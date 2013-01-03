@@ -20,6 +20,7 @@
 #include "feature.h"
 #include "food.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "godconduct.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2405,4 +2406,132 @@ void forest_damage(const actor *mon)
                 break;
             }
     }
+}
+
+vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int max_rays)
+{
+    coord_def aim_dir = (caster->pos() - aim).sgn();
+
+    int num_targets = 0;
+    vector<bolt> beams;
+    int range2 = dist_range(6);
+
+    bolt base_beam;
+
+    base_beam.set_agent(const_cast<actor *>(caster));
+    base_beam.attitude = ATT_FRIENDLY;
+    base_beam.is_tracer = true;
+    base_beam.range = range;
+    base_beam.source = caster->pos();
+    base_beam.target = aim;
+
+    bolt center_beam = base_beam;
+    center_beam.fire();
+    center_beam.is_tracer = false;
+    beams.push_back(center_beam);
+
+    for (distance_iterator di(aim, false, false, 3); di; ++di)
+    {
+        if (monster_at(*di))
+        {
+            coord_def delta = caster->pos() - *di;
+
+            //Don't aim secondary rays at friendlies
+            if ((caster->is_player() ? monster_at(*di)->attitude != ATT_HOSTILE
+                    : monster_at(*di)->attitude != ATT_FRIENDLY))
+                continue;
+
+            if (!caster->can_see(monster_at(*di)))
+                continue;
+
+            //Don't try to aim at a target if it's out of range
+            if (delta.abs() > range2)
+                continue;
+
+            //Don't try to aim at targets in the opposite direction of main aim
+            if (abs(aim_dir.x - delta.sgn().x) + abs(aim_dir.y - delta.sgn().y) >= 2)
+                continue;
+
+            //Test if this beam stops at a location used by any prior beam
+            bolt testbeam = base_beam;
+            testbeam.target = *di;
+            testbeam.hit = AUTOMATIC_HIT;
+            testbeam.fire();
+            bool duplicate = false;
+
+            for (unsigned int i = 0; i < beams.size(); ++i)
+            {
+                if (testbeam.path_taken.back() == beams[i].target)
+                {
+                    duplicate = true;
+                    continue;
+                }
+            }
+            if (!duplicate)
+            {
+                bolt tempbeam = base_beam;
+                tempbeam.target = testbeam.path_taken.back();
+                tempbeam.fire();
+                tempbeam.is_tracer = false;
+                beams.push_back(tempbeam);
+                num_targets++;
+            }
+
+            if (num_targets == max_rays - 1)
+              break;
+        }
+    }
+
+    return beams;
+}
+
+static bool _dazzle_can_hit(const actor *act)
+{
+    if (act->is_monster())
+    {
+        const monster* mons = act->as_monster();
+        bolt testbeam;
+        testbeam.thrower = KILL_YOU;
+        zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
+
+        return (mons->type != MONS_ARCANE_FAMILIAR
+                && mons->type != MONS_ORB_OF_DESTRUCTION
+                && mons->type != MONS_BUSH
+                && !fedhas_shoot_through(testbeam, mons));
+    }
+    else
+        return false;
+}
+
+spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim, bool fail)
+{
+    int range = spell_range(SPELL_DAZZLING_SPRAY, pow);
+
+    targetter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
+
+    hitfunc.set_aim(aim);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "fire towards", _dazzle_can_hit))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    vector<bolt> beams = get_spray_rays(caster, aim, range, 3);
+
+    if (beams.size() == 0)
+    {
+        mpr("You can't see any targets in that direction!");
+        return SPRET_ABORT;
+    }
+
+    for (unsigned int i = 0; i < beams.size(); ++i)
+    {
+        zappy(ZAP_DAZZLING_SPRAY, pow, beams[i]);
+        beams[i].fire();
+    }
+
+    return SPRET_SUCCESS;
 }

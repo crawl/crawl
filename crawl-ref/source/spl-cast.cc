@@ -1024,6 +1024,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_fragment(&you, pow, range);
     case SPELL_FULMINANT_PRISM:
         return new targetter_smite(&you, range, 0, 2);
+    case SPELL_DAZZLING_SPRAY:
+        return new targetter_spray(&you, 6, ZAP_DAZZLING_SPRAY);
     default:
         return 0;
     }
@@ -1380,6 +1382,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_THUNDERBOLT:
         return cast_thunderbolt(&you, powc, target, fail);
 
+    case SPELL_DAZZLING_SPRAY:
+        return cast_dazzling_spray(&you, powc, target, fail);
+
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
     // produced will count as god gifts.
@@ -1650,7 +1655,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SHROUD_OF_GOLUBRIA:
         return cast_shroud_of_golubria(powc, fail);
-        
+
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(powc, beam.target, fail);
 

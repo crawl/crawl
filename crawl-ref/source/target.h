@@ -172,4 +172,20 @@ private:
     int range2;
 };
 
+class targetter_spray : public targetter
+{
+public:
+    targetter_spray(const actor* act, int range, zap_type zap);
+
+    bool valid_aim(coord_def a);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+    bolt base_beam;
+    vector<bolt> beams;
+private:
+    vector<vector<coord_def> > paths_taken;
+    int _range;
+    int range2;
+};
+
 #endif

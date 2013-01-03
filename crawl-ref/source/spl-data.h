@@ -1911,7 +1911,7 @@ struct spell_desc
      false,
      false
 },
-        
+
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
      SPTYP_CONJURATION | SPTYP_HEXES,
@@ -2918,7 +2918,7 @@ struct spell_desc
      true,
      false
 },
-        
+
 {
     SPELL_ARCANE_FAMILIAR, "Iskenderun's Arcane Familiar",
       SPTYP_CONJURATION | SPTYP_CHARMS,
@@ -2955,6 +2955,19 @@ struct spell_desc
      0,
      NULL,
      false,
+     false
+},
+
+{
+    SPELL_DAZZLING_SPRAY, "Dazzling Spray",
+     SPTYP_CONJURATION | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     3,
+     100,
+     6, 6,
+     0,
+     NULL,
+     true,
      false
 },
 
