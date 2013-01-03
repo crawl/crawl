@@ -255,7 +255,10 @@ void TabbedRegion::pack_buffers()
         const tile_info &inf = tile_gui_info(tileidx);
         m_buf_gui.add(tileidx, 0, 0, -inf.width, m_tabs[i].min_y, false);
         if (m_tabs[i].cmd != CMD_NO_CMD)
-            m_buf_gui.add(m_tabs[i].tile_tab, 0, 0, -inf.width*32/20, m_tabs[i].min_y, false, 32.0, 32.0*32.0/20.0, 32.0*32.0/20.0); // UNHARDCODE ME
+        {
+            const tile_info &inf_icon = tile_gui_info(m_tabs[i].tile_tab);
+            m_buf_gui.add(m_tabs[i].tile_tab, 0, 0, -inf_icon.width, m_tabs[i].min_y, false, TILE_Y, TILE_X*inf_icon.width/inf.width, TILE_Y*inf_icon.height/inf.height);
+        }
     }
 }
 
