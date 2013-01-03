@@ -105,6 +105,11 @@ bool form_likes_water(transformation_type form)
             || you.species == SP_OCTOPODE && !form_changed_physiology(form));
 }
 
+bool form_has_mouth(transformation_type form)
+{
+    return form != TRAN_TREE && form != TRAN_WISP && form != TRAN_JELLY;
+}
+
 bool form_can_butcher_barehanded(transformation_type form)
 {
     return (form == TRAN_BLADE_HANDS || form == TRAN_DRAGON

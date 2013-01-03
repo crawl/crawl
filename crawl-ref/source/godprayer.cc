@@ -291,7 +291,7 @@ static bool _altar_prayer()
 
 void pray()
 {
-    if (silenced(you.pos()))
+    if (you.cannot_speak())
     {
         mpr("You are unable to make a sound!");
         return;

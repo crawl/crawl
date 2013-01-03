@@ -5773,6 +5773,8 @@ bool player::cannot_speak() const
         return true;
 
     // No transform that prevents the player from speaking yet.
+    // ... yet setting this would prevent saccing junk and similar activities
+    // for no good reason.
     return false;
 }
 
@@ -5785,9 +5787,19 @@ string player::shout_verb() const
     case TRAN_SPIDER:
         return "hiss";
     case TRAN_BAT:
+    case TRAN_PORCUPINE:
         return "squeak";
     case TRAN_PIG:
         return "squeal";
+
+    // These forms can't shout.
+    case TRAN_TREE:
+        return "creak";
+    case TRAN_JELLY:
+        return "gurgle";
+    case TRAN_WISP:
+        return "whoosh"; // any wonder why?
+
     default:
         if (you.species == SP_FELID)
             return coinflip() ? "meow" : "yowl";
