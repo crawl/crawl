@@ -4110,6 +4110,21 @@ void bolt::enchantment_affect_monster(monster* mon)
     extra_range_used += range_used_on_hit();
 }
 
+bool _dazzle_monster(monster* mons, actor* act)
+{
+    if (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_NONLIVING
+        || mons->holiness() == MH_PLANT)
+        return false;
+
+    if (x_chance_in_y(85 - mons->hit_dice * 3 , 100))
+    {
+        simple_monster_message(mons, " is dazzled.");
+        mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, 40 + random2(40)));
+        return true;
+    }
+    return false;
+}
+
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
     if (YOU_KILL(thrower) && mons_near(mon))
@@ -4174,6 +4189,10 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
           (name == "freezing breath" && mon->flight_mode()))
         beam_hits_actor(mon);
+
+    if (name == "spray of energy")
+        _dazzle_monster(mon, agent());
+
 }
 
 void bolt::beam_hits_actor(actor *act)

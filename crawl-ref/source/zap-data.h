@@ -1100,4 +1100,19 @@ struct zap_info
     0 // Noise comes from explosion
 },
 
+{
+    ZAP_DAZZLING_SPRAY,
+    "spray of energy",
+    50,
+    new calcdice_calculator<2, 8, 1, 4>,
+    new tohit_calculator<9, 1, 7>,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    3
+},
 #endif

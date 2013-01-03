@@ -184,6 +184,12 @@ This spell dims the light of the dungeon, reducing the range of vision. The
 area affected is quite large and it doesn't have sharp edges, thus the effect
 is unlikely to alert anyone not very close to the caster.
 %%%%
+Dazzling Spray spell
+
+This spell fires a spread of scintillating energy bolts from the caster's
+fingertips which can dazzle the vision of any living creature they strike,
+leaving them stumbling about blindly.
+%%%%
 Death Channel spell
 
 This spell raises living creatures slain by the caster and his or her allies

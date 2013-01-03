@@ -800,3 +800,79 @@ aff_type targetter_thunderbolt::is_affected(coord_def loc)
 
     return zapped[loc];
 }
+
+targetter_spray::targetter_spray(const actor* act, int range, zap_type zap)
+{
+    ASSERT(act);
+    agent = act;
+    origin = aim = act->pos();
+    _range = range;
+    range2 = dist_range(range);
+}
+
+bool targetter_spray::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        if (agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    if ((origin - a).abs() > range2)
+        return notify_fail("Out of range.");
+    return true;
+}
+
+bool targetter_spray::set_aim(coord_def a)
+{
+    if (!targetter::set_aim(a))
+        return false;
+
+    if (a == origin)
+        return false;
+
+    beams = get_spray_rays(agent, aim, _range, 3);
+
+    paths_taken.clear();
+    for (unsigned int i = 0; i < beams.size(); ++i)
+        paths_taken.push_back(beams[i].path_taken);
+
+    return true;
+}
+
+aff_type targetter_spray::is_affected(coord_def loc)
+{
+    coord_def c;
+    aff_type affected = AFF_NO;
+
+    for (unsigned int n = 0; n < paths_taken.size(); ++n)
+    {
+        aff_type beam_affect = AFF_YES;
+        bool beam_reached = false;
+        for (vector<coord_def>::const_iterator i = paths_taken[n].begin();
+         i != paths_taken[n].end(); ++i)
+        {
+            c = *i;
+            if (c == loc)
+            {
+                if (cell_is_solid(*i))
+                    beam_affect = AFF_NO;
+                else if (beam_affect != AFF_MAYBE)
+                    beam_affect = AFF_YES;
+
+                beam_reached = true;
+                break;
+            }
+            else if (anyone_there(*i)
+                && !fedhas_shoot_through(beams[n], monster_at(*i)))
+            {
+                beam_affect = AFF_MAYBE;
+            }
+        }
+
+        if (beam_reached && beam_affect > affected)
+            affected = beam_affect;
+    }
+
+    return affected;
+}
