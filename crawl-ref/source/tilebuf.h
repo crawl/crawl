@@ -65,7 +65,8 @@ public:
     void add_unscaled(tileidx_t idx, float x, float y, int ymax = TILE_Y,
                       float scale = 1.0f);
     void add(tileidx_t idx, int x, int y,
-             int ox = 0, int oy = 0, bool centre = true, int ymax = -1);
+             int ox = 0, int oy = 0, bool centre = true, int ymax = -1,
+             float tile_x = TILE_X, float tile_y = TILE_Y);
 };
 
 class ColouredTileBuffer : public VertBuffer

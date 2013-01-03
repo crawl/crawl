@@ -20,7 +20,8 @@ public:
         TAB_OFS_MAX
     };
 
-    void set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab);
+    int push_tab_region(GridRegion *reg, tileidx_t tile_tab);
+    int push_tab_button(command_type cmd, tileidx_t tile_tab);
     GridRegion *get_tab_region(int idx);
     tileidx_t get_tab_tile(int idx);
     void activate_tab(int idx);
@@ -56,7 +57,6 @@ protected:
     void set_icon_pos(int idx);
     void reset_icons(int from_idx);
 
-
     int m_active;
     int m_mouse_tab;
     bool m_use_small_layout;
@@ -66,6 +66,7 @@ protected:
     struct TabInfo
     {
         GridRegion *reg;
+        command_type cmd;
         tileidx_t tile_tab;
         int ofs_y;
         int min_y;
@@ -74,6 +75,9 @@ protected:
         bool enabled;
     };
     vector<TabInfo> m_tabs;
+
+private:
+    int _push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab);
 };
 
 #endif

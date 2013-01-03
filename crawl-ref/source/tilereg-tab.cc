@@ -8,6 +8,7 @@
 #include "state.h"
 #include "tiledef-gui.h"
 #include "cio.h"
+#include "macro.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
@@ -32,7 +33,7 @@ void TabbedRegion::set_icon_pos(int idx)
 
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
-        if (i == idx || !m_tabs[i].reg)
+        if (i == idx || (!m_tabs[i].reg && m_tabs[i].cmd==CMD_NO_CMD))
             continue;
         start_y = max(m_tabs[i].max_y + 1, start_y);
     }
@@ -51,43 +52,55 @@ void TabbedRegion::reset_icons(int from_idx)
         set_icon_pos(i);
 }
 
-void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
+int TabbedRegion::push_tab_button(command_type cmd, tileidx_t tile_tab)
 {
+    return _push_tab(NULL, cmd, tile_tab);
+}
+int TabbedRegion::push_tab_region(GridRegion *reg, tileidx_t tile_tab)
+{
+    return _push_tab(reg, CMD_NO_CMD, tile_tab);
+}
+
+int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab)
+{
+    int idx = m_tabs.size();
     ASSERT(idx >= 0);
     ASSERT(idx >= (int)m_tabs.size() || !m_tabs[idx].reg);
     ASSERT(tile_tab);
 
-    for (int i = (int)m_tabs.size(); i <= idx; ++i)
-    {
-        TabInfo inf;
-        inf.reg = NULL;
-        inf.tile_tab = 0;
-        inf.ofs_y = 0;
-        inf.min_y = 0;
-        inf.max_y = 0;
-        inf.height = 0;
-        inf.enabled = true;
-        m_tabs.push_back(inf);
-    }
+    TabInfo inf;
+    inf.reg = NULL;
+    inf.cmd = CMD_NO_CMD;
+    inf.tile_tab = 0;
+    inf.ofs_y = 0;
+    inf.min_y = 0;
+    inf.max_y = 0;
+    inf.height = 0;
+    inf.enabled = true;
+    m_tabs.push_back(inf);
 
-    const tile_info &inf = tile_gui_info(tile_tab);
-    ox = max((int)inf.width, ox);
+    tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab : TILEG_TAB_BLANK;
+    const tile_info &tinf = tile_gui_info( actual_tile_tab );
+    ox = max((int)tinf.width, ox);
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
     {
-        const tile_info &inf_other = tile_gui_info(tile_tab + i);
-        ASSERT(inf_other.height == inf.height);
-        ASSERT(inf_other.width == inf.width);
+        const tile_info &inf_other = tile_gui_info(actual_tile_tab + i);
+        ASSERT(inf_other.height == tinf.height);
+        ASSERT(inf_other.width == tinf.width);
     }
 
     ASSERT((int)m_tabs.size() > idx);
     m_tabs[idx].reg = reg;
+    m_tabs[idx].cmd = cmd;
     m_tabs[idx].tile_tab = tile_tab;
-    m_tabs[idx].height = inf.height;
+    m_tabs[idx].height = tinf.height;
     set_icon_pos(idx);
 
     recalculate();
+
+    return idx;
 }
 
 GridRegion *TabbedRegion::get_tab_region(int idx)
@@ -238,9 +251,11 @@ void TabbedRegion::pack_buffers()
         else
             ofs = TAB_OFS_UNSELECTED;
 
-        tileidx_t tileidx = m_tabs[i].tile_tab + ofs;
+        tileidx_t tileidx = (m_tabs[i].cmd==CMD_NO_CMD) ? m_tabs[i].tile_tab + ofs : TILEG_TAB_BLANK + ofs;
         const tile_info &inf = tile_gui_info(tileidx);
         m_buf_gui.add(tileidx, 0, 0, -inf.width, m_tabs[i].min_y, false);
+        if (m_tabs[i].cmd != CMD_NO_CMD)
+            m_buf_gui.add(m_tabs[i].tile_tab, 0, 0, -inf.width*32/20, m_tabs[i].min_y, false, 32.0, 32.0*32.0/20.0, 32.0*32.0/20.0); // UNHARDCODE ME
     }
 }
 
@@ -348,8 +363,13 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
     {
         if (event.event == MouseEvent::PRESS)
         {
-            activate_tab(m_mouse_tab);
-            return CK_NO_KEY; // prevent clicking on tab from 'bubbling up' to other regions
+            if (m_tabs[m_mouse_tab].cmd == CMD_NO_CMD)
+            {
+                activate_tab(m_mouse_tab);
+                return CK_NO_KEY; // prevent clicking on tab from 'bubbling up' to other regions
+            }
+            else
+                return command_to_key(m_tabs[m_mouse_tab].cmd);
         }
     }
 
@@ -410,7 +430,7 @@ void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &wind
         return;
 
     // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
-    int scale = 32 * windowsz.y/num_tabs()/m_tabs[0].height -1;
+    int scale = 32 * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
     dx = scale;
     dy = scale;
 }

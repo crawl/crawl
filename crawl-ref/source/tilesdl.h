@@ -169,32 +169,14 @@ protected:
     bool m_fullscreen;
     bool m_need_redraw;
 
-    enum TabID
-    {
-#ifdef TOUCH_UI
-        TAB_COMMAND,
-        TAB_ITEM,
-        TAB_NAVIGATION,
-        TAB_COMMAND2,
-        TAB_MONSTER,
-        TAB_SPELL,
-        TAB_ABILITY,
-        TAB_SKILL,
-        TAB_MEMORISE,
-        TAB_MAX,
-#else
-        TAB_ITEM,
-        TAB_SPELL,
-        TAB_MEMORISE,
-        TAB_ABILITY,
-        TAB_MONSTER,
-        TAB_SKILL,
-        TAB_COMMAND,
-        TAB_COMMAND2,
-        TAB_NAVIGATION,
-        TAB_MAX,
-#endif
-    };
+    int TAB_ABILITY;
+    int TAB_COMMAND;
+    int TAB_COMMAND2;
+    int TAB_ITEM;
+    int TAB_MONSTER;
+    int TAB_NAVIGATION;
+    int TAB_SKILL;
+    int TAB_SPELL;
 
     enum LayerID
     {
