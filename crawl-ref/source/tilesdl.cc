@@ -419,28 +419,29 @@ bool TilesFramework::initialise()
                                          "Navigation", "Navigate around map");
 
 #ifdef TOUCH_UI
-    m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
-    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
-    m_region_tab->set_tab_region(TAB_ABILITY, m_region_abl, TILEG_TAB_ABILITY);
-    m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
-    m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
-    m_region_tab->set_tab_region(TAB_COMMAND2, m_region_cmd_meta,
-                                 TILEG_TAB_COMMAND2);
-    m_region_tab->set_tab_region(TAB_NAVIGATION, m_region_cmd_map,
-                                 TILEG_TAB_NAVIGATION);
+    m_region_tab->push_tab_button(CMD_EXPLORE, TILEG_CMD_EXPLORE);
+    TAB_ITEM    = m_region_tab->push_tab_region(m_region_inv, TILEG_TAB_ITEM);
+    TAB_SPELL   = m_region_tab->push_tab_region(m_region_spl, TILEG_TAB_SPELL);
+    TAB_ABILITY = m_region_tab->push_tab_region(m_region_abl, TILEG_TAB_ABILITY);
+    m_region_tab->push_tab_region(m_region_mon, TILEG_TAB_MONSTER);
+    TAB_COMMAND = m_region_tab->push_tab_region(m_region_cmd, TILEG_TAB_COMMAND);
+    m_region_tab->push_tab_region(m_region_cmd_meta,
+                                  TILEG_TAB_COMMAND2);
+    TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
+                                  TILEG_TAB_NAVIGATION);
     m_region_tab->activate_tab(TAB_COMMAND);
 #else
-    m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
-    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
-    m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
-    m_region_tab->set_tab_region(TAB_ABILITY, m_region_abl, TILEG_TAB_ABILITY);
-    m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
-    m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
-    m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
-    m_region_tab->set_tab_region(TAB_COMMAND2, m_region_cmd_meta,
-                                 TILEG_TAB_COMMAND2);
-    m_region_tab->set_tab_region(TAB_NAVIGATION, m_region_cmd_map,
-                                 TILEG_TAB_NAVIGATION);
+    TAB_ITEM    = m_region_tab->push_tab_region(m_region_inv, TILEG_TAB_ITEM);
+    TAB_SPELL   = m_region_tab->push_tab_region(m_region_spl, TILEG_TAB_SPELL);
+    m_region_tab->push_tab_region(m_region_mem, TILEG_TAB_MEMORISE);
+    TAB_ABILITY = m_region_tab->push_tab_region(m_region_abl, TILEG_TAB_ABILITY);
+    m_region_tab->push_tab_region(m_region_mon, TILEG_TAB_MONSTER);
+    m_region_tab->push_tab_region(m_region_skl, TILEG_TAB_SKILL);
+    TAB_COMMAND = m_region_tab->push_tab_region(m_region_cmd, TILEG_TAB_COMMAND);
+    m_region_tab->push_tab_region(m_region_cmd_meta,
+                                  TILEG_TAB_COMMAND2);
+    TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
+                                                   TILEG_TAB_NAVIGATION);
     m_region_tab->activate_tab(TAB_ITEM);
 #endif
 
@@ -1146,17 +1147,16 @@ void TilesFramework::place_tab(int idx)
         return;
 
     int min_ln = 1, max_ln = 1;
-    switch (idx)
+    if (idx == TAB_SPELL)
     {
-    case TAB_SPELL:
         if (you.spell_no == 0)
         {
             m_region_tab->enable_tab(TAB_SPELL);
             return;
         }
         max_ln = calc_tab_lines(you.spell_no);
-        break;
-    case TAB_ABILITY:
+    }
+    else if (idx == TAB_ABILITY)
     {
         unsigned int talents = your_talents(false).size();
         if (talents == 0)
@@ -1165,32 +1165,25 @@ void TilesFramework::place_tab(int idx)
             return;
         }
         max_ln = calc_tab_lines(talents);
-        break;
     }
-    case TAB_MONSTER:
+    else if (idx == TAB_MONSTER)
         max_ln = max_mon_height;
-        break;
-    case TAB_COMMAND:
+    else if (idx == TAB_COMMAND)
         min_ln = max_ln = calc_tab_lines(m_region_cmd->n_common_commands);
-        break;
-    case TAB_COMMAND2:
+    else if (idx == TAB_COMMAND2)
         min_ln = max_ln = calc_tab_lines(m_region_cmd_meta->n_common_commands);
-        break;
-    case TAB_NAVIGATION:
+    else if (idx == TAB_NAVIGATION)
         min_ln = max_ln = calc_tab_lines(m_region_cmd_map->n_common_commands);
-        break;
-    case TAB_SKILL:
+    else if (idx == TAB_SKILL)
         min_ln = max_ln = calc_tab_lines(NUM_SKILLS);
-        break;
-    }
 
     int lines = min(max_ln, (m_statcol_bottom - m_statcol_top - m_tab_margin)
                             / m_region_tab->dy);
     if (lines >= min_ln)
     {
         TabbedRegion* region_tab = new TabbedRegion(m_init);
-        region_tab->set_tab_region(0, m_region_tab->get_tab_region(idx),
-                                   m_region_tab->get_tab_tile(idx));
+        region_tab->push_tab_region(m_region_tab->get_tab_region(idx),
+                                    m_region_tab->get_tab_tile(idx));
         m_tabs[idx] = region_tab;
         region_tab->activate_tab(0);
         m_region_tab->disable_tab(idx);

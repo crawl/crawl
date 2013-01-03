@@ -131,7 +131,7 @@ void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax,
 }
 
 void TileBuffer::add(tileidx_t idx, int x, int y, int ox, int oy,
-                     bool centre, int ymax)
+                     bool centre, int ymax, float tile_x, float tile_y)
 {
     float pos_sx = x;
     float pos_sy = y;
@@ -140,7 +140,7 @@ void TileBuffer::add(tileidx_t idx, int x, int y, int ox, int oy,
     bool drawn = tex->get_coords(idx, ox, oy,
                                  pos_sx, pos_sy, pos_ex, pos_ey,
                                  tex_sx, tex_sy, tex_ex, tex_ey,
-                                 centre, -1, ymax, TILE_X, TILE_Y);
+                                 centre, -1, ymax, tile_x, tile_y);
 
     if (!drawn)
         return;
