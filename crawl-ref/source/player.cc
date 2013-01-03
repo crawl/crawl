@@ -1911,6 +1911,9 @@ int player_spec_cold()
         sc += you.wearing(EQ_RINGS, RING_ICE);
     }
 
+    if (you.species == SP_LAVA_ORC && (temperature_effect(LORC_LAVA_BOOST) || temperature_effect(LORC_FIRE_BOOST)))
+        sc--;
+
     return sc;
 }
 
@@ -6003,8 +6006,12 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
-    if (duration[DUR_STONESKIN])
-        AC += 200 + skill(SK_EARTH_MAGIC, 20);       // max 7
+    if (duration[DUR_STONESKIN]) {
+        int boost = 200 + skill(SK_EARTH_MAGIC, 20); // max 7
+        if (you.species == SP_LAVA_ORC)
+            boost = std::max(boost, 200 + 100 * you.experience_level / 5); // max 7
+        AC += boost;
+    }
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();

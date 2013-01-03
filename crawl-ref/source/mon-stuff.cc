@@ -50,6 +50,8 @@
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "notes.h"
+#include "ouch.h"
+#include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
@@ -4752,19 +4754,32 @@ void temperature_changed(bool inc_temp)
     if (inc_temp)
         old_temp -= 2;
 
-    // Stoneskin stuff.
-    if (inc_temp && !temperature_effect(LORC_STONESKIN) && you.duration[DUR_STONESKIN] > 0)
+    // Reached the temp that kills off stoneskin.
+    if (inc_temp && new_temp == TEMP_WARM)
     {
+        // Handles condensation shield, ozo's armour, icemail.
+        expose_player_to_element(BEAM_FIRE, 0);
+
+        // Handled separately because normally heat doesn't affect this.
+        if (you.form == TRAN_ICE_BEAST || you.form == TRAN_STATUE)
+            untransform(true, false);
+
+        // Stoneskin melts.
         you.set_duration(DUR_STONESKIN, 0);
         mpr("Your stony skin melts.", MSGCH_DURATION);
+
         you.redraw_armour_class = true;
     }
 
-    if (!inc_temp && temperature_effect(LORC_STONESKIN) && !you.duration[DUR_STONESKIN])
+    // Cooled down enough for stoneskin to kick in again.
+    if (!inc_temp && old_temp == TEMP_WARM)
     {
-        you.set_duration(DUR_STONESKIN, 500);
-        mpr("Your skin cools and hardens.", MSGCH_DURATION);
-        you.redraw_armour_class = true;
+        if (you.duration[DUR_STONESKIN] < 500)
+        {
+            you.set_duration(DUR_STONESKIN, 500);
+            mpr("Your skin cools and hardens.", MSGCH_DURATION);
+            you.redraw_armour_class = true;
+        }
     }
 
     // Passive heat stuff.

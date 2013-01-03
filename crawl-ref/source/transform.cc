@@ -715,6 +715,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return _abort_or_fizzle(just_check);
     }
 
+    if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
+        && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
+    {
+        if (!force)
+            mpr("Your temperature is too high to benefit from that spell.");
+        return _abort_or_fizzle(just_check);
+    }
+
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     int str = 0, dex = 0;
@@ -1051,7 +1059,11 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_STATUE:
-        mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
+        // This only handles lava orcs going statue -> stoneskin.
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN))
+            mpr("You revert to a slightly less stony form.", MSGCH_DURATION);
+        else if (you.species != SP_LAVA_ORC)
+            mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, 2, true,
                      "losing the statue transformation");
         notify_stat_change(STAT_STR, -2, true,
@@ -1064,7 +1076,10 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_ICE_BEAST:
-        mpr("You warm up again.", MSGCH_DURATION);
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+            mpr("Your icy form melts away into molten rock.", MSGCH_DURATION);
+        else
+            mpr("You warm up again.", MSGCH_DURATION);
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
@@ -1150,6 +1165,11 @@ void untransform(bool skip_wielding, bool skip_move)
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
              armour->name(DESC_YOUR).c_str());
     }
+
+    // Lava orcs become stony again if at the right temperature.
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+        && you.duration[DUR_STONESKIN] < 500)
+        you.duration[DUR_STONESKIN] = 500;
 
     if (hp_downscale != 10 && you.hp != you.hp_max)
     {
