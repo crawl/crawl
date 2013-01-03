@@ -841,10 +841,10 @@ void down_stairs(dungeon_feature_type force_stair)
     {
         mpr("You pass through the gate.");
         take_note(Note(NOTE_MESSAGE, 0, 0,
-            stair_find == DNGN_EXIT_ABYSS ? "Escaped the Abyss." :
-            stair_find == DNGN_EXIT_PANDEMONIUM ? "Escaped the Pandemonium." :
-            stair_find == DNGN_EXIT_THROUGH_ABYSS ? "Escaped into the Abyss." :
-            "Buggered into bugdom."), true);
+            stair_find == DNGN_EXIT_ABYSS ? "Escaped the Abyss" :
+            stair_find == DNGN_EXIT_PANDEMONIUM ? "Escaped Pandemonium" :
+            stair_find == DNGN_EXIT_THROUGH_ABYSS ? "Escaped into the Abyss" :
+            "Buggered into bugdom"), true);
 
         if (!you.wizard || !crawl_state.is_replaying_keys())
             more();
