@@ -22,21 +22,30 @@ traditional "./configure; make; make install" that you might expect.
 Build Process
 -------------
 
- * get the latest Android SDK (here:
+ * Get the latest Android SDK (here:
    http://developer.android.com/sdk/index.html)
- * run "android" and fetch the files for the android-14 platform
- * get the latest CrystaX NDK (here: http://www.crystax.net/en/android/ndk/7)
- * configure your PATH. Assuming you've installed the SDK in $SDK and the
+ * Run "android" and fetch the files for the android-14 platform
+ * get the latest Android NDK, r8d (here:
+   http://developer.android.com/ndk/index.html)
+ * Configure your PATH. Assuming you've installed the SDK in $SDK and the
    NDK in $NDK: export PATH=$SDK/tools:$SDK/platform-tools:$NDK:$PATH
- * ensure that you have all of the dependent host libraries required to
-   use the SDK, NDK and build crawl's host tools (libsdl1.2-dev at least).
-   Note that you also need the zip and libvorbis-dev packages.
- * Get the SDL android port (a modified version of telya's):
+ * Ensure that you have all of the dependent host libraries required to
+   use the SDK, NDK and build crawl's host tools. For a recent ubuntu host
+   these are:
+     - ia32-libs
+     - build-essential
+     - libpng12-dev
+     - libsdl1.2-dev
+     - libsdl-image1.2-dev
+     - libfreetype6-dev
+   (you may also require libvorbis-dev and zip)
+ * If you don't have them already, you need Oracle's JDK and ant installed
+ * Get the SDL android port (a modified version of pelya's):
    git submodule update --checkout crawl-ref/source/contrib/sdl-android
- * run make android
+ * run "make android"
  * If it fails, run it again (happens a lot on the first build).
  * you'll find the apk in the source directory. It should be more than 10 MB.
-   If it's only 5.5 MB, run make android again.
+   If it's only 5.5 MB, run "make android" again.
 
 
 Project Structure
@@ -44,15 +53,15 @@ Project Structure
 At a high level, the SDL library and DCSS are laid out on disk as
 follows:
 
-commandergenius/
+crawl-ref/source/contrib/sdl-android
   build.sh              # script to build DCSS
   project/
     bin/                # where the .apk gets put
     java/               # Java code that wraps the native game+libs
     jni/                # where contrib libraries live, including SDL
-      application/src   # link to the directory containing crawl-ref
+      application/src   # symlink to the directory containing crawl-ref
 
-Alongside the crawl-ref directory there are some additional
+Within the crawl-ref directory there are some additional
 configuration and build scripts that are required to integrate the
 Android libraries with DCSS:
 
@@ -74,10 +83,10 @@ Android libraries with DCSS:
 
 Technical Notes
 ---------------
- * this port uses CrystaX's version of the Android NDK, *not* the
-   official one. The reason is primarily that the official standard
-   library port doesn't support wchar_t, which DCSS uses for unicode
-   support
+ * this port currently uses r8d of the Android NDK. Even minor revisions
+   of the native dev kit can prevent the app from compiling, or working
+   properly on all Android platforms: be aware if using an earlier (or
+   later!) version
  * there are lots of Android-specifics in the makefile, because (a) the
    custom toolchain needs lots of CFLAGS and LDFLAGS to work properly
    and (b) the target paths for the data directory are completely
