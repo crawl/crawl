@@ -1222,6 +1222,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return _mon_cycle(TILEP_MONS_FIRE_VORTEX, tile_num_prop);
     case MONS_SPATIAL_VORTEX:
         return _mon_cycle(TILEP_MONS_SPATIAL_VORTEX, tile_num_prop);
+    case MONS_SPATIAL_MAELSTROM:
+        return _mon_cycle(TILEP_MONS_SPATIAL_MAELSTROM, tile_num_prop);
     case MONS_TWISTER:
         return _mon_cycle(TILEP_MONS_TWISTER, tile_num_prop);
 
