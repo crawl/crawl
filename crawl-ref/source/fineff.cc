@@ -70,6 +70,16 @@ static void _trj_spawns(actor *attacker, actor *trj, coord_def pos, int damage)
     if (invalid_monster_index(foe) && foe != MHITYOU)
         foe = MHITNOT;
 
+    // Give spawns the same attitude as TRJ; if TRJ is now dead, make them
+    // hostile.
+    const beh_type spawn_beh = trj
+        ? attitude_creation_behavior(trj->as_monster()->attitude)
+        : BEH_HOSTILE;
+
+    // No permanent friendly jellies from an enslaved TRJ.
+    if (spawn_beh == BEH_FRIENDLY)
+        return;
+
     int spawned = 0;
     for (int i = 0; i < tospawn; ++i)
     {
@@ -79,8 +89,8 @@ static void _trj_spawns(actor *attacker, actor *trj, coord_def pos, int damage)
             continue;
 
         if (monster *mons = mons_place(
-                              mgen_data(jelly, BEH_HOSTILE, trj, 0, 0,
-                                        jpos, foe, MG_DONT_COME, GOD_JIYVA)))
+                              mgen_data(jelly, spawn_beh, trj, 0, 0, jpos,
+                                        foe, MG_DONT_COME, GOD_JIYVA)))
         {
             // Don't allow milking the royal jelly.
             mons->flags |= MF_NO_REWARD;
