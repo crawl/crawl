@@ -16,6 +16,7 @@
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
+#include "state.h"
 #include "view.h"
 
 void final_effect::schedule()
@@ -212,7 +213,7 @@ void trj_spawn_fineff::fire()
         : BEH_HOSTILE;
 
     // No permanent friendly jellies from an enslaved TRJ.
-    if (spawn_beh == BEH_FRIENDLY)
+    if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
         return;
 
     int spawned = 0;
