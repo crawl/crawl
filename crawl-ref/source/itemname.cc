@@ -2250,6 +2250,9 @@ void check_item_knowledge(bool unknown_items)
             // Water is never interesting either. [1KB]
             if (i == OBJ_POTIONS && j == POT_WATER)
                 continue;
+
+            if (i == OBJ_JEWELLERY && j == AMU_CONTROLLED_FLIGHT)
+                continue;
 #endif
 
             if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
