@@ -6104,7 +6104,13 @@ int player::armour_class() const
         case TRAN_NONE:
         case TRAN_APPENDAGE:
         case TRAN_BLADE_HANDS:
-        case TRAN_LICH:  // can wear normal body armour (small bonus)
+        case TRAN_LICH:  // can wear normal body armour (no bonus)
+            break;
+
+        case TRAN_JELLY:  // no bonus
+        case TRAN_BAT:
+        case TRAN_PIG:
+        case TRAN_PORCUPINE:
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
@@ -6133,11 +6139,8 @@ int player::armour_class() const
                 AC += 100 + skill(SK_EARTH_MAGIC, 25);   // max +7
             break;
 
-        case TRAN_TREE:
+        case TRAN_TREE: // extreme bonus, no EV
             AC += 2500;
-            break;
-
-        default:
             break;
         }
     }
