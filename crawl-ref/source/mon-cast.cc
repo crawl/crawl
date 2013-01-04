@@ -365,7 +365,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
-    case SPELL_POLYMORPH_OTHER:
+    case SPELL_POLYMORPH:
         beam.flavour  = BEAM_POLYMORPH;
         beam.is_beam  = true;
         break;
@@ -2119,9 +2119,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_MELEE)
             return false;
 
-        // Friendly monsters don't use polymorph other, for fear of harming
-        // the player.
-        if (spell_cast == SPELL_POLYMORPH_OTHER && mons->friendly())
+        // Friendly monsters don't use polymorph, as it's likely to cause
+        // runaway growth of an enemy.
+        if (spell_cast == SPELL_POLYMORPH && mons->friendly())
             return false;
 
         // Past this point, we're actually casting, instead of just pondering.

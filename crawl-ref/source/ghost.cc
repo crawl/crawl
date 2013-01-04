@@ -122,7 +122,7 @@ static spell_type search_order_misc[] = {
     SPELL_MEPHITIC_CLOUD,
     SPELL_SLOW,
     SPELL_PETRIFY,
-    SPELL_POLYMORPH_OTHER,
+    SPELL_POLYMORPH,
     SPELL_TELEPORT_OTHER,
     SPELL_DIG,
     SPELL_CORONA,

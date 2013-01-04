@@ -1276,7 +1276,7 @@ bool is_offensive_wand(const item_def& item)
     case WAND_FIREBALL:
     case WAND_TELEPORTATION:
     case WAND_LIGHTNING:
-    case WAND_POLYMORPH_OTHER:
+    case WAND_POLYMORPH:
     case WAND_DRAINING:
     case WAND_DISINTEGRATION:
         return true;

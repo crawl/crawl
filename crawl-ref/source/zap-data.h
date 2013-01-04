@@ -282,7 +282,7 @@ struct zap_info
 },
 
 {
-    ZAP_POLYMORPH_OTHER,
+    ZAP_POLYMORPH,
     "",
     100,
     NULL,

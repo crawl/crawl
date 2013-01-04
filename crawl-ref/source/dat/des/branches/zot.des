@@ -871,7 +871,7 @@ KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
         lightning rod w:6 | rod of demonology w:4 | rod of the swarm w:4 | \
         rod of destruction w:2 | rod of striking w:6 | wand of hasting w:16 | \
         wand of confusion | wand of random effects w:6 | \
-        wand of polymorph other w:6 | any wand w:28 | any rod w:2 | \
+        wand of polymorph w:6 | any wand w:28 | any rod w:2 | \
         nothing w:45 . randart ring mail | randart chain mail | \
         randart scale mail | randart splint mail | ring mail | \
         chain mail | scale mail | splint mail | nothing w:20

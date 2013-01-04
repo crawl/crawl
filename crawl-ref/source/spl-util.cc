@@ -1067,8 +1067,8 @@ spell_type zap_type_to_spell(zap_type zap)
         return SPELL_TELEPORT_OTHER;
     case ZAP_LIGHTNING:
         return SPELL_LIGHTNING_BOLT;
-    case ZAP_POLYMORPH_OTHER:
-        return SPELL_POLYMORPH_OTHER;
+    case ZAP_POLYMORPH:
+        return SPELL_POLYMORPH;
     case ZAP_NEGATIVE_ENERGY:
         return SPELL_BOLT_OF_DRAINING;
     case ZAP_ENSLAVEMENT:

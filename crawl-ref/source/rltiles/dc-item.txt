@@ -626,7 +626,7 @@ i-digging WAND_DIGGING
 i-fireball WAND_FIREBALL
 i-teleportation WAND_TELEPORTATION
 i-lightning WAND_LIGHTNING
-i-polymorph_other WAND_POLYMORPH_OTHER
+i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
 i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS

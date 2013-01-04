@@ -1601,12 +1601,11 @@ Magiczny przedmiot który potrafi uczynić stworzenie na które został skierowa
 niezdolnym do ruchu. W szczególności, nagła utrata zdolności machania
 skrzydłami może się skończyć kąpielą w lawie.
 %%%%
-wand of polymorph other
+wand of polymorph
 
 Magiczny przemiot który potrafi przemienić stworzenie w coś innego. Jest
 szczególnie efektywne wobec istot które naturalnie zmieniają formę: nie są one
-w stanie odeprzeć tego efektu. Nie da się tej różdżki skierować na siebie
-samego.
+w stanie odeprzeć tego efektu.
 %%%%
 wand of random effects
 

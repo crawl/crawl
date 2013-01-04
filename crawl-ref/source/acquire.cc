@@ -766,7 +766,7 @@ static int _acquirement_wand_subtype()
         case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
         case WAND_FIREBALL:
         case WAND_DISINTEGRATION:
-        case WAND_POLYMORPH_OTHER:
+        case WAND_POLYMORPH:
             w = 5; break;
         case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
         case WAND_FROST:

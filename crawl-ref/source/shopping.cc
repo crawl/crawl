@@ -1803,7 +1803,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_ENSLAVEMENT:
-            case WAND_POLYMORPH_OTHER:
+            case WAND_POLYMORPH:
             case WAND_PARALYSIS:
                 valued += 20;
                 break;
