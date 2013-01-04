@@ -66,7 +66,7 @@ static void _mons_in_cloud(monster* mons);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
-static spell_type _map_wand_to_mspell(int wand_type);
+static spell_type _map_wand_to_mspell(wand_type kind);
 static void _shedu_movement_clamp(monster* mons);
 
 // [dshaligram] Doesn't need to be extern.
@@ -1315,7 +1315,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
     item_def &wand(mitm[mons->inv[MSLOT_WAND]]);
 
     // map wand type to monster spell type
-    const spell_type mzap = _map_wand_to_mspell(wand.sub_type);
+    const spell_type mzap = _map_wand_to_mspell((wand_type)wand.sub_type);
     if (mzap == SPELL_NO_SPELL)
         return false;
 
@@ -1327,8 +1327,8 @@ static bool _handle_wand(monster* mons, bolt &beem)
     beem.aux_source =
         wand.name(DESC_QUALNAME, false, true, false, false);
 
-    const int wand_type = wand.sub_type;
-    switch (wand_type)
+    const wand_type kind = (wand_type)wand.sub_type;
+    switch (kind)
     {
     case WAND_DISINTEGRATION:
         // Dial down damage from wands of disintegration, since
@@ -1395,6 +1395,9 @@ static bool _handle_wand(monster* mons, bolt &beem)
             break;
         }
         return false;
+
+    default:
+        break;
     }
 
     if (mons->confused())
@@ -1433,12 +1436,12 @@ static bool _handle_wand(monster* mons, bolt &beem)
         {
             if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
             {
-                set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+                set_ident_type(OBJ_WANDS, kind, ID_KNOWN_TYPE);
                 mons->props["wand_known"] = true;
             }
             else
             {
-                set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+                set_ident_type(OBJ_WANDS, kind, ID_MON_TRIED_TYPE);
                 mons->props["wand_known"] = false;
             }
 
@@ -3730,9 +3733,9 @@ static void _mons_in_cloud(monster* mons)
     actor_apply_cloud(mons);
 }
 
-static spell_type _map_wand_to_mspell(int wand_type)
+static spell_type _map_wand_to_mspell(wand_type kind)
 {
-    switch (wand_type)
+    switch (kind)
     {
     case WAND_FLAME:           return SPELL_THROW_FLAME;
     case WAND_FROST:           return SPELL_THROW_FROST;
