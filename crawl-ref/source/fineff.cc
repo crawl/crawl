@@ -15,6 +15,7 @@
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
+#include "state.h"
 #include "view.h"
 
 void add_final_effect(final_effect_flavour flavour,
@@ -77,7 +78,7 @@ static void _trj_spawns(actor *attacker, actor *trj, coord_def pos, int damage)
         : BEH_HOSTILE;
 
     // No permanent friendly jellies from an enslaved TRJ.
-    if (spawn_beh == BEH_FRIENDLY)
+    if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
         return;
 
     int spawned = 0;
