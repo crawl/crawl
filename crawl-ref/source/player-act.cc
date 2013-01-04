@@ -403,6 +403,10 @@ string player::hand_name(bool plural, bool *can_plural) const
         str = "scythe-like blade";
     else if (form == TRAN_TREE)
         str = "branch";
+    else if (form == TRAN_WISP)
+        str = "strand";
+    else if (form == TRAN_JELLY)
+        str = "bump"; // not even pseudopods...
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || !form_changed_physiology())
     {
@@ -436,6 +440,10 @@ string player::foot_name(bool plural, bool *can_plural) const
         str = "hind leg";
     else if (form == TRAN_TREE)
         str = "root";
+    else if (form == TRAN_WISP)
+        str = "strand";
+    else if (form == TRAN_JELLY)
+        str = "underside", *can_plural = false;
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || !form_changed_physiology())
     {
