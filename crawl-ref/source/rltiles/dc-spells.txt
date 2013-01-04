@@ -165,7 +165,7 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
-polymorph_other POLYMORPH_OTHER
+polymorph POLYMORPH
 homunculus HOMUNCULUS
 beastly_appendage BEASTLY_APPENDAGE
 

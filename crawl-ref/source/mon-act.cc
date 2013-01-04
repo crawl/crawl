@@ -3745,7 +3745,7 @@ static spell_type _map_wand_to_mspell(wand_type kind)
     case WAND_LIGHTNING:       return SPELL_LIGHTNING_BOLT;
     case WAND_DRAINING:        return SPELL_BOLT_OF_DRAINING;
     case WAND_DISINTEGRATION:  return SPELL_DISINTEGRATE;
-    case WAND_POLYMORPH_OTHER: return SPELL_POLYMORPH_OTHER;
+    case WAND_POLYMORPH: return SPELL_POLYMORPH;
     default:                   return SPELL_NO_SPELL;
     }
 }

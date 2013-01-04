@@ -525,9 +525,9 @@ Poisonous Cloud spell
 
 This spell conjures forth a great cloud of lethal gasses.
 %%%%
-Polymorph Other spell
+Polymorph spell
 
-This spell randomly alters the form of another creature. It is especially
+This spell randomly alters the form of a creature. It is especially
 effective against shape-changing creatures.
 %%%%
 Portal Projectile spell

@@ -544,7 +544,7 @@ static const char* _wand_type_name(int wandtype)
     case WAND_FIREBALL:        return "fireball";
     case WAND_TELEPORTATION:   return "teleportation";
     case WAND_LIGHTNING:       return "lightning";
-    case WAND_POLYMORPH_OTHER: return "polymorph other";
+    case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
     case WAND_DRAINING:        return "draining";
     case WAND_RANDOM_EFFECTS:  return "random effects";

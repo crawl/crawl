@@ -3119,7 +3119,7 @@ zap_type item_def::zap() const
     case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
     case WAND_TELEPORTATION:   result = ZAP_TELEPORTATION;   break;
     case WAND_LIGHTNING:       result = ZAP_LIGHTNING;       break;
-    case WAND_POLYMORPH_OTHER: result = ZAP_POLYMORPH_OTHER; break;
+    case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
     case WAND_DRAINING:        result = ZAP_NEGATIVE_ENERGY; break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATION;  break;

@@ -3320,23 +3320,10 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_MALMUTATE:
-        if (MON_KILL(thrower))
-        {
-            mpr("Strange energies course through your body.");
-            you.mutate(aux_source.empty() ? get_source_name() :
-                       (get_source_name() + "/" + aux_source));
-            obvious_effect = true;
-        }
-        else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
-                 == ID_KNOWN_TYPE)
-        {
-            mpr("This is polymorph other only!");
-        }
-        else
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            msg_generated = true; // to avoid duplicate "nothing happens"
-        }
+        mpr("Strange energies course through your body.");
+        you.mutate(aux_source.empty() ? get_source_name() :
+                   (get_source_name() + "/" + aux_source));
+        obvious_effect = true;
         break;
 
     case BEAM_SLOW:
@@ -4790,7 +4777,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_POLYMORPH:
     case BEAM_MALMUTATE:
-        if (mon->mutate("polymorph other")) // exact source doesn't matter
+        if (mon->mutate("polymorph")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {
