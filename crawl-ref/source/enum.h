@@ -297,10 +297,10 @@ enum transformation_type
     TRAN_APPENDAGE,
     TRAN_TREE,
     TRAN_PORCUPINE,
-    TRAN_JELLY,
     TRAN_WISP,
+    TRAN_JELLY,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_WISP
+    LAST_FORM = TRAN_JELLY
 };
 
 enum beam_type                  // bolt::flavour
