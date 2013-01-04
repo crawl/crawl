@@ -4544,62 +4544,6 @@ string get_skill_description(skill_type skill, bool need_title)
 
     switch (skill)
     {
-    case SK_UNARMED_COMBAT:
-    {
-        // Give a detailed listing of what attacks the character may perform.
-        vector<string> unarmed_attacks;
-
-        if (you.has_usable_tail())
-            unarmed_attacks.push_back("slap with your tail");
-
-        if (you.has_usable_fangs())
-            unarmed_attacks.push_back("bite with your sharp teeth");
-        else if (player_mutation_level(MUT_BEAK))
-            unarmed_attacks.push_back("peck with your beak");
-
-        if (player_mutation_level(MUT_HORNS))
-            unarmed_attacks.push_back("headbutt with your horns");
-        else if (you.species == SP_NAGA)
-            unarmed_attacks.push_back("do a headbutt attack");
-
-        if (player_mutation_level(MUT_HOOVES))
-            unarmed_attacks.push_back("kick with your hooves");
-        else if (player_mutation_level(MUT_TALONS))
-            unarmed_attacks.push_back("claw with your talons");
-        else if (you.species != SP_NAGA && you.species != SP_FELID
-                 && !you.fishtail)
-        {
-            unarmed_attacks.push_back("deliver a kick");
-        }
-
-        if (you.has_usable_pseudopods())
-            unarmed_attacks.push_back("bludgeon with your pseudopods");
-
-        if (you.has_usable_tentacles())
-            unarmed_attacks.push_back("slap with your tentacles");
-
-        if (you.species == SP_FELID)
-            unarmed_attacks.push_back("use your claws");
-        else if (you.species != SP_OCTOPODE && !you.weapon())
-            unarmed_attacks.push_back("throw a punch");
-        else if (you.species != SP_OCTOPODE && you.has_usable_offhand())
-            unarmed_attacks.push_back("punch with your free hand");
-
-        if (!unarmed_attacks.empty())
-        {
-            string broken = "For example, you could ";
-                   broken += comma_separated_line(unarmed_attacks.begin(),
-                                                  unarmed_attacks.end(),
-                                                  " or ", ", ");
-                   broken += ".";
-            linebreak_string(broken, get_number_of_cols() - 1);
-
-            result += "\n";
-            result += broken;
-        }
-        break;
-    }
-
     case SK_INVOCATIONS:
         if (you.species == SP_DEMIGOD)
         {
