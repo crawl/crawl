@@ -229,6 +229,10 @@ spatial_vortex1 MONS_SPATIAL_VORTEX /*'v'*/
 spatial_vortex2
 spatial_vortex3
 spatial_vortex4
+maelstrom1 MONS_SPATIAL_MAELSTROM /*'v'*/
+maelstrom2
+maelstrom3
+maelstrom4
 twister1 MONS_TWISTER /*'v'*/
 twister2
 twister3
