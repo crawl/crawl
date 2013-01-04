@@ -399,7 +399,10 @@ bool TilesFramework::initialise()
         return false;
     }
 
-    m_init = TileRegionInit(m_image, m_fonts[m_lbl_font].font, TILE_X, TILE_Y);
+    if (tiles.is_using_small_layout())
+        m_init = TileRegionInit(m_image, m_fonts[m_crt_font].font, TILE_X, TILE_Y);
+    else
+        m_init = TileRegionInit(m_image, m_fonts[m_lbl_font].font, TILE_X, TILE_Y);
     m_region_tile = new DungeonRegion(m_init);
     m_region_tab  = new TabbedRegion(m_init);
     m_region_inv  = new InventoryRegion(m_init);
