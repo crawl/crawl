@@ -2487,7 +2487,7 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    return (is_explosion || is_big_cloud || aimed_at_spot);
+    return (is_explosion || is_big_cloud || aimed_at_spot || hit == AUTOMATIC_HIT);
 }
 
 void bolt::drop_object()
