@@ -51,8 +51,8 @@ static const char* form_names[] =
     "appendage",
     "tree",
     "porcupine",
-    "jelly",
     "wisp",
+    "jelly",
 };
 
 const char* transform_name(transformation_type form)
