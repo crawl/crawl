@@ -925,8 +925,10 @@ protected:
     int m_currently_active;
     int m_items_shown;
 
+#ifdef USE_TILE_LOCAL
     TextTileItem *m_arrow_up;
     TextTileItem *m_arrow_down;
+#endif
 };
 
 /**

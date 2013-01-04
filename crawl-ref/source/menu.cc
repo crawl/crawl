@@ -3704,10 +3704,12 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
 MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
                               m_items_shown(0)
 {
+#ifdef USE_TILE_LOCAL
     m_arrow_up = new TextTileItem();
     m_arrow_down = new TextTileItem();
     m_arrow_up->add_tile(tile_def(TILE_MI_ARROW0, TEX_DEFAULT));
     m_arrow_down->add_tile(tile_def(TILE_MI_ARROW4, TEX_DEFAULT));
+#endif
 }
 
 MenuScroller::~MenuScroller()
@@ -4158,12 +4160,14 @@ void MenuScroller::_place_items()
         ++m_items_shown;
     }
 
+#ifdef USE_TILE_LOCAL
     // arrows
-    m_arrow_down->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_min_coord.y+space_used-32),coord_def(m_max_coord.x,m_min_coord.y+space_used));
+    m_arrow_down->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_max_coord.y-32),coord_def(m_max_coord.x,m_max_coord.y));
     m_arrow_down->set_visible(m_topmost_visible+m_items_shown<m_entries.size());
 
     m_arrow_up->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_min_coord.y),coord_def(m_max_coord.x,m_min_coord.y+32));
     m_arrow_up->set_visible(m_topmost_visible>0);
+#endif
 }
 
 MenuItem* MenuScroller::_find_item_by_direction(int start_index,
