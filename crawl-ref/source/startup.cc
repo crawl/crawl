@@ -598,9 +598,14 @@ again:
     }
 
     tmp = new NoSelectTextItem();
+
     string text = "Use the up/down keys to select the type of game or load a "
-                  "character.\n"
-                  "You can type your name; if you leave it blank you will be "
+                  "character.";
+    if (tiles.is_using_small_layout())
+        text += " ";
+    else
+        text += "\n";
+    text +=       "You can type your name; if you leave it blank you will be "
                   "asked later.\n"
                   "Press Enter to start";
     // TODO: this should include a description of that character.

@@ -924,6 +924,9 @@ protected:
     int m_topmost_visible;
     int m_currently_active;
     int m_items_shown;
+
+    TextTileItem *m_arrow_up;
+    TextTileItem *m_arrow_down;
 };
 
 /**

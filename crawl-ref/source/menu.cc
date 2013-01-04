@@ -3702,8 +3702,12 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
 }
 
 MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
-    m_items_shown(0)
+                              m_items_shown(0)
 {
+    m_arrow_up = new TextTileItem();
+    m_arrow_down = new TextTileItem();
+    m_arrow_up->add_tile(tile_def(TILE_MI_ARROW0, TEX_DEFAULT));
+    m_arrow_down->add_tile(tile_def(TILE_MI_ARROW4, TEX_DEFAULT));
 }
 
 MenuScroller::~MenuScroller()
@@ -3904,6 +3908,16 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             else
                 return MenuObject::INPUT_DESELECTED;
         }
+#ifdef USE_TILE_LOCAL
+        else
+        {
+            // handle clicking on the scrollbar (top half of region => scroll up)
+            if (me.py-m_min_coord.y > (m_max_coord.y-m_min_coord.y)/2)
+                return process_input(CK_DOWN);
+            else
+                return process_input(CK_UP);
+        }
+#endif
     }
     if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
@@ -3927,6 +3941,12 @@ void MenuScroller::render()
     vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
         (*it)->render();
+
+#ifdef USE_TILE_LOCAL
+    // draw scrollbar
+    m_arrow_up->render();
+    m_arrow_down->render();
+#endif
 }
 
 MenuItem* MenuScroller::get_active_item()
@@ -4137,6 +4157,13 @@ void MenuScroller::_place_items()
         space_used += item_height;
         ++m_items_shown;
     }
+
+    // arrows
+    m_arrow_down->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_min_coord.y+space_used-32),coord_def(m_max_coord.x,m_min_coord.y+space_used));
+    m_arrow_down->set_visible(m_topmost_visible+m_items_shown<m_entries.size());
+
+    m_arrow_up->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_min_coord.y),coord_def(m_max_coord.x,m_min_coord.y+32));
+    m_arrow_up->set_visible(m_topmost_visible>0);
 }
 
 MenuItem* MenuScroller::_find_item_by_direction(int start_index,
