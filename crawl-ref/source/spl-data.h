@@ -2920,6 +2920,19 @@ struct spell_desc
 },
 
 {
+    SPELL_MALMUTATE, "Malmutate",
+     SPTYP_TRANSMUTATION | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
+     8,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

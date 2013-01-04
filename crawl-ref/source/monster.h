@@ -301,8 +301,10 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const string &reason);
+    bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
                            bool damage_inventory = true,

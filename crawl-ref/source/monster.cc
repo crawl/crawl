@@ -4814,6 +4814,11 @@ bool monster::can_safely_mutate() const
     return can_mutate();
 }
 
+bool monster::can_polymorph() const
+{
+    return can_mutate();
+}
+
 bool monster::can_bleed(bool /*allow_tran*/) const
 {
     return mons_has_blood(type);
@@ -4822,6 +4827,14 @@ bool monster::can_bleed(bool /*allow_tran*/) const
 bool monster::mutate(const string &reason)
 {
     if (!can_mutate())
+        return false;
+
+    return polymorph(0);
+}
+
+bool monster::polymorph(int pow)
+{
+    if (!can_polymorph())
         return false;
 
     // Polymorphing a (very) ugly thing will mutate it into a different

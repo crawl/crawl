@@ -394,6 +394,7 @@ enum beam_type                  // bolt::flavour
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
     BEAM_DEVOUR_FOOD,             // Pseudo-beam for harpies' devouring food.
+    BEAM_MALMUTATE,
 
     NUM_BEAMS
 };
@@ -3298,6 +3299,7 @@ enum spell_type
     SPELL_DISJUNCTION,
     SPELL_CHAOS_BREATH,
     SPELL_FRENZY,
+    SPELL_MALMUTATE,
 
     NUM_SPELLS
 };

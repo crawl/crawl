@@ -7089,6 +7089,15 @@ bool player::can_safely_mutate() const
                && hunger_state == HS_ENGORGED);
 }
 
+bool player::can_polymorph() const
+{
+    if (you.transform_uncancellable)
+        return false;
+    if (you.is_undead)
+        return is_undead == US_SEMI_UNDEAD && hunger_state > HS_SATIATED;
+    return true;
+}
+
 bool player::can_bleed(bool allow_tran) const
 {
     if (allow_tran)
@@ -7128,6 +7137,40 @@ bool player::mutate(const string &reason)
     }
 
     return give_bad_mutation(reason);
+}
+
+bool player::polymorph(int pow)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (!can_polymorph())
+        return false;
+
+    // Be unreliable over lava.  This is not that important as usually when
+    // it matters you'll have temp flight and thus that pig will fly (and
+    // when flight times out, we'll have roasted bacon).
+    for (int tries = 0; tries < 3; tries++)
+    {
+        // Whole-body transformations only; mere appendage doesn't seem fitting.
+        transformation_type f = random_choose_weighted(
+            100, TRAN_BAT,
+            100, TRAN_PIG,
+            100, TRAN_TREE,
+            100, TRAN_PORCUPINE,
+            100, TRAN_WISP,
+             20, TRAN_SPIDER,
+             20, TRAN_ICE_BEAST,
+              5, TRAN_STATUE,
+              1, TRAN_DRAGON,
+              0);
+        if (transform(pow, f))
+        {
+            you.transform_uncancellable = true;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool player::is_icy() const

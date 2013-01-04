@@ -204,6 +204,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         elem = ETC_HOLY;
         break;
     case BEAM_POLYMORPH:
+    case BEAM_MALMUTATE:
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
@@ -3265,7 +3266,7 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    if (flavour != BEAM_POLYMORPH && has_saving_throw()
+    if (flavour != BEAM_MALMUTATE && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
@@ -3315,6 +3316,10 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_POLYMORPH:
+        obvious_effect = you.polymorph(ench_power);
+        break;
+
+    case BEAM_MALMUTATE:
         if (MON_KILL(thrower))
         {
             mpr("Strange energies course through your body.");
@@ -4636,8 +4641,12 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
     bool rc = true;
     switch (flavour)
     {
-    case BEAM_POLYMORPH:
+    case BEAM_MALMUTATE:
         rc = mon->can_mutate();
+        break;
+
+    case BEAM_POLYMORPH:
+        rc = mon->can_polymorph();
         break;
 
     case BEAM_DEGENERATE:
@@ -4780,6 +4789,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_POLYMORPH:
+    case BEAM_MALMUTATE:
         if (mon->mutate("polymorph other")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
@@ -5865,6 +5875,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return "digging";
     case BEAM_TELEPORT:              return "teleportation";
     case BEAM_POLYMORPH:             return "polymorph";
+    case BEAM_MALMUTATE:             return "malmutation";
     case BEAM_ENSLAVE:               return "enslave";
     case BEAM_BANISH:                return "banishment";
     case BEAM_DEGENERATE:            return "degeneration";
