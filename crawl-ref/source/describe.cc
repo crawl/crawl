@@ -4011,25 +4011,25 @@ static const char *divine_title[NUM_GODS][8] =
      "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
 };
 
-static int _piety_level()
+static int _piety_level(int piety)
 {
-    return (you.piety >  160) ? 7 :
-           (you.piety >= 120) ? 6 :
-           (you.piety >= 100) ? 5 :
-           (you.piety >=  75) ? 4 :
-           (you.piety >=  50) ? 3 :
-           (you.piety >=  30) ? 2 :
-           (you.piety >    5) ? 1
-                              : 0;
+    return (piety >  160) ? 7 :
+           (piety >= 120) ? 6 :
+           (piety >= 100) ? 5 :
+           (piety >=  75) ? 4 :
+           (piety >=  50) ? 3 :
+           (piety >=  30) ? 2 :
+           (piety >    5) ? 1
+                          : 0;
 }
 
-std::string god_title(god_type which_god, species_type which_species)
+std::string god_title(god_type which_god, species_type which_species, int piety)
 {
     std::string title;
     if (you.penance[which_god])
         title = divine_title[which_god][0];
     else
-        title = divine_title[which_god][_piety_level()];
+        title = divine_title[which_god][_piety_level(piety)];
 
     title = replace_all(title, "%s",
                         species_name(which_species, true, false));
@@ -4306,7 +4306,7 @@ void describe_god(god_type which_god, bool give_title)
         cprintf("\nTitle - ");
         textcolor(colour);
 
-        std::string title = god_title(which_god, you.species);
+        std::string title = god_title(which_god, you.species, you.piety);
         cprintf("%s", title.c_str());
     }
 

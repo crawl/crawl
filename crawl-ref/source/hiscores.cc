@@ -1693,7 +1693,8 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
                   points, name.c_str(),
                   skill_title(best_skill, best_skill_lvl,
-                               race, str, dex, god).c_str(), lvl);
+                               race, str, dex, god, piety).c_str(),
+                  lvl);
         desc = buf;
     }
     else
