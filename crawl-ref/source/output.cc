@@ -58,7 +58,7 @@
 #include "directn.h"
 #endif
 
-#ifdef TOUCH_UI
+#ifdef USE_TILE_LOCAL
 #include "tilesdl.h"
 
 /*
@@ -592,7 +592,7 @@ static void _print_stats_hp(int x, int y)
     for (int i = 18-col; i > 0; i--)
         CPRINTF(" ");
 
-#ifdef TOUCH_UI
+#ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
         HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
     else
@@ -735,8 +735,12 @@ static void _print_stats_wp(int y)
     textcolor(Options.status_caption_colour);
     CPRINTF("Wp: ");
     textcolor(col);
+#ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
     CPRINTF("%s", chop_string(text, w).c_str());
+#else
+    CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
+#endif
     textcolor(LIGHTGREY);
 }
 
@@ -780,8 +784,12 @@ static void _print_stats_qv(int y)
     textcolor(Options.status_caption_colour);
     CPRINTF("Qv: ");
     textcolor(col);
+#ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
     CPRINTF("%s", chop_string(text, w).c_str());
+#else
+    CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
+#endif
     textcolor(LIGHTGREY);
 }
 
@@ -930,7 +938,7 @@ static void _print_status_lights(int y)
     }
 #endif
 
-#ifdef TOUCH_UI
+#ifdef USE_TILE_LOCAL
     if (!tiles.is_using_small_layout())
     {
 #endif
@@ -959,7 +967,7 @@ static void _print_status_lights(int y)
             CGOTOXY(1, line_cur, GOTO_STAT);
         }
     }
-#ifdef TOUCH_UI
+#ifdef USE_TILE_LOCAL
     }
     else
     {
@@ -1010,9 +1018,11 @@ static void _redraw_title(const string &your_name, const string &job_name)
     const unsigned int WIDTH = crawl_view.hudsz.x;
     string title = your_name + " the " + job_name;
 
+#ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
         title = your_name;
     else
+#endif
     {
         unsigned int in_len = strwidth(title);
         if (in_len > WIDTH)
@@ -1035,9 +1045,15 @@ static void _redraw_title(const string &your_name, const string &job_name)
     // Line 1: Foo the Bar    *WIZARD*
     CGOTOXY(1, 1, GOTO_STAT);
     textcolor(YELLOW);
+#ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout() && you.wizard) textcolor(LIGHTBLUE);
+#endif
     CPRINTF("%s", chop_string(title, WIDTH).c_str());
+#ifdef USE_TILE_LOCAL
     if (you.wizard && !tiles.is_using_small_layout())
+#else
+    if (you.wizard)
+#endif
     {
         textcolor(LIGHTBLUE);
         CGOTOXY(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
@@ -1151,7 +1167,11 @@ void print_stats(void)
     int yhack = crawl_state.game_is_zotdef();
 
     // If Options.show_gold_turns, line 9 is Gold and Turns
+#ifdef USE_TILE_LOCAL
     if (Options.show_gold_turns && !tiles.is_using_small_layout())
+#else
+    if (Options.show_gold_turns)
+#endif
     {
         // Increase y-value for all following lines.
         yhack++;
@@ -1240,9 +1260,6 @@ void draw_border(void)
     textcolor(Options.status_caption_colour);
 
     //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
-#ifdef TOUCH_UI_deleteme
-    if (!tiles.is_using_small_layout())
-#endif
     CGOTOXY(1, 4, GOTO_STAT); CPRINTF("Magic:");
     CGOTOXY(1, 5, GOTO_STAT); CPRINTF("AC:");
     CGOTOXY(1, 6, GOTO_STAT); CPRINTF("EV:");

@@ -3033,7 +3033,7 @@ void level_change(bool skip_attribute_increase)
             you.experience_level = new_exp;
             you.max_level = you.experience_level;
 
-#ifdef USE_TILES_LOCAL
+#ifdef USE_TILE_LOCAL
             // In case of intrinsic ability changes.
             tiles.layout_statcol();
             redraw_screen();
