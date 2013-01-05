@@ -601,9 +601,11 @@ again:
 
     string text = "Use the up/down keys to select the type of game or load a "
                   "character.";
+#ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
         text += " ";
     else
+#endif
         text += "\n";
     text +=       "You can type your name; if you leave it blank you will be "
                   "asked later.\n"
