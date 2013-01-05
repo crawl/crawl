@@ -269,6 +269,18 @@ static tileidx_t _random_trousers()
 
 void fill_doll_equipment(dolls_data &result)
 {
+    // The support for eq-using forms is working too badly for this one, so
+    // we use regular player code here instead.
+    if (you.form == TRAN_TREE)
+    {
+        result.parts[TILEP_PART_BASE]    = TILEP_TRAN_TREE;
+        result.parts[TILEP_PART_HELM]    = 0; // fixme, should show up
+        result.parts[TILEP_PART_DRCHEAD] = 0;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        result.parts[TILEP_PART_LEG]     = 0;
+        result.parts[TILEP_PART_SHADOW]  = 0;
+    }
+
     // Base tile.
     if (result.parts[TILEP_PART_BASE] == TILEP_SHOW_EQUIP)
         tilep_race_default(you.species, you.experience_level, &result);
