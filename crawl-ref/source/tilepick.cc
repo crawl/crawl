@@ -5485,7 +5485,7 @@ void tile_init_props(monster* mon)
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
         && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS
         && mon->type != MONS_FIRE_VORTEX && mon->type != MONS_TWISTER
-        && mon->type != MONS_SPATIAL_VORTEX
+        && mon->type != MONS_SPATIAL_VORTEX && mon->type != MONS_SPATIAL_MAELSTROM
         && mon->type != MONS_ABOMINATION_SMALL
         && mon->type != MONS_ABOMINATION_LARGE)
     {
