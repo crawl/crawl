@@ -12,6 +12,12 @@ endif
 
 CFLAGS := -O2 -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
+ifdef ANDROID
+  CXXFLAGS :=
+  LDFLAGS :=
+  LIBS :=
+endif
+
 ifdef TILES
   ifndef CONTRIB_SDL
     SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
