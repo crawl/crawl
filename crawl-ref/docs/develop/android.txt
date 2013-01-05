@@ -26,7 +26,7 @@ Build Process
    http://developer.android.com/sdk/index.html)
  * Run "android" and fetch the files for the android-14 platform
  * get the latest Android NDK, r8d (here:
-   http://developer.android.com/ndk/index.html)
+   http://developer.android.com/sdk/ndk/index.html)
  * Configure your PATH. Assuming you've installed the SDK in $SDK and the
    NDK in $NDK: export PATH=$SDK/tools:$SDK/platform-tools:$NDK:$PATH
  * Ensure that you have all of the dependent host libraries required to
@@ -98,3 +98,7 @@ Technical Notes
    necessary because the SDL library provides overlays for the soft-
    keyboard and configurable keys, which interferes with some of the
    OpenGL state
+ * the rltiles/ tools get compiled using native tools not the NDK ones,
+   and the environment is cleared for the sub-make. This might cause the
+   build to fail, depending on your environment, and can be fixed manually
+   with "cd rltiles && make" prior to "make android"
