@@ -401,7 +401,7 @@ static vector<string> _get_base_dirs()
         SysEnv.crawl_base + "../Resources/",
 #endif
 #ifdef __ANDROID__
-        "/sdcard/Android/data/org.develz.crawl/files",
+        "/sdcard/Android/data/org.develz.crawl/files/",
 #endif
     };
 
@@ -456,6 +456,9 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     for (unsigned b = 0, size = bases.size(); b < size; ++b)
     {
         string name = bases[b] + basename;
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
+#endif
         if (thing_exists(name))
             return name;
     }
