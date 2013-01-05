@@ -100,5 +100,11 @@ Technical Notes
    OpenGL state
  * the rltiles/ tools get compiled using native tools not the NDK ones,
    and the environment is cleared for the sub-make. This might cause the
-   build to fail, depending on your environment, and can be fixed manually
-   with "cd rltiles && make" prior to "make android"
+   build to fail, depending on your environment
+ * don't rename the NDK directory: it contains the revision (e.g. -r8d)
+   and some of the build scripts use this to determine which libraries
+   to include
+ * the build framework will return "build successful" even if the
+   crawl application is not compiled successfully. A failed build will
+   produce a very small .apk. The error message will be mid-way through
+   the log
