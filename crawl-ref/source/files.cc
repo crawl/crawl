@@ -400,6 +400,9 @@ static vector<string> _get_base_dirs()
 #ifdef TARGET_OS_MACOSX
         SysEnv.crawl_base + "../Resources/",
 #endif
+#ifdef __ANDROID__
+        "/sdcard/Android/data/org.develz.crawl/files",
+#endif
     };
 
     const string prefixes[] = {
