@@ -1666,6 +1666,9 @@ bool player::res_corr(bool calc_unid, bool items) const
 
 int player_res_acid(bool calc_unid, bool items)
 {
+    if (you.form == TRAN_JELLY || you.form == TRAN_WISP)
+        return 3;
+
     return you.res_corr(calc_unid, items) ? 1 : 0;
 }
 
@@ -1673,7 +1676,12 @@ int player_res_acid(bool calc_unid, bool items)
 // as pre_resist_damage * X / 100.
 int player_acid_resist_factor()
 {
-    return (player_res_acid() ? 50 : 100);
+    int rA = player_res_acid();
+    if (rA >= 3)
+        return 0;
+    else if (rA >= 1)
+        return 50;
+    return 100;
 }
 
 int player_res_electricity(bool calc_unid, bool temp, bool items)
@@ -6306,9 +6314,9 @@ bool player::is_insubstantial() const
     return you.form == TRAN_WISP;
 }
 
-int player::res_acid() const
+int player::res_acid(bool calc_unid) const
 {
-    return player_res_acid();
+    return player_res_acid(calc_unid);
 }
 
 int player::res_fire() const

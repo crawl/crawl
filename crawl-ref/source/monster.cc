@@ -3949,9 +3949,9 @@ bool monster::res_corr(bool calc_unid, bool items) const
     return actor::res_corr(calc_unid, items);
 }
 
-int monster::res_acid() const
+int monster::res_acid(bool calc_unid) const
 {
-    return res_corr() ? 1 : 0;
+    return max(get_mons_resist(this, MR_RES_ACID), (int)actor::res_corr(calc_unid));
 }
 
 int monster::res_magic() const

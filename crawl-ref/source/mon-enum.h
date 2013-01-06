@@ -186,13 +186,18 @@ enum mon_resist_flags
     MR_RES_COLD          = 1 << 9,
     MR_RES_NEG           = 1 << 12,
     MR_RES_ROTTING       = 1 << 15,
+    MR_RES_ACID          = 1 << 18,
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
     MR_RES_ASPHYX        = 1 << 24,
-    MR_RES_ACID          = 1 << 25,
+#if TAG_MAJOR_VERSION == 34
+    MR_OLD_RES_ACID      = 1 << 25,
+#else
+    // unused 1 << 25,
+#endif
     MR_RES_STICKY_FLAME  = 1 << 26,
-    // 1 << 27,
+    // unused 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
