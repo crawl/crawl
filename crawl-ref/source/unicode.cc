@@ -15,28 +15,6 @@
 #include "syscalls.h"
 #include "unicode.h"
 
-#ifdef __ANDROID__
-// these two functions are borrowed from Crystax's wchar_t implementation
-// found here:
-//   https://github.com/crystax/android-platform-ndk/blob/crystax-r7/sources/crystax/src/locale/utf8.c
-#include <errno.h>
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-typedef struct {
-        wchar_t ch;
-        int     want;
-        wchar_t lbound;
-} _UTF8State;
-
-static size_t   _UTF8_mbrtowc(wchar_t * __restrict, const char * __restrict,
-                    size_t, _UTF8State * __restrict);
-static size_t   _UTF8_wcrtomb(char * __restrict, wchar_t,
-                    _UTF8State * __restrict);
-
-typedef _UTF8State utf8_mbstate_t;
-#else
-typedef mbstate_t utf8_mbstate_t;
-#endif
-
 // there must be at least 4 bytes free, NOT CHECKED!
 int wctoutf8(char *d, ucs_t s)
 {
@@ -190,10 +168,13 @@ string utf16_to_8(const utf16_t *s)
 
 string utf8_to_mb(const char *s)
 {
+#ifdef __ANDROID__
+    return s;
+#else
     string d;
     ucs_t c;
     int l;
-    utf8_mbstate_t ps;
+    mbstate_t ps;
 
     memset(&ps, 0, sizeof(ps));
     while ((l = utf8towc(&c, s)))
@@ -201,11 +182,7 @@ string utf8_to_mb(const char *s)
         s += l;
 
         char buf[MB_LEN_MAX];
-#ifdef __ANDROID__
-        int r = _UTF8_wcrtomb(buf, c, &ps);
-#else
         int r = wcrtomb(buf, c, &ps);
-#endif
         if (r != -1)
         {
             for (int i = 0; i < r; i++)
@@ -215,22 +192,24 @@ string utf8_to_mb(const char *s)
             d.push_back('?'); // TODO: try to transliterate
     }
     return d;
+#endif
 }
 
 string mb_to_utf8(const char *s)
 {
+#ifdef __ANDROID__
+    // Paranoia; all consumers already use the same code so this won't do
+    // anything new.
+    return utf8_validate(s);
+#else
     string d;
     wchar_t c;
     int l;
-    utf8_mbstate_t ps;
+    mbstate_t ps;
 
     memset(&ps, 0, sizeof(ps));
     // the input is zero-terminated, so third argument doesn't matter
-#ifdef __ANDROID__
-    while ((l = _UTF8_mbrtowc(&c, s, MB_LEN_MAX, &ps)))
-#else
     while ((l = mbrtowc(&c, s, MB_LEN_MAX, &ps)))
-#endif
     {
         if (l > 0)
             s += l;
@@ -246,6 +225,7 @@ string mb_to_utf8(const char *s)
             d.push_back(buf[i]);
     }
     return d;
+#endif
 }
 
 static string utf8_validate(const char *s)
@@ -634,196 +614,3 @@ unsigned short charset_cp437[256] =
     0x2261, 0x00b1, 0x2265, 0x2264, 0x2320, 0x2321, 0x00f7, 0x2248,
     0x00b0, 0x2219, 0x00b7, 0x221a, 0x207f, 0x00b2, 0x25a0, 0x00a0,
 };
-
-#ifdef __ANDROID__
-
-static size_t
-_UTF8_mbrtowc(wchar_t * __restrict pwc, const char * __restrict s, size_t n,
-    _UTF8State * __restrict ps)
-{
-        _UTF8State *us;
-        int ch, i, mask, want;
-        wchar_t lbound, wch;
-
-        us = (_UTF8State *)ps;
-
-        if (us->want < 0 || us->want > 6) {
-                errno = EINVAL;
-                return ((size_t)-1);
-        }
-
-        if (s == NULL) {
-                s = "";
-                n = 1;
-                pwc = NULL;
-        }
-
-        if (n == 0)
-                /* Incomplete multibyte sequence */
-                return ((size_t)-2);
-
-        if (us->want == 0 && ((ch = (unsigned char)*s) & ~0x7f) == 0) {
-                /* Fast path for plain ASCII characters. */
-                if (pwc != NULL)
-                        *pwc = ch;
-                return (ch != '\0' ? 1 : 0);
-        }
-
-        if (us->want == 0) {
-                /*
-                 * Determine the number of octets that make up this character
-                 * from the first octet, and a mask that extracts the
-                 * interesting bits of the first octet. We already know
-                 * the character is at least two bytes long.
-                 *
-                 * We also specify a lower bound for the character code to
-                 * detect redundant, non-"shortest form" encodings. For
-                 * example, the sequence C0 80 is _not_ a legal representation
-                 * of the null character. This enforces a 1-to-1 mapping
-                 * between character codes and their multibyte representations.
-                 */
-                ch = (unsigned char)*s;
-                if ((ch & 0x80) == 0) {
-                        mask = 0x7f;
-                        want = 1;
-                        lbound = 0;
-                } else if ((ch & 0xe0) == 0xc0) {
-                        mask = 0x1f;
-                        want = 2;
-                        lbound = 0x80;
-                } else if ((ch & 0xf0) == 0xe0) {
-                        mask = 0x0f;
-                        want = 3;
-                        lbound = 0x800;
-                } else if ((ch & 0xf8) == 0xf0) {
-                        mask = 0x07;
-                        want = 4;
-                        lbound = 0x10000;
-                } else if ((ch & 0xfc) == 0xf8) {
-                        mask = 0x03;
-                        want = 5;
-                        lbound = 0x200000;
-                } else if ((ch & 0xfe) == 0xfc) {
-                        mask = 0x01;
-                        want = 6;
-                        lbound = 0x4000000;
-                } else {
-                        /*
-                         * Malformed input; input is not UTF-8.
-                         */
-                        errno = EILSEQ;
-                        return ((size_t)-1);
-                }
-        } else {
-                want = us->want;
-                lbound = us->lbound;
-        }
-
-        /*
-         * Decode the octet sequence representing the character in chunks
-         * of 6 bits, most significant first.
-         */
-        if (us->want == 0)
-                wch = (unsigned char)*s++ & mask;
-        else
-                wch = us->ch;
-        for (i = (us->want == 0) ? 1 : 0; (size_t)i < MIN((size_t)want, n); i++) {
-                if ((*s & 0xc0) != 0x80) {
-                        /*
-                         * Malformed input; bad characters in the middle
-                         * of a character.
-                         */
-                        errno = EILSEQ;
-                        return ((size_t)-1);
-                }
-                wch <<= 6;
-                wch |= *s++ & 0x3f;
-        }
-        if (i < want) {
-                /* Incomplete multibyte sequence. */
-                us->want = want - i;
-                us->lbound = lbound;
-                us->ch = wch;
-                return ((size_t)-2);
-        }
-        if (wch < lbound) {
-                /*
-                 * Malformed input; redundant encoding.
-                 */
-                errno = EILSEQ;
-                return ((size_t)-1);
-        }
-        if (pwc != NULL)
-                *pwc = wch;
-        us->want = 0;
-        return (wch == L'\0' ? 0 : want);
-}
-
-static size_t
-_UTF8_wcrtomb(char * __restrict s, wchar_t wc, _UTF8State * __restrict ps)
-{
-        _UTF8State *us;
-        unsigned char lead;
-        int i, len;
-
-        us = (_UTF8State *)ps;
-
-        if (us->want != 0) {
-                errno = EINVAL;
-                return ((size_t)-1);
-        }
-
-        if (s == NULL)
-                /* Reset to initial shift state (no-op) */
-                return (1);
-
-        if ((wc & ~0x7f) == 0) {
-                /* Fast path for plain ASCII characters. */
-                *s = (char)wc;
-                return (1);
-        }
-
-        /*
-         * Determine the number of octets needed to represent this character.
-         * We always output the shortest sequence possible. Also specify the
-         * first few bits of the first octet, which contains the information
-         * about the sequence length.
-         */
-        if ((wc & ~0x7f) == 0) {
-                lead = 0;
-                len = 1;
-        } else if ((wc & ~0x7ff) == 0) {
-                lead = 0xc0;
-                len = 2;
-        } else if ((wc & ~0xffff) == 0) {
-                lead = 0xe0;
-                len = 3;
-        } else if ((wc & ~0x1fffff) == 0) {
-                lead = 0xf0;
-                len = 4;
-        } else if ((wc & ~0x3ffffff) == 0) {
-                lead = 0xf8;
-                len = 5;
-        } else if ((wc & ~0x7fffffff) == 0) {
-                lead = 0xfc;
-                len = 6;
-        } else {
-                errno = EILSEQ;
-                return ((size_t)-1);
-        }
-
-        /*
-         * Output the octets representing the character in chunks
-         * of 6 bits, least significant last. The first octet is
-         * a special case because it contains the sequence length
-         * information.
-         */
-        for (i = len - 1; i > 0; i--) {
-                s[i] = (wc & 0x3f) | 0x80;
-                wc >>= 6;
-        }
-        *s = (wc & 0xff) | lead;
-
-        return (len);
-}
-#endif
