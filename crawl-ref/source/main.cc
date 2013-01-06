@@ -4195,7 +4195,7 @@ static void _move_player(coord_def move)
     if (!in_bounds(targ))
         return;
 
-    const dungeon_feature_type targ_grid = grd(targ);
+    dungeon_feature_type targ_grid = grd(targ);
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
@@ -4218,7 +4218,7 @@ static void _move_player(coord_def move)
         targ_monst = NULL;
     }
 
-    const bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
+    bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
@@ -4295,6 +4295,14 @@ static void _move_player(coord_def move)
 
             attacking = true;
         }
+    }
+
+    if (you.form == TRAN_JELLY && feat_is_closed_door(targ_grid))
+    {
+        mpr("You eat the door.");
+        nuke_wall(targ);
+        targ_pass = true;
+        targ_grid = grd(targ);
     }
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
