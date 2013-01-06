@@ -462,7 +462,7 @@ bool player_in_bat_form()
 
 bool player_can_open_doors()
 {
-    return (you.form != TRAN_BAT);
+    return (you.form != TRAN_BAT && you.form != TRAN_JELLY);
 }
 
 bool player_under_penance(void)
