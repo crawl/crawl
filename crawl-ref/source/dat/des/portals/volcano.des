@@ -1011,8 +1011,8 @@ NSUBST:  s = 2:s / *:.
 KFEAT:   r = bolt trap
 KFEAT:   s = spear trap
 #        The monsters. The patrolling tag seems to keep them from wandering
-#        around, opening the secret doors. It might also be keeping them from
-#        "answering" the alarm traps though.
+#        around. It might also be keeping them from "answering" the alarm
+#        traps though.
 MONS:    patrolling mummy
 MONS:    human skeleton / elf skeleton / dwarf skeleton / merfolk skeleton / \
          tengu skeleton

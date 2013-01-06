@@ -652,9 +652,9 @@ ITEM:    potion of curing / potion of heal wounds / potion of speed / \
          scroll of blinking w:5 / scroll of holy word / \
          scroll of curse armour w:5 / scroll of curse weapon w:5
 # There are three setups than can occur:
-# 10% - part of the loot in the closets, secret doors, bit more loot
-# 45% - doors are secret, traps are nasty, monsters asleep
-# 45% - doors are obvious, traps are softer, monsters are awake
+# 10% - part of the loot in the closets, runed doors, bit more loot
+# 45% - doors are runed, traps are nasty, monsters asleep
+# 45% - doors are plain, traps are softer, monsters are awake
 # TODO: rebalance after secret door removal.
 : if crawl.one_chance_in(10) then
 SUBST:   3 = d
@@ -916,7 +916,7 @@ ENDMAP
 #
 # At the end of the corridor is a second treasure room, this one also
 # containing more flying skeleton alarm traps, plus guardian mummies inside
-# 3x3 rooms with secret doors.
+# 3x3 rooms with runed doors.
 #
 # The intent is that someone with a relatively high stealth skill (at least
 # for early) will be able to sneak past all of the flying skulls and grab the

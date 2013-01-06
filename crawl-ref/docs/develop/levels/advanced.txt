@@ -794,16 +794,11 @@ dungeon cell which they are on:
       Zoo (minivault_9) in dat/mini.des for an example.
 
 * door_description_prefix: A string to prepend to the description of
-      any door the marker is on.  This should be used for doors
-      rather than the feature_description property since it elemintates
-      the need to track if the door is opened or closed, plus it will
-      have no effect on secret doors which have yet to be detected.
+      any door the marker is on.  For a more powerful version, you can
+      use set_feature_name() instead.
 
 * door_description_suffix: A string to append to the description of
-      any door the marker is on.  This should be used for doors
-      rather than the feature_description property since it elemintates
-      the need to track if the door is opened or closed, plus it will
-      have no effect on secret doors which have yet to be detected.
+      any door the marker is on.
 
 * door_open_prompt: If placed on top of a door, the use will be prompted
       before opening the door, with the value of the property used as
@@ -815,8 +810,8 @@ dungeon cell which they are on:
 * door_description_noun: Overwrite the noun used by the door. Replaces, for
       instance, "door" with "doorway".
 
-* door_description_veto: Vetoes the use of "open", "closed" and "detected
-      secret" when applying adjectives to door descriptions.
+* door_description_veto: Vetoes the use of "open", "closed" and "runed"
+      when applying adjectives to door descriptions.
 
 * door_berserk_verb_open: Replace the verb used for opening the door while
       berserk. Should include "%s%s", as it is printed as a formatted string.
@@ -1063,7 +1058,7 @@ P.   Feature Names
 
 These are the feature names usable in MARKER declarations:
 
-unseen, rock_wall, stone_wall, closed_door, metal_wall, secret_door,
+unseen, rock_wall, stone_wall, closed_door, metal_wall, runed_door,
 green_crystal_wall, orcish_idol, wax_wall, permarock_wall,
 silver_statue, granite_statue, orange_crystal_statue,
 statue_reserved_1, statue_reserved_2, lava, deep_water, shallow_water,

@@ -494,9 +494,8 @@ ENDMAP
 #######################################################################
 # Four elements.
 # Pretty hazardous, but the Earth side is always safe to leave through.
-# Players can safely watch at the clouds. Autoexplore will not run into
-# the chambers, players have to search for the secret door. Likewise,
-# all exits are secret except for the safe one.
+# Players can safely watch at the clouds. All exits are runed except for
+# the safe one.
 # This vault is great. I've seen players marvel at it. If need be, we
 # may delegate it to another branch, where less caution measures are
 # demanded. But I'd like to keep it on D:1 (dp).
