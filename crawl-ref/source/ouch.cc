@@ -406,6 +406,11 @@ void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message
 
 void weapon_acid(int acid_strength)
 {
+    // Currently acid_strength is fixed at 5.
+    acid_strength = acid_strength * player_acid_resist_factor() / 100;
+    if (acid_strength <= 0)
+        return;
+
     int hand_thing = -1;
 
     if (!you.melded[EQ_WEAPON])

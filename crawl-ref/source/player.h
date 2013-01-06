@@ -604,7 +604,7 @@ public:
     bool is_unbreathing() const;
     bool is_insubstantial() const;
     bool is_cloud_immune(cloud_type) const;
-    int res_acid() const;
+    int res_acid(bool calc_unid = true) const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;

@@ -271,7 +271,7 @@ public:
     virtual bool is_artificial() const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
-    virtual int res_acid() const = 0;
+    virtual int res_acid(bool calc_unid = true) const = 0;
     virtual int res_fire() const = 0;
     virtual int res_holy_fire() const;
     virtual int res_steam() const = 0;

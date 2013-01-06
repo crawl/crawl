@@ -431,10 +431,11 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return (act->is_player()?
-              you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
-            : act->res_acid() == 3);
+    return
+       act->is_player() && you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
+       || act->res_acid() == 3;
 }
+
 /**
  * Accessor method to the clinging member.
  *
