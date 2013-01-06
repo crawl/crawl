@@ -422,7 +422,8 @@ bool TilesFramework::initialise()
                                          "Navigation", "Navigate around map");
 
 #ifdef TOUCH_UI
-    m_region_tab->push_tab_button(CMD_EXPLORE, TILEG_CMD_EXPLORE);
+    if (tiles.is_using_small_layout())
+        m_region_tab->push_tab_button(CMD_EXPLORE, TILEG_CMD_EXPLORE);
     TAB_ITEM    = m_region_tab->push_tab_region(m_region_inv, TILEG_TAB_ITEM);
     TAB_SPELL   = m_region_tab->push_tab_region(m_region_spl, TILEG_TAB_SPELL);
     TAB_ABILITY = m_region_tab->push_tab_region(m_region_abl, TILEG_TAB_ABILITY);
