@@ -431,10 +431,9 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    // res_acid is immunity only for monsters; players need Jiyva
-    return (act->is_player() ?
+    return (act->is_player()?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
-            : act->res_acid());
+            : act->res_acid() == 3);
 }
 /**
  * Accessor method to the clinging member.
