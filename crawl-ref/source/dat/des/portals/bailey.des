@@ -655,9 +655,8 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # Loot consists of 8 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
-# The secret door does not work well, it will always be open. I also believe
-# that loot is a bit much, but other baileys suffer from that as well... added
-# the warlord in an attempt to make it more even. --dpeg
+# I believe that loot is a bit much, but other baileys suffer from that as
+# well... added the warlord in an attempt to make it more even.  --dpeg
 ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
         potion of magic w:5 / potion of speed w:5 / \

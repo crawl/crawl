@@ -3473,7 +3473,6 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
 }
 
 // Monsters that eat items (currently only jellies) also eat doors.
-// However, they don't realise that secret doors make good eating.
 bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 {
 

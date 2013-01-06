@@ -731,7 +731,7 @@ static void _debug_destroy_doors()
 // a) Destroys all traps on the level.
 // b) Kills all monsters on the level.
 // c) Suppresses monster generation.
-// d) Converts all closed doors and secret doors to floor.
+// d) Converts all closed doors to floor.
 // e) Forgets map.
 // f) Counts number of turns needed to explore the level.
 void debug_test_explore()

@@ -2029,8 +2029,8 @@ MONS:     random, shadow fiend, reaper, soul eater, shadow demon
 MONS:     shadow dragon, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
-# Randomising the secret doors to get into the pyramid.
-# There may be secret doors that lead nowhere.
+# Randomising the doors to get into the pyramid.
+# There may be ones that lead nowhere.
 SHUFFLE:  FfGgHh
 SUBST:    F = =
 SUBST:    f : fff=c, f = =c

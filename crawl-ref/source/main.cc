@@ -4003,7 +4003,7 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            // Once opened, formerly secret doors become normal doors.
+            // Once opened, formerly runed doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
             set_terrain_changed(dc);
             dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
