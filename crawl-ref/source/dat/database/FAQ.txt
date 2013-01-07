@@ -124,7 +124,7 @@ I can't find any downstairs. Am I missing something?
 %%%%
 A:downstairs
 
-A: They may be in a part of the level not reachable from the upstairs you came from. Try going up and coming via a different set of stairs from the level above. Note that most levels feature three downstairs as well as three upstairs, not counting any escape hatches.
+A: They may be in a part of the level that is not reachable from the upstairs you came from. Try going up to the previous level and coming back down from there via a different set of stairs. Note that most levels feature three downstairs as well as three upstairs, not counting any escape hatches.
 
 Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the dungeon overview ('Ctrl-O') to see how deep you've delved into a given branch, or the database ('?/b') for the number of levels for unseen branches.
 %%%%
