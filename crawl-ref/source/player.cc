@@ -6543,17 +6543,14 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (immediate > 0)
         rot_hp(immediate);
 
-    if (rotting < 40)
-    {
-        // Either this, or the actual rotting message should probably
-        // be changed so that they're easier to tell apart. -- bwr
-        mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             rotting > 0 ? "rotting" : "start to rot");
+    // Either this, or the actual rotting message should probably
+    // be changed so that they're easier to tell apart. -- bwr
+    mprf(MSGCH_WARN, "You feel your flesh %s away!",
+         (rotting > 0 || immediate) ? "rotting" : "start to rot");
 
-        rotting += amount;
+    rotting += amount;
 
-        learned_something_new(HINT_YOU_ROTTING);
-    }
+    learned_something_new(HINT_YOU_ROTTING);
 
     if (one_chance_in(4))
         sicken(50 + random2(100));
