@@ -1132,8 +1132,8 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them.
-    if (you.species == SP_FELID && mutat == MUT_CLAWS)
+    // increases for them.  And octopodes have no hands.
+    if ((you.species == SP_FELID || you.species == SP_OCTOPODE) && mutat == MUT_CLAWS)
         return true;
 
     // Merfolk have no feet in the natural form, and we never allow mutations
