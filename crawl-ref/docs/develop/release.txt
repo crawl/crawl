@@ -73,10 +73,9 @@ for those the list begins with step 3.
     from a separate clone instead.
 
     Release is when you may go wild with optimizations -- the binaries will
-    be compiled once, used by thousands of users!  Currently, the
-    recommended settings are LTO and -O2 (with C++'s code size bloat, -O3 is
-    actually slower), although this is likely to change in the future.  If
-    you want to bother with profile-guided stuff, this is the time.
+    be compiled once, used by thousands of users!  You want for example to
+    specify LTO=y. If you want to bother with profile-guided stuff, this is
+    the time.
 
     The makefile targets are "package-windows" and "package-windows-zips"
     for the installer and stand-alone zips respectively.  Unless you're on
@@ -84,7 +83,9 @@ for those the list begins with step 3.
     make LTO=y CROSSHOST=i686-w64-mingw32 package-windows
 
     Some final testing never hurts; we're supposed to support win2k so test
-    there as well.
+    there as well. You need at the very least to test old Windows, new
+    Windows, installer and zipped, tiles and console. A mandatory test is:
+    start a new game, kill a monster, save, load, die.
 
 8.  Push the tag
     Until the moment you push it to the official repository, you can delete
