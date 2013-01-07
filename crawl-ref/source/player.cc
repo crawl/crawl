@@ -6361,7 +6361,7 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    if (temp && (petrified() || form == TRAN_STATUE))
+    if (temp && (petrified() || form == TRAN_STATUE || form == TRAN_WISP))
         return 3;
 
     if (you.mutation[MUT_FOUL_STENCH])
