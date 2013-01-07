@@ -1517,7 +1517,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_LAVA_ORC, 'o', RED, "lava orc",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     mrd(MR_RES_FIRE, 3),
     600, 15, MONS_ORC, MONS_LAVA_ORC, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
