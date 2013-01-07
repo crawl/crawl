@@ -30,6 +30,7 @@
 #include "species.h"
 #include "state.h"
 #include "stuff.h"
+#include "version.h"
 
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
@@ -160,13 +161,11 @@ static bool _is_species_valid_choice(species_type species)
     if (species >= SP_ELF) // These are all invalid.
         return false;
 
-#if 0
-    if (species == SP_MY_NEW_TRUNK_ONLY_EXPERIMENT
+    if (species == SP_LAVA_ORC
         && Version::ReleaseType() != VER_ALPHA)
     {
         return false;
     }
-#endif
 
     // Non-base draconians cannot be selected either.
     if (species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN)
