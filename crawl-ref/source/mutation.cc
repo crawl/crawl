@@ -25,6 +25,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -45,7 +46,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
-#include "hints.h"
+#include "viewchar.h"
 #include "xom.h"
 
 static int _body_covered();
@@ -844,17 +845,19 @@ static void _display_temperature()
         std::ostringstream ostr;
 
         std::string colourname = temperature_string(t);
+#define F(x) stringize_glyph(dchar_glyph(DCHAR_FRAME_##x))
         if (t == TEMP_MAX)
-            text = "  ╔═MAX══╗";
+            text = "  " + F(TL) + F(HORIZ) + "MAX" + F(HORIZ) + F(HORIZ) + F(TR);
         else if (t == TEMP_MIN)
-            text = "  ╚══MIN═╝";
+            text = "  " + F(BL) + F(HORIZ) + F(HORIZ) + "MIN" + F(HORIZ) + F(BR);
         else if (temperature() < t)
-            text = "  ║      ║";
+            text = "  " + F(VERT) + "      " + F(VERT);
         else if (temperature() == t)
-            text = "  ║~~~~~~║";
+            text = "  " + F(VERT) + "~~~~~~" + F(VERT);
         else
-            text = "  ║######║";
+            text = "  " + F(VERT) + "######" + F(VERT);
         text += "    ";
+#undef F
 
         ostr << '<' << colourname << '>' << text
              << "</" << colourname << '>';
