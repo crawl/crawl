@@ -346,6 +346,7 @@ enum beam_type                  // bolt::flavour
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
+    BEAM_MALMUTATE,
     BEAM_ENSLAVE,
     BEAM_BANISH,
     BEAM_DEGENERATE,
@@ -394,7 +395,6 @@ enum beam_type                  // bolt::flavour
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
     BEAM_DEVOUR_FOOD,             // Pseudo-beam for harpies' devouring food.
-    BEAM_MALMUTATE,
 
     NUM_BEAMS
 };
