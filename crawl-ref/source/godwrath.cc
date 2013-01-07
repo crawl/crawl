@@ -1316,8 +1316,6 @@ static bool _beogh_idol_revenge()
             revenge = _get_beogh_speech("idol follower").c_str();
         else if (you.species == SP_HILL_ORC)
             revenge = _get_beogh_speech("idol hill orc").c_str();
-        else if (you.species == SP_LAVA_ORC)
-            revenge = _get_beogh_speech("idol lava orc").c_str();
         else
             revenge = _get_beogh_speech("idol other").c_str();
 
