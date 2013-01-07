@@ -253,12 +253,16 @@ brand_type player::damage_brand(int)
                 ret = SPWPN_VAMPIRICISM;
             break;
 
+        case TRAN_JELLY:
+            ret = SPWPN_ACID;
+            break;
+
         default:
             break;
         }
     }
 
-    return (static_cast<brand_type>(ret));
+    return ret;
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.

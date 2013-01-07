@@ -140,6 +140,7 @@ equipment_type item_equip_slot(const item_def &item);
 
 void item_was_lost(const item_def &item);
 void item_was_destroyed(const item_def &item, int cause = -1);
+void corrode_item(item_def &item, actor *holder);
 
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted,
