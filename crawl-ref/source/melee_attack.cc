@@ -3412,9 +3412,38 @@ void melee_attack::attacker_sustain_passive_damage()
     if (defender->type == MONS_PROGRAM_BUG)
         return;
 
-    // FIXME: monsters should suffer from attacking jellies
-    if (attacker->is_player() && mons_class_flag(defender->type, M_ACID_SPLASH))
-        weapon_acid(5);
+    if (mons_class_flag(defender->type, M_ACID_SPLASH)
+        || defender->is_player() && you.form == TRAN_JELLY)
+    {
+        int rA = attacker->res_acid();
+        if (rA < 3)
+        {
+            int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, rA, 5);
+            item_def *weap = weapon;
+
+            if (!weap)
+                weap = attacker->slot_item(EQ_GLOVES);
+
+            if (weap)
+            {
+                if (x_chance_in_y(acid_strength + 1, 20))
+                    corrode_item(*weap, attacker);
+            }
+            else if (attacker->is_player())
+            {
+                mprf("Your %s burn!", you.hand_name(true).c_str());
+                ouch(roll_dice(1, acid_strength), defender->mindex(),
+                     KILLED_BY_ACID);
+            }
+            else
+            {
+                simple_monster_message(attacker->as_monster(),
+                                       " is burned by acid!");
+                attacker->hurt(defender, roll_dice(1, acid_strength),
+                    BEAM_ACID, false);
+            }
+        }
+    }
 }
 
 int melee_attack::staff_damage(skill_type skill)
