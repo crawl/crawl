@@ -721,7 +721,10 @@ static bool _level_up_check(skill_type sk, bool simu)
     {
         you.training[sk] = 0;
         if (!simu)
+        {
             you.train[sk] = 0;
+            you.train_alt[sk] = 0;
+        }
         return true;
     }
 
