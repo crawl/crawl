@@ -454,6 +454,7 @@ void wizard_set_skill_level(skill_type skill)
     if (amount == 27)
     {
         you.train[skill] = 0;
+        you.train_alt[skill] = 0;
         reset_training();
         check_selected_skills();
     }
