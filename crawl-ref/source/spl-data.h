@@ -2972,6 +2972,19 @@ struct spell_desc
 },
 
 {
+    SPELL_FORCE_LANCE, "Force Lance",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     2,
+     50,
+     3, 3,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

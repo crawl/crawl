@@ -296,6 +296,11 @@ Flight spell
 
 This spell grants to the caster the ability to fly through the air.
 %%%%
+Force Lance spell
+
+This spell fires a shaft of concussive force which can send its target hurtling
+backwards if the impact is not nullified by their defenses.
+%%%%
 Freeze spell
 
 This spell freezes a creature. This may temporarily slow the metabolism of a
