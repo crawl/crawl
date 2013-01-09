@@ -1145,8 +1145,10 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             _update_abyss_terrain(p, abyss_genlevel_mask, morph);
             abyss_sample_queue.pop();
         }
+#ifdef DEBUG_ABYSS
         if (ii)
             dprf("Examined %d features.", ii);
+#endif
     }
 
     int ii = 0;
