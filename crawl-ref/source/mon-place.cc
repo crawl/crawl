@@ -790,6 +790,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
                                            bool super_ood,
                                            bool want_corpse_capable)
 {
+    // Sometimes the caller wants an extra hard monster.
     int lev = place.absdepth();
 
     if (super_ood)
@@ -798,27 +799,39 @@ monster_type pick_random_monster_for_place(const level_id &place,
     if (moderate_ood)
         lev += 5;
 
-    int tries = 100;
-    monster_type chosen = MONS_NO_MONSTER;
+    // If the caller supplied a zombie_monster argument, use it to figure out
+    // whether or not it wants a zombie, and if so, what size.
+    const bool wanted_a_zombie = zombie_monster != MONS_NO_MONSTER
+                                 && mons_class_is_zombified(zombie_monster);
     const zombie_size_type wanted_zombie_size =
-        (zombie_monster != MONS_NO_MONSTER
-         && mons_class_is_zombified(zombie_monster))?
-        zombie_class_size(zombie_monster) : Z_NOZOMBIE;
+         wanted_a_zombie ? zombie_class_size(zombie_monster) : Z_NOZOMBIE;
 
-    do
-        chosen = _pick_random_monster(place, lev, lev, NULL);
-    while (!invalid_monster_type(chosen)
-           && wanted_zombie_size != Z_NOZOMBIE
-           && !mons_class_flag(chosen, M_NO_POLY_TO)
-           && mons_zombie_size(chosen) != wanted_zombie_size
-           && (!want_corpse_capable
-               || mons_class_can_leave_corpse(mons_species(chosen)))
-           && --tries > 0);
+    // Try 100 times to generate an acceptable monster, then give
+    // up and return MONS_NO_MONSTER and let the caller deal with it.
+    for (int tries=0; tries < 100; ++tries)
+    {
+        monster_type chosen = _pick_random_monster(place, lev, lev, NULL);
 
-    if (!tries)
-        chosen = MONS_NO_MONSTER;
+        // If _pick_random_monster gave us something invalid give up and let
+        // the caller deal with it.
+        if (invalid_monster_type(chosen))
+            return chosen;
 
-    return chosen;
+        // Reject things that can't leave corpses.
+        if (want_corpse_capable && !mons_class_can_leave_corpse(mons_species(chosen)))
+            continue;
+
+        // Now, if we didn't want a zombie, we are done.
+        if (!wanted_a_zombie)
+            return chosen;
+
+        // Otherwise make sure our zombie is the right size.
+        if (mons_zombie_size(chosen) == wanted_zombie_size)
+            return chosen;
+    }
+
+    // :(. We failed to find a monster. Sorry.
+    return MONS_NO_MONSTER;
 }
 
 // A short function to check the results of near_stairs().
