@@ -164,18 +164,21 @@ static void _write_abyssal_features()
     abyssal_features.clear();
 }
 
+static int _abyssal_depth_factor()
+{
+    const bool lugonu_favoured =
+        (you.religion == GOD_LUGONU && !player_under_penance()
+         && you.piety >= piety_breakpoint(4));
+    const double depth = you.depth + lugonu_favoured;
+    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
+}
+
 // Returns the roll to use to check if we want to create an abyssal rune.
 static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
-    const bool lugonu_favoured =
-        (you.religion == GOD_LUGONU && !player_under_penance()
-         && you.piety >= piety_breakpoint(4));
-
-    const double depth = you.depth + lugonu_favoured;
-
-    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
+    return _abyssal_depth_factor();
 }
 
 static void _abyss_erase_stairs_from(const vault_placement *vp)
@@ -410,7 +413,10 @@ void push_features_to_abyss()
 // square is 1 in N.
 static int _abyss_exit_chance()
 {
-    int exit_chance = (you.runes[RUNE_ABYSSAL] ? 1250 : 7500);
+    if (you.runes[RUNE_ABYSSAL])
+        return 7500;
+    int depth_mod = _abyssal_depth_factor();
+    int exit_chance = 1000 + depth_mod * depth_mod;
     if (crawl_state.game_is_sprint())
         exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
     return exit_chance;
