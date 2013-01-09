@@ -799,27 +799,31 @@ monster_type pick_random_monster_for_place(const level_id &place,
     if (moderate_ood)
         lev += 5;
 
-    // If the caller supplied a zombie_monster argument, use it to figure out
-    // whether or not it wants a zombie, and if so, what size.
+    // If the caller supplied a zombie_monster argument, use it to
+    // figure out whether or not it wants a zombie, and if so, what
+    // size.
     const bool wanted_a_zombie = zombie_monster != MONS_NO_MONSTER
                                  && mons_class_is_zombified(zombie_monster);
     const zombie_size_type wanted_zombie_size =
-         wanted_a_zombie ? zombie_class_size(zombie_monster) : Z_NOZOMBIE;
+        wanted_a_zombie ? zombie_class_size(zombie_monster) : Z_NOZOMBIE;
 
-    // Try 100 times to generate an acceptable monster, then give
-    // up and return MONS_NO_MONSTER and let the caller deal with it.
-    for (int tries=0; tries < 100; ++tries)
+    // Try 100 times to generate an acceptable monster, then give up and
+    // return MONS_NO_MONSTER and let the caller deal with it.
+    for (int tries = 0; tries < 100; ++tries)
     {
         monster_type chosen = _pick_random_monster(place, lev, lev, NULL);
 
-        // If _pick_random_monster gave us something invalid give up and let
-        // the caller deal with it.
+        // If _pick_random_monster() gave us something invalid, give up
+        // and let the caller deal with it.
         if (invalid_monster_type(chosen))
             return chosen;
 
         // Reject things that can't leave corpses.
-        if (want_corpse_capable && !mons_class_can_leave_corpse(mons_species(chosen)))
+        if (want_corpse_capable
+            && !mons_class_can_leave_corpse(mons_species(chosen)))
+        {
             continue;
+        }
 
         // Now, if we didn't want a zombie, we are done.
         if (!wanted_a_zombie)
@@ -830,7 +834,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
             return chosen;
     }
 
-    // :(. We failed to find a monster. Sorry.
+    // :( We failed to find a monster. Sorry.
     return MONS_NO_MONSTER;
 }
 
