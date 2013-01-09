@@ -226,8 +226,7 @@ ENDMAP
 # Other Swamp vaults
 ###############################################################################
 NAME:    hangedman_swamp_phenomena
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   1 = insubstantial wisp
 KMONS:   2 = ball lightning
@@ -235,55 +234,55 @@ KMONS:   3 = vapour
 KFEAT:   t = mangrove
 KFEAT:   123 = deep_water
 SHUFFLE: })
-SUBST:   T = w:3 t, W = W:3 w, . = .:3 W, \
-         } = }>, ) = <)>
+SUBST:   T = w:3 t, M = ~:4 t, W = W:3 w, . = .:3 W, } = }:20 >, ) = ):25 <>
+KPROP:   ~ = no_rtele_into
 MAP
-  Ttttttt  @tt{@
- Tttttttttt .ttT
-Tttt3tww.tWT.wtt
-Ttt211w}wWt.wwwtt
-ttt11wW.W.Ww11ttt
-ttwww.tWw)w112ttT
-Tttw.TWt.wwt3tttT
- Ttt. tttttttttT
+  Mtttttt  @tt{@
+ Mttttttttt..ttM
+Mttt3twwwtWT.wtt
+Mtt211w}wwt.wwwtt
+ttt11w.w.w.w11ttt
+ttwww.tWw)w112ttM
+Mttw.TWt.wwt3tttM
+ Mtt..tttttttttM
    tt@  ttttttt
 ENDMAP
 
 NAME:    hangedman_swamp_wriggling
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 MONS:    swamp worm, giant leech, spiny worm
 KFEAT:   t = mangrove
 SHUFFLE: })
-SUBST:   } = }>, ) = <)>
+SUBST:   } = }>, ) = <)>, } = }:20 >, ) = ):25 <>, 4 = 23
 MAP
       @tttttt@
-     Wttw.wwtt{
+     WttwWwwtt{
  ...tttW2..w1tt
- tw1tt3wWt.Wwtt
+ tw1tt4wWt.Wwtt
 ttW.tt}3)tW.1tt
-t1.WtW2wtt.Wtt
+t1.WtW4wtt.Wtt
 tww..2Wwtt1Wt
-tt1w.wwtt....
+tt1wWwwtt....
  ttttttt@
 ENDMAP
 
 NAME:    hangedman_swamp_ravenous
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 MONS:    necrophage / nothing w:4
 MONS:    rotting hulk / necrophage w:4
-MONS:    ghoul
+MONS:    ghoul w:19 / rotting hulk w:1
 KFEAT:   jlt = mangrove
 KFEAT:   % = shallow_water / .
+KFEAT:   ~ = deep_water
 SHUFFLE: jJ / lL, })
-SUBST:   JLT = w:4 t, } = }>, ) = <)>
+SUBST:   JLT = w:4 t, M = ~:4 t, } = }:20 >, ) = ):25 <>
+KPROP:   ~ = no_rtele_into
 : dgn.delayed_decay(_G, '%', 'any corpse')
 MAP
- TTtttttt{
-TtttWTWttt@
+ MMtttttt{
+MtttWTWttt@
 tt1W2w2W1tt
 t1WlTWt.W1t
 @%wlL}jJ.%t
@@ -291,31 +290,92 @@ t1WlTWt.W1t
 t%.lL)jJw%@
 t1W.tWTt.1t
 tt1W2w2W1tt
-TtttWTWtttT
- TTtttttTT
+MtttWTWtttM
+ MMtttttMM
 ENDMAP
 
 NAME:    hangedman_swamp_muck
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
-MONS:    slime creature, giant amoeba, brown ooze
+KMONS:   1 = slime creature
+KMONS:   2 = giant amoeba
+KMONS:   3 = brown ooze
 KFEAT:   t = mangrove
 KFEAT:   12 = shallow_water
+KFEAT:   ~ = deep_water
 SHUFFLE: })
-SUBST:   T = w:4 t, } = }>, ) = <)>
+SUBST:   T = w:4 t, M = ~:4 t, } = }:20 >, ) = ):25 <>
+KPROP:   ~ = no_rtele_into
 MAP
- TtttttttttT
-TttW3}2)3wttT
-Ttw.tt1tt.WtT
-Ttt..wtt..ttT
-Tttt.1t1.tttt
-Ttw.1wtw1.WTt
-TtWtttwtttWtt
-Tt2.tT.Tt.2tT
-Ttt..twW..ttT
-{Ttt.www.ttT
+ MtttttttttM
+MttW3}2)3wttM
+Mtw.tt1tt.WtM
+Mtt..wtt..ttM
+Mttt.1t1.tttt
+Mtw.1wtw1.WTt
+MtWtttwtttWtt
+Mt2.tT.Tt.2tM
+Ttt..twW..ttM
+{Ttt.www.ttM
  @WWwtTtwW@
+ENDMAP
+
+NAME:    hangedman_swamp_dais
+TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling
+DEPTH:   Swamp, Zot:1-4
+KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
+KFEAT:   aA = stone_arch
+KFEAT:   B = shallow_water
+KFEAT:   M = mangrove
+KFEAT:   Z = known zot trap
+: if you.branch() == "Swamp" then
+MONS:    swamp drake, hydra, swamp dragon
+KMONS:   A = swamp dragon
+KMONS:   B = green draconian
+SUBST:   x = M
+NSUBST:  1 = 1:2 / 1:3 / * = 1:80 23
+: else
+KMONS:   1 = green draconian
+KMONS:   a = death drake
+KMONS:   A = tentacled monstrosity / green death
+# No burning down the mangroves or making them look burnt.
+KMONS:   b = green draconian caller w:15 / yellow draconian caller w:1 / \
+             white draconian caller w:1 / grey draconian caller w:1 / \
+             pale draconian caller w:1 / purple draconian caller w:1
+KMONS:   B = green draconian zealot w:15 / yellow draconian zealot w:1 / \
+             white draconian zealot w:1 / grey draconian zealot w:1 / \
+             pale draconian zealot w:1 / purple draconian zealot w:1
+KMONS:   % = rotting devil / orange demon
+KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 / eight-headed hydra w:5
+KMONS:   | = large abomination / tentacled monstrosity w:5
+SHUFFLE: AB%| / abd*
+: end
+SUBST:   < : <:1 .:9
+NSUBST:  < = 1:{ / 1:}
+SHUFFLE: {} / {[ / {[ / }] / }]
+MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", pow_max = 2, \
+                 delay_min = 100, delay_max = 150, size = 1, walk_dist = 1 }
+MAP
+         xxxxx
+        @xWxWxxxx
+       @@......<xx
+    xxxxxxxxxx..Zxx
+   xxxxxcxxxx.x1.<x
+  xxxWWW.WWW.xGx..x
+ xxxW1..W...W.x.x.xx
+xxxW...MwM...W.xx.Wx
+xxW1.M..M..M..Wxx.xx
+xxW...M.w.M...Wxx.Wx
+xxW.M..w|w..M.Wxx.xx
+xc.WwMw|A|wMwW.cx@@
+xxW.M.%w|w..M.Wxx@
+xxW...M%w.M...Wxx
+xxW..M..M..M.1Wxx
+xxxB...MwM...Wxxx
+ xxxB...W..1Wxxx
+  xxxWWW.WWWxxx
+   xxxxxcxxxxx
+    xxxxxxxxx
 ENDMAP
 
 ###############################################################################

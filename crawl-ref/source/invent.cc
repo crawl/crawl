@@ -179,7 +179,7 @@ void InvEntry::select(int qty)
 
 string InvEntry::get_filter_text() const
 {
-    return filtering_item_prefix(*item) + " " + get_text();
+    return item_prefix(*item) + " " + get_text();
 }
 
 string InvEntry::get_text(bool need_cursor) const
@@ -915,7 +915,7 @@ vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key(int key)
 {
-    if ( key == CONTROL('W') )
+    if (key == CONTROL('W'))
     {
         Options.show_inventory_weights = !Options.show_inventory_weights;
         draw_menu();
@@ -1203,8 +1203,8 @@ static bool _item_class_selected(const item_def &i, int selector)
             return true;
 
         for (int eq = 0; eq < NUM_EQUIP; eq++)
-             if (you.equip[eq] == i.link)
-                 return true;
+            if (you.equip[eq] == i.link)
+                return true;
 
         return false;
     }
@@ -1565,7 +1565,7 @@ static bool _has_warning_inscription(const item_def& item,
             else if (oper == OPER_ZAP && r[i+1] == 'z') // for the 0.3.4. keys
                 return true;
             else if (oper == OPER_EVOKE
-                     && (r[i+1] == 'V' || tolower(r[i+1]) == 'z'))
+                     && (r[i+1] == 'V' || toalower(r[i+1]) == 'z'))
             {
                 return true;
             }

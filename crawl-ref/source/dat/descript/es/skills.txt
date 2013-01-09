@@ -143,6 +143,12 @@ proyectiles (mágicos y no mágicos) con el escudo que lleves (que también pued
 ser mágico o divino). Algunos ataques, como los virotes de penetración, no
 pueden ser bloqueados de ningún modo.
 %%%%
+Traps
+
+Un personaje que se haya entrenado con trampas será más observador con respecto
+al entorno y se dará cuenta de las trampas rápidamente, lo que le hará más
+veloz a la hora de desactivarlas.
+%%%%
 Unarmed Combat
 
 Estar entrenado en Combate sin Armas incrementa la precisión, el daño y la

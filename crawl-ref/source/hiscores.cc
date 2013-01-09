@@ -1383,28 +1383,42 @@ void scorefile_entry::init(time_t dt)
      */
 
     // do points first.
-    uint64_t pt = min(you.gold, 1000000); // sprint games could overflow a 32 bit value
-    pt += _award_modified_experience();
+    points = 0;
+    bool base_score = true;
 
-    num_runes      = runes_in_pack();
-    num_diff_runes = num_runes;
+    dlua.pushglobal("dgn.persist.calc_score");
+    lua_pushboolean(dlua, death_type == KILLED_BY_WINNING);
+    if (dlua.callfn(NULL, 1, 2))
+        dlua.fnreturns(">db", &points, &base_score);
 
-    // There's no point in rewarding lugging artefacts.  Thus, no points
-    // for the value of the inventory. -- 1KB
-    if (death_type == KILLED_BY_WINNING)
+    // If calc_score didn't exist, or returned true as its second value,
+    // use the default formula.
+    if (base_score)
     {
-        pt += 250000; // the Orb
-        pt += num_runes * 2000 + 4000;
-        pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
-            / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
-    }
-    pt += num_runes * 10000;
-    pt += num_runes * (num_runes + 2) * 1000;
+        // sprint games could overflow a 32 bit value
+        uint64_t pt = points + min(you.gold, 1000000);
+        pt += _award_modified_experience();
 
-    // Players will have a hard time getting 1/10 of this (see XP cap):
-    if (pt > 99999999)
-        pt = 99999999;
-    points = pt;
+        num_runes      = runes_in_pack();
+        num_diff_runes = num_runes;
+
+        // There's no point in rewarding lugging artefacts.  Thus, no points
+        // for the value of the inventory. -- 1KB
+        if (death_type == KILLED_BY_WINNING)
+        {
+            pt += 250000; // the Orb
+            pt += num_runes * 2000 + 4000;
+            pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
+                / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
+        }
+        pt += num_runes * 10000;
+        pt += num_runes * (num_runes + 2) * 1000;
+
+        // Players will have a hard time getting 1/10 of this (see XP cap):
+        if (pt > 99999999)
+            pt = 99999999;
+        points = pt;
+    }
 
     race = you.species;
     job  = you.char_class;
@@ -1438,13 +1452,13 @@ void scorefile_entry::init(time_t dt)
     const int statuses[] = {
         DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
         STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR, STATUS_BURDEN,
-        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_JELLY_PRAYER,
+        STATUS_MISSILES, DUR_JELLY_PRAYER,
         STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONESKIN, DUR_TELEPORT,
         DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE, DUR_INVIS, DUR_CONF,
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK, STATUS_AIRBORNE,
         DUR_POISONING, STATUS_NET, STATUS_SPEED, DUR_AFRAID, DUR_MIRROR_DAMAGE,
         DUR_SCRYING, STATUS_FIREBALL, DUR_SHROUD_OF_GOLUBRIA,
-        STATUS_CONSTRICTED, STATUS_AUGMENTED, STATUS_SILENCE,
+        STATUS_CONSTRICTED, STATUS_AUGMENTED, STATUS_SILENCE, DUR_DISJUNCTION,
     };
 
     status_info inf;
@@ -1453,9 +1467,9 @@ void scorefile_entry::init(time_t dt)
         fill_status_info(statuses[i], &inf);
         if (!inf.short_text.empty())
         {
-             if (!status_effects.empty())
-                 status_effects += ",";
-             status_effects += inf.short_text;
+            if (!status_effects.empty())
+                status_effects += ",";
+            status_effects += inf.short_text;
         }
     }
 
@@ -1686,7 +1700,8 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
                   points, name.c_str(),
                   skill_title(best_skill, best_skill_lvl,
-                               race, str, dex, god).c_str(), lvl);
+                               race, str, dex, god, piety).c_str(),
+                  lvl);
         desc = buf;
     }
     else

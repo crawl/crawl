@@ -129,7 +129,7 @@ public:
     SkillMenu();
 
     void clear_flag(int flag);
-    void init(int flag, int exp);
+    void init(int flag);
     void clear();
     bool is_set(int flag) const;
     void set_flag(int flag);
@@ -169,7 +169,6 @@ private:
     FormattedTextItem* m_help_button;
 
     skill_state m_skill_backup;
-    int m_exp;
 
     SkillMenuEntry* find_entry(skill_type sk);
     void init_flags();

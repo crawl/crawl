@@ -86,9 +86,9 @@ static string __try_exact_string(const vector<string> &prefixes,
         else if (str_to_branch(prefixes[i]) != NUM_BRANCHES
                  || prefixes[i] == "Dungeon")
         {
-           if (ignore_branch)
-               continue;
-           branch = true;
+            if (ignore_branch)
+                continue;
+            branch = true;
         }
         prefix += prefixes[i];
         prefix += " ";
@@ -409,13 +409,13 @@ bool mons_speaks(monster* mons)
 
     if (!force_speak)
     {
-       // Invisible monster tries to remain unnoticed.  Unless they're
-       // confused, since then they're too confused to realise they
-       // should stay silent, but only if the player can see them, so as
-       // to not have to deal with cases of speaking monsters which the
-       // player can't see.
-       if (unseen && !confused)
-           return false;
+        // Invisible monster tries to remain unnoticed.  Unless they're
+        // confused, since then they're too confused to realise they
+        // should stay silent, but only if the player can see them, so as
+        // to not have to deal with cases of speaking monsters which the
+        // player can't see.
+        if (unseen && !confused)
+            return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
         // unless they're normally silent (S_SILENT).  Use

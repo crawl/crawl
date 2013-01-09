@@ -19,15 +19,6 @@ class reader;
 class writer;
 class StashMenu;
 
-enum STASH_TRACK_MODES
-{
-    STM_NONE,             // Stashes are not tracked
-    STM_EXPLICIT,         // Only explicitly marked stashes are tracked
-    STM_DROPPED,          // Dropped items and explicitly marked stashes are
-                          // tracked
-    STM_ALL,              // All seen items are tracked
-};
-
 struct stash_search_result;
 class Stash
 {
@@ -322,33 +313,25 @@ public:
 
     ShopInfo &get_shop(const coord_def& c)
     {
-      return get_current_level().get_shop(c);
+        return get_current_level().get_shop(c);
     }
 
     void remove_level(const level_id &which = level_id::current());
 
-    enum stash_update_mode
-    {
-        ST_PASSIVE,             // Maintain existing stashes only.
-        ST_AGGRESSIVE,          // Create stashes for each square containing
-                                // objects, even if those squares were not
-                                // previously marked as stashes.
-    };
-
     void update_corpses();
     void update_identification();
 
-    void update_visible_stashes(StashTracker::stash_update_mode = ST_PASSIVE);
+    void update_visible_stashes();
 
     // Update stash at (x,y) on current level, defaulting to player's current
     // location if no parameters are supplied, return true if a stash was
     // updated.
     bool update_stash(const coord_def& c);
-    void  move_stash(const coord_def& from, const coord_def& to);
+    void move_stash(const coord_def& from, const coord_def& to);
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied.
-    void add_stash(int x = -1, int y = -1, bool verbose = false);
+    void add_stash(int x = -1, int y = -1);
 
     // Mark square (x,y) as not stashworthy. The player's current location is
     // used if no parameters are supplied.

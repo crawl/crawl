@@ -16,13 +16,6 @@ amulet of conservation
 Este amuleto protege de la destrucción algunas de las pertenencias de su
 portador, aunque no de forma infalible.
 %%%%
-amulet of controlled flight
-
-Si el portador consigue comenzar a levitar de alguna forma, este amuleto le
-permitirá ejercer cierto control sobre el movimiento resultante. Por ejemplo,
-podrá descender escaleras, y tomar objetos del suelo. Todo ello, sin perder
-ninguna de las ventajas de levitar.
-%%%%
 amulet of guardian spirit
 
 Este amuleto hace que su portador sea un poco menos vulnerable al daño externo.
@@ -640,10 +633,6 @@ hand axe
 
 Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser arrojada.
 %%%%
-helm
-
-Una protección metálica para la cabeza.
-%%%%
 helmet
 
 Una protección metálica para la cabeza.
@@ -929,10 +918,6 @@ potion of invisibility
 
 Una poción que te oculta de la vista de los demás.
 %%%%
-potion of levitation
-
-Una poción que confiere gran flotabilidad a quien la consuma.
-%%%%
 potion of magic
 
 Una valiosa poción que infunde energía mágica.
@@ -1040,11 +1025,6 @@ Este poderoso anillo puede ser activado para ocultar a su portador de la vista
 de los demás, pero incrementa la velocidad de su metabolismo en gran medida
 mientras lo hace.
 %%%%
-ring of levitation
-
-Este anillo permite que su portador levite sobre el suelo. El poder de este
-anillo no puede ser evocado si ya se está levitando.
-%%%%
 ring of life protection
 
 Este anillo bendito protege la fuerza vital de su portador de energías
@@ -1105,6 +1085,33 @@ ring of sustenance
 
 Este anillo proporciona sustento a su portador, de tal forma que necesita comer
 con menos frecuencia.
+%%%%
+ring of teleport control
+
+Este anillo le permite a su portador controlar el destino de cualquier
+teletransportación, aunque no con perfecta precisión. Intentar teletranspotarse
+a la posición de un objeto sólido, resultará en una teletransportación a una
+posición completamente aleatoria. También debes tener presente, que las
+teletransportaciones controladas te contaminarán con energías mágicas
+resisduales.
+%%%%
+ring of teleportation
+
+Este anillo ocasionalmente activará su poder para teletranspotar a su portador
+a una posición aleatoria, y puede ser evocado deliberadamente para conseguir el
+mismo efecto.
+%%%%
+ring of wizardry
+
+Este anillo incrementa la habilidad de su portador para usar hechizos mágicos.
+%%%%
+robe
+
+Una prenda holgada, con mangas anchas y hecha de un tejido ligero. Las túnicas
+se pueden ajustar fácilmente a cualquier humanoide, sea cual sea su tamaño.
+Esta vestimenta ofrece poca protección ante el daño físico, pero no obstaculiza
+la capacidad para evadir ataques, o la adecuada realización de los gestos
+taumatúrgicos.
 %%%%
 scythe
 

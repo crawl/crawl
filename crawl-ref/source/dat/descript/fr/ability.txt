@@ -120,18 +120,6 @@ Turn Visible
 
 Redevenir visible à nouveau.
 %%%%
-Evoke Levitation
-
-Commencer à léviter. Durant la lévitation, vous pouvez traverser en toute
-sécurité les eaux profondes et les obstacles similaires. soyez conscient que la
-lévitation peut s'achever à un moment inopportun et vous faire tomber vers
-votre mort. alors que vous lévitez, vous ne pouvez pas interagir avec les
-objets au sol ou les ramasser.
-%%%%
-Stop Levitating
-
-Arrête la lévitation.
-%%%%
 End Transformation
 
 Revenir à votre forme normale, avec un léger retard.

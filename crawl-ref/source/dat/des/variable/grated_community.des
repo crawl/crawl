@@ -16,13 +16,25 @@ ORIENT: north
 DEPTH:  D:18-26
 MONS:   patrolling vault guard, patrolling war dog, patrolling centaur warrior
 MONS:   generate_awake slave, deep dwarf artificer
+  : if you.absdepth() < 23 then
+KMONS:  a = patrolling two-headed ogre
+  : else
 KMONS:  a = patrolling two-headed ogre / patrolling stone giant
+  : end
 KMONS:  b = patrolling ettin
 KMONS:  k = patrolling vampire mage / patrolling boggart
 KMONS:  d = orc warlord
-KMONS:  e = vampire / yaktaur / frost giant / fire giant /\
-            ettin / orc / war dog / draconian / titan / iron troll /\
+  : if you.absdepth() < 23 then
+KMONS:  e = vampire / yaktaur /\
+            ettin / orc / war dog / draconian / iron troll /\
             deep troll / cyclops / deep dwarf / centaur / warg / wizard
+KMONS:  i = frost giant / fire giant
+  : else
+KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
+            ettin / orc / war dog / draconian / iron troll /\
+            deep troll / cyclops / deep dwarf / centaur / warg / wizard
+KMONS:  i = titan
+  : end
 KMONS:  P = plant
 KMONS:  h = generate_awake human / generate_awake elf / generate_awake gnome
 : dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 gnome chunk')
@@ -31,14 +43,14 @@ FTILE:  =E79 = floor_grass
 COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
-: kitem("$ = q:" .. crawl.random_range(50, 200) .. " gold")
+: kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
 KITEM:  % = hammer
-KITEM:  * = animal skin, q:2 sausage
+KITEM:  * = animal skin, q:2 sausage, any good_item
 KITEM:  ' = ident:type wand of disintegration, ident:type scroll of teleportation
 MARKER: + = lua:restrict_door()
 MARKER: # = lua:fog_machine { cloud_type = "flame", \
                 pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1 }
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
 KFEAT:  g = iron_grate
 SUBST:  9 = 8
 KFEAT:  8 = granite_statue
@@ -58,7 +70,7 @@ KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
 :        type:Legendary suffix:Smithy count:10 greed:40 ;\
 :        damaged plate armour ego:none | damaged chain mail ego:none |\
 :        damaged long sword ego:none | damaged shield ego:none |\
-:        damaged large shield ego:none | damaged battleaxe ego:none ")
+:        damaged large shield ego:none | damaged battleaxe ego:none")
 SHUFFLE:  QRSTUVX
 SUBVAULT: Q : grated_community_mu_home1
 SUBVAULT: R : grated_community_mu_home2
@@ -87,7 +99,7 @@ cZ==-5....-===QQQQQQQ===TTTTTTT===UUUUUUU=...=9c...eee..+.a.cW.Wch^h^c.b..cc==Zc
 cZ==-*....-===QQQQQQQ===TTTTTTT===UUUUUUU=...==n....e...cccccc+cc^h^.ccc+ccc==Zc
 cZ==---n-+-===QQQQQQQ===TTTTTTT===UUUUUUU=.....~................ccnncc....cc==Zc
 cZ..........e.......Q.e.......T.e.......U......~.......eee.......e........cc==Zc
-cZ...=7=7=.efe.=7=7=.efe.=7=7=.efe.=7=7=.....==n.......eee.......ee.e...e.cc==Zc
+cZ...=7=7=.efe.=7=7=.efe.=7=7=.ife.=7=7=.....==n.......eee.......ee.i...e.cc==Zc
 cZ........R.e.......S.e.......V.e.......X......~.................e........cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=.....~........ccccccccccccccccc+cc==Zc
 cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...==n........+.......c.k.......cc==Zc
@@ -121,7 +133,7 @@ KMONS:   2 = generate_awake spectral hound
 KMONS:   3 = generate_awake spectral war dog
 KMONS:   4 = generate_awake spectral warg
 KMONS:   V = vampire knight / vampire mage
-KITEM:   V = potion of blood / q:2 potion of blood / q:3 potion of blood
+KITEM:   V = potion of blood / q:2 potion of blood / q:3 potion of blood, any good_item
 KFEAT:   g = iron_grate
 KFEAT:   _ = altar_kikubaaqudgha
 KFEAT:   ! = fountain_blood
@@ -172,10 +184,10 @@ SUBST:  # = ?
 ####  The frost giant has an ice fireplace ok that's just how he cooks
 MARKER: # = lua:fog_machine { cloud_type = "flame", \
                 pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1 }
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
 MARKER: ? = lua:fog_machine { cloud_type = "freezing vapour", \
                 pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1 }
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
 KFEAT:  = = floor
 TILE:   c = wall_brick_dark_2
 
@@ -270,10 +282,10 @@ KITEM:   % = w:12 animal skin / race:orcish hammer / race:orcish hand axe /\
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor
 KITEM:   $ = race:orcish battleaxe / nothing, race:orcish plate armour /\
-             nothing, meat ration, q:2 sausage / nothing, gold
+             nothing, meat ration, q:2 sausage / nothing, gold, any, any
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
-                 size = 1, walk_dist = 0, start_clouds = 1 }
+                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
 MARKER: + = lua:restrict_door()
 KFEAT:  ~ = closed_door
 KFEAT:  = = floor
@@ -294,13 +306,13 @@ NAME: grated_community_mu_troll_home
 TAGS: grated_community_mu_home grated_community_mu_home5
 MONS: patrolling iron troll / patrolling deep troll
 FTILE:   1.c~+#$%& = floor_dirt
-: dgn.delayed_decay(_G, '%', 'w:20 any skeleton / w:5 any chunk')
+: dgn.delayed_decay(_G, '%', 'w:20 any skeleton / w:5 any chunk, any / nothing')
 KITEM:   $ = animal skin
 NSUBST:  . = 7:% / 2:$ / *:.
 KFEAT:   ~ = floor
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
-                 size = 1, walk_dist = 0, start_clouds = 1 }
+                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
 MARKER:  + = lua:restrict_door()
 KFEAT:   = = floor
 KPROP:   . = bloody
@@ -324,12 +336,14 @@ FTILE:  123.c'+%$W8n~ = floor_grass_dirt_mix
 MONS:   patrolling centaur warrior, plant
 KITEM:  3 = q:5 arrow
 KITEM:  ' = q:1 arrow
-KITEM:  $ = centaur barding / nothing, q:30 arrow / q:30 arrow ego:flame
+KITEM:  $ = centaur barding / nothing, q:30 arrow /\
+            q:30 arrow ego:flame, any good_item
 : else
 MONS:   patrolling yaktaur captain, plant
 KITEM:  3 = q:5 bolt
 KITEM:  ' = q:1 bolt
-KITEM:  $ = centaur barding / nothing, q:30 bolt / q:30 bolt ego:flame
+KITEM:  $ = centaur barding / nothing, q:30 bolt /\
+            q:30 bolt ego:flame, any good_item
 :end
 SHUFFLE: %$
 SUBST:  % = %W

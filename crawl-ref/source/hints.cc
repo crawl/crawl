@@ -245,15 +245,15 @@ static species_type _get_hints_species(unsigned int type)
 {
     switch (type)
     {
-      case HINT_BERSERK_CHAR:
-          return SP_MINOTAUR;
-      case HINT_MAGIC_CHAR:
-          return SP_DEEP_ELF;
-      case HINT_RANGER_CHAR:
-          return SP_CENTAUR;
-      default:
-          // Use something fancy for debugging.
-          return SP_TENGU;
+    case HINT_BERSERK_CHAR:
+        return SP_MINOTAUR;
+    case HINT_MAGIC_CHAR:
+        return SP_DEEP_ELF;
+    case HINT_RANGER_CHAR:
+        return SP_CENTAUR;
+    default:
+        // Use something fancy for debugging.
+        return SP_TENGU;
     }
 }
 
@@ -261,15 +261,15 @@ static job_type _get_hints_job(unsigned int type)
 {
     switch (type)
     {
-      case HINT_BERSERK_CHAR:
-          return JOB_BERSERKER;
-      case HINT_MAGIC_CHAR:
-          return JOB_CONJURER;
-      case HINT_RANGER_CHAR:
-          return JOB_HUNTER;
-      default:
-          // Use something fancy for debugging.
-          return JOB_NECROMANCER;
+    case HINT_BERSERK_CHAR:
+        return JOB_BERSERKER;
+    case HINT_MAGIC_CHAR:
+        return JOB_CONJURER;
+    case HINT_RANGER_CHAR:
+        return JOB_HUNTER;
+    default:
+        // Use something fancy for debugging.
+        return JOB_NECROMANCER;
     }
 }
 
@@ -651,50 +651,50 @@ void taken_new_item(object_class_type item_type)
 {
     switch (item_type)
     {
-      case OBJ_WANDS:
-          learned_something_new(HINT_SEEN_WAND);
-          break;
-      case OBJ_SCROLLS:
-          learned_something_new(HINT_SEEN_SCROLL);
-          break;
-      case OBJ_JEWELLERY:
-          learned_something_new(HINT_SEEN_JEWELLERY);
-          break;
-      case OBJ_POTIONS:
-          learned_something_new(HINT_SEEN_POTION);
-          break;
-      case OBJ_BOOKS:
-          learned_something_new(HINT_SEEN_SPBOOK);
-          break;
-      case OBJ_FOOD:
-          learned_something_new(HINT_SEEN_FOOD);
-          break;
-      case OBJ_CORPSES:
-          learned_something_new(HINT_SEEN_CARRION);
-          break;
-      case OBJ_WEAPONS:
-          learned_something_new(HINT_SEEN_WEAPON);
-          break;
-      case OBJ_ARMOUR:
-          learned_something_new(HINT_SEEN_ARMOUR);
-          break;
-      case OBJ_MISSILES:
-          learned_something_new(HINT_SEEN_MISSILES);
-          break;
-      case OBJ_MISCELLANY:
-          learned_something_new(HINT_SEEN_MISC);
-          break;
-      case OBJ_STAVES:
-          learned_something_new(HINT_SEEN_STAFF);
-          break;
-      case OBJ_RODS:
-          learned_something_new(HINT_SEEN_ROD);
-          break;
-      case OBJ_GOLD:
-          learned_something_new(HINT_SEEN_GOLD);
-          break;
-      default: // nothing to be done
-          return;
+    case OBJ_WANDS:
+        learned_something_new(HINT_SEEN_WAND);
+        break;
+    case OBJ_SCROLLS:
+        learned_something_new(HINT_SEEN_SCROLL);
+        break;
+    case OBJ_JEWELLERY:
+        learned_something_new(HINT_SEEN_JEWELLERY);
+        break;
+    case OBJ_POTIONS:
+        learned_something_new(HINT_SEEN_POTION);
+        break;
+    case OBJ_BOOKS:
+        learned_something_new(HINT_SEEN_SPBOOK);
+        break;
+    case OBJ_FOOD:
+        learned_something_new(HINT_SEEN_FOOD);
+        break;
+    case OBJ_CORPSES:
+        learned_something_new(HINT_SEEN_CARRION);
+        break;
+    case OBJ_WEAPONS:
+        learned_something_new(HINT_SEEN_WEAPON);
+        break;
+    case OBJ_ARMOUR:
+        learned_something_new(HINT_SEEN_ARMOUR);
+        break;
+    case OBJ_MISSILES:
+        learned_something_new(HINT_SEEN_MISSILES);
+        break;
+    case OBJ_MISCELLANY:
+        learned_something_new(HINT_SEEN_MISC);
+        break;
+    case OBJ_STAVES:
+        learned_something_new(HINT_SEEN_STAFF);
+        break;
+    case OBJ_RODS:
+        learned_something_new(HINT_SEEN_ROD);
+        break;
+    case OBJ_GOLD:
+        learned_something_new(HINT_SEEN_GOLD);
+        break;
+    default: // nothing to be done
+        return;
     }
 }
 
@@ -1130,7 +1130,7 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_CONTAMINATED_CHUNK:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
-    case HINT_LEVITATING:
+    case HINT_FLYING:
     case HINT_INACCURACY:
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
@@ -2388,17 +2388,17 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_ABILITY_ITEM:
-        // Specialcase levitation because it's a guaranteed trigger in the
+        // Specialcase flight because it's a guaranteed trigger in the
         // tutorial.
-        if (player_evokable_levitation())
+        if (you.evokable_flight())
         {
-            text << "Levitation will allow you to cross deep water or lava. To "
+            text << "Flight will allow you to cross deep water or lava. To "
                     "activate it, select the corresponding ability in the ability "
                     "menu (<w>%</w>"
 #ifdef USE_TILE
                     " or via <w>mouseclick</w> in the <w>command panel</w>"
 #endif
-                    "). Once levitating, keep an eye on the status line and messages "
+                    "). Once flying, keep an eye on the status line and messages "
                     "as it will eventually time out and may cause you to fall "
                     "into water and drown.";
         }
@@ -2425,10 +2425,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
-    case HINT_LEVITATING:
-        if (player_evokable_levitation())
+    case HINT_FLYING:
+        if (you.evokable_flight())
         {
-            text << "To stop levitating, use the corresponding ability "
+            text << "To stop flying, use the corresponding ability "
                     "in the ability menu (<w>%</w>).";
             cmd.push_back(CMD_USE_ABILITY);
         }
@@ -3226,8 +3226,8 @@ void hints_describe_item(const item_def &item)
 
     switch (item.base_type)
     {
-       case OBJ_WEAPONS:
-       {
+        case OBJ_WEAPONS:
+        {
             if (is_artefact(item) && item_type_known(item))
             {
                 if (gives_ability(item)
@@ -3360,8 +3360,8 @@ void hints_describe_item(const item_def &item)
             }
             Hints.hints_events[HINT_SEEN_WEAPON] = false;
             break;
-       }
-       case OBJ_MISSILES:
+        }
+        case OBJ_MISSILES:
             if (is_throwable(&you, item))
             {
                 ostr << item.name(DESC_YOUR)
@@ -3406,8 +3406,8 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_MISSILES] = false;
             break;
 
-       case OBJ_ARMOUR:
-       {
+        case OBJ_ARMOUR:
+        {
             bool wearable = true;
             if (you.species == SP_CENTAUR && item.sub_type == ARM_BOOTS)
             {
@@ -3514,8 +3514,8 @@ void hints_describe_item(const item_def &item)
             }
             Hints.hints_events[HINT_SEEN_ARMOUR] = false;
             break;
-       }
-       case OBJ_WANDS:
+        }
+        case OBJ_WANDS:
             ostr << "The magic within can be unleashed by evoking "
                     "(<w>%</w>) it.";
             cmd.push_back(CMD_EVOKE);
@@ -3540,7 +3540,7 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_WAND] = false;
             break;
 
-       case OBJ_FOOD:
+        case OBJ_FOOD:
             if (food_is_rotten(item) && !player_mutation_level(MUT_SAPROVOROUS))
             {
                 ostr << "You can't eat rotten chunks, so you might just as "
@@ -3581,7 +3581,7 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_FOOD] = false;
             break;
 
-       case OBJ_SCROLLS:
+        case OBJ_SCROLLS:
             ostr << "Type <w>%</w> to read this scroll"
 #ifdef USE_TILE
                     "or simply click on it with your <w>left mouse button</w>"
@@ -3592,8 +3592,8 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_SCROLL] = false;
             break;
 
-       case OBJ_JEWELLERY:
-       {
+        case OBJ_JEWELLERY:
+        {
             ostr << "Jewellery can be <w>%</w>ut on or <w>%</w>emoved "
                     "again"
 #ifdef USE_TILE
@@ -3634,8 +3634,8 @@ void hints_describe_item(const item_def &item)
             }
             Hints.hints_events[HINT_SEEN_JEWELLERY] = false;
             break;
-       }
-       case OBJ_POTIONS:
+        }
+        case OBJ_POTIONS:
             ostr << "Type <w>%</w> to quaff this potion"
 #ifdef USE_TILE
                     "or simply click on it with your <w>left mouse button</w>"
@@ -3645,7 +3645,7 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_POTION] = false;
             break;
 
-       case OBJ_BOOKS:
+        case OBJ_BOOKS:
             if (item.sub_type == BOOK_MANUAL)
             {
                 ostr << "A manual can greatly help you in training a skill. "
@@ -3739,7 +3739,7 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_SPBOOK] = false;
             break;
 
-       case OBJ_CORPSES:
+        case OBJ_CORPSES:
             Hints.hints_events[HINT_SEEN_CARRION] = false;
 
             if (item.sub_type == CORPSE_SKELETON)
@@ -3811,7 +3811,7 @@ void hints_describe_item(const item_def &item)
             cmd.push_back(CMD_BUTCHER);
             break;
 
-       case OBJ_RODS:
+        case OBJ_RODS:
             if (!item_ident(item, ISFLAG_KNOW_TYPE))
             {
                 ostr << "\n\nTo find out what this rod might do, you have "
@@ -3837,7 +3837,7 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_ROD] = false;
             break;
 
-       case OBJ_STAVES:
+        case OBJ_STAVES:
             ostr << "This staff can enhance your spellcasting, possibly "
                     "making a certain spell school more powerful, or "
                     "making difficult magic easier to cast. ";
@@ -3867,7 +3867,7 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_STAFF] = false;
             break;
 
-       case OBJ_MISCELLANY:
+        case OBJ_MISCELLANY:
             if (is_deck(item))
             {
                 ostr << "Decks of cards are powerful but dangerous magical "
@@ -3894,7 +3894,7 @@ void hints_describe_item(const item_def &item)
             Hints.hints_events[HINT_SEEN_MISC] = false;
             break;
 
-       default:
+        default:
             return;
     }
 
@@ -3907,7 +3907,7 @@ void hints_describe_item(const item_def &item)
     display_tagged_block(broken);
 }
 
-void hints_inscription_info(bool autoinscribe, string prompt)
+void hints_inscription_info(string prompt)
 {
     // Don't print anything if there's not enough space.
     if (wherey() >= get_number_of_lines() - 1)
@@ -3917,7 +3917,7 @@ void hints_inscription_info(bool autoinscribe, string prompt)
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool longtext = false;
-    if (wherey() <= get_number_of_lines() - (autoinscribe ? 10 : 8))
+    if (wherey() <= get_number_of_lines() - 8)
     {
         text << "\n"
          "Inscriptions are a powerful concept of Dungeon Crawl.\n"
@@ -3928,14 +3928,6 @@ void hints_inscription_info(bool autoinscribe, string prompt)
         longtext = true;
     }
 
-    if (autoinscribe && wherey() <= get_number_of_lines() - 6)
-    {
-        text << "\n"
-         "Artefacts can be autoinscribed to give a brief overview of their \n"
-         "known properties.";
-
-        longtext = true;
-    }
     text << "\n"
        "(In the main screen, press <w>?6</w> for more information.)\n";
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
@@ -4033,13 +4025,13 @@ static void _hints_describe_feature(int x, int y)
                         "dangerous task.\n\n"
 
                         "You can safely pass over a mechanical trap if "
-                        "you're flying or levitating.";
+                        "you're flying.";
             }
             else
             {
                 ostr << "Magical traps can't be disarmed, and unlike "
                         "mechanical traps you can't avoid tripping them "
-                        "by levitating or flying over them.";
+                        "by flying over them.";
             }
             Hints.hints_events[HINT_SEEN_TRAP] = false;
             break;

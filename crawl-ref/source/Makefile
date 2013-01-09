@@ -1080,8 +1080,8 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 greet:
 	@if [ ! -e $(GAME) ]; then\
-		printf "  * If you experience any problems building Crawl, please take a second look\\n"\
-		"  * at INSTALL.txt: the solution to your problem just might be in there!\\n";\
+		printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
+		                  "at INSTALL.txt: the solution to your problem just might be in there!";\
 	fi
 
 docs: $(GENERATED_DOCS)
@@ -1343,7 +1343,7 @@ clean: clean-rltiles clean-webserver clean-android tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d
+	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty
 	$(RM) -r build-win
 	$(RM) -r build
 
@@ -1611,9 +1611,9 @@ tx-sync:
 .PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 ifdef ANDROID
-	# force submake to run properly
-	env -i - bash -l -c "$(MAKE) -C $(RLTILES) all TILES=1 V=1"
-    # prove that tiles were generated properly
+        # force submake to run properly
+	+$(MAKE) -C $(RLTILES) all ANDROID=1 TILES=1 V=1
+        # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
@@ -1740,14 +1740,20 @@ mac-app-console: all
 #############################################################################
 # Building the Android package
 #
+PROJECT_DIR=contrib/sdl-android/project
+SRC_LINK=$(PROJECT_DIR)/jni/application/src
+ifeq (,$(wildcard $(PROJECT_DIR)/ant.properties))
+	GENERATED_APK=project/bin/MainActivity-debug.apk
+else
+	GENERATED_APK=project/bin/MainActivity-release.apk
+endif
 
 android:
-	@SRC_LINK=contrib/sdl-android/project/jni/application/src ;\
-	if [ ! -e $$SRC_LINK ]; then \
-		ln -s `cd ..; pwd` $$SRC_LINK; \
+	if [ ! -e $(SRC_LINK) ]; then \
+		ln -s `cd ..; pwd` $(SRC_LINK); \
 	fi
 	@cd contrib/sdl-android && ./build.sh && \
-	mv project/bin/MainActivity-debug.apk ../../crawl_tiles_android-$(SRC_VERSION).apk
+	mv $(GENERATED_APK) ../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests

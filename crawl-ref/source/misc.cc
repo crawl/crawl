@@ -1274,8 +1274,8 @@ void search_around()
 
         int dist = ri->range(you.pos());
 
-        // Own square is not excluded; may be levitating.
-        // XXX: Currently, levitating over a trap will always detect it.
+        // Own square is not excluded; may be flying.
+        // XXX: Currently, flying over a trap will always detect it.
 
         int effective = (dist <= 1) ? skill : farskill - 256 * dist;
 
@@ -2074,7 +2074,7 @@ void revive()
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     if (you.duration[DUR_SCRYING])
         you.xray_vision = false;
 
@@ -2191,7 +2191,6 @@ void run_environment_effects()
     run_corruption_effects(you.time_taken);
     shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
                        false, true);
-    abyss_morph(you.time_taken);
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
     timeout_phoenix_markers(you.time_taken);
@@ -2578,6 +2577,15 @@ void maybe_id_ring_hunger()
     _maybe_id_jewel(RING_SUSTENANCE, NUM_JEWELLERY, ARTP_METABOLISM);
 }
 
+void maybe_id_clarity()
+{
+    // If we have clarity without any items
+    if (you.clarity(false, false))
+        return;
+
+    _maybe_id_jewel(NUM_JEWELLERY, AMU_CLARITY, ARTP_CLARITY);
+}
+
 void maybe_id_resist(beam_type flavour)
 {
     switch (flavour)
@@ -2667,7 +2675,6 @@ bool maybe_id_weapon(item_def &item, const char *msg)
         set_ident_flags(item, id);
         if (do_art_brand)
             artefact_wpn_learn_prop(item, ARTP_BRAND);
-        add_autoinscription(item);
         if (msg)
             mprf("%s%s", msg, item.name(DESC_INVENTORY_EQUIP).c_str());
         you.wield_change = true;

@@ -35,7 +35,7 @@ function ready()
     crawl.sendkeys("&@27 12 12" .. eol)
     crawl.sendkeys("&o)demon whip" .. eol .. "chaos" .. eol)
     crawl.sendkeys("g&o[boots" .. eol .. "running" .. eol)
-    crawl.sendkeys("g&o[gold dragon armour" .. eol .. "levitation" .. eol)
+    crawl.sendkeys("g&o[gold dragon armour" .. eol .. "flying" .. eol)
     crawl.sendkeys("g&o[large shield" .. eol .. "reflection" .. eol)
     crawl.sendkeys("g&o[helmet" .. eol .. "see invis" .. eol)
     crawl.sendkeys("g&o[gloves" .. eol .. "strength" .. eol)
@@ -49,7 +49,7 @@ function ready()
     crawl.sendkeys("&tga2" .. eol .. esc)
     crawl.sendkeys("&tha2" .. eol .. esc)
     crawl.sendkeys("&tia2" .. eol .. esc)
-    crawl.sendkeys("ag") -- levitation
+    crawl.sendkeys("ag") -- flight
     --# re-enable monsters
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('mon_act', false)" .. eol .. esc)
@@ -59,6 +59,26 @@ function ready()
   if you.turns() ~= last_turn then
     command = 1
     last_turn = you.turns()
+
+    -- every 50 turns, cast a spell assigned to an uppercase slot if there is one
+    if you.turns() % 50 == 0 then
+      local sp = you.spell_letters()
+      local to_cast = 0
+      local count = 0
+      for i = 1, 52 do
+        if sp[i] ~= nil and sp[i] >= 'A' and sp[i] <= 'Z' then
+          count = count + 1
+          if crawl.one_chance_in(count) then
+            to_cast = sp[i]
+          end
+        end
+      end
+      if to_cast ~= 0 then
+        command = 0
+        crawl.sendkeys("Z" .. to_cast .. eol .. esc)
+        return
+      end
+    end
   else
     command = command + 1
   end
@@ -67,8 +87,5 @@ function ready()
       command = 2
   end
   crawl.sendkeys(cmds[command])
-  -- if you.turns() >= 1000 then
-  --   crawl.sendkeys("*qyes" .. eol .. esc .. esc)
-  -- end
 end
 }

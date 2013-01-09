@@ -10,6 +10,7 @@
 #include "env.h"
 #include "hints.h"
 #include "message.h"
+#include "misc.h"
 #include "monster.h"
 #include "mon-iter.h"
 #include "mon-util.h"
@@ -60,7 +61,8 @@ bool update_mislead_monster(monster* mons)
     if (mons_is_unique(mons->type) || !mons->mname.empty()
         || mons->props.exists("monster_tile")
         || mons->props.exists("mislead_as")
-        || mons->type == MONS_ORB_OF_DESTRUCTION
+        || mons_is_projectile(mons->type)
+        || mons_is_tentacle_segment(mons->type)
         || mons->type == MONS_MARA_FAKE)
     {
         return false;
@@ -89,13 +91,8 @@ static int _update_mislead_monsters(monster* caster)
     return count;
 }
 
-void end_mislead(bool level_change)
+void end_mislead()
 {
-    if (level_change)
-    {
-        mpr("Away from their source, illusions no longer mislead you.",
-            MSGCH_DURATION);
-    }
     you.duration[DUR_MISLED] = 0;
     for (monster_iterator mi; mi; ++mi)
         if (mi->props.exists("mislead_as"))
@@ -111,9 +108,11 @@ void mons_cast_mislead(monster* mons)
 
     // We deal with pointless misleads in the right place now.
 
-    if (player_mental_clarity(true))
+    if (you.clarity())
     {
         mpr("Your vision blurs momentarily.");
+        if (!you.clarity(false))
+            maybe_id_clarity();
         return;
     }
 

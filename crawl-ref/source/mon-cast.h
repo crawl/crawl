@@ -16,8 +16,8 @@ bool is_valid_mon_spell(spell_type spell);
 
 bool handle_mon_spell(monster* mons, bolt &beem);
 
-bolt mons_spells(monster* mons, spell_type spell_cast, int power,
-                 bool check_validity = false);
+bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
+                     bool check_validity = false);
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise = true, bool special_ability = false);
 void mons_cast_noise(monster* mons, const bolt &pbolt,

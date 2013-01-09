@@ -44,9 +44,10 @@ define(["jquery", "./enums"], function ($, enums) {
 
     function touch(x, y)
     {
-        var cell = get(x, y);
+        var pos = (y === undefined) ? x : {x: x, y: y};
+        var cell = get(pos.x, pos.y);
         if (!cell.dirty)
-            dirty_locs.push({x: x, y: y});
+            dirty_locs.push(pos);
         cell.dirty = true;
     }
 

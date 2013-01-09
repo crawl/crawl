@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./enums",
-        "./dungeon_renderer", "./cell_renderer"],
-function ($, comm, client, enums, dungeon_renderer, cr) {
+        "./dungeon_renderer", "./cell_renderer", "./util"],
+function ($, comm, client, enums, dungeon_renderer, cr, util) {
     var chunk_size = 50;
 
     // Helpers
@@ -22,7 +22,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
     function set_item_contents(item, elem)
     {
-        elem.html(formatted_string_to_html(item_text(item)));
+        elem.html(util.formatted_string_to_html(item_text(item)));
         var col = item_colour(item);
         elem.removeClass();
         elem.addClass("level" + item.level);
@@ -53,55 +53,6 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
             elem.prepend(canvas);
         }
-    }
-
-    var cols = {
-        "black": 0,
-        "blue": 1,
-        "green": 2,
-        "cyan": 3,
-        "red": 4,
-        "magenta": 5,
-        "brown": 6,
-        "lightgrey": 7,
-        "lightgray": 7,
-        "darkgrey": 8,
-        "darkgray": 8,
-        "lightblue": 9,
-        "lightgreen": 10,
-        "lightcyan": 11,
-        "lightred": 12,
-        "lightmagenta": 13,
-        "yellow": 14,
-        "white": 15
-    };
-
-    function formatted_string_to_html(str)
-    {
-        var other_open = false;
-        return str.replace(/<(\/?[a-z]+)>/ig, function (str, p1) {
-            var closing = false;
-            if (p1.match(/^\//))
-            {
-                p1 = p1.substr(1);
-                closing = true;
-            }
-            if (p1 in cols)
-            {
-                if (closing)
-                    return "</span>";
-                else
-                {
-                    var text = "<span class='fg" + cols[p1] + "'>";
-                    if (other_open)
-                        text = "</span>" + text;
-                    other_open = true;
-                    return text;
-                }
-            }
-            else
-                return str;
-        }).replace(/<</g, "<");
     }
 
     var menu_stack = [];
@@ -172,7 +123,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             }
         }
 
-        menu_div.append("<div id='menu_more'>" + formatted_string_to_html(menu.more)
+        menu_div.append("<div id='menu_more'>" + util.formatted_string_to_html(menu.more)
                         + "</div>");
 
         content_div.scroll(menu_scroll_handler);

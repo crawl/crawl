@@ -124,6 +124,11 @@ struct crawl_environment
     // A stack that accumulates subvaults being placed. A failure may pop a
     // part of the stack before retrying.
     vector<string> new_subvault_names, new_subvault_tags;
+    // A set of the unique subvaults being placed. These are considered used
+    // for the purposes of placing additional subvaults.
+    string_set new_used_subvault_names;
+    // A set of uniq_ or luniq_ map tags being placed.
+    string_set new_used_subvault_tags;
 
     // Vault currently being placed, for crash dump purposes.
     string placing_vault;

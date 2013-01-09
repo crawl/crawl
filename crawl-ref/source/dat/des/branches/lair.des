@@ -344,8 +344,7 @@ ORIENT: float
 TAGS:   lair_entry transparent
 MONS:   plant / fungus / nothing
 MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / yak / w:20 nothing
-KMONS:  A = patrolling deep elf soldier name:deep_elf_watchman \
-            name_replace name_descriptor name_nocorpse
+MONS:   patrolling deep elf soldier
 KFEAT:  O = enter_lair
 SUBST:  D = 1:5 2:2 .
 SUBST:  . = 1:2 2:2 .
@@ -366,7 +365,7 @@ MAP
  .D.1D221D1..
 .D.1D1D1D1D1..
 ..1D1ccccD1D1.
-@1D2DcOAc121..
+@1D2DcO3c121..
 ..121c%CcD2D1@
 .1D1Dcc+c1D1..
 ..1D1D1C1D1.D.
@@ -2327,4 +2326,48 @@ xxxxxxxxxxxxxxxx     ........G....
 xxxxxxxxx             ..G........
 xxx                   .........G.
 x                           .....
+ENDMAP
+
+##############################################################################
+# Dragon's lair.
+#
+NAME:   guppyfry_lair_end_dragon
+PLACE:  Lair:$
+TAGS:   patrolling no_monster_gen
+ORIENT: southeast
+KMONS:  1 = fire drake / swamp drake / mottled dragon / steam dragon
+KMONS:  2 = dragon
+KMONS:  3 = plant
+KMONS:  4 = basilisk / komodo dragon
+KMONS:  5 = iguana / crocodile
+SUBST:  - = wwWW..%3t554
+SUBST:  w = wwwW
+SUBST:  ? = 145*
+: lair_small_ending(_G)
+MAP
+@..@..@..xxxxxxxxxxxxxxxxx
+x3WW-3.xxxxttttttttttxxxxx
+xttWW-tttt.ttt3WW-..ttxxxx
+x3ttW-tt.ttt--WwwW3..ttxxx
+xtttWWtt...t--WwwwW-.tttxx
+xtt1Wttt1.tt.WWtt3WW..tttx
+xttWw-t3.t..Wttt--WWW.tttx
+xxttWWt-1t..W--t3.WwwWttxx
+xtt1-Wwttt.-wWtt-WwwwWttxx
+xxtt--Wtt3.wWtttWwwwwWtttx
+xtt3.tWWttwW3tt1WWWwwWttxx
+xttt.ttWww-.tttt3WwwwWtttx
+xxtt3.3-W-.tt??..WwwW.ttxx
+xxtt...3WWttt$%.WwwW.ttxxx
+xxttt.t.-Wtt2**.WwwW.ttxxx
+xttttt..Wwttt$%..WW.tttxxx
+xxxxtt..-WWtt??..WwWW.ttxx
+xxxxxtt..-WWttt3WWwW..ttxx
+xxxxxxtt..3WWt1WWwW.tttxxx
+xxxxxxxttt..WWtWW-..ttxxxx
+xxxxxxxxttt.WwwwW3.ttxxxxx
+xxxxxxxxxtt.-WwW..ttttxxxx
+xxxxxxxxxttttWW-.tttxxxxxx
+xxxxxxxxxxtttttttttxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

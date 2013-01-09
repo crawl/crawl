@@ -1,0 +1,96 @@
+%%%%
+Mace of Variability
+
+Je to poněkud nespolehlivé.
+%%%%
+Scythe of Curses
+
+Tato zbraň nese strašlivé a vysoce znepokojivé prokletí.
+%%%%
+Sword of Cerebov
+
+Tajemné plameny kryjí zkroucený kotouč.
+%%%%
+Staff of Dispater
+
+Tato legendární položka může rozpoutat běsnění pekla.
+%%%%
+dagger of Chilly Death
+
+Dýka z jednoho velkého kusu safíru.
+%%%%
+glaive of the Guard
+
+Tato zbraň kdysi patřila Garu Doghovi, strážci královské poklady. Podle legendy
+byl ztracen někde v žaláři.
+%%%%
+crossbow "Hellfire"
+
+Planoucí kuše, kovaná v ohni pekel.
+%%%%
+sword of the Doom Knight
+
+Adamantiový velký meč.
+%%%%
+mithril axe "Arga"
+
+Překrásná Mithril sekera, pravděpodobně ji ztratil nějaký trpasličí hrdina.
+%%%%
+crossbow "Sniper"
+
+Kuše z nějakého černého materiálu.
+%%%%
+longbow "Piercer"
+
+Mimořádně velký kovový dlouhý luk.
+%%%%
+knife of Accuracy
+
+Je téměř neomylně přesná.
+%%%%
+Lehudib's crystal spear
+
+Pravděpodobně tato relikvie vedla k vynálezu slavného kouzla, nebo možná
+naopak.
+%%%%
+cloak of the Thief
+
+Umožňuje jeho nositeli, aby vynikl v umění krádeže.
+%%%%
+crown of Dyrovepreva
+
+Velká koruna z temného bronzu, set s oslnivou škálou drahých kamenů.
+%%%%
+cloak of Flash
+
+Vibrační plášť.
+%%%%
+Lear's chain mail
+
+Drátěná košile z čistého zlata.
+%%%%
+mask of the Dragon
+
+Modrá maska.
+%%%%
+fencer's gloves
+
+Pár rukavic z bílého hedvábí.
+%%%%
+cloak of Starlight
+
+Fosforeskující plášť, tkaný z čistých světelných paprsků.
+%%%%
+amulet of Cekugob
+
+Podivně vyhlížející kus krystalu na obyčejně vypadajícím řetězu s podivným
+výběrem moci.
+%%%%
+ring of Robustness
+
+Prostý ocelový kroužek.
+%%%%
+autumn katana
+
+Tento exotický meč je zbraň pro skutečně osvícené uživatele.
+%%%%

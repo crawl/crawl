@@ -2,6 +2,7 @@
 
 #include "species.h"
 
+#include "libutil.h"
 #include "random.h"
 
 // March 2008: change order of species and jobs on character selection
@@ -76,8 +77,9 @@ species_type get_species_by_abbrev(const char *abbrev)
     COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES);
     for (i = 0; i < NUM_SPECIES; i++)
     {
-        if (tolower(abbrev[0]) == tolower(Species_Abbrev_List[i][0])
-            && tolower(abbrev[1]) == tolower(Species_Abbrev_List[i][1]))
+        // This assumes untranslated abbreviations.
+        if (toalower(abbrev[0]) == toalower(Species_Abbrev_List[i][0])
+            && toalower(abbrev[1]) == toalower(Species_Abbrev_List[i][1]))
         {
             break;
         }

@@ -223,7 +223,7 @@ void ghost_demon::init_random_demon()
     // Does demon fly?
     fly = (one_chance_in(3) ? FL_NONE :
            one_chance_in(5) ? FL_LEVITATE
-                            : FL_FLY);
+                            : FL_WINGED);
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
@@ -348,7 +348,7 @@ static int _player_ghost_base_movement_speed()
     if (player_mutation_level(MUT_SLOW, false))
         speed -= player_mutation_level(MUT_SLOW, false) + 1;
 
-    if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
+    if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
         speed += 2;
 
     // Cap speeds.
@@ -712,7 +712,7 @@ static bool _know_spell(spell_type spell)
 static spell_type search_first_list(int ignore_spell)
 {
     for (unsigned i = 0; i < ARRAYSZ(search_order_conj); ++i)
-     {
+    {
         if (search_order_conj[i] == SPELL_NO_SPELL)
             return SPELL_NO_SPELL;
 

@@ -159,7 +159,6 @@ public:
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
-    bool        show_no_ctele;   // Show -cTele in the status light area.
 
     uint32_t    autopickups;     // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
@@ -173,7 +172,6 @@ public:
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
-    bool        list_rotten;     // list slots for rotting corpses/chunks
     chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        prefer_safe_chunks; // prefer clean chunks to contaminated ones
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
@@ -250,7 +248,6 @@ public:
     FixedBitVector<27+1> note_skill_levels;   // Skill levels to note
     vector<pair<text_pattern, string> > auto_spell_letters;
 
-    bool        autoinscribe_artefacts; // Auto-inscribe identified artefacts.
     bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
 
     bool        pickup_thrown;  // Pickup thrown missiles
@@ -323,9 +320,6 @@ public:
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
-
-    bool       menu_colour_prefix_class; // Prefix item class to string
-    bool       menu_colour_shops;   // Use menu colours in shops?
 
     vector<menu_sort_condition> sort_menus;
 
@@ -444,6 +438,7 @@ public:
     int         tile_map_pixels;
     int         tile_cell_pixels;
     bool        tile_filter_scaling;
+    bool        tile_use_small_layout;
 #endif
 
 #ifdef USE_TILE

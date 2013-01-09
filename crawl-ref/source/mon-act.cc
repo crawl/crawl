@@ -140,7 +140,7 @@ static bool _swap_monsters(monster* mover, monster* moved)
     // Although nominally stationary kraken tentacles can be swapped
     // with the main body.
     if (mons_is_stationary(moved)
-        && moved->type != MONS_KRAKEN_TENTACLE)
+        && !moved->is_child_tentacle())
     {
         return false;
     }
@@ -1170,19 +1170,17 @@ static bool _handle_rod(monster *mons, bolt &beem)
         return false;
 
     // XXX: There should be a better way to do this than hardcoding
-    // monster-castable rod spells!
+    // monster-castable rod spells!  Also, there is currently no monster
+    // version of Olgreb's Toxic Radiance, used by the rod of venom.
     switch (mzap)
     {
-    case SPELL_BOLT_OF_COLD:
     case SPELL_BOLT_OF_FIRE:
     case SPELL_BOLT_OF_INACCURACY:
-    case SPELL_BOLT_OF_MAGMA:
     case SPELL_IRON_SHOT:
     case SPELL_LIGHTNING_BOLT:
     case SPELL_POISON_ARROW:
     case SPELL_THROW_FLAME:
     case SPELL_THROW_FROST:
-    case SPELL_VENOM_BOLT:
         break;
 
     case SPELL_STRIKING:
@@ -1226,7 +1224,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     dprf("using rod with power %d", power);
 
-    bolt theBeam = mons_spells(mons, mzap, power, check_validity);
+    bolt theBeam = mons_spell_beam(mons, mzap, power, check_validity);
     beem         = _generate_item_beem(beem, theBeam, mons);
 
     if (mons->confused())
@@ -1323,7 +1321,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
 
     // set up the beam
     int power         = 30 + mons->hit_dice;
-    bolt theBeam      = mons_spells(mons, mzap, power);
+    bolt theBeam      = mons_spell_beam(mons, mzap, power);
     beem = _generate_item_beem(beem, theBeam, mons);
 
     beem.aux_source =
@@ -1345,11 +1343,11 @@ static bool _handle_wand(monster* mons, bolt &beem)
         return false;
 
     case WAND_POLYMORPH_OTHER:
-         // Monsters can be very trigger happy with wands, reduce this
-         // for polymorph.
-         if (!one_chance_in(5))
-             return false;
-         break;
+        // Monsters can be very trigger happy with wands, reduce this
+        // for polymorph.
+        if (!one_chance_in(5))
+            return false;
+        break;
 
     // These are wands that monsters will aim at themselves {dlb}:
     case WAND_HASTING:
@@ -1648,6 +1646,16 @@ static void _confused_move_dir(monster *mons)
         }
 }
 
+static int _tentacle_move_speed(monster_type type)
+{
+    if (type == MONS_KRAKEN)
+        return 10;
+    else if (type == MONS_TENTACLED_STARSPAWN)
+        return 18;
+    else
+        return 0;
+}
+
 void handle_monster_move(monster* mons)
 {
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
@@ -1713,7 +1721,7 @@ void handle_monster_move(monster* mons)
     // Memory is decremented here for a reason -- we only want it
     // decrementing once per monster "move".
     if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI])
-        mons->foe_memory--;
+        mons->foe_memory -= you.time_taken;
 
     // Otherwise there are potential problems with summonings.
     if (mons->type == MONS_GLOWING_SHAPESHIFTER)
@@ -1762,9 +1770,9 @@ void handle_monster_move(monster* mons)
             break;
 
         if (old_pos != mons->pos()
-            && mons_base_type(mons) == MONS_KRAKEN)
+            && mons_is_tentacle_head(mons_base_type(mons)))
         {
-            move_kraken_tentacles(mons);
+            move_child_tentacles(mons);
             kraken_last_update = mons->pos();
         }
 
@@ -2098,10 +2106,10 @@ void handle_monster_move(monster* mons)
 
             // See if we move into (and fight) an unfriendly monster.
             monster* targ = monster_at(mons->pos() + mmov);
-            if (mons_base_type(mons) == MONS_KRAKEN
-                && targ && targ->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                && targ->props.exists("inwards") && targ->props["inwards"].get_int() == mons->mindex()
-                && env.grid(targ->pos()) == DNGN_DEEP_WATER)
+
+            //If a tentacle owner is attempting to move into an adjacent
+            //segment, kill the segment and adjust connectivity data.
+            if (targ && mons_tentacle_adjacent(mons, targ))
             {
                 bool basis = targ->props.exists("outwards");
                 int out_idx = basis ? targ->props["outwards"].get_int() : -1;
@@ -2126,7 +2134,7 @@ void handle_monster_move(monster* mons)
                 }
                 // Figure out if they fight.
                 else if ((!mons_is_firewood(targ)
-                          || mons->type == MONS_KRAKEN_TENTACLE)
+                          || mons->is_child_tentacle())
                               && fight_melee(mons, targ))
                 {
                     if (mons_is_batty(mons))
@@ -2168,14 +2176,23 @@ void handle_monster_move(monster* mons)
         }
     }
 
-    if (mons_base_type(mons) == MONS_KRAKEN)
+    if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (mons->pos() != kraken_last_update)
-            move_kraken_tentacles(mons);
-        move_kraken_tentacles(mons);
+            move_child_tentacles(mons);
+
+        mons->number += you.time_taken * _tentacle_move_speed(mons_base_type(mons));
+        while (mons->number >= 100)
+        {
+            move_child_tentacles(mons);
+            mons->number -= 100;
+        }
     }
 
     mons->handle_constriction();
+
+    if (mons->type == MONS_ANCIENT_ZYME)
+        ancient_zyme_sicken(mons);
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
@@ -2545,12 +2562,12 @@ static bool _handle_pickup(monster* mons)
     if (mons->asleep() || mons->submerged())
         return false;
 
-    // Hack - Harpies fly over water, but we don't have a general
-    // system for monster igrd yet.  Flying intelligent monsters
-    // (tengu!) would also count here.
+    // Flying over water doesn't let you pick up stuff.  This is inexact, as
+    // a merfolk could be flying, but that's currently impossible except for
+    // being tornadoed, and with *that* low life expectancy let's not care.
     dungeon_feature_type feat = grd(mons->pos());
 
-    if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && !mons->flight_mode())
+    if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && mons->flight_mode())
         return false;
 
     const bool nearby = mons_near(mons);
@@ -2780,24 +2797,17 @@ static bool _no_habitable_adjacent_grids(const monster* mon)
     return true;
 }
 
-static bool _same_kraken_parts(const monster* mpusher,
+static bool _same_tentacle_parts(const monster* mpusher,
                                const monster* mpushee)
 {
-    if (mons_base_type(mpusher) != MONS_KRAKEN)
+    if (!mons_is_tentacle_head(mons_base_type(mpusher)))
         return false;
 
-    if (mpushee->type == MONS_KRAKEN_TENTACLE
-        && int(mpushee->number) == mpusher->mindex())
-    {
+    if (mpushee->is_child_tentacle_of(mpusher))
         return true;
-    }
 
-    if (mpushee->type == MONS_KRAKEN_TENTACLE_SEGMENT
-        && int(menv[mpushee->number].number) == mpusher->mindex()
-        && mpushee->props.exists("inwards") && mpushee->props["inwards"].get_int() == mpusher->mindex())
-    {
+    if (mons_tentacle_adjacent(mpusher, mpushee))
         return true;
-    }
 
     return false;
 }
@@ -2814,7 +2824,7 @@ static bool _mons_can_displace(const monster* mpusher,
 
 
     if (immobile_monster[ipushee]
-        && !_same_kraken_parts(mpusher, mpushee))
+        && !_same_tentacle_parts(mpusher, mpushee))
     {
         return false;
     }
@@ -2827,7 +2837,7 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
         || mpusher->cannot_move() || mons_is_stationary(mpusher)
         || mpusher->is_constricted() || mpushee->is_constricted()
-        || (!_same_kraken_parts(mpusher, mpushee)
+        || (!_same_tentacle_parts(mpusher, mpushee)
            && (mpushee->cannot_move()
                || mons_is_stationary(mpushee)))
         || mpusher->asleep() || mpushee->caught())
@@ -2865,7 +2875,7 @@ static bool _check_slime_walls(const monster *mon,
                                const coord_def &targ)
 {
     if (!player_in_branch(BRANCH_SLIME_PITS) || mons_is_slime(mon)
-        || mon->res_acid() >= 3 || mons_intel(mon) <= I_INSECT)
+        || actor_slime_wall_immune(mon) || mons_intel(mon) <= I_INSECT)
     {
         return false;
     }
@@ -2962,7 +2972,9 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     }
 
     // Wandering mushrooms usually don't move while you are looking.
-    if (mons->type == MONS_WANDERING_MUSHROOM)
+    if (mons->type == MONS_WANDERING_MUSHROOM
+        || (mons->type == MONS_LURKING_HORROR
+            && mons->foe_distance() > random2(LOS_RADIUS + 1)))
     {
         if (!mons->wont_attack()
             && is_sanctuary(mons->pos()))
@@ -3252,31 +3264,34 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         }
     }
 
-    if (mons_can_open_door(mons, f))
+    if (grd(f) == DNGN_CLOSED_DOOR)
     {
-        _mons_open_door(mons, f);
-        return true;
-    }
-    else if (mons_can_eat_door(mons, f))
-    {
-        grd(f) = DNGN_FLOOR;
-        set_terrain_changed(f);
-
-        _jelly_grows(mons);
-
-        if (you.see_cell(f))
+        if (mons_can_open_door(mons, f))
         {
-            viewwindow();
-
-            if (!you.can_see(mons))
-            {
-                mpr("The door mysteriously vanishes.");
-                interrupt_activity(AI_FORCE_INTERRUPT);
-            }
-            else
-                simple_monster_message(mons, " eats the door!");
+            _mons_open_door(mons, f);
+            return true;
         }
-    } // done door-eating jellies
+        else if (mons_can_eat_door(mons, f))
+        {
+            grd(f) = DNGN_FLOOR;
+            set_terrain_changed(f);
+
+            _jelly_grows(mons);
+
+            if (you.see_cell(f))
+            {
+                viewwindow();
+
+                if (!you.can_see(mons))
+                {
+                    mpr("The door mysteriously vanishes.");
+                    interrupt_activity(AI_FORCE_INTERRUPT);
+                }
+                else
+                    simple_monster_message(mons, " eats the door!");
+            }
+        } // done door-eating jellies
+    }
 
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
@@ -3536,20 +3551,34 @@ static bool _monster_move(monster* mons)
     // If we haven't found a good move by this point, we're not going to.
     // ------------------------------------------------------------------
 
+    if (mons->type == MONS_SPATIAL_MAELSTROM)
+    {
+        const dungeon_feature_type feat = grd(mons->pos() + mmov);
+        if (!feat_is_permarock(feat) && feat_is_solid(feat)
+            && mons->type == MONS_SPATIAL_MAELSTROM)
+        {
+            const coord_def target(mons->pos() + mmov);
+            create_monster(
+                    mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), mons,
+                          2, MON_SUMM_ANIMATE,
+                          target, MHITNOT,
+                          0, GOD_LUGONU));
+            nuke_wall(target);
+        }
+    }
+
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
     const bool flattens_trees = mons_flattens_trees(mons);
     // Take care of beetle burrowing.
     if (burrows || flattens_trees)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
-
         if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
               && burrows)
              || (flattens_trees && feat_is_tree(feat)))
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
-
             nuke_wall(target);
 
             if (flattens_trees)

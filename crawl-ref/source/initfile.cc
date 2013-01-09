@@ -495,7 +495,13 @@ void game_options::str_to_enemy_hp_colour(const string &colours, bool prepend)
     for (int i = 0, csize = colour_list.size(); i < csize; i++)
     {
         const int col = str_to_colour(colour_list[i]);
-        if (prepend)
+        if (col < 0)
+        {
+            Options.report_error("Bad enemy_hp_colour: %s\n",
+                                 colour_list[i].c_str());
+            return;
+        }
+        else if (prepend)
             enemy_hp_colour.insert(enemy_hp_colour.begin(), col);
         else
             enemy_hp_colour.push_back(col);
@@ -761,7 +767,6 @@ void game_options::reset_options()
     mlist_targetting = false;
     msg_condense_repeats = true;
     msg_condense_short = true;
-    show_no_ctele = true;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -805,7 +810,6 @@ void game_options::reset_options()
     confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
     prompt_for_swap        = true;
-    list_rotten            = true;
     auto_drop_chunks       = ADC_NEVER;
     prefer_safe_chunks     = true;
     easy_eat_chunks        = false;
@@ -885,8 +889,6 @@ void game_options::reset_options()
 #endif
     use_fake_player_cursor = true;
     show_player_species    = false;
-
-    stash_tracking         = STM_ALL;
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
@@ -1035,6 +1037,7 @@ void game_options::reset_options()
                                              "command, spell, ability, "
                                              "monster");
 # endif
+    tile_use_small_layout = false;
 #endif
 
 #ifdef USE_TILE
@@ -1092,7 +1095,6 @@ void game_options::reset_options()
     note_monsters.clear();
     note_messages.clear();
     autoinscriptions.clear();
-    autoinscribe_artefacts = true;
     autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.reset();
@@ -1105,8 +1107,6 @@ void game_options::reset_options()
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
-    menu_colour_prefix_class = true;
-    menu_colour_shops = true;
     message_colour_mappings.clear();
     drop_filter.clear();
     map_file_name.clear();
@@ -2109,8 +2109,8 @@ static void _bindkey(string field)
     const command_type cmd  = name_to_command(name);
     if (cmd == CMD_NO_CMD)
     {
-       mprf(MSGCH_ERROR, "No command named '%s'", name.c_str());
-       return;
+        mprf(MSGCH_ERROR, "No command named '%s'", name.c_str());
+        return;
     }
 
     bind_command_to_key(cmd, key);
@@ -2414,6 +2414,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         // option.  Let's try to keep to less rude ones, though.
         else if (field == "kraut" || field == "jerry" || field == "fritz")
             lang = LANG_KRAUT;
+        else if (field == "futhark" || field == "runes" || field == "runic")
+            lang = LANG_FUTHARK;
 /*
         else if (field == "cyr" || field == "cyrillic" || field == "commie" || field == "кириллица")
             lang = LANG_CYRILLIC;
@@ -2492,7 +2494,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
-    else BOOL_OPTION(list_rotten);
     else BOOL_OPTION(prefer_safe_chunks);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(easy_eat_gourmand);
@@ -2649,7 +2650,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
-    else BOOL_OPTION(show_no_ctele);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else OLD_LIST_OPTION(note_monsters);
@@ -2897,7 +2897,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autoinscriptions.push_back(entry);
     }
-    else BOOL_OPTION(autoinscribe_artefacts);
     else BOOL_OPTION(autoinscribe_cursed);
 #ifndef DGAMELAUNCH
     else if (key == "map_file_name")
@@ -2924,13 +2923,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (insplit.size() == 2)
                 hp_percent = atoi(insplit[0].c_str());
 
-            int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            pair<int, int> entry(hp_percent, scolour);
-            // We do not treat prepend differently since we will be sorting.
-            if (minus_equal)
-                remove_matching(hp_colour, entry);
+            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
+            const int scolour = str_to_colour(colstr);
+            if (scolour > 0)
+            {
+                pair<int, int> entry(hp_percent, scolour);
+                // We do not treat prepend differently since we will be sorting.
+                if (minus_equal)
+                    remove_matching(hp_colour, entry);
+                else
+                    hp_colour.push_back(entry);
+            }
             else
-                hp_colour.push_back(entry);
+            {
+                report_error("Bad hp_colour: %s", colstr.c_str());
+                break;
+            }
         }
         stable_sort(hp_colour.begin(), hp_colour.end(), _first_greater);
     }
@@ -2955,13 +2963,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (insplit.size() == 2)
                 mp_percent = atoi(insplit[0].c_str());
 
-            int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            pair<int, int> entry(mp_percent, scolour);
-            // We do not treat prepend differently since we will be sorting.
-            if (minus_equal)
-                remove_matching(mp_colour, entry);
+            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
+            const int scolour = str_to_colour(colstr);
+            if (scolour > 0)
+            {
+                pair<int, int> entry(mp_percent, scolour);
+                // We do not treat prepend differently since we will be sorting.
+                if (minus_equal)
+                    remove_matching(mp_colour, entry);
+                else
+                    mp_colour.push_back(entry);
+            }
             else
-                mp_colour.push_back(entry);
+            {
+                report_error("Bad mp_colour: %s", colstr.c_str());
+                break;
+            }
         }
         stable_sort(mp_colour.begin(), mp_colour.end(), _first_greater);
     }
@@ -2986,13 +3003,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (insplit.size() == 2)
                 stat_limit = atoi(insplit[0].c_str());
 
-            int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            pair<int, int> entry(stat_limit, scolour);
-            // We do not treat prepend differently since we will be sorting.
-            if (minus_equal)
-                remove_matching(stat_colour, entry);
+            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
+            const int scolour = str_to_colour(colstr);
+            if (scolour > 0)
+            {
+                pair<int, int> entry(stat_limit, scolour);
+                // We do not treat prepend differently since we will be sorting.
+                if (minus_equal)
+                    remove_matching(stat_colour, entry);
+                else
+                    stat_colour.push_back(entry);
+            }
             else
-                stat_colour.push_back(entry);
+            {
+                report_error("Bad stat_colour: %s", colstr.c_str());
+                break;
+            }
         }
         stable_sort(stat_colour.begin(), stat_colour.end(), _first_less);
     }
@@ -3286,10 +3312,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         _merge_lists(menu_colour_mappings, new_entries, caret_equal);
     }
-    else BOOL_OPTION(menu_colour_prefix_class);
-    else BOOL_OPTION_NAMED("menu_color_prefix_class", menu_colour_prefix_class);
-    else BOOL_OPTION(menu_colour_shops);
-    else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
     else if (key == "message_colour" || key == "message_color")
     {
         // TODO: support -= here.
@@ -3499,6 +3521,24 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_filter_scaling);
 #endif // USE_TILE_LOCAL
+#ifdef TOUCH_UI
+//    else BOOL_OPTION(tile_use_small_layout);
+    else if (key == "tile_use_small_layout")
+    {
+        if (field == "true")
+            tile_use_small_layout = true;
+        else if (field == "false")
+            tile_use_small_layout = false;
+        else
+#ifdef __ANDROID__
+            // android default to true for now
+            tile_use_small_layout = true;
+#else
+            // should choose small layout for small *physical* screens
+            tile_use_small_layout = false;
+#endif
+    }
+#endif
 #ifdef USE_TILE
     else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);

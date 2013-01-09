@@ -175,7 +175,7 @@ static int _make_mimic_item(object_class_type type)
 // map definitions.
 void wizard_create_spec_monster_name()
 {
-    char specs[100];
+    char specs[1024];
     mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
     if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
@@ -468,7 +468,7 @@ void debug_list_monsters()
 void wizard_spawn_control()
 {
     mpr("(c)hange spawn rate or (s)pawn monsters? ", MSGCH_PROMPT);
-    const int c = tolower(getchm());
+    const int c = toalower(getchm());
 
     char specs[256];
     bool done = false;
@@ -702,7 +702,7 @@ void wizard_detect_creatures()
 // specified regex.
 void wizard_dismiss_all_monsters(bool force_all)
 {
-    char buf[80] = "";
+    char buf[1024] = "";
     if (!force_all)
     {
         mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
@@ -726,7 +726,7 @@ void debug_make_monster_shout(monster* mon)
     mpr("Make the monster (S)hout or (T)alk? ", MSGCH_PROMPT);
 
     char type = (char) getchm(KMC_DEFAULT);
-    type = tolower(type);
+    type = toalower(type);
 
     if (type != 's' && type != 't')
     {
@@ -801,7 +801,7 @@ void wizard_apply_monster_blessing(monster* mon)
         MSGCH_PROMPT);
 
     char type = (char) getchm(KMC_DEFAULT);
-    type = tolower(type);
+    type = toalower(type);
 
     if (type != 'b' && type != 's' && type != 'r')
     {
@@ -1021,13 +1021,13 @@ void wizard_give_monster_item(monster* mon)
 
     if ((mon->flags & MF_HARD_RESET) && !(item.flags & ISFLAG_SUMMONED))
     {
-       mprf(MSGCH_WARN, "WARNING: Monster has MF_HARD_RESET and all its "
-            "items will disappear when it does.");
+        mprf(MSGCH_WARN, "WARNING: Monster has MF_HARD_RESET and all its "
+             "items will disappear when it does.");
     }
     else if ((item.flags & ISFLAG_SUMMONED) && !mon->is_summoned())
     {
-       mprf(MSGCH_WARN, "WARNING: Item is summoned and will disappear when "
-            "the monster does.");
+        mprf(MSGCH_WARN, "WARNING: Item is summoned and will disappear when "
+             "the monster does.");
     }
     // Monster's old item moves to player's inventory.
     if (old_eq != NON_ITEM)
@@ -1035,8 +1035,8 @@ void wizard_give_monster_item(monster* mon)
         mpr("Fetching monster's old item.");
         if (mitm[old_eq].flags & ISFLAG_SUMMONED)
         {
-           mprf(MSGCH_WARN, "WARNING: Item is summoned and shouldn't really "
-                "be anywhere but in the inventory of a summoned monster.");
+            mprf(MSGCH_WARN, "WARNING: Item is summoned and shouldn't really "
+                 "be anywhere but in the inventory of a summoned monster.");
         }
         mitm[old_eq].pos.reset();
         mitm[old_eq].link = NON_ITEM;
@@ -1139,7 +1139,7 @@ void wizard_make_monster_summoned(monster* mon)
 
     mpr("Which summon type? ", MSGCH_PROMPT);
 
-    char choice = tolower(getchm());
+    char choice = toalower(getchm());
 
     if (!(choice >= 'a' && choice <= 'g') && choice != 'm' && choice != 's')
     {
@@ -1495,7 +1495,7 @@ void debug_miscast(int target_index)
 void debug_ghosts()
 {
     mpr("(C)reate or (L)oad bones file?", MSGCH_PROMPT);
-    const char c = tolower(getchm());
+    const char c = toalower(getchm());
 
     if (c == 'c')
         save_ghost(true);

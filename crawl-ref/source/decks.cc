@@ -12,7 +12,6 @@
 
 #include "externs.h"
 
-#include "acquire.h"
 #include "beam.h"
 #include "cio.h"
 #include "coordit.h"
@@ -69,6 +68,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
+#include "uncancel.h"
 #include "view.h"
 #include "xom.h"
 
@@ -1016,12 +1016,11 @@ bool deck_stack()
 
     _deck_ident(deck);
     const int num_cards    = cards_in_deck(deck);
-    const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
     if (num_cards == 1)
         mpr("There's only one card left!");
     else if (num_cards < 5)
-        mprf("The deck only has %d cards.", num_to_stack);
+        mprf("The deck only has %d cards.", num_cards);
     else if (num_cards == 5)
         mpr("The deck has exactly five cards.");
     else
@@ -1030,6 +1029,19 @@ bool deck_stack()
              num_cards);
     }
     more();
+
+    run_uncancel(UNC_STACK_FIVE, slot);
+    return true;
+}
+
+bool stack_five(int slot)
+{
+    item_def& deck(you.inv[slot]);
+    if (_check_buggy_deck(deck))
+        return false;
+
+    const int num_cards    = cards_in_deck(deck);
+    const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "deck_stack");
@@ -1050,22 +1062,14 @@ bool deck_stack()
         // Rest of deck is discarded.
     }
 
-    // Re-add the cards, with changed flags, in case the game is closed
-    // while the swapping takes place, so we don't leak information about
-    // the deck.
-    // If it does get closed, the order of the top five cards will be
-    // unchanged, but the deck will be marked as stacked. (jpeg)
-    for (unsigned int i = 0; i < draws.size(); ++i)
-    {
-        _push_top_card(deck, draws[draws.size() - 1 - i],
-                       flags[flags.size() - 1 - i]);
-    }
+    CrawlHashTable &props = deck.props;
     deck.plus2 = -num_to_stack;
     props["num_marked"] = static_cast<char>(num_to_stack);
     // Remember that the deck was stacked even if it is later unmarked
     // (e.g. by Nemelex abandonment).
     props["stacked"] = true;
     you.wield_change = true;
+    bool done = true;
 
     if (draws.size() > 1)
     {
@@ -1094,7 +1098,7 @@ bool deck_stack()
             {
                 cgotoxy(1,11);
                 textcolor(LIGHTGREY);
-                cprintf("Are you sure? (press y or Y to confirm)");
+                cprintf("Are you done? (press y or Y to confirm)");
                 if (toupper(getchk()) == 'Y')
                     break;
 
@@ -1122,19 +1126,13 @@ bool deck_stack()
 
                 _redraw_stacked_cards(draws, selected);
             }
-            // If you HUP the game, you lose the opportunity for further
-            // stacking, but you might have already ordered some, no need
-            // to destroy that.
             else if (c == CK_ESCAPE && crawl_state.seen_hups)
-                break; // TODO: continue on game restore instead?
+            {
+                done = false;
+                break; // continue on game restore
+            }
         }
         redraw_screen();
-    }
-    // Remove the cards again, and add them
-    for (unsigned int i = 0; i < draws.size(); ++i)
-    {
-        uint8_t   _flags;
-        _draw_top_card(deck, false, _flags);
     }
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
@@ -1145,7 +1143,7 @@ bool deck_stack()
     _check_buggy_deck(deck);
     you.wield_change = true;
 
-    return true;
+    return done;
 }
 
 // Draw the next three cards, discard two and pick one.
@@ -1158,6 +1156,12 @@ bool deck_triple_draw()
         return false;
     }
 
+    run_uncancel(UNC_DRAW_THREE, slot);
+    return true;
+}
+
+bool draw_three(int slot)
+{
     item_def& deck(you.inv[slot]);
 
     if (_check_buggy_deck(deck))
@@ -1204,7 +1208,17 @@ bool deck_triple_draw()
             }
             need_prompt_redraw = false;
         }
-        const int keyin = tolower(get_ch());
+        const int keyin = toalower(get_ch());
+
+        if (crawl_state.seen_hups)
+        {
+            // Return the cards, for now.
+            for (int i = 0; i < num_to_draw; ++i)
+                _push_top_card(deck, draws[i], flags[i]);
+
+            return false;
+        }
+
         if (keyin == '?')
         {
             _describe_cards(draws);
@@ -1461,7 +1475,7 @@ static void _portal_card(int power, deck_rarity_type rarity)
 
 static void _warp_card(int power, deck_rarity_type rarity)
 {
-    if (item_blocks_teleport(true, true))
+    if (you.no_tele(true, true, true))
     {
         canned_msg(MSG_STRANGE_STASIS);
         return;
@@ -2458,7 +2472,7 @@ static void _genie_card(int power, deck_rarity_type rarity)
         mpr("A genie takes form and thunders: "
             "\"Choose your reward, mortal!\"");
         more();
-        acquirement(OBJ_RANDOM, AQ_CARD_GENIE);
+        run_uncancel(UNC_ACQUIREMENT, AQ_CARD_GENIE);
     }
     else
     {
@@ -2524,11 +2538,11 @@ static void _crusade_card(int power, deck_rarity_type rarity)
         // A chance to convert opponents.
         for (monster_iterator mi(you.get_los()); mi; ++mi)
         {
-             if (mi->friendly()
-                || mi->holiness() != MH_NATURAL
-                || mons_is_unique(mi->type)
-                || mons_immune_magic(*mi)
-                || player_will_anger_monster(*mi))
+            if (mi->friendly()
+               || mi->holiness() != MH_NATURAL
+               || mons_is_unique(mi->type)
+               || mons_immune_magic(*mi)
+               || player_will_anger_monster(*mi))
             {
                 continue;
             }
@@ -2794,42 +2808,60 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 
     monster *mon = create_monster(mg);
 
-    if (mon)
+    if (!mon)
     {
-        mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
-
-        redraw_screen(); // We want to see the monster while it's asking to be paid.
-
-        if (player_will_anger_monster(mon))
-        {
-            simple_monster_message(mon, " is repulsed!");
-            return;
-        }
-
-        const int fee = fuzz_value(exper_value(mon), 15, 15);
-        if (fee > you.gold)
-        {
-            mprf("You cannot afford %s fee of %d gold!",
-                 mon->name(DESC_ITS).c_str(), fee);
-            simple_monster_message(mon, " attacks!");
-            return;
-        }
-
-        const string prompt = make_stringf("Pay %s fee of %d gold?",
-                                           mon->name(DESC_ITS).c_str(), fee);
-        if (!yesno(prompt.c_str()))
-        {
-            simple_monster_message(mon, " attacks!");
-            return;
-        }
-
-        simple_monster_message(mon, " joins your ranks!");
-        mon->attitude = ATT_FRIENDLY;
-        mons_att_changed(mon);
-        you.del_gold(fee);
-    }
-    else
         mpr("You see a puff of smoke.");
+        return;
+    }
+
+    mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
+
+    redraw_screen(); // We want to see the monster while it's asking to be paid.
+
+    if (player_will_anger_monster(mon))
+    {
+        simple_monster_message(mon, " is repulsed!");
+        return;
+    }
+
+    const int fee = fuzz_value(exper_value(mon), 15, 15);
+    if (fee > you.gold)
+    {
+        mprf("You cannot afford %s fee of %d gold!",
+             mon->name(DESC_ITS).c_str(), fee);
+        simple_monster_message(mon, " attacks!");
+        return;
+    }
+
+    mon->props["mercenary_fee"] = fee;
+    run_uncancel(UNC_MERCENARY, mon->mid);
+}
+
+bool recruit_mercenary(int mid)
+{
+    monster *mon = monster_by_mid(mid);
+    if (!mon)
+        return true; // wut?
+
+    int fee = mon->props["mercenary_fee"].get_int();
+    const string prompt = make_stringf("Pay %s fee of %d gold?",
+                                       mon->name(DESC_ITS).c_str(), fee);
+    bool paid = yesno(prompt.c_str(), false, 0);
+    if (crawl_state.seen_hups)
+        return false;
+
+    mon->props.erase("mercenary_fee");
+    if (!paid)
+    {
+        simple_monster_message(mon, " attacks!");
+        return true;
+    }
+
+    simple_monster_message(mon, " joins your ranks!");
+    mon->attitude = ATT_FRIENDLY;
+    mons_att_changed(mon);
+    you.del_gold(fee);
+    return true;
 }
 
 static void _alchemist_card(int power, deck_rarity_type rarity)

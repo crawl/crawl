@@ -8,6 +8,7 @@
 
 #include "areas.h"
 #include "arena.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "cloud.h"
@@ -21,6 +22,7 @@
 #include "dgn-overview.h"
 #include "dlua.h"
 #include "dungeon.h"
+#include "effects.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
@@ -966,7 +968,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     {
         // Mummies committing suicide don't cause a death curse.
         if (index == mons->mindex())
-           return;
+            return;
         target = &menv[index];
     }
 
@@ -1047,6 +1049,16 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
+static void _setup_torment_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_NEG;
+    beam.damage  = 0;
+    beam.name    = "wave of negative energy";
+    beam.colour  = LIGHTGRAY;
+    beam.ex_size = 1;
+}
+
 static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
                                          actor* agent)
 {
@@ -1088,6 +1100,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
         _setup_lightning_explosion(beam, *mons);
         sanct_msg    = "By Zin's power, the ball lightning's explosion "
                        "is contained.";
+    }
+    else if (type == MONS_LURKING_HORROR)
+    {
+        _setup_torment_explosion(beam, *mons);
+        sanct_msg = "The lurking horror fades away harmlessly.";
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
@@ -1131,8 +1148,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (is_sanctuary(mons->pos()))
         return false;
 
-    // Inner-flamed monsters leave behind some flame clouds.
-    if (mons->has_ench(ENCH_INNER_FLAME))
+    // Explosion side-effects.
+    if (type == MONS_LURKING_HORROR)
+        torment(mons, mons->mindex(), mons->pos());
+    else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
             if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
@@ -1206,7 +1225,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 void mons_relocated(monster* mons)
 {
     // If the main body teleports get rid of the tentacles
-    if (mons_base_type(mons) == MONS_KRAKEN)
+    if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         int headnum = mons->mindex();
 
@@ -1215,44 +1234,38 @@ void mons_relocated(monster* mons)
 
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mi->type == MONS_KRAKEN_TENTACLE
-                && (int)mi->number == headnum)
+            if (mi->is_child_tentacle_of(mons))
             {
                 for (monster_iterator connect; connect; ++connect)
                 {
-                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                        && (int) connect->number == mi->mindex())
-                    {
+                    if (connect->is_child_tentacle_of(*mi))
                         monster_die(*connect, KILL_RESET, -1, true, false);
-                    }
                 }
                 monster_die(*mi, KILL_RESET, -1, true, false);
             }
         }
     }
     // If a tentacle/segment is relocated just kill the tentacle
-    else if (mons->type == MONS_KRAKEN_TENTACLE
-             || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
+    else if (mons->is_child_monster())
     {
         int base_id = mons->mindex();
 
-        if (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
-            base_id = mons->number;
+        monster* tentacle = mons;
+
+        if (mons->is_child_tentacle_segment()
+                && !::invalid_monster_index(base_id)
+                && menv[base_id].is_parent_monster_of(mons))
+        {
+            tentacle = &menv[base_id];
+        }
 
         for (monster_iterator connect; connect; ++connect)
         {
-            if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                && (int) connect->number == base_id)
-            {
+            if (connect->is_child_tentacle_of(tentacle))
                 monster_die(*connect, KILL_RESET, -1, true, false);
-            }
         }
 
-        if (!::invalid_monster_index(base_id)
-            && menv[base_id].type == MONS_KRAKEN_TENTACLE)
-        {
-            monster_die(&menv[base_id], KILL_RESET, -1, true, false);
-        }
+        monster_die(tentacle, KILL_RESET, -1, true, false);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE
              || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
@@ -1280,20 +1293,25 @@ void mons_relocated(monster* mons)
     mons->clear_clinging();
 }
 
-static int _destroy_tentacle(int tentacle_idx, monster* origin)
+// When given either a tentacle end or segment, kills the end and all segments
+// of that tentacle.
+static int _destroy_tentacle(monster* mons)
 {
     int seen = 0;
 
-    if (invalid_monster_index(tentacle_idx))
+    monster* head = mons_is_tentacle_segment(mons->type)
+            ? mons_get_parent_monster(mons) : mons;
+
+    //If we tried to find the head, but failed (probably because it is already
+    //dead), cancel trying to kill this tentacle
+    if (head == NULL)
         return 0;
 
     // Some issue with using monster_die leading to DEAD_MONSTER
     // or w/e. Using hurt seems to cause more problems though.
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_KRAKEN_TENTACLE_SEGMENT
-            && (int)mi->number == tentacle_idx
-            && mi->mindex() != origin->mindex())
+        if (mi->is_child_tentacle_of(head))
         {
             if (mons_near(*mi))
                 seen++;
@@ -1302,14 +1320,14 @@ static int _destroy_tentacle(int tentacle_idx, monster* origin)
         }
     }
 
-    if (origin->mindex() != tentacle_idx)
+    if (mons != head)
     {
-        if (mons_near(&menv[tentacle_idx]))
-            seen++;
+        if (mons_near(head))
+                seen++;
 
         //mprf("killing base, %d %d", origin->mindex(), tentacle_idx);
         //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
-        monster_die(&menv[tentacle_idx], KILL_MISC, NON_MONSTER, true);
+        monster_die(head, KILL_MISC, NON_MONSTER, true);
     }
 
     return seen;
@@ -1317,31 +1335,21 @@ static int _destroy_tentacle(int tentacle_idx, monster* origin)
 
 static int _destroy_tentacles(monster* head)
 {
-    int tent = 0;
-    int headnum = head->mindex();
-
-    if (invalid_monster_index(headnum))
-        return 0;
-
+    int seen = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_KRAKEN_TENTACLE
-            && (int)mi->number == headnum)
+        if (mi->is_child_tentacle_of(head))
         {
-            for (monster_iterator connect; connect; ++connect)
+            if (_destroy_tentacle(*mi))
+                seen++;
+            if (!mi->is_child_tentacle_segment())
             {
-                if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                    && (int) connect->number == mi->mindex())
-                {
-                    connect->hurt(*connect, INSTANT_DEATH);
-                }
+                monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
+                seen++;
             }
-            if (mons_near(*mi))
-                tent++;
-            mi->hurt(*mi, INSTANT_DEATH);
         }
     }
-    return tent;
+    return seen;
 }
 
 static string _killer_type_name(killer_type killer)
@@ -1563,7 +1571,7 @@ int monster_die(monster* mons, killer_type killer,
     // Take notes and mark milestones.
     record_monster_defeat(mons, killer);
 
-    // From time to time Trog gives you a little bonus.
+    // Various sources of berserk extension on kills.
     if (killer == KILL_YOU && you.berserk())
     {
         if (you.religion == GOD_TROG
@@ -1576,14 +1584,21 @@ int monster_die(monster* mons, killer_type killer,
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
         }
+        else if (player_equip_unrand_effect(UNRAND_BLOODLUST))
+        {
+            if (coinflip())
+            {
+                const int bonus = (2 + random2(4)) / 2;
+                you.increase_duration(DUR_BERSERK, bonus);
+                mpr("The necklace of Bloodlust glows a violent red.");
+            }
+        }
         else if (!you.suppressed()
-                 && wearing_amulet(AMU_RAGE)
+                 && you.wearing(EQ_AMULET, AMU_RAGE)
                  && one_chance_in(30))
         {
             const int bonus = (2 + random2(4)) / 2;
-
             you.increase_duration(DUR_BERSERK, bonus);
-
             mpr("Your amulet glows a violent red.");
         }
     }
@@ -1603,6 +1618,7 @@ int monster_die(monster* mons, killer_type killer,
 
     if (mons->type == MONS_GIANT_SPORE
         || mons->type == MONS_BALL_LIGHTNING
+        || mons->type == MONS_LURKING_HORROR
         || mons->has_ench(ENCH_INNER_FLAME))
     {
         did_death_message =
@@ -2304,34 +2320,22 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->is_named() && created_friendly)
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
-    else if (mons_base_type(mons) == MONS_KRAKEN)
+    else if (mons_is_tentacle_head(mons_base_type(mons)))
     {
-        if (_destroy_tentacles(mons) && !in_transit)
-            mpr("The dead kraken's tentacles slide back into the water.");
-    }
-    else if ((mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                  || mons->type == MONS_KRAKEN_TENTACLE)
-              && killer != KILL_MISC)
-    {
-        int t_idx = mons->type == MONS_KRAKEN_TENTACLE
-                    ? mons->mindex() : mons->number;
-        if (_destroy_tentacle(t_idx, mons) && !in_transit)
+        if (_destroy_tentacles(mons)
+            && !in_transit
+            && you.see_cell(mons->pos()))
         {
-            //mprf("A tentacle died?");
+            if (mons_base_type(mons) == MONS_KRAKEN)
+                mpr("The dead kraken's tentacles slide back into the water.");
+            else if (mons->type == MONS_TENTACLED_STARSPAWN)
+                mpr("The starspawn's tentacles wither and die.");
         }
-
     }
-    else if (mons->type == MONS_ELDRITCH_TENTACLE)
+    else if (mons_is_tentacle(mons->type) && killer != KILL_MISC
+            || mons->type == MONS_ELDRITCH_TENTACLE)
     {
-        for (monster_iterator mit; mit; ++mit)
-        {
-            if (mit->alive()
-                && mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && mit->number == unsigned(mons->mindex()))
-            {
-                monster_die(*mit, KILL_MISC, NON_MONSTER, true);
-            }
-        }
+        _destroy_tentacle(mons);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
              && killer != KILL_MISC)
@@ -2514,12 +2518,15 @@ void monster_cleanup(monster* mons)
     // cleaned up first, we wouldn't get a message anyway.
     mons->stop_constricting_all(false, true);
 
+    if (mons_is_tentacle_head(mons_base_type(mons)))
+        _destroy_tentacles(mons);
+
     env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();
 
     for (monster_iterator mi; mi; ++mi)
-       if (mi->foe == monster_killed)
+        if (mi->foe == monster_killed)
             mi->foe = MHITNOT;
 
     if (you.pet_target == monster_killed)
@@ -2679,7 +2686,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
 
-    if (mons->type == MONS_KRAKEN)
+    if (mons_is_tentacle_head(mons_base_type(mons)))
         _destroy_tentacles(mons);
 
     // Inform listeners that the original monster is gone.
@@ -3719,7 +3726,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
 
         // We don't care about what's underneath the rain cloud if we can fly.
-        if (mons->flight_mode() != FL_NONE)
+        if (mons->flight_mode())
             return false;
 
         // These don't care about deep water.
@@ -3903,7 +3910,7 @@ int mons_natural_regen_rate(monster* mons)
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
-    // Levitating/flying/clinging monsters don't make contact with the terrain.
+    // Flying/clinging monsters don't make contact with the terrain.
     if (!mons->ground_level())
         return;
 
@@ -4002,6 +4009,7 @@ bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor
         case MONS_TROLL:
         case MONS_HYDRA:
         case MONS_KILLER_KLOWN:
+        case MONS_STARCURSED_MASS:
         case MONS_LERNAEAN_HYDRA:
         case MONS_DISSOLUTION:
         case MONS_TEST_SPAWNER:
@@ -4391,6 +4399,8 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
+
+    shake_off_monsters(mons);
 }
 
 void mons_clear_trapping_net(monster* mon)
@@ -4551,40 +4561,26 @@ void mons_att_changed(monster* mon)
 {
     const mon_attitude_type att = mon->temp_attitude();
 
-    if (mons_base_type(mon) == MONS_KRAKEN)
-    {
-        const int headnum = mon->mindex();
-
-        for (monster_iterator mi; mi; ++mi)
-            if (mi->type == MONS_KRAKEN_TENTACLE
-                && (int)mi->number == headnum)
-            {
-                mi->attitude = att;
-                for (monster_iterator connect; connect; ++connect)
-                {
-                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                        && (int) connect->number == mi->mindex())
-                    {
-                        connect->attitude = att;
-                    }
-                }
-            }
-    }
-    if (mon->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+    if (mons_is_tentacle_head(mons_base_type(mon))
         || mon->type == MONS_ELDRITCH_TENTACLE)
     {
-        unsigned base_idx = mon->type == MONS_ELDRITCH_TENTACLE ?
-                            mon->mindex() : mon->number;
-
-        menv[base_idx].attitude = att;
         for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && mi->number == base_idx)
+            if (mi->is_child_tentacle_of(mon))
             {
                 mi->attitude = att;
+                if (mon->type != MONS_ELDRITCH_TENTACLE)
+                {
+                    for (monster_iterator connect; connect; ++connect)
+                    {
+                        if (connect->is_child_tentacle_of(mi->as_monster()))
+                            connect->attitude = att;
+                    }
+                }
+
+                // It's almost always flipping between hostile and friendly;
+                // enslaving a pacified starspawn is still a shock.
+                mi->stop_constricting_all();
             }
-        }
     }
 }
 
@@ -4607,7 +4603,8 @@ void debuff_monster(monster* mon)
         ENCH_REGENERATION,
         ENCH_STICKY_FLAME,
         ENCH_TP,
-        ENCH_INNER_FLAME
+        ENCH_INNER_FLAME,
+        ENCH_OZOCUBUS_ARMOUR
     };
 
     // Dispel all magical enchantments...
@@ -4622,6 +4619,18 @@ void debuff_monster(monster* mon)
             // For non-natural invisibility, turn autopickup back on manually,
             // since dispelling invisibility quietly won't do so.
             autotoggle_autopickup(false);
+        }
+        if (lost_enchantments[i] == ENCH_CONFUSION)
+        {
+            // Don't dispel permaconfusion.
+            if (mons_class_flag(mon->type, M_CONFUSED))
+                continue;
+        }
+        if (lost_enchantments[i] == ENCH_REGENERATION)
+        {
+            // Don't dispel regen if it's from Trog.
+            if (mon->has_ench(ENCH_RAISED_MR))
+                continue;
         }
 
         mon->del_ench(lost_enchantments[i], true, true);

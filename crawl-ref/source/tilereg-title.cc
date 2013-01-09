@@ -27,15 +27,42 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
     if (!m_img.load_texture(_get_title_image().c_str(), MIPMAP_NONE))
         return;
 
-    // Center
-    wx = width;
-    wy = height;
-    ox = (wx - m_img.orig_width()) / 2;
-    oy = (wy - m_img.orig_height()) / 2;
+    if (m_img.orig_width() < width && m_img.orig_height() < height)
+    {
+        // Center
+        wx = width;
+        wy = height;
+        ox = (wx - m_img.orig_width()) / 2;
+        oy = (wy - m_img.orig_height()) / 2;
 
-    GLWPrim rect(0, 0, m_img.width(), m_img.height());
-    rect.set_tex(0, 0, 1, 1);
-    m_buf.add_primitive(rect);
+        GLWPrim rect(0, 0, m_img.width(), m_img.height());
+        rect.set_tex(0, 0, 1, 1);
+        m_buf.add_primitive(rect);
+    }
+    else
+    {
+        // scale to fit
+        if (width < height)
+        {
+            // taller than wide (scale to fit width; leave top/bottom borders)
+            ox = 0;
+            oy = (height - m_img.orig_height()*width/m_img.orig_width())/2;
+            wx = m_img.width()*width/m_img.orig_width();
+            wy = m_img.height()*width/m_img.orig_width();
+        }
+        else
+        {
+            // wider than tall (so scale to fit height; leave left/right borders)
+            oy = 0;
+            ox = (width - m_img.orig_width()*height/m_img.orig_height())/2;
+            wx = m_img.width()*height/m_img.orig_height();
+            wy = m_img.height()*height/m_img.orig_height();
+        }
+
+        GLWPrim rect(0, 0, wx, wy);
+        rect.set_tex(0, 0, 1, 1);
+        m_buf.add_primitive(rect);
+    }
 }
 
 void TitleRegion::render()

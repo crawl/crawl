@@ -188,7 +188,7 @@ circumference as exits. Note that it is not possible to predict
 which spaces the level builder will choose to connect; if you need
 predictability, use explicit @ exits on the edge.
 
-The level-builder will also implicitly treat doors and secret doors
+The level-builder will also implicitly treat doors and runed doors
 on the edge of a map as explicit exits (the same as using @) and
 connect them to the rest of the level.
 

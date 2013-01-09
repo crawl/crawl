@@ -175,7 +175,9 @@ static const char* _jewellery_base_ability_string(int subtype)
     case AMU_RESIST_CORROSION:   return "rCorr";
     case AMU_THE_GOURMAND:       return "Gourm";
     case AMU_CONSERVATION:       return "Cons";
+#if TAG_MAJOR_VERSION == 34
     case AMU_CONTROLLED_FLIGHT:  return "cFly";
+#endif
     case AMU_RESIST_MUTATION:    return "rMut";
     case AMU_GUARDIAN_SPIRIT:    return "Spirit";
     case AMU_FAITH:              return "Faith";
@@ -221,7 +223,8 @@ static vector<string> _randart_propnames(const item_def& item,
         { "+Blink", ARTP_BLINK,                 2 },
         { "+Rage",  ARTP_BERSERK,               2 },
         { "+Inv",   ARTP_INVISIBLE,             2 },
-        { "+Lev",   ARTP_LEVITATE,              2 },
+        { "+Fly",   ARTP_FLY,                   2 },
+        { "+Fog",   ARTP_FOG,                   2 },
 
         // Resists, also really important
         { "rElec",  ARTP_ELECTRICITY,           2 },
@@ -247,6 +250,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
         { "Curse",  ARTP_CURSED,                2 },
         { "Clar",   ARTP_CLARITY,               2 },
+        { "RMsl",   ARTP_RMSL,                  2 }
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -353,29 +357,13 @@ static vector<string> _randart_propnames(const item_def& item,
     return propnames;
 }
 
-// Remove randart auto-inscription.  Do it once for each property
-// string, rather than the return value of artefact_auto_inscription(),
-// in case more information about the randart has been learned since
-// the last auto-inscription.
-void trim_randart_inscrip(item_def& item)
-{
-    vector<string> propnames = _randart_propnames(item, true);
-
-    for (unsigned int i = 0; i < propnames.size(); ++i)
-    {
-        item.inscription = replace_all(item.inscription, propnames[i]+",", "");
-        item.inscription = replace_all(item.inscription, propnames[i],     "");
-    }
-    trim_string(item.inscription);
-}
-
 void trim_god_gift_inscrip(item_def& item)
 {
     item.inscription = replace_all(item.inscription, "god gift, ", "");
     item.inscription = replace_all(item.inscription, "god gift", "");
 }
 
-string artefact_auto_inscription(const item_def& item)
+string artefact_inscription(const item_def& item)
 {
     if (item.base_type == OBJ_BOOKS)
         return "";
@@ -387,17 +375,6 @@ string artefact_auto_inscription(const item_def& item)
     if (!insc.empty() && insc[insc.length() - 1] == ',')
         insc.erase(insc.length() - 1);
     return insc;
-}
-
-void add_autoinscription(item_def &item)
-{
-    if (!is_artefact(item) || !Options.autoinscribe_artefacts)
-        return;
-
-    // Remove previous randart inscription.
-    trim_randart_inscrip(item);
-
-    add_inscription(item, artefact_auto_inscription(item));
 }
 
 void add_inscription(item_def &item, string inscrip)
@@ -446,7 +423,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
         { ARTP_EYESIGHT, "It enhances your eyesight.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
-        { ARTP_LEVITATE, "It lets you levitate.", false},
+        { ARTP_FLY, "It lets you fly.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISES, "It makes noises.", false},
@@ -458,6 +435,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CURSED, "It may recurse itself.", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_MUTAGENIC, "It causes magical contamination when unequipped.", false},
+        { ARTP_RMSL, "It protects you from missiles.", false},
+        { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
@@ -554,8 +533,6 @@ int str_to_trap(const string &s)
     // allow a couple of synonyms
     if (tspec == "random" || tspec == "any")
         return TRAP_RANDOM;
-    else if (tspec == "suitable")
-        return TRAP_INDEPTH;
     else if (tspec == "nonteleport" || tspec == "noteleport"
              || tspec == "nontele" || tspec == "notele")
     {
@@ -616,7 +593,7 @@ static string _describe_demon(const string& name, flight_type fly)
         " lumpy ",
         "n armoured ",
         " carapaced ",
-        " slender "
+        " slender ",
     };
 
     const char* wing_names[] = {
@@ -629,12 +606,12 @@ static string _describe_demon(const string& name, flight_type fly)
         " with small, bat-like wings",
         " with hairy wings",
         " with great feathered wings",
-        " with shiny metal wings"
+        " with shiny metal wings",
     };
 
     const char* lev_names[] = {
         " which hovers in mid-air",
-        " with sacs of gas hanging from its back"
+        " with sacs of gas hanging from its back",
     };
 
     const char* nonfly_names[] = {
@@ -695,7 +672,7 @@ static string _describe_demon(const string& name, flight_type fly)
 
     switch (fly)
     {
-    case FL_FLY:
+    case FL_WINGED:
         description << RANDOM_ELEMENT(wing_names);
         break;
 
@@ -1330,9 +1307,9 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_PONDEROUSNESS:
             description += "It is very cumbersome, thus slowing your movement.";
             break;
-        case SPARM_LEVITATION:
+        case SPARM_FLYING:
             description += "It can be activated to allow its wearer to "
-                "float above the ground and remain so indefinitely.";
+                "fly indefinitely.";
             break;
         case SPARM_MAGIC_RESISTANCE:
             description += "It increases its wearer's resistance "
@@ -2156,10 +2133,16 @@ string get_item_description(const item_def &item, bool verbose,
     if (verbose && origin_describable(item))
         description << "\n" << origin_desc(item) << ".";
 
-    if (verbose)
+    // This information is obscure and differs per-item, so looking it up in
+    // a docs file you don't know to exist is tedious.  On the other hand,
+    // it breaks the screen for people on very small terminals.
+    if (verbose && get_number_of_lines() >= 28)
     {
         description << "\n\n" << "Stash search prefixes: "
                     << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+        string menu_prefix = item_prefix(item, false);
+        if (!menu_prefix.empty())
+            description << "\nMenu/colouring prefixes: " << menu_prefix;
     }
 
     return description.str();
@@ -2389,7 +2372,6 @@ static command_type _get_action(int key, vector<command_type> actions)
         act_key[CMD_QUAFF]              = 'q';
         act_key[CMD_DROP]               = 'd';
         act_key[CMD_INSCRIBE_ITEM]      = 'i';
-        act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
         act_key[CMD_ADJUST_INVENTORY]   = '=';
         act_key_init = false;
     }
@@ -2401,22 +2383,6 @@ static command_type _get_action(int key, vector<command_type> actions)
             return *at;
     }
     return CMD_NO_CMD;
-}
-
-static bool _need_autoinscribe(item_def &item)
-{
-    // Only allow autoinscription if we don't have all the text already.
-    if (is_artefact(item))
-    {
-        string ainscrip = artefact_auto_inscription(item);
-        if (!ainscrip.empty()
-            && (item.inscription.empty()
-                || item.inscription.find(ainscrip) == string::npos))
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 //---------------------------------------------------------------
@@ -2505,9 +2471,6 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     if (allow_inscribe)
         actions.push_back(CMD_INSCRIBE_ITEM);
 
-    if (_need_autoinscribe(item))
-        actions.push_back(CMD_MAKE_NOTE); //autoinscribe
-
     static bool act_str_init = true; // Does act_str needs to be initialised?
     static map<command_type, string> act_str;
     if (act_str_init)
@@ -2525,7 +2488,6 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         act_str[CMD_QUAFF]              = "(q)uaff";
         act_str[CMD_DROP]               = "(d)rop";
         act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
-        act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
         act_str[CMD_ADJUST_INVENTORY]   = "(=)adjust";
         act_str_init = false;
     }
@@ -2567,15 +2529,15 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     menu.draw_menu();
 #endif
 
-    keyin = tolower(getch_ck());
+    keyin = toalower(getch_ck());
     command_type action = _get_action(keyin, actions);
 
 #ifdef TOUCH_UI
     if (menu.process_key(keyin))
     {
         vector<MenuItem*> selection = menu.get_selected_items();
-        if( selection.size() == 1 )
-            action = (command_type)selection.at(0)->get_id();
+        if (selection.size() == 1)
+            action = (command_type) selection.at(0)->get_id();
     }
 #endif
 
@@ -2613,14 +2575,11 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         eat_food(slot);
         return false;
     case CMD_READ:
-        read_scroll(slot);
-        if (item.base_type == OBJ_BOOKS)
-            return true; // We stay in the inventory to see the book content.
-        else
-        {
+        if (item.base_type != OBJ_BOOKS)
             redraw_screen();
-            return false;
-        }
+        read_scroll(slot);
+        // In case of a book, stay in the inventory to see the content.
+        return item.base_type == OBJ_BOOKS;
     case CMD_WEAR_JEWELLERY:
         redraw_screen();
         puton_ring(slot);
@@ -2639,9 +2598,6 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         return false;
     case CMD_INSCRIBE_ITEM:
         inscribe_item(item, false);
-        break;
-    case CMD_MAKE_NOTE:
-        add_autoinscription(item);
         break;
     case CMD_ADJUST_INVENTORY:
         _adjust_item(item);
@@ -2670,7 +2626,7 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
 #endif
 
     if (_can_show_spells(item))
-      return _describe_spellbook(item);
+        return _describe_spellbook(item);
 
     _show_item_description(item);
     _update_inscription(item);
@@ -2718,21 +2674,13 @@ void inscribe_item(item_def &item, bool msgwin)
 
     const bool is_inscribed = !item.inscription.empty();
 
-    bool need_autoinscribe = _need_autoinscribe(item) && msgwin;
     string prompt;
     int keyin;
 
-    // Don't prompt for whether to inscribe in the first place unless
-    // autoinscribing or clearing an existing inscription become an option.
-    if (need_autoinscribe && !is_inscribed)
-        prompt = "You can (i)nscribe or (a)utoinscribe.";
-    else if (!need_autoinscribe && is_inscribed)
+    if (is_inscribed)
+    {
         prompt = "You can (a)dd to, (r)eplace or (c)lear the inscription.";
-    else if (need_autoinscribe && is_inscribed)
-        prompt = "You can (a)dd to, (r)eplace, (c)lear the inscription "
-                 "or (A)utoinscribe.";
 
-    if (prompt != "")
         if (msgwin)
             mpr(prompt.c_str(), MSGCH_PROMPT);
         else
@@ -2744,41 +2692,28 @@ void inscribe_item(item_def &item, bool msgwin)
             if (crawl_state.game_is_hints()
                 && wherey() <= get_number_of_lines() - 5)
             {
-                hints_inscription_info(need_autoinscribe, prompt);
+                hints_inscription_info(prompt);
             }
         }
+    }
 
-    keyin = (prompt != "" ? getch_ck() : 'i');
-    if (keyin != 'A')
-        keyin = tolower(keyin);
+    keyin = (is_inscribed ? getch_ck() : 'i');
+    keyin = toalower(keyin);
     switch (keyin)
     {
     case 'c':
         item.inscription.clear();
         break;
-    case 'A':
-        if (need_autoinscribe)
-        {
-            add_autoinscription(item);
-            break;
-        }
-        // If autoinscription is impossible, prompt for an inscription instead.
     case 'a':
-        if (!is_inscribed)
-        {
-            add_autoinscription(item);
-            break;
-        }
-        // If it is inscribed, prompt for an inscription instead.
     case 'i':
     case 'r':
     {
         if (!is_inscribed)
             prompt = "Inscribe with what? ";
-        else if (keyin == 'i' || keyin == 'a' || keyin == 'A')
-            prompt = "Add what to inscription? ";
-        else
+        else if (keyin == 'r')
             prompt = "Replace inscription with what? ";
+        else
+            prompt = "Add what to inscription? ";
 
         char buf[79];
         int ret;
@@ -3279,14 +3214,21 @@ static string _monster_stat_description(const monster_info& mi)
         result << ".\n";
     }
 
-    // Can the monster levitate/fly?
+    // Can the monster fly, and how?
     // This doesn't give anything away since no (very) ugly things can
     // fly, all ghosts can fly, and for demons it's already mentioned in
     // their flavour description.
-    if (mi.fly != FL_NONE)
+    switch (mi.fly)
     {
-        result << uppercase_first(pronoun) << " can "
-               << (mi.fly == FL_FLY ? "fly" : "levitate") << ".\n";
+    case FL_NONE:
+        break;
+    case FL_WINGED:
+        result << uppercase_first(pronoun) << " can fly by flapping "
+               << mi.pronoun(PRONOUN_POSSESSIVE) << " wings.\n";
+        break;
+    case FL_LEVITATE:
+        result << uppercase_first(pronoun) << " can fly.\n";
+        break;
     }
 
     // Unusual regeneration rates.
@@ -4031,7 +3973,7 @@ static const char *divine_title[NUM_GODS][8] =
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
      "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
 
-    // Fedhas Madash -- nature theme.  Titles could use some work
+    // Fedhas Madash -- nature theme.
     {"Walking Fertiliser", "Green %s",              "Inciter",                  "Photosynthesist",
      "Cultivator",         "Green Death",           "Nimbus",                   "Force of Nature"},
 
@@ -4044,25 +3986,25 @@ static const char *divine_title[NUM_GODS][8] =
      "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
 };
 
-static int _piety_level()
+static int _piety_level(int piety)
 {
-    return (you.piety >  160) ? 7 :
-           (you.piety >= 120) ? 6 :
-           (you.piety >= 100) ? 5 :
-           (you.piety >=  75) ? 4 :
-           (you.piety >=  50) ? 3 :
-           (you.piety >=  30) ? 2 :
-           (you.piety >    5) ? 1
-                              : 0;
+    return (piety >  160) ? 7 :
+           (piety >= 120) ? 6 :
+           (piety >= 100) ? 5 :
+           (piety >=  75) ? 4 :
+           (piety >=  50) ? 3 :
+           (piety >=  30) ? 2 :
+           (piety >    5) ? 1
+                          : 0;
 }
 
-string god_title(god_type which_god, species_type which_species)
+string god_title(god_type which_god, species_type which_species, int piety)
 {
     string title;
     if (you.penance[which_god])
         title = divine_title[which_god][0];
     else
-        title = divine_title[which_god][_piety_level()];
+        title = divine_title[which_god][_piety_level(piety)];
 
     title = replace_all(title, "%s",
                         species_name(which_species, true, false));
@@ -4339,7 +4281,7 @@ void describe_god(god_type which_god, bool give_title)
         cprintf("\nTitle - ");
         textcolor(colour);
 
-        string title = god_title(which_god, you.species);
+        string title = god_title(which_god, you.species, you.piety);
         cprintf("%s", title.c_str());
     }
 
@@ -4602,62 +4544,6 @@ string get_skill_description(skill_type skill, bool need_title)
 
     switch (skill)
     {
-    case SK_UNARMED_COMBAT:
-    {
-        // Give a detailed listing of what attacks the character may perform.
-        vector<string> unarmed_attacks;
-
-        if (you.has_usable_tail())
-            unarmed_attacks.push_back("slap with your tail");
-
-        if (you.has_usable_fangs())
-            unarmed_attacks.push_back("bite with your sharp teeth");
-        else if (player_mutation_level(MUT_BEAK))
-            unarmed_attacks.push_back("peck with your beak");
-
-        if (player_mutation_level(MUT_HORNS))
-            unarmed_attacks.push_back("headbutt with your horns");
-        else if (you.species == SP_NAGA)
-            unarmed_attacks.push_back("do a headbutt attack");
-
-        if (player_mutation_level(MUT_HOOVES))
-            unarmed_attacks.push_back("kick with your hooves");
-        else if (player_mutation_level(MUT_TALONS))
-            unarmed_attacks.push_back("claw with your talons");
-        else if (you.species != SP_NAGA && you.species != SP_FELID
-                 && !you.fishtail)
-        {
-            unarmed_attacks.push_back("deliver a kick");
-        }
-
-        if (you.has_usable_pseudopods())
-            unarmed_attacks.push_back("bludgeon with your pseudopods");
-
-        if (you.has_usable_tentacles())
-            unarmed_attacks.push_back("slap with your tentacles");
-
-        if (you.species == SP_FELID)
-            unarmed_attacks.push_back("use your claws");
-        else if (you.species != SP_OCTOPODE && !you.weapon())
-            unarmed_attacks.push_back("throw a punch");
-        else if (you.species != SP_OCTOPODE && you.has_usable_offhand())
-            unarmed_attacks.push_back("punch with your free hand");
-
-        if (!unarmed_attacks.empty())
-        {
-            string broken = "For example, you could ";
-                   broken += comma_separated_line(unarmed_attacks.begin(),
-                                                  unarmed_attacks.end(),
-                                                  " or ", ", ");
-                   broken += ".";
-            linebreak_string(broken, get_number_of_cols() - 1);
-
-            result += "\n";
-            result += broken;
-        }
-        break;
-    }
-
     case SK_INVOCATIONS:
         if (you.species == SP_DEMIGOD)
         {

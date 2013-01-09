@@ -440,6 +440,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             power /= 10;
         }
 
+        // Augmentation boosts spell power at high HP.
+        if (!fail_rate_check)
+        {
+            power *= 10 + 4 * augmentation_amount();
+            power /= 10;
+        }
+
         power = stepdown_value(power / 100, 50, 50, 150, 200);
     }
 
@@ -493,10 +500,8 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    if (player_effect_archmagi())
+    if (you.archmagi())
         enhanced++;
-
-    enhanced += augmentation_amount();
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
@@ -535,7 +540,7 @@ static bool _can_cast()
     }
 
     // Randart weapons.
-    if (player_effect_nocast())
+    if (you.no_cast())
     {
         mpr("Something interferes with your magic!");
         return false;
@@ -845,7 +850,7 @@ bool is_prevented_teleport(spell_type spell)
     return (spell == SPELL_BLINK
              || spell == SPELL_CONTROLLED_BLINK
              || spell == SPELL_TELEPORT_SELF)
-            && item_blocks_teleport(false, false);
+            && you.no_tele(false, false, spell != SPELL_TELEPORT_SELF);
 }
 
 bool spell_is_uncastable(spell_type spell, string &msg)
@@ -1603,6 +1608,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_RECALL:
         return cast_recall(fail);
 
+    case SPELL_DISJUNCTION:
+        return cast_disjunction(powc, fail);
+
     case SPELL_CORPSE_ROT:
         return cast_corpse_rot(fail);
 
@@ -1899,6 +1907,4 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
     }
-    if (spell == SPELL_CONDENSATION_SHIELD)
-        skills.insert(SK_SHIELDS);
 }

@@ -1,0 +1,17 @@
+Steve Worley's reference implementation of Worley Noise was originally licensed
+under the following terms:
+
+   Copyright 1994, 2002 by Steven Worley
+   This software may be modified and redistributed without restriction
+   provided this comment header remains intact in the source code.
+   This code is provided with no warrantee, express or implied, for
+   any purpose.
+
+While these terms are quite permissive, they do not reflect the text of a
+common, OSI approved license. On December 19, 2012 Steve agreed to release the
+code under the MIT license.
+
+   It's no problem at all to relicense the code to standardize it.
+   Please go ahead and change the header to show an MIT license.
+
+-- bh

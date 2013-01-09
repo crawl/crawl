@@ -44,7 +44,7 @@
 #ifdef WIZARD
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
-    if (player_in_connected_branch())
+    if (player_in_connected_branch() || player_in_branch(BRANCH_ABYSS))
     {
         int depth = you.depth;
         if (down)
@@ -64,6 +64,8 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
             // Special cases
             if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
                 return DNGN_EXIT_HELL;
+            else if (player_in_branch(BRANCH_ABYSS))
+                return DNGN_EXIT_ABYSS;
             else if (player_in_branch(BRANCH_MAIN_DUNGEON))
                 return DNGN_STONE_STAIRS_UP_I;
 
@@ -102,9 +104,6 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         }
         else
             return DNGN_ESCAPE_HATCH_UP;
-
-    case BRANCH_ABYSS:
-        return DNGN_EXIT_ABYSS;
 
     case BRANCH_PANDEMONIUM:
         if (down)
@@ -630,6 +629,11 @@ static void debug_load_map_by_name(string name, bool primary)
         you.props["force_map"] = toplace->name;
         wizard_recreate_level();
         you.props.erase("force_map");
+
+        // We just saved with you.props["force_map"] set; save again in
+        // case we crash (lest we have the property forever).
+        if (!crawl_state.test)
+            save_game_state();
     }
     else
     {
@@ -727,7 +731,7 @@ static void _debug_destroy_doors()
 // a) Destroys all traps on the level.
 // b) Kills all monsters on the level.
 // c) Suppresses monster generation.
-// d) Converts all closed doors and secret doors to floor.
+// d) Converts all closed doors to floor.
 // e) Forgets map.
 // f) Counts number of turns needed to explore the level.
 void debug_test_explore()
@@ -832,6 +836,15 @@ void wizard_recreate_level()
     viewwindow();
 
     trackers_init_new_level(true);
+}
+
+void wizard_clear_used_vaults()
+{
+    you.uniq_map_tags.clear();
+    you.uniq_map_names.clear();
+    env.level_uniq_maps.clear();
+    env.level_uniq_map_tags.clear();
+    mpr("All vaults are now eligible for [re]use.");
 }
 
 void wizard_abyss_speed()

@@ -201,6 +201,41 @@ static const char* cyrillic[][4] =
   {0}
 };
 
+static const char* runes[][4] =
+{
+  {"ae",  "ᛇ"},
+  {"a",   "ᚨ"},
+  {"b",   "ᛒ"},
+  {"c",   "ᚲ"},
+  {"d",   "ᛞ"},
+  {"e",   "ᛖ"},
+  {"f",   "ᚠ"},
+  {"g",   "ᚷ"},
+  {"h",   "ᚺ"},
+  {"i",   "ᛁ"},
+  {"j",   "ᛃ"},
+  {"k",   "ᚲ"},
+  {"l",   "ᛚ"},
+  {"m",   "ᛗ"},
+  {"ng",  "ᛜ"},
+  {"n",   "ᚾ"},
+  {"o",   "ᛟ"},
+  {"ph",  "ᚠ"},
+  {"p",   "ᛈ"},
+  {"q",   "ᛩ"},
+  {"r",   "ᚱ"},
+  {"s",   "ᛊ"},
+  {"th",  "ᚦ"},
+  {"t",   "ᛏ"},
+  {"u",   "ᚢ"},
+  {"v",   "ᚡ"},
+  {"w",   "ᚹ"},
+  {"x",   "ᚲᛊ"},
+  {"y",   "ᚤ"}, // Anglo-Saxon, sometimes medieval
+  {"z",   "ᛉ"},
+  {0}
+};
+
 static void _replace_cap_variants(string &str,
                                   string a,
                                   string b,
@@ -415,6 +450,9 @@ void filter_lang(string &str)
         break;
     case LANG_WIDE:
         return _wide(str);
+    case LANG_FUTHARK:
+        repl = runes;
+        break;
     default:
         return;
     }

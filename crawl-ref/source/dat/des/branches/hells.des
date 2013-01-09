@@ -123,7 +123,11 @@ NAME:   hell_entry
 TAGS:   extra allow_dup luniq can_overwrite replace_portal
 DEPTH:  D:21-27
 CHANCE: 100%
-KFEAT:  O = enter_hell
+: if you.where() == 'D:21' then
+KFEAT: O = enter_hell no_mimic
+: else
+KFEAT: O = enter_hell
+: end
 MAP
 O
 ENDMAP
@@ -399,6 +403,80 @@ MAP
 ENDMAP
 
 ##############################################################################
+
+NAME:    hangedman_player_shredder
+TAGS:    transparent mini_float no_monster_gen no_item_gen no_pool_fixup
+DEPTH:   Dis:1-6, Zot:1-4
+: if you.branch() == "Dis" then
+KMONS:   01 = tormentor
+KMONS:   23 = reaper
+KMONS:   45 = hellion
+KMONS:   67 = quicksilver dragon
+KMONS:   89 = iron golem
+KMONS:   ABC = dancing weapon ; great sword good_item | battleaxe good_item | \
+                               bardiche good_item | great mace good_item
+KMONS:   D = iron elemental
+KMONS:   E = lich
+KMONS:   F = executioner
+KMONS:   ! = iron devil / skeletal warrior / hell knight / place:Zot:1 skeleton w:15
+KMONS:   ? = patrolling iron imp
+: dgn.delayed_decay(_G, '%', 'human corpse / human skeleton, \
+:                             human corpse / human skeleton')
+: else
+KMONS:   01 = ghost moth
+KMONS:   23 = golden dragon
+KMONS:   4567 = nonbase draconian
+KMONS:   89 = killer klown
+KMONS:   AB = curse toe
+KMONS:   CD = electric golem
+KMONS:   E = orb of fire
+KMONS:   F = ancient lich
+KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
+             battleaxe good_item | bardiche good_item | great mace good_item / \
+             dragon / ice dragon / storm dragon / bone dragon w:5
+KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
+KITEM:   % = % / * w:2
+: end
+KMONS:   H = iron dragon
+KFEAT:   - = runed_door
+SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
+SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
+NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
+SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
+NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
+NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
+SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
+: if you.branch() == "Dis" then
+TILE:    G = dngn_statue_iron
+COLOUR:  G = cyan
+: set_feature_name("granite_statue", "iron statue")
+: end
+MAP
+.........................
+.vv...vv+vv...vv+vv...vv.
+.vvv+vv.!.vv+vv.!.vv+vvv.
+.vv.!.vvbvv.!.vvdvv.!.vv.
+.vvvavv%g%vvcvv%i%vvevvv.
+.vv%f%vv-vv%h%vv-vv%j%vv.
+.vvv-vv.2.vv-vv.6.vv-vvv.
+.vv.0.v...v.4.v...v.'.vv.
+.vv...vv+vv...vv+vv...vv.
+.vvv+vv...vv+vv...vv+vvv.
+.vv...................vv.
+?vv..~`^I~`^.~`^.~`^H.vv?
+.vv.H^`~.^`~.^`~I^`~..vv.
+.vv...................vv.
+.vvv+vv...vv+vv...vv+vvv.
+.vv...vv+vv...vv+vv...vv.
+.vv.1.v...v.5.v...v.".vv.
+.vvv-vv.3.vv-vv.7.vv-vvv.
+.vv%}%vv-vv%}%vv-vv%}%vv.
+.vvvvvv%}%vvvvv%}%vvvvvv.
+.vv.G.vvvvv.G.vvvvv.G.vv.
+............?............
+ENDMAP
+
+##############################################################################
 # lemuel_nasty_pond
 #
 NAME:   lemuel_nasty_pond
@@ -425,6 +503,120 @@ MAP
  ..ZZZZZ4wwww.3......
    3ZZZZwwwww....3.
      .ZZwww3.....
+ENDMAP
+
+##############################################################################
+
+NAME:    hangedman_elemental_grid_stream
+TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
+DEPTH:   Geh, Coc, Zot:1-4
+:  if you.branch() == "Geh" then
+KMONS:   1 = brimstone fiend w:9 / hell sentinel w:1
+KMONS:   2 = hellion / balrug
+KMONS:   34 = smoke demon / red devil
+KMONS:   56 = skeletal warrior ; broad axe ego:flaming ident:type | \
+         halberd ego:flaming ident:type w:7 | spiked flail ego:flaming ident:type
+KMONS:   7 = hell knight
+SUBST:   w = l, W = .
+KPROP:   l = no_cloud_gen
+:  elseif you.branch() == "Coc" then
+KMONS:   1 = ice fiend
+KMONS:   2 = blizzard demon
+KMONS:   34 = ice devil / blue devil
+KMONS:   56 = reaper ; scythe ego:freezing ident:type
+KMONS:   7 = alligator snapping turtle skeleton / anaconda simulacrum / \
+         golden dragon simulacrum w:5 / iron troll simulacrum w:5 / hydra simulacrum
+KMONS:   0 = skeletal warrior ; sling ego:frost ident:type . sling bullet
+SUBST:   l = w, W = .
+:  else
+KMONS:   1 = kraken simulacrum
+KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
+KMONS:   3 = orb of fire / hellephant w:5
+KMONS:   4 = draconian scorcher
+KMONS:   5 = red draconian ; cloak . mace ego:freezing ident:type
+KMONS:   6 = white draconian ; cloak . mace ego:flaming ident:type
+KFEAT:   1 = w
+KFEAT:   3 = l
+NSUBST:  0 = 1:5 / 1:6
+SUBST:   x : x:9 b:1, 7 = .
+:  end
+SHUFFLE: {` / `}
+SUBST:   { : .:4 A:3 B:3, } : .:2 C:3, ` = .
+NSUBST:  A = 1:{ / 1:} / *:., B = 1:{ / 1:[ / *:., C = 1:} / 1:] / *:.
+MAP
+xxxx@@....
+xllxxx......
+x47llxxx........xxxx
+xll0.ll..ll...xxxwwx
+x1`ww..ww..ww..ww72x
+xww5.ww{WwwW{ww.6wwx
+x47ww..ww..ww..ll`3x
+xwwxxx...ll..ll.0llx
+xxxx........xxxll72x
+        ......xxxllx
+          ....@@xxxx
+ENDMAP
+
+##############################################################################
+
+NAME:    hangedman_snap_crack_crunch
+TAGS:    transparent no_monster_gen
+DEPTH:   Tar:1-6, Zot:1-4
+: if you.branch() == "Tar" then
+KMONS:   12 = patrolling reaper
+KMONS:   34 = patrolling tormentor
+KMONS:   56 = patrolling shadow demon
+KMONS:   7 = skeletal warrior
+KMONS:   8 = patrolling shadow imp / patrolling rotting devil
+KMONS:   AB = lich
+KMONS:   CD : vampire mage / mummy priest
+KMONS:   EF : shadow dragon w:5 / death drake
+KITEM:   | = nothing
+: else
+KMONS:   12 = patrolling lich w:5 / ancient lich
+KMONS:   34 = patrolling curse toe
+KMONS:   56 = patrolling bone dragon
+KMONS:   7 = death cob w:12 / small zombie w:2 / large zombie w:2 / \
+             small skeleton w:2 / large skeleton w:2 / guardian mummy w:4
+KMONS:   8 = patrolling death cob
+KMONS:   ABCD = shadow dragon
+KMONS:   EF = death drake
+: end
+KMONS:   0 = soul eater
+KMONS:   Z = curse skull
+SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
+SUBST:   { : -_= |:3, } : -= |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
+SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
+NSUBST:  - = 1:{ / 1:}, _ = 1:[ / 1 = (:80 <, = = 1:] / 1 = ):80 >
+NSUBST:  7 = 3:7 / 3:0 / 2 = 70
+MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
+                pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = -1 }
+MAP
+         xxxxxxxxx
+        xxxx...7.xx.@@.
+   xxxxxxxx..cc.7xx.....
+  xxxxxxxx.AcXc..xx....@
+  xxx......cGc...x.."..@
+  xx.'....cXc....x.8....
+  xx..cc..cc..cc..x..xxx
+  xx..cXc.....cXc..xxxxxx
+ xxx...cHc..1..cXc....7.x
+xxxx....cXc.....cXc....7x
+xxx..cc..cc..cc..cc..cc.x
+xx.BcXc....{cXc.....cXc.x
+x..cIc..2..cZc..3..cIc..x
+x.cXc.....cXc{....cXcC.xx
+x.cc..cc..cc..cc..cc..xxx
+x7....cXc.....cXc....xxxx
+x.7....cXc..4..cHc...xxx
+xxxxxx..cXc.....cXc..xx
+ xxx..x..cc..cc..cc..xx
+ ....8.x....cXc....'.xx
+ @.."..x...cGc......xxx
+ @....xx..cXcD.xxxxxxxx
+ .....xx7.cc..xxxxxxxx
+  .@@.xx.7...xxxx
+       xxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -1038,6 +1230,7 @@ TAGS:    dis_divider no_vmirror no_rotate
 KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 KFEAT:   2 = deep_water
+KFEAT:   w = deep_water
 KMASK:   w = no_monster_gen
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -1058,6 +1251,7 @@ TAGS:    dis_divider no_vmirror no_rotate
 KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 KFEAT:   2 = deep_water
+KFEAT:   w = deep_water
 KMASK:   w = no_monster_gen
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -1835,8 +2029,8 @@ MONS:     random, shadow fiend, reaper, soul eater, shadow demon
 MONS:     shadow dragon, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
-# Randomising the secret doors to get into the pyramid.
-# There may be secret doors that lead nowhere.
+# Randomising the doors to get into the pyramid.
+# There may be ones that lead nowhere.
 SHUFFLE:  FfGgHh
 SUBST:    F = =
 SUBST:    f : fff=c, f = =c

@@ -49,6 +49,7 @@ struct cloud_info
 #define MAP_UMBRAED        0x1000000
 #define MAP_SUPPRESSED     0X2000000
 #define MAP_QUAD_HALOED    0X4000000
+#define MAP_DISJUNCT       0X8000000
 
 /*
  * A map_cell stores what the player knows about a cell.
@@ -100,7 +101,7 @@ struct map_cell
             _mons = new monster_info(*_mons);
         if (_item)
             _item = new item_info(*_item);
-         return *this;
+        return *this;
     }
 
     void clear()

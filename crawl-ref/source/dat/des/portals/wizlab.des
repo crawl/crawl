@@ -782,13 +782,13 @@ LFLOORTILE: floor_pebble_white
 COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
-                    blink_other;blink_other;major_healing name:strange_machine \
+                    blink_other;blink_other name:strange_machine \
                     name_replace name_descriptor hd:13 hp:120 \
                     tile:mons_statue_guardian
 # please make sure this is the book with Tukima's Dance
 KITEM:      8 = book of enchantments
 KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
-                    blink_other;blink_other;major_healing name:strange_machine \
+                    blink_other;blink_other name:strange_machine \
                     name_replace name_descriptor hd:13 hp:120 \
                     tile:mons_statue_guardian
 KITEM:      9 = scroll of acquirement
@@ -901,7 +901,7 @@ ctttttttttyyyttttttty...ytttttttyyytttttttttc
 ctttttttty...yttttty.....yttttty...yttttttttc
 cttttttt..111.........T.........111..tttttttc
 ctttttt...121.tttttc.....cttttt.121...ttttttc
-cttttt.tty...yttttttcc=cctttttty...ytt.tttttc
+cttttt.tty...yttttttcc+cctttttty...ytt.tttttc
 ctttt.tttty.yttttttt.....ttttttty.ytttt.ttttc
 cttt.tttttt.tttttttyd232eyttttttt.tttttt.tttc
 cttt.tttttt..tttttttydefyttttttt..tttttt.tttc
@@ -918,7 +918,7 @@ cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
 ctttt.tttttt..ttttt.G._.G.ttttt..tttttt.ttttc
 cttt.tttttt..ttttt...4.4...ttttt..tttttt.tttc
 cttt.ttttt..ttttt...........ttttt..ttttt.tttc
-ctttt.ttty/ytttt....cc=cc....tttty/yttt.ttttc
+ctttt.ttty/ytttt....cc+cc....tttty/yttt.ttttc
 cttttt.ty...yttttttcc...cctttttty...yt.tttttc
 ctttttt./.1./.ttttcc..2..cctttt./.1./.ttttttc
 cttttttty...yt...../.1T1../....ty...ytttttttc
@@ -1140,9 +1140,9 @@ MAP
 ^^^^^^^^^^^^^^^^^^^^^^.^^^^^^^^^^^^^^^^^^^^^^
                 ^____...____^
                 ^__.......__^
-                ^_...!=!..._^
-                ^_.<.=A=.<._^
-                ^_...!=!..._^
+                ^_...!+!..._^
+                ^_.<.+A+.<._^
+                ^_...!+!..._^
                 ^__.......__^
                 ^____...____^
                 ^^^^^^^^^^^^^
@@ -1241,10 +1241,9 @@ COLOUR:     W = green
 :           door_verb_open="You part the %s%s.",
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
-KITEM:      $ = potion of degeneration / potion of decay / \
-            potion of mutation / w:3 potion of strong poison / \
-            w:2 potion of poison / w:5 potion of curing / \
-            w:3 potion of heal wounds / w:1 potion of cure mutation
+KITEM:      $ = w:45 potion of mutation / w:5 potion of gain strength / \
+            w:5 potion of gain dexterity / w:5 potion of gain intelligence / \
+            w:1 potion of cure mutation
 KITEM:      * = gold
 KITEM:      % = amulet of resist mutation good_item
 KITEM:      : = randbook disc:transmutation owner:Cigotuvi
@@ -1325,7 +1324,6 @@ TILE:       c = wall_zot_magenta
 TILE:       v = dngn_metal_wall_magenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-KFEAT:      + = runed_door
 MARKER:     R = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" \
@@ -1599,7 +1597,7 @@ ttT.....ccG.............Gcc..........Ttt
 ttT.....Tc....G.....G....cT..........Ttt
 ttT.c..cTcc.............cccT.........Ttt
 ttTcc++ccccccc.......ccccccc+cc......Ttt
-ttcc5555cccdeccc===cccfgccc444cc.....Ttt
+ttcc5555cccdeccc+++cccfgccc444cc.....Ttt
 ttc555555c....c.....c....c44444c....Tttt
 ttc555555cc.............cc44444cc..ctttt
 ttc555555ccccccccccccccccccc+cccc++ccttt
@@ -1619,30 +1617,37 @@ tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
-##################################################################################
+################################################################################
 # The Roulette of Golubria (by HangedMan.)
 # Golubria's fascination with translocations led him to warp out a sub-realm
 # of the Abyss into his own translocations playground, with some nasty and wild
 # security systems built in to defend his many assorted possessions.
 #
+# New explanation of the teleporter transformations: Three teleporter sets of
+# four rooms each, diagonal and (default) clockwise orthogonal rotated, and
+# (default) counter-clockwise orthogonal not. Each set's outward
+# teleporters (would) always rotate the same amount of rooms per direction.
+# However, the center's thirteenth main teleporter pair slightly distorts this,
+# which makes it good and difficult to anticipate landing in the center
+# even when deciphering this (horribly complicated) source.
 NAME:    wizlab_golubria
 TAGS:    no_monster_gen no_item_gen allow_dup no_pool_fixup
 ORIENT:  encompass
 LFLAGS:  no_tele_control
-KMONS:   1 = spatial vortex / blink frog / insubstantial wisp w:1 / nothing w:4
+KMONS:   1 = spatial vortex w:8 / blink frog / insubstantial wisp w:2 / nothing w:5
 KMONS:   2 = deep elf summoner w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
              rakshasa w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
              boggart ; dart ego:dispersal w:20 | dart w:5 | nothing /  \
              wizard ; dart ego:dispersal w:20 | dart w:5 | nothing
-KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip \
-             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
-             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             boggart w:5 ; whip ego:distortion | whip \
-             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
-             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             wizard ; whip ego:distortion | whip \
-             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
-             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal
+KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
+             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
+             spear ego:vorpal w:6 . dart ego:dispersal / \
+             boggart w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
+             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
+             spear ego:vorpal w:6 . dart ego:dispersal / \
+             wizard ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
+             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
+             spear ego:vorpal w:6 . dart ego:dispersal
 # Disclaimer: the following three sets are all Abyss spawns.
 KMONS:   04 = large abomination w:40 / small abomination w:40 / large skeleton w:30 / \
               small skeleton / chaos spawn w:5 / soul eater / hellwing / orange demon / \
@@ -1664,71 +1669,70 @@ KMONS:   8 = silver statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
              wand of teleportation w:5 / any scroll w:1
-KITEM:   e = ring of teleport control w:5 / ring of teleportation
+KITEM:   e = ring of teleport control w:9 / ring of teleportation w:20 / any ring w:1
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              manual of translocations w:5 / randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria|passage_of_golubria
-KITEM:   g = ring of levitation / potion of levitation q:2 / \
+KITEM:   g = ring of flight / potion of flight q:2 / \
              wand of digging w:5 / lantern of shadows / \
              potion of speed w:5 / scroll of fog / potion of porridge / \
              any wand w:1 / any potion w:1 / any scroll w:1
-KITEM:   h = pair of boots ego:levitation w:9 / pair of boots ego:running w:1 / \
+KITEM:   ! = pair of boots ego:flying w:9 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:9 / pair of boots w:1
-KITEM:   i = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_flash / \
-             cloak unrand:cloak_of_starlight / cloak unrand:cloak_of_the_thief
-KITEM:   j = wand of disintegration
-KITEM:   * = star_item / any w:5, any w:5 / nothing
+KITEM:   $ = wand of disintegration
 KITEM:   % = any level:3, any level:3 / nothing
+KITEM:   * = star_item / any w:5, any w:5 / nothing
+KITEM:   | = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_flash / \
+             cloak unrand:cloak_of_starlight / cloak unrand:cloak_of_the_thief
 KFEAT:   - = rock_wall
-KFEAT:   J = metal_wall
-KFEAT:   K = green_crystal_wall
-KFEAT:   m = iron_grate
-KFEAT:   l = lava w:6 / deep_water w:4 / shallow_water
+KFEAT:   N = iron_grate
+KFEAT:   ~ = deep_water
 KFEAT:   D = permarock_wall
-KFEAT:   ~ = known teleport trap
+KFEAT:   ^ = known teleport trap
 KFEAT:   8_ = altar_lugonu
-KFEAT:   OPQRSTUVWXYZ&?[ = teleporter
-KFEAT:   opsrtuvwxyz@!] = floor
-KPROP:   "_a = no_rtele_into
-MARKER:  ~ = lua:fog_machine { cloud_type = "translocational energy",  \
+KFEAT:   OPQRSTUVWXYZ&{( = teleporter
+KFEAT:   opqsrtuvwxyz@}) = floor
+KPROP:   a"_~ = no_rtele_into
+MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy",  \
              pow_max = 15, delay_min = 30, delay_max = 60, size_min = 2, size_max = 3 }
-SHUFFLE: qtwz / twzq / wzqt / zqtw, ypsv / vyps / svyp / psvy, ]?A}
-NSUBST:  o = 1:o / 1:Q / 1:Y, p = 1:p / 1:R / 1:Z, q = 1:q / 1:S / 1:&
-NSUBST:  r = 1:r / 1:T / 1:O, s = 1:s / 1:U / 1:P, t = 1:t / 1:V / 1:Q
-NSUBST:  u = 1:u / 1:W / 1:R, v = 1:v / 1:X / 1:S, w = 1:w / 1:Y / 1:T
-NSUBST:  x = 1:x / 1:Z / 1:U, y = 1:y / 1:& / 1:V, z = 1:z / 1:O / 1:W
-NSUBST:  @ = 1:@ / 1:P / 1:X / 1:<, 4 = 4:5 / 4:4, ` = 4:d / 4:i / 1:j / 5:% / *:`
-NSUBST:  a = 1:_ / 1:_" / *:a, + = 2:+ / *:c, ( = 1:! / 1:[ / *:<
-NSUBST:  { = 2:< / *:d, 2 = 1:66699 / 1:66993 / 2:9 / 1:993 / 1:92 / *:2
-NSUBST:  d = 2:* / 2:e / 2:f / 3:g / 1:eeggh% / 1:gg% / 3:%
-NSUBST:  7 = 7 / *=7``
-SUBST:   a = ':70 -:40 ncCll, F = ":70 -:40 ncCll, c = cccJK, C = cJK, B = cJKn....
-SUBST:   e = de, % = %%%%g., * = **%, 4 = 444'', 5 = 5555544'', } = <
-: colour("' = " .. dgn.random_colour() )
-COLOUR:  OPQRSTUVWXYZ&?[ = warp
-COLOUR:  opqrstuvwxyz@!] = gold
+SHUFFLE: qS?tViwYJzOl / tViwYJzOKqS? / wYJzOKqS?tVi / zOKqS?tViwYJ
+SHUFFLE: y&KpRmsUHvXj / vXjy&KpRmsUH / sUHvXjy&KpRm / pRmsUHvXjy&K
+SHUFFLE: SMViYJOK / MSiVJYKO, &KRmUHXj / K&mRHUjX, QmThWIZk / mQhTIWkZ
+NSUBST:  @ = 1:@ / 1:P / 1:L / 1:<, 4 = 4:5 / 4:4, ` = 4:d / 3:| / 1:|% / 1:$ / 4:% / *:`
+NSUBST:  a = 1:_ / 1:_" / *:a, + = 2:+ / *:c, ( = 1:} / 1:( / *:<
+NSUBST:  [ = 2:< / *:d, 2 = 1:66699 / 1:66993 / 2:9 / 1:993 / 1:92 / *:2
+NSUBST:  d = 2:* / 2:e / 2:f / 3:g / 1:eegg!!% / 1:gg% / 3:%
+NSUBST:  7 = 1:7 / 1 = 7:4 `:6 / *:`, A = 1:) / 1:< / 1:{ / 1:A
+SUBST:   h = O, H = P, i = Q, I = R, j = S, J = T
+SUBST:   k = U, K = V, l = W, L = X, m = Y, M = Z, ? = &
+SUBST:   a = ':70 -:40 ccCC~, F = ":70 -:40 ccCC~, E = nccCC, c = cccb, C = cb
+SUBST:   B = ccbn..., e = de, % = %%%%g., * = **%, 4 = 444'', 5 = 5555544''
+COLOUR:  n = lightgreen
+COLOUR:  c = white
+COLOUR:  OPQRSTUVWXYZ&{( = warp
+COLOUR:  opqrstuvwxyz@}) = gold
 COLOUR:  D = darkgrey
-FTILE:   '"GcJKaFn45_+ = floor_demonic_green
-FTILE:   .012369AB{< = floor_rough_green / floor_pebble_green w:15
-FTILE:   `~78m = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
-FTILE:   defghijk*% = floor_rough_green
+LFLOORCOL: green
+FTILE:   '"GbcaFn45_+ = floor_demonic_green
+FTILE:   .012369AB< = floor_rough_green / floor_pebble_green w:15
+FTILE:   `~78N = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
+FTILE:   defg!$%*| = floor_rough_green
 LROCKTILE: wall_zot_green
+TILE:    b = dngn_crystal_green / dngn_crystal_cyan w:5
 TILE:    c = dngn_stone_wall_green / dngn_stone_wall_cyan w:5
-TILE:    K = dngn_crystal_green / dngn_crystal_cyan w:5
-TILE:    J = dngn_metal_wall_green / dngn_metal_wall_cyan w:5
-TILE:    n = dngn_transparent_wall_green / dngn_transparen_wall_cyan w:5
+TILE:    n = dngn_transparent_wall_green / dngn_transparent_wall_cyan w:5
 TILE:    D = dngn_dimension_edge
-FTILE:   OPQRSTUVWXYZ&?[ = floor_rough_green
-TILE:    opqrstuvwxyz@!] = floor_black_cobalt
+FTILE:   OPQRSTUVWXYZ&{( = floor_rough_green
+TILE:    opqrstuvwxyz@}) = floor_black_cobalt
 
 {{
 -- This isn't the prettiest way of handling the teleporters, but it guarantees
 -- they behave exactly the same way as in HangedMan's original version. All I've
 -- done is remove some massive code duplication. [evilmike]
 
-local teleporter_glyph = "OPQRSTUVWXYZ&?["
-local teleport_spot_glyph = "opqrstuvwxyz@!]"
+local teleporter_glyph = "OPQRSTUVWXYZ&?{("
+local teleport_spot_glyph = "opqrstuvwxyz@!})"
 local tele_marker = {}
 
 for i = 1, #teleporter_glyph do
@@ -1750,7 +1754,7 @@ set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spa
                     golden eye w:5 / executioner w:2 / shadow demon w:2 / tormentor w:2 / ]])
 
 set_border_fill_type('permarock_wall')
-set_feature_name("clear_permarock_wall", "The dimension's edge")
+set_feature_name("permarock_wall", "The dimension's edge")
 set_feature_name("green_crystal_wall", "wall of crystal")
 wizlab_setup(_G, "The Roulette of Golubria")
 }}
@@ -1760,57 +1764,57 @@ epilogue{{
 }}
 MAP
                DDDDDDDDDD   DDDDDDDDDD
-    DDDDDD    DDccccccccDDDDDccccccccDD    DDDDDD
+    DDDDDD    DDccEEEcccDDDDDcccEEEccDD    DDDDDD
   DDDccccDDDDDDcc..o...ccccccc...p..ccDDDDDDccccDDD
-  Dccc.zcccccccco......ocaaacp......pccccccccq.cccD
- DDcz....ccaaaan........naaan........naaaacc....qcDD
+  DEEc.lccccccccQ......mcaaacR......MccccccccS.cEED
+ DDEz....ccaaaan........naaan........naaaacc....qEDD
  Dcc......caaa"n........n"a"n........n"aaac......ccD
  Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
- Dcz..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..qcD
+ DcO..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..?cD
  Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
  DDcc....2.0caaacc1....ccaaacc....1ccaaac1.2....ccDD
-  Dcccc...{.ccaaacc1.{.caaaaac.{.1ccaaacc1{...ccccD
+  Dcccc...[.ccaaacc1.[.caaaaac.[.1ccaaacc1[...ccccD
   Dcaannc11..ccaaacc...caaaaac...ccaaacc...0cnnaacD
   Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
   Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
  DDca"aaaaaccc+FFaFF'F'FaaaaaF'F'FaaFF+cccaaaaa"acDD
 DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
-Dccy....ccaaaaFF'F'FFFFFF'G'FFFFFF'F'FFaaaacc....rccD
-Dc.......ccaaaaFF4''FF'F'FFF'F'FF''4FFaaaacc.......cD
-Dc.......1ccaaFF''GF''C'C'F'C'C''FG''FFaacc1.......cD
-Dcy...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc1..BB...rcD
-Dc....BBB...cc'FFF'Cn'C~'CnC'~C'nC'FFF'cc...BBB....cD
-Dc....B2..{..+FFFF'C'@C'``n``'C@'C'FFFF+..{..2B....cD
+DccK....ccaaaaFF'F'FFFFFF'G'FFFFFF'F'FFaaaacc....TccD
+Dc.......ccaaaaFF4F'FF'F'FFF'F'FF'F4FFaaaacc.......cD
+DE.......1ccaaFF'FGF''C'C'F'C'C''FGF'FFaacc1.......ED
+DEy...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc1..BB...rED
+DE....BBB...cc'FFF'Cn'C^'CnC'^C'nC'FFF'cc...BBB....ED
+Dc....B2..[..+FFFF'C'@C'``n``'C@'C'FFFF+..[..2B....cD
 Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
-Dccy....0ccccFFFFF'C~'`````````'~C'FFFFFcccc0....rccDDDDDDDD
-DDccnnncccaaaaaFF'CC'````mmm````'CC'FFaaaaacccnnnccDDDnnnnnD
- Dcaa"aaaaaaaaFF'F'CC'``mm7mm``'CC'F'FFaaaaaaaa"aacDDDn?.}nD
- DcaaaaaaaaaaaF4GFF(nn``m787m``nn(FFG4FaaaaaaaaaaacDDDn...nD
- Dcaa"aaaaaaaaFF'F'CC'``mm7mm``'CC'F'FFaaaaaaaa"aacDDDn].AnD
-DDccnnncccaaaaaFF'CC'````mmm````'CC'FFaaaaacccnnnccDDDnnnnnD
-Dccx....0ccccFFFFF'C~'`````````'~C'FFFFFcccc0....sccDDDDDDDD
+Dcc&....0ccccFFFFF'C^'`````````'~C'FFFFFcccc0....hccDDDDDDDD
+DDccnnncccaaaaaFF'CC'````NNN````'CC'FFaaaaacccnnnccDDDnnnnnD
+ Dcaa"aaaaaaaaFF'F'CC'``NN7NN``'CC'F'FFaaaaaaaa"aacDDDnA.AnD
+ DcaaaaaaaaaaaF4GFF(nn``N787N``nn(FFG4FaaaaaaaaaaacDDDn...nD
+ Dcaa"aaaaaaaaFF'F'CC'``NN7NN``'CC'F'FFaaaaaaaa"aacDDDnA.AnD
+DDccnnncccaaaaaFF'CC'````NNN````'CC'FFaaaaacccnnnccDDDnnnnnD
+Dcck....0ccccFFFFF'C^'`````````'^C'FFFFFcccc0....UccDDDDDDDD
 Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
-Dc....B2..{..+FFF'CC'@C'`'n'`'C@'C'FFFF+..{..2B....cD
-Dc....BBB...cc'FFF'Cn'C~'CnC'~C'nC'FFF'cc...BBB....cD
-Dcx...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc...BB...scD
-Dc.......1ccaaFF''GF''C'C'F'C'C''FG''FFaacc1.......cD
-Dc.......ccaaaaFF4''FF'F'FFF'F'FF''4FFaaaacc1......cD
-Dccx....ccaaaaaF'F'FFFFFF'G'FFFFFF'F'Faaaaacc....sccD
+Dc....B2..[..+FFF'CC'@C'`'n'`'C@'C'FFFF+..[..2B....cD
+DE....BBB...cc'FFF'Cn'C^'CnC'^C'nC'FFF'cc...BBB....ED
+DEx...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc...BB...sED
+DE.......1ccaaFF'FGF''C'C'F'C'C''FGF'FFaacc1.......ED
+Dc.......ccaaaaFF4F'FF'F'FFF'F'FF'F4FFaaaacc1......cD
+DccZ....ccaaaaaF'F'FFFFFF'G'FFFFFF'F'Faaaaacc....HccD
 DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
  DDca"aaaaaccc+FFaFF'F'FaFFFaF'F'FaaFF+cccaaaaa"acDD
   Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
   Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
   Dcaannc0...ccaaacc...caaaaac...ccaaacc..11cnnaacD
-  Dcccc...{1ccaaacc1.{.caaaaac.{.1ccaaacc.{...ccccD
+  Dcccc...[1ccaaacc1.[.caaaaac.[.1ccaaacc.[...ccccD
  DDcc....2.1caaacc1....ccaaacc....1ccaaac0.2....ccDD
  Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
- Dcw..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..tcD
+ DcJ..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..VcD
  Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
  Dcc......caaa"n........n"a"n........n"aaac......ccD
- DDcw....ccaaaan........naaan........naaaacc....tcDD
-  Dccc.wccccccccv......vcaaacu......ucccccccct.cccD
+ DDEw....ccaaaan........naaan........naaaacc....tEDD
+  DEEc.Yccccccccj......XcaaacI......Wcccccccci.cEED
   DDDccccDDDDDDcc..v...ccccccc...u..ccDDDDDDccccDDD
-    DDDDDD    DDccccccccDDDDDccccccccDD    DDDDDD
+    DDDDDD    DDccEEEcccDDDDDcccEEEccDD    DDDDDD
                DDDDDDDDDD   DDDDDDDDDD
 ENDMAP
 
@@ -1842,11 +1846,11 @@ MARKER:     ! = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
-KITEM:      % = w:20 potion of levitation / \
+KITEM:      % = w:20 potion of flight / \
             potion of magic / potion of speed / potion of resistance / \
             gold / potion of agility / potion of brilliance
 KITEM:      ? = randbook disc:air
-KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
+KITEM:      $ = wand of lightning / staff of air / ring of flight /\
             gold / scroll of silence / ring of teleport control / \
             quick blade / ring of evasion / ring of see invisible / \
             book of clouds / any book w:15 / any good_item / any w:20

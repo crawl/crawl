@@ -15,7 +15,6 @@ function ($, cr, map_knowledge, settings, dngn) {
         if (cell == null || cell.bg == null) return false;
         var base_bg = dngn.basetile(cell.bg.value);
         return (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
-                || base_bg == dngn.DNGN_ALTAR_CHEIBRIADOS
                 || is_torch(base_bg)
                 || (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.BLOOD));
     }
@@ -24,7 +23,6 @@ function ($, cr, map_knowledge, settings, dngn) {
     {
         var base_bg = dngn.basetile(cell.bg.value);
         if (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
-            || base_bg == dngn.DNGN_ALTAR_CHEIBRIADOS
             || is_torch(base_bg))
         {
             cell.bg.value = base_bg + (cell.bg.value - base_bg + 1) % dngn.tile_count(base_bg);
@@ -169,6 +167,8 @@ function ($, cr, map_knowledge, settings, dngn) {
                 for (var cx = 0; cx < this.cols; cx++)
                     this.render_cell(cx + this.view.x, cy + this.view.y,
                                      cx * cw, cy * ch);
+
+            this.draw_minibars();
         },
 
         fit_to: function(width, height, min_diameter)
@@ -262,6 +262,22 @@ function ($, cr, map_knowledge, settings, dngn) {
                                (x - this.view.x) * this.cell_width,
                                (y - this.view.y) * this.cell_height);
         },
+
+        // This is mostly here so that it can inherit cell size
+        new_renderer: function(tiles)
+        {
+            tiles = tiles || [];
+            var renderer = new cr.DungeonCellRenderer();
+            var canvas = $("<canvas>");
+            renderer.set_cell_size(this.cell_width,
+                                   this.cell_height);
+            canvas[0].width = renderer.cell_width;
+            canvas[0].height = renderer.cell_height;
+            renderer.init(canvas[0]);
+            renderer.draw_tiles(tiles);
+
+            return renderer;
+        }
     });
 
     var renderer = new DungeonViewRenderer();

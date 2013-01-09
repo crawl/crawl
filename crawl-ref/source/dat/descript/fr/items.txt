@@ -16,13 +16,6 @@ amulet of conservation
 Cette amulette protège de la destruction certaines possessions, mais pas de
 manière infaillible.
 %%%%
-amulet of controlled flight
-
-Si le porteur de cette amulette venait à léviter par un moyen magique, il ou
-elle serait capable d'exercer un certain contrôle sur ses mouvements. Ceci
-autorise par exemple la descente d'escaliers et l'accès aux objets situés au
-sol, sans toutefois priver le porteur des bénéfices de la lévitation.
-%%%%
 amulet of guardian spirit
 
 Cette amulette rend son porteur moins susceptible aux blessures physiques,
@@ -686,10 +679,6 @@ Un outil pour trancher des fibres de bois, ou de la chair. Petite et conçue
 pour une manipulation rapide et précise, elle est également équilibrée de façon
 a être lancée si nécessaire.
 %%%%
-helm
-
-Un couvre-chef en métal.
-%%%%
 helmet
 
 Un couvre-chef en métal.
@@ -999,10 +988,6 @@ potion of invisibility
 
 Une potion qui vous cache de la vue des autres.
 %%%%
-potion of levitation
-
-Une potion qui confère une grande flottabilité à celui qui la consomme.
-%%%%
 potion of magic
 
 Une potion précieuse qui accorde à une personne une infusion d'énergie magique.
@@ -1114,11 +1099,6 @@ Cet puissant anneau peut être activé pour cacher son porteur de la vue des
 autres, mais augmente grandement la vitesse de son métabolisme en faisant
 ainsi.
 %%%%
-ring of levitation
-
-Cet anneau permet à son porteur de flotter au dessus du sol. Le pouvoir de cet
-anneau ne peut être déclenché alors que l'on est déjà en lévitation.
-%%%%
 ring of life protection
 
 Cet anneau bénit protège la force vitale de son porteur contre l'énergie
@@ -1217,10 +1197,6 @@ rod of striking
 
 Ce sceptre permet à son possesseur de frapper ses ennemis à distance avec des
 projectiles d’énergie.
-%%%%
-rod of summoning
-
-Ce sceptre contient des sorts de convocation.
 %%%%
 rod of venom
 

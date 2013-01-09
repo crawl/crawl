@@ -24,7 +24,7 @@
 
 monster_type debug_prompt_for_monster(void)
 {
-    char  specs[80];
+    char specs[1024];
 
     mpr("Which monster by name? ", MSGCH_PROMPT);
     if (!cancelable_get_line_autohist(specs, sizeof specs))
@@ -201,18 +201,18 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
     else if (in_bounds(mon->target))
     {
-       target = mgrd(mon->target);
+        target = mgrd(mon->target);
 
-       if (target == NON_MONSTER)
-           fprintf(stderr, "nothing");
-       else if (target == midx)
-           fprintf(stderr, "improperly linked self");
-       else if (target == mon->foe)
-           fprintf(stderr, "same as foe");
-       else if (invalid_monster_index(target))
-           fprintf(stderr, "invalid monster index %d", target);
-       else
-           fprintf(stderr, "%s", debug_mon_str(&menv[target]).c_str());
+        if (target == NON_MONSTER)
+            fprintf(stderr, "nothing");
+        else if (target == midx)
+            fprintf(stderr, "improperly linked self");
+        else if (target == mon->foe)
+            fprintf(stderr, "same as foe");
+        else if (invalid_monster_index(target))
+            fprintf(stderr, "invalid monster index %d", target);
+        else
+            fprintf(stderr, "%s", debug_mon_str(&menv[target]).c_str());
     }
     else
         fprintf(stderr, "<OoB>");

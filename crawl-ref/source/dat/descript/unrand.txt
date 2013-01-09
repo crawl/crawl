@@ -1,8 +1,8 @@
 %%%%
 Singing Sword
 
-This enchanted weapon loves nothing more than to sing to its owner, whether they
-want it to or not.
+This enchanted weapon loves nothing more than to sing to its owner, whether
+they want it to or not.
 %%%%
 Wrath of Trog
 
@@ -17,9 +17,9 @@ It is rather unreliable.
 Glaive of Prune
 
 It is the creation of a mad god, and carries a curse which transforms anyone
-wielding it into a prune. Fortunately, the curse works very slowly, and one
-can use it briefly with no consequences worse than slightly purple skin and a
-few wrinkles.
+wielding it into a prune. Fortunately, the curse works very slowly, and one can
+use it briefly with no consequences worse than slightly purple skin and a few
+wrinkles.
 %%%%
 Sword of Power
 
@@ -35,9 +35,8 @@ effect even on creatures immune to all commonly known poisons.
 %%%%
 Staff of Wucad Mu
 
-Its power varies in proportion to its wielder's intelligence. It can be evoked
-to restore large amounts of magical energy, but at the risk of damaging the
-user's mind.
+It can be evoked to restore large amounts of magical energy, but at the risk of
+damaging the user's mind. Its power depends on the wielder's evocations skill.
 %%%%
 Vampire's Tooth
 
@@ -247,7 +246,8 @@ A robe made of the finest silk.
 %%%%
 cloak of the Thief
 
-It allows its wearer to excel in the arts of thievery.
+It allows its wearer to excel in the arts of thievery, and can be evoked to
+release thick clouds of smoke to allow for a hasty escape.
 %%%%
 shield "Bullseye"
 
@@ -353,8 +353,8 @@ And this shield surely will be heard!
 %%%%
 amulet of the Air
 
-It appears that a powerful air mage enchanted this sky-blue amulet with a good
-deal of protective charms from his school of magic.
+This sky-blue amulet must have been given its many protective properties by a
+powerful air mage. It seems the one thing they lacked was a steady hand.
 %%%%
 ring of Shadows
 

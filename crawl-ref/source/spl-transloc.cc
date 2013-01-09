@@ -5,6 +5,10 @@
 
 #include "AppHdr.h"
 
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
 #include "spl-transloc.h"
 #include "externs.h"
 
@@ -61,6 +65,55 @@ spret_type cast_controlled_blink(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_disjunction(int pow, bool fail)
+{
+    fail_check();
+    int rand = random_range(35, 45) + random2(pow / 12);
+    you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
+        max(you.duration[DUR_DISJUNCTION] + rand,
+        30 + rand));
+    contaminate_player(1, true);
+    disjunction();
+    return SPRET_SUCCESS;
+}
+
+void disjunction()
+{
+    int steps = you.time_taken;
+    invalidate_agrid(true);
+    for (int step = 0; step < steps; ++step)
+    {
+        vector<monster*> mvec;
+        for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+        {
+            monster* mons = monster_at(*ri);
+            if (!mons || !you.see_cell(*ri))
+                continue;
+            mvec.push_back(mons);
+        }
+        if (mvec.empty())
+            return;
+        // blink should be isotropic
+        random_shuffle(mvec.begin(), mvec.end());
+        for (vector<monster*>::iterator mitr = mvec.begin();
+            mitr != mvec.end(); mitr++)
+        {
+            monster* mons = *mitr;
+            if (!mons->alive() || mons->no_tele())
+                continue;
+            coord_def p = mons->pos();
+            if (!disjunction_haloed(p))
+                continue;
+
+            int dist = grid_distance(you.pos(), p);
+            int decay = max(1, (dist - 1) * (dist + 1));
+            int chance = pow(0.8, 1.0 / decay) * 1000;
+            if (!x_chance_in_y(chance, 1000))
+                blink_away(mons, &you);
+        }
+    }
+}
+
 // If wizard_blink is set, all restriction are ignored (except for
 // a monster being at the target spot), and the player gains no
 // contamination.
@@ -80,7 +133,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     }
 
     // yes, there is a logic to this ordering {dlb}:
-    if (item_blocks_teleport(true, true) && !wizard_blink)
+    if (you.no_tele(true, true, true) && !wizard_blink)
     {
         if (pre_msg)
             mpr(pre_msg->c_str());
@@ -124,7 +177,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     else
     {
         // query for location {dlb}:
-        while (!crawl_state.seen_hups)
+        while (1)
         {
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
@@ -132,6 +185,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             args.may_target_monster = false;
             args.top_prompt = "Blink to where?";
             direction(beam, args);
+
+            if (crawl_state.seen_hups) {
+                mpr("Cancelling blink due to HUP.");
+                return -1;
+            }
 
             if (!beam.isValid || beam.target == you.pos())
             {
@@ -252,7 +310,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 
     coord_def target;
 
-    if (item_blocks_teleport(true, true) && !override_stasis)
+    if (you.no_tele(true, true, true) && !override_stasis)
         canned_msg(MSG_STRANGE_STASIS);
     else if (player_in_branch(BRANCH_ABYSS)
              && !override_abyss
@@ -318,7 +376,7 @@ void you_teleport(void)
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
-    if (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+    if (you.no_tele(true, true))
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
@@ -374,7 +432,7 @@ static void _handle_teleport_update(bool large_change, bool check_ring_TC,
         {
             const bool see_cell = you.see_cell(mi->pos());
 
-            if (mi->foe == MHITYOU && !see_cell)
+            if (mi->foe == MHITYOU && !see_cell && !you.penance[GOD_ASHENZARI])
             {
                 mi->foe_memory = 0;
                 behaviour_event(*mi, ME_EVAL);
@@ -405,7 +463,7 @@ static void _handle_teleport_update(bool large_change, bool check_ring_TC,
 }
 
 static bool _teleport_player(bool allow_control, bool new_abyss_area,
-                             bool wizard_tele)
+                             bool wizard_tele, int range)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
@@ -418,7 +476,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
 
     // Stasis can't block the Abyss from shifting.
     if (!wizard_tele
-        && (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+        && (crawl_state.game_is_sprint() || you.no_tele(true, true))
             && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
@@ -612,7 +670,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         do
             newpos = random_in_bounds();
         while (_cell_vetoes_teleport(newpos)
-               || need_distance_check && (newpos - centre).abs() < 34*34
+               || (newpos - old_pos).abs() > dist_range(range)
+               || need_distance_check && (newpos - centre).abs()
+                                          <= dist_range(min(range - 1, 34))
                || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO));
 
         if (newpos == old_pos)
@@ -635,7 +695,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     return (!is_controlled);
 }
 
-bool you_teleport_to(const coord_def where_to, bool move_monsters)
+bool you_teleport_to(const coord_def where_to, bool move_monsters, bool override_stasis)
 {
     // Attempts to teleport the player from their current location to 'where'.
     // Follows this line of reasoning:
@@ -647,6 +707,12 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     //      found (or a monster can be moved out of the way, with move_monster)
     //      then teleport the player there.
     //   4. If not, give up and return false.
+
+    if (you.no_tele(true, true) && !override_stasis)
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return false;
+    }
 
     bool check_ring_TC = false;
     const coord_def old_pos = you.pos();
@@ -704,10 +770,11 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
+void you_teleport_now(bool allow_control, bool new_abyss_area,
+                      bool wizard_tele, int range)
 {
     const bool randtele = _teleport_player(allow_control, new_abyss_area,
-                                           wizard_tele);
+                                           wizard_tele, range);
 
     // Xom is amused by uncontrolled teleports that land you in a
     // dangerous place, unless the player is in the Abyss and
@@ -984,6 +1051,12 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     {
         mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
         direction(bmove, args);
+
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling blink due to HUP.");
+            return SPRET_ABORT;
+        }
 
         if (bmove.isValid && !bmove.delta.origin())
             break;

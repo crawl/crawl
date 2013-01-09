@@ -2564,7 +2564,7 @@ DEPTH:   D:9-, Crypt
 MONS:    patrolling flying skull
 MONS:    small zombie / large zombie / small skeleton / large skeleton
 : if you.absdepth() > 19 then
-MONS:    vampire knight / ghoul / phantasmal warrior
+MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
 KMONS:   4 = Boris / lich / unborn deep dwarf
 KMONS:   5 = lich / unborn deep dwarf
 : elseif you.absdepth() > 13 then
@@ -2603,10 +2603,10 @@ ENDMAP
 NAME:    hangedman_arrow_trap
 ORIENT:  float
 DEPTH:   D:12-
-SHUFFLE: {( / })
+SHUFFLE: {( / }) / {} / {}
 MAP
-xx=xxxxxxxxxxxx=xx
-x.xxxx|x{(x|xxxx.x
+xxxxxxxxxxxxxxxxxx
+x*xxxx*x{(x*xxxx*x
 x..x9x9x..x9x9x..x
 xx..x9xx..xx9x..xx
 xxx..x0x00x0x..xxx
@@ -2614,7 +2614,7 @@ xxxx..xx00xx..xxxx
 xxxxx..x++x..xxxxx
 xxxxxx......xxxxxx
 xxxxxxx....xxxxxxx
-xxxxxxxx||xxxxxxxx
+xxxxxxxx**xxxxxxxx
 xxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -3086,7 +3086,7 @@ MONS:    generate_awake golden eye, slime creature, brown ooze
 KFEAT:   > = known shaft trap
 KMASK:   ' = !no_monster_gen
 KMASK:   ' = !no_item_gen
-SHUFFLE: {[(<
+SHUFFLE: {[(
 SUBST:   ( = (:70 <, [ = [:50 <
 MAP
   '''''''''''''''''
@@ -3098,9 +3098,9 @@ MAP
 ''c..%cc.....cc%..c''
 ''cc+cc.......cc+cc''
 'cc..n.........n..cc'
-'n..cc....{....cc..n'
-'n.1n2...[>(...2n1.n'
 'n..cc....<....cc..n'
+'n.1n2...[{(...2n1.n'
+'n..cc....>....cc..n'
 'cc..n.........n..cc'
 ''cc+cc.......cc+cc''
 ''c..*cc.....cc*..c''

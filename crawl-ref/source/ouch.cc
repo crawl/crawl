@@ -317,7 +317,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
             if (one_chance_in(3)
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!player_res_mutation_from_item()
+                && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
                 // silver stars only, if this ever changes we may want to give
@@ -434,7 +434,7 @@ static void _item_corrode(int slot)
         return;
 
     // Anti-corrosion items protect against 90% of corrosion.
-    if (player_res_corr() && !one_chance_in(10))
+    if (you.res_corr() && !one_chance_in(10))
     {
         dprf("Amulet protects.");
         return;
@@ -587,7 +587,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
         {
             // Conservation doesn't help against harpies' devouring food.
             if (flavour != BEAM_DEVOUR_FOOD
-                && player_item_conserve() && !one_chance_in(10))
+                && you.conservation() && !one_chance_in(10))
             {
                 continue;
             }
@@ -783,9 +783,15 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 //
 // XXX: This function is far from perfect and a work in progress.
 bool expose_player_to_element(beam_type flavour, int strength,
-                              bool damage_inventory)
+                              bool damage_inventory, bool slow_dracs)
 {
     _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+
+    if (flavour == BEAM_COLD && slow_dracs && player_genus(GENPC_DRACONIAN)
+        && you.res_cold() <= 0 && coinflip())
+    {
+        you.slow_down(0, strength);
+    }
 
     if (strength <= 0 || !damage_inventory)
         return false;
@@ -822,7 +828,7 @@ void lose_level()
 
     you.redraw_title = true;
     you.redraw_experience = true;
-#ifdef USE_TILES_LOCAL
+#ifdef USE_TILE_LOCAL
     // In case of intrinsic ability changes.
     tiles.layout_statcol();
     redraw_screen();
@@ -1192,7 +1198,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
     {
-        if (player_spirit_shield() && death_type != KILLED_BY_POISON)
+        if (you.spirit_shield() && death_type != KILLED_BY_POISON)
         {
             // round off fairly (important for taking 1 damage at a time)
             int mp = div_rand_round(dam * you.magic_points,
@@ -1252,8 +1258,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                     .death_description(scorefile_entry::DDV_TERSE);
             }
 
-            take_note(
-                      Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()));
+            take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
+                           damage_desc.c_str()));
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
@@ -1448,7 +1454,6 @@ void _end_game(scorefile_entry &se)
             continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
         set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-        add_autoinscription(you.inv[i]);
     }
 
     _delete_files();

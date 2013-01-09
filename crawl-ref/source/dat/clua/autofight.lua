@@ -242,7 +242,7 @@ function attack(allow_movement)
   elseif caught then
     crawl.mpr("You are " .. caught .. "!")
   elseif hp_is_low() then
-    crawl.mpr("You are too injured to fight blindly!")
+    crawl.mpr("You are too injured to fight recklessly!")
   elseif info == nil then
     crawl.mpr("No target in view!")
   elseif info.attack_type == 3 then

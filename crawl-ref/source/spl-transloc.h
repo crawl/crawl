@@ -4,6 +4,8 @@
 #include "spl-cast.h"
 
 spret_type cast_controlled_blink(int pow, bool fail);
+spret_type cast_disjunction(int pow, bool fail);
+void disjunction();
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false,
           string *pre_msg = NULL);
 spret_type cast_blink(bool allow_partial_control, bool fail);
@@ -14,9 +16,11 @@ spret_type cast_teleport_self(bool fail);
 void you_teleport();
 void you_teleport_now(bool allow_control,
                       bool new_abyss_area = false,
-                      bool wizard_tele = false);
+                      bool wizard_tele = false,
+                      int range = GDM);
 bool you_teleport_to(const coord_def where,
-                     bool move_monsters = false);
+                     bool move_monsters = false,
+                     bool override_stasis = false);
 
 spret_type cast_portal_projectile(int pow, bool fail);
 

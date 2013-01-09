@@ -70,11 +70,8 @@ bool form_can_wear(transformation_type form)
 
 bool form_can_fly(transformation_type form)
 {
-    if (you.species == SP_TENGU
-        && (you.experience_level >= 15 || you.airborne()))
-    {
+    if (you.racial_permanent_flight())
         return true;
-    }
     return (form == TRAN_DRAGON || form == TRAN_BAT);
 }
 
@@ -431,25 +428,25 @@ monster_type dragon_form_dragon_type()
 {
     switch (you.species)
     {
-        case SP_WHITE_DRACONIAN:
-             return MONS_ICE_DRAGON;
-        case SP_GREEN_DRACONIAN:
-             return MONS_SWAMP_DRAGON;
-        case SP_YELLOW_DRACONIAN:
-             return MONS_GOLDEN_DRAGON;
-        case SP_GREY_DRACONIAN:
-             return MONS_IRON_DRAGON;
-        case SP_BLACK_DRACONIAN:
-             return MONS_STORM_DRAGON;
-        case SP_PURPLE_DRACONIAN:
-             return MONS_QUICKSILVER_DRAGON;
-        case SP_MOTTLED_DRACONIAN:
-             return MONS_MOTTLED_DRAGON;
-        case SP_PALE_DRACONIAN:
-             return MONS_STEAM_DRAGON;
-        case SP_RED_DRACONIAN:
-        default:
-             return MONS_DRAGON;
+    case SP_WHITE_DRACONIAN:
+        return MONS_ICE_DRAGON;
+    case SP_GREEN_DRACONIAN:
+        return MONS_SWAMP_DRAGON;
+    case SP_YELLOW_DRACONIAN:
+        return MONS_GOLDEN_DRAGON;
+    case SP_GREY_DRACONIAN:
+        return MONS_IRON_DRAGON;
+    case SP_BLACK_DRACONIAN:
+        return MONS_STORM_DRAGON;
+    case SP_PURPLE_DRACONIAN:
+        return MONS_QUICKSILVER_DRAGON;
+    case SP_MOTTLED_DRACONIAN:
+        return MONS_MOTTLED_DRAGON;
+    case SP_PALE_DRACONIAN:
+        return MONS_STEAM_DRAGON;
+    case SP_RED_DRACONIAN:
+    default:
+        return MONS_DRAGON;
     }
 }
 
@@ -469,16 +466,19 @@ int form_hp_mod()
     }
 }
 
-static bool _levitating_in_new_form(transformation_type which_trans)
+static bool _flying_in_new_form(transformation_type which_trans)
 {
-    //if our levitation is uncancellable (or tenguish) then it's not from evoking
-    if (you.attribute[ATTR_LEV_UNCANCELLABLE] || you.permanent_flight())
+    // If our flight is uncancellable (or tenguish) then it's not from evoking
+    if (you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+        || you.permanent_flight() && you.racial_permanent_flight())
+    {
         return true;
+    }
 
-    if (!you.is_levitating())
+    if (!you.flight_mode())
         return false;
 
-    int sources = player_evokable_levitation();
+    int sources = you.evokable_flight();
     int sources_removed = 0;
     set<equipment_type> removed = _init_equipment_removal(which_trans);
     for (set<equipment_type>::iterator iter = removed.begin();
@@ -490,11 +490,11 @@ static bool _levitating_in_new_form(transformation_type which_trans)
         item_info inf = get_item_info(*item);
 
         //similar code to safe_to_remove from item_use.cc
-        if (inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_LEVITATION)
+        if (inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT)
             sources_removed++;
-        if (inf.base_type == OBJ_ARMOUR && inf.special == SPARM_LEVITATION)
+        if (inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING)
             sources_removed++;
-        if (is_artefact(inf) && artefact_known_wpn_property(inf, ARTP_LEVITATE))
+        if (is_artefact(inf) && artefact_known_wpn_property(inf, ARTP_FLY))
             sources_removed++;
     }
 
@@ -505,7 +505,7 @@ bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat)
 {
     // Everything is okay if we can fly.
-    if (form_can_fly(which_trans) || _levitating_in_new_form(which_trans))
+    if (form_can_fly(which_trans) || _flying_in_new_form(which_trans))
         return false;
 
     // We can only cling for safety if we're already doing so.
@@ -992,7 +992,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
        you.transform_uncancellable = true;
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && you.flight_mode() == FL_NONE
+    if (was_flying && !you.flight_mode()
                    || feat_is_water(grd(you.pos()))
                       && (which_trans == TRAN_BLADE_HANDS
                           || which_trans == TRAN_APPENDAGE)
@@ -1109,7 +1109,7 @@ void untransform(bool skip_wielding, bool skip_move)
     _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (old_flight && you.flight_mode() == FL_NONE
+    if (!skip_move && (old_flight && !you.flight_mode()
                        || (feat_is_water(grd(you.pos()))
                            && (old_form == TRAN_ICE_BEAST
                                || you.species == SP_MERFOLK))))

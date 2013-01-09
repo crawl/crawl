@@ -60,7 +60,7 @@ int MenuRegion::handle_mouse(MouseEvent &event)
     int x, y;
     if (!mouse_pos(event.px, event.py, x, y))
 #ifdef TOUCH_UI
-        if((int)event.py < oy && event.event == MouseEvent::PRESS
+        if ((int)event.py < oy && event.event == MouseEvent::PRESS
            && event.button == MouseEvent::LEFT)
         {
             return CK_TOUCH_DUMMY; // mouse click in title area
@@ -101,7 +101,7 @@ int MenuRegion::handle_mouse(MouseEvent &event)
             if (entry == -1)
 #ifdef TOUCH_UI
                 // if L-CLICK on --more--, do more action
-                if(y > m_more_region_start && m_more.width() > 0)
+                if (y > m_more_region_start && m_more.width() > 0)
                     return CK_TOUCH_DUMMY;
                 else
 #endif

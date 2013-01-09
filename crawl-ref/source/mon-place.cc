@@ -10,6 +10,7 @@
 #include "mon-place.h"
 #include "mgen_data.h"
 
+#include "abyss.h"
 #include "areas.h"
 #include "arena.h"
 #include "branch.h"
@@ -38,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "sprint.h"
 #include "stairs.h"
@@ -583,6 +585,9 @@ monster_type pick_random_monster(const level_id &place,
 
 bool can_place_on_trap(monster_type mon_type, trap_type trap)
 {
+    if (mons_is_tentacle_segment(mon_type))
+        return true;
+
     if (trap == TRAP_TELEPORT)
         return false;
 
@@ -591,7 +596,7 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
         if (_is_random_monster(mon_type))
             return false;
 
-        return (mons_class_flies(mon_type) != FL_NONE
+        return (mons_class_flies(mon_type)
                 || get_monster_data(mon_type)->size == SIZE_TINY);
     }
 
@@ -785,29 +790,46 @@ monster_type pick_random_monster_for_place(const level_id &place,
                                            monster_type zombie_monster,
                                            bool want_corpse_capable)
 {
+    // Sometimes the caller wants an extra hard monster.
     int lev = place.absdepth();
 
-    int tries = 100;
-    monster_type chosen = MONS_NO_MONSTER;
+    // If the caller supplied a zombie_monster argument, use it to
+    // figure out whether or not it wants a zombie, and if so, what
+    // size.
+    const bool wanted_a_zombie = zombie_monster != MONS_NO_MONSTER
+                                 && mons_class_is_zombified(zombie_monster);
     const zombie_size_type wanted_zombie_size =
-        (zombie_monster != MONS_NO_MONSTER
-         && mons_class_is_zombified(zombie_monster))?
-        zombie_class_size(zombie_monster) : Z_NOZOMBIE;
+        wanted_a_zombie ? zombie_class_size(zombie_monster) : Z_NOZOMBIE;
 
-    do
-        chosen = _pick_random_monster(place, lev, lev, NULL);
-    while (!invalid_monster_type(chosen)
-           && wanted_zombie_size != Z_NOZOMBIE
-           && !mons_class_flag(chosen, M_NO_POLY_TO)
-           && mons_zombie_size(chosen) != wanted_zombie_size
-           && (!want_corpse_capable
-               || mons_class_can_leave_corpse(mons_species(chosen)))
-           && --tries > 0);
+    // Try 100 times to generate an acceptable monster, then give up and
+    // return MONS_NO_MONSTER and let the caller deal with it.
+    for (int tries = 0; tries < 100; ++tries)
+    {
+        monster_type chosen = _pick_random_monster(place, lev, lev, NULL);
 
-    if (!tries)
-        chosen = MONS_NO_MONSTER;
+        // If _pick_random_monster() gave us something invalid, give up
+        // and let the caller deal with it.
+        if (invalid_monster_type(chosen))
+            return chosen;
 
-    return chosen;
+        // Reject things that can't leave corpses.
+        if (want_corpse_capable
+            && !mons_class_can_leave_corpse(mons_species(chosen)))
+        {
+            continue;
+        }
+
+        // Now, if we didn't want a zombie, we are done.
+        if (!wanted_a_zombie)
+            return chosen;
+
+        // Otherwise make sure our zombie is the right size.
+        if (mons_zombie_size(chosen) == wanted_zombie_size)
+            return chosen;
+    }
+
+    // :( We failed to find a monster. Sorry.
+    return MONS_NO_MONSTER;
 }
 
 // A short function to check the results of near_stairs().
@@ -858,7 +880,8 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
         || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
-            && is_sanctuary(mg_pos)))
+            && is_sanctuary(mg_pos)
+            && !mons_is_tentacle_segment(montype)))
     {
         return false;
     }
@@ -892,6 +915,31 @@ static bool _valid_monster_generation_location(mgen_data &mg)
 static bool _in_ood_pack_protected_place()
 {
     return (env.turns_on_level < 1400 - env.absdepth0 * 117);
+}
+
+static string _abyss_monster_creation_message(monster* mon, bool visible)
+{
+    if (mon->type == MONS_DEATH_COB)
+    {
+        if (visible)
+            return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
+        return " smells like butter!";
+    }
+
+    string messages[] = {
+        (visible ? " appears" : " flickers") + string(" in a shower of")
+            + (one_chance_in(3) ? " translocational energy." : " sparks."),
+        " materialises.",
+        string(" emerges from ") + (one_chance_in(3) ? "chaos." : "the beyond."),
+        " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + "!",
+        (one_chance_in(3) ? " erupts" : " bursts") + string(" from nowhere!"),
+        string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
+        string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething")
+            + string(" chaos."),
+        string(" punctures the fabric of") + (one_chance_in(5) ? " time!" : " the universe."),
+        string(" manifests") + (silenced(you.pos()) ? "!" : " with a bang!")
+    };
+    return messages[min(random2(9), random2(9))];
 }
 
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
@@ -1126,40 +1174,48 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #endif
     }
 
+    if (player_in_branch(BRANCH_ABYSS) && !mg.summoner)
+        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
+
     // Message to player from stairwell/gate appearance.
-    if (you.see_cell(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
+    if (you.see_cell(mg.pos) &&
+       (mg.proximity == PROX_NEAR_STAIRS ||
+       (player_in_branch(BRANCH_ABYSS) && !mg.summoner)))
     {
         string msg;
-
-        if (mon->visible_to(&you))
+        bool is_visible = mon->visible_to(&you);
+        if (is_visible)
             msg = mon->name(DESC_A);
         else if (shoved)
             msg = "Something";
 
-        if (shoved)
+        if (mg.proximity == PROX_NEAR_STAIRS)
         {
-            msg += " shoves you out of the ";
-            if (stair_type == DCHAR_ARCH)
-                msg += "gateway!";
-            else
-                msg += "stairwell!";
-            mpr(msg.c_str());
-        }
-        else if (!msg.empty())
-        {
-            if (stair_type == DCHAR_STAIRS_DOWN)
-                msg += " comes up the stairs.";
-            else if (stair_type == DCHAR_STAIRS_UP)
-                msg += " comes down the stairs.";
-            else if (stair_type == DCHAR_ARCH)
-                msg += " comes through the gate.";
-            else
-                msg = "";
-
-            if (!msg.empty())
+            if (shoved)
+            {
+                msg += " shoves you out of the ";
+                if (stair_type == DCHAR_ARCH)
+                    msg += "gateway!";
+                else
+                    msg += "stairwell!";
                 mpr(msg.c_str());
+            }
+            else if (!msg.empty())
+            {
+                if (stair_type == DCHAR_STAIRS_DOWN)
+                    msg += " comes up the stairs.";
+                else if (stair_type == DCHAR_STAIRS_UP)
+                    msg += " comes down the stairs.";
+                else if (stair_type == DCHAR_ARCH)
+                    msg += " comes through the gate.";
+                else
+                    msg = "";
+            }
         }
-
+        else if (player_in_branch(BRANCH_ABYSS))
+            msg += _abyss_monster_creation_message(mon, is_visible);
+        if (!msg.empty())
+            mpr(msg.c_str());
         // Special case: must update the view for monsters created
         // in player LOS.
         viewwindow();
@@ -1301,7 +1357,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (dont_place)
         fpos.reset();
     else if (leader == 0 && in_bounds(mg.pos)
-        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos)
+        && (mg.behaviour == BEH_FRIENDLY ||
+            (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype))
             || mons_is_mimic(montype))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
@@ -1691,6 +1748,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             blame_prefix = "woven by ";
         }
+
+        if (mg.cls == MONS_DANCING_WEAPON)
+            blame_prefix = "animated by ";
     }
     else if (mons_class_is_zombified(mg.cls))
         blame_prefix = "animated by ";
@@ -1719,16 +1779,16 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mons_add_blame(mon, blame_prefix + "the player character");
         else
         {
-            monster* sum = mg.summoner->as_monster();
+            const monster* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
                                  + sum->full_name(DESC_A, true)));
             if (sum->props.exists("blame"))
             {
-                CrawlVector& oldblame = sum->props["blame"].get_vector();
-                for (CrawlVector::iterator i = oldblame.begin();
+                const CrawlVector& oldblame = sum->props["blame"].get_vector();
+                for (CrawlVector::const_iterator i = oldblame.begin();
                      i != oldblame.end(); ++i)
                 {
-                    mons_add_blame(mon, *i);
+                    mons_add_blame(mon, i->get_string());
                 }
             }
         }

@@ -11,7 +11,6 @@
 #define DEAD_ARE_FLYING 4
 #define DEAD_ARE_SLITHERING 8
 #define DEAD_ARE_HOPPING 16
-#define DEAD_ARE_FLOATING 32
 
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);

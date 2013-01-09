@@ -228,6 +228,12 @@ Dig spell
 
 This spell forms tunnels through unworked rock by liquefying it.
 %%%%
+Disjunction spell
+
+This spell destabilizes the space in a sphere around you for a while, causing
+anyone nearby to be randomly blinked. The chance of blinking depends on the
+distance from you, being nearly certain when directly adjacent.
+%%%%
 Dispel Undead spell
 
 This spell uses the very forces that bind an undead creature together to
@@ -496,7 +502,8 @@ Petrify spell
 
 This spell attempts to petrify a monster. If successful, the monster is slowed
 down for a while until it is temporarily turned into stone. In this state, a
-monster will take less damage upon being hit.
+monster will take less damage upon being hit. It also precludes the use of
+wings, which can be quite unhealthy above lava.
 %%%%
 Phase Shift spell
 
@@ -747,6 +754,10 @@ This spell throws a small bolt of flame.
 Throw Frost spell
 
 This spell throws a small bolt of frost.
+%%%%
+Thunderbolt spell
+
+This spell creates an arc of electricity.
 %%%%
 Tornado spell
 

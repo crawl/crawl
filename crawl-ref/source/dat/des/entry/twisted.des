@@ -8,45 +8,6 @@
 # lua, use of SUBVAULTs or just plain obfusciation. Some maps simply have
 # extremely long headers, so we put them here.
 ##############################################################################
-NAME:    dpeg_entry_thieves
-ORIENT:  float
-TAGS:    entry no_monster_gen
-WEIGHT:  20
-: if crawl.one_chance_in(7) then
-SHUFFLE: Aa/Bb, EF, CD
-NSUBST:  A=1:+/*:x, F=1:+/*:x, D=1:+/*:x
-SUBST:   Y=], a:+., BbCEG=x
-: else
-SHUFFLE: Aa/Bb, FG, CDE
-NSUBST:  A=1:+/*:x, F=1:+/*:x, D=1:+/*:x, E=1:+/*:x
-SUBST:   a:+., BbCG=x, Y=.
-:end
-SHUFFLE: H4/'"
-SUBST:   '=x, ":x"
-NSUBST:  "=1:<>/*:., H=1:+/*:x, 4:4..
-SUBST:   Z=.+
-: if crawl.one_chance_in(7) then
-SHUFFLE: LK, IJ
-NSUBST:  L=1:+/*:x, I=1:+/*:x
-SUBST:   X=), KJM=x
-:else
-SHUFFLE: ML, IJ, JKL
-SUBST:   KL=x, X=.
-NSUBST:  M=1:+/*:x, I=1:+/*:x, J=1:+/*:x
-:end
-SHUFFLE: 123567
-SUBST:   12=., 3:3., 5:5., 3567=.
-MAP
-xxxxxxxxxxxxx
-x11B2.D33F.[x
-AAAB.2D33FY.x
-xaaxCCxEExGGx
-@.....{.....@
-MMMxKxIIxZHHH
-x.XL7J65I.H4x
-x(.L7J56IxH4x
-xxxxxxxxxxxxx
-ENDMAP
 
 ##############################################################################
 # 37 x 22 -- this one is huge and twisted, but it's also old...
@@ -71,8 +32,9 @@ SUBST:  X=+, Y:YYY+
 NSUBST: Y=1:+/*:x
 : end
 SUBST:  XY=x, ABCabcdefghijk=l, DEFmnopqrstuv=w
-MONS:   bush w:1 / plant w:6 / fungus w:9
-MONS:   fungus
+KPROP:  1G = no_rtele_into
+MONS:   bush w:1 / plant w:6 / fungus w:9 / nothing w:45
+MONS:   fungus / nothing w:20
 SUBST:  "=2', '=2..., 2:222.WW
 : if crawl.coinflip() then
 SUBST:  Z=x, z=+, V=x
@@ -532,9 +494,8 @@ ENDMAP
 #######################################################################
 # Four elements.
 # Pretty hazardous, but the Earth side is always safe to leave through.
-# Players can safely watch at the clouds. Autoexplore will not run into
-# the chambers, players have to search for the secret door. Likewise,
-# all exits are secret except for the safe one.
+# Players can safely watch at the clouds. All exits are runed except for
+# the safe one.
 # This vault is great. I've seen players marvel at it. If need be, we
 # may delegate it to another branch, where less caution measures are
 # demanded. But I'd like to keep it on D:1 (dp).
@@ -903,54 +864,6 @@ x...c---A----n...........@
 x...cccccccccc...xxxxxxxxx
 x................x
 xxxxxxxxxxxxxxxxxx
-ENDMAP
-
-###############################################################################
-
-NAME: grunt_entry_hellfire
-TAGS: entry no_monster_gen no_trap_gen no_item_gen
-WEIGHT: 4
-ORIENT: float
-SHUFFLE: {(
-KPROP: HdefghijkLMNP- = no_rtele_into
-TILE:  n = dngn_transparent_wall_red
-SUBVAULT: d : grunt_burning_victim
-SUBVAULT: e : grunt_burning_victim
-SUBVAULT: f : grunt_burning_victim
-SUBVAULT: g : grunt_burning_victim
-SUBVAULT: h : grunt_burning_victim
-SUBVAULT: i : grunt_burning_victim
-SUBVAULT: j : grunt_burning_victim
-SUBVAULT: k : grunt_burning_victim
-SUBVAULT: L : grunt_burning_victim
-SUBVAULT: M : grunt_burning_victim
-SUBVAULT: N : grunt_burning_victim
-SUBVAULT: P : grunt_burning_victim
-MARKER: H = lua:fog_machine { cloud_type="flame", pow_min=10, pow_max=10, \
-                              delay = 10, walk_dist = 3, size = 5, \
-                              excl_rad = 0 }
-MAP
-xxxxxxxxxx@xxxxxxxxxx
-xxxxxxx.......xxxxxxx
-xxxxx...........xxxxx
-xxxx......[......xxxx
-xxx.....nnnnn.....xxx
-xx....nnn---nnn....xx
-xx...nn--d-e--nn...xx
-x....n-f-----g-n....x
-x...nn--H-H-H--nn...x
-x...n-h-------i-n...x
-@...n---H-G-H---n...@
-x...n-j-------k-n...x
-x...nn--H-H-H--nn...x
-x....n-L-----M-n....x
-xx..{nn--N-P--nn(..xx
-xx....nnn---nnn....xx
-xxx.....nnnnn.....xxx
-xxxx.............xxxx
-xxxxx...........xxxxx
-xxxxxxx.......xxxxxxx
-xxxxxxxxxx@xxxxxxxxxx
 ENDMAP
 
 ###############################################################################

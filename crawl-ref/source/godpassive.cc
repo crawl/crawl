@@ -120,18 +120,18 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.magic_points < you.max_magic_points)
     {
-         inc_mp(max(random2(item_value), 1));
-         *js |= JS_MP;
-     }
+        inc_mp(max(random2(item_value), 1));
+        *js |= JS_MP;
+    }
 
     if (you.piety >= piety_breakpoint(4)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.hp < you.hp_max
         && !you.duration[DUR_DEATHS_DOOR])
     {
-         inc_hp(max(random2(item_value), 1));
-         *js |= JS_HP;
-     }
+        inc_hp(max(random2(item_value), 1));
+        *js |= JS_HP;
+    }
 }
 
 void jiyva_slurp_message(int js)
@@ -381,7 +381,7 @@ static bool _jewel_auto_id(const item_def& item)
     case RING_INVISIBILITY:
     case RING_TELEPORTATION:
     case RING_MAGICAL_POWER:
-    case RING_LEVITATION:
+    case RING_FLIGHT:
     case RING_ICE:
     case RING_FIRE:
     case RING_WIZARDRY:
@@ -479,7 +479,6 @@ bool god_id_item(item_def& item, bool silent)
         if (ided & ISFLAG_KNOW_TYPE)
             set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ided);
-        add_autoinscription(item);
 
         if (item.props.exists("needs_autopickup") && is_useless_item(item))
             item.props.erase("needs_autopickup");

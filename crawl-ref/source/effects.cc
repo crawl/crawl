@@ -523,16 +523,18 @@ static string _who_banished(const string &who)
 void banished(const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
+    push_features_to_abyss();
     if (crawl_state.game_is_zotdef())
         return;
 
-    mark_milestone("abyss.enter",
-                   "is cast into the Abyss!" + _who_banished(who));
+    if (!player_in_branch(BRANCH_ABYSS)) {
+      mark_milestone("abyss.enter",
+                     "is cast into the Abyss!" + _who_banished(who));
+    }
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        // Can't happen outside wizmode.
-        mpr("You feel trapped.");
+        down_stairs(DNGN_ABYSSAL_STAIR);
         return;
     }
 
@@ -540,7 +542,6 @@ void banished(const string &who)
     take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
 
     stop_delay(true);
-    push_features_to_abyss();
     down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 
     // Xom just might decide to interfere.
@@ -1006,7 +1007,7 @@ void yell(bool force)
     case 't':
         mprf(MSGCH_SOUND, "You %s%s!",
              shout_verb.c_str(),
-             you.berserk() ? "wildly" : " for attention");
+             you.berserk() ? " wildly" : " for attention");
         noisy(noise_level, you.pos());
         you.turn_is_over = true;
         return;
@@ -1948,19 +1949,14 @@ static void _rot_inventory_food(int time_delta)
                 break;
             }
         }
-        else if (Options.list_rotten)
+        else
             msg = "Something in your inventory has become rotten.";
 
-        if (Options.list_rotten)
-        {
-            mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
-                 msg.c_str(),
-                 rotten_items.size() > 1 ? "s" : "",
-                 comma_separated_line(rotten_items.begin(),
-                                      rotten_items.end()).c_str());
-        }
-        else if (!msg.empty())
-            mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
+        mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
+             msg.c_str(),
+             rotten_items.size() > 1 ? "s" : "",
+             comma_separated_line(rotten_items.begin(),
+                                  rotten_items.end()).c_str());
 
         learned_something_new(HINT_ROTTEN_FOOD);
     }
@@ -2029,6 +2025,10 @@ void handle_time()
         && !crawl_state.game_is_zotdef())
     {
         spawn_random_monsters();
+        if (player_in_branch(BRANCH_ABYSS))
+          for (int i = 1; i < you.depth; ++i)
+                if (x_chance_in_y(i, 5))
+                    spawn_random_monsters();
     }
 
     // Labyrinth and Abyss maprot.
@@ -2278,12 +2278,13 @@ void handle_time()
         {
             you.attribute[ATTR_EVOL_XP] = 0;
             mpr("You feel a genetic drift.");
-            bool evol = mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
-                               "evolution",
-                               false, false, false, false, false, true);
+            bool evol = one_chance_in(5) ?
+                delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
+                mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                       "evolution", false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
-                && (!player_res_mutation_from_item()
+                && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
                 evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);
@@ -2574,41 +2575,6 @@ void update_level(int elapsedTime)
     for (int i = 0; i < MAX_CLOUDS; i++)
         delete_cloud(i);
 }
-
-static void _maybe_restart_fountain_flow(const coord_def& where,
-                                         const int tries)
-{
-    dungeon_feature_type grid = grd(where);
-
-    if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
-        return;
-
-    for (int i = 0; i < tries; ++i)
-    {
-        if (!one_chance_in(100))
-            continue;
-
-        // Make it start flowing again.
-        grd(where) = static_cast<dungeon_feature_type> (grid
-                        - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
-
-        // XXX: why should the player magically know this?!
-        if (env.map_knowledge(where).seen())
-            env.map_knowledge(where).set_feature(grd(where));
-
-        // Clean bloody floor.
-        if (is_bloodcovered(where))
-            env.pgrid(where) &= ~(FPROP_BLOODY);
-
-        // Chance of cleaning adjacent squares.
-        for (adjacent_iterator ai(where); ai; ++ai)
-            if (is_bloodcovered(*ai) && one_chance_in(5))
-                env.pgrid(*ai) &= ~(FPROP_BLOODY);
-
-        break;
-   }
-}
-
 
 // A comparison struct for use in an stl priority queue.
 template<typename T>
@@ -3098,23 +3064,6 @@ static void _update_corpses(int elapsedTime)
         else
             it.special -= rot_time;
     }
-
-    int fountain_checks = elapsedTime / 1000;
-    if (x_chance_in_y(elapsedTime % 1000, 1000))
-        fountain_checks += 1;
-
-    // Dry fountains may start flowing again.
-    if (fountain_checks > 0)
-    {
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            if (grd(*ri) >= DNGN_DRY_FOUNTAIN_BLUE
-                && grd(*ri) < DNGN_PERMADRY_FOUNTAIN)
-            {
-                _maybe_restart_fountain_flow(*ri, fountain_checks);
-            }
-        }
-    }
 }
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)
@@ -3172,8 +3121,6 @@ void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
 
-    const int depth = player_in_branch(BRANCH_SLIME_PITS) ? you.depth : 1;
-
     int walls = 0;
     for (adjacent_iterator ai(act->pos()); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
@@ -3181,6 +3128,8 @@ void slime_wall_damage(actor* act, int delay)
 
     if (!walls)
         return;
+
+    const int depth = player_in_branch(BRANCH_SLIME_PITS) ? you.depth : 1;
 
     // Up to 1d6 damage per wall per slot.
     const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
@@ -3202,13 +3151,13 @@ void slime_wall_damage(actor* act, int delay)
         if (mons_is_slime(mon))
             return;
 
-         const int dam = resist_adjust_damage(mon, BEAM_ACID, mon->res_acid(),
+        const int dam = resist_adjust_damage(mon, BEAM_ACID, mon->res_acid(),
                                               roll_dice(2, strength));
-         if (dam > 0 && you.can_see(mon))
-         {
-             mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
+        if (dam > 0 && you.can_see(mon))
+        {
+            mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_THE).c_str());
-         }
-         mon->hurt(NULL, dam, BEAM_ACID);
+        }
+        mon->hurt(NULL, dam, BEAM_ACID);
     }
 }

@@ -2215,7 +2215,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         const int tmp = random2(600) + 200 * (item.sub_type != ARM_BOOTS);
 
         rc = (tmp < 200) ? SPARM_RUNNING :
-             (tmp < 400) ? SPARM_LEVITATION :
+             (tmp < 400) ? SPARM_FLYING :
              (tmp < 600) ? SPARM_STEALTH :
              (tmp < 700) ? SPARM_COLD_RESISTANCE
                          : SPARM_FIRE_RESISTANCE;
@@ -2282,7 +2282,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_NORMAL:
         return true;
 
-    case SPARM_LEVITATION:
+    case SPARM_FLYING:
         if (slot == EQ_BODY_ARMOUR)
             return true;
         // deliberate fall-through
@@ -2661,7 +2661,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              500, POT_AGILITY,
                                              500, POT_BRILLIANCE,
                                              280, POT_INVISIBILITY,
-                                             280, POT_LEVITATION,
+                                             280, POT_FLIGHT,
                                              280, POT_RESISTANCE,
                                              280, POT_MAGIC,
                                              280, POT_BERSERK_RAGE,
@@ -3418,12 +3418,18 @@ static bool _armour_is_visibly_special(const item_def &item)
 
 jewellery_type get_random_amulet_type()
 {
+#if TAG_MAJOR_VERSION == 34
     int res;
     do
         res = (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
-    // Do not generate cFly (now used for amulet of the Air only)
+    // Do not generate cFly
     while (res == AMU_CONTROLLED_FLIGHT);
+
     return jewellery_type(res);
+#else
+    return static_cast<jewellery_type>(AMU_FIRST_AMULET
+           + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+#endif
 }
 
 static jewellery_type _get_raw_random_ring_type()

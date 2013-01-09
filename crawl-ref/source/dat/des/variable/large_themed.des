@@ -101,7 +101,7 @@ DEPTH:   D:7-27, Lair, Crypt
 MONS:    ice statue / orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
-ITEM:    ring of teleportation / ring of levitation
+ITEM:    ring of teleportation / ring of flight
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxwwwxxxxxxxxxxx
@@ -179,7 +179,7 @@ NAME:    dragon1_lemuel
 ORIENT:  northeast
 DEPTH:   D:9-20, Lair
 MONS:    patrolling dragon, patrolling ice dragon
-ITEM:    potion of levitation / scroll of teleportation
+ITEM:    potion of flight / scroll of teleportation
 SUBST:   ! : ?x
 SHUFFLE: 1?/2W
 SUBST:   2=2:20 1
@@ -206,7 +206,7 @@ ENDMAP
 ################################################################################
 # Steading of the Giant Chief
 #
-NAME:    Giant_Chief_Lemuel
+NAME:    giant_chief_lemuel
 DEPTH:   D:11-22, Orc:3-4
 ORIENT:  north
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
@@ -222,7 +222,7 @@ SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x.
 SUBST:   0 = 4 7 8:20 .:20
 SUBST:   T = .:50 ~
 SUBST:   | : |:30 Z
-SUBST:   ! = =+x
+SUBST:   ! = +x
 KFEAT:   Z = floor
 KMONS:   Z = hill giant zombie / stone giant zombie / cyclops zombie /\
              titan zombie
@@ -238,9 +238,9 @@ xx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+TT+.........5cx
 x?$$$$$$.?xx?.666.xxxxxxee0eexxx7....7.......c........cccc.........1cx
 x.$$$$$$..?x...6..eeeeeeexxxxxxx............7ccccc+ccccccc.........5cx
 x....<.....+?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cx
-x?........?xxxx.xxxxxxxx<=$$$TT+.......+TTTTTTTTTTTc(((((c.......***cx
+x?........?xxxx.xxxxxxxx<+$$$TT+.......+TTTTTTTTTTTc(((((c.......***cx
 xx........?xx...xxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cx
-xxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx=xxxx
+xxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx+xxxx
 xxxxxx!xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxx
 xxx....xxxxx..xaaaaabbb0;''''''c.......c'''''';0ggggdddddd????xxx||xxx
 x...xxxxx???0?aaaaabbbb..;'''''ccc+++ccc''''';...ggggggdddddd???xxxxxx
@@ -502,9 +502,9 @@ MAP
 .c$c%c......ww.ccccccccc.......xx
 .c+c+c......ww.c.%$....ccccccccxx
 .c...+......ww.c*.115..c$$+|*|cxx
-.c1..c.....ww..c...55+ccc=cxx+cxx
+.c1..c.....ww..c...55+ccc+cxx+cxx
 .ccccc.....ww..ccccccc....c|+*cxx
-............ww.......c5...cxx=cxx
+............ww.......c5...cxx+cxx
 ....6.ccccc.ww.w...2.+51..c|1.cxx
 ....63+...c..wwww..21+51..c2.2cxx
 ....6.ccccc..wwwwww..c5...cc+ccxx
@@ -534,8 +534,8 @@ DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon
 WEIGHT:  6
-ITEM:    ring of levitation / potion of levitation / nothing
-ITEM:    potion of levitation / nothing, nothing, nothing, nothing
+ITEM:    ring of flight / potion of flight / nothing
+ITEM:    potion of flight / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
@@ -565,8 +565,8 @@ DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon
 WEIGHT:  4
-ITEM:    ring of levitation / potion of levitation / nothing
-ITEM:    potion of levitation, nothing, nothing, nothing, nothing
+ITEM:    ring of flight / potion of flight / nothing
+ITEM:    potion of flight, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP
@@ -675,25 +675,25 @@ KMONS:  F = ancient lich
 MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
- cc......=.....cc......=....$cc
+ cc......+.....cc......+....$cc
  ccmcccccc..5..cczcccccc.6.6$cc
  cc.....cc*5E5.cc.....cc..F.$cc
  ccccccmcc|.5..cccccczcc.6.6$cc
- cc.....cc*$$..=......cc|||||cc
+ cc.....cc*$$..+......cc|||||cc
  cc.ccccccccccccccccccccccccccc
- cc=ccccccccccccccccccccccccccc
+ cc+ccccccccccccccccccccccccccc
  cc.....cllllllcc%$$..cwwwwwwcc
  cc.4.4.clcccclcc$.3..cwccccwcc
- cc..D..=.cllllcc$3C3.=.cwwwwcc
+ cc..D..+.cllllcc$3C3.+.cwwwwcc
  cc%4.4.ccclccccc..3..cccwccccc
- cc$$$%%ccclllll=.....cccwwwwcc
+ cc$$$%%ccclllll+.....cccwwwwcc
  cccccccccccccccccccccccccccwcc
- ccccccccccccccccccccccccccc=cc
-.cc......=...$$ccWWWWWW=.....cc
+ ccccccccccccccccccccccccccc+cc
+.cc......+...$$ccWWWWWW+.....cc
 .cc.cccccc..1.$ccWcccccc.2.2.cc
 .cc.....cc.1A1.ccWWWWWWc..B..cc
 occcccc.cc..1..cccccccWc.2.2$cc
-@=......cc.....=WWWWWWWc...$%cc
+@+......cc.....+WWWWWWWc...$%cc
 occcccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
 ENDMAP
@@ -863,7 +863,7 @@ MONS:   ghost moth, Jory, vampire knight
 MONS:   raven
 NSUBST: A = 3:v / *:=, B = 3:v / *:=
 NSUBST: C = 2:v / *:=, D = 2:v / *:=
-# Make sure monsters don't wander to much.
+# Make sure monsters don't wander too much.
 KFEAT:  + = runed_door
 # Colouring
 COLOUR: G = cyan
@@ -981,7 +981,6 @@ NSUBST: 3 = 3:. / *:3
 SUBST:  ^ : ^mmm
 KFEAT:  ^ = teleport trap
 KFEAT:  m = iron_grate
-KFEAT:  ! = runed_door
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
 KPROP:  -d|*$14567^ = no_rtele_into
@@ -1016,14 +1015,14 @@ xxxxc--cc4-c3~3c--cc-4cxxxxx
 xxxccmmccmmcc+ccmmccmmccxxxx
 xxxc3..................cxxxx
 xxxc3................3.cxxxx
-xxxcmmcmmc!cmmcmmcmmc..ccccx
+xxxcmmcmmc+cmmcmmcmmc..ccccx
 xxxc--c-4c-c4-c4-c-4c..m--cx
 xxxc-4c--c-cccccccccc..m-4cx
 xxxccccccc--^1y||c--m.3ccccx
 xxxccccccc-ccccc|c-4m..m4-cx
 xxxc4-c--c-c-4cc|cccc..m--cx
 xxxc--c-4c-c--cddc-4c..ccccx
-xxxcmmcmmc!cmmccccmmc..cxxxx
+xxxcmmcmmc+cmmccccmmc..cxxxx
 xxxc3..................cxxxx
 xxxc3.................3cxxxx
 xxxccmmcmmcmmc..cmmcmmccxxxx
@@ -1424,4 +1423,40 @@ xxxxx"x........x+xxxxx........x"xxxxx
 .......xx=xx..mx.....xm..xx=xx.......
 ........xx'x...xm+++mx...x'xx........
 ..................@..................
+ENDMAP
+
+###############################################################################
+# Tagged "extra" because I find it too small to take the full vault slot.
+#
+NAME: lightli_too_deep
+DEPTH: D:17-27
+TAGS: no_monster_gen extra
+ORIENT: northeast
+MONS: balrug
+MONS: sun demon
+KFEAT: H = enter_hell
+SUBST: y = x..
+SUBST: ; = %A.....l
+KITEM: % = dwarf skeleton
+: dgn.delayed_decay(_G, '%', 'dwarf skeleton')
+KITEM: A = any weapon race:dwarven w:20 /  chain mail race:dwarven w:30 / \
+           splint mail race:dwarven w:30 / plate armour race:dwarven w:19 / \
+           crystal plate armour race:dwarven w:1
+MAP
+xxxxxxxxxxxxxxx
+xxxxcccccccxxxx
+xxxxcA;H;Acxxxx
+xxxxc;;1;;cxxxx
+xxxxc;2|2;cxxxx
+xxxxc;;;;;cxxxx
+xxxxccc.cccxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxy%yxxxxxxx
+xxxxxy.yxxxxxxx
+xxxxxy.yxxxxxxx
+xxxxy...yxxxxxx
+xxxy.%...yxxxxx
 ENDMAP

@@ -35,9 +35,9 @@ default-depth: D:12-26
 # Should be turned into a timed, non-announced portal vault
 # using the maprot (or unmappable) flag.
 #
-# The two orange statues are placed for maximum pain -- one you're
-# likely to first see while levitating, the other is hard to target
-# with disintegration through its protective plants.
+# The two orange statues are placed for maximum pain -- one you're likely to
+# first see while flying, the other is hard to target with disintegration
+# through its protective plants.
 #
 # Lemuel
 #
@@ -140,10 +140,9 @@ ENDMAP
 #
 # By minmay.
 #
-# All arrivals from above (and one from below) bubbles just lead to
-# downward escape hatches. The other two staircases from below lead
-# to bubbles with some loot. For the main fight, you have to levitate
-# or teleport.
+# All arrivals from above (and one from below) bubbles just lead to downward
+# escape hatches.  The other two staircases from below lead to bubbles with
+# some loot.  For the main fight, you have to fly or teleport.
 # The opposition is nasty, but this map is deep enough.
 NAME:    minmay_sea_of_fire
 TAGS:    no_rotate
@@ -446,143 +445,99 @@ ENDMAP
 ################################################################################
 # Zero! Nine! Eight!
 #
-NAME:     hangedman_slaughterboxes
-TAGS:     no_pool_fixup no_monster_gen no_item_gen patrolling
-ORIENT:   encompass
-DEPTH:    D:16-26
-MONS:     butterfly, plant
-SUBVAULT: a : hm_sb_wall_set_up
-KMASK:    a = no_trap_gen
-KMASK:    xX' = !no_monster_gen
-SHUFFLE:  de, fg, hi, jk, JK, nm, XZ / yz
-SUBST:    X = xx', y= x'', Z = xx., z = x..
-SUBST:    dfhk = x, egij = ., T = TTV, U = TUU, t : ttx, " : WW'
-SUBST:    % = %%%%$$., * = ***%, | = |||*
-SUBST:    JNQ = 0, OR = ., S : 09, M = 09, K = 9
+NAME:    hangedman_slaughterboxes
+TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling
+ORIENT:  encompass
+DEPTH:   D:16-26
+MONS:    butterfly, plant
+KMONS:   S = 0 band
+KMONS:   # = 9 band
+KFEAT:   ^ = stone_arch
+KFEAT:   - = enter_vaults
+SHUFFLE: :;, `~, 34, 67, !?, XZ / yz
+SUBST:   % = %:40 $:20 ., * = *:30 %, | = |:30 *
+SHUFFLE: ABCDE / BADCE / AGHIC / ACGHE, BDF
+SUBST:   ACF = ., BDGHI = x, E : .x
+SHUFFLE: JKLMN / KJMLN / JPQRL / JLPQN, KMO
+SUBST:   JLO = ., KMPQR = x, N : .x
+SHUFFLE: cdefg / dcfeg / cijke / ceijg, dfh
+SUBST:   ceh = ., dfijk = x, g : .x
+SHUFFLE: nopqr / onqpr / ntuvp / nptur, oqs
+SUBST:   nps = ., oqtuv = x, r : .x
+SUBST:   X = xx', y= x'', Z = xx., z = x..
+SUBST:   ;` = ., :~ = x, T = TTV, U = TUU
+SUBST:   7? = ., 36! = 0, Y : 09, 5 = 09, 4 = 9
+SUBST:   = : ttx2, " : WW', _  = C, @ = G
+NSUBST:  ' = 7:S / 2:# / 6 = S:2 #:1 .:2 / *:.
+: if you.absdepth() > 20 then
+SUBST:   & : a:45 c:8 vb x:2, a : c:15 vb
+MARKER:  ^ = lua:props_marker { portal=1 }
+: else
+SUBST:   & : a:80 x:15 c:3 v:1 b:1, a : c:38 v:2 b:2
+:    if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+NSUBST:  ^ = 1:- / *:^
+:    end
+: end
 MAP
-   xxxxxxxxxxxxxxx      xxxxx       xxxx
+   xxxxxxxxxxxxxxx      xxxxx       xxxxx
   xxxxxxxxxxxxxxxxx    xxxxxxx    xxxxxxaaaaaaaaaaaaaaa
  xxxZZZZZZZZZZZZxxxxxxxxxXXXxxxxxxxxxZZaaaaaaaaaaaaaaaaa
 xxxZ............ZxxxxxxXX'''XXxxxxxZZ..aaalalalalalalaaaa
-xxZ..exdxexdxex..ZZXXXX'''x'''XXZZZ....aalllllllllllllaaaa
-xxZ.ex........e....'''''''x''''''......aal%%%%*****|||laaa
-xxZ.x..dxxxex.x....'x'''x'''x'''x...{..aal%........J8|llaa
-xxZ.d.dx''''e.d...x'''x'''x'''x''.x..[.aal%.aKaa...aJ|laaa
-xxZ.x.x'ede'x.x....'x'''x'''x'''x...(..aal%.K8aa.aa..*llaa
-xxZ.e.x'd'd'x.e....''''''''''''''......aal%.aaa..aa..*laaa
-xxZ.x.x'ede'x.x..aaaaaaaaaaaaaaaaaaaaaaaal%.aa.|.....*llaa
-xxZ.d.e''''xd.d.aaaaaaaaaaaaaaaaaaaaaaaalaa.....|.aa.*laaa
-xxZ.x.xexxxd..x.aa9...0aaa0..NOaalllllllaaaa.....aaa.%llaa
-xxZ.e........xe.aa.aaa.aaa.aaaNaal%%%%%%aaana...aa8K.%laaa
-xxZ.xexdxexdxe..aa.aaa.aaa.aaa.aal%90a...anana..aaKa.%llaa
-xxZ.............aa.aaa.aaa.aaa.aal%0.a.0..anana......%laaa
-xxxZ.......aaaaaaa....9aaa....0aal%aa......anaaa%%%%%%llaa
- xxxZ.....aaaaaaaaa.a.aaaaaaaaaaal%......<..aaaalllllllaaa
- xxxZ.jkj.aa9....aaaaaaa0aaaaaaaaaaaaaaaM....aalaaaaaaaaaa
-  xxX'kXk'aa.aaa.aaaa....aaaaaaaaaaaaaaaa..0.%laaaaaaaaaaxx
-  xxX'jkj'aa.aaa.aaaaaa..a...QRaaa.....aa....%laa.......Zxx
-  xxX'''''aa.aaa.aa.aaa.%a.aaaQaaa.]1U.aa..aa%laa..)....Zxx
-  xxX'''''aa....9aa.aaa0%a.aaa.aaa.1G1.aa.a.0%laa.>.>..Zxxx
-  xxX'kjk'aaaaaaaaa...08*a.aaa.aaa.U1}.aa.a09%laa......Zxx
-  xxX'jXj'aaaaaaaa0..%%*aa9....aaa.....aa%%%%%laa..x..Zxxx
- xxxX'kjk'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllaa.....Xxx
- xxX''''''aa....0aaa....0aaa...aaaaaaaaaaaaaaaaaa'x'x'Xxx
- xxX''''''aa.aaa.aaa.aaa.aSa.a.aaaaaaaaaaaaaaaaaa'''''Xxx
- xxX'jkj''aa.aaa.aaa.aaa.a..aaa..a...QRaaa0..NOaa''x''Xxx
- xxX'kXk''aa.aaa.aaa.aaa.a.aaaaa.a.aaaQaaa.aaaNaa''''''Xxx
- xxX'jkj''aa9....aaa0....a%0aaa..a.aaa.aaa.aaa.aa'x'x''Xxxx
- xxX''''''aaaaaaaaaaaaaaaa*80a.aaa.aaa.aaa.aaa.aa'''''''Xxx
- xxX''''''aaaaaaaaaaaaaaaa|*%..Saa9....aaa....0aa''x'xx'Xxx
- xxX'kjk''aawwwwwwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'''''''Xxx
- xxX'jXj''aaw2112waa....Maaa....0aa*%%..0aaaaaaaa'x'x''Xxxx
- xxX'kjk''aaw..T.Waa.aaa.aaa.aaa.a*80...aaaaaaaaa''''''Xxx
- xxxX'''''aaw....Waa.aaa.aaa.aaa.a%0aaa.aa9...0aa''x''Xxx
-  xxX'''''aaw.2..Waa.aaa.aaa.aaa.a%.aaa.aa.aaa.aa'''''Xxx
-  xxX'jkj'aaw....Waa.....aaa0....a..aaaaaa.aaa.aa'x'x'Xxx
-  xxX'kXk'aaw...Gwaaaaaaaaaaaaaaaa....aaaa.aaa.aa'''''Xxx
-  xxX'jkj'aaw.C..wwaaaaaaaaaaaaaaa0aaaaaaa....9aa..x..Zxxx
-  xxX'''''aaw....GwwWWWWwwaaaaaaaaaaaaaaaaaaaaaaa.....Zxxxx
-  xxX'''''aaW......G....2waa....0aaa9....aaaaaaa.......Zxxx
-  xxX'kjk'aaW..C.......T1waa.aaa.aaa.aaa.aa.............Zxx
-  xxZ'jXj'aaW.....C..2..1waa.aaa.aaa.aaa.aa..fxgxfxgxfx.Zxx
- xxxZ.kjk.aaw...........2waa.aaa.aaa.aaa.aa.fx........f.Zxx
-xxxZ.......aawWWWwwwwwwwwwaa9....aaa....9aa.x..gxxxfx.x.Zxx
-xxZ''''t'..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.g.gx''''f.g.Zxx
-xxX''''''....aaaaaaaaaaaaaaaaaaaaaaaaaaaaa..x.x'fgf'x.x.Zxx
-xxX''''''t....''''''''''''''''''''''''''....f.x'g'g'x.f.Zxx
-xxX't'<'''''.hih''ihi''''''''''''hih''ihi...x.x'fgf'x.x.Zxx
-xxX'''""'''t.iXi''hXh''hih''ihi''iXi''hXh...g.f''''xg.x.Zxx
-xxX'''""<'''.hih''ihi''iXi''hXh''hih''ihi...x.xfxxxg..x.Zxx
-xxX''<''''''..'''''''''hih''ihi'''''''''....f........xf.Zxx
-xxX'''''t'''ZZZXXXXXXX''''''''''XXXXXXXXZZ..xfxgxfxgxf..Zxx
-xxX''''''''ZxxxxxxxxxxXXXXXXXXXXxxxxxxxxxxZ............Zxxx
-xxxXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxZZZZZZZZZZZZxxx
- xxxxxxxxxxxx        xxxxxxxxxxxxx       xxxxxxxxxxxxxxxx
-  xxxxxxxxxx                              xxxxxxxxxxxxxx
-ENDMAP
-
-# Subvault which is purely an isolated set-up for hangedman_slaughterboxes.
-NAME:    hangedman_sb_wall_set_up
-DEPTH:
-ORIENT:  encompass
-TAGS:    hm_sb_wall_set_up no_monster_gen no_trap_gen allow_dup
-: if you.absdepth() > 20 then
-SHUFFLE:  cbv
-: end
-SHUFFLE: ABCDE / BADCE / AGHIC / ACGHE, JKLMN / KJMLN / JPQRL / JLPQN
-SHUFFLE: STUVW / TSVUW / SYZaU / SUYZW, defgh / edgfh / djklf / dfjkh
-SHUFFLE: mnopq / nmpoq / mstuo / mostq, BDF, KMO, TVX, egi, npr
-SUBST:   ACFJLOSUXdfimor = ., BDGHIKMPQRTVYZaegjklnpstu = x
-SUBST:   E : x., N : x., W : x., h : x., q : x.
-MAP
-                              ccccccccccccccc
-                             ccccccccccccccccc
-                             ccc c c c c c cccc
-                             cc             cccc
-                             cc              ccc
-                             cc               cc
-                             cc   c cc   c   ccc
-                             cc     cc cc     cc
-                             cc   ccc  cc    ccc
-       cccccccccccccccccccccccc   cc          cc
-      cccchcccccccqccccccccccc cc       cc   ccc
-      cc     .c.     cc       ccc+     ccc    cc
-      cc def c+c mno cc       cc. +   cc     ccc
-      ch ghg .c. pqp qc    c   + . +  cc c    cc
-      cc fed c+c onm cc    c    + . +        ccc
- ccccccc     .c.     cc  cc      + .cc        cc
-ccccNcccc.c.cccc.c.c.cc           +ccc       ccc
-cc     ccc+c+c cc+c+cccccc+c+c     cc cccccccccc
-cc JKL .ccc    c.c.c.cccc.c.ccc      cccccccccc
-cN MNM c+cSTU  c     .c.     c+      cc
-cc LKJ .c VWV  c def c+c     .c  cc  cc
-cc     c+ UTS  c ghg .c.     c+ c    cc
-cc.c.c.cc      c fed c+c     .c c    cc
-ccc+c+cc      cc     .c.     cc      cc
-cc.c.c.cccccccc+ccccccc..c.c.cc      cc
-cc     .c.     ccc   +.cc+c+ccccccccccc
-cc ABC c+c JKL c c c c+c.c.c.cccccqcccc
-cE DED .c. MNM c  UVS  c     .c.     cc
-cc CBA c+c LKJ c cTWVc c dgf c+c mpo cc
-cc     .c.     c  STU  c ehe .c. nqn qc
-ccccEccccc.c.c.c   c ccc fgd c+c opm cc
-ccccccccccc+c+cc      cc     .c.     cc
-cc      cc.c.c.cccccccc+cccccccc.c.c.cc
-cc      cc     .c.     cc      cc+c+ccc
-cc      c. DCB c+c JML c      cc.c.c.cc
-cc      +c AEC .c. KNK c  SVU +c     cc
-cc      c. BAD c+c LMJ c  TWT c. dgf cc
-cc      +c     .c.     c  UVSc+c ehe hc
-cc      ccc.c.cccc.c.c.c    ccc. fgd cc
-cc       c+c+cccccc+c+cc c+c+ccc     cc
-cc              cc.c.c.cccc.c.cccchcccc
-.c              cc     .c.     ccccccc
-.+              cc ADC c+c JML cc
-.+              cE BEB .c. KNK Nc
-.c              cc CDA c+c LMJ cc
- cc             cc     .c.     cc
- ccc++ccccccccccccccEcccccccNcccc
-   ....cccccccccccccccccccccccccc
+xxZ..`x~x`x~x`x..ZZXXXX'''x'''XXZZZ....aalllllllllllllaaaa
+xxZ.`x........`....'''''''x''''''......aal%%%%*****|||laaa
+xxZ.x..~xxx`x.x....'x'''x'''x'''x...{..aal%........38|llaa
+xxZ.~.~x''''`.~...x'''x'''x'''x''.x..[.aal%.&4&&..&&3|laaa
+xxZ.x.x'`~`'x.x....'x'''x'''x'''x...(..aal%.48&&.&&&.*llaa
+xxZ.`.x'~0~'x.`....''''''''''''''......aal%.&&&...&..*laaa
+xxZ.x.x'`~`'x.x..aaaaaaaaaaaaaaaaaaaaaaaal%.&&.|.....*llaa
+xxZ.~.`''''x~.~.aaaaraaaaaaaEaaaaaaaaaaal&&.....|.&&.*laaa
+xxZ.x.x`xxx~..x.aa9...0.&.0..67aalllllll&&&+.....&&&.%llaa
+xxZ.`........x`.aa.nop.&+&.ADC6aal%%%%%%&&.m+...&&84.%laaa
+xxZ.x`x~x`x~x`..ar.qrq..&..BEB.Eal%90&...+m.m+..&&4&.%llaa
+xxZ.............aa.pon.&+&.CDA.aal%0.&.0..+m.m+......%laaa
+xxxZ.......aaaaaaa....9.&.....0aal%&&......+m.&&%%%%%%llaa
+ xxxZ.....aaaaNaaaa.a.aaaa.&.&.aal%......<..+&&&lllllllaaa
+ xxxZ.BAD.aa9....aaa+a+a0a&+&+&aaaaa+a+a5....&&laaaaaaaaaax
+  xxX'CEA'aa.JKL..aaa....a.&.&.aaaa.a.aaa..0.%laaaaaaaaaaxx
+  xxX'DCB'aN.MNM.a+acde..a...!?.&......a+....%laa.......Zxx
+  xxX'''''aa.LKJ..a.fgf.%a.nop!&+&.]1U..a..&&%laa..)....Zxx
+  xxX'''''aa....9a+.edc0%a.qrq..&..1@1.a+.&.0%laa.>.>..Zxxx
+  xxX'LKJ'aa.&.&.aa...08*a.pon.&+&.U1}..a.&09%laa......Zxx
+  xxX'MNM'aa&+&+&a0..%%*aa9.....&......aa%%%%%laa..x..Zxxx
+ xxxX'JKL'aa.&.&.aaaaaaaa+aaaaaaa..&.&.aallllllaa.....Xxx
+ xxX''''''aa....0.&.....0aa&...+.a&+&+&aaaaaaaaaa'x'x'Xxx
+ xxX''''''aa.ABC.&+&.JKL.aY&.&.a+a.&.&.aaaaaEaaaa'''''Xxx
+ xxX'CBA''aE.DED..&..MNM.a..efc..a...!?.&.0..67aa''x''Xxx
+ xxX'DED''aa.CBA.&+&.LKJ.a.&dgf&.a.nqp!&+&.ADC6aa''''''Xxx
+ xxX'ABC''aa9.....&.0....a%0cde..a.oro..&..BEB.Ea'x'x''Xxxx
+ xxX''''''aaaaEaaaaa.&.&.a*80&.&&a.pqn.&+&.CDA.aa'''''''Xxx
+ xxX''''''aaaaaaaaaa&+&+&a|*%..Yaa9.....&.....0aa''x'xx'Xxx
+ xxX'pon''aawwwwwwaa.&.&.aaaaaaaa+aaaaaaaa.&.&.aa'''''''Xxx
+ xxX'qrq''aaw2112waa....5.&.....0aa*%%..0a&+&+&aa'x'x''Xxxx
+ xxX'nop''aaw..T.Wa..DCB.&+&.JML.a*80...aa.&.&.aa''''''Xxx
+ xxX''''''aaw....W+a.AEC..&..KNK.a%0cfe.+a9...0aa''x''Xxx
+ xxX''''''aaw.2..Wa..BAD.&+&.LMJ.a%.dgd.a..nqp.aa'''''Xxx
+ xxxX'edc'aaw....W+a......&.0....a..efca+a.oro.ra'x'x'Xxx
+  xxX'fgf'aaw...@waaa.a.aaaa.&.&.a....aaa..pqn.aa'''''Xxx
+  xxX'cde'aaw._..wwa+a+aaaaa&+&+&a0a+a+aaa....9aa..x..Zxxx
+  xxX'''''aaw....@wwWWWWwwaa.&.&.aaaa.a.aaaaraaaa.....Zxxxx
+  xxX'''''.aW......@....2waa....0.&.9....aaaaaaa.......Zxxx
+  xxX'cde'.+W.._.......T1waa.ADC.&+&.JML.aa.............Zxx
+  xxZ'fgd'.+W....._..2..1waE.BEB..&..KNK.Na..;x:x;x:x;x.Zxx
+ xxxZ.efc..aww..........2waa.CDA.&+&.LMJ.aa.;x........;.Zxx
+xxxxZ......aawWWWwwwwwwwwwaa9.....&.....9aa.x..:xxx;x.x.Zxx
+xxxX'''='..aaa++aaaaaaaaaaaaaaEaaaaaaaNaaaa.:.:x'''';.:.Zxx
+xxX''''''........aaaaaaaaaaaaaaaaaaaaaaaaa..x.x';:;'x.x.Zxx
+xxX''''''=....''''''''''''''''''''''''''....;.x':0:'x.;.Zxx
+xxX'='^'''''.cde''efc''''''''''''LMJ''BAD...x.x';:;'x.x.Zxx
+xxX'''""'''=.fgd''dgd''pqn''CDA''KNK''CEA...:.;''''x:.x.Zxx
+xxX'''""^'''.efc''cfe''oro''BEB''JML''DCB...x.x;xxx:..x.Zxx
+xxX''^''''''..'''''''''nqp''ADC'''''''''....;........x;.Zxx
+xxX'''''='''ZZZXXXXXXX''''''''''XXXXXXXXZZ..x;x:x;x:x;..Zxx
+xxxX'''''''XxxxxxxxxxxXXXXXXXXXXxxxxxxxxxxZ............Zxxx
+ xxxXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxZZZZZZZZZZZZxxx
+  xxxxxxxxxxx        xxxxxxxxxxxxx       xxxxxxxxxxxxxxxx
+   xxxxxxxxx                              xxxxxxxxxxxxxx
 ENDMAP
 
 ################################################################################
@@ -1024,18 +979,17 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
 DEPTH:   D:16-26
 ORIENT:  encompass
 KMONS:   - = plant
-KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
+KMONS:   _ = plant col:random name:demonic name_adjective
 KMONS:   no = human ; dart ego:exploding w:21 | dart ego:dispersal w:2 | \
                       dart ego:none w:1 | wand of lightning w:1 . \
                       mundane flail | mundane falchion | mundane trident . \
                       mundane ring mail | mundane scale mail | mundane chain mail / \
               human ; mundane blowgun . needle ego:confusion | \
-                      needle ego:slow | needle ego:poisoned w:4 | \
-                      needle ego:paralysis w:4 | needle ego:sleep w:4 . \
+                      needle ego:slow | needle ego:poisoned . \
                       mundane flail | mundane falchion | mundane trident . \
                       mundane ring mail | mundane scale mail | mundane chain mail
 KMONS:   p = giant eyeball
-KMONS:   q = great orb of eyes
+KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
 KMONS:   r = vault guard
 : local bands = {
 :     [42 - you.absdepth() * 2] =
@@ -1080,12 +1034,15 @@ KFEAT:   B = enter_vaults
 KFEAT:   C : C / any shop
 SHUFFLE: <d` / {e1 / (f2 / [g3, >h4 / }i5 / )j6 / ]k7, (f2 / )j6, 15
 : if you.absdepth() > 20 then
-SHUFFLE: aA&@
 SUBST:   ( = D
 MARKER:  D = lua:props_marker { portal=1 }
+:     if crawl.random2(you.depth()-15) > (you.depth()-18) then
+SUBST:   A&@ = a, _ = -, l = W
+:     else
+SHUFFLE: aA&@
+:     end
 : else
-SUBST:   A&@ = a, _ = -
-SUBST:   l = W
+SUBST:   A&@ = a, _ = -, l = W
 :     if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
 NSUBST:  ( = 1:B / *:(
 SUBST:   f = r, 2 = '
@@ -1103,12 +1060,12 @@ SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
 NSUBST:  ~ = 2:~ / 1:~. / 75:H / 225:I / *:.
 SUBST:   H = ~ .:4490, I = ~ .:9990
 COLOUR:  "-_ = green
-COLOUR:  '`089%*|!?OPYZ = white
+COLOUR:  '`089rs%*|!? = white
 FTILE:   ^"aA@&-_U = floor_grass
 : if crawl.coinflip() then
-FTILE:   '`<{([>})]089s%*|!?BCTDEF = floor_vault
+FTILE:   '`<{([>})]089rs%*|!?BCTDEF = floor_vault
 : else
-FTILE:   '`<{([>})]089s%*|!?BCTDEF = floor_pebble_darkgray
+FTILE:   '`<{([>})]089rs%*|!?BCTDEF = floor_pebble_darkgray
 : end
 MAP
                           vvvvvvv

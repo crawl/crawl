@@ -165,23 +165,23 @@
 
     {  MST_VAMPIRE,
       {
-       SPELL_VAMPIRE_SUMMON,
+       SPELL_VAMPIRIC_DRAINING,
        SPELL_CONFUSE,
        SPELL_INVISIBILITY,
        SPELL_NO_SPELL,
-       SPELL_VAMPIRE_SUMMON,
-       SPELL_VAMPIRE_SUMMON
+       SPELL_NO_SPELL,
+       SPELL_VAMPIRIC_DRAINING,
       }
     },
 
     {  MST_VAMPIRE_KNIGHT,
       {
-       SPELL_VAMPIRE_SUMMON,
+       SPELL_BLINK_CLOSE,
        SPELL_PARALYSE,
        SPELL_HASTE,
        SPELL_INVISIBILITY,
-       SPELL_VAMPIRE_SUMMON,
-       SPELL_MINOR_HEALING
+       SPELL_NO_SPELL,
+       SPELL_VAMPIRIC_DRAINING
       }
     },
 
@@ -253,8 +253,8 @@
 
     {  MST_KRAKEN,
       {
-       SPELL_KRAKEN_TENTACLES,
-       SPELL_KRAKEN_TENTACLES,
+       SPELL_CREATE_TENTACLES,
+       SPELL_CREATE_TENTACLES,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -608,7 +608,7 @@
        SPELL_BLINK,
        SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_UFETUBUS,
-       SPELL_VAMPIRE_SUMMON,
+       SPELL_SUMMON_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_NO_SPELL
       }
@@ -1627,17 +1627,6 @@
       }
     },
 
-    {  MST_BLESSED_TOE,
-      {
-       SPELL_SUMMON_HOLIES,
-       SPELL_SUMMON_HOLIES,
-       SPELL_HEAL_OTHER,
-       SPELL_HOLY_WORD,
-       SPELL_SUMMON_HOLIES,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_SPIRIT,
       {
        SPELL_BLINK_AWAY,
@@ -1675,9 +1664,9 @@
       {
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
        SPELL_MESMERISE,
-       SPELL_BLINK,
-       SPELL_BRAIN_FEED,
-       SPELL_PAIN,
+       SPELL_BLINK_CLOSE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_VAMPIRIC_DRAINING,
       }
     },
@@ -1814,6 +1803,17 @@
       }
     },
 
+    {  MST_TENTACLED_STARSPAWN,
+      {
+       SPELL_CREATE_TENTACLES,
+       SPELL_CREATE_TENTACLES,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_FRANCES,
       {
        SPELL_THROW_ICICLE,
@@ -1822,6 +1822,17 @@
        SPELL_IRON_SHOT,
        SPELL_SUMMON_DEMON,
        SPELL_HASTE
+      }
+    },
+
+    {  MST_THRASHING_HORROR,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_FRENZY
       }
     },
 

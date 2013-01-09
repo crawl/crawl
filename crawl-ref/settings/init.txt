@@ -71,12 +71,9 @@
 # macro_dir  = settings/
 # sound = <regex>:<path to sound file>
 
-##### 3-  Lua Files #################################################
+##### 3-  Interface #################################################
 #
-
-##### 4-  Interface #################################################
-#
-##### 4-a       Picking up and Dropping ###############
+##### 3-a       Picking up and Dropping ###############
 #
 # Rods are \ here.
 # autopickup = $?!:"/%
@@ -94,20 +91,20 @@
 # drop_filter += skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
-##### 4-b       Targetting ############################
+##### 3-b       Targetting ############################
 #
 # default_target = false
 # target_unshifted_dirs = true
 # darken_beyond_range = false
 
-##### 4-c       Passive Sightings #####################
+##### 3-c       Passive Sightings #####################
 #
 # detected_monster_colour = lightred
 # detected_item_colour = green
 # remembered_monster_colour = darkgrey
 # clean_map = true
 
-##### 4-d       Branding ##############################
+##### 3-d       Branding ##############################
 #
 # friend_brand       = hi:green
 # neutral_brand      = hi:lightgrey
@@ -117,13 +114,13 @@
 # feature_item_brand = reverse
 # trap_item_brand    = reverse
 
-##### 4-e       Level Map Functions ###################
+##### 3-e       Level Map Functions ###################
 #
 # level_map_cursor_step = 7
 # level_map_title = false
 # show_waypoints = false
 
-##### 4-f       Viewport Options  ###################
+##### 3-f       Viewport Options  ###################
 #
 # view_max_width   = 33
 # view_max_height  = 21
@@ -136,7 +133,7 @@
 # scroll_margin_y  = 2
 # scroll_margin    = 2
 
-##### 4-g       Travel and Exploration #################
+##### 3-g       Travel and Exploration #################
 #
 # travel_delay = 20
 # explore_delay = -1
@@ -175,13 +172,7 @@
 
 #rest_wait_both = true
 
-##### 4-h       Stashes ###############################
-#
-
-# annotate_item_class = true
-# annotate_item_dropped = true
-
-##### 4-i       Command Enhancements ##################
+##### 3-h       Command Enhancements ##################
 #
 # auto_list     = false
 # auto_switch   = true
@@ -204,7 +195,7 @@
 
 # autofight_stop = 30
 
-##### 4-j       Messages and Display Enhancements #####
+##### 3-i       Messages and Display Enhancements #####
 #
 # hp_warning = 30
 # mp_warning = 0
@@ -227,19 +218,14 @@
 # show_more                  = false
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
-# list_rotten                = false
 # auto_drop_chunks           = (never | rotten | yes)
 # msg_condense_repeats   = false
 # msg_condense_short     = false
-# show_no_ctele          = false
 # skill_focus            = false
 # show_travel_trail       = true
 
-#####          Colours (messages and menus) #####
+##### 3-j       Colours (messages and menus) ##########
 #
-# menu_colour_prefix_class = false
-# menu_colour_shops = false
-
 # Food is colour coded by default as follows:
 #
 #   yellow     = preferred food                    ($preferred)
@@ -284,32 +270,31 @@
 # force_more_message += There are no visible monsters within range
 # force_more_message += This wand has no charges
 
-##### 4-k       Firing Commands #######################
+##### 3-k       Firing Commands #######################
 #
 # fire_items_start = a
 # fire_order = launcher, return
 # fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger / club
 # fire_order += inscribed
 
-##### 4-l       Channels ##############################
+##### 3-l       Channels ##############################
 #
 # channel.multiturn = mute
 
-##### 4-m       Inscriptions ##########################
+##### 3-m       Inscriptions ##########################
 #
 # autoinscribe += bad_item.*potion:!q
 # autoinscribe += potion.*mutation:!q
-# autoinscribe_artefacts = false
 # autoinscribe_cursed = false
 # autoinscribe += fruit:!e
 
-##### 4-n       Macro related Options #################
+##### 3-n       Macro related Options #################
 #
 # flush.failure = false
 # flush.command = true
 # flush.message = true
 
-##### 4-t       Tile related Options ##################
+##### 3-o       Tile related Options ##################
 #
 # tile_show_items = !?/%=([)x}:|\
 
@@ -357,6 +342,7 @@
 # tile_full_screen      = true
 # tile_window_width     = 1024
 # tile_window_height    = 768
+# tile_use_small_layout = true
 # tile_map_pixels       = 3
 # tile_cell_pixels      = 32
 # tile_filter_scaling   = true
@@ -380,13 +366,13 @@
 # tile_show_minimagicbar  = false
 
 
-##### 5-  Dump File #################################################
+##### 4-  Dump File #################################################
 #
-##### 5-a       Saving ################################
+##### 4-a       Saving ################################
 #
 # dump_on_save = false
 
-##### 5-b       Items and Kill List ###################
+##### 4-b       Items and Kill List ###################
 #
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
@@ -400,7 +386,7 @@
 # dump_order += action_counts
 # dump_book_spells = false
 
-##### 5-c       Notes #################################
+##### 4-c       Notes #################################
 #
 # user_note_prefix=@@@
 # note_hp_percent = 5
@@ -412,9 +398,9 @@
 # note_items    += rod of, acquirement, preservation, running, of Zot
 # note_monsters += orb of fire, ancient lich, Sigmund
 
-##### 6-  Miscellaneous #############################################
+##### 5-  Miscellaneous #############################################
 #
-##### 6-a       All OS ################################
+##### 5-a       All OS ################################
 #
 # mouse_input      = true
 # wiz_mode         = no
@@ -426,7 +412,7 @@
 # language = pl|fr|zh|ko|fi|ru|el|da|li|pt|de|lv|cs|hu
 #
 # Joke translations (complete!).
-# language = dwarven|jagerkin|kraut|wide
+# language = dwarven|jagerkin|kraut|runes|wide
 #
 # colour.lightgray = black
 # colour.lightcyan = cyan
@@ -440,16 +426,16 @@
 ## Highlight the edge of unexplored terrain.
 # feature = explore horizon {',,green}
 
-##### 6-b   Windows console #######################
+##### 5-b   Windows console #######################
 #
 # dos_use_background_intensity = true
 # background = black
 
-##### 6-c   Unix console ##########################
+##### 5-c   Unix console ##########################
 #
 # use_fake_cursor = false
 
-##### 6-d   Alternative keybinding files ##########
+##### 5-d   Alternative keybinding files ##########
 #
 # Alternative vi bindings for Dvorak users.
 # include = dvorak_command_keys.txt

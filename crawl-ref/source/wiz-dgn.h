@@ -21,6 +21,7 @@ void wizard_level_travel(bool down);
 void wizard_interlevel_travel();
 void wizard_list_levels();
 void wizard_recreate_level();
+void wizard_clear_used_vaults();
 void debug_make_trap(void);
 bool debug_make_shop(const coord_def& pos = you.pos());
 void debug_place_map(bool primary);

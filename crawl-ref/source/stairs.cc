@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+#include "abyss.h"
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
@@ -185,22 +186,19 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         else
         {
             mprf("You %s downwards.",
-                 you.flight_mode() == FL_FLY ? "fly" :
-                     (you.airborne() ? "float" : "slide"));
+                 you.flight_mode() ? "fly" : "slide");
         }
     }
     else if (feat_is_gate(stair))
     {
         mprf("You %s %s through the gate.",
-             you.flight_mode() == FL_FLY ? "fly" :
-                   (you.airborne() ? "float" : "go"),
+             you.flight_mode() ? "fly" : "go",
              going_up ? "up" : "down");
     }
     else
     {
         mprf("You %s %swards.",
-             you.flight_mode() == FL_FLY ? "fly" :
-                   (you.airborne() ? "float" : "climb"),
+             you.flight_mode() ? "fly" : "climb",
              going_up ? "up" : "down");
     }
 }
@@ -407,9 +405,7 @@ void up_stairs(dungeon_feature_type force_stair)
 
     const dungeon_feature_type stair_taken = stair_find;
 
-    if (you.flight_mode() == FL_LEVITATE && !feat_is_gate(stair_find))
-        mpr("You float upwards... And bob straight up to the ceiling!");
-    else if (you.flight_mode() == FL_FLY && !feat_is_gate(stair_find))
+    if (you.flight_mode() && !feat_is_gate(stair_find))
         mpr("You fly upwards.");
     else
         _climb_message(stair_find, true, old_level.branch);
@@ -526,6 +522,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         else
             die("hell exit without return destination");
 
+    case DNGN_ABYSSAL_STAIR:
+        ASSERT(you.where_are_you == BRANCH_ABYSS);
+        push_features_to_abyss();
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
@@ -581,7 +580,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
                 level_id::current().describe().c_str());
         }
         return you.level_stack.back().id;
-
+    case DNGN_ENTER_ABYSS:
+        push_features_to_abyss();
+        break;
     default:
         break;
     }
@@ -675,13 +676,6 @@ void down_stairs(dungeon_feature_type force_stair)
         const bool known_trap = (grd(you.pos()) != DNGN_UNDISCOVERED_TRAP
                                  && !force_stair);
 
-        if (you.flight_mode() == FL_LEVITATE && !force_stair)
-        {
-            if (known_trap)
-                mpr("You can't fall through a shaft while levitating.");
-            return;
-        }
-
         if (!is_valid_shaft_level())
         {
             if (known_trap)
@@ -709,9 +703,9 @@ void down_stairs(dungeon_feature_type force_stair)
                                     + short_place_name(shaft_dest) + ".");
         }
 
-        if (you.flight_mode() != FL_FLY || force_stair)
+        if (!you.flight_mode() || force_stair)
             mpr("You fall through a shaft!");
-        if (you.flight_mode() == FL_FLY && !force_stair)
+        if (you.flight_mode() && !force_stair)
             mpr("You dive down through the shaft.");
 
         // Shafts are one-time-use.
@@ -847,10 +841,10 @@ void down_stairs(dungeon_feature_type force_stair)
     {
         mpr("You pass through the gate.");
         take_note(Note(NOTE_MESSAGE, 0, 0,
-            stair_find == DNGN_EXIT_ABYSS ? "Escaped the Abyss." :
-            stair_find == DNGN_EXIT_PANDEMONIUM ? "Escaped the Pandemonium." :
-            stair_find == DNGN_EXIT_THROUGH_ABYSS ? "Escaped into the Abyss." :
-            "Buggered into bugdom."), true);
+            stair_find == DNGN_EXIT_ABYSS ? "Escaped the Abyss" :
+            stair_find == DNGN_EXIT_PANDEMONIUM ? "Escaped Pandemonium" :
+            stair_find == DNGN_EXIT_THROUGH_ABYSS ? "Escaped into the Abyss" :
+            "Buggered into bugdom"), true);
 
         if (!you.wizard || !crawl_state.is_replaying_keys())
             more();
@@ -900,6 +894,11 @@ void down_stairs(dungeon_feature_type force_stair)
         break;
 
     case BRANCH_ABYSS:
+        if (old_level.branch == BRANCH_ABYSS)
+        {
+            mpr("You plunge deeper into the Abyss.", MSGCH_BANISHMENT);
+            break;
+        }
         if (!force_stair)
             mpr("You enter the Abyss!");
 

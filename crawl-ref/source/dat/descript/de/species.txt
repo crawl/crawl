@@ -4,37 +4,121 @@ Centaur
 Schnell, stark und massig. Zentauren brauchen mehr Nahrung als andere Spezies.
 Sie sind besonders geschickt im Umgang mit Fernkampfwaffen.
 %%%%
+Deep Dwarf
+
+Tiefenzwerge leben im Untergrund und können sich nicht auf natürliche Weise
+heilen, aber sie sind sehr widerstandsfähig gegenüber Schaden und tragen
+Heilausrüstung mit sich.
+%%%%
+Deep Elf
+
+Die magieaffinsten Elfen, aber auch die gebrechlichsten.
+%%%%
 Demigod
 
 Sie werden niemals einem Gott folgen, aber Halbgötter machen das mit göttlichen
 Attributen und Lebenspunkten wett.
+%%%%
+Demonspawn
+
+Dämonenbruten sind halb Mensch, halb Dämon. Sie erlangen während ihres
+Wachstums starke Mutationen.
+%%%%
+Draconian
+
+Draken sind vielseitige Hybride. Sie werden mit Level 7 erwachsen und
+entwickeln eine Farbe.
+%%%%
+Felid
+
+Diese viellebigen Katzen besitzen Wissen, doch zu erweiterter
+Gegenstandsveränderung oder der Benutzung von Rüstungen und Waffen sind sie
+nicht in der Lage.
 %%%%
 Ghoul
 
 Ein Untoter, dazu verdammt auf ewig zu verrotten. Sie sind immer auf der Suche
 nach Faulem, um es zu essen...
 %%%%
+Halfling
+
+Klein, aber zäh, sind Halblinge unübertroffene Meister mit Schleudern. Sie
+haben eine erhöhte Resistenz gegen Mutationen.
+%%%%
 High Elf
 
 Stolze Elfen, die sowohl Zauber sprechen als auch mit dem Schwert kämpfen
 können.
 %%%%
+Hill Orc
+
+Orks sind geschickt im Nahkampf, und versuchen sich oft in offensiver Magie.
+Von den meisten gehasst, sind Orks sehr stolz und viele von ihnen fühlen sich
+überlegen.
+%%%%
 Human
 
 Schlicht und durchschnittlich.
+%%%%
+Tengu
+
+Vogelmenschen, die den Kampf lieben - sowohl mit Waffen, als auch mit Zaubern.
+Sie sind recht gebrechlich, aber später lernen sie, geschickt zu fliegen.
+%%%%
+Kobold
+
+Klein, bösartig und ein bisschen gebrechlich, aber vielseitig begabt. Sie
+können und werden jede Art von Fleisch essen.
+%%%%
+Merfolk
+
+Halb Fisch, halb Mensch, sind Meerleute Bewohner des Wassers und des Landes.
+Sie sind starke Kämpfer, und Meister darin, Magie zur Unterstützung im Kampf zu
+benutzen.
 %%%%
 Minotaur
 
 Ein großer, muskulärer Mensch mit dem Kopf eins Bullen. Sie sind hervorragend
 in allen Formen von Nah- und Fernkampf.
 %%%%
+Mummy
+
+Eine untote Gestalt, gehüllt in Bandagen und einbalsamierende Flüssigkeiten,
+gezwungen zum Laufen durch einen antiken Fluch.
+%%%%
+Naga
+
+Ein Hybrid; Mensch von der Brust aufwärts, mit dem schuppigen, muskulösen Torso
+einer Schlange. Sie bewegen sich langsam, sind aber von Natur aus sehr
+widerstandsfähig.
+%%%%
 Octopode
 
 Eine Spezies amphibischer Kopffüßer. Sie können acht Ringe tragen, aber fast
 keine Rüstung passt ihnen.
 %%%%
+Ogre
+
+Groß und stark, werden sie meistens als Wüstlinge angesehen. Allerdings sind
+Oger sehr gut mit den Grundkenntnissen der Magie vertraut.
+%%%%
+Sludge Elf
+
+Eine verdorbene Elfenart, die List statt fairem Kampf bevorzugt, und dunkle
+Magie statt anderen Zaubern.
+%%%%
 Spriggan
 
 Sehr klein, sehr schmächtig und sehr schnell. Spriggans sind kompetente
 Messerstecher und Zauberer.
+%%%%
+Troll
+
+Große Wüstlinge, bereit, alles mit ihren Klauen zu zermalmen, nie zweimal
+nachdenkend. Sie haben stets Hunger.
+%%%%
+Vampire
+
+Ständig zwischen Leben und Tod wechselnd, sind sie gekonnte Messerstecher und
+Zauberer(?).
 %%%%

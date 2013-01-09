@@ -7,37 +7,60 @@ function init_ice(e)
   e.tags('serial_ice')
   e.tags('extra')
   e.tags('mini_float')
+  e.tags('transparent')
   e.weight('2')
-  e.kmons('.-_ = small simulacrum / large simulacrum / death yak w:1 / \
-                 wolf w:20 / yak / polar bear / white imp w:20 / \
-                 ufetubus / ice beast w:15 / w:2000 nothing')
+  if you.branch() == "Coc" then
+    e.kmons('.- = small simulacrum / large simulacrum w:20 / \
+                  ice fiend w:1 / blizzard demon w:5 / ice devil / \
+                  blue devil / white imp / ice beast w:20 / \
+                  ice dragon w:5 / ice dragon simulacrum w:5 / \
+                  w:2000 nothing')
+  else
+    e.kmons('.- = small simulacrum / large simulacrum / death yak w:1 / \
+                  wolf w:20 / yak / polar bear / white imp w:20 / \
+                  ufetubus / ice beast w:15 / w:2000 nothing')
+  end
   e.subst("- = --.")
   e.rtile("x = wall_zot_cyan")
   e.colour("x = white")
 
   e.colour(".A@G! = white")
-  e.ftile(".A@G! = floor_ice")
+  e.ftile(".xA@G! = floor_ice")
   e.kfeat("A = stone_arch")
-  e.lua_marker("!", fog_machine { pow_max = 15, delay_min = 50, delay_max = 100,
+  e.kfeat(".-! = floor")
+
+  local cloud_type = "thin mist"
+  if you.branch() == "Coc" then
+    cloud_type = "freezing vapour"
+  end
+  e.lua_marker("!", fog_machine { cloud_type = cloud_type, pow_max = 15,
+                                  delay_min = 50, delay_max = 100,
                                   size = 8, start_clouds = 1 } )
 end
 }}
 
 NAME:   serial_ice
-DEPTH:  D:8-16
-TAGS:   extra luniq_serial
-CHANCE: 1%
+DEPTH:  D:8-16, Coc
+TAGS:   extra luniq_serial allow_dup
+CHANCE: 1% (D), 3% (Coc)
 {{
   local c = 4 + crawl.random2(3) * crawl.random2(4)
+  local ice_cave = 0
+  if you.branch() == "D" and you.absdepth() >= 11 and
+     dgn.map_by_tag("uniq_ice_cave") and crawl.coinflip() then
+    ice_cave = 1
+  end
+
   hook("post_place", function()
     dgn.place_maps{tag="serial_ice", count=c}
+    -- chance_icecave excludes special Vaults ice cave entries
+    dgn.place_maps{tag="chance_icecave", count=ice_cave}
   end)
 }}
 
 ###############################################################################
 
 NAME:   serial_ice_a
-TAGS:   mini_float
 : init_ice(_G)
 MAP
 -----
@@ -48,7 +71,7 @@ MAP
 ENDMAP
 
 NAME:   serial_ice_b
-TAGS:   mini_float
+TAGS:   allow_dup luniq vaults_room_7_spin_encounter
 SUBST:  ! = ....!
 : init_ice(_G)
 MAP
@@ -89,18 +112,16 @@ MAP
 ENDMAP
 
 NAME:   serial_ice_e
-TAGS:   mini_float
-SUBST:  ! = ___!
+SUBST:  ! = ...!
 : init_ice(_G)
 MAP
 .-.-.-
--.-.-.
-.-.!.-
+-.-!-.
+.-.-.-
 -.-.-.
 ENDMAP
 
 NAME:   serial_ice_f
-TAGS:   mini_float
 SUBST:  w = wwW, . = ...w
 : init_ice(_G)
 MAP
@@ -116,22 +137,23 @@ MAP
 ENDMAP
 
 NAME:   serial_ice_g
+TAGS:   allow_dup luniq vaults_room_7_spin_encounter
 NSUBST: x = . / x
 SUBST:  x = .xx
-SUBST:  Y = .!!
+SUBST:  ! = .!!
 : init_ice(_G)
 MAP
 -------
 --xxx--
 -xx.xx-
--x.Y.x-
+-x.!.x-
 -xx.xx-
 --xxx--
 -------
 ENDMAP
 
 NAME:   serial_ice_h
-TAGS:   mini_float
+TAGS:   allow_dup luniq vaults_room_7_spin_encounter
 : init_ice(_G)
 MAP
 -------
@@ -144,7 +166,7 @@ MAP
 ENDMAP
 
 NAME:   serial_ice_i
-TAGS:   mini_float
+TAGS:   luniq_serial_ice_big
 SUBST:  W = wW
 SUBST:  + = Ww.
 : init_ice(_G)
@@ -161,7 +183,7 @@ MAP
 ENDMAP
 
 NAME:   serial_ice_j
-TAGS:   mini_float
+TAGS:   luniq_serial_ice_big
 KPROP:  +-AwW = no_rtele_into
 SUBST:  w = wwW
 SUBST:  + = Ww.
@@ -176,4 +198,91 @@ MAP
 -w+++.........ww.+-+
 -ww++++wwwwwwww++--+
 -++++-------...+++-
+ENDMAP
+
+NAME:   serial_ice_k
+TAGS:   luniq_serial_ice_big
+NSUBST: W = 1:W / *=Ww
+SUBST:  + = Ww.
+: init_ice(_G)
+MAP
+             ---
+          --------
+       ---.++ww+..-@
+      --..++..+++.--
+wwwww--++www++.....-
+    wwwwwwwwwWWWW++..
+    --....+w+...wwWWw   ww
+     --+++ww+++....-wwww
+      @--+++.-------
+         -----
+ENDMAP
+
+NAME:   serial_ice_l
+TAGS:   luniq_serial_ice_big
+SUBST:  c = xx.
+SUBST:  ! = ....!
+: init_ice(_G)
+MAP
+       w
+      www
+      www
+      www
+     wwwww
+    -wwwww-
+  ---wwwww---
+ ---ccxxxcc---
+@--....!....--@
+ ---ccxxxcc---
+  ---wwwww---
+    -wwwww-
+     wwwww
+      www
+      www
+      www
+       w
+ENDMAP
+
+NAME:   serial_ice_m
+TAGS:   allow_dup luniq vaults_room_7_city_encounter
+SUBST:  + = Ww.
+SUBST:  ! = .!!
+: init_ice(_G)
+MAP
+xxxx@xxxx
+xww+.+wwx
+xw+...+wx
+x+.....+x
+@...!...@
+x+.....+x
+xw+...+wx
+xww+.+wwx
+xxxx@xxxx
+ENDMAP
+
+NAME:   serial_ice_n
+NSUBST: x = 1:. / 2:x / *=xx.
+: init_ice(_G)
+MAP
+  --@--
+---------
+-.......-
+xxxxxxxxx
+-.......-
+---------
+  --@--
+ENDMAP
+
+NAME:   serial_ice_o
+: init_ice(_G)
+MAP
+     -----
+   --.....--
+  -.........-
+ -.G..---..G.-
+ -..-------..-
+-.---     ---.-
+---         ---
+--           --
+-             -
 ENDMAP

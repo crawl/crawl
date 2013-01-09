@@ -44,10 +44,10 @@ static duration_def duration_data[] =
       BLUE, "Touch", "confusing touch", "" },
     { DUR_CONTROL_TELEPORT, true,
       MAGENTA, "cTele", "", "You can control teleportations." },
+    { DUR_CORONA, false,
+      YELLOW, "Corona", "", "" },
     { DUR_DEATH_CHANNEL, true,
       MAGENTA, "DChan", "death channel", "You are channeling the dead." },
-    { DUR_DEFLECT_MISSILES, true,
-      MAGENTA, "DMsl", "deflect missiles", "You deflect missiles." },
     { DUR_DIVINE_STAMINA, true,
       WHITE, "Vit", "vitalised", "You are divinely vitalised." },
     { DUR_DIVINE_VIGOUR, false,
@@ -76,8 +76,6 @@ static duration_def duration_data[] =
       MAGENTA, "Petr", "petrifying", "You are turning to stone." },
     { DUR_JELLY_PRAYER, false,
       WHITE, "Pray", "praying", "You are praying." },
-    { DUR_REPEL_MISSILES, true,
-      BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
     { DUR_RESISTANCE, true,
       LIGHTBLUE, "Resist", "", "You resist elements." },
     { DUR_SLAYING, false,
@@ -115,7 +113,7 @@ static duration_def duration_data[] =
       LIGHTGREY, "Tornado", "tornado",
       "You are in the eye of a mighty hurricane." },
     { DUR_LIQUEFYING, false,
-      YELLOW, "Liquid", "liquefying",
+      LIGHTBLUE, "Liquid", "liquefying",
       "The ground has become liquefied beneath your feet." },
     { DUR_HEROISM, false,
       LIGHTBLUE, "Hero", "heroism", "You possess the skills of a mighty hero." },
@@ -129,6 +127,8 @@ static duration_def duration_data[] =
       BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
     { DUR_TORNADO_COOLDOWN, false,
       YELLOW, "Tornado", "", "" ,},
+    { DUR_DISJUNCTION, true,
+      BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -210,7 +210,6 @@ static void _mark_expiring(status_info* inf, bool expiring)
 static void _describe_airborne(status_info* inf);
 static void _describe_burden(status_info* inf);
 static void _describe_glow(status_info* inf);
-static void _describe_backlit(status_info* inf);
 static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
 static void _describe_rotting(status_info* inf);
@@ -222,8 +221,9 @@ static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
 static void _describe_terrain(status_info* inf);
+static void _describe_missiles(status_info* inf);
 
-void fill_status_info(int status, status_info* inf)
+bool fill_status_info(int status, status_info* inf)
 {
     _reset_status_info(inf);
 
@@ -236,7 +236,7 @@ void fill_status_info(int status, status_info* inf)
         duration_type dur = static_cast<duration_type>(status);
 
         if (!you.duration[dur])
-            return;
+            return false;
 
         const duration_def* ddef = _lookup_duration(dur);
         if (ddef)
@@ -293,7 +293,10 @@ void fill_status_info(int status, status_info* inf)
 
     case STATUS_BACKLIT:
         if (you.backlit())
-            _describe_backlit(inf);
+        {
+            inf->short_text = "glowing";
+            inf->long_text  = "You are glowing.";
+        }
         break;
 
     case STATUS_UMBRA:
@@ -357,17 +360,17 @@ void fill_status_info(int status, status_info* inf)
 
     case STATUS_AUGMENTED:
     {
-         int level = augmentation_amount();
+        int level = augmentation_amount();
 
-         if (level > 0)
-         {
-             inf->light_colour = (level == 3) ? WHITE :
-                                 (level == 2) ? LIGHTBLUE
-                                              : BLUE;
+        if (level > 0)
+        {
+            inf->light_colour = (level == 3) ? WHITE :
+                                (level == 2) ? LIGHTBLUE
+                                             : BLUE;
 
-             inf->light_text = "Aug";
-         }
-         break;
+            inf->light_text = "Aug";
+        }
+        break;
     }
 
     case DUR_CONFUSING_TOUCH:
@@ -427,14 +430,8 @@ void fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case DUR_REPEL_MISSILES:
-        // no status light or short text when also deflecting
-        if (you.duration[DUR_DEFLECT_MISSILES])
-        {
-            inf->light_colour = 0;
-            inf->light_text   = "";
-            inf->short_text   = "";
-        }
+    case STATUS_MISSILES:
+        _describe_missiles(inf);
         break;
 
     case STATUS_MANUAL:
@@ -527,6 +524,14 @@ void fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_NO_CTELE:
+        if (!allow_control_teleport(true))
+        {
+            inf->light_colour = RED;
+            inf->light_text = "-cTele";
+        }
+        break;
+
     default:
         if (!found)
         {
@@ -534,9 +539,12 @@ void fill_status_info(int status, status_info* inf)
             inf->light_text   = "Missing";
             inf->short_text   = "missing status";
             inf->long_text    = "Missing status description.";
+            return false;
         }
-        break;
+        else
+            break;
     }
+    return true;
 }
 
 static void _describe_hunger(status_info* inf)
@@ -602,26 +610,6 @@ static void _describe_glow(status_info* inf)
         inf->short_text += "contaminated";
         inf->long_text = describe_contamination(cont);
     }
-}
-
-static void _describe_backlit(status_info* inf)
-{
-    if (get_contamination_level() > 1)
-        inf->light_colour = _bad_ench_colour(get_contamination_level(), 2, 3);
-    else if (you.duration[DUR_QUAD_DAMAGE])
-        inf->light_colour = BLUE;
-    else if (you.duration[DUR_LIQUID_FLAMES])
-        inf->light_colour = RED;
-    else if (you.halo_radius2() > 0)
-        return;
-    else if (you.duration[DUR_CORONA])
-        inf->light_colour = LIGHTBLUE;
-    else if (!you.umbraed() && you.haloed())
-        inf->light_colour = YELLOW;
-
-    inf->light_text   = "Glow";
-    inf->short_text   = "glowing";
-    inf->long_text    = "You are glowing.";
 }
 
 static void _describe_regen(status_info* inf)
@@ -746,24 +734,13 @@ static void _describe_airborne(status_info* inf)
     if (!you.airborne())
         return;
 
-    const bool perm     = you.permanent_flight() || you.permanent_levitation();
-    const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
-    const bool uncancel = you.attribute[ATTR_LEV_UNCANCELLABLE];
+    const bool perm     = you.permanent_flight();
+    const bool expiring = (!perm && dur_expiring(DUR_FLIGHT));
 
-    if (player_effect_cfly())
-    {
-        inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
-        inf->light_text   = "Fly";
-        inf->short_text   = "flying";
-        inf->long_text    = "You are flying.";
-    }
-    else
-    {
-        inf->light_colour = perm ? WHITE : uncancel ? BLUE : MAGENTA;
-        inf->light_text   = "Lev";
-        inf->short_text   = "levitating";
-        inf->long_text    = "You are hovering above the floor.";
-    }
+    inf->light_colour = you.tengu_flight() ? BLUE : perm ? WHITE : MAGENTA;
+    inf->light_text   = "Fly";
+    inf->short_text   = "flying";
+    inf->long_text    = "You are flying.";
     inf->light_colour = _dur_colour(inf->light_colour, expiring);
     _mark_expiring(inf, expiring);
 }
@@ -847,13 +824,6 @@ static void _describe_burden(status_info* inf)
         inf->long_text    = "You are burdened.";
         break;
     case BS_UNENCUMBERED:
-        if (you.species == SP_TENGU && you.flight_mode() == FL_FLY)
-        {
-            if (you.travelling_light())
-                inf->long_text = "Your small burden allows quick flight.";
-            else
-                inf->long_text = "Your heavy burden is slowing your flight.";
-        }
         break;
     }
 }
@@ -955,4 +925,34 @@ static void _describe_terrain(status_info* inf)
     default:
         ;
     }
+}
+
+static void _describe_missiles(status_info* inf)
+{
+    const int level = you.missile_deflection();
+    if (!level)
+        return;
+
+    bool expiring;
+    if (level > 1)
+    {
+        inf->light_colour = MAGENTA;
+        inf->light_text   = "DMsl";
+        inf->short_text   = "deflect missiles";
+        inf->long_text    = "You deflect missiles.";
+        expiring = dur_expiring(DUR_DEFLECT_MISSILES);
+    }
+    else
+    {
+        bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
+                    || !you.suppressed() && you.scan_artefacts(ARTP_RMSL);
+        inf->light_colour = BLUE;
+        inf->light_text   = "RMsl";
+        inf->short_text   = "repel missiles";
+        inf->long_text    = "You repel missiles.";
+        expiring = (!perm && dur_expiring(DUR_REPEL_MISSILES));
+    }
+
+    inf->light_colour = _dur_colour(inf->light_colour, expiring);
+    _mark_expiring(inf, expiring);
 }

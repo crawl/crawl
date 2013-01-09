@@ -70,12 +70,12 @@ orange_rat CORPSE_ORANGE_RAT
 porcupine CORPSE_PORCUPINE
 %sdir mon/rat
 labrat_plain CORPSE_LABORATORY_RAT
+labrat_airborne
 labrat_armoured
 labrat_beastly
 labrat_fiery
 labrat_gaseous
 labrat_leeching
-labrat_levitating
 labrat_mutated
 labrat_shifting
 labrat_venomous

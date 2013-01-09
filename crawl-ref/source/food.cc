@@ -425,9 +425,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    if (!player_can_reach_floor())
-        return false;
-
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
     // might still benefit from it.
@@ -646,7 +643,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                      corpse_name.c_str());
                 repeat_prompt = false;
 
-                keyin = tolower(getchm(KMC_CONFIRM));
+                keyin = toalower(getchm(KMC_CONFIRM));
                 switch (keyin)
                 {
                 case 'y':
@@ -1226,9 +1223,6 @@ int eat_from_floor(bool skip_chunks)
     if (!_eat_check())
         return false;
 
-    if (you.flight_mode() == FL_LEVITATE)
-        return 0;
-
     // Corpses should have been handled before.
     if (you.species == SP_VAMPIRE && skip_chunks)
         return 0;
@@ -1335,7 +1329,7 @@ int eat_from_floor(bool skip_chunks)
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
-            int keyin = tolower(getchm(KMC_CONFIRM));
+            int keyin = toalower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
             case 'q':
@@ -1493,7 +1487,7 @@ bool eat_from_inventory()
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
-            int keyin = tolower(getchm(KMC_CONFIRM));
+            int keyin = toalower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
             case 'q':
@@ -1567,32 +1561,28 @@ int prompt_eat_chunks(bool only_auto)
     bool found_valid = false;
     vector<item_def *> chunks;
 
-    // First search the stash on the floor, unless levitating.
-    if (you.flight_mode() != FL_LEVITATE)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        for (stack_iterator si(you.pos(), true); si; ++si)
+        if (you.species == SP_VAMPIRE)
         {
-            if (you.species == SP_VAMPIRE)
-            {
-                if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
-                    continue;
-
-                if (!mons_has_blood(si->mon_type))
-                    continue;
-            }
-            else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
+            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                 continue;
 
-            if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
+            if (!mons_has_blood(si->mon_type))
                 continue;
-
-            // Don't prompt for bad food types.
-            if (is_bad_food(*si))
-                continue;
-
-            found_valid = true;
-            chunks.push_back(&(*si));
         }
+        else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
+            continue;
+
+        if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
+            continue;
+
+        // Don't prompt for bad food types.
+        if (is_bad_food(*si))
+            continue;
+
+        found_valid = true;
+        chunks.push_back(&(*si));
     }
 
     // Then search through the inventory.
@@ -1633,8 +1623,7 @@ int prompt_eat_chunks(bool only_auto)
     const bool easy_eat = (Options.easy_eat_chunks || only_auto)
         && !you.is_undead && !you.duration[DUR_NAUSEA];
     const bool easy_contam = easy_eat
-        && (Options.easy_eat_gourmand
-            && player_effect_gourmand()
+        && (Options.easy_eat_gourmand && you.gourmand()
             || Options.easy_eat_contaminated);
 
     if (found_valid)
@@ -1666,7 +1655,7 @@ int prompt_eat_chunks(bool only_auto)
                      item_name.c_str());
             }
 
-            int keyin = autoeat ? 'y' : tolower(getchm(KMC_CONFIRM));
+            int keyin = autoeat ? 'y' : toalower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
             case 'q':
@@ -1795,8 +1784,7 @@ static int _chunk_nutrition(int likes_chunks)
                              : _apply_herbivore_nutrition_effects(nutrition));
     }
 
-    const int gourmand =
-        player_effect_gourmand() ? you.duration[DUR_GOURMAND] : 0;
+    const int gourmand = you.gourmand() ? you.duration[DUR_GOURMAND] : 0;
     const int effective_nutrition =
         _apply_gourmand_nutrition_effects(nutrition, gourmand);
 
@@ -1849,7 +1837,7 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     // contaminated meat as though it were "clean" meat - level 3
     // saprovores get rotting meat effect from clean chunks, since they
     // love rotting meat.
-    if (player_effect_gourmand())
+    if (you.gourmand())
     {
         int left = GOURMAND_MAX - you.duration[DUR_GOURMAND];
         // [dshaligram] Level 3 saprovores relish contaminated meat.
@@ -2545,7 +2533,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
         {
             if (!suppress_msg)
                 mpr("Blech - you need blood!");
-             return false;
+            return false;
         }
 
         const int vorous = _player_likes_food_type(kindof_thing);

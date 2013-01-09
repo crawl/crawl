@@ -17,6 +17,7 @@
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "map_knowledge.h"
 #include "feature.h"
 #include "fprop.h"
@@ -200,6 +201,7 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
@@ -264,6 +266,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
@@ -1362,7 +1365,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     }
 
     // A distinction between stepping and falling from
-    // you.duration[DUR_LEVITATION] prevents stepping into a thin stream
+    // you.duration[DUR_FLIGHT] prevents stepping into a thin stream
     // of lava to get to the other side.
     if (scramble())
     {
@@ -1564,9 +1567,12 @@ static const char *dngn_feature_names[] =
 "stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up",
 
 "enter_dis", "enter_gehenna", "enter_cocytus",
-"enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
-"enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"exit_dungeon", "exit_through_abyss",
+"enter_tartarus", "enter_abyss", "exit_abyss",
+#if TAG_MAJOR_VERSION > 34
+"abyssal_stair",
+#endif
+"stone_arch", "enter_pandemonium", "exit_pandemonium",
+"transit_pandemonium", "exit_dungeon", "exit_through_abyss",
 "exit_hell", "enter_hell", "enter_labyrinth",
 "teleporter", "enter_portal_vault", "exit_portal_vault",
 "expired_portal",
@@ -1600,6 +1606,10 @@ static const char *dngn_feature_names[] =
 
 "explore_horizon",
 "unknown_altar", "unknown_portal",
+
+#if TAG_MAJOR_VERSION == 34
+"abyssal_stair",
+#endif
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)
@@ -1665,6 +1675,7 @@ void nuke_wall(const coord_def& p)
     remove_mold(p);
 
     grd(p) = (grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    env.level_map_mask(p) |= MMT_NUKED;
     set_terrain_changed(p);
 }
 

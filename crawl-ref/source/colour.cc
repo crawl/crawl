@@ -166,6 +166,38 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
+static int _etc_disjunction(int, const coord_def& loc)
+{
+    static int turns = you.num_turns;
+    static coord_def centre = find_centre_for(loc, AREA_DISJUNCTION);
+
+    if (turns != you.num_turns || (centre-loc).abs() > 15)
+    {
+        centre = find_centre_for(loc, AREA_DISJUNCTION);
+        turns = you.num_turns;
+    }
+
+    if (centre.origin())
+        return MAGENTA;
+
+    int x = loc.x - centre.x;
+    int y = loc.y - centre.y;
+    double dist = sqrt(x*x + y*y);
+    int parity = ((int) (dist / PI) + you.frame_no / 11) % 2 ? 1 : -1;
+    double dir = sin(atan2(x, y)*PI + parity * you.frame_no / 3) + 1;
+    switch ((int) floor(dir * 2))
+    {
+    case 0:
+        return LIGHTBLUE;
+    case 1:
+        return BLUE;
+    case 2:
+        return MAGENTA;
+    default:
+        return LIGHTMAGENTA;
+    }
+}
+
 static int _etc_liquefied(int, const coord_def& loc)
 {
     static int turns = you.num_turns;
@@ -260,8 +292,8 @@ int dam_colour(const monster_info& mi)
     if (!mons_class_can_display_wounds(mi.type))
         return Options.enemy_hp_colour[6]; // undead and whatnot
 
-   switch (mi.dam)
-   {
+    switch (mi.dam)
+    {
         case MDAM_OKAY:                 return Options.enemy_hp_colour[0];
         case MDAM_LIGHTLY_DAMAGED:      return Options.enemy_hp_colour[1];
         case MDAM_MODERATELY_DAMAGED:   return Options.enemy_hp_colour[2];
@@ -491,14 +523,10 @@ void init_element_colours()
                         0));
     add_element_colour(_create_random_element_colour_calc(
                             ETC_KRAKEN, "kraken",
-                            15,  GREEN,
-                            15,  LIGHTGREEN,
-                            15,  LIGHTCYAN,
-                            15,  LIGHTBLUE,
-                            15,  RED,
-                            15,  LIGHTRED,
-                            15,  MAGENTA,
-                            15,  LIGHTMAGENTA,
+                            30,  LIGHTGREEN,
+                            30,  LIGHTBLUE,
+                            30,  RED,
+                            30,  LIGHTMAGENTA,
                         0));
     add_element_colour(new element_colour_calc(
                             ETC_FLOOR, "floor", _etc_floor
@@ -565,6 +593,9 @@ void init_element_colours()
                             ETC_ORB_GLOW, "orb_glow", _etc_orb_glow
                        ));
     add_element_colour(new element_colour_calc(
+                            ETC_DISJUNCTION, "disjunction", _etc_disjunction
+                       ));
+    add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random
                        ));
     // redefined by Lua later
@@ -629,8 +660,8 @@ unsigned int str_to_tile_colour(string colour)
 
     for (unsigned int i = 0; i < 24; i++)
     {
-         if (tile_cols[i] == colour)
-             return i;
+        if (tile_cols[i] == colour)
+            return i;
     }
     return 0;
 }

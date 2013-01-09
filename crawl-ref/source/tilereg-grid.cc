@@ -29,6 +29,7 @@ GridRegion::GridRegion(const TileRegionInit &init) :
     m_flavour(NULL),
     m_cursor(NO_CURSOR),
     m_last_clicked_item(-1),
+    m_grid_page(0),
     m_buf(init.im)
 {
 }
@@ -64,7 +65,7 @@ void GridRegion::on_resize()
 unsigned int GridRegion::cursor_index() const
 {
     ASSERT(m_cursor != NO_CURSOR);
-    return (m_cursor.x + m_cursor.y * mx);
+    return m_cursor.x + m_cursor.y * mx + m_grid_page*mx*my - m_grid_page*2;
 }
 
 void GridRegion::place_cursor(const coord_def &cursor)
@@ -96,6 +97,10 @@ void GridRegion::draw_desc(const char *desc)
     // Always draw the description in the inventory header. (jpeg)
     int x = sx + ox + dx / 2;
     int y = sy + oy;
+
+    // ... unless we're using the touch UI, in which case: put at bottom
+    if( tiles.is_using_small_layout() )
+        y = wy;
 
     const coord_def min_pos(sx, sy - dy);
     const coord_def max_pos(ex, ey);

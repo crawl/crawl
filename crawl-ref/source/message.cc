@@ -38,6 +38,10 @@
 #include "luaterp.h"
 #endif
 
+#ifdef USE_TILE_WEB
+#include "tileweb.h"
+#endif
+
 static bool _ends_in_punctuation(const string& text)
 {
     switch (text[text.size() - 1])
@@ -573,9 +577,8 @@ public:
             if (crawl_state.game_is_hints())
             {
                 string more_str = "--more-- Press Space ";
-#ifdef USE_TILE
-                more_str += "or click ";
-#endif
+                if (is_tiles())
+                    more_str += "or click ";
                 more_str += "to continue. You can later reread messages with "
                             "Ctrl-P.";
                 cprintf(more_str.c_str());
@@ -620,15 +623,24 @@ class message_store
     bool last_of_turn;
     int temp; // number of temporary messages
 
+    int unsent; // number of messages not yet sent to the webtiles client
+    bool prev_unsent;
+    int client_rollback;
+
 public:
-    message_store() : last_of_turn(false), temp(0) {}
+    message_store() : last_of_turn(false), temp(0),
+                      unsent(0), prev_unsent(false), client_rollback(0) {}
 
     void add(const message_item& msg)
     {
         if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
+        {
+            prev_unsent = true;
             return;
+        }
         flush_prev();
         prev_msg = msg;
+        prev_unsent = true;
         if (msg.channel == MSGCH_PROMPT || _temporary)
             flush_prev();
     }
@@ -651,6 +663,7 @@ public:
 
     void roll_back()
     {
+        client_rollback = max(0, temp - unsent);
         msgs.roll_back(temp);
         temp = 0;
     }
@@ -675,6 +688,11 @@ public:
             msgwin.new_cmdturn(true);
             last_of_turn = false;
         }
+        if (prev_unsent)
+        {
+            unsent++;
+            prev_unsent = false;
+        }
     }
 
     void new_turn()
@@ -698,10 +716,74 @@ public:
         last_of_turn = false;
         temp = 0;
     }
+
+#ifdef USE_TILE_WEB
+    void send(int old_msgs = 0)
+    {
+        unsent += old_msgs;
+        if (unsent == 0) return;
+
+        if (client_rollback > 0)
+        {
+            tiles.json_write_int("rollback", client_rollback);
+            client_rollback = 0;
+        }
+        if (old_msgs > 0)
+            tiles.json_write_int("old_msgs", old_msgs);
+        tiles.json_open_array("messages");
+        for (int i = -unsent; i < 0; ++i)
+        {
+            message_item& msg = msgs[i];
+            tiles.json_open_object();
+            tiles.json_write_string("text", msg.text);
+            tiles.json_write_int("turn", msg.turn);
+            tiles.json_write_int("channel", msg.channel);
+            if (msg.repeats > 1)
+                tiles.json_write_int("repeats", msg.repeats);
+            tiles.json_close_object();
+        }
+        if (prev_unsent && have_prev())
+        {
+            tiles.json_open_object();
+            tiles.json_write_string("text", prev_msg.text);
+            tiles.json_write_int("turn", prev_msg.turn);
+            tiles.json_write_int("channel", prev_msg.channel);
+            if (prev_msg.repeats > 1)
+                tiles.json_write_int("repeats", prev_msg.repeats);
+            tiles.json_close_object();
+        }
+        tiles.json_close_array();
+        unsent = 0;
+        prev_unsent = false;
+    }
+#endif
 };
 
 // Circular buffer for keeping past messages.
 message_store buffer;
+
+#ifdef USE_TILE_WEB
+bool _more = false, _last_more = false;
+
+void webtiles_send_messages()
+{
+    webtiles_send_last_messages(0);
+}
+void webtiles_send_last_messages(int n)
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "msgs");
+    tiles.json_treat_as_empty();
+    if (_more != _last_more)
+    {
+        tiles.json_write_bool("more", _more);
+        _last_more = _more;
+    }
+    buffer.send(n);
+    tiles.json_close_object(true);
+    tiles.finish_message();
+}
+#endif
 
 static FILE* _msg_dump_file = NULL;
 
@@ -1291,9 +1373,9 @@ static bool channel_message_history(msg_channel_type channel)
     case MSGCH_PROMPT:
     case MSGCH_EQUIPMENT:
     case MSGCH_EXAMINE_FILTER:
-       return false;
+        return false;
     default:
-       return true;
+        return true;
     }
 }
 
@@ -1369,7 +1451,11 @@ static void readkey_more(bool user_forced)
     if (autoclear_more)
         return;
     int keypress;
+#ifdef USE_TILE_WEB
+    unwind_bool unwind_more(_more, true);
+#endif
     mouse_control mc(MOUSE_MODE_MORE);
+
     do
         keypress = getch_ck();
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'

@@ -116,10 +116,10 @@ public:
 
 void clear_rays_on_exit()
 {
-   delete dead_rays;
-   delete smoke_rays;
-   for (quadrant_iterator qi; qi; ++qi)
-       delete blockrays(*qi);
+    delete dead_rays;
+    delete smoke_rays;
+    for (quadrant_iterator qi; qi; ++qi)
+        delete blockrays(*qi);
 }
 
 // Pre-squared LOS radius.

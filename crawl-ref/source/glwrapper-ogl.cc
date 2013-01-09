@@ -418,7 +418,7 @@ void OGLStateManager::glDebug(const char* msg)
 {
 #ifdef __ANDROID__
     int e = glGetError();
-    if(e>0)
+    if (e > 0)
         __android_log_print(ANDROID_LOG_INFO, "Crawl.gl", "ERROR %x: %s",e,msg);
 #endif
 }
@@ -604,12 +604,12 @@ void OGLShapeBuffer::glDebug(const char* msg)
 {
 #ifdef __ANDROID__
     int e = glGetError();
-    if(e>0)
+    if (e > 0)
         __android_log_print(ANDROID_LOG_INFO, "Crawl.gl", "ERROR %x: %s",e,msg);
 #else
 #ifdef DEBUG_DIAGNOSTICS
     int e = glGetError();
-    if(e>0)
+    if (e > 0)
         printf("ERROR %x: %s\n",e,msg);
 #endif
 #endif

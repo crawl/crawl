@@ -50,12 +50,13 @@ spell's power. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 
-Enchanters use spells to boost themselves in battle, or incapacitate others.
-They also start with good darts.
+Enchanters use spells from the book of Maledictions to incapacitate their foes,
+and are equipped with a dagger and some darts.
 %%%%
 Fighter
 
-Fighters come with armour and shield, as well as a weapon of their choice.
+Fighters are equipped with armour and shield, as well as a weapon of their
+choice.
 %%%%
 Fire Elementalist
 
@@ -74,7 +75,8 @@ healing will possibly pacify beasts and brutes, yielding experience.
 %%%%
 Hunter
 
-Hunters are able to attack at range, without relying on pesky magic.
+Hunters are able to attack with a ranged weapon of their choice, without
+relying on pesky magic.
 %%%%
 Ice Elementalist
 
@@ -83,8 +85,8 @@ other spells are quite versatile.
 %%%%
 Monk
 
-Monks are ready to take on everything in the dungeon wearing just a robe and
-using their body.
+Monks are ready to take on the dungeon wearing just a robe and using their
+body. They will gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
@@ -122,7 +124,7 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice and a Blinking scroll. They can
+Warpers start with a weapon of their choice and a scroll of blinking. They can
 learn spells from the book of Spatial Translocations.
 %%%%
 Wizard

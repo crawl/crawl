@@ -34,6 +34,10 @@ Eustachio
 Radījumu izsaucēja māceklis ar gludām ūsām. Viņam ir smieklīgas idejas par
 godu.
 %%%%
+Gloorx Vloq
+
+Ēnains siluets, kas tīts dziļā tumsā.
+%%%%
 Grum
 
 Sīksta paskata gnolls, valkājam viena no sava bijušo cīņas suņu kažoku.
@@ -79,6 +83,10 @@ tā ķermenī iedvesa varenu un spēcīgu maģiju, mēģinot viņam piešķirt m
 dzīvi. Nu viņš ir aizmirsts un izdēdējis līdz irstošām marlēm un izkaltušam un
 trauslam ģindenim.
 %%%%
+Nessos
+
+Melns kentauru karotājs ar ļaunu spīdumu acīs.
+%%%%
 Rupert
 
 Vīrs ar ļoti sliktām manierēm, kura aurus, viņu apskauž pat cilvēkēdāji.
@@ -92,6 +100,11 @@ Snorg
 Īpaši tukls trollis ar strauju raksturu un prāvu vēderu. Neieinteresēts par
 Lodi, Snorgs ir sajūsmā par tās pievilinātajiem nebeidzamajiem dēkaiņu pūļiem
 jeb vieglajām maltītēm.
+%%%%
+Sonja
+
+Gracioza koboldu slepkava. Apbrīno tās gracizās piruetes, noelsies par tās
+pārdrošajiem lēcieni! Tomēr uzmanies no viņas nažiem!
 %%%%
 Tiamat
 
@@ -147,18 +160,26 @@ ancient lich
 Ličs, kurš neskaitāmu gadsimtu laikā, pētot tumšās zintis, ir kļuvis
 neiedomājami spēcīgs.
 %%%%
+balrug
+
+Milzīgs un ļoti varens dēmons, kas tīts liesmās un ēnās.
+%%%%
 big fish
 
 Miesīga zivs ar plašu, zobiem pilnu muti.
+%%%%
+big kobold
+
+Kobolts, kas ir lielāks un sīkstāks, nekā parastie kobolti, un nereti ir
+bruņots.
 %%%%
 black draconian
 
 Zvīņām klāts cilvēkveidīgais ar rāpuļa asti un maziem spārniņiem.
 %%%%
-blessed toe
+blizzard demon
 
-Relikvija no dievbijīga svētā ķermeņa, kas planē gaisā, mirdzot dievišķā
-gaismā.
+Lieldēmons, kas tīts sniegā un zibeņos.
 %%%%
 Brimstone Fiend
 
@@ -174,9 +195,18 @@ clay golem
 
 Milzīga māla statuja, kas pārdabiskiem līdzekļiem tikusi atdzīvināta.
 %%%%
+deep elf knight
+
+Kaujās rūdīts dzīļu elfu karotājs.
+%%%%
 deep dwarf berserker
 
 Negants un asinskārs pazemes rūķis, kas alkst cīņas neprāta.
+%%%%
+deep dwarf necromancer
+
+Ļauns dzīļu rūķis, kas iemainījis savu mirstīgo dvēseli pret okulto nāves un
+sāpju zinšu meistarību.
 %%%%
 deep dwarf scion
 

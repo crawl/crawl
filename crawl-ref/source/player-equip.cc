@@ -273,8 +273,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     // For evokable stuff, check whether other equipped items yield
     // the same ability.  If not, and if the ability granted hasn't
     // already been discovered, give a message.
-    if (unknown_proprt(ARTP_LEVITATE)
-        && !items_give_ability(item.link, ARTP_LEVITATE))
+    if (unknown_proprt(ARTP_FLY)
+        && !items_give_ability(item.link, ARTP_FLY))
     {
         if (msg)
         {
@@ -283,7 +283,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
             else
                 mpr("You feel buoyant.");
         }
-        artefact_wpn_learn_prop(item, ARTP_LEVITATE);
+        artefact_wpn_learn_prop(item, ARTP_FLY);
     }
 
     if (unknown_proprt(ARTP_INVISIBLE) && !you.duration[DUR_INVIS])
@@ -301,6 +301,13 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
+    if (unknown_proprt(ARTP_MUTAGENIC))
+    {
+        if (msg)
+            mpr("You feel a build-up of mutagenic energy.");
+        artefact_wpn_learn_prop(item, ARTP_MUTAGENIC);
+    }
+
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
     {
@@ -310,9 +317,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
-
-    if (!alreadyknown)
-        add_autoinscription(item);
 
     if (!alreadyknown && dangerous)
     {
@@ -380,17 +384,17 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_NOISES] != 0)
         you.attribute[ATTR_NOISES] = 0;
 
-    if (proprt[ARTP_LEVITATE] != 0 && you.cancellable_levitation()
-        && !player_evokable_levitation())
+    if (proprt[ARTP_FLY] != 0 && you.cancellable_flight()
+        && !you.evokable_flight())
     {
-        you.duration[DUR_LEVITATION] = 0;
+        you.duration[DUR_FLIGHT] = 0;
         land_player();
     }
 
     if (proprt[ARTP_INVISIBLE] != 0
         && you.duration[DUR_INVIS] > 1
         && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-        && !player_evokable_invis())
+        && !you.evokable_invis())
     {
         you.duration[DUR_INVIS] = 1;
     }
@@ -540,8 +544,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             if (!was_known)
             {
                 item.flags |= ISFLAG_NOTED_ID;
-
-                add_autoinscription(item);
 
                 // Make a note of it.
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
@@ -906,7 +908,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             mpr("You feel rather ponderous.");
             break;
 
-        case SPARM_LEVITATION:
+        case SPARM_FLYING:
             mpr("You feel rather light.");
             break;
 
@@ -938,7 +940,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_SPIRIT_SHIELD:
-            if (!unmeld && player_spirit_shield() < 2)
+            if (!unmeld && you.spirit_shield() < 2)
             {
                 dec_mp(you.magic_points);
                 mpr("You feel spirits watching over you.");
@@ -1027,7 +1029,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
     case SPARM_DARKNESS:
         if (you.duration[DUR_INVIS]
             && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-            && !player_evokable_invis())
+            && !you.evokable_invis())
         {
             you.duration[DUR_INVIS] = 1;
         }
@@ -1049,21 +1051,21 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         mpr("That put a bit of spring back into your step.");
         break;
 
-    case SPARM_LEVITATION:
-        if (you.attribute[ATTR_PERM_LEVITATION]
-            && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION)
-            && (you.species != SP_TENGU || you.experience_level < 15))
+    case SPARM_FLYING:
+        if (you.attribute[ATTR_PERM_FLIGHT]
+            && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
+            && !you.racial_permanent_flight())
         {
-                you.attribute[ATTR_PERM_LEVITATION] = 0;
-                if (player_evokable_levitation())
-                    levitate_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
+            you.attribute[ATTR_PERM_FLIGHT] = 0;
+            if (you.evokable_flight())
+                fly_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
         }
 
-        //since a permlev item can keep templev evocations going
-        // we should check templev here too
-        if (you.cancellable_levitation() && !player_evokable_levitation())
+        // since a permflight item can keep tempflight evocations going
+        // we should check tempflight here too
+        if (you.cancellable_flight() && !you.evokable_flight())
         {
-            you.duration[DUR_LEVITATION] = 0;
+            you.duration[DUR_FLIGHT] = 0;
             land_player();
         }
         break;
@@ -1093,13 +1095,13 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_SPIRIT_SHIELD:
-        if (!player_spirit_shield())
+        if (!you.spirit_shield())
         {
             mpr("You feel strangely alone.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
         }
-        else if (player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
+        else if (you.wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
         {
             item_def& amu(you.inv[you.equip[EQ_AMULET]]);
             wear_id_type(amu);
@@ -1288,15 +1290,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             ident = ID_KNOWN_TYPE;
         break;
 
-    case RING_LEVITATION:
-        if (!scan_artefacts(ARTP_LEVITATE))
+    case RING_FLIGHT:
+        if (!you.scan_artefacts(ARTP_FLY))
         {
             if (you.airborne())
                 mpr("You feel vaguely more buoyant than before.");
             else
                 mpr("You feel buoyant.");
             if (artefact)
-                fake_rap = ARTP_LEVITATE;
+                fake_rap = ARTP_FLY;
             else
                 ident = ID_KNOWN_TYPE;
         }
@@ -1313,7 +1315,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case AMU_RAGE:
-        if (!scan_artefacts(ARTP_BERSERK))
+        if (!you.scan_artefacts(ARTP_BERSERK))
         {
             mpr("You feel a brief urge to hack something to bits.");
             if (artefact)
@@ -1344,16 +1346,14 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         }
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case AMU_CONTROLLED_FLIGHT:
-        if (you.is_levitating()
-            && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
-        {
-            ident = ID_KNOWN_TYPE;
-        }
+        ident = ID_KNOWN_TYPE;
         break;
+#endif
 
     case AMU_GUARDIAN_SPIRIT:
-        if (player_spirit_shield() < 2 && !unmeld)
+        if (you.spirit_shield() < 2 && !unmeld)
         {
             dec_mp(you.magic_points);
             mpr("You feel your power drawn to a protective spirit.");
@@ -1513,10 +1513,10 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
         notify_stat_change(STAT_INT, -item.plus, false, item, true);
         break;
 
-    case RING_LEVITATION:
-        if (you.cancellable_levitation() && !player_evokable_levitation())
+    case RING_FLIGHT:
+        if (you.cancellable_flight() && !you.evokable_flight())
         {
-            you.duration[DUR_LEVITATION] = 0;
+            you.duration[DUR_FLIGHT] = 0;
             land_player();
         }
         break;
@@ -1524,7 +1524,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
     case RING_INVISIBILITY:
         if (you.duration[DUR_INVIS]
             && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-            && !player_evokable_invis())
+            && !you.evokable_invis())
         {
             you.duration[DUR_INVIS] = 1;
         }

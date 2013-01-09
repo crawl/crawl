@@ -688,7 +688,7 @@ string maybe_pick_random_substring(string s)
             break;
 
         string substring = s.substr(start + 1, end - start - 1);
-        vector<string> split = split_string("|", substring, false, false);
+        vector<string> split = split_string("|", substring, false, true);
         int index = random2(split.size());
         s.replace(start, end + 1 - start, split[index]);
     }
@@ -1193,6 +1193,7 @@ void text_popup(const string& text, const wchar_t *caption)
     MessageBoxW(0, OUTW(text), caption, MB_OK);
 }
 #else
+# ifdef USE_CURSES
 
 /* [ds] This SIGHUP handling is primitive and far from safe, but it
  * should be better than nothing. Feel free to get rigorous on this.
@@ -1202,10 +1203,6 @@ static void handle_hangup(int)
     if (crawl_state.seen_hups++)
         return;
 
-#ifdef USE_TILE_LOCAL
-    // XXX: Will a tiles build ever need to handle the HUP signal?
-    sighup_save_and_exit();
-#elif defined(USE_CURSES)
     // When using Curses, closing stdin will cause any Curses call blocking
     // on key-presses to immediately return, including any call that was
     // still blocking in the main thread when the HUP signal was caught.
@@ -1220,10 +1217,8 @@ static void handle_hangup(int)
     // the hack of avoiding excomunication consesquences because of the
     // more() after "You have lost your religion!"
     fclose(stdin);
-#else
-     #error "Must use either Curses or tiles on Unix"
-#endif
 }
+# endif
 
 void init_signals()
 {
@@ -1242,7 +1237,13 @@ void init_signals()
     signal(SIGINT, SIG_IGN);
 #endif
 
+# ifdef USE_TILE_LOCAL
+    // Losing the controlling terminal doesn't matter, we continue and will
+    // shut down only when the actual window is closed.
+    signal(SIGHUP, SIG_IGN);
+# else
     signal(SIGHUP, handle_hangup);
+# endif
 #endif
 
 #ifdef DGL_ENABLE_CORE_DUMP

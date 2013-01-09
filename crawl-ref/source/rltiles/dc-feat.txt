@@ -326,6 +326,15 @@ shallow_bord_bl DNGN_WAVE_SW
 shallow_bord_lft DNGN_WAVE_W
 shallow_bord_tl DNGN_WAVE_NW
 
+murky_bord_top MURKY_WAVE_N
+murky_bord_tr MURKY_WAVE_NE
+murky_bord_rgt MURKY_WAVE_E
+murky_bord_br MURKY_WAVE_SE
+murky_bord_btm MURKY_WAVE_S
+murky_bord_bl MURKY_WAVE_SW
+murky_bord_lft MURKY_WAVE_W
+murky_bord_tl MURKY_WAVE_NW
+
 # Make all base variants equally likely, but their special ones less so.
 %weight 4
 shoals_deep_water1 SHOALS_DEEP_WATER
@@ -531,14 +540,7 @@ jiyva09
 jiyva10
 jiyva11
 fedhas DNGN_ALTAR_FEDHAS
-cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
-cheibriados_03
-cheibriados_04
-cheibriados_06
-cheibriados_08
-cheibriados_09
-cheibriados_10
-cheibriados_12
+cheibriados DNGN_ALTAR_CHEIBRIADOS
 ashenzari DNGN_ALTAR_ASHENZARI
 unknown DNGN_UNKNOWN_ALTAR
 
@@ -684,6 +686,7 @@ effect/umbra UMBRA
 effect/orb_glow0 ORB_GLOW
 effect/orb_glow1
 effect/quad_glow QUAD_GLOW
+effect/disjunct DISJUNCT
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

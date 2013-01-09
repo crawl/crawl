@@ -38,9 +38,6 @@
 -- only get about 60 turns to kill the last enemy, and it might spawn in a far
 -- away spot. This is intentional.
 --
--- XXX: It would be good if arena points override real points, multiplied by
---      runecount if you win.
---
 -- XXX: TRJ doesn't work.
 --
 -- XXX: Zin is overpowered.
@@ -100,7 +97,11 @@ function arena_sprint_end_round(data)
         if data.round_id > 27 then
             local p = dgn.find_marker_positions_by_prop("centre_point", 1)[1]
             dgn.grid(p.x, p.y, "exit_dungeon")
-            crawl.mpr("The exit has re-opened... for now.", "orb")
+            if data.round_id < 42 then
+                crawl.mpr("The exit has re-opened... for now.", "orb")
+            else
+                crawl.mpr("The exit has re-opened.", "orb")
+            end
         end
     elseif data.round_id == 27 then
         crawl.mpr("The Orb of Zot has appeared in the centre of the arena!", "orb")
@@ -146,14 +147,15 @@ function arena_sprint_end_round(data)
     end
 
     style_gain = style_gain * data.style_mult
-    data.style_points = data.style_points + style_gain
-    if data.style_points > 1 then
-        crawl.mpr("You now have " .. data.style_points .. " arena points " ..
+    local style_points = dgn.persist.arena_style_points + style_gain
+    dgn.persist.arena_style_points = style_points
+    if style_points > 1 then
+        crawl.mpr("You now have " .. style_points .. " arena points " ..
                   "(gained " .. style_gain .. ").", "intrinsic_gain")
     else
         crawl.mpr("You now have 1 arena point.", "intrinsic_gain")
     end
-    crawl.take_note("Arena points: " .. data.style_points ..
+    crawl.take_note("Arena points: " .. style_points ..
                     " (+" .. style_gain .. ") [x" .. data.style_mult .. "]",
                     "intrinsic_gain")
 
@@ -172,11 +174,9 @@ function arena_sprint_end_round(data)
     end
 
     if data.round_id == 42 then
-        crawl.mpr("The arena falls silent. Everyone but you is dead.")
-        crawl.mpr("Frankly, I didn't think it was possible to get this far.")
-        crawl.mpr("Congratulations, champion.")
-        crawl.mpr("ARENA POINT TOTAL: " .. data.style_points, "intrinsic_gain")
-        crawl.take_note("ARENA POINT TOTAL: " .. data.style_points)
+        crawl.mpr("<white>The arena falls silent. Everyone but you is dead.</white>")
+        crawl.mpr("<white>There is nothing to do now but take the Orb and leave.</white>")
+        crawl.mpr("<white>Congratulations, champion.</white>")
         data.finished = true
     else
         data.round_id = data.round_id + 1
@@ -611,8 +611,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:3",
-                "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue /\
-                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow /\
+                "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue tile:mons_orb_of_ice /\
+                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity /\
                   w:5 silver star",
                 "hellion / w:5 efreet"
             }
@@ -685,8 +685,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
-                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue /\
-                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow /\
+                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue tile:mons_orb_of_ice /\
+                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity /\
                   w:20 silver star",
                 "hellion"
             }
@@ -746,7 +746,7 @@ function arena_sprint_init_boss_table()
     else
         bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 /\
                  siren name:succubus tile:mons_succubus n_rpl n_des n_spe \
-                     col:lightmagenta hp:300 spells:malign_gateway /\
+                     col:lightmagenta hp:300 spells:malign_gateway perm_ench:flight /\
                  harpy name:queen n_suf n_noc col:lightgreen hp:260 /\
                  manticore name:hardcore n_adj n_noc col:lightred hp:400",
                  "barnacled rune of zot"}
@@ -854,6 +854,7 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
             arena_sprint_ominous_countdown(data.time_left, data.between_rounds)
 
             if data.time_left <= 0 then
+                crawl.take_note("Round " .. data.round_id .. ".")
                 crawl.mpr("ROUND " .. data.round_id .. "!", "warning")
                 if data.round_id == 42 then
                     crawl.mpr("FINAL BOSS!", "warning")
@@ -941,6 +942,18 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
     end
 end
 
+-- Should return two values: the score, and false to indicate that we
+-- don't want to add the default score.
+function arena_sprint_score (won)
+    local points = dgn.persist.arena_style_points
+    local runes = you.num_runes()
+
+    if won and runes > 0 then
+        points = points * runes
+    end
+    return points, false
+end
+
 }}
 
 NAME:       arena_sprint
@@ -963,7 +976,6 @@ LROCKTILE:  wall_hall
             between_rounds = true,  -- Are we waiting for the next round?
             finished = false,       -- You somehow beat round 42
             monster_set = {},
-            style_points = 0,
             style_mult = 1,
             spawn_dir = ""          -- Which spawn points to use?
         },
@@ -984,6 +996,11 @@ LROCKTILE:  wall_hall
     })
 
     dgn.persist.arena_sprint_boss_set = arena_sprint_init_boss_table()
+
+    -- Storing this in dgn.persist rather than arena_marker.data so that
+    -- arena_sprint_score can access it.
+    dgn.persist.arena_style_points = 0
+    dgn.persist.calc_score = global_function("arena_sprint_score");
 
     lua_marker("{", arena_marker)
     lua_marker("{", portal_desc { centre_point = 1 })

@@ -8,6 +8,7 @@
 
 #include "externs.h"
 
+#include "act-iter.h"
 #include "arena.h"
 #include "beam.h"
 #include "colour.h"
@@ -25,6 +26,7 @@
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "terrain.h"
 #include "mgen_data.h"
@@ -42,6 +44,8 @@
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
+#include "ouch.h"
+#include "target.h"
 
 #include <algorithm>
 #include <queue>
@@ -354,17 +358,27 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 static monster* _do_split(monster* thing, coord_def & target)
 {
     // Create a new slime.
-    monster *new_slime = create_monster(mgen_data(MONS_SLIME_CREATURE,
-                                             thing->behaviour,
-                                             0,
-                                             0,
-                                             0,
-                                             target,
-                                             thing->foe,
-                                             MG_FORCE_PLACE));
+    mgen_data new_slime_data = mgen_data(thing->type,
+                                         thing->behaviour,
+                                         0,
+                                         0,
+                                         0,
+                                         target,
+                                         thing->foe,
+                                         MG_FORCE_PLACE);
+
+    // Don't explicitly announce the child slime coming into view if you
+    // saw the split that created it
+    if (you.can_see(thing))
+        new_slime_data.extra_flags |= MF_WAS_IN_VIEW;
+
+    monster *new_slime = create_monster(new_slime_data);
 
     if (!new_slime)
         return 0;
+
+    if (you.can_see(thing))
+        mprf("%s splits.", thing->name(DESC_A).c_str());
 
     // Inflict the new slime with any enchantments on the parent.
     _split_ench_durations(thing, new_slime);
@@ -372,9 +386,6 @@ static monster* _do_split(monster* thing, coord_def & target)
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
     // XXX copy summoner info
-
-    if (you.can_see(thing))
-        mprf("%s splits.", thing->name(DESC_A).c_str());
 
     int split_off = thing->number / 2;
     float max_per_blob = thing->max_hit_points / float(thing->number);
@@ -590,8 +601,8 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 // Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monster* thing)
 {
-     return (thing->asleep() || mons_is_wandering(thing)
-             || thing->foe == MHITNOT);
+    return (thing->asleep() || mons_is_wandering(thing)
+            || thing->foe == MHITNOT);
 }
 
 // Slime creatures cannot split or merge under these conditions.
@@ -780,8 +791,8 @@ static monster *_slime_split(monster* thing, bool force_split)
         }
     }
 
-   // No free squares.
-   return 0;
+    // No free squares.
+    return 0;
 }
 
 // See if a given slime creature can split or merge.
@@ -822,12 +833,139 @@ bool slime_creature_mutate(monster* slime)
     return monster_polymorph(slime, RANDOM_MONSTER);
 }
 
+bool _starcursed_split(monster* mon)
+{
+    if (!mon
+        || mon->number <= 1
+        || mon->type != MONS_STARCURSED_MASS)
+    {
+        return false;
+    }
+
+    const coord_def origin = mon->pos();
+
+    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    random_shuffle(compass_idx, compass_idx + 8);
+
+    // Anywhere we can place an offspring?
+    for (int i = 0; i < 8; ++i)
+    {
+        coord_def target = origin + Compass[compass_idx[i]];
+
+        if (mons_class_can_pass(MONS_STARCURSED_MASS, env.grid(target))
+            && !actor_at(target))
+        {
+            return _do_split(mon, target);
+        }
+    }
+
+    // No free squares.
+    return false;
+}
+
+void _starcursed_scream(monster* mon, actor* target)
+{
+    if (!target || !target->alive())
+        return;
+
+    // These monsters have too primitive a mind to be affected
+    if (!target->is_player() && mons_intel(target->as_monster()) <= I_INSECT)
+        return;
+
+    //Gather the chorus
+    vector<monster*> chorus;
+
+    for (actor_iterator ai(target->get_los()); ai; ++ai)
+    {
+        if (ai->is_monster())
+        {
+            monster* m = ai->as_monster();
+            if (m->type == MONS_STARCURSED_MASS)
+                chorus.push_back(m);
+        }
+    }
+
+    int n = chorus.size();
+    int dam = 0; int stun = 0;
+    string message;
+
+    dprf("Chorus size: %d", n);
+
+    if (n > 7)
+    {
+        message = "A cacophony of accursed wailing tears at your sanity!";
+        if (coinflip())
+            stun = 2;
+    }
+    else if (n > 4)
+    {
+        message = "A deafening chorus of shrieks assaults your mind!";
+        if (x_chance_in_y(1,3))
+            stun = 1;
+    }
+    else if (n > 1)
+        message = "A chorus of shrieks assaults your mind.";
+    else
+        message = "The starcursed mass shrieks in your mind.";
+
+    dam = 4 + random2(5) + random2(n * 3 / 2);
+
+    if (!target->is_player())
+    {
+        if (you.see_cell(target->pos()))
+        {
+            mprf(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
+                                                  : MSGCH_MONSTER_SPELL,
+                 "%s writhes in pain as voices assail %s mind.",
+                 target->name(DESC_THE).c_str(),
+                 target->pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+        target->hurt(mon, dam);
+    }
+    else
+    {
+        mpr(message, MSGCH_MONSTER_SPELL);
+        ouch(dam, mon->mindex(), KILLED_BY_BEAM, "accursed screaming");
+    }
+
+    if (stun && target->alive())
+        target->paralyse(mon, stun, "accursed screaming");
+
+    for (unsigned int i = 0; i < chorus.size(); ++i)
+        if (chorus[i]->alive())
+            chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
+}
+
+bool _will_starcursed_scream(monster* mon)
+{
+    vector<monster*> chorus;
+
+    for (actor_iterator ai(mon->get_los()); ai; ++ai)
+    {
+        if (ai->is_monster())
+        {
+            monster* m = ai->as_monster();
+            if (m->type == MONS_STARCURSED_MASS)
+            {
+                //Don't scream if any part of the chorus has a scream timeout
+                //(This prevents it being staggered into a bunch of mini-screams)
+                if (m->has_ench(ENCH_SCREAMED))
+                    return false;
+                else
+                    chorus.push_back(m);
+            }
+        }
+    }
+
+    return x_chance_in_y(1, chorus.size() + 1);
+}
+
 // Returns true if you resist the siren's call.
-// -- added equivalency for huldra
 static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70) > 0
-                      || you.cannot_act() || you.asleep());
+                      || you.cannot_act() || you.asleep()
+                      || you.clarity());
 
     if (!do_resist)
     {
@@ -1420,7 +1558,7 @@ struct tentacle_attack_constraints
             temp.path_distance = node.path_distance;
             temp.estimate = 0;
 
-            if (!in_bounds(temp.pos))
+            if (!in_bounds(temp.pos) || is_sanctuary(temp.pos))
                 continue;
 
             if (!base_monster->is_habitable(temp.pos))
@@ -1711,7 +1849,7 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     // Find the tentacle -> head path
     target_position current_target;
     current_target.target = base_position;
-/*    target_monster current_target;
+/*  target_monster current_target;
     current_target.target_mindex = headnum;
 */
 
@@ -1734,38 +1872,31 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     return true;
 }
 
-static void _collect_tentacles(int headnum,
+static void _collect_tentacles(monster* mons,
                                vector<monster_iterator> & tentacles)
 {
+    monster_type tentacle = mons_tentacle_child_type(mons);
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
     {
-         if (int (mi->number) == headnum)
-         {
-             if (mi->type == MONS_KRAKEN_TENTACLE)
-                 tentacles.push_back(mi);
-         }
+        if (int (mi->number) == mons->mindex() && mi->type == tentacle)
+            tentacles.push_back(mi);
     }
 }
 
-static void _purge_connectors(int tentacle_idx,
-                              bool (*valid_mons)(monster*))
+static void _purge_connectors(int tentacle_idx, monster_type mon_type)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (int (mi->number) == tentacle_idx)
+        if ((int) mi->number == tentacle_idx
+            && mi->type == mon_type)
         {
-            //if (mi->type == MONS_KRAKEN_TENTACLE_SEGMENT)
-            if (valid_mons(&menv[mi->mindex()]))
-            {
-                int hp = menv[mi->mindex()].hit_points;
-                if (hp > 0 && hp < menv[tentacle_idx].hit_points)
-                    menv[tentacle_idx].hit_points = hp;
+            int hp = menv[mi->mindex()].hit_points;
+            if (hp > 0 && hp < menv[tentacle_idx].hit_points)
+                menv[tentacle_idx].hit_points = hp;
 
-                monster_die(&env.mons[mi->mindex()],
-                        KILL_MISC, NON_MONSTER, true);
-            }
-
+            monster_die(&env.mons[mi->mindex()],
+                    KILL_MISC, NON_MONSTER, true);
         }
     }
 }
@@ -1809,19 +1940,6 @@ static void _collect_foe_positions(monster* mons,
             foe_positions.push_back(test->pos());
         }
     }
-}
-
-bool valid_kraken_connection(const monster* mons)
-{
-    return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mons->type == MONS_KRAKEN_TENTACLE
-            || mons_base_type(mons) == MONS_KRAKEN);
-}
-
-
-static bool _valid_kraken_segment(monster * mons)
-{
-    return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT);
 }
 
 static bool _valid_demonic_connection(monster* mons)
@@ -1885,11 +2003,9 @@ static int _collect_connection_data(monster* start_monster,
 
 void move_demon_tentacle(monster* tentacle)
 {
-    if (!tentacle
-        || tentacle->type != MONS_ELDRITCH_TENTACLE)
-    {
+    if (!tentacle || tentacle->type != MONS_ELDRITCH_TENTACLE)
         return;
-    }
+
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
     int tentacle_idx = tentacle->mindex();
@@ -1925,7 +2041,7 @@ void move_demon_tentacle(monster* tentacle)
 
     //bool retract_found = retract_pos.x == -1 && retract_pos.y == -1;
 
-    _purge_connectors(tentacle->mindex(), _valid_demonic_connection);
+    _purge_connectors(tentacle->mindex(), MONS_ELDRITCH_TENTACLE_SEGMENT);
 
     if (severed)
     {
@@ -1966,14 +2082,12 @@ void move_demon_tentacle(monster* tentacle)
     {
         // todo: set a random position?
 
-        //mprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
+        dprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
         random_shuffle(compass_idx, compass_idx + 8);
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
-            //coord_def test = old_pos;
-            //test.x++;
-            if (!in_bounds(test)
+            if (!in_bounds(test) || is_sanctuary(test)
                 || actor_at(test))
             {
                 continue;
@@ -1993,7 +2107,6 @@ void move_demon_tentacle(monster* tentacle)
                     || connection_data.find(test)->second.size() > 1))
             {
                 new_pos = test;
-//                mprf("start 0, escalated %d max %d", escalated, *probe->second.rbegin());
                 break;
             }
             else if (tentacle->is_habitable(test)
@@ -2051,24 +2164,22 @@ void move_demon_tentacle(monster* tentacle)
         mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y,
              old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
 
-//        mgrd(tentacle->pos()) = tentacle->mindex();
+//      mgrd(tentacle->pos()) = tentacle->mindex();
 
         // Is it ok to purge the tentacle here?
         monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
         return;
     }
 
-//    mprf("mindex %d vsisted %d", tentacle_idx, visited_count);
+//  mprf("mindex %d vsisted %d", tentacle_idx, visited_count);
     tentacle->check_redraw(old_pos);
     tentacle->apply_location_effects(old_pos);
 }
 
-
-
-void move_kraken_tentacles(monster* kraken)
+void move_child_tentacles(monster* mons)
 {
-    if (mons_base_type(kraken) != MONS_KRAKEN
-        || kraken->asleep())
+    if (!mons_is_tentacle_head(mons_base_type(mons))
+        || mons->asleep())
     {
         return;
     }
@@ -2076,19 +2187,17 @@ void move_kraken_tentacles(monster* kraken)
     bool no_foe = false;
 
     vector<coord_def> foe_positions;
-    _collect_foe_positions(kraken, foe_positions, _basic_sight_check);
+    _collect_foe_positions(mons, foe_positions, _basic_sight_check);
 
     //if (!kraken->near_foe())
     if (foe_positions.empty()
-        || kraken->behaviour == BEH_FLEE
-        || kraken->behaviour == BEH_WANDER)
+        || mons->behaviour == BEH_FLEE
+        || mons->behaviour == BEH_WANDER)
     {
         no_foe = true;
     }
     vector<monster_iterator> tentacles;
-    int headnum = kraken->mindex();
-
-    _collect_tentacles(headnum, tentacles);
+    _collect_tentacles(mons, tentacles);
 
     // Move each tentacle in turn
     for (unsigned i = 0; i < tentacles.size(); i++)
@@ -2097,14 +2206,12 @@ void move_kraken_tentacles(monster* kraken)
 
         if (!tentacle)
         {
-            mprf("missing tentacle in path");
+            dprf("Missing tentacle in path.");
             continue;
         }
 
         tentacle_connect_constraints connect_costs;
         map<coord_def, set<int> > connection_data;
-
-//        connect_costs.kraken = kraken;
 
         monster* current_mon = tentacle;
         int current_count = 0;
@@ -2123,11 +2230,12 @@ void move_kraken_tentacles(monster* kraken)
             int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
 
             if (next_idx != -1 && menv[next_idx].alive()
-                && (menv[next_idx].type == MONS_KRAKEN_TENTACLE_SEGMENT
-                    || mons_base_type(&menv[next_idx]) == MONS_KRAKEN))
+                && (menv[next_idx].is_child_tentacle_of(tentacle)
+                    || menv[next_idx].is_parent_monster_of(tentacle)))
             {
                 current_mon = &menv[next_idx];
-                if (!retract_found && current_mon->type == MONS_KRAKEN_TENTACLE_SEGMENT)
+                if (!retract_found
+                    && current_mon->is_child_tentacle_of(tentacle))
                 {
                     retract_pos = current_mon->pos();
                     retract_found = true;
@@ -2140,10 +2248,10 @@ void move_kraken_tentacles(monster* kraken)
 
         int tentacle_idx = tentacle->mindex();
 
-        _purge_connectors(tentacle_idx, _valid_kraken_segment);
+        _purge_connectors(tentacle_idx, mons_tentacle_child_type(tentacle));
 
         if (no_foe
-            && grid_distance(tentacle->pos(), kraken->pos()) == 1)
+            && grid_distance(tentacle->pos(), mons->pos()) == 1)
         {
             // Drop the tentacle if no enemies are in sight and it is
             // adjacent to the main body. This is to prevent players from
@@ -2157,20 +2265,37 @@ void move_kraken_tentacles(monster* kraken)
         bool path_found = false;
 
         tentacle_attack_constraints attack_constraints;
-        //attack_constraints.base_monster = kraken;
         attack_constraints.base_monster = tentacle;
         attack_constraints.max_string_distance = MAX_KRAKEN_TENTACLE_DIST;
         attack_constraints.connection_constraints = &connection_data;
         attack_constraints.target_positions = &foe_positions;
 
-        if (!no_foe)
+        //If this tentacle is constricting a creature, attempt to pull it back
+        //towards the head.
+        bool pull_constrictee = false;
+        actor* constrictee = NULL;
+        if (tentacle->is_constricting() && retract_found)
         {
-            path_found = _tentacle_pathfind(tentacle, attack_constraints, new_pos,
-                                            foe_positions,
-                                            current_count);
+            actor::constricting_t::const_iterator it = tentacle->constricting->begin();
+            constrictee = actor_by_mid(it->first);
+            if (grd(old_pos) >= DNGN_SHALLOW_WATER
+                && constrictee->is_habitable(old_pos))
+            {
+                pull_constrictee = true;
+            }
         }
 
-        if (no_foe || !path_found)
+        if (!no_foe && !pull_constrictee)
+        {
+            path_found = _tentacle_pathfind(
+                    tentacle,
+                    attack_constraints,
+                    new_pos,
+                    foe_positions,
+                    current_count);
+        }
+
+        if (no_foe || !path_found || pull_constrictee)
         {
             if (retract_found)
                 new_pos = retract_pos;
@@ -2199,25 +2324,38 @@ void move_kraken_tentacles(monster* kraken)
         mgrd(tentacle->pos()) = NON_MONSTER;
 
         // Why do I have to do this move? I don't get it.
-        // specifically, if tentacle isn't registered at its new position on mgrd
-        // the search fails (sometimes), Don't know why. -cao
+        // specifically, if tentacle isn't registered at its new position on
+        // mgrd the search fails (sometimes), Don't know why. -cao
         tentacle->set_position(new_pos);
         mgrd(tentacle->pos()) = tentacle->mindex();
+
+        if (pull_constrictee)
+        {
+            mprf("The tentacle pulls %s backwards!",
+                 constrictee->name(DESC_THE).c_str());
+
+            if (constrictee->as_player())
+                move_player_to_grid(old_pos, false, true);
+            else
+                constrictee->move_to_pos(old_pos);
+
+            // Interrupt stair travel and passwall.
+            if (constrictee->is_player())
+                stop_delay(true);
+        }
         tentacle->clear_far_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
-        bool connected = _try_tentacle_connect(new_pos, kraken->pos(),
-                                               tentacle_idx, kraken->mindex(),
-                                               connect_costs,
-                                               MONS_KRAKEN_TENTACLE_SEGMENT);
-
+        bool connected = _try_tentacle_connect(new_pos, mons->pos(),
+                                tentacle_idx, mons->mindex(),
+                                connect_costs,
+                                mons_tentacle_child_type(tentacle));
 
         // Can't connect, usually the head moved and invalidated our position
         // in some way. Should look into this more at some point -cao
         if (!connected)
         {
-            //mprf("CONNECT FAILED, PURGING TENTACLE");
             mgrd(tentacle->pos()) = tentacle->mindex();
             monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
 
@@ -2226,7 +2364,6 @@ void move_kraken_tentacles(monster* kraken)
 
         tentacle->check_redraw(old_pos);
         tentacle->apply_location_effects(old_pos);
-
     }
 }
 
@@ -2664,6 +2801,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_COLD_BREATH;
     // Intentional fallthrough
 
+    case MONS_APOCALYPSE_CRAB:
+        if (spell == SPELL_NO_SPELL)
+            spell = SPELL_CHAOS_BREATH;
+    // Intentional fallthrough
+
     // Dragon breath weapons:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
@@ -2692,6 +2834,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
             setup_mons_cast(mons, beem, spell);
 
             if (mons->type == MONS_FIRE_CRAB)
+            {
+                beem.is_big_cloud = true;
+                beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
+            }
+
+            if (mons->type == MONS_APOCALYPSE_CRAB)
             {
                 beem.is_big_cloud = true;
                 beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
@@ -2805,7 +2953,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.species == SP_MERFOLK || you.check_res_magic(100) > 0))
+                && (you.species == SP_MERFOLK
+                    || you.check_res_magic(100) > 0
+                    || you.clarity()))
             {
                 if (!did_resist)
                     canned_msg(MSG_YOU_RESIST);
@@ -2825,14 +2975,14 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (one_chance_in(5))
         {
-            if (you.visible_to(mons))
+            if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
             {
-                flash_view_delay(MAGENTA, 300);
+                targetter_los hitfunc(mons, LOS_SOLID);
+                flash_view_delay(MAGENTA, 300, &hitfunc);
                 simple_monster_message(mons, " pulses with an eldritch light!");
 
                 if (!is_sanctuary(you.pos())
-                    // Doesn't work through glass, but you still see pulses.
-                    && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+                        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
                 {
                     int num_mutations = 2 + random2(3);
                     for (int i = 0; i < num_mutations; ++i)
@@ -2871,6 +3021,17 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
             used = true;
         }
+        break;
+
+    case MONS_STARCURSED_MASS:
+        if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3))
+            _starcursed_split(mons);
+
+        if (!mons_is_confused(mons)
+                && !is_sanctuary(mons->pos()) && !is_sanctuary(beem.target)
+                && _will_starcursed_scream(mons)
+                && coinflip())
+            _starcursed_scream(mons, actor_at(beem.target));
         break;
 
     default:
@@ -3223,5 +3384,130 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
             thread = thread->last;
         }
         env.level_state |= LSTATE_GLOW_MOLD;
+    }
+}
+
+void ancient_zyme_sicken(monster* mons)
+{
+    if (is_sanctuary(mons->pos()))
+        return;
+
+    if (!is_sanctuary(you.pos())
+        && you.res_rotting() <= 0
+        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+    {
+        if (!you.disease)
+        {
+            mpr("You feel yourself grow ill in the presence of the ancient zyme.", MSGCH_WARN);
+            you.sicken(50 + random2(50));
+        }
+        else if (x_chance_in_y(you.time_taken, 60))
+            you.sicken(35 + random2(50));
+
+        if (x_chance_in_y(you.time_taken, 100))
+        {
+            mpr("The zyme's presence inflicts a toll on your body.");
+            you.drain_stat((coinflip() ? STAT_STR : STAT_DEX), 1, mons);
+        }
+
+    }
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        monster *m = monster_at(*ri);
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+            && !is_sanctuary(*ri))
+        {
+            m->sicken(2 * you.time_taken);
+        }
+    }
+}
+
+static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
+{
+    // Combine enchantment durations.
+    _merge_ench_durations(initial_mass, merge_to);
+
+    merge_to->number += initial_mass->number;
+    merge_to->max_hit_points += initial_mass->max_hit_points;
+    merge_to->hit_points += initial_mass->hit_points;
+
+    // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
+    // passed on if the merged slime subsequently splits.  Hopefully
+    // this won't do anything weird.
+    merge_to->flags |= initial_mass->flags;
+
+    // Overwrite the state of the slime getting merged into, because it
+    // might have been resting or something.
+    merge_to->behaviour = initial_mass->behaviour;
+    merge_to->foe = initial_mass->foe;
+
+    behaviour_event(merge_to, ME_EVAL);
+
+    // Have to 'kill' the slime doing the merging.
+    monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
+
+    return true;
+}
+
+void starcursed_merge(monster* mon, bool forced)
+{
+    //Find a random adjacent starcursed mass
+    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    random_shuffle(compass_idx, compass_idx + 8);
+
+    for (int i = 0; i < 8; ++i)
+    {
+        coord_def target = mon->pos() + Compass[compass_idx[i]];
+        monster* mergee = monster_at(target);
+        if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
+        {
+            if (forced && you.can_see(mon))
+                mpr("The starcursed mass shudders and is absorbed by its neighbour.");
+            if (_do_merge_masses(mon, mergee))
+                return;
+        }
+    }
+
+    // If there was nothing adjacent to merge with, at least try to move toward
+    // another starcursed mass
+    for (distance_iterator di(mon->pos(), true, true, 8); di; ++di)
+    {
+        monster* ally = monster_at(*di);
+        if (ally && ally->alive() && ally->type == MONS_STARCURSED_MASS
+            && mon->can_see(ally))
+        {
+            bool moved = false;
+
+            coord_def sgn = (*di - mon->pos()).sgn();
+            if (mon_can_move_to_pos(mon, sgn))
+            {
+                mon->move_to_pos(mon->pos()+sgn, false);
+                moved = true;
+            }
+            else if (abs(sgn.x) != 0)
+            {
+                coord_def dx(sgn.x, 0);
+                if (mon_can_move_to_pos(mon, dx))
+                {
+                    mon->move_to_pos(mon->pos()+dx, false);
+                    moved = true;
+                }
+            }
+            else if (abs(sgn.y) != 0)
+            {
+                coord_def dy(0, sgn.y);
+                if (mon_can_move_to_pos(mon, dy))
+                {
+                    mon->move_to_pos(mon->pos()+dy, false);
+                    moved = true;
+                }
+            }
+
+            if (moved)
+            {
+                mpr("The starcursed mass shudders and withdraws towards its neighbour.");
+                mon->speed_increment -= 10;
+            }
+        }
     }
 }

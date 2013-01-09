@@ -183,6 +183,12 @@ enum KEYS
     CK_CTRL_PGDN,
     CK_CTRL_TAB,
 
+#ifdef TOUCH_UI
+    // extra numpad keys for zoom
+    CK_NUMPAD_PLUS,
+    CK_NUMPAD_MINUS,
+#endif
+
     // Mouse codes.
     CK_MOUSE_MOVE  = -10009,
     CK_MOUSE_CMD,

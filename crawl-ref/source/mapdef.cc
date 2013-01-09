@@ -68,7 +68,7 @@ static const char *map_section_names[] = {
 static string_set Map_Flag_Names;
 
 const char *traversable_glyphs =
-    ".+=w@{}()[]<>BC^~TUVY$%*|Odefghijk0123456789";
+    ".+=w@{}()[]<>BC^TUVY$%*|Odefghijk0123456789";
 
 // atoi that rejects strings containing non-numeric trailing characters.
 // returns defval for invalid input.
@@ -94,6 +94,14 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
     return (weight == TAG_UNFOUND? defweight : weight);
+}
+
+void clear_subvault_stack(void)
+{
+    env.new_subvault_names.clear();
+    env.new_subvault_tags.clear();
+    env.new_used_subvault_names.clear();
+    env.new_used_subvault_tags.clear();
 }
 
 void map_register_flag(const string &flag)
@@ -2184,10 +2192,14 @@ bool map_def::map_already_used() const
     return (you.uniq_map_names.find(name) != you.uniq_map_names.end()
             || (env.level_uniq_maps.find(name) !=
                 env.level_uniq_maps.end())
+            || (env.new_used_subvault_names.find(name) !=
+                env.new_used_subvault_names.end())
             || has_any_tag(you.uniq_map_tags.begin(),
                            you.uniq_map_tags.end())
             || has_any_tag(env.level_uniq_map_tags.begin(),
-                           env.level_uniq_map_tags.end()));
+                           env.level_uniq_map_tags.end())
+            || has_any_tag(env.new_used_subvault_tags.begin(),
+                           env.new_used_subvault_tags.end()));
 }
 
 bool map_def::valid_item_array_glyph(int gly)
@@ -3145,6 +3157,37 @@ string map_def::subvault_from_tagstring(const string &sub)
     return "";
 }
 
+static void _register_subvault(const string name, const string spaced_tags)
+{
+    if (spaced_tags.find(" allow_dup ") == string::npos
+        || spaced_tags.find(" luniq ") != string::npos)
+    {
+        env.new_used_subvault_names.insert(name);
+    }
+
+    vector<string> tags = split_string(" ", spaced_tags);
+    for (int t = 0, ntags = tags.size(); t < ntags; t++)
+    {
+        const string &tag = tags[t];
+        if (tag.find("uniq_") == 0 || tag.find("luniq_") == 0)
+            env.new_used_subvault_tags.insert(tag);
+    }
+}
+
+static void _reset_subvault_stack(const int reg_stack)
+{
+    env.new_subvault_names.resize(reg_stack);
+    env.new_subvault_tags.resize(reg_stack);
+
+    env.new_used_subvault_names.clear();
+    env.new_used_subvault_tags.clear();
+    for (int i = 0; i < reg_stack; i++)
+    {
+        _register_subvault(env.new_subvault_names[i],
+                           env.new_subvault_tags[i]);
+    }
+}
+
 string map_def::apply_subvault(string_spec &spec)
 {
     // Find bounding box for key glyphs
@@ -3163,6 +3206,7 @@ string map_def::apply_subvault(string_spec &spec)
     // Remember the subvault registration pointer, so we can clear it.
     const int reg_stack = env.new_subvault_names.size();
     ASSERT(reg_stack == (int)env.new_subvault_tags.size());
+    ASSERT(reg_stack >= (int)env.new_used_subvault_names.size());
 
     const int max_tries = 100;
     int ntries = 0;
@@ -3173,8 +3217,7 @@ string map_def::apply_subvault(string_spec &spec)
         // Each iteration, restore tags and names.  This is because this vault
         // may successfully load a subvault (registering its tag and name), but
         // then itself fail.
-        env.new_subvault_names.resize(reg_stack);
-        env.new_subvault_tags.resize(reg_stack);
+        _reset_subvault_stack(reg_stack);
 
         const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
@@ -3199,12 +3242,13 @@ string map_def::apply_subvault(string_spec &spec)
         env.new_subvault_names.push_back(vault.name);
         env.new_subvault_tags.push_back(vault.tags);
 
+        _register_subvault(vault.name, vault.tags);
+
         return "";
     }
 
     // Failure, drop subvault registrations.
-    env.new_subvault_names.resize(reg_stack);
-    env.new_subvault_tags.resize(reg_stack);
+    _reset_subvault_stack(reg_stack);
 
     return (make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                          tag.c_str(), tl.x, tl.y, br.x, br.y));
@@ -4000,7 +4044,7 @@ mons_spec mons_list::get_slime_spec(const string &name) const
         mprf(MSGCH_DIAGNOSTICS, "Slime spec wants invalid size '%s'",
              prefix.c_str());
 #endif
-     }
+    }
 
     return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
 }
@@ -4382,7 +4426,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "dexterity",
         "intelligence",
         "ponderousness",
-        "levitation",
+        "flying",
         "magic_resistance",
         "protection",
         "stealth",

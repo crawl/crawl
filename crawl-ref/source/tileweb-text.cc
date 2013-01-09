@@ -172,19 +172,23 @@ void WebTextArea::send(bool force)
         {
             if (!sending)
             {
-                tiles.write_message("{msg:'txt',id:'%s'",
+                tiles.write_message("{\"msg\":\"txt\",\"id\":\"%s\"",
                                     m_client_side_name.c_str());
                 if (force)
-                    tiles.write_message(",clear:1");
-                tiles.write_message(",lines:{");
+                    tiles.write_message(",\"clear\":true");
+                tiles.write_message(",\"lines\":{");
                 sending = true;
             }
 
-            tiles.write_message("%u:\"%s\",", y, html.c_str());
+            tiles.json_write_comma();
+            tiles.write_message("\"%u\":\"%s\"", y, html.c_str());
         }
     }
     if (sending)
-        tiles.send_message("}}");
+    {
+        tiles.write_message("}}");
+        tiles.finish_message();
+    }
 }
 
 void WebTextArea::on_resize()

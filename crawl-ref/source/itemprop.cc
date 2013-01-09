@@ -290,7 +290,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17, 250,  8,
         SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 10 },
-    { WPN_EXECUTIONERS_AXE,  "executioner's axe", 18, -6, 20, 280,  9,
+    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 20, 280,  9,
         SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 2 },
 
@@ -730,6 +730,12 @@ static iflags_t _full_ident_mask(const item_def& item)
         flagset = 0;
         break;
     case OBJ_BOOKS:
+        if (item.sub_type == BOOK_DESTRUCTION)
+        {
+            flagset = 0;
+            break;
+        }
+        // Intentional fall-through.
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
         flagset = ISFLAG_KNOW_TYPE;
@@ -1604,72 +1610,24 @@ bool is_blessed_convertible(const item_def &item)
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
 
-bool convert2good(item_def &item, bool allow_blessed)
+bool convert2good(item_def &item)
 {
     if (item.base_type != OBJ_WEAPONS)
         return false;
 
     switch (item.sub_type)
     {
-    default:
-        return false;
+    default: return false;
 
-    case WPN_FALCHION:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_FALCHION;
-        break;
-
-    case WPN_LONG_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_LONG_SWORD;
-        break;
-
-    case WPN_SCIMITAR:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_SCIMITAR;
-        break;
-
-    case WPN_DEMON_BLADE:
-        if (!allow_blessed)
-            item.sub_type = WPN_SCIMITAR;
-        else
-            item.sub_type = WPN_EUDEMON_BLADE;
-        break;
-
-    case WPN_DOUBLE_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_DOUBLE_SWORD;
-        break;
-
-    case WPN_GREAT_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_GREAT_SWORD;
-        break;
-
-    case WPN_TRIPLE_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_TRIPLE_SWORD;
-        break;
-
-    case WPN_DEMON_WHIP:
-        if (!allow_blessed)
-            item.sub_type = WPN_WHIP;
-        else
-            item.sub_type = WPN_SACRED_SCOURGE;
-        break;
-
-    case WPN_DEMON_TRIDENT:
-        if (!allow_blessed)
-            item.sub_type = WPN_TRIDENT;
-        else
-            item.sub_type = WPN_TRISHULA;
-        break;
+    case WPN_FALCHION:      item.sub_type = WPN_BLESSED_FALCHION; break;
+    case WPN_LONG_SWORD:    item.sub_type = WPN_BLESSED_LONG_SWORD; break;
+    case WPN_SCIMITAR:      item.sub_type = WPN_BLESSED_SCIMITAR; break;
+    case WPN_DEMON_BLADE:   item.sub_type = WPN_EUDEMON_BLADE; break;
+    case WPN_DOUBLE_SWORD:  item.sub_type = WPN_BLESSED_DOUBLE_SWORD; break;
+    case WPN_GREAT_SWORD:   item.sub_type = WPN_BLESSED_GREAT_SWORD; break;
+    case WPN_TRIPLE_SWORD:  item.sub_type = WPN_BLESSED_TRIPLE_SWORD; break;
+    case WPN_DEMON_WHIP:    item.sub_type = WPN_SACRED_SCOURGE; break;
+    case WPN_DEMON_TRIDENT: item.sub_type = WPN_TRISHULA; break;
     }
 
     if (is_blessed(item))
@@ -1685,44 +1643,17 @@ bool convert2bad(item_def &item)
 
     switch (item.sub_type)
     {
-    default:
-        return false;
+    default: return false;
 
-    case WPN_BLESSED_FALCHION:
-        item.sub_type = WPN_FALCHION;
-        break;
-
-    case WPN_BLESSED_LONG_SWORD:
-        item.sub_type = WPN_LONG_SWORD;
-        break;
-
-    case WPN_BLESSED_SCIMITAR:
-        item.sub_type = WPN_SCIMITAR;
-        break;
-
-    case WPN_EUDEMON_BLADE:
-        item.sub_type = WPN_DEMON_BLADE;
-        break;
-
-    case WPN_BLESSED_DOUBLE_SWORD:
-        item.sub_type = WPN_DOUBLE_SWORD;
-        break;
-
-    case WPN_BLESSED_GREAT_SWORD:
-        item.sub_type = WPN_GREAT_SWORD;
-        break;
-
-    case WPN_BLESSED_TRIPLE_SWORD:
-        item.sub_type = WPN_TRIPLE_SWORD;
-        break;
-
-    case WPN_SACRED_SCOURGE:
-        item.sub_type = WPN_DEMON_WHIP;
-        break;
-
-    case WPN_TRISHULA:
-        item.sub_type = WPN_DEMON_TRIDENT;
-        break;
+    case WPN_BLESSED_FALCHION:     item.sub_type = WPN_FALCHION; break;
+    case WPN_BLESSED_LONG_SWORD:   item.sub_type = WPN_LONG_SWORD; break;
+    case WPN_BLESSED_SCIMITAR:     item.sub_type = WPN_SCIMITAR; break;
+    case WPN_EUDEMON_BLADE:        item.sub_type = WPN_DEMON_BLADE; break;
+    case WPN_BLESSED_DOUBLE_SWORD: item.sub_type = WPN_DOUBLE_SWORD; break;
+    case WPN_BLESSED_GREAT_SWORD:  item.sub_type = WPN_GREAT_SWORD; break;
+    case WPN_BLESSED_TRIPLE_SWORD: item.sub_type = WPN_TRIPLE_SWORD; break;
+    case WPN_SACRED_SCOURGE:       item.sub_type = WPN_DEMON_WHIP; break;
+    case WPN_TRISHULA:             item.sub_type = WPN_DEMON_TRIDENT; break;
     }
 
     return true;
@@ -1799,6 +1730,9 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
     if (get_item_slot(item) != slot)
         return true;
 
+    if (item.base_type == OBJ_WEAPONS)
+        return true;
+
     if (item.base_type == OBJ_ARMOUR || !_item_known_uncursed(item))
         return false;
 
@@ -1810,11 +1744,7 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
                 || item.sub_type == AMU_GUARDIAN_SPIRIT
                 || (item.sub_type == RING_MAGICAL_POWER && !swap_in));
     }
-
-    const brand_type brand = get_weapon_brand(item);
-    return (brand != SPWPN_DISTORTION
-           && (brand != SPWPN_VAMPIRICISM || you.is_undead != US_ALIVE)
-           && (brand != SPWPN_HOLY_WRATH || you.is_undead == US_ALIVE));
+    return true;
 }
 
 static bool _item_is_swappable(const item_def &item, bool swap_in)
@@ -1900,14 +1830,6 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     sk = range_skill(item);
     if (sk != SK_THROWING)
         skills.insert(sk);
-
-    if (item.base_type == OBJ_RODS && item_type_known(item))
-    {
-        int sp = 0;
-        while (sp < SPELLBOOK_SIZE && is_valid_spell_in_book(item, sp))
-            if (which_spell_in_book(item, sp++) == SPELL_CONDENSATION_SHIELD)
-                skills.insert(SK_SHIELDS);
-    }
 
     return !skills.empty();
 }
@@ -2094,11 +2016,6 @@ bool item_is_horn_of_geryon(const item_def &item)
 {
     return (item.base_type == OBJ_MISCELLANY
             && item.sub_type == MISC_HORN_OF_GERYON);
-}
-
-bool item_is_corpse(const item_def &item)
-{
-    return (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
 }
 
 bool item_is_spellbook(const item_def &item)
@@ -2567,7 +2484,8 @@ int property(const item_def &item, int prop_type)
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
         {
-            switch (prop_type) {
+            switch (prop_type)
+            {
             case PWPN_DAMAGE:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].dam
                         + artefact_wpn_property(item, ARTP_BASE_DAM));
@@ -2625,7 +2543,7 @@ bool gives_ability(const item_def &item)
         break;
     case OBJ_JEWELLERY:
         if (item.sub_type == RING_TELEPORTATION
-            || item.sub_type == RING_LEVITATION
+            || item.sub_type == RING_FLIGHT
             || item.sub_type == RING_INVISIBILITY
             || item.sub_type == AMU_RAGE)
         {
@@ -2639,7 +2557,7 @@ bool gives_ability(const item_def &item)
             return false;
         const special_armour_type ego = get_armour_ego_type(item);
 
-        if (ego == SPARM_DARKNESS || ego == SPARM_LEVITATION)
+        if (ego == SPARM_DARKNESS || ego == SPARM_FLYING)
             return true;
         break;
     }
@@ -2654,6 +2572,11 @@ bool gives_ability(const item_def &item)
     for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
         if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
             return true;
+
+#if TAG_MAJOR_VERSION == 34
+    if (artefact_wpn_property(item, ARTP_FOG))
+        return true;
+#endif
 
     return false;
 }

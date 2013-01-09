@@ -399,6 +399,9 @@ static void _check_stop_train()
     _check_spell_skills();
     _check_abil_skills();
 
+    if (you.manual_skill != SK_NONE)
+        you.stop_train.erase(you.manual_skill);
+
     if (you.stop_train.empty())
         return;
 
@@ -718,7 +721,10 @@ static bool _level_up_check(skill_type sk, bool simu)
     {
         you.training[sk] = 0;
         if (!simu)
+        {
             you.train[sk] = 0;
+            you.train_alt[sk] = 0;
+        }
         return true;
     }
 

@@ -545,6 +545,11 @@ ancient lich
 A lich who, having existed for countless centuries, has grown almost
 unimaginably powerful through the study of dark magic.
 %%%%
+ancient zyme
+
+A nexus of sentient cancer and disease, borne aloft perhaps by malice alone.
+Its nature inflicts withering illness on all living beings in its presence.
+%%%%
 angel
 
 A divine warrior of the Shining One, it is a towering winged figure of
@@ -560,6 +565,12 @@ apis
 
 A placid, sacred bull of Elyvilon. Beware, evildoers, as it will surely turn on
 you!
+%%%%
+apocalypse crab
+
+An opalescent crab with jet black eyes. A distant relative of the fire crab,
+the rumors claim that this species is waiting for the end of time. The
+chaotic mists effusing from its mandible are hardly suggestive of waiting.
 %%%%
 azure jelly
 
@@ -622,11 +633,6 @@ A scale-covered humanoid with a reptilian tail and small wings.
 black mamba
 
 A large and astonishingly fast tropical snake whose bite bears a deadly venom.
-%%%%
-blessed toe
-
-A sacred relic from the body of a pious saint. It floats through the air and
-shines with a divine light.
 %%%%
 blink frog
 
@@ -882,12 +888,6 @@ arcane abilities of destruction, summoning and banishment.
 deep elf summoner
 
 This deep elf is skilled in the summoning of small demons and creatures.
-%%%%
-deep elf watchman
-
-A battle-scarred deep elf soldier. It eyes you warily, as though determined to
-keep you from gaining entry to the place it guards, and it looks well prepared
-to do so with strong weapons and magic.
 %%%%
 deep dwarf
 
@@ -1700,6 +1700,10 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie green glow.
 %%%%
+lurking horror
+
+A formless mass of energy. It seems to stop moving when you look at it.
+%%%%
 macabre mass
 
 A fused and twisted collection of body parts, weakly animated by necromancy. It
@@ -1768,13 +1772,6 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with fearsome claws and flames
 licking out from its toothy maw.
-%%%%
-# Orb of Zot special
-monstrous item mimic
-
-This mimic chose nothing else to masquerade as but the fabled Orb of Zot. Since
-it was able to successfully assume its appearance and stay here, saying it
-might be deadly is an understatement.
 %%%%
 moth
 
@@ -2342,6 +2339,10 @@ soul eater
 This demon looks like a malignantly shifting shadow gliding through the air. It
 radiates an intense aura of negative force.
 %%%%
+spatial maelstrom
+
+A malevolent rift in reality.
+%%%%
 spatial vortex
 
 A crazily shifting twist in the fabric of reality.
@@ -2416,6 +2417,26 @@ spriggan rider
 Mounted on giant fireflies, these riders make sure no one who dares to intrude
 on the spriggan forests and cairns will be able to just walk away.
 %%%%
+starcursed mass
+
+An mass of stellar detritus that glows with the sickly putrescence of a
+dying star, forever shrieking soundlessly in a voice beyond mortal grasp.
+Its form quivers and undulates constantly, dividing spontaneously and then
+withdrawing when threatened. While the voice of even a single one is
+unsettling, in chorus, their screams can overwhelm the minds of even the
+bravest warriors, leaving them stunned and helpless.
+%%%%
+starspawn tentacle
+
+The writhing appendage of a tentacled starspawn, capable of grasping nearly
+any prey and dragging it back to be devoured. Any damage dealt to it hurts
+the whole creature.
+%%%%
+starspawn tentacle segment
+
+A sinuous length of an extended starspawn tentacle. Any damage dealt to it
+hurts the whole creature.
+%%%%
 statue
 
 At first glance, this piece of sculpted granite appears inert. The red glow
@@ -2472,7 +2493,7 @@ break into a frenzied dance.
 %%%%
 tentacle
 
-This mighty tentacle is a part of a kraken. Any damage dealt to it hurts the
+This mighty tentacle is part of a kraken. Any damage dealt to it hurts the
 whole creature.
 %%%%
 tentacle segment
@@ -2484,10 +2505,20 @@ tentacled monstrosity
 
 A writhing mass of tentacles, all covered in putrid mucus.
 %%%%
+tentacled starspawn
+
+A lumbering maw shrouded in a mass of sinuous tentacles. Every now and again,
+one slithers out to drag unfortunate prey back into its waiting gullet.
+%%%%
 terrified wizard
 
 This guy has been caught by magic-haters, and is going to be sacrificed on the
 altar of Trog.
+%%%%
+thrashing horror
+
+A seething mass of yellow flesh. It thrashes erratically, sometimes devouring
+friend and foe alike.
 %%%%
 titan
 
@@ -2663,9 +2694,9 @@ hunger for life essence, on which it feeds.
 %%%%
 wretched star
 
-A conflux of unearthly light and energy, awash in unnatural colours and
-strange forms no normal being was meant to perceive. Merely being near it
-fills your body with the disorder of the Abyss.
+A conflux of unearthly light and energy, awash in unnatural colours and strange
+forms no normal being was meant to perceive. Merely being near it fills your
+body with the disorder of the Abyss.
 %%%%
 wyvern
 
@@ -3184,13 +3215,6 @@ sacrificial human
 From the look of things, she was supposed to be sacrificed in some
 demon-summoning ritual.
 %%%%
-shadowy statue
-
-Made of some black lusterless stone, this statue seems to be the focal point
-for swirling shadows that permeate this room. They seem to be more substantial
-than your usual half-light, so it might be a good idea to blow the statue to
-smithereens before the shadows turn fully real.
-%%%%
 sickly siren
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
@@ -3206,20 +3230,9 @@ Since when is having flesh a requirement to be a master archer? These skeletal
 fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
 only good for a supply of sinew for bowstrings anyway.
 %%%%
-snail statue
-
-This idol to the god Cheibriados has the odd property of turning the ground in
-its presence into difficult-to-slog-through mud.
-%%%%
 soapberry tree
 
 <apple tree>
-%%%%
-spearthrower statue
-
-This statue bristles with sharp shards of green crystal that sparkle with every
-gleam of light. The shards seem to be in motion, migrating to form long spears
-of crystal that the statue can shoot through interlopers.
 %%%%
 spooky statue
 

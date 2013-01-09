@@ -1,11 +1,30 @@
 // TODO: Generate this automatically from enum.h?
 define(function () {
-    var exports = {};
+    var exports = {}, val;
+    // Various constants
+    exports.gxm = 80;
+    exports.gym = 70;
+    exports.stat_width = 42;
+
     // UI States (tileweb.h)
     exports.ui = {};
     exports.ui.NORMAL   = 0;
     exports.ui.CRT      = 1;
     exports.ui.VIEW_MAP = 2;
+
+    // Mouse modes
+    val = 0;
+    exports.mouse_mode = {};
+    exports.mouse_mode.NORMAL = val++;
+    exports.mouse_mode.COMMAND = val++;
+    exports.mouse_mode.TARGET = val++;
+    exports.mouse_mode.TARGET_DIR = val++;
+    exports.mouse_mode.TARGET_PATH = val++;
+    exports.mouse_mode.MORE = val++;
+    exports.mouse_mode.MACRO = val++;
+    exports.mouse_mode.PROMPT = val++;
+    exports.mouse_mode.YESNO = val++;
+    exports.mouse_mode.MAX = val++;
 
     // Cursors
     exports.CURSOR_MOUSE = 0;
@@ -18,6 +37,29 @@ define(function () {
     exports.HALO_RANGE = 1;
     exports.HALO_MONSTER = 2;
     exports.HALO_UMBRA = 3;
+
+    // equipment_type
+    exports.equip = {};
+    val = 0;
+    exports.equip.WEAPON = val++;
+    exports.equip.CLOAK = val++;
+    exports.equip.HELMET = val++;
+    exports.equip.GLOVES = val++;
+    exports.equip.BOOTS = val++;
+    exports.equip.SHIELD = val++;
+    exports.equip.BODY_ARMOUR = val++;
+    exports.equip.LEFT_RING = val++;
+    exports.equip.RIGHT_RING = val++;
+    exports.equip.AMULET = val++;
+    exports.equip.RING_ONE = val++;
+    exports.equip.RING_TWO = val++;
+    exports.equip.RING_THREE = val++;
+    exports.equip.RING_FOUR = val++;
+    exports.equip.RING_FIVE = val++;
+    exports.equip.RING_SIX = val++;
+    exports.equip.RING_SEVEN = val++;
+    exports.equip.RING_EIGHT = val++;
+    exports.equip.NUM_EQUIP = val++;
 
     // Tile flags.
     // Mostly this complicated because they need more than 32 bits.
@@ -220,7 +262,7 @@ define(function () {
     mf.PRESELECTED      = 0x4000;
     exports.menu_flag = mf;
 
-    var val = 0;
+    val = 0;
     exports.CHATTR = {};
     exports.CHATTR.NORMAL = val++;
     exports.CHATTR.STANDOUT = val++;
@@ -259,6 +301,14 @@ define(function () {
     exports.MF_MAX = val++;
 
     exports.MF_SKIP = val++;
+
+    exports.reverse_lookup = function (e, value) {
+        for (var prop in e)
+        {
+            if (e[prop] == value)
+                return prop;
+        }
+    };
 
     return exports;
 });

@@ -50,7 +50,7 @@ bool is_dumpable_artefact(const item_def &item, bool verbose);
 string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool noquote = false);
 
-string god_title(god_type which_god, species_type which_species);
+string god_title(god_type which_god, species_type which_species, int piety);
 void describe_god(god_type which_god, bool give_title);
 
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
@@ -89,10 +89,8 @@ string get_command_description(const command_type cmd, bool terse);
 void print_description(const string &desc);
 void print_description(const describe_info &inf);
 
-void trim_randart_inscrip(item_def& item);
 void trim_god_gift_inscrip(item_def& item);
-string artefact_auto_inscription(const item_def& item);
-void add_autoinscription(item_def &item);
+string artefact_inscription(const item_def& item);
 void add_inscription(item_def &item, string inscrip);
 
 string trap_name(trap_type trap);

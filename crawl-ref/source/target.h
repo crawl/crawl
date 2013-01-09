@@ -27,6 +27,7 @@ public:
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
     virtual bool can_affect_outside_range();
+    virtual bool can_affect_walls();
 
     virtual aff_type is_affected(coord_def loc) = 0;
 protected:
@@ -97,6 +98,7 @@ public:
     targetter_fragment(const actor *act, int power, int range = LOS_RADIUS);
     bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
+    bool can_affect_walls();
 private:
     int pow;
 };

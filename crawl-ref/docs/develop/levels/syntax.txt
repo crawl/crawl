@@ -175,10 +175,11 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           or minivault, so you can control at what depths your vault gets
           placed.
 
-          A simple DEPTH: declaration that does not specify a branch
-          applies to all branches. A map declared with depth 7-20 could
-          be used in the Lair, for instance. (Lair:1 will be treated as
-          a depth of 12 if the Lair entrance is on D:11.)
+          A simple DEPTH: declaration that does not specify a branch applies
+          to all branches. A map declared with depth 7-20 could be used in the
+          Lair, for instance (Lair:1 will be treated as a depth of 12 if the
+          Lair entrance is on D:11). In general, you should avoid using such
+          unconstrained DEPTHs unless you know what you are doing.
 
           You can constrain a map by branch:
 

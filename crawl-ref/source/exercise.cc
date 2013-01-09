@@ -24,7 +24,8 @@ skill_type abil_skill(ability_type abil)
     case ABIL_EVOKE_BLINK:
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
-    case ABIL_EVOKE_LEVITATE:
+    case ABIL_EVOKE_FLIGHT:
+    case ABIL_EVOKE_FOG:
         return SK_EVOCATIONS;
 
     case ABIL_NEMELEX_DRAW_ONE:
@@ -97,7 +98,8 @@ static int _abil_degree(ability_type abil)
     case ABIL_EVOKE_BLINK:
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
-    case ABIL_EVOKE_LEVITATE:
+    case ABIL_EVOKE_FLIGHT:
+    case ABIL_EVOKE_FOG:
         return 1;
 
     case ABIL_NEMELEX_DRAW_ONE:

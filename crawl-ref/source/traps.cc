@@ -126,12 +126,6 @@ void trap_def::prepare_ammo(int charges)
     case TRAP_SPEAR:
         ammo_qty = 2 + random2avg(6, 3);
         break;
-    case TRAP_ALARM:
-        ammo_qty = 2 + random2(4);
-        // Zotdef: alarm traps have practically unlimited ammo
-        if (crawl_state.game_is_zotdef())
-            ammo_qty = 3276; // *10, stored as short
-        break;
     case TRAP_GOLUBRIA:
         // really, turns until it vanishes
         ammo_qty = 30 + random2(20);
@@ -246,14 +240,10 @@ bool trap_def::is_safe(actor* act) const
     if (!act->is_player())
         return false;
 
-    // No prompt (teleport traps are ineffective if
-    // wearing an amulet of stasis)
-    if (type == TRAP_TELEPORT
-        && (player_effect_stasis(false)
-            || player_effect_notele(false)))
-    {
+    // No prompt (teleport traps are ineffective if wearing an amulet of
+    // stasis or a -TELE item)
+    if (type == TRAP_TELEPORT && you.no_tele(false))
         return true;
-    }
 
     if (!is_known(act))
         return false;
@@ -265,14 +255,14 @@ bool trap_def::is_safe(actor* act) const
     }
 
     #ifdef CLUA_BINDINGS
-     // Prompt for any trap where you might not have enough hp
-     // as defined in init.txt (see trapwalk.lua)
-     if (clua.callbooleanfn(false, "ch_cross_trap", "s", name().c_str()))
-         return true;
+    // Prompt for any trap where you might not have enough hp
+    // as defined in init.txt (see trapwalk.lua)
+    if (clua.callbooleanfn(false, "ch_cross_trap", "s", name().c_str()))
+        return true;
 
 #endif
 
-     return false;
+    return false;
 }
 
 // Returns the number of a net on a given square.
@@ -360,8 +350,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         return;
     }
 
-    bool mon_flies = mon->flight_mode() == FL_FLY;
-    if (mon_flies && (!mons_is_confused(mon) || one_chance_in(3)))
+    if (mon->flight_mode() && (!mons_is_confused(mon) || one_chance_in(3)))
     {
         simple_monster_message(mon, " darts out from under the net!");
         return;
@@ -380,7 +369,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         else
             simple_monster_message(mon, " is caught in the net!");
 
-        if (mon_flies)
+        if (mon->flight_mode() == FL_WINGED)
         {
             simple_monster_message(mon, " falls like a stone!");
             mons_check_pool(mon, mon->pos(), pbolt.killer(), pbolt.beam_source);
@@ -393,7 +382,7 @@ bool player_caught_in_net()
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return false;
 
-    if (you.flight_mode() == FL_FLY && (!you.confused() || one_chance_in(3)))
+    if (you.flight_mode() && (!you.confused() || one_chance_in(3)))
     {
         mpr("You dart out from under the net!");
         return false;
@@ -405,9 +394,11 @@ bool player_caught_in_net()
         mpr("You become entangled in the net!");
         stop_running();
 
-        // I guess levitation works differently, keeping both you
-        // and the net hovering above the floor
-        if (you.flight_mode() == FL_FLY)
+        // I guess magical works differently, keeping both you
+        // and the net hovering above the floor.
+        // Currently we cheat for bat and dragon forms, pretending them to
+        // be magical, and thus this check never matches currently.
+        if (you.flight_mode() == FL_WINGED)
         {
             mpr("You fall like a stone!");
             fall_into_a_pool(you.pos(), false, grd(you.pos()));
@@ -633,22 +624,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_ALARM:
-        if (!ammo_qty--)
-        {
-            if (you_trigger)
-                mpr("You trigger an alarm trap, but it seems broken.");
-            else if (in_sight && you_know)
-                mpr("The alarm trap gives no sound.");
+        // In ZotDef, alarm traps don't go away after use.
+        if (!crawl_state.game_is_zotdef())
             trap_destroyed = true;
-        }
-        else if (silenced(pos))
+
+        if (silenced(pos))
         {
             if (you_know && in_sight)
-                mpr("The alarm trap is silent.");
-
-            // If it's silent, you don't know about it.
-            if (!you_know)
-                hide();
+                mpr("The alarm trap vibrates slightly, failing to make a sound.");
         }
         else
         {
@@ -1221,74 +1204,6 @@ void disarm_trap(const coord_def& where)
     }
 }
 
-// Attempts to take a net off a given monster.
-// This doesn't actually have any effect (yet).
-// Do not expect gratitude for this!
-// ----------------------------------
-void remove_net_from(monster* mon)
-{
-    you.turn_is_over = true;
-
-    int net = get_trapping_net(mon->pos());
-
-    if (net == NON_ITEM)
-    {
-        mon->del_ench(ENCH_HELD, true);
-        return;
-    }
-
-    // factor in whether monster is paralysed or invisible
-    int paralys = 0;
-    if (mon->paralysed()) // makes this easier
-        paralys = random2(5);
-
-    int invis = 0;
-    if (!mon->visible_to(&you)) // makes this harder
-        invis = 3 + random2(5);
-
-    bool net_destroyed = false;
-    if (random2(you.skill_rdiv(SK_TRAPS) + 2) + paralys
-           <= random2(2*mon->body_size(PSIZE_BODY) + 3) + invis)
-    {
-        if (x_chance_in_y(2, you.skill(SK_TRAPS, 2) + you.dex()))
-        {
-            mitm[net].plus--;
-            mpr("You tear at the net.");
-            if (mitm[net].plus < -7)
-            {
-                mprf("Whoops! The net comes apart in your %s!",
-                     you.hand_name(true).c_str());
-                mon->del_ench(ENCH_HELD, true);
-                destroy_item(net);
-                net_destroyed = true;
-            }
-        }
-
-        if (!net_destroyed)
-        {
-            if (mon->visible_to(&you))
-            {
-                mprf("You fail to remove the net from %s.",
-                     mon->name(DESC_THE).c_str());
-            }
-            else
-                mpr("You fail to remove the net.");
-        }
-
-        practise(EX_REMOVE_NET);
-        return;
-    }
-
-    mon->del_ench(ENCH_HELD, true);
-    remove_item_stationary(mitm[net]);
-
-    if (mon->visible_to(&you))
-        mprf("You free %s.", mon->name(DESC_THE).c_str());
-    else
-        mpr("You loosen the net.");
-
-}
-
 // Decides whether you will try to tear the net (result <= 0)
 // or try to slip out of it (result > 0).
 // Both damage and escape could be 9 (more likely for damage)
@@ -1459,9 +1374,9 @@ void free_self_from_net()
             if (you.attribute[ATTR_HELD] > 1 && hold < -random2(5))
                 you.attribute[ATTR_HELD]--;
         }
-   }
-   else
-   {
+    }
+    else
+    {
         // You try to escape (takes at least 3 turns, and at most 10).
         int escape = do_what;
 
@@ -1496,7 +1411,7 @@ void free_self_from_net()
             mpr("You struggle to escape the net.");
 
         you.attribute[ATTR_HELD] -= escape;
-   }
+    }
 }
 
 void clear_trapping_net()

@@ -121,30 +121,24 @@ ENDMAP
 #############################################################################
 # Wary orcs
 #
-# Disabled, knowing of guaranteed traps there makes walking here a degenerate
-# piece of spoilage.  Is this vault salvageable somehow?
 NAME: david_orc_4
-WEIGHT: 0
 TAGS: orc_entry no_rotate
 ORIENT: float
-SHUFFLE: XYZ
-SUBST: ? = I F
-# around 4% of these entries have a dangerous statue
-SUBST: a = ~:4  .
-SUBST: b = ~:8  .
-SUBST: c = ~:12 .
-SUBST: d = ~:16 .
-KFEAT: X = .
-KFEAT: Y = bolt trap
-KFEAT: Z = bolt trap
-KFEAT: O = enter_orcish_mines
+SUBST:  ? = I G .
+MONS:   orc warrior band
+NSUBST: a = 1:1 / *:.
+NSUBST: b = 1:1 / *:.
+NSUBST: c = 1:1 / *:.
+NSUBST: d = 1:1 / *:.
+KFEAT:  X = known bolt trap
+KFEAT:  O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xx?xxx?xxx?xxx?xxxxxxx
 xaaaxbbbxcccxdddx.lllx
 .aaaabbbbccccdddx.Xllx
-@aaaabbbbccccddd+.YOlx
-.aaaabbbbccccdddx.Zllx
+@aaaabbbbccccddd+.XOlx
+.aaaabbbbccccdddx.Xllx
 xaaaxbbbxcccxdddx.lllx
 xx?xxx?xxx?xxx?xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
@@ -392,7 +386,11 @@ MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
+: if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest / nothing
+: else
+MONS:   orc priest / nothing
+: end
 SUBST:  ? = x . $:1
 KFEAT:  O = enter_orcish_mines
 MAP
@@ -427,7 +425,11 @@ MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
+: if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest
+: else
+MONS:   orc priest
+: end
 SUBST:  4 = 34
 SUBST:  ? = x . $:1
 KFEAT:  O = enter_orcish_mines

@@ -19,7 +19,7 @@ function castle_lemuel_subvault_setup(e)
          e.colour("? = brown")
          e.ftile("? = floor_orc")
          e.kfeat("? = floor")
-         e.subst("X = c =:1")
+         e.subst("X = c +:1")
          e.subst("~ = ~:2 .")
          e.subst("8 = 89")
          e.tile("c = wall_stone_brick")
@@ -34,8 +34,8 @@ function castle_lemuel_subvault_setup(e)
             e.subst("|=*")
             e.subst("*=*.")
             e.mons("gnoll")
-            e.mons("gnoll")
-            e.mons("ogre")
+            e.mons("gnoll / gnoll shaman w:5")
+            e.mons("ogre / gnoll sergeant")
             e.mons("jackal")
             e.mons("gnoll")
             e.mons("jackal")
@@ -96,7 +96,7 @@ MAP
 .+....+..1...1....1...1..+....+.
 .cccccccccccccc++cccccccccccXcc.
 1c1.1..ccccccc....ccccccc..m..c1
-.c.2...+.....=....=.....+..m.8c.
+.c.2...+.....+....+.....+..m.8c.
 +c1.1..ccccccc....ccccccc..m..c+
   cccccccccccc++++cccccccccccc
 ENDMAP
@@ -148,7 +148,7 @@ TAGS:   lemuel_castle_interior
 : castle_lemuel_subvault_setup(_G)
 SUBST:  $=$:5 .
 MAP
-+c....=~~.*c$*|cc|*$cccccc$...c+
++c....+~~.*c$*|cc|*$cccccc$...c+
 .c.1..ccccccmc1321cmcccccc....c.
 .c..2........c.12.c...........c.
 .cc++c.........ww.....2..1c++cc.

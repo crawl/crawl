@@ -390,8 +390,9 @@ Weapon speech
 
 For obvious reasons, weapon noises get by without any such prefixes,
 and the only hardcoded keywords are "noisy weapon" for weapons with
-the noises property, and "singing sword" for (who'd have guessed?) the
-Singing Sword.
+the noises property, "shield of the gong", while the singing sword uses
+"singing sword " + one of: silenced, no_tension, low_tension, high_tension,
+SCREAM.
 
 
 Death speech
@@ -874,83 +875,90 @@ APPENDIX: List of monster glyphs
 
 Lowercase letters:
 ------------------
-a   worker ant, soldier ant, queen ant
-b   giant bat, butterfly
+a   worker ant, soldier ant, queen ant, ant larva
+b   bat, butterfly, raven, phoenix
 c   centaur (warrior), yaktaur (captain)
 d   all draconians
 e   all elves
 f   toadstool, fungus, ballistomycete, wandering mushroom
 g   goblin, hobgoblin, gnoll, boggart
 h   hounds (jackal, hound, wolf, warg, war dog, hell hound),
-    hogs (hog, hell hog)
-j   snails: elephant slug, giant slug, giant snail
-k   winged insects: killer bee, bumblebee, queen bee
-l   lizards (giant newt/gecko/iguana/lizard, gila monster, komodo
-             dragon),
-    drakes (swamp drake, firedrake, death drake, lindwurm)
+    hogs (hog, hell hog, holy swine), and felid
+i   all spriggans
+j   snails: elephant slug, giant slug, agate snail
+k   winged insects: killer bee, queen bee, giant firefly
+l   lizards (giant newt/gecko, iguana, basilisk, komodo dragon),
+    drakes (swamp drake, fire drake, death drake, lindwurm)
 m   all merfolk, mermaid, siren
-n   ghouls: necrophage, ghoul, rotting hulk
+n   ghouls: necrophage, ghoul, rotting hulk, bog body
 o   all orcs
-p   all ghosts, phantom, and shadow
-r   all rodents (rats of all colours, and quokka)
-s   arachnides (giant mite, giant centipede, scorpion, wolf spider,
-                redback, trapdoor spider)
+p   all ghosts, phantom, shadow, silent spectre
+q   all dwarves
+r   all rodents (rats of all colours, porcupine, quokka)
+s   arachnids (giant mite/centipede, (emperor) scorpion,
+               wolf/trapdoor/orb spider, redback, tarantella)
     also: giant cockroach, demonic crawler
-t   (alligator) snapping turtle, crocodile, (baby) alligator
+t   (alligator) snapping turtle, crocodile, (baby) alligator, fire crab
 u   (very) ugly thing
-v   all vortices, and insubstantial wisp
-w   all worms and larvae
-x   unseen horror, small abomination
+v   all vortices, insubstantial wisp, vapour
+w   all worms and tentacles
+x   unseen horror, small abomination, crawling corpse, macabre mass,
+    octopode
 y   wasps, moths, mosquitoes
-z   small zombie/skeleton/simulacrum, skeletal warrior, flying skull,
-    curse skull, and curse toe
+z   small zombie/skeleton/simulacrum, wight, skeletal warrior,
+    flying skull, flaming corpse, curse skull, curse toe
 
 Uppercase letters:
 ------------------
-A   Angel, Daeva
+A   angel, cherub, seraph, daeva, profane servitor
 B   all beetles
 C   all giants, ettin, cyclops, and titan
 D   all dragons, wyvern, and hydra
 E   all elementals
 F   all frogs
-G   all eyes, giant spore, and giant orange brain
-H   hippogriff, manticore, griffon, minotaur, and sphinx
-I   ice beast
+G   all eyes, giant orange brain, ophan
+H   hybrids: hippogriff, manticore, griffon, harpy, minotaur, sphinx,
+    shedu, tengu
+I   ice beast, sky beast
 J   all jellies, oozes, and slime creature, pulsating lump,
     giant amoeba, jellyfish, and acid blob
 K   all kobolds
 L   all liches
 M   all mummies
-N   all naga
+N   all naga, salamander
 O   all ogres
-P   all plants
+P   all plants, bushes
 R   (fake) rakshasa, efreet
-S   all snakes, and salamander
+S   all snakes, guardian serpent
 T   all trolls
 U   all bears
 V   all vampires
-W   all wraiths, wight, and spectral warrior/thing
-X   kraken, abomination, tentacled monstrosity, and Orb Guardian
-Y   all yaks, sheep and elephants
+W   all wraiths, eidolon, phantasmal warrior, spectral thing
+X   kraken, large abomination, tentacled monstrosity, and Orb Guardian
+Y   all yaks, sheep and elephants, catoblepas, apis
 Z   large zombie/skeleton/simulacrum
 
 Numbers:
 --------
-1   all Fiends, Executioner, Blue/Green Death, Balrug, Cacodemon
-2   sun demon, reaper, soul eater, ice devil, beast, and Lorocyproca
-3   hellion, tormentor, blue/iron devil, neqoxec, ynoxinul,
-    orange/shadow/smoke demon, chaos spawn, and demonic crawler
-4   red/rotting/hairy devil, sixfirhy, and hellwing
-5   all imps, and other minor demons (quasit, lemure, ufetubus, midge)
+1   all Fiends, Executioner, and Hell Sentinel
+2   shadow demon, green death, hellion, tormentor, reaper, hell beast,
+    blizzard demon, lorocyproca, balrug, and cacodemon
+3   sun demon, soul eater, ice devil, neqoxec, ynoxinul, chaos spawn,
+    shadow/smoke demon
+4   blue/red/iron/rotting devil, orange demon, sixfirhy, and hellwing
+5   all imps, and other minor demons (quasit, lemure, ufetubus)
 8   all golems, and living statues
 9   all gargoyles
 
 Other symbols:
 --------------
-;   all fish, and electric eel
+;   all fish, shark, electric eel
 @   all humans, (glowing) shapeshifter, and Killer Klown
 &   all pandemonium lords
-*   giant spore, ball lightning, and orb of fire
+*   giant spore, ball lightning, orb of fire, silver star,
+    orb of destruction, wretched star, tentacle segment
+(   dancing weapon
+{   all sensed monsters, and lightning spire
 %   death cob
 
 

@@ -77,7 +77,7 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.duration[DUR_STONESKIN])
+    if (you.duration[DUR_STONESKIN] || you.duration[DUR_FIRE_SHIELD])
     {
         mpr("The spell conflicts with another spell still in effect.");
         return SPRET_ABORT;
@@ -194,7 +194,7 @@ spret_type cast_swiftness(int power, bool fail)
     fail_check();
 
     // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
-    // you're levitating, for instance.
+    // you're flying, for instance.
     you.increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
                           "You feel quick.");
     did_god_conduct(DID_HASTY, 8, true);
@@ -212,16 +212,13 @@ spret_type cast_fly(int power, bool fail)
 
     fail_check();
     const int dur_change = 25 + random2(power) + random2(power);
-    const bool was_levitating = you.airborne();
+    const bool was_flying = you.airborne();
 
-    you.increase_duration(DUR_LEVITATION, dur_change, 100);
-    you.increase_duration(DUR_CONTROLLED_FLIGHT, dur_change, 100);
-    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+    you.increase_duration(DUR_FLIGHT, dur_change, 100);
+    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
 
-    burden_change();
-
-    if (!was_levitating)
-        float_player(true);
+    if (!was_flying)
+        float_player();
     else
         mpr("You feel more buoyant.");
     return SPRET_SUCCESS;

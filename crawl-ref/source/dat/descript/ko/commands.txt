@@ -154,6 +154,10 @@ CMD_WAIT
 
 1턴간 대기
 %%%%
+CMD_WAIT verbose
+
+대기겸 휴식을 취하면서 한턴을 보낸다.
+%%%%
 CMD_DISPLAY_INVENTORY
 
 현재 소지품 표시

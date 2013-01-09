@@ -177,6 +177,154 @@ MAP
 O
 ENDMAP
 
+# Misc Pan entries. These are just regular minivaults, since the dungeon can
+# have multiple portals to Pandemonium.
+
+NAME:   rand_demon_pan_entry_1
+TAGS:   patrolling no_monster_gen
+DEPTH:  D:21-27
+MONS:   common demon
+KMONS:  O = any demon
+KFEAT:  O = enter_pandemonium
+MAP
+xxxxxxxx@@x
+x..1...x..x
+x..x...x..x
+x..x...x..x
+x..x.1.x..x
+x..x.O.x..x
+x..x.1.x..x
+x..x...x..x
+x..x...1..x
+x@@xxxxxxxx
+ENDMAP
+
+NAME:   rand_demon_pan_entry_3
+TAGS:   patrolling no_monster_gen mini_float transparent
+DEPTH:  D:21-27
+MONS:   common demon
+KMONS:  O = any demon
+KFEAT:  O = enter_pandemonium
+MAP
+............
+.x.x.x.x.x..
+..x.x.x.x.x.
+.x.x.x.x.x..
+..x.x1x1x.x.
+.x.x.xOx.x..
+..x.x1x1x.x.
+.x.x.x.x.x..
+..x.x.x.x.x.
+.x.x.x.x.x..
+..x.x.x.x.x.
+............
+ENDMAP
+
+NAME:   rand_demon_pan_entry_4
+TAGS:   patrolling no_monster_gen mini_float transparent
+DEPTH:  D:21-27
+MONS:   common demon
+KMONS:  O = any demon
+KFEAT:  O = enter_pandemonium
+MAP
+...........
+.xxxxxxxxx.
+.x...x1+.x.
+.x+x+x+x.x.
+.x1x...x.x.
+.x+xxx+x.x.
+.x...x1xOx.
+.x+x.xxxxx.
+.x1x.....=.
+.xxxxxxxxx.
+...........
+ENDMAP
+
+NAME:   rand_demon_pan_entry_5
+TAGS:   patrolling no_monster_gen mini_float transparent
+DEPTH:  D:21-27
+MONS:   common demon
+KMONS:  O = any demon
+KFEAT:  O = enter_pandemonium
+MAP
+............
+...xx==xx...
+..xx....xx..
+.xx......xx.
+.x........x.
+.=...1O...=.
+.=...11...=.
+.x........x.
+.xx......xx.
+..xx....xx..
+...xx==xx...
+............
+ENDMAP
+
+NAME:   rand_demon_pan_entry_7
+TAGS:   patrolling no_monster_gen mini_float transparent
+DEPTH:  D:21-27
+MONS:   common demon
+KMONS:  O = any demon
+KFEAT:  O = enter_pandemonium
+NSUBST: ? = 1:O / 4:1 / *:.
+MAP
+............
+.xxx....xxx.
+.x?xx=xxx?x.
+.xx+....+xx.
+..x.x++x.x..
+..x.+??+.=..
+..=.+??+.x..
+..x.x++x.x..
+.xx+....+xx.
+.x?xxx=xx?x.
+.xxx....xxx.
+............
+ENDMAP
+
+NAME:   rand_demon_pan_entry_8
+TAGS:   patrolling no_monster_gen mini_float transparent
+DEPTH:  D:21-27
+MONS:   common demon
+KMONS:  O = any demon
+KFEAT:  O = enter_pandemonium
+MAP
+ ...........
+....xxxxxxx.
+..xxx....1x.
+.xx..1..O.x.
+.x........x.
+.xx.......x.
+..xx.1..1.x.
+.........xx.
+.....x...x..
+.....xx.xx..
+ @....xxx...
+  ........
+ENDMAP
+
+NAME:   rand_demon_pan_entry_9
+TAGS:   patrolling no_monster_gen mini_float transparent
+DEPTH:  D:21-27
+MONS:   common demon
+KMONS:  O = any demon
+KFEAT:  O = enter_pandemonium
+NSUBST: ^ = 4:^ / 4:1 / *:.
+MAP
+............
+.xxxxxxxxxx.
+.x.+.....xx.
+.x.xxxxxx.x.
+.x.xO^^^x.x.
+.x.x^^^^x.x.
+.x.x^^^^x.x.
+.x.x^^^^x.x.
+.x.xxxx+x.x.
+.xx.....x.x.
+.xxxxxxxx=x.
+............
+ENDMAP
 
 ##############################################################################
 # Random unguarded exits
@@ -1478,6 +1626,215 @@ xxxxxxxx...c+c...xxxxxxxx
    xxxxxxxx3.3xxxxxxxx
     xxxxxxxx|xxxxxxxx
      xxxxxxxxxxxxxxx
+ENDMAP
+
+###################################
+
+NAME: nicolae_pan_door_chamber
+TAGS: pan allow_dup
+WEIGHT: 5
+MONS: any demon, common demon, greater demon
+MARKER: + = lua:props_marker { connected_exclude="true" }
+MARKER: + = lua:restrict_door()
+MARKER: - = lua:props_marker { connected_exclude="true" }
+MARKER: - = lua:restrict_door()
+NSUBST: + = 1:P / 2:2 / 1:3 / *:+
+SUBST: - = +
+: pan_demonic_rune(_G, 'P', true)
+MAP
+   x..@..x
+ xxx.....xxx
+ xx...1...xx
+xx.-------.xx
+...-+++++-...
+...-+++++-...
+@.1-+++++-1.@
+...-+++++-...
+...-+++++-...
+xx.-------.xx
+ xx...1...xx
+ xxx.....xxx
+   x..@..x
+ENDMAP
+
+###################################
+
+NAME: nicolae_pan_diamonds
+TAGS: pan allow_dup
+MONS: pandemonium lord, greater demon, any demon
+NSUBST: P = 1:P / *:.
+: pan_demonic_rune(_G, 'P')
+MAP
+       c
+      cxc
+     cxmxc
+    cxmPmxc
+   cxm...mxc
+    cxm.mxc
+   cxm...mxc
+  cxm..2..mxc
+   cxm...mxc
+  cxcxm.mxcxc
+ cxmxm...mxmxc
+ .m.m.3.3.m.m.
+@m.2...1...2.m@
+ .m.m.3.3.m.m.
+ cxmxm...mxmxc
+  cxcxm.mxcxc
+   cxm...mxc
+  cxm..2..mxc
+   cxm...mxc
+    cxm.mxc
+   cxm...mxc
+    cxmPmxc
+     cxmxc
+      cxc
+       c
+ENDMAP
+
+###################################
+
+NAME: nicolae_pan_giant_door
+TAGS: pan allow_dup no_trap_gen
+MONS: any demon
+MARKER: = = lua:restrict_door()
+: pan_demonic_rune(_G, 'P', true)
+MAP
+     .....
+   .........
+ ....G...G....
+ ...xxx=xxx...
+ ...xc1=1cX...
+  ..xc1=1cX..
+    xc1=1cX
+    xc1=1cX
+    xc1=1cx
+    ccc=ccc
+    c.1.1.c
+    c1.P.1c
+    ccccccc
+ENDMAP
+
+###################################
+
+NAME: nicolae_pan_hourglass
+TAGS: pan allow_dup
+NSUBST: P = 1:P / *:.
+MONS: common demon, greater demon
+: pan_demonic_rune(_G, 'P', true)
+MAP
+   xxxxxxxxx
+  xm...P...mx
+ xm.2.....2.mx
+ xm...xxx...mx
+ xm..xxxxx..mx
+ xm..1xxx1..mx
+  xm.......mx
+   xm..2..mx
+    xm.1.mx
+    ..m1m..
+    @11m11@
+    ..m1m..
+    xm.1.mx
+   xm..2..mx
+  xm.......mx
+ xm..1xxx1..mx
+ xm..xxxxx..mx
+ xm...xxx...mx
+ xm.2.....2.mx
+  xm...P...mx
+   xxxxxxxxx
+ENDMAP
+
+###################################
+
+NAME: nicolae_pan_double_arrow
+TAGS: pan allow_dup
+MONS: greater demon, common demon
+: pan_demonic_rune(_G, 'P', true)
+MAP
+       c
+      ccc
+     ccxcc
+    ccxxxcc
+   ccxxxxxcc
+  ccxxx.xxxcc
+ ccxxx...xxxcc
+ccxxx.....xxxcc
+ xxx..2.2..xxx
+  x.........x
+  .2.x...x.2.
+ ...xx.1.xx...
+...xxx...xxx...
+..xxxx...xxxx..
+@xxxxx.P.xxxxx@
+..xxxx...xxxx..
+...xxx...xxx...
+ ...xx.1.xx...
+  .2.x...x.2.
+  x.........x
+ xxx..2.2..xxx
+ccxxx.....xxxcc
+ ccxxx...xxxcc
+  ccxxx.xxxcc
+   ccxxxxxcc
+    ccxxxcc
+     ccxcc
+      ccc
+       c
+ENDMAP
+
+###################################
+
+NAME: nicolae_pan_glass_arcs
+TAGS: pan allow_dup
+MONS: any demon, greater demon
+: pan_demonic_rune(_G, 'P', true)
+MAP
+     ccccc
+  ccccccccccc
+  ...ccccc...
+  n.1..c..1.n
+ ..nn..2..nn..
+ ...nn...nn...
+ @1.nn.P.nn.1@
+ ...nn...nn...
+ ..nn..2..nn..
+  n.1..c..1.n
+  ...ccccc...
+  ccccccccccc
+     ccccc
+ENDMAP
+
+###################################
+
+NAME: nicolae_pan_performance_anxiety
+TAGS: pan allow_dup no_trap_gen
+WEIGHT: 1
+KPROP: tb = no_rtele_into
+MONS: greater demon, common demon
+NSUBST: t = 10:p / *:., b = 10:p / *:.
+KMONS: p = human / elf / orc / naga / centaur / draconian / \
+   ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
+   deep dwarf / felid / octopode / vampire / base draconian / demigod / \
+   demonspawn / merfolk / halfling
+: pan_demonic_rune(_G, 'P', true)
+MAP
+      ccccc
+    ccctttccc
+   cctttttttcc
+   cttnnnnnttc
+  cctnn.2.nntcc
+  ctnn.1.1.nntc
+..cnn.1...1.nnc..
+@....2..P..2....@
+..cnn.1...1.nnc..
+  cbnn.1.1.nnbc
+  ccbnn.2.nnbcc
+   cbbnnnnnbbc
+   ccbbbbbbbcc
+    cccbbbccc
+      ccccc
 ENDMAP
 
 #############################################################################

@@ -262,6 +262,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_TARTARUS:
         return TILE_DNGN_ENTER_TARTARUS;
     case DNGN_ENTER_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_EXIT_THROUGH_ABYSS:
         return TILE_DNGN_ENTER_ABYSS;
     case DNGN_EXIT_HELL:
@@ -893,6 +894,13 @@ static tileidx_t _mon_sinus(tileidx_t tile)
     return (n < count) ? (tile + n) : (tile + 2 * count - 2 - n);
 }
 
+static tileidx_t _mon_cycle(tileidx_t tile, int offset)
+{
+    int count = tile_player_count(tile);
+    return (tile + ((offset + you.frame_no) % count));
+}
+
+
 // This function allows for getting a monster from "just" the type.
 // To avoid needless duplication of a cases in tileidx_monster, some
 // extra parameters that have reasonable defaults for monsters where
@@ -1211,11 +1219,13 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // vortices ('v')
     case MONS_FIRE_VORTEX:
-        return TILEP_MONS_FIRE_VORTEX;
+        return _mon_cycle(TILEP_MONS_FIRE_VORTEX, tile_num_prop);
     case MONS_SPATIAL_VORTEX:
-        return TILEP_MONS_SPATIAL_VORTEX;
+        return _mon_cycle(TILEP_MONS_SPATIAL_VORTEX, tile_num_prop);
+    case MONS_SPATIAL_MAELSTROM:
+        return _mon_cycle(TILEP_MONS_SPATIAL_MAELSTROM, tile_num_prop);
     case MONS_TWISTER:
-        return TILEP_MONS_TWISTER;
+        return _mon_cycle(TILEP_MONS_TWISTER, tile_num_prop);
 
     // elementals ('E')
     case MONS_AIR_ELEMENTAL:
@@ -1253,11 +1263,13 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_MACABRE_MASS:
         return TILEP_MONS_MACABRE_MASS;
 
-    // abyssal monsters (not assigned/implemented yet)
+    // abyssal monsters
     case MONS_LURKING_HORROR:
         return TILEP_MONS_LURKING_HORROR;
     case MONS_ANCIENT_ZYME:
         return TILEP_MONS_ANCIENT_ZYME;
+    case MONS_APOCALYPSE_CRAB:
+        return TILEP_MONS_APOCALYPSE_CRAB;
     case MONS_STARCURSED_MASS:
         return TILEP_MONS_STARCURSED_MASS;
     case MONS_TENTACLED_STARSPAWN:
@@ -1821,8 +1833,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ORB_OF_FIRE;
     case MONS_ORB_OF_DESTRUCTION:
         return _mon_random(TILEP_MONS_ORB_OF_DESTRUCTION);
-    case MONS_BLESSED_TOE:
-        return TILEP_MONS_BLESSED_TOE;
     case MONS_SILVER_STAR:
         return TILEP_MONS_SILVER_STAR;
 
@@ -2482,7 +2492,7 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-static bool _tentacle_tile_not_levitating(tileidx_t tile)
+static bool _tentacle_tile_not_flying(tileidx_t tile)
 {
     // All tiles between these two enums feature tentacles
     // emerging from water.
@@ -2559,7 +2569,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_ITEM_MIMIC:
             return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC;
         case MONS_RAVENOUS_ITEM_MIMIC:
+#if TAG_MAJOR_VERSION == 34
         case MONS_MONSTROUS_ITEM_MIMIC:
+#endif
             return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_RAVEN;
 
         // Feature mimics get drawn with the dungeon, see tileidx_feature.
@@ -2568,7 +2580,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_FEATURE_MIMIC:
             return TILE_FLAG_MIMIC;
         case MONS_RAVENOUS_FEATURE_MIMIC:
-        case MONS_MONSTROUS_FEATURE_MIMIC: // unused
             return TILE_FLAG_MIMIC_RAVEN;
 
         case MONS_DANCING_WEAPON:
@@ -2582,6 +2593,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_KRAKEN_TENTACLE_SEGMENT:
         case MONS_ELDRITCH_TENTACLE:
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
+        case MONS_STARSPAWN_TENTACLE:
+        case MONS_STARSPAWN_TENTACLE_SEGMENT:
         {
             tileidx_t tile = _tileidx_tentacle(mon);
             const bool is_kraken = _mons_is_kraken_tentacle(mon.type);
@@ -2637,7 +2650,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if (!mons.ground_level() && !_tentacle_tile_not_levitating(ch))
+    if (!mons.ground_level() && !_tentacle_tile_not_flying(ch))
         ch |= TILE_FLAG_FLYING;
     // FIXME: should probably have a different tile flag for being webbed
     if (mons.is(MB_CAUGHT) || mons.is(MB_WEBBED))
@@ -3091,9 +3104,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
-  }
+    }
 
-  return TILE_ERROR;
+    return TILE_ERROR;
 }
 
 static tileidx_t _tileidx_missile(const item_def &item)
@@ -4706,7 +4719,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Monster spells (mostly?)
     case SPELL_HELLFIRE_BURST:
-    case SPELL_VAMPIRE_SUMMON:
     case SPELL_BRAIN_FEED:
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_STEAM_BALL:
@@ -4952,7 +4964,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HELLFIRE;
     // Tengu, Draconians
     case ABIL_FLY:
-    case ABIL_FLY_II:
         return TILEG_ABILITY_FLIGHT;
     case ABIL_STOP_FLYING:
         return TILEG_ABILITY_FLIGHT_END;
@@ -4979,10 +4990,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_INVISIBILITY;
     case ABIL_EVOKE_TURN_VISIBLE:
         return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
-    case ABIL_EVOKE_LEVITATE:
-        return TILEG_ABILITY_EVOKE_LEVITATE;
-    case ABIL_EVOKE_STOP_LEVITATING:
-        return TILEG_ABILITY_EVOKE_LEVITATE_END;
+    case ABIL_EVOKE_FLIGHT:
+        return TILEG_ABILITY_EVOKE_FLIGHT;
 
     // Divine abilities
     // Zin
@@ -5439,6 +5448,7 @@ void bind_item_tile(item_def &item)
     if (item.props.exists("item_tile_name"))
     {
         string tile = item.props["item_tile_name"].get_string();
+        dprf("Binding non-worn item tile: \"%s\".", tile.c_str());
         tileidx_t index;
         if (!tile_main_index(tile.c_str(), &index))
         {
@@ -5454,6 +5464,7 @@ void bind_item_tile(item_def &item)
     if (item.props.exists("worn_tile_name"))
     {
         string tile = item.props["worn_tile_name"].get_string();
+        dprf("Binding worn item tile: \"%s\".", tile.c_str());
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
@@ -5470,9 +5481,11 @@ void bind_item_tile(item_def &item)
 
 void tile_init_props(monster* mon)
 {
-    // Only those use tile_num.
+    // Only monsters using mon_mod or mon_cycle need a tile_num.
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
         && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS
+        && mon->type != MONS_FIRE_VORTEX && mon->type != MONS_TWISTER
+        && mon->type != MONS_SPATIAL_VORTEX && mon->type != MONS_SPATIAL_MAELSTROM
         && mon->type != MONS_ABOMINATION_SMALL
         && mon->type != MONS_ABOMINATION_LARGE)
     {

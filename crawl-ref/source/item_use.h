@@ -35,7 +35,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
 bool do_wear_armour(int item, bool quiet);
 
 bool can_wield(item_def *weapon, bool say_why = false,
-               bool ignore_temporary_disability = false, bool unwield = false);
+               bool ignore_temporary_disability = false, bool unwield = false,
+               bool only_known = true);
 
 bool wield_weapon(bool auto_wield, int slot = -1,
                   bool show_weff_messages = true, bool force = false,
@@ -54,7 +55,6 @@ void prompt_inscribe_item();
 void warn_shield_penalties();
 void warn_armour_penalties();
 
-bool item_blocks_teleport(bool calc_unid, bool permit_id);
 bool stasis_blocks_effect(bool calc_unid, bool identify,
                           const char *msg, int noise = 0,
                           const char *silencedmsg = NULL);

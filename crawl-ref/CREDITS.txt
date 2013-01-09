@@ -1,11 +1,11 @@
 ﻿The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Samuel
-Bronson, Jude Brown, Robert Burnham, Chris Campbell, Matthew Cline,
-Paul Du Bois, Florian Diebold, Michael Gagno, Eino Keskitalo, Vsevolod
-Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza, Jesse Luehrs,
-Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan, Haran Pilpel,
-Aaron Pixton, David Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto,
-David Lawrence Ramsey, Robert Vollmert, Enne Walker, Chris West, Samuel Wilson)
-would like to thank:
+Bronson, Jude Brown, Robert Burnham, Chris Campbell, Matthew Cline, Paul Du
+Bois, Florian Diebold, Michael Gagno, Brendan Hickey, Eino Keskitalo,
+Vsevolod Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza, Jesse
+Luehrs, Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan, Haran
+Pilpel, Aaron Pixton, David Ploog, Johanna Ploog, Stefan O'Rear, Charles
+Otto, David Lawrence Ramsey, Robert Vollmert, Enne Walker, Chris West,
+Samuel Wilson) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -53,6 +53,7 @@ Terje Bø
 Erik Inge Bolsø
 Peter Borgmann
 Daniel Mark Brownrigg
+Andre Bubel
 Trent W. Buck
 Joe Buzzelli
 Policarpo Caballero
@@ -61,6 +62,7 @@ Aaron Curtis
 Simon Curtis
 Denzi
 Lothar Dierkes
+DracoOmega
 Mike Drinen
 Kieron Dunbar
 Micha Elsner
@@ -79,7 +81,7 @@ Sophie Hamilton
 Chris Hamons
 Anders Heggestøyl
 R. Dan Henry
-Brendan Hickey
+Chris Honey
 Sylvia 'Onia' Hörnke
 Benoit Hudson
 Pete Hurst

@@ -119,7 +119,7 @@ const Branch branches[NUM_BRANCHES] = {
       true, LIGHTGREY, BROWN,
       'B', false, -7 },
 
-    { BRANCH_CRYPT, BRANCH_VAULTS, 2, 4, 5, 19,
+    { BRANCH_CRYPT, BRANCH_VAULTS, 2, 3, 5, 19,
       0, 0,
       DNGN_ENTER_CRYPT, DNGN_RETURN_FROM_CRYPT,
       "Crypt", "the Crypt", "Crypt",
@@ -191,7 +191,7 @@ const Branch branches[NUM_BRANCHES] = {
       true, BROWN, BROWN,
       'F', true, 0 },
 
-    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 1, 24,
+    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 5, 24,
       BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
       "Abyss", "the Abyss", "Abyss",

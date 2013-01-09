@@ -93,7 +93,7 @@ void set_redraw_status(uint64_t flags)
 
 int get_ch()
 {
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     int gotched = getchm();
 
     if (gotched == 0)
@@ -120,7 +120,7 @@ void cio_cleanup()
 }
 
 // Clear some globally defined variables.
-void clear_globals_on_exit()
+static void _clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
@@ -220,7 +220,7 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 
     cio_cleanup();
     msg::deinitialise_mpr_streams();
-    clear_globals_on_exit();
+    _clear_globals_on_exit();
     databaseSystemShutdown();
 #ifdef DEBUG_PROPS
     dump_prop_accesses();
@@ -564,7 +564,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
     pop->push_entry(me);
 #endif
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
     {
 #ifdef TOUCH_UI
@@ -637,7 +637,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
     if (yes1 != 'Y')
     {
         if (lowered)
-            help += tolower(yes1);
+            help += toalower(yes1);
         else
             help += yes1;
         print_yes = true;
@@ -649,7 +649,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
             help += "/";
 
         if (lowered)
-            help += tolower(yes2);
+            help += toalower(yes2);
         else
             help += yes2;
         print_yes = true;
@@ -670,12 +670,12 @@ static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
                                  bool allow_all = false)
 {
     string result = " [";
-           result += (lowered ? "(y)es" : "(Y)es");
-           result += _list_alternative_yes(yes1, yes2, lowered);
-           if (allow_all)
-               result += (lowered? "/(a)ll" : "/(A)ll");
-           result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
-           result += "]";
+    result += (lowered ? "(y)es" : "(Y)es");
+    result += _list_alternative_yes(yes1, yes2, lowered);
+    if (allow_all)
+        result += (lowered? "/(a)ll" : "/(A)ll");
+    result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
+    result += "]";
 
     return result;
 }
@@ -689,7 +689,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
     if (!crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_YESNO);
 
     string prompt =
         make_stringf("%s%s ", str ? str : "Buggy prompt?",

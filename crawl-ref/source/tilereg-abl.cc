@@ -57,6 +57,10 @@ int AbilityRegion::handle_mouse(MouseEvent &event)
     const ability_type ability = (ability_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
+        // close tab again if using small layout
+        if (tiles.is_using_small_layout())
+            tiles.deactivate_tab();
+
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         talent tal = get_talent(ability, true);
@@ -153,6 +157,9 @@ int AbilityRegion::get_max_slots()
 
 void AbilityRegion::pack_buffers()
 {
+    if (m_items.size() == 0)
+        return;
+
     const int max_spells = get_max_slots();
 
     // Pack base separately, as it comes from a different texture...

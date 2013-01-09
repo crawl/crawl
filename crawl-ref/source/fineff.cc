@@ -12,9 +12,11 @@
 #include "libutil.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
+#include "state.h"
 #include "view.h"
 
 void final_effect::schedule()
@@ -83,6 +85,11 @@ bool kraken_damage_fineff::mergeable(const final_effect &fe) const
     return o && att == o->att && def == o->def;
 }
 
+bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
+{
+    const starcursed_merge_fineff *o = dynamic_cast<const starcursed_merge_fineff *>(&fe);
+    return o && def == o->def;
+}
 
 void mirror_damage_fineff::merge(const final_effect &fe)
 {
@@ -194,8 +201,20 @@ void trj_spawn_fineff::fire()
 
     dprf("Trying to spawn %d jellies.", tospawn);
 
-    unsigned short foe = attack && attack->alive() ? attack->mindex()
-                                                       : MHITNOT;
+    unsigned short foe = attack && attack->alive() ? attack->mindex() : MHITNOT;
+    // may be ANON_FRIENDLY_MONSTER
+    if (invalid_monster_index(foe) && foe != MHITYOU)
+        foe = MHITNOT;
+
+    // Give spawns the same attitude as TRJ; if TRJ is now dead, make them
+    // hostile.
+    const beh_type spawn_beh = trj
+        ? attitude_creation_behavior(trj->as_monster()->attitude)
+        : BEH_HOSTILE;
+
+    // No permanent friendly jellies from an enslaved TRJ.
+    if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
+        return;
 
     int spawned = 0;
     for (int i = 0; i < tospawn; ++i)
@@ -206,8 +225,8 @@ void trj_spawn_fineff::fire()
             continue;
 
         if (monster *mons = mons_place(
-                              mgen_data(jelly, BEH_HOSTILE, trj, 0, 0,
-                                        jpos, foe, MG_DONT_COME, GOD_JIYVA)))
+                              mgen_data(jelly, spawn_beh, trj, 0, 0, jpos,
+                                        foe, MG_DONT_COME, GOD_JIYVA)))
         {
             // Don't allow milking the royal jelly.
             mons->flags |= MF_NO_REWARD;
@@ -253,6 +272,13 @@ void kraken_damage_fineff::fire()
 {
     if (actor *df = defender())
         df->hurt(attacker(), damage);
+}
+
+void starcursed_merge_fineff::fire()
+{
+    actor *defend = defender();
+    if (defend && defend->alive())
+        starcursed_merge(defender()->as_monster(), true);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

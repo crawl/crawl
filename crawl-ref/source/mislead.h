@@ -5,4 +5,4 @@
 
 bool update_mislead_monster(monster* mons);
 int count_mara_fakes();
-void end_mislead(bool level_change = false);
+void end_mislead();

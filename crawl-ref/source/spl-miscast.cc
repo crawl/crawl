@@ -11,6 +11,7 @@
 
 #include <sstream>
 
+#include "branch.h"
 #include "colour.h"
 #include "cloud.h"
 #include "directn.h"
@@ -226,7 +227,7 @@ void MiscastEffect::init()
             cause.replace(cause.begin(), cause.begin() + 2, "an indirect");
         else
             cause = replace_all(cause, "death curse", "indirect death curse");
-   }
+    }
 
     // source_known = false for MELEE_MISCAST so that melee miscasts
     // won't give a "nothing happens" message.
@@ -614,9 +615,11 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 
 bool MiscastEffect::_send_to_abyss()
 {
-    if (player_in_branch(BRANCH_ABYSS) || source == HELL_EFFECT_MISCAST)
+    if ((player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
+        || source == HELL_EFFECT_MISCAST)
+    {
         return _malign_gateway(); // attempt to degrade to malign gateway
-
+    }
     target->banish(act_source, cause);
     return true;
 }
@@ -990,26 +993,11 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(target->is_player() ? 2 : 1))
         {
         case 0:
-            if (target->is_player() && !liquefied(you.pos())
-                && you.ground_level())
-            {
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
-                levitate_player(20);
-            }
-            else if (target->is_player())
-            {
-                // Reasoning: miscasts to get levitation to escape the effects of
-                // liquefaction = cheap.
-                random_uselessness();
-            }
+            if (target->is_player())
+                you.backlight();
             else
-            {
-                // There's no levitation enchantment for monsters, and,
-                // anyway, it's not nearly as inconvenient for monsters as
-                // for the player, so backlight them instead.
                 target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
                                                           guilty));
-            }
             break;
         case 1:
             random_uselessness();
@@ -2290,7 +2278,7 @@ void MiscastEffect::_ice(int severity)
             else
                 do_msg();
             if (target->alive())
-                target->expose_to_element(BEAM_COLD, 2);
+                target->expose_to_element(BEAM_COLD, 2, true, false);
             break;
         }
         break;

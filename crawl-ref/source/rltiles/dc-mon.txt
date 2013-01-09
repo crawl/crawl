@@ -22,6 +22,10 @@ butterfly3
 butterfly4
 butterfly5
 butterfly6
+butterfly7
+butterfly8
+butterfly9
+butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
 %rim 1
@@ -87,12 +91,12 @@ porcupine MONS_PORCUPINE
 ## Laboratory rats
 %sdir mon/rat
 labrat_plain MONS_LABORATORY_RAT
+labrat_airborne
 labrat_armoured
 labrat_beastly
 labrat_fiery
 labrat_gaseous
 labrat_leeching
-labrat_levitating
 labrat_mutated
 labrat_shifting
 labrat_venomous
@@ -216,10 +220,23 @@ fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 water_elemental MONS_WATER_ELEMENTAL /*'#'*/
 air_elemental MONS_AIR_ELEMENTAL /*'#'*/
 iron_elemental MONS_IRON_ELEMENTAL
-fire_vortex MONS_FIRE_VORTEX /*'v'*/
-spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
-twister MONS_TWISTER /*'v'*/
 %rim 0
+fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
+fire_vortex2
+fire_vortex3
+fire_vortex4
+spatial_vortex1 MONS_SPATIAL_VORTEX /*'v'*/
+spatial_vortex2
+spatial_vortex3
+spatial_vortex4
+maelstrom1 MONS_SPATIAL_MAELSTROM /*'v'*/
+maelstrom2
+maelstrom3
+maelstrom4
+twister1 MONS_TWISTER /*'v'*/
+twister2
+twister3
+twister4
 vapour MONS_VAPOUR /*'#'*/
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
@@ -235,6 +252,7 @@ silver_star MONS_SILVER_STAR /*'*'*/
 ### Abyssal horrors ('*')
 %sdir mon/abyss
 ancient_zyme MONS_ANCIENT_ZYME
+apocalypse_crab MONS_APOCALYPSE_CRAB
 lurking_horror MONS_LURKING_HORROR
 starcursed_mass MONS_STARCURSED_MASS
 tentacled_starspawn MONS_TENTACLED_STARSPAWN
@@ -390,7 +408,6 @@ orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
 spooky_statue MONS_SPOOKY_STATUE
-snail_statue MONS_SNAIL_STATUE
 chilling_statue MONS_CHILLING_STATUE
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
@@ -475,7 +492,9 @@ maud MONS_MAUD
 maurice MONS_MAURICE
 nikola MONS_NIKOLA
 norris MONS_NORRIS
+%rim 0
 psyche MONS_PSYCHE
+%rim 1
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 terence MONS_TERENCE
@@ -904,7 +923,6 @@ hungry_ghost MONS_HUNGRY_GHOST
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir mon/holy
 spirit MONS_SPIRIT
-blessed_toe MONS_BLESSED_TOE /*'*'*/
 
 ## Dwarves ('q')
 %sdir mon
@@ -947,6 +965,10 @@ ancient_champion MONS_ANCIENT_CHAMPION
 ## Sprint specials
 %sdir mon/sprint
 succubus MONS_SUCCUBUS
+%rim 0
+orb_of_ice MONS_ORB_OF_ICE
+orb_of_electricity MONS_ORB_OF_ELECTRICITY
+%rim 1
 
 %include dc-zombie.txt
 

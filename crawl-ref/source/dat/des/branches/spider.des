@@ -397,14 +397,15 @@ ENDMAP
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling mini_float allow_dup
 DEPTH:  Spider:1-3, Zot:1-4
+KMONS:  0 = patrolling spider
 KMONS:  1 = tarantella
 : if you.branch() == "Zot" then
 KMONS:  2* = jumping spider / orb spider w:5
 KMONS:  3| = ghost moth / moth of wrath
 KITEM:  | = acquire any w:5 / any good_item
 KFEAT:  ` = known zot trap
-KFEAT:  ^ = web w:8 / any trap w:1 / . w:7
-KFEAT:  ~ = zot trap w:15 / shaft trap / web w:5 / . w:5
+KFEAT:  ^ = web w:7 / known web trap w:1 / any trap w:1 / . w:7
+KFEAT:  ~ = zot trap w:15 / shaft trap / web w:4 / known web trap w:1 / . w:5
 NSUBST: 4 = 1:122 / 1:112
 SUBST:  X = c
 : else
@@ -412,7 +413,7 @@ KMONS:  2 = tarantella
 KMONS:  3 = orb spider
 KITEM:  | = superb_item / any good_item w:5
 KFEAT:  ` = known shaft trap
-KFEAT:  ^ = web / . w:6
+KFEAT:  ^ = web w:9 / known web trap w:1 / . w:6
 KFEAT:  ~ = shaft trap w:15 / web / . w:5
 NSUBST: 4 = 1:2 / *:W
 SUBST:  X = x
@@ -421,11 +422,10 @@ KITEM:  * = star_item / superb_item w:5
 KFEAT:  123*| = shallow_water
 KMASK:  . = !no_monster_gen
 SUBST:  ' = ..^
-MARKER: G = lua:props_marker { stop_explore = "statue" }
 MAP
-    ..'''''..
+    ..''0''..
    ..XX'''XX..
-  ..XX`'G'`XX..
+  .0XX`'G'`XX0.
  ..XX~'''''~XX..
 ..XX~''^^^''~XX..
 .XX~''^xxx^''~XX.

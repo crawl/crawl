@@ -47,6 +47,7 @@ enum map_mask_type
     MMT_MIMIC      = 0x100,   // Feature mimics
     MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
     MMT_WAS_DOOR_MIMIC = 0x400, // There was a door mimic there.
+    MMT_NUKED      = 0x800,   // This feature was dug, deconstructed or nuked.
 };
 
 class dgn_region;

@@ -565,7 +565,7 @@ xxxxxxxxxcc.....ccxxxxxxxxx
 xxxxxxxxxc<d.3.d<cxxxxxxxxx
 xxxxxxxxxc...G...cxxxxxxxxx
 xxxxxxxxxcc.....ccxxxxxxxxx
-xxxxxxxxxxcvv=vvcxxxxxxxxxx
+xxxxxxxxxxcvv+vvcxxxxxxxxxx
 xxxxxxxxvvvv...vvvvxxxxxxxx
 xxxxxxvvv.........vvvxxxxxx
 xxxxxvv.............vvxxxxx
@@ -580,7 +580,7 @@ ENDMAP
 ############################################################################
 # River.
 #
-# There will be either a ring of levitation or about three potions.
+# There will be either a ring of flight or about three potions.
 # Loots consists of six good items.
 #
 NAME:    bailey_axe_4
@@ -589,8 +589,8 @@ ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
-ITEM:    potion of levitation ident:type
-ITEM:    ring of levitation ident:type
+ITEM:    potion of flight ident:type
+ITEM:    ring of flight ident:type
 SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
 SUBST:   e = e..
@@ -655,9 +655,8 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # Loot consists of 8 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
-# The secret door does not work well, it will always be open. I also believe
-# that loot is a bit much, but other baileys suffer from that as well... added
-# the warlord in an attempt to make it more even. --dpeg
+# I believe that loot is a bit much, but other baileys suffer from that as
+# well... added the warlord in an attempt to make it more even.  --dpeg
 ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
         potion of magic w:5 / potion of speed w:5 / \
@@ -687,7 +686,7 @@ tttttc.......+....2....+.......cttttt
 ttttcc.......cc.1...1.cc.......cctttt
 ttttc.........c.......c.........ctttt
 tttcc...1.1...ccGG.GGcc...1.1...ccttt
-tttc1....T....1ccc=ccc1....T....1cttt
+tttc1....T....1ccc+ccc1....T....1cttt
 tttcc...1.1...ccc...ccc...1.1...ccttt
 ttttc.........c1.....1c.........ctttt
 ttttcc.......cc..1.1..cc.......cctttt
@@ -765,7 +764,7 @@ xxxxxxxx.xx..w..ccc..ww..xxxxxxxxxx
 x.........xx...cc.cc..ww..........x
 x.wwwwwwwxxxxxccd|ecc..wwwwwwwwww.x
 x.w..xxxxxxxxcc.....cc1..1..1..1w.x
-x.w.ccncccccccccc=ccccccccccncc.w.x
+x.w.ccncccccccccc+ccccccccccncc.w.x
 x.w1cc.$$$.cc.........cE....2cc1w.x
 x.w..nc.$.cc..lllllll..EE...cn..w.x
 x.ww1.cc.cc..ll..2..ll..Ec.cc.1ww.x

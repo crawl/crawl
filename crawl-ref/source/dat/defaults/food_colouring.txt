@@ -5,7 +5,7 @@
 
 inv := menu_colour
 
-inv += $evil:.*evil_eating.*
+inv += $forbidden:.*forbidden.*
 
 inv += $preferred:.*preferred.*
 

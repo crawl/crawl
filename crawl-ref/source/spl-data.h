@@ -313,6 +313,19 @@ struct spell_desc
 },
 
 {
+    SPELL_DISJUNCTION, "Disjunction",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
      SPFLAG_GRID | SPFLAG_AREA,
@@ -898,6 +911,20 @@ struct spell_desc
      false,
      false
 },
+
+{
+    SPELL_FRENZY, "Frenzy",
+     SPTYP_CHARMS,
+     SPFLAG_HASTY | SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
 
 {
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
@@ -1940,6 +1967,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_VAMPIRE_SUMMON, "Vampire Summon",
      SPTYP_SUMMONING,
@@ -1952,6 +1980,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_BRAIN_FEED, "Brain Feed",
@@ -2228,6 +2257,19 @@ struct spell_desc
 },
 
 {
+    SPELL_CHAOS_BREATH, "Chaos Breath",
+     SPTYP_CONJURATION | SPTYP_RANDOM,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     5,
+     0,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_COLD_BREATH, "Cold Breath",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
@@ -2280,7 +2322,7 @@ struct spell_desc
 },
 
 {
-    SPELL_KRAKEN_TENTACLES, "Spawn Tentacles",
+    SPELL_CREATE_TENTACLES, "Spawn Tentacles",
      SPTYP_SUMMONING,
      SPFLAG_MONSTER,
      5,
@@ -2614,32 +2656,6 @@ struct spell_desc
      0,
      NULL,
      true,
-     false
-},
-
-{
-    SPELL_SUMMON_HOLIES, "Summon Holies",
-     SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
-     5,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
-    SPELL_HOLY_WORD, "Holy Word",
-     SPTYP_NONE,
-     SPFLAG_AREA,
-     6,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
      false
 },
 

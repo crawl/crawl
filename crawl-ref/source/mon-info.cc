@@ -153,6 +153,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_OZOCUBUS_ARMOUR;
     case ENCH_WRETCHED:
         return MB_WRETCHED;
+    case ENCH_SCREAMED:
+        return MB_SCREAMED;
     default:
         return NUM_MB_FLAGS;
     }
@@ -305,9 +307,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     mbase_speed = mons_class_base_speed(type);
 
-    fly = mons_class_flies(type);
-    if (fly == FL_NONE)
-        fly = mons_class_flies(base_type);
+    fly = max(mons_class_flies(type), mons_class_flies(base_type));
 
     if (mons_class_wields_two_weapons(type)
         || mons_class_wields_two_weapons(base_type))
@@ -425,7 +425,9 @@ monster_info::monster_info(const monster* m, int milev)
             || type == MONS_SHEDU
             || type == MONS_KRAKEN_TENTACLE
             || type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || type == MONS_ELDRITCH_TENTACLE_SEGMENT)
+            || type == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || type == MONS_STARSPAWN_TENTACLE
+            || type == MONS_STARSPAWN_TENTACLE_SEGMENT)
         {
             number = 0;
         }
@@ -435,8 +437,7 @@ monster_info::monster_info(const monster* m, int milev)
 
         if (m->is_summoned())
             mb.set(MB_SUMMONED);
-
-        if (m->is_perm_summoned())
+        else if (m->is_perm_summoned())
             mb.set(MB_PERM_SUMMON);
     }
     else
@@ -977,8 +978,10 @@ string monster_info::mimic_name() const
         s = "inept ";
     if (type == MONS_RAVENOUS_ITEM_MIMIC || type == MONS_RAVENOUS_FEATURE_MIMIC)
         s = "ravenous ";
-    if (type == MONS_MONSTROUS_ITEM_MIMIC || type == MONS_MONSTROUS_FEATURE_MIMIC)
+#if TAG_MAJOR_VERSION == 34
+    if (type == MONS_MONSTROUS_ITEM_MIMIC)
         s = "monstrous ";
+#endif
 
     if (props.exists("feat_type"))
         s += feat_type_name(get_mimic_feature());
@@ -1559,7 +1562,7 @@ bool monster_info::cannot_move() const
 
 bool monster_info::airborne() const
 {
-    return (fly == FL_LEVITATE) || (fly == FL_FLY && !cannot_move());
+    return (fly == FL_LEVITATE) || (fly == FL_WINGED && !cannot_move());
 }
 
 bool monster_info::ground_level() const
@@ -1581,7 +1584,7 @@ void get_monster_info(vector<monster_info>& mons)
     for (unsigned int i = 0; i < visible.size(); i++)
     {
         if (!mons_class_flag(visible[i]->type, M_NO_EXP_GAIN)
-            || visible[i]->type == MONS_KRAKEN_TENTACLE
+            || visible[i]->is_child_tentacle()
             || visible[i]->type == MONS_BALLISTOMYCETE
                 && visible[i]->number > 0)
         {

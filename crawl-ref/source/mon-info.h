@@ -85,6 +85,7 @@ enum monster_info_flags
     MB_OZOCUBUS_ARMOUR,
     MB_STONESKIN,
     MB_WRETCHED,
+    MB_SCREAMED,
     NUM_MB_FLAGS
 };
 
