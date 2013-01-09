@@ -415,7 +415,7 @@ static int _abyss_exit_chance()
 {
     if (you.runes[RUNE_ABYSSAL])
         return 7500;
-    int depth_mod = _abyssal_depth_factor();
+    const int depth_mod = _abyssal_depth_factor();
     int exit_chance = 1000 + depth_mod * depth_mod;
     if (crawl_state.game_is_sprint())
         exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
