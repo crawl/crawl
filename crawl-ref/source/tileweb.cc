@@ -3,10 +3,13 @@
 #ifdef USE_TILE_WEB
 
 #include "artefact.h"
+#include "branch.h"
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
 #include "files.h"
+#include "itemname.h"
+#include "lang-fake.h"
 #include "libutil.h"
 #include "map_knowledge.h"
 #include "menu.h"
@@ -15,8 +18,10 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "state.h"
 #include "stuff.h"
+#include "skills2.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
@@ -89,6 +94,7 @@ TilesFramework tiles;
 TilesFramework::TilesFramework()
     : m_crt_mode(CRT_NORMAL),
       m_controlled_from_web(false),
+      m_last_ui_state(UI_INIT),
       m_view_loaded(false),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
@@ -97,8 +103,6 @@ TilesFramework::TilesFramework()
       m_need_full_map(true),
       m_text_crt("crt"),
       m_text_menu("menu_txt"),
-      m_text_stat("stats"),
-      m_text_message("messages"),
       m_print_fg(15)
 {
     screen_cell_t default_cell;
@@ -149,17 +153,8 @@ bool TilesFramework::initialise()
     return true;
 }
 
-void TilesFramework::write_message()
-{
-    for (unsigned int i = 0; i < m_prefixes.size(); ++i)
-        m_msg_buf.append(m_prefixes[i].data());
-    m_prefixes.clear();
-}
-
 void TilesFramework::write_message(const char *format, ...)
 {
-    write_message(); // prefixes
-
     char buf[2048];
     int len;
 
@@ -179,7 +174,6 @@ void TilesFramework::write_message(const char *format, ...)
 
 void TilesFramework::finish_message()
 {
-    m_prefixes.clear();
     if (m_msg_buf.size() == 0)
         return;
 
@@ -223,16 +217,8 @@ void TilesFramework::finish_message()
     m_msg_buf.clear();
 }
 
-void TilesFramework::send_message()
-{
-    write_message();
-    finish_message();
-}
-
 void TilesFramework::send_message(const char *format, ...)
 {
-    write_message();
-
     char buf[2048];
     int len;
 
@@ -404,28 +390,16 @@ bool TilesFramework::await_input(wint_t& c, bool block)
     }
 }
 
-void TilesFramework::push_prefix(const string& prefix)
-{
-    m_prefixes.push_back(prefix);
-}
-
-void TilesFramework::pop_prefix(const string& suffix)
-{
-    if (!m_prefixes.empty())
-        m_prefixes.pop_back();
-    else
-        write_message("%s", suffix.c_str());
-}
-
-bool TilesFramework::prefix_popped()
-{
-    return m_prefixes.empty();
-}
-
 void TilesFramework::dump()
 {
     fprintf(stderr, "Webtiles message buffer: %s\n", m_msg_buf.c_str());
-    fprintf(stderr, "Webtiles prefix count: %d\n", (int) m_prefixes.size());
+    fprintf(stderr, "Webtiles JSON stack:\n");
+    for (unsigned int i = 0; i < m_json_stack.size(); ++i)
+    {
+        fprintf(stderr, "start: %d end: %d type: %c\n",
+                m_json_stack[i].start, m_json_stack[i].prefix_end,
+                m_json_stack[i].type);
+    }
 }
 
 void TilesFramework::_send_version()
@@ -436,7 +410,7 @@ void TilesFramework::_send_version()
 #endif
 
     string title = CRAWL " " + Version::Long();
-    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
+    send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
 }
 
 void TilesFramework::push_menu(Menu* m)
@@ -445,7 +419,7 @@ void TilesFramework::push_menu(Menu* m)
     mi.menu = m;
     m_menu_stack.push_back(mi);
     m->webtiles_write_menu();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void TilesFramework::push_crt_menu(string tag)
@@ -460,7 +434,12 @@ void TilesFramework::push_crt_menu(string tag)
     json_write_string("type", "crt");
     json_write_string("tag", tag);
     json_close_object();
-    send_message();
+    finish_message();
+}
+
+bool TilesFramework::is_in_crt_menu()
+{
+    return !m_menu_stack.empty() && m_menu_stack.back().menu == NULL;
 }
 
 void TilesFramework::pop_menu()
@@ -468,7 +447,7 @@ void TilesFramework::pop_menu()
     if (m_menu_stack.empty()) return;
     MenuInfo mi = m_menu_stack.back();
     m_menu_stack.pop_back();
-    send_message("{msg:'close_menu'}");
+    send_message("{\"msg\":\"close_menu\"}");
 }
 
 void TilesFramework::close_all_menus()
@@ -483,7 +462,7 @@ static void _send_ui_state(WebtilesUIState state)
     tiles.json_write_string("msg", "ui_state");
     tiles.json_write_int("state", state);
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void TilesFramework::set_ui_state(WebtilesUIState state)
@@ -491,7 +470,307 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     if (m_ui_state == state) return;
 
     m_ui_state = state;
-    _send_ui_state(state);
+}
+
+void TilesFramework::update_input_mode(mouse_mode mode)
+{
+    redraw();
+
+    json_open_object();
+    json_write_string("msg", "input_mode");
+    json_write_int("mode", mode);
+    json_close_object();
+    finish_message();
+}
+
+static bool _update_string(bool force, string& current,
+                           const string& next,
+                           const string& name,
+                           bool update = true)
+{
+    if (force || (current != next))
+    {
+        tiles.json_write_string(name, next);
+        if (update)
+            current = next;
+        return true;
+    }
+    else
+        return false;
+}
+
+template<class T> static bool _update_int(bool force, T& current, T next,
+                                          const string& name,
+                                          bool update = true)
+{
+    if (force || (current != next))
+    {
+        tiles.json_write_int(name, next);
+        if (update)
+            current = next;
+        return true;
+    }
+    else
+        return false;
+}
+
+static bool _update_statuses(player_info& c)
+{
+    bool changed = false;
+    unsigned int counter = 0;
+    status_info inf;
+    for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
+    {
+        if (!fill_status_info(status, &inf))
+            continue;
+
+        if (!inf.light_text.empty() || !inf.short_text.empty())
+        {
+            if (!changed)
+            {
+                if (counter >= c.status.size()
+                    || inf.light_text != c.status[counter].light_text
+                    || inf.light_colour != c.status[counter].light_colour
+                    || inf.short_text != c.status[counter].short_text)
+                {
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                c.status.resize(counter + 1);
+                c.status[counter] = inf;
+            }
+
+            counter++;
+        }
+    }
+    if (c.status.size() != counter)
+    {
+        ASSERT(!changed);
+        changed = true;
+        c.status.resize(counter);
+    }
+
+    return changed;
+}
+
+player_info::player_info()
+{
+    for (unsigned int i = 0; i < NUM_EQUIP; ++i)
+        equip[i] = -1;
+    position = coord_def(-1, -1);
+}
+
+void TilesFramework::_send_player(bool force_full)
+{
+    player_info& c = m_current_player_info;
+
+    json_open_object();
+    json_write_string("msg", "player");
+    json_treat_as_empty();
+
+    _update_string(force_full, c.name, you.your_name, "name");
+    _update_string(force_full, c.job_title, filtered_lang(player_title()),
+                   "title");
+    _update_int(force_full, c.wizard, you.wizard, "wizard");
+    _update_string(force_full, c.species, species_name(you.species),
+                   "species");
+    string god = "";
+    if (you.religion == GOD_JIYVA)
+        god = god_name_jiyva(true);
+    else if (you.religion != GOD_NO_GOD)
+        god = god_name(you.religion);
+    _update_string(force_full, c.god, god, "god");
+    _update_int(force_full, c.under_penance, player_under_penance(), "penance");
+    uint8_t prank = 0;
+    if (you.religion == GOD_XOM)
+    {
+        if (!you.gift_timeout)
+            prank = 2;
+        else if (you.gift_timeout == 1)
+            prank = 1;
+    }
+    else if (you.religion != GOD_NO_GOD)
+        prank = max(0, piety_rank() - 1);
+    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+             && !had_gods())
+    {
+        prank = 2;
+    }
+    _update_int(force_full, c.piety_rank, prank, "piety_rank");
+
+    _update_int(force_full, c.form, (uint8_t) you.form, "form");
+
+    _update_int(force_full, c.hp, you.hp, "hp");
+    _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
+    _update_int(force_full, c.real_hp_max, get_real_hp(true, true), "real_hp_max");
+
+    _update_int(force_full, c.mp, you.magic_points, "mp");
+    _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+
+    _update_int(force_full, c.armour_class, you.armour_class(), "ac");
+    _update_int(force_full, c.evasion, player_evasion(), "ev");
+    _update_int(force_full, c.shield_class, player_shield_class(), "sh");
+
+    _update_int(force_full, c.strength, (int8_t) you.strength(false), "str");
+    _update_int(force_full, c.strength_max, (int8_t) you.max_strength(), "str_max");
+    _update_int(force_full, c.intel, (int8_t) you.intel(false), "int");
+    _update_int(force_full, c.intel_max, (int8_t) you.max_intel(), "int_max");
+    _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
+    _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
+
+    if (you.species == SP_FELID)
+    {
+        _update_int(force_full, c.lives, you.lives, "lives");
+        _update_int(force_full, c.deaths, you.deaths, "deaths");
+    }
+
+    _update_int(force_full, c.experience_level, you.experience_level, "xl");
+    _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
+    _update_int(force_full, c.gold, you.gold, "gold");
+
+    if (crawl_state.game_is_zotdef())
+        _update_int(force_full, c.zot_points, you.zot_points, "zp");
+    if (you.running == 0) // Don't update during running/resting
+        _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+
+    const PlaceInfo& place = you.get_place_info();
+    string short_name = branches[place.branch].shortname;
+
+    if (brdepth[place.branch] == 1)
+    {
+        // Definite articles
+        if (place.branch == BRANCH_ABYSS)
+            short_name.insert(0, "The ");
+        // Indefinite articles
+        else if (place.branch != BRANCH_PANDEMONIUM &&
+                 !is_connected_branch(place.branch))
+        {
+            short_name = article_a(short_name);
+        }
+    }
+    _update_string(force_full, c.place, short_name, "place");
+    _update_int(force_full, c.depth, brdepth[place.branch] > 1 ? you.depth : 0, "depth");
+
+    if (m_origin.equals(-1, -1))
+        m_origin = you.position;
+    coord_def pos = you.position - m_origin;
+    if (force_full || (c.position != pos))
+    {
+        json_open_object("pos");
+        json_write_int("x", pos.x);
+        json_write_int("y", pos.y);
+        json_close_object();
+        c.position = pos;
+    }
+
+    if (force_full || _update_statuses(c))
+    {
+        json_open_array("status");
+        for (unsigned int i = 0; i < c.status.size(); ++i)
+        {
+            json_open_object();
+            if (!c.status[i].light_text.empty())
+                json_write_string("light", c.status[i].light_text);
+            if (!c.status[i].short_text.empty())
+                json_write_string("text", c.status[i].short_text);
+            if (c.status[i].light_colour)
+                json_write_int("col", c.status[i].light_colour);
+            json_close_object(true);
+        }
+        json_close_array();
+    }
+
+    json_open_object("inv");
+    for (unsigned int i = 0; i < ENDOFPACK; ++i)
+    {
+        json_open_object(make_stringf("%d", i));
+        _send_item(c.inv[i], get_item_info(you.inv[i]), force_full);
+        json_close_object(true);
+    }
+    json_close_object(true);
+
+    json_open_object("equip");
+    for (unsigned int i = 0; i < NUM_EQUIP; ++i)
+    {
+        _update_int(force_full, c.equip[i], you.equip[i],
+                    make_stringf("%d", i));
+    }
+    json_close_object(true);
+
+    _update_int(force_full, c.quiver_item,
+                (int8_t) you.m_quiver->get_fire_item(), "quiver_item");
+
+    _update_string(force_full, c.unarmed_attack,
+                   you.unarmed_attack_name(), "unarmed_attack");
+
+    json_close_object(true);
+
+    finish_message();
+}
+
+void TilesFramework::_send_item(item_info& current, const item_info& next,
+                                bool force_full)
+{
+    bool changed = false;
+
+    if (force_full || (current.base_type != next.base_type))
+    {
+        changed = true;
+        json_write_int("base_type", next.base_type);
+    }
+
+    changed |= _update_int(force_full, current.sub_type, next.sub_type,
+                           "sub_type", false);
+    changed |= _update_int(force_full, current.plus, next.plus,
+                           "plus", false);
+    changed |= _update_int(force_full, current.plus2, next.plus2,
+                           "plus2", false);
+    changed |= _update_int(force_full, current.quantity, next.quantity,
+                           "quantity", false);
+    changed |= _update_int(force_full, current.flags, next.flags,
+                           "flags", false);
+    changed |= _update_string(force_full, current.inscription,
+                              next.inscription, "inscription", false);
+
+    // TODO: props?
+
+    changed |= (current.special != next.special);
+
+    // Derived stuff
+    if (changed)
+    {
+        string name = next.name(DESC_A, true, false, true);
+        if (force_full || current.name(DESC_A, true, false, true) != name)
+        {
+            json_write_string("name", name);
+
+            const string current_prefix = item_prefix(current);
+            const string prefix = item_prefix(next);
+            if (force_full || current_prefix != prefix)
+            {
+                const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
+                const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
+                if (current_prefcol != prefcol)
+                    json_write_int("col", prefcol);
+            }
+        }
+
+        tileidx_t tile = tileidx_item(next);
+        if (force_full || tileidx_item(current) != tile)
+        {
+            json_open_array("tile");
+            tileidx_t base_tile = tileidx_known_base_item(tile);
+            if (base_tile)
+                json_write_int(base_tile);
+            json_write_int(tile);
+            json_close_array();
+        }
+
+        current = next;
+    }
 }
 
 
@@ -549,7 +828,7 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    tiles.write_message("doll:[");
+    tiles.json_open_array("doll");
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
@@ -569,35 +848,40 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
             ymax = 18;
         }
 
-        tiles.write_message("[%u,%d],", (unsigned int) doll.parts[p], ymax);
+        tiles.json_write_comma();
+        tiles.write_message("[%u,%d]", (unsigned int) doll.parts[p], ymax);
     }
 
-    tiles.write_message("],");
+    tiles.json_close_array();
 }
 
 static void _send_mcache(mcache_entry *entry, bool submerged)
 {
     bool trans = entry->transparent();
     if (trans)
-        tiles.write_message("trans:true,");
+        tiles.json_write_int("trans", 1);
 
     const dolls_data *doll = entry->doll();
     if (doll)
         _send_doll(*doll, submerged, trans);
     else
-        tiles.write_message("doll:[],");
+    {
+        tiles.json_write_comma();
+        tiles.write_message("\"doll\":[]");
+    }
 
-    tiles.write_message("mcache:[");
+    tiles.json_open_array("mcache");
 
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
     {
-        tiles.write_message("[%u,%d,%d],", (unsigned int) dinfo[i].idx,
+        tiles.json_write_comma();
+        tiles.write_message("[%u,%d,%d]", (unsigned int) dinfo[i].idx,
                             dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 
-    tiles.write_message("],");
+    tiles.json_close_array();
 }
 
 static bool _in_water(const packed_cell &cell)
@@ -649,30 +933,31 @@ void TilesFramework::_send_cell(const coord_def &gc,
                                 bool force_full)
 {
     if (current_mc.feat() != next_mc.feat())
-        write_message("f:%d,", next_mc.feat());
+        json_write_int("f", next_mc.feat());
 
     if (next_mc.monsterinfo())
         _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
     else if (current_mc.monsterinfo())
-        write_message("mon:null,");
+        json_write_null("mon");
 
     map_feature mf = get_cell_map_feature(next_mc);
     if (get_cell_map_feature(current_mc) != mf)
-        write_message("mf:%u,", mf);
+        json_write_int("mf", mf);
 
     // Glyph and colour
     ucs_t glyph = next_sc.glyph;
     if (current_sc.glyph != glyph)
     {
+        json_write_comma();
         if (glyph == '\\')
-            write_message("g:'\\\\',");
-        else if (glyph == '\'')
-            write_message("g:'\\'',");
+            write_message("\"g\":\"\\\\\"");
+        else if (glyph == '"')
+            write_message("\"g\":\"\\\"\"");
         else
         {
             char buf[5];
             buf[wctoutf8(buf, glyph)] = 0;
-            write_message("g:'%s',", buf);
+            write_message("\"g\":\"%s\"", buf);
         }
     }
     if ((current_sc.colour != next_sc.colour
@@ -680,10 +965,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
     {
         int col = next_sc.colour;
         col = (_get_brand(col) << 4) | (col & 0xF);
-        write_message("col:%d,", col);
+        json_write_int("col", col);
     }
 
-    push_prefix("t:{");
+    json_open_object("t");
     {
         // Tile data
         const packed_cell &next_pc = next_sc.tile;
@@ -698,61 +983,62 @@ void TilesFramework::_send_cell(const coord_def &gc,
         {
             fg_changed = true;
 
-            write_message("fg:");
+            json_write_name("fg");
             _write_tileidx(next_pc.fg);
-            write_message(",");
             if (fg_idx && fg_idx <= TILE_MAIN_MAX)
-                write_message("base:%u,", (unsigned int) tileidx_known_base_item(fg_idx));
+                json_write_int("base", (int) tileidx_known_base_item(fg_idx));
         }
 
         if (next_pc.bg != current_pc.bg)
         {
-            write_message("bg:");
+            json_write_name("bg");
             _write_tileidx(next_pc.bg);
-            write_message(",");
         }
 
         if (next_pc.is_bloody != current_pc.is_bloody)
-            write_message("bloody:%u,", next_pc.is_bloody);
+            json_write_bool("bloody", next_pc.is_bloody);
 
         if (next_pc.old_blood != current_pc.old_blood)
-            write_message("old_blood:%u,", next_pc.old_blood);
+            json_write_bool("old_blood", next_pc.old_blood);
 
         if (next_pc.is_silenced != current_pc.is_silenced)
-            write_message("silenced:%u,", next_pc.is_silenced);
+            json_write_bool("silenced", next_pc.is_silenced);
 
         if (next_pc.is_suppressed != current_pc.is_suppressed)
-            write_message("suppressed:%u,", next_pc.is_suppressed);
+            json_write_bool("suppressed", next_pc.is_suppressed);
 
         if (next_pc.halo != current_pc.halo)
-            write_message("halo:%u,", next_pc.halo);
+            json_write_int("halo", next_pc.halo);
 
         if (next_pc.is_moldy != current_pc.is_moldy)
-            write_message("moldy:%u,", next_pc.is_moldy);
+            json_write_bool("moldy", next_pc.is_moldy);
 
         if (next_pc.glowing_mold != current_pc.glowing_mold)
-            write_message("glowing_mold:%u,", next_pc.glowing_mold);
+            json_write_bool("glowing_mold", next_pc.glowing_mold);
 
         if (next_pc.is_sanctuary != current_pc.is_sanctuary)
-            write_message("sanctuary:%u,", next_pc.is_sanctuary);
+            json_write_bool("sanctuary", next_pc.is_sanctuary);
 
         if (next_pc.is_liquefied != current_pc.is_liquefied)
-            write_message("liquefied:%u,", next_pc.is_liquefied);
+            json_write_bool("liquefied", next_pc.is_liquefied);
 
         if (next_pc.orb_glow != current_pc.orb_glow)
-            write_message("orb_glow:%u,", next_pc.orb_glow);
+            json_write_int("orb_glow", next_pc.orb_glow);
 
         if (next_pc.quad_glow != current_pc.quad_glow)
-            write_message("quad_glow:%u,", next_pc.quad_glow);
+            json_write_bool("quad_glow", next_pc.quad_glow);
+
+        if (next_pc.disjunct != current_pc.disjunct)
+            json_write_bool("disjunct", next_pc.disjunct);
 
         if (next_pc.mangrove_water != current_pc.mangrove_water)
-            write_message("swtree:%u,", next_pc.mangrove_water);
+            json_write_bool("mangrove_water", next_pc.mangrove_water);
 
         if (next_pc.blood_rotation != current_pc.blood_rotation)
-            write_message("bloodrot:%d,", next_pc.blood_rotation);
+            json_write_int("blood_rotation", next_pc.blood_rotation);
 
         if (next_pc.travel_trail != current_pc.travel_trail)
-            write_message("tt:%d,", next_pc.travel_trail);
+            json_write_int("travel_trail", next_pc.travel_trail);
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor
@@ -760,10 +1046,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
              || !_needs_flavour(current_pc)
              || force_full))
         {
-            write_message("flv:{f:%d,", next_pc.flv.floor);
+            json_open_object("flv");
+            json_write_int("f", next_pc.flv.floor);
             if (next_pc.flv.special)
-                write_message("s:%d,", next_pc.flv.special);
-            write_message("},");
+                json_write_int("s", next_pc.flv.special);
+            json_close_object();
         }
 
         if (fg_idx >= TILEP_MCACHE_START)
@@ -774,7 +1061,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 if (entry)
                     _send_mcache(entry, in_water);
                 else
-                    write_message("doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
+                {
+                    json_write_comma();
+                    write_message("\"doll\":[[%d,%d]]", TILEP_MONS_UNKNOWN, TILE_Y);
+                }
             }
         }
         else if (fg_idx == TILEP_PLAYER)
@@ -794,7 +1084,8 @@ void TilesFramework::_send_cell(const coord_def &gc,
         {
             if (fg_changed)
             {
-                write_message("doll:[[%u,%d]],", (unsigned int) fg_idx, TILE_Y);
+                json_write_comma();
+                write_message("\"doll\":[[%u,%d]]", (unsigned int) fg_idx, TILE_Y);
                 // TODO: _transform_add_weapon
             }
         }
@@ -817,13 +1108,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (overlays_changed)
         {
-            write_message("ov:[");
+            json_open_array("ov");
             for (int i = 0; i < next_pc.num_dngn_overlay; ++i)
-                write_message("%d,", next_pc.dngn_overlay[i]);
-            write_message("],");
+                json_write_int(next_pc.dngn_overlay[i]);
+            json_close_array();
         }
     }
-    pop_prefix("},");
+    json_close_object(true);
 }
 
 void TilesFramework::_send_map(bool force_full)
@@ -833,10 +1124,23 @@ void TilesFramework::_send_map(bool force_full)
     force_full = force_full || m_need_full_map;
     m_need_full_map = false;
 
-    push_prefix("{msg:\"map\",");
+    json_open_object();
+    json_write_string("msg", "map");
+    json_treat_as_empty();
 
     if (force_full)
-        write_message("clear:1,");
+        json_write_bool("clear", true);
+
+    if (m_current_gc != m_next_gc)
+    {
+        if (m_origin.equals(-1, -1))
+            m_origin = m_next_gc;
+        json_open_object("vgrdc");
+        json_write_int("x", m_next_gc.x - m_origin.x);
+        json_write_int("y", m_next_gc.y - m_origin.y);
+        json_close_object();
+        m_current_gc = m_next_gc;
+    }
 
     screen_cell_t default_cell;
     default_cell.tile.bg = TILE_FLAG_UNSEEN;
@@ -847,7 +1151,7 @@ void TilesFramework::_send_map(bool force_full)
     coord_def last_gc(0, 0);
     bool send_gc = true;
 
-    push_prefix("cells:[");
+    json_open_array("cells");
     for (int y = 0; y < GYM; y++)
         for (int x = 0; x < GXM; x++)
         {
@@ -870,14 +1174,15 @@ void TilesFramework::_send_map(bool force_full)
             if (m_origin.equals(-1, -1))
                 m_origin = gc;
 
+            json_open_object();
             if (send_gc
                 || last_gc.x + 1 != gc.x
                 || last_gc.y != gc.y)
             {
-                push_prefix(make_stringf("{x:%d,y:%d,", (x - m_origin.x), (y - m_origin.y)));
+                json_write_int("x", x - m_origin.x);
+                json_write_int("y", y - m_origin.y);
+                json_treat_as_empty();
             }
-            else
-                push_prefix("{");
 
             const screen_cell_t& sc = force_full ? default_cell
                 : m_current_view(gc);
@@ -889,15 +1194,18 @@ void TilesFramework::_send_map(bool force_full)
                        mc, env.map_knowledge(gc),
                        new_monster_locs, force_full);
 
-            if (prefix_popped())
+            if (!json_is_empty())
             {
                 send_gc = false;
                 last_gc = gc;
             }
-            pop_prefix("},");
+            json_close_object(true);
         }
-    pop_prefix("]");
-    pop_prefix("}");
+    json_close_array(true);
+
+    json_close_object(true);
+
+    finish_message();
 
     m_current_map_knowledge = env.map_knowledge;
     m_current_view = m_next_view;
@@ -909,13 +1217,13 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
                                    map<uint32_t, coord_def>& new_monster_locs,
                                    bool force_full)
 {
+    json_open_object("mon");
     if (m->client_id)
     {
-        push_prefix(make_stringf("mon:{id:%d,", m->client_id));
+        json_write_int("id", m->client_id);
+        json_treat_as_empty();
         new_monster_locs[m->client_id] = gc;
     }
-    else
-        push_prefix("mon:{");
 
     const monster_info* last = NULL;
     map<uint32_t, coord_def>::const_iterator it =
@@ -925,52 +1233,47 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         last = m_current_map_knowledge(gc).monsterinfo();
 
         if (last && (last->client_id != m->client_id))
-            write_message(); // Force sending at least the id
+            json_treat_as_nonempty(); // Force sending at least the id
     }
     else
     {
         last = m_current_map_knowledge(it->second).monsterinfo();
 
         if (it->second != gc)
-            write_message(); // As above
+            json_treat_as_nonempty(); // As above
     }
 
     if (last == NULL)
         force_full = true;
 
     if (force_full || (last->full_name() != m->full_name()))
-    {
-        write_message("name:'%s',",
-                      replace_all_of(m->full_name(), "'", "\\'").c_str());
-    }
+        json_write_string("name", m->full_name());
 
     if (force_full || (last->pluralised_name() != m->pluralised_name()))
-    {
-        write_message("plural:'%s',",
-                      replace_all_of(m->pluralised_name(), "'", "\\'").c_str());
-    }
+        json_write_string("plural", m->pluralised_name());
 
     if (force_full || (last->type != m->type))
     {
-        write_message("type:%d,", m->type);
+        json_write_int("type", m->type);
 
         // TODO: get this information to the client in another way
-        write_message("typedata:{avghp:%d,", mons_avg_hp(m->type));
+        json_open_object("typedata");
+        json_write_int("avghp", mons_avg_hp(m->type));
         if (mons_class_flag(m->type, M_NO_EXP_GAIN))
-            write_message("no_exp:1,");
-        write_message("},");
+            json_write_bool("no_exp", true);
+        json_close_object();
     }
 
     if (force_full || (last->attitude != m->attitude))
-        write_message("att:%d,", m->attitude);
+        json_write_int("att", m->attitude);
 
     if (force_full || (last->base_type != m->base_type))
-        write_message("btype:%d,", m->base_type);
+        json_write_int("btype", m->base_type);
 
     if (force_full || (last->threat != m->threat))
-        write_message("threat:%d,", m->threat);
+        json_write_int("threat", m->threat);
 
-    pop_prefix("},");
+    json_close_object(true);
 }
 
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
@@ -1039,32 +1342,8 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     place_cursor(CURSOR_MAP, cen);
 }
 
-static const int min_stat_height = 12;
-static const int stat_width = 42;
-
-static void _send_layout_data()
-{
-    tiles.json_open_object();
-    tiles.json_write_string("msg", "layout");
-
-    tiles.json_write_int("stat_width", crawl_view.hudsz.x);
-    tiles.json_write_int("show_diameter", ENV_SHOW_DIAMETER);
-    tiles.json_write_int("gxm", GXM);
-    tiles.json_write_int("gym", GYM);
-    tiles.json_write_int("msg_height", crawl_view.msgsz.y);
-
-    tiles.json_close_object();
-
-    tiles.send_message();
-}
-
 void TilesFramework::resize()
 {
-    // Send the client the necessary data to do the layout
-    _send_layout_data();
-
-    m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
     m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
     m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
@@ -1075,19 +1354,17 @@ void TilesFramework::resize()
 void TilesFramework::_send_everything()
 {
     _send_version();
-    _send_layout_data();
-
-    send_message("{msg:\"vgrdc\",x:%d,y:%d}",
-                 m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
-    send_message("{msg:\"flash\",col:%d}", m_current_flash_colour);
-
-    _send_map(true);
-    finish_message();
-
-    send_message("{msg:'redraw'}");
 
     // UI State
     _send_ui_state(m_ui_state);
+    m_last_ui_state = m_ui_state;
+
+    send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
+
+    _send_map(true);
+
+     // Player
+    _send_player(true);
 
     // Menus
     json_open_object();
@@ -1108,11 +1385,13 @@ void TilesFramework::_send_everything()
     }
     json_close_array();
     json_close_object();
-    send_message();
+    finish_message();
+
+    webtiles_send_last_messages();
+
+    update_input_mode(mouse_control::current_mode());
 
     m_text_crt.send(true);
-    m_text_stat.send(true);
-    m_text_message.send(true);
     m_text_menu.send(true);
 }
 
@@ -1147,13 +1426,10 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
             break;
         }
         break;
+    case GOTO_STAT:
     case GOTO_MSG:
         set_ui_state(UI_NORMAL);
-        m_print_area = &m_text_message;
-        break;
-    case GOTO_STAT:
-        set_ui_state(UI_NORMAL);
-        m_print_area = &m_text_stat;
+        m_print_area = NULL;
         break;
     default:
         m_print_area = NULL;
@@ -1166,39 +1442,27 @@ void TilesFramework::redraw()
 {
     if (!has_receivers()) return;
 
+    if (m_last_ui_state != m_ui_state)
+    {
+        _send_ui_state(m_ui_state);
+        m_last_ui_state = m_ui_state;
+    }
+
     m_text_crt.send();
-    m_text_stat.send();
-    m_text_message.send();
     m_text_menu.send();
 
-    if (m_need_redraw)
-    {
-        push_prefix("{msg:'multi',msgs:[");
-        if (m_current_gc != m_next_gc)
-        {
-            if (m_origin.equals(-1, -1))
-                m_origin = m_next_gc;
-            write_message("{msg:'vgrdc',x:%d,y:%d},",
-                          m_next_gc.x - m_origin.x,
-                          m_next_gc.y - m_origin.y);
-            m_current_gc = m_next_gc;
-        }
+    _send_player();
+    webtiles_send_messages();
 
+    if (m_need_redraw && m_view_loaded)
+    {
         if (m_current_flash_colour != m_next_flash_colour)
         {
-            write_message("{msg:'flash',col:%d},",
-                          m_next_flash_colour);
+            send_message("{\"msg\":\"flash\",\"col\":%d}",
+                         m_next_flash_colour);
             m_current_flash_colour = m_next_flash_colour;
         }
-
-        if (m_view_loaded)
-        {
-            push_prefix("");
-            _send_map(false);
-            pop_prefix(",");
-        }
-        pop_prefix("{msg:'redraw'}]}");
-        finish_message();
+        _send_map(false);
     }
 
     m_need_redraw = false;
@@ -1264,13 +1528,13 @@ void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 
         if (result == NO_CURSOR)
         {
-            send_message("{msg:\"cursor\",id:%d}", type);
+            send_message("{\"msg\":\"cursor\",\"id\":%d}", type);
             return;
         }
         else
         {
-            send_message("{msg:\"cursor\",id:%d,loc:{x:%d,y:%d}}", type,
-                    result.x - m_origin.x, result.y - m_origin.y);
+            send_message("{\"msg\":\"cursor\",\"id\":%d,\"loc\":{\"x\":%d,\"y\":%d}}",
+                         type, result.x - m_origin.x, result.y - m_origin.y);
         }
     }
 }
@@ -1300,14 +1564,14 @@ void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 
     m_has_overlays = true;
 
-    send_message("{msg:'overlay',idx:%u,x:%d,y:%d}", (unsigned int) idx,
-            gc.x - m_origin.x, gc.y - m_origin.y);
+    send_message("{\"msg\":\"overlay\",\"idx\":%u,\"x\":%d,\"y\":%d}",
+                 (unsigned int) idx, gc.x - m_origin.x, gc.y - m_origin.y);
 }
 
 void TilesFramework::clear_overlays()
 {
     if (m_has_overlays)
-        send_message("{msg:'clear_overlays'}");
+        send_message("{\"msg\":\"clear_overlays\"}");
 
     m_has_overlays = false;
 }
@@ -1430,49 +1694,84 @@ void TilesFramework::write_message_escaped(const string& s)
     }
 }
 
-void TilesFramework::json_open_object(const string& name)
+void TilesFramework::json_open(const string& name, char opener, char type)
 {
+    m_json_stack.resize(m_json_stack.size() + 1);
+    JsonFrame& fr = m_json_stack.back();
+    fr.start = m_msg_buf.size();
+
     json_write_comma();
     if (!name.empty())
         json_write_name(name);
 
-    write_message("{");
-    json_object_level++;
-    need_comma = false;
+    m_msg_buf.append(1, opener);
+
+    fr.prefix_end = m_msg_buf.size();
+    fr.type = type;
 }
 
-void TilesFramework::json_close_object()
+void TilesFramework::json_treat_as_empty()
 {
-    write_message("}");
-    json_object_level--;
-    need_comma = true;
+    if (m_json_stack.empty())
+        die("json error: empty stack");
+    m_json_stack.back().prefix_end = m_msg_buf.size();
+}
+
+void TilesFramework::json_treat_as_nonempty()
+{
+    if (m_json_stack.empty())
+        die("json error: empty stack");
+    m_json_stack.back().prefix_end = -1;
+}
+
+bool TilesFramework::json_is_empty()
+{
+    if (m_json_stack.empty())
+        die("json error: empty stack");
+    return m_json_stack.back().prefix_end == (int) m_msg_buf.size();
+}
+
+void TilesFramework::json_close(bool erase_if_empty, char type)
+{
+    if (m_json_stack.empty())
+        die("json error: attempting to close object/array on empty stack");
+    if (m_json_stack.back().type != type)
+        die("json error: attempting to close wrong type");
+
+    if (erase_if_empty && json_is_empty())
+        m_msg_buf.resize(m_json_stack.back().start);
+    else
+        m_msg_buf.append(1, type);
+
+    m_json_stack.pop_back();
+}
+
+void TilesFramework::json_open_object(const string& name)
+{
+    json_open(name, '{', '}');
+}
+
+void TilesFramework::json_close_object(bool erase_if_empty)
+{
+    json_close(erase_if_empty, '}');
 }
 
 void TilesFramework::json_open_array(const string& name)
 {
-    json_write_comma();
-    if (!name.empty())
-        json_write_name(name);
-
-    write_message("[");
-    json_object_level++;
-    need_comma = false;
+    json_open(name, '[', ']');
 }
 
-void TilesFramework::json_close_array()
+void TilesFramework::json_close_array(bool erase_if_empty)
 {
-    write_message("]");
-    json_object_level--;
-    need_comma = true;
+    json_close(erase_if_empty, ']');
 }
 
 void TilesFramework::json_write_comma()
 {
-    if (json_object_level > 0 && need_comma)
-    {
-        write_message(",");
-        need_comma = false;
-    }
+    if (m_msg_buf.empty()) return;
+    char last = m_msg_buf[m_msg_buf.size() - 1];
+    if (last == '{' || last == '[' || last == ',' || last == ':') return;
+    write_message(",");
 }
 
 void TilesFramework::json_write_name(const string& name)
@@ -1489,8 +1788,6 @@ void TilesFramework::json_write_int(int value)
     json_write_comma();
 
     write_message("%d", value);
-
-    need_comma = true;
 }
 
 void TilesFramework::json_write_int(const string& name, int value)
@@ -1501,6 +1798,39 @@ void TilesFramework::json_write_int(const string& name, int value)
     json_write_int(value);
 }
 
+void TilesFramework::json_write_bool(bool value)
+{
+    json_write_comma();
+
+    if (value)
+        write_message("true");
+    else
+        write_message("false");
+}
+
+void TilesFramework::json_write_bool(const string& name, bool value)
+{
+    if (!name.empty())
+        json_write_name(name);
+
+    json_write_bool(value);
+}
+
+void TilesFramework::json_write_null()
+{
+    json_write_comma();
+
+    write_message("null");
+}
+
+void TilesFramework::json_write_null(const string& name)
+{
+    if (!name.empty())
+        json_write_name(name);
+
+    json_write_null();
+}
+
 void TilesFramework::json_write_string(const string& value)
 {
     json_write_comma();
@@ -1508,8 +1838,6 @@ void TilesFramework::json_write_string(const string& value)
     write_message("\"");
     write_message_escaped(value);
     write_message("\"");
-
-    need_comma = true;
 }
 
 void TilesFramework::json_write_string(const string& name, const string& value)

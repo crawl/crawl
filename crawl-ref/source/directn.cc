@@ -69,25 +69,25 @@
 
 enum LOSSelect
 {
-    LOS_ANY      = 0x00,
+    LS_ANY      = 0x00,
 
     // Check only visible squares
-    LOS_VISIBLE  = 0x01,
+    LS_VISIBLE  = 0x01,
 
     // Check only hidden squares
-    LOS_HIDDEN   = 0x02,
+    LS_HIDDEN   = 0x02,
 
-    LOS_VISMASK  = 0x03,
+    LS_VISMASK  = 0x03,
 
     // Flip from visible to hidden when going forward,
     // or hidden to visible when going backwards.
-    LOS_FLIPVH   = 0x20,
+    LS_FLIPVH   = 0x20,
 
     // Flip from hidden to visible when going forward,
     // or visible to hidden when going backwards.
-    LOS_FLIPHV   = 0x40,
+    LS_FLIPHV   = 0x40,
 
-    LOS_NONE     = 0xFFFF,
+    LS_NONE     = 0xFFFF,
 };
 
 #ifdef WIZARD
@@ -119,7 +119,7 @@ static bool _find_square_wrapper(coord_def &mfp, int direction,
                                                    bool, int, targetter*),
                                  bool need_path, int mode,
                                  int range, targetter *hitfunc, bool wrap,
-                                 int los = LOS_ANY);
+                                 int los = LS_ANY);
 
 static int  _targetting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
@@ -999,28 +999,6 @@ static bool _blocked_ray(const coord_def &where,
     return true;
 }
 
-static string _targ_mode_name(targ_mode_type mode)
-{
-    switch (mode)
-    {
-    case TARG_ANY:
-        return "any";
-    case TARG_ENEMY:
-        return "enemies";
-    case TARG_FRIEND:
-        return "friends";
-    case TARG_INJURED_FRIEND:
-        return "injured friends";
-    case TARG_HOSTILE:
-    case TARG_HOSTILE_SUBMERGED:
-        return "hostiles";
-    case TARG_EVOLVABLE_PLANTS:
-        return "plants";
-    default:
-        return "buggy";
-    }
-}
-
 #ifndef USE_TILE_LOCAL
 static void _update_mlist(bool enable)
 {
@@ -1044,7 +1022,7 @@ coord_def direction_chooser::find_default_target() const
         // Try to find an object.
         success = _find_square_wrapper(result, 1, _find_object,
                                        needs_path, TARG_ANY, range, hitfunc,
-                                       true, LOS_FLIPVH);
+                                       true, LS_FLIPVH);
     }
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
              || mode == TARG_HOSTILE_SUBMERGED
@@ -1084,8 +1062,8 @@ coord_def direction_chooser::find_default_target() const
             // We might be able to hit monsters in LOS that are outside of
             // normal range, but inside explosion/cloud range
             if (!success
-                && you.current_vision > range
-                && hitfunc && hitfunc->can_affect_outside_range())
+                && hitfunc && hitfunc->can_affect_outside_range()
+                && (you.current_vision > range || hitfunc->can_affect_walls()))
             {
                 success = _find_square_wrapper(result, 1, _find_monster_expl,
                                                needs_path, mode, range, hitfunc,
@@ -1252,7 +1230,7 @@ void direction_chooser::object_cycle(int dir)
 {
     if (_find_square_wrapper(objfind_pos, dir, _find_object,
                              needs_path, TARG_ANY, range, hitfunc, true,
-                             (dir > 0 ? LOS_FLIPVH : LOS_FLIPHV)))
+                             (dir > 0 ? LS_FLIPVH : LS_FLIPHV)))
     {
         set_target(objfind_pos);
         show_items_once = true;
@@ -1278,7 +1256,7 @@ void direction_chooser::feature_cycle_forward(int feature)
 {
     if (_find_square_wrapper(objfind_pos, 1, _find_feature,
                              needs_path, feature, range, hitfunc, true,
-                             LOS_FLIPVH))
+                             LS_FLIPVH))
     {
         set_target(objfind_pos);
     }
@@ -1868,12 +1846,6 @@ void direction_chooser::show_help()
     need_all_redraw = true;
 }
 
-void direction_chooser::cycle_targetting_mode()
-{
-    mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-    mprf("Targetting mode is now: %s", _targ_mode_name(mode).c_str());
-}
-
 // Return false if we should continue looping, true if we're done.
 bool direction_chooser::do_main_loop()
 {
@@ -1936,8 +1908,6 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_FIND_ALTAR:     feature_cycle_forward('_');  break;
     case CMD_TARGET_FIND_UPSTAIR:   feature_cycle_forward('<');  break;
     case CMD_TARGET_FIND_DOWNSTAIR: feature_cycle_forward('>');  break;
-
-    case CMD_TARGET_CYCLE_TARGET_MODE: cycle_targetting_mode(); break;
 
     case CMD_TARGET_MAYBE_PREV_TARGET:
         loop_done = looking_at_you() ? select_previous_target()
@@ -2283,7 +2253,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     if (mode != TARG_EVOLVABLE_PLANTS
         && mons_class_flag(mon->type, M_NO_EXP_GAIN)
         && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0)
-        && mon->type != MONS_KRAKEN_TENTACLE)
+        && !mons_is_tentacle(mon->type))
     {
         return false;
     }
@@ -2461,8 +2431,10 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 }
 
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
-                           int range, targetter *hitfunc)
+                               int range, targetter *hitfunc)
 {
+    ASSERT(hitfunc);
+
 #ifdef CLUA_BINDINGS
     {
         coord_def dp = grid2player(where);
@@ -2475,7 +2447,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 #endif
 
     // Only check for explosive targetting at the edge of the range
-    if (you.pos().range(where) != range)
+    if (you.pos().range(where) != range && !hitfunc->can_affect_walls())
         return false;
 
     // Target outside LOS.
@@ -2493,7 +2465,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
     if (hitfunc->set_aim(where))
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
-            if (hitfunc->is_affected(*ri))
+            if (hitfunc->is_affected(*ri) >= AFF_YES)
             {
                 const monster* mon = monster_at(*ri);
                 if (mon != NULL)
@@ -2530,13 +2502,13 @@ static bool _find_object(const coord_def& where, int mode,
 
 static int _next_los(int dir, int los, bool wrap)
 {
-    if (los == LOS_ANY)
-        return (wrap? los : LOS_NONE);
+    if (los == LS_ANY)
+        return (wrap? los : LS_NONE);
 
-    bool vis    = los & LOS_VISIBLE;
-    bool hidden = los & LOS_HIDDEN;
-    bool flipvh = los & LOS_FLIPVH;
-    bool fliphv = los & LOS_FLIPHV;
+    bool vis    = los & LS_VISIBLE;
+    bool hidden = los & LS_HIDDEN;
+    bool flipvh = los & LS_FLIPVH;
+    bool fliphv = los & LS_FLIPHV;
 
     if (!vis && !hidden)
         vis = true;
@@ -2556,21 +2528,21 @@ static int _next_los(int dir, int los, bool wrap)
         //    so we can go back to the first item in LOS. Unless we set
         //    fliphv, we can't flip from hidden to visible.
         //
-        los = flipvh? LOS_FLIPHV : LOS_FLIPVH;
+        los = flipvh? LS_FLIPHV : LS_FLIPVH;
     }
     else
     {
         if (!flipvh && !fliphv)
-            return LOS_NONE;
+            return LS_NONE;
 
         if (flipvh && vis != (dir == 1))
-            return LOS_NONE;
+            return LS_NONE;
 
         if (fliphv && vis == (dir == 1))
-            return LOS_NONE;
+            return LS_NONE;
     }
 
-    los = (los & ~LOS_VISMASK) | (vis? LOS_HIDDEN : LOS_VISIBLE);
+    los = (los & ~LS_VISMASK) | (vis? LS_HIDDEN : LS_VISIBLE);
     return los;
 }
 
@@ -2601,10 +2573,10 @@ static bool _find_square(coord_def &mfp, int direction,
 
     int i, j;
 
-    if (los == LOS_NONE)
+    if (los == LS_NONE)
         return false;
 
-    if (los == LOS_FLIPVH || los == LOS_FLIPHV)
+    if (los == LS_FLIPVH || los == LS_FLIPHV)
     {
         if (in_los_bounds_v(mfp))
         {
@@ -2612,26 +2584,26 @@ static bool _find_square(coord_def &mfp, int direction,
             // need to find what we're currently on.
             const bool vis = you.see_cell(view2grid(mfp));
 
-            if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
+            if (wrap && (vis != (los == LS_FLIPVH)) == (direction == 1))
             {
                 // We've already flipped over into the other direction,
                 // so correct the flip direction if we're wrapping.
-                los = (los == LOS_FLIPHV ? LOS_FLIPVH : LOS_FLIPHV);
+                los = (los == LS_FLIPHV ? LS_FLIPVH : LS_FLIPHV);
             }
 
-            los = (los & ~LOS_VISMASK) | (vis ? LOS_VISIBLE : LOS_HIDDEN);
+            los = (los & ~LS_VISMASK) | (vis ? LS_VISIBLE : LS_HIDDEN);
         }
         else
         {
             if (wrap)
-                los = LOS_HIDDEN | (direction > 0 ? LOS_FLIPHV : LOS_FLIPVH);
+                los = LS_HIDDEN | (direction > 0 ? LS_FLIPHV : LS_FLIPVH);
             else
-                los |= LOS_HIDDEN;
+                los |= LS_HIDDEN;
         }
     }
 
-    onlyVis     = (los & LOS_VISIBLE);
-    onlyHidden  = (los & LOS_HIDDEN);
+    onlyVis     = (los & LS_VISIBLE);
+    onlyHidden  = (los & LS_HIDDEN);
 
     int radius = 0;
     if (crawl_view.viewsz.x > crawl_view.viewsz.y)
@@ -3007,9 +2979,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "mangrove";
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
-           return "idol of Beogh";
+            return "idol of Beogh";
         else
-           return "orcish idol";
+            return "orcish idol";
     case DNGN_GRANITE_STATUE:
         return "granite statue";
     case DNGN_LAVA:
@@ -3069,6 +3041,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "one-way gate to the infinite horrors of the Abyss";
     case DNGN_EXIT_ABYSS:
         return "gateway leading out of the Abyss";
+    case DNGN_ABYSSAL_STAIR:
+        return "gateway leading deeper into the Abyss";
     case DNGN_EXIT_THROUGH_ABYSS:
         return "exit through the horrors of the Abyss";
     case DNGN_STONE_ARCH:
@@ -3810,6 +3784,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.push_back("is liquefied");
     if (orb_haloed(where) || quad_haloed(where))
         areas.push_back("is covered in magical glow");
+    if (disjunction_haloed(where))
+        areas.push_back("is bathed in translocation energy");
     if (!areas.empty())
     {
         mprf("This square %s.",
@@ -4030,7 +4006,7 @@ command_type targetting_behaviour::get_command(int key)
         key = get_key();
 
     command_type cmd = key_to_command(key, KMC_TARGETTING);
-    if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
+    if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_PREV_TARGET)
         return cmd;
 
 #ifndef USE_TILE_LOCAL

@@ -441,6 +441,8 @@ string describe_mutations(bool center_title)
 
     case SP_BLACK_DRACONIAN:
         result += _dragon_abil("You can breathe wild blasts of lightning.");
+        if (you.experience_level >= 14)
+            result += "You can fly continuously.\n";
         scale_type = "glossy black";
         have_any = true;
         break;
@@ -557,7 +559,7 @@ string describe_mutations(bool center_title)
         num << 4 + you.experience_level / 3
                  + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
 
-        const string msg = "Your " + scale_type + " scales are "
+        string msg = "Your " + scale_type + " scales are "
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
               + " (AC +" + num.str() + ").";
 
@@ -565,6 +567,13 @@ string describe_mutations(bool center_title)
                       player_is_shapechanged() && you.form != TRAN_DRAGON);
 
         result += "Your body does not fit into most forms of armour.\n";
+
+        msg = "Your cold-blooded metabolism reacts poorly to cold.";
+        if (you.res_cold() <= 0)
+            result += msg + "\n";
+        else
+            result += "<darkgrey>" + msg + "</darkgrey>\n";
+
         have_any = true;
     }
 
@@ -709,11 +718,11 @@ static void _display_vampire_attributes()
     {
         for (int x = 0; x < 7; x++)  // columns (hunger states)
         {
-             if (y > 0 && x == current)
-                 result += "<w>";
-             result += column[y][x];
-             if (y > 0 && x == current)
-                 result += "</w>";
+            if (y > 0 && x == current)
+                result += "<w>";
+            result += column[y][x];
+            if (y > 0 && x == current)
+                result += "</w>";
         }
         result += "\n";
     }
@@ -1207,6 +1216,23 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
+static bool _undead_rot()
+{
+    if (you.is_undead == US_SEMI_UNDEAD)
+    {
+        switch (you.hunger_state)
+        {
+        case HS_SATIATED:  return !one_chance_in(3);
+        case HS_FULL:      return coinflip();
+        case HS_VERY_FULL: return one_chance_in(3);
+        case HS_ENGORGED:  return false;
+        default: return true;
+        }
+    }
+
+    return you.is_undead;
+}
+
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
             bool demonspawn, bool no_rot, bool temporary)
@@ -1234,7 +1260,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         // resistance mutation.
         if (!god_gift)
         {
-            if ((player_res_mutation_from_item()
+            if ((you.rmut_from_item()
                  && !one_chance_in(temporary ? 3 : 10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
@@ -1260,7 +1286,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
     }
 
-    bool rotting = you.is_undead;
+    bool rotting = _undead_rot();
 
     if (you.is_undead == US_SEMI_UNDEAD)
     {
@@ -1274,18 +1300,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             if (you.hunger_state >= HS_SATIATED)
                 rotting = false;
         }
-        else
-        {
-            // Else, chances depend on hunger state.
-            switch (you.hunger_state)
-            {
-            case HS_SATIATED:  rotting = !one_chance_in(3); break;
-            case HS_FULL:      rotting = coinflip();        break;
-            case HS_VERY_FULL: rotting = one_chance_in(3);  break;
-            case HS_ENGORGED:  rotting = false;             break;
-            default: ;
-            }
-        }
+        // Else, chances depend on hunger state.
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
@@ -1509,7 +1524,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
-    take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+    if (!temporary)
+        take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
 
 #ifdef USE_TILE_LOCAL
     if (your_talents(false).size() != old_talents)
@@ -1591,7 +1607,8 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
 
-    take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+    if (!transient)
+        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
 
     return true;
 }
@@ -1626,6 +1643,9 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                 return false;
             }
         }
+
+        if (_undead_rot())
+            return false;
     }
 
     if (which_mutation == RANDOM_MUTATION
@@ -1830,11 +1850,11 @@ string mutation_name(mutation_type mut, int level, bool colour)
             if (fully_inactive)
                 colourname = "darkgrey";
             else if (partially_active)
-                colourname = demonspawn ? "yellow"   : "blue";
+                colourname = demonspawn ? "yellow"    : "blue";
             else if (extra)
-                colourname = demonspawn ? "lightmagenta" : "cyan";
+                colourname = demonspawn ? "lightcyan" : "cyan";
             else
-                colourname = demonspawn ? "magenta"      : "lightblue";
+                colourname = demonspawn ? "cyan"      : "lightblue";
         }
         else if (fully_inactive)
             colourname = "darkgrey";
@@ -1845,7 +1865,8 @@ string mutation_name(mutation_type mut, int level, bool colour)
         else if (_is_slime_mutation(mut))
             colourname = "green";
         else if (temporary)
-            colourname = "magenta";
+            colourname = (you.mutation[mut] > you.temp_mutations[mut]) ?
+                         "lightmagenta" : "magenta";
 
         // Build the result
         ostringstream ostr;
@@ -2185,6 +2206,9 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
         break;
     }
 
+    if (which_mut == NUM_MUTATIONS)
+        return false;
+
     int old_level = you.mutation[which_mut];
 
     if (mutate(which_mut, reason, false, false, false, false, false, false, true))
@@ -2361,7 +2385,7 @@ void check_antennae_detect()
                     continue;
                 }
 
-                for (radius_iterator ri2(mon->pos(), 2, C_SQUARE); ri2; ++ri2)
+                for (radius_iterator ri2(mon->pos(), 2, C_ROUND); ri2; ++ri2)
                     if (you.see_cell(*ri2))
                     {
                         mon->flags |= MF_SENSED;
@@ -2405,11 +2429,11 @@ int handle_pbd_corpses(bool do_rot)
 int augmentation_amount()
 {
     int amount = 0;
-    const int level = player_mutation_level(MUT_AUGMENTATION) + 1;
+    const int level = player_mutation_level(MUT_AUGMENTATION);
 
-    for (int i = 1; i < level; ++i)
+    for (int i = 0; i < level; ++i)
     {
-        if (you.hp <= (i * you.hp_max) / level)
+        if (you.hp >= ((i + level) * you.hp_max) / (2 * level))
             amount++;
     }
 

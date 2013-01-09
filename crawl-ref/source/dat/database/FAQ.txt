@@ -124,7 +124,7 @@ I can't find any downstairs. Am I missing something?
 %%%%
 A:downstairs
 
-A: While this might be a bug, chances are the downstairs are somewhere in a room closed off by a secret door. If you search (with '5') in suspicious-looking corridors and along walls near empty terrain, you will eventually find one. Note that most levels feature three downstairs as well as three upstairs, not counting any escape hatches. If you get stuck, you might try another set of stairs from the level above.
+A: They may be in a part of the level that is not reachable from the upstairs you came from. Try going up to the previous level and coming back down from there via a different set of stairs. Note that most levels feature three downstairs as well as three upstairs, not counting any escape hatches.
 
 Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the dungeon overview ('Ctrl-O') to see how deep you've delved into a given branch, or the database ('?/b') for the number of levels for unseen branches.
 %%%%
@@ -134,7 +134,7 @@ I teleported and ended up in a closed room without any exits. Am I stuck?
 %%%%
 A:stuck
 
-A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis bug tracker: https://crawl.develz.org/mantis/
+A: Unlike previous versions of Crawl that had secret doors, this cannot happen anymore. If it somehow does, it could be a bug that needs fixing, so please report it on our Mantis bug tracker: https://crawl.develz.org/mantis/
 
 If you're playing locally, be sure to upload your save file!
 

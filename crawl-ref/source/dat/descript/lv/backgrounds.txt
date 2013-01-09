@@ -4,6 +4,12 @@ Arcane Marksman
 Burvju strēlnieki nēsā tālcīņas ieročus, reizē arī izmantojot burvestības savu
 naidnieku novājināšanai pret uzbrukumiem no attāluma.
 %%%%
+Assassin
+
+Slepkavas paļaujas uz lavīšanos, gatavi nodurt neuzmanīgos pretiniekus. To
+arsenālā ir ne tikai duncis un apmetnis, tie līdzi nēsā arī nejaukas ar kurāri
+noziestas šautriņas savai pūšamcaurulei.
+%%%%
 Chaos Knight
 
 Haosa bruņinieki ir neparedzamā Ksorna spēlmantiņas, kas atkarīgas no dieva
@@ -42,6 +48,11 @@ Necromancer
 
 Nekromanti ir burvji, kas specializējas nāves zintīs. Viņi sāk spēli ar Sāpju
 burvestību.
+%%%%
+Priest
+
+Svētnieki ir Zina sekotāji, nesot dieva vārdu pazemes iemītniekiem. Klinšu orki
+tā vietā seko orku dievam Beoham.
 %%%%
 Wanderer
 

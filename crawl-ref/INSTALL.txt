@@ -149,7 +149,8 @@ Prerequisites (other systems):
 GNU gcc and g++, GNU make, libncursesw or libcursesw. You need the development
 headers for ncurses - they may not be installed by default on some Unixes.
 
-For tile builds, you need FreeDesktop's pkg-config and X11 headers.
+For tile builds, you need FreeDesktop's pkg-config, X11 and opengl headers.
+The latter are likely to come from mesa sources.
 
 flex and bison are optional but highly recommended. Recent versions of byacc
 are also fine (edit your makefile appropriately).

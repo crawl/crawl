@@ -106,7 +106,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
                 "own body.");
         }
         else if (!enough_hp(2, true))
-             mpr("Your attempt to draw power from your own body fails.");
+            mpr("Your attempt to draw power from your own body fails.");
         else
         {
             int food = 0;
@@ -257,7 +257,6 @@ spret_type cast_phase_shift(int pow, bool fail)
 
 static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
-    // Irony: you can passwall through a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
     // are used for impassable walls...
     switch (feat)

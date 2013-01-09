@@ -6,6 +6,25 @@
 #ifndef ZAP_DATA_H
 #define ZAP_DATA_H
 
+/*
+struct zap_info
+{
+    zap_type ztype;
+    const char* name;           // NULL means handled specially
+    int power_cap;
+    dam_deducer* damage;
+    tohit_deducer* tohit;       // Enchantments have power modifier here
+    int colour;
+    bool is_enchantment;
+    beam_type flavour;
+    dungeon_char_type glyph;
+    bool always_obvious;
+    bool can_beam;
+    bool is_explosion;
+    int hit_loudness;
+}
+*/
+
 {
     ZAP_FLAME,
     "puff of flame",
@@ -235,7 +254,7 @@
     "",
     100,
     NULL,
-    NULL,
+    new tohit_calculator<0, 3, 2>,
     BLACK,
     true,
     BEAM_TELEPORT,

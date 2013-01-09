@@ -16,13 +16,6 @@ amulet of conservation
 This amulet protects some of the possessions of its wearer from outright
 destruction, but not infallibly so.
 %%%%
-amulet of controlled flight
-
-Should the wearer of this amulet be levitated by magical means, he or she will
-be able to exercise some control over the resulting motion. This allows the
-descent of staircases and the retrieval of items lying on the ground, for
-example, but does not deprive the wearer of the benefits of levitation.
-%%%%
 amulet of guardian spirit
 
 This amulet makes its wearer less susceptible to external damage, draining
@@ -167,8 +160,8 @@ book of annihilations
 Blood leaks from the tattered pages of this book, and even an illiterate will
 feel the sheer impact of arcane fury contained within. It is sought after by
 sorcerers, for it allows the gifted and resourceful to command destruction with
-the ease of a twinkle. Feeble wizards, however, may well meet their doom when
-trying to read this opus.
+ease. Feeble wizards, however, may well meet their doom when trying to read this
+opus.
 %%%%
 book of beasts
 
@@ -215,9 +208,7 @@ what objects the cloud diagrams look like.
 book of conjurations
 
 A book containing an introduction to the destructive magical arts of
-Conjurations. It shudders with barely-contained power when it is opened. A very
-popular book, it is constantly being revised and updated: this year's edition
-has a focus on the elements of Ice and Air.
+Conjurations. It shudders with barely-contained power when it is opened.
 %%%%
 book of control
 
@@ -602,8 +593,7 @@ Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 
-A terrible weapon, forged in the fires of Hell. It becomes even more deadly
-when wielded by those of a demonic nature.
+A terrible weapon, forged in the fires of Hell.
 %%%%
 demon trident
 
@@ -647,8 +637,7 @@ forces of evil.
 %%%%
 eveningstar
 
-The spikes of this type of morningstar are exeptionally long, allowing it to
-cause invidious wounds.
+The opposite of a morningstar.
 %%%%
 executioner's axe
 
@@ -664,8 +653,8 @@ concentrated at the point to increase its lethality.
 %%%%
 fire dragon armour
 
-A magical armour, made from the scales of a fire-breathing dragon. It provides
-great protection from the effects of fire, while rendering its wearer more
+Armour made from the scales of a fire-breathing dragon. It provides great
+protection from the effects of fire, while rendering its wearer more
 susceptible to the effects of cold.
 %%%%
 fire dragon hide
@@ -693,8 +682,8 @@ A pole with a large, heavy blade on one end.
 %%%%
 gold dragon armour
 
-A magical armour made from the scales of a gold dragon. It is much heavier than
-most dragon scale armours, and grants its wearer resistance to poison, fire and
+Armour made from the scales of a gold dragon. It is much heavier than most
+dragon scale armours, and grants its wearer resistance to poison, fire and
 cold.
 %%%%
 gold dragon hide
@@ -749,10 +738,6 @@ A tool for rending apart the fibres of wood, or flesh. Small and crafted for
 fast, precise handling, it is also balanced such that it can be thrown if
 necessary.
 %%%%
-helm
-
-A piece of metal headgear.
-%%%%
 helmet
 
 A piece of metal headgear.
@@ -769,8 +754,8 @@ gain entry.
 %%%%
 ice dragon armour
 
-A magical armour, made from the scales of a cold-breathing dragon. It provides
-great protection from the effects of cold while rendering its wearer more
+Armour made from the scales of a cold-breathing dragon. It provides great
+protection from the effects of cold while rendering its wearer more
 susceptible to the effects of fire and heat.
 %%%%
 ice dragon hide
@@ -850,15 +835,12 @@ A yellow fruit.
 %%%%
 lightning rod
 
-Once, a wizard ignorant of the workings of mundane items misunderstood the
-purpose of lightning rods. Instead of making one that merely drew lightning, he
-made one that created it instead.
-
-This rod shoots continuous lightning: the discharge is sustained, and can be
-redirected to new targets by evoking the rod in subsequent turns (failing to do
-so will release the trigger). The rod takes a moment to warm up, making short
-bursts rather ineffective. Once the zap is active, one can wave the rod,
-creating impressive and damaging arcs of electricity.
+This rod allows its wielder to fire continuous lightning: the discharge is
+sustained, and can be redirected to new targets by evoking the rod in
+subsequent turns (failing to do so will release the trigger). The rod takes a
+moment to warm up, making short bursts rather ineffective. Once the zap is
+active, one can wave the rod, creating impressive and damaging arcs of
+electricity.
 %%%%
 long sword
 
@@ -896,11 +878,11 @@ of a well-trained combatant.
 %%%%
 mottled dragon armour
 
-A magical armour made from the scales of a mottled dragon. Although it does not
-provide its wearer with much in the way of special magical protection, unlike
-the armour made from the scales of some larger dragons, it is as light and
-relatively uncumbersome as leather armour. It is also remarkably smooth,
-letting sticky flames flow down like water.
+Armour made from the scales of a mottled dragon. Although it does not
+provide its wearer with much protection, unlike the armour made from the
+scales of some larger dragons, it is as light and relatively uncumbersome as
+leather armour. It is also remarkably smooth, letting sticky flames flow
+down like water.
 %%%%
 mottled dragon hide
 
@@ -921,10 +903,9 @@ they could not hope to control.
 %%%%
 needle
 
-A thin piece of metal, typically coated in some harmful substance. It does
-little damage if thrown by hand, but when launched from a blowgun it can be
-deadly, delivering its toxins into the bloodstream of a living or demonic
-being.
+A thin piece of metal, typically coated in some harmful substance. When
+launched from a blowgun it can be deadly, delivering its toxins into the
+bloodstream of a living or demonic being.
 %%%%
 orange
 
@@ -957,8 +938,8 @@ A delicious juicy fruit.
 %%%%
 pearl dragon armour
 
-A magical armour made from the nacreous scales of a pearl dragon. It grants its
-wearer resistance to negative energies.
+Armour made from the nacreous scales of a pearl dragon. It grants its wearer
+resistance to negative energies.
 %%%%
 pearl dragon hide
 
@@ -1060,7 +1041,7 @@ potion of invisibility
 
 A potion which hides you from the sight of others.
 %%%%
-potion of levitation
+potion of flight
 
 A potion which confers great buoyancy on one who consumes it.
 %%%%
@@ -1173,10 +1154,10 @@ ring of invisibility
 This powerful ring can be activated to hide its wearer from the view of others,
 but increases the speed of his or her metabolism greatly while doing so.
 %%%%
-ring of levitation
+ring of flight
 
-This ring allows its wearer to hover above the floor. The ring's power cannot
-be invoked while levitating.
+This ring allows its wearer to fly. The ring's power cannot be evoked while
+airborne, so it's ill-suited for longer trips above deadly liquid.
 %%%%
 ring of life protection
 
@@ -1271,17 +1252,22 @@ rod of destruction
 
 This rod contains spells of mayhem and destruction.
 %%%%
+rod of inaccuracy
+
+This rod allows its wielder to fire a powerful but extremely inaccurate bolt of
+power.
+%%%%
 rod of striking
 
 This rod allows its wielder to strike foes from afar with force bolts.
 %%%%
-rod of summoning
+rod of the swarm
 
-This rod contains spells of summoning.
+This rod allows its wielder to summon a swarm of insects.
 %%%%
 rod of venom
 
-This rod contains offensive and defensive spells of poison.
+This rod contains offensive spells of poison.
 %%%%
 rod of warding
 
@@ -1410,9 +1396,6 @@ else nearby.
 scroll of magic mapping
 
 This scroll reveals the surroundings of the one who reads it.
-
-It will reveal the presence of secret doors, but is not strong enough to see
-past them, or into completely sealed areas.
 %%%%
 scroll of noise
 
@@ -1612,10 +1595,10 @@ spells.
 %%%%
 steam dragon armour
 
-A magical armour, made from the scales of a steam-breathing dragon. Although,
-unlike the armour made from the scales of some larger dragons, it does not
-provide its wearer with much in the way of special magical protection, it is
-extremely light and as supple as cloth.
+Armour made from the scales of a steam-breathing dragon. Although, unlike
+the armour made from the scales of some larger dragons, it does not provide
+its wearer with much protection, it is extremely light and as supple as
+cloth.
 %%%%
 steam dragon hide
 
@@ -1637,9 +1620,9 @@ same time.
 %%%%
 storm dragon armour
 
-A magical armour made from the scales of a lightning-breathing dragon. It is
-heavier than most dragon scale armours, and gives its wearer great resistance
-to electrical discharges.
+Armour made from the scales of a lightning-breathing dragon. It is heavier
+than most dragon scale armours, and gives its wearer great resistance to
+electrical discharges.
 %%%%
 storm dragon hide
 
@@ -1658,8 +1641,8 @@ A humble raisin.
 %%%%
 swamp dragon armour
 
-A magical armour made from the scales of a swamp dragon. It confers resistance
-to poison on its wearer.
+Armour made from the scales of a swamp dragon. It confers resistance to
+poison on its wearer.
 %%%%
 # Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
 swamp dragon hide
@@ -1716,14 +1699,14 @@ One's servants.
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll. Wearable, like other beastly skins, it
-also reacts well to enchantment.
+The stiff and knobbly hide of a troll, with magical regenerative properties.
+Wearable, like other beastly skins, it also reacts well to enchantment.
 %%%%
 troll leather armour
 
-A magical armour, made from the stiff and knobbly skin of a common troll. It
-magically regenerates its wearer's flesh at a fairly slow rate (unless already
-a troll).
+Armour made from the stiff and knobbly skin of a common troll. It magically
+regenerates its wearer's flesh at a fairly slow rate (unless already a
+troll).
 %%%%
 wand of cold
 
@@ -1793,7 +1776,10 @@ miss.
 %%%%
 wand of paralysis
 
-A magical device which can render a creature immobile.
+A magical device which can render a creature immobile, incapable of moving any
+of its limbs. A paralysed creature can only breathe, think, and helplessly
+watch as it falls into lava below or you put it out of its misery with your
+dagger.
 %%%%
 wand of polymorph other
 

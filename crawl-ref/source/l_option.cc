@@ -59,8 +59,6 @@ static option_handler handlers[] =
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },
-    { "menu_colour_prefix_class", &Options.menu_colour_prefix_class,
-                                  option_hboolean },
     { "autopick_on", NULL, option_autopick }
 };
 

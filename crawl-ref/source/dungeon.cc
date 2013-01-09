@@ -48,6 +48,7 @@
 #include "lev-pand.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -182,6 +183,7 @@ static void _slime_connectivity_fixup();
 
 static void _dgn_postprocess_level();
 static void _calc_density();
+static void _mark_solid_squares();
 
 //////////////////////////////////////////////////////////////////////////
 // Static data
@@ -419,6 +421,7 @@ static void _dgn_postprocess_level()
     shoals_postprocess_level();
     _builder_assertions();
     _calc_density();
+    _mark_solid_squares();
 }
 
 void dgn_clear_vault_placements(vault_placement_refv &vps)
@@ -630,7 +633,8 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
 }
 
 static void _dgn_register_vault(const string name, const string spaced_tags)
-{    if (spaced_tags.find(" allow_dup ") == string::npos)
+{
+    if (spaced_tags.find(" allow_dup ") == string::npos)
         you.uniq_map_names.insert(name);
 
     if (spaced_tags.find(" luniq ") != string::npos)
@@ -746,6 +750,7 @@ static bool _is_perm_down_stair(const coord_def &c)
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
         return true;
     default:
         return false;
@@ -995,8 +1000,7 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
             _dgn_register_vault(env.new_subvault_names[i],
                                 env.new_subvault_tags[i]);
         }
-        env.new_subvault_names.clear();
-        env.new_subvault_tags.clear();
+        clear_subvault_stack();
 
         // Identify each square in the map with its map_index.
         if (!overwritable && !transparent)
@@ -1161,6 +1165,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
     env.level_vault_list.clear();
+    clear_subvault_stack();
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
@@ -1170,8 +1175,6 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_layout_types.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
-    env.new_subvault_names.clear();
-    env.new_subvault_tags.clear();
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
@@ -4133,20 +4136,17 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.plus = props["charges"].get_int();
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
          || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
-        && props.exists("plus"))
+        && props.exists("plus") && !is_unrandom_artefact(item))
     {
         item.plus = props["plus"].get_int();
     }
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_JEWELLERY)
-        && props.exists("plus2"))
+        && props.exists("plus2") && !is_unrandom_artefact(item))
     {
         item.plus2 = props["plus2"].get_int();
     }
     if (props.exists("ident"))
-    {
         item.flags |= props["ident"].get_int();
-        add_autoinscription(item);
-    }
     if (props.exists("unobtainable"))
         item.flags |= ISFLAG_UNOBTAINABLE;
 
@@ -4693,9 +4693,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     if (f.trap.get())
     {
         trap_spec* spec = f.trap.get();
-        if (spec && spec->tr_type == TRAP_INDEPTH)
-            place_specific_trap(where, random_trap_for_place());
-        else if (spec)
+        if (spec)
             _place_specific_trap(where, spec);
 
         // f.feat == 1 means trap is generated known.
@@ -5518,7 +5516,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             if ((type == MONS_PLANT  ||
                  type == MONS_FUNGUS ||
                  type == MONS_BUSH) && one_chance_in(frequency))
-                 {
+            {
                 mg.cls = type;
             }
             else
@@ -6529,4 +6527,15 @@ static void _calc_density()
 
     dprf("Level density: %d", open);
     env.density = open;
+}
+
+// Mark all solid squares as no_rtele so that digging doesn't influence
+// random teleportation.
+static void _mark_solid_squares()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (grd(*ri) <= DNGN_MAXSOLID)
+            env.pgrid(*ri) |= FPROP_NO_RTELE_INTO;
+    }
 }

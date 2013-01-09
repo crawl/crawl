@@ -76,7 +76,6 @@ int identify(int power, int item_slot, string *pre_msg)
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        add_autoinscription(item);
 
         if (is_deck(item) && !top_card_is_known(item))
             deck_identify_first(item_slot);
@@ -174,11 +173,11 @@ static int _can_pacify_monster(const monster* mon, const int healed,
                                const int max_healed)
 {
 
-   int pacifiable = is_pacifiable(mon);
-   if (pacifiable < 0)
-       return pacifiable;
+    int pacifiable = is_pacifiable(mon);
+    if (pacifiable < 0)
+        return pacifiable;
 
-   if (healed < 1)
+    if (healed < 1)
         return 0;
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
@@ -382,7 +381,7 @@ int cast_healing(int pow, int max_pow, bool divine_ability,
 
 // Antimagic is sort of an anti-extension... it sets a lot of magical
 // durations to 1 so it's very nasty at times (and potentially lethal,
-// that's why we reduce levitation to 2, so that the player has a chance
+// that's why we reduce flight to 2, so that the player has a chance
 // to stop insta-death... sure the others could lead to death, but that's
 // not as direct as falling into deep water) -- bwr
 void antimagic()
@@ -391,27 +390,29 @@ void antimagic()
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
         DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
         DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
+        DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
         DUR_SLAYING, DUR_STEALTH,
         DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
-        DUR_SHROUD_OF_GOLUBRIA
+        DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION
     };
 
     bool need_msg = false;
 
-    if (!you.permanent_levitation() && !you.permanent_flight()
-        && you.duration[DUR_LEVITATION] > 11)
+    if (!you.permanent_flight()
+        && you.duration[DUR_FLIGHT] > 11)
     {
-        you.duration[DUR_LEVITATION] = 11;
+        you.duration[DUR_FLIGHT] = 11;
         need_msg = true;
     }
 
-    if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 11)
+    // Don't dispel divine regeneration.
+    if (you.duration[DUR_REGENERATION] > 0
+        && !you.attribute[ATTR_DIVINE_REGENERATION])
     {
-        you.duration[DUR_CONTROLLED_FLIGHT] = 11;
+        you.duration[DUR_REGENERATION] = 1;
         need_msg = true;
     }
 
@@ -424,7 +425,7 @@ void antimagic()
     if (you.duration[DUR_PETRIFYING] > 0)
     {
         you.duration[DUR_PETRIFYING] = 0;
-        mpr("Your limbs stop stiffening.", MSGCH_DURATION);
+        mpr("You feel limber!", MSGCH_DURATION);
     }
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])

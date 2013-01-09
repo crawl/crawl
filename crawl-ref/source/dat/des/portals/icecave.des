@@ -91,8 +91,11 @@ function callback.ice_cave_statue_garden_teleporter(data, triggerable,
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
     data.teleport_spot)
 
-  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
-  crawl.mpr("Your surroundings suddenly seem different!")
+  if you.teleport_to(my_slaves[1].x, my_slaves[1].y) then
+    crawl.mpr("Your surroundings suddenly seem different!")
+  else
+    crawl.mpr("There is a strange hissing noise.")
+  end
 end
 
 }}
@@ -105,6 +108,8 @@ function ice_cave_appearance(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
   e.tile("< = dngn_portal_ice_cave")
+  -- Don't trap amphibious players.
+  e.kprop("w = no_rtele_into")
 
   -- Alter short feature descriptions for all ice cave destination vaults.
   e.set_feature_name("rock_wall", "ice covered rock wall")
@@ -545,7 +550,7 @@ ITEM:    cap ego:cold_resistance w:10 / \
          large shield ego:cold_resistance w:5 / \
          animal skin ego:cold_resistance / nothing w:60
 ITEM:    potion of resistance w:5 / potion of gain strength / \
-         potion of might / potion of confusion / potion of levitation / \
+         potion of might / potion of confusion / potion of flight / \
          potion of experience w:2
 MAP
                   xxxxx        xxxxxxxx

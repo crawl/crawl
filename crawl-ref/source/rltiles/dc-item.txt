@@ -522,6 +522,8 @@ orcish_buckler1 ARM_BUCKLER_ORCISH
 orcish_buckler2
 %rim 1
 
+buckler_spriggan ARM_BUCKLER_SPRIGGAN
+
 shield1_elven ARM_SHIELD
 shield2_kite
 shield3_round
@@ -533,6 +535,10 @@ large_shield3
 shield_dd SHIELD_DEEP_DWARF
 shield_dd_scion SHIELD_DEEP_DWARF_SCION
 lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+%rim 0
+shield_donald SHIELD_DONALD
+lshield_louise LSHIELD_LOUISE
+%rim 1
 
 %sdir item/armour/headgear
 #####ARM_HELMET
@@ -575,7 +581,7 @@ i-strength BRAND_ARM_STRENGTH
 i-dexterity BRAND_ARM_DEXTERITY
 i-intelligence BRAND_ARM_INTELLIGENCE
 i-ponderous BRAND_ARM_PONDEROUSNESS
-i-levitation BRAND_ARM_LEVITATION
+i-flying BRAND_ARM_FLYING
 i-magic-res BRAND_ARM_MAGIC_RESISTANCE
 i-protection BRAND_ARM_PROTECTION
 %rim 0
@@ -810,7 +816,7 @@ i-dex RING_DEXTERITY
 i-int RING_INTELLIGENCE
 i-wizardry RING_WIZARDRY
 i-magical-power RING_MAGICAL_POWER
-i-levitation RING_LEVITATION
+i-flight RING_FLIGHT
 i-life-protection RING_LIFE_PROTECTION
 i-r-magic RING_PROTECTION_FROM_MAGIC
 i-fire RING_FIRE
@@ -859,6 +865,7 @@ i-warding AMU_WARDING
 i-r-corrosion AMU_RESIST_CORROSION
 i-gourmand AMU_THE_GOURMAND
 i-conservation AMU_CONSERVATION
+# Remove i-c-flight when save compatibility is broken
 i-c-flight AMU_CONTROLLED_FLIGHT
 i-inaccuracy AMU_INACCURACY
 i-r-mutation AMU_RESIST_MUTATION
@@ -896,7 +903,7 @@ i-agility POT_AGILITY
 i-gain-strength POT_GAIN_STRENGTH
 i-gain-dexterity POT_GAIN_DEXTERITY
 i-gain-intelligence POT_GAIN_INTELLIGENCE
-i-levitation POT_LEVITATION
+i-flight POT_FLIGHT
 i-poison POT_POISON
 i-slowing POT_SLOWING
 i-paralysis POT_PARALYSIS

@@ -39,30 +39,35 @@ static inline int unscale_round_up(int number, int scale)
 }
 
 // Chinese rod numerals are _not_ digits for our purposes.
-static inline int isadigit(int c)
+static inline bool isadigit(int c)
 {
     return (c >= '0' && c <= '9');
 }
 
 // 'ä' is a letter, but not a valid inv slot/etc.
-static inline int isalower(int c)
+static inline bool isalower(int c)
 {
     return (c >= 'a' && c <= 'z');
 }
 
-static inline int isaupper(int c)
+static inline bool isaupper(int c)
 {
     return (c >= 'A' && c <= 'Z');
 }
 
-static inline int isaalpha(int c)
+static inline bool isaalpha(int c)
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-static inline int isaalnum(int c)
+static inline bool isaalnum(int c)
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+}
+
+static inline ucs_t toalower(ucs_t c)
+{
+    return isaupper(c) ? c + 'a' - 'A' : c;
 }
 
 int numcmp(const char *a, const char *b, int limit = 0);
@@ -225,10 +230,19 @@ public:
     {
         m_previous_mode = ms_current_mode;
         ms_current_mode = mode;
+
+#ifdef USE_TILE_WEB
+        if (m_previous_mode != ms_current_mode)
+            tiles.update_input_mode(mode);
+#endif
     }
 
     ~mouse_control()
     {
+#ifdef USE_TILE_WEB
+        if (m_previous_mode != ms_current_mode)
+            tiles.update_input_mode(m_previous_mode);
+#endif
         ms_current_mode = m_previous_mode;
     }
 

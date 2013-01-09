@@ -46,10 +46,10 @@ function ($, map_knowledge, dungeon_renderer, view_data,
                                dungeon_renderer.rows * cell_h - 1);
     }
 
-    function fit_to(width, layout_parameters)
+    function fit_to(width)
     {
-        var gxm = layout_parameters.gxm;
-        var gym = layout_parameters.gym;
+        var gxm = enums.gxm;
+        var gym = enums.gym;
         var display = $("#minimap").css("display");
         $("#minimap, #minimap_overlay").show();
 

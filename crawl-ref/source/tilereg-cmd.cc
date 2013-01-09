@@ -67,6 +67,12 @@ int CommandRegion::handle_mouse(MouseEvent &event)
         const command_type cmd = (command_type) m_items[item_idx].idx;
         m_last_clicked_item = item_idx;
 
+        if (tiles.is_using_small_layout())
+        {
+            // close the tab that we've just successfully used a command from
+            tiles.deactivate_tab();
+        }
+
         // this is a really horrid way to preserve the interface in viewmap.cc
         // which expects a keypress rather than a command :(
         if (tiles.get_map_display())
@@ -198,7 +204,7 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
         return // shamefully copied from _can_cast in spl-cast.cc
             (player_in_bat_form() || you.form == TRAN_PIG) ||
             (you.stat_zero[STAT_INT]) ||
-            (player_effect_nocast()) ||
+            (you.no_cast()) ||
             (!you.spell_no) ||
             (you.berserk()) ||
             (you.confused()) ||

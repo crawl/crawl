@@ -431,22 +431,6 @@ static void _wucad_miscast(actor* victim, int power,int fail)
                   "the Staff of Wucad Mu", NH_NEVER);
 }
 
-static void _wucad_pluses(item_def *item)
-{
-    item->plus  = min(you.intel() - 3, 22);
-    item->plus2 = min(you.intel() / 2, 13);
-}
-
-static void _WUCAD_MU_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    _wucad_pluses(item);
-}
-
-static void _WUCAD_MU_world_reacts(item_def *item)
-{
-    _wucad_pluses(item);
-}
-
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
@@ -629,14 +613,14 @@ found:
 
     if (!you.beheld_by(closest))
     {
-         mprf("Visions of slaying %s flood into your mind.",
-              closest->name(DESC_THE).c_str());
+        mprf("Visions of slaying %s flood into your mind.",
+             closest->name(DESC_THE).c_str());
 
-         // The monsters (if any) currently mesmerising the player do not include
-         // this monster. To avoid trapping the player, all other beholders
-         // are removed.
+        // The monsters (if any) currently mesmerising the player do not include
+        // this monster. To avoid trapping the player, all other beholders
+        // are removed.
 
-         you.clear_beholders();
+        you.clear_beholders();
     }
 
     if (you.confused())

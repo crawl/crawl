@@ -128,7 +128,7 @@ enum hints_event_type
     HINT_TARGET_NO_FOE,
     HINT_REMOVED_CURSE,
     HINT_ITEM_RESISTANCES,
-    HINT_LEVITATING,
+    HINT_FLYING,
     HINT_INACCURACY,
     HINT_HEALING_POTIONS,
     HINT_GAINED_SPELLCASTING,
@@ -173,7 +173,7 @@ string hints_skills_description_info(void);
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);
 void hints_describe_item(const item_def &item);
-void hints_inscription_info(bool autoinscribe, string prompt);
+void hints_inscription_info(string prompt);
 bool hints_pos_interesting(int x, int y);
 void hints_describe_pos(int x, int y);
 bool hints_monster_interesting(const monster* mons);

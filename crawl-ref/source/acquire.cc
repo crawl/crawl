@@ -26,6 +26,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -457,7 +458,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity,
     {
     // this was above in the vampire block, but gets overwritten by line 1371
     // so moving here {due}
-        quantity = 2 + random2(4);
+        quantity = 8 + random2(5);
     }
 }
 
@@ -954,30 +955,11 @@ static bool _do_book_acquirement(item_def &book, int agent)
     ASSERT(!is_random_artefact(book));
 
     int          level       = (you.skills[SK_SPELLCASTING] + 2) / 3;
-    unsigned int seen_levels = you.attribute[ATTR_RND_LVL_BOOKS];
 
     level = max(1, level);
 
     if (agent == GOD_XOM)
         level = random_range(1, 9);
-    else if (seen_levels & (1 << level))
-    {
-        // Give a book of a level not seen before, preferably one with
-        // spells of a low enough level for the player to cast, or the
-        // lowest aviable level if all levels which the player can cast
-        // have already been given.
-        int max_level = min(9, you.get_experience_level());
-
-        vector<int> vec;
-        for (int i = 1; i <= 9 && (vec.empty() || i <= max_level); i++)
-            if (!(seen_levels & (1 << i)))
-                vec.push_back(i);
-
-        if (!vec.empty())
-            level = vec[random2(vec.size())];
-        else
-            level = -1;
-    }
 
     int choice = NUM_BOOKS;
 
@@ -1625,7 +1607,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             you.species == SP_FELID ? "" : "[j] Ammunition");
         mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
 
-        const int keyin = tolower(get_ch());
+        const int keyin = toalower(get_ch());
         switch (keyin)
         {
         case 'a':    class_wanted = OBJ_WEAPONS;    break;
@@ -1651,7 +1633,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             // to make a selection.
             if (crawl_state.seen_hups)
             {
-                mpr("Acquirement interrupted by HUP signal.", MSGCH_ERROR);
+                dprf("Acquirement interrupted by HUP signal.");
                 you.turn_is_over = false;
                 return false;
             }

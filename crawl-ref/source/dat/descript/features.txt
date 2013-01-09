@@ -149,6 +149,11 @@ A gateway leading out of the Abyss
 A gateway out of this accursed place, shimmering and shifting in the
 impermanent landscape.
 %%%%
+A gateway leading deeper into the Abyss
+
+A strangely calm gateway amid the roiling landscape. It leads further into the
+depths of the abyss.
+%%%%
 A gateway to a ziggurat
 
 This portal leads to an ancient ziggurat, a place of untold challenges and
@@ -200,7 +205,7 @@ away.
 A hole to the Spider Nest
 
 This is more of a natural sloped shaft than a stairway, but it will do. If you
-want to die from most potent venoms of this world, that is.
+want to die from the most potent venoms of this world, that is.
 %%%%
 A labyrinth entrance
 
@@ -595,9 +600,8 @@ The endless lava
 A sea of fire and brimstone that goes as far as you can see. Which is not far
 because of thick smoke.
 
-Unlike small pools of lava where flight or levitation may allow short trips,
-floating above this inferno would cook you in no time thanks to runaway
-convection.
+Unlike small pools of lava where flight may allow short trips, floating above
+this inferno would cook you in no time thanks to runaway convection.
 %%%%
 A floor
 
@@ -609,7 +613,7 @@ Some deep water
 This water is as deep as it is dangerous. No sane traveller would attempt to
 set foot into it, apart from those able to fly or swim. Be warned: many
 confused adventurers have met their death in the depths, and an unexpected end
-of levitation has drowned even more careless interlopers.
+of flight has drowned even more careless interlopers.
 %%%%
 Some lava
 

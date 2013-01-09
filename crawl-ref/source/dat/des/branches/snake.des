@@ -113,6 +113,46 @@ MAP
 ...
 ENDMAP
 
+NAME:   guppyfry_snake_entry_island
+TAGS:   snake_entry patrolling no_monster_gen
+ORIENT: float
+MONS:   naga / nothing, plant
+KFEAT:  O = enter_snake_pit
+SUBST:  - = . W:2 2:1
+MAP
+   -WWWWW-
+  -WWWWWWW-
+ -WWW---WWW-
+-WWW-----WWW-
+-WW---1---WW-
+@WW--1O1--WW@
+-WW---1---WW-
+-WWW-----WWW-
+ -WWW---WWW-
+  -WWWWWWW-
+   -WWWWW-
+ENDMAP
+
+NAME:   guppyfry_snake_entry_garden
+TAGS:   snake_entry patrolling no_monster_gen
+ORIENT: float
+MONS:  naga / nothing, plant
+KFEAT:  O = enter_snake_pit
+SUBST:  - = wW2t.
+MAP
+ xxxx@xxxx
+xx---.---xx
+x----.----x
+x--tt.tt--x
+x--t1.1t--x
+@....O....@
+x--t1.1t--x
+x--tt.tt--x
+x----.----x
+xx---.---xx
+ xxxx@xxxx
+ENDMAP
+
 ##############################################################################
 # Snake Pit specific non-ending non-entry vaults
 ##############################################################################
@@ -421,6 +461,90 @@ xx.xxxx.x.x
    x.0.x
    x...x
    xx@xx
+ENDMAP
+
+NAME: nicolae_snakescales
+DEPTH: Snake
+ORIENT: float
+SUBST: 0 = 0., 9 = 9., 8 = 8.
+MAP
+        xxx       xxx       xxx
+       x...x     x...x     x...x
+      x.....x   x.....x   x.....x
+   xxx...0...xxx...9...xxx...0...xxx
+  x...x.....x...x.....x...x.....x...x
+ x.....x...x.....x...x.....x...x.....x
+x...0...xxx...9...xxx...9...xxx...0..x
+ x.....x...x.....x...x.....x...x.....x
+  x...x.....x...x.....x...x.....x...x
+   xxx...0...xxx...8...xxx...0...xxx
+  x...x.....x...x.....x...x.....x...x
+ x.....x...x.....x...x.....x...x.....x
+x...0...xxx...9...xxx...9...xxx...0..x
+ x.....x...x.....x...x.....x...x.....x
+  x...x.....x...x.....x...x.....x...x
+   xxx...0...xxx...8...xxx...0...xxx
+  x...x.....x...x.....x...x.....x...x
+ x.....x...x.....x...x.....x...x.....x
+x...0...xxx...9...xxx...9...xxx...0..x
+ x.....x...x.....x...x.....x...x.....x
+  x...x.....x...x.....x...x.....x...x
+   xxx...0...xxx...9...xxx...0...xx
+      x.....x   x.....x   x.....x
+       x...x     x...x     x...x
+        xxx       xxx       xxx
+ENDMAP
+
+NAME: nicolae_snake_nest
+DEPTH: Snake
+ORIENT: float
+MAP
+         .........
+    ......xx..xxx..
+  ...xxxxxx..xx.xx..
+.....x......xx...xx..
+.xx..xx...............
+..xx....xxxx..xxxx..x..
+ ..x..xxx..x.....xx.xx..
+ ..x..x....xx.x...x..x...
+ ..x....xx....xx..x..xxx.
+ .xx.xx.x......x.xx....x.
+ .x..x..x..xxxxx.x.....x.
+ .x..x..x.xx........x.xx.
+ ....x..x....x..xxx.x....
+ .xx.xx.xx...x.xx.x.xxx..
+ .x...x..xxx.x....x...x.
+ .xx..xx.....x....x.x.x.
+ ..x...x.x...x..xxx.xxx.
+  .xx....xxxxx..........
+  ..x...........x..xx..
+   .x.xxx...xxx.x..x..
+   .x...xxxxx...x..x.
+   .............xxxx.
+     ..xx..xxxx......
+      ..xxxx..x.
+       .........
+ENDMAP
+
+NAME:    guppyfry_snake_island
+DEPTH:   Snake
+TAGS:   transparent
+MONS:  plant
+SUBST:   . = . W:1 1:1, - = . W:3 0:1 ~:1 %:1
+SHUFFLE: 0~
+MAP
+@.WWWWWWWW.@
+.WWW.....WW.
+WWW--WW-00WW
+WW..WWWW..WW
+WWW--WWWW~WW
+WWWW..WWWWWW
+WWWWW--WWWWW
+W~WWWW..WWWW
+W--WWWW--WWW
+WW..WW..WWWW
+.WW----WWWW.
+@.WWWWWWWW.@
 ENDMAP
 
 ################################################################################

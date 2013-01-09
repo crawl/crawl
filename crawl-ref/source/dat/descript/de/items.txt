@@ -9,13 +9,6 @@ amulet of conservation
 Dieses Amulett bewahrt manche Besitztümer seines Trägers vor vollständiger
 Zerstörung, ist aber nicht unfehlbar.
 %%%%
-amulet of controlled flight
-
-Wird der Träger dieses Amuletts durch Magie zum Schweben gebracht, so kann er
-eine gewisse Kontrolle über seine Bewegungen ausüben. Dies ermöglicht unter
-anderem den Abstieg von Treppen und das Aufnehmen von Gegenständen auf dem
-Boden, hebt aber nicht die Vorteile des freien Schwebens auf.
-%%%%
 amulet of inaccuracy
 
 Dieses Amulett macht seinen Träger weniger Zielgenau im Nahkampf und wenn
@@ -73,6 +66,14 @@ bolt
 Ein Metallprojektil. Es ist kürzer als ein Pfeil und zum verschießen mit einer
 Armbrust vorgesehen.
 %%%%
+book of fixed level
+
+Ein Buch mit Zaubersprüchen.
+%%%%
+book of fixed theme
+
+Ein Buch mit Zaubersprüchen.
+%%%%
 cap
 
 Eine Stoff- oder Lederkappe.
@@ -89,9 +90,22 @@ cloak
 
 Ein Stoffumhang.
 %%%%
+corpse
+
+Eine Leiche. Du kannst sie schlachten, um essbare Fleischstücke zu erhalten.
+%%%%
 crystal plate armour
 
 Ein unglaublich schwere aber extrem effektive kristalline Rüstung.
+%%%%
+demon blade
+
+Eine schreckliche Waffe, geschmiedet in den Feuern der Hölle. Geführt von jenen
+mit dämonischer Natur wird sie noch um einiges tödlicher.
+%%%%
+demon whip
+
+Eine schreckliche Waffe, hergestellt in den Tiefen des Infernos.
 %%%%
 dire flail
 
@@ -164,9 +178,25 @@ pear
 
 Eine köstliche und saftige Frucht.
 %%%%
+ring of protection from cold
+
+Dieser Ring schützt den Träger vor Kälte.
+%%%%
 ring of protection from fire
 
 Dieser Ring schützt vor Hitze und Feuer.
+%%%%
+ring of wizardry
+
+Dieser Ring verbessert die Fähigkeit seines Trägers Zaubersprüche zu wirken.
+%%%%
+rune of zot
+
+Ein Talisman, der Eintritt in Zots Reich gewährt.
+%%%%
+scroll of curse armour
+
+Diese Schriftrolle platziert einen Fluch auf einem getragenem Stück Rüstung.
 %%%%
 scroll of remove curse
 

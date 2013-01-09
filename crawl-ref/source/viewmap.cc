@@ -67,9 +67,11 @@ static unsigned _get_travel_colour(const coord_def& p)
 #ifndef USE_TILE_LOCAL
 static bool _travel_colour_override(const coord_def& p)
 {
-  if (is_waypoint(p) || is_stair_exclusion(p)
-     || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
+    if (is_waypoint(p) || is_stair_exclusion(p)
+       || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
+    {
         return true;
+    }
 #ifdef WIZARD
     if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
         return true;
@@ -196,6 +198,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_ABYSS:
         case DNGN_EXIT_THROUGH_ABYSS:
         case DNGN_EXIT_ABYSS:
+        case DNGN_ABYSSAL_STAIR:
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_TRANSIT_PANDEMONIUM:
@@ -240,6 +243,8 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
+        // Not a > glyph, but it goes deeper into the abyss.
+        case DNGN_ABYSSAL_STAIR:
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
@@ -704,6 +709,12 @@ bool show_map(level_pos &lpos,
     mouse_control mc(MOUSE_MODE_NORMAL);
     tiles.do_map_display();
 #endif
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt(false);
+    tiles_ui_control ui(UI_VIEW_MAP);
+#endif
+
     {
         levelview_excursion le(travel_mode);
         level_id original(level_id::current());
@@ -713,11 +724,6 @@ bool show_map(level_pos &lpos,
 
         cursor_control ccon(!Options.use_fake_cursor);
         int i, j;
-
-#ifdef USE_TILE_WEB
-        tiles_crt_control crt(false);
-        tiles_ui_control ui(UI_VIEW_MAP);
-#endif
 
         int move_x = 0, move_y = 0, scroll_y = 0;
 
@@ -867,7 +873,7 @@ bool show_map(level_pos &lpos,
                 // location.  It silently ignores everything else going
                 // on in this function.  --Enne
 #ifdef USE_TILE_LOCAL
-                if(first_run)
+                if (first_run)
                 {
                     tiles.update_tabs();
                     first_run = false;

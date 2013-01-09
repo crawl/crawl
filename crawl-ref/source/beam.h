@@ -107,6 +107,9 @@ struct bolt
                                        // this is required in order to change mulch rate on these types
     bool        animate;               // Do we draw animations?
     ac_type     ac_rule;               // How does defender's AC affect damage.
+#ifdef DEBUG_DIAGNOSTICS
+    bool        quiet_debug;           // Disable any debug spam.
+#endif
 
     // Various callbacks.
     vector<range_used_func>  range_funcs;

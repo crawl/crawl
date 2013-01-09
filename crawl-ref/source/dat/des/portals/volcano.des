@@ -634,7 +634,7 @@ NSUBST: X = 1:+ / *:x
 :       fiery_guardians(_G)
 #       Loot: 8 items.
 :       volcano_setup(_G)
-COLOUR: = = red
+COLOUR: + = red
 MAP
 xxxxxxxxx+xxxxxxxxx
 x...xxxx...xxxx...x
@@ -661,7 +661,7 @@ KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
 KFEAT:  l = l
 #       Loot: 8 items.
 :       volcano_setup(_G)
-COLOUR: = = red
+COLOUR: + = red
 MAP
 xxxxxxxxx.xxxxxxxxx
 xxx..xxxx.xcccccccc
@@ -687,7 +687,7 @@ NSUBST: Y = 1:+ / *:x
 MONS:   clay golem w:50 / molten gargoyle w:2
 #       Loot: 8 items, 10 gold.
 :       volcano_setup(_G)
-COLOUR: = = red
+COLOUR: + = red
 MAP
 xxxxxxxxx+xxxxxxxxx
 xx....xx...xx....xx
@@ -1011,8 +1011,8 @@ NSUBST:  s = 2:s / *:.
 KFEAT:   r = bolt trap
 KFEAT:   s = spear trap
 #        The monsters. The patrolling tag seems to keep them from wandering
-#        around, opening the secret doors. It might also be keeping them from
-#        "answering" the alarm traps though.
+#        around. It might also be keeping them from "answering" the alarm
+#        traps though.
 MONS:    patrolling mummy
 MONS:    human skeleton / elf skeleton / dwarf skeleton / merfolk skeleton / \
          tengu skeleton
@@ -1285,8 +1285,8 @@ ENDMAP
 # Let's go, Overflow!
 #
 # You don't have much time to get the loot, as the Volcano is spitting out lava
-# like there's no tomorrow! Of course, if you can levitate or fly, you've got a
-# good chance of getting everything. If you get stuck, you can just wait it out.
+# like there's no tomorrow! Of course, if you can fly, you've got a good chance
+# of getting everything. If you get stuck, you can just wait it out.
 #
 # No monsters, only lava and loot. Original idea by dpeg.
 #

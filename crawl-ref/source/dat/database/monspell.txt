@@ -236,6 +236,14 @@ You hear a spitting sound.
 Petrifying Cloud cast
 
 @The_monster@ breathes a plume of calcifying dust @at@ @target@.
+%%%%
+Chaos Breath cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Frenzy cast
+
+@The_monster@ convulses with anger.
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -379,10 +387,6 @@ angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
 %%%%
-blessed toe cast targeted
-
-@The_monster@ beseeches @possessive_God@ to heal @target@!
-%%%%
 dragon cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.
@@ -466,6 +470,10 @@ You hear some strange, mumbled words.
 ######################################################
 # Generic priest, wizard and demonic casting messages.
 ######################################################
+%%%%
+Heal Other priest cast
+
+@The_monster@ calls upon @possessive_God@ to heal @target@.
 %%%%
 priest cast targeted
 

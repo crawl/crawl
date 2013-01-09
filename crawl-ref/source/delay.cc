@@ -1318,16 +1318,12 @@ static void _armour_wear_effects(const int item_slot)
 
     item_def &arm = you.inv[item_slot];
 
-    const bool was_known = item_type_known(arm);
-
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK);
     if (is_artefact(arm))
         arm.flags |= ISFLAG_NOTED_ID;
 
     const equipment_type eq_slot = get_armour_slot(arm);
 
-    if (!was_known)
-            add_autoinscription(arm);
     mprf("You finish putting on %s.", arm.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)

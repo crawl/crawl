@@ -15,13 +15,6 @@ amulet of conservation
 Ten amulet ochrania zwoje i eliksiry przed zniszczeniem, niestety nie jest
 niezawodny.
 %%%%
-amulet of controlled flight
-
-Jeśli nosiciel tego amuletu zostanie poddany lewitacji w jakiś sposób, amulet
-ten umożliwia kontrolę nad lotem. Daje to między innymi możliwość kontaktu z
-podłożem, podnoszenia przedmiotów leżących na ziemi, jak i schodzenia po
-schodach.
-%%%%
 amulet of guardian spirit
 
 Ten amulet chroni swego nosiciela przed obrażeniami. Odniesione rany zamiast
@@ -598,10 +591,6 @@ hand axe
 
 Mała siekiera zdatna zarówno do walki wręcz jak i do rzucania.
 %%%%
-helm
-
-Metalowe nakrycie głowy.
-%%%%
 helmet
 
 Metalowe nakrycie głowy.
@@ -868,6 +857,10 @@ potion of experience
 
 Prawdziwie cudowny napitek, który trwale zwiększa umiejętności pijącego.
 %%%%
+potion of flight
+
+Eliksir który daje zdolność lotu.
+%%%%
 potion of gain dexterity
 
 Eliksir który powoduje korzystną mutację.
@@ -889,10 +882,6 @@ stopniu usunąć skutki trwałej zgnilizny.
 potion of invisibility
 
 Eliksir który daje tymczasową niewidzialność.
-%%%%
-potion of levitation
-
-Eliksir który czyni pijącego lżejszym od powietrza.
 %%%%
 potion of magic
 
@@ -982,6 +971,12 @@ Ten pierścień daje swemu nosicielowi moc ognia. Wzmacnia to wszelkie czary
 Magii Ognia jak i zapewnia odporność na ogień, jednakże czary Magii Lodu są
 osłabione, a nosiciel jest bardziej wrażliwy na zimno.
 %%%%
+ring of flight
+
+Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
+Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania.
+To może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
+%%%%
 ring of hunger
 
 Ten pierścień pomaga zrzucić nadwagę, wielce zwiększając zużycie pokarmu.
@@ -1004,12 +999,6 @@ tego efektu — trzeba go aktywować, do czego potrzebna jest umiejętność
 posługiwania się magicznymi przedmiotami. Bycie niewidzialnym znacznie wzmaga
 zużycie metabolizm, a także powoduje magiczne skażenie. Zbyt częste użycie tego
 pierścienia nie jest więc wskazane.
-%%%%
-ring of levitation
-
-Ten pierścień, po uruchomieniu, pozwala unieść się w powietrze na krótki czas.
-Po wylądowaniu można uruchomić pierścień ponownie, nie da się jednak tego
-zrobić z powietrza.
 %%%%
 ring of life protection
 
@@ -1100,17 +1089,23 @@ rod of destruction
 
 Ten pręt zawiera czary siejące zniszczenie.
 %%%%
+rod of inaccuracy
+
+Ten pręt strzela potężną strugą czystej magii. Jest on bardzo trudny do
+wycelowania, a jego efekt łatwy do uniknięcia, jednak jak już w coś trafi,
+skutki są dość brutalne.
+%%%%
 rod of striking
 
 Ten pręt pozwala uderzać wrógów surową magią, niestety niezbyt efektywnie.
 %%%%
-rod of summoning
+rod of the swarm
 
-Ten pret zawiera czary przywołań.
+Ten pręt pozwala przyzwać chmarę owadów.
 %%%%
 rod of venom
 
-Ten pręt zawiera ofensywne jak i ochronne czary Magii Trucizn.
+Ten pręt zawiera ofensywne czary Magii Trucizn.
 %%%%
 rod of warding
 
@@ -1603,7 +1598,8 @@ trafiają.
 wand of paralysis
 
 Magiczny przedmiot który potrafi uczynić stworzenie na które został skierowany
-niezdolnym do ruchu.
+niezdolnym do ruchu. W szczególności, nagła utrata zdolności machania
+skrzydłami może się skończyć kąpielą w lawie.
 %%%%
 wand of polymorph other
 

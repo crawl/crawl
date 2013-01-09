@@ -1,0 +1,43 @@
+%%%%
+tutorial1 go_on
+
+Tev izdodas lieliski! Nu papēti vēl mazliet līdz sasniedz nākamo zilo
+kvadrātiņu.
+%%%%
+tutorial1 newlevel
+
+Jauns līmenis! Lai sāktu, dodieties iekšā pa labajā pusē esošajām durvīm.
+
+Kā arī atcerieties: Jūs varat lasīt vecos ziņojumus, nospiežot
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
+%%%%
+tutorial2 start
+
+Šajā mācību stundā Jūs apgūsit par briesmoņiem un cīnīšanos. Vispirms mums
+vajadzēs ieroci! Aizejiet un paņemiet to, kas tur mētājas.
+%%%%
+tutorial2 melee
+
+Lai uzbruktu briesmonim ar dūrēm vai rokās turēto ieroci, vienkārši uzejiet tam
+virsū.
+%%%%
+tutorial2 wait
+
+Tā vietā, lai gāztos iekšā telpā un tikt briesmoņu aplenktam, Jūs varat arī
+pakāpties atpakaļ un nogaidīt (ar <w>[$cmd[CMD_MOVE_NOWHERE]]</w>) līdz tie nāk
+pēc Jums.
+%%%%
+tutorial2 tutorial_end
+
+Apsveicu! Jūs pārdzīvojāt pirmo briesmoņu baru! Lai izietu no apmācības,
+vienkārši nokāpiet lejā pa šīm kāpnēm.
+%%%%
+tutorial5 start
+
+Šajā mācību stundā Jūs uzzināsit par dieviem un to, kā izmantot to spēku.
+%%%%
+tutorial5 piety_on_kill
+
+Dažiem dieviem tiešām patīk, ja viņu vārdā nogalināt briesmoņus. Lai tik sākas
+slaktiņš!
+%%%%

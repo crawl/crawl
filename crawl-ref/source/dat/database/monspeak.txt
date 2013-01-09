@@ -770,7 +770,7 @@ VISUAL:@The_monster@ looks really [rattled|scared stiff|petrified].
 
 @The_monster@ weeps quietly.
 
-@The_monster@ looks in an agony of indecision for an escape route...
+@The_monster@ looks desperately for an escape route.
 
 @The_monster@ hums to @reflexive@ desperately, trying to keep calm.
 
@@ -1064,8 +1064,6 @@ VISUAL:@The_monster@ takes a fighting stance.
 
 @The_monster@ says, "Are you willing to die fighting? I was!"
 
-@The_monster@ says @to_foe@, "I lost a battle, but kept my dignity. You look to have neither."
-
 @The_monster@ sneers, "Do you call that fighting?"
 
 @The_monster@ laughs, "And you think you're capable of finding the legendary Orb of Zot. I had it, you know. Then I gave it away so I could steal it AGAIN."
@@ -1258,15 +1256,17 @@ VISUAL ENCHANT:@The_monster@ is bathed in the radiant lights of Iskenderun.
 
 VISUAL SPELL:Energy condenses in front of @the_monster@, but quickly dissipates.
 %%%%
-Enchantments player ghost
+Hexes player ghost
 
 VISUAL WARN:You feel a strange force tugging at your mind. @player_only@
 
 @The_monster@ says @to_foe@, "You will soon be helpless to avoid my power."
 
-@The_monster@ says, "If you think I look tough now, just wait!"
-
 @The_monster@ says @to_foe@, "When I snap my fingers, you will think you are a chicken."
+%%%%
+Charms player ghost
+
+@The_monster@ says, "If you think I look tough now, just wait!"
 %%%%
 Summonings player ghost
 
@@ -2074,7 +2074,7 @@ VISUAL:@The_monster@ inspects you suspiciously.
 @The_monster@ says, "ME ROCKS!"
 ### End CHUCK ###
 %%%%
-############ CRAZY YIUF  ### A mad old gnoll!
+############ CRAZY YIUF ### A mad old gnoll!
 Crazy Yiuf
 
 @_crazy_yiuf_speech_@
@@ -2869,8 +2869,6 @@ w:50
 
 @The_monster@ says, "I hate vampires."
 
-@The_monster@ says, "What is up with vampires and their rat fetish?"
-
 @The_monster@ says, "How did they even end up in those cages?"
 
 @The_monster@ says, "That ghoul gave me heartburn."
@@ -2885,7 +2883,7 @@ w:50
 
 @The_monster@ says, "I just hope the loot isn't guarded by liches. I hate liches."
 
-@The_monster@ says, "The mummy wasn't that great."
+@The_monster@ says, "That mummy wasn't so great."
 
 @The_monster@ says, "This place has the same junk as everywhere else. I hate that."
 
@@ -3913,7 +3911,6 @@ ENCHANT:@The_monster@ mutters a nigh-unspeakable word.
 @The_monster@ says, "I speak the language of demons!"
 
 @The_monster@ howls an indescribable curse.
-VISUAL WARN:You feel fear.
 
 @The_monster@ says, "I have seen worlds and universes beyond all imagining."
 %%%%
@@ -4868,10 +4865,8 @@ VISUAL:@The_monster@'s bandages flutter.
 VISUAL:@The_monster@ breathes soot at you.
 
 VISUAL SPELL:@The_monster@ blazes with dark energy!
-VISUAL WARN:You feel utter despair.
 
 VISUAL SPELL:@The_monster@ @_Menkaure_verb_@ a few words.
-VISUAL WARN:You feel lassitude.
 
 VISUAL SPELL:@The_monster@ @_Menkaure_verb_@ dryly.
 VISUAL ENCHANT:@The_monster@ glows.
@@ -5943,28 +5938,16 @@ VISUAL:@The_monster@ basks in @possessive@ own plume of deadly dust.
 @The_monster@ stomps on the ground.
 WARN:You hear tremors.
 
-VISUAL:@The_monster@ closes @possessive@ eyes.
-VISUAL WARN:You feel as though you are being watched from above.
-
 VISUAL:@The_monster@ bares @possessive@ teeth, and the ground turns slowly to stone.
 
-VISUAL:@The_monster@ stomps toward you, implacably.
+VISUAL:@The_monster@ stomps toward @foe@, implacably.
 
-VISUAL:@The_monster@ prepares to charge at you.
+VISUAL:@The_monster@ prepares to charge at @foe@.
 
 VISUAL:@The_monster@ wanders slowly into a prime firing position.
 
 w:1
-VISUAL:@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand.
-
-w:1
-VISUAL:@The_monster@ sculpts the ground into a sphere of stone suspended by the thinnest support in the sky.
-
-w:1
-VISUAL:@The_monster@ breathes on the earth until a ridged crescent appears, raises @possessive@ hoof in rage, then stops.
-
-w:1
-VISUAL:Tears glisten in @possessive@ eyes as @subjective@ regards a sphere of stone @subjective@ breathed into being on the floor.
+VISUAL:@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand. @player_only@
 %%%%
 ################## Crystal golem ###########################
 crystal golem
@@ -6153,9 +6136,6 @@ VISUAL SPELL:@The_monster@ flicks @possessive@ antennae at the ground!
 VISUAL WARN:The ground rattles!
 
 VISUAL:@The_monster@ tries to bite you, but has no teeth.
-
-VISUAL:@The_monster@ forgets @subjective@ is a moth of wrath and starts meditating mothfully.
-VISUAL ENCHANT:The Dungeon calms.
 %%%%
 ################## Statues ##################
 default orange crystal statue

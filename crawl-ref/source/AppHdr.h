@@ -156,7 +156,7 @@ static inline T move(T x) { return x; } // good enough for our purposes
     // #define WINMM_PLAY_SOUNDS
 
     // Use Perl-compatible regular expressions. libpcre must be available and
-    // linked in.  This is optional.
+    // linked in.  Required in the absence of POSIX regexes.
     #ifndef REGEX_PCRE
     #define REGEX_PCRE
     #endif
@@ -334,7 +334,6 @@ static inline T move(T x) { return x; } // good enough for our purposes
 // =========================================================================
 //  Game Play Defines
 // =========================================================================
-// use Abyss morphing
 
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000

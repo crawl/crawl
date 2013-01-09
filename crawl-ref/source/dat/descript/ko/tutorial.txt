@@ -1,0 +1,474 @@
+%%%%
+tutorial intro
+
+<w>$cmd[CMD_REPLAY_MESSAGES]</w>단축키를 눌러서 지금까지 나온 메시지들을 다시
+읽을 수 있습니다. 또한, <cyan>--다음장--</cyan> 이 화면에 표시되면
+<w>스페이스</w> 키를 눌러 다음 메시지를 볼 수 있습니다.
+%%%%
+tutorial1 start
+
+이번 시간에는 어떻게 캐릭터를 조작하여 던전을 탐험하는지에 대해 알아보겠습니다.
+캐릭터를 움직이기 위해서는 <localtiles>이동하고 싶은 곳을 <w>마우스</w>를
+이용해서 클릭하거나,</localtiles> <w>[화살표 키]</w>를 사용하시면 됩니다.
+%%%%
+tutorial1 go_on
+
+잘 하셨습니다! 이제, 다음 파란색 사각형이 나올 때까지 조금 더 이동해보세요.
+%%%%
+tutorial1 diagonal
+
+<w>[숫자 패드]</w>, 또는 <w>[hjkl 이동방식]</w>을 이용해서 대각선 방향으로
+이동할 수도 있습니다. (제대로 안되면 Numlock 기능이 제대로 켜져있는지
+확인해보세요.)
+
+<w></w>  숫자 패드 :    <w>7 8 9</w>          hjkl 식 :
+<w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+
+<w></w>                 \|/                         \|/
+
+<w></w>                <w>4</w>-<w>.</w>-<w>6</w>
+<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+
+<w></w>                 /|\                         /|\
+
+<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
+$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+
+<localtiles>물론, <w>[마우스]</w>를 이용할 수도 있습니다.</localtiles>
+%%%%
+tutorial1 shiftmove
+
+한 칸 한 칸 이동하는게 귀찮다면, <w>[시프트]</w> 키를 누른 채로 <w>[숫자
+패드]</w>나 <w>[hjkl 이동방식]</w>을 이용하면 좀 더 편하게 이동할 수 있습니다.
+앞에 갈림길이 있거나 다른 특이사항이 있을 때까지, 캐릭터는 해당 방향으로 계속
+이동할 것입니다.
+%%%%
+tutorial1 downstairs
+
+내려가는 계단 위에서 <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w> 키를 누르면 한 층 밑으로
+이동할 수 있습니다. <localtiles>혹은 캐릭터를 <w>[시프트+마우스 클릭]</w> 하여
+내려갈 수도 있습니다</localtiles>.
+%%%%
+tutorial1 levelmap
+
+여기는 어디지? 캐릭터가 지금 어디에 있는지 모르겠다면, <tiles>화면 오른쪽에
+있는 <w>미니맵</w>을 보면 됩니다.</tiles><localtiles> <w>[오른쪽
+마우스버튼]</w>을 클릭한 채로 미니맵에서 보고 싶은 곳에 커서를 가져가 대보면
+그곳의 지형을 볼 수 있으며, <w>[왼쪽 마우스버튼]</w>을 클릭하면 지금 보고 있는
+곳, 혹은 미니맵을 클릭했을 경우 해당 지역으로 빠르게 이동할 수
+있습니다.</localtiles>
+%%%%
+tutorial1 autoexplore
+
+게임 내내 이렇게 직접 이동하는 것은 따분한 일입니다. <w>[$cmd[CMD_EXPLORE]]</w>
+키를 눌러, 시선을 끌만한 일이 일어나기 전까지 자동으로 여행하는 '자동이동
+기능'을 써보세요!
+%%%%
+tutorial1 exclusion
+
+몇몇 위험한 구름과 적들을 만나면, 자동으로 주변에 <w>이동금지구역</w>이
+설정됩니다. 자동이동 기능은 이렇게 특정 구역이 이동금지구역으로 표시되는 순간,
+이동을 멈춥니다. (<localtiles>(<w>[마우스 클릭]</w>을 이용하는 이동도
+포함됩니다!)</localtiles>
+
+물론 자동이동 기능을 다시 사용하면 이동금지구역을 제외하고 움직이기 때문에 다시
+안전한 여행을 할 수 있습니다. <w>[$cmd[CMD_EXPLORE]]</w> 키를 눌러 여행을
+계속하세요.
+%%%%
+tutorial1 autoexplore_announce
+
+자동이동 기능은 시선을 끌 만한 던전의 구성요소나 물건이 있으면 이동을 멈추고
+발견한 것에 대한 메시지를 표시합니다. 계단으로 바로 이동하는 방법에는
+<localtiles>계단을 <w>[왼쪽 마우스버튼]</w>으로 클릭하거나,
+</localtiles><w>[$cmd[CMD_DISPLAY_MAP] << 엔터]</w> 키를 순서대로 누르는 방법이
+있습니다.
+%%%%
+tutorial1 tutorial_end
+
+축하합니다! 첫번째 연습과정을 통과하셨습니다!
+
+연습을 끝내려면, <localtiles>캐릭터에 마우스 커서를 대고 <w>[시프트+마우스
+클릭]</w>을 누르거나, </localtiles><w>[$cmd[CMD_GO_UPSTAIRS]]</w> 키를 눌러
+계단을 올라가면 됩니다. 던전을 빠져나올 것이냐는 질문이 나오면, <w>[대문자
+Y]</w> 키를 눌러 답하시면 됩니다.
+%%%%
+tutorial1 newlevel
+
+새로운 장소를 발견하였습니다! 본격적으로 연습을 시작하기 전에, 오른쪽으로
+이동하여 파란 사각형 위에 서보세요.
+
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w> 키를 이용해서 언제든지 이전 메시지를 볼 수
+있습니다. 전에 본 메시지가 기억나지 않을 때 사용해보세요.
+%%%%
+tutorial1 door
+
+닫힌 문이 있는 방향으로 이동하면 문을 열 수 있습니다. 문을 다시 닫으려면,
+<w>[$cmd[CMD_CLOSE_DOOR]]</w> 키를 누르세요.
+%%%%
+tutorial1 secret_door_glass
+
+어딘가에 숨겨진 문이 있는 것 같습니다. <w>[$cmd[CMD_REST]]</w> 키를 이용해서
+비밀 문을 찾아보세요. 여러 번 시도해야 할 수도 있습니다. 혹시 이런 과정이
+너무나도 귀찮다면, 휴식도 취할 겸 <w>[5]</w> 키를 눌러보세요. 100턴간 휴식을
+취하면서 주변에 비밀문이 있나 살펴보는 키입니다. <w>[5]</w> 키의 자세한
+사용법은 다음 시간에 배울 수 있습니다.
+%%%%
+tutorial1 water
+
+얕은 물은 누구든지 지나다닐 수 있지만, 깊은 물은 그렇지 않습니다. 지금
+플레이하고 있는 하이 엘프 종족을 비롯한 종족 대부분은 깊은 물을 지나다닐 수
+없습니다.
+%%%%
+tutorial1 secret_door_wall
+
+막다른 길! 아니 잠깐, 왠지 이런 곳에는 비밀문이 있을 것 같은데..?
+<w>[$cmd[CMD_REST]]</w> 키, 혹은 <w>[5]</w> 키를 이용하여 비밀문을 찾아봅시다.
+%%%%
+tutorial1 upstairs
+
+올라가는 계단 위에서 <w>[$cmd[CMD_GO_UPSTAIRS]]</w> 키를 누르면 한 층 위로
+이동할 수 있습니다. <localtiles>혹은 캐릭터를 <w>[시프트+클릭]</w> 하여 올라갈
+수도 있습니다</localtiles>.
+%%%%
+tutorial1 exit
+
+<yellow>이동 명령어</yellow>
+
+ 숫자 패드 :      <w>7 8 9</w>           hjkl 식 :   <w>$cmd[CMD_MOVE_UP_LEFT]
+$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+
+                  \|/                         \|/
+
+                 <w>4</w>-<w>.</w>-<w>6</w>
+<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+
+                  /|\                         /|\
+
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
+$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+
+  <w>Shift + direction</w> moves you several squares into this direction.
+
+  <localtiles>You also can move by <w>clicking</w> somewhere in sight or on the
+<w>minimap</w>.</localtiles>
+
+
+<w>시프트 + 방향키</w> 해당 방향으로 여러 칸 움직입니다.
+
+<localtiles>시야 내의 아무 곳, 혹은 <w>미니맵</w>에 커서를 위치시킨 후  <w>왼쪽
+마우스버튼</w>을 클릭하여 이동할 수도 있습니다.</localtiles>
+
+
+<yellow>계단</yellow>
+
+<w>$cmd[CMD_GO_UPSTAIRS]</w> 이전 층계로 돌아갑니다.
+
+<w>$cmd[CMD_GO_DOWNSTAIRS]</w> 다음 층계로 이동합니다.
+
+<w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w> 현재 캐릭터와 가장 가까운 올라가는 /
+내려가는 계단으로 이동합니다.
+
+
+<yellow>문</yellow>
+
+문이 있는 곳으로 이동하면 자동으로 문을 열 수 있습니다.
+
+<w>$cmd[CMD_CLOSE_DOOR]</w> 열린 문을 닫습니다.
+
+<w>$cmd[CMD_REST]</w> 비밀문이 있는지 찾아봅니다.
+
+
+<yellow>자동이동</yellow>
+
+<localtiles><w>미니맵</w>에서 가고 싶은 곳을 클릭합니다.
+
+ </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다.
+<w>엔터</w> 키를 눌러 이동할 수 있습니다.
+
+</webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다. <w>엔터</w>
+키를 눌러 이동할 수 있습니다.
+
+ </console><w>$cmd[CMD_EXPLORE]</w> 자동이동 기능을 사용합니다.
+
+
+                                 <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
+%%%%
+tutorial2 start
+
+이번 시간에는 캐릭터의 생명을 위협하는 적과 싸우는 방법을 알아보겠습니다. 적과
+싸우려면 무기가 있는 편이 좋겠죠? 캐릭터 앞에 있는 무기를 주워보세요.
+%%%%
+tutorial2 pickup_weapon
+
+<w>[$cmd[CMD_PICKUP]]</w> 키나 <w>[g]</w> 키를 이용해서 무기를 줍고,
+<w>[$cmd[CMD_WIELD_WEAPON]]</w> 키를 이용해서 무기를 손에 들 수 있습니다.
+<localtiles> 키보드를 쓰는 대신, 장비에 <w>[왼쪽 마우스버튼]</w>을 클릭해서
+장비를 줍고 손에 들 수도 있습니다.</localtiles>
+%%%%
+tutorial2 melee
+
+무기를 이용해 적을 공격하려면 - 혹은 지금까지의 모든 친절한 설명을 무시한 채 두
+주먹만을 이용해 싸울 것을 결심했다면 - , 적이 있는 방향으로 이동하기만 하면
+됩니다.
+%%%%
+tutorial2 resting
+
+잘하셨습니다! 전투 중에 잃어버린 체력을 보충하려면 <w>$cmd[CMD_REST]</w> 키를
+이용해서 휴식을 취하면 됩니다. 이 기능은 100턴동안 휴식을 취하면서 주변에
+숨겨진 함정이나 비밀문이 있나 탐색을 시행합니다. 휴식을 멈춰야 할 정도의 일이
+발생하면 100턴이 지나지 않았더라도 도중에 휴식을 멈춥니다.
+%%%%
+tutorial2 chop_corpses
+
+<w>[$cmd[CMD_BUTCHER]]</w> 키 혹은 <localtiles><w>[시프트 + 왼쪽
+마우스버튼]</w>, </localtiles>을 이용하면 다양한 적들의 시체에서 먹을 수 있는
+고깃덩어리들을 얻을 수 있습니다. 이 고깃덩어리들을 먹으려면
+<w>[$cmd[CMD_EAT]]</w> 키 혹은 <localtiles><w>[왼쪽
+마우스버튼]</w></localtiles>을 이용하면 됩니다.
+%%%%
+tutorial2 rest_and_chop_reminder
+
+<w>[$cmd[CMD_BUTCHER]]</w> 키로 시체에서 먹을만한 음식을 만들어낼 수 있으며,
+<w>[$cmd[CMD_REST]]</w> 키로 휴식을 취할 수 있습니다. 중요하니까 잊지 마세요!
+%%%%
+tutorial2 wait
+
+적진 한가운데로 무모하게 돌진하는 것은 자살행위입니다! 여기서는 뒤로 물러나서
+적들이 올 때까지 기다리세요. (<w>[$cmd[CMD_MOVE_NOWHERE]]</w> 키로 제자리에서
+대기할 수 있습니다.) 1:1 상황을 만드는 것은 근접전에서 가장 중요한
+생존전략입니다.
+%%%%
+tutorial2 resting_reminder
+
+<w>[$cmd[CMD_REST]]</w> 키를 이용해서 휴식을 취할 수 있습니다. 정말정말 중요한
+기능이니까 절대 잊지 마세요!
+%%%%
+tutorial2 eat_reminder
+
+<w>[$cmd[CMD_BUTCHER]]</w> 키 혹은 <localtiles><w>[시프트 + 왼쪽
+마우스버튼]</w>, </localtiles>을 이용하면 다양한 적들의 시체에서 먹을 수 있는
+고깃덩어리들을 얻을 수 있습니다. 이 고깃덩어리들을 먹으려면
+<w>[$cmd[CMD_EAT]]</w> 키 혹은 <localtiles><w>[왼쪽
+마우스버튼]</w></localtiles>을 이용하면 됩니다. 중요한 내용이니까 또 나오는
+거겠죠? 잊지 마세요!
+%%%%
+tutorial2 compare_monster_desc
+
+<localtiles><w>마우스
+커서</w></localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FO
+RWARD]]</w></console><webtiles
+><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></webtiles>를
+위치시켜서 두 괴물들을 살펴보고, <localtiles><w>[오른쪽
+마우스버튼]</w></localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_D
+ESCRIBE]]</w></console><webtiles><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCR
+IBE]]</w></webtiles>을 이용해서 두 괴물의 상세한 설명을 읽어보세요. 이렇게 얻은
+정보들을 토대로, 어느 쪽 문을 여는 게 더 안전할지 결정해보세요.
+%%%%
+tutorial2 downstairs
+
+잘하셨습니다! 체력이 가득 찰 때까지 휴식을 취한 다음,
+<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w> 키를 이용해서 다음 층으로 가세요.
+%%%%
+tutorial2 newlevel
+
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w> 키를 이용해서 지나간 메시지를 다시 볼 수
+있습니다. 한 번도 이 기능을 안 써봤다면, 지금이라도 한 번쯤 써보세요.
+%%%%
+tutorial2 darts
+
+이제 원거리 공격을 해볼 시간입니다! <w>[$cmd[CMD_PICKUP]]</w><localtiles> 키나
+<localtiles><w>[왼쪽 마우스버튼]</w></localtiles>을 이용해서 이 다트들을 주운
+다음, 계속 진행하세요.
+%%%%
+tutorial2 throwing
+
+<w>[$cmd[CMD_FIRE]]</w> 키<localtiles>혹은 소지품 창에 들어있는 다트에
+<w>[마우스 왼쪽버튼]</w>를 클릭하는 방법</localtiles>을(를) 이용해서 적에게
+다트를 조준할 수 있습니다. 자동적으로 조준된 적에게 다트를 발사하려면
+<w>[$cmd[CMD_TARGET_SELECT]]</w> 키나 <w>[엔터]</w> 키를 누르세요.
+%%%%
+tutorial2 wield_bow
+
+이 활을 주운 다음 <w>[$cmd[CMD_WIELD_WEAPON]]</w>키<localtiles> 혹은 <w>[왼쪽
+마우스버튼]</w></localtiles>을(를) 이용해서 장비하세요.
+%%%%
+tutorial2 firing
+
+화살을 발사하는 것도 조금 전에 다트를 던진 것처럼 하시면 됩니다 ; 즉,
+<w>[$cmd[CMD_FIRE]]</w> 키<localtiles>혹은 소지품 창에 들어있는 화살에
+<w>[마우스 왼쪽버튼]</w>를 클릭하는 방법</localtiles>을(를) 이용해서 적을
+조준하면 됩니다. 또한, <w>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w> 키를 이용해서
+조준대상을 바꿀 수도 있습니다. 왼쪽의 벌레는 용암 사이에 갇혀있어서 안전하므로,
+오른쪽의 돌을 던져대는 허수아비에 공격을 집중하는 게 좋습니다. 조준된 적에게
+화살을 발사하려면 <w>[$cmd[CMD_TARGET_SELECT]]</w> 키나 <w>[엔터]</w> 키를
+누르세요.
+%%%%
+tutorial2 travel_reminder
+
+<w>[$cmd[CMD_EXPLORE]]</w> 키를 이용해서 자동이동을 할 수 있습니다. 설마 아직도
+한 칸 한 칸 움직이고 계신가요?
+%%%%
+tutorial2 explore
+
+출구를 찾아보세요! <w>[$cmd[CMD_EXPLORE]]</w> 키를 이용하는 게 좋을 것 같네요.
+%%%%
+tutorial2 tutorial_end
+
+축하합니다! 괴물과의 첫번째 사투에서 승리하셨습니다! 이 계단을 내려가면
+연습과정을 끝낼 수 있습니다.
+%%%%
+tutorial2 exit
+
+<yellow>무기<console> <cyan>)</cyan></console></yellow>
+
+  <w>$cmd[CMD_PICKUP]</w>  땅에 있는 물건을 줍습니다.
+  <w>$cmd[CMD_WIELD_WEAPON]</w> 손에 무기를 듭니다. <localtiles>  소지품 창에서
+해당 무기에<w>왼쪽 마우스버튼</w>을 클릭해서 들 수도 있습니다. </localtiles>
+
+
+<yellow>괴물</yellow>
+
+<localtiles>  <w>마우스 커서</w>  괴물의 간략한 상태를 봅니다.
+  <w>오른쪽 마우스버튼</w>  괴물의 자세한 설명을 봅니다.</localtiles> <console>
+<w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한 상태를 봅니다.
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을
+봅니다.</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한
+상태를 봅니다.
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을
+봅니다.</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  전에 조준했던 적에게 다시
+탄환을 발사합니다.
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> 다른 적 조준 <localtiles>
+ 발사하고 싶은 탄환에 <w>왼쪽 마우스버튼</w> 을 클릭해서 적을 조준하고,
+<w>엔터</w> 키로 발사할 수 있습니다.</localtiles>
+
+
+<yellow>휴식</yellow>
+
+  <w>$cmd[CMD_MOVE_NOWHERE]</w>  1턴동안 휴식하면서 주변을 살핍니다.
+  <w>$cmd[CMD_REST]</w>  100턴동안 휴식하면서 주변을 살핍니다.
+
+
+<yellow>시체<console> <brown>%</brown></console></yellow>
+
+  <w>$cmd[CMD_BUTCHER]</w>  시체에서 먹을만한 고기조각을 썰어냅니다.
+  <w>$cmd[CMD_EAT]</w>  썰어낸 고기조각 또는 다른 음식을 먹습니다
+                                 <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
+%%%%
+tutorial5 start
+
+이번 시간에는 어떻게 신을 믿고 권능을 사용하는지에 대해 알아보겠습니다.
+%%%%
+tutorial5 secret_door
+
+저 유리벽 어딘가에 제단으로 들어가는 문이 있습니다! 유리벽 근처에서
+<w>$cmd[CMD_REST]</w> 키<localtiles> 또는 명령어 모음에서<w>왼쪽
+마우스버튼</w>으로 해당 기능</localtiles>을(를) 이용해서 비밀문을 찾아보세요.
+%%%%
+tutorial5 dungeon_overview
+
+'트로그' 는 게임 내의 많은 신들 가운데 하나입니다. 실제 게임에서는
+<w>$cmd[CMD_DISPLAY_OVERMAP]</w> 키<localtiles> 또는 명령어 모음에서 <w>던전
+구조 보기</w> 버튼</localtiles>을(를) 이용해서 모든 제단과 다른 관심갈만한
+요소들의 위치를 알 수 있습니다.
+%%%%
+tutorial5 altar
+
+<w>$cmd[CMD_PRAY]</w> 키<localtiles> (또는 <w>명령어 모음</w>에서 선택하거나
+캐릭터에 <w>시프트+왼쪽 마우스버튼</w>을 클릭하는 방법)</localtiles> 을(를)
+이용하여 신에게 기도를 드리고 해당 신의 신도가 될 수 있습니다. 신을 믿을 것인지
+물어보는 화면에서 <w>!</w> 키<localtiles> 혹은<w>오른쪽
+마우스버튼</w></localtiles>을(를) 이용하면, 신에 대한 자세한 설명을 볼 수
+있습니다.
+
+신을 믿기로 했다면, 신에게 기도를 드린 후 <w>Y</w>키를 누르세요.
+%%%%
+tutorial5 religion
+
+현재 믿고있는 신앙에 대한 정보를 보고싶다면 <w>$cmd[CMD_DISPLAY_RELIGION]</w>
+키<localtiles> (혹은 명령어 모음의 <w>신앙</w> 버튼을 클릭하거나, 캐릭터에
+<w>시프트+오른쪽 마우스버튼</w>)</localtiles>을(를) 이용하면 됩니다. 그
+화면에서 다시 <w>!</w> 키<localtiles> 또는 <w>오른쪽
+마우스버튼</w></localtiles>을(를) 누르면 신에 대한 더 자세한 정보가 나타납니다.
+%%%%
+tutorial5 piety_on_kill
+
+지금 믿고 있는 트로그를 비롯한 몇몇 신들은, 캐릭터가 뭔가를 죽이면 매우
+좋아합니다. 트로그를 기쁘게 만들어보세요.
+%%%%
+tutorial5 sacrificing
+
+시체 위에서 <w>$cmd[CMD_PRAY]</w> 키<localtiles> 혹은 <w>명령어
+모음</w></localtiles>을(를) 이용하여 트로그에게 시체를 바칠 수 있습니다. 한 번
+해보세요!
+%%%%
+tutorial5 burn_book
+
+트로그를 믿는 동안에는 <w>$cmd[CMD_USE_ABILITY]</w> 키<localtiles> 혹은
+<w>명령어 모음</w></localtiles>을(를) 이용하여 마법책을 불태울 수 있습니다.
+트로그는 마법책을 불태우는 것도 뭔가를 죽이는 것만큼이나 좋아하며, 적들이
+마법책 위로 이동하는 순간 마법책을 불태우는 것도 가능합니다. 한 번 해보세요.
+%%%%
+tutorial5 berserk
+
+강해보이는 적을 만났을 때에는, <w>$cmd[CMD_USE_ABILITY]</w> 키나<localtiles>
+<w>명령어 모음</w></localtiles>을(를) 이용하여 트로그의 광폭화 권능을 사용할 수
+있습니다. 앞에 있는 적은 지금 상태로는 이기기 어려우므로, 권능을 사용해보세요.
+%%%%
+tutorial5 exhaustion
+
+광폭화는 강력하지만, 그 후유증도 심합니다. 광폭화의 후유증으로 속도가 느려지는
+'감속' 상태, 잠시 동안 광폭화를 다시 사용할 수 없는 '탈진' 상태가 걸렸습니다.
+<w>$cmd[CMD_REST]</w> 키<localtiles> (혹은 <w>명령어
+모음</w>)</localtiles>을(를) 이용해서 후유증에서 벗어나는 것이 좋습니다.
+%%%%
+tutorial5 hunger
+
+캐릭터가 '매우 배고픔' 혹은 그보다 더 배고픈 상태가 되면 광폭화 권능을 사용할
+수 없습니다. 이는 캐릭터가 언제나 먹을거리를 어느 정도 가지고 다니는 것이
+좋다는 것을 의미하며, 또한 시체를 해체해서 먹는 것과 트로그에게 바치는 것의
+균형을 잘 유지해야 한다는 것을 의미합니다.
+%%%%
+tutorial5 berserk2
+
+광폭화는 적 다수를 상대할 때에도 큰 도움이 됩니다. 광폭화 도중에 싸움판에서
+도망치지만 않는다면 말이죠.
+%%%%
+tutorial5 tutorial_end
+
+축하합니다! 마지막 연습과정을 끝내셨습니다. 이제부터는 실전입니다. 행운을
+빕니다!
+
+이 계단을 내려가면 연습과정을 끝낼 수 있습니다.
+%%%%
+tutorial5 exit
+
+<yellow>신앙 관련 명령어</yellow>
+
+  $cmd[CMD_PRAY]  제단에서 사용하여 신을 믿거나, 시체를 바칠 때 사용합니다.
+
+  $cmd[CMD_USE_ABILITY]  권능을 사용할 때 사용합니다.
+
+  $cmd[CMD_DISPLAY_RELIGION]  현재 신앙도 등을 볼 때 사용합니다.
+
+<localtiles>캐릭터에 <w>오른쪽 마우스버튼</w>을 클릭해서 볼 수도
+있습니다.</localtiles>
+
+
+<yellow>휴식</yellow>
+
+  <w>$cmd[CMD_MOVE_NOWHERE]</w>  1턴동안 휴식하면서 주변을 살핍니다.
+  <w>$cmd[CMD_REST]</w>  100턴동안 휴식하면서 주변을 살핍니다.
+
+
+
+<yellow>기타 명령어</yellow>
+
+  $cmd[CMD_DISPLAY_OVERMAP]  던전의 전체적인 구성을 표시합니다.
+
+  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  게임 내의 모든 요소에 대한 설명을 볼 수
+있습니다.
+
+
+                                 <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
+%%%%

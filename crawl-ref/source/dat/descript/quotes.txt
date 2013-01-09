@@ -789,6 +789,14 @@ ghoul
  And because it is my heart.’”
     -Stephen Crane, _The Black Riders and Other Lines_. 1895.
 %%%%
+giant centipede
+
+“Traffickers in the Black Meat, flesh of the giant black centipede—sometimes
+attaining a length of six feet—found in a lane of black rocks and iridescent,
+brown lagoons, exhibit paralyzed crustaceans in camouflage pockets of the Plaza
+visible only to the Meat Eaters.”
+    -William S. Burroughs, _Naked Lunch_. 1959.
+%%%%
 giant frog
 
 “Hello, my baby
@@ -1148,8 +1156,10 @@ vampire
  - You don't believe in vampires?
  • 'course not!
  • But I do believe in con artists. And charletans who like to stir up trouble!
- • Dead people who get up at night and suck blood. How stupid do you think we are?
- • My place is haunted with 16 ghosts and they all say there n'ain't no vampires!
+ • Dead people who get up at night and suck blood. How stupid do you think we
+are?
+ • My place is haunted with 16 ghosts and they all say there n'ain't no
+vampires!
     -Rich Morris
 %%%%
 worm
@@ -1192,10 +1202,6 @@ amulet of clarity
 <amulet>
 %%%%
 amulet of conservation
-
-<amulet>
-%%%%
-amulet of controlled flight
 
 <amulet>
 %%%%
@@ -1700,7 +1706,7 @@ his left pocket, and it slipped on his finger. The goblins stopped short. They
 could not see a sign of him. He had vanished.”
     -J.R.R. Tolkien, _The Hobbit, or There and Back Again_. 1937.
 %%%%
-ring of levitation
+ring of flight
 
 <ring>
 %%%%
@@ -1784,11 +1790,15 @@ rod of destruction
 
 <rod>
 %%%%
+rod of inaccuracy
+
+<rod>
+%%%%
 rod of striking
 
 <rod>
 %%%%
-rod of summoning
+rod of the swarm
 
 <rod>
 %%%%
@@ -1940,7 +1950,14 @@ staff of energy
 %%%%
 staff of fire
 
-<staff>
+“The wizard suddenly remembered the words of the god. He remembered that of all
+the creatures that people the earth, Fire was the only one who knew his son to
+be a phantom. This memory, which at first calmed him, ended by tormenting him.
+He feared lest his son should meditate on this abnormal privilege and by some
+means find out he was a mere simulacrum. Not to be a man, to be a projection of
+another man's dreams—what an incomparable humiliation, what madness!”
+    -Jorge Luis Borges, _The Circular Ruins_. 1940.
+    trans. Anthony Bonner, 1962.
 %%%%
 staff of poison
 
@@ -3031,14 +3048,6 @@ ring
  To hang upon a tree.”
     -Oscar Wilde, “Chanson”. 1881.
 %%%%
-rod
-
-“Fear not the wicked’s malice, nor their rod.”
-    -John Bunyan, _The Pilgrim's Progress From This World, to That Which is to
-     Come: Delivered Under the Similitude of a Dream Wherein is Discovered, the
-     Manner of His Setting Out, His Dangerous Journey; and Safe Arrival at the
-     Desired Countrey_, para. 500. 1678.
-%%%%
 wand
 
 "[The principle of selection] is the magician’s wand, by means of which he may
@@ -3095,8 +3104,8 @@ Kirke
 
 “Lo, thy comrades yonder in the house of Kirke are penned like swine in
 close-barred sties. And art thou come to release them? Nay, I tell thee, thou
-shalt not thyself return, but shalt remain there with the others.” Homer,
-Odysseia
+shalt not thyself return, but shalt remain there with the others.”
+    -Homer, Odysseia
 %%%%
 the Lernaean hydra
 

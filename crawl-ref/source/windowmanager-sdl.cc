@@ -45,7 +45,7 @@ void WindowManager::shutdown()
     wm = NULL;
 #ifdef __ANDROID__
     Mix_CloseAudio();
-    while(Mix_Init(0))
+    while (Mix_Init(0))
         Mix_Quit();
 #endif
 }
@@ -202,6 +202,14 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_TAB:
         if (numpad_offset) // keep tab a tab
             return (CK_TAB_TILE + numpad_offset);
+#ifdef TOUCH_UI
+        break;
+    // used for zoom in/out
+    case SDLK_KP_PLUS:
+        return CK_NUMPAD_PLUS;
+    case SDLK_KP_MINUS:
+        return CK_NUMPAD_MINUS;
+#endif
     default:
         break;
     }
@@ -918,7 +926,7 @@ void SDLWrapper::glDebug(const char* msg)
 {
 #ifdef __ANDROID__
     int e = glGetError();
-    if(e>0)
+    if (e > 0)
        __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
 #endif
 }

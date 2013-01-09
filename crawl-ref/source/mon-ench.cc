@@ -115,7 +115,7 @@ bool monster::add_ench(const mon_enchant &ench)
         return false;
     }
 
-    if (ench.ench == ENCH_LEVITATION && has_ench(ENCH_LIQUEFYING))
+    if (ench.ench == ENCH_FLIGHT && has_ench(ENCH_LIQUEFYING))
     {
         del_ench(ENCH_LIQUEFYING);
         invalidate_agrid();
@@ -725,7 +725,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer liquefying the ground.");
         break;
 
-    case ENCH_LEVITATION:
+    case ENCH_FLIGHT:
         apply_location_effects(pos(), me.killer(), me.kill_agent());
         break;
 
@@ -782,18 +782,18 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_REGENERATION:
-         if (!quiet)
+        if (!quiet)
             simple_monster_message(this, " is no longer regenerating.");
-         break;
+        break;
 
     case ENCH_WRETCHED:
-         if (!quiet)
-         {
+        if (!quiet)
+        {
             snprintf(info, INFO_SIZE, " seems to return to %s normal shape.",
                      pronoun(PRONOUN_POSSESSIVE, true).c_str());
             simple_monster_message(this, info);
-         }
-         break;
+        }
+        break;
 
     default:
         break;
@@ -898,7 +898,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED:
+            case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1094,7 +1094,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
-    case ENCH_LEVITATION:
+    case ENCH_FLIGHT:
     case ENCH_DAZED:
     case ENCH_FAKE_ABJURATION:
     case ENCH_RECITE_TIMER:
@@ -1107,6 +1107,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DEATHS_DOOR:
     case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_WRETCHED:
+    case ENCH_SCREAMED:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1360,7 +1361,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STICKY_FLAME:
     {
         if (feat_is_watery(grd(pos())) && (ground_level()
-              || mons_intel(this) >= I_NORMAL && flight_mode() != FL_LEVITATE))
+              || mons_intel(this) >= I_NORMAL && flight_mode()))
         {
             if (mons_near(this) && visible_to(&you))
             {
@@ -1421,14 +1422,11 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (you.can_see(this))
             {
                 if (type == MONS_PILLAR_OF_SALT)
-                {
-                     mprf("%s crumbles away.",
-                          name(DESC_THE, false).c_str());
-                }
+                    mprf("%s crumbles away.", name(DESC_THE, false).c_str());
                 else
                 {
-                     mprf("A nearby %s withers and dies.",
-                          name(DESC_PLAIN, false).c_str());
+                    mprf("A nearby %s withers and dies.",
+                         name(DESC_PLAIN, false).c_str());
                 }
             }
 
@@ -1542,7 +1540,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
                 env.grid(base_position) = DNGN_FLOOR;
 
-            env.pgrid(base_position) |= FPROP_BLOODY;
+            maybe_bloodify_square(base_position);
             add_ench(ENCH_SEVERED);
 
             // Severed tentacles immediately become "hostile" to everyone (or insane)
@@ -1581,12 +1579,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     {
         simple_monster_message(this, " writhes!");
         coord_def base_position = props["base_position"].get_coord();
-        dungeon_feature_type ftype = env.grid(base_position);
-        if (feat_has_solid_floor(ftype)
-            && !feat_is_watery(ftype))
-        {
-            env.pgrid(base_position) |= FPROP_BLOODY;
-        }
+        maybe_bloodify_square(base_position);
         hurt(me.agent(), 20);
     }
 
@@ -1751,7 +1744,7 @@ bool monster::is_summoned(int* duration, int* summon_type) const
     case MON_SUMM_CLONE:
 
     // Nor are body parts.
-    case SPELL_KRAKEN_TENTACLES:
+    case SPELL_CREATE_TENTACLES:
 
     // Some object which was animated, and thus not really summoned.
     case MON_SUMM_ANIMATE:
@@ -1810,11 +1803,11 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "guardian_timer", "levitation",
+    "withdrawn", "attached", "guardian_timer", "flight",
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "wretched", "buggy",
+    "ozocubus_armour", "wretched", "screamed", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

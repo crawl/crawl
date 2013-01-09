@@ -174,6 +174,111 @@ xxxxxxxxxxx
 xxxxxxxxxxx
 ENDMAP
 
+NAME:   gup_sewer_entry_pipe
+TAGS:   uniq_sewer no_monster_gen chance_sewer patrolling no_pool_fixup
+CHANCE: 8%
+: sewer_portal(_G)
+KMONS:  1 = giant cockroach / giant mite / giant gecko / nothing
+KFEAT:  1 = W
+SUBST:  W = WW.
+COLOUR: 1Ww = green
+MAP
+@Wxxxxxxxxx
+WWWWWWWWWWxx
+xWWwwwwwwWWx
+xxxxxxxxx11x
+ xxwwwwww11x
+xxWWW1O1WWxx
+x11wwwwwwxx
+x11xxxxxxxxx
+xWWwwwwwwWWx
+xxWWWWWWWWWW
+ xxxxxxxxWW@
+ENDMAP
+
+NAME:   gup_sewer_entry_spiral
+TAGS:   uniq_sewer no_monster_gen mini_float chance_sewer patrolling
+CHANCE: 8%
+: sewer_portal(_G)
+KMONS:  1 = rat / grey rat / green rat w:5 / giant centipede w:5 / \
+            giant cockroach / giant mite / giant gecko / worm w:5 / nothing
+KFEAT:  1 = W
+NSUBST: - : 8:1 / 8:. / *:W
+COLOUR: 1W = green
+MAP
+xxxxxxxxxx
+x--------xx
+@xxxxxxxx-x
+xx-----xx-x
+x-xxxxx-x-x
+x-xx-Ox-x-x
+x-x-xxx-x-x
+x-xx----x-x
+x-xxxxxxx-x
+xx-------xx
+ xxxxxxxxx
+ENDMAP
+
+NAME:   gup_sewer_entry_bubbles
+TAGS:   uniq_sewer no_monster_gen mini_float chance_sewer patrolling
+CHANCE: 8%
+: sewer_portal(_G)
+COLOUR: 1W = green
+KMONS:  1 = rat / grey rat / green rat w:5 / giant centipede w:5 / \
+            giant cockroach / giant mite / giant gecko / worm w:5 / nothing
+KFEAT:  1 = W
+NSUBST: - = 8:1 / *:W
+MAP
+.xxx....xxx.
+xx-xxxxxx-xx
+x----------x
+x---xxxx---x
+xx-xx--xx-xx
+.x-x--O-x-x.
+.x-x----x-x.
+xx-xx--xx-xx
+x---x--x---x
+x---x------x
+xx-xxxxxx-xx
+.x@x....xxx.
+ENDMAP
+
+NAME:   gup_sewer_entry_bowl
+TAGS:   uniq_sewer no_monster_gen mini_float chance_sewer
+CHANCE: 8%
+: sewer_portal(_G)
+COLOUR: 1W = green
+KMONS:  1 = rat / grey rat / green rat w:5 / \
+            giant cockroach / giant mite / giant gecko / worm w:3 / nothing
+KFEAT:  1 = W
+MAP
+..........
+.xxx.xxxx..
+.xWxxxWWxx+.
+.xW+WW11WWx.
+.xO+WW11WWx.
+.xWxxxWWxx+.
+.xxx.xxxx..
+..........
+ENDMAP
+
+NAME:   gup_sewer_entry_glass
+TAGS:   uniq_sewer no_monster_gen mini_float chance_sewer
+CHANCE: 8%
+: sewer_portal(_G)
+COLOUR: 1W = green
+KMONS:  1 = giant centipede / giant cockroach / nothing
+KFEAT:  1 = W
+MAP
+..........
+.mmmmmmm.
+.mW1W1Wm.
+.+W1O1Wm.
+.mW1W1Wm.
+.mmmmmmm.
+.........
+ENDMAP
+
 # The actual portal vaults #####################################
 default-depth: Sewer
 
@@ -209,7 +314,7 @@ SHUFFLE:  deef
 ITEM:     potion of heal wounds / potion of curing
 ITEM:     potion of curing / potion of curing q:2 w:5 / \
           potion of heal wounds / potion of heal wounds q:2 w:5
-KITEM:    f = potion of levitation q:2 ident:type, potion of restore abilities w:7 / \
+KITEM:    f = potion of flight q:2 ident:type, potion of restore abilities w:7 / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
 KFEAT:    f = shallow_water
@@ -267,7 +372,7 @@ SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
         potion of brilliance w:4 / potion of agility w:4 /\
-        potion of levitation w:4 / any scroll w:7 / any armour w:2 / any weapon w:2
+        potion of flight w:4 / any scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
 : set_feature_name("clear_stone_wall", "large window")
 KFEAT:  C = deep_water
@@ -531,7 +636,7 @@ MONS:   kobold, jackal
 SUBST:  3 = 334
 KMONS:  3 = giant slug
 KMONS:  4 = Purgy, giant slug
-ITEM:   potion of levitation / potion of agility / potion of heal wounds / \
+ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
         scroll of random uselessness / meat ration / royal jelly / \
@@ -598,7 +703,7 @@ KMONS:   1 = giant newt / ball python w:5 / \
          adder w:4 / big fish w:3 / nothing w:6
 #      loot
 SUBST:   e = !!!!????%
-KITEM:   ? = potion of levitation q:2 w:15 / potion of curing /\
+KITEM:   ? = potion of flight q:2 w:15 / potion of curing /\
          potion of heal wounds / potion of might / potion of magic /\
          potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
@@ -695,7 +800,7 @@ MONS:     ooze / nothing w:2
 SHUFFLE:  de
 ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
           scroll of blinking / scroll of identify / nothing
-ITEM:     potion of levitation w:50 / potion of invisibility / \
+ITEM:     potion of flight w:50 / potion of invisibility / \
           potion of might w:3 / potion of agility w:4 / \
           potion of brilliance w:3 / nothing
 #       possibly rather generous loot, if you get to the center
@@ -709,7 +814,7 @@ ITEM:     scroll of identify / scroll of recharging / \
 KITEM:    ' = scroll of random uselessness w:30 / \
               scroll of identify / scroll of teleportation / \
               potion of confusion w:50 / potion of paralysis w:50 / \
-              potion of mutation / potion of levitation / \
+              potion of mutation / potion of flight / \
               wizard hat / buckler / pair of gloves w:5 / pair of boots w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -757,7 +862,7 @@ COLOUR: HJ = blue
 KFEAT:  GnHJ = w
 COLOUR: G = green
 COLOUR: s = cyan
-KITEM:  M = potion of levitation q:4 ident:type
+KITEM:  M = potion of flight q:4 ident:type
 KITEM:  N = scroll of teleportation q:2 ident:type
 : sewer_setup(_G)
 MAP
@@ -831,7 +936,7 @@ SUBST:   y = w
 SUBST:   hVZzSsUuTgY = W
 #      loot
 SUBST:   e = !!!!?????
-KITEM:   ? = potion of levitation w:5 / potion of levitation q:2 w:5 /\
+KITEM:   ? = potion of flight w:5 / potion of flight q:2 w:5 /\
          potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\

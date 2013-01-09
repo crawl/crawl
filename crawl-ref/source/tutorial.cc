@@ -50,7 +50,7 @@ void tutorial_init_hint(const char* hintstr)
         hint = HINT_NEW_LEVEL;
     else if (strcmp(hintstr, "HINT_CHOOSE_STAT") == 0)
         hint = HINT_CHOOSE_STAT;
-   else if (strcmp(hintstr, "HINT_YOU_CURSED") == 0)
+    else if (strcmp(hintstr, "HINT_YOU_CURSED") == 0)
         hint = HINT_YOU_CURSED;
     else if (strcmp(hintstr, "HINT_REMOVED_CURSE") == 0)
         hint = HINT_REMOVED_CURSE;

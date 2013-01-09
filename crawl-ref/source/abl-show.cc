@@ -20,6 +20,7 @@
 #include "acquire.h"
 #include "artefact.h"
 #include "beam.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
@@ -57,6 +58,7 @@
 #include "skills2.h"
 #include "species.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
@@ -221,9 +223,6 @@ static const ability_def Ability_List[] =
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
 
-    // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
-    // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
-    { ABIL_FLY_II, "Fly", 0, 0, 25, 0, 0, ABFLAG_NONE},
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
       0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
@@ -247,8 +246,8 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_EVOKE_LEVITATE, "Evoke Levitation", 1, 0, 100, 0, 0, ABFLAG_NONE},
-    { ABIL_EVOKE_STOP_LEVITATING, "Stop Levitating", 0, 0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_EVOKE_FLIGHT, "Evoke Flight", 1, 0, 100, 0, 0, ABFLAG_NONE},
+    { ABIL_EVOKE_FOG, "Evoke Fog", 2, 0, 250, 0, 0, ABFLAG_NONE},
 
     { ABIL_END_TRANSFORMATION, "End Transformation", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -989,12 +988,8 @@ talent get_talent(ability_type ability, bool check_confused)
             failure -= 20;
         break;
 
-    case ABIL_FLY:              // this is for tengu {dlb}
+    case ABIL_FLY:
         failure = 45 - (3 * you.experience_level);
-        break;
-
-    case ABIL_FLY_II:           // this is for draconians {dlb}
-        failure = 45 - (you.experience_level + you.strength());
         break;
 
     case ABIL_TRAN_BAT:
@@ -1034,17 +1029,17 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:
-    case ABIL_EVOKE_STOP_LEVITATING:
     case ABIL_STOP_FLYING:
         failure = 0;
         break;
 
-    case ABIL_EVOKE_LEVITATE:
+    case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_BLINK:
         failure = 40 - you.skill(SK_EVOCATIONS, 2);
         break;
 
     case ABIL_EVOKE_BERSERK:
+    case ABIL_EVOKE_FOG:
         failure = 50 - you.skill(SK_EVOCATIONS, 2);
         break;
         // end item abilities - some possibly mutagenic {dlb}
@@ -1275,15 +1270,13 @@ void no_ability_msg()
 {
     // Give messages if the character cannot use innate talents right now.
     // * Vampires can't turn into bats when full of blood.
-    // * Permanent flying (Tengu) cannot be turned off.
+    // * Tengu can't start to fly if already flying.
     if (you.species == SP_VAMPIRE && you.experience_level >= 3)
         mpr("Sorry, you're too full to transform right now.");
     else if (you.species == SP_TENGU && you.experience_level >= 5
              || player_mutation_level(MUT_BIG_WINGS))
     {
-        if (you.flight_mode() == FL_LEVITATE)
-            mpr("You can only start flying from the ground.");
-        else if (you.flight_mode() == FL_FLY)
+        if (you.flight_mode())
             mpr("You're already flying!");
     }
     else if (silenced(you.pos()) && you.religion != GOD_NO_GOD)
@@ -1527,7 +1520,7 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
-        if (item_blocks_teleport(false, false))
+        if (you.no_tele(false, false, true))
         {
             if (!quiet)
                 mpr("You cannot teleport right now.");
@@ -1540,17 +1533,10 @@ static bool _check_ability_possible(const ability_def& abil,
         return (you.can_go_berserk(true, false, true)
                 && (quiet || berserk_check_wielded_weapon()));
 
-    case ABIL_FLY_II:
-        if (you.duration[DUR_EXHAUSTED])
+    case ABIL_EVOKE_FOG:
+        if (env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
-            if (!quiet)
-                mpr("You're too exhausted to fly.");
-            return false;
-        }
-        else if (you.burden_state != BS_UNENCUMBERED)
-        {
-            if (!quiet)
-                mpr("You're carrying too much weight to fly.");
+            mpr("It's too cloudy to do that here.");
             return false;
         }
         return true;
@@ -1570,12 +1556,12 @@ bool check_ability_possible(const ability_type ability, bool hungerCheck,
 bool activate_talent(const talent& tal)
 {
     // Doing these would outright kill the player.
-    if (tal.which == ABIL_EVOKE_STOP_LEVITATING)
+    if (tal.which == ABIL_STOP_FLYING)
     {
         if (is_feat_dangerous(env.grid(you.pos()), true, true)
             && (!you.can_swim() || !feat_is_water(env.grid(you.pos()))))
         {
-            mpr("Stopping levitation right now would be fatal!");
+            mpr("Stopping flight right now would be fatal!");
             crawl_state.zero_turns_taken();
             return false;
         }
@@ -1614,7 +1600,7 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    if ((tal.which == ABIL_EVOKE_LEVITATE || tal.which == ABIL_TRAN_BAT)
+    if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT)
         && you.liquefied_ground())
     {
         mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
@@ -1627,7 +1613,6 @@ bool activate_talent(const talent& tal)
     switch (tal.which)
     {
         case ABIL_RENOUNCE_RELIGION:
-        case ABIL_EVOKE_STOP_LEVITATING:
         case ABIL_STOP_FLYING:
         case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_END_TRANSFORMATION:
@@ -2082,15 +2067,15 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_MEPHITIC:
-             if (!zapping(ZAP_BREATHE_MEPHITIC,
-                 (you.form == TRAN_DRAGON) ?
-                     2 * you.experience_level : you.experience_level,
-                 beam, true,
-                          "You exhale a blast of noxious fumes."))
-             {
-                 return false;
-             }
-             break;
+            if (!zapping(ZAP_BREATHE_MEPHITIC,
+                (you.form == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
+                         "You exhale a blast of noxious fumes."))
+            {
+                return false;
+            }
+            break;
 
         default:
             break;
@@ -2116,21 +2101,17 @@ static bool _do_ability(const ability_def& abil)
         go_berserk(true);
         break;
 
-    // Fly (tengu) - eventually becomes permanent (see main.cc).
+    // Fly (tengu/drac) - permanent at high XL
     case ABIL_FLY:
-        if (you.experience_level < 15)
-            cast_fly(you.experience_level * 4);
-        else
+        if (you.racial_permanent_flight())
         {
-            you.attribute[ATTR_PERM_LEVITATION] = 1;
-            float_player(true);
-            mpr("You feel very comfortable in the air.");
+            you.attribute[ATTR_PERM_FLIGHT] = 1;
+            float_player();
+            if (you.species == SP_TENGU)
+                mpr("You feel very comfortable in the air.");
         }
-        break;
-
-    // Fly (Draconians, or anything else with wings).
-    case ABIL_FLY_II:
-        cast_fly(you.experience_level * 2);
+        else
+            cast_fly(you.experience_level * 4);
         break;
 
     // DEMONIC POWERS:
@@ -2153,31 +2134,28 @@ static bool _do_ability(const ability_def& abil)
         you.duration[DUR_INVIS] = 1;
         break;
 
-    case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
+    case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
+        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
         {
             bool standing = !you.airborne();
-            you.attribute[ATTR_PERM_LEVITATION] = 1;
+            you.attribute[ATTR_PERM_FLIGHT] = 1;
             if (standing)
-                float_player(false);
+                float_player();
             else
                 mpr("You feel more buoyant.");
         }
         else
-            levitate_player(you.skill(SK_EVOCATIONS, 2) + 30);
+            fly_player(you.skill(SK_EVOCATIONS, 2) + 30);
         break;
 
-    case ABIL_EVOKE_STOP_LEVITATING:
-        ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
-        you.duration[DUR_LEVITATION] = 0;
-        // cancels all sources at once: boots + tengu
-        you.attribute[ATTR_PERM_LEVITATION] = 0;
-        land_player();
+    case ABIL_EVOKE_FOG:     // cloak of the Thief
+        mpr("With a swish of your cloak, you release a cloud of fog.");
+        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
     case ABIL_STOP_FLYING:
-        you.duration[DUR_LEVITATION] = 0;
-        you.attribute[ATTR_PERM_LEVITATION] = 0;
+        you.duration[DUR_FLIGHT] = 0;
+        you.attribute[ATTR_PERM_FLIGHT] = 0;
         land_player();
         break;
 
@@ -3146,29 +3124,21 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.species == SP_VAMPIRE && you.experience_level >= 6)
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
 
-    if (you.species == SP_TENGU
-        && !you.attribute[ATTR_PERM_LEVITATION]
-        && you.experience_level >= 5
-        && (you.experience_level >= 15 || !you.airborne()))
+    if ((you.species == SP_TENGU && you.experience_level >= 5
+         || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()
+        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
-        // jmf: "upgrade" for draconians -- expensive flight
+        // Black draconians get permaflight at XL 14, but they don't get
+        // the tengu movement/evasion bonuses and they don't get temporary
+        // flight before then.
+        // Other dracs can mutate big wings whenever for temporary flight.
         _add_talent(talents, ABIL_FLY, check_confused);
     }
-    else if (player_mutation_level(MUT_BIG_WINGS) && !you.airborne()
-             // Liches' bone wings and statues' stone wings cannot fly.
-             && !form_changed_physiology())
-    {
-        ASSERT(player_genus(GENPC_DRACONIAN));
-        _add_talent(talents, ABIL_FLY_II, check_confused);
-    }
 
-    if (you.attribute[ATTR_PERM_LEVITATION]
-        && you.species == SP_TENGU && you.experience_level >= 5)
-    {
+    if (you.attribute[ATTR_PERM_FLIGHT] && you.racial_permanent_flight())
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
-    }
 
     // Mutations
     if (player_mutation_level(MUT_HURL_HELLFIRE))
@@ -3207,13 +3177,16 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // Evocations from items.
     if (!you.suppressed())
     {
-        if (scan_artefacts(ARTP_BLINK))
+        if (you.scan_artefacts(ARTP_BLINK))
             _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
 
-        if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
+        if (you.scan_artefacts(ARTP_FOG))
+            _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
+
+        if (you.evokable_berserk())
             _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-        if (player_evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+        if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
         {
             // Now you can only turn invisibility off if you have an
             // activatable item.  Wands and potions will have to time
@@ -3224,29 +3197,32 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
         }
 
-        if (player_evokable_levitation())
+        if (you.evokable_flight())
         {
             // Has no effect on permanently flying Tengu.
-            if (!you.permanent_flight())
+            if (!you.permanent_flight() || !you.racial_permanent_flight())
             {
-                // You can still evoke perm levitation if you have temporary one.
-                if (!you.is_levitating()
-                    || !you.attribute[ATTR_PERM_LEVITATION]
-                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
+                // You can still evoke perm flight if you have temporary one.
+                if (!you.flight_mode()
+                    || !you.attribute[ATTR_PERM_FLIGHT]
+                       && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
                 {
-                    _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
+                    _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
                 }
-                // Now you can only turn levitation off if you have an
+                // Now you can only turn flight off if you have an
                 // activatable item.  Potions and miscast effects will
                 // have to time out (this makes the miscast effect actually
                 // a bit annoying). -- bwr
-                if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
-                    _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
+                if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
+                    _add_talent(talents, ABIL_STOP_FLYING, check_confused);
             }
         }
 
-        if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
+        if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
+            && !crawl_state.game_is_sprint())
+        {
             _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
+        }
     }
 
     // Find hotkeys for the non-hotkeyed talents.

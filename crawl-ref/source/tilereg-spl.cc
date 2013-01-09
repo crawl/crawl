@@ -59,6 +59,10 @@ int SpellRegion::handle_mouse(MouseEvent &event)
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
+        // close tab again if using small layout
+        if (tiles.is_using_small_layout())
+            tiles.deactivate_tab();
+
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (!cast_a_spell(false, spell))
@@ -149,6 +153,9 @@ int SpellRegion::get_max_slots()
 
 void SpellRegion::pack_buffers()
 {
+    if (m_items.size()==0)
+        return;
+
     const int max_spells = get_max_slots();
 
     // Pack base separately, as it comes from a different texture...

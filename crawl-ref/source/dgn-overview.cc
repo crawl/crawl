@@ -108,10 +108,14 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
     level_pos pos1(level_id::current(), orig);
     level_pos pos2(level_id::current(), dest);
 
-    shops_present[pos2]         = shops_present[pos1];
-    altars_present[pos2]        = altars_present[pos1];
-    portals_present[pos2]       = portals_present[pos1];
-    portal_notes[pos2]          = portal_notes[pos1];
+    if (shops_present.count(pos1))
+        shops_present[pos2]         = shops_present[pos1];
+    if (altars_present.count(pos1))
+        altars_present[pos2]        = altars_present[pos1];
+    if (portals_present.count(pos1))
+        portals_present[pos2]       = portals_present[pos1];
+    if (portal_notes.count(pos1))
+        portal_notes[pos2]          = portal_notes[pos1];
 
     unnotice_feature(pos1);
 

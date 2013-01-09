@@ -160,6 +160,10 @@ CMD_WAIT
 
 Attend un tour
 %%%%
+CMD_WAIT verbose
+
+Vous attendez et vous reposez un tour.
+%%%%
 CMD_DISPLAY_INVENTORY
 
 Affiche le contenu de votre inventaire

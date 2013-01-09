@@ -129,8 +129,8 @@ void player::clear_beholders()
 // Possibly end mesmerisation if a loud noise happened.
 void player::beholders_check_noise(int loudness, bool axe)
 {
-   if (axe)
-       return;
+    if (axe)
+        return;
 
     if (loudness >= 20 && beheld())
     {

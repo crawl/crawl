@@ -33,6 +33,7 @@ enum lang_t
     LANG_JAGERKIN,
     LANG_KRAUT,
     LANG_CYRILLIC,
+    LANG_FUTHARK,
     LANG_WIDE,
 };
 
@@ -61,7 +62,9 @@ enum ability_type
     ABIL_HELLFIRE,
     // Tengu, Draconians
     ABIL_FLY,
+#if TAG_MAJOR_VERSION == 34
     ABIL_FLY_II,
+#endif
     ABIL_STOP_FLYING,
     // Mummies
     ABIL_MUMMY_RESTORATION,
@@ -80,9 +83,12 @@ enum ability_type
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
     ABIL_EVOKE_TURN_VISIBLE,
-    ABIL_EVOKE_LEVITATE,
+    ABIL_EVOKE_FLIGHT,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_STOP_LEVITATING,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_STOP_LEVITATING,
+#endif
+    ABIL_EVOKE_FOG,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_FOG,
 
     // Divine abilities
     // Zin
@@ -256,16 +262,17 @@ enum attribute_type
     ATTR_PURCHASES,            // Gold amount spent at shops.
     ATTR_DONATIONS,            // Gold amount donated to Zin.
     ATTR_MISC_SPENDING,        // Spending for things like ziggurats.
-    ATTR_RND_LVL_BOOKS,        // Bitfield of level-type randart spellbooks
-                               // player has seen.
+#if TAG_MAJOR_VERSION == 34
+    ATTR_UNUSED1,              // was ATTR_RND_LVL_BOOKS
+#endif
     ATTR_NOISES,               // A noisy artefact is equipped.
     ATTR_SHADOWS,              // Lantern of shadows effect.
 #if TAG_MAJOR_VERSION == 34
-    ATTR_FRUIT_FOUND,          // Mask of fruit types found.
+    ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
 #endif
-    ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
+    ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
-    ATTR_PERM_LEVITATION,      // Tengu flight or boots of lev are on.
+    ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
@@ -702,7 +709,6 @@ enum command_type
     CMD_WIZARD,
     CMD_DESTROY_ITEM,
 
-    CMD_FORGET_STASH,
     CMD_SEARCH_STASHES,
     CMD_EXPLORE,
     CMD_INTERLEVEL_TRAVEL,
@@ -729,6 +735,12 @@ enum command_type
     CMD_EDIT_PLAYER_TILE,
     CMD_MIN_TILE = CMD_EDIT_PLAYER_TILE,
     CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
+#endif
+
+#ifdef TOUCH_UI
+    // zoom on dungeon
+    CMD_ZOOM_IN,
+    CMD_ZOOM_OUT,
 #endif
 
     // Repeat previous command
@@ -816,7 +828,6 @@ enum command_type
     CMD_TARGET_DIR_UP_RIGHT,
 
     CMD_TARGET_DESCRIBE,
-    CMD_TARGET_CYCLE_TARGET_MODE,
     CMD_TARGET_PREV_TARGET,
     CMD_TARGET_MAYBE_PREV_TARGET,
     CMD_TARGET_SELECT,
@@ -997,8 +1008,7 @@ enum chunk_drop_type
     ADC_YES,
 };
 
-// When adding new delays, update their names in delay.cc, or bad things will
-// happen.
+// When adding new delays, update their names in delay.cc
 enum delay_type
 {
     DELAY_NOT_DELAYED,
@@ -1257,6 +1267,9 @@ enum dungeon_feature_type
     DNGN_ENTER_TARTARUS,
     DNGN_ENTER_ABYSS,
     DNGN_EXIT_ABYSS,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ABYSSAL_STAIR,
+#endif
     DNGN_STONE_ARCH,
     DNGN_ENTER_PANDEMONIUM,
     DNGN_EXIT_PANDEMONIUM,
@@ -1352,6 +1365,10 @@ enum dungeon_feature_type
     DNGN_UNKNOWN_ALTAR,
     DNGN_UNKNOWN_PORTAL,
 
+#if TAG_MAJOR_VERSION == 34
+    DNGN_ABYSSAL_STAIR,
+#endif
+
     NUM_FEATURES
 };
 
@@ -1366,7 +1383,7 @@ enum duration_type
     DUR_MIGHT,
     DUR_BRILLIANCE,
     DUR_AGILITY,
-    DUR_LEVITATION,
+    DUR_FLIGHT,
     DUR_BERSERK,
     DUR_POISONING,
 
@@ -1389,7 +1406,9 @@ enum duration_type
     DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
     DUR_REGENERATION,
     DUR_SWIFTNESS,
+#if TAG_MAJOR_VERSION == 34
     DUR_CONTROLLED_FLIGHT,
+#endif
     DUR_TELEPORT,
     DUR_CONTROL_TELEPORT,
     DUR_BREATH_WEAPON,
@@ -1400,8 +1419,8 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
 #endif
-    DUR_WEAPON_BRAND,                  // general "branding" spell counter
-    DUR_DEMONIC_GUARDIAN,              // demonic guardian timeout
+    DUR_WEAPON_BRAND,           // general "branding" spell counter
+    DUR_DEMONIC_GUARDIAN,       // demonic guardian timeout
     DUR_POWERED_BY_DEATH,
     DUR_SILENCE,
     DUR_CONDENSATION_SHIELD,
@@ -1424,7 +1443,7 @@ enum duration_type
     DUR_COLOUR_SMOKE_TRAIL,
     DUR_SLIMIFY,
     DUR_TIME_STEP,
-    DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
+    DUR_ICEMAIL_DEPLETED,       // Wait this many turns for full Icemail
     DUR_MISLED,
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
@@ -1443,11 +1462,11 @@ enum duration_type
     DUR_NAUSEA,
     DUR_AMBROSIA,
     DUR_TEMP_MUTATIONS,
+    DUR_DISJUNCTION,
     NUM_DURATIONS
 };
 
-// This list must match the enchant_names array in monster.cc or Crawl
-// will CRASH, we kid you not.
+// This list must match the enchant_names array in monster.cc
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:
 //     berserk -> haste, might; fatigue -> slow
@@ -1513,7 +1532,7 @@ enum enchant_type
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
-    ENCH_LEVITATION,
+    ENCH_FLIGHT,
     ENCH_LIQUEFYING,
     ENCH_TORNADO,
     ENCH_FAKE_ABJURATION,
@@ -1531,6 +1550,7 @@ enum enchant_type
     ENCH_ROLLING,       // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,
     ENCH_WRETCHED,      // An abstract placeholder for monster mutations
+    ENCH_SCREAMED,      // Starcursed scream timer
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -1678,7 +1698,6 @@ enum holy_word_source_type
 {
     HOLY_WORD_GENERIC     = -1,
     HOLY_WORD_SCROLL      = -2,
-    HOLY_WORD_SPELL       = -3,  // SPELL_HOLY_WORD
     HOLY_WORD_ZIN         = -4,  // Zin effect
     HOLY_WORD_TSO         = -5,  // TSO effect
 };
@@ -1808,7 +1827,7 @@ enum KeymapContext
 {
     KMC_DEFAULT,         // For no-arg getchm(), must be zero.
     KMC_LEVELMAP,        // When in the 'X' level map
-    KMC_TARGETTING,       // Only during 'x' and other targetting modes
+    KMC_TARGETTING,      // Only during 'x' and other targetting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
 #ifdef USE_TILE
@@ -1851,8 +1870,8 @@ enum killer_type                       // monster_die(), thing_thrown
 enum flight_type
 {
     FL_NONE = 0,
+    FL_WINGED,                         // wings, etc... paralysis == fall
     FL_LEVITATE,                       // doesn't require physical effort
-    FL_FLY                             // wings, etc... paralysis == fall
 };
 
 // Can't change this order without breaking saves.
@@ -2112,11 +2131,15 @@ enum monster_type                      // menv[].type
     MONS_INEPT_ITEM_MIMIC,
     MONS_ITEM_MIMIC,
     MONS_RAVENOUS_ITEM_MIMIC,
+#if TAG_MAJOR_VERSION == 34
     MONS_MONSTROUS_ITEM_MIMIC,
+#endif
     MONS_INEPT_FEATURE_MIMIC,
     MONS_FEATURE_MIMIC,
     MONS_RAVENOUS_FEATURE_MIMIC,
+#if TAG_MAJOR_VERSION == 34
     MONS_MONSTROUS_FEATURE_MIMIC, // unused
+#endif
 
     // Plants:
     MONS_TOADSTOOL,
@@ -2378,7 +2401,9 @@ enum monster_type                      // menv[].type
     MONS_SERAPH,
     MONS_PHOENIX,
     MONS_SILVER_STAR,
+#if TAG_MAJOR_VERSION == 34
     MONS_BLESSED_TOE,
+#endif
     MONS_SHEDU,
     MONS_OPHAN,
     MONS_SPIRIT,
@@ -2495,6 +2520,11 @@ enum monster_type                      // menv[].type
     MONS_ELEMENTAL,             // genus
 
     MONS_FANNAR,
+    MONS_APOCALYPSE_CRAB,
+    MONS_STARSPAWN_TENTACLE,
+    MONS_STARSPAWN_TENTACLE_SEGMENT,
+
+    MONS_SPATIAL_MAELSTROM,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -2762,7 +2792,7 @@ enum potion_type
     POT_GAIN_STRENGTH,
     POT_GAIN_DEXTERITY,
     POT_GAIN_INTELLIGENCE,
-    POT_LEVITATION,
+    POT_FLIGHT,
     POT_POISON,
     POT_SLOWING,
     POT_PARALYSIS,
@@ -2812,7 +2842,10 @@ enum artefact_prop_type
     ARTP_MAGIC,
     ARTP_EYESIGHT,
     ARTP_INVISIBLE,
-    ARTP_LEVITATE,
+    ARTP_FLY,
+#if TAG_MAJOR_VERSION != 34
+    ARTP_FOG,
+#endif
     ARTP_BLINK,
     ARTP_BERSERK,
     ARTP_NOISES,
@@ -2832,6 +2865,10 @@ enum artefact_prop_type
     ARTP_CLARITY,
     ARTP_BASE_ACC,
     ARTP_BASE_DAM,
+    ARTP_RMSL,
+#if TAG_MAJOR_VERSION == 34
+    ARTP_FOG,
+#endif
     ARTP_NUM_PROPERTIES
 };
 
@@ -3171,7 +3208,9 @@ enum spell_type
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST,
+#if TAG_MAJOR_VERSION == 34
     SPELL_VAMPIRE_SUMMON,
+#endif
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
     SPELL_STEAM_BALL,
@@ -3194,7 +3233,7 @@ enum spell_type
     SPELL_DRACONIAN_BREATH,
     SPELL_WATER_ELEMENTALS,
     SPELL_PORKALATOR,
-    SPELL_KRAKEN_TENTACLES,
+    SPELL_CREATE_TENTACLES,
     SPELL_TOMB_OF_DOROKLOHE,
     SPELL_SUMMON_EYEBALLS,
     SPELL_HASTE_OTHER,
@@ -3222,8 +3261,10 @@ enum spell_type
     SPELL_SUMMON_SPECTRAL_ORCS,
     SPELL_RESURRECT,
     SPELL_HOLY_LIGHT,
+#if TAG_MAJOR_VERSION == 34
     SPELL_HOLY_WORD,
     SPELL_SUMMON_HOLIES,
+#endif
     SPELL_HEAL_OTHER,
     SPELL_SACRIFICE,
     SPELL_HOLY_FLAMES,
@@ -3256,6 +3297,9 @@ enum spell_type
     SPELL_ENSNARE,
     SPELL_THUNDERBOLT,
     SPELL_SUMMON_MINOR_DEMON,
+    SPELL_DISJUNCTION,
+    SPELL_CHAOS_BREATH,
+    SPELL_FRENZY,
 
     NUM_SPELLS
 };
@@ -3315,7 +3359,9 @@ enum trap_type                         // env.trap_type[]
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
-    TRAP_INDEPTH,                      // Level-appropriate trap.
+#if TAG_MAJOR_VERSION == 34
+    TRAP_UNUSED1,                      // was TRAP_INDEPTH
+#endif
     TRAP_NONTELEPORT,
     TRAP_RANDOM,
 };
@@ -3361,7 +3407,6 @@ enum zap_type
     ZAP_TELEPORTATION,
     ZAP_LIGHTNING,
     ZAP_POLYMORPH_OTHER,
-    ZAP_LAST_RANDOM = ZAP_POLYMORPH_OTHER,   // maximal random_effects beam
     ZAP_VENOM_BOLT,
     ZAP_NEGATIVE_ENERGY,
     ZAP_CRYSTAL_SPEAR,
@@ -3507,7 +3552,8 @@ enum seen_context_type
 
 enum los_type
 {
-    LOS_ARENA        = 0,
+    LOS_NONE         = 0,
+    LOS_ARENA        = LOS_NONE,
     LOS_DEFAULT      = (1 << 0),
     LOS_NO_TRANS     = (1 << 1),
     LOS_SOLID        = (1 << 2),
@@ -3523,6 +3569,14 @@ enum ac_type
     AC_TRIPLE,
     // This one stays fair over arbitrary splits.
     AC_PROPORTIONAL,
+};
+
+enum uncancellable_type
+{
+    UNC_ACQUIREMENT,           // arg is AQ_SCROLL or AQ_CARD_GENIE
+    UNC_DRAW_THREE,            // arg is inv slot of the deck
+    UNC_STACK_FIVE,            // arg is inv slot of the deck
+    UNC_MERCENARY,             // arg is mid of the monster
 };
 
 // Tiles stuff.

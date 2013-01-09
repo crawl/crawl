@@ -194,64 +194,6 @@ MAP
 ENDMAP
 
 #############################################################################
-# Trapped exits - this is evil!
-NAME:    labyrinth_trapped
-WEIGHT:  0
-TAGS:    minotaur generate_loot allow_dup
-MONS:    patrolling minotaur
-NSUBST:  g = 1:. / *:b
-NSUBST:  D = 1:. / *:D
-KFEAT:   d = bolt trap / dart trap / needle trap / blade trap
-KFEAT:   D = teleport trap
-SUBST:   b : vvb
-WEIGHT:  2
-MAP
-..............
-.bbbbbbbbbbbb.
-.g.dddD+.bbbb.
-.b.bbbbb.bbbb.
-.g.dddD+.+1<b.
-.b.bbbbb.bbbb.
-.g.dddD+.bbbb.
-.bbbbbbbbbbbb.
-..............
-ENDMAP
-
-#############################################################################
-# Another trapped exit - most evil again!
-NAME:    labyrinth_trapped_2
-WEIGHT:  0
-TAGS:    minotaur allow_dup generate_loot
-ITEM:    potion of porridge
-SHUFFLE: XYZ
-SHUFFLE: GH, LM, fghijklmn, FHIJKLN
-KFEAT:   f = teleport trap
-KFEAT:   n = teleport trap
-KFEAT:   F = teleport trap
-KFEAT:   N = teleport trap
-SUBST:   g=., h=., i=., j=., k=., l=., m=.
-SUBST:   G=., H=., I=., J=., K=., L=., M=.
-SUBST:   Y=*, Z=*
-KFEAT:   X = <
-KMONS:   X = patrolling minotaur
-KFEAT:   S = granite_statue
-WEIGHT:  2
-MAP
-.............
-.vvvvvvvvvvv.
-.vvXvvYvvZvv.
-.vv+vv+vv+vv.
-.vFGHIJKLMNv.
-.vfghijklmnv.
-.v.........v.
-.v.S..S..S.v.
-.v...d.d...v.
-.vvvvv+vvvvv.
-............
-ENDMAP
-# The heart stopper
-
-#############################################################################
 # Chooses four corpses, each with their own set of loot, themed around some
 # particular archetypical species/background. Each set of loot has at least
 # three guaranteed items.

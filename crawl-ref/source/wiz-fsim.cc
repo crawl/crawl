@@ -224,7 +224,8 @@ static monster* _init_fsim()
         args.needs_path = false;
         args.top_prompt = "Select a monster, or hit Escape to use default.";
         direction(moves, args);
-        if (monster_at(moves.target)) {
+        if (monster_at(moves.target))
+        {
             mon = clone_mons(monster_at(moves.target), true);
             if (mon)
                 mon->flags |= MF_HARD_RESET;
@@ -594,7 +595,7 @@ void wizard_fight_sim(bool double_scale)
     {
         mpr("(A)ttack or (D)efense?", MSGCH_PROMPT);
 
-        switch (tolower(getchk()))
+        switch (toalower(getchk()))
         {
         case 'a':
         case 'A':

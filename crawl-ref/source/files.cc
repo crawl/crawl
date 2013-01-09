@@ -60,6 +60,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-iter.h"
@@ -399,6 +400,9 @@ static vector<string> _get_base_dirs()
 #ifdef TARGET_OS_MACOSX
         SysEnv.crawl_base + "../Resources/",
 #endif
+#ifdef __ANDROID__
+        "/sdcard/Android/data/org.develz.crawl/files/",
+#endif
     };
 
     const string prefixes[] = {
@@ -452,6 +456,9 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     for (unsigned b = 0, size = bases.size(); b < size; ++b)
     {
         string name = bases[b] + basename;
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
+#endif
         if (thing_exists(name))
             return name;
     }
@@ -1499,6 +1506,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Don't do so if we are just moving around inside Pan, though.
     if (just_created_level && stair_taken != DNGN_TRANSIT_PANDEMONIUM)
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+
+    // If the player entered the level from a different location than they last
+    // exited it, have monsters lose track of where they are
+    if (you.position != env.old_player_pos)
+       shake_off_monsters(you.as_player());
 
     return just_created_level;
 }

@@ -1157,6 +1157,16 @@ spret_type cast_shadow_creatures(god_type god, bool fail)
         me.set_duration(mons, &me);
         mons->update_ench(me);
         player_angers_monster(mons);
+
+        // Possibly anger band members, too.
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (testbits(mi->flags, MF_BAND_MEMBER)
+                && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
+            {
+                player_angers_monster(*mi);
+            }
+        }
     }
     else
         mpr("The shadows disperse without effect.");
@@ -1486,8 +1496,6 @@ static void _display_undead_motions(int motions)
         motions_list.push_back("walking");
     if (motions & DEAD_ARE_HOPPING)
         motions_list.push_back("hopping");
-    if (motions & DEAD_ARE_FLOATING)
-        motions_list.push_back("floating");
     if (motions & DEAD_ARE_SWIMMING)
         motions_list.push_back("swimming");
     if (motions & DEAD_ARE_FLYING)
@@ -1615,10 +1623,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         *motions_r |= DEAD_ARE_SWIMMING;
     }
-    else if (mons_class_flies(zombie_type) == FL_FLY)
+    else if (mons_class_flies(zombie_type))
         *motions_r |= DEAD_ARE_FLYING;
-    else if (mons_class_flies(zombie_type) == FL_LEVITATE)
-        *motions_r |= DEAD_ARE_FLOATING;
     else if (mons_genus(zombie_type)    == MONS_ADDER
              || mons_genus(zombie_type) == MONS_NAGA
              || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
@@ -2076,8 +2082,6 @@ bool monster_simulacrum(monster *caster, bool actual)
     }
 
     // need to be able to pick up the apported corpse
-    if (caster->flight_mode() == FL_LEVITATE)
-        return false;
     if (feat_virtually_destroys_item(grd(caster->pos()), item_def()))
         return false;
 

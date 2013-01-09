@@ -18,17 +18,17 @@ ae += useless_item
 ae += dangerous_item
 
 # Exclude items which your god disapproves of.
-ae += evil_item
+ae += forbidden
 
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
-ae += amulet of (inaccuracy|the gourmand|controlled flight|warding)
+ae += amulet of (inaccuracy|the gourmand|warding)
 ae += amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasis)
 # Rings of teleportation are not redundant -- double *TELE is pretty good in
 # the Abyss.  Still, they're more in line with bone lanterns, so you can
 # pick up the second one by hand.
-ae += ring of (see invisible|levitation|poison resistance|teleportation)
+ae += ring of (see invisible|flight|poison resistance|teleportation)
 ae += ring of (invisibility|teleport control)
 : if you.race() ~= "Ogre" and you.race() ~= "Troll"
 :    and you.race() ~= "Centaur" and you.race() ~= "Octopode" then

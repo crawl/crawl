@@ -681,6 +681,8 @@ TAGS: overwritable layout allow_dup unrand
 {{
     layout_type "delve"
 
+    if is_validating() then return; end
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -1008,6 +1010,8 @@ TAGS: overwritable layout allow_dup unrand
 {{
     layout_type "delve"
 
+    if is_validating() then return; end
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -1041,10 +1045,142 @@ TAGS: overwritable layout allow_dup unrand
     subst('X = x')
 }}
 
+################################################################
+# layout_cocytus
+#
+# An ice cave approximation for Cocytus.  There is one main
+#  delved path that is guarenteed to contain at least one up and
+#  down stairs.  There are also other delved paths and
+#  diamond-shaped rooms, but these might be behind pools of
+#  water.  To avoid trapping the player, all random teleports go
+#  to the main path.
+#
+NAME: layout_cocytus
+DEPTH: Coc
+CHANCE: 100%
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    layout_type "delve"
+
+    if is_validating() then return; end
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+
+    local map_border = 5
+    local map_x_min = map_border
+    local map_y_min = map_border
+    local map_x_max = gxm - map_border - 1
+    local map_y_max = gym - map_border - 1
+    fill_area { x1 = map_x_min, y1 = map_y_min,
+                x2 = map_x_max, y2 = map_y_max, fill = 'x', border = 'X' }
+
+    -- Due to the behaviour of the spotty_map, delve, and
+    --  fill_disconnected functions, we need to make some
+    --  strange substitutions to have the right glyphs on the
+    --  map when we call these functions.  We will put the
+    --  glyphs right again later.
+    --    -> spotty_map always expands '.' glyphs with '.'s
+    --    -> delve always places '.' glyphs and seems to have
+    --       trouble with 'w's
+    --    -> fill_disconnected will not fill custom-defined
+    --       glyphs, even if they are kfeat-ed to another glyph
+
+    -- Add some water patches.
+    --    1. Add some circles of floor
+    --    2. Expand the floor circles using spotty_map
+    --    3. Convert the floor to unbreakable wall (later water)
+    for i = 1, crawl.random_range(40, 60) do
+        local x = crawl.random_range(map_x_min, map_x_max)
+        local y = crawl.random_range(map_y_min, map_y_max)
+        local radius = crawl.random_range(1, 2)
+        if crawl.one_chance_in(15) then
+            radius = crawl.random_range(3, 4)
+        end
+
+        make_circle ({ x = x, y = y, radius = radius, fill = '.'})
+    end
+    local iterations = crawl.random_range(150, 350)
+    spotty_map { boxy = false, iterations = iterations }
+    subst('. = X')
+
+    -- Delve the paths
+    local ngb_min = 2
+    local ngb_max = 5
+    -- chance of connecting to an adjecent passage
+    local connchance = 0
+    local total_count = crawl.random_range(200, 500)
+    local top = 10
+
+    -- Delve the main path and add two sets of stairs.  This
+    --  guarentees the map is connected without crossing water.
+    --  Keep the '@' glyph for connectivity checking later.
+    delve(ngb_min, ngb_max, connchance, total_count, top)
+    nsubst('. = 1:@ / *:.')
+    local x, y = farthest_from('@')
+    mapgrd[x][y] = '{'
+    x, y = farthest_from('{')
+    mapgrd[x][y] = '}'
+    subst('. = >')
+
+    -- Delve some smaller paths
+    for i = 1, crawl.random_range(1, 3) do
+        ngb_min = crawl.random_element { [1] = 3, [2] = 1 }
+        ngb_max = crawl.random_range(2, 5)
+        connchance = crawl.random_element
+            { [0] = 1, [2] = 2, [5] = 1, [20] = 1 }
+        total_count = crawl.random_range(50, 150)
+        top = crawl.random_element
+            { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] = 1 }
+
+        delve(2, 3, 3, 150, 100)
+    end
+    subst('. = <')
+
+    -- Fix up the map after delving.
+    --    1. The edges become walls
+    --    2. The remaining unbreakable walls become water
+    fill_area { x1 = 0,         y1 = 0,
+                x2 = map_x_min, y2 = gym-1,     fill = 'x' }
+    fill_area { x1 = map_x_max, y1 = 0,
+                x2 = gxm-1,     y2 = gym-1,     fill = 'x' }
+    fill_area { x1 = map_x_min, y1 = 0,
+                x2 = map_x_max, y2 = map_y_min, fill = 'x' }
+    fill_area { x1 = map_x_min, y1 = map_y_max,
+                x2 = map_x_max, y2 = gym-1,     fill = 'x' }
+    subst('X = w')
+
+    -- Add some rooms
+    for i = 1, crawl.random_range(15, 25) do
+        local x = crawl.random_range(8, gxm-9)
+        local y = crawl.random_range(8, gym-9)
+        local radius = crawl.random_element
+            { [1] = 30, [2] = 50, [3] = 15, [4] = 4, [5] = 1 }
+
+        octa_room { x1 = x - radius, y1 = y - radius,
+                    x2 = x + radius, y2 = y + radius,
+                    oblique = radius, replace = 'x', inside = '<'}
+    end
+
+    -- Finishing up stuff.
+    --     1. Fill everything not connected to the '@' set when
+    --        delving the first path.
+    --     2. Set the first delved path to floor.
+    --     3. Set the rooms and the other delved paths to
+    --        no_r_tele_into floor ('_').  These areas might be
+    --        inescapable if water convers the path out.
+    fill_disconnected{wanted = '@'}
+    subst('@> = .')
+    subst('< = _')
+    kfeat('_ = .')
+    kprop('_ = no_rtele_into')
+}}
+
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Pan
-WEIGHT: 90, 10 (D:1), 200 (Geh), 200 (Coc), 10 (Zot)
+WEIGHT: 90, 10 (D:1), 200 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{

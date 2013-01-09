@@ -1,4 +1,4 @@
-from tornado.escape import json_encode, json_decode, to_unicode
+from tornado.escape import json_encode, json_decode, utf8
 import tornado.websocket
 import tornado.ioloop
 import tornado.template
@@ -10,6 +10,7 @@ import signal
 import time, datetime
 import codecs
 import random
+import zlib
 
 import config
 from userdb import *
@@ -121,6 +122,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.id = current_id
         current_id += 1
 
+        self.deflate = True
+        self._compressobj = zlib.compressobj(zlib.Z_DEFAULT_COMPRESSION,
+                                             zlib.DEFLATED,
+                                             -zlib.MAX_WBITS)
+        self.total_message_bytes = 0
+        self.compressed_bytes_sent = 0
+        self.uncompressed_bytes_sent = 0
+
+        self.subprotocol = None
+
         self.logger = logging.LoggerAdapter(logging.getLogger(), {})
         self.logger.process = self._process_log_msg
 
@@ -153,10 +164,30 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def allow_draft76(self):
         return True
 
+    def select_subprotocol(self, subprotocols):
+        if "no-compression" in subprotocols:
+            self.deflate = False
+            self.subprotocol = "no-compression"
+            return "no-compression"
+        return None
+
     def open(self):
-        self.logger.info("Socket opened from ip %s (fd%s).",
+        compression = "on"
+        if isinstance(self.ws_connection, getattr(tornado.websocket, "WebSocketProtocol76", ())):
+            # Old Websocket versions don't support binary messages
+            self.deflate = False
+            compression = "off, old websockets"
+        elif self.subprotocol == "no-compression":
+            compression = "off, client request"
+        if hasattr(self, "get_extensions"):
+            if any(s.endswith("deflate-frame") for s in self.get_extensions()):
+                self.deflate = False
+                compression = "deflate-frame extension"
+
+        self.logger.info("Socket opened from ip %s (fd%s, compression: %s).",
                          self.request.remote_ip,
-                         self.request.connection.stream.socket.fileno())
+                         self.request.connection.stream.socket.fileno(),
+                         compression)
         sockets.add(self)
 
         self.reset_timeout()
@@ -454,8 +485,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def write_message(self, msg):
         try:
-            msg = to_unicode(msg)
-            if not self.client_closed:
+            if self.client_closed: return
+            msg = utf8(msg)
+            self.total_message_bytes += len(msg)
+            if self.deflate:
+                # Compress like in deflate-frame extension:
+                # Apply deflate, flush, then remove the 00 00 FF FF
+                # at the end
+                compressed = self._compressobj.compress(msg)
+                compressed += self._compressobj.flush(zlib.Z_SYNC_FLUSH)
+                compressed = compressed[:-4]
+                self.compressed_bytes_sent += len(compressed)
+                super(CrawlWebSocket, self).write_message(compressed, binary=True)
+            else:
+                self.uncompressed_bytes_sent += len(msg)
                 super(CrawlWebSocket, self).write_message(msg)
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
@@ -482,4 +525,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.timeout:
             self.ioloop.remove_timeout(self.timeout)
 
-        self.logger.info("Socket closed.")
+        if self.total_message_bytes == 0:
+            comp_ratio = "N/A"
+        else:
+            comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
+
+        self.logger.info("Socket closed. (%s bytes sent, compression ratio %s%%)",
+                         self.total_message_bytes, comp_ratio)

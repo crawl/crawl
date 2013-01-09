@@ -74,9 +74,10 @@
 # * cursed:   Item is generated cursed.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
+# * fog:      Lets wearer use the evoke fog ability.
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
-# * lev:      Lets wearer evoke levitation ability.
+# * fly:      Lets wearer evoke flight ability.
 # * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
@@ -89,6 +90,7 @@
 # * poison:   Grants poison resistance.
 # * randapp:  Generated with a random artefact's appearance (used by
 #             strictly-bad unrands).
+# * rmsl:     Passively repels missiles.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * special:  Artefact is "special": can't be picked up by monsters,
@@ -217,7 +219,7 @@ BOOL:    poison
 
 NAME:    Staff of Wucad Mu
 OBJ:     OBJ_WEAPONS/WPN_STAFF
-PLUS:    0/0 # Set on wield
+PLUS:    +9/+9
 COLOUR:  ETC_MAGIC
 TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu
@@ -643,7 +645,7 @@ OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +8
 COLOUR:  BROWN
 TILE:    urand_ignorance
-TILE_EQ: large_shield_of_ignorance
+TILE_EQ: lshield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
@@ -662,22 +664,20 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
-PLUS:     +1
+PLUS:     +2
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
-EV:       2
-DEX:      2
 DAM:      -3
 STEALTH:  60
-BOOL:     seeinv, inv, lev
+BOOL:     seeinv, fog
 
 NAME:    shield "Bullseye"
 OBJ:     OBJ_ARMOUR/ARM_SHIELD
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
-TILE_EQ: bullseye
+TILE_EQ: shield_bullseye
 EV:      -5
 
 NAME:    crown of Dyrovepreva
@@ -721,7 +721,7 @@ COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
-BOOL:     lev
+BOOL:     fly
 
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
@@ -877,18 +877,17 @@ OBJ:      OBJ_ARMOUR/ARM_SHIELD
 PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
-TILE_EQ:  gong
+TILE_EQ:  shield_gong
 BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
 BOOL:     elec, life
 
 NAME:    amulet of the Air
-OBJ:     OBJ_JEWELLERY/AMU_CONTROLLED_FLIGHT
+OBJ:     OBJ_JEWELLERY/AMU_INACCURACY
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
-EV:      3
-STEALTH: 50
-BOOL:    elec, lev
+EV:      5
+BOOL:    elec, fly, rmsl
 
 NAME:    ring of Shadows
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
@@ -960,7 +959,7 @@ PLUS:     +3
 COLOUR:   ETC_MIST
 TILE:     urand_clouds
 TILE_EQ:  robe_clouds
-BOOL:     elec, lev
+BOOL:     elec, fly
 
 NAME:     hat of Pondering
 OBJ:      OBJ_ARMOUR/ARM_WIZARD_HAT
@@ -983,7 +982,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:    1
 STR:      +3
-BOOL:     evil, seeinv, lev, special
+BOOL:     evil, seeinv, fly, special
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1085,7 +1084,7 @@ HP:      10
 MP:      10
 STEALTH: 100
 STR:     3
-BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv, mutate
+BOOL:    nogen, berserk, blink, clarity, elec, inv, fly, life, nospell, notelep, poison, seeinv, mutate
 
 # This is the second of two amulets used to test suppression. See above.
 NAME:    dark chocolate

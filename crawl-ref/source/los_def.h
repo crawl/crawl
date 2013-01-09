@@ -42,7 +42,6 @@ class los_def : public los_base
     coord_def center;
     opacity_func const * opc;
     circle_def bds;
-    bool arena;
 
 public:
     los_def();
@@ -53,7 +52,6 @@ public:
     los_def& operator=(const los_def& l);
     void init(const coord_def& center, const opacity_func& o,
                                        const circle_def& b);
-    void init_arena(const coord_def& center);
     void set_center(const coord_def& center);
     coord_def get_center() const;
     void set_opacity(const opacity_func& o);

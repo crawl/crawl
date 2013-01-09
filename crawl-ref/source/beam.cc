@@ -21,6 +21,7 @@
 
 #include "areas.h"
 #include "attitude-change.h"
+#include "branch.h"
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
@@ -479,7 +480,10 @@ bool bolt::can_affect_actor(const actor *act) const
         // Note: this is done for balance, even if it hurts realism a bit.
         // It is arcane knowledge which wall patterns will cause lightning
         // to bounce thrice, double damage for ordinary bounces is enough.
-        dprf(DIAG_BEAM, "skipping beam hit, affected them twice already");
+#ifdef DEBUG_DIAGNOSTICS
+        if (!quiet_debug)
+            dprf(DIAG_BEAM, "skipping beam hit, affected them twice already");
+#endif
         return false;
     }
     // If there's a function that checks whether an actor is affected,
@@ -705,6 +709,10 @@ void bolt::initialise_fire()
     }
 
 #ifdef DEBUG_DIAGNOSTICS
+    // Not a "real" tracer, merely a range/reachability check.
+    if (quiet_debug)
+        return;
+
     dprf(DIAG_BEAM, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (is_beam) ? "beam" : "missile",
@@ -1004,11 +1012,11 @@ void bolt::nuke_wall_effect()
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
     {
-         set<coord_def> doors = connected_doors(pos());
-         set<coord_def>::iterator it;
-         for (it = doors.begin(); it != doors.end(); ++it)
-             nuke_wall(*it);
-         break;
+        set<coord_def> doors = connected_doors(pos());
+        set<coord_def>::iterator it;
+        for (it = doors.begin(); it != doors.end(); ++it)
+            nuke_wall(*it);
+        break;
     }
 
     default:
@@ -2454,6 +2462,9 @@ void bolt::affect_endpoint()
     if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
         big_cloud(CLOUD_FIRE, agent(), pos(), 0, 8 + random2(5));
 
+    if (origin_spell == SPELL_CHAOS_BREATH && is_big_cloud)
+        big_cloud(CLOUD_CHAOS, agent(), pos(), 0, 8 + random2(5));
+
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
@@ -2977,7 +2988,7 @@ bool bolt::is_harmless(const monster* mon) const
         return (mon->res_poison() >= 3);
 
     case BEAM_ACID:
-        return (mon->res_acid() >= 3);
+        return mon->res_acid();
 
     case BEAM_PETRIFY:
         return (mon->res_petrify() || mon->petrified());
@@ -3019,7 +3030,7 @@ bool bolt::harmless_to_player() const
         return (player_res_poison(false) >= 3);
 
     case BEAM_POTION_MEPHITIC:
-        return (player_res_poison(false) > 0 || player_mental_clarity(false)
+        return (player_res_poison(false) > 0 || you.clarity(false)
                 || you.is_unbreathing());
 
     case BEAM_ELECTRICITY:
@@ -3373,11 +3384,8 @@ void bolt::affect_player_enchantment()
 
         // An enemy helping you escape while in the Abyss, or an
         // enemy stabilizing a teleport that was about to happen.
-        if (!mons_att_wont_attack(attitude)
-            && player_in_branch(BRANCH_ABYSS))
-        {
+        if (!mons_att_wont_attack(attitude) && player_in_branch(BRANCH_ABYSS))
             xom_is_stimulated(200);
-        }
 
         obvious_effect = true;
         break;
@@ -3401,11 +3409,6 @@ void bolt::affect_player_enchantment()
         if (YOU_KILL(thrower))
         {
             mpr("This spell isn't strong enough to banish yourself.");
-            break;
-        }
-        if (player_in_branch(BRANCH_ABYSS))
-        {
-            mpr("You feel trapped.");
             break;
         }
         you.banish(agent(), zapper());
@@ -3708,7 +3711,7 @@ void bolt::affect_player()
 
         // Potions exploding.
         if (flavour == BEAM_COLD)
-            expose_player_to_element(BEAM_COLD, burn_power);
+            expose_player_to_element(BEAM_COLD, burn_power, true, false);
 
         // Spore pops.
         if (in_explosion_phase && flavour == BEAM_SPORE)
@@ -4169,7 +4172,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         beogh_follower_convert(mon, true);
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
-          (name == "freezing breath" && mon->flight_mode() == FL_FLY))
+          (name == "freezing breath" && mon->flight_mode()))
         beam_hits_actor(mon);
 }
 
@@ -4463,8 +4466,10 @@ void bolt::affect_monster(monster* mon)
             // if it would have hit otherwise...
             if (_test_beam_hit(beam_hit, rand_ev, is_beam, 0, r))
             {
-                msg::stream << mon->name(DESC_THE) << " deflects the "
-                            << name << '!' << endl;
+                string deflects = (defl == 2) ? "deflects" : "repels";
+                msg::stream << mon->name(DESC_THE) << " "
+                            << deflects << " the " << name
+                            << '!' << endl;
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),
@@ -4786,7 +4791,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BANISH:
-        if (player_in_branch(BRANCH_ABYSS))
+        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
             simple_monster_message(mon, " wobbles for a moment.");
         else
             mon->banish(agent());
@@ -5667,7 +5672,11 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
                draw_delay(15), special_explosion(NULL), animate(true),
-               ac_rule(AC_NORMAL), range_funcs(),
+               ac_rule(AC_NORMAL),
+#ifdef DEBUG_DIAGNOSTICS
+               quiet_debug(false),
+#endif
+               range_funcs(),
                damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),

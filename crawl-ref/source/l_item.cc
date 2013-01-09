@@ -287,7 +287,7 @@ static const char *ring_types[] =
     "intelligence",
     "wizardry",
     "magical power",
-    "levitation",
+    "flight",
     "life protection",
     "protection from magic",
     "fire",
@@ -298,7 +298,11 @@ static const char *ring_types[] =
 static const char *amulet_types[] =
 {
     "rage", "clarity", "warding", "resist corrosion",
-    "gourmand", "conservation", "controlled flight", "inaccuracy",
+    "gourmand", "conservation",
+#if TAG_MAJOR_VERSION == 34
+    "controlled flight",
+#endif
+    "inaccuracy",
     "resist mutation", "guardian spirit", "faith", "stasis",
 };
 
@@ -424,7 +428,7 @@ static int l_item_do_name_coloured(lua_State *ls)
     if (item)
     {
         string name   = _item_name(ls, item);
-        int    col    = menu_colour(name, menu_colour_item_prefix(*item));
+        int    col    = menu_colour(name, item_prefix(*item));
         string colstr = colour_to_str(col);
 
         ostringstream out;

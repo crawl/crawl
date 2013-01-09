@@ -16,13 +16,6 @@ amulet of conservation
 Denne amulet beskytter bærerens ejendele mod ødelæggelse, men er ikke
 ufejlbarlig.
 %%%%
-amulet of controlled flight
-
-Hvis bæreren af denne amulet skulle blive leviteret på magisk vis, så får han
-eller hun en vist grad af kontrol over bevægelsen. Det gør det muligt at gå ned
-ad trapper og at samle ting op, som ligger på jorden, for eksempel, men uden at
-fratage bæreren levitationens fordele.
-%%%%
 amulet of guardian spirit
 
 Denne amulet gør bæreren mindre modtagelig over for fysisk skade, men dræner i
@@ -541,10 +534,6 @@ En lille frugt.
 great mace
 
 En enorm stridskølle af metal, som er overordentligt uhåndterlig.
-%%%%
-helm
-
-En hovedbeklædning af metal.
 %%%%
 honeycomb
 

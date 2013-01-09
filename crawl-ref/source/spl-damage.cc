@@ -479,8 +479,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
         // Note: this used to be 12!... and it was also applied even if
         // the player didn't take damage from the cold, so we're being
         // a lot nicer now.  -- bwr
-        if (freeze_potions)
-            expose_player_to_element(BEAM_COLD, 5);
+        expose_player_to_element(BEAM_COLD, 5, freeze_potions);
     }
 
     // Now do the monsters.
@@ -546,12 +545,8 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
             remove_sanctuary(true);
 
         // Cold-blooded creatures can be slowed.
-        if (mi->alive()
-            && mons_class_flag(mi->type, M_COLD_BLOOD)
-            && coinflip())
-        {
-            mi->add_ench(ENCH_SLOW);
-        }
+        if (mi->alive())
+            mi->expose_to_element(BEAM_COLD, 5);
     }
     return SPRET_SUCCESS;
 }
@@ -630,7 +625,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    if (mons->observable() && mons->undead_or_demonic())
+    if (mons->observable() && mons->holiness() != MH_NATURAL)
     {
         mpr("Draining that being is not a good idea.");
         return SPRET_ABORT;
@@ -665,15 +660,14 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     // Monster might be invisible or player misled.
-    if (mons->undead_or_demonic())
+    if (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_DEMONIC)
     {
         mpr("Aaaarggghhhhh!");
         dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
         return SPRET_SUCCESS;
     }
 
-    if (mons->holiness() != MH_NATURAL
-        || mons->res_negative_energy())
+    if (mons->holiness() != MH_NATURAL || mons->res_negative_energy())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
@@ -1755,11 +1749,9 @@ static int _disperse_monster(monster* mon, int pow)
 {
     if (!mon)
         return 0;
-    if (mons_is_projectile(mon->type))
-        return 0;
 
     if (mon->no_tele())
-        return 1;
+        return 0;
 
     if (mon->check_res_magic(pow) > 0)
     {

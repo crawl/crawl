@@ -6,6 +6,10 @@ body {
     margin: 4px;
 }
 
+#left_column {
+    line-height: 1em;
+}
+
 #right_column {
     display: inline-block;
     vertical-align: top;
@@ -15,8 +19,94 @@ body {
 }
 
 #stats {
-    display: inline;
+    display: inline-block;
     position: static;
+    color: #babdb6; /* lightgray */
+}
+
+#stats_titleline, #stats_species_god {
+    color: #fce94f; /* yellow */
+}
+#stats_piety {
+    color: #fce94f; /* yellow */
+}
+#stats_piety.penance {
+    color: #a40000; /* red */
+}
+#stats_piety.monk {
+    color: #555753; /* darkgray */
+}
+#stats_wizmode {
+    color: #204a87; /* blue */
+}
+.stats_caption {
+    color: #8f5902; /* brown */
+}
+
+.degenerated_stat {
+    color: #fce94f; /* yellow */
+}
+.zero_stat {
+    color: #ef2929; /* lightred */
+}
+.low_stat {
+    color: #a40000; /* red */
+}
+.boosted_stat {
+    color: #729fcf; /* lightblue */
+}
+
+
+.bar span {
+    display: inline-block;
+    height: 100%;
+}
+
+#stats_hp_bar {
+    background-color: #555753; /* darkgray */
+}
+#stats_hp_bar_full {
+    background-color: #8ae234; /* lightgreen */
+}
+#stats_hp_bar_decrease {
+    background-color: #a40000; /* red */
+}
+#stats_hp_bar_increase {
+    background-color: #4e9a06; /* green */
+}
+
+#stats_mp_bar {
+    background-color: #555753; /* darkgray */
+}
+#stats_mp_bar_full {
+    background-color: #729fcf; /* lightblue */
+}
+#stats_mp_bar_decrease {
+    background-color: #5c3566; /* magenta */
+}
+#stats_mp_bar_increase {
+    background-color: #204a87; /* blue */
+}
+
+#message_pane {
+    width: 100%;
+}
+#messages_container {
+    display: block;
+    overflow-y: hidden;
+}
+#messages {
+    line-height: 1.4em;
+    width: 100%;
+}
+.prefix_glyph.turn_marker {
+    color: #babdb6; /* lightgray */
+}
+.prefix_glyph.command_marker {
+    color: #555753; /* darkgray */
+}
+.game_message {
+    white-space: pre-wrap;
 }
 
 #minimap_block {
@@ -60,26 +150,26 @@ body {
 }
 
 #monster_list .trivial {
-    color: darkgray;
+    color: #555753; /* darkgray */
 }
 #monster_list .easy {
-    color: lightgray;
+    color: #babdb6; /* lightgray */
 }
 #monster_list .tough {
-    color: yellow;
+    color: #fce94f; /* yellow */
 }
 #monster_list .nasty {
-    color: rgb(255,  82,  82);
+    color: #ef2929; /* lightred */
 }
 
 #monster_list .friendly {
-    color: green;
+    color: #4e9a06; /* green */
 }
 
 #monster_list .good_neutral,
 #monster_list .neutral,
 #monster_list .strict_neutral {
-    color: brown;
+    color: #8f5902; /* brown */
 }
 
 #monster_list .ellipse {

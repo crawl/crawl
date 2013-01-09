@@ -554,6 +554,17 @@ void debug_mons_scan()
 void check_map_validity()
 {
 #ifdef ASSERTS
+    dungeon_feature_type portal = DNGN_UNSEEN;
+    if (you.where_are_you == BRANCH_MAIN_DUNGEON)
+    {
+        if (you.depth == 24)
+            portal = DNGN_ENTER_PANDEMONIUM;
+        else if (you.depth == 25)
+            portal = DNGN_ENTER_ABYSS;
+        else if (you.depth == 21)
+            portal = DNGN_ENTER_HELL;
+    }
+
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
@@ -571,7 +582,13 @@ void check_map_validity()
         // border must be impassable
         if (!in_bounds(*ri))
             ASSERT(feat_is_solid(feat));
+
+        if (feat == portal)
+            portal = DNGN_UNSEEN;
     }
+
+    if (portal)
+        die("%s didn't get generated.", dungeon_feature_name(portal));
 
     // And just for good measure:
     debug_item_scan();

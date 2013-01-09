@@ -42,11 +42,13 @@ skill_type str_to_skill(const string &skill);
 string skill_title(
     skill_type best_skill, uint8_t skill_lev,
     // these used for ghosts and hiscores:
-    int species = -1, int str = -1, int dex = -1, int god = -1);
+    int species = -1, int str = -1, int dex = -1, int god = -1,
+    int piety = you.piety);
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
     // these used for ghosts and hiscores:
-    int species = -1, int str = -1, int dex = -1, int god = -1);
+    int species = -1, int str = -1, int dex = -1, int god = -1,
+    int piety = you.piety);
 unsigned get_skill_rank(unsigned skill_lev);
 
 string player_title();

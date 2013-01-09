@@ -19,15 +19,53 @@ Artificer
 beginnen mit einigen magischen Gerätschaften und können mit solchen Werkzeugen
 kompetent umgehen.
 %%%%
+Assassin
+
+Assassinen haben viel mit Tarnung zu tun, immer bereit, unaufmerksame Gegner zu
+erdolchen. Neben Dolch und Umhang tragen sie fiese Kurarenadeln und ein
+Blasrohr mit sich.
+%%%%
 Berserker
 
 Berserker glauben an Trog, den Magiehassenden Gott der Raserei. Nicht viel kann
 einen tobenden Berserker anfangs aufhalten, außer die eigene Hybris
 %%%%
+Chaos Knight
+
+Chaosritter sind Spielzeuge des unberechenbaren Xom, und sind den ständig
+wechselnden Gefühlen des Gottes ausgesetzt.
+%%%%
+Conjurer
+
+Elementbeschwörer konfrontieren Probleme mit schädlichen Zaubersprüchen aus dem
+Buch der Elementbeschwörungen.
+%%%%
+Death Knight
+
+Todesritter sind Nahkämpfer, die die Untoten im Namen von Yredelemnul, dem
+Dunklen, kontrollieren.
+%%%%
+Earth Elementalist
+
+Erd-Elementalisten kennen den Sandstrahl-Zauber und tragen Steine mit sich, um
+die Kraft des Zaubers zu erhöhen. Mehr Erdzaubersprüche befinden sich in ihrem
+Buch der Geomantie.
+%%%%
+Enchanter
+
+Verzauberer benutzen Zaubersprüche, um sich selbst im Kampf zu stärken oder
+Gegner kampfunfähig zu machen. Sie starten zusätzlich mit guten Wurfpfeilen.
+%%%%
 Fighter
 
 Kämpfer kommen mit Rüstung und Schild, sowie einer Waffe ihrer Wahl. Sie haben
 mehr Lebenspunkte als jeder andere Hintergrund.
+%%%%
+Fire Elementalist
+
+Feuer-Elementalisten starten mit dem Buch der Flammen und kennen den
+Flammenzungen-Zauber. Die anderen Zauber in ihrem Buch befassen sich ebenfalls
+mit Zerstörung.
 %%%%
 Gladiator
 
@@ -44,12 +82,59 @@ Hunter
 Jäger können aus der Ferne angreifen ohne auf nervtötende Magie zurückgreifen
 zu müssen.
 %%%%
+Ice Elementalist
+
+Eis-Elementalisten starten mit dem Buch des Frosts und dem Gefrierzauber. Die
+anderen Zauber in ihrem Buch sind recht vielseitig.
+%%%%
+Monk
+
+Mönche sind bereit, allen im Verlies lauernden Gefahren nur mit einem Gewand
+und ihrem unbewaffneten Körper entgegenzutreten.
+%%%%
 Necromancer
 
 Nekromanten sind Zauberer, die sich auf Todesmagie spezialisieren. Sie beginnen
 mit dem Schmerzfluch.
 %%%%
+Priest
+
+Priester sind Anhänger von Zin und verbreiten sein Wort unter den Bewohnern des
+Verlieses. Bergork-Priester sind stattdessen Anhänger des Orkgottes Beogh.
+%%%%
+Skald
+
+Skalde sind Nahkämpfer, die sich selbst mit Zaubersprüchen aus dem Buch der
+Kampfgesänge im Kampf unterstützen.
+%%%%
+Summoner
+
+Beschwörer starten mit dem Buch des Rufens und sind am Anfang dazu in der Lage,
+kleine Säugetiere zu beschwören.
+%%%%
+Transmuter
+
+Verwandler ändern ihre Form in die eines Monsters. Sie können außerdem Stäbe in
+Schlangen verwandeln.
+%%%%
+Venom Mage
+
+Giftmagier starten mit dem Handbuch des jungen Giftmörders und dem
+Stich-Zauberspruch. Sie haben es am Anfang ziemlich leicht.
+%%%%
 Wanderer
 
 Wanderer beginnen mit zufälliger Ausrüstung und Fertigkeiten.
+%%%%
+Warper
+
+Teleporter starten mit einer Waffe ihrer Wahl und einer
+Kurzstreckenteleport-Schriftrolle(?). Sie können Zaubersprüche aus dem Buch der
+räumlichen Bewegungen lernen.
+%%%%
+Wizard
+
+Zauberer starten mit einem Buch der kleinen Magie, das eine breite Auswahl an
+Zaubersprüchen enthält. Sie haben mehr magische Reserven als irgendein anderer
+Beruf(?).
 %%%%

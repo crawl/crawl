@@ -99,7 +99,7 @@ bool is_giant_club_type(int wpn_type);
 bool is_demonic(const item_def &item);
 bool is_blessed(const item_def &item);
 bool is_blessed_convertible(const item_def &item);
-bool convert2good(item_def &item, bool allow_blessed = true);
+bool convert2good(item_def &item);
 bool convert2bad(item_def &item);
 
 int get_vorpal_type(const item_def &item);
@@ -134,8 +134,6 @@ bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);
 bool item_is_unique_rune(const item_def &item);
 bool item_is_orb(const item_def &orb);
 bool item_is_horn_of_geryon(const item_def &item);
-
-bool item_is_corpse(const item_def &item);
 bool item_is_spellbook(const item_def &item);
 
 

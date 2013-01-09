@@ -8,7 +8,6 @@
 #include "item_use.h"
 
 #include "abl-show.h"
-#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -58,6 +57,7 @@
 #include "target.h"
 #include "throw.h"
 #include "transform.h"
+#include "uncancel.h"
 #include "unwind.h"
 #include "view.h"
 #include "xom.h"
@@ -73,7 +73,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield)
+               bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
 
@@ -155,7 +155,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
-    if (you.undead_or_demonic() && is_holy_item(*weapon))
+    if (you.undead_or_demonic() && is_holy_item(*weapon)
+        && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
@@ -178,7 +179,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         && you.hunger_state < HS_FULL
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && !crawl_state.game_is_zotdef()
-        && !you.is_undead)
+        && !you.is_undead
+        && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
@@ -240,8 +242,8 @@ static bool _valid_weapon_swap(const item_def &item)
 
     if (item.base_type == OBJ_POTIONS && item_type_known(item))
     {
-       return (item.sub_type == POT_BLOOD
-               || item.sub_type == POT_BLOOD_COAGULATED);
+        return (item.sub_type == POT_BLOOD
+                || item.sub_type == POT_BLOOD_COAGULATED);
     }
 
     return false;
@@ -359,6 +361,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return false;
     }
 
+    // Ensure wieldable, stat loss non-fatal
+    if (!can_wield(&new_wpn, true) || !_safe_to_remove_or_wear(new_wpn, false))
+        return false;
+
     // Unwield any old weapon.
     if (you.weapon())
     {
@@ -371,9 +377,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return false;
     }
 
-    // Ensure wieldable, stat loss non-fatal
-    if (!can_wield(&new_wpn, true)
-        || !_safe_to_remove_or_wear(new_wpn, false))
+    // Really ensure wieldable, even unknown brand
+    if (!can_wield(&new_wpn, true, false, false, false))
     {
         if (!was_barehanded)
         {
@@ -584,7 +589,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
     {
         if (verbose)
-           mpr("You can't wear that.");
+            mpr("You can't wear that.");
 
         return false;
     }
@@ -669,7 +674,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("Boots don't fit your talons!");
-           return false;
+            return false;
         }
 
         if (you.species == SP_NAGA)
@@ -682,7 +687,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (!ignore_temporary && you.fishtail)
         {
             if (verbose)
-               mpr("You don't currently have feet!");
+                mpr("You don't currently have feet!");
             return false;
         }
     }
@@ -699,7 +704,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
         if (player_mutation_level(MUT_ANTENNAE) == 3)
         {
-           if (verbose)
+            if (verbose)
                 mpr("You can't wear any headgear with your large antennae!");
             return false;
         }
@@ -760,7 +765,7 @@ bool do_wear_armour(int item, bool quiet)
     if (!invitem.defined())
     {
         if (!quiet)
-           mpr("You don't have any such object.");
+            mpr("You don't have any such object.");
         return false;
     }
 
@@ -772,7 +777,7 @@ bool do_wear_armour(int item, bool quiet)
     if (item == you.equip[EQ_WEAPON])
     {
         if (!quiet)
-           mpr("You are wielding that object!");
+            mpr("You are wielding that object!");
         return false;
     }
 
@@ -832,7 +837,7 @@ bool do_wear_armour(int item, bool quiet)
         else
         {
             if (!quiet)
-               mpr("Your cloak prevents you from wearing the armour.");
+                mpr("Your cloak prevents you from wearing the armour.");
             return false;
         }
     }
@@ -1001,7 +1006,7 @@ static int _prompt_ring_to_remove(int new_ring)
     // Deactivate choice from tile inventory.
     // FIXME: We need to be able to get the choice (item letter)
     //        *without* the choice taking action by itself!
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     int c;
     do
         c = getchm();
@@ -1053,7 +1058,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     //        *without* the choice taking action by itself!
     int eqslot = EQ_NONE;
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     int c;
     do
     {
@@ -1181,27 +1186,27 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     return true;
 }
 
-// Checks whether removing an item would cause levitation to end and the
+// Checks whether removing an item would cause flight to end and the
 // player to fall to their death.
 bool safe_to_remove(const item_def &item, bool quiet)
 {
     item_info inf = get_item_info(item);
 
-    const bool grants_lev =
-         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_LEVITATION
-         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_LEVITATION
+    const bool grants_flight =
+         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT
+         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
          || is_artefact(inf)
-            && artefact_known_wpn_property(inf, ARTP_LEVITATE);
+            && artefact_known_wpn_property(inf, ARTP_FLY);
 
-    // assumes item can't grant levitation twice
-    const bool removing_ends_lev =
-        you.is_levitating()
-        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-        && (player_evokable_levitation() == 1);
+    // assumes item can't grant flight twice
+    const bool removing_ends_flight =
+        you.flight_mode()
+        && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+        && (you.evokable_flight() == 1);
 
     const dungeon_feature_type feat = grd(you.pos());
 
-    if (grants_lev && removing_ends_lev
+    if (grants_flight && removing_ends_flight
         && (feat == DNGN_LAVA
             || feat == DNGN_DEEP_WATER && !player_likes_water()))
     {
@@ -1866,7 +1871,7 @@ void zap_wand(int slot)
     if (alreadyknown && zap_wand.target == you.pos())
     {
         if (wand.sub_type == WAND_TELEPORTATION
-            && item_blocks_teleport(false, false))
+            && you.no_tele(false, false))
         {
             mpr("You cannot teleport right now.");
             return;
@@ -2057,9 +2062,9 @@ void drink(int slot)
 
     if (you.form == TRAN_BAT)
     {
-       canned_msg(MSG_PRESENT_FORM);
-       _vampire_corpse_help();
-       return;
+        canned_msg(MSG_PRESENT_FORM);
+        _vampire_corpse_help();
+        return;
     }
 
     if (slot == -1)
@@ -2160,9 +2165,6 @@ static bool _drink_fountain()
     if (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD)
         return false;
 
-    if (!player_can_reach_floor("fountain"))
-        return false;
-
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -2203,7 +2205,7 @@ static bool _drink_fountain()
                                    40,  POT_AGILITY,
                                    40,  POT_BRILLIANCE,
                                    32,  POT_DEGENERATION,
-                                   27,  POT_LEVITATION,
+                                   27,  POT_FLIGHT,
                                    27,  POT_POISON,
                                    27,  POT_SLOWING,
                                    27,  POT_PARALYSIS,
@@ -2732,7 +2734,7 @@ static bool _scroll_modify_item(item_def scroll)
     switch (scroll.sub_type)
     {
     case SCR_IDENTIFY:
-        if (!fully_identified(item))
+        if (!fully_identified(item) || is_deck(item) && !top_card_is_known(item))
         {
             identify(-1, item_slot);
             return true;
@@ -2888,7 +2890,7 @@ void read_scroll(int slot)
         {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            if (item_blocks_teleport(false, false))
+            if (you.no_tele(false, false, which_scroll == SCR_BLINKING))
             {
                 mpr("You cannot teleport right now.");
                 return;
@@ -2903,6 +2905,15 @@ void read_scroll(int slot)
         case SCR_ENCHANT_WEAPON_I:
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
+            if (you.weapon() && is_weapon(*you.weapon())
+                && !you.weapon()->cursed()
+                && (is_artefact(*you.weapon())
+                    || you.weapon()->base_type != OBJ_WEAPONS))
+            {
+                mpr("This weapon cannot be enchanted.");
+                return;
+            }
+        // Fall-through.
         case SCR_VORPALISE_WEAPON:
             if (!you.weapon() || !is_weapon(*you.weapon()))
             {
@@ -3043,7 +3054,7 @@ void read_scroll(int slot)
         more();
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, ID_KNOWN_TYPE);
-        acquirement(OBJ_RANDOM, AQ_SCROLL);
+        run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
         break;
 
     case SCR_FEAR:
@@ -3299,21 +3310,18 @@ void examine_object(void)
     mesclr();
 }
 
-bool item_blocks_teleport(bool calc_unid, bool permit_id)
-{
-    return (player_effect_notele(calc_unid)
-            || stasis_blocks_effect(calc_unid, permit_id, NULL)
-            || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
-}
-
 bool stasis_blocks_effect(bool calc_unid,
                           bool identify,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
-    if (player_effect_stasis(calc_unid))
+    if (you.stasis(calc_unid))
     {
         item_def *amulet = you.slot_item(EQ_AMULET, false);
+
+        // Just in case a non-amulet stasis source is added.
+        if (amulet && amulet->sub_type != AMU_STASIS)
+            amulet = 0;
 
         if (msg)
         {
@@ -3417,7 +3425,7 @@ static bool _prompt_eat_bad_food(const item_def food)
     if (!is_bad_food(food))
         return true;
 
-    const string food_colour = menu_colour_item_prefix(food);
+    const string food_colour = item_prefix(food);
     string colour            = "";
     string colour_off        = "";
 

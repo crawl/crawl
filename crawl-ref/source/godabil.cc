@@ -709,7 +709,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
 
     while (true)
     {
-        int keyn = tolower(getch_ck());
+        int keyn = toalower(getch_ck());
 
         if (keyn >= 'a' && keyn < 'a' + menu_cnt)
         {
@@ -3071,22 +3071,20 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     if (mon == NULL)
         return 0;
 
+    if (coinflip())
+        return 0;
+
     if (!mon->friendly())
         behaviour_event(mon, ME_ANNOY, &you);
 
-    int res_margin = mon->check_res_magic(pow * 2);
-    if (res_margin > 0)
-    {
-        mprf("%s%s",
-             mon->name(DESC_THE).c_str(),
-             mons_resist_string(mon, res_margin));
-        return 1;
-    }
-
     const int damage = 1 + random2(pow / 6);
     if (mons_genus(mon->type) == MONS_BLINK_FROG)
+    {
+        mprf("%s basks in the distortional energy.",
+             mon->name(DESC_THE).c_str());
         mon->heal(damage, false);
-    else if (mon->check_res_magic(pow) <= 0)
+    }
+    else
     {
         mon->hurt(&you, damage);
         if (!mon->alive())

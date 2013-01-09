@@ -521,7 +521,7 @@ void handle_behaviour(monster* mon)
                                 mon->target = PLAYER_POS;  // infallible tracking in zotdef
                             else
                             {
-                                if (x_chance_in_y(300, you.skill(SK_STEALTH, 100))
+                                if (x_chance_in_y(50, you.stealth())
                                     || you.penance[GOD_ASHENZARI] && coinflip())
                                 {
                                     mon->target = you.pos();
@@ -567,17 +567,17 @@ void handle_behaviour(monster* mon)
             switch (mons_intel(mon))
             {
             case I_HIGH:
-                mon->foe_memory = 100 + random2(200);
+                mon->foe_memory = random_range(700, 1300);
                 break;
             case I_NORMAL:
-                mon->foe_memory = 50 + random2(100);
+                mon->foe_memory = random_range(300, 700);
                 break;
             case I_ANIMAL:
             case I_INSECT:
-                mon->foe_memory = 25 + random2(75);
+                mon->foe_memory = random_range(250, 550);
                 break;
             case I_PLANT:
-                mon->foe_memory = 10 + random2(50);
+                mon->foe_memory = random_range(100, 300);
                 break;
             }
 
@@ -816,33 +816,23 @@ void handle_behaviour(monster* mon)
 static bool _mons_check_foe(monster* mon, const coord_def& p,
                             bool friendly, bool neutral)
 {
-    if (!in_bounds(p))
-        return false;
+    // We don't check for the player here because otherwise wandering
+    // monsters will always attack you.
 
-    if (p == you.pos())
+    // -- But why should they always attack monsters? -- 1KB
+
+    monster* foe = monster_at(p);
+    if (foe && foe != mon
+        && (foe->friendly() != friendly
+            || neutral && !foe->neutral())
+        && mon->can_see(foe)
+        && !mons_is_projectile(foe->type)
+        && summon_can_attack(mon, p)
+        && (friendly || !is_sanctuary(p))
+        && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
+            // Zotdef allies take out firewood
     {
-        // The player: We don't return true here because
-        // otherwise wandering monsters will always
-        // attack the player.
-        return false;
-    }
-
-    if (!summon_can_attack(mon, p))
-        return false;
-
-    if (monster* foe = monster_at(p))
-    {
-        if (foe != mon
-            && mon->can_see(foe)
-            && !mons_is_projectile(foe->type)
-            && (friendly || !is_sanctuary(p))
-            && (foe->friendly() != friendly
-                || neutral && !foe->neutral())
-            && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
-                // Zotdef allies take out firewood
-        {
-            return true;
-        }
+        return true;
     }
     return false;
 }
@@ -1135,7 +1125,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                 mon->foe = MHITYOU;
                 msg = "PLAIN:@The_monster@ returns to your side!";
             }
-            else if (mon->type != MONS_KRAKEN_TENTACLE)
+            else if (!mon->is_child_tentacle())
             {
                 msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
                 if (msg.empty())
@@ -1229,4 +1219,28 @@ void make_mons_stop_fleeing(monster* mon)
 {
     if (mons_is_retreating(mon))
         behaviour_event(mon, ME_CORNERED);
+}
+
+//Make all monsters lose track of a given target after a few turns
+void shake_off_monsters(const actor* target)
+{
+    //If the player is under Ashenzari penance, monsters will not
+    //lose track of them so easily
+    if (target->is_player() && you.penance[GOD_ASHENZARI])
+        return;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        monster* m = mi->as_monster();
+        if (m->foe == target->mindex() && m->foe_memory > 0)
+        {
+            // Set foe_memory to a small non-zero amount so that monsters can
+            // still close in on your old location, rather than immediately
+            // realizing their target is gone, even if they took stairs while
+            // out of sight
+            dprf("Monster %d forgot about foe %d. (Previous foe_memory: %d)",
+                    m->mindex(), target->mindex(), m->foe_memory);
+            m->foe_memory = min(m->foe_memory, 7);
+        }
+    }
 }

@@ -16,6 +16,7 @@
 #include "options.h"
 #include "player.h"
 #include "showsymb.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -308,23 +309,30 @@ void tile_init_flavour()
 
 static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
-    if (depth <= 9)
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
+    {
+        t.push_back(TILE_WALL_BRICK_DARK_4);
+        t.push_back(TILE_WALL_BRICK_DARK_5);
+        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
+        return;
+    }
+    if (depth <= 6)
         t.push_back(TILE_WALL_BRICK_DARK_1);
-    if (depth > 4 && depth <= 13)
+    if (depth > 3 && depth <= 9)
     {
         t.push_back(TILE_WALL_BRICK_DARK_2);
         t.push_back(TILE_WALL_BRICK_DARK_2_TORCH);
     }
-    if (depth > 9 && depth <= 18)
+    if (depth > 6 && depth <= 14)
         t.push_back(TILE_WALL_BRICK_DARK_3);
-    if (depth > 13 && depth <= 22)
+    if (depth > 9 && depth <= 20)
     {
         t.push_back(TILE_WALL_BRICK_DARK_4);
         t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
     }
-    if (depth > 18)
+    if (depth > 14)
         t.push_back(TILE_WALL_BRICK_DARK_5);
-    if (depth > 22)
+    if (depth > 20)
     {
         t.push_back(TILE_WALL_BRICK_DARK_6);
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);
@@ -399,7 +407,7 @@ void tile_init_flavour(const coord_def &gc)
 
     if (!env.tile_flv(gc).wall)
     {
-        if (player_in_branch(BRANCH_MAIN_DUNGEON))
+        if (player_in_branch(BRANCH_MAIN_DUNGEON) && env.tile_default.wall == TILE_WALL_NORMAL)
         {
             vector<tileidx_t> tile_candidates;
             _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
@@ -745,6 +753,19 @@ void tile_draw_floor()
         }
 }
 
+void tile_clear_map(const coord_def& gc)
+{
+    env.tile_bk_fg(gc) = 0;
+    tiles.update_minimap(gc);
+}
+
+void tile_forget_map(const coord_def &gc)
+{
+    env.tile_bk_fg(gc) = 0;
+    env.tile_bk_bg(gc) = 0;
+    tiles.update_minimap(gc);
+}
+
 static void _tile_place_item(const coord_def &gc, const item_info &item,
                              bool more_items)
 {
@@ -981,11 +1002,8 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
-        || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
-    {
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB)
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
-    }
     else if (bg_idx == TILE_DNGN_LAVA)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
@@ -1183,11 +1201,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else
             *bg = orig + min((int)flv.special, 6);
     }
-    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
-             || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
-    {
+    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
         *bg = orig + flv.special % tile_dngn_count(orig);
-    }
     else if (orig < TILE_DNGN_MAX)
         *bg = _pick_random_dngn_tile(orig, flv.special);
 
@@ -1296,6 +1311,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_QUAD_HALOED)
         cell.quad_glow = true;
 
+    if (mc.flags & MAP_DISJUNCT)
+        cell.disjunct = true;
+
     if (Options.show_travel_trail)
     {
         int tt_idx = travel_trail_index(gc);
@@ -1313,18 +1331,5 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             }
         }
     }
-}
-
-void tile_clear_map(const coord_def& gc)
-{
-    env.tile_bk_fg(gc) = 0;
-    tiles.update_minimap(gc);
-}
-
-void tile_forget_map(const coord_def &gc)
-{
-    env.tile_bk_fg(gc) = 0;
-    env.tile_bk_bg(gc) = 0;
-    tiles.update_minimap(gc);
 }
 #endif

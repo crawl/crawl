@@ -358,7 +358,6 @@ void autoid_unrand(item_def &item)
         return;
 
     set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
-    add_autoinscription(item);
 }
 
 unique_item_status_type get_unique_item_status(int art)
@@ -456,8 +455,8 @@ void artefact_desc_properties(const item_def &item,
         fake_plus = 9;
         break;
 
-    case RING_LEVITATION:
-        fake_rap = ARTP_LEVITATE;
+    case RING_FLIGHT:
+        fake_rap = ARTP_FLY;
         break;
 
     case AMU_RAGE:
@@ -975,12 +974,12 @@ static void _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    // levitate
+    // flight
     if (!done_powers
         && one_chance_in(10)
-        && (aclass != OBJ_JEWELLERY || atype != RING_LEVITATION))
+        && (aclass != OBJ_JEWELLERY || atype != RING_FLIGHT))
     {
-        proprt[ARTP_LEVITATE] = 1;
+        proprt[ARTP_FLY] = 1;
         power_level++;
     }
 
@@ -1347,7 +1346,6 @@ void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
         return;
 
     known_vec[prop] = static_cast<bool>(true);
-    add_autoinscription(item);
 }
 
 static string _get_artefact_type(const item_def &item, bool appear = false)
@@ -1374,7 +1372,7 @@ static string _get_artefact_type(const item_def &item, bool appear = false)
         else
             return "ring";
      default:
-         return "artefact";
+        return "artefact";
     }
 }
 
@@ -1703,8 +1701,8 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_MAGICAL_POWER;
         break;
 
-    case RING_LEVITATION:
-        provides = ARTP_LEVITATE;
+    case RING_FLIGHT:
+        provides = ARTP_FLY;
         break;
 
     case RING_LIFE_PROTECTION:
@@ -2055,7 +2053,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         && !strcmp(unrand->name, unrand->unid_name))
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
-        add_autoinscription(item);
     }
 
     return true;

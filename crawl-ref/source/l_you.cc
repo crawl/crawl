@@ -115,16 +115,16 @@ LUARET1(you_res_cold, number, player_res_cold(false))
 LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
 LUARET1(you_res_statdrain, number, player_sust_abil(false))
-LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
+LUARET1(you_res_mutation, number, you.rmut_from_item(false) ? 1 : 0)
 LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
-LUARET1(you_spirit_shield, number, player_spirit_shield())
-LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
-LUARET1(you_conservation, boolean, player_item_conserve(false))
-LUARET1(you_res_corr, boolean, player_res_corr(false))
+// Returning a number so as not to break existing scripts.
+LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
+LUARET1(you_gourmand, boolean, you.gourmand(false))
+LUARET1(you_conservation, boolean, you.conservation(false))
+LUARET1(you_res_corr, boolean, you.res_corr(false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
 LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
-LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
-LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
+LUARET1(you_flying, boolean, you.flight_mode())
 LUARET1(you_transform, string, you.form ? transform_name() : "")
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
@@ -408,7 +408,6 @@ static const struct luaL_reg you_clib[] =
     { "gourmand",     you_gourmand },
     { "conservation", you_conservation },
     { "res_corr",     you_res_corr },
-    { "levitating",   you_levitating },
     { "flying",       you_flying },
     { "transform",    you_transform },
     { "berserk",      you_berserk },
@@ -518,8 +517,11 @@ LUAFN(you_teleport_to)
     bool move_monsters = false;
     if (lua_gettop(ls) == 3)
         move_monsters = lua_toboolean(ls, 3);
+    bool override_stasis = false;
+    if (lua_gettop(ls) == 4)
+        override_stasis = lua_toboolean(ls, 4);
 
-    lua_pushboolean(ls, you_teleport_to(place, move_monsters));
+    lua_pushboolean(ls, you_teleport_to(place, move_monsters, override_stasis));
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 

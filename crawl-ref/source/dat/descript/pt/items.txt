@@ -369,10 +369,6 @@ hand axe
 
 Machadinha de arremesso ou combate mano a mano.
 %%%%
-helm
-
-Uma peça de armadura para a cabeça.
-%%%%
 helmet
 
 Uma peça de armadura para a cabeça.

@@ -131,6 +131,7 @@
 #include "hints.h"
 #include "shout.h"
 #include "stash.h"
+#include "uncancel.h"
 #include "version.h"
 #include "view.h"
 #include "viewchar.h"
@@ -376,7 +377,7 @@ static void _launch_game_loop()
              && !crawl_state.seen_hups);
 }
 
-static void _launch_game()
+static NORETURN void _launch_game()
 {
     const bool game_start = startup_step();
 
@@ -442,11 +443,16 @@ static void _launch_game()
     // Initialise save game so we can recover from crashes on D:1.
     save_game_state();
 
+#ifdef USE_TILE_WEB
+    // Send initial game state before we do any UI updates
+    tiles.redraw();
+#endif
+
+    run_uncancels();
+
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
         _input();
-
-    clear_globals_on_exit();
 }
 
 static void _show_commandline_options_help()
@@ -638,6 +644,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 #endif
     case CONTROL('H'): wizard_set_hunger_state(); break;
     case CONTROL('I'): debug_item_statistics(); break;
+    case CONTROL('K'): wizard_clear_used_vaults(); break;
     case CONTROL('L'): wizard_set_xl(); break;
     case CONTROL('M'): wizard_memorise_spec_spell(); break;
     case CONTROL('P'): wizard_transform(); break;
@@ -732,7 +739,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case CONTROL('A'):
         if (player_in_branch(BRANCH_ABYSS))
-            abyss_teleport(true);
+            wizard_set_abyss();
         else
             mpr("You can only abyss_teleport() inside the Abyss.");
         break;
@@ -960,7 +967,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
     case CMD_DESTROY_ITEM:
-    case CMD_FORGET_STASH:
     case CMD_FIX_WAYPOINT:
     case CMD_CLEAR_MAP:
     case CMD_INSCRIBE_ITEM:
@@ -1459,27 +1465,18 @@ static void _go_upstairs()
     if (!_prompt_unique_pan_rune(ygrd))
         return;
 
-    if (ygrd == DNGN_EXIT_DUNGEON)
+    if (ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
-        bool stay = true;
         string prompt = make_stringf("Are you sure you want to leave the "
                                      "Dungeon?%s",
                                      crawl_state.game_is_tutorial() ? "" :
                                      " This will make you lose the game!");
-        if (player_has_orb())
-            stay = !yesno("Are you sure you want to win?");
-        else
-            stay = !yesno(prompt.c_str(), false, 'n');
-
-        if (stay)
+        if (!yesno(prompt.c_str(), false, 'n'))
         {
             mpr("Alright, then stay!");
             return;
         }
     }
-
-    if (you.duration[DUR_MISLED])
-        end_mislead(true);
 
     you.clear_clinging();
     you.stop_constricting_all(true);
@@ -1501,12 +1498,6 @@ static void _go_downstairs()
 
     if (_stairs_check_mesmerised())
         return;
-
-    if (shaft && you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You can't fall through a shaft while levitating.");
-        return;
-    }
 
     // Up and down both work for shops.
     if (ygrd == DNGN_ENTER_SHOP)
@@ -1541,9 +1532,6 @@ static void _go_downstairs()
     if (!you.attempt_escape()) // false means constricted and don't escape
         return;
 
-    if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
-        return;
-
     if (!_prompt_dangerous_portal(ygrd))
         return;
 
@@ -1560,9 +1548,6 @@ static void _go_downstairs()
 
     if (!_prompt_unique_pan_rune(ygrd))
         return;
-
-    if (you.duration[DUR_MISLED])
-        end_mislead(true);
 
     you.clear_clinging();
     you.stop_constricting_all(true);
@@ -1625,7 +1610,7 @@ static void _experience_check()
                 << " (" << you.num_turns << " turns)"
                 << endl;
 #ifdef DEBUG_DIAGNOSTICS
-    if (wearing_amulet(AMU_THE_GOURMAND))
+    if (you.gourmand())
     {
         mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d",
              you.duration[DUR_GOURMAND]);
@@ -1711,7 +1696,7 @@ static void _toggle_friendly_pickup()
     int type;
     {
         cursor_control con(true);
-        type = tolower(getchm(KMC_DEFAULT));
+        type = toalower(getchm(KMC_DEFAULT));
     }
 
     switch (type)
@@ -1907,16 +1892,17 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
+#ifdef TOUCH_UI
+        // zoom commands
+    case CMD_ZOOM_IN:   tiles.zoom_dungeon(true); break;
+    case CMD_ZOOM_OUT:  tiles.zoom_dungeon(false); break;
+#endif
+
         // Stash commands.
     case CMD_SEARCH_STASHES:
         if (Hints.hints_stashes)
             Hints.hints_stashes = 0;
         StashTrack.search_stashes();
-        break;
-
-    case CMD_FORGET_STASH:
-        if (Options.stash_tracking >= STM_EXPLICIT)
-            StashTrack.no_stash();
         break;
 
     case CMD_INSPECT_FLOOR:
@@ -1962,14 +1948,10 @@ void process_command(command_type cmd)
 
     case CMD_DROP:
         drop();
-        if (Options.stash_tracking >= STM_DROPPED)
-            StashTrack.add_stash();
         break;
 
     case CMD_DROP_LAST:
         drop_last();
-        if (Options.stash_tracking >= STM_DROPPED)
-            StashTrack.add_stash();
         break;
 
     case CMD_EVOKE:
@@ -2125,12 +2107,12 @@ void process_command(command_type cmd)
     default:
         if (crawl_state.game_is_hints())
         {
-           string msg = "Unknown command. (For a list of commands type "
-                        "<w>?\?<lightgrey>.)";
-           mpr(msg);
+            string msg = "Unknown command. (For a list of commands type "
+                         "<w>?\?<lightgrey>.)";
+            mpr(msg);
         }
         else // well, not examine, but...
-           mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
+            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
 
         break;
     }
@@ -2265,8 +2247,10 @@ static void _decrement_petrification(int delay)
         {
             dur = 0;
             // If we'd kill the player when active flight stops, this will
-            // need to pass the killer.  Unlike monsters, almost all cFly is
-            // magical (sans tengu) so there's no flapping of wings, though.
+            // need to pass the killer.  Unlike monsters, almost all flight is
+            // magical, inluding tengu, as there's no flapping of wings.  Should
+            // we be nasty to dragon and bat forms?  For now, let's not instakill
+            // them even if it's inconsistent.
             you.fully_petrify(NULL);
         }
         else if (dur < 15 && old_dur >= 15)
@@ -2281,7 +2265,7 @@ static void _decrement_durations()
 {
     int delay = you.time_taken;
 
-    if (player_effect_gourmand())
+    if (you.gourmand())
     {
         if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
@@ -2625,11 +2609,9 @@ static void _decrement_durations()
         //       avoid the mutation being a "death sentence" to
         //       certain characters.
 
-        if (you.berserk_penalty != NO_BERSERK_PENALTY)
+        if (you.berserk_penalty != NO_BERSERK_PENALTY
+            && one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
         {
-            const int chance =
-                10 + player_mutation_level(MUT_BERSERK) * 25;
-
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
             if (you.religion == GOD_TROG && x_chance_in_y(you.piety, 150)
@@ -2637,7 +2619,7 @@ static void _decrement_durations()
             {
                 mpr("Trog's vigour flows through your veins.");
             }
-            else if (one_chance_in(chance))
+            else
             {
                 mpr("You pass out from exhaustion.", MSGCH_WARN);
                 you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
@@ -2698,12 +2680,21 @@ static void _decrement_durations()
 #endif
     }
 
+    if (you.duration[DUR_DISJUNCTION])
+    {
+        disjunction();
+        _decrement_a_duration(DUR_DISJUNCTION, delay,
+                              "The translocation energy dissipates.");
+        if (!you.duration[DUR_DISJUNCTION])
+            invalidate_agrid(true);
+    }
+
     if (_decrement_a_duration(DUR_TORNADO_COOLDOWN, delay,
                               "The winds around you calm down."))
     {
         remove_tornado_clouds(MID_PLAYER);
     }
-    // Should expire before levitation.
+    // Should expire before flight.
     if (you.duration[DUR_TORNADO])
     {
         tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
@@ -2713,11 +2704,11 @@ static void _decrement_durations()
             you.duration[DUR_TORNADO_COOLDOWN] = random_range(25, 35);
     }
 
-    if (you.duration[DUR_LEVITATION])
+    if (you.duration[DUR_FLIGHT])
     {
-        if (!you.permanent_levitation() && !you.permanent_flight())
+        if (!you.permanent_flight())
         {
-            if (_decrement_a_duration(DUR_LEVITATION, delay,
+            if (_decrement_a_duration(DUR_FLIGHT, delay,
                                       0,
                                       random2(6),
                                       "You are starting to lose your buoyancy."))
@@ -2725,20 +2716,12 @@ static void _decrement_durations()
                 land_player();
             }
         }
-        else if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
+        else if ((you.duration[DUR_FLIGHT] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-            you.duration[DUR_LEVITATION] = 0;
+            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
+            you.duration[DUR_FLIGHT] = 0;
         }
-    }
-
-    if (!you.permanent_flight()
-        && _decrement_a_duration(DUR_CONTROLLED_FLIGHT, delay)
-        && you.airborne()
-        && !player_effect_cfly())
-    {
-            mpr("You lose control over your flight.", MSGCH_DURATION);
     }
 
     if (you.rotting > 0)
@@ -2812,8 +2795,8 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
         elyvilon_remove_divine_vigour();
 
-    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
-    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);
+    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, delay);
+    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, delay);
 
     _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
 
@@ -2871,11 +2854,13 @@ static void _check_banished()
     {
         you.banished = false;
         if (!player_in_branch(BRANCH_ABYSS))
-        {
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
-            more();
-            banished(you.banished_by);
-        }
+        else if (you.depth < brdepth[BRANCH_ABYSS])
+            mpr("You are cast deeper into the Abyss!", MSGCH_BANISHMENT);
+        else
+            mpr("The Abyss bends around you!", MSGCH_BANISHMENT);
+        more();
+        banished(you.banished_by);
         you.banished_by.clear();
     }
 }
@@ -2929,7 +2914,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     // XXX: Don't let DD use guardian spirit for free HP, since their
     // damage shaving is enough. (due, dpeg)
-    if (player_spirit_shield() && you.species == SP_DEEP_DWARF)
+    if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
         return;
 
     // XXX: Doing the same as the above, although overflow isn't an
@@ -3030,8 +3015,14 @@ static void _player_reacts()
         const int teleportitis_level = player_teleport();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-            you_teleport_now(true);
-        else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80))
+        {
+            if (teleportitis_level >= 8)
+                you_teleport_now(true);
+            else
+                you_teleport_now(true, false, false, teleportitis_level * 5);
+        }
+        else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
+          && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
             mpr("You are suddenly pulled into a different region of the Abyss!",
                 MSGCH_BANISHMENT);
@@ -3163,6 +3154,7 @@ static void _player_reacts_to_monsters()
         you.redraw_stats[STAT_STR] = true;
         you.redraw_stats[STAT_DEX] = true;
         you.redraw_stats[STAT_INT] = true;
+        notify_stat_change("suppression");
 
         if (you.suppressed())
             you.props["exists_if_suppressed"] = true;
@@ -3237,6 +3229,7 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         _player_reacts();
 
+    abyss_morph(you.time_taken);
     apply_noises();
     handle_monsters(true);
 
@@ -3455,20 +3448,6 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
-        if (mon->caught() && mon->friendly() && form_can_wield()
-            && !you.confused())
-        {
-            const string prompt =
-                make_stringf("Do you want to try to take the net off %s?",
-                             mon->name(DESC_THE).c_str());
-
-            if (yesno(prompt.c_str(), true, 'n'))
-            {
-                remove_net_from(mon);
-                return true;
-            }
-        }
-
         you.turn_is_over = true;
         fight_melee(&you, mon);
 
@@ -3487,9 +3466,6 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                 mpr("You can't disarm traps in your present form.");
                 return true;
             }
-
-            if (!player_can_reach_floor())
-                return true;
 
             const int cloud = env.cgrid(target);
             if (cloud != EMPTY_CLOUD
@@ -4027,7 +4003,7 @@ static void _close_door(coord_def move)
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            // Once opened, formerly secret doors become normal doors.
+            // Once opened, formerly runed doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
             set_terrain_changed(dc);
             dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
@@ -4270,10 +4246,8 @@ static void _move_player(coord_def move)
     coord_def mon_swap_dest;
 
     string verb;
-    if (you.flight_mode() == FL_FLY)
+    if (you.flight_mode())
         verb = "fly";
-    else if (you.flight_mode() == FL_LEVITATE)
-        verb = "levitate";
     else if (you.is_wall_clinging())
         verb = "cling";
     else if (you.species == SP_NAGA && !form_changed_physiology())
@@ -4454,7 +4428,7 @@ static void _move_player(coord_def move)
     apply_berserk_penalty = !attacking;
 
     if (!attacking && you.religion == GOD_CHEIBRIADOS && one_chance_in(10)
-        && player_effect_running())
+        && you.run())
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

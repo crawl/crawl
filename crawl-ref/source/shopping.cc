@@ -501,18 +501,12 @@ static string _shop_print_stock(const vector<int>& stock,
                              && item_type_known(item)
                              && get_ident_type(item) != ID_KNOWN_TYPE
                              && !is_artefact(item);
-        if (viewing)
-            textcolor((unknown || is_artefact(item))? WHITE : LIGHTGREY);
-        else if (Options.menu_colour_shops)
-        {
-            // Colour stock according to menu colours.
-            const string colprf = menu_colour_item_prefix(item);
-            const int col = menu_colour(item.name(DESC_A),
-                                        colprf, "shop");
-            textcolor(col != -1 ? col : LIGHTGREY);
-        }
-        else
-            textcolor(i % 2 ? LIGHTGREY : WHITE);
+
+        // Colour stock according to menu colours.
+        const string colprf = item_prefix(item);
+        const int col = menu_colour(item.name(DESC_A),
+                                    colprf, "shop");
+        textcolor(col != -1 ? col : LIGHTGREY);
 
         string item_name = item.name(DESC_A, false, id);
         if (unknown)
@@ -588,15 +582,6 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
     int total_cost = 0;
 
     vector<int> stock = _shop_get_stock(shopidx);
-
-    // Autoinscribe randarts in the shop.
-    for (unsigned int i = 0; i < stock.size(); i++)
-    {
-        item_def& item = mitm[stock[i]];
-        if (Options.autoinscribe_artefacts && is_artefact(item))
-            item.inscription = artefact_auto_inscription(item);
-    }
-
     vector<bool> selected;
     vector<bool> in_list;
 
@@ -766,12 +751,12 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         if (key != CK_ENTER && menu.process_key(key))
         {
             vector<MenuItem*> selection = menu.get_selected_items();
-            if( selection.size() == 1 )
-                key = (int)selection.at(0)->get_id();
+            if (selection.size() == 1)
+                key = (int) selection.at(0)->get_id();
         }
 
 #else
-        mouse_control mc(MOUSE_MODE_MORE);
+        mouse_control mc(MOUSE_MODE_PROMPT);
         int key = getchm();
 #endif
 
@@ -966,7 +951,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
         else
         {
-            key = tolower(key) - 'a';
+            key = toalower(key) - 'a';
             if (key >= static_cast<int>(stock.size()))
             {
                 _shop_print("No such item.", 1);
@@ -1139,7 +1124,7 @@ int artefact_value(const item_def &item)
         ret += 10;
 
     // abilities:
-    if (prop[ ARTP_LEVITATE ])
+    if (prop[ ARTP_FLY ])
         ret += 3;
 
     if (prop[ ARTP_BLINK ])
@@ -1711,7 +1696,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_FIRE_RESISTANCE:
             case SPARM_SEE_INVISIBLE:
             case SPARM_INTELLIGENCE:
-            case SPARM_LEVITATION:
+            case SPARM_FLYING:
             case SPARM_PRESERVATION:
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
@@ -1879,7 +1864,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
             case POT_RESTORE_ABILITIES:
-            case POT_LEVITATION:
+            case POT_FLIGHT:
             case POT_MUTATION:
                 valued += 30;
                 break;
@@ -2124,14 +2109,13 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_SUSTAIN_ABILITIES:
                 case RING_SUSTENANCE:
                 case RING_TELEPORTATION:
-                case RING_LEVITATION:
+                case RING_FLIGHT:
                 case AMU_STASIS:
                     valued += 175;
                     break;
 
                 case RING_SEE_INVISIBLE:
                 case AMU_WARDING:
-                case AMU_CONTROLLED_FLIGHT:
                     valued += 150;
                     break;
 
@@ -2967,12 +2951,12 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
         if (cost > you.gold)
             me->colour = DARKGREY;
-        else if (thing_is_item(thing) && Options.menu_colour_shops)
+        else if (thing_is_item(thing))
         {
             // Colour shopping list item according to menu colours.
             const item_def &item = get_thing_item(thing);
 
-            const string colprf = menu_colour_item_prefix(item);
+            const string colprf = item_prefix(item);
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 

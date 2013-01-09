@@ -40,12 +40,6 @@ static bool _zin_donate_gold();
 
 static bool _confirm_pray_sacrifice(god_type god)
 {
-    if (Options.stash_tracking == STM_EXPLICIT && is_stash(you.pos()))
-    {
-        mpr("You can't sacrifice explicitly marked stashes.");
-        return false;
-    }
-
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (god_likes_item(god, *si)
@@ -310,9 +304,6 @@ void pray()
     const god_type altar_god = feat_altar_god(grd(you.pos()));
     if (altar_god != GOD_NO_GOD)
     {
-        if (!player_can_reach_floor("altar"))
-            return;
-
         if (you.religion != GOD_NO_GOD && altar_god == you.religion)
             something_happened = _altar_prayer();
         else if (altar_god != GOD_NO_GOD)

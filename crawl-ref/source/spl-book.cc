@@ -95,8 +95,6 @@ int spellbook_contents(item_def &book, read_book_action_type action,
 
     const int spell_levels = player_spell_levels();
 
-    set_ident_flags(book, ISFLAG_KNOW_TYPE);
-
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
@@ -212,9 +210,9 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     }
 
     if (update_screen)
-        keyn = tolower(getchm(KMC_MENU));
+        keyn = toalower(getchm(KMC_MENU));
 
-    return keyn;     // try to figure out that for which this is used {dlb}
+    return keyn;     // either ignored or spell letter
 }
 
 // Rarity 100 is reserved for unused books.
@@ -358,7 +356,7 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-bool is_valid_spell_in_book(const item_def &book, int spell)
+static bool _is_valid_spell_in_book(const item_def &book, int spell)
 {
     return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
 }
@@ -447,7 +445,9 @@ int read_book(item_def &book, read_book_action_type action)
     tiles_crt_control show_as_menu(CRT_MENU, "read_book");
 #endif
 
-    // Remember that this function is called from staff spells as well.
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+
+    // Remember that this function is called for rods as well.
     const int keyin = spellbook_contents(book, action);
 
     if (book.base_type == OBJ_BOOKS)
@@ -455,12 +455,6 @@ int read_book(item_def &book, read_book_action_type action)
 
     if (!crawl_state.is_replaying_keys())
         redraw_screen();
-
-    // Put special book effects in another function which can be called
-    // from memorise as well.
-
-    set_ident_flags(book, ISFLAG_KNOW_TYPE);
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
 
     return keyin;
 }
@@ -618,7 +612,7 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
     int spells_in_book = 0;
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
-        if (!is_valid_spell_in_book(book, j))
+        if (!_is_valid_spell_in_book(book, j))
             continue;
 
         const spell_type spell = which_spell_in_book(book, j);
@@ -681,8 +675,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         num_books++;
         num_on_ground++;
-        if (player_can_reach_floor("", true))
-            _index_book(book, book_hash, num_unreadable, book_errors);
+        _index_book(book, book_hash, num_unreadable, book_errors);
     }
 
     if (book_errors)
@@ -708,11 +701,6 @@ static bool _get_mem_list(spell_list &mem_spells,
                     MSGCH_PROMPT);
             }
         }
-        return false;
-    }
-    else if (num_on_ground && num_on_ground == num_books
-             && !player_can_reach_floor("", just_check))
-    {
         return false;
     }
     else if (num_unreadable == num_books)
@@ -1256,7 +1244,7 @@ int count_rod_spells(const item_def &item, bool need_id)
         return 0;
 
     int nspel = 0;
-    while (nspel < SPELLBOOK_SIZE && is_valid_spell_in_book(item, nspel))
+    while (nspel < SPELLBOOK_SIZE && _is_valid_spell_in_book(item, nspel))
         ++nspel;
 
     return nspel;
@@ -1309,7 +1297,7 @@ int rod_spell(int rod)
 
     const int idx = letter_to_index(keyin);
 
-    if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(irod, idx))
+    if ((idx >= SPELLBOOK_SIZE) || !_is_valid_spell_in_book(irod, idx))
     {
         canned_msg(MSG_HUH);
         return -1;

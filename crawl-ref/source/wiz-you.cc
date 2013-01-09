@@ -7,6 +7,8 @@
 
 #include "wiz-you.h"
 
+#include "abyss.h"
+
 #include "cio.h"
 #include "debug.h"
 #include "dbg-util.h"
@@ -270,6 +272,7 @@ void wizard_heal(bool super_heal)
     if (super_heal)
     {
         // Clear more stuff and give a HP boost.
+        unrot_hp(9999);
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
@@ -279,6 +282,7 @@ void wizard_heal(bool super_heal)
     // Clear most status ailments.
     you.rotting = 0;
     you.disease = 0;
+    you.duration[DUR_NAUSEA]    = 0;
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
@@ -300,7 +304,7 @@ void wizard_set_hunger_state()
 
     mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
 
-    const int c = tolower(getchk());
+    const int c = toalower(getchk());
 
     // Values taken from food.cc.
     switch (c)
@@ -450,6 +454,7 @@ void wizard_set_skill_level(skill_type skill)
     if (amount == 27)
     {
         you.train[skill] = 0;
+        you.train_alt[skill] = 0;
         reset_training();
         check_selected_skills();
     }
@@ -673,6 +678,18 @@ bool wizard_add_mutation()
 }
 #endif
 
+void wizard_set_abyss()
+{
+    char buf[80];
+    mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
+    if (cancelable_get_line_autohist(buf, sizeof buf))
+        abyss_teleport(true);
+
+    uint32_t x, y, z;
+    sscanf(buf, "%d %d %d", &x, &y, &z);
+    set_abyss_state(coord_def(x,y), z);
+}
+
 void wizard_set_stats()
 {
     char buf[80];
@@ -705,7 +722,7 @@ static const char* dur_names[] =
     "might",
     "brilliance",
     "agility",
-    "levitation",
+    "flight",
     "berserker",
     "poisoning",
     "confusing touch",
@@ -725,7 +742,9 @@ static const char* dur_names[] =
     "divine shield",
     "regeneration",
     "swiftness",
+#if TAG_MAJOR_VERSION == 34
     "controlled flight",
+#endif
     "teleport",
     "control teleport",
     "breath weapon",
@@ -778,7 +797,8 @@ static const char* dur_names[] =
     "tornado cooldown",
     "nausea",
     "ambrosia",
-    "temporary mutations"
+    "temporary mutations",
+    "disjunction",
 };
 
 void wizard_edit_durations(void)
@@ -1015,7 +1035,7 @@ void wizard_transform()
         }
         mpr("Which form (ESC to exit)? ", MSGCH_PROMPT);
 
-        int keyin = tolower(get_ch());
+        int keyin = toalower(get_ch());
 
         if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')

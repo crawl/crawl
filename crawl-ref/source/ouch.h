@@ -81,7 +81,8 @@ bool drain_exp(bool announce_full = true);
 bool expose_items_to_element(beam_type flavour, const coord_def& where,
                              int strength = 0);
 bool expose_player_to_element(beam_type flavour, int strength = 0,
-                              bool damage_inventory = true);
+                              bool damage_inventory = true,
+                              bool slow_dracs = true);
 
 void screen_end_game(string text);
 int timescale_damage(const actor *act, int damage);

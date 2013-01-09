@@ -410,9 +410,9 @@ static bool _reroll_random(newgame_def* ng)
 
     cprintf("\nDo you want to play this combination? (ynq) [y]");
     char c = getchm();
-    if (key_is_escape(c) || tolower(c) == 'q')
+    if (key_is_escape(c) || toalower(c) == 'q')
         game_ended();
-    return (tolower(c) == 'n');
+    return (toalower(c) == 'n');
 }
 
 static void _choose_char(newgame_def* ng, newgame_def* choice,
@@ -425,13 +425,12 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
     else if (ng->type == GAME_TYPE_HINTS)
         pick_hints(choice);
 
-#ifdef DGAMELAUNCH
-    // Please disable when the tournament is over.
+#if defined(DGAMELAUNCH) && defined(TOURNEY)
     // Apologies to non-public servers.
     if (ng->type == GAME_TYPE_NORMAL)
     {
-        if (!yesno("Trunk games don't count for the tournament, you want 0.11. "
-                   "Play trunk anyway? (Y/N)", false, 'n'))
+        if (!yesno("Trunk games don't count for the tournament, you want "
+                   TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
         {
             game_ended();
         }
@@ -602,9 +601,9 @@ static void _construct_species_menu(const newgame_def* ng,
 
         if (ng->job == JOB_UNKNOWN
             || job_allowed(species, ng->job) == CC_UNRESTRICTED)
-          {
-              tmp->set_fg_colour(LIGHTGRAY);
-              tmp->set_highlight_colour(GREEN);
+        {
+            tmp->set_fg_colour(LIGHTGRAY);
+            tmp->set_highlight_colour(GREEN);
         }
         else
         {

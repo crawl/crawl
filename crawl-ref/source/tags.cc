@@ -87,7 +87,7 @@ extern abyss_state abyssal_state;
 
 reader::reader(const string &_read_filename, int minorVersion)
     : _filename(_read_filename), _chunk(0), _pbuf(NULL), _read_offset(0),
-      _minorVersion(minorVersion), seen_enums()
+      _minorVersion(minorVersion)
 {
     _file       = fopen_u(_filename.c_str(), "rb");
     opened_file = !!_file;
@@ -624,15 +624,27 @@ level_pos unmarshall_level_pos(reader& th)
 
 void marshallCoord(writer &th, const coord_def &c)
 {
-    marshallShort(th, c.x);
-    marshallShort(th, c.y);
+    marshallInt(th, c.x);
+    marshallInt(th, c.y);
 }
 
 coord_def unmarshallCoord(reader &th)
 {
     coord_def c;
-    c.x = unmarshallShort(th);
-    c.y = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_COORD_SERIALIZER)
+    {
+#endif
+        c.x = unmarshallInt(th);
+        c.y = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+    {
+        c.x = unmarshallShort(th);
+        c.y = unmarshallShort(th);
+    }
+#endif
     return c;
 }
 
@@ -837,98 +849,6 @@ string make_date_string(time_t in_date)
               date->tm_year + 1900, date->tm_mon, date->tm_mday,
               date->tm_hour, date->tm_min, date->tm_sec,
               ((date->tm_isdst > 0) ? "D" : "S"));
-}
-
-void marshallEnumVal(writer& wr, const enum_info *ei, int val)
-{
-    enum_write_state& ews = wr.used_enums[ei];
-
-    if (!ews.store_type)
-    {
-        vector<pair<int, string> > values;
-
-        ei->collect(values);
-
-        for (unsigned i = 0; i < values.size(); ++i)
-            ews.names.insert(values[i]);
-
-        ews.store_type = 1;
-
-        if (ews.names.begin() != ews.names.end()
-            && (ews.names.rbegin()->first >= 128
-                || ews.names.begin()->first <= -1))
-        {
-            ews.store_type = 2;
-        }
-
-        marshallByte(wr, ews.store_type);
-    }
-
-    if (ews.store_type == 2)
-        marshallShort(wr, val);
-    else
-        marshallByte(wr, val);
-
-    if (ews.used.find(val) == ews.used.end())
-    {
-        ASSERT(ews.names.find(val) != ews.names.end());
-        marshallString(wr, ews.names[val]);
-
-        ews.used.insert(val);
-    }
-}
-
-int unmarshallEnumVal(reader& rd, const enum_info *ei)
-{
-    enum_read_state& ers = rd.seen_enums[ei];
-
-    if (!ers.store_type)
-    {
-        vector<pair<int, string> > values;
-
-        ei->collect(values);
-
-        for (unsigned i = 0; i < values.size(); ++i)
-            ers.names.insert(make_pair(values[i].second, values[i].first));
-
-        if (rd.getMinorVersion() < ei->non_historical_first)
-        {
-            ers.store_type = ei->historic_bytes;
-
-            const enum_info::enum_val *evi = ei->historical;
-
-            for (; evi->name; ++evi)
-            {
-                if (ers.names.find(string(evi->name)) != ers.names.end())
-                    ers.mapping[evi->value] = ers.names[string(evi->name)];
-                else
-                    ers.mapping[evi->value] = ei->replacement;
-            }
-        }
-        else
-            ers.store_type = unmarshallByte(rd);
-    }
-
-    int raw;
-
-    if (ers.store_type == 2)
-        raw = unmarshallShort(rd);
-    else
-        raw = unmarshallByte(rd);
-
-    if (ers.mapping.find(raw) != ers.mapping.end())
-        return ers.mapping[raw];
-
-    ASSERT(rd.getMinorVersion() >= ei->non_historical_first);
-
-    string name = unmarshallString(rd);
-
-    if (ers.names.find(name) != ers.names.end())
-        ers.mapping[raw] = ers.names[name];
-    else
-        ers.mapping[raw] = ei->replacement;
-
-    return ers.mapping[raw];
 }
 
 static void marshallStringVector(writer &th, const vector<string> &vec)
@@ -1326,12 +1246,19 @@ static void tag_construct_you(writer &th)
         marshallBoolean(th, you.branches_left[i]);
 
     marshallCoord(th, abyssal_state.major_coord);
-    marshallFloat(th, abyssal_state.depth);
+    marshallInt(th, abyssal_state.depth);
     marshallFloat(th, abyssal_state.phase);
 
     _marshall_constriction(th, &you);
 
     marshallUByte(th, you.octopus_king_rings);
+
+    marshallUnsigned(th, you.uncancel.size());
+    for (i = 0; i < (int)you.uncancel.size(); i++)
+    {
+        marshallUByte(th, you.uncancel[i].first);
+        marshallInt(th, you.uncancel[i].second);
+    }
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
@@ -1890,11 +1817,35 @@ static void tag_read_you(reader &th)
 
     count = unmarshallByte(th);
     ASSERT(count == (int)you.ability_letter_table.size());
+#if TAG_MAJOR_VERSION == 34
+    bool found_fly = false;
+    bool found_stop_flying = false;
+#endif
     for (i = 0; i < count; i++)
     {
         int a = unmarshallShort(th);
         ASSERT(a >= -1 && a != 0 && a < NUM_ABILITIES);
         you.ability_letter_table[i] = static_cast<ability_type>(a);
+#if TAG_MAJOR_VERSION == 34
+        if (you.ability_letter_table[i] == ABIL_FLY
+            || you.ability_letter_table[i] == ABIL_FLY_II)
+        {
+            if (found_fly)
+                you.ability_letter_table[i] = ABIL_NON_ABILITY;
+            else
+                you.ability_letter_table[i] = ABIL_FLY;
+            found_fly = true;
+        }
+        if (you.ability_letter_table[i] == ABIL_EVOKE_STOP_LEVITATING
+            || you.ability_letter_table[i] == ABIL_STOP_FLYING)
+        {
+            if (found_stop_flying)
+                you.ability_letter_table[i] = ABIL_NON_ABILITY;
+            else
+                you.ability_letter_table[i] = ABIL_STOP_FLYING;
+            found_stop_flying = true;
+        }
+#endif
     }
 
     // how many skills?
@@ -2117,16 +2068,43 @@ static void tag_read_you(reader &th)
 #endif
 
     abyssal_state.major_coord = unmarshallCoord(th);
-    abyssal_state.depth = unmarshallFloat(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_DEEP_ABYSS)
+    {
+        if (th.getMinorVersion() < TAG_MINOR_REMOVE_ABYSS_SEED)
+            unmarshallInt(th); // was abyssal_state.seed, unused.
+        abyssal_state.depth = unmarshallInt(th);
+        abyssal_state.nuke_all = false;
+    }
+    else
+    {
+        unmarshallFloat(th); // converted abyssal_state.depth to int.
+        abyssal_state.depth = 0;
+        abyssal_state.nuke_all = true;
+    }
+#endif
     abyssal_state.phase = unmarshallFloat(th);
-
-    // Don't undo digging on the next tick after a load.
-    if (you.where_are_you == BRANCH_ABYSS)
-        recompute_saved_abyss_features();
 
     _unmarshall_constriction(th, &you);
 
     you.octopus_king_rings = unmarshallUByte(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_UNCANCELLABLES)
+    {
+#endif
+    count = unmarshallUnsigned(th);
+    ASSERT(count >= 0);
+    ASSERT(count < 16); // sanity check
+    you.uncancel.resize(count);
+    for (i = 0; i < count; i++)
+    {
+        you.uncancel[i].first = (uncancellable_type)unmarshallUByte(th);
+        you.uncancel[i].second = unmarshallInt(th);
+    }
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
     {
@@ -2301,6 +2279,13 @@ static void tag_read_you_dungeon(reader &th)
         ASSERT(brdepth[j] <= MAX_BRANCH_DEPTH);
         startdepth[j] = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 34
+    // Deepen the Abyss; this is okay since new abyssal stairs will be
+    // generated as the place shifts.
+    if (th.getMinorVersion() < TAG_MINOR_DEEP_ABYSS)
+        brdepth[BRANCH_ABYSS] = 5;
+#endif
+
     ASSERT(you.depth <= brdepth[you.where_are_you]);
 
     // Root of the dungeon; usually BRANCH_MAIN_DUNGEON.
@@ -2393,7 +2378,7 @@ static void tag_construct_level(writer &th)
 
     marshallInt(th, env.level_flags);
 
-    marshallInt(th, you.elapsed_time);
+    marshallInt(th, you.on_current_level ? you.elapsed_time : env.elapsed_time);
     marshallCoord(th, you.pos());
 
     // Map grids.
@@ -2567,6 +2552,24 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_fixup_props(item);
 
 #if TAG_MAJOR_VERSION == 34
+    // Remove artefact autoinscriptions from the saved inscription.
+    if (th.getMinorVersion() < TAG_MINOR_AUTOINSCRIPTIONS && is_artefact(item))
+    {
+        string art_ins = artefact_inscription(item);
+        if (!art_ins.empty())
+        {
+            item.inscription = replace_all(item.inscription, art_ins + ",", "");
+            item.inscription = replace_all(item.inscription, art_ins, "");
+
+            // Avoid q - the ring "Foo" {+Fly rF+, +Lev rF+}
+            art_ins = replace_all(art_ins, "+Fly", "+Lev");
+            item.inscription = replace_all(item.inscription, art_ins + ",", "");
+            item.inscription = replace_all(item.inscription, art_ins, "");
+
+            trim_string(item.inscription);
+        }
+    }
+
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
 #endif
@@ -2904,6 +2907,8 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
 
+    // Some TAG_MAJOR_VERSION == 34 saves suffered data loss here, beware.
+    // Should be harmless, hopefully.
     unmarshallUnsigned(th, mi.fly);
 
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)

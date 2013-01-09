@@ -406,14 +406,14 @@ static void _maybe_leave_water(const cloud_struct& c)
     {
         dungeon_feature_type feat;
 
-       if (grd(c.pos) == DNGN_FLOOR)
-           feat = DNGN_SHALLOW_WATER;
-       else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
-                && one_chance_in(3) && !crawl_state.game_is_zotdef())
-           // Don't drown the player!
-           feat = DNGN_DEEP_WATER;
-       else
-           feat = grd(c.pos);
+        if (grd(c.pos) == DNGN_FLOOR)
+            feat = DNGN_SHALLOW_WATER;
+        else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
+                 && one_chance_in(3) && !crawl_state.game_is_zotdef())
+            // Don't drown the player!
+            feat = DNGN_DEEP_WATER;
+        else
+            feat = grd(c.pos);
 
         if (grd(c.pos) != feat)
         {
@@ -883,20 +883,11 @@ bool _actor_apply_cloud_side_effects(actor *act,
         }
         if (player)
         {
-            bool affected = false;
             if (you.duration[DUR_FIRE_SHIELD] > 1)
             {
                 you.duration[DUR_FIRE_SHIELD] = 1;
-                affected = true;
+                return true;
             }
-
-            if (you.misled())
-            {
-                mpr("The rain washes away your illusions!", MSGCH_DURATION);
-                you.duration[DUR_MISLED] = 0;
-                affected = true;
-            }
-            return affected;
         }
         break;
 
@@ -1110,7 +1101,7 @@ int actor_apply_cloud(actor *act)
     }
 
     if (player && cloud_flavour != BEAM_NONE)
-        expose_player_to_element(cloud_flavour, 7);
+        expose_player_to_element(cloud_flavour, 7, true, false);
 
     const bool side_effects =
         _actor_apply_cloud_side_effects(act, cloud, final_damage);

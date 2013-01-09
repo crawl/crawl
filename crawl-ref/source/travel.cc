@@ -238,11 +238,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
         if (grid == DNGN_DEEP_WATER && player_likes_water(true))
             return true;
 
-        // Permanently levitating players can cross most hostile terrain.
+        // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
             || grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_NATURAL)
         {
-            return (you.permanent_levitation() || you.permanent_flight());
+            return you.permanent_flight();
         }
 
         // You can't open doors in bat form.
@@ -424,7 +424,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     }
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
-    // navigated over if the player is willing to take damage, or levitate.
+    // navigated over if the player is willing to take damage or fly.
     if (ignore_hostile && _is_reseedable(c, true))
         return true;
 
@@ -2379,18 +2379,12 @@ bool travel_kill_monster(monster_type mons)
         return false;
 
     // Don't auto-kill things with berserkitis or *rage.
-    if (player_mutation_level(MUT_BERSERK)
-        || player_effect_angry())
+    if (player_mutation_level(MUT_BERSERK) || you.angry())
     {
-        if (player_effect_stasis(false)
-            || player_mental_clarity(false)
-            || you.is_undead == US_UNDEAD
-            || you.is_undead == US_HUNGRY_DEAD)
-        {
-            return true;
-        }
-        else
-            return false;
+        return (you.stasis(false)
+                || you.clarity(false)
+                || you.is_undead == US_UNDEAD
+                || you.is_undead == US_HUNGRY_DEAD);
     }
 
     return true;
@@ -2933,14 +2927,6 @@ void start_explore(bool grab_items)
     maybe_clear_weapon_swap();
 
     you.running = (grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
-    if (you.running == RMODE_EXPLORE_GREEDY
-        && Options.stash_tracking != STM_ALL)
-    {
-        Options.explore_greedy = false;
-        mpr("Greedy explore is available only if stash_tracking = all");
-        more();
-        you.running = RMODE_EXPLORE;
-    }
 
     if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
     {
@@ -3684,7 +3670,7 @@ void TravelCache::add_waypoint(int x, int y)
     mprf(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
          waypoints_exist? ", D - delete waypoint" : "");
 
-    int keyin = tolower(get_ch());
+    int keyin = toalower(get_ch());
 
     if (waypoints_exist && keyin == 'd')
     {

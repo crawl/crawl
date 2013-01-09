@@ -74,7 +74,7 @@ static void _handle_stat_change(stat_type stat, const char *aux = NULL,
                                 bool see_source = true);
 static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
 
-void attribute_increase()
+bool attribute_increase()
 {
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
@@ -99,7 +99,7 @@ void attribute_increase()
     learned_something_new(HINT_CHOOSE_STAT);
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 #endif
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     // Calling a user-defined lua function here to let players reply to the
     // prompt automatically.
     clua.callfn("choose_stat_gain", 0, 0);
@@ -115,27 +115,27 @@ void attribute_increase()
         switch (keyin)
         {
         CASE_ESCAPE
-            // [ds] It's safe to save the game here; when the player
-            // reloads, the game will re-prompt for their level-up
-            // stat gain.
+            // It is unsafe to save the game here; continue with the turn
+            // normally, when the player reloads, the game will re-prompt
+            // for their level-up stat gain.
             if (crawl_state.seen_hups)
-                sighup_save_and_exit();
+                return false;
             break;
 
         case 's':
         case 'S':
             modify_stat(STAT_STR, 1, false, "level gain");
-            return;
+            return true;
 
         case 'i':
         case 'I':
             modify_stat(STAT_INT, 1, false, "level gain");
-            return;
+            return true;
 
         case 'd':
         case 'D':
             modify_stat(STAT_DEX, 1, false, "level gain");
-            return;
+            return true;
 #ifdef TOUCH_UI
         default:
             status->text = "Please choose an option below"; // too naggy?
@@ -157,7 +157,7 @@ void jiyva_stat_action()
     }
     // Try to avoid burdening people or making their armour difficult to use.
     int current_capacity = carrying_capacity(BS_UNENCUMBERED);
-    int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 249)/250;
+    int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 207)/208;
     int evp = you.unadjusted_body_armour_penalty();
     target_stat[0] = max(max(9, 2 + 3 * evp), 2 + carrying_strength);
     target_stat[1] = 9;
@@ -364,10 +364,10 @@ static int _strength_modifier()
         result += 3 * count_worn_ego(SPARM_STRENGTH);
 
         // rings of strength
-        result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
+        result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
 
         // randarts of strength
-        result += scan_artefacts(ARTP_STRENGTH);
+        result += you.scan_artefacts(ARTP_STRENGTH);
     }
 
     // mutations
@@ -375,7 +375,8 @@ static int _strength_modifier()
               - player_mutation_level(MUT_WEAK);
     result += player_mutation_level(MUT_STRONG_STIFF)
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
-    result -= player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    result -= player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE)
+              ? player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE) - 1 : 0;
 
     // transformations
     switch (you.form)
@@ -408,10 +409,10 @@ static int _int_modifier()
         result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
         // rings of intelligence
-        result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+        result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
         // randarts of intelligence
-        result += scan_artefacts(ARTP_INTELLIGENCE);
+        result += you.scan_artefacts(ARTP_INTELLIGENCE);
     }
 
     // mutations
@@ -439,10 +440,10 @@ static int _dex_modifier()
         result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
         // rings of dexterity
-        result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
+        result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
 
         // randarts of dexterity
-        result += scan_artefacts(ARTP_DEXTERITY);
+        result += you.scan_artefacts(ARTP_DEXTERITY);
     }
 
     // mutations

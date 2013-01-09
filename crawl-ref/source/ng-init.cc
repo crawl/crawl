@@ -28,20 +28,18 @@
 
 static uint8_t _random_potion_description()
 {
-    int desc, colour;
+    int desc;
 
     desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
 
     if (coinflip())
         desc %= PDC_NCOLOURS;
 
-    colour = PCOLOUR(desc);
-
     // nature and colour correspond to primary and secondary in
     // itemname.cc.
 
 #if TAG_MAJOR_VERSION == 34
-    if (colour == PDC_CLEAR) // only water can be clear, re-roll
+    if (PCOLOUR(desc) == PDC_CLEAR) // only water can be clear, re-roll
         return _random_potion_description();
 #endif
 
@@ -95,10 +93,6 @@ void initialise_branch_depths()
 
     for (int i = 0; i < NUM_BRANCHES; i++)
         brdepth[i] = branches[i].numlevels;
-
-    // In trunk builds, test variable-length branches.
-    if (numcmp(Version::Long().c_str(), "0.11-b") == -1)
-        brdepth[BRANCH_ELVEN_HALLS] = random_range(3, 4);
 }
 
 #define MAX_OVERFLOW_LEVEL 9

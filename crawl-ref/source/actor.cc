@@ -26,12 +26,6 @@ actor::~actor()
         delete constricting;
 }
 
-bool actor::has_equipped(equipment_type eq, int sub_type) const
-{
-    const item_def *item = slot_item(eq, false);
-    return (item && item->sub_type == sub_type);
-}
-
 bool actor::will_trigger_shaft() const
 {
     return (ground_level() && total_weight() > 0 && is_valid_shaft_level()
@@ -47,7 +41,8 @@ level_id actor::shaft_dest(bool known = false) const
 
 bool actor::airborne() const
 {
-    return (is_levitating() || (flight_mode() == FL_FLY && !cannot_move()));
+    flight_type fly = flight_mode();
+    return (fly == FL_LEVITATE || fly == FL_WINGED && !cannot_move());
 }
 
 /**
@@ -240,6 +235,158 @@ int actor::body_weight(bool base) const
     }
 }
 
+bool actor::inaccuracy() const
+{
+    return !suppressed() && wearing(EQ_AMULET, AMU_INACCURACY);
+}
+
+bool actor::gourmand(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && wearing(EQ_AMULET, AMU_THE_GOURMAND, calc_unid);
+}
+
+bool actor::conservation(bool calc_unid, bool items) const
+{
+    if (suppressed() || !items)
+        return false;
+
+    return wearing(EQ_AMULET, AMU_CONSERVATION, calc_unid)
+           || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION, calc_unid);
+}
+
+bool actor::res_corr(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION)
+                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION,
+                                    calc_unid));
+}
+
+// This is a bit confusing. This is not the function that determines whether or
+// not an actor is capable of teleporting, only whether they are specifically
+// under the influence of the "notele" effect. See item_blocks_teleport() in
+// item_use.cc for a superset of this function.
+bool actor::has_notele_item(bool calc_unid) const
+{
+    if (suppressed())
+        return false;
+
+    return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+}
+
+bool actor::stasis(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && wearing(EQ_AMULET, AMU_STASIS, calc_unid);
+}
+
+// permaswift effects like boots of running and lightning scales
+bool actor::run(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && wearing_ego(EQ_BOOTS, SPARM_RUNNING, calc_unid);
+}
+
+bool actor::angry(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && scan_artefacts(ARTP_ANGRY, calc_unid);
+}
+
+bool actor::clarity(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && (wearing(EQ_AMULET, AMU_CLARITY, calc_unid)
+                     || scan_artefacts(ARTP_CLARITY, calc_unid));
+}
+
+bool actor::faith(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
+}
+
+bool actor::warding(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    // Note: when adding a new source of warding, please add it to
+    // melee_attack::attack_warded_off() as well.
+    return items && (wearing(EQ_AMULET, AMU_WARDING, calc_unid)
+                     || wearing(EQ_STAFF, STAFF_SUMMONING, calc_unid));
+}
+
+bool actor::archmagi(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && wearing_ego(EQ_BODY_ARMOUR, SPARM_ARCHMAGI, calc_unid);
+}
+
+bool actor::no_cast(bool calc_unid, bool items) const
+{
+    if (suppressed())
+        items = false;
+
+    return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING, calc_unid);
+}
+
+bool actor::rmut_from_item(bool calc_unid) const
+{
+    return !suppressed() && wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid);
+}
+
+bool actor::evokable_berserk(bool calc_unid) const
+{
+    return !suppressed() && (wearing(EQ_AMULET, AMU_RAGE, calc_unid)
+                             || scan_artefacts(ARTP_BERSERK, calc_unid));
+}
+
+bool actor::evokable_invis(bool calc_unid) const
+{
+    return !suppressed()
+           && (wearing(EQ_RINGS, RING_INVISIBILITY, calc_unid)
+               || wearing_ego(EQ_CLOAK, SPARM_DARKNESS, calc_unid)
+               || scan_artefacts(ARTP_INVISIBLE, calc_unid));
+}
+
+// Return an int so we know whether an item is the sole source.
+int actor::evokable_flight(bool calc_unid) const
+{
+    if (suppressed())
+        return 0;
+
+    return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
+           + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
+           + scan_artefacts(ARTP_FLY, calc_unid);
+}
+
+int actor::spirit_shield(bool calc_unid, bool items) const
+{
+    if (suppressed() || !items)
+        return 0;
+
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD, calc_unid)
+           + wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid);
+}
+
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
                     int stab_bypass) const
 {
@@ -281,9 +428,10 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return (act->is_player()?
+    // res_acid is immunity only for monsters; players need Jiyva
+    return (act->is_player() ?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
-            : act->res_acid() == 3);
+            : act->res_acid());
 }
 /**
  * Accessor method to the clinging member.

@@ -519,19 +519,6 @@ MAP
 000
 ENDMAP
 
-NAME:     vaults_room_1_city_dangerous_ocs_ss_is
-TAGS:     vaults_room_1_city_dangerous allow_dup
-WEIGHT:   5
-SHUFFLE:  12
-MONS:     orange crystal statue / silver statue / ice statue
-MONS:     statue tile:mons_statue_archer name:archer n_adj; \
-          longbow . arrow q:30
-MAP
-...
-.1.
-...
-ENDMAP
-
 NAME:     vaults_room_1_city_loot_4_doors
 TAGS:     vaults_room_1_city_loot allow_dup
 : vaults_standard_loot(_G)
@@ -1651,61 +1638,6 @@ A.....A
 A.....A
 ENDMAP
 
-NAME:     vaults_room_7_spin_empty_mumra_puddle
-TAGS:     vaults_room_7_spin_empty allow_dup luniq
-SUBST:    1 : W.
-SUBST:    2 : W.
-SUBST:    3 : W.
-SUBST:    4 : W.
-SUBST:    5 : W.
-SUBST:    6 : W.
-SUBST:    W = W:20 w:3
-SUBST:    . = .:20 W:3
-MAP
-6664455
-6633445
-6333345
-3322334
-3212214
-1112221
-1111122
-ENDMAP
-
-NAME:     vaults_room_7_spin_empty_mumra_cave_out
-TAGS:     vaults_room_7_spin_empty allow_dup luniq
-WEIGHT:   5
-SUBST:    B = .:10 ^:4
-SUBST:    A = .:5 ^:5
-KFEAT:    ^ = shaft trap
-MAP
-..BBB..
-.BBBBB.
-BBAAABB
-BBAAABB
-BBAAABB
-.BBBBB.
-..BBB..
-ENDMAP
-
-# Some old junk nobody could quite bring themselves to throw out
-NAME:     vaults_room_7_spin_empty_mumra_broom_cupboard
-TAGS:     vaults_room_7_spin_empty_mumra
-SUBST:    w = ww.
-KFEAT:    w = web
-SUBST:    w = .
-SUBST:    . = s:3 .:10
-KITEM:    s = club mundane w:20 / short sword mundane / dagger mundane /\
-          trident mundane / spear mundane
-MAP
-ww...ww
-w.....w
-.......
-.......
-.......
-w.....w
-ww...ww
-ENDMAP
-
 NAME:     vaults_room_7_spin_encounter_corners
 TAGS:     vaults_room_7_spin_encounter allow_dup no_monster_gen
 SUBST:    G : G..
@@ -1729,21 +1661,6 @@ MAP
 ..BBB..
 ..BBB..
 .......
-.......
-ENDMAP
-
-NAME:     vaults_room_7_spin_encounter_yaktaur
-TAGS:     vaults_room_7_spin_encounter allow_dup
-TAGS:     no_monster_gen no_pool_fixup
-MONS:     yaktaur / yaktaur band
-: vaults_ornamental_pool(_G)
-MAP
-.......
-.wwwww.
-.w...w.
-.w.1.w.
-.w...w.
-.wwwww.
 .......
 ENDMAP
 
@@ -1775,25 +1692,6 @@ MAP
 .d...d.
 .0ddd0.
 0.....0
-ENDMAP
-
-NAME:     vaults_room_7_spin_encounter_mumra_cobwebs
-TAGS:     vaults_room_7_spin_encounter allow_dup
-SUBST:    ' = ':10 .:5
-SUBST:    ; = ':10 .:15
-SUBST:    . = ':10 .:40
-KFEAT:    ' = web
-SUBST:    . = 1:1 .:10
-NSUBST:   . = 2:$ / *:.
-MONS:     trapdoor spider
-MAP
-';';;''
-';;;;;'
-;;;..;;
-;;..;;'
-';;.;;'
-'';;;;'
-''''';'
 ENDMAP
 
 NAME:     vaults_room_7_spin_dangerous_boxed
@@ -1862,27 +1760,6 @@ MAP
 .d...d.
 .9ddd9.
 9.....9
-ENDMAP
-
-NAME:     vaults_room_7_spin_dangerous_mumra_exhibit_lair
-TAGS:     vaults_room_7_spin_dangerous no_monster_gen
-SHUFFLE:  t4
-NSUBST:   1 = 1:1 / *:2
-SUBST:    2 = 2:10 3:5 .:20
-SUBST:    3 = 3:10 .:50
-KMONS:    1 = hydra
-KMONS:    2 = elephant / spiny worm
-KMONS:    3 = catoblepas / basilisk
-KMONS:    4 = plant
-FTILE:    t.1234 = floor_lair
-MAP
-tt333tt
-t32223t
-3221223
-3211123
-3221223
-t32223t
-tt333tt
 ENDMAP
 
 NAME:     vaults_room_7_spin_loot_cross
@@ -1986,41 +1863,6 @@ MAP
 .......
 ENDMAP
 
-NAME:     vaults_room_7_spin_up1_mumra_kobold_pokers
-TAGS:     vaults_room_7_spin_up1 allow_dup patrolling
-SUBST:    1 = 1 .
-SUBST:    2 = 2 ..
-MONS:     kobold ; dagger / big kobold ; short sword
-MONS:     kobold ; spear / big kobold ; bardiche
-: subvault_place_stair(_G)
-MAP
-2222222
-2111112
-21...12
-21.{.12
-21...12
-2111112
-2222222
-ENDMAP
-
-NAME:     vaults_room_7_spin_down1_mumra_elliptics_bane
-TAGS:     vaults_room_7_spin_down1 allow_dup patrolling luniq
-SUBST:    1 = 1 ..
-SUBST:    2 = 2 ...
-MONS:     iron troll / iron golem
-MONS:     crystal golem / vault guard
-KFEAT:    .12 = floor
-: subvault_place_stair(_G)
-MAP
-.......
-.11111.
-.12221.
-.12{21.
-.12221.
-.11111.
-.......
-ENDMAP
-
 NAME:     vaults_room_7_spin_up3_water
 TAGS:     vaults_room_7_spin_up3 allow_dup no_pool_fixup
 SHUFFLE:  wW/IG/yz
@@ -2037,6 +1879,21 @@ wW.{.Ww
 ..III..
 wW.[.Ww
 ww...ww
+ENDMAP
+
+NAME:    vaults_room_7_spin_up3_hangedman_random_cross
+TAGS:    vaults_room_7_spin_up3 allow_dup
+SHUFFLE: ABCDEF
+SUBST:   A : x:4 .:1, B : x:7 .:3, C : x:1 .:4, DEF = .
+NSUBST:  { = 1:{ / 1:[ / 1:( / 1:<
+MAP
+...A...
+.BC{DB.
+.DEFEC.
+A{F<F{A
+.CEFED.
+.BD{CB.
+...A...
 ENDMAP
 
 NAME:     vaults_room_7_spin_up3_grunt_open
@@ -2334,23 +2191,6 @@ ww.q.ww
 ww...ww
 ENDMAP
 
-NAME:     vaults_room_7_facing_dangerous_pool
-TAGS:     vaults_room_7_facing_dangerous allow_dup no_pool_fixup
-WEIGHT:   1
-MONS:     orange crystal statue / silver statue / ice statue
-SUBVAULT: A : vaults_door_7
-: vaults_standard_loot(_G)
-: vaults_ornamental_pool(_G)
-MAP
-%....xx
-.www..x
-.www...A
-.www.1.A
-.www...A
-.www..x
-%....xx
-ENDMAP
-
 NAME:     vaults_room_7_facing_loot_narrow
 TAGS:     vaults_room_7_facing_loot allow_dup
 SHUFFLE:  GI/wW
@@ -2386,26 +2226,6 @@ II..xxx
 ...xx..A
 II..xxx
 GI...xx
-ENDMAP
-
-NAME:     vaults_room_7_facing_stairs1_statues
-TAGS:     vaults_room_7_facing_down1 allow_dup no_monster_gen
-WEIGHT:   4
-SUBST:    1 = 12....
-MONS:     orange crystal statue / silver statue / ice statue
-MONS:     statue tile:mons_statue_archer name:archer n_adj; \
-          longbow . arrow q:30
-SUBVAULT: A : vaults_door_7
-: vaults_standard_loot(_G)
-: subvault_place_stair(_G)
-MAP
-.......
-.G.%.G.
-.......A
-.{.1...A
-.......A
-.G.%.G.
-.......
 ENDMAP
 
 NAME:     vaults_room_7_facing_up3_pool
@@ -2579,34 +2399,8 @@ _+_+_+.A
 _+_+_+_
 ENDMAP
 
-# average 54 + 91 + 40 + 18 = 203 gold
-NAME:     vaults_room_7_dead_end_encounter_rich_statue
-TAGS:     vaults_room_7_dead_end_encounter allow_dup no_monster_gen
-WEIGHT:   5
-SUBST:    g = gf
-SUBST:    f = fe
-SUBST:    e = ed
-SUBST:    d = d.
-MONS:     orange crystal statue / silver statue / ice statue
-SUBVAULT: A : vaults_door_7
-: vaults_numbered_gold_items(_G)
-MAP
-xxfedxx
-xxfd.xx
-gfed...A
-gfe1...A
-gfed...A
-xxfd.xx
-xxfedxx
-ENDMAP
-
 NAME:     vaults_room_7_dead_end_encounter_statue_hallway
 TAGS:     vaults_room_7_dead_end_encounter allow_dup
-NSUBST:   1 = 1:2 / *:1
-MONS:     generate_awake statue name:warrior n_adj \
-          tile:mons_statue_scythe ; scythe
-MONS:     generate_awake statue name:warrior n_adj \
-          tile:mons_statue_scythe ; good_item scythe
 SUBVAULT: A : vaults_door_7
 : vaults_standard_loot(_G)
 MAP
@@ -2642,24 +2436,17 @@ DDDxxxxx
 ...B...
 ENDMAP
 
-# This thing is dangerous (and unique)
-NAME:     vaults_room_7_dead_end_dangerous_shadowmancer
-TAGS:     vaults_room_7_dead_end_dangerous no_monster_gen
-SUBST:    G : G.
-MONS:     generate_awake statue name:shadowy n_adj \
-          tile:mons_statue_mage \
-          spells:shadow_creatures;shadow_creatures;invisibility;\
-                 shadow_creatures;shadow_creatures;shadow_creatures
-SUBVAULT: A : vaults_door_7
-: vaults_standard_loot(_G)
+NAME:     vaults_room_7_dead_end_dangerous_hangedman_quadrants
+TAGS:     vaults_room_7_dead_end_dangerous no_monster_gen allow_dup luniq
+SUBST:    $ : $., % : $%., = : -., - : +:4 $:1
 MAP
-xx%*%xx
-xxG%Gxx
-%G...G.A
-*%.1...A
-%G...G.A
-xxG%Gxx
-xx%*%xx
+xx9x0xx
+x.$x$0x
+9$%-%$.+
+xx=x=xx+
+9$%-%$.+
+x.$x$0x
+xx9x0xx
 ENDMAP
 
 NAME:     vaults_room_7_dead_end_loot_glass_wall
@@ -2986,25 +2773,6 @@ AA.....AA
 AAAAAAAAA
 ENDMAP
 
-# Some kobolds to poke you
-NAME:     vaults_room_7_city_encounter_mumra_kobold_gallery
-TAGS:     vaults_room_7_city_encounter allow_dup no_pool_fixup luniq
-SUBST:    AB = x
-KFEAT:    H : w
-KMONS:    1 = kobold ; trident / kobold ; spear
-KPROP:    1% = no_rtele_into
-MAP
-xxxx.xxxx
-xx1H.H1xx
-xx1A.B1xx
-x%1H.H1%x
-xx1A*B1xx
-x%1H.H1%x
-xx1A.B1xx
-xx1H.H1xx
-xxxx.xxxx
-ENDMAP
-
 NAME:     vaults_room_7_city_dangerous_cross
 TAGS:     vaults_room_7_city_dangerous allow_dup
 SHUFFLE:  GHI
@@ -3023,25 +2791,6 @@ A.IpppI.A
 A.GpppG.A
 AAAGIGAAA
 AAA...AAA
-AAAAAAAAA
-ENDMAP
-
-NAME:     vaults_room_7_city_dangerous_ringed_statue
-TAGS:     vaults_room_7_city_dangerous allow_dup
-WEIGHT:   3
-NSUBST:   % = 1:* / *:%
-MONS:     orange crystal statue / silver statue / ice statue
-SUBVAULT: A : vaults_room_7_city_statue_rings
-: vaults_standard_loot(_G)
-MAP
-AAAAAAAAA
-AA.....AA
-A..AAA..A
-A.A%%%A.A
-A.A%1%A.A
-A.A%%%A.A
-A..AAA..A
-AA.....AA
 AAAAAAAAA
 ENDMAP
 
@@ -3983,27 +3732,6 @@ MAP
 ..........
 ENDMAP
 
-NAME:     vaults_room_10_facing_encounter_octagon_archers
-TAGS:     vaults_room_10_facing_encounter allow_dup no_monster_gen
-SHUFFLE:  123456
-SUBST:    23456 = .
-SHUFFLE:  12
-MONS:     human ; bow . arrow q:20
-MONS:     human ; crossbow . bolt q:20
-SUBVAULT: A : vaults_door_10
-MAP
-xxx5.23xxx
-xx4.1..6xx
-x4.2.....x
-3.15..6...A
-..2.......A
-..2.......A
-3.15..6...A
-x4.2.....x
-xx4.1..6xx
-xxx5.23xxx
-ENDMAP
-
 NAME:     vaults_room_10_facing_encounter_2_pools
 TAGS:     vaults_room_10_facing_encounter allow_dup
 TAGS:     no_pool_fixup no_monster_gen
@@ -4194,87 +3922,6 @@ xx_______x
 xx_______x
 ENDMAP
 
-# Loosely "loot" due to having some large rocks
-NAME:     vaults_room_10_dead_end_empty_mumra_cave_in
-TAGS:     vaults_room_10_dead_end_empty allow_dupe luniq
-SUBST:    B = _:10 B:4 x:2
-SUBST:    C = _:12 C:2 B:3 x:2
-SUBST:    x = _:10 x:3
-KITEM:    C = large rock
-KITEM:    B = stone
-KPROP:  _ = no_rtele_into
-SUBVAULT: A : vaults_door_10
-MAP
-xxx____xxx
-xxxBBBBxxx
-xxBBBBBBxx
-_BBCCCCBB.A
-_BBCCCCBB.A
-_BBCCCCBB.A
-_BBCCCCBB.A
-xxBBBBBBxx
-xxxBBBBxxx
-xxx____xxx
-ENDMAP
-
-NAME:     vaults_room_10_dead_end_empty_mumra_latrine_1
-TAGS:     vaults_room_10_dead_end_empty allow_dup luniq_mumra_latrine
-KMONS:    p = plant
-# Might have a single fish
-KMONS:    f = big fish
-KFEAT:    f = W
-SUBST:    w = W:8 f
-# Maybe a little flooding
-SUBST:    1 = .:3 W
-SUBST:    2 = .:3 W
-SUBST:    3 = .:3 W
-# Some empty faucets
-SUBST:    T = T:4 V:1
-# Rare chance of blood fountain
-SUBST:    T = T:10 Y:1
-SUBVAULT: A : vaults_door_10
-MAP
-xxxxxxxxxx
-xxWxWxWxWx
-xx+x+x+x+x
-xp1133....A
-xT1T3T.T..A
-x1133322..A
-xT3T3T2T..A
-xp33.2222x
-xx+x+x+x+x
-xxWxWxWxWx
-ENDMAP
-
-NAME:     vaults_room_10_dead_end_empty_mumra_latrine_2
-TAGS:     vaults_room_10_dead_end_empty allow_dup luniq_mumra_latrine
-KMONS:    p = plant
-# Maybe a little flooding
-SUBST:    1 = .:3 W
-SUBST:    2 = .:3 W
-SUBST:    3 = .:3 W
-# Might have the odd fish
-KMONS:    f = big fish
-KFEAT:    f = W
-SUBST:    w = W:8 f
-# Some empty faucets
-SUBST:    T = T:4 V:1
-# Rare chance of blood fountain
-SUBST:    T = T:10 Y:1
-SUBVAULT: A : vaults_door_10
-MAP
-xxxxxxxxxx
-xT.p3T3p.T
-x..333333.
-xp.xxxxx.pA
-x..+WcW+.2A
-xT1xxxxx2TA
-x11+WcW+22A
-xp1xxxxx2p
-x111..222.
-xT.1.T.2.T
-ENDMAP
-
 NAME:     vaults_room_10_dead_end_encounter_semicircle
 TAGS:     vaults_room_10_dead_end_encounter allow_dup
 TAGS:     no_pool_fixup no_monster_gen
@@ -4331,51 +3978,6 @@ xxxxxx+x+x
 xxxxxx_x_x
 ENDMAP
 
-#  I actually changed this one quite a bit.  The original had
-#    wax walls and no monsters.  ~infinplex
-NAME:     vaults_room_10_dead_end_encounter_mumra_exhibit_hive
-TAGS:     vaults_room_10_dead_end_encounter no_monster_gen no_item_gen
-NSUBST:   1 = 1:1 / 1:d / 1:e / *:.
-NSUBST:   . = 7:2 / 2:3 / 2:e / *:.
-MONS:     queen bee
-MONS:     killer bee
-MONS:     yellow wasp / red wasp
-ITEM:     royal jelly
-ITEM:     honeycomb
-SUBVAULT: A : vaults_door_10
-MAP
-xxxxxxxxxx
-xxxxx..xxx
-xxxx....xx
-xx11......A
-x111......A
-x111......A
-xx11......A
-xxxx....xx
-xxxxx..xxx
-xxxxxxxxxx
-ENDMAP
-
-NAME:     vaults_room_10_dead_end_dangerous_semicircle
-TAGS:     vaults_room_10_dead_end_dangerous allow_dup no_monster_gen
-WEIGHT:   5
-SUBST:    - = x+
-NSUBST:   % = 1:* / *=%.
-MONS:     orange crystal statue / silver statue / ice statue
-: vaults_standard_loot(_G)
-MAP
-xxxxxxxxxx
-xxxxxx%...
-xxxx%.....
-xxx%......x
-xx%.......-
-xx%..1....+
-xx%.......-
-xxx%......
-xxxx%.....
-xxxxxx%...
-ENDMAP
-
 NAME:     vaults_room_10_dead_end_dangerous_many_doors
 TAGS:     vaults_room_10_dead_end_dangerous allow_dup no_monster_gen
 SHUFFLE:  GHIJ
@@ -4393,57 +3995,6 @@ xxx_+.H.H.+
 xxxxxG.G.G
 xxxxxx+x+x
 xxxxxx_x_x
-ENDMAP
-
-#  This is basically lemuel_jelly_drop_b from Vaults.des
-NAME:     vaults_room_10_dead_end_dangerous_lemuel_jelly_drop
-TAGS:     vaults_room_10_dead_end_dangerous uniq_jelly_drop
-TAGS:     no_monster_gen no_trap_gen no_item_gen
-WEIGHT:   5
-MONS:     jelly generate_awake
-KFEAT:    ^ = known teleport trap
-KPROP:    1^. = no_rtele_into
-DEPTH:    Vaults
-MAP
-xx..^x1xxx
-x.xxxxx.xx
-.xx.1x.x.x
-.x.x1x.x.xx
-.x.x1x.x.xx
-.x.x1x.x.xx
-.x.x1x.x.xx
-.x.x1.xx.x
-x.xxxxx.xx
-xx1x^..xxx
-ENDMAP
-
-# Flooded vault
-# TODO: On opening door, spill water out into the corridor
-# Monsters:
-# - A kraken and some minor fish
-# - Nest of crocodiles
-# - Eels
-NAME:     vaults_room_10_dead_end_dangerous_mumra_flooded
-TAGS:     vaults_room_10_dead_end_dangerous
-WEIGHT:   5
-SUBST:    w = w:10 W:20
-NSUBST:   1 = 1:1 / *:w
-SUBST:    2 = 2:2 w:12 W:4
-KFEAT:    12 = deep_water
-MONS:     kraken
-MONS:     shark / snapping turtle / harpy
-SUBVAULT: A : vaults_door_10
-MAP
-WWWwwwwWWW
-Wwww22wwwW
-Ww222222wW
-ww221122wwA
-w22111122wA
-w22111122wA
-ww221122wwA
-Ww222222wW
-Wwww222wwW
-WWWwwwwWWW
 ENDMAP
 
 NAME:     vaults_room_10_dead_end_dangerous_mumra_dragons_den
@@ -4478,8 +4029,6 @@ TAGS:     no_monster_gen no_item_gen
 :   subst(': = _')
 : end
 SUBST:    % = %%.
-MONS:     statue tile:mons_statue_archer name:archer n_adj; \
-          longbow . arrow q:30
 KPROP:  _ = no_rtele_into
 : vaults_standard_loot(_G)
 MAP
@@ -4971,35 +4520,6 @@ wwwww..wwwww
 wwwww..wwwww
 .www....www.
 ..w......w..
-ENDMAP
-
-NAME:     vaults_room_10_city_dangerous_mumra_exhibit_shoals
-TAGS:     vaults_room_10_city_dangerous no_wall_fixup no_pool_fixup
-TAGS:     no_monster_gen no_item_gen
-SUBST:    W = WWWw
-SUBST:    w = wwwW
-TILE:     x = wall_vines
-SUBST:    W = 4:1 w:2 W:20
-SUBST:    1 = 1:20 .:5 2:5
-SUBST:    2 = 2:20 .:8 3:5
-SUBST:    3 = 3:20 .:10
-MONS:     merfolk aquamancer / siren
-MONS:     merfolk impaler
-MONS:     merfolk javelineer
-MONS:     snapping turtle
-MAP
-WWWWWWWWWWW.
-WWWwwwwwWWW.
-WWwxxxxxwWW.
-Wwxx323xxwW.
-Wwx32123xwW.
-Wwx21*12+.W.
-Wwx32123xwW.
-Wwxx323xxwW.
-WWwxxxxxwWW.
-WWWwwwwwWWW.
-WWWWWWWWWWW.
-............
 ENDMAP
 
 NAME:     vaults_room_10_city_loot_subvault_glass
@@ -5646,8 +5166,6 @@ SUBST:    ' : ".
 SUBST:    " : x..
 SHUFFLE:  12
 SUBST:    2 = x
-MONS:     statue tile:mons_statue_archer name:archer n_adj; \
-          longbow . arrow q:30
 MAP
 uuyz.......yyuu
 uuzz...2...zzuu
@@ -5814,7 +5332,6 @@ xxxG.......Gxxx
 xxxI.......Ixxx
 ENDMAP
 
-# They get you if you move...
 NAME:     vaults_room_15_spin_up1_star
 TAGS:     vaults_room_15_spin_up1 allow_dup
 SUBST:    z : yy.
@@ -5825,8 +5342,6 @@ SUBST:    " : x..
 SHUFFLE:  12
 SUBST:    2 = x
 SUBST:    1 : 1xxxx
-MONS:     statue tile:mons_statue_archer name:archer n_adj; \
-          longbow . arrow q:30
 : subvault_place_stair(_G)
 MAP
 uuyz.......yyuu
@@ -6525,7 +6040,6 @@ SUBST:    H : G...
 SUBST:    G : GGG.
 SUBST:    IJK = .
 SUBST:    Z : xxxG
-MONS:     orange crystal statue / silver statue / ice statue
 SUBVAULT: A : vaults_door_15
 SUBVAULT: B : vaults_door_15
 SUBVAULT: C : vaults_door_15
@@ -6546,39 +6060,6 @@ J..x.x.x.x.x.x.
 ..Hx...x...x...
 .G.xxxxxxxxxxxx
 I..........Zxxx
-ENDMAP
-
-NAME:     vaults_room_15_facing_dangerous_edged_pool_archers
-TAGS:     vaults_room_15_facing_dangerous allow_dup
-WEIGHT:   5
-SUBST:    W : w..
-SUBST:    G : xxG
-SUBST:    H : xxxG
-SUBST:    I : xxG
-SUBST:    J : xxxxG
-SHUFFLE:  12
-MONS:     human ; bow . arrow q:20
-MONS:     human ; crossbow . bolt q:20
-SUBVAULT: A : vaults_door_15
-SUBVAULT: B : vaults_room_4_city_encounter
-SUBVAULT: C : vaults_room_4_city_encounter
-: vaults_ornamental_pool(_G)
-MAP
-...............
-.CCCCCC..xxHxx.
-.CCCCCC..IxxxG.
-.CCCCCC..xxJxx.
-.CCCCCC..Ww1wW.A
-.CCCCCC..Ww1wW.A
-.CCCCCC..Ww1wW.A
-.........Ww1wW.A
-.BBBBBB..Ww1wW.A
-.BBBBBB..Ww1wW.A
-.BBBBBB..Ww1wW.A
-.BBBBBB..xxJxx.
-.BBBBBB..IxxxG.
-.BBBBBB..xxHxx.
-...............
 ENDMAP
 
 NAME:     vaults_room_15_facing_loot_edged_pool
@@ -6806,34 +6287,6 @@ EEEEEEExDDDDDDD
 EEEEEEExDDDDDDD
 ENDMAP
 
-# average 24 + 13.5 = 37.5 gold
-NAME:     vaults_room_15_dead_end_empty_spiral_pool
-TAGS:     vaults_room_15_dead_end_empty allow_dup
-SUBST:    - = x+
-SUBST:    I = Gd
-MONS:     fungus / nothing
-MONS:     fungus / nothing w:30
-KFEAT:    ^ = known zot trap
-: vaults_ornamental_pool(_G)
-: vaults_numbered_gold_items(_G)
-MAP
-xxxxx..^..xxxxx
-xxx..xxxx...xxx
-xx.xxxxxxx...xx
-x.xxxxxxxxx...x
-x.xxxxwwwxx...xx
-xxxxx1wwwdxx..xx
-xxx221wwwdex...-
-xx.221wwwIexG..+
-xx.x21wwwdex...-
-x.xxx1wwwdxx..xx
-x.xxxxwwwxx...xx
-x..xxxxxxxx...x
-xx.xxxxxxx...xx
-xxx..xxxx...xxx
-xxxxx..^..xxxxx
-ENDMAP
-
 NAME:     vaults_room_15_dead_end_encounter_guarded_subvault
 TAGS:     vaults_room_15_dead_end_encounter allow_dup no_monster_gen
 SHUFFLE:  GHIJ
@@ -6844,8 +6297,6 @@ SUBST:    pqrs = x
 SUBST:    y = .
 SUBST:    z = xm+
 MONS:     vault guard
-MONS:     generate_awake statue name:warrior n_adj \
-          tile:mons_statue_scythe ; good_item scythe
 SUBVAULT: A : vaults_door_15
 SUBVAULT: B : vaults_room_7_facing_empty     w:10 /\
               vaults_room_7_facing_encounter w:10 /\
@@ -6943,34 +6394,6 @@ xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:     vaults_room_15_dead_end_dangerous_spiral_pool
-TAGS:     vaults_room_15_dead_end_dangerous allow_dup
-SUBST:    - = x+
-SUBST:    G = G4
-MONS:     fungus / nothing
-MONS:     fungus / nothing w:30
-MONS:     orange crystal statue / silver statue / ice statue
-MONS:     generate_awake statue name:warrior n_adj \
-          tile:mons_statue_scythe ; good_item scythe
-KFEAT:    ^ = known zot trap
-MAP
-xxxxx..^..xxxxx
-xxx..xxxx...xxx
-xx.xxxxxxx...xx
-x.xxxxxxxxx...x
-x.xxxxwwwxx...xx
-xxxxx1www%xx..xx
-xxx221www%%x...-
-xx.221www3%xG..+
-xx.x21www%%x...-
-x.xxx1www%xx..xx
-x.xxxxwwwxx...xx
-x..xxxxxxxx...x
-xx.xxxxxxx...xx
-xxx..xxxx...xxx
-xxxxx..^..xxxxx
-ENDMAP
-
 # This is adapted from metal_show in Vaults.des
 #
 # The Hell Knights are playing the Vault tonight. Rock! \m/ (Shiori)
@@ -7060,37 +6483,6 @@ xxxsxxxx..xxxxx
 xxxrrrrr..xxxxx
 xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx
-ENDMAP
-
-# This is for both entry and exit stairs
-# average 24 + 13.5 = 37.5 gold
-NAME:     vaults_room_15_dead_end_stairs1_spiral_pool
-TAGS:     vaults_room_15_dead_end_up1 allow_dup
-TAGS:     vaults_room_15_dead_end_down1 allow_dup
-SUBST:    - = x+
-SUBST:    I = Gd
-MONS:     fungus / nothing
-MONS:     fungus / nothing w:30
-KFEAT:    ^ = known zot trap
-: vaults_ornamental_pool(_G)
-: vaults_numbered_gold_items(_G)
-: subvault_place_stair(_G)
-MAP
-xxxxx..^..xxxxx
-xxx..xxxx...xxx
-xx.xxxxxxx...xx
-x.xxxxxxxxx...x
-x{xxxxwwwxx...xx
-xxxxx1wwwdxx..xx
-xxx221wwwdex...-
-xx.221wwwIexG..+
-xx.x21wwwdex...-
-x.xxx1wwwdxx..xx
-x.xxxxwwwxx...xx
-x..xxxxxxxx...x
-xx.xxxxxxx...xx
-xxx..xxxx...xxx
-xxxxx..^..xxxxx
 ENDMAP
 
 NAME:     vaults_room_15_dead_end_up1_subvaults_7
@@ -7184,8 +6576,6 @@ SUBST:    y = .
 SUBST:    z = xm+
 SUBST:    1 : 1.
 MONS:     vault guard
-MONS:     generate_awake statue name:warrior n_adj \
-          tile:mons_statue_scythe ; good_item scythe
 SUBVAULT: A : vaults_door_15
 SUBVAULT: B : vaults_room_7_facing_up3
 MAP
@@ -7216,8 +6606,6 @@ SUBST:    pqrs = x
 SUBST:    y = .
 SUBST:    z = xm+
 MONS:     vault guard
-MONS:     generate_awake statue name:warrior n_adj \
-          tile:mons_statue_scythe ; good_item scythe
 SUBVAULT: A : vaults_door_15
 SUBVAULT: B : vaults_room_7_facing_down3
 MAP
@@ -7530,49 +6918,6 @@ xx%wwxx...xxww%xx
 Jx*%wxL...Lxw%*xJ
 xxxxxxx+++xxxxxxx
 IxJxxJH...HJxxJxI
-ENDMAP
-
-# average 18 + 52 + 80 + 60 = 201 gold
-NAME:     vaults_room_15_city_loot_broken_box_archers
-TAGS:     vaults_room_15_city_loot allow_dup
-SHUFFLE:  Wl / _-
-SUBST:    Wl = w
-SUBST:    _ = .
-SUBST:    - = x
-SHUFFLE:  xX/cC/vV
-SUBST:    cCvV = .
-NSUBST:   X = 2:+ / 4=xx+ / *:x
-SHUFFLE:  12
-SUBST:    2 = K
-NSUBST:   1 = 1:1 / *=GG1
-SHUFFLE:  GHIJKLM
-SUBST:    HIJKLM = d
-NSUBST:   g = 1:g / *:f
-NSUBST:   f = 4:f / *:e
-NSUBST:   e = 10:e / *:d
-NSUBST:   d = 17:d / *:.
-MONS:     statue tile:mons_statue_archer name:archer n_adj; \
-          longbow . arrow q:30
-: vaults_ornamental_pool(_G)
-: vaults_numbered_gold_items(_G)
-MAP
-....WWWwwwWWW....
-.xXXxlwwwwwlxXXx.
-.XcCCcwwwwwcCCcX.
-.XCvvVvwwwvVvvCX.
-WxCvI.JdWdJ.IvCxW
-WlcV.2ee1ee2.VclW
-WwwvJeeHfHeeJvwwW
-wwwwdeHgggHedwwww
-wwwwW1fgGgf1Wwwww
-wwwwdeHgggHedwwww
-WwwvJeeHfHeeJvwwW
-WlcV.2ee1ee2.VclW
-WxCvI.JdWdJ.IvCxW
-.XCvvVvwwwvVvvCX.
-.XcCCcwwwwwcCCcX.
-.xXXxlwwwwwlxXXx.
-....WWWwwwWWW....
 ENDMAP
 
 NAME:     vaults_room_15_city_up1_subvaults_1044444

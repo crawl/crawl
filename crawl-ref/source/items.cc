@@ -83,8 +83,7 @@ static bool will_autoinscribe = false;
 static inline string _autopickup_item_name(const item_def &item)
 {
     return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
-           + menu_colour_item_prefix(item, false) + " "
-           + item.name(DESC_PLAIN);
+           + item_prefix(item, false) + " " + item.name(DESC_PLAIN);
 }
 
 // Used to be called "unlink_items", but all it really does is make
@@ -1212,9 +1211,6 @@ string origin_desc(const item_def &item)
 
 bool pickup_single_item(int link, int qty)
 {
-    if (!player_can_reach_floor())
-        return false;
-
     item_def* item = &mitm[link];
     if (item->base_type == OBJ_GOLD && !qty && !i_feel_safe()
         && !yesno("Are you sure you want to pick up this pile of gold now?",
@@ -1283,9 +1279,6 @@ void pickup(bool partial_quantity)
 {
     int keyin = 'x';
 
-    if (!player_can_reach_floor())
-        return;
-
     int o = you.visible_igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);
 
@@ -1333,7 +1326,7 @@ void pickup(bool partial_quantity)
                      get_menu_colour_prefix_tags(mitm[o],
                                                  DESC_A).c_str());
 
-                mouse_control mc(MOUSE_MODE_MORE);
+                mouse_control mc(MOUSE_MODE_YESNO);
                 keyin = getchk();
             }
 
@@ -1593,7 +1586,9 @@ void note_inscribe_item(item_def &item)
 int move_item_to_player(int obj, int quant_got, bool quiet,
                         bool ignore_burden)
 {
-    if (item_is_stationary(mitm[obj]))
+    item_def &it = mitm[obj];
+
+    if (item_is_stationary(it))
     {
         mpr("You cannot pick up the net that holds you!");
         // Fake a successful pickup (return 1), so we can continue to
@@ -1601,7 +1596,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return 1;
     }
 
-    if (mitm[obj].base_type == OBJ_ORBS && crawl_state.game_is_zotdef())
+    if (it.base_type == OBJ_ORBS && crawl_state.game_is_zotdef())
     {
         if (runes_in_pack() < 15)
         {
@@ -1613,24 +1608,27 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     int retval = quant_got;
 
     // Gold has no mass, so we handle it first.
-    if (mitm[obj].base_type == OBJ_GOLD)
+    if (it.base_type == OBJ_GOLD)
     {
-        _got_gold(mitm[obj], quant_got, quiet);
+        _got_gold(it, quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
         return retval;
     }
     // So do runes.
-    if (item_is_rune(mitm[obj]))
+    if (item_is_rune(it))
     {
-        you.runes.set(mitm[obj].plus);
-        _check_note_item(mitm[obj]);
+        if (!you.runes[it.plus])
+        {
+            you.runes.set(it.plus);
+            _check_note_item(it);
+        }
 
         if (!quiet)
         {
             mprf("You pick up the %s rune and feel its power.",
-                 rune_type_name(mitm[obj].plus));
+                 rune_type_name(it.plus));
             int nrunes = runes_in_pack();
             if (nrunes >= you.obtainable_runes)
                 mpr("You have collected all the runes! Now go and win!");
@@ -1647,13 +1645,13 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             mpr("Press } to see all the runes you have collected.");
         }
 
-        if (mitm[obj].plus == RUNE_ABYSSAL)
+        if (it.plus == RUNE_ABYSSAL)
             mpr("You feel the abyssal rune guiding you out of this place.");
 
-        if (mitm[obj].plus == RUNE_TOMB)
+        if (it.plus == RUNE_TOMB)
             add_daction(DACT_TOMB_CTELE);
 
-        if (mitm[obj].plus >= RUNE_DIS && mitm[obj].plus <= RUNE_TARTARUS)
+        if (it.plus >= RUNE_DIS && it.plus <= RUNE_TARTARUS)
             unset_level_flags(LFLAG_NO_TELE_CONTROL);
 
         dungeon_events.fire_position_event(
@@ -1673,9 +1671,9 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return retval;
     }
 
-    const int unit_mass = item_mass(mitm[obj]);
-    if (quant_got > mitm[obj].quantity || quant_got <= 0)
-        quant_got = mitm[obj].quantity;
+    const int unit_mass = item_mass(it);
+    if (quant_got > it.quantity || quant_got <= 0)
+        quant_got = it.quantity;
 
     int imass = unit_mass * quant_got;
     if (!ignore_burden && (you.burden + imass > carrying_capacity()))
@@ -1701,29 +1699,29 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         retval = part;
     }
 
-    if (is_stackable_item(mitm[obj]))
+    if (is_stackable_item(it))
     {
         for (int m = 0; m < ENDOFPACK; m++)
         {
-            if (items_stack(you.inv[m], mitm[obj]))
+            if (items_stack(you.inv[m], it))
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
 
-                _check_note_item(mitm[obj]);
+                _check_note_item(it);
 
                 const bool floor_god_gift
-                    = mitm[obj].inscription.find("god gift") != string::npos;
+                    = it.inscription.find("god gift") != string::npos;
                 const bool inv_god_gift
                     = you.inv[m].inscription.find("god gift") != string::npos;
 
                 // If the object on the ground is inscribed, but not
                 // the one in inventory, then the inventory object
                 // picks up the other's inscription.
-                if (!(mitm[obj].inscription).empty()
+                if (!(it.inscription).empty()
                     && you.inv[m].inscription.empty())
                 {
-                    you.inv[m].inscription = mitm[obj].inscription;
+                    you.inv[m].inscription = it.inscription;
                 }
 
                 // Remove god gift inscription unless both items have it.
@@ -1733,13 +1731,13 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                     trim_god_gift_inscrip(you.inv[m]);
                 }
 
-                merge_item_stacks(mitm[obj], you.inv[m], quant_got);
+                merge_item_stacks(it, you.inv[m], quant_got);
 
                 inc_inv_item_quantity(m, quant_got);
                 dec_mitm_item_quantity(obj, quant_got);
                 burden_change();
 
-                _got_item(mitm[obj], quant_got);
+                _got_item(it, quant_got);
 
                 if (!quiet)
                 {
@@ -1765,7 +1763,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (!quiet && partial_pickup)
         mpr("You can only carry some of what is here.");
 
-    int freeslot = find_free_slot(mitm[obj]);
+    int freeslot = find_free_slot(it);
     if (freeslot < 0 || freeslot >= ENDOFPACK
         || you.inv[freeslot].defined())
     {
@@ -1773,11 +1771,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return -1;
     }
 
-    if (mitm[obj].base_type == OBJ_ORBS
+    if (it.base_type == OBJ_ORBS
         && you.char_direction == GDT_DESCENDING)
     {
         // Take a note!
-        _check_note_item(mitm[obj]);
+        _check_note_item(it);
 
         env.orb_pos = you.pos(); // can be wrong in wizmode
         orb_pickup_noise(you.pos(), 30);
@@ -1794,7 +1792,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         invalidate_agrid(true);
     }
 
-    coord_def p = mitm[obj].pos;
+    coord_def p = it.pos;
     // If moving an item directly from a monster to the player without the
     // item having been on the grid, then it really isn't a position event.
     if (in_bounds(p))
@@ -1802,9 +1800,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         dungeon_events.fire_position_event(
             dgn_event(DET_ITEM_PICKUP, p, 0, obj, -1), p);
     }
+
     item_def &item = you.inv[freeslot];
     // Copy item.
-    item        = mitm[obj];
+    item        = it;
     item.link   = freeslot;
     item.pos.set(-1, -1);
     // Remove "dropped by ally" flag.
@@ -1820,13 +1819,13 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     note_inscribe_item(item);
 
     item.quantity = quant_got;
-    if (is_blood_potion(mitm[obj]))
+    if (is_blood_potion(it))
     {
-        if (quant_got != mitm[obj].quantity)
+        if (quant_got != it.quantity)
         {
             // Remove oldest timers from original stack.
             for (int i = 0; i < quant_got; i++)
-                remove_oldest_blood_potion(mitm[obj]);
+                remove_oldest_blood_potion(it);
 
             // ... and newest ones from picked up stack
             remove_newest_blood_potion(item);
@@ -2443,11 +2442,19 @@ static void _multidrop(vector<SelItem> tmp_items)
         start_delay(DELAY_MULTIDROP, items_for_multidrop.size());
 }
 
+static bool _autogenerated_inscription(item_def& item)
+{
+    return (item.inscription == "god gift"
+            || item.inscription == "Sonja"
+            || item.inscription == "Psyche"
+            || item.inscription == "Donald");
+}
+
 static void _autoinscribe_item(item_def& item)
 {
     // If there's an inscription already, do nothing - except
     // for automatically generated inscriptions
-    if (!item.inscription.empty() && item.inscription != "god gift")
+    if (!item.inscription.empty() && !_autogenerated_inscription(item))
         return;
     const string old_inscription = item.inscription;
     item.inscription.clear();
@@ -2619,9 +2626,6 @@ bool can_autopickup()
     // autopickup is still possible with inscriptions and
     // pickup_thrown.
     if (Options.autopickup_on <= 0)
-        return false;
-
-    if (you.flight_mode() == FL_LEVITATE)
         return false;
 
     if (!i_feel_safe())
@@ -3058,7 +3062,7 @@ bool item_is_active_manual(const item_def &item)
 bool item_def::has_spells() const
 {
     return (item_is_spellbook(*this) && item_type_known(*this)
-            || count_rod_spells(*this, true) > 1);
+            || count_rod_spells(*this, true) > 0);
 }
 
 int item_def::book_number() const
@@ -3087,7 +3091,18 @@ zap_type item_def::zap() const
         return ZAP_DEBUGGING_RAY;
 
     zap_type result = ZAP_DEBUGGING_RAY;
-    switch (static_cast<wand_type>(sub_type))
+    wand_type wand_sub_type = static_cast<wand_type>(sub_type);
+
+    if (wand_sub_type == WAND_RANDOM_EFFECTS)
+    {
+        while (wand_sub_type == WAND_RANDOM_EFFECTS
+               || wand_sub_type == WAND_HEAL_WOUNDS)
+        {
+            wand_sub_type = static_cast<wand_type>(random2(NUM_WANDS));
+        }
+    }
+
+    switch (wand_sub_type)
     {
     case WAND_FLAME:           result = ZAP_FLAME;           break;
     case WAND_FROST:           result = ZAP_FROST;           break;
@@ -3108,14 +3123,7 @@ zap_type item_def::zap() const
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
     case WAND_DRAINING:        result = ZAP_NEGATIVE_ENERGY; break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATION;  break;
-    case WAND_RANDOM_EFFECTS:
-        result = static_cast<zap_type>(random2(ZAP_LAST_RANDOM + 1));
-        if (one_chance_in(20))
-            result = ZAP_NEGATIVE_ENERGY;
-        if (one_chance_in(17))
-            result = ZAP_ENSLAVEMENT;
-        break;
-
+    case WAND_RANDOM_EFFECTS:  /* impossible */
     case NUM_WANDS: break;
     }
     return result;
@@ -3295,7 +3303,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         }
         mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
 
-        int keyin = tolower(get_ch());
+        int keyin = toalower(get_ch());
 
         if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')
@@ -3378,7 +3386,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
                 MSGCH_PROMPT);
             mpr("Which deck (ESC to exit)? ");
 
-            const int keyin = tolower(get_ch());
+            const int keyin = toalower(get_ch());
 
             if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
@@ -3419,7 +3427,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
             mpr("[a] plain [b] ornate [c] legendary? (ESC to exit)",
                 MSGCH_PROMPT);
 
-            int keyin = tolower(get_ch());
+            int keyin = toalower(get_ch());
 
             if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
@@ -3999,7 +4007,8 @@ item_info get_item_info(const item_def& item)
 
     const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
                                 CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
-                                "drawn_cards", "item_tile", "item_tile_name"};
+                                "drawn_cards", "item_tile", "item_tile_name",
+                                "worn_tile", "worn_tile_name"};
     for (unsigned i = 0; i < ARRAYSZ(copy_props); ++i)
     {
         if (item.props.exists(copy_props[i]))
@@ -4073,7 +4082,7 @@ object_class_type get_item_mimic_type()
     mprf("[%c] random", letter);
     choices[letter] = OBJ_RANDOM;
     mpr("\nWhat kind of item mimic? ", MSGCH_PROMPT);
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
 
     if (choices.find(keyin) == choices.end())
         return OBJ_UNASSIGNED;

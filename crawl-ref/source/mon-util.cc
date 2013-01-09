@@ -302,13 +302,10 @@ void init_monster_symbols()
             monster_symbols[i].glyph = mons_base_char(i);
 }
 
-static bool _get_kraken_head(const monster*& mon)
+static bool _get_tentacle_head(const monster*& mon)
 {
-    if (!valid_kraken_connection(mon))
-        return false;
-
-    // For kraken tentacle segments, find the associated tentacle.
-    if (mon->type == MONS_KRAKEN_TENTACLE_SEGMENT)
+    // For tentacle segments, find the associated tentacle.
+    if (mon->is_child_tentacle_segment())
     {
         if (invalid_monster_index(mon->number))
             return false;
@@ -318,8 +315,8 @@ static bool _get_kraken_head(const monster*& mon)
         mon = &menv[mon->number];
     }
 
-    // For kraken tentacles, find the associated head.
-    if (mon->type == MONS_KRAKEN_TENTACLE)
+    // For tentacles, find the associated head.
+    if (mon->is_child_tentacle())
     {
         if (invalid_monster_index(mon->number))
             return false;
@@ -358,7 +355,7 @@ resists_t get_mons_class_resists(monster_type mc)
 
 resists_t get_mons_resists(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     resists_t resists = get_mons_class_resists(mon->type);
 
@@ -406,27 +403,164 @@ bool mons_class_flag(monster_type mc, uint64_t bf)
     return (me ? (me->bitfields & bf) != 0 : false);
 }
 
-int scan_mon_inv_randarts(const monster* mon,
-                          artefact_prop_type ra_prop)
+int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
+{
+    int ret = 0;
+    const item_def *item = 0;
+
+    switch (slot)
+    {
+    case EQ_WEAPON:
+    case EQ_STAFF:
+        {
+            const mon_inv_type end = mons_wields_two_weapons(this)
+                                     ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
+
+            for (int i = MSLOT_WEAPON; i <= end; i = i + 1)
+            {
+                item = mslot_item((mon_inv_type) i);
+                if (item && item->base_type == (slot == EQ_WEAPON ? OBJ_WEAPONS
+                                                                  : OBJ_STAVES)
+                    && item->sub_type == sub_type
+                    // Weapon subtypes are always known, staves not.
+                    && (slot == EQ_WEAPON || calc_unid
+                        || item_type_known(*item)))
+                {
+                    ret++;
+                }
+            }
+        }
+        break;
+
+    case EQ_ALL_ARMOUR:
+    case EQ_CLOAK:
+    case EQ_HELMET:
+    case EQ_GLOVES:
+    case EQ_BOOTS:
+    case EQ_SHIELD:
+        item = mslot_item(MSLOT_SHIELD);
+        if (item && item->base_type == OBJ_ARMOUR && item->sub_type == sub_type)
+            ret++;
+        // Don't check MSLOT_ARMOUR for EQ_SHIELD
+        if (slot == EQ_SHIELD)
+            break;
+        // intentional fall-through
+    case EQ_BODY_ARMOUR:
+        item = mslot_item(MSLOT_ARMOUR);
+        if (item && item->base_type == OBJ_ARMOUR && item->sub_type == sub_type)
+            ret++;
+        break;
+
+    case EQ_AMULET:
+    case EQ_RINGS:
+    case EQ_RINGS_PLUS:
+    case EQ_RINGS_PLUS2:
+        item = mslot_item(MSLOT_JEWELLERY);
+        if (item && item->base_type == OBJ_JEWELLERY
+            && item->sub_type == sub_type
+            && (calc_unid || item_type_known(*item)))
+        {
+            if (slot == EQ_RINGS_PLUS)
+                ret += item->plus;
+            else if (slot == EQ_RINGS_PLUS2)
+                ret += item->plus2;
+            else
+                ret++;
+        }
+        break;
+    default:
+        die("invalid slot %d for monster::wearing()", slot);
+    }
+    return ret;
+}
+
+int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
+{
+    int ret = 0;
+    const item_def *item = 0;
+
+    switch (slot)
+    {
+    case EQ_WEAPON:
+        {
+            const mon_inv_type end = mons_wields_two_weapons(this)
+                                     ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
+
+            for (int i = MSLOT_WEAPON; i <= end; i++)
+            {
+                item = mslot_item((mon_inv_type) i);
+                if (item && item->base_type == OBJ_WEAPONS
+                    && get_weapon_brand(*item) == special
+                    && (calc_unid || item_type_known(*item)))
+                {
+                    ret++;
+                }
+            }
+        }
+        break;
+
+    case EQ_ALL_ARMOUR:
+    case EQ_CLOAK:
+    case EQ_HELMET:
+    case EQ_GLOVES:
+    case EQ_BOOTS:
+    case EQ_SHIELD:
+        item = mslot_item(MSLOT_SHIELD);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        // Don't check MSLOT_ARMOUR for EQ_SHIELD
+        if (slot == EQ_SHIELD)
+            break;
+        // intentional fall-through
+    case EQ_BODY_ARMOUR:
+        item = mslot_item(MSLOT_ARMOUR);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        break;
+
+    case EQ_AMULET:
+    case EQ_STAFF:
+    case EQ_RINGS:
+    case EQ_RINGS_PLUS:
+    case EQ_RINGS_PLUS2:
+        // No egos.
+        break;
+
+    default:
+        die("invalid slot %d for monster::wearing_ego()", slot);
+    }
+    return ret;
+}
+
+int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid) const
 {
     int ret = 0;
 
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
+    // TODO: do we really want to prevent randarts from working for zombies?
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
-        const int weapon    = mon->inv[MSLOT_WEAPON];
-        const int second    = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
-        const int armour    = mon->inv[MSLOT_ARMOUR];
-        const int shield    = mon->inv[MSLOT_SHIELD];
-        const int jewellery = mon->inv[MSLOT_JEWELLERY];
+        const int weap      = inv[MSLOT_WEAPON];
+        const int second    = inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
+        const int armour    = inv[MSLOT_ARMOUR];
+        const int shld      = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[weapon]))
+        if (weap != NON_ITEM && mitm[weap].base_type == OBJ_WEAPONS
+            && is_artefact(mitm[weap]))
         {
-            ret += artefact_wpn_property(mitm[weapon], ra_prop);
+            ret += artefact_wpn_property(mitm[weap], ra_prop);
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[second]) && mons_wields_two_weapons(mon))
+            && is_artefact(mitm[second]) && mons_wields_two_weapons(this))
         {
             ret += artefact_wpn_property(mitm[second], ra_prop);
         }
@@ -437,10 +571,10 @@ int scan_mon_inv_randarts(const monster* mon,
             ret += artefact_wpn_property(mitm[armour], ra_prop);
         }
 
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR
-            && is_artefact(mitm[shield]))
+        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
+            && is_artefact(mitm[shld]))
         {
-            ret += artefact_wpn_property(mitm[shield], ra_prop);
+            ret += artefact_wpn_property(mitm[shld], ra_prop);
         }
 
         if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
@@ -485,8 +619,7 @@ bool mons_class_is_firewood(monster_type mc)
 {
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
-            && mc != MONS_KRAKEN_TENTACLE
-            && mc != MONS_KRAKEN_TENTACLE_SEGMENT);
+            && !mons_is_tentacle(mc));
 }
 
 bool mons_is_firewood(const monster* mon)
@@ -580,6 +713,7 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_TWISTER
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
+           || mc == MONS_LURKING_HORROR
            || mc == MONS_DANCING_WEAPON;
 }
 
@@ -661,6 +795,21 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_HALL_OF_BLADES:
         return (mons->type == MONS_DANCING_WEAPON);
 
+    case BRANCH_ABYSS:
+        switch (mons->type)
+        {
+            case MONS_ABOMINATION_LARGE:
+            case MONS_ABOMINATION_SMALL:
+            case MONS_LURKING_HORROR:
+            case MONS_TENTACLED_MONSTROSITY:
+            case MONS_TENTACLED_STARSPAWN:
+            case MONS_THRASHING_HORROR:
+            case MONS_UNSEEN_HORROR:
+            case MONS_WRETCHED_STAR:
+                return true;
+            default:
+                return false;
+        }
     default:
         return false;
     }
@@ -772,14 +921,21 @@ bool mons_is_mimic(monster_type mc)
     return (mons_is_item_mimic(mc) || mons_is_feat_mimic(mc));
 }
 
+#if TAG_MAJOR_VERSION == 34
 bool mons_is_item_mimic(monster_type mc)
 {
     return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_MONSTROUS_ITEM_MIMIC);
 }
+#else
+bool mons_is_item_mimic(monster_type mc)
+{
+    return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_RAVENOUS_ITEM_MIMIC);
+}
+#endif
 
 bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_MONSTROUS_FEATURE_MIMIC);
+    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_RAVENOUS_FEATURE_MIMIC);
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
@@ -859,11 +1015,8 @@ void discover_mimic(const coord_def& pos, bool wake)
 
     const int level = env.absdepth0 + 1;
 
-    // Orb mimic is special
-    if (item && item->base_type == OBJ_ORBS)
-        mg.cls = MONS_MONSTROUS_ITEM_MIMIC;
     // Early levels get inept mimics instead
-    else if (!x_chance_in_y(level - 6, 6))
+    if (!x_chance_in_y(level - 6, 6))
         mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
     // Deeper, you get ravenous mimics
     else if (x_chance_in_y(level - 15, 6))
@@ -1207,7 +1360,7 @@ bool mons_class_can_regenerate(monster_type mc)
 
 bool mons_can_regenerate(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     if (testbits(mon->flags, MF_NO_REGEN))
         return false;
@@ -1222,7 +1375,7 @@ bool mons_class_can_display_wounds(monster_type mc)
 
 bool mons_can_display_wounds(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     return mons_class_can_display_wounds(mon->type);
 }
@@ -1301,6 +1454,7 @@ bool mons_class_can_use_stairs(monster_type mc)
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
+            && mc != MONS_SPATIAL_MAELSTROM
             && mc != MONS_PLAYER_GHOST
             && mc != MONS_GERYON
             && mc != MONS_ROYAL_JELLY
@@ -1421,7 +1575,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 {
     monster_type mc = mon->type;
 
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     const bool zombified = mons_is_zombified(mon);
 
@@ -1537,39 +1691,33 @@ flight_type mons_flies(const monster* mon, bool temp)
 
     // Handle the case where the zombified base monster can't fly, but
     // the zombified monster can (e.g. spectral things).
-    if (ret == FL_NONE && mons_is_zombified(mon))
-        ret = mons_class_flies(mon->type);
+    if (mons_is_zombified(mon))
+        ret = max(ret, mons_class_flies(mon->type));
 
-    if (temp && ret == FL_NONE
-        && scan_mon_inv_randarts(mon, ARTP_LEVITATE) > 0)
+    if (temp && ret < FL_LEVITATE)
     {
-        ret = FL_LEVITATE;
-    }
+        if (mon->scan_artefacts(ARTP_FLY) > 0)
+            return FL_LEVITATE;
 
-    if (temp && ret == FL_NONE)
-    {
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM
             && mitm[armour].base_type == OBJ_ARMOUR
-            && mitm[armour].special == SPARM_LEVITATION)
+            && mitm[armour].special == SPARM_FLYING)
         {
-            ret = FL_LEVITATE;
+            return FL_LEVITATE;
         }
-    }
 
-    if (temp && ret == FL_NONE)
-    {
         const int jewellery = mon->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
             && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && mitm[jewellery].sub_type == RING_LEVITATION)
+            && mitm[jewellery].sub_type == RING_FLIGHT)
         {
-            ret = FL_LEVITATE;
+            return FL_LEVITATE;
         }
-    }
 
-    if (temp && ret == FL_NONE && mon->has_ench(ENCH_LEVITATION))
-        ret = FL_LEVITATE;
+        if (mon->has_ench(ENCH_FLIGHT))
+            return FL_LEVITATE;
+    }
 
     return ret;
 }
@@ -1795,6 +1943,10 @@ int exper_value(const monster* mon, bool real)
     // of blobs merged. -cao
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         x_val *= mon->number;
+
+    // Scale starcursed mass exp by what percentage of the whole it represents
+    if (mon->type == MONS_STARCURSED_MASS)
+        x_val = (x_val * mon->number) / 12;
 
     // Reductions for big values. - bwr
     if (x_val > 100)
@@ -2114,6 +2266,10 @@ void define_monster(monster* mons)
         hd += random2(10) - 4;
         ac += random2(5) - 2;
         ev += random2(5) - 2;
+        break;
+
+    case MONS_STARCURSED_MASS:
+        monnumber = 12;
         break;
 
     default:
@@ -2437,7 +2593,7 @@ mon_intel_type mons_class_intel(monster_type mc)
 
 mon_intel_type mons_intel(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     if (mons_enslaved_soul(mon))
         return mons_class_intel(mons_zombie_base(mon));
@@ -2487,6 +2643,8 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
         ht = HT_WATER;
     else if (ht == HT_ROCK)
         ht = HT_LAND;
+    else if (ht == HT_INCORPOREAL)
+        ht = HT_ROCK;
     return ht;
 }
 
@@ -2497,7 +2655,13 @@ habitat_type mons_secondary_habitat(const monster* mon)
 
 bool mons_wall_shielded(const monster* mon)
 {
-    return (_mons_class_habitat(mons_base_type(mon)) == HT_ROCK);
+    switch (_mons_class_habitat(mons_base_type(mon)))
+    {
+        case HT_ROCK:
+            return true;
+        default:
+            return false;
+    }
 }
 
 bool intelligent_ally(const monster* mon)
@@ -2568,6 +2732,7 @@ bool mons_self_destructs(const monster* m)
 {
     return (m->type == MONS_GIANT_SPORE
             || m->type == MONS_BALL_LIGHTNING
+            || m->type == MONS_LURKING_HORROR
             || m->type == MONS_ORB_OF_DESTRUCTION);
 }
 
@@ -2835,7 +3000,7 @@ static bool _ms_los_spell(spell_type monspell)
     // True, the tentacles _are_ summoned, but they are restricted to
     // water just like the kraken is, so it makes more sense not to
     // count them here.
-    if (monspell == SPELL_KRAKEN_TENTACLES)
+    if (monspell == SPELL_CREATE_TENTACLES)
         return false;
 
     if (monspell == SPELL_SMITING
@@ -2871,6 +3036,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     {
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
+    case SPELL_FRENZY:
     case SPELL_HASTE:
     case SPELL_MIGHT:
     case SPELL_MINOR_HEALING:
@@ -3275,6 +3441,9 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
     if (grid == DNGN_MALIGN_GATEWAY)
         return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 
+    if (_mons_class_habitat(mc) == HT_INCORPOREAL)
+        return !feat_is_permarock(grid);
+
     if (_mons_class_habitat(mc) == HT_ROCK)
     {
         // Permanent walls can't be passed through.
@@ -3294,37 +3463,26 @@ static bool _mons_can_open_doors(const monster* mon)
 // given door. These all return false if there's no closed door there.
 bool mons_can_open_door(const monster* mon, const coord_def& pos)
 {
-    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
-        return false;
-
     if (!_mons_can_open_doors(mon))
         return false;
 
-    return (env.grid(pos) == DNGN_CLOSED_DOOR);
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
+        return false;
+
+    return true;
 }
 
 // Monsters that eat items (currently only jellies) also eat doors.
-// However, they don't realise that secret doors make good eating.
 bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 {
-    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
-        return false;
 
     if (mons_itemeat(mon) != MONEAT_ITEMS)
         return false;
 
-    dungeon_feature_type feat = env.grid(pos);
-    if (feat == DNGN_OPEN_DOOR)
-        return true;
-
-    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto"
-         // Doors with permarock marker cannot be eaten.
-        || feature_marker_at(pos, DNGN_PERMAROCK_WALL))
-    {
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return false;
-    }
 
-    return (feat == DNGN_CLOSED_DOOR);
+    return true;
 }
 
 static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
@@ -3337,7 +3495,7 @@ static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
 bool mons_can_traverse(const monster* mon, const coord_def& p,
                        bool checktraps)
 {
-    if (_mons_can_pass_door(mon, p))
+    if (grd(p) == DNGN_CLOSED_DOOR && _mons_can_pass_door(mon, p))
         return true;
 
     if (!mon->is_habitable(p))
@@ -3865,7 +4023,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     if (mc == MONS_CHAOS_SPAWN)
         return (static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1)));
 
-    const bool flies = (mons_class_flies(mc) == FL_FLY);
+    const bool flies = (mons_class_flies(mc) == FL_WINGED);
 
     switch (mons_base_char(mc))
     {
@@ -4180,13 +4338,33 @@ bool mons_is_tentacle(monster_type mc)
     return (mc == MONS_KRAKEN_TENTACLE
             || mc == MONS_KRAKEN_TENTACLE_SEGMENT
             || mc == MONS_ELDRITCH_TENTACLE
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || mc == MONS_STARSPAWN_TENTACLE
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
 }
 
 bool mons_is_tentacle_segment(monster_type mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
+}
+
+bool mons_is_tentacle_head(monster_type mc)
+{
+    return (mc == MONS_KRAKEN
+            || mc == MONS_TENTACLED_STARSPAWN);
+}
+
+monster* mons_get_parent_monster(monster* mons)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_parent_monster_of(mons))
+            return mi->as_monster();
+    }
+
+    return 0;
 }
 
 void init_anon()
@@ -4233,7 +4411,56 @@ const char* mons_class_name(monster_type mc)
 bool mons_is_tentacle_end(monster_type mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
-            || mtype == MONS_ELDRITCH_TENTACLE);
+            || mtype == MONS_ELDRITCH_TENTACLE
+            || mtype == MONS_STARSPAWN_TENTACLE);
+}
+
+monster_type mons_tentacle_parent_type(const monster* mons)
+{
+    switch (mons_base_type(mons))
+    {
+        case MONS_KRAKEN_TENTACLE:
+            return MONS_KRAKEN;
+        case MONS_KRAKEN_TENTACLE_SEGMENT:
+            return MONS_KRAKEN_TENTACLE;
+        case MONS_STARSPAWN_TENTACLE:
+            return MONS_TENTACLED_STARSPAWN;
+        case MONS_STARSPAWN_TENTACLE_SEGMENT:
+            return MONS_STARSPAWN_TENTACLE;
+        case MONS_ELDRITCH_TENTACLE_SEGMENT:
+            return MONS_ELDRITCH_TENTACLE;
+        default:
+            return MONS_PROGRAM_BUG;
+    }
+}
+
+monster_type mons_tentacle_child_type(const monster* mons)
+{
+    switch (mons_base_type(mons))
+    {
+        case MONS_KRAKEN:
+            return MONS_KRAKEN_TENTACLE;
+        case MONS_KRAKEN_TENTACLE:
+            return MONS_KRAKEN_TENTACLE_SEGMENT;
+        case MONS_TENTACLED_STARSPAWN:
+            return MONS_STARSPAWN_TENTACLE;
+        case MONS_STARSPAWN_TENTACLE:
+            return MONS_STARSPAWN_TENTACLE_SEGMENT;
+        case MONS_ELDRITCH_TENTACLE:
+            return MONS_ELDRITCH_TENTACLE_SEGMENT;
+        default:
+            return MONS_PROGRAM_BUG;
+    }
+}
+
+//Returns whether a given monster is a tentacle segment immediately attached
+//to the parent monster
+bool mons_tentacle_adjacent(const monster* parent, const monster* child)
+{
+    return (mons_is_tentacle_head(mons_base_type(parent))
+            && mons_is_tentacle_segment(child->type)
+            && child->props.exists("inwards")
+            && child->props["inwards"].get_int() == parent->mindex());
 }
 
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)

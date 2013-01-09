@@ -923,11 +923,11 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     if (!fake)
     {
-       ch = tileidx_feature(c);
-       if (ch == TILE_FLOOR_NORMAL)
-           ch = env.tile_flv(c).floor;
-       else if (ch == TILE_WALL_NORMAL)
-           ch = env.tile_flv(c).wall;
+        ch = tileidx_feature(c);
+        if (ch == TILE_FLOOR_NORMAL)
+            ch = env.tile_flv(c).floor;
+        else if (ch == TILE_WALL_NORMAL)
+            ch = env.tile_flv(c).wall;
     }
 
     tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
@@ -1486,7 +1486,7 @@ void Menu::webtiles_handle_item_request(int start, int end)
     tiles.json_close_array();
 
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_update_item(int index) const
@@ -1511,7 +1511,7 @@ void Menu::webtiles_update_item(int index) const
     tiles.json_close_array();
 
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_update_title() const
@@ -1520,7 +1520,7 @@ void Menu::webtiles_update_title() const
     tiles.json_write_string("msg", "update_menu");
     webtiles_write_title();
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_update_scroll_pos() const
@@ -1529,7 +1529,7 @@ void Menu::webtiles_update_scroll_pos() const
     tiles.json_write_string("msg", "menu_scroll");
     tiles.json_write_int("first", first_entry);
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_write_title() const
@@ -1977,8 +1977,8 @@ bool formatted_scroller::process_key(int keyin)
     lastch = keyin;
 
 #ifdef TOUCH_UI
-    if(keyin == CK_TOUCH_DUMMY) // mouse click in title area, which
-        return true;            // wouldn't usually be handled
+    if (keyin == CK_TOUCH_DUMMY) // mouse click in title area, which
+        return true;             // wouldn't usually be handled
 #endif
 
     if (f_keyfilter)
@@ -3702,8 +3702,14 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
 }
 
 MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
-    m_items_shown(0)
+                              m_items_shown(0)
 {
+#ifdef USE_TILE_LOCAL
+    m_arrow_up = new TextTileItem();
+    m_arrow_down = new TextTileItem();
+    m_arrow_up->add_tile(tile_def(TILE_MI_ARROW0, TEX_DEFAULT));
+    m_arrow_down->add_tile(tile_def(TILE_MI_ARROW4, TEX_DEFAULT));
+#endif
 }
 
 MenuScroller::~MenuScroller()
@@ -3904,6 +3910,16 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             else
                 return MenuObject::INPUT_DESELECTED;
         }
+#ifdef USE_TILE_LOCAL
+        else
+        {
+            // handle clicking on the scrollbar (top half of region => scroll up)
+            if (me.py-m_min_coord.y > (m_max_coord.y-m_min_coord.y)/2)
+                return process_input(CK_DOWN);
+            else
+                return process_input(CK_UP);
+        }
+#endif
     }
     if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
@@ -3927,6 +3943,12 @@ void MenuScroller::render()
     vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
         (*it)->render();
+
+#ifdef USE_TILE_LOCAL
+    // draw scrollbar
+    m_arrow_up->render();
+    m_arrow_down->render();
+#endif
 }
 
 MenuItem* MenuScroller::get_active_item()
@@ -4137,6 +4159,15 @@ void MenuScroller::_place_items()
         space_used += item_height;
         ++m_items_shown;
     }
+
+#ifdef USE_TILE_LOCAL
+    // arrows
+    m_arrow_down->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_max_coord.y-32),coord_def(m_max_coord.x,m_max_coord.y));
+    m_arrow_down->set_visible(m_topmost_visible+m_items_shown<m_entries.size());
+
+    m_arrow_up->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_min_coord.y),coord_def(m_max_coord.x,m_min_coord.y+32));
+    m_arrow_up->set_visible(m_topmost_visible>0);
+#endif
 }
 
 MenuItem* MenuScroller::_find_item_by_direction(int start_index,
@@ -4277,7 +4308,7 @@ void BoxMenuHighlighter::render()
         return;
 
     if (!m_visible)
-       return;
+        return;
     _place_items();
 #ifdef USE_TILE_LOCAL
     m_line_buf.draw();

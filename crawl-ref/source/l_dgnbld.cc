@@ -698,7 +698,7 @@ LUAFN(dgn_replace_area)
 {
     LINES(ls, 1, lines);
 
-    TABLE_STR(ls, find, '\0');
+    TABLE_STR(ls, find, 0);
     TABLE_CHAR(ls, replace, '\0');
 
     int x1, y1, x2, y2;
@@ -764,7 +764,7 @@ LUAFN(dgn_replace_random)
     if (!_coords(ls, lines, x1, y1, x2, y2))
         return 0;
 
-    int count = (x2 - x1) * (y2 - y1);
+    int count = (x2 - x1 + 1) * (y2 - y1 + 1);
     if (!count)
     {
         if (required)
@@ -886,7 +886,7 @@ LUAFN(dgn_spotty_map)
                && strchr(replace, lines(x, y-2))
                && strchr(replace, lines(x, y+2)));
 
-        for (radius_iterator ai(coord_def(x, y), 1, boxy ? C_SQUARE : C_POINTY,
+        for (radius_iterator ai(coord_def(x, y), boxy ? 2 : 1, C_CIRCLE,
                                 NULL, false); ai; ++ai)
         {
             if (strchr(replace, lines(*ai)))

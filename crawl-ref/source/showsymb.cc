@@ -120,9 +120,9 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
         }
         else if (cell.flags & MAP_UMBRAED)
         {
-           if (cell.flags & MAP_SILENCED)
+            if (cell.flags & MAP_SILENCED)
                 colour = BLUE; // Silence gets darker
-           else
+            else
                 colour = ETC_DEATH; // If no holy or silence
         }
         else if (cell.flags & MAP_SILENCED)
@@ -131,6 +131,8 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_QUAD_HALOED)
             colour = BLUE;
+        else if (cell.flags & MAP_DISJUNCT)
+            colour = ETC_DISJUNCTION;
         else if (cell.flags & MAP_SUPPRESSED)
             colour = LIGHTGREEN;
     }
@@ -211,8 +213,7 @@ static cglyph_t _get_item_override(const item_def &item)
         return g;
 
     string name = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
-                + " {" + filtering_item_prefix(item, false) + "} "
-                + item.name(DESC_PLAIN);
+                + " {" + item_prefix(item, false) + "} " + item.name(DESC_PLAIN);
 
     {
         // Check the cache...
@@ -265,7 +266,7 @@ show_class get_cell_show_class(const map_cell& cell,
 
     if (feat_is_trap(cell.feat())
      || is_critical_feature(cell.feat())
-     || cell.feat() < DNGN_MINMOVE)
+     || (cell.feat() && cell.feat() < DNGN_MINMOVE))
     {
         return SH_FEATURE;
     }

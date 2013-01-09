@@ -20,6 +20,9 @@ fi
 NDK=`which ndk-build`
 NDK=`dirname $NDK`
 
+# are we using crystax?
+#CRYSTAX=1
+
 # GCC & toolchain
 GCCPREFIX=arm-linux-androideabi
 GCCVER=4.6.3
@@ -97,7 +100,7 @@ LDFLAGS="\
 
 # LIBS
 LIBS="\
--lcrystax_static \
+`[ ! -z \"$CRYSTAX\"  ] && echo '-lcrystax_static'` \
 `echo $APP_SHARED_LIBS | sed \"s@\([-a-zA-Z0-9_.]\+\)@$LOCAL_PATH/../../obj/local/armeabi/lib\1.so@g\"` \
 `echo $APP_STATIC_LIBS | sed 's/\([-a-zA-Z0-9_.]*\)/-l\1/g'` \
 $SYSROOT/usr/lib/libc.so \

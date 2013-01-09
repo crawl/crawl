@@ -236,7 +236,7 @@ void adjust(void)
 {
     mpr("Adjust (i)tems, (s)pells, or (a)bilities? ", MSGCH_PROMPT);
 
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
 
     if (keyin == 'i')
         _adjust_item();
@@ -533,8 +533,7 @@ void list_armour()
         else if (armour_id != -1)
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
-            colour = menu_colour(estr.str(),
-                                 menu_colour_item_prefix(you.inv[armour_id]),
+            colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
                                  "equip");
         }
         else if (!you_can_wear(i))
@@ -589,7 +588,7 @@ void list_jewellery(void)
         else if (jewellery_id != -1)
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
-            string prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
+            string prefix = item_prefix(you.inv[jewellery_id]);
             colour = menu_colour(item, prefix, "equip");
         }
         else
@@ -643,7 +642,6 @@ static const char *targetting_help_1 =
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
-    "<w>Ctrl-F</w> : monster targetting modes\n"
 #ifndef USE_TILE_LOCAL
     "<w>Ctrl-L</w> : targetting via monster list\n"
 #endif
@@ -724,7 +722,7 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
             }
             me->add_hotkey(hotkey);
             if (isaupper(hotkey))
-                me->add_hotkey(tolower(hotkey));
+                me->add_hotkey(toalower(hotkey));
             me->level  = MEL_SUBTITLE;
             me->colour = WHITE;
         }
@@ -2148,7 +2146,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "interlevel travel");
     _add_command(cols, 0, CMD_SEARCH_STASHES, "Find items");
     _add_command(cols, 0, CMD_FIX_WAYPOINT, "set Waypoint");
-    _add_command(cols, 0, CMD_FORGET_STASH, "Exclude square from searches");
 
     cols.add_formatted(
             0,
@@ -2592,6 +2589,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
                        "<w>(</w>      : turn cell into feature\n"
                        "<w>\\</w>      : make a shop\n"
+                       "<w>Ctrl-K</w> : mark all vaults as unused\n"
                        "\n"
                        "<yellow>Other level related commands</yellow>\n"
                        "<w>Ctrl-A</w> : generate new Abyss area\n"

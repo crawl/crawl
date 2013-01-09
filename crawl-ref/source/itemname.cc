@@ -21,6 +21,7 @@
 #include "artefact.h"
 #include "colour.h"
 #include "decks.h"
+#include "describe.h"
 #include "food.h"
 #include "goditem.h"
 #include "invent.h"
@@ -295,6 +296,13 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         if (tried)
             insparts.push_back(tried_str);
 
+        if (is_artefact(*this))
+        {
+            string part = artefact_inscription(*this);
+            if (!part.empty())
+                insparts.push_back(part);
+        }
+
         if (with_inscription && !(inscription.empty()))
             insparts.push_back(inscription);
 
@@ -468,7 +476,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_DEXTERITY:         return "dexterity";
         case SPARM_INTELLIGENCE:      return "intelligence";
         case SPARM_PONDEROUSNESS:     return "ponderousness";
-        case SPARM_LEVITATION:        return "levitation";
+        case SPARM_FLYING:            return "flying";
         case SPARM_MAGIC_RESISTANCE:  return "magic resistance";
         case SPARM_PROTECTION:        return "protection";
         case SPARM_STEALTH:           return "stealth";
@@ -501,7 +509,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_DEXTERITY:         return " {Dex+3}";
         case SPARM_INTELLIGENCE:      return " {Int+3}";
         case SPARM_PONDEROUSNESS:     return " {ponderous}";
-        case SPARM_LEVITATION:        return " {Lev}";
+        case SPARM_FLYING:            return " {Fly}";
         case SPARM_MAGIC_RESISTANCE:  return " {MR}";
         case SPARM_PROTECTION:        return " {AC+3}";
         case SPARM_STEALTH:           return " {Stlth+}";
@@ -602,7 +610,7 @@ static const char* potion_type_name(int potiontype)
     case POT_GAIN_STRENGTH:     return "gain strength";
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
-    case POT_LEVITATION:        return "levitation";
+    case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
     case POT_SLOWING:           return "slowing";
     case POT_PARALYSIS:         return "paralysis";
@@ -682,7 +690,7 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_INTELLIGENCE:          return "ring of intelligence";
     case RING_WIZARDRY:              return "ring of wizardry";
     case RING_MAGICAL_POWER:         return "ring of magical power";
-    case RING_LEVITATION:            return "ring of levitation";
+    case RING_FLIGHT:                return "ring of flight";
     case RING_LIFE_PROTECTION:       return "ring of life protection";
     case RING_PROTECTION_FROM_MAGIC: return "ring of protection from magic";
     case RING_FIRE:                  return "ring of fire";
@@ -694,7 +702,9 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";
     case AMU_THE_GOURMAND:      return "amulet of the gourmand";
     case AMU_CONSERVATION:      return "amulet of conservation";
+#if TAG_MAJOR_VERSION == 34
     case AMU_CONTROLLED_FLIGHT: return "amulet of controlled flight";
+#endif
     case AMU_INACCURACY:        return "amulet of inaccuracy";
     case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
     case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
@@ -1045,17 +1055,17 @@ static const char* rod_type_name(int type)
 {
     switch ((rod_type)type)
     {
-    case ROD_SUMMONING:       return "summoning";
+    case ROD_SWARM:           return "the swarm";
     case ROD_WARDING:         return "warding";
     case ROD_LIGHTNING:       return "lightning";
     case ROD_STRIKING:        return "striking";
     case ROD_DEMONOLOGY:      return "demonology";
     case ROD_VENOM:           return "venom";
+    case ROD_INACCURACY:      return "inaccuracy";
 
     case ROD_DESTRUCTION_I:
     case ROD_DESTRUCTION_II:
     case ROD_DESTRUCTION_III:
-    case ROD_DESTRUCTION_IV:
                               return "destruction";
 
     default: return "bugginess";
@@ -1876,9 +1886,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             case ROD_DESTRUCTION_III:
                 buff << " [lightning,fireball,iron]";
                 break;
-            case ROD_DESTRUCTION_IV:
-                buff << " [inacc,magma,cold]";
-                break;
             }
             break;
 
@@ -2242,6 +2249,9 @@ void check_item_knowledge(bool unknown_items)
 #if TAG_MAJOR_VERSION == 34
             // Water is never interesting either. [1KB]
             if (i == OBJ_POTIONS && j == POT_WATER)
+                continue;
+
+            if (i == OBJ_JEWELLERY && j == AMU_CONTROLLED_FLIGHT)
                 continue;
 #endif
 
@@ -2779,8 +2789,7 @@ bool is_interesting_item(const item_def& item)
     if (fully_identified(item) && is_artefact(item))
         return true;
 
-    const string iname = menu_colour_item_prefix(item, false) + " "
-                         + item.name(DESC_PLAIN);
+    const string iname = item_prefix(item, false) + " " + item.name(DESC_PLAIN);
     for (unsigned i = 0; i < Options.note_items.size(); ++i)
         if (Options.note_items[i].matches(iname))
             return true;
@@ -3140,8 +3149,8 @@ bool is_useless_item(const item_def &item, bool temp)
                         && (you.species != SP_VAMPIRE
                             || temp && you.hunger_state < HS_SATIATED));
 
-        case POT_LEVITATION:
-            return (you.permanent_levitation() || you.permanent_flight());
+        case POT_FLIGHT:
+            return you.permanent_flight();
 
         case POT_PORRIDGE:
         case POT_BLOOD:
@@ -3211,9 +3220,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_res_poison(false, temp, false) > 0
                     && (temp || you.species != SP_VAMPIRE));
 
+#if TAG_MAJOR_VERSION == 34
         case AMU_CONTROLLED_FLIGHT:
             return (player_genus(GENPC_DRACONIAN)
                     || (you.species == SP_TENGU && you.experience_level >= 5));
+#endif
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);
@@ -3227,8 +3238,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_INVISIBILITY:
             return _invisibility_is_useless(temp);
 
-        case RING_LEVITATION:
-            return (you.permanent_levitation() || you.permanent_flight());
+        case RING_FLIGHT:
+            return you.permanent_flight();
 
         default:
             return false;
@@ -3318,15 +3329,11 @@ bool is_useless_item(const item_def &item, bool temp)
     return false;
 }
 
-static const string _item_prefix(const item_def &item, bool temp, bool filter)
+string item_prefix(const item_def &item, bool temp)
 {
     vector<string> prefixes;
 
-    // No identified/unidentified for filtering, since the user might
-    // want to filter on "ident" to find scrolls of identify.
-    if (filter)
-        ;
-    else if (item_ident(item, ISFLAG_KNOW_TYPE))
+    if (item_ident(item, ISFLAG_KNOW_TYPE))
         prefixes.push_back("identified");
     else
     {
@@ -3357,7 +3364,10 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
     }
 
     if (good_god_hates_item_handling(item) || god_hates_item_handling(item))
+    {
         prefixes.push_back("evil_item");
+        prefixes.push_back("forbidden");
+    }
 
     if (is_emergency_item(item))
         prefixes.push_back("emergency_item");
@@ -3384,7 +3394,10 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
         if (item.sub_type == NUM_FOODS)
             break;
         if (is_forbidden_food(item))
-            prefixes.push_back("evil_eating"), prefixes.push_back("forbidden");
+        {
+            prefixes.push_back("evil_eating"); // compat with old configs
+            prefixes.push_back("forbidden");
+        }
 
         if (is_inedible(item))
             prefixes.push_back("inedible");
@@ -3406,6 +3419,7 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
             && is_blood_potion(item))
         {
             prefixes.push_back("evil_eating");
+            prefixes.push_back("forbidden");
         }
         if (is_preferred_food(item))
             prefixes.push_back("preferred");
@@ -3434,8 +3448,7 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
         break;
     }
 
-    if (Options.menu_colour_prefix_class && !filter)
-        prefixes.push_back(item_class_name(item.base_type, true));
+    prefixes.push_back(item_class_name(item.base_type, true));
 
     string result = comma_separated_line(prefixes.begin(), prefixes.end(),
                                          " ", " ");
@@ -3443,20 +3456,10 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
     return result;
 }
 
-string menu_colour_item_prefix(const item_def &item, bool temp)
-{
-    return _item_prefix(item, temp, false);
-}
-
-string filtering_item_prefix(const item_def &item, bool temp)
-{
-    return _item_prefix(item, temp, true);
-}
-
 string get_menu_colour_prefix_tags(const item_def &item,
                                    description_level_type desc)
 {
-    string cprf       = menu_colour_item_prefix(item);
+    string cprf       = item_prefix(item);
     string colour     = "";
     string colour_off = "";
     string item_name  = item.name(desc);

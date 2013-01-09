@@ -286,9 +286,9 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
 
 void xom_tick()
 {
-     // Xom now ticks every action, not every 20 turns.
-     if (x_chance_in_y(1, 20))
-     {
+    // Xom now ticks every action, not every 20 turns.
+    if (x_chance_in_y(1, 20))
+    {
         // Xom semi-randomly drifts your piety.
         const string old_xom_favour = describe_xom_favour();
         const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
@@ -343,7 +343,7 @@ void xom_tick()
         }
     }
 
-    if (player_effect_faith() ? coinflip() : one_chance_in(3))
+    if (you.faith() ? coinflip() : one_chance_in(3))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = (tension ==  0 ? 1 :
@@ -487,7 +487,7 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
     {
     case SPELL_BLINK:
     case SPELL_TELEPORT_SELF:
-        return !item_blocks_teleport(false, false);
+        return !you.no_tele(false, false, spell == SPELL_BLINK);
     default:
         return true;
     }
@@ -839,12 +839,12 @@ static bool _is_chaos_upgradeable(const item_def &item,
     // Since Xom is a god, he is capable of changing randarts, but not
     // other artefacts.
     if (is_unrandom_artefact(item))
-       return false;
+        return false;
 
     // Staves and rods can't be changed either, since they don't have brands
     // in the way other weapons do.
     if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
-       return false;
+        return false;
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if he or she can defeat the monster.
@@ -906,7 +906,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
     if (!mon->alive() || mons_attitude(mon) != ATT_HOSTILE
         || mons_is_fleeing(mon) || mons_is_panicking(mon))
     {
-       return false;
+        return false;
     }
 
     if (mons_itemuse(mon) < MONUSE_STARTING_EQUIPMENT)
@@ -921,7 +921,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
     // being given chaos weapons, while other gods won't mind the help
     // in their servants' killing the player.
     if (is_good_god(mon->god))
-       return false;
+        return false;
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.
@@ -1064,7 +1064,7 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 static bool _player_is_dead()
 {
     return (you.hp <= 0 || you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0
-            || is_feat_dangerous(grd(you.pos()))
+            || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
             || you.did_escape_death());
 }
 
@@ -2607,8 +2607,8 @@ static void _xom_zero_miscast()
                            "immediately jumps back in!");
     }
 
-    ////////////////////////////////////////////
-    // Body, player spcies, transformations, etc
+    //////////////////////////////////////////////
+    // Body, player species, transformations, etc.
 
     if (you.species == SP_MUMMY && you_tran_can_wear(EQ_BODY_ARMOUR))
     {
@@ -2625,7 +2625,7 @@ static void _xom_zero_miscast()
                 str += " primary";
             else
             {
-                str += random_choose(" front", " middle", " rear");
+                str += random_choose(" front", " middle", " rear", 0);
                 str += " secondary";
             }
         str += " eye.";
@@ -2867,7 +2867,7 @@ static int _xom_miscast(const int max_level, const bool nasty,
 #endif
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
 
-    if (level == 0 && one_chance_in(20))
+    if (level == 0 && one_chance_in(3))
     {
         god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
         _xom_zero_miscast();

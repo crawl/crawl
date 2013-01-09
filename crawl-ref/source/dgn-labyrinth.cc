@@ -137,7 +137,7 @@ static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
         if (recurse)
         {
             if (grd(p) == DNGN_FLOOR)
-               return false;
+                return false;
         }
         else if (_has_no_floor_neighbours(p, true))
             return true;
@@ -255,7 +255,7 @@ static void _place_extra_lab_minivaults()
 static bool _has_vault_in_radius(const coord_def &pos, int radius,
                                  unsigned mask)
 {
-    for (radius_iterator rad(pos, radius, C_SQUARE); rad; ++rad)
+    for (radius_iterator rad(pos, radius, C_ROUND); rad; ++rad)
     {
         if (!in_bounds(*rad))
             continue;

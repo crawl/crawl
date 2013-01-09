@@ -1279,6 +1279,8 @@ private:
 
 const int CHANCE_ROLL = 10000;
 
+void clear_subvault_stack(void);
+
 void map_register_flag(const string &flag);
 
 string escape_string(string in, const string &toesc, const string &escapewith);

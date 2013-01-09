@@ -147,8 +147,9 @@ dungeons.
 %%%%
 Dowsing card
 
-This card lets you detect secret doors, traps, creatures or some combination
-thereof. It is usually found in decks of changes and dungeons.
+This card lets you detect traps, reveals your surroundings, makes you
+telepathic for a short time, or some combination thereof. It is usually found in
+decks of changes and dungeons.
 %%%%
 the Trowel card
 

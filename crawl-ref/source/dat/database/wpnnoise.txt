@@ -147,7 +147,7 @@ w:50
 @Your_weapon@ [coughs|swears|yawns][| loudly| noisily].
 
 w:40
-@Your_weapon@ [burps|cheers|hollers|yelps][ |loudly]!
+@Your_weapon@ [burps|cheers|hollers|yelps][| loudly]!
 
 w:30
 @Your_weapon@ makes a [horrible|deep, guttural|tutting] noise.
@@ -514,7 +514,7 @@ w:30
 
 @The_weapon@ plays a couple of bars.
 
-@The_weapon@ [nearly|clearly|] [hits|misses] the concert pitch.
+@The_weapon@ [nearly |clearly |][hits|misses] the concert pitch.
 
 @The_weapon@ repeatedly practises the high pitch.
 
@@ -527,7 +527,7 @@ _singing_no-low_tension_
 
 @The_weapon@ breaks into glorious song!
 
-@The_weapon@ sings [|off-key].
+@The_weapon@ sings[| off-key].
 
 @The_weapon@ [sings|whistles] [loudly|merrily].
 
@@ -685,7 +685,7 @@ _common_speaking_no_tension_
 
 @The_weapon@ brightly asks, "How about a duet?"
 
-@The_weapon@ wonders, "Am I just an instrument of [demise|death|downfall]?"
+@The_weapon@ wonders, "Am I just an instrument of [doom|death|destruction]?"
 
 @The_weapon@ yells, "No battle, no fun!"
 
@@ -756,7 +756,7 @@ _rare_speaking_no_tension_
 
 @The_weapon@ amuses itself with detailed descriptions of past executions.
 
-@The_weapon@ wishes everyone in the dungeon [unpleasant|sudden] [demise|death].
+@The_weapon@ wishes everyone in the dungeon [an unpleasant|a sudden] [demise|death].
 
 @The_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
 
@@ -894,6 +894,11 @@ w:1
 %%%%
 _speaking_high_tension_
 
+@The_weapon@ yells, "I hereby consecrate these halls WITH BLOOD!"
+
+# After the crusader's "deus vult" battle cry
+@The_weapon@ bellows, "{{ if you.god() == "No God" then return "@_godless_sorter_@"; else return "@player_god@"; end }} wills it!"
+
 @The_weapon@ shouts, "Lose my temper? Nonsense! My steel will be strong forever!"
 
 @The_weapon@ shouts, "Cut 'em off! All their little heads at once!"
@@ -1008,9 +1013,12 @@ _SCREAM_
 
 @The_weapon@ @_screams_@, "FOUNTAINS OF BLOOD IN HONOUR OF THE FAIR BLADE!"
 
-@The_weapon@ @_screams_@, "I AM THE FOURTH HORSEMAN! THE TIME IS NOW!"
+@The_weapon@ @_screams_@, "I AM THE FIFTH HORSEMAN! THE TIME IS NOW!"
 
-@The_weapon@ @_screams_@, "THIS IS THE END AS YOU ALL KNOW IT!!!"
+@The_weapon@ @_screams_@, "I AM BECOME DEATH, [DESTROYER|DEFILER|DISMEMBERER] OF [WORLDS|GODS|CHAMPIONS|HEROES|LEGIONS|NATIONS|MILLIONS]!"
+
+# R.E.M.
+@The_weapon@ @_screams_@, "THIS IS THE END OF THE WORLD AS YOU KNOW IT!!!"
 
 # Marilyn Manson, "The Reflecting God"
 @The_weapon@ @_screams_@, "WHEN I'M GOD, EVERYONE DIES!!!"
@@ -1053,6 +1061,37 @@ _SCREAM_
 
 @The_weapon@ @_screams_@, "HOW CAN YOU THINK ABOUT SINGING AT A TIME LIKE THIS?!"
 
+@The_weapon@ @_screams_@, "THE SCREAMS! DON'T LET THEM STOP WITH THE SCREAMS!"
+
+@The_weapon@ @_screams_@, "NONE SHALL [LIVE|ESCAPE|SURVIVE|BE SPARED]!"
+
+@The_weapon@ @_screams_@, "SPARE NO ONE!"
+
+@The_weapon@ @_screams_@, "COME TO ME! COME TO ME AND DIE!"
+
+@The_weapon@ @_screams_@, "CUT! CUT! CUT AND SLASH!"
+
+@The_weapon@ @_screams_@, "STABBITY STAB STAB STAB!"
+
+@The_weapon@ @_screams_@, "ABANDON ALL HOPE!"
+
+@The_weapon@ @_screams_@, "SLASH 'EM! SLASH 'EM ALL!"
+
+@The_weapon@ @_screams_@, "LET'S HACK!"
+
+@The_weapon@ @_screams_@, "DON'T YOU DARE DIE ON ME NOW, @CAPS@ @player_name@!"
+
+@The_weapon@ @_screams_@, "THIS IS THE COLOUR OF PAIN!"
+
+w:1
+@The_weapon@ @_screams_@, "YES! YES! YES! THIS is the LIFE, baby, this is the LIFE!"
+
+w:1
+@The_weapon@ @_screams_@, "PAINT IT RED! PAINT IT RED! PAINT IT ALL RED RED RED RED!!!!"
+
+w:20
+@The_weapon@ @_screams_@, "SWING ME [HARDER|FASTER], YOU [FUMBLE-FINGERED|INCOMPETENT|USELESS|SLUGGISH|NOODLE-ARMED|RUNNY-EYED|KNUCKLE-DRAGGING] [NINCOMPOOP|LARDBUCKET|WEAKLING|STICK-INSECT|FLATFOOT|BONEHEAD|MOONCALF|SLOTH]!"
+
 # Immortal Defense, Cut Point quote
 @The_weapon@ @_screams_@, "SUFFER OR PERISH! EITHER!"
 
@@ -1093,12 +1132,21 @@ w:1
 w:1
 @The_weapon@ @_screams_@, "LET'S FONDLE THE @_PETS_@, FONDLE THEM!"
 
+w:40
+@The_weapon@ @_screams_@, "I AM [AN ANGEL|AN ARTIST|AN AVATAR|A HARBINGER|AN INSTRUMENT|A POET|A PROPHET|A SERVANT|A SLAVE|THE LORD|THE MASTER] OF [BLOOD|DANCE|DEATH|DESOLATION|DESPAIR|DESTRUCTION|DOOM|GORE|MADNESS|MUSIC|PAIN|RUIN|SLAUGHTER|SONG|STEEL|WAR]!"
+
 # Immortal Defense, Courage Point quote
 @The_weapon@ @_screams_@, "EVERYTHING FAILS! EVERYTHING!!!"
 
 # From Monty Python and the Holy Grail (Knights who say Ni)
 w:1
 @The_weapon@ @_screams_@, "NI! NI!! NI!!! NI!!! NI!!!"
+
+# Order of the Stick's Belkar Bitterleaf, chaotic evil ranger/barbarian halfling
+@The_weapon@ @_screams_@, "I AM A SEXY SHOELESS GOD OF WAR!"
+
+# Terry Pratchett, Foul Old Ron
+@The_weapon@ @_screams_@, "BUGGRIT, MILLENIUM HAND AND SHRIMP!"
 
 ###############################################################################
 # Lines from real songs.
@@ -1109,6 +1157,13 @@ w:1
 
 %%%%
 _real_song_no_tension_
+
+# Alan Lerner, Frederick Loewe: Paint your wagon
+@The_weapon@ sings, "I was forged under a slaughtering star..."
+
+# Spiritual
+w:1
+@The_weapon@ sings, "Nobody knows the trouble I've seen... Nobody but Ashenzari."
 
 # Huey Lewis and the News, "Hip To Be Square". Another psychopathic music lover.
 @The_weapon@ sings, "It's hip to be square!"
@@ -1200,9 +1255,119 @@ w:1
 # Johnny Cash, "Folsom Prison Blues"
 @The_weapon@ sings, "I stabbed a man in the dungeon, just to watch him die."
 
+# All below from Richard Wagner's Rheingold
+@The_weapon@ sings, in a lilting soprano, "[Heiajaheia! Heiajaheia!|Wagala weia! Wallala, weiala weia!|Wallala! Lalaleia! Leialala!|Heia! Heia! Hahei!]"
+
+w:1
+@The_weapon@ sings, in a lilting soprano, "Badly you guard... the sleeping gold; watch better o'er... the slumberer's bed!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Damp fills my nostrils: curse this sneezing!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "...for hear me, ye waves: thus I curse love!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Thank you, stupid! Your work has stood the test."
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "The whole world will I win... all for my own!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "All you gods I'll grip... in my golden grasp!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "As I renounced love, all living things... shall love renounce!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Beware! Beware! For when once you men... serve my might..."
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Beware the nocturnal host... when the Abyssal horde rises... from the silent depths... to the day's light!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "With wisdom the fool... is puffed up to bursting! Now may envy devour you!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Take heed, haughty god! If I sinned, I sinned only 'gainst myself!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "But you, immortal one, sin against... all that was, is and shall be!""
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "It shall gladden... no happy man; its bright gleam... shall light on no one lucky!"
+
+w:1
+@The_weapon@ sings, in a thundering basso, "Many a time have I paid... giants their due."
+
+w:1
+@The_weapon@ sings, in a thundering basso, "A sultry haze... hangs in the air; its dull weight... oppresses me."
+
+@The_weapon@ sings, in a thundering basso, "Heda! Heda! Hedo!"
+
+w:1
+@The_weapon@ sings, in a rumbling basso, "...its glittering glow hides... runes of riches..."
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "As you command, I will willingly lead you - steeply down: shall we journey to the Orb?"
+
+w:1
+@The_weapon@ sings, in a rumbling basso, "But for all the world... I will not surrender the Orb!"
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "Then shall we swing down... through the sulphurous cleft?"
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "Oh! Oh! Terrible serpent, do not swallow me!"
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "Slink off home! No knot holds you: go your way freely!"
+
+w:1
+@The_weapon@ sings, in a piercing soprano, "Woe! Woe is me!"
+
+w:1
+@The_weapon@ sings, in a squeaky tenor, "Oh, Oh! Ow! Ow! Ow!"
+
+w:1
+@The_weapon@ sings, in a melting tenor, "How soft the breeze... which breathes on us again!"
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "Your power lends you... high-flying courage: grim and great... has grown your strength."
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "For moon, stars and the radiant sun... may, too, do no other... than to serve you!"
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "Take whatever shape you wish... with wonder strike me dumb!"
+
+w:1
+@The_weapon@ sings, in a cavernous basso, "Ah, her gaze... still gleams toward me; the stars of her eyes... still shine on me!"
+
+w:1
+@The_weapon@ sings, in a forceful soprano, "Irredeemably... to dark destruction... its possession dooms you."
+
+w:1
+@The_weapon@ sings, in a forceful soprano, "Hear me! Hear me! Hear me! All that is shall come to an end."
+
+w:1
+@The_weapon@ sings, in a forceful soprano, "A dark day... dawns for the gods."
+
+w:1
+@The_weapon@ sings, in a forceful soprano, "Whatever was - I know; whatever is, whatever shall be - I also see."
+
 ############ real songs, low or high tension -- possibly damage! ############
 %%%%
 _real_song_low-high_tension_
+
+@The_weapon@ sings, "Roll, roll, roll those heads, roll them all along. Merrily, merrily, merrily..."
+
+# Nancy Sinatra
+w:1
+@The_weapon@ sings, "This blade is made for cutting, and that's just what I'll do..."
+
+# Traditional (Pete Seeger, Joan Baez and others)
+@The_weapon@ sings, "We shall overcome..."
 
 # Pixies
 @The_weapon@ sings, "Slicing up eyeballs, I want you to know!"
@@ -1229,7 +1394,7 @@ w:1
 @The_weapon@ roars, "I want to gut you like an animal!"
 
 # Queen
-@The_weapon@ happily sings, "... another one bites the dust!"
+@The_weapon@ happily sings, "...another one bites the dust!"
 
 # GG Allin
 @The_weapon@ sings, "Die when you die!"
@@ -1243,6 +1408,37 @@ w:1
 # Dead or Alive, "You Spin Me Round"
 @The_weapon@ sings, "You spin me right round baby, right round..."
 
+# All below from Richard Wagner's Rheingold
+w:1
+@The_weapon@ sings, in a stentorian basso, "Despicable dogs, put down the jewellery!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "I have faith in your faithlessness, not your fidelity! But dauntlessly - I defy you all!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Too hard for you... because you're too stupid!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Bring it in there... as I command! Pile the hoard... into a heap!"
+
+w:1
+@The_weapon@ sings, in a thundering basso, "Come here, you cur! If you want to measure, measure yourself against me!"
+
+w:1
+@The_weapon@ sings, in a rumbling basso, "You slyly... evade the POINT."
+
+w:1
+@The_weapon@ sings, in a rumbling basso, "Shall I exert myself... against the miscreant for you?"
+
+w:1
+@The_weapon@ sings, in a rumbling basso, "But fall will the foe... with your cunning's aid!"
+
+w:1
+@The_weapon@ sings, in a rumbling basso, "Enough, blasphemous fool!"
+
+w:1
+@The_weapon@ sings, in a rumbling basso, "Leave him... his slavering fury!"
+
 ############ real songs, high tension -- damage! ############
 %%%%
 _real_song_high_tension_
@@ -1255,6 +1451,30 @@ _real_song_high_tension_
 
 # Frank Sinatra (or Sid Vicious)
 @The_weapon@ sings, "I did it my way!"
+
+# All below from Richard Wagner's Rheingold
+w:1
+@The_weapon@ sings, in a stentorian basso, "Tremble with terror, abject throng!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Rascally robber! Rogue! Ruffian!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Terrible vengeance... I vow for this wrong!"
+
+w:1
+@The_weapon@ sings, in a stentorian basso, "Ah! Crushed! Shattered! Of wretches the wretchedest slave!"
+
+# German
+w:1
+@The_weapon@ sings, in a thundering basso, "Breche denn alles!"
+
+w:1
+@The_weapon@ sings, in a mocking tenor, "Does a mist deceive me? Does a dream mock me? How anxious and pale... you've a-sudden become!"
+
+# This would need the ability to have conditionals based on branch.
+#w:1
+#@The_weapon@ sings, in a mocking tenor, "Here is the Swamp: through the pale mist - what fiery sparks are flashing?"
 
 ###############################################################################
 # synonyms used above

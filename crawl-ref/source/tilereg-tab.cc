@@ -7,14 +7,17 @@
 #include "libutil.h"
 #include "state.h"
 #include "tiledef-gui.h"
+#include "cio.h"
+#include "macro.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
     m_active(-1),
     m_mouse_tab(-1),
+    m_use_small_layout(false),
+    m_is_deactivated(false),
     m_buf_gui(&init.im->m_textures[TEX_GUI])
 {
-
 }
 
 TabbedRegion::~TabbedRegion()
@@ -30,7 +33,7 @@ void TabbedRegion::set_icon_pos(int idx)
 
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
-        if (i == idx || !m_tabs[i].reg)
+        if (i == idx || (!m_tabs[i].reg && m_tabs[i].cmd==CMD_NO_CMD))
             continue;
         start_y = max(m_tabs[i].max_y + 1, start_y);
     }
@@ -49,43 +52,55 @@ void TabbedRegion::reset_icons(int from_idx)
         set_icon_pos(i);
 }
 
-void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
+int TabbedRegion::push_tab_button(command_type cmd, tileidx_t tile_tab)
 {
+    return _push_tab(NULL, cmd, tile_tab);
+}
+int TabbedRegion::push_tab_region(GridRegion *reg, tileidx_t tile_tab)
+{
+    return _push_tab(reg, CMD_NO_CMD, tile_tab);
+}
+
+int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab)
+{
+    int idx = m_tabs.size();
     ASSERT(idx >= 0);
     ASSERT(idx >= (int)m_tabs.size() || !m_tabs[idx].reg);
     ASSERT(tile_tab);
 
-    for (int i = (int)m_tabs.size(); i <= idx; ++i)
-    {
-        TabInfo inf;
-        inf.reg = NULL;
-        inf.tile_tab = 0;
-        inf.ofs_y = 0;
-        inf.min_y = 0;
-        inf.max_y = 0;
-        inf.height = 0;
-        inf.enabled = true;
-        m_tabs.push_back(inf);
-    }
+    TabInfo inf;
+    inf.reg = NULL;
+    inf.cmd = CMD_NO_CMD;
+    inf.tile_tab = 0;
+    inf.ofs_y = 0;
+    inf.min_y = 0;
+    inf.max_y = 0;
+    inf.height = 0;
+    inf.enabled = true;
+    m_tabs.push_back(inf);
 
-    const tile_info &inf = tile_gui_info(tile_tab);
-    ox = max((int)inf.width, ox);
+    tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab : TILEG_TAB_BLANK;
+    const tile_info &tinf = tile_gui_info( actual_tile_tab );
+    ox = max((int)tinf.width, ox);
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
     {
-        const tile_info &inf_other = tile_gui_info(tile_tab + i);
-        ASSERT(inf_other.height == inf.height);
-        ASSERT(inf_other.width == inf.width);
+        const tile_info &inf_other = tile_gui_info(actual_tile_tab + i);
+        ASSERT(inf_other.height == tinf.height);
+        ASSERT(inf_other.width == tinf.width);
     }
 
     ASSERT((int)m_tabs.size() > idx);
     m_tabs[idx].reg = reg;
+    m_tabs[idx].cmd = cmd;
     m_tabs[idx].tile_tab = tile_tab;
-    m_tabs[idx].height = inf.height;
+    m_tabs[idx].height = tinf.height;
     set_icon_pos(idx);
 
     recalculate();
+
+    return idx;
 }
 
 GridRegion *TabbedRegion::get_tab_region(int idx)
@@ -113,10 +128,17 @@ void TabbedRegion::activate_tab(int idx)
         return;
 
     if (m_active == idx)
-        return;
+        if (m_use_small_layout)
+        {
+            if (!m_is_deactivated)
+                return deactivate_tab();
+        }
+        else
+            return;
 
     m_active = idx;
     m_dirty  = true;
+    m_is_deactivated = false;
     tiles.set_need_redraw();
 
     if (m_tabs[m_active].reg)
@@ -124,6 +146,17 @@ void TabbedRegion::activate_tab(int idx)
         m_tabs[m_active].reg->activate();
         m_tabs[m_active].reg->update();
     }
+}
+
+void TabbedRegion::deactivate_tab()
+{
+    m_is_deactivated = true;
+
+    m_dirty = true;
+    tiles.set_need_redraw();
+
+    if (m_tabs[m_active].reg)
+        m_tabs[m_active].reg->clear();
 }
 
 int TabbedRegion::active_tab() const
@@ -187,6 +220,8 @@ void TabbedRegion::update()
 {
     if (!active_is_valid())
         return;
+    if (m_is_deactivated)
+        return;
 
     m_tabs[m_active].reg->update();
 }
@@ -216,10 +251,14 @@ void TabbedRegion::pack_buffers()
         else
             ofs = TAB_OFS_UNSELECTED;
 
-        tileidx_t tileidx = m_tabs[i].tile_tab + ofs;
+        tileidx_t tileidx = (m_tabs[i].cmd==CMD_NO_CMD) ? m_tabs[i].tile_tab + ofs : TILEG_TAB_BLANK + ofs;
         const tile_info &inf = tile_gui_info(tileidx);
-        int offset_y = m_tabs[i].min_y;
-        m_buf_gui.add(tileidx, 0, 0, -inf.width, offset_y, false);
+        m_buf_gui.add(tileidx, 0, 0, -inf.width, m_tabs[i].min_y, false);
+        if (m_tabs[i].cmd != CMD_NO_CMD)
+        {
+            const tile_info &inf_icon = tile_gui_info(m_tabs[i].tile_tab);
+            m_buf_gui.add(m_tabs[i].tile_tab, 0, 0, -inf_icon.width, m_tabs[i].min_y, false, TILE_Y, TILE_X*inf_icon.width/inf.width, TILE_Y*inf_icon.height/inf.height);
+        }
     }
 }
 
@@ -270,6 +309,14 @@ void TabbedRegion::on_resize()
         if (!m_tabs[i].reg)
             continue;
 
+        // on small layout we want to draw tab from top-right corner inwards (down and left)
+        if (m_use_small_layout)
+        {
+            reg_sx = (sx+ox) - ox*dx/32 - mx*m_tabs[i].reg->dx;
+            m_tabs[i].reg->dx = dx;
+            m_tabs[i].reg->dy = dy;
+        }
+
         m_tabs[i].reg->place(reg_sx, reg_sy);
         m_tabs[i].reg->resize(mx, my);
     }
@@ -280,14 +327,22 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
     int x = event.px - sx;
     int y = event.py - sy;
 
+    if (m_use_small_layout)
+    {
+        // scale x and y back to fit
+        // x = ... only works because we have offset all the way over to the right and
+        //         it's just the margin (ox) that's visible
+        x = ((sx+ox)-event.px)*32/dx;
+        y = y*32/dy;
+    }
+
     if (x < 0 || x > ox || y < 0 || y > wy)
         return -1;
 
     for (int i = 0; i < (int)m_tabs.size(); ++i)
-    {
         if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
             return i;
-    }
+
     return -1;
 }
 
@@ -311,8 +366,13 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
     {
         if (event.event == MouseEvent::PRESS)
         {
-            activate_tab(m_mouse_tab);
-            return 0;
+            if (m_tabs[m_mouse_tab].cmd == CMD_NO_CMD)
+            {
+                activate_tab(m_mouse_tab);
+                return CK_NO_KEY; // prevent clicking on tab from 'bubbling up' to other regions
+            }
+            else
+                return command_to_key(m_tabs[m_mouse_tab].cmd);
         }
     }
 
@@ -357,12 +417,27 @@ int TabbedRegion::find_tab(string tab_name) const
     string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
+        if (m_tabs[i].reg == NULL) continue;
+
         string reg_name = lowercase_string(m_tabs[i].reg->name());
         if (tab_name == reg_name || pluralised_name == reg_name)
             return i;
     }
 
     return -1;
+}
+
+void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &windowsz)
+{
+    m_use_small_layout = use_small_layout;
+
+    if (m_tabs.size() == 0 || !use_small_layout)
+        return;
+
+    // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
+    int scale = 32 * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
+    dx = scale;
+    dy = scale;
 }
 
 #endif

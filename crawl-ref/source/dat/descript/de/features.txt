@@ -1,13 +1,1030 @@
 %%%%
+A Zot trap
+
+Diese Falle birgt eine mächtige Verzauberung, die gefährliche, unvorhersehbare
+magische Effekte bei denen verursacht, die das Pech haben, sie auszulösen. Die
+Effekte sind oft schlimmer als direkter Schaden - du könntest dich im Abgrund
+wiederfinden, kontaminiert mit enormen Mengen wilder Magie, umringt von
+mächtigen, beschworenen Feinden, und so weiter... - es ist etwas, das du auf
+jeden Fall vermeiden solltest.
+%%%%
+A basalt altar of Yredelemnul
+
+Ein Altar für Yredelemnul, den Dunklen, hergestellt aus stängligem Basalt.
+%%%%
+A blade trap
+
+Du kannst den Rand einer gewaltigen, sensenartigen Klinge, versteckt in einem
+Spalt, sehen; wahrscheinlich hat es ein Gegengewicht als Pendel. (?)
+%%%%
+A bloodstained altar of Trog
+
+Ein Altar für Trog, den Zornigen, ungehobelt von Riesenhänden gemacht und mit
+Blutflecken überzogen.
+%%%%
+A blossoming altar of Fedhas
+
+Ein Altar für Fedhas Madash, ummantelt von lebhaften und bunten Pflanzen.
+%%%%
+A bolt trap
+
+Ein gut verstecktes Loch, das eine armbrustähnliche Vorrichtung enthält. Hüte
+dich vor ihren Bolzen, denn eine Stahlkonstruktion kann deutlich weiter
+schießen als ihre menschlichen Äquivalente(?)
+%%%%
+A broken pillar
+
+Die Hersteller dieser Säule sind schon vor langer Zeit gestorben. Niemand, der
+noch lebt, erinnert sich daran, warum sie sie gebaut haben.
+%%%%
+A burning altar of Makhleb
+
+Ein ewig brennender Altar für Makhleb, den Zerstörer. Merkwürdige, drehende
+Muster sind in den Flammen sichtbar.
+%%%%
+A closed door
+
+Eine Holztür. Um sie zu öffnen, laufe dagegen oder drücke O.
+%%%%
+A collapsed entrance
+
+Diese Passage wurde anscheinend schlecht hergestellt, und kann nicht mehr
+benutzt werden.
+%%%%
+A corrupted altar of Lugonu
+
+Ein Altar für Lugonu, die Ungeformte. Wahrscheinlich war der Altar ehemals für
+einen anderen Gott gedacht, bis er unwiderruflich verdorben wurde.
+%%%%
+A crawl-hole back to the Lair
+
+Diese Passage führt zurück zu weniger engen Plätzen mit weniger Spinnweben.
+%%%%
+A dart trap
+
+Diese Falle kann relativ schwache Metallnägel verschießen. Sie werden
+wahrscheinlich niemanden direkt töten, aber sie könnten genug sein, um
+jemanden, der halbtot vor einem Monster wegrennt, zu Fall zu bringen.
+%%%%
+A deep blue altar of Sif Muna
+
+Ein tiefblauer Altar, mit komplexen Mustern und längst vergessenen Texten
+verziert; gewidmet Sif Muna, der Wissenden.
+%%%%
+A detected altar
+
+Ein Altar irgendeiner Art. Wenn du wissen willst, welchem Gott er gesegnet ist,
+musst du näher kommen.
+%%%%
+A detected shop or portal
+
+Ein Portal irgendeiner Art. Du kannst nicht feststellen, wohin es führt, ohne
+näher zu kommen.
+%%%%
 A dry fountain
 
-Ein ausgetrockneter Brunnen der schon bessere Tage gesehen hat
+Ein ausgetrockneter Brunnen, der schon bessere Tage gesehen hat.
+%%%%
+A fountain of clear blue water
+
+Drücke "q", um aus diesem Springbrunnen zu trinken. Nicht, dass es irgendeinen
+Effekt hätte...
+%%%%
+A fountain of blood
+
+Drücke "q", um aus diesem Springbrunnen zu trinken, wenn du unbedingt willst.
+%%%%
+A fountain of sparkling water
+
+Drücke "q", um aus diesem magischen Springbrunnen zu trinken. Erwarte magische
+Effekte, solange der Brunnen noch magisch ist.
+%%%%
+A gate leading back out of here
+
+Dieses Tor scheint dich wieder dorthin zurückzuführen, wo du herkamst.
+%%%%
+A gate leading back out of this place
+
+Dieses Tor führt dich zurück zum Verlies.
+%%%%
+A gate leading out of Pandemonium
+
+Endlich, ein Tor, das dich zurück zum Verlies führt.
+%%%%
+A gate leading to another region of Pandemonium
+
+Dieses Tor führt dich zu noch einer weiteren Region des Pandemoniums. Es wird
+immer mehr geben.
+%%%%
+A one-way gate leading to the halls of Pandemonium
+
+Dieses Tor führt zu den endlosen Hallen des Pandemoniums. Geschichten über
+erfolgreiche Plünderungen dieser Unterwelten sind selten, denn selbst die
+stärksten und erfahrensten Abenteurer können hier sterben. Allerdings enthalten
+diese Hallen einige Runen und viele wertvolle Items. Es ist deutlich leichter,
+hineinzukommen, als wieder herauszukommen.
+%%%%
+A gas trap
+
+Glücklicherweise hast du diese Falle bemerkt, denn sie hätte dich mit einer
+Wolke tödlichen Gases umhüllt. Du weißt nicht, welche Art von Gas es ist -
+vielleicht ist es einfach nur Giftgas, vielleicht sind es mutagene Dämpfe oder
+entzündlicher Dunst - oder etwas noch schlimmeres.
+%%%%
+A gate to the Realm of Zot
+
+Dieses Tor führt zum Zot-Reich, der letzten Etappe deiner Suche, denn seine
+unterste Ebene birgt die berüchtigte Kugel des Zot. Sowohl die Kugel, als auch
+das Reich haben einen furchterregenden, zweifelhaften Ruf, doch eine einzige
+Information scheint sicher zu sein: Die Monster, die dieses Gebiet bewohnen und
+die Kugel beschützen, sind seltsam und stark - manche von ihnen findet man
+nirgendwo außer hier.
+%%%%
+A gateway back into the Dungeon
+
+Dieses Tor erlaubt eine oft für unmöglich gehaltene Heldentat: Das lebendige
+Verlassen der Hölle.
+%%%%
+A gateway leading out of the Abyss
+
+Ein Portal, das zurück aus diesem verfluchten Ort führt. Es schimmert und
+verändert ständig seine Form in dieser unbeständigen Landschaft.
+%%%%
+A gateway to a ziggurat
+
+Dieses Portal führt zu einem antiken Zikkurat, einem Ort unsäglicher
+Herausforderungen und unermesslichem Reichtums.
+%%%%
+A gateway to the ashen valley of Gehenna
+
+Du kannst die Hitze fühlen. Ghenna scheint aus nichts als Flammen, Lava und
+Höllenfeuer gemacht worden zu sein.
+%%%%
+A gateway to Hell
+
+Dieses Tor führt in den Vorraum der Hölle. Nur wenige würden freiwillig dorthin
+gehen.
+%%%%
+A gateway to the Iron City of Dis
+
+Wer wird den Test der Eisenstadt Dis bestehen?
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+Dieser Ort scheint negative Energie auszustrahlen.
+%%%%
+A gateway to the freezing wastes of Cocytus
+
+Aus den erfrorenen Landschaften von Cocytus dringt ein kühler Windhauch an
+deine Seele.
+%%%%
+A gleaming silver wall
+
+Diese Wand aus purem Silber wurde von Zin geschaffen, um ein Monster zu fangen.
+Sie zerbricht schnell und wird nicht lange halten.
+%%%%
+A glowing golden altar of the Shining One
+
+Ein Altar für den Glänzenden, gemacht aus dem reinsten Gold. Er strahlt mit
+beinahe erblindender Helligkeit.
+%%%%
+A glowing silver altar of Zin
+
+Ein sanft glühender Altar für Zin, den Gesetzgeber, gemacht aus Silber, so
+makellos und rein, wie auch Zins Schüler sein sollen.
+%%%%
+A granite statue
+
+Trotz der Härte des verwendeten Steins ist diese Statue schon ziemlich
+verwittert.
+%%%%
+A hole to the Spider Nest
+
+Dies ist ein natürlicherer Weg nach unten als eine Treppe, aber er wird
+ausreichen... wenn du durch die tödlichsten Gifte dieser Welt sterben willst.
+%%%%
+A labyrinth entrance
+
+Ein Portal, das dich in ein von raffinierten und heimtückischen Wesen
+entworfenes, verworrenes Labyrinth führt, dessen Ausgang von einem
+furchteinflößenden Monster bewacht wird. Viele Abenteurer starben bereits in
+diesen verzweigten, sich ständig veränderten Passagen einen grausamen
+Hungertod.
+%%%%
+A mangrove
+
+Dieser Baum ist speziell für das Wachsen unter sumpfigen Bedingungen angepasst.
+Seine Reben(?) sind zu dick, um hindurchzusehen.
+%%%%
+A magical trap
+
+Eine magische Einrichtung, hergestellt, um Vorbeikommende zu verletzen. Sie
+kann nicht deaktiviert werden.
+%%%%
+A mechanical trap
+
+Eine mechanische Vorrichtung, hergestellt, um Vorbeikommende zu verletzen. Ein
+erfahrener Abenteurer könnte versuchen, sie zu deaktivieren.
+%%%%
+A natural trap
+
+Eine natürlich entstandene Falle, die so aussieht, als sei sie speziell zum
+Verletzen von Vorbeikommenden gemacht worden.
+%%%%
+A metal wall
+
+Eine Wand aus blau-grauem Metall. Wie jeder Verlieselektriker weiß, stellt sie
+eine elektrische Verbindung zur Erde her.
+%%%%
+A needle trap
+
+Es ist verdammt sicher, dass die Nadeln aus dieser Falle mit irgendeinem
+scheußlichen Gift übergossen wurden.
+%%%%
+A net trap
+
+Ein großes, verstecktes Netz hängt an der Verliesdecke, mit einem Strick daran;
+so gebastelt, dass es auf jeden, der auf ihn tritt, fällt.
+%%%%
+A one-way gate to the infinite horrors of the Abyss
+
+Ein Tor, das zu einem Ort führt, der von Chaos zerrissen ist und an dem Dämonen
+spuken. Die ganze Substanz dieses Ortes ist unbeständig und skurril, und du
+findest dort die Wesen aus deinen schlimmsten Albträumen. Es ist leicht, hinein
+zu gehen, doch der Rückweg wird nicht durch dieses Tor führen.
+%%%%
+A passage of Golubria
+
+Dieses unstabile Portal ermöglicht die sofortige Reise zu einem anderen, nahe
+gelegenen Portal von Golubria, und wird sich hinter allem schließen, was
+hindurch geht.
+%%%%
+A portal to somewhere
+
+Eine schnittähnliche Träne in der Realität, durch die man in eine
+furchteinflößende, sternenhelle Welt sehen kann. Glücklickerweise verhindert
+die Magie, die dieses Portal geöffnet hat, dass das Vakuum auf der anderen
+Seite alles in Sichtweite einsaugt und verschluckt.
+%%%%
+A pressure plate
+
+Einer der Steine im Boden scheint nicht allzu fest zu sein, und du merkst, dass
+es ein Auslöser ist, obwohl du keine Ahnung davon hast, mit welcher Art von
+Falle er verbunden ist.
+%%%%
+A radiant altar of Vehumet
+
+Ein Altar, lichterloh brennend in den Lichtern von Iskenderun, verspricht den
+Anhängern Vehumets große, zerstörerische Macht.
+%%%%
+A rock wall
+
+Diese Wand besteht aus einfachem Fels.
+%%%%
+A rock-blocked tunnel
+
+Der Weg, auf dem du hergekommen bist, scheint nicht mehr als Rückweg geeignet
+zu sein.
+%%%%
+A rocky tunnel leading out of this place
+
+Eine unstabile Passage im vulkanischen Fels, die einen kühlen Luftzug
+hineinlässt.
+%%%%
+A roughly hewn altar of Beogh
+
+Ein Altar für Beogh, unverkennbar grob gehauen von orkischen Kunsthandwerkern.
+%%%%
+A runed door
+
+Eine Tür, überzogen von Runen. Es sieht so aus, als befinde sich dahinter etwas
+besonderes - vielleicht Gefahr, vielleicht Schätze. Du kannst die Runen brechen
+und sie wie jede andere Tür öffnen (zum Beispiel, indem du dagegen läufst oder
+'O' drückst).
+%%%%
+A shaft
+
+Ein tiefes Loch. Wer weiß, wo du herauskommen könntest, wenn du herunterfällst?
+%%%%
+A shattered altar of Ashenzari
+
+Dieser Altar aus Kristall wurde in Stücke zerschlagen, als Ashenzari verflucht
+wurde. Dennoch ist hier noch immer Macht; eine dunkle Aura hält die Bruchstücke
+im halbexplodierten Stadium fest, stehend in der Zeit und im Raum, ganz wie der
+Gott, den sie repräsentieren.
+%%%%
+A shimmering altar of Xom
+
+Dieser Altar schimmert ständig in allen sichtbaren (und wahrscheinlich auch in
+einigen unsichtbaren) Farben, die Laune Xoms, des Unberechenbaren,
+repräsentierend.
+%%%%
+A shop
+
+Ein Geschäft im Verlies, jenseits der Sicht der Oberwelt, besetzt von einem
+verschwiegenen, zurückgezogenen Ladenhüter, mit dem man nicht verhandeln kann,
+der nichts zurückerstattet und an nichts interessiert ist, was du ihm anbieten
+könntest. Manche Geschäfte verkaufen antike Gegenstände unbekannter Herkunft,
+und geben wenig Auskunft über die Qualität oder die Art ihrer Güter.
+%%%%
+A slime covered rock wall
+
+Diese Felswand ist von einer dicken, hellgrünen Schleimschicht überzogen.
+Iiiiiih.
+%%%%
+A snail-covered altar of Cheibriados
+
+Dieser Altar scheint unbeweglicher als die anderen zu sein.
+%%%%
+A sparkling altar of Nemelex Xobeh
+
+Dieser Altar funkelt in einer Lichtershow, auf die jedes Spielcasino neidisch
+wäre, um Anhänger für Nemelex Xobeh zu gewinnen.
+%%%%
+A spawn point
+
+Hier ist einer der Eingänge, durch die die Gegenseite hineinkommen kann.
+%%%%
+A spear trap
+
+Diese Falle schießt lange, scharfe Pfähle, die Vorbeikommende aufspießen
+können.
+%%%%
+A staircase back to the Crypt
+
+Diese Treppe führt zurück zu den Grabgewölben.
+%%%%
+A staircase back to the Dungeon
+
+Diese Treppe führt zurück zur Vertrautheit des Verlieses.
+%%%%
+A staircase back to the Lair
+
+Diese Treppe führt zurück zum Lager der Bestien.
+%%%%
+A staircase back to the Mines
+
+Diese breite Treppe führt zurück zu den orkischen Minen.
+%%%%
+A staircase back to the Vaults
+
+Diese Treppe führt zurück zu den mächtigen Gruften.
+%%%%
+A staircase leading out of the dungeon
+
+Dieser Ausgang führt zum großen blauen Raum. Himmel, singende Vögel, frische
+Luft - du weißt schon.  Dazu kommen Steuern und alles andere, wovor du
+weggelaufen bist.
+
+Wenn du diese Treppen hochsteigst, wird deine Suche nach der Kugel beendet sein
+- egal, ob du sie gefunden hast, oder nicht.
+%%%%
+A staircase to the Crypt
+
+Diese Treppen führen in eine antike Grabkammer. Unglücklicherweise war nicht
+alles, was dort vergraben wurde, so nett, tot zu bleiben.
+%%%%
+A staircase to the Ecumenical Temple
+
+Ein Eingang zum Tempel der Götter, einem Ort der Ruhe und Erholung vom Wahnsinn
+des Verlieses.
+%%%%
+A staircase to the Elven Halls
+
+Eine breite Treppe führt nach unten zu den Hallen der Tiefelfen, geschickten
+Kämpfern mit Klingen und Bögen sowie furchterregenden Hexern und Zauberern.
+%%%%
+A staircase to the Hall of Blades
+
+Diese Treppen führen herunter zur Halle der Klingen. Die Stufen scheinen bei
+Angriffen der dort befindlichen belebten Waffen ausgeklopft und angeschlagen
+worden zu sein.
+%%%%
+A staircase to the Lair
+
+Diese Treppen führen hinunter zum Lager der Bestien, für einen Klimawechsel(?).
+%%%%
+A staircase to the Orcish Mines
+
+Ein Eingang zu den Minen der Orks, gefüllt mit ihrem Gold, aber heimtückisch
+und voller Fallen.
+%%%%
+A staircase to the Dwarven Hall
+
+Ein Eingang zur gut gemachten Halle der Zwerge. Du glaubst, Ale zu riechen.
+%%%%
+A staircase to the Enchanted Forest
+
+Ein Eingang zum Wald der Spriggans. Nimm dir einen Ast und du bist tot... wobei
+sie nicht einmal darauf warten werden.
+%%%%
+A staircase to the Shoals
+
+Hier sind die Sandbänke: exotische Untergrundstrände, salzige Gischt und
+Kreaturen, die beißen, erdolchen und zerfleischen.
+%%%%
+A staircase to the Slime Pits
+
+Ein Eingang zum gestaltlosen Reich der Säuren, Gelees und Schleime.
+%%%%
+A staircase to the Snake Pit
+
+Hier ist der Weg zur Heimat der Schlange, dem Lager der Nagas.
+%%%%
+A staircase to the Swamp
+
+Eine Treppe zu einer sumpfigen Einöde, voller Schlamm, Dreck, Fliegen und
+großen, geifernden, fleischfressenden Monstern.
+%%%%
+A staircase to the Tomb
+
+Ein Weg, der in die Grabkammer der Alten führt; ein Platz der Verdammung, voll
+schrecklicher Gestalten, die durch die abscheulichste Nekromantie zum Leben
+erweckt wurden.
+%%%%
+A staircase to the Vaults
+
+Diese Treppen führen hinunter zur Gruft, bekannt als die Heimat riesiger
+Schätze. Sie sind mit Blutflecken bespritzt.
+%%%%
+A stone staircase leading down
+
+Diese Treppe führt weiter nach unten.
+%%%%
+A stone staircase leading up
+
+Diese Treppe führt zurück nach oben.
+%%%%
+A stone wall
+
+Ein härteres Hindernis als Felswände. Nur die mächtigste Magie kann Steinwände
+zerschmettern.
+%%%%
+A teleporter
+
+Dieser Teleporter wird dich in einen anderen Raum bringen.
+%%%%
+A teleportation trap
+
+Diese magische Falle kann jeden, der arglos genug ist und darüber geht - oder
+sogar fliegt -, an einen zufälligen Ort auf der gleichen Ebene teleportieren.
+%%%%
+A translucent rock wall
+
+Das Mineral, aus dem dieser Fels besteht, ist so durchsichtig wie
+hochqualitatives Glas. Ob es natürlich oder magisch ist, kannst du nicht
+herausfinden.
+%%%%
+A translucent stone wall
+
+Ein härteres Hindernis als Felswände. Nur die mächtigste Magie kann Steinwände
+zerschmettern. Diese Wand wurde von geheimnisvoller Magie durchtränkt, um sie
+transparent zu machen.
+%%%%
+A translucent unnaturally hard rock wall
+
+Diese Wand wurde von geheimnisvoller Magie durchtränkt, die sie nicht nur
+unzerstörbar, sondern auch durchsichtig wie Glas macht.
+%%%%
+A tree
+
+Während das Verlies mit trübem magischem Licht gefüllt ist, ist es an den
+meisten Stellen nicht hell genug, um größere Pflanzen wachsen zu lassen. Das
+Licht ist allerdings nicht gleichmäßig, und es gibt auch hier unten Stellen, an
+denen mit Fedhas Segen einige Bäume, so groß wie die an der Erdoberfläche,
+wachsen können.
+%%%%
+A viscous altar of Jiyva
+
+Ein schleimiger, stets veränderlicher Altar für Jiyva. Du bist dir nicht
+sicher, woraus er gemacht ist, und du willst es auch eigentlich gar nicht
+wissen.
+%%%%
+A wall of green crystal
+
+Aus irgendeinem Grund wurden manche Wände im Verlies, wie diese hier, aus
+poliertem Kristall hergestellt, der von geheimnisvoller Magie durchtränkt
+wurde. Diese Magie verhindert eine schnelle Zerstörung und lässt ihn Hitze und
+Kälte reflektieren.
+%%%%
+A wall of the weird stuff which makes up Pandemonium
+
+Diese Wand wurde aus dem komischen Zeug gemacht, aus dem auch das Pandemonium
+besteht, aber irgendwie scheint sie felsartig zu sein.
+%%%%
+A white marble altar of Elyvilon
+
+Ein Altar für Elyvilon, den Heiler, gemacht aus dem reinsten weißen Marmor und
+verziert mit einer Skulptur des Kelches der Reinigung.
+%%%%
+A web
+
+Die Spinne, die dieses Netz hinterlassen hat, muss riesig gewesen sein, denn es
+sieht aus, als sei es zum Fangen von {{ return you.genus(true) }} statt Fliegen
+gemacht.
+%%%%
+An abandoned shop
+
+Dieser Laden wurde verlassen.
+%%%%
+An alarm trap
+
+Während diese Falle selbst keinen Schaden verursacht, könnte ihr lautes
+Alarmsignal jemanden herbeirufen, der dir schadet. Natürlich hast du die
+Möglichkeit, diesem Jemand selbst Schaden zuzufügen.
+%%%%
+An ancient bone altar of Kikubaaqudgha
+
+Antike Knochen wurden hier aufgestapelt, um einen Altar für den schrecklichen
+Dämonengott Kikubaaqudgha zu formen.
+%%%%
+An arrow trap
+
+Du kannst mehrere Bogensehnen und Pfeile sehen, die an bogenähnlichen Dingen
+befestigt sind. Normalerweise wird bei jedem Auslösen einer solchen Falle immer
+nur ein Pfeil abgeschossen. Solche Fallen sind günstiger und leichter
+herzustellen als ein automatisch nachladender Mechanismus und ein Stahlbogen
+mit enormer Zugkraft; erwarte also nicht zu viel Schaden von dieser Falle.
+Trotzdem reicht bereits ein Pfeil durch die Arterie aus, um einen Menschen zu
+töten.
+%%%%
+An empty arch of ancient stone
+
+Ein steinerner Torbogen, der wohl schon immer hier stand und an keinen
+besonderen Ort zu führen scheint.
+%%%%
+An escape hatch in the ceiling
+
+Eine gefederte, einseitige Falltür in der Decke.
+%%%%
+An escape hatch in the floor
+
+Eine gefederte, einseitige Falltür im Verliesboden, die einem von Gegnern
+umgebenen Abenteurer die Möglichkeit geben, die Gefahren dieser Ebene gegen die
+Gefahren der nächsten Ebene einzutauschen.
+%%%%
+An exit through the horrors of the Abyss
+
+Wenn du schon immer einmal von der Hölle ins Feuer wolltest, ist das deine
+Chance. Dieses Portal ermöglicht dir die Rückkehr von diesem Ort... über einen
+schönen, malerischen Weg durch unendlichen Wahnsinn.
+%%%%
+An iron altar of Okawaru
+
+Ein Altar für den Kriegsmeister Okawaru, gebaut aus Eisen und Stahl, mit
+erstaunlich scharfen Kanten.
+%%%%
+An iron grate
+
+Dieses Eisengitter sieht verrostet aus, als ob es recht leicht mit einem
+Zauberspruch oder einem Zauberstab zerstört werden könnte. Es ist aber zu
+stabil, um von Hand zerbrochen zu werden.
+%%%%
+An orcish idol
+
+Ein Idol des Orkgottes Beogh. Seine Zerstörung würde Beogh zornig machen.
+%%%%
+An unnaturally hard rock wall
+
+Du kannst diese Wand auf keine Weise beeinflussen.
+%%%%
+The endless lava
+
+Ein See aus Feuer und Schwefel, der so weit geht, wie du sehen kannst - und das
+ist dank des dicken Rauchs nicht besonders weit.
+
+Im Gegensatz zu kleinen Lavabacken, über die man fliegen oder schweben kann,
+ist ein Flug über dieses Inferno eine todsichere Möglichkeit, dich zu grillen.
+%%%%
+A floor
+
+Ein ausgetretener Steinflur, gemacht aus genau passenden Granitplatten, die vor
+langer Zeit von lange vergessenen Händen dort eingesetzt wurden.
+%%%%
+Some deep water
+
+Dieses Wasser ist genauso tief wie gefährlich. Kein vernünftiger Reisender
+würde versuchen, einen Fuß hineinzusetzen - abgesehen von denen, die fliegen
+oder schwimmen können. Sei gewarnt: Viele verwirrte Abenteurer haben ihren Tod
+in den Tiefen gefunden, und das unerwartete Ende eines Levitationszaubers hat
+noch mehr Eindringlinge ertrinken lassen.
+%%%%
+Some lava
+
+Ein sehr heißes Becken geschmolzenen Gesteins, Wolken aus schwefligem Rauch
+ausstoßend.
+%%%%
+Some shallow water
+
+Dieses trübe, hüfthohe Wasser macht Landratten das Gehen und Kämpfen schwer und
+lästig - das kann gefährlich sein, wird aber nie direkt zum Tod führen.
+%%%%
+The open sea
+
+Nichts außer endlosem Wind und Wellen, und kein Leuchtturm in Sicht. Du würdest
+sehr schnell hoffnungslos verloren sein - riskiere es lieber nicht.
+%%%%
+A large open door
+
+<eine offene Tür>
+%%%%
+An open gate
+
+<eine offene Tür>
+%%%%
+A huge open gate
+
+<eine offene Tür>
+%%%%
+A large closed door
+
+<eine geschlossene Tür>
+%%%%
+A closed gate
+
+<eine geschlossene Tür>
+%%%%
+A huge closed gate
+
+<eine geschlossene Tür>
+%%%%
+A large runed door
+
+<eine mit Runen bemalte Tür>
+%%%%
+A runed gate
+
+<eine mit Runen bemalte Tür>
+%%%%
+A huge runed gate
+
+<eine mit Runen bemalte Tür>
+%%%%
+An empty arch of stone
+
+Dies ist das Portal, durch das du hierher kamst; nun scheint es seiner Magie
+beraubt worden zu sein.
+%%%%
+A portal leading out of here
+
+Dieses schimmernde magische Tor wird dich aus der Behausung des Zauberers
+zurück zu dem Ort führen, von dem du kamst. Du bezweifelst, dass du jemals
+wieder hierher kommen kannst, also solltest du erst deine Plünderung beenden.
+%%%%
+An autumnal tree
+
+Diese großen Bäume scheinen für immer in herbstlichem Zustand stehengeblieben
+zu sein: Ihre Blätter sind rot und golden, fallen von den Ästen und schweben
+graziös zu Boden. Bevor sie diesen allerdings erreichen, kommt ein Schatten
+vorbei, und wenn er wieder weg ist, befinden sich die Blätter erneut auf dem
+Ast, bereit, noch einmal herunterzufallen.
+%%%%
+A crumbled stone wall
+
+Diese beschädigten Mauern scheinen in der Zeit stehen geblieben zu sein, genau
+wie die Bäume: immer bereit, zusammenzubrechen, aber vollkommen unfähig dazu.
+%%%%
+A strange statue
+
+Die Charakterzüge dieser Statue sind sonderbar und fremdartig. Liegt das daran,
+dass sie verschlissen und angeschlagen ist? Oder daran, dass die Vorlage etwas
+dämonisches und böses war?
+%%%%
+A timeless floor
+
+Obwohl sicherlich tausende Füße diesen Boden betreten haben, scheint er zeitlos
+und unzerstörbar zu sein.
+%%%%
+A crystal clear mirror
+
+Ein glitzernder Kristallspiegel, der alles um sich herum reflektiert.
+%%%%
+A strange machine
+
+Ein mechanischer Apparat, der zischt und knallt. Sein Material spiegelt das
+Licht.
+%%%%
+A glistening fountain
+
+Das Einzige, was hier fehlt, ist Wasser.
+%%%%
+A black marble wall
+
+Der Marmor glitzert und schimmert. Er ist zweifellos wunderschön!
+%%%%
+A marble floor
+
+Während die Wände aus schwarzem Marmor bestehen, ist der Boden weiß und
+silbern, an manchen Stellen mit einem leichten rosanen Farbton.
+%%%%
+A rose-covered archway
+
+Die Rosen sehen wunderschön aus!
+%%%%
+A vine-covered statue
+
+Sie sieht fast aus wie ein Monster, das vollständig aus Weinreben gemacht
+wurde.
+%%%%
+A crumbling stone wall
+
+Sie sieht antik aus.
+%%%%
+The grass-covered ground
+
+Übersät von Blättern und Zweigen, die laut unter den Füßen knirschen, ist
+dieses Gras knusprig(?) und frisch.
+%%%%
+A strange rock wall
+
+Sie ist mit Grabmalereien dekoriert.
+%%%%
+A highly decorated stone wall
+
+Sie ist mit verstörenden, schrecklichen Bildern bedeckt.
+%%%%
+A rough-hewn floor
+
+Er ist an manchen Stellen rau und uneben.
+%%%%
+Viscous fluid
+
+Diese klebrige Flüssigkeit scheint von den nahegelegenen Wänden abgesondert zu
+werden. Sie sieht ekelhaft aus.
+%%%%
+A sinewy wall
+
+Diese Wände sehen seltsam organisch aus, obwohl sie unglaublich haltbar und
+widerstandsfähig sind.
+%%%%
+A thin membrane
+
+Diese fremdartige Membran ist dünn genug, um hindurchzusehen.
+%%%%
+A pulsating floor
+
+Dieser glitschige Boden scheint in einem unbekannten Takt zu pulsieren.
+%%%%
+Zonguldrok's gravestone
+
+Ein Grabstein. Der Name 'Zonguldrok' ist in goldenen Buchstaben eingraviert.
+%%%%
+A gravestone
+
+Ein namenloses Grab. Die Frage bleibt: Ist das Grab oder die darin liegende
+Person namenlos?
+%%%%
+The ground
+
+Kein Leben wächst hier. Der Boden ist vollkommen tot.
+%%%%
+The dimension's edge
+
+Am Rand dieser winzigen, isolierten Ebene löst sich die Welt selbst in
+Vergessenheit auf. Es ist unmöglich, dieses dunkle Nichts zu betreten oder zu
+beeinflussen.
+%%%%
+A wall of crystal
+
+<Eine Wand aus grünem Kristall>
+%%%%
+A damp floor
+
+Vielleicht ist es die Luftfeuchtigkeit oder der dauernde Wolkenfluss, der
+diesen Boden ewig feucht hält.
+%%%%
+A wall of white crystal
+
+Dies ist minderwertiger Kristall. Er ist kaum durchsichtig, und seine schiefen
+Konturen machen es noch schlimmer. Der schillernde Glanz sieht allerdings immer
+noch ziemlich gut aus.
+%%%%
+A wall of transparent white crystal
+
+Dieser Kristall scheint tadellos und unvergänglich zu sein. Es könnte Diamant
+oder etwas ähnliches sein - was auch immer es ist, du bist nicht dazu in der
+Lage, diese Wand zu durchbrechen.
+%%%%
+A hot floor
+
+Tief unter dem Boden brennt ein Feuer, dessen Hitze alle anderen Feuer
+übertrifft: das Feuer der Hölle. Wenn du den Boden berührst, spürst du die
+Hitze.
+%%%%
+A black wall
+
+Vielleicht Stein oder Kohle, oder ein Material, das man nur in den Tiefen der
+Hölle findet.
+%%%%
+A carved rock wall
+
+Sie ist dekoriert mit Bildern von Tod und Zerstörung.
 %%%%
 A dead tree
 
 Dieser Baum ist genauso tot wie alles andere hier.
 %%%%
+An iron statue
+
+Die Statue hat keinen Mund. Gruselig!
+%%%%
+Ashen ground
+
+Mit jedem Schritt wanderst du auf Asche. Sie ist warm und fast angenehm.
+%%%%
+A tempered metal wall
+
+Diese Metallwände verströmen Wärme.
+%%%%
+An ice-covered rock wall
+
+Eine Felswand, umgeben von einer dicken Eisschicht.
+%%%%
+An ice-covered stone wall
+
+Eine Steinwand, umgeben von einer dicken Eisschicht.
+%%%%
+Frost-covered floor
+
+Frostbedeckter Boden. Es knirscht genugtuend unter den Füßen.
+%%%%
+A cracked metal wall
+
+Diese Metallwand ist beschädigt, doch das Loch ist nicht groß genug, um
+hindurchzuklettern.
+%%%%
 A golden statue
 
 Eine solide Goldstatue eines Heiligen.
+%%%%
+A silver wall
+
+Diese Wand ist aus purem Silber gemacht.
+%%%%
+A rune carved stone wall
+
+In diese komischerweise schleimfreie Steinwand wurden zahllose mystische Runen
+eingeritzt. Ein oft wiederholtes Muster aus Runen scheint von dem 'Geleekönig'
+zu erzählen.
+%%%%
+A sarcophagus
+
+Ein antiker Sarkophag. Er scheint leer zu sein.
+%%%%
+A heavily etched metal wall
+
+In diese Wand aus Metall wurden Bilder geätzt, die auf großartige und grausam
+detaillierte Weise darstellen, was genau mit jemandem passieren wird, der etwas
+aus der Gruft stiehlt. Dir ist auf einmal mulmig zumute.
+%%%%
+A heavily etched wall of green crystal
+
+In diese Wand aus grünem Kristall wurden Bilder geätzt, die auf großartige und
+grausam detaillierte Weise darstellen, was genau mit jemandem passieren wird,
+der etwas aus der Gruft stiehlt. Dir ist auf einmal mulmig zumute.
+%%%%
+An adventurer's gravestone
+
+Das Grab eines Abenteurers, der sein Ziel fast erreicht hatte.
+%%%%
+A granite stump
+
+Dieser Granitstumpf war wohl einmal eine Statue...
+%%%%
+An ice choked empty arch of ancient stone
+
+Es sieht so aus, als sei der Weg, von dem du kamst, seit Jahren nicht benutzt
+worden. Dieses Portal ist nicht nur alt und unbrauchbar, sondern auch fast
+komplett von Eis umhüllt.
+
+Glücklicherweise siehst du ein anderes Portal in der Nähe schimmern.
+%%%%
+An ice covered gate leading back out of here
+
+Hier steht ein immer noch funktionierendes Portal. Seine Magie hält das Eis
+zurück und verhindert, dass es den Zugang verschließt. Du bist dir ziemlich
+sicher, dass du nicht mehr zurückkehren kannst, wenn du hindurchgegangen bist,
+also solltest du lieber erst diesen Ort erkunden.
+
+Oder, vielleicht solltest du weglaufen, solange du noch nicht zu einem
+hässlichen Eiszapfen gefroren bist.
+%%%%
+An ice covered rock wall
+
+Dieser Fels ist von einer dicken Eisschicht umhüllt. Da du an manchen Stellen
+Wasser tropfen siehst, ist dir klar, wie diese Höhle entstanden ist: Wasser ist
+in Felsspalten geflossen und dann gefroren, immer weiter den Ort vergrößernd,
+an dem du dich befindest. Wenn du länger hier bleibst, wird auch das Wasser in
+deinem Körper gefrieren(?).
+%%%%
+Some ice crusted deep water
+
+Das Eis hier ist in Stücke gebrochen, und das Wasser, auf dem es schwimmt,
+sieht überhaupt nicht einladend aus.
+%%%%
+Some ice crusted shallow water
+
+Es sieht eiskalt aus, aber wenn dir eine Unterkühlung nichts ausmacht, kannst
+du wahrscheinlich hindurchwaten.
+%%%%
+A large window
+
+Ein Fenster, eingebaut in die Seite eines riesigen Metallrohrs. Dahinter sieht
+man das Wasser fließen.
+%%%%
+A glass window
+
+Ein pockiges Fenster aus extrem hartem Glas.
+%%%%
+A granite statue of a fallen hero
+
+Die lebensgroße Granitstatue eines Zwergen, der diese Halle bewacht. Du fühlst
+dich von ihr beobachtet.
+%%%%
+An elephant-shaped statue
+
+Diese abgenutzte Statue stellt einen Wache stehenden Elefanten dar.
+%%%%
+A weirdly glowing ball
+
+Dieser schwebende Ball verbreitet ein schimmerndes Licht.
+%%%%
+A very old granite statue
+
+Ein Riss durchzieht die Statue in Brusthöhe. Vielleicht wird sie zerbrechen,
+wenn du dagegen schlägst?
+%%%%
+A sealed sarcophagus
+
+Dieser antike Sarkophag ist dicht verschlossen.
+%%%%
+A flagged portal
+
+Dieses Portal führt zu einem verbotenen Verlies der bösen Ritter. Du erkennst
+das an den mit schwarzen Bannern verzierten Waffen im Schrägkreuz. Es sieht so
+aus, als solltest du das Portal betreten, bevor die daran angebrachte Flagge
+auf den Boden gesunken ist.
+%%%%
+A flickering gateway to a bazaar
+
+Ein glühendes Portal zu einem Basar [passt "Markt" besser?], auf dem  sich
+umherziehende Händler treffen, um ihre Waren zu verkaufen. Sie bleiben nie
+lange an einem Ort.
+%%%%
+A gateway to a bazaar
+
+Ein glühendes Portal zu einem Basar [passt "Markt" besser?], auf dem  sich
+umherziehende Händler treffen, um ihre Waren zu verkaufen. Sie werden auf dich
+warten, aber sobald du die Chance nutzt, um dir ihre Angebote anzusehen, werden
+sie auch schon wieder abreisen und nach neuen Kunden suchen.
+%%%%
+A frozen archway
+
+Eine ständige Kälte scheint dieses Portal zu umgeben. Was auch immer auf der
+anderen Seite lebt - es wird voller grimmiger arktischer Wut sein. Du bemerkst,
+dass der Torbogen schmilzt.
+%%%%
+A sand-covered staircase
+
+Du kannst eine Treppe ausmachen, die nach unten in eine kleine Grabkammer
+führt. Sand umgibt die Treppe und rieselt andauernd herunter. Nicht mehr lang,
+und die Treppe wird nicht mehr vorhanden sein. Man sagt, dass einige entfernte
+Verwandten der Pharaonen hier begraben wurden.
+%%%%
+A glowing drain
+
+Ein glühender Abflusseingang, der einen unangenehmen Geruch nach Extrementen
+verströmt. Er scheint zu rosten und wird bald verstopfen.
+%%%%
+A portal to a secret trove of treasure
+
+Ein aufwendig bearbeitetes goldenes Tor, das zu einem riesigen Schatz
+wertvoller Items führt. Der Eintrittspreis ist nicht gering.
+%%%%
+A dark tunnel
+
+Direkt in den Fels führt ein dunkler, bedrohlich wirkender Tunnel. Ab und zu
+kommt Luft heraus, die so heiß ist, dass sie dein Gesicht versengt. Diese Luft
+ist es wahrscheinlich auch, die immer wieder einige Felsbrocken von der
+Tunneldecke und vom Tunnelrand löst. Der Eingang wird langsam, aber sicher von
+den Steinen verschlossen.
+%%%%
+A magical portal
+
+Dieses Portal wurde von einem leichtsinnigen Zauberer offen gelassen. Es könnte
+in ein geheimes Labor führen, doch sei gewarnt: Es ist wahrscheinlich voller
+magischer Fallen und schrecklicher Monster. Das Portal scheint langsam wieder
+zu verschwinden.
+%%%%
+An open sea?
+
+Obwohl es jedem dir bekannten physischen und geometrischen Gesetz widerspricht,
+weißt du, dass sich in diesem winzigen Raum unzweifelhaft ein schrecklich
+großes Meer unmöglicher Größe befindet.
+
+Entweder das, oder es ist eine blaue Wand.
+%%%%
+An exit from the tutorial
+
+Dies ist ein Weg aus dem Verlies, der dir das Beenden des Tutorials ermöglicht.
 %%%%

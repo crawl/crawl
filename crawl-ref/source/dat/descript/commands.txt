@@ -336,3 +336,18 @@ CMD_MAP_FIND_STASH verbose
 
 Cycle through all stashes on the current level.
 %%%%
+CMD_ZOOM_IN
+
+Zoom in
+%%%%
+CMD_ZOOM_IN verbose
+
+Zoom in on dungeon area
+%%%%
+CMD_ZOOM_OUT
+
+Zoom out
+%%%%
+CMD_ZOOM_OUT verbose
+
+Zoom out on dungeon area

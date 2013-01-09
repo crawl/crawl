@@ -1,37 +1,206 @@
-Stone Soup 0.12 (up to 0.12-a0-221-gc8484b0)
---------------------------------------------
+Stone Soup 0.12 (up to 0.12-a0-1573-g98eede4)
+---------------------------------------------
 
 Branches, environment
 ---------------------
+* Vaults is now five levels long, and has an entirely new layout.
+* The Abyss is revamped yet again. It now contains five (still infinite)
+  levels of increasing difficulty. Each level is composed of regions with
+  different layouts, most of which are more static than before. The rune
+  appears only at the third level and below, more frequently at deeper levels.
+* The Abyssal rune always appears in a vault, never lying around on the floor.
+* Having the Abyssal rune greatly increases the generation of Abyss exits.
 * A new Sprint map by evilmike: "Thunderdome".
+* A new Sprint map by st: "The Pits".
+* A new layout for Cocytus.
+* A new dragon-themed Lair ending.
+* Lots more new vaults.
+* Remove secret doors entirely, replacing some with runed doors.
 * More layouts allowed in Zot.
 * Abyss morphing can push the player.
+* New "runed door" feature: won't be opened by auto-explore or by monsters.
+  Becomes a regular door when opened.
+* Alarm traps only trigger once.
+* A number of vaults are fixed to not trap the player.
 
 Character
 ---------
 * Stalker is removed.
+* Gladiator no longer starts with a buckler, gets more Dodging to compensate.
+* Traps & Doors is just "Traps".
+* Traps are spotted (or not) deterministically based on skill level and a
+  few other factors: spending more time does not help.
+* Levitation is no more.
+* Flying no longer increases carrying capacity.
+* Carrying capacity is slightly less dependent on strength.
+* Tengu receive their movement speed bonus when flying, regardless of burden.
+* Black draconians gain permanent flight (like Tengu but without the speed
+  boost) at XL 14.
+* Experience aptitude uses the same scale as skill aptitudes. This scale is
+  coarser than the old one, so most races now require slightly more or less
+  experience to gain levels than before.
+* Deep Elves are better at Earth magic than Air.
+* Hill Orcs are better at Axes, worse at gaining levels.
+* Tengu are better at gaining levels.
+* Berserkers may choose their starting weapon.
+* Races that forbid some mutations (e.g. nagas and talons) are no longer
+  more resistant to mutation as a result.
+* Levels 1 and 2 of the teleportitis mutation teleport you only a limited
+  distance.
+* The augmentation mutation now gives bonuses at high HP rather than low HP.
+* Many scale mutations are slightly improved.
 
 Monsters
 --------
+* Removed: bumblebees, blessed toes.
+* New monster: moth of suppression. Generates an aura that prevents evocation
+  and suppresses the magical effects of wielded/worn equipment.
+* New abyssal monsters:
+    - Wretched star: bestows temporary mutations.
+    - Tentacled starspawn: has constricting tentacles and a nasty attack.
+    - Ancient zyme: causes sickness and stat drain when near the player.
+    - Lurking horror: stalks like a wandering mushroom, then explodes for
+      torment and draining.
+    - Starcursed mass: proliferates when ignored, re-merges when damaged.
+      Has a smite-targeted psychic scream that becomes more powerful as
+      more masses become visible.
+    - Apocalypse crab: breathes clouds of chaos.
+    - Thrashing horror: moves like a bat, tramples, and frenzies.
+    - Spatial maelstrom: incorporeal vortex that turns walls into more 
+      maelstroms.
+* Friendly summoned monsters do not attack things unless the player has line
+  of sight to both the summon and the victim. Glass does not count as line of
+  sight for this purpose.
+* Summoned monsters do not cast spells that create permanent allies.
+* Only a select few monsters flee at low HP.
 * New monster spells: Shatter, LRD.
+* Bone dragons are faster but have fewer HP.
+* Ereshkigal is much more dangerous.
+* Soul eaters can drain life from their surroundings.
+* Lorocyprocas are somewhat more powerful, particularly against high-AC
+  players.
+* Vampires no longer summon hordes of mammals. Plain vampires cast Vampiric
+  Drain instead, while vampire knights cast Blink Close.
+* Apis do not fly.
+* Frances has a more powerful set of spells.
+* Joseph does somewhat more damage in melee.
+* Monsters are much less likely to polymorph into plain elves and humans.
+* Non-humanoid holies no longer "salute", etc.
+* Trapdoor spiders no longer get "stuck".
 
 Spells
 ------
 * Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+* New spell: Disjunction (level 8 Translocation). Has a duration, during
+  which it blinks away nearby monsters. Causes contamination.
+* Spell memorisation failure is no more. As long as the failure chance is
+  not 100%, the spell can be memorized. There is a warning prompt if the
+  chance of a miscast is high.
+* Beastly Appendage no longer gives claws, but can give horns to Tengu.
+* The blinking component of the Dispersal spell is irresistible.
+* Darkness appears in the Book of Dreams.
+* Teleport Other gets a power boost.
+* Condensation Shield's SH bonus no longer cares about Shields skill or
+  intelligence.
 
 Items
 -----
+* Axes have a cleaving attack: they hit up to seven targets with a single
+  swing (all directions except directly opposite the direction of attack,
+  but not if a wall is in the way). These secondary attacks do only 75%
+  damage and do not hit allies. Base damage for the larger axes is reduced
+  to compensate.
+* Weapon skill training only requires having a weapon of the appropriate
+  type, not necessarily the ability to wield it.
 * All troll-genus monsters can drop troll hides.
 * Monsters don't drop animal skins.
 * Potion of water is removed.
+* Potion of decay rots HP immediately rather than giving the "Rot" status.
+* Plain (non-magic, non-quarter-) staves are removed.
+* The number of small fruit in various vaults is reduced.
+* Potions and rings of levitation are now "of flight"; boots of levitation
+  are now "of flying"; and the +Lev artefact property is now +Fly.
+* Amulet of controlled flight is removed; Amulet of the Air now grants
+  inaccuracy and passive Repel Missiles instead.
+* Amulet of inaccuracy correctly affects ranged weapons.
+* Amulet of clarity prevents mesmerisation.
+* Staff of enchantment is removed.
+* Rod of summoning is now rod of the swarm (loses Recall and Call Canine).
+* Rod of destruction [inacc,magma,cold] is now rod of inaccuracy (loses
+  Bolt of Magma and Bolt of Cold).
+* Rod of venom loses Cure Poison and Venom Bolt, gains Olgreb's Toxic
+  Radiance.
+* Spear of the Botono enhances Hexes and is no longer noisy, but more
+  severely reduces the wielder's HP.
+* Robe of Night reduces visibility like the Darkness spell.
+* Staff of Wucad Mu is now +9,+9 rather than caring about intelligence.
+* Cloak of the Thief can be evoked for fog.
+* Scroll of vulnerability properly cancels petrification.
+* Plutonium sword sometimes causes transmutation miscast effects against the
+  defender.
+* The "Contam" artefact property no longer causes contamination over time,
+  but only when the item is unequipped.
+* The "*Rage" artefact property triggers much less often (except for Wrath of
+  Trog).
+
+Gods
+----
+* Jiyva will never shuffle a stat to zero.
+* New Xom effects: loud noises, blink monsters, enchant monster (petrify,
+  slow, paralysis, enslavement; haste, might, invisibility).
+* Xom does not reduce stats as drastically, unless bored.
+* Xom will not animate or swap weapons in the Abyss.
+* Gods can no longer grant permanent brands to friendly dancing weapons.
+* Zin's vitalisation protects against paralysing attacks.
 
 Interface
 ---------
-* New options: auto_sacrifice, dump_on_save.
+* Many updated tiles.
+* A new Android port with touch-screen support.
+* New options: auto_sacrifice, dump_on_save, item_glyph, tile_cell_pixels,
+  tile_filter_scaling.
+* Removed options: sacrifice_before_explore (now part of auto_sacrifice),
+  annotate_item_class, annotate_item_dropped, autoinscribe_artefacts,
+  show_no_ctele, menu_colour_prefix_class, menu_colour_shops, list_rotten.
+* List options can be prepended to with ^=.
+* The "evil_eating" and "evil_item" menu-colouring prefixes are renamed to
+  "forbidden".
+* Explosion and cloud spells will try to target a spot adjacent to an
+  out-of-range monster before falling back to the player's position.
+* It is possible to restrict a ctrl-f stash search to the current level by
+  prefixing it with "@".
 * Removed the hidden special cost of Spellcasting, Stealth, Evocations and
   Invocations. Aptitudes adjusted.
+* Various effects will now restart on load if the player disconnects or
+  closes the window at their prompt: potion/card of experience, acquirement,
+  Draw Three, Stack Five, and the Mercenary card.
 * Some colour changes in the skill menu.
 * Swap the cycle ammunition commands. '(' = backward, ')' = forward.
+* Webtiles supports real-time animations, toggleable via F10.
+* Webtiles displays miniature health and MP bars on the player.
+* Changed colour scheme for webtiles text (including glyph mode).
+* Many webtiles bugfixes.
+  
+Technical
+---------
+* Numerous crash fixes.
+* Crashes during level transition no longer result in broken saves.
+* Webtiles can use compression with most supported browsers.
+* Webtiles messages are always syntactically correct JSON.
+
+Stone Soup 0.11.1 (20121116)
+----------------------------
+* A number of crash fixes.
+* Option fixes: spell_slot=, runrest_ignore_monster-=
+* Xom won't Inner Flame magic-immune monsters. Some were quite inappropriate.
+* TSO won't get mad at you when a monster uses a staff of death.
+* Boulder beetles stop rolling upon teleporting.
+* Zombies get same eligibility for constriction as their base monsters.
+* Slimify fixes: kraken tentacles (no longer slimeable) and monsters in/over
+  water (will turn into water-capable jellies).
+* You can't stop some of Xom's spells anymore.
+* Gaining/losing mutations from Jiyva is less spammy.
+* Non-good gods can punish their worshippers during penance, like in 0.10-.
 
 Stone Soup 0.11 (20121001)
 --------------------------
@@ -45,6 +214,8 @@ Stone Soup 0.11 (20121001)
 * New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
 * Removed monsters: Jozef, bog mummy, midge, Pit Fiend, hairy devil.
 * Lots of new vaults and tiles.
+* Config file overhaul: lists require += when appending, you don't need to
+  upgrade your config by hand anymore (after this last(?) time).
 
 Branches, environment
 ---------------------

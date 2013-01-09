@@ -69,7 +69,7 @@ static void _make_all_books()
 
 void wizard_create_spec_object_by_name()
 {
-    char buf[500];
+    char buf[1024];
     mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
     if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
@@ -225,11 +225,6 @@ void wizard_create_spec_object()
             destroy_item(thing_created);
             return;
         }
-        if (Options.autoinscribe_artefacts && is_artefact(mitm[thing_created]))
-        {
-            mitm[thing_created].inscription
-                = artefact_auto_inscription(mitm[thing_created]);
-        }
     }
 
     // Deck colour (which control rarity) already set.
@@ -266,7 +261,7 @@ static const char* _prop_name[] = {
     "Mag",
     "SInv",
     "Inv",
-    "Lev",
+    "Fly",
     "Blnk",
     "Bers",
     "Nois",
@@ -286,6 +281,8 @@ static const char* _prop_name[] = {
     "Clar",
     "BAcc",
     "BDam",
+    "RMsl",
+    "Fog",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -307,7 +304,7 @@ static int8_t _prop_type[] = {
     ARTP_VAL_POS,  //MAGIC
     ARTP_VAL_BOOL, //EYESIGHT
     ARTP_VAL_BOOL, //INVISIBLE
-    ARTP_VAL_BOOL, //LEVITATE
+    ARTP_VAL_BOOL, //FLIGHT
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
     ARTP_VAL_POS,  //NOISES
@@ -327,6 +324,8 @@ static int8_t _prop_type[] = {
     ARTP_VAL_BOOL, //CLARITY
     ARTP_VAL_ANY,  //BASE_ACC
     ARTP_VAL_ANY,  //BASE_DAM
+    ARTP_VAL_BOOL, //RMSL
+    ARTP_VAL_BOOL, //FOG
 };
 
 static void _tweak_randart(item_def &item)
@@ -378,7 +377,7 @@ static void _tweak_randart(item_def &item)
 
     mpr("Change which field? ", MSGCH_PROMPT);
 
-    int keyin = tolower(get_ch());
+    int keyin = toalower(get_ch());
     unsigned int  choice;
 
     if (isaalpha(keyin))
@@ -424,9 +423,6 @@ static void _tweak_randart(item_def &item)
                              val);
         break;
     }
-
-    if (Options.autoinscribe_artefacts)
-        item.inscription = artefact_auto_inscription(item);
 }
 
 void wizard_tweak_object(void)
@@ -465,7 +461,7 @@ void wizard_tweak_object(void)
 
             mpr("Which field? ", MSGCH_PROMPT);
 
-            keyin = tolower(get_ch());
+            keyin = toalower(get_ch());
 
             if (keyin == 'a')
                 old_val = you.inv[item].plus;
@@ -551,7 +547,7 @@ static bool _make_book_randart(item_def &book)
     do
     {
         mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
-        type = tolower(getchk());
+        type = toalower(getchk());
     }
     while (type != 't' && type != 'l');
 
@@ -666,11 +662,6 @@ void wizard_make_object_randart()
             return;
         }
 
-        // need to trim before the object changes, or else the old properties
-        // won't be removed
-        if (Options.autoinscribe_artefacts)
-            trim_randart_inscrip(item);
-
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;
         item.props.clear();
@@ -683,11 +674,11 @@ void wizard_make_object_randart()
     {
         god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
-           mpr("No such god, leaving item origin alone.");
+            mpr("No such god, leaving item origin alone.");
         else
         {
-           mprf("God gift of %s.", god_name(god, false).c_str());
-           item.orig_monnum = -god;
+            mprf("God gift of %s.", god_name(god, false).c_str());
+            item.orig_monnum = -god;
         }
     }
 
@@ -710,8 +701,6 @@ void wizard_make_object_randart()
         do_curse_item(item, true);
     else
         do_uncurse_item(item, false);
-
-    add_autoinscription(item);
 
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)
@@ -754,8 +743,6 @@ void wizard_identify_pack()
         {
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_IDENT_MASK);
-            if (Options.autoinscribe_artefacts && is_artefact(item))
-                item.inscription = artefact_auto_inscription(item);
         }
     }
     you.wield_change  = true;
@@ -876,7 +863,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         MSGCH_PROMPT);
 
     object_class_type type;
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
     switch (keyin)
     {
     case 'a': type = OBJ_WEAPONS;    break;
@@ -1172,7 +1159,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "dexterity",
             "intelligence",
             "ponderous",
-            "levitation",
+            "flight",
             "magic reistance",
             "protection",
             "stealth",
@@ -1183,14 +1170,14 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reflection",
             "spirit shield",
             "archery",
-         };
+        };
 
         const int non_art = acq_calls - num_arts;
         for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
         {
-           if (ego_quants[i] > 0)
-               fprintf(ostat, "%17s: %5.2f\n", names[i],
-                       100.0 * (float) ego_quants[i] / (float) non_art);
+            if (ego_quants[i] > 0)
+                fprintf(ostat, "%17s: %5.2f\n", names[i],
+                        100.0 * (float) ego_quants[i] / (float) non_art);
         }
         fprintf(ostat, "\n\n");
     }
@@ -1344,7 +1331,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_MAGIC
          1, //ARTP_EYESIGHT
          1, //ARTP_INVISIBLE
-         1, //ARTP_LEVITATE
+         1, //ARTP_FLY
          1, //ARTP_BLINK
          1, //ARTP_CAN_TELEPORT
          1, //ARTP_BERSERK
@@ -1366,6 +1353,8 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_CLARITY
          0, //ARTP_BASE_ACC
          0, //ARTP_BASE_DAM
+         1, //ARTP_RMSL
+         1, //ARTP_FOG
          -1
     };
 
@@ -1491,7 +1480,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_MAGIC",
         "ARTP_EYESIGHT",
         "ARTP_INVISIBLE",
-        "ARTP_LEVITATE",
+        "ARTP_FLY",
         "ARTP_BLINK",
         "ARTP_BERSERK",
         "ARTP_NOISES",
@@ -1511,6 +1500,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CLARITY",
         "ARTP_BASE_ACC",
         "ARTP_BASE_DAM",
+        "ARTP_RMSL"
+        "ARTP_FOG",
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");
@@ -1544,7 +1535,7 @@ void debug_item_statistics(void)
     mpr("Generate stats for: [a] acquirement [b] randart properties");
     flush_prev_message();
 
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
     switch (keyin)
     {
     case 'a': _debug_acquirement_stats(ostat); break;

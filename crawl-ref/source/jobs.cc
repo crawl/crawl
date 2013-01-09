@@ -47,8 +47,9 @@ job_type get_job_by_abbrev(const char *abbrev)
 
     for (i = 0; i < NUM_JOBS; i++)
     {
-        if (tolower(abbrev[0]) == tolower(Job_Abbrev_List[i][0])
-            && tolower(abbrev[1]) == tolower(Job_Abbrev_List[i][1]))
+        // This assumes untranslated abbreviations.
+        if (toalower(abbrev[0]) == toalower(Job_Abbrev_List[i][0])
+            && toalower(abbrev[1]) == toalower(Job_Abbrev_List[i][1]))
         {
             break;
         }

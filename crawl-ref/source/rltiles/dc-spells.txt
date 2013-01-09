@@ -18,7 +18,6 @@ chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 deflect_missiles DEFLECT_MISSILES
 flight FLIGHT
-levitation LEVITATION
 lightning_bolt LIGHTNING_BOLT
 repel_missiles REPEL_MISSILES
 shock SHOCK
