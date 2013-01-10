@@ -791,13 +791,14 @@ void game_options::reset_options()
     char_set      = CSET_DEFAULT;
 
     // set it to the .crawlrc default
-    autopickups = ((1 << OBJ_GOLD)      |
-                   (1 << OBJ_SCROLLS)   |
-                   (1 << OBJ_POTIONS)   |
-                   (1 << OBJ_BOOKS)     |
-                   (1 << OBJ_JEWELLERY) |
-                   (1 << OBJ_WANDS)     |
-                   (1 << OBJ_FOOD));
+    autopickups.reset();
+    autopickups.set(OBJ_GOLD);
+    autopickups.set(OBJ_SCROLLS);
+    autopickups.set(OBJ_POTIONS);
+    autopickups.set(OBJ_BOOKS);
+    autopickups.set(OBJ_JEWELLERY);
+    autopickups.set(OBJ_WANDS);
+    autopickups.set(OBJ_FOOD);
     auto_switch             = false;
     suppress_startup_errors = false;
 
@@ -2324,7 +2325,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "autopickup")
     {
         // clear out autopickup
-        autopickups = 0;
+        autopickups.reset();
 
         ucs_t c;
         for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
@@ -2332,7 +2333,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             object_class_type type = item_class_by_sym(c);
 
             if (type < NUM_OBJECT_CLASSES)
-                autopickups |= (1 << type);
+                autopickups.set(type);
             else
                 report_error("Bad object type '%*s' for autopickup.\n", s, tp);
         }

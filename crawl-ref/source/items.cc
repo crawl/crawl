@@ -2596,7 +2596,7 @@ static bool _is_option_autopickup(const item_def &item, string &iname)
         return false;
 #endif
 
-    return (Options.autopickups & (1L << item.base_type));
+    return Options.autopickups[item.base_type];
 }
 
 bool item_needs_autopickup(const item_def &item)

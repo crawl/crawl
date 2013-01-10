@@ -160,7 +160,7 @@ public:
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
 
-    uint32_t    autopickups;     // items to autopickup
+    FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
     bool        clean_map;       // remove unseen clouds/monsters
