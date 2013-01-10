@@ -4422,12 +4422,15 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (!mspec.place.is_valid())
         mspec.place = level_id::current();
 
-    if (is_connected_branch(mspec.place))
+    if (type == RANDOM_SUPER_OOD || type == RANDOM_MODERATE_OOD)
     {
-        if (type == RANDOM_SUPER_OOD)
-            mspec.place.depth += 4 + mspec.place.depth, type = RANDOM_MONSTER;
+        if (brdepth[mspec.place.branch] <= 1)
+            ; // no OODs here
+        else if (type == RANDOM_SUPER_OOD)
+            mspec.place.depth += 4 + mspec.place.depth;
         else if (type == RANDOM_MODERATE_OOD)
-            mspec.place.depth += 5, type = RANDOM_MONSTER;
+            mspec.place.depth += 5;
+        type = RANDOM_MONSTER;
     }
 
     if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
