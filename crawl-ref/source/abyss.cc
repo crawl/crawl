@@ -106,8 +106,6 @@ static coord_def _place_feature_near(const coord_def &centre,
     return INVALID_COORD;
 }
 
-#define DEBUG_ABYSS
-
 // Returns a feature suitable for use in the proto-Abyss level.
 static dungeon_feature_type _abyss_proto_feature()
 {
@@ -651,10 +649,8 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     grd(p) = DNGN_UNSEEN;
 
     // Nuke items.
-#ifdef DEBUG_ABYSS
     if (igrd(p) != NON_ITEM)
-        dprf("Nuke item stack at (%d, %d)", p.x, p.y);
-#endif
+        dprf(DIAG_ABYSS, "Nuke item stack at (%d, %d)", p.x, p.y);
     lose_item_stack(p);
 
     // Nuke monster.
@@ -929,10 +925,8 @@ static bool _abyss_teleport_within_level()
             && !monster_at(newspot)
             && env.cgrid(newspot) == EMPTY_CLOUD)
         {
-#ifdef DEBUG_ABYSS
-            dprf("Abyss same-area teleport to (%d,%d).",
+            dprf(DIAG_ABYSS, "Abyss same-area teleport to (%d,%d).",
                  newspot.x, newspot.y);
-#endif
             you.moveto(newspot);
             return true;
         }
@@ -1145,10 +1139,8 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             _update_abyss_terrain(p, abyss_genlevel_mask, morph);
             abyss_sample_queue.pop();
         }
-#ifdef DEBUG_ABYSS
         if (ii)
-            dprf("Examined %d features.", ii);
-#endif
+            dprf(DIAG_ABYSS, "Examined %d features.", ii);
     }
 
     int ii = 0;
@@ -1226,10 +1218,8 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
     const bool placed_abyssal_rune =
         find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
 
-#ifdef DEBUG_ABYSS
-    dprf("_generate_area(). turns_on_level: %d, rune_on_floor: %s",
+    dprf(DIAG_ABYSS, "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
-#endif
 
     _abyss_apply_terrain(abyss_genlevel_mask);
 
@@ -1277,10 +1267,8 @@ void set_abyss_state(coord_def coord, uint32_t depth)
 
 static void abyss_area_shift(void)
 {
-#ifdef DEBUG_ABYSS
-    dprf("area_shift() - player at pos (%d, %d)",
+    dprf(DIAG_ABYSS, "area_shift() - player at pos (%d, %d)",
          you.pos().x, you.pos().y);
-#endif
 
     {
         xom_abyss_feature_amusement_check xomcheck;
@@ -1487,9 +1475,7 @@ void abyss_teleport(bool new_area)
         return;
     }
 
-#ifdef DEBUG_ABYSS
-    dprf("New area Abyss teleport.");
-#endif
+    dprf(DIAG_ABYSS, "New area Abyss teleport.");
     _abyss_generate_new_area();
     _write_abyssal_features();
     forget_map(false);
