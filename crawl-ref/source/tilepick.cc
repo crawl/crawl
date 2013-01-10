@@ -4926,7 +4926,7 @@ tileidx_t tileidx_gametype(const game_type gtype)
 
 tileidx_t tileidx_ability(const ability_type ability)
 {
-    switch(ability)
+    switch (ability)
     {
     // Innate abilities and (Demonspaw) mutations.
     case ABIL_SPIT_POISON:

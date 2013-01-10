@@ -3367,7 +3367,7 @@ bool player_angers_monster(monster* mon)
         {
             const string mname = mon->name(DESC_THE).c_str();
 
-            switch(why)
+            switch (why)
             {
             case DID_UNHOLY:
             case DID_NECROMANCY:

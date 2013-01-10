@@ -66,7 +66,7 @@ Monsters
       more masses become visible.
     - Apocalypse crab: breathes clouds of chaos.
     - Thrashing horror: moves like a bat, tramples, and frenzies.
-    - Spatial maelstrom: incorporeal vortex that turns walls into more 
+    - Spatial maelstrom: incorporeal vortex that turns walls into more
       maelstroms.
 * Friendly summoned monsters do not attack things unless the player has line
   of sight to both the summon and the victim. Glass does not count as line of
@@ -180,7 +180,7 @@ Interface
 * Webtiles displays miniature health and MP bars on the player.
 * Changed colour scheme for webtiles text (including glyph mode).
 * Many webtiles bugfixes.
-  
+
 Technical
 ---------
 * Numerous crash fixes.

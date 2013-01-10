@@ -191,8 +191,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
 // This table puts all the information in one place... -- bwr
 //
 // The four numerical fields are: MP, HP, food, and piety.
-// Note:  food_cost  = val + random2avg( val, 2 )
-//        piety_cost = val + random2( (val + 1) / 2 + 1 );
+// Note:  food_cost  = val + random2avg(val, 2)
+//        piety_cost = val + random2((val + 1) / 2 + 1);
 //        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
 static const ability_def Ability_List[] =
 {
