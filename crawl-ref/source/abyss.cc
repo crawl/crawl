@@ -408,7 +408,8 @@ void push_features_to_abyss()
 // square is 1 in N.
 static int _abyss_exit_chance()
 {
-    int exit_chance = (you.runes[RUNE_ABYSSAL] ? 1250 : 7500);
+    int exit_chance = (you.runes[RUNE_ABYSSAL] ? 1250
+                                               : 7500 - 1250 * (you.depth - 1));
     if (crawl_state.game_is_sprint())
         exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
     return exit_chance;
