@@ -4226,6 +4226,11 @@ void bolt::beam_hits_actor(actor *act)
         if (name == "lance of force" && coinflip())
             knockback_actor(act);
 
+        // Stun the monster briefly so that it doesn't look as though it wasn't
+        // knocked back at all
+        if (act->is_monster())
+            act->as_monster()->speed_increment -= random2(6) + 4;
+
         act->apply_location_effects(oldpos, killer(), beam_source);
     }
 }
