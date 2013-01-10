@@ -1038,7 +1038,7 @@ void game_options::reset_options()
                                              "command, spell, ability, "
                                              "monster");
 # endif
-    tile_use_small_layout = false;
+    tile_use_small_layout = OPT_AUTO;
 #endif
 
 #ifdef USE_TILE
@@ -3527,17 +3527,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_use_small_layout")
     {
         if (field == "true")
-            tile_use_small_layout = true;
+            tile_use_small_layout = OPT_YES;
         else if (field == "false")
-            tile_use_small_layout = false;
+            tile_use_small_layout = OPT_NO;
         else
-#ifdef __ANDROID__
-            // android default to true for now
-            tile_use_small_layout = true;
-#else
-            // should choose small layout for small *physical* screens
-            tile_use_small_layout = false;
-#endif
+            tile_use_small_layout = OPT_AUTO;
     }
 #endif
 #ifdef USE_TILE

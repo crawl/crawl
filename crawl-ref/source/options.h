@@ -436,7 +436,7 @@ public:
     int         tile_map_pixels;
     int         tile_cell_pixels;
     bool        tile_filter_scaling;
-    bool        tile_use_small_layout;
+    option_value tile_use_small_layout;
 #endif
 
 #ifdef USE_TILE

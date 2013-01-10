@@ -53,6 +53,7 @@
 #ifdef __ANDROID__
 #include <android/log.h>
 #include <GLES/gl.h>
+#include <SDL_android.h>
 #endif
 
 #ifdef TARGET_OS_WINDOWS
@@ -1035,9 +1036,23 @@ bool TilesFramework::is_using_small_layout()
     // automatically use small layout at low resolutions if TOUCH_UI enabled,
     // otherwise only if forced to
 #ifdef TOUCH_UI
-    return (m_windowsz.y <= 480 || Options.tile_use_small_layout);
+    switch (Options.tile_use_small_layout)
+    {
+    case OPT_YES:
+        return true;
+    case OPT_NO:
+        return false;
+    case OPT_AUTO:
+    default:
+#ifdef __ANDROID__
+        Options.tile_use_small_layout = (SDL_ANDROID_GetY16Inches()<40) ? OPT_YES : OPT_NO; // about 2.5" high
 #else
-    return Options.tile_use_small_layout;
+        Options.tile_use_small_layout = (m_windowsz.x<=480) ? OPT_YES : OPT_NO;
+#endif
+        return Options.tile_use_small_layout == OPT_YES;
+    }
+#else
+    return Options.tile_use_small_layout == OPT_YES;
 #endif
 }
 void TilesFramework::zoom_dungeon(bool in)
