@@ -2404,10 +2404,11 @@ static monster_type _pick_swarmer()
 {
     static monster_type swarmers[] =
     {
-        MONS_KILLER_BEE, MONS_SCORPION, MONS_WORM,
-        MONS_GOLIATH_BEETLE, MONS_VAMPIRE_MOSQUITO,
-        MONS_WOLF_SPIDER, MONS_BUTTERFLY, MONS_YELLOW_WASP,
-        MONS_WORKER_ANT,
+        MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
+        MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
+        MONS_GOLIATH_BEETLE, MONS_SPIDER,        MONS_BUTTERFLY,
+        MONS_YELLOW_WASP,    MONS_WORKER_ANT,    MONS_WORKER_ANT,
+        MONS_WORKER_ANT
     };
 
     return RANDOM_ELEMENT(swarmers);
