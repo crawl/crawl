@@ -16,11 +16,13 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
+#include "options.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
-#include "state.h"
 #include "spl-util.h"
+#include "state.h"
+#include "stuff.h"
 
 monster_type debug_prompt_for_monster(void)
 {
@@ -400,5 +402,62 @@ void debuglog(const char *format, ...)
     vfprintf(debugf, format, args);
     va_end(args);
     fflush(debugf);
+}
+#endif
+
+#ifndef DEBUG_DIAGNOSTICS
+void wizard_toggle_dprf()
+{
+    mpr("Diagnostic messages are available only in debug builds.");
+}
+#else
+static const char* diag_names[] =
+{
+    "normal",
+    "combat",
+    "beam",
+    "abyss",
+    "monplace",
+};
+
+void wizard_toggle_dprf()
+{
+    COMPILE_CHECK(ARRAYSZ(diag_names) == NUM_DIAGNOSTICS);
+
+    while (true)
+    {
+        string line;
+        for (int i = 0; i < NUM_DIAGNOSTICS; i++)
+        {
+            line += make_stringf("%s[%c] %-10s%s ",
+                                 Options.quiet_debug_messages[i] ? "<white>" : "",
+                                 i + '0',
+                                 diag_names[i],
+                                 Options.quiet_debug_messages[i] ? "</white>" : "");
+            if (i % 5 == 4 || i == NUM_DIAGNOSTICS - 1)
+            {
+                mpr(line, MSGCH_PROMPT);
+                line.clear();
+            }
+        }
+        mpr("Toggle which debug class (ESC to exit)? ", MSGCH_PROMPT);
+
+        int keyin = toalower(get_ch());
+
+        if (key_is_escape(keyin) || keyin == ' '
+            || keyin == '\r' || keyin == '\n')
+        {
+            return mpr("M'kay.");
+        }
+
+        if (keyin < '0' || keyin >= '0' + NUM_DIAGNOSTICS)
+            continue;
+
+        int diag = keyin - '0';
+        Options.quiet_debug_messages.set(diag, !Options.quiet_debug_messages[diag]);
+        mprf("%s messages will be %s.", diag_names[diag],
+             Options.quiet_debug_messages[diag] ? "quiet" : "printed");
+        return;
+    }
 }
 #endif

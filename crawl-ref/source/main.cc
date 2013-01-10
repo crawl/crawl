@@ -648,6 +648,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('L'): wizard_set_xl(); break;
     case CONTROL('M'): wizard_memorise_spec_spell(); break;
     case CONTROL('P'): wizard_transform(); break;
+    case CONTROL('Q'): wizard_toggle_dprf(); break;
     case CONTROL('R'): wizard_recreate_level(); break;
     case CONTROL('S'): wizard_abyss_speed(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
