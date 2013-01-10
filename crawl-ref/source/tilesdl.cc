@@ -905,9 +905,7 @@ void TilesFramework::do_layout()
         m_stat_x_divider = m_windowsz.x - (m_region_tab->ox*m_region_tab->dx/32) - get_crt_font()->char_width()*10;
         // old logic, if we're going to impinge upon a nice square dregion
         if (available_height_in_tiles * m_region_tile->dx > m_stat_x_divider)
-        {
             m_stat_x_divider = available_height_in_tiles * m_region_tile->dx;
-        }
         // always overlay message area on dungeon
         message_y_divider = m_windowsz.y;
 
@@ -983,9 +981,7 @@ void TilesFramework::do_layout()
                 }
             }
             else
-            {
                 message_y_divider = available_height_in_tiles * m_region_tile->dy;
-            }
         }
     }
 
@@ -1016,13 +1012,9 @@ void TilesFramework::do_layout()
     crawl_view.msgsz.y = m_region_msg->my;
 
     if (use_small_layout)
-    {
         m_stat_col = m_stat_x_divider;
-    }
     else
-    {
         m_stat_col = m_stat_x_divider + map_stat_margin;
-    }
     m_region_stat->resize_to_fit(m_windowsz.x - m_stat_x_divider, m_windowsz.y);
     m_region_stat->place(m_stat_col, 0, 0);
     m_region_stat->resize(m_region_stat->mx, min_stat_height);

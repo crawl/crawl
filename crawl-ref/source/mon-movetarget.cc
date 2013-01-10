@@ -969,7 +969,7 @@ static bool _herd_ok(monster * mon)
         if (mit->mindex() == mon->mindex())
             continue;
 
-        if (mons_genus(mit->type) == mons_genus(mon->type) )
+        if (mons_genus(mit->type) == mons_genus(mon->type))
         {
             int g_dist = grid_distance(mit->pos(), mon->pos());
             if (g_dist < HERD_COMFORT_RANGE

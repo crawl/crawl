@@ -386,8 +386,8 @@ KITEM:  O = abyssal rune of Zot
 KMONS:  OL = lich / w:1 ancient lich
 NSUBST: C = 1:+ / *:cc+
 NSUBST: L = 1:O / *:L
-: colour("c = " .. dgn.random_colour() )
-: colour(". = " .. dgn.random_colour() )
+: colour("c = " .. dgn.random_colour())
+: colour(". = " .. dgn.random_colour())
 MAP
   ccccc
  ccccccc

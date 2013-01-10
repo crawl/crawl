@@ -296,12 +296,12 @@ bool InventoryRegion::update_tip_text(string& tip)
         return false;
 
     // page next/prev
-    if( _is_next_button(item_idx) )
+    if (_is_next_button(item_idx))
     {
         tip = "Next page\n[L-Click] Show next page of items";
         return true;
     }
-    else if( _is_prev_button(item_idx) )
+    else if (_is_prev_button(item_idx))
     {
         tip = "Previous page\n[L-Click] Show previous page of items";
         return true;

@@ -99,7 +99,7 @@ void GridRegion::draw_desc(const char *desc)
     int y = sy + oy;
 
     // ... unless we're using the touch UI, in which case: put at bottom
-    if( tiles.is_using_small_layout() )
+    if (tiles.is_using_small_layout())
         y = wy;
 
     const coord_def min_pos(sx, sy - dy);

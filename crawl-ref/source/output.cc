@@ -124,7 +124,7 @@ void cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
     if (tiles.is_using_small_layout())
         TOUCH_UI_STATE = (touchui_states)((x<<8)+y);
 //    printf("[%x]: ",TOUCH_UI_STATE);
-    switch ( TOUCH_UI_STATE )
+    switch (TOUCH_UI_STATE)
     {
         case TOUCH_V_HP:
         case TOUCH_T_MP:
@@ -204,10 +204,10 @@ void cprintf_touchui(const char *format, ...)
 {
     va_list args;
     string  buf;
-    va_start( args, format );
-    buf = vmake_stringf( format, args );
+    va_start(args, format);
+    buf = vmake_stringf(format, args);
 
-    switch( TOUCH_UI_STATE )
+    switch (TOUCH_UI_STATE)
     {
         case TOUCH_T_MP:
         case TOUCH_V_TITL2:
@@ -221,63 +221,65 @@ void cprintf_touchui(const char *format, ...)
             TOUCH_UI_STATE = TOUCH_V_HP;
             break;
         case TOUCH_V_TITLE:
-            cprintf( you.your_name.c_str() );
+            cprintf(you.your_name.c_str());
             break;
         case TOUCH_V_HP:
         case TOUCH_V_MP:
             // suppress everything after initial print; rjustify
-            cprintf( "%3s", buf.c_str() );
+            cprintf("%3s", buf.c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL;
             break;
         case TOUCH_V_STR:
         case TOUCH_V_INT:
         case TOUCH_V_DEX:
             // rjustify to 3 chars on these
-            cprintf( "%3s", buf.c_str() );
+            cprintf("%3s", buf.c_str());
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
-            cprintf( buf.c_str() );
+            cprintf(buf.c_str());
             break;
         case TOUCH_T_QV:
             TOUCH_UI_STATE = TOUCH_V_QV;
-            cprintf( buf.c_str() );
+            cprintf(buf.c_str());
             break;
         case TOUCH_V_WP:
         case TOUCH_V_QV:
             // get rid of the hotkey; somewhat pointless in a touch-screen ui :)
-            cprintf( buf.substr(3,10).c_str() );
+            cprintf(buf.substr(3,10).c_str());
             break;
 
         default:
 //            printf("p: %s\n",buf.c_str());
-            cprintf( buf.c_str() );
+            cprintf(buf.c_str());
     }
-    va_end( args );
+    va_end(args);
 }
 
 void nowrap_eol_cprintf_touchui(const char *format, ...)
 {
     va_list args;
     string  buf;
-    va_start( args, format );
-    buf = vmake_stringf( format, args );
+    va_start(args, format);
+    buf = vmake_stringf(format, args);
 
     // N.B. this should really be factored out and merged with the other switch-case above
-    switch( TOUCH_UI_STATE )
+    switch (TOUCH_UI_STATE)
     {
         case TOUCH_S_NULL:
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            cprintf( "%s%s %.4s",get_species_abbrev(you.species),get_job_abbrev(you.char_class),god_name(you.religion).c_str());
+            cprintf("%s%s %.4s", get_species_abbrev(you.species),
+                                 get_job_abbrev(you.char_class),
+                                 god_name(you.religion).c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
             break;
         default:
 //            printf("q: %s\n",buf.c_str());
-            nowrap_eol_cprintf( buf.c_str() );
+            nowrap_eol_cprintf(buf.c_str());
     }
-    va_end( args );
+    va_end(args);
 }
 
 #else
@@ -330,7 +332,7 @@ class colour_bar
             return;
         }
 
-        const int width = crawl_view.hudsz.x - (ox-1);
+        const int width = crawl_view.hudsz.x - (ox - 1);
         const int disp  = width * val / max_val;
         const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
         m_old_disp = disp;
@@ -559,7 +561,7 @@ static void _print_stats_hp(int x, int y)
     short hp_colour = HUD_VALUE_COLOUR;
 
     const bool boosted = you.duration[DUR_DIVINE_VIGOUR]
-                             || you.berserk();
+                         || you.berserk();
 
     if (boosted)
         hp_colour = LIGHTBLUE;

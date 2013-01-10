@@ -3831,13 +3831,13 @@ static string _find_executable_path()
     // binary executable. This is useful, because argv[0] can be relative
     // when we really need an absolute path in order to locate the game's
     // resources.
-#if defined ( TARGET_OS_WINDOWS )
+#if defined (TARGET_OS_WINDOWS)
     wchar_t tempPath[MAX_PATH];
     if (GetModuleFileNameW(NULL, tempPath, MAX_PATH))
         return utf16_to_8(tempPath);
     else
         return "";
-#elif defined ( TARGET_OS_LINUX )
+#elif defined (TARGET_OS_LINUX)
     char tempPath[2048];
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
@@ -3847,7 +3847,7 @@ static string _find_executable_path()
         return mb_to_utf8(tempPath);
     }
     return "";
-#elif defined ( TARGET_OS_MACOSX )
+#elif defined (TARGET_OS_MACOSX)
     return mb_to_utf8(NXArgv[0]);
 #else
     // We don't know how to find the executable's path on this OS.

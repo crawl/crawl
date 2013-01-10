@@ -218,7 +218,7 @@ static int _cull_items(void)
                         first_cleaned = si->index();
 
                     // POOF!
-                    destroy_item( si->index() );
+                    destroy_item(si->index());
                 }
             }
         }
