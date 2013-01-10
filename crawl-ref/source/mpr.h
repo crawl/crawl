@@ -78,6 +78,7 @@ enum diag_type
     DIAG_COMBAT,
     DIAG_BEAM,
     DIAG_ABYSS,
+    DIAG_MONPLACE,
     NUM_DIAGNOSTICS
 };
 

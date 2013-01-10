@@ -38,7 +38,7 @@ static void _give_monster_item(monster* mon, int thing,
     item_def &mthing = mitm[thing];
     ASSERT(mthing.defined());
 
-    dprf("Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
+    dprf(DIAG_MONPLACE, "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
          mon->name(DESC_PLAIN, true).c_str());
 
     mthing.pos.reset();
@@ -74,7 +74,7 @@ static void _give_monster_item(monster* mon, int thing,
     if (!(pickupfn ? (mon->*pickupfn)(mthing, false)
                    : mon->pickup_item(mthing, false, true)))
     {
-        dprf("Destroying %s because %s doesn't want it!",
+        dprf(DIAG_MONPLACE, "Destroying %s because %s doesn't want it!",
              mthing.name(DESC_PLAIN, false, true).c_str(),
              mon->name(DESC_PLAIN, true).c_str());
         destroy_item(thing, true);
@@ -153,7 +153,8 @@ static void _give_wand(monster* mon, int level)
 
         if (no_high_tier && is_high_tier_wand(wand.sub_type))
         {
-            dprf("Destroying %s because %s doesn't want a high tier wand.",
+            dprf(DIAG_MONPLACE,
+                 "Destroying %s because %s doesn't want a high tier wand.",
                  wand.name(DESC_A).c_str(),
                  mon->name(DESC_THE).c_str());
             destroy_item(idx, true);
@@ -1078,7 +1079,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_DEEP_DWARF_ARTIFICER:
         if (one_chance_in(25))
         {
-            dprf("generating a rare rod");
+            dprf(DIAG_MONPLACE, "generating a rare rod");
             item.base_type = OBJ_RODS;
             item.sub_type  = random2(NUM_RODS);
         }

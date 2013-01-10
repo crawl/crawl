@@ -4494,7 +4494,7 @@ void monster::load_ghost_spells()
     spells = ghost->spells;
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf("Ghost spells:");
+    dprf(DIAG_MONPLACE, "Ghost spells:");
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
     {
         mprf(MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",

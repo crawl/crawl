@@ -3137,7 +3137,7 @@ monster* mons_place(mgen_data mg)
     if (!creation)
         return 0;
 
-    dprf("Created %s.", creation->base_name(DESC_A, true).c_str());
+    dprf(DIAG_MONPLACE, "Created %s.", creation->base_name(DESC_A, true).c_str());
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
