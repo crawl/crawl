@@ -2699,12 +2699,11 @@ _
 Tab
   Cycle through shops and portals.
 
-\*
-  Cycle forwards through stashes (if the option stash_tracking is set to all,
-  this cycles through all items and piles).
+I
+  Cycle forward through all items and piles.
 
-/
-  Cycle backward through stashes.
+O
+  Cycle backward through all items and piles.
 
 Ctrl-C
   Clear level and main maps (from temporarily seen monsters, clouds, etc.).
