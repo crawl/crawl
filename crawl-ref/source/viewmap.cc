@@ -173,6 +173,8 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_RETURN_FROM_FOREST:
 #endif
         case DNGN_RETURN_FROM_ORC:
+        // Not a < glyph, but still the best hells can do
+        case DNGN_ENTER_HELL:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME:
         case DNGN_RETURN_FROM_VAULTS:
