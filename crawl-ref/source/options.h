@@ -263,8 +263,6 @@ public:
 
     vector<message_filter> force_more_message;
 
-    int         stash_tracking; // How stashes are tracked
-
     int         tc_reachable;   // Colour for squares that are reachable
     int         tc_excluded;    // Colour for excluded squares.
     int         tc_exclude_circle; // Colour for squares in the exclusion radius
