@@ -3505,7 +3505,7 @@ void starcursed_merge(monster* mon, bool forced)
 
             if (moved)
             {
-                mpr("The starcursed mass shudders and withdraws towards its neighbour.");
+                simple_monster_message(mon, " shudders and withdraws towards its neighbour.");
                 mon->speed_increment -= 10;
             }
         }
