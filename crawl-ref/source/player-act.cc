@@ -408,7 +408,7 @@ string player::hand_name(bool plural, bool *can_plural) const
     else if (form == TRAN_TREE)
         str = "branch";
     else if (form == TRAN_WISP)
-        str = "strand";
+        str = "misty tendril";
     else if (form == TRAN_JELLY)
         str = "bump"; // not even pseudopods...
     else if (form == TRAN_LICH || form == TRAN_STATUE
