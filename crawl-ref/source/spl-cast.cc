@@ -1331,9 +1331,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_HELLFIRE_BURST:
         return cast_hellfire_burst(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
 
-    case SPELL_FIREBALL:
-        return fireball(powc, beam, fail);
-
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);
 

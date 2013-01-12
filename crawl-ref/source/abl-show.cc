@@ -1916,7 +1916,7 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
 
-        if (!fireball(power, beam))
+        if (!zapping(ZAP_FIREBALL, power, beam, true, NULL, false))
             return false;
 
         // Only one allowed, since this is instantaneous. - bwr
