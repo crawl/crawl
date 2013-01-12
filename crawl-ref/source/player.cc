@@ -6851,13 +6851,13 @@ bool player::sicken(int amount, bool allow_hint)
     return true;
 }
 
-bool player::can_see_invisible(bool calc_unid) const
+bool player::can_see_invisible(bool calc_unid, bool items) const
 {
     if (crawl_state.game_is_arena())
         return true;
 
     // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
+    if (items && !you.suppressed())
     {
         if (you.wearing(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
             // armour: (checks head armour only)
@@ -6894,7 +6894,7 @@ bool player::can_see_invisible(bool calc_unid) const
 
 bool player::can_see_invisible() const
 {
-    return can_see_invisible(true);
+    return can_see_invisible(true, true);
 }
 
 bool player::invisible() const
