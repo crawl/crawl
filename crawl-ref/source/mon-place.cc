@@ -656,10 +656,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     if (want_band)
         *want_band = false;
 
-    // This ignores passed place -- sounds like a bug.  The old code ignored
-    // the monster_level.
-    *place = level_id::current();
-
     if (mon_type == RANDOM_DRACONIAN)
     {
         // Pick any random drac, constrained by colour if requested.
@@ -687,10 +683,11 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))
     {
-
         // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
         {
+            const level_id orig_place = *place;
+
             if (_find_mon_place_near_stairs(pos, stair_type, *place))
             {
                 // No monsters spawned in the Temple.
@@ -702,7 +699,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             if (proximity == PROX_NEAR_STAIRS)
                 dprf("foreign monster from %s", place->describe().c_str());
             else // we dunt cotton to no ferrniers in these here parts
-                *place = level_id::current();
+                *place = orig_place;
 
         } // end proximity check
 
