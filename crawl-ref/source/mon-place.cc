@@ -81,8 +81,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           coord_def &pos,
                                           unsigned mmask,
                                           dungeon_char_type *stair_type,
-                                          int *lev_mons,
-                                          bool *chose_ood_monster,
+                                          level_id *place,
                                           bool *want_band);
 
 static monster_type _band_member(band_type band);
@@ -455,15 +454,12 @@ static bool _is_random_monster(int mt)
 
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
-static monster_type _pick_random_monster(const level_id &place, int power,
-                                 int &lev_mons,
-                                 bool *chose_ood_monster,
+static monster_type _pick_random_monster(const level_id place,
+                                 level_id *final_place = nullptr,
                                  bool force_mobile = false)
 {
-    bool ood_dummy = false;
-    bool *isood = chose_ood_monster? chose_ood_monster : &ood_dummy;
-
-    *isood = false;
+    if (final_place)
+        *final_place = place; // FIXME
 
     if (crawl_state.game_is_arena())
     {
@@ -478,7 +474,8 @@ static monster_type _pick_random_monster(const level_id &place, int power,
 
     monster_type mon_type = MONS_PROGRAM_BUG;
 
-    lev_mons = power;
+    // FIXME: return actual place chosen
+    int lev_mons = place.absdepth();
 
     const int original_level = lev_mons;
 
@@ -561,26 +558,20 @@ static monster_type _pick_random_monster(const level_id &place, int power,
     if (monster_pick_tries <= 0)
         return MONS_PROGRAM_BUG;
 
-    if (level > original_level + 5)
-        *isood = true;
-
     if (lev_mons > original_level)
-        dprf("Orginal level: %d, Final level: %d, Monster: %s, OOD: %s",
+        dprf("Orginal level: %d, Final level: %d, Monster: %s",
              original_level, lev_mons,
              mon_type == MONS_NO_MONSTER || mon_type == MONS_PROGRAM_BUG ?
-             "NONE" : get_monster_data(mon_type)->name,
-             *isood? "YES" : "no");
+             "NONE" : get_monster_data(mon_type)->name);
 
     return mon_type;
 }
 
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
-monster_type pick_random_monster(const level_id &place,
-                                 bool *chose_ood_monster)
+monster_type pick_random_monster(const level_id &place)
 {
-    int level = place.absdepth();
-    return _pick_random_monster(place, level, level, chose_ood_monster);
+    return _pick_random_monster(place);
 }
 
 bool can_place_on_trap(monster_type mon_type, trap_type trap)
@@ -659,12 +650,15 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           coord_def &pos,
                                           unsigned mmask,
                                           dungeon_char_type *stair_type,
-                                          int *lev_mons,
-                                          bool *chose_ood_monster,
+                                          level_id *place,
                                           bool *want_band)
 {
     if (want_band)
         *want_band = false;
+
+    // This ignores passed place -- sounds like a bug.  The old code ignored
+    // the monster_level.
+    *place = level_id::current();
 
     if (mon_type == RANDOM_DRACONIAN)
     {
@@ -693,26 +687,22 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))
     {
-        level_id place = level_id::current();
-        const int original_level = *lev_mons;
 
         // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
         {
-            if (_find_mon_place_near_stairs(pos, stair_type, place))
+            if (_find_mon_place_near_stairs(pos, stair_type, *place))
             {
                 // No monsters spawned in the Temple.
-                if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
+                if (branches[place->branch].id == BRANCH_ECUMENICAL_TEMPLE)
                     proximity = PROX_AWAY_FROM_PLAYER;
-                else
-                    *lev_mons = place.absdepth();
             }
             else
                 proximity = PROX_AWAY_FROM_PLAYER;
             if (proximity == PROX_NEAR_STAIRS)
-                dprf("foreign monster from %s", place.describe().c_str());
+                dprf("foreign monster from %s", place->describe().c_str());
             else // we dunt cotton to no ferrniers in these here parts
-                place = level_id::current();
+                *place = level_id::current();
 
         } // end proximity check
 
@@ -726,10 +716,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             bool banded = vault_mon_bands[i];
 
             if (type == -1)
-            {
-                place = level_id::from_packed_place(base);
-                *lev_mons = place.absdepth();
-            }
+                *place = level_id::from_packed_place(base);
             else
             {
                 base_type = (monster_type) base;
@@ -743,8 +730,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     mon_type =
                         _resolve_monster_type(mon_type, proximity,
                                               base_type, pos, mmask,
-                                              stair_type, lev_mons,
-                                              chose_ood_monster,
+                                              stair_type,
+                                              place,
                                               want_band);
                 }
                 return mon_type;
@@ -754,11 +741,11 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         int tries = 0;
         while (tries++ < 300)
         {
-            const int target_level = *lev_mons;
+            level_id orig_place = *place;
+
             // Now pick a monster of the given branch and level.
-            mon_type = _pick_random_monster(place, *lev_mons, *lev_mons,
-                                       chose_ood_monster,
-                                       mon_type == RANDOM_MOBILE_MONSTER);
+            mon_type = _pick_random_monster(*place, place,
+                                            mon_type == RANDOM_MOBILE_MONSTER);
 
             // Don't allow monsters too stupid to use stairs (e.g.
             // non-spectral zombified undead) to be placed near
@@ -768,18 +755,15 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             {
                 break;
             }
-            *lev_mons = target_level;
+
+            *place = orig_place;
         }
 
         if (proximity == PROX_NEAR_STAIRS && tries >= 300)
         {
             proximity = PROX_AWAY_FROM_PLAYER;
 
-            // Reset target level.
-            *lev_mons = original_level;
-
-            mon_type = _pick_random_monster(place, *lev_mons, *lev_mons,
-                                       chose_ood_monster,
+            mon_type = _pick_random_monster(*place, place,
                                        mon_type == RANDOM_MOBILE_MONSTER);
         }
     }
@@ -790,9 +774,6 @@ monster_type pick_random_monster_for_place(const level_id &place,
                                            monster_type zombie_monster,
                                            bool want_corpse_capable)
 {
-    // Sometimes the caller wants an extra hard monster.
-    int lev = place.absdepth();
-
     // If the caller supplied a zombie_monster argument, use it to
     // figure out whether or not it wants a zombie, and if so, what
     // size.
@@ -805,7 +786,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
     // return MONS_NO_MONSTER and let the caller deal with it.
     for (int tries = 0; tries < 100; ++tries)
     {
-        monster_type chosen = _pick_random_monster(place, lev, lev, NULL);
+        monster_type chosen = _pick_random_monster(place, NULL);
 
         // If _pick_random_monster() gave us something invalid, give up
         // and let the caller deal with it.
@@ -957,15 +938,15 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     if (!mg.place.is_valid())
         mg.place = level_id::current();
-    int monster_level = mg.place.absdepth();
 
-    bool chose_ood_monster = false;
     bool want_band = false;
+    level_id place = mg.place;
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
                                    mg.pos, mg.map_mask,
-                                   &stair_type, &monster_level,
-                                   &chose_ood_monster,
+                                   &stair_type,
+                                   &place,
                                    &want_band);
+    bool chose_ood_monster = place.absdepth() > mg.place.absdepth() + 5;
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
 
@@ -1157,7 +1138,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (ugly_colour != BLACK)
         ugly_colour = BLACK;
 
-    monster* mon = _place_monster_aux(mg, 0, monster_level, force_pos, dont_place);
+    monster* mon = _place_monster_aux(mg, 0, place.absdepth(), force_pos, dont_place);
 
     // Bail out now if we failed.
     if (!mon)
@@ -1261,7 +1242,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             continue;
         }
 
-        monster *member = _place_monster_aux(band_template, mon, monster_level);
+        monster *member = _place_monster_aux(band_template, mon, place.absdepth());
         if (member)
         {
             member->flags |= MF_BAND_MEMBER;
