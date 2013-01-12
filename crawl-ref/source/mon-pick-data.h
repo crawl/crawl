@@ -1051,7 +1051,6 @@ static pop_entry pop_abyss[] =
   {  1,  5,    8, FLAT, MONS_SILENT_SPECTRE },
   {  1,  5,   17, FLAT, MONS_EIDOLON },
   {  1,  5,   52, FLAT, MONS_FLYING_SKULL },
-  {  1,  5,  334, FLAT, MONS_SKELETAL_WARRIOR },
   {  1,  5,    8, FLAT, MONS_PHANTASMAL_WARRIOR },
   {  1,  5,   46, FLAT, MONS_LICH },
   {  1,  5,    8, FLAT, MONS_ANCIENT_LICH },
