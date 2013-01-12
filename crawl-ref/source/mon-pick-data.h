@@ -1,4 +1,4 @@
-static pop_entry pop_d[] =
+static const pop_entry pop_d[] =
 { // Dungeon (OOD cap: 31 maxlev: 31)
   { -3,  7,  514, SEMI, MONS_GIANT_NEWT },
   { -3,  7,  999, FLAT, MONS_GOBLIN },
@@ -175,12 +175,12 @@ static pop_entry pop_d[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_temple[] =
+static const pop_entry pop_temple[] =
 { // Temple
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_orc[] =
+static const pop_entry pop_orc[] =
 { // Orcish Mines (OOD cap: 23 maxlev: 4)
   { -2,  4,   25, PEAK, MONS_FUNGUS },
   { -2,  4,  192, FLAT, MONS_GOBLIN }, /* symmetry crop from -4..6 */
@@ -209,7 +209,7 @@ static pop_entry pop_orc[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_elf[] =
+static const pop_entry pop_elf[] =
 { // Elven Halls (OOD cap: 16 maxlev: 7)
   {  1,  3, 1000, FLAT, MONS_FUNGUS }, /* symmetry crop from -3..7 */
   {  1,  3,   89, FLAT, MONS_ORC }, /* symmetry crop from -2..6 */
@@ -238,7 +238,7 @@ static pop_entry pop_elf[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_dwarf[] =
+static const pop_entry pop_dwarf[] =
 { // Dwarven Hall
   {  1,  1, 1000, FLAT, MONS_DEEP_DWARF },
   {  1,  1,  826, FLAT, MONS_DEEP_DWARF_SCION },
@@ -260,7 +260,7 @@ static pop_entry pop_dwarf[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_lair[] =
+static const pop_entry pop_lair[] =
 { // Lair (OOD cap: 21 maxlev: 8)
   { -3,  5,   89, PEAK, MONS_GIANT_NEWT },
   { -4,  6,  514, SEMI, MONS_GIANT_GECKO },
@@ -325,7 +325,7 @@ static pop_entry pop_lair[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_swamp[] =
+static const pop_entry pop_swamp[] =
 { // Swamp (OOD cap: 16 maxlev: 5)
   { -4,  6,  999, FLAT, MONS_FUNGUS },
   { -4,  6, 1000, FLAT, MONS_PLANT },
@@ -359,7 +359,7 @@ static pop_entry pop_swamp[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_shoals[] =
+static const pop_entry pop_shoals[] =
 { // Shoals (OOD cap: 16 maxlev: 5)
   { -4,  6,  258, PEAK, MONS_BAT },
   { -1,  5,  334, FLAT, MONS_SEA_SNAKE }, /* symmetry crop from -3..7 */
@@ -382,7 +382,7 @@ static pop_entry pop_shoals[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_snake[] =
+static const pop_entry pop_snake[] =
 { // Snake Pit (OOD cap: 16 maxlev: 6)
   { -1,  5,   52, SEMI, MONS_BALL_PYTHON },
   { -1,  5,  999, FLAT, MONS_ADDER }, /* symmetry crop from -3..7 */
@@ -397,7 +397,7 @@ static pop_entry pop_snake[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_spider[] =
+static const pop_entry pop_spider[] =
 { // Spider Nest (OOD cap: 16 maxlev: 6)
   { -1,  5,   89, SEMI, MONS_WORM }, /* symmetry crop from -2..6 */
   { -1,  5,   52, SEMI, MONS_GIANT_COCKROACH },
@@ -426,7 +426,7 @@ static pop_entry pop_spider[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_slime[] =
+static const pop_entry pop_slime[] =
 { // Slime Pits (OOD cap: 14 maxlev: 6)
   { -2,  6,  514, FLAT, MONS_OOZE }, /* symmetry crop from -3..7 */
   { -2,  6, 1000, FLAT, MONS_JELLY }, /* symmetry crop from -3..7 */
@@ -447,7 +447,7 @@ static pop_entry pop_slime[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_vaults[] =
+static const pop_entry pop_vaults[] =
 { // Vaults (OOD cap: 15 maxlev: 15)
 //{-19, -9,  514, SEMI, MONS_GIANT_NEWT },
 //{-19, -9,  999, FLAT, MONS_GOBLIN },
@@ -624,13 +624,13 @@ static pop_entry pop_vaults[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_blade[] =
+static const pop_entry pop_blade[] =
 { // Hall of Blades
   {  1,  1, 1000, FLAT, MONS_DANCING_WEAPON },
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_crypt[] =
+static const pop_entry pop_crypt[] =
 { // Crypt (OOD cap: 12 maxlev: 6)
   { -4,  6, 1000, FLAT, MONS_ZOMBIE_SMALL },
   { -1,  5,   98, SEMI, MONS_PHANTOM }, /* symmetry crop from -2..6 */
@@ -669,7 +669,7 @@ static pop_entry pop_crypt[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_tomb[] =
+static const pop_entry pop_tomb[] =
 { // Tomb (OOD cap: 10 maxlev: 5)
   { -1,  3,   89, FLAT, MONS_ZOMBIE_SMALL }, /* symmetry crop from -3..5 */
   {  1,  3,    3, SEMI, MONS_TRAPDOOR_SPIDER },
@@ -688,7 +688,7 @@ static pop_entry pop_tomb[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_hell[] =
+static const pop_entry pop_hell[] =
 { // Hell
   {  1,  1,   89, FLAT, MONS_ORANGE_RAT },
   {  1,  1,   89, FLAT, MONS_HELL_HOUND },
@@ -715,7 +715,7 @@ static pop_entry pop_hell[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_dis[] =
+static const pop_entry pop_dis[] =
 { // Dis (OOD cap: 3 maxlev: 5)
   { -3,  3,   25, PEAK, MONS_CLAY_GOLEM },
   { -2,  2,    8, PEAK, MONS_CRIMSON_IMP },
@@ -761,7 +761,7 @@ static pop_entry pop_dis[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_geh[] =
+static const pop_entry pop_geh[] =
 { // Gehenna (OOD cap: 3 maxlev: 5)
   { -3,  3,   25, PEAK, MONS_CLAY_GOLEM },
   { -5,  5,  690, SEMI, MONS_RED_DEVIL },
@@ -802,7 +802,7 @@ static pop_entry pop_geh[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_coc[] =
+static const pop_entry pop_coc[] =
 { // Cocytus (OOD cap: 3 maxlev: 5)
   { -4,  4,  136, SEMI, MONS_NECROPHAGE },
   { -5,  5,  514, SEMI, MONS_SKELETAL_WARRIOR },
@@ -838,7 +838,7 @@ static pop_entry pop_coc[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_tar[] =
+static const pop_entry pop_tar[] =
 { // Tartarus (OOD cap: 3 maxlev: 5)
   { -4,  4,   89, PEAK, MONS_CRIMSON_IMP },
   { -5,  5,  999, FLAT, MONS_SHADOW_IMP },
@@ -882,7 +882,7 @@ static pop_entry pop_tar[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_zot[] =
+static const pop_entry pop_zot[] =
 { // Zot (OOD cap: 4 maxlev: 6)
   { -3,  5,   89, PEAK, MONS_ELECTRIC_GOLEM },
   { -2,  4,   52, SEMI, MONS_ORB_OF_FIRE },
@@ -918,7 +918,7 @@ static pop_entry pop_zot[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_forest[] =
+static const pop_entry pop_forest[] =
 { // Forest (OOD cap: 15 maxlev: 6)
   { -1,  5,  690, FLAT, MONS_WOLF }, /* symmetry crop from -3..7 */
   { -1,  5,  690, FLAT, MONS_GRIZZLY_BEAR }, /* symmetry crop from -3..7 */
@@ -932,7 +932,7 @@ static pop_entry pop_forest[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_abyss[] =
+static const pop_entry pop_abyss[] =
 { // Abyss
   {  1,  5,   46, FLAT, MONS_FIRE_BAT },
   {  1,  5,   30, FLAT, MONS_HELL_HOUND },
@@ -1075,7 +1075,7 @@ static pop_entry pop_abyss[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_pan[] =
+static const pop_entry pop_pan[] =
 { // Pandemonium
   {  1,  1,   25, FLAT, MONS_HELL_HOUND },
   {  1,  1,   25, FLAT, MONS_HELL_HOG },
@@ -1155,27 +1155,27 @@ static pop_entry pop_pan[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_zig[] =
+static const pop_entry pop_zig[] =
 { // Ziggurat (OOD cap: 4 maxlev: -999)
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_lab[] =
+static const pop_entry pop_lab[] =
 { // Labyrinth
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_bazaar[] =
+static const pop_entry pop_bazaar[] =
 { // Bazaar
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_trove[] =
+static const pop_entry pop_trove[] =
 { // Trove
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_sewer[] =
+static const pop_entry pop_sewer[] =
 { // Sewer
   {  1,  1, 1000, FLAT, MONS_GIANT_NEWT },
   {  1,  1,  514, FLAT, MONS_GIANT_GECKO },
@@ -1189,7 +1189,7 @@ static pop_entry pop_sewer[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_ossuary[] =
+static const pop_entry pop_ossuary[] =
 { // Ossuary
   {  1,  1,   89, FLAT, MONS_MUMMY },
   {  1,  1,  514, FLAT, MONS_SKELETON_SMALL },
@@ -1197,7 +1197,7 @@ static pop_entry pop_ossuary[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_bailey[] =
+static const pop_entry pop_bailey[] =
 { // Bailey
   {  1,  1,  514, FLAT, MONS_GNOLL },
   {  1,  1,  514, FLAT, MONS_ORC },
@@ -1206,7 +1206,7 @@ static pop_entry pop_bailey[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_icecv[] =
+static const pop_entry pop_icecv[] =
 { // Ice Cave
   {  1,  1,   89, FLAT, MONS_YAK },
   {  1,  1,   89, FLAT, MONS_POLAR_BEAR },
@@ -1220,7 +1220,7 @@ static pop_entry pop_icecv[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_volcano[] =
+static const pop_entry pop_volcano[] =
 { // Volcano
   {  1,  1,  514, FLAT, MONS_HELL_HOUND },
   {  1,  1,  514, FLAT, MONS_HELL_HOG },
@@ -1236,13 +1236,18 @@ static pop_entry pop_volcano[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static pop_entry pop_wizlab[] =
+static const pop_entry pop_wizlab[] =
 { // Wizlab
   { 0,0,0,FLAT,MONS_0 }
 };
 
+// In C++ prior to C++11, we can't have an array of pointers to initialized
+// arrays of different sizes without declaring individual arrays as
+// standalone symbols first.  Thus this fugly list.
+// Statically defined counts are merely an inconsequential nicety, no need
+// to preserve them.
 #define POP(x) { pop_##x, ARRAYSZ(pop_##x) - 1 }
-static struct { pop_entry *pop; int count; } population[] =
+static const struct { const pop_entry *pop; int count; } population[] =
 {
     POP(d),
     POP(temple),
