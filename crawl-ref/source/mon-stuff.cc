@@ -1056,7 +1056,7 @@ static void _setup_torment_explosion(bolt & beam, const monster& origin)
     beam.damage  = 0;
     beam.name    = "wave of negative energy";
     beam.colour  = LIGHTGRAY;
-    beam.ex_size = 1;
+    beam.ex_size = 2;
 }
 
 static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
