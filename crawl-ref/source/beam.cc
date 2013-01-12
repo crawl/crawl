@@ -4299,10 +4299,10 @@ void bolt::affect_monster(monster* mon)
         return;
     }
 
-    // All kinds of beams go past orbs of destruction.
+    // All kinds of beams go past orbs of destruction and arcane familiars.
     // We don't check mons_is_projectile() since that probably won't be the
     // case for rolling boulders.
-    if (mon->type == MONS_ORB_OF_DESTRUCTION)
+    if (mon->type == MONS_ORB_OF_DESTRUCTION || mon->type == MONS_ARCANE_FAMILIAR)
     {
         apply_hit_funcs(mon, 0);
         return;
