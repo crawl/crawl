@@ -67,8 +67,7 @@ monster_type pick_random_monster_for_place(const level_id &place,
 
 class level_id;
 
-monster_type pick_random_monster(const level_id &place,
-                                 bool *chose_ood_monster = NULL);
+monster_type pick_random_monster(const level_id &place);
 
 conduct_type player_will_anger_monster(monster_type type);
 conduct_type player_will_anger_monster(monster* mon);
