@@ -47,6 +47,8 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_NEGATIVE_ENERGY;
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
         return ZAP_CRYSTAL_SPEAR;
+    case SPELL_FIREBALL:
+        return ZAP_FIREBALL;
     case SPELL_BOLT_OF_INACCURACY:
         return ZAP_BEAM_OF_ENERGY;
     case SPELL_STICKY_FLAME:
