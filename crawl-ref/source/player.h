@@ -404,10 +404,10 @@ public:
 
     void reset_prev_move();
 
-    int stat(stat_type stat, bool nonneg=true) const;
-    int strength(bool nonneg=true) const;
-    int intel(bool nonneg=true) const;
-    int dex(bool nonneg=true) const;
+    int stat(stat_type stat, bool nonneg = true) const;
+    int strength(bool nonneg = true) const;
+    int intel(bool nonneg = true) const;
+    int dex(bool nonneg = true) const;
     int max_stat(stat_type stat) const;
     int max_strength() const;
     int max_intel() const;
@@ -423,7 +423,7 @@ public:
     bool invisible() const;
     bool misled() const;
     bool can_see_invisible() const;
-    bool can_see_invisible(bool unid) const;
+    bool can_see_invisible(bool unid, bool items = true) const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
     bool nightvision() const;
