@@ -37,7 +37,7 @@ typedef struct
 int mons_depth(monster_type mcls, branch_type branch)
 {
     // legacy function, until ZotDef is ported
-    for (pop_entry *pe = population[branch].pop; pe->mons; pe++)
+    for (const pop_entry *pe = population[branch].pop; pe->mons; pe++)
         if (pe->mons == mcls)
             return (pe->minr + pe->maxr) / 2;
 
@@ -48,7 +48,7 @@ int mons_depth(monster_type mcls, branch_type branch)
 // A return value of zero means the monster will never appear. {dlb}
 int mons_rarity(monster_type mcls, branch_type branch)
 {
-    for (pop_entry *pe = population[branch].pop; pe->mons; pe++)
+    for (const pop_entry *pe = population[branch].pop; pe->mons; pe++)
         if (pe->mons == mcls)
         {
             // A rough and wrong conversion of new-style linear rarities to
