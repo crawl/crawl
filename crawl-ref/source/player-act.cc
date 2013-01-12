@@ -390,10 +390,8 @@ string player::conj_verb(const string &verb) const
 
 string player::hand_name(bool plural, bool *can_plural) const
 {
-    bool _can_plural;
-    if (can_plural == NULL)
-        can_plural = &_can_plural;
-    *can_plural = true;
+    if (can_plural)
+        *can_plural = true;
 
     string str;
 
