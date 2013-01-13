@@ -203,15 +203,15 @@ void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
-bool dgn_place_map(const map_def *map,
-                   bool check_collision,
-                   bool make_no_exits,
-                   const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_place_map(const map_def *map,
+                                     bool check_collision,
+                                     bool make_no_exits,
+                                     const coord_def &pos = INVALID_COORD);
 
-const map_def *dgn_safe_place_map(const map_def *map,
-                                  bool check_collision,
-                                  bool make_no_exits,
-                                  const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_safe_place_map(const map_def *map,
+                                          bool check_collision,
+                                          bool make_no_exits,
+                                          const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
 void run_map_epilogues();
@@ -249,7 +249,8 @@ void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 
-void dgn_register_place(const vault_placement &place, bool register_vault);
+const vault_placement *dgn_register_place(const vault_placement &place,
+                                          bool register_vault);
 
 void dgn_seen_vault_at(coord_def p);
 
