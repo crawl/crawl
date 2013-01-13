@@ -186,6 +186,11 @@ public:
     bool find_home_near_player();
     bool find_home_anywhere();
 
+    // The map that placed this monster.
+    bool has_originating_map() const;
+    string originating_map() const;
+    void set_originating_map(const string &);
+
     void set_ghost(const ghost_demon &ghost);
     void ghost_init(bool need_pos = true);
     void ghost_demon_init();

@@ -2137,6 +2137,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
             inf.title = desc;
         }
+
         bool temp = false;
         get_monster_db_desc(mi, inf, temp);
     }
@@ -3841,7 +3842,7 @@ static void _debug_describe_feature_at(const coord_def &where)
         const vault_placement &vp(*env.level_vaults[map_index]);
         const coord_def br = vp.pos + vp.size - 1;
         vault = make_stringf(" [Vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
-                             vp.map.name.c_str(),
+                             vp.map_name_at(where).c_str(),
                              vp.pos.x, vp.pos.y,
                              br.x, br.y,
                              vp.size.x, vp.size.y);

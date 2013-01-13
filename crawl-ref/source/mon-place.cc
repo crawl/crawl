@@ -1168,6 +1168,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (!mon)
         return 0;
 
+    if (mg.props.exists("map"))
+        mon->set_originating_map(mg.props["map"].get_string());
+
     if (mg.needs_patrol_point()
         || (mon->type == MONS_ALLIGATOR
             && !testbits(mon->flags, MF_BAND_MEMBER)))
@@ -1271,6 +1274,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         {
             member->flags |= MF_BAND_MEMBER;
             member->props["band_leader"].get_int() = mon->mid;
+            member->set_originating_map(mon->originating_map());
 
             // Priestly band leaders should have an entourage of the
             // same religion, unless members of that entourage already

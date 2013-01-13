@@ -145,6 +145,7 @@ public:
     void apply_grid();
     void draw_at(const coord_def &c);
     void connect(bool spotty = false) const;
+    string map_name_at(const coord_def &c) const;
 };
 
 class vault_place_iterator

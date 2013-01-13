@@ -4383,6 +4383,24 @@ bool monster::check_set_valid_home(const coord_def &place,
     return true;
 }
 
+bool monster::has_originating_map() const
+{
+    return this->props.exists("map");
+}
+
+string monster::originating_map() const
+{
+    if (!this->has_originating_map())
+        return "";
+    return this->props["map"].get_string();
+}
+
+void monster::set_originating_map(const string &map_name)
+{
+    if (!map_name.empty())
+        this->props["map"].get_string() = map_name;
+}
+
 #define MAX_PLACE_NEAR_DIST 8
 
 bool monster::find_home_near_place(const coord_def &c)
