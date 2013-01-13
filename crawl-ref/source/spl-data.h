@@ -1402,6 +1402,20 @@ struct spell_desc
 },
 
 {
+    SPELL_ELECTRIC_FORM, "Electric Form",
+     SPTYP_AIR | SPTYP_TRANSMUTATION,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+
+{
     SPELL_DEATH_CHANNEL, "Death Channel",
      SPTYP_NECROMANCY,
      SPFLAG_HELPFUL,

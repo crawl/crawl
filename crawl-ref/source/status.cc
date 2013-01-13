@@ -920,6 +920,11 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "wisp-form";
         inf->long_text  = "You are an insubstantial wisp.";
         break;
+    case TRAN_ELECTRIC:
+        inf->light_text = "Electric";
+        inf->short_text = "electric-form";
+        inf->long_text  = "You are living electricity.";
+        break;
     case TRAN_NONE:
         break;
     }

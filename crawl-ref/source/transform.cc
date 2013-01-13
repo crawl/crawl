@@ -55,6 +55,7 @@ static const char* form_names[] =
     "wisp",
     "jelly",
     "fungus",
+    "electric",
 };
 
 const char* transform_name(transformation_type form)
@@ -159,6 +160,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
 
     // Some can't wear anything.
     case TRAN_DRAGON:
+    case TRAN_ELECTRIC:
     case TRAN_BAT:
     case TRAN_PIG:
     case TRAN_SPIDER:
@@ -449,6 +451,8 @@ monster_type transform_mons()
         return MONS_ANIMATED_TREE;
     case TRAN_WISP:
         return MONS_INSUBSTANTIAL_WISP;
+    case TRAN_ELECTRIC:
+        return MONS_ELECTRIC_GOLEM;
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:
@@ -655,6 +659,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
         return min(10 + random2(pow) + random2(pow), 60);
     case TRAN_STATUE:
     case TRAN_DRAGON:
+    case TRAN_ELECTRIC:
     case TRAN_LICH:
     case TRAN_BAT:
         return min(20 + random2(pow) + random2(pow), 100);
@@ -822,6 +827,12 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "dragon";
         str       = 10;
         msg      += "a fearsome dragon!";
+        break;
+
+    case TRAN_ELECTRIC:
+        tran_name = "electric";
+        dex       = 10;
+        msg      += "animated electricity!";
         break;
 
     case TRAN_LICH:
@@ -1151,6 +1162,12 @@ void untransform(bool skip_wielding, bool skip_move)
                      "losing the spider transformation");
         if (!skip_move)
             you.check_clinging(false);
+        break;
+
+    case TRAN_ELECTRIC:
+        mpr("You ground out.", MSGCH_DURATION);
+        notify_stat_change(STAT_DEX, -10, true,
+                    "losing the electric transformation");
         break;
 
     case TRAN_BAT:

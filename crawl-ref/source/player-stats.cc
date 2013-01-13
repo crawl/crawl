@@ -300,7 +300,6 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
              "You feel %s.",
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
-
     _handle_stat_change(which_stat, cause, see_source);
 }
 
@@ -459,6 +458,7 @@ static int _dex_modifier()
     switch (you.form)
     {
     case TRAN_SPIDER: result +=  5; break;
+    case TRAN_ELECTRIC: result +=  10; break;
     case TRAN_STATUE: result -=  2; break;
     case TRAN_BAT:    result +=  5; break;
     default:                        break;

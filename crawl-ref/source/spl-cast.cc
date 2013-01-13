@@ -839,6 +839,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_BLADE_HANDS:
     case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
+    case SPELL_ELECTRIC_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
@@ -1589,6 +1590,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_DRAGON_FORM:
         return cast_transform(powc, TRAN_DRAGON, fail);
+
+    case SPELL_ELECTRIC_FORM:
+        return cast_transform(powc, TRAN_ELECTRIC, fail);
 
     case SPELL_NECROMUTATION:
         return cast_transform(powc, TRAN_LICH, fail);

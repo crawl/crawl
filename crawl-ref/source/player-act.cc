@@ -244,6 +244,10 @@ brand_type player::damage_brand(int)
             ret = SPWPN_FREEZING;
             break;
 
+        case TRAN_ELECTRIC:
+            ret = SPWPN_ELECTROCUTION;
+            break;
+
         case TRAN_LICH:
             ret = SPWPN_DRAINING;
             break;

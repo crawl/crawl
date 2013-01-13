@@ -307,8 +307,9 @@ enum transformation_type
     TRAN_WISP,
     TRAN_JELLY,
     TRAN_FUNGUS,
+    TRAN_ELECTRIC,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_FUNGUS
+    LAST_FORM = TRAN_ELECTRIC
 };
 
 enum beam_type                  // bolt::flavour
@@ -3221,6 +3222,7 @@ enum spell_type
     SPELL_STATUE_FORM,
     SPELL_ICE_FORM,
     SPELL_DRAGON_FORM,
+    SPELL_ELECTRIC_FORM,
     SPELL_NECROMUTATION,
     SPELL_DEATH_CHANNEL,
     SPELL_SYMBOL_OF_TORMENT,

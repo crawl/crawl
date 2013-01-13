@@ -508,6 +508,8 @@ bool is_player_same_species(const monster_type mon, bool transform)
             return (mons_genus(mon) == MONS_SPIDER);
         case TRAN_DRAGON:
             return (mons_genus(mon) == MONS_DRAGON); // Includes all drakes.
+        case TRAN_ELECTRIC:
+            return (mon == MONS_ELECTRIC_GOLEM);
         case TRAN_PIG:
             return (mons_genus(mon) == MONS_HOG);
         case TRAN_JELLY:
@@ -1490,6 +1492,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         case TRAN_ICE_BEAST:
             rf--;
             break;
+        case TRAN_ELECTRIC:
+            rf += 1;
+            break;
         case TRAN_WISP:
             rf += 2;
             break;
@@ -1557,6 +1562,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         {
         case TRAN_ICE_BEAST:
             rc += 3;
+            break;
+        case TRAN_ELECTRIC:
+            rc += 1;
             break;
         case TRAN_WISP:
             rc += 2;
@@ -1722,6 +1730,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
             return 3;
 
+        if (you.form == TRAN_ELECTRIC)
+            return 3;
+
         if (you.duration[DUR_RESISTANCE])
             re++;
 
@@ -1751,6 +1762,7 @@ int player_res_torment(bool, bool temp)
             || you.form == TRAN_LICH
             || you.form == TRAN_FUNGUS
             || you.form == TRAN_TREE
+            || you.form == TRAN_ELECTRIC
             || you.form == TRAN_WISP
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
@@ -1826,6 +1838,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         {
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
+        case TRAN_ELECTRIC:
         case TRAN_DRAGON:
         case TRAN_FUNGUS:
         case TRAN_TREE:
@@ -3717,6 +3730,8 @@ int check_stealth(void)
     case TRAN_PORCUPINE:
         race_mod = 12; // small but noisy
         break;
+    case TRAN_ELECTRIC:
+        race_mod = 6; // crackling, ozone smell
     case TRAN_PIG:
         race_mod = 9; // trotters, oinking...
         break;
@@ -6181,9 +6196,15 @@ int player::armour_class() const
         case TRAN_WISP:
             AC += 1000;
             break;
+
         case TRAN_FUNGUS:
             AC += 1200;
             break;
+
+        case TRAN_ELECTRIC:
+            AC += 1000 + skill(SK_AIR_MAGIC, 25);
+            break;
+
         case TRAN_DRAGON: // Draconians handled above
             AC += 1600;
             break;
@@ -6346,6 +6367,7 @@ bool player::is_unbreathing() const
     case TRAN_FUNGUS:
     case TRAN_TREE:
     case TRAN_JELLY:
+    case TRAN_ELECTRIC:
     case TRAN_WISP:
         return true;
     default:

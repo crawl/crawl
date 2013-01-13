@@ -1977,6 +1977,16 @@ void melee_attack::set_attack_verb()
             else
                 attack_verb = "shred";
             break;
+        case TRAN_ELECTRIC:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "shock";
+            else if (damage_done < HIT_MED)
+                attack_verb = "jolt";
+            else if (damage_done < HIT_STRONG)
+                attack_verb = "zap";
+            else
+                attack_verb = "blast";
+            break;
         case TRAN_STATUE:
         case TRAN_LICH:
             if (you.has_usable_claws())
@@ -3759,6 +3769,7 @@ int melee_attack::calc_to_hit(bool random)
                 break;
             case TRAN_BAT:
             case TRAN_BLADE_HANDS:
+            case TRAN_ELECTRIC:
                 mhit += maybe_random2(12, random);
                 break;
             case TRAN_STATUE:
@@ -5214,6 +5225,9 @@ int melee_attack::calc_base_unarmed_damage()
         case TRAN_FUNGUS:
         case TRAN_TREE:
             damage = 12;
+            break;
+        case TRAN_ELECTRIC:
+            damage = 8 + div_rand_round(you.dex(), 3);
             break;
         case TRAN_BLADE_HANDS:
             damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
