@@ -3455,6 +3455,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         return; // not a real monster
     monster& mons = *monster_at(mi.pos);
 
+    if (mons.has_originating_map())
+        inf.body << make_stringf("\nPlaced by map: %s",
+                                 mons.originating_map().c_str());
+
     inf.body << "\nMonster health: "
              << mons.hit_points << "/" << mons.max_hit_points << "\n";
 

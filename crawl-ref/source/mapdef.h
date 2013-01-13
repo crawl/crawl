@@ -302,6 +302,7 @@ public:
     map_string_list strlist;
 };
 
+typedef pair<coord_def, coord_def> map_corner_t;
 class map_def;
 class rectangle_iterator;
 struct keyed_mapspec;
@@ -423,8 +424,8 @@ public:
                           const coord_def &br, Matrix<bool> &flags);
 
     // Merge vault onto the tl/br subregion, where mask is true.
-    void merge_subvault(const coord_def &tl, const coord_def &br,
-                        const Matrix<bool> &mask, const map_def &vault);
+    map_corner_t merge_subvault(const coord_def &tl, const coord_def &br,
+                                const Matrix<bool> &mask, const map_def &vault);
 private:
     void init_from(const map_lines &map);
     template <typename V> void clear_vector(V &vect);
@@ -1051,6 +1052,21 @@ public:
     }
 };
 
+// Position of a subvault inside its parent.
+struct subvault_place
+{
+    coord_def tl, br;
+    unique_ptr<map_def> subvault;
+
+    subvault_place();
+    subvault_place(const coord_def &_tl, const coord_def &_br,
+                   const map_def &_subvault);
+    subvault_place(const subvault_place &place);
+    subvault_place &operator = (const subvault_place &place);
+
+    void set_subvault(const map_def &);
+};
+
 /////////////////////////////////////////////////////////////////////////////
 // map_def: map definitions for maps loaded from .des files.
 //
@@ -1120,6 +1136,7 @@ public:
     dungeon_feature_type border_fill_type;
 
     ::map<dungeon_feature_type, string> feat_renames;
+    vector<subvault_place> subvault_places;
 
 private:
     // This map has been loaded from an index, and not fully realised.
@@ -1137,6 +1154,7 @@ private:
 public:
     map_def();
 
+    string name_at(const coord_def &pos) const;
     string desc_or_name() const;
 
     string describe() const;

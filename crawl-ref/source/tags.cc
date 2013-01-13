@@ -1513,6 +1513,9 @@ static void unmarshall_level_map_unique_ids(reader &th)
     unmarshallSet(th, env.level_uniq_map_tags, unmarshallStringNoMax);
 }
 
+static void marshall_subvault_place(writer &th,
+                                    const subvault_place &subvault_place);
+
 static void marshall_mapdef(writer &th, const map_def &map)
 {
     marshallString(th, map.name);
@@ -1521,8 +1524,21 @@ static void marshall_mapdef(writer &th, const map_def &map)
     marshallString(th, map.description);
     marshallMap(th, map.feat_renames,
                 _marshall_as_int<dungeon_feature_type>, marshallStringNoMax);
+    marshall_iterator(th,
+                      map.subvault_places.begin(),
+                      map.subvault_places.end(),
+                      marshall_subvault_place);
 }
 
+static void marshall_subvault_place(writer &th,
+                                    const subvault_place &subvault_place)
+{
+    marshallCoord(th, subvault_place.tl);
+    marshallCoord(th, subvault_place.br);
+    marshall_mapdef(th, *subvault_place.subvault);
+}
+
+static subvault_place unmarshall_subvault_place(reader &th);
 static map_def unmarshall_mapdef(reader &th)
 {
     map_def map;
@@ -1533,7 +1549,20 @@ static map_def unmarshall_mapdef(reader &th)
     unmarshallMap(th, map.feat_renames,
                   unmarshall_int_as<dungeon_feature_type>,
                   unmarshallStringNoMax);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_REIFY_SUBVAULTS)
+#endif
+        unmarshall_vector(th, map.subvault_places, unmarshall_subvault_place);
     return map;
+}
+
+static subvault_place unmarshall_subvault_place(reader &th)
+{
+    subvault_place subvault;
+    subvault.tl = unmarshallCoord(th);
+    subvault.br = unmarshallCoord(th);
+    subvault.set_subvault(unmarshall_mapdef(th));
+    return subvault;
 }
 
 static void marshall_vault_placement(writer &th, const vault_placement &vp)

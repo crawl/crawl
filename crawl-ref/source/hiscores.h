@@ -80,6 +80,7 @@ private:
     branch_type branch;             // dungeon branch
     string      map;                // the vault (if any) the player is in
     string      mapdesc;            // DESC: of the vault the player is in.
+    string      killer_map;         // the vault (if any) that placed the killer
     int         final_hp;           // actual current HPs (probably <= 0)
     int         final_max_hp;       // net HPs after rot
     int         final_max_max_hp;   // gross HPs before rot

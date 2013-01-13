@@ -4611,6 +4611,8 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
+    if (!place.map.has_tag("transparent"))
+        mspec.props["map"].get_string() = place.map_name_at(where);
     return dgn_place_monster(mspec, monster_level, where, false,
                              generate_awake, patrolling);
 }
@@ -6322,6 +6324,12 @@ void run_map_epilogues()
 
 //////////////////////////////////////////////////////////////////////////
 // vault_placement
+
+string vault_placement::map_name_at(const coord_def &where) const
+{
+    const coord_def offset = where - this->pos;
+    return this->map.name_at(offset);
+}
 
 void vault_placement::reset()
 {

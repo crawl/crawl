@@ -175,6 +175,42 @@ int store_tilename_get_index(const string tilename)
 }
 
 ///////////////////////////////////////////////
+// subvault_place
+//
+
+subvault_place::subvault_place()
+    : tl(), br(), subvault()
+{
+}
+
+subvault_place::subvault_place(const coord_def &_tl,
+                               const coord_def &_br,
+                               const map_def &_subvault)
+    : tl(_tl), br(_br), subvault(new map_def(_subvault))
+{
+}
+
+subvault_place::subvault_place(const subvault_place &place)
+    : tl(place.tl), br(place.br),
+      subvault(place.subvault.get() ? new map_def(*place.subvault) : NULL)
+{
+}
+
+subvault_place &subvault_place::operator = (const subvault_place &place)
+{
+    tl = place.tl;
+    br = place.br;
+    subvault.reset(place.subvault.get() ? new map_def(*place.subvault) : NULL);
+    return *this;
+}
+
+void subvault_place::set_subvault(const map_def &_subvault)
+{
+    subvault.reset(new map_def(_subvault));
+}
+
+
+///////////////////////////////////////////////
 // level_range
 //
 
@@ -1156,8 +1192,10 @@ void map_lines::fill_mask_matrix(const string &glyphs,
         }
 }
 
-void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
-                               const Matrix<bool> &mask, const map_def &vmap)
+map_corner_t map_lines::merge_subvault(const coord_def &mtl,
+                                       const coord_def &mbr,
+                                       const Matrix<bool> &mask,
+                                       const map_def &vmap)
 {
     const map_lines &vlines = vmap.map;
 
@@ -1355,6 +1393,8 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
             // Set keyspec index for this subvault.
             (*overlay)(x, y).keyspec_idx = idx;
         }
+
+    return map_corner_t(vtl, vbr);
 }
 
 void map_lines::overlay_tiles(tile_spec &spec)
@@ -2185,6 +2225,7 @@ void map_def::reinit()
     map.clear();
     mons.clear();
     feat_renames.clear();
+    subvault_places.clear();
 }
 
 bool map_def::map_already_used() const
@@ -2237,6 +2278,24 @@ bool map_def::in_map(const coord_def &c) const
 int map_def::glyph_at(const coord_def &c) const
 {
     return map(c);
+}
+
+string map_def::name_at(const coord_def &c) const
+{
+    vector<string> names;
+    names.push_back(this->name);
+    for (int i = 0, nsubvaults = this->subvault_places.size();
+         i < nsubvaults; ++i)
+    {
+        const subvault_place &subvault = subvault_places[i];
+        if (c.x >= subvault.tl.x && c.x <= subvault.br.x &&
+            c.y >= subvault.tl.y && c.y <= subvault.br.y &&
+            subvault.subvault->in_map(c - subvault.tl))
+        {
+            names.push_back(subvault.subvault->name_at(c - subvault.tl));
+        }
+    }
+    return comma_separated_line(names.begin(), names.end(), ", ", ", ");
 }
 
 string map_def::desc_or_name() const
@@ -3237,12 +3296,17 @@ string map_def::apply_subvault(string_spec &spec)
         ASSERT(vault.map.width() <= vwidth);
         ASSERT(vault.map.height() <= vheight);
 
-        map.merge_subvault(tl, br, flags, vault);
+        const map_corner_t subvault_corners =
+            map.merge_subvault(tl, br, flags, vault);
+
         copy_hooks_from(vault, "post_place");
         env.new_subvault_names.push_back(vault.name);
         env.new_subvault_tags.push_back(vault.tags);
-
         _register_subvault(vault.name, vault.tags);
+        subvault_places.push_back(
+            subvault_place(subvault_corners.first,
+                           subvault_corners.second,
+                           vault));
 
         return "";
     }
