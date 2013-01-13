@@ -6940,11 +6940,8 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monster* mon = looker->as_monster();
-    return (!mon->has_ench(ENCH_BLIND) && !invisible()
-            || in_water()
-            || mon->can_see_invisible()
-            || mons_sense_invis(mon)
-               && distance2(pos(), mon->pos()) <= dist_range(4));
+    return (mons_sense_invis(mon) && distance2(pos(), mon->pos()) <= dist_range(4))
+            || (!mon->has_ench(ENCH_BLIND) && (!invisible() || mon->can_see_invisible()));
 }
 
 bool player::backlit(bool check_haloed, bool self_halo) const
