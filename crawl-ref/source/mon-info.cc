@@ -1356,7 +1356,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_MUTE))
         v.push_back("permanently mute");
     if (is(MB_BLIND))
-        v.push_back("permanently blind");
+        v.push_back("blind");
     if (is(MB_DUMB))
         v.push_back("stupefied");
     if (is(MB_MAD))
