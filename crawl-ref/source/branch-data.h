@@ -12,7 +12,6 @@ const Branch branches[NUM_BRANCHES] = {
     //  entry stairs, exit stairs, short name, long name, abbrev name
     //  entry message
     //  has_uniques, floor colour, rock colour
-    //  mons rarity function, mons level function
     //  travel shortcut, dangerous branch end, ambient noise level
 
     { BRANCH_MAIN_DUNGEON, NUM_BRANCHES, 0, 0, 27, 0,
@@ -137,7 +136,7 @@ const Branch branches[NUM_BRANCHES] = {
 
     { BRANCH_VESTIBULE_OF_HELL, NUM_BRANCHES, 27, 27, 1, 27,
       BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_HELL, DNGN_EXIT_HELL, // sentinel
+      DNGN_ENTER_HELL, DNGN_EXIT_HELL,
       "Hell", "the Vestibule of Hell", "Hell",
       NULL,
       true, LIGHTGREY, LIGHTRED,
@@ -145,7 +144,7 @@ const Branch branches[NUM_BRANCHES] = {
 
     { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_DIS, NUM_FEATURES, // sentinel
+      DNGN_ENTER_DIS, NUM_FEATURES,
       "Dis", "the Iron City of Dis", "Dis",
       NULL,
       false, CYAN, BROWN,
@@ -153,7 +152,7 @@ const Branch branches[NUM_BRANCHES] = {
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_GEHENNA, NUM_FEATURES, // sentinel
+      DNGN_ENTER_GEHENNA, NUM_FEATURES,
       "Gehenna", "Gehenna", "Geh",
       NULL,
       false, BROWN, RED,
@@ -161,7 +160,7 @@ const Branch branches[NUM_BRANCHES] = {
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_COCYTUS, NUM_FEATURES, // sentinel
+      DNGN_ENTER_COCYTUS, NUM_FEATURES,
       "Cocytus", "Cocytus", "Coc",
       NULL,
       false, LIGHTBLUE, LIGHTCYAN,
@@ -169,7 +168,7 @@ const Branch branches[NUM_BRANCHES] = {
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_TARTARUS, NUM_FEATURES, // sentinel
+      DNGN_ENTER_TARTARUS, NUM_FEATURES,
       "Tartarus", "Tartarus", "Tar",
       NULL,
       false, MAGENTA, MAGENTA,
