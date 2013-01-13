@@ -4794,8 +4794,8 @@ bool monster::visible_to(const actor *looker) const
     bool blind = looker->is_monster()
                  && looker->as_monster()->has_ench(ENCH_BLIND);
 
-    bool vis = !blind && !invisible() || looker->can_see_invisible()
-               || sense_invis && adjacent(pos(), looker->pos());
+    bool vis = (sense_invis && adjacent(pos(), looker->pos()))
+               || (!blind && (!invisible() || looker->can_see_invisible()));
 
     return (vis && (this == looker || !submerged()));
 }
