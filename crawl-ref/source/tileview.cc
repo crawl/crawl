@@ -1312,7 +1312,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         cell.quad_glow = true;
 
     if (mc.flags & MAP_DISJUNCT)
-        cell.disjunct = true;
+        cell.disjunct = get_disjunct_phase(gc);
 
     if (Options.show_travel_trail)
     {
