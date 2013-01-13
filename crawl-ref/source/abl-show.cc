@@ -2816,7 +2816,8 @@ int choose_ability_menu(const vector<talent>& talents)
 #endif
 
     ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                             | MF_TOGGLE_ACTION, text_only);
+                             | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE,
+                             text_only);
 
     abil_menu.set_highlighter(NULL);
 #ifdef USE_TILE_LOCAL
