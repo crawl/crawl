@@ -195,6 +195,24 @@ string utf8_to_mb(const char *s)
 #endif
 }
 
+static string utf8_validate(const char *s)
+{
+    string d;
+    ucs_t c;
+    int l;
+
+    while ((l = utf8towc(&c, s)))
+    {
+        s += l;
+
+        char buf[4];
+        int r = wctoutf8(buf, c);
+        for (int i = 0; i < r; i++)
+            d.push_back(buf[i]);
+    }
+    return d;
+}
+
 string mb_to_utf8(const char *s)
 {
 #ifdef __ANDROID__
@@ -226,24 +244,6 @@ string mb_to_utf8(const char *s)
     }
     return d;
 #endif
-}
-
-static string utf8_validate(const char *s)
-{
-    string d;
-    ucs_t c;
-    int l;
-
-    while ((l = utf8towc(&c, s)))
-    {
-        s += l;
-
-        char buf[4];
-        int r = wctoutf8(buf, c);
-        for (int i = 0; i < r; i++)
-            d.push_back(buf[i]);
-    }
-    return d;
 }
 
 static bool _check_trail(FILE *f, const char* bytes, int len)
