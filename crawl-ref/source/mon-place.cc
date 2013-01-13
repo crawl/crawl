@@ -923,7 +923,7 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - env.absdepth0 * 117);
 }
 
-static string _abyss_monster_creation_message(monster* mon, bool visible)
+static string _abyss_monster_creation_message(const monster* mon, bool visible)
 {
     if (mon->type == MONS_DEATH_COB)
     {
