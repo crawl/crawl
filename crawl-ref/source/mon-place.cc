@@ -933,8 +933,8 @@ static string _abyss_monster_creation_message(const monster* mon, bool visible)
     }
 
     string messages[] = {
-        (visible ? " appears" : " flickers") + string(" in a shower of")
-            + (one_chance_in(3) ? " translocational energy." : " sparks."),
+        (visible ? " appears" : " flickers") + string(" in a shower of ")
+            + (one_chance_in(3) ? "translocational energy." : "sparks."),
         " materialises.",
         string(" emerges from ") + (one_chance_in(3) ? "chaos." : "the beyond."),
         " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + "!",
@@ -942,7 +942,7 @@ static string _abyss_monster_creation_message(const monster* mon, bool visible)
         string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
         string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething")
             + string(" chaos."),
-        string(" punctures the fabric of") + (one_chance_in(5) ? " time!" : " the universe."),
+        string(" punctures the fabric of ") + (one_chance_in(5) ? "time!" : "the universe."),
         string(" manifests") + (silenced(you.pos()) ? "!" : " with a bang!")
     };
     return messages[min(random2(9), random2(9))];
