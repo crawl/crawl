@@ -166,7 +166,7 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
-static int _etc_disjunction(int, const coord_def& loc)
+int get_disjunct_phase(const coord_def& loc)
 {
     static int turns = you.num_turns;
     static coord_def centre = find_centre_for(loc, AREA_DISJUNCTION);
@@ -178,20 +178,25 @@ static int _etc_disjunction(int, const coord_def& loc)
     }
 
     if (centre.origin())
-        return MAGENTA;
+        return 2;
 
     int x = loc.x - centre.x;
     int y = loc.y - centre.y;
     double dist = sqrt(x*x + y*y);
     int parity = ((int) (dist / PI) + you.frame_no / 11) % 2 ? 1 : -1;
     double dir = sin(atan2(x, y)*PI + parity * you.frame_no / 3) + 1;
-    switch ((int) floor(dir * 2))
+    return 1 + (int) floor(dir * 2);
+}
+
+static int _etc_disjunction(int, const coord_def& loc)
+{
+    switch (get_disjunct_phase(loc))
     {
-    case 0:
-        return LIGHTBLUE;
     case 1:
-        return BLUE;
+        return LIGHTBLUE;
     case 2:
+        return BLUE;
+    case 3:
         return MAGENTA;
     default:
         return LIGHTMAGENTA;
