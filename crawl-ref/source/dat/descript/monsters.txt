@@ -1,4 +1,4 @@
-%%%%
+﻿%%%%
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
@@ -317,14 +317,15 @@ the minds of the mightiest and most brilliant spell-casters.
 %%%%
 Margery
 
-A lithe spellcaster. She's scantily clad, yet the little she wears seems to be
-finest-quality dragon armour, granting quite good protection. And distracting
-humanoid males has its value in combat, as well.
+A lithe spellcaster in service to the powers of Hell; it is her duty to ensure
+that the inhabitants of the Dungeon never forget their place. As a girl, she
+personally slew the ancient dragon from whose hide her strange armour is
+crafted.
 %%%%
 Maud
 
 A mysterious warrior princess from a far-off kingdom, on a quest to retrieve
-the legendary sword 'Entarex'. Countless have been the admirers who, thinking
+the legendary sword 'Entarex.' Countless have been the admirers who, thinking
 about Maud, forgot everything else.
 %%%%
 Maurice
