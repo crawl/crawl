@@ -155,6 +155,7 @@ apportation APPORTATION
 blink BLINK
 controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
+disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
 phase_shift PHASE_SHIFT
