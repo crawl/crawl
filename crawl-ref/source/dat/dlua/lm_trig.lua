@@ -819,6 +819,10 @@ function DgnTriggerer:turn(triggerable, marker, ev)
     self.countdown = self.countdown +
         crawl.random_range(self.delay_min, self.delay_max, 1)
   end
+
+  if self.countdown < 0 then
+    self:reset_countdown()
+  end
 end
 
 function DgnTriggerer:reset_countdown()
