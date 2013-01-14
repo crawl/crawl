@@ -1,4 +1,4 @@
-﻿%%%%
+%%%%
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
@@ -325,7 +325,7 @@ crafted.
 Maud
 
 A mysterious warrior princess from a far-off kingdom, on a quest to retrieve
-the legendary sword 'Entarex.' Countless have been the admirers who, thinking
+the legendary sword 'Entarex'. Countless have been the admirers who, thinking
 about Maud, forgot everything else.
 %%%%
 Maurice
