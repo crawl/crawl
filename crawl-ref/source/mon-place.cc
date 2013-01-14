@@ -929,6 +929,7 @@ static string _abyss_monster_creation_message(const monster* mon, bool visible)
     {
         if (visible)
             return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
+        // XXX: What if the player can't smell?
         return " smells like butter!";
     }
 
