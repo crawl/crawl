@@ -1842,6 +1842,10 @@ static vector<formatted_string> _get_overview_stats()
     const bool boosted_hp  = you.duration[DUR_DIVINE_VIGOUR]
                                 || you.berserk();
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
+    const bool boosted_ac  = you.duration[DUR_ICY_ARMOUR]
+                                || you.duration[DUR_STONESKIN];
+    const bool boosted_ev  = you.duration[DUR_PHASE_SHIFT]
+                                || you.duration[DUR_AGILITY];
     const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
                                 || you.duration[DUR_MIGHT]
                                 || you.duration[DUR_BERSERK];
@@ -1890,10 +1894,16 @@ static vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "Gold %d", you.gold);
     cols1.add_formatted(0, buf, false);
 
-    snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
+    if (boosted_ac)
+    {
+        snprintf(buf, sizeof buf, "AC <lightblue>%2d</lightblue>",
+                 you.armour_class());
+    }
+    else
+        snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
     cols1.add_formatted(1, buf, false);
 
-    if (you.duration[DUR_AGILITY])
+    if (boosted_ev)
     {
         snprintf(buf, sizeof buf, "EV <lightblue>%2d</lightblue>",
                  player_evasion());
