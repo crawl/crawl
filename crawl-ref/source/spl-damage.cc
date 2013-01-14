@@ -1151,7 +1151,7 @@ bool mons_shatter(monster* caster, bool actual)
         }
     }
 
-    int pow = 5 + caster->hit_dice / 3;
+    int pow = 5 + caster->hit_dice * 3;
     int rad = 3 + div_rand_round(caster->hit_dice, 5);
 
     int dest = 0;
