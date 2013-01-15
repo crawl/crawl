@@ -298,7 +298,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_SPEAR,             "spear",               6,  4, 11,  50,  3,
         SK_POLEARMS,     HANDS_ONE,    SIZE_SMALL,  MI_NONE, true,
         DAMV_PIERCING, 10 },
-    { WPN_TRIDENT,           "trident",             9,  3, 13, 160,  4,
+    { WPN_TRIDENT,           "trident",             9,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 10 },
     { WPN_HALBERD,           "halberd",            13, -3, 15, 200,  5,
