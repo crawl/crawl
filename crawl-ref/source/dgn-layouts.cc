@@ -58,6 +58,8 @@ void dgn_build_basic_level()
     coord_def begin;
     coord_def end;
 
+    vector<coord_def> upstairs;
+
     _make_trail(35, 30, 35, 20, corrlength, intersect_chance, no_corr,
                  begin, end);
 
@@ -65,6 +67,7 @@ void dgn_build_basic_level()
     {
         grd(begin) = DNGN_STONE_STAIRS_DOWN_I;
         grd(end)   = DNGN_STONE_STAIRS_UP_I;
+        upstairs.push_back(begin);
     }
 
     begin.reset(); end.reset();
@@ -76,6 +79,7 @@ void dgn_build_basic_level()
     {
         grd(begin) = DNGN_STONE_STAIRS_DOWN_II;
         grd(end)   = DNGN_STONE_STAIRS_UP_II;
+        upstairs.push_back(begin);
     }
 
     begin.reset(); end.reset();
@@ -87,6 +91,7 @@ void dgn_build_basic_level()
     {
         grd(begin) = DNGN_STONE_STAIRS_DOWN_III;
         grd(end)   = DNGN_STONE_STAIRS_UP_III;
+        upstairs.push_back(begin);
     }
 
     // Generate a random dead-end that /may/ have a shaft.  Good luck!
@@ -106,6 +111,8 @@ void dgn_build_basic_level()
         dprf("Placing shaft trail...");
         if (!end.origin())
         {
+            if (!begin.origin())
+                upstairs.push_back(begin);
             if (!one_chance_in(3) && !map_masked(end, MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
             {
                 trap_def* ts = NULL;
@@ -140,6 +147,15 @@ void dgn_build_basic_level()
                 dprf("Trail does not end in shaft.");
             }
         }
+    }
+
+    for (vector<coord_def>::iterator pathstart = upstairs.begin();
+         pathstart != upstairs.end(); pathstart++)
+    {
+        vector<coord_def>::iterator pathend = pathstart;
+        pathend++;
+        for (; pathend != upstairs.end(); pathend++)
+            join_the_dots(*pathstart, *pathend, MMT_VAULT);
     }
 
     if (level_number > 1 && one_chance_in(16))
