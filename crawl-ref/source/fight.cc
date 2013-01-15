@@ -480,9 +480,6 @@ int player_weapon_str_weight()
 
     int ret = weapon_str_weight(weapon->base_type, weapon->sub_type);
 
-    if (hands_reqd(*weapon, you.body_size()) == HANDS_HALF && !you.shield())
-        ret += 1;
-
     return ret;
 }
 

@@ -124,7 +124,6 @@ enum corpse_type
 enum hands_reqd_type
 {
     HANDS_ONE,
-    HANDS_HALF,
     HANDS_TWO,
 };
 

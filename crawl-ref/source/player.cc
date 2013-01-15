@@ -5909,10 +5909,7 @@ int player::armour_tohit_penalty(bool random_factor, int scale) const
 
 int player::shield_tohit_penalty(bool random_factor, int scale) const
 {
-    const item_def* wp = slot_item(EQ_WEAPON);
-    int factor = (wp && hands_reqd(*wp, body_size()) == HANDS_HALF) ? 2 : 1;
-
-    return maybe_roll_dice(factor, adjusted_shield_penalty(scale), random_factor);
+    return maybe_roll_dice(1, adjusted_shield_penalty(scale), random_factor);
 }
 
 int player::skill(skill_type sk, int scale, bool real) const
@@ -6788,10 +6785,7 @@ int player::usable_tentacles() const
     if (wp)
     {
         hands_reqd_type hands_req = hands_reqd(*wp, body_size());
-        if (hands_req == HANDS_HALF && you.shield())
-            hands_req = HANDS_ONE;
-
-        free_tentacles -= hands_req + 2;
+        free_tentacles -= 2 * hands_req + 2;
     }
 
     return free_tentacles;

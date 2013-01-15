@@ -161,8 +161,7 @@ static bool _two_handed()
         return false;
 
     hands_reqd_type wep_type = hands_reqd(*wpn, you.body_size());
-    return wep_type == HANDS_TWO || wep_type == HANDS_HALF
-                                    && you.has_usable_offhand();
+    return wep_type == HANDS_TWO;
 }
 
 void ash_check_bondage(bool msg)

@@ -988,8 +988,6 @@ void melee_attack::adjust_noise()
 {
     if (attacker->is_player() && weapon != NULL)
     {
-        hands = hands_reqd(*weapon, attacker->body_size());
-
         switch (single_damage_type(*weapon))
         {
         case DAM_BLUDGEON:
@@ -3785,14 +3783,9 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
         random_var shield_penalty = constant(0);
         if (attacker_shield_penalty)
         {
-            if (weapon && hands == HANDS_HALF)
-                shield_penalty = div_rand_round(rv::roll_dice(1, attacker_shield_penalty), 20);
-            else
-            {
-                shield_penalty = div_rand_round(rv::min(rv::roll_dice(1, attacker_shield_penalty),
-                                                        rv::roll_dice(1, attacker_shield_penalty)),
-                                                20);
-            }
+            shield_penalty = div_rand_round(rv::min(rv::roll_dice(1, attacker_shield_penalty),
+                                                    rv::roll_dice(1, attacker_shield_penalty)),
+                                            20);
         }
         // Give unarmed shield-users a slight penalty always.
         if (!weapon && player_wearing_slot(EQ_SHIELD))
@@ -5272,14 +5265,6 @@ int melee_attack::calc_damage()
         potential_damage =
             !weapon ? calc_base_unarmed_damage()
                     : calc_base_weapon_damage();
-
-        // [0.6 AC/EV overhaul] Shields don't go well with hand-and-half weapons.
-        if (weapon && hands == HANDS_HALF)
-        {
-            potential_damage =
-                max(1,
-                    potential_damage - div_rand_round(roll_dice(1, attacker_shield_penalty), 20));
-        }
 
         potential_damage = player_stat_modify_damage(potential_damage);
 
