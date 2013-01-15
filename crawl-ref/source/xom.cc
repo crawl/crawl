@@ -1287,7 +1287,7 @@ static int _xom_send_allies(int sever, bool debug = false)
                     || (!is_demonic[i] && hostiletype == 2))
                 {
                     summons[i]->attitude = ATT_HOSTILE;
-                    // XXX need to reset summon quota here?
+                    // XXX: Need to reset summon quota here?
                     behaviour_event(summons[i], ME_ALERT, &you);
                 }
             }
