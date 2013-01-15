@@ -54,6 +54,7 @@
 #include "notes.h"
 #include "player.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -1063,18 +1064,37 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     }
 }
 
-static void _pain_recover_mp(int dam)
+static void _powered_by_pain(int dam)
 {
-    if (you.mutation[MUT_POWERED_BY_PAIN]
-        && (you.magic_points < you.max_magic_points))
-    {
-        if (random2(dam) > 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN)
-            || dam >= you.hp_max / 2)
-        {
-            int gain_mp = roll_dice(3, 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN));
+    const int level = player_mutation_level(MUT_POWERED_BY_PAIN);
 
-            mpr("You focus.");
-            inc_mp(gain_mp);
+    if (you.mutation[MUT_POWERED_BY_PAIN]
+        && (random2(dam) > 2 + 3 * level
+            || dam >= you.hp_max / 2))
+    {
+        switch (random2(4))
+        {
+        case 0:
+        case 1:
+        {
+            if (you.magic_points < you.max_magic_points)
+            {
+                mpr("You focus on the pain.");
+                int mp = roll_dice(3, 2 + 3 * level);
+                mpr("You feel your power returning.");
+                inc_mp(mp);
+                break;
+            }
+            break;
+        }
+        case 2:
+            mpr("You focus on the pain.");
+            potion_effect(POT_MIGHT, level * 20);
+            break;
+        case 3:
+            mpr("You focus on the pain.");
+            potion_effect(POT_AGILITY, level * 20);
+            break;
         }
     }
 }
@@ -1263,7 +1283,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
-            _pain_recover_mp(dam);
+            _powered_by_pain(dam);
 
             return;
         } // else hp <= 0
