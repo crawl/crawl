@@ -228,13 +228,10 @@ run on 9x).
 
 * To build Crawl on Windows, first download and install msysgit. msysgit is
   a full MinGW setup that even includes Git (which happens to be the source
-  code management system used by the Crawl team). To get msysgit, be sure to
-  download the 'msysGit-netinstall' from here:
+  code management system used by the Crawl team). To get msysgit, download
+  'msysGit-netinstall' from here:
 
-    http://code.google.com/p/msysgit/downloads/list
-
-  NOTE: Do NOT get any of the versions that do not have 'netinstall' in the
-        filename. The 'netinstall' is the only one used by the Crawl team.
+    http://code.google.com/p/msysgit/downloads/list?q=net+installer
 
   NOTE: msysgit should be installed to a path that does not contain spaces,
         such as the default location 'c:\msysgit'.
