@@ -3622,17 +3622,16 @@ monster_type summon_any_dragon(dragon_class_type dct)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
-    int temp_rand;
-
     switch (dct)
     {
     case DRAGON_LIZARD:
-        temp_rand = random2(100);
-        mon = ((temp_rand > 80) ? MONS_SWAMP_DRAKE :
-               (temp_rand > 59) ? MONS_KOMODO_DRAGON :
-               (temp_rand > 34) ? MONS_FIRE_DRAKE :
-               (temp_rand > 11) ? MONS_DEATH_DRAKE :
-                                  MONS_DRAGON);
+        mon = random_choose_weighted(
+            5, MONS_SWAMP_DRAKE,
+            5, MONS_KOMODO_DRAGON,
+            6, MONS_FIRE_DRAKE,
+            6, MONS_DEATH_DRAKE,
+            3, MONS_DRAGON,
+            0);
         break;
 
     case DRAGON_DRACONIAN:
@@ -3640,16 +3639,17 @@ monster_type summon_any_dragon(dragon_class_type dct)
         break;
 
     case DRAGON_DRAGON:
-        temp_rand = random2(90);
-        mon = ((temp_rand > 80) ? MONS_MOTTLED_DRAGON :
-               (temp_rand > 70) ? MONS_LINDWURM :
-               (temp_rand > 60) ? MONS_STORM_DRAGON :
-               (temp_rand > 50) ? MONS_MOTTLED_DRAGON :
-               (temp_rand > 40) ? MONS_STEAM_DRAGON :
-               (temp_rand > 30) ? MONS_DRAGON :
-               (temp_rand > 20) ? MONS_ICE_DRAGON :
-               (temp_rand > 10) ? MONS_SWAMP_DRAGON
-                                : MONS_SHADOW_DRAGON);
+        mon = random_choose_weighted(
+            1, MONS_MOTTLED_DRAGON,
+            1, MONS_LINDWURM,
+            1, MONS_STORM_DRAGON,
+            1, MONS_MOTTLED_DRAGON,
+            1, MONS_STEAM_DRAGON,
+            1, MONS_DRAGON,
+            1, MONS_ICE_DRAGON,
+            1, MONS_SWAMP_DRAGON,
+            1, MONS_SHADOW_DRAGON,
+            0);
         break;
 
     default:
