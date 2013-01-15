@@ -769,11 +769,6 @@ static string _handedness_string(const item_def &item)
     case HANDS_ONE:
         description += "It is a one handed weapon.";
         break;
-    case HANDS_HALF:
-        description += "It can be used with one hand, or more "
-                       "effectively with two (i.e. when not using a "
-                       "shield).";
-        break;
     case HANDS_TWO:
         description += "It is a two handed weapon.";
         break;

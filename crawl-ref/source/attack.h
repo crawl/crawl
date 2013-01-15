@@ -51,7 +51,6 @@ public:
     item_def        *weapon;
     brand_type      damage_brand;
     skill_type      wpn_skill;
-    hands_reqd_type hands;
 
     // Attacker's shield, stored so we can reference it and determine
     // the attacker's combat effectiveness
