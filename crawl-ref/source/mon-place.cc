@@ -3640,10 +3640,9 @@ monster_type summon_any_dragon(dragon_class_type dct)
 
     case DRAGON_DRAGON:
         mon = random_choose_weighted(
-            1, MONS_MOTTLED_DRAGON,
+            2, MONS_MOTTLED_DRAGON,
             1, MONS_LINDWURM,
             1, MONS_STORM_DRAGON,
-            1, MONS_MOTTLED_DRAGON,
             1, MONS_STEAM_DRAGON,
             1, MONS_DRAGON,
             1, MONS_ICE_DRAGON,
