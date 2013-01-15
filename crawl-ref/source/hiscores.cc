@@ -1062,10 +1062,8 @@ void scorefile_entry::set_score_fields() const
             fields->add_field("mapdesc", "%s", mapdesc.c_str());
     }
 
-    if (!killer_map.empty() && killer_map != map)
-    {
+    if (!killer_map.empty())
         fields->add_field("killermap", "%s", killer_map.c_str());
-    }
 
 #ifdef DGL_EXTENDED_LOGFILES
     const string short_msg = short_kill_message();
