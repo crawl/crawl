@@ -2469,7 +2469,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
             if (hitfunc->is_affected(*ri) >= AFF_YES)
             {
                 const monster* mon = monster_at(*ri);
-                if (mon != NULL)
+                if (mon && _mons_is_valid_target(mon, mode, range))
                     return _want_target_monster(mon, mode);
             }
         }
