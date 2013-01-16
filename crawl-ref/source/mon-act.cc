@@ -1568,6 +1568,14 @@ static bool _handle_throw(monster* mons, bolt & beem)
         || (!liquefied && one_chance_in(archer ? 9 : 5)))
         return false;
 
+    // Stabbers going in for the kill don't use ranged attacks.
+    if (mons_class_flag(mons->type, M_STABBER)
+        && mons->get_foe() != NULL
+        && mons->get_foe()->incapacitated())
+    {
+        return false;
+    }
+
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !mons_near(mons))
         return false;

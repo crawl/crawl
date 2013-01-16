@@ -2637,6 +2637,8 @@ enum monster_type                      // menv[].type
     MONS_TENGU_CONJURER,
     MONS_TENGU_REAVER,
 
+    MONS_SPRIGGAN_ENCHANTER,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
