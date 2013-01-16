@@ -2027,6 +2027,13 @@ vector<spell_type> _vehumet_eligible_gift_spells()
     else if (you.piety >= piety_breakpoint(0))
         max_level = 1;
     max_level = std::min(you.experience_level, max_level);
+    // First offer will always be level 1.
+    if (you.num_total_gifts[you.religion] == 0)
+        max_level = 1;
+
+    // Also impose a minimum level. When this reaches 10, the player
+    // won't get any more gifts.
+    int min_level = you.num_total_gifts[you.religion]/2;
 
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
@@ -2034,21 +2041,20 @@ vector<spell_type> _vehumet_eligible_gift_spells()
         if (!is_valid_spell(spell))
             continue;
 
-        // Your first offer will always be level 1 (even if you joined
-        // with extra piety by being a Monk, for example).
-        // TODO: seen spells in destroyed books should be gifted
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
             && !you.seen_spell[spell]
             && spell_rarity(spell) != -1
             && spell_difficulty(spell) <= max_level
-            && !_is_recent_spell(spell)
-            && (you.num_total_gifts[you.religion] > 0
-                || spell_difficulty(spell) == 1))
+            && spell_difficulty(spell) >= min_level
+            && !_is_recent_spell(spell))
         {
             eligible_spells.push_back(spell);
         }
     }
+    // Don't get stuck if all level 1 spells have been seen.
+    if (you.num_total_gifts[you.religion] == 0 && eligible_spells.empty())
+        eligible_spells.push_back(SPELL_MAGIC_DART);
     return (eligible_spells);
 }
 
