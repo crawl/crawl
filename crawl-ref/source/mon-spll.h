@@ -2033,4 +2033,15 @@
       }
     },
 
+    {  MST_SPRIGGAN_ENCHANTER,
+      {
+       SPELL_CONFUSE,
+       SPELL_HIBERNATION,
+       SPELL_INVISIBILITY,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
 #endif

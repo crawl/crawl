@@ -1331,6 +1331,21 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_SABRE, -1);
         break;
 
+    case MONS_SPRIGGAN_ASSASSIN:
+        if (!melee_only)
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_BLOWGUN;
+            item_race = MAKE_ITEM_NO_RACE;
+            break;
+        }
+        // deliberate fall-through
+    case MONS_SPRIGGAN_ENCHANTER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = one_chance_in(3) ? WPN_QUICK_BLADE : WPN_DAGGER;
+        break;
+
     case MONS_SPRIGGAN_RIDER:
         if (!melee_only && one_chance_in(4))
         {
@@ -1502,6 +1517,16 @@ static void _give_ammo(monster* mon, int level,
             {
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                                   SPMSL_CURARE);
+
+                mitm[thing_created].quantity = random_range(4, 10);
+            }
+            else if (mon->type == MONS_SPRIGGAN_ASSASSIN)
+            {
+                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                  random_choose_weighted(4, SPMSL_PARALYSIS,
+                                                         3, SPMSL_SLEEP,
+                                                         2, SPMSL_CONFUSION,
+                                                         0));
 
                 mitm[thing_created].quantity = random_range(4, 10);
             }
@@ -1810,6 +1835,8 @@ static void _give_shield(monster* mon, int level)
         break;
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_RIDER:
+    case MONS_SPRIGGAN_ASSASSIN:
+    case MONS_SPRIGGAN_ENCHANTER:
         if (!one_chance_in(4))
             break;
     case MONS_SPRIGGAN_DEFENDER:
@@ -2236,6 +2263,8 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_AIR_MAGE:
+    case MONS_SPRIGGAN_ASSASSIN:
+    case MONS_SPRIGGAN_ENCHANTER:
     case MONS_SPRIGGAN_DEFENDER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
