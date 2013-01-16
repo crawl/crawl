@@ -2026,6 +2026,7 @@ vector<spell_type> _vehumet_eligible_gift_spells()
         max_level = 2;
     else if (you.piety >= piety_breakpoint(0))
         max_level = 1;
+    max_level = std::min(you.experience_level, max_level);
 
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
