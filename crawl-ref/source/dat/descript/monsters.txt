@@ -72,9 +72,6 @@ Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
 regenerate his desiccated skeletal remains even if completely disintegrated.
-However, while this complicated process would usually take months or even
-years, Boris has mastered it to the point of being able to reintegrate himself
-in a matter of minutes.
 %%%%
 Cerebov
 
