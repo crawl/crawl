@@ -25,8 +25,10 @@ for (@files)
     next if m[(^|/)\.git(modules|attributes)$];
     next if /\.(lex|tab)\./;
     next if !/\./;
-    my $tab = /\.(rb|pl|sh)$/i; # Allow tabs for these files.
+    my $tab = /\.(rb|pl|sh)$/;  # Allow tabs for these files.
     $tab = 1 if /Makefile/i;    # ... and for makefiles.
+    my $bom = /\.js$/;          # And BOM for these.
+    $bom = 1 if /CREDITS/;
     undef local $/;
     open F, "<$_" or die "Can't open $_";
     my $file = $_;
@@ -49,6 +51,7 @@ for (@files)
     # Note: it's a byte string, as we had to handle invalid encodings above,
     # and $cont may be invalid.
     print "zero width space: $file\n" if s/\xe2\x80\x8b//sg; # U+200B
+    print "BOM: $file\n" if !$bom && s/\xef\xbb\xbf//sg; # U+FFEF
 
     if ($_ ne $cont)
     {
