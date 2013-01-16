@@ -277,7 +277,7 @@ void nowrap_eol_cprintf_touchui(const char *format, ...)
             break;
         default:
 //            printf("q: %s\n",buf.c_str());
-            nowrap_eol_cprintf(buf.c_str());
+            nowrap_eol_cprintf("%s", buf.c_str());
     }
     va_end(args);
 }
@@ -981,12 +981,15 @@ static void _print_status_lights(int y)
         }
         else
         {
-            while (i_light<lights.size() && i_light<crawl_view.hudsz.x-1)
+            while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
                 textcolor(lights[i_light].color);
-                if (i_light==lights.size()-1 && strwidth(lights[i_light].text) < crawl_view.hudsz.x-wherex())
+                if (i_light == lights.size() - 1
+                    && strwidth(lights[i_light].text) < crawl_view.hudsz.x - wherex())
+                {
                     CPRINTF("%s",lights[i_light].text.c_str());
-                else if (lights.size()>crawl_view.hudsz.x/2)
+                }
+                else if ((int)lights.size() > crawl_view.hudsz.x / 2)
                     CPRINTF("%.1s",lights[i_light].text.c_str());
                 else
                     CPRINTF("%.1s ",lights[i_light].text.c_str());
