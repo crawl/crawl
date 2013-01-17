@@ -4,7 +4,7 @@
 # no monsters at all.
 
 NAME:   serial_pond
-TAGS:    allow_dup extra luniq_serial
+TAGS:   allow_dup extra luniq_serial decor
 DEPTH:  D:7-14, Lair
 CHANCE: 1%
 {{

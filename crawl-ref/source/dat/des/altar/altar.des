@@ -27,6 +27,18 @@
 #
 ###############################################################################
 
+{{
+function interest_check(e)
+  if you.branch() == "D" then
+    if you.absdepth() > 9 then
+      e.tags('extra')
+	end
+  else
+	e.tags('extra')
+  end
+end
+}}
+
 default-depth: D
 
 ##############################################################################
@@ -75,7 +87,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   basic_altar
-TAGS:   allow_dup extra no_monster_gen transparent
+TAGS:   allow_dup extra no_monster_gen transparent mini_float decor
 DEPTH:  5-
 CHANCE: 20% (Orc)
 CHANCE: 10% (Snake, Forest, Dwarf)
@@ -92,8 +104,9 @@ MAP
 ENDMAP
 
 NAME:    old_standard_altar
-TAGS:    allow_dup
+TAGS:    transparent mini_float allow_dup decor
 SHUFFLE: cvxxxx
+: interest_check(_G)
 MAP
 ...........
 .xxxx.xxxx.
@@ -109,9 +122,10 @@ MAP
 ENDMAP
 
 NAME:    lemuel_round_altar
-TAGS:    allow_dup
+TAGS:    allow_dup decor
 SHUFFLE: cvxx
 SUBST:   X:x.
+: interest_check(_G)
 MAP
    xxXxx
   xx...xx
@@ -125,7 +139,8 @@ MAP
 ENDMAP
 
 NAME: lemuel_crystal_altar
-TAGS: allow_dup
+TAGS: transparent allow_dup decor
+: interest_check(_G)
 MAP
 b.b
 .C.
@@ -137,12 +152,13 @@ DEPTH:  D:2-18, Swamp, Shoals
 WEIGHT: 9
 : local brnd = crawl.random2(13)
 : if brnd > 10 then
-TAGS:   no_monster_gen no_rotate
+TAGS:   transparent no_monster_gen no_rotate decor
 # this case almost always has altar access
 : else
-TAGS:   no_monster_gen no_pool_fixup no_rotate
+TAGS:   transparent no_monster_gen no_pool_fixup no_rotate decor
 : end
 KPROP:  C = no_rtele_into
+: interest_check(_G)
 MAP
    .........
   ...wwwww...
@@ -161,6 +177,7 @@ NAME:   lemuel_altar_in_water2
 TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  D:2-18, Lair, Snake, Swamp, Shoals
 WEIGHT: 1
+: interest_check(_G)
 MAP
    www
   wwwww
@@ -181,10 +198,12 @@ MAP
 ENDMAP
 
 NAME:    lemuel_doored_altar
+TAGS:    transparent mini_float decor
 DEPTH:   D:1-18, Vaults, Lair, Elf, Crypt
 SHUFFLE: XY
 SUBST:   X = .
 SUBST:   Y = +
+: interest_check(_G)
 MAP
 .........
 .xxxmxxx.
@@ -230,6 +249,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:  lemuel_tele_altar
+TAGS:  transparent mini_float decor
 DEPTH: D:2-18, Vaults
 SUBST: Y = X x
 KFEAT: X = teleport trap
@@ -248,12 +268,14 @@ MAP
 ENDMAP
 
 NAME:  lemuel_statue_altar
+TAGS:  transparent decor
 DEPTH: 2-18, Vaults, Elf
 : if you.absdepth() < 10 then
 SUBST: F = G
 : end
 SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
+: interest_check(_G)
 MAP
 .........
 .ccccccc.
@@ -263,9 +285,10 @@ MAP
 ENDMAP
 
 NAME:   lemuel_coloured_pillars_altar
+TAGS:   no_rotate decor
 DEPTH:  D:2-18, Vaults, Elf
-TAGS:   no_rotate
 COLOUR: c = blue / yellow / red / cyan
+: interest_check(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxx
 ...................x
@@ -281,6 +304,7 @@ DEPTH:  D:2-12, Vaults, Elf, Crypt
 ORIENT: float
 SUBST:  T:T., )=)}], c:ccx
 KMASK:  T = no_monster_gen
+: interest_check(_G)
 MAP
 ccccccc
 cT...Tc
@@ -352,7 +376,7 @@ ENDMAP
 
 NAME:    good_gods_temple_1
 DEPTH:   D:2-27, Lair
-TAGS:    no_monster_gen no_trap_gen uniq_good_god_temple extra
+TAGS:    no_monster_gen no_trap_gen uniq_good_god_temple extra decor
 MONS:    plant
 KFEAT:   D = altar_elyvilon
 KFEAT:   E = altar_zin
@@ -375,7 +399,7 @@ ENDMAP
 NAME:    good_gods_mini_temple
 DEPTH:   D:2-27, Lair
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup uniq_good_god_temple
-TAGS:    no_item_gen extra
+TAGS:    no_item_gen extra decor
 MONS:    plant
 KFEAT:   D = altar_elyvilon
 KFEAT:   E = altar_zin
