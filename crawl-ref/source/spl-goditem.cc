@@ -325,9 +325,11 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
+        {
             pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
-        if (!pgain) // Always give a 50% chance of gaining a little piety.
-            pgain = coinflip();
+            if (!pgain) // Always give a 50% chance of gaining a little piety.
+                pgain = coinflip();
+        }
 
         // The feedback no longer tells you if you gained any piety this time,
         // it tells you merely the general rate.
