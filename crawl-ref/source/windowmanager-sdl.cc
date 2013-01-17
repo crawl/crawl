@@ -562,6 +562,11 @@ int SDLWrapper::wait_event(wm_event *event)
     if (!SDL_WaitEvent(&sdlevent))
         return 0;
 
+#ifdef __ANDROID__
+    while (sdlevent.type > SDL_VIDEOEXPOSE) // last credible event type in SDL_events.h
+        if (!SDL_WaitEvent(&sdlevent)) return 0;
+#endif
+
     // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type)
     {
