@@ -1186,10 +1186,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (player_in_branch(BRANCH_ABYSS) && !mg.summoner)
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
 
-    // Message to player from stairwell/gate appearance.
-    if (you.see_cell(mg.pos) &&
-       (mg.proximity == PROX_NEAR_STAIRS ||
-       (player_in_branch(BRANCH_ABYSS) && !mg.summoner)))
+    // Message to player from stairwell/gate/abyss appearance.
+    if (you.see_cell(mg.pos)
+        && (mg.proximity == PROX_NEAR_STAIRS
+            || (player_in_branch(BRANCH_ABYSS)
+                && !mg.summoner && !mons_is_mimic(mon->type))))
     {
         string msg;
         bool is_visible = mon->visible_to(&you);
