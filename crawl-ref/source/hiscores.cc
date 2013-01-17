@@ -628,6 +628,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
+    "mirror_damage",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -2251,6 +2252,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             needs_beam_cause_line = true;
         }
 
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_MIRROR_DAMAGE:
+        desc += terse ? "mirror damage" : "Killed by mirror damage";
         needs_damage = true;
         break;
 
