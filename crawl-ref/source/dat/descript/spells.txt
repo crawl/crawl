@@ -576,8 +576,8 @@ contact with reality.
 Shatter spell
 
 This spell causes a burst of concussive force around the caster, which will
-damage most creatures, although those composed of stone, metal or crystal, or
-otherwise brittle, will particularly suffer. The magic has been known to
+damage most creatures, although those composed of stone, metal, crystal or
+otherwise brittle material will particularly suffer. The magic has been known to
 adversely affect walls.
 %%%%
 Shock spell
