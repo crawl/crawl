@@ -66,7 +66,7 @@ ENDMAP
 
 NAME:    eino_jars
 DEPTH:   D:7-14
-TAGS:    extra luniq_mini
+TAGS:    extra
 SHUFFLE: 11%
 MONS:    killer bee / nothing w:5
 SUBST:   % = %*
@@ -1030,7 +1030,7 @@ ENDMAP
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:2-6
-TAGS:    extra luniq_mini
+TAGS:    extra
 MONS:    gnoll;scythe.robe, hobgoblin;scythe.robe, orc;scythe.robe
 SUBST:   n = 1:20 n:5
 KMONS:   n = Sigmund, gnoll;scythe.robe / hobgoblin;scythe.robe / orc;scythe.robe
@@ -1300,7 +1300,7 @@ ENDMAP
 NAME:   corexii_checkpoint_a
 DEPTH:  D, Elf
 WEIGHT: 7
-TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini
+TAGS:   no_monster_gen no_item_gen allow_dup extra
 NSUBST: 1 = 2:1 / *:.
 : if you.branch() == "Elf" then
 MONS:   elf
@@ -1319,7 +1319,7 @@ ENDMAP
 NAME:    corexii_checkpoint_b
 DEPTH:   D, Elf
 WEIGHT:  3
-TAGS:    no_monster_gen no_item_gen allow_dup extra luniq_mini
+TAGS:    no_monster_gen no_item_gen allow_dup extra
 SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
@@ -2419,7 +2419,7 @@ MAP
 ENDMAP
 
 NAME:    statue_in_the_mist_lemuel
-TAGS:    extra luniq_mini
+TAGS:    extra
 MONS:    orange crystal statue / silver statue / ice statue
 DEPTH:   D:9-, Orc, Elf, Snake, Swamp
 MARKER:  G = lua:fog_machine { cloud_type= "grey smoke", \
@@ -3148,7 +3148,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_st_funbox
-TAGS:  extra luniq_mini
+TAGS:  extra
 DEPTH: D:9-
 KMONS: 0 = 0
 KMONS: 9 = 9
@@ -3229,7 +3229,7 @@ ENDMAP
 
 # Small chamber for a nice item (Eino)
 NAME:   small_chamber_with_monster
-TAGS:   mini_float extra luniq_mini
+TAGS:   mini_float extra
 DEPTH:  D:8-27, Elf, Crypt
 MAP
 xxxxxxx
@@ -4452,7 +4452,7 @@ ENDMAP
 
 # Lava pond
 NAME:  minivault_15
-TAGS:  extra luniq_mini
+TAGS:  extra
 KMONS: 1 = silver statue / ice statue
 KFEAT: 1 = <
 MAP
@@ -4468,7 +4468,7 @@ MAP
 ENDMAP
 
 NAME:    minivault_16
-TAGS:    allow_dup extra luniq_mini
+TAGS:    allow_dup extra
 WEIGHT:  40
 # as this replaces the former statue only minivaults
 SHUFFLE: G111
@@ -4488,7 +4488,7 @@ MAP
 ENDMAP
 
 NAME: minivault_20
-TAGS: allow_dup extra luniq_mini abyss ruin_abyss
+TAGS: allow_dup extra abyss ruin_abyss
 MAP
 ............
 .xxxx..xxxx.
@@ -4505,7 +4505,7 @@ MAP
 ENDMAP
 
 NAME:    minivault_25_ag
-TAGS:    allow_dup extra luniq_mini abyss ruin_abyss
+TAGS:    allow_dup extra abyss ruin_abyss
 SHUFFLE: XY, ABCDE
 SUBST:   X=x, Y=+
 SUBST:   A=?, B=%%%*, C=T, D=0009, E=89

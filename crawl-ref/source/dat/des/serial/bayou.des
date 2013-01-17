@@ -7,7 +7,7 @@
 # placing a large number of ponds and lakes with thick vegetation.
 
 NAME:   serial_bayou
-TAGS:   allow_dup extra luniq_serial
+TAGS:   allow_dup extra luniq_serial decor
 DEPTH:  D, Snake, Lair
 CHANCE: 1%
 {{
@@ -18,7 +18,7 @@ CHANCE: 1%
 }}
 
 NAME:   serial_bayou_pond_a
-TAGS:   coolio_serial_bayou allow_dup extra
+TAGS:   coolio_serial_bayou allow_dup extra decor
 DEPTH:  D, Snake, Lair
 MONS:   plant
 SUBST:  ? = .WW2
@@ -36,7 +36,7 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_pond_b
-TAGS:   coolio_serial_bayou allow_dup extra
+TAGS:   coolio_serial_bayou allow_dup extra decor
 DEPTH:  D, Snake, Lair
 MONS:   plant
 SUBST:  ? = .WW21
@@ -54,7 +54,7 @@ ENDMAP
 
 NAME:   serial_bayou_pond_c
 #mangrove
-TAGS:   coolio_serial_bayou allow_dup extra
+TAGS:   coolio_serial_bayou allow_dup extra decor
 DEPTH:  D, Snake, Lair
 MONS:   plant
 SUBST:  ? = WWtt2
@@ -78,7 +78,7 @@ ENDMAP
 
 NAME:   serial_bayou_pond_d
 #small pond
-TAGS:  coolio_serial_bayou allow_dup extra
+TAGS:  coolio_serial_bayou allow_dup extra decor
 DEPTH:  D, Snake, Lair
 SUBST:  1 = 1W.
 SUBST:  W = WWWt
@@ -94,7 +94,7 @@ ENDMAP
 
 NAME:serial_bayou_pond_e
 #small pond
-TAGS:  coolio_serial_bayou allow_dup extra
+TAGS:  coolio_serial_bayou allow_dup extra decor
 DEPTH: D, Snake, Lair
 SUBST: W = WWW1.
 SUBST: . = ..t
@@ -109,7 +109,7 @@ ENDMAP
 
 NAME: serial_bayou_ford_a
 #a small pond that can be forded
-TAGS:  coolio_serial_bayou transparent extra
+TAGS:  coolio_serial_bayou transparent extra decor
 DEPTH: D, Snake, Lair
 SUBST: ? = Wt
 SUBST: V = Www
@@ -138,7 +138,7 @@ ENDMAP
 
 NAME:   serial_bayou_shore_a
 #a shore of a small lake
-TAGS:   coolio_serial_bayou extra
+TAGS:   coolio_serial_bayou extra decor
 ORIENT: east
 DEPTH:  D, Snake, Lair
 SUBST:  ? = Wt
@@ -166,7 +166,7 @@ ENDMAP
 
 NAME:   serial_bayou_shore_b
 #a shore of a small pond, duplicable
-TAGS:   coolio_serial_bayou allow_dup extra
+TAGS:   coolio_serial_bayou allow_dup extra decor
 ORIENT: east
 DEPTH:  D, Snake, Lair
 SUBST:  ? = Wt
@@ -188,7 +188,7 @@ ENDMAP
 
 NAME:   serial_bayou_lagoon_a
 #mangrove
-TAGS:   coolio_serial_bayou transparent extra
+TAGS:   coolio_serial_bayou transparent extra decor
 DEPTH:  D, Snake, Lair
 SUBST:  ? = W11.
 SUBST:  w = wwt

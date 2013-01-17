@@ -289,7 +289,7 @@ ENDMAP
 # Staircase flavour vaults.
 #
 NAME:    minmay_staircase_windowed_small
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  5
@@ -311,7 +311,7 @@ ccccc
 ENDMAP
 
 NAME:    minmay_staircase_windowed_large
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  5
@@ -336,7 +336,7 @@ ccccccc
 ENDMAP
 
 NAME:    minmay_staircase_statues
-TAGS:    extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  5
@@ -348,7 +348,7 @@ G.G
 ENDMAP
 
 NAME:    minmay_staircase_statues_hall_small
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  3
@@ -369,7 +369,7 @@ cccc...cccc
 ENDMAP
 
 NAME:    minmay_staircase_statues_hall_large
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  2
@@ -399,7 +399,7 @@ cccccc.....cccccc
 ENDMAP
 
 NAME:    minmay_staircase_bubble
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 SUBST:   m = mmmm.
@@ -417,7 +417,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_squiggle
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: }]){[(
@@ -432,7 +432,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_1
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D: 2-26
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
@@ -451,7 +451,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_2
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -467,7 +467,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_3
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -484,7 +484,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_4
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
@@ -505,7 +505,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_5
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
@@ -528,7 +528,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_spiral
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -546,7 +546,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_spiral_double
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -567,7 +567,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_x
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   D : .x
@@ -586,7 +586,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_split_hallway
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -608,7 +608,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_trident
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  } = 1:} / *:.
@@ -632,7 +632,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_hallway_doors
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D: 2-26
 WEIGHT:  3
 SHUFFLE: DEHJK
@@ -659,7 +659,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_diamond
 ORIENT:  float
-TAGS:    extra luniq_staircase allow_dup
+TAGS:    extra luniq_staircase allow_dup decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -680,7 +680,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_star
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   D : .x
@@ -704,7 +704,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_door_maze
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  D = 1:+ / *:x
@@ -725,7 +725,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_9_rooms
 ORIENT:  float
-TAGS:    extra luniq_staircase no_monster_gen
+TAGS:    extra luniq_staircase no_monster_gen decor
 DEPTH:   D:2-26
 WEIGHT:  2
 # Room contents
@@ -757,7 +757,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_1
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -781,7 +781,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_2
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -811,7 +811,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_3a
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -846,7 +846,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_3b
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  2
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -876,7 +876,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_river
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  D = 1:W / *:w
@@ -901,7 +901,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pool_1
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase no_pool_fixup no_monster_gen
+TAGS:    transparent extra luniq_staircase no_pool_fixup no_monster_gen decor
 DEPTH:   D:2-26
 WEIGHT:  3
 # Water
@@ -929,7 +929,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pool_2
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase no_monster_gen
+TAGS:    transparent extra luniq_staircase no_monster_gen decor
 DEPTH:   D:2-26, Lair:*, Swamp:*
 WEIGHT:  3 (D), 10 (Swamp)
 # Water
@@ -959,7 +959,7 @@ ENDMAP
 # This is replaced by infiniplex_staircase_pool_lava for low levels
 NAME:    infiniplex_staircase_pool
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-20, Lair:*, Swamp:*
 WEIGHT:  2 (D), 20 (Swamp)
 SUBST:   D = ww.
@@ -984,7 +984,7 @@ ENDMAP
 #    There are a few small changes to accout for lava being impassible.
 NAME:    infiniplex_staircase_pool_lava
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:21-26
 WEIGHT:  2
 SUBST:   D = ll.
@@ -2497,7 +2497,7 @@ ENDMAP
 # http://en.wikipedia.org/wiki/Celtic_maze
 NAME:   mumra_celtic_spiral_tile
 ORIENT: float
-TAGS:   allow_dup
+TAGS:   transparent allow_dup decor
 DEPTH:  D:1-10
 WEIGHT: 2
 MAP
