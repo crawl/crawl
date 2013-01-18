@@ -17,70 +17,52 @@
 
 function place_vaults_rooms(e,data, room_count, max_room_depth)
 
-  -- Don't try to place anything, testing painter
-  return nil
-end
+  -- Simple case to test room placement
+  for i = 1, 5, 1 do
+    place_vaults_room(e,data,"room")
+  end
 
-function place_vaults_rooms_old(e,data, room_count, max_room_depth)
-
-    -- Figure out what rooms we're using
-    -- TODO: This needs to vary more depending on the layout
-    local room_spread = {
-      { "upstairs", 2, 3 },
-      { "downstairs", 3, 3 },
---      { "encounter", 1,4 },
-      { "special", 1,2 },
-      { "loot", 0, 2 },
-      { "empty", 7, 10 },
-    }
-    -- Manually adjust frequencies of stair rooms
-    -- Always have 3 downstairs rooms in V:4
-    -- TODO: Still not perfect, need some more logic. This means 3 stair *rooms* will
-    --       always be placed in V:4 even if one already had 3 stair cases. See st_'s
-    --       comments on V:4 on the tracker.
-    if you.depth < dgn.br_depth(you.branch()) - 1 then
-      if crawl.one_chance_in(4) then
-        room_spread[1] = { "downstairs", 2, 3 }
-      end
-      if crawl.one_chance_in(6) then
-        room_spread[1] = { "downstairs", 1, 3 }
-      end
-      if crawl.one_chance_in(6) then
-        room_spread[2] = { "upstairs", 1, 3 }
-      end
-    end
-
-    -- Min 10 rooms, max 20
-    local room_queue = { }
-    for i,spread in ipairs(room_spread) do
-      local room_count = crawl.random_range(spread[2],spread[3])
-      for n = 0,room_count-1 do
-          table.insert(room_queue,spread[1])
-      end
-    end
-    -- TODO: Shuffle queue because rooms to the end are increasingly unlikely to place
-    --       (but always keep stairs first, they're kind of important)
-
-    -- Finally, attempt to place all items in the queue
-    for i,queued in ipairs(room_queue) do
-      place_vaults_room(e,data,queued)
-    end
 end
 
 function place_vaults_room(e,walls,room_type)
-      local maxTries = 50
-      local tries = 0
-      local done = false
-      -- Have a few goes, a random wall spot will be selected each time from all available walls
-      while tries < maxTries and not done do
-        tries = tries + 1
-        local which_wall = eligible_walls[crawl.random_range(1,table.count(eligible_walls))]
-        -- Attempt to place a room on the wall at a random position
-        if vaults_maybe_place_vault(e, which_wall, queued, crawl.random_range(2,which_wall[3]-3), walls) then
-          done = true
-        end
+
+  local gxm, gym = dgn.max_bounds()
+
+  local maxTries = 50
+  local maxSpotTries = 5000
+  local tries = 0
+  local spotTries = 0
+  local done = false
+  local foundSpot = false
+  local spot = nil
+  local usage = nil
+  -- Have a few goes, a random wall spot will be selected each time from all available walls
+  -- and we check if we can place something there
+  while tries < maxTries and not done do
+    tries = tries + 1
+
+    -- Find an eligible spot
+    spotTries = 0
+    foundSpot = false
+    -- Brute force, this needs optimising, but for now try about 5000 times to find an eligible spot
+    while spotTries < maxSpotTries and not foundSpot do
+      spotTries = spotTries + 1
+      spot = { x = crawl.random_range(0,gxm-1), y = crawl.random_range(0,gxm-1) }
+      usage = vaults_get_usage(spot.x,spot.y)
+      if (usage.usage == "eligible" or usage.usage == "open") then
+        foundSpot = true
       end
+    end
+
+    if foundSpot == true then
+      -- Attempt to place a room on the wall at a random position
+      if maybe_place_vault(e, spot, usage) then
+        done = true
+      end
+    end
+  end
 end
+
 
 -- Moves from a start point along a move vector mapped to actual vectors xVector/yVector
 -- This allows us to deal with coords independently of how they are rotated to the dungeon grid
@@ -111,7 +93,141 @@ local function vector_rotate(vec, count)
   return vec
 end
 
-local function vaults_maybe_place_vault(e, wall, room_type, distance, walls, max_room_depth)
+local normals = {
+  { x = 0, y = -1, dir = 0 },
+  { x = -1, y = 0, dir = 1 },
+  { x = 0, y = 1, dir = 2 },
+  { x = 1, y = 0, dir = 3 }
+}
+
+local function maybe_place_vault(e, pos, usage, room_type, max_room_depth)
+
+  -- Resolve a map with the specified tag
+  local map, vplace = dgn.resolve_map(dgn.map_by_tag("vaults_"..room_type),true,true)
+  local room_width,room_height
+  if map ~= nil then
+    room_width,room_height = dgn.mapsize(map)
+
+--           print( "Size " .. room_width .. " x " .. room_height)
+  else
+    return false
+  end
+
+  -- Get wall's normal and calculate the door vector (i.e. attaching wall)
+  local v_normal, v_wall, room_base, clear_bounds
+
+  -- Placing a room in open space
+  if usage.usage == "open" then
+    -- Pick a random orientation
+    v_normal = normals[crawl.random_range(0,3)]
+    v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
+    -- Ultimately where the bottom-left corner of the room will be placed (relative to pos)
+    -- It is offset by 1,1 from the picked spot
+    room_base = vaults_vector_add(pos, { x = 1, y = 1 }, v_wall, v_normal)
+  end
+
+  -- Placing a room in a wall
+  if usage.usage == "eligible" then
+    v_normal = usage.normal
+    v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
+    -- Ultimately where the bottom-left corner of the room will be placed (relative to pos)
+    -- It is offset by half the room width and up by one to make room for door
+    room_base = vaults_vector_add(pos, { x = math.floor(-room_width/2), y = 1 }, v_wall, v_normal)
+  end
+
+-- print("Vectors: " .. orient.x .. ", " .. orient.y .. " and " .. door_vector.x .. ", "..door_vector.y)
+
+  -- How big the door? TODO: Choose later (let vault tags veto door sizes, in fact vault tags should allow the room to position its own door/wall/windows)
+  local door_length = crawl.random_range(2,4)
+  local has_windows = crawl.one_chance_in(5)
+
+--      local oriented = string.find(dgn.tags(map), " no_rotate ")
+  -- TODO: Could just check orient flag of map?
+--      crawl.mpr("Width " .. room_width .. " height " .. room_height)
+
+  -- Door positioning
+  local relative_to_door = math.floor((room_width - door_length)/2) + crawl.random_range(-1,1) --  0 -- crawl.random_range(0,(room_width-door_length)/2)
+  local relative = { x = target.x - door_vector.x * relative_to_door, y = target.y - door_vector.y * relative_to_door }
+
+  local origin = { x = -1, y = -1 }
+  local opposite = { x = -1, y = -1 }
+  local is_clear = true
+  local grid = dgn.grid
+
+  -- Check every square this room will go, including its walls, make sure we have space
+  for rx = -1, room_width, 1 do
+    for ry = -1, room_height, 1 do
+
+      -- Figure out where this target actually lies after rotation
+      local target = vaults_vector_add(room_base, { x = rx, y = ry }, v_wall, v_normal )
+
+      -- For placement we have to store the top-left corner of the room in absolute map coords
+      if (origin.x == -1 or target.x < origin.x) then origin.x = target.x end
+      if (origin.y == -1 or target.y < origin.y) then origin.y = target.y end
+      if (opposite.x == -1 or target.x > opposite.x) then opposite.x = target.x end
+      if (opposite.y == -1 or target.y > opposite.y) then opposite.y = target.y end
+
+      -- Check target usage
+      local target_usage = vaults_get_usage(target.x,target.y)
+
+      -- If any square is restricted then we fail. If our room type is "open" then we need to find all open or eligible_open squares (meaning we take up
+      -- open space or we are attaching to an existing building). If our room type is "eligible" then we need to find all unused or eligible squares (meaning
+      -- we are building into empty walls or attaching to more buildings).
+      if (target_usage.usage == "restricted" or (usage.usage == "open" and target.usage ~= "eligible_open" and target_usage.usage ~= "open")
+        or (usage.usage == "eligible" and target.usage ~= "eligible" and target.usage ~= "none") )then
+        is_clear = false
+        break
+      end
+
+    end
+
+    if not is_clear then
+      break
+    end
+  end
+
+  -- No clear space found, cancel
+  if not is_clear then
+    return false
+  end
+
+  -- Now need the door
+  local rx1 = relative_to_door
+  local dx1 = relative.x + (rx1 * door_vector.x) + (1 * orient.x)
+  local dy1 = relative.y + (rx1 * door_vector.y) + (1 * orient.y)
+  local rx2 = rx1 + door_length - 1
+  local dx2 = relative.x + (rx2 * door_vector.x) + (1 * orient.x)
+  local dy2 = relative.y + (rx2 * door_vector.y) + (1 * orient.y)
+
+  -- If placing in open space, we need to surround with walls
+  -- TODO: Randomly vary the wall type
+  if usage.usage=="open" then
+    dgn.fill_grd_area(origin.x-1, origin.y-1, opposite.x+1, opposite.y+1, "stone_wall")
+  end
+
+  -- Create floor space to place the vault
+  dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
+  -- Fill the door
+  dgn.fill_grd_area(pos.x, pos.y, pos.x, pos.y, "closed_door")
+  -- dgn.fill_grd_area(dx1, dy1, dx2, dy2, "closed_door")
+
+  -- Place the map inside
+  dgn.reuse_map(vplace,origin.x,origin.y,false,false)
+
+  -- Loop through all squares and update eligibility
+  for x = origin.x, opposite.x, 1 do
+    for y = origin.y, opposite.y, 1 do
+      -- Restricting further placement to keep things simple. Will need to be more clever about how we treat the walls.
+      vaults_set_usage(x,y,{usage = "restricted"})
+    end
+  end
+
+  -- TODO: We'll might want to get some data from the placed map e.g. tags and return it
+  return true
+end
+
+
+local function vaults_maybe_place_vault_old(e, wall, room_type, distance, walls, max_room_depth)
 
     -- Resolve a map with the specified tag
     local map, vplace = dgn.resolve_map(dgn.map_by_tag("vaults_room_"..room_type),true,true)
@@ -215,4 +331,65 @@ local function vaults_maybe_place_vault(e, wall, room_type, distance, walls, max
 
   -- TODO: We'll might want to get some data from the placed map e.g. tags and return it
   return true
+end
+
+function place_vaults_room_old(e,walls,room_type)
+  local maxTries = 50
+  local tries = 0
+  local done = false
+  -- Have a few goes, a random wall spot will be selected each time from all available walls
+  while tries < maxTries and not done do
+    tries = tries + 1
+    local which_wall = eligible_walls[crawl.random_range(1,table.count(eligible_walls))]
+    -- Attempt to place a room on the wall at a random position
+    if vaults_maybe_place_vault(e, which_wall, queued, crawl.random_range(2,which_wall[3]-3), walls) then
+      done = true
+    end
+  end
+end
+
+function place_vaults_rooms_old(e,data, room_count, max_room_depth)
+
+    -- Figure out what rooms we're using
+    -- TODO: This needs to vary more depending on the layout
+    local room_spread = {
+      { "upstairs", 2, 3 },
+      { "downstairs", 3, 3 },
+--      { "encounter", 1,4 },
+      { "special", 1,2 },
+      { "loot", 0, 2 },
+      { "empty", 7, 10 },
+    }
+    -- Manually adjust frequencies of stair rooms
+    -- Always have 3 downstairs rooms in V:4
+    -- TODO: Still not perfect, need some more logic. This means 3 stair *rooms* will
+    --       always be placed in V:4 even if one already had 3 stair cases. See st_'s
+    --       comments on V:4 on the tracker.
+    if you.depth < dgn.br_depth(you.branch()) - 1 then
+      if crawl.one_chance_in(4) then
+        room_spread[1] = { "downstairs", 2, 3 }
+      end
+      if crawl.one_chance_in(6) then
+        room_spread[1] = { "downstairs", 1, 3 }
+      end
+      if crawl.one_chance_in(6) then
+        room_spread[2] = { "upstairs", 1, 3 }
+      end
+    end
+
+    -- Min 10 rooms, max 20
+    local room_queue = { }
+    for i,spread in ipairs(room_spread) do
+      local room_count = crawl.random_range(spread[2],spread[3])
+      for n = 0,room_count-1 do
+          table.insert(room_queue,spread[1])
+      end
+    end
+    -- TODO: Shuffle queue because rooms to the end are increasingly unlikely to place
+    --       (but always keep stairs first, they're kind of important)
+
+    -- Finally, attempt to place all items in the queue
+    for i,queued in ipairs(room_queue) do
+      place_vaults_room(e,data,queued)
+    end
 end
