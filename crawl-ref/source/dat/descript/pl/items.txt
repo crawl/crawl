@@ -1225,8 +1225,7 @@ próbie odczytania.
 %%%%
 scroll of magic mapping
 
-Ten zwój tworzy mapę poziomu lochów wokół czytającego. Jego moc nie jest
-wystarczająca aby ujawnić wnętrze pomieszczeń ukrytych za sekretnymi drzwiami.
+Ten zwój tworzy mapę poziomu lochów wokół czytającego.
 %%%%
 scroll of noise
 
