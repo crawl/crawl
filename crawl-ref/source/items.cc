@@ -2566,6 +2566,8 @@ static bool _is_option_autopickup(const item_def &item, string &iname)
         if (force != 0)
             return (force == 1);
     }
+    else
+        return false;
 
     //Check for initial settings
     for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
