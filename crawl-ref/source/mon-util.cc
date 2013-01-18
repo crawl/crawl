@@ -815,6 +815,26 @@ bool mons_is_native_in_branch(const monster* mons,
     }
 }
 
+bool mons_is_abyssal(monster_type mc)
+{
+    switch (mc)
+    {
+    case MONS_TENTACLED_STARSPAWN:
+    case MONS_LURKING_HORROR:
+    case MONS_THRASHING_HORROR:
+    case MONS_STARCURSED_MASS:
+    case MONS_ANCIENT_ZYME:
+    case MONS_WRETCHED_STAR:
+    case MONS_ELDRITCH_TENTACLE:
+    case MONS_APOCALYPSE_CRAB:
+    case MONS_STARSPAWN_TENTACLE:
+    case MONS_SPATIAL_MAELSTROM:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool mons_is_poisoner(const monster* mon)
 {
     if (chunk_is_poisonous(mons_corpse_effect(mon->type)))

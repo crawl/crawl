@@ -364,6 +364,7 @@ bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 bool mons_has_flesh(const monster* mon);
+bool mons_is_abyssal(monster_type mc);
 
 bool herd_monster(const monster* mon);
 
