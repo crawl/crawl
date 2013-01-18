@@ -113,6 +113,11 @@ bool form_changed_physiology(transformation_type form)
             && form != TRAN_BLADE_HANDS);
 }
 
+bool form_can_use_wand(transformation_type form)
+{
+    return (form_can_wield(form) || form == TRAN_DRAGON);
+}
+
 bool form_can_wear_item(const item_def& item, transformation_type form)
 {
     if (item.base_type == OBJ_JEWELLERY)

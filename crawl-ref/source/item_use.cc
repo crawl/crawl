@@ -1735,7 +1735,7 @@ static targetter *_wand_targetter(const item_def *wand)
 
 void zap_wand(int slot)
 {
-    if (you.species == SP_FELID || !form_can_wield())
+    if (you.species == SP_FELID || !form_can_use_wand())
     {
         mpr("You have no means to grasp a wand firmly enough.");
         return;
