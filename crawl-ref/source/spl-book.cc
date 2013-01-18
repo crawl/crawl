@@ -2387,13 +2387,9 @@ bool make_book_theme_randart(item_def &book,
                     if (all_spells_disc1 && !one_chance_in(6))
                         god = GOD_KIKUBAAQUDGHA;
                     break;
-                case SPTYP_SUMMONING:
                 case SPTYP_CONJURATION:
-                    if ((all_spells_disc1 || disc2 == SPTYP_SUMMONING
-                         || disc2 == SPTYP_CONJURATION) && !one_chance_in(4))
-                    {
+                    if (all_spells_disc1 && !one_chance_in(4))
                         god = GOD_VEHUMET;
-                    }
                     break;
                 default:
                     break;
