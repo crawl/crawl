@@ -32,6 +32,7 @@ local function initialize_grids()
   local gxm, gym = dgn.max_bounds()
 
   for y = 0, (gym-1), 1 do
+    usage_grid[y] = { }
     layout_grid[y] = { }
     for x = 0, (gxm-1), 1 do
       usage_grid[y][x] = { usage = "none" }
@@ -62,59 +63,6 @@ end
 
 local function set_layout(x,y,value)
   layout_grid[y][x] = value
-end
-
-------------------------------------------------------------------------------
-function paint_vaults_layout(e, paint, options)
-
-  initialize_grids()
-
-  for item in paint do
-
-    if item.type == "floor" then
-      -- Set layout details in the painted area
-      for x = item.corner1.x, item.corner2.x, 1 do
-        for y = item.corner1.y, item.corner2.y, 1 do
-          set_layout(x,y,0)
-        end
-      end
-    end
-    if item.type == "wall" then
-      -- Set layout details in the painted area
-      for x = item.corner1.x, item.corner2.x, 1 do
-        for y = item.corner1.y, item.corner2.y, 1 do
-          set_layout(x,y,1)
-        end
-      end
-    end
-
-  end
-
-  determine_usage_from_layout()
-
-  -- Paint the resultant layout onto the dungeon grid
-  local gxm, gym = dgn.max_bounds()
-
-  local wall_type = "stone_wall"
-  if options.wall_type ~= nil then wall_type = options.wall_type end
-  local floor_type = "floor"
-
-  for x = 0, gxm-1, 1 do
-    for y = 0, gym-1, 1 do
-
-      local wall = get_layout(x,y)
-      if wall == 1 then
-        dgn.fill_grd_area(x,y, wall_type)
-      else
-        dgn.fill_grd_area(x,y, floor_type)
-      end
-
-    end
-  end
-
-  -- We probably don't need this data anymore
-  return usage_grid
-
 end
 
 local function determine_usage_from_layout()
@@ -205,5 +153,64 @@ local function determine_usage_from_layout()
 
     end
   end
+
+end
+
+------------------------------------------------------------------------------
+
+function paint_vaults_layout(e, paint, options)
+
+  if options == nil then options = {} end
+
+  initialize_grids()
+
+  for i,item in ipairs(paint) do
+
+    if item.type == "floor" then
+      print("Painting floor: " .. item.corner1.x .. "," .. item.corner1.y .. " to " .. item.corner2.x .. "," .. item.corner2.y)
+      -- Set layout details in the painted area
+      for x = item.corner1.x, item.corner2.x, 1 do
+        for y = item.corner1.y, item.corner2.y, 1 do
+          set_layout(x,y,0)
+        end
+      end
+    end
+    if item.type == "wall" then
+      print("Painting wall: " .. item.corner1.x .. "," .. item.corner1.y .. " to " .. item.corner2.x .. "," .. item.corner2.y)
+      -- Set layout details in the painted area
+      for x = item.corner1.x, item.corner2.x, 1 do
+        for y = item.corner1.y, item.corner2.y, 1 do
+          set_layout(x,y,1)
+        end
+      end
+    end
+
+  end
+
+  determine_usage_from_layout()
+
+  -- Paint the resultant layout onto the dungeon grid
+  local gxm, gym = dgn.max_bounds()
+
+  local wall_type = "stone_wall"
+  if options.wall_type ~= nil then wall_type = options.wall_type end
+  local floor_type = "floor"
+
+  for x = 0, gxm-1, 1 do
+    for y = 0, gym-1, 1 do
+
+      local wall = get_layout(x,y)
+      -- TODO: Look up the function for filling a single square...
+      if wall == 1 then
+        dgn.fill_grd_area(x,y, x,y, wall_type)
+      else
+        dgn.fill_grd_area(x,y, x,y, floor_type)
+      end
+
+    end
+  end
+
+  -- We probably don't need this data anymore
+  return usage_grid
 
 end

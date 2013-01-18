@@ -46,8 +46,8 @@
 
 default-depth: Vaults
 
-# Include builder code
-: require("dlua/v_main.lua")
+# Include layout code
+: require("dlua/v_layouts.lua")
 
 ################################################################################
 # Ring Layout
@@ -64,37 +64,41 @@ default-depth: Vaults
 # the parameters with different DEPTH or WEIGHT settings to make certain
 # layout styles more or less likely.
 NAME: layout_vaults_ring
-DEPTH: Vault
+DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_ring_layout(_G, 5, 20)
 MAP
 ENDMAP
 
 NAME: layout_vaults_cross
-DEPTH: Vault
+DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_cross_layout(_G, 5, 0.5)
 MAP
 ENDMAP
 
 NAME: layout_vaults_big_room
-DEPTH: Vault
+DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_big_room_layout(_G, 20)
 MAP
 ENDMAP
 
 NAME: layout_vaults_chaotic_city
-DEPTH: Vault
+DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_chaotic_city_layout(_G, 5, 0.5)
 MAP
 ENDMAP
