@@ -3273,8 +3273,8 @@ KITEM: 8 = % / * / w:1 |
 KITEM: 9 = % / * / w:1 |
 KFEAT: 8 = 8
 KFEAT: 9 = 9
-KFEAT: X = teleport trap
-KFEAT: Z : teleport trap / w:30 x
+KFEAT: X = known teleport trap
+KFEAT: Z : known teleport trap / w:30 x
 SHUFFLE: xcvb
 MAP
 ............
