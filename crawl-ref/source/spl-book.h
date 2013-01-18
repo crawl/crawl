@@ -22,6 +22,7 @@ enum read_book_action_type
 int  book_rarity(uint8_t which_book);
 int  spell_rarity(spell_type which_spell);
 void init_spell_rarities();
+bool is_player_spell(spell_type which_spell);
 
 bool is_valid_spell_in_book(const item_def &book, int spell);
 
