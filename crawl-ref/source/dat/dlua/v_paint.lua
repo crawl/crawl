@@ -15,8 +15,13 @@
 
 -- Will contain data about how each square is used and therefore how rooms
 -- can be applied
-local usage_grid = { }
-local layout_grid = { }
+usage_grid = { }
+layout_grid = { }
+
+local usage_restricted_count = 0
+local usage_open_count = 0
+local usage_eligible_count = 0
+local usage_none_count = 0
 
 -- Some constants to control certain things about how usage is calculated
 local c_min_distance_from_wall = 2  -- Rooms placed on floor areas must be this
@@ -43,20 +48,37 @@ end
 
 local function get_usage(x,y)
   -- Handle out of bounds
-  if usage_grid[y] == nil then return { usage = "restricted" } end
-  if usage_grid[y][x] == nil then return { usage = "restricted" } end
+  if usage_grid[y] == nil then
+    return { usage = "restricted" }
+  end
+  if usage_grid[y][x] == nil then
+    return { usage = "restricted" }
+  end
 
   return usage_grid[y][x]
 end
 
+-- Global version
+function vaults_get_usage(x,y)
+  return get_usage(x,y)
+end
+
 local function set_usage(x,y,usage)
   usage_grid[y][x] = usage
+  if usage.usage == "restricted" then usage_restricted_count = usage_restricted_count + 1 end
+  if usage.usage == "open" then usage_open_count = usage_open_count + 1 end
+  if usage.usage == "none" then usage_none_count = usage_none_count + 1 end
+  if usage.usage == "eligible" then usage_eligible_count = usage_eligible_count + 1 end
 end
 
 local function get_layout(x,y)
   -- Handle out of bounds
-  if layout_grid[y] == nil then return 1 end
-  if layout_grid[y][x] == nil then return 1 end
+  if layout_grid[y] == nil then
+    return 1
+  end
+  if layout_grid[y][x] == nil then
+    return 1
+  end
 
   return layout_grid[y][x]
 end
@@ -66,6 +88,11 @@ local function set_layout(x,y,value)
 end
 
 local function determine_usage_from_layout()
+
+  usage_restricted_count = 0
+  usage_open_count = 0
+  usage_eligible_count = 0
+  usage_none_count = 0
 
   local gxm, gym = dgn.max_bounds()
 
@@ -77,7 +104,7 @@ local function determine_usage_from_layout()
       -- This flag will track if there is only floor in the area
       local only_floor = true
       for yl = -c_min_distance_from_wall, c_min_distance_from_wall, 1 do
-        local_grid[yl] = {}
+        local_grid[yl] = { }
         for xl = -c_min_distance_from_wall, c_min_distance_from_wall, 1 do
           local_grid[yl][xl] = get_layout(xl,yl)
           if local_grid[yl][xl] == 1 then only_floor = false end
@@ -153,7 +180,10 @@ local function determine_usage_from_layout()
 
     end
   end
-
+  print ("Restricted: " .. usage_restricted_count)
+  print ("None:       " .. usage_none_count)
+  print ("Eligible:   " .. usage_eligible_count)
+  print ("Open:       " .. usage_open_count)
 end
 
 ------------------------------------------------------------------------------
@@ -167,7 +197,6 @@ function paint_vaults_layout(e, paint, options)
   for i,item in ipairs(paint) do
 
     if item.type == "floor" then
-      print("Painting floor: " .. item.corner1.x .. "," .. item.corner1.y .. " to " .. item.corner2.x .. "," .. item.corner2.y)
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
         for y = item.corner1.y, item.corner2.y, 1 do
@@ -176,7 +205,6 @@ function paint_vaults_layout(e, paint, options)
       end
     end
     if item.type == "wall" then
-      print("Painting wall: " .. item.corner1.x .. "," .. item.corner1.y .. " to " .. item.corner2.x .. "," .. item.corner2.y)
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
         for y = item.corner1.y, item.corner2.y, 1 do

@@ -1,10 +1,23 @@
 ------------------------------------------------------------------------------
 -- v_layouts.lua:
 --
--- Contains the functions that actually build the layouts.
--- See v_main.lua for further information.
+-- Main layouts include for Vaults.
 --
--- by mumra
+-- Code by mumra
+-- Based on work by infiniplex, based on original work and designs by mumra :)
+-- Contains the functions that actually build the layouts.
+--
+-- Notes:
+-- The original had the entire layout code in layout_vaults.des under a
+-- single map def. This made things very hard to understand. Here I am
+-- separating things into some smaller separate which can be called
+-- from short map headers in layout_vaults.des.
+--
+-- The layout functions set up an array of floor/wall areas then call the paint
+-- functions and room building functions. It'd be easy to allow more complex
+-- geometries by passing in callbacks or enhancing the paint function but in
+-- general we only want wide straight corridors or open rectangular areas so
+-- room/door placement can work correctly.
 ------------------------------------------------------------------------------
 
 require("dlua/v_paint.lua")
@@ -56,6 +69,7 @@ end
 
 function build_vaults_big_room_layout(e, outerPadding)
   -- The Big Room
+  -- Sorry, no imps
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
 
