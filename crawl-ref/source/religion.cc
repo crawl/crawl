@@ -2034,7 +2034,7 @@ vector<spell_type> _vehumet_eligible_gift_spells()
     // Also impose a minimum level. When this reaches 10, the player
     // won't get any more gifts.
     const int gifts = you.num_total_gifts[you.religion];
-    int min_level = std::max(gifts + 1, 2 * gifts - 10)/2;
+    int min_level = std::max(gifts + 2, 2 * gifts - 10)/2;
 
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
