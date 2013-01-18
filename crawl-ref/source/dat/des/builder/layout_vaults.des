@@ -2,7 +2,9 @@
 # Layouts for The Vaults (mumra's rewrite)
 #
 # This file contains map headers for picking the main layout. It mainly calls
-# off to functions which are held in dlua/v_*.lua
+# off to functions which are held in dlua/v_layouts.lua. The idea is that
+# layout parameters (and importantly DEPTH, WEIGHT, etc.) can be easily tweaked
+# in this header and all building logic happens in pure *.lua files.
 #
 # It uses all the mini vaults from layout_vaults_*.des and places these as
 # rooms within structured areas. These vaults can use various to
@@ -65,14 +67,34 @@ NAME: layout_vaults_ring
 DEPTH: Vault
 WEIGHT: 90
 ORIENT: encompass
-
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
-{{
-  -- The build functions return a data object which tells the room placer about walls it
-  -- can use
-  local data = build_vaults_ring_level(_G)
-  -- Place the actual rooms (more parameters required)
-  place_vaults_rooms(_G,data)
+: build_vaults_ring_layout(_G, 5, 20)
 MAP
 ENDMAP
 
+NAME: layout_vaults_cross
+DEPTH: Vault
+WEIGHT: 90
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+: build_vaults_cross_layout(_G, 5, 0.5)
+MAP
+ENDMAP
+
+NAME: layout_vaults_big_room
+DEPTH: Vault
+WEIGHT: 90
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+: build_vaults_big_room_layout(_G, 20)
+MAP
+ENDMAP
+
+NAME: layout_vaults_chaotic_city
+DEPTH: Vault
+WEIGHT: 90
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+: build_vaults_chaotic_city_layout(_G, 5, 0.5)
+MAP
+ENDMAP
