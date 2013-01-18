@@ -1553,6 +1553,8 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
 
         // Got a place, summon the beast.
         monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
+        if (mons_is_abyssal(mons))
+            continue;
         if (invalid_monster_type(mons))
             return false;
 
