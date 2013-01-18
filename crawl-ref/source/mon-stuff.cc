@@ -58,6 +58,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
@@ -1049,16 +1050,6 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
-static void _setup_torment_explosion(bolt & beam, const monster& origin)
-{
-    _setup_base_explosion(beam, origin);
-    beam.flavour = BEAM_NEG;
-    beam.damage  = 0;
-    beam.name    = "wave of negative energy";
-    beam.colour  = LIGHTGRAY;
-    beam.ex_size = 2;
-}
-
 static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
                                          actor* agent)
 {
@@ -1103,7 +1094,6 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
     else if (type == MONS_LURKING_HORROR)
     {
-        _setup_torment_explosion(beam, *mons);
         sanct_msg = "The lurking horror fades away harmlessly.";
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
@@ -1178,7 +1168,13 @@ static bool _explode_monster(monster* mons, killer_type killer,
         viewwindow();
 
     // FIXME: show_more == mons_near(mons)
-    beam.explode();
+    if (type == MONS_LURKING_HORROR)
+    {
+        targetter_los hitfunc(mons, LOS_SOLID);
+        flash_view_delay(DARKGRAY, 300, &hitfunc);
+    }
+    else
+        beam.explode();
 
     activate_ballistomycetes(mons, beam.target, YOU_KILL(beam.killer()));
     // Monster died in explosion, so don't re-attach it to the grid.
