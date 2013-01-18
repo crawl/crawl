@@ -2063,7 +2063,6 @@ spell_type _vehumet_find_spell_gift()
 {
     vector<spell_type> eligible_spells = _vehumet_eligible_gift_spells();
     spell_type spell = SPELL_NO_SPELL;
-    // TODO: push the weighting towards higher level spells
     for (unsigned int i = 1; i <= eligible_spells.size(); ++i)
     {
         if (one_chance_in(i))
