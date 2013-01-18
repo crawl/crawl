@@ -1150,7 +1150,7 @@ static void _update_place_info()
 static void _input()
 {
     if (crawl_state.seen_hups)
-        sighup_save_and_exit();
+        save_game(true, "Game saved, see you later!");
 
     crawl_state.clear_mon_acting();
 
@@ -1281,7 +1281,7 @@ static void _input()
         const command_type cmd = _get_next_cmd();
 
         if (crawl_state.seen_hups)
-            sighup_save_and_exit();
+            save_game(true, "Game saved, see you later!");
 
         crawl_state.waiting_for_command = false;
 
