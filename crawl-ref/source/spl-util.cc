@@ -970,7 +970,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && !player_under_penance()
-        && you.piety >= piety_breakpoint(2))
+        && you.piety >= piety_breakpoint(3))
     {
         maxrange++;
         minrange++;

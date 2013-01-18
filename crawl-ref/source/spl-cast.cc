@@ -281,7 +281,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     int wiz_factor = 87;
 
     if (you.religion == GOD_VEHUMET
-        && !player_under_penance() && you.piety >= piety_breakpoint(1)
+        && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && vehumet_supports_spell(spell))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
