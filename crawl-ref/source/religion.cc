@@ -2014,16 +2014,16 @@ vector<spell_type> _vehumet_eligible_gift_spells()
     vector<spell_type>eligible_spells;
 
     int max_level = 0;
-    if (you.piety >= 160 )
+    if (you.piety >= 161)
         max_level = 9;
     else if (you.piety >= piety_breakpoint(4))
         max_level = 7;
     else if (you.piety >= piety_breakpoint(3))
-        max_level = 4;
+        max_level = 5;
     else if (you.piety >= piety_breakpoint(2))
-        max_level = 3;
+        max_level = 4;
     else if (you.piety >= piety_breakpoint(1))
-        max_level = 2;
+        max_level = 3;
     else if (you.piety >= piety_breakpoint(0))
         max_level = 1;
     max_level = std::min(you.experience_level, max_level);
@@ -2033,7 +2033,8 @@ vector<spell_type> _vehumet_eligible_gift_spells()
 
     // Also impose a minimum level. When this reaches 10, the player
     // won't get any more gifts.
-    int min_level = you.num_total_gifts[you.religion]/2;
+    const int gifts = you.num_total_gifts[you.religion];
+    int min_level = std::max(gifts + 1, 2 * gifts - 10)/2;
 
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
