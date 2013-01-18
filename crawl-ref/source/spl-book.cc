@@ -316,7 +316,7 @@ void init_spell_rarities()
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         // Manuals and books of destruction are not even part of this loop.
-        if (i >= MIN_GOD_ONLY_BOOK && i <= MAX_GOD_ONLY_BOOK)
+        if (i >= MIN_RARE_BOOK && i <= MAX_RARE_BOOK)
             continue;
 
         for (int j = 0; j < SPELLBOOK_SIZE; ++j)
@@ -1529,14 +1529,14 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
                             bool avoid_known = false)
 {
     // For randarts handed out by Sif Muna, spells contained in the
-    // Vehumet/Kiku specials are fair game.
+    // special books are fair game.
     // We store them in an extra vector that (once sorted) can later
     // be checked for each spell with a rarity -1 (i.e. not normally
     // appearing randomly).
     vector<spell_type> special_spells;
     if (god == GOD_SIF_MUNA)
     {
-        for (int i = MIN_GOD_ONLY_BOOK; i <= MAX_GOD_ONLY_BOOK; ++i)
+        for (int i = MIN_RARE_BOOK; i <= MAX_RARE_BOOK; ++i)
             for (int j = 0; j < SPELLBOOK_SIZE; ++j)
             {
                 spell_type spell = which_spell_in_book(i, j);

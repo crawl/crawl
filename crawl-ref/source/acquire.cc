@@ -1378,11 +1378,11 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
-        // Sif Muna shouldn't gift Vehumet or Kiku's special books.
+        // Sif Muna shouldn't gift special books.
         // (The spells therein are still fair game for randart books.)
         if (agent == GOD_SIF_MUNA
-            && doodad.sub_type >= MIN_GOD_ONLY_BOOK
-            && doodad.sub_type <= MAX_GOD_ONLY_BOOK)
+            && doodad.sub_type >= MIN_RARE_BOOK
+            && doodad.sub_type <= MAX_RARE_BOOK)
         {
             ASSERT(doodad.base_type == OBJ_BOOKS);
 
