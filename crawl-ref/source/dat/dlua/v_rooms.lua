@@ -15,7 +15,13 @@
 -- add new layouts.
 ------------------------------------------------------------------------------
 
-function place_vaults_rooms(e,data)
+function place_vaults_rooms(e,data, room_count, max_room_depth)
+
+  -- Don't try to place anything, testing painter
+  return nil
+end
+
+function place_vaults_rooms_old(e,data, room_count, max_room_depth)
 
     -- Figure out what rooms we're using
     -- TODO: This needs to vary more depending on the layout
@@ -42,6 +48,7 @@ function place_vaults_rooms(e,data)
       if crawl.one_chance_in(6) then
         room_spread[2] = { "upstairs", 1, 3 }
       end
+    end
 
     -- Min 10 rooms, max 20
     local room_queue = { }
