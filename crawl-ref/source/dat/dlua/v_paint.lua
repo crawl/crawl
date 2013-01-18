@@ -13,11 +13,6 @@
 -- initial level generation).
 ------------------------------------------------------------------------------
 
--- Will contain data about how each square is used and therefore how rooms
--- can be applied
-usage_grid = { }
-layout_grid = { }
-
 local usage_restricted_count = 0
 local usage_open_count = 0
 local usage_eligible_count = 0
@@ -31,22 +26,32 @@ local c_min_distance_from_wall = 2  -- Rooms placed on floor areas must be this
 
 ------------------------------------------------------------------------------
 -- Initialize and empty usage grid
-local function initialize_grids()
-  usage_grid = { }
+local function new_layout()
   layout_grid = { }
   local gxm, gym = dgn.max_bounds()
 
   for y = 0, (gym-1), 1 do
-    usage_grid[y] = { }
     layout_grid[y] = { }
     for x = 0, (gxm-1), 1 do
-      usage_grid[y][x] = { usage = "none" }
       layout_grid[y][x] = 1 -- 1 means wall
     end
   end
+  return layout_grid
+end
+local function new_usage()
+  usage_grid = { }
+  local gxm, gym = dgn.max_bounds()
+
+  for y = 0, (gym-1), 1 do
+    usage_grid[y] = { }
+    for x = 0, (gxm-1), 1 do
+      usage_grid[y][x] = { usage = "none" }
+    end
+  end
+  return usage_grid
 end
 
-local function get_usage(x,y)
+local function get_usage(usage_grid,x,y)
   -- Handle out of bounds
   if usage_grid[y] == nil then
     return { usage = "restricted" }
@@ -59,11 +64,11 @@ local function get_usage(x,y)
 end
 
 -- Global version
-function vaults_get_usage(x,y)
-  return get_usage(x,y)
+function vaults_get_usage(usage_grid,x,y)
+  return get_usage(usage_grid,x,y)
 end
 
-local function set_usage(x,y,usage)
+local function set_usage(usage_grid,x,y,usage)
   usage_grid[y][x] = usage
   if usage.usage == "restricted" then usage_restricted_count = usage_restricted_count + 1 end
   if usage.usage == "open" then usage_open_count = usage_open_count + 1 end
@@ -71,7 +76,12 @@ local function set_usage(x,y,usage)
   if usage.usage == "eligible" then usage_eligible_count = usage_eligible_count + 1 end
 end
 
-local function get_layout(x,y)
+-- Global version
+function vaults_set_usage(usage_grid,x,y,usage)
+  return set_usage(usage_grid,x,y,usage)
+end
+
+local function get_layout(layout_grid,x,y)
   -- Handle out of bounds
   if layout_grid[y] == nil then
     return 1
@@ -83,11 +93,11 @@ local function get_layout(x,y)
   return layout_grid[y][x]
 end
 
-local function set_layout(x,y,value)
+local function set_layout(layout_grid,x,y,value)
   layout_grid[y][x] = value
 end
 
-local function determine_usage_from_layout()
+local function determine_usage_from_layout(layout_grid)
 
   usage_restricted_count = 0
   usage_open_count = 0
@@ -95,6 +105,7 @@ local function determine_usage_from_layout()
   usage_none_count = 0
 
   local gxm, gym = dgn.max_bounds()
+  local usage_grid = new_usage()
 
   for x = 0, gxm-1, 1 do
     for y = 0, gym-1, 1 do
@@ -106,14 +117,14 @@ local function determine_usage_from_layout()
       for yl = -c_min_distance_from_wall, c_min_distance_from_wall, 1 do
         local_grid[yl] = { }
         for xl = -c_min_distance_from_wall, c_min_distance_from_wall, 1 do
-          local_grid[yl][xl] = get_layout(xl,yl)
+          local_grid[yl][xl] = get_layout(layout_grid,x+xl,y+yl)
           if local_grid[yl][xl] == 1 then only_floor = false end
         end
       end
 
       -- Completely open floor so we could place a room here
       if only_floor == true then
-        set_usage(x,y, { usage = "open" })
+        set_usage(usage_grid,x,y, { usage = "open" })
       else
 
         -- Are we dealing with floor or wall?
@@ -138,21 +149,21 @@ local function determine_usage_from_layout()
           -- What we need to know in the usage grid is the normal, i.e. the direction in which the user will be entering
           -- the room.
           if adjacent_sum == 3 then
-            -- Floor to the north
+           -- Floor to the north
             if local_grid[-1][0] == 0 then
-              set_usage(x,y, { usage = "eligible", normal = { x = 0, y = 1 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = 1 }})
             end
             -- Floor to the south
             if local_grid[1][0] == 0 then
-              set_usage(x,y, { usage = "eligible", normal = { x = 0, y = -1 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = -1 }})
             end
             -- Floor to the west
             if local_grid[0][-1] == 0 then
-              set_usage(x,y, { usage = "eligible", normal = { x = 1, y = 0 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 1, y = 0 }})
             end
             -- Floor to the east
             if local_grid[0][1] == 0 then
-              set_usage(x,y, { usage = "eligible", normal = { x = -1, y = 0 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = -1, y = 0 }})
             end
           else
             -- Wall all around?
@@ -162,10 +173,10 @@ local function determine_usage_from_layout()
               -- Wall definitely all around?
               if diagonal_sum == 4 then
                 -- Should have been set at initialization
-                set_usage(x,y, { usage = "none" })
+                set_usage(usage_grid,x,y, { usage = "none" })
               else
                 -- There are some diagonal holes so we can't use this square
-                set_usage(x,y, { usage = "restricted" })
+                set_usage(usage_grid,x,y, { usage = "restricted" })
               end
 
             end
@@ -173,7 +184,7 @@ local function determine_usage_from_layout()
         else -- Floor
 
           -- We already know there is a wall nearby, so this square is restricted
-          set_usage(x,y, { usage = "restricted" })
+          set_usage(usage_grid,x,y, { usage = "restricted" })
 
         end
       end
@@ -184,6 +195,7 @@ local function determine_usage_from_layout()
   print ("None:       " .. usage_none_count)
   print ("Eligible:   " .. usage_eligible_count)
   print ("Open:       " .. usage_open_count)
+  return usage_grid
 end
 
 ------------------------------------------------------------------------------
@@ -192,7 +204,9 @@ function paint_vaults_layout(e, paint, options)
 
   if options == nil then options = {} end
 
-  initialize_grids()
+  -- Will contain data about how each square is used and therefore how rooms
+  -- can be applied
+  local layout_grid = new_layout()
 
   for i,item in ipairs(paint) do
 
@@ -200,7 +214,7 @@ function paint_vaults_layout(e, paint, options)
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
         for y = item.corner1.y, item.corner2.y, 1 do
-          set_layout(x,y,0)
+          set_layout(layout_grid,x,y,0)
         end
       end
     end
@@ -208,14 +222,14 @@ function paint_vaults_layout(e, paint, options)
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
         for y = item.corner1.y, item.corner2.y, 1 do
-          set_layout(x,y,1)
+          set_layout(layout_grid,x,y,1)
         end
       end
     end
 
   end
 
-  determine_usage_from_layout()
+  local usage_grid = determine_usage_from_layout(layout_grid)
 
   -- Paint the resultant layout onto the dungeon grid
   local gxm, gym = dgn.max_bounds()
@@ -227,7 +241,7 @@ function paint_vaults_layout(e, paint, options)
   for x = 0, gxm-1, 1 do
     for y = 0, gym-1, 1 do
 
-      local wall = get_layout(x,y)
+      local wall = get_layout(layout_grid,x,y)
       -- TODO: Look up the function for filling a single square...
       if wall == 1 then
         dgn.fill_grd_area(x,y, x,y, wall_type)
