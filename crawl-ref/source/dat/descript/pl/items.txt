@@ -1097,7 +1097,7 @@ skutki są dość brutalne.
 %%%%
 rod of striking
 
-Ten pręt pozwala uderzać wrógów surową magią, niestety niezbyt efektywnie.
+Ten pręt pozwala uderzać wrogów surową magią, niestety niezbyt efektywnie.
 %%%%
 rod of the swarm
 
@@ -1179,14 +1179,14 @@ ze skóry niektórych stworzeń — zwykle trolli i smoków.
 %%%%
 scroll of enchant weapon i
 
-Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w czwili
+Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w chwili
 odczytania zwoju. Zwiększa on celność. Broń która już jest wysokiej jakości
 może nie poddać się działaniu tego zwoju — szansa porażki jest coraz większa.
 Bezwzględny limit to +9.
 %%%%
 scroll of enchant weapon ii
 
-Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w czwili
+Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w cewili
 odczytania zwoju. Zwiększa on zadawane obrażenia. Broń która już jest wysokiej
 jakości może nie poddać się działaniu tego zwoju — szansa porażki jest coraz
 większa. Bezwzględny limit to +9.
@@ -1194,7 +1194,7 @@ większa. Bezwzględny limit to +9.
 scroll of enchant weapon iii
 
 Ten zwój pozwala na znaczne poprawienie jakości broni trzymanej w dłoni w
-czwili odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia.
+zwili odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia.
 Broń która już jest wysokiej jakości może nie poddać się działaniu tego zwoju —
 szansa porażki jest coraz większa. Bezwzględny limit to +9.
 %%%%
@@ -1226,7 +1226,7 @@ próbie odczytania.
 scroll of magic mapping
 
 Ten zwój tworzy mapę poziomu lochów wokół czytającego. Jego moc nie jest
-wystarczająca aby ujawnić wnętrze pomieszczeń ukrytych za sekrentymi drzwiami.
+wystarczająca aby ujawnić wnętrze pomieszczeń ukrytych za sekretnymi drzwiami.
 %%%%
 scroll of noise
 
@@ -1243,7 +1243,7 @@ zastosowania.
 %%%%
 scroll of recharging
 
-Ten zwój służy do ładowania mocy różdzek. Użyty na magicznym pręcie, zwiększa
+Ten zwój służy do ładowania mocy różdżek. Użyty na magicznym pręcie, zwiększa
 zarówno pojemność jego baterii (max. do +17), jak i jakość pręta (max. do +9)
 która poprawia zarówno szybkość regeneracji baterii jak i przydatność pręta w
 walce wręcz.
@@ -1304,7 +1304,7 @@ shield
 
 Kawał metalu, z uchwytem i paskami umożliwiającymi przyczepienie do ramienia.
 Pozwala blokować ciosy, jednak utrudnia ruchy co spowalnia szybkość ataków oraz
-przeskadza w rzucaniu czarów.
+przeszkadza w rzucaniu czarów.
 %%%%
 short sword
 
@@ -1398,7 +1398,7 @@ użytkownik posiada umiejętności w Magii Ognia.
 staff of poison
 
 Ten kij zwiększa moc czarów Magii Trucizn, a także zapewnia ochronę przed
-truciznami i jadami. Jeśli użytkownik posiada umiejętności zarówno w uzyciu
+truciznami i jadami. Jeśli użytkownik posiada umiejętności zarówno w użyciu
 przedmiotów magicznych jak i w Magii Trucizn, wrogowie uderzeni tym kijem
 zostaną zatruci — nawet ci którzy zwykle są na trucizny odporni. Oczywiście nie
 działa to na duchy, umarlaków, i tym podobnych.
@@ -1439,7 +1439,7 @@ Magiczny przedmiot do przywoływania żywiołaków ziemi. Jest niezbyt niezawodn
 zwykle potrzebując paru prób zanim poprawnie zadziała. Potrzebuje jakiegoś
 kawałka skały do działania — zwykła ściana powinna się nadać. Kontrola nad
 żywiołakiem wymaga umiejętności z Magii Ziemi, jednak nawet ci którzy tej
-umiejętności nie posiadają, moga skorzystać z tego przedmiotu w celu powolnego,
+umiejętności nie posiadają, mogą skorzystać z tego przedmiotu w celu powolnego,
 bolesnego drążenia tuneli. Wymaga to oczywiście możliwości pokonania zeźlonego
 żywiołaka...
 %%%%
@@ -1450,7 +1450,7 @@ skór, ale zapewnia też świetną obronę, a także odporność na porażenie p
 %%%%
 storm dragon hide
 
-Surowa skóra smoka zionacego piorunami, pokryta wyjątkowo twardymi niebieskimi
+Surowa skóra smoka zionącego piorunami, pokryta wyjątkowo twardymi niebieskimi
 łuskami. W tej postaci nie zapewnia wiele oprócz odporności na porażenie
 prądem, ale można z niej zrobić świetną zbroję.
 %%%%
@@ -1460,7 +1460,7 @@ Mały ale smakowity czerwony owoc.
 %%%%
 sultana
 
-Pojedyńcza rodzynka. Bardzo duża jak na rodzynkę, ale wciąż arbuz to to nie
+Pojedyncza rodzynka. Bardzo duża jak na rodzynkę, ale wciąż arbuz to to nie
 jest...
 %%%%
 swamp dragon armour
@@ -1510,7 +1510,7 @@ Magiczny miecz z trzema wielkimi ostrymi ostrzami.
 %%%%
 trishula
 
-Błogosławiony trójząb uformowany w świetym ogniu, z trzema zębami
+Błogosławiony trójząb uformowany w świętym ogniu, z trzema zębami
 symbolizującymi połączoną potęgę trójcy dobrych bogów. Jest to ulubiona broń
 sług Świetlistego.
 %%%%
@@ -1603,7 +1603,7 @@ skrzydłami może się skończyć kąpielą w lawie.
 %%%%
 wand of polymorph other
 
-Magiczny przemiot który potrafi przemienić stworzenie w coś innego. Jest
+Magiczny przedmiot który potrafi przemienić stworzenie w coś innego. Jest
 szczególnie efektywne wobec istot które naturalnie zmieniają formę: nie są one
 w stanie odeprzeć tego efektu. Nie da się tej różdżki skierować na siebie
 samego.

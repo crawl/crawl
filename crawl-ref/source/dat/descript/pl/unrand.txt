@@ -71,7 +71,7 @@ Niesie część mocy arcy-diabła Asmodeusza.
 faerie dragon armour
 
 Wróżkowe smoki były kiedyś rasą tego samego gatunku co nakrapiane. Na swe
-nieszczęście, ich źywe kolory stały się ich zgubą, alarmując potencjalną
+nieszczęście, ich żywe kolory stały się ich zgubą, alarmując potencjalną
 zdobycz. Dziś już zupełnie wyginęły, a ten cenny relikt jest jednym z ostatnich
 dowodów że kiedykolwiek istniały.
 %%%%
@@ -354,7 +354,7 @@ mocy.
 %%%%
 amulet of the Four Winds
 
-Ten wisior z najczystego jadeitu daje nosicielowi mistyczną siłę aby odeprzeć
+Ten wisior z najczystszego jadeitu daje nosicielowi mistyczną siłę aby odeprzeć
 wrogie uroki.
 %%%%
 necklace of Bloodlust
@@ -389,7 +389,7 @@ Spiczasty kapelusz, umazany w jakimś śluzie.
 
 Jest to ulubiony kapelusz ślimaczego czarodzieja Brzuchonoka, z czarami
 pomagającymi mu myśleć. Jest także zaklęty aby chronić przed wpływem solą, ale
-podejrzewam że tobie akura się to zbytnio nie przyda.
+podejrzewam że tobie akurat się to zbytnio nie przyda.
 %%%%
 obsidian axe
 
@@ -419,7 +419,7 @@ Ten zamorski miecz jest bronią dla oświeconego szermierza.
 %%%%
 shillelagh "Devastator"
 
-Ten kijaszek jest obciażony czymś cięższym niż ołów.
+Ten kijaszek jest obciążony czymś cięższym niż ołów.
 %%%%
 dragonskin cloak
 
