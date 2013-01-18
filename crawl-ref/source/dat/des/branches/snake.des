@@ -827,3 +827,53 @@ cc...c4....4..cc...c c........cc....2....2c...cc
     ccc...2..cccc    c....c   ccc...1..cccc
       cccccccc       c..@.c     cccccccc
 ENDMAP
+
+################################################################################
+
+NAME: grunt_snake_rune_pools
+PLACE: Snake:$
+TAGS: no_trap_gen
+ORIENT: north
+MONS: greater naga / naga warrior
+MONS: greater naga / guardian serpent
+MONS: naga warrior / naga
+MONS: naga mage / naga
+MONS: naga
+
+KMONS: 6 = sea snake / nothing
+KFEAT: 6 = deep_water
+KMASK: 6w = no_monster_gen
+
+KMONS: S = guardian serpent / w:20 anaconda / w:30 black mamba
+
+KITEM: O = serpentine rune of zot
+MAP
+          ccccccccc
+        ccc.6w6w6.ccc
+      ccc.5..www..5.ccc
+      c4.www1.2.1www.4c
+   ccccw.w6w..O..ww6.wcccc
+ ccc.w6wS6www212www6Sw6w.ccc
+ c.+.www.wwwwwwwwwww.www.+.c
+cc.+....3w6www6ww6ww3....+.cc
+c..cccwww.ww6www6ww.wwwccc..c
+c..cxcc6w...5.2.5...w6ccxc..c
+c..cxxcwwwwwnnnnnwwwwwcxxc..c
+cc.5cccww6wnn666nnw6wwccc5.cc
+ cc34cccwwnn.w6w.nnwwccc43cc
+  c..ccccnn4.2.2.4nncccc..c
+  c...cc..5..S.S..5..cc...c
+  cc...+...3..1..3...+...cc
+   cc..+..5.......5..+..cc
+    cccccc.........cccccc
+         cccc+++cccc
+         ccc4...4ccc
+        cc...www...cc
+        cSn3.w6w.3nSc
+        cSn.16w62.nSc
+        cSn..w6w..nSc
+        cc...www...cc
+         ccc.....ccc
+          ccc===ccc
+          cc..@..cc
+ENDMAP
