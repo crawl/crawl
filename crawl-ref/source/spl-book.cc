@@ -287,8 +287,8 @@ int book_rarity(uint8_t which_book)
     case BOOK_SUMMONINGS:
         return 18;
 
-    case BOOK_ANNIHILATIONS: // Vehumet special
-    case BOOK_GRAND_GRIMOIRE:    // Vehumet special
+    case BOOK_ANNIHILATIONS:
+    case BOOK_GRAND_GRIMOIRE:
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_MANUAL:
         return 20;
@@ -387,9 +387,8 @@ bool player_can_memorise_from_spellbook(const item_def &book)
         return true;
 
     if ((book.sub_type == BOOK_ANNIHILATIONS
-            && you.religion != GOD_VEHUMET
-            && (you.skill(SK_CONJURATIONS) < 10
-                || you.skill(SK_SPELLCASTING) < 6))
+         && (you.skill(SK_CONJURATIONS) < 10
+             || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_GRAND_GRIMOIRE
             && (you.skill(SK_SUMMONINGS) < 10
                 || you.skill(SK_SPELLCASTING) < 6))
