@@ -3,7 +3,7 @@
  * @brief Functions for unix and curses support
 **/
 
-/* Some replacement routines missing in gcc
+/* Emulation of ancient Borland conio.
    Some of these are inspired by/stolen from the Linux-conio package
    by Mental EXPlotion. Hope you guys don't mind.
    The colour exchange system is perhaps a little overkill, but I wanted
