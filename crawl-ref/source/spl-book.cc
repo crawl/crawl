@@ -348,6 +348,19 @@ void init_spell_rarities()
     }
 }
 
+bool is_player_spell(spell_type which_spell)
+{
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    {
+        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+        {
+            if (which_spell_in_book(i, j) == which_spell)
+                return true;
+        }
+    }
+    return false;
+}
+
 int spell_rarity(spell_type which_spell)
 {
     const int rarity = _lowest_rarity[which_spell];

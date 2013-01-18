@@ -2044,7 +2044,7 @@ vector<spell_type> _vehumet_eligible_gift_spells()
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
             && !you.seen_spell[spell]
-            && spell_rarity(spell) != -1
+            && is_player_spell(spell)
             && spell_difficulty(spell) <= max_level
             && spell_difficulty(spell) >= min_level
             && !_is_recent_spell(spell))
