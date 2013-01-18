@@ -2274,10 +2274,12 @@ bool do_god_gift(bool forced)
             break;              // End of book gods.
 
         case GOD_VEHUMET:
+            const int gifts = you.num_total_gifts[you.religion];
             if (forced || !vehumet_is_currently_gifting()
-                          && you.piety >= piety_breakpoint(0)
-                          // TODO: This chance is probably totally off
-                          && one_chance_in(you.piety / 4))
+                          && (you.piety >= piety_breakpoint(0) && gifts == 0
+                              || you.piety >= 30 + random2(6) + 18 * gifts && gifts <= 5
+                              || you.piety >= piety_breakpoint(4) && one_chance_in(20)))
+
             {
                 spell_type spell = _vehumet_find_spell_gift();
                 if (spell != SPELL_NO_SPELL)
@@ -2289,8 +2291,8 @@ bool do_god_gift(bool forced)
                     simple_god_message(prompt.c_str());
                     more();
                     you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
-                    _inc_gift_timeout(max(spell_difficulty(you.vehumet_gift),
-                                      (spell_difficulty(you.vehumet_gift)^2) / 3));
+                    if (gifts >= 5)
+                        _inc_gift_timeout(spell_difficulty(spell)^2 / 4);
                     you.num_current_gifts[you.religion]++;
                     you.num_total_gifts[you.religion]++;
                     take_note(Note(NOTE_OFFERED_SPELL, you.vehumet_gift));
