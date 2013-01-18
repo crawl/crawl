@@ -207,10 +207,9 @@ much the better; if not, well, there'll be other playthings...
 Vehumet powers
 
 Worshippers of Vehumet will quickly be able to recover their magical energy
-upon killing beings. As they gain favour, they will also gain various
-enhancements to their destructive spells — firstly, assistance in casting such
-spells; then increased range for conjurations; and finally a lowered cost for
-casting higher level destructive spells. Vehumet will offer followers the
+upon killing beings. As they gain favour, they will also gain
+enhancements to their destructive spells — first assistance in casting such
+spells and then increased range for conjurations. Vehumet will offer followers the
 knowledge of increasingly powerful destructive spells as they gain piety.
 %%%%
 Okawaru powers
