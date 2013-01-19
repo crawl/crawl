@@ -157,11 +157,13 @@ MAP
 ENDMAP
 
 # Golems are slow and they protect an altar to the slow god. (Lemuel)
-NAME:  golem_altar_1
-DEPTH: 8-12
+# Goliath beetles are also slow and more reasonable for an overflow altar.
+# --elliptic
+NAME:  beetle_altar_1
+DEPTH: 5-9
 TAGS:  patrolling no_monster_gen no_item_gen
-TAGS:  uniq_golem_altar temple_overflow_cheibriados
-KMONS: _ = iron golem
+TAGS:  uniq_beetle_altar temple_overflow_cheibriados
+KMONS: _ = goliath beetle
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
 MAP
@@ -178,11 +180,11 @@ xxx.....xxx
 xxx.....xxx
 ENDMAP
 
-NAME:    golem_altar_2
-DEPTH:   8-12
+NAME:    beetle_altar_2
+DEPTH:   5-9
 TAGS:    patrolling no_monster_gen no_item_gen
-TAGS:    uniq_golem_altar temple_overflow_cheibriados
-KMONS:   _ = iron golem
+TAGS:    uniq_beetle_altar temple_overflow_cheibriados
+KMONS:   _ = goliath beetle
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
 MAP
