@@ -31,19 +31,19 @@ function build_vaults_ring_layout(e, corridorWidth, outerPadding)
   print("Ring Layout")
 
   local c1 = { x = outerPadding, y = outerPadding }
-  local c2 = { x = outerPadding + corridorWidth - 1, y = outerPadding + corridorWidth - 1 }
-  local c3 = { x = gxm - outerPadding - corridorWidth, y = gym - outerPadding - corridorWidth }
+  local c2 = { x = outerPadding + corridorWidth, y = outerPadding + corridorWidth }
+  local c3 = { x = gxm - outerPadding - corridorWidth - 1, y = gym - outerPadding - corridorWidth - 1 }
   local c4 = { x = gxm - outerPadding - 1, y = gym - outerPadding - 1 }
 
   -- Paint four floors
   local paint = {
-    { type = "floor", corner1 = c1, corner2 = { x = c4.x, y = c2.y } },
-    { type = "floor", corner1 = c1, corner2 = { x = c2.x, y = c4.y } },
+    { type = "floor", corner1 = c1, corner2 = c4,
+    { type = "wall", corner1 = c2, corner2 = c3 },
     { type = "floor", corner1 = { x = c1.x, y = c3.y } , corner2 = c4 },
     { type = "floor", corner1 = { x = c3.x, y = c1.y } , corner2 = c4 }
   }
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, 3)
+  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 3 })
 
 end
 
@@ -63,7 +63,7 @@ function build_vaults_cross_layout(e, corridorWidth, intersect)
   }
 
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, 4)
+  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 4 })
 
 end
 
@@ -81,7 +81,7 @@ function build_vaults_big_room_layout(e, outerPadding)
     { type = "floor", corner1 = { x = outerPadding, y = outerPadding }, corner2 = { x = gxm - outerPadding - 1, y = gym - outerPadding - 1 } }
   }
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, 4)
+  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 4 })
 
 end
 
@@ -98,6 +98,6 @@ function build_vaults_chaotic_city_layout(e)
   }
 
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, 5)
+  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 5 })
 
 end
