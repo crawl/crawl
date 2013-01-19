@@ -5,12 +5,6 @@
 
 #include "tiletex.h"
 
-enum wm_endianness
-{
-    WM_BIG_ENDIAN,
-    WM_LIL_ENDIAN,
-};
-
 enum wm_event_type
 {
     WM_NOEVENT = 0,
@@ -109,7 +103,6 @@ public:
     virtual bool set_window_icon(const char* icon_name) = 0;
     virtual key_mod get_mod_state() const = 0;
     virtual void set_mod_state(key_mod mod) = 0;
-    virtual int byte_order() = 0;
 
     // System time functions
     virtual void set_timer(unsigned int interval,

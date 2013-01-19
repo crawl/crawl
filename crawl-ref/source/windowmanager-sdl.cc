@@ -899,13 +899,6 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     return success;
 }
 
-int SDLWrapper::byte_order()
-{
-    if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-        return WM_BIG_ENDIAN;
-    return WM_LIL_ENDIAN;
-}
-
 SDL_Surface *SDLWrapper::load_image(const char *file) const
 {
     SDL_Surface *surf = NULL;
