@@ -26,8 +26,8 @@
 #     Empty rooms. These provide furniture for areas that we otherwise want empty.
 #     They should allow normal monster placement.
 #
-# - layout_vaults_stairs_up
-# - layout_vaults_stairs_down
+# - vaults_stairs_up
+# - vaults_stairs_down
 #     Up to three each will be placed of these room types. It is assumed
 #     that the room has one staircase (and most should). If it does have more
 #     you can include the tag layout_vaults_stairs_2 or layout_vaults_stairs_3
@@ -39,11 +39,26 @@
 #
 # In addition there are some specific modifier tags:
 #
-# - layout_vaults_no_windows
-#     The vault will never have windows so the door must be opened.
+# - vaults_no_windows
+#     The vault will never have windows.
 #
-# - layout_vaults_rotate
-#     The vault can be placed in any rotation and be flipped
+# - vaults_orient_n
+# - vaults_orient_e
+# - vaults_orient_s
+# - vaults_orient_w
+#     Controls the orientation of the vault. A vault can have multiple of these
+#     tags if it designed to be entered from multiple directions, in which case a
+#     random orientation will be picked from the ones you have specified. If it
+#     has none of these tags then it will be randomly rotated.
+#     Specifically the tags mean "the vault can be entered from this direction".
+#     It doesn't mean your vault won't be rotated, it just means that the door
+#     will be placed at the correct size as you've designed it. So if you have
+#     vaults_orient_n, but the vault is placed rotated 90 degrees clockwise, then
+#     the door will be at the west.
+#     These tags also control how additional sub-rooms might get attached onto
+#     your room. If you have vaults_orient_n and vaults_orient_s then your vault
+#     could get used as a corridor connecting one part of the layout to another
+#     room.
 #
 # TODO: Should the documentation above be moved to a text file in docs or even
 #       to general vault authoring docmentation? -mumra

@@ -45,10 +45,10 @@ local function vector_rotate(vec, count)
 end
 
 local normals = {
-  { x = 0, y = -1, dir = 0 },
-  { x = -1, y = 0, dir = 1 },
-  { x = 0, y = 1, dir = 2 },
-  { x = 1, y = 0, dir = 3 }
+  { x = 0, y = -1, dir = 0, name="n" },
+  { x = -1, y = 0, dir = 1, name="w" },
+  { x = 0, y = 1, dir = 2, name="s" },
+  { x = 1, y = 0, dir = 3, name="e" }
 }
 
 local function print_vector(caption,v)
@@ -134,7 +134,7 @@ function place_vaults_rooms(e,data, room_count, options)
   if options.emty_chance == nil then options.empty_chance = 50 end -- Chance in 100
 
   -- Attempt to place as many rooms as we've been asked for
---  for i = 1, room_count, 1 do
+  -- for i = 1, 1, 1 do
   for i = 1, room_count, 1 do
     local placed = false
     local tries = 0
@@ -222,11 +222,31 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local room_width, room_height = room.size.x, room.size.y
 
   -- Get wall's normal and calculate the door vector (i.e. attaching wall)
-  local v_normal, v_wall, room_base, clear_bounds
+  local v_normal, v_wall, room_base, clear_bounds, orient
+  -- Does the room need a specific orientation?
+  if room.type == "vault" then
+    local orients = { }
+    for i, n in ipairs(normals) do
+      if dgn.has_tag(room.map,"vaults_orient_" .. n.name) then
+        table.insert(orients,n)
+      end
+    end
+    local count = #orients
+    if count > 0 then
+      orient = orients[crawl.random_range(1,count)]
+    else
+      -- Pick one of the four orients now; if the room is rectangular we'll need
+      -- to swap the width/height anyway
+      orient = normals[crawl.random_range(1,#normals)]
+    end
+    -- Exchange width and height
+    if orient.dir % 2 == 1 then room_width, room_height = room_height, room_width end
+  end
 
   -- Placing a room in open space
   if usage.usage == "open" then
-    -- Pick a random orientation
+    -- Pick a random rotation for the door wall
+    -- TODO: We might as well try all four?
     v_normal = normals[crawl.random_range(1,4)]
     v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
     -- Ultimately where the bottom-left corner of the room will be placed (relative to pos)
@@ -279,16 +299,9 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       break
     end
   end
+
   -- No clear space found, cancel
   if not is_clear then return false end
-
-  -- Now need the door
-  -- local rx1 = relative_to_door
-  -- local dx1 = relative.x + (rx1 * door_vector.x) + (1 * orient.x)
-  -- local dy1 = relative.y + (rx1 * door_vector.y) + (1 * orient.y)
-  -- local rx2 = rx1 + door_length - 1
-  -- local dx2 = relative.x + (rx2 * door_vector.x) + (1 * orient.x)
-  -- local dy2 = relative.y + (rx2 * door_vector.y) + (1 * orient.y)
 
   -- If placing in open space, we need to surround with walls
   -- TODO: Randomly vary the wall type
@@ -322,7 +335,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     dgn.fill_grd_area(door_c1.x, door_c1.y, door_c2.x, door_c2.y, "closed_door")
 
     -- Optionally generate windows
-    if door_length < room_width and crawl.one_chance_in(5) then
+    if door_length < room_width and crawl.one_chance_in(5) then -- and not (room.type == "vault" and dgn.has_tag(room.map,"vaults_no_windows")) then
       local window_pos1 = crawl.random_range(0, door_start - 1)
       local window_pos2 = crawl.random_range(0, door_start - 1)
       local window_1l = vaults_vector_add(room_base, { x = window_pos1, y = -1 }, v_wall, v_normal)
@@ -335,9 +348,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     end
 
   end
-
-
-  -- dgn.fill_grd_area(dx1, dy1, dx2, dy2, "closed_door")
 
   -- Loop through all squares and update eligibility
   for x = origin.x, opposite.x, 1 do
@@ -358,7 +368,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     end
   end
 
-  -- TODO: We'll might want to get some data from the placed map e.g. tags and return it
+  -- TODO: We might want to get some data from the placed map e.g. tags and return it
   return true
 end
 
