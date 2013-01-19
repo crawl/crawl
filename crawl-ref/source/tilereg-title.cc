@@ -27,7 +27,7 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
     if (!m_img.load_texture(_get_title_image().c_str(), MIPMAP_NONE))
         return;
 
-    if (m_img.orig_width() < width && m_img.orig_height() < height)
+    if ((int)m_img.orig_width() < width && (int)m_img.orig_height() < height)
     {
         // Center
         wx = width;
