@@ -685,6 +685,35 @@ int TilesFramework::getch_ck()
             switch (event.type)
             {
             case WM_ACTIVEEVENT:
+#ifdef __ANDROID__
+                // short-term: when crawl is 'iconified' in android,
+                // close it
+                if (/*event.active.state == 0x04 SDL_APPACTIVE &&*/ event.active.gain == 0)
+                {
+                    if (crawl_state.need_save)
+                        save_game(true);
+                    exit(0);
+                }
+                // long-term pseudo-code:
+                /*
+                if (event.active.state == SDL_APPACTIVE)
+                {
+                    if (event.active.gain == 0)
+                    {
+                        if (crawl_state.need_save)
+                            save_game(true);
+                        do_no_SDL_or_GL_calls();
+                    }
+                    else
+                    {
+                        reload_gl_textures();
+                        reset_gl_state();
+                        wm->set_mod_state(MOD_NONE);
+                        set_need_redraw();
+                    }
+                }
+                 */
+#else
                 // When game gains focus back then set mod state clean
                 // to get rid of stupid Windows/SDL bug with Alt-Tab.
                 if (event.active.gain != 0)
@@ -692,6 +721,7 @@ int TilesFramework::getch_ck()
                     wm->set_mod_state(MOD_NONE);
                     set_need_redraw();
                 }
+#endif
                 break;
             case WM_KEYDOWN:
                 m_key_mod |= event.key.keysym.key_mod;
