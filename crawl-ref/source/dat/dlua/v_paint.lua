@@ -64,6 +64,7 @@ function vaults_get_usage(usage_grid,x,y)
 end
 
 local function set_usage(usage_grid,x,y,usage)
+  if usage_grid[y] == nil or usage_grid[y][x] == nil then return false end
   usage_grid[y][x] = usage
 end
 
@@ -161,9 +162,11 @@ local function determine_usage_from_layout(layout_grid,options)
             if adjacent_sum == 4 then
               local diagonal_sum = local_grid[-1][-1] + local_grid[1][-1] + local_grid[-1][1] + local_grid[1][1]
 
-              -- Wall definitely all around?
-              if diagonal_sum == 4 then
-                -- Should have been set at initialization
+              -- Wall mostly all around? (We allow one missing corner otherwise rooms can't overlap corners
+              -- and logically it's fine for any wall to be placed there, other missing holes will fail the placement
+              -- anyway)
+              if diagonal_sum >= 3 then
+                -- Should have been set this way at initialization but let's check anyway
                 set_usage(usage_grid,x,y, { usage = "none" })
               else
                 -- There are some diagonal holes so we can't use this square
