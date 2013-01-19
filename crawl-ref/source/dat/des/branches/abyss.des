@@ -29,7 +29,11 @@ ENDMAP
 # Dummy vaults
 NAME: abyss_furniture_dummy
 TAGS: abyss dummy
-: chance("0 :" .. 1 - 0.1 * you.depth())
+CHANCE: 0 : 90% (Abyss:1)
+CHANCE: 0 : 80% (Abyss:2)
+CHANCE: 0 : 70% (Abyss:3)
+CHANCE: 0 : 60% (Abyss:4)
+CHANCE: 0 : 50% (Abyss:5)
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune dummy
@@ -37,7 +41,11 @@ CHANCE: 0 : 10%
 
 NAME: abyss_exit_dummy
 TAGS: abyss_exit dummy
-: chance("0 :" .. 1 - 0.05 * you.depth())
+CHANCE: 0 : 95% (Abyss:1)
+CHANCE: 0 : 90% (Abyss:2)
+CHANCE: 0 : 85% (Abyss:3)
+CHANCE: 0 : 80% (Abyss:4)
+CHANCE: 0 : 75% (Abyss:5)
 
 ###############################################################################
 NAME: abyss_furniture_001
