@@ -180,7 +180,34 @@ function place_vaults_rooms(e,data, room_count, options)
     end
   end
 
+  -- Useful if things aren't working:
+  -- dump_usage_grid(data)
+
   return true
+end
+
+function dump_usage_grid(usage_grid)
+
+  for i, row in ipairs(usage_grid) do
+    local maprow = ""
+    for j, cell in ipairs(row) do
+      if cell.usage == "none" then maprow = maprow .. " "
+      elseif cell.usage == "restricted" then
+        if cell.reason == "vault" then maprow = maprow .. ","
+        elseif cell.reason == "door" then maprow = maprow .. "="
+        else maprow = maprow .. "!" end
+      elseif cell.usage == "empty" then maprow = maprow .. "."
+      elseif cell.usage == "eligible" then
+        if cell.normal == nil then maprow = maprow .. "!"
+        elseif cell.normal.x == -1 then maprow = maprow .. "<"
+        elseif cell.normal.x == 1 then maprow = maprow .. ">"
+        elseif cell.normal.y == -1 then maprow = maprow .. "^"
+        elseif cell.normal.y == 1 then maprow = maprow .. "v" end
+      else maprow = maprow .. "?" end
+    end
+    print (maprow)
+  end
+
 end
 
 function place_vaults_room(e,usage_grid,room, options)
@@ -279,6 +306,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Can veto room from options
   if options.veto_place_callback ~= nil then
     local result = options.veto_place_callback(usage,room)
+    if result ~= true then return false end
   end
 
   local origin = { x = -1, y = -1 }
@@ -356,6 +384,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   if room.type == "vault" then
     -- Allow map to by flipped and rotated again
     dgn.tags_remove(room.map, "no_vmirror no_hmirror no_rotate")
+    -- Hardwiring this for now
+    dgn.tags(room.map, "transparent")
 
     -- Calculate the final orientation we need for the room to match the door
     -- Somewhat discovered by trial and error but it appears to work
@@ -427,7 +457,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   local new_depth = 2
   if usage.depth ~= nil then new_depth = usage.depth + 1 end
-
   for n = 0, room_width - 1, 1 do
     -- Door wall
     local p1 = vaults_vector_add(room_base,{x = n, y = -1}, v_wall, v_normal)
@@ -438,11 +467,11 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   end
   for n = 0, room_height - 1, 1 do
     -- Left wall
-    local p1 = vaults_vector_add(room_base,{x = -1, y = n}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p1.x,p1.y,{ usage = wall_usage, normal = vector_rotate(normals[2],v_normal_dir), room = room, depth = new_depth })
+    local p3 = vaults_vector_add(room_base,{x = -1, y = n}, v_wall, v_normal)
+    vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = wall_usage, normal = vector_rotate(normals[2],v_normal_dir), room = room, depth = new_depth })
     -- Right wall
-    local p2 = vaults_vector_add(room_base,{x = room_width, y = n}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = wall_usage, normal = vector_rotate(normals[4],v_normal_dir), room = room, depth = new_depth })
+    local p4 = vaults_vector_add(room_base,{x = room_width, y = n}, v_wall, v_normal)
+    vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = wall_usage, normal = vector_rotate(normals[4],v_normal_dir), room = room, depth = new_depth })
   end
 
   -- TODO: We might want to get some data from the placed map e.g. tags and return it

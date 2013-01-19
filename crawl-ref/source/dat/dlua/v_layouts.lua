@@ -118,34 +118,37 @@ function build_vaults_maze_layout(e,veto_callback)
 end
 
 function build_vaults_maze_snakey_layout(e)
+    print("Snakey Maze Layout")
 
   -- Alternate between up/down rooms
   local function callback(usage,room)
-    if usage.normal == nil then return true end
+    if usage.normal == nil or usage.depth == nil then return true end
     local odd = usage.depth % 2
     if odd == 0 then
-      if usage.normal.x ~= 0 then return false end
+      if usage.normal.y == 0 then return false end
       return true
     end
-    if usage.normal.y ~= 0 then return false end
+    if usage.normal.x == 0 then return false end
     return true
   end
-
+  build_vaults_maze_layout(e,callback)
 end
 
 function build_vaults_maze_bifur_layout(e)
+    print("Bifur Maze Layout")
   local which = crawl.coinflip()
   -- Go either horizontal or vertical for a few rooms then expand
   local function callback(usage,room)
     if usage.normal == nil then return true end
-    if usage.depth == nil or usage.depth > 4 then return true end
+    if usage.depth == nil or usage.depth > 2 then return true end
 
     if which then
-      if usage.normal.x ~= 0 then return false end
+      if usage.normal.y == 0 then return false end
       return true
     end
-    if usage.normal.y ~= 0 then return false end
+    if usage.normal.x == 0 then return false end
     return true
 
   end
+  build_vaults_maze_layout(e,callback)
 end
