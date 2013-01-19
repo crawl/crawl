@@ -1330,7 +1330,7 @@ CONTENT_PORTAL_TROVE           = 20
 CONTENT_PORTAL_WIZARD_LAB      = 21
 CONTENT_PORTAL_ZIGGURAT        = 22
 
-CONTENT_SERIAL_MINIWIZLAB      = 23
+-- CONTENT_SERIAL_MINIWIZLAB      = 23
 CONTENT_SERIAL_CRYSTAL         = 24
 CONTENT_SERIAL_MAGIC_RESEARCH  = 25
 
@@ -1376,7 +1376,7 @@ A_CONTENT_NAME =
         "trove",
         "wizlab",
         "ziggurat",
-        "miniwizlab",
+        "ERROR",
         "crystal",
         "magic_research",
         "ERROR" }
@@ -3182,36 +3182,36 @@ function calculateContentSerialVault(a_rooms, room_count)
 
   local chosen = crawl.random2(200)
 
-  if chosen < 16 then
-    --
-    --  miniwizlab serial vault
-    --
-    --  We place a 7x7 room and 1-3 4x4 rooms.
-    --
+--  if chosen < 16 then
+--    --
+--    --  miniwizlab serial vault
+--    --
+--    --  We place a 7x7 room and 1-3 4x4 rooms.
+--    --
+--
+--    if a_room_size_count[7] >= 1 and a_room_size_count[4] >= 1 then
+--
+--      setRandomRoomToContent(a_rooms, room_count,
+--                             a_group_for_size[7],
+--                             CONTENT_SERIAL_MINIWIZLAB)
+--
+--      setRandomRoomToContent(a_rooms, room_count,
+--                             a_group_for_size[4],
+--                             CONTENT_SERIAL_MINIWIZLAB)
+--      if a_room_size_count[4] >= 2 and crawl.random2(3) < 2 then
+--        setRandomRoomToContent(a_rooms, room_count,
+--                               a_group_for_size[4],
+--                               CONTENT_SERIAL_MINIWIZLAB)
+--
+--        if a_room_size_count[4] >= 3 and crawl.random2(2) < 1 then
+--          setRandomRoomToContent(a_rooms, room_count,
+--                                 a_group_for_size[4],
+--                                 CONTENT_SERIAL_MINIWIZLAB)
+--        end
+--      end
+--    end
 
-    if a_room_size_count[7] >= 1 and a_room_size_count[4] >= 1 then
-
-      setRandomRoomToContent(a_rooms, room_count,
-                             a_group_for_size[7],
-                             CONTENT_SERIAL_MINIWIZLAB)
-
-      setRandomRoomToContent(a_rooms, room_count,
-                             a_group_for_size[4],
-                             CONTENT_SERIAL_MINIWIZLAB)
-      if a_room_size_count[4] >= 2 and crawl.random2(3) < 2 then
-        setRandomRoomToContent(a_rooms, room_count,
-                               a_group_for_size[4],
-                               CONTENT_SERIAL_MINIWIZLAB)
-
-        if a_room_size_count[4] >= 3 and crawl.random2(2) < 1 then
-          setRandomRoomToContent(a_rooms, room_count,
-                                 a_group_for_size[4],
-                                 CONTENT_SERIAL_MINIWIZLAB)
-        end
-      end
-    end
-
-  elseif chosen < 20 then
+  if chosen < 4 then
 
     --
     -- crystal serial vault
@@ -3229,7 +3229,7 @@ function calculateContentSerialVault(a_rooms, room_count)
                              a_group_for_size[10],
                              CONTENT_SERIAL_CRYSTAL)
     end
-  elseif chosen < 21 then
+  elseif chosen < 5 then
 
     --
     -- serial_hangedman_research
