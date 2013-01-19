@@ -1602,6 +1602,22 @@ LUAFN(_dgn_in_vault)
     return 1;
 }
 
+LUAFN(_dgn_set_map_mask)
+{
+    GETCOORD(c, 1, 2, map_bounds);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    env.level_map_mask(c) |= mask;
+    return 1;
+}
+
+LUAFN(_dgn_unset_map_mask)
+{
+    GETCOORD(c, 1, 2, map_bounds);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    env.level_map_mask(c) &= ~mask;
+    return 1;
+}
+
 LUAFN(_dgn_map_parameters)
 {
     return clua_stringtable(ls, map_parameters);
@@ -1882,6 +1898,8 @@ const struct luaL_reg dgn_dlib[] =
 { "reuse_map", _dgn_reuse_map },
 { "resolve_map", _dgn_resolve_map },
 { "in_vault", _dgn_in_vault },
+{ "set_map_mask", _dgn_set_map_mask },
+{ "unset_map_mask", _dgn_unset_map_mask },
 
 { "map_parameters", _dgn_map_parameters },
 
