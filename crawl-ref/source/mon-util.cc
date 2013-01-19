@@ -819,16 +819,16 @@ bool mons_is_abyssal(monster_type mc)
 {
     switch (mc)
     {
-    case MONS_TENTACLED_STARSPAWN:
-    case MONS_LURKING_HORROR:
-    case MONS_THRASHING_HORROR:
-    case MONS_STARCURSED_MASS:
     case MONS_ANCIENT_ZYME:
-    case MONS_WRETCHED_STAR:
-    case MONS_ELDRITCH_TENTACLE:
     case MONS_APOCALYPSE_CRAB:
-    case MONS_STARSPAWN_TENTACLE:
+    case MONS_ELDRITCH_TENTACLE:
+    case MONS_LURKING_HORROR:
     case MONS_SPATIAL_MAELSTROM:
+    case MONS_STARCURSED_MASS:
+    case MONS_STARSPAWN_TENTACLE:
+    case MONS_TENTACLED_STARSPAWN:
+    case MONS_THRASHING_HORROR:
+    case MONS_WRETCHED_STAR:
         return true;
     default:
         return false;
