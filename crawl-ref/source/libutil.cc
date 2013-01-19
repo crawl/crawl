@@ -1193,7 +1193,7 @@ void text_popup(const string& text, const wchar_t *caption)
     MessageBoxW(0, OUTW(text), caption, MB_OK);
 }
 #else
-# if defined(USE_CURSES) || defined(__ANDROID__)
+# ifdef USE_CURSES
 
 /* [ds] This SIGHUP handling is primitive and far from safe, but it
  * should be better than nothing. Feel free to get rigorous on this.
@@ -1202,13 +1202,7 @@ static void handle_hangup(int)
 {
     if (crawl_state.seen_hups++)
         return;
-#ifdef __ANDROID__
-    // for android, we're currently using SIGHUP to immediately close
-    // the app, as cleanly as possible. The 'correct' thing to do is
-    // completely reconstitute the OpenGL state, from scratch, which is
-    // somewhat more complicated
-    sighup_save_and_exit();
-#else
+
     // When using Curses, closing stdin will cause any Curses call blocking
     // on key-presses to immediately return, including any call that was
     // still blocking in the main thread when the HUP signal was caught.
@@ -1223,7 +1217,6 @@ static void handle_hangup(int)
     // the hack of avoiding excomunication consesquences because of the
     // more() after "You have lost your religion!"
     fclose(stdin);
-#endif
 }
 # endif
 
@@ -1245,16 +1238,9 @@ void init_signals()
 #endif
 
 # ifdef USE_TILE_LOCAL
-#  ifdef __ANDROID__
-    // Currently Android will SIGHUP the app when it's sent into the background
-    // ... because the alternative (of resetting OpenGL state and reloading all
-    // the textures is *super* complicated
-    signal(SIGHUP, handle_hangup);
-#  else
     // Losing the controlling terminal doesn't matter, we continue and will
     // shut down only when the actual window is closed.
     signal(SIGHUP, SIG_IGN);
-#  endif
 # else
     signal(SIGHUP, handle_hangup);
 # endif
