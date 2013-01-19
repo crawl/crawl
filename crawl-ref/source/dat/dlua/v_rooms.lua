@@ -69,11 +69,22 @@ local function pick_room(e, options)
 
   -- Do we just want an empty room?
   if crawl.random2(100) < options.empty_chance then
+    local veto = true
 
-    room = {
-      type = "empty",
-      size = { x = crawl.random_range(options.min_room_size,options.max_room_size), y = crawl.random_range(options.min_room_size,options.max_room_size) }
-    }
+    while veto do
+      veto = false
+
+      room = {
+        type = "empty",
+        size = { x = crawl.random_range(options.min_room_size,options.max_room_size), y = crawl.random_range(options.min_room_size,options.max_room_size) }
+      }
+
+      if options.veto_room_callback ~= nil then
+        local result = options.veto_room_callback(room)
+        if result == true then veto = true end
+      end
+
+    end
     return room
 
   else
@@ -107,8 +118,8 @@ local function pick_room(e, options)
             map = map,
             vplace = vplace
           }
-          if options.veto_callback ~= nill then
-            local result = options.veto_callback(room)
+          if options.veto_room_callback ~= nil then
+            local result = options.veto_room_callback(room)
             if result == true then veto = true end
           end
           if not veto then
@@ -181,7 +192,7 @@ function place_vaults_rooms(e,data, room_count, options)
   end
 
   -- Useful if things aren't working:
-  -- dump_usage_grid(data)
+  dump_usage_grid(data)
 
   return true
 end
@@ -198,11 +209,13 @@ function dump_usage_grid(usage_grid)
         else maprow = maprow .. "!" end
       elseif cell.usage == "empty" then maprow = maprow .. "."
       elseif cell.usage == "eligible" then
-        if cell.normal == nil then maprow = maprow .. "!"
-        elseif cell.normal.x == -1 then maprow = maprow .. "<"
-        elseif cell.normal.x == 1 then maprow = maprow .. ">"
-        elseif cell.normal.y == -1 then maprow = maprow .. "^"
-        elseif cell.normal.y == 1 then maprow = maprow .. "v" end
+        if cell.depth == nil then maprow = maprow .. "!"
+        else maprow = maprow .. cell.depth end
+        -- if cell.normal == nil then maprow = maprow .. "!"
+        -- elseif cell.normal.x == -1 then maprow = maprow .. "<"
+        -- elseif cell.normal.x == 1 then maprow = maprow .. ">"
+        -- elseif cell.normal.y == -1 then maprow = maprow .. "^"
+        -- elseif cell.normal.y == 1 then maprow = maprow .. "v" end
       else maprow = maprow .. "?" end
     end
     print (maprow)
@@ -306,7 +319,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Can veto room from options
   if options.veto_place_callback ~= nil then
     local result = options.veto_place_callback(usage,room)
-    if result ~= true then return false end
+    if result == true then return false end
   end
 
   local origin = { x = -1, y = -1 }
