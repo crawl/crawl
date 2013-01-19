@@ -84,7 +84,7 @@ default-depth: Vaults
 # layout styles more or less likely.
 NAME: layout_vaults_ring
 DEPTH: Vaults
-WEIGHT: 90
+WEIGHT: 25
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -94,7 +94,7 @@ ENDMAP
 
 NAME: layout_vaults_cross
 DEPTH: Vaults
-WEIGHT: 90
+WEIGHT: 40
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -104,7 +104,7 @@ ENDMAP
 
 NAME: layout_vaults_big_room
 DEPTH: Vaults
-WEIGHT: 90
+WEIGHT: 50
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -114,7 +114,7 @@ ENDMAP
 
 NAME: layout_vaults_chaotic_city
 DEPTH: Vaults
-WEIGHT: 90
+WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -124,7 +124,7 @@ ENDMAP
 
 NAME: layout_vaults_maze
 DEPTH: Vaults
-WEIGHT: 100
+WEIGHT: 80
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -134,7 +134,7 @@ ENDMAP
 
 NAME: layout_vaults_maze_snakey
 DEPTH: Vaults
-WEIGHT: 1000
+WEIGHT: 30
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -144,7 +144,7 @@ ENDMAP
 
 NAME: layout_vaults_maze_bifur
 DEPTH: Vaults
-WEIGHT: 1000
+WEIGHT: 30
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults

@@ -105,31 +105,43 @@ function build_vaults_maze_layout(e,veto_callback)
 
     print("Maze Layout")
 
-  local x1 = crawl.random_range(20, gxm-30)
-  local y1 = crawl.random_range(20, gym-30)
+  -- Put a single empty room somewhere roughly central. All rooms will be built off from each other following this
+  local x1 = crawl.random_range(30, gxm-70)
+  local y1 = crawl.random_range(30, gym-70)
 
   local paint = {
-    { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + 6, y = y1 + 6 } }
+    { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + crawl.random_range(4,10), y = y1 + crawl.random_range(4,10) } }
   }
 
+  local function room_veto(room)
+    -- Avoid *very* large empty rooms, but they can be long and thin
+    if room.type == "empty" then
+      if room.size.x + room.size.y > 23 then return true end
+    end
+    return false
+  end
+
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 0, veto_place_callback = veto_callback })
+  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 3, max_room_size = 25 })
 
 end
 
 function build_vaults_maze_snakey_layout(e)
     print("Snakey Maze Layout")
-
   -- Alternate between up/down rooms
+  -- Note sure why there is an issue with this layout never getting past depth 3 (without the 1/20 bailout)...
+    local which = crawl.coinflip()
   local function callback(usage,room)
-    if usage.normal == nil or usage.depth == nil then return true end
+    if usage.normal == nil or usage.depth == nil then return false end
     local odd = usage.depth % 2
-    if odd == 0 then
-      if usage.normal.y == 0 then return false end
-      return true
+    if odd == which then
+      if crawl.one_chance_in(20) then return false end
+      if usage.normal.y == 0 then return true end
+      return false
     end
-    if usage.normal.x == 0 then return false end
-    return true
+    if crawl.one_chance_in(20) then return false end
+    if usage.normal.x == 0 then return true end
+    return false
   end
   build_vaults_maze_layout(e,callback)
 end
@@ -139,15 +151,22 @@ function build_vaults_maze_bifur_layout(e)
   local which = crawl.coinflip()
   -- Go either horizontal or vertical for a few rooms then expand
   local function callback(usage,room)
-    if usage.normal == nil then return true end
-    if usage.depth == nil or usage.depth > 2 then return true end
+    if usage.normal == nil then return false end
+    if usage.depth == nil or usage.depth > 3 then return false end
 
-    if which then
-      if usage.normal.y == 0 then return false end
+    if which > 0 then
+      if usage.normal.y == 0 then
+        -- Need a slight chance to extend in other directions otherwise the layout gets stuck
+        if crawl.one_chance_in(10) then return false end
+        return true
+      end
+      return false
+    end
+    if usage.normal.x == 0 then
+      if crawl.one_chance_in(10) then return false end
       return true
     end
-    if usage.normal.x == 0 then return false end
-    return true
+    return false
 
   end
   build_vaults_maze_layout(e,callback)
