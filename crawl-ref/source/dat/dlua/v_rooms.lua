@@ -84,6 +84,9 @@ local function pick_room(e, options)
     while tries < maxTries and not found do
       -- Resolve a map with the specified tag
       local mapdef = dgn.map_by_tag("vaults_"..room_type)
+      -- Temporarily prevent map getting mirrored / rotated during resolution
+      dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate");
+      -- Resolve the map so we can find its width / height
       local map, vplace = dgn.resolve_map(mapdef,true,true)
       local room_width,room_height
 
@@ -222,7 +225,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local room_width, room_height = room.size.x, room.size.y
 
   -- Get wall's normal and calculate the door vector (i.e. attaching wall)
-  local v_normal, v_wall, room_base, clear_bounds, orient
+  local v_normal, v_wall, room_base, clear_bounds, orient, v_normal_dir
   -- Does the room need a specific orientation?
   if room.type == "vault" then
     local orients = { }
@@ -248,6 +251,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     -- Pick a random rotation for the door wall
     -- TODO: We might as well try all four?
     v_normal = normals[crawl.random_range(1,4)]
+    v_normal_dir = v_normal.dir
     v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
     -- Ultimately where the bottom-left corner of the room will be placed (relative to pos)
     -- It is offset by 1,1 from the picked spot
@@ -257,6 +261,11 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Placing a room in a wall
   if usage.usage == "eligible" then
     v_normal = usage.normal
+    for i,n in ipairs(normals) do
+      if n.x == v_normal.x and n.y == v_normal.y then
+        v_normal_dir = n.dir
+      end
+    end
     v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
     -- Ultimately where the bottom-left corner of the room will be placed (relative to pos)
     -- It is offset by half the room width and up by one to make room for door
@@ -314,7 +323,17 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   -- Place the map inside
   if room.type == "vault" then
-    dgn.reuse_map(room.vplace,origin.x,origin.y,false,false)
+    dgn.tags_remove(room.map, "no_vmirror no_hmirror no_rotate")
+    -- Calculate the final orientation we need for the room to match the door
+    -- Somewhat discovered by trial and error but it appears to work
+    local final_orient = (orient.dir - v_normal_dir + 2) % 4
+
+    -- We can only rotate a map clockwise or anticlockwise. To rotate 180 we just flip on both axes.
+    if final_orient == 0 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,0)
+    elseif final_orient == 1 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,1)
+    elseif final_orient == 2 then dgn.reuse_map(room.vplace,origin.x,origin.y,true,true,0)
+    elseif final_orient == 3 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,-1) end
+
   end
 
   local needs_door = true
