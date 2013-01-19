@@ -37,10 +37,8 @@ function build_vaults_ring_layout(e, corridorWidth, outerPadding)
 
   -- Paint four floors
   local paint = {
-    { type = "floor", corner1 = c1, corner2 = c4,
-    { type = "wall", corner1 = c2, corner2 = c3 },
-    { type = "floor", corner1 = { x = c1.x, y = c3.y } , corner2 = c4 },
-    { type = "floor", corner1 = { x = c3.x, y = c1.y } , corner2 = c4 }
+    { type = "floor", corner1 = c1, corner2 = c4},
+    { type = "wall", corner1 = c2, corner2 = c3 }
   }
   local data = paint_vaults_layout(e, paint)
   local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 3 })
@@ -58,8 +56,8 @@ function build_vaults_cross_layout(e, corridorWidth, intersect)
   local xc = math.floor((gxm-corridorWidth)/2)
   local yc = math.floor((gym-corridorWidth)/2)
   local paint = {
-    { type = "floor", corner1 = { x = xc, y = 0 }, corner2 = { x = xc + corridorWidth - 1, y = gym - 1 } },
-    { type = "floor", corner1 = { x = 0, y = yc }, corner2 = { x = gxm - 1, y = yc + corridorWidth - 1 } }
+    { type = "floor", corner1 = { x = xc, y = 1 }, corner2 = { x = xc + corridorWidth - 1, y = gym - 2 } },
+    { type = "floor", corner1 = { x = 1, y = yc }, corner2 = { x = gxm - 2, y = yc + corridorWidth - 1 } }
   }
 
   local data = paint_vaults_layout(e, paint)
@@ -91,10 +89,9 @@ function build_vaults_chaotic_city_layout(e)
 
       print("Chaotic City Layout")
 
-
   -- Paint everything with floor
   local paint = {
-    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = gxm - 1, y = gym - 1 } }
+    { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm - 2, y = gym - 2 } }
   }
 
   local data = paint_vaults_layout(e, paint)

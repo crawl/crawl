@@ -13,11 +13,6 @@
 -- initial level generation).
 ------------------------------------------------------------------------------
 
-local usage_restricted_count = 0
-local usage_open_count = 0
-local usage_eligible_count = 0
-local usage_none_count = 0
-
 -- Some constants to control certain things about how usage is calculated
 local c_min_distance_from_wall = 2  -- Rooms placed on floor areas must be this
                                     -- far from a wall (avoids choke points)
@@ -70,10 +65,6 @@ end
 
 local function set_usage(usage_grid,x,y,usage)
   usage_grid[y][x] = usage
-  if usage.usage == "restricted" then usage_restricted_count = usage_restricted_count + 1 end
-  if usage.usage == "open" then usage_open_count = usage_open_count + 1 end
-  if usage.usage == "none" then usage_none_count = usage_none_count + 1 end
-  if usage.usage == "eligible" then usage_eligible_count = usage_eligible_count + 1 end
 end
 
 -- Global version
@@ -97,7 +88,7 @@ local function set_layout(layout_grid,x,y,value)
   layout_grid[y][x] = value
 end
 
-local function determine_usage_from_layout(layout_grid)
+local function determine_usage_from_layout(layout_grid,options)
 
   usage_restricted_count = 0
   usage_open_count = 0
@@ -114,9 +105,9 @@ local function determine_usage_from_layout(layout_grid)
       local local_grid = { }
       -- This flag will track if there is only floor in the area
       local only_floor = true
-      for yl = -c_min_distance_from_wall, c_min_distance_from_wall, 1 do
+      for yl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
         local_grid[yl] = { }
-        for xl = -c_min_distance_from_wall, c_min_distance_from_wall, 1 do
+        for xl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
           local_grid[yl][xl] = get_layout(layout_grid,x+xl,y+yl)
           if local_grid[yl][xl] == 1 then only_floor = false end
         end
@@ -191,10 +182,6 @@ local function determine_usage_from_layout(layout_grid)
 
     end
   end
-  print ("Restricted: " .. usage_restricted_count)
-  print ("None:       " .. usage_none_count)
-  print ("Eligible:   " .. usage_eligible_count)
-  print ("Open:       " .. usage_open_count)
   return usage_grid
 end
 
@@ -202,7 +189,7 @@ end
 
 function paint_vaults_layout(e, paint, options)
 
-  if options == nil then options = {} end
+  if options == nil then options = { min_distance_from_wall = c_min_distance_from_wall } end
 
   -- Will contain data about how each square is used and therefore how rooms
   -- can be applied
@@ -229,7 +216,7 @@ function paint_vaults_layout(e, paint, options)
 
   end
 
-  local usage_grid = determine_usage_from_layout(layout_grid)
+  local usage_grid = determine_usage_from_layout(layout_grid,options)
 
   -- Paint the resultant layout onto the dungeon grid
   local gxm, gym = dgn.max_bounds()

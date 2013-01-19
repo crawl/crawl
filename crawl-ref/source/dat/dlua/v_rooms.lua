@@ -129,17 +129,16 @@ function place_vaults_rooms(e,data, room_count, options)
 
   -- Set default options
   if options.min_room_size == nil then options.min_room_size = 5 end
-  if options.max_room_size == nil then options.max_room_size = 20 end
+  if options.max_room_size == nil then options.max_room_size = 15 end
   if options.max_room_depth == nil then options.max_room_depth = 0 end -- No max
   if options.emty_chance == nil then options.empty_chance = 50 end -- Chance in 100
 
   -- Attempt to place as many rooms as we've been asked for
 --  for i = 1, room_count, 1 do
-  for i = 1, 10, 1 do
+  for i = 1, room_count, 1 do
     local placed = false
     local tries = 0
     local maxTries = 50
-
 
     local results = { }
     -- Try several times to find a room that passes placement (it could get vetoed at the placement stage,
@@ -204,7 +203,6 @@ function place_vaults_room(e,usage_grid,room, options)
       local spoty = crawl.random_range(0,gxm-1)
       spot = { x = spotx, y = spoty }
       usage = vaults_get_usage(usage_grid,spot.x,spot.y)
-      print ("Usage: " .. usage.usage)
       if (usage.usage == "eligible" or usage.usage == "open") then
         foundSpot = true
       end
@@ -222,7 +220,6 @@ end
 
 function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local room_width, room_height = room.size.x, room.size.y
-  print ("Map size: " .. room_width .. " x " .. room_height)
 
   -- Get wall's normal and calculate the door vector (i.e. attaching wall)
   local v_normal, v_wall, room_base, clear_bounds
@@ -231,13 +228,10 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   if usage.usage == "open" then
     -- Pick a random orientation
     v_normal = normals[crawl.random_range(1,4)]
-    print_vector("v_normal",v_normal)
     v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
-    print_vector("v_wall",v_wall)
     -- Ultimately where the bottom-left corner of the room will be placed (relative to pos)
     -- It is offset by 1,1 from the picked spot
     room_base = vaults_vector_add(pos, { x = 1, y = 1 }, v_wall, v_normal)
-    print_vector("room_base", room_base)
   end
 
   -- Placing a room in a wall
@@ -248,20 +242,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     -- It is offset by half the room width and up by one to make room for door
     room_base = vaults_vector_add(pos, { x = math.floor(-room_width/2), y = 1 }, v_wall, v_normal)
   end
-
--- print("Vectors: " .. orient.x .. ", " .. orient.y .. " and " .. door_vector.x .. ", "..door_vector.y)
-
-  -- How big the door? TODO: Choose later (let vault tags veto door sizes, in fact vault tags should allow the room to position its own door/wall/windows)
-  local door_length = crawl.random_range(2,4)
-  local has_windows = crawl.one_chance_in(5)
-
---      local oriented = string.find(dgn.tags(map), " no_rotate ")
-  -- TODO: Could just check orient flag of map?
---      crawl.mpr("Width " .. room_width .. " height " .. room_height)
-
-  -- Door positioning
-  -- local relative_to_door = math.floor((room_width - door_length)/2) + crawl.random_range(-1,1) --  0 -- crawl.random_range(0,(room_width-door_length)/2)
-  -- local relative = { x = target.x - door_vector.x * relative_to_door, y = target.y - door_vector.y * relative_to_door }
 
   local origin = { x = -1, y = -1 }
   local opposite = { x = -1, y = -1 }
@@ -302,10 +282,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- No clear space found, cancel
   if not is_clear then return false end
 
-  print_vector("Origin",origin)
-  print_vector("Opposite",opposite)
-  print_vector("Pos",pos)
-
   -- Now need the door
   -- local rx1 = relative_to_door
   -- local dx1 = relative.x + (rx1 * door_vector.x) + (1 * orient.x)
@@ -322,14 +298,46 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   -- Create floor space to place the vault
   dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
-  -- Fill the door
-  dgn.fill_grd_area(pos.x, pos.y, pos.x, pos.y, "closed_door")
-  -- dgn.fill_grd_area(dx1, dy1, dx2, dy2, "closed_door")
 
   -- Place the map inside
   if room.type == "vault" then
     dgn.reuse_map(room.vplace,origin.x,origin.y,false,false)
   end
+
+  local needs_door = true
+  -- How big the door?
+  if needs_door then
+    -- Even or odd width
+    local oddness = room_width % 2
+    -- Work out half the door length
+    local door_max = math.floor(room_width / 2)
+    local door_half_length = crawl.random_range(1,door_max)
+    -- Multiply by two and add one if odd
+    local door_length = door_half_length * 2 + oddness
+
+    local door_start = (room_width - door_length) / 2
+    local door_c1 = vaults_vector_add(room_base, { x = door_start, y = -1 }, v_wall, v_normal)
+    local door_c2 = vaults_vector_add(room_base, { x = room_width - 1 - door_start, y = -1 }, v_wall, v_normal)
+
+    dgn.fill_grd_area(door_c1.x, door_c1.y, door_c2.x, door_c2.y, "closed_door")
+
+    -- Optionally generate windows
+    if door_length < room_width and crawl.one_chance_in(5) then
+      local window_pos1 = crawl.random_range(0, door_start - 1)
+      local window_pos2 = crawl.random_range(0, door_start - 1)
+      local window_1l = vaults_vector_add(room_base, { x = window_pos1, y = -1 }, v_wall, v_normal)
+      local window_1r = vaults_vector_add(room_base, { x = room_width - 1 - window_pos1, y = -1 }, v_wall, v_normal)
+      local window_2l = vaults_vector_add(room_base, { x = window_pos2, y = -1 }, v_wall, v_normal)
+      local window_2r = vaults_vector_add(room_base, { x = room_width - 1 - window_pos2, y = -1 }, v_wall, v_normal)
+
+      dgn.fill_grd_area(window_1l.x, window_1l.y, window_2l.x, window_2l.y, "clear_stone_wall")
+      dgn.fill_grd_area(window_1r.x, window_1r.y, window_2r.x, window_2r.y, "clear_stone_wall")
+    end
+
+  end
+
+
+  -- dgn.fill_grd_area(dx1, dy1, dx2, dy2, "closed_door")
 
   -- Loop through all squares and update eligibility
   for x = origin.x, opposite.x, 1 do

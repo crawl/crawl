@@ -11,16 +11,20 @@
 # modify the way they are used within the layouts. A vault requires at least
 # one of the following to even be used:
 #
-# - layout_vaults_room
+# - vaults_room
 #     A standard room. These are the most commonly used type and therefore will
 #     be seen a lot.
 #     As such they should used standard monster/item placement (8s, 9s, etc.),
 #     be extremely sparing with any obvious layout features, and be heavily
 #     randomised.
 #
-# - layout_vaults_rare
+# - vaults_rare
 #     Rare rooms. These are more like normal branch minivaults. They can contain
 #     more interesting features and they might
+#
+# - vaults_empty
+#     Empty rooms. These provide furniture for areas that we otherwise want empty.
+#     They should allow normal monster placement.
 #
 # - layout_vaults_stairs_up
 # - layout_vaults_stairs_down
