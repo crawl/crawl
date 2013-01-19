@@ -237,7 +237,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
     }
 
     dgn_replace_area(10, 10, (GXM - 10), (GYM - 10), DNGN_ROCK_WALL,
-                     DNGN_FLOOR);
+                     DNGN_FLOOR, MMT_VAULT);
 
     // replace_area can also be used to fill in:
     for (i = 0; i < number_boxes; i++)
@@ -268,7 +268,10 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
         if (one_chance_in(3))
             _box_room(b1x, b2x, b1y, b2y, drawing);
         else
-            dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
+        {
+            dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing,
+                             MMT_VAULT);
+        }
     }
 
     dgn_region room = dgn_region::absolute(25, 25, 55, 45);
@@ -329,7 +332,7 @@ void dgn_build_rooms_level(int nrooms)
             continue;
         }
 
-        dgn_replace_area(room.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR);
+        dgn_replace_area(room.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR, MMT_VAULT);
 
         if (!connect_target.origin())
             join_the_dots(room.random_edge_point(), connect_target, MMT_VAULT);
@@ -731,12 +734,12 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
     int new_doors, doors_placed;
 
     // Do top & bottom walls.
-    dgn_replace_area(bx1, by1, bx2, by1, DNGN_FLOOR, wall_type);
-    dgn_replace_area(bx1, by2, bx2, by2, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx1, by1, bx2, by1, DNGN_FLOOR, wall_type, MMT_VAULT);
+    dgn_replace_area(bx1, by2, bx2, by2, DNGN_FLOOR, wall_type, MMT_VAULT);
 
     // Do left & right walls.
-    dgn_replace_area(bx1, by1+1, bx1, by2-1, DNGN_FLOOR, wall_type);
-    dgn_replace_area(bx2, by1+1, bx2, by2-1, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx1, by1+1, bx1, by2-1, DNGN_FLOOR, wall_type, MMT_VAULT);
+    dgn_replace_area(bx2, by1+1, bx2, by2-1, DNGN_FLOOR, wall_type, MMT_VAULT);
 
     // Sometimes we have to place doors, or else we shut in other
     // buildings' doors.
@@ -823,8 +826,10 @@ static void _big_room(int level_number)
     }
 
     // Make the big room.
-    dgn_replace_area(region.pos, region.end(), DNGN_ROCK_WALL, type_floor);
-    dgn_replace_area(region.pos, region.end(), DNGN_CLOSED_DOOR, type_floor);
+    dgn_replace_area(region.pos, region.end(), DNGN_ROCK_WALL, type_floor,
+                     MMT_VAULT);
+    dgn_replace_area(region.pos, region.end(), DNGN_CLOSED_DOOR, type_floor,
+                     MMT_VAULT);
 
     if (type_floor == DNGN_FLOOR)
         type_2 = _random_wall();
