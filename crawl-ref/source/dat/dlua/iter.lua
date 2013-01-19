@@ -145,6 +145,16 @@ function iter.mons_rect_iterator (top_corner, bottom_corner, filter)
   return iter.rect_iterator(top_corner, bottom_corner, iter.monster_filter(filter), true)
 end
 
+function iter.border_iterator(top_corner, bottom_corner, rvi)
+  local function check_inner(point)
+    if point.x == top_corner.x or point.x == bottom_corner.x or point.y == top_corner.y or point.y == bottom_corner.y then
+      return point
+    end
+    return nil
+  end
+  return iter.rectangle_iterator:new(top_corner, bottom_corner, check_inner, rvi)
+end
+
 -------------------------------------------------------------------------------
 -- los_iterator
 -------------------------------------------------------------------------------

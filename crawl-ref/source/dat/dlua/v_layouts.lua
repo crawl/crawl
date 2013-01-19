@@ -98,3 +98,54 @@ function build_vaults_chaotic_city_layout(e)
   local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 5 })
 
 end
+
+function build_vaults_maze_layout(e,veto_callback)
+  if not crawl.game_started() then return end
+  local gxm, gym = dgn.max_bounds()
+
+    print("Maze Layout")
+
+  local x1 = crawl.random_range(20, gxm-30)
+  local y1 = crawl.random_range(20, gym-30)
+
+  local paint = {
+    { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + 6, y = y1 + 6 } }
+  }
+
+  local data = paint_vaults_layout(e, paint)
+  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 0, veto_place_callback = veto_callback })
+
+end
+
+function build_vaults_maze_snakey_layout(e)
+
+  -- Alternate between up/down rooms
+  local function callback(usage,room)
+    if usage.normal == nil then return true end
+    local odd = usage.depth % 2
+    if odd == 0 then
+      if usage.normal.x ~= 0 then return false end
+      return true
+    end
+    if usage.normal.y ~= 0 then return false end
+    return true
+  end
+
+end
+
+function build_vaults_maze_bifur_layout(e)
+  local which = crawl.coinflip()
+  -- Go either horizontal or vertical for a few rooms then expand
+  local function callback(usage,room)
+    if usage.normal == nil then return true end
+    if usage.depth == nil or usage.depth > 4 then return true end
+
+    if which then
+      if usage.normal.x ~= 0 then return false end
+      return true
+    end
+    if usage.normal.y ~= 0 then return false end
+    return true
+
+  end
+end

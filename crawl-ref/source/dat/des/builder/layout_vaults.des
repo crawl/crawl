@@ -121,3 +121,33 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 : build_vaults_chaotic_city_layout(_G, 5, 0.5)
 MAP
 ENDMAP
+
+NAME: layout_vaults_maze
+DEPTH: Vaults
+WEIGHT: 100
+ORIENT: encompass
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
+: build_vaults_maze_layout(_G)
+MAP
+ENDMAP
+
+NAME: layout_vaults_maze_snakey
+DEPTH: Vaults
+WEIGHT: 1000
+ORIENT: encompass
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
+: build_vaults_maze_snakey_layout(_G)
+MAP
+ENDMAP
+
+NAME: layout_vaults_maze_bifur
+DEPTH: Vaults
+WEIGHT: 1000
+ORIENT: encompass
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
+: build_vaults_maze_bifur_layout(_G)
+MAP
+ENDMAP
