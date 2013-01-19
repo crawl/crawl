@@ -57,15 +57,7 @@
 #endif
 
 #ifdef TARGET_OS_WINDOWS
-
-#include <windows.h>
-// WINAPI defines these, but we are already using them in
-// wm_event_type enum,
-// so we have to undef these to have working input when using
-// Windows and Tiles
-#undef WM_KEYDOWN
-#undef WM_KEYUP
-#undef WM_QUIT
+# include <windows.h>
 #endif
 
 // Default Screen Settings
@@ -647,7 +639,7 @@ int TilesFramework::getch_ck()
             ticks = wm->get_ticks();
             if (!mouse_target_mode)
             {
-                if (event.type != WM_CUSTOMEVENT)
+                if (event.type != WME_CUSTOMEVENT)
                 {
                     tiles.clear_text_tags(TAG_CELL_DESC);
                     m_region_msg->alt_text().clear();
@@ -684,7 +676,7 @@ int TilesFramework::getch_ck()
 
             switch (event.type)
             {
-            case WM_ACTIVEEVENT:
+            case WME_ACTIVEEVENT:
 #ifdef __ANDROID__
                 // short-term: when crawl is 'iconified' in android,
                 // close it
@@ -723,7 +715,7 @@ int TilesFramework::getch_ck()
                 }
 #endif
                 break;
-            case WM_KEYDOWN:
+            case WME_KEYDOWN:
                 m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
@@ -733,12 +725,12 @@ int TilesFramework::getch_ck()
                 m_last_tick_moved = UINT_MAX;
                 break;
 
-            case WM_KEYUP:
+            case WME_KEYUP:
                 m_key_mod &= ~event.key.keysym.key_mod;
                 m_last_tick_moved = UINT_MAX;
                 break;
 
-            case WM_MOUSEMOTION:
+            case WME_MOUSEMOTION:
                 {
                     // Record mouse pos for tooltip timer
                     if (m_mouse.x != (int)event.mouse_event.px
@@ -774,7 +766,7 @@ int TilesFramework::getch_ck()
                     // (possibly because redrawing is slow or the user
                     // is moving the mouse really quickly), process those
                     // first, before bothering to redraw the screen.
-                    unsigned int count = wm->get_event_count(WM_MOUSEMOTION);
+                    unsigned int count = wm->get_event_count(WME_MOUSEMOTION);
                     ASSERT(count >= 0);
                     if (count > 0)
                         continue;
@@ -789,7 +781,7 @@ int TilesFramework::getch_ck()
                 }
                break;
 
-            case WM_MOUSEBUTTONUP:
+            case WME_MOUSEBUTTONUP:
                 {
                     m_buttons_held  &= ~(event.mouse_event.button);
                     event.mouse_event.held = m_buttons_held;
@@ -799,7 +791,7 @@ int TilesFramework::getch_ck()
                 }
                 break;
 
-            case WM_MOUSEBUTTONDOWN:
+            case WME_MOUSEBUTTONDOWN:
                 {
                     m_buttons_held  |= event.mouse_event.button;
                     event.mouse_event.held = m_buttons_held;
@@ -809,13 +801,13 @@ int TilesFramework::getch_ck()
                 }
                 break;
 
-            case WM_QUIT:
+            case WME_QUIT:
                 if (crawl_state.need_save)
                     save_game(true);
                 exit(0);
                 break;
 
-            case WM_CUSTOMEVENT:
+            case WME_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
                 break;
