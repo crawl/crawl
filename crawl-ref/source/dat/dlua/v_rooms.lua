@@ -15,59 +15,6 @@
 -- add new layouts.
 ------------------------------------------------------------------------------
 
-function place_vaults_rooms(e,data, room_count, max_room_depth)
-
-  -- Simple case to test room placement
-  for i = 1, 5, 1 do
-    place_vaults_room(e,data,"room", { max_room_depth = max_room_depth } )
-  end
-
-  return true
-end
-
-function place_vaults_room(e,usage_grid,room_type, options)
-
-  local gxm, gym = dgn.max_bounds()
-
-  local maxTries = 50
-  local maxSpotTries = 5000
-  local tries = 0
-  local spotTries = 0
-  local done = false
-  local foundSpot = false
-  local spot = { }
-  local usage = { }
-  -- Have a few goes, a random wall spot will be selected each time from all available walls
-  -- and we check if we can place something there
-  while tries < maxTries and not done do
-    tries = tries + 1
-
-    -- Find an eligible spot
-    spotTries = 0
-    foundSpot = false
-    -- Brute force, this needs optimising, but for now try about 5000 times to find an eligible spot
-    while spotTries < maxSpotTries and not foundSpot do
-      spotTries = spotTries + 1
-      local spotx = crawl.random_range(0,gxm-1)
-      local spoty = crawl.random_range(0,gxm-1)
-      spot = { x = spotx, y = spoty }
-      usage = vaults_get_usage(usage_grid,spot.x,spot.y)
-      print ("Usage: " .. usage.usage)
-      if (usage.usage == "eligible" or usage.usage == "open") then
-        foundSpot = true
-      end
-    end
-
-    if foundSpot == true then
-      -- Attempt to place a room on the wall at a random position
-      if vaults_maybe_place_vault(e, spot, usage_grid, usage, room_type, options) then
-        done = true
-      end
-    end
-  end
-end
-
-
 -- Moves from a start point along a move vector mapped to actual vectors xVector/yVector
 -- This allows us to deal with coords independently of how they are rotated to the dungeon grid
 local function vaults_vector_add(start, move, xVector, yVector)
@@ -112,22 +59,171 @@ local function print_vector(caption,v)
   end
 end
 
-function vaults_maybe_place_vault(e, pos, usage_grid, usage, room_type, options)
-  print_vector("Pos",pos)
-  -- Resolve a map with the specified tag
-  local mapdef = dgn.map_by_tag("vaults_"..room_type)
-  local map, vplace = dgn.resolve_map(mapdef,true,true)
-  local room_width,room_height
+local function pick_room(e, options)
 
-  if map ~= nil then
-    room_width,room_height = dgn.mapsize(map)
+  local weights = { }
 
---           print( "Size " .. room_width .. " x " .. room_height)
+  -- Do we just want an empty room?
+  if crawl.random2(100) < options.empty_chance then
+
+    room = {
+      type = "empty",
+      size = { x = crawl.random_range(options.min_room_size,options.max_room_size), y = crawl.random_range(options.min_room_size,options.max_room_size) }
+    }
+    return room
+
   else
-    return false
+    -- Pick by tag
+    -- Ignore weights for now
+    local room_type = "room"
+
+    local found = false
+    local tries = 0
+    local maxTries = 20
+
+    while tries < maxTries and not found do
+      -- Resolve a map with the specified tag
+      local mapdef = dgn.map_by_tag("vaults_"..room_type)
+      local map, vplace = dgn.resolve_map(mapdef,true,true)
+      local room_width,room_height
+
+      if map == nil then
+        -- If we can't find a map then we're probably not going to find one
+        return nil
+      else
+        local room_width,room_height = dgn.mapsize(map)
+        local veto = false
+        if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
+          local room = {
+            type = "vault",
+            size = { x = room_width, y = room_height },
+            map = map,
+            vplace = vplace
+          }
+          if options.veto_callback ~= nill then
+            local result = options.veto_callback(room)
+            if result == true then veto = true end
+          end
+          if not veto then
+            return room
+          end
+        end
+      end
+    end
+  end
+  return nil
+
+end
+
+local function analyse_vault_post_placement(e,usage_grid,room,result,options)
+
+  -- for p in iter.rect_iterator(dgn.point(p1.x, p1.y), dgn.point(p2.x, p2.y)) do
+
+  -- end
+
+end
+
+function place_vaults_rooms(e,data, room_count, options)
+
+  if options == nil then options = { } end
+
+  -- Set default options
+  if options.min_room_size == nil then options.min_room_size = 5 end
+  if options.max_room_size == nil then options.max_room_size = 20 end
+  if options.max_room_depth == nil then options.max_room_depth = 0 end -- No max
+  if options.emty_chance == nil then options.empty_chance = 50 end -- Chance in 100
+
+  -- Attempt to place as many rooms as we've been asked for
+--  for i = 1, room_count, 1 do
+  for i = 1, 10, 1 do
+    local placed = false
+    local tries = 0
+    local maxTries = 50
+
+
+    local results = { }
+    -- Try several times to find a room that passes placement (it could get vetoed at the placement stage,
+    -- for instance low-depth rooms might be required to have multiple entrances)
+    while tries < maxTries and not placed do
+      tries = tries + 1
+      -- Pick a room
+      local room = pick_room(e, options)
+      -- Attempt to place it. The placement function will try several times to find somewhere to fit it.
+      if room ~= nil then
+        local result = place_vaults_room(e,data,room,options)
+        if result.placed then
+          placed = true
+          if room.type == "vault" then
+            -- Perform analysis for stairs
+            analyse_vault_post_placement(e,data,room,result,options)
+            table.insert(results,result)
+          end
+        end
+      end
+    end
   end
 
+  -- TODO: Finally, pick the rooms where we'll place the stairs
+
+  -- Set MMT_VAULT across the whole map depending on usage. This way the dungeon builder knows where to place standard vaults without messing up the layout.
+  local gxm, gym = dgn.max_bounds()
+  for p in iter.rect_iterator(dgn.point(0, 0), dgn.point(gxm - 1, gym - 1)) do
+    local usage = vaults_get_usage(data,p.x,p.y)
+    if usage.usage == "restricted" or usage.usage == "eligible_open" or (usage.usage == "eligible" and usage.depth > 1) then
+      dgn.set_map_mask(p.x,p.y)
+    end
+  end
+
+  return true
+end
+
+function place_vaults_room(e,usage_grid,room, options)
+
+  local gxm, gym = dgn.max_bounds()
+
+  local maxTries = 50
+  local maxSpotTries = 5000
+  local tries = 0
+  local spotTries = 0
+  local done = false
+  local foundSpot = false
+  local spot = { }
+  local usage = { }
+
+  -- Have a few goes at placing; we'll select a random eligible / open spot each time and try to place the vault there
+  while tries < maxTries and not done do
+    tries = tries + 1
+
+    -- Find an eligible spot
+    spotTries = 0
+    foundSpot = false
+    -- Brute force, this needs optimising, but for now try poll the grid up to 5000 times until we find an eligible spot
+    while spotTries < maxSpotTries and not foundSpot do
+      spotTries = spotTries + 1
+      local spotx = crawl.random_range(0,gxm-1)
+      local spoty = crawl.random_range(0,gxm-1)
+      spot = { x = spotx, y = spoty }
+      usage = vaults_get_usage(usage_grid,spot.x,spot.y)
+      print ("Usage: " .. usage.usage)
+      if (usage.usage == "eligible" or usage.usage == "open") then
+        foundSpot = true
+      end
+    end
+
+    if foundSpot == true then
+      -- Attempt to place the room on the wall at a random position
+      if vaults_maybe_place_vault(e, spot, usage_grid, usage, room, options) then
+        done = true
+      end
+    end
+  end
+  return { placed = done }
+end
+
+function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
+  local room_width, room_height = room.size.x, room.size.y
   print ("Map size: " .. room_width .. " x " .. room_height)
+
   -- Get wall's normal and calculate the door vector (i.e. attaching wall)
   local v_normal, v_wall, room_base, clear_bounds
 
@@ -231,13 +327,26 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room_type, options)
   -- dgn.fill_grd_area(dx1, dy1, dx2, dy2, "closed_door")
 
   -- Place the map inside
-  dgn.reuse_map(vplace,origin.x,origin.y,false,false)
+  if room.type == "vault" then
+    dgn.reuse_map(room.vplace,origin.x,origin.y,false,false)
+  end
 
   -- Loop through all squares and update eligibility
   for x = origin.x, opposite.x, 1 do
     for y = origin.y, opposite.y, 1 do
       -- Restricting further placement to keep things simple. Will need to be more clever about how we treat the walls.
-      vaults_set_usage(usage_grid,x,y,{usage = "restricted"})
+      if room.type == "vault" then
+        vaults_set_usage(usage_grid,x,y,{usage = "restricted"})
+      end
+      -- Empty space
+      if room.type == "empty" then
+        -- Still restrict walls
+        if x == origin.x or x == opposite.x or y == origin.y or y == opposite.y then
+          vaults_set_usage(usage_grid,x,y,{usage = "restricted"})
+        else
+          vaults_set_usage(usage_grid,x,y,{usage = "empty"})
+        end
+      end
     end
   end
 

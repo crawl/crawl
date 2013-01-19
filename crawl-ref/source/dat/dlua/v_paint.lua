@@ -151,19 +151,19 @@ local function determine_usage_from_layout(layout_grid)
           if adjacent_sum == 3 then
            -- Floor to the north
             if local_grid[-1][0] == 0 then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = 1 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = 1 }, depth = 1})
             end
             -- Floor to the south
             if local_grid[1][0] == 0 then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = -1 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = -1 }, depth = 1})
             end
             -- Floor to the west
             if local_grid[0][-1] == 0 then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 1, y = 0 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 1, y = 0 }, depth = 1})
             end
             -- Floor to the east
             if local_grid[0][1] == 0 then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = -1, y = 0 }})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = -1, y = 0 }, depth = 1})
             end
           else
             -- Wall all around?
@@ -244,9 +244,9 @@ function paint_vaults_layout(e, paint, options)
       local wall = get_layout(layout_grid,x,y)
       -- TODO: Look up the function for filling a single square...
       if wall == 1 then
-        dgn.fill_grd_area(x,y, x,y, wall_type)
+        dgn.grid(x,y,wall_type)
       else
-        dgn.fill_grd_area(x,y, x,y, floor_type)
+        dgn.grid(x,y,floor_type)
       end
 
     end

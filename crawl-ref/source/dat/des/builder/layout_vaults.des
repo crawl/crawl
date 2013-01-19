@@ -67,7 +67,7 @@ NAME: layout_vaults_ring
 DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-CHANCE: 50%
+CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_ring_layout(_G, 5, 20)
 MAP
@@ -77,7 +77,7 @@ NAME: layout_vaults_cross
 DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-CHANCE: 50%
+CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_cross_layout(_G, 5, 0.5)
 MAP
@@ -87,7 +87,7 @@ NAME: layout_vaults_big_room
 DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-CHANCE: 50%
+CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_big_room_layout(_G, 20)
 MAP
@@ -97,7 +97,7 @@ NAME: layout_vaults_chaotic_city
 DEPTH: Vaults
 WEIGHT: 90
 ORIENT: encompass
-CHANCE: 50%
+CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 : build_vaults_chaotic_city_layout(_G, 5, 0.5)
 MAP
