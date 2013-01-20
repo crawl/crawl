@@ -8,6 +8,10 @@
 #     might help link together sections of the maze layout
 #     where there it runs out of room for bigger one) but
 #     the 1x1s seem unneccesary.
+#     Except that they're used as subvaults by some of the 7x7
+#     layouts so actually they still need to be available.
+#     But they're not tagged with vaults_room so won't be
+#     used on their own.
 #
 #   - Stuff that doesn't fit with the current design. Right
 #     now we don't need vaults with pre-defined walls and
@@ -32,6 +36,84 @@
 #
 # - mumra
 
+#
+#  vaults_standard_loot
+#
+#  This function substitutes loot types for greater randomness.
+#
+
+{{
+function vaults_standard_loot(e)
+  e.subst("| = *|||")
+  e.subst("* = %%%******|")
+  e.subst("% = ....$%%%%*")
+end
+}}
+
+#
+#  vaults_numbered_gold_items
+#
+#  This function sets the next items (normally d-g) to have a
+#    small amount of gold.  The quantities are:
+#      -> d:  1- 5 gold
+#      -> e:  6-10 gold
+#      -> f: 11-15 gold
+#      -> g: 16-20 gold
+#
+
+{{
+function vaults_numbered_gold_items(e)
+  e.item("gold q:1  / gold q:2  / gold q:3  / gold q:4  / gold q:5")
+  e.item("gold q:6  / gold q:7  / gold q:8  / gold q:9  / gold q:10")
+  e.item("gold q:11 / gold q:12 / gold q:13 / gold q:14 / gold q:15")
+  e.item("gold q:16 / gold q:17 / gold q:18 / gold q:19 / gold q:20")
+end
+}}
+
+#
+#  vaults_ornamental_pool
+#
+#  This function randomly replaces water with some obstruction.
+#    Using this standard function allows all the rooms to have
+#    the same probability of each.  It also would allow other
+#    cell values to be added, such as slippery ice if it ever
+#    gets added.
+#
+#  This function does not activate the no_pool_fixup tag, but
+#    does mark the water as no_monster_gen.
+#
+#  This function currently has a chance of the following:
+#      -> deep water    (most common)
+#      -> shallow water
+#      -> lava
+#      -> known spiderwebs   (rare)
+#      -> unknown spiderwebs (very rare)
+#
+
+{{
+function vaults_ornamental_pool(e)
+  local replace_with = crawl.random2(60)
+  if replace_with < 46 then
+    e.subst("w : w:30 W:10 l:6")
+    e.kmask("wWl = no_monster_gen")
+    e.kfeat("w = w")
+    e.kfeat("W = W")
+    e.kfeat("l = l")
+  elseif replace_with < 50 then
+    e.subst("w = ww.")
+    if crawl.random2(4) < 1 then
+      e.kfeat("w : web trap")
+    else
+      e.kfeat("w : known web trap")
+    end
+  else
+    -- weight 10
+    e.subst("w : .")
+  end
+end
+}}
+
+
 
 ################################################################
 #  1x1 subvaults (closets)
@@ -49,25 +131,25 @@
 #
 
 NAME:     vaults_room_1_spin_empty_default
-TAGS:     vaults_room_1_spin_empty allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_empty allow_dup no_monster_gen no_item_gen transparent
 MAP
 .
 ENDMAP
 
 NAME:     vaults_room_1_spin_encounter_default
-TAGS:     vaults_room_1_spin_encounter allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_encounter allow_dup no_monster_gen no_item_gen transparent
 MAP
 0
 ENDMAP
 
 NAME:     vaults_room_1_spin_dangerous_default
-TAGS:     vaults_room_1_spin_dangerous allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_dangerous allow_dup no_monster_gen no_item_gen transparent
 MAP
 9
 ENDMAP
 
 NAME:     vaults_room_1_spin_loot_default
-TAGS:     vaults_room_1_spin_loot allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_loot allow_dup no_monster_gen no_item_gen transparent
 : vaults_standard_loot(_G)
 MAP
 %
@@ -75,22 +157,20 @@ ENDMAP
 
 # This is for both entry and exit stairs
 NAME:     vaults_room_1_spin_stairs1_default
-TAGS:     vaults_room_1_spin_up1 vaults_room_1_spin_down1
-TAGS:     vaults_room_1_spin_secret  allow_dup no_monster_gen no_item_gen
-: subvault_place_stair(_G)
+TAGS:     vaults_room_1_spin_up1 vaults_room_1_spin_down1 transparent
 MAP
 {
 ENDMAP
 
 NAME:     vaults_room_1_spin_crypt_default
-TAGS:     vaults_room_1_spin_crypt allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_crypt allow_dup no_monster_gen no_item_gen transparent
 KFEAT:    O = enter_crypt
 MAP
 O
 ENDMAP
 
 NAME:     vaults_room_1_spin_blade_default
-TAGS:     vaults_room_1_spin_blade allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_blade allow_dup no_monster_gen no_item_gen transparent
 KFEAT:    O = enter_hall_of_blades
 MAP
 O
@@ -99,7 +179,7 @@ ENDMAP
 # Entries for ???_icecave_??? and ???_wizlab_??? are in .des files
 
 NAME:     vaults_room_1_spin_bazaar_subvault
-TAGS:     vaults_room_1_spin_bazaar allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_bazaar allow_dup no_monster_gen no_item_gen transparent
 SUBVAULT: B : bzr_entry
 SUBST:    B = .
 MAP
@@ -107,7 +187,7 @@ B
 ENDMAP
 
 NAME:     vaults_room_1_spin_lab_default
-TAGS:     vaults_room_1_spin_lab allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_lab allow_dup no_monster_gen no_item_gen transparent
 SUBVAULT: B : uniq_lab
 SUBST:    B = .
 MAP
@@ -115,7 +195,7 @@ B
 ENDMAP
 
 NAME:     vaults_room_1_spin_trove_default
-TAGS:     vaults_room_1_spin_trove allow_dup no_monster_gen no_item_gen
+TAGS:     vaults_room_1_spin_trove allow_dup no_monster_gen no_item_gen transparent
 SUBVAULT: B : chance_trove
 SUBST:    B = .
 MAP
@@ -125,7 +205,7 @@ ENDMAP
 # not used because ziggurats are D only
 # too small for a ziggurat entry, so empty
 NAME:     vaults_room_1_spin_ziggurat_dummy
-TAGS:     vaults_room_1_spin_ziggurat allow_dup
+TAGS:     vaults_room_1_spin_ziggurat allow_dup transparent
 MAP
 .
 ENDMAP
@@ -137,7 +217,7 @@ ENDMAP
 #
 
 NAME:     vaults_room_1_city_empty_4_doors
-TAGS:     vaults_room_1_city_empty allow_dup
+TAGS:     vaults_room_1_city_empty allow_dup transparent
 MAP
 x+x
 +.+
@@ -145,7 +225,7 @@ x+x
 ENDMAP
 
 NAME:     vaults_room_1_city_empty_statues
-TAGS:     vaults_room_1_city_empty allow_dup
+TAGS:     vaults_room_1_city_empty allow_dup transparent
 MAP
 G.G
 ...
@@ -153,7 +233,7 @@ G.G
 ENDMAP
 
 NAME:     vaults_room_1_city_empty_1_statue
-TAGS:     vaults_room_1_city_empty allow_dup
+TAGS:     vaults_room_1_city_empty allow_dup transparent
 WEIGHT:   20
 MAP
 ...
@@ -162,7 +242,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_1_city_empty_1_pool
-TAGS:     vaults_room_1_city_empty allow_dup no_pool_fixup
+TAGS:     vaults_room_1_city_empty allow_dup no_pool_fixup transparent
 : vaults_ornamental_pool(_G)
 MAP
 www
@@ -171,7 +251,7 @@ www
 ENDMAP
 
 NAME:     vaults_room_1_city_encounter_4_doors
-TAGS:     vaults_room_1_city_encounter allow_dup
+TAGS:     vaults_room_1_city_encounter allow_dup transparent
 MAP
 x+x
 +0+
@@ -179,7 +259,7 @@ x+x
 ENDMAP
 
 NAME:     vaults_room_1_city_encounter_statues
-TAGS:     vaults_room_1_city_encounter allow_dup
+TAGS:     vaults_room_1_city_encounter allow_dup transparent
 MAP
 G.G
 .0.
@@ -187,7 +267,7 @@ G.G
 ENDMAP
 
 NAME:     vaults_room_1_city_dangerous_4_doors
-TAGS:     vaults_room_1_city_dangerous allow_dup
+TAGS:     vaults_room_1_city_dangerous allow_dup transparent
 MAP
 x+x
 +9+
@@ -195,7 +275,7 @@ x+x
 ENDMAP
 
 NAME:     vaults_room_1_city_dangerous_statue_guards
-TAGS:     vaults_room_1_city_dangerous allow_dup
+TAGS:     vaults_room_1_city_dangerous allow_dup transparent
 NSUBST:   0 = 2:0 / 1:0. / *:.
 MAP
 000
@@ -204,7 +284,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_1_city_loot_4_doors
-TAGS:     vaults_room_1_city_loot allow_dup
+TAGS:     vaults_room_1_city_loot allow_dup transparent
 : vaults_standard_loot(_G)
 MAP
 x+x
@@ -213,7 +293,7 @@ x+x
 ENDMAP
 
 NAME:     vaults_room_1_city_loot_statues
-TAGS:     vaults_room_1_city_loot allow_dup
+TAGS:     vaults_room_1_city_loot allow_dup transparent
 : vaults_standard_loot(_G)
 MAP
 G.G
@@ -223,11 +303,11 @@ ENDMAP
 
 # This is for both entry and exit stairs
 NAME:     vaults_room_1_city_stairs1_open
-TAGS:     vaults_room_1_city_up1
-TAGS:     vaults_room_1_city_down1 allow_dup
+TAGS:     vaults_room_1_city_up1 transparent vaults_room_1_city_down1 allow_dup
+TAGS:
 WEIGHT:   20
 NSUBST:   . = 1:0. / *:~
-: subvault_place_stair(_G)
+
 MAP
 ...
 .{.
@@ -237,8 +317,8 @@ ENDMAP
 # This is for both entry and exit stairs
 NAME:     vaults_room_1_city_stairs1_4_doors
 TAGS:     vaults_room_1_city_up1
-TAGS:     vaults_room_1_city_down1 allow_dup
-: subvault_place_stair(_G)
+TAGS:     vaults_room_1_city_down1 allow_dup transparent
+
 MAP
 x+x
 +{+
@@ -248,9 +328,9 @@ ENDMAP
 # This is for both entry and exit stairs
 NAME:     vaults_room_1_city_stairs1_statues
 TAGS:     vaults_room_1_city_up1
-TAGS:     vaults_room_1_city_down1 allow_dup
+TAGS:     vaults_room_1_city_down1 allow_dup transparent
 SUBST:    . = .:10 ~:1
-: subvault_place_stair(_G)
+
 MAP
 G.G
 .{.
@@ -270,7 +350,7 @@ ENDMAP
 #
 
 NAME:     vaults_door_4
-TAGS:     vaults_door_4 allow_dup
+TAGS:     vaults_door_4 allow_dup transparent
 SUBST:    - : x+
 MAP
 +-
@@ -389,7 +469,7 @@ ENDMAP
 NAME:     vaults_room_4_spin_stairs1_statues
 TAGS:     vaults_room_4_spin_up1 vaults_room_4_spin_down1 allow_dup
 SUBST:    G : xG...
-: subvault_place_stair(_G)
+
 MAP
 G..G
 .{..
@@ -426,7 +506,7 @@ TAGS:     vaults_room_4_spin_secret allow_dup no_monster_gen no_item_gen
 SUBST:    G : xG%%%
 NSUBST:   % = 8:% / *:.
 : vaults_standard_loot(_G)
-: subvault_place_stair(_G)
+
 MAP
 G%%G
 %{.%
@@ -438,7 +518,7 @@ NAME:     vaults_room_4_spin_secret_ring
 TAGS:     vaults_room_4_spin_secret allow_dup no_monster_gen no_item_gen
 SUBST:    w : xw
 NSUBST:   9 = 1:9 / *:*
-: subvault_place_stair(_G)
+
 : vaults_standard_loot(_G)
 : vaults_ornamental_pool(_G)
 MAP
@@ -501,57 +581,6 @@ MAP
 .ef.
 8..8
 ENDMAP
-
-# Entries for ???_icecave_??? and ???_wizlab_??? are in .des files
-
-NAME:     vaults_room_4_spin_bazaar_subvault
-TAGS:     vaults_room_4_spin_bazaar allow_dup no_monster_gen no_item_gen
-NSUBST:   B = 1:B / *:.
-SUBVAULT: B : bzr_entry
-SUBST:    B = .
-MAP
-B...
-.BB.
-....
-....
-ENDMAP
-
-NAME:     vaults_room_4_spin_lab_default
-TAGS:     vaults_room_4_spin_lab allow_dup no_monster_gen no_item_gen
-NSUBST:   B = 1:B / *:.
-SUBVAULT: B : uniq_lab
-SUBST:    B = .
-MAP
-B...
-.BB.
-....
-....
-ENDMAP
-
-NAME:     vaults_room_4_spin_trove_default
-TAGS:     vaults_room_4_spin_trove allow_dup no_monster_gen no_item_gen
-NSUBST:   B = 1:B / *:.
-SUBVAULT: B : chance_trove
-SUBST:    B = .
-MAP
-B...
-.BB.
-....
-....
-ENDMAP
-
-# not used because ziggurats are D only
-# too small for a ziggurat entry, so empty
-NAME:     vaults_room_4_spin_ziggurat_dummy
-TAGS:     vaults_room_4_spin_ziggurat allow_dup
-MAP
-....
-....
-....
-....
-ENDMAP
-
-
 
 ########
 #  4x4 subvaults with a facing direction
@@ -625,7 +654,7 @@ ENDMAP
 NAME:     vaults_room_4_facing_stairs1_open
 TAGS:     vaults_room_4_facing_up1 vaults_room_4_facing_down1 allow_dup
 SUBVAULT: A : vaults_door_4
-: subvault_place_stair(_G)
+
 MAP
 {...
 ....A
@@ -798,7 +827,7 @@ TAGS:     vaults_room_4_dead_end_up1 vaults_room_4_dead_end_down1 allow_dup
 WEIGHT:   20
 NSUBST:   { = 1:{ / *:.
 SUBVAULT: A : vaults_door_4
-: subvault_place_stair(_G)
+
 MAP
 {{..
 {{..A
@@ -809,7 +838,7 @@ ENDMAP
 # This is for both entry and exit stairs
 NAME:     vaults_room_4_dead_end_stairs1_narrow
 TAGS:     vaults_room_4_dead_end_up1 vaults_room_4_dead_end_down1 allow_dup
-: subvault_place_stair(_G)
+
 MAP
 xxxx
 xxxxx
@@ -945,7 +974,7 @@ SUBST:    - = x:20 +:1
 NSUBST:   { = 1:{ / *0
 SUBST:    0 = .:6 0:3 %:1
 : vaults_standard_loot(_G)
-: subvault_place_stair(_G)
+
 MAP
 xpxxqx
 p{xx{q
@@ -957,7 +986,7 @@ ENDMAP
 
 NAME:     vaults_room_4_city_stairs1_C
 TAGS:     vaults_room_4_city_up1 vaults_room_4_city_down1 allow_dup
-: subvault_place_stair(_G)
+
 MAP
 xxxxxx
 x{...x
@@ -1081,7 +1110,7 @@ AAAAAA
 ENDMAP
 
 NAME:     vaults_room_4_city_subring_wall
-TAGS:     vaults_room_4_city_subring allow_dup
+TAGS:     vaults_room_4_city_subring allow_dup transparent
 WEIGHT:   60
 SHUFFLE:  ABCD
 SUBVAULT: A : vaults_door_4
@@ -1110,7 +1139,7 @@ xx  xx
 ENDMAP
 
 NAME:     vaults_room_4_city_subring_statue_ring
-TAGS:     vaults_room_4_city_subring allow_dup
+TAGS:     vaults_room_4_city_subring allow_dup transparent
 WEIGHT:   20
 MAP
 ..GG..
@@ -1122,7 +1151,7 @@ G    G
 ENDMAP
 
 NAME:     vaults_room_4_city_subring_8_statues
-TAGS:     vaults_room_4_city_subring allow_dup
+TAGS:     vaults_room_4_city_subring allow_dup transparent
 WEIGHT:   10
 MAP
 .G..G.
@@ -1134,7 +1163,7 @@ G.  .G
 ENDMAP
 
 NAME:     vaults_room_4_city_subring_statue_corners
-TAGS:     vaults_room_4_city_subring allow_dup
+TAGS:     vaults_room_4_city_subring allow_dup transparent
 WEIGHT:   10
 MAP
 Gx++xG
@@ -1148,7 +1177,7 @@ ENDMAP
 
 
 ######################
-Portal entries etc.
+# Portal entries etc.
 
 # This is just "minmay_crypt_up_simple_box" with new tags
 NAME:     vaults_room_7_spin_crypt_default
