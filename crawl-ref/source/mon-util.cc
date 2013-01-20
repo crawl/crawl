@@ -822,7 +822,6 @@ bool mons_is_abyssal_only(monster_type mc)
     case MONS_ANCIENT_ZYME:
     case MONS_ELDRITCH_TENTACLE:
     case MONS_LURKING_HORROR:
-    case MONS_SPATIAL_MAELSTROM:
     case MONS_WRETCHED_STAR:
         return true;
     default:
