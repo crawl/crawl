@@ -77,18 +77,19 @@ function build_vaults_cross_layout(e, corridorWidth, intersect)
 
 end
 
-function build_vaults_big_room_layout(e, outerPadding)
+function build_vaults_big_room_layout(e, minPadding,maxPadding)
   -- The Big Room
   -- Sorry, no imps
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
 
+  local padx,pady = crawl.random_range(minPadding,maxPadding),crawl.random_range(minPadding,maxPadding)
 
-    print("Big Room Layout")
+  print("Big Room Layout")
 
   -- Will have a ring of outer rooms but the central area will be chaotic city
   local paint = {
-    { type = "floor", corner1 = { x = outerPadding, y = outerPadding }, corner2 = { x = gxm - outerPadding - 1, y = gym - outerPadding - 1 } }
+    { type = "floor", corner1 = { x = padx, y = pady }, corner2 = { x = gxm - padx - 1, y = gym - pady - 1 } }
   }
   local data = paint_vaults_layout(e, paint)
   local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 4 })
