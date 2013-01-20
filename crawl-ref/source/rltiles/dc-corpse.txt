@@ -13,7 +13,7 @@
 %sdir mon/animals
 
 ## Insects ('a')
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_cockroach CORPSE_GIANT_COCKROACH
 worker_ant CORPSE_WORKER_ANT
 soldier_ant CORPSE_SOLDIER_ANT
@@ -41,7 +41,7 @@ cat1 CORPSE_FELID
 %sdir mon/animals
 
 ## Bees ('k')
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 killer_bee CORPSE_KILLER_BEE
 queen_bee CORPSE_QUEEN_BEE
 giant_firefly CORPSE_FIREFLY
@@ -55,7 +55,7 @@ basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
 
 ## Slugs ('j')
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 elephant_slug CORPSE_ELEPHANT_SLUG
 giant_slug CORPSE_GIANT_SLUG
 agate_snail CORPSE_AGATE_SNAIL
@@ -82,7 +82,7 @@ labrat_venomous
 %sdir mon/animals
 
 ## Spiders and insects ('s')
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_centipede CORPSE_GIANT_CENTIPEDE
 giant_mite CORPSE_GIANT_MITE
 scorpion CORPSE_SCORPION
@@ -108,7 +108,7 @@ alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
 fire_crab CORPSE_FIRE_CRAB
 
 ## Worms ('w')
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 ant_larva CORPSE_ANT_LARVA
 worm CORPSE_WORM
 swamp_worm CORPSE_SWAMP_WORM
@@ -133,7 +133,7 @@ electric_eel CORPSE_ELECTRIC_EEL
 #lava_fish CORPSE_LAVA_FISH
 shark CORPSE_SHARK
 kraken_head CORPSE_KRAKEN /*'x'*/
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
 ## Beetles ('B')
@@ -198,7 +198,7 @@ mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 
 ## Rotting monsters ('n')
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 %sdir mon/undead
 bog_body CORPSE_BOG_BODY
 necrophage CORPSE_NECROPHAGE
@@ -264,7 +264,7 @@ mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 
 ## Eyes ('G')
 %sdir mon/eyes
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_eyeball CORPSE_GIANT_EYEBALL
 eye_of_devastation CORPSE_EYE_OF_DEVASTATION
 eye_of_draining CORPSE_EYE_OF_DRAINING
@@ -287,7 +287,7 @@ unique/arachne_staveless CORPSE_ARACHNE
 
 ## Jellies ('J')
 %sdir mon/amorphous
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_amoeba CORPSE_GIANT_AMOEBA
 
 ## Kobolds ('K')
@@ -317,7 +317,7 @@ deep_troll CORPSE_DEEP_TROLL
 human CORPSE_HUMAN
 demonspawn CORPSE_DEMONSPAWN
 halfling CORPSE_HALFLING
-%back blood_green
+%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 
