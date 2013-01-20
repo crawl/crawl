@@ -1093,9 +1093,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
                        "is contained.";
     }
     else if (type == MONS_LURKING_HORROR)
-    {
         sanct_msg = "The lurking horror fades away harmlessly.";
-    }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
