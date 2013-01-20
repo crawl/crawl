@@ -450,6 +450,7 @@ enter_abyss2
 enter_abyss3
 exit_abyss DNGN_EXIT_ABYSS
 exit_abyss_flickering
+abyssal_stair DNGN_ABYSSAL_STAIR
 
 enter_pandemonium DNGN_ENTER_PANDEMONIUM
 portal DNGN_PORTAL
