@@ -290,8 +290,10 @@ void follower::restore_mons_items(monster& m)
 
 static bool _is_religious_follower(const monster* mon)
 {
-    return ((you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
-            && is_follower(mon));
+    return ((you.religion == GOD_YREDELEMNUL
+             || you.religion == GOD_BEOGH
+             || you.religion == GOD_FEDHAS)
+                 && is_follower(mon));
 }
 
 static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
@@ -331,8 +333,8 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
         if (!fol->friendly())
             return false;
 
-        // Undead will follow Yredelemnul worshippers, and orcs will
-        // follow Beogh worshippers.
+        // Undead will follow Yredelemnul worshippers, orcs will follow
+        // Beogh worshippers, and plants will follow Fedhas worshippers.
         if (!_is_religious_follower(fol))
             return false;
     }
