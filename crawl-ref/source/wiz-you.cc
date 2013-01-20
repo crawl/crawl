@@ -682,7 +682,7 @@ void wizard_set_abyss()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (!cancelable_get_line_autohist(buf, sizeof buf))
         abyss_teleport(true);
 
     uint32_t x, y, z;
