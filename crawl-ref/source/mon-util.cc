@@ -1475,7 +1475,6 @@ bool mons_class_can_use_stairs(monster_type mc)
             && !mons_is_tentacle(mc)
             && !mons_is_abyssal(mc)
             && mc != MONS_SILENT_SPECTRE
-            && mc != MONS_SPATIAL_MAELSTROM
             && mc != MONS_PLAYER_GHOST
             && mc != MONS_GERYON
             && mc != MONS_ROYAL_JELLY
