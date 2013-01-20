@@ -31,7 +31,7 @@ function build_vaults_layout(e, name, paint, options)
   print("Vaults Layout: " .. name)
 
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, options)
+  local rooms = place_vaults_rooms(e, data, 25, options)
 
 end
 
@@ -53,7 +53,7 @@ function build_vaults_ring_layout(e, corridorWidth, outerPadding)
     { type = "wall", corner1 = c2, corner2 = c3 }
   }
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 3 })
+  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 3 })
 
 end
 
@@ -73,7 +73,7 @@ function build_vaults_cross_layout(e, corridorWidth, intersect)
   }
 
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 4 })
+  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 4 })
 
 end
 
@@ -91,7 +91,7 @@ function build_vaults_big_room_layout(e, outerPadding)
     { type = "floor", corner1 = { x = outerPadding, y = outerPadding }, corner2 = { x = gxm - outerPadding - 1, y = gym - outerPadding - 1 } }
   }
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 4 })
+  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 4 })
 
 end
 
@@ -107,7 +107,7 @@ function build_vaults_chaotic_city_layout(e)
   }
 
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 5 })
+  local rooms = place_vaults_rooms(e, data, 30, { max_room_depth = 5 })
 
 end
 
@@ -134,48 +134,44 @@ function build_vaults_maze_layout(e,veto_callback)
   end
 
   local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 20, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 3, max_room_size = 25 })
+  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 3, max_room_size = 25 })
 
 end
-
+-- Uses a custom vetor function to alternate between up or down connections depending on oddness of depth
 function build_vaults_maze_snakey_layout(e)
     print("Snakey Maze Layout")
-  -- Alternate between up/down rooms
-  -- Note sure why there is an issue with this layout never getting past depth 3 (without the 1/20 bailout)...
-    local which = crawl.coinflip()
+    local which = 0
+    if crawl.coinflip() then which = 1 end
   local function callback(usage,room)
     if usage.normal == nil or usage.depth == nil then return false end
     local odd = usage.depth % 2
     if odd == which then
-      if crawl.one_chance_in(20) then return false end
       if usage.normal.y == 0 then return true end
       return false
     end
-    if crawl.one_chance_in(20) then return false end
     if usage.normal.x == 0 then return true end
     return false
   end
   build_vaults_maze_layout(e,callback)
 end
 
+-- Goes in just one direction for a few rooms then branches out
+
 function build_vaults_maze_bifur_layout(e)
     print("Bifur Maze Layout")
   local which = crawl.coinflip()
-  -- Go either horizontal or vertical for a few rooms then expand
+  local target_depth = crawl.random_range(2,4)
   local function callback(usage,room)
     if usage.normal == nil then return false end
-    if usage.depth == nil or usage.depth > 3 then return false end
+    if usage.depth == nil or usage.depth > target_depth then return false end
 
     if which then
       if usage.normal.y == 0 then
-        -- Need a slight chance to extend in other directions otherwise the layout gets stuck
-        if crawl.one_chance_in(10) then return false end
         return true
       end
       return false
     end
     if usage.normal.x == 0 then
-      if crawl.one_chance_in(10) then return false end
       return true
     end
     return false
