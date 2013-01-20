@@ -815,19 +815,14 @@ bool mons_is_native_in_branch(const monster* mons,
     }
 }
 
-bool mons_is_abyssal(monster_type mc)
+bool mons_is_abyssal_only(monster_type mc)
 {
     switch (mc)
     {
     case MONS_ANCIENT_ZYME:
-    case MONS_APOCALYPSE_CRAB:
     case MONS_ELDRITCH_TENTACLE:
     case MONS_LURKING_HORROR:
     case MONS_SPATIAL_MAELSTROM:
-    case MONS_STARCURSED_MASS:
-    case MONS_STARSPAWN_TENTACLE:
-    case MONS_TENTACLED_STARSPAWN:
-    case MONS_THRASHING_HORROR:
     case MONS_WRETCHED_STAR:
         return true;
     default:
@@ -1473,7 +1468,7 @@ bool mons_class_can_use_stairs(monster_type mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && !mons_is_tentacle(mc)
-            && !mons_is_abyssal(mc)
+            && !mons_is_abyssal_only(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST
             && mc != MONS_GERYON
