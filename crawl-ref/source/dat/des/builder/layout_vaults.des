@@ -92,13 +92,123 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 MAP
 ENDMAP
 
-NAME: layout_vaults_cross
+################################################################################
+# Omnibox
+#
+# This will generate anything from chaotic city to maze (thru "square ring
+# huge center" / "square ring chaotic city") and more!
+#
+# Apologies if this is just too little code.
+NAME: layout_vaults_omnibox
 DEPTH: Vaults
-WEIGHT: 40
+WEIGHT: 70
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
-: build_vaults_cross_layout(_G, 5, 0.5)
+{{
+  local gxm,gym = dgn.max_bounds()
+  local min_size = 6
+  local p1 = { x = crawl.random_range(1,gxm - 1 - min_size), y = crawl.random_range(1,gym - 1 - min_size) }
+  local p2 = { x = crawl.random_range(p1.x + min_size - 1, gxm - 1), y = crawl.random_range(p1.y + min_size - 1, gym - 1) }
+  build_vaults_layout(_G, "Omnibox", { { type = "floor", corner1 = p1, corner2 = p2 } })
+}}
+MAP
+ENDMAP
+
+################################################################################
+# Omnicross
+#
+# Generates junctions of various kinds, including big crosses, t-junctions, and
+# corners (potentially thick enough for cities in the middle) and more!
+NAME: layout_vaults_omnicross
+DEPTH: Vaults
+WEIGHT: 70
+ORIENT: encompass
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
+{{
+  local gxm,gym = dgn.max_bounds()
+  -- Corridor widths
+  local min_width,max_width = 4,20
+  local width1,width2 = crawl.random_range(min_width,max_width),crawl.random_range(min_width,max_width)
+  -- Positions along either axis
+  local pos1,pos2 = crawl.random_range(1,gym-2-width1),crawl.random_range(1,gxm-2-width2)
+  -- Corridor lengths
+  local length1,length2 = crawl.random_range((gxm+1)/2,gxm-2),crawl.random_range((gym+1)/2,gym-2)
+  -- Intersect positions
+  local inter1,inter2 = crawl.random_range(math.max(1,pos2-length1+width2),math.min(gxm-1-length1,pos2)),crawl.random_range(math.max(1,pos1-length2+width1),math.min(gym-1-length2,pos1))
+
+  build_vaults_layout(_G, "Omnicross", {
+    { type = "floor", corner1 = { x = inter1, y = pos1 }, corner2 = { x = inter1 + length1 - 1, y = pos1 + width1 - 1 } },
+    { type = "floor", corner1 = { x = pos2, y = inter2 }, corner2 = { x = pos2 + width2 - 1, y = inter2 + length2 - 1 } },
+  })
+}}
+MAP
+ENDMAP
+
+################################################################################
+# Grid
+#
+# Basically like V:5 except it might be divided into smaller areas than quadrants
+NAME: layout_vaults_quadrants
+DEPTH: Vaults
+WEIGHT: 1000
+ORIENT: encompass
+CHANCE: 100%
+{{
+  local gxm,gym = dgn.max_bounds()
+  local paint = { { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm-1, y = gym-1 } } }
+  local pad = 2
+  local bisectx = crawl.random_range(2,4)
+  local bisecty = crawl.random_range(2,4)
+  for i = 0, (bisectx-1), 1 do
+    for j = 0, (bisecty-1), 1 do
+      table.insert(paint, { type = "wall",
+        corner1 = { x = 1 + math.floor((gxm - 2) / bisectx) * i + pad, y = 1 + math.floor((gym - 2) / bisecty) * j + pad },
+        corner2 = { x = 1 + math.floor((gxm - 2) / bisectx) * (i+1) - pad, y = 1 + math.floor((gym - 2) / bisecty) * (j+1) - pad }
+      })
+    end
+  end
+
+  build_vaults_layout(_G, "Quadrants", paint)
+}}
+MAP
+ENDMAP
+
+################################################################################
+# Omnicross
+#
+# Generates junctions of various kinds, including big crosses, t-junctions, and
+# corners (potentially thick enough for cities in the middle) and more!
+NAME: layout_vaults_omnicrossx
+DEPTH: Vaults
+WEIGHT: 0
+ORIENT: encompass
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
+{{
+  local gxm,gym = dgn.max_bounds()
+  -- Corridor widths
+  local min_width,max_width = 4,20
+  local width1,width2 = crawl.random_range(min_width,max_width),crawl.random_range(min_width,max_width)
+  local half_size = { x = math.ceil(width1/2), y = math.ceil(width2/2) }
+  -- Corridor lengths
+  local length1,length2 = crawl.random_range((gxm+1)/2,gxm-2),crawl.random_range((gym+1)/2,gym-2)
+  -- Where on the map they intersect
+  local intersect = { x = crawl.random_range(2+half_size.y, gxm - 2 - half_size.y), y = crawl.random_range(2+(half_size.x), gym - 2 - half_size.y) }
+  -- How each corridor is positioned along the intersect
+  local pos1,pos2 = crawl.random_range(0, gxm - 2 - length1 - width2), crawl.random_range(0, gym - 2 - length2 - width1)
+  -- Calculate the two boxes
+  local p1 = { x = intersect.x + half_size.y - length1 + pos1, y = intersect.y - half_size.x }
+  local p2 = { x = p1.x + length1, y = p1.y + width2 }
+  local p3 = { x = intersect.x - half_size.y, y = intersect.y + half_size.x - length2 + pos2 }
+  local p4 = { x = p3.x + width1, y = p3.y + length2 }
+
+  build_vaults_layout(_G, "Omnicross", {
+    { type = "floor", corner1 = p1, corner2 = p2 },
+    { type = "floor", corner1 = p3, corner2 = p4 }
+  })
+}}
 MAP
 ENDMAP
 

@@ -55,7 +55,7 @@ local normals = {
   { x = 1, y = 0, dir = 3, name="e" }
 }
 
-local function print_vector(caption,v)
+function print_vector(caption,v)
   if v == nil then
    print(caption .. ": nil")
   else
@@ -192,16 +192,19 @@ function place_vaults_rooms(e,data, room_count, options)
   end
 
   -- Useful if things aren't working:
-  dump_usage_grid(data)
+  dump_usage_grid_pretty(data)
 
   return true
 end
 
 function dump_usage_grid(usage_grid)
 
-  for i, row in ipairs(usage_grid) do
+    local gxm,gym = dgn.max_bounds()
+
+  for i = 0, gym-1, 1 do
     local maprow = ""
-    for j, cell in ipairs(row) do
+    for j = 0, gxm-1, 1 do
+      local cell = usage_grid[i][j]
       if cell.usage == "none" then maprow = maprow .. " "
       elseif cell.usage == "restricted" then
         if cell.reason == "vault" then maprow = maprow .. ","
@@ -222,6 +225,33 @@ function dump_usage_grid(usage_grid)
   end
 
 end
+
+function dump_usage_grid_pretty(usage_grid)
+
+    local gxm,gym = dgn.max_bounds()
+
+  for i = 0, gym-1, 1 do
+    local maprow = ""
+    for j = 0, gxm-1, 1 do
+      local cell = usage_grid[i][j]
+      if cell.usage == "none" then maprow = maprow .. " "
+      elseif cell.usage == "restricted" then
+        if cell.reason == "vault" then maprow = maprow .. ","
+        elseif cell.reason == "door" then maprow = maprow .. "+"
+        else maprow = maprow .. "." end
+      elseif cell.usage == "empty" then maprow = maprow .. "."
+      elseif cell.usage == "eligible" or cell.usage == "eligible_open" then
+        if cell.normal == nil then maprow = maprow .. "!"
+        elseif cell.normal.x == 0 then maprow = maprow .. "-"
+        elseif cell.normal.y == 0 then maprow = maprow .. "|" end
+      elseif cell.usage == "open" then maprow = maprow .. "."
+      else maprow = maprow .. "?" end
+    end
+    print (maprow)
+  end
+
+end
+
 
 function place_vaults_room(e,usage_grid,room, options)
 
