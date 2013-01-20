@@ -23,6 +23,18 @@
 require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
 
+-- Build any vaults layout from a paint array, useful to quickly prototype
+-- layouts in layout_vaults.des
+function build_vaults_layout(e, name, paint, options)
+
+  if not crawl.game_started() then return end
+  print("Vaults Layout: " .. name)
+
+  local data = paint_vaults_layout(e, paint)
+  local rooms = place_vaults_rooms(e, data, 20, options)
+
+end
+
 function build_vaults_ring_layout(e, corridorWidth, outerPadding)
 
   if not crawl.game_started() then return end
@@ -154,7 +166,7 @@ function build_vaults_maze_bifur_layout(e)
     if usage.normal == nil then return false end
     if usage.depth == nil or usage.depth > 3 then return false end
 
-    if which > 0 then
+    if which then
       if usage.normal.y == 0 then
         -- Need a slight chance to extend in other directions otherwise the layout gets stuck
         if crawl.one_chance_in(10) then return false end

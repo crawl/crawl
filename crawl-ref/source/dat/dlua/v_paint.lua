@@ -86,6 +86,9 @@ local function get_layout(layout_grid,x,y)
 end
 
 local function set_layout(layout_grid,x,y,value)
+  if layout_grid[y] == nil or layout_grid[y][x] == nil then
+    print("Invalid coord: " .. x .. ", " .. y)
+  end
   layout_grid[y][x] = value
 end
 
