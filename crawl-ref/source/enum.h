@@ -281,6 +281,8 @@ enum attribute_type
     ATTR_EVOL_XP,              // XP gained since last evolved mutation
     ATTR_LIFE_GAINED,          // XL when a felid gained a life.
     ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
+    ATTR_TEMP_MUT_XP,          // Amount of XP remaining before some temp muts
+                               // will be removed
     NUM_ATTRIBUTES
 };
 
@@ -1462,7 +1464,9 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
     DUR_NAUSEA,
     DUR_AMBROSIA,
+#if TAG_MAJOR_VERSION == 34
     DUR_TEMP_MUTATIONS,
+#endif
     DUR_DISJUNCTION,
     DUR_VEHUMET_GIFT,
     NUM_DURATIONS
