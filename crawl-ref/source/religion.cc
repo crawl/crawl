@@ -1466,10 +1466,10 @@ bool is_fellow_slime(const monster* mon)
             && mons_is_god_gift(mon, GOD_JIYVA));
 }
 
-static bool _is_neutral_plant(const monster* mon)
+static bool _is_plant_follower(const monster* mon)
 {
     return (mon->alive() && mons_is_plant(mon)
-            && mon->attitude == ATT_GOOD_NEUTRAL);
+            && mon->attitude == ATT_FRIENDLY);
 }
 
 static bool _has_jelly()
@@ -1491,7 +1491,7 @@ bool is_follower(const monster* mon)
     else if (you.religion == GOD_JIYVA)
         return is_fellow_slime(mon);
     else if (you.religion == GOD_FEDHAS)
-        return _is_neutral_plant(mon);
+        return _is_plant_follower(mon);
     else
         return (mon->alive() && mon->friendly());
 }
