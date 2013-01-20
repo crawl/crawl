@@ -2533,6 +2533,7 @@ enum monster_type                      // menv[].type
     MONS_STARSPAWN_TENTACLE_SEGMENT,
 
     MONS_SPATIAL_MAELSTROM,
+    MONS_CHAOS_BUTTERFLY,
 
     MONS_JORGRUN,
     MONS_LAMIA,
@@ -3310,6 +3311,7 @@ enum spell_type
     SPELL_DISJUNCTION,
     SPELL_CHAOS_BREATH,
     SPELL_FRENZY,
+    SPELL_SUMMON_TWISTER,
 
     NUM_SPELLS
 };
