@@ -1981,7 +1981,6 @@ int monster_die(monster* mons, killer_type killer,
                     || you.religion == GOD_SHINING_ONE
                     || you.religion == GOD_YREDELEMNUL
                     || you.religion == GOD_KIKUBAAQUDGHA
-                    || you.religion == GOD_VEHUMET
                     || you.religion == GOD_MAKHLEB
                     || you.religion == GOD_LUGONU
                     || !anon && mons_is_god_gift(killer_mon))
@@ -2119,21 +2118,6 @@ int monster_die(monster* mons, killer_type killer,
                     else
                         notice |= did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
-                }
-
-                if (you.religion == GOD_VEHUMET
-                    && notice
-                    && !player_under_penance()
-                    && random2(you.piety) >= piety_breakpoint(0))
-                {
-                    // Vehumet - only for non-undead servants (coding
-                    // convenience, no real reason except that Vehumet
-                    // prefers demons).
-                    if (you.magic_points < you.max_magic_points)
-                    {
-                        mpr("You feel your power returning.");
-                        inc_mp(1 + random2(mons->hit_dice / 2));
-                    }
                 }
 
                 if (you.religion == GOD_SHINING_ONE

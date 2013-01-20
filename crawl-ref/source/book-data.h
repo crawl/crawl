@@ -442,7 +442,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Annihilations - Vehumet special
+{   // Book of Annihilations
     SPELL_POISON_ARROW,
     SPELL_IOOD,
     SPELL_CHAIN_LIGHTNING,
@@ -453,7 +453,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Grand Grimoire - Vehumet special
+{   // Grand Grimoire
     SPELL_DEMONIC_HORDE,
     SPELL_MASS_ABJURATION,
     SPELL_HAUNT,

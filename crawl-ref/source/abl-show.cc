@@ -190,7 +190,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
 // The description screen was way out of date with the actual costs.
 // This table puts all the information in one place... -- bwr
 //
-// The four numerical fields are: MP, HP, food, and piety.
+// The five numerical fields are: MP, HP, food, piety and ZP.
 // Note:  food_cost  = val + random2avg(val, 2)
 //        piety_cost = val + random2((val + 1) / 2 + 1);
 //        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
@@ -382,6 +382,9 @@ static const ability_def Ability_List[] =
       0, 0, 0, 20, 0, ABFLAG_NONE},
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
       0, 0, 0, 0, 0, ABFLAG_NONE},
+
+    // Vehumet
+    { ABIL_VEHUMET_MEMORISE_SPELL, "Memorise spell", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, 10, ABFLAG_ZOTDEF},
@@ -2691,6 +2694,11 @@ static bool _do_ability(const ability_def& abil)
         ashenzari_end_transfer();
         break;
 
+    case ABIL_VEHUMET_MEMORISE_SPELL:
+        if (!vehumet_accept_gift())
+            return false;
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')
@@ -3155,6 +3163,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     vector<ability_type> abilities = get_god_abilities(include_unusable);
     for (unsigned int i = 0; i < abilities.size(); ++i)
         _add_talent(talents, abilities[i], check_confused);
+
+    if (vehumet_is_currently_gifting())
+        _add_talent(talents, ABIL_VEHUMET_MEMORISE_SPELL, check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD

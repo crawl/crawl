@@ -246,9 +246,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Vehumet
     { "gain magical power from killing",
+      "",
       "Vehumet is aiding your destructive magics.",
       "Vehumet is extending the range of your destructive magics.",
-      "Vehumet is reducing the cost of your expensive destructive magics.",
       "" },
     // Okawaru
     { "gain great but temporary skills",
@@ -363,9 +363,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Vehumet
     { "gain magical power from killing",
+      "",
       "Vehumet will no longer aid your destructive magics.",
       "Vehumet will no longer extend the range of your destructive magics.",
-      "Vehumet will no longer reduce the cost of your expensive destructive magics.",
       "" },
     // Okawaru
     { "gain great but temporary skills",
@@ -644,7 +644,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_VEHUMET: case GOD_MAKHLEB: case GOD_LUGONU:
+    case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill living beings");
         break;
 
@@ -662,6 +662,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill living beings");
         break;
 
@@ -685,8 +686,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_VEHUMET: case GOD_MAKHLEB:
-    case GOD_LUGONU:
+    case GOD_SHINING_ONE: case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill the undead");
         break;
 
@@ -695,6 +695,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill the undead");
         break;
 
@@ -721,6 +722,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill demons");
         break;
 
@@ -761,6 +763,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
+    case GOD_VEHUMET:
         likes.push_back("you kill holy beings");
         break;
 
@@ -1952,6 +1955,125 @@ static bool _jiyva_mutate()
         return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
 }
 
+bool vehumet_is_currently_gifting()
+{
+    if (you.duration[DUR_VEHUMET_GIFT] && you.vehumet_gift != SPELL_NO_SPELL)
+        return (true);
+
+    return (false);
+}
+
+void _add_to_recent_spells(spell_type spell)
+{
+    you.vehumet_recent_spells.push_front(spell);
+    if (you.vehumet_recent_spells.size() > MAX_RECENT_SPELLS)
+        you.vehumet_recent_spells.pop_back();
+}
+
+bool _is_recent_spell(spell_type spell)
+{
+    for (list<spell_type>::iterator it = you.vehumet_recent_spells.begin();
+         it != you.vehumet_recent_spells.end(); ++it)
+    {
+        if (*it == spell)
+            return (true);
+    }
+
+    return (false);
+}
+
+bool vehumet_accept_gift()
+{
+    if (player_spell_levels() >= spell_levels_required(you.vehumet_gift))
+    {
+        string prompt = make_stringf("Do you really want to memorise %s (Level %d)?",
+                                     spell_title(you.vehumet_gift),
+                                     spell_difficulty(you.vehumet_gift));
+        if (yesno(prompt.c_str(), true, 'n'))
+        {
+            take_note(Note(NOTE_GOD_GIFT, you.religion));
+            add_spell_to_memory(you.vehumet_gift);
+            you.seen_spell[you.vehumet_gift] = true;
+            prompt = make_stringf(" grants you knowledge of %s.",
+                                  spell_title(you.vehumet_gift));
+            simple_god_message(prompt.c_str());
+            you.vehumet_gift = SPELL_NO_SPELL;
+            you.duration[DUR_VEHUMET_GIFT] = 0;
+
+            return true;
+        }
+        else
+            canned_msg(MSG_OK);
+    }
+    else
+        mpr("You can't memorise that many levels of magic yet!");
+
+    return false;
+}
+
+vector<spell_type> _vehumet_eligible_gift_spells()
+{
+    vector<spell_type>eligible_spells;
+
+    int max_level = 0;
+    if (you.piety >= 161)
+        max_level = 9;
+    else if (you.piety >= piety_breakpoint(4))
+        max_level = 7;
+    else if (you.piety >= piety_breakpoint(3))
+        max_level = 5;
+    else if (you.piety >= piety_breakpoint(2))
+        max_level = 4;
+    else if (you.piety >= piety_breakpoint(1))
+        max_level = 3;
+    else if (you.piety >= piety_breakpoint(0))
+        max_level = 1;
+    max_level = std::min(you.experience_level, max_level);
+    // First offer will always be level 1.
+    if (you.num_total_gifts[you.religion] == 0)
+        max_level = 1;
+
+    // Also impose a minimum level. When this reaches 10, the player
+    // won't get any more gifts.
+    const int gifts = you.num_total_gifts[you.religion];
+    int min_level = std::max(gifts + 2, 2 * gifts - 10)/2;
+
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        spell_type spell = static_cast<spell_type>(i);
+        if (!is_valid_spell(spell))
+            continue;
+
+        if (vehumet_supports_spell(spell)
+            && !you.has_spell(spell)
+            && !you.seen_spell[spell]
+            && is_player_spell(spell)
+            && spell_difficulty(spell) <= max_level
+            && spell_difficulty(spell) >= min_level
+            && !_is_recent_spell(spell))
+        {
+            eligible_spells.push_back(spell);
+        }
+    }
+    // Don't get stuck if all level 1 spells have been seen.
+    if (you.num_total_gifts[you.religion] == 0 && eligible_spells.empty())
+        eligible_spells.push_back(SPELL_MAGIC_DART);
+    return (eligible_spells);
+}
+
+spell_type _vehumet_find_spell_gift()
+{
+    vector<spell_type> eligible_spells = _vehumet_eligible_gift_spells();
+    spell_type spell = SPELL_NO_SPELL;
+    for (unsigned int i = 1; i <= eligible_spells.size(); ++i)
+    {
+        if (one_chance_in(i))
+            spell = eligible_spells.at(i - 1);
+    }
+    return (spell);
+}
+
+///////////////////////////////
 bool do_god_gift(bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
@@ -2075,12 +2197,11 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-        case GOD_VEHUMET:
+            int gift;
+            gift = NUM_BOOKS;
             // Break early if giving a gift now means it would be lost.
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
-
-            unsigned int gift = NUM_BOOKS;
 
             // Kikubaaqudgha gives the lesser Necromancy books in a quick
             // succession.
@@ -2101,26 +2222,6 @@ bool do_god_gift(bool forced)
             {
                 if (you.religion == GOD_SIF_MUNA)
                     gift = OBJ_RANDOM;
-                else if (you.religion == GOD_VEHUMET)
-                {
-                    if (!you.had_book[BOOK_CONJURATIONS])
-                        gift = BOOK_CONJURATIONS;
-                    else if (!you.had_book[BOOK_POWER])
-                        gift = BOOK_POWER;
-                    else if (!you.had_book[BOOK_ANNIHILATIONS])
-                        gift = BOOK_ANNIHILATIONS;  // Conjuration books.
-
-                    if (you.skills[SK_CONJURATIONS] < you.skills[SK_SUMMONINGS]
-                        || gift == NUM_BOOKS)
-                    {
-                        if (!you.had_book[BOOK_CALLINGS])
-                            gift = BOOK_CALLINGS;
-                        else if (!you.had_book[BOOK_SUMMONINGS])
-                            gift = BOOK_SUMMONINGS;
-                        else if (!you.had_book[BOOK_GRAND_GRIMOIRE])
-                            gift = BOOK_GRAND_GRIMOIRE; // Summoning books.
-                    }
-                }
             }
 
             if (gift != NUM_BOOKS)
@@ -2169,16 +2270,42 @@ bool do_god_gift(bool forced)
                     // Timeouts are meaningless for Kiku.
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
-                        // Vehumet gives books less readily.
-                        if (you.religion == GOD_VEHUMET)
-                            _inc_gift_timeout(10 + random2(10));
-
                         _inc_gift_timeout(40 + random2avg(19, 2));
                     }
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
             }                   // End of giving books.
             break;              // End of book gods.
+
+        case GOD_VEHUMET:
+            const int gifts = you.num_total_gifts[you.religion];
+            if (forced || !vehumet_is_currently_gifting()
+                          && (you.piety >= piety_breakpoint(0) && gifts == 0
+                              || you.piety >= 30 + random2(6) + 18 * gifts && gifts <= 5
+                              || you.piety >= piety_breakpoint(4) && one_chance_in(20)))
+
+            {
+                spell_type spell = _vehumet_find_spell_gift();
+                if (spell != SPELL_NO_SPELL)
+                {
+                    you.vehumet_gift = spell;
+                    _add_to_recent_spells(you.vehumet_gift);
+                    string prompt = make_stringf(" offers you knowledge of %s.",
+                                     spell_title(you.vehumet_gift));
+                    simple_god_message(prompt.c_str());
+                    more();
+                    you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
+                    if (gifts >= 5)
+                        _inc_gift_timeout(spell_difficulty(spell)^2 / 4);
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
+                    take_note(Note(NOTE_OFFERED_SPELL, you.vehumet_gift));
+                    success = true;
+                }
+                else
+                    success = false;
+            }
+            break;
         }                       // switch (you.religion)
     }                           // End of gift giving.
 
@@ -2895,6 +3022,8 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_VEHUMET:
+        you.vehumet_gift = SPELL_NO_SPELL;
+        you.duration[DUR_VEHUMET_GIFT] = 0;
         _set_penance(old_god, 25);
         break;
 

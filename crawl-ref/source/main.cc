@@ -116,6 +116,7 @@
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-transloc.h"
+#include "spl-util.h"
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
@@ -2334,6 +2335,15 @@ static void _decrement_durations()
                               "Your skin is crawling a little less now."))
     {
         remove_regen(you.attribute[ATTR_DIVINE_REGENERATION]);
+    }
+
+    if (_decrement_a_duration(DUR_VEHUMET_GIFT, delay, "Vehumet withdraws the offer.",
+                              coinflip(), "Vehumet won't offer you this gift forever..."))
+    {
+        simple_god_message(make_stringf(" denies you knowledge of %s.",
+                                        spell_title(you.vehumet_gift)).c_str());
+        you.vehumet_gift = SPELL_NO_SPELL;
+
     }
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");

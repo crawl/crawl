@@ -799,6 +799,7 @@ static const char* dur_names[] =
     "ambrosia",
     "temporary mutations",
     "disjunction",
+    "vehumet gift"
 };
 
 void wizard_edit_durations(void)

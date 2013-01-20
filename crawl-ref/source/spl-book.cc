@@ -285,8 +285,8 @@ int book_rarity(uint8_t which_book)
     case BOOK_SUMMONINGS:
         return 18;
 
-    case BOOK_ANNIHILATIONS: // Vehumet special
-    case BOOK_GRAND_GRIMOIRE:    // Vehumet special
+    case BOOK_ANNIHILATIONS:
+    case BOOK_GRAND_GRIMOIRE:
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_MANUAL:
         return 20;
@@ -314,7 +314,7 @@ void init_spell_rarities()
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         // Manuals and books of destruction are not even part of this loop.
-        if (i >= MIN_GOD_ONLY_BOOK && i <= MAX_GOD_ONLY_BOOK)
+        if (i >= MIN_RARE_BOOK && i <= MAX_RARE_BOOK)
             continue;
 
         for (int j = 0; j < SPELLBOOK_SIZE; ++j)
@@ -346,6 +346,19 @@ void init_spell_rarities()
     }
 }
 
+bool is_player_spell(spell_type which_spell)
+{
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    {
+        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+        {
+            if (which_spell_in_book(i, j) == which_spell)
+                return true;
+        }
+    }
+    return false;
+}
+
 int spell_rarity(spell_type which_spell)
 {
     const int rarity = _lowest_rarity[which_spell];
@@ -372,11 +385,9 @@ bool player_can_memorise_from_spellbook(const item_def &book)
         return true;
 
     if ((book.sub_type == BOOK_ANNIHILATIONS
-            && you.religion != GOD_VEHUMET
-            && (you.skill(SK_CONJURATIONS) < 10
-                || you.skill(SK_SPELLCASTING) < 6))
+         && (you.skill(SK_CONJURATIONS) < 10
+             || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_GRAND_GRIMOIRE
-            && you.religion != GOD_VEHUMET
             && (you.skill(SK_SUMMONINGS) < 10
                 || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_NECRONOMICON
@@ -1415,14 +1426,14 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
                             bool avoid_known = false)
 {
     // For randarts handed out by Sif Muna, spells contained in the
-    // Vehumet/Kiku specials are fair game.
+    // special books are fair game.
     // We store them in an extra vector that (once sorted) can later
     // be checked for each spell with a rarity -1 (i.e. not normally
     // appearing randomly).
     vector<spell_type> special_spells;
     if (god == GOD_SIF_MUNA)
     {
-        for (int i = MIN_GOD_ONLY_BOOK; i <= MAX_GOD_ONLY_BOOK; ++i)
+        for (int i = MIN_RARE_BOOK; i <= MAX_RARE_BOOK; ++i)
             for (int j = 0; j < SPELLBOOK_SIZE; ++j)
             {
                 spell_type spell = which_spell_in_book(i, j);
@@ -2273,13 +2284,9 @@ bool make_book_theme_randart(item_def &book,
                     if (all_spells_disc1 && !one_chance_in(6))
                         god = GOD_KIKUBAAQUDGHA;
                     break;
-                case SPTYP_SUMMONING:
                 case SPTYP_CONJURATION:
-                    if ((all_spells_disc1 || disc2 == SPTYP_SUMMONING
-                         || disc2 == SPTYP_CONJURATION) && !one_chance_in(4))
-                    {
+                    if (all_spells_disc1 && !one_chance_in(4))
                         god = GOD_VEHUMET;
-                    }
                     break;
                 default:
                     break;

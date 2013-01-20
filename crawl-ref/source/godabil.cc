@@ -1432,7 +1432,7 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
+    if (spell_typematch(spell, SPTYP_CONJURATION))
         return true;
 
     // Conjurations work by conjuring up a chunk of short-lived matter and
