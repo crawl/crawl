@@ -971,16 +971,16 @@ void save_abyss_uniques()
         }
 }
 
-bool in_wastes(const coord_def &p)
+bool _in_wastes(const coord_def &p)
 {
-    return (p.x > 0 && p.x < 0x3FFFFFF && p.y > 0 && p.y < 0x3FFFFFF);
+    return (p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF);
 }
 
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord;
     const static WastesLayout wastes;
-    if (in_wastes(pt)) {
+    if (_in_wastes(pt)) {
       ProceduralSample sample = wastes(pt, abyssal_state.depth);
       abyss_sample_queue.push(sample);
       return sample;
@@ -1098,7 +1098,7 @@ static void _update_abyss_terrain(const coord_def &p,
         if (feat == DNGN_FLOOR && in_los_bounds_g(rp))
         {
             cloud_type cloud = _cloud_from_feat(currfeat);
-            int cloud_life = (in_wastes(abyssal_state.major_coord) ? 5 : 2) + random2(2);
+            int cloud_life = (_in_wastes(abyssal_state.major_coord) ? 5 : 2) + random2(2);
             if (cloud != CLOUD_NONE)
                 check_place_cloud(_cloud_from_feat(currfeat), rp, cloud_life, 0, 3);
         }
