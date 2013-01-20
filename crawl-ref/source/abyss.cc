@@ -1572,7 +1572,9 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
             monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
             if (mons_is_abyssal_only(mons)
                 || mons_class_holiness(mons) == MH_HOLY)
+            {
                 continue;
+            }
             if (invalid_monster_type(mons))
                 continue;
 
