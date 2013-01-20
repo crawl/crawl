@@ -971,7 +971,7 @@ void save_abyss_uniques()
         }
 }
 
-bool _in_wastes(const coord_def &p)
+static bool _in_wastes(const coord_def &p)
 {
     return (p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF);
 }
@@ -980,7 +980,8 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord;
     const static WastesLayout wastes;
-    if (_in_wastes(pt)) {
+    if (_in_wastes(pt))
+    {
       ProceduralSample sample = wastes(pt, abyssal_state.depth);
       abyss_sample_queue.push(sample);
       return sample;
@@ -1108,7 +1109,8 @@ static void _update_abyss_terrain(const coord_def &p,
     }
 }
 
-static int _abyssal_stair_chance() {
+static int _abyssal_stair_chance()
+{
   return 3500 - (200 * you.depth / 3);
 }
 
