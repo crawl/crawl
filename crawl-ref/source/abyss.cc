@@ -1566,17 +1566,21 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         }
 
         // Got a place, summon the beast.
-        monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
-        if (mons_is_abyssal_only(mons))
-            continue;
-        if (invalid_monster_type(mons))
-            return false;
+        // Retry on invalid monsters.
+        for (int x = 0; x < 10; ++x)
+        {
+            monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
+            if (mons_is_abyssal_only(mons)
+                || mons_class_holiness(mons) == MH_HOLY)
+                continue;
+            if (invalid_monster_type(mons))
+                continue;
 
-        mgen_data mg(mons, beh, 0, 5, 0, p);
-        mg.non_actor_summoner = "Lugonu's corruption";
-        mg.place = BRANCH_ABYSS;
-
-        return create_monster(mg);
+            mgen_data mg(mons, beh, 0, 5, 0, p);
+            mg.non_actor_summoner = "Lugonu's corruption";
+            mg.place = BRANCH_ABYSS;
+            return create_monster(mg);
+        }
     }
 
     return false;
