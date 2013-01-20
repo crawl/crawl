@@ -1660,9 +1660,9 @@ void handle_monster_move(monster* mons)
 {
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
-
-    if (mons->type == MONS_SPATIAL_MAELSTROM &&
-       (!player_in_branch(BRANCH_ABYSS) || !player_in_branch(BRANCH_ZIGGURAT)))
+    if (mons->type == MONS_SPATIAL_MAELSTROM
+        && (!player_in_branch(BRANCH_ABYSS)
+            || !player_in_branch(BRANCH_ZIGGURAT)))
     {
         for (int i = 0; i < you.time_taken; ++i)
         {
