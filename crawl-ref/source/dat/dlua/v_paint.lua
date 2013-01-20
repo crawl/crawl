@@ -227,7 +227,7 @@ function paint_vaults_layout(e, paint, options)
   -- Paint the resultant layout onto the dungeon grid
   local gxm, gym = dgn.max_bounds()
 
-  local wall_type = "stone_wall"
+  local wall_type = "rock_wall"
   if options.wall_type ~= nil then wall_type = options.wall_type end
   local floor_type = "floor"
 

@@ -353,79 +353,67 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     if result == true then return false end
   end
 
-  local origin = { x = -1, y = -1 }
-  local opposite = { x = -1, y = -1 }
   local is_clear = true
-  local grid = dgn.grid
 
   -- Check every square this room will go, including its walls, make sure we have space
-  local rx1 = -1
-  local rx2 = room_width
-  local ry1 = -1
-  local ry2 = room_height
-  -- If we're placing in the open, need to check the surrounding border to avoid butting
-  -- right up next to existing rooms
-  if usage.usage == "open" or usage.usage == "eligible_open" then
-    rx1 = -2
-    ry1 = -2
-    rx2 = room_width + 1
-    ry2 = room_height + 1
-  end
-  for rx = rx1, rx2, 1 do
-    for ry = ry1, ry2, 1 do
+  for p in iter.rect_iterator(dgn.point(-1, -1), dgn.point(room_width, room_height)) do
 
-      -- Figure out where this target actually lies after rotation
-      local target = vaults_vector_add(room_base, { x = rx, y = ry }, v_wall, v_normal )
-      -- For placement we have to store the top-left corner of the room in absolute map coords
-      if rx >= 0 and rx < room_width and ry >=0 and ry < room_height then
-        if (origin.x == -1 or target.x < origin.x) then origin.x = target.x end
-        if (origin.y == -1 or target.y < origin.y) then origin.y = target.y end
-        if (opposite.x == -1 or target.x > opposite.x) then opposite.x = target.x end
-        if (opposite.y == -1 or target.y > opposite.y) then opposite.y = target.y end
-      end
+    local rx,ry = p.x,p.y
 
-      -- Check target usage
-      local target_usage = vaults_get_usage(usage_grid,target.x,target.y)
+    -- Figure out where this target actually lies in map coords after rotation
+    local target = vaults_vector_add(room_base, { x = rx, y = ry }, v_wall, v_normal )
 
-      -- Checking outer border (only for open rooms)
-      -- TODO: This code should probably be simplified with rectangle iterators and a new border iterator
-      if (rx == -2 or ry == -2 or rx == (room_width + 1) or ry == (room_height + 1)) then
-        -- Here we don't mind most restricted because that could be the inner row of a subvault we're attaching
-        -- to. What we're worried about is if there is a wall *next* to our wall which could block doors.
-        if (target_usage.usage == "eligible" or target_usage.usage == "eligible_open" or (target_usage.usage == "restricted" and target_usage.reason ~= "vault")) then
-          is_clear = false
-          break
-        end
-      -- Standard check.
-      -- If any square is restricted then we fail. If our room type is "open" then we need to find all open or eligible_open squares (meaning we take up
-      -- open space or we are attaching to an existing building). If our room type is "eligible" then we need to find all unused or eligible squares (meaning
-      -- we are building into empty walls or attaching to more buildings).
-      elseif (target_usage.usage == "restricted" or (usage.usage == "open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")
-        or (usage.usage == "eligible" and target_usage.usage ~= "eligible" and target_usage.usage ~= "none")
-        or (usage.usage == "eligible_open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")) then
-        is_clear = false
-        break
-      end
-    end
+    -- Check existing usage of that square
+    local target_usage = vaults_get_usage(usage_grid,target.x,target.y)
 
-    if not is_clear then
+    -- Check we are allowed to build here
+    -- If any square is restricted then we fail. If our room type is "open" then we need to find all open or eligible_open squares (meaning we take up
+    -- open space or we are attaching to an existing building). If our room type is "eligible" then we need to find all unused or eligible squares (meaning
+    -- we are building into empty walls or attaching to more buildings).
+    if (target_usage.usage == "restricted" or (usage.usage == "open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")
+      or (usage.usage == "eligible" and target_usage.usage ~= "eligible" and target_usage.usage ~= "none")
+      or (usage.usage == "eligible_open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")) then
+      is_clear = false
       break
     end
   end
 
-  -- No clear space found, cancel
+  -- For open rooms, check a border all around the outside of the wall. We don't want to land right next to another room because we could cut off its door,
+  -- and also it would just create ugly two-thick walls.
+  if (usage.usage=="open" or usage.usage == "eligible_open") then
+    for p in iter.border_iterator(dgn.point(-2, -2), dgn.point(room_width + 1, room_height + 1)) do
+
+      local target = vaults_vector_add(room_base, { x = p.x, y = p.y }, v_wall, v_normal )
+      local target_usage = vaults_get_usage(usage_grid,target.x,target.y)
+
+      -- Here we don't mind if restricted squares are outside the border, unless it's part of another vault's door.
+      -- We don't want to butt up right next to an eligible wall without joining to it (or do we ...? it would mean less chokepoints existing... but could block parts of the scenery)
+      if (target_usage.usage == "eligible" or (target_usage.usage == "eligible_open" and target_usage.room ~= usage.room)
+         or (target_usage.usage == "restricted" and target_usage.reason ~= "vault" and target_usage.room ~= usage.room ) ) then
+        is_clear = false
+        break
+      end
+    end
+  end
+
+  -- No clear space found, the function fails and we'll look for a new spot
   if not is_clear then return false end
+
+  -- Lookup the two corners of the room and map to oriented coords to find the top-leftmost and bottom-rightmost coords relative to dungeon orientation
+  -- In particular we need the origin to eventually place the vault, and to fill in the floor/walls on the grid
+  local c1,c2 = vaults_vector_add(room_base, { x = 0, y = 0 }, v_wall, v_normal ),vaults_vector_add(room_base, { x = room_width-1, y = room_height-1 }, v_wall, v_normal )
+  local origin, opposite = { x = math.min(c1.x,c2.x), y = math.min(c1.y,c2.y) },{ x = math.max(c1.x,c2.x), y = math.max(c1.y,c2.y) }
 
   -- If placing in open space, we need to surround with walls
   -- TODO: Randomly vary the wall type
   if usage.usage == "open" then
-    dgn.fill_grd_area(origin.x - 1, origin.y - 1, opposite.x + 1, opposite.y + 1, "stone_wall")
+    dgn.fill_grd_area(origin.x - 1, origin.y - 1, opposite.x + 1, opposite.y + 1, "rock_wall")
   end
 
   -- Create floor space to place the vault in
   dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
 
-  -- Place the map inside the room if we have one
+  -- Actually place a map inside the room if we have one
   if room.type == "vault" then
     -- Allow map to by flipped and rotated again
     dgn.tags_remove(room.map, "no_vmirror no_hmirror no_rotate")
@@ -444,8 +432,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   end
 
-  local needs_door = true
   -- How big the door?
+  local needs_door = true  -- Only reason we wouldn't need a door is if we're intentionally creating a dead end, not implemented yet
   if needs_door then
     -- Even or odd width
     local oddness = room_width % 2
@@ -485,7 +473,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     end
     -- Empty space
     if room.type == "empty" then
-      -- Still restrict walls
+      -- Could restrict next to walls if we want to e.g. create large empty areas and build new cities inside them
       -- if x == origin.x or x == opposite.x or y == origin.y or y == opposite.y then
         -- vaults_set_usage(usage_grid,x,y,{usage = "restricted"})
       -- else
