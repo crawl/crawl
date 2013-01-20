@@ -172,34 +172,6 @@
 #    testing.
 #
 
-
-
-########
-#  General functions
-#
-#  These functions are used by many of the rooms.
-#
-#
-#  subvault_place_stair
-#
-#  This function substitutes in the correct stair type to an
-#    ???_up or ???_down subvault.  The correct type will be
-#    set by the map generator before the subvault is added.
-#
-#  One implication of this system is that it is possible to use
-#    the same maps for both entry and exit subvaults.
-#
-
-{{
--- A default value
-dgn.persist.vault_current_stairs_glyph = '{'
-
-function subvault_place_stair(e)
-  e.subst("{([})] = {")
-  e.subst("{ = " .. dgn.persist.vault_current_stairs_glyph)
-end
-}}
-
 #
 #  vaults_standard_loot
 #
@@ -354,14 +326,14 @@ end
 #
 
 NAME:     vaults_door_7
-TAGS:     vaults_door_7 allow_dup
+TAGS:     vaults_door_7 allow_dup transparent
 SUBST:    - = xx+
 MAP
 -+-
 ENDMAP
 
 NAME:     vaults_door_7_double
-TAGS:     vaults_door_7 allow_dup
+TAGS:     vaults_door_7 allow_dup transparent
 WEIGHT:   1
 MAP
 +x+
@@ -702,7 +674,7 @@ SUBVAULT: B : vaults_door_7
 SUBVAULT: C : vaults_door_7
 SUBVAULT: D : vaults_door_7
 SUBVAULT: E : vaults_door_7
-: subvault_place_stair(_G)
+
 MAP
 _-...-_
 -xEEEx-
@@ -718,7 +690,7 @@ NAME:     vaults_room_7_spin_stairs1_statues
 TAGS:     vaults_room vaults_room allow_dup
 SHUFFLE:  GI
 SUBST:    I = .
-: subvault_place_stair(_G)
+
 MAP
 .......
 .GI.IG.
@@ -828,7 +800,7 @@ ENDMAP
 NAME:     vaults_room_7_spin_secret_grid
 TAGS:     vaults_room allow_dup no_monster_gen no_item_gen
 SUBST:    w : x:5 m:1 w:8 .:2
-: subvault_place_stair(_G)
+
 : vaults_standard_loot(_G)
 : vaults_ornamental_pool(_G)
 MAP
@@ -956,7 +928,7 @@ SUBST:    I = .
 SUBST:    W = w
 SUBVAULT: A : vaults_door_7
 : vaults_ornamental_pool(_G)
-: subvault_place_stair(_G)
+
 MAP
 GI...xx
 II..xxx
@@ -1265,7 +1237,7 @@ NSUBST:   _ = 1:{ / 2:0 / *:_
 KPROP:    +_%$0 = no_rtele_into
 SUBVAULT: A : vaults_door_7
 : vaults_ornamental_pool(_G)
-: subvault_place_stair(_G)
+
 MAP
 .......
 .wwwww.
@@ -1290,7 +1262,7 @@ NSUBST:   _ = 1:% / 2:0 / *:_
 KPROP:    +_%$0{ = no_rtele_into
 SUBVAULT: A : vaults_door_7
 : vaults_standard_loot(_G)
-: subvault_place_stair(_G)
+
 MAP
 {u{p_-_
 uxuxpx-
@@ -1303,7 +1275,7 @@ ENDMAP
 
 NAME:     vaults_room_7_dead_end_stairs1_statue_hallway
 TAGS:     vaults_room_7_dead_end_down1 allow_dup
-: subvault_place_stair(_G)
+
 MAP
 xxxxxxx
 xxxxxxx
@@ -1370,7 +1342,7 @@ ENDMAP
 #
 
 NAME:     vaults_room_7_city_empty_subvaults
-TAGS:     vaults_room_7_city_empty allow_dup
+TAGS:     vaults_room vaults_empty allow_dup
 SHUFFLE:  GHIJ
 SUBST:    HIJ = .
 SUBVAULT: A : vaults_room_1_city_empty
@@ -1390,7 +1362,7 @@ CCC...BBB
 ENDMAP
 
 NAME:     vaults_room_7_city_empty_quartered_pool
-TAGS:     vaults_room_7_city_empty allow_dup no_pool_fixup
+TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
 SHUFFLE:  GHIJ
 SUBST:    HIJ = .
 : vaults_ornamental_pool(_G)
@@ -1407,7 +1379,7 @@ wwww.wwww
 ENDMAP
 
 NAME:     vaults_room_7_city_empty_boxed_pool
-TAGS:     vaults_room_7_city_empty allow_dup no_pool_fixup
+TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
 SHUFFLE:  GHI
 SUBST:    HI = .
 SHUFFLE:  +-
@@ -1426,7 +1398,7 @@ Ixx+-+xxI
 ENDMAP
 
 NAME:     vaults_room_7_city_empty_cross_statues
-TAGS:     vaults_room_7_city_empty allow_dup
+TAGS:     vaults_room vaults_empty allow_dup
 WEIGHT:   20
 SHUFFLE:  GHIJK
 SUBST:    HIJK = .
@@ -1444,7 +1416,7 @@ AAAAAAAAA
 ENDMAP
 
 NAME:     vaults_room_7_city_empty_cross_water
-TAGS:     vaults_room_7_city_empty allow_dup
+TAGS:     vaults_room vaults_empty allow_dup
 SUBST:    W = w.
 SUBVAULT: A : vaults_room_7_city_cross_wall
 MAP
@@ -1460,7 +1432,7 @@ AAAAAAAAA
 ENDMAP
 
 NAME:     vaults_room_7_city_empty_statue_rings
-TAGS:     vaults_room_7_city_empty allow_dup
+TAGS:     vaults_room vaults_empty allow_dup
 WEIGHT:   20
 SHUFFLE:  GI
 SUBST:    I : G.
@@ -1479,7 +1451,7 @@ AAAAAAAAA
 ENDMAP
 
 NAME:     vaults_room_7_city_encounter_cross
-TAGS:     vaults_room_7_city_encounter allow_dup
+TAGS:     vaults_room allow_dup
 SHUFFLE:  GHI
 SUBST:    HI = .
 SUBVAULT: A : vaults_room_7_city_cross_wall
@@ -1496,7 +1468,7 @@ AAAAAAAAA
 ENDMAP
 
 NAME:     vaults_room_7_city_encounter_statue_rings
-TAGS:     vaults_room_7_city_encounter allow_dup
+TAGS:     vaults_room allow_dup
 SUBST:    G = G0
 NSUBST:   0 = 1:0 / *:.
 SUBVAULT: A : vaults_room_7_city_statue_rings
@@ -1513,7 +1485,7 @@ AAAAAAAAA
 ENDMAP
 
 NAME:     vaults_room_7_city_dangerous_cross
-TAGS:     vaults_room_7_city_dangerous allow_dup
+TAGS:     vaults_room vaults_hard allow_dup
 SHUFFLE:  GHI
 SUBST:    HI = .
 SHUFFLE:  pq
@@ -1535,7 +1507,7 @@ ENDMAP
 
 # average 36 + 39 + 16 + 6 = 99 gold
 NAME:     vaults_room_7_city_loot_glass_walls
-TAGS:     vaults_room_7_city_loot allow_dup
+TAGS:     vaults_room allow_dup
 SUBST:    G : G..
 NSUBST:   = = 1:+ / *:m
 NSUBST:   $ = 2:g / 3:f / 2:e / *:d
@@ -1557,7 +1529,7 @@ xxxDDDxxx
 ENDMAP
 
 NAME:     vaults_room_7_city_loot_statue_rings
-TAGS:     vaults_room_7_city_loot allow_dup no_pool_fixup
+TAGS:     vaults_room allow_dup no_pool_fixup
 WEIGHT:   5
 SUBVAULT: A : vaults_room_7_city_statue_rings
 : vaults_standard_loot(_G)
@@ -1575,7 +1547,7 @@ AAAAAAAAA
 ENDMAP
 
 NAME:     vaults_room_7_city_loot_mumra_shop_pool
-TAGS:     vaults_room_7_city_loot luniq
+TAGS:     vaults_room luniq
 SUBST:    w = w:10 2:1
 MONS:     plant
 KMONS:    2 = electric eel
@@ -1595,7 +1567,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_7_city_loot_mumra_shop_minimaze
-TAGS:     vaults_room_7_city_loot no_wall_fixup luniq
+TAGS:     vaults_room no_wall_fixup luniq
 NSUBST:   s = 1:s / *:.
 KFEAT:    s = any shop
 RTILE:    x = wall_lab_rock
@@ -1612,10 +1584,10 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_7_city_up1_statue_rings
-TAGS:     vaults_room_7_city_up1 allow_dup
+TAGS:     vaults_room allow_dup
 WEIGHT:   5
 SUBVAULT: A : vaults_room_7_city_statue_rings
-: subvault_place_stair(_G)
+
 MAP
 AAAAAAAAA
 AA.....AA
@@ -1629,14 +1601,14 @@ AAAAAAAAA
 ENDMAP
 
 NAME:     vaults_room_7_city_down1_subvaults
-TAGS:     vaults_room_7_city_down1 allow_dup
+TAGS:     vaults_room allow_dup
 SHUFFLE:  GH
 SUBST:    H = .
 SUBVAULT: A : vaults_room_1_city_empty
 SUBVAULT: B : vaults_room_1_city_empty
 SUBVAULT: C : vaults_room_1_city_empty
 SUBVAULT: D : vaults_room_1_city_encounter
-: subvault_place_stair(_G)
+
 MAP
 DDD...AAA
 DDD.G.AAA
@@ -1650,7 +1622,7 @@ CCC...BBB
 ENDMAP
 
 NAME:     vaults_room_7_city_up3_glass_box
-TAGS:     vaults_room_7_city_up3 allow_dup
+TAGS:     vaults_room allow_dup
 SUBST:    G : G__
 KPROP:    _ = no_rtele_into
 SHUFFLE:  pqrs
@@ -1676,7 +1648,7 @@ xxxDDDxxx
 ENDMAP
 
 NAME:     vaults_room_7_city_down3_cross
-TAGS:     vaults_room_7_city_down3 allow_dup
+TAGS:     vaults_room allow_dup
 SHUFFLE:  GHI
 SUBST:    HI = .
 SHUFFLE:  {}
@@ -2014,7 +1986,7 @@ NAME:     vaults_room_10_spin_stairs1_spiral
 TAGS:     vaults_room_10_spin_up1
 TAGS:     vaults_room_10_spin_down1 allow_dup
 NSUBST:   { = 1:{ / 1:0 / *=0%..
-: subvault_place_stair(_G)
+
 MAP
 ..........
 .x+xxxxxx.
@@ -2134,7 +2106,7 @@ NAME:     vaults_room_10_spin_secret_pinwheel
 TAGS:     vaults_room_10_spin_secret allow_dup no_monster_gen no_item_gen
 NSUBST:   * = 1:* / *=***1
 MONS:     vault guard
-: subvault_place_stair(_G)
+
 : vaults_standard_loot(_G)
 MAP
 x{+....xxx
@@ -2547,7 +2519,7 @@ SUBST:    HJ = .
 SUBST:    I : xG
 NSUBST:   { : 1:{ / *:x
 SUBVAULT: A : vaults_door_10
-: subvault_place_stair(_G)
+
 MAP
 H.G....xxx
 .......{xx
@@ -2825,7 +2797,7 @@ TAGS:     vaults_room_10_dead_end_up1
 TAGS:     vaults_room_10_dead_end_down1 allow_dup
 SUBST:    - = x+
 NSUBST:   { = 1:{ / *:.
-: subvault_place_stair(_G)
+
 MAP
 xxxxxxxxxx
 xxxxxx...{
@@ -3340,7 +3312,7 @@ NSUBST:   q = 1:+ / *:x
 NSUBST:   r = 1:+ / *:x
 NSUBST:   s = 1:+ / *:x
 NSUBST:   _ = 1:0 / 1:0% / *:.
-: subvault_place_stair(_G)
+
 MAP
 ...Gx+xG....
 ..I.x.x.I...
@@ -4052,7 +4024,7 @@ SUBVAULT: B : vaults_door_15
 SUBVAULT: C : vaults_door_15
 SUBVAULT: D : vaults_door_15
 SUBVAULT: E : vaults_door_15
-: subvault_place_stair(_G)
+
 MAP
 xxxI.......Ixxx
 xxxG.......Gxxx
@@ -4081,7 +4053,7 @@ SUBST:    " : x..
 SHUFFLE:  12
 SUBST:    2 = x
 SUBST:    1 : 1xxxx
-: subvault_place_stair(_G)
+
 MAP
 uuyz.......yyuu
 uuzz...2...zzuu
@@ -4329,7 +4301,7 @@ NSUBST:   1 = 1:9 / *=9..
 NSUBST:   $ = 2:g / 6:f / 10:e / 19:d / *:.
 SUBVAULT: A : vaults_room_15_concentric_circles
 : vaults_numbered_gold_items(_G)
-: subvault_place_stair(_G)
+
 validate {{ return has_exit_from_glyph('_') }}
 MAP
 $$$$$$$$$$$$$$$
@@ -4366,7 +4338,7 @@ MONS:     vault guard
 MONS:     stone golem
 MONS:     iron golem
 MONS:     crystal golem
-: subvault_place_stair(_G)
+
 : vaults_standard_loot(_G)
 MAP
 xxx.........xxx
@@ -4389,7 +4361,7 @@ ENDMAP
 NAME:     vaults_room_15_spin_secret_subvault_10
 TAGS:     vaults_room_15_spin_secret allow_dup
 SUBVAULT: A : vaults_room_10_city_loot
-: subvault_place_stair(_G)
+
 MAP
 ...............
 .AAAAAAAAAAAA..
@@ -5822,7 +5794,7 @@ KMASK:    _ = no_monster_gen
 SUBST:    1 : 1__
 MONS:     vault guard
 : vaults_ornamental_pool(_G)
-: subvault_place_stair(_G)
+
 MAP
 IxJxxJH...HJxxJxI
 xxxxxxx+++xxxxxxx
