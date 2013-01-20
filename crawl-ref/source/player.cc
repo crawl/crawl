@@ -2776,6 +2776,27 @@ void forget_map(bool rot)
 #endif
 }
 
+void _remove_temp_mutations()
+{
+    int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
+        max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
+        2 + random2(3)));
+    
+    if (num_remove >= you.attribute[ATTR_TEMP_MUTATIONS])
+        mpr("You feel the corruption within you wane completely.", MSGCH_DURATION);
+    else
+        mpr("You feel the corruption within you wane somewhat.", MSGCH_DURATION);
+    
+    for (int i = 0; i < num_remove; ++i)
+        delete_temp_mutation();
+    
+    if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
+    {
+        you.attribute[ATTR_TEMP_MUT_XP] += 
+            min(you.experience_level, 17) * (350 + roll_dice(5, 350)) / 17;
+    }
+}
+
 int get_exp_progress()
 {
     if (you.experience_level >= 27)
@@ -2881,6 +2902,13 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     if (actual_gain != NULL)
         *actual_gain = you.experience - old_exp;
+    
+    if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
+    {
+        you.attribute[ATTR_TEMP_MUT_XP] -= exp_gained;
+        if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
+            _remove_temp_mutations();
+    }
 }
 
 static void _draconian_scale_colour_message()

@@ -2837,24 +2837,6 @@ static void _decrement_durations()
                           0,
                           "Your shroud begins to fray at the edges.");
 
-    if (_decrement_a_duration(DUR_TEMP_MUTATIONS, delay))
-    {
-
-        int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
-                max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
-                2 + random2(3)));
-
-        if (num_remove == you.attribute[ATTR_TEMP_MUTATIONS])
-            mpr("You feel the corruption within you wane completely.", MSGCH_DURATION);
-        else
-            mpr("You feel the corruption within you wane somewhat.", MSGCH_DURATION);
-
-        for (int i = 0; i < num_remove; ++i)
-            delete_temp_mutation();
-        if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
-            you.increase_duration(DUR_TEMP_MUTATIONS, 20 + roll_dice(3,10), 50);
-    }
-
     if (!env.sunlight.empty())
         process_sunlights();
 }

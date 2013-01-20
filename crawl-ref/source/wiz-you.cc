@@ -797,7 +797,9 @@ static const char* dur_names[] =
     "tornado cooldown",
     "nausea",
     "ambrosia",
+#if TAG_MAJOR_VERSION == 34
     "temporary mutations",
+#endif
     "disjunction",
     "vehumet gift"
 };
