@@ -1858,11 +1858,14 @@ void handle_monster_move(monster* mons)
         if (mons->type == MONS_TIAMAT && one_chance_in(3))
             draconian_change_colour(mons);
 
-        if  (mons->type == MONS_ASMODEUS)
+        if  (mons->type == MONS_ASMODEUS
+             || mons->type == MONS_CHAOS_BUTTERFLY)
         {
             for (adjacent_iterator ai(mons->pos()); ai; ++ai)
                 if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-                    place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), mons);
+                    place_cloud(mons->type == MONS_ASMODEUS ? CLOUD_FIRE
+                                                            : CLOUD_RAIN,
+                                *ai, 1 + random2(6), mons);
         }
 
         _monster_regenerate(mons);

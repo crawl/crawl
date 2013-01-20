@@ -2806,6 +2806,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_CHAOS_BREATH;
     // Intentional fallthrough
 
+    case MONS_CHAOS_BUTTERFLY:
+        if (spell == SPELL_NO_SPELL)
+            spell = SPELL_SUMMON_TWISTER;
+    // Intentional fallthrough
+
     // Dragon breath weapons:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
@@ -2828,7 +2833,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
         }
 
-        if (mons->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
+        if (mons->type != MONS_HELL_HOUND
+            && mons->type != MONS_CHAOS_BUTTERFLY
+            && x_chance_in_y(3, 13)
             || one_chance_in(10))
         {
             setup_mons_cast(mons, beem, spell);
@@ -2846,10 +2853,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
             }
 
             // Fire tracer.
-            fire_tracer(mons, beem);
+            bool spellOK = true;
+
+            if (spell_needs_tracer(spell))
+            {
+                fire_tracer(mons, beem);
+                spellOK = mons_should_fire(beem);
+            }
 
             // Good idea?
-            if (mons_should_fire(beem))
+            if (spellOK)
             {
                 make_mons_stop_fleeing(mons);
                 _mons_cast_abil(mons, beem, spell);

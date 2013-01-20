@@ -1119,6 +1119,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FRAGMENTATION:
     case SPELL_SHATTER:
     case SPELL_FRENZY:
+    case SPELL_SUMMON_TWISTER:
         return true;
     default:
         if (check_validity)
@@ -3695,6 +3696,17 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                           mons, duration, spell_cast, mons->pos(),
                           mons->foe, 0, god));
         }
+        return;
+
+    case SPELL_SUMMON_TWISTER:
+        duration  = min(2 + mons->hit_dice / 10, 6);
+
+        create_monster(
+            mgen_data(MONS_TWISTER,
+                      SAME_ATTITUDE(mons), mons,
+                      duration, spell_cast,
+                      mons->pos(), mons->foe, 0, god));
+
         return;
 
     // TODO: Outsource the cantrip messages and allow specification of

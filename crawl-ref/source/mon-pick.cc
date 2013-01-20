@@ -112,6 +112,7 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_ANCIENT_ZYME:
     case MONS_STARCURSED_MASS:
     case MONS_THRASHING_HORROR:
+    case MONS_CHAOS_BUTTERFLY:
         return 40;
 
     case MONS_IRON_IMP:

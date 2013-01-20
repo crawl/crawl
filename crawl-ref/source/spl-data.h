@@ -2920,6 +2920,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SUMMON_TWISTER, "Summon Twister",
+     SPTYP_SUMMONING | SPTYP_AIR,
+     SPFLAG_UNCLEAN | SPFLAG_MONSTER,
+     9,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
