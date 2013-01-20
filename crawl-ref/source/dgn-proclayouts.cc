@@ -13,17 +13,6 @@
 
 #include "mpr.h"
 
-bool less_dense_than(const dungeon_feature_type &a, const dungeon_feature_type &b)
-{
-    return true;
-    // Is only one feature solid?
-    if (feat_is_solid(a) ^ feat_is_solid(b))
-        return feat_is_solid(b);
-    if (feat_is_water(a) || feat_is_lava(a) || feat_is_statue_or_idol(a) && b == DNGN_FLOOR)
-        return true;
-    return false;
-}
-
 dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 {
     static dungeon_feature_type features[] = {
@@ -143,6 +132,22 @@ RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
     ProceduralSample sample = ChaosLayout(n.id[0] + seed, density)(p, offset);
     return ProceduralSample(p, sample.feat(), min(sample.changepoint(), changepoint));
 }
+
+ProceduralSample
+WastesLayout::operator()(const coord_def &p, const uint32_t offset) const
+{
+    double x = p.x;
+    double y = p.y;
+    double z = offset / 3;
+    worley::noise_datum n = worley::noise(x, y, z);
+    const uint32_t changepoint = offset + _get_changepoint(n, 3);
+    ProceduralSample sample = ChaosLayout(n.id[0], 10)(p, offset);
+    dungeon_feature_type feat = feat_is_solid(sample.feat())
+        ? DNGN_ROCK_WALL : DNGN_FLOOR;
+    return ProceduralSample(p, feat, min(sample.changepoint(), changepoint));
+}
+
+
 
 ProceduralSample
 RiverLayout::operator()(const coord_def &p, const uint32_t offset) const

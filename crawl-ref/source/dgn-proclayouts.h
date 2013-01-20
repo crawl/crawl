@@ -14,8 +14,6 @@
 #include "externs.h"
 #include "worley.h"
 
-bool less_dense_than(const dungeon_feature_type &a, const dungeon_feature_type &b);
-
 class ProceduralSample
 {
     public:
@@ -105,6 +103,13 @@ class RoilingChaosLayout : public ProceduralLayout
     private:
         const uint32_t seed;
         const uint32_t density;
+};
+
+class WastesLayout : public ProceduralLayout
+{
+    public:
+        WastesLayout() { };
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
 };
 
 class RiverLayout : public ProceduralLayout
