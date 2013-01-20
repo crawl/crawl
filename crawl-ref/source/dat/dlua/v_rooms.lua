@@ -281,7 +281,7 @@ function place_vaults_room(e,usage_grid,room, options)
       local spoty = crawl.random_range(2,gym-2)
       spot = { x = spotx, y = spoty }
       usage = vaults_get_usage(usage_grid,spot.x,spot.y)
-      if (usage.usage == "eligible" or usage.usage == "open") then
+      if (usage.usage == "eligible_open" or usage.usage == "eligible" or usage.usage == "open") then
         foundSpot = true
       end
     end

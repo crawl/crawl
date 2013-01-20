@@ -101,7 +101,7 @@ ENDMAP
 # Apologies if this is just too little code.
 NAME: layout_vaults_omnibox
 DEPTH: Vaults
-WEIGHT: 60
+WEIGHT: 30
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -122,7 +122,7 @@ ENDMAP
 # corners (potentially thick enough for cities in the middle) and more!
 NAME: layout_vaults_omnicross
 DEPTH: Vaults
-WEIGHT: 60
+WEIGHT: 30
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -194,7 +194,7 @@ ENDMAP
 # something very similar.
 NAME: layout_vaults_big_room
 DEPTH: Vaults
-WEIGHT: 1000
+WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
@@ -204,7 +204,7 @@ ENDMAP
 
 NAME: layout_vaults_chaotic_city
 DEPTH: Vaults
-WEIGHT: 1000
+WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
