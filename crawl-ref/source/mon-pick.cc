@@ -109,7 +109,6 @@ int mons_abyss_rare(monster_type mcls)
     // New abyssals, made more common for testing.
     case MONS_WRETCHED_STAR:
     case MONS_TENTACLED_STARSPAWN:
-    case MONS_LURKING_HORROR:
     case MONS_ANCIENT_ZYME:
     case MONS_STARCURSED_MASS:
     case MONS_THRASHING_HORROR:
@@ -124,6 +123,8 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_BONE_DRAGON:
     case MONS_SIXFIRHY:
     case MONS_SPATIAL_MAELSTROM:
+    case MONS_APOCALYPSE_CRAB:
+    case MONS_LURKING_HORROR:
         return 20;
 
     case MONS_EFREET:
@@ -182,7 +183,6 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_SHADOW_IMP:
     case MONS_SUN_DEMON:
     case MONS_WIGHT:
-    case MONS_APOCALYPSE_CRAB:
         return 10;
 
     case MONS_ICE_BEAST:
