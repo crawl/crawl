@@ -149,14 +149,15 @@ ENDMAP
 ################################################################################
 # Grid
 #
-# Basically like V:5 except it might be divided into smaller areas than quadrants
+# Basically like V:5 except it might be divided into smaller areas than quadrants,
+# and we randomise things by omitting or jittering some segments
 NAME: layout_vaults_quadrants
 DEPTH: Vaults
 WEIGHT: 20
 ORIENT: encompass
 CHANCE: 100%
 {{
-  -- TODO: smaller rooms with more grid divisions; jitter rooms when corridors are wide enough
+  -- TODO: smaller actual rooms with more grid divisions?; jitter rooms when corridors are wide enough
   -- Perhaps lose the outer border with 4 divisions
   local gxm,gym = dgn.max_bounds()
   local paint = { { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm-2, y = gym-2 } } }
@@ -172,10 +173,13 @@ CHANCE: 100%
 
   for i = 0, (bisectx-1), 1 do
     for j = 0, (bisecty-1), 1 do
-      table.insert(paint, { type = "wall",
-        corner1 = { x = 1 + math.floor((gxm - 2) / bisectx ) * i + padx, y = 1 + math.floor((gym - 2) / bisecty) * j + pady },
-        corner2 = { x = 1 + math.floor((gxm - 2) / bisectx ) * (i+1) - padx - 1, y = 1 + math.floor((gym - 2) / bisecty) * (j+1) - pady - 1 }
-      })
+      -- 1/3 chance to skip this quadrant
+      if not crawl.one_chance_in(3) then
+        table.insert(paint, { type = "wall",
+          corner1 = { x = 1 + math.floor((gxm - 2) / bisectx ) * i + padx, y = 1 + math.floor((gym - 2) / bisecty) * j + pady },
+          corner2 = { x = 1 + math.floor((gxm - 2) / bisectx ) * (i+1) - padx - 1, y = 1 + math.floor((gym - 2) / bisecty) * (j+1) - pady - 1 }
+        })
+      end
     end
   end
 
@@ -184,22 +188,23 @@ CHANCE: 100%
 MAP
 ENDMAP
 
-# The following three have zero weight because they're covered by omnibox but maybe could have fairly low weight
-# instead (esp. chaotic city) because they would require quite a specific and rare omnibox to happen
-
+# The following couple have somewhat low weights because they're not doing anything any differnt than omnibox can produce,
+# although it would take a fairly specific and relativly unlikely omnibox to produce exactly the sme effect so they
+# should stay in on their own right. However the basic maze is fairly pointless because omnibox quite regularly does
+# something very similar.
 NAME: layout_vaults_big_room
 DEPTH: Vaults
-WEIGHT: 0
+WEIGHT: 1000
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
-: build_vaults_big_room_layout(_G, 20)
+: build_vaults_big_room_layout(_G, 10, 20)
 MAP
 ENDMAP
 
 NAME: layout_vaults_chaotic_city
 DEPTH: Vaults
-WEIGHT: 10
+WEIGHT: 1000
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults

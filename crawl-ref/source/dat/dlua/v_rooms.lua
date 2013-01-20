@@ -401,7 +401,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       -- open space or we are attaching to an existing building). If our room type is "eligible" then we need to find all unused or eligible squares (meaning
       -- we are building into empty walls or attaching to more buildings).
       elseif (target_usage.usage == "restricted" or (usage.usage == "open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")
-        or (usage.usage == "eligible" and target_usage.usage ~= "eligible" and target_usage.usage ~= "none")) then
+        or (usage.usage == "eligible" and target_usage.usage ~= "eligible" and target_usage.usage ~= "none")
+        or (usage.usage == "eligible_open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")) then
         is_clear = false
         break
       end
@@ -500,7 +501,12 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   if usage.usage == "open" or usage.usage == "eligible_open" then wall_usage = "eligible_open" end
 
   -- TODO: Need to check which walls allow attachment (this data needs to be generated in pick_room from orient_* tags)
-
+  -- TODO: Additionally, if a wall overlaps with another eligible wall (that supports an exit) then we should carve a new door.
+  -- TODO: Furthermore, for open rooms, we should sometims carve a door on multiple sides anyway. So in fact door carving should
+  -- be happening here ... or even right at the end.
+  -- TODO: Finally finally, just because a wall is eligible doesn't mean it has connectivity. We need to use post placement
+  -- analysis to check for open squares. In the mean time it might be sensible to only make the middle few squares of a wall
+  -- eligible (and this will avoid silly corner attachments).
   local new_depth = 2
   if usage.depth ~= nil then new_depth = usage.depth + 1 end
   for n = 0, room_width - 1, 1 do
