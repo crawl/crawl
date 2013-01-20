@@ -157,15 +157,15 @@ ORIENT: encompass
 CHANCE: 100%
 {{
   local gxm,gym = dgn.max_bounds()
-  local paint = { { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm-1, y = gym-1 } } }
+  local paint = { { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm-2, y = gym-2 } } }
   local pad = 2
   local bisectx = crawl.random_range(2,4)
   local bisecty = crawl.random_range(2,4)
   for i = 0, (bisectx-1), 1 do
     for j = 0, (bisecty-1), 1 do
       table.insert(paint, { type = "wall",
-        corner1 = { x = 1 + math.floor((gxm - 2) / bisectx) * i + pad, y = 1 + math.floor((gym - 2) / bisecty) * j + pad },
-        corner2 = { x = 1 + math.floor((gxm - 2) / bisectx) * (i+1) - pad, y = 1 + math.floor((gym - 2) / bisecty) * (j+1) - pad }
+        corner1 = { x = 1 + math.floor((gxm - 2) / bisectx ) * i + pad, y = 1 + math.floor((gym - 2) / bisecty) * j + pad },
+        corner2 = { x = 1 + math.floor((gxm - 2) / bisectx ) * (i+1) - pad - 1, y = 1 + math.floor((gym - 2) / bisecty) * (j+1) - pad - 1 }
       })
     end
   end

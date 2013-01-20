@@ -192,7 +192,7 @@ function place_vaults_rooms(e,data, room_count, options)
   end
 
   -- Useful if things aren't working:
-  dump_usage_grid_pretty(data)
+  dump_usage_grid(data)
 
   return true
 end
@@ -211,14 +211,15 @@ function dump_usage_grid(usage_grid)
         elseif cell.reason == "door" then maprow = maprow .. "="
         else maprow = maprow .. "!" end
       elseif cell.usage == "empty" then maprow = maprow .. "."
-      elseif cell.usage == "eligible" then
-        if cell.depth == nil then maprow = maprow .. "!"
-        else maprow = maprow .. cell.depth end
-        -- if cell.normal == nil then maprow = maprow .. "!"
-        -- elseif cell.normal.x == -1 then maprow = maprow .. "<"
-        -- elseif cell.normal.x == 1 then maprow = maprow .. ">"
-        -- elseif cell.normal.y == -1 then maprow = maprow .. "^"
-        -- elseif cell.normal.y == 1 then maprow = maprow .. "v" end
+      elseif cell.usage == "eligible" or cell.usage == "eligible_open" then
+        -- if cell.depth == nil then maprow = maprow .. "!"
+        -- else maprow = maprow .. cell.depth end
+        if cell.normal == nil then maprow = maprow .. "!"
+        elseif cell.normal.x == -1 then maprow = maprow .. "<"
+        elseif cell.normal.x == 1 then maprow = maprow .. ">"
+        elseif cell.normal.y == -1 then maprow = maprow .. "^"
+        elseif cell.normal.y == 1 then maprow = maprow .. "v" end
+      elseif cell.usage == "open" then maprow = maprow .. "_"  -- Easier to see the starting room
       else maprow = maprow .. "?" end
     end
     print (maprow)
@@ -276,8 +277,8 @@ function place_vaults_room(e,usage_grid,room, options)
     -- Brute force, this needs optimising, but for now try poll the grid up to 5000 times until we find an eligible spot
     while spotTries < maxSpotTries and not foundSpot do
       spotTries = spotTries + 1
-      local spotx = crawl.random_range(0,gxm-1)
-      local spoty = crawl.random_range(0,gxm-1)
+      local spotx = crawl.random_range(2,gxm-2)
+      local spoty = crawl.random_range(2,gym-2)
       spot = { x = spotx, y = spoty }
       usage = vaults_get_usage(usage_grid,spot.x,spot.y)
       if (usage.usage == "eligible" or usage.usage == "open") then
@@ -460,7 +461,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     dgn.fill_grd_area(door_c1.x, door_c1.y, door_c2.x, door_c2.y, "closed_door")
 
     -- Optionally generate windows
-    if door_length < room_width and crawl.one_chance_in(5) then -- and not (room.type == "vault" and dgn.has_tag(room.map,"vaults_no_windows")) then
+    if door_length < room_width and crawl.one_chance_in(5) and (room.map == nil or not dgn.has_tag(room.map,"vaults_no_windows")) then
       local window_pos1 = crawl.random_range(0, door_start - 1)
       local window_pos2 = crawl.random_range(0, door_start - 1)
       local window_1l = vaults_vector_add(room_base, { x = window_pos1, y = -1 }, v_wall, v_normal)
@@ -498,6 +499,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local wall_usage = "eligible"
   if usage.usage == "open" or usage.usage == "eligible_open" then wall_usage = "eligible_open" end
 
+  -- TODO: Need to check which walls allow attachment (this data needs to be generated in pick_room from orient_* tags)
+
   local new_depth = 2
   if usage.depth ~= nil then new_depth = usage.depth + 1 end
   for n = 0, room_width - 1, 1 do
@@ -506,15 +509,15 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     vaults_set_usage(usage_grid,p1.x,p1.y,{ usage = "restricted", room = room, reason = "door" })
     -- Rear wall
     local p2 = vaults_vector_add(room_base,{x = n, y = room_height}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = wall_usage, normal = vector_rotate(normals[1],v_normal_dir), room = room, depth = new_depth })
+    vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = wall_usage, normal = vector_rotate(normals[1],-v_normal_dir), room = room, depth = new_depth })
   end
   for n = 0, room_height - 1, 1 do
     -- Left wall
     local p3 = vaults_vector_add(room_base,{x = -1, y = n}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = wall_usage, normal = vector_rotate(normals[2],v_normal_dir), room = room, depth = new_depth })
+    vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = wall_usage, normal = vector_rotate(normals[2],-v_normal_dir), room = room, depth = new_depth })
     -- Right wall
     local p4 = vaults_vector_add(room_base,{x = room_width, y = n}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = wall_usage, normal = vector_rotate(normals[4],v_normal_dir), room = room, depth = new_depth })
+    vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = wall_usage, normal = vector_rotate(normals[4],-v_normal_dir), room = room, depth = new_depth })
   end
 
   -- TODO: We might want to get some data from the placed map e.g. tags and return it
