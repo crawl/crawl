@@ -796,20 +796,14 @@ bool mons_is_native_in_branch(const monster* mons,
         return (mons->type == MONS_DANCING_WEAPON);
 
     case BRANCH_ABYSS:
-        switch (mons->type)
-        {
-            case MONS_ABOMINATION_LARGE:
-            case MONS_ABOMINATION_SMALL:
-            case MONS_LURKING_HORROR:
-            case MONS_TENTACLED_MONSTROSITY:
-            case MONS_TENTACLED_STARSPAWN:
-            case MONS_THRASHING_HORROR:
-            case MONS_UNSEEN_HORROR:
-            case MONS_WRETCHED_STAR:
-                return true;
-            default:
-                return false;
-        }
+        return (mons_is_abyssal_only(mons->type)
+                || mons->type == MONS_ABOMINATION_LARGE
+                || mons->type == MONS_ABOMINATION_SMALL
+                || mons->type == MONS_TENTACLED_MONSTROSITY
+                || mons->type == MONS_TENTACLED_STARSPAWN
+                || mons->type == MONS_THRASHING_HORROR
+                || mons->type == MONS_UNSEEN_HORROR);
+
     default:
         return false;
     }
