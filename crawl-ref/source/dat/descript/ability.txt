@@ -507,11 +507,6 @@ usual busy pace, monsters will wander, perishable items will decay, plants will
 grow. After some time has passed, you will return in the same state as the very
 second you departed.
 %%%%
-Renounce Religion
-
-Renounce your faith. This will make your character leave your god (and usually
-anger said god).
-%%%%
 # Jiyva
 Request Jelly
 
@@ -543,6 +538,18 @@ Sacrifice part of one of your skills to improve another.
 End Transfer Knowledge
 
 Abort an ongoing skill transfer.
+%%%%
+# Vehumet
+Memorise spell
+
+Immediately gain knowledge of a destructive spell offered to you by Vehumet.
+The offer will expire after a short while. Check the Religion screen (^) to
+see which spell is offered.
+%%%%
+Renounce Religion
+
+Renounce your faith. This will make your character leave your god (and usually
+anger said god).
 %%%%
 # Zotdef
 Make dart trap

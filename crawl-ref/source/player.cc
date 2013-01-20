@@ -3782,6 +3782,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_FLIGHT:
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
+    case DUR_VEHUMET_GIFT:
     case DUR_SLIMIFY:
         return (10 * BASELINE_DELAY);
 
@@ -5368,7 +5369,9 @@ void player::init()
     burden          = 0;
     burden_state    = BS_UNENCUMBERED;
     spells.init(SPELL_NO_SPELL);
+    vehumet_recent_spells.clear();
     spell_no        = 0;
+    vehumet_gift    = SPELL_NO_SPELL;
     char_direction  = GDT_DESCENDING;
     opened_zot      = false;
     royal_jelly_dead = false;

@@ -90,6 +90,10 @@ bool bless_follower(monster* follower = NULL,
                     bool (*suitable)(const monster* mon) = is_follower,
                     bool force = false);
 
+// Vehumet gift interface.
+bool vehumet_is_currently_gifting();
+bool vehumet_accept_gift();
+
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_likes_item(god_type god, const item_def& item);
 bool god_likes_items(god_type god, bool greedy_explore = false);

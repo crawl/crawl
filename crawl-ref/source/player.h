@@ -95,7 +95,10 @@ public:
   int burden;
   burden_state_type burden_state;
   FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
+  std::list<spell_type> vehumet_recent_spells;
+
   uint8_t spell_no;
+  spell_type vehumet_gift;
   game_direction_type char_direction;
   bool opened_zot;
   bool royal_jelly_dead;

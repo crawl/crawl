@@ -452,15 +452,6 @@ bool spell_harms_area(spell_type spell)
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    if (vehumet_supports_spell(which_spell)
-        && you.religion == GOD_VEHUMET
-        && !player_under_penance()
-        && you.piety >= piety_breakpoint(3)
-        && _seekspell(which_spell)->level >= 5)
-    {
-        return (_seekspell(which_spell)->level - 1);
-    }
-
     return (_seekspell(which_spell)->level);
 }
 
@@ -980,7 +971,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && !player_under_penance()
-        && you.piety >= piety_breakpoint(2))
+        && you.piety >= piety_breakpoint(3))
     {
         maxrange++;
         minrange++;
