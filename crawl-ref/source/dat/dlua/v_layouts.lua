@@ -137,14 +137,24 @@ function build_vaults_maze_layout(e,veto_callback)
   local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 3, max_room_size = 25 })
 
 end
--- Uses a custom vetor function to alternate between up or down connections depending on oddness of depth
+-- Uses a custom veto function to alternate between up or down connections every {dist} rooms
 function build_vaults_maze_snakey_layout(e)
-    print("Snakey Maze Layout")
-    local which = 0
-    if crawl.coinflip() then which = 1 end
+  print("Snakey Maze Layout")
+
+  local which = 0
+  if crawl.coinflip() then which = 1 end
+
+  -- How many rooms to draw before alternating
+  -- When it's 1 it doesn't create an obvious visual effect but hopefully in gameplay
+  -- it will be more obvious.
+  local dist = crawl.random_range(1,3)
+  -- Just to be fair we'll offset by a number, this will determine how far from the
+  -- first room it goes before the first switch
+  local offset = crawl.random_range(0,dist-1)
+  -- Callback function
   local function callback(usage,room)
     if usage.normal == nil or usage.depth == nil then return false end
-    local odd = usage.depth % 2
+    local odd = (math.floor(usage.depth/dist)+offset) % 2
     if odd == which then
       if usage.normal.y == 0 then return true end
       return false
@@ -155,16 +165,20 @@ function build_vaults_maze_snakey_layout(e)
   build_vaults_maze_layout(e,callback)
 end
 
--- Goes in just one direction for a few rooms then branches out
-
+-- Goes just either horizontally or vertically for a few rooms then branches out, makes
+-- an interesting sprawly maze with two bulby areas
 function build_vaults_maze_bifur_layout(e)
-    print("Bifur Maze Layout")
+
+  print("Bifur Maze Layout")
   local which = crawl.coinflip()
   local target_depth = crawl.random_range(2,4)
+
+  -- Callback function
   local function callback(usage,room)
     if usage.normal == nil then return false end
     if usage.depth == nil or usage.depth > target_depth then return false end
-
+    -- TODO: Should also check if the coord is within a certain distance of map edge as an emergency bailout
+    -- ... but we don't have the coord here right now
     if which then
       if usage.normal.y == 0 then
         return true
@@ -179,3 +193,4 @@ function build_vaults_maze_bifur_layout(e)
   end
   build_vaults_maze_layout(e,callback)
 end
+-- TODO: Spirally maze
