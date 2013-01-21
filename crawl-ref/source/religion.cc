@@ -2274,7 +2274,7 @@ bool do_god_gift(bool forced)
                     more();
                     you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
                     if (gifts >= 5)
-                        _inc_gift_timeout(spell_difficulty(spell)^2 / 4);
+                        _inc_gift_timeout(30 + random2avg(20, 2));
                     you.num_current_gifts[you.religion]++;
                     you.num_total_gifts[you.religion]++;
                     take_note(Note(NOTE_OFFERED_SPELL, you.vehumet_gift));
