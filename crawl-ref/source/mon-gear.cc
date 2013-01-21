@@ -411,6 +411,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         break;
 
+    case MONS_LAMIA:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_HALBERD, WPN_GLAIVE, WPN_BARDICHE,
+                                      -1);
+        level = MAKE_GOOD_ITEM;
+        break;
+
     case MONS_GNOLL_SHAMAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -2054,6 +2062,13 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         }
         else
             return;
+        break;
+
+    case MONS_LAMIA:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_NAGA_BARDING;
+        level          = MAKE_GOOD_ITEM;
         break;
 
     case MONS_GASTRONOK:

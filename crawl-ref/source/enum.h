@@ -2535,6 +2535,7 @@ enum monster_type                      // menv[].type
     MONS_SPATIAL_MAELSTROM,
 
     MONS_JORGRUN,
+    MONS_LAMIA,
 
     NUM_MONSTERS,               // used for polymorph
 

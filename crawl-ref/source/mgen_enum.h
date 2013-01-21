@@ -70,6 +70,7 @@ enum band_type
     BAND_SPIDER,
     BAND_JUMPING_SPIDER,
     BAND_TARANTELLA,
+    BAND_LAMIA,
     NUM_BANDS                   // always last
 };
 
