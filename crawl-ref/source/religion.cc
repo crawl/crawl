@@ -2029,13 +2029,24 @@ vector<spell_type> _vehumet_eligible_gift_spells()
     return (eligible_spells);
 }
 
+int _vehumet_weighting(spell_type spell)
+{
+    int bias = 200 + elemental_preference(spell, 10);
+    bias = std::min(std::max(bias, 40), 360);
+    return bias;
+}
+
 spell_type _vehumet_find_spell_gift()
 {
     vector<spell_type> eligible_spells = _vehumet_eligible_gift_spells();
     spell_type spell = SPELL_NO_SPELL;
+    int total_weight = 0;
+    int this_weight = 0;
     for (unsigned int i = 1; i <= eligible_spells.size(); ++i)
     {
-        if (one_chance_in(i))
+        this_weight = _vehumet_weighting(eligible_spells.at(i - 1));
+        total_weight += this_weight;
+        if (x_chance_in_y(this_weight, total_weight))
             spell = eligible_spells.at(i - 1);
     }
     return (spell);

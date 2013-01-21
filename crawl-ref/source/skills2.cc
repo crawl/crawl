@@ -638,6 +638,24 @@ static skill_type _get_opposite(skill_type sk)
     }
 }
 
+int elemental_preference(skill_type sk, int scale)
+{
+    const skill_type sk2 = _get_opposite(sk);
+    if (sk2 == SK_NONE)
+        return 0;
+    return (you.skill(sk, scale) - you.skill(sk2, scale));
+}
+
+int elemental_preference(spell_type spell, int scale)
+{
+    skill_set skill_list;
+    spell_skills(spell, skill_list);
+    int preference = 0;
+    for (skill_set_iter it = skill_list.begin(); it != skill_list.end(); ++it)
+        preference += elemental_preference(*it, scale);
+    return preference;
+}
+
 /*
  * Compare skill levels
  *
