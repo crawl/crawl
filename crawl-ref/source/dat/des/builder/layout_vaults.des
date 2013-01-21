@@ -155,6 +155,7 @@ NAME: layout_vaults_quadrants
 DEPTH: Vaults
 WEIGHT: 20
 ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
 CHANCE: 100%
 {{
   -- TODO: smaller actual rooms with more grid divisions?; jitter rooms when corridors are wide enough

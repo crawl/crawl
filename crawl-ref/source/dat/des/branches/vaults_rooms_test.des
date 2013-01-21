@@ -2,8 +2,20 @@
 # Useful for making sure feature are working as expected
 
 # 6x6 room filled with 8s and 9s testing level generation
+NAME:     vaults_test_room_stairs
+TAGS:     vaults_test_2_room transparent luniq_stairs
+CHANCE:   100%
+MAP
+......
+......
+.v{}v.
+..[]..
+.v()v.
+......
+ENDMAP
+
 NAME:     vaults_test_room_monsters
-TAGS:     vaults_test_room allow_dup
+TAGS:     vaults_test_2_room allow_dup transparent
 SUBST:    . = .....889
 MAP
 ......

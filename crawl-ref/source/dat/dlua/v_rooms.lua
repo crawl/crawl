@@ -135,9 +135,14 @@ end
 
 local function analyse_vault_post_placement(e,usage_grid,room,result,options)
 
-  -- for p in iter.rect_iterator(dgn.point(p1.x, p1.y), dgn.point(p2.x, p2.y)) do
-
-  -- end
+  result.stairs = { }
+  for p in iter.rect_iterator(dgn.point(room.origin.x, room.origin.y), dgn.point(room.opposite.x, room.opposite.y)) do
+    if (feat.is_stone_stair(p.x,p.y)) then
+      -- Remove the stair and remember it
+      dgn.grid(p.x,p.y,"floor") --TODO: Be more intelligent about how to replace it
+      table.insert(result.stairs, { pos = { x = p.x, y = p.y } })
+    end
+  end
 
 end
 
@@ -149,7 +154,8 @@ function place_vaults_rooms(e,data, room_count, options)
   if options.min_room_size == nil then options.min_room_size = 5 end
   if options.max_room_size == nil then options.max_room_size = 15 end
   if options.max_room_depth == nil then options.max_room_depth = 0 end -- No max
-  if options.emty_chance == nil then options.empty_chance = 50 end -- Chance in 100
+  if options.emty_chance == nil then options.empty_chance = 30 end -- Chance in 100
+  local results = { }
 
   -- Attempt to place as many rooms as we've been asked for
   -- for i = 1, 10, 1 do
@@ -158,7 +164,6 @@ function place_vaults_rooms(e,data, room_count, options)
     local tries = 0
     local maxTries = 50
 
-    local results = { }
     -- Try several times to find a room that passes placement (it could get vetoed at the placement stage,
     -- for instance low-depth rooms might be required to have multiple entrances)
     while tries < maxTries and not placed do
@@ -178,9 +183,38 @@ function place_vaults_rooms(e,data, room_count, options)
         end
       end
     end
+
   end
 
   -- TODO: Finally, pick the rooms where we'll place the stairs
+    -- Now we need some stairs
+    local stairs = { }
+    for i, r in ipairs(results) do
+      for j, s in ipairs(r.stairs) do
+       if s ~= nil then table.insert(stairs,s) end
+      end
+    end
+
+    local stair_types = {
+      "stone_stairs_down_i", "stone_stairs_down_ii",
+      "stone_stairs_down_iii", "stone_stairs_up_i",
+      "stone_stairs_up_ii", "stone_stairs_up_iii" } -- , "escape_hatch_up" }"escape_hatch_down",
+
+    -- Place three up, three down
+    -- TODO: Place some hatches / mimics too
+
+    for n = 1, 6, 1 do
+      -- Do we have any left?
+      if #stairs == 0 then break end
+      -- Any random stair
+      local i = crawl.random_range(1, #stairs)
+      local stair = stairs[i]
+      -- Place it
+      dgn.grid(stair.pos.x, stair.pos.y, stair_types[n])
+      -- Remove from list
+      table.remove(stairs,i)
+    end
+
 
   -- Set MMT_VAULT across the whole map depending on usage. This way the dungeon builder knows where to place standard vaults without messing up the layout.
   local gxm, gym = dgn.max_bounds()
@@ -188,6 +222,7 @@ function place_vaults_rooms(e,data, room_count, options)
     local usage = vaults_get_usage(data,p.x,p.y)
     if usage.usage == "restricted" or usage.usage == "eligible_open" or (usage.usage == "eligible" and usage.depth > 1) then
       dgn.set_map_mask(p.x,p.y)
+      -- dgn.unset_map_mask(p.x,p.y,32) -- Remove MMT_OPAQUE
     end
   end
 
@@ -404,11 +439,20 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local c1,c2 = vaults_vector_add(room_base, { x = 0, y = 0 }, v_wall, v_normal ),vaults_vector_add(room_base, { x = room_width-1, y = room_height-1 }, v_wall, v_normal )
   local origin, opposite = { x = math.min(c1.x,c2.x), y = math.min(c1.y,c2.y) },{ x = math.max(c1.x,c2.x), y = math.max(c1.y,c2.y) }
 
-  -- If placing in open space, we need to surround with walls
-  -- TODO: Randomly vary the wall type
-  if usage.usage == "open" then
-    dgn.fill_grd_area(origin.x - 1, origin.y - 1, opposite.x + 1, opposite.y + 1, "rock_wall")
-  end
+  -- Store; will also be used for vault analysis
+  room.origin = origin
+  room.opposite = opposite
+
+  -- Randomly vary the wall type
+  -- TODO: Use a spread from config instead so we can control this better or even set a level-wide theme of a particular type
+  -- TODO: Also, perhaps vaults should be able to specify the type of wall they want
+  local surrounding_wall_type = "rock_wall"
+  if crawl.one_chance_in(8) then surrounding_wall_type = "stone_wall" end
+  if crawl.one_chance_in(15) then surrounding_wall_type = "metal_wall" end
+  if crawl.one_chance_in(25) then surrounding_wall_type = "green_crystal_wall" end
+  -- if usage.usage == "open" or usage.usage == "eligible_open" then
+    dgn.fill_grd_area(origin.x - 1, origin.y - 1, opposite.x + 1, opposite.y + 1, surrounding_wall_type)
+  -- end
 
   -- Create floor space to place the vault in
   dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
@@ -458,7 +502,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       local window_2l = vaults_vector_add(room_base, { x = window_pos2, y = -1 }, v_wall, v_normal)
       local window_2r = vaults_vector_add(room_base, { x = room_width - 1 - window_pos2, y = -1 }, v_wall, v_normal)
 
-      dgn.fill_grd_area(window_1l.x, window_1l.y, window_2l.x, window_2l.y, "clear_stone_wall")
+      dgn.fill_grd_area(window_1l.x, window_1l.y, window_2l.x, window_2l.y, "clear_stone_wall") -- TODO: Vary window type
       dgn.fill_grd_area(window_1r.x, window_1r.y, window_2r.x, window_2r.y, "clear_stone_wall")
     end
 
