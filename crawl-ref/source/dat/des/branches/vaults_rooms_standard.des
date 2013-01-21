@@ -1,0 +1,52 @@
+NAME:     vaults_standard_mumra_x
+TAGS:     vaults_room
+SUBST:    8 = .......8889
+MAP
+.........
+.cc8)8cc.
+..cc8cc..
+..8ccc8..
+.).8c8.).
+..8ccc8..
+..cc8cc..
+.cc8)8cc.
+.........
+ENDMAP
+
+NAME:     vaults_standard_mumra_enter_the_diamond
+TAGS:     vaults_room vaults_orient_e vaults_orient_w
+SUBST:    8 = .........8889
+SUBST:    x = xxxxxxxcccvb
+MAP
+..88xxx88..
+..8xx8xx8..
+..xx8.8xx..
+.xx8...8xx.
+.....).....
+.xx8...8xx.
+..xx8.8xx..
+..8xx8xx8..
+..88xxx88..
+ENDMAP
+
+NAME:     vaults_standard_mumra_lines
+TAGS:     vaults_room vaults_orient_e vaults_orient_w
+SUBST:    x = xxxxxxxcccvb
+NSUBST:   8 = 7:8 / 2:9 / 1:0 / 2:) / *:.
+MAP
+..xx8.8....
+...xxx..8..
+..8..xxx...
+......8xx..
+..8.xx.....
+.8.xx...8..
+..xx..x....
+.xx.8.xx.8.
+.......x...
+..xx.8.xx..
+.8.xx.8.x8.
+..8.xx..xx.
+.........x.
+..8.xxxx...
+.xxxx.8....
+ENDMAP
