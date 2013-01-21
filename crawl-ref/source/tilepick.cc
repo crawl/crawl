@@ -950,6 +950,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_RAVEN;
     case MONS_PHOENIX:
         return TILEP_MONS_PHOENIX;
+    case MONS_CHAOS_BUTTERFLY:
+        return _mon_random(TILEP_MONS_BUTTERFLY);
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -1947,6 +1949,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT;
     case MONS_UNBORN_DEEP_DWARF:
         return TILEP_MONS_UNBORN_DEEP_DWARF;
+    case MONS_JORGRUN:
+        return TILEP_MONS_JORGRUN;
     case MONS_GNOME:
         return TILEP_MONS_GNOME;
 
@@ -2010,6 +2014,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // guardian serpent ('N')
     case MONS_AIZUL:
         return TILEP_MONS_AIZUL;
+    case MONS_LAMIA:
+        return TILEP_MONS_LAMIA;
 
     // ogre ('O')
     case MONS_EROLCHA:
