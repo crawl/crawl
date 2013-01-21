@@ -2335,7 +2335,9 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (cast_refrigeration(60, !already_known, false) != SPRET_SUCCESS)
+        if (cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
+                                  (already_known) ? &you : NULL, false)
+            != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;
@@ -2350,7 +2352,9 @@ static bool _vorpalise_weapon(bool already_known)
         break;
 
     case SPWPN_VENOM:
-        if (cast_toxic_radiance(!already_known) != SPRET_SUCCESS)
+        if (cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE, 60,
+                                  (already_known) ? &you : NULL, false)
+            != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;

@@ -1170,8 +1170,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         return false;
 
     // XXX: There should be a better way to do this than hardcoding
-    // monster-castable rod spells!  Also, there is currently no monster
-    // version of Olgreb's Toxic Radiance, used by the rod of venom.
+    // monster-castable rod spells!
     switch (mzap)
     {
     case SPELL_BOLT_OF_FIRE:
@@ -1208,6 +1207,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_SWARM:
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
         _rod_fired_pre(mons);
         mons_cast(mons, beem, mzap, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
