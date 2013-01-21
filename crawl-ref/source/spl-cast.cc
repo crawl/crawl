@@ -1157,9 +1157,23 @@ spret_type your_spells(spell_type spell, int powc,
                                "death!", GOD_KIKUBAAQUDGHA);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, -god, SPTYP_NECROMANCY,
+            MiscastEffect(&you, -GOD_KIKUBAAQUDGHA, SPTYP_NECROMANCY,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
+        }
+        else if (vehumet_supports_spell(spell)
+                 && you.religion != GOD_VEHUMET
+                 && you.penance[GOD_VEHUMET]
+                 && one_chance_in(20))
+        {
+            // And you thought you'd Fire Storm your way out of penance...
+            simple_god_message(" does not allow the disloyal to dabble in "
+                               "destruction!", GOD_VEHUMET);
+
+            // The spell still goes through, but you get a miscast anyway.
+            MiscastEffect(&you, -GOD_VEHUMET, SPTYP_CONJURATION,
+                          (you.experience_level / 2) + (spell_difficulty(spell) * 2),
+                          random2avg(88, 3), "the malice of Vehumet");
         }
 
         const int spfail_chance = spell_fail(spell);
