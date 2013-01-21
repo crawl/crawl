@@ -169,6 +169,7 @@ unseen_monster UNSEEN_CORPSE
 slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
+slot_vehumet ITEM_SLOT_VEHUMET
 
 error ERROR
 %rim 1

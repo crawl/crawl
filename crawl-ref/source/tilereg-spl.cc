@@ -14,6 +14,7 @@
 #include "stuff.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
+#include "tiledef-main.h"
 #include "tilepick.h"
 #include "viewgeom.h"
 
@@ -191,6 +192,10 @@ void SpellRegion::pack_buffers()
 
             if (item.flag & TILEI_FLAG_CURSOR)
                 m_buf.add_icons_tile(TILEI_CURSOR, x, y);
+
+            // Vehumet gift
+            if (item.flag & TILEI_FLAG_EQUIP)
+                m_buf.add_main_tile(TILE_ITEM_SLOT_VEHUMET, x, y);
 
             if (item.quantity != -1)
                 draw_number(x, y, item.quantity);
