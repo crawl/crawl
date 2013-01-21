@@ -678,7 +678,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         else
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_STAFF;
+            item.sub_type = WPN_QUARTERSTAFF;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VORPAL);
             set_equip_race(item, ISFLAG_DWARVEN);
         }
