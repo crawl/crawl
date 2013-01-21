@@ -323,7 +323,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_CHAOS_BUTTERFLY, 'b', ETC_RANDOM, "chaos butterfly",
-    M_NO_SKELETON | M_BATTY,
+    M_NO_SKELETON | M_BATTY | M_NO_POLY_TO,
     MR_VUL_POISON,
     0, 10, MONS_BUTTERFLY, MONS_CHAOS_BUTTERFLY, MH_NATURAL, -3,
     { {AT_BITE, AF_CHAOS, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
