@@ -2926,7 +2926,7 @@ void describe_spell(spell_type spelled, const item_def* item)
     if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
     {
         redraw_screen();
-        if (!learn_spell(spelled, item->sub_type) || !you.turn_is_over)
+        if (!learn_spell(spelled) || !you.turn_is_over)
             more();
         redraw_screen();
     }
@@ -4483,7 +4483,7 @@ void describe_god(god_type which_god, bool give_title)
                                            "You can memorise "
                                            + string(spell_title(you.vehumet_gift))
                                            + ".",
-                                           ABIL_VEHUMET_MEMORISE_SPELL);
+                                           ABIL_NON_ABILITY);
             }
         }
 
