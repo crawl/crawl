@@ -2628,6 +2628,11 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         }
         break;
 
+    case MONS_LAMIA:
+        band = BAND_LAMIA;
+        band_size = 5 + random2(4);
+        break;
+
     default: ;
     }
 
@@ -3004,6 +3009,15 @@ static monster_type _band_member(band_type band, int power)
                                            8, MONS_REDBACK,
                                           10, MONS_SPIDER,
                                            2, MONS_DEMONIC_CRAWLER,
+                                           0);
+        break;
+
+    case BAND_LAMIA:
+        // Total weight 40
+        mon_type = random_choose_weighted( 4, MONS_GREATER_NAGA,
+                                           8, MONS_NAGA_WARRIOR,
+                                          12, MONS_NAGA_MAGE,
+                                          16, MONS_NAGA,
                                            0);
         break;
 

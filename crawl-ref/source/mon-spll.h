@@ -1262,7 +1262,6 @@
       }
     },
 
-
     // demon lords
     {  MST_GERYON,
       {
@@ -1844,6 +1843,17 @@
        SPELL_FRAGMENTATION,
        SPELL_SHATTER,
        SPELL_BLINK
+      }
+    },
+
+    {  MST_LAMIA,
+      {
+       SPELL_IOOD,
+       SPELL_MESMERISE,
+       SPELL_HASTE,
+       SPELL_OLGREBS_TOXIC_RADIANCE,
+       SPELL_NO_SPELL,
+       SPELL_TELEPORT_SELF
       }
     },
 
