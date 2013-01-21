@@ -2031,8 +2031,8 @@ vector<spell_type> _vehumet_eligible_gift_spells()
 
 int _vehumet_weighting(spell_type spell)
 {
-    int bias = 200 + elemental_preference(spell, 10);
-    bias = std::min(std::max(bias, 40), 360);
+    int bias = 100 + elemental_preference(spell, 10);
+    bias = std::min(std::max(bias, 10), 190);
     return bias;
 }
 
