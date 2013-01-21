@@ -906,11 +906,11 @@ static bool _lugonu_retribution()
 
 static bool _vehumet_retribution()
 {
-    // conjuration/summoning theme
+    // conjuration theme
     const god_type god = GOD_VEHUMET;
 
     simple_god_message("'s vengeance finds you.", god);
-    MiscastEffect(&you, -god, coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
+    MiscastEffect(&you, -god, SPTYP_CONJURATION,
                    8 + you.experience_level, random2avg(98, 3),
                    "the wrath of Vehumet");
     return true;
