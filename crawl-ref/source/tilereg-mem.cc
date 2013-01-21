@@ -63,7 +63,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
     {
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
-        if (learn_spell(spell, m_items[item_idx].special))
+        if (learn_spell(spell))
             tiles.update_tabs();
         else
             flush_input_buffer(FLUSH_ON_FAILURE);
