@@ -711,6 +711,8 @@ naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
+%sdir mon/unique
+lamia MONS_LAMIA
 
 ## Ogres ('O')
 %sdir mon/unique
@@ -936,7 +938,10 @@ deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
 %rim 0
 undead/unborn_deep_dwarf MONS_UNBORN_DEEP_DWARF
 %rim 1
+%sdir mon/unique
+jorgrun MONS_JORGRUN
 # an entry vault
+%sdir mon
 gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
