@@ -2827,8 +2827,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (!you.visible_to(mons))
             break;
 
-        if ((mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN)
-            && mons->has_ench(ENCH_BREATH_WEAPON))
+        if ((mons_genus(mons->type) == MONS_DRAGON
+            || mons_genus(mons->type) == MONS_DRACONIAN)
+                && mons->has_ench(ENCH_BREATH_WEAPON))
         {
             break;
         }
@@ -2836,7 +2837,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->type != MONS_HELL_HOUND
             && mons->type != MONS_CHAOS_BUTTERFLY
             && x_chance_in_y(3, 13)
-            || one_chance_in(10))
+                || one_chance_in(10))
         {
             setup_mons_cast(mons, beem, spell);
 
