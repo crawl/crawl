@@ -1173,7 +1173,7 @@ static bool _learn_spell_checks(spell_type specspell)
         return false;
     }
 
-    if (spell_fail(specspell) >= 100)
+    if (specspell != you.vehumet_gift && spell_fail(specspell) >= 100)
     {
         mpr("This spell is too difficult to memorise!");
         return false;
