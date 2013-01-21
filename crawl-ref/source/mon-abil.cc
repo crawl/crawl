@@ -2834,10 +2834,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
         }
 
-        if (mons->type != MONS_HELL_HOUND
-            && mons->type != MONS_CHAOS_BUTTERFLY
-            && x_chance_in_y(3, 13)
-                || one_chance_in(10))
+        if (mons->type == MONS_HELL_HOUND || mons->type == MONS_CHAOS_BUTTERFLY
+                ? one_chance_in(10)
+                : x_chance_in_y(4, 13))
         {
             setup_mons_cast(mons, beem, spell);
 
