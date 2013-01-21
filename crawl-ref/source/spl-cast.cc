@@ -1350,7 +1350,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_liquefaction(powc, fail);
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return cast_refrigeration(powc, false, true, fail);
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_los_attack_spell(spell, powc, &you, true, true, fail);
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(powc, fail);
@@ -1467,9 +1468,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_MASS_ABJURATION:
         return cast_mass_abjuration(powc, fail);
-
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return cast_toxic_radiance(powc, false, fail);
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:
