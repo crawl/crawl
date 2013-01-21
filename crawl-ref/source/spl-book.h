@@ -33,7 +33,7 @@ int read_book(item_def &item, read_book_action_type action);
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool learn_spell();
-bool learn_spell(spell_type spell, int book = NUM_BOOKS);
+bool learn_spell(spell_type spell);
 bool forget_spell_from_book(spell_type spell, const item_def* book);
 
 string desc_cannot_memorise_reason(bool undead);

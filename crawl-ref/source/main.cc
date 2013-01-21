@@ -2337,14 +2337,7 @@ static void _decrement_durations()
         remove_regen(you.attribute[ATTR_DIVINE_REGENERATION]);
     }
 
-    if (_decrement_a_duration(DUR_VEHUMET_GIFT, delay, "Vehumet withdraws the offer.",
-                              coinflip(), "Vehumet won't offer you this gift forever..."))
-    {
-        simple_god_message(make_stringf(" denies you knowledge of %s.",
-                                        spell_title(you.vehumet_gift)).c_str());
-        you.vehumet_gift = SPELL_NO_SPELL;
-
-    }
+    _decrement_a_duration(DUR_VEHUMET_GIFT, delay);
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");
 

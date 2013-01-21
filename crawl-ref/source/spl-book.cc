@@ -689,6 +689,13 @@ static bool _get_mem_list(spell_list &mem_spells,
         _index_book(book, book_hash, num_unreadable, book_errors);
     }
 
+    // Handle Vehumet gifts
+    if (vehumet_is_currently_gifting())
+    {
+        book_hash[you.vehumet_gift] = NUM_BOOKS;
+        num_books++;
+    }
+
     if (book_errors)
         more();
 
@@ -830,6 +837,12 @@ bool has_spells_to_memorise(bool silent, int current_spell)
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
+    // List the Vehumet gift at the very top.
+    if (you.vehumet_gift == a)
+        return true;
+    else if (you.vehumet_gift == b)
+        return false;
+
     // List spells we can memorize right away first.
     if (player_spell_levels() >= spell_levels_required(a)
         && player_spell_levels() < spell_levels_required(b))
@@ -977,12 +990,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
         ostringstream desc;
 
         int colour = LIGHTGRAY;
+        if (spell == you.vehumet_gift)
+            colour = LIGHTBLUE;
         // Grey out spells for which you lack experience or spell levels.
-        if (spell_difficulty(spell) > you.experience_level
-            || player_spell_levels() < spell_levels_required(spell))
-        {
+        else if (spell_difficulty(spell) > you.experience_level
+                 || player_spell_levels() < spell_levels_required(spell))
             colour = DARKGRAY;
-        }
         else
             colour = spell_highlight_by_utility(spell);
 
@@ -1094,9 +1107,7 @@ bool learn_spell()
         return false;
     }
 
-    spells_to_books::iterator it = book_hash.find(specspell);
-
-    return learn_spell(specspell, it->second);
+    return learn_spell(specspell);
 }
 
 // Returns a string about why an undead character can't memorise a spell.
@@ -1171,7 +1182,7 @@ static bool _learn_spell_checks(spell_type specspell)
     return true;
 }
 
-bool learn_spell(spell_type specspell, int book)
+bool learn_spell(spell_type specspell)
 {
     if (!_learn_spell_checks(specspell))
         return false;

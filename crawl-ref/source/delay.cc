@@ -693,6 +693,12 @@ void handle_delay()
             break;
 
         case DELAY_MEMORISE:
+            if (static_cast<spell_type>(delay.parm1) == you.vehumet_gift)
+            {
+                string message = make_stringf(" grants you knowledge of %s.",
+                    spell_title(you.vehumet_gift));
+                simple_god_message(message.c_str());
+            }
             mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
             break;
 
@@ -1081,9 +1087,18 @@ static void _finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_MEMORISE:
+    {
+        spell_type spell = static_cast<spell_type>(delay.parm1);
         mpr("You finish memorising.");
-        add_spell_to_memory(static_cast<spell_type>(delay.parm1));
+        add_spell_to_memory(spell);
+        if (spell == you.vehumet_gift)
+        {
+            you.seen_spell[spell] = true;
+            you.vehumet_gift = SPELL_NO_SPELL;
+            you.duration[DUR_VEHUMET_GIFT] = 0;
+        }
         break;
+    }
 
     case DELAY_RECITE:
     {

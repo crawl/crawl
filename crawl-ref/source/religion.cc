@@ -1957,10 +1957,7 @@ static bool _jiyva_mutate()
 
 bool vehumet_is_currently_gifting()
 {
-    if (you.duration[DUR_VEHUMET_GIFT] && you.vehumet_gift != SPELL_NO_SPELL)
-        return (true);
-
-    return (false);
+    return (you.vehumet_gift != SPELL_NO_SPELL);
 }
 
 void _add_to_recent_spells(spell_type spell)
@@ -1980,35 +1977,6 @@ bool _is_recent_spell(spell_type spell)
     }
 
     return (false);
-}
-
-bool vehumet_accept_gift()
-{
-    if (player_spell_levels() >= spell_levels_required(you.vehumet_gift))
-    {
-        string prompt = make_stringf("Do you really want to memorise %s (Level %d)?",
-                                     spell_title(you.vehumet_gift),
-                                     spell_difficulty(you.vehumet_gift));
-        if (yesno(prompt.c_str(), true, 'n'))
-        {
-            take_note(Note(NOTE_GOD_GIFT, you.religion));
-            add_spell_to_memory(you.vehumet_gift);
-            you.seen_spell[you.vehumet_gift] = true;
-            prompt = make_stringf(" grants you knowledge of %s.",
-                                  spell_title(you.vehumet_gift));
-            simple_god_message(prompt.c_str());
-            you.vehumet_gift = SPELL_NO_SPELL;
-            you.duration[DUR_VEHUMET_GIFT] = 0;
-
-            return true;
-        }
-        else
-            canned_msg(MSG_OK);
-    }
-    else
-        mpr("You can't memorise that many levels of magic yet!");
-
-    return false;
 }
 
 vector<spell_type> _vehumet_eligible_gift_spells()
@@ -2279,11 +2247,10 @@ bool do_god_gift(bool forced)
 
         case GOD_VEHUMET:
             const int gifts = you.num_total_gifts[you.religion];
-            if (forced || !vehumet_is_currently_gifting()
+            if (forced || !you.duration[DUR_VEHUMET_GIFT]
                           && (you.piety >= piety_breakpoint(0) && gifts == 0
                               || you.piety >= 30 + random2(6) + 18 * gifts && gifts <= 5
                               || you.piety >= piety_breakpoint(4) && one_chance_in(20)))
-
             {
                 spell_type spell = _vehumet_find_spell_gift();
                 if (spell != SPELL_NO_SPELL)
