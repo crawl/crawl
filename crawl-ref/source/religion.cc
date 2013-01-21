@@ -2249,7 +2249,7 @@ bool do_god_gift(bool forced)
             const int gifts = you.num_total_gifts[you.religion];
             if (forced || !you.duration[DUR_VEHUMET_GIFT]
                           && (you.piety >= piety_breakpoint(0) && gifts == 0
-                              || you.piety >= 30 + random2(6) + 18 * gifts && gifts <= 5
+                              || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
                               || you.piety >= piety_breakpoint(4) && one_chance_in(20)))
             {
                 spell_type spell = _vehumet_find_spell_gift();
