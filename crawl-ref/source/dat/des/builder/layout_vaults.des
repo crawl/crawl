@@ -147,6 +147,24 @@ MAP
 ENDMAP
 
 ################################################################################
+# Omnigrid
+#
+# Uses a box-packing algorithm to subdivide the map into randomly-sized areas
+# which can either be mini city clusters or solid walls for embedding rooms in.
+#
+# Technically capable but unlikely to produce a quadrants layout.
+NAME: layout_vaults_omnigrid
+DEPTH: Vaults
+WEIGHT: 50
+ORIENT: encompass
+CHANCE: 100%
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults
+: build_vaults_layout(_G, "Omnigrid", layout_primitive_omnigrid())
+MAP
+ENDMAP
+
+
+################################################################################
 # Grid
 #
 # Basically like V:5 except it might be divided into smaller areas than quadrants,

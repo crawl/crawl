@@ -195,3 +195,83 @@ function build_vaults_maze_bifur_layout(e)
   build_vaults_maze_layout(e,callback)
 end
 -- TODO: Spirally maze
+
+-- Builds the paint array for omnigrid
+function layout_primitive_omnigrid()
+
+  local gxm,gym = dgn.max_bounds()
+  local options = {
+    subdivide_initial_chance = 100, -- % chance of subdividing at first level, if < 100 then we might just get chaotic city
+    subdivide_level_multiplier = 0.75,   -- Multiply subdivide chance by this amount with each level
+    minimum_size = 12,  -- Don't ever create areas smaller than this
+    fill_chance = 65, -- % chance of filling an area vs. leaving it open
+    fill_padding = 2,  -- Padding around a fill area, effectively this is half the corridor width
+  }
+  local results = omnigrid_subdivide_area(1,1,gxm-1,gym-1,options)
+  local paint = {}
+  for i, area in ipairs(result) do
+    -- TODO: Jitter / vary corridor widths (depending on size of area)
+    table.insert(paint,{ type = "floor", x1 = area.x1, y1 = area.y1, x2 = area.x2, y2 = area.x2 }
+    -- Fill the area?
+    if crawl.random2(100) < options.fill_chance then
+      table.insert(paint,{ type = "wall", x1 = area.x1 + options.fill_padding, y1 = area.y1 + options.fill_padding, x2 = area.x2 - options.fill_padding, y2 = area.x2 - options.fill_padding }
+    end
+  end
+  return paint
+end
+
+function omnigrid_subdivide_area(x1,y1,x2,y2,options,results,chance)
+  -- Default parameters
+  if results == nil then results = {} end
+  if chance == nil then chance = options.subdivide_initial_chance end
+
+  local subdiv_x, subdiv_y, subdivide = true,true,true
+  local width,height = x2-x1+1,y2-y1+1
+
+  -- Check which if any axes can be subdivided
+
+  if width < 2 * options.minimum_size then
+    subdiv_x = false
+  end
+  if height < 2 * options.minimum_size then
+    subdiv_y = false
+  end
+  if not subdiv_x and not subdiv_y then
+    subdivide = false
+  end
+
+  if crawl.random2(100) >= chance then
+    subdivide = false
+  end
+
+  if subdivide then
+    -- Choose axis? (Remember some might already be too small)
+    local which = "x"
+    if not subdiv_x then which = "y"
+    else if subdiv_y then
+      if crawl.coinflip() then which = "y"
+    end
+
+    local new_chance = chance * options.subdivide_level_multiplier
+
+    -- Could probably avoid this duplication but it's not that bad
+    if which == "x" then
+      local pos = crawl.random_range(options.minimum_size,width-options.minimum_size)
+      -- Create the two new areas
+      omnigrid_subdivide_area(x1,y1,x1 + pos - 1,y2,options,results,new_chance)
+      omnigrid_subdivide_area(x1 + pos,y1,x2,y2,options,results,new_chance)
+    else
+      local pos = crawl.random_range(options.minimum_size,height-options.minimum_size)
+      -- Create the two new areas
+      omnigrid_subdivide_area(x1,y1,x2,y2 + pos - 1,options,results,new_chance)
+      omnigrid_subdivide_area(x1,y1 + pos,x2,y2,options,results,new_chance)
+    end
+
+  else
+    -- End of subdivision; add an area
+    table.insert(results, { x1=x1,y1=y1,x2=x2,y2=y2 })
+  end
+
+  return results
+
+end
