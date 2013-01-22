@@ -2833,9 +2833,6 @@ bool _is_cancellable_scroll(scroll_type scroll)
 
 void read_scroll(int slot)
 {
-    if (you.form == TRAN_WISP)
-        return mpr("You have no means to unroll scrolls or open books.");
-
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -2878,6 +2875,12 @@ void read_scroll(int slot)
     {
         _handle_read_book(item_slot);
         return;
+    }
+
+    if (you.form == TRAN_WISP)
+    {
+        crawl_state.zero_turns_taken();
+        return mpr("You have no means to unroll scrolls.");
     }
 
     if (silenced(you.pos()))
