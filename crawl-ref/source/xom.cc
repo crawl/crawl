@@ -3338,7 +3338,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         return XOM_BAD_SUMMON_HOSTILES;
 
     int num_summoned = 0;
-    bool shadow_creatures = one_chance_in(3);
+    const bool shadow_creatures = one_chance_in(3);
 
     if (shadow_creatures)
     {
