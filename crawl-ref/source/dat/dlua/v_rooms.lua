@@ -186,34 +186,36 @@ function place_vaults_rooms(e,data, room_count, options)
 
   end
 
-  -- TODO: Finally, pick the rooms where we'll place the stairs
-    -- Now we need some stairs
-    local stairs = { }
-    for i, r in ipairs(results) do
-      for j, s in ipairs(r.stairs) do
-       if s ~= nil then table.insert(stairs,s) end
-      end
+  -- Now we need some stairs
+  local stairs = { }
+  for i, r in ipairs(results) do
+    for j, s in ipairs(r.stairs) do
+      if s ~= nil then table.insert(stairs,s) end
     end
+  end
 
-    local stair_types = {
-      "stone_stairs_down_i", "stone_stairs_down_ii",
-      "stone_stairs_down_iii", "stone_stairs_up_i",
-      "stone_stairs_up_ii", "stone_stairs_up_iii" } -- , "escape_hatch_up" }"escape_hatch_down",
+  local stair_types = {
+    "stone_stairs_down_i", "stone_stairs_down_ii",
+    "stone_stairs_down_iii", "stone_stairs_up_i",
+    "stone_stairs_up_ii", "stone_stairs_up_iii" } -- , "escape_hatch_up" }"escape_hatch_down",
 
-    -- Place three up, three down
-    -- TODO: Place some hatches / mimics too
+  -- Place three up, three down
+  -- TODO: Optionally place some hatches / mimics too
 
-    for n = 1, 6, 1 do
-      -- Do we have any left?
-      if #stairs == 0 then break end
-      -- Any random stair
-      local i = crawl.random_range(1, #stairs)
-      local stair = stairs[i]
-      -- Place it
-      dgn.grid(stair.pos.x, stair.pos.y, stair_types[n])
-      -- Remove from list
-      table.remove(stairs,i)
+  for n = 1, 6, 1 do
+    -- Do we have any left?
+    if #stairs == 0 then
+      print "NOT ENOUGH STAIRS"
+      break
     end
+    -- Any random stair
+    local i = crawl.random_range(1, #stairs)
+    local stair = stairs[i]
+    -- Place it
+    dgn.grid(stair.pos.x, stair.pos.y, stair_types[n])
+    -- Remove from list
+    table.remove(stairs,i)
+  end
 
 
   -- Set MMT_VAULT across the whole map depending on usage. This way the dungeon builder knows where to place standard vaults without messing up the layout.
