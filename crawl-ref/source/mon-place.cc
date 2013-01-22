@@ -2629,6 +2629,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         break;
 
     case MONS_LAMIA:
+        natural_leader = true;
         band = BAND_LAMIA;
         band_size = 5 + random2(4);
         break;
