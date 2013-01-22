@@ -3327,17 +3327,6 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     return XOM_DID_NOTHING;
 }
 
-static bool _has_min_animated_weapon_level()
-{
-    if (you.penance[GOD_XOM])
-        return true;
-
-    if (_xom_is_bored())
-        return (you.experience_level >= 4);
-
-    return (you.experience_level >= 7);
-}
-
 static int _xom_summon_hostiles(int sever, bool debug = false)
 {
     bool rc = false;
@@ -3345,70 +3334,47 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
     int result = XOM_DID_NOTHING;
 
-    // Nasty, but fun.
-    if (player_weapon_wielded() && _has_min_animated_weapon_level()
-        && one_chance_in(4) && !player_in_branch(BRANCH_ABYSS))
+    if (debug)
+        return XOM_BAD_SUMMON_DEMONS;
+
+    // The number of demons is dependent on severity, though heavily
+    // randomised.
+    int numdemons = sever;
+    for (int i = 0; i < 3; ++i)
+        numdemons = random2(numdemons + 1);
+    numdemons = min(numdemons + 1, 14);
+
+    // Limit number of demons by experience level.
+    if (!you.penance[GOD_XOM])
     {
-        if (debug)
-            return XOM_BAD_ANIMATE_WPN;
+        const int maxdemons = (you.experience_level / 2);
+        if (numdemons > maxdemons)
+            numdemons = maxdemons;
+    }
 
-        const item_def& weapon = *you.weapon();
-        const string wep_name = weapon.name(DESC_PLAIN);
-        rc = cast_tukimas_dance(100, GOD_XOM, true);
-
-        if (rc)
+    int num_summoned = 0;
+    for (int i = 0; i < numdemons; ++i)
+    {
+        if (create_monster(
+                mgen_data::hostile_at(
+                    _xom_random_demon(sever), "Xom",
+                    true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                    GOD_XOM)))
         {
-            static char wpn_buf[80];
-            snprintf(wpn_buf, sizeof(wpn_buf),
-                     "animates weapon (%s)", wep_name.c_str());
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, wpn_buf), true);
-            result = XOM_BAD_ANIMATE_WPN;
+            num_summoned++;
         }
     }
-    else
+
+    if (num_summoned > 0)
     {
-        if (debug)
-            return XOM_BAD_SUMMON_DEMONS;
+        static char summ_buf[80];
+        snprintf(summ_buf, sizeof(summ_buf),
+                 "summons %d hostile demon%s",
+                 num_summoned, num_summoned > 1 ? "s" : "");
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
-        // The number of demons is dependent on severity, though heavily
-        // randomised.
-        int numdemons = sever;
-        for (int i = 0; i < 3; ++i)
-            numdemons = random2(numdemons + 1);
-        numdemons = min(numdemons + 1, 14);
-
-        // Limit number of demons by experience level.
-        if (!you.penance[GOD_XOM])
-        {
-            const int maxdemons = (you.experience_level / 2);
-            if (numdemons > maxdemons)
-                numdemons = maxdemons;
-        }
-
-        int num_summoned = 0;
-        for (int i = 0; i < numdemons; ++i)
-        {
-            if (create_monster(
-                    mgen_data::hostile_at(
-                        _xom_random_demon(sever), "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
-                        GOD_XOM)))
-            {
-                num_summoned++;
-            }
-        }
-
-        if (num_summoned > 0)
-        {
-            static char summ_buf[80];
-            snprintf(summ_buf, sizeof(summ_buf),
-                     "summons %d hostile demon%s",
-                     num_summoned, num_summoned > 1 ? "s" : "");
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
-
-            rc = true;
-            result = XOM_BAD_SUMMON_DEMONS;
-        }
+        rc = true;
+        result = XOM_BAD_SUMMON_DEMONS;
     }
 
     if (rc)
@@ -4235,7 +4201,7 @@ static const string _xom_effect_to_name(int effect)
         "miscast (minor)", "miscast (major)", "miscast (nasty)",
         "stat loss", "teleportation", "swap weapons", "chaos upgrade",
         "mutation", "polymorph", "repel stairs", "confusion", "draining",
-        "torment", "animate weapon", "summon demons", "banishment (pseudo)",
+        "torment", "summon demons", "banishment (pseudo)",
         "banishment"
     };
 
