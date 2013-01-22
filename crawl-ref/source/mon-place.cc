@@ -2879,6 +2879,10 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
     case BAND_DEEP_TROLLS:
         mon_type = MONS_DEEP_TROLL;
+        if (one_chance_in(3))
+            mon_type = random_choose(MONS_DEEP_TROLL_EARTH_MAGE,
+                                     MONS_DEEP_TROLL_SHAMAN,
+                                     -1);
         break;
     case BAND_HOGS:
         mon_type = MONS_HOG;

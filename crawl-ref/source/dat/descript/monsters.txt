@@ -947,6 +947,15 @@ deep troll
 A stooped troll with dark skin, the cave-dwelling deep troll often travels in
 packs.
 %%%%
+deep troll earth mage
+
+A particularly intelligent deep troll, it wields earth magic to tunnel through
+the earth to allow it and its kin to ambush its foes.
+%%%%
+deep troll shaman
+
+A deep troll blessed with divine power to strengthen and hasten its kin.
+%%%%
 demigod
 
 The aura of power around this human-like figure immediately betrays its divine

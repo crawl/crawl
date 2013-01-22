@@ -1857,6 +1857,28 @@
       }
     },
 
+    {  MST_DEEP_TROLL_EARTH_MAGE,
+      {
+       SPELL_LRD,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_DIG,
+       SPELL_NO_SPELL,
+      }
+    },
+
+    {  MST_DEEP_TROLL_SHAMAN,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_HASTE_OTHER,
+       SPELL_MIGHT_OTHER,
+       SPELL_MINOR_HEALING,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

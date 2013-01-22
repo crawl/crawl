@@ -1568,6 +1568,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_IRON_TROLL;
     case MONS_DEEP_TROLL:
         return TILEP_MONS_DEEP_TROLL;
+    case MONS_DEEP_TROLL_EARTH_MAGE:
+        return TILEP_MONS_DEEP_TROLL_EARTH_MAGE;
+    case MONS_DEEP_TROLL_SHAMAN:
+        return TILEP_MONS_DEEP_TROLL_SHAMAN;
 
     // bears ('U')
     case MONS_GRIZZLY_BEAR:
@@ -3870,6 +3874,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_IRON_TROLL:
         return TILE_CORPSE_IRON_TROLL;
     case MONS_DEEP_TROLL:
+    case MONS_DEEP_TROLL_SHAMAN:
+    case MONS_DEEP_TROLL_EARTH_MAGE:
         return TILE_CORPSE_DEEP_TROLL;
 
     // bears ('U')
