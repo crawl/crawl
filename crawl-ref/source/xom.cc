@@ -3335,33 +3335,54 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
     int result = XOM_DID_NOTHING;
 
     if (debug)
-        return XOM_BAD_SUMMON_DEMONS;
-
-    // The number of demons is dependent on severity, though heavily
-    // randomised.
-    int numdemons = sever;
-    for (int i = 0; i < 3; ++i)
-        numdemons = random2(numdemons + 1);
-    numdemons = min(numdemons + 1, 14);
-
-    // Limit number of demons by experience level.
-    if (!you.penance[GOD_XOM])
-    {
-        const int maxdemons = (you.experience_level / 2);
-        if (numdemons > maxdemons)
-            numdemons = maxdemons;
-    }
+        return XOM_BAD_SUMMON_HOSTILES;
 
     int num_summoned = 0;
-    for (int i = 0; i < numdemons; ++i)
+    bool shadow_creatures = one_chance_in(3);
+
+    if (shadow_creatures)
     {
-        if (create_monster(
-                mgen_data::hostile_at(
-                    _xom_random_demon(sever), "Xom",
-                    true, 4, MON_SUMM_WRATH, you.pos(), 0,
-                    GOD_XOM)))
+        // Small number of shadow creatures.
+        int count = 2 + random2(4);
+        for (int i = 0; i < count; ++i)
         {
-            num_summoned++;
+            if (create_monster(
+                    mgen_data::hostile_at(
+                        RANDOM_MOBILE_MONSTER, "Xom",
+                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        GOD_XOM)))
+            {
+                num_summoned++;
+            }
+        }
+    }
+    else
+    {
+        // The number of demons is dependent on severity, though heavily
+        // randomised.
+        int numdemons = sever;
+        for (int i = 0; i < 3; ++i)
+            numdemons = random2(numdemons + 1);
+        numdemons = min(numdemons + 1, 14);
+
+        // Limit number of demons by experience level.
+        if (!you.penance[GOD_XOM])
+        {
+            const int maxdemons = (you.experience_level / 2);
+            if (numdemons > maxdemons)
+                numdemons = maxdemons;
+        }
+
+        for (int i = 0; i < numdemons; ++i)
+        {
+            if (create_monster(
+                    mgen_data::hostile_at(
+                        _xom_random_demon(sever), "Xom",
+                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        GOD_XOM)))
+            {
+                num_summoned++;
+            }
         }
     }
 
@@ -3369,12 +3390,13 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
     {
         static char summ_buf[80];
         snprintf(summ_buf, sizeof(summ_buf),
-                 "summons %d hostile demon%s",
-                 num_summoned, num_summoned > 1 ? "s" : "");
+                 "summons %d hostile %s%s",
+                 num_summoned, shadow_creatures ? "shadow creature" : "demon",
+                 num_summoned > 1 ? "s" : "");
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
         rc = true;
-        result = XOM_BAD_SUMMON_DEMONS;
+        result = XOM_BAD_SUMMON_HOSTILES;
     }
 
     if (rc)
