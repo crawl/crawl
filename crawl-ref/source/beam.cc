@@ -847,7 +847,7 @@ void bolt::digging_wall_effect()
     case DNGN_SLIMY_WALL:
     case DNGN_GRATE:
         nuke_wall(pos());
-        if (!msg_generated)
+        if (!msg_generated && you.see_cell(pos()))
         {
             obvious_effect = true;
             msg_generated = true;
@@ -855,6 +855,7 @@ void bolt::digging_wall_effect()
             string wall;
             if (feat == DNGN_GRATE)
             {
+                // XXX: should this change for monsters?
                 mpr("The damaged grate falls apart.");
                 return;
             }
@@ -864,7 +865,9 @@ void bolt::digging_wall_effect()
                 wall = "weird stuff";
             else
                 wall = "rock";
-            mprf("The %s liquefies and sinks out of sight.", wall.c_str());
+            mprf("%s %s liquefies and sinks out of sight.",
+                 agent() && agent()->is_player() ? "The" : "Some",
+                 wall.c_str());
             // This is silent.
         }
         break;
