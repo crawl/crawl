@@ -67,7 +67,7 @@ local function pick_room(e, options)
 
   local weights = { }
 
-  -- Do we just want an empty room?
+  -- Do we just want an empty room? (Otherwise known as "floor vault" thanks to elliott)
   if crawl.random2(100) < options.empty_chance then
     local veto = true
 
@@ -79,12 +79,26 @@ local function pick_room(e, options)
         size = { x = crawl.random_range(options.min_room_size,options.max_room_size), y = crawl.random_range(options.min_room_size,options.max_room_size) }
       }
 
+      -- Describe connectivity of each wall. Of course all points are connectable since the room is empty.
+      room.walls = { }
+      local length
+      for n = 0, 3, 1 do
+        room.walls[n] = { eligible = true }
+        if (n % 2) == 1 then length = room.size.y else length = room.size.x
+        room.walls[n].cells = {}
+        for m = 1, length, 1 do
+          room.walls[n].cells[m] = true
+        end
+      end
+
+      -- Custom veto function can throw out the room now
       if options.veto_room_callback ~= nil then
         local result = options.veto_room_callback(room)
         if result == true then veto = true end
       end
 
     end
+
     return room
 
   else
@@ -98,7 +112,7 @@ local function pick_room(e, options)
 
     while tries < maxTries and not found do
       -- Resolve a map with the specified tag
-      local mapdef = dgn.map_by_tag("vaults_"..room_type)
+      local mapdef = dgn.map_by_tag("vaults_"..room_type,true)
       -- Temporarily prevent map getting mirrored / rotated during resolution
       dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate");
       -- Resolve the map so we can find its width / height
@@ -118,6 +132,37 @@ local function pick_room(e, options)
             map = map,
             vplace = vplace
           }
+
+          -- Check all four directions for orient tag before we create the wals data, since the existence of a
+          -- single orient tag makes the other walls ineligible
+          local tags = {}
+          local has_orient = false
+          for n = 0, 3, 1 do
+            if dgn.has_tag(room.map,"vaults_orient_" .. normals[n].name) then
+              has_orient = true
+              tags[n] = true
+            end
+          end
+
+          -- Describe connectivity of each wall.
+          room.walls = { }
+          local length
+          for n = 0, 3, 1 do
+            local eligible = true
+            if has_orient and not tags[n] then eligible = false
+            room.walls[n] = { eligible = eligible }
+            -- Only need to compute wall data for an eligible wall
+            if eligible then
+              if (n % 2) == 1 then length = room.size.y else length = room.size.x
+              room.walls[n].cells = {}
+              for m = 1, length, 1 do
+                -- For now we'll assume the middle 3 or 4 squares have connectivity, this will solve 99% of cases with current
+                -- subvaults (but make a somewhat boring layout). Really we should do a more detailed analysis of the map glyphs.
+                if math.abs(m - 0 - length/2) <= 2 then room.walls[n].cells[m] = true else room.walls[n].cells[m] = false
+              end
+            end
+          end
+
           if options.veto_room_callback ~= nil then
             local result = options.veto_room_callback(room)
             if result == true then veto = true end
