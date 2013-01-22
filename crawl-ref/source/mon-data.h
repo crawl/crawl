@@ -878,7 +878,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GNOLL_SHAMAN, 'g', WHITE, "gnoll shaman",
-    M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
+    M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     680, 10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
