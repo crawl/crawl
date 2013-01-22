@@ -263,6 +263,18 @@ void manage_fire_shield(int delay)
 
 spret_type cast_corpse_rot(bool fail)
 {
+    if (!you.res_rotting())
+    {
+        for (stack_iterator si(you.pos()); si; ++si)
+        {
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            {
+                if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
+                    return SPRET_ABORT;
+                break;
+            }
+        }
+    }
     fail_check();
     corpse_rot(&you);
     return SPRET_SUCCESS;
