@@ -85,7 +85,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           bool *chose_ood_monster,
                                           bool *want_band);
 
-static monster_type _band_member(band_type band, int power);
+static monster_type _band_member(band_type band, int power, int which);
 static band_type _choose_band(monster_type mon_type, int power, int &band_size,
                               bool& natural_leader);
 
@@ -1023,7 +1023,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         band_size++;
         for (int i = 1; i < band_size; ++i)
         {
-            band_monsters[i] = _band_member(band, mg.power);
+            band_monsters[i] = _band_member(band, mg.power, i);
 
             // Get the (very) ugly thing band colour, so that all (very)
             // ugly things in a band will start with it.
@@ -2496,7 +2496,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
 
     case MONS_POLYPHEMUS:
         natural_leader = true;
-        band = BAND_DEATH_YAKS;
+        band = BAND_POLYPHEMUS;
         band_size = 3 + random2(3);
         break;
 
@@ -2646,7 +2646,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
     return band;
 }
 
-static monster_type _band_member(band_type band, int power)
+static monster_type _band_member(band_type band, int power, int which)
 {
     monster_type mon_type = MONS_PROGRAM_BUG;
     int temp_rand;
@@ -2748,6 +2748,12 @@ static monster_type _band_member(band_type band, int power)
         mon_type = MONS_INSUBSTANTIAL_WISP;
         break;
 
+    case BAND_POLYPHEMUS:
+        if (which == 1)
+        {
+            mon_type = MONS_CATOBLEPAS;
+            break;
+        }
     case BAND_DEATH_YAKS:
         mon_type = MONS_DEATH_YAK;
         break;
@@ -3014,12 +3020,13 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_LAMIA:
-        // Total weight 40
-        mon_type = random_choose_weighted( 4, MONS_GREATER_NAGA,
-                                           8, MONS_NAGA_WARRIOR,
-                                          12, MONS_NAGA_MAGE,
-                                          16, MONS_NAGA,
-                                           0);
+        if (which <= 2)
+            mon_type = MONS_GREATER_NAGA;
+        else // Total weight 40
+            mon_type = random_choose_weighted( 8, MONS_NAGA_WARRIOR,
+                                              16, MONS_NAGA_MAGE,
+                                              24, MONS_NAGA,
+                                               0);
         break;
 
     default:
