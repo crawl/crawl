@@ -2707,7 +2707,8 @@ bool fire_arcane_familiar(monster* mons)
 
     // If our last target is dead, or the player wandered off, resume
     // following the player
-    if ((mons->foe == MHITNOT || !mons->can_see(you.as_player()))
+    if ((mons->foe == MHITNOT || !mons->can_see(you.as_player())
+         || (!invalid_monster_index(mons->foe) && !you.can_see(&menv[mons->foe])))
         && !mons->props.exists("tracking"))
         mons->foe = MHITYOU;
 
