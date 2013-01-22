@@ -415,6 +415,12 @@ bool disc_of_storms(bool drac_breath)
 
 void tome_of_power(int slot)
 {
+    if (you.form == TRAN_WISP)
+    {
+        crawl_state.zero_turns_taken();
+        return mpr("You can't handle books in this form.");
+    }
+
     int powc = 5 + you.skill(SK_EVOCATIONS)
                  + roll_dice(5, you.skill(SK_EVOCATIONS));
 
