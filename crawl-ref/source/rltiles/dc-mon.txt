@@ -758,6 +758,8 @@ troll MONS_TROLL
 rock_troll MONS_ROCK_TROLL
 iron_troll MONS_IRON_TROLL
 deep_troll MONS_DEEP_TROLL
+deep_troll_earth_mage MONS_DEEP_TROLL_EARTH_MAGE
+deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
 ## From the Wucad Mu wizard laboratory
 vault/rock_troll_monk_ghost MONS_ROCK_TROLL_MONK
 vault/iron_troll_monk_ghost MONS_IRON_TROLL_MONK
