@@ -100,8 +100,8 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 {{
   local gxm,gym = dgn.max_bounds()
   local min_size = 6
-  local p1 = { x = crawl.random_range(1,gxm - 1 - min_size), y = crawl.random_range(1,gym - 1 - min_size) }
-  local p2 = { x = crawl.random_range(p1.x + min_size - 1, gxm - 1), y = crawl.random_range(p1.y + min_size - 1, gym - 1) }
+  local p1 = { x = crawl.random_range(1,gxm - 2 - min_size), y = crawl.random_range(1,gym - 2 - min_size) }
+  local p2 = { x = crawl.random_range(p1.x + min_size - 1, gxm - 2), y = crawl.random_range(p1.y + min_size - 1, gym - 2) }
   build_vaults_layout(_G, "Omnibox", { { type = "floor", corner1 = p1, corner2 = p2 } })
 }}
 MAP
