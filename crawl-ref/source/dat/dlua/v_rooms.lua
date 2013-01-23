@@ -196,13 +196,7 @@ end
 
 function place_vaults_rooms(e,data, room_count, options)
 
-  if options == nil then options = { } end
-
-  -- Set default options
-  if options.min_room_size == nil then options.min_room_size = 5 end
-  if options.max_room_size == nil then options.max_room_size = 15 end
-  if options.max_room_depth == nil then options.max_room_depth = 0 end -- No max
-  if options.emty_chance == nil then options.empty_chance = 30 end -- Chance in 100
+  if options == nil then options = vaults_default_options() end
   local results = { }
 
   -- Attempt to place as many rooms as we've been asked for

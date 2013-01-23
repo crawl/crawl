@@ -4,7 +4,8 @@
 -- Main layouts include for Vaults.
 --
 -- Code by mumra
--- Based on work by infiniplex, based on original work and designs by mumra :)
+-- Based on work by infiniplex, based on original designs and code by mumra.
+--
 -- Contains the functions that actually build the layouts.
 --
 -- Notes:
@@ -23,6 +24,56 @@
 require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
 
+-- Default parameters for all Vaults layouts. Some individual layouts might
+-- tweak these parameters to create specific effects.
+function vaults_default_options()
+
+  local options = {
+    min_room_size = 5,
+    max_room_size = 15,
+    max_room_depth = 0, -- No max depth (not implementd yet anyway)
+    empty_chance = 40, -- Chance in 100 to make a floor vault (redundant)
+
+    -- Weightings of various types of room generators. The plan is to better support code vaults here.
+    room_type_weights = {
+      { generator = "floor", weight = 40 }, -- Floor vault
+      { generator = "tagged", tag = "vaults_room", weight = 50 },
+      { generator = "tagged", tag = "vaults_empty", weight = 30 },
+      { generator = "tagged", tag = "vaults_hard", weight = 10 },
+    },
+
+    -- Weightings for types of wall to use across the whole layout
+    -- TODO: These weights should vary by depth; metal/green crystal become much more likely at V:3-4
+    layout_wall_weights = {
+      { feature = "rock_wall", weight = 2 },
+      { feature = "stone_wall", weight = 30 },
+      { feature = "metal_wall", weight = 20 },
+      { feature = "green_crystal_wall", weight = 3 },
+    },
+
+    -- Weightings for types of wall to use for individual rooms, overriding the layout wall
+    room_wall_weights = {
+      { default = true, weight = 100 }, -- Weighting to leave default wall type
+      { feature = "rock_wall", weight = 5 },
+      { feature = "stone_wall", weight = 30 },
+      { feature = "metal_wall", weight = 20 },
+      { feature = "green_crystal_wall", weight = 10 },
+    }
+
+  }
+
+  return options
+end
+
+-- Merges together two options tables (usually the default options getting
+-- overwritten by a minimal set provided by an individual layout)
+function merge_options(base,to_merge)
+  -- Quite simplistic, right now this won't recurse into sub tables (it might need to)
+  for key, val in ipairs(to_merge) do
+    base[key] = val
+  end
+end
+
 -- Build any vaults layout from a paint array, useful to quickly prototype
 -- layouts in layout_vaults.des
 function build_vaults_layout(e, name, paint, options)
@@ -30,8 +81,13 @@ function build_vaults_layout(e, name, paint, options)
   if not crawl.game_started() then return end
   print("Vaults Layout: " .. name)
 
-  local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 25, options)
+  e.layout_type "vaults" -- TODO: Lowercase and underscorise the name?
+
+  local defaults = vaults_default_options()
+  if options ~= nil then merge_options(defaults,options) end
+
+  local data = paint_vaults_layout(e, paint, defaults)
+  local rooms = place_vaults_rooms(e, data, 25, defaults)
 
 end
 

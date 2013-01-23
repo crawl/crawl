@@ -7,7 +7,7 @@
 # in this header and all building logic happens in pure *.lua files.
 #
 # It uses all the mini vaults from layout_vaults_*.des and places these as
-# rooms within structured areas. These vaults can use various to
+# rooms within structured areas. These vaults can use various tags to
 # modify the way they are used within the layouts. A vault requires at least
 # one of the following to even be used:
 #
@@ -25,17 +25,6 @@
 # - vaults_empty
 #     Empty rooms. These provide furniture for areas that we otherwise want empty.
 #     They should allow normal monster placement.
-#
-# - vaults_stairs_up
-# - vaults_stairs_down
-#     Up to three each will be placed of these room types. It is assumed
-#     that the room has one staircase (and most should). If it does have more
-#     you can include the tag layout_vaults_stairs_2 or layout_vaults_stairs_3
-#     and set a low weight.
-#     The builder will place rooms until it has enough stairs. Down stairs
-#     will usually place 3 and only rarely 2 or 1, never on V:$-1. Up stairs
-#     are less strict (and therefore more likely to ultimately be placed
-#     in the corridors).
 #
 # In addition there are some specific modifier tags:
 #
