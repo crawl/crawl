@@ -97,8 +97,8 @@ local function pick_room(e, options)
     while tries < maxTries and not found do
       -- Resolve a map with the specified tag
       local mapdef = dgn.map_by_tag("vaults_"..room_type,true)
-      -- Temporarily prevent map getting mirrored / rotated during resolution
-      dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate");
+      -- Temporarily prevent map getting mirrored / rotated during resolution; and hardwire transparency because lack of it can fail a whole layout
+      dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
       -- Resolve the map so we can find its width / height
       local map, vplace = dgn.resolve_map(mapdef,true,true)
       local room_width,room_height
@@ -107,6 +107,10 @@ local function pick_room(e, options)
         -- If we can't find a map then we're probably not going to find one
         return nil
       else
+        -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
+        dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
+
+        -- Check map size
         local room_width,room_height = dgn.mapsize(map)
         local veto = false
         if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
@@ -460,11 +464,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   -- Actually place a map inside the room if we have one
   if room.type == "vault" then
-    -- Allow map to by flipped and rotated again
-    dgn.tags_remove(room.map, "no_vmirror no_hmirror no_rotate")
-    -- Hardwiring this for now
-    dgn.tags(room.map, "transparent")
-
     -- Calculate the final orientation we need for the room to match the door
     -- Somewhat discovered by trial and error but it appears to work
     local final_orient = (orient.dir - v_normal_dir + 2) % 4
