@@ -4009,7 +4009,9 @@ bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor
         case MONS_CRIMSON_IMP:
         case MONS_IRON_TROLL:
         case MONS_LEMURE:
+#if TAG_MAJOR_VERSION == 34
         case MONS_ROCK_TROLL:
+#endif
         case MONS_SLIME_CREATURE:
         case MONS_SNORG:
         case MONS_PURGY:

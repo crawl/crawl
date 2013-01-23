@@ -2242,7 +2242,9 @@ enum monster_type                      // menv[].type
     MONS_TWO_HEADED_OGRE,
     MONS_OGRE_MAGE,
     MONS_TROLL,
+#if TAG_MAJOR_VERSION == 34
     MONS_ROCK_TROLL,
+#endif
     MONS_IRON_TROLL,
     MONS_DEEP_TROLL,
     MONS_GIANT,                 // genus

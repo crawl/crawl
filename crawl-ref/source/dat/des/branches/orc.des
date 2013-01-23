@@ -860,7 +860,7 @@ KMONS:   2 = orc knight
 KMONS:   3 = orc warrior / orc ; crossbow . bolt . spear | hand axe | mace
 KMONS:   4 = orc priest / orc / nothing
 KMONS:   5 = orc wizard / nothing
-KMONS:   6 = ogre / two-headed ogre / troll / rock troll / ogre mage / nothing
+KMONS:   6 = ogre / two-headed ogre / troll / deep troll / ogre mage / nothing
 KMONS:   7 = warg
 KFEAT:   S = any shop
 SUBST:   ? = 3467
@@ -1258,7 +1258,7 @@ ENDMAP
 NAME:    st_orc_open
 TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:4
-MONS:    ogre, two-headed ogre, troll, rock troll w:19 / iron troll w:1
+MONS:    ogre, two-headed ogre, troll, deep troll w:19 / iron troll w:1
 MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
 KFEAT:   S = any shop
 MAP

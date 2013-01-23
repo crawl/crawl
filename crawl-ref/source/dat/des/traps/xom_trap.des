@@ -60,7 +60,7 @@ function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
   elseif you.absdepth() <= 13 then
     dgn.create_monster(b.x, b.y, 'generate_awake troll')
   elseif you.absdepth() <= 17 then
-    dgn.create_monster(b.x, b.y, 'generate_awake rock troll')
+    dgn.create_monster(b.x, b.y, 'generate_awake deep troll')
   elseif you.absdepth() <= 22 then
     dgn.create_monster(b.x, b.y, 'generate_awake iron troll')
   elseif you.absdepth() <= 27 then

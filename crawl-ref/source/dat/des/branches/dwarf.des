@@ -143,7 +143,7 @@ NAME:    enter_dwarf_6
 TAGS:    dwarf_entry
 MONS:    elf / w:5 deep dwarf / deep dwarf necromancer / \
          deep dwarf artificer
-MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
+MONS:    shadow wraith / wraith / wight w:5 / troll / deep troll w:5 / \
          deep dwarf necromancer w:2 / deep dwarf artificer w:1
 FTILE:   12O.+ = floor_sandstone
 FTILE:   +12O. = floor_limestone
@@ -534,7 +534,7 @@ SUBVAULT: C : dhfh_hall_right
 SUBVAULT: D : dhfh_hall_right
 KMONS:    1 = patrolling unborn deep dwarf w:5 / \
               patrolling deep dwarf death knight / patrolling deep dwarf necromancer
-KMONS:    2 = shadow wraith / freezing wraith / troll / rock troll w:5 / \
+KMONS:    2 = shadow wraith / freezing wraith / troll / deep troll w:5 / \
               patrolling deep dwarf death knight w:3 / patrolling deep dwarf necromancer w:2 / \
               patrolling unborn deep dwarf w:1
 {{
@@ -575,7 +575,7 @@ CHANCE: 50%
 DEPTH:  Dwarf:1
 MONS:   elf w:5 / deep dwarf / deep dwarf necromancer / \
         deep dwarf berserker
-MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
+MONS:   shadow wraith / wraith / wight w:5 / troll / deep troll w:5 / \
         deep dwarf necromancer w:2 / deep dwarf scion w:1
 SUBST:   1 = d f:5 g:2 j:1
 KMONS:   d = deep dwarf / deep dwarf scion
@@ -638,7 +638,7 @@ CHANCE: 50%
 DEPTH:  Dwarf:1
 MONS:   elf w:5 / dwarf / deep dwarf necromancer / \
         deep dwarf berserker
-MONS:   shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
+MONS:   shadow wraith / wraith / wight w:5 / troll / deep troll w:5 / \
         deep dwarf necromancer w:2 / deep dwarf scion w:1
 SUBST:   1 = d f:5 g:2 j:1
 KMONS:   d = deep dwarf / deep dwarf scion

@@ -196,6 +196,7 @@ static monsterentry mondata[] = {
 #if TAG_MAJOR_VERSION == 34
     AXED_MON(MONS_BUMBLEBEE)
     AXED_MON(MONS_ARACHNOID)
+    AXED_MON(MONS_ROCK_TROLL)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -3810,19 +3811,6 @@ static monsterentry mondata[] = {
     { 7, 3, 5, 0 },
     3, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
-},
-
-{
-    MONS_ROCK_TROLL, 'T', LIGHTGREY, "rock troll",
-    M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    1600, 11, MONS_TROLL, MONS_ROCK_TROLL, MH_NATURAL, -4,
-    { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20},
-      {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK },
-    { 11, 3, 5, 0 },
-    13, 6, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT,
-    I_NORMAL, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 

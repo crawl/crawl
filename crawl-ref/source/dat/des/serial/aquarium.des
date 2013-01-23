@@ -157,7 +157,7 @@ function init_aquarium(e)
                  w:1  generate_awake red wasp simulacrum /
                  w:1  generate_awake orc simulacrum /
                  w:1  generate_awake yaktaur simulacrum /
-                 w:1  generate_awake rock troll simulacrum /
+                 w:1  generate_awake deep troll simulacrum /
                  w:1  generate_awake wolf spider simulacrum /
                  w:1  generate_awake wolf simulacrum /
                  w:1  generate_awake polar bear simulacrum /

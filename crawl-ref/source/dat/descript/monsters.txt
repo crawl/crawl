@@ -2948,6 +2948,11 @@ deep elf scorcher
 A deep elf excelling in fire magic, feared for its power to conjure great
 storms of flame.
 %%%%
+deep troll monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed
+memory.
+%%%%
 deformed humanoid
 
 This poor creature looks hideously deformed.
@@ -3244,11 +3249,6 @@ almost as if they could be removed one by one and used in a real bow.
 pyrus tree
 
 <apple tree>
-%%%%
-rock troll monk
-
-It seems a flimsy representation of a monk; nothing more than a half-formed
-memory.
 %%%%
 sacrificial human
 

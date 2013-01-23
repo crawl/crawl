@@ -760,15 +760,13 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
             switch (random2(8))
             {
             case 0:
-                mon = MONS_DEEP_TROLL;
-                break;
             case 1:
             case 2:
-                mon = MONS_IRON_TROLL;
+                mon = MONS_DEEP_TROLL;
                 break;
             case 3:
             case 4:
-                mon = MONS_ROCK_TROLL;
+                mon = MONS_IRON_TROLL;
                 break;
             default:
                 mon = MONS_TROLL;

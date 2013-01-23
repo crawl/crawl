@@ -309,7 +309,6 @@ two_headed_ogre CORPSE_TWO_HEADED_OGRE
 
 ## Trolls ('T')
 troll CORPSE_TROLL
-rock_troll CORPSE_ROCK_TROLL
 iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 

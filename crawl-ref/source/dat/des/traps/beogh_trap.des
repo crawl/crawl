@@ -71,7 +71,7 @@ SUBST:  M:v, 1=1112 , 3=123 , ^t:. , *=*|
 MONS:   w:7  generate_awake troll ; robe . nothing /\
         w:5  generate_awake ogre ;  giant club | robe /\
         w:5  generate_awake orc ; war axe | robe
-MONS:   w:10 generate_awake rock troll ; robe . nothing /\
+MONS:   w:10 generate_awake deep troll ; robe . nothing /\
         w:5  generate_awake orc warrior ; broad axe | robe /\
         w:10 generate_awake two-headed ogre ; giant spiked club | robe
 MONS:   w:10 generate_awake orc priest /\
