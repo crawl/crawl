@@ -643,7 +643,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_JELLY:
     case TRAN_TREE:
     case TRAN_WISP:
-        return pow;
+        return min(15 + random2(pow) + random2(pow / 2), 100);
     case TRAN_NONE:
         return 0;
     default:
