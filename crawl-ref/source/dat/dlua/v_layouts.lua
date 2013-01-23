@@ -202,12 +202,12 @@ function layout_primitive_omnigrid()
   local gxm,gym = dgn.max_bounds()
   local options = {
     subdivide_initial_chance = 100, -- % chance of subdividing at first level, if < 100 then we might just get chaotic city
-    subdivide_level_multiplier = 0.75,   -- Multiply subdivide chance by this amount with each level
+    subdivide_level_multiplier = 0.85,   -- Multiply subdivide chance by this amount with each level
     minimum_size = 12,  -- Don't ever create areas smaller than this
-    fill_chance = 80, -- % chance of filling an area vs. leaving it open
+    fill_chance = 75, -- % chance of filling an area vs. leaving it open
     fill_padding = 2,  -- Padding around a fill area, effectively this is half the corridor width
   }
-  local results = omnigrid_subdivide_area(1,1,gxm-1,gym-1,options)
+  local results = omnigrid_subdivide_area(1,1,gxm-2,gym-2,options)
   local paint = {}
   for i, area in ipairs(results) do
     -- TODO: Jitter / vary corridor widths (depending on size of area)
