@@ -84,7 +84,7 @@ local function pick_room(e, options)
       local length
       for n = 0, 3, 1 do
         room.walls[n] = { eligible = true }
-        if (n % 2) == 1 then length = room.size.y else length = room.size.x
+        if (n % 2) == 1 then length = room.size.y else length = room.size.x end
         room.walls[n].cells = {}
         for m = 1, length, 1 do
           room.walls[n].cells[m] = true
@@ -138,7 +138,7 @@ local function pick_room(e, options)
           local tags = {}
           local has_orient = false
           for n = 0, 3, 1 do
-            if dgn.has_tag(room.map,"vaults_orient_" .. normals[n].name) then
+            if dgn.has_tag(room.map,"vaults_orient_" .. normals[n+1].name) then
               has_orient = true
               tags[n] = true
             end
@@ -149,16 +149,16 @@ local function pick_room(e, options)
           local length
           for n = 0, 3, 1 do
             local eligible = true
-            if has_orient and not tags[n] then eligible = false
+            if has_orient and not tags[n] then eligible = false end
             room.walls[n] = { eligible = eligible }
             -- Only need to compute wall data for an eligible wall
             if eligible then
-              if (n % 2) == 1 then length = room.size.y else length = room.size.x
+              if (n % 2) == 1 then length = room.size.y else length = room.size.x end
               room.walls[n].cells = {}
               for m = 1, length, 1 do
                 -- For now we'll assume the middle 3 or 4 squares have connectivity, this will solve 99% of cases with current
                 -- subvaults (but make a somewhat boring layout). Really we should do a more detailed analysis of the map glyphs.
-                if math.abs(m - 0 - length/2) <= 2 then room.walls[n].cells[m] = true else room.walls[n].cells[m] = false
+                if math.abs(m - 0 - length/2) <= 2 then room.walls[n].cells[m] = true else room.walls[n].cells[m] = false end
               end
             end
           end
@@ -182,7 +182,10 @@ local function analyse_vault_post_placement(e,usage_grid,room,result,options)
 
   result.stairs = { }
   for p in iter.rect_iterator(dgn.point(room.origin.x, room.origin.y), dgn.point(room.opposite.x, room.opposite.y)) do
-    if (feat.is_stone_stair(p.x,p.y)) then
+    if (feat.is_stone_stair(p.x,p.y)) or
+      -- On V:1 the branch entrant stairs don't count as stone_stair; we need to check specifically for the V exit stairs
+      -- to avoid overwriting e.g. Crypt stairs!
+      dgn.feature_name(dgn.grid(p.x,p.y)) == "return_from_vaults" then
       -- Remove the stair and remember it
       dgn.grid(p.x,p.y,"floor") --TODO: Be more intelligent about how to replace it
       table.insert(result.stairs, { pos = { x = p.x, y = p.y } })
@@ -273,8 +276,8 @@ function place_vaults_rooms(e,data, room_count, options)
     end
   end
 
-  -- Useful if things aren't working:
-  dump_usage_grid(data)
+  -- Useful to see what's going on when things are getting veto'd:
+  dump_usage_grid_pretty(data)
 
   return true
 end
@@ -356,7 +359,7 @@ function place_vaults_room(e,usage_grid,room, options)
     -- Find an eligible spot
     spotTries = 0
     foundSpot = false
-    -- Brute force, this needs optimising, but for now try poll the grid up to 5000 times until we find an eligible spot
+    -- Brute force, this needs optimising, but for now try polling the grid up to 5000 times until we find an eligible spot
     while spotTries < maxSpotTries and not foundSpot do
       spotTries = spotTries + 1
       local spotx = crawl.random_range(2,gxm-2)
@@ -369,6 +372,25 @@ function place_vaults_room(e,usage_grid,room, options)
     end
 
     if foundSpot == true then
+      -- Scan a 5x5 grid around an open spot, see if we find an eligible_open wall to attacn to. This makes us much more likely to
+      -- join up rooms in open areas, and reduces the amount of 1-tile-width chokepoints between rooms. It's still fairly simplistic
+      -- though and maybe we could do this around the whole room area later on instead?
+      if usage.usage == "open" then
+        local near_eligibles = {}
+        for p in iter.rect_iterator(dgn.point(spot.x-2,spot.y-2),dgn.point(spot.x+2,spot.y+2)) do
+          local near_usage = vaults_get_usage(usage_grid,p.x,p.y)
+          if near_usage.usage == "eligible_open" then
+            table.insert(near_eligibles, { spot = p, usage = near_usage })
+          end
+        end
+        -- Randomly pick one of the new spots; maybe_place_vault will at least attempt to attach the room here instead, if possible
+        if #near_eligibles > 0 then
+          local picked = near_eligibles[crawl.random2(#near_eligibles)+1]
+          spot = picked.spot
+          usage = picked.usage
+        end
+      end
+
       -- Attempt to place the room on the wall at a random position
       if vaults_maybe_place_vault(e, spot, usage_grid, usage, room, options) then
         done = true
@@ -383,25 +405,25 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   -- Get wall's normal and calculate the door vector (i.e. attaching wall)
   local v_normal, v_wall, room_base, clear_bounds, orient, v_normal_dir
-  -- Does the room need a specific orientation?
-  if room.type == "vault" then
-    local orients = { }
-    for i, n in ipairs(normals) do
-      if dgn.has_tag(room.map,"vaults_orient_" .. n.name) then
-        table.insert(orients,n)
-      end
+  -- Choose a room orientation from  available ones (as determined in pick_room)
+  local orients = { }
+  for n = 0, 3, 1 do
+    if room.walls[n].eligible then
+      table.insert(orients,{ dir = n, wall = room.walls[n] })  -- TODO: We mainly need the dir right now; but should we save the wall a well for convenience?
     end
-    local count = #orients
-    if count > 0 then
-      orient = orients[crawl.random_range(1,count)]
-    else
-      -- Pick one of the four orients now; if the room is rectangular we'll need
-      -- to swap the width/height anyway
-      orient = normals[crawl.random_range(1,#normals)]
-    end
-    -- Exchange width and height
-    if orient.dir % 2 == 1 then room_width, room_height = room_height, room_width end
   end
+  local count = #orients
+  if count > 0 then
+    local chosen = crawl.random2(count)
+    orient = normals[orients[chosen + 1].dir + 1]  -- Base 1 arrays making things very confusing!
+  else
+    -- Should never happen, if there are no orients then all are enabled ...
+    -- Pick one of the four orients now; if the room is rectangular we'll need
+    -- to swap the width/height anyway
+    orient = normals[crawl.random_range(1,#normals)]
+  end
+  -- Exchange width and height
+  if orient.dir % 2 == 1 then room_width, room_height = room_height, room_width end
 
   -- Placing a room in open space
   if usage.usage == "open" then
