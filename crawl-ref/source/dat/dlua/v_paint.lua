@@ -13,12 +13,6 @@
 -- initial level generation).
 ------------------------------------------------------------------------------
 
--- Some constants to control certain things about how usage is calculated
-local c_min_distance_from_wall = 2  -- Rooms placed on floor areas must be this
-                                    -- far from a wall (avoids choke points)
-                                    -- (unless they're attaching to an "eligible"
-                                    -- wall of course)
-
 ------------------------------------------------------------------------------
 -- Initialize and empty usage grid
 local function new_layout()
@@ -195,7 +189,7 @@ end
 
 function paint_vaults_layout(e, paint, options)
 
-  if options == nil then options = { min_distance_from_wall = c_min_distance_from_wall } end
+  if options == nil then options = vaults_default_options() end
 
   -- Will contain data about how each square is used and therefore how rooms
   -- can be applied
