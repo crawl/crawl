@@ -1280,7 +1280,7 @@ TAGS:   no_pool_fixup patrolling
 KPROP:  1 = no_rtele_into
 SUBST:  1 = 1:50 2 3:5
 MONS:   troll
-MONS:   rock troll
+MONS:   deep troll
 MONS:   iron troll
 MAP
 xxxxx...........................xxxxxx
@@ -3332,7 +3332,7 @@ KMONS:   U = death ooze / bone dragon / profane servitor w:5
 KMONS:   V = elephant / very ugly thing / wolf spider
 KMONS:   W = dire elephant / alligator / emperor scorpion
 KMONS:   Y = anaconda / alligator snapping turtle
-KMONS:   X = rock troll / orc knight / hill giant
+KMONS:   X = deep troll / orc knight / hill giant
 KMONS:   Z = iron troll / naga warrior / minotaur
 KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
 KMONS:   d = deep elf mage / wizard / boggart

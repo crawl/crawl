@@ -36,7 +36,7 @@ function base_monster_setup(e)
            trapdoor spider / basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
            griffon / ugly thing / gargoyle / molten gargoyle / metal gargoyle /\
-           kobold demonologist band / giant slug / rock troll /\
+           kobold demonologist band / giant slug / deep troll /\
            deep elf fighter band / agate snail / boulder beetle / red wasp /\
            orc high priest band w:5 / pulsating lump / boring beetle /\
            flayed ghost / freezing wraith / shadow wraith /\
@@ -75,10 +75,11 @@ function base_monster_setup(e)
            hell hog band w:5 / alligator band w:5 / minotaur")
   e.kmons("D = dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
            very ugly thing band w:5 / sphinx / iron troll /\
-           orc warlord band / yaktaur captain band w:5 / deep troll band w:5 /\
-           fire giant w:20 / frost giant w:20 / hell knight band /\
-           storm dragon / glowing shapeshifter / bone dragon / stone giant /\
-           deep elf annihilator / deep elf death mage / deep elf high priest /\
+           orc warlord band / yaktaur captain band w:5 /\
+           deep troll shaman band w:5 / fire giant w:20 / frost giant w:20 /\
+           hell knight band / storm dragon / glowing shapeshifter /\
+           bone dragon / stone giant / deep elf annihilator /\
+           deep elf death mage / deep elf high priest /\
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
            titan w:5 / deep dwarf berserker / unborn deep dwarf / ettin /\
            greater naga / dancing weapon / dire elephant band /\
@@ -126,7 +127,7 @@ function base_monster_setup(e)
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
            Ereshkigal / Ignacio / Geryon")
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
-           fire giant / ettin / rock troll / iron troll")
+           fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
   e.kmons("O = deep elf mage / deep elf summoner / deep elf conjurer /\
            deep elf annihilator / deep elf knight band / deep elf death mage /\
@@ -2071,7 +2072,7 @@ KMONS:  a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
         orc sorcerer / orc high priest
 KMONS:  A = orc warlord
 KMONS:  b = hill giant /\
-        ogre / two-headed ogre / troll / rock troll /\
+        ogre / two-headed ogre / troll / deep troll /\
         iron troll w:5 / deep troll/ ogre mage w:5 /\
         cyclops / stone giant w:5 / ettin w:5
 KMONS:  B = titan

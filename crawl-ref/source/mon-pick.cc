@@ -544,7 +544,7 @@ int mons_dungeon_level(monster_type mcls)
     case MONS_GIANT_SLUG:
     case MONS_IRON_GOLEM:
     case MONS_OGRE_MAGE:
-    case MONS_ROCK_TROLL:
+    case MONS_DEEP_TROLL:
     case MONS_TOENAIL_GOLEM:
     case MONS_YAKTAUR:
     case MONS_WOLF_SPIDER:
@@ -597,7 +597,8 @@ int mons_dungeon_level(monster_type mcls)
         return 25;
 
     case MONS_DANCING_WEAPON:
-    case MONS_DEEP_TROLL:
+    case MONS_DEEP_TROLL_EARTH_MAGE:
+    case MONS_DEEP_TROLL_SHAMAN:
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_HELL_KNIGHT:
@@ -702,7 +703,7 @@ int mons_dungeon_rare(monster_type mcls)
     case MONS_WORM:
         return 50;
 
-    case MONS_ROCK_TROLL:
+    case MONS_DEEP_TROLL:
         return 48;
 
     case MONS_MANTICORE:
@@ -774,11 +775,12 @@ int mons_dungeon_rare(monster_type mcls)
     case MONS_BOGGART:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_KNIGHT:
-    case MONS_DEEP_TROLL:
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_IRON_TROLL:
+    case MONS_DEEP_TROLL_EARTH_MAGE:
+    case MONS_DEEP_TROLL_SHAMAN:
     case MONS_OOZE:
     case MONS_ORC_PRIEST:
     case MONS_PLANT:
@@ -913,9 +915,10 @@ int mons_dwarf_rare(monster_type mcls)
     case MONS_FROST_GIANT:
     case MONS_STONE_GIANT:
         return 5;
-    case MONS_DEEP_TROLL:
+    case MONS_DEEP_TROLL_EARTH_MAGE:
+    case MONS_DEEP_TROLL_SHAMAN:
     case MONS_IRON_TROLL:
-    case MONS_ROCK_TROLL:
+    case MONS_DEEP_TROLL:
     case MONS_SHADOW_WRAITH:
         return 2;
 
@@ -947,7 +950,7 @@ int mons_mineorc_level(monster_type mcls)
     case MONS_ORC_HIGH_PRIEST:
     case MONS_ORC_SORCERER:
     case MONS_ORC_WARLORD:
-    case MONS_ROCK_TROLL:
+    case MONS_DEEP_TROLL:
     case MONS_STONE_GIANT:
     case MONS_TROLL:
     case MONS_TWO_HEADED_OGRE:
@@ -1000,7 +1003,7 @@ int mons_mineorc_rare(monster_type mcls)
 
     case MONS_ETTIN:
     case MONS_IRON_TROLL:
-    case MONS_ROCK_TROLL:
+    case MONS_DEEP_TROLL:
     case MONS_STONE_GIANT:
         return 3;
 
