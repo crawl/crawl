@@ -4717,11 +4717,6 @@ bool monster::can_go_berserk() const
     return true;
 }
 
-bool monster::frenzied() const
-{
-    return has_ench(ENCH_INSANE);
-}
-
 bool monster::berserk() const
 {
     return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
