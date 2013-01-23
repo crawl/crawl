@@ -3900,8 +3900,6 @@ _build_vault_impl(const map_def *vault,
 
     vault_placement place;
 
-    place.level_number = env.absdepth0;
-
     if (map_bounds(where))
         place.pos = where;
 
@@ -6331,6 +6329,12 @@ void run_map_epilogues()
 
 //////////////////////////////////////////////////////////////////////////
 // vault_placement
+
+vault_placement::vault_placement()
+    : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
+      exits(), level_number(env.absdepth0), seen(false)
+{
+}
 
 string vault_placement::map_name_at(const coord_def &where) const
 {
