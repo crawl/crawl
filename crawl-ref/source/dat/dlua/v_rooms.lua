@@ -559,7 +559,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     -- Look up the right wall number, adjusting for room orientation. Check if wall allows door then either restrict or make eligible...
     if rear_wall.eligible then
       vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = wall_usage, normal = vector_rotate(normals[1],-v_normal_dir), room = room, depth = new_depth, wall = rear_wall })
-      if n == math.floor(room_width / 2) then
+      if room.type == "vault" and n == math.floor(room_width / 2) then
         rear_wall.door_position = p2
       end
     else
@@ -575,7 +575,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     local wall = room.walls[(1 - v_normal_dir)%4]
     if wall.eligible then
       vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = wall_usage, normal = vector_rotate(normals[2],-v_normal_dir), room = room, depth = new_depth, wall = left_wall })
-      if n == math.floor(room_height / 2) then
+      if room.type == "vault" and n == math.floor(room_height / 2) then
         left_wall.door_position = p3
       end
     else
@@ -587,7 +587,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
     if wall.eligible then
       vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = wall_usage, normal = vector_rotate(normals[4],-v_normal_dir), room = room, depth = new_depth, wall = right_wall })
-      if n == math.floor(room_height / 2) then
+      if room.type == "vault" and n == math.floor(room_height / 2) then
         right_wall.door_position = p4
       end
     else
