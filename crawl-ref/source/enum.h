@@ -1512,7 +1512,7 @@ enum enchant_type
 #endif
     ENCH_SWIFT,
     ENCH_TIDE,
-    ENCH_INSANE,
+    ENCH_INSANE,         // Berserk + changed attitude.
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
@@ -1538,8 +1538,8 @@ enum enchant_type
     ENCH_DAZED,         // Dazed - less chance of acting each turn.
     ENCH_MUTE,          // Silenced.
     ENCH_BLIND,         // Blind (everything is invisible).
-    ENCH_DUMB,          // Dumb (as in, 'struck dumb').
-    ENCH_MAD,           // Mad.
+    ENCH_DUMB,          // Stupefied (paralysis by a different name).
+    ENCH_MAD,           // Confusion by another name.
     ENCH_SILVER_CORONA, // Zin's silver light.
     ENCH_RECITE_TIMER,  // Was recited against.
     ENCH_INNER_FLAME,
