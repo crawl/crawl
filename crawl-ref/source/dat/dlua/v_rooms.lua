@@ -164,6 +164,8 @@ end
 
 local function analyse_vault_post_placement(e,usage_grid,room,result,options)
 
+  local perform_subst = true
+  if dgn.has_tag(room.map, "preserve_wall") or room.wall_type == nil then perform_subst = false end
   result.stairs = { }
   for p in iter.rect_iterator(dgn.point(room.origin.x, room.origin.y), dgn.point(room.opposite.x, room.opposite.y)) do
     if (feat.is_stone_stair(p.x,p.y)) or
@@ -173,6 +175,10 @@ local function analyse_vault_post_placement(e,usage_grid,room,result,options)
       -- Remove the stair and remember it
       dgn.grid(p.x,p.y,"floor") --TODO: Be more intelligent about how to replace it
       table.insert(result.stairs, { pos = { x = p.x, y = p.y } })
+    end
+    -- Substitute rock walls for surrounding wall type
+    if dgn.feature_name(dgn.grid(p.x,p.y)) == "rock_wall" then
+      dgn.grid(p.x,p.y,room.wall_type)
     end
   end
 
@@ -229,11 +235,8 @@ function place_vaults_rooms(e,data, room_count, options)
   -- TODO: Optionally place some hatches / mimics too
 
   for n = 1, 6, 1 do
-    -- Do we have any left?
-    if #stairs == 0 then
-      print "NOT ENOUGH STAIRS"
-      break
-    end
+    -- Do we have any left? TODO: Could place some in random floor rooms, but hopefully the dungeon layout will provide missing stairs
+    if #stairs == 0 then break end
     -- Any random stair
     local i = crawl.random_range(1, #stairs)
     local stair = stairs[i]
@@ -443,17 +446,16 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   room.opposite = opposite
 
   -- Randomly vary the wall type
-  -- TODO: Use a spread from config instead so we can control this better or even set a level-wide theme of a particular type
-  -- TODO: Also, perhaps vaults should be able to specify the type of wall they want
-  local surrounding_wall_type = "rock_wall"
-  if crawl.one_chance_in(8) then surrounding_wall_type = "stone_wall" end
+  -- TODO: Use spread from config instead and take note of level-wide wall type
+  local surrounding_wall_type = "stone_wall"
+  if crawl.one_chance_in(20) then surrounding_wall_type = "rock_wall" end
   if crawl.one_chance_in(15) then surrounding_wall_type = "metal_wall" end
   if crawl.one_chance_in(25) then surrounding_wall_type = "green_crystal_wall" end
-  -- if usage.usage == "open" or usage.usage == "eligible_open" then
-    dgn.fill_grd_area(origin.x - 1, origin.y - 1, opposite.x + 1, opposite.y + 1, surrounding_wall_type)
-  -- end
+  -- Store it so we can perform substitution after placement
+  room.wall_type = surrounding_wall_type
 
-  -- Create floor space to place the vault in
+  -- Fill the wall and then floor space inside
+  dgn.fill_grd_area(origin.x - 1, origin.y - 1, opposite.x + 1, opposite.y + 1, surrounding_wall_type)
   dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
 
   -- Actually place a map inside the room if we have one
