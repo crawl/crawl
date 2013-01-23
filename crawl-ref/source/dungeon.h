@@ -135,12 +135,7 @@ public:
     bool seen;
 
 public:
-    vault_placement()
-        : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
-          exits(), level_number(0), seen(false)
-    {
-    }
-
+    vault_placement();
     void reset();
     void apply_grid();
     void draw_at(const coord_def &c);
