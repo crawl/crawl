@@ -2811,7 +2811,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             if (!mons->props.exists("twister_time")
                 || you.elapsed_time - (int)mons->props["twister_time"] > 200)
+            {
                 spell = SPELL_SUMMON_TWISTER;
+            }
             else
                 break;
         }
@@ -3066,7 +3068,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
     {
         if (mons_genus(mons->type) == MONS_DRAGON
             || mons_genus(mons->type) == MONS_DRACONIAN)
+        {
             setup_breath_timeout(mons);
+        }
         else if (mons->type == MONS_CHAOS_BUTTERFLY)
             mons->props["twister_time"].get_int() = you.elapsed_time;
     }
