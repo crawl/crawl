@@ -21,6 +21,7 @@
 -- room/door placement can work correctly.
 ------------------------------------------------------------------------------
 
+require("dlua/v_debug.lua")
 require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
 
@@ -29,7 +30,9 @@ require("dlua/v_rooms.lua")
 function vaults_default_options()
 
   local options = {
-    min_room_size = 5,
+    min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
+    max_rooms = 25, -- Maximum number of rooms to attempt to place
+    min_room_size = 5, -- Min/max sizes of rooms
     max_room_size = 15,
     max_room_depth = 0, -- No max depth (not implementd yet anyway)
     empty_chance = 40, -- Chance in 100 to make a floor vault (redundant)
@@ -81,13 +84,13 @@ function build_vaults_layout(e, name, paint, options)
   if not crawl.game_started() then return end
   print("Vaults Layout: " .. name)
 
-  e.layout_type "vaults" -- TODO: Lowercase and underscorise the name?
+  e.layout_type "vaults" -- TODO: Lowercase and underscorise the name parameter?
 
   local defaults = vaults_default_options()
   if options ~= nil then merge_options(defaults,options) end
 
   local data = paint_vaults_layout(e, paint, defaults)
-  local rooms = place_vaults_rooms(e, data, 25, defaults)
+  local rooms = place_vaults_rooms(e, data, defaults.max_rooms, defaults)
 
 end
 
@@ -95,8 +98,6 @@ function build_vaults_ring_layout(e, corridorWidth, outerPadding)
 
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
-
-  print("Ring Layout")
 
   local c1 = { x = outerPadding, y = outerPadding }
   local c2 = { x = outerPadding + corridorWidth, y = outerPadding + corridorWidth }
@@ -108,8 +109,8 @@ function build_vaults_ring_layout(e, corridorWidth, outerPadding)
     { type = "floor", corner1 = c1, corner2 = c4},
     { type = "wall", corner1 = c2, corner2 = c3 }
   }
-  local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 3 })
+
+  build_vaults_layout(e, "Ring", paint, { max_room_depth = 3 })
 
 end
 
@@ -119,8 +120,6 @@ function build_vaults_cross_layout(e, corridorWidth, intersect)
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
 
-    print("Cross Layout")
-
   local xc = math.floor((gxm-corridorWidth)/2)
   local yc = math.floor((gym-corridorWidth)/2)
   local paint = {
@@ -128,8 +127,7 @@ function build_vaults_cross_layout(e, corridorWidth, intersect)
     { type = "floor", corner1 = { x = 1, y = yc }, corner2 = { x = gxm - 2, y = yc + corridorWidth - 1 } }
   }
 
-  local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 4 })
+  build_vaults_layout(e, "Cross", paint, { max_room_depth = 4 })
 
 end
 
@@ -138,17 +136,13 @@ function build_vaults_big_room_layout(e, minPadding,maxPadding)
   -- Sorry, no imps
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
-
   local padx,pady = crawl.random_range(minPadding,maxPadding),crawl.random_range(minPadding,maxPadding)
-
-  print("Big Room Layout")
 
   -- Will have a ring of outer rooms but the central area will be chaotic city
   local paint = {
     { type = "floor", corner1 = { x = padx, y = pady }, corner2 = { x = gxm - padx - 1, y = gym - pady - 1 } }
   }
-  local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 4 })
+  build_vaults_layout(e, "Big Room", paint, { max_room_depth = 4 })
 
 end
 
@@ -156,23 +150,19 @@ function build_vaults_chaotic_city_layout(e)
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
 
-      print("Chaotic City Layout")
-
-  -- Paint everything with floor
+  -- Paint entire level with floor
   local paint = {
     { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm - 2, y = gym - 2 } }
   }
 
-  local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 30, { max_room_depth = 5 })
+  build_vaults_layout(e, "Choatic City", paint, { max_room_depth = 5, max_rooms = 30 })
 
 end
 
-function build_vaults_maze_layout(e,veto_callback)
+function build_vaults_maze_layout(e,veto_callback, name)
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
-
-    print("Maze Layout")
+  if name == nil then name = "Maze" end
 
   -- Put a single empty room somewhere roughly central. All rooms will be built off from each other following this
   local x1 = crawl.random_range(30, gxm-70)
@@ -190,13 +180,11 @@ function build_vaults_maze_layout(e,veto_callback)
     return false
   end
 
-  local data = paint_vaults_layout(e, paint)
-  local rooms = place_vaults_rooms(e, data, 25, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 3, max_room_size = 25 })
+  build_vaults_layout(e, name, paint, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 3, max_room_size = 25 })
 
 end
 -- Uses a custom veto function to alternate between up or down connections every {dist} rooms
 function build_vaults_maze_snakey_layout(e)
-  print("Snakey Maze Layout")
 
   local which = 0
   if crawl.coinflip() then which = 1 end
@@ -219,14 +207,13 @@ function build_vaults_maze_snakey_layout(e)
     if usage.normal.x == 0 then return true end
     return false
   end
-  build_vaults_maze_layout(e,callback)
+  build_vaults_maze_layout(e,callback, "Snakey Maze")
 end
 
 -- Goes just either horizontally or vertically for a few rooms then branches out, makes
 -- an interesting sprawly maze with two bulby areas
 function build_vaults_maze_bifur_layout(e)
 
-  print("Bifur Maze Layout")
   local which = crawl.coinflip()
   local target_depth = crawl.random_range(2,4)
 
@@ -248,7 +235,7 @@ function build_vaults_maze_bifur_layout(e)
     return false
 
   end
-  build_vaults_maze_layout(e,callback)
+  build_vaults_maze_layout(e,callback, "Bifur Maze")
 end
 -- TODO: Spirally maze
 

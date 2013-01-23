@@ -1,19 +1,18 @@
 ------------------------------------------------------------------------------
 -- v_rooms.lua:
 --
--- Main include for Vaults.
---
--- Code by mumra
--- Based on work by infiniplex, based on original work and designs by mumra :)
---
--- Notes:
--- The original had the entire layout code in layout_vaults.des under a
--- single map def. This made things very hard to understand. Here I am
--- separating things into some separate functions which can be called
--- from short map header in layout_vaults.des. This at least makes it
--- easier to control the weightings and depths of those layouts, and to
--- add new layouts.
+-- This file handles the main task of selecting rooms and drawing them onto
+-- the layout.
 ------------------------------------------------------------------------------
+
+-- The four directions and their associated vector normal and name.
+-- This helps us manage orientation of rooms.
+local normals = {
+  { x = 0, y = -1, dir = 0, name="n" },
+  { x = -1, y = 0, dir = 1, name="w" },
+  { x = 0, y = 1, dir = 2, name="s" },
+  { x = 1, y = 0, dir = 3, name="e" }
+}
 
 -- Moves from a start point along a move vector mapped to actual vectors xVector/yVector
 -- This allows us to deal with coords independently of how they are rotated to the dungeon grid
@@ -31,36 +30,21 @@ end
 local function vector_rotate(vec, count)
   if count > 0 then
     local rotated = { x = -vec.y, y = vec.x }
-    if rotated.x == -0 then rotated.x = 0 end
-    if rotated.y == -0 then rotated.y = 0 end
+--    if rotated.x == -0 then rotated.x = 0 end
+  --  if rotated.y == -0 then rotated.y = 0 end
     count = count - 1
     if count <= 0 then return rotated end
     return vector_rotate(rotated,count)
   end
   if count < 0 then
     local rotated = { x = vec.y, y = -vec.x }
-    if rotated.x == -0 then rotated.x = 0 end
-    if rotated.y == -0 then rotated.y = 0 end
+ --   if rotated.x == -0 then rotated.x = 0 end
+  --  if rotated.y == -0 then rotated.y = 0 end
     count = count + 1
     if count >= 0 then return rotated end
     return vector_rotate(rotated,count)
   end
   return vec
-end
-
-local normals = {
-  { x = 0, y = -1, dir = 0, name="n" },
-  { x = -1, y = 0, dir = 1, name="w" },
-  { x = 0, y = 1, dir = 2, name="s" },
-  { x = 1, y = 0, dir = 3, name="e" }
-}
-
-function print_vector(caption,v)
-  if v == nil then
-   print(caption .. ": nil")
-  else
-    print(caption .. ": " .. v.x .. ", " .. v.y)
-  end
 end
 
 local function pick_room(e, options)
@@ -266,7 +250,6 @@ function place_vaults_rooms(e,data, room_count, options)
     local usage = vaults_get_usage(data,p.x,p.y)
     if usage.usage == "restricted" or usage.usage == "eligible_open" or (usage.usage == "eligible" and usage.depth > 1) then
       dgn.set_map_mask(p.x,p.y)
-      -- dgn.unset_map_mask(p.x,p.y,32) -- Remove MMT_OPAQUE
     end
   end
 
@@ -275,63 +258,6 @@ function place_vaults_rooms(e,data, room_count, options)
 
   return true
 end
-
-function dump_usage_grid(usage_grid)
-
-    local gxm,gym = dgn.max_bounds()
-
-  for i = 0, gym-1, 1 do
-    local maprow = ""
-    for j = 0, gxm-1, 1 do
-      local cell = usage_grid[i][j]
-      if cell.usage == "none" then maprow = maprow .. " "
-      elseif cell.usage == "restricted" then
-        if cell.reason == "vault" then maprow = maprow .. ","
-        elseif cell.reason == "door" then maprow = maprow .. "="
-        else maprow = maprow .. "!" end
-      elseif cell.usage == "empty" then maprow = maprow .. "."
-      elseif cell.usage == "eligible" or cell.usage == "eligible_open" then
-        -- if cell.depth == nil then maprow = maprow .. "!"
-        -- else maprow = maprow .. cell.depth end
-        if cell.normal == nil then maprow = maprow .. "!"
-        elseif cell.normal.x == -1 then maprow = maprow .. "<"
-        elseif cell.normal.x == 1 then maprow = maprow .. ">"
-        elseif cell.normal.y == -1 then maprow = maprow .. "^"
-        elseif cell.normal.y == 1 then maprow = maprow .. "v" end
-      elseif cell.usage == "open" then maprow = maprow .. "_"  -- Easier to see the starting room
-      else maprow = maprow .. "?" end
-    end
-    print (maprow)
-  end
-
-end
-
-function dump_usage_grid_pretty(usage_grid)
-
-    local gxm,gym = dgn.max_bounds()
-
-  for i = 0, gym-1, 1 do
-    local maprow = ""
-    for j = 0, gxm-1, 1 do
-      local cell = usage_grid[i][j]
-      if cell.usage == "none" then maprow = maprow .. " "
-      elseif cell.usage == "restricted" then
-        if cell.reason == "vault" then maprow = maprow .. ","
-        elseif cell.reason == "door" then maprow = maprow .. "+"
-        else maprow = maprow .. "." end
-      elseif cell.usage == "empty" then maprow = maprow .. "."
-      elseif cell.usage == "eligible" or cell.usage == "eligible_open" then
-        if cell.normal == nil then maprow = maprow .. "!"
-        elseif cell.normal.x == 0 then maprow = maprow .. "-"
-        elseif cell.normal.y == 0 then maprow = maprow .. "|" end
-      elseif cell.usage == "open" then maprow = maprow .. "."
-      else maprow = maprow .. "?" end
-    end
-    print (maprow)
-  end
-
-end
-
 
 function place_vaults_room(e,usage_grid,room, options)
 
@@ -591,82 +517,52 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     end
   end
 
-  -- Handle wall usage. We don't set the corners, only adjacent walls, because it's fine for other walls to use the corners
-  local wall_usage = "eligible"
+  -- Set wall usage. For each wall of the room set it to eligible or restricted depending on if it's the entrant wall or one of
+  -- the others, and on the vaults_orient_* tags.
+  local wall_usage, new_depth = "eligible", 2
   if usage.usage == "open" or usage.usage == "eligible_open" then wall_usage = "eligible_open" end
+  if usage.depth ~= nil then new_depth = usage.depth + 1 end  -- Room depth
 
-  -- TODO: Need to check which walls allow attachment (this data needs to be generated in pick_room from orient_* tags)
-  -- TODO: Additionally, if a wall overlaps with another eligible wall (that supports an exit) then we should carve a new door.
+  -- TODO: if a wall overlaps with another eligible wall (that supports an exit) then we should carve a new door.
   -- TODO: Furthermore, for open rooms, we should sometims carve a door on multiple sides anyway. So in fact door carving should
   -- be happening here ... or even right at the end.
-  -- TODO: Finally finally, just because a wall is eligible doesn't mean it has connectivity. We need to use post placement
-  -- analysis to check for open squares. In the mean time it might be sensible to only make the middle few squares of a wall
-  -- eligible (and this will avoid silly corner attachments).
-  local new_depth = 2
-  if usage.depth ~= nil then new_depth = usage.depth + 1 end
+
+  -- We don't do anything with the corners, only adjacent walls, because it's fine for other rooms to overlap corners
   for n = 0, room_width - 1, 1 do
     -- Door wall
     local p1 = vaults_vector_add(room_base,{x = n, y = -1}, v_wall, v_normal)
     vaults_set_usage(usage_grid,p1.x,p1.y,{ usage = "restricted", room = room, reason = "door" })
     -- Rear wall
     local p2 = vaults_vector_add(room_base,{x = n, y = room_height}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = wall_usage, normal = vector_rotate(normals[1],-v_normal_dir), room = room, depth = new_depth })
+    -- Look up the right wall number, adjusting for room orientation. Check if wall allows door then either restrict or make eligible...
+    local wall = room.walls[(0 - v_normal_dir)%4]
+    if wall.eligible then
+      vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = wall_usage, normal = vector_rotate(normals[1],-v_normal_dir), room = room, depth = new_depth })
+    else
+      vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = "restricted", room = room, reason = "orient" })
+    end
   end
   for n = 0, room_height - 1, 1 do
     -- Left wall
     local p3 = vaults_vector_add(room_base,{x = -1, y = n}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = wall_usage, normal = vector_rotate(normals[2],-v_normal_dir), room = room, depth = new_depth })
+    local wall = room.walls[(1 - v_normal_dir)%4]
+    if wall.eligible then
+      vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = wall_usage, normal = vector_rotate(normals[2],-v_normal_dir), room = room, depth = new_depth })
+    else
+      vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = "restricted", room = room, reason = "orient" })
+    end
+
     -- Right wall
     local p4 = vaults_vector_add(room_base,{x = room_width, y = n}, v_wall, v_normal)
-    vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = wall_usage, normal = vector_rotate(normals[4],-v_normal_dir), room = room, depth = new_depth })
+    wall = room.walls[(3 - v_normal_dir)%4]
+    if wall.eligible then
+      vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = wall_usage, normal = vector_rotate(normals[4],-v_normal_dir), room = room, depth = new_depth })
+    else
+      vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = "restricted", room = room, reason = "orient" })
+    end
+
   end
 
   -- TODO: We might want to get some data from the placed map e.g. tags and return it
   return true
-end
-
-function place_vaults_rooms_old(e,data, room_count, max_room_depth)
-
-    -- Figure out what rooms we're using
-    -- TODO: This needs to vary more depending on the layout
-    local room_spread = {
-      { "upstairs", 2, 3 },
-      { "downstairs", 3, 3 },
---      { "encounter", 1,4 },
-      { "special", 1,2 },
-      { "loot", 0, 2 },
-      { "empty", 7, 10 },
-    }
-    -- Manually adjust frequencies of stair rooms
-    -- Always have 3 downstairs rooms in V:4
-    -- TODO: Still not perfect, need some more logic. This means 3 stair *rooms* will
-    --       always be placed in V:4 even if one already had 3 stair cases. See st_'s
-    --       comments on V:4 on the tracker.
-    if you.depth < dgn.br_depth(you.branch()) - 1 then
-      if crawl.one_chance_in(4) then
-        room_spread[1] = { "downstairs", 2, 3 }
-      end
-      if crawl.one_chance_in(6) then
-        room_spread[1] = { "downstairs", 1, 3 }
-      end
-      if crawl.one_chance_in(6) then
-        room_spread[2] = { "upstairs", 1, 3 }
-      end
-    end
-
-    -- Min 10 rooms, max 20
-    local room_queue = { }
-    for i,spread in ipairs(room_spread) do
-      local room_count = crawl.random_range(spread[2],spread[3])
-      for n = 0,room_count-1 do
-          table.insert(room_queue,spread[1])
-      end
-    end
-    -- TODO: Shuffle queue because rooms to the end are increasingly unlikely to place
-    --       (but always keep stairs first, they're kind of important)
-
-    -- Finally, attempt to place all items in the queue
-    for i,queued in ipairs(room_queue) do
-      place_vaults_room(e,data,queued)
-    end
 end

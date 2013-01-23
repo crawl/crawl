@@ -18,6 +18,9 @@
 #     be extremely sparing with any obvious layout features, and be heavily
 #     randomised.
 #
+# - vaults_hard
+#     Tough rooms. Similar to a standard room but more likely to feature 8s and 9s.
+#
 # - vaults_rare
 #     Rare rooms. These are more like normal branch minivaults. They can contain
 #     more interesting features and they might
