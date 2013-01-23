@@ -110,7 +110,7 @@ local function pick_room(e, options)
         -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
         dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
 
-        -- Check map size
+
         local room_width,room_height = dgn.mapsize(map)
         local veto = false
         if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
@@ -261,7 +261,7 @@ function place_vaults_rooms(e,data, room_count, options)
   end
 
   -- Useful to see what's going on when things are getting veto'd:
-  dump_usage_grid_pretty(data)
+  -- dump_usage_grid_pretty(data)
 
   return true
 end

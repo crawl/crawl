@@ -82,7 +82,7 @@ end
 function build_vaults_layout(e, name, paint, options)
 
   if not crawl.game_started() then return end
-  print("Vaults Layout: " .. name)
+  -- print("Vaults Layout: " .. name)
 
   e.layout_type "vaults" -- TODO: Lowercase and underscorise the name parameter?
 
