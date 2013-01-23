@@ -356,19 +356,6 @@ MAP
 .......
 ENDMAP
 
-NAME:     vaults_room_7_spin_empty_cross
-TAGS:     vaults_room vaults_empty allow_dup
-SUBST:    ~ = ~:1 .:20
-MAP
-xx...xx
-xxx~xxx
-.xx~xx.
-.~~.~~.
-.xx~xx.
-xxx~xxx
-xx...xx
-ENDMAP
-
 NAME:     vaults_room_7_spin_empty_door_ring
 TAGS:     vaults_room vaults_empty allow_dup
 SUBST:    + : +.
@@ -426,10 +413,9 @@ NAME:     vaults_room_7_spin_empty_feature
 TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
 SUBST:    G : G..
 SUBST:    x : xxw...
-SUBST:    ! = SCT^
+SUBST:    ! = SCT
 SUBST:    T = TTTUVV
 KFEAT:    S = any shop
-KFEAT:    ^ = known zot trap
 : vaults_ornamental_pool(_G)
 MAP
 xx...xx
@@ -441,30 +427,13 @@ xxG.Gxx
 xx...xx
 ENDMAP
 
-NAME:     vaults_room_7_spin_empty_mumra_statues
-TAGS:     vaults_room vaults_empty allow_dup luniq
+NAME:     mumra_vaults_statues_and_fountains
+TAGS:     vaults_room vaults_empty allow_dup
 SUBST:    A : G..
 SUBST:    B : G..
 SUBST:    C : G..
 SUBST:    D : G..
-SUBST:    1 = G . 1:5
-KMONS:    1 = statue
-MAP
-A.....A
-.B.D.B.
-..C.C..
-.D.1.D.
-..C.C..
-.B.D.B.
-A.....A
-ENDMAP
-
-NAME:     vaults_room_7_spin_empty_mumra_fountains
-TAGS:     vaults_room vaults_empty allow_dup luniq
-SUBST:    A : T..
-SUBST:    B : T..
-SUBST:    C : T..
-SUBST:    D : T..
+SUBST:    G : GT
 SUBST:    T = T .:8 V:3 Y:1
 MAP
 A.....A
@@ -532,24 +501,6 @@ MAP
 0.....0
 ENDMAP
 
-NAME:     vaults_room_7_spin_dangerous_boxed
-TAGS:     vaults_room vaults_hard allow_dup
-SUBST:    - : xxm++...
-KPROP:    _ = no_rtele_into
-SUBVAULT: B : vaults_door_7
-SUBVAULT: C : vaults_door_7
-SUBVAULT: D : vaults_door_7
-SUBVAULT: E : vaults_door_7
-MAP
-_-...-_
--xEEEx-
-.D...B.
-.D.9.B.
-.D...B.
--xCCCx-
-_-...-_
-ENDMAP
-
 NAME:     vaults_room_7_spin_dangerous_default
 TAGS:     vaults_room vaults_hard allow_dup no_monster_gen
 SHUFFLE:  GI
@@ -600,40 +551,6 @@ MAP
 9.....9
 ENDMAP
 
-NAME:     vaults_room_7_spin_loot_cross
-TAGS:     vaults_room allow_dup no_monster_gen
-: vaults_standard_loot(_G)
-SUBST:    ~ = ~:1 .:10
-MAP
-xx...xx
-xxx~xxx
-.xx~xx.
-.~~*~~.
-.xx~xx.
-xxx~xxx
-xx...xx
-ENDMAP
-
-NAME:     vaults_room_7_spin_loot_boxed
-TAGS:     vaults_room allow_dup
-SUBST:    - : xxm++...
-KPROP:    _ = no_rtele_into
-NSUBST:   % = 4:% /.
-SUBVAULT: B : vaults_door_7
-SUBVAULT: C : vaults_door_7
-SUBVAULT: D : vaults_door_7
-SUBVAULT: E : vaults_door_7
-: vaults_standard_loot(_G)
-MAP
-_-...-_
--xEEEx-
-.D%%%B.
-.D%%%B.
-.D%%%B.
--xCCCx-
-_-...-_
-ENDMAP
-
 NAME:     vaults_room_7_spin_loot_water_ring
 TAGS:     vaults_room allow_dup no_pool_fixup no_monster_gen
 NSUBST:   % = 6:% / *:_
@@ -648,41 +565,6 @@ MAP
 .w%%%w.
 .wwwww.
 .......
-ENDMAP
-
-# average 13 + 24 + 114 = 151 gold
-NAME:     vaults_room_7_spin_loot_gold
-TAGS:     vaults_room allow_dup no_monster_gen no_item_gen
-NSUBST:   $ = 1:f / 3:e / 38:d / *:.
-: vaults_numbered_gold_items(_G)
-MAP
-$$$$$$$
-$$$$$$$
-$$$$$$$
-$$$$$$$
-$$$$$$$
-$$$$$$$
-$$$$$$$
-ENDMAP
-
-# This is for both entry and exit stairs
-NAME:     vaults_room_7_spin_stairs1_boxed
-TAGS:     vaults_room vaults_room allow_dup
-SUBST:    - : xxm++...
-KPROP:    _ = no_rtele_into
-SUBVAULT: B : vaults_door_7
-SUBVAULT: C : vaults_door_7
-SUBVAULT: D : vaults_door_7
-SUBVAULT: E : vaults_door_7
-
-MAP
-_-...-_
--xEEEx-
-.D...B.
-.D.{.B.
-.D...B.
--xCCCx-
-_-...-_
 ENDMAP
 
 # This is for both entry and exit stairs
@@ -725,27 +607,15 @@ SHUFFLE: ABCDEF
 SUBST:   A : x:4 .:1, B : x:7 .:3, C : x:1 .:4, DEF = .
 NSUBST:  { = 1:{ / 1:[ / 1:( / 1:<
 MAP
-...A...
-.BC{DB.
-.DEFEC.
-A{F<F{A
-.CEFED.
-.BD{CB.
-...A...
-ENDMAP
-
-NAME:     vaults_room_7_spin_up3_grunt_open
-TAGS:     vaults_room allow_dup no_monster_gen no_item_gen
-SHUFFLE:  {([<
-SUBST:    < = .
-MAP
-.......
-.{...[.
-.......
-.......
-.......
-.(...<.
-.......
+.........
+....A....
+..BC{DB..
+..DEFEC..
+.A{F<F{A.
+..CEFED..
+..BD{CB..
+....A....
+.........
 ENDMAP
 
 NAME:     vaults_room_7_spin_down3_cross
@@ -760,20 +630,6 @@ xxx.xxx
 .x>.]x.
 xxx.xxx
 xx...xx
-ENDMAP
-
-NAME:     vaults_room_7_spin_down3_grunt_open
-TAGS:     vaults_room allow_dup no_monster_gen no_item_gen
-SHUFFLE: }])>
-SUBST: > = .
-MAP
-.......
-.}...].
-.......
-.......
-.......
-.)...>.
-.......
 ENDMAP
 
 NAME:     vaults_room_7_spin_secret_subvaulted
