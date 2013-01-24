@@ -271,67 +271,51 @@ function place_vaults_room(e,usage_grid,room, options)
   local gxm, gym = dgn.max_bounds()
 
   local maxTries = 50
-  local maxSpotTries = 5000
   local tries = 0
-  local spotTries = 0
   local done = false
-  local foundSpot = false
-  local spot = { }
-  local usage = { }
 
-  -- Have a few goes at placing; we'll select a random eligible / open spot each time and try to place the vault there
+  local available_spots = #(usage_grid.eligibles)
+  if available_spots == 0 then return { placed = false } end
+
+  -- Have a few goes at placing; we'll select a random eligible spot each time and try to place the vault there
   while tries < maxTries and not done do
     tries = tries + 1
 
-    -- Find an eligible spot
-    spotTries = 0
-    foundSpot = false
-    -- Brute force, this needs optimising, but for now try polling the grid up to 5000 times until we find an eligible spot
-    while spotTries < maxSpotTries and not foundSpot do
-      spotTries = spotTries + 1
-      local spotx = crawl.random_range(2,gxm-2)
-      local spoty = crawl.random_range(2,gym-2)
-      spot = { x = spotx, y = spoty }
-      usage = vaults_get_usage(usage_grid,spot.x,spot.y)
-      if (usage.usage == "eligible_open" or usage.usage == "eligible" or usage.usage == "open") then
-        foundSpot = true
+    -- Select an eligible spot from the list in usage_grid
+    local usage = usage_grid.eligibles[crawl.random_range(1,available_spots)]
+    local spot = usage.spot
+    -- Scan a 5x5 grid around an open spot, see if we find an eligible_open wall to attacn to. This makes us much more likely to
+    -- join up rooms in open areas, and reduces the amount of 1-tile-width chokepoints between rooms. It's still fairly simplistic
+    -- though and maybe we could do this around the whole room area later on instead?
+    if usage.usage == "open" then
+      local near_eligibles = {}
+      for p in iter.rect_iterator(dgn.point(spot.x-2,spot.y-2),dgn.point(spot.x+2,spot.y+2)) do
+        local near_usage = vaults_get_usage(usage_grid,p.x,p.y)
+        if near_usage.usage == "eligible_open" then
+          table.insert(near_eligibles, { spot = p, usage = near_usage })
+        end
+      end
+      -- Randomly pick one of the new spots; maybe_place_vault will at least attempt to attach the room here instead, if possible
+      if #near_eligibles > 0 then
+        local picked = near_eligibles[crawl.random2(#near_eligibles)+1]
+        spot = picked.spot
+        usage = picked.usage
       end
     end
 
-    if foundSpot == true then
-      -- Scan a 5x5 grid around an open spot, see if we find an eligible_open wall to attacn to. This makes us much more likely to
-      -- join up rooms in open areas, and reduces the amount of 1-tile-width chokepoints between rooms. It's still fairly simplistic
-      -- though and maybe we could do this around the whole room area later on instead?
-      if usage.usage == "open" then
-        local near_eligibles = {}
-        for p in iter.rect_iterator(dgn.point(spot.x-2,spot.y-2),dgn.point(spot.x+2,spot.y+2)) do
-          local near_usage = vaults_get_usage(usage_grid,p.x,p.y)
-          if near_usage.usage == "eligible_open" then
-            table.insert(near_eligibles, { spot = p, usage = near_usage })
-          end
-        end
-        -- Randomly pick one of the new spots; maybe_place_vault will at least attempt to attach the room here instead, if possible
-        if #near_eligibles > 0 then
-          local picked = near_eligibles[crawl.random2(#near_eligibles)+1]
-          spot = picked.spot
-          usage = picked.usage
-        end
+    if (usage.usage == "eligible" or usage.usage == "eligible_open") and usage.wall ~= nil then
+      -- Link directly to this wall's door position
+      -- TODO: Something slightly more interesting based on analysis of the room
+      if usage.wall.door_position ~= nil then
+        -- Change target spot to use this position
+        spot = usage.wall.door_position
+        vaults_get_usage(usage_grid,spot.x,spot.y)
       end
+    end
 
-      if (usage.usage == "eligible" or usage.usage == "eligible_open") and usage.wall ~= nil then
-        -- Link directly to this wall's door position
-        -- TODO: Something slightly more interesting based on analysis of the room
-        if usage.wall.door_position ~= nil then
-          -- Change target spot to use this position
-          spot = usage.wall.door_position
-          vaults_get_usage(usage_grid,spot.x,spot.y)
-        end
-      end
-
-      -- Attempt to place the room on the wall at a random position
-      if vaults_maybe_place_vault(e, spot, usage_grid, usage, room, options) then
-        done = true
-      end
+    -- Attempt to place the room on the wall at a random position
+    if vaults_maybe_place_vault(e, spot, usage_grid, usage, room, options) then
+      done = true
     end
   end
   return { placed = done }

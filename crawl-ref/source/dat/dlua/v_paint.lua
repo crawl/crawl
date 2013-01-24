@@ -28,7 +28,7 @@ local function new_layout()
   return layout_grid
 end
 local function new_usage()
-  usage_grid = { }
+  usage_grid = { eligibles = { } }
   local gxm, gym = dgn.max_bounds()
 
   for y = 0, (gym-1), 1 do
@@ -59,6 +59,18 @@ end
 
 local function set_usage(usage_grid,x,y,usage)
   if usage_grid[y] == nil or usage_grid[y][x] == nil then return false end
+  -- Check existing usage, remove it from eligibles if it's there
+  local current = usage_grid[y][x]
+  if current.eligibles_index ~= nil then
+    table.remove(usage_grid.eligibles,current.eligibles_index)
+  end
+  -- Add to the eligibles list if it's eligible
+  if usage.usage == "eligible" or usage.usage == "eligible_open" or usage.usage == "open" then
+    usage.spot = { x = x, y = y } -- Store x,y in the usage object otherwise when we look it up in the list we don't know where it came from!
+    table.insert(usage_grid.eligibles,usage)
+    usage.eligibles_index = #(usage_grid.eligibles)  -- Store index of the new item so we can remove it when it's overwritten
+  end
+  -- Store usage in grid
   usage_grid[y][x] = usage
 end
 
