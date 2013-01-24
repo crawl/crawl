@@ -2275,8 +2275,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
-        cast_los_attack_spell(SPELL_DRAIN_LIFE, you.skill_rdiv(SK_INVOCATIONS),
-                              &you, true);
+        yred_drain_life();
         break;
 
     case ABIL_YRED_ENSLAVE_SOUL:

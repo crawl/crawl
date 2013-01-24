@@ -1664,6 +1664,51 @@ void yred_animate_remains_or_dead()
     }
 }
 
+void yred_drain_life()
+{
+    mpr("You draw life from your surroundings.");
+
+    flash_view(DARKGREY);
+    more();
+    mesclr();
+
+    const int pow = you.skill_rdiv(SK_INVOCATIONS);
+    const int hurted = 3 + random2(7) + random2(pow);
+    int hp_gain = 0;
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (mi->res_negative_energy())
+            continue;
+
+        if (mi->wont_attack())
+            continue;
+
+        mprf("You draw life from %s.",
+             mi->name(DESC_THE).c_str());
+
+        behaviour_event(*mi, ME_WHACK, &you, you.pos());
+
+        mi->hurt(&you, hurted);
+
+        if (mi->alive())
+            print_wounds(*mi);
+
+        if (!mi->is_summoned())
+            hp_gain += hurted;
+    }
+
+    hp_gain /= 2;
+
+    hp_gain = min(pow * 2, hp_gain);
+
+    if (hp_gain)
+    {
+        mpr("You feel life flooding into your body.");
+        inc_hp(hp_gain);
+    }
+}
+
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mons_enslaved_body_and_soul(mon));
