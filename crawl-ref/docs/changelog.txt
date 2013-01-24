@@ -23,6 +23,7 @@ Branches, environment
   Becomes a regular door when opened.
 * Alarm traps only trigger once.
 * A number of vaults are fixed to not trap the player.
+* Place more decorative vaults.
 
 Character
 ---------
