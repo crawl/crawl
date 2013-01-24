@@ -6,7 +6,7 @@
     e.tags("allow_dup")
     e.subst("0 = 0:100 9:4 8:1")
     e.nsubst(". = 1:( / *:.") -- a staircase
-    e.subst(". = .:100 0:3 8:1")
+    e.subst(". = .:200 0:15 9:1")
 --    e.nsubst(". = 1:1 / *:.")
 --    e.nsubst("- = 2:1 / *:.")
 --    e.nsubst("_ = 0:1 / *:.")
@@ -36,34 +36,34 @@ NAME:    v_pattern_1
 TAGS:    vaults_room
 : subvault_setup_random_monsters(_G)
 MAP
-.x.x.x.x.x.
+.x.x...x.x.
 x.x.x.x.x.x
 .x.x.x.x.x.
 x.x.x.x.x.x
 .x.x.x.x.x.
-x.x.x.x.x.x
+..x.x.x.x..
 .x.x.x.x.x.
 x.x.x.x.x.x
 .x.x.x.x.x.
 x.x.x.x.x.x
-.x.x.x.x.x.
+.x.x...x.x.
 ENDMAP
 
 NAME:    v_pattern_2
 TAGS:    vaults_room
 : subvault_setup_random_monsters(_G)
 MAP
-.x.x.x.x.x.
+.x.x...x.x.
 x.x.x.x.x.x
 .x.x.x.x.x.
 x.x.....x.x
 .x.......x.
-x.x..0..x.x
+..x..0..x..
 .x.......x.
 x.x.....x.x
 .x.x.x.x.x.
 x.x.x.x.x.x
-.x.x.x.x.x.
+.x.x...x.x.
 ENDMAP
 
 NAME:    v_pattern_3
@@ -75,17 +75,17 @@ NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 : subvault_setup_random_monsters(_G)
 MAP
-...x.x.x...
+...x...x...
 ...wx.xy...
 ...x.x.x...
 xwxwx.xyxyx
 .x.x.x.x.x.
-x.x.x.x.x.x
+..x.x.x.x..
 .x.x.x.x.x.
 xzxzx.xuxux
 ...x.x.x...
 ...zx.xu...
-...x.x.x...
+...x...x...
 ENDMAP
 
 NAME:    v_pattern_4
@@ -93,17 +93,17 @@ TAGS:    vaults_room
 SUBST:   y:x., Y:x.
 : subvault_setup_random_monsters(_G)
 MAP
-.x.x.x.x.x.
+.x.x...x.x.
 x.x.x.x.x.x
 .x.x.x.x.x.
 x.x.xxx.x.x
 .x.xyyyx.x.
-x.xxyYyxx.x
+..xxyYyxx..
 .x.xyyyx.x.
 x.x.xxx.x.x
 .x.x.x.x.x.
 x.x.x.x.x.x
-.x.x.x.x.x.
+.x.x...x.x.
 ENDMAP
 
 NAME:    v_pattern_5
@@ -113,17 +113,17 @@ SUBST:   z = .
 NSUBST:  y = 1:.+ / *:x
 : subvault_setup_random_monsters(_G)
 MAP
-.x.x.x.x.x.
+.x.x...x.x.
 x.x.x.x.x.x
 .xzxzxzxzx.
 x.xyxyxyx.x
 .xzx...xzx.
-x.xy.0.yx.x
+..xy.0.yx..
 .xzx...xzx.
 x.xyxyxyx.x
 .xzxzxzxzx.
 x.x.x.x.x.x
-.x.x.x.x.x.
+.x.x...x.x.
 ENDMAP
 
 NAME:    v_alt_pattern_1
@@ -414,7 +414,7 @@ xzzx...xyyx
 ENDMAP
 
 NAME:    v_misc_11
-TAGS:    vaults_room
+TAGS:    vaults_room vaults_orient_n vaults_orient_s
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
@@ -434,7 +434,7 @@ xuuxxxxxuux
 ENDMAP
 
 NAME:    v_misc_12
-TAGS:    vaults_room
+TAGS:    vaults_room vaults_orient_n vaults_orient_s
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 : subvault_setup_random_monsters(_G)
@@ -850,7 +850,7 @@ ENDMAP
 
 
 NAME:    v_rooms_1
-TAGS:    vaults_room
+TAGS:    vaults_room vault_orient_n vault_orient_s vault_orient_w
 SUBST:   0 = 0.
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
@@ -893,7 +893,7 @@ xxxx.xzzx....x.xsxttt
 ENDMAP
 
 NAME:    v_rooms_3
-TAGS:    vaults_room
+TAGS:    vaults_room vaults_orient_n vaults_orient_s
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 NSUBST:  w = 1:+ / *:x

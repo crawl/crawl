@@ -48,7 +48,7 @@ function vaults_default_options()
     -- Weightings for types of wall to use across the whole layout
     -- TODO: These weights should vary by depth; metal/green crystal become much more likely at V:3-4
     layout_wall_weights = {
-      { feature = "rock_wall", weight = 2 },
+      { feature = "rock_wall", weight = 2 }, -- Possibly shouldn't be here at all, someone please advise
       { feature = "stone_wall", weight = 30 },
       { feature = "metal_wall", weight = 20 },
       { feature = "green_crystal_wall", weight = 3 },
