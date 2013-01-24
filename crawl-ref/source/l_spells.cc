@@ -12,12 +12,8 @@
 #include "env.h"
 #include "spl-damage.h"
 
-LUAWRAP(_refrigeration,
-        cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION,
-                              luaL_checkint(ls, 1), NULL, true))
-LUAWRAP(_toxic_radiance,
-        cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE,
-                              luaL_checkint(ls, 1), NULL, true))
+LUAWRAP(_refrigeration, cast_refrigeration(luaL_checkint(ls, 1), true))
+LUAWRAP(_toxic_radiance, cast_toxic_radiance(true))
 
 const struct luaL_reg spells_dlib[] =
 {
