@@ -31,7 +31,7 @@ function vaults_default_options()
 
   local options = {
     min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
-    max_rooms = 25, -- Maximum number of rooms to attempt to place
+    max_rooms = 20, -- Maximum number of rooms to attempt to place
     min_room_size = 5, -- Min/max sizes of rooms
     max_room_size = 15,
     max_room_depth = 0, -- No max depth (not implementd yet anyway)
@@ -39,7 +39,7 @@ function vaults_default_options()
 
     -- Weightings of various types of room generators. The plan is to better support code vaults here.
     room_type_weights = {
-      { generator = "floor", weight = 40, min_size = 5, max_size = 15 }, -- Floor vault
+      { generator = "floor", weight = 40, min_size = 5, max_size = 20 }, -- Floor vault
       { generator = "tagged", tag = "vaults_room", weight = 50 },
       { generator = "tagged", tag = "vaults_empty", weight = 30 },
       { generator = "tagged", tag = "vaults_hard", weight = 10 },
@@ -180,7 +180,7 @@ function build_vaults_maze_layout(e,veto_callback, name)
     return false
   end
 
-  build_vaults_layout(e, name, paint, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 3, max_room_size = 25 })
+  build_vaults_layout(e, name, paint, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 5, max_room_size = 25, max_rooms = 25 })
 
 end
 -- Uses a custom veto function to alternate between up or down connections every {dist} rooms
