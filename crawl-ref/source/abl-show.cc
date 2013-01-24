@@ -507,7 +507,7 @@ static string _zd_mons_description_for_ability(const ability_def &abil)
     case ABIL_MAKE_BURNING_BUSH:
         return "Blackened shoots writhe from the ground and burst into flame!";
     case ABIL_MAKE_ICE_STATUE:
-        return "Water vapor collects and crystallizes into an icy humanoid shape.";
+        return "Water vapor collects and crystallises into an icy humanoid shape.";
     case ABIL_MAKE_OCS:
         return "Quartz juts from the ground and forms a humanoid shape. You smell citrus.";
     case ABIL_MAKE_SILVER_STATUE:
