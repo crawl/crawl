@@ -395,10 +395,9 @@ ENDMAP
 NAME:     vaults_room_4_spin_empty_feature
 TAGS:     vaults_room_4_spin_empty allow_dup
 SUBST:    G : xG...
-SUBST:    ! = SCT^
+SUBST:    ! = SCT
 SUBST:    T = TTTUVV
 KFEAT:    S = any shop
-KFEAT:    ^ = known zot trap
 MAP
 G..G
 .!..
