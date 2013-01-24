@@ -236,7 +236,6 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
-    end_arcane_familiar(false);
 }
 
 static void _update_travel_cache(const level_id& old_level,
