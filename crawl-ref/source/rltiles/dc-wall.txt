@@ -752,6 +752,26 @@ cobalt_stone10
 cobalt_stone11
 cobalt_stone12
 
+catacombs0 WALL_CATACOMBS
+catacombs1
+catacombs2
+catacombs3
+catacombs4
+catacombs5
+catacombs6
+%weight 6
+catacombs7
+catacombs8
+catacombs9
+catacombs10
+catacombs11
+%weight 3
+catacombs12
+catacombs13
+catacombs14
+catacombs15
+%weight 10
+
 stone2_gray0 DNGN_STONE_WALL DNGN_STONE_WALL_LIGHTGRAY
 stone2_gray1
 stone2_gray2
