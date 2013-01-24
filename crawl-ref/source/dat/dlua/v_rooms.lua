@@ -90,16 +90,14 @@ local function pick_room(e, options)
     return room
 
   -- Pick by tag
-  elseif chosen.generator == "tagged"
-    local room_type = chosen.tag
-
+  elseif chosen.generator == "tagged" then
     local found = false
     local tries = 0
     local maxTries = 20
 
     while tries < maxTries and not found do
       -- Resolve a map with the specified tag
-      local mapdef = dgn.map_by_tag("vaults_"..room_type,true)
+      local mapdef = dgn.map_by_tag(chosen.tag,true)
       -- Temporarily prevent map getting mirrored / rotated during resolution; and hardwire transparency because lack of it can fail a whole layout
       dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
       -- Resolve the map so we can find its width / height
