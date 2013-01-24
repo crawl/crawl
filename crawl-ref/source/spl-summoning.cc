@@ -2635,7 +2635,12 @@ bool fire_arcane_familiar(monster* mons)
         // Set up the beam.
         bolt beam;
         beam.source_name = "arcane familiar";
-        beam.target = mons->props["firing_target"].get_coord();
+
+        // If we are locked onto a foe, use its current position
+        if (mons->foe != MHITYOU)
+            beam.target = menv[mons->foe].pos();
+        else
+            beam.target = mons->props["firing_target"].get_coord();
 
         beam.name       = "bolt of energy";
         beam.range      = LOS_RADIUS;
