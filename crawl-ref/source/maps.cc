@@ -1176,6 +1176,9 @@ static bool verify_file_version(const string &file, time_t mtime)
         fclose(fp);
         return (major == TAG_MAJOR_VERSION
                 && minor <= TAG_MINOR_VERSION
+#if TAG_MAJOR_VERSION == 34
+                && minor >= TAG_MINOR_0_12
+#endif
                 && t == mtime);
     }
     catch (short_read_exception &E)
@@ -1209,6 +1212,10 @@ static bool _load_map_index(const string& cache, const string &base,
             int64_t t = unmarshallSigned(inf);
             if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
                 return false;
+#if TAG_MAJOR_VERSION == 34
+            if (minor < TAG_MINOR_0_12)
+                return false;
+#endif
             lc_global_prelude.read(inf);
             fclose(fp);
 
@@ -1227,6 +1234,10 @@ static bool _load_map_index(const string& cache, const string &base,
     int64_t t = unmarshallSigned(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
         return false;
+#if TAG_MAJOR_VERSION == 34
+    if (minor < TAG_MINOR_0_12)
+        return false;
+#endif
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize(nexist + nmaps, map_def());
