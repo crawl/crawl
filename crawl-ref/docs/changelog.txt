@@ -1,4 +1,4 @@
-Stone Soup 0.12 (up to 0.12-a0-1573-g98eede4)
+Stone Soup 0.12 (up to 0.12-a0-1808-gb42fc8b)
 ---------------------------------------------
 
 Branches, environment
@@ -14,6 +14,7 @@ Branches, environment
 * A new Sprint map by st: "The Pits".
 * A new layout for Cocytus.
 * A new dragon-themed Lair ending.
+* A new water-themed rune vault for the Snake Pit.
 * Lots more new vaults.
 * Remove secret doors entirely, replacing some with runed doors.
 * More layouts allowed in Zot.
@@ -48,7 +49,9 @@ Character
 * Levels 1 and 2 of the teleportitis mutation teleport you only a limited
   distance.
 * The augmentation mutation now gives bonuses at high HP rather than low HP.
+* The Powered by Pain mutation sometimes gives stat bonuses.
 * Many scale mutations are slightly improved.
+* Dragon form can use wands again.
 
 Monsters
 --------
@@ -60,7 +63,7 @@ Monsters
     - Tentacled starspawn: has constricting tentacles and a nasty attack.
     - Ancient zyme: causes sickness and stat drain when near the player.
     - Lurking horror: stalks like a wandering mushroom, then explodes for
-      torment and draining.
+      torment.
     - Starcursed mass: proliferates when ignored, re-merges when damaged.
       Has a smite-targeted psychic scream that becomes more powerful as
       more masses become visible.
@@ -68,12 +71,17 @@ Monsters
     - Thrashing horror: moves like a bat, tramples, and frenzies.
     - Spatial maelstrom: incorporeal vortex that turns walls into more
       maelstroms.
+    - Chaos butterfly: is surrounded by rain, summons twisters, and
+      has a chaos attack.
+* New uniques:
+    - Jorgrun, a dwarven earth elementalist.
+    - Lamia, queen of the nagas.
 * Friendly summoned monsters do not attack things unless the player has line
   of sight to both the summon and the victim. Glass does not count as line of
   sight for this purpose.
 * Summoned monsters do not cast spells that create permanent allies.
 * Only a select few monsters flee at low HP.
-* New monster spells: Shatter, LRD.
+* New monster spells: Shatter, LRD, OTR.
 * Bone dragons are faster but have fewer HP.
 * Ereshkigal is much more dangerous.
 * Soul eaters can drain life from their surroundings.
@@ -87,6 +95,7 @@ Monsters
 * Monsters are much less likely to polymorph into plain elves and humans.
 * Non-humanoid holies no longer "salute", etc.
 * Trapdoor spiders no longer get "stuck".
+* Stone giants, titans, wyverns, and the iron giant are slightly smaller.
 
 Spells
 ------
@@ -102,6 +111,8 @@ Spells
 * Teleport Other gets a power boost.
 * Condensation Shield's SH bonus no longer cares about Shields skill or
   intelligence.
+* Summon swarm now gives spiders instead of wolf spiders.
+* Venom Bolt and Bolt of Magma do more damage.
 
 Items
 -----
@@ -142,6 +153,8 @@ Items
   but only when the item is unequipped.
 * The "*Rage" artefact property triggers much less often (except for Wrath of
   Trog).
+* The hand-and-a-half weapon category is gone; such weapons are now
+  one-handed for normal-size races.
 
 Gods
 ----
@@ -152,6 +165,11 @@ Gods
 * Xom will not animate or swap weapons in the Abyss.
 * Gods can no longer grant permanent brands to friendly dancing weapons.
 * Zin's vitalisation protects against paralysing attacks.
+* Vehumet is overhauled: Now grants damaging spells one-at-a-time (available
+  from the (M)emorization screen), partially based on your elemental skills.
+  No longer supports summoning, accepts ally kills, or reduces spell MP cost.
+* Elyvilon no longer gives piety for pacifying summoned monsters.
+* Mobile Fedhas-granted allies follow you across levels en masse.
 
 Interface
 ---------
@@ -166,7 +184,8 @@ Interface
 * The "evil_eating" and "evil_item" menu-colouring prefixes are renamed to
   "forbidden".
 * Explosion and cloud spells will try to target a spot adjacent to an
-  out-of-range monster before falling back to the player's position.
+  out-of-range monster before falling back to the player's position,
+  but will ignore plants.
 * It is possible to restrict a ctrl-f stash search to the current level by
   prefixing it with "@".
 * Removed the hidden special cost of Spellcasting, Stealth, Evocations and
