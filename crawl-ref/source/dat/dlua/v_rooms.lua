@@ -49,10 +49,14 @@ end
 
 local function pick_room(e, options)
 
-  local weights = { }
+  -- Pick generator from weighted table
+  local chosen = util.random_weighted_from("weight",options.room_type_weights)
 
-  -- Do we just want an empty room? (Otherwise known as "floor vault" thanks to elliott)
-  if crawl.random2(100) < options.empty_chance then
+  -- TODO: Proceduralise the generators more so the weights table can contain functions that generate the room contents, answer questions about
+  -- size, connectable walls, etc.
+
+  -- Floor vault (empty rooms)
+  if chosen.generator == "floor" then
     local veto = true
 
     while veto do
@@ -85,10 +89,9 @@ local function pick_room(e, options)
 
     return room
 
-  else
-    -- Pick by tag
-    -- Ignore weights for now
-    local room_type = "room"
+  -- Pick by tag
+  elseif chosen.generator == "tagged"
+    local room_type = chosen.tag
 
     local found = false
     local tries = 0
@@ -109,7 +112,6 @@ local function pick_room(e, options)
       else
         -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
         dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
-
 
         local room_width,room_height = dgn.mapsize(map)
         local veto = false

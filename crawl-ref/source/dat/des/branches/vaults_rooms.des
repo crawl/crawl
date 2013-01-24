@@ -344,7 +344,7 @@ ENDMAP
 #
 
 NAME:     vaults_room_7_spin_empty_subvaulted
-TAGS:     vaults_room vaults_empty allow_dup
+TAGS:     vaults_empty allow_dup
 SUBVAULT: B : vaults_room_1_city_empty
 MAP
 .......
@@ -357,7 +357,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_7_spin_empty_door_ring
-TAGS:     vaults_room vaults_empty allow_dup
+TAGS:     vaults_empty allow_dup
 SUBST:    + : +.
 MAP
 .+...+.
@@ -370,7 +370,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_7_spin_empty_pool
-TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
+TAGS:     vaults_empty allow_dup no_pool_fixup
 : vaults_ornamental_pool(_G)
 MAP
 .......
@@ -383,7 +383,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_7_spin_empty_4_pools
-TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
+TAGS:     vaults_empty allow_dup no_pool_fixup
 : vaults_ornamental_pool(_G)
 MAP
 ww...ww
@@ -396,7 +396,7 @@ ww...ww
 ENDMAP
 
 NAME:     vaults_room_7_spin_empty_statues
-TAGS:     vaults_room vaults_empty allow_dup
+TAGS:     vaults_empty allow_dup
 SHUFFLE:  GI
 SUBST:    I : G..
 MAP
@@ -410,7 +410,7 @@ xx...xx
 ENDMAP
 
 NAME:     vaults_room_7_spin_empty_feature
-TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
+TAGS:     vaults_empty allow_dup no_pool_fixup
 SUBST:    G : G..
 SUBST:    x : xxw...
 SUBST:    ! = SCT
@@ -428,7 +428,7 @@ xx...xx
 ENDMAP
 
 NAME:     mumra_vaults_statues_and_fountains
-TAGS:     vaults_room vaults_empty allow_dup
+TAGS:     vaults_empty allow_dup
 SUBST:    A : G..
 SUBST:    B : G..
 SUBST:    C : G..
@@ -502,7 +502,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_7_spin_dangerous_default
-TAGS:     vaults_room vaults_hard allow_dup no_monster_gen
+TAGS:     vaults_hard allow_dup no_monster_gen
 SHUFFLE:  GI
 SUBST:    I : G.
 SHUFFLE:  pq/rs
@@ -522,7 +522,7 @@ G.....G
 ENDMAP
 
 NAME:     vaults_room_7_spin_dangerous_grunt_1
-TAGS:     vaults_room vaults_hard allow_dup no_item_gen no_monster_gen
+TAGS:     vaults_hard allow_dup no_item_gen no_monster_gen
 WEIGHT:   5
 ITEM:     any good_item / any
 NSUBST:   8 = 2:8 / 2:0 / *:.
@@ -537,7 +537,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_7_spin_dangerous_grunt_2
-TAGS:     vaults_room vaults_hard allow_dup no_item_gen no_monster_gen
+TAGS:     vaults_hard allow_dup no_item_gen no_monster_gen
 WEIGHT:   5
 ITEM:     any good_item / any
 NSUBST:   9 = 2:9 / 2:8 / *:.
@@ -1182,7 +1182,7 @@ ENDMAP
 #
 
 NAME:     vaults_room_7_city_empty_subvaults
-TAGS:     vaults_room vaults_empty allow_dup
+TAGS:     vaults_empty allow_dup
 SHUFFLE:  GHIJ
 SUBST:    HIJ = .
 SUBVAULT: A : vaults_room_1_city_empty
@@ -1202,7 +1202,7 @@ CCC...BBB
 ENDMAP
 
 NAME:     vaults_room_7_city_empty_quartered_pool
-TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
+TAGS:     vaults_empty allow_dup no_pool_fixup
 SHUFFLE:  GHIJ
 SUBST:    HIJ = .
 : vaults_ornamental_pool(_G)
@@ -1219,7 +1219,7 @@ xxww.wwxx
 ENDMAP
 
 NAME:     vaults_room_7_city_empty_boxed_pool
-TAGS:     vaults_room vaults_empty allow_dup no_pool_fixup
+TAGS:     vaults_empty allow_dup no_pool_fixup
 SHUFFLE:  GHI
 SUBST:    HI = .
 SHUFFLE:  +-

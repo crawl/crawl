@@ -39,7 +39,7 @@ function vaults_default_options()
 
     -- Weightings of various types of room generators. The plan is to better support code vaults here.
     room_type_weights = {
-      { generator = "floor", weight = 40 }, -- Floor vault
+      { generator = "floor", weight = 40, min_size = 5, max_size = 15 }, -- Floor vault
       { generator = "tagged", tag = "vaults_room", weight = 50 },
       { generator = "tagged", tag = "vaults_empty", weight = 30 },
       { generator = "tagged", tag = "vaults_hard", weight = 10 },
@@ -51,10 +51,10 @@ function vaults_default_options()
       { feature = "rock_wall", weight = 2 }, -- Possibly shouldn't be here at all, someone please advise
       { feature = "stone_wall", weight = 30 },
       { feature = "metal_wall", weight = 20 },
-      { feature = "green_crystal_wall", weight = 3 },
+      { feature = "green_crystal_wall", weight = 5 },
     },
 
-    -- Weightings for types of wall to use for individual rooms, overriding the layout wall
+    -- Weightings for types of wall to use for individual rooms, overriding the layout wall (unused)
     room_wall_weights = {
       { default = true, weight = 100 }, -- Weighting to leave default wall type
       { feature = "rock_wall", weight = 5 },
