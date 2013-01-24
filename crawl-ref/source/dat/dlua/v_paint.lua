@@ -223,6 +223,15 @@ function paint_vaults_layout(e, paint, options)
 
   local wall_type = "stone_wall"
   if options.wall_type ~= nil then wall_type = options.wall_type end
+
+  -- Use spread from config
+  if options.layout_wall_weights ~= nil then
+    local chosen = util.random_weighted_from("weight", options.layout_wall_weights) -- Anyone coding Lua in Crawl needs to be aware of this function!!
+    wall_type = chosen.feature
+  end
+  -- Store it in options so it can get used for room surrounds
+  options.layout_wall_type = wall_type
+
   local floor_type = "floor"
 
   for x = 0, gxm-1, 1 do

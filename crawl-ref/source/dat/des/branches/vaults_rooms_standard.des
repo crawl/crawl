@@ -1,6 +1,6 @@
 NAME:     vaults_standard_mumra_x
 TAGS:     vaults_room
-SUBST:    0 = .......0009
+SUBST:    0 = .......0000
 MAP
 .........
 .cc0)0cc.
@@ -15,7 +15,7 @@ ENDMAP
 
 NAME:     vaults_standard_mumra_enter_the_diamond
 TAGS:     vaults_room vaults_orient_e vaults_orient_w
-SUBST:    0 = .........0009
+SUBST:    0 = .........0000
 MAP
 ..00xxx00..
 ..0xx0xx0..
@@ -30,21 +30,22 @@ ENDMAP
 
 NAME:     vaults_standard_mumra_lines
 TAGS:     vaults_room vaults_orient_e vaults_orient_w
-NSUBST:   0 = 7:0 / 2:9 / 1:8 / 2:) / *:.
+SUBST:    0 = .:200 0:80 9:1
+SUBST:    ( = .:2 (:1
 MAP
 ..xx0.0....
 ...xxx..0..
 ..0..xxx...
-......0xx..
+..(...0xx..
 ..0.xx.....
-.0.xx...0..
+.0.xx...(0.
 ..xx..x....
 .xx.0.xx.0.
 .......x...
 ..xx.0.xx..
 .0.xx.0.x0.
 ..0.xx..xx.
-.........x.
+..(......x.
 ..0.xxxx...
 .xxxx.0....
 ENDMAP

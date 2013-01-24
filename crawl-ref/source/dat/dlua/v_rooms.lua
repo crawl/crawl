@@ -449,12 +449,11 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   room.origin = origin
   room.opposite = opposite
 
-  -- Randomly vary the wall type
-  -- TODO: Use spread from config instead and take note of level-wide wall type
-  local surrounding_wall_type = "stone_wall"
-  if crawl.one_chance_in(20) then surrounding_wall_type = "rock_wall" end
-  if crawl.one_chance_in(15) then surrounding_wall_type = "metal_wall" end
-  if crawl.one_chance_in(25) then surrounding_wall_type = "green_crystal_wall" end
+  -- Wall type. Originally this was randomly varied but we decided it didn't work very well especially when rooms were connected.
+  local surrounding_wall_type = options.layout_wall_type
+--  if crawl.one_chance_in(20) then surrounding_wall_type = "rock_wall" end
+--  if crawl.one_chance_in(15) then surrounding_wall_type = "metal_wall" end
+--  if crawl.one_chance_in(25) then surrounding_wall_type = "green_crystal_wall" end
   -- Store it so we can perform substitution after placement
   room.wall_type = surrounding_wall_type
 
@@ -479,15 +478,22 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- How big the door?
   local needs_door = true  -- Only reason we wouldn't need a door is if we're intentionally creating a dead end, not implemented yet
   if needs_door then
-    -- Even or odd width
+    -- Even or odd room width
     local oddness = room_width % 2
+    -- Doors should be 1 or 2 wide. Right now this depends on whether the wall has odd or even length. This isn't ideal, should be randomised
+    -- more, but things generally look weird if they're off-center.
+    local door_length = 2 - oddness
+    -- Rarish chance of a slightly bigger door, TODO: Discuss more with elliptic & st
+    -- For now will keep things highly predictable so the layouts work properly. But it really shouldn't be too hard at this stage
+    -- to check for spots where both sides of the wall have floor, and carve the door there. (Would be nice IMO to extremely rarely have
+    -- the very big doors, perhaps only on the empty rooms).
+    -- if crawl.one_chance_in(6) then door_length = door_length + 2
+
     -- Work out half the door length
 --    local door_max = math.floor(room_width / 2)
 --    local door_half_length = crawl.random_range(1,door_max)
     -- Multiply by two and add one if odd
 --    local door_length = door_half_length * 2 + oddness
-    local door_length = 4
-    if oddness == 1 then door_length = 3 end
 
     local door_start = (room_width - door_length) / 2
     local door_c1 = vaults_vector_add(room_base, { x = door_start, y = -1 }, v_wall, v_normal)
@@ -560,7 +566,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     -- Look up the right wall number, adjusting for room orientation. Check if wall allows door then either restrict or make eligible...
     if rear_wall.eligible then
       vaults_set_usage(usage_grid,p2.x,p2.y,{ usage = wall_usage, normal = vector_rotate(normals[1],-v_normal_dir), room = room, depth = new_depth, wall = rear_wall })
-      if room.type == "vault" and n == math.floor(room_width / 2) then
+      if room.type == "vault" and n == math.ceil(room_width / 2) then
         rear_wall.door_position = p2
       end
     else
@@ -576,7 +582,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     local wall = room.walls[(1 - v_normal_dir)%4]
     if wall.eligible then
       vaults_set_usage(usage_grid,p3.x,p3.y,{ usage = wall_usage, normal = vector_rotate(normals[2],-v_normal_dir), room = room, depth = new_depth, wall = left_wall })
-      if room.type == "vault" and n == math.floor(room_height / 2) then
+      if room.type == "vault" and n == math.ceil(room_height / 2) then
         left_wall.door_position = p3
       end
     else
@@ -588,7 +594,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
     if wall.eligible then
       vaults_set_usage(usage_grid,p4.x,p4.y,{ usage = wall_usage, normal = vector_rotate(normals[4],-v_normal_dir), room = room, depth = new_depth, wall = right_wall })
-      if room.type == "vault" and n == math.floor(room_height / 2) then
+      if room.type == "vault" and n == math.ceil(room_height / 2) then
         right_wall.door_position = p4
       end
     else

@@ -416,17 +416,6 @@ MAP
 ....
 ENDMAP
 
-NAME:     vaults_room_4_spin_encounter_traps
-TAGS:     vaults_room_4_spin_encounter allow_dup no_monster_gen
-SUBST:    G : xG~~~
-SUBST:    ~ = ~.
-MAP
-G~~G
-~~~~
-~~~~
-G~~G
-ENDMAP
-
 NAME:     vaults_room_4_spin_dangerous_default
 TAGS:     vaults_room_4_spin_dangerous allow_dup no_monster_gen
 SHUFFLE:  pq/rs
