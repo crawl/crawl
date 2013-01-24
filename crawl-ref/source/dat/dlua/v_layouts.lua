@@ -33,7 +33,7 @@ function vaults_default_options()
     min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
     max_rooms = 20, -- Maximum number of rooms to attempt to place
     min_room_size = 5, -- Min/max sizes of rooms
-    max_room_size = 15,
+    max_room_size = 40,
     max_room_depth = 0, -- No max depth (not implementd yet anyway)
     empty_chance = 40, -- Chance in 100 to make a floor vault (redundant)
 
@@ -83,6 +83,8 @@ function build_vaults_layout(e, name, paint, options)
 
   if not crawl.game_started() then return end
   -- print("Vaults Layout: " .. name)
+  local gxm,gym = dgn.max_bounds()
+  -- e.extend_map{width=gxm, height=gym, fill='x'}
 
   e.layout_type "vaults" -- TODO: Lowercase and underscorise the name parameter?
 
@@ -119,6 +121,8 @@ function build_vaults_cross_layout(e, corridorWidth, intersect)
   -- Ignoring intersect for now
   if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
+
+  local corridorWidth = 3 + crawl.random2avg(3,2)
 
   local xc = math.floor((gxm-corridorWidth)/2)
   local yc = math.floor((gym-corridorWidth)/2)
