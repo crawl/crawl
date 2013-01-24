@@ -75,6 +75,7 @@
 #include "random.h"
 #include "show.h"
 #include "shopping.h"
+#include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -1076,6 +1077,8 @@ static void _grab_followers()
         monster* mons = &menv[i];
         if (!mons->alive())
             continue;
+        if (mons->type == MONS_ARCANE_FAMILIAR)
+            end_arcane_familiar(false);
         mons->flags &= ~MF_TAKING_STAIRS;
     }
 }
