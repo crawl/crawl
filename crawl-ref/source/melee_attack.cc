@@ -976,7 +976,7 @@ bool melee_attack::attack()
     return attack_occurred;
 }
 
-/* Initializes the noise_factor
+/* Initialises the noise_factor
  *
  * For both players and monsters, separately sets the noise_factor for weapon
  * attacks based on damage type or attack_type/attack_flavour respectively.

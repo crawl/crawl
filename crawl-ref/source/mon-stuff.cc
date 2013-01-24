@@ -201,7 +201,7 @@ void monster_drop_things(monster* mons,
     }
 }
 
-// Initializes a corpse item using the given monster and monster type.
+// Initialises a corpse item using the given monster and monster type.
 // The monster pointer is optional; you may pass in NULL to bypass
 // per-monster checks.
 //
