@@ -1365,7 +1365,7 @@ static int _shatter_player_dice()
     // flyers get no extra damage.
     else if (you.airborne())
         return 1;
-    else if (you.form == TRAN_STATUE || you.form == TRAN_LICH)
+    else if (you.form == TRAN_STATUE)
         return 6;
     else if (you.form == TRAN_ICE_BEAST)
         return 4;
@@ -2090,13 +2090,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.colour     = WHITE;
             beam.damage.num = 2;
             beam.flavour    = BEAM_ICE;
-            return true;
-        }
-        else if (you.form == TRAN_LICH) // blast of bone
-        {
-            beam.name   = "blast of bone shards";
-            beam.colour = LIGHTGREY;
-            beam.damage.num = 2;
             return true;
         }
 
