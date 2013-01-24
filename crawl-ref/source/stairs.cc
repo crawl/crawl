@@ -215,6 +215,16 @@ static void _clear_golubria_traps()
     }
 }
 
+static void _clear_prisms()
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monster* mons = &menv[i];
+        if (mons->type == MONS_FULMINANT_PRISM)
+            mons->reset();
+    }
+}
+
 static void _leaving_level_now(dungeon_feature_type stair_used)
 {
     process_sunlights(true);
@@ -236,6 +246,7 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
+    _clear_prisms();
 }
 
 static void _update_travel_cache(const level_id& old_level,
