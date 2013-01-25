@@ -141,12 +141,23 @@ local function pick_room(e, options)
             room.walls[n] = { eligible = eligible }
             -- Only need to compute wall data for an eligible wall
             if eligible then
+              local wall_normal = normals[n+1]
+              local wall_dir = vector_rotate(wall_normal,1)
+              -- Get the coord of the first cell of the wall
+              local start = { x = 0, y = 0 }
+              if n == 1 then start = { x = 0, y = room.size.y - 1 }
+              elseif n == 2 then start = { x = room.size.x - 1, y = room.size.y - 1 }
+              elseif n == 3 then start = { x = room.size.x - 1, y = 0 } end
+
               if (n % 2) == 1 then length = room.size.y else length = room.size.x end
               room.walls[n].cells = {}
+--              print("Map: " .. dgn.desc(map))
+              -- For every cell of the wall, check the internal feature of the room
               for m = 1, length, 1 do
-                -- For now we'll assume the middle 3 or 4 squares have connectivity, this will solve 99% of cases with current
-                -- subvaults (but make a somewhat boring layout). Really we should do a more detailed analysis of the map glyphs.
-                if math.abs(m - 0 - length/2) <= 2 then room.walls[n].cells[m] = true else room.walls[n].cells[m] = false end
+                -- Map to internal room coordinate based on start vector and normals
+                local mapped = vaults_vector_add(start, { x = m - 1, y = 0 }, wall_dir,wall_normal)
+                local feat = dgn.inspect_map(vplace,mapped.x,mapped.y)
+                room.walls[n].cells[m] = { feature = feat }
               end
             end
           end
