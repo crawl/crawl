@@ -727,7 +727,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
     }
 
-    case MONS_POLYPHEMUS:
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
         item.base_type = OBJ_MISSILES;
@@ -1519,6 +1518,12 @@ static void _give_ammo(monster* mon, int level,
             weap_type  = MI_LARGE_ROCK;
             weap_class = OBJ_MISSILES;
             qty = 2;
+            break;
+
+        case MONS_POLYPHEMUS:
+            weap_type  = MI_LARGE_ROCK;
+            weap_class = OBJ_MISSILES;
+            qty        = random_range(8, 12);
             break;
 
         case MONS_MERFOLK_JAVELINEER:
