@@ -2140,7 +2140,10 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         if ((mons_is_statue(mon->type) || mon->is_skeletal())
              && x_chance_in_y(pow / 5, 50)) // potential insta-kill
         {
-            monster_die(mon, KILL_YOU, NON_MONSTER);
+            monster_die(mon,
+                        caster->is_player() ? KILL_YOU
+                                            : KILL_MON,
+                        NON_MONSTER);
             beam.damage.num += 2;
         }
         else if (caster->is_player())
