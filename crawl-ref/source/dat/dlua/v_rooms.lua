@@ -452,10 +452,10 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     local final_orient = (orient.dir - v_normal_dir + 2) % 4
 
     -- We can only rotate a map clockwise or anticlockwise. To rotate 180 we just flip on both axes.
-    if final_orient == 0 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,0)
-    elseif final_orient == 1 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,1)
-    elseif final_orient == 2 then dgn.reuse_map(room.vplace,origin.x,origin.y,true,true,0)
-    elseif final_orient == 3 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,-1) end
+    if final_orient == 0 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,0,true,true)
+    elseif final_orient == 1 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,1,true,true)
+    elseif final_orient == 2 then dgn.reuse_map(room.vplace,origin.x,origin.y,true,true,0,true,true)
+    elseif final_orient == 3 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,-1,true,true) end
 
   end
 
