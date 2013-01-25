@@ -758,8 +758,8 @@ catacombs2
 catacombs3
 catacombs4
 catacombs5
-catacombs6
 %weight 6
+catacombs6
 catacombs7
 catacombs8
 catacombs9
