@@ -188,10 +188,10 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_MACE,              "mace",                8,  3, 14, 120,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_CRUSHING, 10 },
-    { WPN_FLAIL,             "flail",               9,  2, 15, 130,  8,
+    { WPN_FLAIL,             "flail",              10,  0, 14, 130,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_CRUSHING, 10 },
-    { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
+    { WPN_MORNINGSTAR,       "morningstar",        13, -2, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,  30,  2,
@@ -200,13 +200,15 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_SLASHING, 0 },
+#if TAG_MAJOR_VERSION == 34
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
+#endif
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
-    { WPN_EVENINGSTAR,       "eveningstar",        14, -1, 15, 180,  8,
+    { WPN_EVENINGSTAR,       "eveningstar",        15, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 2 },
     { WPN_GREAT_MACE,        "great mace",         18, -4, 17, 270,  9,
@@ -1362,7 +1364,6 @@ int weapon_rarity(int w_type)
         return 5;
 
     case WPN_BROAD_AXE:
-    case WPN_SPIKED_FLAIL:
     case WPN_WHIP:
         return 4;
 
@@ -1398,6 +1399,9 @@ int weapon_rarity(int w_type)
     case WPN_SACRED_SCOURGE:
     case WPN_TRISHULA:
     case WPN_STAFF:
+#if TAG_MAJOR_VERSION == 34
+    case WPN_SPIKED_FLAIL:
+#endif
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return 0;
 

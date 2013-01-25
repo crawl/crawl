@@ -515,7 +515,7 @@ KMONS:   1 = brimstone fiend w:9 / hell sentinel w:1
 KMONS:   2 = hellion / balrug
 KMONS:   34 = smoke demon / red devil
 KMONS:   56 = skeletal warrior ; broad axe ego:flaming ident:type | \
-         halberd ego:flaming ident:type w:7 | spiked flail ego:flaming ident:type
+         halberd ego:flaming ident:type w:7 | morningstar ego:flaming ident:type
 KMONS:   7 = hell knight
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen

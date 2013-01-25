@@ -2985,9 +2985,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_FLAIL_DWARF;
         return TILE_WPN_FLAIL;
 
+#if TAG_MAJOR_VERSION == 34
     case WPN_SPIKED_FLAIL:
         return TILE_WPN_SPIKED_FLAIL;
-
+#endif
     case WPN_GREAT_MACE:
         return TILE_WPN_GREAT_MACE;
 

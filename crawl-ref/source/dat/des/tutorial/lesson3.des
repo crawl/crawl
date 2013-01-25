@@ -161,7 +161,7 @@ KFEAT:   S = general shop use_all ; \
              buckler ego:none | ring of slaying | scroll of enchant weapon II
 ITEM:    gold q:40
 ITEM:    gold q:220
-MONS:    gnoll ; flail ego:none | spiked flail ego:none | spear ego:none . \
+MONS:    gnoll ; flail ego:none | morningstar ego:none | spear ego:none . \
          leather armour | ring mail
 MONS:    crimson imp
 MONS:    orc ; scimitar ego:none | battleaxe ego:none | trident ego:none . \

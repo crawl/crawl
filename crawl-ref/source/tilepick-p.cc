@@ -96,9 +96,11 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_FLAIL:
         tile = TILEP_HAND1_FLAIL;
         break;
+#if TAG_MAJOR_VERSION == 34;
     case WPN_SPIKED_FLAIL:
         tile = TILEP_HAND1_SPIKED_FLAIL;
         break;
+#endif
     case WPN_DIRE_FLAIL:
         tile = TILEP_HAND1_GREAT_FLAIL;
         break;
