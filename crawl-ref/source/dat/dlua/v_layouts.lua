@@ -39,7 +39,7 @@ function vaults_default_options()
 
     -- Weightings of various types of room generators. The plan is to better support code vaults here.
     room_type_weights = {
-      { generator = "floor", weight = 40, min_size = 5, max_size = 20 }, -- Floor vault
+      { generator = "floor", weight = 40, min_size = 5, max_size = 15 }, -- Floor vault
       { generator = "tagged", tag = "vaults_room", weight = 50 },
       { generator = "tagged", tag = "vaults_empty", weight = 30 },
       { generator = "tagged", tag = "vaults_hard", weight = 10 },

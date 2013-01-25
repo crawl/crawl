@@ -58,15 +58,16 @@ local function pick_room(e, options)
   -- Floor vault (empty rooms)
   if chosen.generator == "floor" then
     local veto = true
+    local floor_feat = dgn.feature_number("floor")
+    local diff = chosen.max_size - chosen.min_size
 
     while veto do
       veto = false
-
       room = {
         type = "empty",
-        size = { x = crawl.random_range(options.min_room_size,options.max_room_size), y = crawl.random_range(options.min_room_size,options.max_room_size) }
+        -- Use random2(random2(..)) to get a room size that tends towards lower values
+        size = { x = chosen.min_size + crawl.random2(crawl.random2(diff)), y = chosen.min_size + crawl.random2(crawl.random2(diff)) }
       }
-
       -- Describe connectivity of each wall. Of course all points are connectable since the room is empty.
       room.walls = { }
       local length
@@ -75,7 +76,7 @@ local function pick_room(e, options)
         if (n % 2) == 1 then length = room.size.y else length = room.size.x end
         room.walls[n].cells = {}
         for m = 1, length, 1 do
-          room.walls[n].cells[m] = true
+          room.walls[n].cells[m] = { feat = floor_feat, open = true }
         end
       end
 
@@ -151,13 +152,14 @@ local function pick_room(e, options)
 
               if (n % 2) == 1 then length = room.size.y else length = room.size.x end
               room.walls[n].cells = {}
---              print("Map: " .. dgn.desc(map))
               -- For every cell of the wall, check the internal feature of the room
               for m = 1, length, 1 do
                 -- Map to internal room coordinate based on start vector and normals
                 local mapped = vaults_vector_add(start, { x = m - 1, y = 0 }, wall_dir,wall_normal)
-                local feat = dgn.inspect_map(vplace,mapped.x,mapped.y)
-                room.walls[n].cells[m] = { feature = feat }
+                local feature = dgn.inspect_map(vplace,mapped.x,mapped.y)
+                local solid = feat.is_solid(feature)
+                local water = feat.is_water(feature)
+                room.walls[n].cells[m] = { feature = feature, open = not (solid or water) }
               end
             end
           end
