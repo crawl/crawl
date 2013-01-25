@@ -1789,11 +1789,10 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     beam.source      = you.pos();
     beam.hit         = AUTOMATIC_HIT;
 
-    if (const monster* mons = caster->as_monster())
-        beam.source_name = mons->name(DESC_PLAIN, true);
+    beam.source_name = caster->name(DESC_PLAIN, true);
+    beam.aux_source = "by Lee's Rapid Deconstruction"; // for direct attack
 
     beam.target = target;
-    beam.aux_source.clear();
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
     beam.damage = dice_def(0, 5 + pow / 5);
@@ -1932,6 +1931,9 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             // Targeted monster not shatterable, try the terrain instead.
             goto do_terrain;
         }
+
+        beam.aux_source = beam.name;
+
         // Got a target, let's blow it up.
         return true;
     }
@@ -2065,6 +2067,8 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         beam.colour = element_colour(get_feature_def(grid).colour,
                                      false, target);
     }
+
+    beam.aux_source = beam.name;
 
     return true;
 }
