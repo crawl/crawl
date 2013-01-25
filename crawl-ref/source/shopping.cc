@@ -1254,7 +1254,9 @@ unsigned int item_value(item_def item, bool ident)
             valued += 45;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case WPN_SPIKED_FLAIL:
+#endif
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
             valued += 50;

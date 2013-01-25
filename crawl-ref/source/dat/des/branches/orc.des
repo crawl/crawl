@@ -1122,7 +1122,7 @@ ENDMAP
 NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
 PLACE:   Orc:4
-MONS:    orc warrior w:1 ; crossbow . bolt . halberd | war axe | spiked flail /\
+MONS:    orc warrior w:1 ; crossbow . bolt . halberd | war axe | morningstar /\
          orc w:10 ; crossbow . bolt . trident | hand axe | mace
 MONS:    orc warrior ; crossbow . bolt . glaive | broad axe | battleaxe | great mace
 MONS:    orc knight ; crossbow . bolt . glaive | broad axe | great mace

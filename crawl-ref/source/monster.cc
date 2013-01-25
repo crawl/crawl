@@ -1478,7 +1478,7 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         if (mons->type == MONS_EDMUND)
         {
             return (wtype == WPN_FLAIL
-                    || wtype == WPN_SPIKED_FLAIL
+                    || wtype == WPN_MORNINGSTAR
                     || wtype == WPN_DIRE_FLAIL);
         }
 

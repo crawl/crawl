@@ -701,9 +701,9 @@ KITEM: f = war axe plus:2 plus2:3 ego:freezing ident:all not_cursed /\
 KITEM: g = dire flail plus:2 plus2:2 ego:protection ident:all not_cursed /\
        dire flail plus:2 plus2:2 ego:vorpal ident:all not_cursed /\
        dire flail plus:2 plus2:2 good_item ident:all not_cursed w:5 /\
-       spiked flail plus:2 plus2:2 ego:protection ident:all not_cursed /\
-       spiked flail plus:2 plus2:2 ego:vorpal ident:all not_cursed /\
-       spiked flail plus:2 plus2:2 good_item ident:all not_cursed w:5
+       morningstar plus:2 plus2:2 ego:protection ident:all not_cursed /\
+       morningstar plus:2 plus2:2 ego:vorpal ident:all not_cursed /\
+       morningstar plus:2 plus2:2 good_item ident:all not_cursed w:5
 KITEM: h = halberd plus:2 plus2:2 ego:protection ident:all not_cursed /\
        halberd plus:2 plus2:2 ego:venom ident:all not_cursed /\
        halberd plus:2 plus2:2 good_item ident:all not_cursed w:5

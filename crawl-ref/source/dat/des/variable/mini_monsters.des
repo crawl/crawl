@@ -1216,7 +1216,7 @@ DEPTH:  D:6-10
 MONS:   human; club | mace w:3 . animal skin | leather armour
 MONS:   human; sling . stone | sling bullet w:3 . animal skin | leather armour
 SUBST:  1 = 112.
-KMONS:  3 = human; flail | spiked flail w:3 . ring mail | scale mail
+KMONS:  3 = human; flail | morningstar w:3 . ring mail | scale mail
 KITEM:  3 = %
 MAP
 .........

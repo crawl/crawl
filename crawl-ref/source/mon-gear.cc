@@ -315,13 +315,13 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
         if (one_chance_in(6))
         {
-            item.sub_type = random_choose(WPN_SPIKED_FLAIL, WPN_GREAT_MACE,
-                                          WPN_WAR_AXE,      WPN_TRIDENT,   -1);
+            item.sub_type = random_choose(WPN_MORNINGSTAR, WPN_GREAT_MACE,
+                                          WPN_WAR_AXE,     WPN_TRIDENT,   -1);
         }
         else
         {
             item.sub_type = random_choose(
-                WPN_MACE,      WPN_FLAIL,       WPN_MORNINGSTAR,
+                WPN_MACE,      WPN_FLAIL,       WPN_FALCHION,
                 WPN_DAGGER,    WPN_SHORT_SWORD, WPN_LONG_SWORD,
                 WPN_SCIMITAR,  WPN_GREAT_SWORD, WPN_HAND_AXE,
                 WPN_BATTLEAXE, WPN_SPEAR,       WPN_HALBERD,
@@ -345,8 +345,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_EDMUND:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted (30, WPN_FLAIL, 10, WPN_SPIKED_FLAIL,
-                                                 5, WPN_DIRE_FLAIL, 0);
+        item.sub_type = one_chance_in(3) ? WPN_DIRE_FLAIL : WPN_FLAIL;
         // "expensive" flail. {due}
         if (item.sub_type == WPN_FLAIL)
             level = MAKE_GOOD_ITEM;
@@ -371,7 +370,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
         if (one_chance_in(6))
         {
-            item.sub_type = random_choose_weighted(5, WPN_SPIKED_FLAIL, 5, WPN_GREAT_MACE,
+            item.sub_type = random_choose_weighted(5, WPN_MORNINGSTAR, 5, WPN_GREAT_MACE,
                                                    5, WPN_GREAT_SWORD, 10, WPN_BROAD_AXE,
                                                    15, WPN_BATTLEAXE, 0);
         }
@@ -496,8 +495,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                 20, WPN_HAMMER,      20, WPN_SHORT_SWORD,
                 20, WPN_MACE,        10, WPN_WHIP,
                 10, WPN_TRIDENT,     10, WPN_FALCHION,
-                10, WPN_MORNINGSTAR, 6,  WPN_WAR_AXE,
-                3, WPN_SPIKED_FLAIL,
+                6, WPN_WAR_AXE,      3, WPN_MORNINGSTAR,
                 0);
         }
         else
@@ -512,9 +510,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                 20, WPN_MACE,
                                                 10, WPN_TRIDENT,
                                                 10, WPN_FALCHION,
-                                                10, WPN_MORNINGSTAR,
-                                                 3, WPN_SPIKED_FLAIL,
-                                                 0);
+                                                3, WPN_MORNINGSTAR,
+                                                0);
         break;
 
     case MONS_DUVESSA:
@@ -631,10 +628,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             10, WPN_LONG_SWORD, 10, WPN_SHORT_SWORD,
             10, WPN_SCIMITAR,   10, WPN_BATTLEAXE,
             10, WPN_HAND_AXE,   10, WPN_HALBERD,
-            10, WPN_GLAIVE,     10, WPN_MORNINGSTAR,
+            10, WPN_GLAIVE,     10, WPN_MACE,
             10, WPN_GREAT_MACE, 10, WPN_TRIDENT,
-            9,  WPN_WAR_AXE,     9, WPN_FLAIL,
-            1,  WPN_BROAD_AXE,   1, WPN_SPIKED_FLAIL,
+            9,  WPN_WAR_AXE,    9, WPN_FLAIL,
+            1,  WPN_BROAD_AXE,  1, WPN_MORNINGSTAR,
             0);
         break;
 

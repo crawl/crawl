@@ -930,7 +930,6 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
 
         case WPN_MACE:
         case WPN_FLAIL:
-        case WPN_SPIKED_FLAIL:
         case WPN_GREAT_MACE:
         case WPN_DIRE_FLAIL:
             if (one_chance_in(4))
@@ -1134,7 +1133,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_MACE:
         case WPN_GREAT_MACE:
         case WPN_FLAIL:
-        case WPN_SPIKED_FLAIL:
         case WPN_DIRE_FLAIL:
         case WPN_HAMMER:
             if (one_chance_in(25))
