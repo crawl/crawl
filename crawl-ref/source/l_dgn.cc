@@ -1777,6 +1777,26 @@ LUAFN(_dgn_reuse_map)
     return 0;
 }
 
+// dgn.inspect_map(vplace,x,y)
+//
+// You must first have resolved a map to get the vault_placement, using dgn.resolve_map(..).
+// This function will then inspect a coord on that map where <0,0> is the top-left cell and tell you
+// the feature type. This will respect all KFEAT and other map directives; and SUBST and other
+// transformations will have already taken place during resolve_map./
+LUAFN(_dgn_inspect_map)
+{
+    if (!lua_isuserdata(ls, 1))
+        luaL_argerror(ls, 1, "Expected vault_placement");
+
+    vault_placement &vp(*static_cast<vault_placement*>(lua_touserdata(ls, 1)));
+
+    COORDS(place, 2, 3);
+
+    lua_pushnumber(ls, vp.feature_at(place));
+
+    return 1;
+}
+
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
 LUAFN(dgn_fill_grd_area)
@@ -1897,6 +1917,7 @@ const struct luaL_reg dgn_dlib[] =
 { "place_map", _dgn_place_map },
 { "reuse_map", _dgn_reuse_map },
 { "resolve_map", _dgn_resolve_map },
+{ "inspect_map", _dgn_inspect_map },
 { "in_vault", _dgn_in_vault },
 { "set_map_mask", _dgn_set_map_mask },
 { "unset_map_mask", _dgn_unset_map_mask },

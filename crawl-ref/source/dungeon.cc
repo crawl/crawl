@@ -151,6 +151,12 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
                               int vgrid);
 static void _vault_grid_mapspec(vault_placement &place, const coord_def& where,
                                 keyed_mapspec& mapsp);
+static dungeon_feature_type _vault_inspect(vault_placement &place,
+                                           int vgrid, keyed_mapspec *mapsp);
+static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
+                                                   keyed_mapspec& mapsp);
+static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
+                                                 int vgrid);
 
 static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
@@ -6435,6 +6441,86 @@ void vault_placement::connect(bool spotty) const
         if (!_connect_vault_exit(*i))
             dprf("Warning: failed to connect vault exit (%d;%d).", i->x, i->y);
     }
+}
+
+// Checks the resultant feature type of the map glyph, after applying KFEAT and so forth.
+// Unfortunately there is a certain amount of duplication of the code path in apply_grid; but actual modifications to the level
+// are so intertwined with that code path it would be actually quite messy to try and avoid the duplication.
+dungeon_feature_type vault_placement::feature_at(const coord_def &c)
+{
+    // Can't check outside bounds of vault
+    if (size.zero() || c.x > size.x || c.y > size.y)
+        return NUM_FEATURES;
+
+    const int feat = map.map.glyph(c);
+
+    if (feat == ' ')
+        return NUM_FEATURES;
+
+    keyed_mapspec *mapsp = map.mapspec_at(c);
+    return _vault_inspect(*this, feat, mapsp);
+
+}
+
+static dungeon_feature_type _vault_inspect(vault_placement &place,
+                        int vgrid, keyed_mapspec *mapsp)
+{
+    // The two functions called are
+    if (mapsp && mapsp->replaces_glyph())
+        return _vault_inspect_mapspec(place, *mapsp);
+    else
+        return _vault_inspect_glyph(place, vgrid);
+}
+
+static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place, keyed_mapspec& mapsp)
+{
+    dungeon_feature_type found = NUM_FEATURES;
+    const feature_spec f = mapsp.get_feat();
+    if (f.trap.get())
+    {
+        trap_spec* spec = f.trap.get();
+        if (spec)
+            found = trap_category(spec->tr_type);
+    }
+    else if (f.feat >= 0)
+        found = static_cast<dungeon_feature_type>(f.feat);
+    else if (f.glyph >= 0)
+        found = _vault_inspect_glyph(place, f.glyph);
+    else if (f.shop.get())
+        found = DNGN_ENTER_SHOP;
+    else
+        found = DNGN_FLOOR;
+
+    return found;
+}
+
+static dungeon_feature_type _vault_inspect_glyph(vault_placement &place, int vgrid)
+{
+    // Get the base feature according to the glyph
+    dungeon_feature_type found = NUM_FEATURES;
+    if (vgrid != -1)
+        found = _glyph_to_feat(vgrid, &place);
+
+    // If it's an altar for an unavailable god then it will get turned into floor by _vault_grid_glyph
+    if (feat_is_altar(found)
+        && is_unavailable_god(feat_altar_god(found)))
+    {
+        found = DNGN_FLOOR;
+    }
+
+    // TODO: Handle exits (mainly I am interested in know about the @ -mumra)
+    /*
+    switch (vgrid)
+    {
+    case '@':
+    case '=':
+    case '+':
+        if (_map_feat_is_on_edge(place, where))
+            place.exits.push_back(where);
+
+        break;
+    }*/
+    return found;
 }
 
 static void _remember_vault_placement(const vault_placement &place, bool extra)
