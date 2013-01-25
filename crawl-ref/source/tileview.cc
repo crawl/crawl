@@ -311,9 +311,7 @@ static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
     if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
     {
-        t.push_back(TILE_WALL_BRICK_DARK_4);
-        t.push_back(TILE_WALL_BRICK_DARK_5);
-        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
+        t.push_back(TILE_WALL_CATACOMBS);
         return;
     }
     if (depth <= 6)
