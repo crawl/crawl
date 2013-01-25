@@ -106,6 +106,9 @@ alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
 fire_crab CORPSE_FIRE_CRAB
+%sdir mon/abyss
+apocalypse_crab CORPSE_APOCALYPSE_CRAB
+%sdir mon/animals
 
 ## Worms ('w')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4

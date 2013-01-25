@@ -3661,6 +3661,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_ALLIGATOR_SNAPPING_TURTLE;
     case MONS_FIRE_CRAB:
         return TILE_CORPSE_FIRE_CRAB;
+    case MONS_APOCALYPSE_CRAB:
+        return TILE_CORPSE_APOCALYPSE_CRAB;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
