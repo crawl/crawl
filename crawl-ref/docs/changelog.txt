@@ -1,3 +1,16 @@
+Stone Soup 0.11.2 (20130125)
+----------------------------
+* Crash fixes.
+* Jellies no longer take damage from acid.
+* The Royal Jelly spawns behave correctly on the arena, and after pacification.
+* Handle forcibly closing the game a bit better (save corruption, crashes,
+  possible cheating).
+* No more false annotations in the Abyss.
+* Octopodes can't grow claws on their non-existant hands anymore.
+* Tile games did not always draw overlays properly.
+* Invocation based titles were wrong on the high scores list.
+* A number of other misc fixes.
+
 Stone Soup 0.11.1 (20121116)
 ----------------------------
 * A number of crash fixes.
