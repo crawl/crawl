@@ -23,7 +23,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MERFOLK:
-        case SP_HALFLING:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
