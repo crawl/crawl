@@ -1790,9 +1790,12 @@ LUAFN(_dgn_inspect_map)
 
     vault_placement &vp(*static_cast<vault_placement*>(lua_touserdata(ls, 1)));
 
-    COORDS(place, 2, 3);
+    // Not using the COORDS macro because it checks against in_bounds which will fail 0,0 (!)
+    coord_def c;
+    c.x = luaL_checkint(ls, 2);
+    c.y = luaL_checkint(ls, 3);
 
-    lua_pushnumber(ls, vp.feature_at(place));
+    lua_pushnumber(ls, vp.feature_at(c));
 
     return 1;
 }
