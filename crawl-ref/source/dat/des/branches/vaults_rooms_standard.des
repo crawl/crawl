@@ -25,7 +25,7 @@
 ################################################################################
 
 NAME:     vaults_standard_mumra_x
-TAGS:     allow_dup vaults_room
+TAGS:     vaults_room
 NSUBST:   ' = 1:0 / 2=0. / *:.
 SUBST:    ) = )..
 MAP
@@ -61,7 +61,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_standard_mumra_lines
-TAGS:     allow_dup vaults_room vaults_orient_e vaults_orient_w
+TAGS:     vaults_room vaults_orient_e vaults_orient_w
 SUBST:    ( = .:2 (:1
 NSUBST:   . = 2:0 / 2=0. / *:.
 MAP
@@ -96,7 +96,7 @@ xx...xx
 ENDMAP
 
 NAME:     vaults_room_fours
-TAGS:  allow_dup      vaults_room allow_dup
+TAGS:     vaults_room allow_dup
 SUBST:    w : x:20 w:5
 NSUBST:   . = 1:( / 1:0 / 1:0. / *:.
 MAP
@@ -146,23 +146,23 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_grunt_arrival_checkpoint
-TAGS:     llow_dup vaults_room vaults_orient_e no_monster_gen no_item_gen no_trap_gen
+TAGS:     vaults_room vaults_orient_e no_monster_gen no_item_gen no_trap_gen
 WEIGHT:   15 (Vaults:1), 3
 MONS:     vault guard
 MAP
 xxxxxxxxxx
 xxxx.T.xxx
 xxxx...xxx
-x{.n1.1n..
+x..n1.1n..
 x(.+...+..
-x[.n1.1n..
+x..n1.1n..
 xxxx...xxx
 xxxx.T.xxx
 xxxxxxxxxx
 ENDMAP
 
 NAME:     vaults_room_boxed
-TAGS:     vaults_room allow_dup
+TAGS:     vaults_room
 NSUBST:   - = 1:+ / 2=x+ / *:x
 NSUBST:   . = 2:0 / 2=0. / *:.
 MAP
@@ -188,65 +188,65 @@ ENDMAP
 ############################################################
 # The Hell Knights are playing the Vault tonight. Rock! \m/ (Shiori)
 #
-#NAME:   metal_show
-#TAGS:   vaults_room vaults_orient_e
-#TAGS:   no_monster_gen no_item_gen no_wall_fixup
-#WEIGHT: 2
-#COLOUR: M = magenta
-#COLOUR: K = magenta
-#FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
-#MARKER: # = lua:fog_machine{\
-#            pow_max = 15, delay_min = 100, delay_max = 150, \
-#            size = 2, size_buildup_amnt = 10, \
-#            size_buildup_time = 1000 }
-#KFEAT:  # = fountain_blood
-## the talent:
-#: if crawl.one_chance_in(10) then
-#NSUBST: M = M / K.
-#: else
-#SUBST:  M = .
-#: end
-#KMONS:  K = patrolling hell knight
-#KMONS:  M = patrolling Margery
-## the staff-- manager and bartender:
-#KMONS:  S = human; robe
-## the bouncers:
-#KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
-## the fans:
-#SUBST:  F = 011112223334455679.........
-#MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
-#MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
-## these are Sludge Elves.
-#MONS:   ghoul / necrophage / rotting hulk / vampire
-#MONS:   wizard / necromancer
-#MONS:   big kobold / kobold demonologist
-#MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
-#        w:2 deep elf priest
-#MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
-#        Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
-#        Wiglaf / Norris / goblin
-#KITEM:  ! = any potion / potion of confusion, \
-#            any potion / potion of paralysis, any potion / potion of slowing
-#KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
-#MAP
-#vvvvvvvvvvvvv....
-#v!+.MMMM.+S$v....
-#v!v.KKKK.v$$vF...
-#vvvv#MM#vvvvvFF..
-#v..FFFFFFvFFvFF..
-#v!mFvFFvFvFF+BF..
-#v!mFFFFFFvFFvFF..
-#v!mFFFFFFvFF+BF..
-#v!mFvFFvFvFFvFF..
-#v!mFFFFFFvFF+BF..
-#vSmFFFFFFvFFvFF..
-#vvvvvBBvvvFFvFF..
-#vFFFFFFFFFFFvF...
-#vvvvvvvvvvvvv....
-#ENDMAP
+NAME:   metal_show
+TAGS:   vaults_room vaults_orient_e
+TAGS:   no_monster_gen no_item_gen no_wall_fixup
+WEIGHT: 2
+COLOUR: M = magenta
+COLOUR: K = magenta
+FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
+MARKER: # = lua:fog_machine{\
+            pow_max = 15, delay_min = 100, delay_max = 150, \
+            size = 2, size_buildup_amnt = 10, \
+            size_buildup_time = 1000 }
+KFEAT:  # = fountain_blood
+# the talent:
+: if crawl.one_chance_in(10) then
+NSUBST: M = M / K.
+: else
+SUBST:  M = .
+: end
+KMONS:  K = patrolling hell knight
+KMONS:  M = patrolling Margery
+# the staff-- manager and bartender:
+KMONS:  S = human; robe
+# the bouncers:
+KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
+# the fans:
+SUBST:  F = 011112223334455679.........
+MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
+MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
+# these are Sludge Elves.
+MONS:   ghoul / necrophage / rotting hulk / vampire
+MONS:   wizard / necromancer
+MONS:   big kobold / kobold demonologist
+MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
+        w:2 deep elf priest
+MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
+        Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
+        Wiglaf / Norris / goblin
+KITEM:  ! = any potion / potion of confusion, \
+            any potion / potion of paralysis, any potion / potion of slowing
+KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
+MAP
+vvvvvvvvvvvvv....
+v!+.MMMM.+S$v....
+v!v.KKKK.v$$vF...
+vvvv#MM#vvvvvFF..
+v..FFFFFFvFFvFF..
+v!mFvFFvFvFF+BF..
+v!mFFFFFFvFFvFF..
+v!mFFFFFFvFF+BF..
+v!mFvFFvFvFFvFF..
+v!mFFFFFFvFF+BF..
+vSmFFFFFFvFFvFF..
+vvvvvBBvvvFFvFF..
+vFFFFFFFFFFFvF...
+vvvvvvvvvvvvv....
+ENDMAP
 
 NAME:    v_pattern_1
-TAGS:    allow_dup vaults_room luniq_lattice
+TAGS:    vaults_room luniq_lattice
 NSUBST:  . = 1:0 / 2=0. / *:.
 NSUBST:  . = 1:( / *:.
 MAP
@@ -264,7 +264,7 @@ x.x.x.x.x.x
 ENDMAP
 
 NAME:    v_pattern_2
-TAGS:    allow_dup vaults_room luniq_lattice
+TAGS:    vaults_room luniq_lattice
 NSUBST:  . = 1:0 / 2=0. / *:.
 NSUBST:  . = 1:( / *:.
 MAP
@@ -282,7 +282,7 @@ x.x.x.x.x.x
 ENDMAP
 
 NAME:    v_pattern_3
-TAGS:    allow_dup vaults_room luniq_lattice
+TAGS:    vaults_room luniq_lattice
 SHUFFLE: wuyz / ....
 NSUBST:  w = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
@@ -305,7 +305,7 @@ xzxzx.xuxux
 ENDMAP
 
 NAME:    v_pattern_4
-TAGS:    allow_dup vaults_room luniq_lattice
+TAGS:    vaults_room luniq_lattice
 SUBST:   y:x., Y:x.
 NSUBST:  . = 1:0 / 2=0. / *:.
 NSUBST:  . = 1:( / *:.
@@ -324,7 +324,7 @@ x.x.x.x.x.x
 ENDMAP
 
 NAME:    v_pattern_5
-TAGS:    allow_dup vaults_room luniq_lattice
+TAGS:    vaults_room luniq_lattice
 SHUFFLE: zy
 SUBST:   z = .
 NSUBST:  y = 1:.+ / *:x
@@ -367,7 +367,7 @@ zxzx.x.xyxy
 ENDMAP
 
 NAME:    v_alt_pattern_5
-TAGS:    allow_dup vaults_room
+TAGS:    vaults_room
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 SUBST:   0 = 0.
@@ -767,7 +767,7 @@ MAP
 ENDMAP
 
 NAME:    v_rooms_1
-TAGS:    vaults_room allow_dup
+TAGS:    vaults_room
 TAGS:    vault_orient_n vault_orient_s vault_orient_w
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
@@ -790,7 +790,7 @@ xssssx.t...t...u.....
 ENDMAP
 
 NAME:    v_rooms_2
-TAGS:    vaults_room allow_dup
+TAGS:    vaults_room
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 NSUBST:  w = 1:+ / *:x
@@ -812,7 +812,7 @@ xxxx.xzzx....x.xsxttt
 ENDMAP
 
 NAME:    v_rooms_3
-TAGS:    vaults_room allow_dup
+TAGS:    vaults_room
 TAGS:    vaults_orient_n vaults_orient_s
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
@@ -916,7 +916,7 @@ ENDMAP
 #ENDMAP
 
 NAME:     vaults_room_glass_cross
-TAGS:     vaults_hard allow_dup
+TAGS:     vaults_hard
 NSUBST:   y = 1:+ / *:x
 SUBST:    w : ....x, m : mmmx, * = *%
 KITEM:    8 = $
@@ -936,7 +936,7 @@ ww......ww
 ENDMAP
 
 NAME:     vaults_room_hangedman_quadrants
-TAGS:     vaults_hard no_monster_gen allow_dup
+TAGS:     vaults_hard no_monster_gen
 SUBST:    $ = $%., * = *|, = : -., - : +:4 $:1
 MAP
 xx.x.xx
@@ -949,7 +949,7 @@ xx.x.xx
 ENDMAP
 
 NAME:     vaults_room_guarded_vault
-TAGS:     vaults_hard vaults_orient_e allow_dup
+TAGS:     vaults_hard vaults_orient_e
 MONS:     vault guard
 SUBST:    0 = 00.
 MAP
@@ -963,7 +963,7 @@ MAP
 ENDMAP
 
 NAME:    v_hard_diamondy
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 SUBST:   1 = 0..
 MAP
 xxxxx..x..xxxxx
@@ -997,7 +997,7 @@ xxx+xxxx+xxx
 ENDMAP
 
 NAME:    v_hard_smaller_cells
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 MAP
 ..x.0x..x0.x..
 ..x0.x..x.0x..
@@ -1010,7 +1010,7 @@ xx+xx+xx+xx+xx
 ENDMAP
 
 NAME:    v_hard_lines
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 SHUFFLE: 90
 SUBST:   1 = 00.
 MAP
@@ -1025,7 +1025,7 @@ xxxxxx++xxxxxx
 ENDMAP
 
 NAME:    v_hard_spiral_rooms
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 MAP
 ....x.........
 .0..+.........
@@ -1038,7 +1038,7 @@ xxxxxxxxxx.0..
 ENDMAP
 
 NAME:    v_hard_cross
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 KMONS:   8 = 8
 KITEM:   8 = |, *
 SUBST:   8 = 98, 0 = 09
@@ -1057,7 +1057,7 @@ xxxxx.xxxxx
 ENDMAP
 
 NAME:    v_hard_check
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 KMONS:   8 = 8
 KITEM:   8 = |
 KMONS:   9 = 9
@@ -1071,7 +1071,7 @@ MAP
 ENDMAP
 
 NAME:    v_hard_octagons_1
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 NSUBST:  ^ = 2:* / *:%
 MAP
 ......|x.....x^..^x..
@@ -1092,7 +1092,7 @@ x+xx......xx+xx..xx..
 ENDMAP
 
 NAME:    v_hard_octagons_2
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 NSUBST:  ^ = 3:* / *:%$
 MAP
 ....^x..x^......^x^..
@@ -1113,7 +1113,7 @@ x..xxx.....xx+xx^.0..
 ENDMAP
 
 NAME:    v_hard_squares
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 MAP
 ..............
 ....0....0....
@@ -1132,7 +1132,7 @@ MAP
 ENDMAP
 
 NAME:    v_hard_lattice
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 MAP
 .x.x.x.x.
 .x0x.x0x.
@@ -1145,7 +1145,7 @@ x.x.x.x.x
 ENDMAP
 
 NAME:    v_hard_more_cells
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 MAP
 ...x...x...
 .0.+.9.+.9.
@@ -1157,7 +1157,7 @@ x+xxx+xxx+x
 ENDMAP
 
 NAME:    v_hard_hourglassy
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 TAGS:    vaults_orient_n vaults_orient_s
 MAP
 xxxxxxx...xxxxxxx
@@ -1172,7 +1172,7 @@ xxxxxxx...xxxxxxx
 ENDMAP
 
 NAME:    v_hard_eye
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 TAGS:    vaults_orient_n vaults_orient_s
 NSUBST:  9 = 1:8 / *:9
 MAP
@@ -1193,7 +1193,7 @@ xxxxxxxxx..xxxxxxxxx
 ENDMAP
 
 NAME:    v_hard_star
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 TAGS:    vaults_orient_n vaults_orient_s
 NSUBST:  0 = 2=998 / 6:0 / *:.
 MAP
@@ -1210,7 +1210,7 @@ xxxxxxxxxxxx..xxxxxxxxxxxx
 ENDMAP
 
 NAME:    v_hard_quartered_hall
-TAGS:    vaults_hard allow_dup
+TAGS:    vaults_hard
 NSUBST:  0 = 4=998 / 8:0 / *:.
 MAP
 xxxxxxx..xxxxxxx
