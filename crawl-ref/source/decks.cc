@@ -1972,6 +1972,24 @@ static void _potion_card(int power, deck_rarity_type rarity)
     potion_effect(pot, random2(power/4));
 }
 
+static string _god_wrath_stat_check(string cause_orig)
+{
+    string cause = cause_orig;
+
+    if (crawl_state.is_god_acting())
+    {
+        god_type which_god = crawl_state.which_god_acting();
+        if (crawl_state.is_god_retribution())
+            cause = "the wrath of " + god_name(which_god);
+        else if (which_god == GOD_XOM)
+            cause = "the capriciousness of Xom";
+        else
+            cause = "the 'helpfulness' of " + god_name(which_god);
+    }
+
+    return cause;
+}
+
 static void _focus_card(int power, deck_rarity_type rarity)
 {
     stat_type best_stat = STAT_STR;
@@ -1995,18 +2013,7 @@ static void _focus_card(int power, deck_rarity_type rarity)
         worst_stat = static_cast<stat_type>(random2(3));
     }
 
-    string cause = "the Focus card";
-
-    if (crawl_state.is_god_acting())
-    {
-        god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution())
-            cause = "the wrath of " + god_name(which_god);
-        else if (which_god == GOD_XOM)
-            cause = "the capriciousness of Xom";
-        else
-            cause = "the 'helpfulness' of " + god_name(which_god);
-    }
+    const string cause = _god_wrath_stat_check("the Focus card");
 
     modify_stat(best_stat, 1, true, cause.c_str(), true);
     modify_stat(worst_stat, -1, true, cause.c_str(), true);
@@ -2021,18 +2028,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     for (int i = 0; i < NUM_STATS; ++i)
         new_base[perm[i]]  = you.base_stats[i];
 
-    string cause = "the Shuffle card";
-
-    if (crawl_state.is_god_acting())
-    {
-        god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution())
-            cause = "the wrath of " + god_name(which_god);
-        else if (which_god == GOD_XOM)
-            cause = "the capriciousness of Xom";
-        else
-            cause = "the 'helpfulness' of " + god_name(which_god);
-    }
+    const string cause = _god_wrath_stat_check("the Shuffle card");
 
     for (int i = 0; i < NUM_STATS; ++i)
     {
