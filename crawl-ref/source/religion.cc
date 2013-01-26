@@ -477,6 +477,11 @@ bool is_chaotic_god(god_type god)
             || god == GOD_JIYVA);
 }
 
+bool is_unknown_god(god_type god)
+{
+    return (god == GOD_NAMELESS);
+}
+
 bool is_unavailable_god(god_type god)
 {
     if (god == GOD_JIYVA && jiyva_is_dead())

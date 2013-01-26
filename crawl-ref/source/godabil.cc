@@ -546,7 +546,7 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
             eligibility[RECITE_HERETIC]++;
 
         // ...as are evil gods.
-        if (is_evil_god(mon->god) || mon->god == GOD_NAMELESS)
+        if (is_evil_god(mon->god) || is_unknown_god(mon->god))
             eligibility[RECITE_HERETIC]++;
 
         // (The above mean that worshipers will be treated as

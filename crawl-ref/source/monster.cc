@@ -3445,7 +3445,7 @@ bool monster::is_holy(bool check_spells) const
     if (holiness() == MH_HOLY)
         return true;
 
-    // Assume that all unknown gods (GOD_NAMELESS) are not holy.
+    // Assume that all unknown gods are not holy.
     if (is_priest() && is_good_god(god) && check_spells)
         return true;
 
@@ -3471,8 +3471,8 @@ bool monster::is_evil(bool check_spells) const
     if (holiness() == MH_UNDEAD)
         return true;
 
-    // Assume that all unknown gods (GOD_NAMELESS) are evil.
-    if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS)
+    // Assume that all unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || is_unknown_god(god))
         && check_spells)
     {
         return true;
@@ -3516,7 +3516,8 @@ bool monster::is_unclean(bool check_spells) const
     if (type == MONS_ANCIENT_ZYME)
         return true;
 
-    // Assume that all unknown gods (GOD_NAMELESS) are not chaotic.
+    // Assume that all unknown gods are not chaotic.
+    //
     // Being a worshipper of a chaotic god doesn't yet make you
     // physically/essentially chaotic (so you don't get hurt by silver),
     // but Zin does mind.
