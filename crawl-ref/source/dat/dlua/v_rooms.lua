@@ -49,8 +49,15 @@ end
 
 local function pick_room(e, options)
 
+  -- Filters out rooms that have reached their max
+  local function weight_callback(generator)
+    if generator.max_rooms ~= nil and generator.placed_count ~= nil and generator.place_count >= generator.max_rooms then
+      return 0
+    end
+    return generator.weight
+  end
   -- Pick generator from weighted table
-  local chosen = util.random_weighted_from("weight",options.room_type_weights)
+  local chosen = util.random_weighted_from(weight_callback,options.room_type_weights)
 
   -- TODO: Proceduralise the generators more so the weights table can contain functions that generate the room contents, answer questions about
   -- size, connectable walls, etc.
@@ -118,7 +125,8 @@ local function pick_room(e, options)
           type = "vault",
           size = { x = room_width, y = room_height },
           map = map,
-          vplace = vplace
+          vplace = vplace,
+          generator_used = chosen
         }
 
         -- Check all four directions for orient tag before we create the wals data, since the existence of a
@@ -244,6 +252,9 @@ function place_vaults_rooms(e,data, room_count, options)
             -- Perform analysis for stairs
             analyse_vault_post_placement(e,data,room,result,options)
             table.insert(results,result)
+            -- Increment the count of rooms of this type
+            if room.placed_count == nil then room.placed_count = 0 end
+            room.placed_count = room.placed_count + 1
           end
         end
       end
