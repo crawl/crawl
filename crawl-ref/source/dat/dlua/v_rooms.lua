@@ -90,6 +90,7 @@ local function pick_room(e, options)
 
     return room
 
+
   -- Pick by tag
   elseif chosen.generator == "tagged" then
     local found = false
@@ -105,70 +106,87 @@ local function pick_room(e, options)
       local map, vplace = dgn.resolve_map(mapdef,true,true)
       local room_width,room_height
 
-      if map == nil then
         -- If we can't find a map then we're probably not going to find one
-        return nil
-      else
-        -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
-        dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
+      if map == nil then return nil end
+      -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
+      dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
 
-        local room_width,room_height = dgn.mapsize(map)
-        local veto = false
-        if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
-          local room = {
-            type = "vault",
-            size = { x = room_width, y = room_height },
-            map = map,
-            vplace = vplace
-          }
+      local room_width,room_height = dgn.mapsize(map)
+      local veto = false
+      if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
+        local room = {
+          type = "vault",
+          size = { x = room_width, y = room_height },
+          map = map,
+          vplace = vplace
+        }
 
-          -- Check all four directions for orient tag before we create the wals data, since the existence of a
-          -- single orient tag makes the other walls ineligible
-          local tags = {}
-          local has_orient = false
-          for n = 0, 3, 1 do
-            if dgn.has_tag(room.map,"vaults_orient_" .. normals[n+1].name) then
-              has_orient = true
-              tags[n] = true
+        -- Check all four directions for orient tag before we create the wals data, since the existence of a
+        -- single orient tag makes the other walls ineligible
+        local tags = {}
+        local has_orient = false
+        for n = 0, 3, 1 do
+          if dgn.has_tag(room.map,"vaults_orient_" .. normals[n+1].name) then
+            has_orient = true
+            tags[n] = true
+          end
+        end
+
+        -- Describe connectivity of each wall.
+        room.walls = { }
+        local length
+        local has_exits = false
+        for n = 0, 3, 1 do
+          local eligible = true
+
+          if has_orient and not tags[n] then eligible = false end
+          room.walls[n] = { eligible = eligible }
+          -- Only need to compute wall data for an eligible wall.
+          if eligible then
+            local wall_normal = normals[n+1]
+            local wall_dir = vector_rotate(wall_normal,1)
+            -- Get the coord of the first cell of the wall
+            local start = { x = 0, y = 0 }
+            if n == 1 then start = { x = 0, y = room.size.y - 1 }
+            elseif n == 2 then start = { x = room.size.x - 1, y = room.size.y - 1 }
+            elseif n == 3 then start = { x = room.size.x - 1, y = 0 } end
+
+            if (n % 2) == 1 then length = room.size.y else length = room.size.x end
+            room.walls[n].cells = {}
+            -- For every cell of the wall, check the internal feature of the room
+            for m = 1, length, 1 do
+              -- Map to internal room coordinate based on start vector and normals
+              local mapped = vaults_vector_add(start, { x = m - 1, y = 0 }, wall_dir,wall_normal)
+              local feature, is_exit, is_space = dgn.inspect_map(vplace,mapped.x,mapped.y)
+              if is_exit then has_exits = true end
+              room.walls[n].cells[m] = { feature = feature, exit = is_exit, space = is_space }
             end
           end
-
-          -- Describe connectivity of each wall.
-          room.walls = { }
-          local length
-          for n = 0, 3, 1 do
-            local eligible = true
-            if has_orient and not tags[n] then eligible = false end
-            room.walls[n] = { eligible = eligible }
-            -- Only need to compute wall data for an eligible wall
-            if eligible then
-              local wall_normal = normals[n+1]
-              local wall_dir = vector_rotate(wall_normal,1)
-              -- Get the coord of the first cell of the wall
-              local start = { x = 0, y = 0 }
-              if n == 1 then start = { x = 0, y = room.size.y - 1 }
-              elseif n == 2 then start = { x = room.size.x - 1, y = room.size.y - 1 }
-              elseif n == 3 then start = { x = room.size.x - 1, y = 0 } end
-
-              if (n % 2) == 1 then length = room.size.y else length = room.size.x end
-              room.walls[n].cells = {}
-              -- For every cell of the wall, check the internal feature of the room
-              for m = 1, length, 1 do
-                -- Map to internal room coordinate based on start vector and normals
-                local mapped = vaults_vector_add(start, { x = m - 1, y = 0 }, wall_dir,wall_normal)
-                local feature = dgn.inspect_map(vplace,mapped.x,mapped.y)
-                room.walls[n].cells[m] = { feature = feature, open = feat.has_solid_floor(feature) }
+        end
+        -- Loop through the walls again and determine openness. Has to be a separate loop because we needed to know has_exits.
+        for n = 0, 3, 1 do
+          local wall_has_exit = false
+          if room.walls[n].cells ~= nil then
+            for i,cell in ipairs(room.walls[n].cells) do
+              local is_open = true
+              if cell.exit then wall_has_exit = true end
+              if cell.space or (has_exits and not cell.exit) then
+                is_open = false
+              else
+                is_open = feat.has_solid_floor(cell.feature)
               end
+              cell.open = is_open
             end
           end
+          if has_exits and not wall_has_exit then wall.eligible = false end
+        end
 
-          if options.veto_room_callback ~= nil then
-            local result = options.veto_room_callback(room)
-            if result == true then veto = true end
-          end
-          if not veto then
-            return room
-          end
+        if options.veto_room_callback ~= nil then
+          local result = options.veto_room_callback(room)
+          if result == true then veto = true end
+        end
+        if not veto then
+          return room
         end
       end
     end
