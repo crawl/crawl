@@ -339,7 +339,7 @@ WEIGHT: 100
 : place_unique(_G, "Dissolution")
 
 NAME:   uniq_polyphemus
-DEPTH:  Shoals
+DEPTH:  Shoals:2-
 WEIGHT: 50
 : place_unique(_G, "Polyphemus band")
 
