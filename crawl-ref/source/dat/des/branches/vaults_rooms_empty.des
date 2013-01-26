@@ -26,20 +26,23 @@
 
 NAME:     vaults_room_door_ring
 TAGS:     vaults_empty allow_dup
-SUBST:    + : +.....
+SHUFFLE:  abcdefghijklm
+SUBST:    abcdefg = +
+SUBST:    hijklm = .
 MAP
-.+...+.
-+xxxxx+
-.xxxxx.
-.xxxxx.
-.xxxxx.
-+xxxxx+
-.+...+.
+..b..c..
+..b..c..
+aaxxxxdd
+..xxxx..
+..xxxx..
+hhxxxxee
+..g..f..
+..g..f..
 ENDMAP
 
 NAME:     vaults_room_pool
 TAGS:     vaults_empty allow_dup no_pool_fixup
-SUBST:    w : x.
+SUBST:    w : xW
 MAP
 .......
 .......
@@ -52,7 +55,7 @@ ENDMAP
 
 NAME:     vaults_room_pools
 TAGS:     vaults_empty allow_dup no_pool_fixup
-SUBST:    w : x.
+SUBST:    w : xwW
 MAP
 ww...ww
 ww...ww
@@ -91,7 +94,7 @@ MAP
 ENDMAP
 
 NAME:     vaults_room_hallway
-TAGS:     vaults_empty vaults_orient_w vaults_orient_e allow_dup
+TAGS:     vaults_empty allow_dup
 MAP
 x.x.x.x.x.x
 ...........
@@ -159,7 +162,7 @@ xxxrx..xqxxx
 ENDMAP
 
 NAME:     vaults_room_ringed_pool
-TAGS:     vaults_empty no_pool_fixup allow_dup
+TAGS:     vaults_empty no_pool_fixup
 SHUFFLE:  xc
 SUBST:    c : x.
 NSUBST:   . = 1:( / *:.
@@ -300,17 +303,17 @@ ENDMAP
 
 NAME:    v_misc_13
 TAGS:    vaults_empty allow_dup
-SUBST:   a:x..., b:x.....
+SUBST:   b:x.....
 NSUBST:  ( = 1:( / *:.
 MAP
 xxxx...xxxx
 xxx..(..xxx
 xx..bbb..xx
-x..bbabb..x
-..bbaaabb..
-.(baaaaab(.
-..bbaaabb..
-x..bbabb..x
+x..bbxbb..x
+..bbxxxbb..
+.(bxxxxxb(.
+..bbxxxbb..
+x..bbxbb..x
 xx..bbb..xx
 xxx..(..xxx
 xxxx...xxxx
@@ -363,7 +366,7 @@ MAP
 ..xxx.xxx..
 ..x.....x..
 ..x.yby.x..
-....bab....
+....bxb....
 ..x.yby.x..
 ..x.....x..
 ..xxx.xxx..
