@@ -3512,7 +3512,7 @@ bool monster::is_unclean(bool check_spells) const
         return true;
     }
 
-    // A floating mass of disease is nearly the definition of unclean
+    // A floating mass of disease is nearly the definition of unclean.
     if (type == MONS_ANCIENT_ZYME)
         return true;
 
