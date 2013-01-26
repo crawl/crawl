@@ -455,15 +455,12 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   -- Wall type. Originally this was randomly varied but we decided it didn't work very well especially when rooms were connected.
   local surrounding_wall_type = options.layout_wall_type
---  if crawl.one_chance_in(20) then surrounding_wall_type = "rock_wall" end
---  if crawl.one_chance_in(15) then surrounding_wall_type = "metal_wall" end
---  if crawl.one_chance_in(25) then surrounding_wall_type = "green_crystal_wall" end
+
   -- Store it so we can perform substitution after placement
   room.wall_type = surrounding_wall_type
 
-  -- Fill the wall and then floor space inside
+  -- Fill the wall
   dgn.fill_grd_area(origin.x - 1, origin.y - 1, opposite.x + 1, opposite.y + 1, surrounding_wall_type)
-  dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
 
   -- Calculate the final orientation we need for the room to match the door
   -- Somewhat worked out by trial and error but it appears to work
@@ -478,6 +475,9 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     elseif final_orient == 2 then dgn.reuse_map(room.vplace,origin.x,origin.y,true,true,0,true,true)
     elseif final_orient == 3 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,1,true,true) end
 
+  elseif room.type == "empty" then
+    -- TODO: Call terrain callback
+    dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
   end
 
   -- How big the door?
