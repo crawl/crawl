@@ -1348,8 +1348,8 @@ void tso_divine_shield()
         if (you.shield()
             || you.duration[DUR_CONDENSATION_SHIELD])
         {
-            mprf("Your shield is strengthened by %s's divine power.",
-                 god_name(GOD_SHINING_ONE).c_str());
+            mprf("Your shield is strengthened by %s divine power.",
+                 apostrophise(god_name(GOD_SHINING_ONE)).c_str());
         }
         else
             mpr("A divine shield forms around you!");

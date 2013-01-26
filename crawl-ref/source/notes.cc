@@ -321,7 +321,8 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_GOD_POWER:
             result << "Acquired "
-                   << god_name(static_cast<god_type>(first)) << "'s "
+                   << apostrophise(god_name(static_cast<god_type>(first)))
+                   << " "
                    << _number_to_ordinal(_real_god_power(first, second)+1)
                    << " power";
             break;
