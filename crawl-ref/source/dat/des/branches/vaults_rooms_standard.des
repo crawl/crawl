@@ -3,13 +3,13 @@ TAGS:     vaults_room
 SUBST:    0 = .......0000
 MAP
 .........
-.cc0)0cc.
-..cc0cc..
-..0ccc0..
-.).0c0.).
-..0ccc0..
-..cc0cc..
-.cc0)0cc.
+.xx0)0xx.
+..xx0xx..
+..0xxx0..
+.).0x0.).
+..0xxx0..
+..xx0xx..
+.xx0)0xx.
 .........
 ENDMAP
 
@@ -45,7 +45,7 @@ MAP
 ..xx.0.xx..
 .0.xx.0.x0.
 ..0.xx..xx.
-..(......x.
-..0.xxxx...
-.xxxx.0....
+..(..xx..x.
+..0.xx.....
+...xx.0....
 ENDMAP
