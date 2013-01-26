@@ -3595,12 +3595,23 @@ monster_type royal_jelly_ejectable_monster()
 static string _replace_god_name(god_type god, bool need_verb = false,
                                 bool capital = false)
 {
-    string result =
-          ((god == GOD_NO_GOD)    ? (capital ? "You"      : "you") :
-           (god == GOD_NAMELESS)  ? (capital ? "Your god" : "your god")
-                                  : god_name(god, false));
+    string result;
+
+    if (god == GOD_NO_GOD)
+        result = capital ? "You" : "you";
+    else if (god == GOD_NAMELESS)
+        result = capital ? "Your god" : "your god";
+    else
+    {
+        const string godname = god_name(god, false);
+        result = capital ? uppercase_first(godname) : godname;
+    }
+
     if (need_verb)
-        result += (god == GOD_NO_GOD) ? " are" : " is";
+    {
+        result += ' ';
+        result += (god == GOD_NO_GOD) ? "are" : "is";
+    }
 
     return result;
 }
@@ -3919,7 +3930,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     else if (mons->god == GOD_NAMELESS)
     {
         msg = replace_all(msg, "@God@", "a god");
-        string possessive = mons->pronoun(PRONOUN_POSSESSIVE) + " god";
+        const string possessive = mons->pronoun(PRONOUN_POSSESSIVE) + " god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
 
         msg = replace_all(msg, "@my_God@", "my God");
@@ -3927,11 +3938,12 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     }
     else
     {
-        msg = replace_all(msg, "@God@", god_name(mons->god));
-        msg = replace_all(msg, "@possessive_God@", god_name(mons->god));
+        const string godname = god_name(mons->god);
+        msg = replace_all(msg, "@God@", godname);
+        msg = replace_all(msg, "@possessive_God@", godname);
 
-        msg = replace_all(msg, "@my_God@", god_name(mons->god));
-        msg = replace_all(msg, "@My_God@", god_name(mons->god));
+        msg = replace_all(msg, "@my_God@", godname);
+        msg = replace_all(msg, "@My_God@", uppercase_first(godname).c_str());
     }
 
     // Replace with species specific insults.
