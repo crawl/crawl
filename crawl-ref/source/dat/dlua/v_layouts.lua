@@ -196,7 +196,7 @@ function build_vaults_maze_snakey_layout(e)
   -- How many rooms to draw before alternating
   -- When it's 1 it doesn't create an obvious visual effect but hopefully in gameplay
   -- it will be more obvious.
-  local dist = crawl.random_range(1,3)
+  local dist = crawl.random_range(1,2) -- TODO: This range can be higher if the callback has the coords, if we're near the edge then bailout
   -- Just to be fair we'll offset by a number, this will determine how far from the
   -- first room it goes before the first switch
   local offset = crawl.random_range(0,dist-1)
@@ -219,7 +219,7 @@ end
 function build_vaults_maze_bifur_layout(e)
 
   local which = crawl.coinflip()
-  local target_depth = crawl.random_range(2,4)
+  local target_depth = crawl.random_range(2,3) -- TODO: This range can be higher if the callback has the coords, if we're near the edge then bailout
 
   -- Callback function
   local function callback(usage,room)
