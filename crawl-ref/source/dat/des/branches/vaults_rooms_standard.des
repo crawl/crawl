@@ -895,6 +895,253 @@ MAP
 ....x........+....
 ENDMAP
 
+
+
+# newnewvaults vaults
+# _slither, _capsules, _town_square, and _monster_house are all old boring projects.
+
+NAME:   hangedman_vaults_slither
+TAGS:   vaults_room
+SUBST:  b : aX., B : AX., c : aC..., C : Ax..., a : Ax., A : xx., X : xx.
+NSUBST: 0 = 2:0 / * = 0..
+MAP
+        x........x............
+        x.a..a.a.x.B..CC.0.CC@
+        x.a......x.......C....
+        x.......Cx.B.xxxxxxxxx
+        x.a.xa...x...x
+        x...x0..BxB0Bx
+        xb0bxb..0x...x
+        x...x...Ax.A.x
+xxxxxxxxx.b.xc.......x
+....c.......x......A.x
+@cc.0.cc..b.x.A.A..A.x
+............x........x
+ENDMAP
+
+NAME:    hangedman_vaults_pinch
+TAGS:    vaults_room
+SHUFFLE: ac, AC
+SUBST:   b : axX..., B : AxX..., c : ax, C : Ax, a : Axx., A : xxx.
+SUBST:   d : x.., D : x.. X : x
+NSUBST:  0 = 1:0 / 2 = 0.
+MAP
+      x.......
+      x.D..BA.
+      x....CB.
+      x..BC...
+      x..AB...
+      x.0...D.
+xxxxxxx0......
+.......xxxxxxx
+.d...0.x
+...ba..x
+...cb..x
+.bc....x
+.ab..d.x
+.......x
+ENDMAP
+
+NAME:    hangedman_vaults_stagger
+TAGS:    vaults_room
+SHUFFLE: abc, ABC, de / de / ed, DE / DE / ED
+SUBST:   a = 0, A : 0.., bBcC = ., dD = +, eE = x
+MAP
+.........xxxx
+.........xa.x
+..xxeddexx..x
+..xc........xxxx
+xxx.....bb.cxA.x
+  x..xxDEEDxx..x
+  x.axC.BB.....xxx
+  xxxx........Cx..
+     x..xxeddexx..
+     x.Ax.........
+     xxxx.........
+ENDMAP
+
+NAME:    hangedman_vaults_variations
+TAGS:    vaults_room
+SHUFFLE: abc, ABC
+NSUBST:  1 = 1:0 / * = 0., 2 = 1:0 / * = 0.
+SUBST:   aA : x., bB : x:1 .:9, cC = .
+MAP
+     x...x
+     xa.ax
+     x...xxxxx
+     x.....11x
+     x..bc..1x
+    xx.......x
+xxxxx+xxxx.c.xxx
+.A.....22x.b..a.
+....BC..2x......
+.A.......x....a.
+xxxxxx.C.+xxxxxx
+     x.B.xx
+     x...x
+     x...x
+     xA.Ax
+     x...x
+ENDMAP
+
+NAME:    hangedman_vaults_unwind
+TAGS:    vaults_room
+SHUFFLE: ABCD
+SUBST:   A : x:90 ., B : xx., C : x., D : x.., E : x .:90
+NSUBST:  2:0 / * = 0:6 .:4
+MAP
+     x..................
+     x......E...........
+     x...D..x...........
+     x.....C...D........
+     x....0BA0..........
+     x.Ex.AxxBC...xxxxxx
+xxxxxx...CBxxA.xE.x
+..........0AB0....x
+........D...C.....x
+...........x..D...x
+...........E......x
+..................x
+ENDMAP
+
+NAME:    hangedman_vaults_stitches
+TAGS:    vaults_room
+SUBST:   b : aX., B : AX., c : aC..., C : Ax..., a : Ax., A : xx., X : xx.
+NSUBST:  2:0 / * = 0.
+MAP
+     x.....x     x.......
+     x.b...x     x...A...
+     x.0c..x     x.A.0.A.
+     x...b.xxxxxxx.......
+xxxxxx......0......xxxxxx
+.......xxxxxxx.B...x
+.a.0.a.x     x..C0.x
+...a...x     x...B.x
+.......x     x.....x
+ENDMAP
+
+NAME:    hangedman_vaults_nodes
+TAGS:    vaults_room
+SUBST:   a : xx., b : xx., A : x., B : x.
+NSUBST:  2:0 / * = 0:4 .:6
+MAP
+    x..............x
+    x..B.A....a.b..x
+    x.A0..B..b..0a.x
+    x.B..0A..a0..b.x
+xxxxx..A.B....b.a..xxxxx
+........................
+...ba...xxxxxxxx...AB...
+..a.0b..x      x..B0.A..
+..b..a..x      x..A..B..
+...ab...x      x...BA...
+........x      x........
+ENDMAP
+
+NAME:    hangedman_vaults_corner
+TAGS:    vaults_room
+SHUFFLE: abc
+SUBST:   a = x, bc = ., A : x., B : x., C : x., D : x., E : x.
+NSUBST:  2:0 / * = 0:4 .:6
+MAP
+.......abc.....
+...B...abc..E..
+...A...abc..D..
+.BA0AB.abc.C.C.
+...A...abc.C0C.
+...B...abc..D..
+.......abc..E..
+aaaaaaa.0......
+bbbbbbb0xxxxxxx
+ccccccc.x
+........x
+...CC...x
+.ED.0DE.x
+...CC...x
+........x
+ENDMAP
+
+NAME:    hangedman_vaults_hat
+TAGS:    vaults_room
+SHUFFLE: defg, =-
+SUBST:   a = x.., b : x., c : x., d : x., e : x.., f : x.., g : x...
+SUBST:   = = x, - = +, + : +:19 .:1
+NSUBST:  0 = 2:0 / * = 0.
+MAP
+       x...x
+       x.a.x
+       x.0.x
+    xxxxx+xxxxx
+    x.........x
+    x0b.c.c.b0x
+    x.........x
+xxxxxxx=-x-=xxxxxxx
+.....0.......0.....
+.d..e..f.g.f..e..d.
+...................
+ENDMAP
+
+NAME:   hangedman_vaults_capsules
+TAGS:   vaults_room
+SUBST:  A : x..., B : x.., C : x., D : xx.
+NSUBST: 1:0 / * = 0.
+MAP
+ xxx......
+xxA..x.DC.
+xA0..x..D.
+x..xxx0...
+...xBBxxx.
+.xxxBBx...
+....xxx..x
+.D..x..0Ax
+.CD.x..Axx
+......xxx
+ENDMAP
+
+NAME:    hangedman_vaults_stream
+TAGS:    vaults_room
+SHUFFLE: ab, AB
+SUBST:   aA : x, bB : ., c : x., C : x.
+NSUBST:  2:0 / * = 0.
+MAP
+  x............
+  x..A..0......
+xxxC.BABBAABBA.
+..C0..BAABBAABA
+....c......0..B
+.ab..c.........
+..ab..xxxxx....
+.0ba..xxxxxxxxx
+..ba..xx
+..ab..xx
+..ab..xx
+..ba0..x
+..ba...x
+..ab...x
+...ab..x
+ENDMAP
+
+NAME:    hangedman_vaults_passings
+TAGS:    vaults_room
+SHUFFLE: abcdefghijkl
+SUBST:   ab = x, c : xx., d : x., e : x:1 .:9, fgh = .
+NSUBST:  1:0 / * = 0.
+MAP
+      x.......x
+      xfee....x
+      x....ffex
+xxxxxxx.......x
+.........gh....
+.ab.0.cd....gh.
+....ab.0.cd....
+.gh....ab.0.cd.
+....gh.........
+........xxxxxxx
+.eef....x
+.....effx
+........x
+ENDMAP
+
 ################################################################################
 # "Hard" subvaults. Putting them in here for now, we can move them into a new
 # file later if wanted.
@@ -1227,4 +1474,29 @@ xxx+x.0..0.x+xxx
 xx..xx....xx..xx
 x*00|x....x*00*x
 xxxxxxx..xxxxxxx
+ENDMAP
+
+NAME:    hangedman_vaults_hard_town_square
+TAGS:    vaults_hard
+KFEAT:   d = any shop
+SHUFFLE: abc, de, d*, AB
+SUBST:   a : x., b : x.., c = ., e = %%$, * = %:3 *:7
+SUBST:   A : x.., B : xx., C : xGT
+SUBST:   1 = 9:3 0:7, 2 = 9:7 0:3
+MAP
+xxxxxx...xxxxxx
+xe.2xx.C.xx1.ex
+x.A..x...x..A.x
+x1.d.xx.xx.d.2x
+xx...........xx
+xxxx.B.c.B.xxxx
+...x..aba..x...
+.C...cbGbc...C.
+...x..aba..x...
+xxxx.B.c.B.xxxx
+xx...........xx
+x2.e.xx.xx...1x
+x.A..x...x..A%x
+xd.1xx.C.xx2%%x
+xxxxxx...xxxxxx
 ENDMAP
