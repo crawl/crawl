@@ -1,51 +1,1230 @@
+################################################################################
+# vaults_rooms_standard.des: Subvaults for the Vaults.
+#
+# Content: These are the subvaults that place a small number of monsters.
+#   Subvaults placing no monsters should go in vaults_rooms_empty.des
+#
+################################################################################
+#
+# All of the subvaults in here should use the tag vaults_room
+#
+# You can additionally use the following tags:
+#
+# vaults_orient_n vaults_orient_s vaults_orient_e vaults_orient_w
+# no_windows preserve_wall
+#
+# vaults_orient_x: controls the entry points to the subvault.
+# A subvault using vaults_orient_n will always be entered from the north side,
+# as it appears in the .des. Multiple orient tags may be used.
+#
+# no_windows: prevents the layout from creating windows into the subvault.
+#
+# preserve_wall: prevents the layout from changing rock into the same wall type
+# as the rest of the floor.
+#
+################################################################################
+
 NAME:     vaults_standard_mumra_x
-TAGS:     vaults_room
-SUBST:    0 = .......0000
+TAGS:     allow_dup vaults_room
+NSUBST:   ' = 1:0 / 2=0. / *:.
+SUBST:    ) = )..
 MAP
-.........
-.xx0)0xx.
-..xx0xx..
-..0xxx0..
-.).0x0.).
-..0xxx0..
-..xx0xx..
-.xx0)0xx.
-.........
+''.....''
+'x..)..x'
+.xx...xx.
+..xx'xx..
+...xxx...
+.).'x'.).
+...xxx...
+..xx'xx..
+.xx...xx.
+'x..)..x'
+''.....''
 ENDMAP
 
+# added the top and bottom lines of this vault to prevent disconnection
 NAME:     vaults_standard_mumra_enter_the_diamond
-TAGS:     vaults_room vaults_orient_e vaults_orient_w
-SUBST:    0 = .........0000
+TAGS:     allow_dup vaults_room vaults_orient_e vaults_orient_w
+NSUBST:   . = 1:0 / 2=0. / *:.
 MAP
-..00xxx00..
-..0xx0xx0..
-..xx0.0xx..
-.xx0...0xx.
+...........
+....xxx....
+...xx.xx...
+..xx...xx..
+.xx.....xx.
 .....).....
-.xx0...0xx.
-..xx0.0xx..
-..0xx0xx0..
-..00xxx00..
+.xx.....xx.
+..xx...xx..
+...xx.xx...
+....xxx....
+...........
 ENDMAP
 
 NAME:     vaults_standard_mumra_lines
-TAGS:     vaults_room vaults_orient_e vaults_orient_w
-SUBST:    0 = .:200 0:80 9:1
+TAGS:     allow_dup vaults_room vaults_orient_e vaults_orient_w
 SUBST:    ( = .:2 (:1
+NSUBST:   . = 2:0 / 2=0. / *:.
 MAP
-..xx0.0....
-...xxx..0..
-..0..xxx...
-..(...0xx..
-..0.xx.....
-.0.xx...(0.
-..xx..x....
-.xx.0.xx.0.
-.......x...
-..xx.0.xx..
-.0.xx.0.x0.
-..0.xx..xx.
-..(..xx..x.
-..0.xx.....
-...xx.0....
+....xx.(...
+.....xx....
+......xx...
+.......xx..
+.....x.....
+....xx.....
+...xx......
+..xx..xx...
+.xx....xx..
+xx......xx.
+x..xx....xx
+....xx....x
+.....xx....
+...(..xx.(.
+.......xx..
+ENDMAP
+
+NAME:     vaults_room_corners
+TAGS:     vaults_room allow_dup no_monster_gen
+SUBST:    G : xxxxG..........
+MAP
+xx...xx
+xxG.Gxx
+.G...G.
+...0...
+.G...G.
+xxG.Gxx
+xx...xx
+ENDMAP
+
+NAME:     vaults_room_fours
+TAGS:  allow_dup      vaults_room allow_dup
+SUBST:    w : x:20 w:5
+NSUBST:   . = 1:( / 1:0 / 1:0. / *:.
+MAP
+.......
+.ww.ww.
+.ww.ww.
+...0...
+.ww.ww.
+.ww.ww.
+.......
+ENDMAP
+
+# With apologies to NetHack.
+# You'd expect the second room to be completely full of monsters,
+# but that would be just a little unfair.
+NAME:     vaults_room_grunt_arrival_ludios
+WEIGHT:   15 (Vaults:1), 3
+TAGS:     vaults_room vaults_orient_e
+SHUFFLE:  {([<
+SUBST:    0 = 00.
+MAP
+xxxxxx..
+.0.0.x..
+0.0.0+..
+.0.0.x..
+0.0.0x..
+..x+xxxx
+..x...(x
+..x..{[x
+ENDMAP
+
+NAME:     vaults_room_door_hall
+TAGS:  allow_dup      vaults_room
+NSUBST:   . = 1:0 / 2=0. / *:.
+NSUBST:   ( = 1:( / *:.
+MAP
+......(xxx
+.......xxx
+..xxxxxxxx
+..x....x..
+..+....+..
+..+....+..
+..x....x..
+..xxxxxxxx
+.......xxx
+......(xxx
+ENDMAP
+
+NAME:     vaults_room_grunt_arrival_checkpoint
+TAGS:     llow_dup vaults_room vaults_orient_e no_monster_gen no_item_gen no_trap_gen
+WEIGHT:   15 (Vaults:1), 3
+MONS:     vault guard
+MAP
+xxxxxxxxxx
+xxxx.T.xxx
+xxxx...xxx
+x{.n1.1n..
+x(.+...+..
+x[.n1.1n..
+xxxx...xxx
+xxxx.T.xxx
+xxxxxxxxxx
+ENDMAP
+
+NAME:     vaults_room_boxed
+TAGS:     vaults_room allow_dup
+NSUBST:   - = 1:+ / 2=x+ / *:x
+NSUBST:   . = 2:0 / 2=0. / *:.
+MAP
+xxxx.......xxxx
+xxxx.......xxxx
+xxxxxxx+xxxxxxx
+xxx.........xxx
+..x.x-----x.x..
+..x.-.....-.x..
+..x.-.....-.x..
+..+.-.....-.+..
+..x.-.....-.x..
+..x.-.....-.x..
+..x.x-----x.x..
+xxx.........xxx
+xxxxxxx+xxxxxxx
+xxxx.......xxxx
+xxxx.......xxxx
+ENDMAP
+
+# XXX: This vault caused problems, I haven't tested it since the door/orient
+#      improvements
+############################################################
+# The Hell Knights are playing the Vault tonight. Rock! \m/ (Shiori)
+#
+#NAME:   metal_show
+#TAGS:   vaults_room vaults_orient_e
+#TAGS:   no_monster_gen no_item_gen no_wall_fixup
+#WEIGHT: 2
+#COLOUR: M = magenta
+#COLOUR: K = magenta
+#FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
+#MARKER: # = lua:fog_machine{\
+#            pow_max = 15, delay_min = 100, delay_max = 150, \
+#            size = 2, size_buildup_amnt = 10, \
+#            size_buildup_time = 1000 }
+#KFEAT:  # = fountain_blood
+## the talent:
+#: if crawl.one_chance_in(10) then
+#NSUBST: M = M / K.
+#: else
+#SUBST:  M = .
+#: end
+#KMONS:  K = patrolling hell knight
+#KMONS:  M = patrolling Margery
+## the staff-- manager and bartender:
+#KMONS:  S = human; robe
+## the bouncers:
+#KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
+## the fans:
+#SUBST:  F = 011112223334455679.........
+#MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
+#MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
+## these are Sludge Elves.
+#MONS:   ghoul / necrophage / rotting hulk / vampire
+#MONS:   wizard / necromancer
+#MONS:   big kobold / kobold demonologist
+#MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
+#        w:2 deep elf priest
+#MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
+#        Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
+#        Wiglaf / Norris / goblin
+#KITEM:  ! = any potion / potion of confusion, \
+#            any potion / potion of paralysis, any potion / potion of slowing
+#KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
+#MAP
+#vvvvvvvvvvvvv....
+#v!+.MMMM.+S$v....
+#v!v.KKKK.v$$vF...
+#vvvv#MM#vvvvvFF..
+#v..FFFFFFvFFvFF..
+#v!mFvFFvFvFF+BF..
+#v!mFFFFFFvFFvFF..
+#v!mFFFFFFvFF+BF..
+#v!mFvFFvFvFFvFF..
+#v!mFFFFFFvFF+BF..
+#vSmFFFFFFvFFvFF..
+#vvvvvBBvvvFFvFF..
+#vFFFFFFFFFFFvF...
+#vvvvvvvvvvvvv....
+#ENDMAP
+
+NAME:    v_pattern_1
+TAGS:    allow_dup vaults_room luniq_lattice
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+.x.x...x.x.
+x.x.x.x.x.x
+.x.x.x.x.x.
+x.x.x.x.x.x
+.x.x.x.x.x.
+..x.x.x.x..
+.x.x.x.x.x.
+x.x.x.x.x.x
+.x.x.x.x.x.
+x.x.x.x.x.x
+.x.x...x.x.
+ENDMAP
+
+NAME:    v_pattern_2
+TAGS:    allow_dup vaults_room luniq_lattice
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+.x.x...x.x.
+x.x.x.x.x.x
+.x.x.x.x.x.
+x.x.....x.x
+.x.......x.
+..x..0..x..
+.x.......x.
+x.x.....x.x
+.x.x.x.x.x.
+x.x.x.x.x.x
+.x.x...x.x.
+ENDMAP
+
+NAME:    v_pattern_3
+TAGS:    allow_dup vaults_room luniq_lattice
+SHUFFLE: wuyz / ....
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+SUBST:   0 = 0.
+NSUBST:  . = 1:( / *:.
+MAP
+...x...x...
+.0.wx.xy.0.
+...x.x.x...
+xwxwx.xyxyx
+.x.x.x.x.x.
+..x.x.x.x..
+.x.x.x.x.x.
+xzxzx.xuxux
+...x.x.x...
+.0.zx.xu.0.
+...x...x...
+ENDMAP
+
+NAME:    v_pattern_4
+TAGS:    allow_dup vaults_room luniq_lattice
+SUBST:   y:x., Y:x.
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+.x.x...x.x.
+x.x.x.x.x.x
+.x.x.x.x.x.
+x.x.xxx.x.x
+.x.xyyyx.x.
+..xxyYyxx..
+.x.xyyyx.x.
+x.x.xxx.x.x
+.x.x.x.x.x.
+x.x.x.x.x.x
+.x.x...x.x.
+ENDMAP
+
+NAME:    v_pattern_5
+TAGS:    allow_dup vaults_room luniq_lattice
+SHUFFLE: zy
+SUBST:   z = .
+NSUBST:  y = 1:.+ / *:x
+SUBST:   0 = 0.
+NSUBST:  . = 1:( / *:.
+MAP
+.x.x...x.x.
+x.x.x.x.x.x
+.xzxzxzxzx.
+x.xyxyxyx.x
+.xzx.0.xzx.
+..xy0.0yx..
+.xzx.0.xzx.
+x.xyxyxyx.x
+.xzxzxzxzx.
+x.x.x.x.x.x
+.x.x...x.x.
+ENDMAP
+
+NAME:    v_alt_pattern_2
+TAGS:    allow_dup vaults_room
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...w...u...
+.x.x.x.x.x.
+...w...u...
+wxwx.x.xuxu
+...........
+.x.x.x.x.x.
+...........
+zxzx.x.xyxy
+...z...y...
+.x.x.x.x.x.
+...z...y...
+ENDMAP
+
+NAME:    v_alt_pattern_5
+TAGS:    allow_dup vaults_room
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+SUBST:   0 = 0.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+.xzxzxzxzx.
+.z...0...z.
+.x.xyxyx.x.
+.z.y...y.z.
+.x.x0.0x.x.
+.z.y...y.z.
+.x.xyxyx.x.
+.z...0...z.
+.xzxzxzxzx.
+...........
+ENDMAP
+
+NAME:    v_alt_pattern_6
+TAGS:    vaults_room allow_dup
+SHUFFLE: wyux
+SUBST:   w:., y:., u:.
+NSUBST:  . = 1:0 / 3=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+.x.x.x.x.x.
+.w.w.w.w.w.
+.y.y.y.y.y.
+.u.u.u.u.u.
+...........
+.u.u.u.u.u.
+.y.y.y.y.y.
+.w.w.w.w.w.
+.x.x.x.x.x.
+...........
+ENDMAP
+
+NAME:    v_misc_1
+TAGS:    allow_dup vaults_room
+SUBST:   +:++., y:++.
+NSUBST:  . = 1:0 / 3=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+....x..x....
+....+..+....
+....x..x....
+...xxyyxx...
+x+xx....xx+x
+...y....y...
+...y....y...
+x+xx....xx+x
+...xxyyxx...
+....x..x....
+....+..+....
+....x..x....
+ENDMAP
+
+NAME:    v_misc_2
+TAGS:    allow_dup vaults_room
+SUBST:   a:x.
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...x...x...
+...x...x...
+.xxx...xxx.
+...........
+.....a.....
+...........
+.xxx...xxx.
+...x...x...
+...x...x...
+...........
+ENDMAP
+
+NAME:    v_misc_3
+TAGS:    vaults_room allow_dup
+NSUBST:  . = 1:0 / 1=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+..xxxxxxx..
+..xxxxxxx..
+..xxxxxxx..
+..xxxxxxx..
+..xxxxxxx..
+..xxxxxxx..
+..xxxxxxx..
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_4
+TAGS:    vaults_room allow_dup
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+............
+............
+..xxx..xxx..
+..xxx..xxx..
+..xx....xx..
+............
+............
+..xx....xx..
+..xxx..xxx..
+..xxx..xxx..
+............
+............
+ENDMAP
+
+NAME:    v_misc_5
+TAGS:    vaults_room allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+..xyyyyyx..
+..y.....y..
+..y.....y..
+..y.....y..
+..y.....y..
+..y.....y..
+..xyyyyyx..
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_9
+TAGS:    vaults_room allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+..x.....x..
+..y.....y..
+..y.....y..
+..y.....y..
+..y.....y..
+..xyyyyyx..
+...........
+...........
+...........
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_10
+TAGS:    vaults_room allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+xzzx...xyyx
+...z...y...
+...z...y...
+...z...y...
+...z...y...
+...z...y...
+xzzx...xyyx
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_11
+TAGS:    vaults_room vaults_orient_n vaults_orient_s allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+xyyxxxxxyyx
+...........
+...........
+xzzxxxxxzzx
+...........
+...........
+xuuxxxxxuux
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_12
+TAGS:    vaults_room vaults_orient_n vaults_orient_s allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+....x.x....
+....z.y....
+....z.y....
+....z.y....
+....z.y....
+xzzzx.xyyyx
+...........
+...........
+...........
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_18
+TAGS:    vaults_room allow_dup
+SUBST:   y : x.
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...x...x...
+...x...x...
+...xxyxx...
+xxx.....xxx
+..x.....x..
+..y.....y..
+..x.....x..
+xxx.....xxx
+...xxyxx...
+...x...x...
+...x...x...
+ENDMAP
+
+NAME:    v_misc_26
+TAGS:    vaults_room allow_dup
+SHUFFLE: abcd+
+SUBST:   u:xxx., y:x..., U:x, a:x, b:x, c:x, d:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...c...c...
+...a...b...
+..+x...x+..
+dbx.....xad
+....yuy....
+....uUu....
+....yuy....
+dax.....xbd
+..+x...x+..
+...b...a...
+...c...c...
+ENDMAP
+
+NAME:    v_misc_27
+TAGS:    vaults_room allow_dup
+SHUFFLE: abc+
+SUBST:   a:x, b:x, c:x
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+....x..x....
+...+x..x+...
+cbax....xabc
+............
+............
+cbax....xabc
+...+x..x+...
+....x..x....
+ENDMAP
+
+NAME:    v_misc_28
+TAGS:    vaults_room allow_dup
+SHUFFLE: a+
+SUBST:   +:++., a:.
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+....x..x....
+....x..x....
+....x..x....
+...ax..xa...
+xxxx+..+xxxx
+............
+............
+xxxx+..+xxxx
+...ax..xa...
+....x..x....
+....x..x....
+....x..x....
+ENDMAP
+
+NAME:    v_misc_29
+TAGS:    vaults_room allow_dup
+SUBST:   +:.++
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+....x..x....
+....x..x....
+....x..x....
+...xx..xx...
+...x....x...
+...+....+...
+...x....x...
+...xx..xx...
+....x..x....
+....x..x....
+....x..x....
+ENDMAP
+
+NAME:    v_misc_30
+TAGS:    vaults_room allow_dup
+NSUBST:  . = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...x...x...
+...........
+...x...x...
+x.xxxxxxx.x
+...x...x...
+...........
+...x...x...
+x.xxxxxxx.x
+...x...x...
+...........
+...x...x...
+ENDMAP
+
+NAME:    v_misc_31
+TAGS:    vaults_room luniq_cells
+WEIGHT:  5
+SUBST:   0 = 0009..
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+..xux+xzx..
+..u0x0x0z..
+..xxxxxxx..
+..+0xxx0+..
+..xxxxxxx..
+..y0x0x0w..
+..xyx+xwx..
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_32
+TAGS:    vaults_room luniq_cells
+WEIGHT:  5
+SUBST:   0 = 0009..
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+..xxxxxxx..
+..x0z0y0x..
+..xzx+xyx..
+..x0+.+0x..
+..xux+xwx..
+..x0u.w0x..
+..xxx+xxx..
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_33
+TAGS:    vaults_room allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  ' = 1:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+..............
+..............
+..xxxx..xxxx..
+..x''w..z''x..
+..x''w..z''x..
+..xwwx..xzzx..
+..............
+..............
+..xuux..xyyx..
+..x''u..y''x..
+..x''u..y''x..
+..xxxx..xxxx..
+..............
+..............
+ENDMAP
+
+NAME:    v_rooms_1
+TAGS:    vaults_room allow_dup
+TAGS:    vault_orient_n vault_orient_s vault_orient_w
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  s = 1:+ / *:x
+NSUBST:  t = 1:+ / *:x
+NSUBST:  . = 2:0 / 3=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...x..x.....x.x......
+...y..z.....z.w......
+...y..xzzzzzx.w......
+xyyx..........w......
+.......xtttx..xxxwwwx
+xssssx.t...t...u.....
+.....s.t...t...u.....
+.....s.xtttx...u.....
+.....x.........u.....
+ENDMAP
+
+NAME:    v_rooms_2
+TAGS:    vaults_room allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  s = 1:+ / *:x
+NSUBST:  t = 1:+ / *:x
+NSUBST:  . = 2:0 / 3=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+....x..x...x.x...x...
+....+..x...x.x...u...
+....xyyxx+xx.x...u...
+xyyxx........xuuux...
+...+.............t...
+...x....xxwwwx...t...
+xxxx.xzzx....x.xsxttt
+...+.z..w....x.s.....
+...x.z..w....x.s.....
+ENDMAP
+
+NAME:    v_rooms_3
+TAGS:    vaults_room allow_dup
+TAGS:    vaults_orient_n vaults_orient_s
+NSUBST:  y = 1:+ / *:x
+NSUBST:  z = 1:+ / *:x
+NSUBST:  w = 1:+ / *:x
+NSUBST:  u = 1:+ / *:x
+NSUBST:  s = 1:+ / *:x
+NSUBST:  t = 1:+ / *:x
+NSUBST:  . = 2:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+...x.x....x......
+...y.x....s......
+...y.xttttx......
+...y......s......
+...y......xxssssx
+xyyxux...........
+.....u.xwwx.xzzzx
+.....u.w..w.z....
+.....u.w..w.z....
+.....x.x..x.x....
+ENDMAP
+
+NAME:    v_rooms_4
+TAGS:    vaults_room allow_dup
+NSUBST:  . = 2:0 / 2=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+.......x.....
+.......x.....
+.......x.....
+.......x.....
+.......x.....
+xxxxxx+x.....
+.....+.+.....
+.....x+xxxxxx
+.....x.......
+.....x.......
+.....x.......
+.....x.......
+.....x.......
+ENDMAP
+
+NAME:    v_rooms_5
+TAGS:    vaults_room allow_dup
+NSUBST:  . = 2:0 / 3=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+.....x..x.....
+.....+..x.....
+.....x..x.....
+.....x..x.....
+.....x..x.....
+xxxxxx..xxxx+x
+..............
+..............
+x+xxxx..xxxxxx
+.....x..x.....
+.....x..x.....
+.....x..x.....
+.....x..+.....
+.....x..x.....
+ENDMAP
+
+NAME:    v_rooms_6
+TAGS:    vaults_room allow_dup
+NSUBST:  . = 2:0 / 3=0. / *:.
+NSUBST:  . = 1:( / *:.
+MAP
+....x........+....
+....+........x....
+....xxxxxxxxxx....
+....x........x....
+....x........x....
+....+........+....
+....+........+....
+....x........x....
+....x........x....
+....xxxxxxxxxx....
+....+........x....
+....x........+....
+ENDMAP
+
+################################################################################
+# "Hard" subvaults. Putting them in here for now, we can move them into a new
+# file later if wanted.
+#NAME:     vaults_room_hard_dummy
+#TAGS:     vaults_hard allow_dup
+#SUBST:    x : .x
+#MAP
+#xx......xx
+#x........x
+#..........
+#..........
+#..........
+#..........
+#..........
+#..........
+#..........
+#x........x
+#xx......xx
+#ENDMAP
+
+NAME:     vaults_room_glass_cross
+TAGS:     vaults_hard allow_dup
+NSUBST:   y = 1:+ / *:x
+SUBST:    w : ....x, m : mmmx, * = *%
+KITEM:    8 = $
+NSUBST:   9 = 1:9 / *:000009
+NSUBST:   8 = 1:9 / *=09
+MAP
+ww......ww
+ww......ww
+..9xmmx9..
+..xy.8yx..
+..m.*%.m..
+..m.%*.m..
+..xy8.yx..
+..9xmmx9..
+ww......ww
+ww......ww
+ENDMAP
+
+NAME:     vaults_room_hangedman_quadrants
+TAGS:     vaults_hard no_monster_gen allow_dup
+SUBST:    $ = $%., * = *|, = : -., - : +:4 $:1
+MAP
+xx.x.xx
+x9$x$9x
+.$*-*$.
+xx=x=xx
+.$*-*$.
+x9$x$9x
+xx.x.xx
+ENDMAP
+
+NAME:     vaults_room_guarded_vault
+TAGS:     vaults_hard vaults_orient_e allow_dup
+MONS:     vault guard
+SUBST:    0 = 00.
+MAP
+%....*x11
+..00..x..
+......n..
+0.99.0+..
+......n..
+..00..x..
+*....%x11
+ENDMAP
+
+NAME:    v_hard_diamondy
+TAGS:    vaults_hard allow_dup
+SUBST:   1 = 0..
+MAP
+xxxxx..x..xxxxx
+xxxx..1x1..xxxx
+xxx...xxx...xxx
+xx...xx%xx...xx
+x...0.....0...x
+...x.......x...
+.1xx.......xx1.
+xxx*..9.9..*xxx
+.1xx.......xx1.
+...x.......x...
+x...0.....0...x
+xx...xx%xx...xx
+xxx...xxx...xxx
+xxxx..1x1..xxxx
+xxxxx..x..xxxxx
+ENDMAP
+
+NAME:    v_hard_cells
+TAGS:    vaults_hard allow_dup
+MAP
+...x....x...
+...x....x...
+xxx+xxxx+xxx
+$0.x%09*x.0$
+$0.x*90%x.0$
+xxx+xxxx+xxx
+...x....x...
+...x....x...
+ENDMAP
+
+NAME:    v_hard_smaller_cells
+TAGS:    vaults_hard allow_dup
+MAP
+..x.0x..x0.x..
+..x0.x..x.0x..
+xx+xx+xx+xx+xx
+..x$%x9*x$$x..
+..x$$x*9x%$x..
+xx+xx+xx+xx+xx
+..x0.x..x.0x..
+..x.0x..x0.x..
+ENDMAP
+
+NAME:    v_hard_lines
+TAGS:    vaults_hard allow_dup
+SHUFFLE: 90
+SUBST:   1 = 00.
+MAP
+%............9
+0............*
+xxxxxx++xxxxxx
+.....+11+.....
+.....+11+.....
+xxxxxx++xxxxxx
+9............%
+*............0
+ENDMAP
+
+NAME:    v_hard_spiral_rooms
+TAGS:    vaults_hard allow_dup
+MAP
+....x.........
+.0..+.........
+..0.xxxxxxxxxx
+.0..x$*9%+....
+....+%9*$x..0.
+xxxxxxxxxx.0..
+.........+..0.
+.........x....
+ENDMAP
+
+NAME:    v_hard_cross
+TAGS:    vaults_hard allow_dup
+KMONS:   8 = 8
+KITEM:   8 = |, *
+SUBST:   8 = 98, 0 = 09
+MAP
+xxxxx.xxxxx
+xxxx.0.xxxx
+xxxxx.xxxxx
+xxx.....xxx
+x.x.x+x.x.x
+.0..+8+..0.
+x.x.x+x.x.x
+xxx.....xxx
+xxxxx.xxxxx
+xxxx.0.xxxx
+xxxxx.xxxxx
+ENDMAP
+
+NAME:    v_hard_check
+TAGS:    vaults_hard allow_dup
+KMONS:   8 = 8
+KITEM:   8 = |
+KMONS:   9 = 9
+KITEM:   9 = *
+MAP
+.................
+.xxxxxxxxxxxxxxx.
+.x98990+9+9+0+0+.
+.xxxxxxxxxxxxxxx.
+.................
+ENDMAP
+
+NAME:    v_hard_octagons_1
+TAGS:    vaults_hard allow_dup
+NSUBST:  ^ = 2:* / *:%
+MAP
+......|x.....x^..^x..
+.9...9*x.....x.90.x..
+......xx.....xx..xx..
+.....xx.......x++x...
+....+x..xx+xx........
+.9.xx..xx...xx.....xx
+*%xx...x^.9.^x....xx^
+xxx....xx...xx...xx..
+........xx+xx....+.0.
+.................+.9.
+x+xx......xx+xx..xx..
+...xx....xx...xx..xx^
+...0xx..xx.....xx..xx
+..9.^x..x0..9..0x....
+....^x..x^.....^x....
+ENDMAP
+
+NAME:    v_hard_octagons_2
+TAGS:    vaults_hard allow_dup
+NSUBST:  ^ = 3:* / *:%$
+MAP
+....^x..x^......^x^..
+.9..^x..x...90...x.0.
+....xx..xx......xx.0.
+...xx...%xxx..xxxx...
+x++x....|x.x++x..xx..
+x.....9.%x........x++
+xx..9...xx...........
+.xx....xx............
+..x+xx+x.............
+.................xx+x
+......xx+xx.....xx...
+x++x.xx...xx...xx....
+x..xxx.....xx+xx^.0..
+.00.xx..9..x...x^.9..
+....xx^...^x.0.x.....
+ENDMAP
+
+NAME:    v_hard_squares
+TAGS:    vaults_hard allow_dup
+MAP
+..............
+....0....0....
+..xxxx++xxxx..
+..x........x..
+..x...00...x..
+..x..xxxx..x..
+..x..x*%x..x..
+..x..x*%x..x..
+..x..x++x..x..
+..x........x..
+..x0..99..0x..
+..xxxxxxxxxx..
+..............
+..............
+ENDMAP
+
+NAME:    v_hard_lattice
+TAGS:    vaults_hard allow_dup
+MAP
+.x.x.x.x.
+.x0x.x0x.
+x.x.x.x.x
+x%x9x*x.x
+.x*x9x%x.
+.x.x.x.x.
+x0x.x.x0x
+x.x.x.x.x
+ENDMAP
+
+NAME:    v_hard_more_cells
+TAGS:    vaults_hard allow_dup
+MAP
+...x...x...
+.0.+.9.+.9.
+...x*.*x...
+x+xxx+xxx+x
+...x*.%x...
+.9.+.9.+.0.
+...x...x...
+ENDMAP
+
+NAME:    v_hard_hourglassy
+TAGS:    vaults_hard allow_dup
+TAGS:    vaults_orient_n vaults_orient_s
+MAP
+xxxxxxx...xxxxxxx
+xxxxxx.....xxxxxx
+xxxx.........xxxx
+xx0...........0xx
+x|9....9.9....9|x
+xx0...........0xx
+xxxx.........xxxx
+xxxxxx.....xxxxxx
+xxxxxxx...xxxxxxx
+ENDMAP
+
+NAME:    v_hard_eye
+TAGS:    vaults_hard allow_dup
+TAGS:    vaults_orient_n vaults_orient_s
+NSUBST:  9 = 1:8 / *:9
+MAP
+xxxxxxxxx..xxxxxxxxx
+xx%**xxxx..xxxx%*%xx
+x.9...xx....xx...9.x
+x...0.xx....xx.0...x
+x....xx0....0xx....x
+x.0.xx..x..x..xx.0.x
+x.........9........x
+x........9.........x
+x.0.xx..x..x..xx.0.x
+x....xx0....0xx....x
+x...0.xx....xx.0...x
+x.9...xx....xx...9.x
+xx|*%xxxx..xxxx%**xx
+xxxxxxxxx..xxxxxxxxx
+ENDMAP
+
+NAME:    v_hard_star
+TAGS:    vaults_hard allow_dup
+TAGS:    vaults_orient_n vaults_orient_s
+NSUBST:  0 = 2=998 / 6:0 / *:.
+MAP
+xxxxxxxxxxxx..xxxxxxxxxxxx
+x%*xxxxxxx......xxxxxxx%*x
+x*9..xxx...0..0...xxx..9%x
+xx.......0..xx..0.......xx
+xxxx..0....xxxx....0..xxxx
+xxxx..0....xxxx....0..xxxx
+xx.......0..xx..0.......xx
+x%9..xxx...0..0...xxx..9*x
+x*%xxxxxxx......xxxxxxx*%x
+xxxxxxxxxxxx..xxxxxxxxxxxx
+ENDMAP
+
+NAME:    v_hard_quartered_hall
+TAGS:    vaults_hard allow_dup
+NSUBST:  0 = 4=998 / 8:0 / *:.
+MAP
+xxxxxxx..xxxxxxx
+x*00*x....x*00*x
+xx..xx....xx..xx
+xxx+x.0..0.x+xxx
+xxx...x..x...xxx
+x..0x......x0..x
+.......09.......
+.......90.......
+x..0x......x0..x
+xxx...x..x...xxx
+xxx+x.0..0.x+xxx
+xx..xx....xx..xx
+x*00|x....x*00*x
+xxxxxxx..xxxxxxx
 ENDMAP
