@@ -1,0 +1,477 @@
+################################################################################
+# vaults_rooms_empty.des: Subvaults for the Vaults.
+#
+# Content: These are the subvaults that place no monsters.
+#   Subvaults placing monsters should go in vaults_rooms_standard.des
+#
+################################################################################
+#
+# All of the subvaults in here should use the tag vaults_empty
+#
+# You can additionally use the following tags:
+#
+# vaults_orient_n vaults_orient_s vaults_orient_e vaults_orient_w
+# no_windows preserve_wall
+#
+# vaults_orient_x: controls the entry points to the subvault.
+# A subvault using vaults_orient_n will always be entered from the north side,
+# as it appears in the .des. Multiple orient tags may be used.
+#
+# no_windows: prevents the layout from creating windows into the subvault.
+#
+# preserve_wall: prevents the layout from changing rock into the same wall type
+# as the rest of the floor.
+#
+################################################################################
+
+NAME:     vaults_room_door_ring
+TAGS:     vaults_empty allow_dup
+SUBST:    + : +.....
+MAP
+.+...+.
++xxxxx+
+.xxxxx.
+.xxxxx.
+.xxxxx.
++xxxxx+
+.+...+.
+ENDMAP
+
+NAME:     vaults_room_pool
+TAGS:     vaults_empty allow_dup no_pool_fixup
+SUBST:    w : x.
+MAP
+.......
+.......
+..www..
+..www..
+..www..
+.......
+.......
+ENDMAP
+
+NAME:     vaults_room_pools
+TAGS:     vaults_empty allow_dup no_pool_fixup
+SUBST:    w : x.
+MAP
+ww...ww
+ww...ww
+.......
+.......
+.......
+ww...ww
+ww...ww
+ENDMAP
+
+NAME:     vaults_room_stairs_pillars
+TAGS:     vaults_empty allow_dup
+SHUFFLE:  GI
+SUBST:    I = ., G = x
+MAP
+.......
+.G.I.G.
+.......
+.I.(.I.
+.......
+.G.I.G.
+.......
+ENDMAP
+
+
+NAME:     vaults_room_semicircle
+TAGS:     allow_dup vaults_empty vaults_orient_e
+MAP
+.....xx
+......x
+.......
+.(.....
+.......
+......x
+.....xx
+ENDMAP
+
+NAME:     vaults_room_hallway
+TAGS:     vaults_empty vaults_orient_w vaults_orient_e allow_dup
+MAP
+x.x.x.x.x.x
+...........
+.....(.....
+...........
+x.x.x.x.x.x
+ENDMAP
+
+NAME:     vaults_room_mumra_shop_pool
+TAGS:     vaults_empty vaults_orient_s
+WEIGHT:   2
+SUBST:    w = w:10 2:1, G : G.
+MONS:     plant
+KFEAT:    s = any shop
+FTILE:    _1s = floor_swamp
+MAP
+.........
+.G.www.G.
+..wwwww..
+.wwwswww.
+.ww1_1ww.
+.www_www.
+..ww_ww..
+.G.w_w.G.
+...._....
+ENDMAP
+
+NAME:     vaults_room_grid
+TAGS:     allow_dup vaults_empty
+SHUFFLE:  xyz
+SUBST:    x : xxx...
+SUBST:    y : xx....
+SUBST:    z : x.....
+MAP
+..........
+.xx.yy.xx.
+.xx.yy.xx.
+..........
+.yy.zz.yy.
+.yy.zz.yy.
+..........
+.xx.yy.xx.
+.xx.yy.xx.
+..........
+ENDMAP
+
+NAME:     vaults_room_fancy_cross
+TAGS:     allow_dup vaults_empty
+SHUFFLE:  SPQR / spqr
+SUBST:    S=+, P=+, Q=+, R=+, s=., p=., q=., r=.
+NSUBST:   . = 1:( / *:.
+MAP
+....x..x....
+....x..x....
+..xSx..xPx..
+..S.s..p.P..
+xxxsx..xpxxx
+............
+............
+xxxrx..xqxxx
+..R.r..q.Q..
+..xRx..xQx..
+....x..x....
+....x..x....
+ENDMAP
+
+NAME:     vaults_room_ringed_pool
+TAGS:     vaults_empty no_pool_fixup allow_dup
+SHUFFLE:  xc
+SUBST:    c : x.
+NSUBST:   . = 1:( / *:.
+MAP
+..xxx..xxx..
+............
+x...cccc...x
+x..........x
+x.c.wwww.c.x
+..c.wwww.c..
+..c.wwww.c..
+x.c.wwww.c.x
+x..........x
+x...cccc...x
+............
+..xxx..xxx..
+ENDMAP
+
+NAME:     vaults_room_octagon
+TAGS:     allow_dup vaults_empty
+SHUFFLE:  pq/rs
+SUBST:    q : xx.
+SUBST:    s : xx.
+SUBST:    r : xx.
+SUBST:    p : x
+MAP
+xxxx.......xxxx
+xxx...srs...xxx
+xx....rrr....xx
+x.....srs.....x
+...............
+...............
+.srs..qpq..srs.
+.rrr..ppp..rrr.
+.srs..qpq..srs.
+...............
+...............
+x.....srs.....x
+xx....rrr....xx
+xxx...srs...xxx
+xxxx.......xxxx
+ENDMAP
+
+NAME:     vaults_room_large_hall
+TAGS:     allow_dup vaults_empty
+SUBST:    a : x.
+MAP
+.x.x.x..x.x.x.
+.x.x.x..x.x.x.
+..............
+..............
+..............
+......aa......
+......aa......
+..............
+..............
+..............
+.x.x.x..x.x.x.
+.x.x.x..x.x.x.
+ENDMAP
+
+NAME:    v_alt_pattern_1
+TAGS:    allow_dup vaults_empty
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+.x.x.x.x.x.
+...........
+.x.x.x.x.x.
+...........
+.x.x.x.x.x.
+...........
+.x.x.x.x.x.
+...........
+.x.x.x.x.x.
+...........
+ENDMAP
+
+NAME:    v_alt_pattern_3
+TAGS:    allow_dup vaults_empty
+SHUFFLE: +ab
+SUBST:   a=x, b=x
+NSUBST:  . = 1:( / *:.
+MAP
+......x......
+......+......
+..xx..x..xx..
+..xx..a..xx..
+......x......
+......b......
+x+xaxbxbxax+x
+......b......
+......x......
+..xx..a..xx..
+..xx..x..xx..
+......+......
+......x......
+ENDMAP
+
+NAME:    v_alt_pattern_4
+TAGS:    allow_dup vaults_empty
+SUBST:   y : x.
+NSUBST:  . = 1:( / *:.
+MAP
+.............
+.............
+..xxxx.xxxx..
+..x.......x..
+..x.......x..
+..x..yxy..x..
+.....xxx.....
+..x..yxy..x..
+..x.......x..
+..x.......x..
+..xxxx.xxxx..
+.............
+.............
+ENDMAP
+
+NAME:    v_misc_8
+TAGS:    vaults_empty allow_dup
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+.....x.....
+....xxx....
+...........
+..x.....x..
+.xx.....xx.
+..x.....x..
+...........
+....xxx....
+.....x.....
+...........
+ENDMAP
+
+
+
+NAME:    v_misc_13
+TAGS:    vaults_empty allow_dup
+SUBST:   a:x..., b:x.....
+NSUBST:  ( = 1:( / *:.
+MAP
+xxxx...xxxx
+xxx..(..xxx
+xx..bbb..xx
+x..bbabb..x
+..bbaaabb..
+.(baaaaab(.
+..bbaaabb..
+x..bbabb..x
+xx..bbb..xx
+xxx..(..xxx
+xxxx...xxxx
+ENDMAP
+
+NAME:    v_misc_14
+TAGS:    vaults_empty allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  . = 1:( / *:.
+MAP
+xxxx...xxxx
+xxx.....xxx
+xx..xyx..xx
+x..xx.xx..x
+..xx...xx..
+..y.....y..
+..xx...xx..
+x..xx.xx..x
+xx..xyx..xx
+xxx.....xxx
+xxxx...xxxx
+ENDMAP
+
+NAME:    v_misc_15
+TAGS:    vaults_empty allow_dup
+NSUBST:  y = 1:+ / *:x
+NSUBST:  . = 1:( / *:.
+MAP
+xxxx...xxxx
+xxx.....xxx
+xx.......xx
+x..xxyxx..x
+...x...x...
+...y...y...
+...x...x...
+x..xxyxx..x
+xx.......xx
+xxx.....xxx
+xxxx...xxxx
+ENDMAP
+
+NAME:    v_misc_16
+TAGS:    vaults_empty allow_dup
+SHUFFLE: aby / aaa / bbb / bay / bya
+SUBST:   a:., b:x, y:x
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+..xxx.xxx..
+..x.....x..
+..x.yby.x..
+....bab....
+..x.yby.x..
+..x.....x..
+..xxx.xxx..
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_17
+TAGS:    vaults_empty allow_dup
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+...........
+..xxx.xxx..
+..xx.x.xx..
+..x.x.x.x..
+...x.x.x...
+..x.x.x.x..
+..xx.x.xx..
+..xxx.xxx..
+...........
+...........
+ENDMAP
+
+NAME:    v_misc_19
+TAGS:    vaults_empty allow_dup
+NSUBST:  . = 1:( / *:.
+MAP
+...xx.xx...
+...xx.xx...
+...........
+xx.......xx
+xx.......xx
+...........
+xx.......xx
+xx.......xx
+...........
+...xx.xx...
+...xx.xx...
+ENDMAP
+
+NAME:    v_misc_22
+TAGS:    vaults_empty allow_dup
+NSUBST:  . = 1:( / *:.
+MAP
+xx.......xx
+xx.......xx
+....xxx....
+....xxx....
+..xxxxxxx..
+..xxxxxxx..
+..xxxxxxx..
+....xxx....
+....xxx....
+xx.......xx
+xx.......xx
+ENDMAP
+
+NAME:    v_misc_23
+TAGS:    vaults_empty allow_dup
+SUBST:   y:+.
+NSUBST:  . = 1:( / *:.
+MAP
+xx..y.y..xx
+xx..xxx..xx
+...xxxxx...
+..xxxxxxx..
+yxxxxxxxxxy
+.xxxxxxxxx.
+yxxxxxxxxxy
+..xxxxxxx..
+...xxxxx...
+xx..xxx..xx
+xx..y.y..xx
+ENDMAP
+
+NAME:    v_misc_24
+TAGS:    vaults_empty allow_dup
+SUBST:   a:x.
+NSUBST:  . = 1:( / *:.
+MAP
+...........
+.....x.....
+.....x.....
+...aaxaa...
+...axxxa...
+.xxxxxxxxx.
+...axxxa...
+...aaxaa...
+.....x.....
+.....x.....
+...........
+ENDMAP
+
+NAME:    v_misc_25
+TAGS:    vaults_empty allow_dup
+SUBST:   u:x., y:x., Y:x.
+NSUBST:  . = 1:( / *:.
+MAP
+xxxu...uxxx
+xxxu...uxxx
+xxxu...uxxx
+uuuu...uuuu
+....yYy....
+....YYY....
+....yYy....
+uuuu...uuuu
+xxxu...uxxx
+xxxu...uxxx
+xxxu...uxxx
+ENDMAP
