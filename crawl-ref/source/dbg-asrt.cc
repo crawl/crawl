@@ -143,7 +143,7 @@ static void _dump_player(FILE *file)
             you.strength(false), you.max_strength(),
             you.intel(false), you.max_intel(),
             you.dex(false), you.max_dex());
-    fprintf(file, "Position: %s, god:%s (%d), turn_is_over: %d, "
+    fprintf(file, "Position: %s, god: %s (%d), turn_is_over: %d, "
                   "banished: %d\n",
             debug_coord_str(you.pos()).c_str(),
             god_name(you.religion).c_str(), (int) you.religion,
