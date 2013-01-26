@@ -30,16 +30,12 @@ end
 local function vector_rotate(vec, count)
   if count > 0 then
     local rotated = { x = -vec.y, y = vec.x }
---    if rotated.x == -0 then rotated.x = 0 end
-  --  if rotated.y == -0 then rotated.y = 0 end
     count = count - 1
     if count <= 0 then return rotated end
     return vector_rotate(rotated,count)
   end
   if count < 0 then
     local rotated = { x = vec.y, y = -vec.x }
- --   if rotated.x == -0 then rotated.x = 0 end
-  --  if rotated.y == -0 then rotated.y = 0 end
     count = count + 1
     if count >= 0 then return rotated end
     return vector_rotate(rotated,count)
@@ -494,28 +490,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- How big the door?
   local needs_door = true  -- Only reason we wouldn't need a door is if we're intentionally creating a dead end, not implemented yet
   if needs_door then
-    -- Even or odd room width
-    local oddness = room_width % 2
-    -- Doors should be 1 or 2 wide. Right now this depends on whether the wall has odd or even length. This isn't ideal, should be randomised
-    -- more, but things generally look weird if they're off-center.
-    local door_length = 2 - oddness
-    -- Rarish chance of a slightly bigger door, TODO: Discuss more with elliptic & st
-    -- For now will keep things highly predictable so the layouts work properly. But it really shouldn't be too hard at this stage
-    -- to check for spots where both sides of the wall have floor, and carve the door there. (Would be nice IMO to extremely rarely have
-    -- the very big doors, perhaps only on the empty rooms).
-    -- if crawl.one_chance_in(6) then door_length = door_length + 2
-
-    -- Work out half the door length
---    local door_max = math.floor(room_width / 2)
---    local door_half_length = crawl.random_range(1,door_max)
-    -- Multiply by two and add one if odd
---    local door_length = door_half_length * 2 + oddness
-
-    local door_start = (room_width - door_length) / 2
-    local door_c1 = vaults_vector_add(room_base, { x = door_start, y = -1 }, v_wall, v_normal)
-    local door_c2 = vaults_vector_add(room_base, { x = room_width - 1 - door_start, y = -1 }, v_wall, v_normal)
-
-    -- dgn.fill_grd_area(door_c1.x, door_c1.y, door_c2.x, door_c2.y, "closed_door")
     door_length = 1
     dgn.grid(pos.x,pos.y, "closed_door")  -- Placing door only on original spot for now, figure out bigger doors later
 
@@ -534,8 +508,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   end
 
+  local set_empty = crawl.coinflip() -- Allow the room to be used for more rooms or not?
   -- Loop through all squares and update eligibility
-  local set_empty = crawl.coinflip()
   for p in iter.rect_iterator(dgn.point(origin.x,origin.y), dgn.point(opposite.x,opposite.y)) do
     local x,y = p.x,p.y
     -- Restricting further placement to keep things simple. Will need to be more clever about how we treat the walls.
