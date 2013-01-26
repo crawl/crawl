@@ -475,6 +475,10 @@ You hear some strange, mumbled words.
 # Generic priest, wizard and demonic casting messages.
 ######################################################
 %%%%
+Haste Other priest cast
+
+@The_monster@ calls upon @possessive_God@ to speed up @target@.
+%%%%
 Heal Other priest cast
 
 @The_monster@ calls upon @possessive_God@ to heal @target@.
