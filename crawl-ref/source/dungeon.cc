@@ -6462,6 +6462,24 @@ dungeon_feature_type vault_placement::feature_at(const coord_def &c)
 
 }
 
+bool vault_placement::is_space(const coord_def &c)
+{
+    // Can't check outside bounds of vault
+    if (size.zero() || c.x > size.x || c.y > size.y)
+        return NUM_FEATURES;
+
+    const int feat = map.map.glyph(c);
+    return (feat == ' ');
+}
+bool vault_placement::is_exit(const coord_def &c)
+{
+    // Can't check outside bounds of vault
+    if (size.zero() || c.x > size.x || c.y > size.y)
+        return NUM_FEATURES;
+
+    const int feat = map.map.glyph(c);
+    return (feat == '@');
+}
 static dungeon_feature_type _vault_inspect(vault_placement &place,
                         int vgrid, keyed_mapspec *mapsp)
 {
@@ -6508,18 +6526,6 @@ static dungeon_feature_type _vault_inspect_glyph(vault_placement &place, int vgr
         found = DNGN_FLOOR;
     }
 
-    // TODO: Handle exits (mainly I am interested in know about the @ -mumra)
-    /*
-    switch (vgrid)
-    {
-    case '@':
-    case '=':
-    case '+':
-        if (_map_feat_is_on_edge(place, where))
-            place.exits.push_back(where);
-
-        break;
-    }*/
     return found;
 }
 

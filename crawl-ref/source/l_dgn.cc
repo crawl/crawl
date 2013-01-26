@@ -1796,8 +1796,9 @@ LUAFN(_dgn_inspect_map)
     c.y = luaL_checkint(ls, 3);
 
     lua_pushnumber(ls, vp.feature_at(c));
-
-    return 1;
+    lua_pushboolean(ls, vp.is_exit(c));
+    lua_pushboolean(ls, vp.is_space(c));
+    return 3;
 }
 
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
