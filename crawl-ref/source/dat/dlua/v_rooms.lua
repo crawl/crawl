@@ -157,9 +157,7 @@ local function pick_room(e, options)
                 -- Map to internal room coordinate based on start vector and normals
                 local mapped = vaults_vector_add(start, { x = m - 1, y = 0 }, wall_dir,wall_normal)
                 local feature = dgn.inspect_map(vplace,mapped.x,mapped.y)
-                local solid = feat.is_solid(feature)
-                local water = feat.is_water(feature)
-                room.walls[n].cells[m] = { feature = feature, open = not (solid or water) }
+                room.walls[n].cells[m] = { feature = feature, open = feat.has_solid_floor(feature) }
               end
             end
           end
