@@ -182,7 +182,7 @@ local function pick_room(e, options)
               cell.open = is_open
             end
           end
-          if has_exits and not wall_has_exit then wall.eligible = false end
+          if has_exits and not wall_has_exit then room.walls[n].eligible = false end
         end
 
         if options.veto_room_callback ~= nil then
