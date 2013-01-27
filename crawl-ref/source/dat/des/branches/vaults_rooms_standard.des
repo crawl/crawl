@@ -191,7 +191,7 @@ ENDMAP
 NAME:   metal_show
 TAGS:   vaults_room vaults_orient_e
 TAGS:   no_monster_gen no_item_gen no_wall_fixup
-WEIGHT: 2
+WEIGHT: 0
 COLOUR: M = magenta
 COLOUR: K = magenta
 FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
