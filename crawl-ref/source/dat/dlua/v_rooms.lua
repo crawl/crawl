@@ -223,7 +223,7 @@ end
 function place_vaults_rooms(e, data, room_count, options)
 
   if options == nil then options = vaults_default_options() end
-  local results, rooms_placed, max_tries, times_failed, bailout = { }, 0, 27, 0, false
+  local results, rooms_placed, max_tries, times_failed, bailout = { }, 0, 10, 0, false
 
   -- Keep trying to place rooms until we've had times_failed fail in a row or we reach the max
   while rooms_placed < room_count and times_failed < max_tries do
@@ -296,7 +296,7 @@ function place_vaults_rooms(e, data, room_count, options)
   end
 
   -- Useful to see what's going on when things are getting veto'd:
-  -- dump_usage_grid(data)
+  if _VAULTS_DEBUG then dump_usage_grid(data) end
 
   return true
 end
@@ -305,8 +305,8 @@ function place_vaults_room(e,usage_grid,room, options)
 
   local gxm, gym = dgn.max_bounds()
 
-  -- Fairly high number of tries because it's fairly quick to see whether a room fits but non-trivial to resolve a vault
-  local maxTries = 20
+  -- Fairly high number of tries is allowed because it's fairly quick to see whether a room fits but non-trivial to resolve a vault
+  local maxTries = 50
   local tries = 0
   local done = false
 
@@ -394,7 +394,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
   end
 
-  -- Check every square this room will go, including its walls, to make sure we have space
   local is_clear, room_width, room_height = true, room.size.x, room.size.y
   -- Exchange width and height if the room has rotated
   if orient.dir % 2 == 1 then room_width, room_height = room_height, room_width end
@@ -408,21 +407,26 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     if result == true then return false end
   end
 
-  for p in iter.rect_iterator(dgn.point(-1, -1), dgn.point(room_width, room_height)) do
-
-    local rx,ry = p.x,p.y
-
-    -- Figure out where this target actually lies in map coords after rotation
-    local target = vaults_vector_add(room_base, { x = rx, y = ry }, v_wall, v_normal )
+  -- Calculate the two corner points including walls. Calculating this first rather than for each checking coord proved to be
+  -- a significant optimisation; but this will mean to correctly do empty space collapsing we'd have to first create a correctly transformed
+  -- map of the space which would negate this optimisation. However we only need to compute the space once for each of the four orientations
+  -- so maybe that should happen in the pick_room phase.
+  local space_tl,space_br = vaults_vector_add(room_base, { x = -1, y = -1 }, v_wall, v_normal ),vaults_vector_add(room_base, { x = room_width, y = room_height }, v_wall, v_normal )
+  local space_p1,space_p2 = dgn.point(math.min(space_tl.x,space_br.x),math.min(space_tl.y,space_br.y)),dgn.point(math.max(space_tl.x,space_br.x),math.max(space_tl.y,space_br.y))
+  -- Check every square this room will go, including its walls, to make sure we have space
+  for target in iter.rect_iterator(space_p1,space_p2) do
 
     -- Check existing usage of that square
     local target_usage = vaults_get_usage(usage_grid,target.x,target.y)
 
     -- Check we are allowed to build here
-    -- If any square is restricted then we fail. If our room type is "open" then we need to find all open or eligible_open squares (meaning we take up
+    -- If our room type is "open" then we need to find all open or eligible_open squares (meaning we take up
     -- open space or we are attaching to an existing building). If our room type is "eligible" then we need to find all unused or eligible squares (meaning
-    -- we are building into empty walls or attaching to more buildings).
-    if (target_usage.usage == "restricted" or (usage.usage == "open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")
+    -- we are building into empty walls or attaching to more buildings). "Restricted" squares only need to fail for certain reasons; quite often our walls will
+    -- overwrite walls of other rooms which may be "restricted" due to the contents of the room, but restricted squares inside vaults or too near to existing walls
+    -- ("border") must fail.
+    if ((target_usage.usage == "restricted" and (target_usage.reason == "border" or target_usage.reason == "vault"))
+      or (usage.usage == "open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")
       or (usage.usage == "eligible" and target_usage.usage ~= "eligible" and target_usage.usage ~= "none")
       or (usage.usage == "eligible_open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")) then
       is_clear = false
@@ -433,9 +437,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- For open rooms, check a border all around the outside of the wall. We don't want to land right next to another room because we could cut off its door,
   -- and also it would just create ugly two-thick walls.
   if (usage.usage=="open" or usage.usage == "eligible_open") then
-    for p in iter.border_iterator(dgn.point(-2, -2), dgn.point(room_width + 1, room_height + 1)) do
+    for target in iter.border_iterator(dgn.point(space_p1.x-1, space_p1.y-1), dgn.point(space_p1.x + 1, space_p2.y + 1)) do
 
-      local target = vaults_vector_add(room_base, { x = p.x, y = p.y }, v_wall, v_normal )
       local target_usage = vaults_get_usage(usage_grid,target.x,target.y)
 
       -- Here we don't mind if restricted squares are outside the border, unless it's part of another vault's door.

@@ -25,6 +25,8 @@ require("dlua/v_debug.lua")
 require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
 
+_VAULTS_DEBUG = false
+
 -- Default parameters for all Vaults layouts. Some individual layouts might
 -- tweak these parameters to create specific effects.
 function vaults_default_options()
@@ -82,7 +84,9 @@ end
 function build_vaults_layout(e, name, paint, options)
 
   if not crawl.game_started() then return end
-  -- print("Vaults Layout: " .. name)
+
+  if _VAULTS_DEBUG then print("Vaults Layout: " .. name) end
+
   local gxm,gym = dgn.max_bounds()
   -- e.extend_map{width=gxm, height=gym, fill='x'}
 
