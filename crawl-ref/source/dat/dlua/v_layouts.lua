@@ -43,7 +43,7 @@ function vaults_default_options()
     room_type_weights = {
       { generator = "floor", weight = 40, min_size = 6, max_size = 18 }, -- Floor vault
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
-      { generator = "tagged", tag = "vaults_empty", weight = 30 },
+      { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },
     },
 
@@ -188,7 +188,7 @@ function build_vaults_maze_layout(e,veto_callback, name)
     return false
   end
 
-  build_vaults_layout(e, name, paint, { max_room_depth = 0, veto_room_callback = room_veto, veto_place_callback = veto_callback, min_room_size = 5, max_room_size = 25, max_rooms = 25 })
+  build_vaults_layout(e, name, paint, { max_room_depth = 0, veto_place_callback = veto_callback })
 
 end
 -- Uses a custom veto function to alternate between up or down connections every {dist} rooms

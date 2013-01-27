@@ -97,7 +97,7 @@ local function pick_room(e, options)
   elseif chosen.generator == "tagged" then
     local found = false
     local tries = 0
-    local maxTries = 20
+    local maxTries = 50
 
     while tries < maxTries and not found do
       -- Resolve a map with the specified tag
@@ -105,7 +105,7 @@ local function pick_room(e, options)
       -- Temporarily prevent map getting mirrored / rotated during resolution; and hardwire transparency because lack of it can fail a whole layout
       dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
       -- Resolve the map so we can find its width / height
-      local map, vplace = dgn.resolve_map(mapdef,true,true)
+      local map, vplace = dgn.resolve_map(mapdef,false)
       local room_width,room_height
 
         -- If we can't find a map then we're probably not going to find one
@@ -223,7 +223,7 @@ end
 function place_vaults_rooms(e, data, room_count, options)
 
   if options == nil then options = vaults_default_options() end
-  local results, rooms_placed, max_tries, times_failed, bailout = { }, 0, 10, 0, false
+  local results, rooms_placed, max_tries, times_failed, total_failed = { }, 0, 27, 0, 0
 
   -- Keep trying to place rooms until we've had times_failed fail in a row or we reach the max
   while rooms_placed < room_count and times_failed < max_tries do
@@ -249,14 +249,16 @@ function place_vaults_rooms(e, data, room_count, options)
           room.generator_used.placed_count = room.generator_used.placed_count + 1
         end
       end
+
     end
 
     if not placed then
       times_failed = times_failed + 1 -- Increment failure count
+      total_failed = total_failed + 1
     end
 
   end
-
+  print ("Total placement failures: " .. total_failed)
   -- Now we need some stairs
   local stairs = { }
   for i, r in ipairs(results) do
@@ -285,12 +287,11 @@ function place_vaults_rooms(e, data, room_count, options)
     table.remove(stairs,i)
   end
 
-
   -- Set MMT_VAULT across the whole map depending on usage. This way the dungeon builder knows where to place standard vaults without messing up the layout.
   local gxm, gym = dgn.max_bounds()
   for p in iter.rect_iterator(dgn.point(0, 0), dgn.point(gxm - 1, gym - 1)) do
     local usage = vaults_get_usage(data,p.x,p.y)
-    if usage.usage == "restricted" or usage.usage == "eligible_open" or (usage.usage == "eligible" and usage.depth > 1) then
+    if usage ~= nil and usage.usage == "restricted" or usage.usage == "eligible_open" or (usage.usage == "eligible" and usage.depth > 1) then
       dgn.set_map_mask(p.x,p.y)
     end
   end
@@ -306,7 +307,7 @@ function place_vaults_room(e,usage_grid,room, options)
   local gxm, gym = dgn.max_bounds()
 
   -- Fairly high number of tries is allowed because it's fairly quick to see whether a room fits but non-trivial to resolve a vault
-  local maxTries = 50
+  local maxTries = 20
   local tries = 0
   local done = false
 
@@ -327,7 +328,7 @@ function place_vaults_room(e,usage_grid,room, options)
       local near_eligibles = {}
       for p in iter.rect_iterator(dgn.point(spot.x-2,spot.y-2),dgn.point(spot.x+2,spot.y+2)) do
         local near_usage = vaults_get_usage(usage_grid,p.x,p.y)
-        if near_usage.usage == "eligible_open" then
+        if near_usage ~= nil and near_usage.usage == "eligible_open" then
           table.insert(near_eligibles, { spot = p, usage = near_usage })
         end
       end
@@ -425,7 +426,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     -- we are building into empty walls or attaching to more buildings). "Restricted" squares only need to fail for certain reasons; quite often our walls will
     -- overwrite walls of other rooms which may be "restricted" due to the contents of the room, but restricted squares inside vaults or too near to existing walls
     -- ("border") must fail.
-    if ((target_usage.usage == "restricted" and (target_usage.reason == "border" or target_usage.reason == "vault"))
+    if (target_usage == nil or (target_usage.usage == "restricted" and (target_usage.reason == "border" or target_usage.reason == "vault" or target_usage.reason == "door"))
       or (usage.usage == "open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")
       or (usage.usage == "eligible" and target_usage.usage ~= "eligible" and target_usage.usage ~= "none")
       or (usage.usage == "eligible_open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")) then
@@ -436,14 +437,14 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   -- For open rooms, check a border all around the outside of the wall. We don't want to land right next to another room because we could cut off its door,
   -- and also it would just create ugly two-thick walls.
-  if (usage.usage=="open" or usage.usage == "eligible_open") then
+  if (is_clear and usage.usage == "open" or usage.usage == "eligible_open") then
     for target in iter.border_iterator(dgn.point(space_p1.x-1, space_p1.y-1), dgn.point(space_p1.x + 1, space_p2.y + 1)) do
 
       local target_usage = vaults_get_usage(usage_grid,target.x,target.y)
 
       -- Here we don't mind if restricted squares are outside the border, unless it's part of another vault's door.
       -- We don't want to butt up right next to an eligible wall without joining to it (or do we ...? it would mean less chokepoints existing... but could block parts of the scenery)
-      if (target_usage.usage == "eligible" or (target_usage.usage == "eligible_open" and target_usage.room ~= usage.room)
+      if (target_usage == nil or target_usage.usage == "eligible" or (target_usage.usage == "eligible_open" and target_usage.room ~= usage.room)
          or (target_usage.usage == "restricted" and target_usage.reason ~= "vault" and target_usage.room ~= usage.room ) ) then
         is_clear = false
         break

@@ -43,10 +43,10 @@ end
 local function get_usage(usage_grid,x,y)
   -- Handle out of bounds
   if usage_grid[y] == nil then
-    return { usage = "restricted" }
+    return nil
   end
   if usage_grid[y][x] == nil then
-    return { usage = "restricted" }
+    return nil
   end
 
   return usage_grid[y][x]
