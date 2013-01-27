@@ -187,7 +187,7 @@ local function determine_usage_from_layout(layout_grid,options)
         else -- Floor
 
           -- We already know there is a wall nearby, so this square is restricted
-          set_usage(usage_grid,x,y, { usage = "restricted" })
+          set_usage(usage_grid,x,y, { usage = "restricted", reason = "border" })
 
         end
       end
