@@ -2583,6 +2583,7 @@ static void tag_construct_level(writer &th)
         marshallByte(th, env.cloud[i].type);
         if (env.cloud[i].type == CLOUD_NONE)
             continue;
+        ASSERT(in_bounds(env.cloud[i].pos));
         marshallByte(th, env.cloud[i].pos.x);
         marshallByte(th, env.cloud[i].pos.y);
         marshallShort(th, env.cloud[i].decay);
@@ -3291,7 +3292,16 @@ static void tag_read_level(reader &th)
         env.cloud[i].name   = unmarshallString(th);
         env.cloud[i].tile   = unmarshallString(th);
         env.cloud[i].excl_rad = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+        // Please remove soon, after games get unstuck.
+        if (!in_bounds(env.cloud[i].pos))
+        {
+            env.cloud[i].type = CLOUD_NONE;
+            continue;
+        }
+#else
         ASSERT(in_bounds(env.cloud[i].pos));
+#endif
         env.cgrid(env.cloud[i].pos) = i;
         env.cloud_no++;
     }
