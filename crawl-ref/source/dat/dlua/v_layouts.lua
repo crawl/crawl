@@ -31,7 +31,7 @@ function vaults_default_options()
 
   local options = {
     min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
-    max_rooms = 25, -- Maximum number of rooms to attempt to place
+    max_rooms = 27, -- Maximum number of rooms to attempt to place
     min_room_size = 5, -- Min/max sizes of rooms
     max_room_size = 40,
     max_room_depth = 0, -- No max depth (not implementd yet anyway)
