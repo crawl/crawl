@@ -895,11 +895,6 @@ MAP
 ....x........+....
 ENDMAP
 
-
-
-# newnewvaults vaults
-# _slither, _capsules, _town_square, and _monster_house are all old boring projects.
-
 NAME:   hangedman_vaults_slither
 TAGS:   vaults_room
 SUBST:  b : aX., B : AX., c : aC..., C : Ax..., a : Ax., A : xx., X : xx.

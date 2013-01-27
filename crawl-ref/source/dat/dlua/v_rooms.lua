@@ -47,7 +47,7 @@ local function pick_room(e, options)
 
   -- Filters out rooms that have reached their max
   local function weight_callback(generator)
-    if generator.max_rooms ~= nil and generator.placed_count ~= nil and generator.place_count >= generator.max_rooms then
+    if generator.max_rooms ~= nil and generator.placed_count ~= nil and generator.placed_count >= generator.max_rooms then
       return 0
     end
     return generator.weight
@@ -69,7 +69,8 @@ local function pick_room(e, options)
       room = {
         type = "empty",
         -- Use random2(random2(..)) to get a room size that tends towards lower values
-        size = { x = chosen.min_size + crawl.random2(crawl.random2(diff)), y = chosen.min_size + crawl.random2(crawl.random2(diff)) }
+        size = { x = chosen.min_size + crawl.random2(crawl.random2(diff)), y = chosen.min_size + crawl.random2(crawl.random2(diff)) },
+        generator_used = chosen
       }
       -- Describe connectivity of each wall. Of course all points are connectable since the room is empty.
       room.walls = { }
@@ -88,11 +89,9 @@ local function pick_room(e, options)
         local result = options.veto_room_callback(room)
         if result == true then veto = true end
       end
-
     end
 
     return room
-
 
   -- Pick by tag
   elseif chosen.generator == "tagged" then
@@ -221,39 +220,39 @@ local function analyse_vault_post_placement(e,usage_grid,room,result,options)
 
 end
 
-function place_vaults_rooms(e,data, room_count, options)
+function place_vaults_rooms(e, data, room_count, options)
 
   if options == nil then options = vaults_default_options() end
-  local results = { }
+  local results, rooms_placed, max_tries, times_failed, bailout = { }, 0, 27, 0, false
 
-  -- Attempt to place as many rooms as we've been asked for
-  -- for i = 1, 10, 1 do
-  for i = 1, room_count, 1 do
+  -- Keep trying to place rooms until we've had times_failed fail in a row or we reach the max
+  while rooms_placed < room_count and times_failed < max_tries do
     local placed = false
-    local tries = 0
-    local maxTries = 25  -- 25 tries to pick a room and place it
 
-    -- Try several times to find a room that passes placement (it could get vetoed at the placement stage,
-    -- for instance low-depth rooms might be required to have multiple entrances)
-    while tries < maxTries and not placed do
-      tries = tries + 1
-      -- Pick a room
-      local room = pick_room(e, options)
-      -- Attempt to place it. The placement function will try several times to find somewhere to fit it.
-      if room ~= nil then
-        local result = place_vaults_room(e,data,room,options)
-        if result.placed then
-          placed = true
-          if room.type == "vault" then
-            -- Perform analysis for stairs
-            analyse_vault_post_placement(e,data,room,result,options)
-            table.insert(results,result)
-            -- Increment the count of rooms of this type
-            if room.placed_count == nil then room.placed_count = 0 end
-            room.placed_count = room.placed_count + 1
-          end
+    -- Pick a room
+    local room = pick_room(e, options)
+    -- Attempt to place it. The placement function will try several times to find somewhere to fit it.
+    if room ~= nil then
+      local result = place_vaults_room(e,data,room,options)
+      if result ~= nil and result.placed then
+        placed = true
+        rooms_placed = rooms_placed + 1  -- Increment # rooms placed
+        times_failed = 0 -- Reset fail count
+        if room.type == "vault" then
+          -- Perform analysis for stairs
+          analyse_vault_post_placement(e,data,room,result,options)
+          table.insert(results,result)
+        end
+        -- Increment the count of rooms of this type
+        if room.generator_used ~= nil then
+          if room.generator_used.placed_count == nil then room.generator_used.placed_count = 0 end
+          room.generator_used.placed_count = room.generator_used.placed_count + 1
         end
       end
+    end
+
+    if not placed then
+      times_failed = times_failed + 1 -- Increment failure count
     end
 
   end
@@ -307,7 +306,7 @@ function place_vaults_room(e,usage_grid,room, options)
   local gxm, gym = dgn.max_bounds()
 
   -- Fairly high number of tries because it's fairly quick to see whether a room fits but non-trivial to resolve a vault
-  local maxTries = 50
+  local maxTries = 20
   local tries = 0
   local done = false
 
