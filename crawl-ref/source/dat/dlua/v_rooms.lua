@@ -231,7 +231,7 @@ function place_vaults_rooms(e,data, room_count, options)
   for i = 1, room_count, 1 do
     local placed = false
     local tries = 0
-    local maxTries = 50
+    local maxTries = 25  -- 25 tries to pick a room and place it
 
     -- Try several times to find a room that passes placement (it could get vetoed at the placement stage,
     -- for instance low-depth rooms might be required to have multiple entrances)
@@ -306,6 +306,7 @@ function place_vaults_room(e,usage_grid,room, options)
 
   local gxm, gym = dgn.max_bounds()
 
+  -- Fairly high number of tries because it's fairly quick to see whether a room fits but non-trivial to resolve a vault
   local maxTries = 50
   local tries = 0
   local done = false
