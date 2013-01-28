@@ -36,8 +36,10 @@ function vaults_default_options()
     max_rooms = 27, -- Maximum number of rooms to attempt to place
     min_room_size = 5, -- Min/max sizes of rooms (fairly redundant, could maybe be used to tune specific layouts to tend to smaller or bigger rooms)
     max_room_size = 40,
-    max_room_depth = 0, -- No max depth (not implementd yet anyway)
-    empty_chance = 40, -- Chance in 100 to make a floor vault (redundant)
+    max_room_depth = 0, -- No max depth (not implemented yet anyway)
+    -- The following settings (in addition to max_rooms) can adjust how long it takes to build a level, at the expense of potentially less intereting layouts
+    max_room_tries = 27, -- How many *consecutive* rooms can fail to place before we exit the entire routine
+    max_place_tries = 50, -- How many times we will attempt to place *each room* before picking another
 
     -- Weightings of various types of room generators. The plan is to better support code vaults here.
     room_type_weights = {
@@ -255,8 +257,8 @@ function layout_primitive_omnigrid()
   local gxm,gym = dgn.max_bounds()
   local options = {
     subdivide_initial_chance = 100, -- % chance of subdividing at first level, if < 100 then we might just get chaotic city
-    subdivide_level_multiplier = 0.85,   -- Multiply subdivide chance by this amount with each level
-    minimum_size = 12,  -- Don't ever create areas smaller than this
+    subdivide_level_multiplier = 0.80,   -- Multiply subdivide chance by this amount with each level
+    minimum_size = 15,  -- Don't ever create areas smaller than this
     fill_chance = 75, -- % chance of filling an area vs. leaving it open
     fill_padding = 2,  -- Padding around a fill area, effectively this is half the corridor width
   }
