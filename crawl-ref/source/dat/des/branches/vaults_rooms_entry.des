@@ -1,0 +1,64 @@
+################################################
+# Branch entry rooms (Crypt/Blade)
+
+# This is just "minmay_crypt_up_simple_box" with new tags
+NAME:     vaults_room_7_spin_crypt_default
+TAGS:     vaults_entry_crypt allow_dup no_monster_gen
+MONS:     place:Crypt:1
+KFEAT:    O = enter_crypt
+MAP
+.......
+.cc.cc.
+.c1c1c.
+..cOc..
+.c1c1c.
+.cc.cc.
+.......
+ENDMAP
+
+NAME:     vaults_room_7_spin_crypt_grunt
+TAGS:     vaults_entry_crypt allow_dup no_item_gen no_monster_gen
+NSUBST:   1 = 2:1 / *:2
+MONS:     place:Crypt:1
+KFEAT:    O = enter_crypt
+MAP
+.......
+.1...1.
+.......
+...O...
+.......
+.1...1.
+.......
+ENDMAP
+
+NAME:     vaults_room_7_spin_blade_pillars
+TAGS:     vaults_entry_blade allow_dup no_monster_gen
+SUBST:    y : x...
+SUBST:    1 = 1.
+MONS:     place:Blade:1
+KFEAT:    O = enter_hall_of_blades
+FTILE:    cxyO1. = floor_hall
+MAP
+xy...yx
+y..c..y
+..1.1..
+.c.O.c.
+..1.1..
+y..c..y
+xy...yx
+ENDMAP
+
+NAME:     vaults_room_7_spin_blade_grunt
+TAGS:     vaults_entry_blade allow_dup no_item_gen no_monster_gen
+NSUBST:   1 = 2:1 / *:.
+MONS:     dancing weapon
+KFEAT:    O = enter_hall_of_blades
+MAP
+.......
+.1...1.
+.......
+...O...
+.......
+.1...1.
+.......
+ENDMAP
