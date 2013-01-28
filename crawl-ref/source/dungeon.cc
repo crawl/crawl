@@ -6443,9 +6443,11 @@ void vault_placement::connect(bool spotty) const
     }
 }
 
-// Checks the resultant feature type of the map glyph, after applying KFEAT and so forth.
-// Unfortunately there is a certain amount of duplication of the code path in apply_grid; but actual modifications to the level
-// are so intertwined with that code path it would be actually quite messy to try and avoid the duplication.
+// Checks the resultant feature type of the map glyph, after applying KFEAT
+// and so forth. Unfortunately there is a certain amount of duplication of
+// the code path in apply_grid; but actual modifications to the level
+// are so intertwined with that code path it would be actually quite messy
+// to try and avoid the duplication.
 dungeon_feature_type vault_placement::feature_at(const coord_def &c)
 {
     // Can't check outside bounds of vault
@@ -6490,7 +6492,8 @@ static dungeon_feature_type _vault_inspect(vault_placement &place,
         return _vault_inspect_glyph(place, vgrid);
 }
 
-static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place, keyed_mapspec& mapsp)
+static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
+                                                   keyed_mapspec& mapsp)
 {
     dungeon_feature_type found = NUM_FEATURES;
     const feature_spec f = mapsp.get_feat();
@@ -6512,7 +6515,8 @@ static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place, keyed
     return found;
 }
 
-static dungeon_feature_type _vault_inspect_glyph(vault_placement &place, int vgrid)
+static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
+                                                 int vgrid)
 {
     // Get the base feature according to the glyph
     dungeon_feature_type found = NUM_FEATURES;
