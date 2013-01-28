@@ -1779,10 +1779,11 @@ LUAFN(_dgn_reuse_map)
 
 // dgn.inspect_map(vplace,x,y)
 //
-// You must first have resolved a map to get the vault_placement, using dgn.resolve_map(..).
-// This function will then inspect a coord on that map where <0,0> is the top-left cell and tell you
-// the feature type. This will respect all KFEAT and other map directives; and SUBST and other
-// transformations will have already taken place during resolve_map./
+// You must first have resolved a map to get the vault_placement, using
+// dgn.resolve_map(..). This function will then inspect a coord on that map
+// where <0,0> is the top-left cell and tell you the feature type. This will
+// respect all KFEAT and other map directives; and SUBST and other
+// transformations will have already taken place during resolve_map.
 LUAFN(_dgn_inspect_map)
 {
     if (!lua_isuserdata(ls, 1))

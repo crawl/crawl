@@ -150,7 +150,8 @@ static void _dgn_flush_map_environment_for(const string &mapname)
     dlua.callfn("dgn_flush_map_environment_for", "s", mapname.c_str());
 }
 
-// Execute the map's Lua, perform substitutions and other transformations, and validate the map
+// Execute the map's Lua, perform substitutions and other transformations,
+// and validate the map
 static bool _resolve_map_lua(map_def &map)
 {
     _dgn_flush_map_environment_for(map.name);
@@ -181,7 +182,8 @@ static bool _resolve_map_lua(map_def &map)
     return true;
 }
 
-// Resolve Lua and transformation directives, then mirror and rotate the map if allowed
+// Resolve Lua and transformation directives, then mirror and rotate the
+// map if allowed
 static bool _resolve_map(map_def &map)
 {
     if (!_resolve_map_lua(map))
