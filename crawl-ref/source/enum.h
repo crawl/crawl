@@ -2508,7 +2508,6 @@ enum monster_type                      // menv[].type
     MONS_PLAYER_GHOST,
     MONS_BALL_LIGHTNING,
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
-    MONS_ARCANE_FAMILIAR,
     MONS_PILLAR_OF_SALT,
     MONS_HELL_LORD,             // genus
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
@@ -2544,6 +2543,7 @@ enum monster_type                      // menv[].type
     MONS_LAMIA,
 
     MONS_FULMINANT_PRISM,
+    MONS_ARCANE_FAMILIAR,
 
     NUM_MONSTERS,               // used for polymorph
 
