@@ -4742,3 +4742,72 @@ c.C6DA6.c.BCD7A.c.*****.c
 c...............c.......c
 ccccccccccccccccccccccccc
 ENDMAP
+
+####
+
+NAME:    hangedman_six_sided_sadism
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   D:15-27
+ORIENT:  float
+MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
+         deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
+         rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
+         vampire / octopode w:5 ; trident good_item
+MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
+         skeletal warrior / yaktaur captain w:5 / ogre mage / \
+         deep elf knight / phantasmal warrior / guardian mummy w:5 / \
+         guardian serpent w:5 / harpy w:5
+MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
+         hell knight w:5 / orc warlord / \
+         minotaur w:5 ; any armour good_item . any weapon good_item / \
+         vampire knight / vampire mage / ghoul w:5 / base draconian / \
+         spriggan defender w:3 / spriggan air mage / siren w:2 / \
+         deep elf death mage
+MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
+         sphinx w:5 / greater naga w:5 / mummy priest w:1 / \
+         nonbase draconian w:1
+SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
+SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
+SUBST:   IKO = 1, LPS = 2, T = 3, JMNQRUV = %
+: if you.absdepth() > 20 then
+SUBST:   3 = 334, 2 = 223, 1 = 112
+: else
+SUBST:   4 = 3
+: end
+MAP
+             @.ccccccc.@
+            ..cc.....cc..
+           ..cc.V.S.U.cc..
+          ..ccT.xxxxx.Tcc..
+        ...cc..xxxxxxx..cc...
+    .....ccc.Uxxxxxxxxx..ccc.....
+   ..ccc+ccc..xxxxxxxxxV.ccccccc..
+  ..cc.....cc..xxxxxxx..cc..3..cc..
+ ..cc...I...ccS.xxxxx.Sc+.......cc..
+@.cc.........cc.V.T.U.+c2..HGH..3cc.@
+.cc..I..J..I..cc.....cc...Gx.xG...cc.
+cc....JxxxJ....cc+++cc...GH%%%HG...cc
+cc....JxxxJ....cc+++cc...HG%%%GH...cc
+.cc..I..J..I..cc.*|*.cc...Hx.xH...cc.
+@.cc.........cc*.1.2.*cc2..GHG..1cc.@
+ ..cc...I...cc|.c...c.|cc.......cc..
+  ..cc.....cc*.c.ccc.c.*cc..1..cc..
+   ..cc+c+cc..c.c343c.c..cc+c+cc..
+  ..cc.....cc*1..c3c..1*cc.....cc..
+ ..ccM.....Kcc|2.....2*cc...%...cc..
+@.ccN.......Lcc*.ccc.*cc..FF.FF..cc.@
+.ccM..AA.BB..Kcc.*|*.cc...xE.Ex...cc.
+cc.....AxB.....ccccccc...%E232E%...cc
+cc.....BxA.....ccccccc...%E121E%...cc
+.ccK..BB.AA..Mcc.O.P.cc...xE.Ex...cc.
+@.ccL.......Nc+Q.....R+c..FF.FF..cc.@
+ ..ccK.....M+c....D....c+...%...cc..
+  ..cc.....ccQ.C.x.x.C.Rcc.....cc..
+   ..ccccccc...CD...DC...ccccccc..
+    .....ccc...DC...CD...ccc.....
+        ...ccO.D.x.xDD.Pcc...
+          ..cc....C....cc..
+           ..ccP.....Pcc..
+            ..cc.R.R.cc..
+             @.ccccccc.@
+ENDMAP

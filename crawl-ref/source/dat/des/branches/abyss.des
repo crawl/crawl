@@ -144,28 +144,6 @@ xx23xx W
  xxxxxx W
 ENDMAP
 
-# "(He) opened the mailbox. There was nothing inside. Nothing after nothing came pouring out."
-NAME:   not_door_vault_hangedman
-TAGS:   abyss
-MARKER: X = lua: props_marker { connected_exclude="true" }
-MARKER: Y = lua: props_marker { connected_exclude="true", \
-                                stop_explore="strange structure made of doors" }
-KFEAT:  X = +
-KFEAT:  Y = runed_door
-MONS:   lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
-MAP
-YYYYYYYYYY
-YmXXmmXXmY
-YXXXXXXXXY
-YXX1111XXY
-YmX1221XmY
-YmX1221XmY
-YXX1111XXY
-YXXXXXXXXY
-YmXXmmXXmY
-YYYYYYYYYY
-ENDMAP
-
 NAME:   hangedman_abyss_overflow_altar
 TAGS:   abyss no_item_gen no_monster_gen no_pool_fixup
 MONS:   stone golem
@@ -371,6 +349,468 @@ x x.xyzACBzy
 xx.x.yCBB8zy
 x.x.xyzCzzzy
 .x x.yyyyyyy
+ENDMAP
+
+NAME:    hangedman_glass_garden
+TAGS:    no_monster_gen no_pool_fixup abyss
+DEPTH:   D
+MONS:    butterfly, plant, unseen horror, shadow wraith, vapour
+SHUFFLE: 34GT, GTt
+: if you.branch() == "D" then
+TAGS:    extra transparent mini_float
+WEIGHT:  1
+SUBST:   M = m, 34'" = ., ABCD = W
+: else
+SHUFFLE: 345", ABCD / ACBD / ADCB
+SUBST:   + = M, ' = x:5 c:2 v:1 b:1, " = ., % = %%***|
+SUBST:   AB : wwl, CD : wll
+NSUBST:  M : 1:+ / 2 = mmm+ / * = m:19 +:1
+: end
+MAP
+   ''' '''
+  'MmM+MmM'
+ 'MmAA.BBMM'
+'MmA..2..BmM'
+'mA.2.4.2.Bm'
+'MA..1G1..BM'
+ +.2T3%3T2.+
+'MC..1G1..DM'
+'mC.2.4.2.Dm'
+'MmC..2..DmM'
+ 'MmCC.DDmM'
+  'MmM+MmM'
+   ''' '''
+ENDMAP
+
+NAME:    hangedman_shadowy_showcase
+TAGS:    transparent no_monster_gen abyss
+MONS:    shadow wraith / unseen horror / thrashing horror, lurking horror
+MONS:    shapeshifter / very ugly thing / large abomination w:2, wretched star
+MONS:    large abomination / rotting hulk / death ooze w:2, ancient zyme
+MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
+KMONS:   8 = starcursed mass
+KMONS:   9 = octopode ; trident | halberd | glaive / chaos spawn / \
+         anaconda perm_ench:shapeshifter w:2
+KMONS:   0 = tentacled starspawn
+KMONS:   A = patrolling shadow demon
+KMONS:   B = boggart
+SHUFFLE: 12 / 34 / 56 / 78 / 90, A' / A' / A' / A' / 'B
+SUBST:   x = x:5 c:4 b:2 v:1, X = x:2 c:4 b:3 v:1, ' = ..lw
+SUBST:   . = .:99 W:1, * = .$%%***|, d = %$
+MAP
+   ...xxxxxxx
+  @.. xxxxxxx
+ @. .xx ..2xx
+.. ..xx.x1.xx
+......x..x.xxx
+. xx.d.... xxxx
+xxxxx.X.XXXXXxxxxxx
+xx ......X'AXxxxxxx
+xx1x..X..**'X 3.3xx
+xx..x.XX*X*XX.x..xx
+xx1.1 X'**..X..x3xx
+xxxxxxXA'X...... xx
+xxxxxxXXXXX.X.xxxxx
+    xxxx ....d.xx.
+     xxx.x..x... ..
+      xx.3x.xx.....
+      xx4.. xx . @
+      xxxxxxx...@
+      xxxxxxx ..
+ENDMAP
+
+NAME:    hangedman_relentless_pull
+TAGS:    no_monster_gen no_item_gen abyss
+MONS:    very ugly thing / large abomination / ynoxinul / unseen horror / smoke demon
+MONS:    tentacled starspawn / starcursed mass
+MONS:    very ugly thing, wretched star, lurking horror, ancient zyme
+SHUFFLE: 2d, 34eAB / 34eAB / '''CD, 34 / 56
+SUBST:   de = %**, AB = x, C = ., D = @, x = xxccb
+MAP
+ xxxxx         xxxxx
+xx%1xx@       Bxx3exx
+ x....xx.   .xxA43ex
+xx.xxxxxxx xxxxxxx.xx
+ x.xd. .2x x3. .dx.x
+xx.xx.x.xxxxx.x.xx.xx
+ x..xx.x.xxx.x.xx..x
+xx..x.. xxxxx ..x..xx
+ x..x .x. x .x. x..x
+xx .xx..x.x.x..xx. xx
+xxx..x....%....x..xxx
+ xx .%.xx.1.xx.%. xx
+  xx .xxxxxxxxx. xx
+   xxxx x x x xxxx
+ENDMAP
+
+NAME:    hangedman_steaming_rock
+TAGS:    abyss transparent
+MONS:    eye of devastation w:9 / nothing w:1
+KMONS:   2 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
+             very ugly thing w:5/ rakshasa w:5 / chaos spawn w:5
+KMONS:   3 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
+             fire crab w:5
+KMONS:   4 = apocalypse crab / death drake w:5
+KITEM:   2 = % / $, % / *
+KITEM:   34 = %, * / |
+KFEAT:   ABCD = m
+SUBST:   c = cccbbv
+SHUFFLE: ABCD
+MARKER:  A = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 2, pow_max = 3, delay = 85, size_min = 2, size_max = 4, \
+             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+MARKER:  B = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 2, pow_max = 3, delay = 75, size_min = 2, size_max = 4, \
+             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+MARKER:  C = lua:fog_machine {cloud_type = "rain", \
+             pow_min = 3, pow_max = 4, delay = 30, size_min = 3, size_max = 4, \
+             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+MARKER:  D = lua:fog_machine {cloud_type = "calcifying dust", \
+             pow_min = 2, pow_max = 3, delay = 75, size_min = 2, size_max = 3, \
+             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+TILE:    ABCD = dngn_transparent_wall_blue
+COLOUR:  ABCD = lightblue
+MAP
+   ....
+  .cccc.
+ .mmmccc..
+.cmmAcmccc.
+.cmAcmmmmcc.
+.cccmm   mcc.
+ .1cm 322 mc.
+ ..cm 422 mc.
+.cccmm   mcc.
+.cmDcmmmmcc.
+.cmmDcmccc.
+ .mmmccc..
+  .cccc..
+   ....
+ENDMAP
+
+NAME:    hangedman_classic_abyss_death
+TAGS:    abyss transparent no_monster_gen
+MONS:    large abomination / ynoxinul / unseen horror / \
+         large skeleton / sixfirhy / smoke demon / neqoxec / \
+         efreet / rakshasa / giant orange brain / very ugly thing / \
+         golden eye / hell hog
+MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
+         death drake / daeva / angel / bone dragon / balrug w:4 / \
+         shadow demon w:4 / executioner w:4 / hellion w:4
+SHUFFLE: lw / ll / ww / ''
+NSUBST:  2 : 2:2 / *:1
+SUBST:   c = ccvbb, x = xxxc, ' = .
+MAP
+         c
+        cc
+       cc.
+      ccx.@
+     cc2x..x
+    cc%xx wxx
+   cc*11x% w.@
+  cc2x1x%x% ...cc
+ ccxxxx%.%xxxxcc
+cc... %x%x1x2cc
+   @.l %x11*cc
+    xxl xx%cc
+     x..x2cc
+      @.xcc
+       .cc
+       cc
+       c
+ENDMAP
+
+NAME:    hangedman_illusive_loot
+TAGS:    patrolling abyss
+WEIGHT:  5
+MONS:    rakshasa, guardian serpent / great orb of eyes
+ITEM:    potion of might / potion of speed / potion of heal wounds w:12 / \
+         wand of lightning / wand of draining / wand of slowing w:5 / \
+         wand of confusion w:5 / wand of fire w:1 / wand of cold w:1 / \
+         ring mail good_item / splint mail good_item w:12 / shield / \
+         spear good_item / trident good_item / any weapon w:12 / \
+         any w:2
+SUBST:   x = ccccvbb
+MAP
+     .x.x
+   x.xxx.x
+  x.xx1xx.x
+ x. x ..x .x
+ .xxx.ddxxx.
+.xx .dddd xx.
+xx1.ddd...1xx
+.xx.dd..x.xx.
+x.xxxd.x+xx..
+ x. x ..x2. x
+  x.xx1xx.x.
+   x.xxx. ..
+     .x..x
+ENDMAP
+
+NAME:   hangedman_abyss_or_decor_stabs
+TAGS:   transparent mini_float no_pool_fixup decor abyss
+DEPTH:  D
+: if you.branch() == "Abyss" then
+SUBST:  xc = xxxxcccb, ' = %0, " = wl...
+: else
+TAGS:   extra
+SUBST:  '" = ., c : xxc
+: end
+MAP
+...."
+.cxx.
+.x'..."
+.x.cxx.
+"..x'..."
+  .x.cxx.
+  "..x'..."
+    .x.cxx.
+    "..x'..
+      .x.
+      "..
+ENDMAP
+
+NAME:   hangedman_abyss_or_decor_jellyfish_corner
+TAGS:   transparent mini_float decor abyss
+DEPTH:  D:4-
+WEIGHT: 5 (D), 10
+: if you.branch() == "Abyss" then
+SUBST:  x : XXCB, c : CB, X = xxxxcb, C = xccccb, B = xcbbbb
+SUBST:  HIJ = cbw,  ' = 000., " = %%%.
+: else
+TAGS:   extra
+SUBST:  '" = ., c : xxc, H : xc.., I : xc.., J : xc..
+: end
+MAP
+       .c
+      .xc
+     .xcc
+    @x..c......
+   @x..'ccxx...
+  .x..H"c".xxx.
+ .x..H'"c'.....
+.xc.'"""c.I...
+ccccccccc...J.
+   .c"'..x....
+   .x..I..x...
+   .xx.....xx.
+   ..x..J..xx.
+   ..x........
+   ....
+ENDMAP
+
+NAME:    hangedman_abyss_or_decor_lesser_grid
+TAGS:    transparent mini_float no_pool_fixup decor abyss
+DEPTH:   D
+: if you.branch() == "Abyss" then
+SHUFFLE: ABCDEF, "'
+SUBST:   A : cbx.., B : cbx., C : cbx.., D : cbx., E : cbx.., F : cbx.
+SUBST:   " = 0., ' = %*..., X = wl.
+: else
+TAGS:    extra
+SUBST:   '" = ., X : x.
+SUBST:   A : xxc., B : xxc., C : xxc., D : xxc., E : xxc., F : xxc.
+: end
+MAP
+.......
+.AB....
+.BA.X..
+.'".......
+.CD"EF"xx.
+.DC'FE'xx.
+.......'"....
+   ..X.FE....
+   ....EF.X..
+   ....'"....
+      .DC"BA.
+      .CD'AB.
+      .......
+ENDMAP
+
+NAME:    hangedman_abyss_or_decor_clamps
+TAGS:    transparent mini_float no_pool_fixup decor abyss
+DEPTH:   D:8-
+KFEAT:   @ = +
+SHUFFLE: ABCDEFGH, '"
+: if you.branch() == "Abyss" then
+SUBST:   b = wlb., AB = wl., CD = xcb., EFGH = .
+SUBST:   x = xxxxcccb, ' = 00., " = %%*.
+: else
+TAGS:    extra
+SUBST:   b : bbwww., A : @, B : @xx, C : @xxxx, DEFGH = x, '" = .
+: end
+MAP
+    xxAxx
+    x...x
+    B.'.C
+    x...x
+xxDxx...xxExx
+x....b".....x
+F.'.."b"..'.G
+x......b....x
+xxHxxx+xbx+xxxHxx
+    x....b......x
+    G.'.."b"..'.F
+    x....."b....x
+    xxExx...xxDxx
+        x...x
+        C.'.B
+        x...x
+        xxAxx
+ENDMAP
+
+NAME:    hangedman_abyss_or_decor_in_passing
+TAGS:    transparent no_pool_fixup decor abyss
+DEPTH:   D:4-
+: if you.branch() == "Abyss" then
+SUBST:   ' = 00., " = %%*..
+SUBST:   x = xxxxcb, XY = ww...
+: else
+TAGS:    extra
+SUBST:   x : xxxc, Y = x, X : x..
+NSUBST:  ; = 1:@ / *:., : = 1:@ / *:., ` = 1:@ / *:.
+: end
+MAP
+     x
+ ;;;;x::::
+ ;YX.x.XY:
+ ;X..x..X:
+ ;.......:
+xxxx.x.xxxx
+ `.......'x
+ `X..x.X'"x
+ `YX.x.'Y"x
+ ````x'""xx
+     xxxxx
+ENDMAP
+
+NAME:    hangedman_abyss_or_decor_stagger
+TAGS:    transparent no_pool_fixup decor abyss
+DEPTH:   D:4-
+: if you.branch() == "Abyss" then
+SUBST:   ' = 00., " = %%., X = xxcccb, x = xxxxxcccb
+SUBST:   yY = ...xxxcbw, zZ = ...xxxcbl
+: else
+TAGS:    extra
+SHUFFLE: yY, zZ
+SUBST:   x : xxxxc, X : xxc, y : x.., z : x.., YZ'" = .
+: end
+MAP
+..........
+.xxxXxxx..
+...'X"..z...
+..."X'..Z...
+.xxxXXXxxx..
+..Y.."X'..z...
+..y..'X"..Z...
+ ..xxxXXXxxx..
+ ...Y..'X"..z..
+ ...y.."X'..Z..
+   ..xxxXXXxxx.
+   ...Y.."X'...
+   ...y..'X"...
+     ..xxxXxxx.
+     ..........
+ENDMAP
+
+NAME:    hangedman_abyss_or_decor_slice
+TAGS:    transparent no_pool_fixup decor abyss
+DEPTH:   D:4-
+WEIGHT:  5 (D), 10
+: if you.branch() == "Abyss" then
+SUBST:   ' = 00., " = %%., x = xxxxxcccb, cX = xxccb
+: else
+TAGS:    extra
+SUBST:   x : xxxxc, c : xxc. X : xxc, '" = .
+: end
+MAP
+        ..c
+       ..X.
+      ..c..
+.......c'.
+x"x'x"c.xxxx
+xxxx.c"x'x"x
+  .'c.......
+ ..c..
+ .X..
+ c..
+ENDMAP
+
+NAME:    hangedman_abyss_town
+TAGS:    abyss no_monster_gen patrolling allow_dup
+WEIGHT:  5
+MONS:    rakshasa / efreet / smoke demon / wizard / base draconian w:5 / \
+         guardian serpent w:1 / tengu w:3 / vampire w:3 / octopode w:3 / \
+         eidolon w:5
+MONS:    thrashing horror / ancient zyme w:5 / very ugly thing / \
+         large abomination / unseen horror / vapour w:5 / shapeshifter / \
+         wretched star w:5 / air elemental
+MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
+         profane servitor w:5 / lorocyproca / deep elf demonologist / \
+         deep elf sorcerer / unborn deep dwarf
+MONS:    bone dragon / tentacled starspawn / starcursed mass / \
+         apocalypse crab / place:Blade / tentacled monstrosity / \
+         glowing shapeshifter
+ITEM:    superb_item, piece of ambrosia q:2 / royal jelly q:2
+ITEM:    dart good_item q:100, any magical staff
+ITEM:    scroll of magic mapping q:4 / scroll of random uselessness q:4
+ITEM:    ring mail randart / scale mail randart / chain mail randart / \
+         splint mail randart
+ITEM:    demon blade ego:chaos ident:type / \
+         demon trident ego:chaos ident:type / \
+         demon whip ego:chaos ident:type
+KITEM:   k = acquire misc, acquire misc
+SHUFFLE: defghijk
+NSUBST:  0 : 2:0 / 1 = VY / *:.
+SUBST:   c = c:7 b:2 v:1, x = x:8 c:1 b:1
+MAP
+  ccccccc..
+ ccccccc ...ccccccc
+ ccd...cc... ccccccc
+ cc.2c+cc...cc...ecc
+ cc.cc1 cc..cc+c2.cc
+ cc.+12.+..cc 1cc.cc
+ cccc .cc...+.21+.cc
+ c ccc+c....cc. cccc
+ ....c.. xx .c+ccc c
+........x00x...c....
+....c...x00x........
+c ccc+c. xx ..c....
+cccc..cc....c+ccc c
+cc.+12.+...cc..cccc
+cc.cc1.cc..+.34+.cc
+cc.2c+cc..cc.4cc1cc
+ccf...cc...cc+c1%cc
+ccccccc ...cc.1%gcc
+ ccccccc... ccccccc
+         ..ccccccc
+ENDMAP
+
+NAME:    hangedman_abyss_stitches_cave
+TAGS:    transparent no_monster_gen
+DEPTH:   Abyss
+MONS:    thrashing horror / unseen horror / very ugly thing / \
+         shapeshifter w:5 / large abomination / common demon
+MONS:    starcursed mass / apocalypse crab / hellephant / \
+         tentacled monstrosity / tentacled starspawn w:5
+SHUFFLE: yY / yY / Yy
+SUBST:   x : X:9 C:1, y : W:25 L:25 X:35 C:10 M:5, Y = ., z : X:20 CMB
+SUBST:   X = x:50 cb, C = c:50 bv, B = b:50 cv, M = m:50 cb, W = w:50 l
+SUBST:   L = l:50 w, $ = $%., % = %:7 .:3, * = *:7 %:3
+MAP
+            xxxxxxxxxxx
+            x%1.zxz...x
+           xx.y.zzz.y.xxx
+         xxx..Y..Y..Y....
+         x%..zzz.y.zzz.Z.
+         x2Yyzxz$1.zxz...
+         x*1.zzxxxxxxx
+   xxxxxxxzz.1*x
+...zxz.1$zxzYZ2x
+.Z.zzz.Y.zzz..%x
+....Y..y..y..xxx
+xxx.y.zzz.Y.xx
+  x.1.zxz.1%x
+  xxxxxxxxxxx
 ENDMAP
 
 ###############################################################################
