@@ -1925,8 +1925,6 @@ struct spell_desc
      false
 },
 
-// From here on, all spells are monster-only spells.
-
 {
     SPELL_PARALYSE, "Paralyse",
      SPTYP_HEXES,
