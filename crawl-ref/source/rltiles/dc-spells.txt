@@ -30,6 +30,10 @@ tornado TORNADO
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
 orb_of_destruction IOOD
+arcane_familiar ARCANE_FAMILIAR
+dazzling_spray DAZZLING_SPRAY
+force_lance FORCE_LANCE
+fulminant_prism FULMINANT_PRISM
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT

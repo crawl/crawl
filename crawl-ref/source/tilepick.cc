@@ -1836,6 +1836,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ORB_OF_FIRE;
     case MONS_ORB_OF_DESTRUCTION:
         return _mon_random(TILEP_MONS_ORB_OF_DESTRUCTION);
+    case MONS_ARCANE_FAMILIAR:
+        return TILEP_MONS_ARCANE_FAMILIAR;
+    case MONS_FULMINANT_PRISM:
+        return _mon_random(TILEP_MONS_FULMINANT_PRISM);
     case MONS_SILVER_STAR:
         return TILEP_MONS_SILVER_STAR;
 
@@ -4703,10 +4707,15 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DRAGON_FORM:              return TILEG_DRAGON_FORM;
     case SPELL_NECROMUTATION:            return TILEG_NECROMUTATION;
 
-    // pure Conjuration
+    // Conjurations
     case SPELL_MAGIC_DART:               return TILEG_MAGIC_DART;
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: return TILEG_ISKENDERUNS_MYSTIC_BLAST;
     case SPELL_IOOD:                     return TILEG_IOOD;
+    case SPELL_FORCE_LANCE:               return TILEG_FORCE_LANCE;
+    case SPELL_ARCANE_FAMILIAR:               return TILEG_ARCANE_FAMILIAR;
+    case SPELL_DAZZLING_SPRAY:               return TILEG_DAZZLING_SPRAY;
+    case SPELL_FULMINANT_PRISM:               return TILEG_FULMINANT_PRISM;
+
 
     // --------------------------------------------
     // Rods and abilities (tiles needed for later)
