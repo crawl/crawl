@@ -813,7 +813,7 @@ static bool _slime_split_merge(monster* thing)
 }
 
 // Splits and polymorphs merged slime creatures.
-bool slime_creature_mutate(monster* slime)
+bool slime_creature_polymorph(monster* slime)
 {
     ASSERT(slime->type == MONS_SLIME_CREATURE);
 
@@ -823,7 +823,7 @@ bool slime_creature_mutate(monster* slime)
         while (slime->number > 1 && count <= 10)
         {
             if (monster *splinter = _slime_split(slime, true))
-                slime_creature_mutate(splinter);
+                slime_creature_polymorph(splinter);
             else
                 break;
             count++;

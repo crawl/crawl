@@ -4776,8 +4776,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_POLYMORPH:
+        if (mon->polymorph(ench_power))
+            obvious_effect = true;
+        if (YOU_KILL(thrower))
+        {
+            did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3),
+                            effect_known);
+        }
+        return MON_AFFECTED;
+
     case BEAM_MALMUTATE:
-        if (mon->mutate("polymorph")) // exact source doesn't matter
+        if (mon->mutate("")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {
