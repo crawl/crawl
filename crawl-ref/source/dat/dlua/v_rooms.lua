@@ -102,6 +102,8 @@ local function pick_room(e, options)
     while tries < maxTries and not found do
       -- Resolve a map with the specified tag
       local mapdef = dgn.map_by_tag(chosen.tag,true)
+      if mapdef == nil then return nil end  -- Shouldn't happen when thing are working but just in case
+
       -- Temporarily prevent map getting mirrored / rotated during resolution; and hardwire transparency because lack of it can fail a whole layout
       dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
       -- Resolve the map so we can find its width / height
