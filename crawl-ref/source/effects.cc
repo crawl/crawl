@@ -2981,40 +2981,6 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
     return false;
 }
 
-// Randomly decide whether or not to spawn a mushroom over the given
-// corpse.  Assumption: this is called before the rotting away logic in
-// update_corpses.  Some conditions in this function may set the corpse
-// timer to 0, assuming that the corpse will be turned into a
-// skeleton/destroyed on this update.
-static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
-{
-    if (crawl_state.disables[DIS_SPAWNS])
-        return;
-
-    // We won't spawn a mushroom within 10 turns of the corpse's being created
-    // or rotting away.
-    int low_threshold  = 5;
-    int high_threshold = FRESHEST_CORPSE - 15;
-
-    if (corpse.special < low_threshold || corpse.special > high_threshold)
-        return;
-
-    int spawn_time = (rot_time > corpse.special ? corpse.special : rot_time);
-
-    if (spawn_time > high_threshold)
-        spawn_time = high_threshold;
-
-    int step_size = 10;
-
-    int current_trials = spawn_time / step_size;
-    int trial_prob     = mushroom_prob(corpse);
-    int success_count  = binomial_generator(current_trials, trial_prob);
-
-    int seen_spawns;
-    spawn_corpse_mushrooms(corpse, success_count, seen_spawns);
-    mushroom_spawn_message(seen_spawns, you.see_cell(corpse.pos) ? 1 : 0);
-}
-
 //---------------------------------------------------------------
 //
 // update_corpses
@@ -3041,9 +3007,6 @@ static void _update_corpses(int elapsedTime)
             maybe_coagulate_blood_potions_floor(c);
             continue;
         }
-
-        if (it.sub_type == CORPSE_BODY)
-            _maybe_spawn_mushroom(it, rot_time);
 
         if (rot_time >= it.special && !is_being_butchered(it))
         {
