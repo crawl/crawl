@@ -18,6 +18,34 @@
 #xx......xx
 #ENDMAP
 
+#
+#  st_box_setup
+#
+#  This is the header for st's "greater box" vaults.
+
+{{
+function st_box_setup(e)
+  e.tags("no_item_gen")
+  e.subst("% = %%%**|$")
+  e.kmons("7 = patrolling vault guard")
+  e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
+               golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
+               iron dragon w:2 / swamp dragon / dragon / ice dragon /\
+               catoblepas / moth of wrath w:1 / ghost moth w:1 /\
+               eye of draining / giant eyeball / eye of devastation /\
+               giant orange brain / greater naga / guardian serpent /\
+               vampire knight / vampire mage / deep elf sorcerer /\
+               deep elf death mage / deep elf demonologist /\
+               deep elf annihilator / deep elf high priest / orc warlord /\
+               base draconian w:15 / sphinx / shapeshifter /\
+               glowing shapeshifter")
+  e.subst("0 = 0:9 Z:1")
+  e.subst("9 = 9:3 Z:1")
+end
+}}
+
+####
+
 NAME:     vaults_room_glass_cross
 TAGS:     vaults_hard
 NSUBST:   y = 1:+ / *:x
@@ -393,4 +421,170 @@ x...xx      x...x      xx...x
 xx.......+...x.x...+.......xx
  xx......xxxxx.xxxxx......xx
   x.....xx   ...   xx.....x
+ENDMAP
+
+####
+# st's greater box vaults!
+
+# 32 monsters, 38 %
+NAME:     st_greater_box_1
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 5:9 / 3:0 / *:.
+NSUBST:   " = 8:9 / *:.
+NSUBST:   - = 8:9 / *:.
+NSUBST:   8 = 2:8 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v''''''''''''''''''''''''''''v
+v''''''''''''''''''''''''''''v
+v''''''''''''''''''''''''''''v
+v''''''''''''''''''''''''''''v
+vvvv==vvvv''''''''''vv==vvvvvv
+v""""""""v''''''''''v----v-8-v
+v""""""""v''''''''''v----v---v
+v""""""""vvvvv==vvvvv----v---v
+v""""""""v%%%v77v---v----v---v
+v""""""""v%%%v77v------------v
+v""""""""v%%%v77v------------v
+v""""""""v"""v==v------------v
+v"""""""""""8v..v------------v
+v""""""""""""v..v------------v
+v""""""""v"""v..v------------v
+v""""""""v%%%v..v-----8------v
+v""""""""v%%%v..v$%%%%%%%%%%$v
+v"""8""""v%%%v..v$%%%%%%%%%%$v
+vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
+              ..
+ENDMAP
+
+# 32 monsters, 36 %
+NAME:     st_greater_box_2
+TAGS:     vaults_hard vaults_orient_s
+SHUFFLE:  ab
+SUBST:    a = +
+SUBST:    b = v
+SUBST:    c : v.
+SUBST:    d : v.
+NSUBST:   ' = 8:9 / *:.
+NSUBST:   " = 8:9 / *:.
+NSUBST:   - = 8:9 / *:.
+NSUBST:   8 = 2:8 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v%%%---v"""""""8""""""v---%%%v
+v%%%---+""""""""""""""+---%%%v
+v%%%8--v""""""""""""""v--8%%%v
+v------vvvvvvvaavvvvvvv------v
+v------v''''''''''''''v------v
+vvbbvvvb'c''''dd''''c'vvvvbbvv
+v""""v'''c''''dd''''c'''v""""v
+v""""v'ccc''''''''''ccc'v""""v
+v""""a'''''dd''8'dd'''''a"""8v
+v8"""a'''''dd'8''dd'''''a""""v
+v""""v'ccc''''''''''ccc'v""""v
+v""""v'''c''''dd''''c'''v""""v
+vv++vvvv'c''''dd''''c'bvvv++vv
+v------v''''''''''''''v------v
+v------vvvvvvv==vvvvvvv------v
+v%%%8--v..7........7..v--8%%%v
+v%%%---v..7........7..v---%%%v
+v%%%---v..7........7..v---%%%v
+vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
+              ..
+ENDMAP
+
+# 36 monsters, 42 %
+NAME:     st_greater_box_3
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 12:9 / *:.
+NSUBST:   " = 10:9 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vv''''vv''''vv77vv..9..9..vv"v
+v''''vv''''vv....vv......vv""v
+v...vv''''vv......vv....vv"""v
+v...v....vv........vv++vv""""v
+v...+....=7...vv...7=..+"""""v
+v...+....=7...vv...7=..+"""""v
+v...v....vv........vv++vv""""v
+v...vv''''vv......vv""""vv"""v
+v''''vv''''vv....vv""""""vv""v
+vv''''vv''''vv77vv""""""""vv+v
+vvv''''vv''''v==v""""""""""+8v
+v%vv''''vv''vv..vv""""""""vv+v
+v%%vv''''vvvv....vv""""""vv$$v
+v%%%vv''''vv......vv""""vv$%%v
+v%%%%vv'''v0......0vv++vv%%%%v
+v%%$%$vv++vv......vv$%%$vv%%%v
+v%%%$=v....vv....vv$%%%%$vv%%v
+v%%$vv.....8vv..vv$%%%%%%$vv%v
+vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
+              ..
+ENDMAP
+
+# 31 monsters, 28 %, 8 |
+NAME:     st_greater_box_4
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 5:9 / 3:0 / *:.
+NSUBST:   " = 8:9 / *:.
+NSUBST:   - = 8:9 / 2:8 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v%$%$v------------------v%$%$v
+v$%$%v------------------v$%$%v
+v%|%$+------------------+%|%$v
+v$%|%+------------------+$%|%v
+v%$%$v------------------v%$%$v
+v$%$%v------------------v$%$%v
+vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
+v......."""""""""""""".......v
+v......."""""""""""""".......v
+v+vvvv+vvvvvvvvvvvvvvvv+vvvv+v
+v''''v""""""v%||%v""""""v''''v
+v''''v""""""+%||%+""""""v''''v
+vvvv+vvvvvvvvvvvvvvvvvvvv+vvvv
+v.......''''''''''''''.......v
+v.......''''''''''''''.......v
+v++vvvvvvvvvvvvvvvvvvvvvvvv++v
+v........77........77........v
+v........7..........7........v
+vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
+              ..
+ENDMAP
+
+# 26 monsters, 36 %
+NAME:     st_greater_box_5
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 15:9 / 3:8 / *:.
+SHUFFLE:  abc
+SUBST:    a = +
+SUBST:    b = v
+SUBST:    c = v
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v%$%$v''''''''''''''''''v%$%$v
+v$%$%+''''''''''''''''''+$%$%v
+v%$%$v''''''''''''''''''v%$%$v
+vvvvvv''''''''''''''''''vvvvvv
+v%%%%v''''''''''''''''''v%%%%v
+v%%%%+''''''''''''''''''+%%%%v
+v%%%%v''''''''''''''''''v%%%%v
+vvvvvv''''''''98''''''''vvvvvv
+v$$$$v''''''''''''''''''v$$$$v
+v$$$$+''''''''''''''''''+$$$$v
+v$$$$v''''''''''''''''''v$$$$v
+vvvvvv''''''''''''''''''vvvvvv
+v....v''''''''''''''''''v....v
+v....+''''''''''''''''''+....v
+v....v''''''''''''''''''v....v
+vavvvvvvvcvvvvbbvvvvcvvvvvvvav
+v.........77......77.........v
+v.........7........7.........v
+vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
+              ..
 ENDMAP
