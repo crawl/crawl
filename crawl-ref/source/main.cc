@@ -2830,7 +2830,7 @@ static void _decrement_durations()
                           "Your shroud unravels.",
                           0,
                           "Your shroud begins to fray at the edges.");
-    
+
     if (_decrement_a_duration(DUR_ARCANE_FAMILIAR, delay))
         end_arcane_familiar(false);
 
