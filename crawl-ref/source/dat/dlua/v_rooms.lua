@@ -258,7 +258,7 @@ function place_vaults_rooms(e, data, room_count, options)
     end
 
   end
-  print ("Total placement failures: " .. total_failed)
+
   -- Now we need some stairs
   local stairs = { }
   for i, r in ipairs(results) do
@@ -270,7 +270,9 @@ function place_vaults_rooms(e, data, room_count, options)
   local stair_types = {
     "stone_stairs_down_i", "stone_stairs_down_ii",
     "stone_stairs_down_iii", "stone_stairs_up_i",
-    "stone_stairs_up_ii", "stone_stairs_up_iii" } -- , "escape_hatch_up" }"escape_hatch_down",
+    "stone_stairs_up_ii", "stone_stairs_up_iii",
+    "escape_hatch_up", "escape_hatch_down",
+    "escape_hatch_up", "escape_hatch_down" }
 
   -- Place three up, three down
   -- TODO: Optionally place some hatches / mimics too
@@ -307,7 +309,7 @@ function place_vaults_room(e,usage_grid,room, options)
   local gxm, gym = dgn.max_bounds()
 
   -- Fairly high number of tries is allowed because it's fairly quick to see whether a room fits but non-trivial to resolve a vault
-  local maxTries = 20
+  local maxTries = 50
   local tries = 0
   local done = false
 

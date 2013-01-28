@@ -191,7 +191,7 @@ ENDMAP
 NAME:   metal_show
 TAGS:   vaults_room vaults_orient_e
 TAGS:   no_monster_gen no_item_gen no_wall_fixup
-WEIGHT: 0
+WEIGHT: 2
 COLOUR: M = magenta
 COLOUR: K = magenta
 FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
@@ -1137,361 +1137,210 @@ xxxxxxx.......x
 ........x
 ENDMAP
 
-################################################################################
-# "Hard" subvaults. Putting them in here for now, we can move them into a new
-# file later if wanted.
-#NAME:     vaults_room_hard_dummy
-#TAGS:     vaults_hard allow_dup
-#SUBST:    x : .x
-#MAP
-#xx......xx
-#x........x
-#..........
-#..........
-#..........
-#..........
-#..........
-#..........
-#..........
-#x........x
-#xx......xx
-#ENDMAP
-
-NAME:     vaults_room_glass_cross
-TAGS:     vaults_hard
-NSUBST:   y = 1:+ / *:x
-SUBST:    w : ....x, m : mmmx, * = *%
-KITEM:    8 = $
-NSUBST:   9 = 1:9 / *:000009
-NSUBST:   8 = 1:9 / *=09
+NAME:    hangedman_vaults_trim
+TAGS:    vaults_room allow_dup
+SHUFFLE: abcd / abcd / dcba / badc
+SUBST:   aA : xx., bB : x., cC : x., dD : x.
+NSUBST:  0 = 1:0 / * = 0:3 .:7
 MAP
-ww......ww
-ww......ww
-..9xmmx9..
-..xy.8yx..
-..m.*%.m..
-..m.%*.m..
-..xy8.yx..
-..9xmmx9..
-ww......ww
-ww......ww
+.x.....x.....x..
+..0AB0...ab.....
+.....CD...0cd0..
+..x.....x.....x.
 ENDMAP
 
-NAME:     vaults_room_hangedman_quadrants
-TAGS:     vaults_hard no_monster_gen
-SUBST:    $ = $%., * = *|, = : -., - : +:4 $:1
+NAME:    hangedman_vaults_cutoff
+TAGS:    vaults_room allow_dup
+SHUFFLE: aA / aA / Aa, bB / bB / Bb, cC / cC / Cc, dD / dD / Dd, eE / eE / Ee
+SUBST:   a : x., b : x., c : x., d : x., e : x., ABCDE = .
+NSUBST:  0 = 1:0 / * = 0:3 .:7
 MAP
-xx.x.xx
-x9$x$9x
-.$*-*$.
-xx=x=xx
-.$*-*$.
-x9$x$9x
-xx.x.xx
+...x.......x.......
+.A.x.B.(.C.x.D.0.E.
+.a.x.b.x0c0x.d.x.e.
+.A.0.B.x.C.(.D.x.E.
+.......x.......x...
 ENDMAP
 
-NAME:     vaults_room_guarded_vault
-TAGS:     vaults_hard vaults_orient_e
-MONS:     vault guard
-SUBST:    0 = 00.
+NAME:    hangedman_vaults_locks
+TAGS:    vaults_room
+SHUFFLE: ABCDEF, +-, =~
+SUBST:   A : x:9 .:1, B : xx., C : x., D : x., E : x.., F : x...
+SUBST:   -~ = x, = = +
+NSUBST:  0 = 1:0 / * = 0.
 MAP
-%....*x11
-..00..x..
-......n..
-0.99.0+..
-......n..
-..00..x..
-*....%x11
+  xxxxx.........xxxxx
+  x...x.E..F..E.x...x
+  x.B.+....(....=.B.x
+xxx.0.x--x.0.x~~x.0.xxx
+.........+.F.=.........
+.A..C..D.x...x.D..C..A.
+.........xxxxx.........
 ENDMAP
 
-NAME:    v_hard_diamondy
-TAGS:    vaults_hard
-SUBST:   1 = 0..
+NAME:    hangedman_vaults_slice
+TAGS:    vaults_room allow_dup
+SHUFFLE: ABCDEF, abde / abde / baed
+SUBST:   aA : x:9 .:1, bB : xxx.., C : x., dD : x.., eE : x:1 .:9, F : .
+NSUBST:  0 = 1:0 / * = 0:3 .:7
 MAP
-xxxxx..x..xxxxx
-xxxx..1x1..xxxx
-xxx...xxx...xxx
-xx...xx%xx...xx
-x...0.....0...x
-...x.......x...
-.1xx.......xx1.
-xxx*..9.9..*xxx
-.1xx.......xx1.
-...x.......x...
-x...0.....0...x
-xx...xx%xx...xx
-xxx...xxx...xxx
-xxxx..1x1..xxxx
-xxxxx..x..xxxxx
+................
+.D.(..E..0xx.ba.
+...0xx.CC.Fx0...
+.AB.Fx0..d..(.e.
+................
 ENDMAP
 
-NAME:    v_hard_cells
-TAGS:    vaults_hard allow_dup
+NAME:    hangedman_vaults_maws
+TAGS:    vaults_room allow_dup
+SHUFFLE: abcd, ABCD
+SUBST:   abAB = ., c = xx., d = x.., C = xx., D = x.., E = x., F = x.
+NSUBST:  0 = 1:0 / * = 0:3 .:7
 MAP
-...x....x...
-...x....x...
-xxx+xxxx+xxx
-$0.x%09*x.0$
-$0.x*90%x.0$
-xxx+xxxx+xxx
-...x....x...
-...x....x...
+........xxxxx
+.E0F........x
+xxxxx..abcd0x
+x.....{.....x
+x0ABCD..xxxxx
+x........E0F.
+xxxxx........
 ENDMAP
 
-NAME:    v_hard_smaller_cells
-TAGS:    vaults_hard
+NAME:    hangedman_vaults_nails
+TAGS:    vaults_room allow_dup
+SHUFFLE: ab / ab / ab / ba, cd / cd / cd / dc
+SUBST:   aA : x:9 .:1, bB : x., cC : x.., dD : x..
+NSUBST:  0 = 1:0 / * = 0.
 MAP
-..x.0x..x0.x..
-..x0.x..x.0x..
-xx+xx+xx+xx+xx
-..x$%x9*x$$x..
-..x$$x*9x%$x..
-xx+xx+xx+xx+xx
-..x0.x..x.0x..
-..x.0x..x0.x..
+...............
+.d.c.d.(.......
+...b.....BAxAB.
+...a0..0..0A...
+.baxab.....B...
+.......(.D.C.D.
+...............
 ENDMAP
 
-NAME:    v_hard_lines
-TAGS:    vaults_hard
-SHUFFLE: 90
-SUBST:   1 = 00.
-MAP
-%............9
-0............*
-xxxxxx++xxxxxx
-.....+11+.....
-.....+11+.....
-xxxxxx++xxxxxx
-9............%
-*............0
-ENDMAP
-
-NAME:    v_hard_spiral_rooms
-TAGS:    vaults_hard
-MAP
-....x.........
-.0..+.........
-..0.xxxxxxxxxx
-.0..x$*9%+....
-....+%9*$x..0.
-xxxxxxxxxx.0..
-.........+..0.
-.........x....
-ENDMAP
-
-NAME:    v_hard_cross
-TAGS:    vaults_hard
-KMONS:   8 = 8
-KITEM:   8 = |, *
-SUBST:   8 = 98, 0 = 09
-MAP
-xxxxx.xxxxx
-xxxx.0.xxxx
-xxxxx.xxxxx
-xxx.....xxx
-x.x.x+x.x.x
-.0..+8+..0.
-x.x.x+x.x.x
-xxx.....xxx
-xxxxx.xxxxx
-xxxx.0.xxxx
-xxxxx.xxxxx
-ENDMAP
-
-NAME:    v_hard_check
-TAGS:    vaults_hard
-KMONS:   8 = 8
-KITEM:   8 = |
-KMONS:   9 = 9
-KITEM:   9 = *
-MAP
-.................
-.xxxxxxxxxxxxxxx.
-.x98990+9+9+0+0+.
-.xxxxxxxxxxxxxxx.
-.................
-ENDMAP
-
-NAME:    v_hard_octagons_1
-TAGS:    vaults_hard
-NSUBST:  ^ = 2:* / *:%
-MAP
-......|x.....x^..^x..
-.9...9*x.....x.90.x..
-......xx.....xx..xx..
-.....xx.......x++x...
-....+x..xx+xx........
-.9.xx..xx...xx.....xx
-*%xx...x^.9.^x....xx^
-xxx....xx...xx...xx..
-........xx+xx....+.0.
-.................+.9.
-x+xx......xx+xx..xx..
-...xx....xx...xx..xx^
-...0xx..xx.....xx..xx
-..9.^x..x0..9..0x....
-....^x..x^.....^x....
-ENDMAP
-
-NAME:    v_hard_octagons_2
-TAGS:    vaults_hard
-NSUBST:  ^ = 3:* / *:%$
-MAP
-....^x..x^......^x^..
-.9..^x..x...90...x.0.
-....xx..xx......xx.0.
-...xx...%xxx..xxxx...
-x++x....|x.x++x..xx..
-x.....9.%x........x++
-xx..9...xx...........
-.xx....xx............
-..x+xx+x.............
-.................xx+x
-......xx+xx.....xx...
-x++x.xx...xx...xx....
-x..xxx.....xx+xx^.0..
-.00.xx..9..x...x^.9..
-....xx^...^x.0.x.....
-ENDMAP
-
-NAME:    v_hard_squares
-TAGS:    vaults_hard
+NAME:    hangedman_vaults_restitches
+TAGS:    vaults_room allow_dup
+SHUFFLE: aAeE / aAeE / AaEa, bBfF / bBfF / BbFf, cCgG / cCgG / CcGg, dDhH / dDhH / DdHh
+SHUFFLE: eEfFgGhH / eEfFgGhH / gGhHeEfF / hHgGfFeE
+SUBST:   ae : x:5 .:3, bf : x:5 .:3, cg : x:5 .:3, dh : x:5 .:3
+SUBST:   AE : x:7 .:3, BF : x:7 .:3, CG : x:7 .:3, DH : x:7 .:3
+NSUBST:  0 = 1:0 / * = 0:3 .:7
 MAP
 ..............
-....0....0....
-..xxxx++xxxx..
-..x........x..
-..x...00...x..
-..x..xxxx..x..
-..x..x*%x..x..
-..x..x*%x..x..
-..x..x++x..x..
-..x........x..
-..x0..99..0x..
-..xxxxxxxxxx..
-..............
+.....B.....H..
+.AaA.b0GgG0h..
+.....B.....H..
+..D.....F.....
+..d0CcC0f.EeE.
+..D.....F.....
 ..............
 ENDMAP
 
-NAME:    v_hard_lattice
-TAGS:    vaults_hard
+NAME: ontoclasm_vaults_eye
+TAGS: vaults_room
+NSUBST: 0 = 1:0 / *=0..
+SUBST: ( = ((0.
+KMONS: 0 = 0 band
 MAP
-.x.x.x.x.
-.x0x.x0x.
-x.x.x.x.x
-x%x9x*x.x
-.x*x9x%x.
-.x.x.x.x.
-x0x.x.x0x
-x.x.x.x.x
+  .....
+ ..xxx..
+..xxxxx..
+...0.0xx.
+.x..(..x.
+.xx0.0...
+..xxxxx..
+ ..xxx..
+  .....
 ENDMAP
 
-NAME:    v_hard_more_cells
-TAGS:    vaults_hard
+NAME: grunt_vaults_swirl
+TAGS: vaults_room
+NSUBST: 0 = 2:0 / *:.
+KMONS: 0 = 0 band
 MAP
-...x...x...
-.0.+.9.+.9.
-...x*.*x...
-x+xxx+xxx+x
-...x*.%x...
-.9.+.9.+.0.
-...x...x...
+ xx.......xx
+xx....xxxx.xx
+x...xxx.0xx.x
+...xxx+xx.xx.
+...xx...xx.x.
+..xx..0..xx..
+..xx.0(0.xx..
+..xx..0..xx..
+.x.xx...xx...
+.xx.xx+xxx...
+x.xx0.xxx0..x
+xx.xxxx....xx
+ xx.......xx
 ENDMAP
 
-NAME:    v_hard_hourglassy
-TAGS:    vaults_hard
-TAGS:    vaults_orient_n vaults_orient_s
+NAME: grunt_vaults_twisty
+TAGS: vaults_room
+SHUFFLE: ABCD
+SHUFFLE: Aa, Bb, Cc, Dd
+NSUBST: A = 1:+ / *:x
+NSUBST: B = 1:+ / *:x
+NSUBST: C = 1:+ / *:x
+NSUBST: D = 1:+ / *:x
+SUBST: abcd = .
+NSUBST: 0 = 2:0 / *:.
+KMONS: 0 = 0 band
 MAP
-xxxxxxx...xxxxxxx
-xxxxxx.....xxxxxx
-xxxx.........xxxx
-xx0...........0xx
-x|9....9.9....9|x
-xx0...........0xx
-xxxx.........xxxx
-xxxxxx.....xxxxxx
-xxxxxxx...xxxxxxx
+   x....x
+   xxAAxx
+  xx....xx
+ xx..xx..xxx
+ x0.xxxx0.x.
+ x0.xxxxx.B.
+ xx..xxxxxB.
+ xxx..xxxxx.
+xx xx00xx xx
+.xxxxx..xxx
+.Cxxxxx..xx
+.C.xxxxx.0x
+.x..xxxx.0x
+xxx0.xx..xx
+  xx....xx
+   xxDDxx
+   x....x
 ENDMAP
 
-NAME:    v_hard_eye
-TAGS:    vaults_hard
-TAGS:    vaults_orient_n vaults_orient_s
-NSUBST:  9 = 1:8 / *:9
+NAME: grunt_vaults_funnel
+TAGS: vaults_room
+KMONS: 0 = 0 band
 MAP
-xxxxxxxxx..xxxxxxxxx
-xx%**xxxx..xxxx%*%xx
-x.9...xx....xx...9.x
-x...0.xx....xx.0...x
-x....xx0....0xx....x
-x.0.xx..x..x..xx.0.x
-x.........9........x
-x........9.........x
-x.0.xx..x..x..xx.0.x
-x....xx0....0xx....x
-x...0.xx....xx.0...x
-x.9...xx....xx...9.x
-xx|*%xxxx..xxxx%**xx
-xxxxxxxxx..xxxxxxxxx
+      ...
+     xx+x
+    xxx.x
+  xxx...x
+ xx.....x
+......xxx.
+..(.0.+...
+......xxx.
+ xx.....x
+  xxx...x
+    xxx.x
+     xx+x
+      ...
 ENDMAP
 
-NAME:    v_hard_star
-TAGS:    vaults_hard
-TAGS:    vaults_orient_n vaults_orient_s
-NSUBST:  0 = 2=998 / 6:0 / *:.
+NAME: grunt_vaults_trifunnel
+TAGS: vaults_room
+KMONS: 0 = 0 band
 MAP
-xxxxxxxxxxxx..xxxxxxxxxxxx
-x%*xxxxxxx......xxxxxxx%*x
-x*9..xxx...0..0...xxx..9%x
-xx.......0..xx..0.......xx
-xxxx..0....xxxx....0..xxxx
-xxxx..0....xxxx....0..xxxx
-xx.......0..xx..0.......xx
-x%9..xxx...0..0...xxx..9*x
-x*%xxxxxxx......xxxxxxx*%x
-xxxxxxxxxxxx..xxxxxxxxxxxx
-ENDMAP
-
-NAME:    v_hard_quartered_hall
-TAGS:    vaults_hard
-NSUBST:  0 = 4=998 / 8:0 / *:.
-MAP
-xxxxxxx..xxxxxxx
-x*00*x....x*00*x
-xx..xx....xx..xx
-xxx+x.0..0.x+xxx
-xxx...x..x...xxx
-x..0x......x0..x
-.......09.......
-.......90.......
-x..0x......x0..x
-xxx...x..x...xxx
-xxx+x.0..0.x+xxx
-xx..xx....xx..xx
-x*00|x....x*00*x
-xxxxxxx..xxxxxxx
-ENDMAP
-
-NAME:    hangedman_vaults_hard_town_square
-TAGS:    vaults_hard
-KFEAT:   d = any shop
-SHUFFLE: abc, de, d*, AB
-SUBST:   a : x., b : x.., c = ., e = %%$, * = %:3 *:7
-SUBST:   A : x.., B : xx., C : xGT
-SUBST:   1 = 9:3 0:7, 2 = 9:7 0:3
-MAP
-xxxxxx...xxxxxx
-xe.2xx.C.xx1.ex
-x.A..x...x..A.x
-x1.d.xx.xx.d.2x
-xx...........xx
-xxxx.B.c.B.xxxx
-...x..aba..x...
-.C...cbGbc...C.
-...x..aba..x...
-xxxx.B.c.B.xxxx
-xx...........xx
-x2.e.xx.xx...1x
-x.A..x...x..A%x
-xd.1xx.C.xx2%%x
-xxxxxx...xxxxxx
+      ...     ...     ...
+     xx+x    xx+x    xx+x
+    xxx.x   xxx.x   xxx.x
+  xxx...x xxx...x xxx...x
+ xx.....xxx.....xxx.....x
+......xxx.....xxx.....xxx.
+....0.+...(.0.+.....0.....
+......xxx.....xxx.....xxx.
+ xx.....xxx.....xxx.....x
+  xxx...x xxx...x xxx...x
+    xxx.x   xxx.x   xxx.x
+     xx+xx   xx+xx   xx+x
+      ...     ...     ...
 ENDMAP
