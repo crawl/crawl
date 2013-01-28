@@ -44,6 +44,14 @@ NSUBST: z = 1:+ / *:x
 : else
 SUBST:  Zz=., V=x
 : end
+MARKER: { = lua:props_marker { entry_stairs=1 }
+veto {{
+  local slave = dgn.find_marker_positions_by_prop( "entry_stairs", 1 )
+  if slave == nil then return false end
+  if slave[1] == nil then return false end
+  crawl.mpr("(".. slave[1].x .. "," .. slave[1].y .. ")")
+  return not dgn.has_exit_from(slave[1])
+}}
 MAP
             xxxxxx@xxxxxx
        xxxxxx'''''''''''xxxxxx
