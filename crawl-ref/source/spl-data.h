@@ -2923,7 +2923,7 @@ struct spell_desc
     SPELL_MALMUTATE, "Malmutate",
      SPTYP_TRANSMUTATION | SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
-     8,
+     6,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
