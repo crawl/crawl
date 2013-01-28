@@ -4824,7 +4824,16 @@ bool monster::mutate(const string &reason)
     if (!can_mutate())
         return false;
 
-    return polymorph(0);
+    // Ugly things merely change colour.
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    {
+        ugly_thing_mutate(this);
+        return true;
+    }
+
+    simple_monster_message(this, " twists and deforms.");
+    add_ench(mon_enchant(ENCH_WRETCHED, 1, nullptr, INFINITE_DURATION));
+    return true;
 }
 
 bool monster::polymorph(int pow)
@@ -4851,7 +4860,7 @@ bool monster::polymorph(int pow)
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_mutate(this);
+        slime_creature_polymorph(this);
         return true;
     }
 
