@@ -34,14 +34,14 @@ function vaults_default_options()
   local options = {
     min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
     max_rooms = 27, -- Maximum number of rooms to attempt to place
-    min_room_size = 5, -- Min/max sizes of rooms
+    min_room_size = 5, -- Min/max sizes of rooms (fairly redundant, could maybe be used to tune specific layouts to tend to smaller or bigger rooms)
     max_room_size = 40,
     max_room_depth = 0, -- No max depth (not implementd yet anyway)
     empty_chance = 40, -- Chance in 100 to make a floor vault (redundant)
 
     -- Weightings of various types of room generators. The plan is to better support code vaults here.
     room_type_weights = {
-      { generator = "floor", weight = 40, min_size = 6, max_size = 18 }, -- Floor vault
+      { generator = "floor", weight = 35, min_size = 6, max_size = 16 }, -- Floor vault
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },

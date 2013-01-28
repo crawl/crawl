@@ -248,7 +248,7 @@ ENDMAP
 # Snakey maze consitently struggles to place rooms. Set to weight zero for now.
 NAME: layout_vaults_maze_snakey
 DEPTH: Vaults
-WEIGHT: 0
+WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_maze

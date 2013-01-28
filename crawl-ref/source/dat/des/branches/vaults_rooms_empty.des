@@ -478,3 +478,279 @@ xxxu...uxxx
 xxxu...uxxx
 xxxu...uxxx
 ENDMAP
+
+NAME: ontoclasm_vaults_shuriken
+TAGS: vaults_empty
+MAP
+.xxx.....
+..xxxx..x
+..x.x+xxx
+.x+....xx
+.xx.(.xx.
+xx....+x.
+xxx+x.x..
+x..xxxx..
+.....xxx.
+ENDMAP
+
+NAME: ontoclasm_vaults_twist
+TAGS: vaults_empty
+MAP
+......xx.xxxxxxxx
+..xxx.....xxxxxx.
+.xxxxxx.....xxx..
+xxxxxxxx.xx......
+ENDMAP
+
+NAME: ontoclasm_vaults_spin
+TAGS: vaults_room
+SHUFFLE: ab
+SUBST: a : x, b : .
+KMONS: 0 = 0 band
+MAP
+aa....x@...
+abbxx.xxxx.
+.bxxx....x.
+.xxxxxxx.x.
+.x...0.x.x.
+.x.x.(.x.x.
+.x.x.0...x.
+.x.xxxxxxx.
+.x....xxxb.
+.xxxx.xxbba
+...@x....aa
+ENDMAP
+
+NAME: ontoclasm_vaults_loading_screen
+TAGS: vaults_empty allow_dup
+SUBST: a : x... , b : x....., c : x.....
+SUBST: x : xxxxxm
+MAP
+ .....
+ .ccc.
+ .bxb.
+@.axa.@
+(.axa.(
+@.axa.@
+ .bxb.
+ .ccc.
+ .....
+ENDMAP
+
+NAME: ontoclasm_vaults_ring_large
+TAGS: vaults_empty allow_dup
+SHUFFLE: abcdefghi / o'''''ooo / oo''''ooo / ooo'''ooo / \
+         ''''''ooo / o'''''ooo / oo''''ooo / ooo'''ooo / \
+         o''o''''o / oo'oo'''o / oooooo''o / ''o''o''o / \
+         ''''''''o / '''''''o' / o''o'''o' / oo'oo''o' / \
+         ''o''o'o' / oooooo'o'
+SUBST: abcdef' = .
+SUBST: ghio = x
+MAP
+    cc....
+  accc......
+ aaacxiix....
+ baxxxiixhh..
+bbbxxxiihhh...
+bbxxxxighhxx..
+..xxxxgghxxx..
+..xxxhggxxxx..
+..xxhhgixxxxee
+...hhhiixxxeee
+ ..hhxiixxxde
+ ....xiixfddd
+  ......fffd
+    ....ff
+ENDMAP
+
+NAME: ontoclasm_vaults_ring_square
+TAGS: vaults_empty allow_dup
+SHUFFLE: abcdefghi / o'''''ooo / oo''''ooo / ooo'''ooo / \
+         ''''''ooo / o'''''ooo / oo''''ooo / ooo'''ooo / \
+         o''o''''o / oo'oo'''o / oooooo''o / ''o''o''o / \
+         ''''''''o / '''''''o' / o''o'''o' / oo'oo''o' / \
+         ''o''o'o' / oooooo'o'
+SUBST: abcdef' = .
+SUBST: ghio = x
+MAP
+      .
+     ...
+    cc...
+   aacx...
+  baaxxh...
+ .bbxxhhx...
+...iiigiii...
+ ...xhhxxee.
+  ...hxxdde
+   ...xfdd
+    ...ff
+     ...
+      .
+ENDMAP
+
+NAME: ontoclasm_vaults_ring_small
+TAGS: vaults_empty allow_dup
+SHUFFLE: abcdefghi / o'''''ooo / oo''''ooo / ooo'''ooo / \
+         ''''''ooo / o'''''ooo / oo''''ooo / ooo'''ooo / \
+         o''o''''o / oo'oo'''o / oooooo''o / ''o''o''o / \
+         ''''''''o / '''''''o' / o''o'''o' / oo'oo''o' / \
+         ''o''o'o' / oooooo'o'
+SUBST: abcdef' = .
+SUBST: ghio = x
+MAP
+   caab
+ .ccaabb.
+ ..xxxx..
+..xxxxhh..
+..iiigii..
+..iigiii..
+..hhxxxx..
+ ..xxxx..
+ .eeddff.
+   eddf
+ENDMAP
+
+NAME: ontoclasm_vaults_misaligned
+TAGS: vaults_empty allow_dup
+MAP
+   ..
+   ....
+  .......
+  ..(......
+ ..........
+ .........
+..........
+......(..
+  .......
+    ....
+      ..
+ENDMAP
+
+NAME: ontoclasm_vaults_pinch
+TAGS: vaults_empty
+MAP
+...
+   .
+    .
+   ...
+  ..(..
+ ..(..
+  ...
+   .
+    .
+     ...
+ENDMAP
+
+NAME: ontoclasm_vaults_claustrophobia
+TAGS: vaults_empty
+SUBST: G : GGGT.
+MAP
+.x..x...x..x.
+x+xx+xxxxxx+x
+.x..x...x..x.
+.x..x...x..x.
+xxxxxxxx+xxx+
+.x.........x.
+.x.G..(..G.x.
+.x.........x.
++xxx+xxxxxxxx
+.x..x...x..x.
+.x..x...x..x.
+x+xxxxxx+xx+x
+.x..x...x..x.
+ENDMAP
+
+NAME: grunt_vaults_hallway_short
+TAGS: vaults_empty allow_dup
+SHUFFLE: G = GT
+MAP
+.xx.xx.xx.
+..........
+...G..G...
+..........
+.xx.xx.xx.
+ENDMAP
+
+NAME: grunt_vaults_hallway_long
+TAGS: vaults_empty allow_dup
+SHUFFLE: G = GT
+MAP
+.xx.xx.xx.xx.xx.xx.
+...................
+...G..G..(..G..G...
+...................
+.xx.xx.xx.xx.xx.xx.
+ENDMAP
+
+NAME: grunt_vaults_diagonal
+TAGS: vaults_empty
+MAP
+xx........
+xxx.......
+.xxx...(..
+..xxx.....
+...xxx....
+....x+x...
+.....xxx..
+..(...xxx.
+.......xxx
+........xx
+ENDMAP
+
+NAME: grunt_vaults_focal
+TAGS: vaults_empty
+SHUFFLE: ABCD
+SHUFFLE: Aa, Bb, Cc, Dd
+NSUBST: A = 1:+ / *:x
+NSUBST: B = 1:+ / *:x
+NSUBST: C = 1:+ / *:x
+NSUBST: D = 1:+ / *:x
+SUBST: abcd = .
+MAP
+xx......xx
+xxx....xxx
+.xxx..xxx.
+..xxAAxxx.
+...B(.D...
+...B.(D...
+..xxCCxx..
+.xxx..xxx.
+xxx....xxx
+xx......xx
+ENDMAP
+
+NAME: grunt_vaults_bifocal
+TAGS: vaults_empty
+SHUFFLE: ABCD, EFGH
+SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh
+NSUBST: A = 1:+ / *:x
+NSUBST: B = 1:+ / *:x
+NSUBST: C = 1:+ / *:x
+NSUBST: D = 1:+ / *:x
+NSUBST: E = 1:+ / *:x
+NSUBST: F = 1:+ / *:x
+NSUBST: G = 1:+ / *:x
+NSUBST: H = 1:+ / *:x
+SUBST: abcdefgh = .
+MAP
+xx......xx
+xxx....xxx
+.xxx..xxx.
+..xxAAxxx.
+...B..D...
+...B..D...
+..xxCCxx..
+.xxx..xxx.
+xxx....xxx
+xx..(...xx
+xx...(..xx
+xxx....xxx
+.xxx..xxx.
+..xxEExxx.
+...F..H...
+...F..H...
+..xxGGxx..
+.xxx..xxx.
+xxx....xxx
+xx......xx
+ENDMAP
