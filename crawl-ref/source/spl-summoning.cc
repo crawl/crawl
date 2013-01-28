@@ -2572,12 +2572,35 @@ bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
     return false;
 }
 
-bool trigger_arcane_familiar()
+bool trigger_arcane_familiar(bolt& beam)
 {
     monster* familiar = _find_arcane_familiar();
 
     if (familiar->props.exists("ready"))
     {
+        // If the familiar is aiming at empty air but the triggering conjuration
+        // is an explosion, try to find something to shoot within the blast
+        if (!familiar->props.exists("foe") && beam.is_explosion)
+        {
+            explosion_map exp_map;
+            exp_map.init(INT_MAX);
+            beam.determine_affected_cells(exp_map, coord_def(), 0, beam.ex_size, true, true);
+
+            for (radius_iterator ri(beam.target, beam.ex_size, C_ROUND); ri; ++ri)
+            {
+                if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
+                {
+                    if (monster_at(*ri) && (monster_at(*ri) != familiar))
+                    {
+                        familiar->props["firing_target"] = *ri;
+                        familiar->foe = monster_at(*ri)->mindex();
+                        familiar->props["foe"] = familiar->foe;
+                        continue;
+                    }
+                }
+            }
+        }
+
         familiar->props.erase("ready");
         familiar->props["firing"] = true;
         return true;

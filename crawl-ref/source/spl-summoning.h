@@ -85,7 +85,7 @@ spret_type cast_mass_abjuration(int pow, bool fail = false);
 spret_type cast_arcane_familiar(int pow, god_type god, bool fail);
 void end_arcane_familiar(bool killed);
 bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam);
-bool trigger_arcane_familiar();
+bool trigger_arcane_familiar(bolt& beam);
 bool fire_arcane_familiar(monster* mons);
 void reset_arcane_familiar(monster* mons);
 

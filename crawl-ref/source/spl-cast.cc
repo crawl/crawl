@@ -1199,7 +1199,7 @@ spret_type your_spells(spell_type spell, int powc,
     {
     case SPRET_SUCCESS:
         if (you.duration[DUR_ARCANE_FAMILIAR] && allow_fail)
-            trigger_arcane_familiar();
+            trigger_arcane_familiar(beam);
         _spellcasting_side_effects(spell, powc, god);
         return SPRET_SUCCESS;
 
