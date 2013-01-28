@@ -361,8 +361,6 @@ NAME: grunt_vaults_funneled_arena
 TAGS: vaults_hard
 NSUBST: 9 = 1:8 / *:9
 SUBST: 0 = 90000000
-KMONS: 8 = 8 band
-KMONS: 9 = 9 band
 KMONS: 0 = 0 band
 SUBST: $ = |***$$$$
 MAP
