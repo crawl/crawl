@@ -225,10 +225,10 @@ end
 function place_vaults_rooms(e, data, room_count, options)
 
   if options == nil then options = vaults_default_options() end
-  local results, rooms_placed, max_tries, times_failed, total_failed = { }, 0, 27, 0, 0
+  local results, rooms_placed, times_failed, total_failed = { }, 0, 0, 0
 
-  -- Keep trying to place rooms until we've had times_failed fail in a row or we reach the max
-  while rooms_placed < room_count and times_failed < max_tries do
+  -- Keep trying to place rooms until we've had max_room_tries fail in a row or we reach the max
+  while rooms_placed < room_count and times_failed < options.max_room_tries do
     local placed = false
 
     -- Pick a room
@@ -310,8 +310,6 @@ function place_vaults_room(e,usage_grid,room, options)
 
   local gxm, gym = dgn.max_bounds()
 
-  -- Fairly high number of tries is allowed because it's fairly quick to see whether a room fits but non-trivial to resolve a vault
-  local maxTries = 50
   local tries = 0
   local done = false
 
@@ -319,7 +317,7 @@ function place_vaults_room(e,usage_grid,room, options)
   if available_spots == 0 then return { placed = false } end
 
   -- Have a few goes at placing; we'll select a random eligible spot each time and try to place the vault there
-  while tries < maxTries and not done do
+  while tries < options.max_place_tries and not done do
     tries = tries + 1
 
     -- Select an eligible spot from the list in usage_grid
@@ -442,7 +440,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- For open rooms, check a border all around the outside of the wall. We don't want to land right next to another room because we could cut off its door,
   -- and also it would just create ugly two-thick walls.
   if (is_clear and usage.usage == "open" or usage.usage == "eligible_open") then
-    for target in iter.border_iterator(dgn.point(space_p1.x-1, space_p1.y-1), dgn.point(space_p1.x + 1, space_p2.y + 1)) do
+    for target in iter.border_iterator(dgn.point(space_p1.x-1, space_p1.y-1), dgn.point(space_p2.x + 1, space_p2.y + 1)) do
 
       local target_usage = vaults_get_usage(usage_grid,target.x,target.y)
 
