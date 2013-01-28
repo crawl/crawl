@@ -547,6 +547,110 @@ WW..WW..WWWW
 @.WWWWWWWW.@
 ENDMAP
 
+####
+
+NAME:    hangedman_snake_corridor_cut
+TAGS:    no_monster_gen transparent
+DEPTH:   Snake
+MONS:    naga, patrolling naga mage
+MONS:    black mamba / anaconda, patrolling guardian serpent
+MONS:    patrolling adder / patrolling ball python / \
+         patrolling water moccasin w:5
+SHUFFLE: hH / hH / hH, iI / iI / Ii, jJ / jJ / Jj, kK / kK / Kk
+SHUFFLE: 1234 / 1234 / 1212 / 3434
+SUBST:   hi = ., H : xx., I : xx., J : xx., K : xx., % = $%
+MAP
+xxxxxxxxx@5@xxx
+xccccccccc...xxx
+xc*2%...KxJ...xxx
+xc2*1...xxx.j..xxx
+xc%1....JxKk....xxx
+xcHxI.....kKxJ...xx
+@cxxx.i1.j.xxx.j..x
+5.IxHh..%..JxKk...@
+@...hHxI.1%..kKxJ.5
+x..i.xxx.i3.j.xxxc@
+xx...IxHh..%..JxKcx
+xxx....hHxI.3....cx
+ xxx..i.xxx.i....cx
+  xxx...IxHh.....cx
+   xxx....hHxI.3%cx
+    xxx..i.xxx3*4cx
+     xxx...IxH%4*cx
+      xxx...ccccccx
+       xxx@5@xxxxxx
+ENDMAP
+
+NAME:    hangedman_snake_corridor_split
+TAGS:    no_monster_gen transparent allow_dup
+DEPTH:   Snake
+MONS:    naga, black mamba, naga warrior, anaconda, naga mage, guardian serpent
+SUBST:   X : xxc, Y : x:33 c:66 w:1, 0 = 12
+SHUFFLE: 34, 56, 3456 / 3456 / 3456 / 3535 / 4646 / 3636 / 4545 / 3434 / 5656
+MAP
+    xxxxxxx
+   xxxxxxxxx
+  xxxx...xxxx
+xxxxx..X..xxxx
+xxxx..X%X.3xxxxx
+xx1..X%..X.4xxxx
+xx2YY..x..X.0.xxxxxxxxx
+x..YY.xxx..YY.xxxxxxxxx.@.
+..X.21xxxx.*Y...xxxxxx..X@
+@X..xxxxxx...Y*.xxxx12.X..
+.@.xxxxxxxxx.YY..xxx.YY..x
+   xxxxxxxxx.0.X..x..YY2xx
+          xxxx6.X..%X..1xx
+          xxxxx5.X%X..xxxx
+            xxxx..X..xxxxx
+             xxxx...xxxx
+              xxxxxxxxx
+              xxxxxxxx
+ENDMAP
+
+NAME:    hangedman_snake_sidewinding
+TAGS:    allow_dup
+DEPTH:   Snake:1-4, Zot:1-4
+: if you.branch() == "Zot" then
+KMONS:  A = base draconian / green draconian w:4
+KMONS:  B = swamp dragon w:5 / dragon / ice dragon / storm dragon w:5
+KMONS:  C = nonbase green draconian / draconian annihilator
+KMONS:  D = golden dragon / shadow dragon / quicksilver dragon w:5 / \
+            iron dragon w:5
+: else
+KMONS:  A = naga warrior / naga mage / naga
+KMONS:  B = black mamba w:6 / anaconda
+KMONS:  C = greater naga / naga mage w:5 / guardian serpent w:5
+KMONS:  D = guardian serpent / anaconda w:2
+: end
+SHUFFLE: @123<= / &456"-, EF
+SUBST:   = = +, 1 = A, 2 = B, 3 = C, < : ~~_..., &E = x, - = c
+SUBST:   456 = ', "F = ., y : x:2 G:1 .:6, Y : z', Z : z', z : xc
+NSUBST:  * = **|, ~ = 1:( / 1:(<.., _ = 1:) / 1:)>.
+KMASK:   '%*d = no_monster_gen
+MAP
+x@@xxxxxxxxxxxxxxxxxxxx
+x""xxcccccccccccccccccx
+x..xxxcc13121'''%%%**cx
+xy..A%c--32z'''Z''BD*cx
+xy...B%--c1''z'''z'B%cx
+x4.xxxxxccc''z''zYz'%cx
+x..xxEExxccc'''zYz''%cx
+xy...EE.A%ccc'''z''Z'cx
+xy...FF..B%ccc'''''''cx
+x4.xxFFxxxxxccc''zz''cx
+x1.xxEExxEExxccc''''4cx
+xy...EE..EE.A%ccc''z5cx
+xy...FF..FF..B%ccc454cx
+x..xxFFxxFFxxxxxccc66cx
+x1.xxEExxEExxEExxc==4cx
+xy...EE..EE..EE.A%==ccx
+xy...FF..FF..FF..B%cccx
+x..xxFFxxFFxxFFxxxxxccx
+x<<xxxxxxxxxxxxxxxxxxcx
+x&&xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################
