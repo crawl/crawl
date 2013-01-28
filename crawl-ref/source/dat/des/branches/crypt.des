@@ -82,7 +82,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_round
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   place:Crypt:1
 KFEAT:  O = enter_crypt
 MAP
@@ -102,7 +102,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_box
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   place:Crypt:1
 KFEAT:  O = enter_crypt
 MAP
@@ -118,7 +118,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_statues
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   place:Crypt:1
 KFEAT:  O = enter_crypt
 MAP
@@ -138,7 +138,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_sparse
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   place:Crypt:1
 KFEAT:  O = enter_crypt
 MAP
@@ -158,7 +158,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_walls
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   place:Crypt:1
 KFEAT:  O = enter_crypt
 MAP
@@ -182,7 +182,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_corners
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   place:Crypt:1
 KFEAT:  O = enter_crypt
 MAP
@@ -202,7 +202,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_simple_plaza
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   place:Crypt:1
 KFEAT:  O = enter_crypt
 MAP
@@ -220,7 +220,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_skeletal_spiral
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   small skeleton / large skeleton / skeletal warrior
 KFEAT:  O = enter_crypt
 MAP
@@ -241,7 +241,7 @@ ENDMAP
 NAME:    minmay_crypt_entry_necro_gods
 ORIENT:  float
 WEIGHT:  30
-TAGS:    crypt_entry
+TAGS:    crypt_entry vaults_entry_crypt
 SHUFFLE: AB
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_yredelemnul
@@ -263,7 +263,7 @@ ENDMAP
 ##############################################################################
 NAME:    minmay_crypt_entry_nasty_monster
 ORIENT:  float
-TAGS:    crypt_entry
+TAGS:    crypt_entry vaults_entry_crypt
 MONS:    bone dragon w:25 / lich / shadow dragon w:5, curse skull
 SHUFFLE: 1X/2Y
 SUBST:   X=., Y=x
@@ -286,7 +286,7 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_vampire_x
 ORIENT: float
-TAGS:   crypt_entry
+TAGS:   crypt_entry vaults_entry_crypt
 MONS:   vampire, vampire knight / vampire mage
 SUBST:  V = VVVY
 KFEAT:  O = enter_crypt
