@@ -160,6 +160,15 @@ CMD_WAIT verbose
 
 Spend a single turn waiting and resting.
 %%%%
+CMD_SAFE_WAIT
+
+Wait a single turn if safe
+%%%%
+CMD_SAFE_WAIT verbose
+
+Spend a single turn waiting and resting, but only if there are no hostile
+monsters in view.
+%%%%
 CMD_DISPLAY_INVENTORY
 
 Display the contents of your inventory
