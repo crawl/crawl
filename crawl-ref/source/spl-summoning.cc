@@ -2511,7 +2511,8 @@ bool _familiar_can_mirror(spell_type spell)
     return ((spell_typematch(spell, SPTYP_CONJURATION)
             && spell_to_zap(spell) != NUM_ZAPS)
             || spell == SPELL_MEPHITIC_CLOUD
-            || spell == SPELL_IOOD);
+            || spell == SPELL_IOOD
+            || spell == SPELL_DAZZLING_SPRAY);
 }
 
 bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
