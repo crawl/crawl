@@ -121,6 +121,21 @@ MAP
       .......
 ENDMAP
 
+NAME:   ashenzari_conservatory_becter
+TAGS:   temple_overflow_ashenzari transparent mini_float
+KFEAT:  _ = altar_ashenzari
+DEPTH:  2-9
+MAP
+   .....
+ .........
+ .........
+....mmm....
+....m_m....
+....c+c....
+xxxxx.xxxxx
+     @
+ENDMAP
+
 ### Cheibriados overflow altars ###############################################
 
 NAME:   cheibriados_altar_1
@@ -200,6 +215,44 @@ x.._..x
 xxxxxxx
 ENDMAP
 
+NAME:   cheibriados_altar_wand_db
+TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados patrolling
+DEPTH:  D:2-9
+KFEAT:  _ = altar_cheibriados
+MONS:   goblin; wand of slowing / \
+        hobgoblin; wand of slowing / \
+        gnoll; wand of slowing / \
+        orc; wand of slowing / \
+        kobold; wand of slowing
+MONS:   goblin / hobgoblin / gnoll / orc / kobold
+NSUBST: 2 = 1:1 / *:2
+MAP
+ccccccc
+c.2.2.c
+c2._.2c
+c.....c
+c.....c
+ccc+ccc
+ENDMAP
+
+NAME:   chei_snail_safe_becter
+TAGS:   overflow_altar_cheibriados transparent mini_float no_monster_gen
+KMONS:  a = agate snail
+NSUBST: ' = 1:a / *:.
+KFEAT:  _ = altar_cheibriados
+DEPTH:  2-9
+MAP
+ ........
+..xxxxxx..
+.xx''''xx.
+.x'xxxx'x.
+.x'm.<x'x.
+.xx+._x'x.
+..xxxxx'x.
+.x.....xx.
+.xxxxxxx..
+.........
+ENDMAP
 
 ### Elyvilon overflow altars ##################################################
 
@@ -571,6 +624,59 @@ c?c?c?c?c?c?ccG
 ccccccccccccccc
 ENDMAP
 
+NAME:   kiku_gazebo_garden_becter
+TAGS:   temple_overflow_kikubaaqudgha transparent mini_float
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+KFEAT:  _ = altar_kikubaaqudgha
+SUBST:  ` = f....
+COLOUR: c = magenta
+COLOUR: i' = brown
+COLOUR: " = yellow
+TILE:   c = dngn_stone_wall_magenta
+FTILE:  '"_ = floor_pebble_yellow
+DEPTH:  2-9
+MAP
+..````
+.ccc`````
+.c'c"`````
+.c''""````
+.c'''"c````
+.c'_''cc```
+.c'''"c````
+.c''""````
+.c'c"`````
+.ccc`````
+..````
+ENDMAP
+
+NAME:   kiku_gazebo_pond_becter
+TAGS:   temple_overflow_kikubaaqudgha transparent mini_float
+KFEAT:  _ = altar_kikubaaqudgha
+KMASK:  Ww = no_monster_gen
+SUBST:  M = W..
+COLOUR: c = magenta
+COLOUR: i' = brown
+COLOUR: " = yellow
+COLOUR: w = green
+COLOUR: W = lightgreen
+TILE:   c = dngn_stone_wall_magenta
+FTILE:  '"_ = floor_pebble_yellow
+DEPTH:  2-9
+MAP
+..........
+.cccccccc.
+.c''''cc...
+.c'_'""..V.
+.c'W""MMM..
+.c'"WWWwwM.
+.cc".MWwwM.
+.cc..MwwwM.
+.c...MwwwM.
+...V..MMM..
+.........
+ENDMAP
 
 ### Makhleb overflow altars ###################################################
 
@@ -618,6 +724,90 @@ MAP
 ...
 ENDMAP
 
+NAME:  makhleb_altar_promises_db
+TAGS:  uniq_altar_makhleb temple_overflow_makhleb
+DEPTH: D:2-20
+KFEAT: _ = altar_makhleb
+MONS:  executioner / balrug / green death / cacodemon / blizzard demon
+MONS:  orange demon / ynoxinul / neqoxec / hellwing / smoke demon
+MAP
+  ccc
+  c1c
+cccmccc
+c2m_m2c
+ccc.ccc
+  c.c
+  c@c
+ENDMAP
+
+NAME:   makhleb_blood_cavern_becter
+TAGS:   uniq_altar_makhleb temple_overflow_makhleb mini_float
+: if you.absdepth() < 6 then
+KITEM:  1 = human corpse
+KMONS:  2 = hound
+: else
+KMONS:  1 = necrophage
+KMONS:  2 = hound skeleton
+: end
+KFEAT:  _ = altar_makhleb
+KPROP:  y' = bloody
+COLOUR: c = darkgrey
+TILE:   c = wall_hall
+SUBST:  ' = .
+SUBST:  y = x
+DEPTH:  2-9
+MAP
+  @@@
+ x..'.xxx
+ xx...'yxx
+ xxxx..'yxx
+ xxxxxx.'yx
+ xxxxxxy'.x
+xxxx.'y'.xx
+xcc.12'.xx
+xcA_'.xxx
+xcc..xxx
+xxxxxx
+ENDMAP
+
+NAME:   makhleb_heckhound_becter
+TAGS:   uniq_altar_makhleb temple_overflow_makhleb no_monster_gen mini_float
+KFEAT:  _ = altar_makhleb
+KMONS:  _ = hound perm_ench:bleeding
+COLOUR: c = darkgrey
+TILE:   c = wall_hall
+SUBST:  y = xx.
+DEPTH:  2-9
+MAP
+ xxxxx
+xxcccxx
+xycAcyx
+x.._..x
+xy...yx
+ y...y
+  @@@
+ENDMAP
+
+NAME:   makhleb_grotto_becter
+TAGS:   no_monster_gen temple_overflow_makhleb mini_float
+MONS:   iron imp w:1 / shadow imp w:1 / crimson imp
+KFEAT:  _ = altar_makhleb
+COLOUR: c' = darkgrey
+TILE:   c = wall_hall
+FTILE:  A_'1 = floor_grey_dirt
+SUBST:  ' = .
+DEPTH:  2-9
+MAP
+ xxxxx
+xxcccxx
+xwcAcwx
+xww_wwx
+xww1wwx
+x.w'w.x
+xx...xx
+ xx+xx
+   @
+ENDMAP
 
 ### Nemelex overflow altars ###################################################
 
@@ -683,6 +873,102 @@ Cnnnnnnn...nnnnnnnC
 CCCCCCCC+++CCCCCCCC
 ENDMAP
 
+NAME:    nemelex_dance_club_becter
+TAGS:    overflow_altar_nemelex_xobeh transparent
+TAGS:    no_rotate no_vmirror no_monster_gen no_item_gen
+: if you.depth() <= 4 then
+MONS:    orc ; club race:orcish
+: else
+MONS:    ogre ; giant club
+: end
+MONS:    ooze
+KFEAT:   _ = altar_nemelex_xobeh
+SHUFFLE:  12_
+COLOUR:  12' = random
+COLOUR:  x = darkgrey
+TILE:    x = wall_pebble_darkgray
+DEPTH:   2-9
+MAP
+    .....
+   ..xxx..
+   .xx'xx.
+ ...x'1'x...
+..xxxx'xxxx..
+.xx''x+x''xx.
+.x'2'+.+'_'x.
+.xx'xx.xx'xx.
+..xxx.x.xxx..
+ .....x.....
+    .xxx.
+    .....
+ENDMAP
+
+NAME:   nemelex_diamond_rough_becter
+TAGS:   overflow_altar_nemelex_xobeh transparent mini_float
+KFEAT:  _ = altar_nemelex_xobeh
+COLOUR: x = lightred
+COLOUR: 'b = silver
+TILE:   x = wall_pebble_red
+TILE:   b = dngn_crystal_white
+MAP
+    ...
+   ..x..
+  ..xxx..
+ ..xxbxx..
+..xxb'bxx..
+.xxb'_'bxx.
+..xxb'bxx..
+ ..x+b+x..
+  ..xxx..
+   ..x..
+    ...
+ENDMAP
+
+NAME:   nemelex_lonely_heart_becter
+TAGS:   overflow_altar_nemelex_xobeh transparent
+TAGS:   no_rotate no_vmirror  no_monster_gen no_item_gen
+MONS:   butterfly
+MONS:   nothing w:4 / jessica w:1
+KFEAT:  _ = altar_nemelex_xobeh
+COLOUR: x = lightred
+TILE:   x = wall_pebble_red
+DEPTH:  2-9
+MAP
+  .... ....
+ ..xx...xx..
+..xxxx.xxxx..
+.xx..x+x..xx.
+.xx._.1.1.xx.
+..xx.1.1.xx..
+ ..xx.2.xx..
+  ..xx.xx..
+   ..xxx..
+    .....
+ENDMAP
+
+NAME:   nemelex_spade_bored_becter
+TAGS:   overflow_altar_nemelex_xobeh transparent
+TAGS:   no_rotate no_vmirror  no_monster_gen no_item_gen
+KFEAT:  _ = altar_nemelex_xobeh
+KFEAT:  o = known shaft trap
+NSUBST: ' = 6:o / *:.
+COLOUR: x = darkgrey
+TILE:   x = wall_pebble_darkgray
+DEPTH:  2-9
+MAP
+     .....
+    ..xxx..
+   ..xx'xx..
+  ..xx'''xx..
+ ..xx''_''xx..
+..xx'''''''xx..
+.xx'''''''''xx.
+.x'''xxxxx'''x.
+.xx'+x.x.x+'xx.
+..xxx..x..xxx..
+ .....xxx.....
+     .....
+ENDMAP
 
 ### Okawaru overflow altars ###################################################
 
@@ -774,6 +1060,42 @@ MAP
    .....
 ENDMAP
 
+NAME:  okawaru_altar_gauntlet_db
+TAGS:  uniq_altar_okawaru temple_overflow_okawaru
+DEPTH: D:2-9
+KFEAT: _ = altar_okawaru
+MONS:  goblin; dart q:5 / hobgoblin; dart q:5 / gnoll; dart q:5 /\
+       orc; dart q:5 / kobold; dart q:5 /
+
+MAP
+  xxx
+xxx_xxx
+x1w.wxx
+xxw.w1x
+x1w.wxx
+xxw.w1x
+x1w.wxx
+xxw.w1x
+xxx+xxx
+ENDMAP
+
+NAME:   okawaru_gym_becter
+TAGS:   uniq_altar_okawaru temple_overflow_okawaru
+TAGS:   transparent mini_float
+MONS:   training dummy ; club
+KFEAT:  _ = altar_okawaru
+DEPTH:  2-9
+MAP
+   .....
+ .........
+ .vv...vv.
+..v1...1v..
+....._.....
+..v1...1v..
+ .vv...vv.
+ .........
+   .....
+ENDMAP
 
 ### Sif Muna overflow altars ##################################################
 
@@ -963,6 +1285,89 @@ xx.....xx
  xx@@@xx
 ENDMAP
 
+NAME:   trog_butcher_becter
+TAGS:   overflow_altar_trog mini_float
+: if you.absdepth() < 6 then
+MONS:   orc ; hand axe . animal skin
+MONS:   giant gecko / rat / giant newt / quokka
+{{
+  dgn.delayed_decay(_G, 'd',
+                    'giant gecko chunk q:1 / rat chunk q:1 / ' ..
+                    'giant newt chunk q:1 / quokka chunk q:1')
+}}
+: else
+MONS:   orc warrior ; war axe . animal skin
+MONS:   sheep / iguana / worker ant
+{{
+  dgn.delayed_decay(_G, 'd',
+                    'sheep chunk q:1 / iguana chunk q:1 / ' ..
+                    'worker ant chunk q:1')
+}}
+: end
+NSUBST: ' = 3:2 / *:.
+KPROP:  1y" = bloody
+KFEAT:  _ = altar_trog
+KFEAT:  ^ = known shaft trap
+KFEAT:  m = iron_grate
+COLOUR: m = darkgrey
+SUBST:  y = x
+SUBST:  " = .
+DEPTH:  2-9
+MAP
+  xxxxxxx
+ xx'''''xx
+xx.xxxxxxxx
+xx+xmmmx^yx
+xx.."1d""yx
+xx..._"..xx
+ xx.....xx
+  xx...xx
+     @
+ENDMAP
+
+NAME:   trog_hazing_becter
+TAGS:   overflow_altar_trog mini_float no_monster_gen no_item_gen no_pool_fixup
+MONS:   goblin ; stone q:5 . animal skin / \
+        hobgoblin ; stone q:5 . animal skin / \
+        kobold ; stone q:5 | throwing net q:1 . animal skin
+ITEM:   stone
+NSUBST: T = 6:1 / *:.
+SUBST:  . = d....
+KFEAT:  _ = altar_trog
+KFEAT:  m = iron_grate
+COLOUR: m = darkgrey
+DEPTH:  2-9
+MAP
+  xxxxx
+ xxmmmxx
+xx.._..xx
+xTw...wTx
+xTWw.wWTx
+xTTw.wTTx
+xxTw.wTxx
+ xxx.xxx
+  xx@xx
+ENDMAP
+
+NAME:   trog_three_pillars_becter
+TAGS:   overflow_altar_trog transparent mini_float
+KFEAT:  _ = altar_trog
+SUBST:  y = x..
+SUBST:  z = xx.
+DEPTH:  2-9
+MAP
+ ..........
+.......yy..
+..yy..zxxy.
+.yxxz.xbxy.
+.yxb...xxy.
+.yxx._.....
+.......xy..
+.....zbxy..
+   ..yxxy..
+   ...yy...
+    ......
+ENDMAP
 
 ### Vehumet overflow altars ###################################################
 
@@ -1046,6 +1451,42 @@ MAP
 .........
 ENDMAP
 
+NAME:   vehumet_altar_book_db
+TAGS:   uniq_altar_vehumet temple_overflow_vehumet
+DEPTH:  D:2-9
+KFEAT:  _ = altar_vehumet
+ITEM:   randbook owner:Vehumet desc:conj title:Elementary_Destruction \
+                 spells:magic_dart numspells:1 /\
+        randbook owner:Vehumet desc:conj title:the_Universal_Darts_Champion \
+                 spells:magic_dart numspells:1 /\
+        randbook owner:Vehumet desc:conj title:Basic_Conjurations \
+                 spells:magic_dart numspells:1
+MAP
+  xxx
+ xxdxx
+xx...xx
+x.._..x
+xx...xx
+ xx.xx
+  x@x
+ENDMAP
+
+NAME:  vehumet_altar_wand_db
+TAGS:  uniq_altar_vehumet temple_overflow_vehumet mini_float patrolling
+DEPTH: D:2-9
+KFEAT: _ = altar_vehumet
+MONS:  goblin; wand of flame | wand of frost | wand of magic darts /\
+       hobgoblin; wand of flame | wand of frost | wand of magic darts /\
+       kobold; wand of flame | wand of frost | wand of magic darts
+MAP
+.......
+...x...
+...1...
+.x._.x.
+.......
+...x...
+.......
+ENDMAP
 
 ### Xom overflow altars #######################################################
 
@@ -1275,6 +1716,28 @@ c?c?c?c?c?c?ccG
 ccccccccccccccc
 ENDMAP
 
+NAME:   yredelemnul_forgotten_temple_becter
+TAGS:   temple_overflow_yredelemnul no_monster_gen no_item_gen mini_float
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  . = known web trap / .
+: if you.absdepth() <= 4 then
+KMONS:  _ = spectral orc
+: elseif you.absdepth() <= 7 then
+KMONS:  _ = spectral human hd:3
+: else
+KMONS:  _ = spectral elf hd:5
+: end
+DEPTH:  2-9
+MAP
+xxxxxxxxx
+xcccccccx
+xc.._..cx
+xcc...ccx
+xc.....cx
+xcc...ccx
+xxcc+ccxx
+ xxx@xxx
+ENDMAP
 
 ### Zin overflow altars #######################################################
 
@@ -1301,6 +1764,121 @@ xc.....cx
 xcG...Gcx
 xccc+cccx
     @
+ENDMAP
+
+NAME:   zin_treasury
+TAGS:   no_item_gen no_monster_gen temple_overflow_zin
+KFEAT:  _ = altar_zin
+KFEAT:  m = iron_grate
+KPROP:  $ = no_rtele_into
+COLOUR: c = white
+COLOUR: m = darkgrey
+TILE:   c = wall_church
+FTILE:  _.m+$ = floor_limestone
+DEPTH:  2-9
+MAP
+  xxxxxxx
+  xcccccx
+ xxc$$$cxx
+xxcc$$$ccxx
+xccmm$mmccx
+xcc.mmm.ccx
+xcc.._..ccx
+xxc.....cxx
+ xccc+cccx
+     @
+ENDMAP
+
+NAME:   zin_purify
+TAGS:   no_item_gen no_monster_gen temple_overflow_zin
+TAGS:   transparent mini_float
+KFEAT:  _ = altar_zin
+KFEAT:  v = general shop name:Zin type:Purification suffix:Station count:1 \
+        greed:30 ; \
+        potion of curing | potion of restore abilities w:1 | \
+        potion of cure mutation w:1
+COLOUR: c = white
+COLOUR: ' = white
+TILE:   c = wall_church
+FTILE:  Td'_ = floor_limestone
+SUBST:  ' = .
+DEPTH:  2-9
+MAP
+ .....
+..ccc..
+.ccTcc.
+..c_c..
+ .....
+...'...
+..'v'..
+ ..'..
+  ...
+ENDMAP
+
+NAME:   zin_scriptorium
+TAGS:   no_item_gen no_monster_gen temple_overflow_zin
+ITEM:   any scroll
+KFEAT:  _ = altar_zin
+KFEAT:  m = iron_grate
+KPROP:  ? = no_rtele_into
+COLOUR: m = darkgrey
+COLOUR: c = white
+TILE:   c = wall_church
+FTILE:  _.m+d = floor_limestone
+NSUBST: ? = 2:d / *:.
+DEPTH:  2-9
+MAP
+  xxxxxxx
+  xcccccx
+ xxc???cxx
+ xcc???ccx
+xxcccmcccxx
+xcc.....ccx
+xcc.._..ccx
+xxc.....cxx
+ xccc+cccx
+     @
+ENDMAP
+
+NAME:   zin_academy
+TAGS:   no_item_gen no_monster_gen temple_overflow_zin
+TAGS:   transparent mini_float
+KFEAT:  _ = altar_zin
+COLOUR: c = white
+COLOUR: ' = white
+TILE:   c = wall_church
+FTILE:  _' = floor_limestone
+SUBST:  ' = .
+DEPTH:  2-9
+MAP
+  ccccccc
+ccc.ttttccc
+c.tt'_'t..c
+....'''....
+...........
+...'''''...
+ .........
+   .....
+ENDMAP
+
+NAME:   zin_statuary
+TAGS:   no_item_gen no_monster_gen temple_overflow_zin
+TAGS:   transparent mini_float
+KFEAT:  _ = altar_zin
+COLOUR: c = white
+TILE:   c = wall_church
+FTILE:  _'+ = floor_limestone
+SUBST:  ' = .
+DEPTH:  2-9
+MAP
+ .......
+..ccccc..
+.cc'_'cc.
+..cc+cc..
+...'''...
+.G.....G.
+ ..G.G..
+  .....
 ENDMAP
 
 
@@ -1358,6 +1936,29 @@ MAP
          ...
           .
           @
+ENDMAP
+
+NAME:   tso_oasis_becter
+TAGS:   temple_overflow_the_shining_one transparent mini_float
+TAGS:   no_item_gen no_monster_gen
+KMONS:  f = plant
+SUBST:  ` = ff.
+COLOUR: . = yellow
+FTILE:  `.Tf = floor_sand
+FTILE:  _ = floor_limestone
+COLOUR: c = white
+TILE:   c = wall_church
+KFEAT:  _ = altar_the_shining_one
+MAP
+  ....
+ ..``....
+ .`ww`...
+ ..``..c..
+......+cc..
+..T..cc_cc.
+ .....ccc..
+   ....c..
+     ....
 ENDMAP
 
 ### Variable overflow altars ##################################################
