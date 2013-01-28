@@ -2553,6 +2553,10 @@ bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
                     familiar->props["foe"] = familiar->foe;
                 }
             }
+
+            // If we're firing at empty air, lose any prior target lock
+            if (!familiar->props.exists("foe"))
+                familiar->foe = MHITYOU;
         }
         else
         {
