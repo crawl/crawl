@@ -4,6 +4,7 @@ zombie_small MONS_ZOMBIE_SMALL
 zombie_large MONS_ZOMBIE_LARGE
 zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
 zombie_quadruped_large MONS_ZOMBIE_QUADRUPED_LARGE
+zombie_ogre MONS_ZOMBIE_OGRE
 zombie_toad MONS_ZOMBIE_TOAD
 zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE

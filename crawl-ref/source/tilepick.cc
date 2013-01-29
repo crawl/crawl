@@ -548,6 +548,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_SMALL:
         return TILEP_MONS_SPECTRAL_SMALL;
     case TILEP_MONS_ZOMBIE_LARGE:
+    case TILEP_MONS_ZOMBIE_OGRE:
     case TILEP_MONS_ZOMBIE_DRACONIAN:
         return TILEP_MONS_SPECTRAL_LARGE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
@@ -603,6 +604,7 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_SMALL:
         return TILEP_MONS_SIMULACRUM_SMALL;
     case TILEP_MONS_ZOMBIE_LARGE:
+    case TILEP_MONS_ZOMBIE_OGRE:
     case TILEP_MONS_ZOMBIE_DRACONIAN:
         return TILEP_MONS_SIMULACRUM_LARGE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
@@ -658,6 +660,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
         return TILEP_MONS_SKELETON_SMALL;
     case TILEP_MONS_ZOMBIE_TROLL:
     case TILEP_MONS_ZOMBIE_LARGE:
+    case TILEP_MONS_ZOMBIE_OGRE:
     case TILEP_MONS_ZOMBIE_DRACONIAN:
         return TILEP_MONS_SKELETON_LARGE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
@@ -711,6 +714,11 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         if (mons_genus(subtype) == MONS_TROLL)
         {
             z_tile = TILEP_MONS_ZOMBIE_TROLL;
+            break;
+        }
+        if (mons_genus(subtype) == MONS_OGRE)
+        {
+            z_tile = TILEP_MONS_ZOMBIE_OGRE;
             break;
         }
     case MON_SHAPE_HUMANOID_WINGED:
