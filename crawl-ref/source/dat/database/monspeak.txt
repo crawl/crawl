@@ -4350,6 +4350,9 @@ VISUAL:@The_monster@ gazes at @foe@ [hypnotically|seductively].
 @The_monster@ says @to_foe@, "Catch me, touch me, love me, feed me!"
 
 @The_monster@ innocently whispers @to_foe@, "Don't trust the tales, trust me!"
+
+# On the Beach, Above & Beyond presents OceanLab
+@The_monster@ says @to_foe@, "There's nothing like you and me, on the beach..."
 ## END Ilsuiw ##
 %%%%
 ############ JESSICA ### A sorceress disturbed by player
