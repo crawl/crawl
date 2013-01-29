@@ -41,8 +41,10 @@ dwarven_flail2
 %rim 1
 spiked_flail1 WPN_SPIKED_FLAIL
 spiked_flail2
-great_flail1 WPN_GREAT_FLAIL
-great_flail2
+spiked_flail3
+dire_flail1 WPN_DIRE_FLAIL
+dire_flail2
+dire_flail3
 %rim 0
 morningstar1 WPN_MORNINGSTAR
 morningstar2

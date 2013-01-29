@@ -2984,7 +2984,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_GREAT_MACE;
 
     case WPN_DIRE_FLAIL:
-        return TILE_WPN_GREAT_FLAIL;
+        return TILE_WPN_DIRE_FLAIL;
 
     case WPN_MORNINGSTAR:
         if (race == ISFLAG_ORCISH)
