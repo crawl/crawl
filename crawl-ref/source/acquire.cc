@@ -1283,7 +1283,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
             // Try to fill empty slots.
             if ((_is_armour_plain(doodad)
-                 || get_armour_slot(doodad) == EQ_BODY_ARMOUR)
+                 || get_armour_slot(doodad) == EQ_BODY_ARMOUR && coinflip())
                 && _armour_slot_seen((armour_type)doodad.sub_type))
             {
                 if (_try_give_plain_armour(doodad))
