@@ -309,7 +309,6 @@ chaos_spawn2
 chaos_spawn3
 chaos_spawn4
 chaos_spawn5
-chaos_spawn6
 hellion MONS_HELLION
 iron_devil MONS_IRON_DEVIL
 neqoxec MONS_NEQOXEC
