@@ -541,9 +541,9 @@
       {
        SPELL_ENERGY_BOLT,
        SPELL_SLOW,
-       SPELL_NO_SPELL,
-       SPELL_POLYMORPH_OTHER,
        SPELL_CONFUSE,
+       SPELL_POLYMORPH_OTHER,
+       SPELL_DIG,
        SPELL_NO_SPELL
       }
     },
@@ -1839,10 +1839,10 @@
       {
        SPELL_FRAGMENTATION,
        SPELL_PETRIFY,
-       SPELL_STONESKIN,
-       SPELL_LEDAS_LIQUEFACTION,
+       SPELL_NO_SPELL,
        SPELL_SHATTER,
-       SPELL_BLINK
+       SPELL_DIG,
+       SPELL_NO_SPELL
       }
     },
 
