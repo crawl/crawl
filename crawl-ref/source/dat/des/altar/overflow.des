@@ -1391,30 +1391,6 @@ MAP
 .....
 ENDMAP
 
-# A variation of the above. Use freezing vapours, so that the book won't 'burn'.
-# The fog generator for the altar has the same parameters as above but the one
-# for the book is more dangerous.
-NAME:   dangerous_book
-DEPTH:  2-10
-WEIGHT: 2
-TAGS:   temple_overflow_vehumet
-MARKER: : = lua:fog_machine { cloud_type = "freezing vapour", \
-               pow_min = 6, pow_max = 8, delay_min = 55, delay_max = 75, \
-               size = 2, walk_dist = 0, spread_rate= 0 }
-KFEAT:  _ = altar_vehumet
-MARKER: + = lua:fog_machine { cloud_type = "freezing vapour", \
-              pow_min = 10, pow_max = 12, delay = 30, \
-              size = 2, walk_dist = 0, spread_rate= 0 }
-KITEM:  + = book of conjurations
-MAP
-......
-.:.:..
-.._...
-.:.:..
-....+.
-......
-ENDMAP
-
 NAME:    vehumet_statue
 DEPTH:   4-10
 TAGS:    temple_overflow_vehumet
@@ -1449,26 +1425,6 @@ MAP
 .bbb.bbb.
 ..b...b..
 .........
-ENDMAP
-
-NAME:   vehumet_altar_book_db
-TAGS:   uniq_altar_vehumet temple_overflow_vehumet
-DEPTH:  D:2-9
-KFEAT:  _ = altar_vehumet
-ITEM:   randbook owner:Vehumet desc:conj title:Elementary_Destruction \
-                 spells:magic_dart numspells:1 /\
-        randbook owner:Vehumet desc:conj title:the_Universal_Darts_Champion \
-                 spells:magic_dart numspells:1 /\
-        randbook owner:Vehumet desc:conj title:Basic_Conjurations \
-                 spells:magic_dart numspells:1
-MAP
-  xxx
- xxdxx
-xx...xx
-x.._..x
-xx...xx
- xx.xx
-  x@x
 ENDMAP
 
 NAME:  vehumet_altar_wand_db
