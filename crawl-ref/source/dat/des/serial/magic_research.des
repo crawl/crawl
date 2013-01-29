@@ -16,11 +16,12 @@
 # Schools not covered: Charms, Conjurations. Too little to work with right now.
 # Other magic concepts might be interesting; additions are always welcome!
 
+default-depth: D:18-27, Vaults:1-4, Elf:1-2
+
 {{
 function init_research(e)
   e.tags('serial_research')
   e.tags('no_monster_gen')
-  e.tags('no_hmirror no_vmirror no_rotate')
   e.tags('patrolling')
   e.weight('1')
   if you.branch() == "Elf" then
@@ -44,83 +45,16 @@ end
 }}
 
 NAME:   serial_hangedman_research
-DEPTH:  D:18-26, Elf:1-4
 TAGS:   extra luniq_serial
 CHANCE: 0.5%
 {{
   local c = 4 + crawl.random2(3)
   hook("post_place", function()
-    dgn.place_maps{tag="serial_research_standalone", count=c}
+    dgn.place_maps{tag="serial_research", count=c}
   end)
 }}
 
-NAME:     serial_research_standalone
-TAGS:     serial_research_standalone
-TAGS:     vaults_room_7_city_magic_research allow_dup
-SUBVAULT: A : serial_research
-SHUFFLE: abcdefghi
-SUBST: abcd = c
-SUBST: efg = v
-SUBST: hi = b
-COLOUR: v = white
-TILE: n = DNGN_TRANSPARENT_WALL_WHITE
-MAP
-@...@...@
-abcn+ncba
-bAAAAAAAb
-cAAAAAAAc
-dAAAAAAAd
-aAAAAAAAa
-bAAAAAAAb
-cAAAAAAAc
-dcbadabcd
-ENDMAP
-
-NAME:     serial_research_vaults_facing
-TAGS:     vaults_room_7_facing_magic_research
-TAGS:     vaults_room_7_dead_end_magic_research
-TAGS:     allow_dup
-SUBVAULT: A : serial_research
-SHUFFLE:  abcdefghi
-SUBST:    abcd = c
-SUBST:    efg = v
-SUBST:    hi = b
-COLOUR:   v = white
-TILE:     n = DNGN_TRANSPARENT_WALL_WHITE
-MAP
-  ...
-bcn+ncb
-AAAAAAA
-AAAAAAA
-AAAAAAA
-AAAAAAA
-AAAAAAA
-AAAAAAA
-ENDMAP
-
-NAME:     serial_research_vaults_spin
-TAGS:     vaults_room_7_spin_magic_research
-TAGS:     allow_dup
-SUBVAULT: A : serial_research
-SHUFFLE:  abcdefghi
-SUBST:    abcd = c
-SUBST:    efg = v
-SUBST:    hi = b
-COLOUR:   v = white
-TILE:     n = DNGN_TRANSPARENT_WALL_WHITE
-MAP
-xx...xx
-AAAAAAA
-AAAAAAA
-AAAAAAA
-AAAAAAA
-AAAAAAA
-AAAAAAA
-ENDMAP
-
 ################################################################################
-default-depth:  D:18-26, Elf:1-4, Vaults
-
 NAME:    hangedman_research_pyrotechnics
 MONS:    fire vortex, fire elemental, lava snake, burning bush
 KMONS:   D = fire crab
@@ -131,12 +65,15 @@ FTILE:   .+01234D = FLOOR_VOLCANIC
 SHUFFLE: 34
 : init_research(_G)
 MAP
-llll..1
-2..lll.
-2l....1
-1llll00
-...3lll
-441...D
+@,,,@,,,@
+abcn+ncba
+bllll..1b
+c2..lll.c
+d2l....1d
+a1llll00a
+b...3lllb
+c441...Dc
+dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_thermodynamics
@@ -149,12 +86,15 @@ COLOUR: .01234D = white
 FTILE:  .w+01234D = FLOOR_ICE
 : init_research(_G)
 MAP
-01w.w10
-2w1w1w2
-w.w1w.w
-.w.w.w.
-www2www
-D3.w.34
+@,,,@,,,@
+abcn+ncba
+b01w.w10b
+c2w1w1w2c
+dw.w1w.wd
+a.w.w.w.a
+bwww2wwwb
+cD3.w.34c
+dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_electronics
@@ -166,12 +106,15 @@ FTILE:  .+v0123D = FLOOR_ROUGH_CYAN
 TILE:   v = DNGN_METAL_WALL_CYAN
 : init_research(_G)
 MAP
-3vv.vv3
-21v.v12
-.......
-...v...
-21...12
-320D023
+@,,,@,,,@
+abcn+ncba
+b3vv.vv3b
+c21v.v12c
+d.......d
+a...v...a
+b21...12b
+c320D023c
+dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_geology
@@ -189,12 +132,15 @@ SHUFFLE: 67
 SUBST:   7 = x
 : init_research(_G)
 MAP
-...x...
-0x1.1x0
-.2x5x2.
-.x6D6x.
-.74347.
-x..x..x
+@,,,@,,,@
+abcn+ncba
+b...x...b
+c0x1.1x0c
+d.2x5x2.d
+a.x6D6x.a
+b.74347.b
+cx..x..xc
+dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_toxicology
@@ -212,12 +158,15 @@ SHUFFLE: 12, 34
 : init_research(_G)
 SUBST:   m = n
 MAP
-1m...m2
-1m...m2
-m+...+m
-0mEEEm0
-3mm+mm4
-3m5D5m4
+@,,,@,,,@
+abcn+ncba
+b1m...m2b
+c1m...m2c
+dm+...+md
+a0mEEEm0a
+b3mm+mm4b
+c3m5D5m4c
+dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_thanatology
@@ -236,12 +185,15 @@ SHUFFLE: 1234
 : init_research(_G)
 SUBST:   m = n
 MAP
-11m.m22
-1.m.m.2
-0m...m0
-.m.%.m.
-3.m.m.4
-33mDm44
+@,,,@,,,@
+abcn+ncba
+b11m.m22b
+c1.m.m.2c
+d0m...m0d
+a.m.%.m.a
+b3.m.m.4b
+c33mDm44c
+dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_metamorphosis
@@ -257,12 +209,15 @@ FTILE:   .'m+01234567D = FLOOR_NERVES
 SHUFFLE: 12, 34
 : init_research(_G)
 MAP
-'m...m'
-1m...m2
-3mm.mm4
-.0+5+0.
-.mmmmm.
-'67D76'
+@,,,@,,,@
+abcn+ncba
+b'm...m'b
+c1m...m2c
+d3mm.mm4d
+a.0+5+0.a
+b.mmmmm.b
+c'67D76'c
+dcbadacbd
 ENDMAP
 
 NAME:   hangedman_research_quantum
@@ -276,12 +231,15 @@ COLOUR: .012D = magenta
 FTILE:  .m+012D = FLOOR_DEMONIC_RED
 : init_research(_G)
 MAP
-.......
-.......
-.0mmm0.
-.mm1mm.
-2+111+2
-2m1D1m2
+@,,,@,,,@
+abcn+ncba
+b.......b
+c.......c
+d.0mmm0.d
+a.mm1mm.a
+b2+111+2b
+c2m1D1m2c
+dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_convocations
@@ -297,12 +255,15 @@ FTILE:  .'m+0123D = FLOOR_PEBBLE_LIGHTRED
 SHUFFLE: 23
 : init_research(_G)
 MAP
-0.....0
-+mmmmm+
-...'...
-'..1..'
-..mmm..
-2.+D+.3
+@,,,@,,,@
+abcn+ncba
+b0.....0b
+c+mmmmm+c
+d...'...d
+a'..1..'a
+b..mmm..b
+c2.+D+.3c
+dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_probablistics
@@ -315,10 +276,13 @@ COLOUR: .01234D = blue
 FTILE:  .Vm+01234D = FLOOR_MARBLE
 : init_research(_G)
 MAP
-....m4D
-.V..m23
-....m22
-....m11
-.V..mm+
-.....00
+@,,,@,,,@
+abcn+ncba
+b....m4Db
+c.V..m23c
+d....m22d
+a....m11a
+b.V..mm+b
+c.....00c
+dcbadabcd
 ENDMAP
