@@ -944,7 +944,7 @@ MONS: naga warrior / naga
 MONS: naga mage / naga
 MONS: naga
 
-KMONS: 6 = sea snake / nothing
+KMONS: 6 = sea snake / nothing w:20
 KFEAT: 6 = deep_water
 KMASK: 6w = no_monster_gen
 
@@ -961,9 +961,9 @@ MAP
  c.+.www.wwwwwwwwwww.www.+.c
 cc.+....3w6www6ww6ww3....+.cc
 c..cccwww.ww6www6ww.wwwccc..c
-c..cxcc6w...5.2.5...w6ccxc..c
-c..cxxcwwwwwnnnnnwwwwwcxxc..c
-cc.5cccww6wnn666nnw6wwccc5.cc
+c..cxcc6w..2.5.5.2..w6ccxc..c
+c..ccxcwwwwwnnnnnwwwwwcxcc..c
+cc15cccww6wnn666nnw6wwccc51cc
  cc34cccwwnn.w6w.nnwwccc43cc
   c..ccccnn4.2.2.4nncccc..c
   c...cc..5..S.S..5..cc...c

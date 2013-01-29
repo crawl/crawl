@@ -8,15 +8,16 @@
 {{
     function grunt_profane_halls_setup(e)
         if you.absdepth() >= 24 then
-            e.kmons('1 = base draconian')
-            e.kmons('2 = nonbase draconian')
+            e.kmons('1 = base draconian / nothing w:20')
+            e.kmons('2 = nonbase draconian / base draconian w:20')
             e.kmons('3 = draconian zealot')
         else
             e.kmons('1 = deep elf fighter / deep elf conjurer / '
                     .. 'deep elf summoner / deep elf knight w:5 / '
                     .. 'deep elf annihilator w:5 / '
-                    .. 'deep elf demonologist w:5')
-            e.kmons('2 = deep elf knight')
+                    .. 'deep elf demonologist w:5 /'
+                    .. 'nothing w:68')
+            e.kmons('2 = deep elf knight / deep elf fighter w:20')
             e.kmons('3 = deep elf high priest')
         end
         e.subst('% = * %:20 .')
