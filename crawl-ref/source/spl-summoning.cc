@@ -2665,10 +2665,19 @@ bool fire_arcane_familiar(monster* mons)
         beam.source_name = "arcane familiar";
 
         // If we are locked onto a foe, use its current position
-        if (mons->foe != MHITYOU)
+        if (mons->foe != MHITYOU && menv[mons->foe].alive())
             beam.target = menv[mons->foe].pos();
         else
             beam.target = mons->props["firing_target"].get_coord();
+
+        // Sanity check: if we have somehow ended up targeting ourselves, bail
+        if (beam.target == mons->pos())
+        {
+            mons->props.erase("firing");
+            mons->props.erase("firing_target");
+            mons->props.erase("foe");
+            return false;
+        }
 
         beam.name       = "bolt of energy";
         beam.range      = LOS_RADIUS;
@@ -2735,6 +2744,10 @@ bool fire_arcane_familiar(monster* mons)
                     break;
                 }
             }
+
+            // If we didn't find a better firing position nearby, cancel firing
+            if (!mons->props.exists("tracking"))
+                mons->props.erase("firing");
         }
     }
 
