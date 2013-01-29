@@ -3128,6 +3128,9 @@ void mon_nearby_ability(monster* mons)
 
     switch (mons->type)
     {
+    case MONS_PANDEMONIUM_LORD:
+        if (!mons->ghost->cycle_colours)
+            break;
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
         // Choose random colour.
@@ -3209,11 +3212,6 @@ void mon_nearby_ability(monster* mons)
     case MONS_AIR_ELEMENTAL:
         if (one_chance_in(5))
             mons->add_ench(ENCH_SUBMERGED);
-        break;
-
-    case MONS_PANDEMONIUM_LORD:
-        if (mons->ghost->cycle_colours)
-            mons->colour = random_colour();
         break;
 
     default:
