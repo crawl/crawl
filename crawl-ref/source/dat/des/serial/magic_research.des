@@ -246,23 +246,24 @@ ENDMAP
 
 NAME:    hangedman_research_metamorphosis
 MONS:    wolf spider, ice beast, vampire bat, hog
-MONS:    stone golem, pulsating lump, shining eye
+MONS:    stone golem, insubstantial wisp, jelly
+KMONS:   8 = spider
+KMONS:   9 = porcupine
+# no monster trees, liches are sentient spellcasters
 KMONS:   D = dragon
 KITEM:   D = randbook disc:transmutation numspells:5 / \
              randbook disc:transmutation numspells:6, star_item
-MARKER:  ' = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 100, \
-             pow_max = 100, delay = 10, size = 1, walk_dist = 0, excl_rad = 0 }
-COLOUR:  .'01234567D = lightmagenta
-FTILE:   .'m+01234567D = FLOOR_NERVES
+COLOUR:  .01234567D = lightmagenta
+FTILE:   .m+01234567D = FLOOR_NERVES
 SHUFFLE: 12, 34
 : init_research(_G)
 MAP
-'m...m'
+.m...m.
 1m...m2
 3mm.mm4
 .0+5+0.
 .mmmmm.
-'67D76'
+.67D86.
 ENDMAP
 
 NAME:   hangedman_research_quantum
