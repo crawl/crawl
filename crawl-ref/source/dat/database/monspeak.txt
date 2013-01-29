@@ -4333,13 +4333,13 @@ _Ilsuiw_common_
 
 @The_monster@ whispers @to_foe@, "Come on in, the water's fine."
 
-@The_monster@ sings a @_strange_or_haunting_@ @_chanty_@.
+@The_monster@ sings a [strange|haunting] [sea-chanty|melody].
 
 VISUAL:@The_monster@ runs @possessive@ fingers through @possessive@ long green hair.
 %%%%
 _Ilsuiw_rare_
 
-VISUAL:@The_monster@ gazes at @foe@ @_hypnot_or_seductively_@.
+VISUAL:@The_monster@ gazes at @foe@ [hypnotically|seductively].
 
 @The_monster@ sings, "To sleep, to sleep... mayhap to drown."
 
@@ -4350,24 +4350,6 @@ VISUAL:@The_monster@ gazes at @foe@ @_hypnot_or_seductively_@.
 @The_monster@ says @to_foe@, "Catch me, touch me, love me, feed me!"
 
 @The_monster@ innocently whispers @to_foe@, "Don't trust the tales, trust me!"
-%%%%
-_hypnot_or_seductively_
-
-hypnotically
-
-seductively
-%%%%
-_strange_or_haunting_
-
-strange
-
-haunting
-%%%%
-_chanty_
-
-sea-chanty
-
-melody
 ## END Ilsuiw ##
 %%%%
 ############ JESSICA ### A sorceress disturbed by player
