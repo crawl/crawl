@@ -27,7 +27,7 @@
 NAME: serial_grunt_rogues_gallery
 TAGS: extra luniq_serial
 ORIENT: float
-DEPTH: D:20-26, Elf, Crypt
+DEPTH: D:20-26, Elf, Crypt, !Crypt:$
 CHANCE: 1%
 {{
   hook("post_place", function()
