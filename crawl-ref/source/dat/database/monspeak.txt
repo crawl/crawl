@@ -4245,7 +4245,7 @@ VISUAL:@The_monster@ looks at @possessive@ axe, then at @foe@, then at @possessi
 
 VISUAL:@The_monster@ grins in joy.
 
-@The_monster@ exclaims, "Oh yes!! We are going to have fun!"
+@The_monster@ exclaims, "Oh yes! We are going to have fun!"
 
 @The_monster@ says @to_foe@, "Pain is my business; you will see!"
 
