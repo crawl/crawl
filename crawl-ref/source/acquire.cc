@@ -756,24 +756,24 @@ static int _acquirement_wand_subtype()
         case WAND_HEAL_WOUNDS:
             w = 25; break;
         case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
-        case WAND_INVISIBILITY:
             w = 15; break;
         case WAND_FIRE:             // each 5.7%, group unknown each 9.3%
         case WAND_COLD:
         case WAND_LIGHTNING:
         case WAND_DRAINING:
+        case WAND_INVISIBILITY:
+        case WAND_FIREBALL:
             w = 8; break;
         case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
-        case WAND_FIREBALL:
         case WAND_DISINTEGRATION:
         case WAND_POLYMORPH_OTHER:
+        case WAND_ENSLAVEMENT:
             w = 5; break;
         case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
         case WAND_FROST:
         case WAND_CONFUSION:
         case WAND_PARALYSIS:
         case WAND_SLOWING:
-        case WAND_ENSLAVEMENT:
         case WAND_MAGIC_DARTS:
         case WAND_RANDOM_EFFECTS:
         default:
