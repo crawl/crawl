@@ -338,7 +338,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
 
 // If armour acquirement turned up a non-ego non-artefact armour item,
 // see whether the player has any unfilled equipment slots.  If so,
-// hand out a plain (and possibly negatively enchanted) item of that
+// hand out a plain (possibly enchanted) item of that
 // type.  Otherwise, keep the original armour.
 static bool _try_give_plain_armour(item_def &arm)
 {
@@ -1291,7 +1291,7 @@ int acquirement_create_item(object_class_type class_wanted,
                     // Only Xom gives negatively enchanted items (75% if not 0).
                     if (doodad.plus < 0 && agent != GOD_XOM)
                         doodad.plus = 0;
-                    else if (doodad.plus > 0 && coinflip())
+                    else if (doodad.plus > 0 && agent == GOD_XOM && coinflip())
                         doodad.plus *= -1;
                 }
                 else if (agent != GOD_XOM && one_chance_in(3))
