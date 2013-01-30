@@ -235,7 +235,7 @@ MAP
 .x+xxx+x.x.
 .x...x1xOx.
 .x+x.xxxxx.
-.x1x.....=.
+.x1x.....+.
 .xxxxxxxxx.
 ...........
 ENDMAP
@@ -248,16 +248,16 @@ KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
 MAP
 ............
-...xx==xx...
+...xx++xx...
 ..xx....xx..
 .xx......xx.
 .x........x.
-.=...1O...=.
-.=...11...=.
+.+...1O...+.
+.+...11...+.
 .x........x.
 .xx......xx.
 ..xx....xx..
-...xx==xx...
+...xx++xx...
 ............
 ENDMAP
 
@@ -271,14 +271,14 @@ NSUBST: ? = 1:O / 4:1 / *:.
 MAP
 ............
 .xxx....xxx.
-.x?xx=xxx?x.
+.x?xx+xxx?x.
 .xx+....+xx.
 ..x.x++x.x..
-..x.+??+.=..
-..=.+??+.x..
+..x.+??+.+..
+..+.+??+.x..
 ..x.x++x.x..
 .xx+....+xx.
-.x?xxx=xx?x.
+.x?xxx+xx?x.
 .xxx....xxx.
 ............
 ENDMAP
@@ -322,7 +322,7 @@ MAP
 .x.x^^^^x.x.
 .x.xxxx+x.x.
 .xx.....x.x.
-.xxxxxxxx=x.
+.xxxxxxxx+x.
 ............
 ENDMAP
 
