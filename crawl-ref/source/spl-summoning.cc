@@ -2681,13 +2681,13 @@ bool fire_arcane_familiar(monster* mons)
             return false;
         }
 
-        beam.name       = "bolt of energy";
+        beam.name       = "barrage of energy";
         beam.range      = LOS_RADIUS;
         beam.hit        = AUTOMATIC_HIT;
         beam.damage     = dice_def(2, 6 + mons->hit_dice);
         beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.colour     = MAGENTA;
-        beam.flavour    = BEAM_MISSILE;
+        beam.flavour    = BEAM_MMISSILE;
         beam.is_beam    = false;
 
         // Fire tracer.
