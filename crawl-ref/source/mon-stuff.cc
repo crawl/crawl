@@ -4617,6 +4617,8 @@ void debuff_monster(monster* mon)
         ENCH_OZOCUBUS_ARMOUR
     };
 
+    bool dispelled = false;
+
     // Dispel all magical enchantments...
     for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
     {
@@ -4643,8 +4645,11 @@ void debuff_monster(monster* mon)
                 continue;
         }
 
-        mon->del_ench(lost_enchantments[i], true, true);
+        if (mon->del_ench(lost_enchantments[i], true, true))
+            dispelled = true;
     }
+    if (dispelled)
+        simple_monster_message(mon, "'s magical effects unravel!");
 }
 
 // Return the number of monsters of the specified type.
