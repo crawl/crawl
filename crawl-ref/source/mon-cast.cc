@@ -2604,7 +2604,7 @@ static bool _mons_vampiric_drain(monster *mons)
 
     if (target->is_player())
     {
-        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
+        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, "by vampiric draining");
         if (mons->heal(hp_cost / 2))
         {
             simple_monster_message(mons,
