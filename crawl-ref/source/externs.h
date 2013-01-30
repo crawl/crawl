@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Fixed size 2D vector class that asserts if you do something bad.
+ * @brief Definitions for common structs.
 **/
 
 #ifndef EXTERNS_H
