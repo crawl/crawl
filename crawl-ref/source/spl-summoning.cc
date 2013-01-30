@@ -2450,7 +2450,8 @@ spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
         else
             mpr("You imbue your familiar with additional charge.");
 
-        familiar->number = std::min(20, (int) familiar->number + 4 + (pow / 20));
+        familiar->number = std::min(20, (int) familiar->number
+                                        + 4 + random2(pow + 10) / 10);
         you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice (2, pow), 50);
     }
     else
@@ -2464,14 +2465,14 @@ spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
                 0, god,
                 MONS_NO_MONSTER, 0, BLACK,
                 0);
-        mg.hd = 1 + (pow / 11);
+        mg.hd = 1 + div_rand_round(pow, 11);
         monster *familiar = create_monster(mg);
 
         if (familiar)
         {
             mpr ("You conjure a globe of magical energy.");
             you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice (2, pow), 50);
-            familiar->number = 4 + (pow / 20);
+            familiar->number = 4 + random2(pow + 10) / 10;
         }
         else
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -2796,7 +2797,7 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
 
     fail_check();
 
-    int hd = pow / 10;
+    int hd = div_rand_round(pow, 10);
 
     mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
                                   3, SPELL_SUMMON_SMALL_MAMMALS,
