@@ -2673,7 +2673,7 @@ bool fire_arcane_familiar(monster* mons)
         // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
-            mpr("Arcane familiar targetting itself?  Fixing.", MSGCH_ERROR);
+            mpr("Arcane familiar targetting itself? Fixing.", MSGCH_ERROR);
             mons->props.erase("firing");
             mons->props.erase("firing_target");
             mons->props.erase("foe");
