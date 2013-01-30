@@ -2501,7 +2501,7 @@ void end_arcane_familiar(bool killed)
 
             place_cloud(CLOUD_MAGIC_TRAIL, familiar->pos(), 3 + random2(3), familiar);
 
-            familiar->reset();
+            monster_die(familiar, KILL_RESET, NON_MONSTER);
         }
     }
 }
