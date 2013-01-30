@@ -3150,7 +3150,7 @@ void mon_nearby_ability(monster* mons)
 
             if (foe->is_player() && !can_see)
             {
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
                 interrupt_activity(AI_MONSTER_ATTACKS, mons);
             }
 
@@ -3183,7 +3183,7 @@ void mon_nearby_ability(monster* mons)
                      foe->name(DESC_THE).c_str());
 
             if (foe->is_player() && !can_see)
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
 
             // Subtly different from old paralysis behaviour, but
             // it'll do.
@@ -3198,7 +3198,7 @@ void mon_nearby_ability(monster* mons)
             if (you.can_see(mons))
                 simple_monster_message(mons, " stares at you.");
             else
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
 
             interrupt_activity(AI_MONSTER_ATTACKS, mons);
 
