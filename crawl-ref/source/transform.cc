@@ -13,6 +13,7 @@
 #include "externs.h"
 
 #include "artefact.h"
+#include "cloud.h"
 #include "delay.h"
 #include "env.h"
 #include "godabil.h"
@@ -611,6 +612,13 @@ const char* appendage_name(int app)
 static bool _transformation_is_safe(transformation_type which_trans,
                                     dungeon_feature_type feat, bool quiet)
 {
+    if (which_trans == TRAN_TREE)
+    {
+        const int cloud = env.cgrid(you.pos());
+        if (cloud != EMPTY_CLOUD && is_damaging_cloud(env.cloud[cloud].type, false))
+            return false;
+    }
+
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
