@@ -25,7 +25,7 @@ require("dlua/v_debug.lua")
 require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
 
-_VAULTS_DEBUG = false
+_VAULTS_DEBUG = true
 
 -- Default parameters for all Vaults layouts. Some individual layouts might
 -- tweak these parameters to create specific effects.
@@ -43,7 +43,7 @@ function vaults_default_options()
 
     -- Weightings of various types of room generators. The plan is to better support code vaults here.
     room_type_weights = {
-      { generator = "floor", weight = 35, min_size = 6, max_size = 16 }, -- Floor vault
+      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 35, min_size = 6, max_size = 16 }, -- Floor vault
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },
@@ -59,20 +59,19 @@ function vaults_default_options()
       { feature = "metal_wall", weight = 20 },
       { feature = "green_crystal_wall", weight = 5 },
     },
-
-    -- Weightings for types of wall to use for individual rooms, overriding the layout wall (unused)
-    room_wall_weights = {
-      { default = true, weight = 100 }, -- Weighting to leave default wall type
-      { feature = "rock_wall", weight = 5 },
-      { feature = "stone_wall", weight = 30 },
-      { feature = "metal_wall", weight = 20 },
-      { feature = "green_crystal_wall", weight = 10 },
-    }
+    layout_floor_type = "floor"
 
   }
 
   return options
 end
+
+function floor_vault_paint_callback(room,options)
+  return {
+    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 }},
+  }
+end
+
 
 -- Merges together two options tables (usually the default options getting
 -- overwritten by a minimal set provided by an individual layout)
@@ -99,7 +98,7 @@ function build_vaults_layout(e, name, paint, options)
   local defaults = vaults_default_options()
   if options ~= nil then merge_options(defaults,options) end
 
-  local data = paint_vaults_layout(e, paint, defaults)
+  local data = paint_vaults_layout(paint, defaults)
   local rooms = place_vaults_rooms(e, data, defaults.max_rooms, defaults)
 
 end

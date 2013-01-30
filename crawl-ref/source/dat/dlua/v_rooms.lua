@@ -43,9 +43,101 @@ local function vector_rotate(vec, count)
   return vec
 end
 
+local function make_code_room(options,chosen)
+  -- Pick a size for the room
+  local size
+  if chosen.generator.pick_size_callback ~= nil then
+    size = chosen.generator.pick_size_callback(options)
+  else
+    local min_size, max_size = options.min_room_size,options.max_room_size
+    if chosen.generator.min_size ~= nil then min_size = chosen.generator.min_size end
+    if chosen.generator.max_size ~= nil then max_size = chosen.generator.max_size end
+    local diff = max_size - min_size + 1
+    size = { x = min_size + crawl.random2(crawl.random2(diff)), y = min_size + crawl.random2(crawl.random2(diff)) }
+  end
+
+  room = {
+    type = "grid",
+    size = size,
+    generator_used = chosen,
+    grid = vaults_new_layout(size.x,size.y)
+  }
+
+  -- Make grid empty space
+  for n = 0, size.y-1, 1 do
+    for m = 0, size.x-1, 1 do
+      vaults_set_layout(room.grid,n,m, { solid = 1, space = 1, feature = "rock_wall" })
+    end
+  end
+
+  -- Paint and decorate the layout grid
+  paint_grid(chosen.paint_callback(room,options),options,room.grid)
+  if _VAULTS_DEBUG then dump_layout_grid(room.grid) end
+  if chosen.decorate_callback ~= nil then chosen.decorate_callback(room.grid,room,options) end  -- Post-production
+
+  return room
+end
+
+-- Pick a map by tag and make a room grid from it
+local function make_tagged_room(options,chosen)
+  -- Resolve a map with the specified tag
+  local mapdef = dgn.map_by_tag(chosen.tag,true)
+  if mapdef == nil then return nil end  -- Shouldn't happen when thing are working but just in case
+
+  -- Temporarily prevent map getting mirrored / rotated during resolution; and hardwire transparency because lack of it can fail a whole layout
+  dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
+  -- Resolve the map so we can find its width / height
+  local map, vplace = dgn.resolve_map(mapdef,false)
+  local room,room_width,room_height
+
+    -- If we can't find a map then we're probably not going to find one
+  if map == nil then return nil end
+  -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
+  dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
+
+
+  local room_width,room_height = dgn.mapsize(map)
+  local veto = false
+  if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
+    room = {
+      type = "vault",
+      size = { x = room_width, y = room_height },
+      map = map,
+      vplace = vplace,
+      generator_used = chosen,
+      grid = {}
+    }
+
+    room.preserve_wall = dgn.has_tag(room.map, "preserve_wall")
+    room.no_windows = dgn.has_tag(room.map, "no_windows")
+
+    -- Check all four directions for orient tag before we create the wals data, since the existence of a
+    -- single orient tag makes the other walls ineligible
+    room.tags = {}
+    for n = 0, 3, 1 do
+      if dgn.has_tag(room.map,"vaults_orient_" .. normals[n+1].name) then
+        room.has_orient = true
+        room.tags[n] = true
+      end
+    end
+    -- Make grid by feature inspection; will be used to compute wall data
+    for m = 0, room.size.y - 1, 1 do
+      room.grid[m] = {}
+      for n = 0, room.size.x - 1, 1 do
+        local inspected = { }
+        inspected.feature, inspected.space, inspected.exit = dgn.inspect_map(vplace,n,m)
+        inspected.feature = dgn.feature_name(inspected.feature)
+        room.grid[m][n] = inspected
+      end
+    end
+    found = true
+  end
+  return room
+end
+
 local function pick_room(e, options)
 
-  -- Filters out rooms that have reached their max
+  -- Filters out generators that have reached their max
   local function weight_callback(generator)
     if generator.max_rooms ~= nil and generator.placed_count ~= nil and generator.placed_count >= generator.max_rooms then
       return 0
@@ -54,156 +146,89 @@ local function pick_room(e, options)
   end
   -- Pick generator from weighted table
   local chosen = util.random_weighted_from(weight_callback,options.room_type_weights)
+  local room
 
-  -- TODO: Proceduralise the generators more so the weights table can contain functions that generate the room contents, answer questions about
-  -- size, connectable walls, etc.
+  -- Main generator loop
+  local veto,tries,maxTries = false,0,50
+  while tries < maxTries and (room == nil or veto) do
+    tries = tries + 1
+    veto = false
 
-  -- Floor vault (empty rooms)
-  if chosen.generator == "floor" then
-    local veto = true
-    local floor_feat = dgn.feature_number("floor")
-    local diff = chosen.max_size - chosen.min_size + 1
+    -- Code rooms
+    if chosen.generator == "code" then
+      room = make_code_room(options, chosen)
 
-    while veto do
-      veto = false
-      room = {
-        type = "empty",
-        -- Use random2(random2(..)) to get a room size that tends towards lower values
-        size = { x = chosen.min_size + crawl.random2(crawl.random2(diff)), y = chosen.min_size + crawl.random2(crawl.random2(diff)) },
-        generator_used = chosen
-      }
-      -- Describe connectivity of each wall. Of course all points are connectable since the room is empty.
-      room.walls = { }
-      local length
-      for n = 0, 3, 1 do
-        room.walls[n] = { eligible = true }
-        if (n % 2) == 1 then length = room.size.y else length = room.size.x end
-        room.walls[n].cells = {}
-        for m = 1, length, 1 do
-          room.walls[n].cells[m] = { feat = floor_feat, open = true }
-        end
-      end
-
-      -- Custom veto function can throw out the room now
-      if options.veto_room_callback ~= nil then
-        local result = options.veto_room_callback(room)
-        if result == true then veto = true end
-      end
+    -- Pick vault map by tag
+    elseif chosen.generator == "tagged" then
+      room = make_tagged_room(options,chosen)
     end
 
-    return room
+    if room ~= nil and room.grid ~= nil then
 
-  -- Pick by tag
-  elseif chosen.generator == "tagged" then
-    local found = false
-    local tries = 0
-    local maxTries = 50
+      -- Figure out walls (this will change a bit)
+      room.walls = { }
 
-    while tries < maxTries and not found do
-      -- Resolve a map with the specified tag
-      local mapdef = dgn.map_by_tag(chosen.tag,true)
-      if mapdef == nil then return nil end  -- Shouldn't happen when thing are working but just in case
+      local length
+      local has_exits = false
+      for n = 0, 3, 1 do
+        local eligible = true
+        if room.has_orient and room.tags ~= nil and not room.tags[n] then eligible = false end
+        room.walls[n] = { eligible = eligible }
 
-      -- Temporarily prevent map getting mirrored / rotated during resolution; and hardwire transparency because lack of it can fail a whole layout
-      dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
-      -- Resolve the map so we can find its width / height
-      local map, vplace = dgn.resolve_map(mapdef,false)
-      local room_width,room_height
+        -- Only need to compute wall data for an eligible wall.
+        if eligible then
+          local wall_normal = normals[n+1]
+          local wall_dir = vector_rotate(wall_normal, 1)
+          -- Get the coord of the first cell of the wall
+          local start = { x = 0, y = 0 }
+          if n == 1 then start = { x = 0, y = room.size.y - 1 }
+          elseif n == 2 then start = { x = room.size.x - 1, y = room.size.y - 1 }
+          elseif n == 3 then start = { x = room.size.x - 1, y = 0 } end
 
-        -- If we can't find a map then we're probably not going to find one
-      if map == nil then return nil end
-      -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
-      dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
-
-      local room_width,room_height = dgn.mapsize(map)
-      local veto = false
-      if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
-        local room = {
-          type = "vault",
-          size = { x = room_width, y = room_height },
-          map = map,
-          vplace = vplace,
-          generator_used = chosen
-        }
-
-        -- Check all four directions for orient tag before we create the wals data, since the existence of a
-        -- single orient tag makes the other walls ineligible
-        local tags = {}
-        local has_orient = false
-        for n = 0, 3, 1 do
-          if dgn.has_tag(room.map,"vaults_orient_" .. normals[n+1].name) then
-            has_orient = true
-            tags[n] = true
+          if (n % 2) == 1 then length = room.size.y else length = room.size.x end
+          room.walls[n].cells = {}
+          -- For every cell of the wall, check the internal feature of the room
+          for m = 1, length, 1 do
+            -- Map to internal room coordinate based on start vector and normals
+            local mapped = vaults_vector_add(start, { x = m - 1, y = 0 }, wall_dir,wall_normal)
+            local cell = room.grid[mapped.y][mapped.x]
+            if cell.exit then has_exits = true end
+            room.walls[n].cells[m] = { feature = cell.feature, exit = cell.exit, space = cell.space }
           end
         end
-
-        -- Describe connectivity of each wall.
-        room.walls = { }
-        local length
-        local has_exits = false
-        for n = 0, 3, 1 do
-          local eligible = true
-
-          if has_orient and not tags[n] then eligible = false end
-          room.walls[n] = { eligible = eligible }
-          -- Only need to compute wall data for an eligible wall.
-          if eligible then
-            local wall_normal = normals[n+1]
-            local wall_dir = vector_rotate(wall_normal,1)
-            -- Get the coord of the first cell of the wall
-            local start = { x = 0, y = 0 }
-            if n == 1 then start = { x = 0, y = room.size.y - 1 }
-            elseif n == 2 then start = { x = room.size.x - 1, y = room.size.y - 1 }
-            elseif n == 3 then start = { x = room.size.x - 1, y = 0 } end
-
-            if (n % 2) == 1 then length = room.size.y else length = room.size.x end
-            room.walls[n].cells = {}
-            -- For every cell of the wall, check the internal feature of the room
-            for m = 1, length, 1 do
-              -- Map to internal room coordinate based on start vector and normals
-              local mapped = vaults_vector_add(start, { x = m - 1, y = 0 }, wall_dir,wall_normal)
-              local feature, is_exit, is_space = dgn.inspect_map(vplace,mapped.x,mapped.y)
-              if is_exit then has_exits = true end
-              room.walls[n].cells[m] = { feature = feature, exit = is_exit, space = is_space }
+      end
+      -- Loop through the walls again and determine openness. Has to be a separate loop because we needed to know has_exits.
+      for n = 0, 3, 1 do
+        local wall_has_exit = false
+        if room.walls[n].cells ~= nil then
+          for i,cell in ipairs(room.walls[n].cells) do
+            local is_open = true
+            if cell.exit then wall_has_exit = true end
+            if cell.space or (has_exits and not cell.exit) then
+              is_open = false
+            else
+              is_open = feat.has_solid_floor(cell.feature)
             end
+            cell.open = is_open
           end
         end
-        -- Loop through the walls again and determine openness. Has to be a separate loop because we needed to know has_exits.
-        for n = 0, 3, 1 do
-          local wall_has_exit = false
-          if room.walls[n].cells ~= nil then
-            for i,cell in ipairs(room.walls[n].cells) do
-              local is_open = true
-              if cell.exit then wall_has_exit = true end
-              if cell.space or (has_exits and not cell.exit) then
-                is_open = false
-              else
-                is_open = feat.has_solid_floor(cell.feature)
-              end
-              cell.open = is_open
-            end
-          end
-          if has_exits and not wall_has_exit then room.walls[n].eligible = false end
-        end
+        if has_exits and not wall_has_exit then room.walls[n].eligible = false end
+      end
 
-        if options.veto_room_callback ~= nil then
-          local result = options.veto_room_callback(room)
-          if result == true then veto = true end
-        end
-        if not veto then
-          return room
-        end
+      -- Allow veto callback to throw this room out (e.g. on size, exits)
+      if options.veto_room_callback ~= nil then
+        veto = options.veto_room_callback(room)
       end
     end
   end
-  return nil
+
+  return room
 
 end
 
-local function analyse_vault_post_placement(e,usage_grid,room,result,options)
-
+local function analyse_vault_post_placement(usage_grid,room,result,options)
   local perform_subst = true
-  if dgn.has_tag(room.map, "preserve_wall") or room.wall_type == nil then perform_subst = false end
+  if room.preserve_wall or room.wall_type == nil then perform_subst = false end
   result.stairs = { }
   for p in iter.rect_iterator(dgn.point(room.origin.x, room.origin.y), dgn.point(room.opposite.x, room.opposite.y)) do
     if (feat.is_stone_stair(p.x,p.y)) or
@@ -242,7 +267,7 @@ function place_vaults_rooms(e, data, room_count, options)
         times_failed = 0 -- Reset fail count
         if room.type == "vault" then
           -- Perform analysis for stairs
-          analyse_vault_post_placement(e,data,room,result,options)
+          analyse_vault_post_placement(data,room,result,options)
           table.insert(results,result)
         end
         -- Increment the count of rooms of this type
@@ -399,7 +424,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   local is_clear, room_width, room_height = true, room.size.x, room.size.y
   -- Exchange width and height if the room has rotated
-  if orient.dir % 2 == 1 then room_width, room_height = room_height, room_width end
+  -- if orient.dir % 2 == 1 then room_width, room_height = room_height, room_width end
 
   -- Now we figure out the actual grid coord where the bottom left corner of the room will go
   local room_base = vaults_vector_add(pos, { x = chosen_cell.pos - room_width, y = 1 }, v_wall, v_normal)
@@ -488,9 +513,15 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     elseif final_orient == 2 then dgn.reuse_map(room.vplace,origin.x,origin.y,true,true,0,true,true)
     elseif final_orient == 3 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,1,true,true) end
 
-  elseif room.type == "empty" then
-    -- TODO: Call terrain callback
-    dgn.fill_grd_area(origin.x, origin.y, opposite.x, opposite.y, "floor")
+  elseif room.type == "grid" then
+
+    for n = 0,room.size.x-1,1 do
+      for m = 0,room.size.y-1,1 do
+        local feature = room.grid[m][n].feature
+        local grid_pos = vaults_vector_add(room_base, { x = n, y = m }, v_wall, v_normal)
+        dgn.grid(grid_pos.x, grid_pos.y, feature)
+      end
+    end
   end
 
   -- How big the door?
@@ -523,20 +554,17 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       vaults_set_usage(usage_grid,x,y,{usage = "restricted", reason = "vault" })
     end
     -- Empty space
-    if room.type == "empty" then
-      -- Could restrict next to walls if we want to e.g. create large empty areas and build new cities inside them
-      -- if x == origin.x or x == opposite.x or y == origin.y or y == opposite.y then
-        -- vaults_set_usage(usage_grid,x,y,{usage = "restricted"})
-      -- else
+    if room.type == "grid" then
+      -- TODO: Instead of checking for room type we should iterate through all of either kind of room and set usage appropriately.
 
       -- Setting usage as "empty" means the empty space won't be filled but will be available for vault placement by the dungeon builder
-      if set_empty then
+   --   if set_empty then
         vaults_set_usage(usage_grid,x,y,{usage = "empty"})
-      elseif x > origin.x + 1 and x < opposite.x-1 and y > origin.y - 1 and y < opposite.y - 1 then  -- Leaving a 2 tile border
-        vaults_set_usage(usage_grid,x,y,{usage = "open"})
-      else
-        vaults_set_usage(usage_grid,x,y,{usage = "restricted", reason = "border"})
-      end
+   --   elseif x > origin.x + 1 and x < opposite.x-1 and y > origin.y - 1 and y < opposite.y - 1 then  -- Leaving a 2 tile border
+    --    vaults_set_usage(usage_grid,x,y,{usage = "open"})
+    --  else
+    --    vaults_set_usage(usage_grid,x,y,{usage = "restricted", reason = "border"})
+    --  end
     end
   end
 
