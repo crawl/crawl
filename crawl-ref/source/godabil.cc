@@ -1592,7 +1592,7 @@ void jiyva_paralyse_jellies()
     {
         monster* mon = monster_at(*ri);
 
-        if (mon != NULL && mons_is_slime(mon))
+        if (mon != NULL && is_fellow_slime(mon))
         {
             mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
                                       &you, 200));

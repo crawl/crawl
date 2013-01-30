@@ -2263,7 +2263,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     else if (mon->wont_attack())
         adj += "non-hostile ";
 
-    if (you.religion == GOD_JIYVA && mons_is_slime(mon))
+    if (you.religion == GOD_JIYVA && is_fellow_slime(mon))
         return true;
 
     return !adj.empty() || !suffix.empty();
