@@ -2523,6 +2523,14 @@ bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
     {
         monster* familiar = _find_arcane_familiar();
 
+        // If we've somehow gotten separated from the familiar (ie: abyss level
+        // teleport), bail out and cancel the familiar bond
+        if (!familiar)
+        {
+            end_arcane_familiar(false);
+            return false;
+        }
+
         // In case the familiar was in the middle of a (failed) target-seeking
         // action, cancel it so that it can focus on a new target
         reset_arcane_familiar(familiar);
