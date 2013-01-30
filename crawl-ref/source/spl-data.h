@@ -134,7 +134,7 @@ struct spell_desc
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     -4, // Dig needs to be silent for stalker
+     0,
      NULL,
      false,
      true

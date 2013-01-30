@@ -849,6 +849,17 @@ void bolt::digging_wall_effect()
         nuke_wall(pos());
         if (!msg_generated)
         {
+            if (!you.see_cell(pos()))
+            {
+                if (!silenced(you.pos()))
+                {
+                    mpr("You hear a grinding noise.", MSGCH_SOUND);
+                    obvious_effect = true; // You may still see the caster.
+                    msg_generated = true;
+                }
+                break;
+            }
+
             obvious_effect = true;
             msg_generated = true;
 
@@ -864,8 +875,8 @@ void bolt::digging_wall_effect()
                 wall = "weird stuff";
             else
                 wall = "rock";
-            mprf("The %s liquefies and sinks out of sight.", wall.c_str());
-            // This is silent.
+
+            mprf("The %s shatters into small pieces.", wall.c_str());
         }
         break;
 
