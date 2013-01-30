@@ -210,7 +210,7 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
       0, 0, 125, 0, 0, ABFLAG_BREATH},
-    { ABIL_BREATHE_POWER, "Breathe Energy", 0, 0, 125, 0, 0, ABFLAG_BREATH},
+    { ABIL_BREATHE_POWER, "Breathe Dispelling Energy", 0, 0, 125, 0, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame",
       0, 0, 125, 0, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, 0, ABFLAG_BREATH},

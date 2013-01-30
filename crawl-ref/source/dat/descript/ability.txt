@@ -11,7 +11,7 @@ Blink ability
 
 Randomly translocate a short distance.
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 Breathe a blast of power at a targeted monster, possibly removing some of its
 enchantments.

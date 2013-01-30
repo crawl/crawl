@@ -4184,7 +4184,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     // purple draconian breath
-    if (name == "bolt of energy" || origin_spell == SPELL_QUICKSILVER_BOLT)
+    if (name == "bolt of dispelling energy" || origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_monster(mon);
 
     if (dmg)
