@@ -11,6 +11,23 @@ function print_vector(caption,v)
   end
 end
 
+function dump_layout_grid(layout_grid)
+    local gxm,gym = layout_grid.width,layout_grid.height
+
+    if gxm==nil or gym==nil then gxm,gym = dgn.max_bounds() end
+
+  for i = 0, gym-1, 1 do
+    local maprow = ""
+    for j = 0, gxm-1, 1 do
+      local cell = layout_grid[i][j]
+      if cell.solid == 1 then maprow = maprow .. "x"
+      elseif cell.solid == 0 then maprow = maprow .. "."
+      else maprow = maprow .. " " end
+    end
+    print (maprow)
+  end
+end
+
 function dump_usage_grid(usage_grid)
 
     local gxm,gym = dgn.max_bounds()

@@ -144,7 +144,7 @@ ENDMAP
 
 NAME:     vaults_room_grunt_arrival_checkpoint
 TAGS:     vaults_room vaults_orient_e no_monster_gen no_item_gen no_trap_gen
-WEIGHT:   15 (Vaults:1), 3
+WEIGHT:   5 (Vaults:1), 3
 MONS:     vault guard
 MAP
 xxxxxxxxxx

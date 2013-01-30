@@ -15,25 +15,27 @@
 
 ------------------------------------------------------------------------------
 -- Initialize and empty usage grid
-local function new_layout()
-  layout_grid = { }
+local function new_layout(width, height)
+  layout_grid = { width = width, height = height }
   local gxm, gym = dgn.max_bounds()
 
   for y = 0, (gym-1), 1 do
     layout_grid[y] = { }
     for x = 0, (gxm-1), 1 do
-      layout_grid[y][x] = 1 -- 1 means wall
+      layout_grid[y][x] = { solid = 1 } -- 1 means wall
     end
   end
   return layout_grid
 end
-local function new_usage()
-  usage_grid = { eligibles = { } }
-  local gxm, gym = dgn.max_bounds()
+function vaults_new_layout(width, height)
+  return new_layout(width,height)
+end
+local function new_usage(width, height)
+  usage_grid = { eligibles = { }, width = width, height = height }
 
-  for y = 0, (gym-1), 1 do
+  for y = 0, (height-1), 1 do
     usage_grid[y] = { }
-    for x = 0, (gxm-1), 1 do
+    for x = 0, (width-1), 1 do
       usage_grid[y][x] = { usage = "none" }
     end
   end
@@ -82,20 +84,27 @@ end
 local function get_layout(layout_grid,x,y)
   -- Handle out of bounds
   if layout_grid[y] == nil then
-    return 1
+    return { solid = 1, exit = 0, feature = "permarock_wall" }
   end
   if layout_grid[y][x] == nil then
-    return 1
+    return { solid = 1, exit = 0, feature = "permarock_wall" }
   end
 
   return layout_grid[y][x]
 end
 
+function vaults_get_layout(layout_grid,x,y)
+  return get_layout(layout_grid,x,y)
+end
+
 local function set_layout(layout_grid,x,y,value)
   if layout_grid[y] == nil or layout_grid[y][x] == nil then
-    -- print("Invalid coord: " .. x .. ", " .. y)
+  else
+    layout_grid[y][x] = value
   end
-  layout_grid[y][x] = value
+end
+function vaults_set_layout(layout_grid,x,y,value)
+  return set_layout(layout_grid,x,y,value)
 end
 
 local function determine_usage_from_layout(layout_grid,options)
@@ -105,8 +114,8 @@ local function determine_usage_from_layout(layout_grid,options)
   usage_eligible_count = 0
   usage_none_count = 0
 
-  local gxm, gym = dgn.max_bounds()
-  local usage_grid = new_usage()
+  local gxm, gym = layout_grid.width,layout_grid.height
+  local usage_grid = new_usage(gxm,gym)
 
   for x = 0, gxm-1, 1 do
     for y = 0, gym-1, 1 do
@@ -118,8 +127,9 @@ local function determine_usage_from_layout(layout_grid,options)
       for yl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
         local_grid[yl] = { }
         for xl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
-          local_grid[yl][xl] = get_layout(layout_grid,x+xl,y+yl)
-          if local_grid[yl][xl] == 1 then only_floor = false end
+          local cell = get_layout(layout_grid,x + xl,y + yl)
+          local_grid[yl][xl] = cell
+          if cell.solid == 1 then only_floor = false end
         end
       end
 
@@ -129,7 +139,7 @@ local function determine_usage_from_layout(layout_grid,options)
       else
 
         -- Are we dealing with floor or wall?
-        if local_grid[0][0] == 1 then -- Wall
+        if local_grid[0][0].solid == 1 then -- Wall
 
           -- A wall can either be usage "none" meaning parts of a room could later be built over it;
           -- or it can be "eligible" meaning it can be used as a connecting wall/door to a room;
@@ -141,8 +151,7 @@ local function determine_usage_from_layout(layout_grid,options)
           -- open or none. It's more important to find all squares that *could* be eligible.
 
           -- Sum the adjacent squares
-          local adjacent_sum = local_grid[-1][0] + local_grid[1][0] + local_grid[0][-1] + local_grid[0][1]
-
+          local adjacent_sum = local_grid[-1][0].solid + local_grid[1][0].solid + local_grid[0][-1].solid + local_grid[0][1].solid
           -- Eligible squares have floor on only one side
           -- This ignores diagonals (which is where complex geometry will produce some eligible squares that aren't
           -- really eligible). But it's complicated because we're after diagonals only on the side where the floor is.
@@ -151,25 +160,25 @@ local function determine_usage_from_layout(layout_grid,options)
           -- the room.
           if adjacent_sum == 3 then
            -- Floor to the north
-            if local_grid[-1][0] == 0 then
+            if local_grid[-1][0].solid == 0 then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = 1 }, depth = 1})
             end
             -- Floor to the south
-            if local_grid[1][0] == 0 then
+            if local_grid[1][0].solid == 0 then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = -1 }, depth = 1})
             end
             -- Floor to the west
-            if local_grid[0][-1] == 0 then
+            if local_grid[0][-1].solid == 0 then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 1, y = 0 }, depth = 1})
             end
             -- Floor to the east
-            if local_grid[0][1] == 0 then
+            if local_grid[0][1].solid == 0 then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = -1, y = 0 }, depth = 1})
             end
           else
             -- Wall all around?
             if adjacent_sum == 4 then
-              local diagonal_sum = local_grid[-1][-1] + local_grid[1][-1] + local_grid[-1][1] + local_grid[1][1]
+              local diagonal_sum = local_grid[-1][-1].solid + local_grid[1][-1].solid + local_grid[-1][1].solid + local_grid[1][1].solid
 
               -- Wall mostly all around? (We allow one missing corner otherwise rooms can't overlap corners
               -- and logically it's fine for any wall to be placed there, other missing holes will fail the placement
@@ -197,70 +206,77 @@ local function determine_usage_from_layout(layout_grid,options)
   return usage_grid
 end
 
-------------------------------------------------------------------------------
-
-function paint_vaults_layout(e, paint, options)
-
-  if options == nil then options = vaults_default_options() end
-
-  -- Will contain data about how each square is used and therefore how rooms
-  -- can be applied
-  local layout_grid = new_layout()
+function paint_grid(paint, options, grid)
 
   for i,item in ipairs(paint) do
-
+    local feature
     if item.type == "floor" then
+      feature = options.layout_floor_type
+    elseif item.type == "wall" then
+      feature = options.layout_wall_type
+    elseif item.feature ~= nil then
+      feature = item.feature
+    end
+
+    -- Check which shape to paint
+    local shape_type = "quad"
+    if item.shape ~= nil then shape_type = item.shape end
+
+    -- Get a numerical value for solid (so we can use math when analysing for usage)
+    local solid = feat.has_solid_floor(feature)
+    if solid then solid = 0 else solid = 1 end
+
+    -- Paint features onto grid
+    if shape_type == "quad" then
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
         for y = item.corner1.y, item.corner2.y, 1 do
-          set_layout(layout_grid,x,y,0)
+          set_layout(layout_grid,x,y, { solid = solid, feature = feature })
         end
       end
-    end
-    if item.type == "wall" then
-      -- Set layout details in the painted area
-      for x = item.corner1.x, item.corner2.x, 1 do
-        for y = item.corner1.y, item.corner2.y, 1 do
-          set_layout(layout_grid,x,y,1)
-        end
+    elseif shape_type == "plot" then
+      for i,pos in ipairs(item.points) do
+        set_layout(layout_grid, pos.x, pos.y,{ solid = solid, feature = feature })
       end
     end
 
   end
 
-  local usage_grid = determine_usage_from_layout(layout_grid,options)
+end
 
-  -- Paint the resultant layout onto the dungeon grid
-  local gxm, gym = dgn.max_bounds()
+function paint_vaults_layout(paint, options, layout_grid)
 
+  -- Default options
+  if options == nil then options = vaults_default_options() end
+
+  -- Pick wall type from spread in config
   local wall_type = "stone_wall"
   if options.wall_type ~= nil then wall_type = options.wall_type end
-
-  -- Use spread from config
   if options.layout_wall_weights ~= nil then
-    local chosen = util.random_weighted_from("weight", options.layout_wall_weights) -- Anyone coding Lua in Crawl needs to be aware of this function!!
+    local chosen = util.random_weighted_from("weight", options.layout_wall_weights)
     wall_type = chosen.feature
   end
-  -- Store it in options so it can get used for room surrounds
+  -- Store it in options so it can be used for room surrounds also
   options.layout_wall_type = wall_type
 
-  local floor_type = "floor"
+  local gxm, gym = dgn.max_bounds()
+  layout_grid = new_layout(gxm,gym) -- Will contain data about how each square is used and therefore how rooms can be applied
+  paint_grid(paint,options,layout_grid) -- Paint fills onto the layout grid
 
+  if _VAULTS_DEBUG then dump_layout_grid(layout_grid) end
+
+  local usage_grid = determine_usage_from_layout(layout_grid,options) -- Analyse the layout to determine usage
+
+  -- Apply to the actual dungeon grid
   for x = 0, gxm-1, 1 do
     for y = 0, gym-1, 1 do
-
-      local wall = get_layout(layout_grid,x,y)
-      -- TODO: Look up the function for filling a single square...
-      if wall == 1 then
-        dgn.grid(x,y,wall_type)
-      else
-        dgn.grid(x,y,floor_type)
+      local cell = get_layout(layout_grid,x,y)
+      if cell.feature ~= nil and cell.feature ~= "space" then
+        dgn.grid(x,y,cell.feature)
       end
-
     end
   end
 
-  -- We probably don't need this data anymore
   return usage_grid
 
 end
