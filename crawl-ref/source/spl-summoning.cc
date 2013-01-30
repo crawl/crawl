@@ -2665,7 +2665,7 @@ bool fire_arcane_familiar(monster* mons)
         beam.source_name = "arcane familiar";
 
         // If we are locked onto a foe, use its current position
-        if (mons->foe != MHITYOU && menv[mons->foe].alive())
+        if (!invalid_monster_index(mons->foe) && menv[mons->foe].alive())
             beam.target = menv[mons->foe].pos();
         else
             beam.target = mons->props["firing_target"].get_coord();
@@ -2673,6 +2673,7 @@ bool fire_arcane_familiar(monster* mons)
         // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
+            mpr("Arcane familiar targetting itself?  Fixing.", MSGCH_ERROR);
             mons->props.erase("firing");
             mons->props.erase("firing_target");
             mons->props.erase("foe");
