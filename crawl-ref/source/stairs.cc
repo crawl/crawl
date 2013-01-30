@@ -920,6 +920,8 @@ void down_stairs(dungeon_feature_type force_stair)
             mpr("You feel Cheibriados slowing down the madness of this place.",
                 MSGCH_GOD, GOD_CHEIBRIADOS);
         }
+
+        // Re-entering the Abyss halves accumulated speed.
         you.abyss_speed /= 2;
         learned_something_new(HINT_ABYSS);
         break;
