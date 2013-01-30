@@ -2425,6 +2425,7 @@ static string _status_mut_abilities(int sw)
             mutations.push_back(_annotate_form_based("constrict 1",
                                                      !form_keeps_mutations()));
         }
+        AC_change += you.experience_level / 3;
         break;
 
     case SP_GHOUL:
@@ -2493,6 +2494,7 @@ static string _status_mut_abilities(int sw)
 
     case SP_GREY_DRACONIAN:
         mutations.push_back("walk through water");
+        AC_change += 5;
         break;
 
     case SP_BLACK_DRACONIAN:
@@ -2522,6 +2524,12 @@ static string _status_mut_abilities(int sw)
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         mutations.push_back("unfitting armour");
+    }
+
+    if (player_genus(GENPC_DRACONIAN))
+    {
+        // The five extra points for grey draconians were handled above.
+        AC_change += 4 + you.experience_level / 3;
     }
 
     if (you.species == SP_FELID)
