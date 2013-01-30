@@ -2094,8 +2094,12 @@ static std::string _status_mut_abilities(int sw)
               mutations.push_back("spit poison");
           else
               mutations.push_back("breathe poison");
-          mutations.push_back(_annotate_form_based("constrict 1",
-                                                   !form_keeps_mutations()));
+
+          if (you.experience_level > 12)
+          {
+              mutations.push_back(_annotate_form_based("constrict 1",
+                                                       !form_keeps_mutations()));
+          }
           break;
 
       case SP_GHOUL:
