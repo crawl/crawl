@@ -685,7 +685,7 @@ struct zap_info
 
 {
     ZAP_BREATHE_POWER,
-    "bolt of energy",
+    "bolt of dispelling energy",
     50,
     new dicedef_calculator<3, 3, 1, 3>,
     new tohit_calculator<5, 1, 6>,
