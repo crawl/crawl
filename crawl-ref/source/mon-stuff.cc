@@ -1053,7 +1053,7 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
-    beam.flavour = BEAM_MISSILE;
+    beam.flavour = BEAM_MMISSILE;
     beam.damage  = (origin.number == 2 ? dice_def(3, 6 + origin.hit_dice * 7 / 4)
                     : dice_def(2, 6 + origin.hit_dice * 7 / 4));
     beam.name    = "blast of energy";
