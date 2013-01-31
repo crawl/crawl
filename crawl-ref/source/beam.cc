@@ -4114,7 +4114,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     extra_range_used += range_used_on_hit();
 }
 
-bool _dazzle_monster(monster* mons, actor* act)
+static bool _dazzle_monster(monster* mons, actor* act)
 {
     if (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_NONLIVING
         || mons->holiness() == MH_PLANT)

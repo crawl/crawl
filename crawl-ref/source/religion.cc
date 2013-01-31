@@ -1965,14 +1965,14 @@ bool vehumet_is_currently_gifting()
     return (you.vehumet_gift != SPELL_NO_SPELL);
 }
 
-void _add_to_recent_spells(spell_type spell)
+static void _add_to_recent_spells(spell_type spell)
 {
     you.vehumet_recent_spells.push_front(spell);
     if (you.vehumet_recent_spells.size() > MAX_RECENT_SPELLS)
         you.vehumet_recent_spells.pop_back();
 }
 
-bool _is_recent_spell(spell_type spell)
+static bool _is_recent_spell(spell_type spell)
 {
     for (list<spell_type>::iterator it = you.vehumet_recent_spells.begin();
          it != you.vehumet_recent_spells.end(); ++it)
@@ -1984,7 +1984,7 @@ bool _is_recent_spell(spell_type spell)
     return (false);
 }
 
-vector<spell_type> _vehumet_eligible_gift_spells()
+static vector<spell_type> _vehumet_eligible_gift_spells()
 {
     vector<spell_type>eligible_spells;
 
@@ -2034,14 +2034,14 @@ vector<spell_type> _vehumet_eligible_gift_spells()
     return (eligible_spells);
 }
 
-int _vehumet_weighting(spell_type spell)
+static int _vehumet_weighting(spell_type spell)
 {
     int bias = 100 + elemental_preference(spell, 10);
     bias = std::min(std::max(bias, 10), 190);
     return bias;
 }
 
-spell_type _vehumet_find_spell_gift()
+static spell_type _vehumet_find_spell_gift()
 {
     vector<spell_type> eligible_spells = _vehumet_eligible_gift_spells();
     spell_type spell = SPELL_NO_SPELL;

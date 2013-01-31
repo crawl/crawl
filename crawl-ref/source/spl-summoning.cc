@@ -2416,7 +2416,7 @@ spret_type cast_mass_abjuration(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-monster* _find_arcane_familiar()
+static monster* _find_arcane_familiar()
 {
     monster* mons = NULL;
     for (int i = 0; i < MAX_MONSTERS; ++i)
@@ -2505,7 +2505,7 @@ void end_arcane_familiar(bool killed)
     }
 }
 
-bool _familiar_can_mirror(spell_type spell)
+static bool _familiar_can_mirror(spell_type spell)
 {
     return ((spell_typematch(spell, SPTYP_CONJURATION)
             && spell_to_zap(spell) != NUM_ZAPS)

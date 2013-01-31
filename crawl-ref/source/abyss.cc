@@ -1436,7 +1436,7 @@ retry:
     setup_environment_effects();
 }
 
-void _increase_depth()
+static void _increase_depth()
 {
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
     if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])

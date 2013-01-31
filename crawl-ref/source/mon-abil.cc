@@ -834,7 +834,7 @@ bool slime_creature_mutate(monster* slime)
     return monster_polymorph(slime, RANDOM_MONSTER);
 }
 
-bool _starcursed_split(monster* mon)
+static bool _starcursed_split(monster* mon)
 {
     if (!mon
         || mon->number <= 1
@@ -864,7 +864,7 @@ bool _starcursed_split(monster* mon)
     return false;
 }
 
-void _starcursed_scream(monster* mon, actor* target)
+static void _starcursed_scream(monster* mon, actor* target)
 {
     if (!target || !target->alive())
         return;
@@ -937,7 +937,7 @@ void _starcursed_scream(monster* mon, actor* target)
             chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
 }
 
-bool _will_starcursed_scream(monster* mon)
+static bool _will_starcursed_scream(monster* mon)
 {
     vector<monster*> chorus;
 
