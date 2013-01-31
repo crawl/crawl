@@ -149,9 +149,7 @@ void MemoriseRegion::update()
         }
 
         if (spell == you.vehumet_gift)
-        {
             desc.flag |= TILEI_FLAG_EQUIP;
-        }
 
         m_items.push_back(desc);
     }

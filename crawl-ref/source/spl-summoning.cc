@@ -2423,9 +2423,7 @@ monster* _find_arcane_familiar()
     {
         mons = &menv[i];
         if (mons->type == MONS_ARCANE_FAMILIAR)
-        {
             return mons;
-        }
     }
 
     return NULL;
@@ -2814,9 +2812,7 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
     monster *prism = create_monster(prism_data);
 
     if (prism)
-    {
         mpr("You conjure a prism of explosive energy!");
-    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
