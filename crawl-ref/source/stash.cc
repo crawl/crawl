@@ -301,7 +301,10 @@ void Stash::update()
     if (feat == DNGN_FLOOR)
         feat_desc = "";
     else
-        feat_desc = feature_description_at(coord_def(x, y), false);
+    {
+        feat_desc = feature_description_at(coord_def(x, y), false,
+                                           DESC_A, false);
+    }
 
     // If this is your position, you know what's on this square
     if (p == you.pos())
