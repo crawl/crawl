@@ -702,11 +702,6 @@ bool mons_is_boulder(const monster* mon)
     return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
 }
 
-bool mons_is_familiar(monster_type mc)
-{
-    return (mc == MONS_ARCANE_FAMILIAR);
-}
-
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)

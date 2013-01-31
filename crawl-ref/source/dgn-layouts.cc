@@ -291,61 +291,6 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
     }
 }
 
-void dgn_build_rooms_level(int nrooms)
-{
-    env.level_build_method += " build_rooms";
-    env.level_layout_types.insert("rooms");
-
-    int which_room = 0;
-    const bool exclusive = !one_chance_in(10);
-
-    // Where did this magic number come from?
-    const int maxrooms = 30;
-
-    dgn_region room;
-    coord_def connect_target;
-
-    for (int i = 0; i < nrooms; i++)
-    {
-        int overlap_tries = 200;
-        do
-        {
-            room.size.set(3 + random2(8), 3 + random2(8));
-            room.pos.set(
-                random_range(MAPGEN_BORDER,
-                             GXM - MAPGEN_BORDER - 1 - room.size.x),
-                random_range(MAPGEN_BORDER,
-                             GYM - MAPGEN_BORDER - 1 - room.size.y));
-        }
-        while (_find_forbidden_in_area(room, MMT_VAULT)
-               && overlap_tries-- > 0);
-
-        if (overlap_tries < 0)
-            continue;
-
-        const coord_def end = room.end();
-
-        if (i > 0 && exclusive
-         && _count_antifeature_in_box(room.pos.x - 1, room.pos.y - 1,
-                                      end.x + 2, end.y + 2, DNGN_ROCK_WALL))
-        {
-            continue;
-        }
-
-        dgn_replace_area(room.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR, MMT_VAULT);
-
-        if (!connect_target.origin())
-            join_the_dots(room.random_edge_point(), connect_target, MMT_VAULT);
-
-        connect_target = room.random_edge_point();
-
-        which_room++;
-
-        if (which_room >= maxrooms)
-            break;
-    }
-}
-
 /* Helper functions */
 
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask)
