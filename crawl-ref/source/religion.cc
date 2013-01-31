@@ -2458,8 +2458,11 @@ static void _erase_between(string& s, const string &left, const string &right)
 
 string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
-    if (crawl_state.game_is_zotdef() && strstr(pmsg, "Abyss"))
+    if ((crawl_state.game_is_zotdef() || crawl_state.game_is_sprint())
+        && strstr(pmsg, "Abyss"))
+    {
         return "";
+    }
 
     string pm = pmsg;
 
@@ -2573,9 +2576,6 @@ static void _gain_piety_point();
 void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
-        return;
-
-    if (crawl_state.game_is_sprint() && player_in_branch(BRANCH_ABYSS) && !force)
         return;
 
     // Xom uses piety differently...

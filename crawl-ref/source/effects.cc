@@ -524,12 +524,13 @@ void banished(const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
     push_features_to_abyss();
-    if (crawl_state.game_is_zotdef())
+    if (crawl_state.game_is_zotdef() || crawl_state.game_is_sprint())
         return;
 
-    if (!player_in_branch(BRANCH_ABYSS)) {
-      mark_milestone("abyss.enter",
-                     "is cast into the Abyss!" + _who_banished(who));
+    if (!player_in_branch(BRANCH_ABYSS))
+    {
+        mark_milestone("abyss.enter",
+                       "is cast into the Abyss!" + _who_banished(who));
     }
 
     if (player_in_branch(BRANCH_ABYSS))
