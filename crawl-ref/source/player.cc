@@ -5783,6 +5783,8 @@ void player::god_conduct(conduct_type thing_done, int level)
 void player::banish(actor *agent, const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
+    if (crawl_state.game_is_zotdef() || crawl_state.game_is_sprint())
+        return;
 
     if (you.elapsed_time <= you.attribute[ATTR_BANISHMENT_IMMUNITY])
     {
