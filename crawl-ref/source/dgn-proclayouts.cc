@@ -13,7 +13,7 @@
 
 #include "mpr.h"
 
-dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
+static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 {
     static dungeon_feature_type features[] = {
         DNGN_STONE_WALL,
@@ -27,23 +27,6 @@ dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
         DNGN_METAL_WALL
     };
     return features[val%9];
-}
-
-dungeon_feature_type _pick_pseudorandom_feature(uint64_t val)
-{
-    if (!(val%5))
-        return _pick_pseudorandom_wall(val/5);
-    dungeon_feature_type features[] = {
-        DNGN_STONE_WALL,
-        DNGN_STONE_WALL,
-        DNGN_ROCK_WALL,
-        DNGN_GREEN_CRYSTAL_WALL,
-        DNGN_METAL_WALL,
-        DNGN_SHALLOW_WATER,
-        DNGN_SHALLOW_WATER,
-        DNGN_DEEP_WATER,
-    };
-    return features[(val/5)%9];
 }
 
 ProceduralSample
@@ -77,15 +60,9 @@ DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
 }
 
 
-uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
+static uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
 {
     return max(1, (int) floor((n.distance[1] - n.distance[0]) * scale) - 5);
-}
-
-ProceduralSample _maybe_set_changepoint(const ProceduralSample &s,
-    const uint32_t cp)
-{
-    return ProceduralSample(s.coord(), s.feat(), min(s.changepoint(), cp));
 }
 
 ProceduralSample

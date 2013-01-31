@@ -2776,7 +2776,7 @@ void forget_map(bool rot)
 #endif
 }
 
-void _remove_temp_mutations()
+static void _remove_temp_mutations()
 {
     int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
         max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
