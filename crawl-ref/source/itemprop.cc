@@ -1485,7 +1485,7 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         // that are larger than they are.
         if (!is_range_weapon(item)
             && size < SIZE_MEDIUM
-            && cmp_weapon_size(item, size) > 0)
+            && Weapon_prop[Weapon_index[item.sub_type]].fit_size > size)
         {
             ret = HANDS_TWO;
         }
@@ -1820,18 +1820,10 @@ void maybe_change_train(const item_def& item, bool start)
         }
 }
 
-// Returns number of sizes off.
-int cmp_weapon_size(const item_def &item, size_type size)
-{
-    ASSERT(item.base_type == OBJ_WEAPONS);
-
-    return (Weapon_prop[ Weapon_index[item.sub_type] ].fit_size - size);
-}
-
 // Returns number of sizes away from being a usable weapon.
 static int _fit_weapon_wieldable_size(const item_def &item, size_type size)
 {
-    const int fit = cmp_weapon_size(item, size);
+    const int fit = Weapon_prop[Weapon_index[item.sub_type]].fit_size - size;
 
     return ((fit < -2) ? fit + 2 :
             (fit >  1) ? fit - 1 : 0);
