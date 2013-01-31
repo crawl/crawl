@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "branch.h"
 #include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
@@ -2458,11 +2459,8 @@ static void _erase_between(string& s, const string &left, const string &right)
 
 string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
-    if ((crawl_state.game_is_zotdef() || crawl_state.game_is_sprint())
-        && strstr(pmsg, "Abyss"))
-    {
+    if (brdepth[BRANCH_ABYSS] == -1 && strstr(pmsg, "Abyss"))
         return "";
-    }
 
     string pm = pmsg;
 

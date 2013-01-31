@@ -22,6 +22,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -524,7 +525,7 @@ void banished(const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
     push_features_to_abyss();
-    if (crawl_state.game_is_zotdef() || crawl_state.game_is_sprint())
+    if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
     if (!player_in_branch(BRANCH_ABYSS))
