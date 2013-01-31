@@ -415,8 +415,8 @@ bool disc_of_storms(bool drac_breath)
 
 void tome_of_power(int slot)
 {
-    int powc = 5 + you.skill(SK_EVOCATIONS)
-                 + roll_dice(5, you.skill(SK_EVOCATIONS));
+    const int powc = 5 + you.skill(SK_EVOCATIONS)
+                       + roll_dice(5, you.skill(SK_EVOCATIONS));
 
     msg::stream << "The book opens to a page covered in "
                 << weird_writing() << '.' << endl;
@@ -480,10 +480,9 @@ void tome_of_power(int slot)
     {
         viewwindow();
 
-        int temp_rand = random2(23) + random2(you.skill_rdiv(SK_EVOCATIONS, 1, 3));
-
-        if (temp_rand > 25)
-            temp_rand = 25;
+        const int temp_rand =
+            std::min(25, random2(23)
+                         + random2(you.skill_rdiv(SK_EVOCATIONS, 1, 3)));
 
         const spell_type spell_casted =
             ((temp_rand > 24) ? SPELL_LEHUDIBS_CRYSTAL_SPEAR :
