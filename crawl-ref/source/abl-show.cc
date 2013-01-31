@@ -20,6 +20,7 @@
 #include "acquire.h"
 #include "artefact.h"
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"
@@ -1483,7 +1484,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return !is_level_incorruptible(quiet);
 
     case ABIL_LUGONU_ABYSS_ENTER:
-        if (player_in_branch(BRANCH_ABYSS) || crawl_state.game_is_sprint())
+        if (player_in_branch(BRANCH_ABYSS) || brdepth[BRANCH_ABYSS] == -1)
         {
             if (!quiet)
                 mpr("You're already here!");
@@ -3430,7 +3431,7 @@ vector<ability_type> get_god_abilities(bool include_unusable)
         const ability_type abil =
             _fixup_ability(god_abilities[you.religion][i]);
         if (abil == ABIL_NON_ABILITY
-            || (crawl_state.game_is_zotdef() || crawl_state.game_is_sprint())
+            || brdepth[BRANCH_ABYSS] == -1
                && (abil == ABIL_LUGONU_ABYSS_EXIT
                    || abil == ABIL_LUGONU_ABYSS_ENTER))
         {

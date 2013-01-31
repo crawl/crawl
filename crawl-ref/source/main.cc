@@ -555,7 +555,7 @@ static void _god_greeting_message(bool game_start)
 
     string msg = god_name(you.religion);
 
-    if (crawl_state.game_is_sprint() && you.religion == GOD_LUGONU)
+    if (brdepth[BRANCH_ABYSS] == -1 && you.religion == GOD_LUGONU)
         msg += " welcome";
     else if (game_start)
         msg += " newgame";
@@ -2842,8 +2842,9 @@ static void _decrement_durations()
 
 static void _check_banished()
 {
-    if (you.banished && !crawl_state.game_is_zotdef() && !crawl_state.game_is_sprint())
+    if (you.banished)
     {
+        ASSERT(brdepth[BRANCH_ABYSS] != -1);
         you.banished = false;
         if (!player_in_branch(BRANCH_ABYSS))
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
