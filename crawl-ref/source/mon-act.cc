@@ -3685,9 +3685,7 @@ static bool _monster_move(monster* mons)
                 _mons_fire_wand(mons, wand, beem, you.can_see(mons), false);
             }
             else
-            {
                 simple_monster_message(mons, " falters for a moment.");
-            }
             mons->lose_energy(EUT_SPELL);
             return true;
         }
