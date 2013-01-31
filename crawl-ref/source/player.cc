@@ -2813,8 +2813,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
         return;
-    if (crawl_state.game_is_sprint() && player_in_branch(BRANCH_ABYSS))
-        return;
 
     if (crawl_state.game_is_zotdef())
     {

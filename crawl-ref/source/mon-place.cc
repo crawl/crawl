@@ -524,12 +524,6 @@ static monster_type _pick_random_monster(const level_id &place, int power,
             continue;
         }
 
-        if (place == BRANCH_ABYSS && crawl_state.game_is_sprint()
-            && sprint_veto_random_abyss_monster(mon_type))
-        {
-            continue;
-        }
-
         level = mons_level(mon_type, place) + absdungeon_depth(place.branch, 0);
         diff = level - lev_mons;
 #ifdef ASSERTS

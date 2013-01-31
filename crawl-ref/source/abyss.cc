@@ -44,7 +44,6 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
-#include "sprint.h"
 #include "stash.h"
 #include "state.h"
 #include "terrain.h"
@@ -282,16 +281,11 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
                                bool use_vaults)
 {
     // During game start, number and level of items mustn't be higher than
-    // that on level 1. Abyss in sprint games has no items.
+    // that on level 1.
     int num_items = 150, items_level = 52;
     int items_placed = 0;
 
-    if (crawl_state.game_is_sprint())
-    {
-        num_items   = 0;
-        items_level = 0;
-    }
-    else if (you.char_direction == GDT_GAME_START)
+    if (you.char_direction == GDT_GAME_START)
     {
         num_items   = 3 + roll_dice(3, 11);
         items_level = 0;
@@ -402,17 +396,6 @@ void push_features_to_abyss()
             abyssal_features.push_back(feature);
         }
     }
-}
-
-// Returns N so that the chance of placing an abyss exit on any given
-// square is 1 in N.
-static int _abyss_exit_chance()
-{
-    int exit_chance = (you.runes[RUNE_ABYSSAL] ? 1250
-                                               : 7500 - 1250 * (you.depth - 1));
-    if (crawl_state.game_is_sprint())
-        exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
-    return exit_chance;
 }
 
 static bool _abyss_check_place_feat(coord_def p,
@@ -1127,7 +1110,9 @@ static void _nuke_all_terrain(bool vaults)
 static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
-    const int exit_chance = _abyss_exit_chance();
+    // The chance is reciprocal to these numbers.
+    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
+                            : 7500 - 1250 * (you.depth - 1);
 
     // Except for the altar on the starting position, don't place any altars.
     const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;

@@ -555,7 +555,9 @@ static void _god_greeting_message(bool game_start)
 
     string msg = god_name(you.religion);
 
-    if (game_start)
+    if (crawl_state.game_is_sprint() && you.religion == GOD_LUGONU)
+        msg += " welcome";
+    else if (game_start)
         msg += " newgame";
     else if (you.religion == GOD_XOM)
     {
@@ -2840,7 +2842,7 @@ static void _decrement_durations()
 
 static void _check_banished()
 {
-    if (you.banished && !crawl_state.game_is_zotdef())
+    if (you.banished && !crawl_state.game_is_zotdef() && !crawl_state.game_is_sprint())
     {
         you.banished = false;
         if (!player_in_branch(BRANCH_ABYSS))
