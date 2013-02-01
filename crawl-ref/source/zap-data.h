@@ -1037,7 +1037,7 @@ struct zap_info
 },
 
 {
-    ZAP_BREATHE_STICKY_FLAME, // same data as spell but has different effects on hit
+    ZAP_BREATHE_STICKY_FLAME,
     "splash of liquid fire",
     100,
     new dicedef_calculator<2, 3, 1, 12>,
