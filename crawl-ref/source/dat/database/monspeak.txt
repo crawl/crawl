@@ -4408,7 +4408,7 @@ _Jorgrun_common_
 %%%%
 _Jorgrun_rare_
 
-@The_monster@ says @to_foe@, "Tha earth be me home, an' ye bee trespassing!"
+@The_monster@ says @to_foe@, "Tha earth be me home, an' ye be trespassing!"
 
 @The_monster@ says @to_foe@, "Yer just na down-ta-earth enough."
 
