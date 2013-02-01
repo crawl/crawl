@@ -336,7 +336,7 @@ ENDMAP
 NAME:   minmay_crystal_room
 TAGS:   extra decor
 DEPTH:  D, Elf
-NSUBST: ? = 1:b / *:?
+NSUBST: ? = 1:b / 1:@ / *:?
 SUBST:  ? = bbbbb@
 MAP
 b?b?b?b?b
