@@ -6430,6 +6430,8 @@ infidel
 unbeliever
 
 heretic
+
+apostate
 %%%%
 ######################################################
 # General, non-descript orcs
