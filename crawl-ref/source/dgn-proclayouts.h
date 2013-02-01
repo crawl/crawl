@@ -74,12 +74,12 @@ class DiamondLayout : public ProceduralLayout
 class WorleyLayout : public ProceduralLayout
 {
     public:
-        WorleyLayout(uint32_t _seed, std::vector<const ProceduralLayout*> _layouts, const float _scale = 2.0)
+        WorleyLayout(uint32_t _seed, vector<const ProceduralLayout*> _layouts, const float _scale = 2.0)
                 : seed(_seed), layouts(_layouts), scale(_scale) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
         const uint32_t seed;
-        const std::vector<const ProceduralLayout*> layouts;
+        const vector<const ProceduralLayout*> layouts;
         const float scale;
 };
 

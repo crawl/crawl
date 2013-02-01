@@ -481,7 +481,7 @@ void tome_of_power(int slot)
         viewwindow();
 
         const int temp_rand =
-            std::min(25, random2(23)
+            min(25, random2(23)
                          + random2(you.skill_rdiv(SK_EVOCATIONS, 1, 3)));
 
         const spell_type spell_casted =

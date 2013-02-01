@@ -2448,7 +2448,7 @@ spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
         else
             mpr("You imbue your familiar with additional charge.");
 
-        familiar->number = std::min(20, (int) familiar->number
+        familiar->number = min(20, (int) familiar->number
                                         + 4 + random2(pow + 10) / 10);
         you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice (2, pow), 50);
     }
