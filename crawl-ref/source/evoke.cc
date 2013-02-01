@@ -482,7 +482,7 @@ void tome_of_power(int slot)
 
         const int temp_rand =
             min(25, random2(23)
-                         + random2(you.skill_rdiv(SK_EVOCATIONS, 1, 3)));
+                    + random2(you.skill_rdiv(SK_EVOCATIONS, 1, 3)));
 
         const spell_type spell_casted =
             ((temp_rand > 24) ? SPELL_LEHUDIBS_CRYSTAL_SPEAR :
