@@ -2723,7 +2723,7 @@ void change_monster_type(monster* mons, monster_type targetc)
         name   = "shaped Lernaean hydra";
         flags |= MF_INTERESTING | MF_NAME_SUFFIX;
     }
-    else if (mons->type == MONS_SERPENT_OF_HELL
+    else if (mons->mons_species() == MONS_SERPENT_OF_HELL
              || mons->mname == "shaped Serpent of Hell")
     {
         name   = "shaped Serpent of Hell";
