@@ -6431,28 +6431,6 @@ unbeliever
 
 heretic
 %%%%
-_orc_pathetic_
-
-sorry
-
-pathetic
-
-miserable
-%%%%
-_costumes_or_trick_
-
-costumes
-
-disguise
-
-tricks
-%%%%
-_fool_or_deceive_
-
-fool
-
-deceive
-%%%%
 ######################################################
 # General, non-descript orcs
 ######################################################
@@ -6609,9 +6587,9 @@ _hostile_orc_beogh_believer_speech_rare_
 
 @The_monster@ @_shouts_@ @at_foe@, "Orcs! @foe_name@ is lying!"
 
-@The_monster@ @_orc_says_to_foe_@, "For a messiah, you look rather @_orc_pathetic_@."
+@The_monster@ @_orc_says_to_foe_@, "For a messiah, you look rather [sorry|pathetic|miserable]."
 
-@The_monster@ @_orc_says_to_foe_@, "Your @_costumes_or_trick_@ cannot @_fool_or_deceive_@ me."
+@The_monster@ @_orc_says_to_foe_@, "Your [costumes|disguise|tricks] cannot [fool|deceive] me."
 
 @The_monster@ @_orc_says_to_foe_@, "I wonder, will Beogh raise you from the dead?"
 
