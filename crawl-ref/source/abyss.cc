@@ -62,7 +62,7 @@ static const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 
 abyss_state abyssal_state;
 
-typedef std::priority_queue<ProceduralSample, vector<ProceduralSample>, ProceduralSamplePQCompare> sample_queue;
+typedef priority_queue<ProceduralSample, vector<ProceduralSample>, ProceduralSamplePQCompare> sample_queue;
 
 static sample_queue abyss_sample_queue;
 static vector<dungeon_feature_type> abyssal_features;
