@@ -608,7 +608,8 @@ bool melee_attack::handle_phase_damaged()
     if (defender->can_bleed()
         && !defender->is_summoned()
         && !defender->submerged()
-        && in_bounds(defender->pos()))
+        && in_bounds(defender->pos())
+        && !simu)
     {
         int blood = modify_blood_amount(damage_done, attacker->damage_type());
         if (blood > defender->stat_hp())
