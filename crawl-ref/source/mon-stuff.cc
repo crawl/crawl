@@ -2711,7 +2711,25 @@ void change_monster_type(monster* mons, monster_type targetc)
     string name;
 
     // Preserve the names of uniques and named monsters.
-    if (!mons->mname.empty())
+    if (mons->type == MONS_ROYAL_JELLY
+        || mons->mname == "shaped Royal Jelly")
+    {
+        name   = "shaped Royal Jelly";
+        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+    }
+    else if (mons->type == MONS_LERNAEAN_HYDRA
+             || mons->mname == "shaped Lernaean hydra")
+    {
+        name   = "shaped Lernaean hydra";
+        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+    }
+    else if (mons->type == MONS_SERPENT_OF_HELL
+             || mons->mname == "shaped Serpent of Hell")
+    {
+        name   = "shaped Serpent of Hell";
+        flags |= MF_INTERESTING | MF_NAME_SUFFIX;
+    }
+    else if (!mons->mname.empty())
     {
         if (flags & MF_NAME_MASK)
         {
@@ -2728,21 +2746,6 @@ void change_monster_type(monster* mons, monster_type targetc)
         flags |= MF_INTERESTING;
 
         name = mons->name(DESC_PLAIN, true);
-        if (mons->type == MONS_ROYAL_JELLY)
-        {
-            name   = "shaped Royal Jelly";
-            flags |= MF_NAME_SUFFIX;
-        }
-        else if (mons->type == MONS_LERNAEAN_HYDRA)
-        {
-            name   = "shaped Lernaean hydra";
-            flags |= MF_NAME_SUFFIX;
-        }
-        else if (mons->type == MONS_SERPENT_OF_HELL)
-        {
-            name   = "shaped Serpent of Hell";
-            flags |= MF_NAME_SUFFIX;
-        }
 
         // "Blork the orc" and similar.
         const size_t the_pos = name.find(" the ");
