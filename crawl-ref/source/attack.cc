@@ -29,7 +29,7 @@ attack::attack(actor *attk, actor *defn)
     : attacker(attk), defender(defn), attack_occurred(false),
     cancel_attack(false), did_hit(false), needs_message(false),
     attacker_visible(false), defender_visible(false), to_hit(0),
-    damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
+    damage_done(0), special_damage(0), aux_damage(0),
     final_attack_delay(0), apply_bleeding(false), noise_factor(0),
     ev_margin(0), weapon(NULL),
     damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
