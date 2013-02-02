@@ -1358,3 +1358,33 @@ MAP
 .  .  .
 . ... .
 ENDMAP
+
+NAME:   dpeg_vaults_monster_box
+TAGS:   vaults_room
+SUBST:  - : @.., _ : @..
+SUBST:  b : xxxxb0009.
+NSUBST: 9 = 1:S / *:9
+KFEAT:  S = armour shop / weapon shop
+SUBST:  . = ....0
+MAP
+..@@..
+..bb..
+-.bb.-
+..bb..
+..__..
+ENDMAP
+
+NAME:   dpeg_vaults_monster_doublerow
+TAGS:   vaults_room
+WEIGHT: 1
+SUBST:  0 : 0000000z, z : z., 0 = 0009..
+KMONS:  z = human skeleton
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xx00xx00xx00xx00xx00xx00xx
+xx..xx..xx..xx..xx..xx..xx
+x........................x
+x.xx..xx..xx..xx..xx..xx.x
+..xx00xx00xx00xx00xx00xx..
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

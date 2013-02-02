@@ -920,3 +920,109 @@ MAP
  .......
 .........
 ENDMAP
+
+NAME:  vaults_dpeg_ring
+TAGS:  vaults_empty
+MAP
+.xx.
+x..x
+x..x
+.xx.
+ENDMAP
+
+NAME:  vaults_dpeg_emergency_exit
+TAGS:  vaults_empty no_rtele_into
+DEPTH: Vaults:1-3
+KFEAT: ^ = known shaft trap
+MAP
+.....
+.mmm.
+.m^m.
+.mmm.
+.....
+ENDMAP
+
+NAME:  vaults_dpeg_hooks
+TAGS:  vaults_empty
+SUBST: _ : +..
+MAP
+.......
+.xxx_x.
+.x...x.
+.x...x.
+.x_xxx.
+.......
+ENDMAP
+
+NAME:  vaults_dpeg_diagonal
+TAGS:  vaults_empty
+SUBST: _ : xxxx$ , $ : $SSS. , S = $$.
+MAP
+xxxx..x
+xxx..xx
+xx..xxx
+x..___x
+..x___x
+.xx___x
+xxxxxxx
+ENDMAP
+
+NAME:  vaults_dpeg_encased_lava
+TAGS:  vaults_empty
+KPROP: l = no_rtele_into
+MAP
+.......
+.nnnnn.
+.nllln.
+.nllln.
+.nnnnn.
+.......
+ENDMAP
+
+NAME:  vaults_dpeg_spiral
+TAGS:  vaults_empty
+SUBST: $ : $$$(()
+MAP
+    xxxxxxxx
+   xxxx...xxx
+  xx........xx
+ xx...xxxx...xx
+xx...xxxxxx..xx
+xx...x...xxx..x
+xx...x.$.xxx..x
+xx...x...xx..xx
+xx...xx......xx
+xx....xxx..xxx
+xx.....xxxxxx
+ENDMAP
+
+NAME:  vaults_dpeg_cross
+TAGS:  vaults_empty
+SUBST: _ : xxxxx...TG, T : TUt, t = TU
+MAP
+   x..x
+  xx..xx
+ xxx..xxx
+xxx_.._xxx
+..........
+..........
+xxx_.._xxx
+ xxx..xxx
+  xx..xx
+   x..x
+ENDMAP
+
+NAME:    vaults_dpeg_doors
+TAGS:    vaults_empty
+SHUFFLE: _+
+SUBST:   _ : ...+
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+..xxxxxxxxxxxxxxxxx..
+...._..xxxxxxx..._...
+...._.....+......_...
+...._.....+......_...
+...._..xxxxxxx..._...
+..xxxxxxxxxxxxxxxxx..
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
