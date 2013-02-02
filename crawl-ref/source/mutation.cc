@@ -371,7 +371,7 @@ string describe_mutations(bool center_title)
         if (you.experience_level > 2)
         {
             ostringstream num;
-            num << you.experience_level/3;
+            num << you.experience_level / 3;
             const string acstr = "Your serpentine skin is tough (AC +"
                                  + num.str() + ").";
 
