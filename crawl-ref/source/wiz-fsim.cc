@@ -395,7 +395,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     fdata.accuracy = 100 * hits / iter_limit;
     fdata.av_dam = double(cumulative_damage) / iter_limit;
     fdata.av_time = double(time_taken) / iter_limit + 0.5; // round to nearest
-    fdata.av_eff_dam = fdata.av_dam / fdata.av_time;
+    fdata.av_eff_dam = fdata.av_dam * 100 / fdata.av_time;
 
     return fdata;
 }
