@@ -11,7 +11,7 @@ double av_hit_dam;
 int max_dam;
 int accuracy;
 double av_dam;
-double av_time;
+int av_time;
 double av_eff_dam;
 };
 
