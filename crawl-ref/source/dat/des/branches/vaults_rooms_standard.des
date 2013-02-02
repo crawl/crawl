@@ -1344,3 +1344,17 @@ MAP
      xx+xx   xx+xx   xx+x
       ...     ...     ...
 ENDMAP
+
+NAME: ontoclasm_vaults_chip
+TAGS: vaults_room allow_dup
+SUBST: P = 0. , G : ...G
+KMONS: 0 = 0 band
+MAP
+. ... .
+.  .  .
+..G.G..
+.P.0.P.
+..G.G..
+.  .  .
+. ... .
+ENDMAP
