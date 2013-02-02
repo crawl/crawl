@@ -20,8 +20,8 @@ function dump_layout_grid(layout_grid)
     local maprow = ""
     for j = 0, gxm-1, 1 do
       local cell = layout_grid[i][j]
-      if cell.solid == 1 then maprow = maprow .. "x"
-      elseif cell.solid == 0 then maprow = maprow .. "."
+      if cell.solid then maprow = maprow .. "x"
+      elseif cell.solid == false then maprow = maprow .. "."
       else maprow = maprow .. " " end
     end
     print (maprow)
