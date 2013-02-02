@@ -754,3 +754,42 @@ xxx....xxx
 xxx....xxx
 xx......xx
 ENDMAP
+
+NAME:    hangedman_vaults_impose
+TAGS:    vaults_empty allow_dup
+SHUFFLE: ABC, DEF
+SUBST:   A : x.., B : x.., D : x.., E : x.., CF = .
+SUBST:   G = Gx..., H : xxx., I : xx.
+MAP
+ABC.....FED
+B.........E
+D.G..xH...F
+...(IxxH...
+...IxxxxH..
+..xxxxxxxx.
+..Hxxxxxxxx
+...Hxxx
+F...Hxx
+E....xx
+DEF...x
+ENDMAP
+
+NAME:    hangedman_vaults_corner_blocks
+TAGS:    vaults_empty allow_dup
+SHUFFLE: GH, IJ
+SUBST:   A : xx., B : xx., C : xx., D : xx., E : x..
+SUBST:   F = x..., G : xx., H : x., I : xx., J : x., K : x...
+MAP
+xxxxxx.....x
+xxCBA.....Gx
+xCD...E..HHx
+xB.(....GHxx
+xA.....xxxxx
+x....F.xIJIx
+..E...F.....
+....xx.F..K.
+...GxI......
+..HHxJ......
+.GHxxI.K..(x
+xxxxxx....xx
+ENDMAP

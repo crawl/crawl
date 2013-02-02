@@ -20,6 +20,18 @@
 # For serial vaults, read dat/des/serial/serial_guide.txt.
 ############################################################################
 
+# Functionality for some of HangedMan's decor vaults.
+{{
+function init_hm_decor_walldepth(e, variables)
+local a = you.absdepth() * 5
+  if a - 75 > 0 then
+    e.subst(variables .. " : x:50 c:" .. a .. " b:" .. a - 75)
+  else
+    e.subst(variables .. " : x:50 c:" .. a)
+  end
+end
+}}
+
 NAME:    dungeon_decor
 TAGS:    no_dump extra allow_dup luniq
 DEPTH:   D:13-27
@@ -2862,4 +2874,219 @@ MAP
 .x........x.
 .x.xxxxxxxx.
 ............
+ENDMAP
+
+####
+
+NAME:    hangedman_decor_diamond_cutter
+TAGS:    transparent extra decor
+DEPTH:   D
+WEIGHT:  5 (D:1-3), 10
+SHUFFLE: AB, CD
+SUBST:   Z : z:9 .:1, z : xxB, AC = .
+: init_hm_decor_walldepth(_G, "BD")
+MAP
+xxxxxxxxxxxxxxxxxxxx
+B..AZA..B.B..AZA..B.
+.BA.z.AB...BA.z.AB..
+.AB.z.BA...AB.z.BA..
+A..BzB..A.A..BzB..A.
+........................
+    .C..DzD..C.C..DzD..C
+    ..CD.z.DC...CD.z.DC.
+    ..DC.z.CD...DC.z.CD.
+    .D..CZC..D.D..CZC..D
+    xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    hangedman_decor_lopped
+TAGS:    abyss transparent extra decor no_pool_fixup
+DEPTH:   D, Abyss
+WEIGHT:  5 (D:1-3), 10
+SHUFFLE: CD / CD / CD / DC / DC, EF / EF / EF / FE / FE
+SUBST:   A : z:9 .:1, B : z:9 .:1, CE = .
+SUBST:   H : x..., I : x..., J : x..., K : x...
+: if you.branch() == "Abyss" then
+SUBST:   x = x:19 .:1, z = xcvbl, l : lw
+: else
+: init_hm_decor_walldepth(_G, "DFz")
+: end
+MAP
+........
+...H....
+.zAzAz......
+...C........
+...D...z..J...
+.I.C...A......
+...DCDCzEFEF....
+.......A...E..J.
+  ..K..z...F....
+  .........E....
+      ...zBzBz....
+      .....C......
+        ...D...z..
+        .K.C...B..
+        ...DCDCzH.
+        .......B..
+          ..I..z..
+          ........
+ENDMAP
+
+NAME:    hangedman_decor_push
+TAGS:    transparent decor extra
+DEPTH:   D
+SHUFFLE: AB / AB / CD, EF / EF / GH
+SUBST:   ABEF = x, CG = ., DH = @
+SUBST:   I : z.., J : z.., K : z..
+: init_hm_decor_walldepth(_G, "z")
+MAP
+         xxxxxx...
+         F..z...I.
+         E..z.....
+    xxxxxx.....z..
+    B..z..K.J..z..
+    A..z.....xxxxx
+xxxxx.....z..A
+..z..J.K..z..B
+..z.....xxxxxx
+.....z..E
+.I...z..F
+...xxxxxx
+ENDMAP
+
+NAME:    hangedman_decor_opposing
+TAGS:    transparent decor extra
+DEPTH:   D
+WEIGHT:  5 (D:1-3), 10
+SHUFFLE: CDE
+SUBST:   AB : z.., C : z:7 .:1, D : z.. , E : z:1 .:7, y : xxcz
+: init_hm_decor_walldepth(_G, "z")
+MAP
+    yyy.
+   yy........
+  yy..z......
+ yy.A....DE..
+yy.A..z.CED..
+y.......EC...
+y.z.z.z.......
+.......z.....y
+ ...CE..z..B.y
+ ..DEC...z...y
+ ..ED.....z..y
+ .......B..z.y
+ ............y
+      .yyyyyyy
+ENDMAP
+
+NAME:    hangedman_decor_clover_reticule
+TAGS:    transparent extra decor
+DEPTH:   D
+SHUFFLE: ABCDE
+SUBST:   A : z:9 .:1, B : z., C : z.., DE = '
+KPROP:   ' = no_rtele_into
+: init_hm_decor_walldepth(_G, "z")
+MAP
+      .......
+.......zx.xz.
+.zx.xz.x...x.
+.x...x.......
+.......D...x.
+.x...ECBE.xz.
+.zx.DBAAC.....
+.....CAABD.xz.
+ .zx.EBCE...x.
+ .x...D.......
+ .......x...x.
+ .x...x.zx.xz.
+ .zx.xz.......
+ .......
+ENDMAP
+
+NAME:    hangedman_decor_riveting
+TAGS:    abyss transparent extra decor no_pool_fixup
+DEPTH:   D, Abyss
+WEIGHT:  5 (D:1-3), 10
+SHUFFLE: ABCDEFG
+SUBST:   A : z:9 .:1, B : zz., C : z:1 .:5, D = z:1 .:9, DEFG = .
+: if you.branch() == "Abyss" then
+SUBST:   x = x:19 .:1, z = xcvbl, l : lw
+: else
+: init_hm_decor_walldepth(_G, "z")
+: end
+MAP
+...
+.x.
+.....
+.x.x.
+..A....
+.x.z.x.
+..B.C....
+.x.z.z.x.
+...........
+.x..GGFF.x.
+.......F.....
+.x.z...G.z.x.
+..D....G..C....
+.x.z.z...z.z.x.
+..E.D.....B.A....
+.x.x.x.x.x.x.x.x.
+.................
+ENDMAP
+
+NAME:    hangedman_decor_points
+TAGS:    abyss transparent extra decor no_pool_fixup
+DEPTH:   D, Abyss
+SHUFFLE: ABC
+SUBST:   A : z.., B : zxx, C : zxx
+: if you.branch() == "Abyss" then
+SUBST:   x = x:19 .:1, z = xcvbl, l : lw
+: else
+: init_hm_decor_walldepth(_G, "z")
+: end
+MAP
+            .....
+            .ABC.
+        .....B...
+        .ABC.C..
+    .....B......
+    .ABC.C..ABC.
+.....B......B...
+.ABC.C..zzz.C..
+.B......z......
+.C..ABC.z..ABC.
+....B......B...
+   .C..ABC.C..
+   ....B......
+      .C..ABC.
+      ....B...
+         .C.
+         ...
+ENDMAP
+
+NAME:    hangedman_decor_peaks_small
+TAGS:    abyss transparent extra decor
+DEPTH:   D, Abyss
+WEIGHT:  5 (D:1-3), 10
+SHUFFLE: BCD
+SUBST:   A = z.., B : zzz., C : z..., D = ., X : x:9 .:1
+: if you.branch() == "Abyss" then
+SUBST:   x = x:19 .:1, z = xcvbl, l : lw
+: else
+: init_hm_decor_walldepth(_G, "z")
+: end
+MAP
+       .......
+     ...D...xX
+    ..D...xX..
+   .....xX....
+   .A.xX...xx.
+ ....A........
+ .D.x.A..xx...
+....X..A......
+.D.x....A.BB..
+...X..x.......
+..x...x.B..CC.
+..X.x...B.C...
+.x..x.....C.
+.X..........
 ENDMAP

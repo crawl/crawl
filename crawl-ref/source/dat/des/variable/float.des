@@ -11,6 +11,18 @@
 #            reside in vaults.des.
 ###############################################################################
 
+# Functionality for some of HangedMan's vaults.
+{{
+function init_hm_decor_walldepth(e, variables)
+local a = you.absdepth() * 5
+  if a - 75 > 0 then
+    e.subst(variables .. " : x:50 c:" .. a .. " b:" .. a - 75)
+  else
+    e.subst(variables .. " : x:50 c:" .. a)
+  end
+end
+}}
+
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
 # easy or tough vaults. Also, exclude unthemely branches with !Lair etc.
 default-depth: D:12-26
@@ -4896,4 +4908,46 @@ MAP
 ..Zxxx++xxxZ..                ..xxxx++xxxZ..
  ............                  ............
   ....  ....                    ....  ....
+ENDMAP
+
+NAME:    hangedman_decor_cross_pass
+TAGS:    transparent extra decor no_pool_fixup
+ORIENT:  float
+DEPTH:   D:8-, Elf
+SHUFFLE: _- / _- / -_, '" / '" / "', !? / !? / !?
+SHUFFLE: HIJK / HIJK / IHKJ, LMNO / LMNO / MLON, PQRS / PQRS / QPSR
+SUBST:   HJLNPR = ., I : z:6 .:1, K : z., M : z:6 .:1, O : z., Q : z:6 .:1, S : z.
+SUBST:   A : z., B : z., C : z., ~"! = x, - : ++., ' : ++. ? : +++., = : xx+.
+SUBST:   y : z.., Y = TVCtwz .:30
+: init_hm_decor_walldepth(_G, "z")
+MAP
+           x...x
+           x...x
+       .xxxx...xxxx
+       .!...HIJ...xxxxx
+       .?...KAK...'...x
+       .!...JIH...x...x
+       .xxxx...x""x...xxxx
+  .........x...x...LMN...x
+  xx+xx....x...'...OBO...x
+  x...x....xx=xx...NML...x
+  x...x........xxxx...xx'xx
+xxx...xxxx........x..."...x
+...PQR...x..y.....x..."...x
+...SCS...=........xx'xx...xxx
+...RQP...x....Y....x...PQR...
+xxx...xx-xx........=...SCS...
+  x...~...x.....y..x...RQP...
+  x...~...x........xxxx...xxx
+  xx-xx...xxxx........x...x
+   x...LMN...xx=xx....x...x
+   x...OBO...-...x....xx+xx
+   x...NML...x...x.........
+   xxxx...x~~x...xxxx.
+      x...x...HIJ...!.
+      x...-...KAK...?.
+      xxxxx...JIH...!.
+          xxxx...xxxx.
+             x...x
+             x...x
 ENDMAP

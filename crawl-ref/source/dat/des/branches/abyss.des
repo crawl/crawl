@@ -786,8 +786,7 @@ ccccccc ...cc.1%gcc
 ENDMAP
 
 NAME:    hangedman_abyss_stitches_cave
-TAGS:    transparent no_monster_gen
-DEPTH:   Abyss
+TAGS:    abyss transparent no_monster_gen
 MONS:    thrashing horror / unseen horror / very ugly thing / \
          shapeshifter w:5 / large abomination / common demon
 MONS:    starcursed mass / apocalypse crab / hellephant / \
