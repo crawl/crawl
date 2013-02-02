@@ -1012,7 +1012,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         clear_subvault_stack();
 
         // Identify each square in the map with its map_index.
-        if (!overwritable && !transparent)
+        if (!overwritable)
             _dgn_apply_map_index(place, map_index);
     }
 
@@ -4623,8 +4623,7 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
-    if (!place.map.has_tag("transparent"))
-        mspec.props["map"].get_string() = place.map_name_at(where);
+    mspec.props["map"].get_string() = place.map_name_at(where);
     return dgn_place_monster(mspec, monster_level, where, false,
                              generate_awake, patrolling);
 }
