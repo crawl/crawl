@@ -1,4 +1,4 @@
-Stone Soup 0.12 (up to 0.12-a0-1808-gb42fc8b)
+Stone Soup 0.12 (up to 0.12-a0-2018-g53187cd)
 ---------------------------------------------
 
 Branches, environment
@@ -10,6 +10,7 @@ Branches, environment
   appears only at the third level and below, more frequently at deeper levels.
 * The Abyssal rune always appears in a vault, never lying around on the floor.
 * Having the Abyssal rune greatly increases the generation of Abyss exits.
+* The Abyss no longer exists in Sprint.
 * A new Sprint map by evilmike: "Thunderdome".
 * A new Sprint map by st: "The Pits".
 * A new layout for Cocytus.
@@ -93,14 +94,28 @@ Monsters
 * Apis do not fly.
 * Frances has a more powerful set of spells.
 * Joseph does somewhat more damage in melee.
+* Polyphemus is stronger, faster, and has more rocks.
 * Monsters are much less likely to polymorph into plain elves and humans.
 * Non-humanoid holies no longer "salute", etc.
 * Trapdoor spiders no longer get "stuck".
 * Stone giants, titans, wyverns, and the iron giant are slightly smaller.
+* Rotting corpses no longer spawn toadstools for non-Fedhites.
+* See invisible no longer grants blindness immunity.
+* A number of monsters now have see invisible instead of sense invisible.
+* Monsters can now use wands of digging, and cast Dig in more circumstances.
 
 Spells
 ------
 * Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+* New spell: Force Lance (level 2 Conjuration). Fires a short-range single-
+  target projectile that can knock monsters backwards.
+* New spell: Dazzling Spray (level 3 Conjuration/Hexes). Fires a spread
+  of energy bolts that can blind creatures.
+* New spell: Iskenderun's Arcane Familiar (level 4 Conjuration/Charms).
+  Creates an autonomous globe that shoots at enemies in sync with your
+  conjurations.
+* New spell: Fulminant Prism (level 5 Conjuration/Hexes). Creates a time
+  bomb at a smite-targetted location.
 * New spell: Disjunction (level 8 Translocation). Has a duration, during
   which it blinks away nearby monsters. Causes contamination.
 * Spell memorisation failure is no more. As long as the failure chance is
@@ -114,6 +129,8 @@ Spells
   intelligence.
 * Summon swarm now gives spiders instead of wolf spiders.
 * Venom Bolt and Bolt of Magma do more damage.
+* Conjurers have a new book with non-elemental spells (including the new
+  conjurations).
 
 Items
 -----
@@ -160,6 +177,8 @@ Items
 Gods
 ----
 * Jiyva will never shuffle a stat to zero.
+* Jiyva's paralyse ability no longer affects non-fellow slimes (such as
+  shapeshifters), and followers are no longer warned about attacking them.
 * New Xom effects: loud noises, blink monsters, enchant monster (petrify,
   slow, paralysis, enslavement; haste, might, invisibility).
 * Xom does not reduce stats as drastically, unless bored.
