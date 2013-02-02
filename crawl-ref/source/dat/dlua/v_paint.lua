@@ -84,10 +84,10 @@ end
 local function get_layout(layout_grid,x,y)
   -- Handle out of bounds
   if layout_grid[y] == nil then
-    return { solid = 1, exit = 0, feature = "permarock_wall" }
+    return { space = true, solid = true, exit = false, feature = "permarock_wall" }
   end
   if layout_grid[y][x] == nil then
-    return { solid = 1, exit = 0, feature = "permarock_wall" }
+    return { space = true, solid = true, exit = false, feature = "permarock_wall" }
   end
 
   return layout_grid[y][x]
@@ -129,7 +129,7 @@ local function determine_usage_from_layout(layout_grid,options)
         for xl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
           local cell = get_layout(layout_grid,x + xl,y + yl)
           local_grid[yl][xl] = cell
-          if cell.solid == 1 then only_floor = false end
+          if cell.solid then only_floor = false end
         end
       end
 
@@ -139,7 +139,15 @@ local function determine_usage_from_layout(layout_grid,options)
       else
 
         -- Are we dealing with floor or wall?
-        if local_grid[0][0].solid == 1 then -- Wall
+        if local_grid[0][0].solid then -- Wall
+
+          local function gridsum(grid,list)
+            local sum = 0
+            for i,pos in ipairs(list) do
+              if grid[pos.y][pos.x].solid then sum = sum + 1 end
+            end
+            return sum
+          end
 
           -- A wall can either be usage "none" meaning parts of a room could later be built over it;
           -- or it can be "eligible" meaning it can be used as a connecting wall/door to a room;
@@ -151,7 +159,7 @@ local function determine_usage_from_layout(layout_grid,options)
           -- open or none. It's more important to find all squares that *could* be eligible.
 
           -- Sum the adjacent squares
-          local adjacent_sum = local_grid[-1][0].solid + local_grid[1][0].solid + local_grid[0][-1].solid + local_grid[0][1].solid
+          local adjacent_sum = gridsum(local_grid, { {x=-1,y=0},{x=1,y=0},{x=0,y=-1},{x=0,y=1} })
           -- Eligible squares have floor on only one side
           -- This ignores diagonals (which is where complex geometry will produce some eligible squares that aren't
           -- really eligible). But it's complicated because we're after diagonals only on the side where the floor is.
@@ -160,25 +168,26 @@ local function determine_usage_from_layout(layout_grid,options)
           -- the room.
           if adjacent_sum == 3 then
            -- Floor to the north
-            if local_grid[-1][0].solid == 0 then
+            if not local_grid[-1][0].solid then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = 1 }, depth = 1})
             end
             -- Floor to the south
-            if local_grid[1][0].solid == 0 then
+            if not local_grid[1][0].solid then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = -1 }, depth = 1})
             end
             -- Floor to the west
-            if local_grid[0][-1].solid == 0 then
+            if not local_grid[0][-1].solid then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 1, y = 0 }, depth = 1})
             end
             -- Floor to the east
-            if local_grid[0][1].solid == 0 then
+            if not local_grid[0][1].solid then
               set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = -1, y = 0 }, depth = 1})
             end
           else
             -- Wall all around?
             if adjacent_sum == 4 then
-              local diagonal_sum = local_grid[-1][-1].solid + local_grid[1][-1].solid + local_grid[-1][1].solid + local_grid[1][1].solid
+
+              local diagonal_sum = gridsum(local_grid, { {x=-1,y=-1},{x=1,y=-1},{x=-1,y=1},{x=1,y=1} })
 
               -- Wall mostly all around? (We allow one missing corner otherwise rooms can't overlap corners
               -- and logically it's fine for any wall to be placed there, other missing holes will fail the placement
@@ -222,9 +231,8 @@ function paint_grid(paint, options, grid)
     local shape_type = "quad"
     if item.shape ~= nil then shape_type = item.shape end
 
-    -- Get a numerical value for solid (so we can use math when analysing for usage)
-    local solid = feat.has_solid_floor(feature)
-    if solid then solid = 0 else solid = 1 end
+    -- Discover whether the feature type is solid
+    local solid = not feat.has_solid_floor(feature)
 
     -- Paint features onto grid
     if shape_type == "quad" then
