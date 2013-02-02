@@ -793,3 +793,130 @@ x....F.xIJIx
 .GHxxI.K..(x
 xxxxxx....xx
 ENDMAP
+
+NAME: ontoclasm_vaults_fault
+TAGS: vaults_empty
+MAP
+......
+......xx....
+.....x+x....
+.....xx.....
+....x+x.....
+....xx......
+      ......
+ENDMAP
+
+NAME: ontoclasm_vaults_bender
+TAGS: vaults_empty
+SUBST: a : x..
+MAP
+a.............
+..............
+..
+.............a
+a.............
+            ..
+a.........a ..
+........... ..
+..       .. ..
+.. a...a .. ..
+.. ..... .. ..
+.. .. .. .. ..
+..... .. .....
+a...a .. a...a
+ENDMAP
+
+NAME: ontoclasm_vaults_hangar
+TAGS: vaults_empty allow_dup
+MAP
+.....  .....
+..x......x..
+..x......x..
+..xx....xx..
+..xxxxxxxx..
+..xxxxxxxx..
+..xx....xx..
+..x......x..
+..x......x..
+.....  .....
+ENDMAP
+
+NAME: ontoclasm_vaults_gateway
+TAGS: vaults_empty
+SHUFFLE: a+
+SUBST: a = .
+MAP
+...x...
+..GxG..
+..a+a..
+..a+a..
+..a+a..
+..a+a..
+..GxG..
+...x...
+ENDMAP
+
+
+NAME: ontoclasm_vaults_decontamination
+TAGS: vaults_empty
+KMASK: W = no_monster_gen
+MAP
+...  ...
+..xxxx..
+..+WW+..
+..+WW+..
+..xxxx..
+...  ...
+ENDMAP
+
+NAME: ontoclasm_vaults_ligature
+TAGS: vaults_empty
+MAP
+....b.....
+.bbbb.....
+.b........
+.b.....bb.
+..b....b..
+.bb.....b.
+........b.
+.....bbbb.
+.....b....
+ENDMAP
+
+NAME: ontoclasm_vaults_tryst
+TAGS: vaults_empty
+SUBST: T : TTG.
+MAP
+....xxxxxxxxx..
+....x......xx..
+....xxx+xx..x..
+....xx...xx....
+x.xxx.....x.xxx
+x...x..T..x...x
+xxx.x.....xxx.x
+....xx...xx....
+..x..xx+xxx....
+..xx......x....
+..xxxxxxxxx....
+ENDMAP
+
+NAME: ontoclasm_vaults_idyll
+TAGS: vaults_empty vaults_orient_n vaults_orient_s allow_dup
+SUBST: j : jjj. , m : mmm. , g : ggg. , e : eee. , l : lll.
+SUBST: n : nnn. , a : aaa. , o : ooo. , b : bbb.
+SHUFFLE: abcdefghijklmnopqrstuv
+SUBST: abcdefghijklm = w , nopqrstuv = W , T = TU
+KMASK: wW = no_monster_gen
+MAP
+.........
+ .......
+..jjmjj..
+.glhkhlg.
+.gpihipg.
+.eefTfee.
+.nncdcnn.
+.acodoca.
+..obbbo..
+ .......
+.........
+ENDMAP

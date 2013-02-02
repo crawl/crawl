@@ -588,3 +588,101 @@ v.........7........7.........v
 vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
               ..
 ENDMAP
+
+####
+
+NAME: ontoclasm_vaults_water_temple
+WEIGHT: 3
+TAGS: vaults_hard no_pool_fixup
+KMASK: wW = no_monster_gen
+NSUBST: 0 = 1:9 / *:0
+KMONS: 0 = 0 band
+SUBST: G : GU, % = %%%%*.
+MAP
+     ........
+     ........
+      wx++xw
+   xxxxxWWxxxxx
+   xwwwxWWxwwwx
+.. xw0.x++x.0wx ..
+..wxw%W....W%wxw..
+..xxxx.G..G.xxxx..
+..+WW+..WW..+WW+..
+..+WW+..WW..+WW+..
+..xxxx.G..G.xxxx..
+..wxw%WWwwWW%wxw..
+.. xw0.wwww.0wx ..
+   xwwwxxxxwwwx
+ENDMAP
+
+NAME: ontoclasm_vaults_fire_temple
+WEIGHT: 3
+TAGS: vaults_hard
+KMASK: l = no_monster_gen
+NSUBST: 0 = 1:9 / *:0
+KMONS: 0 = 0 band
+SUBST: G : GY, % = %%%%*.
+MAP
+     ........
+     ........
+      lx++xl
+   xxxxx..xxxxx
+   xlllx..xlllx
+.. xl0.x++x.0lx ..
+..lxl%......%lxl..
+..xxxx.llll.xxxx..
+..+..+.lGGl.+..+..
+..+..+......+..+..
+..xxxx.lGGl.xxxx..
+..lxl%.llll.%lxl..
+.. xl0.llll.0lx ..
+   xlllxxxxlllx
+ENDMAP
+
+NAME: ontoclasm_vaults_shout
+TAGS: vaults_hard
+KMONS: 0 = 0 band
+MAP
+..xxxxxxx
+..x.9...xx
+..x%.9...x
+..xxxxx..x
+.....+..0x
+.....+..0x
+..xxxxx..x
+..x%.9...x
+..x.9...xx
+..xxxxxxx
+ENDMAP
+
+NAME: ontoclasm_vaults_gallery
+TAGS: vaults_hard
+NSUBST: 9 = 1:0 / 1=8 / *:9
+MAP
+G...........G
+..x.......x..
+..xx..%..xx..
+..x.GGGGG.x..
+..xx..9..xx..
+..x*9.9.9*x..
+..xxxxxxxxx..
+ENDMAP
+
+NAME: ontoclasm_vaults_echo
+WEIGHT: 3
+TAGS: vaults_hard no_rotate vaults_orient_s
+NSUBST: % = 2=% / 1=* / *=.
+SUBST: G : GGGTUY
+MAP
+x%..x.x..%x
+..8..|..8..
+....x.x....
+x.xxxxxxx.x
+%....x....%
+.9.x...x.9.
+...x...x...
+x.%x...x%.x
+xxxxx.xxxxx
+...G...G...
+...........
+ENDMAP
