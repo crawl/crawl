@@ -3763,7 +3763,9 @@ void bolt::affect_player()
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
          || (name == "chilling blast" && you.airborne())
          || (name == "lance of force" && hurted > 0))
+    {
         beam_hits_actor(&you);
+    }
 }
 
 int bolt::apply_AC(const actor *victim, int hurted)
