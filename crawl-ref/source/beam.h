@@ -201,6 +201,7 @@ public:
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
+    bool ignores_monster(const monster* mon) const;
 
     maybe_bool affects_wall(dungeon_feature_type wall) const;
 

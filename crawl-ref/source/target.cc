@@ -106,7 +106,7 @@ bool targetter_beam::set_aim(coord_def a)
                 break;
             tempbeam2.target = *i;
             if (anyone_there(*i)
-                && !fedhas_shoot_through(tempbeam, monster_at(*i)))
+                && !tempbeam.ignores_monster(monster_at(*i)))
             {
                 break;
             }
@@ -174,8 +174,8 @@ aff_type targetter_beam::is_affected(coord_def loc)
                 return current;
         }
         if (anyone_there(*i)
-            && !fedhas_shoot_through(beam, monster_at(*i))
-            && !penetrates_targets)
+            && !penetrates_targets
+            && !beam.ignores_monster(monster_at(*i)))
         {
             // We assume an exploding spell will always stop here.
             if (max_expl_rad > 0)
@@ -229,7 +229,7 @@ bool targetter_imb::set_aim(coord_def a)
         c = *i;
         cur_path.push_back(c);
         if (!(anyone_there(c)
-              && !fedhas_shoot_through(beam, monster_at(c)))
+              && !beam.ignores_monster((monster_at(c))))
             && c != end)
             continue;
 
@@ -243,7 +243,7 @@ bool targetter_imb::set_aim(coord_def a)
             which_splash->push_back(*ai);
             if (!cell_is_solid(*ai)
                 && !(anyone_there(*ai)
-                     && !fedhas_shoot_through(beam, monster_at(*ai))))
+                     && !beam.ignores_monster(monster_at(*ai))))
             {
                 which_splash->push_back(c + (*ai - c) * 2);
             }
@@ -864,7 +864,7 @@ aff_type targetter_spray::is_affected(coord_def loc)
                 break;
             }
             else if (anyone_there(*i)
-                && !fedhas_shoot_through(beams[n], monster_at(*i)))
+                && !beams[n].ignores_monster(monster_at(*i)))
             {
                 beam_affect = AFF_MAYBE;
             }

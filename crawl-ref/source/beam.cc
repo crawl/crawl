@@ -4327,55 +4327,22 @@ void bolt::affect_monster(monster* mon)
     }
 
     hit_count[mon->mid]++;
-    // First some special cases.
 
-    // Digging doesn't affect monsters (should it harm earth elementals?)
-    if (flavour == BEAM_DIGGING)
+    if (fedhas_shoot_through(*this, mon) && !is_tracer)
     {
-        apply_hit_funcs(mon, 0);
-        return;
-    }
-
-    // All kinds of beams go past orbs of destruction and arcane familiars.
-    // We don't check mons_is_projectile() since that probably won't be the
-    // case for rolling boulders.
-    if (mon->type == MONS_ORB_OF_DESTRUCTION || mon->type == MONS_ARCANE_FAMILIAR)
-    {
-        apply_hit_funcs(mon, 0);
-        return;
-    }
-
-    // Missiles go past bushes.
-    if (mon->type == MONS_BUSH && !is_beam && !is_explosion
-        && name != "sticky flame"
-        && name != "splash of liquid fire"
-        && name != "lightning arc")
-    {
-        apply_hit_funcs(mon, 0);
-        return;
-    }
-
-    if (fedhas_shoot_through(*this, mon))
-    {
-        apply_hit_funcs(mon, 0);
-        if (!is_tracer)
+        // FIXME: Could use a better message, something about
+        // dodging that doesn't sound excessively weird would be
+        // nice.
+        if (you.see_cell(mon->pos()))
         {
-            // FIXME: Could use a better message, something about
-            // dodging that doesn't sound excessively weird would be
-            // nice.
-            if (you.see_cell(mon->pos()))
-            {
-                simple_god_message(
-                    make_stringf(" protects %s plant from harm.",
-                        attitude == ATT_FRIENDLY ? "your" : "a").c_str(),
-                    GOD_FEDHAS);
-            }
+            simple_god_message(
+                make_stringf(" protects %s plant from harm.",
+                    attitude == ATT_FRIENDLY ? "your" : "a").c_str(),
+                GOD_FEDHAS);
         }
-        return;
     }
 
-    // Fire storm creates these, so we'll avoid affecting them
-    if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
+    if (ignores_monster(mon))
     {
         apply_hit_funcs(mon, 0);
         return;
@@ -4647,6 +4614,35 @@ void bolt::affect_monster(monster* mon)
     }
 
     extra_range_used += range_used_on_hit();
+}
+
+bool bolt::ignores_monster(const monster* mon) const
+{
+    // Digging doesn't affect monsters (should it harm earth elementals?)
+    if (flavour == BEAM_DIGGING)
+        return true;
+
+    // All kinds of beams go past orbs of destruction and arcane familiars.
+    // We don't check mons_is_projectile() since that probably won't be the
+    // case for rolling boulders.
+    if (mon->type == MONS_ORB_OF_DESTRUCTION || mon->type == MONS_ARCANE_FAMILIAR)
+        return true;
+
+    // Missiles go past bushes.
+    if (mon->type == MONS_BUSH && !is_beam && !is_explosion
+        && name != "sticky flame"
+        && name != "splash of liquid fire"
+        && name != "lightning arc")
+        return true;
+
+    if (fedhas_shoot_through(*this, mon))
+        return true;
+
+    // Fire storm creates these, so we'll avoid affecting them
+    if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
+        return true;
+
+    return false;
 }
 
 bool bolt::has_saving_throw() const
