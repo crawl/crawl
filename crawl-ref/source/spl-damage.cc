@@ -1696,6 +1696,10 @@ static bool _safe_discharge(coord_def where, vector<const monster *> &exclude)
 
         if (find(exclude.begin(), exclude.end(), mon) == exclude.end())
         {
+            // Harmless to these monsters, so don't prompt about hitting them
+            if (mon->res_elec() > 0 || mons_flies(mon))
+                continue;
+
             if (stop_attack_prompt(mon, false, where))
                 return false;
 
