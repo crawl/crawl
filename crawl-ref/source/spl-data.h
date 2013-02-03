@@ -436,7 +436,7 @@ struct spell_desc
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     4, // SPTYP_NONE spells have no default noise level
+     4,
      "Smite",
      false,
      false
@@ -2117,7 +2117,7 @@ struct spell_desc
      1,
      0,
      -1, -1,
-     1, // SPTYP_NONE spells have no default noise level
+     1,
      NULL,
      false,
      false
