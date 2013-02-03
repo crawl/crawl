@@ -403,6 +403,12 @@ static bool _map_safe_vault_place(const map_def &map,
     const bool water_ok =
         map.has_tag("water_ok") || player_in_branch(BRANCH_SWAMP);
 
+    const bool vault_can_overwrite_other_vaults =
+        map.has_tag("can_overwrite");
+
+    const bool vault_can_replace_portals =
+        map.has_tag("replace_portal");
+
     const vector<string> &lines = map.map.get_lines();
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
     {
@@ -412,7 +418,7 @@ static bool _map_safe_vault_place(const map_def &map,
         if (lines[dp.y][dp.x] == ' ')
             continue;
 
-        if (!map.has_tag("can_overwrite"))
+        if (!vault_can_overwrite_other_vaults)
         {
             // Also check adjacent squares for collisions, because being next
             // to another vault may block off one of this vault's exits.
@@ -426,7 +432,7 @@ static bool _map_safe_vault_place(const map_def &map,
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
         if (!_may_overwrite_feature(cp, water_ok)
-            && (!map.has_tag("replace_portal")
+            && (!vault_can_replace_portals
                 || !_is_portal_place(cp)))
         {
             return false;
@@ -458,7 +464,6 @@ static bool _connected_minivault_place(const coord_def &c,
         return true;
 
     // Must not be completely isolated.
-    const bool water_ok = place.map.has_tag("water_ok");
     const vector<string> &lines = place.map.map.get_lines();
 
     for (rectangle_iterator ri(c, c + place.size - 1); ri; ++ri)
@@ -468,7 +473,7 @@ static bool _connected_minivault_place(const coord_def &c,
         if (lines[ci.y - c.y][ci.x - c.x] == ' ')
             continue;
 
-        if (_may_overwrite_feature(ci, water_ok, false)
+        if (_may_overwrite_feature(ci, false, false)
             || (place.map.has_tag("replace_portal")
                 && _is_portal_place(ci)))
             return true;

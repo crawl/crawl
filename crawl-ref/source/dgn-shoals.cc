@@ -281,43 +281,8 @@ static void _shoals_deepen_water()
     }
 }
 
-static coord_def _pick_shoals_island()
-{
-    return _shoals_islands.pick_and_remove_random_island();
-}
-
 static void _shoals_furniture(int margin)
 {
-    if (at_branch_bottom())
-    {
-        const coord_def p = _pick_shoals_island();
-        const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
-        const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
-        dgn_ensure_vault_placed(dgn_place_map(vault, true, false, p), false);
-
-        const int nhuts = min(8, int(_shoals_islands.islands.size()));
-        for (int i = 2; i < nhuts; ++i)
-        {
-            // Place (non-rune) minivaults on the other islands. We
-            // reuse the shoal rune huts, but do not place the rune
-            // again.
-            int tries = 5;
-            do
-                vault = random_map_for_tag("shoal_hut");
-            while (!vault && --tries > 0);
-            if (vault)
-                dgn_place_map(vault, true, false, _pick_shoals_island());
-        }
-
-        // Fixup pass to connect vaults.
-        for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
-        {
-            vault_placement &vp(*env.level_vaults[i]);
-            if (vp.map.has_tag(SHOAL_RUNE_HUT))
-                vp.connect();
-        }
-    }
-
     dgn_place_stone_stairs();
 }
 
