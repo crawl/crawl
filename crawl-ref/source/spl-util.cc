@@ -1012,9 +1012,7 @@ int spell_noise(spell_type spell)
     unsigned int disciplines = desc->disciplines;
     int level = desc->level + desc->noise_mod;
 
-    if (disciplines == SPTYP_NONE)
-        return 0;
-    else if (disciplines & SPTYP_CONJURATION)
+    if (disciplines & SPTYP_CONJURATION)
         return level;
     else if (disciplines && !(disciplines & (SPTYP_POISON | SPTYP_AIR)))
         return div_round_up(level * 3, 4);
