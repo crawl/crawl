@@ -3227,7 +3227,7 @@ bool mons_can_attack(const monster* mon)
     return adjacent(mon->pos(), foe->pos());
 }
 
-gender_type mons_class_gender(monster_type mc)
+static gender_type _mons_class_gender(monster_type mc)
 {
     gender_type gender = GENDER_NEUTER;
 
@@ -3302,7 +3302,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
 {
     gender_type gender = !visible ? GENDER_NEUTER
-                                  : mons_class_gender(mon_type);
+                                  : _mons_class_gender(mon_type);
 
     switch (variant)
     {
