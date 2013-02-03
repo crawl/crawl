@@ -1711,6 +1711,21 @@ static int _calc_breath_ability_range(ability_type ability)
     return -2;
 }
 
+static bool _sticky_flame_can_hit(const actor *act)
+{
+    if (act->is_monster())
+    {
+        const monster* mons = act->as_monster();
+        bolt testbeam;
+        testbeam.thrower = KILL_YOU;
+        zappy(ZAP_BREATHE_STICKY_FLAME, 100, testbeam);
+
+        return !testbeam.ignores_monster(mons);
+    }
+    else
+        return false;
+}
+
 static bool _do_ability(const ability_def& abil)
 {
     int power;
@@ -1959,7 +1974,7 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
 
-        if (stop_attack_prompt(hitfunc, "spit at"))
+        if (stop_attack_prompt(hitfunc, "spit at", _sticky_flame_can_hit))
             return false;
 
         zapping(ZAP_BREATHE_STICKY_FLAME, (you.form == TRAN_DRAGON) ?
