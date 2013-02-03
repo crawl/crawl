@@ -250,13 +250,13 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
     if (msg)
         mpr(msg);
 
-    if (ztype == ZAP_LIGHTNING)
+    if (ztype == ZAP_BOLT_OF_LIGHTNING)
     {
         noisy(25, you.pos(), "You hear a mighty clap of thunder!");
         pbolt.heard = true;
     }
 
-    if (ztype == ZAP_DIGGING)
+    if (ztype == ZAP_DIG)
         pbolt.aimed_at_spot = false;
 
     pbolt.fire();

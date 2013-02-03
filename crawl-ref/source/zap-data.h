@@ -26,7 +26,7 @@ struct zap_info
 */
 
 {
-    ZAP_FLAME,
+    ZAP_THROW_FLAME,
     "puff of flame",
     50,
     new dicedef_calculator<2, 4, 1, 10>,
@@ -42,7 +42,7 @@ struct zap_info
 },
 
 {
-    ZAP_FROST,
+    ZAP_THROW_FROST,
     "puff of frost",
     50,
     new dicedef_calculator<2, 4, 1, 10>,
@@ -58,7 +58,7 @@ struct zap_info
 },
 
 {
-    ZAP_SLOWING,
+    ZAP_SLOW,
     "",
     100,
     NULL,
@@ -74,7 +74,7 @@ struct zap_info
 },
 
 {
-    ZAP_HASTING,
+    ZAP_HASTE,
     "",
     100,
     NULL,
@@ -90,7 +90,7 @@ struct zap_info
 },
 
 {
-    ZAP_MAGIC_DARTS,
+    ZAP_MAGIC_DART,
     "magic dart",
     25,
     new dicedef_calculator<1, 3, 1, 5>,
@@ -122,7 +122,7 @@ struct zap_info
 },
 
 {
-    ZAP_PARALYSIS,
+    ZAP_PARALYSE,
     "",
     100,
     NULL,
@@ -138,7 +138,7 @@ struct zap_info
 },
 
 {
-    ZAP_FIRE,
+    ZAP_BOLT_OF_FIRE,
     "bolt of fire",
     200,
     new calcdice_calculator<6, 18, 2, 3>,
@@ -154,7 +154,7 @@ struct zap_info
 },
 
 {
-    ZAP_COLD,
+    ZAP_BOLT_OF_COLD,
     "bolt of cold",
     200,
     new calcdice_calculator<6, 18, 2, 3>,
@@ -186,7 +186,7 @@ struct zap_info
 },
 
 {
-    ZAP_CONFUSION,
+    ZAP_CONFUSE,
     "",
     100,
     NULL,
@@ -218,7 +218,7 @@ struct zap_info
 },
 
 {
-    ZAP_DIGGING,
+    ZAP_DIG,
     "",
     100,
     NULL,
@@ -250,7 +250,7 @@ struct zap_info
 },
 
 {
-    ZAP_TELEPORTATION,
+    ZAP_TELEPORT_OTHER,
     "",
     100,
     NULL,
@@ -266,7 +266,7 @@ struct zap_info
 },
 
 {
-    ZAP_LIGHTNING,
+    ZAP_BOLT_OF_LIGHTNING,
     "bolt of lightning",
     200,
     new calcdice_calculator<1, 11, 3, 5>,
@@ -330,7 +330,7 @@ struct zap_info
 },
 
 {
-    ZAP_CRYSTAL_SPEAR,
+    ZAP_LEHUDIBS_CRYSTAL_SPEAR,
     "crystal spear",
     200,
     new calcdice_calculator<10, 23, 1, 1>,
@@ -346,7 +346,7 @@ struct zap_info
 },
 
 {
-    ZAP_BEAM_OF_ENERGY,
+    ZAP_BOLT_OF_INACCURACY,
     "narrow beam of energy",
     1000,
     new calcdice_calculator<10, 40, 1, 1>,
@@ -362,7 +362,7 @@ struct zap_info
 },
 
 {
-    ZAP_MYSTIC_BLAST,
+    ZAP_ISKENDERUNS_MYSTIC_BLAST,
     "orb of energy",
     100,
     new calcdice_calculator<2, 12, 1, 3>,
@@ -426,6 +426,22 @@ struct zap_info
 },
 
 {
+    ZAP_STICKY_FLAME_RANGE,
+    "sticky flame",
+    100,
+    new dicedef_calculator<2, 3, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    1
+},
+
+{
     ZAP_DISPEL_UNDEAD,
     "",
     100,
@@ -458,7 +474,7 @@ struct zap_info
 },
 
 {
-    ZAP_DEGENERATION,
+    ZAP_CIGOTUVIS_DEGENERATION,
     "",
     100,
     NULL,
@@ -554,7 +570,7 @@ struct zap_info
 },
 
 {
-    ZAP_ELECTRICITY,
+    ZAP_SHOCK,
     "zap",
     25,
     new dicedef_calculator<1, 3, 1, 4>,
@@ -732,7 +748,7 @@ struct zap_info
 },
 
 {
-    ZAP_DISINTEGRATION,
+    ZAP_DISINTEGRATE,
     "",
     100,
     new calcdice_calculator<3, 15, 3, 4>,
@@ -892,7 +908,7 @@ struct zap_info
 },
 
 {
-    ZAP_MAGMA,
+    ZAP_BOLT_OF_MAGMA,
     "bolt of magma",
     200,
     new calcdice_calculator<4, 16, 2, 3>,
@@ -1085,7 +1101,7 @@ struct zap_info
 },
 
 {
-    ZAP_BLAST_OF_SILVER,
+    ZAP_SILVER_BLAST,
     "silver light",
     200,
     new calcdice_calculator<3, 10, 1, 2>,

@@ -3106,25 +3106,25 @@ zap_type item_def::zap() const
 
     switch (wand_sub_type)
     {
-    case WAND_FLAME:           result = ZAP_FLAME;           break;
-    case WAND_FROST:           result = ZAP_FROST;           break;
-    case WAND_SLOWING:         result = ZAP_SLOWING;         break;
-    case WAND_HASTING:         result = ZAP_HASTING;         break;
-    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DARTS;     break;
+    case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
+    case WAND_FROST:           result = ZAP_THROW_FROST;     break;
+    case WAND_SLOWING:         result = ZAP_SLOW;            break;
+    case WAND_HASTING:         result = ZAP_HASTE;           break;
+    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DART;      break;
     case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
-    case WAND_PARALYSIS:       result = ZAP_PARALYSIS;       break;
-    case WAND_FIRE:            result = ZAP_FIRE;            break;
-    case WAND_COLD:            result = ZAP_COLD;            break;
-    case WAND_CONFUSION:       result = ZAP_CONFUSION;       break;
+    case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
+    case WAND_FIRE:            result = ZAP_BOLT_OF_FIRE;    break;
+    case WAND_COLD:            result = ZAP_BOLT_OF_COLD;    break;
+    case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
     case WAND_INVISIBILITY:    result = ZAP_INVISIBILITY;    break;
-    case WAND_DIGGING:         result = ZAP_DIGGING;         break;
+    case WAND_DIGGING:         result = ZAP_DIG;             break;
     case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
-    case WAND_TELEPORTATION:   result = ZAP_TELEPORTATION;   break;
-    case WAND_LIGHTNING:       result = ZAP_LIGHTNING;       break;
+    case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
+    case WAND_LIGHTNING:       result = ZAP_BOLT_OF_LIGHTNING; break;
     case WAND_POLYMORPH_OTHER: result = ZAP_POLYMORPH_OTHER; break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
     case WAND_DRAINING:        result = ZAP_NEGATIVE_ENERGY; break;
-    case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATION;  break;
+    case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
     case WAND_RANDOM_EFFECTS:  /* impossible */
     case NUM_WANDS: break;
     }
