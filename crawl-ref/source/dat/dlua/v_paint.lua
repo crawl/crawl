@@ -17,12 +17,11 @@
 -- Initialize and empty usage grid
 local function new_layout(width, height)
   layout_grid = { width = width, height = height }
-  local gxm, gym = dgn.max_bounds()
 
-  for y = 0, (gym-1), 1 do
+  for y = 0, (height - 1), 1 do
     layout_grid[y] = { }
-    for x = 0, (gxm-1), 1 do
-      layout_grid[y][x] = { solid = 1 } -- 1 means wall
+    for x = 0, (width - 1), 1 do
+      layout_grid[y][x] = { solid = true } -- 1 means wall
     end
   end
   return layout_grid

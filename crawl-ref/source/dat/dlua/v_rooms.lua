@@ -26,7 +26,7 @@ local function vaults_vector_add(start, move, xVector, yVector)
 end
 
 -- Rotates count * 90 degrees anticlockwise
--- Highly rudimentary
+-- Highly rudimentary, and not actually used for anything, keeping around for now just in case.
 local function vector_rotate(vec, count)
   if count > 0 then
     local rotated = { x = -vec.y, y = vec.x }
@@ -64,9 +64,9 @@ local function make_code_room(options,chosen)
   }
 
   -- Make grid empty space
-  for n = 0, size.x-1, 1 do
-    for m = 0, size.y-1, 1 do
-      vaults_set_layout(room.grid,n,m, { solid = true, space = true, feature = "rock_wall" })
+  for n = 0, size.x - 1, 1 do
+    for m = 0, size.y - 1, 1 do
+      vaults_set_layout(room.grid,n,m, { solid = true, space = true, feature = "space" })
     end
   end
 
@@ -94,7 +94,6 @@ local function make_tagged_room(options,chosen)
   if map == nil then return nil end
   -- Allow map to be flipped and rotated again, otherwise we'll struggle later when we want to rotate it into the correct orientation
   dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
-
 
   local room_width,room_height = dgn.mapsize(map)
   local veto = false
@@ -126,6 +125,7 @@ local function make_tagged_room(options,chosen)
       for n = 0, room.size.x - 1, 1 do
         local inspected = { }
         inspected.feature, inspected.exit, inspected.space = dgn.inspect_map(vplace,n,m)
+        inspected.solid = not feat.has_solid_floor(inspected.feature)
         inspected.feature = dgn.feature_name(inspected.feature)
         room.grid[m][n] = inspected
       end
@@ -165,7 +165,8 @@ local function pick_room(e, options)
 
     if room ~= nil and room.grid ~= nil then
 
-      -- Figure out walls
+      -- Create a grid for the wall mask. It's 1 unit bigger on all sides than the standard grid. In this we will track where we need to place walls and also
+      -- if those walls are connected, i.e. border onto a passable square in such a way that they can be used as a door.
       room.walls = { }
       room.mask_grid = { }
       local has_exits = false
@@ -407,11 +408,47 @@ function place_vaults_room(e,usage_grid,room, options)
   return { placed = done }
 end
 
+local function decorate_walls(room, connections, door_required, has_windows)
+
+  -- TODO: Use decorator callbacks for these so we can vary by layout
+  local have_door = true
+  if not door_required then
+    have_door = crawl.x_chance_in_y(4,5)
+  end
+
+  if have_door then
+  local num_doors = math.abs(crawl.random2avg(9,4)-4)+1  -- Should tend towards 1 but rarely can be up to 5
+    for n=1,num_doors,1 do
+      -- This could pick a door we've already picked; doesn't matter, this just makes more doors even slightly
+      -- less likely
+      local door = connections[crawl.random2(#connections)+1]
+      if door ~= nil then
+        dgn.grid(door.grid_pos.x,door.grid_pos.y, "closed_door")
+        door.is_door = true
+      end
+    end
+  end
+
+  -- Optionally place windows
+  if has_windows then
+    local num_windows = math.abs(crawl.random2avg(5,3)-2)+2  -- Should tend towards 2 but rarely can be up to 4
+
+    for n=1,num_windows,1 do
+      -- This could pick a door we've already picked; doesn't matter, this just makes more doors even slightly less likelier
+      local door = connections[crawl.random2(#connections)+1]
+      if door ~= nil and not door.is_door then
+        dgn.grid(door.grid_pos.x,door.grid_pos.y, "clear_stone_wall")
+        door.is_window = true
+      end
+    end
+  end
+end
+
 -- Attempts to place a room by picking a random available spot
 function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local v_normal, v_wall, clear_bounds, orient, v_normal_dir,wall
 
-  -- Choose which wall to attach available ones (as determined in pick_room)
+  -- Choose which wall of the room to attach to this spot (walls were determined in pick_room)
   local orients = { }
   for n = 0, 3, 1 do
     if room.walls[n].eligible then
@@ -436,7 +473,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     -- Pick a random rotation for the door wall
     v_normal = normals[crawl.random_range(1,4)]
     v_normal_dir = v_normal.dir
-    v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
   end
 
   -- If placing a room in an existing wall we have the normal stored alredy in the usage data
@@ -447,16 +483,13 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
         v_normal_dir = n.dir
       end
     end
-    v_wall = vector_rotate(v_normal, 1)  -- Wall normal is perpendicular
   end
 
   local is_clear, room_width, room_height = true, room.size.x, room.size.y
-  -- Exchange width and height if the room has rotated
-  -- if orient.dir % 2 == 1 then room_width, room_height = room_height, room_width end
 
   -- Figure out the mapped x and y vectors of the room relative to its orient
   local room_final_y_dir = (v_normal_dir - chosen_wall.dir + 2) % 4
-  local room_final_x_dir = (room_final_y_dir + 1)%4
+  local room_final_x_dir = (room_final_y_dir + 1) % 4
   local room_final_x_normal = normals[room_final_x_dir+1]
   local room_final_y_normal = normals[room_final_y_dir+1]
 
@@ -474,8 +507,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- map squares easier in the future
   local coords_list = {}
 
-  for m = -1, room_height, 1 do
-    for n = -1, room_width, 1 do
+  for m = -1, room.size.y, 1 do
+    for n = -1, room.size.x, 1 do
       local coord = { room_pos = { x = n, y = m } }
       coord.grid_pos = vaults_vector_add(room_base, coord.room_pos, room_final_x_normal, room_final_y_normal)
       coord.grid_usage = vaults_get_usage(usage_grid, coord.grid_pos.x, coord.grid_pos.y)
@@ -513,7 +546,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- a significant optimisation; but this will mean to correctly do empty space collapsing we'd have to first create a correctly transformed
   -- map of the space which would negate this optimisation. However we only need to compute the space once for each of the four orientations
   -- so maybe that should happen in the pick_room phase.
-  local space_tl,space_br = vaults_vector_add(room_base, { x = -1, y = -1 }, room_final_x_normal, room_final_y_normal),vaults_vector_add(room_base, { x = room_width, y = room_height }, room_final_x_normal, room_final_y_normal)
+  local space_tl,space_br = vaults_vector_add(room_base, { x = -1, y = -1 }, room_final_x_normal, room_final_y_normal),vaults_vector_add(room_base, { x = room.size.x, y = room.size.y }, room_final_x_normal, room_final_y_normal)
   local space_p1,space_p2 = dgn.point(math.min(space_tl.x,space_br.x),math.min(space_tl.y,space_br.y)),dgn.point(math.max(space_tl.x,space_br.x),math.max(space_tl.y,space_br.y))
 
   -- For open rooms, check a border all around the outside of the wall. We don't want to land right next to another room because we could cut off its door,
@@ -588,7 +621,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     local mask_cell = coord.room_mask
 
     if mask_cell.vault then
-      print "VAULT"
       vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "restricted", room = room, reason = "vault" })
     elseif mask_cell.empty then
       vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "empty" })
@@ -598,32 +630,37 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       local grid_coord = coord.grid_pos
       local current_usage = coord.grid_usage
 
-      if usage.usage == "open" and current_usage.usage == "open" then
-        -- Allow doors on other sides with open rooms
-        table.insert(incidental_connections, { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage})
+      if usage.usage == "open" and current_usage.usage == "open" and mask_cell.connected then
+        -- Count all sides as door connections; potentially we'll get doors on multiple side
+        table.insert(door_connections, { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
       end
       if (current_usage.usage == "eligible" and usage.usage == "eligible") or (current_usage.usage == "eligible_open" and usage.usage == "eligible_open") then
       -- Overlapping cells with current room, these are potential door wall candidates
         if usage.room == current_usage.room then
           -- Door connections
           vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = "restricted", room = room, reason = "door" })
-          table.insert(door_connections, { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage})
+          if mask_cell.connected then
+            table.insert(door_connections, { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
+          end
         else
           -- Incidental connections, we can optionally make doors here
           vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = "restricted", room = room, reason = "cell" })
-          table.insert(incidental_connections, { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage})
+          if mask_cell.connected then
+            if incidental_connections[mask_cell.dir] == nil then incidental_connections[mask_cell.dir] = {} end
+            table.insert(incidental_connections[mask_cell.dir], { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
+          end
         end
       end
       -- Carving into rock / open space
-      if mask_cell.connected and ((current_usage.usage == "none" and usage.usage == "eligible") or (current_usage.usage == "open" and usage.usage == "eligible_open")) then
-        print ("Setting usage eligible/_open")
-        local u_wall_dir = (mask_cell.dir + room_final_y_dir) % 4
+      if mask_cell.connected and ((current_usage.usage == "none" and usage.usage == "eligible") or (current_usage.usage == "open" and (usage.usage == "eligible_open" or usage.usage == "open"))) then
+        local u_wall_dir = (room_final_y_dir + mask_cell.dir) % 4
         vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = wall_usage, normal = normals[u_wall_dir + 1], room = room, depth = new_depth, cell = grid_cell, mask = mask_cell })
       end
+
     end
   end
 
-    -- TODO: Following logic to be reintegrated into above loop
+    -- TODO: Following logic to be reintegrated into code room generation
   -- local set_empty = crawl.coinflip() -- Allow the room to be used for more rooms or not?
    --   elseif x > origin.x + 1 and x < opposite.x-1 and y > origin.y - 1 and y < opposite.y - 1 then  -- Leaving a 2 tile border
     --    vaults_set_usage(usage_grid,x,y,{usage = "open"})
@@ -634,20 +671,14 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- How big the door?
   local needs_door = true  -- Only reason we wouldn't need a door is if we're intentionally creating a dead end, not implemented yet
   if needs_door then
-    door_length = 1
-    dgn.grid(pos.x,pos.y, "closed_door")  -- Placing door only on original spot for now, figure out bigger doors later
+    local has_windows = (not room.no_windows) and crawl.one_chance_in(5)
 
-    -- Optionally generate windows (temp. disabled)
-    if false and door_length < room_width and crawl.one_chance_in(5) and (room.map == nil or not dgn.has_tag(room.map,"vaults_no_windows")) then
-      local window_pos1 = crawl.random_range(0, door_start - 1)
-      local window_pos2 = crawl.random_range(0, door_start - 1)
-      local window_1l = vaults_vector_add(room_base, { x = window_pos1, y = -1 }, v_wall, v_normal)
-      local window_1r = vaults_vector_add(room_base, { x = room_width - 1 - window_pos1, y = -1 }, v_wall, v_normal)
-      local window_2l = vaults_vector_add(room_base, { x = window_pos2, y = -1 }, v_wall, v_normal)
-      local window_2r = vaults_vector_add(room_base, { x = room_width - 1 - window_pos2, y = -1 }, v_wall, v_normal)
-
-      dgn.fill_grd_area(window_1l.x, window_1l.y, window_2l.x, window_2l.y, "clear_stone_wall") -- TODO: Vary window type
-      dgn.fill_grd_area(window_1r.x, window_1r.y, window_2r.x, window_2r.y, "clear_stone_wall")
+    decorate_walls(room,door_connections,true,has_windows)
+    -- Have a chance to add doors / windows to each other side of the room
+    for n = 0, 3, 1 do
+      if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
+        decorate_walls(room,incidental_connections[n],false,has_windows)
+      end
     end
 
   end
