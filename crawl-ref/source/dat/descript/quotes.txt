@@ -3000,6 +3000,11 @@ wight
  That doth his life in so long tendance spend!”
     -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
 %%%%
+witch
+
+“Thou shalt not suffer a witch to live.”
+    -KJV Bible, Exodus 22:18
+%%%%
 wizard
 
 “Each family or tribe has a wizard or conjuring doctor, whose office we could
