@@ -3,6 +3,20 @@
 ################################################################################
 
 {{
+
+function shoals_finale_setup(e, qualifier, decoy_count)
+  qualifier = "_" .. qualifier
+  if not decoy_count then
+    decoy_count = crawl.random_range(6, 8)
+  end
+  e.hook('post_place', function ()
+    dgn.place_maps{tag=("shoal_rune" .. qualifier), count=1, die_on_error=true}
+    dgn.place_maps{tag="shoal_guardian", count=1, die_on_error=true}
+    dgn.place_maps{tag=("shoal_hut" .. qualifier), count=decoy_count,
+                   die_on_error=true}
+  end)
+end
+
 -- When the kraken dies, the tides will control the water, so the items will
 -- be accessible!
 function shoals_atoll_kraken_death(data, triggerable, triggerer, marker, ev)
@@ -356,6 +370,16 @@ ENDMAP
 # (which need not be encompassing) are sometimes used, though.
 ##############################################################################
 
+NAME: shoals_end_simple
+PLACE: Shoals:$
+: shoals_finale_setup(_G, 'simple')
+
+# HangedMan's alternative Shoals ending
+NAME: shoals_end_hangedman
+PLACE: Shoals:$
+WEIGHT: 8
+: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,7))
+
 ################################################################################
 # Shoal hut with rune inside.
 #
@@ -363,7 +387,7 @@ ENDMAP
 # item.
 #
 NAME:      shoalhut_rune
-TAGS:      shoal_rune_hut water_ok no_dump allow_dup
+TAGS:      shoal_rune_simple water_ok no_dump mini_float
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.
@@ -385,7 +409,7 @@ ENDMAP
 # Shoal decoy hut
 #
 NAME:      shoalhut
-TAGS:      shoal_hut water_ok no_dump allow_dup
+TAGS:      shoal_hut_simple water_ok no_dump allow_dup mini_float
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.
@@ -401,12 +425,11 @@ xx.0.xx
 ENDMAP
 
 ################################################################################
-# Shoal hangout of Ilsuiw. Using PLACE: makes this quite likely to turn up.
+# Shoal hangout of Ilsuiw.
 # The hut itself may not contain Ilsuiw if she had other engagements.
 
 NAME:    shoal_ilsuiw
-PLACE:   Shoals:$
-TAGS:    mini_float
+TAGS:    mini_float shoal_guardian
 KMONS:   1 = Ilsuiw band, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer
 SUBST:   3 = 33w
@@ -421,4 +444,56 @@ w3w1w3w
 xwwwwwx
 wxw2wxw
  wxwxw
+ENDMAP
+
+################################################################################
+# HangedMan's alternative Shoals:$
+
+NAME:    shoals_rune_alternative
+TAGS:    shoal_rune_hangedman water_ok allow_dup transparent mini_float
+KMONS:   12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
+KMONS:   3 = kraken / harpy band w:5
+KMONS:   d = siren / mermaid w:5
+KITEM:   d = barnacled rune of zot
+KFEAT:   123 = w
+KFEAT:   d = W
+KPROP:   d = no_tide
+SHUFFLE: AB / AB / BA, CD / CD / DC
+NSUBST:  2 = 2 = 22w / * = 22www, 0 = 2:0 / * = 00...
+SUBST:   AC = x, B = w, D = .
+LROCKTILE: wall_vines
+MAP
+  xxxxxxx
+ xx12wwwxx
+xx2x..00Wxx
+x1xd02w..Wx
+x2.03Awx..x
+xw.2AxBw..x
+xw0wwBw.D.x
+xw0.xw..C.x
+xxW...DC.x@
+ xxW....x..
+  xxxxxx@.
+ENDMAP
+
+NAME:    shoals_rune_alternative_decoy
+TAGS:    shoal_hut_hangedman water_ok allow_dup transparent mini_float
+KMONS:   0 = 0
+KITEM:   | = |
+KFEAT:   | = W
+SHUFFLE: AB / AB / BA, CD / CD / DC
+NSUBST:  0 = 3:0 / * = 00...
+SUBST:   AC = x, B = w, D = .
+MAP
+  xxxxxxx
+ xxwwwwwxx
+xxwx00.0Wxx
+xwx|0ww..Wx
+xw00wAwx..x
+xw0wAxBw..x
+xw.wwBw.D.x
+xw0.xw..C.x
+xxW...DC.x@
+ xxW....x..
+  xxxxxx@.
 ENDMAP

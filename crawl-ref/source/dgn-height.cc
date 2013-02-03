@@ -18,6 +18,12 @@ void dgn_initialise_heightmap(int height)
         dgn_height_at(*ri) = height;
 }
 
+void dgn_height_set_at(const coord_def &c, int height)
+{
+    if (env.heightmap.get())
+        dgn_height_at(c) = height;
+}
+
 int resolve_range(int_range range, int nrolls)
 {
     return random_range(range.first, range.second, nrolls);
