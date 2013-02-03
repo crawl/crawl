@@ -111,7 +111,7 @@ void initialise_temples()
             = const_cast<map_def*>(random_map_for_place(ecumenical, false));
 
         if (main_temple == NULL)
-            end (1, false, "No temples?!");
+            end(1, false, "No temples?!");
 
         // Without all this find_glyph() returns 0.
         string err;
