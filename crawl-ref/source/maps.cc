@@ -508,7 +508,7 @@ static coord_def _find_minivault_place(
 
     // [ds] The margin around the edges of the map where the minivault
     // won't be placed. Purely arbitrary as far as I can see.
-    const int margin = MAPGEN_BORDER * 2;
+    const int margin = MAPGEN_BORDER * 2 + 1;
 
     // Find a target area which can be safely overwritten.
     for (int tries = 0; tries < 600; ++tries)

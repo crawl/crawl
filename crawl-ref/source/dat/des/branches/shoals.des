@@ -546,7 +546,7 @@ ENDMAP
 # The hut itself may not contain Ilsuiw if she had other engagements.
 
 NAME:    shoal_ilsuiw
-TAGS:    mini_float shoal_guardian
+TAGS:    shoal_guardian
 KMONS:   1 = Ilsuiw band, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer
 SUBST:   3 = 33w
@@ -567,13 +567,12 @@ ENDMAP
 # HangedMan's alternative Shoals:$
 
 NAME:    shoals_rune_alternative
-TAGS:    shoal_rune_hangedman water_ok allow_dup transparent mini_float
+TAGS:    shoal_rune_hangedman water_ok allow_dup transparent mini_float no_dump
 KMONS:   12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
 KMONS:   3 = kraken / harpy band w:5
 KMONS:   d = siren / mermaid w:5
 KITEM:   d = barnacled rune of zot
 KFEAT:   123 = w
-KFEAT:   d = W
 KPROP:   d = no_tide
 SHUFFLE: AB / AB / BA, CD / CD / DC
 NSUBST:  2 = 2 = 22w / * = 22www, 0 = 2:0 / * = 00...
@@ -594,10 +593,8 @@ xxW...DC.x@
 ENDMAP
 
 NAME:    shoals_rune_alternative_decoy
-TAGS:    shoal_hut_hangedman water_ok allow_dup transparent mini_float
+TAGS:    shoal_hut_hangedman water_ok allow_dup transparent mini_float no_dump
 KMONS:   0 = 0
-KITEM:   | = |
-KFEAT:   | = W
 SHUFFLE: AB / AB / BA, CD / CD / DC
 NSUBST:  0 = 3:0 / * = 00...
 SUBST:   AC = x, B = w, D = .
