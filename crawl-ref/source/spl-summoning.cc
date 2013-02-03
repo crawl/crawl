@@ -1234,7 +1234,6 @@ coord_def find_gateway_location(actor* caster)
 
 spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 {
-    fail_check();
     coord_def point = find_gateway_location(caster);
     bool success = (point != coord_def(0, 0));
 
@@ -1242,6 +1241,8 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 
     if (success)
     {
+        fail_check();
+
         const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
@@ -1267,12 +1268,14 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
             // Messages the same as for SHT, as they are currently (10/10) generic.
             lose_stat(STAT_INT, 1 + random2(3), false, "opening a malign portal");
         }
+
+        return SPRET_SUCCESS;
     }
     // We don't care if monsters fail to cast it.
-    else if (is_player)
+    if (is_player)
         mpr("A gateway cannot be opened in this cramped space!");
 
-    return SPRET_SUCCESS;
+    return SPRET_ABORT;
 }
 
 
