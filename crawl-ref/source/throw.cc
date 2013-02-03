@@ -1526,35 +1526,56 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (!pbolt.effect_known)
         pbolt.special_explosion = NULL;
 
-    // Don't do the tracing when using Portaled Projectile, or when confused.
-    if (!teleport && !you.confused())
+    // Don't trace at all when confused.
+    // Give the player a chance to be warned about helpless targets when using
+    // Portaled Projectile, but obviously don't trace a path.
+    bool cancelled = false;
+    if (!you.confused())
     {
-        // Set values absurdly high to make sure the tracer will
-        // complain if we're attempting to fire through allies.
-        pbolt.hit    = 100;
-        pbolt.damage = dice_def(1, 100);
-
-        // Init tracer variables.
-        pbolt.foe_info.reset();
-        pbolt.friend_info.reset();
-        pbolt.foe_ratio = 100;
-        pbolt.is_tracer = true;
-
-        pbolt.fire();
-
-        // Should only happen if the player answered 'n' to one of those
-        // "Fire through friendly?" prompts.
-        if (pbolt.beam_cancelled)
+        // Kludgy. Ideally this would handled by the same code.
+        // Perhaps some notion of a zero length bolt, with the source and
+        // target both set to the target?
+        if (teleport)
         {
-            canned_msg(MSG_OK);
-            you.turn_is_over = false;
-            if (pbolt.special_explosion != NULL)
-                delete pbolt.special_explosion;
-            return false;
+            // This block is roughly equivalent to bolt::affect_cell for
+            // normal projectiles.
+            monster *m = monster_at(target->target);
+            if (m)
+                cancelled = stop_attack_prompt(m, false, target->target, false);
         }
-        pbolt.hit    = 0;
-        pbolt.damage = dice_def();
+        else
+        {
+            // Set values absurdly high to make sure the tracer will
+            // complain if we're attempting to fire through allies.
+            pbolt.hit    = 100;
+            pbolt.damage = dice_def(1, 100);
+
+            // Init tracer variables.
+            pbolt.foe_info.reset();
+            pbolt.friend_info.reset();
+            pbolt.foe_ratio = 100;
+            pbolt.is_tracer = true;
+
+            pbolt.fire();
+
+            cancelled = pbolt.beam_cancelled;
+
+            pbolt.hit    = 0;
+            pbolt.damage = dice_def();
+        }
     }
+
+    // Should only happen if the player answered 'n' to one of those
+    // "Fire through friendly?" prompts.
+    if (cancelled)
+    {
+        canned_msg(MSG_OK);
+        you.turn_is_over = false;
+        if (pbolt.special_explosion != NULL)
+            delete pbolt.special_explosion;
+        return false;
+    }
+
     pbolt.is_tracer = false;
 
     // Reset values.
