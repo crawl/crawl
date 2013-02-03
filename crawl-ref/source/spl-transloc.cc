@@ -820,6 +820,8 @@ spret_type cast_portal_projectile(int pow, bool fail)
     fail_check();
     bolt beam;
     throw_it(beam, item, true, random2(pow/4), &target);
+    if (!you.turn_is_over)
+        return SPRET_ABORT;
 
     return SPRET_SUCCESS;
 }
