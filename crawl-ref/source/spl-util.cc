@@ -1222,7 +1222,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_DIG:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
     case SPELL_FULMINANT_PRISM:
 
     // Shock and Lightning Bolt are no longer here, as the code below can

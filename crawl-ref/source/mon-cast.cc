@@ -1125,7 +1125,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEATHS_DOOR:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
     case SPELL_SHATTER:
     case SPELL_FRENZY:
     case SPELL_SUMMON_TWISTER:
@@ -2203,7 +2203,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return false;
         }
         // See if we have a good spot to cast LRD at.
-        else if (spell_cast == SPELL_FRAGMENTATION)
+        else if (spell_cast == SPELL_LRD)
         {
             if (!in_bounds(_mons_fragment_target(mons)))
                 return false;
@@ -2969,7 +2969,7 @@ static coord_def _mons_fragment_target(monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
     int pow = 12 * mons->hit_dice;
-    int range = spell_range(SPELL_FRAGMENTATION, pow, false);
+    int range = spell_range(SPELL_LRD, pow, false);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
     {
@@ -3756,7 +3756,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _mons_ozocubus_refrigeration(mons);
         return;
 
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
     {
         const coord_def target = _mons_fragment_target(mons);
         if (in_bounds(target))
@@ -4672,7 +4672,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                            && (pbolt.target != mons->pos()
                                || pbolt.visible())
                            // ugh. --Grunt
-                           && (actual_spell != SPELL_FRAGMENTATION);
+                           && (actual_spell != SPELL_LRD);
 
     vector<string> key_list;
     unsigned int num_spell_keys =

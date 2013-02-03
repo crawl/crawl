@@ -4587,7 +4587,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_STONE_ARROW:              return TILEG_STONE_ARROW;
     case SPELL_DIG:                      return TILEG_DIG;
     case SPELL_BOLT_OF_MAGMA:            return TILEG_BOLT_OF_MAGMA;
-    case SPELL_FRAGMENTATION:            return TILEG_LEES_RAPID_DECONSTRUCTION;
+    case SPELL_LRD:                      return TILEG_LEES_RAPID_DECONSTRUCTION;
     case SPELL_IRON_SHOT:                return TILEG_IRON_SHOT;
     case SPELL_LEDAS_LIQUEFACTION:       return TILEG_LEDAS_LIQUEFACTION;
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:   return TILEG_LEHUDIBS_CRYSTAL_SPEAR;

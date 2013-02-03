@@ -1020,7 +1020,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
             (you.props.exists("thunderbolt_last")
              && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns) ?
                 you.props["thunderbolt_aim"].get_coord() : coord_def());
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
         return new targetter_fragment(&you, pow, range);
     case SPELL_FULMINANT_PRISM:
         return new targetter_smite(&you, range, 0, 2);
@@ -1348,7 +1348,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_AIRSTRIKE:
         return cast_airstrike(powc, spd, fail);
 
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
         return cast_fragmentation(powc, &you, spd.target, fail);
 
     case SPELL_PORTAL_PROJECTILE:
@@ -1798,8 +1798,8 @@ string spell_noise_string(spell_type spell)
         break;
 
     // Medium explosions
-    case SPELL_FRAGMENTATION:   //LRD most often do small and medium explosions
-        effect_noise = 20;      //and sometimes big ones with green crystal
+    case SPELL_LRD:         //LRD most often do small and medium explosions
+        effect_noise = 20;  //and sometimes big ones with green crystal
         break;
 
     // Big explosions

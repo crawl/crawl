@@ -1837,7 +1837,7 @@
 
     {  MST_JORGRUN,
       {
-       SPELL_FRAGMENTATION,
+       SPELL_LRD,
        SPELL_PETRIFY,
        SPELL_NO_SPELL,
        SPELL_SHATTER,

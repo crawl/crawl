@@ -1770,7 +1770,7 @@ struct spell_desc
 #endif
 
 {
-    SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",
+    SPELL_LRD, "Lee's Rapid Deconstruction",
      SPTYP_EARTH,
      SPFLAG_GRID,
      5,
