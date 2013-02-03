@@ -937,15 +937,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         force_item     = true;
         item.base_type = OBJ_WEAPONS;
-        // slightly worse melee, still mostly blessed
         item.sub_type  = random_choose(WPN_FLAIL,
-                                       WPN_BLESSED_LONG_SWORD,
-                                       WPN_BLESSED_SCIMITAR,
-                                       WPN_BLESSED_FALCHION,
+                                       WPN_LONG_SWORD,
+                                       WPN_SCIMITAR,
+                                       WPN_FALCHION,
                                        -1);
         item.plus  = random2(5);
         item.plus2 = random2(5);
-        // but flaming not holy wrath
+        // flaming instead of holy wrath
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
@@ -954,7 +953,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race  = MAKE_ITEM_NO_RACE;
         force_item     = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_BLESSED_GREAT_SWORD;
+        item.sub_type  = WPN_GREAT_SWORD;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         // highly enchanted, we're top rank
         item.plus  = 3 + random2(6);
