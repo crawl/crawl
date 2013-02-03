@@ -1,22 +1,28 @@
 ################################################################################
-# "Hard" subvaults. Putting them in here for now, we can move them into a new
-# file later if wanted.
-#NAME:     vaults_room_hard_dummy
-#TAGS:     vaults_hard allow_dup
-#SUBST:    x : .x
-#MAP
-#xx......xx
-#x........x
-#..........
-#..........
-#..........
-#..........
-#..........
-#..........
-#..........
-#x........x
-#xx......xx
-#ENDMAP
+# vaults_rooms_hard.des: Subvaults for the Vaults.
+#
+# Content: These are the subvaults that place a large number of monsters and
+#          out of depth monsters.
+################################################################################
+#
+# All of the subvaults in here should use the tag vaults_hard
+#
+# You can additionally use the following tags:
+#
+# vaults_orient_n vaults_orient_s vaults_orient_e vaults_orient_w
+# no_windows preserve_wall
+#
+# vaults_orient_x: controls the entry points to the subvault.
+# A subvault using vaults_orient_n will always be entered from the north side,
+# as it appears in the .des. Multiple orient tags may be used.
+#
+# no_windows: prevents the layout from creating windows into the subvault.
+#
+# preserve_wall: prevents the layout from changing rock into the same wall type
+# as the rest of the floor.
+#
+################################################################################
+
 
 #
 #  st_box_setup
@@ -93,7 +99,7 @@ MAP
 *....%x11
 ENDMAP
 
-NAME:    v_hard_diamondy
+NAME:    st_diamondy
 TAGS:    vaults_hard
 SUBST:   1 = 0..
 MAP
@@ -114,7 +120,7 @@ xxxx..1x1..xxxx
 xxxxx..x..xxxxx
 ENDMAP
 
-NAME:    v_hard_cells
+NAME:    st_cells
 TAGS:    vaults_hard allow_dup
 MAP
 ...x....x...
@@ -127,7 +133,7 @@ xxx+xxxx+xxx
 ...x....x...
 ENDMAP
 
-NAME:    v_hard_smaller_cells
+NAME:    st_smaller_cells
 TAGS:    vaults_hard
 MAP
 ..x.0x..x0.x..
@@ -140,7 +146,7 @@ xx+xx+xx+xx+xx
 ..x.0x..x0.x..
 ENDMAP
 
-NAME:    v_hard_lines
+NAME:    st_lines
 TAGS:    vaults_hard
 SHUFFLE: 90
 SUBST:   1 = 00.
@@ -155,7 +161,7 @@ xxxxxx++xxxxxx
 *............0
 ENDMAP
 
-NAME:    v_hard_spiral_rooms
+NAME:    st_spiral_rooms
 TAGS:    vaults_hard
 MAP
 ....x.........
@@ -168,7 +174,7 @@ xxxxxxxxxx.0..
 .........x....
 ENDMAP
 
-NAME:    v_hard_cross
+NAME:    st_cross
 TAGS:    vaults_hard
 KMONS:   8 = 8
 KITEM:   8 = |, *
@@ -187,8 +193,9 @@ xxxx.0.xxxx
 xxxxx.xxxxx
 ENDMAP
 
-NAME:    v_hard_check
+NAME:    st_check
 TAGS:    vaults_hard
+WEIGHT:  5
 KMONS:   8 = 8
 KITEM:   8 = |
 KMONS:   9 = 9
@@ -201,7 +208,7 @@ MAP
 .................
 ENDMAP
 
-NAME:    v_hard_octagons_1
+NAME:    st_octagons_1
 TAGS:    vaults_hard
 NSUBST:  ^ = 2:* / *:%
 MAP
@@ -222,7 +229,7 @@ x+xx......xx+xx..xx..
 ....^x..x^.....^x....
 ENDMAP
 
-NAME:    v_hard_octagons_2
+NAME:    st_octagons_2
 TAGS:    vaults_hard
 NSUBST:  ^ = 3:* / *:%$
 MAP
@@ -243,7 +250,7 @@ x..xxx.....xx+xx^.0..
 ....xx^...^x.0.x.....
 ENDMAP
 
-NAME:    v_hard_squares
+NAME:    st_squares
 TAGS:    vaults_hard
 MAP
 ..............
@@ -262,7 +269,7 @@ MAP
 ..............
 ENDMAP
 
-NAME:    v_hard_lattice
+NAME:    st_lattice
 TAGS:    vaults_hard
 MAP
 .x.x.x.x.
@@ -275,7 +282,7 @@ x0x.x.x0x
 x.x.x.x.x
 ENDMAP
 
-NAME:    v_hard_more_cells
+NAME:    st_more_cells
 TAGS:    vaults_hard
 MAP
 ...x...x...
@@ -287,7 +294,7 @@ x+xxx+xxx+x
 ...x...x...
 ENDMAP
 
-NAME:    v_hard_hourglassy
+NAME:    st_hourglassy
 TAGS:    vaults_hard
 TAGS:    vaults_orient_n vaults_orient_s
 MAP
@@ -302,7 +309,7 @@ xxxxxx.....xxxxxx
 xxxxxxx...xxxxxxx
 ENDMAP
 
-NAME:    v_hard_eye
+NAME:    st_eye
 TAGS:    vaults_hard
 TAGS:    vaults_orient_n vaults_orient_s
 NSUBST:  9 = 1:8 / *:9
@@ -323,7 +330,7 @@ xx|*%xxxx..xxxx%**xx
 xxxxxxxxx..xxxxxxxxx
 ENDMAP
 
-NAME:    v_hard_star
+NAME:    st_star
 TAGS:    vaults_hard
 TAGS:    vaults_orient_n vaults_orient_s
 NSUBST:  0 = 2=998 / 6:0 / *:.
@@ -340,7 +347,7 @@ x*%xxxxxxx......xxxxxxx*%x
 xxxxxxxxxxxx..xxxxxxxxxxxx
 ENDMAP
 
-NAME:    v_hard_quartered_hall
+NAME:    st_quartered_hall
 TAGS:    vaults_hard
 NSUBST:  0 = 4=998 / 8:0 / *:.
 MAP
@@ -440,22 +447,21 @@ v''''''''''''''''''''''''''''v
 v''''''''''''''''''''''''''''v
 v''''''''''''''''''''''''''''v
 v''''''''''''''''''''''''''''v
-vvvv==vvvv''''''''''vv==vvvvvv
+vvvv++vvvv''''''''''vv++vvvvvv
 v""""""""v''''''''''v----v-8-v
 v""""""""v''''''''''v----v---v
-v""""""""vvvvv==vvvvv----v---v
+v""""""""vvvvv++vvvvv----v---v
 v""""""""v%%%v77v---v----v---v
 v""""""""v%%%v77v------------v
 v""""""""v%%%v77v------------v
-v""""""""v"""v==v------------v
+v""""""""v"""v++v------------v
 v"""""""""""8v..v------------v
 v""""""""""""v..v------------v
 v""""""""v"""v..v------------v
 v""""""""v%%%v..v-----8------v
 v""""""""v%%%v..v$%%%%%%%%%%$v
 v"""8""""v%%%v..v$%%%%%%%%%%$v
-vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
-              ..
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 # 32 monsters, 36 %
@@ -487,12 +493,11 @@ v""""v'ccc''''''''''ccc'v""""v
 v""""v'''c''''dd''''c'''v""""v
 vv++vvvv'c''''dd''''c'bvvv++vv
 v------v''''''''''''''v------v
-v------vvvvvvv==vvvvvvv------v
+v------vvvvvvv++vvvvvvv------v
 v%%%8--v..7........7..v--8%%%v
 v%%%---v..7........7..v---%%%v
 v%%%---v..7........7..v---%%%v
-vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
-              ..
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 # 36 monsters, 42 %
@@ -507,22 +512,21 @@ vv''''vv''''vv77vv..9..9..vv"v
 v''''vv''''vv....vv......vv""v
 v...vv''''vv......vv....vv"""v
 v...v....vv........vv++vv""""v
-v...+....=7...vv...7=..+"""""v
-v...+....=7...vv...7=..+"""""v
+v...+....+7...vv...7+..+"""""v
+v...+....+7...vv...7+..+"""""v
 v...v....vv........vv++vv""""v
 v...vv''''vv......vv""""vv"""v
 v''''vv''''vv....vv""""""vv""v
 vv''''vv''''vv77vv""""""""vv+v
-vvv''''vv''''v==v""""""""""+8v
+vvv''''vv''''v++v""""""""""+8v
 v%vv''''vv''vv..vv""""""""vv+v
 v%%vv''''vvvv....vv""""""vv$$v
 v%%%vv''''vv......vv""""vv$%%v
 v%%%%vv'''v0......0vv++vv%%%%v
 v%%$%$vv++vv......vv$%%$vv%%%v
-v%%%$=v....vv....vv$%%%%$vv%%v
+v%%%$+v....vv....vv$%%%%$vv%%v
 v%%$vv.....8vv..vv$%%%%%%$vv%v
-vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
-              ..
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 # 31 monsters, 28 %, 8 |
@@ -540,7 +544,7 @@ v%|%$+------------------+%|%$v
 v$%|%+------------------+$%|%v
 v%$%$v------------------v%$%$v
 v$%$%v------------------v$%$%v
-vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
+vvvvvvvvvvvvvv++vvvvvvvvvvvvvv
 v......."""""""""""""".......v
 v......."""""""""""""".......v
 v+vvvv+vvvvvvvvvvvvvvvv+vvvv+v
@@ -552,8 +556,7 @@ v.......''''''''''''''.......v
 v++vvvvvvvvvvvvvvvvvvvvvvvv++v
 v........77........77........v
 v........7..........7........v
-vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
-              ..
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 # 26 monsters, 36 %
@@ -585,8 +588,7 @@ v....v''''''''''''''''''v....v
 vavvvvvvvcvvvvbbvvvvcvvvvvvvav
 v.........77......77.........v
 v.........7........7.........v
-vvvvvvvvvvvvvv==vvvvvvvvvvvvvv
-              ..
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 ####

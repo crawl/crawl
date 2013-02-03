@@ -2,8 +2,6 @@
 # vaults_rooms_standard.des: Subvaults for the Vaults.
 #
 # Content: These are the subvaults that place a small number of monsters.
-#   Subvaults placing no monsters should go in vaults_rooms_empty.des
-#
 ################################################################################
 #
 # All of the subvaults in here should use the tag vaults_room
@@ -42,7 +40,6 @@ MAP
 ''.....''
 ENDMAP
 
-# added the top and bottom lines of this vault to prevent disconnection
 NAME:     vaults_standard_mumra_enter_the_diamond
 TAGS:     allow_dup vaults_room vaults_orient_e vaults_orient_w
 NSUBST:   . = 1:0 / 2=0. / *:.
@@ -183,8 +180,6 @@ xxxx.......xxxx
 xxxx.......xxxx
 ENDMAP
 
-# XXX: This vault caused problems, I haven't tested it since the door/orient
-#      improvements
 ############################################################
 # The Hell Knights are playing the Vault tonight. Rock! \m/ (Shiori)
 #

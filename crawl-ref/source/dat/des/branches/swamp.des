@@ -378,6 +378,150 @@ xxxB...MwM...Wxxx
     xxxxxxxxx
 ENDMAP
 
+NAME:    st_shrine_of_shade
+DEPTH:   Swamp:1-4
+MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, shadow
+KMONS:   P = w:2 col:darkgrey plant name:withered name_adjective             \
+           tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+           name_adjective tile:mons_withered_plant
+SUBST:   p = Pp, p = PP., o = P..
+MAP
+   oo.oooo
+  pppp.pppp
+ ppccc.cccpp
+opccppo.occpo
+opcp2c1c2ocpo
+ pc.c111cocp
+...211c112..@
+ pcoc111cocp
+opco2c1c2ocpo
+opccoo.ppccpo
+ ppccc.cccpp
+  ppppo.ppp
+   ooo.ooo
+ENDMAP
+
+NAME:    st_swamp_mini
+DEPTH:   Swamp:1-4
+KMONS:   1 = hydra
+KMONS:   2 = swamp dragon
+KFEAT:   12 = shallow_water
+SUBST:   . = wW., 0:34, 3=112..., 4=122...
+MAP
+.......
+.cc.cc.
+.c000c.
+..000..
+.c000c.
+.cc.cc.
+.......
+ENDMAP
+
+NAME:    st_swamp_ruins_1
+DEPTH:   Swamp:1-4
+KMONS:   1 = hydra
+KMONS:   2 = swamp dragon
+KMONS:   3 = swamp drake
+KFEAT:   123 = shallow_water
+SUBST:   . = wwwWWW...t, c = c:17 .:1 t:1 w:1 W:1, C:GC., G=GG., C=cc.
+SUBST:   0:45, 4=1112...., 5=1222...., 6=3.
+MAP
+...C.C.C.C...
+.cc...6...cc.
+.ccccc.ccccc.
+C.cc.....cc.C
+..c.0...0.c..
+C.c...0...c.C
+.6...000...6.
+C.c...0...c.C
+..c.0...0.c..
+C.cc.....cc.C
+.ccccc.ccccc.
+.cc...6...cc.
+...C.C.C.C...
+ENDMAP
+
+NAME:    st_swamp_ruins_2
+DEPTH:   Swamp:1-4
+KMONS:   1 = hydra
+KMONS:   2 = swamp dragon
+KMONS:   3 = swamp drake
+KFEAT:   123 = shallow_water
+SUBST:   . = wwwWWW...t, c = c:15 .:1 t:1 w:1 W:1, C=c.
+SUBST:   0:45, 4=11123....., 5=12223.....
+MAP
+    ......
+  ..........
+ ...ccCCcc...
+ ..cc....cc..
+..cc..00..cc..
+..c..0cc0..c..
+0.C..cccc0.C.0
+..C.0cccc..C..
+..c..0cc0..c..
+..cc..00..cc..
+ ..cc....cc..
+ ...ccCCcc...
+  ..........
+    ......
+ENDMAP
+
+NAME:    st_swamp_ruins_3
+DEPTH:   Swamp:1-4
+KMONS:   1 = hydra
+KMONS:   2 = swamp dragon
+KMONS:   3 = swamp drake
+KFEAT:   123 = shallow_water
+SHUFFLE: cC
+SUBST:   . = wwwWWW...t, c = c:12 .:1 t:1 w:1 W:1, C:GC., G=GG., C=cc.
+SUBST:   0:45, 4=1112...., 5=1222...., 6=3., y = wW.tt
+MAP
+    yyyyyyyyyyyyy
+ ...................
+..ccccccccccccccccc..
+...C.C.C.C0C.C.C.C...
+.0..0.0.0...0.0.0..0.
+...C.C.C.C0C.C.C.C...
+..ccccccccccccccccc..
+ ...................
+    yyyyyyyyyyyyy
+ENDMAP
+
+NAME:    st_swamp_ruins_4
+DEPTH:   Swamp:1-4
+KMONS:   1 = hydra
+KMONS:   2 = swamp dragon
+KMONS:   3 = swamp drake
+KFEAT:   123 = shallow_water
+SHUFFLE: cC
+SUBST:   . = wwwWWW...t, c = c:12 .:1 t:1 w:1 W:1, C=c., *=**%
+SUBST:   0:45, 4=112...., 5=122...., 6=3., y = wwWWW.tt
+MAP
+         yyyyy
+    yyyyy.....yyyyy
+  ...................
+  .ccCCcccccccccCCcc.
+ y.c......000......c.y
+ y.C.6....'''....6.C.y
+ y.C...............C.y
+ y.c...cccCCCccc...c.y
+ y.c...c*.....*c...c.y
+y..c...c...0...c...c..y
+y..c0'.C..0.0..C.'0c..y
+y..c0'.C.0.3.0.C.'0c..y
+y..c0'.C..0.0..C.'0c..y
+y..c...c...0...c...c..y
+ y.c...c*.....*c...c.y
+ y.c...cccCCCccc...c.y
+ y.C...............C.y
+ y.C.6....'''....6.C.y
+ y.c......000......c.y
+  .ccCCcccccccccCCcc.
+  ...................
+    yyyyy.....yyyyy
+         yyyyy
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

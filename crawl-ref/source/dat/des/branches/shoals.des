@@ -364,6 +364,123 @@ WWW..x..x..WWW
    WWWWWWWW
 ENDMAP
 
+NAME:    st_cyclops
+DEPTH:   Shoals:1-4
+MONS:    cyclops, stone giant / frost giant
+KMONS:   P = plant
+KMONS:   f = fungus
+SHUFFLE: 23
+SUBST:   p = p., p = Pf, y = xP., x = x:20 c:2 P:2
+SUBST:   2 = 21, 3 = 1
+MAP
+   ppppp
+  yyyyyyy
+ pyxxyxyyy.
+pyxypppxx.1.
+pyxpp1.px...
+pyxp2.1..1.3
+pyypp1.px...
+pyxxpppyx.1.
+ ypxxyxxyy.
+  yyyyyyy
+   ppppp
+ENDMAP
+
+NAME:    st_shoals_ruin
+DEPTH:   Shoals:1-4
+TAGS:    no_pool_fixup
+MONS:    cyclops, frost giant, stone giant
+KMONS:   P = plant
+KMONS:   f = fungus
+KFEAT:   Pfp = shallow_water
+KFEAT:   5 = deep_water
+SUBST:   p = ppWw, p = Pf, y = xxxxcccPPPfw, f = PPwW, x = x:10 c:1
+SHUFFLE: 23
+SUBST:   2 = 2:15 1:10, 3 = 3:15 1:10
+MAP
+   ppp  @ ppp
+  pppxx..xxppp
+ ppxxx.3.wfxxpp
+ppxxpxx..xwfxxpp
+ppxpppxxxWWffxpp
+pxx**ppyfWWWfxxp
+pxp1..pyfW..ffxp
+pxp.21pyf..1.wxp
+pxp1..yyy1...pxp
+pxxp.1pyp..1pxxp
+ppxp.......ppxpp
+ppxxp..p.fppxxpp
+ ppxxpyyyyfxxpp
+  ppxxxxxxxxpp
+   pppppppppp
+ENDMAP
+
+NAME:    st_sunken_huts
+DEPTH:   Shoals:1-4
+KMONS:   1 = merfolk javelineer
+KMONS:   2 = merfolk impaler
+KMONS:   3 = merfolk aquamancer
+KMONS:   4 = merfolk
+KMONS:   5 = mermaid / siren
+KFEAT:   12345 = deep_water
+SHUFFLE: 1235
+NSUBST:  V = 1:w / *:x
+NSUBST:  U = 1:w / *:x
+NSUBST:  Y = 1:w / *:x
+NSUBST:  X = 1:w / *:x
+NSUBST:  Z = 1:w / *:x
+SUBST:   W = wWW
+MAP
+      WWWWWWWWWWWWWWW
+   WWWwwwwwwwxxxxwwwwWWW
+ WWwxxxxwwwwwxw2xwwwwwwwWW
+Wwwwx1wVww4wwUwwUww4wxYxxwW
+WwwwxwwVwwwwwxUUxwwwwYwwxwW
+WwwwxVVxwwwwwwwwwwwwwYw2xwW
+WwwwwwwwwxZZxwwxXXxwwxYxxwW
+Wwwww4wwwZwwZw5XwwxwwwwwwwW
+ WWwwwwwwxw1xwwXw3xwwwwwWW
+   WWWwwwxxxxwwxxxxwwWWW
+      WWWWWWWWWWWWWWW
+ENDMAP
+
+NAME:    st_sunken_temple
+DEPTH:   Shoals:1-4
+TAGS:    no_pool_fixup
+KMONS:   1 = merfolk javelineer
+KMONS:   2 = merfolk impaler
+KMONS:   3 = merfolk aquamancer
+KMONS:   4 = merfolk
+KMONS:   5 = mermaid / siren
+KMONS:   6 = cyclops
+KMONS:   7 = stone giant
+KMONS:   8 = frost giant
+KMONS:   9 = titan
+KFEAT:   123456789 = deep_water
+KITEM:   | = |
+KITEM:   * = *
+KFEAT:   |* = shallow_water
+SHUFFLE: 12345 / 86769
+NSUBST:  Z = 1:w / *:c
+SUBST:   G = GGGwwW, 7 = 667, 8 = 688, 9 = 7899, x = c
+MAP
+   xxxxxxxxxxx
+  xxGxGxGxGxGxx
+ xxwwwwwwwwwwwxx
+ xwww1wwwww1wwwx
+xxwwxxxxZxxxxwwxx
+xGwwx|wwwww*xwwGx
+xxwwxw2www4wxwwxx
+xGwwZwww5wwwZwwGx
+xxwwxw4www2wxwwxx
+xGwwx*wwwww*xwwGx
+xxwwxxxxZxxxxwwxx
+ xwww3wwwww3wwwx
+ xxwwwwwwwwwwwxx
+  xxGxGx+xGxGxx
+   xxxxx@xxxxx
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps

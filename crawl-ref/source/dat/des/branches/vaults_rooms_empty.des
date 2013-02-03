@@ -2,8 +2,6 @@
 # vaults_rooms_empty.des: Subvaults for the Vaults.
 #
 # Content: These are the subvaults that place no monsters.
-#   Subvaults placing monsters should go in vaults_rooms_standard.des
-#
 ################################################################################
 #
 # All of the subvaults in here should use the tag vaults_empty
