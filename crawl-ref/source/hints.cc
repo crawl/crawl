@@ -4449,19 +4449,16 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     else if (Options.stab_brand != CHATTR_NORMAL
              && mi.is(MB_STABBABLE))
     {
-        ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_SUBJECTIVE)
-             << " has not noticed you - yet. Note that you do not have to "
-                "engage every monster you meet. Sometimes, discretion is the "
-                "better part of valour.";
+        ostr << "Apparently it has not noticed you - yet. Note that you do "
+                "not have to engage every monster you meet. Sometimes, "
+                "discretion is the better part of valour.";
     }
     else if (Options.may_stab_brand != CHATTR_NORMAL
              && mi.is(MB_DISTRACTED))
     {
-        ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_SUBJECTIVE)
-             << " has been distracted by something. You could use this "
-                "opportunity to sneak up on this monster - or to sneak away.";
+        ostr << "Apparently it has been distracted by something. You could "
+                "use this opportunity to sneak up on this monster - or to "
+                "sneak away.";
     }
 
     if (!dangerous && !has_stat_desc)
