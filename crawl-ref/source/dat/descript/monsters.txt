@@ -3353,14 +3353,12 @@ the only way to keep your vital organs undamaged.
 %%%%
 witch
 
-This old human crone must be spending most of her day just working on her
-looks: it's hard to believe one could reach this level of ugliness naturally.
-Robes stained with what appears to be swamp ooze, cauldron soot and brew
-ingredients don't improve her appearance either.
+An old and unnaturally ugly human, wearing
+robes stained with what appears to be swamp ooze, cauldron soot and brew
+ingredients.
 
-A woman with such stellar sanity and manners probably has great pets as well,
-so it's better to neutralize her before she has a chance to unleash them on
-you.
+A magician with such stellar sanity and manners probably has great pets as well.
+You might not have to wait long to find out for certain.
 %%%%
 withered plant
 
