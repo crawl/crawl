@@ -3934,7 +3934,7 @@ random_var melee_attack::player_unarmed_speed()
         unarmed_delay -= div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)), 54);
     // Bats are faster (for what good it does them).
     if (player_in_bat_form())
-        unarmed_delay = div_rand_round(constant(3)*unarmed_delay, 5);
+        unarmed_delay = div_rand_round(unarmed_delay * constant(3), 5);
     return unarmed_delay;
 }
 
