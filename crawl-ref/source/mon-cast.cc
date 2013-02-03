@@ -1324,8 +1324,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             return true;
     }
 
-    if (mons_genus(mon->type) == MONS_DRAGON && mon->has_ench(ENCH_BREATH_WEAPON))
+    if (mons_genus(mon->type) == MONS_DRAGON
+        && mon->has_ench(ENCH_BREATH_WEAPON))
+    {
         return true;
+    }
 
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those
