@@ -1908,7 +1908,16 @@ void handle_monster_move(monster* mons)
                 mons->suicide();
             else
             {
-                simple_monster_message(mons, " crackles loudly.", MSGCH_WARN);
+                if (player_can_hear(mons->pos()))
+                {
+                    if (you.can_see(mons))
+                    {
+                        simple_monster_message(mons, " crackles loudly.",
+                                               MSGCH_WARN);
+                    }
+                    else
+                        mpr("You hear a loud crackle.", MSGCH_SOUND);
+                }
                 // Done this way to keep the detonation timer predictable
                 mons->speed_increment -= 10;
             }
