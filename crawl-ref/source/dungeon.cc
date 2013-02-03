@@ -117,7 +117,9 @@ static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
 
 static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
-static bool _connect_spotty(const coord_def& from);
+static bool _feat_is_wall_floor_liquid(dungeon_feature_type);
+static bool _connect_spotty(const coord_def& from,
+                            bool (*overwriteable)(dungeon_feature_type) = NULL);
 static bool _connect_vault_exit(const coord_def& exit);
 
 // ITEM & SHOP FUNCTIONS
@@ -2259,7 +2261,7 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     const unsigned nvaults = env.level_vaults.size();
 
     // Any further vaults must make sure not to disrupt level layout.
-    dgn_check_connectivity = !player_in_branch(BRANCH_SHOALS);
+    dgn_check_connectivity = true;
 
     if (player_in_branch(BRANCH_MAIN_DUNGEON)
         && !crawl_state.game_is_tutorial())
@@ -3966,8 +3968,7 @@ _build_vault_impl(const map_def *vault,
     if (!make_no_exits)
     {
         const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
-                            || player_in_branch(BRANCH_SLIME_PITS)
-                            || player_in_branch(BRANCH_SHOALS);
+                            || player_in_branch(BRANCH_SLIME_PITS);
         place.connect(spotty);
     }
 
@@ -5003,10 +5004,16 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
     }
 }
 
-static bool _join_the_dots_pathfind(coord_set &coords,
-                                    const coord_def &from, const coord_def &to,
-                                    uint32_t mapmask)
+// Resets travel_point_distance
+vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
+                                             const coord_def &to,
+                                             uint32_t mapmask)
 {
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    const coord_comparator comp(to);
+    coord_set coords(comp);
+
+    vector<coord_def> path;
     coord_def curr = from;
     while (true)
     {
@@ -5026,36 +5033,44 @@ static bool _join_the_dots_pathfind(coord_set &coords,
     }
 
     if (curr != to)
-        return false;
+        return path;
 
     while (curr != from)
     {
         if (!map_masked(curr, mapmask))
-        {
-            grd(curr) = DNGN_FLOOR;
-            dgn_height_set_at(curr);
-        }
+            path.push_back(curr);
 
         const int dist = travel_point_distance[curr.x][curr.y];
         ASSERT(dist < 0 && dist != -1000);
         curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
     }
     if (!map_masked(curr, mapmask))
-        grd(curr) = DNGN_FLOOR;
+        path.push_back(curr);
 
-    return true;
+    return path;
 }
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
-                           uint32_t mapmask)
+                   uint32_t mapmask,
+                   bool (*overwriteable)(dungeon_feature_type))
 {
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    if (!overwriteable)
+        overwriteable = _feat_is_wall_floor_liquid;
 
-    const coord_comparator comp(to);
-    coord_set coords(comp);
-    const bool found = _join_the_dots_pathfind(coords, from, to, mapmask);
+    const vector<coord_def> path =
+        dgn_join_the_dots_pathfind(from, to, mapmask);
 
-    return found;
+    for (vector<coord_def>::const_iterator i = path.begin(); i != path.end();
+         ++i)
+    {
+        if (!map_masked(*i, mapmask) && overwriteable(grd(*i)))
+        {
+            grd(*i) = DNGN_FLOOR;
+            dgn_height_set_at(*i);
+        }
+    }
+
+    return !path.empty() || from == to;
 }
 
 static dungeon_feature_type _pick_temple_altar(vault_placement &place)
@@ -5449,16 +5464,27 @@ static bool _spotty_seed_ok(const coord_def& p)
             && p.x < GXM - margin && p.y < GYM - margin);
 }
 
+static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
+{
+    return (feat_is_water(feat) || feat_is_lava(feat) || feat_is_wall(feat)
+            || feat == DNGN_FLOOR);
+}
+
 // Connect vault exit "from" to dungeon floor by growing a spotty chamber.
 // This tries to be like _spotty_level, but probably isn't quite.
 // It might be better to aim for a more open connection -- currently
 // it stops pretty much as soon as connectivity is attained.
-static bool _connect_spotty(const coord_def& from)
+set<coord_def>
+dgn_spotty_connect_path(const coord_def& from,
+                     bool (*overwriteable)(dungeon_feature_type))
 {
     set<coord_def> flatten;
     set<coord_def> border;
     set<coord_def>::const_iterator it;
     bool success = false;
+
+    if (!overwriteable)
+        overwriteable = _feat_is_wall_floor_liquid;
 
     for (adjacent_iterator ai(from); ai; ++ai)
         if (!map_masked(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
@@ -5483,11 +5509,8 @@ static bool _connect_spotty(const coord_def& from)
             if (grd(*ai) == DNGN_FLOOR)
                 success = true; // Through, but let's remove the others, too.
 
-            if ((grd(*ai) != DNGN_ROCK_WALL && grd(*ai) != DNGN_SLIMY_WALL)
-                || flatten.find(*ai) != flatten.end())
-            {
+            if (!overwriteable(grd(*ai)) || flatten.find(*ai) != flatten.end())
                 continue;
-            }
 
             flatten.insert(*ai);
             for (adjacent_iterator bi(*ai); bi; ++bi)
@@ -5502,16 +5525,29 @@ static bool _connect_spotty(const coord_def& from)
         }
     }
 
-    if (success)
+    if (!success)
+        flatten.clear();
+
+    return flatten;
+}
+
+static bool _connect_spotty(const coord_def& from,
+                            bool (*overwriteable)(dungeon_feature_type))
+{
+    const set<coord_def> spotty_path =
+        dgn_spotty_connect_path(from, overwriteable);
+
+    if (!spotty_path.empty())
     {
-        for (it = flatten.begin(); it != flatten.end(); ++it)
+        for (set<coord_def>::const_iterator it = spotty_path.begin();
+             it != spotty_path.end(); ++it)
         {
             grd(*it) = DNGN_FLOOR;
             dgn_height_set_at(*it);
         }
     }
 
-    return success;
+    return !spotty_path.empty();
 }
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type, int charges)
@@ -6442,8 +6478,14 @@ void vault_placement::connect(bool spotty) const
     for (vector<coord_def>::const_iterator i = exits.begin();
          i != exits.end(); ++i)
     {
-        if (spotty && _connect_spotty(*i))
+        if (spotty && _connect_spotty(*i, _feat_is_wall_floor_liquid))
             continue;
+
+        if (player_in_branch(BRANCH_SHOALS) &&
+            dgn_shoals_connect_point(*i, _feat_is_wall_floor_liquid))
+        {
+            continue;
+        }
 
         if (!_connect_vault_exit(*i))
             dprf("Warning: failed to connect vault exit (%d;%d).", i->x, i->y);

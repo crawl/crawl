@@ -56,6 +56,9 @@ void dgn_island_centred_at(const coord_def &c,
 
 void dgn_smooth_height_at(coord_def c, int radius, int max_height)
 {
+    if (!in_bounds(c))
+        return;
+
     const int height = dgn_height_at(c);
     if (max_height != DGN_UNDEFINED_HEIGHT && height > max_height)
         return;
