@@ -2906,8 +2906,8 @@ static monster_type _band_member(band_type band, int power, int which)
     case BAND_SKELETAL_WARRIORS:
         mon_type = MONS_SKELETAL_WARRIOR;
         break;
+
     case BAND_DRACONIAN:
-    {
         temp_rand = random2((power < 24) ? 27 : 40);
         mon_type =
                 ((temp_rand > 38) ? MONS_DRACONIAN_CALLER :     // 1
@@ -2927,7 +2927,7 @@ static monster_type _band_member(band_type band, int power, int which)
                  (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3
                                     MONS_RED_DRACONIAN);        // 3
         break;
-    }
+
     case BAND_ILSUIW:
         mon_type = random_choose_weighted(30, MONS_MERMAID,
                                           15, MONS_MERFOLK,
