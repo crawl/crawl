@@ -430,7 +430,7 @@ move_again:
             return true;
         }
 
-        if (mons && mons->submerged())
+        if (mons && (mons->submerged() || mons->type == MONS_ARCANE_FAMILIAR))
         {
             // Try to swap with the submerged creature.
             if (mons->is_habitable(mon.pos()))
