@@ -1440,7 +1440,7 @@ bool vehumet_supports_spell(spell_type spell)
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
     if (spell == SPELL_SHATTER
-        || spell == SPELL_FRAGMENTATION // LRD
+        || spell == SPELL_LRD
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
         || spell == SPELL_TORNADO
