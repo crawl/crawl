@@ -2440,7 +2440,9 @@ spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
             coord_def empty;
             if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
                 && familiar->move_to_pos(empty))
+            {
                 recalled = true;
+            }
         }
 
         if (recalled)
@@ -2450,7 +2452,7 @@ spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
 
         familiar->number = min(20, (int) familiar->number
                                    + 4 + random2(pow + 10) / 10);
-        you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice (2, pow), 50);
+        you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice(2, pow), 50);
     }
     else
     {
@@ -2468,8 +2470,8 @@ spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
 
         if (familiar)
         {
-            mpr ("You conjure a globe of magical energy.");
-            you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice (2, pow), 50);
+            mpr("You conjure a globe of magical energy.");
+            you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice(2, pow), 50);
             familiar->number = 4 + random2(pow + 10) / 10;
         }
         else
@@ -2740,7 +2742,9 @@ bool fire_arcane_familiar(monster* mons)
                     if (empty_beam &&
                         find(beam.path_taken.begin(), beam.path_taken.end(), beam.target)
                         == beam.path_taken.end())
+                    {
                         continue;
+                    }
 
                     mons->firing_pos = coord_def(0,0);
                     mons->target = *di;
@@ -2807,7 +2811,7 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
 
     mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
                                   3, SPELL_SUMMON_SMALL_MAMMALS,
-                                  where, MHITYOU,  MG_FORCE_PLACE);
+                                  where, MHITYOU, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 

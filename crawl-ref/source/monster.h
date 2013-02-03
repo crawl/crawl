@@ -437,7 +437,7 @@ public:
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
-    int stealth () const;
+    int stealth() const;
 
     int     shield_bonus() const;
     int     shield_block_penalty() const;
