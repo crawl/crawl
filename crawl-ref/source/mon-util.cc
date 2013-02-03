@@ -3227,6 +3227,71 @@ bool mons_can_attack(const monster* mon)
     return adjacent(mon->pos(), foe->pos());
 }
 
+gender_type mons_class_gender(monster_type mc)
+{
+    gender_type gender = GENDER_NEUTER;
+
+    if (mons_genus(mc) == MONS_MERMAID
+        || mc == MONS_QUEEN_ANT
+        || mc == MONS_QUEEN_BEE
+        || mc == MONS_HARPY
+        || mc == MONS_SPHINX)
+    {
+        gender = GENDER_FEMALE;
+    }
+    // Mara's fakes aren't unique, but should still be classified as
+    // male.
+    else if (mc == MONS_MARA_FAKE
+             || mc == MONS_HELLBINDER
+             || mc == MONS_CLOUD_MAGE)
+    {
+        gender = GENDER_MALE;
+    }
+    else if (mons_is_unique(mc) && !mons_is_pghost(mc))
+    {
+        if (mons_species(mc) == MONS_SERPENT_OF_HELL)
+            mc = MONS_SERPENT_OF_HELL;
+        switch (mc)
+        {
+        case MONS_JESSICA:
+        case MONS_PSYCHE:
+        case MONS_JOSEPHINE:
+        case MONS_AGNES:
+        case MONS_MAUD:
+        case MONS_LOUISE:
+        case MONS_FRANCES:
+        case MONS_MARGERY:
+        case MONS_EROLCHA:
+        case MONS_ERICA:
+        case MONS_TIAMAT:
+        case MONS_ERESHKIGAL:
+        case MONS_ROXANNE:
+        case MONS_SONJA:
+        case MONS_ILSUIW:
+        case MONS_NERGALLE:
+        case MONS_KIRKE:
+        case MONS_DUVESSA:
+        case MONS_THE_ENCHANTRESS:
+        case MONS_NELLIE:
+        case MONS_ARACHNE:
+        case MONS_LAMIA:
+            gender = GENDER_FEMALE;
+            break;
+        case MONS_ROYAL_JELLY:
+        case MONS_LERNAEAN_HYDRA:
+        case MONS_IRON_GIANT:
+        case MONS_SERPENT_OF_HELL:
+            gender = GENDER_NEUTER;
+            break;
+        default:
+            gender = GENDER_MALE;
+            break;
+        }
+    }
+
+    return gender;
+}
+
 // Use of variant (case is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
 // PRONOUN_POSSESSIVE : _Her_ sword explodes!
@@ -3236,68 +3301,8 @@ bool mons_can_attack(const monster* mon)
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
 {
-    gender_type gender = GENDER_NEUTER;
-
-    if (visible)
-    {
-        if (mons_genus(mon_type) == MONS_MERMAID
-            || mon_type == MONS_QUEEN_ANT
-            || mon_type == MONS_QUEEN_BEE
-            || mon_type == MONS_HARPY
-            || mon_type == MONS_SPHINX)
-        {
-            gender = GENDER_FEMALE;
-        }
-        // Mara's fakes aren't unique, but should still be classified as
-        // male.
-        else if (mon_type == MONS_MARA_FAKE
-                 || mon_type == MONS_HELLBINDER
-                 || mon_type == MONS_CLOUD_MAGE)
-        {
-            gender = GENDER_MALE;
-        }
-        else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
-        {
-            if (mons_species(mon_type) == MONS_SERPENT_OF_HELL)
-                mon_type = MONS_SERPENT_OF_HELL;
-            switch (mon_type)
-            {
-            case MONS_JESSICA:
-            case MONS_PSYCHE:
-            case MONS_JOSEPHINE:
-            case MONS_AGNES:
-            case MONS_MAUD:
-            case MONS_LOUISE:
-            case MONS_FRANCES:
-            case MONS_MARGERY:
-            case MONS_EROLCHA:
-            case MONS_ERICA:
-            case MONS_TIAMAT:
-            case MONS_ERESHKIGAL:
-            case MONS_ROXANNE:
-            case MONS_SONJA:
-            case MONS_ILSUIW:
-            case MONS_NERGALLE:
-            case MONS_KIRKE:
-            case MONS_DUVESSA:
-            case MONS_THE_ENCHANTRESS:
-            case MONS_NELLIE:
-            case MONS_ARACHNE:
-            case MONS_LAMIA:
-                gender = GENDER_FEMALE;
-                break;
-            case MONS_ROYAL_JELLY:
-            case MONS_LERNAEAN_HYDRA:
-            case MONS_IRON_GIANT:
-            case MONS_SERPENT_OF_HELL:
-                gender = GENDER_NEUTER;
-                break;
-            default:
-                gender = GENDER_MALE;
-                break;
-            }
-        }
-    }
+    gender_type gender = !visible ? GENDER_NEUTER
+                                  : mons_class_gender(mon_type);
 
     switch (variant)
     {

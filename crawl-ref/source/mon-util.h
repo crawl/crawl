@@ -307,6 +307,8 @@ bool mons_has_ranged_attack(const monster* mon);
 bool mons_has_known_ranged_attack(const monster* mon);
 bool mons_can_attack(const monster* mon);
 
+gender_type mons_class_gender(monster_type mc);
+
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
 
