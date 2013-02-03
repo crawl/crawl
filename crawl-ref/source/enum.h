@@ -2449,7 +2449,7 @@ enum monster_type                      // menv[].type
     MONS_DONALD,
     MONS_URUG,
     MONS_JOSEPH,
-    MONS_SNORG, // was Anita - Snorg is correct 16jan2000 {dlb}
+    MONS_SNORG, // was Anita - 16jan2000 {dlb}
     MONS_ERICA,
     MONS_JOSEPHINE,
     MONS_HAROLD,
@@ -2599,7 +2599,7 @@ enum mon_attitude_type
 };
 
 // Adding slots breaks saves. YHBW.
-enum mon_inv_type           // (int) menv[].inv[]
+enum mon_inv_type           // menv[].inv[]
 {
     MSLOT_WEAPON,           // Primary weapon (melee)
     MSLOT_ALT_WEAPON,       // Alternate weapon, ranged or second melee weapon
@@ -3339,16 +3339,16 @@ enum stat_type
     STAT_INT,
     STAT_DEX,
     NUM_STATS,
-    STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
+    STAT_ALL, // must remain after NUM_STATS
     STAT_RANDOM,
 };
 
 enum targetting_type
 {
     DIR_NONE,
-    DIR_TARGET, // smite targetting
-    DIR_DIR,    // needs a clear line to target
-    DIR_TARGET_OBJECT, // New as of 27-August-2009, for item-targetting spells
+    DIR_TARGET,        // smite targetting
+    DIR_DIR,           // needs a clear line to target
+    DIR_TARGET_OBJECT, // targets items
 };
 
 enum torment_source_type
@@ -3362,7 +3362,7 @@ enum torment_source_type
     TORMENT_KIKUBAAQUDGHA = -7,   // Kikubaaqudgha effect
 };
 
-enum trap_type                         // env.trap_type[]
+enum trap_type
 {
     TRAP_DART,
     TRAP_ARROW,
@@ -3379,7 +3379,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_PLATE,
     TRAP_WEB,
     TRAP_GAS,
-    NUM_TRAPS,                         // must remain last 'regular' member {dlb}
+    NUM_TRAPS,
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
 #if TAG_MAJOR_VERSION == 34
