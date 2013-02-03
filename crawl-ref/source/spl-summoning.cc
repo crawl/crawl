@@ -1189,47 +1189,37 @@ bool can_cast_malign_gateway()
 
 coord_def find_gateway_location(actor* caster)
 {
-    coord_def point = coord_def(0, 0);
+    vector<coord_def> points;
 
     bool xray = you.xray_vision;
     you.xray_vision = false;
 
-    unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
-
-
     for (unsigned i = 0; i < 8; ++i)
     {
-        coord_def delta = Compass[compass_idx[i]];
+        coord_def delta = Compass[i];
         coord_def test = coord_def(-1, -1);
 
-        bool found_spot = false;
-        int tries = 8;
-
-        for (int t = 0; t < tries; t++)
+        for (int t = 0; t < 11; t++)
         {
-            test = caster->pos() + (delta * (2+t+random2(4)));
+            test = caster->pos() + (delta * (2+t));
             if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
-                || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
+                || actor_at(test)
+                || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
                 continue;
             }
 
-            found_spot = true;
-            break;
+            points.push_back(test);
         }
-
-        if (!found_spot)
-            continue;
-
-        point = test;
-        break;
     }
 
     you.xray_vision = xray;
 
-    return point;
+    if (points.empty())
+        return coord_def(0, 0);
+
+    return points[random2(points.size())];
 }
 
 spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
