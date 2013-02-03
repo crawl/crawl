@@ -25,7 +25,7 @@ require("dlua/v_debug.lua")
 require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
 
-_VAULTS_DEBUG = true
+_VAULTS_DEBUG = false
 
 -- Default parameters for all Vaults layouts. Some individual layouts might
 -- tweak these parameters to create specific effects.
