@@ -1005,22 +1005,6 @@ struct zap_info
 },
 
 {
-    ZAP_SUNRAY,
-    "ray of light",
-    200,
-    new calcdice_calculator<4, 15, 1, 1>,
-    new tohit_calculator<5, 1, 20>,
-    ETC_HOLY,
-    false,
-    BEAM_LIGHT,
-    DCHAR_FIRED_BOLT,
-    true,
-    true,
-    false,
-    6 // XXX: Less noise because it's poison?
-},
-
-{
     ZAP_HOLY_LIGHT,
     "beam of light",
     200,
@@ -1034,22 +1018,6 @@ struct zap_info
     true,
     false,
     6
-},
-
-{
-    ZAP_HOLY_BREATH,
-    "holy breath",
-    50,
-    new dicedef_calculator<3, 2, 1, 6>,
-    new tohit_calculator<6, 1, 6>,
-    ETC_HOLY,
-    false,
-    BEAM_HOLY_FLAME,
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    0 // Explosion does the noise.
 },
 
 {
@@ -1098,22 +1066,6 @@ struct zap_info
     false,
     false,
     0
-},
-
-{
-    ZAP_SILVER_BLAST,
-    "silver light",
-    200,
-    new calcdice_calculator<3, 10, 1, 2>,
-    new tohit_calculator<40>,
-    LIGHTGRAY,
-    false,
-    BEAM_BOLT_OF_ZIN,
-    DCHAR_FIRED_ZAP,
-    false,
-    false,
-    true,
-    0 // Noise comes from explosion
 },
 
 {
