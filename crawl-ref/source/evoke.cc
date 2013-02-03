@@ -380,7 +380,7 @@ bool disc_of_storms(bool drac_breath)
         for (int i = 0; i < disc_count; ++i)
         {
             bolt beam;
-            const zap_type types[] = { ZAP_LIGHTNING, ZAP_ELECTRICITY,
+            const zap_type types[] = { ZAP_BOLT_OF_LIGHTNING, ZAP_SHOCK,
                                        ZAP_ORB_OF_ELECTRICITY };
 
             const zap_type which_zap = RANDOM_ELEMENT(types);

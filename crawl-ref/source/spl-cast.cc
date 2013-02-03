@@ -1002,11 +1002,11 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_beam(&you, range, spell_to_zap(spell), pow, true,
                                   0, 0);
     case SPELL_BOLT_OF_FIRE:
-        return new targetter_beam(&you, range, ZAP_FIRE, pow, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, pow, false, 0, 0);
     case SPELL_THROW_FROST:
-        return new targetter_beam(&you, range, ZAP_FROST, pow, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_THROW_FROST, pow, true, 0, 0);
     case SPELL_BOLT_OF_COLD:
-        return new targetter_beam(&you, range, ZAP_COLD, pow, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, pow, false, 0, 0);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return new targetter_imb(&you, pow, range);
     case SPELL_FIRE_STORM:

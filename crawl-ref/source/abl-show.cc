@@ -2342,10 +2342,10 @@ static bool _do_ability(const ability_def& abil)
 
         switch (random2(5))
         {
-        case 0: beam.range =  8; zapping(ZAP_FLAME, power, beam); break;
+        case 0: beam.range =  8; zapping(ZAP_THROW_FLAME, power, beam); break;
         case 1: beam.range =  8; zapping(ZAP_PAIN,  power, beam); break;
         case 2: beam.range =  5; zapping(ZAP_STONE_ARROW, power, beam); break;
-        case 3: beam.range =  8; zapping(ZAP_ELECTRICITY, power, beam); break;
+        case 3: beam.range =  8; zapping(ZAP_SHOCK, power, beam); break;
         case 4: beam.range =  8; zapping(ZAP_BREATHE_ACID, power/2, beam); break;
         }
         break;
@@ -2373,9 +2373,9 @@ static bool _do_ability(const ability_def& abil)
             zap_type ztype = ZAP_DEBUGGING_RAY;
             switch (random2(7))
             {
-            case 0: beam.range =  7; ztype = ZAP_FIRE;               break;
+            case 0: beam.range =  7; ztype = ZAP_BOLT_OF_FIRE;       break;
             case 1: beam.range =  6; ztype = ZAP_FIREBALL;           break;
-            case 2: beam.range =  8; ztype = ZAP_LIGHTNING;          break;
+            case 2: beam.range =  8; ztype = ZAP_BOLT_OF_LIGHTNING;  break;
             case 3: beam.range =  5; ztype = ZAP_STICKY_FLAME;       break;
             case 4: beam.range =  5; ztype = ZAP_IRON_SHOT;          break;
             case 5: beam.range =  6; ztype = ZAP_NEGATIVE_ENERGY;    break;
