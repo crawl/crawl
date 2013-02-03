@@ -932,7 +932,7 @@ static string _abyss_monster_creation_message(const monster* mon, bool visible)
             + (one_chance_in(3) ? "translocational energy." : "sparks."),
         " materialises.",
         string(" emerges from ") + (one_chance_in(3) ? "chaos." : "the beyond."),
-        " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + "!",
+        " assembles " + string(mon->pronoun(PRONOUN_REFLEXIVE, visible)) + "!",
         (one_chance_in(3) ? " erupts" : " bursts") + string(" from nowhere!"),
         string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
         string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething")
