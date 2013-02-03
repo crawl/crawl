@@ -2584,6 +2584,8 @@ bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
 bool trigger_arcane_familiar(bolt& beam)
 {
     monster* familiar = _find_arcane_familiar();
+    if (!familiar)
+        return false;
 
     if (familiar->props.exists("ready"))
     {
@@ -2599,10 +2601,11 @@ bool trigger_arcane_familiar(bolt& beam)
             {
                 if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
                 {
-                    if (monster_at(*ri) && (monster_at(*ri) != familiar))
+                    const monster *targ = monster_at(*ri);
+                    if (targ && targ != familiar)
                     {
                         familiar->props["firing_target"] = *ri;
-                        familiar->foe = monster_at(*ri)->mindex();
+                        familiar->foe = targ->mindex();
                         familiar->props["foe"] = familiar->foe;
                         continue;
                     }
