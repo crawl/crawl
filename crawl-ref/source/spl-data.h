@@ -2684,19 +2684,6 @@ struct spell_desc
 },
 
 {
-    SPELL_SACRIFICE, "Sacrifice",
-     SPTYP_NONE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
-     6,
-     200,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_HOLY_FLAMES, "Holy Flames",
      SPTYP_NONE,
      SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,

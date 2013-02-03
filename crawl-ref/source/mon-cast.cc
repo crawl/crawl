@@ -997,7 +997,6 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_AIRSTRIKE
         || spell_cast == SPELL_MISLEAD
         || spell_cast == SPELL_RESURRECT
-        || spell_cast == SPELL_SACRIFICE
         || spell_cast == SPELL_HOLY_FLAMES
         || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
 }
@@ -1036,7 +1035,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_MISLEAD:
         case SPELL_SMITING:
         case SPELL_RESURRECT:
-        case SPELL_SACRIFICE:
         case SPELL_AIRSTRIKE:
         case SPELL_HOLY_FLAMES:
             return true;
@@ -1967,11 +1965,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 if (spell_cast != SPELL_MELEE)
                     setup_mons_cast(mons, beem, spell_cast);
 
-                // Try to find a nearby ally to haste, heal,
-                // resurrect, or sacrifice itself for.
+                // Try to find a nearby ally to haste, heal or resurrect.
                 if ((spell_cast == SPELL_HASTE_OTHER
-                     || spell_cast == SPELL_HEAL_OTHER
-                     || spell_cast == SPELL_SACRIFICE)
+                     || spell_cast == SPELL_HEAL_OTHER)
                         && !_set_allied_target(mons, beem))
                 {
                     spell_cast = SPELL_NO_SPELL;
