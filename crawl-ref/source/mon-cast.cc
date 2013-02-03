@@ -923,6 +923,14 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = 22 + power / 20;
         break;
 
+    case SPELL_FORCE_LANCE:
+        beam.colour   = LIGHTGREY;
+        beam.name     = "lance of force";
+        beam.damage   = dice_def(3, 3 + power / 50);
+        beam.hit      = 20 + power / 20;
+        beam.flavour  = BEAM_MMISSILE;
+        break;
+
     default:
         if (check_validity)
         {
