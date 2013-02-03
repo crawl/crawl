@@ -3248,8 +3248,8 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         {
             gender = GENDER_FEMALE;
         }
-        // Mara's fakes aren't a unique, but should still be classified
-        // as male.
+        // Mara's fakes aren't unique, but should still be classified as
+        // male.
         else if (mon_type == MONS_MARA_FAKE
                  || mon_type == MONS_HELLBINDER
                  || mon_type == MONS_CLOUD_MAGE)
