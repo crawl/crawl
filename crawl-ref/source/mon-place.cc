@@ -2706,8 +2706,8 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_UGLY_THINGS:
-        mon_type = ((power > 21 && one_chance_in(4)) ?
-                       MONS_VERY_UGLY_THING : MONS_UGLY_THING);
+        mon_type = (power > 21 && one_chance_in(4)) ?
+                       MONS_VERY_UGLY_THING : MONS_UGLY_THING;
         break;
 
     case BAND_HELL_HOUNDS:
@@ -2762,16 +2762,15 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_BALRUG:
-        mon_type = (coinflip() ? MONS_SUN_DEMON : MONS_RED_DEVIL);
+        mon_type = coinflip() ? MONS_SUN_DEMON : MONS_RED_DEVIL;
         break;
 
     case BAND_CACODEMON:
-        mon_type = (coinflip() ? MONS_SIXFIRHY : MONS_ORANGE_DEMON);
+        mon_type = coinflip() ? MONS_SIXFIRHY : MONS_ORANGE_DEMON;
         break;
 
     case BAND_EXECUTIONER:
-        mon_type = (coinflip() ? MONS_ABOMINATION_SMALL
-                               : MONS_ABOMINATION_LARGE);
+        mon_type = coinflip() ? MONS_ABOMINATION_SMALL : MONS_ABOMINATION_LARGE;
         break;
 
     case BAND_PANDEMONIUM_LORD:
@@ -2799,7 +2798,7 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_HELLWING:
-        mon_type = (coinflip() ? MONS_HELLWING : MONS_SMOKE_DEMON);
+        mon_type = coinflip() ? MONS_HELLWING : MONS_SMOKE_DEMON;
         break;
 
     case BAND_DEEP_ELF_FIGHTER:    // deep elf fighter
@@ -2842,6 +2841,7 @@ static monster_type _band_member(band_type band, int power, int which)
                  (temp_rand == 1) ? MONS_DEEP_ELF_SORCERER      // 1 in 16
                                   : MONS_DEEP_ELF_DEATH_MAGE);  // 1 in 16
         break;
+
     case BAND_HELL_KNIGHTS:
         mon_type = MONS_HELL_KNIGHT;
         if (one_chance_in(4))
@@ -2877,7 +2877,7 @@ static monster_type _band_member(band_type band, int power, int which)
         mon_type = MONS_SHEEP;
         break;
     case BAND_GHOULS:
-        mon_type = (coinflip() ? MONS_GHOUL : MONS_NECROPHAGE);
+        mon_type = coinflip() ? MONS_GHOUL : MONS_NECROPHAGE;
         break;
     case BAND_DEEP_TROLLS:
         mon_type = MONS_DEEP_TROLL;
@@ -2937,7 +2937,7 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_AZRAEL:
-        mon_type = coinflip()? MONS_FIRE_ELEMENTAL : MONS_HELL_HOUND;
+        mon_type = coinflip() ? MONS_FIRE_ELEMENTAL : MONS_HELL_HOUND;
         break;
 
     case BAND_DUVESSA:
@@ -2949,7 +2949,7 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_KHUFU:
-        mon_type = coinflip()? MONS_GREATER_MUMMY : MONS_MUMMY;
+        mon_type = coinflip() ? MONS_GREATER_MUMMY : MONS_MUMMY;
         break;
 
     case BAND_GOLDEN_EYE:
