@@ -296,6 +296,48 @@ MAP
 .........@@@...
 ENDMAP
 
+
+############################################################
+# A fortification!
+#
+NAME: grunt_vaults_entry_fortified
+TAGS: vaults_entry no_pool_fixup patrolling
+ORIENT: north
+MONS: human hd:10 ; crossbow . bolt q:10 . short sword | dagger . \
+                    leather armour w:5 | ring mail | scale mail / \
+      orc knight ; crossbow . bolt q:10 . short sword | dagger . \
+                   leather armour w:5 | ring mail | scale mail / \
+      deep elf knight ; crossbow . bolt q:10 . short sword | dagger . \
+                        leather armour w:5 | ring mail | scale mail / \
+      centaur warrior / yaktaur
+MONS: vault guard
+MONS: wizard / orc sorcerer / ogre mage
+MONS: necromancer band / orc high priest band
+NSUBST: T = 1:U / *:T
+KFEAT: K = iron_grate
+KFEAT: O = enter_vaults
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxvvvvvxxxxxxx
+xxxxxxxvT2Tvxxxxxxx
+xxxxxxxv2O2vxxxxxxx
+xxxxxxxvT.Tvxxxxxxx
+xvvvvvvvv+vvvvvvvvx
+xv*...3.....4...*vx
+xv.1....2.2....1.vx
+xv...............vx
+xvK+KvvvK+KvvvK+Kvx
+xv...vxv.2.vxv...vx
+xv...vxv...vxv...vx
+xv...vxv1.1vxv...vx
+xvK12vvv+++vvv21Kvx
+.wwwwwwW...Wwwwwww.
+.WwwwwwW...WwwwwwW.
+ .WwwwWW...WwwwwW.
+  .WWWW.....WWWW.
+   ......@......
+ENDMAP
+
 ###############################################################################
 # Vaults:$ last level of the vaults -- dungeon.cc will change all these 'x's
 ###############################################################################
