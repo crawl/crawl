@@ -405,7 +405,10 @@ int place_monster_corpse(const monster* mons, bool silent,
     // "always_corpse" forces monsters to always generate a corpse upon
     // their deaths.
     if (mons->props.exists("always_corpse")
-        || mons_class_flag(mons->type, M_ALWAYS_CORPSE))
+#if TAG_MAJOR_VERSION == 34
+        || mons_class_flag(mons->type, M_ALWAYS_CORPSE)
+#endif
+        )
     {
         vault_forced = true;
     }
