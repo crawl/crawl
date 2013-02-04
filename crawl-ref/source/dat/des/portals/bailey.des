@@ -287,6 +287,7 @@ COLOUR: ; : red / lightred
 SUBST:  ; = .
 TAGS:   uniq_bailey no_rotate chance_bailey
 CHANCE: 5%
+KMASK:  d = no_item_gen
 KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -345,6 +346,7 @@ TAGS:   uniq_bailey no_rotate chance_bailey
 CHANCE: 5%
 WEIGHT: 3
 COLOUR: n = red
+KMASK:  d = no_item_gen
 KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -418,6 +420,7 @@ ITEM:   any good_item w:10 / nothing w:5
 # Starting room flavour. You cannot actually get the axes.
 SUBST:  Y = ccn
 SUBST:  X : ccn
+KMASK:  Z = no_item_gen
 KITEM:  Z = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
             unobtainable war axe / unobtainable good_item war axe w:5 /\
             unobtainable good_item executioner's axe w:1
