@@ -2723,10 +2723,10 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_DEEP_DWARF:
-        mon_type = random_choose_weighted( 2, MONS_DEEP_DWARF_BERSERKER,
-                                           1, MONS_DEEP_DWARF_DEATH_KNIGHT,
+        mon_type = random_choose_weighted(31, MONS_DEEP_DWARF,
                                            6, MONS_DEEP_DWARF_NECROMANCER,
-                                          31, MONS_DEEP_DWARF,
+                                           2, MONS_DEEP_DWARF_BERSERKER,
+                                           1, MONS_DEEP_DWARF_DEATH_KNIGHT,
                                            0);
         break;
 
