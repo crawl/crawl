@@ -2,6 +2,30 @@
 # swamp.des: All maps and branch endings relating to the Swamp.
 ###############################################################################
 
+# Functionality for one of Grunt's vaults.
+{{
+function callback.grunt_lady_of_the_lake_trigger(data, triggerable, triggerer,
+                                                 marker, ev)
+  if data.triggered then
+    return
+  end
+
+  local b = dgn.find_marker_positions_by_prop("siren_spawn", 1)[1]
+
+  if dgn.create_monster(b.x, b.y, "generate_awake siren") then
+
+    data.triggered = true
+    if you.see_cell(b.x, b.y) then
+      crawl.mpr("A figure emerges from the depths of the water!", "warning");
+    else
+      crawl.mpr("The water ripples visibly.", "visual");
+    end
+  else
+    crawl.mpr("The water ripples visibly.", "visual");
+  end
+end
+}}
+
 ###############################################################################
 # Swamp entries
 ###############################################################################
@@ -520,6 +544,139 @@ y..c...c...0...c...c..y
   ...................
     yyyyy.....yyyyy
          yyyyy
+ENDMAP
+
+NAME: grunt_hermit_hut
+DEPTH: Swamp
+MONS: orc high priest / orc sorcerer / wizard / necromancer band
+SHUFFLE: +d / +d / d+
+SUBST: w = w t:5 T:5
+SUBST: d = c
+SHUFFLE: c = ccx
+KFEAT: T = mangrove
+MAP
+    wwww
+  wwwwwwww
+ wwwwwwwwww
+ www....www
+www.cdcc.www
+www.c1%c.www
+www.c%.c.www
+www.cc+c.www
+ www....www
+ wwww.wwwww
+  www.wwww
+    w.@w
+ENDMAP
+
+NAME: grunt_witch_cave
+DEPTH: Swamp
+: if crawl.coinflip() then
+MONS: wizard hd:10 name:witch n_rpl n_des n_noc col:lightgreen \
+      spells:poisonous_cloud;summon_hydra;cause_fear;slow;.;. ; \
+      robe . quarterstaff . ring of poison resistance
+: else
+MONS: wizard hd:10 name:witch n_rpl n_des n_noc col:lightgreen \
+      spells:venom_bolt;summon_hydra;mesmerise;confuse;.;. ; \
+      robe . quarterstaff . ring of poison resistance
+: end
+MONS: hydra
+{{
+  dgn.delayed_decay(_G, 'd',
+                    'human skeleton / elf skeleton / dwarf skeleton' ..
+                    ' / orc skeleton')
+}}
+NSUBST: : = 5:W / *:.
+SUBST: w = w:10 t:5 T:5
+KFEAT: T = mangrove
+KFEAT: K = shallow_water
+KITEM: K = potion of confusion / potion of paralysis / potion of degeneration \
+           / potion of decay / potion of mutation
+MARKER: K = lua:fog_machine { cloud_type="black smoke", \
+                              pow_min = 10, pow_max = 30, delay = 50, \
+                              size = 1, walk_dist = 2, spread_rate = 25 }
+MARKER: L = lua:fog_machine { cloud_type="flame", \
+                              pow_min = 100, pow_max = 100, delay = 100, \
+                              size = 1, excl_rad = 0, walk_dist = 0 }
+MAP
+     wwwwww
+    wwxxxxww
+  wwxxx**xxxw
+ wwxxd%%%%Wxww
+wwxx::::vvvxxw
+wwx:d::1:KvLxw
+wxx::2::vvvdxw
+wxW:::::::2:xww
+wxx::::2::::dxw
+wxW::::::::xxxw
+wxxd:::::xxxww
+wwxxx:.:xxww
+ wwwxx.xxw
+   wwx.xww
+    wd.dww
+   ww.@.www
+ENDMAP
+
+NAME: grunt_lady_of_the_lake
+DEPTH: Swamp
+SUBST: w = w:50 t:5 T:5
+SUBST: W = w
+KITEM: O = great sword good_item w:20 / \
+           double sword good_item w:2 / \
+           triple sword good_item w:1
+KFEAT: K = deep_water
+KFEAT: T = mangrove
+{{
+  local cf = TriggerableFunction:new{
+      func="callback.grunt_lady_of_the_lake_trigger",
+      repeated=true,
+      data={triggered = false} }
+  cf:add_triggerer(DgnTriggerer:new{type="player_move"})
+  lua_marker("O", cf)
+  lua_marker(":", cf)
+  lua_marker("K", props_marker { siren_spawn = 1 })
+}}
+MAP
+    wwwww
+  wwwwwwwww
+ wwwwwKwwwww
+ wwwwwWwwwww
+wwwwwwWwwwwww
+wwwwww:wwwwww
+wwwww:O:wwwww
+wwwwww:wwwwww
+wwwww.wwwwwww
+ wwwww.wwwww
+ wwwww.wwwww
+  wwwww.www
+    ww@ww
+ENDMAP
+
+NAME: grunt_ruined_hall
+DEPTH: Swamp
+MONS: swamp dragon, hydra, patrolling bog body
+NSUBST: : = 1:1 / 2:2 / 3:3 / 6:0 / *:-
+SUBST: - = .W
+SUBST: C = c:20 . W
+SUBST: + = +.
+SUBST: G = Gg
+KITEM: g = stone w:40 / large rock q:1
+KFEAT: g = floor
+KFEAT: _ = altar_yredelemnul / altar_kikubaaqudgha
+MAP
+ ----------------------
+ -CCCCCCCCCCcccCCCcCCc-
+ -C%%C::::::::::::C%%c-
+ -C%:C::::::::::::C:%c-
+ -CC+C::G:::G:::G:C+cc-
+-.+::::::::::::::::::c-
+@.+:::::::::_::::::1:c-
+-.+::::::::::::::::::c-
+ -cC+c::G:::G:::G:c+cc-
+ -c%:c::::::::::::c:*c-
+ -c%%c::::::::::::c**c-
+ -cccccccccccccccccccc-
+  --------------------
 ENDMAP
 
 ###############################################################################
