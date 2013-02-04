@@ -1070,16 +1070,17 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
                                          actor* agent)
 {
     _setup_base_explosion(beam, origin);
-    const int size = origin.body_size(PSIZE_BODY);
-    beam.flavour   = BEAM_FIRE;
-    beam.damage    = (size > SIZE_BIG)  ? dice_def(3, 25) :
-                     (size > SIZE_TINY) ? dice_def(3, 20) :
-                                          dice_def(3, 15);
-    beam.name      = "fiery explosion";
-    beam.noise_msg = "You hear an explosion!";
-    beam.colour    = RED;
-    beam.ex_size   = (size > SIZE_BIG) ? 2 : 1;
-    beam.set_agent(agent);
+    const int size   = origin.body_size(PSIZE_BODY);
+    beam.flavour     = BEAM_FIRE;
+    beam.damage      = (size > SIZE_BIG)  ? dice_def(3, 25) :
+                       (size > SIZE_TINY) ? dice_def(3, 20) :
+                                            dice_def(3, 15);
+    beam.name        = "fiery explosion";
+    beam.colour      = RED;
+    beam.ex_size     = (size > SIZE_BIG) ? 2 : 1;
+    beam.source_name = origin.name(DESC_A, true);
+    beam.thrower     = (agent && agent->is_player()) ? KILL_YOU_MISSILE
+                                                     : KILL_MON_MISSILE;
 }
 
 static bool _explode_monster(monster* mons, killer_type killer,
@@ -1123,10 +1124,18 @@ static bool _explode_monster(monster* mons, killer_type killer,
         ASSERT(i_f.ench == ENCH_INNER_FLAME);
         agent = actor_by_mid(i_f.source);
         _setup_inner_flame_explosion(beam, *mons, agent);
+        // This might need to change if monsters ever get the ability to cast
+        // Inner Flame...
+        if (i_f.source == MID_ANON_FRIEND)
+            mons_add_blame(mons, "hexed by Xom");
+        else if (agent && agent->is_player())
+            mons_add_blame(mons, "hexed by the player character");
+        else if (agent)
+            mons_add_blame(mons, "hexed by " + agent->name(DESC_A, true));
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion "
                           "is contained.";
-        beam.aux_source = "an exploding inner flame";
+        beam.aux_source = "exploding inner flame";
     }
     else
     {

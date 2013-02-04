@@ -1135,7 +1135,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         auxkilldata = aux;
 
     if (!invalid_monster_index(death_source)
-        && !env.mons[death_source].alive())
+        && !env.mons[death_source].alive()
+        && auxkilldata != "exploding inner flame")
     {
         death_source = NON_MONSTER;
     }
