@@ -1483,8 +1483,8 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         if (mons->type == MONS_EDMUND)
         {
             return (wtype == WPN_FLAIL
-                 || wtype == WPN_SPIKED_FLAIL
-                 || wtype == WPN_DIRE_FLAIL);
+                    || wtype == WPN_SPIKED_FLAIL
+                    || wtype == WPN_DIRE_FLAIL);
         }
 
         // Pikel's got MONUSE_STARTING_EQUIPMENT right now, but,
@@ -1514,9 +1514,9 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         if (mons->type == MONS_ARACHNE)
         {
             return (weapon.base_type == OBJ_STAVES
-                    && weapon.sub_type == STAFF_POISON
-                 || weapon.base_type == OBJ_WEAPONS
-                    && weapon.special == UNRAND_OLGREB);
+                        && weapon.sub_type == STAFF_POISON
+                    || weapon.base_type == OBJ_WEAPONS
+                        && weapon.special == UNRAND_OLGREB);
         }
 
         if (mons->type == MONS_FANNAR)
@@ -2043,7 +2043,8 @@ bool monster::pickup_jewellery(item_def &item, int near, bool force)
     {
         if (!force)
         {
-            int value_old = _get_monster_jewellery_value(this, *existing_jewellery);
+            int value_old = _get_monster_jewellery_value(this,
+                                                         *existing_jewellery);
             if (value_old > value_new)
                 return false;
 
@@ -2403,8 +2404,8 @@ void monster::swap_weapons(int near)
     if (weap && !unequip(*weap, MSLOT_WEAPON, near))
     {
         // Item was cursed.
-        // A centaur may randomly decide to not shoot you, but bashing people with
-        // a ranged weapon is a dead giveaway.
+        // A centaur may randomly decide to not shoot you, but bashing
+        // people with a ranged weapon is a dead giveaway.
         if (weap->cursed() && you.can_see(this) && is_range_weapon(*weap))
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
