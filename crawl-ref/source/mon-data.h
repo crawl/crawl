@@ -1196,11 +1196,23 @@ static monsterentry mondata[] = {
 },
 
 // lizards ('l')
+{ // dummy for giant lizard genus
+    MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard",
+    M_COLD_BLOOD | M_NO_POLY_TO,
+    MR_NO_FLAGS,
+    170, 10, MONS_GIANT_LIZARD, MONS_GIANT_LIZARD, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 1, 2, 0 },
+    0, 15, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
+    I_REPTILE, HT_AMPHIBIOUS, FL_NONE, 10, SWIM_ENERGY(6),
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
+},
+
 {
     MONS_GIANT_NEWT, 'l', GREEN, "giant newt",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
-    170, 10, MONS_GIANT_NEWT, MONS_GIANT_NEWT, MH_NATURAL, -3,
+    170, 10, MONS_GIANT_LIZARD, MONS_GIANT_NEWT, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 1, 2, 0 },
     0, 15, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
@@ -1212,7 +1224,7 @@ static monsterentry mondata[] = {
     MONS_GIANT_GECKO, 'l', YELLOW, "giant gecko",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
-    250, 16, MONS_GIANT_NEWT, MONS_GIANT_GECKO, MH_NATURAL, -3,
+    250, 16, MONS_GIANT_LIZARD, MONS_GIANT_GECKO, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 3, 5, 0 },
     1, 14, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
@@ -1224,7 +1236,7 @@ static monsterentry mondata[] = {
     MONS_IGUANA, 'l', BLUE, "iguana",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
-    400, 13, MONS_GIANT_NEWT, MONS_IGUANA, MH_NATURAL, -3,
+    400, 13, MONS_GIANT_LIZARD, MONS_IGUANA, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
     5, 9, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS,
@@ -1236,7 +1248,7 @@ static monsterentry mondata[] = {
     MONS_BASILISK, 'l', MAGENTA, "basilisk",
     M_COLD_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS,
     MR_NO_FLAGS,
-    450, 15, MONS_GIANT_NEWT, MONS_BASILISK, MH_NATURAL, -3,
+    450, 15, MONS_GIANT_LIZARD, MONS_BASILISK, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 4, 4, 0 },
     3, 12, MST_BASILISK, CE_POISON_CONTAM, Z_SMALL, S_HISS,
@@ -1248,7 +1260,7 @@ static monsterentry mondata[] = {
     MONS_KOMODO_DRAGON, 'l', LIGHTRED, "komodo dragon",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
-    800, 10, MONS_GIANT_NEWT, MONS_KOMODO_DRAGON, MH_NATURAL, -3,
+    800, 10, MONS_GIANT_LIZARD, MONS_KOMODO_DRAGON, MH_NATURAL, -3,
     { {AT_BITE, AF_DISEASE, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     7, 8, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_HISS,
@@ -1256,12 +1268,24 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// drakes (also 'l', but dragon type)
+// drakes (also 'l', but dragon-like)
+{ // dummy for drake genus
+    MONS_DRAKE, 'l', WHITE, "drake",
+    M_WARM_BLOOD | M_FLEES | M_NO_POLY_TO,
+    MR_RES_POISON,
+    900, 16, MONS_DRAKE, MONS_DRAKE, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 4, 5, 5, 0 },
+    3, 11, MST_NO_SPELLS, CE_POISON_CONTAM, Z_BIG, S_ROAR,
+    I_ANIMAL, HT_LAND, FL_WINGED, 11, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
+},
+
 {
     MONS_SWAMP_DRAKE, 'l', BROWN, "swamp drake",
     M_SPELLCASTER | M_WARM_BLOOD | M_FAKE_SPELLS | M_FLEES,
     MR_RES_POISON,
-    900, 16, MONS_DRAGON, MONS_SWAMP_DRAKE, MH_NATURAL, -3,
+    900, 16, MONS_DRAKE, MONS_SWAMP_DRAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 5, 5, 0 },
     3, 11, MST_SWAMP_DRAKE, CE_POISON_CONTAM, Z_BIG, S_ROAR,
@@ -1273,7 +1297,7 @@ static monsterentry mondata[] = {
     MONS_FIRE_DRAKE, 'l', RED, "fire drake",
     M_WARM_BLOOD | M_FAKE_SPELLS | M_FLEES,
     MR_RES_FIRE,
-    1000, 10, MONS_DRAGON, MONS_FIRE_DRAKE, MH_NATURAL, -3,
+    1000, 10, MONS_DRAKE, MONS_FIRE_DRAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 3, 5, 0 },
     3, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT,
@@ -1285,7 +1309,7 @@ static monsterentry mondata[] = {
     MONS_LINDWURM, 'l', LIGHTCYAN, "lindwurm",
     M_WARM_BLOOD | M_GLOWS_LIGHT | M_FLEES,
     MR_NO_FLAGS,
-    950, 13, MONS_DRAGON, MONS_LINDWURM, MH_NATURAL, -3,
+    950, 13, MONS_DRAKE, MONS_LINDWURM, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 10},
       {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK },
     { 9, 3, 5, 0 },
@@ -1298,7 +1322,7 @@ static monsterentry mondata[] = {
     MONS_DEATH_DRAKE, 'l', LIGHTGREY, "death drake",
     M_SPELLCASTER | M_COLD_BLOOD | M_FAKE_SPELLS | M_FLEES,
     MR_RES_POISON | MR_RES_ROTTING,
-    900, 11, MONS_DRAGON, MONS_DEATH_DRAKE, MH_NATURAL, -3,
+    900, 11, MONS_DRAKE, MONS_DEATH_DRAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 5, 7, 0 },
     6, 14, MST_DEATH_DRAKE, CE_ROT, Z_BIG, S_ROAR,
