@@ -2549,6 +2549,8 @@ enum monster_type                      // menv[].type
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
 
+    MONS_ARACHNOID,             // genus
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
