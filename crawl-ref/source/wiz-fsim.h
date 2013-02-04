@@ -12,6 +12,7 @@ int max_dam;
 int accuracy;
 double av_dam;
 int av_time;
+double av_speed;
 double av_eff_dam;
 };
 
