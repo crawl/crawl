@@ -182,7 +182,9 @@ Gods
 * New Xom effects: loud noises, blink monsters, enchant monster (petrify,
   slow, paralysis, enslavement; haste, might, invisibility).
 * Xom does not reduce stats as drastically, unless bored.
-* Xom will not animate or swap weapons in the Abyss.
+* Xom will not animate or swap weapons in the Abyss, and will not hostilely
+  animate your weapon at all anymore.
+* Xom will sometimes summon shadow creatures instead of demons.
 * Gods can no longer grant permanent brands to friendly dancing weapons.
 * Zin's vitalisation protects against paralysing attacks.
 * Vehumet is overhauled: Now grants damaging spells one-at-a-time (available
