@@ -4618,27 +4618,32 @@ void bolt::affect_monster(monster* mon)
 
 bool bolt::ignores_monster(const monster* mon) const
 {
-    // Digging doesn't affect monsters (should it harm earth elementals?)
+    // Digging doesn't affect monsters (should it harm earth elementals?).
     if (flavour == BEAM_DIGGING)
         return true;
 
     // All kinds of beams go past orbs of destruction and arcane familiars.
     // We don't check mons_is_projectile() since that probably won't be the
     // case for rolling boulders.
-    if (mon->type == MONS_ORB_OF_DESTRUCTION || mon->type == MONS_ARCANE_FAMILIAR)
+    if (mon->type == MONS_ORB_OF_DESTRUCTION
+        || mon->type == MONS_ARCANE_FAMILIAR)
+    {
         return true;
+    }
 
     // Missiles go past bushes.
     if (mon->type == MONS_BUSH && !is_beam && !is_explosion
         && name != "sticky flame"
         && name != "splash of liquid fire"
         && name != "lightning arc")
+    {
         return true;
+    }
 
     if (fedhas_shoot_through(*this, mon))
         return true;
 
-    // Fire storm creates these, so we'll avoid affecting them
+    // Fire storm creates these, so we'll avoid affecting them.
     if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
         return true;
 
