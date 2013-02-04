@@ -257,6 +257,9 @@ int main(int argc, char *argv[])
     // switches the terminal to a truetype font.  And even that fails for
     // anything not directly in the font, above U+FFFF, or within Arabic or
     // any complex scripts.
+# ifndef _O_U8TEXT
+#  define _O_U8TEXT 0x40000
+# endif
     _setmode(_fileno(stdout), _O_U8TEXT);
     _setmode(_fileno(stderr), _O_U8TEXT);
 #endif
