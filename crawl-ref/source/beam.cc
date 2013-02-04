@@ -4622,6 +4622,11 @@ bool bolt::ignores_monster(const monster* mon) const
     if (flavour == BEAM_DIGGING)
         return true;
 
+    // The targetters might call us with NULL in the event of a remembered
+    // monster that is no longer there. Treat it as opaque.
+    if (!mon)
+        return false;
+
     // All kinds of beams go past orbs of destruction and arcane familiars.
     // We don't check mons_is_projectile() since that probably won't be the
     // case for rolling boulders.
