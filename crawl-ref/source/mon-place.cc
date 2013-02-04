@@ -2674,15 +2674,15 @@ static monster_type _band_member(band_type band, int power, int which)
     case BAND_ORC_HIGH_PRIEST:
         // XXX: For Beogh punishment, ogres and trolls look out of place...
         // (For normal generation, they're okay, of course.)
-        temp_rand = random2(30);
-        mon_type = ((temp_rand > 17) ? MONS_ORC :          // 12 in 30
-                    (temp_rand >  8) ? MONS_ORC_WARRIOR :  //  9 in 30
-                    (temp_rand >  6) ? MONS_WARG :         //  2 in 30
-                    (temp_rand >  4) ? MONS_ORC_WIZARD :   //  2 in 30
-                    (temp_rand >  2) ? MONS_ORC_PRIEST :   //  2 in 30
-                    (temp_rand >  1) ? MONS_OGRE :         //  1 in 30
-                    (temp_rand >  0) ? MONS_TROLL          //  1 in 30
-                                     : MONS_ORC_SORCERER); //  1 in 30
+        mon_type = random_choose_weighted(12, MONS_ORC,
+                                           9, MONS_ORC_WARRIOR,
+                                           2, MONS_WARG,
+                                           2, MONS_ORC_WIZARD,
+                                           2, MONS_ORC_PRIEST,
+                                           1, MONS_OGRE,
+                                           1, MONS_TROLL,
+                                           1, MONS_ORC_SORCERER,
+                                           0);
         break;
 
     case BAND_KILLER_BEES:
@@ -2753,12 +2753,12 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_NECROMANCER:                // necromancer
-        temp_rand = random2(13);
-        mon_type = ((temp_rand > 9) ? MONS_ZOMBIE_SMALL :   // 3 in 13
-                    (temp_rand > 6) ? MONS_ZOMBIE_LARGE :   // 3 in 13
-                    (temp_rand > 3) ? MONS_SKELETON_SMALL : // 3 in 13
-                    (temp_rand > 0) ? MONS_SKELETON_LARGE   // 3 in 13
-                                    : MONS_NECROPHAGE);     // 1 in 13
+        mon_type = random_choose_weighted(3, MONS_ZOMBIE_SMALL,
+                                          3, MONS_ZOMBIE_LARGE,
+                                          3, MONS_SKELETON_SMALL,
+                                          3, MONS_SKELETON_LARGE,
+                                          1, MONS_NECROPHAGE,
+                                          0);
         break;
 
     case BAND_BALRUG:
@@ -2802,44 +2802,42 @@ static monster_type _band_member(band_type band, int power, int which)
         break;
 
     case BAND_DEEP_ELF_FIGHTER:    // deep elf fighter
-        temp_rand = random2(11);
-        mon_type = ((temp_rand >  4) ? MONS_DEEP_ELF_SOLDIER : // 6 in 11
-                    (temp_rand == 4) ? MONS_DEEP_ELF_FIGHTER : // 1 in 11
-                    (temp_rand == 3) ? MONS_DEEP_ELF_KNIGHT :  // 1 in 11
-                    (temp_rand == 2) ? MONS_DEEP_ELF_CONJURER :// 1 in 11
-                    (temp_rand == 1) ? MONS_DEEP_ELF_MAGE      // 1 in 11
-                                     : MONS_DEEP_ELF_PRIEST);  // 1 in 11
+        mon_type = random_choose_weighted(6, MONS_DEEP_ELF_SOLDIER,
+                                          1, MONS_DEEP_ELF_FIGHTER,
+                                          1, MONS_DEEP_ELF_KNIGHT,
+                                          1, MONS_DEEP_ELF_CONJURER,
+                                          1, MONS_DEEP_ELF_MAGE,
+                                          1, MONS_DEEP_ELF_PRIEST,
+                                          0);
         break;
 
     case BAND_DEEP_ELF_KNIGHT:                    // deep elf knight
-        temp_rand = random2(208);
-        mon_type =
-                ((temp_rand > 159) ? MONS_DEEP_ELF_SOLDIER :    // 23.08%
-                 (temp_rand > 111) ? MONS_DEEP_ELF_FIGHTER :    // 23.08%
-                 (temp_rand >  79) ? MONS_DEEP_ELF_KNIGHT :     // 15.38%
-                 (temp_rand >  51) ? MONS_DEEP_ELF_MAGE :       // 13.46%
-                 (temp_rand >  35) ? MONS_DEEP_ELF_PRIEST :     //  7.69%
-                 (temp_rand >  19) ? MONS_DEEP_ELF_CONJURER :   //  7.69%
-                 (temp_rand >   3) ? MONS_DEEP_ELF_SUMMONER :    // 7.69%
-                 (temp_rand ==  3) ? MONS_DEEP_ELF_DEMONOLOGIST :// 0.48%
-                 (temp_rand ==  2) ? MONS_DEEP_ELF_ANNIHILATOR : // 0.48%
-                 (temp_rand ==  1) ? MONS_DEEP_ELF_SORCERER      // 0.48%
-                                   : MONS_DEEP_ELF_DEATH_MAGE);  // 0.48%
+        mon_type = random_choose_weighted(48, MONS_DEEP_ELF_SOLDIER,
+                                          48, MONS_DEEP_ELF_FIGHTER,
+                                          32, MONS_DEEP_ELF_KNIGHT,
+                                          28, MONS_DEEP_ELF_MAGE,
+                                          16, MONS_DEEP_ELF_PRIEST,
+                                          16, MONS_DEEP_ELF_CONJURER,
+                                          16, MONS_DEEP_ELF_SUMMONER,
+                                           1, MONS_DEEP_ELF_DEMONOLOGIST,
+                                           1, MONS_DEEP_ELF_ANNIHILATOR,
+                                           1, MONS_DEEP_ELF_SORCERER,
+                                           1, MONS_DEEP_ELF_DEATH_MAGE,
+                                           0);
         break;
 
     case BAND_DEEP_ELF_HIGH_PRIEST:                // deep elf high priest
-        temp_rand = random2(16);
-        mon_type =
-                ((temp_rand > 12) ? MONS_DEEP_ELF_SOLDIER :     // 3 in 16
-                 (temp_rand >  9) ? MONS_DEEP_ELF_FIGHTER :     // 3 in 16
-                 (temp_rand >  6) ? MONS_DEEP_ELF_PRIEST :      // 3 in 16
-                 (temp_rand == 6) ? MONS_DEEP_ELF_MAGE :        // 1 in 16
-                 (temp_rand == 5) ? MONS_DEEP_ELF_SUMMONER :    // 1 in 16
-                 (temp_rand == 4) ? MONS_DEEP_ELF_CONJURER :    // 1 in 16
-                 (temp_rand == 3) ? MONS_DEEP_ELF_DEMONOLOGIST :// 1 in 16
-                 (temp_rand == 2) ? MONS_DEEP_ELF_ANNIHILATOR : // 1 in 16
-                 (temp_rand == 1) ? MONS_DEEP_ELF_SORCERER      // 1 in 16
-                                  : MONS_DEEP_ELF_DEATH_MAGE);  // 1 in 16
+        mon_type = random_choose_weighted(3, MONS_DEEP_ELF_SOLDIER,
+                                          3, MONS_DEEP_ELF_FIGHTER,
+                                          3, MONS_DEEP_ELF_PRIEST,
+                                          1, MONS_DEEP_ELF_MAGE,
+                                          1, MONS_DEEP_ELF_SUMMONER,
+                                          1, MONS_DEEP_ELF_CONJURER,
+                                          1, MONS_DEEP_ELF_DEMONOLOGIST,
+                                          1, MONS_DEEP_ELF_ANNIHILATOR,
+                                          1, MONS_DEEP_ELF_SORCERER,
+                                          1, MONS_DEEP_ELF_DEATH_MAGE,
+                                          0);
         break;
 
     case BAND_HELL_KNIGHTS:
@@ -2855,10 +2853,10 @@ static monster_type _band_member(band_type band, int power, int which)
         break;                  // ogre mage
 
     case BAND_KOBOLD_DEMONOLOGIST:
-        temp_rand = random2(13);
-        mon_type = ((temp_rand > 4) ? MONS_KOBOLD :             // 8 in 13
-                    (temp_rand > 0) ? MONS_BIG_KOBOLD           // 4 in 13
-                                    : MONS_KOBOLD_DEMONOLOGIST);// 1 in 13
+        mon_type = random_choose_weighted(8, MONS_KOBOLD,
+                                          4, MONS_BIG_KOBOLD,
+                                          1, MONS_KOBOLD_DEMONOLOGIST,
+                                          0);
         break;
 
     case BAND_NAGAS:
