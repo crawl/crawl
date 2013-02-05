@@ -423,6 +423,24 @@ xx+++xx
  ""@""
 ENDMAP
 
+NAME: lightli_temple_of_fire
+DEPTH: D:2-9
+KPROP: Y = no_rtele_into
+KFEAT: _ = altar_trog / altar_makhleb
+MAP
+llcccccc
+lccYcYccc
+lclllllcc
+lcl...lcc
+lcl...lYc
+@+.._.lcc
+lcl...lYc
+lcl...lcc
+lclllllcc
+lccYcYccc
+llcccccc
+ENDMAP
+
 ##############################################################################
 # III   Altars to minor gods
 #

@@ -1743,6 +1743,8 @@ MAP
 ............
 ENDMAP
 
+##############################################################################
+
 NAME:   lightli_molten_gateway
 TAGS:   entry no_monster_gen
 ORIENT: float
@@ -1765,6 +1767,8 @@ xxxllllllllllxxx
 xxxxxllllllxxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
 
 NAME:   mrwooster_entry_arrow
 TAGS:   entry no_monster_gen
@@ -1824,4 +1828,67 @@ xG.........Gx
 xx.........xx
 xx.........xx
 xxxxxx+xxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME: lightli_entry_statue_moat
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP
+xxxx..xxxx
+xx......xx
+x.xGwwGx.x
+x.xwwwwx.x
+x.xGwwGx.x
+x.xwwwwx.x
+x.xGwwGx.x
+xx......xx
+xxx.{[.xxx
+xxxxxxxxxx
+ENDMAP
+
+NAME: lightli_entry_chessboard
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP
+.c.c.c.c
+c.c.c.c.
+.c.c.c.c
+c.c{c.c.
+.c.c<c.c
+c.c.c.c.
+.c.c.c.c
+c.c.c.c.
+ENDMAP
+
+NAME: lightli_iron_boxes
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP
+..vv..vv..
+..vv..vv..
+vv..vv..vv
+vv..vv..vv
+..vv(.vv..
+..vv.[vv..
+vv..vv..vv
+vv..vv..vv
+..vv..vv..
+..vv..vv..
+ENDMAP
+
+NAME: lightli_entry_maybe_door_vault
+ORIENT: float
+TAGS: entry
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MAP
+   @@
+ ++++++
+ +....+
+@+.{..+@
+@+..[.+@
+ +....+
+ ++++++
+   @@
 ENDMAP
