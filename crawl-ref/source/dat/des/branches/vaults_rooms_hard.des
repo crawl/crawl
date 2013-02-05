@@ -757,3 +757,94 @@ x-..^xxxxxxxxxxxxxx
 x8..|x
 xxxxxx
 ENDMAP
+
+NAME: nicolae_vaults_display_case
+TAGS: vaults_hard vaults_orient_w no_monster_gen
+MAP
+.........
+.........
+..xxxxxx+
+..m*x.0..
+..m*+090.
+..m*x.0..
+..xxxxxx+
+.........
+.........
+ENDMAP
+
+NAME: nicolae_vaults_minivaults
+TAGS: vaults_hard
+NSUBST: P = 1:P / *:9
+SHUFFLE: abc, def, ghi, jkl
+KITEM: P = superb_item
+SUBST: adgj : x
+SUBST: bcefhikl : .
+MAP
+................
+.xxxxxx..xxxxxx.
+.xP.cbx..xefePx.
+.x.abax..x.ddex.
+.xcbc.x..xfddfx.
+.xba...00..f.ex.
+.xxxx.0..0.xxxx.
+.....0.<<.0.....
+.....0.<<.0.....
+.xxxx.0..0.xxxx.
+.x.gi..00..jllx.
+.xhghix..xjkkjx.
+.xihggx..xlkj.x.
+.xPih.x..xlj.Px.
+.xxxxxx..xxxxxx.
+................
+ENDMAP
+
+NAME: nicolae_vaults_murderbox
+TAGS: vaults_hard
+SUBST: m : mx
+MAP
+xx.....xx
+xmm.0.mmx
+.mxx+xxm.
+..x...x..
+.0+.8.+0.
+..x...x..
+.mxx+xxm.
+xmm.0.mmx
+xx.....xx
+ENDMAP
+
+NAME: nicolae_vaults_quadrants
+TAGS: vaults_hard
+SUBST: m : +++xxm, n : +x, % = %%%%%$$$$**|, 8 = 89
+MAP
+     .......
+   ...xm+mx...
+  ..xxx...xxx..
+ ..xx...9...xx..
+ .xxxx.....xxxx.
+..x.xxx...xxx.x..
+.xx..xxn+nxx..xx.
+.m....x%%%x....m.
+.+.9..x%8%x..9.+.
+.m....x%%%x....m.
+.xx..xxxxxxx..xx.
+..x.xxx...xxx.x..
+ .xxxx.....xxxx.
+ ..xx...9...xx..
+  ..xxx...xxx..
+   ...xm+mx...
+     .......
+ENDMAP
+
+NAME: nicolae_vaults_statue_guard
+TAGS: vaults_hard vaults_orient_e
+MONS: silver statue / ice statue / orange crystal statue
+KPROP: % = no_rtele_into
+SUBST: % = %%%*
+MAP
+xxxx......xx
+x%%x....x..x
+x%%1....m.(.
+x%%x....x..x
+xxxx......xx
+ENDMAP

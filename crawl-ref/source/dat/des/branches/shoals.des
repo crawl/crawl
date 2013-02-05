@@ -481,6 +481,108 @@ xxwwxxxxZxxxxwwxx
    xxxxx@xxxxx
 ENDMAP
 
+NAME: nicolae_shoals_undead_eyrie
+DEPTH: Shoals
+SUBST: y = ..xx1
+NSUBST: . = 4:1 / *:.
+MONS: harpy zombie w:30 / griffon zombie / hippogriff zombie / bat zombie w:5
+MAP
+ .....
+...y...
+..yxy..
+.yxxxy.
+..yxy..
+...y...
+ .....
+ENDMAP
+
+NAME: nicolae_shoals_mertower
+DEPTH: Shoals
+FHEIGHT: ;'b123 = 40
+KPROP: ;'b123 = no_tide
+KMONS: 1 = merfolk
+KMONS: 2 = merfolk impaler / nothing w:4
+KMONS: 3 = merfolk javelineer / nothing w:4
+KFEAT: ' = W
+KFEAT: ;23 = w
+KFEAT: b = .
+MAP
+  wwwwwwww
+ wwwxxxxxww
+ wwxx;22xxw
+.b1x';;;3xw
+.bb+';;;3xw
+.b1x';;;3xw
+ wwxx;22xxw
+ wwwxxxxxww
+  wwwwwwww
+ENDMAP
+
+NAME: nicolae_shoals_aquamancer_cove
+DEPTH: Shoals
+TAGS: no_monster_gen
+KMONS: 123 = merfolk aquamancer / nothing w:3
+SUBST: c = x.
+KFEAT: 1 = w
+KFEAT: 2 = .
+KFEAT: 3 = W
+MAP
+     xxcc.@
+    xx...2.
+  xxxc.ccx.
+xxxcc...cxxx
+xccc.....ccxx
+xc...3W3...cxx
+x..WWwwwWW..cx
+x.Ww1www1wW.cx
+cw1wwwwwww1wcx
+  wwwwwwwww
+    wwwww
+ENDMAP
+
+NAME: nicolae_shoals_kraken_intersection
+DEPTH: Shoals
+TAGS: transparent no_pool_fixup water_ok no_trap_gen
+SUBST: b = .w, z = x.
+KPROP: w1. = no_tide
+KPROP: c = no_rtele_into
+SUBST: c = xw
+KFEAT: 1 = w
+KMONS: 1 = kraken
+MAP
+ ccxx@@xxcc
+ccxxz..zxxcc
+cxxz.bb.zxxc
+xxz.bwwb.zxx
+xz.bwwwwb.zx
+@.bwww1wwb.@
+@.bwwwwwwb.@
+xz.bwwwwb.zx
+xxz.bwwb.zxx
+cxxz.bb.zxxc
+ccxxz..zxxcc
+ ccxx@@xxcc
+ENDMAP
+
+NAME: nicolae_shoals_arrival_archipelago
+DEPTH: Shoals
+SHUFFLE: {[(<, abc, def
+SUBST: ade:@, bcf:W
+MAP
+     wwwwb
+    www...b
+ wwwww..{..b
+wwwwwd.....w
+ww..dd....ww
+c....dwwffww
+c..(.wwwffww
+c....ee....w
+ww..eee.[..w
+wwwwwee....a
+  wwww....a
+    wwwwwa
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps

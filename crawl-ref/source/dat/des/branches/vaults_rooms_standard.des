@@ -1383,3 +1383,73 @@ x.xx..xx..xx..xx..xx..xx.x
 ..xx00xx00xx00xx00xx00xx..
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME: nicolae_vaults_mini_display_case
+TAGS: vaults_room vaults_orient_w no_monster_gen
+SUBST: % = %%$*
+MAP
+......
+.xxxx+
+.m%+.0
+.m%x0.
+.xxxx+
+......
+ENDMAP
+
+NAME: nicolae_vaults_three_branches
+TAGS: vaults_room
+SHUFFLE: (%
+SUBST: 0 = 0.
+MAP
+xxxxxx...
+x%%xxx.(.
+x%..xxx..
+xx.00xxx.
+xxx00.xx.
+xxxx...x.
+..xxx.x..
+.(.xxx.(.
+.........
+ENDMAP
+
+NAME: nicolae_vaults_triangles
+TAGS: vaults_room
+SUBST: 0 = 0..., ( = (((0
+MAP
+xxxxxxx.xxxxxxx
+x....x.(.x....x
+x.(.x.....x.(.x
+x..xxxx+xxxx..x
+x.xxx0...0xxx.x
+xx.x0x.0.x0x.xx
+x..x..x.x..x..x
+.(.+.0.x.0.+.(.
+x..x..x.x..x..x
+xx.x0x.0.x0x.xx
+x.xxx0...0xxx.x
+x..xxxx+xxxx..x
+x.(.x.....x.(.x
+x....x.(.x....x
+xxxxxxx.xxxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_twisting_passages
+TAGS: vaults_room
+SUBST: 0 = 00.
+MAP
+xxxx.......xxxx
+x..xxxx.xxxx..x
+x.0...x0x...0.x
+xx.xx.....xx.xx
+.x.xxx...xxx.x.
+.x..xxx(xxx..x.
+.xx..xxxxx..xx.
+..0..(xxx(..0..
+.xx..xxxxx..xx.
+.x..xxx(xxx..x.
+.x.xxx...xxx.x.
+xx.xx.....xx.xx
+x.0...x0x...0.x
+x..xxxx.xxxx..x
+xxxx.......xxxx
+ENDMAP
