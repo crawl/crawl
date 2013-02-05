@@ -9,54 +9,11 @@
 {{
 require("dlua/tutorial.lua")
 
+tutorial4 = {}
 tutorial_msg4 = {}
 
-function tutorial_msg4.start ()
-    tutorial_intro("In this lesson you're going to learn how to learn and cast spells.")
-end
-
-function tutorial_msg4.spellbook ()
-    local text = "You can memorise a spell from carried spellbooks with "
-                 .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>clicking</white> on the memorisation tab "
-                    .. "and selecting the spell tile"
-    end
-    text = text .. ". At experience level 1, only level 1 spells are available "
-                .. "to you. This will change as you gain experience."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.spellcasting ()
-    local text = "You can cast spells with "
-                 .. tutorial_get_cmd("CMD_CAST_SPELL")
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>clicking</white> on the spell tile"
-    end
-    text = text .. ". Press "
-                .. tutorial_get_cmd("CMD_CAST_SPELL")
-                .. "<w>?</w> to get a list of your spells.\n"
-                .. "Once you are out of magic points, retreat and rest with "
-                .. tutorial_get_cmd("CMD_REST")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</white> in the command panel"
-    end
-    text = text .. " to regain them."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.ring_power ()
-    local text = "Put on this ring with "
-                 .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</click>"
-    end
-    text = text .. ", and then rest up to your new full potential."
-
-    return tutorial_message(text)
+function tutorial4.msg(text)
+    return tutorial_msg("tutorial4 " .. text)
 end
 
 function tutorial_msg4.undead ()
@@ -259,9 +216,9 @@ ITEM:    bread ration
 MONS:    training dummy ; stone q:20
 MONS:    bat skeleton, goblin skeleton
 MONS:    rat, goblin
-MARKER:  d = lua:tutorial_msg4.spellbook()
-MARKER:  B = lua:tutorial_msg4.spellcasting()
-MARKER:  e = lua:tutorial_msg4.ring_power()
+MARKER:  d = lua:tutorial4.msg("spellbook")
+MARKER:  B = lua:tutorial4.msg("spellcasting")
+MARKER:  e = lua:tutorial4.msg("ring_power")
 MARKER:  C = lua:tutorial_msg4.undead()
 MARKER:  f = lua:tutorial_msg4.spell_success()
 MARKER:  g = lua:tutorial_msg4.mephitic_cloud()
@@ -270,7 +227,10 @@ MARKER:  h = lua:tutorial_msg4.spell_hunger()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  onclimb = "tutorial_msg4.exit" }
 epilogue{{
-  tutorial_msg4.start()
+  crawl.tutorial_hint("HINT_NEW_LEVEL")
+  crawl.mesclr(true)
+  crawl.tutorial_msg("tutorial4 start")
+  tutorial_intro()
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
