@@ -70,7 +70,7 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  4-22, Pan
+DEPTH:  4-22, Pan, !Dis
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand
@@ -142,7 +142,7 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   Pan, 4-22
+DEPTH:   Pan, 4-22, !Dis
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
@@ -211,7 +211,7 @@ ENDMAP
 #
 
 NAME: layout_big_octagon
-DEPTH:   Pan, 4-22
+DEPTH:   Pan, 4-22, !Dis
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand
@@ -388,7 +388,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 1-
+DEPTH: Pan, 1-, !Dis
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -473,7 +473,6 @@ ENDMAP
 NAME: layout_city
 DEPTH: Dis, 15-, !Pan, !Zot
 WEIGHT: 10
-CHANCE: 100% (Dis)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -586,7 +585,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 1-
+DEPTH: Pan, 1-, !Dis
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -650,7 +649,7 @@ MAP
 ENDMAP
 
 NAME: layout_spotty
-DEPTH: 9-22
+DEPTH: 9-22, !Dis
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -674,7 +673,7 @@ ENDMAP
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
-DEPTH: D:5-27, !Pan
+DEPTH: D:5-27, !Pan, !Dis
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -701,7 +700,7 @@ TAGS: overwritable layout allow_dup unrand
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 2-, !Pan, !Zot
+DEPTH: 2-, !Pan, !Zot, !Dis
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
@@ -1177,9 +1176,83 @@ TAGS: overwritable layout allow_dup unrand
     kprop('_ = no_rtele_into')
 }}
 
+##############################################################
+# layout_dis, by rwbarton
+NAME: layout_dis
+DEPTH: Dis
+WEIGHT: 20
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    local subdivide_threshold = 12
+
+    function room(x1, y1, x2, y2)
+        if x1 < x2 and y1 < y2 then
+           local floor_type = '.'
+           make_box { x1=x1, y1=y1, x2=x2, y2=y2, wall='x', floor=floor_type }
+
+           if x1+2 <= x2-2 and y1+2 <= y2-2 and crawl.one_chance_in(10) then
+              -- decorative statues
+              local x3 = crawl.random_range(x1+2, x2-2)
+              local y3 = crawl.random_range(y1+2, y2-2)
+              mapgrd[x3][y3] = 'G'
+              mapgrd[x1+x2-x3][y3] = 'G'
+              mapgrd[x3][y1+y2-y3] = 'G'
+              mapgrd[x1+x2-x3][y1+y2-y3] = 'G'
+           end
+
+           if (x1+x2) % 2 == 0 and (y1+y2) % 2 == 0
+              and crawl.one_chance_in(10) then
+              -- dry fountain
+              mapgrd[(x1+x2)/2][(y1+y2)/2] = 'V'
+           end
+        end
+    end
+
+    function fill(x1, y1, x2, y2, orient)
+        if orient == 0 then
+            if x2 - x1 < subdivide_threshold then
+               if y2 - y1 >= subdivide_threshold then
+                  fill(x1, y1, x2, y2, 1)
+               else
+                  room(x1, y1, x2, y2)
+               end
+            else
+               local x3 = x1 + 4 + crawl.random2(x2 - x1 - 7)
+               fill(x1, y1, x3, y2, 1)
+               fill(x3, y1, x2, y2, 1)
+               replace_random { x1=x3, y1=y1+1, x2=x3, y2=y2-1, find='x', replace='+' }
+           end
+        else
+            if y2 - y1 < subdivide_threshold then
+               if x2 - x1 >= subdivide_threshold then
+                  fill(x1, y1, x2, y2, 0)
+               else
+                   room(x1, y1, x2, y2)
+               end
+            else
+               local y3 = y1 + 4 + crawl.random2(y2 - y1 - 7)
+               fill(x1, y1, x2, y3, 0)
+               fill(x1, y3, x2, y2, 0)
+               replace_random { x1=x1+1, y1=y3, x2=x2-1, y2=y3, find='x', replace='+' }
+           end
+        end
+    end
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+
+    fill_area{fill = 'x'}
+    fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
+
+    fill(7, 7, gxm-8, gym-8, 0)
+}}
+COLOUR:  G : cyan
+TILE:    G = dngn_statue_iron_golem
+
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: 1-, !Pan
+DEPTH: 1-, !Pan, !Dis
 WEIGHT: 90, 10 (D:1), 200 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -1190,7 +1263,7 @@ MAP
 ENDMAP
 
 NAME: layout_bigger_room
-DEPTH: 9-22, !Crypt, !Pan
+DEPTH: 9-22, !Crypt, !Pan, !Dis
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
