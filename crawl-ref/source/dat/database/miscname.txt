@@ -49,6 +49,8 @@ charcoal
 
 chartreuse
 
+copper
+
 cyan
 
 gold
@@ -56,6 +58,8 @@ gold
 green
 
 grey
+
+gridelin
 
 indigo
 
