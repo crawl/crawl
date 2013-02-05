@@ -1885,6 +1885,23 @@ ccc444ccc
 cccc=cccc
 ENDMAP
 
+NAME: lightli_orcish_oven
+DEPTH: D:6-11, Orc
+MONS: orc warrior, orc
+ITEM: meat ration, bread ration
+MAP
+xxxxxxxxxx
+xvvv....xx
+xvl=.222.x
+xvvv.212.x
+xxxx...xxx
+xxx.x..xxx
+xxx+xx..xx
+xed.xx..xx
+xdexx..xxx
+xxxx.@xxxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -3948,6 +3965,39 @@ MAP
 cc0.0.0.0.0.0.0cc
 c...............c
 cccccccc=cccccccc
+ENDMAP
+
+NAME: lightli_airlock
+DEPTH: D:11-27, Snake, Shoals
+KPROP: W = no_rtele_into
+MAP
+ WccccWWWccccWW
+ cc..ccWcc..ccWWWWW
+ c....cGc....cccccW
+ c.00.ccc.09.cc%*cc
+@=..9.+%=.0*.+=%8|c
+ c.00.ccc.09.cc%*cc
+ c....cGc....cccccW
+ cc..ccWcc..ccWWWWW
+ WccccWWWccccWW
+ENDMAP
+
+NAME: lightli_fourway_metalbox
+DEPTH: D:9-25
+TAGS: mini_float transparent
+NSUBST:   % = 1:* / *:%
+NSUBST:   0 = 1:9 / *:0
+MAP
+vvvv..vvvv
+v0%v++v%0v
+v%v....v%v
+vv......vv
+.+......+.
+.+......+.
+vv......vv
+v%v....v%v
+v0%v++v%0v
+vvvv..vvvv
 ENDMAP
 
 ################################################################

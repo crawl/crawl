@@ -789,6 +789,24 @@ ttT..TttTTTTT..Tt
          tccttt
 ENDMAP
 
+NAME: lightli_tree_ring
+DEPTH: Swamp
+KPROP: *w = no_rtele_into
+KFEAT: T = mangrove
+SUBST: T = Tt
+MAP
+TTTTTTTTTT
+TTTTTTTTTT
+TTwwwwwwTT
+TTwwwwwwTT
+TTww**wwTT
+TTwwwwwwTT
+TTwwwwwwTT
+TTTTttTTTT
+TTTT..TTTT
+TTTT@@TTTT
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

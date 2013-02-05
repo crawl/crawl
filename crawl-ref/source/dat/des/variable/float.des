@@ -4951,3 +4951,63 @@ xxx...xx-xx........=...SCS...
              x...x
              x...x
 ENDMAP
+
+NAME: lightli_eight_chambers
+ORIENT: float
+DEPTH: D:20-27
+TAGS: no_monster_gen no_ctele_into
+SHUFFLE: PFIEMONLSAKRVCTHD
+KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
+           redback
+KMONS: F = fire giant w:5 / dragon / fire elemental / red draconian / sun demon
+KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
+           ice dragon
+KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning / vapour
+KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
+           orc warrior
+KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
+           deep elf summoner / deep elf sorcerer
+KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
+KMONS: S = swamp dragon / hydra w:5 / vapour / large slime creature / alligator
+KMONS: A = alligator snapping turtle w:5 / siren / merfolk aquamancer / \
+           merfolk impaler / harpy
+KMONS: K = greater naga w:5 / naga mage / anaconda / naga warrior / \
+           guardian serpent
+KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
+           tarantella
+KMONS: M = acid blob w:5 / brown ooze / azure jelly / jelly / great orb of eyes
+KMONS: V = vault guard / stone giant w:5 / yaktaur captain / dancing weapon / \
+           skeletal warrior
+KMONS: C = skeletal warrior / bone dragon / flaming corpse / vampire / lich w:5
+KMONS: T = mummy priest w:5 / guardian mummy / sphinx / mummy / reaper
+KMONS: H = balrug w:5 / blizzard demon w:5 / shadow demon w:5 / \
+           hell beast w:5 / sun demon / ice devil / iron devil / soul eater / \
+           hell knight w:5
+KMONS: D = giant newt / kobold / hobgoblin w:5 / goblin / adder
+MAP
+xxvvvvvvvvvvvvvxx
+xvv..vvvvvvv..vvx
+vv.II.vvvvv....vv
+v..II.+...=.EEE.v
+v..II.+...=.EEE.v
+vv....vvvvv....vv
+xvv==vv|||vv++vvx
+xxv..v*****v..vxx
+xxv..v%%%%%v..vxx
+xvv++vv%%%vv==vvx
+vv.FF.vv=vv....vv
+v..FF..v.v..MM..v
+v..FF..v.v..MM..v
+vv....vv+vv.MM.vv
+xvv==vv...vv++vvx
+xxv..v.NNN.v..vxx
+xxv..v.NNN.v..vxx
+xvv++vv...vv==vvx
+vv.PP.vv=vv....vv
+v..PP..v.v..OO..v
+v..PP..v.+..OO..v
+vv....vvvvv.OO.vv
+xvv..vvvvvvv..vvx
+xxv==vvvvvvvvvvxx
+   @@
+ENDMAP

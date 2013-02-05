@@ -296,7 +296,6 @@ MAP
 .........@@@...
 ENDMAP
 
-
 ############################################################
 # A fortification!
 #
@@ -336,6 +335,33 @@ xvK12vvv+++vvv21Kvx
  .WwwwWW...WwwwwW.
   .WWWW.....WWWW.
    ......@......
+ENDMAP
+
+############################################################
+
+NAME: lightli_vaults_fourway_checkpoint
+TAGS: vaults_entry transparent
+ORIENT: float
+MONS: vault guard
+KFEAT: O = enter_vaults
+MAP
+.................
+...vv.......vv...
+..vvvv.....vvvv..
+.vvvvvv...vvvvvv.
+.vvvvvvv+vvvvvvv.
+..vvvv.....vvvv..
+...vv.v0.0v.vv...
+....v.0.1.0.v....
+....+..1O1..+....
+....v.0.1.0.v....
+...vv.v0.0v.vv...
+..vvvv.....vvvv..
+.vvvvvvv+vvvvvvv.
+.vvvvvv...vvvvvv.
+..vvvv.....vvvv..
+...vv.......vv...
+.................
 ENDMAP
 
 ###############################################################################
