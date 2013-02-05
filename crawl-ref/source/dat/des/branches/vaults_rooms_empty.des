@@ -1076,6 +1076,7 @@ ENDMAP
 
 NAME: nicolae_vaults_diagonal_hallway_6
 TAGS: vaults_empty allow_dup
+WEIGHT: 2
 MAP
 ...
 .(..
@@ -1089,6 +1090,7 @@ ENDMAP
 
 NAME: nicolae_vaults_diagonal_hallway_7
 TAGS: vaults_empty allow_dup
+WEIGHT: 3
 MAP
 ...
 .(..
@@ -1103,6 +1105,7 @@ ENDMAP
 
 NAME: nicolae_vaults_diagonal_hallway_8
 TAGS: vaults_empty allow_dup
+WEIGHT: 3
 MAP
 ...
 .(..
@@ -1118,6 +1121,7 @@ ENDMAP
 
 NAME: nicolae_vaults_diagonal_hallway_9
 TAGS: vaults_empty allow_dup
+WEIGHT: 2
 MAP
 ...
 .(..
@@ -1202,6 +1206,7 @@ ENDMAP
 
 NAME: nicolae_vaults_rhombus_5
 TAGS: vaults_empty allow_dup
+WEIGHT: 3
 MAP
 .....
  ..(..
@@ -1212,6 +1217,7 @@ ENDMAP
 
 NAME: nicolae_vaults_rhombus_6
 TAGS: vaults_empty allow_dup
+WEIGHT: 4
 MAP
 ......
  ......
@@ -1224,6 +1230,7 @@ ENDMAP
 
 NAME: nicolae_vaults_rhombus_7
 TAGS: vaults_empty allow_dup
+WEIGHT: 3
 MAP
 .......
  ..(....
