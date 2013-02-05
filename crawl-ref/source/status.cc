@@ -129,6 +129,8 @@ static duration_def duration_data[] =
       YELLOW, "Tornado", "", "" ,},
     { DUR_DISJUNCTION, true,
       BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
+    { DUR_SENTINEL_MARK, true,
+      MAGENTA, "Mark", "marked", "You are marked for hunting." },
 };
 
 static int duration_index[NUM_DURATIONS];

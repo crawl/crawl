@@ -1879,6 +1879,17 @@
       }
     },
 
+    {  MST_VAULT_SENTINEL,
+      {
+       SPELL_SENTINEL_MARK,
+       SPELL_SENTINEL_MARK,
+       SPELL_NO_SPELL,
+       SPELL_SENTINEL_MARK,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

@@ -440,5 +440,7 @@ bool mons_tentacle_adjacent(const monster* parent, const monster* child);
 mon_threat_level_type mons_threat_level(const monster *mon,
                                         bool real = false);
 
+bool mons_foe_is_marked(const monster* mons);
+
 void reset_all_monsters();
 #endif

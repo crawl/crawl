@@ -2847,6 +2847,9 @@ static void _decrement_durations()
                           0,
                           "Your shroud begins to fray at the edges.");
 
+    _decrement_a_duration(DUR_SENTINEL_MARK, delay,
+                          "The sentinel's mark upon you fades away.");
+
     if (!env.sunlight.empty())
         process_sunlights();
 }

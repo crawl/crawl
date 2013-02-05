@@ -803,8 +803,9 @@ static const char* dur_names[] =
     "disjunction",
     "vehumet gift",
 #if TAG_MAJOR_VERSION == 34
-    "battlesphere"
+    "battlesphere",
 #endif
+    "sentinel's mark"
 };
 
 void wizard_edit_durations(void)

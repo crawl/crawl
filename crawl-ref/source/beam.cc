@@ -3459,6 +3459,11 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
+    case BEAM_SENTINEL_MARK:
+        you.sentinel_mark();
+        obvious_effect = true;
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -5859,6 +5864,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_PETRIFYING_CLOUD:      return "calcifying dust";
     case BEAM_BOLT_OF_ZIN:           return "silver light";
     case BEAM_ENSNARE:               return "magic web";
+    case BEAM_SENTINEL_MARK:         return "sentinel's mark";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

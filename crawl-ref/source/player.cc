@@ -4154,6 +4154,7 @@ void display_char_status()
         STATUS_AUGMENTED,
         STATUS_SUPPRESSED,
         STATUS_SILENCE,
+        DUR_SENTINEL_MARK
     };
 
     status_info inf;
@@ -7472,6 +7473,20 @@ bool player::attempt_escape(int attempts)
         mpr(emsg);
         you.turn_is_over = true;
         return false;
+    }
+}
+
+void player::sentinel_mark()
+{
+    if (duration[DUR_SENTINEL_MARK])
+    {
+        mpr("The mark upon you grows brighter.");
+        you.increase_duration(DUR_SENTINEL_MARK, random_range(30, 50), 250);
+    }
+    else
+    {
+        mpr("A sentinel's mark forms upon you.", MSGCH_WARN);
+        you.increase_duration(DUR_SENTINEL_MARK, random_range(50, 80), 250);
     }
 }
 
