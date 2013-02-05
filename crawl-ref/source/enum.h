@@ -368,7 +368,8 @@ enum beam_type                  // bolt::flavour
     BEAM_BERSERK,
     BEAM_SLEEP,
     BEAM_INNER_FLAME,
-    BEAM_LAST_ENCHANTMENT = BEAM_INNER_FLAME,
+    BEAM_SENTINEL_MARK,
+    BEAM_LAST_ENCHANTMENT = BEAM_SENTINEL_MARK,
 
     BEAM_MEPHITIC,
     BEAM_GLOOM,
@@ -1470,6 +1471,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_BATTLESPHERE,
 #endif
+    DUR_SENTINEL_MARK,
     NUM_DURATIONS
 };
 
@@ -2558,6 +2560,8 @@ enum monster_type                      // menv[].type
     MONS_DEEP_TROLL_SHAMAN,
     MONS_DIAMOND_OBELISK,
 
+    MONS_VAULT_SENTINEL,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3344,6 +3348,7 @@ enum spell_type
     SPELL_FORCE_LANCE,
     SPELL_MALMUTATE,
     SPELL_MIGHT_OTHER,
+    SPELL_SENTINEL_MARK,
     NUM_SPELLS
 };
 

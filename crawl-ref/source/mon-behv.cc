@@ -466,6 +466,15 @@ void handle_behaviour(monster* mon)
                      && mon->is_travelling()
                      && mon->travel_target == MTRAV_PLAYER))
             {
+                // If their foe is marked, the monster always knows exactly
+                // where they are.
+                if (mons_foe_is_marked(mon))
+                {
+                    mon->target = you.pos();
+                    try_pathfind(mon);
+                    break;
+                }
+
                 // Maybe the foe is just invisible.
                 if (mon->target.origin() && afoe && mon->near_foe())
                 {
@@ -691,8 +700,18 @@ void handle_behaviour(monster* mon)
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
-            if (proxFoe && !mons_is_batty(mon))
+            if (proxFoe && !mons_is_batty(mon) || mons_foe_is_marked(mon))
             {
+                new_beh = BEH_SEEK;
+                break;
+            }
+
+            // Intelligent creatures not currently pursuing another foe are
+            // altered by a sentinel's mark
+            if (mon->foe == MHITNOT && !isFriendly
+                && you.duration[DUR_SENTINEL_MARK] && isSmart)
+            {
+                new_foe = MHITYOU;
                 new_beh = BEH_SEEK;
                 break;
             }
@@ -706,6 +725,7 @@ void handle_behaviour(monster* mon)
             // leave the level, in case their current choice is blocked.
             if (!proxFoe && mon->foe != MHITNOT
                    && one_chance_in(isSmart ? 60 : 20)
+                   && !mons_foe_is_marked(mon)
                 || isPacified && one_chance_in(isSmart ? 40 : 120))
             {
                 new_foe = MHITNOT;

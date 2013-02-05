@@ -904,6 +904,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MMISSILE;
         break;
 
+    case SPELL_SENTINEL_MARK:
+        beam.ench_power = 125; //Difficult to resist
+        beam.flavour    = BEAM_SENTINEL_MARK;
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {

@@ -913,6 +913,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_TERRAIN,
         STATUS_SILENCE,
         STATUS_NO_CTELE,
+        DUR_SENTINEL_MARK
     };
 
     status_info inf;

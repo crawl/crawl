@@ -724,6 +724,23 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
     }
 
+    case MONS_VAULT_SENTINEL:
+        if (!melee_only && one_chance_in(3))
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_CROSSBOW;
+            break;
+        }
+
+        item.base_type = OBJ_WEAPONS;
+
+        item.sub_type = random_choose_weighted(
+            5, WPN_LONG_SWORD,   4, WPN_FALCHION,
+            3, WPN_WAR_AXE,      3, WPN_MORNINGSTAR,
+            0);
+
+        break;
+
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
         item.base_type = OBJ_MISSILES;
@@ -1944,6 +1961,11 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
                                        ARM_PLATE_ARMOUR, -1);
+        break;
+
+    case MONS_VAULT_SENTINEL:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL, -1);
         break;
 
     case MONS_FREDERICK:

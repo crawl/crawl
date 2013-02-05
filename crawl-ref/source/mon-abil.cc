@@ -3056,6 +3056,31 @@ bool mon_special_ability(monster* mons, bolt & beem)
             _starcursed_scream(mons, actor_at(beem.target));
         break;
 
+
+    case MONS_VAULT_SENTINEL:
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        if (!silenced(mons->pos()) && !mons->has_ench(ENCH_BREATH_WEAPON)
+                && one_chance_in(4))
+        {
+            if (you.can_see(mons))
+            {
+                simple_monster_message(mons, " blows on a signal horn!");
+                noisy(25, mons->pos());
+            }
+            else
+                noisy(25, mons->pos(), "You hear a note blown loudly on a horn!");
+
+            // This is probably coopting the enchant for something beyond its
+            // intended purpose, but the message does match....
+            mon_enchant breath_timeout =
+                mon_enchant(ENCH_BREATH_WEAPON, 1, mons, (4 +  random2(9)) * 10);
+            mons->add_ench(breath_timeout);
+            used = true;
+        }
+        break;
+
     default:
         break;
     }

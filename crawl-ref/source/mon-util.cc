@@ -4523,6 +4523,14 @@ mon_threat_level_type mons_threat_level(const monster *mon, bool real)
     }
 }
 
+bool mons_foe_is_marked(const monster* mon)
+{
+    if (mon->foe == MHITYOU)
+        return (you.duration[DUR_SENTINEL_MARK]);
+    else
+        return false;
+}
+
 // Used when clearing level data, to ensure any additional reset quirks
 // are handled properly.
 void reset_all_monsters()

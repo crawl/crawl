@@ -66,6 +66,9 @@ int mons_tracking_range(const monster* mon)
     if (you.penance[GOD_ASHENZARI])
         range *= 5;
 
+    if (mons_foe_is_marked(mon))
+        range *= 5;
+
     return range;
 }
 
