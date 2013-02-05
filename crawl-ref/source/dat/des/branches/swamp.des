@@ -679,6 +679,116 @@ MAP
   --------------------
 ENDMAP
 
+NAME: nicolae_swamp_necromancer_hut
+DEPTH: Swamp
+SUBST: q = tW., r = W., W = zWW
+# Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
+MONS: necromancer actual_spells spells:bolt_of_cold;bolt_of_draining;animate_dead;simulacrum
+KMONS: z = big fish zombie / swamp drake zombie / swamp worm zombie / \
+        water moccasin zombie / agate snail zombie / swamp dragon zombie / \
+        komodo dragon zombie / red wasp zombie / alligator zombie / \
+        crocodile zombie / hydra zombie / giant leech zombie / hydra zombie / \
+        alligator simulacrum w:1 / swamp drake simulacrum w:1 / \
+        swamp dragon simulacrum w:1 / hydra simulacrum w:1
+KFEAT: t = mangrove
+KFEAT: z = shallow_water
+MAP
+  ttttttt
+ ttxxxxxtt
+tqqx...xqqt
+tqrm.1.mrqt
+qqrx...xrqq
+ rrxx+xxrr
+  r.z.z.r
+   .....
+    @@@
+ENDMAP
+
+NAME: nicolae_swamp_fairy_circle
+DEPTH: Swamp
+SUBST: W = .W, w = wwwW, q = w
+MONS: fungus / nothing w:7
+MAP
+    ...
+  ..111..
+ .11WWW11.
+ .1WWwWW1.
+.1WWwwwWW1.
+.1WwwqwwW1.
+.1WWwwwWW1.
+ .1WWwWW1.
+ .11WWW11.
+  ..111..
+    ...
+ENDMAP
+
+NAME: nicolae_swamp_alligator_family
+DEPTH: Swamp
+NSUBST: T = 2:W / *:t
+KMONS: 1 = alligator
+KMONS: 2 = baby alligator
+KFEAT: t = mangrove
+KFEAT: 12@ = W
+MAP
+   tttt
+  tt11tt
+ tt2222tt
+tTWWWWWWTt
+tWTTWWTTWt
+ WWWTTWWW
+   @@@@
+ENDMAP
+
+NAME: nicolae_swamp_snake_nest
+DEPTH: Swamp
+TAGS: transparent no_monster_gen mini_float
+KMONS: 1 = anaconda
+KMONS: 2 = adder / ball python / water moccasin / black mamba
+SUBST: T = ..ttw
+SUBST: . = .:20 2:3
+KFEAT: .12 = . / W w:2
+KFEAT: t = mangrove
+MAP
+       t.@.tttt
+tttt   tt....Tt
+tTTt    tTT...Tt
+@.TttttttT....Tt
+.....TTT.....Ttt
+tt........TTTtt
+tttt.TwT..Ttt
+ttT...wwT..Tt
+tT.........Ttt
+tT.1...tT...Ttt
+tTT...ttTT...Tt
+ttTTTTtttTT...t
+ tttttt tttT...
+          ttt.@
+ENDMAP
+
+NAME: nicolae_swamp_baby_hydras
+DEPTH: Swamp
+SHUFFLE: abcd
+SUBST: a:@, bcd:t, T = .Wt, . = ...W
+KMONS: 1 = 1-headed hydra
+KMONS: 2 = 2-headed hydra / 3-headed hydra / 4-headed hydra
+KFEAT: t = mangrove
+KFEAT: 12 = . / W
+MAP
+             taat
+            tt..b
+  tttt     ttT..b
+ ttTTtttttttT.1.t
+ttT..TtTTttT...Tt
+tT....1..TTT..TTt
+tT2...TT...1..TTt
+ttT..TttTTTTT..Tt
+ ttTTtttttttT...t
+  tttt    ttT1.tt
+         tt....d
+         t...t.d
+         tccttt
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

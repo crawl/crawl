@@ -1024,3 +1024,259 @@ xxxxxxxxxxxxxxxxxxxxx
 ..xxxxxxxxxxxxxxxxx..
 xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME: nicolae_vaults_angled_halls
+TAGS: vaults_empty allow_dup
+MAP
+xxx....xxx
+xx....xxxx
+x.(..xxxxx
+......xxx.
+....(..x..
+..x..(....
+.xxx......
+xxxxx..(.x
+xxxx....xx
+xxx....xxx
+ENDMAP
+
+NAME: nicolae_vaults_asterisk
+TAGS: vaults_empty allow_dup
+MAP
+xxx.xxx
+.xx.xx.
+..x.x..
+x.....x
+xx.(.xx
+x.....x
+..x.x..
+.xx.xx.
+xxx.xxx
+ENDMAP
+
+NAME: nicolae_vaults_big_angled_halls
+TAGS: vaults_empty allow_dup
+MAP
+xxxx.......xxxx
+xxx.......xxxxx
+xx.......xxxxxx
+x..(....xxxxxxx
+.......xxxxxxx.
+........xxxxx..
+.........xxx...
+....x..(..x....
+...xxx.........
+..xxxxx........
+.xxxxxxx.......
+xxxxxxx....(..x
+xxxxxx.......xx
+xxxxx.......xxx
+xxxx.......xxxx
+ENDMAP
+
+NAME: nicolae_vaults_diagonal_hallway_6
+TAGS: vaults_empty allow_dup
+MAP
+...
+.(..
+.....
+ .....
+  .....
+   .....
+    ..(.
+     ...
+ENDMAP
+
+NAME: nicolae_vaults_diagonal_hallway_7
+TAGS: vaults_empty allow_dup
+MAP
+...
+.(..
+.....
+ .....
+  ..(..
+   .....
+    .....
+     ..(.
+      ...
+ENDMAP
+
+NAME: nicolae_vaults_diagonal_hallway_8
+TAGS: vaults_empty allow_dup
+MAP
+...
+.(..
+.....
+ ..(..
+  .....
+   .....
+    ..(..
+     .....
+      ..(.
+       ...
+ENDMAP
+
+NAME: nicolae_vaults_diagonal_hallway_9
+TAGS: vaults_empty allow_dup
+MAP
+...
+.(..
+.....
+ ..(..
+  .....
+   ..(..
+    .....
+     ..(..
+      .....
+       ..(.
+        ...
+ENDMAP
+
+NAME: nicolae_vaults_little_squares_1
+TAGS: vaults_empty allow_dup
+NSUBST: A = 1:+ / *:x
+MAP
+..xxxx.(.
+(.+..+...
+..x..xx+x
+x+xxAx..x
+x..A.A..x
+x..xAxx+x
+x+xx..x..
+...+..+.(
+.(.xxxx..
+ENDMAP
+
+NAME: nicolae_vaults_little_squares_2
+TAGS: vaults_empty allow_dup
+NSUBST: A = 1:+ / *:x
+NSUBST: B = 1:+ / *:x
+NSUBST: C = 1:+ / *:x
+NSUBST: D = 1:+ / *:x
+SUBST: E = ...(TG
+MAP
+...xxx...
+...A.A...
+..+xAx+..
+xBx...xDx
+x.B.E.D.x
+xBx...xDx
+..+xCx+..
+...C.C...
+...xxx...
+ENDMAP
+
+NAME: nicolae_vaults_little_squares_3
+TAGS: vaults_empty allow_dup
+SHUFFLE: Aa, Bb, Cc, Dd
+SUBST: ABCD : x, abcd : +
+MAP
+..xxx...
+..A.x...
+..aAxbBx
+xxx..B.x
+x.D..xxx
+xDdxCc..
+...x.C..
+...xxx..
+ENDMAP
+
+NAME: nicolae_vaults_little_squares_4
+TAGS: vaults_empty allow_dup
+SHUFFLE: ab, cd
+NSUBST: a = 1:+ / *:x
+NSUBST: c = 1:+ / *:x
+NSUBST: b = 1:= / *:x
+NSUBST: d = 1:= / *:x
+SUBST: = = +xxx
+MAP
+xxxx....
+x..b.xx.
+x..b.xx.
+xaax....
+....xddx
+.xx.c..x
+.xx.c..x
+....xxxx
+ENDMAP
+
+NAME: nicolae_vaults_rhombus_5
+TAGS: vaults_empty allow_dup
+MAP
+.....
+ ..(..
+  ..(..
+   ..(..
+    .....
+ENDMAP
+
+NAME: nicolae_vaults_rhombus_6
+TAGS: vaults_empty allow_dup
+MAP
+......
+ ......
+  ..(...
+   ...(..
+    ......
+     ......
+ENDMAP
+
+
+NAME: nicolae_vaults_rhombus_7
+TAGS: vaults_empty allow_dup
+MAP
+.......
+ ..(....
+  .......
+   ...(...
+    .......
+     ....(..
+      .......
+ENDMAP
+
+NAME: nicolae_vaults_ring_of_whatevers
+TAGS: vaults_empty allow_dup
+SHUFFLE: ab
+SUBST: a : ab, a : x:20 G:5 T:5, b : . x:20 G:5 T:5 W
+MAP
+.........
+....a....
+..b...b..
+.........
+.a..(..a.
+.........
+..b...b..
+....a....
+.........
+ENDMAP
+
+NAME: nicolae_vaults_shelves_hall
+TAGS: vaults_empty allow_dup vaults_orient_n vaults_orient_s
+SUBST: % = %%%$$$
+MAP
+.....
+..(..
+.xxx.
+.%x%.
+.xxx.
+.%x%.
+.xxx.
+.%x%.
+.xxx.
+..(..
+.....
+ENDMAP
+
+NAME: nicolae_vaults_theta
+TAGS: vaults_empty allow_dup
+SHUFFLE: AB
+SUBST: A : ., B : x
+MAP
+xxx.....xxx
+x..xxAxx..x
+.xxxxAxxxx.
+.BBBB.BBBB.
+.xxxxAxxxx.
+x..xxAxx..x
+xxx.....xxx
+ENDMAP
