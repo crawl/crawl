@@ -2951,7 +2951,7 @@ string bolt::zapper() const
     else if (beam_src->is_player())
         return "self";
     else
-        return beam_src->name(DESC_PLAIN);
+        return beam_src->name(DESC_PLAIN, true);
 }
 
 bool bolt::is_harmless(const monster* mon) const
