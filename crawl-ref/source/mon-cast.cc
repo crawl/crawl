@@ -2964,7 +2964,7 @@ static bool _mons_ozocubus_refrigeration(monster* mons, bool actual)
 static coord_def _mons_fragment_target(monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
-    int pow = 12 * mons->hit_dice;
+    int pow = 6 * mons->hit_dice;
     int range = spell_range(SPELL_LRD, pow, false);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
