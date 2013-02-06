@@ -1702,9 +1702,9 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                                      ZAP_LEHUDIBS_CRYSTAL_SPEAR };
     const zap_type venomzaps[3]  = { ZAP_STING, ZAP_VENOM_BOLT,
                                      ZAP_POISON_ARROW };
-    const zap_type sparkzaps[3]  = { ZAP_SHOCK, ZAP_BOLT_OF_LIGHTNING,
+    const zap_type sparkzaps[3]  = { ZAP_SHOCK, ZAP_LIGHTNING_BOLT,
                                      ZAP_ORB_OF_ELECTRICITY };
-    const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_NEGATIVE_ENERGY };
+    const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
     const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
 
     switch (card)

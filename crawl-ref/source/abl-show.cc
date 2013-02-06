@@ -2390,10 +2390,10 @@ static bool _do_ability(const ability_def& abil)
             {
             case 0: beam.range =  7; ztype = ZAP_BOLT_OF_FIRE;       break;
             case 1: beam.range =  6; ztype = ZAP_FIREBALL;           break;
-            case 2: beam.range =  8; ztype = ZAP_BOLT_OF_LIGHTNING;  break;
+            case 2: beam.range =  8; ztype = ZAP_LIGHTNING_BOLT;     break;
             case 3: beam.range =  5; ztype = ZAP_STICKY_FLAME;       break;
             case 4: beam.range =  5; ztype = ZAP_IRON_SHOT;          break;
-            case 5: beam.range =  6; ztype = ZAP_NEGATIVE_ENERGY;    break;
+            case 5: beam.range =  6; ztype = ZAP_BOLT_OF_DRAINING;   break;
             case 6: beam.range =  8; ztype = ZAP_ORB_OF_ELECTRICITY; break;
             }
             zapping(ztype, power, beam);
