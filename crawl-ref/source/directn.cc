@@ -2962,6 +2962,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "closed door";
     case DNGN_RUNED_DOOR:
         return "runed door";
+    case DNGN_SEALED_DOOR:
+        return "sealed door";
     case DNGN_METAL_WALL:
         return "metal wall";
     case DNGN_GREEN_CRYSTAL_WALL:

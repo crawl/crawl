@@ -295,12 +295,20 @@ command_type feat_stair_direction(dungeon_feature_type feat)
 
 bool feat_is_opaque(dungeon_feature_type feat)
 {
+#if TAG_MAJOR_VERSION > 34
     return (feat <= DNGN_MAXOPAQUE);
+#else
+    return (feat <= DNGN_MAXOPAQUE || feat == DNGN_SEALED_DOOR);
+#endif
 }
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
+#if TAG_MAJOR_VERSION > 34
     return (feat <= DNGN_MAXSOLID);
+#else
+    return (feat <= DNGN_MAXSOLID || feat == DNGN_SEALED_DOOR);
+#endif
 }
 
 bool cell_is_solid(const coord_def &c)
@@ -322,12 +330,13 @@ bool feat_has_dry_floor(dungeon_feature_type feat)
 bool feat_is_door(dungeon_feature_type feat)
 {
     return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
-            || feat == DNGN_OPEN_DOOR);
+            || feat == DNGN_OPEN_DOOR || feat == DNGN_SEALED_DOOR);
 }
 
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR);
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
+            || feat == DNGN_SEALED_DOOR);
 }
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
@@ -1554,6 +1563,9 @@ static const char *dngn_feature_names[] =
 #if TAG_MAJOR_VERSION == 34
 "non-secret_door",
 #endif
+#if TAG_MAJOR_VERSION > 34
+"sealed door",
+#endif
 "mangrove", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
@@ -1618,6 +1630,7 @@ static const char *dngn_feature_names[] =
 
 #if TAG_MAJOR_VERSION == 34
 "abyssal_stair",
+"sealed door"
 #endif
 };
 

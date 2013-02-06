@@ -34,7 +34,8 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_tomb_marker::read,
     &map_malign_gateway_marker::read,
     &map_phoenix_marker::read,
-    &map_position_marker::read
+    &map_position_marker::read,
+    &map_door_seal_marker::read,
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
@@ -713,6 +714,51 @@ map_marker *map_phoenix_marker::clone() const
 string map_phoenix_marker::debug_describe() const
 {
     return make_stringf("Phoenix marker (%d, %d)", duration, mon_num);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// map_door_seal_marker
+
+map_door_seal_marker::map_door_seal_marker(const coord_def& p,
+                    int dur, int mnum, dungeon_feature_type oldfeat)
+    : map_marker(MAT_DOOR_SEAL, p), duration(dur), mon_num(mnum),
+        old_feature(oldfeat)
+{
+}
+
+void map_door_seal_marker::write(writer &out) const
+{
+    map_marker::write(out);
+    marshallShort(out, duration);
+    marshallShort(out, mon_num);
+    marshallUByte(out, old_feature);
+}
+
+void map_door_seal_marker::read(reader &in)
+{
+    map_marker::read(in);
+
+    duration = unmarshallShort(in);
+    mon_num = unmarshallShort(in);
+    old_feature = static_cast<dungeon_feature_type>(unmarshallUByte(in));
+}
+
+map_marker *map_door_seal_marker::read(reader &in, map_marker_type)
+{
+    map_door_seal_marker *mc = new map_door_seal_marker();
+    mc->read(in);
+    return mc;
+}
+
+map_marker *map_door_seal_marker::clone() const
+{
+    map_door_seal_marker *mark = new map_door_seal_marker(pos, duration, mon_num, old_feature);
+    return mark;
+}
+
+string map_door_seal_marker::debug_describe() const
+{
+    return make_stringf("Door seal marker (%d, %d)", duration, mon_num);
 }
 
 ////////////////////////////////////////////////////////////////////////////

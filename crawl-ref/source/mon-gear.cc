@@ -684,6 +684,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
+    case MONS_VAULT_WARDEN:
         // being at the top has its privileges
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
@@ -1685,6 +1686,7 @@ static void _give_shield(monster* mon, int level)
         break;
     case MONS_NAGA_WARRIOR:
     case MONS_VAULT_GUARD:
+    case MONS_VAULT_WARDEN:
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
@@ -1958,6 +1960,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_VAMPIRE_KNIGHT:
     case MONS_JORY:
     case MONS_VAULT_GUARD:
+    case MONS_VAULT_WARDEN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
                                        ARM_PLATE_ARMOUR, -1);

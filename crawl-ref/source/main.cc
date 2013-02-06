@@ -3659,6 +3659,12 @@ static void _open_door(coord_def move, bool check_confused)
         return;
     }
 
+    if (feat == DNGN_SEALED_DOOR)
+    {
+        mpr("That door is sealed shut!");
+        return;
+    }
+
     // Finally, open the closed door!
     set<coord_def> all_door = connected_doors(doorpos);
     const char *adj, *noun;

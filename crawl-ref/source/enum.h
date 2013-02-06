@@ -1202,6 +1202,9 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION == 34
     DNGN_OLD_SECRET_DOOR,
 #endif
+#if TAG_MAJOR_VERSION > 34
+    DNGN_SEALED_DOOR,
+#endif
     DNGN_MANGROVE,
     DNGN_METAL_WALL,
         DNGN_MINWALL = DNGN_METAL_WALL,
@@ -1369,6 +1372,7 @@ enum dungeon_feature_type
 
 #if TAG_MAJOR_VERSION == 34
     DNGN_ABYSSAL_STAIR,
+    DNGN_SEALED_DOOR,
 #endif
 
     NUM_FEATURES
@@ -1894,6 +1898,7 @@ enum map_marker_type
     MAT_MALIGN,
     MAT_PHOENIX,
     MAT_POSITION,
+    MAT_DOOR_SEAL,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };
@@ -2561,6 +2566,7 @@ enum monster_type                      // menv[].type
     MONS_DIAMOND_OBELISK,
 
     MONS_VAULT_SENTINEL,
+    MONS_VAULT_WARDEN,
 
     NUM_MONSTERS,               // used for polymorph
 
