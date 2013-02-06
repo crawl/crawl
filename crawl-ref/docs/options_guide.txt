@@ -68,7 +68,8 @@ The contents of this text are:
                 messages_at_top, skill_focus,
                 mlist_allow_alternate_layout, mlist_targetting,
                 menu_colour, message_colour, force_more_message,
-                msg_condense_repeats, msg_condense_short, show_travel_trail
+                msg_condense_repeats, msg_condense_short, show_travel_trail,
+                monster_list_colour
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
@@ -118,9 +119,9 @@ The contents of this text are:
                 note_chat_messages
 5-  Miscellaneous.
 5-a     All OS.
-                mouse_input, wiz_mode, char_set, classic_item_colours,
-                colour, cset, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species
+                mouse_input, wiz_mode, char_set, colour, cset, feature,
+                mon_glyph, item_glyph, use_fake_player_cursor,
+                show_player_species
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -1519,6 +1520,31 @@ skill_focus = true
         the skill screen. When set to false, they only toggle between enabled
         and disabled. Setting the option to "toggle" adds a toggle to the skill
         screen to change the behaviour in-game.
+
+monster_list_colour += <key>:<colour>, <key>:<colour>
+monster_list_colour -= <key>
+        (Overriding list option)
+        Change the colour used to display monsters in the monster list. Valid
+        keys, and their default colours, are:
+
+           Monster attitudes:
+             friendly       - green
+             neutral        - brown ("indifferent")
+             good_neutral   - brown ("peaceful")
+             strict_neutral - brown ("fellow slime")
+
+           Threat levels for hostile monsters:
+             trivial        - darkgrey
+             easy           - lightgrey
+             tough          - yellow
+             nasty          - lightred
+
+         Removing a key with -= currently has the same effect as setting its
+         colour to lightgrey.
+
+         Note that, for TSO worshippers, monsters whom it is forbidden to
+         attack will appear in the "evil colour" (magenta by default)
+         regardless of this option.
 
 3-j     Missiles.
 -----------------

@@ -3023,12 +3023,46 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         stable_sort(stat_colour.begin(), stat_colour.end(), _first_less);
     }
-
     else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
     {
         if (plain)
             enemy_hp_colour.clear();
         str_to_enemy_hp_colour(field, caret_equal);
+    }
+    else if (key == "monster_list_colour" || key == "monster_list_color")
+    {
+        if (plain)
+            clear_monster_list_colours();
+
+        vector<string> thesplit = split_string(",", field);
+        for (unsigned i = 0; i < thesplit.size(); ++i)
+        {
+            vector<string> insplit = split_string(":", thesplit[i]);
+
+            if (insplit.empty() || insplit.size() > 2
+                 || insplit.size() == 1 && !minus_equal
+                 || insplit.size() == 2 && minus_equal)
+            {
+                report_error("Bad monster_list_colour string: %s\n",
+                             field.c_str());
+                break;
+            }
+
+            const int scolour = minus_equal ? -1 : str_to_colour(insplit[1]);
+
+            // No elemental colours!
+            if (scolour >= 16 || scolour < 0 && !minus_equal)
+            {
+                report_error("Bad monster_list_colour: %s", insplit[1].c_str());
+                break;
+            }
+            if (!set_monster_list_colour(insplit[0], scolour))
+            {
+                report_error("Bad monster_list_colour key: %s\n",
+                             insplit[0].c_str());
+                break;
+            }
+        }
     }
 
     else if (key == "note_skill_levels")
