@@ -3427,10 +3427,10 @@ void ancient_zyme_sicken(monster* mons)
         if (!you.disease)
         {
             mpr("You feel yourself grow ill in the presence of the ancient zyme.", MSGCH_WARN);
-            you.sicken(50 + random2(50));
+            you.sicken(30 + random2(30));
         }
         else if (x_chance_in_y(you.time_taken, 60))
-            you.sicken(35 + random2(50));
+            you.sicken(15 + random2(30));
 
         if (x_chance_in_y(you.time_taken, 100))
         {
