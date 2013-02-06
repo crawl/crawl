@@ -4195,7 +4195,6 @@ Harold
 
 w:6
 @_Harold_rare_@
-
 %%%%
 _Harold_common_
 
@@ -4218,7 +4217,6 @@ VISUAL:@The_monster@ looks eager to get this over with.
 @The_monster@ says @to_foe@, "This is so exciting! What a great way to end my career!"
 
 @The_monster@ says @to_foe@, "Ah, this is what I got into this business for!"
-
 %%%%
 # Harold talks about his retirement
 _Harold_rare_
@@ -4246,7 +4244,6 @@ __NEXT
 
 w:5
 @The_monster@ @yells@, "I'm getting too old for this!"
-
 %%%%
 Harold killed
 
@@ -4263,7 +4260,6 @@ w:2
 
 w:1
 @The_monster@ falls down, and clutches @possessive@ wounds. "But I was going to get a @_Harold_retirement_plan_@..."
-
 %%%%
 # Giving Harold some retirement options...
 _Harold_retirement_plan_
@@ -4277,7 +4273,6 @@ horse ranch
 cattle farm
 
 nice plot of land
-
 %%%%
 _Harold_ret_house_
 
@@ -4290,7 +4285,6 @@ house
 cottage
 
 place
-
 %%%%
 _Harold_ret_place_
 
@@ -4303,7 +4297,6 @@ near the shore
 in the country
 
 in the woods
-
 %%%%
 _Harold_ret_hobby_
 
@@ -4318,7 +4311,6 @@ model-building
 writing
 
 painting
-
 ## END Harold ##
 %%%%
 ############ IGNACIO ### A human executioner turned into a demon
