@@ -3358,7 +3358,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         }
     }
 
-    if (grd(f) == DNGN_CLOSED_DOOR)
+    if (grd(f) == DNGN_CLOSED_DOOR || grd(f) == DNGN_SEALED_DOOR)
     {
         if (mons_can_open_door(mons, f))
         {

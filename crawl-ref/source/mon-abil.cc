@@ -15,6 +15,12 @@
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
+#include "dgnevent.h" //XXX
+#include "exclude.h" //XXX
+#ifdef USE_TILE
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
+#endif
 #include "fprop.h"
 #include "ghost.h"
 #include "losglobal.h"
@@ -47,6 +53,8 @@
 #include "viewchar.h"
 #include "ouch.h"
 #include "target.h"
+#include "items.h"
+#include "mapmark.h"
 
 #include <algorithm>
 #include <queue>
@@ -1403,6 +1411,147 @@ static bool _queen_incite_worker(const monster* queen)
 
     return goaded != 0;
 
+}
+
+static bool _can_force_door_shut(const coord_def& door)
+{
+    if (grd(door) != DNGN_OPEN_DOOR)
+        return false;
+
+    set<coord_def> all_door;
+    find_connected_identical(door, grd(door), all_door);
+
+    for (set<coord_def>::const_iterator i = all_door.begin();
+        i != all_door.end(); ++i)
+    {
+        // If anyone is in the doorway, we can't force them out
+        if (actor_at(*i))
+            return false;
+
+        // If there are items in the way, see if there's room to push them
+        // out of the way
+        if (igrd(*i) != NON_ITEM)
+        {
+            bool can_push = false;
+            for (adjacent_iterator ai(*i); ai; ++ai)
+            {
+                dungeon_feature_type feat = grd(*ai);
+                if (!feat_is_solid(feat) && feat != DNGN_LAVA
+                        && feat != DNGN_DEEP_WATER)
+                {
+                    can_push = true;
+                    break;
+                }
+            }
+            if (!can_push)
+                return false;
+        }
+    }
+
+    // Didn't find any items we couldn't displace
+    return true;
+}
+
+static bool _seal_doors(const monster* warden)
+{
+    ASSERT(warden && warden->type == MONS_VAULT_WARDEN);
+
+    int num_closed = 0;
+    int num_sealed = 0;
+    int seal_duration = 80 + random2(80);
+
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
+                 ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_OPEN_DOOR)
+        {
+            if (!you.see_cell_no_trans(*ri))
+                continue;
+
+            if (!_can_force_door_shut(*ri))
+                continue;
+
+            set<coord_def> all_door;
+            find_connected_identical(*ri, grd(*ri), all_door);
+            for (set<coord_def>::const_iterator i = all_door.begin();
+             i != all_door.end(); ++i)
+            {
+                // If there are items in the way, try to push them out of the way
+                if (igrd(*i) != NON_ITEM)
+                {
+                    for (adjacent_iterator ai(*i); ai; ++ai)
+                    {
+                        dungeon_feature_type feat = grd(*ai);
+                        if (!feat_is_solid(feat) && feat != DNGN_LAVA
+                                && feat != DNGN_DEEP_WATER)
+                        {
+                            move_items(*i, *ai);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Close the door
+            vector<coord_def> excludes;
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                i != all_door.end(); ++i)
+            {
+                const coord_def& dc = *i;
+                grd(dc) = DNGN_CLOSED_DOOR;
+                set_terrain_changed(dc);
+                dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
+                if (env.map_knowledge(dc).seen())
+                {
+                    env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+                    env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
+#endif
+                }
+                if (is_excluded(dc))
+                    excludes.push_back(dc);
+            }
+            update_exclusion_los(excludes);
+            ++num_closed;
+        }
+
+        // Try to seal the door
+        if (grd(*ri) == DNGN_CLOSED_DOOR)
+        {
+            if (!you.see_cell_no_trans(*ri))
+                continue;
+
+            set<coord_def> all_door;
+            find_connected_identical(*ri, grd(*ri), all_door);
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                i != all_door.end(); ++i)
+            {
+                map_door_seal_marker *sealmarker =
+                    new map_door_seal_marker(*i, seal_duration, warden->mid, DNGN_CLOSED_DOOR);
+                env.markers.add(sealmarker);
+                env.markers.clear_need_activate();
+
+                grd(*i) = DNGN_SEALED_DOOR;
+                set_terrain_changed(*i);
+            }
+
+            ++num_sealed;
+        }
+    }
+
+    if (num_closed > 0 || num_sealed > 0)
+    {
+        simple_monster_message(warden, " activates a sealing rune.", MSGCH_MONSTER_SPELL);
+        if (num_closed > 1)
+            mpr("The doors slam shut!");
+        else if (num_closed == 1)
+            mpr("A door slams shut!");
+
+        return true;
+    }
+
+    return false;
 }
 
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
@@ -3078,6 +3227,23 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 mon_enchant(ENCH_BREATH_WEAPON, 1, mons, (4 +  random2(9)) * 10);
             mons->add_ench(breath_timeout);
             used = true;
+        }
+        break;
+
+    case MONS_VAULT_WARDEN:
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        if (!you.visible_to(mons))
+            break;
+
+        if (one_chance_in(4))
+        {
+            if (_seal_doors(mons))
+            {
+                used = true;
+                break;
+            }
         }
         break;
 
