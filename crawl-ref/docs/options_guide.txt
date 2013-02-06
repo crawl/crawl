@@ -1524,8 +1524,8 @@ skill_focus = true
 monster_list_colour += <key>:<colour>, <key>:<colour>
 monster_list_colour -= <key>
         (Overriding list option)
-        Change the colour used to display monsters in the monster list. Valid
-        keys, and their default colours, are:
+        Change the colours used to display monster names in the monster list.
+        Valid keys, and their default colours, are:
 
            Monster attitudes:
              friendly       - green
