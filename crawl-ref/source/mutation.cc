@@ -2219,7 +2219,7 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
             you.temp_mutations[which_mut]++;
             you.attribute[ATTR_TEMP_MUTATIONS]++;
             you.attribute[ATTR_TEMP_MUT_XP] =
-                    min(you.experience_level, 17) * (350 + roll_dice(5, 350)) / 17;
+                    min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
         }
         return true;
     }
