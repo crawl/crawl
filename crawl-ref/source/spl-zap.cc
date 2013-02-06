@@ -40,13 +40,13 @@ zap_type spell_to_zap(spell_type spell)
     case SPELL_IRON_SHOT:
         return ZAP_IRON_SHOT;
     case SPELL_LIGHTNING_BOLT:
-        return ZAP_BOLT_OF_LIGHTNING;
+        return ZAP_LIGHTNING_BOLT;
     case SPELL_BOLT_OF_MAGMA:
         return ZAP_BOLT_OF_MAGMA;
     case SPELL_VENOM_BOLT:
         return ZAP_VENOM_BOLT;
     case SPELL_BOLT_OF_DRAINING:
-        return ZAP_NEGATIVE_ENERGY;
+        return ZAP_BOLT_OF_DRAINING;
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
         return ZAP_LEHUDIBS_CRYSTAL_SPEAR;
     case SPELL_FIREBALL:

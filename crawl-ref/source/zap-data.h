@@ -266,7 +266,7 @@ struct zap_info
 },
 
 {
-    ZAP_BOLT_OF_LIGHTNING,
+    ZAP_LIGHTNING_BOLT,
     "bolt of lightning",
     200,
     new calcdice_calculator<1, 11, 3, 5>,
@@ -314,7 +314,7 @@ struct zap_info
 },
 
 {
-    ZAP_NEGATIVE_ENERGY,
+    ZAP_BOLT_OF_DRAINING,
     "bolt of negative energy",
     200,
     new calcdice_calculator<4, 15, 3, 5>,

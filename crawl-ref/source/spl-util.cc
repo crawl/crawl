@@ -1054,11 +1054,11 @@ spell_type zap_type_to_spell(zap_type zap)
         return SPELL_FIREBALL;
     case ZAP_TELEPORT_OTHER:
         return SPELL_TELEPORT_OTHER;
-    case ZAP_BOLT_OF_LIGHTNING:
+    case ZAP_LIGHTNING_BOLT:
         return SPELL_LIGHTNING_BOLT;
     case ZAP_POLYMORPH_OTHER:
         return SPELL_POLYMORPH_OTHER;
-    case ZAP_NEGATIVE_ENERGY:
+    case ZAP_BOLT_OF_DRAINING:
         return SPELL_BOLT_OF_DRAINING;
     case ZAP_ENSLAVEMENT:
         return SPELL_ENSLAVEMENT;
