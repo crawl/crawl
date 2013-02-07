@@ -351,3 +351,4 @@ Zoom out
 CMD_ZOOM_OUT verbose
 
 Zoom out on dungeon area
+%%%%

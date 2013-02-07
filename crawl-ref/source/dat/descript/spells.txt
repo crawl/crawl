@@ -318,7 +318,10 @@ This spell conjures up a large cloud of lethally cold vapour.
 %%%%
 Fulminant Prism spell
 
-This spell conjures a prism which channels magical energy from its surroundings and unleashes it after a short while as a violent explosion of arcane force. Be warned that the prism is extremely fragile and any damage caused to it may result in premature detonation!
+This spell conjures a prism which channels magical energy from its surroundings
+and unleashes it after a short while as a violent explosion of arcane force. Be
+warned that the prism is extremely fragile and any damage caused to it may
+result in premature detonation!
 %%%%
 Major Healing spell
 
@@ -370,8 +373,8 @@ visible again.
 %%%%
 Iskenderun's Arcane Familiar spell
 
-This spell conjures a small globe of magical energy linked to the caster's
-own reserves of power, which will hover alongside its creator and augment their
+This spell conjures a small globe of magical energy linked to the caster's own
+reserves of power, which will hover alongside its creator and augment their
 destructive might. While the familiar cannot take independent action, it will
 fire volleys of energy at the caster's enemies in near-perfect sync with its
 creator's own destructive conjurations.
@@ -600,8 +603,8 @@ Shatter spell
 
 This spell causes a burst of concussive force around the caster, which will
 damage most creatures, although those composed of stone, metal, crystal or
-otherwise brittle material will particularly suffer. The magic has been known to
-adversely affect walls.
+otherwise brittle material will particularly suffer. The magic has been known
+to adversely affect walls.
 %%%%
 Shock spell
 

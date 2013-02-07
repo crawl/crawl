@@ -517,7 +517,11 @@ In this lesson you're going to learn how to learn and cast spells.
 %%%%
 tutorial4 spellbook
 
-You can memorise a spell from carried spellbooks with <w>[$cmd[CMD_MEMORISE_SPELL]]</w><localtiles> or by <w>[clicking]</w> on the memorisation tab and selecting the spell tile</localtiles>. At experience level 1, only level 1 spells are available to you. This will change as you gain experience.
+You can memorise a spell from carried spellbooks with
+<w>[$cmd[CMD_MEMORISE_SPELL]]</w><localtiles> or by <w>[clicking]</w> on the
+memorisation tab and selecting the spell tile</localtiles>. At experience level
+1, only level 1 spells are available to you. This will change as you gain
+experience.
 %%%%
 tutorial4 spellcasting
 
@@ -526,13 +530,19 @@ tutorial4 spellcasting
 ##       Tiles memorization: clicking on a spellbook in the inventory might be
 ##       easier to grasp; could leave the memorisation tab to be discovered by
 ##       the player on their own.
-You can cast spells with <w>[$cmd[CMD_CAST_SPELL]]</w><localtiles> or by <w>[clicking]</w> on the spell tile</localtiles>. Press <w>[$cmd[CMD_CAST_SPELL]?]</w> to get a list of your spells.
+You can cast spells with <w>[$cmd[CMD_CAST_SPELL]]</w><localtiles> or by
+<w>[clicking]</w> on the spell tile</localtiles>. Press
+<w>[$cmd[CMD_CAST_SPELL]?]</w> to get a list of your spells.
 
-Once you are out of magic points, retreat and rest to regain them with <w>[$cmd[CMD_REST]]</w><localtiles> or by <w>[clicking]</w> the rest icon in the command panel</localtiles>.
+Once you are out of magic points, retreat and rest to regain them with
+<w>[$cmd[CMD_REST]]</w><localtiles> or by <w>[clicking]</w> the rest icon in
+the command panel</localtiles>.
 %%%%
 tutorial4 ring_power
 
-Put on this ring with <w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles> or by <w>[clicking]</w> it in the inventory panel</localtiles>, and then rest up to your new full potential.
+Put on this ring with <w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles> or by
+<w>[clicking]</w> it in the inventory panel</localtiles>, and then rest up to
+your new full potential.
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #

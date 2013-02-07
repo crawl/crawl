@@ -543,8 +543,8 @@ Abort an ongoing skill transfer.
 Memorise spell
 
 Immediately gain knowledge of a destructive spell offered to you by Vehumet.
-The offer will expire after a short while. Check the Religion screen (^) to
-see which spell is offered.
+The offer will expire after a short while. Check the Religion screen (^) to see
+which spell is offered.
 %%%%
 Renounce Religion
 
