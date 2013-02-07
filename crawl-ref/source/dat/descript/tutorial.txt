@@ -127,60 +127,38 @@ on your character</localtiles>.
 %%%%
 tutorial1 exit
 
+:nowrap
 <yellow>Movement commands</yellow>
-
-   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT]
-$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
+   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                         \|/
-
-                 <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
+                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
                   /|\                         /|\
-
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
   <w>Shift + direction</w> moves you several squares into this direction.
-
-  <localtiles>You also can move by <w>clicking</w> somewhere in sight or on the
-<w>minimap</w>.</localtiles>
-
+<localtiles>  You also can move by <w>clicking</w> somewhere in sight or on the <w>minimap</w>.
+</localtiles>
 
 <yellow>Staircases</yellow>
-
   <w>$cmd[CMD_GO_UPSTAIRS]</w>  go back to the previous level
-
   <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  enter the next level
-
   <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  travel to the nearest up/downstairs
 
 
 <yellow>Doors</yellow>
-
   can be opened by walking into them
-
   <w>$cmd[CMD_CLOSE_DOOR]</w>  close an open door
-
   <w>$cmd[CMD_REST]</w>  search for secret doors
 
 
 <yellow>Travel</yellow>
-
   <localtiles>mouseclick on the <w>minimap</w>
-
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map,
-travel with <w>Enter</w>
-
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel
-with <w>Enter</w>
-
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w>
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w>
   </console><w>$cmd[CMD_EXPLORE]</w>  autoexplore
 
 
-                                 <cyan>Press <w>any key</w> to clear this
-screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 2: Monsters and combat        #
@@ -303,42 +281,36 @@ tutorial, simply go down these stairs.
 tutorial2 exit
 
 # FIXME: Duplicated for <console> and <webtiles>.
+:nowrap
 <yellow>Weapons<console> <cyan>)</cyan></console></yellow>
 
   <w>$cmd[CMD_PICKUP]</w>  pick up an item
-  <w>$cmd[CMD_WIELD_WEAPON]</w> wield a weapon <localtiles>  You can also do
-this by <w>clicking</w> on the weapon in your inventory.</localtiles>
+  <w>$cmd[CMD_WIELD_WEAPON]</w>  wield a weapon
+<localtiles>     You can also do this by <w>clicking</w> on the weapon in your inventory.</localtiles>
 
 
 <yellow>Monsters</yellow>
-
 <localtiles>  <w>mouseover</w>  examine a monster
-  <w>rightclick</w>  read a more detailed description</localtiles> <console>
-<w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed
-description</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a
-monster
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed
-description</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  fire ammunition at pre-targeted
-monster
+  <w>rightclick</w> read a more detailed description</localtiles>
+<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed description</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed description</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> fire ammunition at pre-targeted monster
   <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> target another monster
-<localtiles>  You can also fire an item by <w>clicking</w> on it and the
-confirming the target with <w>Enter</w>.</localtiles>
+<localtiles>  You can also fire an item by <w>clicking</w> on it and the confirming the target with <w>Enter</w>.</localtiles>
 
 
 <yellow>Resting</yellow>
-
   <w>$cmd[CMD_MOVE_NOWHERE]</w>  wait and rest a single turn
   <w>$cmd[CMD_REST]</w>  wait and rest up to 100 turns
 
 
 <yellow>Corpses<console> <brown>%</brown></console></yellow>
-
   <w>$cmd[CMD_BUTCHER]</w>  chop a corpse into meat chunks
   <w>$cmd[CMD_EAT]</w>  eat a chunk of meat
-                                 <cyan>Press <w>any key</w> to clear this
-screen...</cyan>
+
+
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
 %%%%
 #######################################
 # Tutorial map 3: Items and Inventory #
@@ -508,8 +480,8 @@ Well done! To exit the tutorial, simply go down these stairs.
 tutorial3 exit
 
 # A single screen recapping all commands.
+:nowrap
 <yellow>Item commands</yellow>
-
   <w>$cmd[CMD_PICKUP]</w>  pick up an item
   <w>$cmd[CMD_WEAR_ARMOUR]</w>  wear a piece of armour
   <w>$cmd[CMD_READ]</w>  read a scroll
@@ -520,25 +492,21 @@ tutorial3 exit
   <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  remove jewellery
   <w>$cmd[CMD_DROP]</w>  drop an item
 
-  <w></w>Usage commands are also available from the inventory menu
-(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), as are the item descriptions.
-
-  <localtiles><w></w>And of course, <white>mouseclicks</white> also
-work.</localtiles>
+  <w></w>Usage commands are also available from the inventory menu (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), as are the item descriptions.
+  <localtiles><w></w>And of course, <white>mouseclicks</white> also work.
+</localtiles>
 
 <yellow>Other</yellow>
-
-  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w>  access the command help
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> access the command help
   <w>$cmd[CMD_RESISTS_SCREEN]</w>  display character overview
   <w>$cmd[CMD_USE_ABILITY]</w>  use an ability
   <w>$cmd[CMD_EXPLORE]</w>  explore automatically
   <w>$cmd[CMD_SEARCH_STASHES]</w>  search for items/features previously seen
 
-  <localtiles><w></w>Several of these commands can also be executed by clicking
-in the <w>command panel</w>.</localtiles>
+  <localtiles><w></w>Several of these commands can also be executed by clicking in the <w>command panel</w>.
+</localtiles>
 
-                                 <cyan>Press <w>any key</w> to clear this
-screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 4: Magic and Spellcasting     #
@@ -656,32 +624,23 @@ To exit the tutorial, just go down these stairs.
 tutorial5 exit
 
 # A single screen recapping all commands.
+:nowrap
 <yellow>Religious commands</yellow>
-
   $cmd[CMD_PRAY]  pray at an altar to join a god, or sacrifice a corpse
-
   $cmd[CMD_USE_ABILITY]  use a divine ability
-
   $cmd[CMD_DISPLAY_RELIGION]  check your religious standing
-
-<localtiles>A <w>rightclick</w> on the player tile will also bring up the
-religion screen.</localtiles>
-
+<localtiles>  A <w>rightclick</w> on the player tile will also bring up the religion screen.
+</localtiles>
 
 <yellow>Resting</yellow>
-
   $cmd[CMD_MOVE_NOWHERE]  wait and rest a single turn
-
   $cmd[CMD_REST]  wait and rest up to 100 turns
 
 
 <yellow>Other commands</yellow>
-
   $cmd[CMD_DISPLAY_OVERMAP]  display an overview of the dungeon
-
   $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  search the description database
 
 
-                                 <cyan>Press <w>any key</w> to clear this
-screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
 %%%%
