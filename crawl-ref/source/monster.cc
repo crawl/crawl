@@ -2260,7 +2260,7 @@ bool monster::pickup_misc(item_def &item, int near)
 {
     // Never pick up the horn of Geryon or runes, except for mimics.
     if (item.base_type == OBJ_MISCELLANY
-        && (item.sub_type == MISC_HORN_OF_GERYON
+        && ((item.sub_type == MISC_HORN_OF_GERYON && type != MONS_GERYON)
             || item.sub_type == MISC_RUNE_OF_ZOT)
         && !mons_is_item_mimic(type))
     {
