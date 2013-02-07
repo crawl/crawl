@@ -1953,6 +1953,172 @@ MAP
     ....@....
 ENDMAP
 
+####
+# Madness, frenzy, and lunacy, eh?
+# bh's curves made me think of some weird yet orderly decorum for Zot.
+NAME:    hangedman_zot_decor_unnerving_road
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+SHUFFLE: @&, (), vb / vb / vb / bv / cc, lw / lw / lw / '', JK / LM / NO
+SHUFFLE: JK / JK / JK / !!, LM / ??, NO / `` / `` / `` / ``, JKLMNO / JKLMNO / KJMLON
+SUBST:   '!?`& = ., X : xxc, JLN = F, KMO = f
+SUBST:   ( = (:1 .:14, ) = ):1 .:14
+KMASK:   wlfF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MAP
+      XXXX...&&.
+      Xllvv......
+    XXXlv..v....@
+   XXlllv..v....@
+   Xllvv.vvJ.....
+ XXXlv..v.......
+XXlllv..v....XXXX
+Xllvv(vvL..ObbwwX
+Xlv..v.....b..bwXXX
+Xlv..v.....b..bwwwXX
+Xllvv.vv....bb.bbwwX
+XXlllv..v.....b..bwX
+ XXXlv..v.....b..bwX
+   XllvvN..Mbb)bbwwX
+   XXXX....b..bwwwXX
+    .......b..bwXXX
+   .....Kbb.bbwwX
+   @....b..bwwwXX
+   @....b..bwXXX
+   ......bbwwX
+    .&&...XXXX
+ENDMAP
+
+NAME:    hangedman_zot_decor_checkerboard
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KFEAT:   Z = known zot trap
+SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
+SUBST:   d : wbb, e : wwb, g : lvv, f : llv
+SUBST:   h : lvv, i : llv, j : wbb, k : wwb
+SUBST:   H : wwwwb, I : wwwwb, J : llllv, K : llllv
+SUBST:   L : lvvvv, M : lvvvv, N : wbbbb, O : wbbbb
+SHUFFLE: bv / bv / bv / vb / xx / cc
+NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / *:Z
+SUBST:   Z = ZZUG..., '" = .
+KPROP:   l = no_cloud_gen
+KMASK:   wl = no_monster_gen
+MAP
+.......     ...'...
+.dw.lf.     .Hw.lJ.
+.we.gl.     .wI.Kl.
+@..Z...........Z.........
+.lg.ew.hl.wj.lK.Iw.Ll.wN.
+.fl.wd.li.kw.Jl.wH.lM.Ow.
+.........Z...........Z..@
+      .wk.il.     .wO.Ml.
+      .jw.lh.     .Nw.lL.
+      ...'...     .......
+ENDMAP
+
+NAME:    hangedman_zot_decor_slant
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KFEAT:   zZ = known zot trap
+KFEAT:   fF = floor
+SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc, aAuU / aAuU / aAuU / uUaA
+SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
+SUBST:   aAB = b, uUV = v, Z = ()G .:45 Z:25, '"!? = .
+KMASK:   wlfF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MAP
+            ...!..
+           ........
+           ..UuuU..
+         ....uuuu.!
+         @vv.uuuu..
+         .vv.uuuU..
+      ......F......
+      .vv.VV.vv...
+      .vv.VV.vv.
+   .@....Z....@.
+   .bb.BB.bb.
+ ...bb.BB.bb.
+......f......
+..Aaaa.bb.
+..aaaa.bb@
+!.aaaa....
+..AaaA..
+........
+ ..!...
+ENDMAP
+
+NAME:    hangedman_zot_decor_scrapings
+TAGS:    transparent extra
+DEPTH:   Zot
+KFEAT:   Z = known zot trap
+SHUFFLE: HIJKLM / HIJKLM / IHKJML
+SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
+SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G .:45 Z:25
+MAP
+           ..   ...
+          .......x..
+         ..x......x..
+        ....x..O......
+    ................x..
+   ..J...P...L...N.I.H.
+  ..x.x.....x.x.....x..
+ ....K...M.Z.M...K....
+..x.....x.x.....x.x...
+.H.I.N...L...P...J...
+..x.................
+ ......O...x....
+  ..x.......x..
+   ..x........
+    ...    ..
+ENDMAP
+
+NAME:    hangedman_zot_decor_tridents
+TAGS:    transparent extra
+DEPTH:   Zot
+KFEAT:   Z = known zot trap
+SHUFFLE: vb / xy / XY
+SUBST:   = = ()+Z .:60, - : ++., _ : +.., H : z., I : z., J : z.
+SUBST:   K : zzwl...., L : zzzwl.., M : zzwl...
+SUBST:   N : zzzwl.., O : zzwl..., P : zzwl.., XyYz = x
+KMASK:   wl = no_monster_gen
+MAP
+         xxx.....
+         xxx.......
+         x...Iv.vv.
+    .....x...v.....
+  .....K.-.O...N..@
+.........x...v.....
+.bb.bJ..Pxv_vHv.vv.
+.....b...x...v.....
+@..L...M.=.M...L..@
+.....b...y...v.....
+.bb.bHb_byP..Jv.vv.
+.....b...y.........
+@..N...O.-.K.....
+.....b...y.....
+.bb.bI...y
+.......yyy
+  .....yyy
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

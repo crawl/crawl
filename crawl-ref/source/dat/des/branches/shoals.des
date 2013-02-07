@@ -583,6 +583,25 @@ wwwwwee....a
     wwwwwa
 ENDMAP
 
+NAME:    hangedman_shoals_cup_caves
+TAGS:    water_ok
+DEPTH:   Shoals
+MONS:    cyclops / stone giant w:2
+MONS:    mermaid, harpy, snapping turtle, centaur / centaur warrior, sea snake
+SHUFFLE: 234560, ABC
+SUBST:   A : x:6 .:1, B : xxw., C : xw.., c = c:29 .:1, x = x:9 c:1, % = %:8 *:1 .:1
+MAP
+ xxxx        xxxxx  xxxx
+xxxcxxxxW@Wxxxxcxxxxxcxxx
+xW..%xxWABAWxx414xxx5..Wx
+WA...2x.....x%...%x%...AW
+@B.C.1c..C..c..C..c1.C.B@
+WA...2x3...3x.....x%...AW
+xW..%xxx%1%xxWABAWxx5..Wx
+xxxcxxxxxcxxxxW@Wxxxxcxxx
+ xxxx  xxxxx        xxxx
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps

@@ -828,6 +828,23 @@ x.xWxlxV1x
 xxxxxxxxxx
 ENDMAP
 
+NAME:    hangedman_abyss_river_spirits
+TAGS:    no_monster_gen abyss
+MONS:    smoke demon, efreet, fire elemental, water elemental
+SHUFFLE: ABCDEF / ABCDEF / ABCDEF / ACEBDF / ACEBDF / GGGGGG
+SHUFFLE: 1234 / 1234 / 1234 / 1212 / 1212 / 1212 / 3434 / 3434 / 3434
+SUBST:   ACE = w, BDF = l, G : wl, x = x:50 cb
+MAP
+%2xxAAxxxx
+1.xx..xx2x
+xx..xx.%xxBBxxxx
+xxDDxx%.xx..xx3x
+    x1xx..xx.%xxCCxx
+    xxxxEExx%.xx..xx
+          x4xx..xx.3
+          xxxxFFxx4%
+ENDMAP
+
 ###############################################################################
 # abyss rune vaults
 ###############################################################################

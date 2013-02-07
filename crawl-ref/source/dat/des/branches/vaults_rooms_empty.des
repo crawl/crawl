@@ -1287,3 +1287,17 @@ x..xxAxx..x
 x..xxAxx..x
 xxx.....xxx
 ENDMAP
+
+NAME:    hangedman_vaults_stretched_pinwheel
+TAGS:    vaults_empty allow_dup
+SHUFFLE: ABCD
+SUBST:   A : x., B : x., C: xxx., D : x....
+MAP
+...xxxx.......x
+.D....x.BB.AA.x
+......x.......x
+xxxx..C.C..xxxx
+x.......x......
+x.AA.BB.x....D.
+x.......xxxx...
+ENDMAP
