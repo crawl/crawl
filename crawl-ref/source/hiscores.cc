@@ -2104,7 +2104,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "xom";
         else
             desc += auxkilldata.empty() ? "Killed for Xom's enjoyment"
-                                        : "Killed by" + auxkilldata;
+                                        : "Killed by " + auxkilldata;
         needs_damage = true;
         break;
 
