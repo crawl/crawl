@@ -30,7 +30,7 @@ Once the primary guardian serpent of a legendary treasure hoard, he was
 disgraced after thieves looted it while he slept. He now slithers about the
 dungeon, seeking vengeance against all would-be looters. He is an accomplished
 spellcaster, but no more deadly in melee combat than others of his kind.
-%%%%%
+%%%%
 Agnes
 
 A tall (for her kind) and beautiful warrior, as vain as she is quick. You can't
@@ -52,8 +52,9 @@ present form: half-human, half-spider. No longer aging, she has the youth and
 beauty of a human female, along with the legs and abdomen of a monstrous giant
 spider.
 
-Thousands of years old, she has learned magic and quite a few other tricks. Expect
-to be ensnared by webs and magic while her pets digest and then drink you dry.
+Thousands of years old, she has learned magic and quite a few other tricks.
+Expect to be ensnared by webs and magic while her pets digest and then drink
+you dry.
 %%%%
 Asmodeus
 
@@ -582,8 +583,8 @@ you!
 apocalypse crab
 
 An opalescent crab with jet black eyes. A distant relative of the fire crab,
-the rumours claim that this species is waiting for the end of time. The
-chaotic mists effusing from its mandible are hardly suggestive of waiting.
+the rumours claim that this species is waiting for the end of time. The chaotic
+mists effusing from its mandible are hardly suggestive of waiting.
 %%%%
 azure jelly
 
@@ -1177,7 +1178,9 @@ An ugly, silly bat. It sparkles.
 %%%%
 fulminant prism
 
-A slender prism that crackles with barely-contained destructive energy. Any blow which cracks its fragile surface is likely to result in a violent explosion.
+A slender prism that crackles with barely-contained destructive energy. Any
+blow which cracks its fragile surface is likely to result in a violent
+explosion.
 %%%%
 fungus
 
@@ -2173,7 +2176,7 @@ next victim.
         end
     end
 }}
-%%%%%
+%%%%
 rotting hulk
 
 A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
@@ -2441,18 +2444,18 @@ on the spriggan forests and cairns will be able to just walk away.
 %%%%
 starcursed mass
 
-An mass of stellar detritus that glows with the sickly putrescence of a
-dying star, forever shrieking soundlessly in a voice beyond mortal grasp.
-Its form quivers and undulates constantly, dividing spontaneously and then
-withdrawing when threatened. While the voice of even a single one is
-unsettling, in chorus, their screams can overwhelm the minds of even the
-bravest warriors, leaving them stunned and helpless.
+An mass of stellar detritus that glows with the sickly putrescence of a dying
+star, forever shrieking soundlessly in a voice beyond mortal grasp. Its form
+quivers and undulates constantly, dividing spontaneously and then withdrawing
+when threatened. While the voice of even a single one is unsettling, in chorus,
+their screams can overwhelm the minds of even the bravest warriors, leaving
+them stunned and helpless.
 %%%%
 starspawn tentacle
 
-The writhing appendage of a tentacled starspawn, capable of grasping nearly
-any prey and dragging it back to be devoured. Any damage dealt to it hurts
-the whole creature.
+The writhing appendage of a tentacled starspawn, capable of grasping nearly any
+prey and dragging it back to be devoured. Any damage dealt to it hurts the
+whole creature.
 %%%%
 starspawn tentacle segment
 
@@ -2503,7 +2506,7 @@ A small and slimy dragon, covered in swamp muck.
         return "It smells terrible."
     end
 }}
-%%%%%
+%%%%
 swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
