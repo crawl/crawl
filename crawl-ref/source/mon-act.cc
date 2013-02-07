@@ -392,6 +392,7 @@ static void _maybe_set_patrol_route(monster* mons)
 static bool _mons_can_cast_dig(const monster* mons, bool random)
 {
     return (mons->foe != MHITNOT
+            && mons->can_use_spells()
             && mons->has_spell(SPELL_DIG)
             && !mons->confused()
             && !(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
