@@ -554,6 +554,7 @@ SUBST: w = w t:5 T:5
 SUBST: d = c
 SHUFFLE: c = ccx
 KFEAT: T = mangrove
+KPROP: w = no_rtele_into
 MAP
     wwww
   wwwwwwww
@@ -592,6 +593,7 @@ KFEAT: T = mangrove
 KFEAT: K = shallow_water
 KITEM: K = potion of confusion / potion of paralysis / potion of degeneration \
            / potion of decay / potion of mutation
+KPROP: w = no_rtele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
                               size = 1, walk_dist = 2, spread_rate = 25 }
@@ -626,6 +628,7 @@ KITEM: O = great sword good_item w:20 / \
            triple sword good_item w:1
 KFEAT: K = deep_water
 KFEAT: T = mangrove
+KPROP: wK = no_rtele_into
 {{
   local cf = TriggerableFunction:new{
       func="callback.grunt_lady_of_the_lake_trigger",
@@ -664,7 +667,7 @@ KITEM: g = stone w:40 / large rock q:1
 KFEAT: g = floor
 KFEAT: _ = altar_yredelemnul / altar_kikubaaqudgha
 MAP
- ----------------------
+  --------------------
  -CCCCCCCCCCcccCCCcCCc-
  -C%%C::::::::::::C%%c-
  -C%:C::::::::::::C:%c-
@@ -1133,4 +1136,89 @@ MAP
    tccct''""W.''"'"''W."'"'"Wt&cc
   tttttccxcccttcxctcxcXctcXXxtccc
 ttttttttttttttttttttttttttttttttt
+ENDMAP
+
+###############################################################################
+# A heavy focus on rotting enemies.
+NAME:    led_swamp_rot
+PLACE:   Swamp:$
+TAGS:    no_pool_fixup
+ORIENT:  southwest
+MONS:   bog body / rotting devil / necrophage / hydra zombie w:5, \
+        death drake w:1 / ghoul, \
+        death drake w:1 / death ooze
+SUBST: z = zzzzz1
+SUBST: d = ccczzz
+KPROP: z = no_rtele_into
+SUBST: z = ..twwWWWWW
+SUBST: c = cct
+KITEM: O = decaying rune of zot
+KFEAT: t = mangrove
+MAP
+       @
+tdddzz.zzzzzz
+tdddddz.zdddzzz
+tdddzz.zzzzddzz
+tdccc.zcccdddzz
+tdcc11.z11ccdzz
+tcczz.zzzccddzz
+tczz.zzzzccdzzzz
+tczzz.zzzzccddzzz
+ccdzzz.zzzdccdddzzz
+ccddzzz.zzzdcddddzzz
+ccdd11zz.z11ccddddzzz
+ccdddzzzz..zzccddddzz
+ccddddzzzzz.zzccddzzz
+ccdddzzzzz.zzzzccddzz
+tcdz22zz..z22zzccdddzz
+tcczzzz...zzzzzzccdddzz
+ttczz33.O.33zzztcdddddzz
+ttccttz3.3zzzttccddddttzz
+tttcctttttttttccddddttttz
+ tttcccccccccccddddttttt
+  tttttttttttttttt
+ENDMAP
+
+###############################################################################
+# "Everyone said I was daft to build a castle on a swamp..."
+NAME: grunt_swamp_rune_castle
+PLACE: Swamp:$
+TAGS: no_trap_gen
+ORIENT: float
+MONS:    swamp dragon, swamp drake, hydra, bog body
+MONS:    fungus w:12 / plant w:5 / bush w:1
+NSUBST:  @ = 1:@ / *:.
+SUBST:   C = c.
+SUBST:   = = +.
+NSUBST:  : = 7=1 / 7=2 / 7=3 / 10=4 / 16=5
+SUBST:   : = .W
+SUBST:   G = Gg
+SHUFFLE: def
+KITEM:   d = decaying rune of Zot
+KITEM:   ef = any good_item
+KITEM:   g = stone w:40 / large rock q:1
+KMONS:   d = patrolling the lernaean hydra
+KMONS:   ef = patrolling hydra
+MAP
+ cccccWWW:::WWWccccc
+cc%..ccCC===CCcc..%cc
+c%%...c:::::::c...%%c
+c..d..c:G:::G:c..e..c
+c.....c:::::::c.....c
+cc...+c:G:::G:c+...cc
+Wccccc.:::::::.cccccW
+WC::::::G:::G::::::CW
+WC:G:G:G:::::G:G:G:CW
+:=:::::::::::::::::=:
+:=::::::::U::::::::=@
+:=:::::::::::::::::=:
+WC:G:G:G:::::G:G:G:CW
+WC......G...G......CW
+Wccccc.:::::::.CCCCCW
+cc...+c:G:::G:C=:::CC
+c.....c:::::::C:::::C
+c..f..c:G:::G:C:::::C
+c%%...c:::::::C:::::C
+cc%..ccCC===CCCC::::C
+ cccccWWW:@:WWWCCCCC@
 ENDMAP
