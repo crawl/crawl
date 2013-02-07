@@ -16,32 +16,6 @@ function tutorial4.msg(text)
     return tutorial_msg("tutorial4 " .. text)
 end
 
-function tutorial_msg4.undead ()
-    local text = "Unlike most other monsters, undead do not regenerate "
-                 .. "health and it is impossible to tell how wounded they are."
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "\nIncidentally, you can also cast spells by pressing "
-                    .. "<white>Ctrl + leftclick</white> on the monster."
-    end
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.spell_success ()
-    local text = "To check your spell proficiency, press "
-                 .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or <white>mouseover</white> over your memorised spells"
-    end
-
-    text = text .. ". Compare your spell success rates before "
-                .. "and after wielding this staff."
-
-    return tutorial_message(text)
-end
-
 function tutorial_msg4.mephitic_cloud ()
     return tutorial_message("Mephitic Cloud is a level 3 spell, so you can't "
                             .. "memorise it yet. Quaff this potion of experience (with "
@@ -219,8 +193,8 @@ MONS:    rat, goblin
 MARKER:  d = lua:tutorial4.msg("spellbook")
 MARKER:  B = lua:tutorial4.msg("spellcasting")
 MARKER:  e = lua:tutorial4.msg("ring_power")
-MARKER:  C = lua:tutorial_msg4.undead()
-MARKER:  f = lua:tutorial_msg4.spell_success()
+MARKER:  C = lua:tutorial4.msg("undead")
+MARKER:  f = lua:tutorial4.msg("spell_success")
 MARKER:  g = lua:tutorial_msg4.mephitic_cloud()
 MARKER:  D = lua:tutorial_msg4.aiming_clouds()
 MARKER:  h = lua:tutorial_msg4.spell_hunger()
