@@ -861,6 +861,69 @@ xccccccxx.xxccccccx
 xxxxxxxx.@.xxxxxxxx
 ENDMAP
 
+NAME:    hangedman_tartarus_temple_path
+TAGS:    transparent extra
+DEPTH:   Tar:1-6
+SHUFFLE: hH / hH / Hh, iI / iI / Ii
+SUBST:   h : cccx, H : cxGF, i : cccx, I : cxGF
+SUBST:   d = d., + = +..., { = {}...., c = c:49 .:1, C = c
+MARKER:  F = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
+             pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = -1 }
+{{
+dgn.delayed_decay(_G, 'd', 'base draconian corpse w:5 / ' ..
+                           'base draconian skeleton / ' ..
+                           'shadow dragon corpse w:5 / ' ..
+                           'shadow dragon skeleton')
+}}
+MAP
+ .@xxxxxxxxxxxxxxxxxxxxxxx@.
+.x..cccccccCCCCCCCccccccc..x.
+@...cd.c.dcccccccccd.c.dc...@
+x...c.....cd.....dc.....c...x
+xc..c..c..c...c...c..c..c..cx
+xc..c..h..cF..i..Fc..h..c..cx
+xc..+.dHd.+...I...+.dHd.+..cx
+xc..c..h..cF..i..Fc..h..c..cx
+xc..c..c..c...c...c..c..c..cx
+x...c.....cd..{..dc.....c...x
+@...cd.c.dcccccccccd.c.dc...@
+.x..cccccccCCCCCCCccccccc..x.
+ .@xxxxxxxxxxxxxxxxxxxxxxx@.
+ENDMAP
+
+# Looks really weird and silly in layout_dis, so it's limited to the city layouts.
+NAME:    hangedman_dis_monolith
+TAGS:    transparent layout_city layout_chaotic_city
+DEPTH:   Dis:1-6
+ORIENT:  float
+MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
+         patrolling executioner
+MONS:    patrolling hell sentinel
+MONS:    iron devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
+         iron dragon zombie w:5 / iron troll skeleton w:5 / \
+         iron troll zombie w:5 / hell knight w:15
+MONS:    hellion / tormentor / reaper / \
+         dancing weapon w:20 ; glaive good_item | battleaxe good_item | \
+                               great sword good_item | great mace good_item
+SHUFFLE: ABa / CDb / EFc
+NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
+SUBST:   ABCDE = 3:19 4:1, a = +, bc = v, V : v.
+MAP
+.....................................................
+.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
+.vv.v..v.......v.......v.....v.......v.......v..v.vv.
+.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
+.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
+3vvAAAvvvvvvvvvvvvvvvvvvvCCCvvvvvvvvvvvvvvvvvvvEEEvv3
+4vvvavvvvvvvvvvvvvvvvvvvvvbvvvvvvvvvvvvvvvvvvvvvcvvv4
+3vvBBBvvvvvvvvvvvvvvvvvvvDDDvvvvvvvvvvvvvvvvvvvFFFvv3
+.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
+.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
+.vv.v..v.......v.......v.....v.......v.......v..v.vv.
+.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
+.....................................................
+ENDMAP
+
 ##############################################################################
 # Vestibule of Hell and Geryon
 ##############################################################################

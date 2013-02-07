@@ -294,6 +294,53 @@ MAP
   .....
 ENDMAP
 
+NAME:    hangedman_stitches_earthworm
+TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup mini_float abyss
+DEPTH:   D:16-, Spider:2-
+KMONS:   0 = 0
+KMONS:   1 = rock worm
+KMONS:   2 = boulder beetle
+KMONS:   3 = trapdoor spider / orb spider w:5
+KMONS:   4 = thrashing horror
+KMONS:   5 = rock worm / rock worm zombie w:14 / rock worm spectre w:1
+KITEM:   0.@ = stone no_pickup q:1 w:90 / nothing
+KITEM:   12345 = % w:90 no_pickup / * no_pickup
+SHUFFLE: ABCDEF / ABCDEF / ABCCBA, ABC, 13 / 13 / 31, {`
+SHUFFLE: '.12 / ..12 / .'12 / .'12 / ''12
+:  if you.branch() == "Abyss" then
+SUBST:   G = BEG, C : x:5 cvb, B : x:5 cvbw, A : xcvb w:4
+SUBST:   D: x:5 cvb, E : x:5 cvbw, F : xcvb w:4, { = '
+SUBST:   0 = 4:50 0, 1 = 5
+:  else
+SUBST:   { : {[( `:15, ` = '
+NSUBST:  { = 1:{ / 1:}, [ = 1:[ / 1:(, ( = 1:] / 1:)
+SUBST:   G = BEG, C: xc, B : x., A : xxc .:2
+SUBST:   D : xc, E : x .:5, F : xxc .:2
+:    if you.branch() == "Spider" then
+SUBST:   0 = 3:50 0
+:    else
+:      if you.absdepth() > 20 then
+SUBST: c : cb
+:      end
+:    end
+:  end
+MAP
+  '...      ..'.D.1.D.'..
+ '.'A..    ..'D'E'D'E'D'..
+..'0B..   ..'0E'F'E'F'E0'..
+.'ABC..   .'DEF.'.F.'.FED'.
+..''...   ..'..{.....`..'..
+.CBA'..   ..'DEF.. ..FED'..
+..'2...   ...2'..   ..1'...
+.'CBA..   ..AGF'.   .'FED..
+..'1...   ...'2..   ..2'...
+.CBA'... ...'ABC.   .FED'..
+..''.`.....{.''..   .....'.
+.'CBA.'.A.'.ABC'.   ..FED'.
+..'0B'A'B'A'B0'..   ..E0'..
+ ..'C'B'C'B'C'..    ..D'.'
+  ..'.C.1.C.'..      ...'
+ENDMAP
 
 ###############################################################################
 #
