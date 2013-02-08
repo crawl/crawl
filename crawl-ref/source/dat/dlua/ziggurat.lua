@@ -243,32 +243,25 @@ end
 
 mset(with_props("place:Slime:$", { jelly_protect = true }),
      "place:Snake:$ w:90 / greater naga w:5 / guardian serpent w:5",
-     with_props("place:Lair:$ w:85 / catoblepas w:6 / dire elephant w:5 / " ..
-                "hellephant w:3 / apis w:1", { weight = 5 }),
-     "place:Spider:$ w:115 / ghost moth / red wasp / " ..
+     with_props("place:Lair:$ w:85 / catoblepas w:6 / dire elephant w:6 / " ..
+                "hellephant w:3", { weight = 5 }),
+     "place:Spider:$ w:110 / ghost moth w:15 / red wasp / " ..
                 "orb spider / moth of suppression w:5",
      "place:Crypt:$ w:180 / vampire knight w:14 / lich w:3 / " ..
                 "unborn deep dwarf w:2 / curse toe w:1",
-     with_props("place:Lair:$ w:4 / place:Swamp:$ w:4 / place:Snake:$ w:4 / " ..
-                "place:Shoals:$ w:4 / place:Spider:$ w:4 / place:Slime:$ w:1 / " ..
-                "place:Orc:$ w:2 / place:Elf:$ w:4 / place:Vaults:$ w:8 /  " ..
-                "place:Crypt:$ w:4 / place:Abyss:$ w:1 / place:Geh:$ w:2 /  " ..
-                "place:Coc:$ w:2 / place:Dis:$ w:2 / place:Tar:$ w:2 / " ..
-                "place:Pan:$ w:2 / place:Zot:$ w:2 / boggart w:1 / " ..
-                "glowing shapeshifter hd:27 w:1", { weight = 2 }),
-     with_props("place:Abyss", { weight = 5}),
+     "place:Abyss",
      "place:Swamp:$ w:120 / hydra / swamp dragon / " ..
                 "green death w:6 / death drake w:4",
      "place:Shoals:$ w:125 / merfolk aquamancer w:15 / merfolk impaler w:4 / " ..
                 "merfolk javelineer w:4 / siren w:2",
-     with_props("place:Coc:$ w:980 / Ice Fiend w:5 / " ..
-                 "blizzard demon w:15", { weight = 5 }),
-     with_props("place:Geh:$ w:980 / Brimstone Fiend w:5 / " ..
-                 "balrug w:15", { weight = 5 }),
-     with_props("place:Dis:$ w:960 / Hell Sentinel w:5 / " ..
-                 "dancing weapon w:5 / iron dragon", { weight = 5 }),
-     with_props("place:Tar:$ w:960 / Shadow Fiend w:5 / " ..
-                 "curse toe w:5 / shadow demon", { weight = 5 }),
+     with_props("place:Coc:$ w:460 / Ice Fiend / " ..
+                 "blizzard demon w:30", { weight = 5 }),
+     with_props("place:Geh:$ w:460 / Brimstone Fiend / " ..
+                 "balrug w:30", { weight = 5 }),
+     with_props("place:Dis:$ w:460 / Hell Sentinel / " ..
+                 "dancing weapon / iron dragon w:20", { weight = 5 }),
+     with_props("place:Tar:$ w:460 / Shadow Fiend / " ..
+                 "curse toe / shadow demon w:20", { weight = 5 }),
      with_props("daeva / angel / cherub / pearl dragon / shedu band / ophan / " ..
                 "apis / paladin / w:5 phoenix / w:5 silver star", { weight = 2 }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
@@ -279,7 +272,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
                 "frost giant / ice devil / ice fiend / large simulacrum w:20 / " ..
                 "blizzard demon", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
-                "storm dragon / electric golem / spriggan air mage w:3", { weight = 2 }),
+                "storm dragon / electric golem / spriggan air mage", { weight = 2 }),
      with_props("swamp drake / fire drake / death drake / steam dragon / " ..
                 "swamp dragon / dragon / ice dragon / storm dragon / " ..
                 "iron dragon / shadow dragon / quicksilver dragon / " ..
