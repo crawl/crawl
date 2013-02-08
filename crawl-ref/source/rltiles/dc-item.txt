@@ -915,9 +915,9 @@ i-confusion POT_CONFUSION
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
+i-decay POT_DECAY
 # please remove when TAG_MAJOR_VERSION is bumped
 i-fizzing POT_REMOVE_ME
-i-decay POT_DECAY
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
 i-restore-abilities POT_RESTORE_ABILITIES
