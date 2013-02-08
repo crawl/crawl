@@ -1452,6 +1452,41 @@ static bool _can_force_door_shut(const coord_def& door)
     return true;
 }
 
+static bool _should_force_door_shut(const coord_def& door)
+{
+    if (grd(door) != DNGN_OPEN_DOOR)
+        return false;
+
+    dungeon_feature_type old_feat = grd(door);
+    int cur_tension = get_tension(GOD_NO_GOD);
+
+    set<coord_def> all_door;
+    find_connected_identical(door, grd(door), all_door);
+
+    for (set<coord_def>::const_iterator i = all_door.begin();
+        i != all_door.end(); ++i)
+    {
+        grd(*i) = DNGN_CLOSED_DOOR;
+        set_terrain_changed(*i);
+    }
+
+    int new_tension = get_tension(GOD_NO_GOD);
+
+    for (set<coord_def>::const_iterator i = all_door.begin();
+        i != all_door.end(); ++i)
+    {
+        grd(*i) = old_feat;
+        set_terrain_changed(*i);
+    }
+
+    // If closing the door would reduce player tension by too much, probably
+    // it is scarier for the player to leave it open and thus it should be left
+    // open
+
+    // Currently won't allow tension to be lowered by more than 33%
+    return (((cur_tension - new_tension) * 3) <= cur_tension);
+}
+
 static bool _seal_doors(const monster* warden)
 {
     ASSERT(warden && warden->type == MONS_VAULT_WARDEN);
@@ -1469,6 +1504,10 @@ static bool _seal_doors(const monster* warden)
                 continue;
 
             if (!_can_force_door_shut(*ri))
+                continue;
+
+            // If it's scarier to leave this door open, do so
+            if (!_should_force_door_shut(*ri))
                 continue;
 
             set<coord_def> all_door;
