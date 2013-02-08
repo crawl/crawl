@@ -280,9 +280,6 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
                 "blizzard demon", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
                 "storm dragon / electric golem / spriggan air mage w:3", { weight = 2 }),
-     with_props("clay golem / earth elemental / stone golem / iron golem / " ..
-                "catoblepas / boulder beetle / iron elemental / " ..
-                "crystal golem / stone giant / iron dragon", { weight = 2 }),
      with_props("swamp drake / fire drake / death drake / steam dragon / " ..
                 "swamp dragon / dragon / ice dragon / storm dragon / " ..
                 "iron dragon / shadow dragon / quicksilver dragon / " ..
