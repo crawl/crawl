@@ -757,16 +757,18 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         if (mons_genus(subtype) == MONS_DRAGON
             || mons_genus(subtype) == MONS_WYVERN)
         {
-            if (subtype == MONS_FIRE_DRAKE
-                || subtype == MONS_DEATH_DRAKE
-                || subtype == MONS_SWAMP_DRAKE
-                || subtype == MONS_MOTTLED_DRAGON
+            if (subtype == MONS_MOTTLED_DRAGON
                 || subtype == MONS_STEAM_DRAGON)
             {
                 z_tile = TILEP_MONS_ZOMBIE_DRAKE;
             }
             else
                 z_tile = TILEP_MONS_ZOMBIE_DRAGON;
+            break;
+        }
+        else if (mons_genus(subtype) == MONS_DRAKE)
+        {
+            z_tile = TILEP_MONS_ZOMBIE_DRAKE;
             break;
         }
         else if (mons_genus(subtype) == MONS_HYDRA)
