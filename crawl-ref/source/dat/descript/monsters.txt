@@ -2444,7 +2444,7 @@ on the spriggan forests and cairns will be able to just walk away.
 %%%%
 starcursed mass
 
-An mass of stellar detritus that glows with the sickly putrescence of a dying
+A mass of stellar detritus that glows with the sickly putrescence of a dying
 star, forever shrieking soundlessly in a voice beyond mortal grasp. Its form
 quivers and undulates constantly, dividing spontaneously and then withdrawing
 when threatened. While the voice of even a single one is unsettling, in chorus,
