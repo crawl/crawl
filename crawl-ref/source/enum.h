@@ -2549,7 +2549,9 @@ enum monster_type                      // menv[].type
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
 
+#if TAG_MAJOR_VERSION == 34
     MONS_ARACHNOID,             // genus
+#endif
 
     NUM_MONSTERS,               // used for polymorph
 
