@@ -876,6 +876,11 @@ string monster_info::_apply_adjusted_description(description_level_type desc,
 
 string monster_info::common_name(description_level_type desc) const
 {
+    const string core = _core_name();
+    const bool nocore = mons_class_is_zombified(type)
+                        && mons_is_unique(base_type)
+                        && base_type == mons_species(base_type);
+
     ostringstream ss;
 
     if (props.exists("helpless"))
@@ -884,7 +889,7 @@ string monster_info::common_name(description_level_type desc) const
     if (is(MB_SUBMERGED))
         ss << "submerged ";
 
-    if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE))
+    if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";
 
     if (type == MONS_BALLISTOMYCETE)
@@ -905,9 +910,6 @@ string monster_info::common_name(description_level_type desc) const
         ss << "-headed ";
     }
 
-    string core = _core_name();
-    bool nocore = (mons_class_is_zombified(type) && mons_is_unique(base_type)
-                   && base_type == mons_species(base_type));
     if (!nocore)
         ss << core;
 
@@ -928,6 +930,10 @@ string monster_info::common_name(description_level_type desc) const
     case MONS_SIMULACRUM_LARGE:
         if (!is(MB_NAME_ZOMBIE))
             ss << (nocore ? "" : " ") << "simulacrum";
+        break;
+    case MONS_SPECTRAL_THING:
+        if (nocore)
+            ss << "spectre";
         break;
     case MONS_PILLAR_OF_SALT:
         ss << (nocore ? "" : " ") << "shaped pillar of salt";
