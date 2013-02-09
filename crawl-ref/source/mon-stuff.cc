@@ -1749,11 +1749,11 @@ int monster_die(monster* mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
-    else if (mons->type == MONS_ARCANE_FAMILIAR)
+    else if (mons->type == MONS_BATTLESPHERE)
     {
         if (!wizard && !mons_reset && !was_banished)
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
-        end_arcane_familiar(true);
+        end_battlesphere(true);
     }
 
     const bool death_message = !silent && !did_death_message

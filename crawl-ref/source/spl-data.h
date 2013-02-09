@@ -2905,7 +2905,7 @@ struct spell_desc
 },
 
 {
-    SPELL_ARCANE_FAMILIAR, "Iskenderun's Arcane Familiar",
+    SPELL_BATTLESPHERE, "Iskenderun's Battlesphere",
       SPTYP_CONJURATION | SPTYP_CHARMS,
       SPFLAG_NONE,
       4,

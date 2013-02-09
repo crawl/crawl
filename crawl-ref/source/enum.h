@@ -1475,7 +1475,7 @@ enum duration_type
 #endif
     DUR_DISJUNCTION,
     DUR_VEHUMET_GIFT,
-    DUR_ARCANE_FAMILIAR,
+    DUR_BATTLESPHERE,
     NUM_DURATIONS
 };
 
@@ -2544,7 +2544,7 @@ enum monster_type                      // menv[].type
     MONS_LAMIA,
 
     MONS_FULMINANT_PRISM,
-    MONS_ARCANE_FAMILIAR,
+    MONS_BATTLESPHERE,
 
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
@@ -3329,7 +3329,7 @@ enum spell_type
     SPELL_CHAOS_BREATH,
     SPELL_FRENZY,
     SPELL_SUMMON_TWISTER,
-    SPELL_ARCANE_FAMILIAR,
+    SPELL_BATTLESPHERE,
     SPELL_FULMINANT_PRISM,
     SPELL_DAZZLING_SPRAY,
     SPELL_FORCE_LANCE,

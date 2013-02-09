@@ -30,7 +30,7 @@ tornado TORNADO
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
 orb_of_destruction IOOD
-arcane_familiar ARCANE_FAMILIAR
+battlesphere BATTLESPHERE
 dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM

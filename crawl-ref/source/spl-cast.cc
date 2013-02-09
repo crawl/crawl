@@ -1192,14 +1192,14 @@ spret_type your_spells(spell_type spell, int powc,
         _maybe_cancel_repeat(spell);
 
     // Have to set aim first, in case the spellcast kills its first target
-    if (you.duration[DUR_ARCANE_FAMILIAR] && allow_fail)
-        aim_arcane_familiar(spell, powc, beam);
+    if (you.duration[DUR_BATTLESPHERE] && allow_fail)
+        aim_battlesphere(spell, powc, beam);
 
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
     {
     case SPRET_SUCCESS:
-        if (you.duration[DUR_ARCANE_FAMILIAR] && allow_fail)
-            trigger_arcane_familiar(beam);
+        if (you.duration[DUR_BATTLESPHERE] && allow_fail)
+            trigger_battlesphere(beam);
         _spellcasting_side_effects(spell, powc, god);
         return SPRET_SUCCESS;
 
@@ -1467,8 +1467,8 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_DEATH_CHANNEL:
         return cast_death_channel(powc, god, fail);
 
-    case SPELL_ARCANE_FAMILIAR:
-        return cast_arcane_familiar(powc, god, fail);
+    case SPELL_BATTLESPHERE:
+        return cast_battlesphere(powc, god, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:

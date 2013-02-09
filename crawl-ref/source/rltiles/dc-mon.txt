@@ -242,7 +242,7 @@ orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
 orb_of_destruction2
 orb_of_destruction3
-arcane_familiar MONS_ARCANE_FAMILIAR
+battlesphere MONS_BATTLESPHERE
 fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3

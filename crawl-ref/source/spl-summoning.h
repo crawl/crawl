@@ -82,12 +82,12 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 spret_type cast_abjuration(int pow, const coord_def& where, bool fail = false);
 spret_type cast_mass_abjuration(int pow, bool fail = false);
 
-spret_type cast_arcane_familiar(int pow, god_type god, bool fail);
-void end_arcane_familiar(bool killed);
-bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam);
-bool trigger_arcane_familiar(bolt& beam);
-bool fire_arcane_familiar(monster* mons);
-void reset_arcane_familiar(monster* mons);
+spret_type cast_battlesphere(int pow, god_type god, bool fail);
+void end_battlesphere(bool killed);
+bool aim_battlesphere(spell_type spell, int powc, bolt& beam);
+bool trigger_battlesphere(bolt& beam);
+bool fire_battlesphere(monster* mons);
+void reset_battlesphere(monster* mons);
 
 spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail);
 #endif

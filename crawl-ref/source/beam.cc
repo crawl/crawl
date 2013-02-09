@@ -4627,11 +4627,11 @@ bool bolt::ignores_monster(const monster* mon) const
     if (!mon)
         return false;
 
-    // All kinds of beams go past orbs of destruction and arcane familiars.
+    // All kinds of beams go past orbs of destruction and battlespheres.
     // We don't check mons_is_projectile() since that probably won't be the
     // case for rolling boulders.
     if (mon->type == MONS_ORB_OF_DESTRUCTION
-        || mon->type == MONS_ARCANE_FAMILIAR)
+        || mon->type == MONS_BATTLESPHERE)
     {
         return true;
     }

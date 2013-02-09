@@ -302,7 +302,7 @@ void handle_behaviour(monster* mon)
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->berserk()
         && mon->type != MONS_GIANT_SPORE
-        && mon->type != MONS_ARCANE_FAMILIAR)
+        && mon->type != MONS_BATTLESPHERE)
     {
         if  (!crawl_state.game_is_zotdef())
         {
@@ -844,7 +844,7 @@ static void _set_nearest_monster_foe(monster* mon)
 {
     // These don't look for foes.
     if (mon->good_neutral() || mon->strict_neutral()
-            || mon->type == MONS_ARCANE_FAMILIAR)
+            || mon->type == MONS_BATTLESPHERE)
         return;
 
     const bool friendly = mon->friendly();
@@ -1167,7 +1167,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player() && mon->type != MONS_ARCANE_FAMILIAR)
+        if (src->is_player() && mon->type != MONS_BATTLESPHERE)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;

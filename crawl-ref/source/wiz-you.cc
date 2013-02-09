@@ -802,7 +802,7 @@ static const char* dur_names[] =
 #endif
     "disjunction",
     "vehumet gift",
-    "arcane familiar"
+    "battlesphere"
 };
 
 void wizard_edit_durations(void)

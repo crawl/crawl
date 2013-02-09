@@ -711,7 +711,7 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_TWISTER
-           || mc == MONS_ARCANE_FAMILIAR
+           || mc == MONS_BATTLESPHERE
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
            || mc == MONS_LURKING_HORROR
@@ -1152,7 +1152,7 @@ bool mons_is_conjured(monster_type mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_ARCANE_FAMILIAR
+           || mc == MONS_BATTLESPHERE
            || mc == MONS_FULMINANT_PRISM;
 }
 
