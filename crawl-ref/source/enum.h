@@ -2549,9 +2549,7 @@ enum monster_type                      // menv[].type
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
 
-#if TAG_MAJOR_VERSION == 34
     MONS_ARACHNOID,             // genus
-#endif
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3669,7 +3667,7 @@ enum tile_flags
     TILE_FLAG_CONSTRICTED= 0x20000000ULL,
     TILE_FLAG_SLOWED     = 0x8000000000ULL,
     TILE_FLAG_PAIN_MIRROR = 0x10000000000ULL,
-    //TILE_FLAG_UNUSED     = 0x20000000000ULL,
+    TILE_FLAG_HASTED     = 0x20000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,
