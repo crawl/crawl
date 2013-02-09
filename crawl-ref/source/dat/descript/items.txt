@@ -1678,9 +1678,8 @@ may be hazardous to you or your surroundings!
 %%%%
 trident
 
-A fishing spear improved with a longer shaft and a three-pronged metal head. It
-can be wielded with one or two hands, but due to the added weight it cannot be
-thrown effectively.
+A fishing spear improved with a longer shaft and a three-pronged metal head.
+Due to the added weight it cannot be thrown effectively.
 %%%%
 triple sword
 
