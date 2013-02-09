@@ -2766,7 +2766,7 @@ bool fire_battlesphere(monster* mons)
         // from which we could safely fire at it
         else
         {
-            bool empty_beam = (beam.foe_info.count == 0);
+            const bool empty_beam = (beam.foe_info.count == 0);
             for (distance_iterator di(mons->pos(), true, true, 2); di; ++di)
             {
                 if (*di == beam.target || actor_at(*di)

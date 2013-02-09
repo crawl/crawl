@@ -2264,7 +2264,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         else
         {
-            bool battlesphere = (find_battlesphere(mons) != NULL);
+            const bool battlesphere = (find_battlesphere(mons) != NULL);
             if (spell_needs_foe(spell_cast))
                 make_mons_stop_fleeing(mons);
 
