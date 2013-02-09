@@ -1829,7 +1829,7 @@ void handle_monster_move(monster* mons)
         if (just_once)
         {
             move_demon_tentacle(mons);
-            reset_arcane_familiar(mons);
+            reset_battlesphere(mons);
             just_once = false;
         }
 
@@ -1896,9 +1896,9 @@ void handle_monster_move(monster* mons)
             continue;
         }
 
-        if (mons->type == MONS_ARCANE_FAMILIAR)
+        if (mons->type == MONS_BATTLESPHERE)
         {
-            if (fire_arcane_familiar(mons))
+            if (fire_battlesphere(mons))
                 mons->lose_energy(EUT_SPECIAL);
         }
 
@@ -3832,8 +3832,8 @@ static bool _monster_move(monster* mons)
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(mons, mmov);
 
-    // Familiars need to preserve their tracking targets after each move
-    if (mons_is_wandering(mons) && mons->type != MONS_ARCANE_FAMILIAR)
+    // Battlespheres need to preserve their tracking targets after each move
+    if (mons_is_wandering(mons) && mons->type != MONS_BATTLESPHERE)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();

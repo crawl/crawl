@@ -371,13 +371,13 @@ This spell hides a creature from the sight of others. While invisible you will
 gain magical contamination, which may eventually cause enough glow to make you
 visible again.
 %%%%
-Iskenderun's Arcane Familiar spell
+Iskenderun's Battlesphere spell
 
 This spell conjures a small globe of magical energy linked to the caster's own
 reserves of power, which will hover alongside its creator and augment their
-destructive might. While the familiar cannot take independent action, it will
-fire volleys of energy at the caster's enemies in near-perfect sync with its
-creator's own destructive conjurations.
+destructive might. While the battlesphere cannot take independent action, it
+will fire volleys of energy at the caster's enemies in near-perfect sync with
+its creator's own destructive conjurations.
 %%%%
 Iskenderun's Mystic Blast spell
 

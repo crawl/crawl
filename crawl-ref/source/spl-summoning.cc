@@ -2409,63 +2409,63 @@ spret_type cast_mass_abjuration(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-static monster* _find_arcane_familiar()
+static monster* _find_battlesphere()
 {
     monster* mons = NULL;
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         mons = &menv[i];
-        if (mons->type == MONS_ARCANE_FAMILIAR)
+        if (mons->type == MONS_BATTLESPHERE)
             return mons;
     }
 
     return NULL;
 }
 
-spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
+spret_type cast_battlesphere(int pow, god_type god, bool fail)
 {
-    if (you.duration[DUR_ARCANE_FAMILIAR] > 0)
+    if (you.duration[DUR_BATTLESPHERE] > 0)
     {
-        monster* familiar = _find_arcane_familiar();
+        monster* battlesphere = _find_battlesphere();
         bool recalled = false;
-        if (!you.can_see(familiar))
+        if (!you.can_see(battlesphere))
         {
             coord_def empty;
             if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
-                && familiar->move_to_pos(empty))
+                && battlesphere->move_to_pos(empty))
             {
                 recalled = true;
             }
         }
 
         if (recalled)
-            mpr("You recall your familiar and imbue it with additional charge.");
+            mpr("You recall your battlesphere and imbue it with additional charge.");
         else
-            mpr("You imbue your familiar with additional charge.");
+            mpr("You imbue your battlesphere with additional charge.");
 
-        familiar->number = min(20, (int) familiar->number
+        battlesphere->number = min(20, (int) battlesphere->number
                                    + 4 + random2(pow + 10) / 10);
-        you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice(2, pow), 50);
+        you.increase_duration(DUR_BATTLESPHERE, 7 + roll_dice(2, pow), 50);
     }
     else
     {
-        mgen_data mg (MONS_ARCANE_FAMILIAR,
+        mgen_data mg (MONS_BATTLESPHERE,
                 BEH_FRIENDLY,
                 &you,
-                0, SPELL_ARCANE_FAMILIAR,
+                0, SPELL_BATTLESPHERE,
                 you.pos(),
                 MHITYOU,
                 0, god,
                 MONS_NO_MONSTER, 0, BLACK,
                 0);
         mg.hd = 1 + div_rand_round(pow, 11);
-        monster *familiar = create_monster(mg);
+        monster *battlesphere = create_monster(mg);
 
-        if (familiar)
+        if (battlesphere)
         {
             mpr("You conjure a globe of magical energy.");
-            you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice(2, pow), 50);
-            familiar->number = 4 + random2(pow + 10) / 10;
+            you.increase_duration(DUR_BATTLESPHERE, 7 + roll_dice(2, pow), 50);
+            battlesphere->number = 4 + random2(pow + 10) / 10;
         }
         else
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -2474,33 +2474,33 @@ spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-void end_arcane_familiar(bool killed)
+void end_battlesphere(bool killed)
 {
-    you.duration[DUR_ARCANE_FAMILIAR] = 0;
+    you.duration[DUR_BATTLESPHERE] = 0;
     if (!killed)
     {
-        monster *familiar = _find_arcane_familiar();
+        monster *battlesphere = _find_battlesphere();
         //Should only happen if you dismiss it in wizard mode, I think
-        if (familiar)
+        if (battlesphere)
         {
-            if (you.can_see(familiar))
+            if (you.can_see(battlesphere))
             {
-                if ((familiar->number == 0))
-                    mpr("Your arcane familiar expends the last of its energy and dissipates.");
+                if ((battlesphere->number == 0))
+                    mpr("Your battlesphere expends the last of its energy and dissipates.");
                 else
-                    mpr("Your arcane familiar wavers and loses cohesion.");
+                    mpr("Your battlesphere wavers and loses cohesion.");
             }
             else
-                mpr("You feel your bond with your familiar wane.");
+                mpr("You feel your bond with your battlesphere wane.");
 
-            place_cloud(CLOUD_MAGIC_TRAIL, familiar->pos(), 3 + random2(3), familiar);
+            place_cloud(CLOUD_MAGIC_TRAIL, battlesphere->pos(), 3 + random2(3), battlesphere);
 
-            monster_die(familiar, KILL_RESET, NON_MONSTER);
+            monster_die(battlesphere, KILL_RESET, NON_MONSTER);
         }
     }
 }
 
-static bool _familiar_can_mirror(spell_type spell)
+static bool _battlesphere_can_mirror(spell_type spell)
 {
     return ((spell_typematch(spell, SPTYP_CONJURATION)
             && spell_to_zap(spell) != NUM_ZAPS)
@@ -2509,27 +2509,27 @@ static bool _familiar_can_mirror(spell_type spell)
             || spell == SPELL_DAZZLING_SPRAY);
 }
 
-bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
+bool aim_battlesphere(spell_type spell, int powc, bolt& beam)
 {
-    //Is this spell something that will trigger the familiar?
-    if (_familiar_can_mirror(spell))
+    //Is this spell something that will trigger the battlesphere?
+    if (_battlesphere_can_mirror(spell))
     {
-        monster* familiar = _find_arcane_familiar();
+        monster* battlesphere = _find_battlesphere();
 
-        // If we've somehow gotten separated from the familiar (ie: abyss level
-        // teleport), bail out and cancel the familiar bond
-        if (!familiar)
+        // If we've somehow gotten separated from the battlesphere (ie: abyss level
+        // teleport), bail out and cancel the battlesphere bond
+        if (!battlesphere)
         {
-            end_arcane_familiar(false);
+            end_battlesphere(false);
             return false;
         }
 
-        // In case the familiar was in the middle of a (failed) target-seeking
+        // In case the battlesphere was in the middle of a (failed) target-seeking
         // action, cancel it so that it can focus on a new target
-        reset_arcane_familiar(familiar);
+        reset_battlesphere(battlesphere);
 
         // Don't try to fire at ourselves
-        if (beam.target == familiar->pos())
+        if (beam.target == battlesphere->pos())
             return false;
 
         // If the player beam is targeted at a creature, aim at this creature.
@@ -2537,8 +2537,8 @@ bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
         bolt testbeam;
         zappy(spell_to_zap(spell), powc, testbeam);
 
-        familiar->props["firing_target"] = beam.target;
-        familiar->props.erase("foe");
+        battlesphere->props["firing_target"] = beam.target;
+        battlesphere->props.erase("foe");
         if (!monster_at(beam.target))
         {
             beam.is_tracer = true;
@@ -2548,25 +2548,25 @@ bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
             for (vector<coord_def>::const_reverse_iterator i = beam.path_taken.rbegin();
                 i != beam.path_taken.rend(); ++i)
             {
-                if (*i != familiar->pos() && monster_at(*i))
+                if (*i != battlesphere->pos() && monster_at(*i))
                 {
-                    familiar->props["firing_target"] = *i;
-                    familiar->foe = monster_at(*i)->mindex();
-                    familiar->props["foe"] = familiar->foe;
+                    battlesphere->props["firing_target"] = *i;
+                    battlesphere->foe = monster_at(*i)->mindex();
+                    battlesphere->props["foe"] = battlesphere->foe;
                 }
             }
 
             // If we're firing at empty air, lose any prior target lock
-            if (!familiar->props.exists("foe"))
-                familiar->foe = MHITYOU;
+            if (!battlesphere->props.exists("foe"))
+                battlesphere->foe = MHITYOU;
         }
         else
         {
-            familiar->foe = monster_at(beam.target)->mindex();
-            familiar->props["foe"] = familiar->foe;
+            battlesphere->foe = monster_at(beam.target)->mindex();
+            battlesphere->props["foe"] = battlesphere->foe;
         }
 
-        familiar->props["ready"] = true;
+        battlesphere->props["ready"] = true;
 
         return true;
     }
@@ -2574,17 +2574,17 @@ bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
     return false;
 }
 
-bool trigger_arcane_familiar(bolt& beam)
+bool trigger_battlesphere(bolt& beam)
 {
-    monster* familiar = _find_arcane_familiar();
-    if (!familiar)
+    monster* battlesphere = _find_battlesphere();
+    if (!battlesphere)
         return false;
 
-    if (familiar->props.exists("ready"))
+    if (battlesphere->props.exists("ready"))
     {
-        // If the familiar is aiming at empty air but the triggering conjuration
+        // If the battlesphere is aiming at empty air but the triggering conjuration
         // is an explosion, try to find something to shoot within the blast
-        if (!familiar->props.exists("foe") && beam.is_explosion)
+        if (!battlesphere->props.exists("foe") && beam.is_explosion)
         {
             explosion_map exp_map;
             exp_map.init(INT_MAX);
@@ -2595,19 +2595,19 @@ bool trigger_arcane_familiar(bolt& beam)
                 if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
                 {
                     const monster *targ = monster_at(*ri);
-                    if (targ && targ != familiar)
+                    if (targ && targ != battlesphere)
                     {
-                        familiar->props["firing_target"] = *ri;
-                        familiar->foe = targ->mindex();
-                        familiar->props["foe"] = familiar->foe;
+                        battlesphere->props["firing_target"] = *ri;
+                        battlesphere->foe = targ->mindex();
+                        battlesphere->props["foe"] = battlesphere->foe;
                         continue;
                     }
                 }
             }
         }
 
-        familiar->props.erase("ready");
-        familiar->props["firing"] = true;
+        battlesphere->props.erase("ready");
+        battlesphere->props["firing"] = true;
         return true;
     }
 
@@ -2615,11 +2615,11 @@ bool trigger_arcane_familiar(bolt& beam)
 }
 
 // Called at the start of each round. Cancels firing orders given in the previous
-// round, if the familiar was not able to execute them fully before the next
+// round, if the battlesphere was not able to execute them fully before the next
 // player action
-void reset_arcane_familiar(monster* mons)
+void reset_battlesphere(monster* mons)
 {
-    if (!mons || mons->type != MONS_ARCANE_FAMILIAR)
+    if (!mons || mons->type != MONS_BATTLESPHERE)
         return;
 
     mons->props.erase("ready");
@@ -2634,9 +2634,9 @@ void reset_arcane_familiar(monster* mons)
     }
 }
 
-bool fire_arcane_familiar(monster* mons)
+bool fire_battlesphere(monster* mons)
 {
-    if (!mons || !mons->type == MONS_ARCANE_FAMILIAR)
+    if (!mons || !mons->type == MONS_BATTLESPHERE)
         return false;
 
     bool used = false;
@@ -2660,14 +2660,14 @@ bool fire_arcane_familiar(monster* mons)
         }
         else
         {
-            // If the familiar forgot its foe (due to being out of los), remind it
+            // If the battlesphere forgot its foe (due to being out of los), remind it
             if (mons->props.exists("foe"))
                 mons->foe = mons->props["foe"].get_int();
         }
 
         // Set up the beam.
         bolt beam;
-        beam.source_name = "arcane familiar";
+        beam.source_name = "battlesphere";
 
         // If we are locked onto a foe, use its current position
         if (!invalid_monster_index(mons->foe) && menv[mons->foe].alive())
@@ -2678,7 +2678,7 @@ bool fire_arcane_familiar(monster* mons)
         // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
-            mpr("Arcane familiar targetting itself? Fixing.", MSGCH_ERROR);
+            mpr("Battlesphere targetting itself? Fixing.", MSGCH_ERROR);
             mons->props.erase("firing");
             mons->props.erase("firing_target");
             mons->props.erase("foe");
@@ -2710,9 +2710,9 @@ bool fire_arcane_familiar(monster* mons)
             beam.fire();
 
             used = true;
-            // Decrement # of volleys left and possibly expire the familiar.
+            // Decrement # of volleys left and possibly expire the battlesphere.
             if (--mons->number == 0)
-                end_arcane_familiar(false);
+                end_battlesphere(false);
 
             mons->props.erase("firing");
         }

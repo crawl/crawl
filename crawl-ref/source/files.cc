@@ -1077,8 +1077,8 @@ static void _grab_followers()
         monster* mons = &menv[i];
         if (!mons->alive())
             continue;
-        if (mons->type == MONS_ARCANE_FAMILIAR)
-            end_arcane_familiar(false);
+        if (mons->type == MONS_BATTLESPHERE)
+            end_battlesphere(false);
         mons->flags &= ~MF_TAKING_STAIRS;
     }
 }

@@ -2500,7 +2500,7 @@ static bool _dazzle_can_hit(const actor *act)
         testbeam.thrower = KILL_YOU;
         zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
 
-        return (mons->type != MONS_ARCANE_FAMILIAR
+        return (mons->type != MONS_BATTLESPHERE
                 && mons->type != MONS_ORB_OF_DESTRUCTION
                 && mons->type != MONS_BUSH
                 && !fedhas_shoot_through(testbeam, mons));
