@@ -2772,7 +2772,9 @@ bool fire_battlesphere(monster* mons)
                 if (*di == beam.target || actor_at(*di)
                     || feat_is_solid(grd(*di))
                     || !agent->see_cell(*di))
+                {
                     continue;
+                }
 
                 beam.source = *di;
                 beam.is_tracer = true;
@@ -2781,15 +2783,14 @@ bool fire_battlesphere(monster* mons)
                 if (beam.friend_info.count == 0
                     && (beam.foe_info.count > 0 || empty_beam))
                 {
-                    if (empty_beam &&
-                        find(beam.path_taken.begin(), beam.path_taken.end(),
-                             beam.target)
-                        == beam.path_taken.end())
+                    if (empty_beam
+                        && find(beam.path_taken.begin(), beam.path_taken.end(),
+                                beam.target) == beam.path_taken.end())
                     {
                         continue;
                     }
 
-                    mons->firing_pos = coord_def(0,0);
+                    mons->firing_pos = coord_def(0, 0);
                     mons->target = *di;
                     mons->behaviour = BEH_WANDER;
                     mons->props["foe"] = mons->foe;
