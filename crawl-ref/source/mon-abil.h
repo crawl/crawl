@@ -28,4 +28,5 @@ void move_demon_tentacle(monster * tentacle);
 void ancient_zyme_sicken(monster* mons);
 void starcursed_merge(monster* mon, bool forced);
 
+
 #endif

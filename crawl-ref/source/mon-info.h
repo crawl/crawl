@@ -86,6 +86,7 @@ enum monster_info_flags
     MB_STONESKIN,
     MB_WRETCHED,
     MB_SCREAMED,
+    MB_WORD_OF_RECALL,
     NUM_MB_FLAGS
 };
 

@@ -155,6 +155,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_WRETCHED;
     case ENCH_SCREAMED:
         return MB_SCREAMED;
+    case ENCH_WORD_OF_RECALL:
+        return MB_WORD_OF_RECALL;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1427,6 +1429,8 @@ vector<string> monster_info::attributes() const
         v.push_back("covered in an icy film");
     if (is(MB_WRETCHED))
         v.push_back("misshapen and mutated");
+    if (is(MB_WORD_OF_RECALL))
+        v.push_back("chanting recall");
     return v;
 }
 

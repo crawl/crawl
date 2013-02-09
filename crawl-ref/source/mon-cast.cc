@@ -1111,6 +1111,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FRENZY:
     case SPELL_SUMMON_TWISTER:
     case SPELL_BATTLESPHERE:
+    case SPELL_WORD_OF_RECALL:
         return true;
     default:
         if (check_validity)
@@ -1709,6 +1710,69 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
         god = mons->god;
 }
 
+
+static bool _recallable(monster* caller, monster* targ)
+{
+    return (targ->alive() && mons_intel(targ) >= I_NORMAL
+            && targ->attitude == caller->attitude
+            && !mons_class_is_stationary(targ->type)
+            && !mons_is_conjured(targ->type)
+            && monster_habitable_grid(targ, DNGN_FLOOR)); //XXX?
+}
+
+// Is it worth bothering to invoke recall? (Currently defined by there being at
+// least 3 things we could actually recall
+static bool _should_recall(monster* caller)
+{
+    int num = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (_recallable(caller, *mi) && !caller->can_see(*mi))
+            ++num;
+    }
+    return (num > 2);
+}
+
+void mons_word_of_recall(monster* mons)
+{
+    int num_recalled = 0;
+    int recall_target = 3 + random2(5);
+    vector<monster* > mon_list;
+
+    // Build the list of recallable monsters and randomize
+    for (monster_iterator mi; mi; ++mi)
+    {
+        // Don't recall ourselves
+        if (*mi == mons)
+            continue;
+
+        if (!_recallable(mons, *mi))
+            continue;
+
+        // Don't recall things that are already close to us
+        if (mons->can_see(*mi))
+            continue;
+
+        mon_list.push_back(*mi);
+    }
+    random_shuffle(mon_list.begin(), mon_list.end());
+
+    // Now actually recall things
+    for (unsigned int i = 0; i < mon_list.size(); ++i)
+    {
+        coord_def empty;
+        if (empty_surrounds(mons->pos(), DNGN_FLOOR, 3, false, empty)
+            && mon_list[i]->move_to_pos(empty))
+        {
+            ++num_recalled;
+            simple_monster_message(mon_list[i], " is recalled.");
+        }
+        // Can only recall a couple things at once
+        if (num_recalled == recall_target)
+            break;
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -2225,6 +2289,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         else if (spell_cast == SPELL_CREATE_TENTACLES)
         {
             if (!_mons_available_tentacles(mons))
+                return false;
+        }
+        // Only cast word of recall if there's enough things to bother recalling
+        else if (spell_cast == SPELL_WORD_OF_RECALL)
+        {
+            if (!_should_recall(mons))
                 return false;
         }
 
@@ -4239,6 +4309,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 0, mons,
                                    BASELINE_DELAY *
                                    (20 + random2(power) + random2(power))));
+
+        return;
+    }
+
+    case SPELL_WORD_OF_RECALL:
+    {
+        mon_enchant recall_timer =
+            mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
+        mons->add_ench(recall_timer);
+        mons->speed_increment -= 30;
 
         return;
     }

@@ -27,6 +27,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
 void mons_cast_haunt(monster* mons);
 void mons_cast_mislead(monster* mons);
+void mons_word_of_recall(monster* mons);
 bool actor_is_illusion_cloneable(actor *target);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
