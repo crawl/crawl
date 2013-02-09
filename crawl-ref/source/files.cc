@@ -1078,7 +1078,7 @@ static void _grab_followers()
         if (!mons->alive())
             continue;
         if (mons->type == MONS_BATTLESPHERE)
-            end_battlesphere(false);
+            end_battlesphere(mons, false);
         mons->flags &= ~MF_TAKING_STAIRS;
     }
 }

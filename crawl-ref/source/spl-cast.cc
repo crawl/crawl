@@ -1193,13 +1193,13 @@ spret_type your_spells(spell_type spell, int powc,
 
     // Have to set aim first, in case the spellcast kills its first target
     if (you.duration[DUR_BATTLESPHERE] && allow_fail)
-        aim_battlesphere(spell, powc, beam);
+        aim_battlesphere(&you, spell, powc, beam);
 
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
     {
     case SPRET_SUCCESS:
         if (you.duration[DUR_BATTLESPHERE] && allow_fail)
-            trigger_battlesphere(beam);
+            trigger_battlesphere(&you, beam);
         _spellcasting_side_effects(spell, powc, god);
         return SPRET_SUCCESS;
 
@@ -1468,7 +1468,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_death_channel(powc, god, fail);
 
     case SPELL_BATTLESPHERE:
-        return cast_battlesphere(powc, god, fail);
+        return cast_battlesphere(&you, powc, god, fail);
 
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
