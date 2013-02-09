@@ -8,7 +8,7 @@ hypervaults.floors = {}
 
 function floor_vault_paint_callback(room,options)
   return {
-    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 }},
+    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 }, empty = true},
   }
 end
 

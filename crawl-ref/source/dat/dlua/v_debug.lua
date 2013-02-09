@@ -20,9 +20,10 @@ function dump_layout_grid(layout_grid)
     local maprow = ""
     for j = 0, gxm-1, 1 do
       local cell = layout_grid[i][j]
-      if cell.solid then maprow = maprow .. "x"
+      if cell.space then maprow = maprow .. " "
       elseif cell.solid == false then maprow = maprow .. "."
-      else maprow = maprow .. " " end
+      elseif cell.solid == true then maprow = maprow .. "x"
+      else maprow = maprow .. "?" end
     end
     print (maprow)
   end
@@ -54,6 +55,27 @@ function dump_usage_grid(usage_grid)
     print (maprow)
   end
 
+end
+
+function dump_mask_grid(room)
+
+  for y = -1, room.size.y, 1 do
+    maprow = ""
+    for x = -1, room.size.x, 1 do
+      cell = room.mask_grid[y][x]
+      local char = " "
+      if cell.wall then
+        if cell.dir == 0 then char = "^"
+        elseif cell.dir == 1 then char = "<"
+        elseif cell.dir == 2 then char = "v"
+        elseif cell.dir == 3 then char = ">"
+        elseif cell.dir == nil then char = "x"
+        else char = "?" end
+      end
+      maprow = maprow .. char
+    end
+    print(maprow)
+  end
 end
 
 function dump_usage_grid_pretty(usage_grid)
