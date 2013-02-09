@@ -189,7 +189,7 @@ local function pick_room(e, options)
             local all_space = true
             for ax = n-1, n+1, 1 do
               for ay = m-1, m+1, 1 do
-                if ax ~= n and ay ~= m then
+                if ax ~= n or ay ~= m then
                   local near_cell = vaults_get_layout(room.grid,ax,ay)
                   if not near_cell.space then all_space = false end
                 end
@@ -261,6 +261,10 @@ local function pick_room(e, options)
         veto = options.veto_room_callback(room)
       end
     end
+  end
+
+  if _VAULTS_DEBUG then
+    dump_mask_grid(room)
   end
 
   return room
@@ -502,7 +506,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local is_clear, room_width, room_height = true, room.size.x, room.size.y
 
   -- Figure out the mapped x and y vectors of the room relative to its orient
-  local room_final_y_dir = (v_normal_dir - chosen_wall.dir + 2) % 4
+  local room_final_y_dir = (v_normal_dir + chosen_wall.dir + 2) % 4
   local room_final_x_dir = (room_final_y_dir + 1) % 4
   local room_final_x_normal = hypervaults.normals[room_final_x_dir+1]
   local room_final_y_normal = hypervaults.normals[room_final_y_dir+1]
@@ -636,7 +640,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
     if mask_cell.vault then
       if grid_cell.empty then
-        vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "open" })
+        vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "empty" })
       else
         vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "restricted", room = room, reason = "vault" })
       end

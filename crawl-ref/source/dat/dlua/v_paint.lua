@@ -228,6 +228,17 @@ local function inside_oval(x,y,item)
   return ((math.pow(x-h,2)/math.pow(rx,2) + math.pow(y-k,2)/math.pow(ry,2))<=1)
 end
 
+local function inside_trapese(x,y,item)
+
+  local width1 = item.width1
+  local width2 = item.width2
+  if width1 == nil then width1 = 0 end
+  if width2 == nil then width2 = 1 end
+
+  return true
+
+end
+
 function paint_grid(paint, options, grid)
 
   for i,item in ipairs(paint) do
@@ -251,12 +262,12 @@ function paint_grid(paint, options, grid)
     local solid = not space and not feat.has_solid_floor(feature)
     local empty = (item.empty ~= nil and item.empty)
     -- Paint features onto grid
-    if shape_type == "quad" or shape_type == "ellipse" then
+    if shape_type == "quad" or shape_type == "ellipse" or shape_type == "trapese" then
       -- TODO: shape types are begging to be modularised
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
         for y = item.corner1.y, item.corner2.y, 1 do
-          if shape_type == "quad" or (shape_type == "ellipse" and inside_oval(x,y,item)) then
+          if shape_type == "quad" or (shape_type == "ellipse" and inside_oval(x,y,item)) or (shape_type == "trapese" and inside_trapese(x,y,item)) then
             local ax,ay = x,y
             if item.wrap then
               ax = x % grid.width

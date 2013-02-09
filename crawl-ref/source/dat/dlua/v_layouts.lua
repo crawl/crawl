@@ -77,6 +77,15 @@ function vaults_default_options()
   return options
 end
 
+local function dis_decorate_walls(room, connections, door_required, has_windows)
+  -- 1/3 of walls have doors, the rest become floor
+  if crawl.one_chance_in(3) then
+    hypervaults.rooms.decorate_walls(room, connections, door_required, has_windows)
+  else
+    hypervaults.rooms.decorate_walls_open(room, connections, door_required, has_windows)
+  end
+end
+
 function dis_default_options()
 
   local dis_options = {
@@ -96,14 +105,7 @@ function dis_default_options()
       { feature = "metal_wall", weight = 20 },
     },
 
-    decorate_walls_callback = function(room, connections, door_required, has_windows)
-                          -- 1/4 of walls have doors, the rest become floor
-                          if crawl.one_chance_in(4) then
-                            hypervaults.rooms.decorate_walls(room, connections, door_required, has_windows)
-                          else
-                            hypervaults.rooms.decorate_walls_open(room, connections, door_required, has_windows)
-                          end
-                        end
+    decorate_walls_callback = dis_decorate_walls
 
   }
 
@@ -148,16 +150,18 @@ function hypervaults.build_layout(e, name, paint, options)
   if _VAULTS_DEBUG then print("Hypervaults Layout: " .. name) end
 
   e.layout_type "hypervaults" -- TODO: Lowercase and underscorise the name?
+  local default_options = hypervaults.default_options()
+  if options ~= null then merge_options(default_options,options) end
 
-  local data = paint_vaults_layout(paint, options)
-  local rooms = place_vaults_rooms(e, data, options.max_rooms, options)
+  local data = paint_vaults_layout(paint, default_options)
+  local rooms = place_vaults_rooms(e, data, options.max_rooms, default_options)
 end
 
 -- Merges together two options tables (usually the default options getting
 -- overwritten by a minimal set provided by an individual layout)
 function merge_options(base,to_merge)
   -- Quite simplistic, right now this won't recurse into sub tables (it might need to)
-  for key, val in ipairs(to_merge) do
+  for key, val in pairs(to_merge) do
     base[key] = val
   end
   return base
