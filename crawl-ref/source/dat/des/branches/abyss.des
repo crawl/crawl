@@ -7,6 +7,24 @@
 # vaults will be rejected at compile time, and other orientations will produce
 # weird results.
 
+# Since abyssal stairs don't spawn at the bottom of the Abyss,
+# replace a vault's empty guarded floor with a floor item at the bottom.
+# FIXME: regardless of the abyss exit vault's code, sometimes vaults don't place
+# the exit or stair at all? Only with proper level generation, though, not &L.
+{{
+function init_abyss_exit(e, glyph)
+  if you.depth() == dgn.br_depth(you.branch()) then
+    if crawl.random2(10) > 3 then
+      e.kfeat(glyph .. " = exit_abyss")
+    else
+      e.kitem(glyph .. " = any no_pickup")
+    end
+  else
+    e.kfeat(glyph .. " = exit_abyss w:6 / abyssal_stair w:4")
+  end
+end
+}}
+
 # 1/3 chance to appear on D:21-27, and guaranteed on D:25.
 NAME: abyss_entry
 TAGS: extra allow_dup can_overwrite replace_portal
@@ -39,6 +57,7 @@ NAME: abyss_rune_dummy
 TAGS: abyss_rune dummy
 CHANCE: 0 : 10%
 
+# FIXME: the tag name is inaccurate with abyssal stairs placed by these vaults.
 NAME: abyss_exit_dummy
 TAGS: abyss_exit dummy
 CHANCE: 0 : 95% (Abyss:1)
@@ -49,7 +68,7 @@ CHANCE: 0 : 75% (Abyss:5)
 
 ###############################################################################
 NAME: abyss_furniture_001
-TAGS: abyss allow_dup
+TAGS: abyss extra allow_dup
 MAP
 G.G
 .V.
@@ -64,6 +83,7 @@ TAGS:    no_rotate abyss
 NSUBST:  . = 3:1 / 2:2 / *:.
 SUBST:   ' = .
 COLOUR:  " : white w:5 / none
+TILE:    " : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
 SHUFFLE: ABCDEFHIJKLMNOP
@@ -96,6 +116,28 @@ MAP
 .......t......ttt....
 ENDMAP
 
+# <bh> I got the idea after I introduced a bug where the whole floor of
+#        the abyss turned into altars
+NAME:   bh_abyss_xom_lugonu_altar
+TAGS:   abyss extra allow_dup
+COLOUR: " : magenta w:2 / white
+KFEAT:   _ = altar_lugonu
+KFEAT:   X = altar_xom
+SUBST:   a = XXX"
+SUBST:   b = X"
+SUBST:   c = XX"
+SUBST:   d = X""
+SUBST:   e = X"""
+MAP
+   ebe
+  dcacd
+ ec"""ce
+ ba"_"ab
+ ec"""ce
+  dcacd
+   ebe
+ENDMAP
+
 # Inspired by a bug which turned Lemuel's castle moat into draconians,
 # a little outpost with either easier interior or exterior. ~HangedMan
 NAME:   hangedman_abyss_monster_moat
@@ -111,7 +153,7 @@ KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
             small abomination w:15 / ugly thing w:15 / chaos spawn
 KMONS:  E = very ugly thing
 KMONS:  F = large abomination / glowing shapeshifter w:7
-SHUFFLE: 123/456/789/DEF
+SHUFFLE: 123 / 456 / 789 / DEF
 SUBST:  C = xccv, w : w:8 l:1 .:1, W : .:9 W:1
 MAP
  CCCC  CCCCCCCCCC  CCCC
@@ -128,17 +170,17 @@ ENDMAP
 NAME:   hangedman_abyss_sting
 TAGS:   abyss no_item_gen no_monster_gen
 KMONS:  1 = orange demon
-KMONS:  2 = red wasp / yellow wasp / killer bee w:2
+KMONS:  2 = red wasp / yellow wasp / killer bee w:2 / nothing w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
 KITEM:  23 = honeycomb / royal jelly w:2 / nothing
 MAP
  xxxxxxx
 xx22222xx
-x2222222x
-x22++xx3x
-x22+1 xxx
-x22x 1 xx
+x2...222x
+x2.++xx3x
+x2.+1 xxx
+x2.x 1 xx
 x22xx W x
 xx23xx W
  xxxxxx W
@@ -182,7 +224,7 @@ NAME:    hangedman_abyss_shoalhut
 TAGS:    abyss no_pool_fixup patrolling
 MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
          unseen horror / ynoxinul / snapping turtle skeleton w:15
-NSUBST:  = = 1:x+ / *:x
+NSUBST:  = = 1:+ / 1:xx+ / *:x
 SUBST:   1 = 1., x = xxxxcccvb, l = wWll
 KMASK:   wWl = no_monster_gen
 MAP
@@ -190,7 +232,7 @@ MAP
  lxx=xxl
  xx.1.xx
 lx.1.1.xl
- =1.|.1=
+ =1.*.1=
 lx.1.1.xl
  xx.1.xx
  lxx+xxl
@@ -199,7 +241,7 @@ ENDMAP
 
 NAME:    abyss_fake_exit
 TAGS:    abyss
-KFEAT:   O = exit_abyss / abyssal_stair mimic
+KFEAT:   O = exit_abyss mimic w:6 / abyssal_stair mimic w:4
 MAP
 O
 ENDMAP
@@ -212,7 +254,7 @@ d
 ENDMAP
 
 NAME:    hangedman_abyss_feature_spike
-TAGS:    abyss no_item_gen no_pool_fixup
+TAGS:    abyss extra no_item_gen no_pool_fixup allow_dup
 MONS:    fungus, plant, bush
 ITEM:    stone q:1, large rock q:1
 KFEAT:   ^ : known dart trap / known needle trap / known blade trap
@@ -333,16 +375,16 @@ MONS:    spatial vortex, vapour, harpy, unseen horror
 KMONS:   8 = phoenix w:9 / harpy w:1
 KITEM:   8 = acquire any / any good_item / stone q:1 w:5
 KFEAT:   = = runed_door
-NSUBST:  A = 2:2 / 1:2 / 1:1122. / 1:1122., B = 1:3 / 1:4 / 1:1334. / 1:12334.
+NSUBST:  A = 2:2 / 1:2 / 2 = 1122., B = 1:3 / 1:4 / 1:1334. / 1:12334.
 NSUBST:  C = 1:556 / 1:6 / 1:7 / 1:66777. / 1:1234567.
-SUBST:   x = x:25 c:14 v:6 b:4 G:1 n:2, y = c:3 v:1 b:1, z = x:2 c:1 v:1 b:1
+SUBST:   x = x:25 c:14 v:6 b:4 G:1 n:2, y = c:3 v:1 b:1, z = x:2 c:1 v:1 b:1 .:1
 MAP
  xxxxxxxxxx.
 xx x x x x.x
 x x0x x.x.x
 xx0x.x1x.x.x
-x x.x.x.x.x.
-xx x.==xyyyy
+x x.x1x.x.x.
+xx x1==xyyyy
 x x.x=xAzCzy
 xx1x.xAAABCy
 x x.xyzACBzy
@@ -396,7 +438,7 @@ KMONS:   A = patrolling shadow demon
 KMONS:   B = boggart
 SHUFFLE: 12 / 34 / 56 / 78 / 90, A' / A' / A' / A' / 'B
 SUBST:   x = x:5 c:4 b:2 v:1, X = x:2 c:4 b:3 v:1, ' = ..lw
-SUBST:   . = .:99 W:1, * = .$%%***|, d = %$
+SUBST:   . = .:199 W:1, * = .$%%***|, d = %$
 MAP
    ...xxxxxxx
   @.. xxxxxxx
@@ -534,11 +576,11 @@ MAP
      .x.x
    x.xxx.x
   x.xx1xx.x
- x. x ..x .x
+ x. x.. x .x
  .xxx.ddxxx.
-.xx .dddd xx.
+.xx..dddd xx.
 xx1.ddd...1xx
-.xx.dd..x.xx.
+.xx dd..x.xx.
 x.xxxd.x+xx..
  x. x ..x2. x
   x.xx1xx.x.
@@ -658,7 +700,7 @@ xxHxxx+xbx+xxxHxx
         xxAxx
 ENDMAP
 
-NAME:    hangedman_abyss_or_decor_in_passing
+NAME:    hangedman_abyss_or_decor_passed
 TAGS:    transparent no_pool_fixup decor abyss
 DEPTH:   D:4-
 : if you.branch() == "Abyss" then
@@ -868,6 +910,10 @@ NSUBST: C = 1:+ / *:cc+
 NSUBST: L = 1:O / *:L
 : colour("c = " .. dgn.random_colour())
 : colour(". = " .. dgn.random_colour())
+TILE:   c : dngn_stone_dark / dngn_stone_wall_blue / dngn_stone_wall_green / \
+            dngn_stone_wall_cyan / dngn_stone_wall_red / dngn_stone_wall_white / \
+            dngn_stone_wall_brown / dngn_stone_wall_darkgray / \
+            dngn_stone_wall_yellow / dngn_stone_wall_magenta
 MAP
   ccccc
  ccccccc
@@ -986,7 +1032,7 @@ MAP
 ENDMAP
 
 NAME:   evilmike_abyss_rune_seething_chaos
-TAGS:   abyss_rune allow_dup
+TAGS:   abyss_rune
 KITEM:  O = abyssal rune of Zot
 MARKER: ! = lua:fog_machine { cloud_type = "seething chaos", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
@@ -1012,7 +1058,7 @@ ENDMAP
 
 # Contains 1 to 3 hellephants. 3 is rare.
 NAME:   evilmike_abyss_rune_elephants
-TAGS:   abyss_rune allow_dup
+TAGS:   abyss_rune
 KITEM:  O = abyssal rune of Zot
 SUBST:  l = .....llllx, L: llllx
 KPROP:  ' = no_tele_into
@@ -1098,7 +1144,7 @@ xxxxxXXXX
 ENDMAP
 
 NAME:  evilmike_abyss_rune_tso_outpost
-TAGS:  abyss_rune allow_dup no_monster_gen
+TAGS:  abyss_rune no_monster_gen
 KITEM: O = abyssal rune of Zot
 KFEAT: _ = altar_the_shining_one
 MONS:  angel, cherub, ophan
@@ -1115,7 +1161,7 @@ MAP
 ENDMAP
 
 NAME:  kb_abyss_rune_zappy
-TAGS:  abyss_rune allow_dup
+TAGS:  abyss_rune
 KITEM: O = abyssal rune of Zot
 MONS:  lightning spire generate_awake
 MAP
@@ -1127,7 +1173,7 @@ MAP
 ENDMAP
 
 NAME:   hangedman_abyss_rune_flesh_and_stone
-TAGS:   abyss_rune no_monster_gen no_item_gen no_pool_fixup allow_dup
+TAGS:   abyss_rune no_monster_gen no_item_gen no_pool_fixup
 MONS:   catoblepas, stone golem, earth elemental, stone giant
 KMONS:  O = rock worm
 KITEM:  O = abyssal rune of Zot
@@ -1154,7 +1200,7 @@ MAP
 ENDMAP
 
 NAME:   hangedman_abyss_rune_macabre_mess
-TAGS:   abyss_rune allow_dup
+TAGS:   abyss_rune
 KMONS:  1 = giant orange brain
 KMONS:  2 = golden eye
 KMONS:  3 = flying skull
@@ -1224,7 +1270,7 @@ xxdd4ded4ddxx
 ENDMAP
 
 NAME: lightli_abyss_rune_crippling_grates
-TAGS: abyss_rune allow_dup
+TAGS: abyss_rune
 KFEAT: m = iron_grate
 KITEM: O = abyssal rune of Zot
 KMONS: O = starcursed mass
@@ -1246,10 +1292,15 @@ ENDMAP
 
 ###############################################################################
 # abyss exit vaults
+# Note from HangedMan: Don't tag your abyss exit with allow_dup unless
+# it's small and restrained in its gimmickry: there are more than enough
+# abyss_exit vaults for the longest of given trips without
+# having to repeat vault gimmicks and block seeing other vault gimmicks.
 ###############################################################################
 
 NAME: abyss_exit_lava
 TAGS: abyss_exit allow_dup
+: init_abyss_exit(_G, "O")
 MAP
 l.l
 .O.
@@ -1257,8 +1308,8 @@ l.l
 ENDMAP
 
 NAME:  evilmike_abyss_exit_glass
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
+: init_abyss_exit(_G, "O")
 MAP
  mmm@
 mm.mm
@@ -1268,12 +1319,12 @@ mm.mm
 ENDMAP
 
 NAME:  evilmike_abyss_exit_plants
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
 SUBST: 1 = 112.
 SUBST: . = .:100 1
-MONS:  plant col:any, bush col:any
-# TODO: Tiles!
+MONS:  plant col:random name:demonic name_adjective tile:mons_demonic_plant
+MONS:  bush
+: init_abyss_exit(_G, "O")
 MAP
  .......
 .........
@@ -1288,7 +1339,7 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_1
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+: init_abyss_exit(_G, "O")
 MAP
 x+x
 +O+
@@ -1297,8 +1348,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_2
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: x = x:30 c:20 v:20 m:3 b:3
+: init_abyss_exit(_G, "O")
 MAP
   @ xxxx
  x.xxxxxxx
@@ -1315,8 +1366,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_3
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: . = ..Wwl
+: init_abyss_exit(_G, "O")
 MAP
      .
     ...
@@ -1333,8 +1384,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_4
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 KFEAT: n = stone_arch
+: init_abyss_exit(_G, "O")
 MAP
     x
     x
@@ -1349,9 +1400,9 @@ ENDMAP
 
 NAME:   evilmike_abyss_exit_5
 TAGS:   abyss_exit allow_dup
-KFEAT:  O = exit_abyss / abyssal_stair
 KFEAT:  n = stone_arch
 NSUBST: n = 1:O / *:n
+: init_abyss_exit(_G, "O")
 MAP
     x   x
   x x x x x
@@ -1368,8 +1419,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_6
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: X: .x, x: xxxccvlw, .: ...W
+: init_abyss_exit(_G, "O")
 MAP
   x x x
  x x x x x
@@ -1384,8 +1435,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_7
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: x:xxcv
+: init_abyss_exit(_G, "O")
 MAP
 xx.xx
 x.x.x
@@ -1396,8 +1447,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_8
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: G : GGT, T : TV
+: init_abyss_exit(_G, "O")
 MAP
 ...G...
 .G...G.
@@ -1410,9 +1461,9 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_9
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 KMONS: O = tentacled monstrosity / large abomination / nothing w:5
 SUBST: x = xxc
+: init_abyss_exit(_G, "O")
 MAP
 .xxx.
 x...x
@@ -1422,10 +1473,10 @@ x...x
 ENDMAP
 
 NAME:  evilmike_abyss_exit_10
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
 SUBST: X = x.., x = xxxcv
 MONS:  brain worm / w:5 neqoxec
+: init_abyss_exit(_G, "O")
 MAP
 XXXXXXXXXXX
 XXXXXXXXXXX
@@ -1442,8 +1493,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_11
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: b = bbx
+: init_abyss_exit(_G, "O")
 MAP
    b.b
   bb.bb
@@ -1460,10 +1511,10 @@ ENDMAP
 
 # Technically possible for this one to require dig, but pretty unlikely.
 NAME:  evilmike_abyss_exit_12
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
 SUBST: X = x., x = xxx++1
 MONS:  w:2 trapdoor spider / nothing
+: init_abyss_exit(_G, "O")
 MAP
 XXXxxxXXX
 XxxxxxxxX
@@ -1480,16 +1531,16 @@ ENDMAP
 # I want most characters to be able to actually use this exit
 NAME:  evilmike_abyss_exit_13
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 KMONS: O = w:1 orange crystal statue / w:2 silver statue / w: 20 ice statue / w: 15 oklob plant
+: init_abyss_exit(_G, "O")
 MAP
 O
 ENDMAP
 
 NAME:  evilmike_abyss_exit_14
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: x = xcv, 0 = 0.
+: init_abyss_exit(_G, "O")
 MAP
 x..x..x
 .0.x.0.
@@ -1501,11 +1552,11 @@ x..x..x
 ENDMAP
 
 NAME:  evilmike_abyss_exit_15
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
 KMONS: O = unseen horror / lorocyproca / nothing
 MONS:  small abomination / nothing
 SUBST: X = x., x=xxc
+: init_abyss_exit(_G, "O")
 MAP
  X X X
 X XXX X
@@ -1521,11 +1572,11 @@ X XXX X
 ENDMAP
 
 NAME:   evilmike_abyss_exit_16
-TAGS:   abyss_exit allow_dup
-KFEAT:  O = exit_abyss / abyssal_stair
+TAGS:   abyss_exit
 NSUBST: . = 1:O / *:.
 SUBST:  c = cbx, . = .....12
 MONS:   slime creature, pulsating lump / giant amoeba
+: init_abyss_exit(_G, "O")
 MAP
 c+c+c+c+c+c
 +.+.+.+.+.+
@@ -1542,8 +1593,8 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_17
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: x = xxc, . = ...W, 0 = 0.
+: init_abyss_exit(_G, "O")
 MAP
 ..xx0xx..
 ...xxx...
@@ -1557,12 +1608,12 @@ x...x...x
 ENDMAP
 
 NAME:   evilmike_abyss_exit_kraken
-TAGS:   abyss_exit allow_dup
-KFEAT:  O = exit_abyss / abyssal_stair
+TAGS:   abyss_exit
 NSUBST: w = 1:m / *:w
 KFEAT:  m = w
 KMONS:  m = kraken
 SUBST:  Z = wY, Y = wW, W = w., w=WWw
+: init_abyss_exit(_G, "O")
 MAP
 ..WWWWWWW..
 .WYYYYYYYW.
@@ -1580,13 +1631,13 @@ ENDMAP
 # Fog machine parameters are the same as that swamp entry vault; you pretty
 # much can't avoid the fog here, so I hope you have rMut.
 NAME:   evilmike_abyss_exit_mutagenic
-TAGS:   abyss_exit allow_dup
-KFEAT:  O = exit_abyss / abyssal_stair
+TAGS:   abyss_exit
 MARKER: O = lua:fog_machine {                               \
                 pow_min = 8, pow_max = 12, delay = 25,      \
                 size = 2, walk_dist = 1, spread_rate = 33,  \
                 cloud_type = "mutagenic fog"                \
             }
+: init_abyss_exit(_G, "O")
 MAP
 ...
 .O.
@@ -1595,13 +1646,13 @@ ENDMAP
 
 # Make sure to close the doors if you don't like what you see behind them...
 NAME:   evilmike_abyss_exit_vortex
-TAGS:   abyss_exit allow_dup
-KFEAT:  O = exit_abyss / abyssal_stair
+TAGS:   abyss_exit
 KFEAT:  n = stone_arch
 SUBST:  x:xxxcv, 1=1., g:G.
 SUBST:  G:Gb.
 MONS:   spatial vortex
 NSUBST: n = 1:O / *:n
+: init_abyss_exit(_G, "O")
 MAP
      xxxxx
      x111x
@@ -1621,10 +1672,10 @@ xxxxx.....xxxxx
 ENDMAP
 
 NAME:  evilmike_abyss_exit_chaos
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
 MONS:  chaos spawn
 SUBST: 1 = 11., n : nc, c = cvb
+: init_abyss_exit(_G, "O")
 MAP
  ccncc
 cc.1.cccccc
@@ -1637,12 +1688,12 @@ ENDMAP
 
 # This one is really, really weird...
 NAME:  evilmike_abyss_exit_smiterflies
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
 KMONS: O = generate_awake statue spells:summon_butterflies;summon_butterflies;\
            summon_butterflies;summon_butterflies;summon_butterflies; \
            tile:mons_statue_mage col:lightblue
 MONS:  smoke demon, deep elf priest
+: init_abyss_exit(_G, "O")
 MAP
        ccc
      ccc1ccc
@@ -1664,10 +1715,10 @@ cc..2..........cc
 ENDMAP
 
 NAME:  evilmike_abyss_exit_disperse
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
 SUBST: . = .:100 2
 MONS:  centaur; bow . arrow ego:dispersal, plant
+: init_abyss_exit(_G, "O")
 MAP
      xxx xxx xxx
    xxx1xxx1xxx1x
@@ -1680,31 +1731,29 @@ xx...............x
      xxx xxx xxx
 ENDMAP
 
-NAME:     hangedman_abyss_exit_choices
-TAGS:     abyss_exit allow_dup no_monster_gen
-MONS:     warg, hell hound, giant leech, spiny worm, \
-          crocodile, alligator, black mamba
-KMONS:    8 = anaconda
-KMONS:    9 = fire drake
-KMONS:    0 = mottled dragon
-KMONS:    A = elephant
-KMONS:    B = catoblepas
-KMONS:    C = golden eye
-KMONS:    D = great orb of eyes
-KMONS:    E = vapour
-KMONS:    F = ball lightning
-KMONS:    G = shadow wraith
-KMONS:    H = unseen horror
-NSUBST:   J = 1/2, K = 5/6, L = 9/0, M = C/D
-SHUFFLE:  12/34, 56/78, 90/AB, CD/EF/GH
-KFEAT:    N = exit_abyss / abyssal_stair
-SUBST:    xc = ccv
+NAME:    hangedman_abyss_exit_choices
+TAGS:    abyss_exit allow_dup no_monster_gen
+MONS:    warg / fire drake, hell hound, golden eye / eye of draining
+MONS:    great orb of eyes, crocodile, alligator, black mamba
+KMONS:   8 = anaconda / sea snake
+KMONS:   9 = vapour / ball lightning
+KMONS:   0 = air elemental
+KMONS:   A = shadow wraith
+KMONS:   B = unseen horror
+KMONS:   C = giant leech
+KMONS:   D = spiny worm
+KMONS:   E = elephant
+KMONS:   F = catoblepas / dire elephant
+NSUBST:  J = 1/2, K = 5/6, L = 9/0, M = C/D
+SHUFFLE: 12/34, 56/78, 90/AB, CD/EF
+SUBST:   c = ccv, x = xxc
+: init_abyss_exit(_G, "N")
 MAP
 . . . . . . . . . .
  .xx x x x x x x .
 .ccccccccccccccccc.
 .c +M+ +L+ +K+ +J+.
-.cNcnc.cnc.cnc.cncm
+.cNcnc.cnc.cnc.cncn
 .c +M+ +L+ +K+ +J+.
 .ccccccccccccccccc.
  .xx x x x x x x .
@@ -1714,19 +1763,17 @@ ENDMAP
 ###################################################################
 # Distorted/chaotic kobolds (abyss exit version!) (Jude)
 NAME:   due_exit_kobolds
-TAGS:   no_rotate abyss_exit allow_dup
+TAGS:   no_rotate abyss_exit
 SUBST:  y  = c.
 COLOUR: 1. = random
 MARKER: P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
              size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
              spread_rate=3, start_clouds=1, colour="blue" }
 KFEAT:  _ = altar_lugonu
-KFEAT:  P = enter_abyss
 KMONS:  1 = big kobold w:80 ; short sword | sabre | quick blade w:3 /\
             big kobold w:10 ; quick blade ego:distortion w:6 | \
                               sabre ego:distortion | short sword ego:distortion
-
-KFEAT:  P = exit_abyss / abyssal_stair
+: init_abyss_exit(_G, "P")
 MAP
   ccccc
  cc...cc
@@ -1744,12 +1791,12 @@ cccyy..yycc
 ENDMAP
 
 NAME:  bh_abyss_bestiary
-TAGS:  abyss allow_dup no_rtele_into
+TAGS:  abyss no_rtele_into
 MONS:  thrashing horror
 MONS:  wretched star
 MONS:  lurking horror
 MONS:  tentacled starspawn
-KFEAT: 0 = exit_abyss / abyssal_stair
+: init_abyss_exit(_G, "0")
 MAP
     @
 xxxx.xxxx
@@ -1764,29 +1811,6 @@ xxxx.xxxx
     @
 ENDMAP
 
-###################################################################
-# <bh> I got the idea after I introduced a bug where the whole floor of
-#        the abyss turned into altars
-NAME:   bh_abyss_xom_lugonu_altar
-TAGS:   abyss allow_dup
-COLOUR: " : magenta w:2 / white
-KFEAT:   _ = altar_lugonu
-KFEAT:   X = altar_xom
-SUBST:   a = XXX"
-SUBST:   b = X"
-SUBST:   c = XX"
-SUBST:   d = X""
-SUBST:   e = X"""
-MAP
-   ebe
-  dcacd
- ec"""ce
- ba"_"ab
- ec"""ce
-  dcacd
-   ebe
-ENDMAP
-
 NAME:   bh_silent_lugonu_exit
 TAGS:   abyss allow_dup
 MONS:   silent spectre
@@ -1798,7 +1822,7 @@ MAP
 ENDMAP
 
 NAME:  bh_abyss_fiendish_exit
-TAGS:  abyss_exit allow_dup no_monster_gen
+TAGS:  abyss_exit no_monster_gen
 KMONS: F = patrolling hell sentinel
 KFEAT: F = floor
 KFEAT: 0 = exit_abyss
@@ -1811,6 +1835,7 @@ SUBST: B = BB.
 SUBST: b = B..
 KPROP: B = bloody
 KPROP: F = bloody
+: init_abyss_exit(_G, "0")
 MAP
      .
     ...
@@ -1826,7 +1851,7 @@ MAP
 ENDMAP
 
 NAME:   bh_abyss_demonologist_exit
-TAGS:   abyss_exit allow_dup no_monster_gen no_rtele_into
+TAGS:   abyss_exit no_monster_gen no_rtele_into
 MONS:   deep elf demonologist
 MONS:   kobold demonologist
 MONS:   orc sorcerer
@@ -1841,6 +1866,7 @@ SUBST:  " = B.
 KFEAT:  0 = exit_abyss / abyssal_stair
 KFEAT:  B = floor
 KPROP:  B = bloody
+: init_abyss_exit(_G, "0")
 MAP
 fffffffffffffffffff
 feeeeeeeeeeeeeeeeef
@@ -1862,8 +1888,8 @@ fffffffffffffffffff
 ENDMAP
 
 NAME:  guppyfry_abyss_exit_glass_guarded
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS:  abyss_exit
+: init_abyss_exit(_G, "O")
 MAP
 .............
 .xmxmxmxmxmx.
@@ -1879,8 +1905,8 @@ ENDMAP
 
 NAME:  guppyfry_abyss_exit_spiral_guarded
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
 SUBST: - = llx
+: init_abyss_exit(_G, "O")
 MAP
 .0---------0
 .-........--
@@ -1896,10 +1922,10 @@ MAP
 ENDMAP
 
 NAME: guppyfry_abyss_exit_imp_island
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss / abyssal_stair
+TAGS: abyss_exit
 SUBST: - = Wwwww
 MONS: crimson imp / white imp
+: init_abyss_exit(_G, "O")
 MAP
 .---------.
 ---..1..---
@@ -1916,7 +1942,7 @@ ENDMAP
 
 NAME:  bh_abyss_exit_spiral
 TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss
+: init_abyss_exit(_G, "O")
 MAP
  .xxxx.
   .xxxx.
@@ -1933,10 +1959,10 @@ ENDMAP
 
 NAME:  bh_abyss_exit_grid
 TAGS:  abyss_exit allow_dup
-KFEAT: 0 = exit_abyss
 SUBST: a = x.
 SUBST: b = x..
 SUBST: c = x...
+: init_abyss_exit(_G, "O")
 MAP
    b b b b b
   a.a.a.a.a.a
