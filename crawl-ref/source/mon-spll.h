@@ -1890,6 +1890,17 @@
       }
     },
 
+    {  MST_IRONBRAND_CONVOKER,
+      {
+       SPELL_MIGHT_OTHER,
+       SPELL_MIGHT_OTHER,
+       SPELL_NO_SPELL,
+       SPELL_WORD_OF_RECALL,
+       SPELL_WORD_OF_RECALL,
+       SPELL_NO_SPELL,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

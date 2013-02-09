@@ -3010,6 +3010,20 @@ struct spell_desc
      false
 },
 
+// Ironbrand Convoker version (delayed activation, recalls only humanoids)
+{
+    SPELL_WORD_OF_RECALL, "Word of Recall",
+     SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
+     SPFLAG_NONE,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
 {
     SPELL_NO_SPELL, "nonexistent spell",
      0,

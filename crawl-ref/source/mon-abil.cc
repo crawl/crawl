@@ -3279,10 +3279,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (one_chance_in(4))
         {
             if (_seal_doors(mons))
-            {
                 used = true;
-                break;
-            }
         }
         break;
 

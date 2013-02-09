@@ -21,7 +21,9 @@
 #include "libutil.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "spl-damage.h"
@@ -904,7 +906,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
-        case ENCH_BLIND:
+        case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1683,6 +1685,23 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me, true);
         break;
 
+    case ENCH_WORD_OF_RECALL:
+        // If we've gotten silenced or somehow incapacitated since we started,
+        // cancel the recitation
+        if (silenced(pos()) || paralysed() || petrified()
+            || confused() || asleep())
+        {
+            this->speed_increment += me.duration;
+            del_ench(ENCH_WORD_OF_RECALL, true, false);
+            if (you.can_see(this))
+                mprf("%s word of recall is interrupted.", name(DESC_ITS).c_str());
+            break;
+        }
+
+        if (decay_enchantment(me))
+            mons_word_of_recall(this);
+        break;
+
     default:
         break;
     }
@@ -1813,7 +1832,7 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "wretched", "screamed", "buggy",
+    "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

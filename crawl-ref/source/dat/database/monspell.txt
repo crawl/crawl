@@ -181,6 +181,10 @@ Silver Blast cast
 
 @The_monster@ shoots forth a bolt of silver!
 %%%%
+Word of Recall cast
+
+@The_monster@ begins to recite a word of recall!
+%%%%
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
