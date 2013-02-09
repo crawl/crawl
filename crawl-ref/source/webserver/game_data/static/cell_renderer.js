@@ -726,6 +726,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
                 status_shift += 8;
             }
+            if (fg.HASTED)
+            {
+                this.draw_icon(icons.HASTED, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
             if (fg.SLOWED)
             {
                 this.draw_icon(icons.SLOWED, x, y, -status_shift, 0);

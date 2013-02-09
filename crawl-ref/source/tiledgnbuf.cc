@@ -408,6 +408,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_GLOWING, x, y, -status_shift, 0);
         status_shift += 7;
     }
+    if (fg & TILE_FLAG_HASTED)
+    {
+        m_buf_icons.add(TILEI_HASTED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
     if (fg & TILE_FLAG_SLOWED)
     {
         m_buf_icons.add(TILEI_SLOWED, x, y, -status_shift, 0);
