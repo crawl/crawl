@@ -214,6 +214,20 @@ local function determine_usage_from_layout(layout_grid,options)
   return usage_grid
 end
 
+-- Determine if a point is inside an oval
+-- TODO: There's something wrong with this equation, ovals are coming out with flattened sides and sometimes completely square.
+--       Needs somehow adjusting for the fact that we're dealing with grid squares, if that's indeed the problem ...
+local function inside_oval(x,y,item)
+  -- Radii
+  local rx = (item.corner2.x - item.corner1.x)/2
+  local ry = (item.corner2.y - item.corner1.y)/2
+  -- Center point
+  local h = (item.corner2.x + item.corner1.x)/2
+  local k = (item.corner2.y + item.corner1.y)/2
+  -- Test
+  return ((math.pow(x-h,2)/math.pow(rx,2) + math.pow(y-k,2)/math.pow(ry,2))<=1)
+end
+
 function paint_grid(paint, options, grid)
 
   for i,item in ipairs(paint) do
@@ -222,6 +236,8 @@ function paint_grid(paint, options, grid)
       feature = options.layout_floor_type
     elseif item.type == "wall" then
       feature = options.layout_wall_type
+    elseif item.type == "space" then
+      feature = "space"
     elseif item.feature ~= nil then
       feature = item.feature
     end
@@ -231,19 +247,29 @@ function paint_grid(paint, options, grid)
     if item.shape ~= nil then shape_type = item.shape end
 
     -- Discover whether the feature type is solid
-    local solid = not feat.has_solid_floor(feature)
-
+    local space = (feature == "space")
+    local solid = not space and not feat.has_solid_floor(feature)
+    local empty = (item.empty ~= nil and item.empty)
     -- Paint features onto grid
-    if shape_type == "quad" then
+    if shape_type == "quad" or shape_type == "ellipse" then
+      -- TODO: shape types are begging to be modularised
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
         for y = item.corner1.y, item.corner2.y, 1 do
-          set_layout(layout_grid,x,y, { solid = solid, feature = feature })
+          if shape_type == "quad" or (shape_type == "ellipse" and inside_oval(x,y,item)) then
+            local ax,ay = x,y
+            if item.wrap then
+              ax = x % grid.width
+              ay = y % grid.height
+            end
+
+            set_layout(layout_grid,ax,ay, { solid = solid, feature = feature, space = space, empty = empty })
+          end
         end
       end
     elseif shape_type == "plot" then
       for i,pos in ipairs(item.points) do
-        set_layout(layout_grid, pos.x, pos.y,{ solid = solid, feature = feature })
+        set_layout(layout_grid, pos.x, pos.y,{ solid = solid, feature = feature, empty = empty })
       end
     end
 
