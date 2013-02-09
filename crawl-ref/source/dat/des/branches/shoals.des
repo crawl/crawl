@@ -699,6 +699,7 @@ SHUFFLE: AB / AB / BA, CD / CD / DC
 NSUBST:  2 = 2 = 22w / * = 22www, 0 = 2:0 / * = 00...
 SUBST:   AC = x, B = w, D = .
 LROCKTILE: wall_vines
+FHEIGHT: .d0@ = 15
 MAP
   xxxxxxx
  xx12wwwxx
@@ -719,6 +720,7 @@ KMONS:   0 = 0
 SHUFFLE: AB / AB / BA, CD / CD / DC
 NSUBST:  0 = 3:0 / * = 00...
 SUBST:   AC = x, B = w, D = .
+FHEIGHT: .d0@ = 15
 MAP
   xxxxxxx
  xxwwwwwxx
