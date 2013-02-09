@@ -2409,29 +2409,32 @@ spret_type cast_mass_abjuration(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-static monster* _find_battlesphere()
+monster* find_battlesphere(const actor* agent)
 {
     monster* mons = NULL;
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         mons = &menv[i];
-        if (mons->type == MONS_BATTLESPHERE)
+        if (mons->type == MONS_BATTLESPHERE
+            && agent == actor_by_mid(mons->props["bs_mid"].get_int()))
+        {
             return mons;
+        }
     }
 
     return NULL;
 }
 
-spret_type cast_battlesphere(int pow, god_type god, bool fail)
+spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
-    if (you.duration[DUR_BATTLESPHERE] > 0)
+    if (agent->is_player() && you.duration[DUR_BATTLESPHERE] > 0)
     {
-        monster* battlesphere = _find_battlesphere();
+        monster* battlesphere = find_battlesphere(&you);
         bool recalled = false;
         if (!you.can_see(battlesphere))
         {
             coord_def empty;
-            if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
+            if (empty_surrounds(agent->pos(), DNGN_FLOOR, 3, false, empty)
                 && battlesphere->move_to_pos(empty))
             {
                 recalled = true;
@@ -2439,7 +2442,10 @@ spret_type cast_battlesphere(int pow, god_type god, bool fail)
         }
 
         if (recalled)
-            mpr("You recall your battlesphere and imbue it with additional charge.");
+        {
+            mpr("You recall your battlesphere and imbue it with additional"
+                " charge.");
+        }
         else
             mpr("You imbue your battlesphere with additional charge.");
 
@@ -2449,12 +2455,14 @@ spret_type cast_battlesphere(int pow, god_type god, bool fail)
     }
     else
     {
+        ASSERT(!find_battlesphere(agent));
         mgen_data mg (MONS_BATTLESPHERE,
-                BEH_FRIENDLY,
-                &you,
+                agent->is_player() ? BEH_FRIENDLY
+                                   : SAME_ATTITUDE(agent->as_monster()),
+                agent,
                 0, SPELL_BATTLESPHERE,
-                you.pos(),
-                MHITYOU,
+                agent->pos(),
+                agent->is_player() ? MHITYOU : agent->mid,
                 0, god,
                 MONS_NO_MONSTER, 0, BLACK,
                 0);
@@ -2463,40 +2471,62 @@ spret_type cast_battlesphere(int pow, god_type god, bool fail)
 
         if (battlesphere)
         {
-            mpr("You conjure a globe of magical energy.");
-            you.increase_duration(DUR_BATTLESPHERE, 7 + roll_dice(2, pow), 50);
+            battlesphere->props["bs_mid"].get_int() = agent->mid;
+            if (agent->is_player())
+            {
+                mpr("You conjure a globe of magical energy.");
+                you.increase_duration(DUR_BATTLESPHERE, 7 + roll_dice(2, pow),
+                                      50);
+            }
+            else if (you.can_see(agent) && you.can_see(battlesphere))
+            {
+                simple_monster_message(agent->as_monster(),
+                                       " conjures a globe of magical energy!");
+            }
+            else if (you.can_see(battlesphere))
+            {
+                simple_monster_message(battlesphere, " appears!");
+            }
             battlesphere->number = 4 + random2(pow + 10) / 10;
         }
-        else
+        else if (agent->is_player() || you.can_see(agent))
             canned_msg(MSG_NOTHING_HAPPENS);
     }
 
     return SPRET_SUCCESS;
 }
 
-void end_battlesphere(bool killed)
+void end_battlesphere(monster* mons, bool killed)
 {
-    you.duration[DUR_BATTLESPHERE] = 0;
+    // Should only happen if you dismiss it in wizard mode, I think
+    if (!mons)
+        return;
+
+    actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
+    if (agent && agent->is_player())
+        you.duration[DUR_BATTLESPHERE] = 0;
     if (!killed)
     {
-        monster *battlesphere = _find_battlesphere();
-        //Should only happen if you dismiss it in wizard mode, I think
-        if (battlesphere)
+        if (agent && agent->is_player())
         {
-            if (you.can_see(battlesphere))
+            if (you.can_see(mons))
             {
-                if ((battlesphere->number == 0))
-                    mpr("Your battlesphere expends the last of its energy and dissipates.");
+                if ((mons->number == 0))
+                    mpr("Your battlesphere expends the last of its energy"
+                        " and dissipates.");
                 else
                     mpr("Your battlesphere wavers and loses cohesion.");
             }
             else
                 mpr("You feel your bond with your battlesphere wane.");
-
-            place_cloud(CLOUD_MAGIC_TRAIL, battlesphere->pos(), 3 + random2(3), battlesphere);
-
-            monster_die(battlesphere, KILL_RESET, NON_MONSTER);
         }
+        else if (you.can_see(mons))
+            simple_monster_message(mons, " dissipates.");
+
+        place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(),
+                    3 + random2(3), mons);
+
+        monster_die(mons, KILL_RESET, NON_MONSTER);
     }
 }
 
@@ -2509,23 +2539,25 @@ static bool _battlesphere_can_mirror(spell_type spell)
             || spell == SPELL_DAZZLING_SPRAY);
 }
 
-bool aim_battlesphere(spell_type spell, int powc, bolt& beam)
+bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
 {
     //Is this spell something that will trigger the battlesphere?
     if (_battlesphere_can_mirror(spell))
     {
-        monster* battlesphere = _find_battlesphere();
+        monster* battlesphere = find_battlesphere(agent);
 
-        // If we've somehow gotten separated from the battlesphere (ie: abyss level
-        // teleport), bail out and cancel the battlesphere bond
+        // If we've somehow gotten separated from the battlesphere (ie:
+        // abyss level teleport), bail out and cancel the battlesphere bond
         if (!battlesphere)
         {
-            end_battlesphere(false);
+            if (agent->is_player())
+                you.duration[DUR_BATTLESPHERE] = 0;
             return false;
         }
 
-        // In case the battlesphere was in the middle of a (failed) target-seeking
-        // action, cancel it so that it can focus on a new target
+        // In case the battlesphere was in the middle of a (failed)
+        // target-seeking action, cancel it so that it can focus on a new
+        // target
         reset_battlesphere(battlesphere);
 
         // Don't try to fire at ourselves
@@ -2558,7 +2590,8 @@ bool aim_battlesphere(spell_type spell, int powc, bolt& beam)
 
             // If we're firing at empty air, lose any prior target lock
             if (!battlesphere->props.exists("foe"))
-                battlesphere->foe = MHITYOU;
+                battlesphere->foe = (agent->is_player()) ? MHITYOU
+                                                         : agent->mid;
         }
         else
         {
@@ -2574,23 +2607,26 @@ bool aim_battlesphere(spell_type spell, int powc, bolt& beam)
     return false;
 }
 
-bool trigger_battlesphere(bolt& beam)
+bool trigger_battlesphere(actor* agent, bolt& beam)
 {
-    monster* battlesphere = _find_battlesphere();
+    monster* battlesphere = find_battlesphere(agent);
     if (!battlesphere)
         return false;
 
     if (battlesphere->props.exists("ready"))
     {
-        // If the battlesphere is aiming at empty air but the triggering conjuration
-        // is an explosion, try to find something to shoot within the blast
+        // If the battlesphere is aiming at empty air but the triggering
+        // conjuration is an explosion, try to find something to shoot within
+        // the blast
         if (!battlesphere->props.exists("foe") && beam.is_explosion)
         {
             explosion_map exp_map;
             exp_map.init(INT_MAX);
-            beam.determine_affected_cells(exp_map, coord_def(), 0, beam.ex_size, true, true);
+            beam.determine_affected_cells(exp_map, coord_def(), 0,
+                                          beam.ex_size, true, true);
 
-            for (radius_iterator ri(beam.target, beam.ex_size, C_ROUND); ri; ++ri)
+            for (radius_iterator ri(beam.target, beam.ex_size, C_ROUND);
+                 ri; ++ri)
             {
                 if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
                 {
@@ -2614,9 +2650,9 @@ bool trigger_battlesphere(bolt& beam)
     return false;
 }
 
-// Called at the start of each round. Cancels firing orders given in the previous
-// round, if the battlesphere was not able to execute them fully before the next
-// player action
+// Called at the start of each round. Cancels firing orders given in the
+// previous round, if the battlesphere was not able to execute them fully
+// before the next player action
 void reset_battlesphere(monster* mons)
 {
     if (!mons || mons->type != MONS_BATTLESPHERE)
@@ -2639,6 +2675,14 @@ bool fire_battlesphere(monster* mons)
     if (!mons || !mons->type == MONS_BATTLESPHERE)
         return false;
 
+    actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
+
+    if (!agent || !agent->alive())
+    {
+        end_battlesphere(mons, false);
+        return false;
+    }
+
     bool used = false;
 
     if (mons->props.exists("firing") && mons->number > 0)
@@ -2660,7 +2704,8 @@ bool fire_battlesphere(monster* mons)
         }
         else
         {
-            // If the battlesphere forgot its foe (due to being out of los), remind it
+            // If the battlesphere forgot its foe (due to being out of los),
+            // remind it
             if (mons->props.exists("foe"))
                 mons->foe = mons->props["foe"].get_int();
         }
@@ -2702,17 +2747,18 @@ bool fire_battlesphere(monster* mons)
         // in the first place
         if (beam.friend_info.count == 0
             && (monster_at(beam.target) ? beam.foe_info.count > 0 :
-                find(beam.path_taken.begin(), beam.path_taken.end(), beam.target)
+                find(beam.path_taken.begin(), beam.path_taken.end(),
+                     beam.target)
                     != beam.path_taken.end()))
         {
-            beam.thrower = KILL_YOU;
+            beam.thrower = (agent->is_player()) ? KILL_YOU : KILL_MON;
             simple_monster_message(mons, " fires!");
             beam.fire();
 
             used = true;
             // Decrement # of volleys left and possibly expire the battlesphere.
             if (--mons->number == 0)
-                end_battlesphere(false);
+                end_battlesphere(mons, false);
 
             mons->props.erase("firing");
         }
@@ -2725,7 +2771,7 @@ bool fire_battlesphere(monster* mons)
             {
                 if (*di == beam.target || actor_at(*di)
                     || feat_is_solid(grd(*di))
-                    || !you.see_cell(*di))
+                    || !agent->see_cell(*di))
                     continue;
 
                 beam.source = *di;
@@ -2736,7 +2782,8 @@ bool fire_battlesphere(monster* mons)
                     && (beam.foe_info.count > 0 || empty_beam))
                 {
                     if (empty_beam &&
-                        find(beam.path_taken.begin(), beam.path_taken.end(), beam.target)
+                        find(beam.path_taken.begin(), beam.path_taken.end(),
+                             beam.target)
                         == beam.path_taken.end())
                     {
                         continue;
@@ -2761,10 +2808,11 @@ bool fire_battlesphere(monster* mons)
 
     // If our last target is dead, or the player wandered off, resume
     // following the player
-    if ((mons->foe == MHITNOT || !mons->can_see(you.as_player())
-         || (!invalid_monster_index(mons->foe) && !you.can_see(&menv[mons->foe])))
+    if ((mons->foe == MHITNOT || !mons->can_see(agent)
+         || (!invalid_monster_index(mons->foe)
+             && !agent->can_see(&menv[mons->foe])))
         && !mons->props.exists("tracking"))
-        mons->foe = MHITYOU;
+        mons->foe = (agent->is_player()) ? MHITYOU : agent->mid;
 
     return used;
 }

@@ -1127,6 +1127,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHATTER:
     case SPELL_FRENZY:
     case SPELL_SUMMON_TWISTER:
+    case SPELL_BATTLESPHERE:
         return true;
     default:
         if (check_validity)
@@ -1557,6 +1558,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_OZOCUBUS_ARMOUR:
         if (mon->has_ench(ENCH_OZOCUBUS_ARMOUR))
+            ret = true;
+        break;
+
+    case SPELL_BATTLESPHERE:
+        if (find_battlesphere(mon))
             ret = true;
         break;
 
@@ -2258,10 +2264,15 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         else
         {
+            bool battlesphere = (find_battlesphere(mons) != NULL);
             if (spell_needs_foe(spell_cast))
                 make_mons_stop_fleeing(mons);
 
+            if (battlesphere)
+                aim_battlesphere(mons, spell_cast, 12 * mons->hit_dice, beem);
             mons_cast(mons, beem, spell_cast);
+            if (battlesphere)
+                trigger_battlesphere(mons, beem);
             mons->lose_energy(EUT_SPELL);
         }
     } // end "if (mons->can_use_spells())"
@@ -3866,6 +3877,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                       duration, spell_cast,
                       mons->pos(), mons->foe, 0, god));
 
+        return;
+
+    case SPELL_BATTLESPHERE:
+        cast_battlesphere(mons, min(6 * mons->hit_dice, 200), mons->god, false);
         return;
 
     // TODO: Outsource the cantrip messages and allow specification of

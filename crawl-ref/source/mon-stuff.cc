@@ -1753,7 +1753,7 @@ int monster_die(monster* mons, killer_type killer,
     {
         if (!wizard && !mons_reset && !was_banished)
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
-        end_battlesphere(true);
+        end_battlesphere(mons, true);
     }
 
     const bool death_message = !silent && !did_death_message
