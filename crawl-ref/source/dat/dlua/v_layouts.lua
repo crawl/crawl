@@ -21,11 +21,23 @@
 -- room/door placement can work correctly.
 ------------------------------------------------------------------------------
 
+hypervaults = {}  -- Main namespace
+
 require("dlua/v_debug.lua")
 require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
+require("dlua/v_shapes.lua")
 
-_VAULTS_DEBUG = false
+_VAULTS_DEBUG = true
+
+-- The four directions and their associated vector normal and name.
+-- This helps us manage orientation of rooms.
+hypervaults.normals = {
+  { x = 0, y = -1, dir = 0, name="n" },
+  { x = -1, y = 0, dir = 1, name="w" },
+  { x = 0, y = 1, dir = 2, name="s" },
+  { x = 1, y = 0, dir = 3, name="e" }
+}
 
 -- Default parameters for all Vaults layouts. Some individual layouts might
 -- tweak these parameters to create specific effects.
@@ -34,16 +46,15 @@ function vaults_default_options()
   local options = {
     min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
     max_rooms = 27, -- Maximum number of rooms to attempt to place
-    min_room_size = 5, -- Min/max sizes of rooms (fairly redundant, could maybe be used to tune specific layouts to tend to smaller or bigger rooms)
-    max_room_size = 40,
     max_room_depth = 0, -- No max depth (not implemented yet anyway)
     -- The following settings (in addition to max_rooms) can adjust how long it takes to build a level, at the expense of potentially less intereting layouts
     max_room_tries = 27, -- How many *consecutive* rooms can fail to place before we exit the entire routine
     max_place_tries = 50, -- How many times we will attempt to place *each room* before picking another
 
-    -- Weightings of various types of room generators. The plan is to better support code vaults here.
+    -- Weightings of various types of room generators.
     room_type_weights = {
-      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 35, min_size = 6, max_size = 12 }, -- Floor vault
+      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 30, min_size = 6, max_size = 12 }, -- Floor vault
+      { generator = "code", paint_callback = junction_vault_paint_callback, weight = 80, min_size = 6, max_size = 30, min_corridor = 2, max_corridor = 8 }, -- Floor vault ++
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },
@@ -66,12 +77,81 @@ function vaults_default_options()
   return options
 end
 
-function floor_vault_paint_callback(room,options)
-  return {
-    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 }},
+function dis_default_options()
+
+  local dis_options = {
+    min_distance_from_wall = 1, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
+    max_rooms = 50, -- Maximum number of rooms to attempt to place
+    max_room_tries = 30, -- How many *consecutive* rooms can fail to place before we exit the entire routine
+    max_place_tries = 100, -- How many times we will attempt to place *each room* before picking another
+
+    -- Squares and junctions
+    room_type_weights = {
+      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 10, min_size = 10, max_size = 20 }, -- Floor vault
+      { generator = "code", paint_callback = junction_vault_paint_callback, weight = 80, min_size = 4, max_size = 40, min_corridor = 1, max_corridor = 10 }, -- Floor vault ++
+    },
+
+    -- We only have metal in Dis
+    layout_wall_weights = {
+      { feature = "metal_wall", weight = 20 },
+    },
+
+    decorate_walls_callback = function(room, connections, door_required, has_windows)
+                          -- 1/4 of walls have doors, the rest become floor
+                          if crawl.one_chance_in(4) then
+                            hypervaults.rooms.decorate_walls(room, connections, door_required, has_windows)
+                          else
+                            hypervaults.rooms.decorate_walls_open(room, connections, door_required, has_windows)
+                          end
+                        end
+
   }
+
+  return merge_options(hypervaults.default_options(),dis_options)
+
 end
 
+-- Default options table
+function hypervaults.default_options()
+
+  local options = {
+    max_rooms = 27, -- Maximum number of rooms to attempt to place
+    max_room_depth = 0, -- No max depth (not implemented yet anyway)
+    min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
+    -- The following settings (in addition to max_rooms) can adjust how long it takes to build a level, at the expense of potentially less intereting layouts
+    max_room_tries = 27, -- How many *consecutive* rooms can fail to place before we exit the entire routine
+    max_place_tries = 50, -- How many times we will attempt to place *each room* before picking another
+
+    -- Weightings of various types of room generators. The plan is to better support code vaults here.
+    room_type_weights = {
+      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 1, min_size = 4, max_size = 40, empty = true }, -- Floor vault
+    },
+
+    -- Rock seems a sensible default
+    layout_wall_weights = {
+      { feature = "rock_wall", weight = 1 },
+    },
+    layout_floor_type = "floor"  -- Should probably never need to be anything else
+
+  }
+
+  return options
+
+end
+
+-- TODO: The 'paint' parameter should disappear. Instead the options will contain a setup array. This could contain paint instructions,
+-- but alternately should be able to wire room generators to create initial terrain. Since rooms can now be creaated from paint arrays _anyway_,
+-- it seems that pre-painting the layout is completely unneccesary and room generation can do anything ...
+function hypervaults.build_layout(e, name, paint, options)
+  if not crawl.game_started() then return end
+
+  if _VAULTS_DEBUG then print("Hypervaults Layout: " .. name) end
+
+  e.layout_type "hypervaults" -- TODO: Lowercase and underscorise the name?
+
+  local data = paint_vaults_layout(paint, options)
+  local rooms = place_vaults_rooms(e, data, options.max_rooms, options)
+end
 
 -- Merges together two options tables (usually the default options getting
 -- overwritten by a minimal set provided by an individual layout)
@@ -80,6 +160,7 @@ function merge_options(base,to_merge)
   for key, val in ipairs(to_merge) do
     base[key] = val
   end
+  return base
 end
 
 -- Build any vaults layout from a paint array, useful to quickly prototype
@@ -89,9 +170,6 @@ function build_vaults_layout(e, name, paint, options)
   if not crawl.game_started() then return end
 
   if _VAULTS_DEBUG then print("Vaults Layout: " .. name) end
-
-  local gxm,gym = dgn.max_bounds()
-  -- e.extend_map{width=gxm, height=gym, fill='x'}
 
   e.layout_type "vaults" -- TODO: Lowercase and underscorise the name parameter?
 
@@ -327,4 +405,29 @@ function omnigrid_subdivide_area(x1,y1,x2,y2,options,results,chance)
 
   return results
 
+end
+
+-- TODO: Some redundant code here, combine
+function build_dis_layout(e, name, paint, options)
+
+  if not crawl.game_started() then return end
+
+  if _VAULTS_DEBUG then print("Dis Layout: " .. name) end
+
+  e.layout_type "dis" -- TODO: Lowercase and underscorise the name parameter?
+
+  local defaults = dis_default_options()
+  if options ~= nil then merge_options(defaults,options) end
+
+  local data = paint_vaults_layout(paint, defaults)
+  local rooms = place_vaults_rooms(e, data, defaults.max_rooms, defaults)
+
+end
+
+function build_dis_maze_layout(e)
+  if not crawl.game_started() then return end
+  local name = "Maze"
+  local paint = n3v_paint_small_central_room()
+
+  build_dis_layout(e, name, paint, { max_room_depth = 0 })
 end

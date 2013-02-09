@@ -5,14 +5,7 @@
 -- the layout.
 ------------------------------------------------------------------------------
 
--- The four directions and their associated vector normal and name.
--- This helps us manage orientation of rooms.
-local normals = {
-  { x = 0, y = -1, dir = 0, name="n" },
-  { x = -1, y = 0, dir = 1, name="w" },
-  { x = 0, y = 1, dir = 2, name="s" },
-  { x = 1, y = 0, dir = 3, name="e" }
-}
+hypervaults.rooms = {}
 
 -- Moves from a start point along a move vector mapped to actual vectors xVector/yVector
 -- This allows us to deal with coords independently of how they are rotated to the dungeon grid
@@ -43,15 +36,23 @@ local function vector_rotate(vec, count)
   return vec
 end
 
+    -- TODO: Following logic to be reintegrated into code room generation; meaning large empty rooms could have other rooms placed inside them again
+  -- local set_empty = crawl.coinflip() -- Allow the room to be used for more rooms or not?/
+   --   elseif x > origin.x + 1 and x < opposite.x-1 and y > origin.y - 1 and y < opposite.y - 1 then  -- Leaving a 2 tile border
+    --    vaults_set_usage(usage_grid,x,y,{usage = "open"})
+    --  else
+    --    vaults_set_usage(usage_grid,x,y,{usage = "restricted", reason = "border"})
+    --  end
+
 local function make_code_room(options,chosen)
   -- Pick a size for the room
   local size
-  if chosen.generator.pick_size_callback ~= nil then
-    size = chosen.generator.pick_size_callback(options)
+  if chosen.pick_size_callback ~= nil then
+    size = chosen.pick_size_callback(options)
   else
     local min_size, max_size = options.min_room_size,options.max_room_size
-    if chosen.generator.min_size ~= nil then min_size = chosen.generator.min_size end
-    if chosen.generator.max_size ~= nil then max_size = chosen.generator.max_size end
+    if chosen.min_size ~= nil then min_size = chosen.min_size end
+    if chosen.max_size ~= nil then max_size = chosen.max_size end
     local diff = max_size - min_size + 1
     size = { x = min_size + crawl.random2(crawl.random2(diff)), y = min_size + crawl.random2(crawl.random2(diff)) }
   end
@@ -71,7 +72,7 @@ local function make_code_room(options,chosen)
   end
 
   -- Paint and decorate the layout grid
-  paint_grid(chosen.paint_callback(room,options),options,room.grid)
+  paint_grid(chosen.paint_callback(room,options,chosen),options,room.grid)
   if _VAULTS_DEBUG then dump_layout_grid(room.grid) end
   if chosen.decorate_callback ~= nil then chosen.decorate_callback(room.grid,room,options) end  -- Post-production
 
@@ -84,7 +85,9 @@ local function make_tagged_room(options,chosen)
   local mapdef = dgn.map_by_tag(chosen.tag,true)
   if mapdef == nil then return nil end  -- Shouldn't happen when thing are working but just in case
 
-  -- Temporarily prevent map getting mirrored / rotated during resolution; and hardwire transparency because lack of it can fail a whole layout
+  -- Temporarily prevent map getting mirrored / rotated during resolution because it'll seriously
+  -- screw with our attempts to understand and position the vault later; and hardwire transparency because lack of it can fail a whole layout
+  -- TODO: Store these tags on the room first so we can actually support them down the line ...
   dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent");
   -- Resolve the map so we can find its width / height
   local map, vplace = dgn.resolve_map(mapdef,false)
@@ -97,7 +100,9 @@ local function make_tagged_room(options,chosen)
 
   local room_width,room_height = dgn.mapsize(map)
   local veto = false
-  if not (room_width > options.max_room_size or room_width < options.min_room_size or room_height > options.max_room_size or room_height < options.min_room_size) then
+  -- Check min/max room sizes are observed
+  if (chosen.min_size == nil or not (room_width < chosen.min_size or room_height < chosen.min_size))
+    and (chosen.max_size == nil or not (room_width > chosen.max_size or room_height > chosen.max_size)) then
     room = {
       type = "vault",
       size = { x = room_width, y = room_height },
@@ -114,7 +119,7 @@ local function make_tagged_room(options,chosen)
     -- single orient tag makes the other walls ineligible
     room.tags = {}
     for n = 0, 3, 1 do
-      if dgn.has_tag(room.map,"vaults_orient_" .. normals[n+1].name) then
+      if dgn.has_tag(room.map,"vaults_orient_" .. hypervaults.normals[n+1].name) then
         room.has_orient = true
         room.tags[n] = true
       end
@@ -222,7 +227,7 @@ local function pick_room(e, options)
         end
       end
 
-      -- Loop through the cells again and this time determine openness. Has to be a separate loop because we needed to already know has_exits.
+      -- Loop through the cells again now we know has_exits, and store all connected cells in our list of walls for later.
       for m = -1, room.size.y, 1 do
         for n = -1, room.size.x, 1 do
           local wall_mask = room.mask_grid[m][n]
@@ -408,7 +413,15 @@ function place_vaults_room(e,usage_grid,room, options)
   return { placed = done }
 end
 
-local function decorate_walls(room, connections, door_required, has_windows)
+function hypervaults.rooms.decorate_walls_open(room, connections, door_required, has_windows)
+
+  for i, door in ipairs(connections) do
+    dgn.grid(door.grid_pos.x,door.grid_pos.y, "floor")
+  end
+
+end
+
+function hypervaults.rooms.decorate_walls(room, connections, door_required, has_windows)
 
   -- TODO: Use decorator callbacks for these so we can vary by layout
   local have_door = true
@@ -445,6 +458,7 @@ local function decorate_walls(room, connections, door_required, has_windows)
 end
 
 -- Attempts to place a room by picking a random available spot
+-- TODO: This function is massive and could do with breaking up into a few parts
 function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local v_normal, v_wall, clear_bounds, orient, v_normal_dir,wall
 
@@ -460,7 +474,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   local chosen = orients[crawl.random2(count) + 1]
   wall = chosen.wall
-  orient = normals[chosen.dir + 1]
+  orient = hypervaults.normals[chosen.dir + 1]
 
   -- Pick a random open cell on the wall. This is where we'll attach the room to the door.
   if #wall == 0 then return false end -- Shouldn't happen, eligible should mean cells available
@@ -471,14 +485,14 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- In open space we can pick a random normal for the door
   if usage.usage == "open" then
     -- Pick a random rotation for the door wall
-    v_normal = normals[crawl.random_range(1,4)]
+    v_normal = hypervaults.normals[crawl.random_range(1,4)]
     v_normal_dir = v_normal.dir
   end
 
   -- If placing a room in an existing wall we have the normal stored alredy in the usage data
   if usage.usage == "eligible" or usage.usage == "eligible_open" then
     v_normal = usage.normal -- TODO: make sure usage.normal.dir is never nil and remove this loop
-    for i,n in ipairs(normals) do
+    for i,n in ipairs(hypervaults.normals) do
       if n.x == v_normal.x and n.y == v_normal.y then
         v_normal_dir = n.dir
       end
@@ -490,8 +504,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Figure out the mapped x and y vectors of the room relative to its orient
   local room_final_y_dir = (v_normal_dir - chosen_wall.dir + 2) % 4
   local room_final_x_dir = (room_final_y_dir + 1) % 4
-  local room_final_x_normal = normals[room_final_x_dir+1]
-  local room_final_y_normal = normals[room_final_y_dir+1]
+  local room_final_x_normal = hypervaults.normals[room_final_x_dir+1]
+  local room_final_y_normal = hypervaults.normals[room_final_y_dir+1]
 
   -- Now we can use those vectors along with the position of the connecting wall within the room, to find out where the (0,0) corner
   -- of the room lies on the map (and use that coord for subsequent calculations within the room grid)
@@ -621,9 +635,12 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     local mask_cell = coord.room_mask
 
     if mask_cell.vault then
-      vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "restricted", room = room, reason = "vault" })
-    elseif mask_cell.empty then
-      vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "empty" })
+      if grid_cell.empty then
+        vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "open" })
+      else
+        vaults_set_usage(usage_grid,coord.grid_pos.x,coord.grid_pos.y,{ usage = "restricted", room = room, reason = "vault" })
+      end
+
     elseif mask_cell.wall then
 
       -- Check if overlapping existing wall
@@ -654,30 +671,25 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       -- Carving into rock / open space
       if mask_cell.connected and ((current_usage.usage == "none" and usage.usage == "eligible") or (current_usage.usage == "open" and (usage.usage == "eligible_open" or usage.usage == "open"))) then
         local u_wall_dir = (room_final_y_dir + mask_cell.dir) % 4
-        vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = wall_usage, normal = normals[u_wall_dir + 1], room = room, depth = new_depth, cell = grid_cell, mask = mask_cell })
+        vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = wall_usage, normal = hypervaults.normals[u_wall_dir + 1], room = room, depth = new_depth, cell = grid_cell, mask = mask_cell })
       end
 
     end
   end
 
-    -- TODO: Following logic to be reintegrated into code room generation
-  -- local set_empty = crawl.coinflip() -- Allow the room to be used for more rooms or not?
-   --   elseif x > origin.x + 1 and x < opposite.x-1 and y > origin.y - 1 and y < opposite.y - 1 then  -- Leaving a 2 tile border
-    --    vaults_set_usage(usage_grid,x,y,{usage = "open"})
-    --  else
-    --    vaults_set_usage(usage_grid,x,y,{usage = "restricted", reason = "border"})
-    --  end
-
-  -- How big the door?
+  -- Drawdoors and windows
   local needs_door = true  -- Only reason we wouldn't need a door is if we're intentionally creating a dead end, not implemented yet
   if needs_door then
     local has_windows = (not room.no_windows) and crawl.one_chance_in(5)
 
-    decorate_walls(room,door_connections,true,has_windows)
+    local decorate_callback = options.decorate_walls_callback
+    if decorate_callback == nil then decorate_callback = hypervaults.rooms.decorate_walls end
+
+    decorate_callback(room,door_connections,true,has_windows)
     -- Have a chance to add doors / windows to each other side of the room
     for n = 0, 3, 1 do
       if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
-        decorate_walls(room,incidental_connections[n],false,has_windows)
+        decorate_callback(room,incidental_connections[n],false,has_windows)
       end
     end
 
