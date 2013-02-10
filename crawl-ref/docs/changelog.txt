@@ -20,7 +20,6 @@ Branches, environment
 * A new water-themed rune vault for the Snake Pit.
 * A new rotting-themed rune vault for the Swamp.
 * A new castle-themed rune vault for the Swamp.
-* A new castle-themed rune vault for the Swamp.
 * A new, more waterlogged, rune vault for Shoals.
 * Lots more new vaults.
 * Remove secret doors entirely, replacing some with runed doors.
