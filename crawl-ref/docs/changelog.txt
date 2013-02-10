@@ -71,8 +71,8 @@ Monsters
       more masses become visible.
     - Apocalypse crab: breathes clouds of chaos.
     - Thrashing horror: moves like a bat, tramples, and frenzies.
-    - Spatial maelstrom: incorporeal vortex that turns walls into more
-      maelstroms.
+    - Spatial maelstrom: incorporeal vortex that turns walls into spatial
+      vortices.
     - Chaos butterfly: is surrounded by rain, summons twisters, and
       has a chaos attack.
 * New uniques:
