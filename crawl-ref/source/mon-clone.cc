@@ -216,10 +216,12 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
 bool mons_clonable(const monster* mon, bool needs_adjacent)
 {
     // No uniques or ghost demon monsters.  Also, figuring out the name
-    // for the clone of a named monster isn't worth it.
+    // for the clone of a named monster isn't worth it, and duplicate
+    // battlespheres with the same owner cause problems with the spell
     if (mons_is_unique(mon->type)
         || mons_is_ghost_demon(mon->type)
-        || mon->is_named())
+        || mon->is_named()
+        || mon->type == MONS_BATTLESPHERE)
     {
         return false;
     }
