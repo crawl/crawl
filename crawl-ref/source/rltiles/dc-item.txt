@@ -1054,6 +1054,7 @@ misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_EMPTY_EBONY_CASKET
 misc_box MISC_BOX_OF_BEASTS
 misc_disc MISC_DISC_OF_STORMS
+%rim 0
 misc_deck MISC_DECK
 %start
 %compose misc_deck
@@ -1165,7 +1166,6 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_defense
 %finish
-%rim 0
 misc_quad MISC_QUAD_DAMAGE
 %rim 1
 %sdir item/misc/runes

@@ -152,25 +152,32 @@ brick_brown7
 %resetcol
 
 %variation WALL_BRICK green
-%hue 30 90
-%hue 0 90
+%hue 30 140
+%hue 0 140
+%lum 30 -10
+%lum 0 -10
 %repeat WALL_BRICK WALL_BRICK_GREEN
 %resetcol
 
 %variation WALL_BRICK cyan
 %hue 30 180
 %hue 0 180
+%lum 30 -10
+%lum 0 -10
 %repeat WALL_BRICK WALL_BRICK_CYAN
 %resetcol
 
 %variation WALL_BRICK red
 %hue 30 0
+%lum 30 -5
+%lum 0 -5
 %repeat WALL_BRICK WALL_BRICK_RED
 %resetcol
 
 %variation WALL_BRICK magenta
-%hue 30 300
-%hue 0 300
+%hue 30 270
+%hue 0 270
+%lum 0 -5
 %repeat WALL_BRICK WALL_BRICK_MAGENTA
 %resetcol
 
@@ -189,46 +196,43 @@ brick_brown7
 %resetcol
 
 %variation WALL_BRICK lightblue
-%hue 30 240
-%lum 30 15
-%hue 0 240
+%hue 30 210
+%lum 30 5
+%hue 0 210
 %repeat WALL_BRICK WALL_BRICK_LIGHTBLUE
 %resetcol
 
 %variation WALL_BRICK lightgreen
-%hue 30 90
-%lum 30 15
-%hue 0 90
-%lum 0 5
+%hue 30 110
+%hue 0 110
 %repeat WALL_BRICK WALL_BRICK_LIGHTGREEN
 %resetcol
 
 %variation WALL_BRICK lightcyan
 %hue 30 180
-%lum 30 15
 %hue 0 180
-%lum 0 5
 %repeat WALL_BRICK WALL_BRICK_LIGHTCYAN
 %resetcol
 
 %variation WALL_BRICK lightred
 %hue 30 0
-%lum 30 15
+%lum 30 10
 %lum 0 5
 %repeat WALL_BRICK WALL_BRICK_LIGHTRED
 %resetcol
 
 %variation WALL_BRICK lightmagenta
-%hue 30 300
-%lum 30 15
-%hue 0 300
+%hue 30 290
+%lum 30 5
+%hue 0 290
 %lum 0 5
 %repeat WALL_BRICK WALL_BRICK_LIGHTMAGENTA
 %resetcol
 
 %variation WALL_BRICK yellow
-%hue 30 60
-%hue 0 60
+%hue 30 50
+%hue 0 50
+%lum 0 5
 %repeat WALL_BRICK WALL_BRICK_YELLOW
 %resetcol
 
@@ -236,7 +240,7 @@ brick_brown7
 %desat 30
 %lum 30 30
 %desat 0
-%lum 0 15
+%lum 0 10
 %repeat WALL_BRICK WALL_BRICK_WHITE
 %resetcol
 
@@ -252,15 +256,15 @@ relief2
 relief3
 
 %variation WALL_HALL white
-%lum 0 40
-%lum 28 40
-%lum 29 40
-%lum 30 40
+%lum 0 20
+%lum 28 20
+%lum 29 20
+%lum 30 20
 %repeat WALL_HALL WALL_HALL_WHITE
 %resetcol
 
 %variation WALL_HALL darkgray
-%lum 0 -25
+%lum 0 -15
 %repeat WALL_HALL WALL_HALL_DARKGRAY
 %resetcol
 
@@ -313,31 +317,32 @@ zot_blue2
 zot_blue3
 
 %variation WALL_ZOT green
-%hue 240 120
-%lum 240 -5
+%hue 240 140
+%lum 240 -10
 %repeat WALL_ZOT WALL_ZOT_GREEN
 %resetcol
 
 %variation WALL_ZOT cyan
 %hue 240 180
-%lum 240 -5
+%lum 240 -10
 %repeat WALL_ZOT WALL_ZOT_CYAN
 %resetcol
 
 %variation WALL_ZOT red
 %hue 240 0
-%lum 240 -5
+%lum 240 -10
 %repeat WALL_ZOT WALL_ZOT_RED
 %resetcol
 
 %variation WALL_ZOT magenta
-%hue 240 300
-%lum 240 -5
+%hue 240 270
+%lum 240 -10
 %repeat WALL_ZOT WALL_ZOT_MAGENTA
 %resetcol
 
 %variation WALL_ZOT brown
 %hue 240 30
+%lum 240 -10
 %repeat WALL_ZOT WALL_ZOT_BROWN
 %resetcol
 
@@ -354,36 +359,34 @@ zot_blue3
 %resetcol
 
 %variation WALL_ZOT lightblue
-%lum 240 10
+%hue 240 210
+%lum 240 5
 %repeat WALL_ZOT WALL_ZOT_LIGHTBLUE
 %resetcol
 
 %variation WALL_ZOT lightgreen
-%hue 240 120
-%lum 240 10
+%hue 240 110
 %repeat WALL_ZOT WALL_ZOT_LIGHTGREEN
 %resetcol
 
 %variation WALL_ZOT lightcyan
 %hue 240 180
-%lum 240 10
 %repeat WALL_ZOT WALL_ZOT_LIGHTCYAN
 %resetcol
 
 %variation WALL_ZOT lightred
 %hue 240 0
-%lum 240 10
+%lum 240 5
 %repeat WALL_ZOT WALL_ZOT_LIGHTRED
 %resetcol
 
 %variation WALL_ZOT lightmagenta
-%hue 240 300
-%lum 240 10
+%hue 240 290
 %repeat WALL_ZOT WALL_ZOT_LIGHTMAGENTA
 %resetcol
 
 %variation WALL_ZOT yellow
-%hue 240 60
+%hue 240 50
 %repeat WALL_ZOT WALL_ZOT_YELLOW
 %resetcol
 
@@ -431,22 +434,26 @@ pebble_red3
 %resetcol
 
 %variation WALL_PEBBLE green
-%hue 0 90
+%hue 0 140
+%lum 0 -10
 %repeat WALL_PEBBLE WALL_PEBBLE_GREEN
 %resetcol
 
 %variation WALL_PEBBLE cyan
 %hue 0 180
+%lum 0 -10
 %repeat WALL_PEBBLE WALL_PEBBLE_CYAN
 %resetcol
 
 %variation WALL_PEBBLE magenta
-%hue 0 300
+%hue 0 270
+%lum 0 -5
 %repeat WALL_PEBBLE WALL_PEBBLE_MAGENTA
 %resetcol
 
 %variation WALL_PEBBLE brown
 %hue 0 30
+%lum 0 -5
 %repeat WALL_PEBBLE WALL_PEBBLE_BROWN
 %resetcol
 
@@ -463,42 +470,41 @@ pebble_red3
 %resetcol
 
 %variation WALL_PEBBLE lightblue
-%hue 0 240
-%lum 0 15
+%hue 0 210
+%lum 0 5
 %repeat WALL_PEBBLE WALL_PEBBLE_LIGHTBLUE
 %resetcol
 
 %variation WALL_PEBBLE lightgreen
-%hue 0 90
-%lum 0 15
+%hue 0 110
 %repeat WALL_PEBBLE WALL_PEBBLE_LIGHTGREEN
 %resetcol
 
 %variation WALL_PEBBLE lightcyan
 %hue 0 180
-%lum 0 15
 %repeat WALL_PEBBLE WALL_PEBBLE_LIGHTCYAN
 %resetcol
 
 %variation WALL_PEBBLE lightred
-%lum 0 15
+%lum 0 10
 %repeat WALL_PEBBLE WALL_PEBBLE_LIGHTRED
 %resetcol
 
 %variation WALL_PEBBLE lightmagenta
-%hue 0 300
-%lum 0 15
+%hue 0 290
+%lum 0 5
 %repeat WALL_PEBBLE WALL_PEBBLE_LIGHTMAGENTA
 %resetcol
 
 %variation WALL_PEBBLE yellow
-%hue 0 60
+%hue 0 50
+%lum 0 5
 %repeat WALL_PEBBLE WALL_PEBBLE_YELLOW
 %resetcol
 
 %variation WALL_PEBBLE white
 %desat 0
-%lum 0 20
+%lum 0 10
 %repeat WALL_PEBBLE WALL_PEBBLE_WHITE
 %resetcol
 
@@ -798,7 +804,7 @@ stone2_brown3
 %resetcol
 
 %variation DNGN_STONE_WALL green
-%hue 240 120
+%hue 240 140
 %repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_GREEN
 %resetcol
 
@@ -813,7 +819,7 @@ stone2_brown3
 %resetcol
 
 %variation DNGN_STONE_WALL magenta
-%hue 240 300
+%hue 240 270
 %repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_MAGENTA
 %resetcol
 
@@ -846,7 +852,7 @@ transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_CYAN DNGN_FIRST_TRA
 %resetcol
 
 %variation DNGN_TRANSPARENT_WALL green
-%hue 240 120
+%hue 240 140
 %repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_GREEN
 %resetcol
 
@@ -856,7 +862,7 @@ transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_CYAN DNGN_FIRST_TRA
 %resetcol
 
 %variation DNGN_TRANSPARENT_WALL magenta
-%hue 240 300
+%hue 240 270
 %repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_MAGENTA
 %resetcol
 
@@ -872,7 +878,7 @@ transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_CYAN DNGN_FIRST_TRA
 %resetcol
 
 %variation DNGN_TRANSPARENT_WALL yellow
-%hue 240 60
+%hue 240 50
 %repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_YELLOW
 %resetcol
 
@@ -901,7 +907,7 @@ metal_wall_brown DNGN_METAL_WALL_BLUE
 %resetcol
 
 %variation DNGN_METAL_WALL green
-%hue 240 120
+%hue 240 140
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_GREEN
 %resetcol
 
@@ -916,7 +922,7 @@ metal_wall_brown DNGN_METAL_WALL_BLUE
 %resetcol
 
 %variation DNGN_METAL_WALL magenta
-%hue 240 300
+%hue 240 270
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_MAGENTA
 %resetcol
 
@@ -1037,7 +1043,7 @@ bars_red08
 %resetcol
 
 %variation WALL_BARS green
-%hue 0 90
+%hue 0 140
 %repeat WALL_BARS WALL_BARS_GREEN
 %resetcol
 
@@ -1047,7 +1053,7 @@ bars_red08
 %resetcol
 
 %variation WALL_BARS magenta
-%hue 0 300
+%hue 0 270
 %repeat WALL_BARS WALL_BARS_MAGENTA
 %resetcol
 
