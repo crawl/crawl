@@ -157,6 +157,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_SCREAMED;
     case ENCH_WORD_OF_RECALL:
         return MB_WORD_OF_RECALL;
+    case ENCH_INJURY_BOND:
+        return MB_INJURY_BOND;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1431,6 +1433,8 @@ vector<string> monster_info::attributes() const
         v.push_back("misshapen and mutated");
     if (is(MB_WORD_OF_RECALL))
         v.push_back("chanting recall");
+    if (is(MB_INJURY_BOND))
+        v.push_back("sheltered from injuries");
     return v;
 }
 

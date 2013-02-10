@@ -1565,6 +1565,7 @@ enum enchant_type
     ENCH_WRETCHED,      // An abstract placeholder for monster mutations
     ENCH_SCREAMED,      // Starcursed scream timer
     ENCH_WORD_OF_RECALL,// Chanting word of recall
+    ENCH_INJURY_BOND,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2569,6 +2570,7 @@ enum monster_type                      // menv[].type
     MONS_VAULT_SENTINEL,
     MONS_VAULT_WARDEN,
     MONS_IRONBRAND_CONVOKER,
+    MONS_IRONHEART_PRESERVER,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3358,6 +3360,7 @@ enum spell_type
     SPELL_MIGHT_OTHER,
     SPELL_SENTINEL_MARK,
     SPELL_WORD_OF_RECALL,
+    SPELL_INJURY_BOND,
     NUM_SPELLS
 };
 

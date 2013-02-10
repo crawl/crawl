@@ -4184,6 +4184,17 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             else if (petrifying())
                 amount = amount * 2 / 3;
 
+        if (amount != INSTANT_DEATH && has_ench(ENCH_INJURY_BOND))
+        {
+            monster* guardian = get_ench(ENCH_INJURY_BOND).agent()->as_monster();
+            if (guardian && guardian->alive())
+            {
+                int split = amount / 2;
+                guardian->hurt(agent, split, flavour, cleanup_dead);
+                amount -= split;
+            }
+        }
+
         if (amount == INSTANT_DEATH)
             amount = hit_points;
         else if (hit_dice <= 0)

@@ -87,6 +87,7 @@ enum monster_info_flags
     MB_WRETCHED,
     MB_SCREAMED,
     MB_WORD_OF_RECALL,
+    MB_INJURY_BOND,
     NUM_MB_FLAGS
 };
 
