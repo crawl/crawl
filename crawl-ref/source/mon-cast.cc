@@ -2023,12 +2023,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     setup_mons_cast(mons, beem, spell_cast);
 
                 // Try to find a nearby ally to haste, heal or might.
-                // FIXME: right now the "false" is going to be a conditional
-                // for one of the new vaults monsters if/when those land.
                 if ((spell_cast == SPELL_HASTE_OTHER
                      || spell_cast == SPELL_HEAL_OTHER
                      || spell_cast == SPELL_MIGHT_OTHER)
-                        && !_set_allied_target(mons, beem, false))
+                        && !_set_allied_target(mons, beem,
+                               (mons->type == MONS_IRONBRAND_CONVOKER ? true : false)))
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
