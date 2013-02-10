@@ -987,7 +987,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
-            if (src == &you)
+            if (src == &you && mon->type != MONS_BATTLESPHERE)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
