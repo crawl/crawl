@@ -2567,6 +2567,19 @@ struct spell_desc
 },
 
 {
+    SPELL_MIGHT_OTHER, "Might Other",
+     SPTYP_CHARMS,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     true
+},
+
+{
     SPELL_SUNRAY, "Sunray",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,

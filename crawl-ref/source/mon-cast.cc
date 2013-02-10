@@ -176,7 +176,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 }
 
 // Find an allied monster to cast a beneficial beam spell at.
-static bool _set_allied_target(monster* caster, bolt & pbolt)
+static bool _set_allied_target(monster* caster, bolt & pbolt, bool ignore_genus)
 {
     monster* selected_target = NULL;
     int min_distance = INT_MAX;
@@ -205,7 +205,8 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
 
         else if ((mons_genus(targ->type) == caster_genus
                  || mons_genus(targ->base_monster) == caster_genus
-                 || targ->is_holy() && caster->is_holy())
+                 || targ->is_holy() && caster->is_holy()
+                 || ignore_genus)
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
@@ -349,6 +350,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_MIGHT:
+    case SPELL_MIGHT_OTHER:
         beam.flavour  = BEAM_MIGHT;
         break;
 
@@ -1994,10 +1996,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 if (spell_cast != SPELL_MELEE)
                     setup_mons_cast(mons, beem, spell_cast);
 
-                // Try to find a nearby ally to haste or heal.
+                // Try to find a nearby ally to haste, heal or might.
+                // FIXME: right now the "false" is going to be a conditional
+                // for one of the new vaults monsters if/when those land.
                 if ((spell_cast == SPELL_HASTE_OTHER
-                     || spell_cast == SPELL_HEAL_OTHER)
-                        && !_set_allied_target(mons, beem))
+                     || spell_cast == SPELL_HEAL_OTHER
+                     || spell_cast == SPELL_MIGHT_OTHER)
+                        && !_set_allied_target(mons, beem, false))
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
