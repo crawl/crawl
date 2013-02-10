@@ -2629,6 +2629,20 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         band_size = 5 + random2(4);
         break;
 
+    case MONS_VAULT_WARDEN:
+        natural_leader = true;
+        if (coinflip())
+        {
+            band = BAND_YAKTAURS;
+            band_size = 2 + random2(3);
+        }
+        else
+        {
+            band = BAND_VAULT_WARDEN;
+            band_size = 1 + random2(3);
+        }
+        break;
+
     default: ;
     }
 
@@ -3024,6 +3038,16 @@ static monster_type _band_member(band_type band, int power, int which)
                                               16, MONS_NAGA_MAGE,
                                               24, MONS_NAGA,
                                                0);
+        break;
+
+    case BAND_VAULT_WARDEN:
+        if (which == 1 || which == 2 && coinflip())
+            mon_type = random_choose_weighted( 8, MONS_VAULT_SENTINEL,
+                                              12, MONS_IRONBRAND_CONVOKER,
+                                              10, MONS_IRONHEART_PRESERVER,
+                                               0);
+        else
+            mon_type = MONS_VAULT_GUARD;
         break;
 
     default:
