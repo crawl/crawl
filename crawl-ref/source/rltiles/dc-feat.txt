@@ -683,7 +683,10 @@ wall_old_blood09
 %sdir misc
 halo HALO
 effect/halo_range HALO_RANGE
-effect/umbra UMBRA
+effect/umbra0 UMBRA
+effect/umbra1
+effect/umbra2
+effect/umbra3
 effect/orb_glow0 ORB_GLOW
 effect/orb_glow1
 effect/quad_glow QUAD_GLOW
