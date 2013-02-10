@@ -2462,7 +2462,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 agent,
                 0, SPELL_BATTLESPHERE,
                 agent->pos(),
-                agent->is_player() ? MHITYOU : agent->mid,
+                agent->is_player() ? MHITYOU : agent->mindex(),
                 0, god,
                 MONS_NO_MONSTER, 0, BLACK,
                 0);
@@ -2591,7 +2591,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
             // If we're firing at empty air, lose any prior target lock
             if (!battlesphere->props.exists("foe"))
                 battlesphere->foe = (agent->is_player()) ? MHITYOU
-                                                         : agent->mid;
+                                                         : agent->mindex();
         }
         else
         {
@@ -2813,7 +2813,7 @@ bool fire_battlesphere(monster* mons)
          || (!invalid_monster_index(mons->foe)
              && !agent->can_see(&menv[mons->foe])))
         && !mons->props.exists("tracking"))
-        mons->foe = (agent->is_player()) ? MHITYOU : agent->mid;
+        mons->foe = (agent->is_player()) ? MHITYOU : agent->mindex();
 
     return used;
 }
