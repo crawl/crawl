@@ -1112,6 +1112,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_TWISTER:
     case SPELL_BATTLESPHERE:
     case SPELL_WORD_OF_RECALL:
+    case SPELL_INJURY_BOND:
         return true;
     default:
         if (check_validity)
@@ -1548,6 +1549,17 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_BATTLESPHERE:
         if (find_battlesphere(mon))
             ret = true;
+        break;
+
+    case SPELL_INJURY_BOND:
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mons_aligned(mon, *mi) && !mi->has_ench(ENCH_CHARM)
+                && *mi != mon && mon->see_cell_no_trans(mi->pos())
+                && !mi->has_ench(ENCH_INJURY_BOND))
+                    return false; // We found at least one target; that's enough.
+        }
+        ret = true;
         break;
 
     case SPELL_NO_SPELL:
@@ -4318,6 +4330,22 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
         mons->add_ench(recall_timer);
         mons->speed_increment -= 30;
+
+        return;
+    }
+
+    case SPELL_INJURY_BOND:
+    {
+        simple_monster_message(mons, " begins to accept its allies' injuries.");
+        for (monster_iterator mi(mons->get_los_no_trans()); mi; ++mi)
+        {
+            if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
+                && *mi != mons)
+            {
+                mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, 1, mons, 40 + random2(80));
+                mi->add_ench(bond);
+            }
+        }
 
         return;
     }

@@ -743,12 +743,19 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_IRONBRAND_CONVOKER:
+    case MONS_IRONHEART_PRESERVER:
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(
             3, WPN_GREAT_MACE,  2, WPN_DIRE_FLAIL,
             2, WPN_FLAIL,       2, WPN_MORNINGSTAR,
             1, WPN_MACE,
             0);
+
+        if (mon->type == MONS_IRONHEART_PRESERVER && one_chance_in(3))
+        {
+            force_item = true;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PROTECTION);
+        }
         break;
 
     case MONS_CYCLOPS:
@@ -1712,6 +1719,7 @@ static void _give_shield(monster* mon, int level)
         }
         break;
     case MONS_DRACONIAN_KNIGHT:
+    case MONS_IRONHEART_PRESERVER:
         if (coinflip())
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
@@ -1970,6 +1978,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_JORY:
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
+    case MONS_IRONHEART_PRESERVER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
                                        ARM_PLATE_ARMOUR, -1);

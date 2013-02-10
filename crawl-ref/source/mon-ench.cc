@@ -906,7 +906,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
-        case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
+        case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1702,6 +1702,14 @@ void monster::apply_enchantment(const mon_enchant &me)
             mons_word_of_recall(this);
         break;
 
+    case ENCH_INJURY_BOND:
+        // It's hard to absorb someone else's injuries when you're dead
+        if (!me.agent() || !me.agent()->alive())
+            del_ench(ENCH_INJURY_BOND, true, false);
+        else
+            decay_enchantment(me);
+        break;
+
     default:
         break;
     }
@@ -1832,7 +1840,8 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "buggy",
+    "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

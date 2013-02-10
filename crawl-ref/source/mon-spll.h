@@ -1901,6 +1901,17 @@
       }
     },
 
+    {  MST_IRONHEART_PRESERVER,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_MINOR_HEALING,
+       SPELL_INJURY_BOND,
+       SPELL_NO_SPELL,
+       SPELL_MINOR_HEALING,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
