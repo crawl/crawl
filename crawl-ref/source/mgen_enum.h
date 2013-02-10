@@ -72,6 +72,7 @@ enum band_type
     BAND_TARANTELLA,
     BAND_LAMIA,
     BAND_POLYPHEMUS,
+    BAND_VAULT_WARDEN,
     NUM_BANDS                   // always last
 };
 
