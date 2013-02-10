@@ -203,9 +203,9 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
             else
                 continue;
 
-        else if (mons_genus(targ->type) == caster_genus
+        else if ((mons_genus(targ->type) == caster_genus
                  || mons_genus(targ->base_monster) == caster_genus
-                 || targ->is_holy() && caster->is_holy()
+                 || targ->is_holy() && caster->is_holy())
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
@@ -215,6 +215,12 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
 
         if (got_target && targ_distance < min_distance && targ_distance < pbolt.range)
         {
+            // Make sure we don't accidentally help an enemy with this
+            pbolt.target = targ->pos();
+            fire_tracer(caster, pbolt);
+            if (pbolt.foe_info.count)
+                continue;
+
             min_distance = targ_distance;
             selected_target = *targ;
         }
