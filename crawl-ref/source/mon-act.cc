@@ -3655,8 +3655,7 @@ static bool _monster_move(monster* mons)
     if (mons->type == MONS_SPATIAL_MAELSTROM)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
-        if (!feat_is_permarock(feat) && feat_is_solid(feat)
-            && mons->type == MONS_SPATIAL_MAELSTROM)
+        if (!feat_is_permarock(feat) && feat_is_solid(feat))
         {
             const coord_def target(mons->pos() + mmov);
             create_monster(
