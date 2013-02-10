@@ -1681,7 +1681,7 @@ ITEM:    amulet of warding w:5 / amulet of warding randart
 ITEM:    air elemental fan / lamp of fire / \
          stone of earth elementals / lantern of shadows
 KITEM:   % = any, any / gold / nothing, any / nothing
-KITEM:   _ = scroll of unholy creation, scroll of unholy creation / nothing
+KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34

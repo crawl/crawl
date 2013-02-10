@@ -2746,7 +2746,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  // Medium-level scrolls.
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ENCHANT_WEAPON_III),
-                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_UNHOLY_CREATION),
+                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
 

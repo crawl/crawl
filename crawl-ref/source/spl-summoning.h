@@ -50,7 +50,7 @@ spret_type cast_summon_demon(int pow, god_type god = GOD_NO_GOD,
                              bool fail = false);
 spret_type cast_demonic_horde(int pow, god_type god, bool fail);
 spret_type cast_summon_greater_demon(int pow, god_type god, bool fail);
-spret_type cast_shadow_creatures(god_type god, bool fail);
+spret_type cast_shadow_creatures(god_type god, bool fail, bool scroll = false);
 spret_type cast_summon_horrible_things(int pow, god_type god, bool fail);
 bool can_cast_malign_gateway();
 spret_type cast_malign_gateway(actor* caster, int pow,

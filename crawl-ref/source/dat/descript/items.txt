@@ -2235,10 +2235,9 @@ scroll of remove curse
 
 Reading this scroll removes curses from the items you are using.
 %%%%
-scroll of unholy creation
+scroll of summoning
 
-This scroll draws unformed lumps of flesh from the Abyss to create a terrible
-beast.
+This scroll calls forth several creatures woven from shadow into the shapes of those beings found within the reader's immediate vacinity.
 %%%%
 scroll of teleportation
 

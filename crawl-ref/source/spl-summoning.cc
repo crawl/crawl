@@ -1135,7 +1135,7 @@ static monster_type _zotdef_shadow()
     return RANDOM_MOBILE_MONSTER;
 }
 
-spret_type cast_shadow_creatures(god_type god, bool fail)
+spret_type cast_shadow_creatures(god_type god, bool fail, bool scroll)
 {
     fail_check();
     mpr("Wisps of shadow whirl around you...");
@@ -1144,35 +1144,46 @@ spret_type cast_shadow_creatures(god_type god, bool fail)
     if (crawl_state.game_is_zotdef())
         critter = _zotdef_shadow();
 
-    if (monster *mons = create_monster(
+    int num = (scroll ? roll_dice(2, 2) : 1);
+    int num_created = 0;
+
+    for (int i = 0; i < num; ++i)
+    {
+        if (monster *mons = create_monster(
             mgen_data(critter, BEH_FRIENDLY, &you,
-                      1, // This duration is only used for band members.
+                      (scroll ? 2 : 1), // This duration is only used for band members.
                       SPELL_SHADOW_CREATURES, you.pos(), MHITYOU,
                       MG_FORCE_BEH, god), false))
-    {
-        // Choose a new duration based on HD.
-        int x = max(mons->hit_dice - 3, 1);
-        int d = div_rand_round(17,x);
-        if (d < 1)
-            d = 1;
-        if (d > 4)
-            d = 4;
-        mon_enchant me = mon_enchant(ENCH_ABJ, d);
-        me.set_duration(mons, &me);
-        mons->update_ench(me);
-        player_angers_monster(mons);
-
-        // Possibly anger band members, too.
-        for (monster_iterator mi; mi; ++mi)
         {
-            if (testbits(mi->flags, MF_BAND_MEMBER)
-                && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
+            // Choose a new duration based on HD.
+            int x = max(mons->hit_dice - 3, 1);
+            int d = div_rand_round(17,x);
+            if (scroll)
+                d++;
+            if (d < 1)
+                d = 1;
+            if (d > 4)
+                d = 4;
+            mon_enchant me = mon_enchant(ENCH_ABJ, d);
+            me.set_duration(mons, &me);
+            mons->update_ench(me);
+            player_angers_monster(mons);
+
+            // Possibly anger band members, too.
+            for (monster_iterator mi; mi; ++mi)
             {
-                player_angers_monster(*mi);
+                if (testbits(mi->flags, MF_BAND_MEMBER)
+                    && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
+                {
+                    player_angers_monster(*mi);
+                }
             }
+
+            num_created++;
         }
     }
-    else
+
+    if (!num_created)
         mpr("The shadows disperse without effect.");
 
     return SPRET_SUCCESS;

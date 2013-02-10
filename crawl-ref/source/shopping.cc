@@ -1975,7 +1975,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 200;
                 break;
 
-            case SCR_UNHOLY_CREATION:
+            case SCR_SUMMONING:
                 valued += 95;
                 break;
 
