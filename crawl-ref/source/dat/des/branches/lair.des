@@ -2198,7 +2198,6 @@ SUBST:  . = .:80 W:20 1:4 3:1 4:10
 KFEAT:  W = W
 KMONS:  W = giant leech / nothing w:1200
 SUBST:  % = %%*|
-: lair_small_ending(_G)
 MAP
           ..............
        ....................
