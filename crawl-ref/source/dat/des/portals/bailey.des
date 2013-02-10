@@ -934,7 +934,7 @@ KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
 KITEM:  ? = scroll of enchant weapon I / scroll of enchant weapon II /\
             scroll of enchant weapon III w:5 / scroll of vorpalise weapon w:1 /\
             scroll of enchant armour / scroll of acquirement w:1 /\
-            scroll of unholy creation w:2
+            scroll of summoning w:2
 SUBST:  2 = 2   3:1
 SUBST:  3 = 2   3
 SUBST:  4 = 2:5 3   4:5

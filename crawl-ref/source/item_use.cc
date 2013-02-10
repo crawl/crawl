@@ -3065,23 +3065,10 @@ void read_scroll(int slot)
         noisy(25, you.pos(), "You hear a loud clanging noise!");
         break;
 
-    case SCR_UNHOLY_CREATION:
-    {
-        if (monster *mons = create_monster(
-                            mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                                      &you, 0, 0, you.pos(), MHITYOU,
-                                      MG_FORCE_BEH)))
-        {
-            mpr("A horrible Thing appears!");
-            player_angers_monster(mons);
-        }
-        else
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-        }
+    case SCR_SUMMONING:
+        cast_shadow_creatures(GOD_NO_GOD, false, true);
+        did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
         break;
-    }
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");

@@ -109,7 +109,7 @@ bool is_unholy_item(const item_def& item)
         retval = is_demonic(item);
         break;
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_UNHOLY_CREATION);
+        retval = (item.sub_type == SCR_SUMMONING);
         break;
     case OBJ_BOOKS:
     case OBJ_RODS:
@@ -175,9 +175,6 @@ bool is_corpse_violating_item(const item_def& item)
         retval = (item_brand == SPWPN_REAPING);
         break;
     }
-    case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_UNHOLY_CREATION);
-        break;
     case OBJ_BOOKS:
     case OBJ_RODS:
         retval = _is_bookrod_type(item, is_corpse_violating_spell);
@@ -276,7 +273,7 @@ bool is_chaotic_item(const item_def& item)
         retval = (item.sub_type == POT_MUTATION);
         break;
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_UNHOLY_CREATION);
+        retval = (item.sub_type == SCR_SUMMONING);
         break;
     case OBJ_BOOKS:
     case OBJ_RODS:

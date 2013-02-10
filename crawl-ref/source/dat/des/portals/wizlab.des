@@ -1170,7 +1170,7 @@ KITEM:      % = amulet of resist mutation good_item
 KITEM:      : = randbook disc:transmutation owner:Cigotuvi
 KITEM:      ^ = book of transfigurations / randbook disc:transmutation
 KITEM:      | = staff of death
-KITEM:      l = scroll of unholy creation
+KITEM:      l = scroll of summoning
 NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 :           set_random_mon_list("pulsating lump / small abomination / ugly thing / very ugly thing")
@@ -1926,9 +1926,9 @@ wizname = crawl.make_name()
 
 kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wizname, " ", "_"))
 }}
-KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of unholy creation
+KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
-            amulet of conservation / scroll of torment / scroll of unholy creation /\
+            amulet of conservation / scroll of torment / scroll of summoning /\
             demon blade w:1 / demon whip w:1 / demon trident w:1 / gold / wand of fire /\
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning

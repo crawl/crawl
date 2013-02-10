@@ -43,7 +43,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Makhleb="tome of destruction / rod of demonology",
          ["Nemelex Xobeh"]="scroll of random uselessness q:5-10",
          Okawaru="randbook owner:Lugonu spells:summon_butterflies numspells:1 /\
-              book of Callings / scroll of unholy creation q:2-3",
+              book of Callings / scroll of summoning q:2-3",
          ["Sif Muna"]="staff of channeling / good_item plate armour",
          ["the Shining One"]="wand of invisibility w:20 / rod of venom /\
               book of Envenomations / Young Poisoner's Handbook /\

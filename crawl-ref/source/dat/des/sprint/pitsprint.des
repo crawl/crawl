@@ -677,7 +677,7 @@ SUBVAULT: U : equipment_1
 KITEM: a = bread ration q:7, \
        meat ration q:7, \
        strawberry q:40
-KITEM: b = scroll of unholy creation ident:all q:2, \
+KITEM: b = scroll of summoning ident:all q:2, \
        scroll of amnesia q:5 ident:all, \
        scroll of remove curse q:3 ident:all, \
        scroll of vulnerability q:2 ident:all
