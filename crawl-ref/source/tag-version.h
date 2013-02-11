@@ -27,6 +27,7 @@ enum tag_minor_version
     TAG_MINOR_VEHUMET_SPELL_GIFT,  // Vehumet gift spells instead of books
     TAG_MINOR_0_11 = 17,           // 0.11 final saves
     TAG_MINOR_0_12,                // (no change)
+    TAG_MINOR_BATTLESPHERE_MID,    // Monster battlesphere (mid of creator)
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
