@@ -764,3 +764,11 @@ woodground06
 woodground07
 woodground08
 woodground09
+
+cage0 FLOOR_CAGE
+cage1
+cage2
+cage3
+%weight 5
+cage4
+cage5

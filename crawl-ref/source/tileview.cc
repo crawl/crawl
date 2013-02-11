@@ -123,7 +123,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_VESTIBULE_OF_HELL:
         flv.wall  = TILE_WALL_HELL;
-        flv.floor = TILE_FLOOR_INFERNAL;
+        flv.floor = TILE_FLOOR_CAGE;
         return;
 
     case BRANCH_DIS:
