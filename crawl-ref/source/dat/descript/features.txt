@@ -296,6 +296,10 @@ A door, covered in runic writing. It looks like there is something special
 behind it — perhaps danger, perhaps treasure. You may break the runes and open
 it like any other door (ie, by walking into it or pressing 'O').
 %%%%
+A sealed door
+
+A door sealed tightly by arcane runes. It refuses to open for any creature not recognized by its magic.
+%%%%
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
