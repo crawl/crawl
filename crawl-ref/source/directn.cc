@@ -3284,6 +3284,8 @@ string feature_description_at(const coord_def& where, bool covering,
                 desc += "open ";
             else if (grid == DNGN_RUNED_DOOR)
                 desc += "runed ";
+            else if (grid == DNGN_SEALED_DOOR)
+                desc += "sealed ";
             else
                 desc += "closed ";
         }
