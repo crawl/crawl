@@ -568,6 +568,7 @@ int mons_dungeon_level(monster_type mcls)
     case MONS_VERY_UGLY_THING:
     case MONS_HARPY:
     case MONS_FIRE_CRAB:
+    case MONS_VAULT_WARDEN:
         return 21;
 
     case MONS_BOULDER_BEETLE:
@@ -582,6 +583,8 @@ int mons_dungeon_level(monster_type mcls)
     case MONS_REDBACK:
     case MONS_SPHINX:
     case MONS_VAPOUR:
+    case MONS_VAULT_SENTINEL:
+    case MONS_IRONBRAND_CONVOKER:
         return 23;
 
     case MONS_ORC_SORCERER:
@@ -591,6 +594,7 @@ int mons_dungeon_level(monster_type mcls)
     case MONS_ORC_WARLORD:
     case MONS_IRON_TROLL:
     case MONS_YAKTAUR_CAPTAIN:
+    case MONS_IRONHEART_PRESERVER:
         return 25;
 
     case MONS_DANCING_WEAPON:
@@ -1769,7 +1773,19 @@ int mons_vaults_level(monster_type mcls)
 
 int mons_vaults_rare(monster_type mcls)
 {
-    return mons_dungeon_rare(mcls);
+    switch (mcls)
+    {
+        case MONS_VAULT_WARDEN:
+            return 42;
+        case MONS_VAULT_SENTINEL:
+            return 52;
+        case MONS_IRONBRAND_CONVOKER:
+            return 50;
+        case MONS_IRONHEART_PRESERVER:
+            return 40;
+        default:
+            return mons_dungeon_rare(mcls);
+    }
 }
 
 // The Hall of Blades
