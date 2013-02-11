@@ -2430,6 +2430,8 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
     if (agent->is_player() && you.duration[DUR_BATTLESPHERE] > 0)
     {
         monster* battlesphere = find_battlesphere(&you);
+        ASSERT(battlesphere);
+
         bool recalled = false;
         if (!you.can_see(battlesphere))
         {

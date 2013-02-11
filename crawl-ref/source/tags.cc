@@ -3509,6 +3509,17 @@ void unmarshallMonster(reader &th, monster& m)
             m.props["monster_tile"] = short(index);
     }
 
+#if TAG_MAJOR_VERSION == 34
+    // Battlespheres that don't know their creator's mid must have belonged
+    // to the player pre-monster-battlesphere.
+    if (th.getMinorVersion() < TAG_MINOR_BATTLESPHERE_MID
+        && m.type == MONS_BATTLESPHERE && !m.props.exists("bs_mid"))
+    {
+        // It must have belonged to the player.
+        m.props["bs_mid"].get_int() = MID_PLAYER;
+    }
+#endif
+
     m.check_speed();
 }
 
