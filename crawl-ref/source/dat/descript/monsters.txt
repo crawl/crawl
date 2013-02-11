@@ -1611,6 +1611,14 @@ iron troll
 A great troll, mighty of limb and plated with thick scales that resemble
 lightly rusted iron, especially in their hardness.
 %%%%
+ironbrand convoker
+
+A guardian mage clad in pattern-etched armour, convokers can recite a word of recall to summon distant allies to their location and then imbue them with unnatural might.
+%%%%
+ironheart preserver
+
+A towering figure sheathed in heavy armour, preservers safeguard their allies by selflessly accepting a portion of the injuries inflicted upon them.
+%%%%
 item mimic
 
 An apparently abandoned item, actually a vicious little beast in disguise.
@@ -2649,6 +2657,14 @@ charge, which it will occasionally discharge in your direction.
 vault guard
 
 A heavily armed and armoured guardian of the Vaults.
+%%%%
+vault sentinel
+
+A vigilant scout of the Vaults, sentinels are quick to alert their fellows to the presence of intruders and can mark these same intruders with magic such that they will be unable to hide from pursuit, no matter where they flee.
+%%%%
+vault warden
+
+A veteran commander of the Vaults, wardens can seal nearby doorways to prevent intruders from either trespassing further or escaping alive.
 %%%%
 very ugly thing
 
