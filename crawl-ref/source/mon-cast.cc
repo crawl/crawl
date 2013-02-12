@@ -181,14 +181,14 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
     monster* selected_target = NULL;
     int min_distance = INT_MAX;
 
-    monster_type caster_genus = mons_genus(caster->type);
+    const monster_type caster_genus = mons_genus(caster->type);
 
     for (monster_iterator targ(caster); targ; ++targ)
     {
         if (*targ == caster)
             continue;
 
-        int targ_distance = grid_distance(targ->pos(), caster->pos());
+        const int targ_distance = grid_distance(targ->pos(), caster->pos());
 
         bool got_target = false;
 
