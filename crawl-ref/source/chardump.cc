@@ -669,12 +669,14 @@ static void _sdump_religion(dump_params &par)
     string &text(par.text);
     if (you.religion != GOD_NO_GOD)
     {
-        if (par.se)
-            text += "You worshipped ";
-        else
-            text += "You worship ";
-        text += god_name(you.religion);
-        text += ".\n";
+        if (you.religion!=GOD_SELF) {
+            if (par.se)
+                text += "You worshipped ";
+            else
+                text += "You worship ";
+            text += god_name(you.religion);
+            text += ".\n";
+        }
 
         if (you.religion != GOD_XOM)
         {

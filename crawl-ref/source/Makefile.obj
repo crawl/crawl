@@ -70,6 +70,7 @@ godcompanions.o \
 godconduct.o \
 goditem.o \
 godmenu.o \
+godminion.o \
 godpassive.o \
 godprayer.o \
 godwrath.o \

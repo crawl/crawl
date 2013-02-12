@@ -5620,6 +5620,7 @@ void player::init()
     num_total_gifts.init(0);
     one_time_ability_used.reset();
     piety_max.init(0);
+    notoriety.init(0);
     exp_docked       = 0;
     exp_docked_total = 0;
 

@@ -59,6 +59,38 @@ static bool _confirm_pray_sacrifice(god_type god)
 
 string god_prayer_reaction()
 {
+    // Demigod
+    if (you.religion == GOD_SELF) {
+        if (crawl_state.player_is_dead()) {
+            string result = "People ";
+
+            result +=
+                (you.piety > 130) ? "idolised you" :
+                (you.piety > 100) ? "exalted you" :
+                (you.piety >  70) ? "worshipped you" :
+                (you.piety >  40) ? "told heroic tales of you" :
+                (you.piety >  20) ? "had heard of your name" :
+                (you.piety >   5) ? "knew not of you"
+                                  : "had forgotten you";
+            result += ".";
+            return result;
+        }
+        else {
+            string result = "";
+
+            result +=
+                (you.piety > 130) ? "You are deafened by their praise!" :
+                (you.piety > 100) ? "You hear songs of praise!" :
+                (you.piety >  70) ? "You can hear them!" :
+                (you.piety >  40) ? "You hear distance voices." :
+                (you.piety >  20) ? "You think you hear a faint whisper." :
+                (you.piety >   5) ? "You hear nothing."
+                                  : "You feel an empty void...";
+
+            return result;
+        }
+    }
+
     string result = god_name(you.religion);
     if (crawl_state.player_is_dead())
         result += " was ";
@@ -330,8 +362,13 @@ void pray()
         return;
     }
 
-    mprf(MSGCH_PRAY, "You offer a prayer to %s.",
-         god_name(you.religion).c_str());
+    if (you.religion == GOD_SELF) {
+        mprf(MSGCH_PRAY, "You listen for the prayers of your followers. ");
+    }
+    else {
+        mprf(MSGCH_PRAY, "You offer a prayer to %s.",
+             god_name(you.religion).c_str());
+    }
 
     if (you.religion == GOD_FEDHAS && fedhas_fungal_bloom())
         something_happened = true;

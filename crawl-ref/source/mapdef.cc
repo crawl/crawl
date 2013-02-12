@@ -3871,6 +3871,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             {
                 mspec.extra_monster_flags |= MF_NAME_REPLACE;
             }
+            else if (strip_tag(mon_str, "name_key")
+                || strip_tag(mon_str, "n_key"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_KEY;
+            }
 
             if (strip_tag(mon_str, "name_definite")
                 || strip_tag(mon_str, "n_the"))
@@ -4991,6 +4996,8 @@ item_spec item_list::parse_single_spec(string s)
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "cursed"))
         result.level = ISPEC_BAD; // damaged + cursed, actually
+    if (strip_tag(s, "good_cursed"))
+        result.props["cursed"] = bool(true); // for Ashenzarite minions
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
     if (strip_tag(s, "not_cursed"))

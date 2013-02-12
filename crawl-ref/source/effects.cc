@@ -2388,6 +2388,13 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
     }
 
+    // Demigod minion; check if they already disappeared when you were off-level
+    if (mon->flags & MF_MINION) {
+        if (mon->mid != you.minion_mid) {
+            monster_die(mon, KILL_RESET, NON_MONSTER);
+        }
+    }
+
     // Let sleeping monsters lie.
     if (mon->asleep() || mon->paralysed())
         return;

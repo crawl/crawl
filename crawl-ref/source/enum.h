@@ -999,6 +999,13 @@ enum conduct_type
     DID_SEE_MONSTER,                      // TSO
     DID_DESTROY_DECK,                     // Nemelex
 
+    DID_KILL_UNIQUE,                      // Demigod
+    DID_ENTER_NEW_BRANCH,                 // Demigod
+    DID_GET_RUNE,                         // Demigod / Ash
+    DID_GET_ORB,                          // Demigod
+    DID_KILL_GOD_MINION,                  // Demigod
+    DID_FLEE_GOD_MINION,                  // Demigod
+
     NUM_CONDUCTS
 };
 
@@ -1723,6 +1730,7 @@ enum god_type
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
     GOD_ASHENZARI,
+    GOD_SELF,                           // for demigods; can't be taken by any other player
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

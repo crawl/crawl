@@ -1,0 +1,613 @@
+###############################################################
+# monbuild.txt: generate monster specs (for use with mons_list)
+#
+# Monster specs take the same format as MONS and KMONS in vaults:
+# https://crawl.develz.org/wiki/doku.php?id=dcss:help:maps:syntax:monster_info
+#
+# Used by Demigod mechanic to generate minions for each god. It looks for a key
+# with the format "{god name} minion {level}". Minions will be used from the
+# highest available definition for their level (HD will be automatically adjusted).
+#
+# e.g: if an Ashenzari minion of level 14 is requested, we will fall back to
+# @Ashenzari minion 9@ (but adjust the HD to 14).
+#
+# The minion level is decided by player XL, plus up to 3-4 extra levels based on
+# piety and god wrath.
+#
+# -- mumra
+#
+%%%%
+#############################
+# Ashenzari
+# - Player races with cursed gear
+# - Occasional curse skull / toe at higher levels
+Ashenzari minion 1
+
+human name:Ashenzari_human_name n_key ; mundane good_cursed short sword . mundane good_cursed leather armour
+
+kobold name:Ashenzari_kobold_name n_key ; mundane good_cursed dagger . mundane good_cursed animal skin
+
+# Some with ego
+w:1
+human name:Ashenzari_human_name n_key ; good_cursed sword . good_cursed leather armour ego:@armour ego melee@
+
+w:1
+kobold name:Ashenzari_kobold_name n_key ; good_cursed dagger . good_cursed animal skin ego:@armour ego melee@
+
+w:1
+human name:Ashenzari_human_name n_key ; good_cursed sword ego:@weapon ego low@ . good_cursed leather armour
+
+w:1
+kobold name:Ashenzari_kobold_name n_key ; good_cursed dagger . good_cursed animal skin ego:@armour ego melee@
+%%%%
+Ashenzari minion 9
+
+@Ashenzari race mid@ ; good_cursed armour ego:@armour ego any@ . good_cursed weapon ego:@weapon ego low@
+
+w:1
+# TODO: curse skull could use some new spells
+curse skull name:curse_skull_name n_key
+%%%%
+Ashenzari minion 15
+
+@Ashenzari race high@ ; mundane good_cursed armour ego:@armour ego any@ . mundane good_cursed weapon ego:@weapon ego low@
+
+w:1
+@Ashenzari race high@ ; acquire good_cursed armour . acquire good_cursed weapon
+w:1
+@Ashenzari race high@ ; randart good_cursed armour ego:@armour ego any@ . good_cursed weapon ego:@weapon ego high@
+
+w:1
+# TODO: curse toe could use some new spells
+curse toe name:curse_toe_name n_key
+%%%%
+Ashenzari race mid
+
+troll name:Ashenzari_troll_name n_key
+
+deep elf fighter name:Ashenzari_elf_name n_key
+
+deep elf mage name:Ashenzari_elf_name n_key
+
+deep elf summoner name:Ashenzari_elf_name n_key
+
+w:20
+@Ashenzari race low@
+%%%%
+Ashenzari race high
+
+deep dwarf fighter name:Ashenzari_dwarf_name n_key
+
+deep elf blademaster name:Ashenzari_elf_name n_key
+
+deep elf annihilator name:Ashenzari_elf_name n_key
+
+deep elf demonologist name:Ashenzari_elf_name n_key
+
+draconian name:Ashenzari_draconian_name n_key
+
+w:20
+@Ashenzari race mid@
+%%%%
+#############################
+# Cheibriados
+# - Player races with ponderous gear and slow spells
+# - Slugs, snails, golems
+Cheibriados minion 1
+
+w:3
+giant slug spells:@slow spells low@
+
+w:3
+agate snail
+%%%%
+Cheibriados minion 5
+
+naga name:Cheibriados_name n_key perm_ench:slow @slow spells low@ ; short sword | whip . buckler ego:ponderousness | shield ego:ponderousness . cloak ego:ponderousness | nothing
+%%%%
+Cheibriados minion 9
+
+elephant slug
+
+wood golem spells:@slow spells mid@
+%%%%
+Cheibriados minion 15
+
+crystal golem spells:@slow spells high@
+
+clay golem spells:@slow spells high@
+%%%%
+#############################
+# Elyvilon
+#  - Healers and doctors (?)
+Elyvilon minion 1
+
+%%%%
+Elyvilon minion 9
+
+%%%%
+Elyvilon minion 15
+
+%%%%
+#############################
+# Fedhas
+#  - Hunters (centaurs/spriggans/merfolk)
+#  - Plants
+Fedhas minion 1
+
+centaur
+%%%%
+Fedhas minion 9
+
+oklob plant
+
+spriggan druid
+%%%%
+Fedhas minion 15
+
+wood golem
+
+wandering mushroom
+%%%%
+#############################
+# Kikubaaqudgha
+#  -
+Kikubaaqudgha minion 1
+
+%%%%
+Kikubaaqudgha minion 9
+
+%%%%
+Kikubaaqudgha minion 15
+
+%%%%
+#############################
+# Nemelex Xobeh
+#  - Evocations users (wands, etc.)
+#  - Reflavour spells as cards
+Nemelex Xobeh minion 1
+
+kobold spells:@card spells high@
+%%%%
+Nemelex Xobeh minion 9
+
+spriggan
+%%%%
+Nemelex Xobeh minion 15
+
+deep dwarf artificer spells:@card spells high@
+%%%%
+#############################
+# Makhleb
+Makhleb minion 1
+
+@minor demon@
+%%%%
+Makhleb minion 9
+
+@medium demon@
+%%%%
+Makhleb minion 15
+
+@major demon@
+%%%%
+#############################
+# Okawaru
+#  - Mercenaries
+Okawaru minion 1
+%%%%
+Okawaru minion 9
+%%%%
+Okawaru minion 15
+%%%%
+#############################
+# Sif Muna
+#  - Caster backgrounds
+#  - Favour utility over conjurations (tricky!)
+Sif Muna minion 1
+
+kobold
+
+ogre
+%%%%
+Sif Muna minion 6
+
+kobold demonologist
+
+wizard
+
+ogre mage
+%%%%
+Sif Muna minion 9
+
+deep elf
+
+lich
+
+spriggan air mage
+%%%%
+Sif Muna minion 15
+
+lich
+
+deep elf annihilator
+
+ancient lich
+%%%%
+#############################
+# The Shining One
+# - Holy knights and daevas, cherubs?
+The Shining One minion 1
+
+human name:angelic_name n_key
+%%%%
+The Shining One minion 9
+
+daeva name:angelic_name n_key
+%%%%
+The Shining One minion 15
+
+daeva name:angelic_name n_key
+%%%%
+#############################
+# Trog
+#  - Melee characters with berserk
+#  - Brothers In Arms selection (or characters with the ability)
+Trog minion 1
+
+ogre spells:berserker_rage;.;.;.;.;. name:Trog_name n_key
+%%%%
+Trog minion 9
+
+black bear spells:berserker_rage;.;.;.;.;. name:Trog_name n_key
+
+troll spells:berserker_rage;.;.;.;.;. name:Trog_name n_key
+
+hill giant spells:berserker_rage;.;.;.;.;. name:Trog_name n_key
+%%%%
+Trog minion 15
+
+deep troll spells:berserker_rage;.;.;.;.;. name:Trog_name n_key
+
+stone giant spells:berserker_rage;.;.;.;.;. name:Trog_name n_key
+
+spriggan berserker spells:brothers_in_arms;.;.;.;.;. name:Trog_name n_key
+%%%%
+#############################
+# Vehumet
+#  - Conjurors
+Vehumet minion 1
+
+human name:angelic_name n_key
+%%%%
+Vehumet minion 9
+
+angel name:angelic_name n_key
+%%%%
+Vehumet minion 15
+
+angel name:angelic_name n_key
+%%%%
+#############################
+# Xom
+#
+Xom minion 1
+
+human name:angelic_name n_key
+%%%%
+Xom minion 9
+
+angel name:angelic_name n_key
+%%%%
+Xom minion 15
+
+killer klown name:xom_name n_key
+%%%%
+#############################
+# Yredelemnul
+#
+Yredelemnul minion 1
+
+%%%%
+Yredelemnul minion 9
+
+%%%%
+Yredelemnul minion 15
+
+%%%%
+#############################
+# Zin
+# - Angels, Paladins
+# - Silver brands
+Zin minion 1
+
+human name:angelic_name n_key
+%%%%
+Zin minion 9
+
+angel name:angelic_name n_key
+%%%%
+Zin minion 15
+
+angel name:angelic_name n_key
+%%%%
+hex slow spell
+
+ledas_liquefaction
+
+slow
+
+paralyse
+%%%%
+#######################################
+# Nemelex card parallel spells
+card spells high
+
+@bolt card spell high@;@hex card spell high@;@charm card spell high@;@misc card spell high@;@misc card spell high@;@escape card spell high@
+%%%%
+bolt card spell high
+
+orb_of_destruction
+%%%%
+hex card spell high
+
+.
+%%%%
+charm card spell high
+
+# Velocity card
+haste
+%%%%
+escape card spell high
+
+tomb_of_doroklohe
+%%%%
+misc card spell high
+
+summon_butterflies
+%%%%
+#######################################
+# Misc functions (useful for all)
+#
+# A. Various brands
+#
+# Armour egos for different character types:
+armour ego melee
+
+protection
+
+reflection
+
+w:50
+@armour ego all@
+%%%%
+armour ego ranged
+
+w:10
+@armour ego all@
+
+w:1
+archery
+%%%%
+armour ego caster
+
+w:50
+@armour ego all@
+
+w:1
+archmagi
+%%%%
+armour ego evil
+
+darkness
+%%%%
+# Helpful for all characters
+armour ego all
+
+cold_resistance
+
+magic_resistance
+
+fire_resistance
+
+poison_resistance
+
+positive_energy
+
+see_invisible
+
+w:1
+resistance
+%%%%
+# Complete list (mainly for reference)
+armour ego any
+
+archery
+
+archmagi
+
+cold_resistance
+
+darkness
+
+dexterity
+
+fire_resistance
+
+intelligence
+
+levitation
+
+magic_resistance
+
+poison_resistance
+
+ponderousness
+
+positive_energy
+
+preservation
+
+protection
+
+reflection
+
+resistance
+
+running
+
+see_invisible
+
+spirit shield
+
+stealth
+
+strength
+%%%%
+weapon ego low
+
+# Would be nice to increase chance against draconians
+dragon_slaying
+
+electrocution
+
+evasion
+
+flaming
+
+frost
+
+orc_slaying
+
+penetration
+
+protection
+
+speed
+
+vorpal
+%%%%
+weapon ego high
+
+anti-magic
+
+chaos
+
+confuse
+
+distortion
+
+flame
+
+freezing
+
+reaping
+%%%%
+weapon ego holy
+
+holy_wrath
+%%%%
+weapon ego evil
+
+draining
+
+vampiricism
+
+venom
+
+pain
+%%%%
+weapon ego thrown
+
+returning
+%%%%
+# Flame and frost are only for bows
+weapon ego ranged
+
+flame
+
+frost
+
+%%%%
+weapon ego all
+
+anti-magic
+
+chaos
+
+confuse
+
+distortion
+
+dragon_slaying
+
+draining
+
+electrocution
+
+evasion
+
+flaming
+
+freezing
+
+holy_wrath
+
+orc_slaying
+
+pain
+
+penetration
+
+protection
+
+reaping
+
+returning
+
+speed
+
+vampiricism
+
+venom
+
+vorpal
+%%%%
+missile ego all
+
+chaos
+
+confusion
+
+curare
+
+dispersal
+
+exploding
+
+flame
+
+ice
+
+paralysis
+
+penetration
+
+poisoned
+
+reaping
+
+returning
+
+sickness
+
+silver
+
+sleep
+
+slow
+
+steel
+
+wrath
+%%%%

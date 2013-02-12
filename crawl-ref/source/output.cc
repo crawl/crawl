@@ -1093,10 +1093,15 @@ static void _redraw_title(const string &your_name, const string &job_name)
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you.religion != GOD_NO_GOD)
     {
-        string god = " of ";
-        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
-                                         : god_name(you.religion);
-        NOWRAP_EOL_CPRINTF("%s", god.c_str());
+        string god = "";
+        // No god name for Demigods (but still show piety)
+        if (you.religion != GOD_SELF)
+        {
+            god = " of ";
+            god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
+                                             : god_name(you.religion);
+            NOWRAP_EOL_CPRINTF("%s", god.c_str());
+        }
 
         string piety = _god_powers(true);
         if (player_under_penance())

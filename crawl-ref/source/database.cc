@@ -108,6 +108,7 @@ static TextDB AllDBs[] =
             "wpnnoise.txt", // noisy weapon speech
             "insult.txt",   // imp/demon taunts
             "godspeak.txt", // god speech
+            "godminions.txt", // god speech for Demigods
             NULL),
 
     TextDB("shout", "database/",
@@ -132,6 +133,10 @@ static TextDB AllDBs[] =
             "hints.txt",    // hints mode
             "tutorial.txt", // tutorial mode
             NULL),
+
+    TextDB("build", "database/",             // database for building monster specs
+            "monbuild.txt",
+            NULL),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -143,6 +148,7 @@ static TextDB& MiscDB        = AllDBs[5];
 static TextDB& HelpDB        = AllDBs[6];
 static TextDB& FAQDB         = AllDBs[7];
 static TextDB& HintsDB       = AllDBs[8];
+static TextDB& BuildDB       = AllDBs[10];
 
 static string _db_cache_path(string db, const char *lang)
 {
@@ -833,6 +839,24 @@ string getRandNameString(const string &itemtype, const string &suffix)
     int num_replacements = 0;
 
     return _getRandomisedStr(RandartDB, itemtype, suffix, num_replacements);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Monbuild DB specific functions.
+std::string getRandBuildString(const std::string &itemtype,
+                               const std::string &suffix)
+{
+    if (!BuildDB)
+        return ("");
+
+    int num_replacements = 0;
+
+    mprf("random build lookup for %s%s", itemtype.c_str(), suffix.c_str());
+#ifdef DEBUG_RANDBUILD
+    dprf("random build lookup for %s%s", itemtype.c_str(), suffix.c_str);
+#endif
+    return _getRandomisedStr(BuildDB, itemtype, suffix,
+                             num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////

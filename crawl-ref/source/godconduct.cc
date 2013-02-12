@@ -3,6 +3,8 @@
 #include "godconduct.h"
 
 #include "fight.h"
+#include "database.h"
+#include "godminion.h"
 #include "godwrath.h"
 #include "libutil.h"
 #include "monster.h"
@@ -11,6 +13,7 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
+#include "skills2.h"
 
 /////////////////////////////////////////////////////////////////////
 // god_conduct_trigger
@@ -1016,6 +1019,92 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        // Demigod conducts
+        case DID_KILL_UNIQUE:
+            if (you.religion == GOD_SELF) {
+                // TODO: Vary piety messages
+                god_speaks(GOD_SELF, "Far and wide, tales are told of your deeds!");
+                retval = true;
+                piety_denom = level + 18 - you.experience_level / 2;
+                piety_change = piety_denom - 4;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
+                // A little extra wrath for the unique's own god
+                if (victim->god != GOD_NO_GOD && victim->god < NUM_GODS) {
+                    demigod_incur_wrath(victim->god,10);
+                }
+            }
+            break;
+
+        case DID_ENTER_NEW_BRANCH:
+            if (you.religion == GOD_SELF) {
+                god_speaks(GOD_SELF, "Across the land, word spreads of your progress...");
+                piety_change = 5;
+                piety_denom = 1;
+                retval = true;
+            }
+            break;
+
+        case DID_GET_RUNE:
+            // (mumra) Ash piety gain moved here; it's the same as Demigod but keeping them separate in case tweaking needed
+            if (you.religion == GOD_ASHENZARI)
+            {
+                simple_god_message(" appreciates your discovery of this rune.");
+                // Important!  This should _not_ be scaled by bondage level, as
+                // otherwise people would curse just before picking up.
+                piety_change = 10;
+                piety_denom = 1;
+                retval = true;
+            }
+
+            if (you.religion == GOD_SELF) {
+                std::string announcement = "Around the globe, the name of " + you.your_name + " is whispered in awe!";
+                god_speaks(GOD_SELF, announcement.c_str());
+                piety_change = 10;
+                piety_denom = 1;
+                retval = true;
+            }
+            break;
+        case DID_GET_ORB:
+            if (you.religion == GOD_SELF) {
+                std::string announcement = "In every corner of the world, 'Praise " + you.your_name + " the " + player_title() + "!' is chanted in unison!";
+                god_speaks(GOD_SELF, announcement.c_str());
+                piety_change = 30;
+                piety_denom = 1;
+                retval = true;
+            }
+            break;
+        case DID_KILL_GOD_MINION:
+            if (you.religion == GOD_SELF) {
+                // Get god name of follower
+                std::string victim_god_name = god_name(victim->god,false);
+                std::string announcement = "Far and wide, songs are sung of your glorious struggle against the minions of " + victim_god_name + "!";
+                god_speaks(GOD_SELF, announcement.c_str());
+                piety_denom = level + 18 - you.experience_level / 2;
+                piety_change = piety_denom - 4;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
+                retval = true;
+
+                // Relevant god speaks
+                // TODO: Scale messages with minion tier
+                // TODO: Other gods comment?
+                std::string speak_key = victim_god_name + " minion killed";
+                god_speaks(victim->god, getSpeakString(speak_key).c_str());
+
+                // Slightly annoys the god (but presumably they're also slightly embarassed)
+                demigod_incur_wrath(victim->god, 5);
+            }
+            break;
+        case DID_FLEE_GOD_MINION:
+            if (you.religion == GOD_SELF) {
+                god_speaks(GOD_SELF, "Followers decry your name, as news of your cowardice spreads.");
+                piety_change = -10;
+                piety_denom = 1;
+                retval = true;
+            }
+            break;
+
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
@@ -1078,6 +1167,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
                 "Destroy Deck",
+                "Killed Unique", "Entered New Branch", "Acquired Rune",
+                "Acquired Orb", "Killed God Follower", "Skipped God Follower"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

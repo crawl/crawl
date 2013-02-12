@@ -577,6 +577,9 @@ static void _god_greeting_message(bool game_start)
 
     string msg = god_name(you.religion);
 
+    if (you.religion == GOD_SELF)
+        msg = "Self";
+
     if (brdepth[BRANCH_ABYSS] == -1 && you.religion == GOD_LUGONU)
         msg += " welcome";
     else if (game_start)
@@ -675,6 +678,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('M'): wizard_memorise_spec_spell(); break;
     case CONTROL('P'): wizard_transform(); break;
     case CONTROL('Q'): wizard_toggle_dprf(); break;
+    case CONTROL('O'): wizard_dispatch_minion(); break;
     case CONTROL('R'): wizard_recreate_level(); break;
     case CONTROL('S'): wizard_abyss_speed(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
@@ -4826,5 +4830,5 @@ static void _compile_time_asserts()
     // needs to match the enum, but it currently does.
     for (int i = 0; i < NUM_BRANCHES; ++i)
         ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
-    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 1 == DNGN_ALTAR_LAST_GOD + 1);
+    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 2 == DNGN_ALTAR_LAST_GOD + 1);
 }

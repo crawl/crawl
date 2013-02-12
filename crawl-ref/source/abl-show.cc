@@ -3205,7 +3205,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, abilities[i], check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (you.religion != GOD_NO_GOD
+    // Not for Demigods (mumra)
+    if (you.religion != GOD_NO_GOD && you.religion != GOD_SELF
         && (include_unusable || !silenced(you.pos())))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 

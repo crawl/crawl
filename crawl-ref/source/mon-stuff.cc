@@ -1962,6 +1962,14 @@ int monster_die(monster* mons, killer_type killer,
                     did_god_conduct(DID_KILL_HOLY, mons->hit_dice,
                                     true, mons);
                 }
+
+                if (mons_is_unique(mons->type)) {
+                    did_god_conduct(DID_KILL_UNIQUE, mons->hit_dice, true, mons);
+                }
+
+                if (mons->flags & MF_MINION) {
+                    did_god_conduct(DID_KILL_GOD_MINION, mons->hit_dice, true, mons);
+                }
             }
 
             // Divine health and mana restoration doesn't happen when

@@ -501,6 +501,12 @@ static void _give_items_skills(const newgame_def& ng)
 {
     int weap_skill = 0;
 
+    // There's no similar setup for species; assign Dg themselves as God
+    if (you.species == SP_DEMIGOD) {
+        you.religion = GOD_SELF;
+        you.piety = 35;
+    }
+
     switch (you.char_class)
     {
     case JOB_FIGHTER:

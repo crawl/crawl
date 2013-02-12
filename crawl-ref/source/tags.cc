@@ -1280,7 +1280,11 @@ static void tag_construct_you(writer &th)
     // how much piety have you achieved at highest with each god?
     for (i = 0; i < NUM_GODS; i++)
         marshallByte(th, you.piety_max[i]);
-
+#if TAG_MAJOR_VERSION == 34
+    // how notorious is our Demigod with each major god?
+    for (i = 0; i < NUM_GODS; i++)
+        marshallByte(th, you.notoriety[i]);
+#endif
     marshallByte(th, NUM_NEMELEX_GIFT_TYPES);
     for (i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
         marshallBoolean(th, you.nemelex_sacrificing[i]);
@@ -1380,6 +1384,14 @@ static void tag_construct_you(writer &th)
     marshallUnsigned(th, you.recall_list.size());
     for (i = 0; i < (int)you.recall_list.size(); i++)
         _marshall_as_int<mid_t>(th, you.recall_list[i]);
+
+    // Tracking for Demigods and minions
+#if TAG_MAJOR_VERSION == 34
+    marshallInt(th, you.minion_mid);
+    marshallInt(th, you.minion_timer_long);
+    marshallInt(th, you.minion_timer_short);
+    marshallInt(th, you.minion_kill_count);
+#endif
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
@@ -2195,6 +2207,19 @@ static void tag_read_you(reader &th)
         you.one_time_ability_used.set(i, unmarshallBoolean(th));
     for (i = 0; i < count; i++)
         you.piety_max[i] = unmarshallByte(th);
+
+    #if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() >= TAG_MINOR_DEMIGOD_WORSHIPPERS
+            && th.getMinorVersion() != TAG_MINOR_0_11)
+        {
+    #endif
+    // Demigod notoriety
+    for (i = 0; i < count; i++)
+        you.notoriety[i] = unmarshallUByte(th);
+    #if TAG_MAJOR_VERSION == 34
+        }
+    #endif
+
     count = unmarshallByte(th);
     ASSERT(count == NUM_NEMELEX_GIFT_TYPES);
     for (i = 0; i < count; i++)
@@ -2370,6 +2395,19 @@ static void tag_read_you(reader &th)
     you.recall_list.resize(count);
     for (i = 0; i < count; i++)
         you.recall_list[i] = unmarshall_int_as<mid_t>(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_DEMIGOD_WORSHIPPERS
+        && th.getMinorVersion() != TAG_MINOR_0_11)
+    {
+#endif
+    you.minion_mid = unmarshallInt(th);
+    you.minion_timer_long = unmarshallInt(th);
+    you.minion_timer_short = unmarshallInt(th);
+    you.minion_kill_count = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif

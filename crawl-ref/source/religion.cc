@@ -40,6 +40,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "godcompanions.h"
+#include "godminion.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "godwrath.h"
@@ -327,6 +328,14 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
     },
+    // Demigod
+    // TODO: Review, and vary messages dependant on Demigod's skills
+    { "Few people have heard of your name.",
+      "You now have a small number of dedicated followers.",
+      "Your followers are building altars to you.",
+      "Your worshippers have begun burning heretics at the stake.",
+      "Your worshippers have declared that you are the only god."
+    },
 };
 
 /**
@@ -444,6 +453,14 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."
     },
+    // Demigod
+    // TODO: Review, and vary messages dependant on Demigod's skills?
+    { "Few people even remember your name.",
+      "You have no followers left.",
+      "Small children defecate upon your altars. Nobody minds.",
+      "Your worshippers have forgiven the heretics.",
+      "Your worshippers have begun turning to other gods."
+    },
 };
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
@@ -531,6 +548,9 @@ string get_god_likes(god_type which_god, bool verbose)
         return "";
 
     string text = uppercase_first(god_name(which_god));
+    if (which_god == GOD_SELF)
+        text = "Your followers";
+
     vector<string> likes;
     vector<string> really_likes;
 
@@ -599,6 +619,11 @@ string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you banish creatures to the Abyss");
         break;
 
+    case GOD_SELF:
+        snprintf(info, INFO_SIZE, "you kill unique and powerful enemies");
+        likes.push_back(info);
+        break;
+
     default:
         break;
     }
@@ -625,7 +650,9 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_ASHENZARI:
-        likes.push_back("you obtain runes of Zot");
+    case GOD_SELF:
+        snprintf(info, INFO_SIZE, "you obtain runes of Zot");
+        likes.push_back(info);
         break;
 
     default:
@@ -791,6 +818,10 @@ string get_god_likes(god_type which_god, bool verbose)
         really_likes.push_back("you kill wizards and other users of magic");
         break;
 
+    case GOD_SELF:
+        really_likes.push_back("you acquire the Orb of Zot");
+        break;
+
     default:
         break;
     }
@@ -799,16 +830,21 @@ string get_god_likes(god_type which_god, bool verbose)
         text += " doesn't like anything? This is a bug; please report it.";
     else
     {
-        text += " likes it when ";
+        text += (which_god==GOD_SELF?" like it when ":" likes it when ");
         text += comma_separated_line(likes.begin(), likes.end());
         text += ".";
 
         if (!really_likes.empty())
         {
             text += " ";
-            text += uppercase_first(god_name(which_god));
-
-            text += " especially likes it when ";
+            if (which_god==GOD_SELF)
+            {
+                text += "Your followers especially like it when ";
+            }
+            else {
+                text += uppercase_first(god_name(which_god));
+                text += " especially likes it when ";
+            }
             text += comma_separated_line(really_likes.begin(),
                                          really_likes.end());
             text += ".";
@@ -878,6 +914,10 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     case GOD_NEMELEX_XOBEH:
         really_dislikes.push_back("you destroy decks");
+        break;
+
+    case GOD_SELF:
+        dislikes.push_back("you run away from the heretical minions of false gods");
         break;
 
     default:
@@ -954,8 +994,14 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     if (!dislikes.empty())
     {
-        text += uppercase_first(god_name(which_god));
-        text += " dislikes it when ";
+
+        // Demigod adjustment
+        if (which_god == GOD_SELF)
+          text += "Your followers dislike it when ";
+        else {
+          text += uppercase_first(god_name(which_god));
+          text += " dislikes it when ";
+        }
         text += comma_separated_line(dislikes.begin(), dislikes.end(),
                                      " or ", ", ");
         text += ".";
@@ -966,8 +1012,13 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     if (!really_dislikes.empty())
     {
-        text += uppercase_first(god_name(which_god));
-        text += " strongly dislikes it when ";
+        // Demigod adjustment
+        if (which_god == GOD_SELF)
+            text += "Your followers strongly dislike it when ";
+        else {
+            text += uppercase_first(god_name(which_god));
+            text += " strongly dislikes it when ";
+        }
                 text += comma_separated_line(really_dislikes.begin(),
                                              really_dislikes.end(),
                                              " or ", ", ");
@@ -2369,7 +2420,7 @@ string god_name(god_type which_god, bool long_name)
         return (god_name_jiyva(long_name) +
                 (long_name? " the Shapeless" : ""));
 
-    if (long_name)
+    if (long_name && which_god != GOD_SELF)
     {
         const string shortname = god_name(which_god, false);
         const string longname = getMiscString(shortname + " lastname");
@@ -2404,7 +2455,9 @@ string god_name(god_type which_god, bool long_name)
     case GOD_CHEIBRIADOS:   return "Cheibriados";
     case GOD_XOM:           return "Xom";
     case GOD_ASHENZARI:     return "Ashenzari";
-    case NUM_GODS:          return "Buggy";
+    case GOD_SELF:
+        return (long_name ? (you.your_name + " the " + player_title()) : you.your_name);
+    case NUM_GODS: return "Buggy";
     }
     return "";
 }
@@ -2640,14 +2693,26 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         pgn = sprint_modify_piety(pgn);
 
     pgn = div_rand_round(pgn, denominator);
+
+    // Demigods anger other gods with all piety gain
+    if (you.religion == GOD_SELF)
+    {
+        demigod_incur_wrath_all(pgn);
+    }
+
     while (pgn-- > 0)
         _gain_piety_point();
     if (you.piety > you.piety_max[you.religion])
     {
         if (you.piety > 160 && you.piety_max[you.religion] <= 160)
         {
-            mark_milestone("god.maxpiety", "became the Champion of "
-                           + god_name(you.religion) + ".");
+            if (you.religion != GOD_SELF) {
+                mark_milestone("god.maxpiety", "became the Champion of "
+                               + god_name(you.religion) + ".");
+            }
+            else {
+                mark_milestone("god.maxpiety", "achieved near-Godhood.");
+            }
         }
         you.piety_max[you.religion] = you.piety;
     }
@@ -2980,6 +3045,10 @@ void excommunication(god_type new_god)
     const god_type old_god = you.religion;
     ASSERT(old_god != new_god);
     ASSERT(old_god != GOD_NO_GOD);
+
+    // Demigods can't lose religion (TODO: seems like a hack; review)
+    if (old_god == GOD_SELF)
+        return;
 
     const bool was_haloed = you.haloed();
     const int  old_piety  = you.piety;
@@ -3971,34 +4040,40 @@ bool god_protects_from_harm()
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
-    // First count the number of gods to whom we owe penance.
-    unsigned int penance_count = 0;
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
-    {
-        // Nemelex penance is special: it's only "active"
-        // when penance > 100, else it's passive.
-        if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
-                               || you.penance[i] > 100))
-        {
-            penance_count++;
-        }
+    // Handle Demigod notoriety separately. Demigods should never get penance.
+    if (you.religion == GOD_SELF) {
+        demigod_handle_notoriety();
     }
-    // Now roll to see whether we get retribution and from which god.
-    const unsigned int which_penance = random2(100);
-    if (which_penance < penance_count)
-    {
-        unsigned int count = 0;
+    else {
+        // First count the number of gods to whom we owe penance.
+        unsigned int penance_count = 0;
         for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
         {
+            // Nemelex penance is special: it's only "active"
+            // when penance > 100, else it's passive.
             if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
-                                   || you.penance[i] > 100))
+                                    || you.penance[i] > 100))
             {
-                if (count == which_penance)
+                penance_count++;
+            }
+        }
+        // Now roll to see whether we get retribution and from which god.
+        const unsigned int which_penance = random2(100);
+        if (which_penance < penance_count)
+        {
+            unsigned int count = 0;
+            for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+            {
+                if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
+                                       || you.penance[i] > 100))
                 {
-                    divine_retribution((god_type)i);
-                    break;
+                    if (count == which_penance)
+                    {
+                        divine_retribution((god_type)i);
+                        break;
+                    }
+                    count++;
                 }
-                count++;
             }
         }
     }
@@ -4075,6 +4150,12 @@ void handle_god_time()
                 lose_piety(1);
             break;
 
+        case GOD_SELF:
+            // Demigods; lose piety very slowly since we rarely gain it
+            if (one_chance_in(100))
+                lose_piety(1);
+            break;
+
         default:
             die("Bad god, no bishop!");
             return;
@@ -4128,6 +4209,9 @@ int god_colour(god_type god) // mv - added
 
     case GOD_CHEIBRIADOS:
         return LIGHTCYAN;
+
+    case GOD_SELF:
+        return (WHITE);
 
     case GOD_NO_GOD:
     case NUM_GODS:
@@ -4202,6 +4286,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_JIYVA:
         return (coinflip() ? GREEN : LIGHTGREEN);
+
+    case GOD_SELF:
+        return (WHITE);
 
     default:
         return YELLOW;
@@ -4568,6 +4655,7 @@ static bool _is_temple_god(god_type god)
     case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
+    case GOD_SELF:    // Demigod
         return false;
 
     default:

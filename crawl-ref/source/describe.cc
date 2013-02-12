@@ -3813,6 +3813,19 @@ static string _describe_favour(god_type which_god)
     if (which_god == GOD_XOM)
         return uppercase_first(describe_xom_favour());
 
+    // Demigod
+    // TODO: Split all the special case Demigod bits off into a separate .cc file?
+    if (which_god == GOD_SELF)
+    {
+        return (you.piety > 130) ? "Idolised by the masses.":
+               (you.piety > 100) ? "Exalted with prayer." :
+               (you.piety >  70) ? "Worshipped by many." :
+               (you.piety >  40) ? "Praised by some." :
+               (you.piety >  20) ? "Heard of by few." :
+               (you.piety >   5) ? "Practically unknown."
+                                 : "Forgotten by the people.";
+    }
+
     const string godname = god_name(which_god);
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":
            (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
@@ -4013,6 +4026,11 @@ static const char *divine_title[NUM_GODS][8] =
     // Ashenzari -- divination theme
     {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
      "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
+
+    // Demigod -- worship theme
+    {"Forgotten",          "Nobody",                "Heroic",                    "Renowned",
+     "Fabled",               "Legendary",             "Exalted",                  "Idol" },
+
 };
 
 static int _piety_level(int piety)
@@ -4359,11 +4377,18 @@ void describe_god(god_type which_god, bool give_title)
         //mv: The following code shows abilities given by your god (if any).
 
         textcolor(LIGHTGREY);
-        const char *header = "Granted powers:";
-        const char *cost   = "(Cost)";
-        cprintf("\n\n%s%*s%s\n", header,
-                get_number_of_cols() - 1 - strwidth(header) - strwidth(cost),
-                "", cost);
+        if (you.religion==GOD_SELF)
+        {
+            cprintf("\n\nYour followers:\n");
+        }
+        else
+        {
+            const char *header = "Granted powers:";
+            const char *cost   = "(Cost)";
+            cprintf("\n\n%s%*s%s\n", header,
+                    get_number_of_cols() - 1 - strwidth(header) - strwidth(cost),
+                    "", cost);
+        }
         textcolor(colour);
 
         // mv: Some gods can protect you from harm.

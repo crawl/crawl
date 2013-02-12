@@ -2633,6 +2633,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>G</w>      : dismiss all monsters\n"
                        "<w>m</w>/<w>M</w>    : create monster by number/name\n"
                        "<w>\"</w>      : list monsters\n"
+                       "<w>Ctrl-O</w> : create god minion\n"
                        "\n"
                        "<yellow>Item related commands</yellow>\n"
                        "<w>a</w>      : acquirement\n"

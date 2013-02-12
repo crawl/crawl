@@ -871,3 +871,13 @@ Zin newgame
 
 @Zin welcome@
 %%%%
+Self welcome
+
+Lead your followers to glorious victory!
+
+Show your believers you are the one to retrieve the Orb!
+%%%%
+Self newgame
+
+@Self welcome@
+%%%%

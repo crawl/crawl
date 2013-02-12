@@ -220,5 +220,6 @@ const uint64_t MF_SENSED             = BIT(33); // Player has been warned
                                      // about this monster being nearby.
 const uint64_t MF_NAME_NOCORPSE      = BIT(34); // mname should not be used for corpses
 const uint64_t MF_SEEN_RANGED        = BIT(35); // known to have a ranged attack
-
+const uint64_t MF_NAME_KEY           = BIT(36); // Generate name from monname.txt with key
+const uint64_t MF_MINION             = BIT(37); // Monster is a Demigod minion
 #endif

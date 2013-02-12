@@ -52,4 +52,6 @@ string getHintString(const string &key);
 vector<string> getAllFAQKeys(void);
 string getFAQ_Question(const string &key);
 string getFAQ_Answer(const string &question);
+std::string getRandBuildString(const std::string &itemtype,
+                               const std::string &suffix = "");
 #endif

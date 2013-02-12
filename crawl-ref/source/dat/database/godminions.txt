@@ -1,0 +1,358 @@
+########################################################
+# godminions.txt contains divine speech targetted at Demigods and related events
+#
+# Minion dispatched: God speech when the minion first appears
+#
+Ashenzari minion dispatched
+
+@The_god@ whispers: "You cannot hide your weaknesses from me..."
+
+@The_god@ whispers: "@The_player@, your time is at an end as foretold in the prophecies."
+
+@The_god@ whispers: "The nails would be wasted on you."
+%%%%
+Cheibriados minion dispatched
+
+@The_god@ booms: "Where are you going in such a hurry?"
+%%%%
+Elyvilon minion dispatched
+
+@The_god@ says: "If you will not be pacified, then it saddens me but you must die."
+
+@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+
+w:1
+@The_god@ says: "@The_player@, render unto the gods what is the gods."
+%%%%
+Fedhas minion dispatched
+
+@The_god@ says: "You will be recycled back into the ecosystem!"
+
+@The_god@ says: "May you make excellent compost..."
+%%%%
+Kikubaaqudgha minion dispatched
+
+@The_god@  screeches: "Your corpse shall make a fine addition to my army of the dead!"
+
+@The_god@  intones: "You will make a better @undead type@ than a god, @The_player@."
+%%%%
+@The_god@  minion dispatched
+
+@The_god@ says: "You have drawn... @nemelex bad card@!"
+%%%%
+Makhleb minion dispatched
+
+@The_god@ rages: "Cleanse this sinner, my servant!"
+
+@The_god@ rages: "@The_monster@, disembowel this inept agent of lackluster destruction."
+%%%%
+Okawaru minion dispatched
+
+@The_god@ says: "@The_monster@, bring me the @body part@ of the @angry adjective@ one!"
+
+%%%%
+Sif Muna minion dispatched
+
+@The_god@ whispers: "You know too many secrets, child."
+
+%%%%
+The Shining One minion dispatched
+
+@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+
+w:1
+@The_god@ says: "@The_player@, render unto the gods what is the gods."
+%%%%
+Trog minion dispatched
+
+@The_god@ bellows: "Put down your @reading materials@ and prepare to @fight synonym@!"
+
+@The_god@ roars: "Will your @reading materials@ save you now, @mage synonym@?"
+%%%%
+Vehumet minion dispatched
+
+@The_god@ screams: "@The_monster@ will end you in Hellfire."
+%%%%
+Xom minion dispatched
+
+@The_god@ chuckles: "A new toy for @The_monster@ to play with!"
+
+@Xom laughter@
+%%%%
+Yredelemnul minion dispatched
+
+@The_god@ says: "You will make a better @undead type@ than a god, @The_player@."
+%%%%
+Zin minion dispatched
+
+@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+
+w:1
+@The_god@ says: "@The_player@, render unto the gods what is the gods'."
+%%%%
+##########################################################
+# Gods taunting the player (and each other) during fight
+#
+# The format is:
+# (god) minion taunt [minion type] [winning/losing/won]
+# - winning means the timer is running out (assume player has run away)
+# - won is when timer expired and minion disappeared
+# - losing means the minion is dying and the god might encourage/shout at them
+# - nothing is a generic taunt or fallback if any of the above are winning
+# And:
+# (god) taunt (at god) [minion type] [winning/losing/won]
+# - when gods taunt each other during the fight
+Ashenzari minion taunt winning
+
+@The_god@ whispers: "You will be nailed to the sky, just like I"
+%%%%
+Ashenzari minion taunt won
+
+@The_god@ whispers: "Perhaps another time?"
+%%%%
+Ashenzari minion taunt losing
+
+@The_god@ whispers: "@The_monster@, use what I have shared with you!"
+%%%%
+Trog taunt Sif Muna losing
+
+@The_god@ roars: "See? Your books and words are no match for a blow to the head!"
+
+@The_god@ gloats: "@To_god@, still pretending that the pen is mightier than the sword?"
+%%%
+Trog taunt Sif Muna winning
+
+@The_god@ says: "@The_player, tell me you're not scared of such parlour tricks?"
+%%%
+Cheibriados minion taunt
+
+@The_god@ booms: "Where are you going in such a hurry?"
+%%%%
+Cheibriados minion taunt winning
+
+@The_god@ booms: "That's it, @The_player@... take your time!"
+%%%%
+Cheibriados minion taunt losing
+
+@The_god@ booms: "My head is spinning! @The_monster@, take this fast fool down a gear."
+%%%%
+Elyvilon minion taunt
+
+@The_god@ says: "If you will not be pacified, then it saddens me but you must die."
+
+@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+
+w:1
+@The_god@ says: "@The_player@, render unto the gods what is the gods."
+%%%%
+Fedhas minion taunt
+
+@The_god@ says: "You will be recycled back into the ecosystem!"
+
+@The_god@ says: "I feel you will make excellent compost..."
+%%%%
+Kikubaaqudgha minion taunt
+
+@The_god@  screeches: "Your corpse shall make a fine addition to my army of the dead!"
+
+@The_god@  intones: "You will make a better @undead type@ than a god, @The_player@."
+%%%%
+@The_god@  minion taunt
+
+@The_god@ says: "You have drawn... @nemelex bad card@!"
+%%%%
+Makhleb minion taunt
+
+@The_god@ rages: "Cleanse this sinner, my servant!"
+
+@The_god@ rages: "@The_monster@, disembowel this inept agent of lackluster destruction."
+%%%%
+Okawaru minion taunt
+
+@The_god@ says: "@The_monster@, bring me the @body part@ of the @angry adjective@ one!"
+
+%%%%
+Sif Muna minion taunt
+
+@The_god@ whispers: "You know too many secrets, child."
+
+%%%%
+The Shining One minion taunt
+
+@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+
+w:1
+@The_god@ says: "@The_player@, render unto the gods what is the gods."
+%%%%
+Trog minion taunt
+
+@The_god@ bellows: "Put down your @reading materials@ and prepare to fight!"
+%%%%
+Vehumet minion taunt
+
+@The_god@ screams: "@The_monster@ will end you in Hellfire."
+%%%%
+Xom minion taunt
+
+@The_god@ chuckles: "A new toy for @The_monster@ to play with!"
+
+@Xom laughter@
+%%%%
+Yredelemnul minion taunt
+
+@The_god@ says: "You will make a better @undead type@ than a god, @The_player@."
+%%%%
+Zin minion taunt
+
+@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+
+w:1
+@The_god@ says: "@The_player@, render unto the gods what is the gods'."
+%%%%
+#####################################################
+# Various nouns and adjectives for randomising the preceding speech
+undead type
+
+corpse
+
+carcass
+
+skeleton
+
+zombie
+
+servant
+
+slave
+%%%%
+good god teach
+
+show
+
+teach
+
+demonstrate to
+
+explain to
+%%%%
+good god heretic
+
+heretic
+
+blasphemer
+
+charlatan
+
+scandalmonger
+
+agitator
+
+apostate
+
+pagan
+
+troublemaker
+
+malcontent
+
+delinquent
+
+demagogue
+%%%%
+good god mistake
+
+error
+
+foolishness
+
+perverseness
+
+idiocy
+
+falsehood
+
+absurdity
+
+sinfulness
+
+untruthfulness
+%%%%
+nemelex bad card
+
+Death
+
+The Fool
+
+Justice
+
+Judgement
+%%%%
+# Trophies used in Oka's speech
+trophy body part
+
+head
+
+bowels
+
+eyes
+
+skull
+
+heart
+
+liver
+
+scalp
+%%%%
+# Adjectives Oka uses to describe the player
+angry adjective
+
+despicable
+
+insolent
+
+abominable
+
+inhuman
+
+intolerable
+%%%%
+# Trog describes "books"
+reading materials
+
+books
+
+scrolls
+
+papers
+
+tomes
+
+papyrus
+
+notes
+%%%%
+# Trog synonyms "prepare to [x]"
+fight synonym
+
+fight
+
+do battle
+
+be destroyed
+
+die
+%%%%
+# Trog synonyms "Will your books save you now, [x]?"
+mage synonym
+
+magician
+
+scribe
+
+accountant
+
+quillpusher
+
+bookworm
+%%%%

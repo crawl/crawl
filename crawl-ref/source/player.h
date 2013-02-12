@@ -193,6 +193,8 @@ public:
   FixedVector<short,   NUM_GODS>  num_total_gifts;
   FixedBitVector<   NUM_GODS>  one_time_ability_used;
   FixedVector<uint8_t, NUM_GODS>  piety_max;
+  // For Demigods, tracks each gods' opinion of you
+  FixedVector<uint8_t, NUM_GODS>  notoriety;
 
   // Nemelex sacrifice toggles
   FixedBitVector<NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
@@ -213,6 +215,14 @@ public:
 
   FixedBitVector<NUM_FIXED_BOOKS> had_book;
   FixedBitVector<NUM_SPELLS>      seen_spell;
+  // Demigod minion trackers
+  mid_t minion_mid;
+  int minion_timer_short;
+  int minion_timer_long;
+  int minion_kill_count;
+
+  FixedVector<bool, NUM_FIXED_BOOKS> had_book;
+  FixedVector<bool, NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
   FixedBitVector<NUM_MISCELLANY>     seen_misc;

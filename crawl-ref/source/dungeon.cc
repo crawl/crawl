@@ -21,6 +21,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "coordit.h"
+#include "database.h"
 #include "defines.h"
 #include "describe.h"
 #include "dgn-delve.h"
@@ -4659,6 +4660,22 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     mg.extra_flags |= mspec.extra_monster_flags;
 
     monster *mons = place_monster(mg, true, force_pos && where.origin());
+    // Generate name if needed
+    if (mg.extra_flags & MF_NAME_KEY) {
+        std::string new_name = getRandNameString(mg.mname);
+        if (new_name.length()>0) {
+            mg.extra_flags &= ~MF_NAME_KEY;
+            mg.extra_flags |= MF_NAME_REPLACE;
+            mg.extra_flags |= MF_NAME_DESCRIPTOR;
+            mg.mname = new_name;
+        }
+        else {
+            mg.mname="";
+            mg.extra_flags &= ~MF_NAME_KEY;
+        }
+    }
+
+    monster *mons = place_monster(mg, true, force_pos && place.origin());
     if (!mons)
         return 0;
 

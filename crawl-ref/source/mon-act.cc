@@ -21,6 +21,7 @@
 #include "food.h"
 #include "fight.h"
 #include "fineff.h"
+#include "godminion.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "itemname.h"
@@ -1756,6 +1757,13 @@ static void _pre_monster_move(monster* mons)
     }
 
     fedhas_neutralise(mons);
+
+    // (mumra) not sure best place to put this. Resets the minion short timer if in LOS.
+    if ((you.religion == GOD_SELF) && testbits(mons->flags, MF_MINION)) {
+        if (you.see_cell(mons->pos())) {
+            you.minion_timer_short = DEMIGOD_MINION_TIMER_SHORT;
+        }
+    }
 
     // Monster just summoned (or just took stairs), skip this action.
     if (!mons_is_mimic(mons->type) && testbits(mons->flags, MF_JUST_SUMMONED))

@@ -20,6 +20,7 @@
 #include "env.h"
 #include "files.h"
 #include "ghost.h"
+#include "godminion.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1534,5 +1535,51 @@ void debug_ghosts()
         canned_msg(MSG_OK);
 }
 #endif
+
+void wizard_dispatch_minion()
+{
+    char specs[80];
+
+    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return;
+
+    std::string spec = lowercase_string(specs);
+
+    god_type god = GOD_NO_GOD;
+
+    for (int i = 1; i < NUM_GODS; ++i)
+    {
+        const god_type gi = static_cast<god_type>(i);
+        if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
+        {
+            god = gi;
+            break;
+        }
+    }
+
+    if (god == GOD_NO_GOD || god == GOD_SELF || god == GOD_JIYVA || god == GOD_LUGONU || god == GOD_BEOGH){
+        mpr("That god cannot have minions.");
+        return;
+    }
+    // Level of minion to create
+    mprf(MSGCH_PROMPT, "Enter level of minion: ");
+    char buf[30];
+    if (cancelable_get_line_autohist(buf, sizeof buf))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    const int level = atoi(buf);
+    if (level < 1 || level > 27)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    demigod_dispatch_minion(god, level);
+}
 
 #endif

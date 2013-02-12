@@ -14,6 +14,7 @@
 #include "branch.h"
 #include "files.h"
 #include "kills.h"
+#include "godconduct.h"
 #include "hiscores.h"
 #include "libutil.h"
 #include "message.h"
@@ -430,10 +431,16 @@ void Note::check_milestone() const
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);
 
-            if (dep == 1)
-            {
+            if (dep == 1) {
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig.enter" : "br.enter",
                                "entered " + branch + ".", "parent");
+
+                // Demigod conduct
+                // TODO: I feel that check_milestone is the wrong place for this but where...? -mumra
+                branch_type actual_branch = (branch_type) br;
+                if (actual_branch != BRANCH_ECUMENICAL_TEMPLE && actual_branch != BRANCH_MAIN_DUNGEON) {
+                    did_god_conduct(DID_ENTER_NEW_BRANCH,0);
+                }
             }
             else if (dep == _dungeon_branch_depth(br) || dep == 14
                      || br == BRANCH_ZIGGURAT)
