@@ -5174,7 +5174,7 @@ _Nessos_common_
 %%%%
 _Nessos_rare_
 
-@The_monster@ says, "Study your classics!'
+@The_monster@ says, "Study your classics!"
 
 @The_monster@ says, "I'll learn you. I'll learn you yet!"
 
