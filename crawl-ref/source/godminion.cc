@@ -489,7 +489,7 @@ void demigod_handle_notoriety()
 
             // Equiv level plus a modifier based on notoriety and piety (up to a theoretical max of six levels at full piety and notoriety),
             // plus a random number of levels up to the number of minions the god has sent after you so far.
-            const int level = you.experience_level + div_rand_round((you.notoriety[which_god] * you.piety, 7400)) + (random2(you.minions_dispatched[which_god] + 1));
+            const int level = you.experience_level + div_rand_round(you.notoriety[which_god] * you.piety, 7400) + random2(you.minions_dispatched[which_god] + 1);
             if (demigod_dispatch_minion(which_god,level))
                 // Reset penance
                 dec_notoriety(which_god, you.notoriety[which_god]);
