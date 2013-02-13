@@ -1040,9 +1040,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_ENTER_NEW_BRANCH:
             if (you.religion == GOD_SELF) {
-                god_speaks(GOD_SELF, "Across the land, word spreads of your progress...");
-                piety_change = 5;
+                god_speaks(GOD_SELF, "Your followers are ecstatic as you venture into uncharted territory!");
+                piety_change = 6;
                 piety_denom = 1;
+                retval = true;
+            }
+            break;
+
+        case DID_ENTER_NEW_LEVEL:
+            if (you.religion == GOD_SELF) {
+                god_speaks(GOD_SELF, "Across the land, word spreads of your progress...");
+                piety_change = level;
+                piety_denom = 6;
                 retval = true;
             }
             break;

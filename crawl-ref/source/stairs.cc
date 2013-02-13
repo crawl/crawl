@@ -16,6 +16,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -1001,6 +1002,18 @@ void down_stairs(dungeon_feature_type force_stair)
                 xom_is_stimulated(200);
             break;
         }
+
+        // Conducts for entering branches and levels
+        if (you.depth == 1) { // First level of branch
+            if (you.where_are_you != BRANCH_ECUMENICAL_TEMPLE && you.where_are_you != BRANCH_MAIN_DUNGEON) {
+                did_god_conduct(DID_ENTER_NEW_BRANCH,0);
+            }
+        }
+        else {
+            // TODO: Might need to consider disabling or at least capping for Pan/Zig
+            did_god_conduct(DID_ENTER_NEW_LEVEL,env.absdepth0);
+        }
+
     }
 
     you.turn_is_over = true;

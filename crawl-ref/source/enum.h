@@ -1001,6 +1001,7 @@ enum conduct_type
 
     DID_KILL_UNIQUE,                      // Demigod
     DID_ENTER_NEW_BRANCH,                 // Demigod
+    DID_ENTER_NEW_LEVEL,                  // Demigod
     DID_GET_RUNE,                         // Demigod / Ash
     DID_GET_ORB,                          // Demigod
     DID_KILL_GOD_MINION,                  // Demigod
