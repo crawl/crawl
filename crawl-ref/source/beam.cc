@@ -2160,7 +2160,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
 //  which tells the monster what it'll hit if it breathes/casts etc.
 //
 //  The output from this tracer function is written into the
-//  tracer_info variables (friend_info and foe_info.)
+//  tracer_info variables (friend_info and foe_info).
 //
 //  Note that beam properties must be set, as the tracer will take them
 //  into account, as well as the monster's intelligence.

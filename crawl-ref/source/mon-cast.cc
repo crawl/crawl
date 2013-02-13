@@ -216,7 +216,7 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
         if (got_target && targ_distance < min_distance
             && targ_distance < pbolt.range)
         {
-            // Make sure we don't accidentally help an enemy with this
+            // Make sure we don't accidentally help an enemy with this.
             pbolt.target = targ->pos();
             fire_tracer(caster, pbolt);
             if (pbolt.foe_info.count)
