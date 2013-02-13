@@ -298,7 +298,7 @@ void define_monster(monster* mons);
 
 void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 
-bool mons_should_fire(struct bolt &beam);
+bool mons_should_fire(bolt &beam);
 
 bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,

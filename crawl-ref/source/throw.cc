@@ -2061,7 +2061,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     return hit;
 }
 
-void setup_monster_throw_beam(monster* mons, struct bolt &beam)
+void setup_monster_throw_beam(monster* mons, bolt &beam)
 {
     // FIXME we should use a sensible range here
     beam.range = you.current_vision;
@@ -2075,7 +2075,7 @@ void setup_monster_throw_beam(monster* mons, struct bolt &beam)
 }
 
 // msl is the item index of the thrown missile (or weapon).
-bool mons_throw(monster* mons, struct bolt &beam, int msl)
+bool mons_throw(monster* mons, bolt &beam, int msl)
 {
     string ammo_name;
 
