@@ -1482,8 +1482,10 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // transformations:
         switch (you.form)
         {
-        case TRAN_ICE_BEAST:
         case TRAN_TREE:
+            if (you.religion == GOD_FEDHAS && !player_under_penance())
+                break;
+        case TRAN_ICE_BEAST:
             rf--;
             break;
         case TRAN_WISP:
