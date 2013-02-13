@@ -302,12 +302,13 @@ public:
     void go_berserk(bool intentional, bool potion = false);
     void go_frenzy();
     bool berserk() const;
-    bool frenzied() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const string &reason);
+    bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
                            bool damage_inventory = true,
@@ -339,7 +340,7 @@ public:
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
     int res_torment() const;
-    int res_acid() const;
+    int res_acid(bool calc_unid = true) const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
     int res_constrict() const;

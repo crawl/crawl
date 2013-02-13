@@ -1944,6 +1944,7 @@ void melee_attack::set_attack_verb()
         case TRAN_SPIDER:
         case TRAN_BAT:
         case TRAN_PIG:
+        case TRAN_PORCUPINE:
             if (damage_done < HIT_WEAK)
                 attack_verb = "hit";
             else if (damage_done < HIT_STRONG)
@@ -1989,12 +1990,23 @@ void melee_attack::set_attack_verb()
             }
             // or fall-through
         case TRAN_ICE_BEAST:
+        case TRAN_JELLY: // ?
             if (damage_done < HIT_WEAK)
                 attack_verb = "hit";
             else if (damage_done < HIT_MED)
                 attack_verb = "punch";
             else
                 attack_verb = "pummel";
+            break;
+        case TRAN_TREE:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage_done < HIT_MED)
+                attack_verb = "smack";
+            else if (damage_done < HIT_STRONG)
+                attack_verb = "pummel";
+            else
+                attack_verb = "thrash";
             break;
         case TRAN_DRAGON:
             if (damage_done < HIT_WEAK)
@@ -2005,6 +2017,15 @@ void melee_attack::set_attack_verb()
                 attack_verb = "bite";
             else
                 attack_verb = coinflip() ? "maul" : "trample";
+            break;
+        case TRAN_WISP:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "touch";
+            else if (damage_done < HIT_MED)
+                attack_verb = "hit";
+            else
+                attack_verb = "engulf";
+            break;
             break;
         case TRAN_NONE:
         case TRAN_APPENDAGE:
@@ -3390,9 +3411,38 @@ void melee_attack::attacker_sustain_passive_damage()
     if (defender->type == MONS_PROGRAM_BUG)
         return;
 
-    // FIXME: monsters should suffer from attacking jellies
-    if (attacker->is_player() && mons_class_flag(defender->type, M_ACID_SPLASH))
-        weapon_acid(5);
+    if (mons_class_flag(defender->type, M_ACID_SPLASH)
+        || defender->is_player() && you.form == TRAN_JELLY)
+    {
+        int rA = attacker->res_acid();
+        if (rA < 3)
+        {
+            int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, rA, 5);
+            item_def *weap = weapon;
+
+            if (!weap)
+                weap = attacker->slot_item(EQ_GLOVES);
+
+            if (weap)
+            {
+                if (x_chance_in_y(acid_strength + 1, 20))
+                    corrode_item(*weap, attacker);
+            }
+            else if (attacker->is_player())
+            {
+                mprf("Your %s burn!", you.hand_name(true).c_str());
+                ouch(roll_dice(1, acid_strength), defender->mindex(),
+                     KILLED_BY_ACID);
+            }
+            else
+            {
+                simple_monster_message(attacker->as_monster(),
+                                       " is burned by acid!");
+                attacker->hurt(defender, roll_dice(1, acid_strength),
+                    BEAM_ACID, false);
+            }
+        }
+    }
 }
 
 int melee_attack::staff_damage(skill_type skill)
@@ -3665,28 +3715,24 @@ int melee_attack::calc_to_hit(bool random)
             switch (you.form)
             {
             case TRAN_SPIDER:
+            case TRAN_ICE_BEAST:
+            case TRAN_DRAGON:
+            case TRAN_LICH:
+            case TRAN_TREE:
+            case TRAN_WISP:
                 mhit += maybe_random2(10, random);
                 break;
             case TRAN_BAT:
-                mhit += maybe_random2(12, random);
-                break;
-            case TRAN_ICE_BEAST:
-                mhit += maybe_random2(10, random);
-                break;
             case TRAN_BLADE_HANDS:
                 mhit += maybe_random2(12, random);
                 break;
             case TRAN_STATUE:
                 mhit += maybe_random2(9, random);
                 break;
-            case TRAN_DRAGON:
-                mhit += maybe_random2(10, random);
-                break;
-            case TRAN_LICH:
-                mhit += maybe_random2(10, random);
-                break;
+            case TRAN_PORCUPINE:
             case TRAN_PIG:
             case TRAN_APPENDAGE:
+            case TRAN_JELLY:
             case TRAN_NONE:
                 break;
             }
@@ -4645,7 +4691,8 @@ void melee_attack::do_spines()
     {
         const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
         const int evp = body ? -property(*body, PARM_EVASION) : 0;
-        const int mut = player_mutation_level(MUT_SPINY);
+        const int mut = (you.form == TRAN_PORCUPINE) ? 3
+                        : player_mutation_level(MUT_SPINY);
 
         if (mut && attacker->alive() && one_chance_in(evp + 1))
         {
@@ -5124,6 +5171,7 @@ int melee_attack::calc_base_unarmed_damage()
             damage = (you.species == SP_VAMPIRE ? 2 : 1);
             break;
         case TRAN_ICE_BEAST:
+        case TRAN_TREE:
             damage = 12;
             break;
         case TRAN_BLADE_HANDS:
@@ -5136,9 +5184,12 @@ int melee_attack::calc_base_unarmed_damage()
             damage = 12 + div_rand_round(you.strength() * 2, 3);
             break;
         case TRAN_LICH:
+        case TRAN_WISP:
             damage = 5;
             break;
         case TRAN_PIG:
+        case TRAN_PORCUPINE:
+        case TRAN_JELLY:
             break;
         case TRAN_NONE:
         case TRAN_APPENDAGE:
@@ -5152,7 +5203,7 @@ int melee_attack::calc_base_unarmed_damage()
             apply_bleeding = true;
         }
 
-        if (player_in_bat_form())
+        if (player_in_bat_form() || you.form == TRAN_PORCUPINE)
         {
             // Bats really don't do a lot of damage.
             damage += you.skill_rdiv(SK_UNARMED_COMBAT, 1, 5);

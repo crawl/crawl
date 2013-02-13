@@ -3040,6 +3040,8 @@ static void _player_reacts()
             // mutations).
             save_game(false);
         }
+        else if (you.form == TRAN_WISP)
+            random_blink(false);
     }
 
     actor_apply_cloud(&you);
@@ -3560,11 +3562,7 @@ static void _open_door(coord_def move, bool check_confused)
     if (!move.origin())
     {
         if (check_confused && you.confused() && !one_chance_in(3))
-        {
-            do
-                move = coord_def(random2(3) - 1, random2(3) - 1);
-            while (move.origin());
-        }
+            move = Compass[random2(8)];
         if (_untrap_target(move, check_confused))
             return;
     }
@@ -3609,11 +3607,7 @@ static void _open_door(coord_def move, bool check_confused)
         door_move.delta = move;
 
     if (check_confused && you.confused() && !one_chance_in(3))
-    {
-        do
-            door_move.delta = coord_def(random2(3) - 1, random2(3) - 1);
-        while (door_move.delta.origin());
-    }
+        door_move.delta = Compass[random2(8)];
 
     // We got a valid direction.
     const coord_def doorpos = you.pos() + door_move.delta;
@@ -3865,11 +3859,7 @@ static void _close_door(coord_def move)
         door_move.delta = move;
 
     if (you.confused() && !one_chance_in(3))
-    {
-        do
-            door_move.delta = coord_def(random2(3) - 1, random2(3) - 1);
-        while (door_move.delta.origin());
-    }
+        door_move.delta = Compass[random2(8)];
 
     if (door_move.delta.origin())
     {
@@ -4146,6 +4136,10 @@ static void _move_player(coord_def move)
                 }
             }
         }
+
+        if (you.form == TRAN_TREE)
+            dangerous = DNGN_FLOOR; // still warn about allies
+
         if (dangerous != DNGN_FLOOR || bad_mons)
         {
             string prompt = "Are you sure you want to move while confused "
@@ -4191,6 +4185,20 @@ static void _move_player(coord_def move)
             return;
         }
     }
+    else if (you.form == TRAN_WISP && one_chance_in(10))
+    {
+        // Full confusion appears to be a pain in the rear, and monster
+        // wisps don't attack allies either.  Thus, you can get redirected
+        // only into empty places or towards enemies.
+        coord_def dir = Compass[random2(8)];
+        coord_def targ = you.pos() + dir;
+        monster *dude = monster_at(targ);
+        if (in_bounds(targ) && (dude? !dude->wont_attack() :
+                                      you.can_pass_through(targ)))
+        {
+            move = dir;
+        }
+    }
 
     const coord_def& targ = you.pos() + move;
 
@@ -4198,7 +4206,7 @@ static void _move_player(coord_def move)
     if (!in_bounds(targ))
         return;
 
-    const dungeon_feature_type targ_grid = grd(targ);
+    dungeon_feature_type targ_grid = grd(targ);
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
@@ -4221,7 +4229,7 @@ static void _move_player(coord_def move)
         targ_monst = NULL;
     }
 
-    const bool targ_pass = you.can_pass_through(targ);
+    bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
@@ -4298,6 +4306,14 @@ static void _move_player(coord_def move)
 
             attacking = true;
         }
+    }
+
+    if (you.form == TRAN_JELLY && feat_is_closed_door(targ_grid))
+    {
+        mpr("You eat the door.");
+        nuke_wall(targ);
+        targ_pass = true;
+        targ_grid = grd(targ);
     }
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
@@ -4398,13 +4414,13 @@ static void _move_player(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
-        if (grd(targ) == DNGN_OPEN_SEA)
+        if (you.form == TRAN_TREE)
+            mpr("You cannot move.");
+        else if (grd(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");
-
-        if (grd(targ) == DNGN_LAVA_SEA)
+        else if (grd(targ) == DNGN_LAVA_SEA)
             mpr("The endless sea of lava is not a nice place.");
-
-        if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
+        else if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
             mpr("You cannot walk through the dense trees.");
 
         stop_running();

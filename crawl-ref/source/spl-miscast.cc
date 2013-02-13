@@ -1943,28 +1943,31 @@ void MiscastEffect::_transmutation(int severity)
 
     case 2:         // much more annoying
         // Last case for players only.
-        switch (random2(target->is_player() ? 4 : 3))
+        switch (random2(target->is_player() ? 5 : 4))
         {
         case 0:
+            if (target->polymorph(0)) // short duration
+                break;
+        case 1:
             you_msg      = "Your body is twisted very painfully!";
             mon_msg_seen = "@The_monster@'s body twists and writhes.";
             _ouch(3 + random2avg(23, 2));
             break;
-        case 1:
+        case 2:
             target->petrify(guilty);
             break;
-        case 2:
+        case 3:
             _potion_effect(POT_CONFUSION, 10);
             break;
-        case 3:
+        case 4:
             contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
             break;
         }
         break;
 
     case 3:         // even nastier
-        if (target->is_monster())
-            target->mutate(cause); // Polymorph the monster, if possible.
+        if (coinflip() && target->polymorph(200))
+            break;
 
         switch (random2(3))
         {
@@ -1972,12 +1975,14 @@ void MiscastEffect::_transmutation(int severity)
             you_msg = "Your body is flooded with distortional energies!";
             mon_msg = "@The_monster@'s body is flooded with distortional "
                       "energies!";
-            if (_ouch(3 + random2avg(18, 2)) && target->alive()
-                && target->is_player())
-            {
-                contaminate_player(random2avg(35, 3),
-                                   spell != SPELL_NO_SPELL, false);
-            }
+            if (_ouch(3 + random2avg(18, 2)) && target->alive())
+                if (target->is_player())
+                {
+                    contaminate_player(random2avg(35, 3),
+                                       spell != SPELL_NO_SPELL, false);
+                }
+                else
+                    target->polymorph(0);
             break;
 
         case 1:
@@ -1995,21 +2000,23 @@ void MiscastEffect::_transmutation(int severity)
                 you_msg = "You feel very strange.";
                 delete_mutation(RANDOM_MUTATION, cause, true, false, false, false);
             }
+            else
+                target->polymorph(0);
             _ouch(5 + random2avg(23, 2));
             break;
 
         case 2:
-            // HACK: Avoid lethality before giving mutation, since
-            // afterwards a message would already have been given.
-            if (lethality_margin > 0
-                && (you.hp - lethality_margin) <= 27
-                && avoid_lethal(you.hp))
-            {
-                return;
-            }
-
             if (target->is_player())
             {
+                // HACK: Avoid lethality before giving mutation, since
+                // afterwards a message would already have been given.
+                if (lethality_margin > 0
+                    && (you.hp - lethality_margin) <= 27
+                    && avoid_lethal(you.hp))
+                {
+                    return;
+                }
+
                 you_msg = "Your body is distorted in a weirdly horrible way!";
                 // We don't need messages when the mutation fails,
                 // because we give our own (which is justified anyway as
@@ -2018,6 +2025,8 @@ void MiscastEffect::_transmutation(int severity)
                 if (coinflip())
                     give_bad_mutation(cause, false, false);
             }
+            else
+                target->mutate(cause);
             _ouch(5 + random2avg(23, 2));
             break;
         }

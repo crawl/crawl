@@ -415,6 +415,12 @@ bool disc_of_storms(bool drac_breath)
 
 void tome_of_power(int slot)
 {
+    if (you.form == TRAN_WISP)
+    {
+        crawl_state.zero_turns_taken();
+        return mpr("You can't handle books in this form.");
+    }
+
     const int powc = 5 + you.skill(SK_EVOCATIONS)
                        + roll_dice(5, you.skill(SK_EVOCATIONS));
 
@@ -496,7 +502,7 @@ void tome_of_power(int slot)
              (temp_rand >  6) ? SPELL_STICKY_FLAME_RANGE :
              (temp_rand >  5) ? SPELL_TELEPORT_SELF :
              (temp_rand >  4) ? SPELL_CIGOTUVIS_DEGENERATION :
-             (temp_rand >  3) ? SPELL_POLYMORPH_OTHER :
+             (temp_rand >  3) ? SPELL_POLYMORPH :
              (temp_rand >  2) ? SPELL_MEPHITIC_CLOUD :
              (temp_rand >  1) ? SPELL_THROW_FLAME :
              (temp_rand >  0) ? SPELL_THROW_FROST
@@ -662,6 +668,8 @@ static bool _ball_of_energy(void)
 
 bool evoke_item(int slot)
 {
+    if (you.form == TRAN_WISP)
+        return mpr("You cannot handle anything in this form."), false;
 
     if (you.berserk() && (slot == -1
                        || slot != you.equip[EQ_WEAPON]
@@ -774,7 +782,7 @@ bool evoke_item(int slot)
             return false;
         }
 
-        if (!you.is_undead && you.hunger_state == HS_STARVING)
+        if (!you_foodless() && you.hunger_state == HS_STARVING)
         {
             canned_msg(MSG_TOO_HUNGRY);
             return false;

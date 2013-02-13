@@ -560,8 +560,10 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const string &reason);
+    bool polymorph(int pow);
     void backlight();
     void banish(actor *agent, const string &who = "");
     void blink(bool allow_partial_control = true);
@@ -605,7 +607,7 @@ public:
     bool is_unbreathing() const;
     bool is_insubstantial() const;
     bool is_cloud_immune(cloud_type) const;
-    int res_acid() const;
+    int res_acid(bool calc_unid = true) const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
@@ -620,7 +622,7 @@ public:
     int res_torment() const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
-    int res_constrict() const { return 0; };
+    int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const;

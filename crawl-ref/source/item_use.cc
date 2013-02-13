@@ -2026,9 +2026,12 @@ static void _vampire_corpse_help()
 
 void drink(int slot)
 {
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
     {
-        mpr("You can't drink.");
+        if (you.form == TRAN_TREE)
+            mpr("It'd take too long for a potion to reach your roots.");
+        else
+            mpr("You can't drink.");
         return;
     }
 
@@ -2867,6 +2870,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (you.form == TRAN_WISP)
+    {
+        crawl_state.zero_turns_taken();
+        return mpr("You have no means to unroll scrolls.");
+    }
+
     if (silenced(you.pos()))
     {
         mpr("Magic scrolls do not work when you're silenced!");
@@ -2989,9 +2998,7 @@ void read_scroll(int slot)
     string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
-    if (you.confused()
-        || (which_scroll != SCR_IMMOLATION
-            && !_is_cancellable_scroll(which_scroll)))
+    if (which_scroll != SCR_IMMOLATION && !_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg.c_str());
         // Actual removal of scroll done afterwards. -- bwr

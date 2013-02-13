@@ -4387,7 +4387,7 @@ ENDMAP
 # This wizard likes to experiment!
 NAME:    laboratory_2
 TAGS:    uniq_laboratory_2
-MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph_other;\
+MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph;\
          paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
 DEPTH:   D:10-26
 MONS:    laboratory rat

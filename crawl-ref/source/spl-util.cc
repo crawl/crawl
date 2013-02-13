@@ -1056,8 +1056,8 @@ spell_type zap_type_to_spell(zap_type zap)
         return SPELL_TELEPORT_OTHER;
     case ZAP_LIGHTNING_BOLT:
         return SPELL_LIGHTNING_BOLT;
-    case ZAP_POLYMORPH_OTHER:
-        return SPELL_POLYMORPH_OTHER;
+    case ZAP_POLYMORPH:
+        return SPELL_POLYMORPH;
     case ZAP_BOLT_OF_DRAINING:
         return SPELL_BOLT_OF_DRAINING;
     case ZAP_ENSLAVEMENT:
@@ -1133,11 +1133,15 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_SWIFTNESS:
+        if (transient && you.form == TRAN_TREE)
+            return true;
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)
             return true;
         break;
     case SPELL_FLY:
+        if (transient && you.form == TRAN_TREE)
+            return true;
         if (you.racial_permanent_flight())
             return true;
         if (transient && you.flight_mode())

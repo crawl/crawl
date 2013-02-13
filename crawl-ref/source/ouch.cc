@@ -70,7 +70,6 @@
 #include "xom.h"
 
 static void _end_game(scorefile_entry &se);
-static void _item_corrode(int slot);
 
 static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
@@ -372,14 +371,12 @@ void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message
 
         if (!cloak_protects)
         {
-            if (!player_wearing_slot(slot) && slot != EQ_SHIELD)
+            item_def *item = you.slot_item(static_cast<equipment_type>(slot));
+            if (!item && slot != EQ_SHIELD)
                 dam++;
 
-            if (player_wearing_slot(slot) && corrode_items
-                && x_chance_in_y(acid_strength + 1, 20))
-            {
-                _item_corrode(you.equip[slot]);
-            }
+            if (item && corrode_items && x_chance_in_y(acid_strength + 1, 20))
+                corrode_item(*item, &you);
         }
     }
 
@@ -402,118 +399,6 @@ void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message
             canned_msg(MSG_YOU_RESIST);
 
         ouch(post_res_dam, NON_MONSTER, KILLED_BY_ACID);
-    }
-}
-
-void weapon_acid(int acid_strength)
-{
-    int hand_thing = -1;
-
-    if (!you.melded[EQ_WEAPON])
-        hand_thing = you.equip[EQ_WEAPON];
-
-    if (hand_thing == -1 && !you.melded[EQ_GLOVES])
-        hand_thing = you.equip[EQ_GLOVES];
-
-    if (hand_thing == -1)
-    {
-        msg::stream << "Your " << you.hand_name(true) << " burn!" << endl;
-        ouch(roll_dice(1, acid_strength), NON_MONSTER, KILLED_BY_ACID);
-    }
-    else if (x_chance_in_y(acid_strength + 1, 20))
-        _item_corrode(hand_thing);
-}
-
-static void _item_corrode(int slot)
-{
-    bool it_resists = false;
-    bool suppress_msg = false;
-    item_def& item = you.inv[slot];
-
-    // Artefacts don't corrode.
-    if (is_artefact(item))
-        return;
-
-    // Anti-corrosion items protect against 90% of corrosion.
-    if (you.res_corr() && !one_chance_in(10))
-    {
-        dprf("Amulet protects.");
-        return;
-    }
-
-    int how_rusty = ((item.base_type == OBJ_WEAPONS) ? item.plus2 : item.plus);
-    // Already very rusty.
-    if (how_rusty < -5)
-        return;
-
-    // determine possibility of resistance by object type {dlb}:
-    switch (item.base_type)
-    {
-    case OBJ_ARMOUR:
-        if ((item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
-             || get_equip_race(item) == ISFLAG_DWARVEN)
-            && !one_chance_in(5))
-        {
-            it_resists = true;
-            suppress_msg = false;
-        }
-        break;
-
-    case OBJ_WEAPONS:
-        if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
-        {
-            it_resists = true;
-            suppress_msg = false;
-        }
-        break;
-
-    default:
-        // Other items can't corrode.
-        return;
-    }
-
-    // determine chance of corrosion {dlb}:
-    if (!it_resists)
-    {
-        const int chance = abs(how_rusty);
-
-        // The embedded equation may look funny, but it actually works well
-        // to generate a pretty probability ramp {6%, 18%, 34%, 58%, 98%}
-        // for values [0,4] which closely matches the original, ugly switch.
-        // {dlb}
-        if (chance >= 0 && chance <= 4)
-            it_resists = x_chance_in_y(2 + (4 << chance) + chance * 8, 100);
-        else
-            it_resists = true;
-
-        // If the checks get this far, you should hear about it. {dlb}
-        suppress_msg = false;
-    }
-
-    // handle message output and item damage {dlb}:
-    if (!suppress_msg)
-    {
-        if (it_resists)
-            mprf("%s resists.", item.name(DESC_YOUR).c_str());
-        else
-            mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
-    }
-
-    if (!it_resists)
-    {
-        how_rusty--;
-        xom_is_stimulated(50);
-
-        if (item.base_type == OBJ_WEAPONS)
-            item.plus2 = how_rusty;
-        else
-            item.plus  = how_rusty;
-
-        if (item.base_type == OBJ_ARMOUR)
-            you.redraw_armour_class = true;
-
-        if (you.equip[EQ_WEAPON] == slot)
-            you.wield_change = true;
     }
 }
 

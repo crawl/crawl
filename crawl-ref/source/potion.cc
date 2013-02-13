@@ -216,6 +216,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
 
     case POT_FLIGHT:
+        if (you.form == TRAN_TREE)
+        {
+            mprf(MSGCH_WARN, "Your roots keep you in place.");
+            break;
+        }
+
         if (you.liquefied_ground())
         {
             mprf(MSGCH_WARN, "This potion isn't strong enough to pull you from the ground!");

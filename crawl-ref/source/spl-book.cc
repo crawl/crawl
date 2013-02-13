@@ -481,6 +481,12 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
 {
     bool rc = false;
 
+    if (you.form == TRAN_WISP)
+    {
+        undead = false;
+        return true;
+    }
+
     switch (you.is_undead)
     {
     case US_HUNGRY_DEAD: // Ghouls
@@ -650,6 +656,13 @@ static bool _get_mem_list(spell_list &mem_spells,
                           bool just_check = false,
                           spell_type current_spell = SPELL_NO_SPELL)
 {
+    if (you.form == TRAN_WISP)
+    {
+        if (!just_check)
+            mpr("You can't handle any books in this form.", MSGCH_PROMPT);
+        return false;
+    }
+
     bool          book_errors    = false;
     unsigned int  num_on_ground  = 0;
     unsigned int  num_books      = 0;
@@ -1116,16 +1129,15 @@ string desc_cannot_memorise_reason(bool undead)
     if (undead)
         ASSERT(you.is_undead);
 
-    const bool lichform = (undead
-                           && you.form == TRAN_LICH);
-
     string desc = "You cannot ";
-    if (lichform)
+    if (you.form == TRAN_LICH || you.form == TRAN_WISP)
         desc += "currently ";
     desc += "memorise or cast this spell because you are ";
 
-    if (lichform)
+    if (you.form == TRAN_LICH)
         desc += "in Lich form";
+    else if (you.form == TRAN_WISP)
+        desc += "in Wisp form";
     else
         desc += "a " + lowercase_string(species_name(you.species));
 

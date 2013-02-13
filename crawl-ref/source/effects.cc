@@ -75,6 +75,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -944,14 +945,16 @@ void yell(bool force)
     else if (shout_verb == "scream")
         noise_level = 16;
 
-    if (silenced(you.pos()) || you.cannot_speak())
+    if (you.cannot_speak() || !form_has_mouth())
         noise_level = 0;
 
     if (noise_level == 0)
     {
         if (force)
         {
-            if (shout_verb == "__NONE" || you.paralysed())
+            if (!form_has_mouth())
+                mpr("You have no mouth, and you must scream!");
+            else if (shout_verb == "__NONE" || you.paralysed())
             {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
@@ -965,6 +968,8 @@ void yell(bool force)
                      shout_verb.c_str());
             }
         }
+        else if (!form_has_mouth())
+            mpr("You have no mouth!");
         else
             mpr("You are unable to make a sound!");
 

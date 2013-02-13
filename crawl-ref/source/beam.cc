@@ -205,6 +205,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         elem = ETC_HOLY;
         break;
     case BEAM_POLYMORPH:
+    case BEAM_MALMUTATE:
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
@@ -847,8 +848,19 @@ void bolt::digging_wall_effect()
     case DNGN_SLIMY_WALL:
     case DNGN_GRATE:
         nuke_wall(pos());
-        if (!msg_generated && you.see_cell(pos()))
+        if (!msg_generated)
         {
+            if (!you.see_cell(pos()))
+            {
+                if (!silenced(you.pos()))
+                {
+                    mpr("You hear a grinding noise.", MSGCH_SOUND);
+                    obvious_effect = true; // You may still see the caster.
+                    msg_generated = true;
+                }
+                break;
+            }
+
             obvious_effect = true;
             msg_generated = true;
 
@@ -865,10 +877,10 @@ void bolt::digging_wall_effect()
                 wall = "weird stuff";
             else
                 wall = "rock";
-            mprf("%s %s liquefies and sinks out of sight.",
+
+            mprf("%s %s shatters into small pieces.",
                  agent() && agent()->is_player() ? "The" : "Some",
                  wall.c_str());
-            // This is silent.
         }
         break;
 
@@ -2992,7 +3004,7 @@ bool bolt::is_harmless(const monster* mon) const
         return (mon->res_poison() >= 3);
 
     case BEAM_ACID:
-        return mon->res_acid();
+        return (mon->res_acid() >= 3);
 
     case BEAM_PETRIFY:
         return (mon->res_petrify() || mon->petrified());
@@ -3270,7 +3282,7 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    if (flavour != BEAM_POLYMORPH && has_saving_throw()
+    if (flavour != BEAM_MALMUTATE && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
@@ -3320,23 +3332,14 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_POLYMORPH:
-        if (MON_KILL(thrower))
-        {
-            mpr("Strange energies course through your body.");
-            you.mutate(aux_source.empty() ? get_source_name() :
-                       (get_source_name() + "/" + aux_source));
-            obvious_effect = true;
-        }
-        else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
-                 == ID_KNOWN_TYPE)
-        {
-            mpr("This is polymorph other only!");
-        }
-        else
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            msg_generated = true; // to avoid duplicate "nothing happens"
-        }
+        obvious_effect = you.polymorph(ench_power);
+        break;
+
+    case BEAM_MALMUTATE:
+        mpr("Strange energies course through your body.");
+        you.mutate(aux_source.empty() ? get_source_name() :
+                   (get_source_name() + "/" + aux_source));
+        obvious_effect = true;
         break;
 
     case BEAM_SLOW:
@@ -4680,8 +4683,12 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
     bool rc = true;
     switch (flavour)
     {
-    case BEAM_POLYMORPH:
+    case BEAM_MALMUTATE:
         rc = mon->can_mutate();
+        break;
+
+    case BEAM_POLYMORPH:
+        rc = mon->can_polymorph();
         break;
 
     case BEAM_DEGENERATE:
@@ -4824,7 +4831,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_POLYMORPH:
-        if (mon->mutate("polymorph other")) // exact source doesn't matter
+        if (mon->polymorph(ench_power))
+            obvious_effect = true;
+        if (YOU_KILL(thrower))
+        {
+            did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3),
+                            effect_known);
+        }
+        return MON_AFFECTED;
+
+    case BEAM_MALMUTATE:
+        if (mon->mutate("")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {
@@ -5909,6 +5926,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return "digging";
     case BEAM_TELEPORT:              return "teleportation";
     case BEAM_POLYMORPH:             return "polymorph";
+    case BEAM_MALMUTATE:             return "malmutation";
     case BEAM_ENSLAVE:               return "enslave";
     case BEAM_BANISH:                return "banishment";
     case BEAM_DEGENERATE:            return "degeneration";

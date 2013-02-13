@@ -94,8 +94,8 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_PARALYSE;
     case SPELL_PETRIFY:
         return ZAP_PETRIFY;
-    case SPELL_POLYMORPH_OTHER:
-        return ZAP_POLYMORPH_OTHER;
+    case SPELL_POLYMORPH:
+        return ZAP_POLYMORPH;
     case SPELL_TELEPORT_OTHER:
         return ZAP_TELEPORT_OTHER;
     case SPELL_INNER_FLAME:
