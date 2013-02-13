@@ -300,8 +300,12 @@ enum transformation_type
     TRAN_BAT,
     TRAN_PIG,
     TRAN_APPENDAGE,
+    TRAN_TREE,
+    TRAN_PORCUPINE,
+    TRAN_WISP,
+    TRAN_JELLY,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_APPENDAGE
+    LAST_FORM = TRAN_JELLY
 };
 
 enum beam_type                  // bolt::flavour
@@ -347,6 +351,7 @@ enum beam_type                  // bolt::flavour
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
+    BEAM_MALMUTATE,
     BEAM_ENSLAVE,
     BEAM_BANISH,
     BEAM_DEGENERATE,
@@ -1526,7 +1531,7 @@ enum enchant_type
 #endif
     ENCH_SWIFT,
     ENCH_TIDE,
-    ENCH_INSANE,
+    ENCH_INSANE,         // Berserk + changed attitude.
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
@@ -1552,8 +1557,8 @@ enum enchant_type
     ENCH_DAZED,         // Dazed - less chance of acting each turn.
     ENCH_MUTE,          // Silenced.
     ENCH_BLIND,         // Blind (everything is invisible).
-    ENCH_DUMB,          // Dumb (as in, 'struck dumb').
-    ENCH_MAD,           // Mad.
+    ENCH_DUMB,          // Stupefied (paralysis by a different name).
+    ENCH_MAD,           // Confusion by another name.
     ENCH_SILVER_CORONA, // Zin's silver light.
     ENCH_RECITE_TIMER,  // Was recited against.
     ENCH_INNER_FLAME,
@@ -2528,6 +2533,7 @@ enum monster_type                      // menv[].type
 
     MONS_HELLBINDER,
     MONS_CLOUD_MAGE,
+    MONS_ANIMATED_TREE,
 
     MONS_BEAR,                  // genus
     MONS_ELEMENTAL,             // genus
@@ -3097,7 +3103,7 @@ enum spell_type
     SPELL_BOLT_OF_COLD,
     SPELL_LIGHTNING_BOLT,
     SPELL_BOLT_OF_MAGMA,
-    SPELL_POLYMORPH_OTHER,
+    SPELL_POLYMORPH,
     SPELL_SLOW,
     SPELL_HASTE,
     SPELL_PARALYSE,
@@ -3333,6 +3339,8 @@ enum spell_type
     SPELL_FULMINANT_PRISM,
     SPELL_DAZZLING_SPRAY,
     SPELL_FORCE_LANCE,
+    SPELL_MALMUTATE,
+
     NUM_SPELLS
 };
 
@@ -3438,7 +3446,7 @@ enum zap_type
     ZAP_FIREBALL,
     ZAP_TELEPORT_OTHER,
     ZAP_LIGHTNING_BOLT,
-    ZAP_POLYMORPH_OTHER,
+    ZAP_POLYMORPH,
     ZAP_VENOM_BOLT,
     ZAP_BOLT_OF_DRAINING,
     ZAP_LEHUDIBS_CRYSTAL_SPEAR,

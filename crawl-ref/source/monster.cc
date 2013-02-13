@@ -3953,9 +3953,9 @@ bool monster::res_corr(bool calc_unid, bool items) const
     return actor::res_corr(calc_unid, items);
 }
 
-int monster::res_acid() const
+int monster::res_acid(bool calc_unid) const
 {
-    return res_corr() ? 1 : 0;
+    return max(get_mons_resist(this, MR_RES_ACID), (int)actor::res_corr(calc_unid));
 }
 
 int monster::res_magic() const
@@ -4739,11 +4739,6 @@ bool monster::can_go_berserk() const
     return true;
 }
 
-bool monster::frenzied() const
-{
-    return has_ench(ENCH_INSANE);
-}
-
 bool monster::berserk() const
 {
     return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
@@ -4836,6 +4831,11 @@ bool monster::can_safely_mutate() const
     return can_mutate();
 }
 
+bool monster::can_polymorph() const
+{
+    return can_mutate();
+}
+
 bool monster::can_bleed(bool /*allow_tran*/) const
 {
     return mons_has_blood(type);
@@ -4844,6 +4844,23 @@ bool monster::can_bleed(bool /*allow_tran*/) const
 bool monster::mutate(const string &reason)
 {
     if (!can_mutate())
+        return false;
+
+    // Ugly things merely change colour.
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    {
+        ugly_thing_mutate(this);
+        return true;
+    }
+
+    simple_monster_message(this, " twists and deforms.");
+    add_ench(mon_enchant(ENCH_WRETCHED, 1, nullptr, INFINITE_DURATION));
+    return true;
+}
+
+bool monster::polymorph(int pow)
+{
+    if (!can_polymorph())
         return false;
 
     // Polymorphing a (very) ugly thing will mutate it into a different
@@ -4865,7 +4882,7 @@ bool monster::mutate(const string &reason)
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_mutate(this);
+        slime_creature_polymorph(this);
         return true;
     }
 

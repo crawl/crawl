@@ -3194,35 +3194,7 @@ void corrode_monster(monster* mons, const actor* evildoer)
     if (!one_chance_in(3) && (has_shield || has_armour))
     {
         item_def &thing_chosen = (has_armour ? *has_armour : *has_shield);
-        if (is_artefact(thing_chosen)
-           || (get_equip_race(thing_chosen) == ISFLAG_DWARVEN
-              && one_chance_in(5)))
-        {
-            return;
-        }
-        else
-        {
-            // same formula as for players
-            bool resists = false;
-            int enchant = abs(thing_chosen.plus);
-
-            if (enchant >= 0 && enchant <= 4)
-                resists = x_chance_in_y(2 + (4 << enchant) + enchant * 8, 100);
-            else
-                resists = true;
-
-            if (!resists)
-            {
-                thing_chosen.plus--;
-                mons->ac--;
-                if (you.can_see(mons))
-                {
-                    mprf("The acid corrodes %s %s!",
-                         apostrophise(mons->name(DESC_THE)).c_str(),
-                         thing_chosen.name(DESC_PLAIN).c_str());
-                }
-            }
-        }
+        corrode_item(thing_chosen, mons);
     }
     else if (!one_chance_in(3) && !(has_shield || has_armour)
              && mons->can_bleed() && !mons->res_acid())
@@ -3266,6 +3238,12 @@ bool swap_places(monster* mons, const coord_def &loc)
 bool swap_check(monster* mons, coord_def &loc, bool quiet)
 {
     loc = you.pos();
+
+    if (you.form == TRAN_TREE)
+    {
+        mpr("You can't move.");
+        return false;
+    }
 
     // Don't move onto dangerous terrain.
     if (is_feat_dangerous(grd(mons->pos())) && !you.can_cling_to(mons->pos()))

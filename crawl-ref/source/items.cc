@@ -3118,8 +3118,8 @@ zap_type item_def::zap() const
     case WAND_DIGGING:         result = ZAP_DIG;             break;
     case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
     case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
-    case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT; break;
-    case WAND_POLYMORPH_OTHER: result = ZAP_POLYMORPH_OTHER; break;
+    case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
+    case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
     case WAND_DRAINING:        result = ZAP_BOLT_OF_DRAINING; break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
@@ -4098,4 +4098,83 @@ bool is_valid_mimic_item(object_class_type type)
         if (type == _mimic_item_classes[i])
             return true;
     return false;
+}
+
+void corrode_item(item_def &item, actor *holder)
+{
+    // Artefacts don't corrode.
+    if (is_artefact(item))
+        return;
+
+    // Anti-corrosion items protect against 90% of corrosion.
+    if (holder && holder->res_corr() && !one_chance_in(10))
+    {
+        dprf("Amulet protects.");
+        return;
+    }
+
+    int how_rusty = ((item.base_type == OBJ_WEAPONS) ? item.plus2 : item.plus);
+    // Already very rusty.
+    if (how_rusty < -5)
+        return;
+
+    // determine possibility of resistance by object type {dlb}:
+    switch (item.base_type)
+    {
+    case OBJ_ARMOUR:
+        if ((item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
+             || get_equip_race(item) == ISFLAG_DWARVEN)
+            && !one_chance_in(5))
+        {
+            return;
+        }
+        break;
+
+    case OBJ_WEAPONS:
+        if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
+            return;
+        break;
+
+    default:
+        // Other items can't corrode.
+        return;
+    }
+
+    // determine chance of corrosion {dlb}:
+    const int chance = abs(how_rusty);
+
+    // The embedded equation may look funny, but it actually works well
+    // to generate a pretty probability ramp {6%, 18%, 34%, 58%, 98%}
+    // for values [0,4] which closely matches the original, ugly switch.
+    // {dlb}
+    if (chance < 0 || chance > 4
+        || !x_chance_in_y(2 + (4 << chance) + chance * 8, 100))
+    {
+        return;
+    }
+
+    how_rusty--;
+
+    if (item.base_type == OBJ_WEAPONS)
+        item.plus2 = how_rusty;
+    else
+        item.plus  = how_rusty;
+
+    if (holder && holder->is_player())
+    {
+        mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
+        xom_is_stimulated(50);
+
+        if (item.base_type == OBJ_ARMOUR)
+            you.redraw_armour_class = true;
+
+        if (you.equip[EQ_WEAPON] == item.link)
+            you.wield_change = true;
+    }
+    else if (holder)
+    {
+        mprf("The acid corrodes %s %s!",
+             apostrophise(holder->name(DESC_THE)).c_str(),
+             item.name(DESC_PLAIN).c_str());
+    }
 }

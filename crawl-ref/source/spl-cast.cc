@@ -527,7 +527,8 @@ void inspect_spells()
 
 static bool _can_cast()
 {
-    if (player_in_bat_form() || you.form == TRAN_PIG)
+    if (player_in_bat_form() || you.form == TRAN_PIG || you.form == TRAN_JELLY
+        || you.form == TRAN_PORCUPINE || you.form == TRAN_WISP)
     {
         canned_msg(MSG_PRESENT_FORM);
         return false;
@@ -713,7 +714,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (!you.is_undead
+    if (!you.is_undead && !you_foodless()
         && (you.hunger_state == HS_STARVING
             || you.hunger <= spell_hunger(spell)))
     {
@@ -1119,7 +1120,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
         {
-            if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_POLYMORPH_OTHER)
+            if (spell == SPELL_TELEPORT_OTHER)
                 mpr("Sorry, this spell works on others only.");
             else
                 canned_msg(MSG_UNTHINKING_ACT);

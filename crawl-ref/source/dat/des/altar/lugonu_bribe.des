@@ -60,7 +60,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Zin="good_item " .. weapon .. " ego:draining /\
               good_item " .. weapon .. " ego:pain /\
               good_item " .. weapon .. " ego:chaos /\
-              wand of draining w:7 / wand of polymorph other w:14",
+              wand of draining w:7 / wand of polymorph w:14",
        }
          data.triggered = true
          if item[you.god()] == "no" then return else

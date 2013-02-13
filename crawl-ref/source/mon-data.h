@@ -2257,7 +2257,7 @@ static monsterentry mondata[] = {
 {
     MONS_SPINY_WORM, 'w', LIGHTGREEN, "spiny worm",
     M_NO_SKELETON,
-    MR_VUL_POISON | MR_RES_ACID,
+    MR_VUL_POISON | mrd(MR_RES_ACID, 3),
     1650, 13, MONS_WORM, MONS_SPINY_WORM, MH_NATURAL, -3,
     { {AT_STING, AF_ACID, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 5, 0 },
@@ -3276,7 +3276,7 @@ static monsterentry mondata[] = {
 {
     MONS_OOZE, 'J', LIGHTGREY, "ooze",
     M_SENSE_INVIS,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 3, MONS_JELLY, MONS_OOZE, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
@@ -3288,7 +3288,7 @@ static monsterentry mondata[] = {
 {
     MONS_JELLY, 'J', LIGHTRED, "jelly",
     M_SEE_INVIS | M_SPLITS | M_ACID_SPLASH,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 15, MONS_JELLY, MONS_JELLY, MH_NATURAL, -3,
     { {AT_HIT, AF_ACID, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 5, 5, 0 },
@@ -3348,7 +3348,7 @@ static monsterentry mondata[] = {
 {
     MONS_BROWN_OOZE, 'J', BROWN, "brown ooze",
     M_SENSE_INVIS | M_ACID_SPLASH,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 11, MONS_JELLY, MONS_BROWN_OOZE, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
@@ -3361,7 +3361,7 @@ static monsterentry mondata[] = {
     MONS_AZURE_JELLY, 'J', LIGHTBLUE, "azure jelly",
     M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_COLD | MR_VUL_FIRE | MR_RES_ELEC
-        | MR_RES_ACID,
+        | mrd(MR_RES_ACID, 3),
     0, 12, MONS_JELLY, MONS_AZURE_JELLY, MH_NATURAL, -4,
     { {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_PLAIN, 12},
       {AT_HIT, AF_PLAIN, 12} },
@@ -3374,7 +3374,7 @@ static monsterentry mondata[] = {
 {
     MONS_DEATH_OOZE, 'J', MAGENTA, "death ooze",
     M_SENSE_INVIS,
-    MR_RES_COLD | MR_RES_ACID,
+    MR_RES_COLD | mrd(MR_RES_ACID, 3),
     0, 13, MONS_JELLY, MONS_DEATH_OOZE, MH_UNDEAD, -8,
     { {AT_HIT, AF_ROT, 32}, {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 3, 0 },
@@ -3386,7 +3386,7 @@ static monsterentry mondata[] = {
 {
     MONS_ACID_BLOB, 'J', LIGHTCYAN, "acid blob",
     M_SENSE_INVIS | M_ACID_SPLASH | M_FLEES,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 42}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 18, 3, 5, 0 },
@@ -3616,7 +3616,7 @@ static monsterentry mondata[] = {
 {
     MONS_OKLOB_SAPLING, 'P', LIGHTCYAN, "oklob sapling",
     M_STATIONARY,
-    MR_RES_POISON | MR_RES_ACID,
+    MR_RES_POISON | mrd(MR_RES_ACID, 3),
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 3, 5, 0 },
@@ -3628,7 +3628,7 @@ static monsterentry mondata[] = {
 {
     MONS_OKLOB_PLANT, 'P', LIGHTGREEN, "oklob plant",
     M_STATIONARY,
-    MR_RES_POISON | MR_RES_ACID,
+    MR_RES_POISON | mrd(MR_RES_ACID, 3),
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
@@ -3660,6 +3660,18 @@ static monsterentry mondata[] = {
     10, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
+},
+
+{   // dummy for transformed display
+    MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree",
+    M_STATIONARY | M_NO_POLY_TO,
+    MR_RES_POISON | MR_VUL_FIRE,
+    0, 10, MONS_PLANT, MONS_ANIMATED_TREE, MH_PLANT, MAG_IMMUNE,
+    { {AT_HIT, AF_CRUSH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 20, 3, 5, 0 },
+    25, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_HUGE
 },
 
 // rakshasas and efreet ('R')
@@ -4721,8 +4733,8 @@ static monsterentry mondata[] = {
 {
     MONS_ELDRITCH_TENTACLE, 'w', BLACK, "eldritch tentacle",
     M_NO_POLY_TO | M_STATIONARY | M_SEE_INVIS,
-    mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3) | MR_RES_HELLFIRE
-        | MR_RES_ACID | MR_RES_STICKY_FLAME,
+    mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC | MR_RES_ACID, 3)
+        | MR_RES_HELLFIRE | MR_RES_STICKY_FLAME,
     0, 10, MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE,
         MH_NONLIVING, MAG_IMMUNE,
     { {AT_TENTACLE_SLAP, AF_CHAOS, 30}, {AT_CLAW, AF_CHAOS, 40}, AT_NO_ATK,
@@ -4736,8 +4748,8 @@ static monsterentry mondata[] = {
 {
     MONS_ELDRITCH_TENTACLE_SEGMENT, '*', BLACK, "eldritch tentacle segment",
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO | M_SEE_INVIS,
-    mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3) | MR_RES_HELLFIRE
-        | MR_RES_ACID | MR_RES_STICKY_FLAME,
+    mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC | MR_RES_ACID, 3)
+        | MR_RES_HELLFIRE | MR_RES_STICKY_FLAME,
     0, 10, MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE_SEGMENT,
         MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5501,7 +5513,7 @@ static monsterentry mondata[] = {
     MONS_ORB_OF_DESTRUCTION, '*', WHITE, "orb of destruction",
     M_INSUBSTANTIAL | M_GLOWS_LIGHT | M_NO_EXP_GAIN | M_NO_POLY_TO,
     mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3) | MR_RES_HELLFIRE
-        | MR_RES_ACID | MR_RES_STICKY_FLAME,
+        | mrd(MR_RES_ACID, 3) | MR_RES_STICKY_FLAME,
     0, 0, MONS_ORB_OF_DESTRUCTION, MONS_ORB_OF_DESTRUCTION,
         MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5881,7 +5893,7 @@ static monsterentry mondata[] = {
 {
     MONS_ROYAL_JELLY, 'J', YELLOW, "the royal jelly",
     M_SENSE_INVIS | M_ACID_SPLASH | M_UNIQUE,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 20, MONS_JELLY, MONS_JELLY, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
     { 21, 0, 0, 230 },
@@ -5894,7 +5906,7 @@ static monsterentry mondata[] = {
     MONS_DISSOLUTION, 'J', LIGHTMAGENTA, "Dissolution",
     M_UNIQUE | M_SENSE_INVIS | M_ACID_SPLASH | M_BURROWS | M_PRIEST | M_SPEAKS
         | M_SPELLCASTER,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 60, MONS_JELLY, MONS_JELLY, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
     { 12, 0, 0, 180 },
@@ -6633,7 +6645,7 @@ static monsterentry mondata[] = {
     MONS_TEST_SPAWNER, 'X', WHITE, "test spawner",
     M_SPELLCASTER | M_STATIONARY | M_INSUBSTANTIAL | M_NO_POLY_TO,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD
-        | MR_RES_ROTTING, 4) | MR_RES_ACID | MR_RES_STICKY_FLAME,
+        | MR_RES_ROTTING | MR_RES_ACID, 4) | MR_RES_STICKY_FLAME,
     0, 15, MONS_TEST_SPAWNER, MONS_TEST_SPAWNER, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1000, 1000, 0, 0 },

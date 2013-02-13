@@ -4714,7 +4714,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;
     case SPELL_HOMUNCULUS:               return TILEG_HOMUNCULUS;
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
-    case SPELL_POLYMORPH_OTHER:          return TILEG_POLYMORPH_OTHER;
+    case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
     case SPELL_DRAGON_FORM:              return TILEG_DRAGON_FORM;
     case SPELL_NECROMUTATION:            return TILEG_NECROMUTATION;

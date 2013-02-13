@@ -1269,7 +1269,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 if (failMsg)
                 {
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
-                    maybe_id_resist(BEAM_POLYMORPH);
+                    maybe_id_resist(BEAM_MALMUTATE);
                 }
                 return false;
             }

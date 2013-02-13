@@ -531,7 +531,7 @@ Poisonous Cloud spell
 
 Ten czar tworzy wielki obłok trujących gazów.
 %%%%
-Polymorph Other spell
+Polymorph spell
 
 Ten czar, jeśli nie zostanie odparty, zmienia jakąś istotę w jakieś inne,
 przypadkowe, stworzenie. Działa na wszelkie formy życia łącznie z demonami i

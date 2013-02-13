@@ -129,12 +129,12 @@ struct spell_desc
 
 {
     SPELL_DIG, "Dig",
-     SPTYP_TRANSMUTATION | SPTYP_EARTH,
+     SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
-     -4, // Dig needs to be silent for stalker
+     0,
      NULL,
      false,
      true
@@ -193,9 +193,9 @@ struct spell_desc
 },
 
 {
-    SPELL_POLYMORPH_OTHER, "Polymorph Other",
+    SPELL_POLYMORPH, "Polymorph",
      SPTYP_TRANSMUTATION | SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -1797,7 +1797,7 @@ struct spell_desc
 
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
-     SPTYP_ICE | SPTYP_TRANSMUTATION,
+     SPTYP_ICE,
      SPFLAG_HELPFUL,
      4,
      200,
@@ -2737,7 +2737,7 @@ struct spell_desc
 
 {
     SPELL_LEDAS_LIQUEFACTION, "Leda's Liquefaction",
-     SPTYP_EARTH | SPTYP_TRANSMUTATION,
+     SPTYP_EARTH,
      SPFLAG_AREA,
      4,
      200,
@@ -2927,6 +2927,19 @@ struct spell_desc
      0,
      NULL,
      false,
+     false
+},
+
+{
+    SPELL_MALMUTATE, "Malmutate",
+     SPTYP_TRANSMUTATION | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
      false
 },
 

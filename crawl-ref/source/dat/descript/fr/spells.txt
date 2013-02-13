@@ -537,7 +537,7 @@ Poisonous Cloud spell
 
 Ce sort conjure un gros nuage de gaz mortel.
 %%%%
-Polymorph Other spell
+Polymorph spell
 
 Ce sort altère aléatoirement la forme d'une autre créature. Cela est
 spécialement efficace contre les créatures changeuses de forme.

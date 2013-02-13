@@ -2876,7 +2876,9 @@ static int _get_spell_description(const spell_type spell,
     if (you_cannot_memorise(spell, undead))
         description += "\n" + desc_cannot_memorise_reason(undead) + "\n";
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
+        && you.form != TRAN_WISP)
+    {
         if (you.has_spell(spell))
         {
             description += "\n(F)orget this spell by destroying the book.\n";
@@ -2890,6 +2892,7 @@ static int _get_spell_description(const spell_type spell,
             description += "\n(M)emorise this spell.\n";
             return BOOK_MEM;
         }
+    }
 
     return BOOK_NEITHER;
 }

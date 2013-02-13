@@ -372,12 +372,20 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
-    case SPELL_POLYMORPH_OTHER:
+    case SPELL_POLYMORPH:
         beam.flavour  = BEAM_POLYMORPH;
         beam.is_beam  = true;
-        // Be careful with this one.
-        // Having allies mutate you is infuriating.
-        beam.foe_ratio = 1000;
+        break;
+
+    case SPELL_MALMUTATE:
+        beam.flavour  = BEAM_MALMUTATE;
+        beam.is_beam  = true;
+        /*
+          // Be careful with this one.
+          // Having allies mutate you is infuriating.
+          beam.foe_ratio = 1000;
+        What's the point of this?  Enchantments always hit...
+        */
         break;
 
     case SPELL_FLAME_TONGUE:
@@ -2132,9 +2140,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_MELEE)
             return false;
 
-        // Friendly monsters don't use polymorph other, for fear of harming
-        // the player.
-        if (spell_cast == SPELL_POLYMORPH_OTHER && mons->friendly())
+        // Friendly monsters don't use polymorph, as it's likely to cause
+        // runaway growth of an enemy.
+        if (spell_cast == SPELL_POLYMORPH && mons->friendly())
             return false;
 
         // Past this point, we're actually casting, instead of just pondering.

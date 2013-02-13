@@ -67,7 +67,7 @@ static void _mons_in_cloud(monster* mons);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
-static spell_type _map_wand_to_mspell(int wand_type);
+static spell_type _map_wand_to_mspell(wand_type kind);
 static void _shedu_movement_clamp(monster* mons);
 
 // [dshaligram] Doesn't need to be extern.
@@ -1092,7 +1092,7 @@ static bool _setup_wand_beam(bolt& beem, monster* mons)
     item_def &wand(mitm[mons->inv[MSLOT_WAND]]);
 
     // map wand type to monster spell type
-    const spell_type mzap = _map_wand_to_mspell(wand.sub_type);
+    const spell_type mzap = _map_wand_to_mspell((wand_type)wand.sub_type);
     if (mzap == SPELL_NO_SPELL)
         return false;
 
@@ -1409,7 +1409,8 @@ static bool _handle_wand(monster* mons, bolt &beem)
 
     item_def &wand = mitm[mons->inv[MSLOT_WAND]];
 
-    switch (wand.sub_type)
+    const wand_type kind = (wand_type)wand.sub_type;
+    switch (kind)
     {
     case WAND_DISINTEGRATION:
         // Dial down damage from wands of disintegration, since
@@ -1421,17 +1422,6 @@ static bool _handle_wand(monster* mons, bolt &beem)
     case WAND_RANDOM_EFFECTS:
         // These have been deemed "too tricky" at this time {dlb}:
         return false;
-
-    case WAND_DIGGING:
-        // This is handled elsewhere.
-        return false;
-
-    case WAND_POLYMORPH_OTHER:
-        // Monsters can be very trigger happy with wands, reduce this
-        // for polymorph.
-        if (!one_chance_in(5))
-            return false;
-        break;
 
     // These are wands that monsters will aim at themselves {dlb}:
     case WAND_HASTING:
@@ -1479,6 +1469,9 @@ static bool _handle_wand(monster* mons, bolt &beem)
             break;
         }
         return false;
+
+    default:
+        break;
     }
 
     if (mons->confused())
@@ -3856,9 +3849,9 @@ static void _mons_in_cloud(monster* mons)
     actor_apply_cloud(mons);
 }
 
-static spell_type _map_wand_to_mspell(int wand_type)
+static spell_type _map_wand_to_mspell(wand_type kind)
 {
-    switch (wand_type)
+    switch (kind)
     {
     case WAND_FLAME:           return SPELL_THROW_FLAME;
     case WAND_FROST:           return SPELL_THROW_FROST;
@@ -3875,7 +3868,7 @@ static spell_type _map_wand_to_mspell(int wand_type)
     case WAND_LIGHTNING:       return SPELL_LIGHTNING_BOLT;
     case WAND_DRAINING:        return SPELL_BOLT_OF_DRAINING;
     case WAND_DISINTEGRATION:  return SPELL_DISINTEGRATE;
-    case WAND_POLYMORPH_OTHER: return SPELL_POLYMORPH_OTHER;
+    case WAND_POLYMORPH:       return SPELL_POLYMORPH;
     case WAND_DIGGING:         return SPELL_DIG;
     default:                   return SPELL_NO_SPELL;
     }

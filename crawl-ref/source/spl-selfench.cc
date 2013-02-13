@@ -179,6 +179,12 @@ spret_type cast_revivification(int pow, bool fail)
 
 spret_type cast_swiftness(int power, bool fail)
 {
+    if (you.form == TRAN_TREE)
+    {
+        mpr("You cannot move!");
+        return SPRET_ABORT;
+    }
+
     if (you.in_water())
     {
         mpr("The water foams!");
@@ -204,6 +210,12 @@ spret_type cast_swiftness(int power, bool fail)
 
 spret_type cast_fly(int power, bool fail)
 {
+    if (you.form == TRAN_TREE)
+    {
+        mpr("Your roots keep you in place.", MSGCH_WARN);
+        return SPRET_ABORT;
+    }
+
     if (you.liquefied_ground())
     {
         mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
