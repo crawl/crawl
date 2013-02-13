@@ -205,6 +205,7 @@ MONS: goblin ; hand axe
 MONS: goblin ; spear
 :   bailey_portal_polearm(_G)
 : end
+KMASK: wW = no_monster_gen
 MAP
 .........
 .wwwwwww.
@@ -232,6 +233,7 @@ MONS:   goblin ; spear / hobgoblin ; spear /\
 :   bailey_portal_polearm(_G)
 : end
 SUBST: 1 = 122
+KMASK: wW = no_monster_gen
 MAP
 ...........
 .wwwwwwwww.
@@ -253,6 +255,7 @@ MONS: goblin ; hand axe ego:returning
 MONS: goblin ; spear
 :   bailey_portal_polearm(_G)
 : end
+KMASK: wW = no_monster_gen
 MAP
 .......
 .wwwww.
@@ -718,7 +721,7 @@ ENDMAP
 NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup
+TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
 NSUBST: D = 1:+ / *:c
 NSUBST: E = 1:+ / *:c
 : orc_with_polearm(_G)
@@ -771,7 +774,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_2
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup
+TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
 MONS:   orc warrior ; crossbow . bolt w:5 / orc ; crossbow . bolt
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
