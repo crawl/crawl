@@ -691,6 +691,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
         // Jiyva's wrath-induced transformation is blocking the attempt.
         // May need to be updated if transform_uncancellable is used for
         // other uses.
+        if (!just_check)
+            mpr("You are stuck in your current form!");
         return false;
     }
 
