@@ -1538,11 +1538,13 @@ static void marshall_follower(writer &th, const follower &f)
         marshallItem(th, f.items[i]);
 }
 
-static void unmarshall_follower(reader &th, follower &f)
+static follower unmarshall_follower(reader &th)
 {
+    follower f;
     unmarshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         unmarshallItem(th, f.items[i]);
+    return f;
 }
 
 static void marshall_follower_list(writer &th, const m_transit_list &mlist)
@@ -1576,8 +1578,7 @@ static m_transit_list unmarshall_follower_list(reader &th)
 
     for (int i = 0; i < size; ++i)
     {
-        follower f;
-        unmarshall_follower(th, f);
+        follower f = unmarshall_follower(th);
         mlist.push_back(f);
     }
 
