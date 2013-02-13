@@ -3119,7 +3119,7 @@ void bolt::tracer_affect_player()
     if (YOU_KILL(thrower))
     {
         // Don't ask if we're aiming at ourselves.
-        if (!dont_stop_player && !harmless_to_player())
+        if (!aimed_at_feet && !dont_stop_player && !harmless_to_player())
         {
             string prompt = make_stringf("That %s is likely to hit you. Continue anyway?",
                                          item ? name.c_str() : "beam");
