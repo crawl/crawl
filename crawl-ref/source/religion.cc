@@ -40,6 +40,7 @@
 #include "files.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godcompanions.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "godwrath.h"
@@ -3048,6 +3049,7 @@ void excommunication(god_type new_god)
             simple_god_message(" reclaims all of your granted undead slaves!",
                                GOD_YREDELEMNUL);
             add_daction(DACT_ALLY_YRED_SLAVE);
+            remove_all_companions(GOD_YREDELEMNUL);
         }
         _set_penance(old_god, 30);
         break;
@@ -3083,6 +3085,7 @@ void excommunication(god_type new_god)
             mpr("All of your followers decide to abandon you.",
                 MSGCH_MONSTER_ENCHANT);
             add_daction(DACT_ALLY_BEOGH);
+            remove_all_companions(GOD_BEOGH);
         }
 
         _set_penance(old_god, 50);
@@ -4463,7 +4466,11 @@ static void _place_delayed_monsters()
             (*cback)(mg, mon, placed);
 
         if (mon)
+        {
+            if (you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
+                add_companion(mon);
             placed++;
+        }
 
         if (!_delayed_done_trigger_pos.empty()
             && _delayed_done_trigger_pos[0] == i)

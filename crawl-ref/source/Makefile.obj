@@ -65,6 +65,7 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godcompanions.o \
 godconduct.o \
 goditem.o \
 godmenu.o \

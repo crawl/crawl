@@ -50,6 +50,7 @@
 #include "errors.h"
 #include "fineff.h"
 #include "ghost.h"
+#include "godcompanions.h"
 #include "godpassive.h"
 #include "initfile.h"
 #include "items.h"
@@ -1217,6 +1218,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         // The player is now between levels.
         you.position.reset();
+
+        update_companions();
     }
 
     clear_travel_trail();

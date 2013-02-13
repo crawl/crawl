@@ -29,6 +29,7 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "godcompanions.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "hiscores.h"
@@ -2497,6 +2498,9 @@ int monster_die(monster* mons, killer_type killer,
                                "it dies.");
     }
 
+    if (mons->is_divine_companion() && killer != KILL_RESET)
+        remove_companion(mons);
+
     // If we kill an invisible monster reactivate autopickup.
     // We need to check for actual invisibility rather than whether we
     // can see the monster. There are several edge cases where a monster
@@ -4590,6 +4594,9 @@ void mons_att_changed(monster* mon)
                 mi->stop_constricting_all();
             }
     }
+
+    if (mon->is_divine_companion() && mon->attitude == ATT_HOSTILE)
+        remove_companion(mon);
 }
 
 void debuff_monster(monster* mon)

@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
+#include "godcompanions.h"
 #include "goditem.h"
 #include "itemprop.h"
 #include "libutil.h"
@@ -436,6 +437,7 @@ void beogh_convert_orc(monster* orc, bool emergency,
     orc->flags |= MF_NO_REWARD;
 
     mons_make_god_gift(orc, GOD_BEOGH);
+    add_companion(orc);
 
     if (orc->is_patrolling())
     {

@@ -13,6 +13,7 @@
 #include "delay.h"
 #include "env.h"
 #include "food.h"
+#include "godcompanions.h"
 #include "godconduct.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -233,6 +234,13 @@ bool recall(int type_recalled)
         }
         else
             break;              // no more room to place monsters {dlb}
+    }
+
+    // Interlevel recall
+    if (type_recalled > 0)
+    {
+        if (recall_offlevel_companions())
+            success = true;
     }
 
     if (!success)

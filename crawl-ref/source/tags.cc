@@ -43,6 +43,7 @@
 #include "externs.h"
 #include "files.h"
 #include "ghost.h"
+#include "godcompanions.h"
 #include "itemname.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -274,11 +275,13 @@ static void tag_construct_you_items(writer &th);
 static void tag_construct_you_dungeon(writer &th);
 static void tag_construct_lost_monsters(writer &th);
 static void tag_construct_lost_items(writer &th);
+static void tag_construct_companions(writer &th);
 static void tag_read_you(reader &th);
 static void tag_read_you_items(reader &th);
 static void tag_read_you_dungeon(reader &th);
 static void tag_read_lost_monsters(reader &th);
 static void tag_read_lost_items(reader &th);
+static void tag_read_companions(reader &th);
 
 static void tag_construct_level(writer &th);
 static void tag_construct_level_items(writer &th);
@@ -976,6 +979,7 @@ void tag_write(tag_type tagID, writer &outf)
         tag_construct_you_dungeon(th);
         tag_construct_lost_monsters(th);
         tag_construct_lost_items(th);
+        tag_construct_companions(th);
         break;
     case TAG_LEVEL:
         tag_construct_level(th);
@@ -1026,6 +1030,8 @@ void tag_read(reader &inf, tag_type tag_id)
         tag_read_you_dungeon(th);
         tag_read_lost_monsters(th);
         tag_read_lost_items(th);
+        if (th.getMinorVersion() >= TAG_MINOR_COMPANION_LIST)
+            tag_read_companions(th);
 
         // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
         // Doing this here rather in tag_read_you() because you.can_train()
@@ -1547,6 +1553,22 @@ static follower unmarshall_follower(reader &th)
     return f;
 }
 
+static void marshall_companion(writer &th, const companion &c)
+{
+    marshall_follower(th, c.mons);
+    marshall_level_id(th, c.level);
+    marshallInt(th, c.timestamp);
+}
+
+static companion unmarshall_companion(reader &th)
+{
+    companion c;
+    c.mons = unmarshall_follower(th);
+    c.level = unmarshall_level_id(th);
+    c.timestamp = unmarshallInt(th);
+    return c;
+}
+
 static void marshall_follower_list(writer &th, const m_transit_list &mlist)
 {
     marshallShort(th, mlist.size());
@@ -1763,6 +1785,12 @@ static void tag_construct_lost_items(writer &th)
 {
     marshallMap(th, transiting_items, marshall_level_id,
                  marshall_item_list);
+}
+
+static void tag_construct_companions(writer &th)
+{
+    marshallMap(th, companion_list, _marshall_as_int<mid_t>,
+                 marshall_companion);
 }
 
 // Save versions 30-32.26 are readable but don't store the names.
@@ -2556,6 +2584,14 @@ static void tag_read_lost_items(reader &th)
 
     unmarshallMap(th, transiting_items,
                   unmarshall_level_id, unmarshall_item_list);
+}
+
+static void tag_read_companions(reader &th)
+{
+    companion_list.clear();
+
+    unmarshallMap(th, companion_list, unmarshall_int_as<mid_t>,
+                 unmarshall_companion);
 }
 
 template <typename Z>
@@ -3561,6 +3597,9 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     m.check_speed();
+
+    if (m.is_divine_companion() && companion_is_elsewhere(&m))
+        monster_die(&m, KILL_RESET, -1, true, false);
 }
 
 static void tag_read_level_monsters(reader &th)

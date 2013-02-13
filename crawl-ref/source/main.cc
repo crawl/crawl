@@ -67,6 +67,7 @@
 #include "fineff.h"
 #include "food.h"
 #include "godabil.h"
+#include "godcompanions.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "hiscores.h"
