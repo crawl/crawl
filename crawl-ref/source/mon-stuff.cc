@@ -1968,6 +1968,13 @@ int monster_die(monster* mons, killer_type killer,
                 }
 
                 if (mons->flags & MF_MINION) {
+                    // Reset minion data
+                    if (mons->mid == you.minion_mid) { 
+                        you.minion_mid = 0;
+                        you.minion_timer_long = 0;
+                        you.minion_timer_short = 0;
+                    }
+                    // Trigger conduct
                     did_god_conduct(DID_KILL_GOD_MINION, mons->hit_dice, true, mons);
                 }
             }
