@@ -16,6 +16,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "itemname.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "maps.h"
@@ -31,7 +32,32 @@
 #include "spl-util.h"
 #include "spl-clouds.h"
 
-#define DEMIGOD_BUILD_NUM_RACES 22
+// Make a list of valid minion races
+static monster_type player_races[] = {
+    MONS_HUMAN,
+    MONS_ELF,  // Nearly a high elf
+    MONS_DEEP_ELF_MAGE, // Will do for Deep Elf
+    // MONS_SLUDGE_ELF - no equiv
+    MONS_DEEP_DWARF,
+    MONS_ORC,  // Rotate between other types of orc?
+    MONS_MERFOLK,
+    MONS_HALFLING,
+    MONS_KOBOLD,
+    MONS_SPRIGGAN,
+    MONS_NAGA,
+    MONS_CENTAUR,
+    MONS_OGRE,  // Also ogre mage?
+    MONS_TROLL,
+    MONS_MINOTAUR,
+    MONS_TENGU,
+    MONS_DRACONIAN,
+    MONS_DEMONSPAWN,
+    MONS_MUMMY,
+    MONS_GHOUL,
+    MONS_VAMPIRE,
+    MONS_FELID,
+    MONS_OCTOPODE
+};
 
 /**
  * There are two code paths to build minions. We can either pull a database string from monbuild.txt which must be in a standard MONS spec format;
@@ -47,36 +73,9 @@
  */
 monster* demigod_build_minion(god_type which_god, int level) {
 
-    // Make a list of valid minion races
-    monster_type player_races[DEMIGOD_BUILD_NUM_RACES] = {
-        MONS_HUMAN,
-        MONS_ELF,  // Nearly a high elf
-        MONS_DEEP_ELF_MAGE, // Will do for Deep Elf
-        // MONS_SLUDGE_ELF - no equiv
-        MONS_DEEP_DWARF,
-        MONS_ORC,  // Rotate between other types of orc?
-        MONS_MERFOLK,
-        MONS_HALFLING,
-        MONS_KOBOLD,
-        MONS_SPRIGGAN,
-        MONS_NAGA,
-        MONS_CENTAUR,
-        MONS_OGRE,  // Also ogre mage?
-        MONS_TROLL,
-        MONS_MINOTAUR,
-        MONS_TENGU,
-        MONS_DRACONIAN,
-        MONS_DEMONSPAWN,
-        MONS_MUMMY,
-        MONS_GHOUL,
-        MONS_VAMPIRE,
-        MONS_FELID,
-        MONS_OCTOPODE
-    };
-
     // Get a weight value for each race based on the acting god
     std::vector<std::pair<monster_type, int> > mon_weights;
-    for (int i = 0; i < DEMIGOD_BUILD_NUM_RACES; ++i) {
+    for (int i = 0; i < (int)ARRAYSZ(player_races); ++i) {
         mon_weights.push_back(std::make_pair(static_cast<monster_type>(player_races[i]), demigod_weight_race_for_god(which_god,player_races[i])));
     }
     // Randomly pick a race based on the weights
@@ -122,7 +121,7 @@ monster* demigod_build_minion(god_type which_god, int level) {
         0,
         0,
         0,
-        "Foo",
+        demigod_random_minion_name(which_god, chosen_race, level),
         god_name(which_god,false),
         RANDOM_MONSTER);
 
@@ -406,8 +405,8 @@ bool demigod_dispatch_minion(god_type which_god, int level)
 
     // God message ("Zin minion dispatched low/mid/high" or just "Zin minion dispatched")
     // TODO: Might want to spawn minions out of LOS and deliver this message when they're seen
-    std::string which_god_name = god_name(which_god);
-    std::string speak_key = which_god_name + " minion dispatched";
+    string which_god_name = god_name(which_god);
+    string speak_key = which_god_name + " minion dispatched";
     mprf("god speech lookup for %s", speak_key.c_str());
 
     // Base message level on piety
@@ -416,7 +415,7 @@ bool demigod_dispatch_minion(god_type which_god, int level)
     if (prank>2) tier = " mid";
     if (prank>4) tier = " high";
 
-    std::string speak_text = getSpeakString(speak_key + tier);
+    string speak_text = getSpeakString(speak_key + tier);
     if (speak_text.empty())
         speak_text = getSpeakString(speak_key);
 
@@ -446,7 +445,6 @@ bool demigod_dispatch_minion(god_type which_god, int level)
     int id = create_monster(mg,true);
     // Name semi-unique
     if (id != -1)
-        give_monster_proper_name(&menv[id],true);
     */
 }
 
@@ -495,6 +493,33 @@ void demigod_handle_notoriety()
                 dec_notoriety(which_god, you.notoriety[which_god]);
         }
     }
+}
+
+string demigod_random_minion_name(god_type which_god, monster_type chosen_race, int level) {
+    string suffix = " low";
+    if (level > 9) suffix = " mid";
+    if (level > 18) suffix = " high";
+    
+    string nameKey = god_name(which_god,false) + " minion name";
+    mprf("Minion name lookup for %s", nameKey.c_str());
+    string nameTemplate = getRandNameString(nameKey,suffix);
+    string randomName = "";
+    do randomName = make_name(random_int(), false);
+        while (!getLongDescription(randomName).empty());
+
+    if (nameTemplate.empty())
+        return randomName;
+
+    // TODO: Centralise this post-processing (and other occurrences of it e.g. singing sword speech) into database.cc
+    // A lot of getRandFooString calls are immediately followed by this kind of substitution and it might be a
+    // slight optimisation to pass in a hashtable of tokens (otherwise e.g. @Minion_name@ will be getting looked up 
+    // recursively every time even though we know it isn't in any DB!). This would also ensure the same functionality
+    // is available evrywhere in all database files (for instance some support embedded Lua but this one probably
+    // doesn't).
+    nameTemplate = replace_all(nameTemplate, "@Minion_name@", randomName);
+    nameTemplate = maybe_pick_random_substring(nameTemplate); // Support [Foo|Bar] replacements
+
+    return nameTemplate;
 }
 
 // Player has taken too long to kill the minion.

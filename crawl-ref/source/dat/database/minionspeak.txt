@@ -1,0 +1,14 @@
+############################################################
+# Demigods - speech for minions
+############################################################
+%%%%
+generic minion
+
+@The_monster@ @_yells_@, "I will not fail you, @The_god@!"
+
+@The_monster@ @_shouts_@, "FOR @THE_GOD@!"
+%%%%
+Trog minion
+
+@generic minion@
+%%%%

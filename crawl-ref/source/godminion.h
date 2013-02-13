@@ -30,5 +30,6 @@ void dec_notoriety(god_type god, int val);
 void demigod_minion_timer_expired();
 bool demigod_incur_wrath(god_type which_god, int amount);
 bool demigod_incur_wrath_all(int amount);
+string demigod_random_minion_name(god_type which_god, monster_type chosen_race, int level);
 
 #endif

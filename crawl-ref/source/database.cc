@@ -99,6 +99,7 @@ static TextDB AllDBs[] =
             "randbook.txt", // artefact books
             // This doesn't really belong here, but they *are* god gifts...
             "monname.txt",  // orcish names for Beogh to choose from
+            "minionname.txt", // belongs here even less ...
             NULL),
 
     TextDB("speak", "database/",
@@ -109,6 +110,7 @@ static TextDB AllDBs[] =
             "insult.txt",   // imp/demon taunts
             "godspeak.txt", // god speech
             "godminions.txt", // god speech for Demigods
+            "minionspeak.txt", // speed for God minions
             NULL),
 
     TextDB("shout", "database/",
