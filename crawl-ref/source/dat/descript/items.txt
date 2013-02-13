@@ -524,8 +524,8 @@ A deck of magical cards which induce changes in the user or his environment.
 
 It may contain the following cards: the Elixir, Battlelust, Metamorphosis, the
 Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, Water, Vitrification, the Map,
-Dowsing, the Spade, Trowel, the Minefield.
+Experience, Wild Magic, the Helix, the Sage, the Alchemist, Water,
+Vitrification, Dowsing, Trowel, the Minefield.
 %%%%
 deck of defence
 
@@ -548,8 +548,8 @@ deck of dungeons
 
 A deck of magical cards which deal with shaping the dungeon.
 
-It may contain the following cards: Water, Vitrification, the Map, Dowsing, the
-Spade, Trowel, the Minefield.
+It may contain the following cards: Water, Vitrification, Dowsing, Trowel, the
+Minefield.
 %%%%
 deck of escape
 
@@ -563,8 +563,8 @@ deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
 
-It may contain the following cards: Wrath, the Wraith, the Curse, Xom, Famine,
-Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
+It may contain the following cards: the Wraith, Wild Magic, Wrath, Xom, Famine,
+the Curse, the Tomb, Damnation, the Portal, the Minefield, the Swine, Torment.
 %%%%
 deck of summonings
 
