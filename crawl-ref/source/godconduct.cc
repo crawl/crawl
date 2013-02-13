@@ -1025,13 +1025,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // TODO: Vary piety messages
                 god_speaks(GOD_SELF, "Far and wide, tales are told of your deeds!");
                 retval = true;
+                // TODO: Numbers need reviewing. Currently this will give 1 or 2 piety and is based on the numbers
+                // for Chei piety when killing something fast.
                 piety_denom = level + 18 - you.experience_level / 2;
-                piety_change = piety_denom - 4;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_change = (piety_denom - 4) * 2;
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 // A little extra wrath for the unique's own god
                 if (victim->god != GOD_NO_GOD && victim->god < NUM_GODS) {
-                    demigod_incur_wrath(victim->god,10);
+                    demigod_incur_wrath(victim->god,5);
                 }
             }
             break;
@@ -1077,23 +1079,25 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_KILL_GOD_MINION:
             if (you.religion == GOD_SELF) {
                 // Get god name of follower
-                std::string victim_god_name = god_name(victim->god,false);
-                std::string announcement = "Far and wide, songs are sung of your glorious struggle against the minions of " + victim_god_name + "!";
+                string victim_god_name = god_name(victim->god,false);
+                string announcement = "Far and wide, songs are sung of your glorious struggle against the minions of " + victim_god_name + "!";
                 god_speaks(GOD_SELF, announcement.c_str());
                 piety_denom = level + 18 - you.experience_level / 2;
-                piety_change = piety_denom - 4;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_change = (piety_denom - 4) * 2;
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 retval = true;
 
                 // Relevant god speaks
                 // TODO: Scale messages with minion tier
                 // TODO: Other gods comment?
-                std::string speak_key = victim_god_name + " minion killed";
+                // TODO: And this code really shouldn't even be lumped in with conducts...
+                string speak_key = victim_god_name + " minion killed";
                 god_speaks(victim->god, getSpeakString(speak_key).c_str());
 
                 // Slightly annoys the god (but presumably they're also slightly embarassed)
-                demigod_incur_wrath(victim->god, 5);
+                // TODO: Is there a point to this? It looks like it just means that the first god that sends a minion will always be the most spiteful...
+                demigod_incur_wrath(victim->god, 1);
             }
             break;
         case DID_FLEE_GOD_MINION:

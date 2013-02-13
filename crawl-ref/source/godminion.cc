@@ -15,6 +15,7 @@
 #include "dungeon.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "goditem.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "maps.h"
@@ -92,7 +93,7 @@ monster* demigod_build_minion(god_type which_god, int level) {
             int l = spell_difficulty(spell);
             // TODO: Instead of this hard cutoff, adjust the weights smoothly so that high level spells are more likely for high level chars
             if (level < (l*3)) w = 0;
-            if (level > l*8) w = 0;
+            // if (level > l*8) w = 0;
             if (w>0) {
                 available_spells++;
                 spell_weights.push_back(std::make_pair(spell, w));
@@ -212,21 +213,58 @@ int demigod_weight_spell_for_god(god_type god, monster_type mon, spell_type spel
 
     switch (god) {
         case GOD_ZIN:
-            return 0;
+            // TODO: Modify monster speech when casting these to do something similar to Recite
+            switch (spell) {
+                case SPELL_CONFUSE:
+                case SPELL_PARALYSE:
+                case SPELL_SLEEP:
+                    return 10;
+                case SPELL_SILENCE:
+                    return 5;
+                case SPELL_TOMB_OF_DOROKLOHE: // Imprison / Sanctuary ...?
+                    return 1;
+                default:
+                    return 0;
+            }
         case GOD_SHINING_ONE:
-            return 0;
+            // TODO: Halo
+            switch (spell) {
+                case SPELL_HOLY_LIGHT:
+                case SPELL_HOLY_FLAMES:
+                case SPELL_HOLY_BREATH:
+                    return 10;
+                default:
+                    return 0;
+            }
         case GOD_KIKUBAAQUDGHA:
-            return 0;
+            return spell_typematch(spell, SPTYP_NECROMANCY) ? 10 : 0;
         case GOD_YREDELEMNUL:
-            return 0;
+            return (spell_typematch(spell, SPTYP_NECROMANCY) && spell_typematch(spell, SPTYP_SUMMONING)) ? 10 : 0;
         case GOD_XOM:
-            return 10; // Xom likes all spells
+            // Xom likes all spells, but some even more so
+            switch (spell) {
+                case SPELL_SUMMON_BUTTERFLIES:
+                case SPELL_SUMMON_TWISTER:
+                case SPELL_PORKALATOR:
+                case SPELL_CHAOS_BREATH:
+                    return 50;
+                default:
+                    return 10;
+            }
         case GOD_VEHUMET:
-            return (vehumet_supports_spell(spell) ? 10 : 0);
+            return (is_player_spell(spell) && vehumet_supports_spell(spell)) ? 10 : 0;
         case GOD_OKAWARU:
             return 0;
         case GOD_MAKHLEB:
-            return 0;
+            switch (spell) {
+                // TODO: Minor/Major destruction
+                case SPELL_SUMMON_GREATER_DEMON:
+                case SPELL_SUMMON_DEMON:
+                case SPELL_DEMONIC_HORDE:
+                    return 10;
+                default:
+                    return 0;
+            }
         case GOD_SIF_MUNA:
             // Siffies can still use Conj but it's weighted lower. Otherwise they only use player spells.
             // TODO: Maybe Vehumet spells should use player_spell check too?
@@ -241,15 +279,46 @@ int demigod_weight_spell_for_god(god_type god, monster_type mon, spell_type spel
                     return 0;
             }
         case GOD_NEMELEX_XOBEH:
+            // TODO: Any spells with card-like effects. Or, can monsters use evokables anyway?
             return 0;
         case GOD_ELYVILON:
-            return 0;
+            switch (spell) {
+                case SPELL_MINOR_HEALING:
+                case SPELL_MAJOR_HEALING:
+                case SPELL_HEAL_OTHER:
+                    return 10;
+                default:
+                    return 0;
+            }
         case GOD_FEDHAS:
+            switch (spell) {
+                // case SPELL_AWAKEN_FOREST:  -- if there were any trees around...
+                case SPELL_SUNRAY:
+                case SPELL_SUMMON_CANIFORMS:
+                case SPELL_SUMMON_MUSHROOMS:
+                    return 10;
+                default:
+                    return 0;
+            }
+            // TODO: Fedhasians summon oklobs
             return 0;
         case GOD_CHEIBRIADOS:
-            return 0;
+            // A selection of slowing spells
+            // TODO: Slow the minion
+            switch (spell) {
+                case SPELL_SLOW:
+                case SPELL_LEDAS_LIQUEFACTION:
+                case SPELL_ENSNARE:
+                    return 20;
+                case SPELL_PARALYSE:
+                    return 5;
+                default:
+                    // Low chance of other spells
+                    return (is_player_spell(spell) && !is_hasty_spell(spell)) ? 2 : 0;
+            }
         case GOD_ASHENZARI:
-            return 0;
+            // TODO: Ash minions should get player detection
+            return is_player_spell(spell) ? 10 : 0;
         default:
             // TODO: ASSERT error?
             return 0;
@@ -388,27 +457,29 @@ void demigod_handle_notoriety()
         you.minion_timer_long--;
         you.minion_timer_short--;
 
-        dprf("Minion timers: %d %d",you.minion_timer_short,you.minion_timer_long);
-        if (you.minion_timer_long==0) {
-            dprf("Demigod long timer expired");
+        mprf("Minion timers: %d %d",you.minion_timer_short,you.minion_timer_long);
+        if (you.minion_timer_long<=0) {
+            mprf("Demigod long timer expired");
             demigod_minion_timer_expired();
         }
-        else if ( you.minion_timer_short==0) {
-            dprf("Demigod short timer expired");
+        else if ( you.minion_timer_short<=0) {
+            mprf("Demigod short timer expired");
             demigod_minion_timer_expired();
         }
         // TODO: Taunt messages when timer at low
     }
+    // TODO: Rather than 1/100 flat chance which seems pretty boring, should bias things according to total notoriety
     else if (one_chance_in(100))
     {
         // Decide on a god to act and send a minion
         god_type which_god = GOD_NO_GOD;
 
         std::vector<std::pair<god_type, int> > wrath_weights;
-        for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+        for (int i = GOD_NO_GOD + 1; i < NUM_GODS; ++i)
         {
-            if (you.notoriety[i])
+            if (you.notoriety[i] > 0)
             {
+                mprf("%s notoriety: %d",god_name(static_cast<god_type>(i)).c_str(),you.notoriety[i]);
                 wrath_weights.push_back(std::make_pair(static_cast<god_type>(i), you.notoriety[i]));
             }
         }
@@ -454,15 +525,17 @@ void dec_notoriety(god_type god, int val)
 
     // TODO: dec_penance writes a message like "the god is mollified", but if we've had god speech when the minion lost we probably don't need this?
     you.notoriety[god] -= val;
+    mprf("%s notoriety decreased: %d",god_name(god).c_str(),you.notoriety[god]);
 }
 
 void inc_notoriety(god_type god, int val)
 {
-    if (val <= 0 || you.notoriety[god] <= 0)
+    if (val <= 0)
         return;
-
-    // TODO: dec_penance writes a message like "the god is mollified", but if we've had god speech when the minion lost we probably don't need this?
+    // TODO: Cap notoriety value?
+    // TODO: messages on notoriety increasing?
     you.notoriety[god] += val;
+    mprf("%s notoriety increased: %d",god_name(god).c_str(),you.notoriety[god]);
 }
 
 
