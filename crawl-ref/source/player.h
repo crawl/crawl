@@ -195,6 +195,8 @@ public:
   FixedVector<uint8_t, NUM_GODS>  piety_max;
   // For Demigods, tracks each gods' opinion of you
   FixedVector<uint8_t, NUM_GODS>  notoriety;
+  // How many minions each god has dispatched for you already
+  FixedVector<uint8_t, NUM_GODS>  minions_dispatched;
 
   // Nemelex sacrifice toggles
   FixedBitVector<NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;

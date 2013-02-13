@@ -1284,6 +1284,8 @@ static void tag_construct_you(writer &th)
     // how notorious is our Demigod with each major god?
     for (i = 0; i < NUM_GODS; i++)
         marshallByte(th, you.notoriety[i]);
+    for (i = 0; i < NUM_GODS; i++)
+        marshallByte(th, you.minions_dispatched[i]);
 #endif
     marshallByte(th, NUM_NEMELEX_GIFT_TYPES);
     for (i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
@@ -2216,6 +2218,8 @@ static void tag_read_you(reader &th)
     // Demigod notoriety
     for (i = 0; i < count; i++)
         you.notoriety[i] = unmarshallUByte(th);
+    for (i = 0; i < count; i++)
+        you.minions_dispatched[i] = unmarshallUByte(th);
     #if TAG_MAJOR_VERSION == 34
         }
     #endif

@@ -5621,6 +5621,8 @@ void player::init()
     one_time_ability_used.reset();
     piety_max.init(0);
     notoriety.init(0);
+    minions_dispatched.init(0);
+
     exp_docked       = 0;
     exp_docked_total = 0;
 

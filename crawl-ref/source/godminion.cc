@@ -180,9 +180,6 @@ int demigod_weight_race_for_god(god_type god, monster_type mon) {
     if (god == GOD_FEDHAS && mons_class_holiness(mon) == MH_UNDEAD)
         return 0;
 
-    // if (which_god == GOD_SIF_MUNA && !you.spell_no)
-       //  return false;
-
     // TODO: Adjust preference for some god/race combos
     switch (god) {
         case GOD_ZIN:
@@ -356,6 +353,9 @@ void demigod_fixup_monster_for_god(mgen_data mg, god_type god) {
 bool demigod_dispatch_minion(god_type which_god, int level)
 {
     monster* mons = demigod_build_minion(which_god,level);
+    if (!mons) return false;
+
+    you.minions_dispatched[which_god]++;
 
     // Generate a key for the minion lookup
     /*
@@ -468,32 +468,30 @@ void demigod_handle_notoriety()
         }
         // TODO: Taunt messages when timer at low
     }
-    // TODO: Rather than 1/100 flat chance which seems pretty boring, should bias things according to total notoriety
-    else if (one_chance_in(100))
+    else if (one_chance_in(20))
     {
-        // Decide on a god to act and send a minion
-        god_type which_god = GOD_NO_GOD;
-
         std::vector<std::pair<god_type, int> > wrath_weights;
+        int total_notoriety = 0;
         for (int i = GOD_NO_GOD + 1; i < NUM_GODS; ++i)
         {
-            if (you.notoriety[i] > 0)
+            if (you.notoriety[i] > 0 && i != GOD_SELF && i != GOD_JIYVA && i != GOD_BEOGH && i != GOD_LUGONU)
             {
                 mprf("%s notoriety: %d",god_name(static_cast<god_type>(i)).c_str(),you.notoriety[i]);
                 wrath_weights.push_back(std::make_pair(static_cast<god_type>(i), you.notoriety[i]));
+                total_notoriety += you.notoriety[i];
             }
         }
 
-        if (wrath_weights.size() > 0)
-            which_god = *random_choose_weighted(wrath_weights);
+        // With 20 notoriety with each god, gets a minion roughly every 100 god_time calls (which don't equate strictly to turns but I'm not sure how often)
+        if (total_notoriety > 0 && wrath_weights.size() > 0 && x_chance_in_y(total_notoriety,2000)) {
+            // Decide on a god to act and send a minion
+            god_type which_god = *random_choose_weighted(wrath_weights);
 
-        if (which_god != GOD_NO_GOD && which_god != GOD_SELF) {
             // Equiv level plus a modifier based on notoriety and piety (up to six levels)
-            // TODO: Increase level the more minions have been sent (will need to track #minions sent per god)
-            const int level = you.experience_level + (you.notoriety[which_god] * you.piety / 7400);
-            demigod_dispatch_minion(which_god,level);
-            // Reset penance
-            dec_notoriety(which_god, you.notoriety[which_god]);
+            const int level = you.experience_level + (you.notoriety[which_god] * you.piety / 7400) + (random2(you.minions_dispatched[which_god]));
+            if (demigod_dispatch_minion(which_god,level))
+                // Reset penance
+                dec_notoriety(which_god, you.notoriety[which_god]);
         }
     }
 }
@@ -532,12 +530,11 @@ void inc_notoriety(god_type god, int val)
 {
     if (val <= 0)
         return;
-    // TODO: Cap notoriety value?
     // TODO: messages on notoriety increasing?
     you.notoriety[god] += val;
+    you.notoriety[god] = min((uint8_t)MAX_PENANCE, you.notoriety[god]);
     mprf("%s notoriety increased: %d",god_name(god).c_str(),you.notoriety[god]);
 }
-
 
 bool demigod_incur_wrath(god_type which_god, int amount)
 {
