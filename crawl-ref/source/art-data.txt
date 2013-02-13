@@ -206,7 +206,7 @@ COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   1000
-BOOL:    tilerim, special
+BOOL:    special
 
 NAME:    Staff of Olgreb
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -255,7 +255,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_sceptre_of_torment
 TILE_EQ: mace_ruby
 VALUE:   1200
-BOOL:    tilerim, special, evil
+BOOL:    special, evil
 
 NAME:    Sword of Zonguldrok
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
@@ -266,7 +266,7 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 VALUE:   1250
 CURSED:  3
-BOOL:    tilerim, special, evil, corpse_violating
+BOOL:    special, evil, corpse_violating
 
 NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
@@ -288,7 +288,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
-BOOL:    tilerim, special, evil, nogen
+BOOL:    special, evil, nogen
 
 NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -298,7 +298,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
-BOOL:    tilerim, special, evil, nogen
+BOOL:    special, evil, nogen
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
@@ -560,7 +560,7 @@ TILE_EQ: wyrmbane
 BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
-BOOL:    poison, berserk, tilerim
+BOOL:    poison, berserk
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
