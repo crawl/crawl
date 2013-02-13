@@ -486,6 +486,8 @@ public:
     bool is_parent_monster_of(const monster* mons) const;
     bool is_child_tentacle_segment() const;
 
+    bool is_divine_companion() const;
+
 private:
     void init_with(const monster& mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);

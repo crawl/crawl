@@ -31,6 +31,7 @@ enum tag_minor_version
     TAG_MINOR_MALMUTATE,           // Convert Polymorph to Malmutate on old monsters
     TAG_MINOR_VEHUMET_MULTI_GIFTS, // Vehumet can offer multiple spells at once
     TAG_MINOR_ADD_ABYSS_SEED,      // Reinstate abyss seed. Mistakes were made.
+    TAG_MINOR_COMPANION_LIST,      // Added companion list
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

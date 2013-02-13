@@ -37,6 +37,8 @@ m_transit_list *get_transit_list(const level_id &where);
 void add_monster_to_transit(const level_id &dest, const monster& m);
 void add_item_to_transit(const level_id &dest, const item_def &i);
 
+void remove_monster_from_transit(const level_id &lid, mid_t mid);
+
 // Places (some of the) monsters eligible to be placed on this level.
 void place_transiting_monsters();
 void place_followers();

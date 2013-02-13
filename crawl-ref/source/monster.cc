@@ -5937,3 +5937,10 @@ bool monster::is_parent_monster_of(const monster* mons) const
     return (mons_base_type(this) == mons_tentacle_parent_type(mons)
             && (int) mons->number == mindex());
 }
+
+bool monster::is_divine_companion() const
+{
+    return (((you.religion == GOD_BEOGH && mons_is_god_gift(this, GOD_BEOGH))
+            || (you.religion == GOD_YREDELEMNUL && mons_is_god_gift(this, GOD_YREDELEMNUL)))
+            && attitude == ATT_FRIENDLY);
+}
