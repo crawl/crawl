@@ -2644,6 +2644,7 @@ struct spell_desc
      false,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_RESURRECT, "Resurrection",
      SPTYP_NONE,
@@ -2656,6 +2657,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_HOLY_LIGHT, "Holy Light",

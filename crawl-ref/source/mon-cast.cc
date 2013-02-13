@@ -1011,7 +1011,9 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE
         || spell_cast == SPELL_MISLEAD
+#if TAG_MAJOR_VERSION == 34
         || spell_cast == SPELL_RESURRECT
+#endif
         || spell_cast == SPELL_HOLY_FLAMES
         || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
 }
@@ -1049,7 +1051,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_BRAIN_FEED:
         case SPELL_MISLEAD:
         case SPELL_SMITING:
+#if TAG_MAJOR_VERSION == 34
         case SPELL_RESURRECT:
+#endif
         case SPELL_AIRSTRIKE:
         case SPELL_HOLY_FLAMES:
             return true;
@@ -1978,15 +1982,19 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     spell_cast = hspell_pass[random2(5)];
                 }
 
-                // XXX: Resurrect is a do-nothing spell. Remove it!
-                if (spell_cast == SPELL_NO_SPELL || spell_cast == SPELL_RESURRECT)
+                if (spell_cast == SPELL_NO_SPELL
+#if TAG_MAJOR_VERSION == 34
+                    // XXX: Resurrect is a do-nothing spell. Remove it!
+                    || spell_cast == SPELL_RESURRECT
+#endif
+                    )
                     continue;
 
                 // Setup the spell.
                 if (spell_cast != SPELL_MELEE)
                     setup_mons_cast(mons, beem, spell_cast);
 
-                // Try to find a nearby ally to haste, heal or resurrect.
+                // Try to find a nearby ally to haste or heal.
                 if ((spell_cast == SPELL_HASTE_OTHER
                      || spell_cast == SPELL_HEAL_OTHER)
                         && !_set_allied_target(mons, beem))
