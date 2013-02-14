@@ -577,10 +577,12 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
         -- overwrite walls of other rooms which may be "restricted" due to the contents of the room, but restricted squares inside vaults or too near to existing walls
         -- ("border") must fail.
         if (target_usage == nil or (target_usage.usage == "restricted" and (target_usage.reason == "border" or target_usage.reason == "vault" or target_usage.reason == "door"))
-          or (usage.usage == "open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")
           or (usage.usage == "eligible" and target_usage.usage ~= "eligible" and target_usage.usage ~= "none")
-          or (usage.usage == "eligible_open" and target_usage.usage ~= "eligible_open" and target_usage.usage ~= "open")) then
-            is_clear = false
+          or (usage.usage == "open" and target_usage.usage ~= "open")
+          or (usage.usage == "eligible_open" and target_usage.usage ~= "open"
+             and not ((target_usage.usage == "eligible_open" or (target_usage.usage == "restricted" and target_usage.reason == "wall")) and usage.room == target_usage.room)))
+             then
+          is_clear = false
           break
         end
 
@@ -702,8 +704,10 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       if mask_cell.connected and ((current_usage.usage == "none" and usage.usage == "eligible") or (current_usage.usage == "open" and (usage.usage == "eligible_open" or usage.usage == "open"))) then
         local u_wall_dir = (mask_cell.dir + final_orient) % 4
         vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = wall_usage, normal = hypervaults.normals[u_wall_dir + 1], room = room, depth = new_depth, cell = grid_cell, mask = mask_cell })
+      elseif not mask_cell.connected and (current_usage.usage == "open" and (usage.usage == "eligible_open" or usage.usage == "open")) then
+        -- Should prevent nearby rooms from thinking this space is open
+        vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = "restricted", room = room, depth = new_depth, cell = grid_cell, mask = mask_cell, reason = "wall" })
       end
-
     end
   end
 
