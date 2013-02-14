@@ -2571,7 +2571,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
 
         battlesphere->props["firing_target"] = beam.target;
         battlesphere->props.erase("foe");
-        if (!monster_at(beam.target))
+        if (!actor_at(beam.target))
         {
             beam.is_tracer = true;
             beam.fire();
@@ -2583,7 +2583,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
                 if (*i != battlesphere->pos() && monster_at(*i))
                 {
                     battlesphere->props["firing_target"] = *i;
-                    battlesphere->foe = monster_at(*i)->mindex();
+                    battlesphere->foe = actor_at(*i)->mindex();
                     battlesphere->props["foe"] = battlesphere->foe;
                 }
             }
@@ -2594,7 +2594,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         }
         else
         {
-            battlesphere->foe = monster_at(beam.target)->mindex();
+            battlesphere->foe = actor_at(beam.target)->mindex();
             battlesphere->props["foe"] = battlesphere->foe;
         }
 
@@ -2629,7 +2629,7 @@ bool trigger_battlesphere(actor* agent, bolt& beam)
             {
                 if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
                 {
-                    const monster *targ = monster_at(*ri);
+                    const actor *targ = actor_at(*ri);
                     if (targ && targ != battlesphere)
                     {
                         battlesphere->props["firing_target"] = *ri;
@@ -2778,6 +2778,7 @@ bool fire_battlesphere(monster* mons)
                 beam.source = *di;
                 beam.is_tracer = true;
                 beam.friend_info.reset();
+                beam.foe_info.reset();
                 beam.fire();
                 if (beam.friend_info.count == 0
                     && (beam.foe_info.count > 0 || empty_beam))
