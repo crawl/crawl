@@ -600,7 +600,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
               if maskN == nil or not (maskN.wall or maskN.vault) then
                 local gridN = vaults_vector_add(room_base, posN, room_final_x_normal, room_final_y_normal)
                 local usageN = vaults_get_usage(usage_grid, gridN.x, gridN.y)
-                if (usageN.usage ~= "open" and (usageN.room == nil or usageN.room ~= usage.room)) then -- and (usageN.usage == "vault" or usageN.usage == "eligible_open"))) then
+                if (usageN.usage ~= "open" and not (usageN.usage == "restricted" and usageN.reason == "border") and (usageN.room == nil or usageN.room ~= usage.room)) then -- and (usageN.usage == "vault" or usageN.usage == "eligible_open"))) then
                   is_clear = false
                 end
               end
