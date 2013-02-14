@@ -21,6 +21,7 @@
 -- room/door placement can work correctly.
 ------------------------------------------------------------------------------
 
+hyper = {}
 hypervaults = {}  -- Main namespace
 
 require("dlua/v_debug.lua")
@@ -53,8 +54,8 @@ function vaults_default_options()
 
     -- Weightings of various types of room generators.
     room_type_weights = {
-      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 30, min_size = 6, max_size = 15 }, -- Floor vault
-      { generator = "code", paint_callback = junction_vault_paint_callback, weight = 40, min_size = 6, max_size = 20, min_corridor = 3, max_corridor = 10 }, -- Floor vault ++
+      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 40, min_size = 6, max_size = 15 }, -- Floor vault
+      { generator = "code", paint_callback = junction_vault_paint_callback, weight = 20, min_size = 10, max_size = 20, min_corridor = 3, max_corridor = 6 }, -- Floor vault ++
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },
@@ -75,42 +76,6 @@ function vaults_default_options()
   }
 
   return options
-end
-
-local function dis_decorate_walls(room, connections, door_required, has_windows)
-  -- 1/3 of walls have doors, the rest become floor
-  if crawl.one_chance_in(3) then
-    hypervaults.rooms.decorate_walls(room, connections, door_required, has_windows)
-  else
-    hypervaults.rooms.decorate_walls_open(room, connections, door_required, has_windows)
-  end
-end
-
-function dis_default_options()
-
-  local dis_options = {
-    min_distance_from_wall = 1, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
-    max_rooms = 50, -- Maximum number of rooms to attempt to place
-    max_room_tries = 30, -- How many *consecutive* rooms can fail to place before we exit the entire routine
-    max_place_tries = 100, -- How many times we will attempt to place *each room* before picking another
-
-    -- Squares and junctions
-    room_type_weights = {
-      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 10, min_size = 10, max_size = 20 }, -- Floor vault
-      { generator = "code", paint_callback = junction_vault_paint_callback, weight = 80, min_size = 4, max_size = 40, min_corridor = 1, max_corridor = 10 }, -- Floor vault ++
-    },
-
-    -- We only have metal in Dis
-    layout_wall_weights = {
-      { feature = "metal_wall", weight = 20 },
-    },
-
-    decorate_walls_callback = dis_decorate_walls
-
-  }
-
-  return merge_options(hypervaults.default_options(),dis_options)
-
 end
 
 -- Default options table
