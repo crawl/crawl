@@ -2419,6 +2419,8 @@ monster* find_battlesphere(const actor* agent)
 
 spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
+    fail_check();
+
     monster* battlesphere;
     if (agent->is_player() && (battlesphere = find_battlesphere(&you)))
     {
