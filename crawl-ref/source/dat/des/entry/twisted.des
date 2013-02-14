@@ -834,47 +834,6 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Three runes > orb of zot > upstairs
-NAME:   nicolae_entry_your_instructions
-TAGS:   entry no_monster_gen no_trap_gen no_item_gen
-WEIGHT: 1
-ORIENT: float
-SHUFFLE: [(
-SHUFFLE: ABCDEFHIJKLMNOPQR
-KITEM:  A = gossamer rune of zot mimic
-KITEM:  B = decaying rune of zot mimic
-KITEM:  C = serpentine rune of zot mimic
-KITEM:  D = barnacled rune of zot mimic
-KITEM:  E = slimy rune of zot mimic
-KITEM:  F = silver rune of zot mimic
-KITEM:  H = abyssal rune of zot mimic
-KITEM:  I = demonic rune of zot mimic
-KITEM:  J = glowing rune of zot mimic
-KITEM:  K = magical rune of zot mimic
-KITEM:  L = fiery rune of zot mimic
-KITEM:  M = dark rune of zot mimic
-KITEM:  N = iron rune of zot mimic
-KITEM:  O = icy rune of zot mimic
-KITEM:  P = obsidian rune of zot mimic
-KITEM:  Q = bone rune of zot mimic
-KITEM:  R = golden rune of zot mimic
-KITEM:  Z = Orb of Zot mimic
-KFEAT:  < = escape_hatch_up mimic
-KPROP:  ->ABCDEFHIJKLMNOPQRZ = no_rtele_into
-SUBST:  - = .
-MAP
-xxxxxxxxxxxxxxxxxx
-x................x
-x...cccccccccc...xxxxxxxxx
-x...c---C----n...........@
-x.{.c>-Z<B---n.[.........@
-x...c---A----n...........@
-x...cccccccccc...xxxxxxxxx
-x................x
-xxxxxxxxxxxxxxxxxx
-ENDMAP
-
-###############################################################################
 
 NAME:    nagdon_entry_double_spiral
 TAGS:    entry no_monster_gen no_trap_gen no_pool_fixup
