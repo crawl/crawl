@@ -1133,8 +1133,10 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             _update_abyss_terrain(p, abyss_genlevel_mask, morph);
             abyss_sample_queue.pop();
         }
+/*
         if (ii)
             dprf(DIAG_ABYSS, "Examined %d features.", ii);
+*/
     }
 
     int ii = 0;
@@ -1180,7 +1182,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 abyss_genlevel_mask));
     }
     if (ii)
-        dprf("Nuked %d features", ii);
+        dprf(DIAG_ABYSS, "Nuked %d features", ii);
     dungeon_feature_type feat = grd(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
         you.shove();
