@@ -549,8 +549,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_TROG:
-        snprintf(info, INFO_SIZE, "you destroy spellbooks (especially ones "
-                                  "you've never read)%s",
+        snprintf(info, INFO_SIZE, "you destroy spellbooks%s",
                  verbose ? " via the <w>a</w> command" : "");
 
         likes.push_back(info);
