@@ -2162,12 +2162,6 @@ redback
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
 %%%%
-rock troll
-
-An enormous and very nasty-looking troll, seemingly born of the very living
-rock of the dungeon. Its stony hide seems to heal almost instantaneously from
-most wounds.
-%%%%
 rock worm
 
 A large worm which moves through rock as if it were air.
@@ -2717,10 +2711,6 @@ wolf spider
 
 A hairy fast-moving hunting spider with vicious mandibles, roaming the dungeon
 in search of prey, which it kills with its deadly venom.
-%%%%
-wood golem
-
-A huge animated wooden figure. It is highly inflammable.
 %%%%
 worm
 
