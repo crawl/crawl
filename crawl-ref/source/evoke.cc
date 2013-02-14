@@ -782,7 +782,8 @@ bool evoke_item(int slot)
             return false;
         }
 
-        if (!you_foodless() && you.hunger_state == HS_STARVING)
+        if (!you.is_undead && !you_foodless()
+            && you.hunger_state == HS_STARVING)
         {
             canned_msg(MSG_TOO_HUNGRY);
             return false;

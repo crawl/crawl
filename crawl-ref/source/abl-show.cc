@@ -1629,7 +1629,7 @@ bool activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && !you_foodless()
+    if (hungerCheck && !you.is_undead && !you_foodless()
         && you.hunger_state == HS_STARVING)
     {
         canned_msg(MSG_TOO_HUNGRY);
