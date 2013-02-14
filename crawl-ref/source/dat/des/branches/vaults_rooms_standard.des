@@ -301,7 +301,7 @@ ENDMAP
 
 NAME:    v_pattern_4
 TAGS:    vaults_room luniq_lattice
-SUBST:   y:x., Y:x.
+SUBST:   y:x.
 NSUBST:  . = 1:0 / 2=0. / *:.
 NSUBST:  . = 1:( / *:.
 MAP
@@ -310,7 +310,7 @@ x.x.x.x.x.x
 .x.x.x.x.x.
 x.x.xxx.x.x
 .x.xyyyx.x.
-..xxyYyxx..
+..xxyxyxx..
 .x.xyyyx.x.
 x.x.xxx.x.x
 .x.x.x.x.x.
@@ -578,7 +578,7 @@ ENDMAP
 
 NAME:    v_misc_18
 TAGS:    vaults_room allow_dup
-SUBST:   y : x.
+SUBST:   y : .+
 NSUBST:  . = 1:0 / 2=0. / *:.
 NSUBST:  . = 1:( / *:.
 MAP
