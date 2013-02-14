@@ -4490,7 +4490,8 @@ bool monster::needs_abyss_transit() const
                 || (flags & MF_BANISHED)
                 || hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
-            && !has_ench(ENCH_ABJ));
+            && !has_ench(ENCH_ABJ)
+            && type != MONS_BATTLESPHERE); // can use stairs otherwise
 }
 
 void monster::set_transit(const level_id &dest)
