@@ -2478,14 +2478,18 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
             {
                 mpr("You conjure a globe of magical energy.");
             }
-            else if (you.can_see(agent) && you.can_see(battlesphere))
+            else
             {
-                simple_monster_message(agent->as_monster(),
+                if (you.can_see(agent) && you.can_see(battlesphere))
+                {
+                    simple_monster_message(agent->as_monster(),
                                        " conjures a globe of magical energy!");
-            }
-            else if (you.can_see(battlesphere))
-            {
-                simple_monster_message(battlesphere, " appears!");
+                }
+                else if (you.can_see(battlesphere))
+                {
+                        simple_monster_message(battlesphere, " appears!");
+                }
+                battlesphere->props["band_leader"].get_int() = agent->mid;
             }
             battlesphere->number = 4 + random2(pow + 10) / 10;
         }
