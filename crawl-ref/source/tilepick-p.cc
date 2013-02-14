@@ -79,78 +79,188 @@ tileidx_t tilep_equ_weapon(const item_def &item)
             return tile;
     }
 
+    tileidx_t tile = 0;
+
     switch (item.sub_type)
     {
     // Blunt
-    case WPN_CLUB:              return TILEP_HAND1_CLUB_SLANT;
-    case WPN_MACE:              return TILEP_HAND1_MACE;
-    case WPN_GREAT_MACE:        return TILEP_HAND1_GREAT_MACE;
-    case WPN_FLAIL:             return TILEP_HAND1_FLAIL;
-    case WPN_SPIKED_FLAIL:      return TILEP_HAND1_SPIKED_FLAIL;
-    case WPN_DIRE_FLAIL:        return TILEP_HAND1_GREAT_FLAIL;
-    case WPN_MORNINGSTAR:       return TILEP_HAND1_MORNINGSTAR;
-    case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
-    case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
-    case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
-    case WPN_WHIP:              return TILEP_HAND1_WHIP;
-    case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
-    case WPN_SACRED_SCOURGE:    return TILEP_HAND1_SACRED_SCOURGE;
+    case WPN_CLUB:
+        tile = TILEP_HAND1_CLUB_SLANT;
+        break;
+    case WPN_MACE:
+        tile = TILEP_HAND1_MACE;
+        break;
+    case WPN_GREAT_MACE:
+        tile = TILEP_HAND1_GREAT_MACE;
+        break;
+    case WPN_FLAIL:
+        tile = TILEP_HAND1_FLAIL;
+        break;
+    case WPN_SPIKED_FLAIL:
+        tile = TILEP_HAND1_SPIKED_FLAIL;
+        break;
+    case WPN_DIRE_FLAIL:
+        tile = TILEP_HAND1_GREAT_FLAIL;
+        break;
+    case WPN_MORNINGSTAR:
+        tile = TILEP_HAND1_MORNINGSTAR;
+        break;
+    case WPN_EVENINGSTAR:
+        tile = TILEP_HAND1_EVENINGSTAR;
+        break;
+    case WPN_GIANT_CLUB:
+        tile = TILEP_HAND1_GIANT_CLUB_PLAIN;
+        break;
+    case WPN_GIANT_SPIKED_CLUB:
+        tile = TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
+        break;
+    case WPN_WHIP:
+        tile = TILEP_HAND1_WHIP;
+        break;
+    case WPN_DEMON_WHIP:
+        tile = TILEP_HAND1_BLACK_WHIP;
+        break;
+    case WPN_SACRED_SCOURGE:
+        tile = TILEP_HAND1_SACRED_SCOURGE;
+        break;
 
     // Edge
-    case WPN_DAGGER:               return TILEP_HAND1_DAGGER_SLANT;
-    case WPN_SHORT_SWORD:          return TILEP_HAND1_SHORT_SWORD_SLANT;
-    case WPN_LONG_SWORD:           return TILEP_HAND1_LONG_SWORD_SLANT;
-    case WPN_GREAT_SWORD:          return TILEP_HAND1_GREAT_SWORD_SLANT;
-    case WPN_SCIMITAR:             return TILEP_HAND1_SCIMITAR;
-    case WPN_FALCHION:             return TILEP_HAND1_FALCHION;
-    case WPN_SABRE:                return TILEP_HAND1_SABRE;
-    case WPN_DEMON_BLADE:          return TILEP_HAND1_DEMON_BLADE;
-    case WPN_QUICK_BLADE:          return TILEP_HAND1_DAGGER;
-    case WPN_DOUBLE_SWORD:         return TILEP_HAND1_DOUBLE_SWORD;
-    case WPN_TRIPLE_SWORD:         return TILEP_HAND1_TRIPLE_SWORD;
-    case WPN_EUDEMON_BLADE:        return TILEP_HAND1_BLESSED_BLADE;
+    case WPN_DAGGER:
+        tile = TILEP_HAND1_DAGGER_SLANT;
+        break;
+    case WPN_SHORT_SWORD:
+        tile = TILEP_HAND1_SHORT_SWORD_SLANT;
+        break;
+    case WPN_LONG_SWORD:
+        tile = TILEP_HAND1_LONG_SWORD_SLANT;
+        break;
+    case WPN_GREAT_SWORD:
+        tile = TILEP_HAND1_GREAT_SWORD_SLANT;
+        break;
+    case WPN_SCIMITAR:
+        tile = TILEP_HAND1_SCIMITAR;
+        break;
+    case WPN_FALCHION:
+        tile = TILEP_HAND1_FALCHION;
+        break;
+    case WPN_SABRE:
+        tile = TILEP_HAND1_SABRE;
+        break;
+    case WPN_DEMON_BLADE:
+        tile = TILEP_HAND1_DEMON_BLADE;
+        break;
+    case WPN_QUICK_BLADE:
+        tile = TILEP_HAND1_DAGGER;
+        break;
+    case WPN_DOUBLE_SWORD:
+        tile = TILEP_HAND1_DOUBLE_SWORD;
+        break;
+    case WPN_TRIPLE_SWORD:
+        tile = TILEP_HAND1_TRIPLE_SWORD;
+        break;
+    case WPN_EUDEMON_BLADE:
+        tile = TILEP_HAND1_BLESSED_BLADE;
+        break;
+
     // new blessed weapons
-    case WPN_BLESSED_LONG_SWORD:   return TILEP_HAND1_LONG_SWORD_SLANT;
-    case WPN_BLESSED_GREAT_SWORD:  return TILEP_HAND1_GREAT_SWORD_SLANT;
-    case WPN_BLESSED_SCIMITAR:     return TILEP_HAND1_SCIMITAR;
-    case WPN_BLESSED_FALCHION:     return TILEP_HAND1_FALCHION;
-    case WPN_BLESSED_DOUBLE_SWORD: return TILEP_HAND1_DOUBLE_SWORD;
-    case WPN_BLESSED_TRIPLE_SWORD: return TILEP_HAND1_TRIPLE_SWORD;
+    case WPN_BLESSED_LONG_SWORD:
+        tile = TILEP_HAND1_LONG_SWORD_SLANT;
+        break;
+    case WPN_BLESSED_GREAT_SWORD:
+        tile = TILEP_HAND1_GREAT_SWORD_SLANT;
+        break;
+    case WPN_BLESSED_SCIMITAR:
+        tile = TILEP_HAND1_SCIMITAR;
+        break;
+    case WPN_BLESSED_FALCHION:
+        tile = TILEP_HAND1_FALCHION;
+        break;
+    case WPN_BLESSED_DOUBLE_SWORD:
+        tile = TILEP_HAND1_DOUBLE_SWORD;
+        break;
+    case WPN_BLESSED_TRIPLE_SWORD:
+        tile = TILEP_HAND1_TRIPLE_SWORD;
+        break;
 
     // Axe
-    case WPN_HAND_AXE:         return TILEP_HAND1_HAND_AXE;
-    case WPN_BATTLEAXE:        return TILEP_HAND1_BATTLEAXE;
-    case WPN_BROAD_AXE:        return TILEP_HAND1_BROAD_AXE;
-    case WPN_WAR_AXE:          return TILEP_HAND1_WAR_AXE;
-    case WPN_EXECUTIONERS_AXE: return TILEP_HAND1_EXECUTIONERS_AXE;
-    case WPN_BARDICHE:         return TILEP_HAND1_GLAIVE3;
+    case WPN_HAND_AXE:
+        tile = TILEP_HAND1_HAND_AXE;
+        break;
+    case WPN_BATTLEAXE:
+        tile = TILEP_HAND1_BATTLEAXE;
+        break;
+    case WPN_BROAD_AXE:
+        tile = TILEP_HAND1_BROAD_AXE;
+        break;
+    case WPN_WAR_AXE:
+        tile = TILEP_HAND1_WAR_AXE;
+        break;
+    case WPN_EXECUTIONERS_AXE:
+        tile = TILEP_HAND1_EXECUTIONERS_AXE;
+        break;
+    case WPN_BARDICHE:
+        tile = TILEP_HAND1_GLAIVE3;
+        break;
 
     // Pole
-    case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
-    case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
-    case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
+    case WPN_SPEAR:
+        tile = TILEP_HAND1_SPEAR;
+        break;
+    case WPN_HALBERD:
+        tile = TILEP_HAND1_HALBERD;
+        break;
+    case WPN_GLAIVE:
+        tile = TILEP_HAND1_GLAIVE;
+        break;
 #if TAG_MAJOR_VERSION == 34
-    case WPN_STAFF:         return TILEP_HAND1_STAFF;
+    case WPN_STAFF:
+        tile = TILEP_HAND1_STAFF;
+        break;
 #endif
-    case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
+    case WPN_QUARTERSTAFF:
+        tile = TILEP_HAND1_QUARTERSTAFF1;
+        break;
     case WPN_LAJATANG:
-        return tileidx_enchant_equ(item, TILEP_HAND1_LAJATANG, true);
+        tile = TILEP_HAND1_LAJATANG;
+        break;
 
-    case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
-    case WPN_HAMMER:        return TILEP_HAND1_HAMMER;
-    case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
-    case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
-    case WPN_TRISHULA:      return TILEP_HAND1_TRISHULA;
+    case WPN_SCYTHE:
+        tile = TILEP_HAND1_SCYTHE;
+        break;
+    case WPN_HAMMER:
+        tile = TILEP_HAND1_HAMMER;
+        break;
+    case WPN_TRIDENT:
+        tile = TILEP_HAND1_TRIDENT2;
+        break;
+    case WPN_DEMON_TRIDENT:
+        tile = TILEP_HAND1_DEMON_TRIDENT;
+        break;
+    case WPN_TRISHULA:
+        tile = TILEP_HAND1_TRISHULA;
+        break;
 
     // Ranged
-    case WPN_SLING:         return TILEP_HAND1_SLING;
-    case WPN_BOW:           return TILEP_HAND1_BOW2;
-    case WPN_CROSSBOW:      return TILEP_HAND1_CROSSBOW;
-    case WPN_BLOWGUN:       return TILEP_HAND1_BLOWGUN;
-    case WPN_LONGBOW:       return TILEP_HAND1_BOW3;
+    case WPN_SLING:
+        tile = TILEP_HAND1_SLING;
+        break;
+    case WPN_BOW:
+        tile = TILEP_HAND1_BOW2;
+        break;
+    case WPN_CROSSBOW:
+        tile = TILEP_HAND1_CROSSBOW;
+        break;
+    case WPN_BLOWGUN:
+        tile = TILEP_HAND1_BLOWGUN;
+        break;
+    case WPN_LONGBOW:
+        tile = TILEP_HAND1_BOW3;
+        break;
 
-    default: return 0;
+    default: tile = 0;
     }
+
+    return tile ? tileidx_enchant_equ(item, tile, true) : 0;
 }
 
 tileidx_t tilep_equ_shield(const item_def &item)
