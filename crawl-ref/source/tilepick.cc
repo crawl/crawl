@@ -1800,8 +1800,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // golems ('8')
     case MONS_CLAY_GOLEM:
         return TILEP_MONS_CLAY_GOLEM;
-    case MONS_WOOD_GOLEM:
-        return TILEP_MONS_WOOD_GOLEM;
     case MONS_IRON_GOLEM:
         return TILEP_MONS_IRON_GOLEM;
     case MONS_STONE_GOLEM:

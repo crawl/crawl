@@ -388,11 +388,6 @@ int monster::body_weight(bool /*base*/) const
             weight *= 4;
             break;
 
-        case MONS_WOOD_GOLEM:
-            weight *= 2;
-            weight /= 3;
-            break;
-
         case MONS_FLYING_SKULL:
         case MONS_CURSE_SKULL:
         case MONS_BONE_DRAGON:

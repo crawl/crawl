@@ -1041,10 +1041,10 @@ SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
 #            TODO: 3 Holy set (for later)
 :           local mrnd = crawl.random2(4)
 :           if mrnd == 0 then
-KMONS:      % = clay golem / wood golem / toenail golem w:2
+KMONS:      % = clay golem / toenail golem w:1
 KMONS:      * = stone golem / crystal golem / iron golem
 KMONS:      | = electric golem
-:           set_random_mon_list("clay golem / wood golem / toenail golem w:2 / " ..
+:           set_random_mon_list("clay golem / toenail golem w:1 / " ..
 :                               "stone golem / crystal golem / iron golem")
 :           elseif mrnd == 1 then
 KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\

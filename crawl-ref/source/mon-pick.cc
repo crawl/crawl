@@ -226,7 +226,6 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_STONE_GOLEM:
     case MONS_TENTACLED_MONSTROSITY:
     case MONS_WIZARD:
-    case MONS_WOOD_GOLEM:
     case MONS_DEATH_DRAKE:
     case MONS_SILENT_SPECTRE:
     case MONS_DEEP_DWARF:
@@ -347,7 +346,6 @@ int mons_pan_rare(monster_type mcls)
     case MONS_IRON_GOLEM:
     case MONS_STONE_GOLEM:
     case MONS_TOENAIL_GOLEM:
-    case MONS_WOOD_GOLEM:
         return 5;
     // elementals
     case MONS_AIR_ELEMENTAL:
@@ -487,7 +485,6 @@ int mons_dungeon_level(monster_type mcls)
     case MONS_OKLOB_PLANT:
     case MONS_TROLL:
     case MONS_TWO_HEADED_OGRE:
-    case MONS_WOOD_GOLEM:
     case MONS_YAK:
         return 14;
 
@@ -816,7 +813,6 @@ int mons_dungeon_rare(monster_type mcls)
     case MONS_EFREET:
     case MONS_EYE_OF_DEVASTATION:
     case MONS_NECROMANCER:
-    case MONS_WOOD_GOLEM:
     case MONS_GNOLL_SHAMAN:
         return 15;
 

@@ -2128,7 +2128,9 @@ enum monster_type                      // menv[].type
 
     MONS_GOLEM,                 // genus
     MONS_CLAY_GOLEM,
+#if TAG_MAJOR_VERSION == 34
     MONS_WOOD_GOLEM,
+#endif
     MONS_STONE_GOLEM,
     MONS_IRON_GOLEM,
     MONS_CRYSTAL_GOLEM,
