@@ -4935,15 +4935,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (mon->check_stasis(false))
             return MON_AFFECTED;
 
-        if (mon->del_ench(ENCH_SLOW, true))
-        {
-            if (simple_monster_message(mon, " is no longer moving slowly."))
-                obvious_effect = true;
-
-            return MON_AFFECTED;
-        }
-
-        // Not slowed, haste it.
         if (!mon->has_ench(ENCH_HASTE)
             && !mons_is_stationary(mon)
             && mon->add_ench(ENCH_HASTE))
