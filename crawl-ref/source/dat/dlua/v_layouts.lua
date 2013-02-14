@@ -45,9 +45,9 @@ hypervaults.normals = {
 function vaults_default_options()
 
   local options = {
-    min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
     max_rooms = 27, -- Maximum number of rooms to attempt to place
     max_room_depth = 0, -- No max depth (not implemented yet anyway)
+    min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
     -- The following settings (in addition to max_rooms) can adjust how long it takes to build a level, at the expense of potentially less intereting layouts
     max_room_tries = 27, -- How many *consecutive* rooms can fail to place before we exit the entire routine
     max_place_tries = 50, -- How many times we will attempt to place *each room* before picking another
@@ -107,24 +107,30 @@ function hypervaults.default_options()
 end
 
 -- TODO: The 'paint' parameter should disappear. Instead the options will contain a setup array. This could contain paint instructions,
--- but alternately should be able to wire room generators to create initial terrain. Since rooms can now be creaated from paint arrays _anyway_,
+-- but alternately should be able to wire room generators to create initial terrain. Since rooms can now be created from paint arrays _anyway_,
 -- it seems that pre-painting the layout is completely unneccesary and room generation can do anything ...
 function hypervaults.build_layout(e, name, paint, options)
   if not crawl.game_started() then return end
 
   if _VAULTS_DEBUG then print("Hypervaults Layout: " .. name) end
 
-  e.layout_type "hypervaults" -- TODO: Lowercase and underscorise the name?
+  if name then
+    name = string.lower(name)
+    name = string.gsub(name," ","_")
+    e.layout_type(name)
+  else
+    e.layout_type "hypervaults" -- TODO: Lowercase and underscorise the name?
+  end
   local default_options = hypervaults.default_options()
-  if options ~= null then merge_options(default_options,options) end
+  if options ~= null then hypervaults.merge_options(default_options,options) end
 
   local data = paint_vaults_layout(paint, default_options)
-  local rooms = place_vaults_rooms(e, data, options.max_rooms, default_options)
+  local rooms = place_vaults_rooms(e, data, default_options.max_rooms, default_options)
 end
 
 -- Merges together two options tables (usually the default options getting
 -- overwritten by a minimal set provided by an individual layout)
-function merge_options(base,to_merge)
+function hypervaults.merge_options(base,to_merge)
   -- Quite simplistic, right now this won't recurse into sub tables (it might need to)
   for key, val in pairs(to_merge) do
     base[key] = val
@@ -143,7 +149,7 @@ function build_vaults_layout(e, name, paint, options)
   e.layout_type "vaults" -- TODO: Lowercase and underscorise the name parameter?
 
   local defaults = vaults_default_options()
-  if options ~= nil then merge_options(defaults,options) end
+  if options ~= nil then hypervaults.merge_options(defaults,options) end
 
   local data = paint_vaults_layout(paint, defaults)
   local rooms = place_vaults_rooms(e, data, defaults.max_rooms, defaults)
@@ -230,14 +236,6 @@ function build_vaults_maze_layout(e,veto_callback, name)
     { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + crawl.random_range(4,10), y = y1 + crawl.random_range(4,10) } }
   }
 
-  local function room_veto(room)
-    -- Avoid *very* large empty rooms, but they can be long and thin
-    if room.type == "empty" then
-      if room.size.x + room.size.y > 23 then return true end
-    end
-    return false
-  end
-
   build_vaults_layout(e, name, paint, { max_room_depth = 0, veto_place_callback = veto_callback })
 
 end
@@ -250,22 +248,24 @@ function build_vaults_maze_snakey_layout(e)
   -- How many rooms to draw before alternating
   -- When it's 1 it doesn't create an obvious visual effect but hopefully in gameplay
   -- it will be more obvious.
-  local dist = crawl.random_range(1,2) -- TODO: This range can be higher if the callback has the coords, if we're near the edge then bailout
+  -- TODO: This range can be higher if the callback has the coords (which it now does on state.pos or state.base),
+  --       if we're near the edge then bailout.
+  local dist = crawl.random_range(1,2)
   -- Just to be fair we'll offset by a number, this will determine how far from the
   -- first room it goes before the first switch
   local offset = crawl.random_range(0,dist-1)
   -- Callback function
-  local function callback(usage,room)
-    if usage.normal == nil or usage.depth == nil then return false end
-    local odd = (math.floor(usage.depth/dist)+offset) % 2
+  local function callback(state)
+    if state.usage.normal == nil or state.usage.depth == nil then return false end
+    local odd = (math.floor(state.usage.depth/dist)+offset) % 2
     if odd == which then
-      if usage.normal.y == 0 then return true end
+      if state.usage.normal.y == 0 then return true end
       return false
     end
-    if usage.normal.x == 0 then return true end
+    if state.usage.normal.x == 0 then return true end
     return false
   end
-  build_vaults_maze_layout(e,callback, "Snakey Maze")
+  build_vaults_maze_layout(e, callback, "Snakey Maze")
 end
 
 -- Goes just either horizontally or vertically for a few rooms then branches out, makes
@@ -276,18 +276,18 @@ function build_vaults_maze_bifur_layout(e)
   local target_depth = crawl.random_range(2,3) -- TODO: This range can be higher if the callback has the coords, if we're near the edge then bailout
 
   -- Callback function
-  local function callback(usage,room)
-    if usage.normal == nil then return false end
-    if usage.depth == nil or usage.depth > target_depth then return false end
+  local function callback(state)
+    if state.usage.normal == nil then return false end
+    if state.usage.depth == nil or state.usage.depth > target_depth then return false end
     -- TODO: Should also check if the coord is within a certain distance of map edge as an emergency bailout
     -- ... but we don't have the coord here right now
     if which then
-      if usage.normal.y == 0 then
+      if state.usage.normal.y == 0 then
         return true
       end
       return false
     end
-    if usage.normal.x == 0 then
+    if state.usage.normal.x == 0 then
       return true
     end
     return false
@@ -388,27 +388,3 @@ function omnigrid_subdivide_area(x1,y1,x2,y2,options,results,chance)
 
 end
 
--- TODO: Some redundant code here, combine
-function build_dis_layout(e, name, paint, options)
-
-  if not crawl.game_started() then return end
-
-  if _VAULTS_DEBUG then print("Dis Layout: " .. name) end
-
-  e.layout_type "dis" -- TODO: Lowercase and underscorise the name parameter?
-
-  local defaults = dis_default_options()
-  if options ~= nil then merge_options(defaults,options) end
-
-  local data = paint_vaults_layout(paint, defaults)
-  local rooms = place_vaults_rooms(e, data, defaults.max_rooms, defaults)
-
-end
-
-function build_dis_maze_layout(e)
-  if not crawl.game_started() then return end
-  local name = "Maze"
-  local paint = n3v_paint_small_central_room()
-
-  build_dis_layout(e, name, paint, { max_room_depth = 0 })
-end

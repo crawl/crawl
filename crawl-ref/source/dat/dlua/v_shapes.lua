@@ -31,7 +31,25 @@ function bubble_vault_paint_callback(room,options,gen)
   }
 end
 
-function n3v_paint_small_central_room()
+function hypervaults.floors.full_size_room()
+  local gxm, gym = dgn.max_bounds()
+
+  local paint = {
+    { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm-2, y = gym-2 } }
+  }
+  return paint
+end
+
+function hypervaults.floors.three_quarters_size_room()
+  local gxm, gym = dgn.max_bounds()
+
+  local paint = {
+    { type = "floor", corner1 = { x = 11, y = 11 }, corner2 = { x = gxm-12, y = gym-12 } }
+  }
+  return paint
+end
+
+function hypervaults.floors.small_central_room()
   local gxm, gym = dgn.max_bounds()
   -- Put a single empty room somewhere roughly central. All rooms will be built off from each other following this
   local x1 = crawl.random_range(30, gxm-70)
@@ -53,23 +71,6 @@ function hypervaults.floors.small_edge_room()
 
   local paint = {
     { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + size.x - 1, y = y1 + size.y - 1 } }
-  }
-  return paint
-end
-
-function hypervaults.shapes.sword(room,options,gen)
-  local hilt_pos = math.floor(room.size.y * 3/4)
-  local hilt_width = 3
-  local hilt_width_half = math.floor(hilt_width/2)
-  local blade_width = 5
-  local blade_width_half = math.floor(blade_width/2)
-  local center = math.floor(room.size.x / 2 + 0.5) - 1
-  local paint = {
-    -- Blade
-    { type = "floor", corner1 = { x = center - blade_width_half, y = 0}, corner2 = { x = center + blade_width_half, y = hilt_pos - hilt_width_half - 1}, shape = "trapese" },
-    -- Hilt
-    { type = "floor", corner1 = { x = 0, y = hilt_pos - hilt_width_half }, corner2 = { x = room.size.x - 1, y = hilt_pos + hilt_width_half } },
-    { type = "floor", corner1 = { x = center - hilt_width_half, y = hilt_pos + hilt_width_half + 1}, corner2 = { x = center + hilt_width_half, y = room.size.y + 1 }, width1 = 1, width2 = 0, shape = "trapese" }
   }
   return paint
 end

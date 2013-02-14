@@ -425,7 +425,7 @@ function place_vaults_room(e,usage_grid,room, options)
   return { placed = done, coords_list = list }
 end
 
-function hypervaults.rooms.decorate_walls_open(room, connections, door_required, has_windows)
+function hypervaults.rooms.decorate_walls_open(state, connections, door_required, has_windows)
 
   for i, door in ipairs(connections) do
     dgn.grid(door.grid_pos.x,door.grid_pos.y, "floor")
@@ -433,7 +433,7 @@ function hypervaults.rooms.decorate_walls_open(room, connections, door_required,
 
 end
 
-function hypervaults.rooms.decorate_walls(room, connections, door_required, has_windows)
+function hypervaults.rooms.decorate_walls(state, connections, door_required, has_windows)
 
   -- TODO: Use decorator callbacks for these so we can vary by layout
   local have_door = true
@@ -455,7 +455,7 @@ function hypervaults.rooms.decorate_walls(room, connections, door_required, has_
   end
 
   -- Optionally place windows
-  if has_windows then
+  if not has_windows == false and not state.room.no_windows and crawl.one_chance_in(5) then
     local num_windows = math.abs(crawl.random2avg(5,3)-2)+2  -- Should tend towards 2 but rarely can be up to 4
 
     for n=1,num_windows,1 do
@@ -544,9 +544,19 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- of the room lies on the map (and use that coord for subsequent calculations within the room grid)
   local room_base = vaults_vector_add(pos, { x = -(chosen_wall.pos.x), y = -(chosen_wall.pos.y) }, room_final_x_normal, room_final_y_normal)
 
+  -- State object to send to callbacks
+  local state = {
+    room = room,
+    usage = usage,
+    pos = pos,
+    wall = chosen_wall,
+    base = room_base,
+    dir = final_orient
+  }
+
   -- Layout configuration can now veto this room placement with a callback
   if options.veto_place_callback ~= nil then
-    local result = options.veto_place_callback(usage,room,pos,chosen_wall,room_base,final_orient) -- TODO: Package all these params into a state object
+    local result = options.veto_place_callback(state)
     if result == true then return false end
   end
 
@@ -712,12 +722,10 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   end
 
   -- Use decorator callbacks to decorate the connector cells; e.g. doors and windows, solid wall, open wall ...
-  local has_windows = (not room.no_windows) and crawl.one_chance_in(5)
-
   local decorate_callback = options.decorate_walls_callback
   if decorate_callback == nil then decorate_callback = hypervaults.rooms.decorate_walls end
 
-  decorate_callback(room,door_connections,true,has_windows)
+  decorate_callback(state,door_connections,true)
   -- Have a chance to add doors / windows to each other side of the room
   for n = 0, 3, 1 do
     if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
