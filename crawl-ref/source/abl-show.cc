@@ -186,6 +186,9 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
+    // Demigod
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -3358,7 +3361,8 @@ void set_god_ability_slots()
 {
     ASSERT(you.religion != GOD_NO_GOD);
 
-    _set_god_ability_helper(ABIL_RENOUNCE_RELIGION, 'X');
+    if (you.religion != GOD_SELF)
+        _set_god_ability_helper(ABIL_RENOUNCE_RELIGION, 'X');
 
     // Clear out other god invocations.
     for (int i = 0; i < 52; i++)

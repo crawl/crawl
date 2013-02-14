@@ -86,7 +86,7 @@ Kikubaaqudgha minion name
 
 @Yredelemnul minion name@
 %%%%
-Nemelex Xobeh
+Nemelex Xobeh minion name
 
 # Loosely tarot-based (could be better)
 @Minion_name@ the [King|Lady|Cook|Fool|Mistress|Master|Lover|Knight|Smith]

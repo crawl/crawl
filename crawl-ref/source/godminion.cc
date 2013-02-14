@@ -81,6 +81,8 @@ monster* demigod_build_minion(god_type which_god, int level) {
     // Randomly pick a race based on the weights
     monster_type chosen_race = *random_choose_weighted(mon_weights);
 
+    mprf("Building %s HD:%d for %s", mons_type_name(chosen_race, DESC_PLAIN).c_str(), level, god_name(which_god).c_str());
+
     // Perform a similar process for spells (with some extra adjustment based on minion level)
     std::vector<std::pair<spell_type, int> > spell_weights;
     int available_spells = 0;
@@ -108,17 +110,18 @@ monster* demigod_build_minion(god_type which_god, int level) {
         BEH_HOSTILE,
         0,
         0, 0,
-        you.pos(), // TODO: move it a little farther from the player (does PROX_AWAY_FROM_PLAYER do this?)
-        MHITNOT,
+        you.pos(), //  TODO: Pick a spot slightly farther from the player. We tend to get monsters 1 or 2 tiles away,
+                   // this could be pretty serious for high-HD minions, and doesn't give the player a good chance to run from the fight
+        MHITYOU,
         0,
         which_god,
         MONS_NO_MONSTER,
         0,
         god_colour(which_god),
-        level,
-        PROX_CLOSE_TO_PLAYER,
+        -1,
+        PROX_ANYWHERE,
         level_id::current(),
-        0,
+        level,
         0,
         0,
         demigod_random_minion_name(which_god, chosen_race, level),
@@ -129,34 +132,34 @@ monster* demigod_build_minion(god_type which_god, int level) {
 
     // Create the minion
     monster *mon = create_monster(mg);
-    if (mon) {
-        // Setup monster details so we can check conducts for dying and fleeing
-        mon->flags = mon->flags | MF_MINION;
-        you.minion_mid = mon->mid;
-        you.minion_timer_long = DEMIGOD_MINION_TIMER_LONG;
-        you.minion_timer_short = DEMIGOD_MINION_TIMER_SHORT;
-
-        monster_spells &spells(mon->spells);
-        if (available_spells>0 && num_spells>0) {
-            for (int i = 0; i < num_spells; ++i) {
-                // TODO: Examine the spell - if it's this race's breath spell, skip and fill another slot
-                // spell_type sp = spells[i];
-                spells[i] = *random_choose_weighted(spell_weights);;
-            }
-        }
-
-        // TODO: Add 1 or 2 cantrips
-        // TODO: Give items
-
-        // Also place cloud
-        // TODO: make_a_normal_cloud no longer exists, is there a better way to create this cloud?
-        // apply_area_cloud(make_a_normal_cloud, where, random_range(2,5), random_range(2,5), CLOUD_TLOC_ENERGY, &mons, 20, god_colour(which_god));
-        return mon;
-    }
-    else {
+    if (!mon) {
         mpr("Error creating Minion!");
         return 0;
     }
+    // Setup monster details so we can check conducts for dying and fleeing
+    mon->flags = mon->flags | MF_MINION;
+    you.minion_mid = mon->mid;
+    you.minion_timer_long = DEMIGOD_MINION_TIMER_LONG;
+    you.minion_timer_short = DEMIGOD_MINION_TIMER_SHORT;
+
+    monster_spells &spells(mon->spells);
+    if (available_spells>0 && num_spells>0) {
+        for (int i = 0; i < num_spells; ++i) {
+            // TODO: Examine the spell - if it's this race's breath spell, skip and fill another slot. Also make sure to wipe spell slots we haven't filled.
+            // spell_type sp = spells[i];
+            spells[i] = *random_choose_weighted(spell_weights);
+            mprf("Spell: %s", spell_title(spells[i]));
+        }
+    }
+
+    // TODO: Add 1 or 2 cantrips
+    // TODO: Give items
+
+    // Also place cloud
+    big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(),
+        // pow, size, spread_rate
+        random_range(3,8), random_range(5,6), 20, god_colour(which_god));
+    return mon;
 }
 
 /**
@@ -424,7 +427,7 @@ bool demigod_dispatch_minion(god_type which_god, int level)
     {
         speak_text = replace_all(speak_text, "@The_monster@", mons->name(DESC_THE));
         speak_text = replace_all(speak_text, "@The_player@", you.name(DESC_PLAIN));
-        speak_text = replace_all(speak_text, "@The_god@", god_name(which_god,true));
+        speak_text = replace_all(speak_text, "@The_god@", god_name(which_god));
         // Speak
         god_speaks(which_god, speak_text.c_str());
     }
@@ -485,11 +488,14 @@ void demigod_handle_notoriety()
             // Decide on a god to act and send a minion
             god_type which_god = *random_choose_weighted(wrath_weights);
 
-            // Equiv level plus a modifier based on notoriety and piety (up to a theoretical max of six levels at full piety and notoriety),
-            // plus a random number of levels up to the number of minions the god has sent after you so far.
-            const int level = you.experience_level + div_rand_round(you.notoriety[which_god] * you.piety, 7400) + random2(you.minions_dispatched[which_god] + 1);
+            // Generate at slightly over player level, plus a modifier based on notoriety and piety (up to a theoretical max of ten levels at#
+            // full piety and notoriety), plus a random number of levels up to the number of minions the god has sent after you so far.
+            int max_boost = div_rand_round(you.notoriety[which_god] + you.piety, 40) + you.minions_dispatched[which_god];
+
+            const int level = div_rand_round(you.experience_level * 4,3) + random_range(div_rand_round(max_boost,2),max_boost);
             if (demigod_dispatch_minion(which_god,level))
-                // Reset penance
+                // Reset notoriety for this god
+                // TODO: Maybe should reset when the minion dies or leaves, depending on the result of the battle?
                 dec_notoriety(which_god, you.notoriety[which_god]);
         }
     }
@@ -529,8 +535,10 @@ void demigod_minion_timer_expired()
     monster* minion = monster_by_mid(you.minion_mid);
     if (minion) {
         // Clouds
-        // TODO: make_a_normal_cloud no longer exists, is there a better way to create this cloud?
-        // apply_area_cloud(make_a_normal_cloud, minion->pos(), random_range(2,5), random_range(2,5), CLOUD_TLOC_ENERGY, minion, 20, god_colour(minion->god));
+        big_cloud(CLOUD_TLOC_ENERGY, minion, minion->pos(),
+            // pow, size, spread_rate
+            random_range(3,8), random_range(5,6), 20, god_colour(minion->god));
+
         monster_die(minion, KILL_RESET, NON_MONSTER);
     }
 
