@@ -2425,11 +2425,10 @@ monster* find_battlesphere(const actor* agent)
 
 spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
-    if (agent->is_player() && you.duration[DUR_BATTLESPHERE] > 0)
+    monster* battlesphere;
+    if (agent->is_player() && you.duration[DUR_BATTLESPHERE] > 0
+        && (battlesphere = find_battlesphere(&you)))
     {
-        monster* battlesphere = find_battlesphere(&you);
-        ASSERT(battlesphere);
-
         bool recalled = false;
         if (!you.can_see(battlesphere))
         {
@@ -2467,7 +2466,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 MONS_NO_MONSTER, 0, BLACK,
                 0);
         mg.hd = 1 + div_rand_round(pow, 11);
-        monster *battlesphere = create_monster(mg);
+        battlesphere = create_monster(mg);
 
         if (battlesphere)
         {
