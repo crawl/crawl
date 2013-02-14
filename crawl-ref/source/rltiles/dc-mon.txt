@@ -394,7 +394,6 @@ electric_golem MONS_ELECTRIC_GOLEM
 iron_golem MONS_IRON_GOLEM
 stone_golem MONS_STONE_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
-wood_golem MONS_WOOD_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
 # For the Erinya WizLab

@@ -2417,8 +2417,8 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             }
 
             const monster_type golems[] = {
-                MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
-                MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM
+                MONS_CLAY_GOLEM, MONS_STONE_GOLEM, MONS_IRON_GOLEM,
+                MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM
             };
 
             if (create_monster(
