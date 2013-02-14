@@ -2847,9 +2847,6 @@ static void _decrement_durations()
                           0,
                           "Your shroud begins to fray at the edges.");
 
-    if (_decrement_a_duration(DUR_BATTLESPHERE, delay))
-        end_battlesphere(find_battlesphere(&you), false);
-
     if (!env.sunlight.empty())
         process_sunlights();
 }

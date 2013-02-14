@@ -2292,7 +2292,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         else
         {
-            const bool battlesphere = (find_battlesphere(mons) != NULL);
+            const bool battlesphere = mons->props.exists("battlesphere");
             if (spell_needs_foe(spell_cast))
                 make_mons_stop_fleeing(mons);
 
