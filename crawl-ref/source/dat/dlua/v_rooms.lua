@@ -464,7 +464,7 @@ end
 -- Attempts to place a room by picking a random available spot
 -- TODO: This function is massive and could do with breaking up into a few parts
 function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
-  local v_normal, v_wall, clear_bounds, orient, v_normal_dir,wall
+  local v_normal, v_wall, v_normal_dir,wall
 
   -- Choose which wall of the room to attach to this spot (walls were determined in pick_room)
   local orients = { }
@@ -478,12 +478,10 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   local chosen = orients[crawl.random2(count) + 1]
   wall = chosen.wall
-  orient = hypervaults.normals[chosen.dir + 1]
 
   -- Pick a random open cell on the wall. This is where we'll attach the room to the door.
   if #wall == 0 then return false end -- Shouldn't happen, eligible should mean cells available
   local chosen_wall = wall[crawl.random2(#wall)+1]
-  local chosen_cell = wall.cell
 
   -- Get wall's normal and calculate the door vector (i.e. attaching wall)
   -- In open space we can pick a random normal for the door
@@ -506,10 +504,10 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local is_clear, room_width, room_height = true, room.size.x, room.size.y
 
   -- Figure out the mapped x and y vectors of the room relative to its orient
-  local room_final_y_dir = (v_normal_dir + chosen_wall.dir + 2) % 4
-  local room_final_x_dir = (room_final_y_dir + 1) % 4
-  local room_final_x_normal = hypervaults.normals[room_final_x_dir+1]
-  local room_final_y_normal = hypervaults.normals[room_final_y_dir+1]
+  local room_final_x_dir = (v_normal_dir + 1 - chosen_wall.dir) % 4
+  local room_final_y_dir = (room_final_x_dir - 1) % 4
+  local room_final_x_normal = hypervaults.normals[room_final_x_dir + 1]
+  local room_final_y_normal = hypervaults.normals[room_final_y_dir + 1]
 
   -- Now we can use those vectors along with the position of the connecting wall within the room, to find out where the (0,0) corner
   -- of the room lies on the map (and use that coord for subsequent calculations within the room grid)
@@ -596,9 +594,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   room.origin = origin
   room.opposite = opposite
 
-  -- Calculate the final orientation we need for the room to match the door
-  -- Somewhat worked out by trial and error but it appears to work
-  local final_orient = room_final_y_dir -- (v_normal_dir - orient.dir + 2) % 4 -- Should be same as original room orient?
+  -- Calculate how much the room has to rotate to match the new orientation
+  local final_orient = (room_final_x_dir + 1) % 4
 
   -- Place the vault if we have one
   if room.type == "vault" then
@@ -631,7 +628,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   if usage.usage == "open" or usage.usage == "eligible_open" then wall_usage = "eligible_open" end
   if usage.depth ~= nil then new_depth = usage.depth + 1 end  -- Room depth
 
-  local wall_orient = orient.dir
   local incidental_connections = { }
   local door_connections = { }
   for i, coord in ipairs(coords_list) do
@@ -653,7 +649,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
       if usage.usage == "open" and current_usage.usage == "open" and mask_cell.connected then
         -- Count all sides as door connections; potentially we'll get doors on multiple side
-        table.insert(door_connections, { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
+        table.insert(door_connections, { room_coord = coord.room_pos, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
       end
       if (current_usage.usage == "eligible" and usage.usage == "eligible") or (current_usage.usage == "eligible_open" and usage.usage == "eligible_open") then
       -- Overlapping cells with current room, these are potential door wall candidates
@@ -661,42 +657,38 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
           -- Door connections
           vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = "restricted", room = room, reason = "door" })
           if mask_cell.connected then
-            table.insert(door_connections, { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
+            table.insert(door_connections, { room_coord = coord.room_pos, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
           end
         else
           -- Incidental connections, we can optionally make doors here
           vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = "restricted", room = room, reason = "cell" })
           if mask_cell.connected then
             if incidental_connections[mask_cell.dir] == nil then incidental_connections[mask_cell.dir] = {} end
-            table.insert(incidental_connections[mask_cell.dir], { room_coord = { x=n,y=m }, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
+            table.insert(incidental_connections[mask_cell.dir], { room_coord = coord.room_pos, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
           end
         end
       end
       -- Carving into rock / open space
       if mask_cell.connected and ((current_usage.usage == "none" and usage.usage == "eligible") or (current_usage.usage == "open" and (usage.usage == "eligible_open" or usage.usage == "open"))) then
-        local u_wall_dir = (room_final_y_dir + mask_cell.dir) % 4
+        local u_wall_dir = (mask_cell.dir + final_orient) % 4
         vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = wall_usage, normal = hypervaults.normals[u_wall_dir + 1], room = room, depth = new_depth, cell = grid_cell, mask = mask_cell })
       end
 
     end
   end
 
-  -- Drawdoors and windows
-  local needs_door = true  -- Only reason we wouldn't need a door is if we're intentionally creating a dead end, not implemented yet
-  if needs_door then
-    local has_windows = (not room.no_windows) and crawl.one_chance_in(5)
+  -- Use decorator callbacks to decorate the connector cells; e.g. doors and windows, solid wall, open wall ...
+  local has_windows = (not room.no_windows) and crawl.one_chance_in(5)
 
-    local decorate_callback = options.decorate_walls_callback
-    if decorate_callback == nil then decorate_callback = hypervaults.rooms.decorate_walls end
+  local decorate_callback = options.decorate_walls_callback
+  if decorate_callback == nil then decorate_callback = hypervaults.rooms.decorate_walls end
 
-    decorate_callback(room,door_connections,true,has_windows)
-    -- Have a chance to add doors / windows to each other side of the room
-    for n = 0, 3, 1 do
-      if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
-        decorate_callback(room,incidental_connections[n],false,has_windows)
-      end
+  decorate_callback(room,door_connections,true,has_windows)
+  -- Have a chance to add doors / windows to each other side of the room
+  for n = 0, 3, 1 do
+    if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
+      decorate_callback(room,incidental_connections[n],false,has_windows)
     end
-
   end
 
   return true
