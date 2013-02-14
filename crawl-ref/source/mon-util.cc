@@ -2919,8 +2919,8 @@ void mons_pacify(monster* mon, mon_attitude_type att)
 
 static bool _mons_should_fire_beneficial(bolt &beam)
 {
-    // Should monster heal other or haste other be able to target the
-    // player? Saying no for now. -cao
+    // Should monster heal other, haste other or might other be able to
+    // target the player? Saying no for now. -cao
     if (beam.target == you.pos())
         return false;
 
