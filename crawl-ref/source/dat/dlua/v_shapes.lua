@@ -48,11 +48,11 @@ function hypervaults.floors.small_edge_room()
   local normal = hypervaults.normals[crawl.random2(4)+1]
   local size = { x = crawl.random_range(4,8), y = crawl.random_range(4,8) }
 
-  local x1 = (normal.x + 1)*(gxm-4-size.x)/2 + 2
-  local y1 = (normal.y + 1)*(gxm-4-size.y)/2 + 2
+  local x1 = math.floor((normal.x + 1)*(gxm - 10 - size.x)/2 + 5)
+  local y1 = math.floor((normal.y + 1)*(gym - 10 - size.y)/2 + 5)
 
   local paint = {
-    { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + size.x, y = y1 + size.y } }
+    { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + size.x - 1, y = y1 + size.y - 1 } }
   }
   return paint
 end

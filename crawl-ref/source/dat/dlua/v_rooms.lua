@@ -12,8 +12,8 @@ hypervaults.rooms = {}
 local function vaults_vector_add(start, move, xVector, yVector)
 
   return {
-    x = start.x + move.x * xVector.x + move.y * xVector.y,
-    y = start.y + move.x * yVector.x + move.y * yVector.y
+    x = start.x + (move.x * xVector.x) + (move.y * yVector.x),
+    y = start.y + (move.x * xVector.y) + (move.y * yVector.y)
   }
 
 end
@@ -493,15 +493,17 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   -- If placing a room in an existing wall we have the normal stored alredy in the usage data
   if usage.usage == "eligible" or usage.usage == "eligible_open" then
-    v_normal = usage.normal -- TODO: make sure usage.normal.dir is never nil and remove this loop
-    for i,n in ipairs(hypervaults.normals) do
-      if n.x == v_normal.x and n.y == v_normal.y then
-        v_normal_dir = n.dir
+    v_normal = usage.normal
+    v_normal_dir = usage.normal.dir
+    -- TODO: make sure usage.normal.dir is never nil and remove this loop
+    if v_normal_dir == nil then
+      for i,n in ipairs(hypervaults.normals) do
+        if n.x == v_normal.x and n.y == v_normal.y then
+          v_normal_dir = n.dir
+        end
       end
     end
   end
-
-  local is_clear, room_width, room_height = true, room.size.x, room.size.y
 
   -- Figure out the mapped x and y vectors of the room relative to its orient
   local room_final_x_dir = (v_normal_dir + 1 - chosen_wall.dir) % 4
@@ -509,9 +511,12 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local room_final_x_normal = hypervaults.normals[room_final_x_dir + 1]
   local room_final_y_normal = hypervaults.normals[room_final_y_dir + 1]
 
+  -- Calculate how much the room will have to rotate to match the new orientation
+  local final_orient = (room_final_x_dir + 1) % 4
+
   -- Now we can use those vectors along with the position of the connecting wall within the room, to find out where the (0,0) corner
   -- of the room lies on the map (and use that coord for subsequent calculations within the room grid)
-  local room_base = vaults_vector_add(pos, { x = -chosen_wall.pos.x, y = -chosen_wall.pos.y }, room_final_x_normal, room_final_y_normal)
+  local room_base = vaults_vector_add(pos, { x = -(chosen_wall.pos.x), y = -(chosen_wall.pos.y) }, room_final_x_normal, room_final_y_normal)
 
   -- Layout configuration can now veto this room placement with a callback
   if options.veto_place_callback ~= nil then
@@ -522,6 +527,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Loop through all coords of the room and its walls. Map to grid coords and add all this data into a list to make iterating through
   -- map squares easier in the future
   local coords_list = {}
+  local is_clear = true
 
   for m = -1, room.size.y, 1 do
     for n = -1, room.size.x, 1 do
@@ -593,9 +599,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Store; will also be used for vault analysis
   room.origin = origin
   room.opposite = opposite
-
-  -- Calculate how much the room has to rotate to match the new orientation
-  local final_orient = (room_final_x_dir + 1) % 4
 
   -- Place the vault if we have one
   if room.type == "vault" then
