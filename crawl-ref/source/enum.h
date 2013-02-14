@@ -1480,7 +1480,9 @@ enum duration_type
 #endif
     DUR_DISJUNCTION,
     DUR_VEHUMET_GIFT,
+#if TAG_MAJOR_VERSION == 34
     DUR_BATTLESPHERE,
+#endif
     NUM_DURATIONS
 };
 
