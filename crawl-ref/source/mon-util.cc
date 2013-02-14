@@ -712,6 +712,7 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_TWISTER
            || mc == MONS_BATTLESPHERE
+           || mc == MONS_FULMINANT_PRISM
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
            || mc == MONS_LURKING_HORROR
