@@ -28,7 +28,7 @@ require("dlua/v_paint.lua")
 require("dlua/v_rooms.lua")
 require("dlua/v_shapes.lua")
 
-_VAULTS_DEBUG = true
+_VAULTS_DEBUG = false
 
 -- The four directions and their associated vector normal and name.
 -- This helps us manage orientation of rooms.
