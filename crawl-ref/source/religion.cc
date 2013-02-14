@@ -3340,6 +3340,9 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
         return false;
 
+    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
+        return false;
+
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
         return false;
