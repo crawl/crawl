@@ -627,6 +627,12 @@ basilisk
 
 A crested lizard of middling size with a terrible petrifying gaze.
 %%%%
+battlesphere
+
+A small globe of magical energy that follows a spellcaster. It cannot
+operate on its own, yet it will provide fire support, assaulting whatever
+its conjurer casts at with magical missiles that never miss.
+%%%%
 big fish
 
 A stout fish with a wide, toothy mouth.
