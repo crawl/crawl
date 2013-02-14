@@ -2409,25 +2409,18 @@ spret_type cast_mass_abjuration(int pow, bool fail)
 
 monster* find_battlesphere(const actor* agent)
 {
-    monster* mons = NULL;
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    if (agent->props.exists("battlesphere"))
     {
-        mons = &menv[i];
-        if (mons->type == MONS_BATTLESPHERE
-            && agent == actor_by_mid(mons->props["bs_mid"].get_int()))
-        {
-            return mons;
-        }
+        return monster_by_mid(agent->props["battlesphere"].get_int());
     }
-
-    return NULL;
+    else
+        return NULL;
 }
 
 spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
     monster* battlesphere;
-    if (agent->is_player() && you.duration[DUR_BATTLESPHERE] > 0
-        && (battlesphere = find_battlesphere(&you)))
+    if (agent->is_player() && (battlesphere = find_battlesphere(&you)))
     {
         bool recalled = false;
         if (!you.can_see(battlesphere))
@@ -2450,7 +2443,11 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 
         battlesphere->number = min(20, (int) battlesphere->number
                                    + 4 + random2(pow + 10) / 10);
-        you.increase_duration(DUR_BATTLESPHERE, 7 + roll_dice(2, pow), 50);
+
+        // Increase duration
+        mon_enchant abj = battlesphere->get_ench(ENCH_FAKE_ABJURATION);
+        abj.duration = min(abj.duration + (7 + roll_dice(2, pow)) * 10, 500);
+        battlesphere->update_ench(abj);
     }
     else
     {
@@ -2470,12 +2467,14 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 
         if (battlesphere)
         {
+            int dur = min((7 + roll_dice(2, pow)) * 10, 500);
+            battlesphere->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
             battlesphere->props["bs_mid"].get_int() = agent->mid;
+            agent->props["battlesphere"].get_int() = battlesphere->mid;
+
             if (agent->is_player())
             {
                 mpr("You conjure a globe of magical energy.");
-                you.increase_duration(DUR_BATTLESPHERE, 7 + roll_dice(2, pow),
-                                      50);
             }
             else if (you.can_see(agent) && you.can_see(battlesphere))
             {
@@ -2502,8 +2501,9 @@ void end_battlesphere(monster* mons, bool killed)
         return;
 
     actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
-    if (agent && agent->is_player())
-        you.duration[DUR_BATTLESPHERE] = 0;
+    if (agent)
+        agent->props.erase("battlesphere");
+
     if (!killed)
     {
         if (agent && agent->is_player())
@@ -2549,8 +2549,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         // abyss level teleport), bail out and cancel the battlesphere bond
         if (!battlesphere)
         {
-            if (agent->is_player())
-                you.duration[DUR_BATTLESPHERE] = 0;
+            agent->props.erase("battlesphere");
             return false;
         }
 
