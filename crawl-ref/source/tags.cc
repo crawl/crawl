@@ -3774,6 +3774,10 @@ static void unmarshallSpells(reader &th, monster_spells &spells)
         unmarshallUByte(th);
 #endif
         spells[j] = unmarshallSpellType(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_MALMUTATE && spells[j] == SPELL_POLYMORPH)
+            spells[j] = SPELL_MALMUTATE;
+#endif
     }
 }
 
