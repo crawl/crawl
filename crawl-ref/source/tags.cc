@@ -3141,6 +3141,12 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
     mi.props.clear();
     mi.props.read(th);
+
+    if (mi.type != MONS_PROGRAM_BUG && mons_species(mi.type) == MONS_PROGRAM_BUG)
+    {
+        mi.type = MONS_GHOST;
+        mi.props.clear();
+    }
 }
 
 static void tag_construct_level_monsters(writer &th)
@@ -3523,6 +3529,12 @@ void unmarshallMonster(reader &th, monster& m)
         m.props["bs_mid"].get_int() = MID_PLAYER;
     }
 #endif
+
+    if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
+    {
+        m.type = MONS_GHOST;
+        m.props.clear();
+    }
 
     m.check_speed();
 }
