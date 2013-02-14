@@ -483,6 +483,10 @@ Heal Other priest cast
 
 @The_monster@ calls upon @possessive_God@ to heal @target@.
 %%%%
+Might Other priest cast
+
+@The_monster@ calls upon @possessive_God@ to strengthen @target@.
+%%%%
 priest cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
