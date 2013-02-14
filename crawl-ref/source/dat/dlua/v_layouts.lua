@@ -53,8 +53,8 @@ function vaults_default_options()
 
     -- Weightings of various types of room generators.
     room_type_weights = {
-      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 30, min_size = 6, max_size = 12 }, -- Floor vault
-      { generator = "code", paint_callback = junction_vault_paint_callback, weight = 80, min_size = 6, max_size = 30, min_corridor = 2, max_corridor = 8 }, -- Floor vault ++
+      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 30, min_size = 6, max_size = 15 }, -- Floor vault
+      { generator = "code", paint_callback = junction_vault_paint_callback, weight = 40, min_size = 6, max_size = 20, min_corridor = 3, max_corridor = 10 }, -- Floor vault ++
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },
@@ -340,17 +340,29 @@ function layout_primitive_omnigrid()
     subdivide_initial_chance = 100, -- % chance of subdividing at first level, if < 100 then we might just get chaotic city
     subdivide_level_multiplier = 0.80,   -- Multiply subdivide chance by this amount with each level
     minimum_size = 15,  -- Don't ever create areas smaller than this
-    fill_chance = 75, -- % chance of filling an area vs. leaving it open
+    fill_chance = 64, -- % chance of filling an area vs. leaving it open
     fill_padding = 2,  -- Padding around a fill area, effectively this is half the corridor width
+    jitter_min = -1,
+    jitter_max = 2
   }
   local results = omnigrid_subdivide_area(1,1,gxm-2,gym-2,options)
   local paint = {}
+  local jitter = crawl.coinflip()
   for i, area in ipairs(results) do
-    -- TODO: Jitter / vary corridor widths (depending on size of area)
     table.insert(paint,{ type = "floor", corner1 = {x = area.x1, y = area.y1}, corner2 = { x = area.x2, y = area.y2 }})
-    -- Fill the area?
+    -- Fill the area? -- TODO: We should do something to ensure at least one area is filled. Otherwise it's just another chaotic_city ...
     if crawl.random2(100) < options.fill_chance then
-      table.insert(paint,{ type = "wall", corner1 = { x = area.x1 + options.fill_padding, y = area.y1 + options.fill_padding }, corner2 = { x = area.x2 - options.fill_padding, y = area.y2 - options.fill_padding }} )
+      local corner1 = { x = area.x1 + options.fill_padding, y = area.y1 + options.fill_padding }
+      local corner2 = { x = area.x2 - options.fill_padding, y = area.y2 - options.fill_padding }
+      -- Perform jitter
+      if jitter then
+        corner1.x = corner1.x + crawl.random_range(options.jitter_min,options.jitter_max)
+        corner1.y = corner1.y + crawl.random_range(options.jitter_min,options.jitter_max)
+        corner2.x = corner2.x - crawl.random_range(options.jitter_min,options.jitter_max)
+        corner2.y = corner2.y - crawl.random_range(options.jitter_min,options.jitter_max)
+      end
+
+      table.insert(paint,{ type = "wall", corner1 = corner1, corner2 = corner2 } )
     end
   end
   return paint
