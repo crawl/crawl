@@ -985,8 +985,7 @@ SHUFFLE: OR
 MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
              size = 2, walk_dist = 1, spread_rate= 33 }
-KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum / electric eel \
-             simulacrum
+KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum
 MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon w:5
 SUBST:   X = tt., RY = wWwww., Q=t
 KITEM:   O = decaying rune of Zot
