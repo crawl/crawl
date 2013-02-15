@@ -1850,43 +1850,6 @@ MAP
      .
 ENDMAP
 
-NAME:   bh_abyss_demonologist_exit
-TAGS:   abyss_exit no_monster_gen no_rtele_into
-MONS:   deep elf demonologist
-MONS:   kobold demonologist
-MONS:   orc sorcerer
-MONS:   lich name:lich_demonologist name_replace name_descriptor \
-                            spells:shadow_creatures;summon_greater_demon
-SUBST:  d = ccxxW....
-SUBST:  e = ccxxW...
-SUBST:  f = ccxxW..
-SUBST:  w = WW'..
-SUBST:  ' = B..
-SUBST:  " = B.
-KFEAT:  0 = exit_abyss / abyssal_stair
-KFEAT:  B = floor
-KPROP:  B = bloody
-: init_abyss_exit(_G, "0")
-MAP
-fffffffffffffffffff
-feeeeeeeeeeeeeeeeef
-fedddddddddddddddef
-fedd....cnc....ddef
-fed..ccncWcncc..def
-fed..c1lw0wl2c..def
-fed..clnWWWnlc..def
-fed..cwwWWWwwc..def
-fed..cwwwWwwwc..def
-fed..clnwwwnlc..def
-fed..c3l"""l4c..def
-fed..ccc"""ccc..def
-fed....c===c....def
-fedd...'''''...ddef
-fedddddddddddddddef
-feeeeeeeeeeeeeeeeef
-fffffffffffffffffff
-ENDMAP
-
 NAME:  guppyfry_abyss_exit_glass_guarded
 TAGS:  abyss_exit
 : init_abyss_exit(_G, "O")
