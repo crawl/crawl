@@ -450,6 +450,7 @@ elven_leather_armor2
 
 ring_mail1 ARM_RING_MAIL
 ring_mail2
+ring_mail3
 orcish_ringmail ARM_RING_MAIL_ORC
 orcish_ringmail2
 elven_ringmail ARM_RING_MAIL_ELF
@@ -458,20 +459,24 @@ dwarven_ringmail ARM_RING_MAIL_DWA
 
 scale_mail1 ARM_SCALE_MAIL
 scale_mail2
+scale_mail3
 elven_scalemail ARM_SCALE_MAIL_ELF
 elven_scalemail2
 
 chain_mail1 ARM_CHAIN_MAIL
 chain_mail2
-chain_mail3 ARM_CHAIN_MAIL_ELF
+chain_mail3
+elven_chain_mail ARM_CHAIN_MAIL_ELF
 orcish_chain_mail ARM_CHAIN_MAIL_ORC
 orcish_chain_mail2
 
 splint_mail1 ARM_SPLINT_MAIL
 splint_mail2
+splint_mail3
 
 plate1 ARM_PLATE_ARMOUR
 plate2
+plate3
 orcish_plate ARM_PLATE_ARMOUR_ORC
 orcish_plate2
 
