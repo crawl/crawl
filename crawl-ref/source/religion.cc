@@ -3326,33 +3326,6 @@ bool god_likes_item(god_type god, const item_def& item)
     }
 }
 
-bool player_can_join_god(god_type which_god)
-{
-    if (you.species == SP_DEMIGOD)
-        return false;
-
-    if (is_good_god(which_god) && you.undead_or_demonic())
-        return false;
-
-    if (which_god == GOD_YREDELEMNUL && you.is_artificial())
-        return false;
-
-    if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
-        return false;
-
-    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
-        return false;
-
-    // Fedhas hates undead, but will accept demonspawn.
-    if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
-        return false;
-
-    if (which_god == GOD_SIF_MUNA && !you.spell_no)
-        return false;
-
-    return true;
-}
-
 static bool _transformed_player_can_join_god(god_type which_god)
 {
     if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
@@ -3371,6 +3344,30 @@ static bool _transformed_player_can_join_god(god_type which_god)
     }
 
     return true;
+}
+
+bool player_can_join_god(god_type which_god)
+{
+    if (you.species == SP_DEMIGOD)
+        return false;
+
+    if (is_good_god(which_god) && you.undead_or_demonic())
+        return false;
+
+    if (which_god == GOD_YREDELEMNUL && you.is_artificial())
+        return false;
+
+    if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
+        return false;
+
+    // Fedhas hates undead, but will accept demonspawn.
+    if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
+        return false;
+
+    if (which_god == GOD_SIF_MUNA && !you.spell_no)
+        return false;
+
+    return _transformed_player_can_join_god(which_god);
 }
 
 // Identify any interesting equipment when the player signs up with a
