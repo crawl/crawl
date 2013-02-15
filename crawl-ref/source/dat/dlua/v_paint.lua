@@ -317,6 +317,9 @@ function paint_vaults_layout(paint, options, layout_grid)
       local cell = get_layout(layout_grid,x,y)
       if cell.feature ~= nil and cell.feature ~= "space" then
         dgn.grid(x,y,cell.feature)
+      elseif cell.feature == nil then
+        -- Make sure we set the right type of wall in unpainted grids
+        dgn.grid(x,y,wall_type)
       end
     end
   end
