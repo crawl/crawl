@@ -452,3 +452,18 @@ ring of the Octopus King
  Tried hard to woo her,
  But she couldn't wear all his rings."
 %%%%
+milk chocolate
+
+This item is a debugging aid, granting a vast array of mostly beneficial
+artefact properties.
+
+If you see this in a real game, it's a bug.
+%%%%
+dark chocolate
+
+This item is a debugging aid, granting a vast array of mostly harmful
+artefact properties. It'd distinct from its milky counterpart as some props
+conflict with each other.
+
+If you see this in a real game, it's a bug.
+%%%%
