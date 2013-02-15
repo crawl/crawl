@@ -3795,7 +3795,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     {
         const coord_def target = _mons_fragment_target(mons);
         if (in_bounds(target))
-           cast_fragmentation(12 * mons->hit_dice, mons, target, false);
+           cast_fragmentation(6 * mons->hit_dice, mons, target, false);
 
         return;
     }
