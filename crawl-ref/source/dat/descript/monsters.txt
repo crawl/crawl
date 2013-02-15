@@ -3077,10 +3077,6 @@ lasher statue
 This statue depicts a savage-looking slave driver with a vicious barbed whip.
 It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
-lich demonologist
-
-<lich>
-%%%%
 malarious mermaid
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
