@@ -662,12 +662,14 @@ royal_jelly MONS_ROYAL_JELLY
 dissolution MONS_DISSOLUTION
 %sdir mon/amorphous
 ooze MONS_OOZE
+%rim 0
 jelly MONS_JELLY
 slime_creature MONS_SLIME_CREATURE
 slime_creature2
 slime_creature3
 slime_creature4
 slime_creature5
+%rim 1
 pulsating_lump MONS_PULSATING_LUMP
 giant_amoeba MONS_GIANT_AMOEBA
 brown_ooze MONS_BROWN_OOZE
