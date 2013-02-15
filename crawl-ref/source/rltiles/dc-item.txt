@@ -23,6 +23,7 @@
 club WPN_CLUB
 mace1 WPN_MACE
 mace2
+mace3
 %rim 0
 orcish_mace1 WPN_MACE_ORC
 orcish_mace2
@@ -33,6 +34,7 @@ mace_large1 WPN_GREAT_MACE
 mace_large2
 flail1 WPN_FLAIL
 flail2
+flail3
 %rim 0
 orcish_flail1 WPN_FLAIL_ORC
 orcish_flail2
@@ -94,6 +96,7 @@ elven_dagger2
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
+short_sword3
 %rim 0
 dwarven_short_sword1 WPN_SHORT_SWORD_DWARF
 dwarven_short_sword2
@@ -106,6 +109,7 @@ elven_short_sword2
 long_sword1 WPN_LONG_SWORD
 %rim 0
 long_sword2
+long_sword3
 orcish_long_sword1 WPN_LONG_SWORD_ORC
 orcish_long_sword2
 elven_long_sword1 WPN_LONG_SWORD_ELF
@@ -122,6 +126,7 @@ orcish_great_sword2
 %rim 0
 falchion1 WPN_FALCHION
 falchion2
+falchion3
 orcish_falchion1 WPN_FALCHION_ORC
 orcish_falchion2
 dwarven_falchion1 WPN_FALCHION_DWARF
@@ -131,6 +136,7 @@ elven_falchion2
 %rim 1
 scimitar1 WPN_SCIMITAR
 scimitar2
+scimitar3
 
 %rim 0
 sabre1 WPN_SABRE
@@ -157,6 +163,7 @@ blessed_blade WPN_BLESSED_BLADE
 ##Axe
 hand_axe1 WPN_HAND_AXE
 hand_axe2
+hand_axe3
 %rim 0
 dwarven_hand_axe1 WPN_HAND_AXE_DWARF
 dwarven_hand_axe2
@@ -235,6 +242,7 @@ staff WPN_STAFF
 %rim 1
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
+quarterstaff3
 %rim 0
 lajatang1 WPN_LAJATANG
 lajatang2
