@@ -1283,61 +1283,49 @@ SUBST: abcd = .
 NSUBST: 0 = 2:0 / *:.
 KMONS: 0 = 0 band
 MAP
-   x....x
-   xxAAxx
-  xx....xx
- xx..xx..xxx
- x0.xxxx0.x.
- x0.xxxxx.B.
- xx..xxxxxB.
- xxx..xxxxx.
-xx xx00xx xx
-.xxxxx..xxx
-.Cxxxxx..xx
-.C.xxxxx.0x
-.x..xxxx.0x
-xxx0.xx..xx
-  xx....xx
-   xxDDxx
-   x....x
+ xx....xx
+xx..xx..xx
+x0.xxxx0.x
+x0.xxxxx..
+xx..xxxxx.
+xxx..xxxxx
+xxxx00xxxx
+xxxxx..xxx
+.xxxxx..xx
+..xxxxx.0x
+x..xxxx.0x
+xx0.xx..xx
+ xx....xx
 ENDMAP
 
 NAME: grunt_vaults_funnel
 TAGS: vaults_room
 KMONS: 0 = 0 band
 MAP
-      ...
-     xx+x
     xxx.x
   xxx...x
  xx.....x
-......xxx.
-..(.0.+...
-......xxx.
+......xxx
+..(.0.+..
+......xxx
  xx.....x
   xxx...x
     xxx.x
-     xx+x
-      ...
 ENDMAP
 
 NAME: grunt_vaults_trifunnel
 TAGS: vaults_room
 KMONS: 0 = 0 band
 MAP
-      ...     ...     ...
-     xx+x    xx+x    xx+x
-    xxx.x   xxx.x   xxx.x
-  xxx...x xxx...x xxx...x
+    xxx.xxxxxxx.xxxxxxx.x
+  xxx...xxxxx...xxxxx...x
  xx.....xxx.....xxx.....x
-......xxx.....xxx.....xxx.
-....0.+...(.0.+.....0.....
-......xxx.....xxx.....xxx.
+......xxx.....xxx.....xxx
+....0.+...(.0.+.....0....
+......xxx.....xxx.....xxx
  xx.....xxx.....xxx.....x
-  xxx...x xxx...x xxx...x
-    xxx.x   xxx.x   xxx.x
-     xx+x    xx+x    xx+x
-      ...     ...     ...
+  xxx...xxxxx...xxxxx...x
+    xxx.xxxxxxx.xxxxxxx.x
 ENDMAP
 
 NAME: ontoclasm_vaults_chip
@@ -1345,13 +1333,13 @@ TAGS: vaults_room allow_dup
 SUBST: P = 0. , G : ...G
 KMONS: 0 = 0 band
 MAP
-. ... .
-.  .  .
+.x...x.
+.xx.xx.
 ..G.G..
 .P.0.P.
 ..G.G..
-.  .  .
-. ... .
+.xx.xx.
+.x...x.
 ENDMAP
 
 NAME:   dpeg_vaults_monster_box
