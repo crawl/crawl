@@ -40,10 +40,16 @@ hypervaults.normals = {
   { x = 1, y = 0, dir = 3, name="e" }
 }
 
--- Default parameters for all Vaults layouts. Some individual layouts might
--- tweak these parameters to create specific effects.
+-- Default parameters for all Vaults layouts. Some individual layouts might tweak these parameters to create specific effects.
 function vaults_default_options()
 
+  -- Decide weights for wall types based on depth
+  local depth = you.depth()
+  local stone_weight = (4-depth) * 10              -- 30,20,10,0
+  local metal_weight = math.max(0,(depth-2) * 20)  -- 0,0,20,40
+  local crystal_weight = math.max(0,depth-2)       -- 0,0,1,2
+
+  -- Main options table
   local options = {
     max_rooms = 27, -- Maximum number of rooms to attempt to place
     max_room_depth = 0, -- No max depth (not implemented yet anyway)
@@ -64,12 +70,10 @@ function vaults_default_options()
     },
 
     -- Weightings for types of wall to use across the whole layout
-    -- TODO: These weights should vary by depth; metal/green crystal become much more likely at V:3-4
     layout_wall_weights = {
-      { feature = "rock_wall", weight = 2 }, -- Possibly shouldn't be here at all, someone please advise
-      { feature = "stone_wall", weight = 30 },
-      { feature = "metal_wall", weight = 20 },
-      { feature = "green_crystal_wall", weight = 5 },
+      { feature = "stone_wall", weight = stone_weight },
+      { feature = "metal_wall", weight = metal_weight },
+      { feature = "green_crystal_wall", weight = crystal_weight },
     },
     layout_floor_type = "floor"
 
