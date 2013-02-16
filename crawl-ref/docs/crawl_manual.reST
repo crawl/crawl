@@ -315,9 +315,9 @@ make your character walk repeatedly by pressing Shift and a direction;
 alternatively, press '/' followed by a direction. You will walk in that
 direction until any of a number of things happen: a hostile monster is visible
 on the screen, a message is sent to the message window for any reason, you press
-a key, or you are about to step on anything other than normal floor and it is not your
-first move of the long walk. Note that this
-is functionally equivalent to just pressing the direction key several times.
+a key, or you are about to step on anything other than normal floor and it is
+not your first move of the long walk. Note that this is functionally equivalent
+to just pressing the direction key several times.
 
 Another convenient method for moving long distances is described in the section
 on Automated Travel and Exploration below.
@@ -325,8 +325,9 @@ on Automated Travel and Exploration below.
 Resting
 ========================================
 
-If you press '5', you rest for 100 turns or until your hit points or magic return to
-full, whichever is sooner. You can rest for just one turn by pressing '.', Delete or 's'.
+If you press '5', you rest for 100 turns or until your hit points or magic
+return to full, whichever is sooner. You can rest for just one turn by pressing
+'.', Delete or 's'.
 
 Resting stops if a monster appears or if you are otherwise interrupted.
 
@@ -1497,7 +1498,7 @@ Appendices
 .. note:: Use 'A' to check for which particular peculiarities a species might
           have. Also, some species have special abilities which can be accessed
           by the 'a' abilities menu. Some also have physical characteristics
-          which allow them to make extra attacks using the Unarmed Combat skill.
+          which allow them to make extra attacks.
 
 Humans
   Humans tend to be hardworking and industrious, and learn new things quickly.
@@ -1516,7 +1517,7 @@ Hill Orcs
   only fair), though they are not particularly good at using missile weapons.
   They prefer to use their own weapons. Orcs are poor at using most types of
   magic, with the exception of conjurations, summoning, necromancy, and the
-  elemental magic of earth and fire. They advance in levels as quickly as
+  elemental magic of earth and fire. They advance in levels almost as quickly as
   Humans.
 
   Many Orcs feel superior to all other species and beings, and they have formed
@@ -1589,7 +1590,7 @@ Nagas
   instead of legs.
 
   They are reasonably good at most things and advance in experience levels at
-  the same rate as Sludge Elves. They are naturally immune to poisons, can see
+  the same rate as Hill Orcs. They are naturally resistant to poisons, can see
   invisible creatures and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Their
@@ -1633,8 +1634,8 @@ Trolls
   fur, and their mouths are full of ichor-dripping fangs.
 
   They can rip creatures apart with their claws, and regenerate very quickly
-  from even the most terrible wounds. They learn very slowly indeed - as slowly
-  as High Elves - and need a great amount of food to survive.
+  from even the most terrible wounds. They learn slowly indeed - as slowly as
+  High Elves - and need a great amount of food to survive.
 
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
@@ -1682,11 +1683,10 @@ Demonspawn
   this class of beings also develop a range of unholy abilities, which are
   listed as mutations (and can sometimes be activated with the 'a' command).
 
-  Demonspawn advance quite slowly in experience and learn most skills at about
-  the same rate as do Demigods. However, they are a little better at fighting
-  and much better at conjurations, summonings, necromancy and invocations. Note
-  that unlike Demigods, they can take on gods, although not all will accept
-  them.
+  Demonspawn advance slowly in experience and learn most skills at about the
+  same rate as do Demigods. However, they are a little better at fighting and
+  much better at conjurations, summonings, necromancy and invocations. Note that
+  unlike Demigods, they can take on gods, although not all will accept them.
 
 Deep Dwarves
   Deep Dwarves are short, hardy people who, unlike their extinct surface
@@ -1720,7 +1720,7 @@ Felids
   Felids are a breed of cats that have been granted sentience. Originally they
   were witches' familiars that were magically augmented to provide help for
   their masters' rituals, yet many have abandoned, outlived, or, in at least one
-  case, ripped to shreds their former masters and gone out into the world.
+  case, eviscerated their former masters and gone out into the world.
 
   While fully capable of using speech and most forms of magic, Felids are at a
   serious disadvantage due to their inability to use armour or weapons, or even
@@ -1768,7 +1768,7 @@ elemental magic in particular, while their affinity for other types of magic
 varies among the different sub-species.
 
 High Elves
-  This is a tall and powerful Elven species who advance in levels very slowly,
+  This is a tall and powerful Elven species who advance in levels slowly,
   requiring half again as much experience as Humans. They have good intelligence
   and dexterity, but suffer in strength. Compared with Humans, they have fewer
   HP but more magic. Among all Elves, they are best with blades and bows.
@@ -1779,8 +1779,8 @@ Deep Elves
   gift for all forms of magic (including necromancy and earth magic), and
   adapted physically to their new environment, becoming shorter and weaker than
   other Elves and losing all colouration. They are poor at hand-to-hand combat,
-  but excellent at fighting from a distance. They advance in levels slightly
-  faster than High Elves.
+  but excellent at fighting from a distance. They advance in levels as fast as
+  High Elves.
 
 Sludge Elves
   This is a somewhat degenerate species of Elves. They are mirror images of
@@ -1789,7 +1789,8 @@ Sludge Elves
   of High Elven magic (charms and conjurations). On the other hand, they are
   superlative transmuters, and are comfortable dabbling in necromantic, poison
   and elemental magic. As fighters, they are often more dangerous unarmed than
-  armed. They advance in levels slightly slower than Humans.
+  armed. They advance in levels slightly slower than Humans, but faster than all
+  other Elves.
 
 The Undead
 ========================================
@@ -1805,7 +1806,7 @@ Mummies
   These are undead creatures who travel into the depths in search of revenge,
   redemption, or just because they want to.
 
-  Mummies progress very slowly in levels, half again as slowly as Humans in all
+  Mummies progress slowly in levels, half again as slowly as Humans in all
   skills except fighting, spellcasting and necromancy. As they increase in
   levels, they become increasingly in touch with the powers of death, but cannot
   use some types of necromancy which only affect living creatures. The side
@@ -1875,7 +1876,8 @@ Grey Draconians
 Black Draconians
   can unleash huge electrical discharges, and are naturally insulated. They are
   good at air magic but feel cumbersome with earth magic. Their wings will
-  eventually grow larger, allowing them to fly temporarily.
+  eventually grow larger, which allows them to fly continuously when combined
+  with their natural skill with air magic.
 
 Mottled Draconians
   are somewhat in touch with fire, yet are not weak with ice. They can spit
@@ -2118,12 +2120,10 @@ allow the wielder to attack an opponent two squares away, and even reach over
 monsters. To reach, use the 'v' command - or preferably, use Autofight ('tab').
 
 Unarmed Combat is a special fighting skill. It allows your character to make a
-powerful attack when unarmed and also to make special secondary attacks (and
-increases the power of those attacks for characters who get them anyway). You
-can practise Unarmed Combat by attacking empty-handed, and it is also exercised
-when you make a secondary attack (a kick, punch, etc.). Unarmed combat is
-particularly difficult to use in combination with heavy armour or shields or
-very big weapons.
+powerful attack when unarmed and also to punch with the off hand as an
+additional melee attack. You can practise Unarmed Combat by attacking
+empty-handed. Unarmed combat is particularly difficult to use in combination
+with heavy armour or shields.
 
 Ranged combat skills
 ========================================
@@ -2362,7 +2362,8 @@ a
   a menu.
 
 \\
-  Show item knowledge.
+  Show item knowledge. You can toggle autopickup exceptions for item types in
+  this screen. The screen has its own help text.
 
 m
   Show skill screen. You can get descriptions of present skills from that
@@ -2908,11 +2909,11 @@ Tele
   teleport, another teleport (by any source) will cancel it.
 
 Fly
-  You fly above the ground, being able to cross water and lava, and also to avoid most
-  types of traps. Due to low ceilings in the dungeon, this is not enough to get out of
-  reach of ground-based enemies, although you are safe from electrical melee attacks.
-  Most types of flight will usually time out -- be sure you're not above deadly liquids
-  at that moment.
+  You fly above the ground, and so are able to cross water and lava and avoid
+  most types of traps. Due to low ceilings in the dungeon, this is not enough
+  to get out of reach of ground-based enemies, although you are safe from
+  electrical melee attacks. Most types of flight will time out - be sure you're
+  not above deadly liquids when that happens.
 
 Held
   You are held in a net or a spiderweb. You cannot move freely and will instead
@@ -3110,8 +3111,7 @@ Artefacts autoinscriptions
 
 Many players use inscriptions for properties of artefacts. This makes browsing
 the inventory or stashes easier. Crawl provides a scheme for automatic
-inscription (you can switch this off using the option
-autoinscribe_artefacts=false).
+inscription.
 
 Here, one has to negotiate between two concurrent objectives: terseness for
 better use of limited line lengths versus verboseness for easier reading. The
@@ -3177,10 +3177,10 @@ Int+3
   intelligence modifier
 
 Dam+3
-  damage modifier
+  damage modifier (to melee and ranged combat)
 
 Acc+3
-  accuracy modifier
+  accuracy modifier (to melee and ranged combat)
 
 MR
   boost to magical resistance to hostile enchantments
@@ -3198,22 +3198,22 @@ rMut
   resist mutation
 
 \+Fly
-  can evoke flight
+  can evoke for flight (from the 'a'bilities menu)
 
 \+Inv
-  can evoke invisibility
+  can evoke for invisibility (from the 'a'bilities menu)
 
 \+Blink
-  can evoke blink
+  can evoke for blink (from the 'a'bilities menu)
 
 \+Rage
-  can evoke berserk
+  can evoke for berserk (from the 'a'bilities menu)
 
 \*Rage
-  uncontrolled berserk (anger)
+  uncontrolled berserk (may trigger on melee attacks)
 
 \*Tele
-  random teleporting
+  random teleportation
 
 \-Tele
   prevents teleportation
@@ -3222,28 +3222,25 @@ rMut
   prevents spellcasting
 
 Contam
-  causes magical contamination over time
-
-Contam+
-  high rate of magical contamination
+  causes high magical contamination when unequipped
 
 Noisy
   makes noises
 
 Hunger
-  increased hunger
+  increased rate of hunger
 
 Hunger+
-  highly increased hunger
+  highly increased rate of hunger
 
 Curse
-  chance of self-cursing on equipment
+  chance of self-cursing when equipped
 
 Fire
-  ring of Fire
+  rF+, rC-, enhances fire magic and weakens ice magic
 
 Ice
-  ring of Ice
+  rC+, rF-, enhances ice magic and weakens fire magic
 
 SustAb
   sustain abilities
@@ -3257,17 +3254,14 @@ Regen
 Wiz
   wizardry
 
-MP
-  magical power (additional Magic points)
+MP+3
+  magical power modifier
 
-HP
-  hit points (additional Health)
+HP+3
+  hit point modifier
 
 cTele
   controlled teleport
-
-cFly
-  controlled flight
 
 SInv
   see invisible
@@ -3288,7 +3282,7 @@ Spirit
   guardian spirit
 
 Inacc
-  inaccuracy (Acc-5)
+  inaccuracy (affects all attacks that can miss)
 
 Debugging inscriptions
 ========================================
