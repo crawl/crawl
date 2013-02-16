@@ -448,6 +448,11 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if (target_class == OBJ_UNASSIGNED)
         return false;
 
+    // Wisp form semi-melds all of inventory, making it unusable for you,
+    // but also immune to destruction.  No message is needed.
+    if (you.form == TRAN_WISP)
+        return false;
+
     // Fedhas worshipers are exempt from the food destruction effect
     // of spores.
     if (flavour == BEAM_SPORE
