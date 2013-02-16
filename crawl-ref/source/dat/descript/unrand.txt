@@ -462,7 +462,7 @@ If you see this in a real game, it's a bug.
 dark chocolate
 
 This item is a debugging aid, granting a vast array of mostly harmful
-artefact properties. It'd distinct from its milky counterpart as some props
+artefact properties. It's distinct from its milky counterpart as some props
 conflict with each other.
 
 If you see this in a real game, it's a bug.
