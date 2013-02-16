@@ -1342,18 +1342,6 @@ static void _fixup_walls()
         wall_type = DNGN_METAL_WALL;
         break;
 
-    case BRANCH_VAULTS:
-    {
-        if (you.depth > 2 && one_chance_in(10))
-            wall_type = DNGN_GREEN_CRYSTAL_WALL;
-        else if (x_chance_in_y(you.depth - 1, 3))
-            wall_type = DNGN_METAL_WALL;
-        else if (x_chance_in_y(you.depth + 1, 3))
-            wall_type = DNGN_STONE_WALL;
-
-        break;
-    }
-
     case BRANCH_CRYPT:
         wall_type = DNGN_STONE_WALL;
         break;
