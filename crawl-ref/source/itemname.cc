@@ -3341,8 +3341,11 @@ string item_prefix(const item_def &item, bool temp)
 
     if (fully_identified(item))
         prefixes.push_back("identified");
-    else if (item_ident(item, ISFLAG_KNOW_TYPE))
+    else if (item_ident(item, ISFLAG_KNOW_TYPE)
+             || get_ident_type(item) == ID_KNOWN_TYPE)
+    {
         prefixes.push_back("known");
+    }
     else
         prefixes.push_back("unidentified");
 
