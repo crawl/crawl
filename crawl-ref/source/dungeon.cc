@@ -1328,7 +1328,6 @@ static int _num_mons_wanted()
 static void _fixup_walls()
 {
     // If level part of Dis -> all walls metal.
-    // If part of vaults -> walls depend on level.
     // If part of crypt -> all walls stone.
 
     dungeon_feature_type wall_type = DNGN_ROCK_WALL;
