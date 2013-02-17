@@ -2410,9 +2410,7 @@ spret_type cast_mass_abjuration(int pow, bool fail)
 monster* find_battlesphere(const actor* agent)
 {
     if (agent->props.exists("battlesphere"))
-    {
         return monster_by_mid(agent->props["battlesphere"].get_int());
-    }
     else
         return NULL;
 }
@@ -2475,9 +2473,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
             agent->props["battlesphere"].get_int() = battlesphere->mid;
 
             if (agent->is_player())
-            {
                 mpr("You conjure a globe of magical energy.");
-            }
             else
             {
                 if (you.can_see(agent) && you.can_see(battlesphere))
@@ -2486,9 +2482,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                                        " conjures a globe of magical energy!");
                 }
                 else if (you.can_see(battlesphere))
-                {
                         simple_monster_message(battlesphere, " appears!");
-                }
                 battlesphere->props["band_leader"].get_int() = agent->mid;
             }
             battlesphere->number = 4 + random2(pow + 10) / 10;
