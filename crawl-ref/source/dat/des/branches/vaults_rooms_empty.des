@@ -1301,3 +1301,60 @@ x.......x......
 x.AA.BB.x....D.
 x.......xxxx...
 ENDMAP
+
+NAME:     vaults_mumra_chevron
+TAGS:     vaults_empty
+MAP
+...x...x...
+...x...x...
+x.xxx.xxx.x
+x.xxx.xxx.x
+.x...x...x.
+.x...x...x.
+xxx.xxx.xxx
+xxx.xxx.xxx
+...x...x...
+...x...x...
+ .xxx.xxx.
+ .xxx.xxx.
+ENDMAP
+
+NAME:     vaults_mumra_chevron_long
+TAGS:     vaults_empty
+MAP
+   x...x
+   x...x
+  xxx.xxx
+  xxx.xxx
+ x...x...x
+ x...x...x
+xxx.xxx.xxx
+xxx.xxx.xxx
+...x...x...
+...x...x...
+ .xxx.xxx.
+ .xxx.xxx.
+  ...x...
+  ...x...
+   .xxx.
+   .xxx.
+ENDMAP
+
+NAME:     vaults_mumra_lcd
+TAGS:     vaults_empty
+MAP
+  .....
+ .......
+.x.....x.
+..xxxxx..
+..xxxxx..
+.x.....x.
+x...(...x
+.x.....x.
+..xxxxx..
+..xxxxx..
+.x.....x.
+ .......
+  .....
+ENDMAP
+
