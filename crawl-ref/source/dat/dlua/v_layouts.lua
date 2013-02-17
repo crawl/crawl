@@ -395,4 +395,3 @@ function omnigrid_subdivide_area(x1,y1,x2,y2,options,results,chance)
   return results
 
 end
-

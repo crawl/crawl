@@ -18,7 +18,7 @@ function hyper.vaults.floor_vault(room, options, gen)
 
   local paint = floor_vault_paint_callback(room,options,gen)
   if options.stair_chance ~= nil and crawl.x_chance_in_y(options.stair_chance,100) then
-    
+
     -- Place the stair
     table.insert(paint, { shape = "plot", feature = "stone_stairs_down_i",
       x = crawl.random2(math.floor(room.size.x/2)) + crawl.div_rand_round(room.size.x,4),

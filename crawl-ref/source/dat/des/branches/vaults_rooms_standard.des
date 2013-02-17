@@ -1448,57 +1448,56 @@ NAME:     vaults_mumra_minichess
 TAGS:     vaults_room
 SUBST:    . = ...0
 MAP
-  ..xx..  
-  ..xx..  
+  ..xx..
+  ..xx..
 ..xx..xx..
 ..xx..xx..
 xx..xx..xx
 xx..xx..xx
 ..xx..xx..
 ..xx..xx..
-  ..xx..  
-  ..xx..  
+  ..xx..
+  ..xx..
 ENDMAP
 
 NAME:     vaults_mumra_minichess_inversion
 TAGS:     vaults_room
 SUBST:    . = ...0
 MAP
-    ..    
-    ..    
-  ..xx..  
-  ..xx..  
+    ..
+    ..
+  ..xx..
+  ..xx..
 ..xx..xx..
 ..xx..xx..
-  ..xx..  
-  ..xx..  
-    ..    
-    ..    
+  ..xx..
+  ..xx..
+    ..
+    ..
 ENDMAP
 
 NAME:     vaults_mumra_hex
 TAGS:     vaults_room
 SUBST:    . = ......0
 MAP
-   .....   
-  .......  
- ......... 
+   .....
+  .......
+ .........
 .....(.....
- ......... 
-  .......  
-   .....   
+ .........
+  .......
+   .....
 ENDMAP
 
 NAME:     vaults_mumra_hexcomb
 TAGS:     vaults_room
 SUBST:    0 = 0.
 MAP
-     ... 
-   x.000.x    
- ...x...x... 
+     ...
+   x.000.x
+ ...x...x...
 0.(.0xxx0.(.0
- ...x...x... 
-   x.000.x    
-     ... 
+ ...x...x...
+   x.000.x
+     ...
 ENDMAP
-
