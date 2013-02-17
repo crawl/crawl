@@ -25,6 +25,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -612,6 +613,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
     }
     case ENCH_FAKE_ABJURATION:
+        if (type == MONS_BATTLESPHERE)
+            return end_battlesphere(this, false);
     case ENCH_ABJ:
         // Set duration to -1 so that monster_die() and any of its
         // callees can tell that the monster ran out of time or was
