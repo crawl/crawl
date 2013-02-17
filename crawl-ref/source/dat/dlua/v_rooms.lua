@@ -737,4 +737,3 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   return coords_list
 end
-
