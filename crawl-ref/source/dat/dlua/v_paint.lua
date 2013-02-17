@@ -279,8 +279,12 @@ function paint_grid(paint, options, grid)
         end
       end
     elseif shape_type == "plot" then
-      for i,pos in ipairs(item.points) do
-        set_layout(layout_grid, pos.x, pos.y,{ solid = solid, feature = feature, empty = empty })
+      if item.points ~= nil then
+        for i,pos in ipairs(item.points) do
+          set_layout(layout_grid, pos.x, pos.y,{ solid = solid, feature = feature, empty = empty })
+        end
+      else
+        set_layout(layout_grid, item.x, item.y, { solid = solid, feature = feature, empty = empty })
       end
     end
 
