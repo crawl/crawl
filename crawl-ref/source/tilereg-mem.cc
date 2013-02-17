@@ -8,6 +8,7 @@
 #include "describe.h"
 #include "libutil.h"
 #include "macro.h"
+#include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -148,7 +149,7 @@ void MemoriseRegion::update()
             desc.flag |= TILEI_FLAG_INVALID;
         }
 
-        if (spell == you.vehumet_gift)
+        if (vehumet_is_offering(spell))
             desc.flag |= TILEI_FLAG_EQUIP;
 
         m_items.push_back(desc);
