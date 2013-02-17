@@ -2752,7 +2752,7 @@ struct spell_desc
 
 {
     SPELL_LEDAS_LIQUEFACTION, "Leda's Liquefaction",
-     SPTYP_EARTH,
+     SPTYP_EARTH | SPTYP_HEXES,
      SPFLAG_AREA,
      4,
      200,
