@@ -849,3 +849,21 @@ x%%1....m.(.
 x%%x....x..x
 xxxx......xx
 ENDMAP
+
+NAME:     vaults_mumra_bighexcomb
+TAGS:     vaults_hard
+SUBST:    0 = 0.
+NSUBST:   0 = 1:9 / *:0
+MAP
+      ...  
+     .000.     
+ ...xx...xx... 
+.000.xx+xx.000.
+x...x+...+x...x
+xxxxx..(..xxxxx
+x...x+...+x...x
+.000.xx+xx.000.
+ ...xx...xx... 
+     .000.     
+      ...  
+ENDMAP
