@@ -2493,7 +2493,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
         if (you.religion == GOD_JIYVA)
         {
-            gain = sacrifice_item_stack(*si, &js);
+            gain = sacrifice_item_stack(*si, &js, quant);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
 
