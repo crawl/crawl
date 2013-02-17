@@ -8,8 +8,26 @@ hypervaults.floors = {}
 
 function floor_vault_paint_callback(room,options)
   return {
-    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 }, empty = true},
+    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 }, empty = true },
   }
+end
+
+-- This version of floor vault adds a staircase somewhere randomly in the middle
+-- In other layouts we don't want to mess with the stairs but in V this will ensure the stairs are in a room, not the corridors
+function hyper.vaults.floor_vault(room, options, gen)
+
+  local paint = floor_vault_paint_callback(room,options,gen)
+  if options.stair_chance ~= nil and crawl.x_chance_in_y(options.stair_chance,100) then
+    
+    -- Place the stair
+    table.insert(paint, { shape = "plot", feature = "stone_stairs_down_i",
+      x = crawl.random2(math.floor(room.size.x/2)) + crawl.div_rand_round(room.size.x,4),
+      y = crawl.random2(math.floor(room.size.y/2)) + crawl.div_rand_round(room.size.y,4),
+    })
+
+  end
+  return paint
+
 end
 
 function junction_vault_paint_callback(room,options,gen)

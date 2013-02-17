@@ -276,6 +276,7 @@ local function pick_room(e, options)
 
 end
 
+-- TODO: This callback only actually applies to V, right now at least. Should specify it in the config instead of always calling.
 local function analyse_vault_post_placement(usage_grid,room,result,options)
   local perform_subst = true
   if room.preserve_wall or room.wall_type == nil then perform_subst = false end
@@ -285,7 +286,7 @@ local function analyse_vault_post_placement(usage_grid,room,result,options)
     if dgn.in_bounds(p.x,p.y) and
       (feat.is_stone_stair(p.x,p.y)) or
       -- On V:1 the branch entrant stairs don't count as stone_stair; we need to check specifically for the V exit stairs
-      -- to avoid overwriting e.g. Crypt stairs!
+      -- to avoid overwriting e.g. Crypt or Blade entrance stairs!
       dgn.feature_name(dgn.grid(p.x,p.y)) == "return_from_vaults" then
       -- Remove the stair and remember it
       dgn.grid(p.x,p.y,"floor") --TODO: Be more intelligent about how to replace it
@@ -316,11 +317,9 @@ function place_vaults_rooms(e, data, room_count, options)
         placed = true
         rooms_placed = rooms_placed + 1  -- Increment # rooms placed
         times_failed = 0 -- Reset fail count
-        if room.type == "vault" then
-          -- Perform analysis for stairs
-          analyse_vault_post_placement(data,room,result,options)
-          table.insert(results,result)
-        end
+        -- Perform analysis for stairs (and perform inner wall substituion if applicable)
+        analyse_vault_post_placement(data,room,result,options)
+        table.insert(results,result)
         -- Increment the count of rooms of this type
         if room.generator_used ~= nil then
           if room.generator_used.placed_count == nil then room.generator_used.placed_count = 0 end
@@ -349,18 +348,21 @@ function place_vaults_rooms(e, data, room_count, options)
   local stair_types = {
     "stone_stairs_down_i", "stone_stairs_down_ii",
     "stone_stairs_down_iii", "stone_stairs_up_i",
-    "stone_stairs_up_ii", "stone_stairs_up_iii",
-    "escape_hatch_up", "escape_hatch_down",
-    "escape_hatch_up", "escape_hatch_down" }
+    "stone_stairs_up_ii", "stone_stairs_up_iii" }
 
-  for n = 1, 6, 1 do
-    -- Do we have any left? TODO: Could place some in random floor rooms, but hopefully the dungeon layout will provide missing stairs
+    -- We could place some hatches in rooms but from discussion on IRC just let them place naturally -
+    -- they inherently carry some risk and can't be used for pulling tactics so it's fine to have them in corridors.
+    -- "escape_hatch_up", "escape_hatch_down",
+    -- "escape_hatch_up", "escape_hatch_down" }
+
+  for n,stair_type in ipairs(stair_types) do
+    -- Do we have any left?
     if #stairs == 0 then break end
     -- Any random stair
     local i = crawl.random_range(1, #stairs)
     local stair = stairs[i]
     -- Place it
-    dgn.grid(stair.pos.x, stair.pos.y, stair_types[n])
+    dgn.grid(stair.pos.x, stair.pos.y, stair_type)
     -- Remove from list
     table.remove(stairs,i)
   end

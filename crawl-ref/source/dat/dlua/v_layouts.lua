@@ -21,8 +21,9 @@
 -- room/door placement can work correctly.
 ------------------------------------------------------------------------------
 
-hyper = {}
-hypervaults = {}  -- Main namespace
+hyper = {}  -- Main namespace for engine
+hyper.vaults = {}   -- Main namespace for V branch related bits
+hypervaults = {}  -- Old namespace, gradually moving everything into hyper.*
 
 require("dlua/v_debug.lua")
 require("dlua/v_paint.lua")
@@ -58,9 +59,12 @@ function vaults_default_options()
     max_room_tries = 27, -- How many *consecutive* rooms can fail to place before we exit the entire routine
     max_place_tries = 50, -- How many times we will attempt to place *each room* before picking another
 
+    -- Special option for Vaults (handled in hyper.vaults.floor_vault) - chance out of 100 of placing a stair somewhere in the middle of the floor vault
+    stair_chance = 80,
+
     -- Weightings of various types of room generators.
     room_type_weights = {
-      { generator = "code", paint_callback = floor_vault_paint_callback, weight = 40, min_size = 6, max_size = 15 }, -- Floor vault
+      { generator = "code", paint_callback = hyper.vaults.floor_vault, weight = 40, min_size = 6, max_size = 15 }, -- Floor vault
       { generator = "code", paint_callback = junction_vault_paint_callback, weight = 20, min_size = 10, max_size = 20, min_corridor = 3, max_corridor = 6 }, -- Floor vault ++
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
