@@ -399,35 +399,35 @@ SUBST: 0 = 90000000
 KMONS: 0 = 0 band
 SUBST: $ = |***$$$$
 MAP
-  x.....xx   ...   xx.....x
+  x.....xxxxx...xxxxx.....x
  xx......xxxxx.xxxxx......xx
 xx.......+...x.x...+.......xx
 .........xx..x.x..xx.........
 ....0...xxx.......xxx....0...
-.......xx xx..0..xx xx.......
-......xx   x.....x   xx......
-.....xx    xx...xx    xx.....
-x...xx      x...x      xx...x
-xx+xx       xx.xx       xx+xx
- x.xxx       x.x       xxx.x
- x...xxx    xx+xx    xxx...x
- x.....xxx xx$$$xx xxx.....x
+.......xxxxx..0..xxxxx.......
+......xxxxxx.....xxxxxx......
+.....xxxxxxxx...xxxxxxxx.....
+x...xxxxxxxxx...xxxxxxxxx...x
+xx+xxxxxxxxxxx.xxxxxxxxxxx+xx
+xx.xxxxxxxxxxx.xxxxxxxxxxx.xx
+xx...xxxxxxxxx+xxxxxxxxx...xx
+xx.....xxxxxx$$$xxxxxx.....xx
 .xxx.....xxx$9$9$xxx.....xxx.
 .....0.....+$$G$$+....0......
 .xxx.....xxx$9$9$xxx.....xxx.
- x.....xxx xx$$$xx xxx.....x
- x...xxx    xx+xx    xxx...x
- x.xxx       x.x       xxx.x
-xx+xx       xx.xx       xx+xx
-x...xx      x...x      xx...x
-.....xx    xx...xx    xx.....
-......xx   x.....x   xx......
-.......xx xx..0..xx xx.......
+xx.....xxxxxx$$$xxxxxx.....xx
+xx...xxxxxxxxx+xxxxxxxxx...xx
+xx.xxxxxxxxxxx.xxxxxxxxxxx.xx
+xx+xxxxxxxxxxx.xxxxxxxxxxx+xx
+x...xxxxxxxxx...xxxxxxxxx...x
+.....xxxxxxxx...xxxxxxxx.....
+......xxxxxx.....xxxxxx......
+.......xxxxx..0..xxxxx.......
 ........xxx.......xxx........
 ....0....xx..x.x..xx....0....
 xx.......+...x.x...+.......xx
  xx......xxxxx.xxxxx......xx
-  x.....xx   ...   xx.....x
+  x.....xxxxx...xxxxx.....x
 ENDMAP
 
 ####
@@ -708,6 +708,7 @@ NSUBST: . = 6:0 / *:.
 SUBST:  0 = 00009, 8 = 889
 SUBST:  _ : x. , + : +==
 NSUBST: = = 1:+ / *=+x
+KPROP:  1 = no_rtele_into
 MAP
     @@@
 xxxx+++xxxx
