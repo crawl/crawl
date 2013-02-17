@@ -1960,78 +1960,93 @@ static bool _jiyva_mutate()
         return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
 }
 
-bool vehumet_is_currently_gifting()
+bool vehumet_is_offering(spell_type spell)
 {
-    return (you.vehumet_gift != SPELL_NO_SPELL);
+    return (find(you.vehumet_gifts.begin(), you.vehumet_gifts.end(), spell)
+            != you.vehumet_gifts.end());
 }
 
-static void _add_to_recent_spells(spell_type spell)
+void vehumet_accept_gift(spell_type spell)
 {
-    you.vehumet_recent_spells.push_front(spell);
-    if (you.vehumet_recent_spells.size() > MAX_RECENT_SPELLS)
-        you.vehumet_recent_spells.pop_back();
-}
-
-static bool _is_recent_spell(spell_type spell)
-{
-    for (list<spell_type>::iterator it = you.vehumet_recent_spells.begin();
-         it != you.vehumet_recent_spells.end(); ++it)
+    set<spell_type>::iterator it =
+        find(you.vehumet_gifts.begin(), you.vehumet_gifts.end(), spell);
+    if (it != you.vehumet_gifts.end())
     {
-        if (*it == spell)
-            return (true);
+        you.vehumet_gifts.erase(it);
+        you.seen_spell[spell] = true;
+        you.duration[DUR_VEHUMET_GIFT] = 0;
     }
-
-    return (false);
 }
 
-static vector<spell_type> _vehumet_eligible_gift_spells()
+static void _add_to_old_gifts(spell_type spell)
 {
-    vector<spell_type>eligible_spells;
+    you.old_vehumet_gifts.insert(spell);
+}
 
-    int max_level = 0;
-    if (you.piety >= 161)
-        max_level = 9;
-    else if (you.piety >= piety_breakpoint(4))
-        max_level = 7;
-    else if (you.piety >= piety_breakpoint(3))
-        max_level = 5;
-    else if (you.piety >= piety_breakpoint(2))
-        max_level = 4;
-    else if (you.piety >= piety_breakpoint(1))
-        max_level = 3;
-    else if (you.piety >= piety_breakpoint(0))
-        max_level = 1;
-    max_level = min(you.experience_level, max_level);
-    // First offer will always be level 1.
-    if (you.num_total_gifts[you.religion] == 0)
-        max_level = 1;
+static bool _is_old_gift(spell_type spell)
+{
+    return (find(you.old_vehumet_gifts.begin(),
+                 you.old_vehumet_gifts.end(), spell)
+            != you.old_vehumet_gifts.end());
+}
 
-    // Also impose a minimum level. When this reaches 10, the player
-    // won't get any more gifts.
+static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_spells)
+{
+    set<spell_type> eligible_spells;
+
     const int gifts = you.num_total_gifts[you.religion];
-    int min_level = max(gifts + 2, 2 * gifts - 10)/2;
+    if (gifts >= 13)
+        return eligible_spells;
 
+    int min_lev[13] = {1,1,2,3,3,4,4,5,5,6,6,6,8};
+    int max_lev[13] = {1,2,3,4,5,7,7,7,7,7,7,7,9};
+    int min_level = min_lev[gifts];
+    int max_level = max_lev[gifts];
+
+    if (min_level > you.experience_level)
+        return eligible_spells;
+
+    set<spell_type> backup_spells;
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
         spell_type spell = static_cast<spell_type>(i);
         if (!is_valid_spell(spell))
             continue;
 
+        if (find(excluded_spells.begin(), excluded_spells.end(), spell)
+            != excluded_spells.end())
+        {
+            continue;
+        }
+
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
-            && !you.seen_spell[spell]
             && is_player_spell(spell)
             && spell_difficulty(spell) <= max_level
-            && spell_difficulty(spell) >= min_level
-            && !_is_recent_spell(spell))
+            && spell_difficulty(spell) >= min_level)
         {
-            eligible_spells.push_back(spell);
+            if (!you.seen_spell[spell] && !_is_old_gift(spell))
+                eligible_spells.insert(spell);
+            else
+                backup_spells.insert(spell);
         }
     }
-    // Don't get stuck if all level 1 spells have been seen.
-    if (you.num_total_gifts[you.religion] == 0 && eligible_spells.empty())
-        eligible_spells.push_back(SPELL_MAGIC_DART);
-    return (eligible_spells);
+    // Don't get stuck just because all spells have been seen/offered.
+    if (eligible_spells.empty())
+    {
+        if (backup_spells.empty())
+        {
+            // This is quite improbable to happen, but in this case just
+            // skip the gift and increment the gift counter.
+            if (gifts <= 12)
+            {
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
+            }
+        }
+        return backup_spells;
+    }
+    return eligible_spells;
 }
 
 static int _vehumet_weighting(spell_type spell)
@@ -2041,20 +2056,35 @@ static int _vehumet_weighting(spell_type spell)
     return bias;
 }
 
-static spell_type _vehumet_find_spell_gift()
+static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
 {
-    vector<spell_type> eligible_spells = _vehumet_eligible_gift_spells();
+    set<spell_type> eligible_spells = _vehumet_eligible_gift_spells(excluded_spells);
     spell_type spell = SPELL_NO_SPELL;
     int total_weight = 0;
     int this_weight = 0;
-    for (unsigned int i = 1; i <= eligible_spells.size(); ++i)
+    for (set<spell_type>::iterator it = eligible_spells.begin();
+         it != eligible_spells.end(); ++it)
     {
-        this_weight = _vehumet_weighting(eligible_spells.at(i - 1));
+        this_weight = _vehumet_weighting(*it);
         total_weight += this_weight;
         if (x_chance_in_y(this_weight, total_weight))
-            spell = eligible_spells.at(i - 1);
+            spell = *it;
     }
     return (spell);
+}
+
+static set<spell_type> _vehumet_get_spell_gifts()
+{
+    set<spell_type> offers;
+    unsigned int num_offers = you.num_total_gifts[you.religion] == 12 ? 3 : 1;
+    while (offers.size() < num_offers)
+    {
+        spell_type offer = _vehumet_find_spell_gift(offers);
+        if (offer == SPELL_NO_SPELL)
+            break;
+        offers.insert(offer);
+    }
+    return offers;
 }
 
 ///////////////////////////////
@@ -2264,23 +2294,42 @@ bool do_god_gift(bool forced)
             if (forced || !you.duration[DUR_VEHUMET_GIFT]
                           && (you.piety >= piety_breakpoint(0) && gifts == 0
                               || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
-                              || you.piety >= piety_breakpoint(4) && one_chance_in(20)))
+                              || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
+                              || you.piety >= 161 && gifts <= 12 && one_chance_in(20)))
             {
-                spell_type spell = _vehumet_find_spell_gift();
-                if (spell != SPELL_NO_SPELL)
+                set<spell_type> offers = _vehumet_get_spell_gifts();
+                if (!offers.empty())
                 {
-                    you.vehumet_gift = spell;
-                    _add_to_recent_spells(you.vehumet_gift);
-                    string prompt = make_stringf(" offers you knowledge of %s.",
-                                     spell_title(you.vehumet_gift));
-                    simple_god_message(prompt.c_str());
-                    more();
+                    you.vehumet_gifts = offers;
+                    string prompt = " offers you knowledge of ";
+                    for (set<spell_type>::iterator it = offers.begin();
+                         it != offers.end(); ++it)
+                    {
+                        if (it != offers.begin())
+                        {
+                            if (offers.size() > 2)
+                                prompt += ",";
+                            prompt += " ";
+                            set<spell_type>::iterator next = it;
+                            next++;
+                            if (next == offers.end())
+                                prompt += "and ";
+                        }
+                        prompt += spell_title(*it);
+                        _add_to_old_gifts(*it);
+                        take_note(Note(NOTE_OFFERED_SPELL, *it));
+                    }
+                    prompt += ".";
+
                     you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
                     if (gifts >= 5)
-                        _inc_gift_timeout(30 + random2avg(20, 2));
+                        _inc_gift_timeout(30 + random2avg(30, 2));
                     you.num_current_gifts[you.religion]++;
                     you.num_total_gifts[you.religion]++;
-                    take_note(Note(NOTE_OFFERED_SPELL, you.vehumet_gift));
+
+                    simple_god_message(prompt.c_str());
+                    more();
+
                     success = true;
                 }
                 else
@@ -3000,7 +3049,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_VEHUMET:
-        you.vehumet_gift = SPELL_NO_SPELL;
+        you.vehumet_gifts.clear();
         you.duration[DUR_VEHUMET_GIFT] = 0;
         _set_penance(old_god, 25);
         break;

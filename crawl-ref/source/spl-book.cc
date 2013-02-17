@@ -703,10 +703,12 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     // Handle Vehumet gifts
-    if (vehumet_is_currently_gifting())
+    set<spell_type>::iterator gift_iterator = you.vehumet_gifts.begin();
+    if (gift_iterator != you.vehumet_gifts.end())
     {
-        book_hash[you.vehumet_gift] = NUM_BOOKS;
         num_books++;
+        while (gift_iterator != you.vehumet_gifts.end())
+            book_hash[*gift_iterator++] = NUM_BOOKS;
     }
 
     if (book_errors)
@@ -850,11 +852,11 @@ bool has_spells_to_memorise(bool silent, int current_spell)
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
-    // List the Vehumet gift at the very top.
-    if (you.vehumet_gift == a)
-        return true;
-    else if (you.vehumet_gift == b)
-        return false;
+    // List the Vehumet gifts at the very top.
+    bool offering_a = vehumet_is_offering(a);
+    bool offering_b = vehumet_is_offering(b);
+    if (offering_a != offering_b)
+        return offering_a;
 
     // List spells we can memorize right away first.
     if (player_spell_levels() >= spell_levels_required(a)
@@ -1003,7 +1005,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         ostringstream desc;
 
         int colour = LIGHTGRAY;
-        if (spell == you.vehumet_gift)
+        if (vehumet_is_offering(spell))
             colour = LIGHTBLUE;
         // Grey out spells for which you lack experience or spell levels.
         else if (spell_difficulty(spell) > you.experience_level
@@ -1185,7 +1187,7 @@ static bool _learn_spell_checks(spell_type specspell)
         return false;
     }
 
-    if (specspell != you.vehumet_gift && spell_fail(specspell) >= 100)
+    if (spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
     {
         mpr("This spell is too difficult to memorise!");
         return false;
