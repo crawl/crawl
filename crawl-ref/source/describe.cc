@@ -4479,13 +4479,18 @@ void describe_god(god_type which_god, bool give_title)
         }
         else if (which_god == GOD_VEHUMET)
         {
-            if (vehumet_is_currently_gifting())
+            set<spell_type>::iterator it = you.vehumet_gifts.begin();
+            if (it != you.vehumet_gifts.end())
             {
                 have_any = true;
+
+                string offer = spell_title(*it);
+                // If we have multiple offers, just summarise.
+                if (++it != you.vehumet_gifts.end())
+                    offer = "some of Vehumet's most lethal spells";
+
                 _print_final_god_abil_desc(which_god,
-                                           "You can memorise "
-                                           + string(spell_title(you.vehumet_gift))
-                                           + ".",
+                                           "You can memorise " + offer + ".",
                                            ABIL_NON_ABILITY);
             }
         }

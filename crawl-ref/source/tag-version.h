@@ -29,6 +29,7 @@ enum tag_minor_version
     TAG_MINOR_0_12,                // (no change)
     TAG_MINOR_BATTLESPHERE_MID,    // Monster battlesphere (mid of creator)
     TAG_MINOR_MALMUTATE,           // Convert Polymorph to Malmutate on old monsters
+    TAG_MINOR_VEHUMET_MULTI_GIFTS, // Vehumet can offer multiple spells at once
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
