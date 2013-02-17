@@ -1328,6 +1328,7 @@ static int _num_mons_wanted()
 static void _fixup_walls()
 {
     // If level part of Dis -> all walls metal.
+    // If Vaults:$ -> all walls metal or crystal.
     // If part of crypt -> all walls stone.
 
     dungeon_feature_type wall_type = DNGN_ROCK_WALL;
@@ -1340,6 +1341,18 @@ static void _fixup_walls()
     case BRANCH_DIS:
         wall_type = DNGN_METAL_WALL;
         break;
+
+    case BRANCH_VAULTS:
+    {
+        // Everything but the branch end is handled in Lua.
+        if (you.depth == branches[BRANCH_VAULTS].numlevels)
+        {
+            wall_type = random_choose_weighted(1, DNGN_GREEN_CRYSTAL_WALL,
+                                               9, DNGN_METAL_WALL,
+                                               0);
+        }
+        break;
+    }
 
     case BRANCH_CRYPT:
         wall_type = DNGN_STONE_WALL;
