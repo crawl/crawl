@@ -1491,7 +1491,7 @@ NAME:    zot_minivault_4
 TAGS:    transparent
 DEPTH:   Zot:1-4
 COLOUR:  n = magenta
-TILE:    n = dngn_transparent_wall_magenta
+TILE:    n = dngn_transparent_stone_magenta
 MAP
  xxxxxxxxxxx
 xxx0.....0xxx
@@ -1509,7 +1509,7 @@ NAME:    zot_minivault_5
 TAGS:    transparent
 DEPTH:   Zot:1-4
 COLOUR:  n = magenta
-TILE:    n = dngn_transparent_wall_magenta
+TILE:    n = dngn_transparent_stone_magenta
 MAP
  xxxxxxxxxxx
 xxxnn...0.xxx
@@ -1532,7 +1532,7 @@ DEPTH:   Zot:1-4
 SUBST:   < = ([{
 SUBST:   > = }]}
 COLOUR:  n = magenta
-TILE:    n = dngn_transparent_wall_magenta
+TILE:    n = dngn_transparent_stone_magenta
 MAP
  xxxxxxxxxxxxx
 xxcccccccccccxx
@@ -1637,9 +1637,9 @@ KITEM: Z = randbook spells:summon_demon|fireball|twisted_resurrection|airstrike 
 KITEM: F = randbook spells:bolt_of_fire|fireball|sticky_flame|conjure_flame title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
-TILE: r = dngn_transparent_wall_red, y = dngn_transparent_wall_yellow, \
-      b = dngn_transparent_wall_blue, m = dngn_transparent_wall_magenta, \
-      g = dngn_transparent_wall_green, q = dngn_transparent_wall
+TILE: r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
+      b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
+      g = dngn_transparent_stone_green, q = dngn_transparent_stone
 KFEAT: rybgmq = n
 MAP
            @.......................@

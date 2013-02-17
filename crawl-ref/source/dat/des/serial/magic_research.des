@@ -39,7 +39,7 @@ function init_research(e)
   e.subst('efg = v')
   e.subst('hi = b')
   e.colour('v = white')
-  e.tile('n = DNGN_TRANSPARENT_WALL_WHITE')
+  e.tile('n = DNGN_TRANSPARENT_STONE_WHITE')
   e.subst (', = .')
 end
 }}

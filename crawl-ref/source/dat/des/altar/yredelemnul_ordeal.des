@@ -60,7 +60,7 @@ lua_marker('_', tm)
 lua_marker('M', props_marker { floor=1 })
 }}
 SUBST:  M = n
-TILE:   n = dngn_transparent_wall_darkgray
+TILE:   n = dngn_transparent_stone_darkgray
 TILE:   c = wall_undead
 KPROP:  _- = no_tele_into
 SUBST:  - = .

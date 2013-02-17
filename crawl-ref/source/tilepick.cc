@@ -188,9 +188,10 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_GRATE:
         return TILE_DNGN_GRATE;
     case DNGN_CLEAR_ROCK_WALL:
+        return TILE_DNGN_TRANSPARENT_WALL;
     case DNGN_CLEAR_STONE_WALL:
     case DNGN_CLEAR_PERMAROCK_WALL:
-        return TILE_DNGN_TRANSPARENT_WALL;
+        return TILE_DNGN_TRANSPARENT_STONE;
     case DNGN_STONE_WALL:
         return TILE_DNGN_STONE_WALL;
     case DNGN_CLOSED_DOOR:
