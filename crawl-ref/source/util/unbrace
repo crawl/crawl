@@ -4,7 +4,7 @@ undef $/;
 for $f (grep /\.(cc|h)$/, split /\n/, `git ls-files`)
 {
     open F, "<", $f or die "Can't read $f\n";
-    $_ = <F>;
+    my $old = $_ = <F>;
     close F;
 
     # Aaaw, due to the support code, this beautiful one-liner is one no longer :(
@@ -13,7 +13,11 @@ for $f (grep /\.(cc|h)$/, split /\n/, `git ls-files`)
     # like I always did before...
     s&^( +(?:if|while|for|do|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
 
-    open F, ">", $f or die "Can't write $f\n";
-    print F;
-    close F;
+    if ($old ne $_)
+    {
+        print "$f\n";
+        open F, ">", $f or die "Can't write $f\n";
+        print F;
+        close F;
+    }
 }
