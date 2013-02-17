@@ -1,0 +1,19 @@
+#!/usr/bin/perl -w
+
+undef $/;
+for $f (grep /\.(cc|h)$/, split /\n/, `git ls-files`)
+{
+    open F, "<", $f or die "Can't read $f\n";
+    $_ = <F>;
+    close F;
+
+    # Aaaw, due to the support code, this beautiful one-liner is one no longer :(
+    # Should have told you to:
+    # for x in *.cc *.h;do unbrace <"$x" >aa && mv aa "$x";done
+    # like I always did before...
+    s&^( +(?:if|while|for|do|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
+
+    open F, ">", $f or die "Can't write $f\n";
+    print F;
+    close F;
+}
