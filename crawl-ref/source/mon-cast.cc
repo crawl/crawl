@@ -2188,7 +2188,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return false;
             }
         }
-        // Try to raise crawling corpses: if nothing rises, pretend we didn't cast it.
+        // Ditto for crawling corpses.
         else if (spell_cast == SPELL_TWISTED_RESURRECTION)
         {
             if (mons->friendly() && !_animate_dead_okay(spell_cast))
@@ -2203,7 +2203,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return false;
             }
         }
-        // Ditto for simulacrum.
+        // Ditto for simulacra.
         else if (spell_cast == SPELL_SIMULACRUM)
         {
             if (mons->friendly() && !_animate_dead_okay(spell_cast))
