@@ -741,9 +741,11 @@ plant_10
 plant_11
 plant_crypt MONS_WITHERED_PLANT
 plant_demonic MONS_DEMONIC_PLANT
-%rim 1
-bush MONS_BUSH
 %rim 0
+bush MONS_BUSH
+bush2
+bush3
+bush4
 bush_burning MONS_BUSH_BURNING
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING

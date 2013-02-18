@@ -1530,7 +1530,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_PLANT:
         return _mon_mod(TILEP_MONS_PLANT, tile_num_prop);
     case MONS_BUSH:
-        return TILEP_MONS_BUSH;
+        return _mon_mod(TILEP_MONS_BUSH, tile_num_prop);
     case MONS_BURNING_BUSH:
         return TILEP_MONS_BUSH_BURNING;
     case MONS_OKLOB_SAPLING:
@@ -2562,7 +2562,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
                 return TILEP_MONS_BUSH_BURNING;
             else
-                return TILEP_MONS_BUSH;
+                return _mon_mod(TILEP_MONS_BUSH, tile_num);
         case MONS_BALLISTOMYCETE:
             if (mon.number)
                 return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
@@ -5518,6 +5518,7 @@ void tile_init_props(monster* mon)
     // Only monsters using mon_mod or mon_cycle need a tile_num.
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
         && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS
+        && mon->type != MONS_BUSH
         && mon->type != MONS_FIRE_VORTEX && mon->type != MONS_TWISTER
         && mon->type != MONS_SPATIAL_VORTEX && mon->type != MONS_SPATIAL_MAELSTROM
         && mon->type != MONS_ABOMINATION_SMALL
