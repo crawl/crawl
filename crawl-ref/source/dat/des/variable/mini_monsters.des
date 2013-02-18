@@ -4661,9 +4661,12 @@ MAP
 ENDMAP
 
 NAME: special_room
-TAGS: allow_dup luniq no_item_gen layout_basic
-CHANCE: 10% (Spider), 20%
-DEPTH: 6-30
+TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
+TAGS: no_monster_gen layout_basic layout_rooms layout_misc layout_caves
+TAGS: layout_spotty layout_roguey layout_delve layout_cocytus layout_pools
+CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
+DEPTH: D:8-, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
+       Geh:1-6, Coc:1-6, Dis:1-6, Tar:1-6
 {{
     -- An incredibly ugly kludge to avoid duplicating the list of valid
     -- branches/depths (and causing mysterious errors if it's not up to date).
@@ -4671,8 +4674,8 @@ DEPTH: 6-30
       return
     end
 
-    local width = 5 + crawl.random2avg(6, 2)
-    local height = 5 + crawl.random2avg(6, 2)
+    local width = 6 + crawl.random2avg(3, 2)
+    local height = 5 + crawl.random2avg(5, 1)
 
     extend_map { width = width, height = height }
     make_box { x1 = 0, y1 = 0, x2 = width - 1, y2 = height - 1, floor = 'O' }
@@ -4687,7 +4690,21 @@ DEPTH: 6-30
         entrance_y = crawl.coinflip() and 0 or height - 1
     end
 
-    mapgrd[entrance_x][entrance_y] = '+'
+    mapgrd[entrance_x][entrance_y] = '@'
+}}
+MAP
+ENDMAP
+
+NAME: special_room_vaults
+TAGS: allow_dup luniq unrand no_item_gen vaults_hard
+CHANCE: 1%
+DEPTH: Vaults:1-4
+{{
+    local width = 6 + crawl.random2avg(3, 2)
+    local height = 5 + crawl.random2avg(5, 1)
+
+    extend_map { width = width, height = height, fill = 'O' }
+    subvault('O : special_room')
 }}
 MAP
 ENDMAP
