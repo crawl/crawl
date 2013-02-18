@@ -729,52 +729,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_big_cloud = true;
         break;
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_STEAM_CLOUD:
-        beam.name     = "cloud of steam";
-        beam.damage   = dice_def(1, 0);
-        beam.colour   = LIGHTGREY;
-        beam.flavour  = BEAM_POTION_STEAM;
-        beam.hit      = 14 + power / 30;
-        beam.ench_power = power;
-        beam.is_explosion = true;
-        beam.is_big_cloud = true;
-        break;
-
-    case SPELL_FIRE_CLOUD:
-        beam.name     = "cloud of fire";
-        beam.damage   = dice_def(1, 0);
-        beam.colour   = RED;
-        beam.flavour  = BEAM_POTION_FIRE;
-        beam.hit      = 14 + power / 30;
-        beam.ench_power = power;
-        beam.is_explosion = true;
-        beam.is_big_cloud = true;
-        break;
-
-    case SPELL_POISON_CLOUD:
-        beam.name     = "cloud of poison";
-        beam.damage   = dice_def(1, 0);
-        beam.colour   = LIGHTGREEN;
-        beam.flavour  = BEAM_POTION_POISON;
-        beam.hit      = 14 + power / 30;
-        beam.ench_power = power;
-        beam.is_explosion = true;
-        beam.is_big_cloud = true;
-        break;
-
-    case SPELL_MIASMA_CLOUD:
-        beam.name     = "foul vapour";
-        beam.damage   = dice_def(1, 0);
-        beam.colour   = DARKGREY;
-        beam.flavour  = BEAM_POTION_MIASMA;
-        beam.hit      = 14 + power / 30;
-        beam.ench_power = power;
-        beam.is_explosion = true;
-        beam.is_big_cloud = true;
-        break;
-#endif
-
     case SPELL_MIASMA:            // death drake
         beam.name     = "foul vapour";
         beam.damage   = dice_def(3, 5 + power / 24);

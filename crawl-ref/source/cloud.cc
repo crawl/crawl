@@ -71,19 +71,9 @@ static beam_type _cloud2beam(cloud_type flavour)
     case CLOUD_MEPHITIC:     return BEAM_MEPHITIC;
     case CLOUD_COLD:         return BEAM_COLD;
     case CLOUD_POISON:       return BEAM_POISON;
-#if TAG_MAJOR_VERSION == 34
-    case CLOUD_BLACK_SMOKE:  return BEAM_POTION_BLACK_SMOKE;
-    case CLOUD_GREY_SMOKE:   return BEAM_POTION_GREY_SMOKE;
-    case CLOUD_BLUE_SMOKE:   return BEAM_POTION_BLUE_SMOKE;
-    case CLOUD_PURPLE_SMOKE: return BEAM_POTION_PURPLE_SMOKE;
-#endif
     case CLOUD_STEAM:        return BEAM_STEAM;
     case CLOUD_MIASMA:       return BEAM_MIASMA;
     case CLOUD_CHAOS:        return BEAM_CHAOS;
-#if TAG_MAJOR_VERSION == 34
-    case CLOUD_RAIN:         return BEAM_POTION_RAIN;
-    case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
-#endif
     case CLOUD_GLOOM:        return BEAM_GLOOM;
     case CLOUD_INK:          return BEAM_INK;
     case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
