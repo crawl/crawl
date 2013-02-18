@@ -2381,7 +2381,7 @@ struct spell_desc
      0,
      NULL,
      true,
-     false
+     true
 },
 
 {
@@ -2695,7 +2695,7 @@ struct spell_desc
      0,
      NULL,
      true,
-     false
+     true
 },
 
 {
