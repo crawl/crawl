@@ -3907,6 +3907,8 @@ void runrest::initialise(int dir, int mode)
 
     if (runmode == RMODE_REST_DURATION)
         start_delay(DELAY_REST, 1);
+    else if (runmode == RMODE_WAIT_DURATION)
+        start_delay(DELAY_WAIT, 1);
     else
         start_delay(DELAY_RUN, 1);
 }

@@ -907,7 +907,7 @@ static void _start_running(int dir, int mode)
     if (Hints.hints_events[HINT_SHIFT_RUN] && mode == RMODE_START)
         Hints.hints_events[HINT_SHIFT_RUN] = false;
 
-    if (!i_feel_safe(true))
+    if ((mode != RMODE_WAIT_DURATION) && !i_feel_safe(true))
         return;
 
     coord_def next_pos = you.pos() + Compass[dir];
@@ -1129,7 +1129,8 @@ static void _update_place_info()
         static bool prev_was_rest = false;
 
         if (!you.delay_queue.empty()
-            && you.delay_queue.front().type == DELAY_REST)
+            && (you.delay_queue.front().type == DELAY_REST
+                || you.delay_queue.front().type == DELAY_WAIT))
         {
             prev_was_rest = true;
         }
@@ -1146,7 +1147,8 @@ static void _update_place_info()
         }
 
         if (you.delay_queue.empty()
-            || you.delay_queue.front().type != DELAY_REST)
+            || (you.delay_queue.front().type != DELAY_REST
+                && you.delay_queue.front().type != DELAY_WAIT))
         {
             prev_was_rest = false;
         }
@@ -1933,9 +1935,13 @@ void process_command(command_type cmd)
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_MOVE_NOWHERE:
-    case CMD_WAIT:
         you.check_clinging(false);
+        you.time_taken = div_rand_round(you.time_taken, 10);
         you.turn_is_over = true;
+        break;
+
+    case CMD_WAIT:
+        _start_running(RDIR_REST, RMODE_WAIT_DURATION);
         break;
 
     case CMD_PICKUP:
@@ -3307,7 +3313,11 @@ void world_reacts()
         mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif
 
-    if (you.num_turns != -1)
+    if (you.num_turns != -1
+        && !(you_are_delayed()
+             && (current_delay_action() == DELAY_WAIT
+                 || current_delay_action() == DELAY_REST
+                    && (you.running % 10) != 0)))
     {
         // Zotdef: Time only passes in the hall of zot
         if ((!crawl_state.game_is_zotdef() || player_in_branch(root_branch))

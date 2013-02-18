@@ -269,6 +269,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
 
     case DELAY_RUN:
     case DELAY_REST:
+    case DELAY_WAIT:
     case DELAY_TRAVEL:
     case DELAY_MACRO:
         // Always interruptible.
@@ -538,7 +539,10 @@ delay_type current_delay_action(void)
 
 bool delay_is_run(delay_type delay)
 {
-    return (delay == DELAY_RUN || delay == DELAY_REST || delay == DELAY_TRAVEL);
+    return (delay == DELAY_RUN
+            || delay == DELAY_REST
+            || delay == DELAY_WAIT
+            || delay == DELAY_TRAVEL);
 }
 
 bool is_being_drained(const item_def &item)
@@ -1370,6 +1374,9 @@ static command_type _get_running_command()
 
     if (is_resting())
     {
+        bool showmsg = (you.running.runmode == RMODE_REST_DURATION)
+                       && (you.running.hp == you.hp)
+                       && (you.running.mp == you.magic_points);
         you.running.rest();
 
 #ifdef USE_TILE
@@ -1377,8 +1384,7 @@ static command_type _get_running_command()
             tiles.redraw();
 #endif
 
-        if (!is_resting() && you.running.hp == you.hp
-            && you.running.mp == you.magic_points)
+        if (!is_resting() && showmsg)
         {
             mpr("Done waiting.");
         }
@@ -1410,7 +1416,8 @@ static void _handle_run_delays(const delay_queue_item &delay)
 
     const bool want_move =
         delay.type == DELAY_RUN || delay.type == DELAY_TRAVEL;
-    if ((want_move && you.confused()) || !i_feel_safe(true, want_move))
+    if ((want_move && you.confused()) ||
+        ((delay.type != DELAY_WAIT) && !i_feel_safe(true, want_move)))
         stop_running();
     else
     {
@@ -1437,6 +1444,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
         switch (delay.type)
         {
         case DELAY_REST:
+        case DELAY_WAIT:
         case DELAY_RUN:
             cmd = _get_running_command();
             break;
@@ -1450,7 +1458,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
 
     if (cmd != CMD_NO_CMD)
     {
-        if (delay.type != DELAY_REST)
+        if (delay.type != DELAY_REST && delay.type != DELAY_WAIT)
             mesclr();
         process_command(cmd);
     }
@@ -1865,7 +1873,8 @@ bool interrupt_activity(activity_interrupt_type ai,
             // so that stop running Lua notifications happen.
             for (int j = i; j < size; ++j)
             {
-                if (delay_is_run(you.delay_queue[j].type))
+                if (delay_is_run(you.delay_queue[j].type) &&
+                    (you.delay_queue[j].type != DELAY_WAIT))
                 {
                     _monster_warning(ai, at, you.delay_queue[j].type, msgs_buf);
                     stop_delay(ai == AI_TELEPORT);
@@ -1887,7 +1896,8 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "statue",
     "hungry", "message", "hp_loss", "burden", "stat",
-    "monster", "monster_attack", "teleport", "hit_monster", "sense_monster"
+    "monster", "monster_attack", "teleport", "hit_monster", "sense_monster",
+    "monster_move"
 };
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)
@@ -1916,7 +1926,7 @@ static const char *delay_names[] =
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
     "jewellery_on", "memorise", "butcher", "bottle_blood", "weapon_swap",
     "passwall", "drop_item", "multidrop", "ascending_stairs",
-    "descending_stairs", "recite", "run", "rest", "travel", "macro",
+    "descending_stairs", "recite", "run", "rest", "wait", "travel", "macro",
     "macro_process_key", "interruptible", "uninterruptible"
 };
 
