@@ -2360,45 +2360,6 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     return false;
 }
 
-static int _potion_beam_flavour_to_colour(beam_type flavour)
-{
-    switch (flavour)
-    {
-    case BEAM_POTION_MEPHITIC:
-        return GREEN;
-
-    case BEAM_POTION_POISON:
-        return coinflip() ? GREEN : LIGHTGREEN;
-
-    case BEAM_POTION_MIASMA:
-    case BEAM_POTION_BLACK_SMOKE:
-        return DARKGREY;
-
-    case BEAM_POTION_STEAM:
-    case BEAM_POTION_GREY_SMOKE:
-        return LIGHTGREY;
-
-    case BEAM_POTION_FIRE:
-        return coinflip() ? RED : LIGHTRED;
-
-    case BEAM_POTION_COLD:
-        return coinflip() ? BLUE : LIGHTBLUE;
-
-    case BEAM_POTION_BLUE_SMOKE:
-        return LIGHTBLUE;
-
-    case BEAM_POTION_PURPLE_SMOKE:
-        return MAGENTA;
-
-    case BEAM_POTION_RANDOM:
-    default:
-        // Leave it the colour of the potion, the clouds will colour
-        // themselves on the next refresh. -- bwr
-        return -1;
-    }
-    return -1;
-}
-
 void bolt::affect_endpoint()
 {
     if (special_explosion)
@@ -2769,48 +2730,10 @@ void bolt::affect_place_explosion_clouds()
         return;
     }
 
-    if (flavour >= BEAM_POTION_MEPHITIC && flavour <= BEAM_POTION_RANDOM)
+    if (flavour == BEAM_MEPHITIC)
     {
         const int duration = roll_dice(2, 3 + ench_power / 20);
-        cloud_type cl_type;
-
-        switch (flavour)
-        {
-        case BEAM_POTION_MEPHITIC:
-        case BEAM_POTION_POISON:
-        case BEAM_POTION_MIASMA:
-        case BEAM_POTION_STEAM:
-        case BEAM_POTION_FIRE:
-        case BEAM_POTION_COLD:
-        case BEAM_POTION_BLACK_SMOKE:
-        case BEAM_POTION_GREY_SMOKE:
-        case BEAM_POTION_BLUE_SMOKE:
-        case BEAM_POTION_PURPLE_SMOKE:
-        case BEAM_POTION_RAIN:
-        case BEAM_POTION_MUTAGENIC:
-            cl_type = beam2cloud(flavour);
-            break;
-
-        case BEAM_POTION_RANDOM:
-            switch (random2(10))
-            {
-            case 0:  cl_type = CLOUD_FIRE;           break;
-            case 1:  cl_type = CLOUD_MEPHITIC;       break;
-            case 2:  cl_type = CLOUD_COLD;           break;
-            case 3:  cl_type = CLOUD_POISON;         break;
-            case 4:  cl_type = CLOUD_BLACK_SMOKE;    break;
-            case 5:  cl_type = CLOUD_GREY_SMOKE;     break;
-            case 6:  cl_type = CLOUD_BLUE_SMOKE;     break;
-            case 7:  cl_type = CLOUD_PURPLE_SMOKE;   break;
-            case 8:  cl_type = CLOUD_PETRIFY;        break;
-            default: cl_type = CLOUD_STEAM;          break;
-            }
-            break;
-
-        default:
-            cl_type = CLOUD_STEAM;
-            break;
-        }
+        const cloud_type cl_type = CLOUD_MEPHITIC;
         const coord_def center = (aimed_at_feet ? source : ray.pos());
         if (p == center || x_chance_in_y(125 + ench_power, 225))
             place_cloud(cl_type, p, duration, agent());
@@ -3045,7 +2968,7 @@ bool bolt::harmless_to_player() const
     case BEAM_POISON:
         return (player_res_poison(false) >= 3);
 
-    case BEAM_POTION_MEPHITIC:
+    case BEAM_MEPHITIC:
         return (player_res_poison(false) > 0 || you.clarity(false)
                 || you.is_unbreathing());
 
@@ -5297,22 +5220,6 @@ void bolt::refine_for_explosion()
             name = "stinking cloud";
     }
 
-    if (name == "potion")
-    {
-        seeMsg     = "The potion explodes!";
-        hearMsg    = "You hear an explosion!";
-        if (!is_tracer)
-        {
-
-            name = "cloud";
-            ASSERT(flavour >= BEAM_POTION_MEPHITIC
-                   && flavour <= BEAM_POTION_RANDOM);
-            const int newcolour = _potion_beam_flavour_to_colour(flavour);
-            if (newcolour >= 0)
-                colour = newcolour;
-        }
-    }
-
     if (name == "silver bolt")
     {
         seeMsg  = "The silver bolt explodes into a blast of light!";
@@ -5870,33 +5777,43 @@ static string _beam_type_name(beam_type type)
     case BEAM_MISSILE:               return "missile";
     case BEAM_MMISSILE:              return "magic missile";
 
-    case BEAM_POTION_FIRE:           // fall through
+#if TAG_MAJOR_VERSION == 34
+    case BEAM_POTION_FIRE:
+#endif
     case BEAM_FIRE:                  return "fire";
 
-    case BEAM_POTION_COLD:           // fall through
+#if TAG_MAJOR_VERSION == 34
+    case BEAM_POTION_COLD:
+#endif
     case BEAM_COLD:                  return "cold";
     case BEAM_WATER:                 return "water";
 
     case BEAM_MAGIC:                 return "magic";
     case BEAM_ELECTRICITY:           return "electricity";
 
-    case BEAM_POTION_MEPHITIC:       return "noxious fumes";
+    case BEAM_MEPHITIC:              return "noxious fumes";
 
-    case BEAM_POTION_POISON:         // fall through
+#if TAG_MAJOR_VERSION == 34
+    case BEAM_POTION_POISON:
+#endif
     case BEAM_POISON:                return "poison";
 
     case BEAM_NEG:                   return "negative energy";
     case BEAM_ACID:                  return "acid";
 
-    case BEAM_MIASMA:                // fall through
-    case BEAM_POTION_MIASMA:         return "miasma";
+#if TAG_MAJOR_VERSION == 34
+    case BEAM_POTION_MIASMA:
+#endif
+    case BEAM_MIASMA:                return "miasma";
 
     case BEAM_SPORE:                 return "spores";
     case BEAM_POISON_ARROW:          return "poison arrow";
     case BEAM_HELLFIRE:              return "hellfire";
     case BEAM_NAPALM:                return "sticky fire";
 
-    case BEAM_POTION_STEAM:          // fall through
+#if TAG_MAJOR_VERSION == 34
+    case BEAM_POTION_STEAM:
+#endif
     case BEAM_STEAM:                 return "steam";
 
     case BEAM_ENERGY:                return "energy";
@@ -5934,6 +5851,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_HIBERNATION:           return "hibernation";
     case BEAM_SLEEP:                 return "sleep";
     case BEAM_BERSERK:               return "berserk";
+#if TAG_MAJOR_VERSION == 34
     case BEAM_POTION_BLACK_SMOKE:    return "black smoke";
     case BEAM_POTION_GREY_SMOKE:     return "grey smoke";
     case BEAM_POTION_BLUE_SMOKE:     return "blue smoke";
@@ -5941,6 +5859,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_POTION_RAIN:           return "rain";
     case BEAM_POTION_RANDOM:         return "random potion";
     case BEAM_POTION_MUTAGENIC:      return "mutagenic fog";
+#endif
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
     case BEAM_DEVOUR_FOOD:           return "devour food";

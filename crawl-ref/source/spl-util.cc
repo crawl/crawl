@@ -1288,7 +1288,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     }
     else if (spell == SPELL_MEPHITIC_CLOUD)
     {
-        beam.flavour = BEAM_POTION_MEPHITIC;
+        beam.flavour = BEAM_MEPHITIC;
         beam.ex_size = 1;
         beam.damage = dice_def(1, 1); // so that foe_info is populated
         beam.hit = 20;

@@ -60,57 +60,6 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
-cloud_type beam2cloud(beam_type flavour)
-{
-    switch (flavour)
-    {
-    default:
-    case BEAM_NONE:
-        return CLOUD_NONE;
-    case BEAM_FIRE:
-    case BEAM_POTION_FIRE:
-        return CLOUD_FIRE;
-    case BEAM_POTION_MEPHITIC:
-        return CLOUD_MEPHITIC;
-    case BEAM_COLD:
-    case BEAM_POTION_COLD:
-        return CLOUD_COLD;
-    case BEAM_POISON:
-    case BEAM_POTION_POISON:
-        return CLOUD_POISON;
-    case BEAM_POTION_BLACK_SMOKE:
-        return CLOUD_BLACK_SMOKE;
-    case BEAM_POTION_GREY_SMOKE:
-        return CLOUD_GREY_SMOKE;
-    case BEAM_POTION_BLUE_SMOKE:
-        return CLOUD_BLUE_SMOKE;
-    case BEAM_POTION_PURPLE_SMOKE:
-        return CLOUD_PURPLE_SMOKE;
-    case BEAM_STEAM:
-    case BEAM_POTION_STEAM:
-        return CLOUD_STEAM;
-    case BEAM_MIASMA:
-    case BEAM_POTION_MIASMA:
-        return CLOUD_MIASMA;
-    case BEAM_CHAOS:
-        return CLOUD_CHAOS;
-    case BEAM_POTION_RAIN:
-        return CLOUD_RAIN;
-    case BEAM_POTION_MUTAGENIC:
-        return CLOUD_MUTAGENIC;
-    case BEAM_GLOOM:
-        return CLOUD_GLOOM;
-    case BEAM_RANDOM:
-        return CLOUD_RANDOM;
-    case BEAM_INK:
-        return CLOUD_INK;
-    case BEAM_HOLY_FLAME:
-        return CLOUD_HOLY_FLAMES;
-    case BEAM_PETRIFYING_CLOUD:
-        return CLOUD_PETRIFY;
-    }
-}
-
 static beam_type _cloud2beam(cloud_type flavour)
 {
     switch (flavour)
@@ -119,18 +68,22 @@ static beam_type _cloud2beam(cloud_type flavour)
     case CLOUD_NONE:         return BEAM_NONE;
     case CLOUD_FIRE:         return BEAM_FIRE;
     case CLOUD_FOREST_FIRE:  return BEAM_FIRE;
-    case CLOUD_MEPHITIC:     return BEAM_POTION_MEPHITIC;
+    case CLOUD_MEPHITIC:     return BEAM_MEPHITIC;
     case CLOUD_COLD:         return BEAM_COLD;
     case CLOUD_POISON:       return BEAM_POISON;
+#if TAG_MAJOR_VERSION == 34
     case CLOUD_BLACK_SMOKE:  return BEAM_POTION_BLACK_SMOKE;
     case CLOUD_GREY_SMOKE:   return BEAM_POTION_GREY_SMOKE;
     case CLOUD_BLUE_SMOKE:   return BEAM_POTION_BLUE_SMOKE;
     case CLOUD_PURPLE_SMOKE: return BEAM_POTION_PURPLE_SMOKE;
+#endif
     case CLOUD_STEAM:        return BEAM_STEAM;
     case CLOUD_MIASMA:       return BEAM_MIASMA;
     case CLOUD_CHAOS:        return BEAM_CHAOS;
+#if TAG_MAJOR_VERSION == 34
     case CLOUD_RAIN:         return BEAM_POTION_RAIN;
     case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
+#endif
     case CLOUD_GLOOM:        return BEAM_GLOOM;
     case CLOUD_INK:          return BEAM_INK;
     case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;

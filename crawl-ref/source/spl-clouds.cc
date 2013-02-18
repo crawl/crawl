@@ -133,7 +133,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.damage      = dice_def(1, 0);
     beem.hit         = 20;
     beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour     = BEAM_POTION_MEPHITIC;
+    beem.flavour     = BEAM_MEPHITIC;
     beem.ench_power  = pow;
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU;
