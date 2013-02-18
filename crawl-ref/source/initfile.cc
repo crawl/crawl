@@ -569,9 +569,6 @@ void game_options::set_default_activity_interrupts()
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp",
 
-        "interrupt_wait = interrupt_multidrop, statue, hungry, "
-                          "burden, hit_monster, monster_move",
-
         // Stair ascents/descents cannot be interrupted except by
         // teleportation. Attempts to interrupt the delay will just
         // trash all queued delays, including travel.
