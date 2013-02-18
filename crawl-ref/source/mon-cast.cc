@@ -345,12 +345,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
-    case SPELL_HASTE:              // (self)
+    case SPELL_HASTE:
         beam.flavour  = BEAM_HASTE;
         break;
 
-    case SPELL_MIGHT:
     case SPELL_MIGHT_OTHER:
+    case SPELL_MIGHT:
         beam.flavour  = BEAM_MIGHT;
         break;
 
