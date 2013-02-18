@@ -108,7 +108,7 @@ Possibly constructed by some powerful madman, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
-The Vaults are eight levels deep and contain the silver rune. The entrance can
+The Vaults are five levels deep and contain the silver rune. The entrance can
 be found between levels 14 and 19 of the main dungeon.
 %%%%
 Hall of Blades
