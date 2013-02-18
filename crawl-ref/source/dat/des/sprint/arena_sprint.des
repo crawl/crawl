@@ -231,8 +231,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "small zombie / small skeleton / wight w:5 / necrophage / large zombie w:5 /\
                     large skeleton w:5 / shadow w:5 / phantom w:5",
-                "worker ant / soldier ant w:2 / queen ant w:1 / ant larva w:1 /\
-                    killer bee w:2",
+                "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly / w:1 brown ooze",
                 "giant cockroach / giant mite / giant centipede / w:5 spider /\
                     w:5 goliath beetle / worm / w:5 brain worm",

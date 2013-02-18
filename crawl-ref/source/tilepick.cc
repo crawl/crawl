@@ -1253,11 +1253,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_IRON_ELEMENTAL:
         return TILEP_MONS_IRON_ELEMENTAL;
 
-    // worms and larvae ('w')
+    // worms ('w')
     case MONS_WORM:
         return TILEP_MONS_WORM;
-    case MONS_ANT_LARVA:
-        return TILEP_MONS_ANT_LARVA;
     case MONS_BRAIN_WORM:
         return TILEP_MONS_BRAIN_WORM;
     case MONS_SWAMP_WORM:
@@ -3699,8 +3697,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     }
 
     // worms ('w')
-    case MONS_ANT_LARVA:
-        return TILE_CORPSE_ANT_LARVA;
     case MONS_WORM:
         return TILE_CORPSE_WORM;
     case MONS_BRAIN_WORM:

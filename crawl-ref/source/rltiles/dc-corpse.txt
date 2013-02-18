@@ -112,7 +112,6 @@ apocalypse_crab CORPSE_APOCALYPSE_CRAB
 
 ## Worms ('w')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-ant_larva CORPSE_ANT_LARVA
 worm CORPSE_WORM
 swamp_worm CORPSE_SWAMP_WORM
 spiny_worm CORPSE_SPINY_WORM
