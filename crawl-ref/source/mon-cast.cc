@@ -235,7 +235,7 @@ static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
         return true;
     }
 
-    // Didn't find a target
+    // Didn't find a target.
     return false;
 }
 
