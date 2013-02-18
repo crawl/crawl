@@ -176,7 +176,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 }
 
 // Find an allied monster to cast a beneficial beam spell at.
-static bool _set_allied_target(monster* caster, bolt & pbolt, bool ignore_genus)
+static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
 {
     monster* selected_target = NULL;
     int min_distance = INT_MAX;
