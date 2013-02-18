@@ -5780,46 +5780,21 @@ static string _beam_type_name(beam_type type)
     case BEAM_NONE:                  return "none";
     case BEAM_MISSILE:               return "missile";
     case BEAM_MMISSILE:              return "magic missile";
-
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_POTION_FIRE:
-#endif
     case BEAM_FIRE:                  return "fire";
-
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_POTION_COLD:
-#endif
     case BEAM_COLD:                  return "cold";
     case BEAM_WATER:                 return "water";
-
     case BEAM_MAGIC:                 return "magic";
     case BEAM_ELECTRICITY:           return "electricity";
-
     case BEAM_MEPHITIC:              return "noxious fumes";
-
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_POTION_POISON:
-#endif
     case BEAM_POISON:                return "poison";
-
     case BEAM_NEG:                   return "negative energy";
     case BEAM_ACID:                  return "acid";
-
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_POTION_MIASMA:
-#endif
     case BEAM_MIASMA:                return "miasma";
-
     case BEAM_SPORE:                 return "spores";
     case BEAM_POISON_ARROW:          return "poison arrow";
     case BEAM_HELLFIRE:              return "hellfire";
     case BEAM_NAPALM:                return "sticky fire";
-
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_POTION_STEAM:
-#endif
     case BEAM_STEAM:                 return "steam";
-
     case BEAM_ENERGY:                return "energy";
     case BEAM_HOLY:                  return "holy energy";
     case BEAM_FRAG:                  return "fragments";
@@ -5855,15 +5830,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_HIBERNATION:           return "hibernation";
     case BEAM_SLEEP:                 return "sleep";
     case BEAM_BERSERK:               return "berserk";
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_POTION_BLACK_SMOKE:    return "black smoke";
-    case BEAM_POTION_GREY_SMOKE:     return "grey smoke";
-    case BEAM_POTION_BLUE_SMOKE:     return "blue smoke";
-    case BEAM_POTION_PURPLE_SMOKE:   return "purple smoke";
-    case BEAM_POTION_RAIN:           return "rain";
-    case BEAM_POTION_RANDOM:         return "random potion";
-    case BEAM_POTION_MUTAGENIC:      return "mutagenic fog";
-#endif
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
     case BEAM_DEVOUR_FOOD:           return "devour food";
