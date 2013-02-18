@@ -206,6 +206,7 @@ static bool _set_allied_target(monster* caster, bolt & pbolt, bool ignore_genus)
         else if ((mons_genus(targ->type) == caster_genus
                  || mons_genus(targ->base_monster) == caster_genus
                  || targ->is_holy() && caster->is_holy()
+                 || mons_enslaved_soul(caster)
                  || ignore_genus)
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
