@@ -4984,17 +4984,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
                                      int killernum)
 {
     if (oldpos != pos())
-    {
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
-
-        if (you.can_see(this)
-            && (!mons_is_safe(this)
-                && !mons_class_flag(type, M_NO_EXP_GAIN)
-                || type == MONS_BALLISTOMYCETE && number > 0))
-        {
-            interrupt_activity(AI_MONSTER_MOVE);
-        }
-    }
 
     if (alive() && mons_habitat(this) == HT_WATER
         && !feat_is_watery(grd(pos())) && !has_ench(ENCH_AQUATIC_LAND))

@@ -234,7 +234,6 @@ enum activity_interrupt_type
     AI_HIT_MONSTER,                 // Player hit monster (invis or
                                     // mimic) during travel/explore.
     AI_SENSE_MONSTER,
-    AI_MONSTER_MOVE,
 
     // Always the last.
     NUM_AINTERRUPTS
@@ -1050,7 +1049,6 @@ enum delay_type
     // also handled as delays.
     DELAY_RUN,
     DELAY_REST,
-    DELAY_WAIT,
     DELAY_TRAVEL,
 
     DELAY_MACRO,
