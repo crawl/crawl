@@ -197,6 +197,7 @@ static monsterentry mondata[] = {
     AXED_MON(MONS_BUMBLEBEE)
     AXED_MON(MONS_ARACHNOID)
     AXED_MON(MONS_WOOD_GOLEM)
+    AXED_MON(MONS_ANT_LARVA)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -236,18 +237,6 @@ static monsterentry mondata[] = {
     8, 10, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
     I_INSECT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
-},
-
-{
-    MONS_ANT_LARVA, 'a', LIGHTGREY, "ant larva",
-    M_NO_SKELETON,
-    MR_VUL_POISON,
-    150, 5, MONS_WORKER_ANT, MONS_ANT_LARVA, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
-    2, 6, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 6, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
 // batty monsters ('b')

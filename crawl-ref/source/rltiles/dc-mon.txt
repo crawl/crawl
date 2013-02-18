@@ -130,8 +130,7 @@ alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 fire_crab MONS_FIRE_CRAB
 %rim 1
 
-## Worms and larvae ('w')
-ant_larva MONS_ANT_LARVA
+## Worms ('w')
 worm MONS_WORM
 swamp_worm MONS_SWAMP_WORM
 spiny_worm MONS_SPINY_WORM

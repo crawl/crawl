@@ -157,7 +157,7 @@ ENDMAP
 NAME: minivault_29
 DEPTH: D:8-13, Lair, Spider
 MONS: patrolling queen ant, patrolling soldier ant
-MONS: patrolling worker ant, ant larva
+MONS: patrolling worker ant, patrolling worker ant / nothing
 MAP
 .3......3...
 ...x.xx.x.2.
@@ -244,7 +244,7 @@ ENDMAP
 
 NAME:   minmay_another_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling ant larva, worker ant, soldier ant, patrolling queen ant
+MONS:   patrolling worker ant / nothing, worker ant, soldier ant, patrolling queen ant
 SUBST:  a = 1223........x
 MAP
   .. .... .. .
