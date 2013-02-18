@@ -2950,6 +2950,7 @@ bool bolt::harmless_to_player() const
     // Positive enchantments.
     case BEAM_HASTE:
     case BEAM_HEALING:
+    case BEAM_MIGHT:
     case BEAM_INVISIBILITY:
         return true;
 
@@ -3437,6 +3438,8 @@ void bolt::affect_player_enchantment()
     case BEAM_MIGHT:
         potion_effect(POT_MIGHT, ench_power);
         obvious_effect = true;
+        nasty = false;
+        nice  = true;
         break;
 
     default:
@@ -5604,6 +5607,7 @@ bool bolt::nice_to(const monster* mon) const
 
     if (flavour == BEAM_HASTE
         || flavour == BEAM_HEALING
+        || flavour == BEAM_MIGHT
         || flavour == BEAM_INVISIBILITY)
     {
         return true;
