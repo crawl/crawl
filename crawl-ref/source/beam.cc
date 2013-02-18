@@ -3286,6 +3286,22 @@ void bolt::affect_player_enchantment()
         nice  = true;
         break;
 
+    case BEAM_MIGHT:
+        potion_effect(POT_MIGHT, ench_power);
+        obvious_effect = true;
+        nasty = false;
+        nice  = true;
+        break;
+
+    case BEAM_INVISIBILITY:
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
+        potion_effect(POT_INVISIBILITY, ench_power);
+        contaminate_player(1 + random2(2), effect_known);
+        obvious_effect = true;
+        nasty = false;
+        nice  = true;
+        break;
+
     case BEAM_PARALYSIS:
         you.paralyse(agent(), 2 + random2(6));
         obvious_effect = true;
@@ -3299,15 +3315,6 @@ void bolt::affect_player_enchantment()
     case BEAM_CONFUSION:
         potion_effect(POT_CONFUSION, ench_power);
         obvious_effect = true;
-        break;
-
-    case BEAM_INVISIBILITY:
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
-        potion_effect(POT_INVISIBILITY, ench_power);
-        contaminate_player(1 + random2(2), effect_known);
-        obvious_effect = true;
-        nasty = false;
-        nice  = true;
         break;
 
     case BEAM_TELEPORT:
@@ -3433,13 +3440,6 @@ void bolt::affect_player_enchantment()
     case BEAM_BERSERK:
         potion_effect(POT_BERSERK_RAGE, ench_power);
         obvious_effect = true;
-        break;
-
-    case BEAM_MIGHT:
-        potion_effect(POT_MIGHT, ench_power);
-        obvious_effect = true;
-        nasty = false;
-        nice  = true;
         break;
 
     default:
