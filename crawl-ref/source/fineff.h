@@ -121,10 +121,10 @@ protected:
     int blood;
 };
 
-class kraken_damage_fineff : public final_effect
+class deferred_damage_fineff : public final_effect
 {
 public:
-    kraken_damage_fineff(const actor *attack, const actor *defend, int dam)
+    deferred_damage_fineff(const actor *attack, const actor *defend, int dam)
         : final_effect(attack, defend, coord_def()), damage(dam)
     {
     }
