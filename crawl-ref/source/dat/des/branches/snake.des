@@ -904,6 +904,7 @@ PLACE:  Snake:$
 ORIENT: float
 MONS:   naga / nothing, naga warrior / naga, naga mage / naga
 MONS:   greater naga / guardian serpent
+MONS:   greater naga / naga warrior w:5 / naga mage w:5
 NSUBST: O = 1:A / 1:B
 KITEM:  A = serpentine rune of Zot
 KITEM:  B = serpentine rune of Zot mimic / w:90 acquire any
@@ -912,20 +913,20 @@ MAP
      cccc..1...ccc   c....c    cccc..2...ccc
    ccc.....2.....ccc c....c   cc.....3.....cc
   cc.......1.......ccc....c  cc......2......cc
-  c1....ccccccc....1cc....c  c1....cccccc...1c
- cc..1ccc..2..cc.....c....c cc.2.ccc....cc12.cc
- c...cc...23...cc1........c c...1c.......cc...c
-cc...c2....2....cc........c c...cc..4....4c...cc
-c...cc.2..ccc..22cc....11.c c232c..4.4.4..cc...c
-c...c...2ccccc2...cc..2...c c...c.4.O.4c.2.c...c
-c232c...cc.4.cc...ccc..3..ccc...cc.4.4.c323c...c
-c...c323c.4.4.cc...ccc..3..ccc...cc.4.cc...c232c
-c...c.2.c4.O.4.c...c c...2..cc...2ccccc2...c...c
-c...cc..4.4.4..c232c c.11....cc22..ccc..2.cc...c
-cc...c4....4..cc...c c........cc....2....2c...cc
- c...cc.......c1...c c........1cc...32...cc...c
- cc.21cc....ccc.2.cc c....c.....cc..2..ccc1..cc
-  c1...cccccc....1c  c....cc1....ccccccc....1c
+  c1....ccccccc....1cc....c  c1....cccccc..51c
+ cc.51ccc..2..cc..5..c....c cc.2.ccc....cc12.cc
+ c...cc...23...cc1........c c.5.1c.......cc...c
+cc...c2....2....cc........c c...cc.......4c...cc
+c...cc52..ccc..22cc....32.c c232c......4..cc...c
+c...c...2ccccc25..cc......c c...c.4.O.4c.2.c...c
+c232c...cc.5.cc...ccc..5..ccc...cc.....c323c...c
+c...c323c.....cc...ccc..5..ccc...cc.5.cc...c232c
+c...c.2.c4.O.4.c...c c......cc..52ccccc2...c...c
+c...cc..4......c232c c.23....cc22..ccc..25cc...c
+cc...c4.......cc...c c........cc....2....2c...cc
+ c...cc.......c1.5.c c........1cc...32...cc...c
+ cc.21cc....ccc.2.cc c....c..5..cc..2..ccc15.cc
+  c15..cccccc....1c  c....cc1....ccccccc....1c
   cc......2......cc  c....ccc.......1.......cc
    cc.....3.....cc   c....c ccc.....2.....ccc
     ccc...2..cccc    c....c   ccc...1..cccc
