@@ -5516,7 +5516,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             && !invalid_monster_index(number)
             && menv[number].is_parent_monster_of(this))
     {
-        (new kraken_damage_fineff(oppressor, &menv[number], damage))->schedule();
+        (new deferred_damage_fineff(oppressor, &menv[number], damage))->schedule();
     }
     else if (mons_species(type) == MONS_BUSH
              && res_fire() < 0

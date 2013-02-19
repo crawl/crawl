@@ -79,9 +79,9 @@ bool blood_fineff::mergeable(const final_effect &fe) const
     return o && posn == o->posn && mtype == o->mtype;
 }
 
-bool kraken_damage_fineff::mergeable(const final_effect &fe) const
+bool deferred_damage_fineff::mergeable(const final_effect &fe) const
 {
-    const kraken_damage_fineff *o = dynamic_cast<const kraken_damage_fineff *>(&fe);
+    const deferred_damage_fineff *o = dynamic_cast<const deferred_damage_fineff *>(&fe);
     return o && att == o->att && def == o->def;
 }
 
@@ -114,12 +114,12 @@ void blood_fineff::merge(const final_effect &fe)
     blood += bfe->blood;
 }
 
-void kraken_damage_fineff::merge(const final_effect &fe)
+void deferred_damage_fineff::merge(const final_effect &fe)
 {
-    const kraken_damage_fineff *krakfe =
-        dynamic_cast<const kraken_damage_fineff *>(&fe);
-    ASSERT(krakfe && mergeable(*krakfe));
-    damage += krakfe->damage;
+    const deferred_damage_fineff *ddamfe =
+        dynamic_cast<const deferred_damage_fineff *>(&fe);
+    ASSERT(ddamfe && mergeable(*ddamfe));
+    damage += ddamfe->damage;
 }
 
 
@@ -268,7 +268,7 @@ void blood_fineff::fire()
     bleed_onto_floor(posn, mtype, blood, true);
 }
 
-void kraken_damage_fineff::fire()
+void deferred_damage_fineff::fire()
 {
     if (actor *df = defender())
         df->hurt(attacker(), damage);
