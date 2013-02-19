@@ -2115,15 +2115,17 @@ about 10% every two skill levels. Although lighter weapons are easier to use
 initially, as they strike quickly and accurately, heavier weapons increase in
 damage potential very quickly as you improve your skill with them.
 
-Polearms and certain whips have a special ability: they can reach farther and
+Some weapon types have special abilities. Axes are able to cleave through
+multiple enemies in a single swing, hitting enemies in an arc around the
+wielder with every attack. Polearms and certain whips can reach farther and
 allow the wielder to attack an opponent two squares away, and even reach over
-monsters. To reach, use the 'v' command - or preferably, use Autofight ('tab').
+monsters. Use the 'v' command to target a specific monster with a reaching
+attack, or use Autofight ('tab') to reach automatically.
 
 Unarmed Combat is a special fighting skill. It allows your character to make a
 powerful attack when unarmed and also to punch with the off hand as an
-additional melee attack. You can practise Unarmed Combat by attacking
-empty-handed. Unarmed combat is particularly difficult to use in combination
-with heavy armour or shields.
+additional melee attack. Unarmed combat is particularly difficult to use in
+combination with heavy armour or shields.
 
 Ranged combat skills
 ========================================
