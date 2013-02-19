@@ -1940,7 +1940,7 @@ dump_message_count = 20
 
 dump_order  = header,hiscore,stats,misc,notes,inventory,
 dump_order += skills,spells,overview,mutations,messages,screenshot,
-dump_order += monlist,kills
+dump_order += monlist,kills,action_counts
         (Overriding ordered list option)
         Controls the order of sections in the dump.
 
@@ -1955,10 +1955,6 @@ dump_order += monlist,kills
         in the game. This will only be included in the final dump
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode).
-
-        Also, "action_counts" will count various actions you have done (such
-        as casting a spell or using a weapon type), in total and per every
-        three experience levels.
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
