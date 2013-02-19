@@ -1893,7 +1893,7 @@ bool has_launcher(const item_def &ammo)
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 {
-    size_type bodysize = actor->body_size();
+    const size_type bodysize = actor->body_size();
 
     if (wpn.base_type == OBJ_WEAPONS)
         return Weapon_prop[Weapon_index[wpn.sub_type]].throwable;
