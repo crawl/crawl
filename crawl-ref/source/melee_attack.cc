@@ -818,7 +818,6 @@ bool melee_attack::attack()
     if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
 
-
     if (can_cleave && !cleaving)
         cleave_setup();
 
