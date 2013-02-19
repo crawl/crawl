@@ -2443,7 +2443,7 @@ static void _prepare_water()
                 {
                     grd(*ri) = DNGN_SHALLOW_WATER;
                 }
-                else if (which_grid >= DNGN_FLOOR
+                else if (feat_has_dry_floor(which_grid)
                          && x_chance_in_y(80 - absdepth0 * 4,
                                           100))
                 {
@@ -5937,7 +5937,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // vault.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (grd(*ri) >= DNGN_FLOOR)
+        if (feat_has_dry_floor(grd(*ri)))
         {
             found++;
             if (one_chance_in(found))
