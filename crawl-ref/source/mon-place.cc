@@ -98,10 +98,7 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
                      dungeon_feature_type actual_feat)
 {
     if (feat_wanted == DNGN_FLOOR)
-    {
-        return (actual_feat >= DNGN_FLOOR
-                || actual_feat == DNGN_SHALLOW_WATER);
-    }
+        return feat_has_solid_floor(actual_feat);
 
     if (feat_wanted >= DNGN_ROCK_WALL
         && feat_wanted <= DNGN_CLEAR_PERMAROCK_WALL)

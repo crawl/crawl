@@ -314,6 +314,11 @@ bool feat_has_solid_floor(dungeon_feature_type feat)
             feat != DNGN_LAVA);
 }
 
+bool feat_has_dry_floor(dungeon_feature_type feat)
+{
+    return (feat_has_solid_floor(feat) && feat != DNGN_SHALLOW_WATER);
+}
+
 bool feat_is_door(dungeon_feature_type feat)
 {
     return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR

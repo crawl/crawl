@@ -434,7 +434,7 @@ static monster_type _feature_to_elemental(const coord_def& where,
     }
 
     if ((any_elem || strict_elem == MONS_AIR_ELEMENTAL)
-        && grd(where) >= DNGN_FLOOR && env.cgrid(where) == EMPTY_CLOUD)
+        && feat_has_dry_floor(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
     {
         return MONS_AIR_ELEMENTAL;
     }
