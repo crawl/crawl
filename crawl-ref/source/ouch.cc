@@ -747,6 +747,7 @@ bool drain_exp(bool announce_full)
 
     if (you.experience == 0)
     {
+        mpr("You are drained of all life!");
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
 
         // Return in case death was escaped via wizard mode.
@@ -755,6 +756,7 @@ bool drain_exp(bool announce_full)
 
     if (you.experience_level == 1)
     {
+        mpr("You feel drained.");
         you.experience = 0;
 
         return true;
