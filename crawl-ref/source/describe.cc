@@ -802,8 +802,31 @@ static string _describe_weapon(const item_def &item, bool verbose)
     if (!is_artefact(item) && !verbose)
         spec_ench = SPWPN_NORMAL;
 
-    if (verbose && weapon_skill(item) == SK_POLEARMS)
-        description += "\n\nIt can be evoked to extend its reach.";
+    if (verbose)
+    {
+        switch (weapon_skill(item))
+        {
+        case SK_POLEARMS:
+            description += "\n\nIt can be evoked to extend its reach.";
+            break;
+        case SK_AXES:
+            description += "\n\nIt can hit multiple enemies in an arc"
+                           " around the wielder.";
+            break;
+        case SK_SHORT_BLADES:
+            // TODO: should we mention stabbing for "ok" stabbing weapons?
+            // (long blades, piercing polearms, and clubs)
+            {
+                string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
+                                                           : "particularly";
+                description += "\n\nIt is " + adj + " good for stabbing"
+                               " unaware enemies.";
+            }
+            break;
+        default:
+            break;
+        }
+    }
 
     // special weapon descrip
     if (spec_ench != SPWPN_NORMAL && item_type_known(item))
