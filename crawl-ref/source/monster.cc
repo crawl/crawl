@@ -4186,12 +4186,15 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (amount != INSTANT_DEATH && has_ench(ENCH_INJURY_BOND))
         {
-            monster* guardian = get_ench(ENCH_INJURY_BOND).agent()->as_monster();
+            actor* guardian = get_ench(ENCH_INJURY_BOND).agent();
             if (guardian && guardian->alive())
             {
                 int split = amount / 2;
-                guardian->hurt(agent, split, flavour, cleanup_dead);
-                amount -= split;
+                if (split > 0)
+                {
+                    (new deferred_damage_fineff(agent, guardian, split))->schedule();
+                    amount -= split;
+                }
             }
         }
 
