@@ -73,6 +73,7 @@ enum band_type
     BAND_LAMIA,
     BAND_POLYPHEMUS,
     BAND_VAULT_WARDEN,
+    BAND_OGRE_MAGE_EXTERN,
     NUM_BANDS                   // always last
 };
 
