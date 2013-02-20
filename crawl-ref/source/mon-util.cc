@@ -3487,6 +3487,10 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
     if (!_mons_can_open_doors(mon))
         return false;
 
+    // Creatures allied with the player can't open sealed doors either
+    if (mon->attitude == ATT_FRIENDLY && grd(pos) == DNGN_SEALED_DOOR)
+        return false;
+
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return false;
 
@@ -3516,7 +3520,8 @@ static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
 bool mons_can_traverse(const monster* mon, const coord_def& p,
                        bool checktraps)
 {
-    if (grd(p) == DNGN_CLOSED_DOOR && _mons_can_pass_door(mon, p))
+    if (grd(p) == DNGN_CLOSED_DOOR || grd(p) == DNGN_SEALED_DOOR
+            && _mons_can_pass_door(mon, p))
         return true;
 
     if (!mon->is_habitable(p))
