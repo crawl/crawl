@@ -516,7 +516,7 @@ bool bolt::can_affect_wall_actor(const actor *act) const
     if (is_enchantment())
         return true;
 
-    const bool superconductor = (grd(act->pos()) == DNGN_METAL_WALL
+    const bool superconductor = (feat_is_metal(grd(act->pos()))
                                  && flavour == BEAM_ELECTRICITY);
     if (actor_wall_shielded(act) && !superconductor)
         return false;
@@ -2348,7 +2348,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     if (is_enchantment())
         return false;
 
-    if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL
+    if (flavour == BEAM_ELECTRICITY && !feat_is_metal(feat)
         && !feat_is_tree(feat))
     {
         return true;

@@ -421,6 +421,11 @@ bool feat_is_tree(dungeon_feature_type feat)
     return (feat == DNGN_TREE || feat == DNGN_MANGROVE);
 }
 
+bool feat_is_metal(dungeon_feature_type feat)
+{
+    return (feat == DNGN_METAL_WALL || feat == DNGN_GRATE);
+}
+
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 {
     return (get_feature_dchar(feat) == DCHAR_ARCH
