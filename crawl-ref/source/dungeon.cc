@@ -2008,15 +2008,15 @@ static void _ruin_level(Iterator ri,
         if (!in_bounds(*ri))
             continue;
 
-        /* only try to replace wall and door tiles */
+        // only try to replace wall and door tiles
         if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
             continue;
 
-        /* don't mess with permarock */
+        // don't mess with permarock
         if (grd(*ri) == DNGN_PERMAROCK_WALL)
             continue;
 
-        /* or vaults */
+        // or vaults
         if (map_masked(*ri, vault_mask))
             continue;
 
@@ -2036,8 +2036,8 @@ static void _ruin_level(Iterator ri,
             }
         }
 
-        /* chance of removing the tile is dependent on the number of adjacent
-         * floor(ish) tiles */
+        // chance of removing the tile is dependent on the number of adjacent
+        // floor(ish) tiles
         if (x_chance_in_y(floor_count, ruination))
             to_replace.push_back(replacement);
     }
@@ -2066,7 +2066,7 @@ static void _ruin_level(Iterator ri,
             replacement = DNGN_FLOOR;
         }
 
-        /* only remove some doors, to preserve tactical options */
+        // only remove some doors, to preserve tactical options
         if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
         {
             // Copy the mask and properties too, so that we don't make an
@@ -2076,7 +2076,7 @@ static void _ruin_level(Iterator ri,
             _set_grd(p, replacement);
         }
 
-        /* but remove doors if we've removed all adjacent walls */
+        // but remove doors if we've removed all adjacent walls
         for (adjacent_iterator wai(p); wai; ++wai)
         {
             if (feat_is_door(grd(*wai)))
@@ -2097,7 +2097,7 @@ static void _ruin_level(Iterator ri,
             }
         }
 
-        /* replace some ruined walls with plants/fungi/bushes */
+        // replace some ruined walls with plants/fungi/bushes
         if (plant_density && one_chance_in(plant_density)
             && feat_has_solid_floor(replacement))
         {
@@ -5594,11 +5594,12 @@ static void _add_plant_clumps(int frequency /* = 10 */,
         mgen_data mg;
         if (mgrd(*ri) != NON_MONSTER)
         {
-            /* clump plants around things that already exist */
+            // clump plants around things that already exist
             monster_type type = menv[mgrd(*ri)].type;
-            if ((type == MONS_PLANT  ||
-                 type == MONS_FUNGUS ||
-                 type == MONS_BUSH) && one_chance_in(frequency))
+            if ((type == MONS_PLANT
+                     || type == MONS_FUNGUS
+                     || type == MONS_BUSH)
+                 && one_chance_in(frequency))
             {
                 mg.cls = type;
             }
@@ -5617,7 +5618,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                 if (grd(*rad) != DNGN_FLOOR)
                     continue;
 
-                /* make sure the iterator stays valid */
+                // make sure the iterator stays valid
                 vector<coord_def> more_to_place;
                 for (vector<coord_def>::const_iterator it = to_place.begin();
                      it != to_place.end();
@@ -5625,14 +5626,15 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                 {
                     if (*rad == *it)
                         continue;
-                    /* only place plants next to previously placed plants */
+                    // only place plants next to previously placed plants
                     if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
                     {
                         if (one_chance_in(clump_density))
                             more_to_place.push_back(*rad);
                     }
                 }
-                to_place.insert(to_place.end(), more_to_place.begin(), more_to_place.end());
+                to_place.insert(to_place.end(), more_to_place.begin(),
+                                more_to_place.end());
             }
         }
 
@@ -5679,7 +5681,8 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
         coord_def dest_pos;
         do
             dest_pos = random_in_bounds();
-        while (grd(dest_pos) != DNGN_FLOOR || env.pgrid(dest_pos) & FPROP_NO_RTELE_INTO);
+        while (grd(dest_pos) != DNGN_FLOOR
+               || env.pgrid(dest_pos) & FPROP_NO_RTELE_INTO);
         if (!shaft)
         {
             env.markers.add(new map_position_marker(base_pos, dest_pos));
