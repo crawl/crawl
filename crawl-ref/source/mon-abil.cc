@@ -3273,7 +3273,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!you.visible_to(mons))
+        if (!mons->can_see(&you))
             break;
 
         if (one_chance_in(4))
