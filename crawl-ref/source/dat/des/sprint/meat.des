@@ -1,0 +1,475 @@
+# Sprint VIII, by st
+#
+# An extremely short and difficult survival challenge.
+#
+# Defeating the boss will place the orb underneath you.
+# The boss arrives at turn 150.
+{{
+
+  local bag_of_meat =
+    "orc hp:400 hd:30 name:bag_of_meat n_rpl n_des n_spe n_zom \
+    col:red generate_awake ; ring of slaying plus:27000 plus2:30 \
+    not_cursed ident:all no_pickup . war axe plus:9 plus2:9 \
+    not_cursed ego:none race:no_race ident:all no_pickup"
+
+  local meat_berserker =
+    "ogre hp:500 hd:50 name:meat_berserker n_rpl n_des n_spe n_zom \
+    always_corpse col:red perm_ench:berserk generate_awake \
+    ; ring of slaying plus:27000 plus2:30 not_cursed ident:all \
+    no_pickup . battleaxe plus:9 plus2:9 not_cursed ego:none race:no_race \
+    ident:all no_pickup"
+
+  local tyrant =
+    "lich hp:500 hd:35 name:tyrant n_rpl n_des n_spe n_zom \
+    never_corpse col:lightred generate_awake \
+    spells:haste;haste;airstrike;summon_horrible_things;summon_horrible_things"
+
+  local meat_hydra =
+    "eight-headed hydra hp:1000 hd:30 name:meat_hydra n_rpl n_des \
+     n_spe always_corpse col:lightred generate_awake spells:symbol_of_torment"
+
+  local dread =
+    "wraith hp:500 hd:50 name:dread n_rpl n_des n_spe \
+    never_corpse generate_awake \
+    col:lightred spells:symbol_of_torment;hellfire;hellfire_burst"
+
+  local large_bag =
+    "hill giant hp:400 hd:40 name:large_bag_of_meat n_rpl n_des \
+    n_spe n_zom  col:red generate_awake perm_ench:inner_flame \
+    ; ring of slaying plus:27000 plus2:100 not_cursed ident:all \
+    no_pickup . \
+    giant spiked club plus:9 plus2:9 not_cursed ego:none race:no_race \
+    ident:all no_pickup"
+
+  local destroyer =
+    "vampire knight hp:500 hd:40 name:destroyer n_rpl n_des n_spe \
+    never_corpse col:red generate_awake \
+    spells:blink_close;blink_close;blink_close;blink_close;blink_close \
+    ; ring of slaying plus:27000 plus2:200 not_cursed ident:all \
+    no_pickup . great sword plus:9 plus2:9 ego:vorpal ident:all no_pickup"
+
+  local plague =
+    "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe \
+    never_corpse col:lightred generate_awake \
+    spells:poison_arrow;venom_bolt;poisonous_cloud"
+
+  local sculptor =
+    "skeletal warrior hp:500 hd:30 name:sculptor_of_flesh n_rpl \
+    n_des n_spe n_zom never_corpse col:red generate_awake \
+    spells:twisted_resurrection;twisted_resurrection;twisted_resurrection \
+    ; ring of slaying plus:27000 plus2:250 not_cursed ident:all \
+    no_pickup . great sword plus:9 plus2:9 not_cursed ego:none race:no_race \
+    ident:all no_pickup"
+
+  local observer =
+    "great orb of eyes hp:2000 hd:30 name:observer n_rpl n_des \
+    n_spe never_corpse col:red generate_awake \
+    spells:bolt_of_fire;fireball;fireball;smiting;smiting \
+    perm_ench:invis perm_ench:haste"
+
+  local accursed =
+    "greater mummy hp:500 hd:40 name:accursed n_rpl n_des n_spe \
+    never_corpse col:red generate_awake \
+    spells:smiting;smiting;smiting;smiting;smiting"
+
+  local meat_beast =
+    "hell beast hp:1000 hd:40 name:meat_beast n_rpl n_des n_spe \
+    col:red generate_awake perm_ench:haste"
+
+  local lost_soul =
+    "phantom hp:500 hd:50 name:lost_soul n_rpl n_des n_spe \
+    never_corpse col:lightred generate_awake \
+    spells:bolt_of_draining;bolt_of_draining;dispel_undead;dispel_undead \
+    perm_ench:invis"
+
+  local fleshlord =
+    "hell knight hp:3000 hd:60 name:fleshlord n_rpl n_des n_spe never_corpse \
+    col:lightmagenta generate_awake \
+    spells:slow;haste \
+    ; ring of slaying plus:27000 plus2:400 not_cursed ident:all \
+    no_pickup . great mace plus:9 plus2:9 not_cursed ego:none race:no_race \
+    ident:all no_pickup"
+
+  -- These guys will only show up long after you've had a chance to get the
+  -- orb and get out.
+  local vile =
+    "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse \
+    col:lightred generate_awake perm_ench:haste \
+    spells:slow;confuse;confuse;miasma;hellfire_burst"
+
+  -- Uniques --
+  local servant =
+    "harold hp:650 hd:40 name:The_Servant n_rpl col:yellow \
+    generate_awake never_corpse spells:.;.;.;. \
+    ; ring of slaying plus:27000 plus2:130 not_cursed ident:all \
+    no_pickup . glaive plus:9 plus2:9 not_cursed ego:flaming race:no_race \
+    ident:all no_pickup"
+
+  local captor =
+    "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan \
+    generate_awake never_corpse \
+    spells:slow;haste;ensnare \
+    ; ring of slaying plus:27000 plus2:200 not_cursed ident:all \
+    no_pickup . triple sword plus:9 plus2:9 not_cursed ego:vorpal race:no_race \
+    ident:all no_pickup"
+
+  local defiler =
+    "edmund hp:1000 hd:50 name:The_Defiler n_rpl col:white \
+    generate_awake never_corpse \
+    spells:fireball;fireball;fireball;poisonous_cloud \
+    ; ring of slaying plus:27000 plus2:250 not_cursed ident:all \
+    no_pickup . demon whip plus:9 plus2:9 not_cursed ego:vorpal race:no_race \
+    ident:all no_pickup \
+    . large shield plus:12 not_cursed ego:none race:no_race \
+    ident:all no_pickup"
+
+  -- Meatlord shadow creatures will be shadow fiends
+  local meatlord =
+    "dispater hp:10000 hd:60 name:The_Meatlord n_rpl col:lightmagenta \
+    generate_awake never_corpse \
+    spells:shadow_creatures;shadow_creatures;airstrike;airstrike;conjure_ball_lightning \
+    ; ring of slaying plus:27000 plus2:27000 not_cursed ident:all \
+    no_pickup . mace unrand:sceptre_of_torment not_cursed \
+    ident:all no_pickup"
+
+  -- Unspeakable shadow creatures will be (a lot of) starcursed masses
+  -- This is the secret boss.
+  -- It's not intended that you see this.
+  local avatar =
+    "slime creature hp:10000 hd:100 name:The_Unspeakable \
+    n_rpl col:jewel generate_awake perm_ench:haste \
+    spells:shadow_creatures;shadow_creatures;shadow_creatures;airstrike;smiting;death's_door"
+
+  function blood_monster_definitions(e)
+    e.kmons("1 = " .. bag_of_meat .. "")
+    e.kmons("2 = " .. meat_berserker .. "")
+    e.kmons("3 = " .. large_bag .. "")
+    e.kmons("4 = " .. destroyer .. "")
+    e.kmons("A = " .. servant .. "")
+    e.kmons("B = " .. captor .. "")
+    e.kmons("C = " .. defiler .. "")
+    e.kmons("D = " .. meatlord .. "")
+    e.kmons("E = " .. avatar .. "")
+  end
+
+  function weapon_creation(e)
+    if you.race() == "Felid" then
+      e.kitem("{ = ring of slaying plus:27000 plus2:27000 ident:all no_pickup \
+               not_cursed")
+    elseif you.race() == "Spriggan" or
+           you.race() == "Kobold"   or
+           you.race() == "Halfling" then
+      e.kitem("{ = broad axe plus:27000 plus2:27000 ident:all no_pickup \
+               not_cursed ego:vorpal race:no_race unrand:axe_of_woe")
+    else
+      e.kitem("{ = executioner's axe plus:27000 plus2:27000 ident:all no_pickup \
+               not_cursed ego:vorpal race:no_race unrand:axe_of_woe")
+    end
+  end
+
+  local border_top =
+    "------------------------------------------------------------------------------\n" ..
+    "------------------------------------------------------------------------------\n"
+
+  local border_bottom =
+    "------------------------------------------------------------------------------\n" ..
+    "------------------------------------------------------------------------------"
+
+  function meatlord_stuff(data, triggerable, triggerer, marker, ev)
+    local you_x, you_y = you.pos()
+
+    if triggerer.type == "monster_dies" then
+      crawl.more()
+      crawl.mpr("<red>" .. border_top .. "" ..
+      "--                    </red><lightred>You have destroyed The Meatlord.</lightred><red>                      --\n" ..
+      "" .. border_bottom .. "</red>")
+      crawl.more()
+      crawl.mpr("<red>" .. border_top .. "" ..
+      "--                        </red><lightred>You will die a champion.</lightred><red>                          --\n" ..
+      "" .. border_bottom .. "</red>")
+      crawl.more()
+      crawl.mpr("The Orb of Zot has appeared underneath you.", "orb")
+      dgn.create_item(you_x, you_y, "orb of zot")
+      crawl.more()
+      return
+    end
+  end
+
+  function unspeakable_stuff(data, triggerable, triggerer, marker, ev)
+    local you_x, you_y = you.pos()
+
+    if triggerer.type == "monster_dies" then
+      crawl.more()
+      crawl.mpr("<red>" .. border_top .. "" ..
+      "--                    </red><lightred>You have destroyed The Unspeakable.</lightred><red>                   --\n" ..
+      "" .. border_bottom .. "</red>")
+      crawl.more()
+      crawl.mpr("<lightgreen>The slimy rune of Zot has appeared underneath you.</lightgreen>")
+      dgn.create_item(you_x, you_y, "slimy rune of zot")
+      return
+    end
+  end
+
+  function blood_spawns(data, triggerable, triggerer, marker, ev)
+    if triggerer.type == "turn" then
+
+    data.spawn_count = data.spawn_count + 1
+
+    if data.spawn_count < 20 then      -- turns 01 - 19
+      phase =
+      "" .. bag_of_meat .. " / " .. meat_berserker .. ""
+    elseif data.spawn_count < 30 then  -- turns 20 - 29
+      phase =
+      "" .. destroyer .. " / " .. large_bag .. ""
+    elseif data.spawn_count < 31 then  -- turns 30
+      phase =
+      "" .. meat_hydra .. ""
+    elseif data.spawn_count < 45 then  -- turns 31 - 44
+      phase =
+      "" .. sculptor .. " / " .. destroyer .. ""
+    elseif data.spawn_count < 60 then  -- turns 45 - 59
+      phase =
+      "" .. tyrant .. " / " .. accursed .. " / " .. meat_berserker .. " w:5"
+    elseif data.spawn_count < 75 then  -- turns 60 - 74
+      phase =
+      "" .. dread .. " / " .. meat_beast .. " / " .. meat_berserker .. " w:5"
+    elseif data.spawn_count < 90 then  -- turns 74 - 89
+      phase =
+      "" .. lost_soul .. " / " .. meat_hydra .. " w:5 / " .. meat_beast .. " w:5"
+    elseif data.spawn_count < 105 then  -- turns 90 - 104
+      phase =
+      "" .. observer .. " / " .. tyrant .. " w:5 / " .. accursed .. " w:5"
+    elseif data.spawn_count < 120 then  -- turns 105 - 119
+      phase =
+      "" .. plague .. " / " .. dread .. " w:5 / " .. meat_hydra .. " w:5"
+    elseif data.spawn_count < 135 then  -- turns 120 - 134
+      phase =
+      "" .. fleshlord .. ""
+    elseif data.spawn_count < 170 then  -- turns 135 - 169
+      phase =
+      "" .. meat_berserker .. " / " .. destroyer .. " / " .. meat_beast .. " / "
+      .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
+      .. observer .. " / " .. plague .. " / " .. sculptor .. " / "
+      .. lost_soul .. ""
+    elseif data.spawn_count < 200 then  -- turns 170 - 199
+      phase =
+      "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
+      .. observer .. " / " .. plague .. " / "
+      .. lost_soul .. ""
+    elseif data.spawn_count < 250 then  -- turns 200 - 249
+      phase =
+      "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
+      .. observer .. " / " .. plague .. " / "
+      .. lost_soul .. " / " .. vile .. " w:30"
+    elseif data.spawn_count >= 250 then  -- turns 250 on
+      phase =
+      "" .. vile .. ""
+    end
+
+--    dgn.create_monster(35, 63, phase)
+    dgn.create_monster(37, 63, phase)
+    dgn.create_monster(39, 63, phase)
+    dgn.create_monster(41, 63, phase)
+    dgn.create_monster(43, 63, phase)
+
+    if you.turns() < 230 then
+    dgn.set_random_mon_list("shadow fiend / nothing")
+    else
+    dgn.set_random_mon_list("starcursed mass")
+    end
+
+    if data.spawn_count == 30 then
+      dgn.create_monster(33, 63, servant)
+    elseif data.spawn_count == 60 then
+      dgn.create_monster(33, 63, captor)
+    elseif data.spawn_count == 100 then
+      dgn.create_monster(33, 63, defiler)
+    elseif data.spawn_count == 150 then
+      local mons = dgn.mons_at(39, 35)
+        if mons then
+          mons.dismiss()
+        end
+          dgn.create_monster(39, 35, meatlord)
+          crawl.more()
+          crawl.mpr("<red>" .. border_top .. "" ..
+          "--                      </red><lightred>The Meatlord has descended...</lightred><red>                       --\n" ..
+          "" .. border_bottom .. "</red>")
+          crawl.more()
+    elseif data.spawn_count == 250 then
+      dgn.create_monster(33, 63, avatar)
+      -- No message for the Unspeakable.
+    end
+    end
+  end
+
+}}
+NAME:      meatsprint
+TAGS:      sprint no_rotate no_hmirror no_vmirror
+TAGS:      no_monster_gen no_item_gen no_trap_gen no_pool_fixup
+ORIENT:    encompass
+DESC:      Sprint VIII: "Arena of Blood"
+KFEAT:     { = {
+LROCKCOL:  red
+LFLOORCOL: red
+{{
+
+  local meatlord_marker = TriggerableFunction:new {
+    func = "meatlord_stuff",
+    repeated = true
+    }
+
+  meatlord_marker:add_triggerer(DgnTriggerer:new {
+    type="monster_dies",
+    target = "The Meatlord"
+    })
+  lua_marker("{", meatlord_marker)
+
+  local secret_marker = TriggerableFunction:new {
+    func = "unspeakable_stuff",
+    repeated = true
+    }
+
+  secret_marker:add_triggerer(DgnTriggerer:new {
+    type="monster_dies",
+    target = "The Unspeakable"
+    })
+  lua_marker("J", secret_marker)
+
+  local spawn_marker = TriggerableFunction:new {
+    func = "blood_spawns",
+    repeated = true,
+    data = { spawn_count = 0 }
+    }
+  spawn_marker:add_triggerer(DgnTriggerer:new {
+    type="turn",
+    delay_min=10,
+    delay_max=10
+    })
+
+  lua_marker('&', spawn_marker)
+
+  crawl.more()
+  crawl.mpr("<red>" ..
+-----11------------------------------------@@------------------------------------11
+    "------------------------------------------------------------------------------\n" ..
+    "------------------------------------------------------------------------------\n" ..
+    "--                                                                          --\n" ..
+    "--                            The Arena Of Blood                            --\n" ..
+    "--                                                                          --\n" ..
+    "--                                                                          --" ..
+    "</red>")
+  crawl.more()
+  crawl.mpr("<red>" ..
+    "--                                                                          --\n" ..
+    "--                You descend into the pit of gibs and meat,                --\n" ..
+    "--                    The sunken abyss of the depraved,                     --\n" ..
+    "--                       The mill of turgid gutspawn.                       --\n" ..
+    "--                The writhen instruments serve in adoration,               --\n" ..
+    "--                     Immured beneath a rotten throne.                     --" ..
+    "</red>")
+  crawl.more()
+  crawl.mpr("<red>" ..
+    "--                                                                          --\n" ..
+    "--                  Before you lies the servitor of chaos,                  --\n" ..
+    "--                           The cleaver,                                   --\n" ..
+    "--                             The blasphemer,                              --\n" ..
+    "--                              The destroyer,                              --\n" ..
+    "--                               The Axe of Woe.                            --" ..
+    "</red>")
+  crawl.more()
+  crawl.mpr("<red>" ..
+    "--                                                                          --\n" ..
+    "--                            Vessel of Makhleb,                            --\n" ..
+    "--                           You are the unmaker,                           --\n" ..
+    "--                          You bring the rapture,                          --\n" ..
+    "--                     The murmurs of the thralls rise...                   --\n" ..
+    "--                       The theatre of blood begins.                       --\n" ..
+    "--                                                                          --\n" ..
+    "------------------------------------------------------------------------------\n" ..
+    "------------------------------------------------------------------------------" ..
+    "</red>")
+
+}}
+KITEM:     + = ring of see invisible not_cursed ident:all no_pickup
+KITEM:     * = ring of protection from fire not_cursed ident:all no_pickup
+SUBST:     1 = 1.
+KFEAT:     _ = altar_makhleb
+KFEAT:     ^ = teleport trap
+KFEAT:     x = stone_wall
+COLOUR:    x = red
+TILE:      x = wall_hell
+FTILE:     1234+*&J = floor_demonic_red
+: blood_monster_definitions(_G)
+: weapon_creation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx111111111111111111111xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx1111111111xx1xx1xxxxx111111xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx21111111..................1111111xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx11111....xxxx.....xx.xx............1121xxxxxxxxxxxxxxxx
+xxxxxxxxxxxx2211111....x...........................111122xxxxxxxxxxxxx
+xxxxxxxxxxxx221111......x.........1x.x.......x......11122xxxxxxxxxxxxx
+xxxxxxxxxxxx1111........x..................xxxx.....11111xxxxxxxxxxxxx
+xxxxxxxxxxxx111....xxx...x..........................11111xxxxxxxxxxxxx
+xxxxxxxxxxxx11...xxx......x.......................x....11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..x......................................11xxxxxxxxxxxxx
+xxxxxxxxxxxx11......x.............................x....11xxxxxxxxxxxxx
+xxxxxxxxxxxx11.......x......11x.......x11..............11xxxxxxxxxxxxx
+xxxxxxxxxxxx41..........x...11x.......x11.........xx...14xxxxxxxxxxxxx
+xxxxxxxxxxxx11.......x......xxx.......xxx..............11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..x................xxx.............xxx2..11xxxxxxxxxxxxx
+xxxxxxxxxxxx111.xx........x......._....................11xxxxxxxxxxxxx
+xxxxxxxxxxxx11.1.x.....x.......x.....x.......x.x.......11xxxxxxxxxxxxx
+xxxxxxxxxxxx*1.1.2xxx..........x_.{._x................11*xxxxxxxxxxxxx
+xxxxxxxxxxxx11.1.xx....x.......x.....x......x.x.x....1111xxxxxxxxxxxxx
+xxxxxxxxxxxx11.1x.........x......._....................11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..x................xxx.........x.x.x..x..11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..............xxx.......xxx..........x...11xxxxxxxxxxxxx
+xxxxxxxxxxxx41..............11x.......x11...........x..14xxxxxxxxxxxxx
+xxxxxxxxxxxx11..............11x.......x11..........x...11xxxxxxxxxxxxx
+xxxxxxxxxxxx11.......x.................................11xxxxxxxxxxxxx
+xxxxxxxxxxxx11......x.x.x.................x...x......xx11xxxxxxxxxxxxx
+xxxxxxxxxxxx11.......x.x.................x....x.....xx.11xxxxxxxxxxxxx
+xxxxxxxxxxxx11xxx...x.x.x..............xx.....x.....x2221xxxxxxxxxxxxx
+xxxxxxxxxxxx1122xx...x.x.....x........x......x....xx22211xxxxxxxxxxxxx
+xxxxxxxxxxxx11122x....................x...xxx....x1111111xxxxxxxxxxxxx
+xxxxxxxxxxxx3111111xx.......xx.x...............x111111113xxxxxxxxxxxxx
+xxxxxxxxxxxxxxx11111xx.......................111111111xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx211111xxxx....x.....xxxx111111112xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx1111111............x1111111xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx111111.........111111xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx3111111+1111113xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx^.^.^.^&^.^.^xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx^^^^^^^^^^^^^xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxJxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
