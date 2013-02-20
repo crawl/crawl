@@ -740,9 +740,8 @@ bool mons_behaviour_perceptible(const monster* mon)
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && !mons_is_mimic(mon->type)
             && !mons_is_statue(mon->type)
-            && mon->type != MONS_OKLOB_PLANT
+            && mons_species(mon->type) != MONS_OKLOB_PLANT
             && mon->type != MONS_BALLISTOMYCETE
-            && mon->type != MONS_OKLOB_SAPLING
             && mon->type != MONS_BURNING_BUSH);
 }
 
