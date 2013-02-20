@@ -3630,7 +3630,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BUSH, 'P', BROWN, "bush",
-    M_NO_EXP_GAIN | M_STATIONARY,
+    M_STATIONARY | M_NO_EXP_GAIN,
     MR_RES_POISON | MR_VUL_FIRE,
     0, 10, MONS_PLANT, MONS_BUSH, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
