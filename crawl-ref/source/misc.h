@@ -90,7 +90,7 @@ void timeout_tombs(int duration);
 int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
-void timeout_door_seals(int duration);
+void timeout_door_seals(int duration, bool force = false);
 
 void setup_environment_effects();
 

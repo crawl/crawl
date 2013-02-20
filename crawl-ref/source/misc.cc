@@ -1983,9 +1983,9 @@ void timeout_tombs(int duration)
     }
 }
 
-void timeout_door_seals(int duration)
+void timeout_door_seals(int duration, bool force)
 {
-    if (!duration)
+    if (!duration && !force)
         return;
 
     vector<map_marker*> markers = env.markers.get_all(MAT_DOOR_SEAL);
