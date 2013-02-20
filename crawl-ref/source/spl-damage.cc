@@ -230,7 +230,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
             if (invalid_monster(*mi))
                 continue;
 
-            // Don't arc to things we cannot hit
+            // Don't arc to things we cannot hit.
             if (beam.ignores_monster(*mi))
                 continue;
 
