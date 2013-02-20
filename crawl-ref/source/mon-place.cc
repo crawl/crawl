@@ -2643,6 +2643,29 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         }
         break;
 
+    case MONS_IRONHEART_PRESERVER:
+        natural_leader = true;
+        switch(random2(4))
+        {
+            case 0:
+                band = BAND_DEEP_ELF_HIGH_PRIEST;
+                band_size = 3 + random2(4);
+                break;
+            case 1:
+                band = BAND_DEEP_TROLLS;
+                band_size = 3 + random2(3);
+                break;
+            case 2:
+                band = BAND_ORC_KNIGHT;
+                band_size = 5 + random2(5);
+                break;
+            case 3:
+                band = BAND_OGRE_MAGE_EXTERN;
+                band_size = 4 + random2(4);
+                break;
+        }
+        break;
+
     default: ;
     }
 
@@ -2861,6 +2884,13 @@ static monster_type _band_member(band_type band, int power, int which)
             mon_type = MONS_NECROMANCER;
         break;
 
+    case BAND_OGRE_MAGE_EXTERN:
+        if (which == 1)
+        {
+            mon_type = MONS_OGRE_MAGE;
+            break;
+        }
+        // Deliberate fallthrough
     case BAND_OGRE_MAGE:
         mon_type = MONS_OGRE;
         if (one_chance_in(3))
