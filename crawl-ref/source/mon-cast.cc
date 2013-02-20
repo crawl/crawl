@@ -1776,6 +1776,8 @@ void mons_word_of_recall(monster* mons)
         if (empty_surrounds(mons->pos(), DNGN_FLOOR, 3, false, empty)
             && mon_list[i]->move_to_pos(empty))
         {
+            mon_list[i]->behaviour = BEH_SEEK;
+            mon_list[i]->foe = mons->foe;
             ++num_recalled;
             simple_monster_message(mon_list[i], " is recalled.");
         }
