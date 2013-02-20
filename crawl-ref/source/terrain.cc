@@ -691,11 +691,10 @@ bool is_critical_feature(dungeon_feature_type feat)
 
 bool is_valid_border_feat(dungeon_feature_type feat)
 {
-    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
-            || (feat == DNGN_TREE
-               || feat == DNGN_MANGROVE
-               || feat == DNGN_OPEN_SEA
-               || feat == DNGN_LAVA_SEA));
+    return (feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
+            || (feat_is_tree(feat)
+                || feat == DNGN_OPEN_SEA
+                || feat == DNGN_LAVA_SEA);
 }
 
 // This is for randomly generated mimics.
