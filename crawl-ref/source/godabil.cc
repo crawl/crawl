@@ -2838,6 +2838,7 @@ static bool _possible_evolution(const monster* input,
     {
     case MONS_PLANT:
     case MONS_BUSH:
+    case MONS_BURNING_BUSH:
         possible_monster.new_type = MONS_OKLOB_PLANT;
         possible_monster.fruit_cost = 1;
         break;
