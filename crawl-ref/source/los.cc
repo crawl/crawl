@@ -894,7 +894,7 @@ void losight(los_grid& sh, const coord_def& center,
 opacity_type mons_opacity(const monster* mon, los_type how)
 {
     // no regard for LOS_ARENA
-    if (mon->type == MONS_BUSH && how != LOS_SOLID)
+    if (mons_species(mon->type) == MONS_BUSH && how != LOS_SOLID)
         return OPC_HALF;
 
     if (mons_is_feat_mimic(mon->type))

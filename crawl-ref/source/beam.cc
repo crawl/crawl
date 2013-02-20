@@ -1509,8 +1509,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         {
             if (mons->is_icy())
                 simple_monster_message(mons, " melts!");
-            else if (mons->type == MONS_BUSH)
+            else if (mons_species(mons->type) == MONS_BUSH
+                     && mons->res_fire() < 0)
+            {
                 simple_monster_message(mons, " is on fire!");
+            }
             else if (pbolt.flavour == BEAM_FIRE)
                 simple_monster_message(mons, " is burned terribly!");
             else
@@ -4570,7 +4573,7 @@ bool bolt::ignores_monster(const monster* mon) const
     }
 
     // Missiles go past bushes.
-    if (mon->type == MONS_BUSH && !is_beam && !is_explosion
+    if (mons_species(mon->type) == MONS_BUSH && !is_beam && !is_explosion
         && name != "sticky flame"
         && name != "splash of liquid fire"
         && name != "lightning arc")

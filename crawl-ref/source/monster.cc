@@ -5518,10 +5518,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         (new kraken_damage_fineff(oppressor, &menv[number], damage))->schedule();
     }
-    else if (type == MONS_BUSH && flavour == BEAM_FIRE
-             && damage>8 && x_chance_in_y(damage, 20))
+    else if (mons_species(type) == MONS_BUSH
+             && res_fire() < 0
+             && flavour == BEAM_FIRE
+             && damage > 8 && x_chance_in_y(damage, 20))
     {
-        place_cloud(CLOUD_FIRE, pos(), 20+random2(15), oppressor, 5);
+        place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
     else if (type == MONS_SPRIGGAN_RIDER)
     {

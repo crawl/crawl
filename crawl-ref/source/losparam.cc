@@ -68,16 +68,10 @@ static bool mons_block_immob(const monster* mons)
     if (crawl_state.game_is_zotdef())
         return false;
 
-    switch (mons->type)
-    {
-    case MONS_BUSH:
-    case MONS_PLANT:
-    case MONS_OKLOB_PLANT:
-    case MONS_FUNGUS:
-        return true;
-    default:
-        return false;
-    }
+    return (mons->type == MONS_PLANT
+            || mons->type == MONS_FUNGUS
+            || mons_species(mons->type) == MONS_BUSH
+            || mons_species(mons->type) == MONS_OKLOB_PLANT);
 }
 
 opacity_type opacity_immob::operator()(const coord_def& p) const

@@ -1907,7 +1907,7 @@ bool fedhas_passthrough(const monster* target)
 {
     return (target
             && fedhas_passthrough_class(target->type)
-            && (target->type != MONS_OKLOB_PLANT
+            && (mons_species(target->type) != MONS_OKLOB_PLANT
                 || target->attitude != ATT_HOSTILE));
 }
 
@@ -1915,7 +1915,7 @@ bool fedhas_passthrough(const monster_info* target)
 {
     return (target
             && fedhas_passthrough_class(target->type)
-            && (target->type != MONS_OKLOB_PLANT
+            && (mons_species(target->type) != MONS_OKLOB_PLANT
                 || target->attitude != ATT_HOSTILE));
 }
 
