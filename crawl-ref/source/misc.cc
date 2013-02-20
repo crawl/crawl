@@ -1807,8 +1807,8 @@ static void _drop_tomb(const coord_def& pos, bool premature)
         }
 
         // Zin's Imprison.
-        if (grd(*ai) == DNGN_METAL_WALL &&
-            env.markers.property_at(*ai, MAT_ANY, "tomb") == "Zin")
+        if (grd(*ai) == DNGN_METAL_WALL
+            && env.markers.property_at(*ai, MAT_ANY, "tomb") == "Zin")
         {
             zin = true;
 
