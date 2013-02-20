@@ -2556,6 +2556,7 @@ enum monster_type                      // menv[].type
 
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,
+    MONS_DIAMOND_OBELISK,
 
     NUM_MONSTERS,               // used for polymorph
 

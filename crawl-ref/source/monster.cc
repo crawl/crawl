@@ -4152,8 +4152,11 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
-    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER)
+    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
+        || type == MONS_DIAMOND_OBELISK)
+    {
         return 0;
+    }
 
     if (alive())
     {
