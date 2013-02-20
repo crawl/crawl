@@ -3642,7 +3642,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BURNING_BUSH, 'P', RED, "burning bush",
-    M_STATIONARY | M_SEE_INVIS | M_NO_POLY_TO,
+    M_STATIONARY | M_SEE_INVIS,
     MR_RES_POISON | MR_RES_FIRE,
     0, 10, MONS_PLANT, MONS_BUSH, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
