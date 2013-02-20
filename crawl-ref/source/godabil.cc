@@ -1968,7 +1968,7 @@ int fedhas_fungal_bloom()
         if (!can_spawn_mushrooms(*i))
             continue;
 
-        if (target && target->mons_species() != MONS_TOADSTOOL)
+        if (target && target->type != MONS_TOADSTOOL)
         {
             bool piety = !target->is_summoned();
             switch (mons_genus(target->mons_species()))
