@@ -970,8 +970,8 @@ with a certain devilish cast to its features.
 %%%%
 diamond obelisk
 
-This obelisk seems to be, for all practical purposes, indestructible. You'd
-better find a way around... it might even provide one.
+This obelisk appears to be indestructible. You'd better find a way around...
+it might even provide one.
 %%%%
 dire elephant
 
