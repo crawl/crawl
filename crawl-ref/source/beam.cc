@@ -279,8 +279,11 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
     // Special cases so that tracers behave properly.
     if (pbolt.name != "orb of energy"
-        && pbolt.affects_wall(DNGN_TREE) == B_FALSE)
+        && pbolt.affects_wall(DNGN_TREE) == B_FALSE
+        && pbolt.affects_wall(DNGN_MANGROVE) == B_FALSE)
+    {
         pbolt.name = "unimportant";
+    }
 
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
@@ -1046,7 +1049,7 @@ void bolt::nuke_wall_effect()
         if (beam_source == NON_MONSTER)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
     }
-    else if (feat == DNGN_TREE || feat == DNGN_MANGROVE)
+    else if (feat_is_tree(feat))
     {
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);
@@ -2346,7 +2349,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return false;
 
     if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL
-        && feat != DNGN_TREE && feat != DNGN_MANGROVE)
+        && !feat_is_tree(feat))
     {
         return true;
     }
@@ -2616,14 +2619,15 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
         || flavour == BEAM_NUKE)
     {
+        if (feat_is_tree(wall))
+            return B_TRUE;
+
         if (wall == DNGN_ROCK_WALL
             || wall == DNGN_SLIMY_WALL
             || wall == DNGN_CLEAR_ROCK_WALL
             || wall == DNGN_GRATE
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
-            || wall == DNGN_TREE
-            || wall == DNGN_MANGROVE
             || wall == DNGN_CLOSED_DOOR
             || wall == DNGN_RUNED_DOOR)
         {

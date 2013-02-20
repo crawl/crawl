@@ -1027,7 +1027,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 static bool _suppress_blood(const map_cell& mc)
 {
     const dungeon_feature_type feat = mc.feat();
-    if (feat == DNGN_TREE || feat == DNGN_MANGROVE)
+    if (feat_is_tree(feat))
         return true;
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)

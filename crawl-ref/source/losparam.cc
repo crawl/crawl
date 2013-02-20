@@ -29,7 +29,7 @@ opacity_type opacity_default::operator()(const coord_def& p) const
     dungeon_feature_type f = grid_appearance(p);
     if (feat_is_opaque(f))
         return OPC_OPAQUE;
-    else if (f == DNGN_TREE || f == DNGN_MANGROVE)
+    else if (feat_is_tree(f))
         return OPC_HALF;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
