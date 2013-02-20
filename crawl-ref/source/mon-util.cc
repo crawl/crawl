@@ -876,8 +876,8 @@ bool herd_monster(const monster* mon)
 bool mons_class_is_plant(monster_type mc)
 {
     return (mons_genus(mc) == MONS_PLANT
-            || mons_genus(mc) == MONS_BUSH
-            || mons_genus(mc) == MONS_FUNGUS);
+            || mons_genus(mc) == MONS_FUNGUS
+            || mons_species(mc) == MONS_BUSH);
 }
 
 bool mons_is_plant(const monster* mon)
