@@ -310,8 +310,8 @@ bool cell_is_solid(const coord_def &c)
 
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
-    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER &&
-            feat != DNGN_LAVA);
+    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER
+            && feat != DNGN_LAVA);
 }
 
 bool feat_has_dry_floor(dungeon_feature_type feat)
