@@ -4382,14 +4382,10 @@ int player::scan_artefacts(artefact_prop_type which_property,
         if (!is_artefact(you.inv[ eq ]))
             continue;
 
-        // Ignore unidentified items [TileCrawl dump enhancements].
-        if (!item_ident(you.inv[ eq ], ISFLAG_KNOW_PROPERTIES)
-            && !calc_unid)
-        {
-            continue;
-        }
-
-        retval += artefact_wpn_property(you.inv[ eq ], which_property);
+        bool known;
+        int val = artefact_wpn_property(you.inv[eq], which_property, known);
+        if (calc_unid || known)
+            retval += val;
     }
 
     return retval;
