@@ -1000,7 +1000,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             mpr("You feel strangely stable.");
         }
         you.duration[DUR_FLIGHT] = 0;
-        you.duration[DUR_CONTROLLED_FLIGHT] = 0;
         // break out of webs/nets as well
     case TRAN_DRAGON:
         if (you.attribute[ATTR_HELD])
