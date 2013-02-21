@@ -762,9 +762,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
         if (proximity == PROX_NEAR_STAIRS && tries >= 300)
         {
-            proximity = PROX_AWAY_FROM_PLAYER;
-
-            // Reset target level.
+            // If we couldn't find a stair-taker, just place a monster
+            // for this level.
             *lev_mons = original_level;
 
             mon_type = _pick_random_monster(place, *lev_mons, *lev_mons,

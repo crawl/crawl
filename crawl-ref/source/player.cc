@@ -3385,8 +3385,6 @@ void level_change(bool skip_attribute_increase)
                                 mark_milestone("monstrous", "is a "
                                                "monstrous demonspawn!");
                             }
-
-                            i = you.demonic_traits.size();
                             break;
                         }
 

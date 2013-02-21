@@ -873,8 +873,6 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
         }
 
         SDL_UnlockSurface(img);
-
-        bpp = 4;
     }
     else
     {

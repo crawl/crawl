@@ -837,13 +837,11 @@ void Menu::select_items(int key, int qty)
                 if (check_preselected && items[i]->preselected)
                 {
                     select_index(i, qty);
-                    selected = true;
                     break;
                 }
                 else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
-                    selected = true;
                     break;
                 }
             }
