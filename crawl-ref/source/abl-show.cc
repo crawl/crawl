@@ -591,11 +591,13 @@ static int _zp_cost(const ability_def& abil)
             num = _count_relevant_monsters(abil);
             num -= 2; // first two are base cost
             scale20 = max(num, 0);        // after first two, 20% increment
+            break;
 
         // Monster type 3: least generous
         case ABIL_MAKE_SILVER_STATUE:
         case ABIL_MAKE_CURSE_SKULL:
             scale20 = _count_relevant_monsters(abil); // scale immediately
+            break;
 
         // Simple Traps
         case ABIL_MAKE_DART_TRAP:
