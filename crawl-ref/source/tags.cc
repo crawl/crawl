@@ -2889,8 +2889,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (feat_is_trap(feature))
     {
         trap = (trap_type)unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() == TAG_MINOR_0_11 && trap >= TRAP_TELEPORT)
             trap = (trap_type)(trap - 1);
+#endif
     }
 
     cell.set_feature(feature, feat_colour, trap);
