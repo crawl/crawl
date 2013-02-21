@@ -915,6 +915,7 @@ COLOUR: 'b = silver
 TILE:   x = wall_pebble_red
 TILE:   b = dngn_crystal_white
 : interest_check(_G)
+: set_feature_name("green_crystal_wall", "wall of white crystal")
 MAP
     ...
    ..x..
