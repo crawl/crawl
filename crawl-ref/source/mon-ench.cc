@@ -1657,9 +1657,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
     }
 
-    //This is like Corona, but if silver harms them, it sticky flame levels of damage.
+    // This is like Corona, but if silver harms them, it has sticky
+    // flame levels of damage.
     case ENCH_SILVER_CORONA:
-
         if (is_chaotic())
         {
             bolt beam;
