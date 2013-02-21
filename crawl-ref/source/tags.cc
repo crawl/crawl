@@ -1110,8 +1110,8 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.form);
 
     j = min<int>(you.sage_skills.size(), 32767);
-    marshallShort(th, you.sage_skills.size());
-    for (i = 0; i < (int)you.sage_skills.size(); ++i)
+    marshallShort(th, j);
+    for (i = 0; i < (int)j; ++i)
     {
         marshallByte(th, you.sage_skills[i]);
         marshallInt(th, you.sage_xp[i]);
