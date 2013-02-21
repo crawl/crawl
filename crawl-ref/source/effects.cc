@@ -746,7 +746,6 @@ void random_uselessness(int scroll_slot)
         break;
 
     case 5:
-        temp_rand = random2(3);
         if (player_mutation_level(MUT_BEAK) || one_chance_in(3))
             mpr("Your brain hurts!");
         else if (you.species == SP_MUMMY || coinflip())

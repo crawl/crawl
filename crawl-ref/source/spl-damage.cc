@@ -264,11 +264,9 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
             }
             else if (target.x == -1 || one_chance_in(count))
             {
-                // either first target, or new selected target at min_dist
+                // either first target, or new selected target at
+                // min_dist == dist.
                 target = mi->pos();
-
-                // need to set min_dist for first target case
-                dist = max(dist, min_dist);
             }
         }
 

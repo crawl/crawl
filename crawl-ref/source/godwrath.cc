@@ -1228,7 +1228,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         mprf(MSGCH_DIAGNOSTICS, "No retribution defined for %s.",
              god_name(god).c_str());
 #endif
-        do_more    = false;
         return false;
     }
 

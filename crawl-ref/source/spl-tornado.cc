@@ -301,10 +301,7 @@ void tornado_damage(actor *caster, int dur)
             if (actor* victim = actor_at(*dam_i))
             {
                 if (victim->submerged())
-                {
-                    leda = true; // and with fish, too
                     continue;
-                }
                 if (victim->is_player() && monster_at(*dam_i))
                 {
                     // A far-fetched case: you're using Fedhas' passthrough
@@ -312,14 +309,10 @@ void tornado_damage(actor *caster, int dur)
                     // no free spots, and a monster tornado rotates you.
                     // Plants don't get uprooted, so the logic would be
                     // really complex.  Let's not go there.
-                    leda = true;
                     continue;
                 }
                 if (victim->is_player() && you.form == TRAN_TREE)
-                {
-                    leda = true;
                     continue;
-                }
 
                 leda = victim->liquefied_ground()
                        || victim->is_monster()

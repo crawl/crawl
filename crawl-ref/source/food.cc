@@ -1841,7 +1841,6 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     case CE_ROT:
         return 1000;
     case CE_POISON_CONTAM:
-        chunk_effect = CE_CONTAMINATED;
     case CE_CONTAMINATED:
         switch (sapro)
         {

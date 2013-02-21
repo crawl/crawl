@@ -872,7 +872,6 @@ void wizard_edit_durations(void)
     {
         vector<int>    matches;
         vector<string> match_names;
-        max_len = 0;
 
         for (int i = 0; i < NUM_DURATIONS; ++i)
         {
