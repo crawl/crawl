@@ -1303,3 +1303,333 @@ bb...........b...b.%.b......1....b...b.%.b....1......bb
                  bbYbb
                   bbb
 ENDMAP
+
+################################################################################
+# Giving players the runaround...
+default-depth: D:16-27
+
+NAME: grunt_runaround
+TAGS: no_monster_gen
+ORIENT: encompass
+SUBVAULT: B : grunt_runaround_doors_1
+SUBVAULT: C : grunt_runaround_doors_2
+SUBVAULT: D : grunt_runaround_doors_3
+SUBVAULT: E : grunt_runaround_doors_4
+: if you.absdepth() == 27 then
+KFEAT:  Z = stone_wall
+TILE:   Z = wall_zot_magenta
+COLOUR: Z = lightmagenta
+SUBVAULT: F : grunt_runaround_zot
+NSUBST: < = 1:{ / 1:[ / 1:( / 2:< / *=A
+: elseif you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+KFEAT: Z = metal_wall
+SUBVAULT: F : grunt_runaround_vaults
+NSUBST: < = 1:{ / 1:[ / 1:( / 1:] / 1:) / *=A
+: else
+KFEAT: Z = metal_wall
+SUBVAULT: F : grunt_runaround_loot
+NSUBST: < = 1:{ / 1:[ / 1:( / 1:] / 1:) / *=A
+: end
+{{
+local room_centres = { 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+                       'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+                       'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W' }
+for i = 1, #room_centres do
+  subst(room_centres[i] .. ' : .:21 w l c v b:2')
+end
+}}
+#KMASK: 09 = !no_monster_gen
+SUBST: 0 = 0.
+SUBST: 9 = 90
+KMONS: 0 = 0 band
+: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+KMONS: 9 = human hd:8 ; ring mail w:5 | scale mail | chain mail w:5 \
+                        . long sword | falchion | war axe | broad axe | \
+                          mace | flail \
+                        . nothing w:20 | buckler | shield
+: else
+KMONS: 9 = 9 band
+: end
+KFEAT: G = granite_statue / fountain_blue / fountain_sparkling w:1 / \
+           floor w:21
+MARKER: A = lua:props_marker { portal=1 }
+KFEAT:  A = floor
+MAP
+                  cccccccccccccccc
+                ccc.......<......ccc
+             cccc..................cccc
+           ccc..c..0.dddGddGddd.0..c..ccc
+          cc....BB................BB....cc
+         cc...0..c.cBBccccccccBBc.c..0...cc
+        cc......cccc.....cc.....cccc......cc
+       cc..kk.ccc...HH...CC...II...ccc.ee..cc
+      cc<.Gk.BB..HHGH..0.CC.0..IGII..BB.eG.<cc
+     cc..kk.cc...H.......cc.......I...cc.ee..cc
+    cc..Gk.cc..0....cCCccccccCCc....0..cc.eG..cc
+   cc..kk.ccc.....ccc..........ccc.....ccc.ee..cc
+   c...k.cccCC..CCc.c..0.QQ.0..c.cCC..CCccc.e...c
+  cc....Bc..CCccc...DD..QGGQ..DD...cccCC..cB....cc
+  c..0.cB....ccc..0..c........c..0..ccc....Bc.0..c
+  c....c..0..cc.PP...cDDccccDDc...RR.cc..0..c....c
+ cccB.cc....Cc.PG..DDc...ZZ...cDD..GR.cC....cc.Bccc
+ c..Bcc.OO..C..P..cc...9.EE.9...cc..R..C..JJ.ccB..c
+cc....c.O..cc.0..ccZ..9G.EE.G9..Zcc..0.cc..J.c....cc
+c..0.cc.G..c....DcZEE....ZZ....EEZcD....c..G.cc.0..c
+c....B.OO.cccD..D..EEZZEEZZEEZZEE..D..Dccc.JJ.B....c
+c..j.B.O..C..Dccc...ZZZFFFFFFZZZ...cccD..C..J.B.f..c
+c..j.c....C....D..9.ZZFFFFFFFFZZ.9..D....C....c.f..c
+c..j.c..0.c.0..D.9G.EFFFFFFFFFFE.G9.D..0.c.0..c.f..c
+c..G.c....c..W.c....EFFFFFFFFFFE....c.S..c....c.G..c
+c<.j.ccCCcc.WG.cZEEZZFFFFFFFFFFZZEEZc.GS.ccCCcc.f..c
+c..j.ccCCcc.WG.cZEEZZFFFFFFFFFFZZEEZc.GS.ccCCcc.f.<c
+c..G.c....c..W.c....EFFFFFFFFFFE....c.S..c....c.G..c
+c..j.c..0.c.0..D.9G.EFFFFFFFFFFE.G9.D..0.c.0..c.f..c
+c..j.c....C....D..9.ZZFFFFFFFFZZ.9..D....C....c.f..c
+c..j.B.N..C..Dccc...ZZZFFFFFFZZZ...cccD..C..K.B.f..c
+c....B.NN.cccD..D..EEZZEEZZEEZZEE..D..Dccc.KK.B....c
+c..0.cc.G..c....DcZEE....ZZ....EEZcD....c..G.cc.0..c
+cc....c.N..cc.0..ccZ..9G.EE.G9..Zcc..0.cc..K.c....cc
+ c..Bcc.NN..C..V..cc...9.EE.9...cc..T..C..KK.ccB..c
+ cccB.cc....Cc.VG..DDc...ZZ...cDD..GT.cC....cc.Bccc
+  c....c..0..cc.VV...cDDccccDDc...TT.cc..0..c....c
+  c..0.cB....ccc..0..c........c..0..ccc....Bc.0..c
+  cc....Bc..CCccc...DD..UGGU..DD...cccCC..cB....cc
+   c...i.cccCC..CCc.c..0.UU.0..c.cCC..CCccc.g...c
+   cc..ii.ccc.....ccc..........ccc.....ccc.gg..cc
+    cc..Gi.cc..0....cCCccccccCCc....0..cc.gG..cc
+     cc..ii.cc...M.......cc.......L...cc.gg..cc
+      cc<.Gi.BB..MMGM..0.CC.0..LGLL..BB.gG.<cc
+       cc..ii.ccc...MM...CC...LL...ccc.gg..cc
+        cc......cccc.....cc.....cccc......cc
+         cc...0..c.cBBccccccccBBc.c..0...cc
+          cc....BB................BB....cc
+           ccc..c..0.hhhGhhGhhh.0..c..ccc
+             cccc..................cccc
+                ccc......<.......ccc
+                  cccccccccccccccc
+ENDMAP
+
+NAME: grunt_runaround_doors_1
+TAGS: grunt_runaround_doors_1 allow_dup
+: map("            AA                BB")
+: map("                II        JJ")
+: map(" ")
+: map(" ")
+: map("         XX                      KK")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map("    W                                  L")
+: map("    W                                  L")
+: map(" ")
+: map("H                                          C")
+: map("H                                          C")
+: map(" ")
+: map(" ")
+: map(" V                                        M")
+: map(" V                                        M")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" U                                        N")
+: map(" U                                        N")
+: map(" ")
+: map("")
+: map("G                                          D")
+: map("G                                          D")
+: map(" ")
+: map("    T                                  O")
+: map("    T                                  O")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map("         SS                      PP")
+: map(" ")
+: map(" ")
+: map("                RR        QQ")
+: map("            FF                EE")
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOPQRSTUVWX
+SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+
+NAME: grunt_runaround_doors_2
+TAGS: grunt_runaround_doors_2 allow_dup
+: map("                  AA")
+: map("                  AA")
+: map(" ")
+: map("              XX      II")
+: map(" ")
+: map("     HH  WW                JJ  BB")
+: map("     HH                        BB")
+: map(" ")
+: map(" ")
+: map("     V                          K")
+: map("     V                          K")
+: map(" ")
+: map(" ")
+: map(" ")
+: map("   U                              L")
+: map("   U                              L")
+: map(" ")
+: map(" ")
+: map("GG                                  CC")
+: map("GG                                  CC")
+: map(" ")
+: map(" ")
+: map("   T                              M")
+: map("   T                              M")
+: map(" ")
+: map(" ")
+: map(" ")
+: map("     S                          N")
+: map("     S                          N")
+: map(" ")
+: map(" ")
+: map("     FF                        DD")
+: map("     FF  RR                OO  DD")
+: map(" ")
+: map("              QQ      PP")
+: map(" ")
+: map("                  EE")
+: map("                  EE")
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOPQRSTUVWX
+SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+
+NAME: grunt_runaround_doors_3
+TAGS: grunt_runaround_doors_3 allow_dup
+: map("       AA        BB")
+: map(" ")
+: map("         II    JJ")
+: map("      XX          KK")
+: map(" ")
+: map(" ")
+: map("   W                  L")
+: map("H  W                  L  C")
+: map("H                        C")
+: map("  V                    M")
+: map("  V                    M")
+: map(" ")
+: map(" ")
+: map(" ")
+: map(" ")
+: map("  U                    N")
+: map("  U                    N")
+: map("G                        D")
+: map("G  T                  O  D")
+: map("   T                  O")
+: map(" ")
+: map(" ")
+: map("      SS          PP")
+: map("         RR    QQ")
+: map(" ")
+: map("       FF        EE")
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOPQRSTUVWX
+SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+
+NAME: grunt_runaround_doors_4
+TAGS: grunt_runaround_doors_4 allow_dup
+: map("        AA ")
+: map("        AA")
+: map("  HH          BB")
+: map("  HH  PP  II  BB")
+: map(" ")
+: map(" ")
+: map("   O          J")
+: map("   O          J")
+: map("GG              CC")
+: map("GG              CC")
+: map("   N          K")
+: map("   N          K")
+: map(" ")
+: map(" ")
+: map("  FF  MM  LL  DD")
+: map("  FF          DD")
+: map("        EE")
+: map("        EE")
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOP
+SUBST:   ABCDEFGI : +, HJKLMNOP : Z
+: if you.absdepth() == 27 then
+KFEAT:  Z = stone_wall
+TILE:   Z = wall_zot_magenta
+COLOUR: Z = lightmagenta
+: else
+KFEAT:  Z = metal_wall
+: end
+
+NAME: grunt_runaround_loot
+TAGS: grunt_runaround_loot allow_dup
+SHUFFLE: }>de
+SUBST: de = %
+NSUBST: % = 4:| / 8:* / *=%
+KMONS: 9 = 9 band
+KMONS: 8 = 8 band
+MAP
+  ......
+ ..9..9..
+..8.%%.8..
+.9.%%%%.9.
+..%%}>%%..
+..%%de%%..
+.9.%%%%.9.
+..8.%%.8..
+ ..9..9..
+  ......
+ENDMAP
+
+NAME: grunt_runaround_vaults
+TAGS: grunt_runaround_vaults allow_dup
+SHUFFLE: }Ode
+SUBST: de = %
+NSUBST: % = 4:* / 8:% / *=.
+KFEAT: O = enter_vaults
+MONS: vault guard
+MAP
+  ......
+ ..1..1..
+....%%....
+.1.%%%%.1.
+..%%}O%%..
+..%%de%%..
+.1.%%%%.1.
+....%%....
+ ..1..1..
+  ......
+ENDMAP
+
+NAME: grunt_runaround_zot
+TAGS: grunt_runaround_zot allow_dup
+COLOUR: .1defghijO = magenta
+FTILE: .1defghijO = floor_hall
+SHUFFLE: defg
+SHUFFLE: Ohij
+SUBST: hij = .
+NSUBST: 1 = 1:2 / *=1
+KFEAT: O = enter_zot
+KMONS: d = golden dragon
+KMONS: e = quicksilver dragon
+KMONS: f = storm dragon
+KMONS: g = shadow dragon
+MONS: base draconian
+MONS: nonbase draconian
+MAP
+  ......
+ ..1..1..
+..d....e..
+.1......1.
+....Oh....
+....ij....
+.1......1.
+..f....g..
+ ..1..1..
+  ......
+ENDMAP
