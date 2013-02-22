@@ -1733,7 +1733,8 @@ static bool _recallable(monster* caller, monster* targ)
 }
 
 // Is it worth bothering to invoke recall? (Currently defined by there being at
-// least 3 things we could actually recall
+// least 3 things we could actually recall, and then with a probability inversely
+// proportional to how many HD of allies are current nearby)
 static bool _should_recall(monster* caller)
 {
     int num = 0;
@@ -1742,7 +1743,20 @@ static bool _should_recall(monster* caller)
         if (_recallable(caller, *mi) && !caller->can_see(*mi))
             ++num;
     }
-    return (num > 2);
+
+    // Since there are reinforcements we could recall, do we think we need them?
+    if (num > 2)
+    {
+        int ally_hd = 0;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (*mi != caller && caller->can_see(*mi) && mons_aligned(caller, *mi))
+                ally_hd += mi->hit_dice;
+        }
+        return (25 + roll_dice(2, 22) > ally_hd);
+    }
+    else
+        return false;
 }
 
 void mons_word_of_recall(monster* mons)
