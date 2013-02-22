@@ -1575,19 +1575,15 @@ static bool _seal_doors(const monster* warden)
     ASSERT(warden && warden->type == MONS_VAULT_WARDEN);
 
     int num_closed = 0;
-    int num_sealed = 0;
     int seal_duration = 80 + random2(80);
     bool player_pushed = false;
-    coord_def center = you.pos();
+    bool had_effect = false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
                  ri; ++ri)
     {
         if (grd(*ri) == DNGN_OPEN_DOOR)
         {
-            if (!cell_see_cell(center, *ri, LOS_NO_TRANS))
-                continue;
-
             if (!_can_force_door_shut(*ri))
                 continue;
 
@@ -1617,6 +1613,7 @@ static bool _seal_doors(const monster* warden)
             }
 
             // Close the door
+            bool seen = false;
             vector<coord_def> excludes;
             for (set<coord_def>::const_iterator i = all_door.begin();
                 i != all_door.end(); ++i)
@@ -1635,17 +1632,20 @@ static bool _seal_doors(const monster* warden)
                 }
                 if (is_excluded(dc))
                     excludes.push_back(dc);
+
+                if (you.see_cell(dc))
+                    seen = true;
+
+                had_effect = true;
             }
             update_exclusion_los(excludes);
-            ++num_closed;
+            if (seen)
+                ++num_closed;
         }
 
         // Try to seal the door
         if (grd(*ri) == DNGN_CLOSED_DOOR)
         {
-            if (!cell_see_cell(center, *ri, LOS_NO_TRANS))
-                continue;
-
             set<coord_def> all_door;
             find_connected_identical(*ri, grd(*ri), all_door);
             for (set<coord_def>::const_iterator i = all_door.begin();
@@ -1658,13 +1658,13 @@ static bool _seal_doors(const monster* warden)
 
                 grd(*i) = DNGN_SEALED_DOOR;
                 set_terrain_changed(*i);
-            }
 
-            ++num_sealed;
+                had_effect = true;
+            }
         }
     }
 
-    if (num_closed > 0 || num_sealed > 0)
+    if (had_effect)
     {
         simple_monster_message(warden, " activates a sealing rune.", MSGCH_MONSTER_SPELL);
         if (num_closed > 1)
