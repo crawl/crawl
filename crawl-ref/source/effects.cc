@@ -214,11 +214,7 @@ int torment_player(actor *attacker, int taux)
     }
 
     // Kiku protects you from torment to a degree.
-    const bool kiku_shielding_player =
-        (you.religion == GOD_KIKUBAAQUDGHA
-        && !player_under_penance()
-        && you.piety > 80
-        && !you.gift_timeout); // no protection during pain branding weapon
+    const bool kiku_shielding_player = player_kiku_res_torment();
 
     if (kiku_shielding_player)
     {

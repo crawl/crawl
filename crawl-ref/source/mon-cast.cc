@@ -2012,6 +2012,23 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     continue;
                 }
 
+                // Don't torment your allies. Ticket 6445.
+                // Maybe we won't to add other spells here? Mass
+                // confusion, tornado? These are the obvious ones I
+                // think.
+                if (you.visible_to(mons) && mons_aligned(mons, &you))
+                {
+                    if ((spell_cast == SPELL_SYMBOL_OF_TORMENT \
+                         && !player_res_torment(false) \
+                         && !player_kiku_res_torment()) \
+                        || (spell_cast == SPELL_OZOCUBUS_REFRIGERATION \
+                            && !player_res_cold(false))) 
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                    }
+                }
+
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
