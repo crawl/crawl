@@ -1760,7 +1760,7 @@ int player_kiku_res_torment()
 {
     return (you.religion == GOD_KIKUBAAQUDGHA
             && !player_under_penance()
-            && you.piety > piety_breakpoint(3)
+            && you.piety >= piety_breakpoint(3)
             && !you.gift_timeout); // no protection during pain branding weapon
 }
 
