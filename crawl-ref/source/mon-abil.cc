@@ -2400,8 +2400,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
         // A (very) ugly thing's proximity to you if you're glowing, or
-        // to others of its kind, can mutate it into a different (very)
-        // ugly thing.
+        // to others of its kind, or to other monsters glowing with
+        // radiation, can mutate it into a different (very) ugly thing.
         used = ugly_thing_mutate(mons, true);
         break;
 
