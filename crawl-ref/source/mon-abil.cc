@@ -1413,6 +1413,16 @@ static bool _queen_incite_worker(const monster* queen)
 
 }
 
+static void _set_door(set<coord_def> door, dungeon_feature_type feat)
+{
+    for (set<coord_def>::const_iterator i = door.begin();
+        i != door.end(); ++i)
+    {
+        grd(*i) = feat;
+        set_terrain_changed(*i);
+    }
+}
+
 // Find an adjacent space to displace a stack of items or a creature
 // (If act is null, we are just moving items and not an actor)
 static bool _get_push_space(const coord_def& pos, coord_def& newpos,
@@ -1489,21 +1499,9 @@ static bool _should_force_door_shut(const coord_def& door)
     set<coord_def> all_door;
     find_connected_identical(door, grd(door), all_door);
 
-    for (set<coord_def>::const_iterator i = all_door.begin();
-        i != all_door.end(); ++i)
-    {
-        grd(*i) = DNGN_CLOSED_DOOR;
-        set_terrain_changed(*i);
-    }
-
+    _set_door(all_door, DNGN_CLOSED_DOOR);
     int new_tension = get_tension(GOD_NO_GOD);
-
-    for (set<coord_def>::const_iterator i = all_door.begin();
-        i != all_door.end(); ++i)
-    {
-        grd(*i) = old_feat;
-        set_terrain_changed(*i);
-    }
+    _set_door(all_door, old_feat);
 
     // If closing the door would reduce player tension by too much, probably
     // it is scarier for the player to leave it open and thus it should be left
