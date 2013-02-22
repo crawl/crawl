@@ -1233,7 +1233,11 @@ void bolt::affect_cell()
     // special-casing too.
     bool hit_player = found_player();
     if (hit_player && can_affect_actor(&you))
+    {
         affect_player();
+        if (hit == AUTOMATIC_HIT && !is_beam)
+            finish_beam();
+    }
 
     // We don't want to hit a monster in a wall square twice. Also,
     // stop single target beams from affecting a monster if they already
@@ -1243,7 +1247,11 @@ void bolt::affect_cell()
     {
         monster *m = monster_at(pos());
         if (m && can_affect_actor(m))
+        {
             affect_monster(m);
+            if (hit == AUTOMATIC_HIT && !is_beam)
+                finish_beam();
+        }
     }
 
     if (!feat_is_solid(grd(pos())))
@@ -2469,8 +2477,7 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    return (is_explosion || is_big_cloud || aimed_at_spot
-            || (hit == AUTOMATIC_HIT && !is_beam));
+    return (is_explosion || is_big_cloud || aimed_at_spot);
 }
 
 void bolt::drop_object()
