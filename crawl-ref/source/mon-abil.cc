@@ -1413,6 +1413,43 @@ static bool _queen_incite_worker(const monster* queen)
 
 }
 
+// Find an adjacent space to displace a stack of items or a creature
+// (If act is null, we are just moving items and not an actor)
+static bool _get_push_space(const coord_def& pos, coord_def& newpos,
+        const actor* act)
+{
+    if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
+        return false;
+
+    bool can_push = false;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        dungeon_feature_type feat = grd(*ai);
+        if (feat_has_solid_floor(feat))
+        {
+            // Extra checks if we're moving a monster instead of an item
+            if (act)
+            {
+                if (actor_at(*ai)
+                    || !act->can_pass_through(*ai)
+                    || !act->is_habitable(*ai))
+                    continue;
+            }
+            can_push = true;
+            newpos = *ai;
+            break;
+        }
+    }
+
+    return can_push;
+}
+
+static bool _has_push_space(const coord_def& pos, const actor* act)
+{
+    coord_def dummy(-1, -1);
+    return _get_push_space(pos, dummy, act);
+}
+
 static bool _can_force_door_shut(const coord_def& door)
 {
     if (grd(door) != DNGN_OPEN_DOOR)
@@ -1432,18 +1469,7 @@ static bool _can_force_door_shut(const coord_def& door)
         // out of the way
         if (igrd(*i) != NON_ITEM)
         {
-            bool can_push = false;
-            for (adjacent_iterator ai(*i); ai; ++ai)
-            {
-                dungeon_feature_type feat = grd(*ai);
-                if (!feat_is_solid(feat) && feat != DNGN_LAVA
-                        && feat != DNGN_DEEP_WATER)
-                {
-                    can_push = true;
-                    break;
-                }
-            }
-            if (!can_push)
+            if (!_has_push_space(*i, 0))
                 return false;
         }
     }
@@ -1518,16 +1544,9 @@ static bool _seal_doors(const monster* warden)
                 // If there are items in the way, try to push them out of the way
                 if (igrd(*i) != NON_ITEM)
                 {
-                    for (adjacent_iterator ai(*i); ai; ++ai)
-                    {
-                        dungeon_feature_type feat = grd(*ai);
-                        if (!feat_is_solid(feat) && feat != DNGN_LAVA
-                                && feat != DNGN_DEEP_WATER)
-                        {
-                            move_items(*i, *ai);
-                            break;
-                        }
-                    }
+                    coord_def newpos;
+                    _get_push_space(*i, newpos, 0);
+                    move_items(*i, newpos);
                 }
             }
 
