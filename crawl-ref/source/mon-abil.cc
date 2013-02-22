@@ -3358,7 +3358,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_VAULT_WARDEN:
-        if (mons->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION) || mons->attitude != ATT_HOSTILE)
             break;
 
         if (!mons->can_see(&you))
