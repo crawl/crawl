@@ -1426,11 +1426,13 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 // Find an adjacent space to displace a stack of items or a creature
 // (If act is null, we are just moving items and not an actor)
 static bool _get_push_space(const coord_def& pos, coord_def& newpos,
-        const actor* act)
+        actor* act, bool test_only = false)
 {
     if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
         return false;
 
+    int max_tension = -1;
+    coord_def best_spot(-1, -1);
     bool can_push = false;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
@@ -1444,20 +1446,46 @@ static bool _get_push_space(const coord_def& pos, coord_def& newpos,
                     || !act->can_pass_through(*ai)
                     || !act->is_habitable(*ai))
                     continue;
+
+                // If we're only testing, a single valid spot is acceptable
+                if (test_only)
+                    return true;
+
+                // Calculate tension at new position
+                set<coord_def> all_door;
+                find_connected_identical(pos, grd(pos), all_door);
+                dungeon_feature_type old_feat = grd(pos);
+
+                act->move_to_pos(*ai);
+                _set_door(all_door, DNGN_CLOSED_DOOR);
+                int new_tension = get_tension(GOD_NO_GOD);
+                _set_door(all_door, old_feat);
+                act->move_to_pos(pos);
+
+                if (new_tension > max_tension)
+                {
+                    max_tension = new_tension;
+                    best_spot = *ai;
+                    can_push = true;
+                }
             }
-            can_push = true;
-            newpos = *ai;
-            break;
+            else //If we're not moving a creature, the first open spot is enough
+            {
+                newpos = *ai;
+                return true;
+            }
         }
     }
 
+    if (can_push)
+        newpos = best_spot;
     return can_push;
 }
 
-static bool _has_push_space(const coord_def& pos, const actor* act)
+static bool _has_push_space(const coord_def& pos, actor* act)
 {
     coord_def dummy(-1, -1);
-    return _get_push_space(pos, dummy, act);
+    return _get_push_space(pos, dummy, act, true);
 }
 
 static bool _can_force_door_shut(const coord_def& door)
@@ -1472,12 +1500,17 @@ static bool _can_force_door_shut(const coord_def& door)
         i != all_door.end(); ++i)
     {
         // If anyone is in the doorway, we can't force them out
-        if (actor_at(*i))
+        monster* mons = monster_at(*i);
+        if (mons && mons->attitude != ATT_HOSTILE || you.pos() == *i)
+        {
+            if (!_has_push_space(*i, mons))
+                return false;
+        }
+        else if (actor_at(*i))
             return false;
-
         // If there are items in the way, see if there's room to push them
         // out of the way
-        if (igrd(*i) != NON_ITEM)
+        else if (igrd(*i) != NON_ITEM)
         {
             if (!_has_push_space(*i, 0))
                 return false;
@@ -1499,9 +1532,35 @@ static bool _should_force_door_shut(const coord_def& door)
     set<coord_def> all_door;
     find_connected_identical(door, grd(door), all_door);
 
-    _set_door(all_door, DNGN_CLOSED_DOOR);
-    int new_tension = get_tension(GOD_NO_GOD);
-    _set_door(all_door, old_feat);
+    bool player_in_door = false;
+    for (set<coord_def>::const_iterator i = all_door.begin();
+        i != all_door.end(); ++i)
+    {
+        if (you.pos() == *i)
+        {
+            player_in_door = true;
+            break;
+        }
+    }
+
+    int new_tension;
+    if (player_in_door)
+    {
+        coord_def newpos;
+        coord_def oldpos = you.pos();
+        _get_push_space(oldpos, newpos, &you);
+        you.move_to_pos(newpos);
+        _set_door(all_door, DNGN_CLOSED_DOOR);
+        new_tension = get_tension(GOD_NO_GOD);
+        _set_door(all_door, old_feat);
+        you.move_to_pos(oldpos);
+    }
+    else
+    {
+        _set_door(all_door, DNGN_CLOSED_DOOR);
+        new_tension = get_tension(GOD_NO_GOD);
+        _set_door(all_door, old_feat);
+    }
 
     // If closing the door would reduce player tension by too much, probably
     // it is scarier for the player to leave it open and thus it should be left
@@ -1518,13 +1577,15 @@ static bool _seal_doors(const monster* warden)
     int num_closed = 0;
     int num_sealed = 0;
     int seal_duration = 80 + random2(80);
+    bool player_pushed = false;
+    coord_def center = you.pos();
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
                  ri; ++ri)
     {
         if (grd(*ri) == DNGN_OPEN_DOOR)
         {
-            if (!you.see_cell_no_trans(*ri))
+            if (!cell_see_cell(center, *ri, LOS_NO_TRANS))
                 continue;
 
             if (!_can_force_door_shut(*ri))
@@ -1539,12 +1600,19 @@ static bool _seal_doors(const monster* warden)
             for (set<coord_def>::const_iterator i = all_door.begin();
              i != all_door.end(); ++i)
             {
-                // If there are items in the way, try to push them out of the way
-                if (igrd(*i) != NON_ITEM)
+                // If there are things in the way, push them aside
+                actor* act = actor_at(*i);
+                if (igrd(*i) != NON_ITEM || act)
                 {
                     coord_def newpos;
-                    _get_push_space(*i, newpos, 0);
+                    _get_push_space(*i, newpos, act);
                     move_items(*i, newpos);
+                    if (act)
+                    {
+                        actor_at(*i)->move_to_pos(newpos);
+                        if (act->is_player())
+                            player_pushed = true;
+                    }
                 }
             }
 
@@ -1575,7 +1643,7 @@ static bool _seal_doors(const monster* warden)
         // Try to seal the door
         if (grd(*ri) == DNGN_CLOSED_DOOR)
         {
-            if (!you.see_cell_no_trans(*ri))
+            if (!cell_see_cell(center, *ri, LOS_NO_TRANS))
                 continue;
 
             set<coord_def> all_door;
@@ -1603,6 +1671,9 @@ static bool _seal_doors(const monster* warden)
             mpr("The doors slam shut!");
         else if (num_closed == 1)
             mpr("A door slams shut!");
+
+        if (player_pushed)
+            mpr("You are pushed out of the doorway!");
 
         return true;
     }
