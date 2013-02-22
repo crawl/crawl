@@ -165,10 +165,10 @@ pebble_brown8
 %desat 28
 %desat 29
 %desat 30
-%lum 0 20
-%lum 28 20
-%lum 29 20
-%lum 30 20
+%lum 0 25
+%lum 28 40
+%lum 29 40
+%lum 30 40
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_WHITE
 %resetcol
 
