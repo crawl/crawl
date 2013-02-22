@@ -1448,7 +1448,7 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_ELYVILON_PURIFICATION:
         if (!you.disease && !you.rotting && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
-            && !you.duration[DUR_PARALYSIS] && !you.petrified()
+            && !you.petrifying()
             && you.strength(false) == you.max_strength()
             && you.intel(false) == you.max_intel()
             && you.dex(false) == you.max_dex()
