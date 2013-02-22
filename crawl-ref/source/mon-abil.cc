@@ -1666,7 +1666,8 @@ static bool _seal_doors(const monster* warden)
 
     if (had_effect)
     {
-        simple_monster_message(warden, " activates a sealing rune.", MSGCH_MONSTER_SPELL);
+        mprf(MSGCH_MONSTER_SPELL, "%s activates a sealing rune.",
+                (warden->visible_to(&you) ? warden->name(DESC_THE, true).c_str() : "Someone"));
         if (num_closed > 1)
             mpr("The doors slam shut!");
         else if (num_closed == 1)
