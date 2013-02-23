@@ -3442,3 +3442,130 @@ vault guard captain
 
 <vault guard>
 %%%%
+### Meatsprint
+bag of meat
+
+One of the legions of abominations created by the sculptors of flesh. It is a
+horrendous imitation of the human form, consisting of an unrecognisable mass
+of meat stitched together with limbs sewn on seemingly at random. Its skin
+hangs off loosely in some places and bulges repulsively in others. Each one
+bears a large symbol carved into its flesh, a mark of pride from its twisted
+creator.
+%%%%
+large bag of meat
+
+One of the legions of abominations created by the sculptors of flesh. Its
+bloated hulk pulsates and throbs constantly with accursed fires. It looks as
+if it could explode into a torrent of viscera at any moment.
+%%%%
+meat berserker
+
+One of the legions of abominations created by the sculptors of flesh. Its
+form is large and muscular. It moves swiftly and with impetuous fury, the sole
+thought within its being to rend you apart with great fervour. As it rages,
+it creates a cacophonous din.
+%%%%
+eight-headed meat hydra
+
+One of the legions of abominations created by the sculptors of flesh. Each of
+its eight necks is distended and elongated, connected to a colossal body
+crumpled and dripping with ichor. Its many heads spew blood while writhing
+and convulsing in agony, as it brings torment to itself and anything else that
+beholds its foul visage.
+%%%%
+meat beast
+
+One of the legions of abominations created by the sculptors of flesh. Ablaze
+with demonic frenzy, it gores and tramples with ferocity unmatched. Its skin
+is flayed, exposing the glistening tendons and sinew underneath, and the teeth
+inside its cavernous maw are stained with blood.
+%%%%
+sculptor of flesh
+
+An artisan of unlife, the sculptor appears as a grim skeletal form. It has six
+long arms ending in mangled hands with broken fingers, upon which it crawls
+like a spider. Its skull is abnormally large and full of holes. Its bones are
+reddened and fractured, inscribed with the unholy spells it weaves to assemble
+its puppets.
+%%%%
+destroyer
+
+The destroyers begin to descend upon you. They come in numbers and with wrath,
+maws gaping like abaddon, bottomless and abyssal. They bring your doom and will
+feast on your remains.
+%%%%
+accursed
+
+The accursed are the ones who came before. They have come to ensure you share
+their fate.
+%%%%
+tyrant
+
+A colossal mass of bones and skulls, a walking tomb. You hear shrieks and
+screams as it approaches, shattering off bones with each crushing step,
+reassembling itself in eternal unrest.
+%%%%
+dread
+
+An affront to existence, a void in which there is only torment and hellfire.
+Its unearthly form is torn and twisted, black and hollow. It is bereft of
+rational thought, knowing only hatred and the desire to desecrate your soul.
+%%%%
+scourge
+
+A vast serpentine form with raw and diseased skin, seeping bile and pus,
+spouting venom and blight.
+%%%%
+observer
+
+You see the unseen, you stare and they stare back. They whisper and laugh, they
+grin and cry, they leer at you with contempt and gaze at you in adoration. They
+are the observers, they are the judge of your worth and will decide your end.
+%%%%
+lost soul
+
+A spectre, struggling to leave the mortal world it is incarcerated in. It
+drains life and unlife from all those it comes into contact with.
+%%%%
+fleshlord
+
+One of the greatest servants of the Meatlord. It is muscular, agile and full of
+malevolence.
+%%%%
+vile
+
+An emaciated figure brimming with hellfire and plague. Its appearance
+signifies the end of days.
+%%%%
+The Servant
+
+His glaive is alight with the flames of hell.
+%%%%
+The Captor
+
+Those who enter will not escape.
+%%%%
+The Defiler
+
+His shield is emblazoned with images of infernal flames.
+%%%%
+The Meatlord
+
+You behold the embodiment of filth, corruption and depravity, the Meatlord.
+His foul body is bloated to the extreme, leaking viscous fluid and the stench
+of death. His head is that of a boar with bulging eyes and tusks split in two,
+his snout flares and oozes as he snorts and squeals at the sight of you, his
+mouth is a toothless rift which drools pools of blood and vomits forth
+disgusting remains. His neck is stretched and lops forward, its skin sagging
+downward. His immense gut writhes and distorts as the larvae within await
+their repugnant release. His legs are unrecognisable masses of flesh, covered
+in protrusions and throbbing boils. Your mind reels at the sight of this
+hideous form and your senses begin to shut down in an attempt to preserve your
+sanity as you choke on the oppressive stench.
+%%%%
+The Unspeakable
+
+You hear the echoes of planets behind the deafening roar of stars as it
+approaches. It is the jaws of the abyss. It brings forth crawling chaos from
+within. It is the last sight you will ever see.
+%%%%
