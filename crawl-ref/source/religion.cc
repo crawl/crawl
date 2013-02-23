@@ -3072,6 +3072,10 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_BEOGH:
+        // You might have lost water walking at a bad time...
+        if (_need_water_walking())
+            fall_into_a_pool(you.pos(), true, grd(you.pos()));
+
         if (query_da_counter(DACT_ALLY_BEOGH))
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
@@ -3080,10 +3084,6 @@ void excommunication(god_type new_god)
                 MSGCH_MONSTER_ENCHANT);
             add_daction(DACT_ALLY_BEOGH);
         }
-
-        // You might have lost water walking at a bad time...
-        if (_need_water_walking())
-            fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
         _set_penance(old_god, 50);
         break;
@@ -3151,14 +3151,14 @@ void excommunication(god_type new_god)
         // Actually, doesn't unparalyze jellies.
         you.duration[DUR_JELLY_PRAYER] = 0;
 
+        if (you.duration[DUR_SLIMIFY])
+            you.duration[DUR_SLIMIFY] = 0;
+
         if (query_da_counter(DACT_ALLY_SLIME))
         {
             mpr("All of your fellow slimes turn on you.", MSGCH_MONSTER_ENCHANT);
             add_daction(DACT_ALLY_SLIME);
         }
-
-        if (you.duration[DUR_SLIMIFY])
-            you.duration[DUR_SLIMIFY] = 0;
 
         _set_penance(old_god, 30);
         break;
