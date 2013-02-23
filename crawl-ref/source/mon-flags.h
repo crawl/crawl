@@ -182,7 +182,7 @@ const uint64_t MF_FLEEING_FROM_SANCTUARY = BIT(18); // Is running away from play
 const uint64_t MF_EXPLODE_KILL       = BIT(19); // Is being killed with disintegration
 
     // These are based on the flags in monster class, but can be set for
-    // monsters that are not normally fighters.
+    // monsters that are not normally fighters (in vaults).
 const uint64_t MF_FIGHTER            = BIT(20); // Monster is skilled fighter.
 const uint64_t MF_TWO_WEAPONS        = BIT(21); // Monster wields two weapons.
 const uint64_t MF_ARCHER             = BIT(22); // Monster gets various archery boosts.
