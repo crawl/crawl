@@ -1035,6 +1035,10 @@ void dec_penance(god_type god, int val)
             // another chance to make hostile holy beings good neutral.
             if (is_good_god(god))
                 add_daction(DACT_HOLY_NEW_ATTEMPT);
+            // When you've worked through all your penance, you get
+            // another chance to make hostile slimes strict neutral.
+            else if (god == GOD_JIYVA)
+                add_daction(DACT_SLIME_NEW_ATTEMPT);
         }
     }
     else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)

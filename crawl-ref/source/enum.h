@@ -3546,6 +3546,9 @@ enum daction_type
     // Leave space for new counters, as they need to be at the start.
     DACT_OLD_ENSLAVED_SOULS_POOF = 16,
     DACT_HOLY_NEW_ATTEMPT,
+#if TAG_MAJOR_VERSION > 34
+    DACT_SLIME_NEW_ATTEMPT,
+#endif
     DACT_HOLY_PETS_GO_NEUTRAL,
     DACT_ALLY_TROG,
 
@@ -3555,6 +3558,9 @@ enum daction_type
     DACT_PIKEL_SLAVES,
     DACT_ROT_CORPSES,
     DACT_TOMB_CTELE,
+#if TAG_MAJOR_VERSION == 34
+    DACT_SLIME_NEW_ATTEMPT,
+#endif
     NUM_DACTIONS,
 };
 
