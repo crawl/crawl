@@ -67,7 +67,7 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
     case DACT_ALLY_YRED_SLAVE:
         // Changed: we don't force enslavement of those merely marked.
         return is_yred_undead_slave(mon);
-    case DACT_ALLY_BEOGH: // both orcies and demons summoned by sorcerers
+    case DACT_ALLY_BEOGH: // both orcs and demons summoned by high priests
         return (mon->wont_attack() && mons_is_god_gift(mon, GOD_BEOGH));
     case DACT_ALLY_SLIME:
         return is_fellow_slime(mon);
