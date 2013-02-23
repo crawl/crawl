@@ -3426,7 +3426,8 @@ void ancient_zyme_sicken(monster* mons)
     {
         if (!you.disease)
         {
-            mpr("You feel yourself grow ill in the presence of the ancient zyme.", MSGCH_WARN);
+            mprf(MSGCH_WARN, "You feel yourself grow ill in the presence of %s.",
+                    mons->name(DESC_THE).c_str());
             you.sicken(30 + random2(30));
         }
         else if (x_chance_in_y(you.time_taken, 60))
@@ -3434,7 +3435,7 @@ void ancient_zyme_sicken(monster* mons)
 
         if (x_chance_in_y(you.time_taken, 100))
         {
-            mpr("The zyme's presence inflicts a toll on your body.");
+            mprf("%s presence inflicts a toll on your body.", mons->name(DESC_ITS).c_str());
             you.drain_stat((coinflip() ? STAT_STR : STAT_DEX), 1, mons);
         }
 
@@ -3489,8 +3490,8 @@ void starcursed_merge(monster* mon, bool forced)
         monster* mergee = monster_at(target);
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
-            if (forced && you.can_see(mon))
-                mpr("The starcursed mass shudders and is absorbed by its neighbour.");
+            if (forced)
+                simple_monster_message(mon, " shudders and is absorbed by its neighbour.");
             if (_do_merge_masses(mon, mergee))
                 return;
         }
