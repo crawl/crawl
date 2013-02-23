@@ -792,13 +792,13 @@ static void _WOE_melee_effect(item_def* weapon, actor* attacker,
     switch (random2(8))
     {
     case 0: verb = "cleave", adv = " in twain"; break;
-    case 1: verb = "ravage", adv = " into thin bloody mist"; break;
+    case 1: verb = "pulverise", adv = " into thin bloody mist"; break;
     case 2: verb = "hew", adv = " savagely"; break;
     case 3: verb = "fatally mangle", adv = ""; break;
     case 4: verb = "dissect", adv = " like a pig carcass"; break;
     case 5: verb = "chop", adv = " into pieces"; break;
     case 6: verb = "butcher", adv = " messily"; break;
-    case 7: verb = "slaughter", adv = " with the joy of abattoir"; break;
+    case 7: verb = "slaughter", adv = " joyfully"; break;
     }
     if (you.see_cell(attacker->pos()) || you.see_cell(defender->pos()))
     {
