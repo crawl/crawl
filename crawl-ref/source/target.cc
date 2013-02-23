@@ -53,8 +53,7 @@ bool targetter::anyone_there(coord_def loc)
 }
 
 targetter_beam::targetter_beam(const actor *act, int range, zap_type zap,
-                               int pow, bool stop,
-                               int min_ex_rad, int max_ex_rad) :
+                               int pow, int min_ex_rad, int max_ex_rad) :
                                min_expl_rad(min_ex_rad),
                                max_expl_rad(max_ex_rad)
 {
@@ -78,7 +77,7 @@ targetter_beam::targetter_beam(const actor *act, int range, zap_type zap,
     beam.ex_size = min_ex_rad;
     beam.aimed_at_spot = true;
 
-    penetrates_targets = !stop;
+    penetrates_targets = beam.is_beam;
     range2 = dist_range(range);
 }
 
@@ -200,7 +199,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
 }
 
 targetter_imb::targetter_imb(const actor *act, int pow, int range) :
-               targetter_beam(act, range, ZAP_ISKENDERUNS_MYSTIC_BLAST, pow, true, 0, 0)
+               targetter_beam(act, range, ZAP_ISKENDERUNS_MYSTIC_BLAST, pow, 0, 0)
 {
 }
 

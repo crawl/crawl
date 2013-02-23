@@ -38,7 +38,7 @@ class targetter_beam : public targetter
 {
 public:
     targetter_beam(const actor *act, int range, zap_type zap, int pow,
-                   bool stop, int min_expl_rad, int max_expl_rad);
+                   int min_expl_rad, int max_expl_rad);
     bolt beam;
     virtual bool set_aim(coord_def a);
     bool valid_aim(coord_def a);

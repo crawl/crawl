@@ -985,29 +985,14 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     switch (spell)
     {
     case SPELL_ICE_STORM:
-        return new targetter_beam(&you, range, ZAP_ICE_STORM, pow, true, 2,
-                                  (pow > 76) ? 3 : 2);
+        return new targetter_beam(&you, range, ZAP_ICE_STORM, pow, 2, (pow > 76) ? 3 : 2);
     case SPELL_FIREBALL:
-        return new targetter_beam(&you, range, ZAP_FIREBALL, pow, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_FIREBALL, pow, 1, 1);
     case SPELL_HELLFIRE:
-        return new targetter_beam(&you, range, ZAP_HELLFIRE, pow, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_HELLFIRE, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, pow, true,
+        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, pow,
                                   pow >= 100 ? 1 : 0, 1);
-    case SPELL_SHOCK:
-    case SPELL_LIGHTNING_BOLT:
-        return new targetter_beam(&you, range, spell_to_zap(spell), pow, false,
-                                  0, 0);
-    case SPELL_FLAME_TONGUE:
-    case SPELL_THROW_FLAME:
-        return new targetter_beam(&you, range, spell_to_zap(spell), pow, true,
-                                  0, 0);
-    case SPELL_BOLT_OF_FIRE:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, pow, false, 0, 0);
-    case SPELL_THROW_FROST:
-        return new targetter_beam(&you, range, ZAP_THROW_FROST, pow, true, 0, 0);
-    case SPELL_BOLT_OF_COLD:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, pow, false, 0, 0);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return new targetter_imb(&you, pow, range);
     case SPELL_FIRE_STORM:
@@ -1027,6 +1012,38 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_smite(&you, range, 0, 2);
     case SPELL_DAZZLING_SPRAY:
         return new targetter_spray(&you, 6, ZAP_DAZZLING_SPRAY);
+    case SPELL_MAGIC_DART:
+    case SPELL_FORCE_LANCE:
+    case SPELL_SHOCK:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_FLAME_TONGUE:
+    case SPELL_THROW_FLAME:
+    case SPELL_BOLT_OF_FIRE:
+    case SPELL_THROW_FROST:
+    case SPELL_THROW_ICICLE:
+    case SPELL_BOLT_OF_COLD:
+    case SPELL_STING:
+    case SPELL_VENOM_BOLT:
+    case SPELL_POISON_ARROW:
+    case SPELL_BOLT_OF_MAGMA:
+    case SPELL_IRON_SHOT:
+    case SPELL_STONE_ARROW:
+    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+    case SPELL_CORONA:
+    case SPELL_SLOW:
+    case SPELL_CONFUSE:
+    case SPELL_ENSLAVEMENT:
+    case SPELL_INNER_FLAME:
+    case SPELL_PAIN:
+    case SPELL_AGONY:
+    case SPELL_BOLT_OF_DRAINING:
+    case SPELL_HASTE:
+    case SPELL_PETRIFY:
+    case SPELL_POLYMORPH:
+    case SPELL_DIG:
+    case SPELL_CIGOTUVIS_DEGENERATION:
+    case SPELL_DISPEL_UNDEAD:
+        return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 0);
     default:
         return 0;
     }

@@ -1716,18 +1716,17 @@ static targetter *_wand_targetter(const item_def *wand)
     switch (wand->sub_type)
     {
     case WAND_FIREBALL:
-        return new targetter_beam(&you, range, ZAP_FIREBALL, power, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_FIREBALL, power, 1, 1);
     case WAND_LIGHTNING:
-        return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, false, 0,
-                                  0);
+        return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
     case WAND_FLAME:
-        return new targetter_beam(&you, range, ZAP_THROW_FLAME, power, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_THROW_FLAME, power, 0, 0);
     case WAND_FIRE:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, power, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, power, 0, 0);
     case WAND_FROST:
-        return new targetter_beam(&you, range, ZAP_THROW_FROST, power, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_THROW_FROST, power, 0, 0);
     case WAND_COLD:
-        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, power, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, power, 0, 0);
     default:
         return 0;
     }

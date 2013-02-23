@@ -1924,7 +1924,7 @@ static bool _do_ability(const ability_def& abil)
         power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
         beam.range = spell_range(SPELL_FIREBALL, power);
 
-        targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, true, 1, 1);
+        targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
 
         if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, beam.range,
                              true, true, false, NULL,
