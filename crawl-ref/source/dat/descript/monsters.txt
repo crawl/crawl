@@ -3298,6 +3298,10 @@ tengu aerator
 This particularly ferocious tengu is well on its way towards mastery of air
 magic.
 %%%%
+tengu conjurer
+
+One of many tengu with a talent for the destructive magical arts.
+%%%%
 water elementalist statue
 
 A smooth, charming statue of a beautiful mermaid bathing in a fountain,
