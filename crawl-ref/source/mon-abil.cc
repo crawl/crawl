@@ -3427,7 +3427,7 @@ void ancient_zyme_sicken(monster* mons)
         if (!you.disease)
         {
             mprf(MSGCH_WARN, "You feel yourself grow ill in the presence of %s.",
-                    mons->name(DESC_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             you.sicken(30 + random2(30));
         }
         else if (x_chance_in_y(you.time_taken, 60))
@@ -3435,7 +3435,8 @@ void ancient_zyme_sicken(monster* mons)
 
         if (x_chance_in_y(you.time_taken, 100))
         {
-            mprf("%s presence inflicts a toll on your body.", mons->name(DESC_ITS).c_str());
+            mprf("%s presence inflicts a toll on your body.",
+                 mons->name(DESC_ITS).c_str());
             you.drain_stat((coinflip() ? STAT_STR : STAT_DEX), 1, mons);
         }
 
