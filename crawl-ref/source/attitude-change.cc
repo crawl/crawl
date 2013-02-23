@@ -32,7 +32,6 @@ static void _jiyva_convert_slime(monster* slime);
 static void _fedhas_neutralise_plant(monster* plant);
 static void _good_god_holy_fail_attitude_change(monster* holy);
 
-
 void good_god_follower_attitude_change(monster* mons)
 {
     if (you.undead_or_demonic() || crawl_state.game_is_arena())
