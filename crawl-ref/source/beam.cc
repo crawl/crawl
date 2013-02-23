@@ -1249,7 +1249,8 @@ void bolt::affect_cell()
         if (m && can_affect_actor(m))
         {
             affect_monster(m);
-            if (hit == AUTOMATIC_HIT && !is_beam)
+            if ((hit == AUTOMATIC_HIT && !is_beam)
+                    && (!is_tracer || m->visible_to(agent())))
                 finish_beam();
         }
     }
