@@ -219,12 +219,14 @@ static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
         if (got_target && targ_distance < min_distance
             && targ_distance < pbolt.range)
         {
-            // Make sure we won't hit an invalid target with this aim
+            // Make sure we won't hit an invalid target with this aim.
             pbolt.target = targ->pos();
             fire_tracer(caster, pbolt);
             if (!mons_should_fire(pbolt)
-                 || pbolt.path_taken.back() != pbolt.target)
+                || pbolt.path_taken.back() != pbolt.target)
+            {
                 continue;
+            }
 
             min_distance = targ_distance;
             selected_target = *targ;
