@@ -516,9 +516,9 @@ x
 ENDMAP
 
 NAME:   lemuel_baited_zot_trap
+TAGS:   allow_dup extra luniq
 DEPTH:  Zot:*
 WEIGHT: 20
-TAGS:   allow_dup
 KFEAT:  * = Zot trap
 KITEM:  * = any good_item
 MAP
@@ -526,9 +526,9 @@ MAP
 ENDMAP
 
 NAME:   lemuel_zot_downstairs
+TAGS:   allow_dup extra luniq
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   allow_dup
 SUBST:  . = .^
 KFEAT:  ^ = Zot trap
 SUBST:  > = }])
@@ -539,9 +539,9 @@ xxxxxxx
 ENDMAP
 
 NAME:   lemuel_zot_upstairs
+TAGS:   allow_dup extra luniq
 DEPTH:  Zot:2-5
 ORIENT: float
-TAGS:   allow_dup
 SUBST:  . = .^
 KFEAT:  ^ = zot trap
 SUBST:  < = ([{
@@ -557,27 +557,27 @@ ENDMAP
 NAME:   lemuel_halls_of_wrath
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   no_rotate
 NSUBST: 1 = 6:2 / *=1
 SUBST:  1 = 1 .:5
 SUBST:  1 = 1 3
-MONS:   troll /deep troll / iron troll / ogre / two-headed ogre / w:2 iron devil
+MONS:   troll / deep troll / iron troll / ogre / two-headed ogre
 MONS:   moth of wrath
-MONS:   hill giant / stone giant / fire giant / frost giant / ettin /\
+MONS:   hill giant / stone giant / fire giant / frost giant / ettin / \
         w:5 efreet / w:3 titan
+SUBST:  } = }:80 >, ) = ):80 >
 MAP
 cccccccccccccccccccccccc
-n111111111111111111.c..c
-n111111111111111111.c.)c
-ccccccccccccccccc++cc..c
-n....F....F....F....c..c
+c111111111111111111.n..c
+c111111111111111111.n.)c
+ccnnccccccccccccc++cc..c
+c....G....G....G....c..c
 +...................+..c
 +...................+.}c
 +...................+..c
-n....F....F....F....c..c
-ccccccccccccccccc++cc..c
-n111111111111111111.c.]c
-n111111111111111111.c..c
+c....G....G....G....c..c
+ccnnccccccccccccc++cc..c
+c111111111111111111.n.]c
+c111111111111111111.n..c
 cccccccccccccccccccccccc
 ENDMAP
 
@@ -598,7 +598,7 @@ wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
 wwxxxxxxxxx+xxxxxxxxxww
 wwx....x.......x....xww
-wwx....+...F...+....xww
+wwx....+...G...+....xww
 wwx.4..x.......x..4.xww
 wwx4.4.xxxx+xxxx.4.4xww
 wwx.4.4xxx...xxx4.4.xww
@@ -606,7 +606,7 @@ wwx4.4.xxx.2.xxx.4.4xww
 wwxxxxxxxxx+xxxxxxx+xww
 wwxxxxxxxxx.xxxxxx$$xww
 wwxdddxxxxx.x...xx$$xww
-wwx.2.xxxxx.+.F.xxxxxww
+wwx.2.xxxxx.+.G.xxxxxww
 wwx...xxxxx.x...xxxxxww
 wwx...xxxxx.xxxxxxxxxww
 wwxx+xxxxxx.xxxdddddxww
@@ -614,7 +614,7 @@ wwxx.xxxxxx.xxxd232dxww
 wwxx.xxxxxx.xxxd...dxww
 wwxx......+...+....dxww
 wwxxxxxxxxxmxxxd...dxww
-wwxxxxxxxxxFxxxdddddxww
+wwxxxxxxxxxGxxxdddddxww
 wwxxxxxxxxxxxxxxxxxxxww
 wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
@@ -2144,11 +2144,12 @@ SHUFFLE:  ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE:  Aa / Bb
 KFEAT:    A = any trap / w:30 floor
 KFEAT:    B = any trap / w:10 floor
-SUBST:    a=F, b=6 F
+SUBST:    a=F, b=6 G
 SUBST:    ^ = ^ .:10
 SUBST:    . = .:500 ^
 KMASK:    1! = no_item_gen
 SUBST:    ! = ^ .:40
+SUBST:    F = .
 
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire

@@ -132,19 +132,19 @@ MAP
 O
 ENDMAP
 
-default-depth: D:12-26
+default-depth: D:14-26
 
 ##############################################################################
 # Hellmouth (Lemuel)
-# note that other than the imps, the demons here cannot fly
+# note that most threats here can't fly
 NAME:   hellmouth_1
 TAGS:   no_rotate
 MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
         red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
-        good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
-        scroll of torment
+        good_item demon trident / wand of draining ident:type
+ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
+        grand grimoire / scroll of torment ident:type
 KFEAT:  A = enter_hell
 ORIENT: float
 SUBST:  d=de, ?:?.l, ?=l.
@@ -172,16 +172,16 @@ ENDMAP
 
 ##############################################################################
 # Hellmouth 2 (Lemuel)
-# note that other than the imps, the demons here cannot fly
+# note that most threats here can't fly
 NAME:   hellmouth_2
 TAGS:   no_monster_gen no_rotate
 ORIENT: float
 MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
-        good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
-        scroll of torment
+        good_item demon trident / wand of draining ident:type
+ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
+        grand grimoire / scroll of torment ident:type
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
 KFEAT:  A = enter_hell
@@ -243,77 +243,35 @@ ENDMAP
 
 ##############################################################################
 # Hell vaults
+# Order: Dis, Gehenna, Cocytus, Tartarus. Preserve both order and addition
+# time; the file is confusing and harder to read otherwise.
 ##############################################################################
 
+# The Iron City of Dis
 ##############################################################################
-# Fire storm
-
-NAME:   gehenna_fire_generator
-TAGS:   extra allow_dup
-DEPTH:  Geh:*
-MARKER: . = lua:fog_machine { \
-            pow_max = 15, delay_min = 100, delay_max = 150, size = 1,  \
-            size_buildup_amnt = 29, size_buildup_time = 1000, \
-            cloud_type = "flame" \
-        }
-MAP
-.
-ENDMAP
-
-##############################################################################
-# lemuel_hellion_isle
-
-NAME:  lemuel_hellion_isle
-DEPTH: Geh:*
-MONS:  hellion, brimstone fiend
-SUBST: L = l.
-SUBST: 1 = l:2 1
-MAP
-      lL
-     llL
-    LlLLL
-   LLllLL
-llLLLlllLLL
-LllllllllllLL
-LLLlll11lllllLL
- LLLll111llllL
-  LLlll121llLL
-  Lllll111lLL
-  LLllll1llL
-   LllllllL
-   LLLlllL
-    LLllL
-     LlL
-     LlL
-ENDMAP
-
-##############################################################################
-# lemuel_mystery_crypt
 
 NAME:   lemuel_mystery_crypt
 DEPTH:  Dis:*
 ORIENT: float
-MONS:   mummy / mummy priest / greater mummy, lich
-NSUBST: 1:1=} / *=1
-NSUBST: 1:1=) / *=1
-NSUBST: 1:1=] / *=1
+MONS:   guardian mummy / mummy priest / greater mummy, lich
+NSUBST: 1:1=} / 1=) / 1=] / *=1
 SUBST:  = : +
 SUBST:  }=}>, )=)>, ]=]>
-TILE:   F = dngn_statue_iron
+TILE:   G = dngn_statue_iron
 # occasionally (12.5%), all downstairs are in this vault
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
-xxFxxxx1.x1x.1xxx2..=1x
+xxGxxxx1.x1x.1xxx2..=1x
 xx.xxxxx.x.x.xxxx...xxx
 xx.xx1.x.x.x.x.1x...=1x
 xx.xxx=x=x=x=x=xx...xxx
 x...+...........+...=1x
-+...+.....F.....+.F.xxx
++...+.....G.....+.G.xxx
 x...+...........+...=1x
 xx.xxx=x=x=x=x=xx...xxx
 xx.xx1.x.x.x.x.1x...=1x
 xx.xxxxx.x.x.xxxx...xxx
-xxFxxxx1.x1x.1xxx2..=1x
+xxGxxxx1.x1x.1xxx2..=1x
 xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -476,33 +434,153 @@ MAP
 ............?............
 ENDMAP
 
-##############################################################################
-# lemuel_nasty_pond
-#
-NAME:   lemuel_nasty_pond
-DEPTH:  Tar:*
-TAGS:   no_pool_fixup no_rotate
-MONS:   plant, oklob plant, death ooze, rotting devil, blizzard demon / green death
-SUBST:  W:w.
-SUBST:  Z:w.
-SUBST:  w = w .:1
-SUBST:  . = .:15 1:1 w:1
-SUBST:  1 = 1 2:2
-COLOUR: . = none / green w:2
-COLOUR: w = green / lightgreen
+################################################################################
+# Looks really weird and silly in layout_dis, so it's limited to the city layouts.
+NAME:    hangedman_dis_monolith
+TAGS:    transparent layout_city layout_chaotic_city
+DEPTH:   Dis:1-6
+ORIENT:  float
+MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
+         patrolling executioner
+MONS:    patrolling hell sentinel
+MONS:    iron devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
+         iron dragon zombie w:5 / iron troll skeleton w:5 / \
+         iron troll zombie w:5 / hell knight w:15
+MONS:    hellion / tormentor / reaper / \
+         dancing weapon w:20 ; glaive good_item | battleaxe good_item | \
+                               great sword good_item | great mace good_item
+SHUFFLE: ABa / CDb / EFc
+NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
+SUBST:   ABCDE = 3:19 4:1, a = +, bc = v, V : v.
 MAP
-     ...WWWW3....
-   .3..WWWWW....3...
- ....WWWwwW...3....3.
-..Z.WWwwwwww3.....3...
-3.ZZWwwwwwwwwww3......
-.ZZZ..wwwww5wwwwww3...
-..3Z..44wwwwwww33.....
-.3ZZZ..44wwwwww3..3...
-.ZZZZZ.44wwwww........
- ..ZZZZZ4wwww.3......
-   3ZZZZwwwww....3.
-     .ZZwww3.....
+.....................................................
+.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
+.vv.v..v.......v.......v.....v.......v.......v..v.vv.
+.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
+.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
+3vvAAAvvvvvvvvvvvvvvvvvvvCCCvvvvvvvvvvvvvvvvvvvEEEvv3
+4vvvavvvvvvvvvvvvvvvvvvvvvbvvvvvvvvvvvvvvvvvvvvvcvvv4
+3vvBBBvvvvvvvvvvvvvvvvvvvDDDvvvvvvvvvvvvvvvvvvvFFFvv3
+.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
+.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
+.vv.v..v.......v.......v.....v.......v.......v..v.vv.
+.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
+.....................................................
+ENDMAP
+
+
+# Gehenna
+##############################################################################
+# Fire storm
+
+NAME:   gehenna_fire_generator
+TAGS:   extra allow_dup
+DEPTH:  Geh:*
+MARKER: . = lua:fog_machine { \
+            pow_max = 15, delay_min = 100, delay_max = 150, size = 1,  \
+            size_buildup_amnt = 29, size_buildup_time = 1000, \
+            cloud_type = "flame" \
+        }
+MAP
+.
+ENDMAP
+
+##############################################################################
+# lemuel_hellion_isle
+
+NAME:  lemuel_hellion_isle
+DEPTH: Geh:*
+MONS:  hellion, brimstone fiend
+SUBST: L = l.
+SUBST: 1 = l:2 1
+MAP
+      lL
+     llL
+    LlLLL
+   LLllLL
+llLLLlllLLL
+LllllllllllLL
+LLLlll11lllllLL
+ LLLll111llllL
+  LLlll121llLL
+  Lllll111lLL
+  LLllll1llL
+   LllllllL
+   LLLlllL
+    LLllL
+     LlL
+     LlL
+ENDMAP
+
+################################################################################
+
+NAME:    hangedman_generic_boss_arena
+TAGS:    no_monster_gen
+DEPTH:   Geh, !Geh:$
+MONS:    hell knight, hellion, balrug, balrug
+MONS:    flaming corpse, sun demon, hell hog
+KFEAT:   L = l
+SHUFFLE: dD, eE / fF / 56, 56 / 65 / 55 / 66 / 77 / '', ABC / 234 / <<<, 234 / 322
+NSUBST:  < : 1:) / 1:( / 1:[[[<<>
+SUBST:   ABC : v.., d : vLl, D : vvLl, eE : vvl.., fF : vvl.., v : xcv, ' = .
+KPROP:   l = no_cloud_gen
+MAP
+      xxxxxxxxxxx
+     xxcccccccccxx
+    xxcclllclllccxx
+   xxccl...2...lccxx
+  xxccl.1.....1.lccxx
+ xxccl..lllAlll..lccxx
+xxccl.<ldl...ldl<.lccxx
+xccl..lDl..f..lDl..lccx
+xcl.1ldl..E6E..ldl1.lcx
+xcl..ll..e5F5e..ll..lcx
+xcl..l...........l..lcx
+xcl...B..llDll..C...lcx
+xcl....lldldldll....lcx
+xccl3...1l.D.l1...4lccx
+xxccl......<......lccxx
+ xxccl....lll....lccxx
+  xxcclllllclllllccxx
+   xxcccccccccccccxx
+    xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:    hangedman_hellfire_club
+TAGS:    transparent no_monster_gen
+DEPTH:   Geh:1-6, Zot:1-4
+MONS:    red draconian scorcher / mottled draconian scorcher w:7 / \
+         pale draconian scorcher w:3
+MONS:    red draconian zealot / mottled draconian zealot w:7 / \
+         pale draconian scorcher w:3
+MONS:    hellion
+ITEM:    any potion good_item
+KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8
+KFEAT:   L = l
+KPROP:   l = no_cloud_gen
+SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, ()~- / ()~- / -~(), () / {( / }) / '' / ''
+SUBST:   4 = 3, ' = .:99 >:1, ( = ( <:2, ) = ) >:2
+: if you.branch() == "Geh" then
+SUBST:   d$ = .
+: end
+MAP
+xxxxxxxx.@.xxxxxxxx
+xccccccxx.xxccccccx
+xcd$$1cc...cc2$$dcx
+xcd$$cc.....cc$$dcx
+xc.~cc..x.x..cc..cx
+xc.cc..GxlxG..cc.cx
+xc....xxLllxx....cx
+xc.(...llLll...).cx
+xc....xxllLxx....cx
+xc.cc..GxlxG..cc.cx
+xc..cc..x.x..cc-.cx
+xcd$$cc.....cc$$dcx
+xcd$$3cc...cc4$$dcx
+xccccccxx.xxccccccx
+xxxxxxxx.@.xxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -515,7 +593,7 @@ KMONS:   1 = brimstone fiend w:9 / hell sentinel w:1
 KMONS:   2 = hellion / balrug
 KMONS:   34 = smoke demon / red devil
 KMONS:   56 = skeletal warrior ; broad axe ego:flaming ident:type | \
-         halberd ego:flaming ident:type w:7 | morningstar ego:flaming ident:type
+         halberd ego:flaming ident:type w:7 | spiked flail ego:flaming ident:type
 KMONS:   7 = hell knight
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
@@ -555,145 +633,6 @@ xwwxxx...ll..ll.0llx
 xxxx........xxxll72x
         ......xxxllx
           ....@@xxxx
-ENDMAP
-
-##############################################################################
-
-NAME:    hangedman_snap_crack_crunch
-TAGS:    transparent no_monster_gen
-DEPTH:   Tar:1-6, Zot:1-4
-: if you.branch() == "Tar" then
-KMONS:   12 = patrolling reaper
-KMONS:   34 = patrolling tormentor
-KMONS:   56 = patrolling shadow demon
-KMONS:   7 = skeletal warrior
-KMONS:   8 = patrolling shadow imp / patrolling rotting devil
-KMONS:   AB = lich
-KMONS:   CD : vampire mage / mummy priest
-KMONS:   EF : shadow dragon w:5 / death drake
-KITEM:   | = nothing
-: else
-KMONS:   12 = patrolling lich w:5 / ancient lich
-KMONS:   34 = patrolling curse toe
-KMONS:   56 = patrolling bone dragon
-KMONS:   7 = death cob w:12 / small zombie w:2 / large zombie w:2 / \
-             small skeleton w:2 / large skeleton w:2 / guardian mummy w:4
-KMONS:   8 = patrolling death cob
-KMONS:   ABCD = shadow dragon
-KMONS:   EF = death drake
-: end
-KMONS:   0 = soul eater
-KMONS:   Z = curse skull
-SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
-SUBST:   { : -_= |:3, } : -= |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
-SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
-NSUBST:  - = 1:{ / 1:}, _ = 1:[ / 1 = (:80 <, = = 1:] / 1 = ):80 >
-NSUBST:  7 = 3:7 / 3:0 / 2 = 70
-MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
-                pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = -1 }
-MAP
-         xxxxxxxxx
-        xxxx...7.xx.@@.
-   xxxxxxxx..cc.7xx.....
-  xxxxxxxx.AcXc..xx....@
-  xxx......cGc...x.."..@
-  xx.'....cXc....x.8....
-  xx..cc..cc..cc..x..xxx
-  xx..cXc.....cXc..xxxxxx
- xxx...cHc..1..cXc....7.x
-xxxx....cXc.....cXc....7x
-xxx..cc..cc..cc..cc..cc.x
-xx.BcXc....{cXc.....cXc.x
-x..cIc..2..cZc..3..cIc..x
-x.cXc.....cXc{....cXcC.xx
-x.cc..cc..cc..cc..cc..xxx
-x7....cXc.....cXc....xxxx
-x.7....cXc..4..cHc...xxx
-xxxxxx..cXc.....cXc..xx
- xxx..x..cc..cc..cc..xx
- ....8.x....cXc....'.xx
- @.."..x...cGc......xxx
- @....xx..cXcD.xxxxxxxx
- .....xx7.cc..xxxxxxxx
-  .@@.xx.7...xxxx
-       xxxxxxxxx
-ENDMAP
-
-##############################################################################
-
-NAME: grunt_tartarus_stairs_gauntlet_trap
-DEPTH: Tar:1-6
-TAGS: generate_awake patrolling no_trap_gen
-MONS: Shadow Fiend, shadow demon / reaper, soul eater, rotting devil, shadow imp
-{{
-    dgn.persist.grunt_gauntlet_trap_triggered = false
-    local trap_marker = TriggerableFunction:new {
-        func = "callback.grunt_gauntlet_trap_activate",
-        repeated = true}
-    trap_marker:add_triggerer(DgnTriggerer:new {
-        type="player_move"})
-    lua_marker(':', trap_marker)
-    lua_marker('H', trap_marker)
-    lua_marker('-', trap_marker)
-    lua_marker('1', trap_marker)
-    lua_marker('e', trap_marker)
-    lua_marker('}', trap_marker)
-    lua_marker(']', trap_marker)
-    lua_marker(')', trap_marker)
-    lua_marker('d', props_marker {trap_wall=1})
-    lua_marker('"', props_marker {trap_wall2=1})
-}}
-SUBST: d = c
-SUBST: e = 2
-COLOUR: c = lightmagenta
-KPROP: "H-}]) = no_rtele_into
-KPROP: "H-}]) = no_ctele_into
-MARKER: H = lua:fog_machine { \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 3, walk_dist = 1, cloud_type = "gloom" }
-MAP
-cccccccccccccccccccccc.......
-c...2...............cG.5.....
-cdcccccccccccccccccdcc...5...
-c--H":e:c9c8c8c0c0c0cG.4..5..
-c}--":::cdcdcdcdcdcdcc3.4..5.
-c]1H":::+............+......@
-c)--":::cdcdcdcdcdcdcc3.4..5.
-c--H":e:c9c8c8c0c0c0cG.4..5..
-cdcccccccccccccccccdcc...5...
-c...2...............cG.5.....
-cccccccccccccccccccccc.......
-ENDMAP
-
-##############################################################################
-
-NAME:   grunt_cocytus_stairs_refrigerator
-TAGS:   transparent mini_float
-DEPTH:  Coc:1-6
-COLOUR: c = blue
-MONS:   Ice Fiend, blizzard demon, ice devil, blue devil, white imp
-KMONS:  H = ice statue
-KMONS:  O = ice statue name:chilling_statue name_replace name_descriptor \
-            hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
-            ozocubu's_refrigeration;freezing_cloud;\
-            ozocubu's_refrigeration;ozocubu's_refrigeration \
-            tile:mons_chilling_statue
-MAP
-xwww..4......
-xwwwwww..5...
-xwwwwwwww..5.
-xwwwwwwwww...
-xcccccHwwww4.
-cc.O.ccwwww..
-c}..2.cWWWW4.
-c]1...+.3.3..
-c)..2.cWWWW4.
-cc.O.ccwwww..
-xcccccHwwww4.
-xwwwwwwwww...
-xwwwwwwww..5.
-xwwwwww..5...
-xwww..4......
 ENDMAP
 
 ##############################################################################
@@ -760,37 +699,179 @@ xxcclccclccccc4..wccx
            xxx+++xx
 ENDMAP
 
-NAME:    hangedman_generic_boss_arena
-TAGS:    no_monster_gen
-DEPTH:   Geh, !Geh:$
-MONS:    hell knight, hellion, balrug, balrug
-MONS:    flaming corpse, sun demon, hell hog
-KFEAT:   L = l
-SHUFFLE: dD, eE / fF / 56, 56 / 65 / 55 / 66 / 77 / '', ABC / 234 / <<<, 234 / 322
-NSUBST:  < : 1:) / 1:( / 1:[[[<<>
-SUBST:   ABC : v.., d : vLl, D : vvLl, eE : vvl.., fF : vvl.., v : xcv, ' = .
-KPROP:   l = no_cloud_gen
+# Cocytus
+##############################################################################
+
+NAME:   grunt_cocytus_stairs_refrigerator
+TAGS:   transparent mini_float
+DEPTH:  Coc:1-6
+COLOUR: c = blue
+MONS:   Ice Fiend, blizzard demon, ice devil, blue devil, white imp
+KMONS:  H = ice statue
+KMONS:  O = ice statue name:chilling_statue name_replace name_descriptor \
+            hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
+            ozocubu's_refrigeration;freezing_cloud;\
+            ozocubu's_refrigeration;ozocubu's_refrigeration \
+            tile:mons_chilling_statue
 MAP
-      xxxxxxxxxxx
-     xxcccccccccxx
-    xxcclllclllccxx
-   xxccl...2...lccxx
-  xxccl.1.....1.lccxx
- xxccl..lllAlll..lccxx
-xxccl.<ldl...ldl<.lccxx
-xccl..lDl..f..lDl..lccx
-xcl.1ldl..E6E..ldl1.lcx
-xcl..ll..e5F5e..ll..lcx
-xcl..l...........l..lcx
-xcl...B..llDll..C...lcx
-xcl....lldldldll....lcx
-xccl3...1l.D.l1...4lccx
-xxccl......<......lccxx
- xxccl....lll....lccxx
-  xxcclllllclllllccxx
-   xxcccccccccccccxx
-    xxxxxxxxxxxxxxx
+xwww..4......
+xwwwwww..5...
+xwwwwwwww..5.
+xwwwwwwwww...
+xcccccHwwww4.
+cc.O.ccwwww..
+c}..2.cWWWW4.
+c]1...+.3.3..
+c)..2.cWWWW4.
+cc.O.ccwwww..
+xcccccHwwww4.
+xwwwwwwwww...
+xwwwwwwww..5.
+xwwwwww..5...
+xwww..4......
 ENDMAP
+
+# Tartarus
+##############################################################################
+
+NAME:   lemuel_nasty_pond
+DEPTH:  Tar:*
+TAGS:   no_pool_fixup no_rotate
+MONS:   w:2 col:darkgrey plant name:withered name_adjective               \
+        tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+        name_adjective tile:mons_withered_plant
+MONS:   oklob plant, death ooze, rotting devil, blizzard demon / green death
+SUBST:  W:w.
+SUBST:  Z:w.
+SUBST:  w = w .:1
+SUBST:  . = .:15 1:1 w:1
+SUBST:  1 = 1 2:2
+SUBST:  3 = 3:9 4:1 .:2
+COLOUR: . = none / green w:2
+COLOUR: w = green / lightgreen
+MAP
+     ...WWWW3....
+   .3..WWWWW....3...
+ ....WWWwwW...3....3.
+..Z.WWwwwwww3.....3...
+3.ZZWwwwwwwwwww3......
+.ZZZ..wwwww5wwwwww3...
+..3Z..44wwwwwww33.....
+.3ZZZ..44wwwwww3..3...
+.ZZZZZ.44wwwww........
+ ..ZZZZZ4wwww.3......
+   3ZZZZwwwww....3.
+     .ZZwww3.....
+ENDMAP
+
+##############################################################################
+
+NAME: grunt_tartarus_stairs_gauntlet_trap
+DEPTH: Tar:1-6
+TAGS: generate_awake patrolling no_trap_gen
+MONS: Shadow Fiend, shadow demon / reaper, soul eater, rotting devil, shadow imp
+{{
+    dgn.persist.grunt_gauntlet_trap_triggered = false
+    local trap_marker = TriggerableFunction:new {
+        func = "callback.grunt_gauntlet_trap_activate",
+        repeated = true}
+    trap_marker:add_triggerer(DgnTriggerer:new {
+        type="player_move"})
+    lua_marker(':', trap_marker)
+    lua_marker('H', trap_marker)
+    lua_marker('-', trap_marker)
+    lua_marker('1', trap_marker)
+    lua_marker('e', trap_marker)
+    lua_marker('}', trap_marker)
+    lua_marker(']', trap_marker)
+    lua_marker(')', trap_marker)
+    lua_marker('d', props_marker {trap_wall=1})
+    lua_marker('"', props_marker {trap_wall2=1})
+}}
+SUBST: d = c
+SUBST: e = 2
+COLOUR: c = lightmagenta
+KPROP: "H-}]) = no_rtele_into
+KPROP: "H-}]) = no_ctele_into
+MARKER: H = lua:fog_machine { \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 3, walk_dist = 1, cloud_type = "gloom" }
+MAP
+cccccccccccccccccccccc.......
+c...2...............cG.5.....
+cdcccccccccccccccccdcc...5...
+c--H":e:c9c8c8c0c0c0cG.4..5..
+c}--":::cdcdcdcdcdcdcc3.4..5.
+c]1H":::+............+......@
+c)--":::cdcdcdcdcdcdcc3.4..5.
+c--H":e:c9c8c8c0c0c0cG.4..5..
+cdcccccccccccccccccdcc...5...
+c...2...............cG.5.....
+cccccccccccccccccccccc.......
+ENDMAP
+
+##############################################################################
+NAME:    hangedman_snap_crack_crunch
+TAGS:    transparent no_monster_gen
+DEPTH:   Tar:1-6, Zot:1-4
+: if you.branch() == "Tar" then
+KMONS:   12 = patrolling reaper
+KMONS:   34 = patrolling tormentor
+KMONS:   56 = patrolling shadow demon
+KMONS:   7 = skeletal warrior
+KMONS:   8 = patrolling shadow imp / patrolling rotting devil
+KMONS:   AB = lich
+KMONS:   CD : vampire mage / mummy priest
+KMONS:   EF : shadow dragon w:5 / death drake
+KITEM:   | = nothing
+: else
+KMONS:   12 = patrolling lich w:5 / ancient lich
+KMONS:   34 = patrolling curse toe
+KMONS:   56 = patrolling bone dragon
+KMONS:   7 = death cob w:12 / small zombie w:2 / large zombie w:2 / \
+             small skeleton w:2 / large skeleton w:2 / guardian mummy w:4
+KMONS:   8 = patrolling death cob
+KMONS:   ABCD = shadow dragon
+KMONS:   EF = death drake
+: end
+KMONS:   0 = soul eater
+KMONS:   Z = curse skull
+SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
+SUBST:   { : -_= |:3, } : -= |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
+SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
+NSUBST:  - = 1:{ / 1:}, _ = 1:[ / 1 = (:80 <, = = 1:] / 1 = ):80 >
+NSUBST:  7 = 3:7 / 3:0 / 2 = 70
+MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
+                pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = -1 }
+MAP
+         xxxxxxxxx
+        xxxx...7.xx.@@.
+   xxxxxxxx..cc.7xx.....
+  xxxxxxxx.AcXc..xx....@
+  xxx......cGc...x.."..@
+  xx.'....cXc....x.8....
+  xx..cc..cc..cc..x..xxx
+  xx..cXc.....cXc..xxxxxx
+ xxx...cHc..1..cXc....7.x
+xxxx....cXc.....cXc....7x
+xxx..cc..cc..cc..cc..cc.x
+xx.BcXc....{cXc.....cXc.x
+x..cIc..2..cZc..3..cIc..x
+x.cXc.....cXc{....cXcC.xx
+x.cc..cc..cc..cc..cc..xxx
+x7....cXc.....cXc....xxxx
+x.7....cXc..4..cHc...xxx
+xxxxxx..cXc.....cXc..xx
+ xxx..x..cc..cc..cc..xx
+ ....8.x....cXc....'.xx
+ @.."..x...cGc......xxx
+ @....xx..cXcD.xxxxxxxx
+ .....xx7.cc..xxxxxxxx
+  .@@.xx.7...xxxx
+       xxxxxxxxx
+ENDMAP
+
+##############################################################################
 
 NAME:    hangedman_restless_catacombs
 TAGS:    no_monster_gen
@@ -826,40 +907,7 @@ xcccccccccccccccx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    hangedman_hellfire_club
-TAGS:    transparent no_monster_gen
-DEPTH:   Geh:1-6, Zot:1-4
-MONS:    red draconian scorcher / mottled draconian scorcher w:7 / \
-         pale draconian scorcher w:3
-MONS:    red draconian zealot / mottled draconian zealot w:7 / \
-         pale draconian scorcher w:3
-MONS:    hellion
-ITEM:    any potion good_item
-KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8
-KFEAT:   L = l
-KPROP:   l = no_cloud_gen
-SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, ()~- / ()~- / -~(), () / {( / }) / '' / ''
-SUBST:   4 = 3, ' = .:99 >:1, ( = ( <:2, ) = ) >:2
-: if you.branch() == "Geh" then
-SUBST:   d$ = .
-: end
-MAP
-xxxxxxxx.@.xxxxxxxx
-xccccccxx.xxccccccx
-xcd$$1cc...cc2$$dcx
-xcd$$cc.....cc$$dcx
-xc.~cc..x.x..cc..cx
-xc.cc..GxlxG..cc.cx
-xc....xxLllxx....cx
-xc.(...llLll...).cx
-xc....xxllLxx....cx
-xc.cc..GxlxG..cc.cx
-xc..cc..x.x..cc-.cx
-xcd$$cc.....cc$$dcx
-xcd$$3cc...cc4$$dcx
-xccccccxx.xxccccccx
-xxxxxxxx.@.xxxxxxxx
-ENDMAP
+################################################################################
 
 NAME:    hangedman_tartarus_temple_path
 TAGS:    transparent extra
@@ -889,39 +937,6 @@ x...c.....cd..{..dc.....c...x
 @...cd.c.dcccccccccd.c.dc...@
 .x..cccccccCCCCCCCccccccc..x.
  .@xxxxxxxxxxxxxxxxxxxxxxx@.
-ENDMAP
-
-# Looks really weird and silly in layout_dis, so it's limited to the city layouts.
-NAME:    hangedman_dis_monolith
-TAGS:    transparent layout_city layout_chaotic_city
-DEPTH:   Dis:1-6
-ORIENT:  float
-MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
-         patrolling executioner
-MONS:    patrolling hell sentinel
-MONS:    iron devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
-         iron dragon zombie w:5 / iron troll skeleton w:5 / \
-         iron troll zombie w:5 / hell knight w:15
-MONS:    hellion / tormentor / reaper / \
-         dancing weapon w:20 ; glaive good_item | battleaxe good_item | \
-                               great sword good_item | great mace good_item
-SHUFFLE: ABa / CDb / EFc
-NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
-SUBST:   ABCDE = 3:19 4:1, a = +, bc = v, V : v.
-MAP
-.....................................................
-.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
-.vv.v..v.......v.......v.....v.......v.......v..v.vv.
-.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
-.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
-3vvAAAvvvvvvvvvvvvvvvvvvvCCCvvvvvvvvvvvvvvvvvvvEEEvv3
-4vvvavvvvvvvvvvvvvvvvvvvvvbvvvvvvvvvvvvvvvvvvvvvcvvv4
-3vvBBBvvvvvvvvvvvvvvvvvvvDDDvvvvvvvvvvvvvvvvvvvFFFvv3
-.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
-.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
-.vv.v..v.......v.......v.....v.......v.......v..v.vv.
-.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
-.....................................................
 ENDMAP
 
 ##############################################################################
