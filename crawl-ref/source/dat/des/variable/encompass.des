@@ -509,9 +509,9 @@ xxxZ.......aaaaaaa....9.&.....0aal%&&......+m.&&%%%%%%llaa
  xxX''''''aa....0.&.....0aa&...+.a&+&+&aaaaaaaaaa'x'x'Xxx
  xxX''''''aa.ABC.&+&.JKL.aY&.&.a+a.&.&.aaaaaEaaaa'''''Xxx
  xxX'CBA''aE.DED..&..MNM.a..efc..a...!?.&.0..67aa''x''Xxx
- xxX'DED''aa.CBA.&+&.LKJ.a.&dgf&.a.nqp!&+&.ADC6aa''''''Xxx
- xxX'ABC''aa9.....&.0....a%0cde..a.oro..&..BEB.Ea'x'x''Xxxx
- xxX''''''aaaaEaaaaa.&.&.a*80&.&&a.pqn.&+&.CDA.aa'''''''Xxx
+ xxX'DED''aa.CBA.&+&.LKJ.a.&dgf&.a.nqp!&+&.ABC6aa''''''Xxx
+ xxX'ABC''aa9.....&.0....a%0cde..a.oro..&..DED.Ea'x'x''Xxxx
+ xxX''''''aaaaEaaaaa.&.&.a*80&.&&a.pqn.&+&.CBA.aa'''''''Xxx
  xxX''''''aaaaaaaaaa&+&+&a|*%..Yaa9.....&.....0aa''x'xx'Xxx
  xxX'pon''aawwwwwwaa.&.&.aaaaaaaa+aaaaaaaa.&.&.aa'''''''Xxx
  xxX'qrq''aaw2112waa....5.&.....0aa*%%..0a&+&+&aa'x'x''Xxxx
@@ -980,7 +980,7 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
 DEPTH:   D:16-26
 ORIENT:  encompass
 KMONS:   - = plant
-KMONS:   _ = plant col:random name:demonic name_adjective
+KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
 KMONS:   no = human ; dart ego:exploding w:21 | dart ego:dispersal w:2 | \
                       dart ego:none w:1 | wand of lightning w:1 . \
                       mundane flail | mundane falchion | mundane trident . \

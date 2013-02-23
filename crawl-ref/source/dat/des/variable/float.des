@@ -21,6 +21,13 @@ local a = you.absdepth() * 5
     e.subst(variables .. " : x:50 c:" .. a)
   end
 end
+
+function init_protected_by_tso(e)
+  e.tags('uniq_protected_by_tso')
+  e.colour('- : yellow')
+  e.lua_marker('!', message_at_spot("You almost think you hear a voice: \"Seek not undue power, mortal.\"", "warning"))
+  e.subst('- : +')
+end
 }}
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
@@ -31,11 +38,11 @@ default-depth: D:12-26
 # Elevator
 #
 NAME:    lemuel_elevator
-DEPTH:   D:2-26, Elf:2-4, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
-ORIENT:  float
 TAGS:    allow_dup extra
+DEPTH:   D:2-26, Elf:2, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
+ORIENT:  float
 SUBST:   m:mn
-SHUFFLE: {}, ]}) , [{(
+SHUFFLE: ]}), [{(
 MAP
 mmmm
 m{}m
@@ -1083,20 +1090,20 @@ SUBST:   1 : 1112
 SUBST:   1=1. , 2=2.... , 3=3. , 4=4. , 5=5. , 6=6.
 SUBST:   ':.x''' , '=.x , .=......ww17
 MAP
-              xxxxxxxxxxxxxxxx
-             xxx11'cccccccxxxx
-            xxx'...c..?v3cx1xx
-           xx111.3.c&'.v3c14xx
-           x111'.......&&c4xxx
-           xxx3.11..1xxccc.44x
-             xxx.1.1113x..'xxx
-              xxx'&..11.'xxx
-               x1xxx'..xxx
-               xxx xx'.'xx
-                    xxx44xxxx
-                      xx'.44xx
-                       xxxx.'x
-                          xx@x
+   xxxxxxxxxxxxxxxx
+  xxx11'cccccccxxxx
+ xxx'...c..?v3cx1xx
+xx111.3.c&'.v3c14xx
+x111'.......&&c4xxx
+xxx3.11..1xxccc.44x
+  xxx.1.1113x..'xxx
+   xxx'&..11.'xxx
+    x1xxx'..xxx
+    xxx xx'.'xx
+         xxx44xxxx
+           xx'.44xx
+            xxxx.'x
+               xx@x
 ENDMAP
 
 ##############################################################################
@@ -1230,9 +1237,9 @@ ENDMAP
 # Intentionally used ORIENT: float in order to enforce rooms+corridors.
 #
 NAME:   zaba_anthole
+TAGS:   extra
 ORIENT: float
-TAGS:   allow_dup
-DEPTH:  D:3-9, Lair
+DEPTH:  D:5-9, Lair
 MONS:   worker ant / nothing w:5
 MAP
    @
@@ -1251,7 +1258,7 @@ ENDMAP
 NAME:   lemuel_insect_pit
 TAGS:   no_rotate
 ORIENT: float
-DEPTH:  D:5-12, Elf
+DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   giant centipede w:15 / giant mite w:25
@@ -1262,7 +1269,7 @@ c...............c
 c...............c
 c....vvvvvvv....c
 c....v11111v....c
-c....=11111=....c
+c....=11*11=....c
 c....v11111v....c
 c....vvvvvvv....c
 c...............c
@@ -1473,7 +1480,7 @@ ENDMAP
 #
 NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   D:16-20, Lair:3-, Snake
+DEPTH:   D:16-21, Lair:6-, Snake:1-4
 ORIENT:  float
 SHUFFLE: AB@
 SUBST:   x = .:30 W x:4
@@ -1485,11 +1492,14 @@ KFEAT:   G = x / . / w / W
 KFEAT:   H = . / W
 KMONS:   D = Plant / w:200 nothing
 KMONS:   E = w:2 slime creature / swamp worm /\
-             w:2 vampire mosquito / w:1 electric eel / w:1000 nothing
+             w:2 vampire mosquito / w:1 crocodile / w:1000 nothing
 KMONS:   F = w:2 slime creature / swamp worm /\
-             w:2 vampire mosquito / w:2 electric eel / w:1000 nothing
-KMONS:   H = swamp drake / swamp dragon / hydra / w:20 nothing
-KITEM:   H = any good_item / any potion / w:20 nothing / gold
+             w:2 vampire mosquito / w:2 swamp drake / w:1000 nothing
+KMONS:   H = swamp drake / swamp dragon / hydra
+KITEM:   H = any good_item / any potion / gold
+: if you.branch() ~= "Snake" and you.absdepth() < 18 then
+NSUBST:  H = 3:H / 2 = HH.W / *: .W
+: end
 MAP
 xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
 xxxxxxGGGxxxxxxGEDEExxxxGGxxxxxxx
@@ -1515,7 +1525,7 @@ ENDMAP
 # Another low-level vault - LP
 #
 NAME:    lemuel_reptile_caves
-DEPTH:   D:10-13, Lair, Snake
+DEPTH:   D:10-13, Lair:1-5
 ORIENT:  float
 MONS:    giant gecko / giant newt, crocodile, iguana
 MONS:    fire drake / swamp drake
@@ -1663,39 +1673,33 @@ ENDMAP
 # powerful item under the guard of an angel or daeva.
 
 NAME:    abrahamwl_protected_by_tso_1
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 ORIENT:  float
-TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
-TAGS:    luniq_protected_by_tso
 WEIGHT:  4
 DEPTH:   D:23-27
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
-COLOUR:  - : yellow
-SUBST:   - : +
-MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
-                                   \"Seek not undue power, mortal.\"", \
-                                   "warning" )
-SUBST:   ! : .
+: init_protected_by_tso(_G)
 MAP
          xxxxx
-   xxxxxxxXXXxxxxxxx
-   xXXXXXXX1XXXXXXXx
-   xX|...-...-...|Xx
-   xXXXXXX...XXXXXXx
-   xxxxxXX...XXxxxxx
-     xxxXG...GXxxx
-    xxxxXX...XXxxxx
-    xXXXXX...XXXXXx
-    xXxxxx---xxxxXx
-    xX...........Xx
-    xX...........Xx
-    xX..G.....G..Xx
-    xX...........Xx
-    xX.....1.....Xx
-    xX...........Xx
-    xX..G.....G..Xx
-    xX...........Xx
-    xX...........Xx
-    xXXXXXX-XXXXXXx
+   xxxxxxxcccxxxxxxx
+   xccccccc1cccccccx
+   xc|...-...-...|cx
+   xcccccc...ccccccx
+   xxxxxcc...ccxxxxx
+     xxxcG...Gcxxx
+    xxxxcc...ccxxxx
+    xccccc...cccccx
+    xcxxxx---xxxxcx
+    xc...........cx
+    xc...........cx
+    xc..G.....G..cx
+    xc...........cx
+    xc.....1.....cx
+    xc...........cx
+    xc..G.....G..cx
+    xc...........cx
+    xc...........cx
+    xcccccc-ccccccx
     xxxxxxx!xxxxxxx
        xxxx+xxxx
            @
@@ -1703,8 +1707,7 @@ ENDMAP
 
 NAME:    abrahamwl_protected_by_tso_2
 ORIENT:  float
-TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
-TAGS:    luniq_protected_by_tso
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  4
 DEPTH:   D:18-27
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
@@ -1715,37 +1718,32 @@ SUBST:   | = .
 SUBST:   % = |
 SUBST:   ? = +
 : else
-SUBST:   % = X
-SUBST:   ? = X
+SUBST:   % = c
+SUBST:   ? = c
 : end
 COLOUR:  _ : yellow
-SUBST:   _ : .
-SUBST:   T = T F:1
-COLOUR:  - : yellow
-SUBST:   - : +
-MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
-                                   \"Seek not undue power, mortal.\"", \
-                                   "warning" )
-SUBST:   ! : .
+FTILE:   _A : floor_limestone
+SUBST:   T = T G:1
+: init_protected_by_tso(_G)
 MAP
     xxxxxxxxxxxxxxx
-  xxxXXXXXXXXXXXXXxxx
-  xXXX_____A_____XXXx
-  xX%?Wwwww_wwwwW+|Xx
-  xXXXxWwww_wwwWxXXXx
-  xxxXxxWWw_wWWxxXxxx
-   xXXxxxx._.xxxxXXx
-   xxXxxxx---xxxxXxx
-    xX...........Xx
-    xX...........Xx
-    xX..G.....G..Xx
-    xX...........Xx
-    xX.....1.....Xx
-    xX...........Xx
-    xX..G.....G..Xx
-    xX...........Xx
-    xX...........Xx
-    xXXXXXX-XXXXXXx
+  xxxcccccccccccccxxx
+  xccc_____A_____cccx
+  xc%?Wwwww_wwwwW+|cx
+  xcccxWwww_wwwWxcccx
+  xxxcxxWWw_wWWxxcxxx
+   xccxxxx._.xxxxccx
+   xxcxxxx---xxxxcxx
+    xc...........cx
+    xc...........cx
+    xc..G.....G..cx
+    xc...........cx
+    xc.....1.....cx
+    xc...........cx
+    xc..G.....G..cx
+    xc...........cx
+    xc...........cx
+    xcccccc-ccccccx
     xxxxxxx!xxxxxxx
        xxxx+xxxx
            @
@@ -1753,8 +1751,8 @@ ENDMAP
 
 NAME:    abrahamwl_protected_by_tso_3
 ORIENT:  float
-TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
-TAGS:    luniq_protected_by_tso
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
+TAGS:    uniq_protected_by_tso
 WEIGHT:  4
 DEPTH:   D:18-27
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
@@ -1765,39 +1763,33 @@ SUBST:   | = .
 SUBST:   % = |
 SUBST:   ? = +
 : else
-SUBST:   % = X
-SUBST:   ? = X
+SUBST:   % = c
+SUBST:   ? = c
 : end
 COLOUR:  _ : yellow
-SUBST:   _ : .
+FTILE:   _A : floor_limestone
 SUBST:   T = T F:1
-COLOUR:  - : yellow
-SUBST:   - : +
-MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
-                                   \"Seek not undue power, mortal.\"", \
-                                   "warning" )
-SUBST:   ! : .
 MAP
       xxxxxxxxxxx
-     xxxxxXXXxxxxx
-    xxxxxxX|Xxxxxxx
-    xXXXXXX+XXXXXXx
-   xxXWWWWTATWWWWXx
-  xxxXW.._____..WXx
-  xXXXWt..___..tWXx
-  xX%?W...___...WXx
-  xXXXWt..___..tWXx
-  xxxXxxxx---xxxxXx
-    xX...........Xx
-    xX...........Xx
-    xX..G.....G..Xx
-    xX...........Xx
-    xX.....1.....Xx
-    xX...........Xx
-    xX..G.....G..Xx
-    xX...........Xx
-    xX...........Xx
-    xXXXXXX-XXXXXXx
+     xxxxxcccxxxxx
+    xxxxxxc|cxxxxxx
+    xcccccc+ccccccx
+   xxcWWWWTATWWWWcx
+  xxxcW.._____..Wcx
+  xcccWt..___..tWcx
+  xc%?W...___...Wcx
+  xcccWt..___..tWcx
+  xxxcxxxx---xxxxcx
+    xc...........cx
+    xc...........cx
+    xc..G.....G..cx
+    xc...........cx
+    xc.....1.....cx
+    xc...........cx
+    xc..G.....G..cx
+    xc...........cx
+    xc...........cx
+    xcccccc-ccccccx
     xxxxxxx!xxxxxxx
        xxxx+xxxx
            @
@@ -1811,7 +1803,7 @@ DEPTH:  D:14-24
 ORIENT: float
 KFEAT:  m = iron_grate
 MONS:   eye of devastation / great orb of eyes w:2
-MONS:   golden eye / shining eye w:2
+MONS:   golden eye / eye of draining w:2
 MONS:   giant orange brain
 MAP
 ...................................
@@ -2614,11 +2606,11 @@ ENDMAP
 
 NAME:    hangedman_arrow_trap
 ORIENT:  float
-DEPTH:   D:12-
-SHUFFLE: {( / }) / {} / {}
+DEPTH:   D:12-26
+SHUFFLE: [( / ]) / [] / []
 MAP
 xxxxxxxxxxxxxxxxxx
-x*xxxx*x{(x*xxxx*x
+x*xxxx*x[(x*xxxx*x
 x..x9x9x..x9x9x..x
 xx..x9xx..xx9x..xx
 xxx..x0x00x0x..xxx
@@ -2633,7 +2625,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   nicolae_whirlpool
-TAGS:   patrolling no_pool_fixup no_rotate
+TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen
 ORIENT: float
 MONS:   centaur, centaur warrior
 DEPTH:  D:6-20
@@ -3210,8 +3202,7 @@ NAME:   hangedman_cross_cluster
 TAGS:   patrolling transparent no_monster_gen
 DEPTH:  D:8-
 ORIENT: float
-MONS:   place:D:3 w:98 / lesser demon w:1 / place:D:3 zombie w:1
-SUBST:  C = CTUV, y : xc, z : ccvb
+SUBST:  C = CTUV, y : xc, z : ccvb, 1 = 0''
 KMASK:  ' = !no_monster_gen
 MAP
               '''''''''
@@ -3224,7 +3215,7 @@ MAP
      '''...x.....xxx.....x...'''
  '''''''x.1x$.x'''''''x.$x1.x'''''''
 ''''''''xxxyxxx'''''''xxxyxxx''''''''
-'''xxx..x.$x0.x..ccc..x.0x$.x..xxx.''
+''.xxx..x.$x0.x..ccc..x.0x$.x..xxx.''
 ''..x......x......c......x......x...'
 'x.1x$.x..xxx..c.%c%.c..xxx..x.$x1.x'
 'xxxyxxx'''''''ccczccc'''''''xxxyxxx'
@@ -3397,7 +3388,7 @@ NSUBST: A = 3 / '
 KFEAT:  _ = altar_zin
 FTILE:  '+_!$%*|1234D = floor_vault
 TILE:   v = dngn_metal_wall_white
-TILE:   n = dngn_transparent_stone_white
+TILE:   c = dngn_transparent_wall_white
 COLOUR: v = white
 KFEAT:  D = runed_door
 SUBST:  !' = .

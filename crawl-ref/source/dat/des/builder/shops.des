@@ -14,16 +14,11 @@ end
 
 NAME: serial_shops
 TAGS: allow_dup extra luniq
-DEPTH: 4-
+DEPTH: D:4-, Orc, Elf, Shoals, Snake, Vaults
 CHANCE: 20% (D)
 CHANCE: 30% (Orc)
-CHANCE: 40% (Elf)
-CHANCE: 20% (Shoals)
-CHANCE: 20% (Snake)
-CHANCE: 40% (Vaults)
-CHANCE: 20% (Forest)
-CHANCE: 30% (Dwarf)
-CHANCE: 0
+CHANCE: 40% (Elf, Vaults)
+CHANCE: 20% (Shoals, Snake)
 {{
 hook("post_place", function()
     local num = num_shops()
@@ -96,7 +91,7 @@ ENDMAP
 NAME:    guppyfry_shop_venom
 TAGS:    no_monster_gen
 DEPTH:   D:4-
-MONS:    ball python / adder / water moccasin, place:Snake:1
+MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          w:25 potion of poison | w:5 potion of strong poison | \
          w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
@@ -119,18 +114,19 @@ ENDMAP
 #####################################################
 # Custom earth shop Vault
 NAME:    guppyfry_shop_earth
-TAGS:    no_monster_gen mini_float no_rtele_into
+TAGS:    no_monster_gen
 DEPTH:   D:11-
-KMONS:   1 = gargoyle / boulder beetle / boring beetle / earth elemental / clay golem
-KMONS:   2 = stone giant / earth elemental / crystal golem / iron golem / stone golem
+KMONS:   1 = gargoyle / boulder beetle / boring beetle / earth elemental / cyclops
+KMONS:   2 = stone giant / earth elemental / catoblepas / deep troll earth mage / stone golem
 KMONS:   3 = boring beetle
 ITEM:    stone, wand of digging
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | \
-         w:8 sling | w:8 sling bullet | w:4 sling bullet ego:steel| \
-         w:14 stone of earth elementals | w:7 crystal ball of energy | \
-         w:4 wand of digging | w:9 randbook disc:earth | \
+         w:15 stone | w:15 large rock | w:8 sling | w:8 sling bullet | \
+         w:4 sling bullet ego:steel | w:14 stone of earth elementals | \
+         w:7 crystal ball of energy | w:4 wand of digging | \
+         w:5 randbook disc:earth | w:2 book of the earth | w:2 book of geomancy | \
          w:4 staff of earth | w:4 wand of disintegration | w:1 crystal plate armour
+KPROP:   ?v = no_rtele_into
 SUBST:   ? = 2d.
 SUBST:   - = 3e.
 : if you.absdepth() < 15 then
@@ -175,17 +171,21 @@ NAME:    guppyfry_shop_fishing
 TAGS:    no_monster_gen mini_float
 DEPTH:   D:4-
 KMONS:   1 = giant goldfish / big fish
-KMONS:   2 = place:Shoals:1
+KMONS:   2 = merfolk / mermaid / shark / snapping turtle
+KMONS:   3 = sea snake
 KFEAT:   v = general shop type:Fishing suffix:Supplies count:7 ; \
-         w:10 big fish corpse | w:10 giant goldfish corpse | \
+         w:999 big fish corpse | w:10 giant goldfish corpse | \
          w:10 shark corpse | w:10 jellyfish corpse | w:10 snapping turtle corpse | \
          w:10 throwing net | w:5 javelin | w:5 spear | w:5 trident | \
          w:1 javelin ego:penetration | w:1 spear ego:electrocution | \
          w:1 trident ego:electrocution | w:1 demon trident | \
          w:8 potion of flight | w:5 ring of flight
-SUBST:   ? = 2Ww
-: if you.absdepth() < 8 then
-SUBST:   2 = 1
+KFEAT:   123 = shallow_water
+SUBST:   ? = 1Ww
+: if you.absdepth() > 11 then
+SUBST:   1 = 2:6 3:1
+: elseif you.absdepth() > 7 then
+SUBST:   1 = 2
 : end
 MAP
 .WWW.

@@ -1139,6 +1139,7 @@ SUBST:  T = t:66 .:33 >:1
 COLOUR: . = brown
 COLOUR: t = w:2 darkgrey / w:1 brown
 TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
 MAP
 xxxxxxxx@xxxxxxxx
 xttttttT.TTtttxxx

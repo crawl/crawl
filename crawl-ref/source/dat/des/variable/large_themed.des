@@ -97,7 +97,7 @@ ENDMAP
 #
 NAME:    statuecave_lemuel
 ORIENT:  northeast
-DEPTH:   D:7-27, Lair, Crypt
+DEPTH:   D:7-18, Lair, Crypt:1-4
 MONS:    ice statue / orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
@@ -807,7 +807,6 @@ NAME:   minmay_twisted_water
 ORIENT: north
 DEPTH:  D:9-20
 SUBST:  W = wW
-# Only the dragon can fly; depth is consistent with dragon1_lemuel.
 MONS:   ice statue, patrolling ice dragon, patrolling frost giant, ice beast
 KMONS:  w = w:490 nothing / ice beast
 KFEAT:  w = w
@@ -1255,16 +1254,14 @@ MARKER: ! = lua:fog_machine { \
                 size_buildup_time = 10, cloud_type = "flame" \
             }
 KFEAT:  _ = altar_vehumet
-: if you.absdepth() < 22 then
-# Given a special name so they stand out in tiles mode
-MONS:   statue hd:9 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
+## Made to be always the same hd for consistency. - HangedMan
+MONS:   statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
         name:conjurer n_adj
+: if you.absdepth() < 22 then
 MONS:   w:6 deep elf conjurer / w:2 wizard / w:1 spriggan air mage / w:1 deep elf annihilator
 MONS:   w:3 deep elf annihilator / w:1 deep elf conjurer
 KMONS:  5 = nikola, deep elf annihilator
 : else
-MONS:   statue hd:13 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
-        name:conjurer n_adj
 MONS:   w:4 deep elf conjurer / w:2 wizard / w:2 spriggan air mage / w:2 deep elf annihilator
 MONS:   w:2 deep elf annihilator / w:1 draconian annihilator
 KMONS:  5 = frederick, boris, draconian annihilator

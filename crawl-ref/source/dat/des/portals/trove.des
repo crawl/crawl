@@ -756,24 +756,27 @@ WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
 ITEM:    chain mail unrand:lears_chain_mail                                  /\
- randart plate armour w:50                                                   /\
+         randart plate armour w:50                                           /\
          plate armour unrand:maxwells_patent_armour                          /\
- randart fire dragon armour                                                  /\
+         randart fire dragon armour                                          /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
- randart crystal plate armour                                                /\
- randart robe w:50                                                           /\
-         leather armour unrand:salamander_hide_armour / robe unrand:robe_of_night /\
+         randart crystal plate armour                                        /\
+         leather armour unrand:salamander_hide_armour / randart robe w:50    /\
+         robe unrand:robe_of_night / robe unrand:robe_of_clouds              /\
          robe unrand:robe_of_misfortune / animal skin unrand:skin_of_zhor    /\
          robe unrand:robe_of_augmentation / robe unrand:robe_of_folly        /\
- randart buckler / randart shield / randart large shield                     /\
+         randart buckler / randart shield / randart large shield             /\
          shield unrand:shield_of_resistance / shield unrand:bullseye         /\
-         shield unrand:large_shield_of_ignorance                             /\
- randart cloak w:25                                                          /\
+         large shield unrand:large_shield_of_ignorance                       /\
+         shield unrand:shield_of_the_gong / randart cloak w:25               /\
          cloak unrand:cloak_of_flash / cloak unrand:cloak_of_starlight       /\
-         cloak unrand:cloak_of_the_thief
+         cloak unrand:cloak_of_the_thief / cloak unrand:ratskin_cloak
 ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          ring of protection unrand:ring_of_robustness                        /\
          ring of invisibility unrand:ring_of_shadows                         /\
+         ring of wizardry unrand:ring_of_the_mage                            /\
+         ring of protection unrand:ring_of_the_octopus_king                  /\
+         ring of regeneration unrand:ring_of_vitality                        /\
          amulet of inaccuracy unrand:amulet_of_the_air                       /\
          amulet of clarity unrand:amulet_of_the_four_winds                   /\
          amulet of warding unrand:amulet_of_cekugob                          /\
@@ -781,28 +784,37 @@ ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          amulet of rage unrand:necklace_of_bloodlust                         /\
          helmet unrand:crown_of_dyrovepreva / randart helmet / randart cap   /\
          cap unrand:mask_of_the_dragon / randart wizard hat                  /\
+         cap unrand:hat_of_the_bear_spirit                                   /\
          wizard hat unrand:hat_of_the_alchemist / randart pair of gloves     /\
          wizard hat unrand:hat_of_pondering / randart pair of boots          /\
          pair of boots unrand:boots_of_the_assassin                          /\
          pair of gloves unrand:gauntlets_of_war                              /\
-         pair of gloves unrand:fencers_gloves
+         pair of gloves unrand:fencers_gloves                                /\
+         naga barding unrand:lightning_scales                                /\
+         centaur barding unrand:black_knights_horse_barding
 ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
-         dagger unrand:spriggans_knife / long sword unrand:sword_of_jihad    /\
+         dagger unrand:spriggans_knife / eudemon blade unrand:sword_of_jihad /\
          dagger unrand:morg / great sword unrand:sword_of_the_doom_knight    /\
-         great sword unrand:sword_of_power / long sword unrand:bloodbane     /\
+         great sword unrand:sword_of_power / demon blade unrand:bloodbane    /\
          scimitar unrand:scimitar_of_flaming_death / war axe unrand:arga     /\
-         dagger unrand:knife_of_accuracy / long sword unrand:plutonium_sword /\
+         dagger unrand:knife_of_accuracy / broad axe unrand:obsidian_axe     /\
+         triple sword unrand:plutonium_sword /\
          demon blade unrand:leech / long sword unrand:sword_of_zonguldrok    /\
          staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
-         quarterstaff unrand:elemental_staff                                 /\
-         glaive unrand:glaive_of_prune                                       /\
+         quarterstaff unrand:elemental_staff / mace unrand:devastator        /\
+         staff of channeling unrand:staff_of_wucad_mu                        /\
+         glaive unrand:glaive_of_prune / spear unrand:lehudibs_crystal_spear /\
+         spear unrand:spear_of_the_botono / long sword unrand:singing_sword  /\
          battleaxe unrand:wrath_of_trog / glaive unrand:glaive_of_the_guard  /\
          trident unrand:trident_of_the_octopus_king / spear unrand:wyrmbane  /\
          scythe unrand:scythe_of_curses / giant club unrand:skullcrusher     /\
          great mace unrand:undeadhunter / whip unrand:snakebite              /\
          mace unrand:sceptre_of_torment / mace unrand:mace_of_variability    /\
-         sling unrand:punk / bow unrand:bow_of_krishna_"sharnga"             /\
-         crossbow unrand:hellfire / longbow unrand:piercer                   /\
+         mace unrand:mace_of_brilliance / morningstar unrand:eos             /\
+         sling unrand:punk / longbow unrand:bow_of_krishna_"sharnga"         /\
+         crossbow unrand:hellfire / crossbow unrand:sniper                   /\
+         longbow unrand:piercer / longbow unrand:storm_bow                   /\
+         long sword unrand:autumn_katana / sabre unrand:captains_cutlass     /\
          randart demon blade  / blowgun unrand:blowgun_of_the_assassin
 SHUFFLE: def
 : trove.setup_features(_G)

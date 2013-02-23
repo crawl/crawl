@@ -1059,7 +1059,6 @@ KFEAT:  m = iron_grate
 MONS:   patrolling lich / patrolling ancient lich
 MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
-WEIGHT: 10
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:99 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue

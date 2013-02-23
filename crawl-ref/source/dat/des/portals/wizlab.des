@@ -83,9 +83,6 @@
 #
 # *MUST* make these look awesome in tiles, too.
 #
-# Overall todo: random monster lists for each vault (shadows for Wucad Mu)
-# (must have them or Shadow Creatures won't work)
-#
 ##
 
 {{
@@ -118,6 +115,7 @@ function wizlab_portal (e)
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.tile("O = no_random dngn_portal_wizard_lab")
+    e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
 end
 
 -- Destinations:
@@ -416,11 +414,9 @@ default-depth: Crypt, D:22-27, Elf:3-5
 # Portal entrances.
 #
 # Todo: more, and better.
-NAME:       enter_wizlab_1
-TAGS:       uniq_wizlab chance_wizlab
-CHANCE:     5%
+NAME:       mu_enter_wizlab_1
 ORIENT:     float
-TILE:       m = dngn_transparent_stone_green
+TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
 :           wizlab_portal(_G)
 MAP
@@ -435,28 +431,22 @@ wwbm..O..mbww
     w.@.w
 ENDMAP
 
-###############################################################################
-# Basic Entrance 2 (by Mu.)
-#
-NAME:       enter_wizlab_2
-TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
-CHANCE:     5%
+NAME:       mu_enter_wizlab_2
 ORIENT:     float
 SHUFFLE:    tU
 TILE:       m = dngn_transparent_wall_green
-TILE:       m = dngn_transparent_stone_green
-COLOUR:     mn = lightgreen
+COLOUR:     m = lightgreen
 TILE:       c = wall_stone_gray
 :           wizlab_portal(_G)
 MAP
 .................
 .bbbbbbbmbbbbbbb.
 .bb...b...b...bb.
-.n..U...O...U..n.
+.m..U...O...U..m.
 .bb...b...b...bb.
 .bbbbbbb+bbbbbbb.
 ..bb...b.b...bb..
-..n..t.....t..n..
+..m..t.....t..m..
 ..bb...b.b...bb..
 ..bbbbbb+bbbbbb..
 .................
@@ -465,15 +455,8 @@ MAP
 .................
 ENDMAP
 
-
-###############################################################################
-# Basic Entrance 3 (by Mu.)
-#
-NAME:       enter_wizlab_3
-TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
-CHANCE:     5%
+NAME:       mu_enter_wizlab_3
 ORIENT:     float
-:           wizlab_portal(_G)
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 5, \
@@ -484,21 +467,23 @@ MARKER:     ? = lua:fog_machine { \
                  size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
-COLOUR:     . = red / blue
-KPROP:      .?! = no_rtele_into
+COLOUR:     .' = red / blue
+KPROP:      '?! = no_rtele_into
+SUBST:      ' = .
 TILE:       n = dngn_transparent_stone_magenta
 COLOUR:     n = lightmagenta
 TILE:       c = wall_stone_gray
+:           wizlab_portal(_G)
 MAP
  ccccccccc
-cc..!.?..cc
-c?.......!c
-c..nnnnn..c
-c..n...n..c
-c..n.O.n..c
-c.?n...n!.c
-c..nn.nn..c
-c..nn.nn..c
+cc''!'?''cc
+c?'''''''!c
+c''nnnnn''c
+c''n...n''c
+c''n.O.n''c
+c'?n...n!'c
+c''nn.nn''c
+c''nn.nn''c
 cc!n.n.n?cc
  ccnn.nncc
   cc.n.cc
@@ -506,17 +491,11 @@ cc!n.n.n?cc
     c@c
 ENDMAP
 
-###############################################################################
-# Basic Entrance 4 (by Mu.)
-#
-NAME:       enter_wizlab_4
-TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
-CHANCE:     5%
-ORIENT:     float
-:           wizlab_portal(_G)
+NAME:       mu_enter_wizlab_4
 KFEAT:      ! = floor
 COLOUR:     ! = magenta
 FTILE:      !O = floor_rough_magenta
+:           wizlab_portal(_G)
 MAP
     xxxxx
     w!!!x
@@ -530,12 +509,7 @@ w..www
 @www
 ENDMAP
 
-###############################################################################
-# Basic Entrance 5 (by Mu.)
-#
-NAME:       enter_wizlab_5
-TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
-CHANCE:     5%
+NAME:       mu_enter_wizlab_5
 ORIENT:     float
 COLOUR:     U = random
 COLOUR:     W = mutagenic
@@ -543,6 +517,7 @@ KFEAT:      o = granite_statue
 FTILE:      WU.Oo = floor_rough_magenta
 TILE:       b = dngn_crystal_magenta
 :           wizlab_portal(_G)
+: set_feature_name("green_crystal_wall", "wall of crystal")
 MAP
 bbbbbbbbbbb
 bbbb...bbbb
@@ -558,16 +533,10 @@ bbbb...bbbb
      @
 ENDMAP
 
-###############################################################################
-# Basic Entrance 6 (by Mu.)
-#
-NAME:       enter_wizlab_6
-TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
-CHANCE:     5%
-ORIENT:     float
+NAME:       mu_enter_wizlab_6
 SUBST:      x = mc.
 TILE:       c = wall_stone_white
-TILE:       m = dngn_transparent_wall_magenta
+TILE:       m = dngn_transparent_stone_magenta
 FTILE:      mcx.O = floor_rough_magenta
 :           wizlab_portal(_G)
 MAP
@@ -584,12 +553,11 @@ x.x.x.x.x..
 .x.x.x.x.xc
 ENDMAP
 
-NAME:   enter_wizlab_7
-TAGS:   uniq_wizlab no_item_gen no_monster_gen chance_wizlab
-CHANCE: 5%
-ORIENT: float
+NAME:   mu_enter_wizlab_7
 KFEAT:  abcd : floor
 KFEAT:  ABCD : rock_wall
+TILE:   ABCD = floor_rough_white
+TILE:   ABCD = wall_zot_white
 COLOUR: Aa : yellow
 COLOUR: Bb : green
 COLOUR: Cc : blue
@@ -613,36 +581,7 @@ xxxxxxxxxxx.x
 xxxxxxxxxxxxx
 ENDMAP
 
-# Vaults Entries #################################
-#  - these are placed by tag, not be CHANCE:
-
-default-depth:
-
-NAME:     vaults_room_1_spin_wizlab_default
-TAGS:     vaults_room_1_spin_wizlab allow_dup uniq_wizlab unrand
-TAGS:     no_monster_gen no_item_gen
-: wizlab_portal(_G)
-MAP
-O
-ENDMAP
-
-NAME:     vaults_room_4_spin_wizlab_magenta
-TAGS:     vaults_room_4_spin_wizlab allow_dup uniq_wizlab unrand
-TAGS:     no_monster_gen no_item_gen
-NSUBST:   O = 1:O / *:.
-COLOUR:   . = magenta
-FTILE:    O. = floor_rough_magenta
-: wizlab_portal(_G)
-MAP
-O...
-.OO.
-....
-....
-ENDMAP
-
-NAME:     vaults_room_7_spin_wizlab_default
-TAGS:     vaults_room_7_spin_wizlab allow_dup uniq_wizlab unrand
-TAGS:     no_monster_gen no_item_gen
+NAME:     infiniplex_enter_wizlab_glasses
 FTILE:    GO_ = floor_rough_magenta
 TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
@@ -659,9 +598,7 @@ MAP
 .......
 ENDMAP
 
-NAME:     vaults_room_10_spin_wizlab_water
-TAGS:     vaults_room_10_spin_wizlab allow_dup uniq_wizlab unrand
-TAGS:     no_monster_gen no_item_gen
+NAME:     infiniplex_enter_wizlab_water
 FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
@@ -681,12 +618,9 @@ ww.wwww.ww
 ww......ww
 ENDMAP
 
-NAME:     vaults_room_15_spin_wizlab_spiral
-TAGS:     vaults_room_15_spin_wizlab allow_dup uniq_wizlab unrand
-TAGS:     no_pool_fixup no_monster_gen no_item_gen
+NAME:     infiniplex_enter_wizlab_spiral
 SUBST:    G : xG.
 SUBST:    x : xx.
-: wizlab_portal(_G)
 MARKER:   ! = lua:fog_machine { \
                pow_max = 8, delay_min = 20, delay_max = 60, \
                walk_dist = 3, size = 1, start_clouds = 1, \
@@ -701,6 +635,7 @@ FTILE:    _! = floor_frozen
 COLOUR:   _! = lightcyan
 FTILE:    -? = floor_rough_magenta
 COLOUR:   -? = magenta
+: wizlab_portal(_G)
 MAP
 xx...........xx
 xG.bbbbbbbbb.Gx
@@ -719,8 +654,6 @@ xG.bbbbbbbbb.Gx
 xx...........xx
 ENDMAP
 
-#
-#
 ###############################################################################
 
 default-depth: WizLab
@@ -978,8 +911,7 @@ end
 :           local layout = crawl.random2(13)
 :           if layout < 3 then
 #           Preparation for the rare regular grid layout.
-SUBST:      b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
-SUBST:      l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
+SUBST:      bcdefghijk = ., lmnopqrstu = .
 SUBST:      B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
 SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
 :           end
@@ -988,52 +920,38 @@ SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
 COLOUR:     _ = darkgrey
 KFEAT:      _ = stone_wall
 TILE:       _ = wall_stone_black_marked / wall_stone_dark w:4 / wall_stone_black_marked
-SUBST:      b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
-SUBST:      l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
-SUBST:      B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
-SUBST:      L=., M=., N=., O=., P=., Q=., R=., S=., T=., U=.
+SUBST:      bcdefghijk = ., lmnopqrstu = .
+SUBST:      BCDEFGHIJK = ., LMNOPQRSTU = .
 :           else
 #           ...and now the grid layout.
 SUBST:      _ = .
 SUBST:      *=., %=.
 SUBST:      B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
 SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
-NSUBST:     b = 1:b / *:.
-NSUBST:     c = 1:c / *:.
-NSUBST:     d = 1:d / *:.
-NSUBST:     e = 1:e / *:.
-NSUBST:     f = 1:f / *:.
-NSUBST:     g = 1:g / *:.
-NSUBST:     h = 1:h / *:.
-NSUBST:     i = 1:i / *:.
-NSUBST:     j = 1:j / *:.
-NSUBST:     k = 1:k / *:.
-NSUBST:     l = 1:l / *:.
-NSUBST:     m = 1:m / *:.
-NSUBST:     n = 1:n / *:.
-NSUBST:     o = 1:o / *:.
-NSUBST:     p = 1:p / *:.
-NSUBST:     q = 1:q / *:.
-NSUBST:     r = 1:r / *:.
-NSUBST:     s = 1:s / *:.
-NSUBST:     t = 1:t / *:.
-NSUBST:     u = 1:u / *:.
+NSUBST:     b = 1:b / *:., c = 1:c / *:.
+NSUBST:     d = 1:d / *:., e = 1:e / *:.
+NSUBST:     f = 1:f / *:., g = 1:g / *:.
+NSUBST:     h = 1:h / *:., i = 1:i / *:.
+NSUBST:     j = 1:j / *:., k = 1:k / *:.
+NSUBST:     l = 1:l / *:., m = 1:m / *:.
+NSUBST:     n = 1:n / *:., o = 1:o / *:.
+NSUBST:     p = 1:p / *:., q = 1:q / *:.
+NSUBST:     r = 1:r / *:., s = 1:s / *:.
+NSUBST:     t = 1:t / *:., u = 1:u / *:.
 #           Of the outer boxes, three are damaged.
 SHUFFLE:    bcdefghijklm
 :           box_glyph('b', 'X')
 :           box_glyph('c', 'Y')
 :           box_glyph('d', 'Z')
-SUBST:      b = .
-SUBST:      c = .
-SUBST:      d = .
+SUBST:      bcd = .
 NSUBST:     X = 1=. / *=!:20 .:1
 NSUBST:     Y = 1=. / *=!:30 .:1
 NSUBST:     Z = 1=. / *=!:50 .:1
 #           For the other boxes, prepare same setup as for the
 #           round layout (i.e. six *'s)
 SHUFFLE:    nqru
-SUBST:      e=%, f=%, g=%, h=%, i=%, j=%, k=%, l=%, m=%, n=%
-SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
+SUBST:      efghijklmn = %
+SUBST:      opqrstu = *
 :           end
 #           Monsters
 #            0 Tomb set: zombies, mummies (weight *2)
@@ -1042,28 +960,27 @@ SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
 #            TODO: 3 Holy set (for later)
 :           local mrnd = crawl.random2(4)
 :           if mrnd == 0 then
-KMONS:      % = clay golem / toenail golem w:1
+KMONS:      0% = clay golem / earth elemental / toenail golem w:1
 KMONS:      * = stone golem / crystal golem / iron golem
 KMONS:      | = electric golem
 :           set_random_mon_list("clay golem / toenail golem w:1 / " ..
 :                               "stone golem / crystal golem / iron golem")
 :           elseif mrnd == 1 then
-KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
-                / chaos spawn / demonic crawler / hellwing / orange demon /\
-                soul eater / sun demon
-KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion
-KMONS:      | = blizzard demon / green death / hell sentinel / brimstone fiend /\
-                shadow fiend / ice fiend / executioner / balrug / cacodemon
+KMONS:      0% = smoke demon / ynoxinul / neqoxec / ice devil /\
+                 chaos spawn / soul eater / sun demon
+KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion /\
+                blizzard demon / green death / balrug / cacodemon
+KMONS:      | = hell sentinel / brimstone fiend / shadow fiend /\
+                ice fiend / executioner
 :           set_random_mon_list(
-:               "blue devil / iron devil / ynoxinul / neqoxec / ice devil /" ..
-:               "/ chaos spawn / demonic crawler / hellwing / orange demon /" ..
-:               "soul eater / sun demon / " ..
+:               "smoke demon / ynoxinul / neqoxec / ice devil /" ..
+:               "chaos spawn / soul eater / sun demon / " ..
 :               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
-KMONS:      % = place:D:15 zombie / guardian mummy w:2
-KMONS:      * = place:D:27 zombie / greater mummy w:5
-KMONS:      | = ancient lich
-:           set_random_mon_list("place:D:15 zombie / place:D:27 zombie / guardian mummy")
+KMONS:      0% = place:D:20 zombie / guardian mummy w:4
+KMONS:      * = large zombie / mummy priest w:6
+KMONS:      | = ancient lich / greater mummy
+:           set_random_mon_list("place:D:20 zombie / large zombie / guardian mummy")
 :           end
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
@@ -1071,12 +988,13 @@ KMONS:      | = ancient lich
 :           if lrnd == 0 then
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement / scroll of enchant weapon III q:2 /\
-                scroll of blinking q:2, scroll of fog q:2, scroll of holy word q:2
+KITEM:      | = scroll of acquirement ident:type / scroll of enchant weapon III q:2 ident:type /\
+                scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type, \
+                scroll of holy word q:2 ident:type
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
-KITEM:      | = cursed robe ego:resistance / cursed gold dragon armour
+KITEM:      | = cursed robe ego:resistance ident:type / cursed gold dragon armour
 :           else
 KITEM:      % = any / star_item w:2
 KITEM:      * = star_item / superb_item w:2
@@ -1088,6 +1006,7 @@ KITEM:      | = superb_item
 :           box_glyph('|', '!')
 #           Intentionally colouring the floor glyphs of the central room only.
 #           The squares beneath the boxes are to remain uncoloured.
+NSUBST:     x = 1:. / 1 = x. / *:x
 COLOUR:     ^ = darkgrey
 TILE:       ^ = wall_stone_black_marked / wall_stone_dark w:4 / wall_stone_black_marked
 COLOUR:     = = yellow
@@ -1095,7 +1014,7 @@ KFEAT:      ^ = stone_wall
 COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
 MARKER:     = = lua:portal_desc {wall_drop=1}
-TILE:       ! = dngn_stone_wall_yellow
+TILE:       !x = wall_sandstone
 {{
 local box_marker = TriggerableFunction:new {
     func="wizlab_doroklohe_convert_boxes",
@@ -1133,12 +1052,12 @@ MAP
 ^__........%......t*.....*s......%........__^
 ^___.....................................___^
 ^____ll...............................hh____^
-^_____lL.....kK%.....jJj.....%Ii.....Hh_____^
-^_______l....kk......j%j......ii....h_______^
-^_________........................._________^
+^_____lL.....kK%.....xxx.....%Ii.....Hh_____^
+^_______l....kk......x0x......ii....h_______^
+^_________...........xxx..........._________^
 ^____________...................____________^
 ^________________...........________________^
-^^^^^^^^^^^^^^^^^^^^^^.^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^#^^^^^^^^^^^^^^^^^^^^^^
                 ^____...____^
                 ^__.......__^
                 ^_...!+!..._^
@@ -1840,6 +1759,7 @@ kmons ("    1 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wi
          .. " | dagger ego:freezing")
 }}
 KMONS:      * = w:5 vapour / w:20 air elemental
+KMONS:      v = twister
 SUBST:      . = .:120 *
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
@@ -1855,15 +1775,15 @@ KITEM:      $ = wand of lightning / staff of air / ring of flight /\
             gold / scroll of silence / ring of teleport control / \
             quick blade / ring of evasion / ring of see invisible / \
             book of clouds / any book w:15 / any good_item / any w:20
-KFEAT:      # = deep_water
-NSUBST:     $ = 2:? / *:$
+KFEAT:      v# = deep_water
+NSUBST:     $ = 2:? / *:$, # = 5:v / 4 = v## / *:#
 SUBST:      $ = $%
 COLOUR:     +<bo = white
 LFLOORCOL:  lightblue
 LFLOORTILE: floor_rough_lightblue
 TILE:       o = dngn_transparent_stone_white
 TILE:       b = dngn_crystal_white
-COLOUR:     wW# = silver
+COLOUR:     wWv# = silver
 :           set_border_fill_type('open_sea')
 :           set_random_mon_list("vapour / air elemental")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
