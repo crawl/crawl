@@ -38,6 +38,9 @@ static const char *daction_names[] =
     // Actions not needing a counter.
     "old enslaved souls go poof",
     "holy beings allow another conversion attempt",
+#if TAG_MAJOR_VERSION > 34
+    "slimes allow another conversion attempt",
+#endif
     "holy beings go neutral",
     "Trog's gifts go hostile",
     "shuffle decks",
@@ -46,6 +49,9 @@ static const char *daction_names[] =
     "Pikel's slaves go good-neutral",
     "corpses rot",
     "Tomb loses -cTele",
+#if TAG_MAJOR_VERSION == 34
+    "slimes allow another conversion attempt",
+#endif
 };
 #endif
 
@@ -150,8 +156,9 @@ static void _apply_daction(daction_type act)
                 // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
                 mons_att_changed(*mi);
 
-                // If you reconvert to Fedhas, plants will love you again.
-                if (act == DACT_ALLY_PLANT)
+                // If you reconvert to Fedhas/Jiyva, plants/slimes will
+                // love you again.
+                if (act == DACT_ALLY_PLANT || act == DACT_ALLY_SLIME)
                     mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
                 // No global message for Trog.
@@ -172,6 +179,11 @@ static void _apply_daction(daction_type act)
     case DACT_HOLY_NEW_ATTEMPT:
         for (monster_iterator mi; mi; ++mi)
             if (mi->is_holy())
+                mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
+        break;
+    case DACT_SLIME_NEW_ATTEMPT:
+        for (monster_iterator mi; mi; ++mi)
+            if (mons_is_slime(*mi))
                 mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
         break;
     case DACT_HOLY_PETS_GO_NEUTRAL:
