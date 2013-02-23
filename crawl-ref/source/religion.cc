@@ -3579,7 +3579,8 @@ void god_pitch(god_type which_god)
     // Chei worshippers start their stat gain immediately.
     if (you.religion == GOD_CHEIBRIADOS)
     {
-        simple_god_message(" begins to support your attributes as your movement slows.");
+        simple_god_message(" begins to support your attributes as your "
+                           "movement slows.");
         notify_stat_change("Cheibriados worship");
     }
 
@@ -3611,7 +3612,8 @@ void god_pitch(god_type which_god)
         && query_da_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
     {
         add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
-        mpr("Your unclean and chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
+        mpr("Your unclean and chaotic allies forsake you.",
+            MSGCH_MONSTER_ENCHANT);
     }
     else if (you.religion == GOD_TROG
              && query_da_counter(DACT_ALLY_SPELLCASTER))
@@ -3635,7 +3637,8 @@ void god_pitch(god_type which_god)
     {
         mpr("You can now call upon Fedhas to speed up the decay of corpses.",
             MSGCH_GOD);
-        mpr("The plants of the dungeon cease their hostilities.", MSGCH_MONSTER_ENCHANT);
+        mpr("The plants of the dungeon cease their hostilities.",
+            MSGCH_MONSTER_ENCHANT);
     }
 
     if (you.worshipped[you.religion] < 100)
