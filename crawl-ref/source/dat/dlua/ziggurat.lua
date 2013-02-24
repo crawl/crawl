@@ -242,21 +242,26 @@ local function mset_if(condition, ...)
 end
 
 mset(with_props("place:Slime:$", { jelly_protect = true }),
-     with_props("place:Snake:$", { weight = 5 }),
-     with_props("place:Lair:$ w:90 / catoblepas", { weight = 5 }),
-     "place:Spider:$ w:50 / ghost moth / red wasp / tarantella / orb spider/" ..
-                "redback",
-     "place:Crypt:$",
-     with_props("place:Dwarf:$", { weight = 5 }),
+     "place:Snake:$ w:90 / greater naga w:5 / guardian serpent w:5",
+     with_props("place:Lair:$ w:85 / catoblepas w:6 / dire elephant w:6 / " ..
+                "hellephant w:3", { weight = 5 }),
+     "place:Spider:$ w:110 / ghost moth w:15 / red wasp / " ..
+                "orb spider / moth of suppression w:5",
+     "place:Crypt:$ w:180 / vampire knight w:14 / lich w:3 / " ..
+                "unborn deep dwarf w:2 / curse toe w:1",
      "place:Abyss",
-     with_props("place:Forest:$ w:50 / spriggan defender / " ..
-                "spriggan air mage / spriggan druid / spriggan berserker",
-                { weight = 5 }),
-     with_props("place:Shoals:$", { weight = 5 }),
-     with_props("place:Coc:$", { weight = 5 }),
-     with_props("place:Geh:$", { weight = 5 }),
-     with_props("place:Dis:$", { weight = 5 }),
-     with_props("place:Tar:$", { weight = 5 }),
+     "place:Swamp:$ w:120 / hydra / swamp dragon / " ..
+                "green death w:6 / death drake w:4",
+     "place:Shoals:$ w:125 / merfolk aquamancer w:15 / merfolk impaler w:4 / " ..
+                "merfolk javelineer w:4 / siren w:2",
+     with_props("place:Coc:$ w:460 / Ice Fiend / " ..
+                 "blizzard demon w:30", { weight = 5 }),
+     with_props("place:Geh:$ w:460 / Brimstone Fiend / " ..
+                 "balrug w:30", { weight = 5 }),
+     with_props("place:Dis:$ w:460 / Hell Sentinel / " ..
+                 "dancing weapon / iron dragon w:20", { weight = 5 }),
+     with_props("place:Tar:$ w:460 / Shadow Fiend / " ..
+                 "curse toe / shadow demon w:20", { weight = 5 }),
      with_props("daeva / angel / cherub / pearl dragon / shedu band / ophan / " ..
                 "apis / paladin / w:5 phoenix / w:5 silver star", { weight = 2 }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
@@ -264,12 +269,10 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "dragon / fire giant / orb of fire", { weight = 2 }),
      with_props("ice beast / polar bear / freezing wraith / ice dragon / " ..
-                "frost giant / ice devil / ice fiend / place:D:$ simulacrum / " ..
+                "frost giant / ice devil / ice fiend / large simulacrum w:20 / " ..
                 "blizzard demon", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
-                "storm dragon / electric golem", { weight = 2 }),
-     with_props("clay golem / earth elemental / stone golem / iron golem / " ..
-                "crystal golem / stone giant / iron dragon", { weight = 2 }),
+                "storm dragon / electric golem / spriggan air mage", { weight = 2 }),
      with_props("swamp drake / fire drake / death drake / steam dragon / " ..
                 "swamp dragon / dragon / ice dragon / storm dragon / " ..
                 "iron dragon / shadow dragon / quicksilver dragon / " ..

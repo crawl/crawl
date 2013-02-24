@@ -64,9 +64,9 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE green
-%hue 28 90
-%hue 29 90
-%hue 30 90
+%hue 28 140
+%hue 29 140
+%hue 30 140
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_GREEN
 %resetcol
 
@@ -85,9 +85,9 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE magenta
-%hue 28 300
-%hue 29 300
-%hue 30 300
+%hue 28 270
+%hue 29 270
+%hue 30 270
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_MAGENTA
 %resetcol
 
@@ -102,9 +102,9 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE lightblue
-%hue 28 240
-%hue 29 240
-%hue 30 240
+%hue 28 210
+%hue 29 210
+%hue 30 210
 %lum 28 7
 %lum 29 7
 %lum 30 7
@@ -112,9 +112,9 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE lightgreen
-%hue 28 90
-%hue 29 90
-%hue 30 90
+%hue 28 110
+%hue 29 110
+%hue 30 110
 %lum 28 7
 %lum 29 7
 %lum 30 7
@@ -142,9 +142,9 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE lightmagenta
-%hue 28 300
-%hue 29 300
-%hue 30 300
+%hue 28 290
+%hue 29 290
+%hue 30 290
 %lum 28 7
 %lum 29 7
 %lum 30 7
@@ -152,9 +152,12 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE yellow
-%hue 28 60
-%hue 29 60
-%hue 30 60
+%hue 28 50
+%hue 29 50
+%hue 30 50
+%lum 28 7
+%lum 29 7
+%lum 30 7
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_YELLOW
 %resetcol
 
@@ -162,7 +165,7 @@ pebble_brown8
 %desat 28
 %desat 29
 %desat 30
-%lum 0 20
+%lum 0 25
 %lum 28 40
 %lum 29 40
 %lum 30 40
@@ -306,7 +309,7 @@ rough_red3
 %resetcol
 
 %variation FLOOR_ROUGH green
-%hue 0 90
+%hue 0 140
 %repeat FLOOR_ROUGH FLOOR_ROUGH_GREEN
 %resetcol
 
@@ -316,7 +319,7 @@ rough_red3
 %resetcol
 
 %variation FLOOR_ROUGH magenta
-%hue 0 300
+%hue 0 270
 %repeat FLOOR_ROUGH FLOOR_ROUGH_MAGENTA
 %resetcol
 
@@ -337,36 +340,37 @@ rough_red3
 %resetcol
 
 %variation FLOOR_ROUGH lightblue
-%hue 0 240
-%lum 0 10
+%hue 0 210
+%lum 0 5
 %repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTBLUE
 %resetcol
 
 %variation FLOOR_ROUGH lightgreen
-%hue 0 90
-%lum 0 10
+%hue 0 110
+%lum 0 5
 %repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTGREEN
 %resetcol
 
 %variation FLOOR_ROUGH lightcyan
 %hue 0 180
-%lum 0 10
+%lum 0 7
 %repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTCYAN
 %resetcol
 
 %variation FLOOR_ROUGH lightred
-%lum 0 10
+%lum 0 7
 %repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTRED
 %resetcol
 
 %variation FLOOR_ROUGH lightmagenta
-%hue 0 300
-%lum 0 10
+%hue 0 290
+%lum 0 5
 %repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTMAGENTA
 %resetcol
 
 %variation FLOOR_ROUGH yellow
-%hue 0 60
+%hue 0 50
+%lum 0 5
 %repeat FLOOR_ROUGH FLOOR_ROUGH_YELLOW
 %resetcol
 
@@ -702,7 +706,7 @@ demonic_red9
 
 %variation FLOOR_DEMONIC green
 %lum 0 -7
-%hue 0 90
+%hue 0 140
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_GREEN
 %resetcol
 
@@ -714,7 +718,7 @@ demonic_red9
 
 %variation FLOOR_DEMONIC magenta
 %lum 0 -8
-%hue 0 300
+%hue 0 270
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_MAGENTA
 %resetcol
 
@@ -726,7 +730,7 @@ demonic_red9
 
 %variation FLOOR_DEMONIC lightgray
 %desat 0
-%lum 0 -9
+%lum 0 -6
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTGRAY
 %resetcol
 
@@ -760,3 +764,11 @@ woodground06
 woodground07
 woodground08
 woodground09
+
+cage0 FLOOR_CAGE
+cage1
+cage2
+cage3
+%weight 5
+cage4
+cage5

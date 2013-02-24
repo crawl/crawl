@@ -544,7 +544,7 @@ static const char* _wand_type_name(int wandtype)
     case WAND_FIREBALL:        return "fireball";
     case WAND_TELEPORTATION:   return "teleportation";
     case WAND_LIGHTNING:       return "lightning";
-    case WAND_POLYMORPH_OTHER: return "polymorph other";
+    case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
     case WAND_DRAINING:        return "draining";
     case WAND_RANDOM_EFFECTS:  return "random effects";
@@ -3187,6 +3187,12 @@ bool is_useless_item(const item_def &item, bool temp)
                         && (you.species != SP_VAMPIRE
                             || temp && you.hunger_state <= HS_SATIATED));
 
+        case AMU_CLARITY:
+            return (you.clarity(false, false));
+
+        case AMU_RESIST_CORROSION:
+            return (you.res_corr(false, false));
+
         case AMU_THE_GOURMAND:
             return (player_likes_chunks(true) == 3
                       && player_mutation_level(MUT_SAPROVOROUS) == 3
@@ -3214,7 +3220,7 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.hunger_state == HS_STARVING);
 
         case RING_SEE_INVISIBLE:
-            return player_mutation_level(MUT_ACUTE_VISION);
+            return (you.can_see_invisible(false, false));
 
         case RING_POISON_RESISTANCE:
             return (player_res_poison(false, temp, false) > 0
@@ -3333,35 +3339,15 @@ string item_prefix(const item_def &item, bool temp)
 {
     vector<string> prefixes;
 
-    if (item_ident(item, ISFLAG_KNOW_TYPE))
+    if (fully_identified(item))
         prefixes.push_back("identified");
-    else
+    else if (item_ident(item, ISFLAG_KNOW_TYPE)
+             || get_ident_type(item) == ID_KNOWN_TYPE)
     {
-        if (get_ident_type(item) == ID_KNOWN_TYPE)
-        {
-            // Wands are only fully identified if we know the number of
-            // charges.
-            if (item.base_type == OBJ_WANDS)
-                prefixes.push_back("known");
-
-            // Rings are fully identified simply by knowing their type,
-            // unless the ring has plusses, like a ring of dexterity.
-            else if (item.base_type == OBJ_JEWELLERY
-                     && !jewellery_is_amulet(item))
-            {
-                if (item.plus == 0 && item.plus2 == 0)
-                    prefixes.push_back("identified");
-                else
-                    prefixes.push_back("known");
-            }
-            // All other types of magical items are fully identified
-            // simply by knowing the type.
-            else
-                prefixes.push_back("identified");
-        }
-        else
-            prefixes.push_back("unidentified");
+        prefixes.push_back("known");
     }
+    else
+        prefixes.push_back("unidentified");
 
     if (good_god_hates_item_handling(item) || god_hates_item_handling(item))
     {

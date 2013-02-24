@@ -769,11 +769,6 @@ static string _handedness_string(const item_def &item)
     case HANDS_ONE:
         description += "It is a one handed weapon.";
         break;
-    case HANDS_HALF:
-        description += "It can be used with one hand, or more "
-                       "effectively with two (i.e. when not using a "
-                       "shield).";
-        break;
     case HANDS_TWO:
         description += "It is a two handed weapon.";
         break;
@@ -807,8 +802,31 @@ static string _describe_weapon(const item_def &item, bool verbose)
     if (!is_artefact(item) && !verbose)
         spec_ench = SPWPN_NORMAL;
 
-    if (verbose && weapon_skill(item) == SK_POLEARMS)
-        description += "\n\nIt can be evoked to extend its reach.";
+    if (verbose)
+    {
+        switch (weapon_skill(item))
+        {
+        case SK_POLEARMS:
+            description += "\n\nIt can be evoked to extend its reach.";
+            break;
+        case SK_AXES:
+            description += "\n\nIt can hit multiple enemies in an arc"
+                           " around the wielder.";
+            break;
+        case SK_SHORT_BLADES:
+            // TODO: should we mention stabbing for "ok" stabbing weapons?
+            // (long blades, piercing polearms, and clubs)
+            {
+                string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
+                                                           : "particularly";
+                description += "\n\nIt is " + adj + " good for stabbing"
+                               " unaware enemies.";
+            }
+            break;
+        default:
+            break;
+        }
+    }
 
     // special weapon descrip
     if (spec_ench != SPWPN_NORMAL && item_type_known(item))
@@ -2881,7 +2899,9 @@ static int _get_spell_description(const spell_type spell,
     if (you_cannot_memorise(spell, undead))
         description += "\n" + desc_cannot_memorise_reason(undead) + "\n";
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
+        && you.form != TRAN_WISP)
+    {
         if (you.has_spell(spell))
         {
             description += "\n(F)orget this spell by destroying the book.\n";
@@ -2895,6 +2915,7 @@ static int _get_spell_description(const spell_type spell,
             description += "\n(M)emorise this spell.\n";
             return BOOK_MEM;
         }
+    }
 
     return BOOK_NEITHER;
 }
@@ -2931,7 +2952,7 @@ void describe_spell(spell_type spelled, const item_def* item)
     if (mem_or_forget == BOOK_MEM && toupper(ch) == 'M')
     {
         redraw_screen();
-        if (!learn_spell(spelled, item->sub_type) || !you.turn_is_over)
+        if (!learn_spell(spelled) || !you.turn_is_over)
             more();
         redraw_screen();
     }
@@ -3455,6 +3476,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         return; // not a real monster
     monster& mons = *monster_at(mi.pos);
 
+    if (mons.has_originating_map())
+        inf.body << make_stringf("\nPlaced by map: %s",
+                                 mons.originating_map().c_str());
+
     inf.body << "\nMonster health: "
              << mons.hit_points << "/" << mons.max_hit_points << "\n";
 
@@ -3781,7 +3806,7 @@ static string _describe_favour(god_type which_god)
            (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
            (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
            (you.piety >  40) ? uppercase_first(godname) + " is most pleased with you." :
-           (you.piety >  20) ? uppercase_first(godname) + " has noted your presence." :
+           (you.piety >  20) ? uppercase_first(godname) + " is pleased with you." :
            (you.piety >   5) ? uppercase_first(godname) + " is noncommittal."
                              : "You are beneath notice.";
 }
@@ -3871,14 +3896,6 @@ static string _religion_help(god_type god)
                   "Inscribe items with !p, !* or =p to avoid sacrificing "
                   "them accidentally. See the detailed description to "
                   "sacrifice only some kinds of items.";
-        break;
-
-    case GOD_VEHUMET:
-        if (you.piety >= piety_breakpoint(1))
-        {
-            result += uppercase_first(god_name(god)) + " assists you in "
-                      "casting Conjurations and Summonings.";
-        }
         break;
 
     case GOD_FEDHAS:
@@ -4481,6 +4498,23 @@ void describe_god(god_type which_god, bool give_title)
                 _print_final_god_abil_desc(which_god,
                                            "You can provide lesser healing for others.",
                                            ABIL_ELYVILON_LESSER_HEALING_OTHERS);
+            }
+        }
+        else if (which_god == GOD_VEHUMET)
+        {
+            set<spell_type>::iterator it = you.vehumet_gifts.begin();
+            if (it != you.vehumet_gifts.end())
+            {
+                have_any = true;
+
+                string offer = spell_title(*it);
+                // If we have multiple offers, just summarise.
+                if (++it != you.vehumet_gifts.end())
+                    offer = "some of Vehumet's most lethal spells";
+
+                _print_final_god_abil_desc(which_god,
+                                           "You can memorise " + offer + ".",
+                                           ABIL_NON_ABILITY);
             }
         }
 

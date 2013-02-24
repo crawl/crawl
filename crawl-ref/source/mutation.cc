@@ -371,7 +371,7 @@ string describe_mutations(bool center_title)
         if (you.experience_level > 2)
         {
             ostringstream num;
-            num << you.experience_level/3;
+            num << you.experience_level / 3;
             const string acstr = "Your serpentine skin is tough (AC +"
                                  + num.str() + ").";
 
@@ -1269,7 +1269,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 if (failMsg)
                 {
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
-                    maybe_id_resist(BEAM_POLYMORPH);
+                    maybe_id_resist(BEAM_MALMUTATE);
                 }
                 return false;
             }
@@ -2218,7 +2218,8 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
         {
             you.temp_mutations[which_mut]++;
             you.attribute[ATTR_TEMP_MUTATIONS]++;
-            you.increase_duration(DUR_TEMP_MUTATIONS, 20 + roll_dice(3, 10), 50);
+            you.attribute[ATTR_TEMP_MUT_XP] =
+                    min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
         }
         return true;
     }

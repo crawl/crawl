@@ -572,7 +572,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                     if (cell.quad_glow)
                         this.draw_dngn(dngn.QUAD_GLOW, x, y);
                     if (cell.disjunct)
-                        this.draw_dngn(dngn.DISJUNCT, x, y);
+                        this.draw_dngn(dngn.DISJUNCT + cell.disjunct - 1, x, y);
 
                     // Apply the travel exclusion under the foreground if the cell is
                     // visible.  It will be applied later if the cell is unseen.
@@ -725,6 +725,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             {
                 this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
                 status_shift += 8;
+            }
+            if (fg.HASTED)
+            {
+                this.draw_icon(icons.HASTED, x, y, -status_shift, 0);
+                status_shift += 6;
             }
             if (fg.SLOWED)
             {

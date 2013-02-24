@@ -546,7 +546,7 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
             eligibility[RECITE_HERETIC]++;
 
         // ...as are evil gods.
-        if (is_evil_god(mon->god) || mon->god == GOD_NAMELESS)
+        if (is_evil_god(mon->god) || is_unknown_god(mon->god))
             eligibility[RECITE_HERETIC]++;
 
         // (The above mean that worshipers will be treated as
@@ -1348,8 +1348,8 @@ void tso_divine_shield()
         if (you.shield()
             || you.duration[DUR_CONDENSATION_SHIELD])
         {
-            mprf("Your shield is strengthened by %s's divine power.",
-                 god_name(GOD_SHINING_ONE).c_str());
+            mprf("Your shield is strengthened by %s divine power.",
+                 apostrophise(god_name(GOD_SHINING_ONE)).c_str());
         }
         else
             mpr("A divine shield forms around you!");
@@ -1432,7 +1432,7 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
+    if (spell_typematch(spell, SPTYP_CONJURATION))
         return true;
 
     // Conjurations work by conjuring up a chunk of short-lived matter and
@@ -1440,7 +1440,7 @@ bool vehumet_supports_spell(spell_type spell)
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
     if (spell == SPELL_SHATTER
-        || spell == SPELL_FRAGMENTATION // LRD
+        || spell == SPELL_LRD
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
         || spell == SPELL_TORNADO
@@ -1510,13 +1510,9 @@ bool trog_burn_spellbooks()
                 continue;
             }
 
-            // Piety increases by 2 for books never cracked open, else 1.
-            // Conversely, rarity influences the duration of the pyre.
-            if (!item_type_known(*si))
-                totalpiety += 2;
-            else
-                totalpiety++;
+            totalpiety += 2;
 
+            // Rarity influences the duration of the pyre.
             rarity += book_rarity(si->sub_type);
 
             dprf("Burned spellbook rarity: %d", rarity);
@@ -1592,7 +1588,7 @@ void jiyva_paralyse_jellies()
     {
         monster* mon = monster_at(*ri);
 
-        if (mon != NULL && mons_is_slime(mon))
+        if (mon != NULL && is_fellow_slime(mon))
         {
             mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
                                       &you, 200));
@@ -1911,7 +1907,7 @@ bool fedhas_passthrough(const monster* target)
 {
     return (target
             && fedhas_passthrough_class(target->type)
-            && (target->type != MONS_OKLOB_PLANT
+            && (mons_species(target->type) != MONS_OKLOB_PLANT
                 || target->attitude != ATT_HOSTILE));
 }
 
@@ -1919,7 +1915,7 @@ bool fedhas_passthrough(const monster_info* target)
 {
     return (target
             && fedhas_passthrough_class(target->type)
-            && (target->type != MONS_OKLOB_PLANT
+            && (mons_species(target->type) != MONS_OKLOB_PLANT
                 || target->attitude != ATT_HOSTILE));
 }
 
@@ -1972,7 +1968,7 @@ int fedhas_fungal_bloom()
         if (!can_spawn_mushrooms(*i))
             continue;
 
-        if (target && target->mons_species() != MONS_TOADSTOOL)
+        if (target && target->type != MONS_TOADSTOOL)
         {
             bool piety = !target->is_summoned();
             switch (mons_genus(target->mons_species()))
@@ -2842,6 +2838,7 @@ static bool _possible_evolution(const monster* input,
     {
     case MONS_PLANT:
     case MONS_BUSH:
+    case MONS_BURNING_BUSH:
         possible_monster.new_type = MONS_OKLOB_PLANT;
         possible_monster.fruit_cost = 1;
         break;

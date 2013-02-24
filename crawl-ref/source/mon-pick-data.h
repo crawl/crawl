@@ -59,7 +59,6 @@ static const pop_entry pop_d[] =
   {  9, 17,  136, SEMI, MONS_PLANT },
   {  9, 19,  826, SEMI, MONS_YAK },
   {  9, 19,  334, SEMI, MONS_GIANT_CENTIPEDE },
-  { 11, 17,   52, SEMI, MONS_WOOD_GOLEM },
   { 11, 17,   25, PEAK, MONS_OKLOB_PLANT },
   {  9, 19,  514, SEMI, MONS_BIG_KOBOLD },
   {  9, 19,  334, SEMI, MONS_TWO_HEADED_OGRE },
@@ -109,7 +108,6 @@ static const pop_entry pop_d[] =
   { 19, 21,    3, SEMI, MONS_TOENAIL_GOLEM },
   { 15, 25,  334, SEMI, MONS_YAKTAUR },
   { 15, 25,  420, SEMI, MONS_OGRE_MAGE },
-  { 15, 25,  476, SEMI, MONS_ROCK_TROLL },
   { 17, 25,   89, PEAK, MONS_AGATE_SNAIL },
   { 16, 26,  192, PEAK, MONS_SPINY_WORM },
   { 17, 25,   89, PEAK, MONS_ICE_DRAGON },
@@ -201,7 +199,6 @@ static const pop_entry pop_orc[] =
   {  2,  6,    8, PEAK, MONS_TWO_HEADED_OGRE },
   {  4,  4,    1, FLAT, MONS_OGRE_MAGE },
   {  1,  7,   40, PEAK, MONS_TROLL },
-  {  3,  5,    4, SEMI, MONS_ROCK_TROLL },
   {  3,  5,    4, SEMI, MONS_IRON_TROLL },
   {  2,  6,    8, PEAK, MONS_CYCLOPS },
   {  3,  5,    4, SEMI, MONS_ETTIN },
@@ -247,7 +244,6 @@ static const pop_entry pop_dwarf[] =
   {  1,  1,  690, FLAT, MONS_DEEP_DWARF_BERSERKER },
   {  1,  1,  690, FLAT, MONS_DEEP_DWARF_DEATH_KNIGHT },
   {  1,  1,  334, FLAT, MONS_UNBORN_DEEP_DWARF },
-  {  1,  1,    3, FLAT, MONS_ROCK_TROLL },
   {  1,  1,    3, FLAT, MONS_IRON_TROLL },
   {  1,  1,    3, FLAT, MONS_DEEP_TROLL },
   {  1,  1,    8, FLAT, MONS_STONE_GIANT },
@@ -508,7 +504,6 @@ static const pop_entry pop_vaults[] =
   { -7,  1,  136, SEMI, MONS_PLANT },
   { -7,  3,  826, SEMI, MONS_YAK },
   { -7,  3,  334, SEMI, MONS_GIANT_CENTIPEDE },
-  { -5,  1,   52, SEMI, MONS_WOOD_GOLEM },
   { -5,  1,   25, PEAK, MONS_OKLOB_PLANT },
   { -7,  3,  514, SEMI, MONS_BIG_KOBOLD },
   { -7,  3,  334, SEMI, MONS_TWO_HEADED_OGRE },
@@ -558,7 +553,6 @@ static const pop_entry pop_vaults[] =
   {  3,  5,    3, SEMI, MONS_TOENAIL_GOLEM },
   { -1,  9,  334, SEMI, MONS_YAKTAUR },
   { -1,  9,  420, SEMI, MONS_OGRE_MAGE },
-  { -1,  9,  476, SEMI, MONS_ROCK_TROLL },
   {  1,  9,   89, PEAK, MONS_AGATE_SNAIL },
   {  0, 10,  192, PEAK, MONS_SPINY_WORM },
   {  1,  9,   89, PEAK, MONS_ICE_DRAGON },
@@ -956,7 +950,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   21, FLAT, MONS_ICE_BEAST },
   {  1,  5,   21, FLAT, MONS_SKY_BEAST },
   {  1,  5,    8, FLAT, MONS_CLAY_GOLEM },
-  {  1,  5,    8, FLAT, MONS_WOOD_GOLEM },
   {  1,  5,    8, FLAT, MONS_STONE_GOLEM },
   {  1,  5,    8, FLAT, MONS_IRON_GOLEM },
   {  1,  5,    4, FLAT, MONS_CRYSTAL_GOLEM },
@@ -1066,12 +1059,13 @@ static const pop_entry pop_abyss[] =
   // New abyssals, made more common for testing.
   {  1,  5,  334, FLAT, MONS_WRETCHED_STAR },
   {  1,  5,  334, FLAT, MONS_TENTACLED_STARSPAWN },
-  {  1,  5,  334, FLAT, MONS_LURKING_HORROR },
   {  1,  5,  334, FLAT, MONS_ANCIENT_ZYME },
   {  1,  5,  334, FLAT, MONS_STARCURSED_MASS },
   {  1,  5,  334, FLAT, MONS_THRASHING_HORROR },
+  {  1,  5,  334, FLAT, MONS_CHAOS_BUTTERFLY },
+  {  1,  5,   89, FLAT, MONS_LURKING_HORROR },
   {  1,  5,   89, FLAT, MONS_SPATIAL_MAELSTROM },
-  {  1,  5,   25, FLAT, MONS_APOCALYPSE_CRAB },
+  {  1,  5,   89, FLAT, MONS_APOCALYPSE_CRAB },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1087,7 +1081,6 @@ static const pop_entry pop_pan[] =
   {  1,  1,    3, FLAT, MONS_GIANT_ORANGE_BRAIN },
   {  1,  1,  192, FLAT, MONS_DEMONIC_CRAWLER },
   {  1,  1,    8, FLAT, MONS_CLAY_GOLEM },
-  {  1,  1,    8, FLAT, MONS_WOOD_GOLEM },
   {  1,  1,    8, FLAT, MONS_STONE_GOLEM },
   {  1,  1,    8, FLAT, MONS_IRON_GOLEM },
   {  1,  1,    8, FLAT, MONS_CRYSTAL_GOLEM },
@@ -1241,6 +1234,13 @@ static const pop_entry pop_wizlab[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+#if TAG_MAJOR_VERSION == 34
+static const pop_entry pop_removed[] =
+{
+  { 0,0,0,FLAT,MONS_0 }
+};
+#endif
+
 // In C++ prior to C++11, we can't have an array of pointers to initialized
 // arrays of different sizes without declaring individual arrays as
 // standalone symbols first.  Thus this fugly list.
@@ -1283,4 +1283,7 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(icecv),
     POP(volcano),
     POP(wizlab),
+#if TAG_MAJOR_VERSION == 34
+    POP(removed),
+#endif
 };

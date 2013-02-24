@@ -21,6 +21,7 @@
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
+bool is_unknown_god(god_type god);
 
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
@@ -89,6 +90,10 @@ bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,
                     bool (*suitable)(const monster* mon) = is_follower,
                     bool force = false);
+
+// Vehumet gift interface.
+bool vehumet_is_offering(spell_type spell);
+void vehumet_accept_gift(spell_type spell);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_likes_item(god_type god, const item_def& item);

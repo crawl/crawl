@@ -568,7 +568,7 @@ end
 --   count        - Number of times to repeat the map placement; defaults to 1.
 --                  Note that the map must be marked allow_dup.
 --   die_on_error - If set false, will *not* raise an error if a map cannot
---                  be placed. Defaults to true.
+--                  be placed. Defaults to false.
 -- Returns true if the map(s) were placed successfully, false or nil otherwise.
 --
 -- map, name and tag are mutually exclusive. These parameters may be
@@ -578,6 +578,11 @@ end
 function dgn.place_maps(parameters)
   local n_times = parameters.count or 1
   local n_placed = 0
+
+  local function map_error(name)
+    error("Failed to place map '" .. name .. "'")
+  end
+
   for i = 1, n_times do
     local map = dgn.find_map(parameters)
     if map then
@@ -588,8 +593,13 @@ function dgn.place_maps(parameters)
         if not parameters.die_on_error then
           return nil
         end
-        error("Failed to place map '" .. dgn.name(map) .. "'")
+        map_error(dgn.name(map))
       end
+    else
+      if not parameters.die_on_error then
+        return nil
+      end
+      error("Could not find map to place")
     end
   end
   return n_placed

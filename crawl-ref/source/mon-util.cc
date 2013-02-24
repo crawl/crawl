@@ -711,6 +711,8 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_TWISTER
+           || mc == MONS_BATTLESPHERE
+           || mc == MONS_FULMINANT_PRISM
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
            || mc == MONS_LURKING_HORROR
@@ -738,9 +740,8 @@ bool mons_behaviour_perceptible(const monster* mon)
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && !mons_is_mimic(mon->type)
             && !mons_is_statue(mon->type)
-            && mon->type != MONS_OKLOB_PLANT
+            && mons_species(mon->type) != MONS_OKLOB_PLANT
             && mon->type != MONS_BALLISTOMYCETE
-            && mon->type != MONS_OKLOB_SAPLING
             && mon->type != MONS_BURNING_BUSH);
 }
 
@@ -796,20 +797,30 @@ bool mons_is_native_in_branch(const monster* mons,
         return (mons->type == MONS_DANCING_WEAPON);
 
     case BRANCH_ABYSS:
-        switch (mons->type)
-        {
-            case MONS_ABOMINATION_LARGE:
-            case MONS_ABOMINATION_SMALL:
-            case MONS_LURKING_HORROR:
-            case MONS_TENTACLED_MONSTROSITY:
-            case MONS_TENTACLED_STARSPAWN:
-            case MONS_THRASHING_HORROR:
-            case MONS_UNSEEN_HORROR:
-            case MONS_WRETCHED_STAR:
-                return true;
-            default:
-                return false;
-        }
+        return (mons_is_abyssal_only(mons->type)
+                || mons->type == MONS_ABOMINATION_LARGE
+                || mons->type == MONS_ABOMINATION_SMALL
+                || mons->type == MONS_TENTACLED_MONSTROSITY
+                || mons->type == MONS_TENTACLED_STARSPAWN
+                || mons->type == MONS_THRASHING_HORROR
+                || mons->type == MONS_UNSEEN_HORROR);
+
+    default:
+        return false;
+    }
+}
+
+bool mons_is_abyssal_only(monster_type mc)
+{
+    switch (mc)
+    {
+    case MONS_ANCIENT_ZYME:
+    case MONS_ELDRITCH_TENTACLE:
+    case MONS_ELDRITCH_TENTACLE_SEGMENT:
+    case MONS_LURKING_HORROR:
+    case MONS_WRETCHED_STAR:
+    case MONS_CHAOS_BUTTERFLY:
+        return true;
     default:
         return false;
     }
@@ -864,8 +875,8 @@ bool herd_monster(const monster* mon)
 bool mons_class_is_plant(monster_type mc)
 {
     return (mons_genus(mc) == MONS_PLANT
-            || mons_genus(mc) == MONS_BUSH
-            || mons_genus(mc) == MONS_FUNGUS);
+            || mons_genus(mc) == MONS_FUNGUS
+            || mons_species(mc) == MONS_BUSH);
 }
 
 bool mons_is_plant(const monster* mon)
@@ -1140,7 +1151,9 @@ bool mons_is_conjured(monster_type mc)
     return mons_is_projectile(mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
-           || mc == MONS_BALL_LIGHTNING;
+           || mc == MONS_BALL_LIGHTNING
+           || mc == MONS_BATTLESPHERE
+           || mc == MONS_FULMINANT_PRISM;
 }
 
 // Returns true if the given monster's foe is also a monster.
@@ -1453,8 +1466,8 @@ bool mons_class_can_use_stairs(monster_type mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && !mons_is_tentacle(mc)
+            && !mons_is_abyssal_only(mc)
             && mc != MONS_SILENT_SPECTRE
-            && mc != MONS_SPATIAL_MAELSTROM
             && mc != MONS_PLAYER_GHOST
             && mc != MONS_GERYON
             && mc != MONS_ROYAL_JELLY
@@ -1731,7 +1744,7 @@ int mons_class_res_wind(monster_type mc)
 {
     // Lightning goes well with storms.
     if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
-        || mc == MONS_TWISTER)
+        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY)
     {
         return 1;
     }
@@ -2733,7 +2746,8 @@ bool mons_self_destructs(const monster* m)
     return (m->type == MONS_GIANT_SPORE
             || m->type == MONS_BALL_LIGHTNING
             || m->type == MONS_LURKING_HORROR
-            || m->type == MONS_ORB_OF_DESTRUCTION);
+            || m->type == MONS_ORB_OF_DESTRUCTION
+            || m->type == MONS_FULMINANT_PRISM);
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)
@@ -2905,8 +2919,8 @@ void mons_pacify(monster* mon, mon_attitude_type att)
 
 static bool _mons_should_fire_beneficial(bolt &beam)
 {
-    // Should monster haste other be able to target the player?
-    // Saying no for now. -cao
+    // Should monster heal other, haste other or might other be able to
+    // target the player? Saying no for now. -cao
     if (beam.target == you.pos())
         return false;
 
@@ -2934,6 +2948,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     case BEAM_HASTE:
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
+    case BEAM_MIGHT:
         return true;
 
     default:
@@ -2941,7 +2956,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     }
 }
 
-bool mons_should_fire(struct bolt &beam)
+bool mons_should_fire(bolt &beam)
 {
     dprf("tracer: foes %d (pow: %d), friends %d (pow: %d), "
          "foe_ratio: %d, smart: %s",
@@ -3213,6 +3228,71 @@ bool mons_can_attack(const monster* mon)
     return adjacent(mon->pos(), foe->pos());
 }
 
+static gender_type _mons_class_gender(monster_type mc)
+{
+    gender_type gender = GENDER_NEUTER;
+
+    if (mons_genus(mc) == MONS_MERMAID
+        || mc == MONS_QUEEN_ANT
+        || mc == MONS_QUEEN_BEE
+        || mc == MONS_HARPY
+        || mc == MONS_SPHINX)
+    {
+        gender = GENDER_FEMALE;
+    }
+    // Mara's fakes aren't unique, but should still be classified as
+    // male.
+    else if (mc == MONS_MARA_FAKE
+             || mc == MONS_HELLBINDER
+             || mc == MONS_CLOUD_MAGE)
+    {
+        gender = GENDER_MALE;
+    }
+    else if (mons_is_unique(mc) && !mons_is_pghost(mc))
+    {
+        if (mons_species(mc) == MONS_SERPENT_OF_HELL)
+            mc = MONS_SERPENT_OF_HELL;
+        switch (mc)
+        {
+        case MONS_JESSICA:
+        case MONS_PSYCHE:
+        case MONS_JOSEPHINE:
+        case MONS_AGNES:
+        case MONS_MAUD:
+        case MONS_LOUISE:
+        case MONS_FRANCES:
+        case MONS_MARGERY:
+        case MONS_EROLCHA:
+        case MONS_ERICA:
+        case MONS_TIAMAT:
+        case MONS_ERESHKIGAL:
+        case MONS_ROXANNE:
+        case MONS_SONJA:
+        case MONS_ILSUIW:
+        case MONS_NERGALLE:
+        case MONS_KIRKE:
+        case MONS_DUVESSA:
+        case MONS_THE_ENCHANTRESS:
+        case MONS_NELLIE:
+        case MONS_ARACHNE:
+        case MONS_LAMIA:
+            gender = GENDER_FEMALE;
+            break;
+        case MONS_ROYAL_JELLY:
+        case MONS_LERNAEAN_HYDRA:
+        case MONS_IRON_GIANT:
+        case MONS_SERPENT_OF_HELL:
+            gender = GENDER_NEUTER;
+            break;
+        default:
+            gender = GENDER_MALE;
+            break;
+        }
+    }
+
+    return gender;
+}
+
 // Use of variant (case is irrelevant here):
 // PRONOUN_SUBJECTIVE : _She_ is tap dancing.
 // PRONOUN_POSSESSIVE : _Her_ sword explodes!
@@ -3222,85 +3302,26 @@ bool mons_can_attack(const monster* mon)
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
 {
-    gender_type gender = GENDER_NEUTER;
-
-    if (visible)
-    {
-        if (mons_genus(mon_type) == MONS_MERMAID
-            || mon_type == MONS_QUEEN_ANT
-            || mon_type == MONS_QUEEN_BEE
-            || mon_type == MONS_HARPY
-            || mon_type == MONS_SPHINX)
-        {
-            gender = GENDER_FEMALE;
-        }
-        // Mara's fakes aren't a unique, but should still be classified
-        // as male.
-        else if (mon_type == MONS_MARA_FAKE
-                 || mon_type == MONS_HELLBINDER
-                 || mon_type == MONS_CLOUD_MAGE)
-        {
-            gender = GENDER_MALE;
-        }
-        else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
-        {
-            if (mons_species(mon_type) == MONS_SERPENT_OF_HELL)
-                mon_type = MONS_SERPENT_OF_HELL;
-            switch (mon_type)
-            {
-            case MONS_JESSICA:
-            case MONS_PSYCHE:
-            case MONS_JOSEPHINE:
-            case MONS_AGNES:
-            case MONS_MAUD:
-            case MONS_LOUISE:
-            case MONS_FRANCES:
-            case MONS_MARGERY:
-            case MONS_EROLCHA:
-            case MONS_ERICA:
-            case MONS_TIAMAT:
-            case MONS_ERESHKIGAL:
-            case MONS_ROXANNE:
-            case MONS_SONJA:
-            case MONS_ILSUIW:
-            case MONS_NERGALLE:
-            case MONS_KIRKE:
-            case MONS_DUVESSA:
-            case MONS_THE_ENCHANTRESS:
-            case MONS_NELLIE:
-            case MONS_ARACHNE:
-                gender = GENDER_FEMALE;
-                break;
-            case MONS_ROYAL_JELLY:
-            case MONS_LERNAEAN_HYDRA:
-            case MONS_IRON_GIANT:
-            case MONS_SERPENT_OF_HELL:
-                gender = GENDER_NEUTER;
-                break;
-            default:
-                gender = GENDER_MALE;
-                break;
-            }
-        }
-    }
+    gender_type gender = !visible ? GENDER_NEUTER
+                                  : _mons_class_gender(mon_type);
 
     switch (variant)
     {
-        case PRONOUN_SUBJECTIVE:
-            return ((gender == GENDER_NEUTER) ? "it" :
-                    (gender == GENDER_MALE)   ? "he" : "she");
+    case PRONOUN_SUBJECTIVE:
+        return ((gender == GENDER_NEUTER) ? "it" :
+                (gender == GENDER_MALE)   ? "he" : "she");
 
-        case PRONOUN_POSSESSIVE:
-            return ((gender == GENDER_NEUTER) ? "its" :
-                    (gender == GENDER_MALE)   ? "his" : "her");
+    case PRONOUN_POSSESSIVE:
+        return ((gender == GENDER_NEUTER) ? "its" :
+                (gender == GENDER_MALE)   ? "his" : "her");
 
-        case PRONOUN_REFLEXIVE:
-            return ((gender == GENDER_NEUTER) ? "itself"  :
-                    (gender == GENDER_MALE)   ? "himself" : "herself");
+    case PRONOUN_REFLEXIVE:
+        return ((gender == GENDER_NEUTER) ? "itself"  :
+                (gender == GENDER_MALE)   ? "himself" : "herself");
 
-        case PRONOUN_OBJECTIVE:
-            return ((gender == GENDER_NEUTER) ? "it"  :
-                    (gender == GENDER_MALE)   ? "him" : "her");
+    case PRONOUN_OBJECTIVE:
+        return ((gender == GENDER_NEUTER) ? "it"  :
+                (gender == GENDER_MALE)   ? "him" : "her");
     }
 
     return "";
@@ -3584,12 +3605,23 @@ monster_type royal_jelly_ejectable_monster()
 static string _replace_god_name(god_type god, bool need_verb = false,
                                 bool capital = false)
 {
-    string result =
-          ((god == GOD_NO_GOD)    ? (capital ? "You"      : "you") :
-           (god == GOD_NAMELESS)  ? (capital ? "Your god" : "your god")
-                                  : god_name(god, false));
+    string result;
+
+    if (god == GOD_NO_GOD)
+        result = capital ? "You" : "you";
+    else if (god == GOD_NAMELESS)
+        result = capital ? "Your god" : "your god";
+    else
+    {
+        const string godname = god_name(god, false);
+        result = capital ? uppercase_first(godname) : godname;
+    }
+
     if (need_verb)
-        result += (god == GOD_NO_GOD) ? " are" : " is";
+    {
+        result += ' ';
+        result += (god == GOD_NO_GOD) ? "are" : "is";
+    }
 
     return result;
 }
@@ -3908,7 +3940,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     else if (mons->god == GOD_NAMELESS)
     {
         msg = replace_all(msg, "@God@", "a god");
-        string possessive = mons->pronoun(PRONOUN_POSSESSIVE) + " god";
+        const string possessive = mons->pronoun(PRONOUN_POSSESSIVE) + " god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
 
         msg = replace_all(msg, "@my_God@", "my God");
@@ -3916,11 +3948,12 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     }
     else
     {
-        msg = replace_all(msg, "@God@", god_name(mons->god));
-        msg = replace_all(msg, "@possessive_God@", god_name(mons->god));
+        const string godname = god_name(mons->god);
+        msg = replace_all(msg, "@God@", godname);
+        msg = replace_all(msg, "@possessive_God@", godname);
 
-        msg = replace_all(msg, "@my_God@", god_name(mons->god));
-        msg = replace_all(msg, "@My_God@", god_name(mons->god));
+        msg = replace_all(msg, "@my_God@", godname);
+        msg = replace_all(msg, "@My_God@", uppercase_first(godname).c_str());
     }
 
     // Replace with species specific insults.
@@ -4030,7 +4063,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'a': // ants
         return MON_SHAPE_INSECT;
     case 'b': // bats and butterflies
-        if (mc == MONS_BUTTERFLY)
+        if (mc == MONS_BUTTERFLY || mc == MONS_CHAOS_BUTTERFLY)
             return MON_SHAPE_INSECT_WINGED;
         else
             return MON_SHAPE_BAT;

@@ -3,6 +3,20 @@
 ################################################################################
 
 {{
+
+function shoals_finale_setup(e, qualifier, decoy_count)
+  qualifier = "_" .. qualifier
+  if not decoy_count then
+    decoy_count = crawl.random_range(6, 8)
+  end
+  e.hook('post_place', function ()
+    dgn.place_maps{tag=("shoal_rune" .. qualifier), count=1, die_on_error=true}
+    dgn.place_maps{tag="shoal_guardian", count=1, die_on_error=true}
+    dgn.place_maps{tag=("shoal_hut" .. qualifier), count=decoy_count,
+                   die_on_error=true}
+  end)
+end
+
 -- When the kraken dies, the tides will control the water, so the items will
 -- be accessible!
 function shoals_atoll_kraken_death(data, triggerable, triggerer, marker, ev)
@@ -350,11 +364,259 @@ WWW..x..x..WWW
    WWWWWWWW
 ENDMAP
 
+NAME:    st_cyclops
+DEPTH:   Shoals:1-4
+MONS:    cyclops, stone giant / frost giant
+KMONS:   P = plant
+KMONS:   f = fungus
+SHUFFLE: 23
+SUBST:   p = p., p = Pf, y = xP., x = x:20 c:2 P:2
+SUBST:   2 = 21, 3 = 1
+MAP
+   ppppp
+  yyyyyyy
+ pyxxyxyyy.
+pyxypppxx.1.
+pyxpp1.px...
+pyxp2.1..1.3
+pyypp1.px...
+pyxxpppyx.1.
+ ypxxyxxyy.
+  yyyyyyy
+   ppppp
+ENDMAP
+
+NAME:    st_shoals_ruin
+DEPTH:   Shoals:1-4
+TAGS:    no_pool_fixup
+MONS:    cyclops, frost giant, stone giant
+KMONS:   P = plant
+KMONS:   f = fungus
+KFEAT:   Pfp = shallow_water
+KFEAT:   5 = deep_water
+SUBST:   p = ppWw, p = Pf, y = xxxxcccPPPfw, f = PPwW, x = x:10 c:1
+SHUFFLE: 23
+SUBST:   2 = 2:15 1:10, 3 = 3:15 1:10
+MAP
+   ppp  @ ppp
+  pppxx..xxppp
+ ppxxx.3.wfxxpp
+ppxxpxx..xwfxxpp
+ppxpppxxxWWffxpp
+pxx**ppyfWWWfxxp
+pxp1..pyfW..ffxp
+pxp.21pyf..1.wxp
+pxp1..yyy1...pxp
+pxxp.1pyp..1pxxp
+ppxp.......ppxpp
+ppxxp..p.fppxxpp
+ ppxxpyyyyfxxpp
+  ppxxxxxxxxpp
+   pppppppppp
+ENDMAP
+
+NAME:    st_sunken_huts
+DEPTH:   Shoals:1-4
+KMONS:   1 = merfolk javelineer
+KMONS:   2 = merfolk impaler
+KMONS:   3 = merfolk aquamancer
+KMONS:   4 = merfolk
+KMONS:   5 = mermaid / siren
+KFEAT:   12345 = deep_water
+SHUFFLE: 1235
+NSUBST:  V = 1:w / *:x
+NSUBST:  U = 1:w / *:x
+NSUBST:  Y = 1:w / *:x
+NSUBST:  X = 1:w / *:x
+NSUBST:  Z = 1:w / *:x
+SUBST:   W = wWW
+MAP
+      WWWWWWWWWWWWWWW
+   WWWwwwwwwwxxxxwwwwWWW
+ WWwxxxxwwwwwxw2xwwwwwwwWW
+Wwwwx1wVww4wwUwwUww4wxYxxwW
+WwwwxwwVwwwwwxUUxwwwwYwwxwW
+WwwwxVVxwwwwwwwwwwwwwYw2xwW
+WwwwwwwwwxZZxwwxXXxwwxYxxwW
+Wwwww4wwwZwwZw5XwwxwwwwwwwW
+ WWwwwwwwxw1xwwXw3xwwwwwWW
+   WWWwwwxxxxwwxxxxwwWWW
+      WWWWWWWWWWWWWWW
+ENDMAP
+
+NAME:    st_sunken_temple
+DEPTH:   Shoals:1-4
+TAGS:    no_pool_fixup
+KMONS:   1 = merfolk javelineer
+KMONS:   2 = merfolk impaler
+KMONS:   3 = merfolk aquamancer
+KMONS:   4 = merfolk
+KMONS:   5 = mermaid / siren
+KMONS:   6 = cyclops
+KMONS:   7 = stone giant
+KMONS:   8 = frost giant
+KMONS:   9 = titan
+KFEAT:   123456789 = deep_water
+KITEM:   | = |
+KITEM:   * = *
+KFEAT:   |* = shallow_water
+SHUFFLE: 12345 / 86769
+NSUBST:  Z = 1:w / *:c
+SUBST:   G = GGGwwW, 7 = 667, 8 = 688, 9 = 7899, x = c
+MAP
+   xxxxxxxxxxx
+  xxGxGxGxGxGxx
+ xxwwwwwwwwwwwxx
+ xwww1wwwww1wwwx
+xxwwxxxxZxxxxwwxx
+xGwwx|wwwww*xwwGx
+xxwwxw2www4wxwwxx
+xGwwZwww5wwwZwwGx
+xxwwxw4www2wxwwxx
+xGwwx*wwwww*xwwGx
+xxwwxxxxZxxxxwwxx
+ xwww3wwwww3wwwx
+ xxwwwwwwwwwwwxx
+  xxGxGx+xGxGxx
+   xxxxx@xxxxx
+ENDMAP
+
+NAME: nicolae_shoals_undead_eyrie
+DEPTH: Shoals
+SUBST: y = ..xx1
+NSUBST: . = 4:1 / *:.
+MONS: harpy zombie w:30 / griffon zombie / hippogriff zombie / bat zombie w:5
+MAP
+ .....
+...y...
+..yxy..
+.yxxxy.
+..yxy..
+...y...
+ .....
+ENDMAP
+
+NAME: nicolae_shoals_mertower
+DEPTH: Shoals
+FHEIGHT: ;'b123 = 40
+KPROP: ;'b123 = no_tide
+KMONS: 1 = merfolk
+KMONS: 2 = merfolk impaler / nothing w:4
+KMONS: 3 = merfolk javelineer / nothing w:4
+KFEAT: ' = W
+KFEAT: ;23 = w
+KFEAT: b = .
+MAP
+  wwwwwwww
+ wwwxxxxxww
+ wwxx;22xxw
+.b1x';;;3xw
+.bb+';;;3xw
+.b1x';;;3xw
+ wwxx;22xxw
+ wwwxxxxxww
+  wwwwwwww
+ENDMAP
+
+NAME: nicolae_shoals_aquamancer_cove
+DEPTH: Shoals
+TAGS: no_monster_gen
+KMONS: 123 = merfolk aquamancer / nothing w:3
+SUBST: c = x.
+KFEAT: 1 = w
+KFEAT: 2 = .
+KFEAT: 3 = W
+MAP
+     xxcc.@
+    xx...2.
+  xxxc.ccx.
+xxxcc...cxxx
+xccc.....ccxx
+xc...3W3...cxx
+x..WWwwwWW..cx
+x.Ww1www1wW.cx
+cw1wwwwwww1wcx
+  wwwwwwwww
+    wwwww
+ENDMAP
+
+NAME: nicolae_shoals_kraken_intersection
+DEPTH: Shoals
+TAGS: transparent no_pool_fixup water_ok no_trap_gen
+SUBST: b = .w, z = x.
+KPROP: w1. = no_tide
+KPROP: c = no_rtele_into
+SUBST: c = xw
+KFEAT: 1 = w
+KMONS: 1 = kraken
+MAP
+ ccxx@@xxcc
+ccxxz..zxxcc
+cxxz.bb.zxxc
+xxz.bwwb.zxx
+xz.bwwwwb.zx
+@.bwww1wwb.@
+@.bwwwwwwb.@
+xz.bwwwwb.zx
+xxz.bwwb.zxx
+cxxz.bb.zxxc
+ccxxz..zxxcc
+ ccxx@@xxcc
+ENDMAP
+
+NAME: nicolae_shoals_arrival_archipelago
+DEPTH: Shoals
+SHUFFLE: {[(<, abc, def
+SUBST: ade:@, bcf:W
+MAP
+     wwwwb
+    www...b
+ wwwww..{..b
+wwwwwd.....w
+ww..dd....ww
+c....dwwffww
+c..(.wwwffww
+c....ee....w
+ww..eee.[..w
+wwwwwee....a
+  wwww....a
+    wwwwwa
+ENDMAP
+
+NAME:    hangedman_shoals_cup_caves
+TAGS:    water_ok
+DEPTH:   Shoals
+MONS:    cyclops / stone giant w:2
+MONS:    mermaid, harpy, snapping turtle, centaur / centaur warrior, sea snake
+SHUFFLE: 234560, ABC
+SUBST:   A : x:6 .:1, B : xxw., C : xw.., c = c:29 .:1, x = x:9 c:1, % = %:8 *:1 .:1
+MAP
+ xxxx        xxxxx  xxxx
+xxxcxxxxW@Wxxxxcxxxxxcxxx
+xW..%xxWABAWxx414xxx5..Wx
+WA...2x.....x%...%x%...AW
+@B.C.1c..C..c..C..c1.C.B@
+WA...2x3...3x.....x%...AW
+xW..%xxx%1%xxWABAWxx5..Wx
+xxxcxxxxxcxxxxW@Wxxxxcxxx
+ xxxx  xxxxx        xxxx
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps
 # (which need not be encompassing) are sometimes used, though.
 ##############################################################################
+
+NAME: shoals_end_simple
+PLACE: Shoals:$
+: shoals_finale_setup(_G, 'simple')
+
+# HangedMan's alternative Shoals ending
+NAME: shoals_end_hangedman
+PLACE: Shoals:$
+WEIGHT: 8
+: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,7))
 
 ################################################################################
 # Shoal hut with rune inside.
@@ -363,7 +625,7 @@ ENDMAP
 # item.
 #
 NAME:      shoalhut_rune
-TAGS:      shoal_rune_hut water_ok no_dump allow_dup
+TAGS:      shoal_rune_simple water_ok no_dump mini_float
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.
@@ -385,7 +647,7 @@ ENDMAP
 # Shoal decoy hut
 #
 NAME:      shoalhut
-TAGS:      shoal_hut water_ok no_dump allow_dup
+TAGS:      shoal_hut_simple water_ok no_dump allow_dup mini_float
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.
@@ -401,12 +663,11 @@ xx.0.xx
 ENDMAP
 
 ################################################################################
-# Shoal hangout of Ilsuiw. Using PLACE: makes this quite likely to turn up.
+# Shoal hangout of Ilsuiw.
 # The hut itself may not contain Ilsuiw if she had other engagements.
 
 NAME:    shoal_ilsuiw
-PLACE:   Shoals:$
-TAGS:    mini_float
+TAGS:    shoal_guardian
 KMONS:   1 = Ilsuiw band, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer
 SUBST:   3 = 33w
@@ -421,4 +682,55 @@ w3w1w3w
 xwwwwwx
 wxw2wxw
  wxwxw
+ENDMAP
+
+################################################################################
+# HangedMan's alternative Shoals:$
+
+NAME:    shoals_rune_alternative
+TAGS:    shoal_rune_hangedman water_ok allow_dup transparent mini_float no_dump
+KMONS:   12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
+KMONS:   3 = kraken / harpy band w:5
+KMONS:   d = siren / mermaid w:5
+KITEM:   d = barnacled rune of zot
+KFEAT:   123 = w
+KPROP:   d = no_tide
+SHUFFLE: AB / AB / BA, CD / CD / DC
+NSUBST:  2 = 2 = 22w / * = 22www, 0 = 2:0 / * = 00...
+SUBST:   AC = x, B = w, D = .
+LROCKTILE: wall_vines
+FHEIGHT: .d0@ = 15
+MAP
+  xxxxxxx
+ xx12wwwxx
+xx2x..00Wxx
+x1xd02w..Wx
+x2.03Awx..x
+xw.2AxBw..x
+xw0wwBw.D.x
+xw0.xw..C.x
+xxW...DC.x@
+ xxW....x..
+  xxxxxx@.
+ENDMAP
+
+NAME:    shoals_rune_alternative_decoy
+TAGS:    shoal_hut_hangedman water_ok allow_dup transparent mini_float no_dump
+KMONS:   0 = 0
+SHUFFLE: AB / AB / BA, CD / CD / DC
+NSUBST:  0 = 3:0 / * = 00...
+SUBST:   AC = x, B = w, D = .
+FHEIGHT: .d0@ = 15
+MAP
+  xxxxxxx
+ xxwwwwwxx
+xxwx00.0Wxx
+xwx|0ww..Wx
+xw00wAwx..x
+xw0wAxBw..x
+xw.wwBw.D.x
+xw0.xw..C.x
+xxW...DC.x@
+ xxW....x..
+  xxxxxx@.
 ENDMAP

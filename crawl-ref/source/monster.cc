@@ -388,11 +388,6 @@ int monster::body_weight(bool /*base*/) const
             weight *= 4;
             break;
 
-        case MONS_WOOD_GOLEM:
-            weight *= 2;
-            weight /= 3;
-            break;
-
         case MONS_FLYING_SKULL:
         case MONS_CURSE_SKULL:
         case MONS_BONE_DRAGON:
@@ -717,8 +712,8 @@ bool monster::can_throw_large_rocks() const
 {
     monster_type species = mons_species(false); // zombies can't
     return (species == MONS_STONE_GIANT
-         || species == MONS_CYCLOPS
-         || species == MONS_OGRE);
+            || species == MONS_CYCLOPS
+            || species == MONS_OGRE);
 }
 
 bool monster::can_speak()
@@ -1481,11 +1476,7 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
             return (wtype == WPN_LAJATANG);
 
         if (mons->type == MONS_EDMUND)
-        {
-            return (wtype == WPN_FLAIL
-                 || wtype == WPN_SPIKED_FLAIL
-                 || wtype == WPN_DIRE_FLAIL);
-        }
+            return (wtype == WPN_FLAIL || wtype == WPN_DIRE_FLAIL);
 
         // Pikel's got MONUSE_STARTING_EQUIPMENT right now, but,
         // in case that ever changes, we don't want him to switch away
@@ -1514,9 +1505,9 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         if (mons->type == MONS_ARACHNE)
         {
             return (weapon.base_type == OBJ_STAVES
-                    && weapon.sub_type == STAFF_POISON
-                 || weapon.base_type == OBJ_WEAPONS
-                    && weapon.special == UNRAND_OLGREB);
+                        && weapon.sub_type == STAFF_POISON
+                    || weapon.base_type == OBJ_WEAPONS
+                        && weapon.special == UNRAND_OLGREB);
         }
 
         if (mons->type == MONS_FANNAR)
@@ -2043,7 +2034,8 @@ bool monster::pickup_jewellery(item_def &item, int near, bool force)
     {
         if (!force)
         {
-            int value_old = _get_monster_jewellery_value(this, *existing_jewellery);
+            int value_old = _get_monster_jewellery_value(this,
+                                                         *existing_jewellery);
             if (value_old > value_new)
                 return false;
 
@@ -2257,8 +2249,10 @@ bool monster::pickup_food(item_def &item, int near)
 
 bool monster::pickup_misc(item_def &item, int near)
 {
-    // Never pick up runes, except rune mimics.
-    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_RUNE_OF_ZOT
+    // Never pick up the horn of Geryon or runes, except for mimics.
+    if (item.base_type == OBJ_MISCELLANY
+        && ((item.sub_type == MISC_HORN_OF_GERYON && type != MONS_GERYON)
+            || item.sub_type == MISC_RUNE_OF_ZOT)
         && !mons_is_item_mimic(type))
     {
         return false;
@@ -2403,8 +2397,8 @@ void monster::swap_weapons(int near)
     if (weap && !unequip(*weap, MSLOT_WEAPON, near))
     {
         // Item was cursed.
-        // A centaur may randomly decide to not shoot you, but bashing people with
-        // a ranged weapon is a dead giveaway.
+        // A centaur may randomly decide to not shoot you, but bashing
+        // people with a ranged weapon is a dead giveaway.
         if (weap->cursed() && you.can_see(this) && is_range_weapon(*weap))
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
@@ -3445,7 +3439,7 @@ bool monster::is_holy(bool check_spells) const
     if (holiness() == MH_HOLY)
         return true;
 
-    // Assume that all unknown gods (GOD_NAMELESS) are not holy.
+    // Assume that all unknown gods are not holy.
     if (is_priest() && is_good_god(god) && check_spells)
         return true;
 
@@ -3471,8 +3465,8 @@ bool monster::is_evil(bool check_spells) const
     if (holiness() == MH_UNDEAD)
         return true;
 
-    // Assume that all unknown gods (GOD_NAMELESS) are evil.
-    if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS)
+    // Assume that all unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || is_unknown_god(god))
         && check_spells)
     {
         return true;
@@ -3512,11 +3506,12 @@ bool monster::is_unclean(bool check_spells) const
         return true;
     }
 
-    // A floating mass of disease is nearly the definition of unclean
+    // A floating mass of disease is nearly the definition of unclean.
     if (type == MONS_ANCIENT_ZYME)
         return true;
 
-    // Assume that all unknown gods (GOD_NAMELESS) are not chaotic.
+    // Assume that all unknown gods are not chaotic.
+    //
     // Being a worshipper of a chaotic god doesn't yet make you
     // physically/essentially chaotic (so you don't get hurt by silver),
     // but Zin does mind.
@@ -3949,9 +3944,9 @@ bool monster::res_corr(bool calc_unid, bool items) const
     return actor::res_corr(calc_unid, items);
 }
 
-int monster::res_acid() const
+int monster::res_acid(bool calc_unid) const
 {
-    return res_corr() ? 1 : 0;
+    return max(get_mons_resist(this, MR_RES_ACID), (int)actor::res_corr(calc_unid));
 }
 
 int monster::res_magic() const
@@ -4153,8 +4148,11 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
-    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER)
+    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
+        || type == MONS_DIAMOND_OBELISK)
+    {
         return 0;
+    }
 
     if (alive())
     {
@@ -4383,6 +4381,24 @@ bool monster::check_set_valid_home(const coord_def &place,
     return true;
 }
 
+bool monster::has_originating_map() const
+{
+    return this->props.exists("map");
+}
+
+string monster::originating_map() const
+{
+    if (!this->has_originating_map())
+        return "";
+    return this->props["map"].get_string();
+}
+
+void monster::set_originating_map(const string &map_name)
+{
+    if (!map_name.empty())
+        this->props["map"].get_string() = map_name;
+}
+
 #define MAX_PLACE_NEAR_DIST 8
 
 bool monster::find_home_near_place(const coord_def &c)
@@ -4473,7 +4489,8 @@ bool monster::needs_abyss_transit() const
                 || (flags & MF_BANISHED)
                 || hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
-            && !has_ench(ENCH_ABJ));
+            && !has_ench(ENCH_ABJ)
+            && type != MONS_BATTLESPHERE); // can use stairs otherwise
 }
 
 void monster::set_transit(const level_id &dest)
@@ -4494,7 +4511,7 @@ void monster::load_ghost_spells()
     spells = ghost->spells;
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf("Ghost spells:");
+    dprf(DIAG_MONPLACE, "Ghost spells:");
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
     {
         mprf(MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
@@ -4717,11 +4734,6 @@ bool monster::can_go_berserk() const
     return true;
 }
 
-bool monster::frenzied() const
-{
-    return has_ench(ENCH_INSANE);
-}
-
 bool monster::berserk() const
 {
     return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
@@ -4775,8 +4787,8 @@ bool monster::visible_to(const actor *looker) const
     bool blind = looker->is_monster()
                  && looker->as_monster()->has_ench(ENCH_BLIND);
 
-    bool vis = !blind && !invisible() || looker->can_see_invisible()
-               || sense_invis && adjacent(pos(), looker->pos());
+    bool vis = (sense_invis && adjacent(pos(), looker->pos()))
+               || (!blind && (!invisible() || looker->can_see_invisible()));
 
     return (vis && (this == looker || !submerged()));
 }
@@ -4814,6 +4826,11 @@ bool monster::can_safely_mutate() const
     return can_mutate();
 }
 
+bool monster::can_polymorph() const
+{
+    return can_mutate();
+}
+
 bool monster::can_bleed(bool /*allow_tran*/) const
 {
     return mons_has_blood(type);
@@ -4822,6 +4839,23 @@ bool monster::can_bleed(bool /*allow_tran*/) const
 bool monster::mutate(const string &reason)
 {
     if (!can_mutate())
+        return false;
+
+    // Ugly things merely change colour.
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    {
+        ugly_thing_mutate(this);
+        return true;
+    }
+
+    simple_monster_message(this, " twists and deforms.");
+    add_ench(mon_enchant(ENCH_WRETCHED, 1, nullptr, INFINITE_DURATION));
+    return true;
+}
+
+bool monster::polymorph(int pow)
+{
+    if (!can_polymorph())
         return false;
 
     // Polymorphing a (very) ugly thing will mutate it into a different
@@ -4843,7 +4877,7 @@ bool monster::mutate(const string &reason)
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_mutate(this);
+        slime_creature_polymorph(this);
         return true;
     }
 
@@ -5015,7 +5049,8 @@ bool monster::self_destructs()
     if (type == MONS_GIANT_SPORE
         || type == MONS_BALL_LIGHTNING
         || type == MONS_LURKING_HORROR
-        || type == MONS_ORB_OF_DESTRUCTION)
+        || type == MONS_ORB_OF_DESTRUCTION
+        || type == MONS_FULMINANT_PRISM)
     {
         suicide();
         // Do the explosion right now.
@@ -5477,12 +5512,14 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             && !invalid_monster_index(number)
             && menv[number].is_parent_monster_of(this))
     {
-        (new kraken_damage_fineff(oppressor, &menv[number], damage))->schedule();
+        (new deferred_damage_fineff(oppressor, &menv[number], damage))->schedule();
     }
-    else if (type == MONS_BUSH && flavour == BEAM_FIRE
-             && damage>8 && x_chance_in_y(damage, 20))
+    else if (mons_species(type) == MONS_BUSH
+             && res_fire() < 0
+             && flavour == BEAM_FIRE
+             && damage > 8 && x_chance_in_y(damage, 20))
     {
-        place_cloud(CLOUD_FIRE, pos(), 20+random2(15), oppressor, 5);
+        place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
     else if (type == MONS_SPRIGGAN_RIDER)
     {

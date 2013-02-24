@@ -1726,11 +1726,11 @@ wand of paralysis
 
 Un outil magique qui peut immobiliser une créature.
 %%%%
-wand of polymorph other
+wand of polymorph
 
 Un instrument magique qui transforme la forme d'une créature ciblée en la forme
 d'une autre créature. Cela est particulièrement efficace contre les changeurs
-de forme. Cela n'a aucun effet sur vous, n'essayez même pas.
+de forme.
 %%%%
 wand of random effects
 

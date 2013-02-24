@@ -49,6 +49,8 @@ charcoal
 
 chartreuse
 
+copper
+
 cyan
 
 gold
@@ -56,6 +58,8 @@ gold
 green
 
 grey
+
+gridelin
 
 indigo
 
@@ -293,7 +297,7 @@ Will you be the one to retrieve the fabulous Orb of Zot from the depths?
 
 The destiny of this world depends on the Orb of Zot. Go down and get it!
 
-They say that the Orb of Zot exists deep, deep down but nobody ever got it.
+They say that the Orb of Zot exists deep within this dungeon, but nobody has ever found it.
 %%%%
 welcome_spam Zot Defence
 

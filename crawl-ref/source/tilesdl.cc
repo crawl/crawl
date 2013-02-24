@@ -53,18 +53,11 @@
 #ifdef __ANDROID__
 #include <android/log.h>
 #include <GLES/gl.h>
+#include <SDL_android.h>
 #endif
 
 #ifdef TARGET_OS_WINDOWS
-
-#include <windows.h>
-// WINAPI defines these, but we are already using them in
-// wm_event_type enum,
-// so we have to undef these to have working input when using
-// Windows and Tiles
-#undef WM_KEYDOWN
-#undef WM_KEYUP
-#undef WM_QUIT
+# include <windows.h>
 #endif
 
 // Default Screen Settings
@@ -646,7 +639,7 @@ int TilesFramework::getch_ck()
             ticks = wm->get_ticks();
             if (!mouse_target_mode)
             {
-                if (event.type != WM_CUSTOMEVENT)
+                if (event.type != WME_CUSTOMEVENT)
                 {
                     tiles.clear_text_tags(TAG_CELL_DESC);
                     m_region_msg->alt_text().clear();
@@ -683,7 +676,36 @@ int TilesFramework::getch_ck()
 
             switch (event.type)
             {
-            case WM_ACTIVEEVENT:
+            case WME_ACTIVEEVENT:
+#ifdef __ANDROID__
+                // short-term: when crawl is 'iconified' in android,
+                // close it
+                if (/*event.active.state == 0x04 SDL_APPACTIVE &&*/ event.active.gain == 0)
+                {
+                    if (crawl_state.need_save)
+                        save_game(true);
+                    exit(0);
+                }
+                // long-term pseudo-code:
+                /*
+                if (event.active.state == SDL_APPACTIVE)
+                {
+                    if (event.active.gain == 0)
+                    {
+                        if (crawl_state.need_save)
+                            save_game(true);
+                        do_no_SDL_or_GL_calls();
+                    }
+                    else
+                    {
+                        reload_gl_textures();
+                        reset_gl_state();
+                        wm->set_mod_state(MOD_NONE);
+                        set_need_redraw();
+                    }
+                }
+                 */
+#else
                 // When game gains focus back then set mod state clean
                 // to get rid of stupid Windows/SDL bug with Alt-Tab.
                 if (event.active.gain != 0)
@@ -691,8 +713,9 @@ int TilesFramework::getch_ck()
                     wm->set_mod_state(MOD_NONE);
                     set_need_redraw();
                 }
+#endif
                 break;
-            case WM_KEYDOWN:
+            case WME_KEYDOWN:
                 m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
@@ -702,12 +725,12 @@ int TilesFramework::getch_ck()
                 m_last_tick_moved = UINT_MAX;
                 break;
 
-            case WM_KEYUP:
+            case WME_KEYUP:
                 m_key_mod &= ~event.key.keysym.key_mod;
                 m_last_tick_moved = UINT_MAX;
                 break;
 
-            case WM_MOUSEMOTION:
+            case WME_MOUSEMOTION:
                 {
                     // Record mouse pos for tooltip timer
                     if (m_mouse.x != (int)event.mouse_event.px
@@ -743,7 +766,7 @@ int TilesFramework::getch_ck()
                     // (possibly because redrawing is slow or the user
                     // is moving the mouse really quickly), process those
                     // first, before bothering to redraw the screen.
-                    unsigned int count = wm->get_event_count(WM_MOUSEMOTION);
+                    unsigned int count = wm->get_event_count(WME_MOUSEMOTION);
                     ASSERT(count >= 0);
                     if (count > 0)
                         continue;
@@ -758,7 +781,7 @@ int TilesFramework::getch_ck()
                 }
                break;
 
-            case WM_MOUSEBUTTONUP:
+            case WME_MOUSEBUTTONUP:
                 {
                     m_buttons_held  &= ~(event.mouse_event.button);
                     event.mouse_event.held = m_buttons_held;
@@ -768,7 +791,7 @@ int TilesFramework::getch_ck()
                 }
                 break;
 
-            case WM_MOUSEBUTTONDOWN:
+            case WME_MOUSEBUTTONDOWN:
                 {
                     m_buttons_held  |= event.mouse_event.button;
                     event.mouse_event.held = m_buttons_held;
@@ -778,13 +801,13 @@ int TilesFramework::getch_ck()
                 }
                 break;
 
-            case WM_QUIT:
+            case WME_QUIT:
                 if (crawl_state.need_save)
                     save_game(true);
                 exit(0);
                 break;
 
-            case WM_CUSTOMEVENT:
+            case WME_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
                 break;
@@ -905,9 +928,7 @@ void TilesFramework::do_layout()
         m_stat_x_divider = m_windowsz.x - (m_region_tab->ox*m_region_tab->dx/32) - get_crt_font()->char_width()*10;
         // old logic, if we're going to impinge upon a nice square dregion
         if (available_height_in_tiles * m_region_tile->dx > m_stat_x_divider)
-        {
             m_stat_x_divider = available_height_in_tiles * m_region_tile->dx;
-        }
         // always overlay message area on dungeon
         message_y_divider = m_windowsz.y;
 
@@ -983,9 +1004,7 @@ void TilesFramework::do_layout()
                 }
             }
             else
-            {
                 message_y_divider = available_height_in_tiles * m_region_tile->dy;
-            }
         }
     }
 
@@ -1016,13 +1035,9 @@ void TilesFramework::do_layout()
     crawl_view.msgsz.y = m_region_msg->my;
 
     if (use_small_layout)
-    {
         m_stat_col = m_stat_x_divider;
-    }
     else
-    {
         m_stat_col = m_stat_x_divider + map_stat_margin;
-    }
     m_region_stat->resize_to_fit(m_windowsz.x - m_stat_x_divider, m_windowsz.y);
     m_region_stat->place(m_stat_col, 0, 0);
     m_region_stat->resize(m_region_stat->mx, min_stat_height);
@@ -1043,9 +1058,23 @@ bool TilesFramework::is_using_small_layout()
     // automatically use small layout at low resolutions if TOUCH_UI enabled,
     // otherwise only if forced to
 #ifdef TOUCH_UI
-    return (m_windowsz.y <= 480 || Options.tile_use_small_layout);
+    switch (Options.tile_use_small_layout)
+    {
+    case OPT_YES:
+        return true;
+    case OPT_NO:
+        return false;
+    case OPT_AUTO:
+    default:
+#ifdef __ANDROID__
+        Options.tile_use_small_layout = (SDL_ANDROID_GetY16Inches()<40) ? OPT_YES : OPT_NO; // about 2.5" high
 #else
-    return Options.tile_use_small_layout;
+        Options.tile_use_small_layout = (m_windowsz.x<=480) ? OPT_YES : OPT_NO;
+#endif
+        return Options.tile_use_small_layout == OPT_YES;
+    }
+#else
+    return Options.tile_use_small_layout == OPT_YES;
 #endif
 }
 void TilesFramework::zoom_dungeon(bool in)

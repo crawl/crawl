@@ -55,6 +55,7 @@ enum kill_method_type
     KILLED_BY_DISINT,
     KILLED_BY_HEADBUTT,
     KILLED_BY_ROLLING,
+    KILLED_BY_MIRROR_DAMAGE,
 
     NUM_KILLBY
 };
@@ -63,7 +64,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam = 0, bool doEffects = true);
 void splash_with_acid(int acid_strength, bool corrode_items = true,
                       string hurt_msg = "");
-void weapon_acid(int acid_strength);
 
 class actor;
 int actor_to_death_source(const actor* agent);

@@ -8,6 +8,7 @@
 #include "dgn-shoals.h"
 #include "dgn-height.h"
 #include "env.h"
+#include "flood_find.h"
 #include "fprop.h"
 #include "items.h"
 #include "itemprop.h"
@@ -220,6 +221,22 @@ static void _shoals_apply_level()
         grd(*ri) = _shoals_feature_at(*ri);
 }
 
+static void _shoals_postbuild_apply_level()
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (!map_masked(*ri, MMT_VAULT))
+        {
+            const dungeon_feature_type feat = grd(*ri);
+            if (feat_is_water(feat) || feat == DNGN_ROCK_WALL
+                || feat == DNGN_STONE_WALL || feat == DNGN_FLOOR)
+            {
+                grd(*ri) = _shoals_feature_at(*ri);
+            }
+        }
+    }
+}
+
 // Returns all points in deep water with an adjacent square in shallow water.
 static vector<coord_def> _shoals_water_depth_change_points()
 {
@@ -281,64 +298,30 @@ static void _shoals_deepen_water()
     }
 }
 
-static coord_def _pick_shoals_island()
-{
-    return _shoals_islands.pick_and_remove_random_island();
-}
-
 static void _shoals_furniture(int margin)
 {
-    if (at_branch_bottom())
-    {
-        const coord_def p = _pick_shoals_island();
-        const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
-        const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
-        dgn_ensure_vault_placed(dgn_place_map(vault, true, false, p), false);
-
-        const int nhuts = min(8, int(_shoals_islands.islands.size()));
-        for (int i = 2; i < nhuts; ++i)
-        {
-            // Place (non-rune) minivaults on the other islands. We
-            // reuse the shoal rune huts, but do not place the rune
-            // again.
-            int tries = 5;
-            do
-                vault = random_map_for_tag("shoal_hut");
-            while (!vault && --tries > 0);
-            if (vault)
-                dgn_place_map(vault, true, false, _pick_shoals_island());
-        }
-
-        // Fixup pass to connect vaults.
-        for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
-        {
-            vault_placement &vp(*env.level_vaults[i]);
-            if (vp.map.has_tag(SHOAL_RUNE_HUT))
-                vp.connect();
-        }
-    }
-
     dgn_place_stone_stairs();
 }
 
 static void _shoals_deepen_edges()
 {
-    const int edge = 2;
+    const int edge = 1;
+    const int deepen_by = 1000;
     // Water of the edge of the screen is too deep to be exposed by tides.
     for (int y = 1; y < GYM - 2; ++y)
     {
         for (int x = 1; x <= edge; ++x)
         {
-            dgn_height_at(coord_def(x, y)) -= 800;
-            dgn_height_at(coord_def(GXM - 1 - x, y)) -= 800;
+            dgn_height_at(coord_def(x, y)) -= deepen_by;
+            dgn_height_at(coord_def(GXM - 1 - x, y)) -= deepen_by;
         }
     }
     for (int x = 1; x < GXM - 2; ++x)
     {
         for (int y = 1; y <= edge; ++y)
         {
-            dgn_height_at(coord_def(x, y)) -= 800;
-            dgn_height_at(coord_def(x, GYM - 1 - y)) -= 800;
+            dgn_height_at(coord_def(x, y)) -= deepen_by;
+            dgn_height_at(coord_def(x, GYM - 1 - y)) -= deepen_by;
         }
     }
 }
@@ -733,6 +716,118 @@ void shoals_postprocess_level()
     // Apply tide now, since the tide is likely to be nonzero unless
     // this is Shoals:1
     shoals_apply_tides(0, true, false);
+}
+
+static void _shoals_clamp_height_at(const coord_def &c,
+                                     int clamp_height = SHT_ROCK - 1)
+{
+    if (!in_bounds(c))
+        return;
+
+    if (dgn_height_at(c) > clamp_height)
+        dgn_height_at(c) = clamp_height;
+}
+
+static void _shoals_connect_smooth_height_at(const coord_def &c)
+{
+    if (map_bounds_with_margin(c, 3))
+        dgn_smooth_height_at(c, 1);
+}
+
+static void _shoals_connecting_point_smooth(const coord_def &c, int radius)
+{
+    for (int dy = 0; dy < radius; ++dy)
+    {
+        for (int dx = 0; dx < radius; ++dx)
+        {
+            _shoals_connect_smooth_height_at(c + coord_def(dy, dx));
+            if (dy)
+                _shoals_connect_smooth_height_at(c + coord_def(-dy, dx));
+            if (dx)
+                _shoals_connect_smooth_height_at(c + coord_def(dy, -dx));
+            if (dx && dy)
+                _shoals_connect_smooth_height_at(c + coord_def(-dy, -dx));
+        }
+    }
+}
+
+static void _shoals_connecting_point_clamp_height(
+    const coord_def &c, int radius)
+{
+    if (!in_bounds(c))
+        return;
+
+    for (rectangle_iterator ri(c - coord_def(radius, radius),
+                               c + coord_def(radius, radius)); ri; ++ri)
+    {
+        _shoals_clamp_height_at(*ri);
+    }
+
+    const int min_height_threshold = (SHT_SHALLOW_WATER + SHT_FLOOR) / 2;
+    if (dgn_height_at(c) < min_height_threshold)
+        dgn_height_at(c) = min_height_threshold;
+}
+
+bool dgn_shoals_connect_point(const coord_def &point,
+                              bool (*overwriteable)(dungeon_feature_type))
+{
+    flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds, true,
+                                                 false);
+    ff.add_feat(DNGN_FLOOR);
+
+    const coord_def target = ff.find_first_from(point, env.level_map_mask);
+    if (!in_bounds(target))
+        return false;
+
+    const vector<coord_def> track =
+        dgn_join_the_dots_pathfind(point, target, MMT_VAULT);
+
+    if (!track.empty())
+    {
+        const int n_points = 15;
+        const int radius = 4;
+
+        for (vector<coord_def>::const_iterator i = track.begin();
+             i != track.end(); ++i)
+        {
+            int height = 0, npoints = 0;
+            for (radius_iterator ri(*i, radius, C_POINTY); ri; ++ri)
+            {
+                if (in_bounds(*ri))
+                {
+                    height += dgn_height_at(*ri);
+                    ++npoints;
+                }
+            }
+
+            const int target_height = SHT_FLOOR;
+            if (height < target_height)
+            {
+                const int elevation_change = target_height - height;
+                const int elevation_change_per_dot =
+                    max(1, elevation_change / n_points + 1);
+
+                dgn_island_centred_at(*i, n_points, radius,
+                                      int_range(elevation_change_per_dot,
+                                                elevation_change_per_dot + 20),
+                                      3);
+            }
+        }
+
+        for (int i = track.size() - 1; i >= 0; --i)
+        {
+            const coord_def &p(track[i]);
+            _shoals_connecting_point_smooth(p, radius + 2);
+        }
+        for (int i = track.size() - 1; i >= 0; --i)
+        {
+            const coord_def &p(track[i]);
+            _shoals_connecting_point_clamp_height(p, radius + 2);
+        }
+
+        _shoals_postbuild_apply_level();
+    }
+    return !track.empty();
 }
 
 static void _shoals_run_tide(int &tide, int &acc)

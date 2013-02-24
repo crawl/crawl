@@ -8,6 +8,7 @@
 #include "describe.h"
 #include "libutil.h"
 #include "macro.h"
+#include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -63,7 +64,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
     {
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
-        if (learn_spell(spell, m_items[item_idx].special))
+        if (learn_spell(spell))
             tiles.update_tabs();
         else
             flush_input_buffer(FLUSH_ON_FAILURE);
@@ -147,6 +148,10 @@ void MemoriseRegion::update()
         {
             desc.flag |= TILEI_FLAG_INVALID;
         }
+
+        if (vehumet_is_offering(spell))
+            desc.flag |= TILEI_FLAG_EQUIP;
+
         m_items.push_back(desc);
     }
 }

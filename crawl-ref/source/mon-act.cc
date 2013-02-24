@@ -49,6 +49,7 @@
 #include "shopping.h" // for item values
 #include "spl-book.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -66,7 +67,7 @@ static void _mons_in_cloud(monster* mons);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
-static spell_type _map_wand_to_mspell(int wand_type);
+static spell_type _map_wand_to_mspell(wand_type kind);
 static void _shedu_movement_clamp(monster* mons);
 
 // [dshaligram] Doesn't need to be extern.
@@ -388,13 +389,45 @@ static void _maybe_set_patrol_route(monster* mons)
     }
 }
 
+static bool _mons_can_cast_dig(const monster* mons, bool random)
+{
+    return (mons->foe != MHITNOT
+            && mons->can_use_spells()
+            && mons->has_spell(SPELL_DIG)
+            && !mons->confused()
+            && !(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
+            && (!mons->has_ench(ENCH_ANTIMAGIC)
+                || (random
+                    && x_chance_in_y(mons->hit_dice * BASELINE_DELAY,
+                                     mons->hit_dice * BASELINE_DELAY
+                                     + mons->get_ench(ENCH_ANTIMAGIC).duration)
+                   || (!random
+                       && mons->hit_dice * BASELINE_DELAY
+                          < mons->get_ench(ENCH_ANTIMAGIC).duration))));
+}
+
+static bool _mons_can_zap_dig(const monster* mons)
+{
+    return (mons->foe != MHITNOT
+            && !mons->asleep()
+            && !mons->confused() // they don't get here anyway
+            && !mons->submerged()
+            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
+            && mons->inv[MSLOT_WAND] != NON_ITEM
+            && mitm[mons->inv[MSLOT_WAND]].base_type == OBJ_WANDS
+            && mitm[mons->inv[MSLOT_WAND]].sub_type == WAND_DIGGING
+            && mitm[mons->inv[MSLOT_WAND]].plus > 0);
+}
+
 static void _set_mons_move_dir(const monster* mons,
                                coord_def* dir, coord_def* delta)
 {
     ASSERT(dir && delta);
 
     // Some calculations.
-    if (mons_class_flag(mons->type, M_BURROWS) && mons->foe == MHITYOU)
+    if ((mons_class_flag(mons->type, M_BURROWS)
+         || _mons_can_cast_dig(mons, false))
+        && mons->foe == MHITYOU)
     {
         // Boring beetles always move in a straight line in your
         // direction.
@@ -1054,6 +1087,65 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster* mons)
     return beem;
 }
 
+static bool _setup_wand_beam(bolt& beem, monster* mons)
+{
+    item_def &wand(mitm[mons->inv[MSLOT_WAND]]);
+
+    // map wand type to monster spell type
+    const spell_type mzap = _map_wand_to_mspell((wand_type)wand.sub_type);
+    if (mzap == SPELL_NO_SPELL)
+        return false;
+
+    // set up the beam
+    int power         = 30 + mons->hit_dice;
+    bolt theBeam      = mons_spell_beam(mons, mzap, power);
+    beem = _generate_item_beem(beem, theBeam, mons);
+
+    beem.aux_source =
+        wand.name(DESC_QUALNAME, false, true, false, false);
+
+    return true;
+}
+
+static void _mons_fire_wand(monster* mons, item_def &wand, bolt &beem,
+                            bool was_visible, bool niceWand)
+{
+    if (!simple_monster_message(mons, " zaps a wand."))
+    {
+        if (!silenced(you.pos()))
+            mpr("You hear a zap.", MSGCH_SOUND);
+    }
+
+    // charge expenditure {dlb}
+    wand.plus--;
+    beem.is_tracer = false;
+    beem.fire();
+
+    if (was_visible)
+    {
+        const int wand_type = wand.sub_type;
+
+        if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
+        {
+            set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+            mons->props["wand_known"] = true;
+        }
+        else
+        {
+            set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+            mons->props["wand_known"] = false;
+        }
+
+        // Increment zap count.
+        if (wand.plus2 >= 0)
+            wand.plus2++;
+
+        mons->flags |= MF_SEEN_RANGED;
+    }
+
+    mons->lose_energy(EUT_ITEM);
+}
+
 static void _rod_fired_pre(monster* mons)
 {
     make_mons_stop_fleeing(mons);
@@ -1312,23 +1404,13 @@ static bool _handle_wand(monster* mons, bolt &beem)
     bool zap         = false;
     bool was_visible = you.can_see(mons);
 
-    item_def &wand(mitm[mons->inv[MSLOT_WAND]]);
-
-    // map wand type to monster spell type
-    const spell_type mzap = _map_wand_to_mspell(wand.sub_type);
-    if (mzap == SPELL_NO_SPELL)
+    if (!_setup_wand_beam(beem, mons))
         return false;
 
-    // set up the beam
-    int power         = 30 + mons->hit_dice;
-    bolt theBeam      = mons_spell_beam(mons, mzap, power);
-    beem = _generate_item_beem(beem, theBeam, mons);
+    item_def &wand = mitm[mons->inv[MSLOT_WAND]];
 
-    beem.aux_source =
-        wand.name(DESC_QUALNAME, false, true, false, false);
-
-    const int wand_type = wand.sub_type;
-    switch (wand_type)
+    const wand_type kind = (wand_type)wand.sub_type;
+    switch (kind)
     {
     case WAND_DISINTEGRATION:
         // Dial down damage from wands of disintegration, since
@@ -1337,17 +1419,9 @@ static bool _handle_wand(monster* mons, bolt &beem)
         break;
 
     case WAND_ENSLAVEMENT:
-    case WAND_DIGGING:
     case WAND_RANDOM_EFFECTS:
         // These have been deemed "too tricky" at this time {dlb}:
         return false;
-
-    case WAND_POLYMORPH_OTHER:
-        // Monsters can be very trigger happy with wands, reduce this
-        // for polymorph.
-        if (!one_chance_in(5))
-            return false;
-        break;
 
     // These are wands that monsters will aim at themselves {dlb}:
     case WAND_HASTING:
@@ -1395,6 +1469,9 @@ static bool _handle_wand(monster* mons, bolt &beem)
             break;
         }
         return false;
+
+    default:
+        break;
     }
 
     if (mons->confused())
@@ -1418,38 +1495,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
         if (!niceWand)
             make_mons_stop_fleeing(mons);
 
-        if (!simple_monster_message(mons, " zaps a wand."))
-        {
-            if (!silenced(you.pos()))
-                mpr("You hear a zap.", MSGCH_SOUND);
-        }
-
-        // charge expenditure {dlb}
-        wand.plus--;
-        beem.is_tracer = false;
-        beem.fire();
-
-        if (was_visible)
-        {
-            if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
-            {
-                set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
-                mons->props["wand_known"] = true;
-            }
-            else
-            {
-                set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
-                mons->props["wand_known"] = false;
-            }
-
-            // Increment zap count.
-            if (wand.plus2 >= 0)
-                wand.plus2++;
-
-            mons->flags |= MF_SEEN_RANGED;
-        }
-
-        mons->lose_energy(EUT_ITEM);
+        _mons_fire_wand(mons, wand, beem, was_visible, niceWand);
 
         return true;
     }
@@ -1660,6 +1706,20 @@ void handle_monster_move(monster* mons)
 {
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
+    if (mons->type == MONS_SPATIAL_MAELSTROM
+        && !player_in_branch(BRANCH_ABYSS)
+        && !player_in_branch(BRANCH_ZIGGURAT))
+    {
+        for (int i = 0; i < you.time_taken; ++i)
+        {
+            if (one_chance_in(100))
+            {
+                mons->banish(mons);
+                return;
+            }
+        }
+    }
+
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
     if (mons->liquefied_ground())
@@ -1762,6 +1822,7 @@ void handle_monster_move(monster* mons)
         if (just_once)
         {
             move_demon_tentacle(mons);
+            reset_battlesphere(mons);
             just_once = false;
         }
 
@@ -1828,6 +1889,35 @@ void handle_monster_move(monster* mons)
             continue;
         }
 
+        if (mons->type == MONS_BATTLESPHERE)
+        {
+            if (fire_battlesphere(mons))
+                mons->lose_energy(EUT_SPECIAL);
+        }
+
+        if (mons->type == MONS_FULMINANT_PRISM)
+        {
+            ++mons->number;
+            if (mons->number == 2)
+                mons->suicide();
+            else
+            {
+                if (player_can_hear(mons->pos()))
+                {
+                    if (you.can_see(mons))
+                    {
+                        simple_monster_message(mons, " crackles loudly.",
+                                               MSGCH_WARN);
+                    }
+                    else
+                        mpr("You hear a loud crackle.", MSGCH_SOUND);
+                }
+                // Done this way to keep the detonation timer predictable
+                mons->speed_increment -= 10;
+            }
+            continue;
+        }
+
         mons->shield_blocks = 0;
 
         const int  cloud_num   = env.cgrid(mons->pos());
@@ -1844,11 +1934,14 @@ void handle_monster_move(monster* mons)
         if (mons->type == MONS_TIAMAT && one_chance_in(3))
             draconian_change_colour(mons);
 
-        if  (mons->type == MONS_ASMODEUS)
+        if  (mons->type == MONS_ASMODEUS
+             || mons->type == MONS_CHAOS_BUTTERFLY)
         {
             for (adjacent_iterator ai(mons->pos()); ai; ++ai)
                 if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-                    place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), mons);
+                    place_cloud(mons->type == MONS_ASMODEUS ? CLOUD_FIRE
+                                                            : CLOUD_RAIN,
+                                *ai, 1 + random2(6), mons);
         }
 
         _monster_regenerate(mons);
@@ -2400,7 +2493,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
         if (you.religion == GOD_JIYVA)
         {
-            gain = sacrifice_item_stack(*si, &js);
+            gain = sacrifice_item_stack(*si, &js, quant);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
 
@@ -2935,7 +3028,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     {
         return false;
     }
-
     bool no_water = false;
 
     const int targ_cloud_num = env.cgrid(targ);
@@ -2946,9 +3038,11 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
 
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
+    const bool digs = _mons_can_cast_dig(mons, false)
+                      || _mons_can_zap_dig(mons);
     const bool flattens_trees = mons_flattens_trees(mons);
-    if ((burrows && (target_grid == DNGN_ROCK_WALL
-                     || target_grid == DNGN_CLEAR_ROCK_WALL))
+    if (((burrows || digs) && (target_grid == DNGN_ROCK_WALL
+                               || target_grid == DNGN_CLEAR_ROCK_WALL))
         || (flattens_trees && feat_is_tree(target_grid)))
     {
         // Don't burrow out of bounds.
@@ -3554,8 +3648,7 @@ static bool _monster_move(monster* mons)
     if (mons->type == MONS_SPATIAL_MAELSTROM)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
-        if (!feat_is_permarock(feat) && feat_is_solid(feat)
-            && mons->type == MONS_SPATIAL_MAELSTROM)
+        if (!feat_is_permarock(feat) && feat_is_solid(feat))
         {
             const coord_def target(mons->pos() + mmov);
             create_monster(
@@ -3569,14 +3662,39 @@ static bool _monster_move(monster* mons)
 
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
     const bool flattens_trees = mons_flattens_trees(mons);
+    const bool digs = _mons_can_cast_dig(mons, false)
+                      || _mons_can_zap_dig(mons);
     // Take care of beetle burrowing.
-    if (burrows || flattens_trees)
+    if (burrows || flattens_trees || digs)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
-        if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
-              && burrows)
-             || (flattens_trees && feat_is_tree(feat)))
-            && good_move[mmov.x + 1][mmov.y + 1] == true)
+        if ((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
+            && !burrows && digs)
+        {
+            bolt beem;
+            if (_mons_can_cast_dig(mons, true))
+            {
+                setup_mons_cast(mons, beem, SPELL_DIG);
+                beem.target = mons->pos() + mmov;
+                mons_cast(mons, beem, SPELL_DIG, true, true);
+            }
+            else if (_mons_can_zap_dig(mons))
+            {
+                ASSERT(mons->inv[MSLOT_WAND] != NON_ITEM);
+                item_def &wand = mitm[mons->inv[MSLOT_WAND]];
+                beem.target = mons->pos() + mmov;
+                _setup_wand_beam(beem, mons);
+                _mons_fire_wand(mons, wand, beem, you.can_see(mons), false);
+            }
+            else
+                simple_monster_message(mons, " falters for a moment.");
+            mons->lose_energy(EUT_SPELL);
+            return true;
+        }
+        else if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
+                  && burrows)
+                  || (flattens_trees && feat_is_tree(feat)))
+                 && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
             nuke_wall(target);
@@ -3706,11 +3824,12 @@ static bool _monster_move(monster* mons)
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(mons, mmov);
 
-    if (mons_is_wandering(mons))
+    // Battlespheres need to preserve their tracking targets after each move
+    if (mons_is_wandering(mons) && mons->type != MONS_BATTLESPHERE)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();
-        if (!mons->is_patrolling() )
+        if (!mons->is_patrolling())
         {
             mons->travel_target = MTRAV_NONE;
             mons->travel_path.clear();
@@ -3730,9 +3849,9 @@ static void _mons_in_cloud(monster* mons)
     actor_apply_cloud(mons);
 }
 
-static spell_type _map_wand_to_mspell(int wand_type)
+static spell_type _map_wand_to_mspell(wand_type kind)
 {
-    switch (wand_type)
+    switch (kind)
     {
     case WAND_FLAME:           return SPELL_THROW_FLAME;
     case WAND_FROST:           return SPELL_THROW_FROST;
@@ -3749,7 +3868,8 @@ static spell_type _map_wand_to_mspell(int wand_type)
     case WAND_LIGHTNING:       return SPELL_LIGHTNING_BOLT;
     case WAND_DRAINING:        return SPELL_BOLT_OF_DRAINING;
     case WAND_DISINTEGRATION:  return SPELL_DISINTEGRATE;
-    case WAND_POLYMORPH_OTHER: return SPELL_POLYMORPH_OTHER;
+    case WAND_POLYMORPH:       return SPELL_POLYMORPH;
+    case WAND_DIGGING:         return SPELL_DIG;
     default:                   return SPELL_NO_SPELL;
     }
 }

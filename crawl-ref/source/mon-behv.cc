@@ -301,7 +301,8 @@ void handle_behaviour(monster* mon)
     if (isFriendly
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->berserk()
-        && mon->type != MONS_GIANT_SPORE)
+        && mon->type != MONS_GIANT_SPORE
+        && mon->type != MONS_BATTLESPHERE)
     {
         if  (!crawl_state.game_is_zotdef())
         {
@@ -590,8 +591,9 @@ void handle_behaviour(monster* mon)
                 if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
                     && !mon->berserk())
                 {
-                    // Get to firing range even if we are close.
-                    _set_firing_pos(mon, you.pos());
+                    if (mon->attitude != ATT_FRIENDLY)
+                        // Get to firing range even if we are close.
+                        _set_firing_pos(mon, you.pos());
                 }
                 else if (!mon->firing_pos.zero()
                     && mon->see_cell_no_trans(mon->target))
@@ -841,7 +843,8 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 static void _set_nearest_monster_foe(monster* mon)
 {
     // These don't look for foes.
-    if (mon->good_neutral() || mon->strict_neutral())
+    if (mon->good_neutral() || mon->strict_neutral()
+            || mon->type == MONS_BATTLESPHERE)
         return;
 
     const bool friendly = mon->friendly();
@@ -984,7 +987,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
-            if (src == &you)
+            if (src == &you && mon->type != MONS_BATTLESPHERE)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
@@ -1164,7 +1167,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player())
+        if (src->is_player() && mon->type != MONS_BATTLESPHERE)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;

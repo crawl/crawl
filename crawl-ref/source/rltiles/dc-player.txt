@@ -498,22 +498,31 @@ krishna KRISHNA
 %sdir player/hand1
 # blades
 dagger DAGGER
+dagger2
 dagger_slant DAGGER_SLANT
+dagger_slant2
 short_sword SHORT_SWORD
 short_sword_slant SHORT_SWORD_SLANT
-short_sword2 SHORT_SWORD2
+short_sword_slant2
+short_sword_two SHORT_SWORD2
 sword_thief SWORD_THIEF
 long_sword LONG_SWORD
 long_sword_slant LONG_SWORD_SLANT
+long_sword_slant2
 blessed_blade BLESSED_BLADE
 great_sword GREAT_SWORD
 great_sword_slant GREAT_SWORD_SLANT
+great_sword_slant2
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
+scimitar2
 falchion FALCHION
+falchion2
 double_sword DOUBLE_SWORD
+double_sword2
 triple_sword TRIPLE_SWORD
-sword2 SWORD2
+triple_sword2
+sword_two SWORD2
 sword_tri SWORD_TRI
 broadsword BROADSWORD
 black_sword BLACK_SWORD
@@ -523,7 +532,8 @@ knife KNIFE
 sword_seven SWORD_SEVEN
 heavy_sword HEAVY_SWORD
 sabre SABRE
-sword3 SWORD3
+sabre2
+sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
@@ -532,8 +542,8 @@ enchantress_dagger ENCHANTRESS_DAGGER
 ## blunt
 club CLUB
 club_slant CLUB_SLANT
-club2 CLUB2
-club3 CLUB3
+club_two CLUB2
+club_three CLUB3
 stick STICK
 giant_club GIANT_CLUB
 giant_club_slant GIANT_CLUB_SLANT
@@ -541,62 +551,77 @@ giant_club_spike GIANT_CLUB_SPIKE
 giant_club_spike_slant GIANT_CLUB_SPIKE_SLANT
 giant_club_plain GIANT_CLUB_PLAIN
 whip WHIP
+whip2
 sceptre SCEPTRE
-mace MACE2
-mace3 MACE
-mace2 GREAT_MACE
+mace_two MACE2
+mace MACE
+mace2
+great_mace GREAT_MACE
+great_mace2
 mace_ruby MACE_RUBY
-morningstar MORNINGSTAR2
-morningstar2 MORNINGSTAR
+morningstar_two MORNINGSTAR2
+morningstar MORNINGSTAR
+morningstar2
 eveningstar EVENINGSTAR
+eveningstar2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
-sacred_scourge1 SACRED_SCOURGE
-sacred_scourge2 SACRED_SCOURGE2
-hammer3 HAMMER
-hammer HAMMER1
-hammer2 HAMMER2
+sacred_scourge SACRED_SCOURGE
+sacred_scourge_two SACRED_SCOURGE2
+hammer HAMMER
+hammer2
+hammer_one HAMMER1
+hammer_two HAMMER2
 flail_stick FLAIL_STICK
 flail_ball FLAIL
+flail_ball2
 flail_spike SPIKED_FLAIL
-flail_stick_slant GREAT_FLAIL
-flail_ball2 FLAIL_BALL2
+flail_spike2
+flail_great GREAT_FLAIL
+flail_great2
+flail_stick_slant FLAIL_STICK_SLANT
+flail_ball_two FLAIL_BALL2
 flail_balls FLAIL_BALLS
-flail_ball3 FLAIL_BALL3
-flail_ball4 FLAIL_BALL4
+flail_ball_three FLAIL_BALL3
+flail_ball_four FLAIL_BALL4
 nunchaku NUNCHAKU
 
 ## polearms
-spear1 SPEAR
-spear2 SPEAR2
-spear3 SPEAR3
-spear4 SPEAR4
-spear5 SPEAR5
+spear SPEAR
+spear_two SPEAR2
+spear_three SPEAR3
+spear_four SPEAR4
+spear_five SPEAR5
 hook HOOK
 halberd HALBERD
+halberd2
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
 trident_elec TRIDENT_ELEC
-trident2 TRIDENT2
-trident3 TRIDENT3
+trident_two TRIDENT2
+trident_two2
+trident_three TRIDENT3
 lance LANCE
-lance2 LANCE2
+lance_two LANCE2
 scythe SCYTHE
+scythe2
 scythe_slant SCYTHE_SLANT
 pike PIKE
-staff1 STAFF
-quarterstaff1 QUARTERSTAFF1
-quarterstaff2 QUARTERSTAFF2
-quarterstaff3 QUARTERSTAFF3
-quarterstaff4 QUARTERSTAFF4
+staff STAFF
+quarterstaff QUARTERSTAFF1
+quarterstaff_two QUARTERSTAFF2
+quarterstaff_three QUARTERSTAFF3
+quarterstaff_four QUARTERSTAFF4
 sickle SICKLE
 glaive GLAIVE
-glaive2 GLAIVE2
-glaive3 GLAIVE3
+glaive2
+glaive_two GLAIVE2
+glaive_three GLAIVE3
+glaive_three2
 d_glaive D_GLAIVE
 pole_forked POLE_FORKED
-fork2 FORK2
+fork FORK2
 trishula TRISHULA
 lajatang1 LAJATANG
 lajatang2
@@ -608,7 +633,7 @@ lajatang3
 staff_large STAFF_LARGE
 great_staff GREAT_STAFF
 staff_mage STAFF_MAGE
-staff_mage2 STAFF_MAGE2
+staff_mage_two STAFF_MAGE2
 staff_plain STAFF_PLAIN
 staff_organic STAFF_ORGANIC
 staff_skull STAFF_SKULL
@@ -637,10 +662,15 @@ rod_emerald
 ## axes
 axe_small AXE_SMALL
 hand_axe HAND_AXE
+hand_axe2
 war_axe WAR_AXE
-great_axe BROAD_AXE
-axe BATTLEAXE
+war_axe2
+broad_axe BROAD_AXE
+broad_axe2
+battleaxe BATTLEAXE
+battleaxe2
 axe_executioner EXECUTIONERS_AXE
+axe_executioner2
 axe_double AXE_DOUBLE
 axe_blood AXE_BLOOD
 axe_short AXE_SHORT
@@ -648,14 +678,14 @@ axe_short AXE_SHORT
 ## launchers
 sling SLING
 bow BOW
-bow2 BOW2
-bow3 BOW3
+bow_two BOW2
+bow_three BOW3
 great_bow GREAT_BOW
 bow_blue BOW_BLUE
 crossbow CROSSBOW
-crossbow2 CROSSBOW2
-crossbow3 CROSSBOW3
-crossbow4 CROSSBOW4
+crossbow_two CROSSBOW2
+crossbow_three CROSSBOW3
+crossbow_four CROSSBOW4
 blowgun BLOWGUN
 
 ##missiles

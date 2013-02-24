@@ -402,7 +402,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
 
-    if (proprt[ARTP_MUTAGENIC])
+    if (proprt[ARTP_MUTAGENIC] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7, true);

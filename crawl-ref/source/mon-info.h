@@ -264,6 +264,10 @@ protected:
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
 };
 
+// Colour should be between -1 and 15 inclusive!
+bool set_monster_list_colour(string key, int colour);
+void clear_monster_list_colours();
+
 void get_monster_info(vector<monster_info>& mons);
 
 typedef vector<string> (*desc_filter) (const monster_info& mi);

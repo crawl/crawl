@@ -2655,6 +2655,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>O</w>      : measure exploration time\n"
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
                        "<w>Ctrl-X</w> : Xom effect stats\n"
+#ifdef DEBUG_DIAGNOSTICS
+                       "<w>Ctrl-Q</w> : make some debug messages quiet\n"
+#endif
                        "\n"
                        "<yellow>Other wizard commands</yellow>\n"
                        "(not prefixed with <w>&</w>!)\n"

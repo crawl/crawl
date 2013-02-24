@@ -1,0 +1,91 @@
+{{
+function place_wall_jericho(e, alarm_glyph, wall_glyph)
+    local tm = TriggerableFunction:new{func="callback.wall_jericho_stepped",
+                                       repeated=true, data={triggered=false} }
+    tm:add_triggerer(DgnTriggerer:new{type="player_move"})
+    local rm = TriggerableFunction:new{func="callback.wall_jericho_tick",
+                                       repeated=true,
+                                       data={triggered=false, dur=30} }
+    rm:add_triggerer(DgnTriggerer:new{type="turn"})
+    e.lua_marker(alarm_glyph, tm)
+    e.lua_marker(alarm_glyph, rm)
+    e.lua_marker(alarm_glyph, props_marker { trap= 1 })
+    e.kfeat(alarm_glyph .. ' = alarm trap')
+
+    e.lua_marker(wall_glyph, props_marker { wall_jericho = 1})
+    e.kfeat(wall_glyph .. ' = rock_wall')
+
+    dgn.persist.wall_jericho_triggered = false
+end
+
+function callback.wall_jericho_stepped(data, triggerable, triggerer, marker, ev)
+    if data.triggered == true then
+        return
+    end
+
+    local x, y = marker:pos()
+    local you_x, you_y = you.pos()
+
+    -- Don't let monsters trigger this when you're not in view of it
+    if not you.see_cell(x, y) then
+        return
+    end
+
+    data.triggered = true
+    dgn.persist.wall_jericho_triggered = true
+
+    for slave in iter.slave_iterator("trap", 1) do
+        dgn.grid(slave.x, slave.y, "alarm trap")
+    end
+end
+
+function callback.wall_jericho_tick(data, triggerable, triggerer, marker, ev)
+    if data.triggered == true then
+        return
+    end
+    if not dgn.persist.wall_jericho_triggered then
+        return
+    end
+    data.dur = data.dur - ev:ticks()
+    if data.dur > 0 then
+        return
+    end
+    for slave in iter.slave_iterator("wall_jericho", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+        dgn.place_cloud(slave.x, slave.y, "grey smoke", crawl.random2(15) + 5)
+        dgn.noisy(35, slave.x, slave.y)
+        if (you.see_cell(slave.x, slave.y)) then
+            crawl.mpr("The walls come tumbling down!")
+        else
+            crawl.mpr("The ground quakes!")
+        end
+    end
+    data.triggered = true
+end
+}}
+
+############
+
+NAME:   tso_jericho_becter_ft_grunt
+TAGS:   overflow_altar_the_shining_one transparent no_monster_gen mini_float
+SUBST:  M = m.
+NSUBST: m = 1:. / *:m
+: place_wall_jericho(_G, '^', 'm')
+KFEAT:  _ = altar_the_shining_one
+KFEAT:  ^ = alarm trap
+KPROP:  _ = no_rtele_into
+COLOUR: m' = brown
+COLOUR: ^ = yellow
+FTILE:  m' = floor_pebble_brown
+FTILE:  _^ = floor_limestone
+DEPTH:  2-9
+validate {{ return has_exit_from_glyph('_') }}
+MAP
+ .....
+..MMM....
+.MmmmM..'.
+.Mm_mM.'^'
+.MmmmM..'.
+..MMM....
+ .....
+ENDMAP

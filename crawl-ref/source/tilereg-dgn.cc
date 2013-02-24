@@ -710,8 +710,7 @@ void DungeonRegion::zoom(bool in)
 {
     int sign = in ? 1 : -1;
     int amt  = 4;
-    const int min_zoom = 8; // this needs to be a proportion, not a fixed amount!
-    const int max_zoom = 64;
+    const int max_zoom = 64; // this needs to be a proportion, not a fixed amount!
     const bool minimap_zoom = (sx>dx); // i.e. there's a border bigger than a tile (was dx<min_zoom+amt)
 
     // if we try to zoom out too far, go to minimap instead

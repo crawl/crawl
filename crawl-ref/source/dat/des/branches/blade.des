@@ -1,59 +1,154 @@
 ##############################################################################
 # The Hall of Blades
 ##############################################################################
-# Guarantee a single rare base type with a brand
+# Guarantee two rare base types with a brand
 {{
 
 function hall_of_blades_weapon(e)
 
-  local weapon = util.random_from({"quick blade", "double sword",
+  local types = {"quick blade", "double sword",
                  "executioner's axe", "eveningstar", "bardiche",
-                 "lajatang"})
+                 "lajatang"}
+  local egos = {"flaming", "freezing", "electrocution", "venom",
+              "holy_wrath", "pain", "vampiricism", "draining",
+              "anti-magic", "distortion"}
+  local weapon1 = util.random_from(types)
+  local weapon2 = util.random_from(types)
+  local ego1 = util.random_from(egos)
+  local ego2 = util.random_from(egos)
 
-  local ego = util.random_from({"vorpal", "flaming", "freezing",
-              "electrocution", "vampiricism", "draining", "venom"})
-
-  e.mons("dancing weapon; good_item " .. weapon .. " ego:" .. ego)
+  e.mons("dancing weapon; good_item " .. weapon1 .. " ego:" .. ego1)
+  e.mons("dancing weapon; good_item " .. weapon2 .. " ego:" .. ego2)
 end
 
 }}
 
+######################################
+# Entry vaults
+
+NAME:     vaults_mumra_blade_bloodbath
+TAGS:     vaults_entry_blade allow_dup no_item_gen
+KFEAT:    O = enter_hall_of_blades
+SUBST:    1 = ..'
+SUBST:    2 = .''
+SUBST:    3 = .'''
+KPROP:    ' = bloody
+SUBST:    ' = ...'
+KITEM:    ' = short sword / long sword / morningstar / mace / scimitar / dagger / bardiche / battleaxe / war axe
+MAP
+xx...xxx1..xx
+x.1...x11...x
+..11..121....
+..1222222..11
+...223332221.
+x..23333322.x
+xx2233O332.xx
+x122333332..x
+11122333222..
+....222.211..
+....11...11..
+x...1.x...11x
+xx..1xxx..1xx
+ENDMAP
+
+NAME:     vaults_mumra_blade_sword
+TAGS:     vaults_entry_blade allow_dup no_item_gen
+KFEAT:    O = enter_hall_of_blades
+SUBST:    : : ''-
+SUBST:    ' : ll.
+FTILE:    - = floor_hall
+SUBST:    . : ..W
+MAP
+     :
+    ':'
+    ':'
+    ':'
+    ':'
+   '':''
+   '':''
+   '':''
+   '':''
+-----O-----
+ ....-....
+    .-.
+    .-.
+    .-.
+     -
+ENDMAP
+
+# Based on vaults_rooms_7_spin_blade_pillars
+NAME:     vaults_blade_entry_pillars
+TAGS:     vaults_entry_blade allow_dup no_monster_gen
+SUBST:    y : x...
+SUBST:    1 = 1.
+MONS:     place:Blade:1
+KFEAT:    O = enter_hall_of_blades
+FTILE:    cxyO1. = floor_hall
+MAP
+xy...yx
+y..c..y
+..1.1..
+.c.O.c.
+..1.1..
+y..c..y
+xy...yx
+ENDMAP
+
+# Based on vaults_room_7_spin_blade_grunt
+NAME:     vaults_blade_entry_basic_grunt
+TAGS:     vaults_entry_blade allow_dup no_item_gen no_monster_gen
+NSUBST:   1 = 2:1 / *:.
+MONS:     dancing weapon
+KFEAT:    O = enter_hall_of_blades
+MAP
+.......
+.1...1.
+.......
+...O...
+.......
+.1...1.
+.......
+ENDMAP
+
+######################################
+# Main layout
+
 NAME:    hall_of_blades
+TAGS:    no_dump no_monster_gen
 PLACE:   Blade
 ORIENT:  encompass
-TAGS:    no_dump
-MONS:    dancing weapon
- : hall_of_blades_weapon(_G)
-SHUFFLE: cv
+: hall_of_blades_weapon(_G)
+SHUFFLE: CD / CD / DC, {([
+SUBST:   C : cc., D = ., E : c.., F : c.., c : cv, ([ = .
+NSUBST:  { : 1:{ / 1:( / 1:[ / 1:<, . : 6:0 / 6 = 0. / 6 = 0... / *:.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
-xxxccc....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxx
-xxxcc......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxx
+xxxcccc....cccc.cccc{cccc.cccc.F.cccc.F.cccc.cccc{cccc.cccc.....cccxxx
+xxxccc......cc...cc...cc...cc....(cc(....cc...cc...cc...cc.......ccxxx
+xxxcc.............................................................cxxx
+xxxc......c..............c..................c..............c......cxxx
+xxxc.....ccc............ccc................ccc............ccc.....cxxx
+xxxcE...ccccc..........ccccc..............ccccc..........ccccc...Ecxxx
+xxxcE...ccccc...........ccc................ccc...........ccccc...Ecxxx
+xxxc....0ccc.............c..................c.............ccc0....cxxx
+xxxcE....ccc..............................................ccc....Ecxxx
+xxxcE.....c................................................c.....Ecxxx
+xxxc.............................[CC[.............................cxxx
+xxxc.............DD..............CCCC..............DD.............cxxx
+xxxcE1...0......DDDD.............CCCC.............DDDD......0...2Ecxxx
+xxxc.............DD..............CCCC..............DD.............cxxx
+xxxc.............................[CC[.............................cxxx
+xxxcE.....c................................................c.....Ecxxx
+xxxcE....ccc..............................................ccc....Ecxxx
+xxxc....0ccc.............c..................c.............ccc0....cxxx
+xxxc....ccccc...........ccc................ccc...........ccccc....cxxx
+xxxcE...ccccc..........ccccc..............ccccc..........ccccc...Ecxxx
+xxxcE....ccc............ccc................ccc............ccc....Ecxxx
+xxxc......c..............c..................c..............c......cxxx
 xxxc..............................................................cxxx
-xxxc..........c..............c..............c..............c......cxxx
-xxxc.........ccc............ccc............ccc............ccc.....cxxx
-xxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxx
-xxxc.........ccc............ccc............ccc...........ccccc....cxxx
-xxxc..........c..............c..............c.............ccc.....cxxx
-xxxc......................................................ccc.....cxxx
-xxxc.......................................................c......cxxx
-xxxc.......................................................1......cxxx
-xxxc..............................................................cxxx
-xxxc.....................................................1.2.1....cxxx
-xxxc..............................................................cxxx
-xxxc.......................................................1......cxxx
-xxxc.......................................................c......cxxx
-xxxc......................................................ccc.....cxxx
-xxxc..........c..............c..............c.............ccc.....cxxx
-xxxc.........ccc............ccc............ccc...........ccccc....cxxx
-xxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxx
-xxxc.........ccc............ccc............ccc............ccc.....cxxx
-xxxc..........c..............c..............c..............c......cxxx
-xxxc..............................................................cxxx
-xxxc.......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxx
-xxxcc.....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxx
-xxxccc[{(ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
-xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxcc.......cc...cc...cc...cc....(cc(....cc...cc...cc...cc.......ccxxx
+xxxccc.....cccc.cccc{cccc.cccc.F.cccc.F.cccc.cccc{cccc.cccc.....cccxxx
+xxxcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

@@ -547,6 +547,110 @@ WW..WW..WWWW
 @.WWWWWWWW.@
 ENDMAP
 
+####
+
+NAME:    hangedman_snake_corridor_cut
+TAGS:    no_monster_gen transparent
+DEPTH:   Snake
+MONS:    naga, patrolling naga mage
+MONS:    black mamba / anaconda, patrolling guardian serpent
+MONS:    patrolling adder / patrolling ball python / \
+         patrolling water moccasin w:5
+SHUFFLE: hH / hH / hH, iI / iI / Ii, jJ / jJ / Jj, kK / kK / Kk
+SHUFFLE: 1234 / 1234 / 1212 / 3434
+SUBST:   hi = ., H : xx., I : xx., J : xx., K : xx., % = $%
+MAP
+xxxxxxxxx@5@xxx
+xccccccccc...xxx
+xc*2%...KxJ...xxx
+xc2*1...xxx.j..xxx
+xc%1....JxKk....xxx
+xcHxI.....kKxJ...xx
+@cxxx.i1.j.xxx.j..x
+5.IxHh..%..JxKk...@
+@...hHxI.1%..kKxJ.5
+x..i.xxx.i3.j.xxxc@
+xx...IxHh..%..JxKcx
+xxx....hHxI.3....cx
+ xxx..i.xxx.i....cx
+  xxx...IxHh.....cx
+   xxx....hHxI.3%cx
+    xxx..i.xxx3*4cx
+     xxx...IxH%4*cx
+      xxx...ccccccx
+       xxx@5@xxxxxx
+ENDMAP
+
+NAME:    hangedman_snake_corridor_split
+TAGS:    no_monster_gen transparent allow_dup
+DEPTH:   Snake
+MONS:    naga, black mamba, naga warrior, anaconda, naga mage, guardian serpent
+SUBST:   X : xxc, Y : x:33 c:66 w:1, 0 = 12
+SHUFFLE: 34, 56, 3456 / 3456 / 3456 / 3535 / 4646 / 3636 / 4545 / 3434 / 5656
+MAP
+    xxxxxxx
+   xxxxxxxxx
+  xxxx...xxxx
+xxxxx..X..xxxx
+xxxx..X%X.3xxxxx
+xx1..X%..X.4xxxx
+xx2YY..x..X.0.xxxxxxxxx
+x..YY.xxx..YY.xxxxxxxxx.@.
+..X.21xxxx.*Y...xxxxxx..X@
+@X..xxxxxx...Y*.xxxx12.X..
+.@.xxxxxxxxx.YY..xxx.YY..x
+   xxxxxxxxx.0.X..x..YY2xx
+          xxxx6.X..%X..1xx
+          xxxxx5.X%X..xxxx
+            xxxx..X..xxxxx
+             xxxx...xxxx
+              xxxxxxxxx
+              xxxxxxxx
+ENDMAP
+
+NAME:    hangedman_snake_sidewinding
+TAGS:    allow_dup
+DEPTH:   Snake:1-4, Zot:1-4
+: if you.branch() == "Zot" then
+KMONS:  A = base draconian / green draconian w:4
+KMONS:  B = swamp dragon w:5 / dragon / ice dragon / storm dragon w:5
+KMONS:  C = nonbase green draconian / draconian annihilator
+KMONS:  D = golden dragon / shadow dragon / quicksilver dragon w:5 / \
+            iron dragon w:5
+: else
+KMONS:  A = naga warrior / naga mage / naga
+KMONS:  B = black mamba w:6 / anaconda
+KMONS:  C = greater naga / naga mage w:5 / guardian serpent w:5
+KMONS:  D = guardian serpent / anaconda w:2
+: end
+SHUFFLE: @123<= / &456"-, EF
+SUBST:   = = +, 1 = A, 2 = B, 3 = C, < : ~~_..., &E = x, - = c
+SUBST:   456 = ', "F = ., y : x:2 G:1 .:6, Y : z', Z : z', z : xc
+NSUBST:  * = **|, ~ = 1:( / 1:(<.., _ = 1:) / 1:)>.
+KMASK:   '%*d = no_monster_gen
+MAP
+x@@xxxxxxxxxxxxxxxxxxxx
+x""xxcccccccccccccccccx
+x..xxxcc13121'''%%%**cx
+xy..A%c--32z'''Z''BD*cx
+xy...B%--c1''z'''z'B%cx
+x4.xxxxxccc''z''zYz'%cx
+x..xxEExxccc'''zYz''%cx
+xy...EE.A%ccc'''z''Z'cx
+xy...FF..B%ccc'''''''cx
+x4.xxFFxxxxxccc''zz''cx
+x1.xxEExxEExxccc''''4cx
+xy...EE..EE.A%ccc''z5cx
+xy...FF..FF..B%ccc454cx
+x..xxFFxxFFxxxxxccc66cx
+x1.xxEExxEExxEExxc==4cx
+xy...EE..EE..EE.A%==ccx
+xy...FF..FF..FF..B%cccx
+x..xxFFxxFFxxFFxxxxxccx
+x<<xxxxxxxxxxxxxxxxxxcx
+x&&xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################
@@ -800,6 +904,7 @@ PLACE:  Snake:$
 ORIENT: float
 MONS:   naga / nothing, naga warrior / naga, naga mage / naga
 MONS:   greater naga / guardian serpent
+MONS:   greater naga / naga warrior w:5 / naga mage w:5
 NSUBST: O = 1:A / 1:B
 KITEM:  A = serpentine rune of Zot
 KITEM:  B = serpentine rune of Zot mimic / w:90 acquire any
@@ -808,22 +913,72 @@ MAP
      cccc..1...ccc   c....c    cccc..2...ccc
    ccc.....2.....ccc c....c   cc.....3.....cc
   cc.......1.......ccc....c  cc......2......cc
-  c1....ccccccc....1cc....c  c1....cccccc...1c
- cc..1ccc..2..cc.....c....c cc.2.ccc....cc12.cc
- c...cc...23...cc1........c c...1c.......cc...c
-cc...c2....2....cc........c c...cc..4....4c...cc
-c...cc.2..ccc..22cc....11.c c232c..4.4.4..cc...c
-c...c...2ccccc2...cc..2...c c...c.4.O.4c.2.c...c
-c232c...cc.4.cc...ccc..3..ccc...cc.4.4.c323c...c
-c...c323c.4.4.cc...ccc..3..ccc...cc.4.cc...c232c
-c...c.2.c4.O.4.c...c c...2..cc...2ccccc2...c...c
-c...cc..4.4.4..c232c c.11....cc22..ccc..2.cc...c
-cc...c4....4..cc...c c........cc....2....2c...cc
- c...cc.......c1...c c........1cc...32...cc...c
- cc.21cc....ccc.2.cc c....c.....cc..2..ccc1..cc
-  c1...cccccc....1c  c....cc1....ccccccc....1c
+  c1....ccccccc....1cc....c  c1....cccccc..51c
+ cc.51ccc..2..cc..5..c....c cc.2.ccc....cc12.cc
+ c...cc...23...cc1........c c.5.1c.......cc...c
+cc...c2....2....cc........c c...cc.......4c...cc
+c...cc52..ccc..22cc....32.c c232c......4..cc...c
+c...c...2ccccc25..cc......c c...c.4.O.4c.2.c...c
+c232c...cc.5.cc...ccc..5..ccc...cc.....c323c...c
+c...c323c.....cc...ccc..5..ccc...cc.5.cc...c232c
+c...c.2.c4.O.4.c...c c......cc..52ccccc2...c...c
+c...cc..4......c232c c.23....cc22..ccc..25cc...c
+cc...c4.......cc...c c........cc....2....2c...cc
+ c...cc.......c1.5.c c........1cc...32...cc...c
+ cc.21cc....ccc.2.cc c....c..5..cc..2..ccc15.cc
+  c15..cccccc....1c  c....cc1....ccccccc....1c
   cc......2......cc  c....ccc.......1.......cc
    cc.....3.....cc   c....c ccc.....2.....ccc
     ccc...2..cccc    c....c   ccc...1..cccc
       cccccccc       c..@.c     cccccccc
+ENDMAP
+
+################################################################################
+
+NAME: grunt_snake_rune_pools
+PLACE: Snake:$
+TAGS: no_trap_gen
+ORIENT: north
+MONS: greater naga / naga warrior
+MONS: greater naga / guardian serpent
+MONS: naga warrior / naga
+MONS: naga mage / naga
+MONS: naga
+
+KMONS: 6 = sea snake / nothing w:20
+KFEAT: 6 = deep_water
+KMASK: 6w = no_monster_gen
+
+KMONS: S = guardian serpent / w:20 anaconda / w:30 black mamba
+
+KITEM: O = serpentine rune of zot
+MAP
+          ccccccccc
+        ccc.6w6w6.ccc
+      ccc.5..www..5.ccc
+      c4.www1.2.1www.4c
+   ccccw.w6w..O..ww6.wcccc
+ ccc.w6wS6www212www6Sw6w.ccc
+ c.+.www.wwwwwwwwwww.www.+.c
+cc.+....3w6www6ww6ww3....+.cc
+c..cccwww.ww6www6ww.wwwccc..c
+c..cxcc6w..2.5.5.2..w6ccxc..c
+c..ccxcwwwwwnnnnnwwwwwcxcc..c
+cc15cccww6wnn666nnw6wwccc51cc
+ cc34cccwwnn.w6w.nnwwccc43cc
+  c..ccccnn4.2.2.4nncccc..c
+  c...cc..5..S.S..5..cc...c
+  cc...+...3..1..3...+...cc
+   cc..+..5.......5..+..cc
+    cccccc.........cccccc
+         cccc+++cccc
+         ccc4...4ccc
+        cc...www...cc
+        cSn3.w6w.3nSc
+        cSn.16w62.nSc
+        cSn..w6w..nSc
+        cc...www...cc
+         ccc.....ccc
+          ccc===ccc
+          cc..@..cc
 ENDMAP

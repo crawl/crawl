@@ -7,7 +7,6 @@
 struct bolt;
 class dist;
 
-spret_type fireball(int pow, bolt &beam, bool fail = false);
 spret_type cast_delayed_fireball(bool fail);
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret_type cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -48,4 +47,8 @@ actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
+
+vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int max_rays);
+spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim,
+                               bool fail = false);
 #endif

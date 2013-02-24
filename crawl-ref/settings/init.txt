@@ -187,6 +187,7 @@
 # easy_eat_gourmand      = true
 # easy_eat_contaminated  = true
 # auto_eat_chunks        = true
+# auto_drop_chunks       = (never | rotten | yes)
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = true
@@ -218,7 +219,6 @@
 # show_more                  = false
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
-# auto_drop_chunks           = (never | rotten | yes)
 # msg_condense_repeats   = false
 # msg_condense_short     = false
 # skill_focus            = false

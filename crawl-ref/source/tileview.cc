@@ -123,7 +123,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_VESTIBULE_OF_HELL:
         flv.wall  = TILE_WALL_HELL;
-        flv.floor = TILE_FLOOR_INFERNAL;
+        flv.floor = TILE_FLOOR_CAGE;
         return;
 
     case BRANCH_DIS:
@@ -277,6 +277,9 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+#if TAG_MAJOR_VERSION == 34
+    case BRANCH_UNUSED:
+#endif
     case NUM_BRANCHES:
         break;
     }
@@ -311,9 +314,7 @@ static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
     if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
     {
-        t.push_back(TILE_WALL_BRICK_DARK_4);
-        t.push_back(TILE_WALL_BRICK_DARK_5);
-        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
+        t.push_back(TILE_WALL_CATACOMBS);
         return;
     }
     if (depth <= 6)
@@ -1026,7 +1027,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 static bool _suppress_blood(const map_cell& mc)
 {
     const dungeon_feature_type feat = mc.feat();
-    if (feat == DNGN_TREE || feat == DNGN_MANGROVE)
+    if (feat_is_tree(feat))
         return true;
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
@@ -1312,7 +1313,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         cell.quad_glow = true;
 
     if (mc.flags & MAP_DISJUNCT)
-        cell.disjunct = true;
+        cell.disjunct = get_disjunct_phase(gc);
 
     if (Options.show_travel_trail)
     {

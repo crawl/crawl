@@ -370,6 +370,9 @@ bool actor::evokable_invis(bool calc_unid) const
 // Return an int so we know whether an item is the sole source.
 int actor::evokable_flight(bool calc_unid) const
 {
+    if (is_player() && you.form == TRAN_TREE)
+        return 0;
+
     if (suppressed())
         return 0;
 
@@ -428,11 +431,11 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    // res_acid is immunity only for monsters; players need Jiyva
-    return (act->is_player() ?
-              you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
-            : act->res_acid());
+    return
+       act->is_player() && you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
+       || act->res_acid() == 3;
 }
+
 /**
  * Accessor method to the clinging member.
  *

@@ -13,18 +13,7 @@
 
 #include "mpr.h"
 
-bool less_dense_than(const dungeon_feature_type &a, const dungeon_feature_type &b)
-{
-    return true;
-    // Is only one feature solid?
-    if (feat_is_solid(a) ^ feat_is_solid(b))
-        return feat_is_solid(b);
-    if (feat_is_water(a) || feat_is_lava(a) || feat_is_statue_or_idol(a) && b == DNGN_FLOOR)
-        return true;
-    return false;
-}
-
-dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
+static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 {
     static dungeon_feature_type features[] = {
         DNGN_STONE_WALL,
@@ -38,23 +27,6 @@ dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
         DNGN_METAL_WALL
     };
     return features[val%9];
-}
-
-dungeon_feature_type _pick_pseudorandom_feature(uint64_t val)
-{
-    if (!(val%5))
-        return _pick_pseudorandom_wall(val/5);
-    dungeon_feature_type features[] = {
-        DNGN_STONE_WALL,
-        DNGN_STONE_WALL,
-        DNGN_ROCK_WALL,
-        DNGN_GREEN_CRYSTAL_WALL,
-        DNGN_METAL_WALL,
-        DNGN_SHALLOW_WATER,
-        DNGN_SHALLOW_WATER,
-        DNGN_DEEP_WATER,
-    };
-    return features[(val/5)%9];
 }
 
 ProceduralSample
@@ -88,15 +60,9 @@ DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
 }
 
 
-uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
+static uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
 {
     return max(1, (int) floor((n.distance[1] - n.distance[0]) * scale) - 5);
-}
-
-ProceduralSample _maybe_set_changepoint(const ProceduralSample &s,
-    const uint32_t cp)
-{
-    return ProceduralSample(s.coord(), s.feat(), min(s.changepoint(), cp));
 }
 
 ProceduralSample
@@ -143,6 +109,22 @@ RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
     ProceduralSample sample = ChaosLayout(n.id[0] + seed, density)(p, offset);
     return ProceduralSample(p, sample.feat(), min(sample.changepoint(), changepoint));
 }
+
+ProceduralSample
+WastesLayout::operator()(const coord_def &p, const uint32_t offset) const
+{
+    double x = p.x;
+    double y = p.y;
+    double z = offset / 3;
+    worley::noise_datum n = worley::noise(x, y, z);
+    const uint32_t changepoint = offset + _get_changepoint(n, 3);
+    ProceduralSample sample = ChaosLayout(n.id[0], 10)(p, offset);
+    dungeon_feature_type feat = feat_is_solid(sample.feat())
+        ? DNGN_ROCK_WALL : DNGN_FLOOR;
+    return ProceduralSample(p, feat, min(sample.changepoint(), changepoint));
+}
+
+
 
 ProceduralSample
 RiverLayout::operator()(const coord_def &p, const uint32_t offset) const

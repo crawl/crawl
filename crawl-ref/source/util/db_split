@@ -1,0 +1,31 @@
+#!/usr/bin/perl -w
+
+die "One arg plz (dat/descript/foo.txt), m'kay?\n" if $#ARGV;
+
+my $dbname = $ARGV[0];
+die "Must be a db (.txt).\n" unless $dbname =~ /^(.*)\.txt$/;
+
+open IN, "<", $dbname or die "Can't open $dbname\n";
+undef $/;
+$_ = <IN>;
+close IN;
+
+open KEY, ">", "$1.key" or die "Can't write to $1.key\n";
+open VAL, ">", "$1.val" or die "Can't write to $1.val\n";
+
+for (split /%%%%\n/s)
+{
+    if (/(.+?)\n\n(.*)/s)
+    {
+        print KEY "$1\n%%%%\n";
+        print VAL "$2%%%%\n";
+    }
+    else
+    {
+        print KEY "$_%%%%\n";
+        print VAL "%%%%\n";
+    }
+}
+
+close KEY;
+close VAL;

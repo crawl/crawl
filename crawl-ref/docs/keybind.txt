@@ -210,8 +210,8 @@ _         CMD_MAP_FIND_ALTAR
 E         CMD_MAP_FIND_EXCLUDED
 F         CMD_MAP_FIND_F
 W         CMD_MAP_FIND_WAYPOINT
-*         CMD_MAP_FIND_STASH
-/         CMD_MAP_FIND_STASH_REVERSE (cycle through stashes, in reverse)
+I         CMD_MAP_FIND_STASH
+O         CMD_MAP_FIND_STASH_REVERSE (cycle through stashes, in reverse)
 
 Wiz-mode targetting sub-commands
 --------------------------------

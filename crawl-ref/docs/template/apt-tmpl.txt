@@ -13,15 +13,15 @@ If you consider figuring out such things yourself to be fun, stop
 reading now. Otherwise, just go ahead.
 
  -5  abysmal aptitude
- -4  terrible aptitude (learning half as fast as Humans)
+ -4  terrible aptitude (learning half as fast as at 0 aptitude)
  -3  very poor aptitude
  -2  poor aptitude
  -1  slightly disfavoured aptitude
-  0  standard aptitude (Humans)
+  0  standard aptitude
  +1  slightly favoured aptitude
  +2  strong aptitude
  +3  very strong aptitude
- +4  outstanding aptitude (learning twice as fast as Humans)
+ +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
  +5  exceptional aptitude
 
 Please note that many things affect how quickly a character will

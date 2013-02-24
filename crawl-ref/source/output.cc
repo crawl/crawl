@@ -124,7 +124,7 @@ void cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
     if (tiles.is_using_small_layout())
         TOUCH_UI_STATE = (touchui_states)((x<<8)+y);
 //    printf("[%x]: ",TOUCH_UI_STATE);
-    switch ( TOUCH_UI_STATE )
+    switch (TOUCH_UI_STATE)
     {
         case TOUCH_V_HP:
         case TOUCH_T_MP:
@@ -204,10 +204,10 @@ void cprintf_touchui(const char *format, ...)
 {
     va_list args;
     string  buf;
-    va_start( args, format );
-    buf = vmake_stringf( format, args );
+    va_start(args, format);
+    buf = vmake_stringf(format, args);
 
-    switch( TOUCH_UI_STATE )
+    switch (TOUCH_UI_STATE)
     {
         case TOUCH_T_MP:
         case TOUCH_V_TITL2:
@@ -221,63 +221,65 @@ void cprintf_touchui(const char *format, ...)
             TOUCH_UI_STATE = TOUCH_V_HP;
             break;
         case TOUCH_V_TITLE:
-            cprintf( you.your_name.c_str() );
+            cprintf(you.your_name.c_str());
             break;
         case TOUCH_V_HP:
         case TOUCH_V_MP:
             // suppress everything after initial print; rjustify
-            cprintf( "%3s", buf.c_str() );
+            cprintf("%3s", buf.c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL;
             break;
         case TOUCH_V_STR:
         case TOUCH_V_INT:
         case TOUCH_V_DEX:
             // rjustify to 3 chars on these
-            cprintf( "%3s", buf.c_str() );
+            cprintf("%3s", buf.c_str());
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
-            cprintf( buf.c_str() );
+            cprintf(buf.c_str());
             break;
         case TOUCH_T_QV:
             TOUCH_UI_STATE = TOUCH_V_QV;
-            cprintf( buf.c_str() );
+            cprintf(buf.c_str());
             break;
         case TOUCH_V_WP:
         case TOUCH_V_QV:
             // get rid of the hotkey; somewhat pointless in a touch-screen ui :)
-            cprintf( buf.substr(3,10).c_str() );
+            cprintf(buf.substr(3,10).c_str());
             break;
 
         default:
 //            printf("p: %s\n",buf.c_str());
-            cprintf( buf.c_str() );
+            cprintf(buf.c_str());
     }
-    va_end( args );
+    va_end(args);
 }
 
 void nowrap_eol_cprintf_touchui(const char *format, ...)
 {
     va_list args;
     string  buf;
-    va_start( args, format );
-    buf = vmake_stringf( format, args );
+    va_start(args, format);
+    buf = vmake_stringf(format, args);
 
     // N.B. this should really be factored out and merged with the other switch-case above
-    switch( TOUCH_UI_STATE )
+    switch (TOUCH_UI_STATE)
     {
         case TOUCH_S_NULL:
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            cprintf( "%s%s %.4s",get_species_abbrev(you.species),get_job_abbrev(you.char_class),god_name(you.religion).c_str());
+            cprintf("%s%s %.4s", get_species_abbrev(you.species),
+                                 get_job_abbrev(you.char_class),
+                                 god_name(you.religion).c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
             break;
         default:
 //            printf("q: %s\n",buf.c_str());
-            nowrap_eol_cprintf( buf.c_str() );
+            nowrap_eol_cprintf("%s", buf.c_str());
     }
-    va_end( args );
+    va_end(args);
 }
 
 #else
@@ -330,7 +332,7 @@ class colour_bar
             return;
         }
 
-        const int width = crawl_view.hudsz.x - (ox-1);
+        const int width = crawl_view.hudsz.x - (ox - 1);
         const int disp  = width * val / max_val;
         const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
         m_old_disp = disp;
@@ -559,7 +561,7 @@ static void _print_stats_hp(int x, int y)
     short hp_colour = HUD_VALUE_COLOUR;
 
     const bool boosted = you.duration[DUR_DIVINE_VIGOUR]
-                             || you.berserk();
+                         || you.berserk();
 
     if (boosted)
         hp_colour = LIGHTBLUE;
@@ -710,6 +712,7 @@ static void _print_stats_wp(int y)
             col = RED;
             break;
         case TRAN_STATUE:
+        case TRAN_WISP:
             col = LIGHTGREY;
             break;
         case TRAN_ICE_BEAST:
@@ -723,7 +726,14 @@ static void _print_stats_wp(int y)
             break;
         case TRAN_BAT:
         case TRAN_PIG:
+        case TRAN_PORCUPINE:
             col = LIGHTGREY;
+            break;
+        case TRAN_TREE:
+            col = BROWN;
+            break;
+        case TRAN_JELLY:
+            col = LIGHTRED;
             break;
         default:
             break;
@@ -979,12 +989,15 @@ static void _print_status_lights(int y)
         }
         else
         {
-            while (i_light<lights.size() && i_light<crawl_view.hudsz.x-1)
+            while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
                 textcolor(lights[i_light].color);
-                if (i_light==lights.size()-1 && strwidth(lights[i_light].text) < crawl_view.hudsz.x-wherex())
+                if (i_light == lights.size() - 1
+                    && strwidth(lights[i_light].text) < crawl_view.hudsz.x - wherex())
+                {
                     CPRINTF("%s",lights[i_light].text.c_str());
-                else if (lights.size()>crawl_view.hudsz.x/2)
+                }
+                else if ((int)lights.size() > crawl_view.hudsz.x / 2)
                     CPRINTF("%.1s",lights[i_light].text.c_str());
                 else
                     CPRINTF("%.1s ",lights[i_light].text.c_str());
@@ -1840,6 +1853,10 @@ static vector<formatted_string> _get_overview_stats()
     const bool boosted_hp  = you.duration[DUR_DIVINE_VIGOUR]
                                 || you.berserk();
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
+    const bool boosted_ac  = you.duration[DUR_ICY_ARMOUR]
+                                || you.duration[DUR_STONESKIN];
+    const bool boosted_ev  = you.duration[DUR_PHASE_SHIFT]
+                                || you.duration[DUR_AGILITY];
     const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
                                 || you.duration[DUR_MIGHT]
                                 || you.duration[DUR_BERSERK];
@@ -1888,10 +1905,16 @@ static vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "Gold %d", you.gold);
     cols1.add_formatted(0, buf, false);
 
-    snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
+    if (boosted_ac)
+    {
+        snprintf(buf, sizeof buf, "AC <lightblue>%2d</lightblue>",
+                 you.armour_class());
+    }
+    else
+        snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
     cols1.add_formatted(1, buf, false);
 
-    if (you.duration[DUR_AGILITY])
+    if (boosted_ev)
     {
         snprintf(buf, sizeof buf, "EV <lightblue>%2d</lightblue>",
                  player_evasion());
@@ -2404,8 +2427,13 @@ static string _status_mut_abilities(int sw)
             mutations.push_back("spit poison");
         else
             mutations.push_back("breathe poison");
-        mutations.push_back(_annotate_form_based("constrict 1",
-                                                 !form_keeps_mutations()));
+
+        if (you.experience_level > 12)
+        {
+            mutations.push_back(_annotate_form_based("constrict 1",
+                                                     !form_keeps_mutations()));
+        }
+        AC_change += you.experience_level / 3;
         break;
 
     case SP_GHOUL:
@@ -2474,6 +2502,7 @@ static string _status_mut_abilities(int sw)
 
     case SP_GREY_DRACONIAN:
         mutations.push_back("walk through water");
+        AC_change += 5;
         break;
 
     case SP_BLACK_DRACONIAN:
@@ -2503,6 +2532,12 @@ static string _status_mut_abilities(int sw)
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         mutations.push_back("unfitting armour");
+    }
+
+    if (player_genus(GENPC_DRACONIAN))
+    {
+        // The five extra points for grey draconians were handled above.
+        AC_change += 4 + you.experience_level / 3;
     }
 
     if (you.species == SP_FELID)

@@ -883,6 +883,26 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "appendage";
         inf->long_text  = "You have a beastly appendage.";
         break;
+    case TRAN_TREE:
+        inf->light_text = "Tree";
+        inf->short_text = "tree-form";
+        inf->long_text  = "You are an animated tree.";
+        break;
+    case TRAN_JELLY:
+        inf->light_text = "Jelly";
+        inf->short_text = "jelly-form";
+        inf->long_text  = "You are a lump of jelly.";
+        break;
+    case TRAN_PORCUPINE:
+        inf->light_text = "Porc";
+        inf->short_text = "porcupine-form";
+        inf->long_text  = "You are a porcupine.";
+        break;
+    case TRAN_WISP:
+        inf->light_text = "Wisp";
+        inf->short_text = "wisp-form";
+        inf->long_text  = "You are an insubstantial wisp.";
+        break;
     case TRAN_NONE:
         break;
     }

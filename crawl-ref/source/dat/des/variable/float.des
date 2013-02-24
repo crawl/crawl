@@ -11,6 +11,18 @@
 #            reside in vaults.des.
 ###############################################################################
 
+# Functionality for some of HangedMan's vaults.
+{{
+function init_hm_decor_walldepth(e, variables)
+local a = you.absdepth() * 5
+  if a - 75 > 0 then
+    e.subst(variables .. " : x:50 c:" .. a .. " b:" .. a - 75)
+  else
+    e.subst(variables .. " : x:50 c:" .. a)
+  end
+end
+}}
+
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
 # easy or tough vaults. Also, exclude unthemely branches with !Lair etc.
 default-depth: D:12-26
@@ -289,7 +301,7 @@ ENDMAP
 # Staircase flavour vaults.
 #
 NAME:    minmay_staircase_windowed_small
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  5
@@ -311,7 +323,7 @@ ccccc
 ENDMAP
 
 NAME:    minmay_staircase_windowed_large
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  5
@@ -336,7 +348,7 @@ ccccccc
 ENDMAP
 
 NAME:    minmay_staircase_statues
-TAGS:    extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  5
@@ -348,7 +360,7 @@ G.G
 ENDMAP
 
 NAME:    minmay_staircase_statues_hall_small
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  3
@@ -369,7 +381,7 @@ cccc...cccc
 ENDMAP
 
 NAME:    minmay_staircase_statues_hall_large
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 WEIGHT:  2
@@ -399,7 +411,7 @@ cccccc.....cccccc
 ENDMAP
 
 NAME:    minmay_staircase_bubble
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 ORIENT:  float
 SUBST:   m = mmmm.
@@ -417,7 +429,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_squiggle
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: }]){[(
@@ -432,7 +444,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_1
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D: 2-26
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
@@ -451,7 +463,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_2
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -467,7 +479,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_3
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -484,7 +496,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_4
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
@@ -505,7 +517,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_5
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
@@ -528,7 +540,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_spiral
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -546,7 +558,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_spiral_double
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -567,7 +579,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_x
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   D : .x
@@ -586,7 +598,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_split_hallway
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SHUFFLE: })]{([
@@ -608,7 +620,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_trident
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  } = 1:} / *:.
@@ -632,7 +644,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_hallway_doors
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D: 2-26
 WEIGHT:  3
 SHUFFLE: DEHJK
@@ -659,7 +671,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_diamond
 ORIENT:  float
-TAGS:    extra luniq_staircase allow_dup
+TAGS:    extra luniq_staircase allow_dup decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -680,7 +692,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_star
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase
+TAGS:    transparent extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   D : .x
@@ -704,7 +716,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_door_maze
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  D = 1:+ / *:x
@@ -725,7 +737,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_9_rooms
 ORIENT:  float
-TAGS:    extra luniq_staircase no_monster_gen
+TAGS:    extra luniq_staircase no_monster_gen decor
 DEPTH:   D:2-26
 WEIGHT:  2
 # Room contents
@@ -757,7 +769,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_1
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -781,7 +793,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_2
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -811,7 +823,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_3a
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -846,7 +858,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pillars_3b
 ORIENT:  float
-TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars
+TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
 DEPTH:   D:2-26
 WEIGHT:  2
 SUBST:   c : x:45 .:15 c:10 m:5
@@ -876,7 +888,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_river
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  D = 1:W / *:w
@@ -901,7 +913,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pool_1
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase no_pool_fixup no_monster_gen
+TAGS:    transparent extra luniq_staircase no_pool_fixup no_monster_gen decor
 DEPTH:   D:2-26
 WEIGHT:  3
 # Water
@@ -929,7 +941,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_pool_2
 ORIENT:  float
-TAGS:    transparent extra luniq_staircase no_monster_gen
+TAGS:    transparent extra luniq_staircase no_monster_gen decor
 DEPTH:   D:2-26, Lair:*, Swamp:*
 WEIGHT:  3 (D), 10 (Swamp)
 # Water
@@ -959,7 +971,7 @@ ENDMAP
 # This is replaced by infiniplex_staircase_pool_lava for low levels
 NAME:    infiniplex_staircase_pool
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-20, Lair:*, Swamp:*
 WEIGHT:  2 (D), 20 (Swamp)
 SUBST:   D = ww.
@@ -984,7 +996,7 @@ ENDMAP
 #    There are a few small changes to accout for lava being impassible.
 NAME:    infiniplex_staircase_pool_lava
 ORIENT:  float
-TAGS:    extra luniq_staircase
+TAGS:    extra luniq_staircase decor
 DEPTH:   D:21-26
 WEIGHT:  2
 SUBST:   D = ll.
@@ -1268,7 +1280,7 @@ TAGS:   no_pool_fixup patrolling
 KPROP:  1 = no_rtele_into
 SUBST:  1 = 1:50 2 3:5
 MONS:   troll
-MONS:   rock troll
+MONS:   deep troll
 MONS:   iron troll
 MAP
 xxxxx...........................xxxxxx
@@ -2497,7 +2509,7 @@ ENDMAP
 # http://en.wikipedia.org/wiki/Celtic_maze
 NAME:   mumra_celtic_spiral_tile
 ORIENT: float
-TAGS:   allow_dup
+TAGS:   transparent allow_dup decor
 DEPTH:  D:1-10
 WEIGHT: 2
 MAP
@@ -3320,7 +3332,7 @@ KMONS:   U = death ooze / bone dragon / profane servitor w:5
 KMONS:   V = elephant / very ugly thing / wolf spider
 KMONS:   W = dire elephant / alligator / emperor scorpion
 KMONS:   Y = anaconda / alligator snapping turtle
-KMONS:   X = rock troll / orc knight / hill giant
+KMONS:   X = deep troll / orc knight / hill giant
 KMONS:   Z = iron troll / naga warrior / minotaur
 KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
 KMONS:   d = deep elf mage / wizard / boggart
@@ -3385,7 +3397,7 @@ NSUBST: A = 3 / '
 KFEAT:  _ = altar_zin
 FTILE:  '+_!$%*|1234D = floor_vault
 TILE:   v = dngn_metal_wall_white
-TILE:   c = dngn_transparent_wall_white
+TILE:   n = dngn_transparent_stone_white
 COLOUR: v = white
 KFEAT:  D = runed_door
 SUBST:  !' = .
@@ -4741,4 +4753,261 @@ c.6DBCA.c.EA7BC.c.*|||*.c
 c.C6DA6.c.BCD7A.c.*****.c
 c...............c.......c
 ccccccccccccccccccccccccc
+ENDMAP
+
+####
+
+NAME:    hangedman_six_sided_sadism
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   D:15-27
+ORIENT:  float
+MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
+         deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
+         rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
+         vampire / octopode w:5 ; trident good_item
+MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
+         skeletal warrior / yaktaur captain w:5 / ogre mage / \
+         deep elf knight / phantasmal warrior / guardian mummy w:5 / \
+         guardian serpent w:5 / harpy w:5
+MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
+         hell knight w:5 / orc warlord / \
+         minotaur w:5 ; any armour good_item . any weapon good_item / \
+         vampire knight / vampire mage / ghoul w:5 / base draconian / \
+         spriggan defender w:3 / spriggan air mage / siren w:2 / \
+         deep elf death mage
+MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
+         sphinx w:5 / greater naga w:5 / mummy priest w:1 / \
+         nonbase draconian w:1
+SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
+SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
+SUBST:   IKO = 1, LPS = 2, T = 3, JMNQRUV = %
+: if you.absdepth() > 20 then
+SUBST:   3 = 334, 2 = 223, 1 = 112
+: else
+SUBST:   4 = 3
+: end
+MAP
+             @.ccccccc.@
+            ..cc.....cc..
+           ..cc.V.S.U.cc..
+          ..ccT.xxxxx.Tcc..
+        ...cc..xxxxxxx..cc...
+    .....ccc.Uxxxxxxxxx..ccc.....
+   ..ccc+ccc..xxxxxxxxxV.ccccccc..
+  ..cc.....cc..xxxxxxx..cc..3..cc..
+ ..cc...I...ccS.xxxxx.Sc+.......cc..
+@.cc.........cc.V.T.U.+c2..HGH..3cc.@
+.cc..I..J..I..cc.....cc...Gx.xG...cc.
+cc....JxxxJ....cc+++cc...GH%%%HG...cc
+cc....JxxxJ....cc+++cc...HG%%%GH...cc
+.cc..I..J..I..cc.*|*.cc...Hx.xH...cc.
+@.cc.........cc*.1.2.*cc2..GHG..1cc.@
+ ..cc...I...cc|.c...c.|cc.......cc..
+  ..cc.....cc*.c.ccc.c.*cc..1..cc..
+   ..cc+c+cc..c.c343c.c..cc+c+cc..
+  ..cc.....cc*1..c3c..1*cc.....cc..
+ ..ccM.....Kcc|2.....2*cc...%...cc..
+@.ccN.......Lcc*.ccc.*cc..FF.FF..cc.@
+.ccM..AA.BB..Kcc.*|*.cc...xE.Ex...cc.
+cc.....AxB.....ccccccc...%E232E%...cc
+cc.....BxA.....ccccccc...%E121E%...cc
+.ccK..BB.AA..Mcc.O.P.cc...xE.Ex...cc.
+@.ccL.......Nc+Q.....R+c..FF.FF..cc.@
+ ..ccK.....M+c....D....c+...%...cc..
+  ..cc.....ccQ.C.x.x.C.Rcc.....cc..
+   ..ccccccc...CD...DC...ccccccc..
+    .....ccc...DC...CD...ccc.....
+        ...ccO.D.x.xDD.Pcc...
+          ..cc....C....cc..
+           ..ccP.....Pcc..
+            ..cc.R.R.cc..
+             @.ccccccc.@
+ENDMAP
+
+# Based off Zaba's beehive_diamond.
+# Hopefully the changes for it to fit in D make it more interesting than Hive.
+NAME:    hangedman_what_comes_after_a
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:12-19
+ORIENT:  north
+MONS:    killer bee, queen bee, oklob plant
+KFEAT:   X = x
+ITEM:    honeycomb / royal jelly w:1, honeycomb w:4 / royal jelly
+SUBST:   A = X:3 .:2, z = x.., ' = .:460 01d%
+: if you.absdepth() > 15 then
+SUBST:   " = 1
+: else
+SUBST:   8 = 9, " = '
+: end
+TILE:    X = wall_wax
+COLOUR:  X = yellow
+MAP
+             xxxxxxxxxxxxxxx
+             xxxxxcccccxxxxx
+             xxxccc*e*cccxxx
+              xxc3%e|e%3cxx
+               xcc3*e*3ccx
+               xxcccmcccxx
+             xxxxx18281xxxxx
+           xxxxxd1911191dxxxxx
+          xxxxx'"X"eAe"X"'xxxxx
+         xxxx'''XXX"""XXX'''xxxx
+        xxxx''X''X''X''X''X''xxxx
+      xxxx'''XXX'''XXX'''XXX'''xxxx
+     xxxx''X'1X''X''X''X''X1'X''xxxx
+    xxx'''XXX90'XXX'0'XXX'09XXX'''xxx
+ xxxxx.'X''X'1X1'X''X''X'1X1'X''X'.xxxxx
+xxzx...XXX'''XXX'''XXX'''XXX'''XXX...xzxx
+x.x..A.'X''X''X''X'1X1'X''X''X''X'.A..x.x
+x.x.AAA'''XXX'0'XXX'9'XXX'0'XXX'''AAA.x.x
+.x...A.'X'1X''X''X'1X1'X''X''X1'X'.A...x.
+x.x....XXX010XXX'''XXX'''XXX010XXX....x.x
+x.x..A.'X'1X1'X''X''X''X''X'1X1'X'.A..x.x
+.x..AAA'''XXX'''XXX'''XXX'''XXX'''AAA..x.
+x.x..A.'A''X''X'1X''X''X1'X''X''A'.A..x.x
+x.x....AAA'''XXX010XXX010XXX'''AAA....x.x
+.x.x....A''A''X'1X1'X'1X1'X''A''A....x.x.
+x.xzx.....AAA'''XXX'''XXX'''AAA.....xzx.x
+.x.xzx.....A''A''X''X''X''A''A.....xzx.x.
+ .x.x.x.x....AAA...XXX...AAA....x.x.x.x.
+  .xzx.x.x....A..A..X..A..A....x.x.xzx.
+   .xzx.xzx...................xzx.xzx.
+    .....xzxx.xx.xx.x.xx.xx.xxzx.....
+         .x..x.zx..xzx..xz.x..x.
+          .xx.xx.xx.x.xx.xx.xx.
+ENDMAP
+
+NAME:    hangedman_arch_fort
+TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
+ORIENT:  float
+DEPTH:   D:19-26
+SUBST:   Y : y:8 b:2, y : c:9 b:1, z : Z:16 x:1 b:2 ":1, Z : x:9 b:1
+SUBST:   X = .:19 x:1, G : G:12 c:1 b:1 v:1, w : w:3 l:1 .:1
+SUBST:   + : +:24 W:1, " : .:24 W:1, 9 = 990, % = %%.
+MAP
+           ....  ..........  ...
+          ........................
+         ..Zxxx++xxxZ..Zxxx++xxxZ..
+      .....x9%z..z%9x..x9%z..z%9x.....
+    .......x%."..".%x..x%."..".%x.......
+    .Zxxx++xz""..""zx++xz""..""zx++xxxZ.
+   ..x9%z.......X..........X.......z%9x..
+   ..x%."..........................".%x..
+   ..xz""..yyyY..""zx++xz""..Yyyy..""zx..
+  ...+.......9y..".%x..x%."..y9.......+...
+ ....+....w%|.y..z%9x..x9%z..y.|%w....+....
+ .Zxxx..y.%G%.y..xxxZ..Zxxx..y.%G%.y..xxxZ.
+..x9%z..y.*%w....+........+....w%*.y..z%9x..
+..x%."..y9.......+...  ...+.......9y..".%z..
+..xz""..Yyyy..""zx..    ..xz""..yyyY..""zx..
+ .+...........".%x..    ..x%."...........+.
+ .+...X.......z%9x..    ..x9%x.......X...+.
+..xz""..""zx++xxxZ..    ..Zxxx++xz""..""zx..
+..x%."..".%x.......      .......x%."..".%x..
+..x9%z..z%9x.....          .....x9%z..z%9x..
+..Zxxx++xxxZ..                ..xxxx++xxxZ..
+ ............                  ............
+  ....  ....                    ....  ....
+ENDMAP
+
+NAME:    hangedman_decor_cross_pass
+TAGS:    transparent extra decor no_pool_fixup
+ORIENT:  float
+DEPTH:   D:8-, Elf
+SHUFFLE: _- / _- / -_, '" / '" / "', !? / !? / !?
+SHUFFLE: HIJK / HIJK / IHKJ, LMNO / LMNO / MLON, PQRS / PQRS / QPSR
+SUBST:   HJLNPR = ., I : z:6 .:1, K : z., M : z:6 .:1, O : z., Q : z:6 .:1, S : z.
+SUBST:   A : z., B : z., C : z., ~"! = x, - : ++., ' : ++. ? : +++., = : xx+.
+SUBST:   y : z.., Y = TVCtwz .:30
+: init_hm_decor_walldepth(_G, "z")
+MAP
+           x...x
+           x...x
+       .xxxx...xxxx
+       .!...HIJ...xxxxx
+       .?...KAK...'...x
+       .!...JIH...x...x
+       .xxxx...x""x...xxxx
+  .........x...x...LMN...x
+  xx+xx....x...'...OBO...x
+  x...x....xx=xx...NML...x
+  x...x........xxxx...xx'xx
+xxx...xxxx........x..."...x
+...PQR...x..y.....x..."...x
+...SCS...=........xx'xx...xxx
+...RQP...x....Y....x...PQR...
+xxx...xx-xx........=...SCS...
+  x...~...x.....y..x...RQP...
+  x...~...x........xxxx...xxx
+  xx-xx...xxxx........x...x
+   x...LMN...xx=xx....x...x
+   x...OBO...-...x....xx+xx
+   x...NML...x...x.........
+   xxxx...x~~x...xxxx.
+      x...x...HIJ...!.
+      x...-...KAK...?.
+      xxxxx...JIH...!.
+          xxxx...xxxx.
+             x...x
+             x...x
+ENDMAP
+
+NAME: lightli_eight_chambers
+ORIENT: float
+DEPTH: D:20-27
+TAGS: no_monster_gen no_ctele_into
+SHUFFLE: PFIEMONLSAKRVCTHD
+KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
+           redback
+KMONS: F = fire giant w:5 / dragon / fire elemental / red draconian / sun demon
+KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
+           ice dragon
+KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning / vapour
+KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
+           orc warrior
+KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
+           deep elf summoner / deep elf sorcerer
+KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
+KMONS: S = swamp dragon / hydra w:5 / vapour / large slime creature / alligator
+KMONS: A = alligator snapping turtle w:5 / siren / merfolk aquamancer / \
+           merfolk impaler / harpy
+KMONS: K = greater naga w:5 / naga mage / anaconda / naga warrior / \
+           guardian serpent
+KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
+           tarantella
+KMONS: M = acid blob w:5 / brown ooze / azure jelly / jelly / great orb of eyes
+KMONS: V = vault guard / stone giant w:5 / yaktaur captain / dancing weapon / \
+           skeletal warrior
+KMONS: C = skeletal warrior / bone dragon / flaming corpse / vampire / lich w:5
+KMONS: T = mummy priest w:5 / guardian mummy / sphinx / mummy / reaper
+KMONS: H = balrug w:5 / blizzard demon w:5 / shadow demon w:5 / \
+           hell beast w:5 / sun demon / ice devil / iron devil / soul eater / \
+           hell knight w:5
+KMONS: D = giant newt / kobold / hobgoblin w:5 / goblin / adder
+MAP
+xxvvvvvvvvvvvvvxx
+xvv..vvvvvvv..vvx
+vv.II.vvvvv....vv
+v..II.+...=.EEE.v
+v..II.+...=.EEE.v
+vv....vvvvv....vv
+xvv==vv|||vv++vvx
+xxv..v*****v..vxx
+xxv..v%%%%%v..vxx
+xvv++vv%%%vv==vvx
+vv.FF.vv=vv....vv
+v..FF..v.v..MM..v
+v..FF..v.v..MM..v
+vv....vv+vv.MM.vv
+xvv==vv...vv++vvx
+xxv..v.NNN.v..vxx
+xxv..v.NNN.v..vxx
+xvv++vv...vv==vvx
+vv.PP.vv=vv....vv
+v..PP..v.v..OO..v
+v..PP..v.+..OO..v
+vv....vvvvv.OO.vv
+xvv..vvvvvvv..vvx
+xxv==vvvvvvvvvvxx
+   @@
 ENDMAP

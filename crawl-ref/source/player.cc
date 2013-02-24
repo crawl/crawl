@@ -462,7 +462,7 @@ bool player_in_bat_form()
 
 bool player_can_open_doors()
 {
-    return (you.form != TRAN_BAT);
+    return (you.form != TRAN_BAT && you.form != TRAN_JELLY);
 }
 
 bool player_under_penance(void)
@@ -496,6 +496,12 @@ bool is_player_same_species(const monster_type mon, bool transform)
             return (mon == MONS_BAT);
         case TRAN_ICE_BEAST:
             return (mon == MONS_ICE_BEAST);
+        case TRAN_TREE:
+            return (mon == MONS_ANIMATED_TREE);
+        case TRAN_PORCUPINE:
+            return (mon == MONS_PORCUPINE);
+        case TRAN_WISP:
+            return (mon == MONS_INSUBSTANTIAL_WISP);
         // Compare with monster *species*.
         case TRAN_LICH:
             return (mons_species(mon) == MONS_LICH);
@@ -506,6 +512,8 @@ bool is_player_same_species(const monster_type mon, bool transform)
             return (mons_genus(mon) == MONS_DRAGON); // Includes all drakes.
         case TRAN_PIG:
             return (mons_genus(mon) == MONS_HOG);
+        case TRAN_JELLY:
+            return (mons_genus(mon) == MONS_JELLY);
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
@@ -755,12 +763,19 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     if (eq == EQ_NONE)
         return true;
 
+    if (you.form == TRAN_JELLY
+        || you.form == TRAN_PORCUPINE
+        || you.form == TRAN_WISP)
+    {
+        return (false);
+    }
+
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
     else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
         eq = EQ_RINGS;
 
-    // Everybody can wear at least some type of armour.
+    // Everybody but jellies and porcupines can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
         return true;
 
@@ -839,6 +854,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         }
         return false;
     }
+
+    if (you.form == TRAN_TREE)
+        return (eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_HELMET);
 
     return true;
 }
@@ -1464,8 +1482,14 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // transformations:
         switch (you.form)
         {
+        case TRAN_TREE:
+            if (you.religion == GOD_FEDHAS && !player_under_penance())
+                break;
         case TRAN_ICE_BEAST:
             rf--;
+            break;
+        case TRAN_WISP:
+            rf += 2;
             break;
         case TRAN_DRAGON:
         {
@@ -1531,6 +1555,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         {
         case TRAN_ICE_BEAST:
             rc += 3;
+            break;
+        case TRAN_WISP:
+            rc += 2;
             break;
         case TRAN_DRAGON:
         {
@@ -1611,6 +1638,9 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
         return true;
 
+    if (you.form == TRAN_JELLY || you.form == TRAN_WISP)
+        return 1;
+
     if (items && !suppressed())
     {
         // dragonskin cloak: 0.5 to draconic resistances
@@ -1638,6 +1668,9 @@ bool player::res_corr(bool calc_unid, bool items) const
 
 int player_res_acid(bool calc_unid, bool items)
 {
+    if (you.form == TRAN_JELLY || you.form == TRAN_WISP)
+        return 3;
+
     return you.res_corr(calc_unid, items) ? 1 : 0;
 }
 
@@ -1645,7 +1678,12 @@ int player_res_acid(bool calc_unid, bool items)
 // as pre_resist_damage * X / 100.
 int player_acid_resist_factor()
 {
-    return (player_res_acid() ? 50 : 100);
+    int rA = player_res_acid();
+    if (rA >= 3)
+        return 0;
+    else if (rA >= 1)
+        return 50;
+    return 100;
 }
 
 int player_res_electricity(bool calc_unid, bool temp, bool items)
@@ -1686,7 +1724,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             re++;
 
         // transformations:
-        if (you.form == TRAN_STATUE)
+        if (you.form == TRAN_STATUE || you.form == TRAN_WISP)
             re += 1;
 
         if (re > 1)
@@ -1709,10 +1747,21 @@ int player_res_torment(bool, bool temp)
 {
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.form == TRAN_LICH
+            || you.form == TRAN_TREE
+            || you.form == TRAN_WISP
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
             || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
                 && coinflip()));
+}
+
+// Kiku protects you from torment to a degree.
+int player_kiku_res_torment()
+{
+    return (you.religion == GOD_KIKUBAAQUDGHA
+            && !player_under_penance()
+            && you.piety >= piety_breakpoint(3)
+            && !you.gift_timeout); // no protection during pain branding weapon
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -1775,6 +1824,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
         case TRAN_DRAGON:
+        case TRAN_TREE:
+        case TRAN_JELLY:
+        case TRAN_WISP:
             rp++;
             break;
         default:
@@ -1835,6 +1887,9 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
         if (items && calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
             rsf++;
     }
+
+    if (you.form == TRAN_WISP)
+        rsf++;
 
     if (rsf > 1)
         rsf = 1;
@@ -2054,8 +2109,10 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_STATUE:
+        case TRAN_WISP:
             pl++;
             break;
+        case TRAN_TREE:
         case TRAN_LICH:
             pl += 3;
             break;
@@ -2125,6 +2182,10 @@ int player_movement_speed(bool ignore_burden)
         mv = 5; // but allowed minimum is six
     else if (you.form == TRAN_PIG)
         mv = 7;
+    else if (you.form == TRAN_PORCUPINE)
+        mv = 8;
+    else if (you.form == TRAN_JELLY)
+        mv = 11;
     else if (you.fishtail)
         mv = 6;
 
@@ -2203,7 +2264,8 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
+    if (you.form == TRAN_STATUE || you.form == TRAN_TREE
+        || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
         ps /= 10;
@@ -2446,7 +2508,7 @@ int player_evasion(ev_ignore_type evit)
     const int size_factor = _player_evasion_size_factor();
     // Repulsion fields and size are all that matters when paralysed or
     // at 0 dex.
-    if ((you.cannot_move() || you.stat_zero[STAT_DEX])
+    if ((you.cannot_move() || you.stat_zero[STAT_DEX] || you.form == TRAN_TREE)
         && !(evit & EV_IGNORE_HELPLESS))
     {
         const int paralysed_base_ev = 2 + size_factor / 2;
@@ -2776,6 +2838,27 @@ void forget_map(bool rot)
 #endif
 }
 
+static void _remove_temp_mutations()
+{
+    int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
+        max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
+        2 + random2(3)));
+
+    if (num_remove >= you.attribute[ATTR_TEMP_MUTATIONS])
+        mpr("You feel the corruption within you wane completely.", MSGCH_DURATION);
+    else
+        mpr("You feel the corruption within you wane somewhat.", MSGCH_DURATION);
+
+    for (int i = 0; i < num_remove; ++i)
+        delete_temp_mutation();
+
+    if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
+    {
+        you.attribute[ATTR_TEMP_MUT_XP] +=
+            min(you.experience_level, 17) * (350 + roll_dice(5, 350)) / 17;
+    }
+}
+
 int get_exp_progress()
 {
     if (you.experience_level >= 27)
@@ -2791,8 +2874,6 @@ int get_exp_progress()
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
-        return;
-    if (crawl_state.game_is_sprint() && player_in_branch(BRANCH_ABYSS))
         return;
 
     if (crawl_state.game_is_zotdef())
@@ -2881,6 +2962,13 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     if (actual_gain != NULL)
         *actual_gain = you.experience - old_exp;
+
+    if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
+    {
+        you.attribute[ATTR_TEMP_MUT_XP] -= exp_gained;
+        if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
+            _remove_temp_mutations();
+    }
 }
 
 static void _draconian_scale_colour_message()
@@ -3306,8 +3394,6 @@ void level_change(bool skip_attribute_increase)
                                 mark_milestone("monstrous", "is a "
                                                "monstrous demonspawn!");
                             }
-
-                            i = you.demonic_traits.size();
                             break;
                         }
 
@@ -3603,7 +3689,12 @@ int check_stealth(void)
 
     switch (you.form)
     {
+    case TRAN_TREE:
+        race_mod = 27; // masquerading as scenery
+        break;
     case TRAN_SPIDER:
+    case TRAN_JELLY:
+    case TRAN_WISP:
         race_mod = 21;
         break;
     case TRAN_ICE_BEAST:
@@ -3614,6 +3705,9 @@ int check_stealth(void)
         break;
     case TRAN_DRAGON:
         race_mod = 6;
+        break;
+    case TRAN_PORCUPINE:
+        race_mod = 12; // small but noisy
         break;
     case TRAN_PIG:
         race_mod = 9; // trotters, oinking...
@@ -4295,14 +4389,10 @@ int player::scan_artefacts(artefact_prop_type which_property,
         if (!is_artefact(you.inv[ eq ]))
             continue;
 
-        // Ignore unidentified items [TileCrawl dump enhancements].
-        if (!item_ident(you.inv[ eq ], ISFLAG_KNOW_PROPERTIES)
-            && !calc_unid)
-        {
-            continue;
-        }
-
-        retval += artefact_wpn_property(you.inv[ eq ], which_property);
+        bool known;
+        int val = artefact_wpn_property(you.inv[eq], which_property, known);
+        if (calc_unid || known)
+            retval += val;
     }
 
     return retval;
@@ -5222,6 +5312,9 @@ void float_player()
 
 void fly_player(int pow, bool already_flying)
 {
+    if (you.form == TRAN_TREE)
+        return mpr("Your roots keep you in place.");
+
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)
         mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
@@ -5368,7 +5461,9 @@ void player::init()
     burden          = 0;
     burden_state    = BS_UNENCUMBERED;
     spells.init(SPELL_NO_SPELL);
+    old_vehumet_gifts.clear();
     spell_no        = 0;
+    vehumet_gifts.clear();
     char_direction  = GDT_DESCENDING;
     opened_zot      = false;
     royal_jelly_dead = false;
@@ -5649,6 +5744,7 @@ flight_type player::flight_mode() const
 {
     if (duration[DUR_FLIGHT]
         || you.attribute[ATTR_PERM_FLIGHT]
+        || form == TRAN_WISP
         // dragon and bat should be FL_WINGED, but we don't want paralysis
         // instakills over lava
         || form == TRAN_DRAGON
@@ -5718,6 +5814,8 @@ bool player::cannot_speak() const
         return true;
 
     // No transform that prevents the player from speaking yet.
+    // ... yet setting this would prevent saccing junk and similar activities
+    // for no good reason.
     return false;
 }
 
@@ -5730,9 +5828,19 @@ string player::shout_verb() const
     case TRAN_SPIDER:
         return "hiss";
     case TRAN_BAT:
+    case TRAN_PORCUPINE:
         return "squeak";
     case TRAN_PIG:
-        return "squeal";
+        return coinflip() ? "squeal" : "oink";
+
+    // These forms can't shout.
+    case TRAN_TREE:
+        return "creak";
+    case TRAN_JELLY:
+        return "gurgle";
+    case TRAN_WISP:
+        return "whoosh"; // any wonder why?
+
     default:
         if (you.species == SP_FELID)
             return coinflip() ? "meow" : "yowl";
@@ -5755,6 +5863,8 @@ void player::god_conduct(conduct_type thing_done, int level)
 void player::banish(actor *agent, const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
+    if (brdepth[BRANCH_ABYSS] == -1)
+        return;
 
     if (you.elapsed_time <= you.attribute[ATTR_BANISHMENT_IMMUNITY])
     {
@@ -5909,10 +6019,7 @@ int player::armour_tohit_penalty(bool random_factor, int scale) const
 
 int player::shield_tohit_penalty(bool random_factor, int scale) const
 {
-    const item_def* wp = slot_item(EQ_WEAPON);
-    int factor = (wp && hands_reqd(*wp, body_size()) == HANDS_HALF) ? 2 : 1;
-
-    return maybe_roll_dice(factor, adjusted_shield_penalty(scale), random_factor);
+    return maybe_roll_dice(1, adjusted_shield_penalty(scale), random_factor);
 }
 
 int player::skill(skill_type sk, int scale, bool real) const
@@ -6037,7 +6144,13 @@ int player::armour_class() const
         case TRAN_NONE:
         case TRAN_APPENDAGE:
         case TRAN_BLADE_HANDS:
-        case TRAN_LICH:  // can wear normal body armour (small bonus)
+        case TRAN_LICH:  // can wear normal body armour (no bonus)
+            break;
+
+        case TRAN_JELLY:  // no bonus
+        case TRAN_BAT:
+        case TRAN_PIG:
+        case TRAN_PORCUPINE:
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
@@ -6051,6 +6164,10 @@ int player::armour_class() const
                 AC += 100 + skill(SK_ICE_MAGIC, 25);     // max +7
             break;
 
+        case TRAN_WISP:
+            AC += 1000;
+            break;
+
         case TRAN_DRAGON: // Draconians handled above
             AC += 1600;
             break;
@@ -6062,7 +6179,8 @@ int player::armour_class() const
                 AC += 100 + skill(SK_EARTH_MAGIC, 25);   // max +7
             break;
 
-        default:
+        case TRAN_TREE: // extreme bonus, no EV
+            AC += 2500;
             break;
         }
     }
@@ -6115,6 +6233,8 @@ int player::gdr_perc() const
         return 34; // base AC 8
     case TRAN_STATUE:
         return 39; // like plate (AC 10)
+    case TRAN_TREE:
+        return 48;
     default:
         break;
     }
@@ -6149,7 +6269,7 @@ bool player::heal(int amount, bool max_too)
 
 mon_holy_type player::holiness() const
 {
-    if (form == TRAN_STATUE || petrified())
+    if (form == TRAN_STATUE || form == TRAN_WISP || petrified())
         return MH_NONLIVING;
 
     if (is_undead)
@@ -6207,6 +6327,9 @@ bool player::is_unbreathing() const
     {
     case TRAN_LICH:
     case TRAN_STATUE:
+    case TRAN_TREE:
+    case TRAN_JELLY:
+    case TRAN_WISP:
         return true;
     default:
         break;
@@ -6218,15 +6341,14 @@ bool player::is_unbreathing() const
     return player_mutation_level(MUT_UNBREATHING);
 }
 
-// This is a stub. Makes checking for silver damage a little cleaner.
 bool player::is_insubstantial() const
 {
-    return false;
+    return you.form == TRAN_WISP;
 }
 
-int player::res_acid() const
+int player::res_acid(bool calc_unid) const
 {
-    return player_res_acid();
+    return player_res_acid(calc_unid);
 }
 
 int player::res_fire() const
@@ -6271,7 +6393,7 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    if (temp && (petrified() || form == TRAN_STATUE))
+    if (temp && (petrified() || form == TRAN_STATUE || form == TRAN_WISP))
         return 3;
 
     if (you.mutation[MUT_FOUL_STENCH])
@@ -6335,8 +6457,18 @@ int player::res_wind() const
 
 int player::res_petrify(bool temp) const
 {
-    if (temp && you.form == TRAN_STATUE)
+    if (temp && (you.form == TRAN_STATUE || you.form == TRAN_WISP))
         return 1;
+    return 0;
+}
+
+int player::res_constrict() const
+{
+    if (you.form == TRAN_JELLY || you.form == TRAN_PORCUPINE
+        || you.form == TRAN_WISP)
+    {
+        return 3;
+    }
     return 0;
 }
 
@@ -6411,6 +6543,9 @@ int player_res_magic(bool calc_unid, bool temp)
 bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
     if (crawl_state.game_is_sprint() && !blinking)
+        return true;
+
+    if (you.form == TRAN_TREE)
         return true;
 
     return (you.has_notele_item(calc_unid)
@@ -6788,10 +6923,7 @@ int player::usable_tentacles() const
     if (wp)
     {
         hands_reqd_type hands_req = hands_reqd(*wp, body_size());
-        if (hands_req == HANDS_HALF && you.shield())
-            hands_req = HANDS_ONE;
-
-        free_tentacles -= hands_req + 2;
+        free_tentacles -= 2 * hands_req + 2;
     }
 
     return free_tentacles;
@@ -6851,13 +6983,13 @@ bool player::sicken(int amount, bool allow_hint)
     return true;
 }
 
-bool player::can_see_invisible(bool calc_unid) const
+bool player::can_see_invisible(bool calc_unid, bool items) const
 {
     if (crawl_state.game_is_arena())
         return true;
 
     // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
+    if (items && !you.suppressed())
     {
         if (you.wearing(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
             // armour: (checks head armour only)
@@ -6894,7 +7026,7 @@ bool player::can_see_invisible(bool calc_unid) const
 
 bool player::can_see_invisible() const
 {
-    return can_see_invisible(true);
+    return can_see_invisible(true, true);
 }
 
 bool player::invisible() const
@@ -6916,11 +7048,8 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monster* mon = looker->as_monster();
-    return (!mon->has_ench(ENCH_BLIND) && !invisible()
-            || in_water()
-            || mon->can_see_invisible()
-            || mons_sense_invis(mon)
-               && distance2(pos(), mon->pos()) <= dist_range(4));
+    return (mons_sense_invis(mon) && distance2(pos(), mon->pos()) <= dist_range(4))
+            || (!mon->has_ench(ENCH_BLIND) && (!invisible() || mon->can_see_invisible()));
 }
 
 bool player::backlit(bool check_haloed, bool self_halo) const
@@ -6994,13 +7123,23 @@ bool player::can_safely_mutate() const
                && hunger_state == HS_ENGORGED);
 }
 
+bool player::can_polymorph() const
+{
+    if (you.transform_uncancellable)
+        return false;
+    if (you.is_undead)
+        return is_undead == US_SEMI_UNDEAD && hunger_state > HS_SATIATED;
+    return true;
+}
+
 bool player::can_bleed(bool allow_tran) const
 {
     if (allow_tran)
     {
         // These transformations don't bleed. Lichform is handled as undead.
         if (you.form == TRAN_STATUE || you.form == TRAN_ICE_BEAST
-            || you.form == TRAN_SPIDER)
+            || you.form == TRAN_SPIDER || you.form == TRAN_TREE
+            || you.form == TRAN_PORCUPINE)
         {
             return false;
         }
@@ -7032,6 +7171,40 @@ bool player::mutate(const string &reason)
     }
 
     return give_bad_mutation(reason);
+}
+
+bool player::polymorph(int pow)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (!can_polymorph())
+        return false;
+
+    // Be unreliable over lava.  This is not that important as usually when
+    // it matters you'll have temp flight and thus that pig will fly (and
+    // when flight times out, we'll have roasted bacon).
+    for (int tries = 0; tries < 3; tries++)
+    {
+        // Whole-body transformations only; mere appendage doesn't seem fitting.
+        transformation_type f = random_choose_weighted(
+            100, TRAN_BAT,
+            100, TRAN_PIG,
+            100, TRAN_TREE,
+            100, TRAN_PORCUPINE,
+            100, TRAN_WISP,
+             20, TRAN_SPIDER,
+             20, TRAN_ICE_BEAST,
+              5, TRAN_STATUE,
+              1, TRAN_DRAGON,
+              0);
+        if (transform(pow, f))
+        {
+            you.transform_uncancellable = true;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool player::is_icy() const

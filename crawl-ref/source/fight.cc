@@ -314,8 +314,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     if (res > 0)
     {
-        // Acid resistance is immunity
-        if (mons && (flavour == BEAM_ACID || res >= 3))
+        if (mons && res >= 3)
             resistible = 0;
         else
         {
@@ -479,9 +478,6 @@ int player_weapon_str_weight()
         return 4;
 
     int ret = weapon_str_weight(weapon->base_type, weapon->sub_type);
-
-    if (hands_reqd(*weapon, you.body_size()) == HANDS_HALF && !you.shield())
-        ret += 1;
 
     return ret;
 }

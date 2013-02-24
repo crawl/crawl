@@ -25,6 +25,130 @@ function st_zot_vaults_setup(e)
 end
 }}
 
+{{
+function callback.grunt_zot_stairs_overgrown_start(data, triggerable,
+                                                   triggerer, marker, ev)
+  if data.triggered == true then
+    return
+  end
+
+  crawl.mpr("You have a sense of imminent foreboding.", "warning")
+  dgn.persist.grunt_zot_stairs_overgrown_started = true
+end
+
+function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
+                                                      triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if dgn.persist.grunt_zot_stairs_overgrown_started == nil then
+    return
+  end
+
+  if data.count >= 10 then
+    dgn.persist.grunt_zot_stairs_overgrown_started = nil
+    return
+  end
+
+  local possible = {}
+  local targets = dgn.find_marker_positions_by_prop("oklobify", 1)
+  for _, pos in ipairs(targets) do
+    local mons = dgn.mons_at(pos.x, pos.y)
+    if mons ~= nil and mons.name ~= "oklob plant" then
+      possible[#possible + 1] = pos
+    end
+  end
+
+  if #possible == 0 then
+    dgn.persist.grunt_zot_stairs_overgrown_started = nil
+    return
+  end
+
+  data.count = data.count + 1
+
+  local pos = possible[crawl.random2(#possible) + 1]
+  local mons = dgn.mons_at(pos.x, pos.y)
+  mons.dismiss()
+  local spec = "oklob plant"
+  if data.count > 8 then
+     if crawl.coinflip() then
+        spec = "oklob plant name:annihilator col:lightblue n_suf "
+        spec = spec .. "spells:poison_arrow;orb_of_destruction;.;.;"
+        spec = spec .. "bolt_of_cold actual_spells"
+     else
+        spec = "oklob plant name:demonologist col:yellow n_suf "
+        spec = spec .. "spells:summon_demon;.;.;summon_demon;.;"
+        spec = spec .. "malign_gateway actual_spells"
+     end
+  elseif data.count > 5 then
+     if crawl.coinflip() then
+        spec = "oklob plant name:conjurer col:blue n_suf "
+        spec = spec .. "spells:stone_arrow;.;.;.;iskenderun's_mystic_blast "
+        spec = spec .. "actual_spells"
+     else
+        spec = "oklob plant name:summoner col:brown n_suf "
+        spec = spec .. "spells:summon_minor_demon;.;.;summon_swarm "
+        spec = spec .. "actual_spells"
+     end
+  end
+
+  dgn.create_monster(pos.x, pos.y, spec)
+
+  if not you.see_cell(pos.x, pos.y) then return end
+
+  if not data.warned then
+    data.warned = true
+    crawl.mpr("One of the plants suddenly grows acid sacs!", "warning")
+  else
+    crawl.mpr("Another plant grows acid sacs!", "warning")
+  end
+end
+
+function callback.grunt_zot_stairs_roulette_spawn_doors(data, triggerable,
+                                                        triggerer, marker, ev)
+  if data.triggered then
+    return
+  end
+
+  data.triggered = true
+
+  dgn.persist.grunt_zot_stairs_roulette_doors_spawned = true
+
+  for p in iter.slave_iterator("hidden_door", 1) do
+    dgn.terrain_changed(p.x, p.y, "clear_stone_wall", false, false, false)
+  end
+end
+
+function callback.grunt_zot_stairs_roulette_door_open(data, triggerable,
+                                                      triggerer, marker, ev)
+  if data.triggered then
+    return
+  end
+
+  if dgn.persist.grunt_zot_stairs_roulette_doors_spawned == false then
+    return
+  end
+
+  data.triggered = true
+
+  crawl.mpr("Several panes of glass retract into the floor.")
+  for p in iter.slave_iterator("hidden_door", 1) do
+    dgn.terrain_changed(p.x, p.y, "floor", false, false, false)
+  end
+end
+
+function callback.grunt_zot_stairs_roulette_teleport(data, triggerable,
+                                                     triggerer, marker, ev)
+  slave = dgn.find_marker_positions_by_prop("dest", data.dest)
+  if you.teleport_to(slave[1].x, slave[1].y) then
+      crawl.mpr("Your surroundings suddenly seem different.")
+  else
+      crawl.mpr("There is a strange hissing noise.")
+  end
+end
+}}
+
 ##############################################################################
 ##############################################################################
 #
@@ -871,7 +995,7 @@ KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
         lightning rod w:6 | rod of demonology w:4 | rod of the swarm w:4 | \
         rod of destruction w:2 | rod of striking w:6 | wand of hasting w:16 | \
         wand of confusion | wand of random effects w:6 | \
-        wand of polymorph other w:6 | any wand w:28 | any rod w:2 | \
+        wand of polymorph w:6 | any wand w:28 | any rod w:2 | \
         nothing w:45 . randart ring mail | randart chain mail | \
         randart scale mail | randart splint mail | ring mail | \
         chain mail | scale mail | splint mail | nothing w:20
@@ -1367,7 +1491,7 @@ NAME:    zot_minivault_4
 TAGS:    transparent
 DEPTH:   Zot:1-4
 COLOUR:  n = magenta
-TILE:    n = dngn_transparent_wall_magenta
+TILE:    n = dngn_transparent_stone_magenta
 MAP
  xxxxxxxxxxx
 xxx0.....0xxx
@@ -1385,7 +1509,7 @@ NAME:    zot_minivault_5
 TAGS:    transparent
 DEPTH:   Zot:1-4
 COLOUR:  n = magenta
-TILE:    n = dngn_transparent_wall_magenta
+TILE:    n = dngn_transparent_stone_magenta
 MAP
  xxxxxxxxxxx
 xxxnn...0.xxx
@@ -1408,7 +1532,7 @@ DEPTH:   Zot:1-4
 SUBST:   < = ([{
 SUBST:   > = }]}
 COLOUR:  n = magenta
-TILE:    n = dngn_transparent_wall_magenta
+TILE:    n = dngn_transparent_stone_magenta
 MAP
  xxxxxxxxxxxxx
 xxcccccccccccxx
@@ -1513,9 +1637,9 @@ KITEM: Z = randbook spells:summon_demon|fireball|twisted_resurrection|airstrike 
 KITEM: F = randbook spells:bolt_of_fire|fireball|sticky_flame|conjure_flame title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
-TILE: r = dngn_transparent_wall_red, y = dngn_transparent_wall_yellow, \
-      b = dngn_transparent_wall_blue, m = dngn_transparent_wall_magenta, \
-      g = dngn_transparent_wall_green, q = dngn_transparent_wall
+TILE: r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
+      b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
+      g = dngn_transparent_stone_green, q = dngn_transparent_stone
 KFEAT: rybgmq = n
 MAP
            @.......................@
@@ -1686,6 +1810,313 @@ xx...G...vv4$v$4vv...G...xx
       x..vvv6v6vvv..x
       xx..vvvvvvv..xx
        xx@@vvvvv@@xx
+ENDMAP
+
+####
+# Revenge of the spell-casting oklobs!!!
+NAME: grunt_zot_stairs_overgrown
+DEPTH: Zot, !Zot:$
+MONS: oklob plant, plant col:crystal name:demonic n_adj
+MONS: bush col:warp name:demonic n_adj
+MONS: fungus col:random name:demonic n_adj
+SUBST: 2 = 23
+SUBST: . = .:30 2 3 4
+SUBST: : = .
+{{
+local sm = TriggerableFunction:new {
+  func="callback.grunt_zot_stairs_overgrown_start", triggered=false }
+sm:add_triggerer(DgnTriggerer:new { type = "player_los" })
+lua_marker('1', sm)
+
+local tm = TriggerableFunction:new {
+  func="callback.grunt_zot_stairs_overgrown_oklobify",
+  repeated=true,
+  data={warned = false, count = 0} }
+tm:add_triggerer(DgnTriggerer:new { type="turn", delay_min=30, delay_max=100 })
+lua_marker('}', tm)
+}}
+MARKER: 2 = lua:props_marker { oklobify=1 }
+SHUFFLE: }])
+SUBST: ] = ]>, ) = )>
+MAP
+      xxxxxxxxx
+    xxxcccccccxxx
+  xxxccc.....cccxxx
+  xccc.........cccx
+ xxc....:.:......cxx
+ xcc...:.:.:.....ccx
+xxc...:.222:2.....cx
+xcc....:2:::2.....ccx
+xc....:.2:222......cx
+xc.....:2:}:2......cx
+xc....:.2:1:2......cx
+xc.....:2]:)2......cx
+xc....:.22222......cx
+xcc....:..........ccx
+xxc.....:.........cxx
+ xcc.....:.......ccx
+ xxc......:......cxx
+  xccc....:....cccx
+  xxxccc:::::cccxxx
+    xxccc+++cccxx
+     xxxx@@@xxxx
+ENDMAP
+
+####
+# Care for a little gambling, adventurer?
+NAME: grunt_zot_stairs_roulette
+DEPTH: Zot, !Zot:$
+TAGS: no_monster_gen
+ORIENT: float
+
+MONS: golden dragon / quicksilver dragon / storm dragon / shadow dragon
+MONS: killer klown
+
+# Written out in full so we don't get zealots:
+MONS: draconian monk w:1 / draconian knight w:1 / \
+      draconian scorcher w:1 / draconian annihilator w:1 / \
+      draconian shifter w:1 / draconian caller w:1 / \
+      base draconian w:12
+
+KFEAT: hijk = teleporter
+KFEAT: O = floor
+{{
+dgn.persist.grunt_zot_stairs_roulette_doors_spawned = false
+
+local spawndoors = TriggerableFunction:new{
+    func="callback.grunt_zot_stairs_roulette_spawn_doors",
+    repeated=true,
+    data={triggered=false} }
+spawndoors:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('O', spawndoors)
+lua_marker('O', props_marker {hidden_door=1})
+
+local tm = TriggerableFunction:new{
+    func="callback.grunt_zot_stairs_roulette_door_open",
+    repeated = true, data={triggered=false}
+    }
+tm:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('-', tm)
+
+local tele1 = TriggerableFunction:new{
+    func="callback.grunt_zot_stairs_roulette_teleport",
+    repeated=true,
+    data={dest=1} }
+tele1:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('h', tele1)
+
+local tele2 = TriggerableFunction:new{
+    func="callback.grunt_zot_stairs_roulette_teleport",
+    repeated=true,
+    data={dest=2} }
+tele2:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('i', tele2)
+
+local tele3 = TriggerableFunction:new{
+    func="callback.grunt_zot_stairs_roulette_teleport",
+    repeated=true,
+    data={dest=3} }
+tele3:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('j', tele3)
+
+local tele4 = TriggerableFunction:new{
+    func="callback.grunt_zot_stairs_roulette_teleport",
+    repeated=true,
+    data={dest=4} }
+tele4:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('k', tele4)
+
+lua_marker('d', props_marker {dest=1})
+lua_marker('e', props_marker {dest=2})
+lua_marker('f', props_marker {dest=3})
+lua_marker('g', props_marker {dest=4})
+}}
+SHUFFLE: defg, }])>
+SUBST: ] = ]>, ) = )>
+MAP
+    ....@....
+ nnnnn.n.n.nnnnn
+ nd..n.nhn.n1.en
+ n.U.n.nnn.n...n
+.n...nn...nn..1n.
+.nnnn.nnOnn.nnnn.
+....nn=---=nn....
+.nnn.n-}-]-n.nnn.
+@.in.O--U--O.nj.@
+.nnn.n-)->-n.nnn.
+....nn=---=nn....
+.nnnn.nnOnn3nnnn.
+.n222nn...nn333n.
+ n..2n.nnn.n333n
+ nf.2n.nkn.n33gn
+ nnnnn.n.n.nnnnn
+    ....@....
+ENDMAP
+
+####
+# Madness, frenzy, and lunacy, eh?
+# bh's curves made me think of some weird yet orderly decorum for Zot.
+NAME:    hangedman_zot_decor_unnerving_road
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+SHUFFLE: @&, (), vb / vb / vb / bv / cc, lw / lw / lw / '', JK / LM / NO
+SHUFFLE: JK / JK / JK / !!, LM / ??, NO / `` / `` / `` / ``, JKLMNO / JKLMNO / KJMLON
+SUBST:   '!?`& = ., X : xxc, JLN = F, KMO = f
+SUBST:   ( = (:1 .:14, ) = ):1 .:14
+KMASK:   wlfF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MAP
+      XXXX...&&.
+      Xllvv......
+    XXXlv..v....@
+   XXlllv..v....@
+   Xllvv.vvJ.....
+ XXXlv..v.......
+XXlllv..v....XXXX
+Xllvv(vvL..ObbwwX
+Xlv..v.....b..bwXXX
+Xlv..v.....b..bwwwXX
+Xllvv.vv....bb.bbwwX
+XXlllv..v.....b..bwX
+ XXXlv..v.....b..bwX
+   XllvvN..Mbb)bbwwX
+   XXXX....b..bwwwXX
+    .......b..bwXXX
+   .....Kbb.bbwwX
+   @....b..bwwwXX
+   @....b..bwXXX
+   ......bbwwX
+    .&&...XXXX
+ENDMAP
+
+NAME:    hangedman_zot_decor_checkerboard
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KFEAT:   Z = known zot trap
+SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
+SUBST:   d : wbb, e : wwb, g : lvv, f : llv
+SUBST:   h : lvv, i : llv, j : wbb, k : wwb
+SUBST:   H : wwwwb, I : wwwwb, J : llllv, K : llllv
+SUBST:   L : lvvvv, M : lvvvv, N : wbbbb, O : wbbbb
+SHUFFLE: bv / bv / bv / vb / xx / cc
+NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / *:Z
+SUBST:   Z = ZZUG..., '" = .
+KPROP:   l = no_cloud_gen
+KMASK:   wl = no_monster_gen
+MAP
+.......     ...'...
+.dw.lf.     .Hw.lJ.
+.we.gl.     .wI.Kl.
+@..Z...........Z.........
+.lg.ew.hl.wj.lK.Iw.Ll.wN.
+.fl.wd.li.kw.Jl.wH.lM.Ow.
+.........Z...........Z..@
+      .wk.il.     .wO.Ml.
+      .jw.lh.     .Nw.lL.
+      ...'...     .......
+ENDMAP
+
+NAME:    hangedman_zot_decor_slant
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KFEAT:   zZ = known zot trap
+KFEAT:   fF = floor
+SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc, aAuU / aAuU / aAuU / uUaA
+SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
+SUBST:   aAB = b, uUV = v, Z = ()G .:45 Z:25, '"!? = .
+KMASK:   wlfF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MAP
+            ...!..
+           ........
+           ..UuuU..
+         ....uuuu.!
+         @vv.uuuu..
+         .vv.uuuU..
+      ......F......
+      .vv.VV.vv...
+      .vv.VV.vv.
+   .@....Z....@.
+   .bb.BB.bb.
+ ...bb.BB.bb.
+......f......
+..Aaaa.bb.
+..aaaa.bb@
+!.aaaa....
+..AaaA..
+........
+ ..!...
+ENDMAP
+
+NAME:    hangedman_zot_decor_scrapings
+TAGS:    transparent extra
+DEPTH:   Zot
+KFEAT:   Z = known zot trap
+SHUFFLE: HIJKLM / HIJKLM / IHKJML
+SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
+SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G .:45 Z:25
+MAP
+           ..   ...
+          .......x..
+         ..x......x..
+        ....x..O......
+    ................x..
+   ..J...P...L...N.I.H.
+  ..x.x.....x.x.....x..
+ ....K...M.Z.M...K....
+..x.....x.x.....x.x...
+.H.I.N...L...P...J...
+..x.................
+ ......O...x....
+  ..x.......x..
+   ..x........
+    ...    ..
+ENDMAP
+
+NAME:    hangedman_zot_decor_tridents
+TAGS:    transparent extra
+DEPTH:   Zot
+KFEAT:   Z = known zot trap
+SHUFFLE: vb / xy / XY
+SUBST:   = = ()+Z .:60, - : ++., _ : +.., H : z., I : z., J : z.
+SUBST:   K : zzwl...., L : zzzwl.., M : zzwl...
+SUBST:   N : zzzwl.., O : zzwl..., P : zzwl.., XyYz = x
+KMASK:   wl = no_monster_gen
+MAP
+         xxx.....
+         xxx.......
+         x...Iv.vv.
+    .....x...v.....
+  .....K.-.O...N..@
+.........x...v.....
+.bb.bJ..Pxv_vHv.vv.
+.....b...x...v.....
+@..L...M.=.M...L..@
+.....b...y...v.....
+.bb.bHb_byP..Jv.vv.
+.....b...y.........
+@..N...O.-.K.....
+.....b...y.....
+.bb.bI...y
+.......yyy
+  .....yyy
 ENDMAP
 
 ##############################################################################

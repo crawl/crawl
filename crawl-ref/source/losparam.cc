@@ -29,7 +29,7 @@ opacity_type opacity_default::operator()(const coord_def& p) const
     dungeon_feature_type f = grid_appearance(p);
     if (feat_is_opaque(f))
         return OPC_OPAQUE;
-    else if (f == DNGN_TREE || f == DNGN_MANGROVE)
+    else if (feat_is_tree(f))
         return OPC_HALF;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
@@ -68,16 +68,10 @@ static bool mons_block_immob(const monster* mons)
     if (crawl_state.game_is_zotdef())
         return false;
 
-    switch (mons->type)
-    {
-    case MONS_BUSH:
-    case MONS_PLANT:
-    case MONS_OKLOB_PLANT:
-    case MONS_FUNGUS:
-        return true;
-    default:
-        return false;
-    }
+    return (mons->type == MONS_PLANT
+            || mons->type == MONS_FUNGUS
+            || mons_species(mons->type) == MONS_BUSH
+            || mons_species(mons->type) == MONS_OKLOB_PLANT);
 }
 
 opacity_type opacity_immob::operator()(const coord_def& p) const

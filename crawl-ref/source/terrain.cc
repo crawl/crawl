@@ -310,8 +310,13 @@ bool cell_is_solid(const coord_def &c)
 
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
-    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER &&
-            feat != DNGN_LAVA);
+    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER
+            && feat != DNGN_LAVA);
+}
+
+bool feat_has_dry_floor(dungeon_feature_type feat)
+{
+    return (feat_has_solid_floor(feat) && feat != DNGN_SHALLOW_WATER);
 }
 
 bool feat_is_door(dungeon_feature_type feat)
@@ -419,6 +424,11 @@ bool feat_is_branchlike(dungeon_feature_type feat)
 bool feat_is_tree(dungeon_feature_type feat)
 {
     return (feat == DNGN_TREE || feat == DNGN_MANGROVE);
+}
+
+bool feat_is_metal(dungeon_feature_type feat)
+{
+    return (feat == DNGN_METAL_WALL || feat == DNGN_GRATE);
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
@@ -691,11 +701,10 @@ bool is_critical_feature(dungeon_feature_type feat)
 
 bool is_valid_border_feat(dungeon_feature_type feat)
 {
-    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
-            || (feat == DNGN_TREE
-               || feat == DNGN_MANGROVE
-               || feat == DNGN_OPEN_SEA
-               || feat == DNGN_LAVA_SEA));
+    return (feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
+            || (feat_is_tree(feat)
+                || feat == DNGN_OPEN_SEA
+                || feat == DNGN_LAVA_SEA);
 }
 
 // This is for randomly generated mimics.

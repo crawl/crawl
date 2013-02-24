@@ -54,7 +54,7 @@ void initialise_branch_depths()
     for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
     {
         const Branch *b = &branches[branch];
-        if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
+        if (branch_is_unfinished(b->id))
             startdepth[branch] = -1;
         else
             startdepth[branch] = random_range(b->mindepth, b->maxdepth);
@@ -78,7 +78,6 @@ void initialise_branch_depths()
     {
         brdepth.init(-1);
         brdepth[BRANCH_MAIN_DUNGEON] = 1;
-        brdepth[BRANCH_ABYSS] = 1;
         return;
     }
 
@@ -112,7 +111,7 @@ void initialise_temples()
             = const_cast<map_def*>(random_map_for_place(ecumenical, false));
 
         if (main_temple == NULL)
-            end (1, false, "No temples?!");
+            end(1, false, "No temples?!");
 
         // Without all this find_glyph() returns 0.
         string err;

@@ -126,7 +126,7 @@ end
 ##########################
 
 NAME:   special_room_kobold
-DEPTH:  D:7-15, Orc, Elf
+DEPTH:  D:7-15, Orc
 TAGS:   special_room allow_dup unrand
 WEIGHT: 11
 : sroom_kobold_lair(_G)
@@ -142,7 +142,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_bee
-DEPTH:  D:9-, Lair, Orc, Elf, Snake, Spider, Vaults
+DEPTH:  D:9-, Lair, Orc, Snake, Spider
 TAGS:   special_room allow_dup unrand
 WEIGHT: 30 (8-14), 25 (15-17), 33 (18-20), 8 (21-)
 : sroom_beehive(_G)

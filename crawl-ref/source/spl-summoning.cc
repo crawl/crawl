@@ -7,6 +7,8 @@
 
 #include "spl-summoning.h"
 
+#include <algorithm>
+
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -38,11 +40,14 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-util.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "unwind.h"
+#include "viewchar.h"
 #include "xom.h"
 
 static void _monster_greeting(monster *mons, const string &key)
@@ -294,7 +299,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
         const monster_type swarmers[] = {
             MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
             MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
-            MONS_GOLIATH_BEETLE, MONS_WOLF_SPIDER,   MONS_BUTTERFLY,
+            MONS_GOLIATH_BEETLE, MONS_SPIDER,        MONS_BUTTERFLY,
             MONS_YELLOW_WASP,    MONS_WORKER_ANT,    MONS_WORKER_ANT,
             MONS_WORKER_ANT
         };
@@ -429,7 +434,7 @@ static monster_type _feature_to_elemental(const coord_def& where,
     }
 
     if ((any_elem || strict_elem == MONS_AIR_ELEMENTAL)
-        && grd(where) >= DNGN_FLOOR && env.cgrid(where) == EMPTY_CLOUD)
+        && feat_has_dry_floor(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
     {
         return MONS_AIR_ELEMENTAL;
     }
@@ -755,15 +760,13 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
             switch (random2(8))
             {
             case 0:
-                mon = MONS_DEEP_TROLL;
-                break;
             case 1:
             case 2:
-                mon = MONS_IRON_TROLL;
+                mon = MONS_DEEP_TROLL;
                 break;
             case 3:
             case 4:
-                mon = MONS_ROCK_TROLL;
+                mon = MONS_IRON_TROLL;
                 break;
             default:
                 mon = MONS_TROLL;
@@ -1183,52 +1186,41 @@ bool can_cast_malign_gateway()
 
 coord_def find_gateway_location(actor* caster)
 {
-    coord_def point = coord_def(0, 0);
+    vector<coord_def> points;
 
     bool xray = you.xray_vision;
     you.xray_vision = false;
 
-    unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
-
-
     for (unsigned i = 0; i < 8; ++i)
     {
-        coord_def delta = Compass[compass_idx[i]];
+        coord_def delta = Compass[i];
         coord_def test = coord_def(-1, -1);
 
-        bool found_spot = false;
-        int tries = 8;
-
-        for (int t = 0; t < tries; t++)
+        for (int t = 0; t < 11; t++)
         {
-            test = caster->pos() + (delta * (2+t+random2(4)));
+            test = caster->pos() + (delta * (2+t));
             if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
-                || actor_at(test) || count_neighbours_with_func(test, &feat_is_solid) != 0
+                || actor_at(test)
+                || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell(test))
             {
                 continue;
             }
 
-            found_spot = true;
-            break;
+            points.push_back(test);
         }
-
-        if (!found_spot)
-            continue;
-
-        point = test;
-        break;
     }
 
     you.xray_vision = xray;
 
-    return point;
+    if (points.empty())
+        return coord_def(0, 0);
+
+    return points[random2(points.size())];
 }
 
 spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 {
-    fail_check();
     coord_def point = find_gateway_location(caster);
     bool success = (point != coord_def(0, 0));
 
@@ -1236,6 +1228,8 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 
     if (success)
     {
+        fail_check();
+
         const int malign_gateway_duration = BASELINE_DELAY * (random2(5) + 5);
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
@@ -1261,12 +1255,14 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
             // Messages the same as for SHT, as they are currently (10/10) generic.
             lose_stat(STAT_INT, 1 + random2(3), false, "opening a malign portal");
         }
+
+        return SPRET_SUCCESS;
     }
     // We don't care if monsters fail to cast it.
-    else if (is_player)
+    if (is_player)
         mpr("A gateway cannot be opened in this cramped space!");
 
-    return SPRET_SUCCESS;
+    return SPRET_ABORT;
 }
 
 
@@ -2406,6 +2402,466 @@ spret_type cast_mass_abjuration(int pow, bool fail)
     mpr("Send 'em back where they came from!");
     for (monster_iterator mi(you.get_los()); mi; ++mi)
         _abjuration(pow, *mi);
+
+    return SPRET_SUCCESS;
+}
+
+monster* find_battlesphere(const actor* agent)
+{
+    if (agent->props.exists("battlesphere"))
+        return monster_by_mid(agent->props["battlesphere"].get_int());
+    else
+        return NULL;
+}
+
+spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    monster* battlesphere;
+    if (agent->is_player() && (battlesphere = find_battlesphere(&you)))
+    {
+        bool recalled = false;
+        if (!you.can_see(battlesphere))
+        {
+            coord_def empty;
+            if (empty_surrounds(agent->pos(), DNGN_FLOOR, 3, false, empty)
+                && battlesphere->move_to_pos(empty))
+            {
+                recalled = true;
+            }
+        }
+
+        if (recalled)
+        {
+            mpr("You recall your battlesphere and imbue it with additional"
+                " charge.");
+        }
+        else
+            mpr("You imbue your battlesphere with additional charge.");
+
+        battlesphere->number = min(20, (int) battlesphere->number
+                                   + 4 + random2(pow + 10) / 10);
+
+        // Increase duration
+        mon_enchant abj = battlesphere->get_ench(ENCH_FAKE_ABJURATION);
+        abj.duration = min(abj.duration + (7 + roll_dice(2, pow)) * 10, 500);
+        battlesphere->update_ench(abj);
+    }
+    else
+    {
+        ASSERT(!find_battlesphere(agent));
+        mgen_data mg (MONS_BATTLESPHERE,
+                agent->is_player() ? BEH_FRIENDLY
+                                   : SAME_ATTITUDE(agent->as_monster()),
+                agent,
+                0, SPELL_BATTLESPHERE,
+                agent->pos(),
+                agent->mindex(),
+                0, god,
+                MONS_NO_MONSTER, 0, BLACK);
+        mg.hd = 1 + div_rand_round(pow, 11);
+        battlesphere = create_monster(mg);
+
+        if (battlesphere)
+        {
+            int dur = min((7 + roll_dice(2, pow)) * 10, 500);
+            battlesphere->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
+            battlesphere->props["bs_mid"].get_int() = agent->mid;
+            agent->props["battlesphere"].get_int() = battlesphere->mid;
+
+            if (agent->is_player())
+                mpr("You conjure a globe of magical energy.");
+            else
+            {
+                if (you.can_see(agent) && you.can_see(battlesphere))
+                {
+                    simple_monster_message(agent->as_monster(),
+                                       " conjures a globe of magical energy!");
+                }
+                else if (you.can_see(battlesphere))
+                    simple_monster_message(battlesphere, " appears!");
+                battlesphere->props["band_leader"].get_int() = agent->mid;
+            }
+            battlesphere->number = 4 + random2(pow + 10) / 10;
+        }
+        else if (agent->is_player() || you.can_see(agent))
+            canned_msg(MSG_NOTHING_HAPPENS);
+    }
+
+    return SPRET_SUCCESS;
+}
+
+void end_battlesphere(monster* mons, bool killed)
+{
+    // Should only happen if you dismiss it in wizard mode, I think
+    if (!mons)
+        return;
+
+    actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
+    if (agent)
+        agent->props.erase("battlesphere");
+
+    if (!killed)
+    {
+        if (agent && agent->is_player())
+        {
+            if (you.can_see(mons))
+            {
+                if ((mons->number == 0))
+                    mpr("Your battlesphere expends the last of its energy"
+                        " and dissipates.");
+                else
+                    mpr("Your battlesphere wavers and loses cohesion.");
+            }
+            else
+                mpr("You feel your bond with your battlesphere wane.");
+        }
+        else if (you.can_see(mons))
+            simple_monster_message(mons, " dissipates.");
+
+        place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(),
+                    3 + random2(3), mons);
+
+        monster_die(mons, KILL_RESET, NON_MONSTER);
+    }
+}
+
+static bool _battlesphere_can_mirror(spell_type spell)
+{
+    return ((spell_typematch(spell, SPTYP_CONJURATION)
+            && spell_to_zap(spell) != NUM_ZAPS)
+            || spell == SPELL_MEPHITIC_CLOUD
+            || spell == SPELL_IOOD
+            || spell == SPELL_DAZZLING_SPRAY);
+}
+
+bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
+{
+    //Is this spell something that will trigger the battlesphere?
+    if (_battlesphere_can_mirror(spell))
+    {
+        monster* battlesphere = find_battlesphere(agent);
+
+        // If we've somehow gotten separated from the battlesphere (ie:
+        // abyss level teleport), bail out and cancel the battlesphere bond
+        if (!battlesphere)
+        {
+            agent->props.erase("battlesphere");
+            return false;
+        }
+
+        // In case the battlesphere was in the middle of a (failed)
+        // target-seeking action, cancel it so that it can focus on a new
+        // target
+        reset_battlesphere(battlesphere);
+
+        // Don't try to fire at ourselves
+        if (beam.target == battlesphere->pos())
+            return false;
+
+        // If the player beam is targeted at a creature, aim at this creature.
+        // Otherwise, aim at the furthest creature in the player beam path
+        bolt testbeam;
+        zappy(spell_to_zap(spell), powc, testbeam);
+
+        battlesphere->props["firing_target"] = beam.target;
+        battlesphere->props.erase("foe");
+        if (!actor_at(beam.target))
+        {
+            beam.is_tracer = true;
+            beam.fire();
+            beam.is_tracer = false;
+
+            for (vector<coord_def>::const_reverse_iterator i = beam.path_taken.rbegin();
+                i != beam.path_taken.rend(); ++i)
+            {
+                if (*i != battlesphere->pos() && monster_at(*i))
+                {
+                    battlesphere->props["firing_target"] = *i;
+                    battlesphere->foe = actor_at(*i)->mindex();
+                    battlesphere->props["foe"] = battlesphere->foe;
+                }
+            }
+
+            // If we're firing at empty air, lose any prior target lock
+            if (!battlesphere->props.exists("foe"))
+                battlesphere->foe = agent->mindex();
+        }
+        else
+        {
+            battlesphere->foe = actor_at(beam.target)->mindex();
+            battlesphere->props["foe"] = battlesphere->foe;
+        }
+
+        battlesphere->props["ready"] = true;
+
+        return true;
+    }
+
+    return false;
+}
+
+bool trigger_battlesphere(actor* agent, bolt& beam)
+{
+    monster* battlesphere = find_battlesphere(agent);
+    if (!battlesphere)
+        return false;
+
+    if (battlesphere->props.exists("ready"))
+    {
+        // If the battlesphere is aiming at empty air but the triggering
+        // conjuration is an explosion, try to find something to shoot within
+        // the blast
+        if (!battlesphere->props.exists("foe") && beam.is_explosion)
+        {
+            explosion_map exp_map;
+            exp_map.init(INT_MAX);
+            beam.determine_affected_cells(exp_map, coord_def(), 0,
+                                          beam.ex_size, true, true);
+
+            for (radius_iterator ri(beam.target, beam.ex_size, C_ROUND);
+                 ri; ++ri)
+            {
+                if (exp_map(*ri - beam.target + coord_def(9,9)) < INT_MAX)
+                {
+                    const actor *targ = actor_at(*ri);
+                    if (targ && targ != battlesphere)
+                    {
+                        battlesphere->props["firing_target"] = *ri;
+                        battlesphere->foe = targ->mindex();
+                        battlesphere->props["foe"] = battlesphere->foe;
+                        continue;
+                    }
+                }
+            }
+        }
+
+        battlesphere->props.erase("ready");
+        battlesphere->props["firing"] = true;
+        return true;
+    }
+
+    return false;
+}
+
+// Called at the start of each round. Cancels firing orders given in the
+// previous round, if the battlesphere was not able to execute them fully
+// before the next player action
+void reset_battlesphere(monster* mons)
+{
+    if (!mons || mons->type != MONS_BATTLESPHERE)
+        return;
+
+    mons->props.erase("ready");
+
+    if (mons->props.exists("tracking"))
+    {
+        mons->props.erase("tracking");
+        mons->props.erase("firing");
+        if (mons->props.exists("foe"))
+            mons->foe = mons->props["foe"].get_int();
+        mons->behaviour = BEH_SEEK;
+    }
+}
+
+bool fire_battlesphere(monster* mons)
+{
+    if (!mons || !mons->type == MONS_BATTLESPHERE)
+        return false;
+
+    actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
+
+    if (!agent || !agent->alive())
+    {
+        end_battlesphere(mons, false);
+        return false;
+    }
+
+    bool used = false;
+
+    if (mons->props.exists("firing") && mons->number > 0)
+    {
+        if (mons->props.exists("tracking"))
+        {
+            if (mons->pos() == mons->props["tracking_target"].get_coord())
+            {
+                mons->props.erase("tracking");
+                if (mons->props.exists("foe"))
+                    mons->foe = mons->props["foe"].get_int();
+                mons->behaviour = BEH_SEEK;
+            }
+            else // Currently tracking, but have not reached target pos
+            {
+                mons->target = mons->props["tracking_target"].get_coord();
+                return false;
+            }
+        }
+        else
+        {
+            // If the battlesphere forgot its foe (due to being out of los),
+            // remind it
+            if (mons->props.exists("foe"))
+                mons->foe = mons->props["foe"].get_int();
+        }
+
+        // Set up the beam.
+        bolt beam;
+        beam.source_name = "battlesphere";
+
+        // If we are locked onto a foe, use its current position
+        if (!invalid_monster_index(mons->foe) && menv[mons->foe].alive())
+            beam.target = menv[mons->foe].pos();
+        else
+            beam.target = mons->props["firing_target"].get_coord();
+
+        // Sanity check: if we have somehow ended up targeting ourselves, bail
+        if (beam.target == mons->pos())
+        {
+            mpr("Battlesphere targetting itself? Fixing.", MSGCH_ERROR);
+            mons->props.erase("firing");
+            mons->props.erase("firing_target");
+            mons->props.erase("foe");
+            return false;
+        }
+
+        beam.name       = "barrage of energy";
+        beam.range      = LOS_RADIUS;
+        beam.hit        = AUTOMATIC_HIT;
+        beam.damage     = dice_def(2, 6 + mons->hit_dice);
+        beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.colour     = MAGENTA;
+        beam.flavour    = BEAM_MMISSILE;
+        beam.is_beam    = false;
+
+        // Fire tracer.
+        fire_tracer(mons, beam);
+
+        // Never fire if we would hurt the caster, and ensure that the beam
+        // would hit at least SOMETHING, unless it was targeted at empty space
+        // in the first place
+        if (beam.friend_info.count == 0
+            && (monster_at(beam.target) ? beam.foe_info.count > 0 :
+                find(beam.path_taken.begin(), beam.path_taken.end(),
+                     beam.target)
+                    != beam.path_taken.end()))
+        {
+            beam.thrower = (agent->is_player()) ? KILL_YOU : KILL_MON;
+            simple_monster_message(mons, " fires!");
+            beam.fire();
+
+            used = true;
+            // Decrement # of volleys left and possibly expire the battlesphere.
+            if (--mons->number == 0)
+                end_battlesphere(mons, false);
+
+            mons->props.erase("firing");
+        }
+        // If we are firing at something, try to find a nearby position
+        // from which we could safely fire at it
+        else
+        {
+            const bool empty_beam = (beam.foe_info.count == 0);
+            for (distance_iterator di(mons->pos(), true, true, 2); di; ++di)
+            {
+                if (*di == beam.target || actor_at(*di)
+                    || feat_is_solid(grd(*di))
+                    || !agent->see_cell(*di))
+                {
+                    continue;
+                }
+
+                beam.source = *di;
+                beam.is_tracer = true;
+                beam.friend_info.reset();
+                beam.foe_info.reset();
+                beam.fire();
+                if (beam.friend_info.count == 0
+                    && (beam.foe_info.count > 0 || empty_beam))
+                {
+                    if (empty_beam
+                        && find(beam.path_taken.begin(), beam.path_taken.end(),
+                                beam.target) == beam.path_taken.end())
+                    {
+                        continue;
+                    }
+
+                    mons->firing_pos = coord_def(0, 0);
+                    mons->target = *di;
+                    mons->behaviour = BEH_WANDER;
+                    mons->props["foe"] = mons->foe;
+                    mons->props["tracking"] = true;
+                    mons->foe = MHITNOT;
+                    mons->props["tracking_target"] = *di;
+                    break;
+                }
+            }
+
+            // If we didn't find a better firing position nearby, cancel firing
+            if (!mons->props.exists("tracking"))
+                mons->props.erase("firing");
+        }
+    }
+
+    // If our last target is dead, or the player wandered off, resume
+    // following the player
+    if ((mons->foe == MHITNOT || !mons->can_see(agent)
+         || (!invalid_monster_index(mons->foe)
+             && !agent->can_see(&menv[mons->foe])))
+        && !mons->props.exists("tracking"))
+    {
+        mons->foe = agent->mindex();
+    }
+
+    return used;
+}
+
+spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
+{
+    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_FULMINANT_PRISM,
+                                                      pow)))
+    {
+        mpr("That's too far away.");
+        return SPRET_ABORT;
+    }
+
+    if (cell_is_solid(where))
+    {
+        mpr("You can't conjure that within a solid object!");
+        return SPRET_ABORT;
+    }
+
+    // Note that self-targetting is handled by SPFLAG_NOT_SELF.
+    monster* mons = monster_at(where);
+    if (mons)
+    {
+        if (you.can_see(mons))
+        {
+            mpr("You can't place the prism on a creature.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        // FIXME: maybe should do _paranoid_option_disable() here?
+        mpr("You see a ghostly outline there, and the spell fizzles.");
+        return SPRET_SUCCESS;      // Don't give free detection!
+    }
+
+    fail_check();
+
+    int hd = div_rand_round(pow, 10);
+
+    mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
+                                  3, SPELL_SUMMON_SMALL_MAMMALS,
+                                  where, MHITYOU, MG_FORCE_PLACE);
+    prism_data.hd = hd;
+    monster *prism = create_monster(prism_data);
+
+    if (prism)
+        mpr("You conjure a prism of explosive energy!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
 }

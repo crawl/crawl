@@ -1616,10 +1616,11 @@ bool check_old_item_warning(const item_def& item,
 
         if (jewellery_is_amulet(item))
         {
-            if (you.equip[EQ_AMULET] == -1)
+            int equip = you.equip[EQ_AMULET];
+            if (equip == -1 || item.link == equip)
                 return true;
 
-            old_item = you.inv[you.equip[EQ_AMULET]];
+            old_item = you.inv[equip];
             if (!needs_handle_warning(old_item, OPER_TAKEOFF))
                 return true;
 
@@ -1772,17 +1773,20 @@ bool check_warning_inscriptions(const item_def& item,
                 return true;
 
             // Don't ask if item already worn.
-            int equip = -1;
             if (jewellery_is_amulet(item))
-                equip = you.equip[EQ_AMULET];
+            {
+                int equip = you.equip[EQ_AMULET];
+                if (equip != -1 && item.link == equip)
+                    return check_old_item_warning(item, oper);
+            }
             else
             {
                 for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
                 {
                     if (slots == EQ_AMULET)
-                    continue;
+                        continue;
 
-                    equip = you.equip[slots];
+                    int equip = you.equip[slots];
                     if (equip != -1 && item.link == equip)
                         return check_old_item_warning(item, oper);
                 }

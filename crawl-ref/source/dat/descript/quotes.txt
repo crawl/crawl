@@ -2127,7 +2127,7 @@ wand of paralysis
 
 <wand>
 %%%%
-wand of polymorph other
+wand of polymorph
 
 <wand>
 %%%%
@@ -2999,6 +2999,11 @@ wight
 “Unhappie wight, borne to desastrous end,
  That doth his life in so long tendance spend!”
     -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
+%%%%
+witch
+
+“Thou shalt not suffer a witch to live.”
+    -KJV Bible, Exodus 22:18
 %%%%
 wizard
 

@@ -4188,47 +4188,129 @@ _Grum_rare_
 @The_monster@ says, "You're dog chow, @player_name@!"
 ## END Grum ##
 %%%%
-############ HAROLD ### A middle aged man, hired to kill you. He is in a hurry.
+############ HAROLD ### A middle aged man, anxious to retire after killing you.
 Harold
 
 @_Harold_common_@
 
-w:4
+w:6
 @_Harold_rare_@
 %%%%
 _Harold_common_
 
-VISUAL:@The_monster@ looks nervous.
+VISUAL:@The_monster@ looks eager to get this over with.
 
-@The_monster@ says @to_foe@, "Stand still. I'm trying to kill you."
+@The_monster@ yells @at_foe@, "I don't have all day!"
 
-@The_monster@ screams @at_foe@, "Hurry up!"
+@The_monster@ grumbles @at_foe@, "Just give up already, I want to go home!"
 
-@The_monster@ screams @at_foe@, "Die!"
+@The_monster@ says @to_foe@, "I was hoping my final job would be more of a challenge, but money is money."
 
-@The_monster@ screams @at_foe@, "DIE! Now!"
+@The_monster@ shouts @at_foe@, "Can you die now? I had plans for the rest of the day!"
 
-@The_monster@ says @to_foe@, "I'm in a hurry."
+@The_monster@ says, "Do you have any idea what people are willing to pay to have you killed, @player_name@?" @player_only@
 
-@The_monster@ sighs, "I don't have time for this!"
+@The_monster@ says @to_foe@, "Let's make it quick, okay? I've got mouths to feed."
 
-@The_monster@ screams @at_foe@, "Could you die a little faster?!"
+@The_monster@ says @to_foe@, "Listen, it's nothing personal. It's just a job."
 
-@The_monster@ shouts @at_foe@, "Come on! I've got more names on my list!"
+@The_monster@ says @to_foe@, "This is so exciting! What a great way to end my career!"
+
+@The_monster@ says @to_foe@, "Ah, this is what I got into this business for!"
 %%%%
+# Harold talks about his retirement
 _Harold_rare_
 
-@The_monster@ says @to_foe@, "You know, I'm in a hurry."
+VISUAL:@The_monster@ pauses a moment, imagining something with a smile on @possessive@ face.
 
-@The_monster@ says @to_foe@, "I hope you die faster."
+@The_monster@ considers, "I think I'll use your bounty to get a @_Harold_retirement_plan_@..." @player_only@
 
-@The_monster@ screams @at_foe@, "I'll finish you soon!"
+@The_monster@ asks, "Do you mind if I name my boat the '@player_name@'? Your head will be paying for it, after all." @player_only@
 
-@The_monster@ screams @at_foe@, "Don't delay it!"
+@The_monster@ says happily, "The price on your head will fill my nest egg nicely!" @player_only@
 
-@The_monster@ nervously moans @at_foe@, "This is taking ages..."
+@The_monster@ thinks, and says @to_foe@ "Perhaps I'll take up @_Harold_ret_hobby_@ after I'm done here..."
 
-@The_monster@ says @to_foe@, "Mine is not to reason why. Mine's to do, yours to die."
+@The_monster@ says, "Try to look on the bright side. Your death will help put my children through school." @player_only@
+
+@The_monster@ says @to_foe@, "Bounty hunting has been great, but I can't wait to retire."
+
+@The_monster@ says @to_foe@, "My wife will appreciate not having to wash blood out of my clothes anymore."
+
+%%%%
+fleeing Harold
+
+__NEXT
+
+w:5
+@The_monster@ @yells@, "I'm getting too old for this!"
+%%%%
+Harold killed
+
+__NONE
+
+w:4
+@The_monster@ groans, "My... family..." and then collapses, dead.
+
+w:3
+@The_monster@ looks down at @possessive@ mortal wounds and cries, "But... this was my last day before retirement..."
+
+w:2
+@The_monster@ gasps with @possessive@ last breath, "I wish I had worked less..."
+
+w:1
+@The_monster@ falls down, and clutches @possessive@ wounds. "But I was going to get a @_Harold_retirement_plan_@..."
+%%%%
+# Giving Harold some retirement options...
+_Harold_retirement_plan_
+
+@_Harold_ret_house_@ @_Harold_ret_place_@
+
+fishing boat
+
+horse ranch
+
+cattle farm
+
+nice plot of land
+%%%%
+_Harold_ret_house_
+
+villa
+
+mansion
+
+house
+
+cottage
+
+place
+%%%%
+_Harold_ret_place_
+
+in the mountains
+
+by the lake
+
+near the shore
+
+in the country
+
+in the woods
+%%%%
+_Harold_ret_hobby_
+
+fishing
+
+hiking
+
+carpentry
+
+model-building
+
+writing
+
+painting
 ## END Harold ##
 %%%%
 ############ IGNACIO ### A human executioner turned into a demon
@@ -4245,7 +4327,7 @@ VISUAL:@The_monster@ looks at @possessive@ axe, then at @foe@, then at @possessi
 
 VISUAL:@The_monster@ grins in joy.
 
-@The_monster@ exclaims, "Oh yes!! We are going to have fun!"
+@The_monster@ exclaims, "Oh yes! We are going to have fun!"
 
 @The_monster@ says @to_foe@, "Pain is my business; you will see!"
 
@@ -4333,13 +4415,13 @@ _Ilsuiw_common_
 
 @The_monster@ whispers @to_foe@, "Come on in, the water's fine."
 
-@The_monster@ sings a @_strange_or_haunting_@ @_chanty_@.
+@The_monster@ sings a [strange|haunting] [sea-chanty|melody].
 
 VISUAL:@The_monster@ runs @possessive@ fingers through @possessive@ long green hair.
 %%%%
 _Ilsuiw_rare_
 
-VISUAL:@The_monster@ gazes at @foe@ @_hypnot_or_seductively_@.
+VISUAL:@The_monster@ gazes at @foe@ [hypnotically|seductively].
 
 @The_monster@ sings, "To sleep, to sleep... mayhap to drown."
 
@@ -4350,24 +4432,9 @@ VISUAL:@The_monster@ gazes at @foe@ @_hypnot_or_seductively_@.
 @The_monster@ says @to_foe@, "Catch me, touch me, love me, feed me!"
 
 @The_monster@ innocently whispers @to_foe@, "Don't trust the tales, trust me!"
-%%%%
-_hypnot_or_seductively_
 
-hypnotically
-
-seductively
-%%%%
-_strange_or_haunting_
-
-strange
-
-haunting
-%%%%
-_chanty_
-
-sea-chanty
-
-melody
+# On the Beach, Above & Beyond presents OceanLab
+@The_monster@ says @to_foe@, "There's nothing like you and me, on the beach..."
 ## END Ilsuiw ##
 %%%%
 ############ JESSICA ### A sorceress disturbed by player
@@ -4404,6 +4471,33 @@ _Jessica_rare_
 
 @The_monster@ shouts @at_foe@, "You are a ghastly nuisance!"
 ## END Jessica ##
+%%%%
+############ JORGRUN ### A dwarven earth elementalist.
+Jorgrun
+
+@_Jorgrun_common_@
+
+w:5
+@_Jorgrun_rare_@
+%%%%
+_Jorgrun_common_
+
+@The_monster@ says @to_foe@, "May tha earth consume ye!"
+
+@The_monster@ says @to_foe@, "'tis place shall be yer tomb!"
+
+@The_monster@ mutters some incantations to @reflexive@.
+%%%%
+_Jorgrun_rare_
+
+@The_monster@ says @to_foe@, "Tha earth be me home, an' ye be trespassing!"
+
+@The_monster@ says @to_foe@, "Yer just na down-ta-earth enough."
+
+@The_monster@ says, "I've ne'er se'n tha particular type o' rock formation 'fore."
+
+@The_monster@ says, "A few more walls knocked out 'ere an' thar an' 'tis whole place will come crashin' down."
+## END Jorgrun ##
 %%%%
 ############ JORY ### A powerful vampire Lord.
 silenced Jory
@@ -4587,6 +4681,22 @@ weird
 
 mysterious
 ### END Kirke ###
+%%%%
+############ LAMIA ### Naga queen
+Lamia
+
+VISUAL:@The_monster@ spits on the ground.
+
+VISUAL:@The_monster@ motions for her kin.
+
+@The_monster@ hisses viciously.
+
+@The_monster@ yells, "Slay the intruder!"
+
+@The_monster@ says @to_foe@, "Come a little closer..."
+
+@The_monster@ says @to_foe@, "I shall devour you!"
+### END Lamia
 %%%%
 ############ LOUISE ### A mercenary guarding the dungeon
 Louise
@@ -5064,7 +5174,7 @@ _Nessos_common_
 %%%%
 _Nessos_rare_
 
-@The_monster@ says, "Study your classics!'
+@The_monster@ says, "Study your classics!"
 
 @The_monster@ says, "I'll learn you. I'll learn you yet!"
 
@@ -6402,28 +6512,8 @@ infidel
 unbeliever
 
 heretic
-%%%%
-_orc_pathetic_
 
-sorry
-
-pathetic
-
-miserable
-%%%%
-_costumes_or_trick_
-
-costumes
-
-disguise
-
-tricks
-%%%%
-_fool_or_deceive_
-
-fool
-
-deceive
+apostate
 %%%%
 ######################################################
 # General, non-descript orcs
@@ -6581,9 +6671,9 @@ _hostile_orc_beogh_believer_speech_rare_
 
 @The_monster@ @_shouts_@ @at_foe@, "Orcs! @foe_name@ is lying!"
 
-@The_monster@ @_orc_says_to_foe_@, "For a messiah, you look rather @_orc_pathetic_@."
+@The_monster@ @_orc_says_to_foe_@, "For a messiah, you look rather [sorry|pathetic|miserable]."
 
-@The_monster@ @_orc_says_to_foe_@, "Your @_costumes_or_trick_@ cannot @_fool_or_deceive_@ me."
+@The_monster@ @_orc_says_to_foe_@, "Your [costumes|disguise|tricks] cannot [fool|deceive] me."
 
 @The_monster@ @_orc_says_to_foe_@, "I wonder, will Beogh raise you from the dead?"
 

@@ -693,8 +693,17 @@ void handle_delay()
             break;
 
         case DELAY_MEMORISE:
+        {
+            spell_type spell = static_cast<spell_type>(delay.parm1);
+            if (vehumet_is_offering(spell))
+            {
+                string message = make_stringf(" grants you knowledge of %s.",
+                    spell_title(spell));
+                simple_god_message(message.c_str());
+            }
             mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
             break;
+        }
 
         case DELAY_PASSWALL:
             mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
@@ -1081,9 +1090,13 @@ static void _finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_MEMORISE:
+    {
+        spell_type spell = static_cast<spell_type>(delay.parm1);
         mpr("You finish memorising.");
-        add_spell_to_memory(static_cast<spell_type>(delay.parm1));
+        add_spell_to_memory(spell);
+        vehumet_accept_gift(spell);
         break;
+    }
 
     case DELAY_RECITE:
     {

@@ -42,19 +42,20 @@
 
 #ifdef WIZARD
 
-fight_data null_fight = {0.0,0,0,0.0,0.0,0.0};
+fight_data null_fight = {0.0, 0, 0, 0.0, 0, 0.0};
 typedef map<skill_type, int8_t> skill_map;
 typedef map<skill_type, int8_t>::iterator skill_map_iterator;
 
 static const char* _title_line =
-    "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvEffDam"; // 55 columns
+    "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvSpeed | AvEffDam"; // 64 columns
 
 static const string _fight_string(fight_data fdata)
 {
     return make_stringf("   %5.1f |    %3d |     %3d%% |"
-                        " %5.1f |  %5.1f |    %5.1f",
+                        " %5.1f |   %3d  | %5.2f |    %5.1f",
                         fdata.av_hit_dam, fdata.max_dam, fdata.accuracy,
-                        fdata.av_dam, fdata.av_time, fdata.av_eff_dam);
+                        fdata.av_dam, fdata.av_time, fdata.av_speed,
+                        fdata.av_eff_dam);
 }
 
 static skill_type _equipped_skill()
@@ -358,7 +359,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
                     hits++;
             }
             you.hunger = hunger;
-            time_taken += you.time_taken;
+            time_taken += you.time_taken * 10;
 
             int damage = (mon.max_hit_points - mon.hit_points);
             cumulative_damage += damage;
@@ -375,7 +376,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             you.shield_blocks = 0; // no blocks this round
             fight_melee(&mon, &you, &did_hit, true);
 
-            time_taken += 100 / (mon.speed ? mon.speed : 10);
+            time_taken += 1000 / (mon.speed ? mon.speed : 10);
 
             int damage = you.hp_max - you.hp;
             if (did_hit)
@@ -394,8 +395,9 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     fdata.av_hit_dam = hits ? double(cumulative_damage) / hits : 0.0;
     fdata.accuracy = 100 * hits / iter_limit;
     fdata.av_dam = double(cumulative_damage) / iter_limit;
-    fdata.av_time = double(time_taken) / double(iter_limit) / 10.0;
-    fdata.av_eff_dam = fdata.av_dam / fdata.av_time;
+    fdata.av_time = double(time_taken) / iter_limit + 0.5; // round to nearest
+    fdata.av_speed = double(iter_limit) * 100 / time_taken;
+    fdata.av_eff_dam = fdata.av_dam * 100 / fdata.av_time;
 
     return fdata;
 }

@@ -134,11 +134,11 @@ bool TilesFramework::initialise()
     sockaddr_un addr;
     addr.sun_family = AF_UNIX;
     strcpy(addr.sun_path, m_sock_name.c_str());
-    if (bind(m_sock, (sockaddr*) &addr, sizeof (sockaddr_un)))
+    if (bind(m_sock, (sockaddr*) &addr, sizeof(sockaddr_un)))
         die("Can't bind the webtiles socket!");
 
     int bufsize = 64 * 1024;
-    if (setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof (bufsize)))
+    if (setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize)))
         die("Can't set buffer size!");
     m_max_msg_size = bufsize;
 
@@ -160,7 +160,7 @@ void TilesFramework::write_message(const char *format, ...)
 
     va_list  argp;
     va_start(argp, format);
-    if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= (int)sizeof(buf))
+    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) >= (int)sizeof(buf))
     {
         if (len == -1)
             die("Webtiles message format error! (%s)", format);
@@ -190,7 +190,7 @@ void TilesFramework::finish_message()
         {
             int retries = 10;
             while (sendto(m_sock, fragment_start, fragment_size, 0,
-                          (sockaddr*) &m_dest_addrs[i], sizeof (sockaddr_un)) == -1)
+                          (sockaddr*) &m_dest_addrs[i], sizeof(sockaddr_un)) == -1)
             {
                 if (--retries <= 0)
                     die("Socket write error: %s", strerror(errno));
@@ -224,7 +224,7 @@ void TilesFramework::send_message(const char *format, ...)
 
     va_list  argp;
     va_start(argp, format);
-    if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= (int)sizeof(buf))
+    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) >= (int)sizeof(buf))
     {
         if (len == -1)
             die("Webtiles message format error! (%s)", format);
@@ -250,9 +250,9 @@ wint_t TilesFramework::_receive_control_message()
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
 
-    srcaddr_len = sizeof (srcaddr);
+    srcaddr_len = sizeof(srcaddr);
 
-    int len = recvfrom(m_sock, buf, sizeof (buf),
+    int len = recvfrom(m_sock, buf, sizeof(buf),
                        0,
                        (sockaddr *) &srcaddr, &srcaddr_len);
 

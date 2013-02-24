@@ -38,6 +38,7 @@ constricted CONSTRICTED
 berserk BERSERK
 glowing GLOWING
 slowed SLOWED
+hasted HASTED
 %rim 0
 fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND

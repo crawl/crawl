@@ -1085,6 +1085,19 @@ string unwrap_desc(string desc)
 
     trim_string_right(desc);
 
+    // Lines beginning with a colon are tags with a full entry scope
+    // Only nowrap is supported for now
+    while (desc[0] == ':')
+    {
+        int pos = desc.find("\n");
+        string tag = desc.substr(1, pos - 1);
+        desc.erase(0, pos + 1);
+        if (tag == "nowrap")
+            return desc;
+        else if (desc == "")
+            return "";
+    }
+
     // An empty line separates paragraphs.
     desc = replace_all(desc, "\n\n", "\\n\\n");
     // Indented lines are pre-formatted.

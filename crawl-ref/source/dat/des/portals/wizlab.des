@@ -365,8 +365,8 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
   end
 
   local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
-            " nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf"..
-            " dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk" ..
+            " nas:old_memories tile:mons_human_monk seen / deep troll name:monk n_suf"..
+            " dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_deep_troll_monk" ..
             " / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures " ..
             " nas:old_memories seen tile:mons_iron_troll_monk w:5"
 
@@ -420,7 +420,7 @@ NAME:       enter_wizlab_1
 TAGS:       uniq_wizlab chance_wizlab
 CHANCE:     5%
 ORIENT:     float
-TILE:       m = dngn_transparent_wall_green
+TILE:       m = dngn_transparent_stone_green
 COLOUR:     m = lightgreen
 :           wizlab_portal(_G)
 MAP
@@ -443,7 +443,8 @@ TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
 CHANCE:     5%
 ORIENT:     float
 SHUFFLE:    tU
-TILE:       mn = dngn_transparent_wall_green
+TILE:       m = dngn_transparent_wall_green
+TILE:       m = dngn_transparent_stone_green
 COLOUR:     mn = lightgreen
 TILE:       c = wall_stone_gray
 :           wizlab_portal(_G)
@@ -485,7 +486,7 @@ MARKER:     ? = lua:fog_machine { \
              }
 COLOUR:     . = red / blue
 KPROP:      .?! = no_rtele_into
-TILE:       n = dngn_transparent_wall_magenta
+TILE:       n = dngn_transparent_stone_magenta
 COLOUR:     n = lightmagenta
 TILE:       c = wall_stone_gray
 MAP
@@ -662,7 +663,7 @@ NAME:     vaults_room_10_spin_wizlab_water
 TAGS:     vaults_room_10_spin_wizlab allow_dup uniq_wizlab unrand
 TAGS:     no_monster_gen no_item_gen
 FTILE:    cnO_ = floor_rough_magenta
-TILE:     n = dngn_transparent_wall_magenta
+TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
 COLOUR:   _ = magenta
 TILE:     c = wall_stone_white
@@ -1041,10 +1042,10 @@ SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
 #            TODO: 3 Holy set (for later)
 :           local mrnd = crawl.random2(4)
 :           if mrnd == 0 then
-KMONS:      % = clay golem / wood golem / toenail golem w:2
+KMONS:      % = clay golem / toenail golem w:1
 KMONS:      * = stone golem / crystal golem / iron golem
 KMONS:      | = electric golem
-:           set_random_mon_list("clay golem / wood golem / toenail golem w:2 / " ..
+:           set_random_mon_list("clay golem / toenail golem w:1 / " ..
 :                               "stone golem / crystal golem / iron golem")
 :           elseif mrnd == 1 then
 KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
@@ -1517,8 +1518,8 @@ ITEM:       potion of experience, manual of fighting / manual of armour / manual
             intelligence
 LFLOORCOL:  white
 KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures \
-            nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf \
-            dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk \
+            nas:old_memories tile:mons_human_monk seen / deep troll name:monk n_suf \
+            dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_deep_troll_monk \
             / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures \
             nas:old_memories seen tile:mons_iron_troll_monk w:5
 {{
@@ -1721,7 +1722,7 @@ FTILE:   defg!$%*| = floor_rough_green
 LROCKTILE: wall_zot_green
 TILE:    b = dngn_crystal_green / dngn_crystal_cyan w:5
 TILE:    c = dngn_stone_wall_green / dngn_stone_wall_cyan w:5
-TILE:    n = dngn_transparent_wall_green / dngn_transparent_wall_cyan w:5
+TILE:    n = dngn_transparent_stone_green / dngn_transparent_stone_cyan w:5
 TILE:    D = dngn_dimension_edge
 FTILE:   OPQRSTUVWXYZ&{( = floor_rough_green
 TILE:    opqrstuvwxyz@}) = floor_black_cobalt
@@ -1860,7 +1861,7 @@ SUBST:      $ = $%
 COLOUR:     +<bo = white
 LFLOORCOL:  lightblue
 LFLOORTILE: floor_rough_lightblue
-TILE:       o = dngn_transparent_wall_white
+TILE:       o = dngn_transparent_stone_white
 TILE:       b = dngn_crystal_white
 COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')

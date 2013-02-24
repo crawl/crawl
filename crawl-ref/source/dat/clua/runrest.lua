@@ -88,7 +88,7 @@ function rr_handle_hploss(hplost, source)
 end
 
 function rr_check_params()
-    if ( not g_rr_hplmax or not g_rr_yhpmin )
+    if (not g_rr_hplmax or not g_rr_yhpmin)
             and options.runrest_ignore_poison
     then
         local opt = options.runrest_ignore_poison
@@ -180,8 +180,8 @@ function rr_add_monster(mons_table, s, mode)
         if mode > 1 then
             position = 1
         end
-        table.insert( mons_table[1], position, regexp )
-        table.insert( mons_table[2], position, dist )
+        table.insert(mons_table[1], position, regexp)
+        table.insert(mons_table[2], position, dist)
     end
 end
 

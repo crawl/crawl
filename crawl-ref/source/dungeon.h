@@ -134,16 +134,15 @@ public:
     bool seen;
 
 public:
-    vault_placement()
-        : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
-          exits(), seen(false)
-    {
-    }
-
+    vault_placement();
     void reset();
     void apply_grid();
     void draw_at(const coord_def &c);
     void connect(bool spotty = false) const;
+    string map_name_at(const coord_def &c) const;
+    dungeon_feature_type feature_at(const coord_def &c);
+    bool is_exit(const coord_def &c);
+    bool is_space(const coord_def &c);
 };
 
 class vault_place_iterator
@@ -201,15 +200,15 @@ void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
-bool dgn_place_map(const map_def *map,
-                   bool check_collision,
-                   bool make_no_exits,
-                   const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_place_map(const map_def *map,
+                                     bool check_collision,
+                                     bool make_no_exits,
+                                     const coord_def &pos = INVALID_COORD);
 
-const map_def *dgn_safe_place_map(const map_def *map,
-                                  bool check_collision,
-                                  bool make_no_exits,
-                                  const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_safe_place_map(const map_def *map,
+                                          bool check_collision,
+                                          bool make_no_exits,
+                                          const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
 void run_map_epilogues();
@@ -245,7 +244,8 @@ void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 
-void dgn_register_place(const vault_placement &place, bool register_vault);
+const vault_placement *dgn_register_place(const vault_placement &place,
+                                          bool register_vault);
 
 void dgn_seen_vault_at(coord_def p);
 
@@ -282,7 +282,18 @@ string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 
-bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
+set<coord_def> dgn_spotty_connect_path(
+    const coord_def& from,
+    bool (*overwriteable)(dungeon_feature_type) = NULL);
+
+// Resets travel_point_distance!
+vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
+                                             const coord_def &to,
+                                             uint32_t mapmask);
+
+bool join_the_dots(const coord_def &from, const coord_def &to,
+                   unsigned mmask,
+                   bool (*overwriteable)(dungeon_feature_type) = NULL);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);

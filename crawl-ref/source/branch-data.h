@@ -285,6 +285,16 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, LIGHTGREY, BROWN, // set per-map
       '8', false, 0 },
+
+#if TAG_MAJOR_VERSION == 34
+    { BRANCH_UNUSED, NUM_BRANCHES, -1, -1, 0, 0,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Void", "a void", "Void",
+      NULL,
+      false, LIGHTGREY, BROWN,
+      '9', false, 0 },
+#endif
 };
 
 #endif

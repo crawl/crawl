@@ -186,6 +186,11 @@ public:
     bool find_home_near_player();
     bool find_home_anywhere();
 
+    // The map that placed this monster.
+    bool has_originating_map() const;
+    string originating_map() const;
+    void set_originating_map(const string &);
+
     void set_ghost(const ghost_demon &ghost);
     void ghost_init(bool need_pos = true);
     void ghost_demon_init();
@@ -297,12 +302,13 @@ public:
     void go_berserk(bool intentional, bool potion = false);
     void go_frenzy();
     bool berserk() const;
-    bool frenzied() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const string &reason);
+    bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
                            bool damage_inventory = true,
@@ -334,7 +340,7 @@ public:
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
     int res_torment() const;
-    int res_acid() const;
+    int res_acid(bool calc_unid = true) const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
     int res_constrict() const;
@@ -432,7 +438,7 @@ public:
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
-    int stealth () const;
+    int stealth() const;
 
     int     shield_bonus() const;
     int     shield_block_penalty() const;
