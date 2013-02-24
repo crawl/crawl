@@ -2056,7 +2056,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
         mpr("You feel knowledgeable.");
 
     more();
-    skill_menu(SKMF_EXPERIENCE_CARD, min(power * 50, HIGH_EXP_POOL));
+    skill_menu(SKMF_EXPERIENCE_CARD, min(200 + power * 50, HIGH_EXP_POOL));
 
     // After level 27, boosts you get don't get increased (matters for
     // charging V:8 with no rN+++ and for felids).
