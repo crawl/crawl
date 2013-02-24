@@ -36,6 +36,12 @@
 #include "tags.h"
 #include "terrain.h"
 
+#if BYTE_ORDER == LITTLE_ENDIAN
+# define WORD_LEN sizeof(long)
+#else
+# define WORD_LEN -sizeof(long)
+#endif
+
 static map_section_type _write_vault(map_def &mdef,
                                      vault_placement &,
                                      bool check_place);
@@ -1180,13 +1186,12 @@ static bool verify_file_version(const string &file, time_t mtime)
         reader inf(fp);
         const uint8_t major = unmarshallUByte(inf);
         const uint8_t minor = unmarshallUByte(inf);
+        const int8_t word = unmarshallByte(inf);
         const int64_t t = unmarshallSigned(inf);
         fclose(fp);
         return (major == TAG_MAJOR_VERSION
                 && minor <= TAG_MINOR_VERSION
-#if TAG_MAJOR_VERSION == 34
-                && minor >= TAG_MINOR_0_12
-#endif
+                && word == WORD_LEN
                 && t == mtime);
     }
     catch (short_read_exception &E)
@@ -1217,13 +1222,14 @@ static bool _load_map_index(const string& cache, const string &base,
             reader inf(fp, TAG_MINOR_VERSION);
             uint8_t major = unmarshallUByte(inf);
             uint8_t minor = unmarshallUByte(inf);
+            int8_t word = unmarshallByte(inf);
             int64_t t = unmarshallSigned(inf);
-            if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
+            if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
+                || word != WORD_LEN || t != mtime)
+            {
                 return false;
-#if TAG_MAJOR_VERSION == 34
-            if (minor < TAG_MINOR_0_12)
-                return false;
-#endif
+            }
+
             lc_global_prelude.read(inf);
             fclose(fp);
 
@@ -1239,13 +1245,14 @@ static bool _load_map_index(const string& cache, const string &base,
     // Re-check version, might have been modified in the meantime.
     uint8_t major = unmarshallUByte(inf);
     uint8_t minor = unmarshallUByte(inf);
+    int8_t word = unmarshallByte(inf);
     int64_t t = unmarshallSigned(inf);
-    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
+    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
+        || word != WORD_LEN || t != mtime)
+    {
         return false;
-#if TAG_MAJOR_VERSION == 34
-    if (minor < TAG_MINOR_0_12)
-        return false;
-#endif
+    }
+
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize(nexist + nmaps, map_def());
@@ -1298,6 +1305,7 @@ static void _write_map_prelude(const string &filebase, time_t mtime)
     writer outf(luafile, fp);
     marshallUByte(outf, TAG_MAJOR_VERSION);
     marshallUByte(outf, TAG_MINOR_VERSION);
+    marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     lc_global_prelude.write(outf);
     fclose(fp);
@@ -1314,6 +1322,7 @@ static void _write_map_full(const string &filebase, size_t vs, size_t ve,
     writer outf(cfile, fp);
     marshallUByte(outf, TAG_MAJOR_VERSION);
     marshallUByte(outf, TAG_MINOR_VERSION);
+    marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
@@ -1331,6 +1340,7 @@ static void _write_map_index(const string &filebase, size_t vs, size_t ve,
     writer outf(cfile, fp);
     marshallUByte(outf, TAG_MAJOR_VERSION);
     marshallUByte(outf, TAG_MINOR_VERSION);
+    marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
