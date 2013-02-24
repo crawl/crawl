@@ -2704,7 +2704,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_PETRIFYING;
     if (mons.is(MB_PETRIFIED))
         ch |= TILE_FLAG_PETRIFIED;
-    if (mons.is(MB_BLIND) || mons.is(MB_DAZED))
+    if (mons.is(MB_BLIND))
         ch |= TILE_FLAG_BLIND;
 
     if (mons.attitude == ATT_FRIENDLY)
