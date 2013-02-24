@@ -4171,7 +4171,7 @@ void corrode_item(item_def &item, actor *holder)
         if (you.equip[EQ_WEAPON] == item.link)
             you.wield_change = true;
     }
-    else if (holder)
+    else if (holder && you.see_cell(holder->pos()))
     {
         mprf("The acid corrodes %s %s!",
              apostrophise(holder->name(DESC_THE)).c_str(),
