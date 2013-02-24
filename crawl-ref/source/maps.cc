@@ -1215,26 +1215,23 @@ static bool _load_map_index(const string& cache, const string &base,
                             time_t mtime)
 {
     // If there's a global prelude, load that first.
+    if (FILE *fp = fopen_u((base + ".lux").c_str(), "rb"))
     {
-        FILE *fp = fopen_u((base + ".lux").c_str(), "rb");
-        if (fp)
+        reader inf(fp, TAG_MINOR_VERSION);
+        uint8_t major = unmarshallUByte(inf);
+        uint8_t minor = unmarshallUByte(inf);
+        int8_t word = unmarshallByte(inf);
+        int64_t t = unmarshallSigned(inf);
+        if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
+            || word != WORD_LEN || t != mtime)
         {
-            reader inf(fp, TAG_MINOR_VERSION);
-            uint8_t major = unmarshallUByte(inf);
-            uint8_t minor = unmarshallUByte(inf);
-            int8_t word = unmarshallByte(inf);
-            int64_t t = unmarshallSigned(inf);
-            if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
-                || word != WORD_LEN || t != mtime)
-            {
-                return false;
-            }
-
-            lc_global_prelude.read(inf);
-            fclose(fp);
-
-            global_preludes.push_back(lc_global_prelude);
+            return false;
         }
+
+        lc_global_prelude.read(inf);
+        fclose(fp);
+
+        global_preludes.push_back(lc_global_prelude);
     }
 
     FILE* fp = fopen_u((base + ".idx").c_str(), "rb");
