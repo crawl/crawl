@@ -837,13 +837,11 @@ void Menu::select_items(int key, int qty)
                 if (check_preselected && items[i]->preselected)
                 {
                     select_index(i, qty);
-                    selected = true;
                     break;
                 }
                 else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
-                    selected = true;
                     break;
                 }
             }
@@ -3914,7 +3912,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
         else
         {
             // handle clicking on the scrollbar (top half of region => scroll up)
-            if (me.py-m_min_coord.y > (m_max_coord.y-m_min_coord.y)/2)
+            if (static_cast<int>(me.py)-m_min_coord.y > (m_max_coord.y-m_min_coord.y)/2)
                 return process_input(CK_DOWN);
             else
                 return process_input(CK_UP);
@@ -4163,7 +4161,7 @@ void MenuScroller::_place_items()
 #ifdef USE_TILE_LOCAL
     // arrows
     m_arrow_down->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_max_coord.y-32),coord_def(m_max_coord.x,m_max_coord.y));
-    m_arrow_down->set_visible(m_topmost_visible+m_items_shown<m_entries.size());
+    m_arrow_down->set_visible(m_topmost_visible + m_items_shown < (int)m_entries.size());
 
     m_arrow_up->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_min_coord.y),coord_def(m_max_coord.x,m_min_coord.y+32));
     m_arrow_up->set_visible(m_topmost_visible>0);

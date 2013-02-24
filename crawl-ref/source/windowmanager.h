@@ -5,26 +5,20 @@
 
 #include "tiletex.h"
 
-enum wm_endianness
-{
-    WM_BIG_ENDIAN,
-    WM_LIL_ENDIAN,
-};
-
 enum wm_event_type
 {
-    WM_NOEVENT = 0,
-    WM_ACTIVEEVENT,
-    WM_KEYDOWN,
-    WM_KEYUP,
-    WM_MOUSEMOTION,
-    WM_MOUSEBUTTONUP,
-    WM_MOUSEBUTTONDOWN,
-    WM_QUIT,
-    WM_CUSTOMEVENT,
-    WM_RESIZE,
-    WM_EXPOSE,
-    WM_NUMEVENTS = 15
+    WME_NOEVENT = 0,
+    WME_ACTIVEEVENT,
+    WME_KEYDOWN,
+    WME_KEYUP,
+    WME_MOUSEMOTION,
+    WME_MOUSEBUTTONUP,
+    WME_MOUSEBUTTONDOWN,
+    WME_QUIT,
+    WME_CUSTOMEVENT,
+    WME_RESIZE,
+    WME_EXPOSE,
+    WME_NUMEVENTS = 15
 };
 
 struct wm_keysym
@@ -109,7 +103,6 @@ public:
     virtual bool set_window_icon(const char* icon_name) = 0;
     virtual key_mod get_mod_state() const = 0;
     virtual void set_mod_state(key_mod mod) = 0;
-    virtual int byte_order() = 0;
 
     // System time functions
     virtual void set_timer(unsigned int interval,

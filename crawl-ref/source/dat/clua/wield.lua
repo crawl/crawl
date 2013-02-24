@@ -14,7 +14,7 @@ end
 function ch_item_wieldable(it)
     -- We only need to check for unusual cases - basic matching is handled
     -- by Crawl itself.
-    local spells = make_hash( you.spells() )
+    local spells = make_hash(you.spells())
 
     if (spells["Sublimation of Blood"] or spells["Simulacrum"])
             and food.ischunk(it)
@@ -23,16 +23,16 @@ function ch_item_wieldable(it)
     end
 
     if spells["Sublimation of Blood"]
-            and (string.find( it.name("a"), " potions? of blood") or
-                 string.find( it.name("a"), " potions? of coagulated blood"))
+            and (string.find(it.name("a"), " potions? of blood") or
+                 string.find(it.name("a"), " potions? of coagulated blood"))
     then
         return true
     end
 
     if spells["Sandblast"]
             and it.class(true) == "missile"
-            and (string.find( it.name("a"), " stones?" )
-                 or string.find( it.name("a"), " large rocks?" )
+            and (string.find(it.name("a"), " stones?")
+                 or string.find(it.name("a"), " large rocks?")
                     and (you.race() == "Troll" or you.race() == "Ogre"))
     then
         return true
@@ -40,7 +40,7 @@ function ch_item_wieldable(it)
 
     if spells["Sticks to Snakes"]
             and it.class(true) == "missile"
-            and string.find( it.name("a"), " arrows?" )
+            and string.find(it.name("a"), " arrows?")
     then
         return true
     end

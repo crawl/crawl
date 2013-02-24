@@ -36,6 +36,7 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -813,7 +814,7 @@ static bool _slime_split_merge(monster* thing)
 }
 
 // Splits and polymorphs merged slime creatures.
-bool slime_creature_mutate(monster* slime)
+bool slime_creature_polymorph(monster* slime)
 {
     ASSERT(slime->type == MONS_SLIME_CREATURE);
 
@@ -823,7 +824,7 @@ bool slime_creature_mutate(monster* slime)
         while (slime->number > 1 && count <= 10)
         {
             if (monster *splinter = _slime_split(slime, true))
-                slime_creature_mutate(splinter);
+                slime_creature_polymorph(splinter);
             else
                 break;
             count++;
@@ -833,7 +834,7 @@ bool slime_creature_mutate(monster* slime)
     return monster_polymorph(slime, RANDOM_MONSTER);
 }
 
-bool _starcursed_split(monster* mon)
+static bool _starcursed_split(monster* mon)
 {
     if (!mon
         || mon->number <= 1
@@ -863,7 +864,7 @@ bool _starcursed_split(monster* mon)
     return false;
 }
 
-void _starcursed_scream(monster* mon, actor* target)
+static void _starcursed_scream(monster* mon, actor* target)
 {
     if (!target || !target->alive())
         return;
@@ -936,7 +937,7 @@ void _starcursed_scream(monster* mon, actor* target)
             chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
 }
 
-bool _will_starcursed_scream(monster* mon)
+static bool _will_starcursed_scream(monster* mon)
 {
     vector<monster*> chorus;
 
@@ -2399,8 +2400,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
         // A (very) ugly thing's proximity to you if you're glowing, or
-        // to others of its kind, can mutate it into a different (very)
-        // ugly thing.
+        // to others of its kind, or to other monsters glowing with
+        // radiation, can mutate it into a different (very) ugly thing.
         used = ugly_thing_mutate(mons, true);
         break;
 
@@ -2806,6 +2807,19 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_CHAOS_BREATH;
     // Intentional fallthrough
 
+    case MONS_CHAOS_BUTTERFLY:
+        if (spell == SPELL_NO_SPELL)
+        {
+            if (!mons->props.exists("twister_time")
+                || you.elapsed_time - (int)mons->props["twister_time"] > 200)
+            {
+                spell = SPELL_SUMMON_TWISTER;
+            }
+            else
+                break;
+        }
+    // Intentional fallthrough
+
     // Dragon breath weapons:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
@@ -2822,14 +2836,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (!you.visible_to(mons))
             break;
 
-        if ((mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN)
-            && mons->has_ench(ENCH_BREATH_WEAPON))
+        if ((mons_genus(mons->type) == MONS_DRAGON
+            || mons_genus(mons->type) == MONS_DRACONIAN)
+                && mons->has_ench(ENCH_BREATH_WEAPON))
         {
             break;
         }
 
-        if (mons->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
-            || one_chance_in(10))
+        if (mons->type == MONS_HELL_HOUND || mons->type == MONS_CHAOS_BUTTERFLY
+                ? one_chance_in(10)
+                : x_chance_in_y(4, 13))
         {
             setup_mons_cast(mons, beem, spell);
 
@@ -2846,10 +2862,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
             }
 
             // Fire tracer.
-            fire_tracer(mons, beem);
+            bool spellOK = true;
+
+            if (spell_needs_tracer(spell))
+            {
+                fire_tracer(mons, beem);
+                spellOK = mons_should_fire(beem);
+            }
 
             // Good idea?
-            if (mons_should_fire(beem))
+            if (spellOK)
             {
                 make_mons_stop_fleeing(mons);
                 _mons_cast_abil(mons, beem, spell);
@@ -3043,8 +3065,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     // XXX: Unless monster dragons get abilities that are not a breath
     // weapon...
-    if (used && (mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN))
-        setup_breath_timeout(mons);
+    if (used)
+    {
+        if (mons_genus(mons->type) == MONS_DRAGON
+            || mons_genus(mons->type) == MONS_DRACONIAN)
+        {
+            setup_breath_timeout(mons);
+        }
+        else if (mons->type == MONS_CHAOS_BUTTERFLY)
+            mons->props["twister_time"].get_int() = you.elapsed_time;
+    }
 
     return used;
 }
@@ -3098,6 +3128,9 @@ void mon_nearby_ability(monster* mons)
 
     switch (mons->type)
     {
+    case MONS_PANDEMONIUM_LORD:
+        if (!mons->ghost->cycle_colours)
+            break;
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
         // Choose random colour.
@@ -3117,7 +3150,7 @@ void mon_nearby_ability(monster* mons)
 
             if (foe->is_player() && !can_see)
             {
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
                 interrupt_activity(AI_MONSTER_ATTACKS, mons);
             }
 
@@ -3150,7 +3183,7 @@ void mon_nearby_ability(monster* mons)
                      foe->name(DESC_THE).c_str());
 
             if (foe->is_player() && !can_see)
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
 
             // Subtly different from old paralysis behaviour, but
             // it'll do.
@@ -3165,7 +3198,7 @@ void mon_nearby_ability(monster* mons)
             if (you.can_see(mons))
                 simple_monster_message(mons, " stares at you.");
             else
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
 
             interrupt_activity(AI_MONSTER_ATTACKS, mons);
 
@@ -3179,11 +3212,6 @@ void mon_nearby_ability(monster* mons)
     case MONS_AIR_ELEMENTAL:
         if (one_chance_in(5))
             mons->add_ench(ENCH_SUBMERGED);
-        break;
-
-    case MONS_PANDEMONIUM_LORD:
-        if (mons->ghost->cycle_colours)
-            mons->colour = random_colour();
         break;
 
     default:
@@ -3399,10 +3427,10 @@ void ancient_zyme_sicken(monster* mons)
         if (!you.disease)
         {
             mpr("You feel yourself grow ill in the presence of the ancient zyme.", MSGCH_WARN);
-            you.sicken(50 + random2(50));
+            you.sicken(30 + random2(30));
         }
         else if (x_chance_in_y(you.time_taken, 60))
-            you.sicken(35 + random2(50));
+            you.sicken(15 + random2(30));
 
         if (x_chance_in_y(you.time_taken, 100))
         {
@@ -3505,7 +3533,7 @@ void starcursed_merge(monster* mon, bool forced)
 
             if (moved)
             {
-                mpr("The starcursed mass shudders and withdraws towards its neighbour.");
+                simple_monster_message(mon, " shudders and withdraws towards its neighbour.");
                 mon->speed_increment -= 10;
             }
         }

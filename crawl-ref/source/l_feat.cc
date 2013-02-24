@@ -50,6 +50,7 @@ FEATF(_feat_is_travelable_stair, feat_is_travelable_stair)
 FEATF(_feat_is_gate, feat_is_gate)
 FEATF(_feat_is_water, feat_is_water)
 FEATF(_feat_is_watery, feat_is_watery)
+FEATF(_feat_is_lava, feat_is_lava)
 FEATF(_feat_is_altar, feat_is_altar)
 FEATF(_feat_is_player_altar, feat_is_player_altar)
 FEATF(_feat_is_branch_stairs, feat_is_branch_stairs)
@@ -76,6 +77,7 @@ const struct luaL_reg feat_dlib[] =
 { "is_gate", _feat_is_gate },
 { "is_water", _feat_is_water },
 { "is_watery", _feat_is_watery },
+{ "is_lava", _feat_is_lava },
 { "is_altar", _feat_is_altar },
 { "is_player_altar", _feat_is_player_altar },
 { "is_branch_stairs", _feat_is_branch_stairs },

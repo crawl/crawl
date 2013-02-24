@@ -291,7 +291,7 @@ static bool _altar_prayer()
 
 void pray()
 {
-    if (silenced(you.pos()))
+    if (you.cannot_speak())
     {
         mpr("You are unable to make a sound!");
         return;
@@ -731,10 +731,12 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     return relative_piety_gain;
 }
 
-piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
+piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
 {
+    if (quantity <= 0)
+        quantity = item.quantity;
     piety_gain_t relative_gain = PIETY_NONE;
-    for (int j = 0; j < item.quantity; ++j)
+    for (int j = 0; j < quantity; ++j)
     {
         const piety_gain_t gain = _sacrifice_one_item_noncount(item, js, !j);
 

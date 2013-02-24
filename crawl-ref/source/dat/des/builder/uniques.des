@@ -193,6 +193,10 @@ NAME:   uniq_jessica
 DEPTH:  D:2-3
 : place_unique(_G, "Jessica")
 
+NAME:   uniq_jorgrun
+DEPTH:  D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
+: place_unique(_G, "Jorgrun")
+
 NAME:   uniq_joseph
 DEPTH:  D:7-12, Orc, Lair:1
 : place_unique(_G, "Joseph")
@@ -335,7 +339,7 @@ WEIGHT: 100
 : place_unique(_G, "Dissolution")
 
 NAME:   uniq_polyphemus
-DEPTH:  Shoals
+DEPTH:  Shoals:2-
 WEIGHT: 50
 : place_unique(_G, "Polyphemus band")
 
@@ -388,6 +392,11 @@ MONS: Ignacio
 MAP
 1
 ENDMAP
+
+NAME:   uniq_lamia
+DEPTH:  Snake:2-
+WEIGHT: 50
+: place_unique(_G, "Lamia band")
 
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.

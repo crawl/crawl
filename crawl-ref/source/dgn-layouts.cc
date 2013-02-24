@@ -58,6 +58,8 @@ void dgn_build_basic_level()
     coord_def begin;
     coord_def end;
 
+    vector<coord_def> upstairs;
+
     _make_trail(35, 30, 35, 20, corrlength, intersect_chance, no_corr,
                  begin, end);
 
@@ -65,6 +67,7 @@ void dgn_build_basic_level()
     {
         grd(begin) = DNGN_STONE_STAIRS_DOWN_I;
         grd(end)   = DNGN_STONE_STAIRS_UP_I;
+        upstairs.push_back(begin);
     }
 
     begin.reset(); end.reset();
@@ -76,6 +79,7 @@ void dgn_build_basic_level()
     {
         grd(begin) = DNGN_STONE_STAIRS_DOWN_II;
         grd(end)   = DNGN_STONE_STAIRS_UP_II;
+        upstairs.push_back(begin);
     }
 
     begin.reset(); end.reset();
@@ -87,6 +91,7 @@ void dgn_build_basic_level()
     {
         grd(begin) = DNGN_STONE_STAIRS_DOWN_III;
         grd(end)   = DNGN_STONE_STAIRS_UP_III;
+        upstairs.push_back(begin);
     }
 
     // Generate a random dead-end that /may/ have a shaft.  Good luck!
@@ -106,6 +111,8 @@ void dgn_build_basic_level()
         dprf("Placing shaft trail...");
         if (!end.origin())
         {
+            if (!begin.origin())
+                upstairs.push_back(begin);
             if (!one_chance_in(3) && !map_masked(end, MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
             {
                 trap_def* ts = NULL;
@@ -140,6 +147,15 @@ void dgn_build_basic_level()
                 dprf("Trail does not end in shaft.");
             }
         }
+    }
+
+    for (vector<coord_def>::iterator pathstart = upstairs.begin();
+         pathstart != upstairs.end(); pathstart++)
+    {
+        vector<coord_def>::iterator pathend = pathstart;
+        pathend++;
+        for (; pathend != upstairs.end(); pathend++)
+            join_the_dots(*pathstart, *pathend, MMT_VAULT);
     }
 
     if (level_number > 1 && one_chance_in(16))
@@ -221,7 +237,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
     }
 
     dgn_replace_area(10, 10, (GXM - 10), (GYM - 10), DNGN_ROCK_WALL,
-                     DNGN_FLOOR);
+                     DNGN_FLOOR, MMT_VAULT);
 
     // replace_area can also be used to fill in:
     for (i = 0; i < number_boxes; i++)
@@ -252,7 +268,10 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
         if (one_chance_in(3))
             _box_room(b1x, b2x, b1y, b2y, drawing);
         else
-            dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
+        {
+            dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing,
+                             MMT_VAULT);
+        }
     }
 
     dgn_region room = dgn_region::absolute(25, 25, 55, 45);
@@ -269,61 +288,6 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
             feature = coinflip()? DNGN_DEEP_WATER : DNGN_LAVA;
 
         _octa_room(room, oblique_max, feature);
-    }
-}
-
-void dgn_build_rooms_level(int nrooms)
-{
-    env.level_build_method += " build_rooms";
-    env.level_layout_types.insert("rooms");
-
-    int which_room = 0;
-    const bool exclusive = !one_chance_in(10);
-
-    // Where did this magic number come from?
-    const int maxrooms = 30;
-
-    dgn_region room;
-    coord_def connect_target;
-
-    for (int i = 0; i < nrooms; i++)
-    {
-        int overlap_tries = 200;
-        do
-        {
-            room.size.set(3 + random2(8), 3 + random2(8));
-            room.pos.set(
-                random_range(MAPGEN_BORDER,
-                             GXM - MAPGEN_BORDER - 1 - room.size.x),
-                random_range(MAPGEN_BORDER,
-                             GYM - MAPGEN_BORDER - 1 - room.size.y));
-        }
-        while (_find_forbidden_in_area(room, MMT_VAULT)
-               && overlap_tries-- > 0);
-
-        if (overlap_tries < 0)
-            continue;
-
-        const coord_def end = room.end();
-
-        if (i > 0 && exclusive
-         && _count_antifeature_in_box(room.pos.x - 1, room.pos.y - 1,
-                                      end.x + 2, end.y + 2, DNGN_ROCK_WALL))
-        {
-            continue;
-        }
-
-        dgn_replace_area(room.pos, end, DNGN_ROCK_WALL, DNGN_FLOOR);
-
-        if (!connect_target.origin())
-            join_the_dots(room.random_edge_point(), connect_target, MMT_VAULT);
-
-        connect_target = room.random_edge_point();
-
-        which_room++;
-
-        if (which_room >= maxrooms)
-            break;
     }
 }
 
@@ -715,12 +679,12 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
     int new_doors, doors_placed;
 
     // Do top & bottom walls.
-    dgn_replace_area(bx1, by1, bx2, by1, DNGN_FLOOR, wall_type);
-    dgn_replace_area(bx1, by2, bx2, by2, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx1, by1, bx2, by1, DNGN_FLOOR, wall_type, MMT_VAULT);
+    dgn_replace_area(bx1, by2, bx2, by2, DNGN_FLOOR, wall_type, MMT_VAULT);
 
     // Do left & right walls.
-    dgn_replace_area(bx1, by1+1, bx1, by2-1, DNGN_FLOOR, wall_type);
-    dgn_replace_area(bx2, by1+1, bx2, by2-1, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx1, by1+1, bx1, by2-1, DNGN_FLOOR, wall_type, MMT_VAULT);
+    dgn_replace_area(bx2, by1+1, bx2, by2-1, DNGN_FLOOR, wall_type, MMT_VAULT);
 
     // Sometimes we have to place doors, or else we shut in other
     // buildings' doors.
@@ -807,8 +771,10 @@ static void _big_room(int level_number)
     }
 
     // Make the big room.
-    dgn_replace_area(region.pos, region.end(), DNGN_ROCK_WALL, type_floor);
-    dgn_replace_area(region.pos, region.end(), DNGN_CLOSED_DOOR, type_floor);
+    dgn_replace_area(region.pos, region.end(), DNGN_ROCK_WALL, type_floor,
+                     MMT_VAULT);
+    dgn_replace_area(region.pos, region.end(), DNGN_CLOSED_DOOR, type_floor,
+                     MMT_VAULT);
 
     if (type_floor == DNGN_FLOOR)
         type_2 = _random_wall();

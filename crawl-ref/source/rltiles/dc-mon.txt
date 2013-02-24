@@ -130,8 +130,7 @@ alligator_snapping_turtle_shell MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
 fire_crab MONS_FIRE_CRAB
 %rim 1
 
-## Worms and larvae ('w')
-ant_larva MONS_ANT_LARVA
+## Worms ('w')
 worm MONS_WORM
 swamp_worm MONS_SWAMP_WORM
 spiny_worm MONS_SPINY_WORM
@@ -242,6 +241,11 @@ orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
 orb_of_destruction2
 orb_of_destruction3
+battlesphere MONS_BATTLESPHERE
+fulminant_prism1 MONS_FULMINANT_PRISM
+fulminant_prism2
+fulminant_prism3
+fulminant_prism4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir mon/undead
@@ -304,7 +308,6 @@ chaos_spawn2
 chaos_spawn3
 chaos_spawn4
 chaos_spawn5
-chaos_spawn6
 hellion MONS_HELLION
 iron_devil MONS_IRON_DEVIL
 neqoxec MONS_NEQOXEC
@@ -390,7 +393,6 @@ electric_golem MONS_ELECTRIC_GOLEM
 iron_golem MONS_IRON_GOLEM
 stone_golem MONS_STONE_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
-wood_golem MONS_WOOD_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
 # For the Erinya WizLab
@@ -659,12 +661,14 @@ royal_jelly MONS_ROYAL_JELLY
 dissolution MONS_DISSOLUTION
 %sdir mon/amorphous
 ooze MONS_OOZE
+%rim 0
 jelly MONS_JELLY
 slime_creature MONS_SLIME_CREATURE
 slime_creature2
 slime_creature3
 slime_creature4
 slime_creature5
+%rim 1
 pulsating_lump MONS_PULSATING_LUMP
 giant_amoeba MONS_GIANT_AMOEBA
 brown_ooze MONS_BROWN_OOZE
@@ -711,6 +715,8 @@ naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
+%sdir mon/unique
+lamia MONS_LAMIA
 
 ## Ogres ('O')
 %sdir mon/unique
@@ -735,9 +741,11 @@ plant_10
 plant_11
 plant_crypt MONS_WITHERED_PLANT
 plant_demonic MONS_DEMONIC_PLANT
-%rim 1
-bush MONS_BUSH
 %rim 0
+bush MONS_BUSH
+bush2
+bush3
+bush4
 bush_burning MONS_BUSH_BURNING
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
@@ -749,11 +757,12 @@ purgy MONS_PURGY
 snorg MONS_SNORG
 %sdir mon
 troll MONS_TROLL
-rock_troll MONS_ROCK_TROLL
 iron_troll MONS_IRON_TROLL
 deep_troll MONS_DEEP_TROLL
+deep_troll_earth_mage MONS_DEEP_TROLL_EARTH_MAGE
+deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
 ## From the Wucad Mu wizard laboratory
-vault/rock_troll_monk_ghost MONS_ROCK_TROLL_MONK
+vault/deep_troll_monk_ghost MONS_DEEP_TROLL_MONK
 vault/iron_troll_monk_ghost MONS_IRON_TROLL_MONK
 
 ## Vampires ('V')
@@ -936,7 +945,10 @@ deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
 %rim 0
 undead/unborn_deep_dwarf MONS_UNBORN_DEEP_DWARF
 %rim 1
+%sdir mon/unique
+jorgrun MONS_JORGRUN
 # an entry vault
+%sdir mon
 gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
@@ -1036,6 +1048,7 @@ lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
+tree_form TRAN_TREE
 
 %sdir misc
 unseen_monster MONS_UNKNOWN

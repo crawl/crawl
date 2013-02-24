@@ -39,6 +39,7 @@ bool feat_is_wall(dungeon_feature_type feat);
 bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
 bool feat_has_solid_floor(dungeon_feature_type feat);
+bool feat_has_dry_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_statue_or_idol(dungeon_feature_type feat);
@@ -51,6 +52,7 @@ bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too = false);
 command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 bool feat_is_tree(dungeon_feature_type feat);
+bool feat_is_metal(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);
 bool feat_is_travelable_stair(dungeon_feature_type feat);

@@ -67,11 +67,10 @@ wand of paralysis
 
 Magické zařízení, které může způsobit nehybnost.
 %%%%
-wand of polymorph other
+wand of polymorph
 
-Magické zařízení, které způsobí, že se bytost promění do jiné formy. To  je
-obzvláště účinné proti tvar-měnící bytosti. Nefunguje na vás, takže se ani
-nepokoušejte.
+Magické zařízení, které způsobí, že se bytost promění do jiné formy. To je
+obzvláště účinné proti tvar-měnící bytosti.
 %%%%
 wand of random effects
 

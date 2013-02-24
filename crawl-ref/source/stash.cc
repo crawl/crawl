@@ -301,7 +301,10 @@ void Stash::update()
     if (feat == DNGN_FLOOR)
         feat_desc = "";
     else
-        feat_desc = feature_description_at(coord_def(x, y), false);
+    {
+        feat_desc = feature_description_at(coord_def(x, y), false,
+                                           DESC_A, false);
+    }
 
     // If this is your position, you know what's on this square
     if (p == you.pos())
@@ -1025,6 +1028,14 @@ bool ShopInfo::matches_search(const string &prefix,
 
     activate_notes(note_status);
     return (match || res.matches);
+}
+
+vector<item_def> ShopInfo::inventory() const
+{
+    vector<item_def> ret;
+    for (unsigned i = 0; i < items.size(); ++i)
+        ret.push_back(items[i].item);
+    return ret;
 }
 
 void ShopInfo::write(FILE *f, bool identify) const
@@ -1908,29 +1919,37 @@ static void _stash_flatten_results(const vector<stash_search_result> &in,
     out.reserve(in.size() * 2);
     for (unsigned i = 0; i < in.size(); ++i)
     {
-        if (in[i].count < 2)
-            out.push_back(in[i]);
-        else
+        vector<item_def> items;
+
+        // expand shop inventory
+        if (in[i].matching_items.empty() && in[i].shop)
+            items = in[i].shop->inventory();
+        else if (in[i].count < 2)
         {
-            stash_search_result tmp = in[i];
-            tmp.count = 1;
-            for (unsigned j = 0; j < in[i].matching_items.size(); ++j)
+            out.push_back(in[i]);
+            continue;
+        }
+        else
+            items = in[i].matching_items;
+
+        stash_search_result tmp = in[i];
+        tmp.count = 1;
+        for (unsigned j = 0; j < items.size(); ++j)
+        {
+            const item_def &item = items[j];
+            tmp.match = Stash::stash_item_name(item);
+            if (tmp.shop)
             {
-                const item_def &item = in[i].matching_items[j];
-                tmp.match = Stash::stash_item_name(item);
-                if (tmp.shop)
-                {
-                    // Need to check if the item is in the shop so we can add gold price...
-                    // tmp.shop->shop_item_name()
-                    string sn = tmp.shop->get_shop_item_name(item);
-                    if (!sn.empty())
-                        tmp.match=sn;
-                }
-                tmp.matches = item.quantity;
-                tmp.matching_items.clear();
-                tmp.matching_items.push_back(item);
-                out.push_back(tmp);
+                // Need to check if the item is in the shop so we can add gold price...
+                // tmp.shop->shop_item_name()
+                string sn = tmp.shop->get_shop_item_name(item);
+                if (!sn.empty())
+                    tmp.match=sn;
             }
+            tmp.matches = item.quantity;
+            tmp.matching_items.clear();
+            tmp.matching_items.push_back(item);
+            out.push_back(tmp);
         }
     }
 }

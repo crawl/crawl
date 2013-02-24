@@ -42,7 +42,7 @@ This amulet protects its wearer from mutations, although not infallibly so.
 %%%%
 amulet of the gourmand
 
-This amulet protects its wearer from sickness due to eating fresh raw meat and
+This amulet protects its wearer from nausea due to eating fresh raw meat and
 allows them to digest it when not hungry, but these effects on the wearer's
 digestion are cumulative over time and are initially small.
 %%%%
@@ -160,8 +160,8 @@ book of annihilations
 Blood leaks from the tattered pages of this book, and even an illiterate will
 feel the sheer impact of arcane fury contained within. It is sought after by
 sorcerers, for it allows the gifted and resourceful to command destruction with
-ease. Feeble wizards, however, may well meet their doom when trying to read this
-opus.
+ease. Feeble wizards, however, may well meet their doom when trying to read
+this opus.
 %%%%
 book of beasts
 
@@ -524,8 +524,8 @@ A deck of magical cards which induce changes in the user or his environment.
 
 It may contain the following cards: the Elixir, Battlelust, Metamorphosis, the
 Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, Water, Vitrification, the Map,
-Dowsing, the Spade, Trowel, the Minefield.
+Experience, Wild Magic, the Helix, the Sage, the Alchemist, Water,
+Vitrification, Dowsing, Trowel, the Minefield.
 %%%%
 deck of defence
 
@@ -548,8 +548,8 @@ deck of dungeons
 
 A deck of magical cards which deal with shaping the dungeon.
 
-It may contain the following cards: Water, Vitrification, the Map, Dowsing, the
-Spade, Trowel, the Minefield.
+It may contain the following cards: Water, Vitrification, Dowsing, Trowel, the
+Minefield.
 %%%%
 deck of escape
 
@@ -563,8 +563,8 @@ deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
 
-It may contain the following cards: Wrath, the Wraith, the Curse, Xom, Famine,
-Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
+It may contain the following cards: the Wraith, Wild Magic, Wrath, Xom, Famine,
+the Curse, the Tomb, Damnation, the Portal, the Minefield, the Swine, Torment.
 %%%%
 deck of summonings
 
@@ -1678,9 +1678,8 @@ may be hazardous to you or your surroundings!
 %%%%
 trident
 
-A fishing spear improved with a longer shaft and a three-pronged metal head. It
-can be wielded with one or two hands, but due to the added weight it cannot be
-thrown effectively.
+A fishing spear improved with a longer shaft and a three-pronged metal head.
+Due to the added weight it cannot be thrown effectively.
 %%%%
 triple sword
 
@@ -1781,11 +1780,10 @@ of its limbs. A paralysed creature can only breathe, think, and helplessly
 watch as it falls into lava below or you put it out of its misery with your
 dagger.
 %%%%
-wand of polymorph other
+wand of polymorph
 
 A magical device which causes a creature to be transmogrified into another
-form. It is especially effective against shape-changing creatures. It doesn't
-work on you, so don't even try.
+form. It is especially effective against shape-changing creatures.
 %%%%
 wand of random effects
 

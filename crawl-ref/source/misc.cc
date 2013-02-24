@@ -1807,8 +1807,8 @@ static void _drop_tomb(const coord_def& pos, bool premature)
         }
 
         // Zin's Imprison.
-        if (grd(*ai) == DNGN_METAL_WALL &&
-            env.markers.property_at(*ai, MAT_ANY, "tomb") == "Zin")
+        if (grd(*ai) == DNGN_METAL_WALL
+            && env.markers.property_at(*ai, MAT_ANY, "tomb") == "Zin")
         {
             zin = true;
 
@@ -2263,7 +2263,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     else if (mon->wont_attack())
         adj += "non-hostile ";
 
-    if (you.religion == GOD_JIYVA && mons_is_slime(mon))
+    if (you.religion == GOD_JIYVA && is_fellow_slime(mon))
         return true;
 
     return !adj.empty() || !suffix.empty();
@@ -2630,7 +2630,7 @@ void maybe_id_resist(beam_type flavour)
         _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
         break;
 
-    case BEAM_POLYMORPH:
+    case BEAM_MALMUTATE:
         if (player_mutation_level(MUT_MUTATION_RESISTANCE))
             return;
         _maybe_id_jewel(NUM_JEWELLERY, AMU_RESIST_MUTATION);
@@ -2691,7 +2691,7 @@ void auto_id_inventory()
         item_def& item = you.inv[i];
         if (item.defined())
         {
-            maybe_id_weapon(item, "You determine that: ");
+            maybe_id_weapon(item, "You determine that you are carrying: ");
             god_id_item(item, false);
         }
     }

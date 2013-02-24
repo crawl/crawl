@@ -1,4 +1,4 @@
-Stone Soup 0.12 (up to 0.12-a0-1573-g98eede4)
+Stone Soup 0.12 (up to 0.12-a0-2137-gc3de154)
 ---------------------------------------------
 
 Branches, environment
@@ -10,10 +10,17 @@ Branches, environment
   appears only at the third level and below, more frequently at deeper levels.
 * The Abyssal rune always appears in a vault, never lying around on the floor.
 * Having the Abyssal rune greatly increases the generation of Abyss exits.
+* Many Ziggurat floors have more fine-tuned monster-sets, and a few monster
+  sets have been replaced entirely.
+* The Abyss no longer exists in Sprint.
 * A new Sprint map by evilmike: "Thunderdome".
 * A new Sprint map by st: "The Pits".
 * A new layout for Cocytus.
 * A new dragon-themed Lair ending.
+* A new water-themed rune vault for the Snake Pit.
+* A new rotting-themed rune vault for the Swamp.
+* A new castle-themed rune vault for the Swamp.
+* A new, more waterlogged, rune vault for Shoals.
 * Lots more new vaults.
 * Remove secret doors entirely, replacing some with runed doors.
 * More layouts allowed in Zot.
@@ -22,6 +29,7 @@ Branches, environment
   Becomes a regular door when opened.
 * Alarm traps only trigger once.
 * A number of vaults are fixed to not trap the player.
+* Place more decorative vaults.
 
 Character
 ---------
@@ -48,7 +56,9 @@ Character
 * Levels 1 and 2 of the teleportitis mutation teleport you only a limited
   distance.
 * The augmentation mutation now gives bonuses at high HP rather than low HP.
+* The Powered by Pain mutation sometimes gives stat bonuses.
 * Many scale mutations are slightly improved.
+* Dragon form can use wands again.
 
 Monsters
 --------
@@ -60,20 +70,25 @@ Monsters
     - Tentacled starspawn: has constricting tentacles and a nasty attack.
     - Ancient zyme: causes sickness and stat drain when near the player.
     - Lurking horror: stalks like a wandering mushroom, then explodes for
-      torment and draining.
+      torment.
     - Starcursed mass: proliferates when ignored, re-merges when damaged.
       Has a smite-targeted psychic scream that becomes more powerful as
       more masses become visible.
     - Apocalypse crab: breathes clouds of chaos.
     - Thrashing horror: moves like a bat, tramples, and frenzies.
-    - Spatial maelstrom: incorporeal vortex that turns walls into more 
-      maelstroms.
+    - Spatial maelstrom: incorporeal vortex that turns walls into spatial
+      vortices.
+    - Chaos butterfly: is surrounded by rain, summons twisters, and
+      has a chaos attack.
+* New uniques:
+    - Jorgrun, a dwarven earth elementalist.
+    - Lamia, queen of the nagas.
 * Friendly summoned monsters do not attack things unless the player has line
   of sight to both the summon and the victim. Glass does not count as line of
   sight for this purpose.
 * Summoned monsters do not cast spells that create permanent allies.
 * Only a select few monsters flee at low HP.
-* New monster spells: Shatter, LRD.
+* New monster spells: Shatter, LRD, OTR.
 * Bone dragons are faster but have fewer HP.
 * Ereshkigal is much more dangerous.
 * Soul eaters can drain life from their surroundings.
@@ -84,13 +99,27 @@ Monsters
 * Apis do not fly.
 * Frances has a more powerful set of spells.
 * Joseph does somewhat more damage in melee.
+* Polyphemus is stronger, faster, and has more rocks.
 * Monsters are much less likely to polymorph into plain elves and humans.
 * Non-humanoid holies no longer "salute", etc.
 * Trapdoor spiders no longer get "stuck".
+* Stone giants, titans, wyverns, and the iron giant are slightly smaller.
+* Rotting corpses no longer spawn toadstools for non-Fedhites.
+* See invisible no longer grants blindness immunity.
+* A number of monsters now have see invisible instead of sense invisible.
+* Monsters can now use wands of digging, and cast Dig in more circumstances.
 
 Spells
 ------
 * Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+* New spell: Force Lance (level 2 Conjuration). Fires a short-range single-
+  target projectile that can knock monsters backwards.
+* New spell: Dazzling Spray (level 3 Conjuration/Hexes). Fires a spread
+  of energy bolts that can blind creatures.
+* New spell: Iskenderun's Battlesphere (level 4 Conjuration/Charms). Creates
+  an autonomous globe that shoots at enemies in sync with your conjurations.
+* New spell: Fulminant Prism (level 5 Conjuration/Hexes). Creates a time
+  bomb at a smite-targetted location.
 * New spell: Disjunction (level 8 Translocation). Has a duration, during
   which it blinks away nearby monsters. Causes contamination.
 * Spell memorisation failure is no more. As long as the failure chance is
@@ -102,6 +131,10 @@ Spells
 * Teleport Other gets a power boost.
 * Condensation Shield's SH bonus no longer cares about Shields skill or
   intelligence.
+* Summon swarm now gives spiders instead of wolf spiders.
+* Venom Bolt and Bolt of Magma do more damage.
+* Conjurers have a new book with non-elemental spells (including the new
+  conjurations).
 
 Items
 -----
@@ -142,23 +175,34 @@ Items
   but only when the item is unequipped.
 * The "*Rage" artefact property triggers much less often (except for Wrath of
   Trog).
+* The hand-and-a-half weapon category is gone; such weapons are now
+  one-handed for normal-size races.
 
 Gods
 ----
 * Jiyva will never shuffle a stat to zero.
+* Jiyva's paralyse ability no longer affects non-fellow slimes (such as
+  shapeshifters), and followers are no longer warned about attacking them.
 * New Xom effects: loud noises, blink monsters, enchant monster (petrify,
   slow, paralysis, enslavement; haste, might, invisibility).
 * Xom does not reduce stats as drastically, unless bored.
-* Xom will not animate or swap weapons in the Abyss.
+* Xom will not animate or swap weapons in the Abyss, and will not hostilely
+  animate your weapon at all anymore.
+* Xom will sometimes summon shadow creatures instead of demons.
 * Gods can no longer grant permanent brands to friendly dancing weapons.
 * Zin's vitalisation protects against paralysing attacks.
+* Vehumet is overhauled: Now grants damaging spells one-at-a-time (available
+  from the (M)emorization screen), partially based on your elemental skills.
+  No longer supports summoning, accepts ally kills, or reduces spell MP cost.
+* Elyvilon no longer gives piety for pacifying summoned monsters.
+* Mobile Fedhas-granted allies follow you across levels en masse.
 
 Interface
 ---------
 * Many updated tiles.
 * A new Android port with touch-screen support.
-* New options: auto_sacrifice, dump_on_save, item_glyph, tile_cell_pixels,
-  tile_filter_scaling.
+* New options: auto_sacrifice, dump_on_save, item_glyph, monster_list_colour,
+  tile_cell_pixels, tile_filter_scaling.
 * Removed options: sacrifice_before_explore (now part of auto_sacrifice),
   annotate_item_class, annotate_item_dropped, autoinscribe_artefacts,
   show_no_ctele, menu_colour_prefix_class, menu_colour_shops, list_rotten.
@@ -166,7 +210,8 @@ Interface
 * The "evil_eating" and "evil_item" menu-colouring prefixes are renamed to
   "forbidden".
 * Explosion and cloud spells will try to target a spot adjacent to an
-  out-of-range monster before falling back to the player's position.
+  out-of-range monster before falling back to the player's position,
+  but will ignore plants.
 * It is possible to restrict a ctrl-f stash search to the current level by
   prefixing it with "@".
 * Removed the hidden special cost of Spellcasting, Stealth, Evocations and
@@ -180,7 +225,7 @@ Interface
 * Webtiles displays miniature health and MP bars on the player.
 * Changed colour scheme for webtiles text (including glyph mode).
 * Many webtiles bugfixes.
-  
+
 Technical
 ---------
 * Numerous crash fixes.

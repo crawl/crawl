@@ -486,30 +486,13 @@ static int _launcher_shield_slowdown(const item_def &launcher,
                                      const item_def *shield)
 {
     int speed_adjust = 100;
-    if (!shield)
+    if (!shield || hands_reqd(launcher, you.body_size()) == HANDS_ONE)
         return speed_adjust;
 
     const int shield_type = shield->sub_type;
-    hands_reqd_type hands = hands_reqd(launcher, you.body_size());
-
-    switch (hands)
-    {
-    default:
-    case HANDS_ONE:
-        break;
-
-    case HANDS_HALF:
-        speed_adjust = shield_type == ARM_BUCKLER  ? 105 :
-                       shield_type == ARM_SHIELD   ? 125 :
-                                                     150;
-        break;
-
-    case HANDS_TWO:
-        speed_adjust = shield_type == ARM_BUCKLER  ? 125 :
-                       shield_type == ARM_SHIELD   ? 150 :
-                                                     200;
-        break;
-    }
+    speed_adjust = shield_type == ARM_BUCKLER  ? 125 :
+                   shield_type == ARM_SHIELD   ? 150 :
+                                                 200;
 
     // Adjust for shields skill.
     if (speed_adjust > 100)
@@ -2078,7 +2061,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     return hit;
 }
 
-void setup_monster_throw_beam(monster* mons, struct bolt &beam)
+void setup_monster_throw_beam(monster* mons, bolt &beam)
 {
     // FIXME we should use a sensible range here
     beam.range = you.current_vision;
@@ -2092,7 +2075,7 @@ void setup_monster_throw_beam(monster* mons, struct bolt &beam)
 }
 
 // msl is the item index of the thrown missile (or weapon).
-bool mons_throw(monster* mons, struct bolt &beam, int msl)
+bool mons_throw(monster* mons, bolt &beam, int msl)
 {
     string ammo_name;
 

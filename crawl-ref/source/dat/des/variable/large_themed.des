@@ -662,7 +662,7 @@ MARKER: z = lua:fog_machine { \
                 size = 2, size_buildup_amnt = 1, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" \
             }
-MONS:   wood golem, clay golem, toenail golem, stone golem, iron golem, crystal golem
+MONS:   clay golem, toenail golem, stone golem, iron golem, crystal golem
 KFEAT:  o = granite_statue
 KFEAT:  m = .
 KFEAT:  z = .
@@ -676,23 +676,23 @@ MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
  cc......+.....cc......+....$cc
- ccmcccccc..5..cczcccccc.6.6$cc
- cc.....cc*5E5.cc.....cc..F.$cc
- ccccccmcc|.5..cccccczcc.6.6$cc
+ ccmcccccc..4..cczcccccc.5.5$cc
+ cc.....cc*4E4.cc.....cc..F.$cc
+ ccccccmcc|.4..cccccczcc.5.5$cc
  cc.....cc*$$..+......cc|||||cc
  cc.ccccccccccccccccccccccccccc
  cc+ccccccccccccccccccccccccccc
  cc.....cllllllcc%$$..cwwwwwwcc
- cc.4.4.clcccclcc$.3..cwccccwcc
- cc..D..+.cllllcc$3C3.+.cwwwwcc
- cc%4.4.ccclccccc..3..cccwccccc
+ cc.3.3.clcccclcc$.2..cwccccwcc
+ cc..D..+.cllllcc$2C2.+.cwwwwcc
+ cc%3.3.ccclccccc..2..cccwccccc
  cc$$$%%ccclllll+.....cccwwwwcc
  cccccccccccccccccccccccccccwcc
  ccccccccccccccccccccccccccc+cc
 .cc......+...$$ccWWWWWW+.....cc
-.cc.cccccc..1.$ccWcccccc.2.2.cc
-.cc.....cc.1A1.ccWWWWWWc..B..cc
-occcccc.cc..1..cccccccWc.2.2$cc
+.cc.cccccc..1.$ccWcccccc.1.1.cc
+.cc.....cc..A..ccWWWWWWc..B..cc
+occcccc.cc..1..cccccccWc.1.1$cc
 @+......cc.....+WWWWWWWc...$%cc
 occcccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc

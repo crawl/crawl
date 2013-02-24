@@ -8,16 +8,6 @@
  *   Do this at your leisure.  Change hiscores_format_single() as much
  * as you like.
  *
- *
- * ----------- IF YOU MODIFY THE INTERNAL SCOREFILE FORMAT ------------
- *              .. as defined by the struct 'scorefile_entry' ..
- *   You MUST change hs_copy(),  hs_parse_numeric(),  hs_parse_string(),
- *       and hs_write().  It's also a really good idea to change the
- *       version numbers assigned in ouch() so that Crawl can tell the
- *       difference between your new entry and previous versions.
- *
- *
- *
  */
 
 #include "AppHdr.h"
@@ -638,6 +628,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
+    "mirror_damage",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -717,6 +708,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     branch            = se.branch;
     map               = se.map;
     mapdesc           = se.mapdesc;
+    killer_map        = se.killer_map;
     final_hp          = se.final_hp;
     final_max_hp      = se.final_max_hp;
     final_max_max_hp  = se.final_max_max_hp;
@@ -907,6 +899,7 @@ void scorefile_entry::init_with_fields()
 
     map        = fields->str_field("map");
     mapdesc    = fields->str_field("mapdesc");
+    killer_map = fields->str_field("killermap");
 
     final_hp         = fields->int_field("hp");
     final_max_hp     = fields->int_field("mhp");
@@ -1070,6 +1063,9 @@ void scorefile_entry::set_score_fields() const
             fields->add_field("mapdesc", "%s", mapdesc.c_str());
     }
 
+    if (!killer_map.empty())
+        fields->add_field("killermap", "%s", killer_map.c_str());
+
 #ifdef DGL_EXTENDED_LOGFILES
     const string short_msg = short_kill_message();
     fields->add_field("tmsg", "%s", short_msg.c_str());
@@ -1120,6 +1116,11 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     death_type   = dtype;
     damage       = dam;
 
+    const monster *source_monster =
+        !invalid_monster_index(death_source) ? &menv[death_source] : NULL;
+    if (source_monster)
+        killer_map = source_monster->originating_map();
+
     // Save this here. We don't want to completely remove the status, as that
     // would look odd in the "screenshot", but having DUR_MISLED as a non-zero
     // value at his point in time will generate such odities as "killed by a
@@ -1134,7 +1135,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         auxkilldata = aux;
 
     if (!invalid_monster_index(death_source)
-        && !env.mons[death_source].alive())
+        && !env.mons[death_source].alive()
+        && auxkilldata != "exploding inner flame")
     {
         death_source = NON_MONSTER;
     }
@@ -1501,7 +1503,7 @@ void scorefile_entry::init(time_t dt)
 
     if (const vault_placement *vp = dgn_vault_at(you.pos()))
     {
-        map     = vp->map.name;
+        map     = vp->map_name_at(you.pos());
         mapdesc = vp->map.description;
     }
 
@@ -2102,7 +2104,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "xom";
         else
             desc += auxkilldata.empty() ? "Killed for Xom's enjoyment"
-                                        : auxkilldata;
+                                        : "Killed by " + auxkilldata;
         needs_damage = true;
         break;
 
@@ -2251,6 +2253,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             needs_beam_cause_line = true;
         }
 
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_MIRROR_DAMAGE:
+        desc += terse ? "mirror damage" : "Killed by mirror damage";
         needs_damage = true;
         break;
 

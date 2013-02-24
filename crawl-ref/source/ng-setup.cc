@@ -503,7 +503,9 @@ static void _give_items_skills(const newgame_def& ng)
             newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
                               ARM_ROBE);
         }
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
+        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR,
+                          you.body_size() >= SIZE_MEDIUM ? ARM_SHIELD
+                                                         : ARM_BUCKLER);
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
@@ -642,7 +644,7 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
-        if (!crawl_state.game_is_zotdef())
+        if (!crawl_state.game_is_zotdef() && !crawl_state.game_is_sprint())
             you.char_direction = GDT_GAME_START;
         you.piety = 38;
 

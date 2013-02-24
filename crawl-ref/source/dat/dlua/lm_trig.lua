@@ -812,10 +812,16 @@ function DgnTriggerer:turn(triggerable, marker, ev)
 
   self.sub_type = "countdown"
 
-  while self.countdown <= 0 do
+  local countdown_limit = self.countdown_limit or 200
+  while self.countdown <= 0 and countdown_limit > 0 do
+    countdown_limit = countdown_limit - 1
     triggerable:do_trigger(self, marker, ev)
     self.countdown = self.countdown +
         crawl.random_range(self.delay_min, self.delay_max, 1)
+  end
+
+  if self.countdown < 0 then
+    self:reset_countdown()
   end
 end
 

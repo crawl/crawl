@@ -268,7 +268,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 {
     void* frames[50];
 
-#if defined (TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX)
     backtrace_t backtrace;
     backtrace_symbols_t backtrace_symbols;
     backtrace = nasty_cast<backtrace_t, void*>(dlsym(RTLD_DEFAULT, "backtrace"));
@@ -303,7 +303,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     string bt = "";
     for (int i = 0; i < num_frames; i++)
     {
-#if defined (TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX)
         char *addr = ::strstr(symbols[i], "0x");
         char *mangled = ::strchr(addr, ' ') + 1;
         char *offset = ::strchr(addr, '+');

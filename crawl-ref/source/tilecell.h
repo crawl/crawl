@@ -36,7 +36,7 @@ struct packed_cell
     bool old_blood;
     uint8_t travel_trail;
     bool quad_glow;
-    bool disjunct;
+    uint8_t disjunct;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }

@@ -24,6 +24,7 @@
 #include "defines.h"
 #include "describe.h"
 #include "dgn-delve.h"
+#include "dgn-height.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
 #include "dgn-labyrinth.h"
@@ -116,26 +117,30 @@ static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
 
 static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
-static bool _connect_spotty(const coord_def& from);
+static bool _feat_is_wall_floor_liquid(dungeon_feature_type);
+static bool _connect_spotty(const coord_def& from,
+                            bool (*overwriteable)(dungeon_feature_type) = NULL);
 static bool _connect_vault_exit(const coord_def& exit);
 
 // ITEM & SHOP FUNCTIONS
 static object_class_type _item_in_shop(shop_type shop_type);
 
 // VAULT FUNCTIONS
-static bool _build_secondary_vault(const map_def *vault,
-                                   bool check_collisions = true,
-                                   bool make_no_exits = false,
-                                   const coord_def &where = coord_def(-1, -1));
+static const vault_placement *
+_build_secondary_vault(const map_def *vault,
+                       bool check_collisions = true,
+                       bool make_no_exits = false,
+                       const coord_def &where = coord_def(-1, -1));
 
-static bool _build_primary_vault(const map_def *vault);
+static const vault_placement *_build_primary_vault(const map_def *vault);
 
 static void _build_postvault_level(vault_placement &place);
-static bool _build_vault_impl(const map_def *vault,
-                              bool build_only = false,
-                              bool check_collisions = false,
-                              bool make_no_exits = false,
-                              const coord_def &where = coord_def(-1, -1));
+static const vault_placement *
+_build_vault_impl(const map_def *vault,
+                  bool build_only = false,
+                  bool check_collisions = false,
+                  bool make_no_exits = false,
+                  const coord_def &where = coord_def(-1, -1));
 
 static void _vault_grid(vault_placement &,
                         int vgrid,
@@ -149,6 +154,12 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
                               int vgrid);
 static void _vault_grid_mapspec(vault_placement &place, const coord_def& where,
                                 keyed_mapspec& mapsp);
+static dungeon_feature_type _vault_inspect(vault_placement &place,
+                                           int vgrid, keyed_mapspec *mapsp);
+static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
+                                                   keyed_mapspec& mapsp);
+static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
+                                                 int vgrid);
 
 static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
@@ -986,7 +997,8 @@ static void _dgn_apply_map_index(const vault_placement &place, int map_index)
         env.level_map_ids(*vi) = map_index;
 }
 
-void dgn_register_place(const vault_placement &place, bool register_vault)
+const vault_placement *
+dgn_register_place(const vault_placement &place, bool register_vault)
 {
     const int  map_index    = env.level_vaults.size();
     const bool overwritable = place.map.is_overwritable_layout();
@@ -1003,7 +1015,7 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         clear_subvault_stack();
 
         // Identify each square in the map with its map_index.
-        if (!overwritable && !transparent)
+        if (!overwritable)
             _dgn_apply_map_index(place, map_index);
     }
 
@@ -1081,9 +1093,11 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         }
     }
 
-    env.level_vaults.push_back(new vault_placement(place));
+    vault_placement *new_vault_place = new vault_placement(place);
+    env.level_vaults.push_back(new_vault_place);
     if (register_vault)
         _remember_vault_placement(place, place.map.has_tag("extra"));
+    return new_vault_place;
 }
 
 bool dgn_ensure_vault_placed(bool vault_success,
@@ -1314,7 +1328,7 @@ static int _num_mons_wanted()
 static void _fixup_walls()
 {
     // If level part of Dis -> all walls metal.
-    // If part of vaults -> walls depend on level.
+    // If Vaults:$ -> all walls metal or crystal.
     // If part of crypt -> all walls stone.
 
     dungeon_feature_type wall_type = DNGN_ROCK_WALL;
@@ -1330,13 +1344,13 @@ static void _fixup_walls()
 
     case BRANCH_VAULTS:
     {
-        if (you.depth > 2 && one_chance_in(10))
-            wall_type = DNGN_GREEN_CRYSTAL_WALL;
-        else if (x_chance_in_y(you.depth - 1, 3))
-            wall_type = DNGN_METAL_WALL;
-        else if (x_chance_in_y(you.depth + 1, 3))
-            wall_type = DNGN_STONE_WALL;
-
+        // Everything but the branch end is handled in Lua.
+        if (you.depth == branches[BRANCH_VAULTS].numlevels)
+        {
+            wall_type = random_choose_weighted(1, DNGN_GREEN_CRYSTAL_WALL,
+                                               9, DNGN_METAL_WALL,
+                                               0);
+        }
         break;
     }
 
@@ -1994,15 +2008,15 @@ static void _ruin_level(Iterator ri,
         if (!in_bounds(*ri))
             continue;
 
-        /* only try to replace wall and door tiles */
+        // only try to replace wall and door tiles
         if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
             continue;
 
-        /* don't mess with permarock */
+        // don't mess with permarock
         if (grd(*ri) == DNGN_PERMAROCK_WALL)
             continue;
 
-        /* or vaults */
+        // or vaults
         if (map_masked(*ri, vault_mask))
             continue;
 
@@ -2022,8 +2036,8 @@ static void _ruin_level(Iterator ri,
             }
         }
 
-        /* chance of removing the tile is dependent on the number of adjacent
-         * floor(ish) tiles */
+        // chance of removing the tile is dependent on the number of adjacent
+        // floor(ish) tiles
         if (x_chance_in_y(floor_count, ruination))
             to_replace.push_back(replacement);
     }
@@ -2052,7 +2066,7 @@ static void _ruin_level(Iterator ri,
             replacement = DNGN_FLOOR;
         }
 
-        /* only remove some doors, to preserve tactical options */
+        // only remove some doors, to preserve tactical options
         if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
         {
             // Copy the mask and properties too, so that we don't make an
@@ -2062,7 +2076,7 @@ static void _ruin_level(Iterator ri,
             _set_grd(p, replacement);
         }
 
-        /* but remove doors if we've removed all adjacent walls */
+        // but remove doors if we've removed all adjacent walls
         for (adjacent_iterator wai(p); wai; ++wai)
         {
             if (feat_is_door(grd(*wai)))
@@ -2083,7 +2097,7 @@ static void _ruin_level(Iterator ri,
             }
         }
 
-        /* replace some ruined walls with plants/fungi/bushes */
+        // replace some ruined walls with plants/fungi/bushes
         if (plant_density && one_chance_in(plant_density)
             && feat_has_solid_floor(replacement))
         {
@@ -2247,7 +2261,7 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     const unsigned nvaults = env.level_vaults.size();
 
     // Any further vaults must make sure not to disrupt level layout.
-    dgn_check_connectivity = !player_in_branch(BRANCH_SHOALS);
+    dgn_check_connectivity = true;
 
     if (player_in_branch(BRANCH_MAIN_DUNGEON)
         && !crawl_state.game_is_tutorial())
@@ -2429,7 +2443,7 @@ static void _prepare_water()
                 {
                     grd(*ri) = DNGN_SHALLOW_WATER;
                 }
-                else if (which_grid >= DNGN_FLOOR
+                else if (feat_has_dry_floor(which_grid)
                          && x_chance_in_y(80 - absdepth0 * 4,
                                           100))
                 {
@@ -2939,13 +2953,13 @@ static void _place_chance_vaults()
 
 static void _place_minivaults(void)
 {
+    // Always try to place PLACE:X minivaults.
+    const map_def *vault = NULL;
+    if ((vault = random_map_for_place(level_id::current(), true)))
+        _build_secondary_vault(vault);
+
     if (use_random_maps)
     {
-        const map_def *vault = NULL;
-
-        if ((vault = random_map_for_place(level_id::current(), true)))
-            _build_secondary_vault(vault);
-
         int tries = 0;
         do
         {
@@ -3709,17 +3723,16 @@ static void _fixup_after_vault()
 //
 // Non-dungeon code should generally use dgn_safe_place_map instead of
 // this function to recover from map_load_exceptions.
-bool dgn_place_map(const map_def *mdef,
-                   bool check_collision,
-                   bool make_no_exits,
-                   const coord_def &where)
+const vault_placement *dgn_place_map(const map_def *mdef,
+                                     bool check_collision,
+                                     bool make_no_exits,
+                                     const coord_def &where)
 {
     if (!mdef)
-        return false;
+        return NULL;
 
     const dgn_colour_override_manager colour_man;
 
-    bool did_map = false;
     if (mdef->orient == MAP_ENCOMPASS && !Generating_Level)
     {
         if (check_collision)
@@ -3728,35 +3741,36 @@ bool dgn_place_map(const map_def *mdef,
                  "Cannot generate encompass map '%s' with check_collision=true",
                  mdef->name.c_str());
 
-            return false;
+            return NULL;
         }
 
         // For encompass maps, clear the entire level.
         unwind_bool levgen(Generating_Level, true);
         dgn_reset_level();
         dungeon_events.clear();
-        const bool res = dgn_place_map(mdef, check_collision, make_no_exits, where);
-        _fixup_after_vault();
-        return res;
+        const vault_placement *vault_place =
+            dgn_place_map(mdef, check_collision, make_no_exits, where);
+        if (vault_place)
+            _fixup_after_vault();
+        return vault_place;
     }
 
-    const int map_index = env.level_vaults.size();
-    did_map = _build_secondary_vault(mdef, check_collision,
-                                     make_no_exits, where);
+    const vault_placement *vault_place =
+        _build_secondary_vault(mdef, check_collision,
+                               make_no_exits, where);
 
     // Activate any markers within the map.
-    if (did_map && !Generating_Level)
+    if (vault_place && !Generating_Level)
     {
-        const vault_placement &vp = *env.level_vaults[map_index];
 #ifdef ASSERTS
-        if (mdef->name != vp.map.name)
+        if (mdef->name != vault_place->map.name)
         {
             die("Placed map '%s', yet vault_placement is '%s'",
-                mdef->name.c_str(), vp.map.name.c_str());
+                mdef->name.c_str(), vault_place->map.name.c_str());
         }
 #endif
 
-        for (vault_place_iterator vpi(vp); vpi; ++vpi)
+        for (vault_place_iterator vpi(*vault_place); vpi; ++vpi)
         {
             const coord_def p = *vpi;
             env.markers.activate_markers_at(p);
@@ -3769,7 +3783,7 @@ bool dgn_place_map(const map_def *mdef,
         _dgn_postprocess_level();
     }
 
-    return did_map;
+    return vault_place;
 }
 
 // Identical to dgn_place_map, but recovers gracefully from
@@ -3779,10 +3793,10 @@ bool dgn_place_map(const map_def *mdef,
 // Returns the map actually placed if the map was placed successfully.
 // This is usually the same as the map passed in, unless map load
 // failed and maps had to be reloaded.
-const map_def *dgn_safe_place_map(const map_def *mdef,
-                                  bool check_collision,
-                                  bool make_no_exits,
-                                  const coord_def &where)
+const vault_placement *dgn_safe_place_map(const map_def *mdef,
+                                          bool check_collision,
+                                          bool make_no_exits,
+                                          const coord_def &where)
 {
     const string mapname(mdef->name);
     int retries = 10;
@@ -3790,9 +3804,7 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
     {
         try
         {
-            const bool placed =
-                dgn_place_map(mdef, check_collision, make_no_exits, where);
-            return placed? mdef : NULL;
+            return dgn_place_map(mdef, check_collision, make_no_exits, where);
         }
         catch (map_load_exception &mload)
         {
@@ -3852,9 +3864,11 @@ static void _ruin_vault(const vault_placement &vp)
 
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
-static bool _build_secondary_vault(const map_def *vault,
-                                   bool check_collision, bool no_exits,
-                                   const coord_def &where)
+static
+const vault_placement *
+_build_secondary_vault(const map_def *vault,
+                       bool check_collision, bool no_exits,
+                       const coord_def &where)
 {
     return _build_vault_impl(vault, true, check_collision, no_exits, where);
 }
@@ -3869,16 +3883,18 @@ static bool _build_secondary_vault(const map_def *vault,
 //
 // NOTE: minivaults can never be placed as primary vaults.
 //
-static bool _build_primary_vault(const map_def *vault)
+static const vault_placement *_build_primary_vault(const map_def *vault)
 {
     return _build_vault_impl(vault);
 }
 
 // Builds a vault or minivault. Do not use this function directly: always
 // prefer _build_secondary_vault or _build_primary_vault.
-static bool _build_vault_impl(const map_def *vault,
-                              bool build_only, bool check_collisions,
-                              bool make_no_exits, const coord_def &where)
+static
+const vault_placement *
+_build_vault_impl(const map_def *vault,
+                  bool build_only, bool check_collisions,
+                  bool make_no_exits, const coord_def &where)
 {
     if (dgn_check_connectivity && !dgn_zones)
     {
@@ -3903,7 +3919,7 @@ static bool _build_vault_impl(const map_def *vault,
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
     if (placed_vault_orientation == MAP_NONE)
-        return false;
+        return NULL;
 
     // XXX: Moved this out of dgn_register_place so that vault-set monsters can
     // be accessed with the '9' and '8' glyphs. (due)
@@ -3929,7 +3945,7 @@ static bool _build_vault_impl(const map_def *vault,
 
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.
-    dgn_register_place(place, true);
+    const vault_placement *saved_place = dgn_register_place(place, true);
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
@@ -3969,7 +3985,7 @@ static bool _build_vault_impl(const map_def *vault,
                                  + place.map.name);
     }
 
-    return true;
+    return saved_place;
 }
 
 static void _build_postvault_level(vault_placement &place)
@@ -3997,6 +4013,7 @@ static void _build_postvault_level(vault_placement &place)
     else
     {
         const map_def* layout = random_map_for_tag("layout", true, true);
+        ASSERT(layout);
         _build_secondary_vault(layout, false);
     }
 }
@@ -4598,6 +4615,7 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
+    mspec.props["map"].get_string() = place.map_name_at(where);
     return dgn_place_monster(mspec, where, false, generate_awake, patrolling);
 }
 
@@ -4965,10 +4983,16 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
     }
 }
 
-static bool _join_the_dots_pathfind(coord_set &coords,
-                                    const coord_def &from, const coord_def &to,
-                                    uint32_t mapmask)
+// Resets travel_point_distance
+vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
+                                             const coord_def &to,
+                                             uint32_t mapmask)
 {
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    const coord_comparator comp(to);
+    coord_set coords(comp);
+
+    vector<coord_def> path;
     coord_def curr = from;
     while (true)
     {
@@ -4988,33 +5012,44 @@ static bool _join_the_dots_pathfind(coord_set &coords,
     }
 
     if (curr != to)
-        return false;
+        return path;
 
     while (curr != from)
     {
         if (!map_masked(curr, mapmask))
-            grd(curr) = DNGN_FLOOR;
+            path.push_back(curr);
 
         const int dist = travel_point_distance[curr.x][curr.y];
         ASSERT(dist < 0 && dist != -1000);
         curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
     }
     if (!map_masked(curr, mapmask))
-        grd(curr) = DNGN_FLOOR;
+        path.push_back(curr);
 
-    return true;
+    return path;
 }
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
-                           uint32_t mapmask)
+                   uint32_t mapmask,
+                   bool (*overwriteable)(dungeon_feature_type))
 {
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    if (!overwriteable)
+        overwriteable = _feat_is_wall_floor_liquid;
 
-    const coord_comparator comp(to);
-    coord_set coords(comp);
-    const bool found = _join_the_dots_pathfind(coords, from, to, mapmask);
+    const vector<coord_def> path =
+        dgn_join_the_dots_pathfind(from, to, mapmask);
 
-    return found;
+    for (vector<coord_def>::const_iterator i = path.begin(); i != path.end();
+         ++i)
+    {
+        if (!map_masked(*i, mapmask) && overwriteable(grd(*i)))
+        {
+            grd(*i) = DNGN_FLOOR;
+            dgn_height_set_at(*i);
+        }
+    }
+
+    return !path.empty() || from == to;
 }
 
 static dungeon_feature_type _pick_temple_altar(vault_placement &place)
@@ -5408,16 +5443,27 @@ static bool _spotty_seed_ok(const coord_def& p)
             && p.x < GXM - margin && p.y < GYM - margin);
 }
 
+static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
+{
+    return (feat_is_water(feat) || feat_is_lava(feat) || feat_is_wall(feat)
+            || feat == DNGN_FLOOR);
+}
+
 // Connect vault exit "from" to dungeon floor by growing a spotty chamber.
 // This tries to be like _spotty_level, but probably isn't quite.
 // It might be better to aim for a more open connection -- currently
 // it stops pretty much as soon as connectivity is attained.
-static bool _connect_spotty(const coord_def& from)
+set<coord_def>
+dgn_spotty_connect_path(const coord_def& from,
+                     bool (*overwriteable)(dungeon_feature_type))
 {
     set<coord_def> flatten;
     set<coord_def> border;
     set<coord_def>::const_iterator it;
     bool success = false;
+
+    if (!overwriteable)
+        overwriteable = _feat_is_wall_floor_liquid;
 
     for (adjacent_iterator ai(from); ai; ++ai)
         if (!map_masked(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
@@ -5442,11 +5488,8 @@ static bool _connect_spotty(const coord_def& from)
             if (grd(*ai) == DNGN_FLOOR)
                 success = true; // Through, but let's remove the others, too.
 
-            if ((grd(*ai) != DNGN_ROCK_WALL && grd(*ai) != DNGN_SLIMY_WALL)
-                || flatten.find(*ai) != flatten.end())
-            {
+            if (!overwriteable(grd(*ai)) || flatten.find(*ai) != flatten.end())
                 continue;
-            }
 
             flatten.insert(*ai);
             for (adjacent_iterator bi(*ai); bi; ++bi)
@@ -5461,13 +5504,29 @@ static bool _connect_spotty(const coord_def& from)
         }
     }
 
-    if (success)
+    if (!success)
+        flatten.clear();
+
+    return flatten;
+}
+
+static bool _connect_spotty(const coord_def& from,
+                            bool (*overwriteable)(dungeon_feature_type))
+{
+    const set<coord_def> spotty_path =
+        dgn_spotty_connect_path(from, overwriteable);
+
+    if (!spotty_path.empty())
     {
-        for (it = flatten.begin(); it != flatten.end(); ++it)
+        for (set<coord_def>::const_iterator it = spotty_path.begin();
+             it != spotty_path.end(); ++it)
+        {
             grd(*it) = DNGN_FLOOR;
+            dgn_height_set_at(*it);
+        }
     }
 
-    return success;
+    return !spotty_path.empty();
 }
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type, int charges)
@@ -5514,11 +5573,12 @@ static void _add_plant_clumps(int frequency /* = 10 */,
         mgen_data mg;
         if (mgrd(*ri) != NON_MONSTER)
         {
-            /* clump plants around things that already exist */
+            // clump plants around things that already exist
             monster_type type = menv[mgrd(*ri)].type;
-            if ((type == MONS_PLANT  ||
-                 type == MONS_FUNGUS ||
-                 type == MONS_BUSH) && one_chance_in(frequency))
+            if ((type == MONS_PLANT
+                     || type == MONS_FUNGUS
+                     || type == MONS_BUSH)
+                 && one_chance_in(frequency))
             {
                 mg.cls = type;
             }
@@ -5537,7 +5597,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                 if (grd(*rad) != DNGN_FLOOR)
                     continue;
 
-                /* make sure the iterator stays valid */
+                // make sure the iterator stays valid
                 vector<coord_def> more_to_place;
                 for (vector<coord_def>::const_iterator it = to_place.begin();
                      it != to_place.end();
@@ -5545,14 +5605,15 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                 {
                     if (*rad == *it)
                         continue;
-                    /* only place plants next to previously placed plants */
+                    // only place plants next to previously placed plants
                     if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
                     {
                         if (one_chance_in(clump_density))
                             more_to_place.push_back(*rad);
                     }
                 }
-                to_place.insert(to_place.end(), more_to_place.begin(), more_to_place.end());
+                to_place.insert(to_place.end(), more_to_place.begin(),
+                                more_to_place.end());
             }
         }
 
@@ -5599,7 +5660,8 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
         coord_def dest_pos;
         do
             dest_pos = random_in_bounds();
-        while (grd(dest_pos) != DNGN_FLOOR || env.pgrid(dest_pos) & FPROP_NO_RTELE_INTO);
+        while (grd(dest_pos) != DNGN_FLOOR
+               || env.pgrid(dest_pos) & FPROP_NO_RTELE_INTO);
         if (!shaft)
         {
             env.markers.add(new map_position_marker(base_pos, dest_pos));
@@ -5854,7 +5916,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // vault.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (grd(*ri) >= DNGN_FLOOR)
+        if (feat_has_dry_floor(grd(*ri)))
         {
             found++;
             if (one_chance_in(found))
@@ -5987,6 +6049,7 @@ void init_level_connectivity()
 void read_level_connectivity(reader &th)
 {
     int nb = unmarshallInt(th);
+    ASSERT(nb <= NUM_BRANCHES);
     for (int i = 0; i < nb; i++)
     {
         unsigned int depth = brdepth[i] > 0 ? brdepth[i] : 0;
@@ -6300,6 +6363,17 @@ void run_map_epilogues()
 //////////////////////////////////////////////////////////////////////////
 // vault_placement
 
+vault_placement::vault_placement()
+    : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(), exits(), seen(false)
+{
+}
+
+string vault_placement::map_name_at(const coord_def &where) const
+{
+    const coord_def offset = where - this->pos;
+    return this->map.name_at(offset);
+}
+
 void vault_placement::reset()
 {
     if (_current_temple_hash != NULL)
@@ -6385,12 +6459,108 @@ void vault_placement::connect(bool spotty) const
     for (vector<coord_def>::const_iterator i = exits.begin();
          i != exits.end(); ++i)
     {
-        if (spotty && _connect_spotty(*i))
+        if (spotty && _connect_spotty(*i, _feat_is_wall_floor_liquid))
             continue;
+
+        if (player_in_branch(BRANCH_SHOALS) &&
+            dgn_shoals_connect_point(*i, _feat_is_wall_floor_liquid))
+        {
+            continue;
+        }
 
         if (!_connect_vault_exit(*i))
             dprf("Warning: failed to connect vault exit (%d;%d).", i->x, i->y);
     }
+}
+
+// Checks the resultant feature type of the map glyph, after applying KFEAT
+// and so forth. Unfortunately there is a certain amount of duplication of
+// the code path in apply_grid; but actual modifications to the level
+// are so intertwined with that code path it would be actually quite messy
+// to try and avoid the duplication.
+dungeon_feature_type vault_placement::feature_at(const coord_def &c)
+{
+    // Can't check outside bounds of vault
+    if (size.zero() || c.x > size.x || c.y > size.y)
+        return NUM_FEATURES;
+
+    const int feat = map.map.glyph(c);
+
+    if (feat == ' ')
+        return NUM_FEATURES;
+
+    keyed_mapspec *mapsp = map.mapspec_at(c);
+    return _vault_inspect(*this, feat, mapsp);
+
+}
+
+bool vault_placement::is_space(const coord_def &c)
+{
+    // Can't check outside bounds of vault
+    if (size.zero() || c.x > size.x || c.y > size.y)
+        return NUM_FEATURES;
+
+    const int feat = map.map.glyph(c);
+    return (feat == ' ');
+}
+bool vault_placement::is_exit(const coord_def &c)
+{
+    // Can't check outside bounds of vault
+    if (size.zero() || c.x > size.x || c.y > size.y)
+        return NUM_FEATURES;
+
+    const int feat = map.map.glyph(c);
+    return (feat == '@');
+}
+static dungeon_feature_type _vault_inspect(vault_placement &place,
+                        int vgrid, keyed_mapspec *mapsp)
+{
+    // The two functions called are
+    if (mapsp && mapsp->replaces_glyph())
+        return _vault_inspect_mapspec(place, *mapsp);
+    else
+        return _vault_inspect_glyph(place, vgrid);
+}
+
+static dungeon_feature_type _vault_inspect_mapspec(vault_placement &place,
+                                                   keyed_mapspec& mapsp)
+{
+    dungeon_feature_type found = NUM_FEATURES;
+    const feature_spec f = mapsp.get_feat();
+    if (f.trap.get())
+    {
+        trap_spec* spec = f.trap.get();
+        if (spec)
+            found = trap_category(spec->tr_type);
+    }
+    else if (f.feat >= 0)
+        found = static_cast<dungeon_feature_type>(f.feat);
+    else if (f.glyph >= 0)
+        found = _vault_inspect_glyph(place, f.glyph);
+    else if (f.shop.get())
+        found = DNGN_ENTER_SHOP;
+    else
+        found = DNGN_FLOOR;
+
+    return found;
+}
+
+static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
+                                                 int vgrid)
+{
+    // Get the base feature according to the glyph
+    dungeon_feature_type found = NUM_FEATURES;
+    if (vgrid != -1)
+        found = _glyph_to_feat(vgrid, &place);
+
+    // If it's an altar for an unavailable god then it will get turned into floor by _vault_grid_glyph
+    if (feat_is_altar(found)
+        && is_unavailable_god(feat_altar_god(found)))
+    {
+        found = DNGN_FLOOR;
+    }
+
+    return found;
 }
 
 static void _remember_vault_placement(const vault_placement &place, bool extra)

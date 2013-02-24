@@ -12,12 +12,12 @@ W tej lekcji nauczysz się o bogach, i jak używać ich mocy.
 tutorial5 secret_door
 
 Gdzieś tu musi być wejście do świątyni! Spróbuj obejść i obszukać szklane
-ściany aby znaleźć tajne przejśćie wciskając <w>$cmd[CMD_REST]</w><localtiles>
+ściany aby znaleźć tajne przejście wciskając <w>$cmd[CMD_REST]</w><localtiles>
 lub <w>klikając myszą</w> w panelu czynności</localtiles>.
 %%%%
 tutorial5 dungeon_overview
 
-Trog jest tylko jednym z wielu bogów. Podczas normalnej gry, możesz wcisnać
+Trog jest tylko jednym z wielu bogów. Podczas normalnej gry, możesz wcisnąć
 <w>$cmd[CMD_DISPLAY_OVERMAP],/w><localtiles> lub kliknąć <w>schemat lochów</w>
 w panelu czynności</localtiles> aby obejrzeć listę ołtarzy i podobnych
 interesujących miejsc.
@@ -61,7 +61,7 @@ płomieniach.
 %%%%
 tutorial5 berserk
 
-Przeciw szczegogólnie groźnym wrogom, możesz użyć Berserkerskiego Szału za
+Przeciw szczególnie groźnym wrogom, możesz użyć Berserkerskiego Szału za
 pomocą mocy Troga (klawisz <w>$cmd[CMD_USE_ABILITY]</w><localtiles> lub
 przycisk <w>zdolności</w> w panelu czynności</localtiles>).
 %%%%
@@ -88,7 +88,7 @@ tutorial5 tutorial_end
 Gratulacje! Ukończyłeś ostatnią część samouczka, i jesteś gotów na prawdziwą
 grę. Powodzenia!
 
-Aby zakońzyć, zejdź po tych schodach.
+Aby zakończyć, zejdź po tych schodach.
 %%%%
 tutorial5 exit
 

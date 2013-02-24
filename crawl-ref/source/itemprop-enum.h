@@ -124,7 +124,6 @@ enum corpse_type
 enum hands_reqd_type
 {
     HANDS_ONE,
-    HANDS_HALF,
     HANDS_TWO,
 };
 
@@ -424,7 +423,9 @@ enum weapon_type
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
+#if TAG_MAJOR_VERSION == 34
     WPN_SPIKED_FLAIL,
+#endif
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,
@@ -562,7 +563,7 @@ enum wand_type
     WAND_FIREBALL,
     WAND_TELEPORTATION,
     WAND_LIGHTNING,
-    WAND_POLYMORPH_OTHER,
+    WAND_POLYMORPH,
     WAND_ENSLAVEMENT,
     WAND_DRAINING,
     WAND_RANDOM_EFFECTS,

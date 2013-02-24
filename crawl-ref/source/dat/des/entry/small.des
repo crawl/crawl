@@ -2543,7 +2543,7 @@ ORIENT:  float
 SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / green rat / orange rat / quokka
-MONS:    worker ant / soldier ant / queen ant / ant larva
+MONS:    worker ant / soldier ant / queen ant
 MONS:    spiny worm / brain worm / worm / giant leech
 MONS:    lindwurm / death drake / komodo dragon / basilisk / swamp drake
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant

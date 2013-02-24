@@ -201,6 +201,7 @@ public:
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
+    bool ignores_monster(const monster* mon) const;
 
     maybe_bool affects_wall(dungeon_feature_type wall) const;
 
@@ -313,14 +314,15 @@ bool enchant_monster_with_flavour(monster* mon, actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const string &how);
 
-spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail = false);
+spret_type mass_enchantment(enchant_type wh_enchant, int pow,
+                            bool fail = false);
 
 bool poison_monster(monster* mons, const actor* who, int levels = 1,
                     bool force = false, bool verbose = true);
 bool miasma_monster(monster* mons, const actor* who);
 bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
-void fire_tracer(const monster* mons, struct bolt &pbolt,
+void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false);
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);

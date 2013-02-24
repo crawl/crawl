@@ -728,6 +728,7 @@ void game_options::reset_options()
 #endif
 
 #if defined(TARGET_OS_MACOSX)
+    UNUSED(_resolve_dir);
     const string tmp_path_base =
         _user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
@@ -735,11 +736,8 @@ void game_options::reset_options()
     if (SysEnv.macro_dir.empty())
         macro_dir  = tmp_path_base;
 #else
-        save_dir   = _resolve_dir(SysEnv.crawl_dir.c_str(), "saves/");
-#endif
-
-#if !defined(TARGET_OS_MACOSX)
-        morgue_dir = _resolve_dir(SysEnv.crawl_dir.c_str(), "morgue/");
+    save_dir   = _resolve_dir(SysEnv.crawl_dir.c_str(), "saves/");
+    morgue_dir = _resolve_dir(SysEnv.crawl_dir.c_str(), "morgue/");
 #endif
 
 #if defined(SHARED_DIR_PATH)
@@ -791,13 +789,14 @@ void game_options::reset_options()
     char_set      = CSET_DEFAULT;
 
     // set it to the .crawlrc default
-    autopickups = ((1 << OBJ_GOLD)      |
-                   (1 << OBJ_SCROLLS)   |
-                   (1 << OBJ_POTIONS)   |
-                   (1 << OBJ_BOOKS)     |
-                   (1 << OBJ_JEWELLERY) |
-                   (1 << OBJ_WANDS)     |
-                   (1 << OBJ_FOOD));
+    autopickups.reset();
+    autopickups.set(OBJ_GOLD);
+    autopickups.set(OBJ_SCROLLS);
+    autopickups.set(OBJ_POTIONS);
+    autopickups.set(OBJ_BOOKS);
+    autopickups.set(OBJ_JEWELLERY);
+    autopickups.set(OBJ_WANDS);
+    autopickups.set(OBJ_FOOD);
     auto_switch             = false;
     suppress_startup_errors = false;
 
@@ -1037,7 +1036,7 @@ void game_options::reset_options()
                                              "command, spell, ability, "
                                              "monster");
 # endif
-    tile_use_small_layout = false;
+    tile_use_small_layout = OPT_AUTO;
 #endif
 
 #ifdef USE_TILE
@@ -1069,7 +1068,7 @@ void game_options::reset_options()
     dump_order.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,"
-                    "screenshot,monlist,kills,notes");
+                    "screenshot,monlist,kills,notes,action_counts");
 
     hp_colour.clear();
     hp_colour.push_back(pair<int,int>(50, YELLOW));
@@ -2324,7 +2323,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "autopickup")
     {
         // clear out autopickup
-        autopickups = 0;
+        autopickups.reset();
 
         ucs_t c;
         for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
@@ -2332,7 +2331,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             object_class_type type = item_class_by_sym(c);
 
             if (type < NUM_OBJECT_CLASSES)
-                autopickups |= (1 << type);
+                autopickups.set(type);
             else
                 report_error("Bad object type '%*s' for autopickup.\n", s, tp);
         }
@@ -3022,12 +3021,46 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         stable_sort(stat_colour.begin(), stat_colour.end(), _first_less);
     }
-
     else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
     {
         if (plain)
             enemy_hp_colour.clear();
         str_to_enemy_hp_colour(field, caret_equal);
+    }
+    else if (key == "monster_list_colour" || key == "monster_list_color")
+    {
+        if (plain)
+            clear_monster_list_colours();
+
+        vector<string> thesplit = split_string(",", field);
+        for (unsigned i = 0; i < thesplit.size(); ++i)
+        {
+            vector<string> insplit = split_string(":", thesplit[i]);
+
+            if (insplit.empty() || insplit.size() > 2
+                 || insplit.size() == 1 && !minus_equal
+                 || insplit.size() == 2 && minus_equal)
+            {
+                report_error("Bad monster_list_colour string: %s\n",
+                             field.c_str());
+                break;
+            }
+
+            const int scolour = minus_equal ? -1 : str_to_colour(insplit[1]);
+
+            // No elemental colours!
+            if (scolour >= 16 || scolour < 0 && !minus_equal)
+            {
+                report_error("Bad monster_list_colour: %s", insplit[1].c_str());
+                break;
+            }
+            if (!set_monster_list_colour(insplit[0], scolour))
+            {
+                report_error("Bad monster_list_colour key: %s\n",
+                             insplit[0].c_str());
+                break;
+            }
+        }
     }
 
     else if (key == "note_skill_levels")
@@ -3526,17 +3559,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_use_small_layout")
     {
         if (field == "true")
-            tile_use_small_layout = true;
+            tile_use_small_layout = OPT_YES;
         else if (field == "false")
-            tile_use_small_layout = false;
+            tile_use_small_layout = OPT_NO;
         else
-#ifdef __ANDROID__
-            // android default to true for now
-            tile_use_small_layout = true;
-#else
-            // should choose small layout for small *physical* screens
-            tile_use_small_layout = false;
-#endif
+            tile_use_small_layout = OPT_AUTO;
     }
 #endif
 #ifdef USE_TILE
@@ -3831,13 +3858,13 @@ static string _find_executable_path()
     // binary executable. This is useful, because argv[0] can be relative
     // when we really need an absolute path in order to locate the game's
     // resources.
-#if defined ( TARGET_OS_WINDOWS )
+#if defined (TARGET_OS_WINDOWS)
     wchar_t tempPath[MAX_PATH];
     if (GetModuleFileNameW(NULL, tempPath, MAX_PATH))
         return utf16_to_8(tempPath);
     else
         return "";
-#elif defined ( TARGET_OS_LINUX )
+#elif defined (TARGET_OS_LINUX)
     char tempPath[2048];
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
@@ -3847,7 +3874,7 @@ static string _find_executable_path()
         return mb_to_utf8(tempPath);
     }
     return "";
-#elif defined ( TARGET_OS_MACOSX )
+#elif defined (TARGET_OS_MACOSX)
     return mb_to_utf8(NXArgv[0]);
 #else
     // We don't know how to find the executable's path on this OS.

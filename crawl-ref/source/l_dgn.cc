@@ -1602,6 +1602,22 @@ LUAFN(_dgn_in_vault)
     return 1;
 }
 
+LUAFN(_dgn_set_map_mask)
+{
+    GETCOORD(c, 1, 2, map_bounds);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    env.level_map_mask(c) |= mask;
+    return 1;
+}
+
+LUAFN(_dgn_unset_map_mask)
+{
+    GETCOORD(c, 1, 2, map_bounds);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    env.level_map_mask(c) &= ~mask;
+    return 1;
+}
+
 LUAFN(_dgn_map_parameters)
 {
     return clua_stringtable(ls, map_parameters);
@@ -1761,6 +1777,31 @@ LUAFN(_dgn_reuse_map)
     return 0;
 }
 
+// dgn.inspect_map(vplace,x,y)
+//
+// You must first have resolved a map to get the vault_placement, using
+// dgn.resolve_map(..). This function will then inspect a coord on that map
+// where <0,0> is the top-left cell and tell you the feature type. This will
+// respect all KFEAT and other map directives; and SUBST and other
+// transformations will have already taken place during resolve_map.
+LUAFN(_dgn_inspect_map)
+{
+    if (!lua_isuserdata(ls, 1))
+        luaL_argerror(ls, 1, "Expected vault_placement");
+
+    vault_placement &vp(*static_cast<vault_placement*>(lua_touserdata(ls, 1)));
+
+    // Not using the COORDS macro because it checks against in_bounds which will fail 0,0 (!)
+    coord_def c;
+    c.x = luaL_checkint(ls, 2);
+    c.y = luaL_checkint(ls, 3);
+
+    lua_pushnumber(ls, vp.feature_at(c));
+    lua_pushboolean(ls, vp.is_exit(c));
+    lua_pushboolean(ls, vp.is_space(c));
+    return 3;
+}
+
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
 LUAFN(dgn_fill_grd_area)
@@ -1881,7 +1922,10 @@ const struct luaL_reg dgn_dlib[] =
 { "place_map", _dgn_place_map },
 { "reuse_map", _dgn_reuse_map },
 { "resolve_map", _dgn_resolve_map },
+{ "inspect_map", _dgn_inspect_map },
 { "in_vault", _dgn_in_vault },
+{ "set_map_mask", _dgn_set_map_mask },
+{ "unset_map_mask", _dgn_unset_map_mask },
 
 { "map_parameters", _dgn_map_parameters },
 

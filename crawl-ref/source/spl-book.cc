@@ -285,8 +285,8 @@ int book_rarity(uint8_t which_book)
     case BOOK_SUMMONINGS:
         return 18;
 
-    case BOOK_ANNIHILATIONS: // Vehumet special
-    case BOOK_GRAND_GRIMOIRE:    // Vehumet special
+    case BOOK_ANNIHILATIONS:
+    case BOOK_GRAND_GRIMOIRE:
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_MANUAL:
         return 20;
@@ -314,7 +314,7 @@ void init_spell_rarities()
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         // Manuals and books of destruction are not even part of this loop.
-        if (i >= MIN_GOD_ONLY_BOOK && i <= MAX_GOD_ONLY_BOOK)
+        if (i >= MIN_RARE_BOOK && i <= MAX_RARE_BOOK)
             continue;
 
         for (int j = 0; j < SPELLBOOK_SIZE; ++j)
@@ -346,6 +346,19 @@ void init_spell_rarities()
     }
 }
 
+bool is_player_spell(spell_type which_spell)
+{
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    {
+        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+        {
+            if (which_spell_in_book(i, j) == which_spell)
+                return true;
+        }
+    }
+    return false;
+}
+
 int spell_rarity(spell_type which_spell)
 {
     const int rarity = _lowest_rarity[which_spell];
@@ -372,11 +385,9 @@ bool player_can_memorise_from_spellbook(const item_def &book)
         return true;
 
     if ((book.sub_type == BOOK_ANNIHILATIONS
-            && you.religion != GOD_VEHUMET
-            && (you.skill(SK_CONJURATIONS) < 10
-                || you.skill(SK_SPELLCASTING) < 6))
+         && (you.skill(SK_CONJURATIONS) < 10
+             || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_GRAND_GRIMOIRE
-            && you.religion != GOD_VEHUMET
             && (you.skill(SK_SUMMONINGS) < 10
                 || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_NECRONOMICON
@@ -469,6 +480,12 @@ bool you_cannot_memorise(spell_type spell)
 bool you_cannot_memorise(spell_type spell, bool &undead)
 {
     bool rc = false;
+
+    if (you.form == TRAN_WISP)
+    {
+        undead = false;
+        return true;
+    }
 
     switch (you.is_undead)
     {
@@ -639,6 +656,13 @@ static bool _get_mem_list(spell_list &mem_spells,
                           bool just_check = false,
                           spell_type current_spell = SPELL_NO_SPELL)
 {
+    if (you.form == TRAN_WISP)
+    {
+        if (!just_check)
+            mpr("You can't handle any books in this form.", MSGCH_PROMPT);
+        return false;
+    }
+
     bool          book_errors    = false;
     unsigned int  num_on_ground  = 0;
     unsigned int  num_books      = 0;
@@ -676,6 +700,15 @@ static bool _get_mem_list(spell_list &mem_spells,
         num_books++;
         num_on_ground++;
         _index_book(book, book_hash, num_unreadable, book_errors);
+    }
+
+    // Handle Vehumet gifts
+    set<spell_type>::iterator gift_iterator = you.vehumet_gifts.begin();
+    if (gift_iterator != you.vehumet_gifts.end())
+    {
+        num_books++;
+        while (gift_iterator != you.vehumet_gifts.end())
+            book_hash[*gift_iterator++] = NUM_BOOKS;
     }
 
     if (book_errors)
@@ -819,6 +852,12 @@ bool has_spells_to_memorise(bool silent, int current_spell)
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
 {
+    // List the Vehumet gifts at the very top.
+    bool offering_a = vehumet_is_offering(a);
+    bool offering_b = vehumet_is_offering(b);
+    if (offering_a != offering_b)
+        return offering_a;
+
     // List spells we can memorize right away first.
     if (player_spell_levels() >= spell_levels_required(a)
         && player_spell_levels() < spell_levels_required(b))
@@ -966,12 +1005,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
         ostringstream desc;
 
         int colour = LIGHTGRAY;
+        if (vehumet_is_offering(spell))
+            colour = LIGHTBLUE;
         // Grey out spells for which you lack experience or spell levels.
-        if (spell_difficulty(spell) > you.experience_level
-            || player_spell_levels() < spell_levels_required(spell))
-        {
+        else if (spell_difficulty(spell) > you.experience_level
+                 || player_spell_levels() < spell_levels_required(spell))
             colour = DARKGRAY;
-        }
         else
             colour = spell_highlight_by_utility(spell);
 
@@ -1083,9 +1122,7 @@ bool learn_spell()
         return false;
     }
 
-    spells_to_books::iterator it = book_hash.find(specspell);
-
-    return learn_spell(specspell, it->second);
+    return learn_spell(specspell);
 }
 
 // Returns a string about why an undead character can't memorise a spell.
@@ -1094,16 +1131,15 @@ string desc_cannot_memorise_reason(bool undead)
     if (undead)
         ASSERT(you.is_undead);
 
-    const bool lichform = (undead
-                           && you.form == TRAN_LICH);
-
     string desc = "You cannot ";
-    if (lichform)
+    if (you.form == TRAN_LICH || you.form == TRAN_WISP)
         desc += "currently ";
     desc += "memorise or cast this spell because you are ";
 
-    if (lichform)
+    if (you.form == TRAN_LICH)
         desc += "in Lich form";
+    else if (you.form == TRAN_WISP)
+        desc += "in Wisp form";
     else
         desc += "a " + lowercase_string(species_name(you.species));
 
@@ -1151,7 +1187,7 @@ static bool _learn_spell_checks(spell_type specspell)
         return false;
     }
 
-    if (spell_fail(specspell) >= 100)
+    if (spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
     {
         mpr("This spell is too difficult to memorise!");
         return false;
@@ -1160,7 +1196,7 @@ static bool _learn_spell_checks(spell_type specspell)
     return true;
 }
 
-bool learn_spell(spell_type specspell, int book)
+bool learn_spell(spell_type specspell)
 {
     if (!_learn_spell_checks(specspell))
         return false;
@@ -1415,14 +1451,14 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
                             bool avoid_known = false)
 {
     // For randarts handed out by Sif Muna, spells contained in the
-    // Vehumet/Kiku specials are fair game.
+    // special books are fair game.
     // We store them in an extra vector that (once sorted) can later
     // be checked for each spell with a rarity -1 (i.e. not normally
     // appearing randomly).
     vector<spell_type> special_spells;
     if (god == GOD_SIF_MUNA)
     {
-        for (int i = MIN_GOD_ONLY_BOOK; i <= MAX_GOD_ONLY_BOOK; ++i)
+        for (int i = MIN_RARE_BOOK; i <= MAX_RARE_BOOK; ++i)
             for (int j = 0; j < SPELLBOOK_SIZE; ++j)
             {
                 spell_type spell = which_spell_in_book(i, j);
@@ -2273,13 +2309,9 @@ bool make_book_theme_randart(item_def &book,
                     if (all_spells_disc1 && !one_chance_in(6))
                         god = GOD_KIKUBAAQUDGHA;
                     break;
-                case SPTYP_SUMMONING:
                 case SPTYP_CONJURATION:
-                    if ((all_spells_disc1 || disc2 == SPTYP_SUMMONING
-                         || disc2 == SPTYP_CONJURATION) && !one_chance_in(4))
-                    {
+                    if (all_spells_disc1 && !one_chance_in(4))
                         god = GOD_VEHUMET;
-                    }
                     break;
                 default:
                     break;

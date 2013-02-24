@@ -1696,21 +1696,21 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
-    const zap_type firezaps[3]   = { ZAP_FLAME, ZAP_STICKY_FLAME, ZAP_FIRE };
-    const zap_type frostzaps[3]  = { ZAP_FROST, ZAP_THROW_ICICLE, ZAP_COLD };
+    const zap_type firezaps[3]   = { ZAP_THROW_FLAME, ZAP_STICKY_FLAME, ZAP_BOLT_OF_FIRE };
+    const zap_type frostzaps[3]  = { ZAP_THROW_FROST, ZAP_THROW_ICICLE, ZAP_BOLT_OF_COLD };
     const zap_type hammerzaps[3] = { ZAP_STONE_ARROW, ZAP_IRON_SHOT,
-                                     ZAP_CRYSTAL_SPEAR };
+                                     ZAP_LEHUDIBS_CRYSTAL_SPEAR };
     const zap_type venomzaps[3]  = { ZAP_STING, ZAP_VENOM_BOLT,
                                      ZAP_POISON_ARROW };
-    const zap_type sparkzaps[3]  = { ZAP_ELECTRICITY, ZAP_LIGHTNING,
+    const zap_type sparkzaps[3]  = { ZAP_SHOCK, ZAP_LIGHTNING_BOLT,
                                      ZAP_ORB_OF_ELECTRICITY };
-    const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_NEGATIVE_ENERGY };
-    const zap_type orbzaps[3]    = { ZAP_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
+    const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
+    const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
 
     switch (card)
     {
     case CARD_VITRIOL:
-        ztype = (one_chance_in(3) ? ZAP_DEGENERATION : ZAP_BREATHE_ACID);
+        ztype = (one_chance_in(3) ? ZAP_CIGOTUVIS_DEGENERATION : ZAP_BREATHE_ACID);
         break;
 
     case CARD_FLAME:
@@ -1972,6 +1972,24 @@ static void _potion_card(int power, deck_rarity_type rarity)
     potion_effect(pot, random2(power/4));
 }
 
+static string _god_wrath_stat_check(string cause_orig)
+{
+    string cause = cause_orig;
+
+    if (crawl_state.is_god_acting())
+    {
+        god_type which_god = crawl_state.which_god_acting();
+        if (crawl_state.is_god_retribution())
+            cause = "the wrath of " + god_name(which_god);
+        else if (which_god == GOD_XOM)
+            cause = "the capriciousness of Xom";
+        else
+            cause = "the 'helpfulness' of " + god_name(which_god);
+    }
+
+    return cause;
+}
+
 static void _focus_card(int power, deck_rarity_type rarity)
 {
     stat_type best_stat = STAT_STR;
@@ -1995,18 +2013,7 @@ static void _focus_card(int power, deck_rarity_type rarity)
         worst_stat = static_cast<stat_type>(random2(3));
     }
 
-    string cause = "the Focus card";
-
-    if (crawl_state.is_god_acting())
-    {
-        god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution())
-            cause = "the wrath of " + god_name(which_god);
-        else if (which_god == GOD_XOM)
-            cause = "the capriciousness of Xom";
-        else
-            cause = "the 'helpfulness' of " + god_name(which_god);
-    }
+    const string cause = _god_wrath_stat_check("the Focus card");
 
     modify_stat(best_stat, 1, true, cause.c_str(), true);
     modify_stat(worst_stat, -1, true, cause.c_str(), true);
@@ -2021,18 +2028,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     for (int i = 0; i < NUM_STATS; ++i)
         new_base[perm[i]]  = you.base_stats[i];
 
-    string cause = "the Shuffle card";
-
-    if (crawl_state.is_god_acting())
-    {
-        god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution())
-            cause = "the wrath of " + god_name(which_god);
-        else if (which_god == GOD_XOM)
-            cause = "the capriciousness of Xom";
-        else
-            cause = "the 'helpfulness' of " + god_name(which_god);
-    }
+    const string cause = _god_wrath_stat_check("the Shuffle card");
 
     for (int i = 0; i < NUM_STATS; ++i)
     {
@@ -2421,8 +2417,8 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             }
 
             const monster_type golems[] = {
-                MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
-                MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM
+                MONS_CLAY_GOLEM, MONS_STONE_GOLEM, MONS_IRON_GOLEM,
+                MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM
             };
 
             if (create_monster(

@@ -86,6 +86,7 @@ Sylvia 'Onia' Hörnke
 Benoit Hudson
 Pete Hurst
 Iainuki
+Icy Lich
 Ilyak
 Matthew Ince
 Mitsuhiro Itakura
@@ -103,7 +104,7 @@ Jukka Kuusisto
 Lantier
 Maciej Lapinski
 Jordan Lewis
-Icy Lich
+Sami Liedes
 Markus Maier
 Arien Malec
 Paul Maloney

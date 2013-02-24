@@ -19,8 +19,12 @@ bool form_can_swim(transformation_type form = you.form);
 bool form_likes_water(transformation_type form = you.form);
 bool form_can_butcher_barehanded(transformation_type form = you.form);
 bool form_changed_physiology(transformation_type form = you.form);
+bool form_can_use_wand(transformation_type form = you.form);
 bool form_can_wear_item(const item_def& item,
                         transformation_type form = you.form);
+// Can you make sounds, not necessarily articulate?  (Gods and allies can
+// guess your intent).
+bool form_has_mouth(transformation_type form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation_type form = you.form);
 

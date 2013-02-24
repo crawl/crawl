@@ -30,7 +30,7 @@ Once the primary guardian serpent of a legendary treasure hoard, he was
 disgraced after thieves looted it while he slept. He now slithers about the
 dungeon, seeking vengeance against all would-be looters. He is an accomplished
 spellcaster, but no more deadly in melee combat than others of his kind.
-%%%%%
+%%%%
 Agnes
 
 A tall (for her kind) and beautiful warrior, as vain as she is quick. You can't
@@ -48,12 +48,13 @@ the strongest of them.
 Arachne
 
 Once the best human weaver, Arachne was cursed by being transformed into her
-present form: half-human, half-spider. No longer ageing, she has the youth and
+present form: half-human, half-spider. No longer aging, she has the youth and
 beauty of a human female, along with the legs and abdomen of a monstrous giant
 spider.
 
-Thousands years old, she has learned magic and quite a few other tricks. Expect
-to be ensnared by webs and magic while her pets digest and then drink you dry.
+Thousands of years old, she has learned magic and quite a few other tricks.
+Expect to be ensnared by webs and magic while her pets digest and then drink
+you dry.
 %%%%
 Asmodeus
 
@@ -72,9 +73,6 @@ Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
 regenerate his desiccated skeletal remains even if completely disintegrated.
-However, while this complicated process would usually take months or even
-years, Boris has mastered it to the point of being able to reintegrate himself
-in a matter of minutes.
 %%%%
 Cerebov
 
@@ -251,6 +249,11 @@ Jessica
 An evil apprentice sorceress. She entered the dungeon hoping to find a quiet,
 secluded place where she could study the darker arts without being disturbed.
 %%%%
+Jorgrun
+
+A deep dwarven magician, particularly well-attuned to the dungeon around him.
+He wields powerful earth magic in combat.
+%%%%
 Jory
 
 Once a simple village peasant, Jory found himself transformed in undeath into a
@@ -279,6 +282,16 @@ An incredibly powerful emperor on the way to godhood.
 Kirke
 
 A beautiful enchantress.
+%%%%
+Lamia
+
+A powerful queen of the nagas, said to be willing to eat her own children. {{
+  if you.race == "Naga" then
+    return "She is stunningly beautiful."
+  else
+    return "Despite her deformed body, she is quite beautiful."
+  end
+}}
 %%%%
 the Lernaean hydra
 
@@ -317,9 +330,10 @@ the minds of the mightiest and most brilliant spell-casters.
 %%%%
 Margery
 
-A lithe spellcaster. She's scantily clad, yet the little she wears seems to be
-finest-quality dragon armour, granting quite good protection. And distracting
-humanoid males has its value in combat, as well.
+A lithe spellcaster in service to the powers of Hell; it is her duty to ensure
+that the inhabitants of the Dungeon never forget their place. As a girl, she
+personally slew the ancient dragon from whose hide her strange armour is
+crafted.
 %%%%
 Maud
 
@@ -556,11 +570,6 @@ A divine warrior of the Shining One, it is a towering winged figure of
 unnatural beauty surrounded by an aura of brilliant white light. It appears to
 be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
-ant larva
-
-A juvenile ant in the larval stage of metamorphosis. It is weak and almost
-completely defenseless, and therefore under constant protection.
-%%%%
 apis
 
 A placid, sacred bull of Elyvilon. Beware, evildoers, as it will surely turn on
@@ -569,8 +578,8 @@ you!
 apocalypse crab
 
 An opalescent crab with jet black eyes. A distant relative of the fire crab,
-the rumors claim that this species is waiting for the end of time. The
-chaotic mists effusing from its mandible are hardly suggestive of waiting.
+the rumours claim that this species is waiting for the end of time. The chaotic
+mists effusing from its mandible are hardly suggestive of waiting.
 %%%%
 azure jelly
 
@@ -612,6 +621,12 @@ A huge and very powerful demon, wreathed in fire and shadows.
 basilisk
 
 A crested lizard of middling size with a terrible petrifying gaze.
+%%%%
+battlesphere
+
+A small globe of magical energy that follows a spellcaster. It cannot
+operate on its own, yet it will provide fire support, assaulting whatever
+its conjurer casts at with magical missiles that never miss.
 %%%%
 big fish
 
@@ -731,6 +746,11 @@ centaur warrior
 
 A muscular centaur, a veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
+%%%%
+chaos butterfly
+
+A particularly large, garishly coloured butterfly, seemingly shimmering amidst
+the torrential storm clouds that follow it wherever it goes.
 %%%%
 chaos spawn
 
@@ -922,6 +942,15 @@ deep troll
 A stooped troll with dark skin, the cave-dwelling deep troll often travels in
 packs.
 %%%%
+deep troll earth mage
+
+A particularly intelligent deep troll, it wields earth magic to tunnel through
+the earth to allow it and its kin to ambush its foes.
+%%%%
+deep troll shaman
+
+A deep troll blessed with divine power to strengthen and hasten its kin.
+%%%%
 demigod
 
 The aura of power around this human-like figure immediately betrays its divine
@@ -941,8 +970,8 @@ with a certain devilish cast to its features.
 %%%%
 diamond obelisk
 
-This obelisk seems to be, for all practical purposes, indestructible. You'd
-better find a way around... it might even provide one.
+This obelisk appears to be indestructible. You'd better find a way around...
+it might even provide one.
 %%%%
 dire elephant
 
@@ -1156,6 +1185,12 @@ howling blasts of cold.
 fruity bat
 
 An ugly, silly bat. It sparkles.
+%%%%
+fulminant prism
+
+A slender prism that crackles with barely-contained destructive energy. Any
+blow which cracks its fragile surface is likely to result in a violent
+explosion.
 %%%%
 fungus
 
@@ -2122,12 +2157,6 @@ redback
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
 %%%%
-rock troll
-
-An enormous and very nasty-looking troll, seemingly born of the very living
-rock of the dungeon. Its stony hide seems to heal almost instantaneously from
-most wounds.
-%%%%
 rock worm
 
 A large worm which moves through rock as if it were air.
@@ -2151,7 +2180,7 @@ next victim.
         end
     end
 }}
-%%%%%
+%%%%
 rotting hulk
 
 A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
@@ -2419,18 +2448,18 @@ on the spriggan forests and cairns will be able to just walk away.
 %%%%
 starcursed mass
 
-An mass of stellar detritus that glows with the sickly putrescence of a
-dying star, forever shrieking soundlessly in a voice beyond mortal grasp.
-Its form quivers and undulates constantly, dividing spontaneously and then
-withdrawing when threatened. While the voice of even a single one is
-unsettling, in chorus, their screams can overwhelm the minds of even the
-bravest warriors, leaving them stunned and helpless.
+A mass of stellar detritus that glows with the sickly putrescence of a dying
+star, forever shrieking soundlessly in a voice beyond mortal grasp. Its form
+quivers and undulates constantly, dividing spontaneously and then withdrawing
+when threatened. While the voice of even a single one is unsettling, in chorus,
+their screams can overwhelm the minds of even the bravest warriors, leaving
+them stunned and helpless.
 %%%%
 starspawn tentacle
 
-The writhing appendage of a tentacled starspawn, capable of grasping nearly
-any prey and dragging it back to be devoured. Any damage dealt to it hurts
-the whole creature.
+The writhing appendage of a tentacled starspawn, capable of grasping nearly any
+prey and dragging it back to be devoured. Any damage dealt to it hurts the
+whole creature.
 %%%%
 starspawn tentacle segment
 
@@ -2481,7 +2510,7 @@ A small and slimy dragon, covered in swamp muck.
         return "It smells terrible."
     end
 }}
-%%%%%
+%%%%
 swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
@@ -2677,10 +2706,6 @@ wolf spider
 
 A hairy fast-moving hunting spider with vicious mandibles, roaming the dungeon
 in search of prey, which it kills with its deadly venom.
-%%%%
-wood golem
-
-A huge animated wooden figure. It is highly inflammable.
 %%%%
 worm
 
@@ -2908,6 +2933,11 @@ deep elf scorcher
 A deep elf excelling in fire magic, feared for its power to conjure great
 storms of flame.
 %%%%
+deep troll monk
+
+It seems a flimsy representation of a monk; nothing more than a half-formed
+memory.
+%%%%
 deformed humanoid
 
 This poor creature looks hideously deformed.
@@ -3041,10 +3071,6 @@ lasher statue
 
 This statue depicts a savage-looking slave driver with a vicious barbed whip.
 It appears to be capable of moving the whip arm. Prepare for a flogging...
-%%%%
-lich demonologist
-
-<lich>
 %%%%
 malarious mermaid
 
@@ -3205,11 +3231,6 @@ pyrus tree
 
 <apple tree>
 %%%%
-rock troll monk
-
-It seems a flimsy representation of a monk; nothing more than a half-formed
-memory.
-%%%%
 sacrificial human
 
 From the look of things, she was supposed to be sacrificed in some
@@ -3331,14 +3352,12 @@ the only way to keep your vital organs undamaged.
 %%%%
 witch
 
-This old human crone must be spending most of her day just working on her
-looks: it's hard to believe one could reach this level of ugliness naturally.
-Robes stained with what appears to be swamp ooze, cauldron soot and brew
-ingredients don't improve her appearance either.
+An old and unnaturally ugly human, wearing
+robes stained with what appears to be swamp ooze, cauldron soot and brew
+ingredients.
 
-A woman with such stellar sanity and manners probably has great pets as well,
-so it's better to neutralize her before she has a chance to unleash them on
-you.
+A magician with such stellar sanity and manners probably has great pets as well.
+You might not have to wait long to find out for certain.
 %%%%
 withered plant
 

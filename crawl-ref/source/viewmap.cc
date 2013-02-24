@@ -897,8 +897,7 @@ bool show_map(level_pos &lpos,
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
-                                                    KMC_LEVELMAP,
-                                                    false, false);
+                                                    KMC_LEVELMAP);
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #endif
             if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)

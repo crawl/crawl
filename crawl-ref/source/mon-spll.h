@@ -506,7 +506,7 @@
 
     {  MST_NEQOXEC,
       {
-       SPELL_POLYMORPH_OTHER,
+       SPELL_MALMUTATE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_BRAIN_FEED,
@@ -541,9 +541,9 @@
       {
        SPELL_ENERGY_BOLT,
        SPELL_SLOW,
-       SPELL_NO_SPELL,
-       SPELL_POLYMORPH_OTHER,
        SPELL_CONFUSE,
+       SPELL_MALMUTATE,
+       SPELL_DIG,
        SPELL_NO_SPELL
       }
     },
@@ -748,8 +748,8 @@
 
     {  MST_SHINING_EYE,
       {
-       SPELL_POLYMORPH_OTHER,
-       SPELL_POLYMORPH_OTHER,
+       SPELL_MALMUTATE,
+       SPELL_MALMUTATE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -839,7 +839,7 @@
        SPELL_BOLT_OF_FIRE,
        SPELL_BOLT_OF_FIRE,
        SPELL_NO_SPELL,
-       SPELL_POLYMORPH_OTHER,
+       SPELL_MALMUTATE,
        SPELL_FIREBALL,
        SPELL_FIREBALL
       }
@@ -1261,7 +1261,6 @@
        SPELL_TELEPORT_SELF,
       }
     },
-
 
     // demon lords
     {  MST_GERYON,
@@ -1833,6 +1832,50 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_FRENZY
+      }
+    },
+
+    {  MST_JORGRUN,
+      {
+       SPELL_LRD,
+       SPELL_PETRIFY,
+       SPELL_NO_SPELL,
+       SPELL_SHATTER,
+       SPELL_DIG,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_LAMIA,
+      {
+       SPELL_IOOD,
+       SPELL_MESMERISE,
+       SPELL_HASTE,
+       SPELL_POISON_ARROW,
+       SPELL_NO_SPELL,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_DEEP_TROLL_EARTH_MAGE,
+      {
+       SPELL_LRD,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_DIG,
+       SPELL_NO_SPELL,
+      }
+    },
+
+    {  MST_DEEP_TROLL_SHAMAN,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_HASTE_OTHER,
+       SPELL_MIGHT_OTHER,
+       SPELL_MINOR_HEALING,
       }
     },
 

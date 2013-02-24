@@ -231,8 +231,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "small zombie / small skeleton / wight w:5 / necrophage / large zombie w:5 /\
                     large skeleton w:5 / shadow w:5 / phantom w:5",
-                "worker ant / soldier ant w:2 / queen ant w:1 / ant larva w:1 /\
-                    killer bee w:2",
+                "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly / w:1 brown ooze",
                 "giant cockroach / giant mite / giant centipede / w:5 spider /\
                     w:5 goliath beetle / worm / w:5 brain worm",
@@ -326,7 +325,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ugly thing",
                 "spiny worm w:5 / giant leech / worm / brain worm w:5",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
-                "troll / deep troll w:2 / rock troll / iron troll w:2",
+                "troll / deep troll w:12 / iron troll w:2",
                 "fire drake / swamp drake / steam dragon / swamp dragon /\
                  mottled dragon / komodo dragon",
                 "necrophage / rotting hulk / w:2 ghoul / bog body",
@@ -376,7 +375,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ugly thing w:30 / w:15 very ugly thing / w:1 kirke",
                 "vampire mosquito / red wasp w:5 / yellow wasp / giant firefly",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
-                "troll / deep troll / rock troll / iron troll",
+                "troll / deep troll / iron troll",
                 "fire drake w:5 / swamp drake / swamp dragon /\
                     mottled dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
                     dragon w:5 / ice dragon w:5 / storm dragon w:1",

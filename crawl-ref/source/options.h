@@ -160,7 +160,7 @@ public:
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
 
-    uint32_t    autopickups;     // items to autopickup
+    FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
     bool        clean_map;       // remove unseen clouds/monsters
@@ -262,8 +262,6 @@ public:
     bool        arena_list_eq;
 
     vector<message_filter> force_more_message;
-
-    int         stash_tracking; // How stashes are tracked
 
     int         tc_reachable;   // Colour for squares that are reachable
     int         tc_excluded;    // Colour for excluded squares.
@@ -438,7 +436,7 @@ public:
     int         tile_map_pixels;
     int         tile_cell_pixels;
     bool        tile_filter_scaling;
-    bool        tile_use_small_layout;
+    option_value tile_use_small_layout;
 #endif
 
 #ifdef USE_TILE

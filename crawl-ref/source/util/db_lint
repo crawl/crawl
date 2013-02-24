@@ -188,9 +188,12 @@ if (read_file("descript/monsters"))
         # described with a suffix
         'the Serpent of Hell',
         # overridden descriptions
-        'player', 'player illusion', 'merged slime creature',
+        'player illusion',
+        # reglyphing/colouring dummies
+        'player', 'merged slime creature', 'animated tree',
         # genus-only monsters
-        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental',
+        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental', 'drake',
+        'giant lizard',
     );
     delete $keys{'__(_suffix_examine'};
     delete $keys{"the Serpent of Hell $_"} for qw(gehenna cocytus dis tartarus);

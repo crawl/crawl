@@ -253,12 +253,16 @@ brand_type player::damage_brand(int)
                 ret = SPWPN_VAMPIRICISM;
             break;
 
+        case TRAN_JELLY:
+            ret = SPWPN_ACID;
+            break;
+
         default:
             break;
         }
     }
 
-    return (static_cast<brand_type>(ret));
+    return ret;
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
@@ -395,12 +399,18 @@ string player::hand_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_BAT || form == TRAN_DRAGON)
         str = "foreclaw";
-    else if (form == TRAN_PIG || form == TRAN_SPIDER)
+    else if (form == TRAN_PIG || form == TRAN_SPIDER || form == TRAN_PORCUPINE)
         str = "front leg";
     else if (form == TRAN_ICE_BEAST)
         str = "paw";
     else if (form == TRAN_BLADE_HANDS)
         str = "scythe-like blade";
+    else if (form == TRAN_TREE)
+        str = "branch";
+    else if (form == TRAN_WISP)
+        str = "misty tendril";
+    else if (form == TRAN_JELLY)
+        str = "bump"; // not even pseudopods...
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || !form_changed_physiology())
     {
@@ -432,6 +442,12 @@ string player::foot_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_SPIDER)
         str = "hind leg";
+    else if (form == TRAN_TREE)
+        str = "root";
+    else if (form == TRAN_WISP)
+        str = "strand";
+    else if (form == TRAN_JELLY)
+        str = "underside", *can_plural = false;
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || !form_changed_physiology())
     {
@@ -535,7 +551,11 @@ string player::unarmed_attack_name() const
         break;
     case TRAN_BAT:
     case TRAN_PIG:
+    case TRAN_PORCUPINE:
         text = "Teeth";
+        break;
+    case TRAN_TREE:
+        text = "Branches";
         break;
     case TRAN_NONE:
     case TRAN_APPENDAGE:

@@ -34,8 +34,8 @@ quickly with all weapons of this type, as well as increasing your accuracy and
 damage with them. It is generally recommended to concentrate your efforts on
 one or two weapon types to become more powerful in them.
 
-Axes have some of the strongest two-handed weapons, although they require a lot
-of skill to be used effectively.
+Axes cleave through multiple enemies with a single swing, hitting foes in an
+arc around the wielder.
 
 Being skilled with Axes makes it easier to become more skilled with Maces &
 Flails or Polearms, and vice versa.

@@ -515,7 +515,7 @@ KMONS:   1 = brimstone fiend w:9 / hell sentinel w:1
 KMONS:   2 = hellion / balrug
 KMONS:   34 = smoke demon / red devil
 KMONS:   56 = skeletal warrior ; broad axe ego:flaming ident:type | \
-         halberd ego:flaming ident:type w:7 | spiked flail ego:flaming ident:type
+         halberd ego:flaming ident:type w:7 | morningstar ego:flaming ident:type
 KMONS:   7 = hell knight
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
@@ -694,6 +694,234 @@ xwwwwwwwww...
 xwwwwwwww..5.
 xwwwwww..5...
 xwww..4......
+ENDMAP
+
+##############################################################################
+
+NAME:    hangedman_elemental_corridor
+TAGS:    no_monster_gen no_pool_fixup allow_dup abyss
+DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$
+SHUFFLE: 123456, }] / }] / {[ / **
+:  if you.branch() == "Geh" then
+MONS:    brimstone fiend / balrug / hellion, sun demon / smoke demon / \
+         hell knight
+SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
+:  elseif you.branch() == "Coc" then
+MONS:    ice fiend / blizzard demon / reaper ; scythe ego:freezing ident:type
+MONS:    eight-headed hydra simulacrum w:2 / \
+         seven-headed hydra simulacrum w:2 / \
+         ice dragon simulacrum w:3 / freezing wraith w:3 / ice devil
+SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
+:  elseif you.branch() == "Abyss" then
+MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
+MONS:    large simulacrum w:12 / white draconian / water elemental w:5 / \
+         white very ugly thing w:15 / ice devil w:8
+MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
+MONS:    flaming corpse w:8 / red draconian / fire elemental w:5 / \
+         red very ugly thing w:15 / efreet w:12
+SUBST:   * = *||, {}[] = ***|, xc = xxxccb, 5 = 2, 6 = 4
+:  else
+KMONS:   123 = dragon
+KMONS:   456 = ice dragon
+KMONS:   789 = red draconian ; cloak . long sword ego:freezing ident:type
+KMONS:   ABC = white draconian ; cloak . long sword ego:flaming ident:type
+KMONS:   D = golden dragon
+SUBST:   c : c:5 b:2 n:1
+SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'
+:  end
+KFEAT:   f = deep_water
+KFEAT:   F = lava
+KPROP:   lF = no_cloud_gen
+SUBST:   % = $:2 %:5 *:2, ] = ] >:5, [ = [ <:5, G : G:6 c:2 b:1 .:1
+# Clearly, they commissioned the deep dwarves.
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 3, pow_max = 3, delay = 75, size_min = 2, size_max = 2, \
+             walk_dist = 1, start_clouds = 1, excl_rad = -1 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 3, pow_max = 3, delay = 100, size_min = 2, size_max = 2, \
+             walk_dist = 1, start_clouds = 1, excl_rad = -1 }
+MAP
+  xx+++xxx
+  xc...ccxx
+ xxc...wccxxx
+ xcc...cfcccxx
+xxcc...ccwwccxxxxxx
+xccc...ccccfccccccxx
+xccl..1cccccwcccwccxx
+xcFc...2%]%...6..wccx
+xcFc.....G.G.....cfcx
+xccl..3...%}%5...cfcx
+xxcclccclccccc4..wccx
+ xxccccccFcccc...cccx
+  xxxxxxccllcc...ccxx
+       xxcccFc...cxx
+        xxxccl...cx
+          xxcc...cx
+           xxx+++xx
+ENDMAP
+
+NAME:    hangedman_generic_boss_arena
+TAGS:    no_monster_gen
+DEPTH:   Geh, !Geh:$
+MONS:    hell knight, hellion, balrug, balrug
+MONS:    flaming corpse, sun demon, hell hog
+KFEAT:   L = l
+SHUFFLE: dD, eE / fF / 56, 56 / 65 / 55 / 66 / 77 / '', ABC / 234 / <<<, 234 / 322
+NSUBST:  < : 1:) / 1:( / 1:[[[<<>
+SUBST:   ABC : v.., d : vLl, D : vvLl, eE : vvl.., fF : vvl.., v : xcv, ' = .
+KPROP:   l = no_cloud_gen
+MAP
+      xxxxxxxxxxx
+     xxcccccccccxx
+    xxcclllclllccxx
+   xxccl...2...lccxx
+  xxccl.1.....1.lccxx
+ xxccl..lllAlll..lccxx
+xxccl.<ldl...ldl<.lccxx
+xccl..lDl..f..lDl..lccx
+xcl.1ldl..E6E..ldl1.lcx
+xcl..ll..e5F5e..ll..lcx
+xcl..l...........l..lcx
+xcl...B..llDll..C...lcx
+xcl....lldldldll....lcx
+xccl3...1l.D.l1...4lccx
+xxccl......<......lccxx
+ xxccl....lll....lccxx
+  xxcclllllclllllccxx
+   xxcccccccccccccxx
+    xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    hangedman_restless_catacombs
+TAGS:    no_monster_gen
+DEPTH:   Tar, !Tar:$
+MONS:    soul eater, curse skull
+MONS:    skeletal warrior / phantasmal warrior w:6 / \
+         shadow wraith w:4 / rotting hulk / guardian mummy
+KMONS:   45 = vampire knight
+KMONS:   67 = vampire mage
+KMONS:   89 = ghoul
+KMONS:   AB = mummy priest
+KMONS:   CD = lich
+NSUBST:  0 = 1:( / 1 : ):9 >:1 / 1 : 3:9 [:1 / 1:4 / 1:5 / 1:6 / 1:7 / *:3
+SHUFFLE: 456789ABCD"
+SUBST:   " = 3
+MAP
+xxxxxxxxxxxxxxxxx
+xcccccccccccccccx
+xcG.c0c0c0c0c.Gcx
+xc.1c+c+c+c+c1.cx
+xccc.........cccx
+xc0+.........+0cx
+xccc...x.x...cccx
+xc0+..x...x..+0cx
+xccc....2....cccx
+xc0+..x...x..+0cx
+xccc...x.x...cccx
+xc0+.........+0cx
+xccc.........cccx
+xc.1c+c+c+c+c1.cx
+xcG.c0c0c0c0c.Gcx
+xcccccccccccccccx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    hangedman_hellfire_club
+TAGS:    transparent no_monster_gen
+DEPTH:   Geh:1-6, Zot:1-4
+MONS:    red draconian scorcher / mottled draconian scorcher w:7 / \
+         pale draconian scorcher w:3
+MONS:    red draconian zealot / mottled draconian zealot w:7 / \
+         pale draconian scorcher w:3
+MONS:    hellion
+ITEM:    any potion good_item
+KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8
+KFEAT:   L = l
+KPROP:   l = no_cloud_gen
+SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, ()~- / ()~- / -~(), () / {( / }) / '' / ''
+SUBST:   4 = 3, ' = .:99 >:1, ( = ( <:2, ) = ) >:2
+: if you.branch() == "Geh" then
+SUBST:   d$ = .
+: end
+MAP
+xxxxxxxx.@.xxxxxxxx
+xccccccxx.xxccccccx
+xcd$$1cc...cc2$$dcx
+xcd$$cc.....cc$$dcx
+xc.~cc..x.x..cc..cx
+xc.cc..GxlxG..cc.cx
+xc....xxLllxx....cx
+xc.(...llLll...).cx
+xc....xxllLxx....cx
+xc.cc..GxlxG..cc.cx
+xc..cc..x.x..cc-.cx
+xcd$$cc.....cc$$dcx
+xcd$$3cc...cc4$$dcx
+xccccccxx.xxccccccx
+xxxxxxxx.@.xxxxxxxx
+ENDMAP
+
+NAME:    hangedman_tartarus_temple_path
+TAGS:    transparent extra
+DEPTH:   Tar:1-6
+SHUFFLE: hH / hH / Hh, iI / iI / Ii
+SUBST:   h : cccx, H : cxGF, i : cccx, I : cxGF
+SUBST:   d = d., + = +..., { = {}...., c = c:49 .:1, C = c
+MARKER:  F = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
+             pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = -1 }
+{{
+dgn.delayed_decay(_G, 'd', 'base draconian corpse w:5 / ' ..
+                           'base draconian skeleton / ' ..
+                           'shadow dragon corpse w:5 / ' ..
+                           'shadow dragon skeleton')
+}}
+MAP
+ .@xxxxxxxxxxxxxxxxxxxxxxx@.
+.x..cccccccCCCCCCCccccccc..x.
+@...cd.c.dcccccccccd.c.dc...@
+x...c.....cd.....dc.....c...x
+xc..c..c..c...c...c..c..c..cx
+xc..c..h..cF..i..Fc..h..c..cx
+xc..+.dHd.+...I...+.dHd.+..cx
+xc..c..h..cF..i..Fc..h..c..cx
+xc..c..c..c...c...c..c..c..cx
+x...c.....cd..{..dc.....c...x
+@...cd.c.dcccccccccd.c.dc...@
+.x..cccccccCCCCCCCccccccc..x.
+ .@xxxxxxxxxxxxxxxxxxxxxxx@.
+ENDMAP
+
+# Looks really weird and silly in layout_dis, so it's limited to the city layouts.
+NAME:    hangedman_dis_monolith
+TAGS:    transparent layout_city layout_chaotic_city
+DEPTH:   Dis:1-6
+ORIENT:  float
+MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
+         patrolling executioner
+MONS:    patrolling hell sentinel
+MONS:    iron devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
+         iron dragon zombie w:5 / iron troll skeleton w:5 / \
+         iron troll zombie w:5 / hell knight w:15
+MONS:    hellion / tormentor / reaper / \
+         dancing weapon w:20 ; glaive good_item | battleaxe good_item | \
+                               great sword good_item | great mace good_item
+SHUFFLE: ABa / CDb / EFc
+NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
+SUBST:   ABCDE = 3:19 4:1, a = +, bc = v, V : v.
+MAP
+.....................................................
+.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
+.vv.v..v.......v.......v.....v.......v.......v..v.vv.
+.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
+.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
+3vvAAAvvvvvvvvvvvvvvvvvvvCCCvvvvvvvvvvvvvvvvvvvEEEvv3
+4vvvavvvvvvvvvvvvvvvvvvvvvbvvvvvvvvvvvvvvvvvvvvvcvvv4
+3vvBBBvvvvvvvvvvvvvvvvvvvDDDvvvvvvvvvvvvvvvvvvvFFFvv3
+.vvv+vvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv+vvv.
+.vv...vv3vv4vv3v3vv4vv3vv...vv3vv4vv3v3vv4vv3vv...vv.
+.vv.v..v.......v.......v.....v.......v.......v..v.vv.
+.vv.......vvv.....vvv.....V.....vvv.....vvv.......vv.
+.....................................................
 ENDMAP
 
 ##############################################################################
@@ -1601,7 +1829,7 @@ SUBST:   4 = 444499566-
 COLOUR:  c = lightred
 COLOUR:  G = red
 FTILE:   1234569D%$*|Ovcn+- = floor_pebble_red
-TILE:    n = dngn_transparent_wall_red
+TILE:    n = dngn_transparent_stone_red
 SUBST:   - = .
 KFEAT:   RV = lava
 KFEAT:   L = endless_lava
@@ -2209,7 +2437,7 @@ NSUBST: ! = 2:. / *:c
 NSUBST: ? = 2:. / *:c
 NSUBST: ^ = 2:. / *:c
 KMONS:  E = kraken spectre
-KMONS:  F = shark spectre / big fish spectre / electric eel spectre
+KMONS:  F = shark spectre / big fish spectre
 KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
 : serpent_of_hell_setup(_G)

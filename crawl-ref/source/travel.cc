@@ -247,7 +247,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
 
         // You can't open doors in bat form.
         if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
-            return player_can_open_doors();
+            return player_can_open_doors() || you.form == TRAN_JELLY;
     }
 
     return feat_is_traversable(grid);
@@ -4223,7 +4223,7 @@ void explore_discoveries::add_item(const item_def &i)
 
     string itemname = get_menu_colour_prefix_tags(i, DESC_A);
     monster* mon = monster_at(i.pos);
-    if (mon && mon->type == MONS_BUSH)
+    if (mon && mons_species(mon->type) == MONS_BUSH)
         itemname += " (under bush)";
     else if (mon && mon->type == MONS_PLANT)
         itemname += " (under plant)";

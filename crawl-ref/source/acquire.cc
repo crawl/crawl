@@ -338,7 +338,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
 
 // If armour acquirement turned up a non-ego non-artefact armour item,
 // see whether the player has any unfilled equipment slots.  If so,
-// hand out a plain (and possibly negatively enchanted) item of that
+// hand out a plain (possibly enchanted) item of that
 // type.  Otherwise, keep the original armour.
 static bool _try_give_plain_armour(item_def &arm)
 {
@@ -508,6 +508,10 @@ static int _acquirement_weapon_subtype(bool divine)
     // 0% or 100% in the above formula.  At skill 25 that's *3.5 .
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
+#if TAG_MAJOR_VERSION == 34
+        if (i == WPN_SPIKED_FLAIL)
+            continue;
+#endif
         int wskill = range_skill(OBJ_WEAPONS, i);
         if (wskill == SK_THROWING)
             wskill = weapon_skill(OBJ_WEAPONS, i);
@@ -756,24 +760,24 @@ static int _acquirement_wand_subtype()
         case WAND_HEAL_WOUNDS:
             w = 25; break;
         case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
-        case WAND_INVISIBILITY:
             w = 15; break;
         case WAND_FIRE:             // each 5.7%, group unknown each 9.3%
         case WAND_COLD:
         case WAND_LIGHTNING:
         case WAND_DRAINING:
+        case WAND_INVISIBILITY:
+        case WAND_FIREBALL:
             w = 8; break;
         case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
-        case WAND_FIREBALL:
         case WAND_DISINTEGRATION:
-        case WAND_POLYMORPH_OTHER:
+        case WAND_POLYMORPH:
+        case WAND_ENSLAVEMENT:
             w = 5; break;
         case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
         case WAND_FROST:
         case WAND_CONFUSION:
         case WAND_PARALYSIS:
         case WAND_SLOWING:
-        case WAND_ENSLAVEMENT:
         case WAND_MAGIC_DARTS:
         case WAND_RANDOM_EFFECTS:
         default:
@@ -1283,7 +1287,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
             // Try to fill empty slots.
             if ((_is_armour_plain(doodad)
-                 || get_armour_slot(doodad) == EQ_BODY_ARMOUR)
+                 || get_armour_slot(doodad) == EQ_BODY_ARMOUR && coinflip())
                 && _armour_slot_seen((armour_type)doodad.sub_type))
             {
                 if (_try_give_plain_armour(doodad))
@@ -1291,7 +1295,7 @@ int acquirement_create_item(object_class_type class_wanted,
                     // Only Xom gives negatively enchanted items (75% if not 0).
                     if (doodad.plus < 0 && agent != GOD_XOM)
                         doodad.plus = 0;
-                    else if (doodad.plus > 0 && coinflip())
+                    else if (doodad.plus > 0 && agent == GOD_XOM && coinflip())
                         doodad.plus *= -1;
                 }
                 else if (agent != GOD_XOM && one_chance_in(3))
@@ -1363,11 +1367,11 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
-        // Sif Muna shouldn't gift Vehumet or Kiku's special books.
+        // Sif Muna shouldn't gift special books.
         // (The spells therein are still fair game for randart books.)
         if (agent == GOD_SIF_MUNA
-            && doodad.sub_type >= MIN_GOD_ONLY_BOOK
-            && doodad.sub_type <= MAX_GOD_ONLY_BOOK)
+            && doodad.sub_type >= MIN_RARE_BOOK
+            && doodad.sub_type <= MAX_RARE_BOOK)
         {
             ASSERT(doodad.base_type == OBJ_BOOKS);
 

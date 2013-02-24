@@ -54,7 +54,7 @@ Myśliwi potrafią walczyć na dystans, bez potrzeby uciekania się do magii.
 %%%%
 Monk
 
-Mnisi są gotowi podjąć walkę z kimkolwiek nie uzbojeni w nic prócz szaty i
+Mnisi są gotowi podjąć walkę z kimkolwiek nie uzbrojeni w nic prócz szaty i
 własnego ciała.
 %%%%
 Necromancer

@@ -613,7 +613,7 @@ recite_closure
 ##########################
 Xom prayer
 
-Xom slaps you with a @_trout_species_@ trout!
+Xom slaps you with @_trout_species_@ trout!
 
 Xom toots happily.
 
@@ -629,15 +629,41 @@ Xom says: Amen!
 %%%%
 _trout_species_
 
-rainbow
+a rainbow
 
-flathead
+a flathead
 
-cutthroat
+a cutthroat
 
-bull
+a bull
 
-silver
+a silver
+
+w:3
+@_trout_species_rare_@
+%%%%
+_trout_species_rare_
+
+a complex
+
+a polygonal
+
+an imaginary
+
+an inverse
+
+an unlikely
+
+a used
+
+a second-hand
+
+a prohibited
+
+a challenging
+
+w:2
+a kilgore
 %%%%
 _xom_child_
 

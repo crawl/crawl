@@ -1526,7 +1526,9 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                  act.name(DESC_THE).c_str());
         }
     }
-    else if (!force_hit && pro_block >= con_block)
+    else if (!force_hit
+             && pro_block >= con_block
+             && you.see_cell(act.pos()))
     {
         string owner;
         if (act.is_player())

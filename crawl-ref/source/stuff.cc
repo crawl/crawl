@@ -48,9 +48,9 @@
 
 #ifdef __ANDROID__
 #include <android/log.h>
-double log2( double n )
+double log2(double n)
 {
-    return log(n)/log(2); // :(
+    return log(n) / log(2); // :(
 }
 #endif
 
@@ -507,6 +507,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_EVOCATION_SUPPRESSED:
         mpr("You may not evoke while suppressed!");
         break;
+    case MSG_BEING_WATCHED:
+        mpr("You feel you are being watched by something.");
+        break;
     }
 }
 
@@ -555,7 +558,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
 #ifdef TOUCH_UI
     Popup *pop = new Popup(prompt);
     MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(prompt, MEL_TITLE ));
+    pop->push_entry(new MenuEntry(prompt, MEL_TITLE));
     pop->push_entry(status);
     MenuEntry *me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y', false);
     me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));

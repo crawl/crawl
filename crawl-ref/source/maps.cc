@@ -150,6 +150,8 @@ static void _dgn_flush_map_environment_for(const string &mapname)
     dlua.callfn("dgn_flush_map_environment_for", "s", mapname.c_str());
 }
 
+// Execute the map's Lua, perform substitutions and other transformations,
+// and validate the map
 static bool _resolve_map_lua(map_def &map)
 {
     _dgn_flush_map_environment_for(map.name);
@@ -180,7 +182,8 @@ static bool _resolve_map_lua(map_def &map)
     return true;
 }
 
-// Mirror the map if appropriate, resolve substitutable symbols (?),
+// Resolve Lua and transformation directives, then mirror and rotate the
+// map if allowed
 static bool _resolve_map(map_def &map)
 {
     if (!_resolve_map_lua(map))
@@ -400,6 +403,12 @@ static bool _map_safe_vault_place(const map_def &map,
     const bool water_ok =
         map.has_tag("water_ok") || player_in_branch(BRANCH_SWAMP);
 
+    const bool vault_can_overwrite_other_vaults =
+        map.has_tag("can_overwrite");
+
+    const bool vault_can_replace_portals =
+        map.has_tag("replace_portal");
+
     const vector<string> &lines = map.map.get_lines();
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
     {
@@ -409,7 +418,7 @@ static bool _map_safe_vault_place(const map_def &map,
         if (lines[dp.y][dp.x] == ' ')
             continue;
 
-        if (!map.has_tag("can_overwrite"))
+        if (!vault_can_overwrite_other_vaults)
         {
             // Also check adjacent squares for collisions, because being next
             // to another vault may block off one of this vault's exits.
@@ -423,7 +432,7 @@ static bool _map_safe_vault_place(const map_def &map,
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
         if (!_may_overwrite_feature(cp, water_ok)
-            && (!map.has_tag("replace_portal")
+            && (!vault_can_replace_portals
                 || !_is_portal_place(cp)))
         {
             return false;
@@ -455,7 +464,6 @@ static bool _connected_minivault_place(const coord_def &c,
         return true;
 
     // Must not be completely isolated.
-    const bool water_ok = place.map.has_tag("water_ok");
     const vector<string> &lines = place.map.map.get_lines();
 
     for (rectangle_iterator ri(c, c + place.size - 1); ri; ++ri)
@@ -465,7 +473,7 @@ static bool _connected_minivault_place(const coord_def &c,
         if (lines[ci.y - c.y][ci.x - c.x] == ' ')
             continue;
 
-        if (_may_overwrite_feature(ci, water_ok, false)
+        if (_may_overwrite_feature(ci, false, false)
             || (place.map.has_tag("replace_portal")
                 && _is_portal_place(ci)))
             return true;
@@ -500,7 +508,7 @@ static coord_def _find_minivault_place(
 
     // [ds] The margin around the edges of the map where the minivault
     // won't be placed. Purely arbitrary as far as I can see.
-    const int margin = MAPGEN_BORDER * 2;
+    const int margin = MAPGEN_BORDER * 2 + 1;
 
     // Find a target area which can be safely overwritten.
     for (int tries = 0; tries < 600; ++tries)
@@ -1176,6 +1184,9 @@ static bool verify_file_version(const string &file, time_t mtime)
         fclose(fp);
         return (major == TAG_MAJOR_VERSION
                 && minor <= TAG_MINOR_VERSION
+#if TAG_MAJOR_VERSION == 34
+                && minor >= TAG_MINOR_0_12
+#endif
                 && t == mtime);
     }
     catch (short_read_exception &E)
@@ -1209,6 +1220,10 @@ static bool _load_map_index(const string& cache, const string &base,
             int64_t t = unmarshallSigned(inf);
             if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
                 return false;
+#if TAG_MAJOR_VERSION == 34
+            if (minor < TAG_MINOR_0_12)
+                return false;
+#endif
             lc_global_prelude.read(inf);
             fclose(fp);
 
@@ -1227,6 +1242,10 @@ static bool _load_map_index(const string& cache, const string &base,
     int64_t t = unmarshallSigned(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION || t != mtime)
         return false;
+#if TAG_MAJOR_VERSION == 34
+    if (minor < TAG_MINOR_0_12)
+        return false;
+#endif
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize(nexist + nmaps, map_def());

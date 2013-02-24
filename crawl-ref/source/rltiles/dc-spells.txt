@@ -30,6 +30,10 @@ tornado TORNADO
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
 orb_of_destruction IOOD
+battlesphere BATTLESPHERE
+dazzling_spray DAZZLING_SPRAY
+force_lance FORCE_LANCE
+fulminant_prism FULMINANT_PRISM
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -155,6 +159,7 @@ apportation APPORTATION
 blink BLINK
 controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
+disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
 phase_shift PHASE_SHIFT
@@ -165,7 +170,7 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
-polymorph_other POLYMORPH_OTHER
+polymorph POLYMORPH
 homunculus HOMUNCULUS
 beastly_appendage BEASTLY_APPENDAGE
 

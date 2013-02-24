@@ -424,7 +424,6 @@ KMONS:  n = patrolling death drake
 KITEM:  n = potion of flight q:3
 KMONS:  d = patrolling electric golem
 KITEM:  d = gold q:243
-KMONS:  o = wood golem
 KMONS:  p = clay golem
 SHUFFLE: fgiAC
 KMONS:  f = greater mummy
@@ -449,7 +448,7 @@ cccc.
 ||cb3c
 ||ccnc
 ...czc.
-.k.coccc
+.k.cpccc
 ...=p45c
 X+XXXd6c
 f.gXXX=c

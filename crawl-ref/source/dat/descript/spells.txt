@@ -184,6 +184,12 @@ This spell dims the light of the dungeon, reducing the range of vision. The
 area affected is quite large and it doesn't have sharp edges, thus the effect
 is unlikely to alert anyone not very close to the caster.
 %%%%
+Dazzling Spray spell
+
+This spell fires a spread of scintillating energy bolts from the caster's
+fingertips which can dazzle the vision of any living creature they strike,
+leaving them stumbling about blindly.
+%%%%
 Death Channel spell
 
 This spell raises living creatures slain by the caster and his or her allies
@@ -290,6 +296,11 @@ Flight spell
 
 This spell grants to the caster the ability to fly through the air.
 %%%%
+Force Lance spell
+
+This spell fires a shaft of concussive force which can send its target hurtling
+backwards if the impact is not nullified by their defenses.
+%%%%
 Freeze spell
 
 This spell freezes a creature. This may temporarily slow the metabolism of a
@@ -304,6 +315,13 @@ special enchantments.
 Freezing Cloud spell
 
 This spell conjures up a large cloud of lethally cold vapour.
+%%%%
+Fulminant Prism spell
+
+This spell conjures a prism which channels magical energy from its surroundings
+and unleashes it after a short while as a violent explosion of arcane force. Be
+warned that the prism is extremely fragile and any damage caused to it may
+result in premature detonation!
 %%%%
 Major Healing spell
 
@@ -352,6 +370,14 @@ Invisibility spell
 This spell hides a creature from the sight of others. While invisible you will
 gain magical contamination, which may eventually cause enough glow to make you
 visible again.
+%%%%
+Iskenderun's Battlesphere spell
+
+This spell conjures a small globe of magical energy linked to the caster's own
+reserves of power, which will hover alongside its creator and augment their
+destructive might. While the battlesphere cannot take independent action, it
+will fire volleys of energy at the caster's enemies in near-perfect sync with
+its creator's own destructive conjurations.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -525,9 +551,9 @@ Poisonous Cloud spell
 
 This spell conjures forth a great cloud of lethal gasses.
 %%%%
-Polymorph Other spell
+Polymorph spell
 
-This spell randomly alters the form of another creature. It is especially
+This spell randomly alters the form of a creature. It is especially
 effective against shape-changing creatures.
 %%%%
 Portal Projectile spell
@@ -576,9 +602,9 @@ contact with reality.
 Shatter spell
 
 This spell causes a burst of concussive force around the caster, which will
-damage most creatures, although those composed of stone, metal or crystal, or
-otherwise brittle, will particularly suffer. The magic has been known to
-adversely affect walls.
+damage most creatures, although those composed of stone, metal, crystal or
+otherwise brittle material will particularly suffer. The magic has been known
+to adversely affect walls.
 %%%%
 Shock spell
 

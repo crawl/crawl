@@ -33,6 +33,7 @@
 #include "random.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"
@@ -214,7 +215,17 @@ static void _clear_golubria_traps()
     }
 }
 
-static void _leaving_level_now(dungeon_feature_type stair_used)
+static void _clear_prisms()
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monster* mons = &menv[i];
+        if (mons->type == MONS_FULMINANT_PRISM)
+            mons->reset();
+    }
+}
+
+void leaving_level_now(dungeon_feature_type stair_used)
 {
     process_sunlights(true);
 
@@ -235,6 +246,7 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
+    _clear_prisms();
 }
 
 static void _update_travel_cache(const level_id& old_level,
@@ -357,7 +369,7 @@ void up_stairs(dungeon_feature_type force_stair)
     clear_trapping_net();
 
     // Checks are done, the character is committed to moving between levels.
-    _leaving_level_now(stair_find);
+    leaving_level_now(stair_find);
 
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
@@ -778,7 +790,7 @@ void down_stairs(dungeon_feature_type force_stair)
     const string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
     // Fire level-leaving trigger.
-    _leaving_level_now(stair_find);
+    leaving_level_now(stair_find);
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
@@ -908,6 +920,8 @@ void down_stairs(dungeon_feature_type force_stair)
             mpr("You feel Cheibriados slowing down the madness of this place.",
                 MSGCH_GOD, GOD_CHEIBRIADOS);
         }
+
+        // Re-entering the Abyss halves accumulated speed.
         you.abyss_speed /= 2;
         learned_something_new(HINT_ABYSS);
         break;

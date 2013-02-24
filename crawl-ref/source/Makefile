@@ -1697,7 +1697,9 @@ package-windows:
 ifneq (x$(SRC_VERSION),x$(shell cat build-win/version.txt 2>/dev/null))
 	+$(MAKE) build-windows
 endif
-	makensis -NOCD -DVERSION=$(SRC_VERSION) util/crawl.nsi
+	if $(GXX) -dumpmachine|grep -q x86_64; \
+	  then WINARCH=win64; else WINARCH=win32; fi; \
+	makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$$WINARCH" util/crawl.nsi
 
 build-windows:
 ifneq ($(GAME),crawl.exe)

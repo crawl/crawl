@@ -4,7 +4,7 @@
 
 
 NAME:   serial_curves
-TAGS:   allow_dup extra luniq_serial
+TAGS:   allow_dup extra luniq_serial decor
 #       Suitable for the rooms layout.
 TAGS:   layout_rooms
 DEPTH:  D, Snake
@@ -21,7 +21,7 @@ CHANCE: 1%
 NAME:   eino_curves_01
 DEPTH:  D, Snake
 WEIGHT: 1
-TAGS:   allow_dup extra serial_curves
+TAGS:   transparent allow_dup extra serial_curves decor
 MAP
   @
 x...xxxxxxxxxx
@@ -47,7 +47,7 @@ ENDMAP
 
 NAME:   eino_curves_02
 DEPTH:  D, Snake
-TAGS:   allow_dup extra serial_curves
+TAGS:   transparent allow_dup extra serial_curves decor
 WEIGHT: 1
 MAP
   @
@@ -68,7 +68,7 @@ ENDMAP
 
 NAME:   eino_curves_03
 DEPTH:  D, Snake
-TAGS:   allow_dup extra serial_curves
+TAGS:   transparent allow_dup extra serial_curves decor
 WEIGHT: 1
 MAP
  xxxxxxxxxxxxx
@@ -85,7 +85,7 @@ ENDMAP
 
 NAME:   eino_curves_04
 DEPTH:  D, Snake
-TAGS:   allow_dup extra serial_curves
+TAGS:   transparent allow_dup extra serial_curves decor
 WEIGHT: 1
 MAP
  xxxxxxxxxxxxxxxxxx

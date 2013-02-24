@@ -450,6 +450,7 @@ enter_abyss2
 enter_abyss3
 exit_abyss DNGN_EXIT_ABYSS
 exit_abyss_flickering
+abyssal_stair DNGN_ABYSSAL_STAIR
 
 enter_pandemonium DNGN_ENTER_PANDEMONIUM
 portal DNGN_PORTAL
@@ -682,11 +683,17 @@ wall_old_blood09
 %sdir misc
 halo HALO
 effect/halo_range HALO_RANGE
-effect/umbra UMBRA
+effect/umbra0 UMBRA
+effect/umbra1
+effect/umbra2
+effect/umbra3
 effect/orb_glow0 ORB_GLOW
 effect/orb_glow1
 effect/quad_glow QUAD_GLOW
-effect/disjunct DISJUNCT
+effect/disjunct0 DISJUNCT
+effect/disjunct1
+effect/disjunct2
+effect/disjunct3
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

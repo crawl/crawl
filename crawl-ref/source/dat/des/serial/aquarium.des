@@ -99,10 +99,7 @@ function init_aquarium(e)
     -- I tried ussing [[ ]] here, but Crawl could not find the
     --  mons_diamond_obelisk tile then.  The problem went away
     --  when I put it back to single quotes
-    e.kmons('_ = generate_awake statue n_rpl n_des ' ..
-                'name:diamond_obelisk hp:10000 ' ..
-                'col:white tile:mons_diamond_obelisk ' ..
-                'perm_ench:tornado')
+    e.kmons('_ = diamond obelisk')
   elseif you.absdepth() <= 3 then
     e.subst('w = _')
     e.ftile('_ = floor_grass')
@@ -157,7 +154,7 @@ function init_aquarium(e)
                  w:1  generate_awake red wasp simulacrum /
                  w:1  generate_awake orc simulacrum /
                  w:1  generate_awake yaktaur simulacrum /
-                 w:1  generate_awake rock troll simulacrum /
+                 w:1  generate_awake deep troll simulacrum /
                  w:1  generate_awake wolf spider simulacrum /
                  w:1  generate_awake wolf simulacrum /
                  w:1  generate_awake polar bear simulacrum /
@@ -268,7 +265,7 @@ end
 #
 
 NAME:    serial_aquarium
-TAGS:    allow_dup extra luniq_serial
+TAGS:    allow_dup extra luniq_serial decor
 TAGS:    layout_rooms layout_misc
 DEPTH:   D, Elf
 CHANCE:  1%
