@@ -2056,7 +2056,7 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
 static int _vehumet_weighting(spell_type spell)
 {
     int bias = 100 + elemental_preference(spell, 10);
-    bias = min(std::max(bias, 10), 190);
+    bias = min(max(bias, 10), 190);
     return bias;
 }
 
