@@ -2461,8 +2461,8 @@ bool is_preferred_food(const item_def &food)
     if (is_bad_food(food))
         return false;
 
-    // Honeycombs are tasty for everyone.
-    if (food.sub_type == FOOD_HONEYCOMB || food.sub_type == FOOD_ROYAL_JELLY)
+    // Royal jellies restore stats for everyone.
+    if (food.sub_type == FOOD_ROYAL_JELLY)
         return true;
 
     // Ghouls specifically like rotten food.
