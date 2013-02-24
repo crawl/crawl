@@ -172,6 +172,10 @@ define(function () {
     fg_flags.flags.SLOWED       = [0, 0x080];
     fg_flags.flags.PAIN_MIRROR  = [0, 0x100];
     fg_flags.flags.HASTED       = [0, 0x200];
+    fg_flags.flags.MIGHT        = [0, 0x400];
+    fg_flags.flags.PETRIFYING   = [0, 0x800];
+    fg_flags.flags.PETRIFIED    = [0, 0x1000];
+    fg_flags.flags.BLIND        = [0, 0x2000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
