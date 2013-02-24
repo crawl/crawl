@@ -5095,14 +5095,11 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
 // weighted average of strength and dex, between (str+dex)/2 and dex
 int melee_attack::calc_stat_to_hit_base()
 {
-    // towards_str_avg is a variable, whose sign points towards strength,
-    // and the magnitude is half the difference (thus, when added directly
-    // to you.dex() it gives the average of the two.
-    const signed int towards_str_avg = (you.strength() - you.dex()) / 2;
+    const int weight = weapon ? weapon_str_weight(*weapon) : 4;
 
     // dex is modified by strength towards the average, by the
-    // weighted amount weapon_str_weight() / 10.
-    return (you.dex() + towards_str_avg * player_weapon_str_weight() / 10);
+    // weighted amount weapon_str_weight() / 20.
+    return you.dex() + (you.strength() - you.dex()) * weight / 20;
 }
 
 int melee_attack::test_hit(int to_land, int ev, bool randomise_ev)
@@ -5443,8 +5440,8 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 // weighted average of strength and dex, between str and (str+dex)/2
 int melee_attack::calc_stat_to_dam_base()
 {
-    const signed int towards_dex_avg = (you.dex() - you.strength()) / 2;
-    return (you.strength() + towards_dex_avg * player_weapon_dex_weight() / 10);
+    const int weight = weapon ? 10 - weapon_str_weight(*weapon) : 6;
+    return you.strength() + (you.dex() - you.strength()) * weight / 20;
 }
 
 void melee_attack::stab_message()
