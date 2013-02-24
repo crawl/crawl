@@ -736,10 +736,30 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 this.draw_icon(icons.SLOWED, x, y, -status_shift, 0);
                 status_shift += 6;
             }
+            if (fg.MIGHT)
+            {
+                this.draw_icon(icons.MIGHT, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
             if (fg.PAIN_MIRROR)
             {
                 this.draw_icon(icons.PAIN_MIRROR, x, y, -status_shift, 0);
                 status_shift += 7;
+            }
+            if (fg.PETRIFYING)
+            {
+                this.draw_icon(icons.PETRIFYING, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
+            if (fg.PETRIFIED)
+            {
+                this.draw_icon(icons.PETRIFIED, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
+            if (fg.BLIND)
+            {
+                this.draw_icon(icons.BLIND, x, y, -status_shift, 0);
+                status_shift += 10;
             }
 
             if (fg.ANIM_WEP)

@@ -2698,6 +2698,14 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_PAIN_MIRROR;
     if (mons.is(MB_HASTED))
         ch |= TILE_FLAG_HASTED;
+    if (mons.is(MB_STRONG))
+        ch |= TILE_FLAG_MIGHT;
+    if (mons.is(MB_PETRIFYING))
+        ch |= TILE_FLAG_PETRIFYING;
+    if (mons.is(MB_PETRIFIED))
+        ch |= TILE_FLAG_PETRIFIED;
+    if (mons.is(MB_BLIND) || mons.is(MB_DAZED))
+        ch |= TILE_FLAG_BLIND;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
@@ -2709,7 +2717,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_FLEEING;
     else if (mons.is(MB_STABBABLE))
         ch |= TILE_FLAG_STAB;
-    else if (mons.is(MB_DISTRACTED))
+    // Should petrify show the '?' symbol?
+    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING) && !mons.is(MB_PETRIFIED))
         ch |= TILE_FLAG_MAY_STAB;
 
     mon_dam_level_type damage_level = mons.dam;

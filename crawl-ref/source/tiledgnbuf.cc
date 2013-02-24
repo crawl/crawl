@@ -418,10 +418,30 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SLOWED, x, y, -status_shift, 0);
         status_shift += 6;
     }
+    if (fg & TILE_FLAG_MIGHT)
+    {
+        m_buf_icons.add(TILEI_MIGHT, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
     if (fg & TILE_FLAG_PAIN_MIRROR)
     {
         m_buf_icons.add(TILEI_PAIN_MIRROR, x, y, -status_shift, 0);
         status_shift += 7;
+    }
+    if (fg & TILE_FLAG_PETRIFYING)
+    {
+        m_buf_icons.add(TILEI_PETRIFYING, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_PETRIFIED)
+    {
+        m_buf_icons.add(TILEI_PETRIFIED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_BLIND)
+    {
+        m_buf_icons.add(TILEI_BLIND, x, y, -status_shift, 0);
+        status_shift += 10;
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)
