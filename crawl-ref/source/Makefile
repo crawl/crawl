@@ -119,10 +119,6 @@ CFOPTIMIZE := -O2
 
 endif # USE_ICC
 
-ifdef LTO
-CFOPTIMIZE += -flto=jobserver -fwhole-program
-endif
-
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 CFWARN := -Wall -Wformat-security
 CFWARN_L := -Wundef
@@ -537,6 +533,14 @@ ifdef AUTO_OPT
 ifndef NO_AUTO_OPT
 CFOPTIMIZE += -march=native
 endif
+endif
+
+ifdef LTO
+CFOPTIMIZE += -flto=jobserver -fwhole-program
+  # FIXME: this check is fragile, and should be done via a full compile test.
+  ifeq ($(shell $(GXX) -x c++ /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
+    CFOPTIMIZE += -fno-fat-lto-objects
+  endif
 endif
 
 # Okay, we have to assume we're on something else that
