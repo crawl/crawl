@@ -1560,6 +1560,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
                     return false; // We found at least one target; that's enough.
         }
         ret = true;
+
+    // No need to spam cantrips if we're just travelling around
+    case SPELL_CANTRIP:
+        if (mon->friendly() && mon->foe == MHITYOU)
+            ret = true;
         break;
 
     case SPELL_NO_SPELL:
