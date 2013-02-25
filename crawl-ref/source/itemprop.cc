@@ -1632,7 +1632,8 @@ bool convert2bad(item_def &item)
 
 int weapon_str_weight(const item_def &wpn)
 {
-    ASSERT(is_weapon(wpn));
+    if (!is_weapon(wpn))
+        return 5;
 
     if (wpn.base_type == OBJ_STAVES)
         return Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight;
