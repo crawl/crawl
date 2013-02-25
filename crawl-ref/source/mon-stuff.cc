@@ -577,6 +577,27 @@ static void _give_monster_experience(int experience, int killer_index)
     }
 }
 
+static void _beogh_spread_experience(int exp)
+{
+    int total_hd = 0;
+
+    for (monster_iterator mi(&you); mi; ++mi)
+    {
+        if (is_orcish_follower(*mi))
+            total_hd += mi->hit_dice;
+    }
+
+    if (total_hd > 0)
+    {
+        for (monster_iterator mi(&you); mi; ++mi)
+        {
+            if (is_orcish_follower(*mi))
+                _give_monster_experience(exp * mi->hit_dice / total_hd, mi->mindex());
+        }
+    }
+}
+
+
 static int _calc_player_experience(const monster* mons)
 {
     int experience = exper_value(mons);
@@ -658,6 +679,9 @@ static void _give_player_experience(int experience, killer_type killer,
     // Give a message for monsters dying out of sight.
     if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
+
+    if (kc == KC_YOU && you.religion == GOD_BEOGH)
+        _beogh_spread_experience(experience / 2);
 }
 
 static void _give_experience(int player_exp, int monster_exp,
