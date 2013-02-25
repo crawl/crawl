@@ -141,9 +141,10 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
         else if (menu.jump_to)
         {
             scroll_to_item(menu.jump_to, true);
+        } else {
+            // Hide -more- if at the bottom
+            menu_scroll_handler();
         }
-        // Hide -more- if at the bottom
-        menu_scroll_handler();
     }
 
     function prepare_item_range(start, end, no_request, container)
@@ -305,9 +306,9 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
         contents.scrollTop(item.elem.offset().top - baseline);
 
         menu.anchor_last = false;
-        menu.first_visible = index;
         if (!was_server_initiated)
             menu.server_scroll = false;
+        menu_scroll_handler();
     }
 
     function scroll_bottom_to_item(item_or_index, was_server_initiated)
@@ -327,9 +328,9 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
                            - baseline - contents.innerHeight());
 
         menu.anchor_last = true;
-        menu.last_visible = index;
         if (!was_server_initiated)
             menu.server_scroll = false;
+        menu_scroll_handler();
     }
 
     function update_visible_indices()
@@ -531,7 +532,6 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
             scroll_bottom_to_item(menu.last_visible, true);
         else
             scroll_to_item(menu.first_visible, true);
-        menu_scroll_handler();
     }
 
     function menu_scroll_handler()
