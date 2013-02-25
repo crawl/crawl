@@ -69,6 +69,7 @@ define(function() {
         9: 9,
 
         // Numpad / Arrow keys
+        45: -250,
         35: -1001,
         40: -253,//-1002,
         34: -1003,
@@ -105,6 +106,7 @@ define(function() {
 
     var shift_key_conversion = {
         // Numpad / Arrow keys
+        45: CK_SHIFT_INSERT,
         35: CK_SHIFT_END,
         40: CK_SHIFT_DOWN,
         34: CK_SHIFT_PGDN,
@@ -128,6 +130,7 @@ define(function() {
 
     var ctrl_key_conversion = {
         // Numpad / Arrow keys
+        45: CK_CTRL_INSERT,
         35: CK_CTRL_END,
         40: CK_CTRL_DOWN,
         34: CK_CTRL_PGDN,
