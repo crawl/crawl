@@ -1013,13 +1013,13 @@ void dec_penance(god_type god, int val)
                  you.redraw_armour_class = true;
             // TSO's halo is once more available.
             else if (god == GOD_SHINING_ONE
-                && you.piety >= piety_breakpoint(0))
+                     && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo returns!");
                 invalidate_agrid(true);
             }
             else if (god == GOD_ASHENZARI
-                && you.piety >= piety_breakpoint(2))
+                     && you.piety >= piety_breakpoint(2))
             {
                 mpr("Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
