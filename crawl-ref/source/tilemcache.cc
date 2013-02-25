@@ -242,7 +242,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_JOSEPH:
     case TILEP_MONS_TERENCE:
     case TILEP_MONS_WIGLAF:
-    case TILEP_MONS_FREDERICK:
     case TILEP_MONS_RAKSHASA:
     case TILEP_MONS_RAKSHASA_FAKE:
     case TILEP_MONS_VAMPIRE_KNIGHT:
@@ -332,6 +331,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 0;
         *ofs_y = -1;
         break;
+    case TILEP_MONS_FREDERICK:
+        *ofs_x = 0;
+        *ofs_y = -2;
+        break;
     case TILEP_MONS_RED_DEVIL:
         *ofs_x = 0;
         *ofs_y = -3;
@@ -409,7 +412,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -4;
         break;
     case TILEP_MONS_ARACHNE_STAVELESS:
-        *ofs_x = -2;
+        *ofs_x = -1;
         *ofs_y = -5;
         break;
     // Shift upwards and to the right.
