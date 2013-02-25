@@ -505,6 +505,7 @@ function (exports, $, key_conversion, chat, comm) {
     {
         var msg = data.reason;
         set_layer("crt");
+        hide_dialog();
         $("#chat").hide();
         $("#crt").html(msg + "<br><br>");
         showing_close_message = true;
