@@ -1594,7 +1594,7 @@ MAP
 ENDMAP
 
 NAME:   xom_gifts_altar
-TAGS:   temple_overflow_xom uniq_altar_xom decor
+TAGS:   temple_overflow_xom uniq_altar_xom decor no_monster_gen
 CHANCE: 3
 KFEAT:  _ = altar_xom
 KPROP:  _ = bloody
