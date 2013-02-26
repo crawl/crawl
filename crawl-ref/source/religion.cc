@@ -3148,7 +3148,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_JIYVA:
-        // Actually, doesn't unparalyze jellies.
+        // Actually, doesn't unparalyse jellies.
         you.duration[DUR_JELLY_PRAYER] = 0;
 
         if (you.duration[DUR_SLIMIFY])
