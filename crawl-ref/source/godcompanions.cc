@@ -91,6 +91,10 @@ bool recall_offlevel_companions()
         companion* comp = &i->second;
         if (comp->level != level_id::current())
         {
+            // Recall can't pull monsters out of the Abyss
+            if (comp->level.branch == BRANCH_ABYSS)
+                continue;
+            
             if (comp->mons.place(true))
             {
                 monster* mons = monster_by_mid(mid);
