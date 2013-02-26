@@ -125,7 +125,7 @@ static bool _tso_retribution()
 
         for (; how_many > 0; --how_many)
         {
-            if (summon_holy_warrior(100, god, 0, true, true, true))
+            if (summon_holy_warrior(100, true))
                 success = true;
         }
 

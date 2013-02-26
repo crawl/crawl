@@ -1046,7 +1046,7 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 
     // Sometimes, send a holy warrior instead.
     if (dct == DEMON_GREATER && coinflip())
-        demon = summon_any_holy_being(HOLY_BEING_WARRIOR);
+        demon = random_choose(MONS_DAEVA, MONS_ANGEL, -1);
     else
     {
         const demon_class_type dct2 =
