@@ -3565,26 +3565,6 @@ monster_type summon_any_demon(demon_class_type dct)
     return mon;
 }
 
-monster_type summon_any_holy_being(holy_being_class_type hbct)
-{
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    switch (hbct)
-    {
-    case HOLY_BEING_WARRIOR:
-        mon = random_choose_weighted(
-            1, MONS_ANGEL,
-            1, MONS_DAEVA,
-            0);
-        break;
-
-    default:
-        break;
-    }
-
-    return mon;
-}
-
 monster_type summon_any_dragon(dragon_class_type dct)
 {
     monster_type mon = MONS_PROGRAM_BUG;

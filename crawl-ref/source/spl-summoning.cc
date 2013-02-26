@@ -798,24 +798,20 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
     return true;
 }
 
-static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
-                                       monster_type mon, int dur, bool friendly,
-                                       bool quiet)
+// Not a spell. Rather, this is TSO's doing.
+bool summon_holy_warrior(int pow, bool punish)
 {
-    UNUSED(pow);
+    mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA, -1),
+                 punish ? BEH_HOSTILE : BEH_FRIENDLY,
+                 punish ? 0 : &you,
+                 punish ? 0 : min(2 + (random2(pow) / 4), 6),
+                 0, you.pos(), MHITYOU,
+                 MG_FORCE_BEH, GOD_SHINING_ONE);
 
-    mgen_data mg(mon,
-                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                 friendly ? &you : 0,
-                 dur, spell,
-                 you.pos(),
-                 MHITYOU,
-                 MG_FORCE_BEH, god);
-
-    if (!friendly)
+    if (punish)
     {
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-        mg.non_actor_summoner = god_name(god, false);
+        mg.non_actor_summoner = god_name(GOD_SHINING_ONE, false);
     }
 
     monster *summon = create_monster(mg);
@@ -825,32 +821,11 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
 
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-    if (!quiet)
+    if (!punish)
         mpr("You are momentarily dazzled by a brilliant light.");
 
     player_angers_monster(summon);
     return true;
-}
-
-static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
-                                       holy_being_class_type hbct, int dur,
-                                       bool friendly, bool quiet)
-{
-    monster_type mon = summon_any_holy_being(hbct);
-
-    return _summon_holy_being_wrapper(pow, god, spell, mon, dur, friendly,
-                                      quiet);
-}
-
-// Not a spell. Rather, this is TSO's doing.
-bool summon_holy_warrior(int pow, god_type god, int spell,
-                         bool force_hostile, bool permanent,
-                         bool quiet)
-{
-    return _summon_holy_being_wrapper(pow, god, spell, HOLY_BEING_WARRIOR,
-                                      !permanent ? min(2 + (random2(pow) / 4), 6)
-                                                 : 0,
-                                      !force_hostile, quiet);
 }
 
 // This function seems to have very little regard for encapsulation.
