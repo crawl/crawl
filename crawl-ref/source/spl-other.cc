@@ -24,6 +24,7 @@
 #include "misc.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "place.h"
 #include "player.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -237,7 +238,7 @@ bool recall(int type_recalled)
     }
 
     // Interlevel recall
-    if (type_recalled > 0)
+    if (type_recalled > 0 && branch_allows_followers(you.where_are_you))
     {
         if (recall_offlevel_companions())
             success = true;
