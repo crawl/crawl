@@ -93,11 +93,39 @@ bool recall_offlevel_companions()
         {
             if (comp->mons.place(true))
             {
+                monster* mons = monster_by_mid(mid);
+
                 // The monster is now on this level
                 remove_monster_from_transit(comp->level, mid);
                 comp->level = level_id::current();
-                simple_monster_message(monster_by_mid(mid), " is recalled.");
+                simple_monster_message(mons, " is recalled.");
                 recalled = true;
+
+                // Catch up time for off-level monsters
+                // (We move the player away so that we don't get expiry
+                // messages for things that supposed wore off ages ago)
+                const coord_def old_pos = you.pos();
+                you.moveto(coord_def(0, 0));
+
+                int turns = you.elapsed_time - comp->timestamp;
+                if (mons_can_regenerate(mons))
+                {
+                    if (monster_descriptor(mons->type, MDSC_REGENERATES))
+                        mons->heal(turns);
+                    else
+                    {
+                        const int regen_rate = max(mons_natural_regen_rate(mons) * 2, 5);
+                        mons->heal(div_rand_round(turns * regen_rate, 50));
+                    }
+                }
+                if (turns >= 10 && mons->alive())
+                {
+                    // Remove confusion manually (so that the monster
+                    // doesn't blink after being recalled)
+                    mons->del_ench(ENCH_CONFUSION, true);
+                    mons->timeout_enchantments(turns / 10);
+                }
+                you.moveto(old_pos);
             }
         }
     }
