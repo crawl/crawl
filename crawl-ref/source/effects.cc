@@ -1211,7 +1211,7 @@ static void _hell_effects()
         {
         case BRANCH_DIS:
             if (summon_instead)
-                which_beastie = summon_any_demon(DEMON_GREATER);
+                which_beastie = summon_any_demon(RANDOM_DEMON_GREATER);
             else
                 which_miscast = SPTYP_EARTH;
             break;

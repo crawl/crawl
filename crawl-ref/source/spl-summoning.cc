@@ -1011,33 +1011,23 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
     return success;
 }
 
-static bool _summon_demon_wrapper(int pow, god_type god, int spell,
-                                  demon_class_type dct, int dur, bool friendly,
-                                  bool charmed, bool quiet)
-{
-    monster_type mon = summon_any_demon(dct);
-
-    return _summon_demon_wrapper(pow, god, spell, mon, dur, friendly, charmed,
-                                 quiet);
-}
-
 static bool _summon_lesser_demon(int pow, god_type god, int spell, bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
+    return _summon_demon_wrapper(pow, god, spell, RANDOM_DEMON_LESSER,
                                  min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
 static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
+    return _summon_demon_wrapper(pow, god, spell, RANDOM_DEMON_COMMON,
                                  min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
 static bool _summon_greater_demon(int pow, god_type god, int spell, bool quiet)
 {
-    monster_type mon = summon_any_demon(DEMON_GREATER);
+    monster_type mon = summon_any_demon(RANDOM_DEMON_GREATER);
 
     const bool charmed = (random2(pow) > 5);
     const bool friendly = (charmed && mons_demon_tier(mon) == 2);
