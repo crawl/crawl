@@ -2498,7 +2498,8 @@ int monster_die(monster* mons, killer_type killer,
                                "it dies.");
     }
 
-    if (mons->is_divine_companion() && killer != KILL_RESET)
+    if (mons->is_divine_companion() && killer != KILL_RESET
+            && killer != KILL_BANISHED)
         remove_companion(mons);
 
     // If we kill an invisible monster reactivate autopickup.
