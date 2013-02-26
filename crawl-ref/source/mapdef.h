@@ -626,14 +626,13 @@ private:
 class mons_spec
 {
  public:
-    int type;
+    monster_type type;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
     int number;               // Head count for hydras, etc.
     int quantity;             // Number of monsters (usually 1).
     int genweight;
-    bool fix_mons;
     bool generate_awake;
     bool patrolling;
     bool band;
@@ -660,11 +659,11 @@ class mons_spec
 
     CrawlHashTable props;
 
-    mons_spec(int t = RANDOM_MONSTER,
+    mons_spec(monster_type t = RANDOM_MONSTER,
               monster_type base = MONS_NO_MONSTER,
               int num = 0)
         : type(t), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
-          quantity(1), genweight(10), fix_mons(false),
+          quantity(1), genweight(10),
           generate_awake(false), patrolling(false), band(false),
           colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
           abjuration_duration(0), summon_type(0), items(), monname(""),
@@ -726,7 +725,6 @@ private:
     void parse_mons_spells(mons_spec &slot, vector<string> &spells);
     mon_enchant parse_ench(string &ench_str, bool perm);
     mons_spec pick_monster(mons_spec_slot &slot);
-    int fix_demon(int id) const;
 
 private:
     vector< mons_spec_slot > mons;

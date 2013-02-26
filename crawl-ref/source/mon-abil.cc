@@ -1067,8 +1067,8 @@ static bool _silver_statue_effects(monster* mons)
 
         create_monster(
             mgen_data(
-                summon_any_demon((coinflip() ? DEMON_COMMON
-                                             : DEMON_LESSER)),
+                summon_any_demon((coinflip() ? RANDOM_DEMON_COMMON
+                                             : RANDOM_DEMON_LESSER)),
                 SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
                 foe->pos(), mons->foe));
         return true;

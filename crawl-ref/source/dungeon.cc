@@ -4428,10 +4428,14 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 monster* dgn_place_monster(mons_spec &mspec, coord_def where,
                            bool force_pos, bool generate_awake, bool patrolling)
 {
-    if (mspec.type == -1)
+#if TAG_MAJOR_VERSION == 34
+    if (mspec.type == -1) // or rebuild the des cache
+        return 0;
+#endif
+    if (mspec.type == MONS_NO_MONSTER)
         return 0;
 
-    monster_type type = static_cast<monster_type>(mspec.type);
+    monster_type type = mspec.type;
     const bool m_generate_awake = (generate_awake || mspec.generate_awake);
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
@@ -4843,7 +4847,7 @@ static void _vault_grid_glyph_mons(vault_placement &place,
         {
             int slot = map_def::monster_array_glyph_to_slot(vgrid);
             ms = place.map.mons.get_monster(slot);
-            monster_type mt = static_cast<monster_type>(ms.type);
+            monster_type mt = ms.type;
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
             if (!place.map.place.empty()

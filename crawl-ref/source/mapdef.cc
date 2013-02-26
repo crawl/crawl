@@ -3402,16 +3402,6 @@ mons_list::mons_list() : mons()
 {
 }
 
-int mons_list::fix_demon(int demon) const
-{
-    if (demon >= -1)
-        return demon;
-
-    demon = -100 - demon;
-
-    return summon_any_demon(static_cast<demon_class_type>(demon));
-}
-
 mons_spec mons_list::pick_monster(mons_spec_slot &slot)
 {
     int totweight = 0;
@@ -3422,16 +3412,14 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
     {
         const int weight = i->genweight;
         if (x_chance_in_y(weight, totweight += weight))
-        {
             pick = *i;
-
-            if (pick.type < 0 && pick.fix_mons)
-                pick.type = i->type = fix_demon(pick.type);
-        }
     }
 
-    if (pick.type < 0)
-        pick = fix_demon(pick.type);
+#if TAG_MAJOR_VERSION == 34
+    // Force rebuild of the des cache to drop this check.
+    if (pick.type < -1)
+        pick = (monster_type)(-100 - pick.type);
+#endif
 
     if (slot.fix_slot)
     {
@@ -3637,7 +3625,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.extra_monster_flags |= MF_ACTUAL_SPELLS;
         }
 
-        mspec.fix_mons       = strip_tag(mon_str, "fix_mons");
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
         mspec.band           = strip_tag(mon_str, "band");
@@ -4198,7 +4185,7 @@ mons_spec mons_list::mons_by_name(string name) const
     name = replace_all(name, "random", "any");
 
     if (name == "nothing")
-        return -1;
+        return MONS_NO_MONSTER;
 
     // Special casery:
     if (name == "pandemonium lord")
@@ -4208,16 +4195,16 @@ mons_spec mons_list::mons_by_name(string name) const
         return RANDOM_MONSTER;
 
     if (name == "any demon")
-        return (-100 - DEMON_RANDOM);
+        return RANDOM_DEMON;
 
     if (name == "any lesser demon" || name == "lesser demon")
-        return (-100 - DEMON_LESSER);
+        return RANDOM_DEMON_LESSER;
 
     if (name == "any common demon" || name == "common demon")
-        return (-100 - DEMON_COMMON);
+        return RANDOM_DEMON_COMMON;
 
     if (name == "any greater demon" || name == "greater demon")
-        return (-100 - DEMON_GREATER);
+        return RANDOM_DEMON_GREATER;
 
     if (name == "small zombie")
         return MONS_ZOMBIE_SMALL;

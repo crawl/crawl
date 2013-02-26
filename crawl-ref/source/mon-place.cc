@@ -651,6 +651,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             static_cast<monster_type>(
                 random_range(MONS_DRACONIAN_CALLER, MONS_DRACONIAN_SCORCHER));
     }
+    else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
+        mon_type = summon_any_demon(mon_type);
 
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))
@@ -2742,9 +2744,9 @@ static monster_type _band_member(band_type band, int which)
         else
         {
             mon_type = summon_any_demon(random_choose_weighted(
-                                               50, DEMON_COMMON,
-                                               20, DEMON_GREATER,
-                                               10, DEMON_RANDOM,
+                                               50, RANDOM_DEMON_COMMON,
+                                               20, RANDOM_DEMON_GREATER,
+                                               10, RANDOM_DEMON,
                                                0));
         }
         break;
@@ -3045,8 +3047,8 @@ static monster_type _pick_zot_exit_defender()
 
     const int temp_rand = random2(276);
     const monster_type mon_type =
-        ((temp_rand > 184) ? summon_any_demon(DEMON_COMMON) : // 33.33%
-         (temp_rand > 104) ? summon_any_demon(DEMON_RANDOM) : // 28.99%
+        ((temp_rand > 184) ? summon_any_demon(RANDOM_DEMON_COMMON) : // 33.33%
+         (temp_rand > 104) ? summon_any_demon(RANDOM_DEMON) : // 28.99%
          (temp_rand > 78)  ? MONS_HELL_HOUND :                //  9.06%
          (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :         //  8.70%
          (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :         //  7.61%
@@ -3477,18 +3479,16 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
     return (good_count > 0);
 }
 
-monster_type summon_any_demon(demon_class_type dct)
+monster_type summon_any_demon(monster_type dct)
 {
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    if (dct == DEMON_RANDOM)
-        dct = static_cast<demon_class_type>(random2(DEMON_RANDOM));
+    if (dct == RANDOM_DEMON)
+        dct = static_cast<monster_type>(RANDOM_DEMON_LESSER + random2(3));
 
     switch (dct)
     {
-    case DEMON_LESSER:
+    case RANDOM_DEMON_LESSER:
         // tier 5
-        mon = random_choose_weighted(
+        return random_choose_weighted(
             1, MONS_CRIMSON_IMP,
             1, MONS_QUASIT,
             1, MONS_WHITE_IMP,
@@ -3497,13 +3497,12 @@ monster_type summon_any_demon(demon_class_type dct)
             1, MONS_IRON_IMP,
             1, MONS_SHADOW_IMP,
             0);
-        break;
 
-    case DEMON_COMMON:
+    case RANDOM_DEMON_COMMON:
         if (x_chance_in_y(6, 10))
         {
             // tier 4
-            mon = random_choose_weighted(
+            return random_choose_weighted(
                 1, MONS_BLUE_DEVIL,
                 1, MONS_IRON_DEVIL,
                 1, MONS_ORANGE_DEMON,
@@ -3516,7 +3515,7 @@ monster_type summon_any_demon(demon_class_type dct)
         else
         {
             // tier 3
-            mon = random_choose_weighted(
+            return random_choose_weighted(
                 1, MONS_SUN_DEMON,
                 1, MONS_SOUL_EATER,
                 1, MONS_ICE_DEVIL,
@@ -3526,13 +3525,12 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_CHAOS_SPAWN,
                 0);
         }
-        break;
 
-    case DEMON_GREATER:
+    case RANDOM_DEMON_GREATER:
         if (x_chance_in_y(6, 10))
         {
             // tier 2
-            mon = random_choose_weighted(
+            return random_choose_weighted(
                 1, MONS_GREEN_DEATH,
                 1, MONS_BLIZZARD_DEMON,
                 1, MONS_BALRUG,
@@ -3548,7 +3546,7 @@ monster_type summon_any_demon(demon_class_type dct)
         else
         {
             // tier 1
-            mon = random_choose_weighted(
+            return random_choose_weighted(
                 1, MONS_BRIMSTONE_FIEND,
                 1, MONS_ICE_FIEND,
                 1, MONS_SHADOW_FIEND,
@@ -3556,13 +3554,10 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_EXECUTIONER,
                 0);
         }
-        break;
 
     default:
-        break;
+        return dct;
     }
-
-    return mon;
 }
 
 monster_type summon_any_dragon(dragon_class_type dct)
@@ -3686,12 +3681,16 @@ static void _get_vault_mon_list(vector<mons_spec> &list)
     unsigned int size = type_vec.size();
     for (unsigned int i = 0; i < size; i++)
     {
-        int type = type_vec[i];
-        int base = base_vec[i];
+        monster_type type = static_cast<monster_type>(static_cast<int>(type_vec[i]));
+        monster_type base = static_cast<monster_type>(static_cast<int>(base_vec[i]));
 
         mons_spec spec;
 
+#if TAG_MAJOR_VERSION == 34
         if (type == -1)
+            type = MONS_NO_MONSTER;
+#endif
+        if (type == MONS_NO_MONSTER)
         {
             spec.place = level_id::from_packed_place(base);
             ASSERT(spec.place.is_valid());
@@ -3700,7 +3699,7 @@ static void _get_vault_mon_list(vector<mons_spec> &list)
         else
         {
             spec.type    = type;
-            spec.monbase = (monster_type) base;
+            spec.monbase = base;
             ASSERT(!_is_random_monster(spec.type)
                    && !_is_random_monster(spec.monbase));
         }

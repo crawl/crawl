@@ -1037,25 +1037,25 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
     mprf(MSGCH_DIAGNOSTICS, "_xom_random_demon(); sever = %d, roll: %d",
          sever, roll);
 #endif
-    const demon_class_type dct =
-        (roll >= 850) ? DEMON_GREATER :
-        (roll >= 340) ? DEMON_COMMON
-                      : DEMON_LESSER;
+    monster_type dct =
+        (roll >= 850) ? RANDOM_DEMON_GREATER :
+        (roll >= 340) ? RANDOM_DEMON_COMMON
+                      : RANDOM_DEMON_LESSER;
 
     monster_type demon = MONS_PROGRAM_BUG;
 
     // Sometimes, send a holy warrior instead.
-    if (dct == DEMON_GREATER && coinflip())
+    if (dct == RANDOM_DEMON_GREATER && coinflip())
         demon = random_choose(MONS_DAEVA, MONS_ANGEL, -1);
     else
     {
-        const demon_class_type dct2 =
-            (!use_greater_demons && dct == DEMON_GREATER) ? DEMON_COMMON : dct;
+        if (dct == RANDOM_DEMON_GREATER && !use_greater_demons)
+            dct = RANDOM_DEMON_COMMON;
 
-        if (dct2 == DEMON_COMMON && one_chance_in(10))
+        if (dct == RANDOM_DEMON_COMMON && one_chance_in(10))
             demon = MONS_CHAOS_SPAWN;
         else
-            demon = summon_any_demon(dct2);
+            demon = summon_any_demon(dct);
     }
 
     return demon;

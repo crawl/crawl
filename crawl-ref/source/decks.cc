@@ -2561,13 +2561,13 @@ static void _crusade_card(int power, deck_rarity_type rarity)
 static void _summon_demon_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    demon_class_type dct;
+    monster_type dct;
     if (power_level >= 2)
-        dct = DEMON_GREATER;
+        dct = RANDOM_DEMON_GREATER;
     else if (power_level == 1)
-        dct = DEMON_COMMON;
+        dct = RANDOM_DEMON_COMMON;
     else
-        dct = DEMON_LESSER;
+        dct = RANDOM_DEMON_LESSER;
 
     // FIXME: The manual testing for message printing is there because
     // we can't rely on create_monster() to do it for us. This is

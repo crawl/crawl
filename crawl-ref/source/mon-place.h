@@ -76,7 +76,7 @@ bool player_angers_monster(monster* mon);
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
                       int radius, bool allow_centre, coord_def& empty);
 
-monster_type summon_any_demon(demon_class_type dct);
+monster_type summon_any_demon(monster_type dct);
 
 monster_type summon_any_dragon(dragon_class_type dct);
 
