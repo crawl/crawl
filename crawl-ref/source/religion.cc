@@ -3156,7 +3156,8 @@ void excommunication(god_type new_god)
 
         if (query_da_counter(DACT_ALLY_SLIME))
         {
-            mpr("All of your fellow slimes turn on you.", MSGCH_MONSTER_ENCHANT);
+            mpr("All of your fellow slimes turn on you.",
+                MSGCH_MONSTER_ENCHANT);
             add_daction(DACT_ALLY_SLIME);
         }
 
@@ -3166,7 +3167,8 @@ void excommunication(god_type new_god)
     case GOD_FEDHAS:
         if (query_da_counter(DACT_ALLY_PLANT))
         {
-            mpr("The plants of the dungeon turn on you.", MSGCH_MONSTER_ENCHANT);
+            mpr("The plants of the dungeon turn on you.",
+                MSGCH_MONSTER_ENCHANT);
             add_daction(DACT_ALLY_PLANT);
         }
         _set_penance(old_god, 30);
