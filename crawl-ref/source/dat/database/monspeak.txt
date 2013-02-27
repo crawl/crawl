@@ -874,8 +874,6 @@ friendly hound
 
 VISUAL:@The_monster@ wags @possessive@ tail.
 
-@The_monster@ barks softly, and nuzzles your face.
-
 @hound@
 %%%%
 default insect
