@@ -4154,7 +4154,8 @@ void display_char_status()
         STATUS_AUGMENTED,
         STATUS_SUPPRESSED,
         STATUS_SILENCE,
-        DUR_SENTINEL_MARK
+        DUR_SENTINEL_MARK,
+        STATUS_RECALL
     };
 
     status_info inf;

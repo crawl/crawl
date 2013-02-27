@@ -33,6 +33,7 @@
 #include "random.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "stash.h"
@@ -247,6 +248,8 @@ void leaving_level_now(dungeon_feature_type stair_used)
 
     _clear_golubria_traps();
     _clear_prisms();
+
+    end_recall();
 }
 
 static void _update_travel_cache(const level_id& old_level,

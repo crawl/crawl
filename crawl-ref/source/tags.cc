@@ -1383,6 +1383,10 @@ static void tag_construct_you(writer &th)
         marshallInt(th, you.uncancel[i].second);
     }
 
+    marshallUnsigned(th, you.recall_list.size());
+    for (i = 0; i < (int)you.recall_list.size(); i++)
+        _marshall_as_int<mid_t>(th, you.recall_list[i]);
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2328,6 +2332,18 @@ static void tag_read_you(reader &th)
         you.uncancel[i].first = (uncancellable_type)unmarshallUByte(th);
         you.uncancel[i].second = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL)
+    {
+#endif
+    count = unmarshallUnsigned(th);
+    you.recall_list.resize(count);
+    for (i = 0; i < count; i++)
+        you.recall_list[i] = unmarshall_int_as<mid_t>(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
@@ -3598,7 +3614,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.check_speed();
 
-    if (m.is_divine_companion() && companion_is_elsewhere(&m))
+    if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
         monster_die(&m, KILL_RESET, -1, true, false);
 }
 

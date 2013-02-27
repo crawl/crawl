@@ -291,6 +291,9 @@ public:
   // A stack -- back() is the first to go.
   vector<pair<uncancellable_type, int> > uncancel;
 
+  // A list of allies awaiting an active recall
+  vector<mid_t> recall_list;
+
 
   // -------------------
   // Non-saved UI state:
