@@ -33,6 +33,9 @@ void update_companions();
 bool recall_offlevel_companions();
 
 void list_companions();
-bool companion_is_elsewhere(const monster* mons);
+bool companion_is_elsewhere(mid_t mid);
+
+void populate_offlevel_recall_list();
+bool recall_offlevel_ally(mid_t mid);
 
 #endif

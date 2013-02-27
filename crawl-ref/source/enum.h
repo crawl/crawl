@@ -285,6 +285,8 @@ enum attribute_type
     ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
     ATTR_TEMP_MUT_XP,          // Amount of XP remaining before some temp muts
                                // will be removed
+    ATTR_NEXT_RECALL_TIME,     // aut remaining until next ally will be recalled
+    ATTR_NEXT_RECALL_INDEX,    // index+1 into recall_list for next recall
     NUM_ATTRIBUTES
 };
 

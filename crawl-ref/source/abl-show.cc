@@ -2288,7 +2288,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
-        recall(1);
+        start_recall(1);
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
@@ -2579,7 +2579,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-        recall(2);
+        start_recall(2);
         break;
 
     case ABIL_FEDHAS_SUNLIGHT:

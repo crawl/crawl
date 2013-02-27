@@ -22,6 +22,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
@@ -167,7 +168,7 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
 spret_type cast_recall(bool fail)
 {
     fail_check();
-    recall(0);
+    start_recall(0);
     return SPRET_SUCCESS;
 }
 
@@ -248,6 +249,115 @@ bool recall(int type_recalled)
         mpr("Nothing appears to have answered your call.");
 
     return success;
+}
+
+void start_recall(int type)
+{
+    // Assemble the recall list.
+    you.recall_list.clear();
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_NO_MONSTER)
+            continue;
+
+        if (!mi->friendly())
+            continue;
+
+        if (mons_class_is_stationary(mi->type)
+            || mons_is_conjured(mi->type))
+            continue;
+
+        if (!monster_habitable_grid(*mi, DNGN_FLOOR))
+            continue;
+
+        if (type == 1) // undead
+        {
+            if (mi->holiness() != MH_UNDEAD)
+                continue;
+        }
+        else if (type == 2) // Beogh
+        {
+            if (!is_orcish_follower(*mi))
+                continue;
+        }
+
+        you.recall_list.push_back(mi->mid);
+    }
+
+    if (type > 0 && branch_allows_followers(you.where_are_you))
+        populate_offlevel_recall_list();
+
+    random_shuffle(you.recall_list.begin(), you.recall_list.end());
+
+    if (you.recall_list.size() > 0)
+    {
+        you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
+        you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
+        mpr("You begin recalling your allies.");
+    }
+    else
+        mpr("Nothing appears to have answered your call.");
+}
+
+// Attempt to recall a single monster by mid, which might be either on or off
+// our current level. Returns whether this monster was successfully recalled.
+bool _try_recall(mid_t mid)
+{
+    monster* mons = monster_by_mid(mid);
+    // Either it's dead or off-level.
+    if (!mons)
+        return recall_offlevel_ally(mid);
+    else if (mons->alive())
+    {
+        // Don't recall monsters that are currently in sight.
+        if (mons->see_cell_no_trans(you.pos()))
+            return false;
+        else
+        {
+            coord_def empty;
+            if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
+                && mons->move_to_pos(empty))
+            {
+                simple_monster_message(mons, " is recalled.");
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+// Attempt to recall a number of allies proportional to how much time has passed.
+// Once the list has been fully processed, terminate the status
+void do_recall(int time)
+{
+    while (time > you.attribute[ATTR_NEXT_RECALL_TIME])
+    {
+        // Try to recall an ally.
+        mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
+        you.attribute[ATTR_NEXT_RECALL_INDEX]++;
+        if (_try_recall(mid))
+        {
+            time -= you.attribute[ATTR_NEXT_RECALL_TIME];
+            you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
+        }
+        if ((unsigned int)you.attribute[ATTR_NEXT_RECALL_INDEX] > you.recall_list.size())
+        {
+            end_recall();
+            mpr("You finish recalling your allies.");
+            return;
+        }
+    }
+
+    you.attribute[ATTR_NEXT_RECALL_TIME] -= time;
+    return;
+}
+
+void end_recall()
+{
+    you.attribute[ATTR_NEXT_RECALL_INDEX] = 0;
+    you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
+    you.recall_list.clear();
 }
 
 // Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
