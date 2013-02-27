@@ -575,7 +575,7 @@ static int _zp_cost(const ability_def& abil)
                 num /= 3;
             // ... and for harmless stuff
             else if (abil.ability == ABIL_MAKE_PLANT
-                  || abil.ability == ABIL_MAKE_FUNGUS)
+                     || abil.ability == ABIL_MAKE_FUNGUS)
             {
                 num /= 5;
             }
