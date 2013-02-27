@@ -1314,7 +1314,7 @@ scroll of acquirement
 This wonderful scroll causes the creation of a valuable item, with the reader
 choosing the type of item to be created. Items produced are heavily biased
 towards something fitting the reader's skills, and also towards gear that
-hasn't been seen yet, but alas, nothing is guaranteed.
+hasn't been seen yet, but, alas, nothing is guaranteed.
 %%%%
 scroll of amnesia
 
