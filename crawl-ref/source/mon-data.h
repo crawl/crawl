@@ -5717,7 +5717,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_LERNAEAN_HYDRA, 'D', YELLOW, "the Lernaean hydra",
-    M_UNIQUE | M_COLD_BLOOD,
+    M_UNIQUE | M_WARM_BLOOD,
     MR_RES_POISON,
     2100, 11, MONS_HYDRA, MONS_HYDRA, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
