@@ -20,7 +20,7 @@ void opening_screen(void)
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>\n"
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-    "2002-2012 Crawl DevTeam\n"
+    "2002-2013 Crawl DevTeam\n"
     "Read the instructions for legal details."
     "</brown> " ;
 
