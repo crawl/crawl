@@ -2272,13 +2272,10 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_YRED_INJURY_MIRROR:
         if (yred_injury_mirror())
-            mpr("You renew your dark mirror aura.");
+            mpr("Another wave of unholy energy enters you.");
         else
         {
-            mprf("You %s in prayer and are bathed in unholy energy.",
-                 you.species == SP_NAGA  ? "coil" :
-                 you.species == SP_FELID ? "sit"
-                                         : "kneel");
+            mprf("You offer yourself to Yredelemnul, and fill with his unholy energy.");
         }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
                      + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
