@@ -993,6 +993,8 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand
 
     -- Prevent staircases from being placed in special or inner rooms.
     nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
+    -- Prevent treasure rooms being overwritten by vaults
+    kmask('* = vault')
 
     if special ~= -1 then
         subvault('O : special_room')
