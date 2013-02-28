@@ -3464,6 +3464,15 @@ static void _god_welcome_identify_gear()
 void god_pitch(god_type which_god)
 {
     mprf("You %s the altar of %s.",
+	 you.form == TRAN_SPIDER ? "cling to" :
+	 you.form == TRAN_STATUE ? "are elegantly placed before" :
+	 you.form == TRAN_ICE_BEAST    ? "bow your head before" :
+	 you.form == TRAN_DRAGON ? "bow your head before" :
+	 you.form == TRAN_PIG    ? "bow your head before" :
+	 you.form == TRAN_TREE   ? "sway towards" :
+	 you.form == TRAN_PORCUPINE ? "curl into a sanctuary of spikes before" :
+	 you.form == TRAN_WISP   ? "swirl around" :
+	 you.form == TRAN_JELLY  ? "quiver devoutly before" :
          player_in_bat_form()    ? "perch on" :
          you.species == SP_NAGA  ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
