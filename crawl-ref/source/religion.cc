@@ -3474,6 +3474,7 @@ void god_pitch(god_type which_god)
 	 you.form == TRAN_WISP   ? "swirl around" :
 	 you.form == TRAN_JELLY  ? "quiver devoutly before" :
          player_in_bat_form()    ? "perch on" :
+         you.flight_mode()       ? "hover solemnly before" :
          you.species == SP_NAGA  ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
          you.species == SP_FELID ? "sit before"
