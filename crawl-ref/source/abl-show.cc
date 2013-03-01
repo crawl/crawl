@@ -2275,7 +2275,7 @@ static bool _do_ability(const ability_def& abil)
             mpr("Another wave of unholy energy enters you.");
         else
         {
-            mprf("You offer yourself to %s, and fill with his unholy energy.",
+            mprf("You offer yourself to %s, and fill with unholy energy.",
                  god_name(you.religion).c_str());
         }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
