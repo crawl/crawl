@@ -3299,7 +3299,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MIRROR_DAMAGE:
         simple_monster_message(mons,
-                               " kneels in prayer and is bathed in unholy energy.",
+                               make_stringf(" offers %s to %s and fills with unholy energy.",
+                                   mons->pronoun(PRONOUN_REFLEXIVE).c_str(),
+                                   god_name(mons->god).c_str()).c_str(),
                                MSGCH_MONSTER_SPELL);
         mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, mons,
                        20 * BASELINE_DELAY));
