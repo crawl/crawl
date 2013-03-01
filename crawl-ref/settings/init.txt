@@ -181,6 +181,7 @@
 # equip_unequip = true
 # easy_confirm  = (none | safe | all)
 # allow_self_target      = (yes | no | prompt)
+# always_prompt_melee    = true
 # confirm_butcher        = (auto | always | never)
 # prefer_safe_chunks     = false
 # easy_eat_chunks        = true

@@ -194,6 +194,7 @@ public:
     confirm_level_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
+    bool        always_prompt_melee; // help casters prevent wasted turns
 
     int         colour[16];      // macro fg colours to other colours
     int         background_colour; // select default background colour

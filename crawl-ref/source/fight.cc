@@ -35,6 +35,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "travel.h"
+#include "options.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND
     #define NOTE_DEBUG_CHAOS_EFFECTS
@@ -356,7 +357,13 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     bool weapon_warning  = false;
     bool unarmed_warning = false;
 
-    if (weapon)
+    if (Options.always_prompt_melee) {
+        if (weapon)
+            weapon_warning = true;
+        else
+            unarmed_warning = true;
+    }
+    else if (weapon)
     {
         if (needs_handle_warning(*weapon, OPER_ATTACK)
             || !is_melee_weapon(weapon))

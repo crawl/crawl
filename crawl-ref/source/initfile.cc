@@ -818,6 +818,7 @@ void game_options::reset_options()
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
+    always_prompt_melee    = false;
     hp_warning             = 30;
     magic_point_warning    = 0;
     default_target         = true;
@@ -2475,6 +2476,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "prompt")
             allow_self_target = CONFIRM_PROMPT;
     }
+    else BOOL_OPTION(always_prompt_melee);
     else BOOL_OPTION(easy_quit_item_prompts);
     else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
     else BOOL_OPTION(easy_open);
