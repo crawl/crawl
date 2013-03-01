@@ -3299,7 +3299,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MIRROR_DAMAGE:
         simple_monster_message(mons,
-                               make_stringf(" offers %s to %s and fills with unholy energy.",
+                               make_stringf(" offers %s to %s, and fills with unholy energy.",
                                    mons->pronoun(PRONOUN_REFLEXIVE).c_str(),
                                    god_name(mons->god).c_str()).c_str(),
                                MSGCH_MONSTER_SPELL);
