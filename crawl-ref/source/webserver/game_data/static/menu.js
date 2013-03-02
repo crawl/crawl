@@ -552,10 +552,13 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
 
     function menu_keydown_handler(event)
     {
-        if (event.altKey || event.shiftkey)
-            return;
-
         if (!menu || menu.type === "crt") return;
+
+        if (event.altKey || event.shiftkey) {
+            if (update_server_scroll_timeout)
+                update_server_scroll();
+            return;
+        }
 
         if (event.ctrlKey)
         {
@@ -568,6 +571,8 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
                 event.preventDefault();
                 return false;
             }
+            if (update_server_scroll_timeout)
+                update_server_scroll();
             return;
         }
 
@@ -602,6 +607,9 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
             event.preventDefault();
             return false;
         }
+
+        if (update_server_scroll_timeout)
+            update_server_scroll();
     }
 
     function menu_keypress_handler(event)
@@ -613,8 +621,10 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
         switch (chr)
         {
         case "-":
-            if (menu.tag == "inventory")
+            if (menu.tag == "inventory") {
+                update_server_scroll();
                 return true; // Don't capture - for wield prompts
+            }
 
         case "<":
         case ";":
@@ -629,10 +639,16 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
             event.preventDefault();
             return false;
         }
+
+        if (update_server_scroll_timeout)
+            update_server_scroll();
     }
 
     function item_click_handler(event)
     {
+        if (update_server_scroll_timeout)
+            update_server_scroll();
+
         var item = $(this).data("item");
         if (!item) return;
         if (item.hotkeys && item.hotkeys.length)
