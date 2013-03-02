@@ -133,7 +133,6 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
 
         client.show_dialog("#menu");
 
-        update_visible_indices();
         if (menu.flags & enums.menu_flag.START_AT_END)
         {
             scroll_bottom_to_item(menu.items.length - 1, true);
@@ -142,8 +141,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
         {
             scroll_to_item(menu.jump_to, true);
         } else {
-            // Hide -more- if at the bottom
-            menu_scroll_handler();
+            scroll_to_item(0, true);
         }
     }
 
