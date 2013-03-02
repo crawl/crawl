@@ -1342,7 +1342,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_QUICK_BLADE, // overrated
                                        WPN_SABRE,       // ordinary but popular
                                        WPN_DEMON_WHIP,  // goodness
-                                       WPN_FLAIL,       // best ordinary 1.5-handed
+                                       WPN_FLAIL,       // best ordinary 1-handed
                                        -1);
         level = MAKE_GOOD_ITEM;
         if (one_chance_in(mon->type == MONS_THE_ENCHANTRESS ? 4 : 10))
