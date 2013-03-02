@@ -327,6 +327,8 @@ endif
 
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
+OBJECTS += win32/backtrace.o
+INCLUDES_L += -Iwin32
 else
 ifndef ANDROID
 EXTRA_LIBS += -pthread

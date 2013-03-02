@@ -10,10 +10,11 @@
 #include <sys/time.h>
 #endif
 
-#if defined(UNIX)
+#if defined(UNIX) || defined(TARGET_OS_WINDOWS)
 #include <unistd.h>
         #define BACKTRACE_SUPPORTED
 #endif
+
 
 #ifdef BACKTRACE_SUPPORTED
 #if defined(TARGET_CPU_MIPS) || \
@@ -31,7 +32,6 @@
 #include <cxxabi.h>
 
 #if !defined(TARGET_OS_MACOSX) && \
-    !defined(TARGET_OS_WINDOWS) && \
     !defined(TARGET_COMPILER_CYGWIN)
 #include <execinfo.h>
 #endif
