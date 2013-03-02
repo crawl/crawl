@@ -37,13 +37,15 @@ function callback.grunt_crypt_arrival_guards_awaken(data,triggerable,trigger,mar
         crawl.mpr("You hear grinding stone!", "warning");
     end
     for slave in iter.slave_iterator("trap_sarcophagus", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
-        dgn.colour_at(slave.x, slave.y, "lightgray")
-        dgn.create_monster(slave.x, slave.y,
-                           "w:5 human skeleton / \
-                            w:5 human zombie / \
-                            mummy / \
-                            w:5 guardian mummy")
+        if dgn.feature_name(dgn.grid(slave.x, slave.y)) == "granite_statue" then
+            dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+            dgn.colour_at(slave.x, slave.y, "lightgray")
+            dgn.create_monster(slave.x, slave.y,
+                               "w:5 human skeleton / \
+                                w:5 human zombie / \
+                                mummy / \
+                                w:5 guardian mummy")
+        end
     end
 end
 }}
@@ -375,6 +377,7 @@ TILE:   H = dngn_sarcophagus_pedestal_left
 TILE:   I = dngn_sarcophagus_pedestal_right
 COLOUR: HI = yellow
 TILE:   C = wall_stone_gray
+SUBST:  HI = G
 {{
   local trap_marker = TriggerableFunction:new {
       func = "callback.grunt_crypt_arrival_guards_awaken",
@@ -382,17 +385,13 @@ TILE:   C = wall_stone_gray
   trap_marker:add_triggerer(DgnTriggerer:new {
       type="player_los"})
   lua_marker('J', trap_marker)
-  lua_marker('H', props_marker {trap_sarcophagus=1,
-                                veto_fragmentation="veto",
-                                veto_disintegrate="veto",
-                                veto_shatter="veto"})
-  lua_marker('I', props_marker {trap_sarcophagus=1,
+  lua_marker('G', props_marker {trap_sarcophagus=1,
                                 veto_fragmentation="veto",
                                 veto_disintegrate="veto",
                                 veto_shatter="veto"})
   set_feature_name("granite_statue", "sarcophagus")
 }}
-SUBST:  HI = G
+KFEAT:  G = granite_statue no_mimic
 SUBST:  J = V
 SUBST:  C = c
 MAP
