@@ -1069,7 +1069,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
 bool can_learn_spell(bool silent)
 {
-    if (player_in_bat_form())
+    if (you.form == TRAN_BAT)
     {
         if (!silent)
             canned_msg(MSG_PRESENT_FORM);

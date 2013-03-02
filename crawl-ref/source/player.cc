@@ -455,11 +455,6 @@ bool player_likes_water(bool permanently)
                 && form_likes_water());
 }
 
-bool player_in_bat_form()
-{
-    return (you.form == TRAN_BAT);
-}
-
 bool player_can_open_doors()
 {
     return (you.form != TRAN_BAT && you.form != TRAN_JELLY);
@@ -1282,7 +1277,7 @@ int player_hunger_rate(bool temp)
 {
     int hunger = 3;
 
-    if (temp && player_in_bat_form())
+    if (temp && you.form == TRAN_BAT)
         return 1;
 
     if (you.species == SP_TROLL)
@@ -2178,7 +2173,7 @@ int player_movement_speed(bool ignore_burden)
     // transformations
     if (you.form == TRAN_SPIDER)
         mv = 8;
-    else if (player_in_bat_form())
+    else if (you.form == TRAN_BAT)
         mv = 5; // but allowed minimum is six
     else if (you.form == TRAN_PIG)
         mv = 7;
@@ -3663,7 +3658,7 @@ int check_stealth(void)
             // Thirsty/bat-form vampires are (much) more stealthy
             if (you.hunger_state == HS_STARVING)
                 race_mod = 21;
-            else if (player_in_bat_form()
+            else if (you.form == TRAN_BAT
                      || you.hunger_state <= HS_NEAR_STARVING)
             {
                 race_mod = 20;

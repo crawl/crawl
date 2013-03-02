@@ -896,7 +896,6 @@ void forget_map(bool rot = false);
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
-bool player_in_bat_form();
 bool player_can_open_doors();
 
 void level_change(bool skip_attribute_increase = false);

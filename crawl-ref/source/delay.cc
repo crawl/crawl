@@ -758,7 +758,7 @@ void handle_delay()
                  || mitm[ delay.parm2 ].base_type != OBJ_CORPSES  // noncorpse
                  || mitm[ delay.parm2 ].pos != you.pos()) )       // elsewhere
             || you.hunger_state == HS_ENGORGED
-            || you.hunger_state > HS_SATIATED && player_in_bat_form()
+            || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT
             || (you.hunger_state >= HS_SATIATED
                && mitm[delay.parm2].defined()
                && is_poisonous(mitm[delay.parm2])) )
