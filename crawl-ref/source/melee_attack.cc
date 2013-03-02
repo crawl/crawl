@@ -1826,7 +1826,7 @@ void melee_attack::set_attack_verb()
     // has a non-weapon in hand. - bwr
     // Exception: vampire bats only bite to allow for drawing blood.
     if (damage_done < HIT_WEAK
-        && (you.species != SP_VAMPIRE || !player_in_bat_form())
+        && (you.species != SP_VAMPIRE || you.form != TRAN_BAT)
         && you.species != SP_FELID)
     {
         if (weap_type != WPN_UNKNOWN)
@@ -3978,7 +3978,7 @@ random_var melee_attack::player_unarmed_speed()
     if (you.burden_state == BS_UNENCUMBERED)
         unarmed_delay -= div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)), 54);
     // Bats are faster (for what good it does them).
-    if (player_in_bat_form())
+    if (you.form == TRAN_BAT)
         unarmed_delay = div_rand_round(unarmed_delay * constant(3), 5);
     return unarmed_delay;
 }
@@ -5199,7 +5199,7 @@ int melee_attack::calc_base_unarmed_damage()
             apply_bleeding = true;
         }
 
-        if (player_in_bat_form() || you.form == TRAN_PORCUPINE)
+        if (you.form == TRAN_BAT || you.form == TRAN_PORCUPINE)
         {
             // Bats really don't do a lot of damage.
             damage += you.skill_rdiv(SK_UNARMED_COMBAT, 1, 5);
@@ -5379,7 +5379,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Now print message, need biting unless already done (never for bat form!)
-    if (needs_bite_msg && !player_in_bat_form())
+    if (needs_bite_msg && you.form != TRAN_BAT)
     {
         mprf("You bite %s, and draw %s blood!",
              mon->name(DESC_THE, true).c_str(),
@@ -5401,7 +5401,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
             heal = you.experience_level;
 
         // Decrease healing when done in bat form.
-        if (player_in_bat_form())
+        if (you.form == TRAN_BAT)
             heal /= 2;
 
         if (heal > 0 && !you.duration[DUR_DEATHS_DOOR])
@@ -5424,7 +5424,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         }
 
         // Bats get rather less nutrition out of it.
-        if (player_in_bat_form())
+        if (you.form == TRAN_BAT)
             food_value /= 2;
 
         food_value /= reduction;

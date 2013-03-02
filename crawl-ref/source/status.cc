@@ -830,7 +830,7 @@ static void _describe_burden(status_info* inf)
 
 static void _describe_transform(status_info* inf)
 {
-    const bool vampbat = (you.species == SP_VAMPIRE && player_in_bat_form());
+    const bool vampbat = (you.species == SP_VAMPIRE && you.form == TRAN_BAT);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
     switch (you.form)

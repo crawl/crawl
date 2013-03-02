@@ -1012,7 +1012,7 @@ bool food_change(bool suppress_message)
                     you.set_duration(DUR_TRANSFORMATION, 2);
                 }
             }
-            else if (player_in_bat_form()
+            else if (you.form == TRAN_BAT
                      && you.duration[DUR_TRANSFORMATION] > 5)
             {
                 print_stats();

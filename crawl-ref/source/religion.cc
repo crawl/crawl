@@ -3465,7 +3465,7 @@ void god_pitch(god_type which_god)
 {
     mprf("You %s the altar of %s.",
          you.form == TRAN_WISP   ? "swirl around" :
-         player_in_bat_form()    ? "perch on" :
+         you.form == TRAN_BAT    ? "perch on" :
          you.flight_mode()       ? "hover solemnly before" :
          you.form == TRAN_SPIDER ? "cling to" :
          you.form == TRAN_STATUE ? "place yourself before" :

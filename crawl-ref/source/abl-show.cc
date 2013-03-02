@@ -1588,7 +1588,7 @@ bool activate_talent(const talent& tal)
             crawl_state.zero_turns_taken();
             return false;
         }
-        if (player_in_bat_form() && you.dex() <= 5
+        if (you.form == TRAN_BAT && you.dex() <= 5
             && !yesno("Turning back will reduce your dexterity to zero. Continue?", false, 'n'))
         {
             crawl_state.zero_turns_taken();
