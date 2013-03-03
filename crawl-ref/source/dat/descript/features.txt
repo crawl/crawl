@@ -294,7 +294,7 @@ A runed door
 
 A door, covered in runic writing. It looks like there is something special
 behind it — perhaps danger, perhaps treasure. You may break the runes and open
-it like any other door (ie, by walking into it or pressing 'O').
+it like any other door (i.e., by walking into it or pressing 'O').
 %%%%
 A sealed door
 
