@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Tracking peramallies granted by Yred and Beogh.
+ * @brief Tracking permaallies granted by Yred and Beogh.
 **/
 
 #ifndef GOD_COMPANION_H
