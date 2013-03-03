@@ -4359,7 +4359,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
                 && *mi != mons)
             {
-                mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, 1, mons, 40 + random2(80));
+                mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, 1, mons,
+                                               40 + random2(80));
                 mi->add_ench(bond);
             }
         }

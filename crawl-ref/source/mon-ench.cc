@@ -1694,7 +1694,10 @@ void monster::apply_enchantment(const mon_enchant &me)
             this->speed_increment += me.duration;
             del_ench(ENCH_WORD_OF_RECALL, true, false);
             if (you.can_see(this))
-                mprf("%s word of recall is interrupted.", name(DESC_ITS).c_str());
+            {
+                mprf("%s word of recall is interrupted.",
+                     name(DESC_ITS).c_str());
+            }
             break;
         }
 
