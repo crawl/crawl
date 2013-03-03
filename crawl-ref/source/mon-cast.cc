@@ -4351,7 +4351,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_INJURY_BOND:
     {
-        simple_monster_message(mons, " begins to accept its allies' injuries.");
+        simple_monster_message(mons,
+            make_stringf(" begins to accept %s allies' injuries.",
+                         mons->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         for (monster_iterator mi(mons->get_los_no_trans()); mi; ++mi)
         {
             if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
