@@ -1686,6 +1686,14 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_CLOUD_MAGE;
     case MONS_VAULT_GUARD:
         return TILEP_MONS_VAULT_GUARD;
+    case MONS_VAULT_WARDEN:
+        return TILEP_MONS_VAULT_WARDEN;
+    case MONS_VAULT_SENTINEL:
+        return TILEP_MONS_VAULT_SENTINEL;
+    case MONS_IRONBRAND_CONVOKER:
+        return TILEP_MONS_IRONBRAND_CONVOKER;
+    case MONS_IRONHEART_PRESERVER:
+        return TILEP_MONS_IRONHEART_PRESERVER;
     case MONS_SHAPESHIFTER:
         return TILEP_MONS_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:

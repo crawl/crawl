@@ -518,6 +518,10 @@ hell_knight MONS_HELL_KNIGHT
 necromancer MONS_NECROMANCER
 wizard MONS_WIZARD
 vault_guard MONS_VAULT_GUARD
+vault_warden MONS_VAULT_WARDEN
+vault_sentinel MONS_VAULT_SENTINEL
+ironbrand_convoker MONS_IRONBRAND_CONVOKER
+ironheart_preserver MONS_IRONHEART_PRESERVER
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown_blue MONS_KILLER_KLOWN
