@@ -2263,7 +2263,7 @@ static void tag_read_you(reader &th)
     {
         if (th.getMinorVersion() < TAG_MINOR_REMOVE_ABYSS_SEED
             || th.getMinorVersion() >= TAG_MINOR_ADD_ABYSS_SEED) {
-            abyssal_state.seed = unmarshallInt(th); 
+            abyssal_state.seed = unmarshallInt(th);
         } else {
             abyssal_state.seed = random_int();
         }

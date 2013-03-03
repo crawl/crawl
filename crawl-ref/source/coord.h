@@ -37,6 +37,9 @@ static inline bool map_bounds(const coord_def &p)
     return map_bounds(p.x, p.y);
 }
 
+// Convert an invalid coordinate to a map_bounds coordinate by truncation.
+coord_def clip(const coord_def &p);
+
 // Checks that a given point is within the map, excluding 'margin' squares at
 // the edge of the map.
 bool map_bounds_with_margin(coord_def p, int margin);

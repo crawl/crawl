@@ -6,6 +6,9 @@
 #include <cmath>
 
 #include "dgn-proclayouts.h"
+#include "coord.h"
+#include "coordit.h"
+#include "files.h"
 #include "hash.h"
 #include "perlin.h"
 #include "terrain.h"
@@ -81,7 +84,8 @@ WorleyLayout::operator()(const coord_def &p, const uint32_t offset) const
     const uint8_t choice = parity
         ? id % size
         : min(id % size, (id / size) % size);
-    ProceduralSample sample = (*layouts[(choice + seed) % size])(p, offset);
+    const coord_def pd = p + id;
+    ProceduralSample sample = (*layouts[(choice + seed) % size])(pd, offset);
 
     return ProceduralSample(p, sample.feat(),
                 min(changepoint, sample.changepoint()));
@@ -180,4 +184,98 @@ NewAbyssLayout::operator()(const coord_def &p, const uint32_t offset) const
     }
 
     return ProceduralSample(p, feat, offset + delta);
+}
+
+dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
+{
+    if (feat_is_gate(feature))
+        feature = DNGN_STONE_ARCH;
+    if (feat_is_stair(feature))
+        feature = strict ? DNGN_FLOOR : DNGN_STONE_ARCH;
+    if (feat_is_altar(feature))
+        feature = DNGN_FLOOR;
+    if (feature == DNGN_ENTER_SHOP)
+        feature = DNGN_ABANDONED_SHOP;
+    if (feat_is_trap(feature, true))
+        feature = DNGN_FLOOR;
+    switch (feature)
+    {
+        // demote permarock
+        case DNGN_PERMAROCK_WALL:
+            feature = DNGN_ROCK_WALL;
+            break;
+        case DNGN_CLEAR_PERMAROCK_WALL:
+            feature = DNGN_CLEAR_ROCK_WALL;
+            break;
+        case DNGN_SLIMY_WALL:
+            feature = DNGN_GREEN_CRYSTAL_WALL;
+        case DNGN_UNSEEN:
+            feature = DNGN_FLOOR;
+        default:
+            // handle more terrain types.
+            break;
+    }
+            return feature;
+}
+
+LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_layout) : layout(_layout)
+{
+    if(!is_existing_level(id))
+    {
+        for (rectangle_iterator ri(0); ri; ++ri)
+        {
+            grid(*ri) = DNGN_UNSEEN;
+        }
+        return;
+    }
+    level_excursion le;
+    le.go_to(id);
+    grid = feature_grid(grd);
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        grid(*ri) = sanitize_feature(grid(*ri), true);
+        if (!in_bounds(*ri))
+        {
+            grid(*ri) = DNGN_UNSEEN;
+            continue;
+        }
+
+        uint32_t solid_count = 0;
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+        {
+            solid_count += feat_is_solid(grd(*ai));
+        }
+        coord_def p = *ri;
+        uint64_t base = hash3(p.x, p.y, seed);
+        int div = base % 2 ? 12 : 11;
+        switch (solid_count)
+        {
+            case 8:
+                grid(*ri) = DNGN_UNSEEN;
+                break;
+            case 7:
+            case 6:
+            case 5:
+                if (!((base / 2) % div))
+                    grid(*ri) = DNGN_UNSEEN;
+                break;
+            case 0:
+            case 1:
+                if (!(base % 14))
+                    grid(*ri) = DNGN_UNSEEN;
+                break;
+        }
+    }
+    le.~level_excursion();
+}
+
+ProceduralSample
+LevelLayout::operator()(const coord_def &p, const uint32_t offset) const
+{
+    coord_def cp = clip(p);
+    dungeon_feature_type feat = grid(cp);
+    if (feat == DNGN_UNSEEN) {
+        return layout(p, offset);
+    }
+    return ProceduralSample(p, feat, offset + 4096);
 }
