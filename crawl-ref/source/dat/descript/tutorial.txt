@@ -23,16 +23,16 @@ You can move diagonally by way of the <w>[number pad]</w> (try Numlock on/off)
 or by using the <w>[vi keys]</w>.
 
 <w></w>  Numpad:       <w>7 8 9</w>           vi-keys:
-<w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w>   $cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
 
 <w></w>                 \|/                         \|/
 
 <w></w>                <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+<w>                      $cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
 
 <w></w>                 /|\                         /|\
 
-<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
+<w></w>                <w>1 2 3</w> <w>                      $cmd[CMD_MOVE_DOWN_LEFT]
 $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>You can also move using <w>[Mouse clicks]</w>.</localtiles>
