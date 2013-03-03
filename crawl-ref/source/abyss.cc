@@ -1252,6 +1252,7 @@ static void _initialize_abyss_state()
 {
     abyssal_state.major_coord.x = random2(0x7FFFFFFF);
     abyssal_state.major_coord.y = random2(0x7FFFFFFF);
+    abyssal_state.seed = random2(0x7FFFFFFF);
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random2(0x7FFFFFFF);
     abyssal_state.nuke_all = false;
@@ -1262,6 +1263,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
 {
     abyssal_state.major_coord = coord;
     abyssal_state.depth = depth;
+    abyssal_state.seed = 1;
     abyssal_state.phase = 0.0;
     abyssal_state.nuke_all = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
