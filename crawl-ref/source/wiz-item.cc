@@ -1328,7 +1328,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_ELECTRICITY
          1, //ARTP_POISON
          1, //ARTP_NEGATIVE_ENERGY
-         1, //ARTP_MAGIC
+         0, //ARTP_MAGIC
          1, //ARTP_EYESIGHT
          1, //ARTP_INVISIBLE
          1, //ARTP_FLY

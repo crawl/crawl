@@ -4174,10 +4174,11 @@ void display_char_status()
     // magic resistance
     mprf("You are %s to hostile enchantments.",
          magic_res_adjective(player_res_magic(false)).c_str());
+    dprf("MR: %d", you.res_magic());
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
-    dprf("stealth: %d", check_stealth());
+    dprf("Stealth: %d", check_stealth());
 }
 
 bool player::clarity(bool calc_unid, bool items) const
@@ -6531,6 +6532,9 @@ int player_res_magic(bool calc_unid, bool temp)
     // Enchantment effect
     if (you.duration[DUR_LOWERED_MR] && temp)
         rm /= 2;
+
+    if (rm < 0)
+        rm = 0;
 
     return rm;
 }
