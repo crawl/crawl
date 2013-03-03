@@ -2607,7 +2607,7 @@ static void tag_read_companions(reader &th)
     companion_list.clear();
 
     unmarshallMap(th, companion_list, unmarshall_int_as<mid_t>,
-                 unmarshall_companion);
+                  unmarshall_companion);
 }
 
 template <typename Z>
