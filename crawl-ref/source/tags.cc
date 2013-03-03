@@ -2259,14 +2259,16 @@ static void tag_read_you(reader &th)
 
     abyssal_state.major_coord = unmarshallCoord(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_DEEP_ABYSS && th.getMinorVersion() != TAG_MINOR_0_11)
+    if (th.getMinorVersion() >= TAG_MINOR_DEEP_ABYSS
+        && th.getMinorVersion() != TAG_MINOR_0_11)
     {
         if (th.getMinorVersion() < TAG_MINOR_REMOVE_ABYSS_SEED
-            || th.getMinorVersion() >= TAG_MINOR_ADD_ABYSS_SEED) {
+            || th.getMinorVersion() >= TAG_MINOR_ADD_ABYSS_SEED)
+        {
             abyssal_state.seed = unmarshallInt(th);
-        } else {
-            abyssal_state.seed = random_int();
         }
+        else
+            abyssal_state.seed = random_int();
         abyssal_state.depth = unmarshallInt(th);
         abyssal_state.nuke_all = false;
     }
