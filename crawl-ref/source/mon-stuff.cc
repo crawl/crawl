@@ -592,11 +592,13 @@ static void _beogh_spread_experience(int exp)
         for (monster_iterator mi(&you); mi; ++mi)
         {
             if (is_orcish_follower(*mi))
-                _give_monster_experience(exp * mi->hit_dice / total_hd, mi->mindex());
+            {
+                _give_monster_experience(exp * mi->hit_dice / total_hd,
+                                         mi->mindex());
+            }
         }
     }
 }
-
 
 static int _calc_player_experience(const monster* mons)
 {
@@ -2522,9 +2524,12 @@ int monster_die(monster* mons, killer_type killer,
                                "it dies.");
     }
 
-    if (mons->is_divine_companion() && killer != KILL_RESET
-            && killer != KILL_BANISHED)
+    if (mons->is_divine_companion()
+        && killer != KILL_RESET
+        && killer != KILL_BANISHED)
+    {
         remove_companion(mons);
+    }
 
     // If we kill an invisible monster reactivate autopickup.
     // We need to check for actual invisibility rather than whether we
