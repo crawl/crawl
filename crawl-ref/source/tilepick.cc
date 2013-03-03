@@ -962,7 +962,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_PHOENIX:
         return TILEP_MONS_PHOENIX;
     case MONS_CHAOS_BUTTERFLY:
-        return _mon_random(TILEP_MONS_BUTTERFLY);
+        return _mon_random(TILEP_MONS_CHAOS_BUTTERFLY);
 
     // centaurs ('c')
     case MONS_CENTAUR:
