@@ -936,23 +936,29 @@ level_id _get_real_level()
 {
     push_rng_state();
     seed_rng(abyssal_state.seed);
-    for (int i = 0; i < 20; ++i)
+    vector<level_id> levels;
+    for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
-        const int branch = random2(NUM_BRANCHES);
-        if (branch == BRANCH_ABYSS)
+        if (i == BRANCH_SHOALS || i == BRANCH_ABYSS)
         {
             continue;
         }
-        const int level  = random2(MAX_BRANCH_DEPTH) + 1;
-        const level_id lid(static_cast<branch_type>(branch), level);
-        if (is_existing_level(lid))
+        for (int j = 0; j < brdepth[i]; ++j)
         {
-            pop_rng_state();
-            return lid;
+            const level_id id(static_cast<branch_type>(i), j);
+            if (is_existing_level(id)) {
+                levels.push_back(id);
+            }
         }
     }
+    if (levels.empty())
+    {
+        // Let this fail later on.
+        return level_id(static_cast<branch_type>(BRANCH_MAIN_DUNGEON), 1);
+    }
+    int pick = random2(levels.size());
     pop_rng_state();
-    return level_id(static_cast<branch_type>(BRANCH_MAIN_DUNGEON), 1);
+    return levels[pick];
 }
 
 static ProceduralSample _abyss_grid(const coord_def &p)
