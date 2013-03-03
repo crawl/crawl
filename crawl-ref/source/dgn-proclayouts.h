@@ -46,6 +46,7 @@ class ProceduralLayout
 {
     public:
         virtual ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const = 0;
+        virtual ~ProceduralLayout() { }
 };
 
 class ColumnLayout : public ProceduralLayout
