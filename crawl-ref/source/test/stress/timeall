@@ -4,6 +4,12 @@ use strict;
 my @TESTS = 1..5;
 my $NTRIES = 5;
 
+!system("./crawl --builddb") or die "Rebuilding the db failed -- bailing.\n";
+
+# Load the db into the page cache, make the disk idle.
+system("tar cf - saves/db saves/des >/dev/null 2>/dev/null");
+system("sync");
+
 my (%results, %times, $test);
 for $test (@TESTS)
 {
