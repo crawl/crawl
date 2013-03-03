@@ -5940,7 +5940,9 @@ bool monster::is_parent_monster_of(const monster* mons) const
 
 bool monster::is_divine_companion() const
 {
-    return (((you.religion == GOD_BEOGH && mons_is_god_gift(this, GOD_BEOGH))
-            || (you.religion == GOD_YREDELEMNUL && mons_is_god_gift(this, GOD_YREDELEMNUL)))
-            && attitude == ATT_FRIENDLY);
+    return (((you.religion == GOD_BEOGH
+                  && mons_is_god_gift(this, GOD_BEOGH))
+              || (you.religion == GOD_YREDELEMNUL
+                  && mons_is_god_gift(this, GOD_YREDELEMNUL)))
+              && attitude == ATT_FRIENDLY);
 }

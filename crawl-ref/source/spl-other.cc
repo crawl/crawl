@@ -190,7 +190,9 @@ void start_recall(int type)
 
         if (mons_class_is_stationary(mi->type)
             || mons_is_conjured(mi->type))
+        {
             continue;
+        }
 
         if (!monster_habitable_grid(*mi, DNGN_FLOOR))
             continue;
@@ -252,8 +254,9 @@ bool _try_recall(mid_t mid)
     return false;
 }
 
-// Attempt to recall a number of allies proportional to how much time has passed.
-// Once the list has been fully processed, terminate the status
+// Attempt to recall a number of allies proportional to how much time
+// has passed. Once the list has been fully processed, terminate the
+// status.
 void do_recall(int time)
 {
     while (time > you.attribute[ATTR_NEXT_RECALL_TIME])
@@ -266,7 +269,8 @@ void do_recall(int time)
             time -= you.attribute[ATTR_NEXT_RECALL_TIME];
             you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
         }
-        if ((unsigned int)you.attribute[ATTR_NEXT_RECALL_INDEX] > you.recall_list.size())
+        if ((unsigned int)you.attribute[ATTR_NEXT_RECALL_INDEX] >
+             you.recall_list.size())
         {
             end_recall();
             mpr("You finish recalling your allies.");

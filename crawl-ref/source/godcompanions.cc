@@ -44,8 +44,11 @@ void remove_all_companions(god_type god)
         monster* mons = monster_by_mid(i->first);
         if (!mons)
             mons = &i->second.mons.mons;
-        if ((god == GOD_YREDELEMNUL && is_yred_undead_slave(mons))
-            || (god == GOD_BEOGH && mons->wont_attack() && mons_is_god_gift(mons, GOD_BEOGH)))
+        if ((god == GOD_YREDELEMNUL
+                 && is_yred_undead_slave(mons))
+             || (god == GOD_BEOGH
+                 && mons->wont_attack()
+                 && mons_is_god_gift(mons, GOD_BEOGH)))
         {
             companion_list.erase(i);
         }
@@ -61,8 +64,8 @@ void move_companion_to(const monster* mons, const level_id lid)
 
 void update_companions()
 {
-    for(map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end(); ++i )
+    for (map<mid_t, companion>::iterator i = companion_list.begin();
+         i != companion_list.end(); ++i )
     {
         monster* mons = monster_by_mid(i->first);
         if (mons)
@@ -73,17 +76,15 @@ void update_companions()
                 i->second.timestamp = you.elapsed_time;
             }
             else // We must have angered this creature or lost our religion
-            {
                 companion_list.erase(i);
-            }
         }
     }
 }
 
 void populate_offlevel_recall_list()
 {
-    for(map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end(); ++i )
+    for (map<mid_t, companion>::iterator i = companion_list.begin();
+         i != companion_list.end(); ++i )
     {
         int mid = i->first;
         companion* comp = &i->second;
@@ -128,7 +129,8 @@ bool recall_offlevel_ally(mid_t mid)
                     mons->heal(turns);
                 else
                 {
-                    const int regen_rate = max(mons_natural_regen_rate(mons) * 2, 5);
+                    const int regen_rate =
+                        max(mons_natural_regen_rate(mons) * 2, 5);
                     mons->heal(div_rand_round(turns * regen_rate, 50));
                 }
             }
@@ -151,8 +153,7 @@ bool recall_offlevel_ally(mid_t mid)
 bool companion_is_elsewhere(mid_t mid)
 {
     if (companion_list.find(mid) != companion_list.end())
-    {
         return (companion_list[mid].level != level_id::current());
-    }
+
     return false;
 }
