@@ -1416,7 +1416,7 @@ static bool _queen_incite_worker(const monster* queen)
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 {
     for (set<coord_def>::const_iterator i = door.begin();
-        i != door.end(); ++i)
+         i != door.end(); ++i)
     {
         grd(*i) = feat;
         set_terrain_changed(*i);
@@ -1497,7 +1497,7 @@ static bool _can_force_door_shut(const coord_def& door)
     find_connected_identical(door, grd(door), all_door);
 
     for (set<coord_def>::const_iterator i = all_door.begin();
-        i != all_door.end(); ++i)
+         i != all_door.end(); ++i)
     {
         // If anyone is in the doorway, we can't force them out
         monster* mons = monster_at(*i);
@@ -1594,7 +1594,7 @@ static bool _seal_doors(const monster* warden)
             set<coord_def> all_door;
             find_connected_identical(*ri, grd(*ri), all_door);
             for (set<coord_def>::const_iterator i = all_door.begin();
-             i != all_door.end(); ++i)
+                 i != all_door.end(); ++i)
             {
                 // If there are things in the way, push them aside
                 actor* act = actor_at(*i);
@@ -1616,7 +1616,7 @@ static bool _seal_doors(const monster* warden)
             bool seen = false;
             vector<coord_def> excludes;
             for (set<coord_def>::const_iterator i = all_door.begin();
-                i != all_door.end(); ++i)
+                 i != all_door.end(); ++i)
             {
                 const coord_def& dc = *i;
                 grd(dc) = DNGN_CLOSED_DOOR;
@@ -1649,10 +1649,11 @@ static bool _seal_doors(const monster* warden)
             set<coord_def> all_door;
             find_connected_identical(*ri, grd(*ri), all_door);
             for (set<coord_def>::const_iterator i = all_door.begin();
-                i != all_door.end(); ++i)
+                 i != all_door.end(); ++i)
             {
                 map_door_seal_marker *sealmarker =
-                    new map_door_seal_marker(*i, seal_duration, warden->mid, DNGN_CLOSED_DOOR);
+                    new map_door_seal_marker(*i, seal_duration, warden->mid,
+                                             DNGN_CLOSED_DOOR);
                 env.markers.add(sealmarker);
                 env.markers.clear_need_activate();
 
@@ -1667,7 +1668,8 @@ static bool _seal_doors(const monster* warden)
     if (had_effect)
     {
         mprf(MSGCH_MONSTER_SPELL, "%s activates a sealing rune.",
-                (warden->visible_to(&you) ? warden->name(DESC_THE, true).c_str() : "Someone"));
+                (warden->visible_to(&you) ? warden->name(DESC_THE, true).c_str()
+                                          : "Someone"));
         if (num_closed > 1)
             mpr("The doors slam shut!");
         else if (num_closed == 1)
