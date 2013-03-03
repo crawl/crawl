@@ -889,8 +889,8 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     {
         fake_noisy(30, where);
 
-        // There's also a 1-in-6 flat chance of apport failing.
-        if (one_chance_in(6))
+        // There's also a 1-in-3 flat chance of apport failing.
+        if (one_chance_in(3))
         {
             orb_pickup_noise(where, 30,
                 "The orb shrieks and becomes a dead weight against your magic!",
