@@ -5167,8 +5167,6 @@ _Nessos_common_
 @The_monster@ intently looks at @foe@, slowly moving @possessive@ tail.
 
 @The_monster@ stands on @possessive@ hind legs for a moment.
-
-@The_monster@ prepares to charge into full speed.
 %%%%
 _Nessos_rare_
 
