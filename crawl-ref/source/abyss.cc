@@ -23,6 +23,7 @@
 #include "dgn-proclayouts.h"
 #include "dungeon.h"
 #include "env.h"
+#include "files.h"
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
@@ -61,6 +62,8 @@ static const int ABYSSAL_RUNE_MAX_ROLL = 200;
 static const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 
 abyss_state abyssal_state;
+
+ProceduralLayout *abyssLayout = NULL;
 
 typedef priority_queue<ProceduralSample, vector<ProceduralSample>, ProceduralSamplePQCompare> sample_queue;
 
@@ -362,38 +365,8 @@ void push_features_to_abyss()
             p += you.pos();
 
             dungeon_feature_type feature = map_bounds(p) ? grd(p) : DNGN_UNSEEN;
-
-            if (feat_is_gate(feature))
-                feature = DNGN_STONE_ARCH;
-
-            if (feat_is_stair(feature))
-                feature = (one_chance_in(3) ? DNGN_STONE_ARCH : DNGN_FLOOR);
-
-            if (feat_is_altar(feature))
-                feature = (one_chance_in(9) ? DNGN_ALTAR_XOM : DNGN_FLOOR);
-
-            if (feature == DNGN_ENTER_SHOP)
-                feature = DNGN_ABANDONED_SHOP;
-
-            if (feat_is_trap(feature, true))
-                feature = DNGN_FLOOR;
-
-            switch (feature)
-            {
-                // demote permarock
-                case DNGN_PERMAROCK_WALL:
-                    feature = DNGN_ROCK_WALL;
-                    break;
-                case DNGN_CLEAR_PERMAROCK_WALL:
-                    feature = DNGN_CLEAR_ROCK_WALL;
-                    break;
-                case DNGN_SLIMY_WALL:
-                    feature = DNGN_GREEN_CRYSTAL_WALL;
-                default:
-                    // handle more terrain types.
-                    break;
-            }
-            abyssal_features.push_back(feature);
+            feature = sanitize_feature(feature);
+                 abyssal_features.push_back(feature);
         }
     }
 }
@@ -959,6 +932,29 @@ static bool _in_wastes(const coord_def &p)
     return (p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF);
 }
 
+level_id _get_real_level()
+{
+    push_rng_state();
+    seed_rng(abyssal_state.seed);
+    for (int i = 0; i < 20; ++i)
+    {
+        const int branch = random2(NUM_BRANCHES);
+        if (branch == BRANCH_ABYSS)
+        {
+            continue;
+        }
+        const int level  = random2(MAX_BRANCH_DEPTH) + 1;
+        const level_id lid(static_cast<branch_type>(branch), level);
+        if (is_existing_level(lid))
+        {
+            pop_rng_state();
+            return lid;
+        }
+    }
+    pop_rng_state();
+    return level_id(static_cast<branch_type>(BRANCH_MAIN_DUNGEON), 1);
+}
+
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord;
@@ -989,11 +985,21 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     };
     const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
     const static WorleyLayout layout(4321, mixed_vec);
-    const ProceduralLayout* masterLayouts[] = { &newAbyssLayout, &layout };
-    const static vector<const ProceduralLayout*> master_vec(masterLayouts, masterLayouts + 2);
-    const static WorleyLayout masterLayout(314159, master_vec, 5.0);
-    const static RiverLayout rivers(1800, masterLayout);
-    const ProceduralSample sample = rivers(pt, abyssal_state.depth);
+    const ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
+    const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
+    const static WorleyLayout baseLayout(314159, base_vec, 5.0);
+    const static RiverLayout rivers(1800, baseLayout);
+    if (abyssLayout == NULL)
+    {
+        const level_id lid = _get_real_level();
+        ProceduralLayout* dungeon_level = new LevelLayout(lid, 5, rivers);
+        const ProceduralLayout* complex_layout[] = { dungeon_level, &rivers };
+        const static vector<const ProceduralLayout*> complex_vec(complex_layout, complex_layout + 2);
+        abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
+    }
+
+    const ProceduralSample sample = (*abyssLayout)(pt, abyssal_state.depth);
+    assert(sample.feat() > DNGN_UNSEEN);
     abyss_sample_queue.push(sample);
     return sample;
 }
@@ -1263,7 +1269,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
 {
     abyssal_state.major_coord = coord;
     abyssal_state.depth = depth;
-    abyssal_state.seed = 1;
+    abyssal_state.seed = random2(0x7FFFFFFF);
     abyssal_state.phase = 0.0;
     abyssal_state.nuke_all = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
@@ -1392,7 +1398,11 @@ void generate_abyss()
 {
     env.level_build_method += " abyss";
     env.level_layout_types.insert("abyss");
-
+    if (abyssLayout != NULL)
+    {
+        delete abyssLayout;
+        abyssLayout = NULL;
+    }
 retry:
     _initialize_abyss_state();
 
@@ -1403,6 +1413,10 @@ retry:
     _write_abyssal_features();
     map_bitmask abyss_genlevel_mask(true);
     _abyss_apply_terrain(abyss_genlevel_mask);
+
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri) {
+        ASSERT(grd(*ri) > DNGN_UNSEEN);
+    }
     check_map_validity();
 
     // If we're starting out in the Abyss, make sure the starting grid is

@@ -1263,6 +1263,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (!crawl_state.game_is_tutorial()
             && !crawl_state.game_is_zotdef()
+            && !player_in_branch(BRANCH_ABYSS)
             && (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 2)
             && one_chance_in(3))
         {

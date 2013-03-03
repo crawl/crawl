@@ -14,6 +14,9 @@
 #include "externs.h"
 #include "worley.h"
 
+dungeon_feature_type sanitize_feature(dungeon_feature_type feature,
+        bool strict = false);
+
 class ProceduralSample
 {
     public:
@@ -35,7 +38,7 @@ class ProceduralSamplePQCompare
     public:
         bool operator() (const ProceduralSample &lhs, const ProceduralSample &rhs)
         {
-        return lhs.changepoint() > rhs.changepoint();
+            return lhs.changepoint() > rhs.changepoint();
         }
 };
 
@@ -130,4 +133,16 @@ class NewAbyssLayout : public ProceduralLayout
     private:
         const uint32_t seed;
 };
+
+class LevelLayout : public ProceduralLayout
+{
+    public:
+        LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_layout);
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+    private:
+        feature_grid grid;
+        uint32_t seed;
+        const ProceduralLayout &layout;
+};
+
 #endif /* PROC_LAYOUTS_H */

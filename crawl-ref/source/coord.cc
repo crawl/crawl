@@ -54,6 +54,21 @@ bool map_bounds_with_margin(coord_def p, int margin)
             && p.y >= Y_BOUND_1 + margin && p.y <= Y_BOUND_2 - margin);
 }
 
+coord_def clip(const coord_def &p)
+{
+    if (crawl_state.game_is_arena())
+    {
+        const coord_def &ul = crawl_view.glos1; // Upper left
+        const coord_def &lr = crawl_view.glos2; // Lower right
+        int x = p.x % (lr.x - ul.x + 1);
+        int y = p.y % (lr.y - ul.y + 1);
+        return coord_def(x, y);
+    }
+    int x = abs(p.x) % (GXM - 1) + MAPGEN_BORDER - 1;
+    int y = abs(p.y) % (GYM - 1) + MAPGEN_BORDER - 1;
+    return coord_def(x, y);
+}
+
 coord_def random_in_bounds()
 {
     if (crawl_state.game_is_arena())
