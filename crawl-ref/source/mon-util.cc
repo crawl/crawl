@@ -3520,9 +3520,12 @@ static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
 bool mons_can_traverse(const monster* mon, const coord_def& p,
                        bool checktraps)
 {
-    if (grd(p) == DNGN_CLOSED_DOOR || grd(p) == DNGN_SEALED_DOOR
+    if (grd(p) == DNGN_CLOSED_DOOR
+        || grd(p) == DNGN_SEALED_DOOR
             && _mons_can_pass_door(mon, p))
+    {
         return true;
+    }
 
     if (!mon->is_habitable(p))
         return false;
