@@ -16,6 +16,7 @@ extern const coord_def ABYSS_CENTRE;
 struct abyss_state
 {
     coord_def major_coord;
+    uint32_t seed;
     uint64_t depth;
     double phase;
     bool nuke_all;

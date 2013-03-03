@@ -1362,6 +1362,7 @@ static void tag_construct_you(writer &th)
         marshallBoolean(th, you.branches_left[i]);
 
     marshallCoord(th, abyssal_state.major_coord);
+    marshallInt(th, abyssal_state.seed);
     marshallInt(th, abyssal_state.depth);
     marshallFloat(th, abyssal_state.phase);
 
@@ -2260,8 +2261,12 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_DEEP_ABYSS && th.getMinorVersion() != TAG_MINOR_0_11)
     {
-        if (th.getMinorVersion() < TAG_MINOR_REMOVE_ABYSS_SEED)
-            unmarshallInt(th); // was abyssal_state.seed, unused.
+        if (th.getMinorVersion() < TAG_MINOR_REMOVE_ABYSS_SEED
+            || th.getMinorVersion() >= TAG_MINOR_ADD_ABYSS_SEED) {
+            abyssal_state.seed = unmarshallInt(th); 
+        } else {
+            abyssal_state.seed = random_int();
+        }
         abyssal_state.depth = unmarshallInt(th);
         abyssal_state.nuke_all = false;
     }
