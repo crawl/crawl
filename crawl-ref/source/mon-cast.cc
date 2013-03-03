@@ -1722,7 +1722,6 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
         god = mons->god;
 }
 
-
 static bool _recallable(monster* caller, monster* targ)
 {
     return (targ->alive() && mons_intel(targ) >= I_NORMAL
