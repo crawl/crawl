@@ -26,6 +26,9 @@ enum band_type
     BAND_YAKTAURS,
     BAND_INSUBSTANTIAL_WISPS,
     BAND_OGRE_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    BAND_OGRE_MAGE_EXTERN,
+#endif
     BAND_DEATH_YAKS,
     BAND_NECROMANCER,
     BAND_BALRUG,
@@ -73,7 +76,9 @@ enum band_type
     BAND_LAMIA,
     BAND_POLYPHEMUS,
     BAND_VAULT_WARDEN,
+#if TAG_MAJOR_VERSION == 34
     BAND_OGRE_MAGE_EXTERN,
+#endif
     NUM_BANDS                   // always last
 };
 
