@@ -297,7 +297,8 @@ A bronze shield.
 %%%%
 robe of Folly
 
-A dull grey robe.
+A dull grey robe. It is enchanted to provide its wearer with immeasurable
+power and wisdom.
 %%%%
 Maxwell's patent armour
 

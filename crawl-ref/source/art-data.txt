@@ -783,13 +783,14 @@ MAGIC:   40
 
 NAME:    robe of Folly
 OBJ:     OBJ_ARMOUR/ARM_ROBE
-PLUS:    -1
+PLUS:    3
 COLOUR:  LIGHTGREY
 TILE:    urand_folly
 TILE_EQ: robe_red2
-INT:     -5
-CURSED:  1
-BOOL:    nospell, randapp, unided
+BRAND:   SPARM_ARCHMAGI
+INT:     5
+CURSED:  3
+MAGIC:   -100
 
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
@@ -980,7 +981,7 @@ COLOUR:   ETC_UNHOLY
 TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
-CURSED:    1
+CURSED:   1
 STR:      +3
 BOOL:     evil, seeinv, fly, special
 

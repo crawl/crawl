@@ -1117,8 +1117,10 @@ int artefact_value(const item_def &item)
         ret += 30;
 
     // magic resistance is from 35-100
-    if (prop[ ARTP_MAGIC ])
+    if (prop[ ARTP_MAGIC ] > 0)
         ret += 5 + prop[ ARTP_MAGIC ] / 15;
+    else if (prop[ ARTP_MAGIC ] < 0)
+        ret -= 5;
 
     if (prop[ ARTP_EYESIGHT ])
         ret += 10;

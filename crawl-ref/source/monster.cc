@@ -3960,11 +3960,10 @@ int monster::res_magic() const
     if (u < 0)
         u = hit_dice * -u * 4 / 3;
 
-    // Randarts have a multiplicative effect.
-    u *= (scan_artefacts(ARTP_MAGIC) + 100);
-    u /= 100;
+    // Resistance from artefact properties.
+    u += scan_artefacts(ARTP_MAGIC);
 
-    // ego armour resistance
+    // Ego equipment resistance.
     const int armour    = inv[MSLOT_ARMOUR];
     const int shld      = inv[MSLOT_SHIELD];
     const int jewellery = inv[MSLOT_JEWELLERY];
@@ -3983,6 +3982,9 @@ int monster::res_magic() const
 
     if (has_ench(ENCH_RAISED_MR)) //trog's hand
         u += 70;
+
+    if (u < 0)
+        u = 0;
 
     return u;
 }
