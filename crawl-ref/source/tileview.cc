@@ -1087,11 +1087,11 @@ static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
             return 1;
     case 8:
         ASSERT(!runed);
-        // But is BASE_TILE for others.
+        // The closed door is at BASE_TILE for sets without runed doors
         offset = 0;
         break;
     case 9:
-        // It's located at BASE_TILE+1 for tile sets with runed doors
+        // But is at BASE_TILE+1 for sets with them.
         offset = 1;
         break;
     default:
