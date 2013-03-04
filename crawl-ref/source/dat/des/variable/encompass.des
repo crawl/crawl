@@ -1306,10 +1306,12 @@ ENDMAP
 
 ################################################################################
 # Giving players the runaround...
-default-depth: D:16-27
+
+default-depth:
 
 NAME: grunt_runaround
 TAGS: no_monster_gen
+DEPTH: D:16-27
 ORIENT: encompass
 SUBVAULT: B : grunt_runaround_doors_1
 SUBVAULT: C : grunt_runaround_doors_2
