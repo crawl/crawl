@@ -10,6 +10,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <algorithm>
+#include <sys/types.h>
+#include <sys/param.h>
 
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
@@ -36,6 +38,9 @@
 #include "tags.h"
 #include "terrain.h"
 
+#ifndef BYTE_ORDER
+# error BYTE_ORDER is not defined
+#endif
 #if BYTE_ORDER == LITTLE_ENDIAN
 # define WORD_LEN sizeof(long)
 #else
