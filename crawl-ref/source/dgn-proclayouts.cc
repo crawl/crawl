@@ -218,7 +218,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
     return feature;
 }
 
-LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_layout) : layout(_layout)
+LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_layout) : seed(_seed), layout(_layout)
 {
     if(!is_existing_level(id))
     {
