@@ -19,6 +19,7 @@
 #include <time.h>
 #include <math.h>
 
+#include "abyss.h"
 #include "cio.h"
 #include "colour.h"
 #include "crash.h"
@@ -126,6 +127,7 @@ static void _clear_globals_on_exit()
     clear_zap_info_on_exit();
     clear_colours_on_exit();
     dgn_clear_vault_placements(env.level_vaults);
+    destroy_abyss();
 }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
