@@ -262,7 +262,6 @@ LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_l
                 break;
         }
     }
-    le.~level_excursion();
 }
 
 ProceduralSample
