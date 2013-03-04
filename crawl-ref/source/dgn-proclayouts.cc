@@ -139,9 +139,9 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
     double y = (p.y + perlin::fBM(p.x/4.0 + 3.7, p.y/4.0 + 1.9, seed + 4, 5) * 3) / scalar;
     worley::noise_datum n = worley::noise(x, y, offset / scale + seed);
     const uint32_t changepoint = offset + _get_changepoint(n, scale);
-    if ((n.id[0] ^ n.id[1] ^ seed) % 4) {
+    if ((n.id[0] ^ n.id[1] ^ seed) % 4)
         return layout(p, offset);
-    }
+
     double delta = n.distance[1] - n.distance[0];
     if (delta < 1.5/scalar)
     {
@@ -215,7 +215,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
             // handle more terrain types.
             break;
     }
-            return feature;
+    return feature;
 }
 
 LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_layout) : layout(_layout)
@@ -223,9 +223,7 @@ LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_l
     if(!is_existing_level(id))
     {
         for (rectangle_iterator ri(0); ri; ++ri)
-        {
             grid(*ri) = DNGN_UNSEEN;
-        }
         return;
     }
     level_excursion le;
@@ -242,9 +240,7 @@ LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_l
 
         uint32_t solid_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
-        {
             solid_count += feat_is_solid(grd(*ai));
-        }
         coord_def p = *ri;
         uint64_t base = hash3(p.x, p.y, seed);
         int div = base % 2 ? 12 : 11;
@@ -274,8 +270,7 @@ LevelLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
     coord_def cp = clip(p);
     dungeon_feature_type feat = grid(cp);
-    if (feat == DNGN_UNSEEN) {
+    if (feat == DNGN_UNSEEN)
         return layout(p, offset);
-    }
     return ProceduralSample(p, feat, offset + 4096);
 }

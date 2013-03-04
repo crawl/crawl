@@ -940,15 +940,12 @@ static level_id _get_real_level()
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
         if (i == BRANCH_SHOALS || i == BRANCH_ABYSS)
-        {
             continue;
-        }
         for (int j = 0; j < brdepth[i]; ++j)
         {
             const level_id id(static_cast<branch_type>(i), j);
-            if (is_existing_level(id)) {
+            if (is_existing_level(id))
                 levels.push_back(id);
-            }
         }
     }
     if (levels.empty())
@@ -975,8 +972,9 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static DiamondLayout diamond21(2,1);
     const static ColumnLayout column2(2);
     const static ColumnLayout column26(2,6);
-    const static ProceduralLayout* regularLayouts[] = {
-        &diamond30, &diamond21, &column2, &column26
+    const static ProceduralLayout* regularLayouts[] =
+    {
+        &diamond30, &diamond21, &column2, &column26,
     };
     const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
         regularLayouts + 4);
@@ -986,8 +984,9 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static RoilingChaosLayout chaosC(24324,   380);
     const static RoilingChaosLayout chaosD(24816,   500);
     const static NewAbyssLayout newAbyssLayout(7629);
-    const ProceduralLayout* mixedLayouts[] = {
-        &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout
+    const ProceduralLayout* mixedLayouts[] =
+    {
+        &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
     };
     const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
     const static WorleyLayout layout(4321, mixed_vec);
@@ -1106,7 +1105,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
 static int _abyssal_stair_chance()
 {
-  return 3500 - (200 * you.depth / 3);
+    return 3500 - (200 * you.depth / 3);
 }
 
 static void _nuke_all_terrain(bool vaults)
@@ -1166,7 +1165,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             ++ii;
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
             env.level_map_mask(p) &= ~MMT_NUKED;
-         }
+        }
         if (morph)
             continue;
 
@@ -1420,9 +1419,8 @@ retry:
     map_bitmask abyss_genlevel_mask(true);
     _abyss_apply_terrain(abyss_genlevel_mask);
 
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri) {
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         ASSERT(grd(*ri) > DNGN_UNSEEN);
-    }
     check_map_validity();
 
     // If we're starting out in the Abyss, make sure the starting grid is
