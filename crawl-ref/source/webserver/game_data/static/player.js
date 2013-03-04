@@ -232,17 +232,21 @@ function ($, comm, enums, map_knowledge, messages) {
     $(document).off("game_init.player")
         .on("game_init.player", function () {
             $.extend(player, {
-                name: "", god: "",
-                hp: 0, hp_max: 0,
+                name: "", god: "", title: "", species: "",
+                hp: 0, hp_max: 0, real_hp_max: 0,
                 mp: 0, mp_max: 0,
                 ac: 0, ev: 0, sh: 0,
                 xl: 0, progress: 0,
                 gold: 0,
                 str: 0, int: 0, dex: 0,
+                str_max: 0, int_max: 0, dex_max: 0,
                 piety_rank: 0, penance: false,
                 status: [],
-                inv: {}, equip: {},
-                pos: {x: 0, y: 0}
+                inv: {}, equip: {}, quiver_item: -1,
+                unarmed_attack: "",
+                pos: {x: 0, y: 0},
+                wizard: 0,
+                depth: 0, place: ""
             });
             for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
                 player.equip[i] = -1;
