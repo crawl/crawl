@@ -552,7 +552,6 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_TROG:
         snprintf(info, INFO_SIZE, "you destroy spellbooks%s",
                  verbose ? " via the <w>a</w> command" : "");
-
         likes.push_back(info);
         break;
 
@@ -570,7 +569,6 @@ string get_god_likes(god_type which_god, bool verbose)
                  verbose ? " via the <w>p</w> command (inscribe items with "
                            "<w>!p</w> to prevent their accidental destruction)"
                          : "");
-
         likes.push_back(info);
 
         likes.push_back("you calm hostilities by healing your foes");
@@ -590,15 +588,13 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_ASHENZARI:
-        snprintf(info, INFO_SIZE, "you explore the world (preferably while "
-                                  "bound by curses)");
-        likes.push_back(info);
+        likes.push_back("you explore the world (preferably while bound by "
+                        "curses)");
         break;
 
     case GOD_SHINING_ONE:
-        snprintf(info, INFO_SIZE, "you meet creatures to determine whether "
-                                  "they need to be eradicated");
-        likes.push_back(info);
+        likes.push_back("you meet creatures to determine whether they need to "
+                        "be eradicated");
         break;
 
     case GOD_LUGONU:
