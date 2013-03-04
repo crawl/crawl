@@ -228,7 +228,7 @@ void start_recall(int type)
 
 // Attempt to recall a single monster by mid, which might be either on or off
 // our current level. Returns whether this monster was successfully recalled.
-bool _try_recall(mid_t mid)
+static bool _try_recall(mid_t mid)
 {
     monster* mons = monster_by_mid(mid);
     // Either it's dead or off-level.

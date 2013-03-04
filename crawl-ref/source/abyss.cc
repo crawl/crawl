@@ -932,7 +932,7 @@ static bool _in_wastes(const coord_def &p)
     return (p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF);
 }
 
-level_id _get_real_level()
+static level_id _get_real_level()
 {
     push_rng_state();
     seed_rng(abyssal_state.seed);
