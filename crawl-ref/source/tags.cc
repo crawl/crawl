@@ -2310,6 +2310,7 @@ static void tag_read_you(reader &th)
         unmarshallFloat(th); // converted abyssal_state.depth to int.
         abyssal_state.depth = 0;
         abyssal_state.nuke_all = true;
+        abyssal_state.seed = random_int();
     }
 #endif
     abyssal_state.phase = unmarshallFloat(th);
