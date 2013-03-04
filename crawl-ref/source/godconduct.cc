@@ -137,7 +137,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     break;
                 }
 
-                if (thing_done == DID_ATTACK_HOLY && victim
+                if (thing_done == DID_ATTACK_HOLY
+                    && victim
                     && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
@@ -997,10 +998,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         if (you.religion == GOD_OKAWARU
             // currently no constructs and plants
             && (thing_done == DID_KILL_LIVING
-             || thing_done == DID_KILL_UNDEAD
-             || thing_done == DID_KILL_DEMON
-             || thing_done == DID_KILL_HOLY)
-            && ! god_hates_attacking_friend(you.religion, victim))
+                || thing_done == DID_KILL_UNDEAD
+                || thing_done == DID_KILL_DEMON
+                || thing_done == DID_KILL_HOLY)
+            && !god_hates_attacking_friend(you.religion, victim))
         {
             piety_change = get_fuzzied_monster_difficulty(victim);
             dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
