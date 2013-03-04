@@ -17,7 +17,7 @@ enum spflag_type
     SPFLAG_GRID                 = 0x000004,      // use DIR_GRID targetting
     SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targetting
     SPFLAG_TARG_OBJ             = 0x000010,      // use DIR_TARGET_OBJECT targ.
-    SPFLAG_TARGETTING_MASK       = 0x00001f,      // used to test for targetting
+    SPFLAG_TARGETTING_MASK      = 0x00001f,      // used to test for targetting
     SPFLAG_HELPFUL              = 0x000020,      // TARG_FRIENDS used
     SPFLAG_NEUTRAL              = 0x000040,      // TARG_ANY used
     SPFLAG_NOT_SELF             = 0x000080,      // aborts on isMe
