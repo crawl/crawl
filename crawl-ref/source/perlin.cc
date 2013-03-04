@@ -1,6 +1,10 @@
 /*
  * This is a C++ port of version Stefan Gustavson's public domain
- * implementation of simplex noise (Version 2012-03-09).
+ * implementation of simplex noise (Version 2012-03-09), which can be
+ * found at <http://webstaff.itn.liu.se/~stegu/simplexnoise/>.
+ *
+ * (Simplex Noise is a new (2001) algorithm created by Ken Perlin to
+ * replace his classic "Perlin" noise algorithm.)
  *
  * It was ported by Brendan Hickey (brendan@bhickey.net) and released on
  * 2012-09-16.
@@ -31,7 +35,7 @@
 namespace perlin
 {
     // Inner class to speed upp gradient computations
-    // (array access is a lot slower than member access)
+    // ([in Java,] array access is a lot slower than member access)
     class Grad {
         public:
             const double x, y, z, w;
@@ -366,6 +370,8 @@ namespace perlin
         return 27.0 * (n0 + n1 + n2 + n3 + n4);
     }
 
+    // This is *not* in Stefan Gustavson's Java original
+    // FIXME: what does it do?
     double fBM(double x, double y, double z, uint32_t octaves) {
         if (octaves < 1)
             return 0.0;
