@@ -2101,7 +2101,6 @@ bool poison_monster(monster* mons, const actor *who, int levels,
                                    old_pois.degree > 0 ? " looks even sicker."
                                                        : " is poisoned.");
         }
-        behaviour_event(mons, ME_ANNOY, who);
     }
 
     // Finally, take care of deity preferences.
