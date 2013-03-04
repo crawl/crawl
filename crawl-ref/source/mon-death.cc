@@ -752,10 +752,10 @@ bool mons_is_shedu(const monster* mons)
 /**
  * Initial resurrection functionality for Shedu.
  *
- * This function is called when a shedu dies. It attempt to find that shedu's
- * pair, wake them if necessary, and then begin the resurrection process by
+ * This function is called when a shedu dies. It attempts to find that shedu's
+ * pair, wakes them if necessary, and then begins the resurrection process by
  * giving them the ENCH_PREPARING_RESURRECT enchantment timer. If a pair does
- * not exist (ie, this is the second shedu to have died), nothing happens.
+ * not exist (i.e., this is the second shedu to have died), nothing happens.
  *
  * @param mons    The shedu who died.
 **/
