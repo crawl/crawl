@@ -964,9 +964,9 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static WastesLayout wastes;
     if (_in_wastes(pt))
     {
-      ProceduralSample sample = wastes(pt, abyssal_state.depth);
-      abyss_sample_queue.push(sample);
-      return sample;
+        ProceduralSample sample = wastes(pt, abyssal_state.depth);
+        abyss_sample_queue.push(sample);
+        return sample;
     }
     const static DiamondLayout diamond30(3,0);
     const static DiamondLayout diamond21(2,1);
@@ -1408,6 +1408,7 @@ void generate_abyss()
         delete abyssLayout;
         abyssLayout = NULL;
     }
+
 retry:
     _initialize_abyss_state();
 
