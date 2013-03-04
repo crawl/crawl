@@ -204,6 +204,8 @@ static void _post_init(bool newc)
     crawl_state.last_type = crawl_state.type;
     crawl_state.last_game_won = false;
 
+    destroy_abyss();
+
     calc_hp();
     calc_mp();
     if (you.form != TRAN_LICH)

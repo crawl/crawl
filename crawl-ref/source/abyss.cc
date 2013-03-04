@@ -63,7 +63,7 @@ static const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 
 abyss_state abyssal_state;
 
-ProceduralLayout *abyssLayout = NULL;
+static ProceduralLayout *abyssLayout = NULL;
 
 typedef priority_queue<ProceduralSample, vector<ProceduralSample>, ProceduralSamplePQCompare> sample_queue;
 
@@ -1314,6 +1314,15 @@ static void abyss_area_shift(void)
     check_map_validity();
 }
 
+void destroy_abyss()
+{
+    if (abyssLayout)
+    {
+        delete abyssLayout;
+        abyssLayout = nullptr;
+    }
+}
+
 static colour_t _roll_abyss_floor_colour()
 {
     return random_choose_weighted(
@@ -1403,11 +1412,7 @@ void generate_abyss()
 {
     env.level_build_method += " abyss";
     env.level_layout_types.insert("abyss");
-    if (abyssLayout != NULL)
-    {
-        delete abyssLayout;
-        abyssLayout = NULL;
-    }
+    destroy_abyss();
 
 retry:
     _initialize_abyss_state();

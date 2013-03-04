@@ -1924,7 +1924,10 @@ void delete_level(const level_id &level)
     if (you.save)
         you.save->delete_chunk(level.describe());
     if (level.branch == BRANCH_ABYSS)
+    {
         save_abyss_uniques();
+        destroy_abyss();
+    }
     _do_lost_monsters();
     _do_lost_items();
 }
