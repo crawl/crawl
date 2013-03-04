@@ -30,6 +30,7 @@
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mutation.h"
 #include "options.h"
 #include "shout.h"
@@ -602,7 +603,8 @@ static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
     if (levels <= 0)
         return false;
 
-    victim->poison(agent, levels);
+    if (victim->poison(agent, levels) && victim->is_monster())
+        behaviour_event(victim->as_monster(), ME_ANNOY, agent);
 
     return true;
 }
