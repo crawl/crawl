@@ -185,6 +185,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_OPEN_SEA;
     case DNGN_RUNED_DOOR:
         return TILE_DNGN_RUNED_DOOR;
+    case DNGN_SEALED_DOOR:
+        return TILE_DNGN_SEALED_DOOR;
     case DNGN_GRATE:
         return TILE_DNGN_GRATE;
     case DNGN_CLEAR_ROCK_WALL:
