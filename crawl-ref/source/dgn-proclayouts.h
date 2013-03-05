@@ -183,6 +183,7 @@ class LevelLayout : public ProceduralLayout
         const ProceduralLayout &layout;
 };
 
+class NoiseLayout : public ProceduralLayout
 // Clamps another layout so that it changes no more frequently than specified
 // by the clamp parameter. This is useful if you can't find a good analytic
 // bound on how rapidly your layout changes. If you provide a high valued clamp
@@ -215,13 +216,28 @@ class CityLayout : public ProceduralLayout
 class PlainsLayout : public ProceduralLayout
 {
     public:
-        PlainsLayout() { };
+        NoiseLayout() { };
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
 
-    private:
+    protected:
         double _perlin(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const;
+        worley::noise_datum _worley(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const;
         double _optimum_range(const double val, const double rstart, const double rend) const;
         double _optimum_range_mid(const double val, const double rstart, const double rmax1, const double rmax2, const double rend) const;
+};
+
+class ForestLayout : public NoiseLayout
+{
+    public:
+        ForestLayout() { };
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+};
+
+class PlainsLayout : public NoiseLayout
+{
+    public:
+        PlainsLayout() { };
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
 };
 
 #endif /* PROC_LAYOUTS_H */
