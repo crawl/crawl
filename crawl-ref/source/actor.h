@@ -420,6 +420,8 @@ public:
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage() const = 0;
 
+    string describe_props() const;
+
 
 protected:
     void clear_constricted();

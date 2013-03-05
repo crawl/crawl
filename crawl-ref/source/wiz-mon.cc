@@ -653,6 +653,9 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
 
+    mprf(MSGCH_DIAGNOSTICS, "props: %s",
+         mons.describe_props().c_str());
+
     ostringstream spl;
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
