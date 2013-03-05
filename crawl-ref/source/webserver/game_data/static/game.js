@@ -92,6 +92,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     function toggle_full_window_dungeon_view(full)
     {
         // Toggles the dungeon view for X map mode
+        if (layout_parameters == null) return;
         if (full)
         {
             dungeon_renderer.fit_to(layout_parameters.window_width - 5,
