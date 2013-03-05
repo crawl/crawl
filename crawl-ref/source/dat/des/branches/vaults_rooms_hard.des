@@ -689,15 +689,19 @@ xxxxx.xxxxx
 ...........
 ENDMAP
 
-NAME:   dpeg_vaults_monster_row
+NAME:   dpeg_vaults_monster_doublerow
 TAGS:   vaults_hard
-SUBST:  0 : 0000000z, z : z., 0 = 0099..
+WEIGHT: 1
+SUBST:  0 : 0000000z, z : z., 0 = 0009..
 KMONS:  z = human skeleton
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx00xx00xx00xx00xx00xx00xx
 xx..xx..xx..xx..xx..xx..xx
-..........................
+x........................x
+x.xx..xx..xx..xx..xx..xx.x
+..xx00xx00xx00xx00xx00xx..
+xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   dpeg_vaults_hating_casters
