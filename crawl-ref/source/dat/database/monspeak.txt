@@ -4323,7 +4323,7 @@ _Ignacio_common_
 
 VISUAL:@The_monster@ looks at @possessive@ axe, then at @foe@, then at @possessive@ axe, then at @foe@...
 
-VISUAL:@The_monster@ grins in joy.
+VISUAL:@The_monster@ grins with joy.
 
 @The_monster@ exclaims, "Oh yes! We are going to have fun!"
 
