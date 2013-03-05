@@ -108,3 +108,10 @@ coord_def rotate_adjacent(coord_def vector, int direction)
     vector.y = yn;
     return vector.sgn();
 }
+
+coord_def clamp_in_bounds(const coord_def &p)
+{
+    return coord_def(
+        min(X_BOUND_2 - 1, max(X_BOUND_1 + 1, p.x)),
+        min(Y_BOUND_2 - 1, max(Y_BOUND_1 + 1, p.y)));
+}

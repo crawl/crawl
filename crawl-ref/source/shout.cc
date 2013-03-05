@@ -954,13 +954,6 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
     }
 }
 
-static coord_def _point_clamped_in_bounds(const coord_def &p)
-{
-    return coord_def(
-        min(X_BOUND_2 - 1, max(X_BOUND_1 + 1, p.x)),
-        min(Y_BOUND_2 - 1, max(Y_BOUND_1 + 1, p.y)));
-}
-
 // Given an actor at affected_pos and a given noise, calculates where
 // the actor might think the noise originated.
 //
@@ -1024,7 +1017,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 
     const coord_def final_perceived_point =
         !in_bounds(perceived_point)?
-        _point_clamped_in_bounds(perceived_point)
+        clamp_in_bounds(perceived_point)
         : perceived_point;
 
 #ifdef DEBUG_NOISE_PROPAGATION
