@@ -670,15 +670,21 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_RAT:
     case TILEP_MONS_ZOMBIE_HOUND:
     case TILEP_MONS_ZOMBIE_BEETLE:
+        return TILEP_MONS_SKELETON_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_LIZARD:
     case TILEP_MONS_ZOMBIE_CRAB:
+        return TILEP_MONS_SKELETON_LIZARD;
     case TILEP_MONS_ZOMBIE_TURTLE:
     case TILEP_MONS_ZOMBIE_SPIKED_TURTLE:
-        return TILEP_MONS_SKELETON_QUADRUPED_SMALL;
+        return TILEP_MONS_SKELETON_TURTLE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
     case TILEP_MONS_ZOMBIE_TOAD:
         return TILEP_MONS_SKELETON_QUADRUPED_LARGE;
+    case TILEP_MONS_ZOMBIE_GRIFFON:
+    case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
+        return TILEP_MONS_SKELETON_QUADRUPED_WINGED;
     case TILEP_MONS_ZOMBIE_BAT:
+    case TILEP_MONS_ZOMBIE_HARPY:
         return TILEP_MONS_SKELETON_BAT;
     case TILEP_MONS_ZOMBIE_FISH:
         return TILEP_MONS_SKELETON_FISH;
@@ -690,8 +696,9 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_WORM:
         return TILEP_MONS_SKELETON_SNAKE;
     case TILEP_MONS_ZOMBIE_DRAGON:
-    case TILEP_MONS_ZOMBIE_DRAKE:
         return TILEP_MONS_SKELETON_DRAGON;
+    case TILEP_MONS_ZOMBIE_DRAKE:
+        return TILEP_MONS_SKELETON_DRAKE;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -800,7 +807,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     case MON_SHAPE_QUADRUPED_TAILLESS:
         if (mons_base_char(subtype) == 'F')
             z_tile = TILEP_MONS_ZOMBIE_TOAD;
-        else if (subtype == MONS_FIRE_CRAB)
+        else if (subtype == MONS_FIRE_CRAB || subtype == MONS_APOCALYPSE_CRAB)
             z_tile = TILEP_MONS_ZOMBIE_CRAB;
         else if (subtype == MONS_SNAPPING_TURTLE)
             z_tile = TILEP_MONS_ZOMBIE_TURTLE;
