@@ -29,6 +29,11 @@ class ProceduralSample
     private:
         coord_def c;
         dungeon_feature_type ft;
+        // A lower bound estimate of when this feat can change in terms of absolute abyss depth.
+        // If you say that a feature might change by depth 1000, it will get checked at depth 1000.
+        // Then it will get pushed back into the terrain queue with the new depth estimate.
+        // If you overestimate the time between shifts, this will introduce bad behavior when a game is
+        // loaded. [bh]
         uint32_t cp;
         map_mask_type m;
 };
@@ -49,6 +54,8 @@ class ProceduralLayout
         virtual ~ProceduralLayout() { }
 };
 
+// Geometric layout that generates columns with width cw, col spacing cs, row width rw, and row spacing rs.
+// cw is the only required parameter and will generate uniform columns.
 class ColumnLayout : public ProceduralLayout
 {
     public:
@@ -75,6 +82,7 @@ class DiamondLayout : public ProceduralLayout
         uint32_t w, s;
 };
 
+// A worley noise layout that selects between other layouts.
 class WorleyLayout : public ProceduralLayout
 {
     public:
@@ -87,6 +95,11 @@ class WorleyLayout : public ProceduralLayout
         const float scale;
 };
 
+// A pseudo-random layout with variable density.
+// By default, 45% of the area is wall. Densities in excess of 50% (500) are very
+// likely to create isolated bubbles. See http://en.wikipedia.org/wiki/Percolation_theory
+// for additional information.
+// This layout is depth invariant.
 class ChaosLayout : public ProceduralLayout
 {
     public:
@@ -98,6 +111,7 @@ class ChaosLayout : public ProceduralLayout
         const uint32_t baseDensity;
 };
 
+// Similar to ChaosLayout, but changes relatively quickly with depth.
 class RoilingChaosLayout : public ProceduralLayout
 {
     public:
@@ -109,6 +123,7 @@ class RoilingChaosLayout : public ProceduralLayout
         const uint32_t density;
 };
 
+// A mostly empty layout.
 class WastesLayout : public ProceduralLayout
 {
     public:
@@ -126,6 +141,7 @@ class RiverLayout : public ProceduralLayout
         const ProceduralLayout &layout;
 };
 
+// A reimagining of the beloved newabyss layout.
 class NewAbyssLayout : public ProceduralLayout
 {
     public:
@@ -135,6 +151,8 @@ class NewAbyssLayout : public ProceduralLayout
         const uint32_t seed;
 };
 
+// This layout takes chunks of a single level the player has seen, corrupts them
+// and uses them to build the level.
 class LevelLayout : public ProceduralLayout
 {
     public:
