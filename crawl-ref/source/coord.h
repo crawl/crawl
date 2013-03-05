@@ -62,4 +62,6 @@ coord_def player2grid(const coord_def& pc);
 coord_def grid2player(const coord_def& pc);
 coord_def rotate_adjacent(coord_def vector, int direction);
 
+coord_def clamp_in_bounds(const coord_def &p);
+
 #endif
