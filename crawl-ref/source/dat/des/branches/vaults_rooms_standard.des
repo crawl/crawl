@@ -20,12 +20,41 @@
 # preserve_wall: prevents the layout from changing rock into the same wall type
 # as the rest of the floor.
 #
+# For the most part, any )s [a potential staircase placement]
+# should avoid placing near more than four walls, and definitely not
+# in corridor or otherwise chokepoints.
+#
+# These subvaults will be common building material for the Vaults branch,
+# so keep gimmickry to an absolute minimum or at the very least tiny weight.
+# Stick with walls, doors, 0, and 0 band, for the most part.
+# Also, use allow_dup only on the generic layouts.
+#
 ################################################################################
 
+{{
+
+ -- This defines rough standards used for monster placement in these subvaults.
+ -- Try to stick with using this for most subvaults, depending on openness:
+ -- "small for ~11x11, "large" for ~>14x14, and "medium" for some inbetween.
+ -- Otherwise, use "custom", or not bother with the function.
+
+function vaults_room_setup(e, nsubst_glyph, nsubst_size)
+  e.tags("vaults_room")
+  e.mons("0 band")
+  if nsubst_size == "small" then
+    e.nsubst(nsubst_glyph .. " = 1:1 / 2 = 0.. / *:.")
+  elseif nsubst_size == "medium" then
+    e.nsubst(nsubst_glyph .. " = 1:1 / 1:0 / 1 = 0.. / *:.")
+  elseif nsubst_size == "large" then
+    e.nsubst(nsubst_glyph .. " = 1:1 / 1:0 / 2 = 0. / *:.")
+  end
+end
+
+}}
+
 NAME:     vaults_standard_mumra_x
-TAGS:     vaults_room
-NSUBST:   ' = 1:0 / 2=0. / *:.
 SUBST:    ) = )..
+: vaults_room_setup(_G, "'", "small")
 MAP
 ''.....''
 'x..)..x'
@@ -41,8 +70,8 @@ MAP
 ENDMAP
 
 NAME:     vaults_standard_mumra_enter_the_diamond
-TAGS:     allow_dup vaults_room vaults_orient_e vaults_orient_w
-NSUBST:   . = 1:0 / 2=0. / *:.
+TAGS:     allow_dup vaults_orient_e vaults_orient_w
+: vaults_room_setup(_G, ".", "small")
 MAP
 ...........
 ....xxx....
@@ -58,9 +87,9 @@ MAP
 ENDMAP
 
 NAME:     vaults_standard_mumra_lines
-TAGS:     vaults_room vaults_orient_e vaults_orient_w
+TAGS:     vaults_orient_e vaults_orient_w
 SUBST:    ( = .:2 (:1
-NSUBST:   . = 2:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "large")
 MAP
 ....xx.(...
 .....xx....
@@ -80,27 +109,29 @@ x..xx....xx
 ENDMAP
 
 NAME:     vaults_room_corners
-TAGS:     vaults_room allow_dup no_monster_gen
+TAGS:     allow_dup no_monster_gen
 SUBST:    G : xxxxG..........
+: vaults_room_setup(_G, ".", "custom")
 MAP
 xx...xx
 xxG.Gxx
 .G...G.
-...0...
+...1...
 .G...G.
 xxG.Gxx
 xx...xx
 ENDMAP
 
 NAME:     vaults_room_fours
-TAGS:     vaults_room allow_dup
+TAGS:     allow_dup
 SUBST:    w : x:20 w:5
-NSUBST:   . = 1:( / 1:0 / 1:0. / *:.
+: vaults_room_setup(_G, ".", "custom")
+NSUBST:   . = 1:( / *:.
 MAP
 .......
 .ww.ww.
 .ww.ww.
-...0...
+...1...
 .ww.ww.
 .ww.ww.
 .......
@@ -112,8 +143,8 @@ ENDMAP
 NAME:     vaults_room_grunt_arrival_ludios
 WEIGHT:   15 (Vaults:1), 3
 TAGS:     vaults_room vaults_orient_e
-SHUFFLE:  {([<
 SUBST:    0 = 00.
+SHUFFLE:  {([<
 MAP
 xxxxxx..
 .0.0.x..
@@ -126,8 +157,8 @@ xxxxxx..
 ENDMAP
 
 NAME:     vaults_room_door_hall
-TAGS:  allow_dup      vaults_room
-NSUBST:   . = 1:0 / 2=0. / *:.
+TAGS:     allow_dup
+: vaults_room_setup(_G, ".", "small")
 NSUBST:   ( = 1:( / *:.
 MAP
 ......(xxx
@@ -159,9 +190,8 @@ xxxxxxxxxx
 ENDMAP
 
 NAME:     vaults_room_boxed
-TAGS:     vaults_room
 NSUBST:   - = 1:+ / 2=x+ / *:x
-NSUBST:   . = 2:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "large")
 MAP
 xxxx.......xxxx
 xxxx.......xxxx
@@ -241,8 +271,8 @@ vvvvvvvvvvvvv....
 ENDMAP
 
 NAME:    v_pattern_1
-TAGS:    vaults_room luniq_lattice
-NSUBST:  . = 1:0 / 2=0. / *:.
+TAGS:    luniq_lattice
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 .x.x...x.x.
@@ -259,8 +289,8 @@ x.x.x.x.x.x
 ENDMAP
 
 NAME:    v_pattern_2
-TAGS:    vaults_room luniq_lattice
-NSUBST:  . = 1:0 / 2=0. / *:.
+TAGS:    luniq_lattice
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 .x.x...x.x.
@@ -278,12 +308,13 @@ ENDMAP
 
 NAME:    v_pattern_3
 TAGS:    vaults_room luniq_lattice
-SHUFFLE: wuyz / ....
+SHUFFLE: wuyz / ''''
 NSUBST:  w = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
-SUBST:   0 = 0.
+SUBST:   ' = .
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...x...x...
@@ -300,30 +331,30 @@ xzxzx.xuxux
 ENDMAP
 
 NAME:    v_pattern_4
-TAGS:    vaults_room luniq_lattice
+TAGS:    luniq_lattice
 SUBST:   y:x.
-NSUBST:  . = 1:0 / 2=0. / *:.
-NSUBST:  . = 1:( / *:.
+: vaults_room_setup(_G, ".", "small")
+NSUBST:  ( = 1:( / *:.
 MAP
-.x.x...x.x.
+.x.x.(.x.x.
 x.x.x.x.x.x
 .x.x.x.x.x.
 x.x.xxx.x.x
 .x.xyyyx.x.
-..xxyxyxx..
+(.xxyxyxx.(
 .x.xyyyx.x.
 x.x.xxx.x.x
 .x.x.x.x.x.
 x.x.x.x.x.x
-.x.x...x.x.
+.x.x.(.x.x.
 ENDMAP
 
 NAME:    v_pattern_5
-TAGS:    vaults_room luniq_lattice
+TAGS:    luniq_lattice
 SHUFFLE: zy
 SUBST:   z = .
 NSUBST:  y = 1:.+ / *:x
-SUBST:   0 = 0.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 .x.x...x.x.
@@ -340,12 +371,12 @@ x.x.x.x.x.x
 ENDMAP
 
 NAME:    v_alt_pattern_2
-TAGS:    allow_dup vaults_room
+TAGS:    allow_dup
 NSUBST:  w = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...w...u...
@@ -363,11 +394,10 @@ ENDMAP
 
 # Creates stairs in chokepoints, don't spawn on V:$
 NAME:    v_alt_pattern_5
-TAGS:    vaults_room
 DEPTH:   Vaults:1-3
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
-SUBST:   0 = 0.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...........
@@ -384,10 +414,10 @@ MAP
 ENDMAP
 
 NAME:    v_alt_pattern_6
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: wyux
 SUBST:   w:., y:., u:.
-NSUBST:  . = 1:0 / 3=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...........
@@ -404,9 +434,9 @@ MAP
 ENDMAP
 
 NAME:    v_misc_1
-TAGS:    allow_dup vaults_room
+TAGS:    allow_dup
 SUBST:   +:++., y:++.
-NSUBST:  . = 1:0 / 3=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ....x..x....
@@ -424,9 +454,9 @@ x+xx....xx+x
 ENDMAP
 
 NAME:    v_misc_2
-TAGS:    allow_dup vaults_room
+TAGS:    allow_dup
 SUBST:   a:x.
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...........
@@ -443,8 +473,8 @@ MAP
 ENDMAP
 
 NAME:    v_misc_3
-TAGS:    vaults_room allow_dup
-NSUBST:  . = 1:0 / 1=0. / *:.
+TAGS:    allow_dup
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...........
@@ -461,8 +491,8 @@ MAP
 ENDMAP
 
 NAME:    v_misc_4
-TAGS:    vaults_room allow_dup
-NSUBST:  . = 1:0 / 2=0. / *:.
+TAGS:    allow_dup
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ............
@@ -480,9 +510,9 @@ MAP
 ENDMAP
 
 NAME:    v_misc_5
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 NSUBST:  y = 1:+ / *:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...........
@@ -499,9 +529,9 @@ MAP
 ENDMAP
 
 NAME:    v_misc_9
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 NSUBST:  y = 1:+ / *:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ..x.....x..
@@ -518,10 +548,10 @@ MAP
 ENDMAP
 
 NAME:    v_misc_10
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...........
@@ -538,11 +568,11 @@ xzzx...xyyx
 ENDMAP
 
 NAME:    v_misc_11
-TAGS:    vaults_room vaults_orient_n vaults_orient_s allow_dup
+TAGS:    vaults_orient_n vaults_orient_s allow_dup
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...........
@@ -559,10 +589,10 @@ xuuxxxxxuux
 ENDMAP
 
 NAME:    v_misc_12
-TAGS:    vaults_room vaults_orient_n vaults_orient_s allow_dup
+TAGS:    vaults_orient_n vaults_orient_s allow_dup
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ....x.x....
@@ -579,9 +609,9 @@ xzzzx.xyyyx
 ENDMAP
 
 NAME:    v_misc_18
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SUBST:   y : .+
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...x...x...
@@ -598,10 +628,10 @@ xxx.....xxx
 ENDMAP
 
 NAME:    v_misc_26
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: abcd+
 SUBST:   u:xxx., y:x..., U:x, a:x, b:x, c:x, d:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...c...c...
@@ -618,10 +648,10 @@ dax.....xbd
 ENDMAP
 
 NAME:    v_misc_27
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: abc+
 SUBST:   a:x, b:x, c:x
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ....x..x....
@@ -635,10 +665,10 @@ cbax....xabc
 ENDMAP
 
 NAME:    v_misc_28
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: a+
 SUBST:   +:++., a:.
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ....x..x....
@@ -656,9 +686,9 @@ xxxx+..+xxxx
 ENDMAP
 
 NAME:    v_misc_29
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SUBST:   +:.++
-NSUBST:  . = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ....x..x....
@@ -675,8 +705,8 @@ MAP
 ENDMAP
 
 NAME:    v_misc_30
-TAGS:    vaults_room allow_dup
-NSUBST:  . = 1:0 / 2=0. / *:.
+TAGS:    allow_dup
+: vaults_room_setup(_G, ".", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ...x...x...
@@ -739,12 +769,12 @@ MAP
 ENDMAP
 
 NAME:    v_misc_33
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 NSUBST:  w = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
-NSUBST:  ' = 1:0 / 2=0. / *:.
+: vaults_room_setup(_G, "'", "small")
 NSUBST:  . = 1:( / *:.
 MAP
 ..............
@@ -764,7 +794,6 @@ MAP
 ENDMAP
 
 NAME:    v_rooms_1
-TAGS:    vaults_room
 TAGS:    vault_orient_n vault_orient_s vault_orient_w
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
@@ -772,7 +801,7 @@ NSUBST:  w = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
 NSUBST:  s = 1:+ / *:x
 NSUBST:  t = 1:+ / *:x
-NSUBST:  . = 2:0 / 3=0. / *:.
+: vaults_room_setup(_G, ".", "large")
 NSUBST:  . = 1:( / *:.
 MAP
 ...x..x.....x.x......
@@ -787,14 +816,13 @@ xssssx.t...t...u.....
 ENDMAP
 
 NAME:    v_rooms_2
-TAGS:    vaults_room
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 NSUBST:  w = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
 NSUBST:  s = 1:+ / *:x
 NSUBST:  t = 1:+ / *:x
-NSUBST:  . = 2:0 / 3=0. / *:.
+: vaults_room_setup(_G, ".", "large")
 NSUBST:  . = 1:( / *:.
 MAP
 ....x..x...x.x...x...
@@ -809,7 +837,6 @@ xxxx.xzzx....x.xsxttt
 ENDMAP
 
 NAME:    v_rooms_3
-TAGS:    vaults_room
 TAGS:    vaults_orient_n vaults_orient_s
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
@@ -817,8 +844,7 @@ NSUBST:  w = 1:+ / *:x
 NSUBST:  u = 1:+ / *:x
 NSUBST:  s = 1:+ / *:x
 NSUBST:  t = 1:+ / *:x
-NSUBST:  . = 2:0 / 2=0. / *:.
-NSUBST:  . = 1:( / *:.
+: vaults_room_setup(_G, ".", "medium")
 MAP
 ...x.x....x......
 ...y.x....s......
@@ -833,8 +859,8 @@ xyyxux...........
 ENDMAP
 
 NAME:    v_rooms_4
-TAGS:    vaults_room allow_dup
-NSUBST:  . = 2:0 / 2=0. / *:.
+TAGS:    allow_dup
+: vaults_room_setup(_G, ".", "medium")
 NSUBST:  . = 1:( / *:.
 MAP
 .......x.....
@@ -853,8 +879,8 @@ xxxxxx+x.....
 ENDMAP
 
 NAME:    v_rooms_5
-TAGS:    vaults_room allow_dup
-NSUBST:  . = 2:0 / 3=0. / *:.
+TAGS:    allow_dup
+: vaults_room_setup(_G, ".", "large")
 NSUBST:  . = 1:( / *:.
 MAP
 .....x..x.....
@@ -874,8 +900,8 @@ x+xxxx..xxxxxx
 ENDMAP
 
 NAME:    v_rooms_6
-TAGS:    vaults_room allow_dup
-NSUBST:  . = 2:0 / 3=0. / *:.
+TAGS:    allow_dup
+: vaults_room_setup(_G, ".", "large")
 NSUBST:  . = 1:( / *:.
 MAP
 ....x........+....
@@ -893,9 +919,8 @@ MAP
 ENDMAP
 
 NAME:   hangedman_vaults_slither
-TAGS:   vaults_room
 SUBST:  b : aX., B : AX., c : aC..., C : Ax..., a : Ax., A : xx., X : xx.
-NSUBST: 0 = 2:0 / * = 0..
+: vaults_room_setup(_G, "0", "large")
 MAP
         x........x............
         x.a..a.a.x.B..CC.0.CC@
@@ -916,7 +941,7 @@ TAGS:    vaults_room
 SHUFFLE: ac, AC
 SUBST:   b : axX..., B : AxX..., c : ax, C : Ax, a : Axx., A : xxx.
 SUBST:   d : x.., D : x.. X : x
-NSUBST:  0 = 1:0 / 2 = 0.
+: vaults_room_setup(_G, "0", "small")
 MAP
       x.......
       x.D..BA.
@@ -935,9 +960,10 @@ xxxxxxx0......
 ENDMAP
 
 NAME:    hangedman_vaults_stagger
-TAGS:    vaults_room
+: vaults_room_setup(_G, ".", "custom")
 SHUFFLE: abc, ABC, de / de / ed, DE / DE / ED
-SUBST:   a = 0, A : 0.., bBcC = ., dD = +, eE = x
+NSUBST:  a = 1:1 / 1:0 / *:.
+SUBST:   A = 0.., bBcC = ., dD = +, eE = x
 MAP
 .........xxxx
 .........xa.x
@@ -953,9 +979,9 @@ xxx.....bb.cxA.x
 ENDMAP
 
 NAME:    hangedman_vaults_variations
-TAGS:    vaults_room
-SHUFFLE: abc, ABC
-NSUBST:  1 = 1:0 / * = 0., 2 = 1:0 / * = 0.
+SHUFFLE: abc, ABC, 12
+: vaults_room_setup(_G, "0", "custom")
+NSUBST:  1 = 1:1 / 1 = 0. / *:., 2 = 1:0 / * = 0.
 SUBST:   aA : x., bB : x:1 .:9, cC = .
 MAP
      x...x
@@ -963,11 +989,11 @@ MAP
      x...xxxxx
      x.....11x
      x..bc..1x
-    xx.......x
+    xx....(..x
 xxxxx+xxxx.c.xxx
 .A.....22x.b..a.
 ....BC..2x......
-.A.......x....a.
+.A....(..x....a.
 xxxxxx.C.+xxxxxx
      x.B.xx
      x...x
@@ -977,10 +1003,10 @@ xxxxxx.C.+xxxxxx
 ENDMAP
 
 NAME:    hangedman_vaults_unwind
-TAGS:    vaults_room
 SHUFFLE: ABCD
 SUBST:   A : x:90 ., B : xx., C : x., D : x.., E : x .:90
-NSUBST:  2:0 / * = 0:6 .:4
+: vaults_room_setup(_G, ".", "custom")
+NSUBST:  0 = 1:1 / 1:0 / * = 0:6 .:4
 MAP
      x..................
      x......E...........
@@ -999,7 +1025,7 @@ ENDMAP
 NAME:    hangedman_vaults_stitches
 TAGS:    vaults_room
 SUBST:   b : aX., B : AX., c : aC..., C : Ax..., a : Ax., A : xx., X : xx.
-NSUBST:  2:0 / * = 0.
+: vaults_room_setup(_G, "0", "large")
 MAP
      x.....x     x.......
      x.b...x     x...A...
@@ -1013,9 +1039,8 @@ xxxxxx......0......xxxxxx
 ENDMAP
 
 NAME:    hangedman_vaults_nodes
-TAGS:    vaults_room
 SUBST:   a : xx., b : xx., A : x., B : x.
-NSUBST:  2:0 / * = 0:4 .:6
+: vaults_room_setup(_G, "0", "large")
 MAP
     x..............x
     x..B.A....a.b..x
@@ -1031,10 +1056,9 @@ xxxxx..A.B....b.a..xxxxx
 ENDMAP
 
 NAME:    hangedman_vaults_corner
-TAGS:    vaults_room
 SHUFFLE: abc
 SUBST:   a = x, bc = ., A : x., B : x., C : x., D : x., E : x.
-NSUBST:  2:0 / * = 0:4 .:6
+: vaults_room_setup(_G, "0", "medium")
 MAP
 .......abc.....
 ...B...abc..E..
@@ -1054,11 +1078,10 @@ ccccccc.x
 ENDMAP
 
 NAME:    hangedman_vaults_hat
-TAGS:    vaults_room
 SHUFFLE: defg, =-
 SUBST:   a = x.., b : x., c : x., d : x., e : x.., f : x.., g : x...
 SUBST:   = = x, - = +, + : +:19 .:1
-NSUBST:  0 = 2:0 / * = 0.
+: vaults_room_setup(_G, "0", "large")
 MAP
        x...x
        x.a.x
@@ -1074,9 +1097,8 @@ xxxxxxx=-x-=xxxxxxx
 ENDMAP
 
 NAME:   hangedman_vaults_capsules
-TAGS:   vaults_room
 SUBST:  A : x..., B : x.., C : x., D : xx.
-NSUBST: 1:0 / * = 0.
+: vaults_room_setup(_G, "0", "small")
 MAP
  xxx......
 xxA..x.DC.
@@ -1091,10 +1113,9 @@ x..xxx0...
 ENDMAP
 
 NAME:    hangedman_vaults_stream
-TAGS:    vaults_room
 SHUFFLE: ab, AB
 SUBST:   aA : x, bB : ., c : x., C : x.
-NSUBST:  2:0 / * = 0.
+: vaults_room_setup(_G, "0", "large")
 MAP
   x............
   x..A..0......
@@ -1113,11 +1134,10 @@ xxxC.BABBAABBA.
 ...ab..x
 ENDMAP
 
-NAME:    hangedman_vaults_passings
-TAGS:    vaults_room
+NAME:    hangedman_vaults_river_flow
 SHUFFLE: abcdefghijkl
 SUBST:   ab = x, c : xx., d : x., e : x:1 .:9, fgh = .
-NSUBST:  1:0 / * = 0.
+: vaults_room_setup(_G, "0", "small")
 MAP
       x.......x
       xfee....x
@@ -1128,17 +1148,17 @@ xxxxxxx.......x
 ....ab.0.cd....
 .gh....ab.0.cd.
 ....gh.........
-........xxxxxxx
-.eef....x
-.....effx
-........x
+x.......xxxxxxx
+xeef....x
+x....effx
+x.......x
 ENDMAP
 
 NAME:    hangedman_vaults_trim
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: abcd / abcd / dcba / badc
 SUBST:   aA : xx., bB : x., cC : x., dD : x.
-NSUBST:  0 = 1:0 / * = 0:3 .:7
+: vaults_room_setup(_G, "0", "small")
 MAP
 .x.....x.....x..
 ..0AB0...ab.....
@@ -1147,10 +1167,10 @@ MAP
 ENDMAP
 
 NAME:    hangedman_vaults_cutoff
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: aA / aA / Aa, bB / bB / Bb, cC / cC / Cc, dD / dD / Dd, eE / eE / Ee
 SUBST:   a : x., b : x., c : x., d : x., e : x., ABCDE = .
-NSUBST:  0 = 1:0 / * = 0:3 .:7
+: vaults_room_setup(_G, "0", "small")
 MAP
 ...x.......x.......
 .A.x.B.(.C.x.D.0.E.
@@ -1160,11 +1180,10 @@ MAP
 ENDMAP
 
 NAME:    hangedman_vaults_locks
-TAGS:    vaults_room
 SHUFFLE: ABCDEF, +-, =~
 SUBST:   A : x:9 .:1, B : xx., C : x., D : x., E : x.., F : x...
 SUBST:   -~ = x, = = +
-NSUBST:  0 = 1:0 / * = 0.
+: vaults_room_setup(_G, "0", "small")
 MAP
   xxxxx.........xxxxx
   x...x.E..F..E.x...x
@@ -1179,20 +1198,20 @@ NAME:    hangedman_vaults_slice
 TAGS:    vaults_room allow_dup
 SHUFFLE: ABCDEF, abde / abde / baed
 SUBST:   aA : x:9 .:1, bB : xxx.., C : x., dD : x.., eE : x:1 .:9, F : .
-NSUBST:  0 = 1:0 / * = 0:3 .:7
+: vaults_room_setup(_G, "0", "small")
 MAP
 ................
 .D.(..E..0xx.ba.
 ...0xx.CC.Fx0...
-.AB.Fx0..d..(.e.
+.AB.Fx0..e..(.d.
 ................
 ENDMAP
 
 NAME:    hangedman_vaults_maws
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: abcd, ABCD
 SUBST:   abAB = ., c = xx., d = x.., C = xx., D = x.., E = x., F = x.
-NSUBST:  0 = 1:0 / * = 0:3 .:7
+: vaults_room_setup(_G, "0", "small")
 MAP
 ........xxxxx
 .E0F........x
@@ -1204,10 +1223,10 @@ xxxxx........
 ENDMAP
 
 NAME:    hangedman_vaults_nails
-TAGS:    vaults_room allow_dup
+TAGS:    allow_dup
 SHUFFLE: ab / ab / ab / ba, cd / cd / cd / dc
 SUBST:   aA : x:9 .:1, bB : x., cC : x.., dD : x..
-NSUBST:  0 = 1:0 / * = 0.
+: vaults_room_setup(_G, "0", "small")
 MAP
 ...............
 .d.c.d.(.......
@@ -1219,12 +1238,13 @@ MAP
 ENDMAP
 
 NAME:    hangedman_vaults_restitches
-TAGS:    vaults_room allow_dup
-SHUFFLE: aAeE / aAeE / AaEa, bBfF / bBfF / BbFf, cCgG / cCgG / CcGg, dDhH / dDhH / DdHh
+TAGS:    allow_dup
+SHUFFLE: aAeE / aAeE / AaEa, bBfF / bBfF / BbFf
+SHUFFLE: cCgG / cCgG / CcGg, dDhH / dDhH / DdHh
 SHUFFLE: eEfFgGhH / eEfFgGhH / gGhHeEfF / hHgGfFeE
 SUBST:   ae : x:5 .:3, bf : x:5 .:3, cg : x:5 .:3, dh : x:5 .:3
 SUBST:   AE : x:7 .:3, BF : x:7 .:3, CG : x:7 .:3, DH : x:7 .:3
-NSUBST:  0 = 1:0 / * = 0:3 .:7
+: vaults_room_setup(_G, "0", "small")
 MAP
 ..............
 .....B.....H..
@@ -1237,10 +1257,8 @@ MAP
 ENDMAP
 
 NAME: ontoclasm_vaults_eye
-TAGS: vaults_room
-NSUBST: 0 = 1:0 / *=0..
+: vaults_room_setup(_G, "0", "small")
 SUBST: ( = ((0.
-KMONS: 0 = 0 band
 MAP
   .....
  ..xxx..
@@ -1255,8 +1273,8 @@ ENDMAP
 
 NAME: grunt_vaults_swirl
 TAGS: vaults_room
+MONS: 0 band
 NSUBST: 0 = 2:0 / *:.
-KMONS: 0 = 0 band
 MAP
  xx.......xx
 xx....xxxx.xx
@@ -1317,7 +1335,8 @@ ENDMAP
 
 NAME: grunt_vaults_trifunnel
 TAGS: vaults_room
-KMONS: 0 = 0 band
+MONS: 0 band
+NSUBST: 0 = 1:1 / 1:0 / 1:0.
 MAP
     xxx.xxxxxxx.xxxxxxx.x
   xxx...xxxxx...xxxxx...x
@@ -1350,7 +1369,7 @@ SUBST:  - : @.., _ : @..
 SUBST:  b : xxxxb0009.
 NSUBST: 9 = 1:S / *:9
 KFEAT:  S = armour shop / weapon shop
-SUBST:  . = ....0
+NSUBST: . = 1:1 / * = 0........
 MAP
 ..@@..
 ..bb..
@@ -1359,19 +1378,15 @@ MAP
 ..__..
 ENDMAP
 
-NAME:   dpeg_vaults_monster_doublerow
+NAME:   dpeg_vaults_monster_row
 TAGS:   vaults_room
-WEIGHT: 1
 SUBST:  0 : 0000000z, z : z., 0 = 0009..
 KMONS:  z = human skeleton
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx00xx00xx00xx00xx00xx00xx
 xx..xx..xx..xx..xx..xx..xx
-x........................x
-x.xx..xx..xx..xx..xx..xx.x
-..xx00xx00xx00xx00xx00xx..
-xxxxxxxxxxxxxxxxxxxxxxxxxx
+..........................
 ENDMAP
 
 NAME: nicolae_vaults_mini_display_case
@@ -1389,11 +1404,12 @@ ENDMAP
 NAME: nicolae_vaults_three_branches
 TAGS: vaults_room
 SHUFFLE: (%
-SUBST: 0 = 0.
+MONS: 0 band
+NSUBST: 0 = 1:1 / 2 = 0.. / *:.
 MAP
 xxxxxx...
-x%%xxx.(.
-x%..xxx..
+x.%xxx.(.
+x%%.xxx..
 xx.00xxx.
 xxx00.xx.
 xxxx...x.
@@ -1461,8 +1477,8 @@ xx..xx..xx
 ENDMAP
 
 NAME:     vaults_mumra_minichess_inversion
-TAGS:     vaults_room
-SUBST:    . = ...0
+: vaults_room_setup(_G, ".", "small")
+SUBST:    . = ......0
 MAP
     ..
     ..
@@ -1477,8 +1493,8 @@ MAP
 ENDMAP
 
 NAME:     vaults_mumra_hex
-TAGS:     vaults_room
-SUBST:    . = ......0
+: vaults_room_setup(_G, ".", "small")
+SUBST:    . = .........0
 MAP
    .....
   .......
@@ -1491,7 +1507,7 @@ ENDMAP
 
 NAME:     vaults_mumra_hexcomb
 TAGS:     vaults_room
-SUBST:    0 = 0.
+SUBST:    0 = 0..
 MAP
      ...
    x.000.x
