@@ -301,6 +301,7 @@ void handle_behaviour(monster* mon)
     if (isFriendly
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->berserk()
+        && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
         && mon->type != MONS_BATTLESPHERE)
     {
@@ -811,6 +812,93 @@ void handle_behaviour(monster* mon)
                 mon->target = foepos;
             break;
 
+        case BEH_WITHDRAW:
+        {
+            if (!isFriendly)
+            {
+                new_beh = BEH_WANDER;
+                break;
+            }
+
+            bool stop_retreat = false;
+            // We've approached our next destination, re-evaluate
+            if (distance2(mon->target, mon->pos()) <= 3)
+            {
+                // Continue on to the rally point
+                if (mon->target != mon->patrol_point)
+                    mon->target = mon->patrol_point;
+                // Reached rally point, stop withdrawing
+                else
+                    stop_retreat = true;
+
+            }
+            else if (distance2(mon->pos(), you.pos()) > dist_range(LOS_RADIUS + 2))
+            {
+                // We're too far from the player. Idle around and wait for
+                // them to catch up.
+                if (!mon->props.exists("idle_point"))
+                {
+                    mon->props["idle_point"] = mon->pos();
+                    mon->props["idle_deadline"] = you.elapsed_time + 200;
+                }
+
+                mon->target = clamp_in_bounds(
+                                    mon->props["idle_point"].get_coord()
+                                    + coord_def(random_range(-2, 2),
+                                                random_range(-2, 2)));
+
+                if (you.elapsed_time >= mon->props["idle_deadline"].get_int())
+                    stop_retreat = true;
+            }
+            else
+            {
+                // Be more lenient about player distance if a monster is
+                // idling (to prevent it from repeatedly resetting idle
+                // time if its own wanderings bring it closer to the player)
+                if (mon->props.exists("idle_point")
+                    && distance2(mon->pos(), you.pos()) < dist_range(LOS_RADIUS))
+                {
+                    mon->props.erase("idle_point");
+                    mon->props.erase("idle_deadline");
+                    mon->target = mon->patrol_point;
+                }
+
+                if (mon->pos() == mon->props["last_pos"].get_coord())
+                {
+                    if (!mon->props.exists("blocked_deadline"))
+                        mon->props["blocked_deadline"] = you.elapsed_time + 30;
+
+                    if (!mon->props.exists("idle_deadline"))
+                        mon->props["idle_deadline"] = you.elapsed_time + 200;
+
+                    if (you.elapsed_time >= mon->props["blocked_deadline"].get_int()
+                        || you.elapsed_time >= mon->props["idle_deadline"].get_int())
+                    {
+                        stop_retreat = true;
+                    }
+                }
+                else
+                {
+                    mon->props.erase("blocked_deadline");
+                    mon->props.erase("idle_deadline");
+                }
+            }
+
+            if (stop_retreat)
+            {
+                new_beh = BEH_SEEK;
+                new_foe = MHITYOU;
+                mon->props.erase("last_pos");
+                mon->props.erase("idle_point");
+                mon->props.erase("blocked_deadline");
+                mon->props.erase("idle_deadline");
+            }
+            else
+                mon->props["last_pos"] = mon->pos();
+
+            break;
+        }
+
         default:
             return;     // uh oh
         }
@@ -864,6 +952,7 @@ static void _set_nearest_monster_foe(monster* mon)
 {
     // These don't look for foes.
     if (mon->good_neutral() || mon->strict_neutral()
+            || mon->behaviour == BEH_WITHDRAW
             || mon->type == MONS_BATTLESPHERE)
         return;
 
@@ -964,6 +1053,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     case ME_WHACK:
     case ME_ANNOY:
+
+        // Orders to withdraw take precedence over interruptions
+        if (mon->behaviour == BEH_WITHDRAW)
+            break;
+
         // Will turn monster against <src>, unless they
         // are BOTH friendly or good neutral AND stupid,
         // or else fleeing anyway.  Hitting someone over
@@ -1033,6 +1127,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             break;
         }
+
+        // Orders to withdraw take precedence over interruptions
+        if (mon->behaviour == BEH_WITHDRAW)
+            break;
 
         // Avoid moving friendly giant spores out of BEH_WANDER.
         if (mon->friendly() && mon->type == MONS_GIANT_SPORE)

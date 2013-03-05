@@ -914,6 +914,28 @@ static void _set_allies_patrol_point(bool clear = false)
     }
 }
 
+static void _set_allies_withdraw(const coord_def &target)
+{
+    coord_def delta = target - you.pos();
+    float mult = float(LOS_RADIUS * 2) / (float)max(abs(delta.x), abs(delta.y));
+    coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        mi->behaviour = BEH_WITHDRAW;
+        mi->target = target;
+        mi->patrol_point = rally_point;
+        mi->foe = MHITNOT;
+
+        mi->props.erase("last_pos");
+        mi->props.erase("idle_point");
+        mi->props.erase("idle_deadline");
+        mi->props.erase("blocked_deadline");
+    }
+}
+
 void yell(bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -997,7 +1019,7 @@ void yell(bool force)
         }
 
         mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
-        mpr("                   s - Stop attacking.");
+        mpr("                   r - Retreat!             s - Stop attacking.");
         mpr("                   w - Wait here.           f - Follow me.");
     }
     mprf(" Anything else - Stay silent%s.",
@@ -1109,6 +1131,41 @@ void yell(bool force)
                 canned_msg(MSG_NOTHING_THERE);
                 return;
             }
+        }
+        break;
+
+    case 'r':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        {
+            direction_chooser_args args;
+            args.restricts = DIR_TARGET;
+            args.mode = TARG_ANY;
+            args.needs_path = false;
+            args.top_prompt = "Retreat in which direction?";
+            direction(targ, args);
+        }
+
+        if (targ.isCancel)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        {
+            bool cancel = !targ.isValid;
+            if (!cancel)
+            {
+                mpr("Fall back!");
+                mons_targd = MHITNOT;
+            }
+
+            _set_allies_withdraw(targ.target);
+            coord_def target = targ.target;
         }
         break;
 

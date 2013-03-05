@@ -2606,6 +2606,8 @@ enum beh_type
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
     BEH_RETREAT,                       //  like flee but when cannot attack
+    BEH_WITHDRAW,                      //  an ally given a command to withdraw
+                                       //  (will not respond to attacks)
     NUM_BEHAVIOURS,                    //  max # of legal states
     BEH_CHARMED,                       //  hostile-but-charmed; creation only
     BEH_FRIENDLY,                      //  used during creation only

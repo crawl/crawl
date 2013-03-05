@@ -625,7 +625,8 @@ void debug_stethoscope(int mon)
           mons_is_retreating(&mons)      ? "retreat" :
           mons_is_cornered(&mons)        ? "cornered" :
           mons_is_panicking(&mons)       ? "panic" :
-          mons_is_lurking(&mons)         ? "lurk"
+          mons_is_lurking(&mons)         ? "lurk" :
+          mons.behaviour == BEH_WITHDRAW ? "withdraw"
                                          : "unknown"),
          mons.behaviour,
          ((mons.foe == MHITYOU)                    ? "you" :
