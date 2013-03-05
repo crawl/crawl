@@ -3408,7 +3408,7 @@ w:5
 
 @The_monster@ says, "So, what do you do with all of your corpses? Leave them to rot?"
 
-@The_monster@ says, "You must run out of Gods to curse by."
+@The_monster@ says, "You must run out of gods to curse by."
 
 @The_monster@ says, "You missed the Ecumenical Temple, mate."
 %%%%
