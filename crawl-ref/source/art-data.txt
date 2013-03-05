@@ -1058,6 +1058,15 @@ INT:      1
 DEX:      1
 BOOL:     unided
 
+# Meatsprint only. The type is adjusted to the biggest two-handed axe the
+# player's species can wield (exec or broad).
+# Auto-hits, auto-kills.
+ENUM:     WOE
+NAME:     Axe of Woe
+OBJ:      OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
+COLOUR:   ETC_BLOOD
+BOOL:     nogen
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn
