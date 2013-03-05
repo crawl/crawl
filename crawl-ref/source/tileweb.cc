@@ -1131,7 +1131,7 @@ void TilesFramework::_send_map(bool force_full)
     if (force_full)
         json_write_bool("clear", true);
 
-    if (m_current_gc != m_next_gc)
+    if (force_full || m_current_gc != m_next_gc)
     {
         if (m_origin.equals(-1, -1))
             m_origin = m_next_gc;
