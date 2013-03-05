@@ -2047,6 +2047,12 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
+    else if (unrand_index == UNRAND_WOE && you.species != SP_FELID
+             && !you.could_wield(item, true, true))
+    {
+        // always wieldable, always 2-handed
+        item.sub_type = WPN_BROAD_AXE;
+    }
 
     if (!(unrand->flags & UNRAND_FLAG_RANDAPP)
         && !(unrand->flags & UNRAND_FLAG_UNIDED)

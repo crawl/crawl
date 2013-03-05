@@ -3768,6 +3768,9 @@ int melee_attack::calc_to_hit(bool random)
     if (attacker->confused())
         mhit -= 5;
 
+    if (weapon && is_unrandom_artefact(*weapon) && weapon->special == UNRAND_WOE)
+        return AUTOMATIC_HIT;
+
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
     if (defender == NULL)
