@@ -638,15 +638,6 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Store; will also be used for vault analysis (?)
   room.origin = origin
 
-  -- Place the vault if we have one
-  if room.type == "vault" then
-    -- We can only rotate a map clockwise or anticlockwise. To rotate 180 we just flip on both axes.
-    if final_orient == 0 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,0,true,true)
-    elseif final_orient == 1 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,-1,true,true)
-    elseif final_orient == 2 then dgn.reuse_map(room.vplace,origin.x,origin.y,true,true,0,true,true)
-    elseif final_orient == 3 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,1,true,true) end
-  end
-
   -- Wall type. Originally this was randomly varied but it didn't work well when rooms bordered.
   room.wall_type = options.layout_wall_type
 
@@ -721,6 +712,15 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
         vaults_set_usage(usage_grid,grid_coord.x,grid_coord.y,{ usage = "restricted", room = room, depth = new_depth, cell = grid_cell, mask = mask_cell, reason = "wall" })
       end
     end
+  end
+
+  -- Place the vault if we have one
+  if room.type == "vault" then
+    -- We can only rotate a map clockwise or anticlockwise. To rotate 180 we just flip on both axes.
+    if final_orient == 0 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,0,true,true)
+    elseif final_orient == 1 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,-1,true,true)
+    elseif final_orient == 2 then dgn.reuse_map(room.vplace,origin.x,origin.y,true,true,0,true,true)
+    elseif final_orient == 3 then dgn.reuse_map(room.vplace,origin.x,origin.y,false,false,1,true,true) end
   end
 
   -- Use decorator callbacks to decorate the connector cells; e.g. doors and windows, solid wall, open wall ...
