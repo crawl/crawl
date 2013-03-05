@@ -230,22 +230,20 @@ ENDMAP
 NAME:   co_window_2corner
 WEIGHT: 5
 TAGS:   transparent allow_dup extra serial_co_window_common
-SUBST:  A : .x
-SUBST:  B : .xxxx
 MAP
-AAAAAAx@xxxxx
-AAAAAAx.xxxxx
-AAAAAAx.xxxxx
-AAAAAAx.xxxxx
-AAAAAAx.xxxxx
-AAAAAAm.....@
+xxxxxxx@xxxxx
+xxxxxxx.xxxxx
+xxxxxxx.xxxxx
+xxxxxxx.xxxxx
+xxxxxxx.xxxxx
+xxxxxxm.....@
 xxxxxmmmxxxxx
-@.....mBBBBBB
-xxxxx.xBBBBBB
-xxxxx.xBBBBBB
-xxxxx.xBBBBBB
-xxxxx.xBBBBBB
-xxxxx@xBBBBBB
+@.....mxxxxxx
+xxxxx.xxxxxxx
+xxxxx.xxxxxxx
+xxxxx.xxxxxxx
+xxxxx.xxxxxxx
+xxxxx@xxxxxxx
 ENDMAP
 
 NAME:   co_window_broadway_a
