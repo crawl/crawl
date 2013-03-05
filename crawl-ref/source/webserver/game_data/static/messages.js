@@ -106,15 +106,14 @@ function ($, comm, client, util, settings) {
 
     function get_line(msg)
     {
+        if (client.is_watching != null && client.is_watching())
+            return;
+
         var prompt = $("#messages .game_message").last();
         var input = $("<input class='text' type='text'>");
         prompt.append(input);
 
-        if (!(client.is_watching != null
-              && client.is_watching()))
-        {
-            input.focus();
-        }
+        input.focus();
 
         function restore()
         {
