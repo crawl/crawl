@@ -211,4 +211,17 @@ class CityLayout : public ProceduralLayout
     private:
 };
 
+
+class PlainsLayout : public ProceduralLayout
+{
+    public:    
+        PlainsLayout() { };
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+
+    private:
+        double _perlin(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const;
+        double _optimum_range(const double val, const double rstart, const double rend) const;
+        double _optimum_range_mid(const double val, const double rstart, const double rmax1, const double rmax2, const double rend) const;
+};
+
 #endif /* PROC_LAYOUTS_H */
