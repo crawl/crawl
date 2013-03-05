@@ -909,6 +909,8 @@ static void _set_allies_patrol_point(bool clear = false)
         mi->patrol_point = (clear ? coord_def(0, 0) : mi->pos());
         if (!clear)
             mi->behaviour = BEH_WANDER;
+        else
+            mi->behaviour = BEH_SEEK;
     }
 }
 
