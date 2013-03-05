@@ -768,6 +768,10 @@ function (exports, $, key_conversion, chat, comm) {
     {
         watching = true;
     }
+    exports.is_watching = function ()
+    {
+        return watching;
+    }
 
     var playing = false;
     function crawl_started()

@@ -1,5 +1,5 @@
-define(["jquery", "comm", "./util", "./settings"],
-function ($, comm, util, settings) {
+define(["jquery", "comm", "client", "./util", "./settings"],
+function ($, comm, client, util, settings) {
     var messages = [];
     var more = false;
     var old_scroll_top;
@@ -110,7 +110,11 @@ function ($, comm, util, settings) {
         var input = $("<input class='text' type='text'>");
         prompt.append(input);
 
-        input.focus();
+        if (!(client.is_watching != null
+              && client.is_watching()))
+        {
+            input.focus();
+        }
 
         function restore()
         {
