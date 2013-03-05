@@ -275,6 +275,96 @@ LevelLayout::operator()(const coord_def &p, const uint32_t offset) const
 }
 
 ProceduralSample
+NoiseLayout::operator()(const coord_def &p, const uint32_t offset) const
+{
+    return ProceduralSample(p, DNGN_FLOOR, offset + 4096);
+}
+
+ProceduralSample
+ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
+{
+    dungeon_feature_type feat = DNGN_TREE;
+    /* Extremely dense forest:
+    worley::noise_datum fn = _worley(p, offset, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1);
+    double height = fn.distance[0];
+    double other = fn.distance[1];
+    
+    if (0.8 < height && height < 1.2) {
+        feat = DNGN_FLOOR;
+    }
+    */
+    // A maze of twisty passages, all different:
+    /*
+    worley::noise_datum fn = _worley(p, offset, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 1);
+    double height = fn.distance[0];
+    double other = fn.distance[1];
+    
+    if (0.8 < height && height < 1.2) {
+        feat = DNGN_FLOOR;
+    }
+    */
+    /* Big swirly paths
+    worley::noise_datum fn = _worley(p, offset, 0.2, 0.0, 0.2, 0.0, 2, 0.0, 1);
+    double height = fn.distance[0];
+    double other = fn.distance[1];
+    
+    if (0.8 < height && height < 1.2) {
+        feat = DNGN_FLOOR;
+    }
+    */
+    /* Craziness:
+    worley::noise_datum fn = _worley(p, offset, 0.2, 0.0, 0.2, 0.0, 2, 0.0, 1);
+    double height = fn.distance[0];
+    double other = fn.distance[1];
+    
+    if (0.8 < height && height < 1.2 || 1.4 < other && other < 1.6) {
+        feat = DNGN_FLOOR;
+    }*/
+    /* Nice big variably shaped regions: 
+    worley::noise_datum fn = _worley(p, offset, 0.2, 0.0, 0.2, 0.0, 1, 0.0, 1);
+    double height = fn.distance[0];
+    double other = fn.distance[1];
+    double diff = other-height;
+    if (diff < 0.3) {
+        feat = DNGN_FLOOR;
+    }
+    */
+    // Enchanted Forest
+    // TODO: Need to add some perlin distortion and/or jitter at the edges of range to make the shapes less orderly
+    /*
+    worley::noise_datum fn = _worley(p, offset, 0.16, 0.0, 0.16, 0.0, 1, 0.0, 1);
+    double height = fn.distance[0];
+    double other = fn.distance[1];
+    double diff = other-height;
+    worley::noise_datum fn2 = _worley(p, offset, 0.3, 100.0, 0.3, 123.0, 1, 321.0, 1);
+    double diff2 = fn2.distance[1] - fn2.distance[0];
+    if (diff < 0.1 || diff2 < 0.15) {
+        feat = DNGN_FLOOR;
+    }
+    */
+
+    worley::noise_datum fndx = _worley(p, offset, 0.2, 854.3, 0.2, 123.4, 1, 0.0, 1);
+    worley::noise_datum fndy = _worley(p, offset, 0.2, 123.2, 0.2, 3623.51, 1, 0.0, 1);
+
+    double adjustedx = (fndx.distance[0]-fndx.distance[1]-0.5) * 4.0; //* 2.0;
+    double adjustedy = (fndy.distance[0]-fndy.distance[1]-0.5) * 4.0; // * 2.0;
+
+    worley::noise_datum fn = _worley(p, offset, 0.16, adjustedx, 0.16, adjustedy, 1, 0.0, 1);
+    // worley::noise_datum fn = _worley(p, offset, 0.16, 0, 0.16, 0, 1, 0.0, 1);
+    double height = fn.distance[0];
+    double other = fn.distance[1];
+    double diff = other-height;
+    //worley::noise_datum fn2 = _worley(p, offset, 0.3, 100.0, 0.3, 123.0, 1, 321.0, 1);
+    //double diff2 = fn2.distance[1] - fn2.distance[0];
+    if /*(height>0.9) { */(diff < 0.3) { // || diff2 < 0.15) {
+        feat = DNGN_FLOOR;
+    }
+    //printf("1: %f, 2: %f\n, 3: %f, dx: %f, dy: %f", height,other,diff, adjustedx,adjustedy);
+    int delta = 1;
+    return ProceduralSample(p, feat, offset + delta);
+}
+
+ProceduralSample
 ClampLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
     uint32_t cycle = offset / clamp;
@@ -578,7 +668,15 @@ PlainsLayout::operator()(const coord_def &p, const uint32_t offset) const
     return ProceduralSample(p, feat, offset + delta);
 }
 
-double PlainsLayout::_perlin(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const
+worley::noise_datum NoiseLayout::_worley(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const
+{
+    double hx = ((double)p.x * (double)0.8 + xoff) * xmul;
+    double hy = ((double)p.y * (double)0.8 + yoff) * ymul;
+    double hz = ((double)offset / (double)500 + zoff) * zmul;
+    return worley::noise(hx, hy, hz);
+}
+
+double NoiseLayout::_perlin(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const
 {
     double hx = ((double)p.x / (double)10 + xoff) * xmul;
     double hy = ((double)p.y / (double)10 + yoff) * ymul;
@@ -586,12 +684,12 @@ double PlainsLayout::_perlin(const coord_def &p, const uint32_t offset, const do
     return perlin::fBM(hx, hy, hz, oct) / 2.0 + 0.5;
 }
 
-double PlainsLayout::_optimum_range(const double val, const double rstart, const double rend) const
+double NoiseLayout::_optimum_range(const double val, const double rstart, const double rend) const
 {
     double mid = (rstart + rend) / 2.0;
     return _optimum_range_mid(val, rstart, mid, mid, rend);
 }
-double PlainsLayout::_optimum_range_mid(const double val, const double rstart, const double rmax1, const double rmax2, const double rend) const
+double NoiseLayout::_optimum_range_mid(const double val, const double rstart, const double rmax1, const double rmax2, const double rend) const
 {
     if (rmax1 <= val <= rmax2) return 1.0;
     if (val <= rstart || val >= rend) return 0.0;
