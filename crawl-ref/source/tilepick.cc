@@ -559,7 +559,6 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_HOUND:
     case TILEP_MONS_ZOMBIE_CRAB:
     case TILEP_MONS_ZOMBIE_TURTLE:
-    case TILEP_MONS_ZOMBIE_SPIKED_TURTLE:
         return TILEP_MONS_SPECTRAL_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
         return TILEP_MONS_SPECTRAL_QUADRUPED_LARGE;
@@ -615,7 +614,6 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_HOUND:
     case TILEP_MONS_ZOMBIE_CRAB:
     case TILEP_MONS_ZOMBIE_TURTLE:
-    case TILEP_MONS_ZOMBIE_SPIKED_TURTLE:
         return TILEP_MONS_SIMULACRUM_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
     case TILEP_MONS_ZOMBIE_TOAD:
@@ -675,7 +673,6 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_CRAB:
         return TILEP_MONS_SKELETON_LIZARD;
     case TILEP_MONS_ZOMBIE_TURTLE:
-    case TILEP_MONS_ZOMBIE_SPIKED_TURTLE:
         return TILEP_MONS_SKELETON_TURTLE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
     case TILEP_MONS_ZOMBIE_TOAD:
@@ -809,10 +806,8 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             z_tile = TILEP_MONS_ZOMBIE_TOAD;
         else if (subtype == MONS_FIRE_CRAB || subtype == MONS_APOCALYPSE_CRAB)
             z_tile = TILEP_MONS_ZOMBIE_CRAB;
-        else if (subtype == MONS_SNAPPING_TURTLE)
+        else if (subtype == MONS_SNAPPING_TURTLE || subtype == MONS_ALLIGATOR_SNAPPING_TURTLE)
             z_tile = TILEP_MONS_ZOMBIE_TURTLE;
-        else if (subtype == MONS_ALLIGATOR_SNAPPING_TURTLE)
-            z_tile = TILEP_MONS_ZOMBIE_SPIKED_TURTLE;
         else
         {
             z_tile = (z_size == Z_SMALL ? TILEP_MONS_ZOMBIE_QUADRUPED_SMALL
