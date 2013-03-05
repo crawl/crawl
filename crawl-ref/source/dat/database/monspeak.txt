@@ -3361,15 +3361,15 @@ Vehumet Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "There's not much to say about Vehumet, is there?"
+@The_monster@ says, "What kind of god gives you spells but not spellbooks?"
 
-@The_monster@ says, "I saw a book of Annihilations earlier! Have you?"
+@The_monster@ says, "Let it end in hellfire? When do you get a hellfire spell?"
 
 @The_monster@ says, "I hate Vehumet."
 
 @The_monster@ says, "I hate magic."
 
-@The_monster@ says, "What's the point of summoning, anyway?"
+@The_monster@ says, "What's the point of conjuring, anyway?"
 
 @The_monster@ says, "Do you find it easier to cast spells, now?"
 
