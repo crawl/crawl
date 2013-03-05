@@ -1944,6 +1944,57 @@ MAP
 .X..........
 ENDMAP
 
+NAME:    hangedman_decor_growths
+TAGS:    transparent extra decor
+DEPTH:   D
+SHUFFLE: ABCDEF
+SUBST:   A : x..., B : x.., C : x:7 .:1, EF = x
+: init_hm_decor_walldepth(_G, "x")
+MAP
+            ........
+           ..........
+           ..AABBCC..
+           ..AxBBxC..
+      .......DDxxDD..
+     ........DDxxDD..
+     ..AABCC.ExBBxF..
+ ......AxBxC.EEBBFF..
+.......DDxDD.........
+..ABBC.ExBxF........
+..DxxD.EEBFF.
+..DxxD.......
+..EBBF......
+........
+ ......
+ENDMAP
+
+NAME:    hangedman_decor_slide_cut
+TAGS:    transparent extra decor
+DEPTH:   D
+WEIGHT:  5 (D:1-3), 10
+SHUFFLE: AB, EF / EF / FE, GH / HG, IJ / IJ / JI
+SUBST:   A : zz., B : z.., C : zz., D : zz., EGI = z, FHJ = .
+: init_hm_decor_walldepth(_G, "z")
+MAP
+xx.....
+xx.....
+x.EF..@
+x.FEF..
+x..FE..xxxxxxxxx
+xA...xxxxxxxxxxxx
+xA...Cx...AA...Dx
+x...x..GH.....x.x
+x..x...HGH...x..x
+x.x.....HG..x...x
+xC...BB...xD...Bx
+xxxxxxxxxxxx...Bx
+ xxxxxxxxx..IJ..x
+          ..JIJ.x
+          @..JI.x
+          .....xx
+          .....xx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

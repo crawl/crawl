@@ -1457,3 +1457,58 @@ xxxxxy.yxxxxxxx
 xxxxy...yxxxxxx
 xxxy.%...yxxxxx
 ENDMAP
+
+################################################################################
+NAME:    hangedman_hanging_gardens
+TAGS:    no_monster_gen no_pool_fixup allow_dup
+ORIENT:  float
+DEPTH:   D:19-
+MONS:    plant w:14 / fungus w:4 / bush w:2
+MONS:    dragon / ice dragon / lindwurm / hell hound
+MONS:    death yak / griffon / catoblepas / dire elephant
+MONS:    hydra / anaconda / red wasp w:2 / redback w:3 / wolf spider w:5 / harpy
+MONS:    spriggan druid, spriggan rider, sphinx / phoenix / hell beast
+ITEM:    pear q:1 / apple q:1 / choko q:1 / apricot q:1 / \
+         orange q:1 / banana q:1 / rambutan q:1 / lychee q:1
+NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
+NSUBST:  " : 2:2 / 2:3 / 2:4 / 4 = 233444. / *:.
+NSUBST:  C : 2:1 / * = c:299 1:1
+SUBST:   X = xx., 1 = 1:29 .:1, t = t:99 1:1, u = t
+SUBST:   . = .:2975 1:20 2:1 3:2 4:2, | = *||
+TILE:    c = wall_marble
+FTILE:   .t1234567Gcx+d*| = floor_lair
+COLOUR:  c = white
+COLOUR:  .1234567d*| = green
+MAP
+   ccccccccccccccccccccccccccccccccc
+   ctttttttttttttttttttttttttttttttcc
+   ctdd...""....""................2|c
+cccct"5................1"........".7c
+ctttt*"................".ww.."tttttcc
+ctd"*G*..................ww..tcccccc.
+ctd5"*7.........".t..........tC1111..
+ct.....T...WWW."dt.........."tC11...
+ct.........WWW.dt.1.....ttttttC...1.
+ct.............t.11....tcCCCCCC.....
+ct"......."dt..........tC1111.......
+ct"......"dt....1......tC11'.........
+ct........t.1.....ttttttC...1.XXXXXXX
+ct.......t.11.....cCCCCCC....Xxxxxxxx
+ct................C1111......Xx
+ct...1".........u.C11'......1Xx
+ct"..".ww.........+...16XXXXXxx
+ct"....ww..tcCCCC+c....Xxxxxxx
+ct.........tC1111..u..'Xx
+ct........"tC11'.....'1Xx
+ct...."tttttC...16XXXXXxx
+ct....tcCCCCC....Xxxxxxx
+ct..".tc1111....'Xx
+ct.2..tc11'....'1Xx
+cc.|7.cc...1.XXXXxx
+.cccccc.....Xxxxxx
+ .11111.....Xx
+ ..........'Xx
+..........'1Xx
+XXXXXXXXXXXXxx
+xxxxxxxxxxxxx
+ENDMAP

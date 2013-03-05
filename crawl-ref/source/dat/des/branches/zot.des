@@ -1862,6 +1862,64 @@ xxc.....:.........cxx
      xxxx@@@xxxx
 ENDMAP
 
+NAME:    hangedman_zot_gyre
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KITEM:   % = % no_pickup
+KFEAT:   Z = known zot trap
+SHUFFLE: dD, eE, fF, gG, hH, dD / eE / fF / gG / hH
+SHUFFLE: cCbB / cCbB / bBcC, qQ / qQ / ZZ / wl / '' / ''
+SUBST:   defhH = X, DEF = ., g : X.., G : X.., ' = .
+SUBST:   B = bbCc, C : bWcc, b : bbc, c : bWcc, X : bcxx, W : wl
+NSUBST:  0 = 2 = 0:19 .:1 / *:.
+KPROP:   l = no_cloud_gen
+KMASK:   lw = no_monster_gen
+COLOUR:  qQ = darkgray
+FTILE:   qQ = floor_rough_darkgray
+MARKER:  q = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+MARKER:  Q = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = -1 }
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([<
+:  else
+SUBST:  { = {([<})]>%
+:  end
+MAP
+           ......
+         ..........
+        ..xxxxxxx...
+        ........hx...
+      ....B......hx....
+     .............x.....
+    ..G.C.G.C.....ffxxx..
+    ..x...x.......x......
+   ...x...x...B...x...c....
+  ....F...E.......x.........
+ ...xxFxxxExxD..Q.eexxx.b.x.
+ ..xH.......0xD...x.......x..
+..xH......q...x..0x...c...x..
+..x...........x..xd.......x..
+..x.....b..dxx{xxd..b.....x..
+..x.......dx..x...........x..
+..x...c...x0..x...q......Hx..
+..x.......x...Dx0.......Hx..
+ .x.b.gxxee.Q..DxxExxxFxx...
+ .........x.......E...F....
+  ....c...x...B...x...x...
+    ......x.......x...x..
+    ..gxxff.....C.G.C.G..
+     .....x.............
+      ....xh......B....
+        ...xh........
+         ...xxxxxxx..
+          ..........
+            ......
+ENDMAP
+
 ####
 # Care for a little gambling, adventurer?
 NAME: grunt_zot_stairs_roulette
