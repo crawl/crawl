@@ -1085,6 +1085,10 @@ static void _update_abyss_terrain(const coord_def &p,
 
     const dungeon_feature_type feat = sample.feat();
 
+    // Don't replace open doors with closed doors!
+    if (feat_is_door(currfeat) && feat_is_door(feat))
+        return;
+
     // If the selected grid is already there, *or* if we're morphing and
     // the selected grid should have been there, do nothing.
     if (feat != currfeat)
