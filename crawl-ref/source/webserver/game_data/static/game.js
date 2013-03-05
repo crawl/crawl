@@ -51,12 +51,14 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
 
         // Determine height of messages area
         old_html = $("#messages").html();
+        old_scroll_top = $("#messages_container").scrollTop();
         s = "";
         for (var i = 0; i < msg_height+1; i++)
             s = s + "<br>";
         $("#messages").html(s);
         var msg_height_px = $("#messages").outerHeight();
         $("#messages").html(old_html);
+        $("#messages_container").scrollTop(old_scroll_top);
 
         var remaining_width = window_width - stat_width_px;
         var remaining_height = window_height - msg_height_px;
