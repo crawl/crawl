@@ -545,7 +545,8 @@ static const char *_monster_behaviour_names[] = {
     "cornered",
     "panic",
     "lurk",
-    "retreat"
+    "retreat",
+    "withdraw"
 };
 
 static const char* _behaviour_name(beh_type beh)

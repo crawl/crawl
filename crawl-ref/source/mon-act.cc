@@ -2216,6 +2216,7 @@ void handle_monster_move(monster* mons)
 
             if (targ
                 && targ != mons
+                && mons->behaviour != BEH_WITHDRAW
                 && !mons_aligned(mons, targ)
                 && monster_can_hit_monster(mons, targ))
             {
@@ -2241,6 +2242,14 @@ void handle_monster_move(monster* mons)
                     DEBUG_ENERGY_USE("fight_melee()");
                     continue;
                 }
+            }
+            else if (mons->behaviour == BEH_WITHDRAW
+                     && ((targ && targ != mons && targ->friendly())
+                          || (you.pos() == mons->pos() + mmov)))
+            {
+                // Don't count turns spent blocked by friendly creatures
+                // (or the player) as an indication that we're stuck
+                mons->props.erase("blocked_deadline");
             }
 
             if (invalid_monster(mons) || mons_is_stationary(mons))
@@ -3142,6 +3151,12 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             }
             else
                 return false;
+        }
+        // Prefer to move past enemies instead of hit them, if we're retreating
+        else if (!mons_aligned(mons, targmonster)
+                 && mons->behaviour == BEH_WITHDRAW)
+        {
+            return false;
         }
     }
 
