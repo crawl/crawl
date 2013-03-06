@@ -1887,7 +1887,7 @@ string mutation_name(mutation_type mut, int level, bool colour)
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
-    { 0,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
+    { 0, { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
       { -33, -33, -33 } },
     { 0, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
       { -33, -33, -33 } },
@@ -1911,7 +1911,7 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
-        MUT_RUGGED_BROWN_SCALES },
+           MUT_RUGGED_BROWN_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
       { -33, -33, 0 } },
@@ -1919,7 +1919,7 @@ static const facet_def _demon_facets[] =
         MUT_THIN_METALLIC_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
-        MUT_THIN_SKELETAL_STRUCTURE },
+           MUT_THIN_SKELETAL_STRUCTURE },
       { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { -33, -33, 0 } },
@@ -1948,7 +1948,7 @@ static const facet_def _demon_facets[] =
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 50, 50, 50 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
-          MUT_STOCHASTIC_TORMENT_RESISTANCE },
+           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 50, 50, 50 } },
     { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
       { 50, 50, 50 } },
