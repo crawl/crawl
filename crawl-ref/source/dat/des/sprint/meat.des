@@ -302,6 +302,17 @@
     end
   end
 
+function meatsprint_score (won)
+    local time = you.turns()
+    local score = time * 100000
+
+    if won then
+        score = score * 2
+    end
+
+    return score, false
+end
+
 }}
 NAME:      meatsprint
 TAGS:      sprint no_rotate no_hmirror no_vmirror
@@ -312,6 +323,8 @@ KFEAT:     { = {
 LROCKCOL:  red
 LFLOORCOL: red
 {{
+
+  dgn.persist.calc_score = global_function("meatsprint_score");
 
   local meatlord_marker = TriggerableFunction:new {
     func = "meatlord_stuff",
