@@ -285,11 +285,11 @@
     elseif data.spawn_count == 100 then
       dgn.create_monster(33, 63, defiler)
     elseif data.spawn_count == 150 then
-      local mons = dgn.mons_at(39, 35)
+      local mons = dgn.mons_at(33, 63)
         if mons then
           mons.dismiss()
         end
-          dgn.create_monster(39, 35, meatlord)
+          dgn.create_monster(33, 63, meatlord)
           crawl.more()
           crawl.mpr("<red>" .. border_top .. "" ..
           "--                      </red><lightred>The Meatlord has descended...</lightred><red>                       --\n" ..
