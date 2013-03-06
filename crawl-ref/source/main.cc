@@ -729,6 +729,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'W': wizard_god_wrath();                    break;
     case 'w': wizard_god_mollify();                  break;
     case '#': wizard_load_dump_file();               break;
+    case '&': wizard_list_companions();              break;
 
     case 'x':
         you.experience = 1 + exp_needed(1 + you.experience_level);

@@ -16,6 +16,7 @@
 #include "mon-util.h"
 #include "religion.h"
 #include "stuff.h"
+#include "branch.h"
 
 map<mid_t, companion> companion_list;
 
@@ -162,4 +163,22 @@ bool companion_is_elsewhere(mid_t mid)
         return (companion_list[mid].level != level_id::current());
 
     return false;
+}
+
+void wizard_list_companions()
+{
+    if (companion_list.size() == 0)
+    {
+        mpr("You have no companions.");
+        return;
+    }
+
+    for (map<mid_t, companion>::iterator i = companion_list.begin();
+        i != companion_list.end(); ++i )
+    {
+        companion* comp = &i->second;
+        monster* mon = &comp->mons.mons;
+        mprf("%s (%d)(%s:%d)", mon->name(DESC_PLAIN, true).c_str(),
+                mon->mid, branches[comp->level.branch].abbrevname, comp->level.depth);
+    }
 }
