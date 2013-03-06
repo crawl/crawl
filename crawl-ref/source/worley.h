@@ -66,6 +66,7 @@ struct noise_datum
 {
     double distance[2];
     uint32_t id[2];
+    double pos[2][3];
 };
 
 noise_datum noise(double x, double y, double z);
