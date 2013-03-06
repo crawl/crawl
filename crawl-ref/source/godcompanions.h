@@ -35,7 +35,7 @@ bool recall_offlevel_companions();
 void list_companions();
 bool companion_is_elsewhere(mid_t mid);
 
-void populate_offlevel_recall_list();
+void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list);
 bool recall_offlevel_ally(mid_t mid);
 
 void wizard_list_companions();
