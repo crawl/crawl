@@ -273,3 +273,13 @@ LevelLayout::operator()(const coord_def &p, const uint32_t offset) const
         return layout(p, offset);
     return ProceduralSample(p, feat, offset + 4096);
 }
+
+ProceduralSample
+ClampLayout::operator()(const coord_def &p, const uint32_t offset) const
+{
+    uint32_t order = hash3(p.x, p.y, 0xDEADBEEF);
+    uint32_t clamp_offset = (offset + order) / clamp * clamp;
+    ProceduralSample sample = layout(p, clamp_offset);
+    uint32_t cp = max(sample.changepoint(), offset + order);
+    return ProceduralSample(p, sample.feat(), cp);
+}
