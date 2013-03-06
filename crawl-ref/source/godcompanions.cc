@@ -57,9 +57,15 @@ void remove_all_companions(god_type god)
 
 void move_companion_to(const monster* mons, const level_id lid)
 {
-    companion_list[mons->mid].level = lid;
-    companion_list[mons->mid].mons = follower(*mons);
-    companion_list[mons->mid].timestamp = you.elapsed_time;
+    // If it's taking stairs, that means the player is heading ahead of it,
+    // so we shouldn't relocate the monster until it actually arrives
+    // (or we can clone things on the other end)
+    if (!(mons->flags & MF_TAKING_STAIRS))
+    {
+        companion_list[mons->mid].level = lid;
+        companion_list[mons->mid].mons = follower(*mons);
+        companion_list[mons->mid].timestamp = you.elapsed_time;
+    }
 }
 
 void update_companions()
