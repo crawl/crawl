@@ -84,8 +84,6 @@ void update_companions()
                 i->second.mons = follower(*mons);
                 i->second.timestamp = you.elapsed_time;
             }
-            else // We must have angered this creature or lost our religion
-                companion_list.erase(i);
         }
     }
 }
