@@ -517,7 +517,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_POSITIVE_ENERGY:   return " {rN+}";
         case SPARM_ARCHMAGI:          return " {Archmagi}";
         case SPARM_PRESERVATION:      return " {rCorr, Cons}";
-        case SPARM_REFLECTION:        return " {rflct}";
+        case SPARM_REFLECTION:        return " {reflect}";
         case SPARM_SPIRIT_SHIELD:     return " {Spirit}";
         case SPARM_ARCHERY:           return " {archer}";
         default:                      return " {buggy}";
