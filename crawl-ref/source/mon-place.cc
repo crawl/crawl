@@ -1173,7 +1173,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #endif
     }
 
-    if (player_in_branch(BRANCH_ABYSS) && !mg.summoner)
+    if (player_in_branch(BRANCH_ABYSS) && !mg.summoner
+        && !(mg.extra_flags & MF_WAS_IN_VIEW))
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
 
     // Message to player from stairwell/gate/abyss appearance.
@@ -1212,7 +1213,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
                     msg = "";
             }
         }
-        else if (player_in_branch(BRANCH_ABYSS))
+        else if (player_in_branch(BRANCH_ABYSS) && !(mon->flags & MF_WAS_IN_VIEW))
             msg += _abyss_monster_creation_message(mon, is_visible);
         if (!msg.empty())
             mpr(msg.c_str());
