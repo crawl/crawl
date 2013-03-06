@@ -40,7 +40,7 @@ void remove_companion(monster* mons)
 void remove_all_companions(god_type god)
 {
     for(map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end(); ++i )
+        i != companion_list.end();)
     {
         monster* mons = monster_by_mid(i->first);
         if (!mons)
@@ -51,8 +51,10 @@ void remove_all_companions(god_type god)
                  && mons->wont_attack()
                  && mons_is_god_gift(mons, GOD_BEOGH)))
         {
-            companion_list.erase(i);
+            companion_list.erase(i++);
         }
+        else
+            ++i;
     }
 }
 
