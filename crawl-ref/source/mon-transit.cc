@@ -192,7 +192,11 @@ static void level_place_followers(m_transit_list &m)
     {
         m_transit_list::iterator mon = i++;
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
+        {
+            if (mon->mons.is_divine_companion())
+                move_companion_to(monster_by_mid(mon->mons.mid), level_id::current());
             m.erase(mon);
+        }
     }
 }
 
