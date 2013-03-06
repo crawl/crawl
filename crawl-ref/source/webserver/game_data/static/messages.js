@@ -22,7 +22,6 @@ function ($, comm, client, util, settings) {
         var last_msg_elem = $("#messages .game_message").last();
         var prefix_glyph = last_msg_elem.find(".prefix_glyph");
         prefix_glyph.html(html);
-        prefix_glyph.removeClass(prefix_glyph_classes);
         prefix_glyph.addClass(classes);
     }
 
