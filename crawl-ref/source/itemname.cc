@@ -463,6 +463,9 @@ const char* armour_ego_name(const item_def& item, bool terse)
         {
         case SPARM_NORMAL:            return "";
         case SPARM_RUNNING:
+            // "naga barding of running" doesn't make any sense, and yes,
+            // they are possible. The terse ego name for these is {run}
+            // still to avoid player confusion, it used to be {sslith}.
             if (item.sub_type == ARM_NAGA_BARDING)
                                       return "speedy slithering";
             else
@@ -495,11 +498,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         switch (get_armour_ego_type(item))
         {
         case SPARM_NORMAL:            return "";
-        case SPARM_RUNNING:
-            if (item.sub_type == ARM_NAGA_BARDING)
-                                      return " {sslith}";
-            else
-                                      return " {run}";
+        case SPARM_RUNNING:           return " {run}";
         case SPARM_FIRE_RESISTANCE:   return " {rF+}";
         case SPARM_COLD_RESISTANCE:   return " {rC+}";
         case SPARM_POISON_RESISTANCE: return " {rPois}";
@@ -1461,13 +1460,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             {
                 if (!terse)
                     buff << " of ";
-
-                // "naga barding of running" doesn't make any sense, and yes,
-                // they are possible.
-                if (sub_type == ARM_NAGA_BARDING && sparm == SPARM_RUNNING)
-                    buff << (terse ? "speed" : "speedy slithering");
-                else
-                    buff << armour_ego_name(*this, terse);
+                buff << armour_ego_name(*this, terse);
             }
         }
 
