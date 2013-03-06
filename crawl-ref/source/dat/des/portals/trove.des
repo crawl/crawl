@@ -868,7 +868,7 @@ ITEM:    acquire armour / any useful armour good_item / any armour w:2
 ITEM:    acquire weapon / any useful weapon good_item / any weapon w:2
 ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.good_scroll(_G)
-ITEM:   wand of digging
+ITEM:   wand of digging ident:type
 SHUFFLE: defg
 : trove.setup_features(_G)
 MAP
