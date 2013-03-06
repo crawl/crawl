@@ -1175,7 +1175,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     if (player_in_branch(BRANCH_ABYSS) && !mg.summoner
         && !(mg.extra_flags & MF_WAS_IN_VIEW))
+    {
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
+    }
 
     // Message to player from stairwell/gate/abyss appearance.
     if (you.see_cell(mg.pos)
