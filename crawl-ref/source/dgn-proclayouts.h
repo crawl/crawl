@@ -202,4 +202,13 @@ class ClampLayout : public ProceduralLayout
         const bool bursty;
 };
 
+class CityLayout : public ProceduralLayout
+{
+    public:
+        CityLayout() {}
+        ProceduralSample operator()(const coord_def &p,
+            const uint32_t offset = 0) const;
+    private:
+};
+
 #endif /* PROC_LAYOUTS_H */
