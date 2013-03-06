@@ -278,6 +278,11 @@ ProceduralSample
 ClampLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
     uint32_t order = hash3(p.x, p.y, 0xDEADBEEF);
+    if (bursty)
+    {
+        order &= hash3(p.x + 31, p.y - 37, 0x0DEFACED);
+    }
+    order %= clamp;
     uint32_t clamp_offset = (offset + order) / clamp * clamp;
     ProceduralSample sample = layout(p, clamp_offset);
     uint32_t cp = max(sample.changepoint(), offset + order);

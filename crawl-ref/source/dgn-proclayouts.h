@@ -187,16 +187,19 @@ class LevelLayout : public ProceduralLayout
 // by the clamp parameter. This is useful if you can't find a good analytic
 // bound on how rapidly your layout changes. If you provide a high valued clamp
 // to a fast changing layout, aliasing will occur.
+// If bursty is true, changes will be not be distributed uniformly over the
+// clamp period.
 class ClampLayout : public ProceduralLayout
 {
     public:
-        ClampLayout(const ProceduralLayout &_layout, int _clamp) :
-            layout(_layout), clamp(_clamp) {}
+        ClampLayout(const ProceduralLayout &_layout, int _clamp, bool _bursty) :
+            layout(_layout), clamp(_clamp), bursty(_bursty) {}
         ProceduralSample operator()(const coord_def &p,
             const uint32_t offset = 0) const;
     private:
         const ProceduralLayout &layout;
         const int clamp;
+        const bool bursty;
 };
 
 #endif /* PROC_LAYOUTS_H */
