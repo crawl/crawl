@@ -1042,6 +1042,7 @@ prefer_safe_chunks = true
         The (e)at command will prompt for all chunks on the floor and in your
         inventory, sorted by age. If this option is set to true, clean chunks
         will be offered before contaminated ones even if the latter are older.
+        Rotten chunks will be offered after clean or contaminated ones.
         Poisonous, mutagenic, rot-inducing, and chunks forbidden by
         your religion will always be offered last.
 
