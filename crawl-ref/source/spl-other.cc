@@ -172,6 +172,14 @@ spret_type cast_recall(bool fail)
     return SPRET_SUCCESS;
 }
 
+struct recall_sorter
+{
+    bool operator()(const pair<mid_t,int> &a, const pair<mid_t,int> &b)
+    {
+        return a.second > b.second;
+    }
+};
+
 // Type recalled:
 // 0 = anything
 // 1 = undead only (Yred religion ability)
@@ -179,6 +187,8 @@ spret_type cast_recall(bool fail)
 void start_recall(int type)
 {
     // Assemble the recall list.
+    vector<pair<mid_t, int> > rlist;
+
     you.recall_list.clear();
     for (monster_iterator mi; mi; ++mi)
     {
@@ -208,16 +218,28 @@ void start_recall(int type)
                 continue;
         }
 
-        you.recall_list.push_back(mi->mid);
+        pair<mid_t, int> m = make_pair(mi->mid, mi->hit_dice);
+        rlist.push_back(m);
     }
 
     if (type > 0 && branch_allows_followers(you.where_are_you))
-        populate_offlevel_recall_list();
+        populate_offlevel_recall_list(rlist);
 
-    random_shuffle(you.recall_list.begin(), you.recall_list.end());
-
-    if (you.recall_list.size() > 0)
+    if (rlist.size() > 0)
     {
+        // Sort the recall list roughly by HD, randomizing a little
+        for (unsigned int i = 0; i < rlist.size(); ++i)
+        {
+            rlist[i].second += random2(10);
+        }
+        sort(rlist.begin(), rlist.end(), recall_sorter());
+
+        you.recall_list.clear();
+        for (unsigned int i = 0; i < rlist.size(); ++i)
+        {
+            you.recall_list.push_back(rlist[i].first);
+        }
+
         you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
         you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
         mpr("You begin recalling your allies.");

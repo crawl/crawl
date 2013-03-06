@@ -88,7 +88,7 @@ void update_companions()
     }
 }
 
-void populate_offlevel_recall_list()
+void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
 {
     for (map<mid_t, companion>::iterator i = companion_list.begin();
          i != companion_list.end(); ++i )
@@ -101,7 +101,8 @@ void populate_offlevel_recall_list()
             if (comp->level.branch == BRANCH_ABYSS)
                 continue;
 
-            you.recall_list.push_back(mid);
+            pair<mid_t, int> p = make_pair(mid, comp->mons.mons.hit_dice);
+            recall_list.push_back(p);
         }
     }
 }
