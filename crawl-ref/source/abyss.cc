@@ -1002,7 +1002,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     }
 
     const ProceduralSample sample = (*abyssLayout)(pt, abyssal_state.depth);
-    assert(sample.feat() > DNGN_UNSEEN);
+    ASSERT(sample.feat() > DNGN_UNSEEN);
     abyss_sample_queue.push(sample);
     return sample;
 }
