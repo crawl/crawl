@@ -42,11 +42,11 @@ function vaults_room_setup(e, nsubst_glyph, nsubst_size)
   e.tags("vaults_room")
   e.mons("0 band")
   if nsubst_size == "small" then
-    e.nsubst(nsubst_glyph .. " = 1:1 / 2 = 0.. / *:.")
+    e.nsubst(nsubst_glyph .. " = 1:1 / 2 = 1.. / *:.")
   elseif nsubst_size == "medium" then
-    e.nsubst(nsubst_glyph .. " = 1:1 / 1:0 / 1 = 0.. / *:.")
+    e.nsubst(nsubst_glyph .. " = 2:1 / 1 = 1.. / *:.")
   elseif nsubst_size == "large" then
-    e.nsubst(nsubst_glyph .. " = 1:1 / 1:0 / 2 = 0. / *:.")
+    e.nsubst(nsubst_glyph .. " = 2:1 / 2 = 1. / *:.")
   end
 end
 
@@ -1273,7 +1273,7 @@ ENDMAP
 
 NAME: grunt_vaults_swirl
 TAGS: vaults_room
-MONS: 0 band
+KMONS: 0 = 0 band
 NSUBST: 0 = 2:0 / *:.
 MAP
  xx.......xx
@@ -1335,8 +1335,7 @@ ENDMAP
 
 NAME: grunt_vaults_trifunnel
 TAGS: vaults_room
-MONS: 0 band
-NSUBST: 0 = 1:1 / 1:0 / 1:0.
+KMONS: 0 = 0 band
 MAP
     xxx.xxxxxxx.xxxxxxx.x
   xxx...xxxxx...xxxxx...x
@@ -1365,6 +1364,7 @@ ENDMAP
 
 NAME:   dpeg_vaults_monster_box
 TAGS:   vaults_room
+MONS:   0 band
 SUBST:  - : @.., _ : @..
 SUBST:  b : xxxxb0009.
 NSUBST: 9 = 1:S / *:9
