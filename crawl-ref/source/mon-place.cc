@@ -2635,12 +2635,12 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         if (coinflip())
         {
             band = BAND_YAKTAURS;
-            band_size = 2 + random2(3);
+            band_size = 2 + random2(4);
         }
         else
         {
             band = BAND_VAULT_WARDEN;
-            band_size = 1 + random2(3);
+            band_size = 2 + random2(3);
         }
         break;
 
