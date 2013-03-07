@@ -1186,7 +1186,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
     else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR
-              || orig == TILE_DNGN_RUNED_DOOR) && !mimic)
+              || orig == TILE_DNGN_RUNED_DOOR
+              || orig == TILE_DNGN_SEALED_DOOR)
+             && !mimic)
     {
         tileidx_t override = flv.feat;
         /*
