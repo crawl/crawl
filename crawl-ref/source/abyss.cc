@@ -1015,8 +1015,13 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 
     const ProceduralSample sample = (*abyssLayout)(pt, abyssal_state.depth);
     ASSERT(sample.feat() > DNGN_UNSEEN);
-    abyss_sample_queue.push(sample);
-    return sample;
+
+    // Testing layout
+    const static PlainsLayout test;
+    const static ClampLayout clamp(test, 50, true);
+    const ProceduralSample sample2 = clamp(pt, abyssal_state.depth);
+    abyss_sample_queue.push(sample2);
+    return sample2;
 }
 
 static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
