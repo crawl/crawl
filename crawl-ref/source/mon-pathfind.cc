@@ -413,7 +413,9 @@ bool monster_pathfind::traversable(const coord_def& p)
     //      giving the monster a proper pathfinding LOS.
     if (opc_immob(p) == OPC_OPAQUE
         && grd(p) != DNGN_CLOSED_DOOR && grd(p) != DNGN_SEALED_DOOR)
+    {
         return false;
+    }
 
     if (mons)
         return mons_traversable(p);
