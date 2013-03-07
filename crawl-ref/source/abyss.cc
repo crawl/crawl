@@ -966,6 +966,7 @@ static level_id _get_real_level()
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord;
+    
     const static WastesLayout wastes;
     if (_in_wastes(pt))
     {

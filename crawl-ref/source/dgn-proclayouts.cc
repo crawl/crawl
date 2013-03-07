@@ -349,7 +349,7 @@ ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
     double adjustedx = (fndx.distance[0]-fndx.distance[1]-0.5) * 4.0; //* 2.0;
     double adjustedy = (fndy.distance[0]-fndy.distance[1]-0.5) * 4.0; // * 2.0;
 
-    worley::noise_datum fn = _worley(p, offset, 0.16, adjustedx, 0.16, adjustedy, 1, 0.0, 1);
+    worley::noise_datum fn = _worley(p, offset, 0.16, adjustedx, 0.16, adjustedy, 100, 0.0, 1);  // increased time delta to 100 to test clamp
     // worley::noise_datum fn = _worley(p, offset, 0.16, 0, 0.16, 0, 1, 0.0, 1);
     double height = fn.distance[0];
     double other = fn.distance[1];
@@ -360,8 +360,8 @@ ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
         feat = DNGN_FLOOR;
     }
     //printf("1: %f, 2: %f\n, 3: %f, dx: %f, dy: %f", height,other,diff, adjustedx,adjustedy);
-    int delta = 1;
-    return ProceduralSample(p, feat, offset + delta);
+    int delta = 50;
+    return ProceduralSample(p, feat, offset + 1);
 }
 
 ProceduralSample
