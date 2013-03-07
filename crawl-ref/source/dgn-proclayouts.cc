@@ -663,7 +663,7 @@ PlainsLayout::operator()(const coord_def &p, const uint32_t offset) const
         }
     }
 
-    int delta = 100;
+    int delta = 1;
 
     return ProceduralSample(p, feat, offset + delta);
 }
@@ -672,7 +672,7 @@ worley::noise_datum NoiseLayout::_worley(const coord_def &p, const uint32_t offs
 {
     double hx = ((double)p.x * (double)0.8 + xoff) * xmul;
     double hy = ((double)p.y * (double)0.8 + yoff) * ymul;
-    double hz = ((double)offset / (double)500 + zoff) * zmul;
+    double hz = ((double)offset / (double)80 + zoff) * zmul;
     return worley::noise(hx, hy, hz);
 }
 
@@ -680,7 +680,7 @@ double NoiseLayout::_perlin(const coord_def &p, const uint32_t offset, const dou
 {
     double hx = ((double)p.x / (double)10 + xoff) * xmul;
     double hy = ((double)p.y / (double)10 + yoff) * ymul;
-    double hz = ((double)offset / (double)10000 + zoff) * zmul;
+    double hz = ((double)offset / (double)1000 + zoff) * zmul;
     return perlin::fBM(hx, hy, hz, oct) / 2.0 + 0.5;
 }
 
