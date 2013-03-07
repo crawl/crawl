@@ -987,6 +987,8 @@ bool food_change(bool suppress_message)
         state_changed = true;
         if (newstate > you.hunger_state)
             less_hungry = true;
+        else
+            maybe_id_ring_hunger();
 
         you.hunger_state = newstate;
         set_redraw_status(REDRAW_HUNGER);
@@ -1081,9 +1083,6 @@ bool food_change(bool suppress_message)
             default:
                 return state_changed;
             }
-
-            if (!less_hungry)
-                maybe_id_ring_hunger();
         }
     }
 
