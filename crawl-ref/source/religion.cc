@@ -626,8 +626,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_ASHENZARI:
-        snprintf(info, INFO_SIZE, "you obtain runes of Zot");
-        likes.push_back(info);
+        likes.push_back("you obtain runes of Zot");
         break;
 
     default:
