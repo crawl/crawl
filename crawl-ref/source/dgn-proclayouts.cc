@@ -277,10 +277,11 @@ LevelLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 ClampLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
-    uint32_t order = hash3(p.x, p.y, 0xDEADBEEF);
+    uint32_t cycle = offset / clamp;
+    uint32_t order = hash3(p.x, p.y, 0xDEADBEEF + cycle);
     if (bursty)
     {
-        order &= hash3(p.x + 31, p.y - 37, 0x0DEFACED);
+        order &= hash3(p.x + 31, p.y - 37, 0x0DEFACED + cycle);
     }
     order %= clamp;
     uint32_t clamp_offset = (offset + order) / clamp * clamp;
