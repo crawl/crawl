@@ -181,7 +181,8 @@ CHANCE: 8%
 KMONS:  1 = giant cockroach / giant mite / giant gecko / nothing
 KFEAT:  1 = W
 SUBST:  W = WW.
-COLOUR: 1Ww = green
+COLOUR: 1W = lightgreen
+COLOUR: w  = green
 MAP
 @Wxxxxxxxxx
 WWWWWWWWWWxx
