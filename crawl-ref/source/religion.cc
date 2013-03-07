@@ -570,7 +570,6 @@ string get_god_likes(god_type which_god, bool verbose)
                            "<w>!p</w> to prevent their accidental destruction)"
                          : "");
         likes.push_back(info);
-
         likes.push_back("you calm hostilities by healing your foes");
         break;
 
@@ -610,7 +609,6 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_ZIN:
         snprintf(info, INFO_SIZE, "you donate money%s",
                  verbose ? " (by <w>p</w>raying at an altar)" : "");
-
         likes.push_back(info);
         break;
 
@@ -646,7 +644,8 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_MAKHLEB: case GOD_LUGONU:
+    case GOD_MAKHLEB:
+    case GOD_LUGONU:
         likes.push_back("you or your allies kill living beings");
         break;
 
@@ -688,7 +687,9 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_MAKHLEB: case GOD_LUGONU:
+    case GOD_SHINING_ONE:
+    case GOD_MAKHLEB:
+    case GOD_LUGONU:
         likes.push_back("you or your allies kill the undead");
         break;
 
@@ -707,7 +708,9 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_MAKHLEB: case GOD_LUGONU:
+    case GOD_SHINING_ONE:
+    case GOD_MAKHLEB:
+    case GOD_LUGONU:
         likes.push_back("you or your allies kill demons");
         break;
 
@@ -744,7 +747,8 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_MAKHLEB: case GOD_LUGONU:
+    case GOD_MAKHLEB:
+    case GOD_LUGONU:
         likes.push_back("you or your allies kill holy beings");
         break;
 
