@@ -2288,7 +2288,10 @@ static void _decrement_durations()
 
     if (you.gourmand())
     {
-        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
+        // Innate gourmand is always fully active.
+        if (player_mutation_level(MUT_GOURMAND) > 0)
+            you.duration[DUR_GOURMAND] = GOURMAND_MAX;
+        else if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
     }
     else
