@@ -452,7 +452,19 @@ void debug_mons_scan()
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
 
-        ASSERT(monster_by_mid(m->mid) == m);
+        monster* m1 = monster_by_mid(m->mid);
+        if (m1 != m)
+        {
+            if (m1 && m1->mid == m->mid)
+            {
+                mprf(MSGCH_ERROR,
+                     "Error: monster %s(%d) has same mid as %s(%d) (%d)",
+                     m->name(DESC_PLAIN, true).c_str(), m->mindex(),
+                     m1->name(DESC_PLAIN, true).c_str(), m1->mindex(), m->mid);
+            }
+            else
+                ASSERT(monster_by_mid(m->mid) == m);
+        }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
     for (map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
