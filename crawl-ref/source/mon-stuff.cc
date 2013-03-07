@@ -2526,7 +2526,7 @@ int monster_die(monster* mons, killer_type killer,
 
     if (mons->is_divine_companion()
         && killer != KILL_RESET
-        && killer != KILL_BANISHED)
+        && !(mons->flags & MF_BANISHED))
     {
         remove_companion(mons);
     }
