@@ -45,14 +45,8 @@ void remove_all_companions(god_type god)
         monster* mons = monster_by_mid(i->first);
         if (!mons)
             mons = &i->second.mons.mons;
-        if ((god == GOD_YREDELEMNUL
-                 && is_yred_undead_slave(mons))
-             || (god == GOD_BEOGH
-                 && mons->wont_attack()
-                 && mons_is_god_gift(mons, GOD_BEOGH)))
-        {
+        if (mons_is_god_gift(mons, god))
             companion_list.erase(i++);
-        }
         else
             ++i;
     }
