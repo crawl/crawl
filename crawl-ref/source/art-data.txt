@@ -1065,6 +1065,8 @@ ENUM:     WOE
 NAME:     Axe of Woe
 OBJ:      OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
 COLOUR:   ETC_BLOOD
+TILE:     urand_axe_of_woe
+TILE_EQ:  axe_of_woe
 BOOL:     nogen
 
 # This is the first of two amulets used to test suppression aura.
