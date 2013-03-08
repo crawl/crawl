@@ -767,7 +767,7 @@ bool melee_attack::handle_phase_killed()
     return true;
 }
 
-bool melee_attack::handle_phase_end()
+bool melee_attack::handle_phase_aux()
 {
     if (attacker->is_player())
     {
@@ -782,6 +782,11 @@ bool melee_attack::handle_phase_end()
         print_wounds(defender->as_monster());
     }
 
+    return true;
+}
+
+bool melee_attack::handle_phase_end()
+{
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(attacker, cleave_targets, attack_number,
@@ -853,7 +858,7 @@ bool melee_attack::attack()
         {
             simple_god_message(" blocks your attack.", GOD_ELYVILON);
             dec_penance(GOD_ELYVILON, 1);
-
+            handle_phase_end();
             return false;
         }
         // Check for stab (and set stab_attempt and stab_bonus)
@@ -885,6 +890,7 @@ bool melee_attack::attack()
             if (attacker != defender && attack_warded_off())
             {
                 perceived_attack = true;
+                handle_phase_end();
                 return false;
             }
 
@@ -893,7 +899,10 @@ bool melee_attack::attack()
             attacker_sustain_passive_damage();
 
             if (!cont)
+            {
+                handle_phase_end();
                 return false;
+            }
         }
         else
             handle_phase_dodged();
@@ -968,6 +977,8 @@ bool melee_attack::attack()
 
     if (!defender->alive())
         handle_phase_killed();
+
+    handle_phase_aux();
 
     handle_phase_end();
 
