@@ -295,7 +295,7 @@ cases.]
         datum.id[0] = id[0];
         datum.id[1] = id[1];
         for (int i = 0; i < 2; ++i)
-            for(int j = 0; j < 3; ++j)
+            for (int j = 0; j < 3; ++j)
                 datum.pos[i][j] = delta[i][j];
         return datum;
     }

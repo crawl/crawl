@@ -229,16 +229,12 @@ void start_recall(int type)
     {
         // Sort the recall list roughly by HD, randomizing a little
         for (unsigned int i = 0; i < rlist.size(); ++i)
-        {
             rlist[i].second += random2(10);
-        }
         sort(rlist.begin(), rlist.end(), recall_sorter());
 
         you.recall_list.clear();
         for (unsigned int i = 0; i < rlist.size(); ++i)
-        {
             you.recall_list.push_back(rlist[i].first);
-        }
 
         you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
         you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
