@@ -101,12 +101,17 @@ function ($, comm, client, util, settings) {
                 add_message(msg.messages[i]);
             }
         }
+        var cursor = $("#text_cursor");
+        if (cursor.length > 0)
+            cursor.appendTo($("#messages .game_message").last());
     }
 
     function get_line(msg)
     {
         if (client.is_watching != null && client.is_watching())
             return;
+
+        $("#text_cursor").remove();
 
         var prompt = $("#messages .game_message").last();
         var input = $("<input class='text' type='text'>");
@@ -156,8 +161,26 @@ function ($, comm, client, util, settings) {
         input.remove();
     }
 
+    function text_cursor(data)
+    {
+        if (data.enabled)
+        {
+            if ($("#text_cursor").length > 0)
+                return;
+            if ($("#messages .game_message input").length > 0)
+                return;
+            var cursor = $("<span id='text_cursor'>_</span>");
+            $("#messages .game_message").last().append(cursor);
+        }
+        else
+        {
+            $("#text_cursor").remove();
+        }
+    }
+
     comm.register_handlers({
         "msgs": handle_messages,
+        "text_cursor": text_cursor,
         "get_line": get_line,
         "abort_get_line": abort_get_line
     });
