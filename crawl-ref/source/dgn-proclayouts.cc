@@ -283,85 +283,42 @@ NoiseLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
-    dungeon_feature_type feat = DNGN_TREE;
-    /* Extremely dense forest:
-    worley::noise_datum fn = _worley(p, offset, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1);
-    double height = fn.distance[0];
-    double other = fn.distance[1];
-    
-    if (0.8 < height && height < 1.2) {
-        feat = DNGN_FLOOR;
-    }
-    */
-    // A maze of twisty passages, all different:
-    /*
-    worley::noise_datum fn = _worley(p, offset, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 1);
-    double height = fn.distance[0];
-    double other = fn.distance[1];
-    
-    if (0.8 < height && height < 1.2) {
-        feat = DNGN_FLOOR;
-    }
-    */
-    /* Big swirly paths
-    worley::noise_datum fn = _worley(p, offset, 0.2, 0.0, 0.2, 0.0, 2, 0.0, 1);
-    double height = fn.distance[0];
-    double other = fn.distance[1];
-    
-    if (0.8 < height && height < 1.2) {
-        feat = DNGN_FLOOR;
-    }
-    */
-    /* Craziness:
-    worley::noise_datum fn = _worley(p, offset, 0.2, 0.0, 0.2, 0.0, 2, 0.0, 1);
-    double height = fn.distance[0];
-    double other = fn.distance[1];
-    
-    if (0.8 < height && height < 1.2 || 1.4 < other && other < 1.6) {
-        feat = DNGN_FLOOR;
-    }*/
-    /* Nice big variably shaped regions: 
-    worley::noise_datum fn = _worley(p, offset, 0.2, 0.0, 0.2, 0.0, 1, 0.0, 1);
-    double height = fn.distance[0];
-    double other = fn.distance[1];
-    double diff = other-height;
-    if (diff < 0.3) {
-        feat = DNGN_FLOOR;
-    }
-    */
-    // Enchanted Forest
-    // TODO: Need to add some perlin distortion and/or jitter at the edges of range to make the shapes less orderly
-    /*
-    worley::noise_datum fn = _worley(p, offset, 0.16, 0.0, 0.16, 0.0, 1, 0.0, 1);
-    double height = fn.distance[0];
-    double other = fn.distance[1];
-    double diff = other-height;
-    worley::noise_datum fn2 = _worley(p, offset, 0.3, 100.0, 0.3, 123.0, 1, 321.0, 1);
-    double diff2 = fn2.distance[1] - fn2.distance[0];
-    if (diff < 0.1 || diff2 < 0.15) {
-        feat = DNGN_FLOOR;
-    }
-    */
+    dungeon_feature_type feat = DNGN_FLOOR;
 
-    worley::noise_datum fndx = _worley(p, offset, 0.2, 854.3, 0.2, 123.4, 1, 0.0, 1);
-    worley::noise_datum fndy = _worley(p, offset, 0.2, 123.2, 0.2, 3623.51, 1, 0.0, 1);
+    worley::noise_datum fndx = _worley(p, offset, 0.6, 854.3, 0.6, 123.4, 0.2, 0.0, 1);
+    worley::noise_datum fndy = _worley(p, offset, 0.6, 123.2, 0.6, 3623.51, 0.2, 0.0, 1);
 
-    double adjustedx = (fndx.distance[0]-fndx.distance[1]-0.5) * 4.0; //* 2.0;
-    double adjustedy = (fndy.distance[0]-fndy.distance[1]-0.5) * 4.0; // * 2.0;
+    double adjustedx = (fndx.distance[1]-fndx.distance[0]-0.5) * 2.0;
+    double adjustedy = (fndy.distance[1]-fndy.distance[0]-0.5) * 1.5;
 
-    worley::noise_datum fn = _worley(p, offset, 0.16, adjustedx, 0.16, adjustedy, 100, 0.0, 1);  // increased time delta to 100 to test clamp
-    // worley::noise_datum fn = _worley(p, offset, 0.16, 0, 0.16, 0, 1, 0.0, 1);
-    double height = fn.distance[0];
-    double other = fn.distance[1];
-    double diff = other-height;
-    //worley::noise_datum fn2 = _worley(p, offset, 0.3, 100.0, 0.3, 123.0, 1, 321.0, 1);
-    //double diff2 = fn2.distance[1] - fn2.distance[0];
-    if /*(height>0.9) { */(diff < 0.3) { // || diff2 < 0.15) {
-        feat = DNGN_FLOOR;
+    worley::noise_datum fn = _worley(p, offset, 0.16, adjustedx, 0.16, adjustedy, 0.5, 0.0, 1);
+
+    // Split the id into four 8-bit numbers to use for randomness
+    uint16_t rand[4] = { fn.id[0] >> 24, fn.id[0] >> 16 & 0x000000ff, fn.id[0] >> 8 & 0x000000ff, fn.id[0] & 0x000000ff };
+
+    double diff = fn.distance[1]-fn.distance[0];
+    // 50% chance of trees
+    if (rand[0]<0x80)
+    {
+        if (diff > 0.3)
+            feat = DNGN_TREE;
     }
-    //printf("1: %f, 2: %f\n, 3: %f, dx: %f, dy: %f", height,other,diff, adjustedx,adjustedy);
-    int delta = 50;
-    return ProceduralSample(p, feat, offset + 1);
+    // Small chance of henge
+    else if (rand[0]<0x90)
+    {
+        if (diff > 0.5 && diff < 0.6)
+            feat = DNGN_STONE_ARCH;
+    }
+    // Somewhat under 25% chance of pool
+    else if (rand[0]<0xC0)
+    {
+        if (diff > 0.8)
+            feat = DNGN_DEEP_WATER;
+        else if (diff > 0.4)
+            feat = DNGN_SHALLOW_WATER;
+    }
+    // 25% chance of empty cell
+    return ProceduralSample(p, feat, offset + 1); // Delta is always 1 because the layout will be clamped
 }
 
 ProceduralSample
