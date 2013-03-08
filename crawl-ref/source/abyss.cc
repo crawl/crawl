@@ -1058,7 +1058,6 @@ static void _update_abyss_terrain(const coord_def &p,
     {
         case DNGN_EXIT_ABYSS:
         case DNGN_ABYSSAL_STAIR:
-        case DNGN_STONE_ARCH:
             return;
         default:
             break;
@@ -1188,11 +1187,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         (level_id::current().depth < 5 &&
         _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
                                 DNGN_ABYSSAL_STAIR,
-                                abyss_genlevel_mask))
-        ||
-        _abyss_check_place_feat(p, 10000, NULL, NULL,
-                                DNGN_STONE_ARCH,
-                                abyss_genlevel_mask));
+                                abyss_genlevel_mask)));
     }
     if (ii)
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
