@@ -39,8 +39,8 @@ void remove_companion(monster* mons)
 
 void remove_all_companions(god_type god)
 {
-    for(map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end();)
+    for (map<mid_t, companion>::iterator i = companion_list.begin();
+         i != companion_list.end();)
     {
         monster* mons = monster_by_mid(i->first);
         if (!mons)

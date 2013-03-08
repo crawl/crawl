@@ -220,7 +220,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
 
 LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_layout) : seed(_seed), layout(_layout)
 {
-    if(!is_existing_level(id))
+    if (!is_existing_level(id))
     {
         for (rectangle_iterator ri(0); ri; ++ri)
             grid(*ri) = DNGN_UNSEEN;
@@ -280,9 +280,7 @@ ClampLayout::operator()(const coord_def &p, const uint32_t offset) const
     uint32_t cycle = offset / clamp;
     uint32_t order = hash3(p.x, p.y, 0xDEADBEEF + cycle);
     if (bursty)
-    {
         order &= hash3(p.x + 31, p.y - 37, 0x0DEFACED + cycle);
-    }
     order %= clamp;
     uint32_t clamp_offset = (offset + order) / clamp * clamp;
     ProceduralSample sample = layout(p, clamp_offset);
