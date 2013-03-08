@@ -45,6 +45,8 @@ function ice_cave_portal(e)
         floor = "expired_portal",
         feat_tile = "dngn_portal_ice_cave_gone",
         msg = messager })
+  e.tags("uniq_ice_cave chance_icecave")
+  e.chance("5%")
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
   e.tile("O = dngn_portal_ice_cave")
@@ -60,8 +62,8 @@ end
 {{
 -- Figure out if an easy or a hard ice cave should be used. Players
 -- that enter the portal deeper in the dungeon end up in the hard ones.
--- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4.
--- Hard ice caves are in D:14-19 and Elf:1-5. Those depths are
+-- Possible depths for easy ice caves are D:11-14, Lair, Orc.
+-- Hard ice caves are in D:14-19, Elf, and Vaults. Those depths are
 -- set in the entry vault default-depth.
 function ice_cave_difficulty()
 
@@ -69,13 +71,12 @@ function ice_cave_difficulty()
   local hard = false
 
   -- Handle overlapping depths for easy and hard maps with a coinflip.
-  if you.branch() == "D" and you.depth() == 14 or
-     you.branch() == "Elf" and you.depth() < 3 then
+  if you.branch() == "D" and you.depth() == 14 then
       hard = crawl.coinflip()
   end
 
   if you.branch() == "D" and you.depth() >= 15 or
-     you.branch() == "Elf" then
+     you.branch() == "Elf" or you.branch() == "Vaults" then
       hard = true
   end
 
@@ -227,11 +228,9 @@ end
 
 # Entries ##########################################
 
-default-depth: D:11-19, Lair:1-8, Orc:1-4, Elf:1-5
+default-depth: D:11-19, Lair, Orc, Elf, Vaults:1-4
 
 NAME:   portal_ice_cave_entry_pillars_01
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
 WEIGHT: 4
 : ice_cave_portal(_G)
 MAP
@@ -245,8 +244,6 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_pillars_02
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
 WEIGHT: 4
 : ice_cave_portal(_G)
 MAP
@@ -260,8 +257,6 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_pillars_03
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
 WEIGHT: 2
 : ice_cave_portal(_G)
 MAP
@@ -277,9 +272,8 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_imps
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
-DEPTH:  D:11-14, Lair:1-7, Orc:1-4, Elf:1-2
+TAGS:   patrolling no_monster_gen
+DEPTH:  D:11-14, Lair:1-6, Orc
 : ice_cave_portal(_G)
 MONS:   white imp
 MAP
@@ -291,9 +285,8 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_beasts
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
-DEPTH:  D:11-14, Lair:1-7, Orc:1-4, Elf:1-2
+TAGS:   patrolling no_monster_gen
+DEPTH:  D:11-14, Lair:1-6, Orc
 : ice_cave_portal(_G)
 MONS:   ice beast
 MAP
@@ -305,9 +298,8 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_animals_and_master
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
-DEPTH:  D:14-19, Lair:4-8, Orc:3-4
+TAGS:   patrolling no_monster_gen
+DEPTH:  D:14-19, Lair:6-8, Orc:4, Elf
 : ice_cave_portal(_G)
 MONS:   wolf / yak w:5 / nothing w:1
 MONS:   yak / polar bear w:5 / nothing w:1
@@ -331,9 +323,8 @@ xXX@XXxx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
-DEPTH:  D:14-19, Elf:3-5
+TAGS:   patrolling no_monster_gen
+DEPTH:  D:14-19, Elf
 : ice_cave_portal(_G)
 MONS:   ice beast / freezing wraith w:2 / nothing w:2
 MONS:   freezing wraith / nothing w:3
@@ -351,49 +342,46 @@ xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   portal_ice_cave_demonic_guard
-TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
-CHANCE: 5%
-DEPTH:  D:14-19, Elf:3-5
+TAGS:   patrolling no_monster_gen
+DEPTH:  D:14-19, Elf
 : ice_cave_portal(_G)
 MONS:   ice devil
 MAP
-XXXXXXX
-X..O..X
-X.....X
-X.1.1.X
-X.....X
-XXX.XXX
-XXX.XXX
-XXX.XXX
-XXX.XXX
-XXX+XXX
+xxxxxxxxx
+xXXXXXXXx
+xX..O..Xx
+xX.....Xx
+xX.1.1.Xx
+xX.....Xx
+xXXX.XXXx
+xXXX.XXXx
+xXXX.XXXx
+xXXX.XXXx
+xxxx+xxxx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_01
-TAGS:   uniq_ice_cave chance_icecave
-CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:11-19, Elf:1-5
+DEPTH:  D:11-19, Elf
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
-XXXXXXX
-X.....X
-X..O..X
-X.....X
-X..1..X
-X.....X
-X.....X
-XXX+XXX
+xxxxxxxxx
+xXXXXXXXx
+xX.....Xx
+xX..O..Xx
+xX.....Xx
+xX..1..Xx
+xX.....Xx
+xX.....Xx
+xXXX+XXXx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_02
-TAGS:   uniq_ice_cave chance_icecave
-CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:14-19, Elf:3-5
+DEPTH:  D:14-19, Elf:2-, Vaults:1-4
 : ice_cave_portal(_G)
-MONS:   ice statue
+MONS:   ice statue, ice statue w:9 / patrolling ice dragon w:1
 MAP
    .....
  .........
@@ -406,90 +394,69 @@ MAP
    .....
 ENDMAP
 
-# Vaults Entries #################################
-#  - these are placed by tag, not be CHANCE:
-
-default-depth:
-
-NAME:     vaults_room_1_spin_icecave_default
-TAGS:     vaults_room_1_spin_icecave allow_dup uniq_ice_cave unrand
-TAGS:     no_monster_gen no_item_gen
+NAME:   portal_ice_cave_entry_dragon
+TAGS:   no_monster_gen
+WEIGHT: 4
+DEPTH:  D:14-19, Elf
+MONS:   ice dragon
 : ice_cave_portal(_G)
 MAP
-O
+xxxxxxxx
+xXXXXXxx
+xXO..XXx
+xX.1X.Xx
+xX.X..X@
+xXX..X..
+xxXXX...
+xxxx@...
 ENDMAP
 
-NAME:     vaults_room_4_spin_icecave_dragon
-TAGS:     vaults_room_4_spin_icecave allow_dup uniq_ice_cave unrand
-TAGS:     no_monster_gen no_item_gen
-MONS:     ice dragon
+NAME:   portal_ice_cave_entry_frozen_things
+TAGS:   no_monster_gen
+WEIGHT: 4
+DEPTH:  D:14-19, Elf:2-, Vaults:1-4
+MONS:   freezing wraith
+MONS:   azure jelly / freezing wraith / nothing
 : ice_cave_portal(_G)
 MAP
-O..X
-..X.
-.X..
-X..1
+  '''''
+ ''XXX''
+''XXOXX''
+'XX.2.XX'
+'X.....X'
+'X.1.1.X'
+'XXX.XXX'
+'XXX.XXX'
+'XXX+XXX'
+'''''''''
 ENDMAP
 
-NAME:     vaults_room_7_spin_icecave_devil_box
-TAGS:     vaults_room_7_spin_icecave allow_dup uniq_ice_cave unrand
+NAME:     portal_ice_cave_entry_ugly_swarm
 TAGS:     no_monster_gen no_item_gen
-MONS:     ice devil
-: ice_cave_portal(_G)
-MAP
-_______
-_XXXXX_
-_X.1.X_
-_XO..+_
-_X.1.X_
-_XXXXX_
-_______
-ENDMAP
-
-NAME:     vaults_room_10_spin_icecave_wraiths
-TAGS:     vaults_room_10_spin_icecave allow_dup uniq_ice_cave unrand
-TAGS:     no_monster_gen no_item_gen
-MONS:     freezing wraith
-MONS:     azure jelly / freezing wraith / nothing
-: ice_cave_portal(_G)
-MAP
-xx______xx
-x__XXX___x
-__XXOXX___
-_XX.2.XX__
-_X.....X__
-_X.1.1.X__
-_XXX.XXX__
-_XXX.XXX__
-_XXX+XXX__
-__________
-ENDMAP
-
-NAME:     vaults_room_15_spin_icecave_ugly_swarm
-TAGS:     vaults_room_15_spin_icecave allow_dup uniq_ice_cave
-TAGS:     no_monster_gen no_item_gen unrand
+DEPTH:    D:14-19, Elf, Vaults:1-4
+WEIGHT:   2
 SUBST:    : = 1.
-NSUBST:   2 = 1:2 / 1:12 / *:1
-NSUBST:   1 = 8:1 / *:.
+NSUBST:   2 = 1:2 / 1:12 / * = 1.
+NSUBST:   1 = 7:1 / 1:1. / *:.
 MONS:     white ugly thing
 MONS:     white very ugly thing
 : ice_cave_portal(_G)
 MAP
-_______________
-_______________
-_____....._____
-____.......____
-___...:::...___
-__...:111:...__
-__..:12221:..__
-__..:12O21:..__
-__..:12221:..__
-__...:111:...__
-___...:::...___
-____.......____
-_____....._____
-_______________
-_______________
+    '''''''
+   '''''''''
+  '''.....'''
+ '''..:.:..'''
+'''.:..:..:.'''
+''....111....''
+''.:.12221.:.''
+''..:12O21:..''
+''.:.12221.:.''
+''....111....''
+'''.:..:..:.'''
+ '''..:.:..'''
+  '''.....'''
+   '''''''''
+    '''''''
 ENDMAP
 
 # The destination vaults ############

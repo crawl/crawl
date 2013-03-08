@@ -57,7 +57,7 @@ function callback.ziggurat_initialiser(portal)
 end
 
 -- Common setup for ziggurat entry vaults.
-function ziggurat_portal(e, portal_only)
+function ziggurat_portal(e, spawnrange)
   local d = crawl.roll_dice
   local entry_fee =
     10 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
@@ -76,11 +76,18 @@ function ziggurat_portal(e, portal_only)
       onclimb = "callback.ziggurat_initialiser"
     }
   end
-
-  if portal_only ~= nil then
-    return stair()
+  
+  if spawnrange == "shallow" then
+    e.tags("chance_shallow_zig extra")
+    e.chance("1%")
+  elseif spawnrange == "deep" then
+    e.tags("chance_zig extra allow_dup luniq_zig")
+    e.chance("5%")
+  elseif spawnrange == "pan" then
+    e.tags("chance_pan_zig extra allow_dup")
+    e.chance("8%")
   end
-
+  
   e.lua_marker("O", stair)
   e.kfeat("O = enter_portal_vault")
   e.tile("O = dngn_portal_ziggurat")

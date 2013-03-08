@@ -166,10 +166,14 @@ function trove.portal(e)
             feat_tile = "dngn_portal_trove_gone",
         }
     end
+    e.tags("uniq_trove no_monster_gen chance_trove")
+    e.chance("5%")
     e.lua_marker("O", stair)
     e.kfeat("O = enter_portal_vault")
-    e.colour("O = blue")
+    e.colour(".O = blue")
+    e.ftile(".OcG+ = floor_marble")
     e.tile("O = dngn_portal_trove")
+    e.tile("c = wall_stone_dark")
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -225,7 +229,7 @@ function trove.spell_skills (e)
 end
 }}
 
-default-depth: D:10-, Elf:1-, Vaults
+default-depth: D:10-, Elf, Vaults
 
 ##############################################################################
 #
@@ -234,18 +238,13 @@ default-depth: D:10-, Elf:1-, Vaults
 ##############################################################################
 
 NAME:   enter_trove_0
-TAGS:   uniq_trove no_monster_gen chance_trove
-CHANCE: 5%
 : trove.portal(_G)
 MAP
 O
 ENDMAP
 
 NAME:   enter_trove_1
-TAGS:   uniq_trove no_monster_gen chance_trove
-CHANCE: 5%
 : trove.portal(_G)
-COLOUR: . = blue
 MAP
 ...
 .O.
@@ -253,11 +252,7 @@ MAP
 ENDMAP
 
 NAME:   enter_trove_2
-TAGS:   uniq_trove no_monster_gen chance_trove
-CHANCE: 5%
 : trove.portal(_G)
-COLOUR: . = blue
-COLOUR: G = blue
 MAP
  @G@
 @G.G@
@@ -271,7 +266,6 @@ TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: .c = blue
-TILE:   c = wall_stone_dark
 FTILE:  .cO = floor_marble
 MAP
 ccccc
@@ -283,11 +277,7 @@ ENDMAP
 
 # Of course, not everyone is willing for you to take their treasure...
 NAME:   enter_trove_5
-TAGS:   uniq_trove no_monster_gen chance_trove
-CHANCE: 5%
 : trove.portal(_G)
-COLOUR: . = blue
-COLOUR: c = blue
 : if you.absdepth() <= 15 then
 # Got drafted in from Vaults:$, while the mages try and close the portal down.
 KMONS:  e = vault guard
@@ -296,10 +286,6 @@ KMONS:  e = vault guard
 KMONS:  e = vault guard
 KMONS:  l = vault guard
 : end
-KFEAT:  e = .
-COLOUR: e = blue
-KFEAT:  l = .
-COLOUR: l = blue
 MAP
 ccccc
 c...c
@@ -315,12 +301,10 @@ ENDMAP
 
 # Someone left some gold behind for you!
 NAME:   enter_trove_6
-TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
-CHANCE: 5%
 : trove.portal(_G)
+KFEAT:  X = +
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = +
-COLOUR: + = blue
+COLOUR: $X = blue
 MAP
 ccccccc
 c$$$$$c
@@ -591,7 +575,7 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot: once again, 16 items.
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -616,7 +600,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -635,7 +619,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie
@@ -672,7 +656,7 @@ COLOUR: = = blue
 NSUBST: " = 1:+ / *:x
 NSUBST: ' = 1:+ / *:x
 # Rock is actually diggable for those people driven mad by hatred.
-MONS:   vampire
+MONS:   deep elf summoner
 # 24 items, just because we're feeling generous.
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
@@ -798,7 +782,7 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          great sword unrand:sword_of_power / demon blade unrand:bloodbane    /\
          scimitar unrand:scimitar_of_flaming_death / war axe unrand:arga     /\
          dagger unrand:knife_of_accuracy / broad axe unrand:obsidian_axe     /\
-         triple sword unrand:plutonium_sword /\
+         triple sword unrand:plutonium_sword                                 /\
          demon blade unrand:leech / long sword unrand:sword_of_zonguldrok    /\
          staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
          quarterstaff unrand:elemental_staff / mace unrand:devastator        /\
@@ -868,7 +852,7 @@ ITEM:    acquire armour / any useful armour good_item / any armour w:2
 ITEM:    acquire weapon / any useful weapon good_item / any weapon w:2
 ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.good_scroll(_G)
-ITEM:   wand of digging ident:type
+ITEM:   wand of digging
 SHUFFLE: defg
 : trove.setup_features(_G)
 MAP
@@ -899,7 +883,7 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)

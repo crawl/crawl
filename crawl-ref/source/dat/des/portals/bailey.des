@@ -12,7 +12,7 @@
 ##############################################################################
 
 {{
-function bailey_portal(e, ptype)
+function bailey_portal(e, ptype, trowel)
   local timeout_turns_long = crawl.random_range(2700, 3300)
   local timeout_turns_short = timeout_turns_long/10;
 
@@ -43,18 +43,23 @@ function bailey_portal(e, ptype)
         floor = "stone_arch",
         feat_tile = "dngn_portal_bailey_gone",
         msg = messager })
+  if not trowel then
+    e.tags("uniq_bailey chance_bailey")
+    e.chance("5%")
+  end
+  
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightred")
   e.tile("O = dngn_portal_bailey")
   e.tile("c = wall_stone_brick")
 end
 
-function bailey_portal_axe(e)
-  bailey_portal(e, 'axe')
+function bailey_portal_axe(e, trowel)
+  bailey_portal(e, 'axe', trowel)
 end
 
 function bailey_portal_polearm(e)
-  bailey_portal(e, 'polearm')
+  bailey_portal(e, 'polearm', trowel)
 end
 
 -- colours
@@ -144,22 +149,8 @@ end
 
 }}
 
-
 # Basic bailey entries ##########################################
 default-depth: D:7-16, Orc
-
-NAME:   bailey_entry_dummy
-TAGS:   bailey_entry transparent chance_bailey
-CHANCE: 5%
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-:   bailey_portal_polearm(_G)
-: end
-MAP
-O
-ENDMAP
 
 NAME:   bailey_entry_trowel
 TAGS:   transparent trowel_portal unrand can_overwrite
@@ -167,17 +158,16 @@ DEPTH:  *, !Bailey
 veto {{ return you.is_level_on_stack("Bailey") }}
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-:   bailey_portal_axe(_G)
+:   bailey_portal_axe(_G, true)
 : elseif rnd == 1 then
-:   bailey_portal_polearm(_G)
+:   bailey_portal_polearm(_G, true)
 : end
 MAP
 O
 ENDMAP
 
-NAME:   enter_bailey_1
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
+NAME: enter_bailey_1
+TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -190,8 +180,6 @@ O
 ENDMAP
 
 NAME: enter_bailey_2
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 ITEM: hand axe
@@ -209,8 +197,6 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_3
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe
@@ -232,8 +218,6 @@ MAP
 ENDMAP
 
 NAME:   enter_bailey_4
-TAGS:   uniq_bailey chance_bailey
-CHANCE: 5%
 WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -261,8 +245,6 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_5
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe ego:returning
@@ -285,8 +267,6 @@ NAME:   enter_bailey_6
 WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
-TAGS:   uniq_bailey no_rotate chance_bailey
-CHANCE: 5%
 KMASK:  d = no_item_gen
 KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
@@ -315,8 +295,6 @@ ENDMAP
 
 # They were just having a party.
 NAME:   enter_bailey_7
-TAGS:   uniq_bailey no_rotate chance_bailey
-CHANCE: 5%
 WEIGHT: 3
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -328,7 +306,7 @@ MONS:   gnoll ; spear / goblin ; spear
 : end
 SUBST:  . = ...;!
 COLOUR: ; = red
-KITEM:  ! = potion of confusion w:2
+KITEM:  ! = potion of confusion w:2 ident:type
 KFEAT:  ! = floor
 SUBST:  ; = .
 MAP
@@ -342,8 +320,6 @@ x@x  xxxxxxx
 ENDMAP
 
 NAME:   enter_bailey_8
-TAGS:   uniq_bailey no_rotate chance_bailey
-CHANCE: 5%
 WEIGHT: 3
 COLOUR: n = red
 KMASK:  d = no_item_gen
