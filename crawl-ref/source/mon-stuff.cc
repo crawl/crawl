@@ -2266,7 +2266,6 @@ int monster_die(monster* mons, killer_type killer,
             break;
 
         case KILL_BANISHED:
-        case KILL_RESET:
             // Monster doesn't die, just goes back to wherever it came from.
             // This must only be called by monsters running out of time (or
             // abjuration), because it uses the beam variables!  Or does it???
@@ -2298,6 +2297,10 @@ int monster_die(monster* mons, killer_type killer,
             mons->patrol_point.reset();
             mons->travel_path.clear();
             mons->travel_target = MTRAV_NONE;
+            break;
+
+        case KILL_RESET:
+            drop_items = false;
             break;
 
         case KILL_TIMEOUT:
