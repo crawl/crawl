@@ -35,7 +35,7 @@ enum status_type
     STATUS_MISSILES,
     STATUS_NO_CTELE,
     STATUS_RECALL,
-    STATUS_LAST_STATUS = STATUS_NO_CTELE
+    STATUS_LAST_STATUS = STATUS_RECALL
 };
 
 struct status_info
