@@ -116,6 +116,7 @@ function wizlab_portal (e)
     e.kfeat("O = enter_portal_vault")
     e.tile("O = no_random dngn_portal_wizard_lab")
     e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
+    e.chance("5%")
 end
 
 -- Destinations:
@@ -408,14 +409,13 @@ end
 
 }}
 
-default-depth: Crypt, D:22-27, Elf:3-5
+default-depth: D:22-27, Elf, Crypt, Vaults:1-4
 
 ###############################################################################
 # Portal entrances.
 #
 # Todo: more, and better.
 NAME:       mu_enter_wizlab_1
-ORIENT:     float
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
 :           wizlab_portal(_G)
@@ -432,7 +432,7 @@ wwbm..O..mbww
 ENDMAP
 
 NAME:       mu_enter_wizlab_2
-ORIENT:     float
+DEPTH:      D:22-27, Elf, Crypt, Vaults:1-4
 SHUFFLE:    tU
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
@@ -456,7 +456,6 @@ MAP
 ENDMAP
 
 NAME:       mu_enter_wizlab_3
-ORIENT:     float
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 5, \
@@ -510,7 +509,6 @@ w..www
 ENDMAP
 
 NAME:       mu_enter_wizlab_5
-ORIENT:     float
 COLOUR:     U = random
 COLOUR:     W = mutagenic
 KFEAT:      o = granite_statue
@@ -582,6 +580,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_glasses
+DEPTH:    D:22-27, Elf, Crypt, Vaults:1-4
 FTILE:    GO_ = floor_rough_magenta
 TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
@@ -599,6 +598,7 @@ MAP
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_water
+DEPTH:    D:22-27, Elf, Crypt, Vaults:1-4
 FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
@@ -619,6 +619,7 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
+DEPTH:    D:22-27, Elf, Crypt, Vaults:1-4
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \
@@ -1916,11 +1917,11 @@ MARKER:     f = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "flame", \
                 excl_rad = -1 }
 KMONS:      2 = w:1 Lorocyproca / hell beast / reaper /\
-            w:20 ice devil / w:20 sun demon / hellion
-KMONS:      3 = blue devil / iron devil / soul eater / neqoxec /\
+            w:20 blizzard demon / w:20 sun demon / hellion
+KMONS:      3 = ice devil / iron devil / soul eater / neqoxec /\
             w:5 tormentor / ynoxinul
 KMONS:      4 = kobold demonologist / deep elf demonologist
-KMONS:      5 = blizzard demon / green death / cacodemon
+KMONS:      5 = balrug / green death / cacodemon
 {{
 wizname = crawl.make_name()
 
@@ -2010,6 +2011,11 @@ ENDMAP
 #
 # See git history for previous versions of Ozocubu, Alistair.
 #
+# March 2013 note: there isn't the greatest of interest in making
+# the majority of these potential portals, as nice as that would be, 
+# and the portal is effectively "finished".
+# More effort should be put into editing above vaults anyway.
+#
 # PLANNING AREA:
 #
 # From spells:
@@ -2042,153 +2048,6 @@ ENDMAP
 #    wooden walls set in a forest (more "earthy" than Eringya's Garden)
 # The Alchemist's Tower: gold turned into things, things turned into gold.
 #
-
-###############################################################################
-# Alistair's Brewery
+# Other mages that could use representation, not yet expounded upon:
+# Borgnjor, Leda, Doom Knight, Octopus King, The Captain, Zhor.
 #
-# TODO: Do.
-NAME:       wizlab_alistair
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Alistair's Brewery")
-epilogue{{
-            wizlab_milestone(_G, "Alistair's Brewery")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Lee's Rapid Deconstructor
-#
-# TODO: Do.
-NAME:       wizlab_lee
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Lee's Rapid Deconstructor")
-epilogue{{
-            wizlab_milestone(_G, "Lee's Rapid Deconstructor")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Lehudib's Crystal Spire
-#
-# TODO: Do.
-NAME:       wizlab_lehudib
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Lehudib's Crystal Spire")
-epilogue{{
-            wizlab_milestone(_G, "Lehudib's Crystal Spire")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Maxwell's Forge
-#
-# TODO: Do.
-NAME:       wizlab_maxwell
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Maxwell's Forge")
-epilogue{{
-            wizlab_milestone(_G, "Maxwell's Forge")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Olgreb's Toxic Laboratory
-#
-# TODO: Do.
-NAME:       wizlab_olgreb
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
-epilogue{{
-            wizlab_milestone(_G, "Olgreb's Toxic Laboratory")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Ozocubu's Refrigerator
-#
-# TODO: Do.
-NAME:       wizlab_ozocubu
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Ozocubu's Refrigerator")
-epilogue{{
-            wizlab_milestone(_G, "Ozocubu's Refrigerator")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Cekugob's Oubliette
-#
-# TODO: Do.
-NAME:       wizlab_cekugob
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Cekugob's Oubliette")
-epilogue{{
-            wizlab_milestone(_G, "Cekugob's Oubliette")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Botono's Bayou
-#
-# TODO: Do.
-NAME:       wizlab_botono
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Botono's Bayou")
-epilogue{{
-            wizlab_milestone(_G, "Botono's Bayou")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# Ukta's Hut
-#
-# TODO: Do.
-NAME:       wizlab_ukta
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "Ukta's Hut")
-epilogue{{
-            wizlab_milestone(_G, "Ukta's Hut")
-}}
-MAP
-ENDMAP
-
-###############################################################################
-# The Alchemist's Tower
-#
-# TODO: Do.
-NAME:       wizlab_alchemist
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-WEIGHT:     0
-:           wizlab_setup(_G, "The Alchemist's Tower")
-epilogue{{
-            wizlab_milestone(_G, "The Alchemist's Tower")
-}}
-MAP
-ENDMAP

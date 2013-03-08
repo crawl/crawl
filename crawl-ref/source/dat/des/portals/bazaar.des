@@ -15,7 +15,10 @@
 
 lua {{
 
-function place_bazaar_portal(e, perm)
+function place_bazaar_portal(e, perm, trowel)
+  if not trowel then
+    e.tags("bzr_entry")
+  end
   e.kfeat("O = enter_portal_vault")
   if perm then
      e.lua_marker('O', bazaar_portal(false))
@@ -90,13 +93,15 @@ dgn.set_branch_epilogue("Bazaar", "fixup_bazaar")
 
 }}
 
-default-depth: 10-27
+default-depth: D:11-27, Orc:4, Elf, Snake, Shoals, Vaults:1-4
 
 ###############################################################################
-# Dummy entry
+# Entries.
+# The chance for a bazaar entry is branch and absdepth dependent,
+# and resides in des/builder/shops.des.
 
 NAME:   bzr_entry_dummy
-TAGS:   bzr_entry transparent zotdef_bazaar allow_dup
+TAGS:   transparent zotdef_bazaar allow_dup
 veto {{ return you.is_level_on_stack("Bazaar") }}
 : place_bazaar_portal(_G)
 MAP
@@ -107,15 +112,14 @@ NAME:   bzr_entry_trowel
 TAGS:   transparent trowel_portal unrand can_overwrite
 DEPTH:  *, !Bazaar
 veto {{ return you.is_level_on_stack("Bazaar") }}
-: place_bazaar_portal(_G)
+: place_bazaar_portal(_G, false, true)
 MAP
 O
 ENDMAP
 
-###############################################################################
 # A simple water entry.
-NAME:    bzr_entry_001
-TAGS:    bzr_entry no_pool_fixup allow_dup
+NAME:    bzr_entry_water
+TAGS:    no_pool_fixup
 SHUFFLE: wwl
 : place_bazaar_portal(_G)
 MAP
@@ -126,10 +130,8 @@ w.w.w
  www
 ENDMAP
 
-###############################################################################
 # Some coins to shop with.
-NAME:   bzr_entry_002
-TAGS:   bzr_entry allow_dup
+NAME:   bzr_entry_gold
 SUBST:  $=$.
 : place_bazaar_portal(_G)
 MAP
@@ -140,10 +142,8 @@ x$$$x
 xx.xx
 ENDMAP
 
-###############################################################################
 # Many customers
-NAME:    bzr_entry_003
-TAGS:    bzr_entry allow_dup
+NAME:    bzr_entry_customers
 MONS:    human, orc, goblin, kobold
 SUBST:   . = .:150 1
 SHUFFLE: 1234
@@ -156,10 +156,8 @@ MAP
  .....
 ENDMAP
 
-###############################################################################
 # Safe
-NAME:   bzr_entry_004
-TAGS:   bzr_entry allow_dup
+NAME:   bzr_entry_safe
 : place_bazaar_portal(_G)
 MAP
  xxxxx
@@ -169,10 +167,8 @@ xx...xx
  xxxxx
 ENDMAP
 
-###############################################################################
 # Safe 2
-NAME:    bzr_entry_005
-TAGS:    bzr_entry allow_dup
+NAME:    bzr_entry_islet
 SHUFFLE: wwlW
 : place_bazaar_portal(_G)
 MAP
@@ -183,11 +179,8 @@ wwwwwww
  wwwww
 ENDMAP
 
-###############################################################################
 # Portal along the road
-NAME:    bzr_entry_006
-TAGS:    bzr_entry allow_dup
-ORIENT:  float
+NAME:    bzr_entry_road
 SHUFFLE: XU, TUV
 SUBST:   X=.
 : place_bazaar_portal(_G)
@@ -195,14 +188,13 @@ MAP
    xxx
   xxOxx
 xxx.X.xxx
-.U.....U.
+@U.....U@
 xxxxxxxxx
 ENDMAP
 
-#########################################
 # Portal by the lakeside (jpeg)
-NAME:    bzr_entry_007
-TAGS:    bzr_entry allow_dup no_rotate
+NAME:    bzr_entry_lakeside
+TAGS:    no_rotate
 MONS:    plant
 SHUFFLE: XY
 SUBST:   a = W .
@@ -217,10 +209,8 @@ wwwwwwaaaX.Y.
    wwwwwWa.
 ENDMAP
 
-#########################################
 # Bazaar entry with statue (Lemuel)
 NAME:   statue_bzr
-TAGS:   bzr_entry
 KPROP:  O = no_rtele_into
 SUBST:  G = G111
 MONS:   orange crystal statue / silver statue / ice statue
@@ -232,10 +222,8 @@ cOc
 ccc
 ENDMAP
 
-#########################################
 # Freezing bazaar (Lemuel)
 NAME:   freezing_bzr
-TAGS:   bzr_entry
 MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 5, delay_min = 20, delay_max = 30, \
              size = 2, walk_dist = 3, spread_rate= 20 }
@@ -248,10 +236,8 @@ WwOwW
   W
 ENDMAP
 
-#########################################
 # Bazaar in the mist (Lemuel)
 NAME:   bzr_in_the_mist
-TAGS:   bzr_entry
 MARKER: O = lua:fog_machine { cloud_type= "thin mist", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
@@ -260,10 +246,9 @@ MAP
 O
 ENDMAP
 
-#########################################
 # Firewalk (Lemuel)
 NAME:    bzr_firewalk
-TAGS:    bzr_entry uniq_firewalk no_item_gen
+TAGS:    uniq_firewalk no_item_gen
 SUBST:   $ : $ .
 MARKER:  * = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay_min = 5, delay_max = 10, \

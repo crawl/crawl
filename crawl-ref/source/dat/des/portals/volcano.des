@@ -72,10 +72,12 @@ function volcano_portal (e)
         floor = "expired_portal",
         feat_tile = "dngn_portal_volcano_gone",
         msg = messager })
+    e.tags("uniq_volcano chance_volcano")
+    e.chance("5%")
     e.kfeat("O = enter_portal_vault")
     e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
-    e.colour("O = red")
+    e.colour("XOS = red")
     e.rtile("X = wall_volcanic")
     e.ftile("OS = floor_rough_red")
 end
@@ -470,11 +472,6 @@ MAP
 ENDMAP
 
 NAME:       enter_volcano_1
-TAGS:       uniq_volcano chance_volcano
-CHANCE:     5%
-ORIENT:     float
-COLOUR:     X = red
-COLOUR:     S = red
 :           volcano_portal(_G)
 MAP
  xx
@@ -487,11 +484,6 @@ xXXx.xx
 ENDMAP
 
 NAME:       enter_volcano_2
-TAGS:       uniq_volcano chance_volcano
-CHANCE:     5%
-ORIENT:     float
-COLOUR:     X = red
-COLOUR:     S = red
 :           volcano_portal(_G)
 MAP
 xxxxx
@@ -504,13 +496,8 @@ xx.Sxx
 ENDMAP
 
 NAME:       enter_volcano_3
-TAGS:       uniq_volcano chance_volcano
-CHANCE:     5%
-ORIENT:     float
 MONS:       patrolling fire drake
 #           His name is Robby.
-COLOUR:     X = red
-COLOUR:     S = red
 :           volcano_portal(_G)
 MAP
   xxxxx
@@ -526,12 +513,7 @@ ENDMAP
 
 # This is the "large" one. You might get a clear path, but then again...
 NAME:       enter_volcano_4
-TAGS:       uniq_volcano chance_volcano
 KPROP:      .SLO = no_rtele_into
-CHANCE:     5%
-ORIENT:     float
-COLOUR:     X = red
-COLOUR:     S = red
 NSUBST:     L = 8:. / *:l
 :           volcano_portal(_G)
 MAP
@@ -550,6 +532,7 @@ xxxSxxx
   xxLlLxx
    x.@.x
 ENDMAP
+
 ###############################################################################
 
 default-depth: Volcano

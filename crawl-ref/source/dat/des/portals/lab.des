@@ -42,8 +42,11 @@ TAGS:   transparent extra uniq_lab
 # Labyrinth was (1-285/10^4)^24 = ~49%. Increasing chance to 5% gives you
 # (1-500/10^4)^24 = ~29% chance of NOT placing a Labyrinth, ~71% chance
 # of getting a Labyrinth every game, skewed towards earlier depths.
-CHANCE: 500
-DEPTH:  D:11-21, Elf, Dwarf, Lair, Vaults:1-5
+# (Mar 2013) A long while later, there is general agreement that something
+# should be changed about labyrinths to address percieved tedium.
+# For now, trimming spawning depths to keep the minotaur more dangerous.
+CHANCE: 5%
+DEPTH:  D:11-18, Orc:4, Dwarf, Lair
 : lab_portal(_G)
 MAP
 O

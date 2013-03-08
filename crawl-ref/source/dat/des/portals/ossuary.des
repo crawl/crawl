@@ -40,9 +40,14 @@ function ossuary_portal(e)
         floor = "expired_portal",
         feat_tile = "dngn_portal_ossuary_gone",
         msg = messager })
+  e.tags("uniq_ossuary no_monster_gen chance_ossuary")
+  e.chance("5%")
   e.kfeat("O = enter_portal_vault")
   e.colour("O = brown")
+  e.colour("' = yellow")
+  e.ftile("' = floor_sandstone")
   e.tile("O = dngn_portal_ossuary")
+  e.tile("c = wall_tomb")
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -58,12 +63,7 @@ end
 default-depth: D:4-8
 
 NAME:   enter_ossuary_1
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
 SUBST:  . = . ':7
-COLOUR: ' = yellow
-FTILE:  ' = floor_sandstone
-SUBST:  ' = .
 : ossuary_portal(_G)
 MAP
 .....
@@ -74,20 +74,12 @@ MAP
 ENDMAP
 
 NAME:    enter_ossuary_2
-TAGS:    uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
-SHUFFLE: CD / c+
-COLOUR:  ' = yellow
-COLOUR:  C = yellow
-COLOUR:  D = yellow
-SUBST:   D = +
+SHUFFLE: C+
 SUBST:   C = c
-FTILE:   ' = floor_sandstone
-SUBST:   ' = .
 : ossuary_portal(_G)
 MAP
 .......
-.ccDcc.
+.cc+cc.
 .c'''c.
 .C'O'C.
 .c'''c.
@@ -96,12 +88,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_3
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
-SUBST:  . = Y .
-COLOUR: Y = yellow
-FTILE:  Y = floor_sandstone
-SUBST:  Y = .
+SUBST:  . = ' .
 MONS:   rat zombie / jackal zombie / worm zombie
 MONS:   kobold zombie / goblin zombie / hobgoblin zombie
 MONS:   orc zombie / gnoll zombie / human zombie
@@ -114,31 +101,23 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_4
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
-COLOUR: 1 = yellow, ' = yellow, x = white
+COLOUR: 1 = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
-FTILE:  1 = floor_sandstone, ' = floor_sandstone, x = floor_sandstone, O = floor_sandstone
-RTILE:  x = wall_tomb
+FTILE:  1 = floor_sandstone, x = floor_sandstone, O = floor_sandstone
 : ossuary_portal(_G)
 MAP
 .........
-.xxxxxxx.
-.x''O''x.
-.x'''''x.
-.x'x'x'x.
-.x1x'x1x.
-.xxx'xxx.
+.ccccccc.
+.c''O''c.
+.c'''''c.
+.c'c'c'c.
+.c1c'c1c.
+.ccc'ccc.
 ....'....
 ENDMAP
 
 NAME:   enter_ossuary_5
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
 COLOUR: c = white, + = white, ' = yellow
-RTILE:  c = wall_tomb
-FTILE:  ' = floor_sandstone
-SUBST:  c : cx
 : ossuary_portal(_G)
 MAP
    ...
@@ -153,12 +132,8 @@ MAP
 ENDMAP
 
 NAME:   gup_ossuary_entry_pyramid
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary mini_float
-CHANCE: 5%
+TAGS:   mini_float
 KMONS:  O = mummy
-COLOUR: ' = yellow
-TILE:   c = dngn_stone_wall_yellow
-FTILE:  ' = floor_sandstone
 NSUBST: ' = 3:~ / *:'
 : ossuary_portal(_G)
 MAP
@@ -923,7 +898,7 @@ ENDMAP
 # loot, and escape out before waking anyone up. Whereas someone with 0 stealth
 # skill will wake up the mummies immediately.
 #
-# XXX: Should be looked at when noise/stealth is redone.
+# XXX: Should be looked at with messy runed door use, stealth changes.
 #
 NAME:    ossuary_due_cavern
 WEIGHT:  10

@@ -14,7 +14,6 @@
 # among D:21-27  -- 5%
 # in a Pan level -- 8%
 
-
 # Dummy for the trowel card
 NAME:   enter_the_ziggurat
 TAGS:   trowel_portal unrand can_overwrite
@@ -36,14 +35,12 @@ ENDMAP
 default-depth: D:21-27
 
 NAME:   enter_ziggurat_a
-CHANCE: 5%
-TAGS:   chance_zig extra allow_dup luniq_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
 SUBST:  ' = .
 SUBST:  ; = .
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "deep")
 MAP
 .......
 .;;;;;.
@@ -55,15 +52,14 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-CHANCE:  5%
-TAGS:    chance_zig extra allow_dup luniq_zig no_pool_fixup
+TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
 COLOUR:  ' = cyan
 FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
 SUBST:   '=. , ;=. , _=.
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "deep")
 MAP
    ..'..
   ..'W'..
@@ -77,8 +73,6 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
-CHANCE:  5%
-TAGS:    chance_zig extra allow_dup luniq_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -87,7 +81,7 @@ KPROP:   1Om = no_rtele_into
 SHUFFLE: 123x
 SUBST:   1=1..., 2=2., x=.
 KFEAT:   m = iron_grate
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "deep")
 MAP
     ...
    ..m..
@@ -102,8 +96,6 @@ ENDMAP
 
 # XXX: Undiggable glass has been converted to grates.
 NAME:    enter_ziggurat_d
-CHANCE:  5%
-TAGS:    chance_zig extra allow_dup luniq_zig
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -113,7 +105,7 @@ SHUFFLE: 123x
 SUBST:   1=1..., 2=2., x=.
 SUBST:   ;=.
 KFEAT:   n = iron_grate
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "deep")
 MAP
     ...
    ..n..
@@ -130,14 +122,12 @@ ENDMAP
 default-depth: D:3-20
 
 NAME:   enter_shallow_ziggurat_a
-CHANCE: 1%
-TAGS:   chance_shallow_zig extra luniq_zig
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
 SUBST:  ' = .
 SUBST:  ; = .
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "shallow")
 MAP
 .......
 .;;;;;.
@@ -154,7 +144,7 @@ TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
 MONS:    angel / nothing w:20
 KPROP:   1Om; = no_rtele_into
 SUBST:   ;=.
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "shallow")
 MAP
     ...
    ..m..
@@ -173,7 +163,7 @@ TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
 MONS:    angel / nothing w:20
 KPROP:   1On; = no_rtele_into
 SUBST:   ;=.
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "shallow")
 MAP
     ...
    ..n..
@@ -200,7 +190,7 @@ COLOUR: ' = blue
 FTILE:  ; = floor_hall
 SUBST:  ' = .
 SUBST:  ; = .
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "pan")
 MAP
 .......
 .;;;;;.
@@ -220,7 +210,7 @@ COLOUR:  _ : blue / lightred
 COLOUR:  ' = cyan
 FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
 SUBST:   '=. , ;=. , _=.
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "pan")
 MAP
    ..'..
   ..'W'..
@@ -243,7 +233,7 @@ MONS:    eye of draining / eye of devastation / giant eyeball / \
 SHUFFLE: 123
 SUBST:   1=1, 2=22.
 KFEAT:   m = iron_grate
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "pan")
 MAP
     ...
    ..m..
@@ -267,7 +257,7 @@ MONS:    eye of draining / eye of devastation / giant eyeball / \
 SHUFFLE: 123
 SUBST:   1=1.., 2=2., 3=33.
 KFEAT:   n = iron_grate
-: ziggurat_portal(_G)
+: ziggurat_portal(_G, "pan")
 MAP
     ...
    ..n..
