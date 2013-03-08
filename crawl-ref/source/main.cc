@@ -84,6 +84,7 @@
 #include "makeitem.h"
 #include "mapmark.h"
 #include "maps.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mislead.h"
@@ -3522,26 +3523,31 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                     dungeon_events.fire_vetoable_position_event(event,
                                                                 target);
             }
-
-            list<actor*> cleave_targets;
-            if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES
-                && !you.confused())
+            else
             {
-                get_all_cleave_targets(&you, target, cleave_targets);
-            }
+                list<actor*> cleave_targets;
+                if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES
+                    && !you.confused())
+                {
+                    get_all_cleave_targets(&you, target, cleave_targets);
+                }
 
-            if (!cleave_targets.empty())
-            {
-                targetter_cleave hitfunc(&you, target);
-                if (stop_attack_prompt(hitfunc, "attack"))
-                    return true;
+                if (!cleave_targets.empty())
+                {
+                    targetter_cleave hitfunc(&you, target);
+                    if (stop_attack_prompt(hitfunc, "attack"))
+                        return true;
 
-                if (!you.fumbles_attack())
-                    attack_cleave_targets(&you, cleave_targets);
+                    if (!you.fumbles_attack())
+                        attack_cleave_targets(&you, cleave_targets);
+                }
+                else if (do_msg && !you.fumbles_attack())
+                    mpr("You swing at nothing.");
+                make_hungry(3, true);
+                // Take the usual attack delay.
+                melee_attack attk(&you, NULL);
+                you.time_taken = attk.calc_attack_delay();
             }
-            else if (do_msg && !you.fumbles_attack())
-                mpr("You swing at nothing.");
-            make_hungry(3, true);
             you.turn_is_over = true;
             return true;
         }
