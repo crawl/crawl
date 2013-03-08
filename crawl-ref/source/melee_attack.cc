@@ -1173,8 +1173,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         {
             aux_verb = "claw";
 
-            // Max talon damage: 8.
-            aux_damage += player_mutation_level(MUT_TALONS);
+            // Max talon damage: 9.
+            aux_damage += 1 + player_mutation_level(MUT_TALONS);
         }
         else if (player_mutation_level(MUT_TENTACLE_SPIKE))
         {
