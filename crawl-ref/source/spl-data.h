@@ -167,6 +167,19 @@ struct spell_desc
 },
 
 {
+    SPELL_BLINKBOLT, "Blinkbolt",
+     SPTYP_TRANSMUTATION | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET,
+     5,
+     200,
+     5, 12, // capped at LOS, yet this 12 matters since range increases linearly
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_LIGHTNING_BOLT, "Lightning Bolt",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,

@@ -30,6 +30,7 @@
 #include "random.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -1351,4 +1352,10 @@ static void _extra_hp(int amount_extra) // must also set in calc_hp
     you.hp /= 10;
 
     deflate_hp(you.hp_max, false);
+}
+
+bool blinkbolt()
+{
+    your_spells(SPELL_BLINKBOLT, 200, false, true);
+    return true;
 }

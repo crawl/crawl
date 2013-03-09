@@ -39,6 +39,8 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_POISON_ARROW;
     case SPELL_IRON_SHOT:
         return ZAP_IRON_SHOT;
+    case SPELL_BLINKBOLT:
+        return ZAP_BLINKBOLT;
     case SPELL_LIGHTNING_BOLT:
         return ZAP_LIGHTNING_BOLT;
     case SPELL_BOLT_OF_MAGMA:

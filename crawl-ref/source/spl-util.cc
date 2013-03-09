@@ -916,6 +916,8 @@ static const spell_desc *_seekspell(spell_type spell)
 
 bool is_valid_spell(spell_type spell)
 {
+    if (spell == SPELL_BLINKBOLT)
+        return true;
     return (spell > SPELL_NO_SPELL && spell < NUM_SPELLS
             && spell_list[spell] != -1);
 }

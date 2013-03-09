@@ -1019,6 +1019,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
+    case SPELL_BLINKBOLT:
     case SPELL_LIGHTNING_BOLT:
     case SPELL_FLAME_TONGUE:
     case SPELL_THROW_FLAME:

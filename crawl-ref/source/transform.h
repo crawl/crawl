@@ -51,4 +51,6 @@ const char* transform_name(transformation_type form = you.form);
 
 int form_hp_mod();
 
+bool blinkbolt();
+
 #endif

@@ -266,6 +266,22 @@ struct zap_info
 },
 
 {
+    ZAP_BLINKBOLT,
+    "living lightning",
+    200,
+    new calcdice_calculator<1, 11, 3, 5>,
+    new tohit_calculator<7, 1, 40>,
+    LIGHTCYAN,
+    false,
+    BEAM_ELECTRICITY,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    5 // XXX: Maybe louder?
+},
+
+{
     ZAP_LIGHTNING_BOLT,
     "bolt of lightning",
     200,

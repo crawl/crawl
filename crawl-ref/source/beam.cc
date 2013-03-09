@@ -259,6 +259,12 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
         pbolt.heard = true;
     }
 
+    if (ztype == ZAP_BLINKBOLT)
+    {
+        noisy(25, you.pos(), "You become a mighty clap of thunder!");
+        pbolt.heard = true;
+    }
+
     if (ztype == ZAP_DIG)
         pbolt.aimed_at_spot = false;
 
@@ -2504,6 +2510,20 @@ void bolt::affect_endpoint()
                             DNGN_SHALLOW_WATER,
                             2,
                             random_range(1, 9, 2));
+    }
+
+    if (origin_spell == SPELL_BLINKBOLT)
+    {
+        for (unsigned int i = path_taken.size() - 1; i > 0; --i)
+        {
+            coord_def p = path_taken[i];
+            if (feat_has_solid_floor(grd(p)) && !monster_at(p))
+            {
+                you.blink_to(p);
+                break;
+            }
+
+        }
     }
 
     // FIXME: why don't these just have is_explosion set?

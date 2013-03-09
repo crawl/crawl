@@ -202,6 +202,7 @@ static const ability_def Ability_List[] =
     { ABIL_SPIT_POISON, "Spit Poison", 0, 0, 40, 0, 0, ABFLAG_BREATH},
 
     { ABIL_BLINK, "Blink", 0, 50, 50, 0, 0, ABFLAG_NONE},
+    { ABIL_BLINKBOLT, "Blinkbolt", 0, 0, 100, 0, 0, ABFLAG_NONE},
 
     { ABIL_BREATHE_FIRE, "Breathe Fire", 0, 0, 125, 0, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_FROST, "Breathe Frost", 0, 0, 125, 0, 0, ABFLAG_BREATH},
@@ -1017,6 +1018,10 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_BLINK:
         failure = 48 - (12 * player_mutation_level(MUT_BLINK))
                   - you.experience_level / 2;
+        break;
+
+    case ABIL_BLINKBOLT:
+        failure = 50 - calc_spell_power(SPELL_ELECTRIC_FORM, true) / 3;
         break;
 
         // begin transformation abilities {dlb}
@@ -2110,6 +2115,9 @@ static bool _do_ability(const ability_def& abil)
 
         break;
 
+    case ABIL_BLINKBOLT:
+        return blinkbolt();
+
     case ABIL_EVOKE_BLINK:      // randarts
     case ABIL_BLINK:            // mutation
         random_blink(true);
@@ -3157,6 +3165,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
+
+    if (you.duration[DUR_TRANSFORMATION] && you.form == TRAN_ELECTRIC)
+        _add_talent(talents, ABIL_BLINKBOLT, check_confused);
 
     if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
