@@ -101,10 +101,10 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mons_enslaved_soul(mon);
 
     case DACT_HOLY_NEW_ATTEMPT:
-        return (mon->is_holy());
+        return mon->is_holy();
 
     case DACT_SLIME_NEW_ATTEMPT:
-        return (mons_is_slime(mon));
+        return mons_is_slime(mon);
 
     default:
         return false;
@@ -139,7 +139,7 @@ void add_daction(daction_type act)
     // Immediately apply it to the current level.
     catchup_dactions();
 
-    // And now to any monsters in transit
+    // And now to any monsters in transit.
     apply_daction_to_transit(act);
 
 }
