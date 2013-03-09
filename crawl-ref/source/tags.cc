@@ -3652,7 +3652,7 @@ static void tag_read_level_monsters(reader &th)
         if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
         {
             dprf("Killed elsewhere companion %s(%d) on %s",
-                    m.name(DESC_PLAIN, true), m.mid,
+                    m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
             monster_die(&m, KILL_RESET, -1, true, false);
         }
