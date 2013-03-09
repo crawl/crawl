@@ -38,6 +38,9 @@
 #include "tags.h"
 #include "terrain.h"
 
+#ifdef __ANDROID__
+  #include <sys/endian.h>
+#endif
 #ifndef BYTE_ORDER
 # error BYTE_ORDER is not defined
 #endif
