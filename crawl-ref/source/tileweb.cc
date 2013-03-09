@@ -1688,7 +1688,7 @@ void TilesFramework::write_message_escaped(const string& s)
         else if (c == '\\')
             m_msg_buf.append("\\\\");
         else if (c == '\n')
-            m_msg_buf.append("\\\n");
+            m_msg_buf.append("\\n");
         else
             m_msg_buf.append(1, c);
     }
