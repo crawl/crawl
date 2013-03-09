@@ -3337,7 +3337,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
 
     case MONS_VAULT_SENTINEL:
-        if (mons->has_ench(ENCH_CONFUSION))
+        if (mons->has_ench(ENCH_CONFUSION) || mons->friendly())
             break;
 
         if (!silenced(mons->pos()) && !mons->has_ench(ENCH_BREATH_WEAPON)
