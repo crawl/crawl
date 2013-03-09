@@ -16,6 +16,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
+#include "mon-transit.h"
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
@@ -55,7 +56,7 @@ static const char *daction_names[] =
 };
 #endif
 
-static bool _mons_matches_counter(const monster* mon, daction_type act)
+bool mons_matches_daction(const monster* mon, daction_type act)
 {
     if (!mon || !mon->alive())
         return false;
@@ -96,6 +97,15 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
                 && mon->props.exists("pikel_band")
                 && mon->mname != "freed slave");
 
+    case DACT_OLD_ENSLAVED_SOULS_POOF:
+        return mons_enslaved_soul(mon);
+
+    case DACT_HOLY_NEW_ATTEMPT:
+        return (mon->is_holy());
+
+    case DACT_SLIME_NEW_ATTEMPT:
+        return (mons_is_slime(mon));
+
     default:
         return false;
     }
@@ -108,7 +118,7 @@ void update_da_counters(LevelInfo *lev)
 
     for (monster_iterator mi; mi; ++mi)
         for (int act = 0; act < NUM_DA_COUNTERS; act++)
-            if (_mons_matches_counter(*mi, static_cast<daction_type>(act)))
+            if (mons_matches_daction(*mi, static_cast<daction_type>(act)))
                 lev->da_counters[act]++;
 }
 
@@ -128,6 +138,75 @@ void add_daction(daction_type act)
 
     // Immediately apply it to the current level.
     catchup_dactions();
+
+    // And now to any monsters in transit
+    apply_daction_to_transit(act);
+
+}
+
+void apply_daction_to_mons(monster* mon, daction_type act, bool local)
+{
+    switch (act)
+    {
+        case DACT_ALLY_HOLY:
+        case DACT_ALLY_UNHOLY_EVIL:
+        case DACT_ALLY_UNCLEAN_CHAOTIC:
+        case DACT_ALLY_SPELLCASTER:
+        case DACT_ALLY_YRED_SLAVE:
+        case DACT_ALLY_BEOGH:
+        case DACT_ALLY_SLIME:
+        case DACT_ALLY_PLANT:
+        case DACT_ALLY_TROG:
+            dprf("going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
+            mon->attitude = ATT_HOSTILE;
+            mon->del_ench(ENCH_CHARM, true);
+            if (local)
+                behaviour_event(mon, ME_ALERT, &you);
+            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+            mons_att_changed(mon);
+
+            // If you reconvert to Fedhas/Jiyva, plants/slimes will
+            // love you again.
+            if (act == DACT_ALLY_PLANT || act == DACT_ALLY_SLIME)
+                mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
+
+            // No global message for Trog.
+            if (act == DACT_ALLY_TROG && local)
+                simple_monster_message(mon, " turns against you!");
+            break;
+
+        case DACT_OLD_ENSLAVED_SOULS_POOF:
+            simple_monster_message(mon, " is freed.");
+            // The monster disappears.
+            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            break;
+
+        case DACT_HOLY_NEW_ATTEMPT:
+        case DACT_SLIME_NEW_ATTEMPT:
+            mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
+            break;
+
+        case DACT_HOLY_PETS_GO_NEUTRAL:
+        case DACT_PIKEL_SLAVES:
+            // monster changes attitude
+            mon->attitude = ATT_GOOD_NEUTRAL;
+            mons_att_changed(mon);
+
+            if (act == DACT_PIKEL_SLAVES)
+            {
+                mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR |
+                                MF_NAME_NOCORPSE;
+                mon->mname = "freed slave";
+            }
+            else if (local)
+                simple_monster_message(mon, " becomes indifferent.");
+            mon->behaviour = BEH_WANDER;
+            break;
+
+        // The other dactions do not affect monsters directly
+        default:
+            break;
+    }
 }
 
 static void _apply_daction(daction_type act)
@@ -146,65 +225,16 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
     case DACT_ALLY_TROG:
-        for (monster_iterator mi; mi; ++mi)
-            if (_mons_matches_counter(*mi, act))
-            {
-                dprf("going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
-                mi->attitude = ATT_HOSTILE;
-                mi->del_ench(ENCH_CHARM, true);
-                behaviour_event(*mi, ME_ALERT, &you);
-                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
-                mons_att_changed(*mi);
-
-                // If you reconvert to Fedhas/Jiyva, plants/slimes will
-                // love you again.
-                if (act == DACT_ALLY_PLANT || act == DACT_ALLY_SLIME)
-                    mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
-
-                // No global message for Trog.
-                if (act == DACT_ALLY_TROG)
-                    simple_monster_message(*mi, " turns against you!");
-            }
-        break;
-
     case DACT_OLD_ENSLAVED_SOULS_POOF:
-        for (monster_iterator mi; mi; ++mi)
-            if (mons_enslaved_soul(*mi))
-            {
-                simple_monster_message(*mi, " is freed.");
-                // The monster disappears.
-                monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
-            }
-        break;
     case DACT_HOLY_NEW_ATTEMPT:
-        for (monster_iterator mi; mi; ++mi)
-            if (mi->is_holy())
-                mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
-        break;
     case DACT_SLIME_NEW_ATTEMPT:
-        for (monster_iterator mi; mi; ++mi)
-            if (mons_is_slime(*mi))
-                mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
-        break;
     case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_PIKEL_SLAVES:
         for (monster_iterator mi; mi; ++mi)
-            if (_mons_matches_counter(*mi, act))
-            {
-                // monster changes attitude
-                mi->attitude = ATT_GOOD_NEUTRAL;
-                mons_att_changed(*mi);
-
-                if (act == DACT_PIKEL_SLAVES)
-                {
-                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR |
-                                 MF_NAME_NOCORPSE;
-                    mi->mname = "freed slave";
-                }
-                else
-                    simple_monster_message(*mi, " becomes indifferent.");
-                mi->behaviour = BEH_WANDER;
-            }
+        {
+            if (mons_matches_daction(*mi, act))
+                apply_daction_to_mons(*mi, act, true);
+        }
         break;
 
     case DACT_SHUFFLE_DECKS:
@@ -243,5 +273,5 @@ void catchup_dactions()
 
 unsigned int query_da_counter(daction_type c)
 {
-    return travel_cache.query_da_counter(c);
+    return travel_cache.query_da_counter(c) + count_daction_in_transit(c);
 }

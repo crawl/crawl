@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dactions.h"
 #include "dungeon.h"
 #include "env.h"
 #include "godcompanions.h"
@@ -242,6 +243,39 @@ void place_transiting_items()
 
     // Only unplaceable items are kept in list.
     ilist = keep;
+}
+
+void apply_daction_to_transit(daction_type act)
+{
+    for (monsters_in_transit::iterator i = the_lost_ones.begin();
+            i != the_lost_ones.end(); ++i)
+    {
+        m_transit_list* m = &i->second;
+        for (m_transit_list::iterator j = m->begin(); j != m->end(); ++j)
+        {
+            monster* mon = &j->mons;
+            if (mons_matches_daction(mon, act))
+                apply_daction_to_mons(mon, act, false);
+        }
+    }
+}
+
+int count_daction_in_transit(daction_type act)
+{
+    int count = 0;
+    for (monsters_in_transit::iterator i = the_lost_ones.begin();
+            i != the_lost_ones.end(); ++i)
+    {
+        m_transit_list* m = &i->second;
+        for (m_transit_list::iterator j = m->begin(); j != m->end(); ++j)
+        {
+            monster* mon = &j->mons;
+            if (mons_matches_daction(mon, act))
+                count++;
+        }
+    }
+
+    return count;
 }
 
 //////////////////////////////////////////////////////////////////////////
