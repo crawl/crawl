@@ -157,7 +157,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local)
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
         case DACT_ALLY_TROG:
-            dprf("going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
+            dprf("going hostile: %s", mon->name(DESC_PLAIN, true).c_str());
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM, true);
             if (local)
