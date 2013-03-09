@@ -103,7 +103,7 @@ void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
 
 bool recall_offlevel_ally(mid_t mid)
 {
-    if (!companion_is_elsewhere(mid))
+    if (!companion_is_elsewhere(mid, true))
         return false;
 
     companion* comp = &companion_list[mid];
@@ -152,12 +152,12 @@ bool recall_offlevel_ally(mid_t mid)
     return false;
 }
 
-bool companion_is_elsewhere(mid_t mid)
+bool companion_is_elsewhere(mid_t mid, bool must_exist)
 {
     if (companion_list.find(mid) != companion_list.end())
         return (companion_list[mid].level != level_id::current());
 
-    return false;
+    return (!must_exist);
 }
 
 void wizard_list_companions()

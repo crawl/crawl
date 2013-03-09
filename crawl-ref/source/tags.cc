@@ -3614,9 +3614,6 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     m.check_speed();
-
-    if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
-        monster_die(&m, KILL_RESET, -1, true, false);
 }
 
 static void tag_read_level_monsters(reader &th)
@@ -3644,6 +3641,14 @@ static void tag_read_level_monsters(reader &th)
     {
         monster& m = menv[i];
         unmarshallMonster(th, m);
+
+        if (m.is_divine_companion() && companion_is_elsewhere(m.mid))
+        {
+            dprf("Killed elsewhere companion %s(%d) on %s",
+                    m.name(DESC_PLAIN, true), m.mid,
+                    level_id::current().describe(false, true).c_str());
+            monster_die(&m, KILL_RESET, -1, true, false);
+        }
 
         // place monster
         if (m.alive())
