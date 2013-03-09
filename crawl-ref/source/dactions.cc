@@ -194,8 +194,8 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local)
 
             if (act == DACT_PIKEL_SLAVES)
             {
-                mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR |
-                                MF_NAME_NOCORPSE;
+                mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
+                                  | MF_NAME_NOCORPSE;
                 mon->mname = "freed slave";
             }
             else if (local)
@@ -203,7 +203,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local)
             mon->behaviour = BEH_WANDER;
             break;
 
-        // The other dactions do not affect monsters directly
+        // The other dactions do not affect monsters directly.
         default:
             break;
     }
