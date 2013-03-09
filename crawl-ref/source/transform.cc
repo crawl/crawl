@@ -1356,6 +1356,6 @@ static void _extra_hp(int amount_extra) // must also set in calc_hp
 
 bool blinkbolt()
 {
-    your_spells(SPELL_BLINKBOLT, 200, false, true);
-    return true;
+    int pow = calc_spell_power(SPELL_ELECTRIC_FORM, true);
+    return your_spells(SPELL_BLINKBOLT, 200, false, true) == SPRET_SUCCESS;
 }

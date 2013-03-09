@@ -2514,13 +2514,18 @@ void bolt::affect_endpoint()
 
     if (origin_spell == SPELL_BLINKBOLT)
     {
-        for (unsigned int i = path_taken.size() - 1; i > 0; --i)
+        unsigned int path_end = path_taken.size() - 1;
+        for (unsigned int i = 0; i < path_end; ++i)
         {
             coord_def p = path_taken[i];
             if (feat_has_solid_floor(grd(p)) && !monster_at(p))
             {
-                you.blink_to(p);
-                break;
+                coord_def next_pos = i + 1 < path_end ? path_taken[i + 1] : pos();
+                if (monster_at(next_pos))
+                {
+                    you.blink_to(p);
+                    break;
+                }
             }
 
         }
