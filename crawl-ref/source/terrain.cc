@@ -119,7 +119,9 @@ bool feat_is_portal(dungeon_feature_type feat)
 {
     return feat == DNGN_ENTER_PORTAL_VAULT
         || feat == DNGN_EXIT_PORTAL_VAULT
-        || feat == DNGN_MALIGN_GATEWAY;
+        || feat == DNGN_MALIGN_GATEWAY
+        || feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
+        || feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL;
 }
 
 // Returns true if the given dungeon feature is a stair, i.e., a level
@@ -220,8 +222,6 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
-    case DNGN_ENTER_PORTAL_VAULT:
-    case DNGN_EXIT_PORTAL_VAULT:
     case DNGN_ENTER_ZOT:
     case DNGN_RETURN_FROM_ZOT:
     case DNGN_ENTER_HELL:
@@ -231,13 +231,26 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
         return true;
-    default:
+    case DNGN_MALIGN_GATEWAY:
         return false;
+    default:
+        return feat_is_portal(feat);
     }
 }
 
 command_type feat_stair_direction(dungeon_feature_type feat)
 {
+    if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
+        || feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
+    {
+        return CMD_GO_DOWNSTAIRS;
+    }
+    if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL
+        || feat >= DNGN_RETURN_FROM_FIRST_BRANCH && feat <= DNGN_RETURN_FROM_LAST_BRANCH)
+    {
+        return CMD_GO_UPSTAIRS;
+    }
+
     switch (feat)
     {
     case DNGN_STONE_STAIRS_UP_I:
@@ -245,25 +258,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_DUNGEON:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
-#endif
-    case DNGN_RETURN_FROM_ORC:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_SLIME:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_BLADE:
-    case DNGN_RETURN_FROM_ZOT:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_SNAKE:
-    case DNGN_RETURN_FROM_ELF:
-    case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_SHOALS:
-    case DNGN_RETURN_FROM_SPIDER:
-    case DNGN_RETURN_FROM_FOREST:
-    case DNGN_RETURN_FROM_DEPTHS:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
     case DNGN_EXIT_PORTAL_VAULT:
@@ -287,25 +281,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARF:
-#endif
-    case DNGN_ENTER_ORC:
-    case DNGN_ENTER_LAIR:
-    case DNGN_ENTER_SLIME:
-    case DNGN_ENTER_VAULTS:
-    case DNGN_ENTER_CRYPT:
-    case DNGN_ENTER_BLADE:
-    case DNGN_ENTER_ZOT:
-    case DNGN_ENTER_TEMPLE:
-    case DNGN_ENTER_SNAKE:
-    case DNGN_ENTER_ELF:
-    case DNGN_ENTER_TOMB:
-    case DNGN_ENTER_SWAMP:
-    case DNGN_ENTER_SHOALS:
-    case DNGN_ENTER_SPIDER:
-    case DNGN_ENTER_FOREST:
-    case DNGN_ENTER_DEPTHS:
         return CMD_GO_DOWNSTAIRS;
 
     default:
@@ -734,7 +709,8 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
 {
     // Don't risk trapping the player inside a portal vault, don't destroy
     // runed doors either.
-    if (feat == DNGN_EXIT_PORTAL_VAULT || feat == DNGN_RUNED_DOOR)
+    if (feat == DNGN_EXIT_PORTAL_VAULT || feat == DNGN_RUNED_DOOR
+        || feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
         return false;
 
     // There's only one branch exit.
@@ -1664,6 +1640,28 @@ static const char *dngn_feature_names[] =
 "trap_alarm",
 "trap_zot",
 "passage_of_golubria",
+
+"enter_ziggurat",
+"enter_bazaar",
+"enter_trove",
+"enter_sewer",
+"enter_ossuary",
+"enter_bailey",
+"enter_ice_cave",
+"enter_volcano",
+"enter_wizlab",
+"enter_unused",
+"exit_ziggurat",
+"exit_bazaar",
+"exit_trove",
+"exit_sewer",
+"exit_ossuary",
+"exit_bailey",
+"exit_ice_cave",
+"exit_volcano",
+"exit_wizlab",
+"exit_labyrinth",
+"exit_unused",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)

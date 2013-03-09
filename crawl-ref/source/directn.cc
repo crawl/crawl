@@ -3046,6 +3046,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_ESCAPE_HATCH_DOWN:
         return "escape hatch in the floor";
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_EXIT_LABYRINTH:
         return "escape hatch in the ceiling";
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
@@ -3145,12 +3146,26 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "staircase to the Enchanted Forest";
     case DNGN_ENTER_DEPTHS:
         return "staircase to the Depths";
+    case DNGN_ENTER_ZIGGURAT:
+        return "gateway to a ziggurat";
+    case DNGN_ENTER_BAZAAR:
+        return "gateway to a bazaar"; // "flickering $_" if timed
+    case DNGN_ENTER_TROVE:
+        return "portal to a secret trove of treasure";
+    case DNGN_ENTER_SEWER:
+        return "glowing drain";
+    case DNGN_ENTER_OSSUARY:
+        return "sand-covered staircase";
+    case DNGN_ENTER_BAILEY:
+        return "flagged portal";
+    case DNGN_ENTER_ICE_CAVE:
+        return "frozen archway";
+    case DNGN_ENTER_VOLCANO:
+        return "dark tunnel";
+    case DNGN_ENTER_WIZLAB:
+        return "magical portal";
     case DNGN_ENTER_PORTAL_VAULT:
-        // The bazaar description should be set in the bazaar marker; this
-        // is the description for a portal of unknown type.
         return "gate leading to a distant place";
-    case DNGN_EXIT_PORTAL_VAULT:
-        return "gate leading back out of here";
     case DNGN_MALIGN_GATEWAY:
         return "portal to somewhere";
     case DNGN_EXPIRED_PORTAL:
@@ -3182,6 +3197,20 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "staircase out of the Tomb";
     case DNGN_RETURN_FROM_ZOT:
         return "gate leading back out of this place";
+    case DNGN_EXIT_ICE_CAVE:
+        return "ice covered gate leading back out of here";
+    case DNGN_EXIT_VOLCANO:
+        return "rocky tunnel leading out of this place";
+    case DNGN_EXIT_WIZLAB:
+        return "portal leading out of here";
+    case DNGN_EXIT_ZIGGURAT:
+    case DNGN_EXIT_BAZAAR:
+    case DNGN_EXIT_TROVE:
+    case DNGN_EXIT_SEWER:
+    case DNGN_EXIT_OSSUARY:
+    case DNGN_EXIT_BAILEY:
+    case DNGN_EXIT_PORTAL_VAULT:
+        return "gate leading back out of here";
 
     // altars
     case DNGN_ALTAR_ZIN:

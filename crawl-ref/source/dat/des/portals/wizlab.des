@@ -97,17 +97,13 @@ function wizlab_portal (e)
     e.lua_marker('O',
       timed_marker {
         disappear = "The flow of magic halts.",
-        desc = "magical portal",
         entity = 'portal',
-        dst = 'WizLab',
-        overview = "magical portal",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "stone_arch",
         feat_tile = "dngn_portal_bazaar_gone",
         msg = messager })
-    e.kfeat("O = enter_portal_vault")
-    e.tile("O = no_random dngn_portal_wizard_lab")
+    e.kfeat("O = enter_wizlab")
     e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
     e.chance("500")
 end
@@ -116,10 +112,7 @@ end
 function wizlab_setup (e, wizlab_desc)
     e.orient("encompass")
     e.tags("no_item_gen no_monster_gen")
-    e.kfeat("< = exit_portal_vault")
-    e.tile("< = no_random dngn_portal_wizard_lab")
-    -- This is so that the note shows up properly.
-    e.set_feature_name("exit_portal_vault", "portal leading out of here")
+    e.kfeat("< = exit_wizlab")
 end
 
 function wizlab_milestone (e, wizlab_desc)

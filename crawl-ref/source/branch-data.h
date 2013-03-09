@@ -208,7 +208,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_ZIGGURAT, NUM_BRANCHES, -1, -1, 27, 27,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_ZIGGURAT, DNGN_EXIT_ZIGGURAT,
       "Ziggurat", "a ziggurat", "Zig",
       "You land on top of a ziggurat so tall you cannot make out the ground.",
       false, BLACK, BLACK,
@@ -216,7 +216,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_LABYRINTH, NUM_BRANCHES, -1, -1, 1, 15,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
-      DNGN_ENTER_LABYRINTH, DNGN_ESCAPE_HATCH_UP,
+      DNGN_ENTER_LABYRINTH, DNGN_EXIT_LABYRINTH,
       "Labyrinth", "a labyrinth", "Lab",
       NULL,
       false, BLACK, BLACK,
@@ -224,7 +224,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_BAZAAR, NUM_BRANCHES, -1, -1, 1, 18,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_BAZAAR, DNGN_EXIT_BAZAAR,
       "Bazaar", "a bazaar", "Bazaar",
       "You enter an inter-dimensional bazaar!",
       false, BLUE, YELLOW,
@@ -232,7 +232,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_TROVE, NUM_BRANCHES, -1, -1, 1, 18,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_TROVE, DNGN_EXIT_TROVE,
       "Trove", "a treasure trove", "Trove",
       NULL,
       false, DARKGREY, BLUE,
@@ -240,7 +240,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SEWER, NUM_BRANCHES, -1, -1, 1, 4,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_SEWER, DNGN_EXIT_SEWER,
       "Sewer", "a sewer", "Sewer",
       NULL,
       false, LIGHTGREY, DARKGREY,
@@ -248,7 +248,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_OSSUARY, NUM_BRANCHES, -1, -1, 1, 6,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_OSSUARY, DNGN_EXIT_OSSUARY,
       "Ossuary", "an ossuary", "Ossuary",
       NULL,
       false, WHITE, YELLOW,
@@ -256,7 +256,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_BAILEY, NUM_BRANCHES, -1, -1, 1, 11,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_BAILEY, DNGN_EXIT_BAILEY,
       "Bailey", "a bailey", "Bailey",
       NULL,
       false, WHITE, LIGHTRED,
@@ -264,7 +264,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, -1, -1, 1, 15,
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_ICE_CAVE, DNGN_EXIT_ICE_CAVE,
       "Ice Cave", "an ice cave", "IceCv",
       NULL,
       false, BLUE, WHITE,
@@ -272,7 +272,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_VOLCANO, NUM_BRANCHES, -1, -1, 1, 14,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_VOLCANO, DNGN_EXIT_VOLCANO,
       "Volcano", "a volcano", "Volcano",
       NULL,
       false, RED, RED,
@@ -280,7 +280,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_WIZLAB, NUM_BRANCHES, -1, -1, 1, 24,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      DNGN_ENTER_WIZLAB, DNGN_EXIT_WIZLAB,
       "Wizlab", "a wizard's laboratory", "WizLab",
       NULL,
       false, LIGHTGREY, BROWN, // set per-map

@@ -877,8 +877,12 @@ static int _get_dest_stair_type(branch_type old_branch,
     if (stair_taken >= DNGN_ENTER_DIS && stair_taken <= DNGN_ENTER_TARTARUS)
         return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
 
-    if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
+    if (stair_taken == DNGN_ENTER_PORTAL_VAULT
+        || stair_taken >= DNGN_ENTER_FIRST_PORTAL
+            && stair_taken <= DNGN_ENTER_LAST_PORTAL)
+    {
         return DNGN_STONE_ARCH;
+    }
 
     if (stair_taken == DNGN_ENTER_LABYRINTH)
     {

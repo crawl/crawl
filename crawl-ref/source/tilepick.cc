@@ -259,6 +259,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return TILE_DNGN_STONE_STAIRS_UP;
+    case DNGN_EXIT_LABYRINTH:
     case DNGN_ESCAPE_HATCH_UP:
         return TILE_DNGN_ESCAPE_HATCH_UP;
     case DNGN_SEALED_STAIRS_UP:
@@ -330,6 +331,24 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         if (you.opened_zot)
             return TILE_DNGN_ENTER_ZOT_OPEN;
         return TILE_DNGN_ENTER_ZOT_CLOSED;
+    case DNGN_ENTER_ZIGGURAT:
+        return TILE_DNGN_PORTAL_ZIGGURAT;
+    case DNGN_ENTER_BAZAAR:
+        return TILE_DNGN_PORTAL_BAZAAR;
+    case DNGN_ENTER_TROVE:
+        return TILE_DNGN_PORTAL_TROVE;
+    case DNGN_ENTER_SEWER:
+        return TILE_DNGN_PORTAL_SEWER;
+    case DNGN_ENTER_OSSUARY:
+        return TILE_DNGN_PORTAL_OSSUARY;
+    case DNGN_ENTER_BAILEY:
+        return TILE_DNGN_PORTAL_BAILEY;
+    case DNGN_ENTER_ICE_CAVE:
+        return TILE_DNGN_PORTAL_ICE_CAVE;
+    case DNGN_ENTER_VOLCANO:
+        return TILE_DNGN_PORTAL_VOLCANO;
+    case DNGN_ENTER_WIZLAB:
+        return TILE_DNGN_PORTAL_WIZARD_LAB;
 
     // branch exit stairs
 #if TAG_MAJOR_VERSION == 34
@@ -366,6 +385,20 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_EXIT_TOMB;
     case DNGN_RETURN_FROM_ZOT:
         return TILE_DNGN_RETURN_ZOT;
+
+    case DNGN_EXIT_ZIGGURAT:
+    case DNGN_EXIT_BAZAAR:
+    case DNGN_EXIT_TROVE:
+    case DNGN_EXIT_SEWER:
+    case DNGN_EXIT_OSSUARY:
+    case DNGN_EXIT_BAILEY:
+        return TILE_DNGN_PORTAL;
+    case DNGN_EXIT_ICE_CAVE:
+        return TILE_DNGN_PORTAL_ICE_CAVE;
+    case DNGN_EXIT_VOLCANO:
+        return TILE_DNGN_EXIT_VOLCANO;
+    case DNGN_EXIT_WIZLAB:
+        return TILE_DNGN_PORTAL_WIZARD_LAB;
 
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:

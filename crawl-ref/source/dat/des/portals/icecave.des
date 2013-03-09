@@ -38,11 +38,7 @@ function ice_cave_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The archway melts and disappears.",
-        desc = "frozen archway",
         entity = 'archway',
-        dst = "IceCv",
-        dstname = "ice_cave",
-        overview = "frozen archway",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "expired_portal",
@@ -50,9 +46,7 @@ function ice_cave_portal(e)
         msg = messager })
   e.tags("uniq_ice_cave chance_icecave")
   e.chance(500)
-  e.kfeat("O = enter_portal_vault")
-  e.colour("O = white")
-  e.tile("O = dngn_portal_ice_cave")
+  e.kfeat("O = enter_ice_cave")
   e.colour("X = white")
   e.kfeat("X = x")
   e.rtile("X = wall_zot_cyan")
@@ -98,16 +92,12 @@ end
 -- substitutions have been performed:
 -- : ice_cave_appearance(_G)
 function ice_cave_appearance(e)
-  e.kfeat("< = exit_portal_vault")
-  e.colour("< = white")
-  e.tile("< = dngn_portal_ice_cave")
+  e.kfeat("< = exit_ice_cave")
   -- Don't trap amphibious players.
   e.kprop("w = no_rtele_into")
 
   -- Alter short feature descriptions for all ice cave destination vaults.
   e.set_feature_name("rock_wall", "ice covered rock wall")
-  e.set_feature_name("exit_portal_vault",
-                             "ice covered gate leading back out of here")
   e.set_feature_name("stone_arch", "ice choked empty arch of ancient stone")
   e.set_feature_name("shallow_water", "Some ice crusted shallow water")
   e.set_feature_name("deep_water", "Some ice crusted deep water")

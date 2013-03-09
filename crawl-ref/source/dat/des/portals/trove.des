@@ -159,9 +159,6 @@ function trove.portal(e)
             toll_item = item,
             entity = "portal",
             toll_desc = "to enter a treasure trove",
-            desc = "portal to a secret trove of treasure",
-            overview = "Trove",
-            dst = "Trove",
             floor = "expired_portal",
             feat_tile = "dngn_portal_trove_gone",
         }
@@ -169,10 +166,8 @@ function trove.portal(e)
     e.tags("uniq_trove no_monster_gen chance_trove")
     e.chance(500)
     e.lua_marker("O", stair)
-    e.kfeat("O = enter_portal_vault")
-    e.colour(".O = blue")
+    e.kfeat("O = enter_trove")
     e.ftile(".OcG+ = floor_marble")
-    e.tile("O = dngn_portal_trove")
     e.tile("c = wall_stone_dark")
 end
 
@@ -180,8 +175,7 @@ end
 -- : trove.setup_features(_G)
 -- Note that the function also defines < to be the exit portal.
 function trove.setup_features(e)
-    e.kfeat("< = exit_portal_vault")
-    e.colour("< = blue")
+    e.kfeat("< = exit_trove")
 end
 
 -- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc

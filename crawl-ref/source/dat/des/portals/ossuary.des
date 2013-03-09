@@ -36,10 +36,7 @@ function ossuary_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The hiss of flowing sand is gone.",
-        desc = "sand-covered staircase",
         entity = 'staircase',
-        dst = "Ossuary",
-        overview = "sand-covered staircase",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "expired_portal",
@@ -47,11 +44,9 @@ function ossuary_portal(e)
         msg = messager })
   e.tags("uniq_ossuary no_monster_gen chance_ossuary")
   e.chance(500)
-  e.kfeat("O = enter_portal_vault")
-  e.colour("O = brown")
+  e.kfeat("O = enter_ossuary")
   e.colour("' = yellow")
   e.ftile("' = floor_sandstone")
-  e.tile("O = dngn_portal_ossuary")
   e.tile("c = wall_tomb")
 end
 
@@ -59,8 +54,7 @@ end
 -- : ossuary_setup_features(_G)
 -- Note that the function also defines < to be the exit portal.
 function ossuary_setup_features(e)
-        e.kfeat("< = exit_portal_vault")
-        e.colour("< = brown")
+  e.kfeat("< = exit_ossuary")
 end
 }}
 

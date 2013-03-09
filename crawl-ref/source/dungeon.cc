@@ -2310,7 +2310,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             env.level_map_mask(*ri) |= MMT_MIMIC;
 
             // If we're mimicing a unique portal vault, give a chance for
-            // another one to spawn.
+            // another one to spawn. FIXME: broken
             string dst = env.markers.property_at(pos, MAT_ANY, "dstname");
             if (dst.empty())
                 dst = env.markers.property_at(pos, MAT_ANY, "dst");

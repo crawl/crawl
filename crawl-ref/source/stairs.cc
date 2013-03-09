@@ -495,11 +495,13 @@ level_id stair_destination(coord_def pos, bool for_real)
 level_id stair_destination(dungeon_feature_type feat, const string &dst,
                            bool for_real)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (feat == DNGN_ESCAPE_HATCH_UP && player_in_branch(BRANCH_LABYRINTH))
+        feat = DNGN_EXIT_LABYRINTH;
+#endif
     if (branches[you.where_are_you].exit_stairs == feat)
     {
-        if (feat == DNGN_ESCAPE_HATCH_UP)
-            feat = DNGN_EXIT_PORTAL_VAULT; // silly Labyrinths
-        else if (parent_branch(you.where_are_you) < NUM_BRANCHES)
+        if (parent_branch(you.where_are_you) < NUM_BRANCHES)
         {
             level_id lev = brentry[you.where_are_you];
             if (!lev.is_valid())
@@ -515,6 +517,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             return lev;
         }
     }
+
+    if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
+        feat = DNGN_EXIT_PANDEMONIUM;
 
     switch (feat)
     {
@@ -849,7 +854,9 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     if (stair_find == DNGN_ENTER_LABYRINTH
         || stair_find == DNGN_ENTER_PORTAL_VAULT
         || stair_find == DNGN_ENTER_PANDEMONIUM
-        || stair_find == DNGN_ENTER_ABYSS)
+        || stair_find == DNGN_ENTER_ABYSS
+        || stair_find >= DNGN_ENTER_FIRST_PORTAL
+           && stair_find <= DNGN_ENTER_LAST_PORTAL)
     {
         you.level_stack.push_back(level_pos::current());
     }

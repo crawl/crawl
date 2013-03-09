@@ -37,11 +37,8 @@ function bailey_portal(e, ptype, trowel)
   e.lua_marker('O',
       timed_marker {
         disappear = "The portal closes with a thud.",
-        desc = "flagged portal",
         entity = 'oriflamme',
-        dst = "Bailey",
         bailey_type = ptype,
-        overview = "flagged portal",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "stone_arch",
@@ -52,9 +49,7 @@ function bailey_portal(e, ptype, trowel)
     e.chance(500)
   end
 
-  e.kfeat("O = enter_portal_vault")
-  e.colour("O = lightred")
-  e.tile("O = dngn_portal_bailey")
+  e.kfeat("O = enter_bailey")
   e.tile("c = wall_stone_brick")
 end
 
@@ -68,8 +63,7 @@ end
 
 -- colours
 function bailey_setup(e)
-  e.kfeat("< = exit_portal_vault")
-  e.colour("< = darkgrey")
+  e.kfeat("< = exit_bailey")
 end
 
 -- In order to avoid repeating the lengthy monster definitions:
