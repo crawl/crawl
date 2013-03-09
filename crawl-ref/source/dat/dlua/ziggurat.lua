@@ -76,7 +76,7 @@ function ziggurat_portal(e, spawnrange)
       onclimb = "callback.ziggurat_initialiser"
     }
   end
-  
+
   if spawnrange == "shallow" then
     e.tags("chance_shallow_zig extra")
     e.chance("1%")
@@ -87,7 +87,7 @@ function ziggurat_portal(e, spawnrange)
     e.tags("chance_pan_zig extra allow_dup")
     e.chance("8%")
   end
-  
+
   e.lua_marker("O", stair)
   e.kfeat("O = enter_portal_vault")
   e.tile("O = dngn_portal_ziggurat")

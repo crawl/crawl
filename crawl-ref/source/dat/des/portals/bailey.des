@@ -47,7 +47,7 @@ function bailey_portal(e, ptype, trowel)
     e.tags("uniq_bailey chance_bailey")
     e.chance("5%")
   end
-  
+
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightred")
   e.tile("O = dngn_portal_bailey")
