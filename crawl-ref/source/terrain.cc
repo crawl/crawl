@@ -295,20 +295,12 @@ command_type feat_stair_direction(dungeon_feature_type feat)
 
 bool feat_is_opaque(dungeon_feature_type feat)
 {
-#if TAG_MAJOR_VERSION > 34
     return (feat <= DNGN_MAXOPAQUE);
-#else
-    return (feat <= DNGN_MAXOPAQUE || feat == DNGN_SEALED_DOOR);
-#endif
 }
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
-#if TAG_MAJOR_VERSION > 34
     return (feat <= DNGN_MAXSOLID);
-#else
-    return (feat <= DNGN_MAXSOLID || feat == DNGN_SEALED_DOOR);
-#endif
 }
 
 bool cell_is_solid(const coord_def &c)
