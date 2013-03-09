@@ -177,3 +177,20 @@ void wizard_list_companions()
                 mon->mid, branches[comp->level.branch].abbrevname, comp->level.depth);
     }
 }
+
+#if TAG_MAJOR_VERSION == 34
+// A temporary routine to clean up some references to invalid companions and
+// prevent crashes on load. Should be unnecessary once the cloning bugs that
+// allow the creation of these invalid companions are fully mopped up
+void fixup_bad_companions()
+{
+    for(map<mid_t, companion>::iterator i = companion_list.begin();
+        i != companion_list.end();)
+    {
+        if (invalid_monster_type(i->second.mons.mons.type))
+            companion_list.erase(i++);
+        else
+            ++i;
+    }
+}
+#endif

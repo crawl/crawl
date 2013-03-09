@@ -1793,6 +1793,9 @@ static void tag_construct_lost_items(writer &th)
 
 static void tag_construct_companions(writer &th)
 {
+#if TAG_MAJOR_VERSION == 34
+    fixup_bad_companions();
+#endif
     marshallMap(th, companion_list, _marshall_as_int<mid_t>,
                  marshall_companion);
 }
