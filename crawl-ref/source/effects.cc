@@ -1156,17 +1156,13 @@ void yell(bool force)
             return;
         }
 
+        if (targ.isValid)
         {
-            bool cancel = !targ.isValid;
-            if (!cancel)
-            {
-                mpr("Fall back!");
-                mons_targd = MHITNOT;
-            }
-
-            _set_allies_withdraw(targ.target);
-            coord_def target = targ.target;
+            mpr("Fall back!");
+            mons_targd = MHITNOT;
         }
+
+        _set_allies_withdraw(targ.target);
         break;
 
     default:
