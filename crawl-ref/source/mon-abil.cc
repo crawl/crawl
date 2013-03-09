@@ -1426,7 +1426,7 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 // Find an adjacent space to displace a stack of items or a creature
 // (If act is null, we are just moving items and not an actor)
 static bool _get_push_space(const coord_def& pos, coord_def& newpos,
-        actor* act, bool test_only = false)
+                            actor* act, bool test_only = false)
 {
     if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
         return false;
@@ -1445,7 +1445,9 @@ static bool _get_push_space(const coord_def& pos, coord_def& newpos,
                 if (actor_at(*ai)
                     || !act->can_pass_through(*ai)
                     || !act->is_habitable(*ai))
+                {
                     continue;
+                }
 
                 // If we're only testing, a single valid spot is acceptable
                 if (test_only)
