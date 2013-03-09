@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Zot Def specific functions
+ * @brief Zot Defence specific functions
 **/
 
 #include "AppHdr.h"
