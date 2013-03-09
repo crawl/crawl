@@ -123,7 +123,7 @@ static void _labyrinth_place_exit(const coord_def &end)
 {
     _labyrinth_place_items(end);
     mons_place(mgen_data::sleeper_at(MONS_MINOTAUR, end, MG_PATROLLING));
-    grd(end) = DNGN_ESCAPE_HATCH_UP;
+    grd(end) = DNGN_EXIT_LABYRINTH;
 }
 
 // Checks whether a given grid has at least one neighbour surrounded
@@ -526,7 +526,7 @@ void dgn_build_labyrinth_level()
         if (rplace.map.has_tag("generate_loot"))
         {
             for (vault_place_iterator vi(rplace); vi; ++vi)
-                if (grd(*vi) == DNGN_ESCAPE_HATCH_UP)
+                if (grd(*vi) == DNGN_EXIT_LABYRINTH)
                 {
                     _labyrinth_place_items(*vi);
                     break;

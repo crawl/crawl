@@ -19,13 +19,12 @@ function place_bazaar_portal(e, perm, trowel)
   if not trowel then
     e.tags("bzr_entry")
   end
-  e.kfeat("O = enter_portal_vault")
+  e.kfeat("O = enter_bazaar")
   if perm then
      e.lua_marker('O', bazaar_portal(false))
   else
      e.lua_marker('O', bazaar_portal(not crawl.one_chance_in(6)))
   end
-  e.tile("O = dngn_portal_bazaar")
 end
 
 function bazaar_portal(timed)
@@ -45,12 +44,11 @@ function bazaar_portal(timed)
     return timed_marker {
                   low=blow, high=bhigh, msg=messager, single_timed=true,
                   disappear='The gate to the bazaar disappears!',
-                  desc = "flickering gateway to a bazaar", dst = 'Bazaar',
+                  desc = "flickering gateway to a bazaar",
                   floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
               }
   else
-    return one_way_stair { desc = "gateway to a bazaar",
-                           dst = 'Bazaar', floor = 'stone_arch' }
+    return one_way_stair { floor = 'stone_arch' }
   end
 end
 
@@ -63,7 +61,7 @@ end
 
 function bazaar_setup(e)
   e.kfeat("< = stone_arch")
-  e.kfeat("> = exit_portal_vault")
+  e.kfeat("> = exit_bazaar")
 end
 
 function fixup_bazaar()

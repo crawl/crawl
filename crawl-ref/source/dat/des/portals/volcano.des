@@ -74,10 +74,7 @@ function volcano_portal (e)
       timed_marker {
         disappear = "There is a deep roar from within the tunnel. Moments " ..
                     "later, a river of lava pours forth, sealing it permanently.",
-        desc = "dark tunnel",
         entity = 'tunnel',
-        dst = "Volcano",
-        overview = "dark tunnel",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "expired_portal",
@@ -85,10 +82,9 @@ function volcano_portal (e)
         msg = messager })
     e.tags("uniq_volcano chance_volcano")
     e.chance(500)
-    e.kfeat("O = enter_portal_vault")
-    e.tile("O = dngn_portal_volcano")
+    e.kfeat("O = enter_volcano")
     e.kfeat("S = .")
-    e.colour("XOS = red")
+    e.colour("XS = red")
     e.rtile("X = wall_volcanic")
     e.kfeat("X = rock_wall")
     e.ftile("OS = floor_rough_red")
@@ -97,20 +93,16 @@ end
 -- Destinations:
 function volcano_setup (e)
     setup_loot(e)
-    e.kfeat("< = exit_portal_vault")
-    e.kfeat("I = exit_portal_vault")
-    e.tile("< = dngn_exit_volcano")
-    e.tile("I = dngn_exit_volcano")
+    e.kfeat("< = exit_volcano")
+    e.kfeat("I = exit_volcano")
     e.kfeat("^ = known alarm trap")
     e.subst("L : LLL.l")
     e.subst("L = lll.")
     e.subst("y : yyy.x")
     e.subst("y = xxx.")
-    e.colour("< = red")
     e.colour("c = lightred")
     e.colour("G = lightred")
     e.colour("= = lightred")
-    e.set_feature_name("exit_portal_vault", "rocky tunnel leading out of this place")
     e.set_feature_name("stone_arch", "rock-blocked tunnel")
 end
 

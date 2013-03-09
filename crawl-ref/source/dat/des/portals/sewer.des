@@ -36,27 +36,21 @@ function sewer_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The drain falls to bits.",
-        desc = "glowing drain",
         entity = 'drain',
-        dst = "Sewer",
-        overview = "glowing drain",
         turns = timeout_turns,
         floor = "expired_portal",
         feat_tile = "dngn_portal_sewer_rusted",
         msg = messager })
   e.tags("uniq_sewer no_monster_gen chance_sewer")
   e.chance(800)
-  e.kfeat("O = enter_portal_vault")
+  e.kfeat("O = enter_sewer")
   e.kfeat("1 = W")
-  e.colour("O = lightgreen")
   e.colour("1W = lightgreen / cyan w:5")
   e.colour("w = green")
-  e.tile("O = dngn_portal_sewer")
 end
 
 function sewer_setup(e)
-  e.kfeat("< = exit_portal_vault")
-  e.colour("< = darkgrey")
+  e.kfeat("< = exit_sewer")
   e.colour("w = green")
   e.colour("W = lightgreen")
 end

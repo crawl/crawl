@@ -28,10 +28,8 @@ function lab_portal(e)
         msg = messager,
         floor = 'stone_arch',
         feat_tile = 'dngn_portal_labyrinth_gone',
-        single_timed = true,
-        dstname = 'lab' })
+        single_timed = true })
     e.kfeat("O = enter_labyrinth")
-    e.tile("O = dngn_portal_labyrinth")
 end
 }}
 
@@ -97,6 +95,7 @@ ORIENT:  float
 MONS:    patrolling minotaur
 SHUFFLE: def
 SUBST:   d=~, e=~, f=., b:vvb
+KFEAT:   < : exit_labyrinth
 MAP
 .........
 .bbbbbbb.
@@ -116,6 +115,7 @@ TAGS:   generate_loot allow_dup
 ORIENT: float
 MONS:   patrolling minotaur
 WEIGHT: 2
+KFEAT:  < : exit_labyrinth
 MAP
 ........
 .bbbbbb.
@@ -131,6 +131,7 @@ TAGS:   generate_loot allow_dup
 ORIENT: float
 MONS:   patrolling minotaur
 SUBST:  b : bvz, z = vb
+KFEAT:  < : exit_labyrinth
 MAP
 ............
 .bbbbbbbbbb.
@@ -153,6 +154,7 @@ ORIENT: float
 MONS:   patrolling minotaur, minotaur zombie
 SUBST:  d = 2%*
 SUBST:  b : bvv
+KFEAT:  < : exit_labyrinth
 MAP
 ............
 .bbbbbbbbbb.
@@ -178,7 +180,7 @@ SUBST:   d : b, e : ., f : b
 SUBST:   g : b, h : ., i : b
 SUBST:   k = <, l = ., m = .
 KMONS:   < = patrolling minotaur
-KFEAT:   < = <
+KFEAT:   < = exit_labyrinth
 SUBST:   b : vvb
 
 # should not be necessary
@@ -216,6 +218,7 @@ ORIENT: float
 KMONS: m = patrolling minotaur
 KPROP: ABCD'm = bloody
 KFEAT: ' = floor
+KFEAT: < = exit_labyrinth
 SHUFFLE: bxvc, ABCDEFHIJKLM
 {{
  -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.

@@ -66,11 +66,7 @@ function ziggurat_portal(e, spawnrange)
     return toll_stair {
       amount = entry_fee,
       toll_desc = "to enter a ziggurat",
-      desc = "gateway to a ziggurat",
-      overview = "Ziggurat",
       overview_note = "" .. entry_fee .. " gp",
-      dst = "Zig:1",
-      dstname = "ziggurat",
       floor = "stone_arch",
       feat_tile = "dngn_portal_ziggurat_gone",
       onclimb = "callback.ziggurat_initialiser"
@@ -89,8 +85,7 @@ function ziggurat_portal(e, spawnrange)
   end
 
   e.lua_marker("O", stair)
-  e.kfeat("O = enter_portal_vault")
-  e.tile("O = dngn_portal_ziggurat")
+  e.kfeat("O = enter_ziggurat")
 end
 
 -- Common setup for ziggurat levels.
@@ -647,8 +642,8 @@ local function ziggurat_stairs(entry, exit)
     zigstair(exit.x, exit.y, "stone_stairs_down_i")
   end
 
-  zigstair(exit.x, exit.y + 1, "exit_portal_vault")
-  zigstair(exit.x, exit.y - 1, "exit_portal_vault")
+  zigstair(exit.x, exit.y + 1, "exit_ziggurat")
+  zigstair(exit.x, exit.y - 1, "exit_ziggurat")
 end
 
 local function ziggurat_furnish(centre, entry, exit)
