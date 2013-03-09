@@ -1499,11 +1499,12 @@ static bool _can_force_door_shut(const coord_def& door)
     for (set<coord_def>::const_iterator i = all_door.begin();
          i != all_door.end(); ++i)
     {
-        // If anyone is in the doorway, we can't force them out
-        monster* mons = monster_at(*i);
-        if (mons && mons->attitude != ATT_HOSTILE || you.pos() == *i)
+        // Only attempt to push players and non-hostile monsters out of doorways.
+        actor* act = actor_at(*i);
+        if (act->is_player()
+            || act->is_monster() && act->as_monster()->attitude != ATT_HOSTILE)
         {
-            if (!_has_push_space(*i, mons))
+            if (!_has_push_space(*i, act))
                 return false;
         }
         else if (actor_at(*i))
