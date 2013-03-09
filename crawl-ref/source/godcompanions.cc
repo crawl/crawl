@@ -184,8 +184,8 @@ void wizard_list_companions()
 // allow the creation of these invalid companions are fully mopped up
 void fixup_bad_companions()
 {
-    for(map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end();)
+    for (map<mid_t, companion>::iterator i = companion_list.begin();
+         i != companion_list.end();)
     {
         if (invalid_monster_type(i->second.mons.mons.type))
             companion_list.erase(i++);
