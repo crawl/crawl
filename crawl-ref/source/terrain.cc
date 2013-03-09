@@ -1559,13 +1559,7 @@ string stair_climb_verb(dungeon_feature_type feat)
 
 static const char *dngn_feature_names[] =
 {
-"unseen", "closed_door", "runed_door",
-#if TAG_MAJOR_VERSION == 34
-"non-secret_door",
-#endif
-#if TAG_MAJOR_VERSION > 34
-"sealed door",
-#endif
+"unseen", "closed_door", "runed_door", "sealed_door",
 "mangrove", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
@@ -1630,7 +1624,7 @@ static const char *dngn_feature_names[] =
 
 #if TAG_MAJOR_VERSION == 34
 "abyssal_stair",
-"sealed door"
+"badly_sealed_door",
 #endif
 };
 

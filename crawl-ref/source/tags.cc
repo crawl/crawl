@@ -2941,8 +2941,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (flags & MAP_SERIALIZE_FEATURE)
 #if TAG_MAJOR_VERSION == 34
         feature = unmarshallFeatureType_Info(th);
-    if (feature == DNGN_OLD_SECRET_DOOR)
+    if (feature == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
         feature = DNGN_CLOSED_DOOR;
+    if (feature == DNGN_BADLY_SEALED_DOOR)
+        feature = DNGN_SEALED_DOOR;
 #else
         feature = unmarshallFeatureType(th);
 #endif
@@ -3339,8 +3341,10 @@ static void tag_read_level(reader &th)
             grd[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
 #if TAG_MAJOR_VERSION == 34
-            if (feat == DNGN_OLD_SECRET_DOOR)
+            if (feat == DNGN_SEALED_DOOR && th.getMinorVersion() < TAG_MINOR_0_12)
                 grd[i][j] = DNGN_CLOSED_DOOR;
+            if (feat == DNGN_BADLY_SEALED_DOOR)
+                grd[i][j] = DNGN_SEALED_DOOR;
 #endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);

@@ -1201,12 +1201,7 @@ enum dungeon_feature_type
     DNGN_UNSEEN,
     DNGN_CLOSED_DOOR,
     DNGN_RUNED_DOOR,
-#if TAG_MAJOR_VERSION == 34
-    DNGN_OLD_SECRET_DOOR,
-#endif
-#if TAG_MAJOR_VERSION > 34
     DNGN_SEALED_DOOR,
-#endif
     DNGN_MANGROVE,
     DNGN_METAL_WALL,
         DNGN_MINWALL = DNGN_METAL_WALL,
@@ -1374,7 +1369,7 @@ enum dungeon_feature_type
 
 #if TAG_MAJOR_VERSION == 34
     DNGN_ABYSSAL_STAIR,
-    DNGN_SEALED_DOOR,
+    DNGN_BADLY_SEALED_DOOR,
 #endif
 
     NUM_FEATURES
