@@ -707,10 +707,10 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
-            // Intelligent creatures not currently pursuing another foe are
-            // altered by a sentinel's mark
-            if (mon->foe == MHITNOT && !isFriendly
-                && you.duration[DUR_SENTINEL_MARK] && isSmart)
+            // Creatures not currently pursuing another foe are
+            // alerted by a sentinel's mark
+            if (mon->foe == MHITNOT && you.duration[DUR_SENTINEL_MARK]
+                && !isFriendly && !isNeutral && !isPacified)
             {
                 new_foe = MHITYOU;
                 new_beh = BEH_SEEK;
