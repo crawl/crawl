@@ -109,7 +109,7 @@ TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for hig
 .cflags: .force-cflags
 	@FLAGS='$(TRACK_CFLAGS)'; \
     if test x"$$FLAGS" != x"`cat .cflags 2>/dev/null`" ; then \
-        echo "    * rebuilding crawl: new build flags or prefix"; \
+        echo "    * rebuilding tilegen: new build flags or prefix"; \
         echo "$$FLAGS" > .cflags; \
     fi
 
