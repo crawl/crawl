@@ -56,6 +56,13 @@ body {
     color: #729fcf; /* lightblue */
 }
 
+.degenerated_defense {
+    color: #a40000; /* red */
+}
+.boosted_defense {
+    color: #729fcf; /* lightblue */
+}
+
 
 .bar span {
     display: inline-block;
