@@ -868,9 +868,13 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (proceed)
         {
-            // All items are moved inside.
+            // All items are moved aside.
             if (igrd(*ai) != NON_ITEM)
-                move_items(*ai, where);
+            {
+                coord_def newpos;
+                get_push_space(*ai, newpos, NULL, true);
+                move_items(*ai, newpos);
+            }
 
             // All clouds are destroyed.
             if (env.cgrid(*ai) != EMPTY_CLOUD)
@@ -881,7 +885,6 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 ptrap->destroy();
 
             // Actually place the wall.
-
             if (zin)
             {
                 map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
