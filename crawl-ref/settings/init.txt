@@ -162,8 +162,8 @@
 # runrest_ignore_poison  = 2:30
 # runrest_ignore_monster ^= butterfly:1
 # runrest_ignore_monster ^= swamp worm:3
-# runrest_stop_message ^= You hear a.* slurping noise
-# runrest_ignore_message ^= Jiyva's power touches on your attributes
+# runrest_stop_message += You hear a.* slurping noise
+# runrest_ignore_message += Jiyva's power touches on your attributes
 
 # A good number of runrest_messages is defined by default; you may want to
 # clear them or override some.
