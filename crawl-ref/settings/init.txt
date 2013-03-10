@@ -191,8 +191,8 @@
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = true
-# sort_menus += pickup: true : art, ego, basename, qualname, curse, qty
-# sort_menus += inv: true : equipped, freshness, charged
+# sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
+# sort_menus = inv: true : equipped, freshness, charged
 
 # autofight_stop = 30
 
