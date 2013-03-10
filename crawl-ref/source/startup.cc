@@ -293,12 +293,14 @@ static void _post_init(bool newc)
         // For a new game, wipe out monsters in LOS, and
         // for new hints mode games also the items.
         zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
-
-        if (crawl_state.game_is_zotdef())
-            fully_map_level();
     }
 
     tile_new_level(newc);
+    
+    // For ZotDef, map the level *after* assigning tiles so the tiles
+    // propagate properly out of LoS and the view doesn't look black.
+    if (newc && crawl_state.game_is_zotdef())
+        fully_map_level();
 
     // This just puts the view up for the first turn.
     viewwindow();

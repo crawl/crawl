@@ -554,9 +554,12 @@ void fully_map_level()
                 ok = true;
         if (!ok)
             continue;
-        set_terrain_visible(*ri);
         env.map_knowledge(*ri).set_feature(grd(*ri), 0,
             feat_is_trap(grd(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
+        set_terrain_seen(*ri);
+#ifdef USE_TILE
+        tile_wizmap_terrain(*ri);
+#endif
         if (igrd(*ri) != NON_ITEM)
             env.map_knowledge(*ri).set_detected_item();
         env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
