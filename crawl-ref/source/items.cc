@@ -3948,8 +3948,8 @@ item_info get_item_info(const item_def& item)
             ii.special = item.special;
 
             const int num_cards = cards_in_deck(item);
-            CrawlVector info_cards;
-            CrawlVector info_card_flags;
+            CrawlVector info_cards (SV_BYTE);
+            CrawlVector info_card_flags (SV_BYTE);
             bool found_unmarked = false;
             for (int i = 0; i < num_cards; ++i)
             {
