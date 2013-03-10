@@ -678,7 +678,7 @@ MONS:    w:20 nothing / jackal / rat
 MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
          w:5 jackal / w:5 rat
 ORIENT:  float
-FTILE:   1234+ABCDEabcdem = floor_dirt
+FTILE:   1234ABCDEabcdem = floor_dirt
 SHUFFLE: abcde / fghij
 SUBST:   f=A, g=B, h=C, i=D, j=E
 SUBST:   abcde = mx
