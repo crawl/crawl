@@ -1812,17 +1812,23 @@ static void _drop_tomb(const coord_def& pos, bool premature)
         {
             zin = true;
 
+            dungeon_feature_type old_feat = DNGN_FLOOR;
             vector<map_marker*> markers = env.markers.get_markers_at(*ai);
             for (int i = 0, size = markers.size(); i < size; ++i)
             {
                 map_marker *mark = markers[i];
                 if (mark->property("tomb") == "Zin")
+                {
+                    string old_feat_name = mark->property("old_feat");
+                    if (old_feat_name != "")
+                        old_feat = dungeon_feature_by_name(old_feat_name);
                     env.markers.remove(mark);
+                }
             }
 
             env.markers.clear_need_activate();
 
-            grd(*ai) = DNGN_FLOOR;
+            grd(*ai) = old_feat;
             env.grid_colours(*ai) = 0;
 
             set_terrain_changed(*ai);
