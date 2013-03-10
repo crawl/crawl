@@ -1425,8 +1425,8 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 
 // Find an adjacent space to displace a stack of items or a creature
 // (If act is null, we are just moving items and not an actor)
-static bool _get_push_space(const coord_def& pos, coord_def& newpos,
-                            actor* act, bool test_only = false)
+bool get_push_space(const coord_def& pos, coord_def& newpos,
+                    actor* act, bool ignore_tension)
 {
     if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
         return false;
@@ -1449,26 +1449,30 @@ static bool _get_push_space(const coord_def& pos, coord_def& newpos,
                     continue;
                 }
 
-                // If we're only testing, a single valid spot is acceptable
-                if (test_only)
-                    return true;
-
-                // Calculate tension at new position
-                set<coord_def> all_door;
-                find_connected_identical(pos, grd(pos), all_door);
-                dungeon_feature_type old_feat = grd(pos);
-
-                act->move_to_pos(*ai);
-                _set_door(all_door, DNGN_CLOSED_DOOR);
-                int new_tension = get_tension(GOD_NO_GOD);
-                _set_door(all_door, old_feat);
-                act->move_to_pos(pos);
-
-                if (new_tension > max_tension)
+                // If we don't care about tension, first valid spot is acceptable
+                if (ignore_tension)
                 {
-                    max_tension = new_tension;
-                    best_spot = *ai;
-                    can_push = true;
+                    newpos = *ai;
+                    return true;
+                }
+                else // Calculate tension with monster at new location
+                {
+                    set<coord_def> all_door;
+                    find_connected_identical(pos, grd(pos), all_door);
+                    dungeon_feature_type old_feat = grd(pos);
+
+                    act->move_to_pos(*ai);
+                    _set_door(all_door, DNGN_CLOSED_DOOR);
+                    int new_tension = get_tension(GOD_NO_GOD);
+                    _set_door(all_door, old_feat);
+                    act->move_to_pos(pos);
+
+                    if (new_tension > max_tension)
+                    {
+                        max_tension = new_tension;
+                        best_spot = *ai;
+                        can_push = true;
+                    }
                 }
             }
             else //If we're not moving a creature, the first open spot is enough
@@ -1484,10 +1488,10 @@ static bool _get_push_space(const coord_def& pos, coord_def& newpos,
     return can_push;
 }
 
-static bool _has_push_space(const coord_def& pos, actor* act)
+bool has_push_space(const coord_def& pos, actor* act)
 {
     coord_def dummy(-1, -1);
-    return _get_push_space(pos, dummy, act, true);
+    return get_push_space(pos, dummy, act, true);
 }
 
 static bool _can_force_door_shut(const coord_def& door)
@@ -1510,7 +1514,7 @@ static bool _can_force_door_shut(const coord_def& door)
                 || act->is_monster()
                     && act->as_monster()->attitude != ATT_HOSTILE)
             {
-                if (!_has_push_space(*i, act))
+                if (!has_push_space(*i, act))
                     return false;
             }
             else
@@ -1520,7 +1524,7 @@ static bool _can_force_door_shut(const coord_def& door)
         // out of the way
         else if (igrd(*i) != NON_ITEM)
         {
-            if (!_has_push_space(*i, 0))
+            if (!has_push_space(*i, 0))
                 return false;
         }
     }
@@ -1556,7 +1560,7 @@ static bool _should_force_door_shut(const coord_def& door)
     {
         coord_def newpos;
         coord_def oldpos = you.pos();
-        _get_push_space(oldpos, newpos, &you);
+        get_push_space(oldpos, newpos, &you);
         you.move_to_pos(newpos);
         _set_door(all_door, DNGN_CLOSED_DOOR);
         new_tension = get_tension(GOD_NO_GOD);
@@ -1609,7 +1613,7 @@ static bool _seal_doors(const monster* warden)
                 if (igrd(*i) != NON_ITEM || act)
                 {
                     coord_def newpos;
-                    _get_push_space(*i, newpos, act);
+                    get_push_space(*i, newpos, act);
                     move_items(*i, newpos);
                     if (act)
                     {
