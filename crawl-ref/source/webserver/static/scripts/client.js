@@ -168,6 +168,9 @@ function (exports, $, key_conversion, chat, comm) {
         if (!retrigger_event(e, "game_keypress"))
             return;
 
+        if (watching)
+            return;
+
         e.preventDefault();
 
         var s = String.fromCharCode(e.which);
@@ -232,6 +235,24 @@ function (exports, $, key_conversion, chat, comm) {
         if (!retrigger_event(e, "game_keydown"))
             return;
 
+        if (watching)
+        {
+            if (!e.ctrlKey && !e.shiftKey && !e.altKey)
+            {
+               if (e.which == 27)
+                {
+                    e.preventDefault();
+                    location.hash = "#lobby";
+                }
+                else if (e.which == 123)
+                {
+                    e.preventDefault();
+                    chat.focus();
+                }
+            }
+            return;
+        }
+
         if (e.ctrlKey && !e.shiftKey && !e.altKey)
         {
             if (e.which in key_conversion.ctrl)
@@ -264,12 +285,7 @@ function (exports, $, key_conversion, chat, comm) {
         }
         else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
         {
-            if (e.which == 27 && watching)
-            {
-                e.preventDefault();
-                location.hash = "#lobby";
-            }
-            else if (e.which == 123)
+            if (e.which == 123)
             {
                 e.preventDefault();
                 chat.focus();
