@@ -152,7 +152,12 @@ static vector<level_id> mg_dungeon_places()
 
         const branch_type branch = static_cast<branch_type>(br);
         for (int depth = 1; depth <= brdepth[br]; ++depth)
-            places.push_back(level_id(branch, depth));
+        {
+            level_id l(branch, depth);
+            if (SysEnv.map_gen_range.get() && !SysEnv.map_gen_range->is_usable_in(l))
+                continue;
+            places.push_back(l);
+        }
     }
     return places;
 }
@@ -274,6 +279,11 @@ static void _write_mapgen_stats()
         for (int dep = 1; dep <= brdepth[i]; ++dep)
         {
             const level_id lid(br, dep);
+            if (SysEnv.map_gen_range.get()
+                && !SysEnv.map_gen_range->is_usable_in(lid))
+            {
+                continue;
+            }
             _check_mapless(lid, mapless);
         }
     }
@@ -324,7 +334,7 @@ static void _write_mapgen_stats()
         }
     }
 
-    if (!unused_maps.empty())
+    if (!unused_maps.empty() && !SysEnv.map_gen_range.get())
     {
         fprintf(outf, "\n\nUnused maps:\n\n");
         for (int i = 0, size = unused_maps.size(); i < size; ++i)

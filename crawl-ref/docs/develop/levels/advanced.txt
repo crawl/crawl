@@ -1110,6 +1110,10 @@ probabilities of the random map on each level, use:
 
 crawl -mapstat 1
 
+You can instead limit the levels to operate on by providing a comma
+separated list of level ranges, with same syntax as in DEPTH: stanzas:
+
+crawl -mapstat D:27,Zot,!Zot:5
 
 R.   Map Generation
 ===================
