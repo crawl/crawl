@@ -293,6 +293,9 @@ static void _sdump_transform(dump_params &par)
                                      par.se ? "had" : "have", appendage_name());
             }
             break;
+        case TRAN_FUNGUS:
+            text += "You " + verb + " an sentient fungus.";
+            break;
         case TRAN_TREE:
             text += "You " + verb + " an animated tree.";
             break;

@@ -471,6 +471,8 @@ public:
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
+    bool made_nervous_by(const coord_def &pos);
+
     kill_category kill_alignment() const;
 
     bool has_spell(spell_type spell) const;
