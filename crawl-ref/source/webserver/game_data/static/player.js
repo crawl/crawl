@@ -5,8 +5,14 @@ function ($, comm, enums, map_knowledge, messages) {
     var stat_boosters = {
         "str": "vitalised|mighty|berserk",
         "int": "vitalised|brilliant",
-        "dex": "vitalised|agile"
+        "dex": "vitalised|agile",
     };
+
+    var defense_boosters = {
+        "ac": "icy armour|stone skin",
+        "ev": "phasing|agile",
+        "sh": "shielded",
+    }
 
     function update_bar(name)
     {
@@ -69,32 +75,55 @@ function ($, comm, enums, map_knowledge, messages) {
             return inventory_item_desc(player.quiver_item);
     }
 
-    player.has_status_light = function (status_light)
+    player.has_status_light = function (status_light, col)
     {
         for (var i = 0; i < player.status.length; ++i)
         {
             if (player.status[i].light &&
-                player.status[i].light.match(status_light))
+                player.status[i].light.match(status_light) &&
+                (col == null || player.status[i].col == col))
                 return true;
         }
         return false;
     }
-    player.has_status = function (status_name)
+    player.has_status = function (status_name, col)
     {
         for (var i = 0; i < player.status.length; ++i)
         {
             if (player.status[i].text &&
-                player.status[i].text.match(status_name))
+                player.status[i].text.match(status_name) &&
+                (col == null || player.status[i].col == col))
                 return true;
         }
         return false;
+    }
+    player.incapacitated = function incapacitated()
+    {
+        // FIXME: does this cover all ATTR_HELD cases?
+        return player.has_status("paralysed|petrified|sleeping")
+               || player.has_status("confused|petrifying")
+               || player.has_status("held", 4);
+    }
+
+    function update_defense(type)
+    {
+        var elem = $("#stats_"+type);
+        elem.text(player[type]);
+        elem.removeClass();
+        if (type == "sh" && player.incapacitated()
+            && player.equip[enums.equip.SHIELD] != -1)
+            elem.addClass("degenerated_defense");
+        else if (player.has_status(defense_boosters[type]))
+            elem.addClass("boosted_defense");
+        else if (type == "ac" && player.has_status("icemail depleted"))
+            elem.addClass("degenerated_defense");
     }
 
     function stat_class(stat)
     {
         var val = player[stat];
         var max_val = player[stat + "_max"];
-        if (val <= 0)
+        if (player.has_status("lost " + stat))
             return "zero_stat";
 
         // TODO: stat colour options -- hardcoded for now
@@ -124,8 +153,7 @@ function ($, comm, enums, map_knowledge, messages) {
         $("#stats_" + stat).html(elem);
     }
 
-    var simple_stats = ["hp", "hp_max", "mp", "mp_max",
-                        "ac", "ev", "sh", "xl", "progress", "gold"];
+    var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress", "gold"];
     function update_stats_pane()
     {
         $("#stats_titleline").text(player.name + " the " + player.title);
@@ -173,6 +201,10 @@ function ($, comm, enums, map_knowledge, messages) {
             $("#stats_real_hp_max").text("");
         update_bar("hp");
         update_bar("mp");
+
+        update_defense("ac");
+        update_defense("ev");
+        update_defense("sh");
 
         update_stat("str");
         update_stat("int");
