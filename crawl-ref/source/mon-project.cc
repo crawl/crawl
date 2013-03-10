@@ -516,8 +516,9 @@ move_again:
         }
     }
 
-    // Boulders stop at lava/water to prevent unusual behaviour; skimming across
-    // the water like a pebble could be justifiable but it raises too many questions.
+    // Boulders stop at lava/water to prevent unusual behaviour;
+    // skimming across the water like a pebble could be justifiable, but
+    // it raises too many questions.
     if (!iood && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
     {
         mprf("%s screeches to a halt.", mon.name(DESC_THE, true).c_str());
@@ -581,7 +582,8 @@ static bool _iood_catchup_move(monster& mon)
         return true;
     }
     // Boulder doesn't travel over water/lava.
-    if (mons_is_boulder(&mon) && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
+    if (mons_is_boulder(&mon)
+        && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
     {
         _iood_stop(mon, false);
         return true;
