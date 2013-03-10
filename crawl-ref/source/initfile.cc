@@ -33,6 +33,7 @@
 #include "invent.h"
 #include "libutil.h"
 #include "macro.h"
+#include "mapdef.h"
 #include "message.h"
 #include "mon-util.h"
 #include "jobs.h"
@@ -4280,7 +4281,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_MAPSTAT:
 #ifdef DEBUG_DIAGNOSTICS
             crawl_state.map_stat_gen = true;
-            if (next_is_param)
+            SysEnv.map_gen_iters = 100;
+            if (!next_is_param)
+                ;
+            else if (isadigit(*next_arg))
             {
                 SysEnv.map_gen_iters = atoi(next_arg);
                 if (SysEnv.map_gen_iters < 1)
@@ -4290,7 +4294,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 nextUsed = true;
             }
             else
-                SysEnv.map_gen_iters = 100;
+            {
+                SysEnv.map_gen_range.reset(new depth_ranges);
+                *SysEnv.map_gen_range = depth_ranges::parse_depth_ranges(next_arg);
+                nextUsed = true;
+            }
 
             break;
 #else
