@@ -4329,6 +4329,15 @@ static void _move_player(coord_def move)
             attacking = true;
         }
     }
+    else if (you.form == TRAN_FUNGUS && moving)
+    {
+        if (you.made_nervous_by(targ))
+        {
+                moving = false;
+                you.turn_is_over = false;
+                return;
+        }
+    }
 
     if (you.form == TRAN_JELLY && feat_is_closed_door(targ_grid))
     {
