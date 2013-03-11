@@ -800,6 +800,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         bool success = true;
         bool none_vis = true;
 
+        vector<coord_def> veto_spots(8);
+        for (adjacent_iterator ai(where); ai; ++ai)
+            veto_spots.push_back(*ai);
+
         // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
         {
@@ -807,13 +811,17 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (actor *act = actor_at(*ai))
             {
                 // Can't push ourselves.
-                if (act->is_player() || !has_push_space(*ai, act))
+                coord_def newpos;
+                if (act->is_player()
+                    || !get_push_space(*ai, newpos, act, true, &veto_spots))
                 {
                     success = false;
                     if (you.can_see(act))
                         none_vis = false;
                     break;
                 }
+                else
+                    veto_spots.push_back(newpos);
             }
 
             // Make sure we have a legitimate tile.

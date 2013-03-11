@@ -28,8 +28,10 @@ void move_demon_tentacle(monster * tentacle);
 void ancient_zyme_sicken(monster* mons);
 void starcursed_merge(monster* mon, bool forced);
 
-bool has_push_space(const coord_def& pos, actor* act);
+bool has_push_space(const coord_def& pos, actor* act,
+                    const vector<coord_def>* excluded = NULL);
 bool get_push_space(const coord_def& pos, coord_def& newpos,
-                    actor* act, bool ignore_tension = false);
+                    actor* act, bool ignore_tension = false,
+                    const vector<coord_def>* excluded = NULL);
 
 #endif
