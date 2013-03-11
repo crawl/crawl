@@ -1514,7 +1514,9 @@ static bool _can_force_door_shut(const coord_def& door)
         return false;
 
     set<coord_def> all_door;
+    vector<coord_def> veto_spots;
     find_connected_identical(door, grd(door), all_door);
+    copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
     for (set<coord_def>::const_iterator i = all_door.begin();
          i != all_door.end(); ++i)
@@ -1528,8 +1530,11 @@ static bool _can_force_door_shut(const coord_def& door)
                 || act->is_monster()
                     && act->as_monster()->attitude != ATT_HOSTILE)
             {
-                if (!has_push_space(*i, act))
+                coord_def newpos;
+                if (!get_push_space(*i, newpos, act, true, &veto_spots))
                     return false;
+                else
+                    veto_spots.push_back(newpos);
             }
             else
                 return false;
@@ -1556,7 +1561,9 @@ static bool _should_force_door_shut(const coord_def& door)
     int cur_tension = get_tension(GOD_NO_GOD);
 
     set<coord_def> all_door;
+    vector<coord_def> veto_spots;
     find_connected_identical(door, grd(door), all_door);
+    copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
     bool player_in_door = false;
     for (set<coord_def>::const_iterator i = all_door.begin();
@@ -1574,7 +1581,7 @@ static bool _should_force_door_shut(const coord_def& door)
     {
         coord_def newpos;
         coord_def oldpos = you.pos();
-        get_push_space(oldpos, newpos, &you);
+        get_push_space(oldpos, newpos, &you, false, &veto_spots);
         you.move_to_pos(newpos);
         _set_door(all_door, DNGN_CLOSED_DOOR);
         new_tension = get_tension(GOD_NO_GOD);
@@ -1618,7 +1625,9 @@ static bool _seal_doors(const monster* warden)
                 continue;
 
             set<coord_def> all_door;
+            vector<coord_def> veto_spots;
             find_connected_identical(*ri, grd(*ri), all_door);
+            copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
             for (set<coord_def>::const_iterator i = all_door.begin();
                  i != all_door.end(); ++i)
             {
@@ -1627,13 +1636,14 @@ static bool _seal_doors(const monster* warden)
                 if (igrd(*i) != NON_ITEM || act)
                 {
                     coord_def newpos;
-                    get_push_space(*i, newpos, act);
+                    get_push_space(*i, newpos, act, false, &veto_spots);
                     move_items(*i, newpos);
                     if (act)
                     {
                         actor_at(*i)->move_to_pos(newpos);
                         if (act->is_player())
                             player_pushed = true;
+                        veto_spots.push_back(newpos);
                     }
                 }
             }
