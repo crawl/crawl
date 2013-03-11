@@ -2226,6 +2226,12 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
 
+        if (mons->friendly() || mons->good_neutral())
+        {
+            mpr("You cannot imprison a law-abiding creature!");
+            return false;
+        }
+
         power = 3 + roll_dice(6, (30 + you.skill(SK_INVOCATIONS, 10))
                                  / (3 + mons->hit_dice)) / 3;
 
