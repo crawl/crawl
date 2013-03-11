@@ -805,7 +805,8 @@ static const char* dur_names[] =
 #if TAG_MAJOR_VERSION == 34
     "battlesphere",
 #endif
-    "sentinel's mark"
+    "sentinel's mark",
+    "sickening"
 };
 
 void wizard_edit_durations(void)

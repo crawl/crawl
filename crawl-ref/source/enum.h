@@ -1473,6 +1473,7 @@ enum duration_type
     DUR_BATTLESPHERE,
 #endif
     DUR_SENTINEL_MARK,
+    DUR_SICKENING,
     NUM_DURATIONS
 };
 

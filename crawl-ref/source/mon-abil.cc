@@ -3776,25 +3776,31 @@ void ancient_zyme_sicken(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && you.res_rotting() <= 0
+        && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.disease)
         {
-            mprf(MSGCH_WARN, "You feel yourself grow ill in the presence of %s.",
-                 mons->name(DESC_THE).c_str());
-            you.sicken(30 + random2(30));
-        }
-        else if (x_chance_in_y(you.time_taken, 60))
-            you.sicken(15 + random2(30));
+            if (!you.duration[DUR_SICKENING])
+            {
+                mprf(MSGCH_WARN, "You feel yourself growing ill in the presence of %s.",
+                    mons->name(DESC_THE).c_str());
+            }
 
-        if (x_chance_in_y(you.time_taken, 100))
+            you.duration[DUR_SICKENING] += (2 + random2(4)) * BASELINE_DELAY;
+            if (you.duration[DUR_SICKENING] > 100)
+            {
+                you.sicken(40 + random2(30));
+                you.duration[DUR_SICKENING] = 0;
+            }
+        }
+        else
         {
-            mprf("%s presence inflicts a toll on your body.",
-                 mons->name(DESC_ITS).c_str());
-            you.drain_stat((coinflip() ? STAT_STR : STAT_DEX), 1, mons);
+            if (x_chance_in_y(you.time_taken, 60))
+                you.sicken(15 + random2(30));
         }
-
     }
+
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
     {
         monster *m = monster_at(*ri);

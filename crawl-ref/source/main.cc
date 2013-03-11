@@ -2856,6 +2856,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SENTINEL_MARK, delay,
                           "The sentinel's mark upon you fades away.");
 
+    _decrement_a_duration(DUR_SICKENING, delay);
+
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
