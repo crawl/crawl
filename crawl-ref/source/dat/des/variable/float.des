@@ -5002,3 +5002,102 @@ xvv..vvvvvvv..vvx
 xxv==vvvvvvvvvvxx
    @@
 ENDMAP
+
+NAME:   minmay_rotating_shell
+DEPTH:  D:16-
+WEIGHT: 3
+# 27 / 3 items!
+KITEM:  d = |,|,|,|,|,|,|,|,|
+SUBST:  A : ABB
+SUBST:  B : BCC
+SUBST:  C : CDD
+SUBST:  D : DEE
+SUBST:  E : .:100 x:1 v:1 b:1 G:1
+SUBST:  D : .:100 x v b G:4
+SUBST:  A : .:100 x v b:20 G:16
+SUBST:  B : .:100 x v b:40 G:64
+SUBST:  C : .:100 x v b:80 G:128
+SUBST:  0 = 0..
+SUBST:  9 = 9..
+SUBST:  8 = 8.
+MAP
+          .............
+        ...vvvvvvvvvvv...
+      ...vvv....+...0vvv...
+     ..vvv...vvvv.DD..0vvv..
+    ..vv...vvv..v0.DDD..0vv..
+   ..vv..vvv....vv0..DDD.0vv..
+  ..vv..vv...AA.vvvv0..DD.0vv..
+  .vv..vv..AAA..+..vvv0.DD.0vv.
+ ..v..vv..AA..9vvv...vv0.DD.0v..
+ .vv.vv..AA.9vvvvvvv..vv0.DD.vv.
+..v..v..AA.9vv.....vv..vv0.D.0v..
+.vv.vv.AA.9vv..vvv..vv..vv.DD.vv.
+.v..v..A.9vv..vvvvv..vv..v0.D.0v.
+.v.vv.AA.vv..vv.+8vv..vv.vv.DD.v.
+.v.v..A.9v..vv..v88vv..v..v0.D.v.
+.v.v...9vv.vv..vv888vv.vv.vv...v.
+.v.v+vvvvv+vv.vvdvvvvv+vv.vv+vvv.
+.v.v.vv....vv..vvv8....vv.vv.v0..
+.v.v..v9.B.9vv..v..CC.8v..v..v.E.
+.v.vv.vv.BB.9vv.+.CC.8vv.vv.vv.E.
+.v..v..v9.BB.9vvv.C.8vv..v..v0.E.
+.vv.vv.vv9.BB.9vv..8vv..vv.vv.EE.
+..v..v..vv9.BB.9v.8vv..vv..v0.E..
+ .vv.vv..vv9.BB.vvvv..vv..vv.EE..
+ ..v..vv..vv9...vv...vv..vv0.E...
+  .vv..vv..vvv9.+..vvv..vv0.EE...
+  ..vv..vv...vvvvvvv...vv0.EE....
+   ..vv..vvv...vvv...vvv0.EE.....
+    ..vv...vvv.....vvv0..EE......
+     ..vvv...vvvvvvv0..EEE.......
+      ...vvv....+....EEE.........
+        ...vvvvvv.EEEE...........
+          .......................
+ENDMAP
+
+NAME:   minmay_hidden_floor
+DEPTH:  D:12-
+SUBST:  9 = 9999., 8 = 8888.
+MAP
+     @
+cccccnccccc
+c.........c
+c.ccc9ccc.c
+c.c8ncn8c.c
+c.cn***nc.c
+@.9c*.*c9.n@
+cncn***nc.c
+c.=8ncn8c.c
+c.ccc9ccc.c
+c.........c
+cccccnccccc
+     @
+ENDMAP
+
+NAME:    minmay_multi_spiral
+SHUFFLE: AC
+DEPTH:   D:16-
+SUBST:   A : ., C : x
+SUBST:   x : xcvb
+SUBST:   8 = . 0:1 9:1 8:1
+MAP
+         ......
+         @CCCC..  xxxxxx
+   xxx....AAACC.. x||||xxx
+  xx88AAAA..AACC. xAAAA88xx
+ xx8AAACCAAA.AAC..xCCCAAA8xx
+ x8AACCCCCCAA.ACC8x||CCCAA8x
+xx8ACC8888CCA.AAC8xx888CCA8xx
+x8AAC88xx88CAA.AC8xxxx88CAA8x
+x8ACC8xxxx8CCA.AC88xbxx8CCA8x
+x8ACC8xxbx88CA.ACC8xxxx8CCA8x
+x8AAC88xxxx8CA.AAC88xx88CAA8x
+xx8ACC888xx8CAA.ACC8888CCA8xx
+ x8AACCC||x8CCA.AACCCCCCAA8x
+ xx8AAACCCx..CAA.AAACCAAA8xx
+  xx88AAAAx .CCAA..AAAA88xx
+   xxx||||x ..CCAAA....xxx
+     xxxxxx  ..CCCC.
+              .....@
+ENDMAP
