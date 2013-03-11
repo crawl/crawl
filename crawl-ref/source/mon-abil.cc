@@ -1425,8 +1425,8 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 
 // Find an adjacent space to displace a stack of items or a creature
 // (If act is null, we are just moving items and not an actor)
-bool get_push_space(const coord_def& pos, coord_def& newpos,
-                    actor* act, bool ignore_tension)
+bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
+                    bool ignore_tension, const vector<coord_def>* excluded)
 {
     if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
         return false;
@@ -1448,6 +1448,19 @@ bool get_push_space(const coord_def& pos, coord_def& newpos,
                 {
                     continue;
                 }
+
+                bool spot_vetoed = false;
+                if (excluded)
+                {
+                    for (unsigned int i = 0; i < excluded->size(); ++i)
+                        if (excluded->at(i) == *ai)
+                        {
+                            spot_vetoed = true;
+                            break;
+                        }
+                }
+                if (spot_vetoed)
+                    continue;
 
                 // If we don't care about tension, first valid spot is acceptable
                 if (ignore_tension)
@@ -1488,10 +1501,11 @@ bool get_push_space(const coord_def& pos, coord_def& newpos,
     return can_push;
 }
 
-bool has_push_space(const coord_def& pos, actor* act)
+bool has_push_space(const coord_def& pos, actor* act,
+                    const vector<coord_def>* excluded)
 {
     coord_def dummy(-1, -1);
-    return get_push_space(pos, dummy, act, true);
+    return get_push_space(pos, dummy, act, true, excluded);
 }
 
 static bool _can_force_door_shut(const coord_def& door)
