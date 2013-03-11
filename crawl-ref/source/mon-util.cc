@@ -1576,7 +1576,7 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
     }
     else if (mons->type == MONS_SPECTRAL_THING && coinflip())
         attk.flavour = AF_DRAIN_XP;
-    else if (attk.flavour != AF_REACH)
+    else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
         attk.flavour = AF_PLAIN;
 
     attk.damage = _downscale_zombie_damage(attk.damage);
