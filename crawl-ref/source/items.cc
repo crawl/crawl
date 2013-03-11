@@ -3962,7 +3962,8 @@ item_info get_item_info(const item_def& item)
                 }
                 else if (!found_unmarked)
                 {
-                    // special card to tell at which point cards are no longer continuous
+                    // special card to tell at which point cards are no longer
+                    // continuous
                     info_cards.push_back((char)0);
                     info_card_flags.push_back((char)0);
                     found_unmarked = true;
