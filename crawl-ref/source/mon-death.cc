@@ -281,9 +281,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
     }
 
-    bool found_duvessa = false;
-    bool found_dowan = false;
-    monster* mons;
+    monster* mons = nullptr;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -297,18 +295,16 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         if (mons_is_duvessa(*mi))
         {
             mons = *mi;
-            found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
             mons = *mi;
-            found_dowan = true;
             break;
         }
     }
 
-    if (!found_duvessa && !found_dowan)
+    if (!mons)
         return;
 
     // Okay, let them climb stairs now.
@@ -353,7 +349,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     else if (mons->can_speak())
         mprf("%s", death_message.c_str());
 
-    if (found_duvessa)
+    if (mons_is_duvessa(mons))
     {
         if (mons_near(mons))
         {
@@ -366,8 +362,9 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
             mons->props["duvessa_berserk"] = bool(true);
         }
     }
-    else if (found_dowan)
+    else
     {
+        ASSERT(mons_is_dowan(mons));
         if (mons->observable())
         {
             mons->add_ench(ENCH_HASTE);
@@ -393,9 +390,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 **/
 void elven_twins_pacify(monster* twin)
 {
-    bool found_duvessa = false;
-    bool found_dowan = false;
-    monster* mons;
+    monster* mons = nullptr;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -409,23 +404,19 @@ void elven_twins_pacify(monster* twin)
         if (mons_is_duvessa(*mi))
         {
             mons = *mi;
-            found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
             mons = *mi;
-            found_dowan = true;
             break;
         }
     }
 
-    if (!found_duvessa && !found_dowan)
+    if (!mons)
         return;
 
-    // This shouldn't happen, but sometimes it does.
-    if (mons->neutral())
-        return;
+    ASSERT(!mons->neutral());
 
     if (you.religion == GOD_ELYVILON)
         gain_piety(random2(mons->max_hit_points / (2 + you.piety / 20)), 2);
@@ -448,9 +439,7 @@ void elven_twins_pacify(monster* twin)
 **/
 void elven_twins_unpacify(monster* twin)
 {
-    bool found_duvessa = false;
-    bool found_dowan = false;
-    monster* mons;
+    monster* mons = nullptr;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -464,18 +453,16 @@ void elven_twins_unpacify(monster* twin)
         if (mons_is_duvessa(*mi))
         {
             mons = *mi;
-            found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
             mons = *mi;
-            found_dowan = true;
             break;
         }
     }
 
-    if (!found_duvessa && !found_dowan)
+    if (!mons)
         return;
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
