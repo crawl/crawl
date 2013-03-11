@@ -2791,7 +2791,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
     mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
                  0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
 
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.extra_flags |= MF_NO_REWARD;
 
     // This is a bit of a hack to use give_monster_proper_name to feed
     // the mgen_data, but it gets the job done.
