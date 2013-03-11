@@ -1069,7 +1069,8 @@ void game_options::reset_options()
     dump_order.clear();
     new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,"
-                    "screenshot,monlist,kills,notes,action_counts");
+                    "screenshot,monlist,kills,notes,vaults,"
+                    "action_counts");
 
     hp_colour.clear();
     hp_colour.push_back(pair<int,int>(50, YELLOW));

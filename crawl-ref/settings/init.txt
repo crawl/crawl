@@ -383,7 +383,7 @@
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
-# dump_order += action_counts
+# dump_order += vaults, action_counts
 # dump_book_spells = false
 
 ##### 4-c       Notes #################################
