@@ -298,7 +298,8 @@ it like any other door (i.e., by walking into it or pressing 'O').
 %%%%
 A sealed door
 
-A door sealed tightly by arcane runes. It refuses to open for any creature not recognised by its magic.
+A door sealed tightly by arcane runes. It refuses to open for any creature not
+recognised by its magic.
 %%%%
 A shaft
 
