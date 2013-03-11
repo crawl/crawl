@@ -2748,11 +2748,12 @@ void bolt::affect_place_explosion_clouds()
 
     if (flavour == BEAM_MEPHITIC)
     {
-        const int duration = roll_dice(2, 3 + ench_power / 20);
-        const cloud_type cl_type = CLOUD_MEPHITIC;
         const coord_def center = (aimed_at_feet ? source : ray.pos());
         if (p == center || x_chance_in_y(125 + ench_power, 225))
-            place_cloud(cl_type, p, duration, agent());
+        {
+            place_cloud(CLOUD_MEPHITIC, p, roll_dice(2, 3 + ench_power / 20),
+                        agent());
+        }
     }
 
     // then check for more specific explosion cloud types.
