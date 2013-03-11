@@ -3291,7 +3291,7 @@ xxxxxxx
 ENDMAP
 
 NAME:  kb_rosetta
-TAGS:  vaults_room_15_spin_encounter
+TAGS:  vaults_hard
 DEPTH: D:6-, Vaults, Elf
 SUBST: x : xcvmnot
 SUBST: X : GItTU
@@ -3994,6 +3994,8 @@ MAP
 .......
 ENDMAP
 
+##################
+
 NAME:   lightli_corner_chamber
 DEPTH:  D:2-
 KPROP:  $*09 = no_rtele_into
@@ -4068,6 +4070,316 @@ vv......vv
 v%v....v%v
 v0%v++v%0v
 vvvv..vvvv
+ENDMAP
+
+NAME:   minmay_close_crescents
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+ .........
+..xxxx..x..
+.xx00xx.xx.
+.x0..%x.0x.
+.x0.x%..0x.
+.xx.xx00xx.
+..x..xxxx..
+ .........
+ENDMAP
+
+NAME:   minmay_cut_off
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+.
+..
+.x.
+.x..
+.x0x.
+.x0xx.
+.x0%xx.
+.xxxxxx.
+ .xx%0x.
+  .xx0x.
+   .x0x.
+    ..x.
+     .x.
+      ..
+       .
+ENDMAP
+
+NAME:   minmay_cupped
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+..........
+.xxx...xx.
+.x%xx..xx.
+.xx%xx.0x.
+..xx...0x.
+...x..0xx.
+.....0xxx.
+.xx00xxx..
+.xxxxxx...
+.........
+ENDMAP
+
+NAME:   minmay_unequal
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+........
+.xxx......
+...xxx....
+....0xxx...
+....0.%xxx.
+....0xxx...
+...xxx.....
+.xxx...xxx.
+.....xxx...
+...xxx0....
+.xxx%.0....
+...xxx0....
+ ....xxx...
+ ......xxx.
+   ........
+ENDMAP
+
+NAME:   minmay_box_of_dots
+DEPTH:  D:1-4
+SUBST:  0 = 0., + : +.
+MAP
+ .........
+..xxx+xxx..
+.xx.....xx.
+.x.0x0x0.x.
+.+.x%x%x.+.
+.x.0x0x0.x.
+.xx.....xx.
+..xxx+xxx..
+ .........
+ENDMAP
+
+NAME:   minmay_quantized
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+    .....
+    .xxx.
+  ...x%x...
+  .xxx.xxx.
+...x0.0.0x...
+.xxx.xxx.xxx.
+....0xxx0.%x.
+.xxx.xxx.xxx.
+...x0.0.0x...
+  .xxx.xxx.
+  ...x%x...
+    .xxx.
+    .....
+ENDMAP
+
+NAME:   minmay_ruptured
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+ ..................
+...xx.xx.....xx.xx..
+.xxx.x.xx.x.xx.x.xx.
+.x%..x000xxx000x.%x.
+.xxx.x.xx.x.xx.x.xx.
+...xx.xx.....xx.xx..
+ ..................
+ENDMAP
+
+NAME:   minmay_bisected
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+.....
+.xxx..
+.x%xx..
+.xx0x...
+..xx00...
+ ...00xx..
+  ...x0xx.
+   ..xx%x.
+    ..xxx.
+     .....
+ENDMAP
+
+NAME:   minmay_distorted
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+   ...
+ .......
+ .xxxxx.
+..x.0.x..
+.x0%0x...
+..x.0.x..
+ .xxxxx.
+ .......
+   ...
+ENDMAP
+
+NAME:   minmay_vboxes
+DEPTH:  D:1-4
+SUBST:  0 = 0.
+MAP
+.....         .....
+.xxx..       ..xxx.
+.x%x...     ...x%x.
+.xx.xx..   ..xx.xx.
+...x0x... ...x0x...
+ ..xx.xx...xx.xx..
+  ...x0x...x0x...
+   ..xx0xxx0xx..
+    ...x000x...
+     ..x000x..
+      .x%%%x.
+      .xxxxx.
+      .......
+ENDMAP
+
+NAME:    minmay_surrounded
+DEPTH:   D:1-4
+SUBST:   0 = 0.
+MAP
+.........
+.x0xxx0x.
+.0.....0.
+.x.mmm.x.
+.x.m*m.x.
+.x.mmm.x.
+.0.....0.
+.x0xxx0x.
+.........
+ENDMAP
+
+NAME:    minmay_shallow_snake_nest
+# deeper depths already have snake vaults
+DEPTH:   D:1-3
+: if you.absdepth() > 1 then
+MONS:   ball python / nothing w:20, adder
+: else
+MONS:    ball python / nothing w:50, nothing / adder w:1
+: end
+MONS:    plant / nothing, fungus / nothing
+SUBST:   " = xxx3, ' = xx..13, 1 = 1 3:1
+SHUFFLE: 3334
+MAP
+ xxxxxxx
+xx"""""xx
+x""1'1""x
+x"1'2'1"x
+x"'111'"x
+x"1'1'1"x
+xx"'1'"xx
+ xx"@"xx
+ENDMAP
+
+NAME:    minmay_lizard_king
+DEPTH:   D:1-13
+MONS:    giant newt, giant gecko, iguana, crocodile, basilisk, plant
+SUBST:   6 = 61, 1 = 1.
+: if you.absdepth() > 9 then
+SUBST:   1 = 433221
+: elseif you.absdepth() > 6 then
+SUBST:   5 = 4, 1 = 32211
+: elseif you.absdepth() > 3 then
+SUBST:   5 = 3, 1 = 21
+: else
+SUBST:   5 = 2
+: end
+MAP
+  xxxxxx
+xxx6116x
+x561661xx
+xx166166x
+ x666616x
+ xxxxx6@
+ENDMAP
+
+NAME:    minmay_joined_circles
+DEPTH:   D:2-
+NSUBST:  ? = 1:+ / *:?
+SUBST:   ? = +xxx
+SUBST:   x : x:50 cvbnm
+SHUFFLE: ABC
+SUBST:   A = 0....%, B = 0.%, C = 0%
+MAP
+     .....
+    ..xxx..
+    .xxCxx.
+    .?CCCx.
+    .xxCxx....
+  ....x+xxx?x..
+ .xxxxx.xxBBxx.
+.xxAAA+x+BBBBx.
+.xAAAAAxxBBBBx.
+.xAAAAAxxxBBxx.
+.xAAAAA?.xxxx..
+.xxAAAxx......
+ .xxxxx.
+  .....
+ENDMAP
+
+NAME:    minmay_diamond_spiral
+DEPTH:   D:8-
+SUBST:   ? = .G+m
+SHUFFLE: xcvb / mnnn
+: if you.absdepth() < 13 then
+SUBST:   8 = 9
+: end
+MAP
+          .
+         .x.
+        ..xx.
+       .x..xx.
+      .xxx..xx.
+     .xx8xx..xx.
+    .xx...xx..xx.
+   .xx..x..xx..xx.
+  .xx..xxx..xx..xx.
+ .xx..xx|xx..xx..xx.
+.xx8.xx|..?..|xx.8xx.
+ .xx..xx..xx|xx..xx.
+  .xx..xx..xxx..xx.
+   .xx..xx..x..xx.
+    .xx..xx...xx.
+     .xx..xx8xx.
+      .xx..xxx.
+       .xx..x.
+        .xx..
+         .x.
+          .
+ENDMAP
+
+NAME:    minmay_radiant
+DEPTH:   D:8-
+SUBST:   8 = 888.
+SUBST:   x : xcvbnm G:1
+: if you.absdepth() < 13 then
+SUBST:   8 = 9
+: end
+MAP
+ ..........
+....xxxxx.....
+..xxx..........
+..x......xxxx...
+.xx.........xx..
+.x...xxx.....x..
+.x...x8..xx..x...
+.x...x.|.8x..x...
+.x......|......x.
+...x..x8.|.x...x.
+...x..xx..8x...x.
+ ..x.....xxx...x.
+ ..xx.........xx.
+ ...xxxx......x..
+ ...........xxx..
+ .......xxxxx....
+      ..........
 ENDMAP
 
 ################################################################
