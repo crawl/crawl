@@ -755,8 +755,8 @@ gain entry.
 ice dragon armour
 
 Armour made from the scales of a cold-breathing dragon. It provides great
-protection from the effects of cold while rendering its wearer more
-susceptible to the effects of fire and heat.
+protection from the effects of cold while rendering its wearer more susceptible
+to the effects of fire and heat.
 %%%%
 ice dragon hide
 
@@ -878,11 +878,10 @@ of a well-trained combatant.
 %%%%
 mottled dragon armour
 
-Armour made from the scales of a mottled dragon. Although it does not
-provide its wearer with much protection, unlike the armour made from the
-scales of some larger dragons, it is as light and relatively uncumbersome as
-leather armour. It is also remarkably smooth, letting sticky flames flow
-down like water.
+Armour made from the scales of a mottled dragon. Although it does not provide
+its wearer with much protection, unlike the armour made from the scales of some
+larger dragons, it is as light and relatively uncumbersome as leather armour.
+It is also remarkably smooth, letting sticky flames flow down like water.
 %%%%
 mottled dragon hide
 
@@ -1597,10 +1596,9 @@ spells.
 %%%%
 steam dragon armour
 
-Armour made from the scales of a steam-breathing dragon. Although, unlike
-the armour made from the scales of some larger dragons, it does not provide
-its wearer with much protection, it is extremely light and as supple as
-cloth.
+Armour made from the scales of a steam-breathing dragon. Although, unlike the
+armour made from the scales of some larger dragons, it does not provide its
+wearer with much protection, it is extremely light and as supple as cloth.
 %%%%
 steam dragon hide
 
@@ -1622,9 +1620,9 @@ same time.
 %%%%
 storm dragon armour
 
-Armour made from the scales of a lightning-breathing dragon. It is heavier
-than most dragon scale armours, and gives its wearer great resistance to
-electrical discharges.
+Armour made from the scales of a lightning-breathing dragon. It is heavier than
+most dragon scale armours, and gives its wearer great resistance to electrical
+discharges.
 %%%%
 storm dragon hide
 
@@ -1643,8 +1641,8 @@ A humble raisin.
 %%%%
 swamp dragon armour
 
-Armour made from the scales of a swamp dragon. It confers resistance to
-poison on its wearer.
+Armour made from the scales of a swamp dragon. It confers resistance to poison
+on its wearer.
 %%%%
 # Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
 swamp dragon hide
@@ -1706,8 +1704,7 @@ Wearable, like other beastly skins, it also reacts well to enchantment.
 troll leather armour
 
 Armour made from the stiff and knobbly skin of a common troll. It magically
-regenerates its wearer's flesh at a fairly slow rate (unless already a
-troll).
+regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
 %%%%
 wand of cold
 
@@ -1720,7 +1717,6 @@ A magical device which induces confusion and bewilderment in a target creature.
 wand of digging
 
 A magical device which forms tunnels through unworked rock by liquefying it.
-
 %%%%
 wand of disintegration
 

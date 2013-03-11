@@ -297,8 +297,8 @@ A bronze shield.
 %%%%
 robe of Folly
 
-A dull grey robe. It is enchanted to provide its wearer with immeasurable
-power and wisdom.
+A dull grey robe. It is enchanted to provide its wearer with immeasurable power
+and wisdom.
 %%%%
 Maxwell's patent armour
 
@@ -455,9 +455,9 @@ ring of the Octopus King
 %%%%
 Axe of Woe
 
-As you hold this axe your mind does not feel fully your own. Your body
-begins to exhibit strength far beyond its capabilities, and your movements
-become guided by Makhleb.
+As you hold this axe your mind does not feel fully your own. Your body begins
+to exhibit strength far beyond its capabilities, and your movements become
+guided by Makhleb.
 %%%%
 milk chocolate
 
@@ -468,9 +468,9 @@ If you see this in a real game, it's a bug.
 %%%%
 dark chocolate
 
-This item is a debugging aid, granting a vast array of mostly harmful
-artefact properties. It's distinct from its milky counterpart as some props
-conflict with each other.
+This item is a debugging aid, granting a vast array of mostly harmful artefact
+properties. It's distinct from its milky counterpart as some props conflict
+with each other.
 
 If you see this in a real game, it's a bug.
 %%%%

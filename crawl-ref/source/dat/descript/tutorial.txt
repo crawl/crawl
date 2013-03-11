@@ -541,12 +541,16 @@ tutorial4 undead
 
 # TODO: This is more like hints mode stuff. The mouse interface hint is good
 #       though.
-Unlike most monsters, undead do not regenerate health and it is impossible to tell how wounded they are.<localtiles>
-Incidentally, you can also cast spells by pressing <w>[Ctrl+leftclick]</w> on the monster.</localtiles>
+Unlike most monsters, undead do not regenerate health and it is impossible to
+tell how wounded they are.<localtiles> Incidentally, you can also cast spells
+by pressing <w>[Ctrl+leftclick]</w> on the monster.</localtiles>
 %%%%
 tutorial4 spell_success
 
-To check your spell proficiency, press <w>[$cmd[CMD_DISPLAY_SPELLS]]</w><localtiles> or <w>[mouseover]</w> over your memorised spells</localtiles>. Compare your spell success rates before and after wielding this staff.
+To check your spell proficiency, press
+<w>[$cmd[CMD_DISPLAY_SPELLS]]</w><localtiles> or <w>[mouseover]</w> over your
+memorised spells</localtiles>. Compare your spell success rates before and
+after wielding this staff.
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
