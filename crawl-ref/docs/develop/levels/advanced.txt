@@ -1115,6 +1115,11 @@ separated list of level ranges, with same syntax as in DEPTH: stanzas:
 
 crawl -mapstat D:27,Zot,!Zot:5
 
+Mapstat tends to take large amounts of time, so remember you can have
+optimized debug builds by 'make debug CFOPTIMIZE="-Ofast"' if you're not
+after backtraces (mapstat is quite good for finding map generation crashes).
+CFOPTIMIZE is also a good place for inserting -pg into.
+
 R.   Map Generation
 ===================
 
