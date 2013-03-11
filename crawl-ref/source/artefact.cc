@@ -1163,7 +1163,7 @@ static bool _init_artefact_book(item_def &book)
     // randart, so reset them on each iteration of the loop.
     int  plus  = book.plus;
     int  plus2 = book.plus2;
-    bool book_good;
+    bool book_good = false;
     for (int i = 0; i < 4; i++)
     {
         book.plus  = plus;
