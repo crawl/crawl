@@ -96,12 +96,10 @@ void wizard_create_spec_object()
     char           specs[80];
     ucs_t          keyin;
     monster_type   mon;
-
-    object_class_type class_wanted   = OBJ_UNASSIGNED;
-
+    object_class_type class_wanted;
     int            thing_created;
 
-    while (class_wanted == OBJ_UNASSIGNED || class_wanted == NUM_OBJECT_CLASSES)
+    do
     {
         mpr(") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls",
             MSGCH_PROMPT);
@@ -123,7 +121,8 @@ void wizard_create_spec_object()
             canned_msg(MSG_OK);
             return;
         }
-    }
+    } while (class_wanted == NUM_OBJECT_CLASSES);
+
     msgwin_reply(make_stringf("%c", keyin));
 
     // Allocate an item to play with.
