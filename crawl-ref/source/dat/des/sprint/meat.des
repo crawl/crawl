@@ -90,12 +90,10 @@
     no_pickup . great mace plus:9 plus2:9 not_cursed ego:none race:no_race \
     ident:all no_pickup"
 
-  -- These guys will only show up long after you've had a chance to get the
-  -- orb and get out.
   local vile =
     "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse \
     col:lightred generate_awake perm_ench:haste \
-    spells:slow;confuse;confuse;miasma;hellfire_burst"
+    spells:dig;confuse;confuse;miasma;hellfire_burst"
 
   -- Uniques --
   local servant =
@@ -108,7 +106,7 @@
   local captor =
     "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan \
     generate_awake never_corpse \
-    spells:slow;haste;ensnare \
+    spells:sentinel's_mark;haste;ensnare \
     ; ring of slaying plus:27000 plus2:200 not_cursed ident:all \
     no_pickup . triple sword plus:9 plus2:9 not_cursed ego:vorpal race:no_race \
     ident:all no_pickup"
@@ -134,7 +132,6 @@
 
   -- Unspeakable shadow creatures will be (a lot of) starcursed masses
   -- This is the secret boss.
-  -- It's not intended that you see this.
   local avatar =
     "slime creature hp:10000 hd:100 name:The_Unspeakable \
     n_rpl col:jewel generate_awake perm_ench:haste \
@@ -251,17 +248,17 @@
       .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / " .. sculptor .. " / "
       .. lost_soul .. ""
-    elseif data.spawn_count < 200 then  -- turns 170 - 199
+    elseif data.spawn_count < 210 then  -- turns 170 - 209
       phase =
       "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / "
       .. lost_soul .. ""
-    elseif data.spawn_count < 250 then  -- turns 200 - 249
+    elseif data.spawn_count < 265 then  -- turns 210 - 264
       phase =
       "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / "
-      .. lost_soul .. " / " .. vile .. " w:30"
-    elseif data.spawn_count >= 250 then  -- turns 250 on
+      .. lost_soul .. " / " .. vile .. " w:25"
+    elseif data.spawn_count >= 265 then  -- turns 265 on
       phase =
       "" .. vile .. ""
     end
@@ -285,17 +282,18 @@
     elseif data.spawn_count == 100 then
       dgn.create_monster(33, 63, defiler)
     elseif data.spawn_count == 150 then
-      local mons = dgn.mons_at(33, 63)
+      local m_x, m_y = marker:pos()
+      local mons = dgn.mons_at(m_x, m_y)
         if mons then
           mons.dismiss()
         end
-          dgn.create_monster(33, 63, meatlord)
+          dgn.create_monster(m_x, m_y, meatlord)
           crawl.more()
           crawl.mpr("<red>" .. border_top .. "" ..
           "--                      </red><lightred>The Meatlord has descended...</lightred><red>                       --\n" ..
           "" .. border_bottom .. "</red>")
           crawl.more()
-    elseif data.spawn_count == 250 then
+    elseif data.spawn_count == 300 then
       dgn.create_monster(33, 63, avatar)
       -- No message for the Unspeakable.
     end
@@ -322,6 +320,7 @@ DESC:      Sprint VIII: "Arena of Blood"
 KFEAT:     { = {
 LROCKCOL:  red
 LFLOORCOL: red
+NSUBST:    ' = 1:& / *:.
 {{
 
   dgn.persist.calc_score = global_function("meatsprint_score");
@@ -359,7 +358,7 @@ LFLOORCOL: red
     delay_max=10
     })
 
-  lua_marker('&', spawn_marker)
+  lua_marker("&", spawn_marker)
 
   crawl.more()
   crawl.mpr("<red>" ..
@@ -408,10 +407,10 @@ KITEM:     * = ring of protection from fire not_cursed ident:all no_pickup
 SUBST:     1 = 1.
 KFEAT:     _ = altar_makhleb
 KFEAT:     ^ = teleport trap
-KFEAT:     x = stone_wall
-COLOUR:    x = red
-TILE:      x = wall_hell
-FTILE:     1234+*&J = floor_demonic_red
+KFEAT:     x = rock_wall
+COLOUR:    xX = red
+TILE:      xX = wall_hell
+FTILE:     1234+'*&J = floor_demonic_red
 : blood_monster_definitions(_G)
 : weapon_creation(_G)
 MAP
@@ -442,23 +441,23 @@ xxxxxxxxxxxx221111......x.........1x.x.......x......11122xxxxxxxxxxxxx
 xxxxxxxxxxxx1111........x..................xxxx.....11111xxxxxxxxxxxxx
 xxxxxxxxxxxx111....xxx...x..........................11111xxxxxxxxxxxxx
 xxxxxxxxxxxx11...xxx......x.......................x....11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x......................................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11......x.............................x....11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x......11x.......x11..............11xxxxxxxxxxxxx
-xxxxxxxxxxxx41..........x...11x.......x11.........xx...14xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x......xxx.......xxx..............11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x................xxx.............xxx2..11xxxxxxxxxxxxx
-xxxxxxxxxxxx111.xx........x......._....................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1.x.....x.......x.....x.......x.x.......11xxxxxxxxxxxxx
-xxxxxxxxxxxx*1.1.2xxx..........x_.{._x................11*xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1.xx....x.......x.....x......x.x.x....1111xxxxxxxxxxxxx
-xxxxxxxxxxxx11.1x.........x......._....................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..x................xxx.........x.x.x..x..11xxxxxxxxxxxxx
-xxxxxxxxxxxx11..............xxx.......xxx..........x...11xxxxxxxxxxxxx
-xxxxxxxxxxxx41..............11x.......x11...........x..14xxxxxxxxxxxxx
-xxxxxxxxxxxx11..............11x.......x11..........x...11xxxxxxxxxxxxx
-xxxxxxxxxxxx11.......x.................................11xxxxxxxxxxxxx
-xxxxxxxxxxxx11......x.x.x.................x...x......xx11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..x...............'''''..................11xxxxxxxxxxxxx
+xxxxxxxxxxxx11......x..........'''''''............x....11xxxxxxxxxxxxx
+xxxxxxxxxxxx11.......x......11x'''''''x11..............11xxxxxxxxxxxxx
+xxxxxxxxxxxx41..........x...11x'''''''x11.........xx...14xxxxxxxxxxxxx
+xxxxxxxxxxxx11.......x......xxx'''''''xxx..............11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..x..........'''''.xxx.'''''.......xxx2..11xxxxxxxxxxxxx
+xxxxxxxxxxxx111.xx.......x'''''..._...'''''............11xxxxxxxxxxxxx
+xxxxxxxxxxxx11.1.x.....x..'''''x.....x'''''..x.x.......11xxxxxxxxxxxxx
+xxxxxxxxxxxx*1.1.2xxx.....'''''x_.{._x'''''...........11*xxxxxxxxxxxxx
+xxxxxxxxxxxx11.1.xx....x..'''''x.....x'''''.x.x.x....1111xxxxxxxxxxxxx
+xxxxxxxxxxxx11.1x........x'''''..._...'''''............11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..x..........'''''.xxx.'''''...x.x.x..x..11xxxxxxxxxxxxx
+xxxxxxxxxxxx11..............xxx'''''''xxx..........x...11xxxxxxxxxxxxx
+xxxxxxxxxxxx41..............11x'''''''x11...........x..14xxxxxxxxxxxxx
+xxxxxxxxxxxx11..............11x'''''''x11..........x...11xxxxxxxxxxxxx
+xxxxxxxxxxxx11.......x.........'''''''.................11xxxxxxxxxxxxx
+xxxxxxxxxxxx11......x.x.x.......'''''.....x...x......xx11xxxxxxxxxxxxx
 xxxxxxxxxxxx11.......x.x.................x....x.....xx.11xxxxxxxxxxxxx
 xxxxxxxxxxxx11xxx...x.x.x..............xx.....x.....x2221xxxxxxxxxxxxx
 xxxxxxxxxxxx1122xx...x.x.....x........x......x....xx22211xxxxxxxxxxxxx
@@ -477,10 +476,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx^.^.^.^&^.^.^xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx^^^^^^^^^^^^^xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxX^.^.^.^.^.^.^Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxX^^^^^^^^^^^^^Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxJxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
