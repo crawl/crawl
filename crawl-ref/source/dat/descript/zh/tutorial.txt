@@ -260,6 +260,135 @@ tutorial2 exit
 
                                  <cyan>按<w>任意键</w>退出
 %%%%
+tutorial3 start
+
+本课程中你将学到关于物品的事项，包括如何使用物品。
+%%%%
+tutorial3 armour
+
+按<w>[$cmd[CMD_PICKUP]]</w>来捡起这双靴子，并按<w>[$cmd[CMD_WEAR_ARMOUR]]</w>来穿上它们。<localtiles>或者在物品栏内的图标上<w>[鼠标点击]</w>，也能收到同样的效果。</localtiles>
+%%%%
+tutorial3 autopickup
+
+有些种类的物品<tiles>（周围有一个绿框的那种）</tiles>会在你踩上去的时候自动拾取。
+%%%%
+tutorial3 scroll
+
+许多物品在你刚发现它们的时候都是未鉴定的。鉴定它们的方法之一就是使用它们。试试按<w>[$cmd[CMD_READ]]</w><localtiles>或在物品栏内的图标上<w>[鼠标点击]</w></localtiles>来阅读这张卷轴。
+%%%%
+tutorial3 scroll_noautopickup
+
+在周围有怪物的时候，自动拾取不会生效。你可以现在就按<w>[$cmd[CMD_PICKUP]]</w><localtiles>或<w>[点击]</w>你的角色</localtiles>来拾起它，或者你也可以先干掉附近的敌人然后再拾取它。
+%%%%
+tutorial3 ego_weapon
+
+有<lightblue>符文</lightblue>或<lightblue>发光</lightblue>词缀的物品要么有附加值，要么有特殊属性，也可能两个都有。你必须得按<w>[$cmd[CMD_WIELD_WEAPON]]</w><localtiles>或在物品栏内的图标上<w>[鼠标点击]</w></localtiles>来装备这把弯刀才能知道它的具体属性。
+%%%%
+tutorial3 inventory
+
+如果你想查阅新武器的描述，只要在物品栏（<w>[$cmd[CMD_DISPLAY_INVENTORY]]</w>）中找到并选中它即可。<localtiles>你也可以<w>[鼠标悬停]</w>或在物品栏内的图标上<w>[右击]</w>来收到同样效果</localtiles>。另外要注意的是，所有与物品有关的指令在物品描述界面同样有效。
+%%%%
+tutorial3 battle
+
+如果你成功让一个怪物中毒了，暂时撤退并让毒药杀死它可能会比较好。如果有必要，你也可以暂时撤退来让伤势回复。
+%%%%
+tutorial3 downstairs
+
+战得漂亮！如果有必要，你可以按<w>[$cmd[CMD_REST]]</w>来休息一下，然后按<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles>或<w>[按住Shift点击]</w>你的角色</localtiles>来走下楼梯。
+%%%%
+tutorial3 command_help
+
+如果这么多指令让你感觉有点头晕，你也可以在指令帮助（<w>[$cmd[CMD_DISPLAY_COMMANDS]]</w>）中查找各个指令。<localtiles>部分指令也可以通过点击屏幕右边的<w>指令面板</w>来实现。</localtiles>和以前一样，你可以按<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>来查阅过去的信息。
+%%%%
+tutorial3 potion
+
+你可以按<w>[$cmd[CMD_QUAFF]]</w><localtiles>或<w>[右键点击]</w></localtiles>来饮用一瓶药水。
+%%%%
+tutorial3 artefact_armour
+
+有<w>不寻常名字</w>的物品就是神器了。神器可能有各种特殊的属性。有些物品（例如这件披风）很有名，因此一开始就已经被鉴定；其他一些神器则是随机出现的，并且属性也是未知。试试按<w>[$cmd[CMD_WEAR_ARMOUR]]</w><localtiles>或在物品栏中<w>鼠标点击</w>来装备这件披风。
+%%%%
+tutorial3 wand_fire
+
+你可以按<w>[$cmd[CMD_EVOKE]]</w>来使用魔杖<localtiles>，也可以在物品栏中<w>[鼠标点击]</w></localtiles>。
+%%%%
+tutorial3 wand_digging
+
+挖掘魔杖可以破坏某些种类的墙壁。使用<w>[$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]]</w>
+<localtiles>或<w>[鼠标悬停]</w>在墙上<w>[右击]</w></localtiles>来检视墙壁的种类。
+%%%%
+tutorial3 amulet
+
+你可以按<w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles>或在物品栏内<w>[鼠标点击]</w></localtiles>来戴上一件首饰。有些首饰只要戴上就会自动鉴定，另一些则需要其他的鉴定方式。
+%%%%
+tutorial3 scroll_id
+
+鉴定未知物品的一条重要途径就是阅读鉴定卷轴。试试对你的护身符使用这张卷轴（按<w>[$cmd[CMD_READ]]</w><localtiles>或在物品栏内[点击]</w>它</localtiles>，然后选择护身符对应的字母键<localtiles>或<w>[点击]</w>护身符</localtiles>。
+%%%%
+tutorial3 drop
+
+这个护身符完全没用；你可以按<w>[$cmd[CMD_DROP]]</w><localtiles>
+或在物品栏内<w>[按住Shift点击]</w>它。
+%%%%
+tutorial3 gold
+
+金币可以用于在商店中购买物品。金币没有重量，而且不能丢弃。
+%%%%
+tutorial3 shop
+
+商店中有各种各样的物品，但你无法向他们出售任何东西。
+%%%%
+tutorial3 enter_shop
+
+要进入这家商店，请按<w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles>或<w>[按住Shift点击]</w>你的角色</localtiles>。要想购买物品，请按它们对应的字母键选中它，按<w>[回车]</w>并按<w>[y]es</w>确定。你可以按<w>[!]</w>切换到描述模式。
+%%%%
+tutorial3 autoexplore_reminder
+
+记住，你可以按<w>[$cmd[CMD_EXPLORE]]</w><localtiles>或<w>[点击]</w><w>指令面板</w>上的自动探索图标</localtiles>来自动探索本楼层。
+%%%%
+tutorial3 go_shopping
+
+你现在有钱去商店买东西啦！要想回到商店，最快捷的方法就是搜索它。按下<w>[$cmd[CMD_SEARCH_STASHES]]</w>然后输入"<w>商店</w>"。选中搜索到的结果，然后你就会向目标地点移动。<localtiles>你也可以<w>[点击]</w>指令面板上的搜索按钮，或者通过小地图来回到商店。</localtiles>
+%%%%
+tutorial3 optional_battle
+
+小心，前面有一场<lightred>困难的战斗</lightred>。你可以试试在战斗中使用你学到的知识，也可以尝试直奔那个小岛上的出口。不管怎么说，如果你还没在商店里买过东西，最好先去一下。
+%%%%
+tutorial3 tutorial_end
+
+干的好！走下这里的楼梯来退出教程。
+%%%%
+tutorial3 exit
+
+:nowrap
+<yellow>物品指令</yellow>
+
+  <w>$cmd[CMD_PICKUP]</w>捡起物品
+  <w>$cmd[CMD_WEAR_ARMOUR]</w> 穿上护甲
+  <w>$cmd[CMD_READ]</w>阅读卷轴
+  <w>$cmd[CMD_WIELD_WEAPON]</w>装备武器
+  <w>$cmd[CMD_QUAFF]</w>饮用药水
+  <w>$cmd[CMD_EVOKE]</w>使用魔杖
+  <w>$cmd[CMD_WEAR_JEWELLERY]</w>戴上首饰
+  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>移除首饰
+  <w>$cmd[CMD_DROP]</w>丢弃物品
+
+  <w></w>你也可以通过物品栏界面（<w>$cmd[CMD_DISPLAY_INVENTORY]</w>）来使用物品或查阅物品描述。
+  <localtiles><w></w>当然，你也可以<white>鼠标点击</white>。
+</localtiles>
+
+<yellow>其他</yellow>
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> 查看指令帮助
+  <w>$cmd[CMD_RESISTS_SCREEN]</w>显示角色概况
+  <w>$cmd[CMD_USE_ABILITY]</w>使用异能
+  <w>$cmd[CMD_EXPLORE]</w>自动探索
+  <w>$cmd[CMD_SEARCH_STASHES]</w>搜索见过的物品/设施
+
+<localtiles><w></w>上述指令中有很多都可以通过点击<w>指令面板</w>来下达。
+</localtiles>
+
+                                 <cyan>按<w>任意键</w>清屏...</cyan>
+%%%%
 tutorial5 start
 
 在这一课中你将会学到有关神祗的知识，包括如何使用他们的力量。

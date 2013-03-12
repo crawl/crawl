@@ -299,6 +299,188 @@ tutorial2 exit
 
                                  <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
 %%%%
+tutorial3 start
+
+이번 시간에는 아이템들과 그것들을 사용하는 법에 대해 배워보도록 하겠습니다.
+%%%%
+tutorial3 armour
+
+이 신발을 <w>[$cmd[CMD_PICKUP]]</w>키로 주운 뒤
+<w>[$cmd[CMD_WEAR_ARMOUR]]</w>키로 입어보십시오. <localtiles> 아니면 간단하게
+인벤토리 패널에 있는 신발을 <w>[mouseclick]</w>하십시오.</localtiles>
+%%%%
+tutorial3 autopickup
+
+<tiles>초록색으로 표시된 아이템</tiles>들은 그 위로 걸어갈 경우 자동적으로
+주워집니다.
+%%%%
+tutorial3 scroll
+
+대부분의 아이템들은 그것들을 찾았을 당시에는 무엇인지 판명이 나지 않은
+상태입니다. 그것들이 무엇인지 아는 방법중 하나는 그것을 이용해 보는 것입니다.
+이 스크롤을 <w>[$cmd[CMD_READ]]</w><localtiles>키를 누르거나 인벤토리 패널의
+스크롤을 <w>[mouseclick]</w> 하여 읽어 보십시오.</localtiles>.
+%%%%
+tutorial3 scroll_noautopickup
+
+자동으로 줍는 기능은 근처에 몬스터가 있을 경우 작동하지 않습니다. 당신은
+<w>[$cmd[CMD_PICKUP]]</w><localtiles>키를 누르거나 당신의 캐릭터를
+<w>[clicking]</w> 하거나 </localtiles> 몬스터와 싸워 무찌른 뒤에 주울 수
+있습니다.
+%%%%
+tutorial3 ego_weapon
+
+<lightblue>룬</lightblue>이나 <lightblue>빛나는</lightblue> 이라고 이름이
+붙어있는 아이템들은 인챈트되어 있거나, 특수한 성질을 가지고 있거나 혹은 둘 다일
+수도 있습니다. 이 아이템이 어떤 것인지 알기 위해서는 이 시미터를
+(<w>[$cmd[CMD_WIELD_WEAPON]]</w><localtiles>키를 누르거나 인벤토리 패널의
+시미터를 <w>[clicking]</w>함으로써) 휘둘러 봐야 합니다.
+%%%%
+tutorial3 inventory
+
+새로운 무기의 설명을 보려면 인벤토리에 (<w>[$cmd[CMD_DISPLAY_INVENTORY]]</w>)를
+찾아서 선택해야 합니다. <localtiles>또한 당신은 <w>[mouseover]</w>하거나
+인벤토리 패널의 그 무기를 <w>[right click]</w>하여 확인 할 수도
+있습니다</localtiles>. 아이템 설명 창에서도 아이템 명령어들을 사용할 수
+있습니다.
+%%%%
+tutorial3 battle
+
+만약 당신이 성공적으로 적을 독에 중독시켰다면, 독의 효과를 극대화 하기 위해
+후퇴하십시오. 만약 필요하다면 회복을 위해서 후퇴하는 것도 좋은 선택입니다.
+%%%%
+tutorial3 downstairs
+
+잘 싸우셨습니다! 만약 필요하다면, <w>[$cmd[CMD_REST]]</w>키로 쉬거나,
+<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles>키나 <w>[Shift-Click]</w>하여
+당신의 캐릭터를 아래로 움직이십시오</localtiles>.
+%%%%
+tutorial3 command_help
+
+명령어가 너무 많아서 혼란스럽다면, 명령어 도움말
+<w>[$cmd[CMD_DISPLAY_COMMANDS]]</w>를 통해 필요한 명령어를 찾을 수 있습니다.
+<localtiles>자주 쓰이는 명령어들은 화면 오른쪽의 <w>명령어 패널</w>을
+클릭해서도 사용할 수 있습니다.</localtiles>
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>를 써서 예전 메시지들을 보는 것 또한
+가능합니다.
+%%%%
+tutorial3 potion
+
+<w>[$cmd[CMD_QUAFF]]</w> 명령<localtiles>이나
+<w>[mouseclick]</w></localtiles>을 통해 이 포션들 중 하나를 마실 수 있습니다.
+%%%%
+tutorial3 artefact_armour
+
+<w>독특한 이름</w>이 붙어있는 아이템은 아티펙트입니다. 아티펙트는 여러가지
+특별한 능력을 가지고 있습니다. 어떤 아이템(예를 들어 이 망토같은 것)은 이미
+알고 있는 것일 수도 있고, 어떤건 무작위적이며 밝혀지지 않은 능력을 가지고
+있습니다.<w>[$cmd[CMD_WEAR_ARMOUR]]</w> <localtiles>나 인벤토리 패널의 망토를
+<w>[mouseclick]</w>하여 망토를 입어 보십시오 </localtiles>.
+%%%%
+tutorial3 wand_fire
+
+<w>[$cmd[CMD_EVOKE]]</w><localtiles> 키를 누르거나 인벤토리 패널을
+<w>[mouseclick]</w> 함으로써 마법봉을 사용할 수 있습니다.</localtiles>.
+%%%%
+tutorial3 wand_digging
+
+굴착의 마법봉은 몇몇 종류의 벽을 뚫을 수 있습니다.
+<w>[$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]]</w> <localtiles>나
+<w>[mouseover]</w>/<w>[right click]</w> </localtiles>으로 벽의 종류를 확인하여
+보십시오.
+%%%%
+tutorial3 amulet
+
+장신구는 <w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles>나 인벤토리 페널의 장신구
+아이템을 <w>[mouseclick]</w> 함으로써 착용할 수 있습니다</localtiles>. 어떤
+종류의 장신구는 껴봐야 어떤 것인지 판별할 수 있습니다. 아니면 다른 방법을 통해
+판별해야 합니다.
+%%%%
+tutorial3 scroll_id
+
+무엇인지 정확하게 모르는 아이탬을 판별해 내는데 가장 좋은 방법중 하나는 감정
+두루마리를 사용하는 것 입니다. 이 스크롤을
+<w>[$cmd[CMD_READ]]</w><localtiles>나 인벤토리 패널의 감정 두루마리를
+<w>[clicking]</w>한 후 </localtiles> 부적에 할당된 알파벳을 치거나 <localtiles>
+<w>[mouseclick]</w>하여 부적이 어떠한 것인지 알아내어 보십시오</localtiles>.
+%%%%
+tutorial3 drop
+
+이 부적은 쓸모가 없습니다. 이것을 버리고 싶다면
+<w>[$cmd[CMD_DROP]]</w><localtiles> 하거나 인벤토리 패널의 부적을
+<w>[Shift-leftclicking]</w> 하여 버리십시오</localtiles>.
+%%%%
+tutorial3 gold
+
+금화는 가게에서 사용될 수 있습니다. 금화는 무게가 없으며 버릴 수 없습니다.
+%%%%
+tutorial3 shop
+
+가게는 여러가지 아이탬을 제공합니다. 하지만 그들은 아이탬을 사지는 않습니다.
+%%%%
+tutorial3 enter_shop
+
+가게에 들어가려면 <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles>를 누르거나 당신의
+캐릭터를 <w>[Shift-leftclick]</w>하십시오</localtiles>. 아이탬을 사려면 그
+아이탬의 단축키를 눌러 선택한 후 <w>[Enter]</w>를 누르고 <w>[y]es</w>를 눌러
+확정하십시오. <w>[!]</w>키를 누르면 아이탬 설명 모드로 바꿀 수 있습니다.
+%%%%
+tutorial3 autoexplore_reminder
+
+기억해 두십시오. <w>[$cmd[CMD_EXPLORE]]</w> 키 또는 <w>명령어 패널</w>에 있는
+자동 탐색 버튼을 [clicking]함으로써, 당신은 언제든지 아직 가 보지 않은 던전
+내의 장소를 자동으로 탐색할 수 있습니다.
+%%%%
+tutorial3 go_shopping
+
+이제, 본격적으로 아이템을 구입할 수 있을 정도의 충분한 돈이 모였습니다!
+상점으로 되돌아가는 가장 빠른 방법은 Type <w>[$cmd[CMD_SEARCH_STASHES]]</w>
+키를 누른 후, "<w>shop</w>"을 입력하여 상점의 위치를 검색하는 것입니다. 또한,
+명령어 패널에 있는 '찾기'버튼을 <w>[click]</w>하는 것으로도 가능합니다. 물론
+미니맵에, 상점이 있었던 지역을 클릭하는 것으로도 이동이 가능합니다.
+%%%%
+tutorial3 optional_battle
+
+주의하세요! 이 길로 들어서면, <lightred>힘든 전투</lightred>가 기다리고 있을
+것입니다.  지금까지 배운 전투 방법을 총동원하여 싸워 보거나, 혹은 섬의 다른
+출구로 빠져 나가는 등의 선택사항이 있을 것입니다. 어느 쪽을 택하던 간에,
+상점에서 아이템을 갖추어 다음을 준비해 두는 것이 좋겠죠.
+%%%%
+tutorial3 tutorial_end
+
+끝까지 수고 많으셨습니다! 튜토리얼을 종료하시려면, 이 계단으로 내려가세요.
+%%%%
+tutorial3 exit
+
+:nowrap
+<yellow>아이템 명령어</yellow>
+  <w>$cmd[CMD_PICKUP]</w> 아이템 줍기
+  <w>$cmd[CMD_WEAR_ARMOUR]</w> 방어구 착용
+  <w>$cmd[CMD_READ]</w> 두루마리 읽기
+  <w>$cmd[CMD_WIELD_WEAPON]</w> 무기 장비
+  <w>$cmd[CMD_QUAFF]</w> 포션 마시기
+  <w>$cmd[CMD_EVOKE]</w> 마법봉 발동
+  <w>$cmd[CMD_WEAR_JEWELLERY]</w> 장신구 착용
+  <w>$cmd[CMD_REMOVE_JEWELLERY]</w> 장신구 해제
+  <w>$cmd[CMD_DROP]</w> 아이템 내려놓기
+
+  <w></w>아이템 사용에 관한 명령어는 소지품 메뉴에서도 마찬가지로 사용 가능합니다. (<w>$cmd[CMD_DISPLAY_INVENTORY]</w> 키), 또한 아이템 설명 화면에서도 역시 가능합니다.
+ <localtiles><w></w>물론 <white>마우스 클릭</white>으로도 가능하죠.
+</localtiles>
+
+ <yellow>또다른</yellow>
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> 명령어 도움말 열람
+  <w>$cmd[CMD_RESISTS_SCREEN]</w> 캐릭터 요약 정보 표시
+  <w>$cmd[CMD_USE_ABILITY]</w> 특수능력 사용
+  <w>$cmd[CMD_EXPLORE]</w> 자동 탐색
+  <w>$cmd[CMD_SEARCH_STASHES]</w>  이전에 탐색했던 아이템/지형지물 검색
+
+
+  <localtiles><w></w>이와 같은 명령어 중 일부는, <w>명령어 패널<w>의 아이콘을 클릭하는 것으로도 실행이 가능합니다.
+</localtiles>
+
+                                 <cyan><w>아무 키</w>나 누르면, 이 화면을 닫습니다.</cyan>
+%%%%
 tutorial5 start
 
 이번 시간에는 어떻게 신을 믿고 권능을 사용하는지에 대해 알아보겠습니다.
