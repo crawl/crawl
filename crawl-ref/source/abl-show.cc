@@ -2525,20 +2525,8 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_LUGONU_ABYSS_ENTER:
     {
-        // Move permanent hp/mp loss from leaving to entering the Abyss. (jpeg)
-        const int maxloss = max(2, div_rand_round(you.hp_max, 30));
-        // Lose permanent HP
-        dec_max_hp(random_range(1, maxloss));
-
-        // Paranoia.
-        if (you.hp_max < 1)
-            you.hp_max = 1;
-
         // Deflate HP.
         dec_hp(random2(you.hp), false);
-
-        // Lose 1d2 permanent MP.
-        rot_mp(coinflip() ? 2 : 1);
 
         // Deflate MP.
         if (you.magic_points)
