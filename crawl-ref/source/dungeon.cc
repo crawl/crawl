@@ -1100,8 +1100,8 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     return new_vault_place;
 }
 
-bool dgn_ensure_vault_placed(bool vault_success,
-                             bool disable_further_vaults)
+static bool _dgn_ensure_vault_placed(bool vault_success,
+                                     bool disable_further_vaults)
 {
     if (!vault_success)
         throw dgn_veto_exception("Vault placement failure.");
@@ -1112,7 +1112,7 @@ bool dgn_ensure_vault_placed(bool vault_success,
 
 static bool _ensure_vault_placed_ex(bool vault_success, const map_def *vault)
 {
-    return dgn_ensure_vault_placed(vault_success,
+    return _dgn_ensure_vault_placed(vault_success,
                                     (!vault->has_tag("extra")
                                      && vault->orient == MAP_ENCOMPASS));
 }
@@ -1952,7 +1952,7 @@ static void _build_overflow_temples()
             // find the overflow temple map, so don't veto the level.
             return;
 
-        if (!dgn_ensure_vault_placed(
+        if (!_dgn_ensure_vault_placed(
                 _build_secondary_vault(vault),
                 false))
         {
@@ -2490,7 +2490,7 @@ static void _pan_level()
 
         ASSERT(vault);
 
-        dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+        _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
     }
     else
     {
@@ -2498,7 +2498,7 @@ static void _pan_level()
         ASSERT(vault);
 
         if (vault->orient == MAP_ENCOMPASS)
-            dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+            _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
         else
         {
             const map_def *layout;
@@ -2506,7 +2506,7 @@ static void _pan_level()
                 layout = random_map_for_tag("layout", true, true);
             while (layout->has_tag("no_primary_vault"));
 
-            dgn_ensure_vault_placed(_build_primary_vault(layout), true);
+            _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
 
             dgn_check_connectivity = true;
             _build_secondary_vault(vault);
@@ -3001,7 +3001,7 @@ static void _builder_normal()
     if (!vault)
         die("Couldn't pick a layout.");
 
-    dgn_ensure_vault_placed(_build_primary_vault(vault), false);
+    _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
 }
 
 // Used to nuke shafts placed in corridors on low levels - it's just
@@ -5474,9 +5474,8 @@ static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 // This tries to be like _spotty_level, but probably isn't quite.
 // It might be better to aim for a more open connection -- currently
 // it stops pretty much as soon as connectivity is attained.
-set<coord_def>
-dgn_spotty_connect_path(const coord_def& from,
-                     bool (*overwriteable)(dungeon_feature_type))
+static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
+            bool (*overwriteable)(dungeon_feature_type))
 {
     set<coord_def> flatten;
     set<coord_def> border;
@@ -5535,7 +5534,7 @@ static bool _connect_spotty(const coord_def& from,
                             bool (*overwriteable)(dungeon_feature_type))
 {
     const set<coord_def> spotty_path =
-        dgn_spotty_connect_path(from, overwriteable);
+        _dgn_spotty_connect_path(from, overwriteable);
 
     if (!spotty_path.empty())
     {

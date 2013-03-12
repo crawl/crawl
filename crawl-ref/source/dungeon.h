@@ -268,10 +268,6 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
-bool dgn_ensure_vault_placed(bool vault_success,
-                             bool disable_further_vaults);
-
-
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
@@ -284,10 +280,6 @@ static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat
 string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
-
-set<coord_def> dgn_spotty_connect_path(
-    const coord_def& from,
-    bool (*overwriteable)(dungeon_feature_type) = NULL);
 
 // Resets travel_point_distance!
 vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
