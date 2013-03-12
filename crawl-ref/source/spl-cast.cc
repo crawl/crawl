@@ -77,12 +77,14 @@ static void _surge_power(spell_type spell)
 
     if (enhanced)               // one way or the other {dlb}
     {
-        mprf("You feel a%s %s",
-             (enhanced < -2)  ? "n extraordinarily" :
-             (enhanced == -2) ? "n extremely" :
-             (enhanced == 2)  ? " strong" :
-             (enhanced > 2)   ? " huge"
-                              : "",
+        const string modifier = (enhanced  < -2) ? "extraordinarily" :
+                                (enhanced == -2) ? "extremely" :
+                                (enhanced ==  2) ? "strong" :
+                                (enhanced  >  2) ? "huge"
+                                                 : "";
+        mprf("You feel %s %s",
+             !modifier.length() ? "a"
+                                : article_a(modifier).c_str(),
              (enhanced < 0) ? "numb sensation."
                             : "surge of power!");
     }
