@@ -99,7 +99,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttxx
 ENDMAP
 
 ##########################################################
-# Level 2: Shift-move and secret doors
+# Level 2: Shift-move
 ##########################################################
 NAME:    tutorial_lesson1_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson1
@@ -109,9 +109,7 @@ KFEAT:   ABCD = .
 COLOUR:  ABCD = lightblue
 FTILE:   ABCD = tutorial_pad
 MARKER:  A = lua:tutorial1.msg("door")
-MARKER:  B = lua:tutorial1.msg("secret_door_glass")
 MARKER:  C = lua:tutorial1.msg("water")
-MARKER:  D = lua:tutorial1.msg("secret_door_wall")
 MARKER:  { = lua:tutorial1.msg("upstairs")
 MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
              pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
@@ -131,7 +129,7 @@ vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvv.www.vvvvvvvvvvvvv
 vv.....vvvv.n.vvv.wwwww.vvv...vvvvvv
-vv.(..A+...B=.....wwwww..D=.{.vvvvvv
+vv.(..A+....=.....wwwww...=.{.vvvvvv
 vv.....vvvv.n.vvv.wwwww.vvv...vvvvvv
 vvvvvvvvvvvvvvvvv.wwwww.vvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvCwwwww.vvvvvvvvvvvv
