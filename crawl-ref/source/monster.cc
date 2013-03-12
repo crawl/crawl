@@ -3056,7 +3056,7 @@ void monster::banish(actor *agent, const string &)
         // Note: we do not set MF_GOT_HALF_XP, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
 
-        if (agent->is_player() && !player_in_branch(BRANCH_ABYSS))
+        if (agent->is_player())
             did_god_conduct(DID_BANISH, hit_dice, true /*possibly wrong*/, this);
     }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
