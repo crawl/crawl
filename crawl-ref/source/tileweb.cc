@@ -1117,6 +1117,20 @@ void TilesFramework::_send_cell(const coord_def &gc,
     json_close_object(true);
 }
 
+void TilesFramework::_send_cursor(cursor_type type)
+{
+    if (m_cursor[type] == NO_CURSOR)
+        send_message("{\"msg\":\"cursor\",\"id\":%d}", type);
+    else
+    {
+        if (m_origin.equals(-1, -1))
+            fprintf(stderr, "m_origin not set in _send_cursor\n");
+        send_message("{\"msg\":\"cursor\",\"id\":%d,\"loc\":{\"x\":%d,\"y\":%d}}",
+                     type, m_cursor[type].x - m_origin.x,
+                     m_cursor[type].y - m_origin.y);
+    }
+}
+
 void TilesFramework::_send_map(bool force_full)
 {
     map<uint32_t, coord_def> new_monster_locs;
@@ -1206,6 +1220,9 @@ void TilesFramework::_send_map(bool force_full)
     json_close_object(true);
 
     finish_message();
+
+    if (force_full)
+        _send_cursor(CURSOR_MAP);
 
     m_current_map_knowledge = env.map_knowledge;
     m_current_view = m_next_view;
@@ -1362,6 +1379,9 @@ void TilesFramework::_send_everything()
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
     _send_map(true);
+
+    _send_cursor(CURSOR_MOUSE);
+    _send_cursor(CURSOR_TUTORIAL);
 
      // Player
     _send_player(true);
@@ -1526,16 +1546,11 @@ void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
         if (type == CURSOR_MOUSE)
             m_last_clicked_grid = coord_def();
 
-        if (result == NO_CURSOR)
-        {
-            send_message("{\"msg\":\"cursor\",\"id\":%d}", type);
+        // if map is going to be updated, send the cursor after that
+        if (type == CURSOR_MAP && m_need_full_map)
             return;
-        }
-        else
-        {
-            send_message("{\"msg\":\"cursor\",\"id\":%d,\"loc\":{\"x\":%d,\"y\":%d}}",
-                         type, result.x - m_origin.x, result.y - m_origin.y);
-        }
+
+        _send_cursor(type);
     }
 }
 
