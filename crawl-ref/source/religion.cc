@@ -293,7 +293,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "bend space around yourself",
       "banish your foes",
       "corrupt the fabric of space",
-      "gate yourself to the Abyss - for a price" },
+      "gate yourself to the Abyss" },
     // Beogh
     { "Beogh supports the use of orcish gear.",
       "smite your foes",

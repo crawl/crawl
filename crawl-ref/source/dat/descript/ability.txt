@@ -407,9 +407,8 @@ in the Abyss.
 %%%%
 Enter the Abyss
 
-Transfer yourself to Lugonu's realm instantly... at the cost of permanently
-reducing your maximum health and magic. The effort of even using the ability
-will leave your health and magic depleted.
+Transfer yourself to Lugonu's realm instantly. The effort of even using the
+ability will leave your health and magic depleted.
 %%%%
 # Nemelex Xobeh
 Draw One

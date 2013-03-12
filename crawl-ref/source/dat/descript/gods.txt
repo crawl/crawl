@@ -255,13 +255,14 @@ when called upon; highly pious followers can be sure of such aid.
 %%%%
 Lugonu powers
 
-Followers of Lugonu gain powers to depart the Abyss at will, to banish monsters
-there, and eventually to gate themselves into this realm of chaos — at the cost
-of a part of their soul. Apart from that, they can cause distortional damage to
-monsters, and gain an ability to corrupt the ordered world, enabling them to
-open a gate for creatures of the Abyss to pass through. Lugonu expects
-followers to spread unceasing chaos in the overworld, and as such does not
-grant piety to worshippers while they remain in the Abyss itself.
+Followers of Lugonu gain powers to depart the Abyss at will, to bend space
+around themselves, and to banish monsters to the Abyss. Later they will be able
+to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
+through, and to gate themselves directly into this realm of chaos. Lugonu will
+eventually offer to corrupt a follower's weapon, imbuing it with the distorting
+energies of the Abyss. Lugonu expects followers to spread unceasing chaos in
+the overworld, and as such does not grant piety to worshippers while they
+remain in the Abyss itself.
 %%%%
 Beogh powers
 
