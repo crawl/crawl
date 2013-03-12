@@ -114,16 +114,13 @@ orcish_idol DNGN_ORCISH_IDOL
 %weight 5
 statue_dwarf DNGN_GRANITE_STATUE
 statue_archer
-%weight 2
-statue_sword
-%weight 1
-statue_sigmund
-%weight 5
+statue_tengu
 statue_centaur
 %syn DNGN_STATUE_CENTAUR
-%weight 3
-statue_angel
-%syn DNGN_STATUE_ANGEL
+statue_snail
+statue_cat
+%syn DNGN_STATUE_CAT
+statue_princess
 %weight 8
 statue_mermaid
 %syn DNGN_STATUE_MERMAID
@@ -131,23 +128,29 @@ statue_naga
 %syn DNGN_STATUE_NAGA
 statue_dragon
 %syn DNGN_STATUE_DRAGON
-statue_demonic_bust
-%weight 5
-statue_snail
-statue_cat
-%syn DNGN_STATUE_CAT
+statue_hydra
 %weight 3
+statue_angel
+%syn DNGN_STATUE_ANGEL
 statue_elephant
 %syn DNGN_STATUE_ELEPHANT
 statue_wraith
 statue_imp
 %syn DNGN_STATUE_IMP
 statue_orb
+statue_cerebov
+statue_demonic_bust
+statue_twins
+statue_orb_guardian
+statue_sword
 %weight 1
+statue_sigmund
 statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
 statue_ancient_evil
 %syn DNGN_STATUE_ANCIENT_EVIL
+statue_triangle
+
 # damaged statues
 crumbled_column_1 DNGN_CRUMBLED_COLUMN
 crumbled_column_2
