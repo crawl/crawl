@@ -83,14 +83,10 @@ static string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)
 {
-    string comp_info = compilation_info();
-    if (!comp_info.empty())
-    {
-        fprintf(file, "Compilation info:\n");
-        fprintf(file, "<<<<<<<<<<<\n");
-        fprintf(file, "%s", comp_info.c_str());
-        fprintf(file, ">>>>>>>>>>>\n\n");
-    }
+    fprintf(file, "Compilation info:\n");
+    fprintf(file, "<<<<<<<<<<<\n");
+    fprintf(file, "%s", compilation_info);
+    fprintf(file, ">>>>>>>>>>>\n\n");
 }
 
 static void _dump_level_info(FILE* file)
@@ -519,7 +515,7 @@ static void _debug_dump_lua_persist(FILE* file)
 
 static void _dump_ver_stuff(FILE* file)
 {
-    fprintf(file, "Version: %s %s\n", CRAWL, Version::Long().c_str());
+    fprintf(file, "Version: %s %s\n", CRAWL, Version::Long);
 #if defined(UNIX)
     fprintf(file, "Platform: unix");
 #   if defined(TARGET_OS_MACOSX)

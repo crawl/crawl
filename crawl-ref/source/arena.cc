@@ -441,7 +441,7 @@ namespace arena
 
         cgotoxy(1, line++, GOTO_STAT);
         textcolor(WHITE);
-        center_print(crawl_view.hudsz.x, "Crawl " + Version::Long());
+        center_print(crawl_view.hudsz.x, string("Crawl ") + Version::Long);
         line++;
 
         cgotoxy(1, line++, GOTO_STAT);

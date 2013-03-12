@@ -1802,7 +1802,7 @@ static bool _restore_game(const string& filename)
              you.prev_save_version.c_str());
     }
 
-    if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1
+    if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
         if (!yesno("This game comes from a previous release of Crawl.  If you "
@@ -2056,9 +2056,9 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
 #endif
        )
     {
-        if (Version::ReleaseType())
+        if (Version::ReleaseType)
         {
-            *reason = (CRAWL " " + Version::Short() + " is not compatible with "
+            *reason = (CRAWL " " + string(Version::Short) + " is not compatible with "
                        "save files from older versions. You can continue your "
                        "game with the appropriate older version, or you can "
                        "delete it and start a new game.");

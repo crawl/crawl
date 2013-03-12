@@ -117,7 +117,7 @@ static string _time_string()
 
 static void _write_version(FILE * o)
 {
-    fprintf(o, CRAWL " version %s\n", Version::Long().c_str());
+    fprintf(o, CRAWL " version %s\n", Version::Long);
 }
 
 static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)

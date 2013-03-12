@@ -954,7 +954,7 @@ void scorefile_entry::set_base_xlog_fields() const
     }
     else if (crawl_state.game_is_zotdef())
         score_version += "-zotdef.1";
-    fields->add_field("v", "%s", Version::Short().c_str());
+    fields->add_field("v", "%s", Version::Short);
     fields->add_field("lv", "%s", score_version.c_str());
     if (tiles)
         fields->add_field("tiles", "%d", tiles);
@@ -1351,7 +1351,7 @@ void scorefile_entry::init(time_t dt)
     // 4.1      - added real_time and num_turn fields
     // 4.2      - stats and god info
 
-    version = Version::Short();
+    version = Version::Short;
 #ifdef USE_TILE_LOCAL
     tiles   = 1;
 #elif defined (USE_TILE_WEB)

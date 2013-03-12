@@ -3885,9 +3885,9 @@ static string _find_executable_path()
 
 static void _print_version()
 {
-    printf("Crawl version %s%s", Version::Long().c_str(), "\n");
+    printf("Crawl version %s%s", Version::Long, "\n");
     printf("Save file version %d.%d%s", TAG_MAJOR_VERSION, TAG_MINOR_VERSION, "\n");
-    printf("%s", compilation_info().c_str());
+    printf("%s", compilation_info);
 }
 
 static void _print_save_version(char *name)

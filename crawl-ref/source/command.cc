@@ -104,11 +104,7 @@ static const char *features[] = {
 
 static string _get_version_information(void)
 {
-    string result  = "This is <w>" CRAWL " " + Version::Long() + "</w>";
-
-    result += "\n";
-
-    return result;
+    return string("This is <w>" CRAWL " ") + Version::Long + "</w>\n";
 }
 
 static string _get_version_features(void)
@@ -157,7 +153,7 @@ static string _get_version_changes(void)
         if (help.find("Stone Soup ") == 0)
         {
             // Stop if this is for an older major version; otherwise, highlight
-            if (help.find("Stone Soup "+Version::Major()) == string::npos)
+            if (help.find(string("Stone Soup ")+Version::Major) == string::npos)
                 break;
             else
                 goto highlight;

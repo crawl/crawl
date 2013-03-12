@@ -406,11 +406,11 @@ static NORETURN void _launch_game()
     // Override some options when playing in hints mode.
     init_hints_options();
 
-    if (!game_start && you.prev_save_version != Version::Long())
+    if (!game_start && you.prev_save_version != Version::Long)
     {
         snprintf(info, INFO_SIZE, "Upgraded the game from %s to %s",
                                   you.prev_save_version.c_str(),
-                                  Version::Long().c_str());
+                                  Version::Long);
         take_note(Note(NOTE_MESSAGE, 0, 0, info));
     }
 
