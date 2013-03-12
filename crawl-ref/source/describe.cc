@@ -613,7 +613,7 @@ static string _describe_demon(const string& name, flight_type fly)
     };
 
     const char* lev_names[] = {
-        " which hovers in mid-air",
+        " who hovers in mid-air",
         " with sacs of gas hanging from its back",
     };
 
@@ -642,7 +642,7 @@ static string _describe_demon(const string& name, flight_type fly)
         " and the head of a jackal",
         " and the head of a baboon",
         " and a huge, slobbery tongue",
-        " which is covered in oozing lacerations",
+        " who is covered in oozing lacerations",
         " and the head of a frog",
         " and the head of a yak",
         " and eyes out on stalks",
