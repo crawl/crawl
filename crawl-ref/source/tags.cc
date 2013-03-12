@@ -1065,7 +1065,7 @@ static void tag_construct_char(writer &th)
     // Appending fields is fine.
 
     marshallString(th, you.your_name);
-    marshallString(th, Version::Long());
+    marshallString(th, Version::Long);
 
     marshallByte(th, you.species);
     marshallByte(th, you.char_class);
@@ -1393,7 +1393,7 @@ static void tag_construct_you(writer &th)
     // Write a human-readable string out on the off chance that
     // we fail to be able to read this file back in using some later version.
     string revision = "Git:";
-    revision += Version::Long();
+    revision += Version::Long;
     marshallString(th, revision);
 
     you.props.write(th);

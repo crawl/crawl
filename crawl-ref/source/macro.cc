@@ -679,7 +679,7 @@ void macro_save()
                "\n"
                "# Key Mappings:\n",
             OUTS(CRAWL), // ok, localizing the game name is not likely
-            OUTS(Version::Long())); // nor the version string
+            OUTS(Version::Long)); // nor the version string
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
         char buf[30] = "K:";
