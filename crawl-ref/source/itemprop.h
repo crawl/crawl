@@ -93,7 +93,6 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size);
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size);
 
-bool is_whip_type(int wpn_type);
 bool is_giant_club_type(int wpn_type);
 
 bool is_demonic(const item_def &item);

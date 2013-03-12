@@ -1514,13 +1514,6 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
     return ret;
 }
 
-bool is_whip_type(int wpn_type)
-{
-    return (wpn_type == WPN_WHIP
-            || wpn_type == WPN_DEMON_WHIP
-            || wpn_type == WPN_SACRED_SCOURGE);
-}
-
 bool is_giant_club_type(int wpn_type)
 {
     return (wpn_type == WPN_GIANT_CLUB
