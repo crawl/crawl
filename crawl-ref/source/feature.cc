@@ -407,7 +407,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
 
         case DNGN_ABYSSAL_STAIR:
             f.colour     = LIGHTCYAN;
-            f.dchar      = DCHAR_ARCH;
+            f.dchar      = DCHAR_STAIRS_DOWN;
             f.map_colour = LIGHTCYAN;
             f.minimap    = MF_STAIR_BRANCH;
             break;
