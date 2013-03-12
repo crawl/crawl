@@ -38,7 +38,6 @@ MONS:    rat always_corpse
 MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
 MONS:    gnoll ; flail ego:none not_cursed
 MONS:    orc wizard spells:magic_dart;.;.;.;blink;blink
-MARKER:  A = lua:tutorial5.msg("secret_door")
 MARKER:  = = lua:tutorial5.msg("dungeon_overview")
 MARKER:  _ = lua:tutorial5.msg("altar")
 MARKER:  B = lua:tutorial5.msg("religion")
@@ -90,7 +89,7 @@ x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
 x..mmmmmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
 xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxIxxxx
 xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxx..xxxxx
-xxxxxxAxxxxxxxxxx............F.....3.H.....xxxxxxx
+xxxxxx.xxxxxxxxxx............F.....3.H.....xxxxxxx
 xxxxxx.xxxxxxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
 xxxxxx.xxxxxxxxxx.2...xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

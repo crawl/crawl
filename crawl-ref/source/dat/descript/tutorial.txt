@@ -98,19 +98,9 @@ tutorial1 door
 You can open a closed door by walking into it. To close an open door, press
 <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
 %%%%
-tutorial1 secret_door_glass
-
-It doesn't look like the corridor ends here. Try searching for a secret door
-with <w>[$cmd[CMD_REST]]</w>. This process might spend multiple turns.
-%%%%
 tutorial1 water
 
 Note how you can move through shallow but not through deep water.
-%%%%
-tutorial1 secret_door_wall
-
-A dead-end! Or, wait... is it another secret door? Try searching again with
-<w>[$cmd[CMD_REST]]</w> once again.
 %%%%
 tutorial1 upstairs
 
@@ -141,7 +131,6 @@ tutorial1 exit
 <yellow>Doors</yellow>
   can be opened by walking into them
   <w>$cmd[CMD_CLOSE_DOOR]</w>  close an open door
-  <w>$cmd[CMD_REST]</w>  search for secret doors
 
 
 <yellow>Travel</yellow>
@@ -176,8 +165,8 @@ it.
 tutorial2 resting
 
 Very good! You can regain any lost hit points by resting with
-<w>$cmd[CMD_REST]</w>. This will make you rest and search for up to 100 turns,
-but will get interrupted by a number of important events.
+<w>$cmd[CMD_REST]</w>. This will make you rest for up to 100 turns, but will
+get interrupted by a number of important events.
 %%%%
 tutorial2 chop_corpses
 
@@ -558,12 +547,6 @@ after wielding this staff.
 tutorial5 start
 
 In this lesson you're going to learn about gods and how to use their powers.
-%%%%
-tutorial5 secret_door
-
-There's got to be an entrance to the temple! Try walking around the glass walls
-and searching for secret doors with <w>$cmd[CMD_REST]</w><localtiles> or by
-<w>mouseclick</w> in the command panel</localtiles>.
 %%%%
 tutorial5 dungeon_overview
 
