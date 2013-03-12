@@ -5,6 +5,35 @@ Możesz przeczytać wcześniejsze komunikaty w dowolnym momencie wciskając
 <w>$cmd[CMD_REPLAY_MESSAGES]</w>. Naciśnij <w>spację</w> aby przejść przez
 <cyan>--more--</cyan>.
 %%%%
+tutorial1 start
+
+W tej lekcji nauczymy się jak się poruszać oraz zwiedzać otoczenie. Możesz
+ruszać się <localtiles> przez kliknięci gdziekolwiek myszką <w>[Mouse]</w>, lub
+</localtiles> używając <w>[arrow keys]</w>.
+%%%%
+tutorial1 go_on
+
+Idzie Ci świetnie ! Teraz, przeszukaj trochę okolicę aż nie dotrzesz do
+następnego niebieskiego pola .
+%%%%
+tutorial1 diagonal
+
+:nowrap
+Możesz poruszać się po przekątnej naciskając <w>[number pad]</w> (włącz Numlock) lub przez użwyanie <w>[vi keys]</w>.
+
+<w></w>  Numpad:       <w>7 8 9</w>           vi-keys: <w>   $cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w></w>                 \|/                         \|/
+<w></w>                <w>4</w>-<w>.</w>-<w>6</w> <w>                      $cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+<w></w>                 /|\                         /|\
+<w></w>                <w>1 2 3</w> <w>                      $cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+
+<localtiles>Możesz poruszać się także ,używając <w>[Mouse clicks]</w>.</localtiles>
+%%%%
+tutorial1 shiftmove
+
+Szybszym sposobem "Biegania" przez korytarze jest wcisniecie <w>[Shift]</w>
+razem z <w>[number pad]</w> (sprawdź Numpad) lub <w>[vi keys]</w>.
+%%%%
 tutorial5 start
 
 W tej lekcji nauczysz się o bogach, i jak używać ich mocy.
