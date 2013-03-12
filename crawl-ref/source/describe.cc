@@ -566,37 +566,37 @@ static string _describe_demon(const string& name, flight_type fly)
     seed_rng(seed);
 
     const char* body_descs[] = {
-        " huge, barrel-shaped ",
-        " wispy, insubstantial ",
-        " spindly ",
-        " skeletal ",
-        " horribly deformed ",
-        " spiny ",
-        " waif-like ",
-        " scaly ",
-        " sickeningly deformed ",
-        " bruised and bleeding ",
-        " sickly ",
-        " mass of writhing tentacles for a ",
-        " mass of ropey tendrils for a ",
-        " tree trunk-like ",
-        " hairy ",
-        " furry ",
-        " fuzzy ",
-        "n obese ",
-        " fat ",
-        " slimy ",
-        " wrinkled ",
-        " metallic ",
-        " glassy ",
-        " crystalline ",
-        " muscular ",
-        "n icky ",
-        " swollen ",
-        " lumpy ",
-        "n armoured ",
-        " carapaced ",
-        " slender ",
+        "huge, barrel-shaped ",
+        "wispy, insubstantial ",
+        "spindly ",
+        "skeletal ",
+        "horribly deformed ",
+        "spiny ",
+        "waif-like ",
+        "scaly ",
+        "sickeningly deformed ",
+        "bruised and bleeding ",
+        "sickly ",
+        "mass of writhing tentacles for a ",
+        "mass of ropey tendrils for a ",
+        "tree trunk-like ",
+        "hairy ",
+        "furry ",
+        "fuzzy ",
+        "obese ",
+        "fat ",
+        "slimy ",
+        "wrinkled ",
+        "metallic ",
+        "glassy ",
+        "crystalline ",
+        "muscular ",
+        "icky ",
+        "swollen ",
+        "lumpy ",
+        "armoured ",
+        "carapaced ",
+        "slender ",
     };
 
     const char* wing_names[] = {
@@ -670,8 +670,10 @@ static string _describe_demon(const string& name, flight_type fly)
     };
 
     ostringstream description;
-    description << "A powerful demon, " << name << " has a"
-                << RANDOM_ELEMENT(body_descs) << "body";
+    description << "A powerful demon, " << name << " has ";
+
+    const string a_body = RANDOM_ELEMENT(body_descs);
+    description << article_a(a_body) << "body";
 
     switch (fly)
     {
