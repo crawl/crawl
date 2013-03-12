@@ -17,22 +17,14 @@ tutorial1 go_on
 %%%%
 tutorial1 diagonal
 
-<w>[숫자 패드]</w>, 또는 <w>[hjkl 이동방식]</w>을 이용해서 대각선 방향으로
-이동할 수도 있습니다. (제대로 안되면 Numlock 기능이 제대로 켜져있는지
-확인해보세요.)
+:nowrap
+<w>[숫자 패드]</w>, 또는 <w>[hjkl 이동방식]</w>을 이용해서 대각선 방향으로 이동할 수도 있습니다. (제대로 안되면 Numlock 기능이 제대로 켜져있는지 확인해보세요.)
 
-<w></w>  숫자 패드 :    <w>7 8 9</w>          hjkl 식 :
-<w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
-<w></w>                 \|/                         \|/
-
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
-<w></w>                 /|\                         /|\
-
-<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<w></w>  숫자 패드 :    <w>7 8 9</w>          hjkl 식 : <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w></w>                  \|/                      \|/
+<w></w>                 <w>4</w>-<w>.</w>-<w>6</w>                    <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+<w></w>                  /|\                      /|\
+<w></w>                 <w>1 2 3</w>                    <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>물론, <w>[마우스]</w>를 이용할 수도 있습니다.</localtiles>
 %%%%
@@ -105,24 +97,11 @@ tutorial1 door
 닫힌 문이 있는 방향으로 이동하면 문을 열 수 있습니다. 문을 다시 닫으려면,
 <w>[$cmd[CMD_CLOSE_DOOR]]</w> 키를 누르세요.
 %%%%
-tutorial1 secret_door_glass
-
-어딘가에 숨겨진 문이 있는 것 같습니다. <w>[$cmd[CMD_REST]]</w> 키를 이용해서
-비밀 문을 찾아보세요. 여러 번 시도해야 할 수도 있습니다. 혹시 이런 과정이
-너무나도 귀찮다면, 휴식도 취할 겸 <w>[5]</w> 키를 눌러보세요. 100턴간 휴식을
-취하면서 주변에 비밀문이 있나 살펴보는 키입니다. <w>[5]</w> 키의 자세한
-사용법은 다음 시간에 배울 수 있습니다.
-%%%%
 tutorial1 water
 
 얕은 물은 누구든지 지나다닐 수 있지만, 깊은 물은 그렇지 않습니다. 지금
 플레이하고 있는 하이 엘프 종족을 비롯한 종족 대부분은 깊은 물을 지나다닐 수
 없습니다.
-%%%%
-tutorial1 secret_door_wall
-
-막다른 길! 아니 잠깐, 왠지 이런 곳에는 비밀문이 있을 것 같은데..?
-<w>[$cmd[CMD_REST]]</w> 키, 혹은 <w>[5]</w> 키를 이용하여 비밀문을 찾아봅시다.
 %%%%
 tutorial1 upstairs
 
@@ -132,63 +111,34 @@ tutorial1 upstairs
 %%%%
 tutorial1 exit
 
+:nowrap
 <yellow>이동 명령어</yellow>
-
- 숫자 패드 :      <w>7 8 9</w>           hjkl 식 :   <w>$cmd[CMD_MOVE_UP_LEFT]
-$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
+ 숫자 패드 :     <w>7 8 9</w>           hjkl 식 :   <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                         \|/
-
-                 <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
+                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
                   /|\                         /|\
-
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-
-  <w>Shift + direction</w> moves you several squares into this direction.
-
-  <localtiles>You also can move by <w>clicking</w> somewhere in sight or on the
-<w>minimap</w>.</localtiles>
-
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <w>시프트 + 방향키</w> 해당 방향으로 여러 칸 움직입니다.
-
-<localtiles>시야 내의 아무 곳, 혹은 <w>미니맵</w>에 커서를 위치시킨 후  <w>왼쪽
-마우스버튼</w>을 클릭하여 이동할 수도 있습니다.</localtiles>
+<localtiles>시야 내의 아무 곳, 혹은 <w>미니맵</w>에 커서를 위치시킨 후  <w>왼쪽 마우스버튼</w>을 클릭하여 이동할 수도 있습니다.</localtiles>
 
 
 <yellow>계단</yellow>
-
-<w>$cmd[CMD_GO_UPSTAIRS]</w> 이전 층계로 돌아갑니다.
-
-<w>$cmd[CMD_GO_DOWNSTAIRS]</w> 다음 층계로 이동합니다.
-
-<w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w> 현재 캐릭터와 가장 가까운 올라가는 /
-내려가는 계단으로 이동합니다.
+  <w>$cmd[CMD_GO_UPSTAIRS]</w> 이전 층계로 돌아갑니다.
+  <w>$cmd[CMD_GO_DOWNSTAIRS]</w> 다음 층계로 이동합니다.
+  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w> 현재 캐릭터와 가장 가까운 올라가는 / 내려가는 계단으로 이동합니다.
 
 
 <yellow>문</yellow>
-
-문이 있는 곳으로 이동하면 자동으로 문을 열 수 있습니다.
-
-<w>$cmd[CMD_CLOSE_DOOR]</w> 열린 문을 닫습니다.
-
-<w>$cmd[CMD_REST]</w> 비밀문이 있는지 찾아봅니다.
+  문이 있는 곳으로 이동하면 자동으로 문을 열 수 있습니다.
+  <w>$cmd[CMD_CLOSE_DOOR]</w> 열린 문을 닫습니다.
 
 
 <yellow>자동이동</yellow>
-
-<localtiles><w>미니맵</w>에서 가고 싶은 곳을 클릭합니다.
-
- </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다.
-<w>엔터</w> 키를 눌러 이동할 수 있습니다.
-
-</webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다. <w>엔터</w>
-키를 눌러 이동할 수 있습니다.
-
- </console><w>$cmd[CMD_EXPLORE]</w> 자동이동 기능을 사용합니다.
+  <localtiles>  <w>미니맵</w>에서 가고 싶은 곳을 클릭합니다.
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다.  <w>엔터</w> 키를 눌러 이동할 수 있습니다.
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다. <w>엔터</w> 키를 눌러 이동할 수 있습니다.
+  </console><w>$cmd[CMD_EXPLORE]</w> 자동이동 기능을 사용합니다.
 
 
                                  <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
@@ -319,51 +269,39 @@ tutorial2 tutorial_end
 %%%%
 tutorial2 exit
 
+:nowrap
 <yellow>무기<console> <cyan>)</cyan></console></yellow>
-
   <w>$cmd[CMD_PICKUP]</w>  땅에 있는 물건을 줍습니다.
-  <w>$cmd[CMD_WIELD_WEAPON]</w> 손에 무기를 듭니다. <localtiles>  소지품 창에서
-해당 무기에<w>왼쪽 마우스버튼</w>을 클릭해서 들 수도 있습니다. </localtiles>
+  <w>$cmd[CMD_WIELD_WEAPON]</w> 손에 무기를 듭니다.
+<localtiles>  소지품 창에서 해당 무기에<w>왼쪽 마우스버튼</w>을 클릭해서 들 수도 있습니다.</localtiles>
 
 
 <yellow>괴물</yellow>
-
 <localtiles>  <w>마우스 커서</w>  괴물의 간략한 상태를 봅니다.
-  <w>오른쪽 마우스버튼</w>  괴물의 자세한 설명을 봅니다.</localtiles> <console>
-<w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한 상태를 봅니다.
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을
-봅니다.</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한
-상태를 봅니다.
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을
-봅니다.</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  전에 조준했던 적에게 다시
-탄환을 발사합니다.
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> 다른 적 조준 <localtiles>
- 발사하고 싶은 탄환에 <w>왼쪽 마우스버튼</w> 을 클릭해서 적을 조준하고,
-<w>엔터</w> 키로 발사할 수 있습니다.</localtiles>
+  <w>오른쪽 마우스버튼</w>  괴물의 자세한 설명을 봅니다.</localtiles>
+<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한 상태를 봅니다.
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을 봅니다.</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한 상태를 봅니다.
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을 봅니다.</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> 전에 조준했던 적에게 다시 탄환을 발사합니다.
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> 다른 적 조준
+<localtiles>  발사하고 싶은 탄환에 <w>왼쪽 마우스버튼</w> 을 클릭해서 적을 조준하고, <w>엔터</w> 키로 발사할 수 있습니다.</localtiles>
 
 
 <yellow>휴식</yellow>
-
   <w>$cmd[CMD_MOVE_NOWHERE]</w>  1턴동안 휴식하면서 주변을 살핍니다.
   <w>$cmd[CMD_REST]</w>  100턴동안 휴식하면서 주변을 살핍니다.
 
 
 <yellow>시체<console> <brown>%</brown></console></yellow>
-
   <w>$cmd[CMD_BUTCHER]</w>  시체에서 먹을만한 고기조각을 썰어냅니다.
   <w>$cmd[CMD_EAT]</w>  썰어낸 고기조각 또는 다른 음식을 먹습니다
+
+
                                  <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
 %%%%
 tutorial5 start
 
 이번 시간에는 어떻게 신을 믿고 권능을 사용하는지에 대해 알아보겠습니다.
-%%%%
-tutorial5 secret_door
-
-저 유리벽 어딘가에 제단으로 들어가는 문이 있습니다! 유리벽 근처에서
-<w>$cmd[CMD_REST]</w> 키<localtiles> 또는 명령어 모음에서<w>왼쪽
-마우스버튼</w>으로 해당 기능</localtiles>을(를) 이용해서 비밀문을 찾아보세요.
 %%%%
 tutorial5 dungeon_overview
 
@@ -443,31 +381,23 @@ tutorial5 tutorial_end
 %%%%
 tutorial5 exit
 
+:nowrap
 <yellow>신앙 관련 명령어</yellow>
-
   $cmd[CMD_PRAY]  제단에서 사용하여 신을 믿거나, 시체를 바칠 때 사용합니다.
-
   $cmd[CMD_USE_ABILITY]  권능을 사용할 때 사용합니다.
-
   $cmd[CMD_DISPLAY_RELIGION]  현재 신앙도 등을 볼 때 사용합니다.
-
-<localtiles>캐릭터에 <w>오른쪽 마우스버튼</w>을 클릭해서 볼 수도
-있습니다.</localtiles>
+<localtiles>  캐릭터에 <w>오른쪽 마우스버튼</w>을 클릭해서 볼 수도 있습니다.
+</localtiles>
 
 
 <yellow>휴식</yellow>
-
   <w>$cmd[CMD_MOVE_NOWHERE]</w>  1턴동안 휴식하면서 주변을 살핍니다.
   <w>$cmd[CMD_REST]</w>  100턴동안 휴식하면서 주변을 살핍니다.
 
 
-
 <yellow>기타 명령어</yellow>
-
   $cmd[CMD_DISPLAY_OVERMAP]  던전의 전체적인 구성을 표시합니다.
-
-  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  게임 내의 모든 요소에 대한 설명을 볼 수
-있습니다.
+  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  게임 내의 모든 요소에 대한 설명을 볼 수 있습니다.
 
 
                                  <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
