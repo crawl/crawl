@@ -9,12 +9,6 @@ tutorial5 start
 
 W tej lekcji nauczysz się o bogach, i jak używać ich mocy.
 %%%%
-tutorial5 secret_door
-
-Gdzieś tu musi być wejście do świątyni! Spróbuj obejść i obszukać szklane
-ściany aby znaleźć tajne przejście wciskając <w>$cmd[CMD_REST]</w><localtiles>
-lub <w>klikając myszą</w> w panelu czynności</localtiles>.
-%%%%
 tutorial5 dungeon_overview
 
 Trog jest tylko jednym z wielu bogów. Podczas normalnej gry, możesz wcisnąć
@@ -61,9 +55,9 @@ płomieniach.
 %%%%
 tutorial5 berserk
 
-Przeciw szczególnie groźnym wrogom, możesz użyć Berserkerskiego Szału za
-pomocą mocy Troga (klawisz <w>$cmd[CMD_USE_ABILITY]</w><localtiles> lub
-przycisk <w>zdolności</w> w panelu czynności</localtiles>).
+Przeciw szczególnie groźnym wrogom, możesz użyć Berserkerskiego Szału za pomocą
+mocy Troga (klawisz <w>$cmd[CMD_USE_ABILITY]</w><localtiles> lub przycisk
+<w>zdolności</w> w panelu czynności</localtiles>).
 %%%%
 tutorial5 exhaustion
 
@@ -92,31 +86,23 @@ Aby zakończyć, zejdź po tych schodach.
 %%%%
 tutorial5 exit
 
+:nowrap
 <yellow>Religia:</yellow>
-
   $cmd[CMD_PRAY]  modlitwa na ołtarzu, złożenie ofiary
-
   $cmd[CMD_USE_ABILITY]  przyzwanie boskiej mocy
-
   $cmd[CMD_DISPLAY_RELIGION]  sprawdzenie religijnego statusu
-
-<localtiles>Kliknięcie <w>prawym przyciskiem myszy</w> na twej postaci też
-przejdzie do ekranu religii.</localtiles>
+<localtiles>  Kliknięcie <w>prawym przyciskiem myszy</w> na twej postaci też przejdzie do ekranu religii.</localtiles>
 
 
 <yellow>Odpoczynek:</yellow>
-
   $cmd[CMD_MOVE_NOWHERE]  czekaj i odpoczywaj przez jedną turę
-
   $cmd[CMD_REST]  czekaj i odpoczywaj przez do 100 tur
 
 
 <yellow>Inne:</yellow>
-
   $cmd[CMD_DISPLAY_OVERMAP]  wyświetl schemat lochów
-
   $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  szukaj w bazie opisów
 
-                                 <cyan>Wciśnij <w>dowolny klawisz</w> aby
-zakończyć...</cyan>
+
+                                 <cyan>Wciśnij <w>dowolny klawisz</w> aby zakończyć...</cyan>
 %%%%

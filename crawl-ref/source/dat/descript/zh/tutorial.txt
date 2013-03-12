@@ -15,21 +15,14 @@ tutorial1 go_on
 %%%%
 tutorial1 diagonal
 
-你可以使用<w>[数字小键盘]</w>（试试打开/关上Numlock）或者使用<w>[方向键组合
-]</w>。
+:nowrap
+你可以使用<w>[数字小键盘]</w>（试试打开/关上Numlock）或者使用<w>[方向键组合 ]</w>。
 
-<w></w>  数字键：     <w>7 8 9</w>          方向键组合：
-<w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
-<w></w>                 \|/                         \|/
-
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
-<w></w>                 /|\                         /|\
-
-<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<w></w>  数字键：     <w>7 8 9</w>          方向键组合： <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w></w>                \|/                         \|/
+<w></w>               <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+<w></w>                /|\                         /|\
+<w></w>               <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>同样你可以使用 <w>[鼠标点击]</w>移动。</localtiles>
 %%%%
@@ -92,18 +85,9 @@ tutorial1 door
 只要向门移动就可以打开这扇门。如果你想要把门关上，可以按
 <w>[$cmd[CMD_CLOSE_DOOR]]</w>。
 %%%%
-tutorial1 secret_door_glass
-
-这看起来并不像是走廊的尽头。试着按下<w>[$cmd[CMD_REST]]</w>找找看那扇被隐藏的秘
-门吧。当然，这需要花一点时间。
-%%%%
 tutorial1 water
 
 注意，你可以穿过浅水，但是不能穿过深水。
-%%%%
-tutorial1 secret_door_wall
-
-死胡同！等等...也许这里也有一扇秘门？再按<w>[$cmd[CMD_REST]]</w>找找看吧。
 %%%%
 tutorial1 upstairs
 
@@ -113,54 +97,32 @@ tutorial1 upstairs
 %%%%
 tutorial1 exit
 
+:nowrap
 <yellow>移动指令</yellow>
-
-    数字键:       <w>7 8 9</w>              字母:    <w>$cmd[CMD_MOVE_UP_LEFT]
-$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
-                  \|/                         \|/
-
-                 <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
-                  /|\                         /|\
-
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-
+    数字键:       <w>7 8 9</w>              字母:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+                   \|/                         \|/
+                  <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                   /|\                         /|\
+                  <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
   <w>Shift + 方向</w>让你在该方向上移动数个格子。
-
-  <localtiles>同样你可以使用<w>[鼠标点击]</w>移动。</localtiles>
-
+  <localtiles>同样你可以使用<w>[鼠标点击]</w>移动。
+</localtiles>
 
 <yellow>楼梯</yellow>
-
   <w>$cmd[CMD_GO_UPSTAIRS]</w>  回到上一层
-
   <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  进入下一层
-
   <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  移动到最近的楼梯
 
 
 <yellow>门</yellow>
-
   向门移动即可打开门
-
   <w>$cmd[CMD_CLOSE_DOOR]</w> 关上一个门
-
-  <w>$cmd[CMD_REST]</w>  搜索隐藏的密门
 
 
 <yellow>快速移动</yellow>
-
   <localtiles>鼠标点击<w>小地图</w>
-
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> 进入本层的地图，按
-<w>Enter</w>快速移动
-
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  进入本层的地图，按
-<w>Enter</w>快速移动
-
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> 进入本层的地图，按 <w>Enter</w>快速移动
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  进入本层的地图，按 <w>Enter</w>快速移动
   </console><w>$cmd[CMD_EXPLORE]</w>  自动探索
 
 
@@ -268,46 +230,39 @@ tutorial2 tutorial_end
 %%%%
 tutorial2 exit
 
+:nowrap
 <yellow>武器<console><cyan>)</cyan></console></yellow>
-
-<w>$cmd[CMD_PICKUP]</w>  捡起物品 <w>$cmd[CMD_WIELD_WEAPON]</w> 装备一件武器
-<localtiles>（ 你也可以在物品栏<w>点 击</w>武器。）</localtiles>
+  <w>$cmd[CMD_PICKUP]</w>  捡起物品
+  <w>$cmd[CMD_WIELD_WEAPON]</w>  装备一件武器
+<localtiles>    （ 你也可以在物品栏<w>点 击</w>武器。）</localtiles>
 
 
 <yellow>怪物</yellow>
-
 <localtiles>  <w>鼠标指针悬停</w> 查看怪物
- <w>右击</w> 查看怪物的详细介绍。</localtiles><console>
-<w>$cmd[CMD_LOOK_AROUND]</w> 查看怪物
- <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 查看怪物的详细介绍
-</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w> 查看怪物
- <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 查看怪物的详细介绍
-</webtiles>
- <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  向一个被自动瞄准的敌人发射弹药
- <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> 瞄准另一个敌人<localtiles>
-你也可以<w>点击</w>另一个敌人并按<w>Enter</w>确定。</localtiles>
+  <w>右击</w> 查看怪物的详细介绍。</localtiles>
+<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  查看怪物
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 查看怪物的详细介绍</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w> 查看怪物
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 查看怪物的详细介绍</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> 向一个被自动瞄准的敌人发射弹药
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> 瞄准另一个敌人
+<localtiles>  你也可以<w>点击</w>另一个敌人并按<w>Enter</w>确定。</localtiles>
 
 
 <yellow>休息</yellow>
-
- <w>$cmd[CMD_MOVE_NOWHERE]</w>  等待、休息并搜索一个回合
- <w>$cmd[CMD_REST]</w>  等待、休息并搜索最多100回合
+  <w>$cmd[CMD_MOVE_NOWHERE]</w>  等待、休息并搜索一个回合
+  <w>$cmd[CMD_REST]</w>  等待、休息并搜索最多100回合
 
 
 <yellow>尸体<console><brown>%</brown></console></yellow>
+  <w>$cmd[CMD_BUTCHER]</w>  将尸体切成肉块
+  <w>$cmd[CMD_EAT]</w>  吃一块肉
 
- <w>$cmd[CMD_BUTCHER]</w>  将尸体切成肉块
- <w>$cmd[CMD_EAT]</w>  吃一块肉
+
                                  <cyan>按<w>任意键</w>退出
 %%%%
 tutorial5 start
 
 在这一课中你将会学到有关神祗的知识，包括如何使用他们的力量。
-%%%%
-tutorial5 secret_door
-
-这个神殿肯定有入口！试着在玻璃墙附近按<w>$cmd[CMD_REST]</w><localtiles>或者
-<w>鼠标点击</w>命令栏中对应按钮</localtiles>找找隐藏的门。
 %%%%
 tutorial5 dungeon_overview
 
@@ -374,28 +329,21 @@ tutorial5 tutorial_end
 %%%%
 tutorial5 exit
 
+:nowrap
 <yellow>宗教命令</yellow>
-
   $cmd[CMD_PRAY]  在祭坛上祈祷以加入教会，或献祭尸体
-
   $cmd[CMD_USE_ABILITY]  使用神能
-
   $cmd[CMD_DISPLAY_RELIGION]  查看你的信仰状况
-
-<localtiles>在玩家人物上<w>右击</w>也可以调出宗教界面。</localtiles>
-
+<localtiles>  在玩家人物上<w>右击</w>也可以调出宗教界面。
+</localtiles>
 
 <yellow>休息</yellow>
-
   $cmd[CMD_MOVE_NOWHERE]  等待、休息并搜索一回合
-
   $cmd[CMD_REST]  长时间等待、休息并搜索，最多持续100回合
 
 
 <yellow>其他命令</yellow>
-
   $cmd[CMD_DISPLAY_OVERMAP] 显示地城概览
-
   $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  检查说明数据库
 
 
