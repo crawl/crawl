@@ -3618,9 +3618,9 @@ static const char* xl_rank_names[] = {
 
 static string _xl_rank_name(const int xl_rank)
 {
-    const char* rank = xl_rank_names[xl_rank];
+    const string rank = xl_rank_names[xl_rank];
 
-    return make_stringf("a%s %s", is_vowel(rank[0]) ? "n" : "", rank);
+    return article_a(rank, false);
 }
 
 string short_ghost_description(const monster *mon, bool abbrev)
