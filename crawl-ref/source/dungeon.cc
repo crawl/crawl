@@ -6628,14 +6628,14 @@ string dump_vault_maps()
         if (you.vault_list.find(lid) == you.vault_list.end())
             continue;
 
-        out += lid.describe() + ":\n";
+        out += lid.describe() + ": " + string(max(8 - int(lid.describe().length()), 0), ' ');
 
         vector<string> &maps(you.vault_list[lid]);
 
         string vaults = comma_separated_line(maps.begin(), maps.end(), ", ");
+        out += wordwrap_line(vaults, 70) + "\n";
         while (!vaults.empty())
-            out += "  " + wordwrap_line(vaults, 78) + "\n";
-        out += "\n";
+            out += "          " + wordwrap_line(vaults, 70, false) + "\n";
     }
     return out;
 }

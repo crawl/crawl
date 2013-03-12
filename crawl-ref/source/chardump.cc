@@ -1105,7 +1105,7 @@ static void _sdump_vault_list(dump_params &par)
 #endif
      )
     {
-        par.text += "Vault maps used:\n\n";
+        par.text += "Vault maps used:\n";
         par.text += dump_vault_maps();
     }
 }
