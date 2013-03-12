@@ -274,6 +274,7 @@ protected:
 
     void _send_everything();
 
+    void _send_cursor(cursor_type type);
     void _send_map(bool force_full = false);
     void _send_cell(const coord_def &gc,
                     const screen_cell_t &current_sc, const screen_cell_t &next_sc,
