@@ -1665,7 +1665,6 @@ wand of digging
 
 Un instrument magique qui creuse des tunnels au travers les murs de roche brute
 en la liquéfiant.
-
 %%%%
 wand of disintegration
 
