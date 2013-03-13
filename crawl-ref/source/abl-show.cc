@@ -2220,7 +2220,7 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
 
-        if (mons_is_firewood(mons))
+        if (mons_is_firewood(mons) || mons_is_conjured(mons->type))
         {
             mpr("You cannot imprison that!");
             return false;
