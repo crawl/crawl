@@ -352,7 +352,8 @@ static void _maybe_leave_water(const cloud_struct& c)
         if (grd(c.pos) == DNGN_FLOOR)
             feat = DNGN_SHALLOW_WATER;
         else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
-                 && one_chance_in(3) && !crawl_state.game_is_zotdef())
+                 && one_chance_in(3) && !crawl_state.game_is_zotdef()
+                 && !crawl_state.game_is_sprint())
             // Don't drown the player!
             feat = DNGN_DEEP_WATER;
         else
