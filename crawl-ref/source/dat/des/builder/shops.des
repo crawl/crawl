@@ -119,7 +119,7 @@ DEPTH:   D:11-
 KMONS:   1 = gargoyle / boulder beetle / boring beetle / earth elemental / cyclops
 KMONS:   2 = stone giant / earth elemental / catoblepas / deep troll earth mage / stone golem
 KMONS:   3 = boring beetle
-ITEM:    stone, wand of digging
+ITEM:    stone, wand of digging ident:type
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 sling | w:8 sling bullet | \
          w:4 sling bullet ego:steel | w:14 stone of earth elementals | \
@@ -149,7 +149,7 @@ TAGS:    no_monster_gen
 DEPTH:   D:12-
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
-ITEM:    potion of blood
+ITEM:    potion of blood ident:type
 KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
          w:60 potion of blood | w:20 potion of coagulated blood | \
          w:10 any weapon ego:vampiricism | w:9 randbook disc:necromancy | w:1 book of annihilations
