@@ -162,8 +162,8 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 2; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
-    case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 2; break;
-    case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 13; mp = 2; break;
+    case JOB_HEALER:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
+    case JOB_PRIEST:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
 
