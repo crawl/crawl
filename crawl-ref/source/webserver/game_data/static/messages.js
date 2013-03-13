@@ -136,6 +136,17 @@ function ($, comm, client, util, settings) {
                 return false;
             }
         });
+        input.keypress(function (ev) {
+            if (msg.tag == "stash_search")
+            {
+                if (String.fromCharCode(ev.which) == "?")
+                {
+                    ev.preventDefault();
+                    comm.send_message("key", { keycode: ev.which });
+                    return false;
+                }
+            }
+        });
     }
 
     function abort_get_line()

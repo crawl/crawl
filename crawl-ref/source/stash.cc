@@ -1637,6 +1637,7 @@ public:
                         int wcol = get_number_of_cols())
         : line_reader(buf, sz, wcol)
     {
+        tag = "stash_search";
     }
 protected:
     int process_key(int ch)

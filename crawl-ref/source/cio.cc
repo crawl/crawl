@@ -303,6 +303,8 @@ int line_reader::read_line(bool clear_previous)
         tiles.redraw();
         tiles.json_open_object();
         tiles.json_write_string("msg", "get_line");
+        if (!tag.empty())
+            tiles.json_write_string("tag", tag);
         tiles.json_close_object();
         tiles.finish_message();
     }

@@ -257,6 +257,8 @@ protected:
     keyproc         keyfn;
     int             wrapcol;
 
+    string          tag; // For identification on the Webtiles client side
+
     // These are subject to change during editing.
     char            *cur;
     int             length;
