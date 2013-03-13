@@ -1250,8 +1250,7 @@ bool spell_no_hostile_in_range(spell_type spell)
             for (map<coord_def, aff_type>::iterator it = tgt.seen.begin();
                  it != tgt.seen.end(); it++)
             {
-                if (it->second == AFF_NO
-                    || it->second == AFF_TRACER)
+                if (it->second == AFF_NO || it->second == AFF_TRACER)
                     continue;
 
                 // Checks here are from get_dist_to_nearest_monster().
