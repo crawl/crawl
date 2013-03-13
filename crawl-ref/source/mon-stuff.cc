@@ -4628,8 +4628,12 @@ void mons_att_changed(monster* mon)
             }
     }
 
-    if (mon->is_divine_companion() && mon->attitude == ATT_HOSTILE)
+    if (mon->attitude == ATT_HOSTILE
+        && (mons_is_god_gift(mon, GOD_BEOGH)
+           || mons_is_god_gift(mon, GOD_YREDELEMNUL)))
+    {
         remove_companion(mon);
+    }
 }
 
 void debuff_monster(monster* mon)
