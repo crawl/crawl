@@ -516,7 +516,8 @@ static monster_type _pick_random_monster(const level_id &place, int power,
         mon_type = valid_monster_types[random2(valid_monster_types.size())];
 
         if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type)
-            || force_mobile && mons_class_is_stationary(mon_type))
+            || force_mobile && mons_class_is_stationary(mon_type)
+            || mons_is_abyssal_only(mon_type) && !player_in_branch(BRANCH_ABYSS))
         {
             continue;
         }
