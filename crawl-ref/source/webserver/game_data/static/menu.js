@@ -346,12 +346,24 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
             var item_bottom = item_top + item.elem.outerHeight();
             if (item_top <= top && item_bottom >= top)
             {
-                menu.first_visible = Number(i) + 1;
+                var candidate = Number(i) + 1;
+                while (menu.items[candidate] == null &&
+                       candidate <= menu.last_present)
+                {
+                    candidate++;
+                }
+                menu.first_visible = candidate;
                 if (menu.last_visible !== null) return;
             }
             if (item_top <= bottom && item_bottom >= bottom)
             {
-                menu.last_visible = Number(i) - 1;
+                var candidate = Number(i) - 1;
+                while (menu.items[candidate] == null &&
+                       candidate >= menu.first_present)
+                {
+                    candidate--;
+                }
+                menu.last_visible = candidate;
                 if (menu.first_visible !== null) return;
             }
         }
