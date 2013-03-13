@@ -576,6 +576,9 @@ TAGS: overwritable layout allow_dup unrand
 
         make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4], number=doors}
     end
+
+    -- Prevent treasure rooms being overwritten by vaults
+    kmask('| = vault')
 }}
 MAP
 ENDMAP
