@@ -1529,10 +1529,11 @@ hammer
 %%%%
 hand axe
 
-“'God speed the kiss,' said Max, and Katie sigh'd,
- With pray'rful palms close seal'd, 'God speed the axe!'”
-    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
-     Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
+“Lizzie Borden took an axe
+ And gave her mother forty whacks.
+ When she saw what she had done
+ She gave her father forty-one.”
+    -A popular skipping-rope rhyme, after 1893.
 %%%%
 ice dragon armour
 
@@ -2145,7 +2146,10 @@ wand of teleportation
 %%%%
 war axe
 
-<hand axe>
+“'God speed the kiss,' said Max, and Katie sigh'd,
+ With pray'rful palms close seal'd, 'God speed the axe!'”
+    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
+     Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
 %%%%
 whip
 
