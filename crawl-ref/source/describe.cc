@@ -3622,7 +3622,7 @@ static string _xl_rank_name(const int xl_rank)
 {
     const string rank = xl_rank_names[xl_rank];
 
-    return article_a(rank, false);
+    return article_a(rank);
 }
 
 string short_ghost_description(const monster *mon, bool abbrev)
