@@ -102,7 +102,6 @@ CMD_DISPLAY_CHARACTER_STATUS verbose
 CMD_DISPLAY_KNOWN_OBJECTS
 
 Список опознанных типов вещей
-
 %%%%
 CMD_SAVE_GAME_NOW
 

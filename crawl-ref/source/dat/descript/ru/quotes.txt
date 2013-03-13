@@ -1558,7 +1558,6 @@ deep elf sorcerer
 deep dwarf
 
 глубинный дварф
-
 %%%%
 deep dwarf artificer
 

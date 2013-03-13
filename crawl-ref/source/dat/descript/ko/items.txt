@@ -1673,7 +1673,6 @@ wand of confusion
 wand of digging
 
 가공되지 않은 벽을 녹여 길을 만드는 마법봉이다.
-
 %%%%
 wand of disintegration
 

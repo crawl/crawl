@@ -974,8 +974,8 @@ osłabione, a nosiciel jest bardziej wrażliwy na zimno.
 ring of flight
 
 Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
-Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania.
-To może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
+Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania. To
+może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
 %%%%
 ring of hunger
 
@@ -1193,9 +1193,9 @@ większa. Bezwzględny limit to +9.
 %%%%
 scroll of enchant weapon iii
 
-Ten zwój pozwala na znaczne poprawienie jakości broni trzymanej w dłoni w
-zwili odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia.
-Broń która już jest wysokiej jakości może nie poddać się działaniu tego zwoju —
+Ten zwój pozwala na znaczne poprawienie jakości broni trzymanej w dłoni w zwili
+odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia. Broń
+która już jest wysokiej jakości może nie poddać się działaniu tego zwoju —
 szansa porażki jest coraz większa. Bezwzględny limit to +9.
 %%%%
 scroll of fear

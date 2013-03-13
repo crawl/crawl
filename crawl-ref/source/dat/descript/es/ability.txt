@@ -220,7 +220,6 @@ Animate Dead ability
 Reanimas a todos los cadáveres o esqueletos y los conviertes en tus seguidores.
 Date cuenta de que los zombies y los esqueletos no pueden dejar el nivel donde
 fueron creados.
-
 %%%%
 Drain Life
 
