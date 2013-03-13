@@ -1,9 +1,11 @@
-Stone Soup 0.12 (up to 0.12-a0-2137-gc3de154)
+Stone Soup 0.12 (up to 0.12-a0-2705-ge6d927c)
 ---------------------------------------------
 
 Branches, environment
 ---------------------
 * Vaults is now five levels long, and has an entirely new layout.
+* The Hall of Blades layout has been adjusted, and now contains two weapons
+  with "interesting brands" instead of just one.
 * The Abyss is revamped yet again. It now contains five (still infinite)
   levels of increasing difficulty. Each level is composed of regions with
   different layouts, most of which are more static than before. The rune
@@ -15,6 +17,7 @@ Branches, environment
 * The Abyss no longer exists in Sprint.
 * A new Sprint map by evilmike: "Thunderdome".
 * A new Sprint map by st: "The Pits".
+* A new Sprint map by st: "Arena of Blood".
 * A new layout for Cocytus.
 * A new dragon-themed Lair ending.
 * A new water-themed rune vault for the Snake Pit.
@@ -22,6 +25,10 @@ Branches, environment
 * A new castle-themed rune vault for the Swamp.
 * A new, more waterlogged, rune vault for Shoals.
 * Lots more new vaults.
+* "Special rooms" (kobold/orc rooms, beehives, morgues, jelly pits) have been
+  adjusted, now appear at more appropriate depths and layouts, and no longer
+  place doors.
+* A new "special room" - the mythical zoo, with standard high fantasy beasts.
 * Remove secret doors entirely, replacing some with runed doors.
 * More layouts allowed in Zot.
 * Abyss morphing can push the player.
@@ -29,7 +36,7 @@ Branches, environment
   Becomes a regular door when opened.
 * Alarm traps only trigger once.
 * A number of vaults are fixed to not trap the player.
-* Place more decorative vaults.
+* More decorative vaults are now placed.
 
 Character
 ---------
@@ -62,7 +69,7 @@ Character
 
 Monsters
 --------
-* Removed: bumblebees, blessed toes.
+* Removed: ant larvae, bumblebees, blessed toes, rock trolls, wood golems.
 * New monster: moth of suppression. Generates an aura that prevents evocation
   and suppresses the magical effects of wielded/worn equipment.
 * New abyssal monsters:
@@ -80,6 +87,21 @@ Monsters
       vortices.
     - Chaos butterfly: is surrounded by rain, summons twisters, and
       has a chaos attack.
+* New deep troll specialist monsters, appearing in late-D deep troll packs:
+    - Deep troll shamans: cast Might Other and Haste Other on their
+      accompanying deep troll packs.
+    - Deep troll earth mages: cast Dig and LRD to allow the rest of the deep
+      troll pack to pursue their opponent.
+* New vaults monsters:
+    - Vault sentinels, with a signal horn that generates a lot of noise and
+      the Sentinel's Mark spell which alerts all creatures on the level to
+      the player's location.
+    - Vault wardens, with the ability to close and seal doors near the player
+      for a time or until they are killed.
+    - Ironbrand convokers, with the ability to recall other monsters on the
+      level to their location.
+    - Ironheart preservers, with the ability to take some damage in place of
+      an enemy the player is currently attacking.
 * New uniques:
     - Jorgrun, a dwarven earth elementalist.
     - Lamia, queen of the nagas.
@@ -88,7 +110,7 @@ Monsters
   sight for this purpose.
 * Summoned monsters do not cast spells that create permanent allies.
 * Only a select few monsters flee at low HP.
-* New monster spells: Shatter, LRD, OTR.
+* New monster spells: Shatter, LRD.
 * Bone dragons are faster but have fewer HP.
 * Ereshkigal is much more dangerous.
 * Soul eaters can drain life from their surroundings.
@@ -108,6 +130,7 @@ Monsters
 * See invisible no longer grants blindness immunity.
 * A number of monsters now have see invisible instead of sense invisible.
 * Monsters can now use wands of digging, and cast Dig in more circumstances.
+* Allies summoned with the Mercenary card can pick up and use equipment.
 
 Spells
 ------
@@ -122,6 +145,8 @@ Spells
   bomb at a smite-targetted location.
 * New spell: Disjunction (level 8 Translocation). Has a duration, during
   which it blinks away nearby monsters. Causes contamination.
+* New monster spell: Might Other, which bestows the Might effect on other
+  monsters of the same genus.
 * Spell memorisation failure is no more. As long as the failure chance is
   not 100%, the spell can be memorized. There is a warning prompt if the
   chance of a miscast is high.
@@ -135,6 +160,9 @@ Spells
 * Venom Bolt and Bolt of Magma do more damage.
 * Conjurers have a new book with non-elemental spells (including the new
   conjurations).
+* Apportation now fails on the Orb 1/3 of the time, increased from 1/6.
+* Recall is now gradual instead of instant; one ally is recalled every 3-6
+  aut.
 
 Items
 -----
@@ -143,6 +171,9 @@ Items
   but not if a wall is in the way). These secondary attacks do only 75%
   damage and do not hit allies. Base damage for the larger axes is reduced
   to compensate.
+* One-handed maces and flails have been improved; flails and eveningstars get
+  a one point damage increase, and morningstars get a +3/-1 damage/accuracy
+  boost to replace spiked flails.
 * Weapon skill training only requires having a weapon of the appropriate
   type, not necessarily the ability to wield it.
 * All troll-genus monsters can drop troll hides.
@@ -168,6 +199,8 @@ Items
 * Robe of Night reduces visibility like the Darkness spell.
 * Staff of Wucad Mu is now +9,+9 rather than caring about intelligence.
 * Cloak of the Thief can be evoked for fog.
+* Robe of Folly is now a robe of the Archmagi with Int+5 and MR-100, to
+  differentiate it from the strictly bad Robe of Misfortune.
 * Scroll of vulnerability properly cancels petrification.
 * Plutonium sword sometimes causes transmutation miscast effects against the
   defender.
@@ -177,6 +210,9 @@ Items
   Trog).
 * The hand-and-a-half weapon category is gone; such weapons are now
   one-handed for normal-size races.
+* The wand of polymorph other is now the wand of polymorph; use of it against
+  the player will turn them into a random form (including several new forms -
+  tree form, wisp form, and porcupine form).
 
 Gods
 ----
@@ -196,6 +232,14 @@ Gods
   No longer supports summoning, accepts ally kills, or reduces spell MP cost.
 * Elyvilon no longer gives piety for pacifying summoned monsters.
 * Mobile Fedhas-granted allies follow you across levels en masse.
+* Followers of worshippers of Beogh and Yredelemnul can now be recalled across
+  levels.
+* Followers of Beoghites now share experience when the player scores kills.
+* Zin's Imprisonment can no longer be used against friendly or good-neutral
+  creatures or conjured monsters, and its duration has been adjusted to not
+  depend on the HD of its target.
+* Lugonu no longer gives piety for kills in the Abyss.
+* Lugonu's Enter the Abyss no longer reduces maximum HP or MP.
 
 Interface
 ---------
@@ -225,6 +269,7 @@ Interface
 * Webtiles displays miniature health and MP bars on the player.
 * Changed colour scheme for webtiles text (including glyph mode).
 * Many webtiles bugfixes.
+* Allies can now be ordered to retreat in a specific direction.
 
 Technical
 ---------
