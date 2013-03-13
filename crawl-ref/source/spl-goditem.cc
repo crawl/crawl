@@ -23,6 +23,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "map_knowledge.h"
+#include "mapdef.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -37,6 +38,8 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tiledef-dngn.h"
+#include "tilepick.h"
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
@@ -907,7 +910,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
                 // Make the walls silver.
                 grd(*ai) = DNGN_METAL_WALL;
-                env.grid_colours(*ai) = LIGHTGREY;
+                env.grid_colours(*ai) = WHITE;
+                env.tile_flv(*ai).feat_idx =
+                        store_tilename_get_index("dngn_mirror_wall");
+                env.tile_flv(*ai).feat = TILE_DNGN_MIRROR_WALL;
             }
             // Tomb card
             else

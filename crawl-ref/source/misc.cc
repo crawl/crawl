@@ -73,6 +73,7 @@
 #include "stuff.h"
 #include "target.h"
 #include "terrain.h"
+#include "tileview.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -1832,6 +1833,8 @@ static void _drop_tomb(const coord_def& pos, bool premature)
             env.grid_colours(*ai) = 0;
 
             set_terrain_changed(*ai);
+            tile_clear_flavour(*ai);
+            tile_init_flavour(*ai);
             count++;
             if (you.see_cell(*ai))
                 seen_change = true;
