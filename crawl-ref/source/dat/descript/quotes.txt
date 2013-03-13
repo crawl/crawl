@@ -1872,23 +1872,6 @@ can take the initiative; the halberd is defensive. In the hands of one of two
 men of equal ability, the spear gives a little extra strength.”
     -Miyamoto Musashi, _The Book of Five Rings_. 1645.
 %%%%
-spiked flail
-
-“THE HOLY-WATER SPRINKLER, OR MILITARY FLAIL.
- This class of weapon, like several others, had its inception among the
-implements of husbandry; and it owes its name, like the goedendag, doubtless to
-a brutal jest. It is stated by Whitacre that the agricultural flail was
-introduced into Italy about the time of the Roman conquest of Britain. The
-Anglo-Saxons called it ”Therscol,“ or thrasher. This terrible weapon consists
-of a shaft of wood, garnished with iron, attached to which is a flail of iron,
-moving on a ring; or a chain or chains connecting the head of the shaft with a
-wooden or iron ball or balls at the extremity. The balls are usually garnished
-with iron spikes, but this is not always the case. The holy-water sprinkler is
-often confounded with the ”morning star,“ which is a spiked mace, described
-under that heading.”
-    -Robert Coltman Clephan, _The Defensive Armour and the Weapons and Engines
-     of War of Mediæval Times, and of the “Renaissance”_. 1900.
-%%%%
 splint mail
 
 <leather armour>
