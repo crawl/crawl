@@ -354,7 +354,7 @@ void console_startup()
         exit(0);
     }
 
-    string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + string(Version::Long);
 
     if (!GetConsoleTitleW(oldTitle, 78))
         *oldTitle = 0;

@@ -409,7 +409,7 @@ void TilesFramework::_send_version()
     send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long().c_str());
 #endif
 
-    string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + string(Version::Long);
     send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
 }
 
