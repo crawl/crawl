@@ -2208,8 +2208,11 @@ bool monster::pickup_scroll(item_def &item, int near)
 
     // Holy monsters and worshippers of good gods won't pick up evil
     // scrolls.
-    if ((is_holy() || is_good_god(god)) && is_evil_item(item))
+    if ((is_holy() || is_good_god(god)) 
+        && (is_evil_item(item) || is_unholy_item(item)))
+    {
         return false;
+    }
 
     return pickup(item, MSLOT_SCROLL, near);
 }
