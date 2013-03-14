@@ -2610,8 +2610,8 @@ void mark_milestone(const string &type, const string &milestone,
             && lasttype == type
             && lastmilestone == milestone)
 #ifndef SCORE_WIZARD_CHARACTERS
-        // Don't mark milestones in wizmode
-        || you.wizard
+        // Don't mark normal milestones in wizmode
+        || you.wizard && type != "crash"
 #endif
         )
     {
