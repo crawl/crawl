@@ -342,7 +342,7 @@ bool TilesFramework::initialise()
     "dat/tiles/stone_soup_icon-32x32.png";
 #endif
 
-    string title = CRAWL " " + Version::Long();
+    string title = string(CRAWL " ") + Version::Long;
 
     // Do our initialization here.
 
