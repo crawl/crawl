@@ -109,7 +109,7 @@ void disjunction()
             int decay = max(1, (dist - 1) * (dist + 1));
             int chance = pow(0.8, 1.0 / decay) * 1000;
             if (!x_chance_in_y(chance, 1000))
-                blink_away(mons, &you);
+                blink_away(mons, &you, false);
         }
     }
 }
