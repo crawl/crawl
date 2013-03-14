@@ -24,10 +24,11 @@
 # Currently, you are guaranteed exactly nine foes, with no two races or roles
 # being the same.
 
+default-depth: D:20-26, Elf, Crypt, !Crypt:$
+
 NAME: serial_grunt_rogues_gallery
 TAGS: extra luniq_serial
 ORIENT: float
-DEPTH: D:20-26, Elf, Crypt, !Crypt:$
 CHANCE: 1%
 {{
   hook("post_place", function()
@@ -38,7 +39,7 @@ CHANCE: 1%
 }}
 
 NAME: grunt_rogue_3_row
-TAGS: grunt_rogue_3 transparent
+TAGS: grunt_rogue_3 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 SUBVAULT: B : grunt_rogue_subvault
 SUBVAULT: C : grunt_rogue_subvault
@@ -56,7 +57,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_3_hall
-TAGS: grunt_rogue_3 transparent
+TAGS: grunt_rogue_3 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 SUBVAULT: B : grunt_rogue_subvault
 SUBVAULT: C : grunt_rogue_subvault
@@ -75,7 +76,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_3_triangleish
-TAGS: grunt_rogue_3 transparent
+TAGS: grunt_rogue_3 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 SUBVAULT: B : grunt_rogue_subvault
 SUBVAULT: C : grunt_rogue_subvault
@@ -100,7 +101,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_2_row
-TAGS: grunt_rogue_2 transparent
+TAGS: grunt_rogue_2 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 SUBVAULT: B : grunt_rogue_subvault
 SHUFFLE: de, fg
@@ -117,7 +118,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_2_hall
-TAGS: grunt_rogue_2 transparent
+TAGS: grunt_rogue_2 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 SUBVAULT: B : grunt_rogue_subvault
 SUBVAULT: C : grunt_rogue_subvault
@@ -140,7 +141,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_2_box
-TAGS: grunt_rogue_2 transparent
+TAGS: grunt_rogue_2 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 SUBVAULT: B : grunt_rogue_subvault
 SHUFFLE: de, fg
@@ -161,7 +162,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_1_simple
-TAGS: grunt_rogue_1 transparent
+TAGS: grunt_rogue_1 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 MAP
 ...@...
@@ -174,7 +175,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_1_enclosed
-TAGS: grunt_rogue_1 transparent
+TAGS: grunt_rogue_1 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 NSUBST: d = 1:+ / *:c
 NSUBST: e = 1:+ / *:c
@@ -193,7 +194,7 @@ MAP
 ENDMAP
 
 NAME: grunt_rogue_1_cross
-TAGS: grunt_rogue_1 transparent
+TAGS: grunt_rogue_1 unrand transparent
 SUBVAULT: A : grunt_rogue_subvault
 MAP
 .........
@@ -210,7 +211,7 @@ cc.AAA.cc
 ENDMAP
 
 NAME: grunt_rogue_mifi
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_fi
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_fi
 KMONS: O = minotaur name:fighter n_suf hd:15 god:okawaru ; \
            great sword good_item | battleaxe good_item | trident good_item . \
            chain mail w:10 good_item | splint mail w:5 good_item | \
@@ -225,7 +226,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_mibe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_be
 KMONS: O = minotaur name:berserker n_suf hd:15 god:trog \
            spells:berserker_rage;trog's_hand;.;.;.;brothers_in_arms \
            priest_spells ; \
@@ -246,7 +247,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_spen
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_sp uniq_grunt_rogue_en
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_sp uniq_grunt_rogue_en
 KMONS: O = spriggan defender name:spriggan_enchanter n_rpl n_des name_nocorpse \
            spells:confuse;ensorcelled_hibernation;invisibility;haste \
            actual_spells \
@@ -264,7 +265,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_defe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_de uniq_grunt_rogue_fe
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_de uniq_grunt_rogue_fe
 KMONS: O = deep elf annihilator name:deep_elf_scorcher n_rpl n_des \
            name_nocorpse \
            spells:bolt_of_fire;fireball;blink;fire_storm;bolt_of_magma;blink \
@@ -284,7 +285,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_ddee
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_dd uniq_grunt_rogue_ee
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_dd uniq_grunt_rogue_ee
 KMONS: O = deep dwarf col:white hd:15 name:deep_dwarf_earth_mage n_rpl n_des \
            name_nocorpse \
            spells:iron_shot;petrify;stoneskin;\
@@ -306,7 +307,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_migl
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_gl
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_gl
 KMONS: O = minotaur name:gladiator n_suf hd:15 god:okawaru ; \
            great sword good_item | battleaxe good_item | trident good_item . \
            javelin good_item q:20 . \
@@ -323,7 +324,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_mimo
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_mo
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_mo
 KMONS: O = minotaur name:monk n_suf hd:15 god:okawaru ; \
            chain mail w:10 good_item | splint mail w:5 good_item | \
            plate armour good_item w:1
@@ -336,7 +337,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_musu
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mu uniq_grunt_rogue_su
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mu uniq_grunt_rogue_su
 KMONS: O = mummy priest name:mummy_summoner hd:15 col:white n_rpl n_des \
            god:sif_muna actual_spells \
            spells:summon_demon;summon_ugly_thing;summon_hydra;\
@@ -359,7 +360,7 @@ ENDMAP
 # Disabled, as it's silently redefining a monster.
 NAME: grunt_rogue_ddbe
 WEIGHT: 0
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_dd uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_dd uniq_grunt_rogue_be
 KMONS: O = deep dwarf berserker hd:15 god:trog ; \
            battleaxe good_item | executioner's axe good_item w:5 . \
            chain mail good_item w:10 | \
@@ -377,7 +378,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_ogbe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_og uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_og uniq_grunt_rogue_be
 KMONS: O = ogre col:yellow name:berserker n_suf hd:15 god:trog \
            spells:berserker_rage;trog's_hand;.;.;.;brothers_in_arms \
            priest_spells ; \
@@ -397,7 +398,7 @@ ENDMAP
 
 # Disabled; it silently redefines a monster.
 NAME: grunt_rogue_hopr
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ho uniq_grunt_rogue_pr
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ho uniq_grunt_rogue_pr
 WEIGHT: 0
 KMONS: O = orc high priest hd:15 god:beogh ; \
            battleaxe race:orcish good_item | \
@@ -419,7 +420,7 @@ fHg
 ENDMAP
 
 NAME: grunt_rogue_kobe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ko uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ko uniq_grunt_rogue_be
 KMONS: O = kobold col:lightred name:berserker n_suf hd:15 god:trog \
            spells:berserker_rage;trog's_hand;.;.;.;brothers_in_arms \
            priest_spells ; \
@@ -439,7 +440,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_hofi
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ho uniq_grunt_rogue_fi
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ho uniq_grunt_rogue_fi
 KMONS: O = orc warlord god:okawaru ; \
            battleaxe race:orcish good_item | \
            executioner's axe race:orcish good_item w:5 | \
@@ -458,7 +459,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_mfgl
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mf uniq_grunt_rogue_gl
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mf uniq_grunt_rogue_gl
 KMONS: O = merfolk javelineer name:merfolk_gladiator n_rpl n_des hd:15 \
            name_nocorpse god:okawaru ; \
            trident good_item | halberd good_item | bardiche good_item . \
@@ -477,7 +478,7 @@ ENDMAP
 
 # Disabled, as it's silently redefining a monster.
 NAME: grunt_rogue_ddne
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_dd uniq_grunt_rogue_ne
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_dd uniq_grunt_rogue_ne
 WEIGHT: 0
 KMONS: O = deep dwarf necromancer hd:15 \
            spells:agony;haunt;bolt_of_draining;dispel_undead;animate_dead;\
@@ -498,7 +499,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_mfie
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mf uniq_grunt_rogue_ie
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mf uniq_grunt_rogue_ie
 KMONS: O = merfolk aquamancer name:merfolk_gelid n_rpl n_des hd:15 \
            name_nocorpse spells:bolt_of_cold;ozocubu's_refrigeration;blink;\
            ice_storm;throw_icicle;blink \
@@ -517,7 +518,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_dswz
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ds uniq_grunt_rogue_wz
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ds uniq_grunt_rogue_wz
 KMONS: O = demonspawn name:sorcerer n_suf n_noc col:lightmagenta \
            hd:15 god:vehumet actual_spells \
            spells:fireball;summon_elemental;haste;lightning_bolt;\
@@ -535,7 +536,7 @@ ENDMAP
 
 # This is only a one HD increment, so...
 NAME: grunt_rogue_dewz
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_de uniq_grunt_rogue_wz
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_de uniq_grunt_rogue_wz
 KMONS: O = deep elf sorcerer hd:15 god:vehumet
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = book of minor magic
@@ -549,7 +550,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_cehu
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ce uniq_grunt_rogue_hu
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ce uniq_grunt_rogue_hu
 KMONS: O = centaur warrior name:centaur_hunter n_rpl n_des n_noc \
            hd:15 god:okawaru ; \
            longbow good_item . \
@@ -565,7 +566,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_vpen
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_vp uniq_grunt_rogue_en
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_vp uniq_grunt_rogue_en
 KMONS: O = vampire name:enchanter n_suf hd:15 col:lightred \
            spells:confuse;ensorcelled_hibernation;invisibility;haste \
            actual_spells \
@@ -583,7 +584,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_seee
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_se uniq_grunt_rogue_ee
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_se uniq_grunt_rogue_ee
 KMONS: O = elf col:brown hd:15 name:sludge_elf_earth_mage n_rpl n_des \
            name_nocorpse \
            spells:iron_shot;petrify;stoneskin;\
@@ -605,7 +606,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_midk
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_dk
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_dk
 KMONS: O = minotaur name:death_knight n_suf hd:15 god:yredelemnul col:magenta \
            spells:.;animate_dead;mirror_damage;.;drain_life;drain_life \
            priest_spells ; \
@@ -629,7 +630,7 @@ ENDMAP
 # The HD doesn't do anything; it's there in case someone redefines
 # deep elf annihilators.
 NAME: grunt_rogue_decj
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_de uniq_grunt_rogue_cj
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_de uniq_grunt_rogue_cj
 KMONS: O = deep elf annihilator hd:15 god:vehumet
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = book of conjurations
@@ -643,7 +644,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_hobe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ho uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ho uniq_grunt_rogue_be
 KMONS: O = orc warlord name:orc_berserker n_rpl n_des n_noc hd:15 god:trog \
            spells:berserker_rage;trog's_hand;.;.;.;brothers_in_arms \
            priest_spells ; \
@@ -665,7 +666,7 @@ ENDMAP
 
 # Disabled until monster transmutations make their appearance again...
 #NAME: grunt_rogue_drtm
-#TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_dr uniq_grunt_rogue_tm
+#TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_dr uniq_grunt_rogue_tm
 #KMONS: O = base draconian name:transmuter n_suf hd:15 god:sif_muna \
 #           dbname:draconian_transmuter \
 #           spells:blade_hands;statue_form;dragon_form;stoneskin;\
@@ -683,7 +684,7 @@ ENDMAP
 #ENDMAP
 
 NAME: grunt_rogue_habe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ha uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ha uniq_grunt_rogue_be
 KMONS: O = halfling col:lightred name:berserker n_suf hd:15 god:trog \
            spells:berserker_rage;trog's_hand;.;.;.;brothers_in_arms \
            priest_spells ; \
@@ -703,7 +704,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_teae
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_te uniq_grunt_rogue_ae
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_te uniq_grunt_rogue_ae
 KMONS: O = tengu col:lightcyan name:aerator n_suf hd:15 god:vehumet \
            spells:lightning_bolt;swiftness;chain_lightning;\
            airstrike;.;blink \
@@ -724,7 +725,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_dsbe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ds uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ds uniq_grunt_rogue_be
 KMONS: O = demonspawn name:berserker n_suf hd:15 god:trog col:lightred \
            spells:berserker_rage;trog's_hand;.;.;.;brothers_in_arms \
            priest_spells ; \
@@ -745,7 +746,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_dsfe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_ds uniq_grunt_rogue_fe
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_ds uniq_grunt_rogue_fe
 KMONS: O = demonspawn name:scorcher n_suf n_noc col:lightblue hd:15 \
            spells:bolt_of_fire;fireball;blink;fire_storm;bolt_of_magma;blink \
            god:vehumet actual_spells ; robe good_item . \
@@ -764,7 +765,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_muwz
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mu uniq_grunt_rogue_wz
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mu uniq_grunt_rogue_wz
 KMONS: O = mummy priest name:mummy_sorcerer hd:15 col:lightmagenta n_rpl n_des \
            god:sif_muna actual_spells \
            spells:fireball;summon_elemental;haste;lightning_bolt;\
@@ -785,7 +786,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_hewz
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_he uniq_grunt_rogue_wz
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_he uniq_grunt_rogue_wz
 KMONS: O = elf name:high_elf_sorcerer hd:15 col:lightmagenta n_rpl n_des n_noc \
            god:vehumet actual_spells \
            spells:fireball;summon_elemental;haste;lightning_bolt;\
@@ -806,7 +807,7 @@ f.g
 ENDMAP
 
 NAME: grunt_rogue_mfbe
-TAGS: grunt_rogue_subvault patrolling uniq_grunt_rogue_mf uniq_grunt_rogue_be
+TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mf uniq_grunt_rogue_be
 KMONS: O = merfolk name:berserker n_suf hd:15 god:trog col:white \
            spells:berserker_rage;trog's_hand;.;.;.;brothers_in_arms \
            priest_spells ; \
