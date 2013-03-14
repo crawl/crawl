@@ -192,8 +192,141 @@ ihnen göttliche Wesen als starke Verbündete zu senden. Der Glänzende wird an
 und zu direkt eingreifen, um das Leben eines Anhängers zu schützen. Mit
 steigender Frömmigkeit wird der Glänzende deine Lebenskraft schützen.
 %%%%
+Kikubaaqudgha powers
+
+Kikubaaqudgha wird seinen Anhängern Leichen schicken, ihr nekromantisches
+Können durch geschenkte Zauberbücher verbessern und ihre Waffen mit Schmerz
+durchtränken. Besonders eifrige Anhänger können sich selbst vor Qualen
+schützen, oder diese sogar selbst verursachen, indem sie Kikubaaqudgha eine
+Leiche opfern.
+%%%%
+Yredelemnul powers
+
+Yredelemnul gibt dir die Macht, Skelette und Leichen als Krieger an deiner
+Seite wiederzubeleben, deine untoten Anhänger in deine Nähe zu rufen, und deine
+Lebenspunkte durch Lebensentzug von lebenden Wesen zu erhalten. Irgendwann
+wirst du die Kraft bekommen, die Seele eines Monsters zu binden und an deiner
+Seite kämpfen zu lassen. Yredelemnul wird dir ab und zu stärkere untote Diener
+schenken. Mit genügend Frömmigkeit wird Yredelemnul jeden Schaden auf deine
+Gegner zurückspiegeln.
+%%%%
+Xom powers
+
+Xom anzubeten bedeutet, riskant zu leben. In guter Laune wird Xom dich mit
+Geschenken überhäufen, doch zu anderen Zeitpunkten könnte der launische Gott
+sich dazu entscheiden, "etwas Spannung ins Spiel zu bringen", und dich so ins
+Verderben zu stürzen. Wenn du dich als der stärkere erweist, umso besser - wenn
+nicht, nun, es wird auch andere Spielzeuge geben...
+%%%%
+Vehumet powers
+
+Anhänger Vehumets werden schnell dazu in der Lage sein, ihre magische Energie
+durch das Töten anderer Wesen aufzuladen. Wenn sie beliebter werden, erhalten
+sie verschiedene Verbesserungen für ihre zerstörerischen Zauber - zuerst Hilfe
+beim Zaubern solcher Magie, dann eine erhöhte Reichweite für
+Elementbeschwörungen, und zuletzt geringere Kosten für die Benutzung von
+Hochlevelzaubern. Irgendwann wird Vehumet seinen Anhängern Zauberbücher für
+zerstörerische Magie schenken.
+%%%%
+Okawaru powers
+
+Seine Anhänger werden bald die Fähigkeit erhalten, ihre Fähigkeiten im Kampf
+kurzzeitig zu verbessern, und viel später, noch schneller zu schlagen. Okawaru
+wird seinen Anhängern irgendwann Waffen und Rüstungen schenken.
+%%%%
+Makhleb powers
+
+Makhleb bietet seinen Anhängern verschiedene Möglichkeiten, großen Schaden
+anzurichten, und Hilfe von mächtigen Dämonen zu erhalten, doch diese Kräfte
+haben einen Preis: Blut. Allerdings wird Makhleb die Lebenskraft seiner
+Anhänger erneuern, wenn sie dafür Wesen aller Art töten.
+%%%%
+Sif Muna powers
+
+Anhänger von Sif Muna können magische Energie einschleusen, wenn sie sie am
+meisten brauchen, und sie erhalten die Fähigkeit, jeden beliebigen Zauberspruch
+zu vergessen, um dafür neue zu lernen. Sif Muna schützt Zauberer vor den
+negativen Auswirkungen des Fehlzauberns. Später werden ihre Anhänger
+Zauberbücher erhalten, die alle existierenden Zauber enthalten.
+%%%%
+Trog powers
+
+Trog bietet verschiedene Kräfte, die im Kampf helfen, und zwar die Fähigkeit,
+nach Belieben zu berserken, und die Fähigkeit, Wunden schneller heilen zu
+lassen sowie die Resistenz gegen magische Effekte zu erhöhen. Später können
+Trogs Anhänger mächtige, wütende Verbündete rufen. Irgendwann wird Trog seinen
+Anhängern starke Waffen schenken.
+%%%%
 Nemelex Xobeh powers
 
 Die Anhänger des Tricksers erhalten verschiedene Möglichkeiten, das Glück zu
 beeinflussen, wenn sie Karten ausspielen.
+%%%%
+Elyvilon powers
+
+Der Heiler bietet seinen Anhängern Möglichkeiten, sich selbst von Schaden und
+anderen krankmachenden Effekten zu heilen. Elyvilon erlaubt zudem das Heilen
+von Gegnern, was dazu führen kann, dass diese neutral werden. Elyvilon kann
+direkt eingreifen, um das Leben eines Anhängers zu retten, besonders dann, wenn
+er darum gebeten wurde. Besonders fromme Anhänger können sich einer solchen
+Rettung sicher sein.
+%%%%
+Lugonu powers
+
+Anhänger Lugonus erhalten die Kraft, den Abgrund nach Belieben zu verlassen,
+Monster dorthin zu verbannen, und sich schließlich selbst an diesen Ort des
+Chaos zu transportieren - das kostet sie allerdings einen Teil ihrer Seele.
+Außerdem können sie bei ihren Gegnern Formveränderungsschaden verursachen und
+die geordnete Welt beschädigen, um ein Tor zu öffnen, durch das Wesen aus dem
+Abgrund kommen können.
+%%%%
+Beogh powers
+
+Beogh ermuntert seine Anhänger dazu, orkische Ausrüstung aus dem Verlies zu
+benutzen. Seine Anhänger können ihre Feinde peinigen und werden sogar eigene
+orkische Anhänger erhalten, die von Beogh im Kampf gesegnet und auf der selben
+Ebene zurückgerufen werden können. Schließlich werden sie die Kraft erhalten,
+auf Wasser zu gehen. Beogh wird manchmal direkt eingreifen, um das Leben eines
+Anhängers zu schützen.
+%%%%
+Fedhas powers
+
+Pflanzen und Pilze werden Fedhas' Anhänger nicht ohne Grund angreifen. Seine
+Anhänger können durch Pflanzen und Pilze wandern, und sogar Geschosse sowie
+Zaubersprüche durch sie feuern, ohne ihnen Schaden zuzufügen. Fedhas gibt die
+Fähigkeit, Pflanzen und Pilze in stärkere Wesen zu verwandeln. Irgendwann
+können seine Anhäger eine Mauer aus Pflanzen und explosive Sporen aus Leichen
+herstellen. Ihnen wird zudem einige Kontrolle über das Wetter gegeben, indem
+sie das Sonnlicht und schließlich Regenstürme beeinflussen können.
+%%%%
+Cheibriados powers
+
+Anhänger von Cheibriados bewegen sich langsamer, während sie Anerkennung von
+ihrem Gott erhalten, und werden dafür belohnt, Wesen zu töten, die schneller
+als sie selbst sind. Zu schnelle Bewegungen oder unnötig magisch beschleunigte
+Waffennutzung heißt der Gott nicht gut. Cheibriados belohnt die Gläubigen mit
+einem verlangsamten Metabolismus, der Fähigkeit, andere Wesen zu verlangsamen,
+der Kraft, den Fluss der Zeit durcheinander zu bringen, denen zu schaden, die
+sich schneller als sie selbst bewegen und, letztendlich, die Fähigkeit, die
+Zeit komplett anzuhalten.
+%%%%
+Jiyva powers
+
+Jiyvas Anhänger können Gelee(?) beschwören, Monster in Schleim verwandeln und
+ihre schädlichen Mutationen entfernen. Während ihre Frömmigkeit steigt, wird
+Jiyva in immer kleineren Abständen Gelee in das Verlies fallen lassen, die
+Attribute ihrer Anhänger abhängig von ihren Fähigkeiten, ihrer Rüstung und
+ihrer Last verändern, und Mutationen schenken. Schleime(?) werden einem
+Anhänger Jiyvas niemals Schaden zufügen, und Jiyva verlangt im Gegenzug das
+selbe Verhalten. Letztendlich werden alle sichtbaren Schleime an Gebeten
+teilnehmen, sodass sie sich einige Zeit nicht bewegen.
+%%%%
+Ashenzari powers
+
+Ashenzari mahnt seine Anhänger dazu, sich selbst mit Flüchen zu beladen, und
+gibt Belohnungen für Zeit, die mit dem Tragen verfluchter Ausrüstung verbracht
+wird. Asnehzaris ultimativer Wunsch ist allerdings nicht die Unterwerfung,
+sondern das Wissen über alle Dinge. Gläubige Anhänger, die bereit sind, einen
+Teil ihres Wissens abzugeben, erhalten im Gegenzug einen großen Teil des
+Wissens von Ashenzari.
 %%%%

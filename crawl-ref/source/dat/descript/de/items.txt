@@ -1,4 +1,11 @@
 %%%%
+air elemental fan
+
+Ein magisches Gerät, um Luftelementale zu beschwören. Es ist recht
+unzuverlässig und benötigt mehrere Versuche, um richtig zu funktionieren. Seine
+Benutzung ist mit einem gewissen Risiko verbunden, das kleiner ist, wenn man
+sich mit der richtigen Elementmagie auskennt.
+%%%%
 amulet of clarity
 
 Dieses Amulett bewahrt den Träger vor einigen Formen geistiger Verwirrtheit -
@@ -8,6 +15,13 @@ amulet of conservation
 
 Dieses Amulett bewahrt manche Besitztümer seines Trägers vor vollständiger
 Zerstörung, ist aber nicht unfehlbar.
+%%%%
+amulet of guardian spirit
+
+Dieses Amulett macht seinen Träger weniger anfällig für externen Schaden, indem
+stattdessen die Magiepunkte abgezogen werden. Sollte die Magie erschöpft sein,
+wird das Amulett seine Funktion erst dann wieder erfüllen können, wenn mehr
+Kraft vorhanden ist.
 %%%%
 amulet of inaccuracy
 
@@ -49,6 +63,17 @@ vermag. Dies erleichtert es, deiner momentanen Gottheit gefällig zu sein, aber
 Fehltritte wird sie seltener verzeihen. Das Ablegen des Amulett wird deine
 göttliche Gunst deutlich verringern.
 %%%%
+amulet of stasis
+
+Ein Amulett, akribisch gefertigt mit magischen
+%%%%
+animal skin
+
+Ein großes Stück dicker Haut mit Fell, geschnitten aus dem Körper eines Tieres
+und getragen als primitive Ausrüstung. Es bietet einfachen Schutz gegen
+Schaden, doch da es niemals gegerbt wurde, verbreitet es einen leichten Geruch
+nach faulendem Fleisch.
+%%%%
 apple
 
 Eine köstliche und kräftig rote Frucht - säuerlich auf der Zunge.
@@ -57,14 +82,153 @@ apricot
 
 Eine saftige Gelb-Orangene Frucht, Prunus armeniaca.
 %%%%
+arrow
+
+Ein langschaftiges Projektil, hergestellt, um mit einem Bogen oder Langbogen
+verschossen zu werden, mit Federn an einem Ende und einer Spitze am anderen.
+%%%%
+banana
+
+Eine köstliche gelbe Frucht, wahrscheinlich gewachsen und importiert durch
+einige unmoralische Multinationale als Gegenstand eines korrupten Handels.
+%%%%
+bardiche
+
+Eine lange Stange mit einer enormen, spaltenden Klinge an einem Ende.
+%%%%
+battleaxe
+
+Eine große zweihändige Kriegsaxt mit einem beachtlichen Doppelkopf, gemacht für
+die Benutzung im Kampf durch erfahrene Krieger.
+%%%%
+beef jerky
+
+Ein Streifen konservierten Kuh- oder Bullenfleisches.
+%%%%
 blessed double sword
 
 Eine magische Waffe mit zwei rasiermesserscharfen Klingen.
+%%%%
+blessed falchion
+
+Ein Schwert mit einer breiten, schlitzenden Klinge. Es wurde durch die Kraft
+des Glänzenden verbessert.
+%%%%
+blessed great sword
+
+Ein Schwert mit einer sehr langen, schweren Klinge und einem langen Griff. Es
+wurde durch die Kraft des Glänzenden verbessert.
+%%%%
+blessed long sword
+
+Ein Schwert mit einer langen, schlitzenden Klinge. Es wurde durch die Kraft des
+Glänzenden verbessert.
+%%%%
+blessed scimitar
+
+Ein langes Schwert mit einer krummen Klinge. Es wurde durch die Kraft des
+Glänzenden verbessert.
+%%%%
+blessed triple sword
+
+Eine magische Waffe mit drei großen, rasiermesserscharfen Klingen. Es wurde
+durch die Kraft des Glänzenden verbessert.
+%%%%
+blowgun
+
+Ein langes, leichtes Rohr, offen an beiden Enden, durch die verschiedene Arten
+von Nadeln, angetrieben durch Atemluftstöße, auf Gegner geschossen werden
+können. Es macht kaum Geräusche.
 %%%%
 bolt
 
 Ein Metallprojektil. Es ist kürzer als ein Pfeil und zum verschießen mit einer
 Armbrust vorgesehen.
+%%%%
+book of air
+
+Das ABC der Luftmagie. Die Seiten blättern oft von selbst um, als würden sie
+von einer starken Brise umgeweht; manchmal passiert es auch, dass die Seiten
+durch statische Elektrizität zusammengehalten werden und kleine Funken
+versprühen, wenn sie getrennt werden.
+%%%%
+book of alchemy
+
+Ein Buch, das sich auf alchemistische Prozesse und ihre Benutzung in
+Zaubersprüchen konzentriert. In ihm ist die Weisheit vieler antiker Alchemisten
+gesammelt. Wenn das Buch geöffnet wird, kommt der Text ans Licht, indem die
+Tinte aus der Luft auf den Seiten kondensiert.
+%%%%
+book of annihilations
+
+Blut tropft von den zerschlissenen Seiten dieses Buches, und selbst ein
+Analphabet wird deutlich die geheimnisvolle Wut spüren, die es enthält. Viele
+Zauberer suchen nach diesem Buch, denn es ermöglicht den Beschenkten und
+Erfinderischen die Kontrolle über Zerstörung mit der Leichtigkeit eines
+Augenzwinkerns. Schwache Zauberer werden allerdings ihrem Tod entgegensehen,
+wenn sie versuchen, dieses Werk zu lesen.
+%%%%
+book of beasts
+
+Ein Zauberbuch, das sich auf die magische Erstellung von Bestien konzentriert,
+mit Seiten aus Tierhäuten und einem von Zähnen gesäumten Titelblatt. Es stinkt
+nach einem Zoo, und es wird ab und zu in die Finger unaufmerksamer Leser
+kneifen.
+%%%%
+book of burglary
+
+Ein Buch, das viele verschiedene Zaubersprüche enthält, die für Diebstahl,
+Einbruch und andere Straftaten hilfreich sind. Zauberer, die vergessen, beim
+Lesen dieses Wälzers aufmerksam zu bleiben, werden manchmal eine Seite
+umblättern und dahinter irgendeinen kleinen Gegenstand finden, der aus ihrer
+Tasche geklaut und zwischen den Seiten platziert wurde.
+%%%%
+book of callings
+
+Ein Einführungstext in die magische Beschwörung von Bestien und Wesen aus
+anderen Welten. Winzige Fliegen und Mücken scheinen aus dem Nichts zu kommen,
+wenn das Buch geöffnet wird, und wieder zu verschwinden, wenn es geschlossen
+wird.
+%%%%
+book of cantrips
+
+Ein Buch, das eine kleine Auswahl sehr grundlegender Zaubersprüche enthält,
+gedacht für Anfänger, die Ansätze einer der behandelten Zauberschulen lernen
+wollen. Trotzdem können selbst erfahrene Zauberer einen Nutzen für die darin
+enthaltenen Zaubersprüche finden.
+%%%%
+book of changes
+
+Eine Einführung in die magischen Künste der Transmutationen, mit vielen
+aufwändigen Illustrationen aus der frühen experimentellen Geschichte der
+magischen Schule: halb-Zauberer-halb-Menschen, Zauberer mit Klingennasen, oder
+geschnabelten Tentakeln statt Beinen. Der Text ist voller Beschwichtigungen,
+dass so etwas nicht mehr passiert, obwohl einige mögliche
+Transmutationszauberer sich dazu entscheiden, stattdessen etwas über
+Verzauberungen zu lernen.
+%%%%
+book of clouds
+
+Ein Buch magischer Zaubersprüche zur Erstellung einer Ansammlung von Wolken,
+umzogen von feinem Dunst, der die Wörter manchmal verschleiert erscheinen
+lässt. Ein aufschlussreiches Buch, obwohl der Autor manchmal in langweilige
+Diskussionen darüber verfällt, nach welchen Objekten die Wolken aussehen.
+%%%%
+book of conjurations
+
+Ein Buch, das eine Einführung in die zerstörerischen magischen Künste der
+Elementbeschwörungen enthält. Es flattert mit darin enthaltener Energie, wenn
+es geöffnet wird. Dieses Buch ist sehr beliebt und wird ständig verändert und
+verbessert: die Edition dieses Jahres befasst sich mit den Elementen Eis und
+Luft.
+%%%%
+book of control
+
+Ein magisches Zauberbuch für die Kontrolle von Gedanken, Körper und sogar
+Zeitraum. Zauberer welche dieses Buch irgendwo liegen sehen können das Gefühl
+bekommen durch seine Seiten stöbern zu müssen, und jene die es manchmal tun
+finden es schwierig ihre Gedanke wieder von den Zeichen und Runen im Inneren ab
+zu wenden,
 %%%%
 book of fixed level
 
@@ -73,6 +237,27 @@ Ein Buch mit Zaubersprüchen.
 book of fixed theme
 
 Ein Buch mit Zaubersprüchen.
+%%%%
+bottled efreet
+
+Ein mächtiger Flaschengeist, gefangen von irgendeinem Zauberer und gebunden in
+eine Bronzeflasche. Wenn du das Siegel der Flasche brichst, wirst du ihn
+freilassen, und er wird Schaden anrichten - möglicherweise bei dir selbst.
+%%%%
+bow
+
+Ein rundes Stück Holz mit einer Sehne, zum Schießen von Pfeilen. Es verursacht
+guten Schaden im Kampf, und ein fähiger Benutzer kann es sehr wirksam
+verwenden.
+%%%%
+box of beasts
+
+Eine magische Box, welche viele wilde Bestien enthält. Man kann sie ausbrechen
+lassen, indem man den Deckel der Box öffnet.
+%%%%
+bread ration
+
+Eine sättigende Mahlzeit aus abgestandenem, aber herzhaftem Brot.
 %%%%
 cap
 
@@ -86,6 +271,15 @@ cheese
 
 Ein Stück Käse.
 %%%%
+choko
+
+Eine fast geschmackslose grüne Frucht, die an einer Kletterpflanze wächst.
+%%%%
+chunk of flesh
+
+Ein Stück rohen Fleisches, gefunden im Verlies. Es wird nicht lange frisch
+bleiben.
+%%%%
 cloak
 
 Ein Stoffumhang.
@@ -98,10 +292,18 @@ crystal plate armour
 
 Ein unglaublich schwere aber extrem effektive kristalline Rüstung.
 %%%%
+dart
+
+Ein kleiner, pfeilartiger und spitz zulaufender Wurfgegenstand.
+%%%%
 demon blade
 
 Eine schreckliche Waffe, geschmiedet in den Feuern der Hölle. Geführt von jenen
 mit dämonischer Natur wird sie noch um einiges tödlicher.
+%%%%
+demon trident
+
+Eine schreckliche dreizackige Waffe, geschmiedet aus Feuer und Schwefel.
 %%%%
 demon whip
 
@@ -116,6 +318,20 @@ eggplant
 Eine verfaulte Aubergine, die du auf Crawlentwickler werfen kannst. (Wenn du
 diese Nachricht jemals siehst ist es ein Fehler.)
 %%%%
+empty ebony casket
+
+Eine magische Box, ihre Macht wurde verbraucht.
+%%%%
+eveningstar
+
+Die Stacheln dieser Art von Morgenstern sind besonders lang und ermöglichen
+ihm, gemeine Wunden zu verursachen.
+%%%%
+falchion
+
+Ein langes einseitiges Schwert mit einer leicht gekrümmten Klinge - das Gewicht
+ist auf den Punkt konzentriert, um seine Tödlichkeit zu erhöhen.
+%%%%
 giant club
 
 Ein riesiges Stück Holz, für die Hände eines Ogers geformt.
@@ -128,14 +344,46 @@ glaive
 
 Eine Stange mit einer großen und schweren Klinge an einem Ende.
 %%%%
+gold piece
+
+Ein Stapel glänzender Goldmünzen.
+%%%%
 grape
 
 Eine kleine Frucht.
+%%%%
+helmet
+
+Ein Stück einer Kopfbedeckung aus Metall.
+%%%%
+honeycomb
+
+Ein Klumpen von einer köstlichen Honigwabe, von riesigen Bienen geschaffen.
+%%%%
+javelin
+
+Dieser leichtgewichtige Speer wurde zum werfen entworfen und verursacht ernste
+Verwundungen .
+{{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Bedauerlicherweise ist er zu lang und unhandlich für dich."
+    else
+        return ""
+    end
+}}
 %%%%
 lajatang
 
 Eine sehr seltene und extrem effektive importierte Waffe aus einem Stab mit
 halbmondförmigen Klingen an beiden Enden.
+%%%%
+lantern of shadows
+
+Ein unheiliger Apparat welcher die Kräfte der Dunkelheit zu deiner Hilfe
+herbeiruft, verbunden mit leichten Kosten.
 %%%%
 lemon
 
@@ -144,6 +392,15 @@ Eine gelbe Frucht.
 lychee
 
 Eine tropische Frucht.
+%%%%
+manual
+
+Ein wertvolles Buch welches jemandem erlaubt eine bestimmte Fähigkeit
+effizienter zu erlernen.
+%%%%
+meat ration
+
+Eine sättigende Ration aus getrocknetem und konserviertem Fleisch.
 %%%%
 naga barding
 
@@ -178,6 +435,51 @@ pear
 
 Eine köstliche und saftige Frucht.
 %%%%
+potion of experience
+
+Ein wirklich wundervoller und sehr seltenes Getränk.
+%%%%
+potion of gain dexterity
+
+Ein Trank der Nützlichen Mutation.
+%%%%
+potion of gain intelligence
+
+Ein Trank der Nützlichen Mutation.
+%%%%
+potion of gain strength
+
+Ein Trank der Nützlichen Mutation.
+%%%%
+potion of invisibility
+
+Ein Trank der dich vor der Sicht Anderer versteckt.
+%%%%
+potion of flight
+
+Ein Trank, welcher eine große Beschwingtheit, auf denjenigen der ihn trinkt,
+überträgt.
+%%%%
+quarterstaff
+
+Eine starre hölzerne Stange, geschaffen für den Kampf.
+%%%%
+ring of hunger
+
+Dieser verfluchte Ring lässt deinen Träger schneller hungern.
+%%%%
+ring of flight
+
+Dieser Ring erlaubt seinem Träger zu fliegen.
+%%%%
+ring of magical power
+
+Dieser Ring erhöht die Magiereserven seines Trägers.
+%%%%
+ring of poison resistance
+
+Dieser Ring liefert Schutz vor den Effekten von Vergiftung und Gift.
+%%%%
 ring of protection from cold
 
 Dieser Ring schützt den Träger vor Kälte.
@@ -186,9 +488,27 @@ ring of protection from fire
 
 Dieser Ring schützt vor Hitze und Feuer.
 %%%%
+ring of protection from magic
+
+Dieser Ring erhöht die Resistenz seines Träger gegen feindselige Verzauberungen
+%%%%
+ring of sustenance
+
+Dieser Ring versorgt seinen Träger mit Energie, so das er nicht so oft essen
+muss.
+%%%%
 ring of wizardry
 
 Dieser Ring verbessert die Fähigkeit seines Trägers Zaubersprüche zu wirken.
+%%%%
+rod of inaccuracy
+
+Dieser Stab erlaubt seinem Benutzer, einen kräftigen aber äußerst ungenauen
+Energieblitz abzuschießen.
+%%%%
+rod of the swarm
+
+Dieser Stab erlaubt seinem Benutzer einen Schwarm Insekten zu rufen.
 %%%%
 rune of zot
 
@@ -198,9 +518,27 @@ scroll of curse armour
 
 Diese Schriftrolle platziert einen Fluch auf einem getragenem Stück Rüstung.
 %%%%
+scroll of curse weapon
+
+Diese Schriftrolle legt einen Fluch auf eine angelegte Waffe.
+%%%%
+scroll of fear
+
+Diese Schriftrolle verursacht große Furcht in jene welche den Leser sehen.
+%%%%
 scroll of remove curse
 
 Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.
+%%%%
+scroll of unholy creation
+
+Diese Schriftrolle zieht ungeformte Lumpen aus Fleisch aus dem Abgrund und
+erschafft daraus schreckliche Bestien.
+%%%%
+scroll of teleportation
+
+Liest man die Worte auf dieser Schriftrolle wird sie dich nach kurzer Zeit an
+eine zufällige Position teleportieren.
 %%%%
 skeleton
 
@@ -215,6 +553,10 @@ sling bullet
 
 Ein kleines, schweres Projektil, das speziell für die Nutzung mit Schleudern
 geformt ist. Als Munition sind diese effektiver als einfache Steine.
+%%%%
+snozzcumber
+
+Eine widerwärtige gurkenförmige Frucht.
 %%%%
 spiked flail
 
@@ -233,6 +575,61 @@ swamp dragon armour
 
 Eine magische Rüstung aus den Schuppen eines Sumpfdrachen. Sie verleiht ihrem
 Träger Giftresistenz.
+%%%%
+wand of cold
+
+Ein magisches Gerät welches großartige Bolzen aus Kälte wirft.
+%%%%
+wand of digging
+
+Ein magisches Gerät welches Tunnel durch unbearbeiteten Felsen formt indem es
+ihn verflüssigt.
+%%%%
+wand of enslavement
+
+Ein magisches Gerät welches in einer Kreatur sklavischen Gehorsam verursacht.
+%%%%
+wand of fire
+
+Ein magisches Gerät welches großartige Bolzen aus Flammen wirft.
+%%%%
+wand of fireball
+
+Ein magisches Gerät welches explodierende Feuerstöße wirft.
+%%%%
+wand of flame
+
+Ein magisches Gerät welches kleine Stückchen aus Feuer wirft.
+%%%%
+wand of frost
+
+Ein magisches Gerät welches kleine Stückchen aus Eis wirft.
+%%%%
+wand of hasting
+
+Ein magisches Gerät welches Verzauberungen wirkt um die Aktion einer Kreatur
+beschleunigt in welche sie sich bewegt.
+%%%%
+wand of heal wounds
+
+Ein magisches Gerät welchen die Wunden einer Kreatur heilt.
+%%%%
+wand of invisibility
+
+Ein magisches Gerät welches eine Kreatur vor den Blicken Anderer versteckt.
+%%%%
+wand of lightning
+
+Ein magisches Gerät welches großartige Bolzen aus Blitzen wirft.
+%%%%
+wand of random effects
+
+Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
+%%%%
+wand of slowing
+
+Ein magisches Gerät welches Verzauberungen auf Kreaturen in seiner Richtung
+wirft, welche dadurch verlangsamt werden.
 %%%%
 wizard hat
 

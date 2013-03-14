@@ -569,6 +569,23 @@ Wenn du schon immer einmal von der Hölle ins Feuer wolltest, ist das deine
 Chance. Dieses Portal ermöglicht dir die Rückkehr von diesem Ort... über einen
 schönen, malerischen Weg durch unendlichen Wahnsinn.
 %%%%
+An idol of Beogh
+
+{{
+  if you.god() == "Beogh"
+    then
+      return "Diese grobe aber majestätische Statue stellt Beogh in seiner
+Pracht dar."
+          .. "Auf das alle die keine Orks sind erschlagen werden!";
+    else
+      return "Diese grobe Statue zeigt Beogh, den Gott der primitiven Orks"
+          .. "welche hier leben. Ihre Religion ruft dazu auf alle Ungläubigen"
+          .. "zu ermorden. Es kann eine Freude sein dieses Gotzenbildnis zu
+zerstören,"
+          .. "doch nimm dich in acht, Beogh ist für seine Rachsucht bekannt.";
+  end
+}}
+%%%%
 An iron altar of Okawaru
 
 Ein Altar für den Kriegsmeister Okawaru, gebaut aus Eisen und Stahl, mit
@@ -579,6 +596,17 @@ An iron grate
 Dieses Eisengitter sieht verrostet aus, als ob es recht leicht mit einem
 Zauberspruch oder einem Zauberstab zerstört werden könnte. Es ist aber zu
 stabil, um von Hand zerbrochen zu werden.
+%%%%
+An open door
+
+Eine Holztür. Wenn du neben ihr stehst kannst du sie {{
+    if crawl.is_tiles() then
+        return "entweder mit einem STRG-Links-Klick auf die Tür oder mit der
+Eingabe von 'C' schließen."
+    else
+        return "mit der Eingabe von 'C' schließen."
+    end
+}}
 %%%%
 An orcish idol
 
