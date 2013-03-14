@@ -1,11 +1,335 @@
 %%%%
+Dungeon
+
+Es ist noch immer ein Geheimnis wie dieser bizarre Ort geschaffen wurde. Manche
+behaupten das er der Spielplatz gelangweilter Götter sei, wohingegen andere der
+Meinung sind das er von allen möglichen Arten geformt wurde die von der
+Oberfläche vor dem Licht flohen.Unabhängig davon was sein Ursprung war, diese
+tiefe Höhle ist mit einmaligen Reichtümern und ebenso Gefahren im Überfluss für
+seine Eindringlinge gefüllt. Wenige konnten lebend entkommen, und noch weniger
+behielten etwas Verstand über um die Geschichte zu erzählen.
+
+Das Höhlensystem ist 27 Ebenen tief, aber ehrlich gesagt, das ist erst der
+Anfang.
+%%%%
 Temple
 
 Ein Tempel der Götter, ein Ort des Friedens und der Erholung vom Wahnsinn des
 Verlieses. Er enthält normalerweise Altare für die meisten bekannten Götter und
 befindet sich stets zwischen den Ebenen 4 und 7.
 %%%%
+Orcish Mines
+
+Die gut bearbeiteten Goldminen des Orkenvolkes. Diese verworrenen Höhlen sind
+voller Orks, ihren menschlichen Arbeitern und jede Menge von ihrem frisch
+geschürftem Gold. Geschäftstüchtige Händler haben einen Handelsposten errichtet
+um die Orks mit ihrer Goldlast zu erleichtern. Das planlose Verhalten zu dem
+die Orks beim graben ihrer Minenschächte tendierten führte zu komplexen,
+heimtückischen und wirren Kammern in denen es ein einfaches ist in die Falle zu
+geraten.
+
+Die Ork Minen sind vier Ebenen tief und beinhalten den Zugang zu den
+Elfenhallen.
+%%%%
+Elven Halls
+
+Obwohl die meisten Elfenvölker sich nie in einen dunklen und unterirdischen
+Komplex wie diesen begeben würden, die Tiefenelfen tun es. Ihre Hallen sind
+gefüllt mit Reichtümern, doch jeder Durchreisende sollte sich über die
+legendären magischen Fähigkeiten dieses Volkes bewusst sein.
+
+Die Elfenhallen sind drei Ebenen tief.
+%%%%
+Dwarven Hall
+
+Diese meisterhaft bearbeiteten Steinhallen sind die Behausungen der
+Tiefenzwerge. Ihre außergewöhnlichen Fähigkeiten der Metallbearbeitung
+erlaubten ihnen Unmengen an Waffen zu schmieden um sie gegen Leute wie dich
+einzusetzen.
+
+Doch es ist nur eine einzelne Ebene.
+%%%%
+Lair
+
+Die meisten Abenteurer finden die Höhle der Bestien als eine spannende
+Veränderung des Klimas. Und tatsächlich, man wird eher durchbohrt, zerfleischt
+und gefressen als aufgeschlitzt, verbrannt oder erstochen.
+
+Diese Höhle ist acht Ebenen tief und enthält Stufen zu drei weiteren Gebieten.
+%%%%
+Swamp
+
+Ein sumpfiges, mit Schleim, Dreck und Fliegen überzogenes, Ödland und
+sabbernden fleischfressenden Monstern.
+
+Der Sumpf ist fünf Ebenen tief und enthält die Faulende Rune. Ein Verlies ist
+nur mit zwei der Schlangengruben, Sümpfe, Untiefen und Spinnennestern
+ausgestattet. Ist der Sumpf vorhanden dann findet man den Eingang zwischen der
+Höhle 2 und Höhle 5.
+%%%%
+Shoals
+
+Aus der Ferne hörst du das gleichmäßige Geräusch von Wellen und riechst das
+Salzwasser. Beim erreichen der Untiefen beeindrucken dich exotische
+Untergrund-Strände, welche ein paar Inseln in dem riesigen Meer bilden. Ganz
+plötzlich erfüllt ein markerschütternder Schrei die Luft, gefolgt von einem
+Gurgeln. Angstvoll schaust du dich verwundert um: Wo ist das Raubtier? Und wer
+ist die Beute?
+
+Die Untiefen sind fünf Ebenen tief und enthält die Muschelbesetzte Rune. Ein
+Verlies ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und
+Spinnennestern ausgestattet. Ist der Sumpf vorhanden dann findet man den
+Eingang zwischen der Höhle 3 und Höhle 6.
+%%%%
+Snake Pit
+
+Heimat der Schlange, Höhle der Naga.
+
+Die Schlangengrube ist fünf Ebenen tief und enthält die Schlangenartige Rune.
+Ein Verlies ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und
+Spinnennestern ausgestattet. Ist die Schlangengrube vorhanden dann findet man
+den Eingang zwischen der Höhle 3 und Höhle 6.
+%%%%
+Spider Nest
+
+Auf der Oberfläche könnte eine Spinne mit einem einfachen Tritt entfernt
+werden. Hier unten ist es anders. Wenn du bis jetzt noch keine Spinnenphobie
+hattest, wirst du sie durch diesen Ort mit seinen zerbröckelnden, mit
+Spinnennetzen durchzogenen Höhlen, giftigen Gliedfüßern und den verschiedensten
+gruseligen Krabbeltieren bekommen.
+
+Das Spinnennest ist fünf Ebenen tief und enthält die Gespinst Rune. Ein Verlies
+ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und Spinnennestern
+ausgestattet. Ist das Spinnennest vorhanden dann findet man den Eingang
+zwischen der Höhle 3 und Höhle 6.
+%%%%
+Slime Pits
+
+Das gestaltlose Reich der Säure, Quallen und des Schleims. Jegliche Spur von
+Intelligenz löste sich vor langer Zeit auf. Dennoch, Gerüchten zu Folge sollen
+tief unten riesige Reichtümer liegen, welche in einer geheimen säurefesten
+Kammer ohne Türen oder Fenstern gesichert aufbewahrt sind.
+
+Die Schleimgruben sind sechs Ebenen tief und beinhalten die Schleimige Rune.
+Der Eingang befindet sich zwischen dem Versteck 6 und 8.
+%%%%
+Vaults
+
+Möglicherweise von einem mächtigen Geisteskranken erschaffen sollen die Gewölbe
+große Schätze beherbergen. Auch das weiträumig verspritzte Blut im Eingang
+zeugt von einiger Gewalt.
+
+Die Gewölbe sind acht Ebenen tief und beinhalten die Silber Rune. Der Eingang
+kann im Hauptverlies zwischen Ebene 14 und 19 gefunden werden.
+%%%%
+Hall of Blades
+
+Irgendwann einmal, in den Nachtstunden, wollten alle Dolche, Äxte und
+Stangenwaffen zusammen Walzer tanzen und von Schlachtfeldern frei von Mann und
+Bestie. Diese Zeit ist vorüber, nur die Waffen sind noch dort.
+
+Die Halle der Klingen hat eine einzige Ebene und kann zwischen Gewölbe 4 und
+Gewölbe 6 gefunden werden.
+%%%%
+Crypt
+
+Eine riesige Lagerstätte für die Antiken Toten. Die Luft ist frostig und
+stinkt, die Wände kalt und feucht. Überall sind großzügig Knochen verstreut und
+die Totenklage der gequälten Seelen der lauten Toten schallt von überall her.
+
+Die Krypta ist fünf Ebenen tief und kann zwischen de Ebenen des Gewölbes 2 und
+4 gefunden werden. Sie beinhaltet den Eingang zu den Grabstätten.
+%%%%
+Tomb
+
+Das Grabmal der Antike ist ein Ort der Verdammnis und von niederträchtigster
+Totenbeschwörung belebten Schreckgestalten. Aufrichtige Geschöpfe der
+Oberfläche werden bei der bloßen Erwähnung ihrer Namen bleich. Die Liste derer
+die con diesem Ort zurückkehrten ist überaus kurz.
+
+Das Grabmal ist drei Ebenen tief und beinhaltet die Goldene Rune. Sein Eingang
+befindet sich entweder in der Krypta Ebene 2 oder 3.
+%%%%
+Hell
+
+Das Vorhaus zu den vier Höllen wird von Geyron bewacht. Helden die sich im
+Vorhof bewähren und Geyron's Horn blasen können die verschiedenen Regionen der
+Hölle erkunden: Dis, Gehenna, Cocytus und Tartarus.
+
+Portale zum Vorhof der Hölle findet man in den tieferen Bereichen der Höhlen
+reichlich.
+%%%%
+Dis
+
+Die eiserne Stadt Dis. Wer wird den Test des Eisens bestehen?
+
+Dis ist sieben Ebenen tief und enthält die Eisen Rune. Sie kann über den Vorhof
+der Hölle erreicht werden.
+%%%%
+Gehenna
+
+Die Feuer von Gehenna verbrannten viele selbstbewusste Helden, und sie werden
+noch viele mehr verbrennen.
+
+Gehenna ist sieben Ebenen tief und enthält die Obsidian Rune. Sie kann über den
+Vorhof der Hölle erreicht werden.
+%%%%
+Cocytus
+
+Ein düsteres und frostiges Ödland.
+
+Cocytus ist sieben Ebenen tief und enthält die Eisige Rune. Sie kann über den
+Vorhof der Hölle erreicht werden.
+%%%%
+Tartarus
+
+Die verfaulende Unterwelt. Mit der Zeit saugen die Untoten, Dämonen und Teufel
+dieses Ortes jedes Leben aus den Schatzlüsternden Besuchern herraus.
+
+Tartarus ist sieben Ebenen tief und enthält die Knochen Rune. Sie kann über den
+Vorhof der Hölle erreicht werden.
+%%%%
+Zot
+
+Eine Bereich der Verliese die so entsetzlich, so voller Wahnsinn, Raserei und
+Irrsinn sind, das sie vor zufällig Vorbeireisenden sicher verschlossen wurden.
+Nur die wirklich verrücktesten Abenteurer würden ernsthaft versuchen die
+benötigten Schlüssel zu sammeln, das Siegel zu brechen und tiefer vorzudringen
+- nur in der vergeblichen Hoffnung auf ein legendäres Artefakt das noch nie ein
+andere gesehen hat.
+
+Das Reich von Zot ist fünf Ebenen tief und kann nur betreten werden wenn man
+mindestens drei Runen bei sich trägt.
+%%%%
 Forest
 
 Diese Bäume greifen an!
+%%%%
+Abyss
+
+Der Abgrund ist wirklich ein bizarrer Ort der sich immer verändert und
+verdreht. Er ist mit allen Sorten an Monstern gefüllt, die meisten dämonischer
+Natur deren allgemeines Ziel ist sich an Eindringlingen zu laben. Er ist auch
+die Müllkippe vieler Hexenmeister, deren Vergnügen es ist solche
+Möchtegern-Helden wie dich in den Wahnsinn zu schicken. Berichten zufolge soll
+es eine Struktur in diesem Chaos geben, indem Lugonu anscheinend Pläne für
+diesen Ort und Bewohner ausheckt.
+
+Die Abgrundtiefe Rune kann dort gefunden werden. Der Abgrund kann durch
+Portale, welche man in den tieferen Ebenen des Hauptverlieses finden kann,
+direkt erreicht werden.
+%%%%
+Pandemonium
+
+Pandämonium ist ein endloses Reich der Schmerzen und des Leidens. Wo du eine
+beträchtliche Menge an Beute finden kannst werden alle diese Schätze von
+Dämonen und noch grausameren Dämonen Herrschern bewacht. Viele Helden, mit
+verwirrtem Größenwahnsinnigem Selbstvertrauen, starben schreiend im
+Trommelfeuer der Folter und des Höllenfeuers.
+
+Pandämonium ist endlos. Reichlich Portale dorthin können in den tieferen Teilen
+des Hauptverlieses gefunden werden. Bedenke das der Rückweg schwieriger
+ausfallen könnte.
+
+Nicht weniger als fünf Runen können im Pandämonium gefunden werden:
+ • eine Feurige Rune im gut beheiztem Reich von Cerebov
+ • eine Glühende Rune in der verseuchten Domäne von Mnoleg
+ • eine Magische Rune welche mit den geheimnisvollen Kräften von Lom Lobon und
+seiner Lakaien bewacht wird
+ • eine Dunkle Rune im schattenhaftem Wohnsitz von Gloorx Vloq
+ • Dämonische Runen existieren in mehrfachen Ausführungen, im Besitzt von
+weniger bekannten Herrschern.
+%%%%
+Ziggurat
+
+Ein Zikkurat ist ein seltsam konstruierter Turm welcher aus sechsundzwanzig
+Ebenen, mit zunehmend größeren Kampfarenen, besteht welche jede immer größere
+Reichtümer und sogar noch größere Gefahren beinhaltet als die Letzte. Welches
+Wesen auch immer dieses Ungetüm erschuf verlangt einen hohen Preis als
+Eintritt. Aber Vorsicht, ein Zikkurat ist kein Ort für schwache Nerven: selbst
+die tapfersten und geschicktesten Abenteurer fanden hier ihr Ende. Obwohl sich
+auf jeder Ebene ein Portal zur Sicherheit befindet kann man, hat man es einmal
+verlassen, ein Zikkurat nicht wieder betreten.
+%%%%
+Labyrinth
+
+Das Labyrinth ist ein großer, komplexer Irrgarten, entworfen von subtilen und
+böswilligen Köpfen aus Gründen, die schon lange in der Geschichte verloren
+gingen. Alte Geschichten erzählen, dass das Labyrinth als Gefängnis für einen
+furchterregenden Minotaurus geschaffen wurde. Die neusten Geschichten erzählen,
+dass diese Bestie noch immer dort haust und den einzigen Ausgang des
+Labyrinthes bewacht - und auch von einer großen Sammlung an Schätzen, welche
+von den Körpern törichter Abenteurer genommen wurden, die sich dort verirrten
+und verhungerten. Siehe dich in den sich verändernden und verdrehenden Gängen
+des Labyrinthes vor, oder deine Besitztümer enden im Schatzhort des Minotauren.
+%%%%
+Bazaar
+
+Während ein paar Händler ein Geschäft im Verlies eröffneten, reisen andere in
+Karawanen von Ort zu Ort. Die Basare dieser umherziehenden Händler verfügen
+über eine Reihe verschiedener Geschäfte und auch oft über größere Lager als die
+Sesshaften, manchmal kann man dort auch feilschen.
+
+Doch sei auch gewarnt, dass der nomadische Lebensstil diesen Verkäufern
+beigebracht hat, sich jegliche Gegenstände anzueignen, die ein Abenteurer
+liegen lassen sollte und sich damit dann schnell aus dem Staub zu machen, um
+diese anderswo zu verkaufen.
+%%%%
+Trove
+
+Irgendwann einmal erschuf ein geschäftstüchtiger Dieb und Zauberer, aus furcht
+bei einem Verbrechen erwischt zu werden, ein System aus Portalen, welche zu den
+geheimen Schatzsammlungen und -kammern der Reichen führten. Zu verängstigt sie
+selbst zu plündern, erhob er einen Wucherpreis für jeden, der diese Schätze
+durchwühlen wollte. Der schlaue Architekt entwarf seine Portale so, dass die
+Teilnehmer in die für sie am besten passenden Kammern geleitet wurden.
+%%%%
+Sewer
+
+Jeder bewohnte Ort muss seine Abfallprodukte irgendwo beseitigen. Auch das
+Verlies hat seine stinkende Kanalisation und Abläufe voll schmutzigem Wasser
+und von den meisten gemieden aber die als Versteck der Abscheulichen und
+Verzweifelten genutzt wird. Alte Legenden erzählen von gefährlichen Kreaturen,
+die durch das faule, stinkende grüne Wasser pirschen und jedem ohne Gnade
+auflauern. Die Legenden erwähnen auch die wertvollen Gegenstände, die in die
+Abflusskanälen gespült wurden, vergessen und zum Verschimmeln in den feuchten
+Höhlen liegen gelassen.
+%%%%
+Ossuary
+
+Das Beinhaus ist eine eher kleine Grabstätte welches die Grabbeilagen von
+entfernten Verwandten des Pharaos, sowie die Leichen ihrer Gefolgschaft und
+Haustieren enthalten. Es ist zweifelsohne mit zahlreichen Fallen gespickt und
+seine untoten Bewohner sind nicht grade freundlich auf Plünderung gestimmt.
+%%%%
+Bailey
+
+Noch immer ist der Burghof eine gut bewachte Festung und im Besitz eines
+Orkischen Herrschers. Im inneren werde die persönlichen Schätze von materiellen
+Barrieren und sehr gut bewaffneten menschlichen Kriegern beschützt.
+%%%%
+Ice Cave
+
+Eine trostlose aus festem Eis geformte Höhle, die mit den Echos bestialischem
+Heulen gefüllt ist. Die komplizierten Gravuren und Statuen welche einst die
+Wände ausfüllten wurden mit den Jahrhunderten durch langsame Verschmelzung und
+erneutem Einfrieren verzerrt und unkenntlich.
+%%%%
+Volcano
+
+Gebaut aus riesigen Blöcken Obsidians könnte diese glühend heiße Kammer einst
+als Tempel für fremde Götter gedient haben. Oder es war die Behausung eines
+mächtigen Feuerriesen. Die Luft flimmert von der erdrückenden Hitze, und das
+dumpfe Grollen der Vulkane scheint nie abzuklingen.
+%%%%
+Wizlab
+
+Vor langer Zeit fanden oder erschufen die mächtigsten Magier - viele von denen
+du vielleicht schon gehört hast - kleinere Reiche, welche vom Rest der Welt
+abgeschnitten waren. Dort isolierten sie sich selbst im Streben nach noch
+größerem magischem Wissen und Macht. Die Magier sind lange fort, aber viele
+ihrer geheimnisvollen Labore, gefüllt mit den Ergebnissen ihrer Experimente,
+existieren noch immer. Jene die diese Labore erkunden wollen können mächtige
+magische Schätze finden, doch sei gewarnt: Die Zauberer, denen diese Labore
+gehörten, schützten ihr Ansehen.
 %%%%

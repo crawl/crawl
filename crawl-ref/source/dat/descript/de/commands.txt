@@ -1,29 +1,343 @@
 %%%%
+CMD_REST
+
+Heile und suche ein wenig
+%%%%
+CMD_REST verbose
+
+Verbringe bis zu 100 Runden um Lebenspunkte und/oder Magiepunkte zu
+regenerieren. Die Rast wird unterbrochen sobald ein feindseliges Monster in
+Sicht kommt.
+%%%%
 CMD_EXPLORE
 
 Die aktuelle Ebene automatisch erforschen
+%%%%
+CMD_EXPLORE verbose
+
+Das lässt deinen Charakter automatisch durch unerforschte Bereiche der
+aktuellen Ebene reisen und dabei brauchbare Gegenstände die auf dem Weg liegen
+aufheben. Die Reise wird unterbrochen, sobald ein feindseliges Monster in Sicht
+kommt, und auch um gefunden Gegenstände und Besonderheiten anzuzeigen.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Reise zu entfernten Ebenen
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Automatisch Reise zu entfernten Ebenen. Die Reise wird durch Monster, die in
+Sichtweite kommen, unterbrochen.
+%%%%
+CMD_USE_ABILITY
+
+Benutze göttliche oder angeborene Fähigkeiten
 %%%%
 CMD_PRAY
 
 Bete deinen Gott an
 %%%%
+CMD_PRAY verbose
+
+Wenn deine Gott Opfer mag, wird dies eine Leiche oder andere Gegenstände
+opfern. Und wenn du an einem Altar stehst, erlaubt es dir dem dazugehörigen
+Gott beizutreten. Bei manchen Göttern hat beten auch andere spezielle Effekte.
+%%%%
+CMD_SEARCH_STASHES
+
+Suche nach Gegenständen/Besonderheiten
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Suche nach Gegenständen/Besonderheiten die woanders gesehen hast, dann begib
+dich dort hin.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Letzte Meldung lesen
+%%%%
+CMD_RESISTS_SCREEN
+
+Charakter Übersicht anzeigen
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Zeige Informationen über bekannte Resistenzen, Fähigkeiten, Ausrüstungs-Status,
+usw.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Zeigt die Verlies Übersichtskarte
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Zeigt die Stellen von Abzweigungen, Läden und anderen Besonderheiten denen du
+bis jetzt begegnet bist.
+%%%%
 CMD_DISPLAY_RELIGION
 
 Religiösen Status anzeigen.
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Zeigt was deinem Gott ge- und missfällt, dein Betragen und deinen religiösen
+Stand und göttliche Fähigkeiten.
 %%%%
 CMD_DISPLAY_MUTATIONS
 
 Mutationen anzeigen
 %%%%
+CMD_DISPLAY_SKILLS
+
+Fähigkeiten verwalten
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Charakterstatus anzeigen
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Zeigt aktive Verzauberungen und ein paar andere Dinge an.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Listet entdecke Gegenstands-Typen auf
+%%%%
 CMD_SAVE_GAME_NOW
 
 Speichern und verlassen
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Speichere, für später, und verlasse das Spiel. Sobald du das Spiel fortsetzt,
+wird die Speicherdatei gelöscht.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Veränder das Aussehen der Spielfigur
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Verändert die Ausrüstung und Art des Aussehens der Spielfigur.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Spiel Hilfe
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
 Liste von Kommandos, Optionen, etc.
 %%%%
+CMD_CHARACTER_DUMP
+
+Speichere den Charakter Fortschritt
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Speichere eine riesige Menge an Informationen über deinen Charakter in die
+'Spielername.txt' Datei in das Archiv Verzeichnis, um es dir bei Zeiten
+durchzulesen. Diese beinhaltet Haupteigenschaften, Ausrüstung, Sprüche,
+Fähigkeiten, Notizen, usw.
+%%%%
+CMD_AUTOFIGHT
+
+Schlage das nächststehende Monster
+%%%%
+CMD_AUTOFIGHT verbose
+
+Bewege dich auf das nächste feindselige Monster zu und greife es mit deiner
+ausgerüsteten Waffe an.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Schlage das benachbarte Monster
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Greife das neben dir stehende Monster mir deiner ausgerüsteten Waffe an.
+%%%%
 CMD_WAIT
 
 Warte eine Runde
+%%%%
+CMD_WAIT verbose
+
+Verbringe wartend und rastend eine einzige Runde.
+%%%%
+CMD_DISPLAY_INVENTORY
+
+Zeigt den Inhalt deines Inventars an
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Zeigt den Inhalt deines Inventars an
+%%%%
+CMD_CAST_SPELL
+
+Wirke einen Zauberspruch
+%%%%
+CMD_CAST_SPELL verbose
+
+Wirke einen Zauberspruch.
+%%%%
+CMD_BUTCHER
+
+Zerhackte Leiche
+%%%%
+CMD_BUTCHER verbose
+
+In Stücke zerhackte Leiche
+%%%%
+CMD_MEMORISE_SPELL
+
+Zauberspruch einprägen
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Präge dir einen Zauber in dein Gedächtnis ein, lese von einem Buch das du im
+Besitz hast oder auf dem du stehst.
+%%%%
+CMD_DROP
+
+Gegenstand ablegen
+%%%%
+CMD_DROP verbose
+
+Lege einen oder mehrere Gegenstände, die du gerade bei dir hast, ab.
+%%%%
+CMD_DISPLAY_MAP
+
+Betrete den Karten-Modus
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Navigiere in der zuvor erkundeten Karte.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Bewege dich bis zum Cursor
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Starte Bewegung zur aktuellen Position des Cursors
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Füge einen Wegpunkt hinzu
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Setze einen Wegpunkt auf die aktuelle Position.
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Reise-Ausnahme
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Erstelle eine Reise-Ausnahme, ändere ihren Radius, oder entferne sie.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Reise-Ausnahme aufheben.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Hebe alle Reise-Ausnahmen auf der Ebene auf.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Eine Ebene runter
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Untersuche die nächst tiefere Ebene.
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Eine Ebene rauf
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Untersuche die nächst höhere Ebene.
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Gehe zur Ebene
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Gehe zu einer anderen Ebene im Abzweig und Tiefe.
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Finde Treppen nach oben
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Durchlaufe alle Treppen nach oben.
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Finde Treppen nach unten
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Durchlaufe alle Treppen nach unten.
+%%%%
+CMD_MAP_FIND_YOU
+
+Finde mich
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Bewege den Karten-Cursor zurück zur aktuellen Position.
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Finde Läden und Portale
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Durchlaufe alle Läden und Portale in der aktuellen Ebene.
+%%%%
+CMD_MAP_FIND_TRAP
+
+Fallen finden
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Durchlaufe alle Fallen in der aktuellen Ebene.
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Altäre finden
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Durchlaufe alle Altäre auf der aktuellen Ebene.
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Reise-Ausnahmen finden
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Durchlaufe alle Reise-Ausnahmen auf der aktuellen Ebene.
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Wegpunkt finden
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Durchlaufe alle Wegpunkte auf der aktuellen Ebene
+%%%%
+CMD_MAP_FIND_STASH
+
+Versteck finden
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Durchlaufe alle Verstecke auf der aktuellen Ebene
 %%%%

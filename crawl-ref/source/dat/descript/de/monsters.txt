@@ -1,5 +1,109 @@
 %%%%
+__cap-N_suffix
+
+{{
+    if you.race() == "Naga" then
+        return "Es ist sehr anziehend."
+    else
+        return "Es ist seltsam und abstoßend."
+    end
+}}
+%%%%
+__cap-T_suffix
+
+Du spürst einen Klumpen im inneren deines Magens.
+%%%%
+__cap-U_suffix
+
+Wenn man ihm Angst macht wird es zornig.
+%%%%
+Aizul
+
+Einst der wichtigste Schlangen-Wächter eines legendären Schatzhortes fiel er in
+Ungnade nachdem Diebe ihn plünderten während er schlief. Nun kriecht er im
+Verlies herum und sucht Rache an allen möchtegern Plünderern. Er ist ein
+versierter Hexer, jedoch nicht weniger tödlich im Nahkampf als andere seiner
+Art.
+%%%%
+Asmodeus
+
+Einer der Erz-Dämonen welcher in den tiefen der Hölle haust, von Feuer
+umschlungen.
+%%%%
+Azrael
+
+Ein mächtiger, angriffslustiger Efreet. (Gibt es noch eine andere Art?)
+%%%%
+Dispater
+
+Der Herrscher der eisernen Stadt Dis.
+%%%%
+Ereshkigal
+
+Ein furchterregender Erzfeind welcher die tödliche Unterwelt von Tartarus
+beherrscht.
+%%%%
+Erica
+
+ein hübscher Spruchweber.
+%%%%
+Erolcha
+
+Ein besonders listiger Oger-Magier.
+%%%%
 Joseph
 
 Sieht aus wie ein Söldner.
+%%%%
+Kirke
+
+Eine wunderschöne Zauberin.
+%%%%
+Purgy
+
+Ein ungewöhnlich dünner Troll.
+
+Du spürst einen Klumpen im inneren deines Magens.
+%%%%
+Xtahua
+
+Ein uralter und mächtiger Drache.
+%%%%
+blizzard demon
+
+Ein größerer Dämon, umgeben von Schnee und Blitzen.
+%%%%
+deep elf knight
+
+Ein kampferfahrener Tiefen-Elf Kämpfer.
+%%%%
+deep elf soldier
+
+Ein normaler Soldat der Tiefen-Elfen welcher sinnvolle Zaubersprüche für den
+Kampf kennt.
+%%%%
+deep elf sorcerer
+
+Ein mächtiger Zauberkundiger welcher Kräfte aus der Hölle verwendet, und im
+Besitz von geringeren geheimnisvollen Fähigkeiten der Zerstörung, Beschwörung
+und Vertreibung ist.
+%%%%
+deep elf summoner
+
+Dieser Tiefen-Elf ist in der Beschwörung von kleinen Dämonen und Kreaturen
+ausgebildet.
+%%%%
+deep dwarf necromancer
+
+Ein böser Tiefen-Zwerg welcher seine sterbliche Seele im Austausch für die
+Kontrolle über die okkulte Kunst des Todes und der Schmerzen verkauft hat.
+%%%%
+deep dwarf scion
+
+Ein gepanzerter Tiefen-Zwerg, beeindruckend im Nahkampf.
+%%%%
+deep troll
+
+Ein alters gebeugter Troll mit dunkler Haut, diese in Höhlen lebenden
+Tiefen-Trolle reisen oft in Gruppen.
 %%%%

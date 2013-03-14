@@ -1,0 +1,678 @@
+%%%%
+No ability
+
+Wenn du diese Beschreibung siehst dann ist es ein Fehler.
+%%%%
+Spit Poison
+
+Spucke Gift auf das anvisierte Monster.
+%%%%
+Blink ability
+
+Teleportiere über eine zufällige, kurze Distanz.
+%%%%
+Breathe Fire
+
+Atme eine Feuerwelle auf ein Monster aus, die möglicherweise eine Spur von
+Feuerwolken hinterlässt.
+%%%%
+Breathe Frost
+
+Atme eine Frostwelle auf ein Monster aus.
+%%%%
+Breathe Poison Gas
+
+Atme eine Welle giftiger Gase auf ein Monster aus.
+%%%%
+Breathe Lightning
+
+Lasse eine riesige elektrische Ladung frei, die einen unkontrollierbaren
+Blitzsturm verursacht.
+%%%%
+Breathe Sticky Flame
+
+Atme eine Welle klebrigen Feuers auf ein Monster aus. Wie der Name schon sagt,
+wird dieses Feuer an Monstern kleben bleiben, sodass diese einige Runden lang
+von Feuer umgeben sein können, bis es letztendlich ausgeht. Es kann beim
+Aufschlag auf den Gegner spritzen.
+%%%%
+Breathe Steam
+
+Atme einen Dampfstrahl auf ein Monster aus.
+%%%%
+Breathe Noxious Fumes
+
+Atme eine Welle gesundheitsschädlicher Gase auf ein Monster aus.
+%%%%
+Bat Form
+
+Verwandle dich in eine schnelle Vampirfledermaus. In diesem Zustand kannst du
+weder mit Gegenständen aller Art umgehen (du kannst sie allerdings aufheben
+oder fallen lassen), noch Zaubersprüche einsetzen. Denk daran, dass die
+Fledermausform deine Stärke senken und deine Geschicklichkeit erhöhen wird.
+Daher kannst du dich nicht verwandeln, wenn du nicht stark genug bist. Der Flug
+ist magisch verstärkt, sodass du selbst dann in der Luft bleiben wirst, wenn
+das Gewicht deiner Besitztümer oder eine Flugunfähigkeit dich normalerweise am
+Boden halten würden.
+%%%%
+Bottle Blood
+
+Auf der Erfahrungsstufe 6 oder höher können Vampire Blut von Leichen, welche
+noch Blut enthalten und noch nicht verfault sind, in Flaschen abfüllen. Um
+dieses zu tun, müssen sie in der Lage sein einen Dolch zu benutzen und bei dem
+Körper stehen, so wie es beim Schlachten der Fall ist.
+%%%%
+Spit Acid
+
+Spucke Säure auf das anvisierte Monster.
+%%%%
+Fly
+
+Fliege los. Während des Fluges kannst du Wasser und ähnliche Hindernisse sicher
+überqueren. Sei gewarnt, der Flug kann in einem ungünstigen Moment zu Ende sein
+und du kannst dadurch in den Tod stürzen.
+%%%%
+Hellfire
+
+Beschießt deine Gegner mit Höllenfeuer.
+%%%%
+Release Delayed Fireball
+
+Entfessele augenblicklich einen vorher eingeprägten (verzögerten) Feuerball
+ohne zusätzliche Kosten an Magie und Hunger.
+%%%%
+Self-Restoration
+
+Stelle deine Stärke, Geschicklichkeit und Intelligenz, beim permanenten Verlust
+eines Magiepunktes, wieder her und heile eine große Menge an verfaulten
+Lebenspunkten.
+%%%%
+Device Recharging
+
+Lade für den dauerhaften Verlust eines Magiepunkts einen Zauberstab oder eine
+Zauberstange(?) wieder auf.
+%%%%
+Evoke Teleportation
+
+Teleportiere dich selbst an einen zufälligen Ort auf der Ebene.
+%%%%
+Evoke Blink
+
+Teleportiere über eine zufällige, kurze Distanz.
+%%%%
+Evoke Berserk Rage
+
+Verfalle in Raserei. In Raserei verfallen erhöht, auch wenn es vorübergehend
+ist, deine Lebenspunkte und den Schaden welchen du im Nahkampf anrichtest, Es
+geht schnell zu Ende wenn du nichts tötest, kann aber bei mehreren Tötungen
+hintereinander verlängert werden. In Raserei kannst du einige Aktionen nicht
+ausführen (z.B.: an-/ablegen einer Waffe, etwas trinken, Zauberstäbe oder
+Gegenstände auslösen oder Zauber wirken). Auf solch eine Wut folgt eine tiefe
+Erschöpfung, eine Zeit in der du verlangsamt wirst und nicht nochmal in Raserei
+verfallen kannst.
+%%%%
+Evoke Invisibility
+
+Werde für eine kurze Zeit unsichtbar. Unsichtbarkeit erhöht deine magische
+Kontamination und wird schließlich Glühen verursachen.
+%%%%
+Turn Visible
+
+Werde wieder sichtbar.
+%%%%
+Evoke Flight
+
+<Fliege>
+%%%%
+Stop Flying
+
+Höre auf zu fliegen.
+%%%%
+Evoke Fog
+
+Gebe eine dicke Nebelwolke frei um die Sicht zu verschlechtern.
+%%%%
+End Transformation
+
+Beende deine Verwandlung mit einer kurzen Verzögerung.
+%%%%
+Recite
+
+Predige einem Monster die Gesetze von Zin, was zu verschiedenen Resultaten
+führen kann. Es gibt vier Bücher von welchen du predigen kannst:
+
+ * Buch der Abscheulichkeit: Dieses Buch handelt von den Dingen die Zin zuwider
+sind — Chaos in all seinen Formen. Der Vortrag wird Zin´s mächtigste Schläge
+herbeirufen.
+
+ * Buch der Reinigung: Die Unreinen werden genauso von dem Gesetzgeber
+verachtet. Der Vortrag wird sochen Kreaturen Schaden zufügen.
+
+ * Buch der Abtrünnigen: Intelligente Kreaturen welche Zin nicht anbeten aber
+nichts böses tun werden nicht so hart behandelt. Der Vortrag von diesem Buch
+sät nur leichte Verwirrung. Doch welche die einen gegensätzlichen Gott anbeten
+werden permanent von der Verbreitung ihres faulen Glaubens beraubt.
+
+ * Buch der Gräuel: Dämonen und Untote werden von Zin gehasst. Dieses Buch gibt
+dir die Mittel um sie zu maßregeln.
+%%%%
+Vitalisation
+
+Belebe dich selbst, erlange göttliche Kondition und Nahrung von Zin. Göttliche
+Kondition schützt dich vor Krankheit, Vergiftung, Versteinerung, Verwirrung und
+Verwesung. Sie erhöht und erhält zeitweise deine Stärke, Intelligenz und
+Geschicklichkeit.
+%%%%
+Imprison
+
+Sperre ein Monster vorübergehen in luftleerem Raum umschlossen von silbernen
+Wänden ein. Die Dauer des Gefängnisses wird durch deine Anrufungs-Fähigkeit
+erhöht, aber stärkere Gegner werden einfacher ausbrechen können.
+%%%%
+Sanctuary
+
+Für eine kurze Dauer bekommst du Sicherheit in der göttlichen Zuflucht. Solange
+du in diesem Heiligtum bist können Monster dich nicht angreifen, allerdings
+wird der Schutz verschwinden wenn du den göttlichen Frieden stören solltest.
+%%%%
+Cure All Mutations
+
+Befreie dich von allen Mutationen - aber nur einmal.
+%%%%
+Divine Shield
+
+'The Shining One' belohnt dich mit einem göttlichen Schild. Da es von
+göttlicher Kraft aufrecht gehalten wird, beeinflusst es nicht deine Ausrüstung.
+Wie auch immer, es wird von deiner Willenskraft kontrolliert, und deine
+Fähigkeiten mit Schilden verbessert es noch.
+%%%%
+Cleansing Flame
+
+Rufe eine riesige Explosion göttlichen Zornes, welche Untote und Dämonen um
+dich herum schweren Schaden zufügt. Alle anderen feindlichen Kreaturen nehmen
+auch geringeren Schaden, wohingegen du und deine Verbündeten nie betroffen
+seid.
+%%%%
+Summon Divine Warrior
+
+Beschwöre einen Engel oder einen Daeva, mächtige Krieger gegen das Böse. Sie
+können vom Shining One gesegnet werden, um länger in dieser Welt zu bleiben.
+%%%%
+Receive Corpses
+
+Erschaffe ein oder mehrere wieder erweckbare Monsterleichen neben dir. Die
+Anzahl und Frische der Leichen ist abhängig von der Nekromantie-Fähigkeit.
+%%%%
+Torment
+
+Opfere einen Kadaver um jeden im Sichtfeld, dich eingeschlossen, die Schmerzen
+die dieses Wesen in seinem Leben erlitt mit zu erleben. Dies wird die
+Belastbarkeit derer dezimieren die sie fühlen können.
+
+Kikubaaqudgha wird dich vielleicht davor bewahren ... oder auch nicht.
+%%%%
+Animate Remains
+
+Belebe eine einzige Leiche bzw. ein einziges Skelett als deinen Anhänger
+wieder. Denk daran, dass Zombies und Skelette die Ebene, auf der sie erstellt
+wurden, nicht verlassen können.
+%%%%
+Recall Undead Slaves
+
+Rufe deine Untoten Anhänger zurück zu deiner unmittelbaren Umgebung.
+%%%%
+Injury Mirror
+
+Verletzt angreifende Monster indem es den Schaden, welche diese dir zufügen,
+zurückwirft.
+%%%%
+Animate Dead ability
+
+Belebe alle Leichen und Skelette in deiner Nähe als deine Anhänger wieder. Denk
+daran, dass Zombies und Skelette die Ebene, auf der sie erstellt wurden, nicht
+verlassen können.
+%%%%
+Drain Life
+
+Heile dich, indem du den Wesen um dich herum Leben entziehst.
+%%%%
+Enslave Soul
+
+Markiere dies Seele eines lebenden intelligenten Monster als reif zum pflücken.
+Sobald dieses Monster stirbt gehört seine Seele dir.
+
+Die versklavte Seele behält die Fähigkeiten, Ausrüstung und Eigenschaften des
+Monsters, sowie einige seiner angebohrenen Heilung. Wie auch immer, nur bei
+einem relativ unverwundetem Monster kann die Seele markiert werden, und nur
+eine Seele kann in einem Zeitraum versklavt werden. Desweiteren ist die Dauer
+der Markierung abhängig von deiner Anrufungs-Fähigkeit.
+
+Denke daran das versklavte Seelen dir über die Ebene hinaus, in der sie
+gegründet wurden folgen können.
+%%%%
+Animate Remains or Dead
+
+Wenn du diese Beschreibung siehst, ist es ein Bug.
+%%%%
+Heroism
+
+Erhöht vorübergehend deine Kampffähigkeit, eingeschlossen die Fähigkeit zum
+Schleichen und Fallen meiden.
+%%%%
+Finesse
+
+Steigert massiv deine Geschwindigkeit im Kampf, ohne Verlust der
+Trefferwahrscheinlichkeit. Dieser unnatürliche Effekt verursacht eine kleine
+Menge an magischer Kontamination, was bei längerer Nutzung schlecht für die
+Gesundheit ist.
+%%%%
+Minor Destruction
+
+Schieße eine zufällige verletzende Explosion auf ein anvisiertes Monster.
+%%%%
+Lesser Servant of Makhleb
+
+Beschwöre einen niederen Dämonen. Es besteht eine Chance das er bei einer
+niedrigen Anrufungs-Fähigkeit, feindselig ist
+%%%%
+Major Destruction
+
+Schießt eine zufälligen schadhaften und explosiven Strahl auf ein anvisiertes
+Monster.
+%%%%
+Greater Servant of Makhleb
+
+Beschwöre einen Hauptdämon. Erfahrung mit Beten verringert die Chance, dass er
+feindlich ist.
+%%%%
+Channel Energy
+
+Frische deine magischen Reserven, abhängig von deiner Anrufungs-Fähigkeit, auf.
+%%%%
+Forget Spell
+
+Vergiss irgendeinen Zauberspruch den du dir momentan eingeprägt hast, damit du
+deinen Verstand frei hast um Andere zu lernen.
+%%%%
+Burn Spellbooks
+
+Setze alles Zauberbücher in deinem Sichtfeld in Flammen. Das Feuer ist gefüllt
+mit dem Hass von Trog, und Trog mag es sehr wenn dir egal ist welches Buch des
+Wahnsinns in Flammen aufgeht.
+%%%%
+Berserk
+
+Verfalle in Raserei. In Raserei verfallen erhöht, auch wenn es vorübergehend
+ist, deine Lebenspunkte und den Schaden welchen du im Nahkampf anrichtest, Es
+geht schnell zu Ende wenn du nichts tötest, kann aber bei mehreren Tötungen
+hintereinander verlängert werden. In Raserei kannst du einige Aktionen nicht
+ausführen (z.B.: an-/ablegen einer Waffe, etwas trinken, Zauberstäbe oder
+Gegenstände auslösen oder Zauber wirken). Auf solch eine Wut folgt eine tiefe
+Erschöpfung, eine Zeit in der du verlangsamt wirst und nicht nochmal in Raserei
+verfallen kannst. Im Gegensatz zu anderen Quellen der Raserei, abhängig von
+deiner Frömmigkeit, kann Trog diese Erschöpfung gelegentlich verhindern.
+%%%%
+Trog's Hand
+
+Beschwöre eine mächtige Regenerations-Fähigkeit herauf welche mit anderen
+Fähigkeiten kombinierbar ist und sogar Species die sich normalerweise nicht
+heilen können regeneriert. Dieses erhöht auch den Schutz vor magischen
+Effekten.
+%%%%
+Brothers in Arms
+
+Beschwöre riesige, wütende Verbündete, um Zerstörung zu verursachen.
+%%%%
+Divine Protection
+
+Flehe Elyvilon an um dein Leben zu retten. Wenn du tödlich Verwundet bist kann
+der Heiler den todbringenden Schlag rückgängig machen. Speziell fromme Personen
+können sich dieser Hilfe sicher sein, aber in diesem Fall kostet jeder
+aktueller Eingriff etwas an Religiosität (eine bloße Frage nach einem Eingriff
+ist hingegen jederzeit frei).
+
+Vorsicht! Andere zu töten während man nach Verschonung bittet ist eine große
+Sünde!
+%%%%
+Lesser Healing
+
+Abhängig von deiner Anrufungs-Fähigkeit kannst du einer andere Kreatur einen
+mäßigen Teil seiner Lebensenergie heilen. Benutzt man diese Fähigkeit auf
+feindselige Monster, kann ihr Verhalten neutral werden. Dieses funktioniert am
+besten bei Tieren, schlechter bei Humanoiden deiner Art, noch schlechter auf
+andere Humanoiden und am schlechtesten von allen auf Dämonen und Untoten.
+Hirnlose Kreaturen können nicht befriedet werden, und kein Monster das schläft
+kann befriedet werden. Die Chance einer erfolgreichen Befriedung hängt von der
+Heilkraft ab, so ist es bedeutend besser als leichte Heilung zu benutzen.
+
+Unabhängig davon, ob die Befriedung funktioniert hat oder nicht, die
+investierte Nahrung, Frömmigkeit und Magie-Punkte sind verbraucht. Wenn es
+gelingt, ist das Monster geheilt und du erhältst die hälfte seines
+Erfahrungswertes und möglicherweise etwas Frömmigkeit. Anderenfalls bleibt das
+Monster unbetroffen und du bekommst nichts.
+
+Du kannst auch Verbündete und neutrale Monster heilen.
+%%%%
+Lesser Self-Healing
+
+Abhängig von deiner Anrufungs-Fähigkeit kannst du einen kleine Menge an
+Lebenspunkten heilen.
+%%%%
+Purification
+
+Reinige deinen Körper von allen schlechten Effekten wie Krankheit, Vergiftung,
+Verlangsamung, Versteinerung, Verwirrung und Fäulnis. Dann werden noch Stärke,
+Geschicklichkeit und Intelligenz wieder hergestellt.
+%%%%
+Greater Healing
+
+Abhängig von deiner Anrufungs-Fähigkeit kannst du einer andere Kreatur einen
+mäßigen Teil seiner Lebensenergie heilen. Benutzt man diese Fähigkeit auf
+feindselige Monster, kann ihr Verhalten neutral werden. Dieses funktioniert am
+besten bei Tieren, schlechter bei Humanoiden deiner Art, noch schlechter auf
+andere Humanoiden und am schlechtesten von allen auf Dämonen und Untoten.
+Hirnlose Kreaturen können nicht befriedet werden, und kein Monster das schläft
+kann befriedet werden. Die Chance einer erfolgreichen Befriedung hängt von der
+Heilkraft ab, so ist es bedeutend besser als leichte Heilung zu benutzen.
+
+Unabhängig davon, ob die Befriedung funktioniert hat oder nicht, die
+investierte Nahrung, Frömmigkeit und Magie-Punkte sind verbraucht. Wenn es
+gelingt, ist das Monster geheilt und du erhältst die hälfte seines
+Erfahrungswertes und möglicherweise etwas Frömmigkeit. Anderenfalls bleibt das
+Monster unbetroffen und du bekommst nichts.
+
+Du kannst auch Verbündete und neutrale Monster heilen.
+%%%%
+Greater Self-Healing
+
+Abhängig von deiner Anrufungs-Fähigkeit kannst du einen mäßigen Teil deiner
+Lebenspunkte heilen. Grob gesagt heilt die Größere Heilung dreimal so viel wie
+die Geringere Heilung bei etwas höheren Kosten an Frömmigkeit.
+%%%%
+Divine Vigour
+
+Abhängig von deiner Anrufungs-Fähigkeit, stelle eine große Menge Lebenspunkte
+und Magiepunkte wieder her und erhöhe diese kurzzeitig.
+%%%%
+Depart the Abyss
+
+Verlasse den Abgrund, um an den Ort zurückzukehren, von dem du kamst.
+%%%%
+Bend Space
+
+Krümme das Raumgefüge um dich herum, um dich sofort über eine kleine Distanz zu
+teleportieren und möglicherweise auch Monstern in deiner Umgebung durch
+Teleportation Schaden zuzufügen.
+%%%%
+Banish
+
+Versuche, ein Monster in den Abgrund zu verbannen.
+%%%%
+Corrupt
+
+Verderbe die aktuelle Ebene indem du die Kräfte des Abgrundes entfesselst.
+Dieses wird das Aussehen der Ebene extrem ändern und Dämonen vom Abrund
+hineinholen welche darauf aus sind Zerstörung zu verursachen. Das funktioniert
+nicht auf Ebenen die schon verdorben wurden oder sich im Abgrund befinden.
+%%%%
+Enter the Abyss
+
+Versetz dich augenblicklich in das Reich von Lugonu... die Hälfte deiner
+maximalen Lebens- und Magiepunkte sind dafür permanente Kosten. Nur die
+Bemühung diese Fähigkeit zu benutzen wird deine Lebens- und Magiepunkte
+verbrauchen.
+%%%%
+Draw One
+
+Wähle einen beliebigen Kartenstapel in deinem Inventar und ziehe eine Karte
+davon.
+%%%%
+Peek at Two
+
+Wirf eine Karte von einem Deck in deinem Inventar ab um zwei Karten davon zu
+ziehen, schaue sie dir an und mische sie zurück in das Deck. Das Deck bekommt
+einen Entrag das es diese beiden Karten enthält, und wenn sie verschieden sind
+wird das Deck identifiziert.
+%%%%
+Triple Draw
+
+Ziehe drei Karten von einem Deck in deinem Inventar und siehe sie dir an, dann
+entscheide welche du behalten und welche zwei du abwerfen willst.
+%%%%
+Deal Four
+
+Teilt vier Karten von einem unbezeichneten Deck, in der Zeit die es
+normalerweise bräuchte eine Karte zu ziehen, aus. Der Rest von dem Deck geht
+verloren. Wenn das Deck nicht genügen Karten enthalten sollte gibt Nemelex dir
+eine extra Karte, jedoch wirst du sie nicht mögen.
+%%%%
+Stack Five
+
+Ziehe fünf Karten von einem unbezeichnetem Deck in deinem Inventar, dabei geht
+der Rest verloren. Schau dir die Karten an und sortiere sie in die Reihenfolge
+welche du möchtest. Anschließend kannst du die Karten in der Reihenfolge ziehen
+wie du es gewählt hast.
+%%%%
+Smiting
+
+Erschlage einen Gegner in deinem Sichtbereich. Es benötig keinen geraden Weg,
+sondern es reicht den Gegner zu sehen.
+%%%%
+Recall Orcish Followers
+
+Rufe deine Orkischen Anhänger zurück zu deiner unmittelbaren Umgebung.
+%%%%
+Sunlight
+
+Rufe das Sonnenlicht herunter auf einen kleinen Bereich im Verlies. Monster
+welche von diesem Licht beleuchtet werden sind leichter zu treffen. Von diesem
+Sonnenlicht getroffenes Wasser verdampft. Im speziellen wird tiefes Wasser in
+flaches Wasser verwandelt, und flaches Wasser wird komplett austrocknen und den
+Verliesboden zum Vorschein bringen.
+%%%%
+Growth
+
+Benutze Früchte um einen Ring aus Pflanzen um dich herum wachsen zu lassen.
+Wenn ein kompletter Ring nicht gebildet werden konnte (weil du nicht genug
+Früchte hast), wachsen die Pflanzen auf den Feldern neben dir in deren Nähe
+Monster sind. Pflanzen, welche du erschaffen hast, erhalten proportional zu
+deiner Anrufungs-Fähigkeit einen Bonus auf Trefferpunkte.
+%%%%
+Rain
+
+Lasse Regen um dich herum fallen, was den Verliesboden in seichtes Wasser
+verwandelt und seichtes Wasser in tiefes Wasser. Dies ist geeignet um Pflanzen
+und Pilze in einem Bereich wachsen zu lassen der nicht bewässert ist.
+%%%%
+Reproduction
+
+Erschaffe riesige Sporen aus den Leichen in deiner Sichtlinie. Die Sporen
+werden explodieren und dir oder deinen Feinden Schaden zufügen.
+%%%%
+Evolution
+
+Verwandle neben dir stehende Pflanzen und Pilze in stärkere Arten. Die
+Verbesserung von Pilzen beötigt Frömmigkeit, Pflanzen zu verbessern benötigt
+Nahrung. Verbesserte Pflanzen erhalten einen Bonus zur
+Trefferwahrscheinlichkeit abhängig von der Anrufungs-Fähigkeit des Benutzers,
+und Oklob-Pflanzen spucken eher Säure je höher die Anrufung war.
+%%%%
+Bend Time
+
+Versuche, jeden um dich herum zu verlangsamen. Erfahrung mit Beten macht es
+schwerer, sich dem Zauber zu widerstehen.
+%%%%
+Temporal Distortion
+
+Verzerre den Fluss der Zeit um dich herum, wodurch Monster relativ zu dir in
+der Zeit anhalten.
+%%%%
+Slouch
+
+Verursache bei jedem in Sicht, der sich schneller bewegt wie du, Schaden.
+%%%%
+Step From Time
+
+Entferne dich selbst aus dem Fluss der Zeit. Dinge um dich herum nehmen ihren
+üblichen Gang, Monster gehen weiter, verderbliche Dinge werden verfaulen und
+Pflanzen weiter wachsen. Nachdem etwas Zeit vergangen ist wirst du im gleichen
+Zustand zurückkehren so wie du sie verlassen hast.
+%%%%
+Request Jelly
+
+Erschafft einen Schleim der durch die Gänge kriecht und alle Gegenstände
+einsaugt.
+%%%%
+Jelly Paralyse
+
+Bete um deinen Schleim kurzzeitig aufzuhalten Gegenstände zu verschlucken.
+%%%%
+Slimify
+
+Bedecke deine getragene Waffe oder deine Faust mit Schleim, welche das nächste
+lebende oder untote Monster bei einem Treffer in Schleim verwandelt.
+%%%%
+Cure Bad Mutation
+
+Entferne eine zufällig gewählte schlechte Mutation.
+%%%%
+Scrying
+
+Erlange Astral-Sicht um durch Wände zu sehen. Das ist allerdings nicht genug um
+mit Sprüche und Fähigkeiten hindurch zu zielen, auch die welche durch Glas
+wirken.
+%%%%
+Transfer Knowledge
+
+Opfere einen Teil deiner Fähigkeiten um eine Andere zu verbessern.
+%%%%
+End Transfer Knowledge
+
+Brich einen laufenden Fähigkeitenwechsel ab.
+%%%%
+Renounce Religion
+
+Gebe deinen Glauben auf. Damit verlässt dein Charakter seinen Gott (und
+verärgert diesen Gott normalerweise noch).
+%%%%
+Make dart trap
+
+Erschaffe eine Dart-Falle an der gewählten Position.
+%%%%
+Make oklob sapling
+
+Pflanzt ein Oklob-Bäumchen an der gewählten Position, mit der Fähigkeit Säure
+zu spucken.
+%%%%
+Make arrow trap
+
+Erschaffe eine Pfeil-Falle an der gewählten Position.
+%%%%
+Make plant
+
+Lässt eine Pflanze an der gewählten Position wachsen.
+%%%%
+Remove Curse
+
+Hebt alle Flüche auf deiner Ausrüstung auf.
+%%%%
+Make burning bush
+
+Pflanze einen brennenden Busch an der gewählten Position mit der Fähigkeit
+Feuer zu schießen und unsichtbare Monster zu sehen.
+%%%%
+Make altar
+
+Erschaffe einen Altar eines ausgesuchten Gottes an deiner Position.
+%%%%
+Make grenades
+
+Rufe eine Anzahl explosiver riesiger Sporen um dich herum hervor.
+%%%%
+Make oklob plant
+
+Pflanzt eine voll ausgewachsene Oklob-Pflanze an der ausgewählten Position, mit
+der Fähigkeit Säure zu spucken.
+%%%%
+Make net trap
+
+Erschaffe eine Netz-Falle an der gewählten Position.
+%%%%
+Make ice statue
+
+Erbaue eine Statue mit verschiedenen Eis-Fähigkeiten an der gewählten Position.
+%%%%
+Make spear trap
+
+Erschaffe eine Speer-Falle auf der gewählten Position.
+%%%%
+Make alarm trap
+
+Erschaffe eine Alarm-Falle an der gewählten Position um dich von der
+Anwesenheit von Monstern zu warnen.
+%%%%
+Make mushroom circle
+
+Lässt einen Kreis Pilze im Zentrum der ausgewählten Position wachsen.
+%%%%
+Make bolt trap
+
+Erschaffe eine Bolzen-Falle an der gewählten Position.
+%%%%
+Make crystal statue
+
+Erbaue eine Statue an der gewählten Position mit der Fähigkeit Monster zu
+verwirren.
+%%%%
+Make needle trap
+
+Erschaffe eine Giftnadel-Falle an der gewählten Position.
+%%%%
+Zot-teleport
+
+Führe einen kontrollierten Teleport aus.
+%%%%
+Make water
+
+Erschaffe einen Teich aus seichtem Wasser auf deinem Standpunkt.
+%%%%
+Make lightning spire
+
+Erbaut einen Blitz-Turm mit der Fähigkeit Blitze auf die gewählte Position zu
+werfen.
+%%%%
+Make silver statue
+
+Erbaue eine Statue auf der gewählten Position, mit der Fähigkeit freundliche
+Dämonen zu beschwören.
+%%%%
+Make bazaar
+
+Erschaffe auf deiner Position ein Portal zu einem Basar.
+%%%%
+Acquire gold
+
+Erhalte eine große Menge Gold.
+%%%%
+Make oklob circle
+
+Lässt einen Kreis an Oklob-Pflanzen an der gewählten Position wachsen.
+%%%%
+Sage
+
+Lasse etwas von deiner gesammelten Erfahrung in eine Fähigkeit fließen, um
+diese schneller als normal zu trainieren.
+%%%%
+Acquirement
+
+Erhalte eine gewünschte Gegenstandsart.
+%%%%
+Make blade trap
+
+Erschaffe eine Klingen-Falle an der gewählten Position.
+%%%%
+Make curse skull
+
+Erschaffe einen Unheil-Schädel mit der Fähigkeit Untote an einen Zielort zu
+beschwören, zu den Kosten von nekromantischem Rückschlag auf dich.
+%%%%
