@@ -1632,6 +1632,38 @@ xO**xxxO****9x...x..x.....x
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 19 *, 12 monsters
+NAME:   vaults_end_grunt_pinched
+TAGS:   vaults_end_quadrant
+NSUBST: O = 1:0 / *:*
+SUBST:  9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x......*Ox................
+x......*xx...9............x
+x...9...xx...x............x
+x......xx....xx....9......x
+x.....xx9.....x...........x
+x...xxxxx.....xx..........x
+x9xxxx.xxx.....xx......9..x
+x.......xx..9.9xxxx.......x
+x...9....9....xx.9xxx.....x
+x.9.x........xx....xxxx...x
+x...xxxx....xx........x.9.x
+x.....xxx.9xx.....9.......x
+x.....*Oxxxx..............x
+x..9..**xxx9..............x
+x......xxxxx...9.xx..9.xx9x
+x.....xx.*Oxx....xxxxxxxx.x
+x....xx..**.x.....xxxx....x
+x...xx......xx....xx......x
+x**xx....9...x.9..x....9..x
+xOxx*........9...xx*......x
+xxxO*............xO*......x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ###############################################################################
 # Vaults:8 prize quadrants

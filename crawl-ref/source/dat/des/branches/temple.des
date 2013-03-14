@@ -2776,6 +2776,43 @@ xxxxxx.....xxx....[.{.(....xxx.....xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 8 gods
+NAME:   grunt_temple_mini_profane_8
+PLACE:  Temple
+WEIGHT: 1
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+    ccc      ccccccc      ccc
+   cc.c      c.....c      c.cc
+  cc..cccccccc..G..cccccccc..cc
+ cc{..+......+.....+......+..[cc
+cc....+......+.....+......+....cc
+c....Gcccccccc.....ccccccccG....c
+ccc++cc ccc..+..B..+..ccc cc++ccc
+  c..cccc....+c...c+....cccc..c
+  c..cc.....ccccccccc.....cc..c
+  c..c...cc++...G...++cc...c..c
+  c..c..ccc+.........+ccc..c..c
+ccc++c++ccc...cc+cc...ccc++c++ccc
+c......cccc..cc...cc..cccc......c
+c.......ccc..c..B..c..ccc.......c
+c.G...B.cccG.+.B.B.+.Gccc.B...G.c
+c.......ccc..c..B..c..ccc.......c
+c......cccc..cc...cc..cccc......c
+ccc++c++ccc...cc+cc...ccc++c++ccc
+  c..c..ccc+.........+ccc..c..c
+  c..c...cc++...G...++cc...c..c
+  c..cc.....ccccccccc.....cc..c
+  c..cccc....+c...c+....cccc..c
+ccc++cc ccc..+..B..+..ccc cc++ccc
+c....Gcccccccc.....ccccccccG....c
+cc....+......+.....+......+....cc
+ cc(..+......+.....+......+..<cc
+  cc..cccccccc..G..cccccccc..cc
+   cc.c      c.....c      c.cc
+    ccc      ccccccc      ccc
+ENDMAP
 
 #############################################################################
 # Overflow temples

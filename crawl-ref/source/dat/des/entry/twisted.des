@@ -961,3 +961,265 @@ XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIxx
    XXXXxxxxXXXxxxxxxXX     Xxxxxxxx
       XXXXXX XXXXXXXXX     XXxxxxx
 ENDMAP
+
+#######################################################################
+# The gods give you a sneak preview of the powers you could get by
+# following them.
+#
+# There's a very small chance that this could be scummed by LRDing into
+# the cages, but someone at that point probably doesn't have much of a
+# need of the contents of these vaults anyway.
+#
+# The holy creatures and profane servitors spawned in some subvaults
+# can leak halo / umbra through the walls; at this point in the game,
+# it really should only be a visual problem more than anything else.
+NAME: grunt_entry_enticement
+TAGS: entry no_monster_gen no_item_gen no_tele_into
+ORIENT: float
+SUBVAULT: A : grunt_entry_enticement_altar
+SUBVAULT: B : grunt_entry_enticement_altar
+SUBVAULT: C : grunt_entry_enticement_altar
+SUBVAULT: D : grunt_entry_enticement_altar
+MAP
+    cc.@.cc
+  cccn...nccc
+ ccAAn...nBBcc
+ cAAAn...nBBBc
+ccAAAn...nBBBcc
+cnnnnn...nnnnnc
+......{.(......
+@......T......@
+......[.<......
+cnnnnn...nnnnnc
+ccCCCn...nDDDcc
+ cCCCn...nDDDc
+ ccCCn...nDDcc
+  cccn...nccc
+    cc.@.cc
+ENDMAP
+
+NAME: grunt_entry_enticement_ashenzari
+TAGS: grunt_entry_enticement_altar unrand
+# Deliberately avoiding potions, scrolls, wands, and jewellery here to avoid
+# getting a head start on identifying them.
+ITEM: unobtainable any weapon cursed good_item ident:all / \
+      unobtainable any armour cursed good_item ident:all / \
+      unobtainable any book ident:all / \
+      unobtainable any misc ident:all
+KFEAT: _ = altar_ashenzari
+MAP
+ d.
+d_d
+.d.
+ENDMAP
+
+NAME: grunt_entry_enticement_cheibriados
+TAGS: grunt_entry_enticement_altar unrand
+SHUFFLE: 12
+ITEM: unobtainable plate armour ego:ponderousness good_item ident:type
+MONS: agate snail, goliath beetle
+KFEAT: _ = altar_cheibriados
+MAP
+ ..
+._1
+.2d
+ENDMAP
+
+NAME: grunt_entry_enticement_elyvilon
+TAGS: grunt_entry_enticement_altar unrand
+MONS: apis att:neutral
+# No items - placing healing items here would be too spoilery.
+COLOUR: .1 = blue
+FTILE: ._1 = floor_marble
+KFEAT: _ = altar_elyvilon
+MAP
+ ..
+._.
+..1
+ENDMAP
+
+NAME: grunt_entry_enticement_fedhas
+TAGS: grunt_entry_enticement_altar unrand
+# No oklobs - they exclude through the glass.
+MONS: plant / fungus, wandering mushroom
+COLOUR: .12d = green
+FTILE: _.12d = floor_grass
+ITEM: unobtainable choko / unobtainable lychee / unobtainable rambutan / \
+      unobtainable orange / unobtainable lemon / unobtainable banana / \
+      unobtainable apple / unobtainable apricot / unobtainable pear / \
+      unobtainable snozzcumber / unobtainable grape / unobtainable sultana / \
+      unobtainable strawberry
+KFEAT: _ = altar_fedhas
+MAP
+ 12
+1_d
+2dd
+ENDMAP
+
+NAME: grunt_entry_enticement_kikubaaqudgha
+TAGS: grunt_entry_enticement_altar unrand
+MONS: necromancer, place:D:27 zombie
+COLOUR: ' = brown
+FTILE: '_ = floor_pebble_yellow
+KFEAT: _ = altar_kikubaaqudgha
+MAP
+ 22
+2_2
+221
+ENDMAP
+
+NAME: grunt_entry_enticement_makhleb
+TAGS: grunt_entry_enticement_altar unrand
+KPROP: .K12 = bloody / nothing
+MONS: executioner / balrug / green death / cacodemon / blizzard demon
+MONS: orange demon / ynoxinul / neqoxec / hellwing / smoke demon
+MARKER: K = lua:fog_machine { cloud_type = "flame", \
+                              pow_min = 10, pow_max = 10, delay = 10, \
+                              size = 1, spread_rate = 0, \
+                              walk_dist = 0, excl_rad = 0 }
+KFEAT: _ = altar_makhleb
+MAP
+ K2
+K_.
+2.1
+ENDMAP
+
+NAME: grunt_entry_enticement_nemelex_xobeh
+TAGS: grunt_entry_enticement_altar unrand
+COLOUR: .defg = random
+SHUFFLE: defg
+ITEM: unobtainable legendary deck of destruction ident:all
+ITEM: unobtainable legendary deck of dungeons ident:all
+ITEM: unobtainable legendary deck of escape ident:all
+ITEM: unobtainable legendary deck of summonings ident:all
+ITEM: unobtainable legendary deck of wonders ident:all
+KFEAT: _ = altar_nemelex_xobeh
+MAP
+ dU
+e_f
+Ugh
+ENDMAP
+
+NAME: grunt_entry_enticement_okawaru
+TAGS: grunt_entry_enticement_altar unrand
+COLOUR: . = cyan
+SHUFFLE: defghij
+ITEM: unobtainable triple sword good_item
+ITEM: unobtainable executioner's axe good_item
+ITEM: unobtainable bardiche good_item
+ITEM: unobtainable great mace good_item
+ITEM: unobtainable lajatang good_item
+ITEM: unobtainable crystal plate armour good_item
+ITEM: unobtainable large shield good_item
+FTILE: defghij_ = floor_black_cobalt
+KFEAT: _ = altar_okawaru
+MAP
+ de
+f_g
+hij
+ENDMAP
+
+NAME: grunt_entry_enticement_sif_muna
+TAGS: grunt_entry_enticement_altar unrand
+ITEM: unobtainable any book
+COLOUR: d = blue
+FTILE: _d = floor_hall
+KFEAT: _ = altar_sif_muna
+MAP
+ dd
+d_d
+ddd
+ENDMAP
+
+NAME: grunt_entry_enticement_trog
+TAGS: grunt_entry_enticement_altar unrand
+SHUFFLE: de
+KITEM: d = unobtainable executioner's axe ego:anti-magic good_item ident:type
+KITEM: e = unobtainable battleaxe ego:anti-magic good_item ident:type
+MONS: orc warrior perm_ench:berserk / human hd:6 perm_ench:berserk / \
+      troll perm_ench:berserk / ogre perm_ench:berserk
+KPROP: .de12 = bloody / nothing
+KFEAT: _ = altar_trog
+MAP
+ d1
+e_.
+1..
+ENDMAP
+
+NAME: grunt_entry_enticement_tso
+TAGS: grunt_entry_enticement_altar unrand
+SHUFFLE: de
+KITEM: d = unobtainable long sword ego:holy_wrath ident:type / \
+           unobtainable scimitar ego:holy_wrath ident:type
+KITEM: e = unobtainable shield / unobtainable large shield
+MONS: paladin, angel
+COLOUR: ._de12 = yellow
+FTILE: ._de12 = floor_limestone
+KFEAT: _ = altar_the_shining_one
+MAP
+ .d
+._2
+e21
+ENDMAP
+
+NAME: grunt_entry_enticement_vehumet
+TAGS: grunt_entry_enticement_altar unrand
+MONS: deep elf annihilator, draconian annihilator
+SHUFFLE: de, 12, KL
+ITEM: unobtainable book of power ident:all
+ITEM: unobtainable book of annihilations ident:all
+KFEAT: _ = altar_vehumet
+MARKER: K = lua:fog_machine { cloud_type = "flame", \
+                              pow_min = 10, pow_max = 10, delay = 10, \
+                              size = 1, spread_rate = 0, \
+                              walk_dist = 0, excl_rad = 0 }
+MARKER: L = lua:fog_machine { cloud_type = "freezing vapour", \
+                              pow_min = 10, pow_max = 10, delay = 10, \
+                              size = 1, spread_rate = 0, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+ Kd
+L_1
+e2.
+ENDMAP
+
+NAME: grunt_entry_enticement_xom
+TAGS: grunt_entry_enticement_altar unrand
+NSUBST: d = 3:1 / *:d
+COLOUR: ._d1 = random
+MONS: butterfly
+ITEM: unobtainable any mimic
+KFEAT: _ = altar_xom
+MARKER: _ = lua:fog_machine { cloud_type = "seething chaos", \
+                              pow_min = 30, pow_max = 50, delay = 100, \
+                              size = 1, spread_rate = 70, \
+                              walk_dist = 1, excl_rad = 0 }
+MAP
+ dd
+d_d
+ddd
+ENDMAP
+
+NAME: grunt_entry_enticement_yredelmnul
+TAGS: grunt_entry_enticement_altar unrand
+MONS: deep dwarf death knight
+MONS: profane servitor / bone dragon / ghoul / death cob / skeletal warrior
+KFEAT: _ = altar_yredelemnul
+MAP
+ 22
+2_2
+221
+ENDMAP
+
+NAME: grunt_entry_enticement_zin
+TAGS: grunt_entry_enticement_altar unrand
+MONS: daeva
+KITEM: $ = unobtainable gold
+COLOUR: . = white
+FTILE: ._1$ = floor_limestone
+KFEAT: _ = altar_zin
+MAP
+ $.
+$_1
+.1.
+ENDMAP
