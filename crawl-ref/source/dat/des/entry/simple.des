@@ -1,6 +1,6 @@
 ##############################################################################
 # Simple maps for D:1 entry vaults.
-# See entry.des for where your new entry vault belongs.
+# See entry_guide.txt for where your new entry vault belongs.
 #
 # Please do not rearrange the vaults. The order is chosen so that readers are
 # introduced to new features one by one.
