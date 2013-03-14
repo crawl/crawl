@@ -156,9 +156,9 @@ void blink_other_close(actor* victim, const coord_def &target)
 }
 
 // Blink a monster away from the caster.
-bool blink_away(monster* mon, actor* caster)
+bool blink_away(monster* mon, actor* caster, bool from_seen)
 {
-    if (!mon->can_see(caster))
+    if (from_seen && !mon->can_see(caster))
         return false;
     coord_def dest = random_space_weighted(mon, caster, false, false);
     if (dest.origin())
