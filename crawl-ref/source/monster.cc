@@ -1091,7 +1091,7 @@ void monster::unequip_armour(item_def &item, int near)
         simple_monster_message(this, info);
     }
 
-    ac += armour_bonus(item);
+    ac -= armour_bonus(item);
     ev -= property(item, PARM_EVASION) / 2;
 }
 
