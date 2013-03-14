@@ -156,7 +156,7 @@ Spells
 * Teleport Other gets a power boost.
 * Condensation Shield's SH bonus no longer cares about Shields skill or
   intelligence.
-* Summon swarm now gives spiders instead of wolf spiders.
+* Summon Swarm now gives spiders instead of wolf spiders.
 * Venom Bolt and Bolt of Magma do more damage.
 * Conjurers have a new book with non-elemental spells (including the new
   conjurations).
