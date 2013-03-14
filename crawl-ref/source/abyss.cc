@@ -1003,6 +1003,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 
     const ProceduralSample sample = (*abyssLayout)(pt, abyssal_state.depth);
     ASSERT(sample.feat() > DNGN_UNSEEN);
+    abyss_sample_queue.push(sample);
     return sample;
 }
 
@@ -1039,15 +1040,10 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
     }
 }
 
-static coord_def _relative_position(const coord_def &p)
-{
-    return p - abyssal_state.major_coord;
-}
-
 static void _update_abyss_terrain(const coord_def &p,
     const map_bitmask &abyss_genlevel_mask, bool morph)
 {
-    const coord_def rp = _relative_position(p);
+    const coord_def rp = p - abyssal_state.major_coord;
     // ignore dead coordinates
     if (!in_bounds(rp))
         return;
@@ -1080,19 +1076,7 @@ static void _update_abyss_terrain(const coord_def &p,
     // of external changes such as digging.
     const ProceduralSample sample = _abyss_grid(rp);
 
-    // Don't murder the player.
-    if (rp == you.pos()
-        && (sample.feat() == DNGN_DEEP_WATER || sample.feat() == DNGN_LAVA))
-    {
-        ProceduralSample fakeSample(p, grd(rp), abyssal_state.depth + 1);
-        abyss_sample_queue.push(fakeSample);
-        return;
-    }
-
-    // Enqueue the update...
-    abyss_sample_queue.push(sample);
-
-    // Decline to morph in a couple of cases:
+    // Enqueue the update, but don't morph.
     if (_abyssal_rune_at(rp))
         return;
 
@@ -1174,9 +1158,6 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         const coord_def p(*ri);
         const coord_def abyss_coord = p + abyssal_state.major_coord;
         bool nuked = map_masked(p, MMT_NUKED);
-        if (p == you.pos())
-            continue;
-
         if (used_queue && !nuked)
             continue;
 
@@ -1210,6 +1191,9 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     }
     if (ii)
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
+    dungeon_feature_type feat = grd(you.pos());
+    if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
+        you.shove();
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
