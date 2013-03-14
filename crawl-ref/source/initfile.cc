@@ -3818,6 +3818,7 @@ enum commandline_option_type
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
+    CLO_PRINT_JSON_OPTIONS,
 #endif
 
     CLO_NOPS
@@ -3831,7 +3832,7 @@ static const char *cmd_ops[] = {
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "zotdef", "tutorial", "wizard", "no-save",
 #ifdef USE_TILE_WEB
-    "webtiles-socket", "await-connection",
+    "webtiles-socket", "await-connection", "print-json-options",
 #endif
 };
 
@@ -4092,6 +4093,28 @@ static void _edit_save(int argc, char **argv)
     }
 }
 #undef FAIL
+
+#ifdef USE_TILE_WEB
+static void _write_json_options()
+{
+    tiles.json_open_object();
+    tiles.json_open_array("stat_colour");
+    for (unsigned int i = 0; i < Options.stat_colour.size(); i++) {
+        tiles.json_open_object();
+        tiles.json_write_int("value", Options.stat_colour[i].first);
+        tiles.json_write_int("colour", Options.stat_colour[i].second);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.json_close_object();
+}
+
+static void _print_json_options()
+{
+    _write_json_options();
+    printf("%s\n", tiles.get_message().c_str());
+}
+#endif
 
 static bool _check_extra_opt(char* _opt)
 {
@@ -4501,6 +4524,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_AWAIT_CONNECTION:
             tiles.m_await_connection = true;
+            break;
+
+        case CLO_PRINT_JSON_OPTIONS:
+            if (!rc_only)
+            {
+                _print_json_options();
+                end(0);
+            }
             break;
 #endif
 

@@ -157,6 +157,11 @@ bool TilesFramework::initialise()
     return true;
 }
 
+string TilesFramework::get_message()
+{
+    return m_msg_buf;
+}
+
 void TilesFramework::write_message(const char *format, ...)
 {
     char buf[2048];
