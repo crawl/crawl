@@ -235,6 +235,7 @@ Gods
 * Followers of worshippers of Beogh and Yredelemnul can now be recalled across
   levels.
 * Followers of Beoghites now share experience when the player scores kills.
+* Yredelemnul gives a small amount of piety for desecrating holy remains.
 * Zin's Imprisonment can no longer be used against friendly or good-neutral
   creatures or conjured monsters, and its duration has been adjusted to not
   depend on the HD of its target.
