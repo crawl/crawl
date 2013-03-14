@@ -573,8 +573,8 @@ KMONS: L = deep elf master archer
 KMONS: M = deep elf death mage
 KMONS: N = deep elf sorcerer
 : end
-KMONS: 0 = 0 band
-KMONS: 9 = 9 band
+KMONS: 0 = 0 band w:15 / nothing
+KMONS: 9 = 9 band / 0 band
 KMASK: 1290KLMN = !no_monster_gen
 : if you.absdepth() == 27 then
 SUBVAULT: H : grunt_zot_portal
@@ -687,8 +687,10 @@ ENDMAP
 NAME: grunt_profane_temple_geh
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
+NSUBST: 5 = 1:6 / *:5
 KMONS: 4 = red devil / hell hound / flaming corpse w:5
-KMONS: 5 = hellion / balrug
+KMONS: 5 = sun demon
+KMONS: 6 = hellion / balrug
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen
@@ -718,8 +720,10 @@ ENDMAP
 NAME: grunt_profane_temple_coc
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
+NSUBST: 5 = 1:6 / *:5
 KMONS: 4 = blue devil / large simulacrum / small simulacrum / freezing wraith
-KMONS: 5 = blizzard demon / ice dragon
+KMONS: 5 = ice devil
+KMONS: 6 = blizzard demon / ice dragon
 KMONS: 8 = ice statue name:chilling_statue name_replace name_descriptor \
            hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
            ozocubu's_refrigeration;freezing_cloud;\
@@ -754,9 +758,11 @@ ENDMAP
 NAME: grunt_profane_temple_tar
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
+NSUBST: 5 = 1:6 / *:5
 KMONS: 4 = skeletal warrior w:5 / small skeleton / large skeleton / \
            small zombie / large zombie / flying skull band
-KMONS: 5 = bone dragon / tormentor / lich w:5
+KMONS: 5 = soul eater
+KMONS: 6 = tormentor / reaper / lich w:5 / bone dragon w:2
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen
@@ -786,8 +792,10 @@ ENDMAP
 NAME: grunt_profane_temple_dis
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
+NSUBST: 5 = 1:6 / *:5
 KMONS: 4 = iron devil
-KMONS: 5 =iron dragon / iron troll / iron golem
+KMONS: 5 = skeletal warrior
+KMONS: 6 = iron dragon / iron troll / iron troll
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 COLOUR: G = cyan
