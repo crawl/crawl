@@ -75,7 +75,7 @@ Monsters
 * New abyssal monsters:
     - Wretched star: bestows temporary mutations.
     - Tentacled starspawn: has constricting tentacles and a nasty attack.
-    - Ancient zyme: causes sickness and stat drain when near the player.
+    - Ancient zyme: causes sickness when near the player.
     - Lurking horror: stalks like a wandering mushroom, then explodes for
       torment.
     - Starcursed mass: proliferates when ignored, re-merges when damaged.
