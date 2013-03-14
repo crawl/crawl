@@ -914,6 +914,15 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 env.tile_flv(*ai).feat_idx =
                         store_tilename_get_index("dngn_mirror_wall");
                 env.tile_flv(*ai).feat = TILE_DNGN_MIRROR_WALL;
+                if (env.map_knowledge(*ai).seen())
+                {
+                    env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
+                    env.map_knowledge(*ai).clear_item();
+#ifdef USE_TILE
+                    env.tile_bk_bg(*ai) = TILE_DNGN_MIRROR_WALL;
+                    env.tile_bk_fg(*ai) = 0;
+#endif
+                }
             }
             // Tomb card
             else
