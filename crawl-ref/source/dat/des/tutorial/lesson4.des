@@ -5,173 +5,24 @@
 # TODO:
 #  * trigger when trying to walk into a cloud
 #  * trigger on "might hit yourself" prompt
+#  * potion of experience gives too much skills - find another way for Meph?
 #
 {{
 require("dlua/tutorial.lua")
 
 tutorial4 = {}
-tutorial_msg4 = {}
 
 function tutorial4.msg(text)
     return tutorial_msg("tutorial4 " .. text)
 end
 
-function tutorial_msg4.mephitic_cloud ()
-    return tutorial_message("Mephitic Cloud is a level 3 spell, so you can't "
-                            .. "memorise it yet. Quaff this potion of experience (with "
-                            .. tutorial_get_cmd("CMD_QUAFF")
-                            .. ") to level up, and then memorise it!\n"
-                            .. "At experience level 3, you'll be able to increase one of "
-                            .. "your stats - choosing <w>I</w>ntelligence will help your "
-                            .. "spellcasting even further.")
+function tutorial4.exit()
+    crawl.tutorial_msg("tutorial4 exit", true)
 end
 
-function tutorial_msg4.aiming_clouds ()
-    return tutorial_message("Mephitic Cloud covers an area in noxious fumes when "
-                            .. "cast, and you'll be able to see the area it affects as "
-                            .. "you target it. Try to catch multiple enemies in a single "
-                            .. "cloud in order to be more efficient with your magic.")
-end
-
-function tutorial_msg4.spell_hunger ()
-    return tutorial_message("Spellcasting can make you really hungry. Spell hunger "
-                            .. "is higher for more difficult spells and can be "
-                            .. "reduced by high Intelligence and by training the "
-                            .. "Spellcasting skill.")
-end
-
-function tutorial_msg4.forget_spell ()
-    local text = "Gaining an experience level and raising your Spellcasting "
-                 .. "skill gives you spell slots to spend on spells. You can "
-                 .. "also <w>forget a memorised spell</w> to make space for "
-                 .. "a new one. The easiest way to do this is with a scroll "
-                 .. "of amnesia. Simply read the scroll (with "
-                 .. tutorial_get_cmd("CMD_READ")
-    if crawl.is_tiles() then
-        text = text .. " or by <white>clicking</click> on it"
-    end
-    text = text .. "), and then select the spell you want to forget."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.destroy_spellbook ()
-    local text = "You can also forget a spell by using a spellbook containing "
-                 .. "that spell. For example, to forget \"Magic Dart\", you "
-                 .. "need to read a spellbook containing the spell (with "
-                 .. tutorial_get_cmd("CMD_READ")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>rightclicking</click> on it"
-    end
-    text = text .. "), select \"Magic Dart\", type <w>f</w> and confirm. This "
-                .. "will destroy the book, so you'll need other spellbooks "
-                .. "to learn new spells, such as the one lying over there."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.memorise2 ()
-    local text = "Again, memorise a new spell with "
-                 .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>clicking</white> on the memorisation tab "
-                    .. "and selecting the spell tile"
-    end
-    text = text .. ". And then raise yourself an undead army!"
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.displace_allies ()
-    return tutorial_message("Did you notice you can swap positions with your "
-                            .. "allies by moving into them? Among other things, "
-                            .. "displacing a friendly creature can be a good "
-                            .. "way to escape a fight.")
-end
-
-function tutorial_msg4.order_allies ()
-    return tutorial_message("Try to let your allies do the killing! If "
-                            .. "necessary, you can order them about with "
-                            .. tutorial_get_cmd("CMD_SHOUT") .. "."
-                            .. " Before opening this gate, you may want to "
-                            .. "wait with "
-                            .. tutorial_get_cmd("CMD_MOVE_NOWHERE")
-                            .. " until your allies have caught up with you.")
-end
-
-function tutorial_msg4.heavy_armour ()
-    local text = "Heavy armour really hampers spellcasting. Try putting on that "
-                 .. "mail and shield (with "
-                 .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>clicking</white> on them)"
-    end
-
-    text = text .. ", and compare your spellcasting success rates with "
-                .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseovering</white> your memorised spells"
-    end
-
-    text = text .. ". You can take armour off again with "
-                .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or, again, via <white>mouseclick</white>"
-    end
-    text = text .. "."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.resting_reminder ()
-    text = "Make sure you are at full health and magic points before "
-           .. "entering a new area. If necessary, rest up with "
-           .. tutorial_get_cmd("CMD_REST")
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>mouseclick</white> in the command panel"
-    end
-    text = text .. ".\n"
-                .. "Also, undead don't breathe, so you can cast Mephitic Cloud "
-                .. "without harming your allies."
-
-    return tutorial_message(text)
-end
-
-function tutorial_msg4.tutorial_end ()
-    return tutorial_message("Congratulations, you're a real wizard now! "
-                            .. "To exit the tutorial, simply go down "
-                            .. "these stairs.")
-end
-
-function tutorial_msg4.exit ()
-    -- A single screen recapping all commands.
-
-    local text = "<yellow>Spellcasting commands</yellow>\n"
-                 .. "  " .. tutorial_get_cmd("CMD_MEMORISE_SPELL") .. "  learn a new spell\n"
-                 .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
-                 .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. "\nYou can also learn new spells via the <w>memorisation tab</w>.\n"
-                    .. "You can cast memorised spells via <w>leftclick</w>, and read their descriptions\n"
-                    .. "and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w>.\n\n"
-    end
-
-    text = text .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a book, for descriptions or to forget a spell\n"
-                .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest up to 100 turns to regain magic points and health\n"
-                .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
-                .. "  " .. tutorial_get_cmd("CMD_REMOVE_ARMOUR") .. "  take off armour\n"
-    text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
-
-    return crawl.endgame(text)
-end
-
-function tutorial_msg4.win()
+function tutorial4.win()
     crawl.mark_game_won()
-    return tutorial_msg4.exit()
+    return tutorial4.exit()
 end
 }}
 
@@ -195,11 +46,11 @@ MARKER:  B = lua:tutorial4.msg("spellcasting")
 MARKER:  e = lua:tutorial4.msg("ring_power")
 MARKER:  C = lua:tutorial4.msg("undead")
 MARKER:  f = lua:tutorial4.msg("spell_success")
-MARKER:  g = lua:tutorial_msg4.mephitic_cloud()
-MARKER:  D = lua:tutorial_msg4.aiming_clouds()
-MARKER:  h = lua:tutorial_msg4.spell_hunger()
+MARKER:  g = lua:tutorial4.msg("mephitic_cloud")
+MARKER:  D = lua:tutorial4.msg("aiming_clouds")
+MARKER:  h = lua:tutorial4.msg("spell_hunger")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
-                                 onclimb = "tutorial_msg4.exit" }
+                                 onclimb = "tutorial4.exit" }
 epilogue{{
   crawl.tutorial_hint("HINT_NEW_LEVEL")
   crawl.mesclr(true)
@@ -246,60 +97,55 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 PLACE:   D:2
 ORIENT:  encompass
 KFEAT:   ABCDE = .
-COLOUR:  dABCDE = lightblue
-FTILE:   dABCDE = tutorial_pad
+COLOUR:  dABCDEe = lightblue
+FTILE:   dABCDEe = tutorial_pad
 ITEM:    scroll of amnesia
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
 ITEM:    never_decay bat skeleton / never_decay goblin; nothing skeleton
 ITEM:    never_decay ball python skeleton / never_decay jackal skeleton
-MONS:    hobgoblin always_corpse; shield not_cursed . ring mail race:none not_cursed
+ITEM:    shield race:none not_cursed
+ITEM:    ring mail race:none not_cursed
+MONS:    hobgoblin
 MONS:    rat
 MONS:    goblin
 MONS:    gnoll; nothing
-MARKER:  d = lua:tutorial_msg4.forget_spell()
-MARKER:  A = lua:tutorial_msg4.destroy_spellbook()
-MARKER:  e = lua:tutorial_msg4.memorise2()
-MARKER:  B = lua:tutorial_msg4.displace_allies()
-MARKER:  C = lua:tutorial_msg4.order_allies()
-MARKER:  D = lua:tutorial_msg4.heavy_armour()
-MARKER:  E = lua:tutorial_msg4.resting_reminder()
-MARKER:  } = lua:tutorial_msg4.tutorial_end()
-MARKER:  ) = lua:tutorial_msg4.tutorial_end()
-MARKER:  ] = lua:tutorial_msg4.tutorial_end()
+MARKER:  d = lua:tutorial4.msg("forget_spell")
+MARKER:  e = lua:tutorial4.msg("memorise2")
+MARKER:  B = lua:tutorial4.msg("displace_allies")
+MARKER:  C = lua:tutorial4.msg("order_allies")
+MARKER:  D = lua:tutorial4.msg("heavy_armour")
+MARKER:  E = lua:tutorial4.msg("resting_reminder")
+MARKER:  } = lua:tutorial4.msg("tutorial_end")
+MARKER:  ) = lua:tutorial4.msg("tutorial_end")
+MARKER:  ] = lua:tutorial4.msg("tutorial_end")
 MARKER:  } = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg4.win" }
+                                 onclimb = "tutorial4.win" }
 MARKER:  ) = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg4.win" }
+                                 onclimb = "tutorial4.win" }
 MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  desc = "exit from the tutorial", \
-                                 onclimb = "tutorial_msg4.win" }
+                                 onclimb = "tutorial4.win" }
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx......B.xxxx.T..xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx......B...x.fgf.xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxCCCxxxx...+.geg.....xxxxxxxxxxxxxxx
-xxxxxxxxxxx+++xxxxx..x.fgf.xxxx.Axxxxxxxxxxxxx
+xxxxxxxxxxx+++xxxxx..x.fgf.xxxx..xxxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxx.T..xxxxxx.xxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxdxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx...xxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx{([xxxxxxxxxx
 xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxDxxxxxxx.2..xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxxGx.....4]xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxGf+...2....xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx...Efg+......3.)xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxGg+...3....xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxGx.....2}xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx2...xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxx...xxxxxxxxxxxx.2..xxxxxxxxxx
+xxxxxxxxxxxx.xxx..h..xxxxxxxxGx.....4]xxxxxxxx
+xxxxxxxxxxxx.xxx.....xxxxxxxGf+...2....xxxxxxx
+xxxxxxxxxxxx......D........Efg+......3.)xxxxxx
+xxxxxxxxxxxxxxxx.....xxxxxxxGg+...3....xxxxxxx
+xxxxxxxxxxxxxxxx..i..xxxxxxxxGx.....2}xxxxxxxx
+xxxxxxxxxxxxxxxxx...xxxxxxxxxxxx2...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
