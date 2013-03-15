@@ -147,6 +147,10 @@ bool TilesFramework::initialise()
 
     _send_version();
 
+    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
+    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
+    m_cursor[CURSOR_MAP] = NO_CURSOR;
+
     // Initially, switch to CRT.
     cgotoxy(1, 1, GOTO_CRT);
 
