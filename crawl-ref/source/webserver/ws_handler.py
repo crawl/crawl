@@ -409,6 +409,36 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def pong(self):
         self.received_pong = True
 
+    def rcfile_path(self, game_id):
+        if game_id not in config.games: return None
+        path = dgl_format_str(config.games[game_id]["rcfile_path"],
+                                     self.username, config.games[game_id])
+        return os.path.join(path, self.username + ".rc")
+
+    def get_json_options(self, game_id):
+        if game_id not in config.games: return None
+
+        game = config.games[game_id]
+        call = [game["crawl_binary"],
+                "-name",   self.username,
+                "-rc",     self.rcfile_path(game_id)]
+
+        if "options" in game:
+            call += game["options"]
+        call.append("--print-json-options")
+
+        try:
+            out = subprocess.check_output(call)
+        except subprocess.CalledProcessError as e:
+            self.logger.warning(str(e))
+            out = None
+        return out
+
+    def send_json_options(self, game_id):
+        options = self.get_json_options(game_id);
+        if options != None:
+            self.write_message('{"msg":"options","options":' + options  + '}');
+
     def watch(self, username):
         if self.is_running():
             self.process.stop()
@@ -426,6 +456,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.joining = True
             process.add_watcher(self)
             self.send_message("watching_started")
+            if self.username:
+                self.send_json_options(process.game_params["id"]);
         else:
             self.go_lobby()
 
@@ -465,10 +497,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def get_rc(self, game_id):
         if game_id not in config.games: return
-        rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
-        rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
-        with open(rcfile_path, 'r') as f:
+        with open(self.rcfile_path(game_id), 'r') as f:
             contents = f.read()
         self.send_message("rcfile_contents", contents = contents)
 
