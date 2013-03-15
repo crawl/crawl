@@ -1659,13 +1659,6 @@ static bool _seal_doors(const monster* warden)
                 set_terrain_changed(dc);
                 dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
-                if (env.map_knowledge(dc).seen())
-                {
-                    env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
-#ifdef USE_TILE
-                    env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
-#endif
-                }
                 if (is_excluded(dc))
                     excludes.push_back(dc);
 
@@ -1674,9 +1667,24 @@ static bool _seal_doors(const monster* warden)
 
                 had_effect = true;
             }
-            update_exclusion_los(excludes);
+
             if (seen)
+            {
+                for (set<coord_def>::const_iterator i = all_door.begin();
+                     i != all_door.end(); ++i)
+                {
+                    if (env.map_knowledge(*i).seen())
+                    {
+                        env.map_knowledge(*i).set_feature(DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+                        env.tile_bk_bg(*i) = TILE_DNGN_CLOSED_DOOR;
+#endif
+                    }
+                }
+
+                update_exclusion_los(excludes);
                 ++num_closed;
+            }
         }
 
         // Try to seal the door
