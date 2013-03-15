@@ -4095,27 +4095,26 @@ static void _edit_save(int argc, char **argv)
 #undef FAIL
 
 #ifdef USE_TILE_WEB
+void _write_colour_list(const vector<pair<int, int> > variable,
+        const string &name)
+{
+    tiles.json_open_array(name);
+    for (unsigned int i = 0; i < variable.size(); i++) {
+        tiles.json_open_object();
+        tiles.json_write_int("value", variable[i].first);
+        tiles.json_write_int("colour", variable[i].second);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+}
+
 void game_options::write_json_options(const string& name)
 {
     tiles.json_open_object(name);
 
-    tiles.json_open_array("stat_colour");
-    for (unsigned int i = 0; i < Options.stat_colour.size(); i++) {
-        tiles.json_open_object();
-        tiles.json_write_int("value", Options.stat_colour[i].first);
-        tiles.json_write_int("colour", Options.stat_colour[i].second);
-        tiles.json_close_object();
-    }
-    tiles.json_close_array();
-
-    tiles.json_open_array("hp_colour");
-    for (unsigned int i = 0; i < Options.hp_colour.size(); i++) {
-        tiles.json_open_object();
-        tiles.json_write_int("value", Options.hp_colour[i].first);
-        tiles.json_write_int("colour", Options.hp_colour[i].second);
-        tiles.json_close_object();
-    }
-    tiles.json_close_array();
+    _write_colour_list(Options.hp_colour, "hp_colour");
+    _write_colour_list(Options.mp_colour, "mp_colour");
+    _write_colour_list(Options.stat_colour, "stat_colour");
 
     tiles.json_close_object();
 }
