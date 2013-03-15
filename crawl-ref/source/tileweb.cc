@@ -406,7 +406,7 @@ void TilesFramework::_send_version()
 {
 #ifdef WEB_DIR_PATH
     // The star signals a message to the server
-    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long().c_str());
+    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long);
 #endif
 
     string title = CRAWL " " + string(Version::Long);
