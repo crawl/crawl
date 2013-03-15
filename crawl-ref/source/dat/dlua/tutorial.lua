@@ -24,10 +24,6 @@ function tutorial_message (text, onetime)
   return function_at_spot('tutorial_messenger', data, true)
 end
 
-function tutorial_get_cmd (command)
-  return "<white>" .. crawl.get_command(command) .. "</white>"
-end
-
 function tutorial_intro (msg)
   if msg ~= nil then
     crawl.mesclr(true)
