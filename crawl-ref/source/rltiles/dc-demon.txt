@@ -11,6 +11,9 @@ demon_body_spotty
 demon_body_succubus
 demon_body_tentacley
 demon_body_thin
+demon_body_caterpillar
+demon_body_skeletal
+demon_body_mantis
 
 demon_head_boxes DEMON_HEAD
 demon_head_brain
@@ -31,6 +34,12 @@ demon_head_succubus
 demon_head_teeth
 demon_head_tentacles
 demon_head_worm
+demon_head_fly
+demon_head_frog
+demon_head_butterfly
+demon_head_hair
+demon_head_skull
+demon_head_cow_skull
 
 demon_wings_bat DEMON_WINGS
 demon_wings_bones
@@ -42,3 +51,6 @@ demon_wings_large
 demon_wings_medium
 demon_wings_red
 demon_wings_torn
+demon_wings_sparrow
+demon_wings_hooked
+demon_wings_knobs
