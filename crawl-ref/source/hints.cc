@@ -322,6 +322,22 @@ static void _replace_static_tags(string &text)
 
         text.replace(p, q - p + 1, item);
     }
+
+    // Brand user-input -related (tutorial) items with <w>[(text here)]</w>.
+    while ((p = text.find("<input>")) != string::npos)
+    {
+        size_t q = text.find("</input>", p + 7);
+        if (q == string::npos)
+        {
+            text += "<lightred>ERROR: unterminated <input></lightred>";
+            break;
+        }
+
+        string input = text.substr(p + 7, q - p - 7);
+        input = "<w>[" + input;
+        input += "]</w>";
+        text.replace(p, q - p + 8, input);
+    }
 }
 
 // Prints the hints mode welcome screen.

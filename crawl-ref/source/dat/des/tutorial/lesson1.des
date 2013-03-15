@@ -32,20 +32,20 @@ NAME:    tutorial_lesson1
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 1: Movement and Exploration"
 ORIENT:  encompass
-KFEAT:   ABCDE = .
-KFEAT:   HFI = '
-COLOUR:  ABCDEFHI = lightblue
+KFEAT:   ABC = .
+KFEAT:   DEF = '
+COLOUR:  ABCDEF = lightblue
 COLOUR:  ' = brown
-FTILE:   G'[ = floor_swamp, t = floor_grass
-FTILE:   ABCDEFHI$ = tutorial_pad
+FTILE:   '[ = floor_swamp, t = floor_grass
+FTILE:   ABCDEF = tutorial_pad
 MARKER:  A = lua:tutorial1.msg("go_on")
 MARKER:  B = lua:tutorial1.msg("diagonal")
 MARKER:  C = lua:tutorial1.msg("shiftmove")
 MARKER:  ) = lua:tutorial1.msg("downstairs")
 MARKER:  } = lua:tutorial1.msg("levelmap")
-MARKER:  F = lua:tutorial1.msg("autoexplore")
-MARKER:  H = lua:tutorial1.msg("exclusion")
-MARKER:  I = lua:tutorial1.msg("autoexplore_announce")
+MARKER:  D = lua:tutorial1.msg("autoexplore")
+MARKER:  E = lua:tutorial1.msg("exclusion")
+MARKER:  F = lua:tutorial1.msg("autoexplore_announce")
 MARKER:  [ = lua:tutorial1.msg("tutorial_end")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson1", \
                                  onclimb = "tutorial1.exit" }
@@ -67,7 +67,7 @@ xxxxxxxxxxxxxxxxxxxtttttttttt'''tttttttttttttxxxxxxxxx
 xxxxxxxxxxxxxxxxxttttttttttt'''''tttttttttttttttxxxxxx
 xxxxxxxxxxxxxxxxxtttttttttt'''''''tttttttttttttttxxxxx
 xxxxxxxxxxxxxxxxxxttttttttt'''[''''''ttttttttttttttxxx
-xxxxxxxxxxxxxxxxxxttttttttt'''''''ttt'I''ttttttttttttx
+xxxxxxxxxxxxxxxxxxttttttttt'''''''ttt'F''ttttttttttttx
 xxxxxxxxxxxxxxxxxxtttttttttt'''''tttttttt'''tttttttttt
 xxxxxxxxxxxxxxxxxxxtttttttttt'''tttttttttttt''tttttttt
 xxxxxxxxxxxxxxxxxxxxxxtttttttttttttttttttttttt'ttttttt
@@ -83,7 +83,7 @@ xxxxxxxxxxx......xxxxxxxxx.xxxxxxttttt''WlW''ttttttttt
 xxxxxxxxxxx..xxxxxxxxxxxxxx.xxxxxttttt''WWW''ttttttttt
 xxxxxxxxxxx.......Bxxxxxxxxx.xxxxtttttt'''''tttttttttt
 xxxxxxxxxxxxxxxxxxx.xxxxxxx.xxxxxttttttt'''ttttttttttt
-xxxxxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxtttttttHtttttttttttt
+xxxxxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxtttttttEtttttttttttt
 xxxxxxxxxxxxxxxxxxxxx.xxx.xxxxxxxtttttt''ttttttttttttt
 xxxxxxxxxxxxxxxxxxxxxx.x.xxxxxtxtttttt'ttttttttttttttt
 xxxxxxxxxxxxxxxxxxxxxxxCxxxxxxttttttt'tttttttttttttttt
@@ -91,7 +91,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttt'tttttttttttttttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttt'ttttttttttttttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttt''ttttttt'ttttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttt'''ttt'''tttt
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttt'F''}''ttt
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttt'D''}''ttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxttttttttttttt'''tttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttttt'ttttt
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxtttttttttttttttt
@@ -105,15 +105,13 @@ NAME:    tutorial_lesson1_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson1
 PLACE:   D:2
 ORIENT:  encompass
-KFEAT:   ABCD = .
-COLOUR:  ABCD = lightblue
-FTILE:   ABCD = tutorial_pad
+KFEAT:   ABC = .
+COLOUR:  ABC = lightblue
+FTILE:   ABC = tutorial_pad
 MARKER:  A = lua:tutorial1.msg("door")
+MARKER:  B = lua:tutorial1.msg("close_door")
 MARKER:  C = lua:tutorial1.msg("water")
 MARKER:  { = lua:tutorial1.msg("upstairs")
-MARKER:  l = lua:fog_machine { cloud_type = "steam", pow_min = 10, \
-             pow_max = 10, delay = 10, start_clouds = 1, size_min = 2, \
-             size_max = 2, spread_rate = 0 }
 epilogue{{
   crawl.mesclr(true)
   crawl.tutorial_msg("tutorial1 newlevel");
@@ -128,9 +126,9 @@ vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvwwwvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvv.www.vvvvvvvvvvvvv
-vv.....vvvv.n.vvv.wwwww.vvv...vvvvvv
-vv.(..A+....=.....wwwww...=.{.vvvvvv
-vv.....vvvv.n.vvv.wwwww.vvv...vvvvvv
+vv.....vvvv.v.vvv.wwwww.vvv...vvvvvv
+vv.(..A+....+B....wwwww...+.{.vvvvvv
+vv.....vvvv.v.vvv.wwwww.vvv...vvvvvv
 vvvvvvvvvvvvvvvvv.wwwww.vvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvCwwwww.vvvvvvvvvvvv
 vvvvvvvvvvvvvvvvv..www..vvvvvvvvvvvv
