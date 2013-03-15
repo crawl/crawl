@@ -26,7 +26,8 @@
 
   local meat_hydra =
     "eight-headed hydra hp:1000 hd:30 name:meat_hydra n_rpl n_des \
-     n_spe always_corpse col:lightred generate_awake spells:symbol_of_torment"
+     n_spe always_corpse col:lightred generate_awake spells:symbol_of_torment \
+     dbname:meat_hydra"
 
   local dread =
     "wraith hp:500 hd:50 name:dread n_rpl n_des n_spe \
