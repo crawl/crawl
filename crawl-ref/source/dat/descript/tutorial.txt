@@ -549,6 +549,103 @@ To check your spell proficiency, press
 over your memorised spells</localtiles>. Compare your spell success rates
 before and after wielding this staff.
 %%%%
+tutorial4 mephitic_cloud
+
+Mephitic Cloud is a level 3 spell, so you can't memorise it yet. Quaff this
+potion of experience (with <input>$cmd[CMD_QUAFF]</input><localtiles> or
+<input>mouseclick</input></localtiles>) to level up, and then memorise it!
+
+At experience level 3, you'll be able to increase one of your stats - choosing
+<input>I</input>ntelligence will help your spellcasting even further.
+%%%%
+tutorial4 aiming_clouds
+
+Mephitic Cloud covers an area in noxious fumes when cast, and you'll be able
+to see the area it affects as you target it. Try to catch multiple enemies in
+a single cloud in order to be more efficient with your magic.
+%%%%
+tutorial4 spell_hunger
+
+Spellcasting can make you really hungry. Spell hunger is higher for more
+difficult spells and can be reduced by high Intelligence and by training the
+Spellcasting skill.
+%%%%
+tutorial4 forget_spell
+
+Gaining an experience level and raising your Spellcasting skill gives you
+spell slots to spend on spells. You can also <w>forget a memorised spell</w>
+to make space for a new one. The easiest way to do this is with a scroll of
+amnesia. Simply read the scroll (with <input>$cmd[CMD_READ]</input><localtiles>
+or by <input>clicking</input> on it</localtiles>), and then select the spell
+you want to forget.
+%%%%
+tutorial4 memorise2
+
+Again, memorise a new spell with
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
+<input>clicking</input> on the memorisation tab and selecting the spell
+tile</localtiles>. And then raise yourself an undead army!
+%%%%
+tutorial4 displace_allies
+
+Did you notice you can swap positions with your allies by moving into them?
+Among other things, displacing a friendly creature can be a good way to escape
+a fight.
+%%%%
+tutorial4 order_allies
+
+Try to let your allies do the killing! If necessary, you can order them about
+with <input>$cmd[CMD_SHOUT]</input>. Before opening this gate, you may want to
+wait with <input>$cmd[CMD_MOVE_NOWHERE]</input> until your allies have caught
+up with you.
+%%%%
+tutorial4 heavy_armour
+
+# TODO: Split taking off into separate item.
+Heavy armour really hampers spellcasting. Try putting on that mail and shield
+(with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or by
+<input>clicking</input> on them)</localtiles>, and compare your spellcasting
+success rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
+<input>mouseovering</input> your memorised spells</localtiles>. You can take
+armour off again with <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> or,
+again, via <input>mouseclick</input></localtiles>.
+%%%%
+tutorial4 resting_reminder
+
+Make sure you are at full health and magic points before entering a new area.
+If necessary, rest up with <input>$cmd[CMD_REST]</input><localtiles> or by
+<input>mouseclick</input> in the command panel</localtiles>.
+
+Also, undead don't breathe, so you can cast Mephitic Cloud without harming
+your allies.
+%%%%
+tutorial4 tutorial_end
+
+Congratulations, you're a real wizard now! To exit the tutorial, simply go down
+these stairs.
+%%%%
+tutorial4 exit
+
+# A single screen recapping all commands.
+<yellow>Spellcasting commands</yellow>
+
+  <w>$cmd[CMD_MEMORISE_SPELL]</w>  learn a new spell
+  <w>$cmd[CMD_DISPLAY_SPELLS]</w>  check spell proficiency
+  <w>$cmd[CMD_CAST_SPELL]</w>  cast a spell
+
+<localtiles>     You can also learn new spells via the <w>memorisation tab</w>.
+
+     You can cast memorised spells via <w>leftclick</w>, and read their descriptions and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w></localtiles>
+
+
+  <w>$cmd[CMD_READ]</w>  read a book, for descriptions or to forget a spell
+  <w>$cmd[CMD_REST]</w>  rest up to 100 turns to regain magic points and health
+  <w>$cmd[CMD_SHOUT]</w>  order allies
+  <w>$cmd[CMD_REMOVE_ARMOUR]</w>  take off armour
+
+
+                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>
+%%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
 ##############################################
