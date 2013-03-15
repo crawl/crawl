@@ -15,7 +15,7 @@ function ($, comm) {
             return null;
         }
 
-        if (!name in data)
+        if (!name in options)
         {
             console.error("Option doesn't exist: " + name);
             return null;
