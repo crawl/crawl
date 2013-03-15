@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
         "./settings", "./enums", "./messages",
-        "./text", "./menu", "./player"],
+        "./text", "./menu", "./player", "./options"],
 function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, messages) {
     var layout_parameters = null, ui_state, input_mode;
     var stat_width = 42;
