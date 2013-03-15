@@ -2055,7 +2055,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_MULTI_PICKUP:
         text << "There are a lot of items here. You can pick them up one by one, "
-                "but you can also choose them from a menu: Type <w>%</w><w>%</w> "
+                "but you can also choose them from a menu: type <w>%</w><w>%</w> "
 #ifdef USE_TILE
                 "or <w>click</w> on the player doll "
 #endif
