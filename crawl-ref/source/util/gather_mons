@@ -67,6 +67,12 @@ for (grep /\.des$/, `git ls-files`)
         s|"\s*,\s*"|/|sg;
         vault_mon() for split m{/|,}; #/
     }
+
+    for (/local \w+ =\s*"([^"]+)"$/smg)
+    {
+        s/\\\n\s+//g;
+        vault_mon();
+    }
 }
 
 $mons{"freed slave"} = 1;
