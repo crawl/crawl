@@ -563,7 +563,7 @@ string savedir_versioned_path(const string &shortpath)
 {
 #ifdef DGL_VERSIONED_CACHE_DIR
     const string versioned_dir =
-        _get_base_savedir_path("cache." + Version::Long());
+        _get_base_savedir_path(string("cache.") + Version::Long);
 #else
     const string versioned_dir = _get_base_savedir_path();
 #endif
