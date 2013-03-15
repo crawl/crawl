@@ -276,6 +276,7 @@ protected:
     player_info m_current_player_info;
 
     void _send_version();
+    void _send_options();
 
     void _send_everything();
 

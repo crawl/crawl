@@ -4095,9 +4095,10 @@ static void _edit_save(int argc, char **argv)
 #undef FAIL
 
 #ifdef USE_TILE_WEB
-static void _write_json_options()
+void game_options::write_json_options(const string& name)
 {
-    tiles.json_open_object();
+    tiles.json_open_object(name);
+
     tiles.json_open_array("stat_colour");
     for (unsigned int i = 0; i < Options.stat_colour.size(); i++) {
         tiles.json_open_object();
@@ -4106,12 +4107,22 @@ static void _write_json_options()
         tiles.json_close_object();
     }
     tiles.json_close_array();
+
+    tiles.json_open_array("hp_colour");
+    for (unsigned int i = 0; i < Options.hp_colour.size(); i++) {
+        tiles.json_open_object();
+        tiles.json_write_int("value", Options.hp_colour[i].first);
+        tiles.json_write_int("colour", Options.hp_colour[i].second);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+
     tiles.json_close_object();
 }
 
 static void _print_json_options()
 {
-    _write_json_options();
+    Options.write_json_options("");
     printf("%s\n", tiles.get_message().c_str());
 }
 #endif

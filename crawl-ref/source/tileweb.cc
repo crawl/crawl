@@ -146,6 +146,7 @@ bool TilesFramework::initialise()
         _await_connection();
 
     _send_version();
+    _send_options();
 
     m_cursor[CURSOR_MOUSE] = NO_CURSOR;
     m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
@@ -433,6 +434,15 @@ void TilesFramework::_send_version()
 
     string title = CRAWL " " + string(Version::Long);
     send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
+}
+
+void TilesFramework::_send_options()
+{
+    json_open_object();
+    json_write_string("msg", "options");
+    Options.write_json_options("options");
+    json_close_object();
+    finish_message();
 }
 
 void TilesFramework::push_menu(Menu* m)
