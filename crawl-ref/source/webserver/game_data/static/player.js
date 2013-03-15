@@ -158,6 +158,15 @@ function ($, comm, enums, map_knowledge, messages) {
         {
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
         }
+
+        if (player.zp !== null)
+        {
+            $(".stats_zot_defense").show();
+            $("#stats_zp").text(player.zp);
+        }
+        else
+            $(".stats_zot_defense").hide();
+
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
@@ -237,6 +246,7 @@ function ($, comm, enums, map_knowledge, messages) {
                 mp: 0, mp_max: 0,
                 ac: 0, ev: 0, sh: 0,
                 xl: 0, progress: 0,
+                zp: null,
                 gold: 0,
                 str: 0, int: 0, dex: 0,
                 str_max: 0, int_max: 0, dex_max: 0,
@@ -248,6 +258,8 @@ function ($, comm, enums, map_knowledge, messages) {
                 wizard: 0,
                 depth: 0, place: ""
             });
+            delete player["old_hp"];
+            delete player["old_mp"];
             for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
                 player.equip[i] = -1;
             last_time = null;
