@@ -33,7 +33,6 @@
 #
 # In addition, some volcanos have extra items taken from:
 #   "Random item"
-#   "Bad items"                (see setup_loot() for the list)
 #   "Fruit"
 #
 # See setup_loot() for more information.
@@ -201,9 +200,6 @@ function setup_loot (e)
                                  "trident w:1", "glaive w:1", "halberd w:10", "lajatang w:10",
                                  "longbow w:5", "crossbow w:5"}))
     e.item("any")
-    e.item([[potion of decay / potion of degeneration / potion of mutation /
-             scroll of immolation / scroll of curse weapon / scroll of curse armour /
-             potion of confusion / potion of paralysis / scroll of random uselessness]])
 end
 
 -- #
@@ -215,144 +211,131 @@ end
 -- This function sets up two slots of monsters: in general, the first
 -- slot (say, 1) is the "surrounding" guardians, while the third slot
 -- is a "levelled" up version of the 1s. It's currently balanced for
--- two or three 1s, and one 2.
+-- two or three 1s, and one 2, alongside scattered 1s.
 --
--- Packs are basically as follows:
---  ("intelligent" packs; packs involving uniques)
---  orc warrior, orc warrior, orc warrior, Urug; orc warrior, orc warrior,
---  orc warrior, Blork the orc; orc warrior, orc warrior, orc warrior,
---  orc warrior/orc knight.
---  human, human, human, Edmund; human, human, human, human.
---  big kobold, big kobold, big kobold, Sonja; big kobold, big kobold,
---  big kobold, big kobold.
---  gnoll, gnoll, gnoll, Grum + war dogs; gnoll, gnoll, gnoll, gnoll.
---  (in "Tomb") mummy, mummy, mummy, Menkaure; mummy, mummy, mummy,
---  guardian mummy.
---  (no-unique packs, but still "intelligent")
---  deep elf fighter, deep elf fighter, deep elf fighter, deep elf
---  knight;
---  nothing, minotaur (all on its lonesome)
+-- HangedMan, March 2013:
+-- Humanoids mostly consistent of orcs, centaurs, or ogres with firey
+-- equipment, alongside rare minotaurs, deep elves, and mixed others.
+-- Otherwise, there are mixed sets of "natural" beasts, demons,
+-- and mostly-unliving monsters, with potentially a mix of all three.
+-- The weight for the first half is (slightly) lowered in lair.
+-- There are still a few uniques to echo the old set's intent of course.
 --
--- Natural "packs" usually consist of a few fire/red-themed monsters
--- surrounding either a lindwurm, fire drake, or manticore.
---
--- Demonic "packs" usually consist high chance of imps, toenail golems
--- and pulsating lumps, lower chance of red devils and hell hounds
--- which are then surrounding either a hell hog, a hell knight (with
--- watered-down equipment), flayed ghost or flaming corpse.
---
--- Mixed demonic/natural packs consist of mixes of the above.
---
--- Non-living packs consist of fire vortices and elementals, and are usually
--- mixed in with the above demonic packs.
 
-local urug = "Urug ; spear ego:flaming race:orcish . leather armour ego:fire_resistance race:orcish"
-local blork = "Blork the orc ; short sword race:orcish ego:flaming . leather armour ego:fire_resistance race:orcish"
-local edmund = "Edmund ; flail ego:flaming . leather armour ego:fire_resistance"
-local grum  = "Grum ; animal skin ego:fire_resistance"
-local hellknight = "hell knight w:1 ; hand axe ego:flaming . ring mail ego:fire_resistance"
-
-function fiery_humans (e)
-    -- This is for the village! Wargs and orcs if you came from orc
-    if you.in_branch("orc") then
-        local orc = "orc warrior ; ring mail ego:fire_resistance race:orcish | leather armour ego:fire_resistance \
-                     race:orcish"
-        e.mons("warg / " .. orc)
-        e.mons(orc)
-    -- But hogs and humans if you came from anywhere else.
-    else
-        local human = "human ; short sword ego:flaming | long sword ego:flaming . ring mail ego:fire_resistance"
-        e.mons("hog / " .. human)
-        e.mons(human)
+function fiery_guardians (e, village)
+    local humanweight = 5
+    if you.branch() == "Lair" then
+        humanweight = 4
     end
-end
+    local flame = "ego:flaming ident:type"
+    local res = "ego:fire_resistance ident:type"
 
-function fiery_guardians (e)
-    local guard_type = ""
-    local main_guard = ""
-    -- If we came from orc, we expect to only see orcs.
-    if you.in_branch("orc") then
-        -- We did, and maybe we'll place a unique.
-        if crawl.one_chance_in(9) then
-            e.mons("orc warrior ; spear race:orcish ego:flaming . leather armour ego:fire_resistance")
-            e.mons(urug .. " / " .. blork .. " / orc warrior ; trident race:orcish ego:flaming . ring mail ego:fire_resistance")
+    -- Weighings back and forth with humanoids or not.
+    if crawl.x_chance_in_y(humanweight, "10") or village then
+        local warriorstuff = "scimitar race:orcish " .. flame
+                             .. " | war axe race:orcish " .. flame
+                             .. " | halberd race:orcish " .. flame
+                             .. " . ring mail race:orcish " .. res
+                             .. " | scale mail race:orcish " .. res
+        local knightstuff = "great mace race:orcish " .. flame
+                            .. " | great sword race:orcish " .. flame
+                            .. " | glaive race:orcish " .. flame
+                            .. " . chain mail race:orcish " .. res
+                            .. " | splint mail race:orcish " .. res
+        local magestuff = "spear " .. flame
+                          .. " | whip " .. flame
+                          .. " . robe " .. res
+        local ogrestuff = "great mace " .. flame .. " | giant club " .. flame
+        local centaur = "centaur ; bow ego:none . arrow ego:flame"
+        local centaurstuff = "robe " .. res
+                             .. " . bow ego:flame ident:type . arrow"
+        local elfstuff = "long sword race:elven " .. flame
+                         .. " | short sword race:elven " .. flame
+                         .. " | leather armour race:elven " .. res
+                         .. " | ring mail race:elven " .. res
+        local dracstuff = "long sword " .. flame
+                          .. " | halberd " .. flame
+                          .. " | war axe " .. flame .. " . cloak"
+        if village then
+            e.mons("orc warrior ; " .. warriorstuff
+                  .. " / two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff
+                  .. " / " .. centaur
+                  .. " / deep elf fighter ; " .. elfstuff)
+            e.mons("fire bat / fire drake / hog / hell hound w:3")
             return
         end
-    -- We didn't, and maybe we'll place a unique.
-    elseif crawl.one_chance_in(9) then
-        -- We decided to use a unique.
-        local unq_weight = crawl.random2(40)
-        if unq_weight < 10 then
-            e.mons("human ; scimitar ego:flaming . leather armour ego:fire_resistance")
-            e.mons(edmund .. " / human ; falchion ego:flaming . scale mail ego:fire_resistance")
-        elseif unq_weight < 20 then
-            e.mons("big kobold ; short sword ego:flaming . leather armour ego:fire_resistance")
-            e.mons("Sonja / big kobold ; long sword ego:flaming . ring mail ego:fire_resistance")
-        elseif unq_weight <= 40 then
-            e.mons("gnoll ; halberd ego:flaming | w:2 scythe ego:flaming . scale mail ego:fire_resistance | \
-                    splint mail ego:fire_resistance")
-            e.mons(grum .. " / gnoll ; glaive ego:flaming . splint mail \
-                            ego:fire_resistance | plate armour ego:fire_resistance")
-        end
-    end
-
-    -- No unique, orcs!
-    if you.in_branch("orc") then
-        e.mons("orc warrior ; spear race:orcish ego:flaming . leather armour ego:fire_resistance")
-        e.mons("orc warrior ; trident race:orcish ego:flaming . ring mail ego:fire_resistance / \
-                orc knight ; scythe race:orcish ego:flaming . splint mail ego:fire_resistance")
-        return
-    end
-
-    -- No unique, minotaur!
-    if crawl.one_chance_in(10) then
-        -- It's a lone minotaur! labyrinth-esque.
-        e.mons("nothing")
-        e.mons("minotaur ; trident ego:flaming . splint mail ego:fire_resistance")
-        return
-    end
-
-    if crawl.one_chance_in(4) then
-        if crawl.coinflip() then
-            e.mons("big kobold ; short sword ego:flaming . leather armour ego:fire_resistance")
-            e.mons("big kobold ; long sword ego:flaming . ring mail ego:fire_resistance / kobold demonologist w:2")
+        local set_weight = crawl.random2(11)
+        if set_weight < 3 then
+            e.mons("orc warrior ; " .. warriorstuff)
+            e.kmons("2 = Urug ; javelin . " .. knightstuff
+                    .. " / orc knight w:20 ; " .. knightstuff
+                    .. " / orc sorcerer w:20 ; " .. magestuff
+                    .. ", orc knight ;" .. knightstuff
+                    .. " / orc sorcerer ; " .. magestuff)
+        elseif set_weight < 6 then
+            e.mons("two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff
+                   .. " / hill giant w:5 ; " .. ogrestuff
+                   .. " / ogre w:5 ; " .. ogrestuff)
+            e.kmons("2 = ogre mage w:40 ; " .. magestuff
+                    .. " / Erolcha ; " .. ogrestuff .. " . robe " .. res
+                    .. ", ogre mage ; " .. magestuff)
+        elseif set_weight < 9 then
+            e.mons(centaur
+                   .. " / yaktaur w:5 ; crossbow . bolt ego:flame ident:type")
+            e.kmons("2 = Nessos / centaur warrior w:40 ; " .. centaurstuff
+                    .. ", centaur warrior ; " .. centaurstuff)
+        elseif set_weight < 10 then
+           e.mons("nothing")
+           e.mons("minotaur ; " .. knightstuff)
+        elseif set_weight < 11 then
+           e.mons("deep elf fighter ; " .. elfstuff
+                  .. " / deep elf priest ; " .. elfstuff)
+           e.mons("deep elf knight ; " .. elfstuff)
         else
-            e.mons("deep elf fighter ; sabre ego:flaming race:elven")
-            e.mons("deep elf fighter ; sabre ego:flaming race:elven . chain mail ego:fire_resistance \
-                    race:elven / deep elf knight w:3 ; sabre ego:flaming race:elven . chain mail \
-                    ego:fire_resistance race:elven")
+        -- Mix of the above and worse.
+           e.mons("orc warrior ; " .. warriorstuff
+                  .. " / two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff
+                  .. " / " .. centaur
+                  .. " / deep elf fighter ; " .. elfstuff)
+           e.kmons("2 = Harold ; halberd " .. flame
+                   .. " . ring mail  " .. res
+                   .. " / red draconian " .. dracstuff
+                   .. " / mottled draconian " .. dracstuff
+                   .. ", red draconian " .. dracstuff
+                   .. " / mottled draconian " .. dracstuff)
         end
-        return
+    else
+    -- Unintelligent map! We are now going to use a mixed pack.
+        local hellknight = "hell knight ; long sword " .. flame
+                           .. " | halberd " .. flame
+                           .. " | war axe " .. flame
+                           .. " . chain mail " .. res
+                           .. " | splint mail " .. res
+        local set_weight = crawl.random2(8)
+        if set_weight < 3 then
+            -- "Lair"-esque monster pack.
+            e.mons("komodo dragon w:3 / fire bat band / fire drake / manticore"
+                   .. " / hell hound w:3")
+            e.mons("mottled dragon w:4 / lindwurm w:4 / dragon w:1"
+                   .. " / fire crab w:1")
+        elseif set_weight < 5 then
+            -- "Demonic" monster pack.
+            e.mons("crimson imp / red ugly thing / toenail golem"
+                   .. " / hell hound w:8"
+                   .. " / red devil ; trident ego:flaming ident:type")
+            e.mons("efreet / sun demon / smoke demon / " .. hellknight)
+        elseif set_weight < 7 then
+            -- Unliving themed pack.
+            e.mons("molten gargoyle / fire elemental / toenail golem"
+                   .. " / red ugly thing / earth elemental / fire vortex")
+            e.mons("efreet / molten gargoyle / flaming corpse")
+        else
+            -- Let's go all out.
+            e.mons("hell hound / fire drake / toenail golem / fire elemental"
+                   .. " / komodo dragon")
+            e.mons(hellknight .. " / fire crab")
+        end
     end
-
-    -- Unintelligent map!
-    -- We are now going to use a mixed pack.
-    if crawl.one_chance_in(3) then
-        -- "Lair"-esque fire-themed monster pack.
-        e.mons("hog / worker ant / redback w:1 / manticore")
-        e.mons("fire drake / lindwurm w:1")
-        return
-    end
-
-    if crawl.one_chance_in(3) then
-        -- "Demonic" fire-themed monster pack.
-        e.mons("crimson imp w:20 / pulsating lump / toenail golem / hell hound w:9 / \
-                / red devil ; trident ego:flaming")
-        e.mons("efreet / flaming corpse / flayed ghost / hell hog / vampire / " .. hellknight)
-        return
-    end
-
-    if crawl.coinflip() then
-        -- Demonic/unliving themed pack.
-        e.mons("crimson imp / fire elemental / toenail golem / pulsating lump / hell hound / fire vortex")
-        e.mons("efreet / vampire / " .. hellknight)
-        return
-    end
-
-    -- Finally, if we reach this stage, let's go all out.
-    e.mons("hell hound / hog / toenail golem / fire elemental / crimson imp")
-    e.mons(hellknight)
-    return
 end
 
 function volcano_caves_collapse_doorways(data, triggerable, triggerer,
@@ -444,33 +427,6 @@ default-depth: Lair:1-8, Orc:1-4
 ###############################################################################
 # Entries:
 
-# [ds] A dummy entry that's a proof-of-concept for synchronized fog machines
-# that trigger at multiple places at the same instant, but still have a random
-# delay.
-NAME: enter_volcano_snarktest101
-TAGS: uniq_volcano
-ORIENT: float
-WEIGHT: 0
-{{
-  local fog = chained_fog_machine {
-                            cloud_type = 'flame',
-                            size = 3, pow_min=2,
-                            pow_max = 5, delay_min = 22, delay_max = 120
-                          }
-  lua_marker('m', fog)
-}}
-SUBST: m = .
-:           volcano_portal(_G)
-MAP
-.......
-...m...
-.......
-.m.O.m.
-.......
-...m...
-.......
-ENDMAP
-
 NAME:       enter_volcano_1
 :           volcano_portal(_G)
 MAP
@@ -545,80 +501,84 @@ default-depth: Volcano
 # since been forgotten... the temple guardians still remain
 # and are ready to fight to the death.
 NAME:       volcano_grotto
-WEIGHT:     60
+WEIGHT:     50
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen
 SUBVAULT:   B : volcano_grotto_subvault
-KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:120
+KMONS:      l = lava snake w:2 / lava fish w:5 / fire bat w:1 / nothing w:119
 KFEAT:      l = l
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
 MAP
-                         xxxx
-                    xxxxxxyyxxxx
-                 xxxxy......yyyxx
-              xxxxyyy.LLLLL....yxxx
-            xxxyyy...LlllllL.....Gxxxxxxxx
-          xxxyy....LLlllllllL...........yxxx
-        xxxyy....LLlllllllllL....Gxxxyy..yyxx
-       xxyy.....LllllllllllllL..yxx xxy.y..yxx
-      xxy......LlllllllllllllL..yxxx xxyxx.yyx
-     xxy......LlllllllllllllllL..yyxx xxy..yxx
-    xxy.....LllllllllllllllllllL..yyxxxxxy.xx
-   xxy.....LllllllllllllllllllllL....yx xxy.xx
-  xxy....LllllllllllVlllllllllllL...yxx  xxy.x
-  xy....LlllllllllllllllllllllLL...yxx    xx.x
-  xxy....LlllllllllllllllllllL....yxx    xx.xx
-   xy.....LlllllllllllllllllLL...yxx     xx.x
-   xy.y...LllllllllllllllllLL...yxx      x.yx
-   xxyxy...LllllllllllllllL...yyxBBBBBBBBBBBBBBBBBBB
-    xxxxy...LllllllllllllL...yxxxBBBBBBBBBBBBBBBBBBB
-       xxy...LL....LlllllL..yxx  BBBBBBBBBBBBBBBBBBB
-        xxy....xxx..LlllL...yx   BBBBBBBBBBBBBBBBBBB
-         xy.yxxx<xxy.LLL...yxx   BBBBBBBBBBBBBBBBBBB
-         xx.xx....xxx.....yxx    BBBBBBBBBBBBBBBBBBB
-          x.xxx.....xxy....yx    BBBBBBBBBBBBBBBBBBB
-          xx..xxxAxx.xxy..yxx    BBBBBBBBBBBBBBBBBBB
-           xxx..xxx.xxxx..xx     BBBBBBBBBBBBBBBBBBB
-             xxx.x.xx  xxxx      BBBBBBBBBBBBBBBBBBB
-               x...x             BBBBBBBBBBBBBBBBBBB
+                                    BBBBBBBBBBB
+                                    BBBBBBBBBBB
+                                    BBBBBBBBBBB
+                                    BBBBBBBBBBB
+                         xxxx       BBBBBBBBBBB
+                    xxxxxxyyxxxx    BBBBBBBBBBB
+                 xxxxy......yyyxx   BBBBBBBBBBB
+              xxxxyyy.LLLLL....yxxx BBBBBBBBBBB
+            xxxyyy...LlllllL.....GxxBBBBBBBBBBB
+          xxxyy....LLlllllllL......BBBBBBBBBBBB
+        xxxyy....LLlllllllllL....GxxBBBBBBBBBBB
+       xxyy.....LllllllllllllL..yxx BBBBBBBBBBB
+      xxy......LlllllllllllllL..yxxxBBBBBBBBBBB
+     xxy......LlllllllllllllllL..yyxBBBBBBBBBBB
+    xxy.....LllllllllllllllllllL..yyBBBBBBBBBBB
+   xxy.....LllllllllllllllllllllL...BBBBBBBBBBB
+  xxy....LllllllllllVlllllllllllL...BBBBBBBBBBB
+  xy....LlllllllllllllllllllllLL...yBBBBBBBBBBB
+  xxy....LlllllllllllllllllllL....yxBBBBBBBBBBB
+   xy.....LlllllllllllllllllLL...yxx
+   xy.y...LllllllllllllllllLL...yxx
+   xxyxy...LllllllllllllllL...yyx
+    xxxxy...LllllllllllllL...yxxx
+       xxy...LL....LlllllL..yxx
+        xxy....xxx..LlllL...yx
+         xy.yxxx<xxy.LLL...yxx
+         xx.xx....xxx.....yxx
+          x.xxx.....xxy....yx
+          xx..xxxAxx.xxy..yxx
+           xxx..xxx.xxxx..xx
+             xxx.x.xx  xxxx
+               x...x
                xxxxx
 ENDMAP
 
 NAME:  vgs_original
-TAGS:  volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:  volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
 KFEAT: _ = altar_makhleb / altar_trog / altar_vehumet
 #      Sets up the temple guardians.
 :      fiery_guardians(_G)
-MONS:  clay golem w:50 / molten gargoyle w:2
+MONS:  clay golem w:18 / molten gargoyle w:2
 #      Loot: 9 items, 8 gold.
 :      volcano_setup(_G)
 MAP
+         .
 xxxxxxxxx+xxxxxxxxx
 xcccccxx...xxcccccx
-xc...cx.....xc....x
+xc.1.cx.....xc.1..x
 ccd$ecc..<..ccd$fcc
 c.$f$.c.....c.$e$.c
 c.g$g.ccc+ccc.g$g.c
 cc.3.ccc...ccc.3.cc
-xc...+..111..+...cx
+xc...+..1.1..+...cx
 xcccccccG_Gcccccccx
 xxxxxxxc.2.cxxxxxxx
 xxxxxxxcccccxxxxxxx
 ENDMAP
 
 NAME:   vgs_dualism
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
-KFEAT:  B = altar_makhleb / altar_trog / altar_vehumet
-KFEAT:  C = altar_makhleb / altar_trog / altar_vehumet
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
+KFEAT:  BC = altar_makhleb / altar_trog / altar_vehumet
 #       Place the door.
 NSUBST: X = 1:+ / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 #       Loot: 8 items.
 :       volcano_setup(_G)
-COLOUR: + = red
 MAP
+         .
 xxxxxxxxx+xxxxxxxxx
 x...xxxx...xxxx...x
 x.B.xxx..<..xxx.C.x
@@ -633,45 +593,46 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_hot_hot_hot
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Place the doors.
 NSUBST: X = 1:+ / 1:G / *:x
 NSUBST: Y = 1:+ / 1:G / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
-KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
-KFEAT:  l = l
+KMONS:  3 = lava snake / lava fish w:20 / lava worm
+KFEAT:  3 = l
+NSUBST: 3 = 3:4 / 2 = 4. / *:l
 #       Loot: 8 items.
 :       volcano_setup(_G)
 COLOUR: + = red
 MAP
+         .
 xxxxxxxxx.xxxxxxxxx
 xxx..xxxx.xcccccccc
-xx.xx..x.xxc.l.ldlc
-x.xXXXx.xxccl1l.lec
-x.xXgXxxxxGc.l.l.lc
-xx.XXX..<...l2l.l.c
-xx.xx.xxxxGc.l.l.lc
-xx.xxx.xccccl1l.lfc
-x.xx..YYc....l.lelc
-xx..xxYgc._.l.ldlfc
+xx.xx..x.xxc.3.3d3c
+x.xXXXx.xxcc313.3ec
+x.xXgXxxxxGc.3.3.3c
+xx.XXX..<...313.32c
+xx.xx.xxxxGc.3.3.3c
+xx.xxx.xcccc313.3fc
+x.xx..YYc....3.3e3c
+xx..xxYgc._.3.3d3fc
 xxxxxxxxccccccccccc
 ENDMAP
 
 NAME:   vgs_many_chambers
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Place the doors.
-NSUBST: X = 1:+ / *:x
-NSUBST: Y = 1:+ / *:x
+NSUBST: X = 1:+ / *:x, Y = 1:+ / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
-MONS:   clay golem w:50 / molten gargoyle w:2
+MONS:   clay golem w:18 / molten gargoyle w:2
 #       Loot: 8 items, 10 gold.
 :       volcano_setup(_G)
-COLOUR: + = red
 MAP
+         .
 xxxxxxxxx+xxxxxxxxx
 xx....xx...xx....xx
 x$...1.+.<.+.1...$x
@@ -686,7 +647,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_firespitter
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
@@ -699,13 +660,14 @@ MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a 
 #       Loot: 12 items, 6 gold.
 :       volcano_setup(_G)
 MAP
+         .
 xxxxxxxxc+cxxxxxxxx
 xcccccccc.ccccccccx
 xc$$$gggc.......<cx
 xc...defc....cccccx
-xcll...cc...1.1.ccx
-xcGl....+....2._.cx
-xcll...cc...1.1.ccx
+xc.l...cc...1...ccx
+xcGl1...+....21_.cx
+xc.l...cc...1...ccx
 xc...defc....cccccx
 xc$$$gggc.......<cx
 xcccccccccccccccccx
@@ -713,7 +675,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_trial_of_fire_spitters
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
@@ -724,35 +686,38 @@ MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large dragon. It
 #       Loot: 10 items.
 :       volcano_setup(_G)
 MAP
+         .
 xxxxxxxxx+xxxxxxxxx
-xcccccccc.........x
-xc.....cccccccccc.x
+xxccccccc........xx
+xccg...ccccccccc..x
 xc...c.cFcFcFcFcc.x
 xc121c.c.c.c.c.cc.x
 xcdgdc.c.c.c.c.c..x
 xceCecc.c.c.c.c.cGx
 xcfgfcc.c.c.c.c.cxx
-xcg<gccFcFcFcFcFcxx
+xcc<gccFcFcFcFcFcxx
 xccccccccccccccccxx
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_trial_of_fire_lashers
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 KMONS:  G = statue name:lasher name_adjective \
         tile:mons_statue_whip \
         generate_awake ; whip ego:flaming
-KMONS:  l = lava fish / lava worm / nothing
-KFEAT:  l = l
+KMONS:  4 = lava snake / lava fish w:20 / lava worm
+KFEAT:  4 = l
+NSUBST: l = 3:4 / 2 = 4. / *:l
 #       Loot: 10 items.
 :       volcano_setup(_G)
 MAP
+         .
 xcccccccx+xxxxxxxxx
 xc.....cc.cxxxxxxxx
-xc...cc.c.cccccxxxx
+xc...cl.c.cccccxxxx
 xc...c.cc..cGccxxxx
 xc...c.lccc.cGcccxx
 xc121c.llcGc.ccGcxx
@@ -772,19 +737,18 @@ ENDMAP
 # what magic spells keep this structure afloat, and its occupants from roasting
 # to death!
 NAME:       volcano_lake
-WEIGHT:     60
+WEIGHT:     50
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 KFEAT:      _ = altar_makhleb / altar_trog / altar_vehumet
-KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:900
+KMONS:      l = lava snake w:2 / lava fish w:5 / fire bat w:1 / nothing w:899
 KFEAT:      l = l
 #           Let's choose a path from m, u, z, i, r, n
-SHUFFLE:    m/u/z/i/r/n
-SUBST:      m = .
-SUBST:      u = l, z = l, i = l, r = l, n = l
+SHUFFLE:    muzirn
+SUBST:      m = ., u : l:19 .:1, zirn = l
 #           Sets up the temple guardians.
 :           fiery_guardians(_G)
-MONS:       clay golem w:50 / molten gargoyle w:2
+KMONS:      3 = clay golem w:18 / molten gargoyle w:2
 #           Loot: 10 items, 6 gold.
 :           volcano_setup(_G)
 :           place_lake_volcanoes(_G, {"M", "E", "V", "Q", "T", "S"})
@@ -841,63 +805,58 @@ ENDMAP
 # Instead, we have randomly placed loot in little rooms off the central chamber.
 # Nice place to take a holiday, wouldn't want to live here...
 NAME:       volcano_pools
-WEIGHT:     60
+WEIGHT:     50
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
-#           Sets up the temple guardians.
+#           Sets up the volcano guardians.
 :           fiery_guardians(_G)
-MONS:       clay golem w:50 / molten gargoyle w:2
 #           Loot: 10 items, 6 gold; done in volcano_setup.
-SHUFFLE:    T/Q/B/Y/R
-#           Do the loot first, 10 objects: two monsters (1, 2)
+SHUFFLE:    TQBYR
+#           Do the loot first, 9 objects: two monsters (1, 2)
 NSUBST:     T = 2:1 / 1:2 / 1:d / 1:e / 2:$ / 2:f / 2:g
-NSUBST:     Q = 2:1 / 1:1 / 2:d / 2:e / 2:$ / 1:f / 1:g
+NSUBST:     Q = 2:1 / 1:1. / 2:d / 2:e / 2:$ / 1:f / 1:g
+NSUBST:     Y = 1:1 / *:.
 #           Now the entrance:
 NSUBST:     B = 1:A / *:.
-#           Loot + 10 trashy items.
-SUBST:      R = h
-NSUBST:     Y = 2:1 / *:.
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
 KFEAT:      J = l
 MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MAP
-          xxx
-         xxyxx
-        xxyTyxx  xxx
-       xxTTTTyxxxxxxxx
-      xxlLTTTy.xx...yxx                                xxx
-     xxlllTT<.y..yxx.xxx                              xxyxx
-     xxllllLTLxxxxxy.x.xx                    xxxxxxxxxxyQyxx
-      xxJlllllxx  xxy..yxx                  xxy...xyQyQQ.LLxx
-       xxxxllxx    xxxy..xx              xxxy..yxx.QQQQ.LllLxx
-          xxxx       xxyy.x            xxxy..yxxxxlLQQ<Llllllxx
-                      xyy.x          xxxy..yxxxxxlllLlLllllllJxx
-                     xx..xxxxx      xxy..yxxxx xxlllllllllllxxx
-                     x.yxxxxyxxxxxxxxy.yxxxxx   xxlllllllxxxx
-                     x...xy..xxy..yxx.yx         xxxJllxxx
-                    xx.............y.xxx           xxxxx
-                   xxy...LlLlLlL....xyxx          xxx
-                  xxy...LllllllllL....yx          xJx
-                  xy...LllllllllllL....x         xxllx
-                 xy...LlllllVllllL....xx        xxlllxx
-                 xy...LlllllllllllL....x       xxlLLllx
-               xxx....LlllllllllL....yxxxx    xxlLRRLlx
-            xxxxy.xy....LllLlLlL.......xyxx  xxy<RRRRyx
-           xxy...yxxyy..............yxx..yxxxxy.RRRRyxx
-         xxxy.xxxxxxxxyyxxxyyxy.yyyxxxxxx..xy..yy.Ryxx
-      xxxxx..yx      xxxx xxxxxx.xxxxxx xxy..yxxxxxxx
-     xxyxy.Lyxxxxx            xx.y<yYyx  xxyxxx
-     xyByy.LllllJx           xxyyYYYyyx   xxx
-    xy<BBB.Lllllx           xxyYYYYYyxx
-    xLBBBBLlllllx           xxllLYYlLLx
-    xxLBBBLllllxx            xxllLlllxx
-    xlllLLlllxx               xxllllxx
-    xlllllllxx                 xxxllx
-    xxllllxxx                    xJxx
-     xxxJlxx                     xxx
-       xxxx
+                               xxxx
+              xxxx            xxllxx
+             xxllx           xxLlllx
+             xJlllxx        xxLllllx
+             xlllLTxx      xxyLllllxx
+            xxllTTTyxx     xyQ.Lllllx
+            xllLTTTTyx     xxyQ.Llllxx
+            xllT<TTyxx      xxQQ<Llllx
+            xxlL.yyxx        xyQQllllx
+             xxxy.xx         xQQQLllJx
+             xxx.xxxxxx      xyQLlllxx
+             xy.yxxxxyxxxxxxxxx.llllx
+             xx...xy..xxy..yxx.xxllxx
+             xx.............y.xxxxx
+            xxy...LlLlLlL....xyxx      xxx
+           xxy...LllllllllL....yx      xJx
+           xy...LllllllllllL....x     xxllx
+          xy...LlllllVllllL....xx    xxlllxx
+          xy...LlllllllllllL....x   xxlLLllx
+        xxx....LlllllllllL....yxxxxxxlLRRLlx
+     xxxy........LllLlLlL.......xyxxy<RRRRyx
+    xxx..yxyyxy..............yxx..yy.RRRRyxx
+ xxyxy.Lyxxxxxxyyxxxyyxy.yyyxxxxxx..yy.Ryxx
+ xyByy.LllllJxxxxx xxxxxx.xxxxxx xxxxxxxxx
+xy<BBB.Lllllxx         xx.y<yYyx  xxxx
+xLBBBBLlllllx         xxyyYYYyyx
+xxLBBBLllllxx        xxyYYYYYyxx
+xlllLLlllxx          xxllLYYlLLx
+xlllllllxx            xxllLlllxx
+xxllllxxx              xxllllxx
+ xxxJlxx                xxxllx
+   xxxx                   xJxx
+                          xxx
 ENDMAP
 ###############################################################################
 
@@ -920,24 +879,24 @@ MAP
                  xxxx
             xxxxxxyyxxxxx
           xxxy..yy.....yxxxx
-         xxy........yyx...yxxx        BBBBBBBBBBBBBBBBBBBBBBBBBBB
-       xxxy.................yxxx      BBBBBBBBBBBBBBBBBBBBBBBBBBB
-     xxxy.........LLLL........yxxx    BBBBBBBBBBBBBBBBBBBBBBBBBBB
-    xxy.........LLllllLL........yxxx  BBBBBBBBBBBBBBBBBBBBBBBBBBB
-   xxy..<..A...LllllllllLLL.......yxxxBBBBBBBBBBBBBBBBBBBBBBBBBBB
-  xxy.........LlllllllllllllLLL.....yxBBBBBBBBBBBBBBBBBBBBBBBBBBB
- xxy........LLlllllllllllllllllLLL...lBBBBBBBBBBBBBBBBBBBBBBBBBBB
-xxy....LLlLlllllllllllllllllllllllL...BBBBBBBBBBBBBBBBBBBBBBBBBBB
-xy....LlllllllllllllllllllllllllL....lBBBBBBBBBBBBBBBBBBBBBBBBBBB
-xLl.LllllllllllllllllllllllllllllL..yxBBBBBBBBBBBBBBBBBBBBBBBBBBB
-xlllllllllllllllllGlllllllllllllllLLxxBBBBBBBBBBBBBBBBBBBBBBBBBBB
-xxlllllllllllllGlllllGlllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBBB
- xxlllllllllllllllllllllllllllllllxx  BBBBBBBBBBBBBBBBBBBBBBBBBBB
-  xxullllllllGllllVllllGlllllllluxx   BBBBBBBBBBBBBBBBBBBBBBBBBBB
-   xxxlllllllllllllllllllllllllxxx    BBBBBBBBBBBBBBBBBBBBBBBBBBB
-     xxllllllllGlllllGlllllllxxx      BBBBBBBBBBBBBBBBBBBBBBBBBBB
-      xxllllllllllGlllllllllxxx       BBBBBBBBBBBBBBBBBBBBBBBBBBB
-       xxllllllllllllllllllxxx        BBBBBBBBBBBBBBBBBBBBBBBBBBB
+         xxy........yyx...yxxx        BBBBBBBBBBBBBBBBBBBBBBBBBB
+       xxxy.................yxxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
+     xxxy.........LLLL........yxxx    BBBBBBBBBBBBBBBBBBBBBBBBBB
+    xxy.........LLllllLL........yxxx  BBBBBBBBBBBBBBBBBBBBBBBBBB
+   xxy..<..A...LllllllllLLL.......yxxxBBBBBBBBBBBBBBBBBBBBBBBBBB
+  xxy.........LlllllllllllllLLL.....yxBBBBBBBBBBBBBBBBBBBBBBBBBB
+ xxy........LLlllllllllllllllllLLL...lBBBBBBBBBBBBBBBBBBBBBBBBBB
+xxy....LLlLlllllllllllllllllllllllL...BBBBBBBBBBBBBBBBBBBBBBBBBB
+xy....LlllllllllllllllllllllllllL....lBBBBBBBBBBBBBBBBBBBBBBBBBB
+xLl.LllllllllllllllllllllllllllllL..yxBBBBBBBBBBBBBBBBBBBBBBBBBB
+xlllllllllllllllllGlllllllllllllllLLxxBBBBBBBBBBBBBBBBBBBBBBBBBB
+xxlllllllllllllGlllllGlllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBB
+ xxlllllllllllllllllllllllllllllllxx  BBBBBBBBBBBBBBBBBBBBBBBBBB
+  xxullllllllGllllVllllGlllllllluxx   BBBBBBBBBBBBBBBBBBBBBBBBBB
+   xxxlllllllllllllllllllllllllxxx    BBBBBBBBBBBBBBBBBBBBBBBBBB
+     xxllllllllGlllllGlllllllxxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
+      xxllllllllllGlllllllllxxx       BBBBBBBBBBBBBBBBBBBBBBBBBB
+       xxllllllllllllllllllxxx        BBBBBBBBBBBBBBBBBBBBBBBBBB
         xxxllllllllllllllxxx
           xxxlxxlxxxxlxxxx
             xxxxxx  xxx
@@ -947,10 +906,9 @@ NAME:    vts_original
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror
 #        We have a specific monster set for this vault.
-MONS:    mummy
-MONS:    menkaure / guardian mummy
-MONS:    fire drake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
-MONS:    mummy
+KMONS:   12 = mummy / vampire w:12
+KMONS:   3 = guardian mummy / Menkaure w:5, guardian mummy
+MONS:    fire drake skeleton / lindwurm skeleton w:5 / manticore skeleton / hell hound skeleton
 #        Loot: 4 gold, 8 items.
 :        volcano_setup(_G)
 SHUFFLE: 12K
@@ -959,26 +917,25 @@ MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MARKER:  K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
-# If mummies ever start to use items, please re-rune the doors.
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxyyxxx
-xxxxxxxxxxxxxxxxxxxy.y..Lxx
-xxxxxxxxxxcccccccxy.y.3Lllx
-xxxxxxxxxxc..Y..cy.xxxLlllx
-cxxxxxxxccc.....+.xxxxxllJx
-cccccccccGc..3..cccxxxxxxxx
-.....+....+.3<3.+Kcxxxxxxxx
-cccccccccGc..3..cccxxxxxxxx
-cxxxxxxxccc.....cxxxxxxxxxx
-xxxxxxxxc1c..Y..cxxxxxxxxxx
-xxxxxxxcc+ccccc+ccxvvvvvvxx
-xxxxxccc.........ccv$defvxx
-xxxxxc2+.lllllll.+4+ge$fvxx
-xxxxxccc.........ccv$defvxx
-xxxxxxxcc+ccccc+ccxvvvvvvxx
-xxxxxxxxc1cxxxcKcxxxxxxxxxx
-xxxxxxxxcccxxxcccxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxyyxxx
+xxxxxxxxxxxxxxxxxxy.y..Lxx
+xxxxxxxxxcccccccxy.y.4Lllx
+xxxxxxxxxc..Y..cy.xxxLlllx
+cxxxxxxccc.....+.xxxxxllJx
+ccccccccGc..4..cccxxxxxxxx
+....+....+.4<4.+Kcxxxxxxxx
+ccccccccGc..4..cccxxxxxxxx
+cxxxxxxccc.....cxxxxxxxxxx
+xxxxxxxc1c..Y..cxxxxxxxxxx
+xxxxxxcc+ccccc+ccxvvvvvvxx
+xxxxccc.........ccv$defvxx
+xxxxc2+.lllllll.+4+ge$fvxx
+xxxxccc.........ccv$defvxx
+xxxxxxcc+ccccc+ccxvvvvvvxx
+xxxxxxxc1cxxxcKcxxxxxxxxxx
+xxxxxxxcccxxxcccxxxxxxxxxx
 ENDMAP
 
 NAME:    vts_chambers
@@ -993,38 +950,34 @@ NSUBST:  r = 2:r / *:.
 NSUBST:  s = 2:s / *:.
 KFEAT:   r = bolt trap
 KFEAT:   s = spear trap
-#        The monsters. The patrolling tag seems to keep them from wandering
-#        around. It might also be keeping them from "answering" the alarm
-#        traps though.
-MONS:    patrolling mummy
-MONS:    human skeleton / elf skeleton / dwarf skeleton / merfolk skeleton / \
+#        The monsters.
+MONS:    mummy / vampire
+MONS:    manticore skeleton / ogre skeleton / spriggan skeleton / centaur skeleton / \
          tengu skeleton
-MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
-         minotaur skeleton
-MONS:    patrolling menkaure / patrolling guardian mummy
+MONS:    hill giant skeleton / troll skeleton / draconian skeleton / naga skeleton / \
+         minotaur skeleton / sphinx skeleton w:5
+KMONS:   4 = guardian mummy / Menkaure w:5, guardian mummy
 #        Loot: 21 gold, 10 items.
-# TODO: should the ex-secret doors be runed or ordinary?
-SUBST:   = = +
 :        volcano_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxcccccxxxxxxxxxxxxxxxxx
-xxxxxc...cxxxxxxxxxxxxxxxxx
-xxxxcc.<.cccxxxccccvvvvvxxx
-xxccc......ccccc..$X$$$vxxx
-cxc1.........3....$X$$$vxxx
-ccccc.c2.c.ccccc..$X$$$vxxx
-....+...2..cxxxccccvv=vvxxx
-ccccc.c2.c.ccccc..$Xsssvxxx
-cxc1.........3....$Xsssvxxx
-xxccc......ccccc..$Xsssvxxx
-xxxxcc.cc.ccddeccYvvvv=vxxx
-xxxxxc3cc3c1eeg+!.=4Yttvvvx
-xxxccc.cc.cccccccYvvvtt=1vx
-xxxc...cc...crrrc..3v=vvvvx
-xxxc...cc...crrr+.3.vffvxxx
-xxxc$$$cc$$$+rrrc3..=fgvxxx
-xxxcccccccccccccccccvvvvxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxcccccxxxxxxxxxxxxxxxxx
+xxxxc...cxxxxxxxxxxxxxxxxx
+xxxcc.<.cccxxxccccvvvvvxxx
+xccc......ccccc..$X$$$vxxx
+cc1.........3....$X$$$vxxx
+cccc.c2.c.ccccc..$X...vxxx
+...+...2..cxxxccccvv+vvxxx
+cccc.c2.c.ccccc..$Xsssvxxx
+cc1.........3....$Xsssvxxx
+xccc......ccccc..$Xsssvxxx
+xxxcc.cc.ccddeccYvvvv+vxxx
+xxxxc3cc3c1eeg+!.+4Yttvvvx
+xxccc.cc.cccccccYvvvtt+1vx
+xxc...cc...crrrc..3v+vvvvx
+xxc...cc...crrr+.1.vffvxxx
+xxc$$$cc$$$+rrrc3..+fgvxxx
+xxcccccccccccccccccvvvvxxx
 ENDMAP
 
 ###############################################################################
@@ -1055,46 +1008,46 @@ MARKER:     K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 # Sides:    Lindwurm # Vortex/elemental
 MAP
-                 xxxxxxxxx
-                xxKlllllKxx
-               xxllLLLLLllxx
-              xxXl.d$$ef.lXxx
-             xxy...$f<g$...yxx
-              xxy..g$de$..yxx
-               xxy..yyy..yxx
-                xxx+mxm+xxxx
-               xxy.xxllLYyxx
-              xxy.yxXlllLYyxx
-             xxy.2yxXllllLYyx
-              xxy2yxXlllLYyxx
-               xxy.xxllLYyxx
-                xxy.xxLYyxx
-                 xxy.xYyxx
-                xxxx+x+xxxx
-              xxxy..xxxYYyxxx
-            xxxy..LlXxXlLYYyxxx
-           xxy..LlllXxXlllLYYyxx
-           xy.LlllRRXxXlVlllLYyx
-           xy.LlllRRXxXlllllLYyx
-           xxy..LlllXxXlllLYYyxx
-            xxxy..LLXxXlLYYyxxx
-              xxxy..xxxYYyxxx
-               xxxxx+x+xxxx
-                 xxy.xYyxx
-                xxy.xxlYyxx
-               xxy.xxllLYyxx
-              xxy.yxXlllLYyxx
-             xxy.2yxXKlllLYyx
-              xxy2yxXlllLYyxx
-               xxy.xxllLYyxx
-                xxx+mxm+xxx
-               xxy..yyy..yxx
-              xxy.........yxx
-             xxy...<...A...yxx
-              xxy...LLL...yxx
-               xxllLlllLllxx
-                xxKlllllKxx
-                 xxxxxxxxx
+      xxxxxxxxx
+     xxKlllllKxx
+    xxllLLLLLllxx
+   xxXl.d$$ef.lXxx
+  xxy...$f<g$...yxx
+   xxy..g$de$..yxx
+    xxy..yyy..yxx
+     xxx+mxm+xxxx
+    xxy.xxllLYyxx
+   xxy.yxXlllLYyxx
+  xxy.2yxXllllLYyx
+   xxy2yxXlllLYyxx
+    xxy.xxllLYyxx
+     xxy.xxLYyxx
+      xxy.xYyxx
+     xxxx+x+xxxx
+   xxxy..xxxYYyxxx
+ xxxy..LlXxXlLYYyxxx
+xxy..LlllXxXlllLYYyxx
+xy.LlllRRXxXlVlllLYyx
+xy.LlllRRXxXlllllLYyx
+xxy..LlllXxXlllLYYyxx
+ xxxy..LLXxXlLYYyxxx
+   xxxy..xxxYYyxxx
+    xxxxx+x+xxxx
+      xxy.xYyxx
+     xxy.xxlYyxx
+    xxy.xxllLYyxx
+   xxy.yxXlllLYyxx
+  xxy.2yxXKlllLYyx
+   xxy2yxXlllLYyxx
+    xxy.xxllLYyxx
+     xxx+mxm+xxx
+    xxy..yyy..yxx
+   xxy.........yxx
+  xxy...<...A...yxx
+   xxy...LLL...yxx
+    xxllLlllLllxx
+     xxKlllllKxx
+      xxxxxxxxx
 ENDMAP
 ###############################################################################
 
@@ -1103,8 +1056,11 @@ ENDMAP
 #
 # There are scientists about; beware, as they may wish to experiment on you! The
 # idea was by Zaba, and the execution by due!
+#
+# TODO: Make this layout actually be like other volcanoes,
+#       and also actually contain decent threats.
 NAME:       volcano_bunker
-WEIGHT:     30
+WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 #           Loot: 11 items, 8 gold.
@@ -1112,7 +1068,7 @@ TAGS:       no_item_gen no_monster_gen no_rotate
 ITEM:       apple / choko
 COLOUR:     m = blue
 COLOUR:     + = cyan
-MONS:       human ; robe ego:fire_resistance
+MONS:       human ; robe ego:fire_resistance ident:type
 MONS:       toenail golem
 :           place_chained_volcano(_G)
 :           set_feature_name("clear_rock_wall", "glass window")
@@ -1150,7 +1106,7 @@ ENDMAP
 # idea by dpeg, execution by due. One entrance will close when you enter the
 # portal, leaving you with 7 to discover. Quickly, now!
 NAME:       volcano_caves
-WEIGHT:     30
+WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 LFLAGS:     no_tele_control
@@ -1184,71 +1140,70 @@ SUBST:      R = defg$
 #           and one triple threat (121), plus six items. items can be any of: 1 armour,
 #           1 weapon, 1 potion, 1 any, 1 gold)
 MAP
-               cccc ccc
-             cccXXcccZcccccc
-           cccZccc<RRX1ccZZccc
-           cXX<ZZccXXZccZ1XXcc
-           ccc1RRZcZXccXRR<cccc
-          ccXccZXXccMcXZZXccZZcc
-         ccZ<ZccZMcY.cMccccZ1<Xc
-        ccZ121ZcccY...ccMXXRRccc
-       ccZXRRRRccY....Y.cccccc
-       cZXXXXXccY..A<....ccZZccc
-       ccZRRXXXM.....YcccMXRR1Zcc
-        cccZXcccMY..YMc1ccZXXX<Xc
-          ccccXXccYcccZXXcccZZccc
-           ccZXXZccccZXRRXZcccc
-          ccZRRX1<XXcccZZ<Zcc
-           ccZXZXZccc cccMcc
-            ccccXcc     ccc
-             ccccc
+       cccc ccc
+     cccXXcccZcccccc
+    cccZccc<RRX1ccZZccc
+    cXX<ZZccXXZccZ1XXcc
+    ccc1RRZcZXccXRR<cccc
+   ccXccZXXccMcXZZXccZZcc
+  ccZ<ZccZMcY.cMccccZ1<Xc
+ ccZ121ZcccY...ccMXXRRccc
+ccZXRRRRccY....Y.cccccc
+cZXXXXXccY..A<....ccZZccc
+ccZRRXXXM.....YcccMXRR1Zcc
+ cccZXcccMY..YMc1ccZXXX<Xc
+   ccccXXccYcccZXXcccZZccc
+    ccZXXZccccZXRRXZcccc
+   ccZRRX1<XXcccZZ<Zcc
+    ccZXZXZccc cccMcc
+     ccccXcc     ccc
+      ccccc
 ENDMAP
 ###############################################################################
 
 ###############################################################################
 # Zaba's village!
 #
-# These stupid humans have built their village right next to a dormant volcano.
+# These stupid humanoids built their village right next to a dormant volcano.
 # It has erupted! Most have fled, but some have stayed behind to guard their
 # hard-earned loot. Idea kinda by dpeg, execution by Zaba.
 NAME:       volcano_village
 WEIGHT:     30
 ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen
 SUBST:      S = lw
-SUBST:      W = wW.
-SUBST:      L = ll.
+SUBST:      W = wW`
+SUBST:      L = ll`
 SUBST:      R = lx
-KFEAT:      # = open_sea
 SHUFFLE:    MIN
-SUBST:      I = $def
-NSUBST:     M = 4:1 / 1:2 / *:.
-NSUBST:     N = 6:1 / *:.
-SUBST:      " = ..'
-KFEAT:      ' = alarm trap
-:           set_border_fill_type("open_sea")
-:           fiery_humans(_G)
+NSUBST:     I = 4:. / * = $def
+NSUBST:     M = 3:1 / 2:2 / 3 = $def / *:.
+NSUBST:     N = 2:1 / 1:2 / 1 = $def / *:.
+SUBST:      . = .:99 ':1
+KFEAT:      ' = known alarm trap
+KPROP:      ` = no_rtele_into
+:           fiery_guardians(_G, true)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)
 MAP
-###########################################
-#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
-#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
-#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
-#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
-#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
-#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
-#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
-#wwwwwwwwWwWwWwWwWwWwWwWwWwWwWwWwWwwwwwwww#
-#wwwwwwwWWWWWWWWWWWWWWWWWWWWWWWWWWWwwwwwww#
-#wwwwwwx...."""....."""....."""....xxwwwww#
-#wwwxxxx...xx+xx...xxxxx...xx+xx...'xxwwww#
-#wwxx.xx..xxMMMxx.xxIIIxx.xxNNNxx..x.xxxww#
-#SSx.x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.xAxSS#
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwWwWwWwWwWwWwWwWwWwWwWwWwWwwwwwwwwx
+xwwwwwwwWWWWWWWWWWWWWWWWWWWWWWWWWWWwwwwwwwx
+xwwwwwwx...........................xxwwwwwx
+xwwwxxxx...xx+xx...xxxxx...xx+xx...'xxwwwwx
+xwwxx.xx..xxMMMxx.xxIIIxx.xxNNNxx..x.xxxwwx
+xSSx.x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.xAxSSx
 xSSx<x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.x<xSSx
 xlRxxx.x..xxMMMxx.xxIIIxx.xxNNNxx..xx.xxRlx
 xRlllxx....xxxxx...xx+xx...xxxxx...xxxxllRx
-xlRlllxx...."""....."""....."""....xllllRlx
+xlRlllxx...........................xllllRlx
 xRllllllLLLLLLLLLLLLLLLLLLLLLLLLLLLllllllRx
 xlRllllllLlLlLlLlLlLlLlLlLlLlLlLlLllllllRlx
 xRlllVllllllllllllllllllllllllllllllVllllRx
@@ -1263,8 +1218,6 @@ ENDMAP
 ###############################################################################
 
 ###############################################################################
-
-###############################################################################
 # Let's go, Overflow!
 #
 # You don't have much time to get the loot, as the Volcano is spitting out lava
@@ -1274,9 +1227,10 @@ ENDMAP
 # No monsters, only lava and loot. Original idea by dpeg.
 #
 # TODO: Come up with a better way to indicate to the player that the lava does
-#       eventually recede.
+#       eventually recede. Possibly use at least a few weak enemies after
+#       the overflow ends?
 NAME:       volcano_overflow
-WEIGHT:     10
+WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 MONS:       nothing, nothing, nothing
