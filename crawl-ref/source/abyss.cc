@@ -1589,11 +1589,12 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         for (int x = 0; x < 10; ++x)
         {
             monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
-            if (mons_class_holiness(mons) == MH_HOLY
+            if (invalid_monster_type(mons)
+                || mons_class_holiness(mons) == MH_HOLY
                 || mons_is_abyssal_only(mons))
+            {
                 continue;
-            if (invalid_monster_type(mons))
-                continue;
+            }
 
             mgen_data mg(mons, beh, 0, 5, 0, p);
             mg.non_actor_summoner = "Lugonu's corruption";
