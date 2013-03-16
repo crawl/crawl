@@ -2455,9 +2455,9 @@ void check_item_knowledge(bool unknown_items)
     menu.set_type(MT_KNOW);
     menu_letter ml;
     ml = menu.load_items(items, unknown_items ? unknown_item_mangle
-                                              : known_item_mangle);
+                                              : known_item_mangle, 'a', false);
 
-    ml = menu.load_items(items_missile, known_item_mangle, ml);
+    ml = menu.load_items(items_missile, known_item_mangle, ml, false);
     menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
     menu.load_items_seq(items_other, known_item_mangle, ml);
 
@@ -2511,7 +2511,7 @@ void display_runes()
                                 you.obtainable_runes));
     menu.set_flags(MF_NOSELECT);
     menu.set_type(MT_RUNES);
-    menu.load_items(items, unknown_item_mangle);
+    menu.load_items(items, unknown_item_mangle, 'a', false);
     menu.show();
     menu.getkey();
     redraw_screen();
