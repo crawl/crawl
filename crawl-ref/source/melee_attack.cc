@@ -74,6 +74,14 @@
 #include "shout.h"
 #include "xom.h"
 
+#ifdef NOTE_DEBUG_CHAOS_BRAND
+    #define NOTE_DEBUG_CHAOS_EFFECTS
+#endif
+
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
+    #include "notes.h"
+#endif
+
 // Odd helper function, why is this declared like this?
 #define DID_AFFECT() \
 { \
