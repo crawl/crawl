@@ -243,7 +243,8 @@ static string _stk_weight()
     }
 }
 
-static skill_title_key_t _skill_title_keys[] = {
+static skill_title_key_t _skill_title_keys[] =
+{
     stk("Adj", _stk_adj_cap),
     stk("Genus", _stk_genus_cap),
     stk("genus", _stk_genus_nocap),
@@ -254,6 +255,10 @@ static skill_title_key_t _skill_title_keys[] = {
 
 static string _replace_skill_keys(const string &text)
 {
+    // The container array is unused, we rely on side effects of constructors
+    // of individual items.  Yay.
+    UNUSED(_skill_title_keys);
+
     string::size_type at = 0, last = 0;
     ostringstream res;
     while ((at = text.find('@', last)) != string::npos)
