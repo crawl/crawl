@@ -411,6 +411,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def rcfile_path(self, game_id):
         if game_id not in config.games: return None
+        if not self.username: return None
         path = dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
         return os.path.join(path, self.username + ".rc")
@@ -419,10 +420,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if game_id not in config.games: return None
 
         game = config.games[game_id]
-        call = [game["crawl_binary"],
-                "-name",   self.username,
-                "-rc",     self.rcfile_path(game_id)]
-
+        call = [game["crawl_binary"]];
+        if self.username:
+            call += ["-name",   self.username,
+                    "-rc",     self.rcfile_path(game_id)]
         if "options" in game:
             call += game["options"]
         call.append("--print-json-options")
@@ -456,8 +457,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.joining = True
             process.add_watcher(self)
             self.send_message("watching_started")
-            if self.username:
-                self.send_json_options(process.game_params["id"]);
+            self.send_json_options(process.game_params["id"]);
         else:
             self.go_lobby()
 
