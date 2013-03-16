@@ -384,6 +384,17 @@ static bool _abyss_check_place_feat(coord_def p,
     if (place_feat && feats_wanted)
         ++*feats_wanted;
 
+    // Don't place features in bubbles.
+    int wall_count = 0;
+    for (adjacent_iterator ai(p); ai; ++ai)
+    {
+        wall_count += feat_is_solid(grd(p));
+    }
+    if (wall_count > 6)
+    {
+        return false;
+    }
+
     // There's no longer a need to check for features under items,
     // since we're working on fresh grids that are guaranteed
     // item-free.
