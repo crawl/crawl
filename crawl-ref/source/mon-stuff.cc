@@ -2347,7 +2347,7 @@ int monster_die(monster* mons, killer_type killer,
             mons_speaks(mons);
     }
 
-    if (mons->type == MONS_BORIS && !in_transit)
+    if (mons->type == MONS_BORIS && !in_transit && !mons->pacified())
     {
         // XXX: Actual blood curse effect for Boris? - bwr
 
