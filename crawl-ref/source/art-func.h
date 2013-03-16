@@ -252,7 +252,7 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     *pract    = 1;
     *did_work = true;
 
-    int power = 10 + you.skill(SK_EVOCATIONS, 8);
+    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 3);
 
     your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false);
 
