@@ -854,7 +854,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     }
 
     if (you.form == TRAN_FUNGUS)
-        return (eq == EQ_HELMET || eq == EQ_CLOAK);
+        return (eq == EQ_HELMET);
 
     if (you.form == TRAN_TREE)
         return (eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_HELMET);
