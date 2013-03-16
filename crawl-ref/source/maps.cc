@@ -522,7 +522,8 @@ static coord_def _find_minivault_place(
 
     // [ds] The margin around the edges of the map where the minivault
     // won't be placed. Purely arbitrary as far as I can see.
-    const int margin = MAPGEN_BORDER * 2 + 1;
+    // The spotty connector in the Shoals needs one more space to work.
+    const int margin = MAPGEN_BORDER * 2 + player_in_branch(BRANCH_SHOALS);
 
     // Find a target area which can be safely overwritten.
     for (int tries = 0; tries < 600; ++tries)
