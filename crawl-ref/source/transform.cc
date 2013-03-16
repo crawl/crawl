@@ -1008,11 +1008,15 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_FUNGUS:
         if (you.religion == GOD_FEDHAS)
             simple_god_message(" smiles upon you.");
+        // ignore hunger_state (but don't reset hunger)
+        you.hunger_state = HS_SATIATED;
+        set_redraw_status(REDRAW_HUNGER);
         break;
 
     case TRAN_TREE:
         if (you.religion == GOD_FEDHAS)
             simple_god_message(" smiles upon you.");
+        // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
         set_redraw_status(REDRAW_HUNGER);
         mpr("Your roots penetrate the ground.");
@@ -1023,6 +1027,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         }
         you.duration[DUR_FLIGHT] = 0;
         // break out of webs/nets as well
+
     case TRAN_DRAGON:
         if (you.attribute[ATTR_HELD])
         {
