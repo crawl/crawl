@@ -1273,7 +1273,6 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
         link_items();
     }
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
-    generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
     setup_environment_effects();
 
     // Abyss has a constant density.
@@ -1475,7 +1474,6 @@ retry:
         }
     }
 
-    generate_random_blood_spatter_on_level();
     setup_environment_effects();
 }
 
