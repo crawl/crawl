@@ -2765,7 +2765,7 @@ void melee_attack::chaos_affects_attacker()
 
     if (attacker->is_player() && !you.form && one_chance_in(1000))
     {
-        // non-weapon using forms are uncool here: you'd need to run away
+        // Non-weapon using forms are uncool here: you'd need to run away
         // instead of continuing the fight.
         transformation_type form = coinflip() ? TRAN_TREE : TRAN_APPENDAGE;
         if (one_chance_in(5))
