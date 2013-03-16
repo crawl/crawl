@@ -2762,6 +2762,24 @@ void melee_attack::chaos_affects_attacker()
             DID_AFFECT();
         }
     }
+
+    if (attacker->is_player() && !you.form && one_chance_in(1000))
+    {
+        // non-weapon using forms are uncool here: you'd need to run away
+        // instead of continuing the fight.
+        transformation_type form = coinflip() ? TRAN_TREE : TRAN_APPENDAGE;
+        if (one_chance_in(5))
+            form = coinflip() ? TRAN_STATUE : TRAN_LICH;
+        if (transform(0, form))
+        {
+#ifdef NOTE_DEBUG_CHAOS_EFFECTS
+            take_note(Note(NOTE_MESSAGE, 0, 0,
+                           (string("CHAOS affects attacker: transform into ")
+                           + transform_name(form)).c_str()), true);
+#endif
+            DID_AFFECT();
+        }
+    }
 }
 
 void melee_attack::do_miscast()
