@@ -3818,7 +3818,7 @@ enum commandline_option_type
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
-    CLO_PRINT_JSON_OPTIONS,
+    CLO_PRINT_WEBTILES_OPTIONS,
 #endif
 
     CLO_NOPS
@@ -3832,7 +3832,7 @@ static const char *cmd_ops[] = {
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "zotdef", "tutorial", "wizard", "no-save",
 #ifdef USE_TILE_WEB
-    "webtiles-socket", "await-connection", "print-json-options",
+    "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
 };
 
@@ -4108,7 +4108,7 @@ void _write_colour_list(const vector<pair<int, int> > variable,
     tiles.json_close_array();
 }
 
-void game_options::write_json_options(const string& name)
+void game_options::write_webtiles_options(const string& name)
 {
     tiles.json_open_object(name);
 
@@ -4119,9 +4119,9 @@ void game_options::write_json_options(const string& name)
     tiles.json_close_object();
 }
 
-static void _print_json_options()
+static void _print_webtiles_options()
 {
-    Options.write_json_options("");
+    Options.write_webtiles_options("");
     printf("%s\n", tiles.get_message().c_str());
 }
 #endif
@@ -4536,10 +4536,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             tiles.m_await_connection = true;
             break;
 
-        case CLO_PRINT_JSON_OPTIONS:
+        case CLO_PRINT_WEBTILES_OPTIONS:
             if (!rc_only)
             {
-                _print_json_options();
+                _print_webtiles_options();
                 end(0);
             }
             break;

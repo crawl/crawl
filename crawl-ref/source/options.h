@@ -94,7 +94,7 @@ public:
                             const vector<string> *rcdirs = NULL) throw (string);
 
 #ifdef USE_TILE_WEB
-    void write_json_options(const string &name);
+    void write_webtiles_options(const string &name);
 #endif
 
 public:

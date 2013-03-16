@@ -440,7 +440,7 @@ void TilesFramework::_send_options()
 {
     json_open_object();
     json_write_string("msg", "options");
-    Options.write_json_options("options");
+    Options.write_webtiles_options("options");
     json_close_object();
     finish_message();
 }
