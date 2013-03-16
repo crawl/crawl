@@ -942,7 +942,7 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
         means shift-running and resting only. Only one runrest_ignore_poison
         line is considered. Note that for this work, you should also tell
         Crawl to ignore the "You feel sick" messages. For example,
-             runrest_ignore_message = You feel.*sick
+             runrest_ignore_message ^= You feel.*sick
              runrest_ignore_poison = 4:100
 
 runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...

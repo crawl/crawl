@@ -165,7 +165,7 @@
 # runrest_stop_message += You hear a.* slurping noise
 # runrest_ignore_message += Jiyva's power touches on your attributes
 
-# A good number of runrest_messages is defined by default; you may want to
+# A good number of runrest_messages are defined by default; you may want to
 # clear them or override some.
 
 # trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,blade:95
