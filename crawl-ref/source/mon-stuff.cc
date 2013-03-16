@@ -2504,8 +2504,9 @@ int monster_die(monster* mons, killer_type killer,
     if (mons->type == MONS_SILENT_SPECTRE
         || mons->type == MONS_PROFANE_SERVITOR
         || mons->type == MONS_MOTH_OF_SUPPRESSION)
+    {
         invalidate_agrid();
-
+    }
     const coord_def mwhere = mons->pos();
     if (drop_items)
         monster_drop_things(mons, YOU_KILL(killer) || pet_kill);
