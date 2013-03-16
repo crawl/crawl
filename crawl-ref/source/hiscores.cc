@@ -718,6 +718,9 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     str               = se.str;
     intel             = se.intel;
     dex               = se.dex;
+    ac                = se.ac;
+    ev                = se.ev;
+    sh                = se.sh;
     god               = se.god;
     piety             = se.piety;
     penance           = se.penance;
@@ -726,6 +729,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     death_time        = se.death_time;
     real_time         = se.real_time;
     num_turns         = se.num_turns;
+    num_aut           = se.num_aut;
     num_diff_runes    = se.num_diff_runes;
     num_runes         = se.num_runes;
     kills             = se.kills;
@@ -913,6 +917,10 @@ void scorefile_entry::init_with_fields()
     intel = fields->int_field("int");
     dex   = fields->int_field("dex");
 
+    ac    = fields->int_field("ac");
+    ev    = fields->int_field("ev");
+    sh    = fields->int_field("sh");
+
     god      = str_to_god(fields->str_field("god"));
     piety    = fields->int_field("piety");
     penance  = fields->int_field("pen");
@@ -922,6 +930,7 @@ void scorefile_entry::init_with_fields()
     death_time = _parse_time(fields->str_field("end"));
     real_time  = fields->int_field("dur");
     num_turns  = fields->int_field("turn");
+    num_aut    = fields->int_field("aut");
 
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
@@ -985,6 +994,9 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("str", "%d", str);
     fields->add_field("int", "%d", intel);
     fields->add_field("dex", "%d", dex);
+    fields->add_field("ac", "%d", ac);
+    fields->add_field("ev", "%d", ev);
+    fields->add_field("sh", "%d", sh);
 
     // Don't write No God to save some space.
     if (god != -1)
@@ -999,6 +1011,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
     fields->add_field("dur",   "%d", (int)real_time);
     fields->add_field("turn",  "%d", num_turns);
+    fields->add_field("aut",   "%d", num_aut);
 
     if (num_diff_runes)
         fields->add_field("urune", "%d", num_diff_runes);
@@ -1285,6 +1298,9 @@ void scorefile_entry::reset()
     str                  = -1;
     intel                = -1;
     dex                  = -1;
+    ac                   = -1;
+    ev                   = -1;
+    sh                   = -1;
     damage               = -1;
     source_damage        = -1;
     turn_damage          = -1;
@@ -1296,6 +1312,7 @@ void scorefile_entry::reset()
     death_time           = 0;
     real_time            = -1;
     num_turns            = -1;
+    num_aut              = -1;
     num_diff_runes       = 0;
     num_runes            = 0;
     kills                = 0;
@@ -1489,6 +1506,10 @@ void scorefile_entry::init(time_t dt)
     intel = you.stat(STAT_INT, false);
     dex   = you.stat(STAT_DEX, false);
 
+    ac    = you.armour_class();
+    ev    = player_evasion();
+    sh    = player_shield_class();
+
     god = you.religion;
     if (you.religion != GOD_NO_GOD)
     {
@@ -1514,6 +1535,7 @@ void scorefile_entry::init(time_t dt)
     real_time = you.real_time;
 
     num_turns = you.num_turns;
+    num_aut = you.elapsed_time;
 
     gold       = you.gold;
     gold_found = you.attribute[ATTR_GOLD_FOUND];

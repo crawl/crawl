@@ -90,6 +90,9 @@ private:
     int         str;                // final str (useful for nickname)
     int         intel;              // final int
     int         dex;                // final dex (useful for nickname)
+    int         ac;                 // AC
+    int         ev;                 // EV
+    int         sh;                 // SH
     god_type    god;                // god
     int         piety;              // piety
     int         penance;            // penance
@@ -98,6 +101,7 @@ private:
     time_t      death_time;         // end time of character
     time_t      real_time;          // real playing time in seconds
     int         num_turns;          // number of turns taken
+    int         num_aut;            // quantity of aut taken
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
     int         kills;              // number of monsters killed
