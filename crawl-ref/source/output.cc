@@ -729,6 +729,7 @@ static void _print_stats_wp(int y)
         case TRAN_PORCUPINE:
             col = LIGHTGREY;
             break;
+        case TRAN_FUNGUS:
         case TRAN_TREE:
             col = BROWN;
             break;

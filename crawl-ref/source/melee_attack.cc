@@ -2007,6 +2007,7 @@ void melee_attack::set_attack_verb()
                 break;
             }
             // or fall-through
+        case TRAN_FUNGUS:
         case TRAN_ICE_BEAST:
         case TRAN_JELLY: // ?
             if (damage_done < HIT_WEAK)
@@ -3754,6 +3755,7 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_ICE_BEAST:
             case TRAN_DRAGON:
             case TRAN_LICH:
+            case TRAN_FUNGUS:
             case TRAN_TREE:
             case TRAN_WISP:
                 mhit += maybe_random2(10, random);
@@ -5208,6 +5210,7 @@ int melee_attack::calc_base_unarmed_damage()
             damage = (you.species == SP_VAMPIRE ? 2 : 1);
             break;
         case TRAN_ICE_BEAST:
+        case TRAN_FUNGUS:
         case TRAN_TREE:
             damage = 12;
             break;

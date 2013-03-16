@@ -895,6 +895,11 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "appendage";
         inf->long_text  = "You have a beastly appendage.";
         break;
+    case TRAN_FUNGUS:
+        inf->light_text = "Fungus";
+        inf->short_text = "fungus-form";
+        inf->long_text  = "You are a sentient fungus.";
+        break;
     case TRAN_TREE:
         inf->light_text = "Tree";
         inf->short_text = "tree-form";
