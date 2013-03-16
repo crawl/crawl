@@ -174,7 +174,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
                 || eqslot == EQ_SHIELD);
 
     case TRAN_FUNGUS:
-        return (eqslot == EQ_CLOAK || eqslot == EQ_HELMET);
+        return (eqslot == EQ_HELMET && !is_hard_helmet(item));
 
     case TRAN_TREE:
         return (eqslot == EQ_SHIELD || eqslot == EQ_HELMET);
