@@ -2029,12 +2029,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Player saw the item return.
         if (!is_artefact(you.inv[throw_2]))
-        {
-            // Since this only happens for non-artefacts, also mark properties
-            // as known.
-            set_ident_flags(you.inv[throw_2],
-                            ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
-        }
+            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
     }
     else
     {
@@ -2457,12 +2452,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
 
         // Player saw the item return.
         if (!is_artefact(item))
-        {
-            // Since this only happens for non-artefacts, also mark properties
-            // as known.
-            set_ident_flags(mitm[msl],
-                            ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
-        }
+            set_ident_flags(mitm[msl], ISFLAG_KNOW_TYPE);
     }
     else if (dec_mitm_item_quantity(msl, 1))
         mons->inv[slot] = NON_ITEM;

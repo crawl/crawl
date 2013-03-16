@@ -720,7 +720,8 @@ void unset_ident_flags(item_def &item, iflags_t flags)
 // (e.g., scrolls don't have know-cursedness).
 static iflags_t _full_ident_mask(const item_def& item)
 {
-    iflags_t flagset = ISFLAG_IDENT_MASK;
+    // KNOW_PROPERTIES is only relevant for artefacts, handled later.
+    iflags_t flagset = ISFLAG_IDENT_MASK & ~ISFLAG_KNOW_PROPERTIES;
     switch (item.base_type)
     {
     case OBJ_FOOD:
@@ -741,9 +742,6 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_POTIONS:
         flagset = ISFLAG_KNOW_TYPE;
         break;
-    case OBJ_RODS:
-        flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_CURSE;
-        break;
     case OBJ_STAVES:
         flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
         break;
@@ -755,6 +753,7 @@ static iflags_t _full_ident_mask(const item_def& item)
         if (ring_has_pluses(item))
             flagset |= ISFLAG_KNOW_PLUSES;
         break;
+    case OBJ_RODS:
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
         // All flags necessary for full identification.
