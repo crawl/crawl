@@ -50,6 +50,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
+#include "mon-iter.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
@@ -501,6 +502,8 @@ bool is_player_same_species(const monster_type mon, bool transform)
         case TRAN_LICH:
             return (mons_species(mon) == MONS_LICH);
         // Compare with monster *genus*.
+        case TRAN_FUNGUS:
+            return (mons_genus(mon) == MONS_FUNGUS);
         case TRAN_SPIDER:
             return (mons_genus(mon) == MONS_SPIDER);
         case TRAN_DRAGON:
@@ -849,6 +852,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         }
         return false;
     }
+
+    if (you.form == TRAN_FUNGUS)
+        return (eq == EQ_HELMET || eq == EQ_CLOAK);
 
     if (you.form == TRAN_TREE)
         return (eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_HELMET);
@@ -1477,6 +1483,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // transformations:
         switch (you.form)
         {
+        case TRAN_FUNGUS:
         case TRAN_TREE:
             if (you.religion == GOD_FEDHAS && !player_under_penance())
                 break;
@@ -1742,6 +1749,7 @@ int player_res_torment(bool, bool temp)
 {
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.form == TRAN_LICH
+            || you.form == TRAN_FUNGUS
             || you.form == TRAN_TREE
             || you.form == TRAN_WISP
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
@@ -1819,6 +1827,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
         case TRAN_DRAGON:
+        case TRAN_FUNGUS:
         case TRAN_TREE:
         case TRAN_JELLY:
         case TRAN_WISP:
@@ -2107,6 +2116,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         case TRAN_WISP:
             pl++;
             break;
+        case TRAN_FUNGUS:
         case TRAN_TREE:
         case TRAN_LICH:
             pl += 3;
@@ -3684,6 +3694,9 @@ int check_stealth(void)
 
     switch (you.form)
     {
+    case TRAN_FUNGUS:
+        race_mod = 30;
+        break;
     case TRAN_TREE:
         race_mod = 27; // masquerading as scenery
         break;
@@ -5832,6 +5845,8 @@ string player::shout_verb() const
         return coinflip() ? "squeal" : "oink";
 
     // These forms can't shout.
+    case TRAN_FUNGUS:
+        return "sporulate";
     case TRAN_TREE:
         return "creak";
     case TRAN_JELLY:
@@ -6165,7 +6180,9 @@ int player::armour_class() const
         case TRAN_WISP:
             AC += 1000;
             break;
-
+        case TRAN_FUNGUS:
+            AC += 1200;
+            break;
         case TRAN_DRAGON: // Draconians handled above
             AC += 1600;
             break;
@@ -6325,6 +6342,7 @@ bool player::is_unbreathing() const
     {
     case TRAN_LICH:
     case TRAN_STATUE:
+    case TRAN_FUNGUS:
     case TRAN_TREE:
     case TRAN_JELLY:
     case TRAN_WISP:
@@ -7140,7 +7158,7 @@ bool player::can_bleed(bool allow_tran) const
         // These transformations don't bleed. Lichform is handled as undead.
         if (you.form == TRAN_STATUE || you.form == TRAN_ICE_BEAST
             || you.form == TRAN_SPIDER || you.form == TRAN_TREE
-            || you.form == TRAN_PORCUPINE)
+            || you.form == TRAN_FUNGUS || you.form == TRAN_PORCUPINE)
         {
             return false;
         }
@@ -7189,6 +7207,7 @@ bool player::polymorph(int pow)
         // Whole-body transformations only; mere appendage doesn't seem fitting.
         transformation_type f = random_choose_weighted(
             100, TRAN_BAT,
+            100, TRAN_FUNGUS,
             100, TRAN_PIG,
             100, TRAN_TREE,
             100, TRAN_PORCUPINE,
@@ -7489,6 +7508,27 @@ void player::sentinel_mark()
         mpr("A sentinel's mark forms upon you.", MSGCH_WARN);
         you.increase_duration(DUR_SENTINEL_MARK, random_range(50, 80), 250);
     }
+}
+
+bool player::made_nervous_by(const coord_def &p)
+{
+    if (you.form != TRAN_FUNGUS)
+        return false;
+    monster* mons = monster_at(p);
+    if (mons && !mons_is_firewood(mons))
+        return false;
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+            if (!(mons_is_wandering(*mi)
+                        || mi->asleep()
+                        || mi->confused()
+                        || mi->cannot_act())
+                && you.see_cell(mi->pos())
+                && !mons_is_firewood(*mi)
+                && !mi->neutral())
+                return true;
+    }
+    return false;
 }
 
 /*
