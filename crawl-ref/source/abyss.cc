@@ -1080,11 +1080,24 @@ static void _update_abyss_terrain(const coord_def &p,
     if (_abyssal_rune_at(rp))
         return;
 
-    const dungeon_feature_type feat = sample.feat();
+    dungeon_feature_type feat = sample.feat();
 
     // Don't replace open doors with closed doors!
     if (feat_is_door(currfeat) && feat_is_door(feat))
         return;
+
+    // Veto dangerous terrain.
+    if (you.pos() == rp)
+    {
+        if (feat == DNGN_DEEP_WATER)
+        {
+            feat = DNGN_SHALLOW_WATER;
+        }
+        if (feat == DNGN_LAVA)
+        {
+            feat = DNGN_FLOOR;
+        }
+    }
 
     // If the selected grid is already there, *or* if we're morphing and
     // the selected grid should have been there, do nothing.
