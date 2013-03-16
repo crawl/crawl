@@ -1950,13 +1950,9 @@ _visual_fake_spell_effect_
 
 VISUAL WARN:You feel disoriented.
 
-VISUAL WARN:You feel weakened.
-
 VISUAL WARN:You feel troubled.
 %%%%
 _warn_fake_spell_effect_
-
-WARN:Your equipment suddenly seems to weigh more.
 
 WARN:Suddenly you are surrounded with a pale green light. @player_only@
 
@@ -4784,8 +4780,6 @@ VISUAL ENCHANT:@The_monster@ becomes transparent for a moment.
 VISUAL ENCHANT:@The_monster@'s hands start to glow.
 %%%%
 _bad_effect_
-
-weakened
 
 cursed
 
