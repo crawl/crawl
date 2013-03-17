@@ -1723,7 +1723,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_DEEP_DWARF_NECROMANCER, 'q', MAGENTA, "deep dwarf necromancer",
+    MONS_DEEP_DWARF_NECROMANCER, 'q', LIGHTBLUE, "deep dwarf necromancer",
     M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS | M_NO_REGEN,
     MR_NO_FLAGS,
     600, 10, MONS_DWARF, MONS_DEEP_DWARF, MH_NATURAL, -6,
