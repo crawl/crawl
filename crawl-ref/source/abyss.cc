@@ -387,13 +387,9 @@ static bool _abyss_check_place_feat(coord_def p,
     // Don't place features in bubbles.
     int wall_count = 0;
     for (adjacent_iterator ai(p); ai; ++ai)
-    {
         wall_count += feat_is_solid(grd(p));
-    }
     if (wall_count > 6)
-    {
         return false;
-    }
 
     // There's no longer a need to check for features under items,
     // since we're working on fresh grids that are guaranteed
@@ -1101,13 +1097,9 @@ static void _update_abyss_terrain(const coord_def &p,
     if (you.pos() == rp)
     {
         if (feat == DNGN_DEEP_WATER)
-        {
             feat = DNGN_SHALLOW_WATER;
-        }
         if (feat == DNGN_LAVA)
-        {
             feat = DNGN_FLOOR;
-        }
     }
 
     // If the selected grid is already there, *or* if we're morphing and
