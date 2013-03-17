@@ -23,6 +23,7 @@ enum unchivalric_attack_type
     UCAT_PARALYSED,
     UCAT_SLEEPING,
     UCAT_ALLY,
+    NUM_UCAT
 };
 
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit = NULL,

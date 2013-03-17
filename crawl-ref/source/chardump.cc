@@ -29,6 +29,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "fight.h"
 #include "files.h"
 #include "godprayer.h"
 #include "hiscores.h"
@@ -1146,10 +1147,27 @@ static string _describe_action(caction_type type)
         return "Evoke";
     case CACT_USE:
         return "  Use";
+    case CACT_STAB:
+        return " Stab";
     default:
         return "Error";
     }
 }
+
+static const char* _stab_names[] =
+{
+    "Normal",
+    "Distracted",
+    "Confused",
+    "Fleeing",
+    "Invisible",
+    "Held in net/web",
+    "Petrifying", // could be nice to combine the two
+    "Petrified",
+    "Paralysed",
+    "Sleeping",
+    "Betrayed ally",
+};
 
 static string _describe_action_subtype(caction_type type, int subtype)
 {
@@ -1200,6 +1218,10 @@ static string _describe_action_subtype(caction_type type, int subtype)
         }
     case CACT_USE:
         return uppercase_first(base_type_string((object_class_type)subtype));
+    case CACT_STAB:
+        COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_UCAT);
+        ASSERT(subtype >= 1 && subtype < NUM_UCAT);
+        return _stab_names[subtype];
     default:
         return "Error";
     }

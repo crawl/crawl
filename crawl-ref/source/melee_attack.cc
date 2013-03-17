@@ -3940,6 +3940,7 @@ void melee_attack::player_stab_check()
     switch (uat)
     {
     case UCAT_NO_ATTACK:
+    case NUM_UCAT:
         stab_bonus = 0;
         break;
     case UCAT_SLEEPING:
@@ -3968,6 +3969,9 @@ void melee_attack::player_stab_check()
         stab_attempt = x_chance_in_y(you.skill_rdiv(SK_STABBING) + you.dex() + 1,
                                      roll);
     }
+
+    if (stab_attempt)
+        count_action(CACT_STAB, uat);
 }
 
 
