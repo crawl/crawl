@@ -672,8 +672,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 }
 
 monster_type pick_random_monster_for_place(const level_id &place,
-                                           monster_type zombie_monster,
-                                           bool want_corpse_capable)
+                                           monster_type zombie_monster)
 {
     // If the caller supplied a zombie_monster argument, use it to
     // figure out whether or not it wants a zombie, and if so, what
@@ -693,13 +692,6 @@ monster_type pick_random_monster_for_place(const level_id &place,
         // and let the caller deal with it.
         if (invalid_monster_type(chosen))
             return chosen;
-
-        // Reject things that can't leave corpses.
-        if (want_corpse_capable
-            && !mons_class_can_leave_corpse(mons_species(chosen)))
-        {
-            continue;
-        }
 
         // Now, if we didn't want a zombie, we are done.
         if (!wanted_a_zombie)
