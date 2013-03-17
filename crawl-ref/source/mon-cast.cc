@@ -3120,16 +3120,6 @@ static coord_def _mons_fragment_target(monster *mons)
     return target;
 }
 
-static bool _tentacle_can_spawn_at(monster_type type, const coord_def &pos)
-{
-    if (monster_at(pos))
-        return false;
-    else if (type == MONS_KRAKEN_TENTACLE && !feat_is_water(env.grid(pos)))
-        return false;
-    else
-        return true;
-}
-
 static int _max_tentacles(const monster* mon)
 {
     if (mons_base_type(mon) == MONS_KRAKEN)
@@ -3173,10 +3163,10 @@ static void _mons_create_tentacles(monster* head)
     vector<coord_def> adj_squares;
 
     // collect open adjacent squares, candidate squares must be
-    // water and not already occupied.
+    // not already occupied.
     for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
     {
-        if (_tentacle_can_spawn_at(tent_type, *adj_it))
+        if (!monster_at(*adj_it))
             adj_squares.push_back(*adj_it);
     }
 
