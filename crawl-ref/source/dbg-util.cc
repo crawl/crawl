@@ -84,8 +84,23 @@ void debug_dump_levgen()
     if (!env.level_vault_list.empty())
     {
         mpr("Level vaults:");
-        for (size_t i = 0; i < env.level_vault_list.size(); ++i)
-            mprf("    %s", env.level_vault_list[i].c_str());
+        for (size_t i = 0; i < env.level_vaults.size(); ++i)
+        {
+            const vault_placement* vault = env.level_vaults[i];
+            string vault_name = vault->map.name.c_str();
+            if (vault->map.subvault_places.size())
+            {
+                vault_name += " [";
+                for (unsigned int j = 0; j < vault->map.subvault_places.size(); ++j)
+                {
+                    vault_name += vault->map.subvault_places[j].subvault->name;
+                    if (j < vault->map.subvault_places.size() - 1)
+                        vault_name += ", ";
+                }
+                vault_name += "]";
+            }
+            mprf("    %s", vault_name.c_str());
+        }
     }
     mpr("");
 }
