@@ -4099,7 +4099,8 @@ void _write_colour_list(const vector<pair<int, int> > variable,
         const string &name)
 {
     tiles.json_open_array(name);
-    for (unsigned int i = 0; i < variable.size(); i++) {
+    for (unsigned int i = 0; i < variable.size(); i++)
+    {
         tiles.json_open_object();
         tiles.json_write_int("value", variable[i].first);
         tiles.json_write_string("colour", colour_to_str(variable[i].second));
