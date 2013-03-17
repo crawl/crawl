@@ -105,6 +105,62 @@ monster_type pick_monster_by_hash(branch_type branch, uint32_t hash)
     return population[branch].pop[hash % population[branch].count].mons;
 }
 
+monster_type pick_monster(level_id place, mon_pick_vetoer veto)
+{
+    struct { monster_type mons; int rarity; } valid[NUM_MONSTERS];
+    int nvalid = 0;
+    int totalrar = 0;
+
+    ASSERT(place.is_valid());
+    for (const pop_entry *pop = population[place.branch].pop; pop->mons; pop++)
+    {
+        if (place.depth < pop->minr || place.depth > pop->maxr)
+            continue;
+
+        if (veto && (*veto)(pop->mons))
+            continue;
+
+        int rar = pop->rarity;
+        int len = pop->maxr - pop->minr;
+        switch (pop->distrib)
+        {
+        case FLAT: // 100% everywhere
+            break;
+
+        case SEMI: // 100% in the middle, 50% at the edges
+            ASSERT(len > 0);
+            len *= 2;
+            rar = rar * (len - abs(pop->minr + pop->maxr - 2 * place.depth))
+                      / len;
+            break;
+
+        case PEAK: // 100% in the middle, small at the edges, 0% outside
+            len += 2; // we want it to zero outside the range, not at the edge
+            rar = rar * (len - abs(pop->minr + pop->maxr - 2 * place.depth))
+                      / len;
+            break;
+        }
+
+        ASSERT(rar > 0);
+
+        valid[nvalid].mons = pop->mons;
+        valid[nvalid].rarity = rar;
+        totalrar += rar;
+        nvalid++;
+    }
+
+    if (!nvalid)
+        return MONS_0;
+
+    totalrar = random2(totalrar); // the roll!
+
+    for (int i = 0; i < nvalid; i++)
+        if ((totalrar -= valid[i].rarity) < 0)
+            return valid[i].mons;
+
+    die("mon-pick roll out of range");
+}
+
 bool branch_has_monsters(branch_type branch)
 {
     COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
