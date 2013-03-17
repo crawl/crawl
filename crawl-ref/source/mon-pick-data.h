@@ -1,5 +1,5 @@
 static const pop_entry pop_d[] =
-{ // Dungeon (OOD cap: 31 maxlev: 31)
+{ // Dungeon (OOD cap: 31)
   { -3,  7,  514, SEMI, MONS_GIANT_NEWT },
   { -3,  7,  999, FLAT, MONS_GOBLIN },
   { -2,  8,  192, PEAK, MONS_BALL_PYTHON },
@@ -179,18 +179,18 @@ static const pop_entry pop_temple[] =
 };
 
 static const pop_entry pop_orc[] =
-{ // Orcish Mines (OOD cap: 23 maxlev: 4)
+{ // Orcish Mines
   { -2,  4,   25, PEAK, MONS_FUNGUS },
-  { -2,  4,  192, FLAT, MONS_GOBLIN }, /* symmetry crop from -4..6 */
-  { -2,  4, 1000, FLAT, MONS_ORC }, /* symmetry crop from -4..6 */
-  {  0,  4,   89, FLAT, MONS_HOBGOBLIN }, /* symmetry crop from -2..6 */
-  {  0,  4,  192, FLAT, MONS_ORC_WARRIOR }, /* symmetry crop from -3..7 */
-  {  0,  4,   25, SEMI, MONS_ORC_PRIEST }, /* symmetry crop from -1..5 */
-  {  1,  5,   40, FLAT, MONS_WARG }, /* symmetry crop from 0..6 */
+  { -2,  4,  192, FLAT, MONS_GOBLIN },
+  { -2,  4, 1000, FLAT, MONS_ORC },
+  {  0,  4,   89, FLAT, MONS_HOBGOBLIN },
+  {  0,  4,  192, FLAT, MONS_ORC_WARRIOR },
+  {  0,  4,   25, SEMI, MONS_ORC_PRIEST },
+  {  1,  5,   40, FLAT, MONS_WARG },
   {  2,  4,    3, SEMI, MONS_GNOLL },
-  {  1,  5,   25, SEMI, MONS_ORC_WIZARD }, /* symmetry crop from 0..6 */
-  {  1,  5,   25, SEMI, MONS_ORC_KNIGHT }, /* symmetry crop from 0..6 */
-  {  1,  5,   89, FLAT, MONS_OGRE }, /* symmetry crop from -1..7 */
+  {  1,  5,   25, SEMI, MONS_ORC_WIZARD },
+  {  1,  5,   25, SEMI, MONS_ORC_KNIGHT },
+  {  1,  5,   89, FLAT, MONS_OGRE },
   {  4,  4,    1, FLAT, MONS_GNOLL_SHAMAN },
   {  4,  4,    1, FLAT, MONS_GNOLL_SERGEANT },
   {  2,  6,    8, PEAK, MONS_ORC_HIGH_PRIEST },
@@ -207,24 +207,24 @@ static const pop_entry pop_orc[] =
 };
 
 static const pop_entry pop_elf[] =
-{ // Elven Halls (OOD cap: 16 maxlev: 7)
-  {  1,  7, 1000, FLAT, MONS_FUNGUS }, /* symmetry crop from -3..7 */
-  {  1,  6,   89, FLAT, MONS_ORC }, /* symmetry crop from -2..6 */
-  {  1,  5,   30, FLAT, MONS_ORC_WARRIOR }, /* symmetry crop from -1..5 */
-  {  1,  5,   40, FLAT, MONS_ORC_WIZARD }, /* symmetry crop from -1..5 */
-  {  1,  4,    8, FLAT, MONS_ORC_KNIGHT }, /* symmetry crop from 0..4 */
-  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_SOLDIER }, /* symmetry crop from -3..7 */
-  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_FIGHTER }, /* symmetry crop from -3..7 */
-  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_MAGE }, /* symmetry crop from -3..7 */
-  {  1,  7,  849, FLAT, MONS_DEEP_ELF_SUMMONER }, /* symmetry crop from -3..7 */
-  {  1,  7,  735, FLAT, MONS_DEEP_ELF_CONJURER }, /* symmetry crop from -3..7 */
-  {  1,  6,  136, FLAT, MONS_SHAPESHIFTER }, /* symmetry crop from -2..6 */
+{ // Elven Halls (OOD cap: 7)
+  {  1,  7, 1000, FLAT, MONS_FUNGUS },
+  {  1,  6,   89, FLAT, MONS_ORC },
+  {  1,  5,   30, FLAT, MONS_ORC_WARRIOR },
+  {  1,  5,   40, FLAT, MONS_ORC_WIZARD },
+  {  1,  4,    8, FLAT, MONS_ORC_KNIGHT },
+  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_SOLDIER },
+  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_FIGHTER },
+  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_MAGE },
+  {  1,  7,  849, FLAT, MONS_DEEP_ELF_SUMMONER },
+  {  1,  7,  735, FLAT, MONS_DEEP_ELF_CONJURER },
+  {  1,  6,  136, FLAT, MONS_SHAPESHIFTER },
   {  1,  5,    8, PEAK, MONS_ORC_PRIEST },
   {  1,  5,    8, PEAK, MONS_ORC_HIGH_PRIEST },
-  {  1,  6,   25, SEMI, MONS_ORC_SORCERER }, /* symmetry crop from 0..6 */
-  {  1,  7,  923, FLAT, MONS_DEEP_ELF_KNIGHT }, /* symmetry crop from -2..8 */
-  {  1,  7,  402, FLAT, MONS_DEEP_ELF_PRIEST }, /* symmetry crop from -2..8 */
-  {  1,  6,   25, SEMI, MONS_GLOWING_SHAPESHIFTER }, /* symmetry crop from 0..6 */
+  {  1,  6,   25, SEMI, MONS_ORC_SORCERER },
+  {  1,  7,  923, FLAT, MONS_DEEP_ELF_KNIGHT },
+  {  1,  7,  402, FLAT, MONS_DEEP_ELF_PRIEST },
+  {  1,  6,   25, SEMI, MONS_GLOWING_SHAPESHIFTER },
   {  1,  7,   25, PEAK, MONS_DEEP_ELF_HIGH_PRIEST },
   {  0,  8,   66, PEAK, MONS_DEEP_ELF_DEMONOLOGIST },
   {  1,  7,   40, PEAK, MONS_DEEP_ELF_ANNIHILATOR },
@@ -257,7 +257,7 @@ static const pop_entry pop_dwarf[] =
 };
 
 static const pop_entry pop_lair[] =
-{ // Lair (OOD cap: 21 maxlev: 8)
+{ // Lair
   { -3,  5,   89, PEAK, MONS_GIANT_NEWT },
   { -4,  6,  514, SEMI, MONS_GIANT_GECKO },
   { -4,  6,  826, SEMI, MONS_IGUANA },
@@ -278,21 +278,21 @@ static const pop_entry pop_lair[] =
   { -2,  8,  192, PEAK, MONS_GIANT_MITE },
   {  0,  6,   25, PEAK, MONS_SCORPION },
   { -2,  8,  514, SEMI, MONS_FUNGUS },
-  {  0,  8,  258, SEMI, MONS_BASILISK }, /* symmetry crop from -1..9 */
-  {  0,  8,  981, FLAT, MONS_WATER_MOCCASIN }, /* symmetry crop from -1..9 */
-  {  0,  8,  258, SEMI, MONS_WAR_DOG }, /* symmetry crop from -1..9 */
-  {  0,  8,  607, FLAT, MONS_GIANT_SLUG }, /* symmetry crop from -1..9 */
-  {  0,  8,  514, FLAT, MONS_HIPPOGRIFF }, /* symmetry crop from -1..9 */
-  {  0,  8,  879, FLAT, MONS_SPINY_FROG }, /* symmetry crop from -1..9 */
+  {  0,  8,  258, SEMI, MONS_BASILISK },
+  {  0,  8,  981, FLAT, MONS_WATER_MOCCASIN },
+  {  0,  8,  258, SEMI, MONS_WAR_DOG },
+  {  0,  8,  607, FLAT, MONS_GIANT_SLUG },
+  {  0,  8,  514, FLAT, MONS_HIPPOGRIFF },
+  {  0,  8,  879, FLAT, MONS_SPINY_FROG },
   {  2,  6,    8, PEAK, MONS_YELLOW_WASP },
   {  1,  7,   25, PEAK, MONS_GOLIATH_BEETLE },
-  {  0,  8,  923, FLAT, MONS_PLANT }, /* symmetry crop from -1..9 */
-  {  1,  9,  514, FLAT, MONS_KOMODO_DRAGON }, /* symmetry crop from 0..10 */
+  {  0,  8,  923, FLAT, MONS_PLANT },
+  {  1,  9,  514, FLAT, MONS_KOMODO_DRAGON },
   {  2,  8,   25, PEAK, MONS_ORANGE_RAT },
-  {  1,  9,  624, FLAT, MONS_AGATE_SNAIL }, /* symmetry crop from 0..10 */
-  {  1,  9,  273, SEMI, MONS_SHEEP }, /* symmetry crop from 0..10 */
-  {  1,  9,  514, FLAT, MONS_YAK }, /* symmetry crop from 0..10 */
-  {  1,  9,  420, SEMI, MONS_BLINK_FROG }, /* symmetry crop from 0..10 */
+  {  1,  9,  624, FLAT, MONS_AGATE_SNAIL },
+  {  1,  9,  273, SEMI, MONS_SHEEP },
+  {  1,  9,  514, FLAT, MONS_YAK },
+  {  1,  9,  420, SEMI, MONS_BLINK_FROG },
   {  2,  8,   52, SEMI, MONS_GRIZZLY_BEAR },
   {  2,  8,   25, PEAK, MONS_STEAM_DRAGON },
   {  4,  6,    3, SEMI, MONS_GIANT_SPORE },
@@ -322,29 +322,29 @@ static const pop_entry pop_lair[] =
 };
 
 static const pop_entry pop_swamp[] =
-{ // Swamp (OOD cap: 16 maxlev: 5)
+{ // Swamp
   { -4,  6,  999, FLAT, MONS_FUNGUS },
   { -4,  6, 1000, FLAT, MONS_PLANT },
   { -1,  5,   25, PEAK, MONS_GIANT_NEWT },
-  { -1,  5,  879, FLAT, MONS_WATER_MOCCASIN }, /* symmetry crop from -3..7 */
+  { -1,  5,  879, FLAT, MONS_WATER_MOCCASIN },
   { -1,  5,   25, PEAK, MONS_GIANT_SLUG },
-  { -1,  5, 1000, FLAT, MONS_ALLIGATOR }, /* symmetry crop from -3..7 */
-  { -1,  5,  192, FLAT, MONS_GIANT_FROG }, /* symmetry crop from -3..7 */
-  { -1,  5,  923, FLAT, MONS_SWAMP_DRAKE }, /* symmetry crop from -3..7 */
-  { -1,  5,   89, SEMI, MONS_GIANT_AMOEBA }, /* symmetry crop from -2..6 */
-  { -1,  5,   89, SEMI, MONS_RAVEN }, /* symmetry crop from -2..6 */
-  {  1,  5,   25, SEMI, MONS_AGATE_SNAIL }, /* symmetry crop from 0..6 */
-  {  1,  5,  136, FLAT, MONS_CROCODILE }, /* symmetry crop from -1..7 */
-  {  1,  5,  826, FLAT, MONS_HYDRA }, /* symmetry crop from -2..8 */
-  {  1,  5,  999, FLAT, MONS_VAMPIRE_MOSQUITO }, /* symmetry crop from -2..8 */
-  {  1,  5,  923, FLAT, MONS_BOG_BODY }, /* symmetry crop from -2..8 */
+  { -1,  5, 1000, FLAT, MONS_ALLIGATOR },
+  { -1,  5,  192, FLAT, MONS_GIANT_FROG },
+  { -1,  5,  923, FLAT, MONS_SWAMP_DRAKE },
+  { -1,  5,   89, SEMI, MONS_GIANT_AMOEBA },
+  { -1,  5,   89, SEMI, MONS_RAVEN },
+  {  1,  5,   25, SEMI, MONS_AGATE_SNAIL },
+  {  1,  5,  136, FLAT, MONS_CROCODILE },
+  {  1,  5,  826, FLAT, MONS_HYDRA },
+  {  1,  5,  999, FLAT, MONS_VAMPIRE_MOSQUITO },
+  {  1,  5,  923, FLAT, MONS_BOG_BODY },
   {  1,  7,   52, SEMI, MONS_KOMODO_DRAGON },
-  {  1,  7,  826, FLAT, MONS_GIANT_LEECH }, /* symmetry crop from -1..9 */
-  {  1,  7, 1000, FLAT, MONS_SPINY_FROG }, /* symmetry crop from -1..9 */
-  {  1,  7,  384, FLAT, MONS_SWAMP_DRAGON }, /* symmetry crop from -1..9 */
-  {  1,  7,  192, FLAT, MONS_RED_WASP }, /* symmetry crop from -1..9 */
+  {  1,  7,  826, FLAT, MONS_GIANT_LEECH },
+  {  1,  7, 1000, FLAT, MONS_SPINY_FROG },
+  {  1,  7,  384, FLAT, MONS_SWAMP_DRAGON },
+  {  1,  7,  192, FLAT, MONS_RED_WASP },
   {  1,  7,   40, PEAK, MONS_UGLY_THING },
-  {  1,  7,  384, FLAT, MONS_INSUBSTANTIAL_WISP }, /* symmetry crop from -1..9 */
+  {  1,  7,  384, FLAT, MONS_INSUBSTANTIAL_WISP },
   {  1,  7,   40, PEAK, MONS_PHANTOM },
   {  1,  7,   40, PEAK, MONS_HUNGRY_GHOST },
   {  2,  8,   25, PEAK, MONS_BLINK_FROG },
@@ -356,21 +356,21 @@ static const pop_entry pop_swamp[] =
 };
 
 static const pop_entry pop_shoals[] =
-{ // Shoals (OOD cap: 16 maxlev: 5)
+{ // Shoals
   { -4,  6,  258, PEAK, MONS_BAT },
-  { -1,  5,  334, FLAT, MONS_SEA_SNAKE }, /* symmetry crop from -3..7 */
-  { -1,  5,  258, FLAT, MONS_HIPPOGRIFF }, /* symmetry crop from -3..7 */
-  { -1,  5,  981, FLAT, MONS_MERFOLK }, /* symmetry crop from -3..7 */
-  { -1,  5,  334, FLAT, MONS_MERMAID }, /* symmetry crop from -3..7 */
-  { -1,  5,   89, SEMI, MONS_CENTAUR }, /* symmetry crop from -2..6 */
-  {  1,  5,  334, FLAT, MONS_MANTICORE }, /* symmetry crop from -2..8 */
-  {  1,  5,  125, FLAT, MONS_HARPY }, /* symmetry crop from -1..7 */
-  {  1,  5,  420, FLAT, MONS_SNAPPING_TURTLE }, /* symmetry crop from -2..8 */
+  { -1,  5,  334, FLAT, MONS_SEA_SNAKE },
+  { -1,  5,  258, FLAT, MONS_HIPPOGRIFF },
+  { -1,  5,  981, FLAT, MONS_MERFOLK },
+  { -1,  5,  334, FLAT, MONS_MERMAID },
+  { -1,  5,   89, SEMI, MONS_CENTAUR },
+  {  1,  5,  334, FLAT, MONS_MANTICORE },
+  {  1,  5,  125, FLAT, MONS_HARPY },
+  {  1,  5,  420, FLAT, MONS_SNAPPING_TURTLE },
   {  1,  7,   25, PEAK, MONS_OKLOB_PLANT },
-  {  1,  7,  125, SEMI, MONS_SIREN }, /* symmetry crop from 0..8 */
-  {  1,  7,   89, SEMI, MONS_CYCLOPS }, /* symmetry crop from 0..8 */
-  {  1,  7,  258, FLAT, MONS_SHARK }, /* symmetry crop from -1..9 */
-  {  1,  7,   73, SEMI, MONS_KRAKEN }, /* symmetry crop from 0..8 */
+  {  1,  7,  125, SEMI, MONS_SIREN },
+  {  1,  7,   89, SEMI, MONS_CYCLOPS },
+  {  1,  7,  258, FLAT, MONS_SHARK },
+  {  1,  7,   73, SEMI, MONS_KRAKEN },
   {  2,  8,   25, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  2,  8,   52, SEMI, MONS_MERFOLK_IMPALER },
   {  2,  8,   52, SEMI, MONS_MERFOLK_AQUAMANCER },
@@ -379,39 +379,39 @@ static const pop_entry pop_shoals[] =
 };
 
 static const pop_entry pop_snake[] =
-{ // Snake Pit (OOD cap: 16 maxlev: 6)
+{ // Snake Pit
   { -1,  5,   52, SEMI, MONS_BALL_PYTHON },
-  { -1,  5,  999, FLAT, MONS_ADDER }, /* symmetry crop from -3..7 */
-  {  1,  5,  999, FLAT, MONS_WATER_MOCCASIN }, /* symmetry crop from -2..8 */
-  {  1,  5,  849, FLAT, MONS_BLACK_MAMBA }, /* symmetry crop from -2..8 */
-  {  1,  5,  217, FLAT, MONS_ANACONDA }, /* symmetry crop from -2..8 */
-  {  1,  5,  571, FLAT, MONS_NAGA }, /* symmetry crop from -2..8 */
-  {  1,  7,  244, FLAT, MONS_NAGA_WARRIOR }, /* symmetry crop from -1..9 */
-  {  1,  7,  244, FLAT, MONS_NAGA_MAGE }, /* symmetry crop from -1..9 */
+  { -1,  5,  999, FLAT, MONS_ADDER },
+  {  1,  5,  999, FLAT, MONS_WATER_MOCCASIN },
+  {  1,  5,  849, FLAT, MONS_BLACK_MAMBA },
+  {  1,  5,  217, FLAT, MONS_ANACONDA },
+  {  1,  5,  571, FLAT, MONS_NAGA },
+  {  1,  7,  244, FLAT, MONS_NAGA_WARRIOR },
+  {  1,  7,  244, FLAT, MONS_NAGA_MAGE },
   {  2,  8,   52, SEMI, MONS_GUARDIAN_SERPENT },
   {  3,  9,   52, SEMI, MONS_GREATER_NAGA },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_spider[] =
-{ // Spider Nest (OOD cap: 16 maxlev: 6)
-  { -1,  5,   89, SEMI, MONS_WORM }, /* symmetry crop from -2..6 */
+{ // Spider Nest
+  { -1,  5,   89, SEMI, MONS_WORM },
   { -1,  5,   52, SEMI, MONS_GIANT_COCKROACH },
   { -1,  5,   52, SEMI, MONS_GIANT_CENTIPEDE },
   { -1,  5,   52, SEMI, MONS_GIANT_MITE },
-  { -1,  5,  334, FLAT, MONS_SPIDER }, /* symmetry crop from -3..7 */
-  { -1,  5,  258, FLAT, MONS_SCORPION }, /* symmetry crop from -3..7 */
-  {  1,  5,   89, FLAT, MONS_ROCK_WORM }, /* symmetry crop from -1..7 */
-  {  1,  5,   52, FLAT, MONS_YELLOW_WASP }, /* symmetry crop from 0..6 */
-  {  1,  5,   89, FLAT, MONS_GOLIATH_BEETLE }, /* symmetry crop from -1..7 */
-  {  1,  5,  879, FLAT, MONS_TRAPDOOR_SPIDER }, /* symmetry crop from -2..8 */
-  {  1,  5,  607, FLAT, MONS_REDBACK }, /* symmetry crop from -2..8 */
+  { -1,  5,  334, FLAT, MONS_SPIDER },
+  { -1,  5,  258, FLAT, MONS_SCORPION },
+  {  1,  5,   89, FLAT, MONS_ROCK_WORM },
+  {  1,  5,   52, FLAT, MONS_YELLOW_WASP },
+  {  1,  5,   89, FLAT, MONS_GOLIATH_BEETLE },
+  {  1,  5,  879, FLAT, MONS_TRAPDOOR_SPIDER },
+  {  1,  5,  607, FLAT, MONS_REDBACK },
   {  1,  7,   52, SEMI, MONS_SPINY_WORM },
   {  1,  7,   52, SEMI, MONS_BORING_BEETLE },
-  {  1,  7,   89, SEMI, MONS_BOULDER_BEETLE }, /* symmetry crop from 0..8 */
-  {  1,  7,  763, FLAT, MONS_JUMPING_SPIDER }, /* symmetry crop from -1..9 */
-  {  1,  7,  552, FLAT, MONS_ORB_SPIDER }, /* symmetry crop from -1..9 */
-  {  1,  7,  690, FLAT, MONS_TARANTELLA }, /* symmetry crop from -1..9 */
+  {  1,  7,   89, SEMI, MONS_BOULDER_BEETLE },
+  {  1,  7,  763, FLAT, MONS_JUMPING_SPIDER },
+  {  1,  7,  552, FLAT, MONS_ORB_SPIDER },
+  {  1,  7,  690, FLAT, MONS_TARANTELLA },
   {  0, 10,  258, PEAK, MONS_RED_WASP },
   {  0, 10,  957, FLAT, MONS_WOLF_SPIDER },
   {  1,  9,   89, PEAK, MONS_EMPEROR_SCORPION },
@@ -423,28 +423,28 @@ static const pop_entry pop_spider[] =
 };
 
 static const pop_entry pop_slime[] =
-{ // Slime Pits (OOD cap: 14 maxlev: 6)
-  { -2,  6,  514, FLAT, MONS_OOZE }, /* symmetry crop from -3..7 */
-  { -2,  6, 1000, FLAT, MONS_JELLY }, /* symmetry crop from -3..7 */
-  { -2,  6, 1000, FLAT, MONS_ACID_BLOB }, /* symmetry crop from -3..7 */
-  { -2,  6,  514, FLAT, MONS_GIANT_EYEBALL }, /* symmetry crop from -3..7 */
-  {  0,  6, 1000, FLAT, MONS_BROWN_OOZE }, /* symmetry crop from -2..8 */
-  {  0,  6, 1000, FLAT, MONS_SLIME_CREATURE }, /* symmetry crop from -2..8 */
-  {  0,  6,  514, FLAT, MONS_EYE_OF_DRAINING }, /* symmetry crop from -2..8 */
-  {  1,  7, 1000, FLAT, MONS_GIANT_AMOEBA }, /* symmetry crop from -1..9 */
-  {  1,  7,  514, FLAT, MONS_AZURE_JELLY }, /* symmetry crop from -1..9 */
-  {  1,  7,  514, FLAT, MONS_SHINING_EYE }, /* symmetry crop from -1..9 */
-  {  1,  7,  192, FLAT, MONS_GOLDEN_EYE }, /* symmetry crop from -1..9 */
+{ // Slime Pits
+  { -2,  6,  514, FLAT, MONS_OOZE },
+  { -2,  6, 1000, FLAT, MONS_JELLY },
+  { -2,  6, 1000, FLAT, MONS_ACID_BLOB },
+  { -2,  6,  514, FLAT, MONS_GIANT_EYEBALL },
+  {  0,  6, 1000, FLAT, MONS_BROWN_OOZE },
+  {  0,  6, 1000, FLAT, MONS_SLIME_CREATURE },
+  {  0,  6,  514, FLAT, MONS_EYE_OF_DRAINING },
+  {  1,  7, 1000, FLAT, MONS_GIANT_AMOEBA },
+  {  1,  7,  514, FLAT, MONS_AZURE_JELLY },
+  {  1,  7,  514, FLAT, MONS_SHINING_EYE },
+  {  1,  7,  192, FLAT, MONS_GOLDEN_EYE },
   {  1,  9,   89, PEAK, MONS_PULSATING_LUMP },
-  {  1,  9,  192, SEMI, MONS_EYE_OF_DEVASTATION }, /* symmetry crop from 0..10 */
-  {  1,  9,  192, SEMI, MONS_GREAT_ORB_OF_EYES }, /* symmetry crop from 0..10 */
+  {  1,  9,  192, SEMI, MONS_EYE_OF_DEVASTATION },
+  {  1,  9,  192, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  1, 11,  192, PEAK, MONS_DEATH_OOZE },
   {  2, 10,   89, PEAK, MONS_GIANT_ORANGE_BRAIN },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_vaults[] =
-{ // Vaults (OOD cap: 15 maxlev: 15)
+{ // Vaults (OOD cap: 15)
 //{-19, -9,  514, SEMI, MONS_GIANT_NEWT },
 //{-19, -9,  999, FLAT, MONS_GOBLIN },
 //{-18, -8,  192, PEAK, MONS_BALL_PYTHON },
@@ -625,27 +625,27 @@ static const pop_entry pop_blade[] =
 };
 
 static const pop_entry pop_crypt[] =
-{ // Crypt (OOD cap: 12 maxlev: 6)
+{ // Crypt
   { -4,  6, 1000, FLAT, MONS_ZOMBIE_SMALL },
-  { -1,  5,   98, SEMI, MONS_PHANTOM }, /* symmetry crop from -2..6 */
-  { -1,  5,  258, FLAT, MONS_WIGHT }, /* symmetry crop from -3..7 */
-  { -1,  5, 1000, FLAT, MONS_SKELETON_SMALL }, /* symmetry crop from -3..7 */
-  { -1,  5, 1000, FLAT, MONS_SKELETON_LARGE }, /* symmetry crop from -3..7 */
-  { -1,  5, 1000, FLAT, MONS_ZOMBIE_LARGE }, /* symmetry crop from -3..7 */
-  {  1,  5,  514, FLAT, MONS_NECROPHAGE }, /* symmetry crop from -2..8 */
-  {  1,  5,  192, FLAT, MONS_SHADOW }, /* symmetry crop from -2..8 */
-  {  1,  5,   35, SEMI, MONS_HUNGRY_GHOST }, /* symmetry crop from 0..6 */
-  {  1,  5,  879, FLAT, MONS_SKELETAL_WARRIOR }, /* symmetry crop from -2..8 */
-  {  1,  5,   25, SEMI, MONS_SIMULACRUM_SMALL }, /* symmetry crop from 0..6 */
-  {  1,  5,   25, SEMI, MONS_SIMULACRUM_LARGE }, /* symmetry crop from 0..6 */
+  { -1,  5,   98, SEMI, MONS_PHANTOM },
+  { -1,  5,  258, FLAT, MONS_WIGHT },
+  { -1,  5, 1000, FLAT, MONS_SKELETON_SMALL },
+  { -1,  5, 1000, FLAT, MONS_SKELETON_LARGE },
+  { -1,  5, 1000, FLAT, MONS_ZOMBIE_LARGE },
+  {  1,  5,  514, FLAT, MONS_NECROPHAGE },
+  {  1,  5,  192, FLAT, MONS_SHADOW },
+  {  1,  5,   35, SEMI, MONS_HUNGRY_GHOST },
+  {  1,  5,  879, FLAT, MONS_SKELETAL_WARRIOR },
+  {  1,  5,   25, SEMI, MONS_SIMULACRUM_SMALL },
+  {  1,  5,   25, SEMI, MONS_SIMULACRUM_LARGE },
   {  3,  5,    4, SEMI, MONS_PULSATING_LUMP },
-  {  1,  7,  136, SEMI, MONS_NECROMANCER }, /* symmetry crop from 0..8 */
-  {  1,  7,   66, SEMI, MONS_ROTTING_HULK }, /* symmetry crop from 0..8 */
-  {  1,  7,  136, SEMI, MONS_GHOUL }, /* symmetry crop from 0..8 */
+  {  1,  7,  136, SEMI, MONS_NECROMANCER },
+  {  1,  7,   66, SEMI, MONS_ROTTING_HULK },
+  {  1,  7,  136, SEMI, MONS_GHOUL },
   {  1,  7,   40, PEAK, MONS_FLAYED_GHOST },
-  {  1,  7,  230, FLAT, MONS_WRAITH }, /* symmetry crop from -1..9 */
+  {  1,  7,  230, FLAT, MONS_WRAITH },
   {  1,  7,   40, PEAK, MONS_FREEZING_WRAITH },
-  {  1,  7,  192, FLAT, MONS_SILENT_SPECTRE }, /* symmetry crop from -1..9 */
+  {  1,  7,  192, FLAT, MONS_SILENT_SPECTRE },
   {  1,  7,   40, PEAK, MONS_FLYING_SKULL },
   {  1,  9,  125, PEAK, MONS_BONE_DRAGON },
   {  3,  7,    8, PEAK, MONS_ABOMINATION_SMALL },
@@ -664,17 +664,17 @@ static const pop_entry pop_crypt[] =
 };
 
 static const pop_entry pop_tomb[] =
-{ // Tomb (OOD cap: 10 maxlev: 5)
-  { -1,  5,   89, FLAT, MONS_ZOMBIE_SMALL }, /* symmetry crop from -3..5 */
+{ // Tomb (OOD cap: 5)
+  { -1,  5,   89, FLAT, MONS_ZOMBIE_SMALL },
   {  1,  3,    3, SEMI, MONS_TRAPDOOR_SPIDER },
-  {  1,  5, 1000, FLAT, MONS_MUMMY }, /* symmetry crop from -3..7 */
-  {  1,  5,   98, FLAT, MONS_SKELETON_SMALL }, /* symmetry crop from -2..6 */
-  {  1,  5,   98, FLAT, MONS_SKELETON_LARGE }, /* symmetry crop from -2..6 */
-  {  1,  5,   98, FLAT, MONS_ZOMBIE_LARGE }, /* symmetry crop from -2..6 */
-  {  1,  5, 1000, FLAT, MONS_GUARDIAN_MUMMY }, /* symmetry crop from -2..8 */
-  {  1,  5,  230, FLAT, MONS_FLYING_SKULL }, /* symmetry crop from -2..8 */
-  {  1,  5,   25, SEMI, MONS_SIMULACRUM_SMALL }, /* symmetry crop from 0..6 */
-  {  1,  5,   25, SEMI, MONS_SIMULACRUM_LARGE }, /* symmetry crop from 0..6 */
+  {  1,  5, 1000, FLAT, MONS_MUMMY },
+  {  1,  5,   98, FLAT, MONS_SKELETON_SMALL },
+  {  1,  5,   98, FLAT, MONS_SKELETON_LARGE },
+  {  1,  5,   98, FLAT, MONS_ZOMBIE_LARGE },
+  {  1,  5, 1000, FLAT, MONS_GUARDIAN_MUMMY },
+  {  1,  5,  230, FLAT, MONS_FLYING_SKULL },
+  {  1,  5,   25, SEMI, MONS_SIMULACRUM_SMALL },
+  {  1,  5,   25, SEMI, MONS_SIMULACRUM_LARGE },
   { -1,  9,  334, SEMI, MONS_MUMMY_PRIEST },
   {  3,  5,    6, FLAT, MONS_LICH },
   {  3,  5,    3, SEMI, MONS_ANCIENT_LICH },
@@ -710,7 +710,7 @@ static const pop_entry pop_hell[] =
 };
 
 static const pop_entry pop_dis[] =
-{ // Dis (OOD cap: 3 maxlev: 5)
+{ // Dis
   { -3,  3,   25, PEAK, MONS_CLAY_GOLEM },
   { -2,  2,    8, PEAK, MONS_CRIMSON_IMP },
   { -5,  5,  514, SEMI, MONS_RED_DEVIL },
@@ -734,18 +734,18 @@ static const pop_entry pop_dis[] =
   { -1,  5,   25, PEAK, MONS_EFREET },
   { -3,  7,  420, SEMI, MONS_MUMMY },
   { -3,  7,  258, PEAK, MONS_FLYING_SKULL },
-  { -1,  7,  999, FLAT, MONS_IRON_IMP }, /* symmetry crop from -2..8 */
-  { -1,  7,  999, FLAT, MONS_IRON_DEVIL }, /* symmetry crop from -2..8 */
+  { -1,  7,  999, FLAT, MONS_IRON_IMP },
+  { -1,  7,  999, FLAT, MONS_IRON_DEVIL },
   { -1,  7,   81, PEAK, MONS_VAMPIRE },
   { -1,  7,  136, SEMI, MONS_FLAYED_GHOST },
-  { -1,  7,  476, SEMI, MONS_WRAITH }, /* symmetry crop from -2..8 */
-  { -1,  7,  192, SEMI, MONS_FREEZING_WRAITH }, /* symmetry crop from -2..8 */
+  { -1,  7,  476, SEMI, MONS_WRAITH },
+  { -1,  7,  192, SEMI, MONS_FREEZING_WRAITH },
   {  1,  7,   25, PEAK, MONS_DANCING_WEAPON },
-  {  1,  7,  898, FLAT, MONS_REAPER }, /* symmetry crop from -1..9 */
+  {  1,  7,  898, FLAT, MONS_REAPER },
   {  1,  7,   25, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  192, FLAT, MONS_ICE_DEVIL }, /* symmetry crop from -1..9 */
-  {  1,  7,  334, FLAT, MONS_BLUE_DEVIL }, /* symmetry crop from -1..9 */
-  {  1,  7,  136, SEMI, MONS_FLAMING_CORPSE }, /* symmetry crop from 0..8 */
+  {  1,  7,  192, FLAT, MONS_ICE_DEVIL },
+  {  1,  7,  334, FLAT, MONS_BLUE_DEVIL },
+  {  1,  7,  136, SEMI, MONS_FLAMING_CORPSE },
   {  1,  7,   25, PEAK, MONS_PHANTASMAL_WARRIOR },
   {  1,  7,   25, PEAK, MONS_LICH },
   {  1,  9,   89, PEAK, MONS_BONE_DRAGON },
@@ -756,7 +756,7 @@ static const pop_entry pop_dis[] =
 };
 
 static const pop_entry pop_geh[] =
-{ // Gehenna (OOD cap: 3 maxlev: 5)
+{ // Gehenna
   { -3,  3,   25, PEAK, MONS_CLAY_GOLEM },
   { -5,  5,  690, SEMI, MONS_RED_DEVIL },
   { -5,  5,  999, FLAT, MONS_SKELETON_SMALL },
@@ -776,17 +776,17 @@ static const pop_entry pop_geh[] =
   { -3,  7,  384, SEMI, MONS_FLYING_SKULL },
   { -1,  7,   98, PEAK, MONS_HELL_KNIGHT },
   { -1,  7,   89, PEAK, MONS_IRON_DEVIL },
-  { -1,  7,  402, SEMI, MONS_VAMPIRE }, /* symmetry crop from -2..8 */
-  { -1,  7,  571, FLAT, MONS_WRAITH }, /* symmetry crop from -2..8 */
+  { -1,  7,  402, SEMI, MONS_VAMPIRE },
+  { -1,  7,  571, FLAT, MONS_WRAITH },
   {  2,  6,    8, PEAK, MONS_FIRE_CRAB },
-  {  1,  7,  589, FLAT, MONS_HELLION }, /* symmetry crop from -1..9 */
-  {  1,  7,  367, FLAT, MONS_TORMENTOR }, /* symmetry crop from -1..9 */
-  {  1,  7,  192, FLAT, MONS_BALRUG }, /* symmetry crop from -1..9 */
+  {  1,  7,  589, FLAT, MONS_HELLION },
+  {  1,  7,  367, FLAT, MONS_TORMENTOR },
+  {  1,  7,  192, FLAT, MONS_BALRUG },
   {  2,  6,    8, PEAK, MONS_EFREET },
-  {  1,  7,  217, FLAT, MONS_FLAMING_CORPSE }, /* symmetry crop from -1..9 */
-  {  1,  7,  217, FLAT, MONS_FLAYED_GHOST }, /* symmetry crop from -1..9 */
+  {  1,  7,  217, FLAT, MONS_FLAMING_CORPSE },
+  {  1,  7,  217, FLAT, MONS_FLAYED_GHOST },
   {  2,  8,   25, PEAK, MONS_BONE_DRAGON },
-  {  1,  9,  384, SEMI, MONS_REAPER }, /* symmetry crop from 0..10 */
+  {  1,  9,  384, SEMI, MONS_REAPER },
   {  3,  7,    8, PEAK, MONS_SOUL_EATER },
   {  3,  7,   14, SEMI, MONS_HELL_SENTINEL },
   {  3,  7,    8, PEAK, MONS_BRIMSTONE_FIEND },
@@ -797,7 +797,7 @@ static const pop_entry pop_geh[] =
 };
 
 static const pop_entry pop_coc[] =
-{ // Cocytus (OOD cap: 3 maxlev: 5)
+{ // Cocytus
   { -4,  4,  136, SEMI, MONS_NECROPHAGE },
   { -5,  5,  514, SEMI, MONS_SKELETAL_WARRIOR },
   { -5,  5,  957, FLAT, MONS_SKELETON_SMALL },
@@ -814,18 +814,18 @@ static const pop_entry pop_coc[] =
   { -3,  7,  244, PEAK, MONS_VAMPIRE },
   { -3,  7,  420, SEMI, MONS_WIGHT },
   { -3,  7,  641, SEMI, MONS_FLYING_SKULL },
-  { -1,  7,  258, SEMI, MONS_MUMMY }, /* symmetry crop from -2..8 */
-  { -1,  7,  146, SEMI, MONS_HUNGRY_GHOST }, /* symmetry crop from -2..8 */
-  { -1,  7,  420, SEMI, MONS_WRAITH }, /* symmetry crop from -2..8 */
-  { -1,  7,  968, FLAT, MONS_FREEZING_WRAITH }, /* symmetry crop from -2..8 */
+  { -1,  7,  258, SEMI, MONS_MUMMY },
+  { -1,  7,  146, SEMI, MONS_HUNGRY_GHOST },
+  { -1,  7,  420, SEMI, MONS_WRAITH },
+  { -1,  7,  968, FLAT, MONS_FREEZING_WRAITH },
   { -1,  7,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7,  303, FLAT, MONS_ICE_DRAGON }, /* symmetry crop from -1..9 */
-  {  1,  7,  889, FLAT, MONS_WHITE_IMP }, /* symmetry crop from -1..9 */
-  {  1,  7,  287, FLAT, MONS_TORMENTOR }, /* symmetry crop from -1..9 */
-  {  1,  7,  889, FLAT, MONS_ICE_DEVIL }, /* symmetry crop from -1..9 */
-  {  1,  7,  192, FLAT, MONS_BLIZZARD_DEMON }, /* symmetry crop from -1..9 */
+  {  1,  7,  303, FLAT, MONS_ICE_DRAGON },
+  {  1,  7,  889, FLAT, MONS_WHITE_IMP },
+  {  1,  7,  287, FLAT, MONS_TORMENTOR },
+  {  1,  7,  889, FLAT, MONS_ICE_DEVIL },
+  {  1,  7,  192, FLAT, MONS_BLIZZARD_DEMON },
   {  2,  8,   35, PEAK, MONS_BONE_DRAGON },
-  {  1,  9,  457, SEMI, MONS_REAPER }, /* symmetry crop from 0..10 */
+  {  1,  9,  457, SEMI, MONS_REAPER },
   {  1,  9,   81, PEAK, MONS_SOUL_EATER },
   {  2,  8,   35, PEAK, MONS_LICH },
   {  3,  7,    8, PEAK, MONS_ANCIENT_LICH },
@@ -833,7 +833,7 @@ static const pop_entry pop_coc[] =
 };
 
 static const pop_entry pop_tar[] =
-{ // Tartarus (OOD cap: 3 maxlev: 5)
+{ // Tartarus
   { -4,  4,   89, PEAK, MONS_CRIMSON_IMP },
   { -5,  5,  999, FLAT, MONS_SHADOW_IMP },
   { -3,  3,   40, PEAK, MONS_RED_DEVIL },
@@ -853,54 +853,54 @@ static const pop_entry pop_tar[] =
   { -3,  7,  552, SEMI, MONS_WRAITH },
   { -3,  7,  690, SEMI, MONS_FREEZING_WRAITH },
   { -3,  7,  258, PEAK, MONS_SILENT_SPECTRE },
-  { -1,  7,  334, SEMI, MONS_BONE_DRAGON }, /* symmetry crop from -2..8 */
-  { -1,  7,  367, SEMI, MONS_TORMENTOR }, /* symmetry crop from -2..8 */
-  { -1,  7,  244, SEMI, MONS_ICE_DEVIL }, /* symmetry crop from -2..8 */
-  { -1,  7,  217, SEMI, MONS_BLUE_DEVIL }, /* symmetry crop from -2..8 */
-  { -1,  7,  230, SEMI, MONS_MUMMY }, /* symmetry crop from -2..8 */
-  { -1,  7,  217, SEMI, MONS_HUNGRY_GHOST }, /* symmetry crop from -2..8 */
-  { -1,  7,  192, SEMI, MONS_FLAYED_GHOST }, /* symmetry crop from -2..8 */
-  { -1,  7,  420, SEMI, MONS_PHANTASMAL_WARRIOR }, /* symmetry crop from -2..8 */
+  { -1,  7,  334, SEMI, MONS_BONE_DRAGON },
+  { -1,  7,  367, SEMI, MONS_TORMENTOR },
+  { -1,  7,  244, SEMI, MONS_ICE_DEVIL },
+  { -1,  7,  217, SEMI, MONS_BLUE_DEVIL },
+  { -1,  7,  230, SEMI, MONS_MUMMY },
+  { -1,  7,  217, SEMI, MONS_HUNGRY_GHOST },
+  { -1,  7,  192, SEMI, MONS_FLAYED_GHOST },
+  { -1,  7,  420, SEMI, MONS_PHANTASMAL_WARRIOR },
   {  0,  6,   35, PEAK, MONS_SIMULACRUM_SMALL },
   {  0,  6,   35, PEAK, MONS_SIMULACRUM_LARGE },
-  {  1,  7,   89, SEMI, MONS_SHADOW_DRAGON }, /* symmetry crop from 0..8 */
-  {  1,  7,  720, FLAT, MONS_ROTTING_DEVIL }, /* symmetry crop from -1..9 */
-  {  1,  7,  367, FLAT, MONS_HELLION }, /* symmetry crop from -1..9 */
-  {  1,  7,  859, FLAT, MONS_REAPER }, /* symmetry crop from -1..9 */
-  {  1,  7,  367, FLAT, MONS_SHADOW_DEMON }, /* symmetry crop from -1..9 */
-  {  1,  7,  402, FLAT, MONS_VAMPIRE }, /* symmetry crop from -1..9 */
-  {  1,  7,  571, FLAT, MONS_FLYING_SKULL }, /* symmetry crop from -1..9 */
-  {  1,  9,  258, SEMI, MONS_SOUL_EATER }, /* symmetry crop from 0..10 */
+  {  1,  7,   89, SEMI, MONS_SHADOW_DRAGON },
+  {  1,  7,  720, FLAT, MONS_ROTTING_DEVIL },
+  {  1,  7,  367, FLAT, MONS_HELLION },
+  {  1,  7,  859, FLAT, MONS_REAPER },
+  {  1,  7,  367, FLAT, MONS_SHADOW_DEMON },
+  {  1,  7,  402, FLAT, MONS_VAMPIRE },
+  {  1,  7,  571, FLAT, MONS_FLYING_SKULL },
+  {  1,  9,  258, SEMI, MONS_SOUL_EATER },
   {  1,  9,  125, PEAK, MONS_LICH },
   {  3,  7,   11, PEAK, MONS_ANCIENT_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_zot[] =
-{ // Zot (OOD cap: 4 maxlev: 6)
+{ // Zot
   { -3,  5,   89, PEAK, MONS_ELECTRIC_GOLEM },
   { -2,  4,   52, SEMI, MONS_ORB_OF_FIRE },
-  { -1,  5,  972, FLAT, MONS_MOTH_OF_WRATH }, /* symmetry crop from -3..7 */
-  {  1,  5,   73, FLAT, MONS_BLACK_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_MOTTLED_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_YELLOW_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_GREEN_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_PURPLE_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_RED_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_WHITE_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_GREY_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   73, FLAT, MONS_PALE_DRACONIAN }, /* symmetry crop from -1..7 */
-  {  1,  5,   59, FLAT, MONS_DRACONIAN_CALLER }, /* symmetry crop from 0..6 */
-  {  1,  5,   59, FLAT, MONS_DRACONIAN_MONK }, /* symmetry crop from 0..6 */
-  {  1,  5,   59, FLAT, MONS_DRACONIAN_ZEALOT }, /* symmetry crop from 0..6 */
-  {  1,  5,   59, FLAT, MONS_DRACONIAN_SHIFTER }, /* symmetry crop from 0..6 */
-  {  1,  5,   59, FLAT, MONS_DRACONIAN_ANNIHILATOR }, /* symmetry crop from 0..6 */
-  {  1,  5,   59, FLAT, MONS_DRACONIAN_KNIGHT }, /* symmetry crop from 0..6 */
-  {  1,  5,   59, FLAT, MONS_DRACONIAN_SCORCHER }, /* symmetry crop from 0..6 */
-  {  1,  5,  514, FLAT, MONS_TENTACLED_MONSTROSITY }, /* symmetry crop from -2..8 */
-  {  1,  7,  334, FLAT, MONS_DRAGON }, /* symmetry crop from -1..9 */
-  {  1,  7,  334, FLAT, MONS_ICE_DRAGON }, /* symmetry crop from -1..9 */
-  {  1,  7,  334, FLAT, MONS_DEATH_COB }, /* symmetry crop from -1..9 */
+  { -1,  5,  972, FLAT, MONS_MOTH_OF_WRATH },
+  {  1,  5,   73, FLAT, MONS_BLACK_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_MOTTLED_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_YELLOW_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_GREEN_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_PURPLE_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_RED_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_WHITE_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_GREY_DRACONIAN },
+  {  1,  5,   73, FLAT, MONS_PALE_DRACONIAN },
+  {  1,  5,   59, FLAT, MONS_DRACONIAN_CALLER },
+  {  1,  5,   59, FLAT, MONS_DRACONIAN_MONK },
+  {  1,  5,   59, FLAT, MONS_DRACONIAN_ZEALOT },
+  {  1,  5,   59, FLAT, MONS_DRACONIAN_SHIFTER },
+  {  1,  5,   59, FLAT, MONS_DRACONIAN_ANNIHILATOR },
+  {  1,  5,   59, FLAT, MONS_DRACONIAN_KNIGHT },
+  {  1,  5,   59, FLAT, MONS_DRACONIAN_SCORCHER },
+  {  1,  5,  514, FLAT, MONS_TENTACLED_MONSTROSITY },
+  {  1,  7,  334, FLAT, MONS_DRAGON },
+  {  1,  7,  334, FLAT, MONS_ICE_DRAGON },
+  {  1,  7,  334, FLAT, MONS_DEATH_COB },
   {  0, 10,  192, PEAK, MONS_SHADOW_DRAGON },
   {  0, 10,  514, SEMI, MONS_STORM_DRAGON },
   {  0, 10,  334, SEMI, MONS_BONE_DRAGON },
@@ -913,15 +913,15 @@ static const pop_entry pop_zot[] =
 };
 
 static const pop_entry pop_forest[] =
-{ // Forest (OOD cap: 15 maxlev: 6)
-  { -1,  5,  690, FLAT, MONS_WOLF }, /* symmetry crop from -3..7 */
-  { -1,  5,  690, FLAT, MONS_GRIZZLY_BEAR }, /* symmetry crop from -3..7 */
-  { -1,  5,  334, FLAT, MONS_BLACK_BEAR }, /* symmetry crop from -3..7 */
-  { -1,  5,  999, FLAT, MONS_SPRIGGAN }, /* symmetry crop from -3..7 */
-  { -1,  5,  690, FLAT, MONS_SPRIGGAN_DRUID }, /* symmetry crop from -3..7 */
-  {  1,  5,  690, FLAT, MONS_SPRIGGAN_RIDER }, /* symmetry crop from -2..8 */
-  {  1,  7,  136, SEMI, MONS_SPRIGGAN_BERSERKER }, /* symmetry crop from 0..8 */
-  {  1,  7,  334, FLAT, MONS_SPRIGGAN_AIR_MAGE }, /* symmetry crop from -1..9 */
+{ // Forest
+  { -1,  5,  690, FLAT, MONS_WOLF },
+  { -1,  5,  690, FLAT, MONS_GRIZZLY_BEAR },
+  { -1,  5,  334, FLAT, MONS_BLACK_BEAR },
+  { -1,  5,  999, FLAT, MONS_SPRIGGAN },
+  { -1,  5,  690, FLAT, MONS_SPRIGGAN_DRUID },
+  {  1,  5,  690, FLAT, MONS_SPRIGGAN_RIDER },
+  {  1,  7,  136, SEMI, MONS_SPRIGGAN_BERSERKER },
+  {  1,  7,  334, FLAT, MONS_SPRIGGAN_AIR_MAGE },
   {  2, 10,   89, PEAK, MONS_SPRIGGAN_DEFENDER },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1149,7 +1149,7 @@ static const pop_entry pop_pan[] =
 };
 
 static const pop_entry pop_zig[] =
-{ // Ziggurat (OOD cap: 4 maxlev: -999)
+{ // Ziggurat
   { 0,0,0,FLAT,MONS_0 }
 };
 
