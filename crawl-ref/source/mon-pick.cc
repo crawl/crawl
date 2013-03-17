@@ -33,6 +33,25 @@ typedef struct
 
 #include "mon-pick-data.h"
 
+int branch_ood_cap(branch_type branch)
+{
+    ASSERT(branch < NUM_BRANCHES);
+
+    switch (branch)
+    {
+    case BRANCH_MAIN_DUNGEON:
+        return 31;
+    case BRANCH_VAULTS:
+        return 15;
+    case BRANCH_ELVEN_HALLS:
+        return 7;
+    case BRANCH_TOMB:
+        return 5;
+    default:
+        return branches[branch].numlevels;
+    }
+}
+
 // NOTE: The lower the level the earlier a monster may appear.
 int mons_depth(monster_type mcls, branch_type branch)
 {

@@ -480,12 +480,14 @@ static monster_type _pick_random_monster(level_id place,
     monster_type mon_type = MONS_PROGRAM_BUG;
 
     _apply_ood(place);
+
+    place.depth = min(place.depth, branch_ood_cap(place.branch));
+
     if (final_place)
         *final_place = place;
 
     int level = 0, diff, chance;
-
-    int lev_mons = min(30, place.absdepth());
+    int lev_mons = place.absdepth();
 
     const int n_pick_tries   = 10000;
     const int n_relax_margin = n_pick_tries / 10;
