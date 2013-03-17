@@ -522,6 +522,7 @@ enum caction_type    // Primary categorization of counted actions.
     CACT_ABIL,       // ability_type
     CACT_EVOKE,      // evoc_type
     CACT_USE,        // object_class_type
+    CACT_STAB,       // unchivalric_attack_type
     NUM_CACTIONS,
 };
 
