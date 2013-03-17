@@ -1478,7 +1478,9 @@ static void _go_upstairs()
         return;
     }
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT
+        && player_in_branch(BRANCH_ZIGGURAT)
+        && you.depth < brdepth[BRANCH_ZIGGURAT])
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
@@ -1562,7 +1564,9 @@ static void _go_downstairs()
     if (!check_annotation_exclusion_warning())
         return;
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT
+        && player_in_branch(BRANCH_ZIGGURAT)
+        && you.depth < brdepth[BRANCH_ZIGGURAT])
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
