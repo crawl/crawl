@@ -29,8 +29,10 @@ function ($, comm, enums, map_knowledge, messages) {
             value = 0;
         player["old_" + name] = value;
         var increase = old_value < value;
-        var full_bar = (100 * (increase ? old_value : value) / max).toFixed(0);
-        var change_bar = (100 * Math.abs(old_value - value) / max).toFixed(0);
+        var full_bar = (100 * (increase ? old_value : value) / max).toFixed(2);
+        var change_bar = (100 * Math.abs(old_value - value) / max).toFixed(2);
+        if (full_bar + change_bar > 100)
+            change_bar = 100 - full_bar;
         $("#stats_" + name + "_bar_full").css("width", full_bar + "%");
         $("#stats_" + name + "_bar_" + (increase ? "increase" : "decrease"))
             .css("width", change_bar + "%");
