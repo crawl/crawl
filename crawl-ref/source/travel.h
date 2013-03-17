@@ -62,8 +62,8 @@ uint8_t is_waypoint(const coord_def &p);
 command_type direction_to_command(int x, int y);
 bool is_resting(void);
 void explore_pickup_event(int did_pickup, int tried_pickup);
-bool feat_is_traversable_now(dungeon_feature_type feat);
-bool feat_is_traversable(dungeon_feature_type feat);
+bool feat_is_traversable_now(dungeon_feature_type feat, bool try_fallback = false);
+bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback = false);
 bool is_unknown_stair(const coord_def &p);
 
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
@@ -479,7 +479,9 @@ public:
     virtual ~travel_pathfind();
 
     // Finds travel direction or explore target.
-    coord_def pathfind(run_mode_type rt);
+    // If fallback_explore is set, will consider temporary obstructions like
+    // sealed doors as traversable
+    coord_def pathfind(run_mode_type rt, bool fallback_explore = false);
 
     // For flood-fills (explore), sets starting (seed) square.
     void set_floodseed(const coord_def &seed, bool double_flood = false);
@@ -614,6 +616,10 @@ protected:
     // Used by all instances of travel_pathfind. Happily, we do not need to be
     // re-entrant or thread-safe.
     static FixedVector<coord_def, GXM * GYM> circumference[2];
+
+    // Attempt to path through temporary obstructions (like sealed doors)
+    // due to the possibility they are no longer obstructing us
+    bool try_fallback;
 };
 
 extern TravelCache travel_cache;
