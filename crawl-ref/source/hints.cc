@@ -1142,7 +1142,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_TARGET_NO_FOE:
     case HINT_YOU_POISON:
     case HINT_YOU_SICK:
-    case HINT_CONTAMINATED_CHUNK:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_FLYING:
@@ -1948,14 +1947,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_DISPLAY_CHARACTER_STATUS);
         cmd.push_back(CMD_DISPLAY_COMMANDS);
         break;
-
-    case HINT_CONTAMINATED_CHUNK:
-        text << "Chunks that are described as <brown>contaminated</brown> will "
-                "occasionally make you nauseated when eaten. However, since food is "
-                "scarce in the dungeon, you'll often have to risk it.\n"
-                "While nauseated, you can't stomach anything, and your attributes "
-                "may occasionally decrease. Just go around, hunt for better food.";
-            break;
 
     case HINT_YOU_SICK:
         if (crawl_state.game_is_hints())

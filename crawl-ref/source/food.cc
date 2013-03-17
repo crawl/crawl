@@ -824,16 +824,6 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     if (!check_hunger)
         return true;
 
-    if (you.duration[DUR_NAUSEA] && you.hunger_state > HS_NEAR_STARVING)
-    {
-        if (!silent)
-        {
-            mpr("You can't stomach food right now!");
-            crawl_state.zero_turns_taken();
-        }
-        return false;
-    }
-
     if (you.hunger_state >= HS_ENGORGED)
     {
         if (!silent)
@@ -845,42 +835,6 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
         return false;
     }
     return true;
-}
-
-static bool _has_edible_chunks()
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def &obj(you.inv[i]);
-        if (!obj.defined()
-            || obj.base_type != OBJ_FOOD || obj.sub_type != FOOD_CHUNK
-            || !can_ingest(obj, true, true))
-        {
-            continue;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-void end_nausea()
-{
-    you.duration[DUR_NAUSEA] = 0;
-
-    const char *add = "";
-    // spoilable food, need to interrupt before it can go bad
-    if (_has_edible_chunks())
-        add = ", and you want to eat";
-    else if (you.hunger_state <= HS_HUNGRY)
-        add = ", and you need some food";
-    else if (can_ingest(OBJ_FOOD, FOOD_CHUNK, true)) // carnivore/gourmand
-        add = ", so let's find someone to eat";
-    mprf(MSGCH_DURATION, "Your stomach is not as upset anymore%s.", add);
-
-    if (!_has_edible_chunks() && _eat_check(true, true))
-        _have_corpses_in_pack(false);
 }
 
 // [ds] Returns true if something was eaten.
@@ -1669,7 +1623,7 @@ int prompt_eat_chunks(bool only_auto)
     //  * Ghouls may want to wait until chunks become rotten
     //    or until they have some hp rot to heal.
     const bool easy_eat = (Options.easy_eat_chunks || only_auto)
-        && !you.is_undead && !you.duration[DUR_NAUSEA];
+        && !you.is_undead;
     const bool easy_contam = easy_eat
         && (Options.easy_eat_gourmand && you.gourmand()
             || Options.easy_eat_contaminated);
@@ -1863,9 +1817,9 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     case CE_CONTAMINATED:
         switch (sapro)
         {
-        default: ratio =  333; break; // including sapro 3 (contam is good)
-        case 1:  ratio =   66; break;
-        case 2:  ratio =   22; break;
+        default: ratio =  500; break; // including sapro 3 (contam is good)
+        case 1:  ratio =  100; break;
+        case 2:  ratio =   33; break;
         }
         break;
     case CE_ROTTEN:
@@ -1893,9 +1847,6 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
         else
             ratio = ratio * left / GOURMAND_MAX;
     }
-
-    if (you.duration[DUR_NAUSEA] && sapro < 3)
-        ratio = 1000 - (1000 - ratio) / 2;
 
     return ratio;
 }
@@ -1965,26 +1916,7 @@ static void _eat_chunk(item_def& food)
         }
         else
         {
-            if (x_chance_in_y(contam, 1000))
-            {
-                if (you.duration[DUR_NAUSEA])
-                    mpr("You can barely stomach this raw meat while nauseous.");
-                else
-                    mpr("There is something wrong with this meat.");
-
-                if (you.duration[DUR_DIVINE_STAMINA] > 0)
-                    mpr("Your divine stamina protects you from sickness.");
-                else
-                {
-                    if (you.duration[DUR_NAUSEA])
-                        you.sicken(50 + random2(100));
-                    you.increase_duration(DUR_NAUSEA, 100 + random2(200), 300);
-                    learned_something_new(HINT_CONTAMINATED_CHUNK);
-                    xom_is_stimulated(random2(100));
-                }
-            }
-            else
-                _say_chunk_flavour(likes_chunks);
+            _say_chunk_flavour(likes_chunks);
 
             nutrition = nutrition * (1000 - contam) / 1000;
         }
@@ -2022,13 +1954,6 @@ static void _eating(item_def& food)
 {
     int food_value = ::food_value(food);
     ASSERT(food_value > 0);
-
-    if (you.duration[DUR_NAUSEA])
-    {
-        // possible only when starving or near starving
-        mpr("You force it down, but cannot stomach much of it.");
-        food_value /= 2;
-    }
 
     int duration = food_turns(food) - 1;
     if (you.form == TRAN_JELLY) // remarkably fast eaters, monsters even get

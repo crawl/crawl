@@ -70,9 +70,9 @@ amulet of resist mutation:quote
 %%%%
 amulet of the gourmand
 
-This amulet protects its wearer from nausea due to eating fresh raw meat and
-allows them to digest it when not hungry, but these effects on the wearer's
-digestion are cumulative over time and are initially small.
+This amulet allows its wearer to eat fresh raw meat when not hungry, and
+drastically increases nutrition you can get from them. These effects on the
+wearer's digestion are cumulative over time and are initially small.
 %%%%
 amulet of the gourmand:quote
 

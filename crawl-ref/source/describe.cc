@@ -1963,8 +1963,8 @@ string get_item_description(const item_def &item, bool verbose,
             case CE_CONTAMINATED:
                 if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 {
-                    description << "\n\nMeat like this may occasionally cause "
-                                   "nausea.";
+                    description << "\n\nMeat like this tastes awful and "
+                                   "provides far less nutrition.";
                 }
                 break;
             case CE_POISON_CONTAM:
