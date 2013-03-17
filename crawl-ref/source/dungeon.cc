@@ -676,6 +676,9 @@ static void _dgn_unregister_vault(const map_def &map)
         else if (tag.find("luniq_") == 0)
             env.level_uniq_map_tags.erase(tag);
     }
+
+    for (unsigned int j = 0; j < map.subvault_places.size(); ++j)
+        _dgn_unregister_vault(*map.subvault_places[j].subvault);
 }
 
 bool dgn_square_travel_ok(const coord_def &c)
