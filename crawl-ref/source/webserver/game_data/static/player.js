@@ -1,5 +1,6 @@
-define(["jquery", "comm", "./enums", "./map_knowledge", "./messages"],
-function ($, comm, enums, map_knowledge, messages) {
+define(["jquery", "comm", "./enums", "./map_knowledge", "./messages",
+        "./options"],
+function ($, comm, enums, map_knowledge, messages, options) {
     var player = {}, last_time;
 
     var hp_boosters = "divinely vigorous|berserk";
@@ -161,9 +162,10 @@ function ($, comm, enums, map_knowledge, messages) {
         if (player.has_status("lost " + stat))
             return "zero_stat";
 
-        // TODO: stat colour options -- hardcoded for now
-        if (val <= 3)
-            return "low_stat";
+        var limits = options.get("stat_colour")
+        for (var i in limits)
+            if (val <= limits[i].value)
+                return "colour_" + limits[i].colour;
 
         if (player.has_status(stat_boosters[stat]))
             return "boosted_stat";

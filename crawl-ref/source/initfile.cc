@@ -4102,7 +4102,7 @@ void _write_colour_list(const vector<pair<int, int> > variable,
     for (unsigned int i = 0; i < variable.size(); i++) {
         tiles.json_open_object();
         tiles.json_write_int("value", variable[i].first);
-        tiles.json_write_int("colour", variable[i].second);
+        tiles.json_write_string("colour", colour_to_str(variable[i].second));
         tiles.json_close_object();
     }
     tiles.json_close_array();
