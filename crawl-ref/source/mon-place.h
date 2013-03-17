@@ -62,8 +62,7 @@ bool downgrade_zombie_to_skeleton(monster* mon);
 // If want_corpse_capable is true, only monsters that can leave corpses
 // will be considered.
 monster_type pick_random_monster_for_place(const level_id &place,
-                                           monster_type zombie_monster,
-                                           bool want_corpse_capable);
+                                           monster_type zombie_monster);
 
 class level_id;
 
