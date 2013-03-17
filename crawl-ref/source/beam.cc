@@ -5111,6 +5111,10 @@ int bolt::range_used_on_hit() const
 // body-mass-based.
 bool bolt::knockback_actor(actor *act)
 {
+    // We can't do knockback if the beam starts and ends on the same space
+    if (source == act->pos())
+        return false;
+
     ASSERT(ray.pos() == act->pos());
 
     const coord_def oldpos(ray.pos());
