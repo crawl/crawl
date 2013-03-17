@@ -426,7 +426,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     "-rc",     self.rcfile_path(game_id)]
         if "options" in game:
             call += game["options"]
-        call.append("--print-json-options")
+        call.append("-print-webtiles-options")
 
         try:
             out = subprocess.check_output(call)
