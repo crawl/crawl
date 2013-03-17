@@ -553,8 +553,23 @@ bool debug_make_shop(const coord_def& pos)
     return true;
 }
 
+static void _free_all_vaults()
+{
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        env.level_map_ids(*ri) = INVALID_MAP_INDEX;
+    for (vault_placement_refv::const_iterator vp = env.level_vaults.begin();
+         vp != env.level_vaults.end(); ++vp)
+    {
+        (*vp)->seen = false;
+    }
+    dgn_erase_unused_vault_placements();
+}
+
 static void debug_load_map_by_name(string name, bool primary)
 {
+    if (primary)
+        _free_all_vaults();
+
     const bool place_on_us = !primary && strip_tag(name, "*", true);
 
     level_clear_vault_memory();
@@ -801,14 +816,7 @@ void wizard_list_levels()
 void wizard_recreate_level()
 {
     // Need to allow reuse of vaults, otherwise we'd run out of them fast.
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-        env.level_map_ids(*ri) = INVALID_MAP_INDEX;
-    for (vault_placement_refv::const_iterator vp = env.level_vaults.begin();
-         vp != env.level_vaults.end(); ++vp)
-    {
-        (*vp)->seen = false;
-    }
-    dgn_erase_unused_vault_placements();
+    _free_all_vaults();
 
     for (monster_iterator mi; mi; ++mi)
     {
