@@ -401,7 +401,7 @@ bool disc_of_storms(bool drac_breath)
         {
             for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
             {
-                if (grd(*ri) < DNGN_MAXWALL)
+                if (!in_bounds(*ri) || grd(*ri) < DNGN_MAXWALL)
                     continue;
 
                 if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
