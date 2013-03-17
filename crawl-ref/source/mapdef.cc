@@ -3062,6 +3062,19 @@ void map_def::hmirror()
     case MAP_SOUTHWEST: orient = MAP_SOUTHEAST; break;
     default: break;
     }
+
+    for (int i = 0, nsubvaults = this->subvault_places.size();
+         i < nsubvaults; ++i)
+    {
+        subvault_place &sv = subvault_places[i];
+
+        coord_def old_tl = sv.tl;
+        coord_def old_br = sv.br;
+        sv.tl.x = map.width() - 1 - old_br.x;
+        sv.br.x = map.width() - 1 - old_tl.x;
+
+        sv.subvault->map.hmirror();
+    }
 }
 
 void map_def::vmirror()
@@ -3082,6 +3095,19 @@ void map_def::vmirror()
     case MAP_SOUTHEAST: orient = MAP_NORTHEAST; break;
     case MAP_SOUTHWEST: orient = MAP_NORTHWEST; break;
     default: break;
+    }
+
+    for (int i = 0, nsubvaults = this->subvault_places.size();
+         i < nsubvaults; ++i)
+    {
+        subvault_place &sv = subvault_places[i];
+
+        coord_def old_tl = sv.tl;
+        coord_def old_br = sv.br;
+        sv.tl.y = map.height() - 1 - old_br.y;
+        sv.br.y = map.height() - 1 - old_tl.y;
+
+        sv.subvault->map.vmirror();
     }
 }
 
@@ -3117,6 +3143,29 @@ void map_def::rotate(bool clock)
                 orient = clockrotate_orients[i][!refindex];
                 break;
             }
+
+        for (int i = 0, nsubvaults = this->subvault_places.size();
+             i < nsubvaults; ++i)
+        {
+            subvault_place &sv = subvault_places[i];
+
+            coord_def p1, p2;
+            if (clock) //Clockwise
+            {
+                p1 = coord_def(map.width() - 1 - sv.tl.y, sv.tl.x);
+                p2 = coord_def(map.width() - 1 - sv.br.y, sv.br.x);
+            }
+            else
+            {
+                p1 = coord_def(sv.tl.y, map.height() - 1 - sv.tl.x);
+                p2 = coord_def(sv.br.y, map.height() - 1 - sv.br.x);
+            }
+
+            sv.tl = coord_def(min(p1.x, p2.x), min(p1.y, p2.y));
+            sv.br = coord_def(max(p1.x, p2.x), max(p1.y, p2.y));
+
+            sv.subvault->map.rotate(clock);
+        }
     }
 }
 
