@@ -3168,7 +3168,7 @@ SUBST:   x : x m:5, X : xxxcccbv, ' : .:70 w:20 l
 : elseif you.absdepth() > 13 then
 SUBST:   x : x m:3, X : xcc, ' : .:80 wW
 : else
-SUBST:   x : x m:2, ' : .:90 W
+SUBST:   x : x m:2, X : xxc, ' : .:90 W
 : end
 MAP
   xxxxxxxx
