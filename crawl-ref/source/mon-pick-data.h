@@ -208,23 +208,23 @@ static const pop_entry pop_orc[] =
 
 static const pop_entry pop_elf[] =
 { // Elven Halls (OOD cap: 16 maxlev: 7)
-  {  1,  3, 1000, FLAT, MONS_FUNGUS }, /* symmetry crop from -3..7 */
-  {  1,  3,   89, FLAT, MONS_ORC }, /* symmetry crop from -2..6 */
-  {  1,  3,   30, FLAT, MONS_ORC_WARRIOR }, /* symmetry crop from -1..5 */
-  {  1,  3,   40, FLAT, MONS_ORC_WIZARD }, /* symmetry crop from -1..5 */
-  {  1,  3,    8, FLAT, MONS_ORC_KNIGHT }, /* symmetry crop from 0..4 */
-  {  1,  3, 1000, FLAT, MONS_DEEP_ELF_SOLDIER }, /* symmetry crop from -3..7 */
-  {  1,  3, 1000, FLAT, MONS_DEEP_ELF_FIGHTER }, /* symmetry crop from -3..7 */
-  {  1,  3, 1000, FLAT, MONS_DEEP_ELF_MAGE }, /* symmetry crop from -3..7 */
-  {  1,  3,  849, FLAT, MONS_DEEP_ELF_SUMMONER }, /* symmetry crop from -3..7 */
-  {  1,  3,  735, FLAT, MONS_DEEP_ELF_CONJURER }, /* symmetry crop from -3..7 */
-  {  1,  3,  136, FLAT, MONS_SHAPESHIFTER }, /* symmetry crop from -2..6 */
+  {  1,  7, 1000, FLAT, MONS_FUNGUS }, /* symmetry crop from -3..7 */
+  {  1,  6,   89, FLAT, MONS_ORC }, /* symmetry crop from -2..6 */
+  {  1,  5,   30, FLAT, MONS_ORC_WARRIOR }, /* symmetry crop from -1..5 */
+  {  1,  5,   40, FLAT, MONS_ORC_WIZARD }, /* symmetry crop from -1..5 */
+  {  1,  4,    8, FLAT, MONS_ORC_KNIGHT }, /* symmetry crop from 0..4 */
+  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_SOLDIER }, /* symmetry crop from -3..7 */
+  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_FIGHTER }, /* symmetry crop from -3..7 */
+  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_MAGE }, /* symmetry crop from -3..7 */
+  {  1,  7,  849, FLAT, MONS_DEEP_ELF_SUMMONER }, /* symmetry crop from -3..7 */
+  {  1,  7,  735, FLAT, MONS_DEEP_ELF_CONJURER }, /* symmetry crop from -3..7 */
+  {  1,  6,  136, FLAT, MONS_SHAPESHIFTER }, /* symmetry crop from -2..6 */
   {  1,  5,    8, PEAK, MONS_ORC_PRIEST },
   {  1,  5,    8, PEAK, MONS_ORC_HIGH_PRIEST },
-  {  1,  5,   25, SEMI, MONS_ORC_SORCERER }, /* symmetry crop from 0..6 */
-  {  1,  5,  923, FLAT, MONS_DEEP_ELF_KNIGHT }, /* symmetry crop from -2..8 */
-  {  1,  5,  402, FLAT, MONS_DEEP_ELF_PRIEST }, /* symmetry crop from -2..8 */
-  {  1,  5,   25, SEMI, MONS_GLOWING_SHAPESHIFTER }, /* symmetry crop from 0..6 */
+  {  1,  6,   25, SEMI, MONS_ORC_SORCERER }, /* symmetry crop from 0..6 */
+  {  1,  7,  923, FLAT, MONS_DEEP_ELF_KNIGHT }, /* symmetry crop from -2..8 */
+  {  1,  7,  402, FLAT, MONS_DEEP_ELF_PRIEST }, /* symmetry crop from -2..8 */
+  {  1,  6,   25, SEMI, MONS_GLOWING_SHAPESHIFTER }, /* symmetry crop from 0..6 */
   {  1,  7,   25, PEAK, MONS_DEEP_ELF_HIGH_PRIEST },
   {  0,  8,   66, PEAK, MONS_DEEP_ELF_DEMONOLOGIST },
   {  1,  7,   40, PEAK, MONS_DEEP_ELF_ANNIHILATOR },
@@ -665,12 +665,12 @@ static const pop_entry pop_crypt[] =
 
 static const pop_entry pop_tomb[] =
 { // Tomb (OOD cap: 10 maxlev: 5)
-  { -1,  3,   89, FLAT, MONS_ZOMBIE_SMALL }, /* symmetry crop from -3..5 */
+  { -1,  5,   89, FLAT, MONS_ZOMBIE_SMALL }, /* symmetry crop from -3..5 */
   {  1,  3,    3, SEMI, MONS_TRAPDOOR_SPIDER },
-  {  1,  3, 1000, FLAT, MONS_MUMMY }, /* symmetry crop from -3..7 */
-  {  1,  3,   98, FLAT, MONS_SKELETON_SMALL }, /* symmetry crop from -2..6 */
-  {  1,  3,   98, FLAT, MONS_SKELETON_LARGE }, /* symmetry crop from -2..6 */
-  {  1,  3,   98, FLAT, MONS_ZOMBIE_LARGE }, /* symmetry crop from -2..6 */
+  {  1,  5, 1000, FLAT, MONS_MUMMY }, /* symmetry crop from -3..7 */
+  {  1,  5,   98, FLAT, MONS_SKELETON_SMALL }, /* symmetry crop from -2..6 */
+  {  1,  5,   98, FLAT, MONS_SKELETON_LARGE }, /* symmetry crop from -2..6 */
+  {  1,  5,   98, FLAT, MONS_ZOMBIE_LARGE }, /* symmetry crop from -2..6 */
   {  1,  5, 1000, FLAT, MONS_GUARDIAN_MUMMY }, /* symmetry crop from -2..8 */
   {  1,  5,  230, FLAT, MONS_FLYING_SKULL }, /* symmetry crop from -2..8 */
   {  1,  5,   25, SEMI, MONS_SIMULACRUM_SMALL }, /* symmetry crop from 0..6 */
