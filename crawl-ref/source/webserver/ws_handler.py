@@ -422,8 +422,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         game = config.games[game_id]
         call = [game["crawl_binary"]];
         if self.username:
-            call += ["-name",   self.username,
-                    "-rc",     self.rcfile_path(game_id)]
+            call += ["-rc",     self.rcfile_path(game_id)]
+        else:
+            call += ["-rc",     "/dev/null"]
         if "options" in game:
             call += game["options"]
         call.append("-print-webtiles-options")
