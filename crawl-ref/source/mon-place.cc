@@ -1837,6 +1837,8 @@ monster_type pick_random_zombie()
 
             zombifiable.push_back(mcls);
         }
+
+        ASSERT(!zombifiable.empty());
     }
 
     return (zombifiable[random2(zombifiable.size())]);
