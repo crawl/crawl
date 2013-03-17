@@ -10,6 +10,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
         "str": "vitalised|mighty|berserk",
         "int": "vitalised|brilliant",
         "dex": "vitalised|agile",
+        "hp": "divinely vigorous|berserk",
+        "mp": "divinely vigorous",
     };
 
     var defense_boosters = {
@@ -190,6 +192,40 @@ function ($, comm, enums, map_knowledge, messages, options) {
         $("#stats_" + stat).html(elem);
     }
 
+    function percentage_color(name)
+    {
+        var real = false;
+        if (player["real_" + name + "_max"] != player[name + "_max"])
+            real = true;
+
+        $("#stats_" + name).removeClass();
+        $("#stats_" + name + "_separator").removeClass();
+        $("#stats_" + name + "_max").removeClass();
+        if (real)
+            $("#stats_real_" + name + "_max").removeClass();
+
+        if (player.has_status(stat_boosters[name]))
+        {
+            $("#stats_" + name).addClass("boosted_stat");
+            $("#stats_" + name + "_separator").addClass("boosted_stat");
+            $("#stats_" + name + "_max").addClass("boosted_stat");
+            if (real)
+                $("#stats_real_" + name + "_max").addClass("boosted_stat");
+            return;
+        }
+
+        var val = player[name] / player[(real ? "real_" : "") + name + "_max"]
+                  * 100;
+        var limits = options.get(name + "_colour");
+        var colour = null;
+        for (var i in limits)
+            if (val <= limits[i].value)
+                colour = limits[i].colour;
+
+        if (colour)
+            $("#stats_" + name).addClass("colour_" + colour);
+    }
+
     var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress", "gold"];
     function update_stats_pane()
     {
@@ -270,6 +306,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
         else
             $("#stats_real_hp_max").text("");
 
+        percentage_color("hp");
+        percentage_color("mp");
         update_bar("hp");
         if (do_contam)
             update_bar_contam();
