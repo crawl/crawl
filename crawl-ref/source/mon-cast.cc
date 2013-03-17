@@ -3162,8 +3162,8 @@ static void _mons_create_tentacles(monster* head)
 
     vector<coord_def> adj_squares;
 
-    // collect open adjacent squares, candidate squares must be
-    // not already occupied.
+    // Collect open adjacent squares. Candidate squares must be
+    // unoccupied.
     for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
     {
         if (!monster_at(*adj_it))
