@@ -274,12 +274,7 @@ b. The player may never get a chance to explore unique abyss vaults
    Once any square of a unique vault has been seen by the player in
    the abyss, that vault cannot be reused.
 
-c. Portal vaults that lead out of the abyss cannot return to the
-   abyss. If you place a bazaar portal or similar in the abyss, the
-   player will go straight back to the dungeon when exiting the
-   bazaar.
-
-d. Timers and other listeners in an abyssal vault may be discarded at
+c. Timers and other listeners in an abyssal vault may be discarded at
    any time when the abyss shifts and the vault is destroyed. You can
    still use timers to modify your vaults, but be aware that the timer
    may be removed at any time as the abyss shifts away from your
