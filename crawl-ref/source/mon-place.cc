@@ -437,23 +437,6 @@ void spawn_random_monsters()
     viewwindow();
 }
 
-static vector<monster_type> _find_valid_monster_types(const level_id &place)
-{
-    static vector<monster_type> valid_monster_types;
-    static level_id last_monster_type_place;
-
-    if (last_monster_type_place == place)
-        return valid_monster_types;
-
-    valid_monster_types.clear();
-    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
-        if (mons_rarity(i, place.branch) > 0)
-            valid_monster_types.push_back(i);
-
-    last_monster_type_place = place;
-    return valid_monster_types;
-}
-
 static bool _is_random_monster(int mt)
 {
     return (mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
@@ -473,12 +456,6 @@ static monster_type _pick_random_monster(level_id place,
             return type;
     }
 
-    // Short-circuit it when we know it will fail.
-    if (!branch_has_monsters(place.branch))
-        return MONS_PROGRAM_BUG;
-
-    monster_type mon_type = MONS_PROGRAM_BUG;
-
     _apply_ood(place);
 
     place.depth = min(place.depth, branch_ood_cap(place.branch));
@@ -486,59 +463,12 @@ static monster_type _pick_random_monster(level_id place,
     if (final_place)
         *final_place = place;
 
-    int level = 0, diff, chance;
-    int lev_mons = place.absdepth();
-
-    const int n_pick_tries   = 10000;
-    const int n_relax_margin = n_pick_tries / 10;
-    int monster_pick_tries = 10000;
-    const vector<monster_type> valid_monster_types =
-        _find_valid_monster_types(place);
-
-    if (valid_monster_types.empty())
-        return MONS_PROGRAM_BUG;
-
-    while (monster_pick_tries-- > 0)
-    {
-        mon_type = valid_monster_types[random2(valid_monster_types.size())];
-
-        if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type)
-            || force_mobile && mons_class_is_stationary(mon_type))
-        {
-            continue;
-        }
-
-        level = mons_depth(mon_type, place.branch)
-                + absdungeon_depth(place.branch, 0);
-        diff = level - lev_mons;
-#ifdef ASSERTS
-        if (diff && branches[place.branch].numlevels <= 1)
-        {
-            die("Requested a monster for %s:%d (got: %s)",
-                branches[place.branch].abbrevname,
-                1 + lev_mons - absdungeon_depth(place.branch, 0),
-                mons_class_name(mon_type));
-        }
-#endif
-
-        // If we're running low on tries, ignore level differences.
-        if (monster_pick_tries < n_relax_margin)
-            diff = 0;
-
-        chance = mons_rarity(mon_type, place.branch) - (diff * diff);
-
-        // If we're running low on tries, remove level restrictions.
-        if ((monster_pick_tries < n_relax_margin || abs(lev_mons - level) <= 5)
-            && random2avg(100, 2) <= chance)
-        {
-            break;
-        }
-    }
-
-    if (monster_pick_tries <= 0)
-        return MONS_PROGRAM_BUG;
-
-    return mon_type;
+    if (crawl_state.game_is_arena())
+        return pick_monster(place, arena_veto_random_monster);
+    else if (force_mobile)
+        return pick_monster(place, mons_class_is_stationary);
+    else
+        return pick_monster(place);
 }
 
 // Caller must use !invalid_monster_type to check if the return value
