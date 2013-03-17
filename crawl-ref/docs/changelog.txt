@@ -103,7 +103,7 @@ Monsters
     - Ironheart preservers, with the ability to take some damage in place of
       an enemy the player is currently attacking.
 * New uniques:
-    - Jorgrun, a dwarven earth elementalist.
+    - Jorgrun, a deep dwarven earth elementalist.
     - Lamia, queen of the nagas.
 * Friendly summoned monsters do not attack things unless the player has line
   of sight to both the summon and the victim. Glass does not count as line of
