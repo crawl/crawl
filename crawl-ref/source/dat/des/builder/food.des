@@ -286,3 +286,142 @@ MAP
 ...Z.Z...
  .......
 ENDMAP
+
+# 22.0k/29.5k/0
+# A couple of tengu have staked out a little piece of the dungeon.
+NAME:   grunt_tengu_nest
+DEPTH:  D:9-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
+MONS:   tengu ; war axe | scimitar | long sword, plant
+NSUBST: 2 : 3:2 / *:.
+ITEM:   bread ration / snozzcumber q:3 / orange q:4 w:5 / orange q:5 w:5 / \
+        banana q:4 w:5 / banana q:5 w:5 / lemon q:4 w:5 / lemon q:4 w:5 / \
+        pear q:6 / apple q:6 / apricot q:6 / choko q:7 / rambutan q:7 / \
+        lychee q:7
+MAP
+ xx+xx
+xx2.2xx
+x22222x
+x22222x
+xd1t1dx
+xxdddxx
+ xxxxx
+ENDMAP
+
+# 22.2k/17.7k/12.6k
+# An ogre roasts intruders over his little campfire.
+NAME:   grunt_ogre_cave
+DEPTH:  D:7-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
+        patrolling
+{{
+  local twochance = you.absdepth() - 8
+  local onechance = 7 - twochance
+  mons("ogre w:" .. onechance .. " / two-headed ogre w:" .. twochance)
+  dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
+                             .. ' / dwarf skeleton')
+}}
+ITEM:   bread ration q:3, beef jerky q:3, throwing net
+MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+ xxxxx
+xxxxxxx
+xxeegxx
+xx1Ogxx
+xxdf.xx
+ xxx.xx
+ xx.xxx
+xxx.xxx
+xx.xxx.
+ .g.
+  @
+ENDMAP
+
+# 20.8k/23.8k/12.0k
+# Welcome to Pandemonium Pizzeria; is this for carry-out or delivery?
+# (Ideally the cashier would have a silly cap, but they can't wear caps.)
+NAME:   grunt_pizzeria
+DEPTH:  D:8-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
+        patrolling
+MONS:   deep elf soldier ; sabre race:elven | falchion race:elven / \
+        human hd:5 ; short sword | sabre / \
+        deep dwarf ; hand axe race:dwarven / \
+        orc warrior ; dagger race:orcish / \
+        spriggan ; dagger
+ITEM:   slice of pizza q:8, bread ration q:2
+MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+xxxxxxx
+xvvvdex
+xvO+..x
+xvvv.xx
+x$1...x
+xmmm.xx
+x.....x
+xmm+mmx
+ ..@..
+ENDMAP
+
+# 21.6k/21.6k/21.6k
+NAME:   grunt_rat_hole
+DEPTH:  D:7-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
+        patrolling
+MONS:   rat, grey rat, green rat, orange rat
+ITEM:   cheese q:3
+: if you.absdepth() < 11 then
+NSUBST: 4 = 1:4 / *:3
+: else
+NSUBST: 2 = 2:3 / *:2
+NSUBST: 1 = 5:2 / *:1
+: end
+MAP
+ xxxxx
+xxd4dxx
+xd.d.dx
+x24142x
+x12321x
+xx.1.xx
+xxxx1xx
+xxxdxxx
+xx1xxx
+ xx1xx
+  .@.
+ENDMAP
+
+# 22.6k/22.6k/15k (+ perishable up to 16k, avg 6k)
+NAME:   grunt_livestock
+DEPTH:  D:7-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
+        patrolling
+MONS:   human hd:5 ; animal skin . hand axe
+{{
+  local sheep_weight = 14 - you.absdepth()
+  if sheep_weight <= 0 then
+    mons("hog / yak")
+  else
+    mons("sheep w:" .. sheep_weight .. " / hog w:1 / yak w:1")
+  end
+}}
+ITEM:   cheese q:9, bread ration q:2, beef jerky q:2
+KFEAT:  K = iron_grate
+KFEAT:  - = open_door
+MAP
+.xxxxxxx
+@+...fdx
+.x...1ex
+ xKK-KKx
+ x2...2x
+ x.2.2.x
+ xxxxxxx
+ENDMAP

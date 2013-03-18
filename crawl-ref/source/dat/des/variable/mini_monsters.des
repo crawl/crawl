@@ -4430,7 +4430,6 @@ ENDMAP
 NAME:   minmay_guarded_unrand_robustness
 DEPTH:  D:10-, Vaults
 TAGS:   no_monster_gen no_item_gen
-TAGS:   vaults_room_15_spin_encounter
 WEIGHT: 3, 1 (Vaults)
 # Iron golems are speed 7, so even a naga can outrun them.
 MONS:   patrolling iron golem, patrolling metal gargoyle
@@ -4639,7 +4638,6 @@ ENDMAP
 #
 NAME:   sword_in_stone
 TAGS:   mini_float patrolling
-TAGS:   vaults_7_room_spin_encounter
 DEPTH:  D:5-26, Vaults, Orc, Elf
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item demon blade /\
@@ -4695,6 +4693,119 @@ kkkkkkk
 kkkkkkk
 ENDMAP
 
+# obsidian axe
+# A mini-temple of Makhleb; demons ahoy!
+NAME:   grunt_guarded_unrand_obsidian_axe
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:17-
+WEIGHT: 3
+MONS:   silver statue
+MONS:   patrolling hell knight ; broad axe unrand:obsidian_axe . \
+                                 chain mail | splint mail | plate armour . \
+                                 shield | large shield
+MONS:   patrolling hell knight
+MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
+        ynoxinul / chaos spawn
+MONS:   blue devil / iron devil / orange demon / red devil / rotting devil / \
+        sixfirhy
+KPROP:  ._cGO12345 = bloody / nothing w:20
+KFEAT:  _ = altar_makhleb
+MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0}
+MAP
+      ccccc
+      cO1Oc
+      c3_3c
+     cc424cc
+    cc5.4.5cc
+   cc.G5.5G.cc
+  ccc5.....5ccc
+.ccOc.G5.5G.cOcc.
+.c5.c.......c.5c.
+@+.3=.G.4.G.=3.+@
+.c5.c..._...c.5c.
+.ccOcc.O1O.ccOcc.
+..ccccccccccccc..
+ ...............
+ENDMAP
+
+# Arga
+# The end of a dwarven mineshaft; perhaps they just found the axe again?
+NAME:   grunt_guarded_unrand_arga
+TAGS:   no_monster_gen no_item_gen patrolling
+DEPTH:  D:14-
+WEIGHT: 3
+# KMONS is used here to get the fallback to work properly.
+KMONS:  W = Wiglaf ; war axe unrand:arga . \
+                     shield race:dwarven . \
+                     chain mail w:3 race:dwarven | \
+                     splint mail w:5 race:dwarven | \
+                     plate armour w:10 race:dwarven | \
+                     crystal plate armour w:1 race:dwarven, \
+            deep dwarf berserker ; war axe unrand:arga . \
+                                   chain mail w:5 race:dwarven | \
+                                   splint mail w:2 race:dwarven | \
+                                   plate armour w:1 race:dwarven
+KMONS:  J = Jorgrun, deep dwarf necromancer
+MONS:   deep dwarf berserker
+MONS:   deep dwarf scion / deep dwarf death knight w:2
+MONS:   deep dwarf
+SUBST:  X = x.
+KITEM:  . = gold w:5 / stone / large rock q:1 w:1 / nothing w:40
+MAP
+xX.@.Xxxxxxxxxxxxx
+xX...Xxxccccccxxxx
+xXx2.XXccX1.Xcccxx
+xXX.3XXcXW.J..Xccx
+xxX..XxccX1...2.Xx
+xX3.XXxxccccX2..Xx
+xX..XXxxxxxxXX.XXx
+xX.3XXxxxxxXX.1XXx
+xXX.2XXXXXxX3..XXx
+xxXX.3.2XXXX.1XXxx
+xxxXXX.3.2...XXxxx
+xxxxxXXXX..3XXxxxx
+xxxxxxxxXXXXXxxxxx
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# sword of the Doom Knight
+# A temple to Yredelemnul, with a champion wielding the blade designate.
+NAME:   grunt_unrand_guarded_doom_knight
+TAGS:   no_monster_gen no_item_gen patrolling
+DEPTH:  D:20-, Crypt
+WEIGHT: 3
+MONS:   deep dwarf death knight ; \
+        great sword unrand:sword_of_the_doom_knight . \
+        chain mail race:dwarven w:5 | \
+        splint mail race:dwarven w:2 | \
+        plate armour race:dwarven w:1
+MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
+MONS:   rotting hulk / freezing wraith / phantasmal warrior / \
+        flaming corpse / flayed ghost / skeletal warrior
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  - = open_door
+MAP
+    ccccc
+    c2_3c
+    c.1.c
+    c465c
+ccccc===ccccc
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+ccccc+++ccccc
+     .@.
+ENDMAP
 
 ###################################################################
 #
@@ -4767,7 +4878,6 @@ ENDMAP
 # gate that opens all at once.
 NAME:   door_vault
 TAGS:   allow_dup
-TAGS:   vaults_room_10_spin_dangerous
 WEIGHT: 1 (Vaults), 10
 DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
