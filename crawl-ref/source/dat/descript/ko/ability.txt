@@ -11,7 +11,7 @@ Blink ability
 
 임의의 장소로 순간이동을 한다. 어디로 이동할지는 알 수 없다.
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 대상에게 마력이 깃든 숨결을 내뿜는다. 이 숨결은 적에게 걸려있는 각종 효과를
 없애버린다.

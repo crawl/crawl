@@ -11,7 +11,7 @@ Blink ability
 
 传送到近处的一个随机地点。
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 向目标怪物喷吐出一股能量波，有可能会移除它身上的状态魔法。
 %%%%
