@@ -437,17 +437,27 @@ void spawn_random_monsters()
     viewwindow();
 }
 
-static bool _is_random_monster(int mt)
+static bool _is_random_monster(monster_type mt)
 {
     return (mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
             || mt == WANDERING_MONSTER);
 }
 
+static bool _is_not_a_large_zombie(monster_type mt)
+{
+    return mons_zombie_size(mt) != Z_BIG;
+}
+
+static bool _is_not_a_small_zombie(monster_type mt)
+{
+    return mons_zombie_size(mt) != Z_SMALL;
+}
+
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
-static monster_type _pick_random_monster(level_id place,
-                                 level_id *final_place = nullptr,
-                                 bool force_mobile = false)
+monster_type pick_random_monster(level_id place,
+                                 monster_type kind,
+                                 level_id *final_place)
 {
     if (crawl_state.game_is_arena())
     {
@@ -465,17 +475,17 @@ static monster_type _pick_random_monster(level_id place,
 
     if (crawl_state.game_is_arena())
         return pick_monster(place, arena_veto_random_monster);
-    else if (force_mobile)
+    else if (kind == RANDOM_MOBILE_MONSTER)
         return pick_monster(place, mons_class_is_stationary);
+    else if (mons_class_is_zombified(kind))
+    {
+        // With this code, we can skip the different mon enums for zombie
+        // sizes hack.  No longer needed to choose a size.
+        return pick_monster(place, zombie_class_size(kind) == Z_BIG ?
+                            _is_not_a_large_zombie : _is_not_a_small_zombie);
+    }
     else
         return pick_monster(place);
-}
-
-// Caller must use !invalid_monster_type to check if the return value
-// is a real monster.
-monster_type pick_random_monster(const level_id &place)
-{
-    return _pick_random_monster(place);
 }
 
 bool can_place_on_trap(monster_type mon_type, trap_type trap)
@@ -647,8 +657,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             level_id orig_place = *place;
 
             // Now pick a monster of the given branch and level.
-            mon_type = _pick_random_monster(*place, place,
-                                            mon_type == RANDOM_MOBILE_MONSTER);
+            mon_type = pick_random_monster(*place, mon_type, place);
 
             // Don't allow monsters too stupid to use stairs (e.g.
             // non-spectral zombified undead) to be placed near
@@ -663,47 +672,9 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         }
 
         if (proximity == PROX_NEAR_STAIRS && tries >= 300)
-        {
-            mon_type = _pick_random_monster(*place, place,
-                                       mon_type == RANDOM_MOBILE_MONSTER);
-        }
+            mon_type = pick_random_monster(*place, mon_type, place);
     }
     return mon_type;
-}
-
-monster_type pick_random_monster_for_place(const level_id &place,
-                                           monster_type zombie_monster)
-{
-    // If the caller supplied a zombie_monster argument, use it to
-    // figure out whether or not it wants a zombie, and if so, what
-    // size.
-    const bool wanted_a_zombie = zombie_monster != MONS_NO_MONSTER
-                                 && mons_class_is_zombified(zombie_monster);
-    const zombie_size_type wanted_zombie_size =
-        wanted_a_zombie ? zombie_class_size(zombie_monster) : Z_NOZOMBIE;
-
-    // Try 100 times to generate an acceptable monster, then give up and
-    // return MONS_NO_MONSTER and let the caller deal with it.
-    for (int tries = 0; tries < 100; ++tries)
-    {
-        monster_type chosen = _pick_random_monster(place, NULL);
-
-        // If _pick_random_monster() gave us something invalid, give up
-        // and let the caller deal with it.
-        if (invalid_monster_type(chosen))
-            return chosen;
-
-        // Now, if we didn't want a zombie, we are done.
-        if (!wanted_a_zombie)
-            return chosen;
-
-        // Otherwise make sure our zombie is the right size.
-        if (mons_zombie_size(chosen) == wanted_zombie_size)
-            return chosen;
-    }
-
-    // :( We failed to find a monster. Sorry.
-    return MONS_NO_MONSTER;
 }
 
 // A short function to check the results of near_stairs().

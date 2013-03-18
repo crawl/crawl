@@ -1078,7 +1078,6 @@ monster_type arena_pick_random_monster(const level_id &place)
     game_ended_with_error(
         make_stringf("No random monsters for place '%s'",
                      arena::place.describe().c_str()));
-    return NUM_MONSTERS;
 }
 
 bool arena_veto_random_monster(monster_type type)

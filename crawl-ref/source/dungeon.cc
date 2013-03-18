@@ -4476,8 +4476,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_MONSTER)
     {
-        type = pick_random_monster_for_place(mspec.place, mspec.monbase);
-        if (type == MONS_NO_MONSTER)
+        type = pick_random_monster(mspec.place, mspec.monbase);
+        if (!type)
             type = RANDOM_MONSTER;
     }
 

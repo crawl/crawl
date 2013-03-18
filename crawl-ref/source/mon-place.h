@@ -56,17 +56,11 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs);
 
 bool downgrade_zombie_to_skeleton(monster* mon);
 
-// Picks a monster eligible for random generation at the given place,
-// optionally picking monsters that can be zombified into the target zombie.
-//
-// If want_corpse_capable is true, only monsters that can leave corpses
-// will be considered.
-monster_type pick_random_monster_for_place(const level_id &place,
-                                           monster_type zombie_monster);
-
 class level_id;
 
-monster_type pick_random_monster(const level_id &place);
+monster_type pick_random_monster(level_id place,
+                                 monster_type kind = RANDOM_MONSTER,
+                                 level_id *final_place = nullptr);
 
 conduct_type player_will_anger_monster(monster_type type);
 conduct_type player_will_anger_monster(monster* mon);
