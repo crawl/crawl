@@ -879,7 +879,7 @@ static const pop_entry pop_tar[] =
 static const pop_entry pop_zot[] =
 { // Zot
   {  1,  5,   89, DOWN, MONS_ELECTRIC_GOLEM },
-  { -2,  4,   52, SEMI, MONS_ORB_OF_FIRE },
+  {  1,  5,   42, FLAT, MONS_ORB_OF_FIRE },
   {  1,  5,  972, FLAT, MONS_MOTH_OF_WRATH },
   {  1,  5,   73, FLAT, MONS_BLACK_DRACONIAN },
   {  1,  5,   73, FLAT, MONS_MOTTLED_DRACONIAN },
