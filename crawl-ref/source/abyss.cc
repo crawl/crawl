@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-pathfind.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-transit.h"
 #include "mon-util.h"
@@ -1533,6 +1534,11 @@ static void _initialise_level_corrupt_seeds(int power)
     }
 }
 
+static bool _incorruptible(monster_type mt)
+{
+    return mons_is_abyssal_only(mt) || mons_class_holiness(mt) == MH_HOLY;
+}
+
 // Create a corruption spawn at the given position. Returns false if further
 // monsters should not be placed near this spot (overcrowding), true if
 // more monsters can fit in.
@@ -1560,24 +1566,12 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
             continue;
         }
 
-        // Got a place, summon the beast.
-        // Retry on invalid monsters.
-        for (int x = 0; x < 10; ++x)
-        {
-            monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
-            if (mons_is_abyssal_only(mons)
-                || mons_class_holiness(mons) == MH_HOLY)
-            {
-                continue;
-            }
-            if (invalid_monster_type(mons))
-                continue;
-
-            mgen_data mg(mons, beh, 0, 5, 0, p);
-            mg.non_actor_summoner = "Lugonu's corruption";
-            mg.place = BRANCH_ABYSS;
-            return create_monster(mg);
-        }
+        monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
+        ASSERT(mons);
+        mgen_data mg(mons, beh, 0, 5, 0, p);
+        mg.non_actor_summoner = "Lugonu's corruption";
+        mg.place = BRANCH_ABYSS;
+        return create_monster(mg);
     }
 
     return false;
