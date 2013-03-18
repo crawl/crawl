@@ -60,7 +60,13 @@ int mons_depth(monster_type mcls, branch_type branch)
     // legacy function, until ZotDef is ported
     for (const pop_entry *pe = population[branch].pop; pe->mons; pe++)
         if (pe->mons == mcls)
+        {
+            if (pe->distrib == UP)
+                return pe->maxr;
+            else if (pe->distrib == DOWN)
+                return pe->minr;
             return (pe->minr + pe->maxr) / 2;
+        }
 
     return DEPTH_NOWHERE;
 }
@@ -78,7 +84,7 @@ int mons_rarity(monster_type mcls, branch_type branch)
             // the square of distance).
             // The new data pretty accurately represents old state, but only
             // if depth is known, and mons_rarity() doesn't receive it.
-            static int fudge[3] = { 25, 12, 0 };
+            static int fudge[5] = { 25, 12, 0, 0, 0 };
             int rare = pe->rarity;
             if (rare < 500)
                 rare = isqrt_ceil(rare * 10);
