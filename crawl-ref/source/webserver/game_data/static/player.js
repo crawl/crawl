@@ -27,6 +27,8 @@ function ($, comm, enums, map_knowledge, messages) {
             old_value = value;
         if (value < 0)
             value = 0;
+        if (old_value > max)
+            old_value = max;
         player["old_" + name] = value;
         var increase = old_value < value;
         var full_bar = (100 * (increase ? old_value : value) / max).toFixed(2);
