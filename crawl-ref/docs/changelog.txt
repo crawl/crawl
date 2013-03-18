@@ -15,27 +15,19 @@ Branches, environment
 * Many Ziggurat floors have more fine-tuned monster-sets, and a few monster
   sets have been replaced entirely.
 * The Abyss no longer exists in Sprint.
-* A new Sprint map by evilmike: "Thunderdome".
-* A new Sprint map by st: "The Pits".
-* A new Sprint map by st: "Arena of Blood".
+* Three new Sprint maps: "Thunderdome" by evilmike, "The Pits" and "Arena of
+  Blood" both by st.
 * A new layout for Cocytus.
-* A new dragon-themed Lair ending.
-* A new water-themed rune vault for the Snake Pit.
-* A new rotting-themed rune vault for the Swamp.
-* A new castle-themed rune vault for the Swamp.
-* A new, more waterlogged, rune vault for Shoals.
-* Lots more new vaults.
+* New Lair branch ending vaults, and many other new vaults.
 * "Special rooms" (kobold/orc rooms, beehives, morgues, jelly pits) have been
   adjusted, now appear at more appropriate depths and layouts, and no longer
   place doors.
 * A new "special room" - the mythical zoo, with standard high fantasy beasts.
 * Remove secret doors entirely, replacing some with runed doors.
 * More layouts allowed in Zot.
-* Abyss morphing can push the player.
 * New "runed door" feature: won't be opened by auto-explore or by monsters.
   Becomes a regular door when opened.
 * Alarm traps only trigger once.
-* A number of vaults are fixed to not trap the player.
 * More decorative vaults are now placed.
 
 Character
@@ -45,7 +37,7 @@ Character
 * Traps & Doors is just "Traps".
 * Traps are spotted (or not) deterministically based on skill level and a
   few other factors: spending more time does not help.
-* Levitation is no more.
+* Levitation and controlled flight are no more - all flight is controlled.
 * Flying no longer increases carrying capacity.
 * Carrying capacity is slightly less dependent on strength.
 * Tengu receive their movement speed bonus when flying, regardless of burden.
@@ -58,13 +50,10 @@ Character
 * Hill Orcs are better at Axes, worse at gaining levels.
 * Tengu are better at gaining levels.
 * Berserkers may choose their starting weapon.
-* Races that forbid some mutations (e.g. nagas and talons) are no longer
-  more resistant to mutation as a result.
 * Levels 1 and 2 of the teleportitis mutation teleport you only a limited
   distance.
 * The augmentation mutation now gives bonuses at high HP rather than low HP.
 * The Powered by Pain mutation sometimes gives stat bonuses.
-* Many scale mutations are slightly improved.
 * Dragon form can use wands again.
 
 Monsters
@@ -110,23 +99,16 @@ Monsters
   sight for this purpose.
 * Summoned monsters do not cast spells that create permanent allies.
 * Only a select few monsters flee at low HP.
-* New monster spells: Shatter, LRD.
 * Bone dragons are faster but have fewer HP.
-* Ereshkigal is much more dangerous.
+* Ereshkigal has more HP, and can now cast Silence and Major Healing.
 * Soul eaters can drain life from their surroundings.
-* Lorocyprocas are somewhat more powerful, particularly against high-AC
-  players.
 * Vampires no longer summon hordes of mammals. Plain vampires cast Vampiric
   Drain instead, while vampire knights cast Blink Close.
-* Apis do not fly.
 * Frances has a more powerful set of spells.
 * Joseph does somewhat more damage in melee.
 * Polyphemus is stronger, faster, and has more rocks.
 * Monsters are much less likely to polymorph into plain elves and humans.
-* Non-humanoid holies no longer "salute", etc.
-* Trapdoor spiders no longer get "stuck".
-* Stone giants, titans, wyverns, and the iron giant are slightly smaller.
-* Rotting corpses no longer spawn toadstools for non-Fedhites.
+* Rotting corpses no longer spawn toadstools for non-Fedhasites.
 * See invisible no longer grants blindness immunity.
 * A number of monsters now have see invisible instead of sense invisible.
 * Monsters can now use wands of digging, and cast Dig in more circumstances.
@@ -136,16 +118,17 @@ Spells
 ------
 * Removed: Fulsome Distillation, Evaporate, Cigotuvi's Degeneration, See
   Invisible and Insulation.
-* New spell: Force Lance (level 2 Conjuration). Fires a short-range single-
-  target projectile that can knock monsters backwards.
-* New spell: Dazzling Spray (level 3 Conjuration/Hexes). Fires a spread
-  of energy bolts that can blind creatures.
-* New spell: Iskenderun's Battlesphere (level 4 Conjuration/Charms). Creates
-  an autonomous globe that shoots at enemies in sync with your conjurations.
-* New spell: Fulminant Prism (level 5 Conjuration/Hexes). Creates a time
-  bomb at a smite-targetted location.
-* New spell: Disjunction (level 8 Translocation). Has a duration, during
-  which it blinks away nearby monsters. Causes contamination.
+* New spells:
+    - Force Lance (level 2 Conjuration). Fires a short-range single-target
+      projectile that can knock monsters backwards.
+    - Dazzling Spray (level 3 Conjuration/Hexes). Fires a spread of energy
+      bolts that can blind creatures.
+    - Iskenderun's Battlesphere (level 4 Conjuration/Charms). Creates an
+      autonomous globe that shoots at enemies in sync with your conjurations.
+    - Fulminant Prism (level 5 Conjuration/Hexes). Creates a time bomb at a
+      smite-targetted location.
+    - Disjunction (level 8 Translocation). Has a duration, during which it
+      blinks away nearby monsters. Causes contamination.
 * Spell memorisation failure is no more. As long as the failure chance is
   not 100%, the spell can be memorized. There is a warning prompt if the
   chance of a miscast is high.
@@ -155,7 +138,6 @@ Spells
 * Teleport Other gets a power boost.
 * Condensation Shield's SH bonus no longer cares about Shields skill or
   intelligence.
-* Summon Swarm (rod) now gives spiders instead of wolf spiders.
 * Venom Bolt and Bolt of Magma do more damage.
 * Conjurers have a new book with non-elemental spells (including the new
   conjurations).
@@ -235,9 +217,8 @@ Gods
   levels.
 * Followers of Beoghites now share experience when the player scores kills.
 * Yredelemnul gives a small amount of piety for desecrating holy remains.
-* Zin's Imprisonment can no longer be used against friendly or good-neutral
-  creatures or conjured monsters, and its duration has been adjusted to not
-  depend on the HD of its target.
+* Zin's Imprisonment placement is much more forgiving, pushing adjacent
+  monsters out of the way if possible.
 * Lugonu no longer gives piety for kills in the Abyss.
 * Lugonu's Enter the Abyss no longer reduces maximum HP or MP.
 
