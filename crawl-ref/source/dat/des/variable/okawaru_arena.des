@@ -1,0 +1,177 @@
+# Okawaru's arena.
+# Originally by LexAckson; revised by Grunt.
+
+{{
+function callback.oka_start_challange(data, triggerable, triggerer, marker, ev)
+  -- Open the cages.
+  for slave in iter.slave_iterator("cage_doors", 1) do
+    dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+  end
+  crawl.mpr("The portcullises are lifted away, releasing the combatants.",
+            "warning")
+  crawl.mpr("The doors seal shut behind you!", "warning")
+  -- Close the door.
+  for slave in iter.slave_iterator("iron_doors", 1) do
+    dgn.terrain_changed(slave.x, slave.y, "metal_wall", false, false, false)
+  end
+end
+
+function callback.oka_monsters_death (data, triggerable, triggerer, marker, ev)
+  local mons = dgn.mons_from_mid(ev:arg1())
+  if mons.has_prop("oka_glad") then
+    data.monsters_number = data.monsters_number + 1
+    if data.monsters_number < 4 then
+      return
+    end
+
+    crawl.god_speaks("Okawaru",
+                     "Okawaru booms, \"Excellent! You may choose a reward.\"")
+    -- Open exit.
+    for slave in iter.slave_iterator("iron_doors", 1) do
+      dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    end
+    -- Open loot doors.
+    for slave in iter.slave_iterator("loot_doors", 1) do
+      dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    end
+    crawl.mpr("The gates beind the altar rise, and the entry reopens.")
+  end
+end
+
+function callback.oka_loot_burn (data, triggerable, triggerer, marker, ev)
+  -- Drop item not chosen into lava.
+  for slave in iter.slave_iterator("lava_spout", 1) do
+    local you_x, you_y = you.pos()
+    if you_x ~= (slave.x+2) or you_y ~= slave.y then
+      dgn.terrain_changed(slave.x+2, slave.y, "lava", false, false, false)
+    end
+  end
+end
+
+-- Spawn some monsters.
+function callback.oka_populate_cages (data, triggerable, triggerer, marker, ev)
+  if dgn.persist.oka_arena_cages then
+    return
+  end
+
+  dgn.persist.oka_arena_cages = true
+
+  -- These are Okawaru's warriors, depth-weighted as though they are 9s.
+  local monsters = ""
+  if you.absdepth() < 5 then
+      monsters = "orc warrior w:15"
+  elseif you.absdepth() < 6 then
+      monsters = "orc warrior w:15 / hill giant w:5"
+  elseif you.absdepth() < 8 then
+      monsters = "orc warrior w:15 / hill giant w:5 / cyclops w:10"
+  elseif you.absdepth() < 9 then
+      monsters = "orc warrior w:15 / hill giant w:5 / cyclops w:10"
+                 .. " / centaur warrior w:10"
+  elseif you.absdepth() < 11 then
+      monsters = "orc warrior w:15 / hill giant w:5 / cyclops w:10"
+                 .. " / centaur warrior w:10 / naga warrior w:10"
+  elseif you.absdepth() < 16 then
+      monsters = "orc knight w:15 / hill giant w:5 / cyclops w:10"
+                 .. " / centaur warrior w:10 / naga warrior w:10"
+  else
+     monsters = "orc knight w:15 / stone giant w:10 / fire giant w:10"
+                 .. " / frost giant w:10 / centaur warrior w:10"
+                 .. " / naga warrior w:10"
+  end
+  for slave in iter.slave_iterator("mons_spawn", 1) do
+    local dude = dgn.create_monster(slave.x, slave.y, monsters)
+    dude.set_prop("oka_glad", 1)
+    dude.beh = mons.behaviour("wander")
+  end
+end
+
+}}
+
+NAME:   okawaru_arena_lexackson
+DEPTH:  D:3-18
+WEIGHT: 3
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen generate_awake no_rotate no_hmirror \
+        unique_oka_arena_lexackson temple_overflow_okawaru
+KPROP:  cX-EfGKkL = no_tele_into
+SUBST:  c = t-
+KITEM:  Ll = acquire armour / acquire weapon
+KFEAT:  GR = iron_grate
+KFEAT:  XTv = metal_wall
+KFEAT:  ML = floor
+KFEAT:  E = runed_door
+KFEAT:  Kk = altar_okawaru
+KFEAT:  - = floor
+COLOUR: t-EMLlv = cyan
+
+{{
+local tlos_door = TriggerableFunction:new{
+  func="callback.oka_populate_cages", repeated=true }
+local tlos_altar = TriggerableFunction:new{
+  func="callback.oka_start_challange" }
+local tmonsters_death = TriggerableFunction:new{
+  func="callback.oka_monsters_death",
+  repeated=true,
+  data={monsters_number=0} }
+local tloot_grab = TriggerableFunction:new{
+  func="callback.oka_loot_burn", }
+local tloot_grab2 = TriggerableFunction:new{
+  func="callback.oka_loot_burn" }
+
+tlos_door:add_triggerer(DgnTriggerer:new {
+  type="player_los" })
+tlos_altar:add_triggerer(DgnTriggerer:new {
+  type="player_los" })
+tmonsters_death:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="any" })
+tloot_grab:add_triggerer(DgnTriggerer:new {
+  type="item_pickup",
+  target="auto"})
+tloot_grab:add_triggerer(DgnTriggerer:new {
+  type="item_moved",
+  target="auto"})
+tloot_grab2:add_triggerer(DgnTriggerer:new {
+  type="item_pickup",
+  target="auto"})
+tloot_grab2:add_triggerer(DgnTriggerer:new {
+  type="item_moved",
+  target="auto"})
+
+lua_marker("M", portal_desc { mons_spawn =1 })
+lua_marker("K", tlos_altar)
+lua_marker("T", tmonsters_death)
+lua_marker("G", portal_desc { cage_doors=1 })
+lua_marker("o", tlos_door)
+lua_marker("E", portal_desc { iron_doors=1,
+                              door_open_prompt=
+                                "It reads,\n"
+                                .. "\"Warrior's weapon\n"
+                                .. " gracefuly paints petals red.\n"
+                                .. " Honourable art.\"\n"
+                                .. "Proceed?" })
+lua_marker("L", tloot_grab)
+lua_marker("l", tloot_grab2)
+lua_marker("v", portal_desc { lava_spout=1 })
+lua_marker("R", portal_desc { loot_doors=1 })
+lua_marker("t", portal_desc { veto_fire="veto" })
+set_feature_name("tree", "iron tree")
+
+dgn.persist.oka_arena_cages = false
+}}
+
+MAP
+    XXXXXTXXXX
+    vXLRXvRlXX
+    XXXtkKtXXX
+    XX--c-c-XX
+   XXt-c-c--tXX
+  XXX-c-c-c--XXX
+  XMX--c-c-c-XMX
+  XXG-c-c-c-cGXX
+  Xt-c-c-c-c--tX
+XXX-c-c-c-c-c--XXX
+XMG--c-c-c-c-c-GMX
+XoXXXXXXEEXXXXXXoX
+ .......@........
+ENDMAP

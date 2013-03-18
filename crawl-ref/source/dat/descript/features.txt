@@ -582,6 +582,11 @@ An iron grate
 This iron grate looks rusted, as if it could be disrupted with a spell or a
 wand quite easily. It's too strong to be breakable by hand, though.
 %%%%
+An iron tree
+
+A striking representation of nature in springtime, made completely of iron.
+It looks very delicate - almost alive.
+%%%%
 An open door
 
 A wooden door. You can close it by standing next to it and {{
