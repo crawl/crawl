@@ -119,10 +119,6 @@ Ce sort libère une massive décharge électrique qui passe d'une cible à l'aut
 jusqu'à ce qu'elle touche le sol. Elle peut se remettre à la terre de façon
 inoffensive s'il n'y a pas de cibles suffisamment  proche au sorcier.
 %%%%
-Cigotuvi's Degeneration spell
-
-Ce sort transforme une créature en une masse pulsante de chair.
-%%%%
 Condensation Shield spell
 
 Ce sort force l'air à se condenser en un disque de vapeur à proximité du

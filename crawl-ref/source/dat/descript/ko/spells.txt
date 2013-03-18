@@ -118,10 +118,6 @@ Chain Lightning spell
 만들어낸다. 하지만 이 주문은 시전자 주변에 다른 대상이 없을 때에는 아무런 해도
 끼치지 않는다.
 %%%%
-Cigotuvi's Degeneration spell
-
-이 주문은 대상을 박동하는 살덩어리로 만들어버린다.
-%%%%
 Condensation Shield spell
 
 이 주문은 시전자 주변의 대기를 응결시켜, 방패 모양의 원반을 만든다. 이 원반은

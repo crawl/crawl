@@ -1007,6 +1007,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CIGOTUVIS_DEGENERATION, "Cigotuvi's Degeneration",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
@@ -1019,6 +1020,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_STING, "Sting",
