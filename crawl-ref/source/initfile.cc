@@ -4116,6 +4116,10 @@ void game_options::write_webtiles_options(const string& name)
     _write_colour_list(Options.hp_colour, "hp_colour");
     _write_colour_list(Options.mp_colour, "mp_colour");
     _write_colour_list(Options.stat_colour, "stat_colour");
+    tiles.json_write_bool("tile_show_minihealthbar",
+                          Options.tile_show_minihealthbar);
+    tiles.json_write_bool("tile_show_minimagicbar",
+                          Options.tile_show_minimagicbar);
 
     tiles.json_close_object();
 }
