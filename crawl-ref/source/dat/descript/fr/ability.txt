@@ -11,7 +11,7 @@ Blink ability
 
 Vous translocalise à une courte distance dans une direction aléatoire.
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 Crache un souffle d'énergie sur un monstre ciblé, qui pourra supprimer certains
 de ces enchantements.

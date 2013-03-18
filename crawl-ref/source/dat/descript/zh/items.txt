@@ -1593,7 +1593,7 @@ wand of paralysis
 
 这件魔法道具能让目标生物在短时间内动弹不得。
 %%%%
-wand of polymorph other
+wand of polymorph
 
 这件魔法道具能将目标生物变形成另一种生物。它对拥有变形能力的怪物有特别效果。别
 对你自己使用这种魔杖——那样做不会有任何效果的。

@@ -11,7 +11,7 @@ Blink ability
 
 Translocación aleatoria a corta distancia.
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 Exhalas una descarga de energía al monstruo que apuntes, posiblemente
 eliminando alguno de sus encantamientos.

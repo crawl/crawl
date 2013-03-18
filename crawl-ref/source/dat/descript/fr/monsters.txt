@@ -644,10 +644,6 @@ wolf
 
 Un canidé fort et sauvage, avec des dents tranchantes et un gros appétit.
 %%%%
-wood golem
-
-Un personnage énorme fait tout de bois et animé. Il est hautement inflamable.
-%%%%
 yellow draconian
 
 Un humanoïde couvert d'écailles avec une queue reptilienne et de petites ailes.
@@ -681,10 +677,6 @@ goût.
 hungry kobold
 
 Ce kobold semble énervé du fait d'avoir été interrompu durant son repas.
-%%%%
-lich demonologist
-
-<lich>
 %%%%
 mummy warrior
 

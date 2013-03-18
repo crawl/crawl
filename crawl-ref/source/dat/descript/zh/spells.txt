@@ -454,7 +454,7 @@ Poisonous Cloud spell
 
 这道法术会塑造出一个巨大的毒气云团。
 %%%%
-Polymorph Other spell
+Polymorph spell
 
 这道法术会随机改变一个生物的外形。该法术对会变换形态的生物尤其有效。
 %%%%

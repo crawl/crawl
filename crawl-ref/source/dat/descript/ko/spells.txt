@@ -506,7 +506,7 @@ Poisonous Cloud spell
 
 이 주문은 치명적인 독구름을 만들어낸다.
 %%%%
-Polymorph Other spell
+Polymorph spell
 
 이 주문은 대상을 뭔가 다른 모습으로 변이시킨다. 변형괴물에게 특히 효과적이다.
 %%%%
