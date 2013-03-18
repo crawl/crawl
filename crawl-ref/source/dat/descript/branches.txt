@@ -108,8 +108,9 @@ Possibly constructed by some powerful madman, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
-The Vaults are five levels deep and contain the silver rune. The entrance can
-be found between levels 15 and 20 of the main dungeon.
+The Vaults are five levels deep and contain the silver rune, as well as the
+entrances to two more branches. The entrance can be found between levels 15 and
+20 of the main dungeon.
 %%%%
 Hall of Blades
 
@@ -133,7 +134,7 @@ Tomb
 
 The Tomb of the Ancients is a place of damnation, of horrors animated by the
 vilest necromancy. Honest creatures of the surface turn pale at the mere
-mention of its name, The list of those who have returned from this place of
+mention of its name. The list of those who have returned from this place of
 pure death is exceedingly short.
 
 The Tomb is three levels deep and contains the golden rune. Its entry is either
@@ -202,8 +203,9 @@ in sending would-be champions like you to these proving grounds of madness.
 Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
 schemes around this place and its denizens.
 
-The abyssal rune can be found there. The Abyss can be purposefully reached
-through portals in the deeper levels of the main dungeon.
+The Abyss consists of five infinite levels. The abyssal rune can be found from
+the third level onwards, and is more common at greater depths. The Abyss can be
+purposefully reached through portals in the deeper levels of the main dungeon.
 %%%%
 Pandemonium
 
