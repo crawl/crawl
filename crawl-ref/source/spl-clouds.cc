@@ -212,7 +212,6 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
     if (beam.beam_cancelled)
         return SPRET_ABORT;
 
-
     fail_check();
 
     big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
