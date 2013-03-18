@@ -20,6 +20,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -496,6 +497,11 @@ conduct_type god_hates_item_handling(const item_def &item)
     case GOD_TROG:
         if (item_is_spellbook(item))
             return DID_SPELL_MEMORISE;
+        if (item.sub_type == BOOK_MANUAL && item_type_known(item)
+            && is_harmful_skill((skill_type)item.plus))
+        {
+            return DID_SPELL_PRACTISE;
+        }
         // Only Trog cares about spellsbooks vs rods.
         if (item.base_type == OBJ_RODS)
             return DID_NOTHING;
