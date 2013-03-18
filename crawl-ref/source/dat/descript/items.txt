@@ -318,12 +318,6 @@ Many prominent spellcasters used this book to begin their arcane studies. First
 published three centuries ago, it is one of the most well-known grimoires in
 the world, and is currently on its eighty-eighth printing.
 %%%%
-book of morphology
-
-A book dedicated to Transmutations of form. The text is constantly changing and
-shifting, making it nearly impossible to use a table of contents or a bookmark.
-Still, most sorcerers manage to find what they are looking for in its pages.
-%%%%
 book of necromancy
 
 A macabre book of magic spells, often the very first grimoire a beginning

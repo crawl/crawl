@@ -843,10 +843,6 @@ book of minor magic
 
 книга минорной магии
 %%%%
-book of morphology
-
-книга морфологии
-%%%%
 book of necromancy
 
 книга некромантии

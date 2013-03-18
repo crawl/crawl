@@ -322,12 +322,6 @@ Ensimmäistä kertaa se julkaistiin kolme vuosisataa sitten, ja se on yksi
 tunnetuimmista loitsukirjoista maailmassa. Kädessäsi pitämä kirja on sen
 kahdeksaskymmeneskahdeksas painos.
 %%%%
-book of morphology
-
-Muodonmuutoksia sisältävä kirja. Sen teksti muuttuu ja siirtyilee jatkuvasti,
-eli sisällysluettelo ja kirjanmerkit eivät ole sen kanssa kovin hyödyllisiä.
-Silti useimmat taikojat löytävät siitä mitä etsivät.
-%%%%
 book of necromancy
 
 Makaaberi opus, joka on aloittelevien Nekromantikoiden ensimmäinen kirja hyvin
