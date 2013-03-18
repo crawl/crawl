@@ -143,6 +143,12 @@ richesses sans précédent.
 Le portail ne peut être utilisé qu'une seule fois et, il y a un taxe énorme à
 payer pour pouvoir le franchir.
 %%%%
+A gateway to a ziggurat:quote
+
+“Capitaine : tuez les tous !!
+ Capitaine : Pour la justice.”
+    -Sans Aile
+%%%%
 A gateway to the ashen valley of Gehenna
 
 Vous sentez la chaleur. Gehenna semble n'être rien de plus que flammes, lave et
@@ -232,6 +238,11 @@ Une porte à sens unique vers un royaume démoniaque, déchiré par le chaos, sa
 substance même fluctuante et capricieuse, rempli de créatures sorties tout
 droit d'un cauchemar. Il est facile d'y entrer, mais très difficile d'en
 ressortir.
+%%%%
+A one-way gate to the infinite horrors of the Abyss:quote
+
+“Et si vous regardez longtemps dans une abysse, l'abysse regarde en toi.”
+    -Friedrich Nietzsche, “Au-delà du Bien et du Mal”
 %%%%
 A passage of Golubria
 
@@ -447,6 +458,11 @@ temps elle n'est pas assez forte pour rendre possible la vie de grandes
 plantes. Elle est inégale cependant, et il y a des endroits où, avec la grâce
 de Fedhas, des arbres aussi gros que ceux de la surface peuvent pousser sous
 terre.
+%%%%
+A tree:quote
+
+“Seulement TOI peut éviter les feux de forêt !”
+    -Fumebeaucoup l'Ours
 %%%%
 A viscous altar of Jiyva
 

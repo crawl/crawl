@@ -330,6 +330,14 @@ buckler
 
 Mała tarcza.
 %%%%
+buckler:quote
+
+„Stateczność jego tarcz i puklerz mocny,
+ Za którym stojąc, na żaden strach nocny,
+ Na żadną trwogę, ani dbaj na strzały,
+ Którymi sieje przygoda w dzień biały.”
+    -pieśń kościelna
+%%%%
 cap
 
 Coś do przykrycia głowy.
@@ -602,6 +610,18 @@ Ten róg należy do Geryona, strażnika Przedsionka Piekła. Legendy mówią że
 śmiertelnik który zapragnie dostać się do piekieł żywy, musiałby zadąć w ten
 róg.
 %%%%
+horn of Geryon:quote
+
+„Natenczas Wojski chwycił na taśmie przypięty
+ Swój róg bawoli, długi, cętkowany, kręty
+ Jak wąż boa, oburącz do ust go przycisnął,
+ Wzdął policzki jak banię, w oczach krwią zabłysnął,
+ Zasunął wpół powieki, wciągnął w głąb pół brzucha
+ I do płuc wysłał z niego cały zapas ducha
+ I zagrał: róg jak wicher wirowatym dechem,
+ Niesie w puszczę muzykę i podwaja echem.”
+    -Adam Mickiewicz, „Pan Tadeusz”
+%%%%
 ice dragon armour
 
 Zbroja zrobiona ze skóry zionącego mrozem smoka. Zapewnia ona wspaniałą ochronę
@@ -853,10 +873,6 @@ potion of experience
 
 Prawdziwie cudowny napitek, który trwale zwiększa umiejętności pijącego.
 %%%%
-potion of flight
-
-Eliksir który daje zdolność lotu.
-%%%%
 potion of gain dexterity
 
 Eliksir który powoduje korzystną mutację.
@@ -878,6 +894,10 @@ stopniu usunąć skutki trwałej zgnilizny.
 potion of invisibility
 
 Eliksir który daje tymczasową niewidzialność.
+%%%%
+potion of flight
+
+Eliksir który daje zdolność lotu.
 %%%%
 potion of magic
 
@@ -967,12 +987,6 @@ Ten pierścień daje swemu nosicielowi moc ognia. Wzmacnia to wszelkie czary
 Magii Ognia jak i zapewnia odporność na ogień, jednakże czary Magii Lodu są
 osłabione, a nosiciel jest bardziej wrażliwy na zimno.
 %%%%
-ring of flight
-
-Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
-Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania. To
-może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
-%%%%
 ring of hunger
 
 Ten pierścień pomaga zrzucić nadwagę, wielce zwiększając zużycie pokarmu.
@@ -995,6 +1009,12 @@ tego efektu — trzeba go aktywować, do czego potrzebna jest umiejętność
 posługiwania się magicznymi przedmiotami. Bycie niewidzialnym znacznie wzmaga
 zużycie metabolizm, a także powoduje magiczne skażenie. Zbyt częste użycie tego
 pierścienia nie jest więc wskazane.
+%%%%
+ring of flight
+
+Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
+Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania. To
+może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
 %%%%
 ring of life protection
 
@@ -1034,6 +1054,12 @@ nosiciela, kosztem znacznego przyspieszenia metabolizmu.
 ring of see invisible
 
 Ten pierścień pozwala swemu nosicielowi ujrzeć niewidzialne istoty.
+%%%%
+ring of see invisible:quote
+
+„A oto mój sekret. Jest bardzo prosty: dobrze widzi się tylko sercem.
+Najważniejsze jest niewidoczne dla oczu.”
+    -Antoine de Saint-Exupéry, „Mały Książę”, 1943
 %%%%
 ring of slaying
 
