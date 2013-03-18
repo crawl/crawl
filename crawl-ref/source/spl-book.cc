@@ -271,7 +271,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_DEATH:
         return 11;
 
-    case BOOK_MUTATIONS:
     case BOOK_BURGLARY:
     case BOOK_ALCHEMY:
     case BOOK_DREAMS:
@@ -296,6 +295,7 @@ int book_rarity(uint8_t which_book)
 
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:
+    case BOOK_MUTATIONS:
         return 100;
 #endif
 
