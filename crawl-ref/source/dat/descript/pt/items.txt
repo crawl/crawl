@@ -188,10 +188,6 @@ book of minor magic
 
 Um livro de magia.
 %%%%
-book of morphology
-
-Um livro de magia.
-%%%%
 book of necromancy
 
 Um tomo empoeirado de magia proibida.

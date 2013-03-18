@@ -256,10 +256,6 @@ book of minor magic
 
 Ένα βιβλίο με ξόρκια.
 %%%%
-book of morphology
-
-Ένα βιβλίο με ξόρκια.
-%%%%
 book of necromancy
 
 Ένας σκονισμένος τόμος απαγορευμένης μαγείας.

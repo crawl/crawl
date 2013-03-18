@@ -328,13 +328,6 @@ Mange prominente troldmænd har påbegyndt deres okkulte studier med denne bog,
 siden den udkom første gang for tre århundreder siden. Den er sidenhen udkommet
 i 88 oplag, og er i dag en af verdens mest velkendte grimoirer.
 %%%%
-book of morphology
-
-En bog, som er dedikeret til transmutationer af form. Teksten ændrer og flytter
-sig konstant, så det er stort set umuligt at bruge indholdsfortegnelsen eller
-et bogmærke. Men det lykkes nu alligevel for de fleste troldmænd at finde det,
-de leder efter.
-%%%%
 book of necromancy
 
 En makaber bog med magiske besværgelser, som ofte er den første grimoire, en
