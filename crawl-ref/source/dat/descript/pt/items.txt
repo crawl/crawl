@@ -1,20 +1,20 @@
 %%%%
 air elemental fan
 
-Um dispositivo para invocar elementais do ar. Não se deve confiar muito, já que
-geralmente requer várias tentativas para funcionar corretametne. Usá-lo trás
-riscos que são reduzidos se o usuário for habilidoso na magia elemental
+Um dispositivo mágico para conjurar elementais de ar. É um tanto instável e
+normalmente requer várias tentativas para funcionar corretamente. Ao usá-lo, há
+um certo risco, o qual é reduzido com devida habilidade na magia elemental
 apropriada.
 %%%%
 amulet of clarity
 
-Este amuleto protege o usuário de algumas formas de confusão mental, incluindo
-ser enfurecido contra vontade própria.
+Este amuleto protege seu usuário de algumas formas de confusão mental,
+incluindo de ficar enfurecido contra sua vontade.
 %%%%
 amulet of conservation
 
-Este amuleto protege alguns itens do usuário contra destruição total, mas não é
-infalível.
+Este amuleto protege algumas das posses do usuário de serem destruídas,  mas
+não é infalível.
 %%%%
 amulet of inaccuracy
 
@@ -149,11 +149,11 @@ Um livro de magia.
 %%%%
 book of fixed level
 
-Um livro de magia.
+Um livro de magias.
 %%%%
 book of fixed theme
 
-Um livro de magia.
+Um livro de magias.
 %%%%
 book of fire
 
