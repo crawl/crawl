@@ -243,6 +243,10 @@ private:
     bool apply_dmg_funcs(actor* victim, int &dmg, vector<string> &messages);
     int apply_AC(const actor* victim, int hurted);
 
+    cloud_type get_cloud_type();
+    int get_cloud_pow();
+    int get_cloud_size(bool min = false, bool max = false);
+
     // Functions which handle actually affecting things. They all
     // operate on the beam's current position (i.e., whatever pos()
     // returns.)

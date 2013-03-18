@@ -63,6 +63,7 @@
 #include "spl-transloc.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "throw.h"
@@ -2376,6 +2377,57 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     return false;
 }
 
+cloud_type bolt::get_cloud_type()
+{
+    if (name == "noxious blast")
+        return CLOUD_MEPHITIC;
+
+    if (name == "blast of poison")
+        return CLOUD_POISON;
+
+    if (origin_spell == SPELL_HOLY_BREATH)
+        return CLOUD_HOLY_FLAMES;
+
+    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
+        return CLOUD_FIRE;
+
+    if (origin_spell == SPELL_CHAOS_BREATH && is_big_cloud)
+        return CLOUD_CHAOS;
+
+    if (name == "foul vapour")
+    {
+        // death drake; swamp drakes handled earlier
+        ASSERT(flavour == BEAM_MIASMA);
+        return CLOUD_MIASMA;
+    }
+
+    if (name == "freezing blast")
+        return CLOUD_COLD;
+
+    return CLOUD_NONE;
+}
+
+int bolt::get_cloud_pow()
+{
+    if (name == "freezing blast")
+        return random_range(10, 15);
+
+    return 0;
+}
+
+int bolt::get_cloud_size(bool min, bool max)
+{
+    if (name == "foul vapour" || name == "freezing blast")
+        return 10;
+
+    if (min)
+        return 8;
+    if (max)
+        return 12;
+
+    return 8 + random2(5);
+}
+
 void bolt::affect_endpoint()
 {
     if (special_explosion)
@@ -2402,10 +2454,32 @@ void bolt::affect_endpoint()
         return;
     }
 
+    cloud_type cloud = get_cloud_type();
+
     if (is_tracer)
     {
         if (name == "orb of energy")
             _imb_explosion(this, pos());
+        if (cloud != CLOUD_NONE)
+        {
+            targetter_cloud tgt(agent(), range, get_cloud_size(true),
+                                                get_cloud_size(false, true));
+            tgt.set_aim(pos());
+            for (map<coord_def, aff_type>::iterator it = tgt.seen.begin();
+                 it != tgt.seen.end(); it++)
+            {
+                if (it->second != AFF_YES && it->second != AFF_MAYBE)
+                    continue;
+
+                if (it->first == you.pos())
+                    tracer_affect_player();
+                else if (monster* mon = monster_at(it->first))
+                    tracer_affect_monster(mon);
+
+                if (agent()->is_player() && beam_cancelled)
+                    return;
+            }
+        }
         return;
     }
 
@@ -2442,30 +2516,8 @@ void bolt::affect_endpoint()
         explode();
     }
 
-    if (name == "noxious blast")
-        big_cloud(CLOUD_MEPHITIC, agent(), pos(), 0, 8 + random2(5));
-
-    if (name == "blast of poison")
-        big_cloud(CLOUD_POISON, agent(), pos(), 0, 8 + random2(5));
-
-    if (origin_spell == SPELL_HOLY_BREATH)
-        big_cloud(CLOUD_HOLY_FLAMES, agent(), pos(), 0, 8 + random2(5));
-
-    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
-        big_cloud(CLOUD_FIRE, agent(), pos(), 0, 8 + random2(5));
-
-    if (origin_spell == SPELL_CHAOS_BREATH && is_big_cloud)
-        big_cloud(CLOUD_CHAOS, agent(), pos(), 0, 8 + random2(5));
-
-    if (name == "foul vapour")
-    {
-        // death drake; swamp drakes handled earlier
-        ASSERT(flavour == BEAM_MIASMA);
-        big_cloud(CLOUD_MIASMA, agent(), pos(), 0, 10);
-    }
-
-    if (name == "freezing blast")
-        big_cloud(CLOUD_COLD, agent(), pos(), random_range(10, 15), 10);
+    if (cloud != CLOUD_NONE)
+        big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
 
     if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
         || name == "searing blast") // monster and player red draconian breath abilities
