@@ -140,6 +140,18 @@ pure death is exceedingly short.
 The Tomb is three levels deep and contains the golden rune. Its entry is either
 on Crypt:2 or Crypt:3.
 %%%%
+Tomb:quote
+
+“In the depths of every heart, there is a tomb and a dungeon, though the
+lights, the music, and revelry above may cause us to forget their existence,
+and the buried ones, or prisoners whom they hide. But sometimes, and oftenest
+at midnight, those dark receptacles are flung wide open. In an hour like this,
+when the mind has a passive sensibility, but no active strength; when the
+imagination is a mirror, imparting vividness to all ideas, without the power of
+selecting or controlling them; then pray that your grieves may slumber, and the
+brotherhood of remorse not break their chain.”
+    -Nathaniel Hawthorne, "The Haunted Mind". 1835.
+%%%%
 Hell
 
 The hallway to the four hells is guarded by Geryon. Heroes who prove their

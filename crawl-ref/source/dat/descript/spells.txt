@@ -350,6 +350,13 @@ Ice Storm spell
 This spell hurls a raging blizzard of ice, sleet and freezing gasses at the
 target, dealing partially irresistible cold damage in a large area.
 %%%%
+Ice Storm spell:quote
+
+“Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall
+Stay These Messengers About Their Sacred Business. Do Not Ask Us About
+Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol.”
+    -Anghammarad, “Going Postal”, Terry Pratchett.
+%%%%
 Ignite Poison spell
 
 This spell attempts to convert all nearby poison into liquid flame, burning

@@ -145,6 +145,11 @@ Murray
 
 Un crane démoniaque qui roule sur le sol du donjon.
 %%%%
+Murray:quote
+
+“Regardez derrière vous ! Un singe à trois tête!”
+    -Guybrush Threepwood, _The Secret of Monkey Island_
+%%%%
 Nergalle
 
 Une sorcière flétrie et particulièrement laide, même selon les standards orc.
