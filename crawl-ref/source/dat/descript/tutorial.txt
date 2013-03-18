@@ -159,9 +159,9 @@ weapon! Go and grab the one lying over there.
 tutorial2 pickup_weapon
 
 Pick up this weapon with <input>$cmd[CMD_PICKUP]</input> or <input>g</input>
-and then wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>.
-<localtiles> Alternatively, you can perform either action by
-<input>clicking</input> on it in the inventory panel.</localtiles>
+and then wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>. <localtiles>
+Alternatively, you can perform either action by <input>clicking</input> on it
+in the inventory panel.</localtiles>
 %%%%
 tutorial2 melee
 
@@ -171,15 +171,15 @@ it.
 tutorial2 resting
 
 Very good! You can regain any lost hit points by resting with
-<input>$cmd[CMD_REST]</input>. This will make you rest for up to 100
-turns, but will get interrupted by a number of important events.
+<input>$cmd[CMD_REST]</input>. This will make you rest for up to 100 turns, but
+will get interrupted by a number of important events.
 %%%%
 tutorial2 chop_corpses
 
 You can chop up corpses into edible meat chunks with
-<input>$cmd[CMD_BUTCHER]</input> <localtiles>or
-<input>Shift + mouseclick</input>, </localtiles>and then eat the resulting
-chunks with <input>$cmd[CMD_EAT]</input><localtiles> or by
+<input>$cmd[CMD_BUTCHER]</input> <localtiles>or <input>Shift +
+mouseclick</input>, </localtiles>and then eat the resulting chunks with
+<input>$cmd[CMD_EAT]</input><localtiles> or by
 <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 rest_and_chop_reminder
@@ -206,10 +206,11 @@ chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
 <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
-:nowrap
+
 # The keyboard commands are skipped in localtiles for clarity.
 # FIXME: Content repeated for <console> and <webtiles>. :nowrap is used
 # because of line length.
+:nowrap
 Examine these monsters (<localtiles>via <input>mouseover</input></localtiles><console>with <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></console><webtiles>with <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></webtiles>) and compare their descriptions (<localtiles><input>rightmouseclick</input></localtiles><console><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></console><webtiles><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></webtiles>) to find out which of these cages is safer to fight through.
 %%%%
 tutorial2 downstairs
@@ -452,9 +453,9 @@ tutorial3 go_shopping
 #       viewed.
 You now have enough gold to do some serious shopping! The quickest way back to
 the shop is by searching for it. Type <input>$cmd[CMD_SEARCH_STASHES]</input>,
-and then enter "<w>shop</w>". Select the result to start
-traveling.<localtiles> You can also <input>click</input> on the search button
-in the command panel, or use the minimap to return to the shop.</localtiles>
+and then enter "<w>shop</w>". Select the result to start traveling.<localtiles>
+You can also <input>click</input> on the search button in the command panel, or
+use the minimap to return to the shop.</localtiles>
 %%%%
 tutorial3 optional_battle
 
@@ -560,9 +561,9 @@ At experience level 3, you'll be able to increase one of your stats - choosing
 %%%%
 tutorial4 aiming_clouds
 
-Mephitic Cloud covers an area in noxious fumes when cast, and you'll be able
-to see the area it affects as you target it. Try to catch multiple enemies in
-a single cloud in order to be more efficient with your magic.
+Mephitic Cloud covers an area in noxious fumes when cast, and you'll be able to
+see the area it affects as you target it. Try to catch multiple enemies in a
+single cloud in order to be more efficient with your magic.
 %%%%
 tutorial4 spell_hunger
 
@@ -572,12 +573,12 @@ Spellcasting skill.
 %%%%
 tutorial4 forget_spell
 
-Gaining an experience level and raising your Spellcasting skill gives you
-spell slots to spend on spells. You can also <w>forget a memorised spell</w>
-to make space for a new one. The easiest way to do this is with a scroll of
-amnesia. Simply read the scroll (with <input>$cmd[CMD_READ]</input><localtiles>
-or by <input>clicking</input> on it</localtiles>), and then select the spell
-you want to forget.
+Gaining an experience level and raising your Spellcasting skill gives you spell
+slots to spend on spells. You can also <w>forget a memorised spell</w> to make
+space for a new one. The easiest way to do this is with a scroll of amnesia.
+Simply read the scroll (with <input>$cmd[CMD_READ]</input><localtiles> or by
+<input>clicking</input> on it</localtiles>), and then select the spell you want
+to forget.
 %%%%
 tutorial4 memorise2
 
@@ -616,8 +617,8 @@ Make sure you are at full health and magic points before entering a new area.
 If necessary, rest up with <input>$cmd[CMD_REST]</input><localtiles> or by
 <input>mouseclick</input> in the command panel</localtiles>.
 
-Also, undead don't breathe, so you can cast Mephitic Cloud without harming
-your allies.
+Also, undead don't breathe, so you can cast Mephitic Cloud without harming your
+allies.
 %%%%
 tutorial4 tutorial_end
 
@@ -627,16 +628,14 @@ these stairs.
 tutorial4 exit
 
 # A single screen recapping all commands.
+:nowrap
 <yellow>Spellcasting commands</yellow>
-
   <w>$cmd[CMD_MEMORISE_SPELL]</w>  learn a new spell
   <w>$cmd[CMD_DISPLAY_SPELLS]</w>  check spell proficiency
   <w>$cmd[CMD_CAST_SPELL]</w>  cast a spell
-
 <localtiles>     You can also learn new spells via the <w>memorisation tab</w>.
-
-     You can cast memorised spells via <w>leftclick</w>, and read their descriptions and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w></localtiles>
-
+     You can cast memorised spells via <w>leftclick</w>, and read their descriptions and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w>
+</localtiles>
 
   <w>$cmd[CMD_READ]</w>  read a book, for descriptions or to forget a spell
   <w>$cmd[CMD_REST]</w>  rest up to 100 turns to regain magic points and health
