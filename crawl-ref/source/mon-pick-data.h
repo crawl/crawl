@@ -163,13 +163,13 @@ static const pop_entry pop_d[] =
   { 29, 33,    8, PEAK, MONS_QUICKSILVER_DRAGON },
   { 29, 33,    8, PEAK, MONS_IRON_DRAGON },
   { 29, 33,   14, SEMI, MONS_GOLDEN_DRAGON },
-  { 29, 33,    8, PEAK, MONS_DEEP_ELF_HIGH_PRIEST },
-  { 30, 32,    4, SEMI, MONS_DEEP_ELF_DEMONOLOGIST },
-  { 30, 32,    4, SEMI, MONS_DEEP_ELF_ANNIHILATOR },
-  { 30, 32,    4, SEMI, MONS_DEEP_ELF_SORCERER },
-  { 30, 32,    4, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
+  { 29, 31,    8, UP,   MONS_DEEP_ELF_HIGH_PRIEST },
+  { 30, 31,    4, UP,   MONS_DEEP_ELF_DEMONOLOGIST },
+  { 30, 31,    4, UP,   MONS_DEEP_ELF_ANNIHILATOR },
+  { 30, 31,    4, UP,   MONS_DEEP_ELF_SORCERER },
+  { 30, 31,    4, UP,   MONS_DEEP_ELF_DEATH_MAGE },
   { 28, 34,   25, PEAK, MONS_TITAN },
-  { 30, 32,    4, SEMI, MONS_ANCIENT_LICH },
+  { 30, 31,    4, UP,   MONS_ANCIENT_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -193,16 +193,16 @@ static const pop_entry pop_orc[] =
   {  1,  4,   89, FLAT, MONS_OGRE },
   {  4,  4,    1, FLAT, MONS_GNOLL_SHAMAN },
   {  4,  4,    1, FLAT, MONS_GNOLL_SERGEANT },
-  {  2,  6,    8, PEAK, MONS_ORC_HIGH_PRIEST },
-  {  1,  7,   25, PEAK, MONS_ORC_SORCERER },
-  {  2,  6,    8, PEAK, MONS_ORC_WARLORD },
-  {  2,  6,    8, PEAK, MONS_TWO_HEADED_OGRE },
+  {  2,  4,    8, UP,   MONS_ORC_HIGH_PRIEST },
+  {  1,  4,   25, UP,   MONS_ORC_SORCERER },
+  {  2,  4,    8, UP,   MONS_ORC_WARLORD },
+  {  2,  4,    8, UP,   MONS_TWO_HEADED_OGRE },
   {  4,  4,    1, FLAT, MONS_OGRE_MAGE },
-  {  1,  7,   40, PEAK, MONS_TROLL },
-  {  3,  5,    4, SEMI, MONS_IRON_TROLL },
-  {  2,  6,    8, PEAK, MONS_CYCLOPS },
-  {  3,  5,    4, SEMI, MONS_ETTIN },
-  {  3,  5,    4, SEMI, MONS_STONE_GIANT },
+  {  1,  4,   40, UP,   MONS_TROLL },
+  {  3,  4,    4, UP,   MONS_IRON_TROLL },
+  {  2,  4,    8, UP,   MONS_CYCLOPS },
+  {  3,  4,    4, UP,   MONS_ETTIN },
+  {  3,  4,    4, UP,   MONS_STONE_GIANT },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -230,8 +230,8 @@ static const pop_entry pop_elf[] =
   {  1,  7,   40, PEAK, MONS_DEEP_ELF_ANNIHILATOR },
   {  0,  8,   66, PEAK, MONS_DEEP_ELF_SORCERER },
   {  1,  7,   40, PEAK, MONS_DEEP_ELF_DEATH_MAGE },
-  {  6,  8,    4, SEMI, MONS_DEEP_ELF_BLADEMASTER },
-  {  6,  8,    4, SEMI, MONS_DEEP_ELF_MASTER_ARCHER },
+  {  6,  7,    4, UP,   MONS_DEEP_ELF_BLADEMASTER },
+  {  6,  7,    4, UP,   MONS_DEEP_ELF_MASTER_ARCHER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -603,18 +603,18 @@ static const pop_entry pop_vaults[] =
   { 11, 13,    4, SEMI, MONS_DEEP_ELF_PRIEST },
   {  7, 17,  258, PEAK, MONS_GLOWING_SHAPESHIFTER },
   {  8, 16,   66, PEAK, MONS_TENTACLED_MONSTROSITY },
-  { 11, 19,   89, PEAK, MONS_SHADOW_DRAGON },
-  { 13, 17,    8, PEAK, MONS_BONE_DRAGON },
-  { 13, 17,    8, PEAK, MONS_QUICKSILVER_DRAGON },
-  { 13, 17,    8, PEAK, MONS_IRON_DRAGON },
+  { 11, 15,   89, UP,   MONS_SHADOW_DRAGON },
+  { 13, 15,    8, UP,   MONS_BONE_DRAGON },
+  { 13, 15,    8, UP,   MONS_QUICKSILVER_DRAGON },
+  { 13, 15,    8, UP,   MONS_IRON_DRAGON },
   { 13, 17,   14, SEMI, MONS_GOLDEN_DRAGON },
-  { 13, 17,    8, PEAK, MONS_DEEP_ELF_HIGH_PRIEST },
-  { 14, 16,    4, SEMI, MONS_DEEP_ELF_DEMONOLOGIST },
-  { 14, 16,    4, SEMI, MONS_DEEP_ELF_ANNIHILATOR },
-  { 14, 16,    4, SEMI, MONS_DEEP_ELF_SORCERER },
-  { 14, 16,    4, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
+  { 13, 15,    8, UP,   MONS_DEEP_ELF_HIGH_PRIEST },
+  { 14, 15,    4, UP,   MONS_DEEP_ELF_DEMONOLOGIST },
+  { 14, 15,    4, UP,   MONS_DEEP_ELF_ANNIHILATOR },
+  { 14, 15,    4, UP,   MONS_DEEP_ELF_SORCERER },
+  { 14, 15,    4, UP,   MONS_DEEP_ELF_DEATH_MAGE },
   { 12, 18,   25, PEAK, MONS_TITAN },
-  { 14, 16,    4, SEMI, MONS_ANCIENT_LICH },
+  { 14, 15,    4, UP,   MONS_ANCIENT_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -678,7 +678,7 @@ static const pop_entry pop_tomb[] =
   { -1,  9,  334, SEMI, MONS_MUMMY_PRIEST },
   {  3,  5,    6, FLAT, MONS_LICH },
   {  3,  5,    3, SEMI, MONS_ANCIENT_LICH },
-  {  4,  6,    3, SEMI, MONS_GREATER_MUMMY },
+  {  4,  5,    3, UP,   MONS_GREATER_MUMMY },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -878,9 +878,9 @@ static const pop_entry pop_tar[] =
 
 static const pop_entry pop_zot[] =
 { // Zot
-  { -3,  5,   89, PEAK, MONS_ELECTRIC_GOLEM },
+  {  1,  5,   89, DOWN, MONS_ELECTRIC_GOLEM },
   { -2,  4,   52, SEMI, MONS_ORB_OF_FIRE },
-  { -1,  5,  972, FLAT, MONS_MOTH_OF_WRATH },
+  {  1,  5,  972, FLAT, MONS_MOTH_OF_WRATH },
   {  1,  5,   73, FLAT, MONS_BLACK_DRACONIAN },
   {  1,  5,   73, FLAT, MONS_MOTTLED_DRACONIAN },
   {  1,  5,   73, FLAT, MONS_YELLOW_DRACONIAN },
@@ -898,31 +898,31 @@ static const pop_entry pop_zot[] =
   {  1,  5,   59, FLAT, MONS_DRACONIAN_KNIGHT },
   {  1,  5,   59, FLAT, MONS_DRACONIAN_SCORCHER },
   {  1,  5,  514, FLAT, MONS_TENTACLED_MONSTROSITY },
-  {  1,  7,  334, FLAT, MONS_DRAGON },
-  {  1,  7,  334, FLAT, MONS_ICE_DRAGON },
-  {  1,  7,  334, FLAT, MONS_DEATH_COB },
-  {  0, 10,  192, PEAK, MONS_SHADOW_DRAGON },
-  {  0, 10,  514, SEMI, MONS_STORM_DRAGON },
-  {  0, 10,  334, SEMI, MONS_BONE_DRAGON },
-  {  0, 10,  192, PEAK, MONS_GHOST_MOTH },
+  {  1,  5,  334, FLAT, MONS_DRAGON },
+  {  1,  5,  334, FLAT, MONS_ICE_DRAGON },
+  {  1,  5,  334, FLAT, MONS_DEATH_COB },
+  {  1,  5,  192, UP,   MONS_SHADOW_DRAGON },
+  { -4,  5,  514, UP,   MONS_STORM_DRAGON },
+  { -4,  5,  334, UP,   MONS_BONE_DRAGON },
+  {  1,  5,  192, UP,   MONS_GHOST_MOTH },
   {  2,  8,   52, SEMI, MONS_KILLER_KLOWN },
-  {  1,  9,   89, PEAK, MONS_CURSE_TOE },
+  {  1,  5,   89, UP,   MONS_CURSE_TOE },
   {  1, 11,  367, SEMI, MONS_GOLDEN_DRAGON },
-  {  2, 10,   89, PEAK, MONS_GUARDIAN_MUMMY },
+  {  2,  5,   75, UP,   MONS_GUARDIAN_MUMMY },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_forest[] =
 { // Forest
-  { -1,  5,  690, FLAT, MONS_WOLF },
-  { -1,  5,  690, FLAT, MONS_GRIZZLY_BEAR },
-  { -1,  5,  334, FLAT, MONS_BLACK_BEAR },
-  { -1,  5,  999, FLAT, MONS_SPRIGGAN },
-  { -1,  5,  690, FLAT, MONS_SPRIGGAN_DRUID },
+  {  1,  5,  690, FLAT, MONS_WOLF },
+  {  1,  5,  690, FLAT, MONS_GRIZZLY_BEAR },
+  {  1,  5,  334, FLAT, MONS_BLACK_BEAR },
+  {  1,  5,  999, FLAT, MONS_SPRIGGAN },
+  {  1,  5,  690, FLAT, MONS_SPRIGGAN_DRUID },
   {  1,  5,  690, FLAT, MONS_SPRIGGAN_RIDER },
   {  1,  7,  136, SEMI, MONS_SPRIGGAN_BERSERKER },
   {  1,  7,  334, FLAT, MONS_SPRIGGAN_AIR_MAGE },
-  {  2, 10,   89, PEAK, MONS_SPRIGGAN_DEFENDER },
+  {  2,  5,   75, UP,   MONS_SPRIGGAN_DEFENDER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
