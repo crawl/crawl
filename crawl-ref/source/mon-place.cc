@@ -1783,6 +1783,26 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     // How OOD this zombie can be.
     int relax = 5;
 
+    // On certain branches, zombie creation will fail if we use
+    // the mons_rarity() functions, because (for example) there
+    // are NO zombifiable "native" abyss creatures. Other branches
+    // where this is a problem are hell levels and the crypt.
+    // we have to watch for summoned zombies on other levels, too,
+    // such as the Temple, HoB, and Slime Pits.
+    if (!crawl_state.game_is_zotdef()
+        && (!player_in_connected_branch()
+            || player_in_hell()
+            || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+            || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+            || player_in_branch(BRANCH_CRYPT)
+            || player_in_branch(BRANCH_TOMB)
+            || player_in_branch(BRANCH_HALL_OF_BLADES)
+            || player_in_branch(BRANCH_SLIME_PITS)))
+    {
+        ignore_rarity = true;
+        relax = 2000;
+    }
+
     // Pick an appropriate creature to make a zombie out of,
     // levelwise.  The old code was generating absolutely
     // incredible OOD zombies.
@@ -1790,25 +1810,8 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     {
         monster_type base = pick_random_zombie();
 
-        // On certain branches, zombie creation will fail if we use
-        // the mons_rarity() functions, because (for example) there
-        // are NO zombifiable "native" abyss creatures. Other branches
-        // where this is a problem are hell levels and the crypt.
-        // we have to watch for summoned zombies on other levels, too,
-        // such as the Temple, HoB, and Slime Pits.
-        if ((!crawl_state.game_is_zotdef()
-             && (!player_in_connected_branch()
-                 || player_in_hell()
-                 || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-                 || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
-                 || player_in_branch(BRANCH_CRYPT)
-                 || player_in_branch(BRANCH_TOMB)
-                 || player_in_branch(BRANCH_HALL_OF_BLADES)
-                 || player_in_branch(BRANCH_SLIME_PITS)))
-            || one_chance_in(1000))
-        {
+        if (one_chance_in(1000))
             ignore_rarity = true;
-        }
 
         // Don't make out-of-rarity zombies when we don't have to.
         if (!ignore_rarity && mons_rarity(base, place.branch) == 0)
