@@ -2,6 +2,9 @@ define(["jquery", "comm", "./enums", "./map_knowledge", "./messages"],
 function ($, comm, enums, map_knowledge, messages) {
     var player = {}, last_time;
 
+    var hp_boosters = "divinely vigorous|berserk";
+    var mp_boosters = "divinely vigorous";
+
     var stat_boosters = {
         "str": "vitalised|mighty|berserk",
         "int": "vitalised|brilliant",
@@ -201,6 +204,8 @@ function ($, comm, enums, map_knowledge, messages) {
             $("#stats_real_hp_max").text("");
         update_bar("hp");
         update_bar("mp");
+        $("#stats_hp").toggleClass("boosted_hp", !!player.has_status(hp_boosters));
+        $("#stats_mp").toggleClass("boosted_mp", !!player.has_status(mp_boosters));
 
         update_defense("ac");
         update_defense("ev");
