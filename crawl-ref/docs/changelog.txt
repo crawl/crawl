@@ -134,7 +134,8 @@ Monsters
 
 Spells
 ------
-* Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+* Removed: Fulsome Distillation, Evaporate, Cigotuvi's Degeneration, See
+  Invisible and Insulation.
 * New spell: Force Lance (level 2 Conjuration). Fires a short-range single-
   target projectile that can knock monsters backwards.
 * New spell: Dazzling Spray (level 3 Conjuration/Hexes). Fires a spread
@@ -145,18 +146,16 @@ Spells
   bomb at a smite-targetted location.
 * New spell: Disjunction (level 8 Translocation). Has a duration, during
   which it blinks away nearby monsters. Causes contamination.
-* New monster spell: Might Other, which bestows the Might effect on other
-  monsters of the same genus.
 * Spell memorisation failure is no more. As long as the failure chance is
   not 100%, the spell can be memorized. There is a warning prompt if the
   chance of a miscast is high.
 * Beastly Appendage no longer gives claws, but can give horns to Tengu.
 * The blinking component of the Dispersal spell is irresistible.
-* Darkness appears in the Book of Dreams.
+* Some spellbooks have been reorganized.
 * Teleport Other gets a power boost.
 * Condensation Shield's SH bonus no longer cares about Shields skill or
   intelligence.
-* Summon Swarm now gives spiders instead of wolf spiders.
+* Summon Swarm (rod) now gives spiders instead of wolf spiders.
 * Venom Bolt and Bolt of Magma do more damage.
 * Conjurers have a new book with non-elemental spells (including the new
   conjurations).
