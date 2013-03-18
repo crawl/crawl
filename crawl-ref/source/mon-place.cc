@@ -89,8 +89,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool& natural_leader);
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
-                               int monster_level,
-                               bool force_pos = false, bool dont_place = false);
+                                   level_id place,
+                                   bool force_pos = false,
+                                   bool dont_place = false);
 
 // Returns whether actual_feat is compatible with feat_wanted for monster
 // movement and generation.
@@ -1003,7 +1004,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (ugly_colour != BLACK)
         ugly_colour = BLACK;
 
-    monster* mon = _place_monster_aux(mg, 0, place.absdepth(), force_pos, dont_place);
+    monster* mon = _place_monster_aux(mg, 0, place, force_pos, dont_place);
 
     // Bail out now if we failed.
     if (!mon)
@@ -1111,8 +1112,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             continue;
         }
 
-        monster *member = _place_monster_aux(band_template, mon, place.absdepth());
-        if (member)
+        if (monster *member = _place_monster_aux(band_template, mon, place))
         {
             member->flags |= MF_BAND_MEMBER;
             member->props["band_leader"].get_int() = mon->mid;
@@ -1179,7 +1179,7 @@ static void _place_twister_clouds(monster *mon)
 }
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
-                                   int monster_level,
+                                   level_id place,
                                    bool force_pos, bool dont_place)
 {
     coord_def fpos;
@@ -1263,7 +1263,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // Pick the correct Serpent of Hell.
     if (mon->type == MONS_SERPENT_OF_HELL)
-        switch (you.where_are_you)
+        switch (place.branch)
         {
         case BRANCH_COCYTUS:
             mon->type = MONS_SERPENT_OF_HELL_COCYTUS;
@@ -1283,7 +1283,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         monster_type ztype = mg.base_type;
 
         if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER)
-            ztype = pick_local_zombifiable_monster(monster_level, true, mg.cls, fpos);
+            ztype = pick_local_zombifiable_monster(place.absdepth(), true, mg.cls, fpos);
 
         define_zombie(mon, ztype, mg.cls);
     }
@@ -1493,7 +1493,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
         else
-            give_item(mon, monster_level, summoned);
+            give_item(mon, place.absdepth(), summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1510,10 +1510,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item(mon, monster_level, summoned);
+        give_item(mon, place.absdepth(), summoned);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_weapon(mon, monster_level, summoned);
+            give_weapon(mon, place.absdepth(), summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
