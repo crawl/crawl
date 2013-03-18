@@ -67,8 +67,6 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_DISINTEGRATE;
     case SPELL_THROW_ICICLE:
         return ZAP_THROW_ICICLE;
-    case SPELL_CIGOTUVIS_DEGENERATION:
-        return ZAP_CIGOTUVIS_DEGENERATION;
     case SPELL_PORKALATOR:
         // Wizard mode only.
         return ZAP_PORKALATOR;

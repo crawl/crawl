@@ -116,10 +116,6 @@ This spell releases a massive electrical discharge that arcs from target to
 target until it grounds out. It may ground out harmlessly if there are no
 targets sufficiently close to the caster, however.
 %%%%
-Cigotuvi's Degeneration spell
-
-This spell transforms one creature into a pulsating mass of flesh.
-%%%%
 Condensation Shield spell
 
 This spell causes a disc of dense vapour to condense out of the air surrounding

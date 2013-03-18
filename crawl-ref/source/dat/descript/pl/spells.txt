@@ -118,11 +118,6 @@ Ten czar uwalnia ogromne elektryczne wyładowanie które przepływa od celu do
 celu. Jeśli jednak cele nie są wystarczająco blisko siebie, piorun ten zamiast
 tego pójdzie w ziemię.
 %%%%
-Cigotuvi's Degeneration spell
-
-Ten czar, jeśli nie zostanie odparty, zmienia ofiarę w bezkształtną bryłę mięsa
-— która jednak wciąż jest żywa i wrogo nastawiona.
-%%%%
 Condensation Shield spell
 
 Ten czar tworzy lodowy dysk z wilgoci zawartej w powietrzu, który unosi się

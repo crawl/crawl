@@ -103,10 +103,6 @@ Chain Lightning spell
 。不过，如果周围没有与施法者足够接近的目标，这股电流会直接流入大地，不造成伤害
 。
 %%%%
-Cigotuvi's Degeneration spell
-
-这道法术将一个生物变成一坨颤动的肉团。
-%%%%
 Condensation Shield spell
 
 这道法术让施法者周围的空气浓缩，形成一个密集的云雾之盘。它就像是一面普通盾牌

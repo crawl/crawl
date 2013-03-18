@@ -44,10 +44,6 @@ Cause Fear spell
 
 Tämä taika saa loitsijan lähellä olevat pelkäämään.
 %%%%
-Cigotuvi's Degeneration spell
-
-Tämä taika muuttaa yhden olennon sykkiväksi lihakasaksi.
-%%%%
 Confuse spell
 
 Tämä taika aiheuttaa olennon mieleen hämmennystä ja sekaannusta.
