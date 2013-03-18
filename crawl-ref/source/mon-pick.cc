@@ -20,6 +20,8 @@ enum distrib_type
     SEMI, // 50% chance at range ends, 100% in the middle
     PEAK, // 0% chance just outside range ends, 100% in the middle, range
           // ends typically get ~20% or more
+    UP,   // linearly from near-zero to 100% at the top
+    DOWN, // linearly from 100% at the bottom to near-zero
 };
 
 typedef struct
@@ -138,6 +140,14 @@ monster_type pick_monster(level_id place, mon_pick_vetoer veto)
             len += 2; // we want it to zero outside the range, not at the edge
             rar = rar * (len - abs(pop->minr + pop->maxr - 2 * place.depth))
                       / len;
+            break;
+
+        case UP:
+            rar = rar * (place.depth - pop->minr + 1) / (len + 1);
+            break;
+
+        case DOWN:
+            rar = rar * (pop->maxr - place.depth + 1) / (len + 1);
             break;
         }
 
