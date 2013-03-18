@@ -1168,8 +1168,7 @@ KITEM:      $ = w:45 potion of mutation / w:5 potion of gain strength / \
 KITEM:      * = gold
 KITEM:      % = amulet of resist mutation good_item
 KITEM:      : = randbook disc:transmutation owner:Cigotuvi
-KITEM:      ^ = book of transfigurations / randbook disc:transmutation \
-                owner:Cigotuvi spell:cigotuvi's_degeneration
+KITEM:      ^ = book of transfigurations / randbook disc:transmutation
 KITEM:      | = staff of death
 KITEM:      l = scroll of unholy creation
 NSUBST:     L = 1:| / *:l
