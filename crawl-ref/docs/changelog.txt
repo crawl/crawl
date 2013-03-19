@@ -219,7 +219,7 @@ Gods
 * Yredelemnul gives a small amount of piety for desecrating holy remains.
 * Zin's Imprisonment placement is much more forgiving, pushing adjacent
   monsters out of the way if possible.
-* Lugonu no longer gives piety for kills or corpse sacrifices in the Abyss.
+* Lugonu no longer gives piety for anything in the Abyss.
 * Lugonu's Enter the Abyss no longer reduces maximum HP or MP.
 
 Interface
