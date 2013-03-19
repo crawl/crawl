@@ -116,8 +116,8 @@ source directory, where you can run it as "./crawl".
 
 Prerequisites (Debian):
 
-On Debian-based systems (Ubuntu, Mepis, Xandros, ...), you can get all
-dependencies by typing the following as root/sudo:
+On Debian-based systems (Ubuntu, Mint, ...), you can get all dependencies by
+typing the following as root/sudo:
 apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
   libsqlite3-dev libz-dev pkg-config libsdl-image1.2-dev libsdl1.2-dev      \
   libfreetype6-dev libpng-dev ttf-dejavu-core
