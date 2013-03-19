@@ -276,6 +276,7 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BASE]    = TILEP_TRAN_TREE;
         result.parts[TILEP_PART_HELM]    = 0; // fixme, should show up
         result.parts[TILEP_PART_DRCHEAD] = 0;
+        result.parts[TILEP_PART_DRCWING] = 0;
         result.parts[TILEP_PART_HAIR]    = 0;
         result.parts[TILEP_PART_BEARD]   = 0;
         result.parts[TILEP_PART_LEG]     = 0;
