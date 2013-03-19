@@ -351,13 +351,15 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 bool allow_control_teleport(bool quiet)
 {
     bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
-                    || orb_haloed(you.pos()));
+                    || orb_haloed(you.pos()) || you.beheld());
 
     // Tell the player why if they have teleport control.
     if (!quiet && !retval && player_control_teleport())
     {
         if (orb_haloed(you.pos()))
             mpr("The orb prevents control of your teleportation!", MSGCH_ORB);
+        else if (you.beheld())
+            mpr("It is impossible to concentrate on your destination whilst mesmerised.");
         else
             mpr("A powerful magic prevents control of your teleportation.");
     }
