@@ -87,7 +87,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Enchantments (fourth one)
+{   // Book of Enchantments
     SPELL_CAUSE_FEAR,
     SPELL_SILENCE,
     SPELL_TUKIMAS_DANCE,
