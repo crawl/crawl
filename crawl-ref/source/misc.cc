@@ -1783,9 +1783,9 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         // "Normal" tomb (card or monster spell)
-        if (grd(*ai) == DNGN_ROCK_WALL &&
-            (env.markers.property_at(*ai, MAT_ANY, "tomb") == "card"
-             || env.markers.property_at(*ai, MAT_ANY, "tomb") == "monster"))
+        if ((grd(*ai) == DNGN_ROCK_WALL || grd(*ai) == DNGN_CLEAR_ROCK_WALL)
+            && (env.markers.property_at(*ai, MAT_ANY, "tomb") == "card"
+                || env.markers.property_at(*ai, MAT_ANY, "tomb") == "monster"))
         {
             vector<map_marker*> markers = env.markers.get_markers_at(*ai);
             for (int i = 0, size = markers.size(); i < size; ++i)
