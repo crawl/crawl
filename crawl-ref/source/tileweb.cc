@@ -1100,7 +1100,6 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 json_write_comma();
                 write_message("\"doll\":[[%u,%d]]", (unsigned int) fg_idx, TILE_Y);
-                // TODO: _transform_add_weapon
             }
         }
 
