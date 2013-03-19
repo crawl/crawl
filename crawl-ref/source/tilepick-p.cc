@@ -481,6 +481,11 @@ tileidx_t tileidx_player()
     // Handle shapechange first
     switch (you.form)
     {
+        // equipment-using forms are handled regularly
+        case TRAN_STATUE:
+        case TRAN_LICH:
+        case TRAN_TREE:
+            break;
         // animals
         case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
         case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
@@ -490,20 +495,7 @@ tileidx_t tileidx_player()
         case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
         case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
         case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
-        case TRAN_TREE: break; // handled like regular players
         case TRAN_FUNGUS:    ch = TILEP_MONS_WANDERING_MUSHROOM; break;
-        case TRAN_STATUE:
-        {
-            switch (you.species)
-            {
-            case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
-            case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
-            case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
-            case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
-            default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
-            }
-            break;
-        }
         case TRAN_DRAGON:
         {
             switch (you.species)
@@ -518,18 +510,6 @@ tileidx_t tileidx_player()
             case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
             case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
             default:                   ch = TILEP_TRAN_DRAGON;         break;
-            }
-            break;
-        }
-        case TRAN_LICH:
-        {
-            switch (you.species)
-            {
-            case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
-            case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
-            case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
-            case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
-            default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
             }
             break;
         }

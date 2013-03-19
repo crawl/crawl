@@ -269,10 +269,10 @@ static tileidx_t _random_trousers()
 
 void fill_doll_equipment(dolls_data &result)
 {
-    // The support for eq-using forms is working too badly for this one, so
-    // we use regular player code here instead.
-    if (you.form == TRAN_TREE)
+    // Equipment-using forms
+    switch (you.form)
     {
+    case TRAN_TREE:
         result.parts[TILEP_PART_BASE]    = TILEP_TRAN_TREE;
         result.parts[TILEP_PART_HELM]    = 0; // fixme, should show up
         result.parts[TILEP_PART_DRCHEAD] = 0;
@@ -281,6 +281,45 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BEARD]   = 0;
         result.parts[TILEP_PART_LEG]     = 0;
         result.parts[TILEP_PART_SHADOW]  = 0;
+        break;
+    case TRAN_STATUE:
+        tileidx_t ch;
+        switch (you.species)
+        {
+        case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
+        case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
+        case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
+        case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
+        default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+        result.parts[TILEP_PART_DRCHEAD] = 0;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        result.parts[TILEP_PART_LEG]     = 0;
+        break;
+    case TRAN_LICH:
+        switch (you.species)
+        {
+        case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
+        case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
+        case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
+        case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
+        default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+        result.parts[TILEP_PART_DRCHEAD] = 0;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        result.parts[TILEP_PART_BEARD]   = 0;
+        result.parts[TILEP_PART_LEG]     = 0;
+
+        // fixme: these should show up, but look ugly with the lich tile
+        result.parts[TILEP_PART_HELM]    = 0;
+        result.parts[TILEP_PART_BOOTS]   = 0;
+        result.parts[TILEP_PART_BODY]    = 0;
+        result.parts[TILEP_PART_ARM]     = 0;
+        break;
+    default:
+        break;
     }
 
     // Base tile.

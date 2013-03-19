@@ -33,23 +33,6 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-static void _transform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
-                                  bool in_water)
-{
-    if (you.melded[EQ_WEAPON])
-        return;
-
-    const int item = you.equip[EQ_WEAPON];
-    if (item == -1)
-        return;
-
-    const int wep = tilep_equ_weapon(you.inv[item]);
-    if (!wep)
-        return;
-
-    buf.add(wep, x, y, 0, in_water, false, -1, 0);
-}
-
 void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 {
     pack_background(x, y, cell);
@@ -68,16 +51,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     else if (fg_idx == TILEP_PLAYER)
         pack_player(x, y, in_water);
     else if (fg_idx >= TILE_MAIN_MAX)
-    {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
-        if (fg_idx >= TILEP_TRAN_LICH_EQUIP_FIRST
-                && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST
-            || fg_idx >= TILEP_TRAN_STATUE_EQUIP_FIRST
-                && fg_idx <= TILEP_TRAN_STATUE_EQUIP_LAST)
-        {
-            _transform_add_weapon(m_buf_doll, x, y, in_water);
-        }
-    }
 
     pack_foreground(x, y, cell);
 }
