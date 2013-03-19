@@ -649,11 +649,8 @@ int TilesFramework::getch_ck()
                 {
                     set_need_redraw();
 
-                    // FIXME: I've no idea what the ~ is doing there, though
-                    // it does mean the compiler complains about comparing
-                    // signed and unsigned values, but without it, the alt.
-                    // text gets displayed if I last did a mouseclick, which
-                    // is exactly what I'm trying to avoid here. (jpeg)
+                    // Prevent alt. text getting displayed after a mouseclick,
+                    // only after a mouse movement. (jpeg)
                     if (m_last_tick_moved != UINT_MAX)
                     {
                         m_region_msg->alt_text().clear();
