@@ -1,3 +1,4 @@
+
 %%%%
 tutorial intro
 
@@ -55,12 +56,13 @@ tutorial1 levelmap
 части экрана.</tiles><localtiles> Вы  можете рассмотреть какую-либо часть карты
 поближе по<w>[right mouseclick]</w> а также отправиться туда по
 <w>[leftclick]</w>.</localtiles><webtiles>Вы можете открыть общую карту, нажав
+<w>[$cmd[CMD_DISPLAY_MAP]]</w> а после передвигать курсор, чтобы осмотреть
+уровень. Для перемещения в указанное курсором место вы можете нажать <w>[.]</w>
+или <w>[Enter]</w>. Нажмите <w>[Escape]</w> чтобы вернуться в режим
+игры.</webtiles><console>Вы можете открыть общую карту, нажав
 <w>[$cmd[CMD_DISPLAY_MAP]]</w> а после. Для перемещения в указанное курсором
 место вы можете нажать <w>[.]</w> или <w>[Enter]</w>. Нажмите <w>[Escape]</w>
-чтобы вернуться в режим игры.</webtiles><console>Вы можете открыть общую карту,
-нажав <w>[$cmd[CMD_DISPLAY_MAP]]</w> а после. Для перемещения в указанное
-курсором место вы можете нажать <w>[.]</w> или <w>[Enter]</w>. Нажмите
-<w>[Escape]</w> чтобы вернуться в режим игры.</console>
+чтобы вернуться в режим игры.</console>
 %%%%
 tutorial1 autoexplore
 
@@ -87,8 +89,352 @@ tutorial1 tutorial_end
 
 Поздравляем! Вы завершили первый урок!
 
-Для выхода из обучения просто вподнимитесь вверх по лестнице используя
+Для выхода из обучения просто поднимитесь вверх по лестнице используя
 <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> или <w>[Shift-clicking]</w> по
 вашему персонажу</localtiles>. Для подтверждения нажмите <w>[Y]</w> в верхнем
 регистре.
+%%%%
+tutorial1 newlevel
+
+Новый уровень! Чтобы начать, войдите в дверь справа.
+
+Также помните: вы можете перечитать старые сообщения используя
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
+%%%%
+tutorial1 door
+
+Закрытые двери можно открыть, двигаясь в их сторону. Чтобы закрыть открытую
+дверь нажмите <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
+%%%%
+tutorial1 water
+
+Учтите, вы можете двигаться по мелководью, но не через глубоководье.
+%%%%
+tutorial1 upstairs
+
+Когда вы стоите на лестнице вверх, можно подняться на предыдущий уровень, нажав
+<w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> или же  <w>[Shift-clicking]</w> по
+вашему персонажу</localtiles>.
+%%%%
+tutorial1 exit
+
+<yellow>Команды передвижения</yellow>
+
+   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT]
+$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+
+                  \|/                         \|/
+
+                 <w>4</w>-<w>.</w>-<w>6</w>
+<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+
+                  /|\                         /|\
+
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
+$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+  <w>Shift + направление</w> перемещает вас на несколько клеток в указанном
+направлении.
+
+  <localtiles>Также вы можете передвигаться по <w>щелчку</w> где либо в области
+видимости на<w>миникарте</w>.</localtiles>
+
+<yellow>Лестницы</yellow>
+
+  <w>$cmd[CMD_GO_UPSTAIRS]</w>  вернуться на предыдущий уровень
+
+  <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  перейти на следующий уровень
+
+  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  перейти к ближайшей лестнице
+(вверх/вниз)
+
+<yellow>Двери</yellow>
+
+  могут быть открыты при передвижении в их направлении
+
+  <w>$cmd[CMD_CLOSE_DOOR]</w>  закрыть открытую дверь
+
+  <w>$cmd[CMD_REST]</w>  найти скрытую дверь
+
+<yellow>Путешествие</yellow>
+
+  <localtiles>Щелчок мышью по <w>миникарте</w>
+
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> открыть карту уровня,
+перемещение по<w>Enter</w>
+
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  открыть карту уровня,
+перемещение по <w>Enter</w>
+
+  </console><w>$cmd[CMD_EXPLORE]</w>  автоисследование
+
+                                 <cyan>Нажмите <w>любую клавишу</w> для очистки
+экрана...</cyan>
+%%%%
+tutorial2 start
+
+Этот урок расскажет вам о монстрах и сражениях. Для начала вам необходимо
+оружие. Подберите его!
+%%%%
+tutorial2 pickup_weapon
+
+Поднимите оружие с помощью <w>[$cmd[CMD_PICKUP]]</w> или <w>[g]</w>, затем
+оденьте его с помощью <w>[$cmd[CMD_WIELD_WEAPON]]</w>.<localtiles> Также вы
+можете выполнить эти действия <w>[щелчком]</w> на предмете в панели инвентаря
+.</localtiles>
+%%%%
+tutorial2 melee
+
+Чтобы атаковать монстра голыми руками или же оружием, которое было экипировано,
+просто двигайтесь в его направлении.
+%%%%
+tutorial2 resting
+
+Отлично! Вы можете отдохнуть и восполнить очки здоровья, нажав
+<w>$cmd[CMD_REST]</w>. Вы отдохнете, а также сможете провести поиск в течении
+100 ходов. Отдых и поиск могут прервать множество важных событий.
+%%%%
+tutorial2 chop_corpses
+
+Вы можете разделывать трупы на куски мяса, которые можно съесть, по
+клавише<w>[$cmd[CMD_BUTCHER]]</w> <localtiles>или же по <w>[Shift +
+mouseclick]</w>.</localtiles>Затем вы можете съесть это мясо, используя
+<w>[$cmd[CMD_EAT]]</w><localtiles> или же <w>[mouseclick]</w></localtiles>.
+%%%%
+tutorial2 rest_and_chop_reminder
+
+Не забывайте разделывать трупы (<w>[$cmd[CMD_BUTCHER]]</w>) и отдыхать
+(<w>[$cmd[CMD_REST]]</w>)!
+%%%%
+tutorial2 wait
+
+Вместо того, чтобы бросаться в комнату и быть окруженным монстрами, вы можете
+сделать шаг назад и подождать (с помощью <w>[$cmd[CMD_MOVE_NOWHERE]]</w>) пока
+они не подойдут к вам.
+%%%%
+tutorial2 resting_reminder
+
+Помните, вы можете отдохнуть с помощью <w>[$cmd[CMD_REST]]</w>.
+%%%%
+tutorial2 eat_reminder
+
+Помните, вы можете рубить существ с помощью <w>[$cmd[CMD_BUTCHER]]</w>
+<localtiles>или <w>[Shift + mouseclick], </w>и потом поедать оставшиеся куски с
+помощью <w>[$cmd[CMD_EAT]]</w><localtiles> или
+<w>[mouseclick]</w></localtiles>.
+%%%%
+tutorial2 compare_monster_desc
+
+Изучите этих монстров (<localtiles>через
+<w>mouseover</w></localtiles><console>с помощью
+<w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></console><webtiles
+>с помощью
+<w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></webtiles>) и
+сравните их описания (<localtiles><w>[right
+mouseclick]</w></localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_D
+ESCRIBE]]</w></console><webtiles><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCR
+IBE]]</w></webtiles>) чтобы выяснить, сквозь какие клетки безопаснее всего
+пробиться.
+%%%%
+tutorial2 downstairs
+
+Хорошо! После отдыха до полного здоровья продолжайте следовать на следующий
+уровень с помощью <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w>.
+%%%%
+tutorial2 newlevel
+
+Помните: Вы можете прочесть старые сообщения еще раз с помощью
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
+%%%%
+tutorial2 darts
+
+Теперь, для дальнего боя! Поднимите эти дротики с помощью
+<w>[$cmd[CMD_PICKUP]]</w><localtiles> или <w>[mouseclick]</w>,</localtiles> и
+продолжайте.
+%%%%
+tutorial2 throwing
+
+Вы можете стрелять вашими дротиками в монстра с помощью
+<w>[$cmd[CMD_FIRE]]</w><localtiles> или <w>[clicking]</w> по ним на панели
+инвентаря</localtiles>. Чтобы подтвердить автоматически-выбранного монстра,
+нажмите <w>[$cmd[CMD_TARGET_SELECT]]</w> или <w>[Enter]</w>.
+%%%%
+tutorial2 wield_bow
+
+Поднимите этот лук и вооружитесь им с помощью
+<w>[$cmd[CMD_WIELD_WEAPON]]</w><localtiles> или
+<w>[mouseclick]</w></localtiles>.
+%%%%
+tutorial2 travel_reminder
+
+Помните, что вы можете автоматически исследовать используя
+<w>[$cmd[CMD_EXPLORE]]</w>.
+%%%%
+tutorial2 explore
+
+Найдите выход! Помните, что вы можете автоматически исследовать используя
+<w>[$cmd[CMD_EXPLORE]]</w>.
+%%%%
+tutorial2 tutorial_end
+
+Поздравляем! Вы пережили вашу первую партию монстров! Чтобы выйти из обучения,
+просто спуститесь вниз по этой лестнице.
+%%%%
+tutorial2 exit
+
+<yellow>Оружие<console> <cyan>)</cyan></console></yellow>
+
+  <w>$cmd[CMD_PICKUP]</w>  поднять предмет
+  <w>$cmd[CMD_WIELD_WEAPON]</w> вооружиться оружием <localtiles>  Вы также
+можете сделать это <w>clicking</w> по оружию в вашем инвентаре.</localtiles>
+
+<yellow>Монстры</yellow>
+
+<localtiles>  <w>mouseover</w>  изучить монстра
+  <w>rightclick</w>  прочесть детальное описание</localtiles> <console>
+<w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное
+описание</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное
+описание</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  выстрелить в нацеленного
+монстра
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> прицелиться в другого
+монстра <localtiles>  Вы также можете выстрелить по предмету <w>clicking</w> на
+нем и подтвердив цель с помощью <w>Enter</w>.</localtiles>
+
+<yellow>Отдых</yellow>
+
+  <w>$cmd[CMD_MOVE_NOWHERE]</w>  ждать и отдохнуть 1 ход
+  <w>$cmd[CMD_REST]</w>  ждать и отдыхать до 100 ходов
+
+<yellow>Трупы<console> <brown>%</brown></console></yellow>
+
+  <w>$cmd[CMD_BUTCHER]</w>  рубить трупы на куски мяса
+  <w>$cmd[CMD_EAT]</w>  поедать куски мяса
+                                 <cyan>Нажмите <w>any key</w> ,чтобы очистить
+этот экран...</cyan>
+%%%%
+tutorial3 start
+
+В этом уроке вы узнаете о предметах и о том как их использовать.
+%%%%
+tutorial3 armour
+
+Поднимите эти ботинки при помощи  <w>[$cmd[CMD_PICKUP]]</w> и оденьте их с
+помощью <w>[$cmd[CMD_WEAR_ARMOUR]]</w>.<localtiles> либо просто
+<w>[mouseclick]</w> на них в панели инвентаря. </localtiles>
+%%%%
+tutorial3 autopickup
+
+Некоторые типы предметов<tiles>, помеченные зеленой рамкой,</tiles> подбираются
+автоматически, как только вы наступите на них.
+%%%%
+tutorial3 scroll
+
+Многие предметы не опознаны, когда вы их находите. Один способ решить это -
+используйте их. Попробуйте прочесть этот свиток с помощью
+<w>[$cmd[CMD_READ]]</w><localtiles> или <w>[mouseclick]</w> в панели
+инвентаря</localtiles>.
+%%%%
+tutorial3 potion
+
+Вы можете выпить одно из зелий при помощи  <w>[$cmd[CMD_QUAFF]]</w><localtiles>
+либо <w>[mouseclick]</w></localtiles>.
+%%%%
+tutorial3 gold
+
+Золото может быть потрачено в магазинах. Оно ничего не весит и не может быть
+выброшено.
+%%%%
+tutorial3 shop
+
+Магазины предлагают разные вещи, однако они не покупают вещи у других.
+%%%%
+tutorial3 enter_shop
+
+Чтобы войти в магазин, нажмите <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> или
+<w>[Shift-leftclick]</w> на вашем персонаже</localtiles>. Чтобы купить
+предметы, выберите их с по их горячим клавишам, жмите <w>[Enter]</w> и
+подтвердите с помощью <w>[y]es</w>. Вы также можете переключиться в режим
+описания с помощью <w>[!]</w>.
+%%%%
+tutorial3 autoexplore_reminder
+
+Помните, вы можете исследовать уровень автоматически с помощью
+<w>[$cmd[CMD_EXPLORE]]</w><localtiles> или  <w>[clicking]</w> кнопку
+автоисследовать в <w>command panel</w></localtiles>.
+%%%%
+tutorial3 optional_battle
+
+Внимание, этот путь ведет к <lightred>тяжелому бою</lightred>. Вы можете
+выбирать, использовать полученные боевые навыки или попытаться добраться до
+другого выхода на острове. Иначе, хорошей идеей может быть поход в магазин,
+если вы уже не сделали этого.
+%%%%
+tutorial3 tutorial_end
+
+Хорошая работа! Чтобы выйти из обучения, просто спуститесь вниз по лестнице.
+%%%%
+tutorial5 start
+
+В этом уроке вы узнаете о богах и как использовать их способности.
+%%%%
+tutorial5 dungeon_overview
+
+Трог один из многих богов. В настоящей игре, вы используете
+<w>$cmd[CMD_DISPLAY_OVERMAP]</w><localtiles> или щелкаете по <w>dungeon overmap
+button</w> в командной панели</localtiles> для вывода списка всех алтарей и
+других интересных, давно найденных, особенностях.
+%%%%
+tutorial5 altar
+
+Вы можете молиться над алтарем с помощью <w>$cmd[CMD_PRAY]</w><localtiles> (или
+щелкнув в <w>command panel</w> или <w>Shift-clicking</w> на своем
+персонаже)</localtiles> чтобы получить представление о том, что Бог предлагает
+вам, и присоединиться к вере. Если вы нажмете <w>!</w> <localtiles>или
+<w>rightclick</w></localtiles> на экране религии, то увидите более детальное
+описание.
+
+Подтвердите свой выбор с помощью заглавной <w>Y</w>.
+%%%%
+tutorial5 piety_on_kill
+
+Некоторые боги действительно любят, когда убивают монстров в их честь. Пусть
+начнется бойня!
+%%%%
+tutorial5 sacrificing
+
+Помолившись над трупом с помощью <w>$cmd[CMD_PRAY]</w><localtiles> или через
+<w>command panel</w></localtiles> принесете жертву Трогу. Попробуйте!
+%%%%
+tutorial5 berserk
+
+Против исключительно опасных врагов, вы можете использовать силу Берсерка Трога
+с помощью  <w>$cmd[CMD_USE_ABILITY]</w><localtiles> или <w>command
+panel</w></localtiles>.
+%%%%
+tutorial5 exhaustion
+
+Ярость берсерка  приводит к сильному истощению, во время которого вы не можете
+использовать силу снова, а также замедлены. В это время лучше всего отдохнуть
+при помощи  <w>$cmd[CMD_REST]</w> <localtiles>(либо  <w>command
+panel</w>)</localtiles> до тех пор, пока вы не будете в порядке.
+%%%%
+tutorial5 hunger
+
+Вы не можете войти в берсерк, когда очень голодны, в таких случаях всегда
+носите с собой немного еды. Это означает, что иногда вам придется выбрать,
+разрубить труп или пожертвовать его Трогу.
+%%%%
+tutorial5 berserk2
+
+Берсерк также очень полезен против нескольких врагов - до тех пор, пока вы не
+выдохнитесь.
+%%%%
+tutorial5 tutorial_end
+
+Поздравляем! Вы завершили последний урок обучения и теперь готовы для настоящей
+игры. Удачи!
+
+Чтобы выйти из обучения, просто спуститесь вниз по этой лестнице.
 %%%%

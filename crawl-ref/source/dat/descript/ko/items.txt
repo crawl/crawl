@@ -1,3 +1,4 @@
+
 %%%%
 air elemental fan
 
@@ -627,7 +628,7 @@ eggplant
 %%%%
 empty ebony casket
 
-그 힘을 잃은 마법 상자다.
+힘을 잃어버린 마법 상자다.
 %%%%
 eudemon blade
 
@@ -1037,6 +1038,10 @@ potion of invisibility
 
 다른 자들의 시야로부터 짧은 시간동안 당신을 숨기는 물약이다.
 %%%%
+potion of flight
+
+복용한 이에게 대단한 부양력을 주는 포션
+%%%%
 potion of magic
 
 마신 사람에게 마력을 주입해주는, 귀중한 물약이다.
@@ -1055,7 +1060,7 @@ potion of paralysis
 %%%%
 potion of poison
 
-역한 독성의 액체다. 마시면 독에 걸린다.
+역한 독성의 액체다.
 %%%%
 potion of porridge
 
@@ -1080,7 +1085,7 @@ potion of speed
 %%%%
 potion of strong poison
 
-끔찍한 맹독이 든 물약. 마시면 극심한 독에 걸린다.
+끔찍한 맹독이 든 물약.
 %%%%
 quad damage
 
@@ -1143,6 +1148,10 @@ ring of invisibility
 이 강력한 반지는 발동시키면 착용자를 보이지 않게 만들지만, 그와 동시에 착용자의
 신진대사를 큰 폭으로 증가시켜 더 빨리 배고프게 만든다. 투명 상태가 아닐 때는
 신진대사가 빨라지지 않는다.
+%%%%
+ring of flight
+
+이 반지는 착용자가 떠다닐 수 있도록 해준다.
 %%%%
 ring of life protection
 
@@ -1241,9 +1250,18 @@ rod of destruction
 
 이 마법 막대에는 파괴와 황폐의 주문들이 담겨있다.
 %%%%
+rod of inaccuracy
+
+이 지팡이는 사용자가 강력하지만 극도로 부정확한 파워 볼트를 날릴 수 있게
+해준다.
+%%%%
 rod of striking
 
 이 마법 막대는 힘의 기운을 발사해서 적을 원거리에서 공격할 수 있다.
+%%%%
+rod of the swarm
+
+이 지팡이는 사용자가 벌레떼를 소환할 수 있도록 해준다.
 %%%%
 rod of venom
 
@@ -1752,8 +1770,8 @@ wand of paralysis
 %%%%
 wand of polymorph
 
-대상을 다른 형태로 변신시키는 마법봉이다. 변이괴물에게 특히 유용하다. 마법봉의
-이름에서 알 수 있듯이, 자기 자신에게는 사용해도 효과가 나타나지 않는다.
+대상을 다른 모습으로 변형시키는 마법 도구이다. 특히 지속적으로 모습을 바꾸는
+존재들에게 효과적이다.
 %%%%
 wand of random effects
 

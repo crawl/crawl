@@ -1,3 +1,4 @@
+
 %%%%
 Bolt of Cold spell
 
@@ -7,9 +8,17 @@ Bolt of Fire spell
 
 Šī burvestība sviež lielu uguns šautru.
 %%%%
+Iron Shot spell
+
+Burvestība raida lielu un smagu metāla bultu uz izvēlēto pretinieku.
+%%%%
 Call Imp spell
 
 Šī burvestība no Elles dzīlēm atsauc šurp kādu dēmoniņu.
+%%%%
+Cause Fear spell
+
+Burvestība izraisa bailes visos, kas apkārt būrējam.
 %%%%
 Conjure Flame spell
 
@@ -18,4 +27,37 @@ Conjure Flame spell
 Debugging Ray spell
 
 Stars, kas nodara milzīgus bojājumus (1500 dzīvības punktus) un vienmēr trāpa.
+%%%%
+Dig spell
+
+Burvestība izkausē akmeņus, radot jaunus tuneļus.
+%%%%
+Flight spell
+
+Burvestība sniedz tās būrējam spēju lidot pa gaisu.
+%%%%
+Freeze spell
+
+Burvestība sasaldē briesmoni. Aukstasiņu radījumiem tā var tikai īslaicīgi
+palēnināt vielmaiņu.
+%%%%
+Freezing Cloud spell
+
+Burvestība uzburt lielu nāvīgi aukstu garaiņu mākoni.
+%%%%
+Lehudib's Crystal Spear spell
+
+Burvestība raida nāvīgi asu kristāla bultu.
+%%%%
+Levitation spell
+
+Burvestība sniedz tās būrējam spēju karāties gaisā.
+%%%%
+Paralyse spell
+
+Burvestība atņem briesmonim spēju kustēties.
+%%%%
+Shock spell
+
+Burvestība sviež lēkājošu zibens šautru.
 %%%%

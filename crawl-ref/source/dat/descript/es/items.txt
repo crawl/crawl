@@ -1135,6 +1135,135 @@ Esta vestimenta ofrece poca protección ante el daño físico, pero no obstaculi
 la capacidad para evadir ataques, o la adecuada realización de los gestos
 taumatúrgicos.
 %%%%
+rod of demonology
+
+Esta vara contiene hechizos de invocación, algunos de los cuales pueden liberar
+demonios hacia este mundo desprevenido.
+%%%%
+rod of destruction
+
+Esta vara contiene hechizos de caos y destrucción.
+%%%%
+rod of striking
+
+Esta vara permite al portador atacar a distancia.
+%%%%
+rod of venom
+
+Esta vara contiene hechizos ofensivos de veneno.
+%%%%
+rod of warding
+
+Esta vara contiene hechizos diseñados para repeler enemigos.
+%%%%
+royal jelly
+
+Una cosa gelatinosa dorada bastante nutritiva. Consumirla restaurará tus
+habilidades, además de que es saludable.
+%%%%
+rune of zot
+
+Un talismán que permite la entrada a los dominios de Zot.
+%%%%
+sabre
+
+Aunque fue originalmente diseñada para provocar heridas desde una montura, esta
+espada corta, levemente curvada y de un solo filo, sigue siendo eficaz en manos
+de guerreros desmontados.
+%%%%
+sacred scourge
+
+Una arma bendita, tejida por los santos en el cielo y odiado por lo impío. Es
+el arma favorita de los sirvientes de El Resplandeciente.
+%%%%
+scale mail
+
+Un traje de cuero cubierto con placas de metal unidas y superpuestas entre sí
+para proveer protección total, pero a costa de una reducida libertad de
+movimiento.
+%%%%
+scimitar
+
+Un sable largo. Su ancha y curvada hoja incrementa el daño que inflige, pero
+también hace un poco más difícil manipularla precisamente.
+%%%%
+scroll of acquirement
+
+Este gran pergamino es capaz de crear un objeto. Quien lo use, deberá elegir el
+tipo de objeto que quiera crear.
+%%%%
+scroll of amnesia
+
+Este pergamino permite al lector borrar de forma selectiva uno de los hechizos
+de su memoria para recapturar la energía mágica asociada a él.
+%%%%
+scroll of blinking
+
+Este pergamino permite al lector teleportarse a una distancia corta, con un
+control preciso. Sea cauteloso, las teleportaciones controladas causan
+contaminaciones con energía mágica.
+%%%%
+scroll of curse armour
+
+Este pergamino impone una maldición a una de las piezas de armadura equipada.
+%%%%
+scroll of curse jewellery
+
+Este pergamino impone una maldición a uno de los amuletos o anillos equipados.
+%%%%
+scroll of curse weapon
+
+Este pergamino impone una maldición a un arma empuñada.
+%%%%
+scroll of fear
+
+Este pergamino causa un gran temor a aquellos que están viendo al lector.
+%%%%
+scroll of fog
+
+Este pergamino rodea al lector con una densa nube de niebla.
+%%%%
+scroll of holy word
+
+Este pergamino invoca los poderes del Cielo a causar un gran daño a todas las
+criaturas impías... incluyéndote!
+%%%%
+scroll of identify
+
+Este útil pergamino mágico permite determinar las propiedades mágicas de
+cualquier objeto, y ocasionalmente permitirá múltiples identificaciones.
+
+Si es usado en un mazo de cartas, este pergamino revelará la carta superior.
+%%%%
+scroll of immolation
+
+Este pergamino fue tratado con una sustancia increíblemente inflamable, que
+explota violentamente cuando éste es abierto y leído, quemando al lector y a
+todo lo cercano.
+%%%%
+scroll of magic mapping
+
+Este pergamino revela los alrededores del lector.
+
+Revelará la presencia de puertas secretas, pero no es lo suficientemente
+poderoso para ver más allá de ellas, o en zonas completamente cerradas.
+%%%%
+scroll of remove curse
+
+Leyendo este pergamino remueve maldiciones de objetos que estás usando.
+%%%%
+scroll of teleportation
+
+Cuando leas este pergamino seras transportado a un lugar aleatorio tras esperar
+un poco.
+%%%%
+scroll of torment
+
+Este pergamino llama a los poderes de la oscuridad para infligir gran dolor en
+las criaturas cercanas... incluyéndote!. Este dolor divide en dos la
+resistencia de todas las criaturas vivientes, aunque nunca es directamente
+fatal.
+%%%%
 scythe
 
 Un ápero de granja, normalmente no apto para el combate.
@@ -1194,7 +1323,7 @@ propios propósitos.
 %%%%
 staff of cold
 
-Este ste bastón incrementa el poder de los hechizos de hielo recitados por su
+Este bastón incrementa el poder de los hechizos de hielo recitados por su
 portador y lo protege de los efectos del frío. Si el portador del bastón tiene
 capacidad en evocaciones puede congelar a quienes golpee con él, con mayor
 efecto si también posee conocimiento de la magia del hielo.
@@ -1202,4 +1331,53 @@ efecto si también posee conocimiento de la magia del hielo.
 staff of conjuration
 
 Este bastón aumenta el poder de los conjuros lanzados por su portador.
+%%%%
+staff of death
+
+Este bastón aumenta el poder de los conjuros necromántico del portador, además
+de protegerlo de energía negativa. Si el portador tiene la habilidad
+evocaciones además de la de necromancia, pueden causar mucho dolor a las almas
+vivientes que golpee.
+%%%%
+staff of earth
+
+Este bastón aumenta el poder de los conjuros de tierra del portador. Si éste es
+hábil en evocaciones, puede triturar a quien es golpeado, el daño es aún mayor
+si también se es hábil en magia de tierra.
+%%%%
+staff of energy
+
+Este bastón reduce enormemente el costo de hambre de los hechizos lanzados por
+su portador.
+%%%%
+staff of fire
+
+Este bastón aumenta el poder de los conjuros de fuego del portador, y lo
+protege de los efectos producidos por el calor y el fuego. Si el portador es
+hábil en evocación, puede quemar a quien es golpeado por este bastón; el efecto
+es aún mayor si se tiene habilidad en magia de fuego.
+%%%%
+staff of poison
+
+Este bastón aumenta el poder de los conjuros venenosos del portador mientras lo
+protege del veneno. Si el portador es hábil en evocaciones y en magia venenosa,
+puede envenenar a quien es golpeado por este bastón, incluso si las víctimas
+son naturalmente resistentes.
+%%%%
+staff of power
+
+Este bastón provee una reserva de poder mágico a su portador.
+%%%%
+staff of wizardry
+
+Este bastón incrementa significativamente la habilidad de lanzar hechizos
+mágicos del portador.
+%%%%
+strawberry
+
+Una pequeña pero deliciosa fruta roja.
+%%%%
+sultana
+
+Una modesta pasa de uva.
 %%%%

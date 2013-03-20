@@ -1,3 +1,4 @@
+
 %%%%
 CMD_REST
 
@@ -155,4 +156,80 @@ Pulti šalia esantį monstrą su rankose laikomu ginklu.
 CMD_WAIT
 
 Palūkėti vieną ėjimą
+%%%%
+CMD_WAIT verbose
+
+Praleisti ėjimą laukiant ir ilsintis.
+%%%%
+CMD_DISPLAY_INVENTORY
+
+Rodyti inventoriaus turinį
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Rodyti inventoriaus turinį
+%%%%
+CMD_BUTCHER
+
+Išdarinėti lavoną
+%%%%
+CMD_BUTCHER verbose
+
+Išdarinėti lavoną į gabalus
+%%%%
+CMD_MEMORISE_SPELL
+
+Įsiminti burtažodį
+%%%%
+CMD_DROP
+
+Numesti daiktus
+%%%%
+CMD_DROP verbose
+
+Numesti vieną ar daugiau iš šiuo metu laikomų daiktų
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Žeimiau vienu lygiu
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Tyrinėti sekantį gilesnį lygį
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Aukščiau vienu lygiu
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Tyrinėti sekantį aukštesnį lygį
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Eiti į lygį
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Rasti laiptus aukštyn
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Rasti laiptus žemyn
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Rasti parduotuves ir portalus
+%%%%
+CMD_MAP_FIND_TRAP
+
+Rasti spąstus
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Rasti altorius
+%%%%
+CMD_MAP_FIND_STASH
+
+Surasti slėptuvę
 %%%%

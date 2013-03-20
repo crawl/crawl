@@ -68,7 +68,9 @@ Escupes ácido al monstruo que apuntes.
 %%%%
 Fly
 
-Empiezas a volar.
+Empiezas a volar. Durante el vuelo puedes sobrevolar agua y obstáculos
+similares. Se advierte, sin embargo, que el vuelo puede expirar en momentos
+inoportunos y causar que te precipites a tu muerte.
 %%%%
 Hellfire
 
@@ -118,6 +120,18 @@ tu contaminación mágica y puede finalmente causar brillo.
 Turn Visible
 
 Te vuelves visible de nuevo.
+%%%%
+Evoke Flight
+
+<Fly>
+%%%%
+Stop Flying
+
+Paras de volar.
+%%%%
+Evoke Fog
+
+Expulsa una densa nube de humo para dificultar la visión.
 %%%%
 End Transformation
 
@@ -497,11 +511,6 @@ típico ritmo, los monstruos merodearán, los objetos perecederos se
 descompondrán, las plantas crecerán. Tras algo de tiempo, volverás con el mismo
 estado que tenías en el mismo segundo en que partiste.
 %%%%
-Renounce Religion
-
-Renuncias a tu fe. Esto hará a tu personaje abandonar a su dios (y normalmente
-enfadar a dicho dios).
-%%%%
 Request Jelly
 
 Creas una gelatina neutral que vagará por el suelo digiriendo objetos.
@@ -533,6 +542,11 @@ Sacrifica una parte de una de tus capacidades para mejorar otra.
 End Transfer Knowledge
 
 Cancelas una transferencia de capacidades.
+%%%%
+Renounce Religion
+
+Renuncias a tu fe. Esto hará a tu personaje abandonar a su dios (y normalmente
+enfadar a dicho dios).
 %%%%
 Make dart trap
 

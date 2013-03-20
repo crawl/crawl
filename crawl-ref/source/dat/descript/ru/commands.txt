@@ -1,3 +1,4 @@
+
 %%%%
 CMD_REST
 
@@ -159,4 +160,201 @@ CMD_AUTOFIGHT_NOMOVE verbose
 CMD_WAIT
 
 Пропустить один ход.
+%%%%
+CMD_WAIT verbose
+
+Потратить один ход на ожидание и отдых.
+%%%%
+CMD_DISPLAY_INVENTORY
+
+Показать содержимое инвентаря
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Показать содержимое инвентаря.
+%%%%
+CMD_CAST_SPELL
+
+Прочесть заклинание
+%%%%
+CMD_CAST_SPELL verbose
+
+Прочесть заклинание.
+%%%%
+CMD_BUTCHER
+
+Изрубить труп
+%%%%
+CMD_BUTCHER verbose
+
+Порубить труп на куски.
+%%%%
+CMD_MEMORISE_SPELL
+
+Запомнить заклинание
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Фиксировать заклинание в памяти из книги, которую держите или на которой
+стоите.
+%%%%
+CMD_DROP
+
+Бросить вещи
+%%%%
+CMD_DROP verbose
+
+Бросить одну или несколько вещей, которые вы сейчас держите.
+%%%%
+CMD_DISPLAY_MAP
+
+Войти в режим карты
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Навигация по уже исследованной карте.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Двигаться к указателю
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Начать движение к текущей позиции указателя.
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Добавить нав.точку
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Поставить нав.точку в текущей позиции.
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Запрет движения
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Создать запрет движения, сменить его радиус, или убрать его.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Очистить запреты движения
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Стереть все запреты движения на уровне.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+На уровень вниз
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Исследовать следующий нижний уровень.
+%%%%
+CMD_MAP_PREV_LEVEL
+
+На уровень вверх
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Исследовать следующий верхний уровень.
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Следовать на уровень
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Следовать на другой уровень по ответвлению и глубине.
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Искать лестницу вверх
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Пролистать последовательно лестницы вверх.
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Искать лестницу вниз
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Пролистать последовательно лестницы вниз.
+%%%%
+CMD_MAP_FIND_YOU
+
+Найти меня
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Сдвигает курсор карты к вашей текущей позиции.
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Искать магазины и порталы
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Пролистать последовательно магазины и порталы на текущем уровне.
+%%%%
+CMD_MAP_FIND_TRAP
+
+Искать ловушки
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Пролистать последовательно ловушки на текущем уровне.
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Искать алтари
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Пролистать последовательно алтари на текущем уровне.
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Искать запрет движения
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Пролистать последовательно запреты движения на уровне.
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Искать нав.точку
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Пролистать последовательно все нав.точки на текущем уровне.
+%%%%
+CMD_MAP_FIND_STASH
+
+Искать тайник
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Пролистать последовательно все тайники на текущем уровне.
+%%%%
+CMD_ZOOM_IN
+
+Приближение изображения
+%%%%
+CMD_ZOOM_IN verbose
+
+Приближение изображения района Подземелья
+%%%%
+CMD_ZOOM_OUT
+
+Удаление изображения
+%%%%
+CMD_ZOOM_OUT verbose
+
+Удаление изображения участка Подземелья
 %%%%

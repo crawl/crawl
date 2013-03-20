@@ -1,3 +1,14 @@
+
+%%%%
+__cap-N_suffix
+
+{{
+    if you.race() == "Naga" then
+        return "Tas ir īpaši pievilcīgs."
+    else
+        return "Tas ir dīvains un derdzīgs."
+    end
+}}
 %%%%
 __cap-U_suffix
 
@@ -21,6 +32,12 @@ Dowan
 Skaists, taču augstprātīgs elfs ar dotībām galvenokārt tikai burvestībās. Viņa
 prasmes ir lielisks papildinājums viņa dvīņumāsas Duvesas cīņas bezbailībai.
 %%%%
+Duvessa
+
+Parasta paskata elfu karotāja, kura ir tehniski izcils daudzās kaujas formās,
+taču šī iemesla dēļ ir pārlieku pašpārliecināta. Viņu papildina viņas dvīņu
+brāļa Dovana burvju prasmes.
+%%%%
 Ereshkigal
 
 Baismīgs arhivelns, kurš valda nāvīgajā Tartaras pazemes pasaulē.
@@ -34,9 +51,20 @@ Eustachio
 Radījumu izsaucēja māceklis ar gludām ūsām. Viņam ir smieklīgas idejas par
 godu.
 %%%%
+Frederick
+
+Graciozs karotājmags, kuram uz deguna balstās zelta ietvara monoklis un kurš
+meklē piemērotu un cienījamu pretinieku. Jūs droši vien neatbilstat viņa
+prasībām.
+%%%%
 Gloorx Vloq
 
 Ēnains siluets, kas tīts dziļā tumsā.
+%%%%
+Grinder
+
+Nemākulīgs ēnu velniņš, kurš iepriekš zemākajos elles riņķos tika nodarbināts
+kā mocītājs. Viņam ir tendence žēloties un izteikt muļķīgus apgalvojumus.
 %%%%
 Grum
 
@@ -53,6 +81,11 @@ Ilsuiw
 
 Viltīga ūdenieku ragana, kura izmanto savu daili un zintis nevilšu dēkaiņu
 nonāvēšanai.
+%%%%
+Jessica
+
+Ļauna burvja mācekle. Viņa devās pazemē cerībā atrast klusu un nošķirtu vietu,
+kur varētu netraucēta apgūt tumšās zintis.
 %%%%
 Joseph
 
@@ -137,6 +170,10 @@ Viņš nēsā palielu linu kreklu, kas šķiet par garu viņa druknajām aprisē
 Krekla aizmugurē ir izšūts vārds „Viglafs”, lai arī šķiet, ka sākotnējā vārda
 burtiem pa virsu ir pāršūti ielāpi ar citiem.
 %%%%
+Xtahua
+
+Sens un dižens pūķis.
+%%%%
 acid blob
 
 Slimīgi sastrutojis miesas blāķis, no kura pil nāvējoša skābe.
@@ -160,9 +197,18 @@ ancient lich
 Ličs, kurš neskaitāmu gadsimtu laikā, pētot tumšās zintis, ir kļuvis
 neiedomājami spēcīgs.
 %%%%
+azure jelly
+
+Ārkārtīgi auksts, spilgti zilas citoplazmas blāķis, kurš sev apkārt gaisā veido
+ledus gabalus.
+%%%%
 balrug
 
 Milzīgs un ļoti varens dēmons, kas tīts liesmās un ēnās.
+%%%%
+basilisk
+
+Vidēja izmēra cekulaina ķirzaka ar šausminoši stindzinošu skatienu.
 %%%%
 big fish
 
@@ -172,6 +218,11 @@ big kobold
 
 Kobolts, kas ir lielāks un sīkstāks, nekā parastie kobolti, un nereti ir
 bruņots.
+%%%%
+black bear
+
+Mazs melns lācis. Kā jau visi lāčveidīgie, melnais lācis satrakosies, ja tiks
+smagi savainots vai nobiedēts.
 %%%%
 black draconian
 
