@@ -23,6 +23,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godcompanions.h"
 #include "goditem.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -1710,6 +1711,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     ASSERT(mons_enslaved_body_and_soul(mon));
 
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
+    remove_enslaved_soul_companion();
 
     const string whose = you.can_see(mon) ? apostrophise(mon->name(DESC_THE))
                                           : mon->pronoun(PRONOUN_POSSESSIVE);
@@ -1758,6 +1760,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     name_zombie(mon, &orig);
 
     mons_make_god_gift(mon, GOD_YREDELEMNUL);
+    add_companion(mon);
 
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
