@@ -637,7 +637,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             string msg;
             if (you_trigger)
-                msg = "An alarm trap emits a blaring wail!";
+                msg = "The alarm trap emits a blaring wail!";
             else
             {
                 string dir = _direction_string(pos, !in_sight);
@@ -650,10 +650,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-            noisy(30, pos, msg.c_str(), source, false);
+            noisy(40, pos, msg.c_str(), source, false);
             if (crawl_state.game_is_zotdef())
                 more();
         }
+
+        if (you_trigger)
+            you.sentinel_mark();
         break;
 
     case TRAP_BLADE:
