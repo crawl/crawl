@@ -113,6 +113,36 @@ monster_type pick_monster_by_hash(branch_type branch, uint32_t hash)
     return population[branch].pop[hash % population[branch].count].mons;
 }
 
+static int _rarity_at(const pop_entry *pop, int depth)
+{
+    int rar = pop->rarity;
+    int len = pop->maxr - pop->minr;
+    switch (pop->distrib)
+    {
+    case FLAT: // 100% everywhere
+        return rar;
+
+    case SEMI: // 100% in the middle, 50% at the edges
+        ASSERT(len > 0);
+        len *= 2;
+        return rar * (len - abs(pop->minr + pop->maxr - 2 * depth))
+                   / len;
+
+    case PEAK: // 100% in the middle, small at the edges, 0% outside
+        len += 2; // we want it to zero outside the range, not at the edge
+        return rar * (len - abs(pop->minr + pop->maxr - 2 * depth))
+                   / len;
+
+    case UP:
+        return rar * (depth - pop->minr + 1) / (len + 1);
+
+    case DOWN:
+        return rar * (pop->maxr - depth + 1) / (len + 1);
+    }
+
+    die("bad distrib");
+}
+
 monster_type pick_monster(level_id place, mon_pick_vetoer veto)
 {
     struct { monster_type mons; int rarity; } valid[NUM_MONSTERS];
@@ -128,35 +158,7 @@ monster_type pick_monster(level_id place, mon_pick_vetoer veto)
         if (veto && (*veto)(pop->mons))
             continue;
 
-        int rar = pop->rarity;
-        int len = pop->maxr - pop->minr;
-        switch (pop->distrib)
-        {
-        case FLAT: // 100% everywhere
-            break;
-
-        case SEMI: // 100% in the middle, 50% at the edges
-            ASSERT(len > 0);
-            len *= 2;
-            rar = rar * (len - abs(pop->minr + pop->maxr - 2 * place.depth))
-                      / len;
-            break;
-
-        case PEAK: // 100% in the middle, small at the edges, 0% outside
-            len += 2; // we want it to zero outside the range, not at the edge
-            rar = rar * (len - abs(pop->minr + pop->maxr - 2 * place.depth))
-                      / len;
-            break;
-
-        case UP:
-            rar = rar * (place.depth - pop->minr + 1) / (len + 1);
-            break;
-
-        case DOWN:
-            rar = rar * (pop->maxr - place.depth + 1) / (len + 1);
-            break;
-        }
-
+        int rar = _rarity_at(pop, place.depth);
         ASSERT(rar > 0);
 
         valid[nvalid].mons = pop->mons;
@@ -173,6 +175,58 @@ monster_type pick_monster(level_id place, mon_pick_vetoer veto)
     for (int i = 0; i < nvalid; i++)
         if ((totalrar -= valid[i].rarity) < 0)
             return valid[i].mons;
+
+    die("mon-pick roll out of range");
+}
+
+// Used for picking zombies when there's nothing native.
+// TODO: cache potential zombifiables for the given level/size, with a
+// second pass to select ones that have a skeleton/etc and can be placed in
+// a given spot.
+monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto)
+{
+    monster_type valid[NUM_MONSTERS];
+    int rarities[NUM_MONSTERS];
+    memset(rarities, 0, sizeof(rarities));
+    int nvalid = 0;
+
+    for (int br = 0; br < NUM_BRANCHES; br++)
+    {
+        int depth = absdepth0 - absdungeon_depth((branch_type)br, 0);
+        if (depth < 1 || depth > branch_ood_cap((branch_type)br))
+            continue;
+
+        for (const pop_entry *pop = population[br].pop; pop->mons; pop++)
+        {
+            if (depth < pop->minr || depth > pop->maxr)
+                continue;
+
+            if (veto && (*veto)(pop->mons))
+                continue;
+
+            int rar = _rarity_at(pop, depth);
+            ASSERT(rar > 0);
+
+            monster_type mons = pop->mons;
+            if (!rarities[mons])
+                valid[nvalid++] = pop->mons;
+            if (rarities[mons] < rar)
+                rarities[mons] = rar;
+        }
+    }
+
+    if (!nvalid)
+        return MONS_0;
+
+    int totalrar = 0;
+    for (int i = 0; i < nvalid; i++)
+        totalrar += rarities[valid[i]];
+
+    totalrar = random2(totalrar); // the roll!
+
+    for (int i = 0; i < nvalid; i++)
+        if ((totalrar -= rarities[valid[i]]) < 0)
+            return valid[i];
 
     die("mon-pick roll out of range");
 }
