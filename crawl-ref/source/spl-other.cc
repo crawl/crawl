@@ -254,9 +254,12 @@ static bool _try_recall(mid_t mid)
         return recall_offlevel_ally(mid);
     else if (mons->alive())
     {
-        // Don't recall monsters that are currently in sight.
-        if (mons->see_cell_no_trans(you.pos()))
+        // Don't recall monsters that are already close to the player
+        if (mons->pos().distance_from(you.pos()) < 3
+            && mons->see_cell_no_trans(you.pos()))
+        {
             return false;
+        }
         else
         {
             coord_def empty;
