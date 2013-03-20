@@ -40,7 +40,7 @@ void remove_companion(monster* mons)
 void remove_enslaved_soul_companion()
 {
     for (map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end(); ++i)
+         i != companion_list.end(); ++i)
     {
         monster* mons = monster_by_mid(i->first);
         if (!mons)
