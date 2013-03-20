@@ -1283,7 +1283,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         monster_type ztype = mg.base_type;
 
         if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER)
-            ztype = pick_local_zombifiable_monster(place.absdepth(), true, mg.cls, fpos);
+            ztype = pick_local_zombifiable_monster(place, mg.cls, fpos);
 
         define_zombie(mon, ztype, mg.cls);
     }
@@ -1767,85 +1767,58 @@ static bool _good_zombie(monster_type base, monster_type cs,
     return true;
 }
 
-monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
+// TODO: pass these in a clean way; this code is temporary though (famous last
+// words...).
+static monster_type zombie_kind;
+static coord_def zombie_pos;
+static bool _unfitting_zombie(monster_type mt)
+{
+    // Zombifiability in general.
+    if (mons_species(mt) != mt)
+        return true;
+    if (!mons_zombie_size(mt) || mons_is_unique(mt))
+        return true;
+    if (mons_class_holiness(mt) != MH_NATURAL)
+        return true;
+
+    return !_good_zombie(mt, zombie_kind, zombie_pos);
+}
+
+monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos)
 {
-    bool ignore_rarity = false;
-    const level_id place = (crawl_state.game_is_zotdef())
-                           ? level_id(BRANCH_MAIN_DUNGEON)
-                           : level_id::current();
-    const int eff_depth  = (crawl_state.game_is_zotdef())
-                           ? (you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH)) + 1
-                           : absdungeon_depth(you.where_are_you, 0);
-    power = min(27, power);
+    zombie_kind = cs;
+    zombie_pos = pos;
 
-    // How OOD this zombie can be.
-    int relax = 5;
-
-    // On certain branches, zombie creation will fail if we use
-    // the mons_rarity() functions, because (for example) there
-    // are NO zombifiable "native" abyss creatures. Other branches
-    // where this is a problem are hell levels and the crypt.
-    // we have to watch for summoned zombies on other levels, too,
-    // such as the Temple, HoB, and Slime Pits.
-    if (!crawl_state.game_is_zotdef()
-        && (!player_in_connected_branch()
-            || player_in_hell()
-            || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-            || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
-            || player_in_branch(BRANCH_CRYPT)
-            || player_in_branch(BRANCH_TOMB)
-            || player_in_branch(BRANCH_HALL_OF_BLADES)
-            || player_in_branch(BRANCH_SLIME_PITS)))
+    if (crawl_state.game_is_zotdef())
     {
-        ignore_rarity = true;
-        relax = 2000;
+        place = level_id(BRANCH_MAIN_DUNGEON,
+                         you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH) + 6);
+    }
+    else
+    {
+        // all zombies are OOD by 4
+        place.depth += 4;
     }
 
-    // Pick an appropriate creature to make a zombie out of,
-    // levelwise.  The old code was generating absolutely
-    // incredible OOD zombies.
-    while (true)
+    place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
+
+    if (monster_type mt = pick_monster(place, _unfitting_zombie))
+        return mt;
+
+    int absdepth = place.absdepth();
+    while (1)
     {
-        monster_type base = pick_random_zombie();
+        if (monster_type mt = pick_monster_all_branches(absdepth, _unfitting_zombie))
+            return mt;
 
-        if (one_chance_in(1000))
-            ignore_rarity = true;
-
-        // Don't make out-of-rarity zombies when we don't have to.
-        if (!ignore_rarity && mons_rarity(base, place.branch) == 0)
-            continue;
-
-        // Does the zombie match the parameters?
-        if (!_good_zombie(base, cs, pos))
-            continue;
-
-        // Hack -- non-dungeon zombies are always made out of nastier
-        // monsters.
-        if (hack_hd && !player_in_connected_branch() && mons_power(base) > 8)
-            return base;
-
-        // Check for rarity.. and OOD - identical to mons_place()
-        int level, diff, chance;
-
-        level = mons_depth(base, place.branch) + eff_depth - 4;
-        diff  = level - power;
-
-        chance = (ignore_rarity) ? 100
-                 : mons_rarity(base, place.branch) - (diff * diff) / 2;
-
-        if (power > level - relax && power < level + relax
-            && random2avg(100, 2) <= chance)
-        {
-            return base;
-        }
-
-        // Every so often, we'll relax the OOD restrictions.  Avoids
-        // infinite loops (if we don't do this, things like creating
-        // a large skeleton on level 1 may hang the game!).
-        if (one_chance_in(5))
-            relax++;
+        // Until we get rid of the small/large zombie nonsense, looking for
+        // a large zombie early on will fail.
+        if (absdepth < 27)
+            absdepth++;
+        else
+            absdepth--;
     }
 }
 
