@@ -682,16 +682,16 @@ public:
         // writing out to the message window might
         // in turn result in a recursive flush_prev.
         prev_msg = message_item();
+        if (prev_unsent)
+        {
+            unsent++;
+            prev_unsent = false;
+        }
         store_msg(msg);
         if (last_of_turn)
         {
             msgwin.new_cmdturn(true);
             last_of_turn = false;
-        }
-        if (prev_unsent)
-        {
-            unsent++;
-            prev_unsent = false;
         }
     }
 
