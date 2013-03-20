@@ -205,6 +205,7 @@ spear1 WPN_SPEAR
 %rim 1
 spear2
 %rim 0
+spear3
 orcish_spear1 WPN_SPEAR_ORC
 orcish_spear2
 elven_spear1 WPN_SPEAR_ELF
