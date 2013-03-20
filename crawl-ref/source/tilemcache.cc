@@ -290,6 +290,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERFOLK_IMPALER_WATER:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
+    case TILEP_MONS_VAULT_SENTINEL:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
@@ -300,7 +301,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     // Shift to the right.
     case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_VAULT_WARDEN:
-    case TILEP_MONS_VAULT_SENTINEL:
     case TILEP_MONS_IRONBRAND_CONVOKER:
     case TILEP_MONS_IRONHEART_PRESERVER:
     case TILEP_MONS_DEMONSPAWN:
