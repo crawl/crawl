@@ -613,6 +613,10 @@ static int _get_pack_slot(const item_def& item)
         if (inv_item.quantity && _items_similar(item, inv_item, true)
             && !_wielded_slot_no_quiver(i))
         {
+            // =f prevents item from being in fire order.
+            if (strstr(inv_item.inscription.c_str(), "=f"))
+                return -1;
+
             return i;
         }
     }
