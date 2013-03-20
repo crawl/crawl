@@ -25,6 +25,7 @@ extern map<mid_t, companion> companion_list;
 
 void add_companion(monster* mons);
 void remove_companion(monster* mons);
+void remove_enslaved_soul_companion();
 void remove_all_companions(god_type god);
 void move_companion_to(const monster* mons, const level_id lid);
 
