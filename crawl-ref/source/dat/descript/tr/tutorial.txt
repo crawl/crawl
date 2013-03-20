@@ -1,0 +1,51 @@
+
+%%%%
+tutorial intro
+
+Herzaman <w>$cmd[CMD_REPLAY_MESSAGES]</w> ile tüm mesajlarınızı tekrar
+okuyabilirsiniz. Ayrıca <w>Space</w> tuşu ile<cyan>--more--</cyan>
+temizleyebilirsiniz.
+%%%%
+tutorial1 go_on
+
+Çok iyi gidiyorsun ! Şimdi , sıradaki mavi kareye erişene kadar biraz keşfet.
+%%%%
+tutorial1 levelmap
+
+Bu nedir ? Nerede olduğunu , <tiles>ekranın sağındaki <w>minimap</w>a bakarak
+bul .</tiles><localtiles> <w>[sağ mouse]</w> ile haritanın bir parçasına
+yakından bakabilirsin ve<w>[sol tuş]</w> ile seyehat
+edebilirsin.</localtiles><webtiles> harita üzerinden girişi
+<w>[$cmd[CMD_DISPLAY_MAP]]</w>  ile görüntüleyebilir ve imleci seviye etrafında
+gezindirebilirsiniz. Ayrıca istediğiniz yere <w>[.]</w> yada <w>[Enter]</w>
+basarak seyehat edebilirsiniz normal oyun moduna dönmek için <w>[Escape]</w>
+tuluna basın.</webtiles><console> harita üzerinde
+<w>[$cmd[CMD_DISPLAY_MAP]]</w> ile görüntüle ve ardından imleci seviyenin
+etrafında gezindirin.Ayrıca istediğiniz yere <w>[.]</w> yada <w>[Enter]</w>
+basarak seyehat edebilirsiniz normal oyun moduna dönmek için <w>[Escape]</w>
+tuluna basın</console>
+%%%%
+tutorial1 door
+
+Kapalı kapıyı içine yürüyerek açabilirsin. Açık kapıyı kapatmak için,
+<w>[$cmd[CMD_CLOSE_DOOR]]</w>  tuşunu kullan.
+%%%%
+tutorial2 start
+
+Bu ders sana canavarları ve kavga etmeyi öğretecek. İlk olarak,  bir silaha
+ihtiyacımız var ! Git ve kendine bir yatacak yer kap.
+%%%%
+tutorial2 downstairs
+
+Helal ! Tüm canıla dayandıktan sonra "sıradaki seviyeye gir
+<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w> "
+%%%%
+tutorial2 travel_reminder
+
+<w>[$cmd[CMD_EXPLORE]]</w> kulanarak gezginden faydalanabileceğini unutma.
+%%%%
+tutorial2 explore
+
+Çıkışı bul !  <w>[$cmd[CMD_EXPLORE]]</w> kullanarak gezgine ulaşabileceğini
+unutma.
+%%%%

@@ -1,7 +1,21 @@
+
+%%%%
+CMD_REST verbose
+
+Pavadīt līdz 100 gājieniem, atjaunojot dzīvības un/vai burvestību enerģiju.
+Atpūšanās tiek pārtraukta, tiklīdz redzeslokā parādās naidīgs briesmonis.
 %%%%
 CMD_EXPLORE
 
 Automātiski pētīt pašreizējo līmeni
+%%%%
+CMD_PRAY
+
+Lūgt savu dievu
+%%%%
+CMD_SEARCH_STASHES
+
+Meklēt priekšmetus/iespējas
 %%%%
 CMD_REPLAY_MESSAGES
 
@@ -14,6 +28,10 @@ Parādīt tēla pārskatu
 CMD_RESISTS_SCREEN verbose
 
 Parāda ziņas par zināmajām pretestībām, spējām, aprīkojuma statistiku utt.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Parādīt mutācijas
 %%%%
 CMD_DISPLAY_SKILLS
 
@@ -31,6 +49,11 @@ CMD_SAVE_GAME_NOW
 
 Saglabāt un iziet
 %%%%
+CMD_SAVE_GAME_NOW verbose
+
+Saglabā spēli vēlākam un iziet no tās. Tiklīdz spēle tiek atsākta, saglabātā
+datne tiek atkal izdzēsta.
+%%%%
 CMD_DISPLAY_COMMANDS
 
 Spēles palīdzību
@@ -43,9 +66,18 @@ CMD_AUTOFIGHT
 
 Sist tuvākajam briesmonim
 %%%%
+CMD_AUTOFIGHT verbose
+
+Pārvietoties tuvākā naidīgā briesmoņa virzienā un uzbrukt tam ar rokā turēto
+ieroci.
+%%%%
 CMD_AUTOFIGHT_NOMOVE
 
 Sist blakus stāvošajam briesmonim
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Uzbrukt blakus stāvošajam briesmonim ar rokā turēto ieroci
 %%%%
 CMD_WAIT
 
@@ -63,6 +95,10 @@ CMD_CAST_SPELL verbose
 
 Uzburt burvestību.
 %%%%
+CMD_BUTCHER
+
+Apgraizīt līķi
+%%%%
 CMD_BUTCHER verbose
 
 Sakapāt līķi gabalos.
@@ -78,6 +114,14 @@ Nomest priekšmetus
 CMD_DISPLAY_MAP
 
 Ievadīt kartes kodu
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Meklēt kāpnes augšup
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Meklēt kāpnes lejup
 %%%%
 CMD_MAP_FIND_TRAP
 

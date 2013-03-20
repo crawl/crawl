@@ -1,3 +1,4 @@
+
 %%%%
 No ability
 
@@ -104,6 +105,18 @@ Evoke Invisibility
 Turn Visible
 
 再次隐身。
+%%%%
+Evoke Flight
+
+<Fly>
+%%%%
+Stop Flying
+
+停止飞行。
+%%%%
+Evoke Fog
+
+释放一团浓雾来遮挡视线。
 %%%%
 End Transformation
 
@@ -423,11 +436,6 @@ Step From Time
 ，某些物品会慢慢腐烂，植物会继续生长。过一段时间后，你会以离开时间流时的状态回
 到时间流中。
 %%%%
-Renounce Religion
-
-与你信仰的神祗断绝关系。这会导致你的角色不再信仰该神祗；通常来说，这会招致该神
-祗的怒火。
-%%%%
 Request Jelly
 
 召唤一个非敌对的胶质怪。它会在该楼层上四处游荡并吃掉各种物品。
@@ -457,6 +465,11 @@ Transfer Knowledge
 End Transfer Knowledge
 
 中断正在进行的技能转换。
+%%%%
+Renounce Religion
+
+与你信仰的神祗断绝关系。这会导致你的角色不再信仰该神祗；通常来说，这会招致该神
+祗的怒火。
 %%%%
 Make dart trap
 

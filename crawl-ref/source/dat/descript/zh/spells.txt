@@ -1,3 +1,4 @@
+
 %%%%
 Abjuration spell
 
@@ -152,7 +153,7 @@ Corpse Rot spell
 %%%%
 Cure Poison spell
 
- 这道法术移除施法者身体内的所有毒素。
+这道法术移除施法者身体内的所有毒素。
 %%%%
 Darkness spell
 
@@ -196,6 +197,10 @@ Demonic Horde spell
 Dig spell
 
 这道法术能让未加工过的岩石液化，以此来在岩石中打出一条隧道。
+%%%%
+Disjunction spell
+
+这道法术让你周围一个球形区域内的空间结构变得不稳定，随机让周围的生物闪烁到其他地方。闪烁的概率与怪物和你之间的距离有关；在怪物和你近身的时候，几乎一定会出现闪烁。
 %%%%
 Dispel Undead spell
 

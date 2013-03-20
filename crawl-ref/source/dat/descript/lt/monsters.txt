@@ -1,3 +1,4 @@
+
 %%%%
 Aizul
 
@@ -134,9 +135,35 @@ Geryon
 
 Milžiniškas, sparnuotas trigalvis demonas, Pragaro vartų sargas.
 %%%%
+Gloorx Vloq
+
+Miglota figūra apsupta glūdžios tamsos
+%%%%
+Ijyb
+
+Mažas ir suktas goblinas, dėvintis keletą mėlynų skudurų. Šį požemio lygį jis
+laiko savo valdomis, į kurias įžengus baudžiama mirtimi.
+%%%%
+Ilsuiw
+
+Sukta undinė vandens ragana, kuri naudoja savo grožį ir apžavus įtraukti nieko
+neįtariančius nuotykių ieškotojus į mirtį.
+%%%%
+Joseph
+
+Atrodo kaip samdomas karys.
+%%%%
+Khufu
+
+Neapsakomai galingas imperatorius kelyje į dievastį.
+%%%%
 Kirke
 
 Graži žavėtoja.
+%%%%
+Xtahua
+
+Senas ir galingas drakonas.
 %%%%
 Brimstone Fiend
 
@@ -145,7 +172,7 @@ liepsnų. Vienas labiausiai bauginančių visų Pragarų gyventojų.
 %%%%
 Executioner
 
- Siaubingai galingas ir greitas demonas. Jo figūrą temdo sūkuriuojančių panašių
+Siaubingai galingas ir greitas demonas. Jo figūrą temdo sūkuriuojančių panašių
 į dalgio ašmenų debesis.
 %%%%
 Cigotuvi's Monster

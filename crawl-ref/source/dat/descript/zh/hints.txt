@@ -1,3 +1,4 @@
+
 %%%%
 welcome
 
@@ -163,7 +164,7 @@ return you.god() }} 高兴，这种事就不会发生，而且你还能得到神
 %%%%
 HINT_SEEN_FIRST_OBJECT
 
- <console>$1 </console>是一个物品，你可以移动过去然后按下 <w>g</w> 或 <w>,</w>
+<console>$1 </console>是一个物品，你可以移动过去然后按下 <w>g</w> 或 <w>,</w>
 来拾取它。 <console>通常物品会以非字母字符如 <w>%?!"=()[</w>来表示。 </console>
 <tiles>你也可以在站在物品上之后按下 <w>鼠标左键</w> 来拾取。 </tiles> 另外，一
 些物品通常会自动被拾取。 <tiles>(图像模式中这类物品周围会有一个绿色的边框。

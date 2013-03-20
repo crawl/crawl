@@ -26,6 +26,12 @@ A blossoming altar of Fedhas
 
 Un autel à Fedhas Madash, couvert de végétaux de couleurs vives.
 %%%%
+A bolt trap
+
+Un trou bien caché contenant un bidule ressemblant à une arbalète avec un
+mécanisme d'auto-rechargement. Attention à ses carreaux, la construction en
+acier a une détente bien plus puissante que n'importe quel arbalétrier vivant.
+%%%%
 A broken pillar
 
 Les constructeurs de ce pilier sont morts il y a longtemps. Plus personne ne se
@@ -56,10 +62,21 @@ A crawl-hole back to the Lair
 Un passage qui mène vers des endroits moins exiguës et avec moins de toiles
 d'araignée.
 %%%%
+A dart trap
+
+Ce piège peut tirer des piques de métal relativement faibles. Elles ne
+pourraient pas tuer n'importe qui directement, mais elles pourraient venir à
+bout de quelqu'un qui courrait à moitié-mort en étant poursuivi par un monstre.
+%%%%
 A deep blue altar of Sif Muna
 
 Un autel du bleu le plus pur, couvert de motifs complexes et d'écrits d'une
 langue depuis longtemps oubliée, dédiée à Sif Muna le Gardien des Savoirs.
+%%%%
+A detected altar
+
+Un autel de quelque religion. Si vous voulez savoir à quelle divinité il est
+consacré, vous devriez alors venir plus près.
 %%%%
 A detected shop or portal
 
@@ -113,7 +130,7 @@ A gas trap
 
 Vous avez de la chance d'avoir détecté ce piège car aurait pu libérer un nuage
 de gaz mortel autour de vous. Vous ne pouvez pas déterminer exactement quel
-type de gaz il contient -- peut-être un simple poison, peut être des vapeurs
+type de gaz il contient — peut-être un simple poison, peut être des vapeurs
 mutagènes, peut-être du gaz inflammable, ou peut-être quelque chose d'encore
 plus vicieux.
 %%%%
@@ -123,11 +140,11 @@ Cette porte mène au Royaume de Zot, la dernière épreuve de votre quête. Son
 dernier niveau contient la fameuse Orbe de Zot. L'Orbe et ce Royaume ont une
 terrible réputation sous remise en question mais, une chose semble certaine :
 les monstres qui y hantent ses couloirs et protège l'Orbe sont puissants et
-étranges - certains ne pouvant être rencontrés qu'en ces lieux.
+étranges — certains ne pouvant être rencontrés qu'en ces lieux.
 %%%%
 A gateway back into the Dungeon
 
-Cet accès permet un exploit que tout le monde pensait impossible: revenir de
+Cet accès permet un exploit que tout le monde pensait impossible : revenir de
 l'Enfer en vie.
 %%%%
 A gateway leading out of the Abyss
@@ -256,6 +273,12 @@ Une terrifiante déchirure dans la réalité qui semble dans l'espace.
 Heureusement, la magie qui l'a ouverte empêche le vide d'avaler tout ce qui
 bouge.
 %%%%
+A pressure plate
+
+Une des pierres du sol n'a pas l'air très solide, et vous remarquez qu'il
+s'agit en fait d'une sorte d'enclencheur, vous ne saurez pas dire cependant à
+quel piège elle est reliée.
+%%%%
 A radiant altar of Vehumet
 
 Un autel, enflammé dans les lumières d'Iskenderun et promettant un pouvoir
@@ -280,7 +303,7 @@ Un autel de Beogh, indéniablement taillé grossièrement par des artisans orcs.
 %%%%
 A shaft
 
-Un trou profond. Qui sait où vous finiriez si vous tombiez dedans?
+Un trou profond. Qui sait où vous finiriez si vous tombiez dedans ?
 %%%%
 A shattered altar of Ashenzari
 
@@ -344,7 +367,7 @@ Ces escaliers ramènent aux formidables Chambres Fortes.
 A staircase leading out of the dungeon
 
 Cette sortie mène à la Grande Salle Bleue. Le ciel, des oiseaux qui chantent,
-de l'air frais - ce genre de choses. Aussi des impôts et de tout ce que vous
+de l'air frais — ce genre de choses. Aussi des impôts et de tout ce que vous
 avez fui.
 
 Monter ces escaliers terminera votre quête, que vous transportiez iez l& ou
@@ -435,6 +458,12 @@ A teleporter
 
 Passer par ce portail vous enverra dans une autre salle.
 %%%%
+A teleportation trap
+
+Ce piège magique peut déplacer quiconque d'assez malchanceux pour marcher
+dessus — voire même voler au dessus — vers un endroit quelconque du niveau
+actuel de ce donjon.
+%%%%
 A translucent rock wall
 
 La matière de ce rocher est aussi translucide que du verre de bonne qualité.
@@ -505,6 +534,16 @@ An ancient bone altar of Kikubaaqudgha
 De vieux os ont été empilés ici pour former un autel pour le terrible
 Dieu-Démon Kikubaaqudgha.
 %%%%
+An arrow trap
+
+Vous pouvez voir plusieurs cordes à arc et des flèches attachées à des choses
+ressemblant à des arcs fixes. Typiquement, dans des pièges comme cela, une
+seule flèche est tirée à chaque fois que l'enclencheur est déclenché. Un tel
+piège  est moins cher et plus facile à faire qu'un mécanisme d'auto-recharge et
+d'un arc en acier ayant la détente monstrueuse d'un piège à carreaux, donc
+n'espérez pas d’énormes dégâts. En revanche, une simple flèche dans une artère
+est suffisante pour tuer une personne.
+%%%%
 An empty arch of ancient stone
 
 Une arche en pierre qui semble avoir été installée ici pour l'eternité, mais
@@ -525,6 +564,24 @@ An exit through the horrors of the Abyss
 Si vous avez déjà eu envie de tomber de Charybde en Scylla, c'est le moment ou
 jamais. Ce passage vous permet de quitter cet endroit par un joli sentier
 panoramique à travers la folie à l'état pur.
+%%%%
+An idol of Beogh
+
+{{
+  if you.god() == "Beogh"
+    then
+      return "Cette statue brute mais majestueuse représente Beogh dans sa
+gloire "
+          .. "Que tous ces abrutis de non-Orcs soient ébranlés !";
+    else
+      return "Cette statue grossière représente Beogh, le dieu des orcs
+primitifs "
+          .. "vivant ici. Leur religion appelle à assassiner tous les "
+          .. "non-croyants. Ça serait un plaisir de détruire cette idole, mais
+"
+          .. "prudence, Beogh est connu pour être rancunier.";
+  end
+}}
 %%%%
 An iron altar of Okawaru
 
@@ -607,7 +664,7 @@ ici, alors assurez-vous d'avoir terminer le pillage avant.
 %%%%
 An autumnal tree
 
-Ces grands arbres semblent être fixées en permanence dans un moment d'automne:
+Ces grands arbres semblent être fixées en permanence dans un moment d'automne :
 les feuilles, de couleur rouge et or, tombent des branches et flottent
 gracieusement vers le sol. Cependant, avant même qu'elles n'atteignent le sol,
 une ombre passe, et quand le chatoiement est parti, les feuilles sont une fois
@@ -652,7 +709,7 @@ nuances de rose ici et là.
 %%%%
 A rose-covered archway
 
-Ces roses sont superbes!
+Ces roses sont superbes !
 %%%%
 A vine-covered statue
 
@@ -704,7 +761,7 @@ Une pierre tombale. Le nom 'Zonguldrok' est gravé dessus en lettres d'or.
 A gravestone
 
 Une pierre tombale vierge. Une question demeure : est ce la tombe qui est sans
-nom ou la personne qui repose dedans?
+nom ou la personne qui repose dedans ?
 %%%%
 The ground
 
@@ -730,6 +787,12 @@ C'est du cristal de mauvaise qualité. Il est à peine translucide, et ses faces
 tordues ne font qu'empirer les choses. L'opalescente lueur est cependant assez
 agréable.
 %%%%
+A wall of transparent white crystal
+
+Ce cristal semble parfait et impérissable. Cela doit être du diamant ou quelque
+chose du genre — peu importe ce que c'est, c'est en dehors de vos moyens de
+pouvoir le traverser.
+%%%%
 A hot floor
 
 Profond sous le sol brûle un feu plus chaud que tous les autres feus : le feu
@@ -750,7 +813,7 @@ Cet arbre est mort comme tout le reste autour.
 %%%%
 An iron statue
 
-Cette statue n'a pas de bouche. Effrayant!
+Cette statue n'a pas de bouche. Effrayant !
 %%%%
 Ashen ground
 
@@ -815,9 +878,35 @@ A granite stump
 Ce morceau de granite est tout ce qu'il reste de ce qui était probablement une
 statue longtemps dans le passé.
 %%%%
+An ice choked empty arch of ancient stone
+
+On dirait que le passage que vous avez emprunté n'a pas été utilisé depuis des
+années. Ce portail est non seulement vieux et inopérant, mais aussi pas loin
+d'être complètement enfoui sous la neige. Heureusement, vous pouvez voir un
+autre portail miroitant non loin de là.
+%%%%
+An ice covered gate leading back out of here
+
+Un portail toujours effectif se tient là. Sa magie maintient la glace sur le
+seuil, l'empêchant de bloquer entièrement la porte. Vous êtes plutôt certain
+que vous ne pourrez pas revenir ici après être passé, donc vous feriez mieux
+d'explorer cet endroit d'abord.
+
+Ou peut-être, vous échapper avec votre vie avant que vous vous congeliez en une
+stalagmite fort peu jolie.
+%%%%
+An ice covered rock wall
+
+Cette roche est recouverte d'une épaisse couche de neige et de glace. D'autant
+que vous pouvez voir de l'eau liquide s'écouler par endroit, il est évident que
+cette cave s'est formée de cette manière : l'eau a suinté à travers les
+fissures de la roche et ensuite s'est congelée, plongeant lentement l'endroit
+dans lequel vous êtes. Et ainsi cela creuse ce qu'il reste de votre chaleur
+corporelle.
+%%%%
 Some ice crusted deep water
 
-Ça a l'air gelé!
+Ça a l'air gelé !
 %%%%
 Some ice crusted shallow water
 
@@ -921,7 +1010,7 @@ lentement le passage.
 A magical portal
 
 Ce portail a été laissé ouvert par un sorcier négligent. Il pourrait conduire à
-un laboratoire secret, mais méfiez-vous! Il sera assurément gardé par des
+un laboratoire secret, mais méfiez-vous ! Il sera assurément gardé par des
 monstres et des pièges magiques terribles. On dirait que le portail disparait
 lentement.
 %%%%

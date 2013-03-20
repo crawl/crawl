@@ -1,3 +1,4 @@
+
 %%%%
 CMD_REST
 
@@ -15,7 +16,7 @@ CMD_EXPLORE
 CMD_EXPLORE verbose
 
 让角色在当前层自动探索尚未去过的地方，根据自动拾取的设置自动收集物品。如果遇到
-敌对怪物、发现物品、或特殊设施，移动自行会中止。
+敌对怪物、发现物品、或特殊设施，移动自行会中止，并且通告发现的物品或特殊设施。
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
@@ -56,7 +57,7 @@ CMD_RESISTS_SCREEN
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-显示抗性、属性、装备情况等
+显示抗性、能力、装备统计等信息。
 %%%%
 CMD_DISPLAY_OVERMAP
 
@@ -76,7 +77,7 @@ CMD_DISPLAY_RELIGION verbose
 %%%%
 CMD_DISPLAY_MUTATIONS
 
-显示突变状况
+显示突变
 %%%%
 CMD_DISPLAY_SKILLS
 
@@ -88,11 +89,11 @@ CMD_DISPLAY_CHARACTER_STATUS
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-显示激活的状态法术和一些其他信息。
+显示活跃的附魔和一些其他信息。
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
-列出已经发现的物品类别
+已发现物品种类列表
 %%%%
 CMD_SAVE_GAME_NOW
 
@@ -116,7 +117,7 @@ CMD_DISPLAY_COMMANDS
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
-列出命令及选项等
+命令及选项等列表
 %%%%
 CMD_CHARACTER_DUMP
 
@@ -129,7 +130,7 @@ CMD_CHARACTER_DUMP verbose
 %%%%
 CMD_AUTOFIGHT
 
-攻击最近的怪物
+打击最近的怪物
 %%%%
 CMD_AUTOFIGHT verbose
 
@@ -137,11 +138,11 @@ CMD_AUTOFIGHT verbose
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
-攻击一个邻接的怪物
+打击一个邻接的怪物
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-用持用的武器攻击一个邻接的怪物
+用挥舞的武器攻击一个邻接的怪物
 %%%%
 CMD_WAIT
 
@@ -169,11 +170,11 @@ CMD_CAST_SPELL verbose
 %%%%
 CMD_BUTCHER
 
-分解尸体
+解剖尸体
 %%%%
 CMD_BUTCHER verbose
 
-把尸体分解成肉块。
+解剖一个尸体成为肉块。
 %%%%
 CMD_MEMORISE_SPELL
 

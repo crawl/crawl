@@ -1,0 +1,46 @@
+
+%%%%
+Breathe Frost
+
+Uzpūst izvēlētajam briesmonim ledus brāzmu.
+%%%%
+Breathe Steam
+
+Uzpūst izvēlētajam briesmonim tvaika strūklu.
+%%%%
+Evoke Teleportation
+
+Aizteleportē sevi uz nejaušu līmeņu vietu.
+%%%%
+Banish
+
+=
+%%%%
+Make arrow trap
+
+Izvēlētajā vietā izveidot bultu lamatas.
+%%%%
+Remove Curse
+
+Noņemt lāstu no sava apbruņojuma.
+%%%%
+Make net trap
+
+Izvēlētajā vietā izveidot tīkla lamatas.
+%%%%
+Make water
+
+Izvēlētajā vietā izveidot baseinu sekla ūdens.
+%%%%
+Acquire gold
+
+Iegūt lielu daudzumu zelta.
+%%%%
+Acquirement
+
+Iegūt izvēlētā veida priekšmetu.
+%%%%
+Make blade trap
+
+Izvēlētajā vietā izveidot asmeņu lamatas.
+%%%%

@@ -1,3 +1,4 @@
+
 %%%%
 No ability
 
@@ -110,6 +111,18 @@ Evoke Invisibility
 Turn Visible
 
 투명화를 해제한다.
+%%%%
+Evoke Flight
+
+<Fly>
+%%%%
+Stop Flying
+
+비행을 그만둔다.
+%%%%
+Evoke Fog
+
+시야를 가리기 위해 두꺼운 안개구름을 일으킨다.
 %%%%
 End Transformation
 
@@ -459,10 +472,6 @@ Step From Time
 때문에 적은 떠돌아다니고 시체는 부패하며, 식물은 자라난다. 충분한 시간이 지난
 뒤에, 당신은 전과 같은 모습으로 제자리에 돌아온다.
 %%%%
-Renounce Religion
-
-현재 믿고 있는 신을 버린다. 당신에게 버림받은 신은 분노하여 징벌을 내릴 것이다.
-%%%%
 Request Jelly
 
 중립적인 젤리를 소환한다. 이들은 주변을 배회하며, 눈에 보이는 모든 물건을
@@ -494,6 +503,10 @@ Transfer Knowledge
 End Transfer Knowledge
 
 진행 중인 기술 이전을 중단한다.
+%%%%
+Renounce Religion
+
+현재 믿고 있는 신을 버린다. 당신에게 버림받은 신은 분노하여 징벌을 내릴 것이다.
 %%%%
 Make dart trap
 

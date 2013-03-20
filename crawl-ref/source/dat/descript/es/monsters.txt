@@ -499,6 +499,29 @@ Una enorme serpiente que se desplaza con una velocidad asombrosa tanto por
 tierra como por agua. No mata a sus victimas mediante venenos sino que las
 asfixia.
 %%%%
+angel
+
+Un guerrero divino de El Resplandeciente. Su imponente figura alada, de una
+belleza propia de otro mundo, está bañada por una aura de brillante luz blanca.
+Al volar, da la sensación de ser muy ligero y bastante ágil, a pesar de la
+pesada armadura que lleva.
+%%%%
+apis
+
+Un plácido toro sagrado de Elyvilon. ¡Cuidado, servidores del mal, ya que con
+certeza se volverá contra vosotros!
+%%%%
+baby alligator
+
+Un joven caimán. Aunque aún no tiene poderosas mandíbulas, ni la fuerza
+suficiente para imprimir un ráfaga de velocidad, es más ligero que un adulto y
+sus dientes de leche son muy agudos.
+%%%%
+ball lightning
+
+Una enorme y veloz esfera resplandeciente de energía eléctrica. Explotará en
+cuanto sea provocada.
+%%%%
 Brimstone Fiend
 
 Un enorme y poderoso demonio bañado en fuego infernal, con amplias alas

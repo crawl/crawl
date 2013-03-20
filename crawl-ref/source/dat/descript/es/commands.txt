@@ -161,3 +161,52 @@ CMD_WAIT
 
 Esperar un turno
 %%%%
+CMD_DISPLAY_INVENTORY
+
+Mostrar el contenido de tu inventario
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Muestra el contenido de tu inventario.
+%%%%
+CMD_CAST_SPELL
+
+Pronunciar hechizo
+%%%%
+CMD_CAST_SPELL verbose
+
+Pronuncias un hechizo.
+%%%%
+CMD_BUTCHER
+
+Descuartizar cadáver
+%%%%
+CMD_BUTCHER verbose
+
+Descuartizas un cadáver en pedazos.
+%%%%
+CMD_MEMORISE_SPELL
+
+Memorizar hechizo
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Pones en tu memoria un hechizo leído de un libro que poseas o sobre el que
+estés.
+%%%%
+CMD_DROP
+
+Depositar objetos
+%%%%
+CMD_DROP verbose
+
+Depositas uno o varios de los objetos que actualmente tengas.
+%%%%
+CMD_DISPLAY_MAP
+
+Entrar modo mapa
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Navegas el mapa de lo que ya ha sido explorado.
+%%%%
