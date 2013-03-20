@@ -510,8 +510,8 @@ norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
-%rim 1
 sigmund MONS_SIGMUND
+%rim 1
 terence MONS_TERENCE
 wiglaf MONS_WIGLAF
 
@@ -670,7 +670,9 @@ arachne_staveless MONS_ARACHNE_STAVELESS
 ## Various beasts ('I')
 %sdir mon/animals
 ice_beast MONS_ICE_BEAST
+%rim 0
 sky_beast MONS_SKY_BEAST
+%rim 1
 
 ## Jellies ('J')
 %sdir mon/unique
