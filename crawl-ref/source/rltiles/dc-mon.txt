@@ -491,7 +491,9 @@ edmund MONS_EDMUND
 erica MONS_ERICA
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
+%rim 0
 frederick MONS_FREDERICK
+%rim 1
 harold MONS_HAROLD
 jessica MONS_JESSICA
 joseph MONS_JOSEPH
@@ -501,12 +503,14 @@ louise MONS_LOUISE
 margery MONS_MARGERY
 maud MONS_MAUD
 maurice MONS_MAURICE
+%rim 0
 nikola MONS_NIKOLA
+%rim 1
 norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
-%rim 1
 rupert MONS_RUPERT
+%rim 1
 sigmund MONS_SIGMUND
 terence MONS_TERENCE
 wiglaf MONS_WIGLAF
@@ -710,6 +714,7 @@ mon/vault/zonguldrok_lich MONS_ZONGULDROK_LICH
 
 ## Mummies ('M')
 %sdir mon/unique
+%rim 0
 menkaure MONS_MENKAURE
 khufu MONS_KHUFU
 %sdir mon/undead
@@ -717,6 +722,7 @@ mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
 greater_mummy MONS_GREATER_MUMMY
 mummy_priest MONS_MUMMY_PRIEST
+%rim 1
 
 ## Nagas ('N')
 %sdir mon/unique
@@ -733,11 +739,15 @@ lamia MONS_LAMIA
 
 ## Ogres ('O')
 %sdir mon/unique
+%rim 0
 erolcha MONS_EROLCHA
+%rim 1
 %sdir mon
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
+%rim 0
 ogre_mage MONS_OGRE_MAGE
+%rim 1
 
 ## Plants ('P')
 %sdir mon/fungi_plants
@@ -817,7 +827,9 @@ yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 %sdir mon/unique
 dowan MONS_DOWAN
 duvessa MONS_DUVESSA
+%rim 0
 fannar MONS_FANNAR
+%rim 1
 %sdir mon
 elf MONS_ELF
 deep_elf_fighter MONS_DEEP_ELF_FIGHTER
