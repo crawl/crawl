@@ -1470,10 +1470,6 @@ static bool _handle_wand(monster* mons, bolt &beem)
         }
         return false;
 
-    case WAND_DIGGING:
-        // This is handled elsewhere.
-        return false;
-
     default:
         break;
     }
