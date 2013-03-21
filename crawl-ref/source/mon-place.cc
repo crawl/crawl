@@ -1775,6 +1775,12 @@ monster_type pick_local_zombifiable_monster(level_id place,
         place = level_id(BRANCH_MAIN_DUNGEON,
                          you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH) + 6);
     }
+    else if (place.branch == BRANCH_ZIGGURAT)
+    {
+        // Get Zigs something reasonable to work with, if there's no place
+        // explicitely defined.
+        place = level_id(BRANCH_MAIN_DUNGEON, 31 - (27 - place.depth) / 3);
+    }
     else
     {
         // all zombies are OOD by 4
@@ -1786,19 +1792,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
     if (monster_type mt = pick_monster(place, _unfitting_zombie))
         return mt;
 
-    int absdepth = place.absdepth();
-    while (1)
-    {
-        if (monster_type mt = pick_monster_all_branches(absdepth, _unfitting_zombie))
-            return mt;
-
-        // Until we get rid of the small/large zombie nonsense, looking for
-        // a large zombie early on will fail.
-        if (absdepth < 27)
-            absdepth++;
-        else
-            absdepth--;
-    }
+    return pick_monster_all_branches(place.absdepth(), _unfitting_zombie);
 }
 
 void roll_zombie_hp(monster* mon)
