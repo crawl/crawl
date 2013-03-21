@@ -249,7 +249,12 @@ __attribute__((externally_visible))
 int main(int argc, char *argv[])
 {
 #ifndef __ANDROID__
+# ifdef DGAMELAUNCH
+    // avoid commas instead of dots, etc, on CDO
+    setlocale(LC_CTYPE, "");
+# else
     setlocale(LC_ALL, "");
+# endif
 #endif
 #ifdef TARGET_OS_WINDOWS
     // No documentation about resetting this, nor about which versions of
