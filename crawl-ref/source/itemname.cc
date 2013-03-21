@@ -1817,6 +1817,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
     case OBJ_CORPSES:
     {
+        if (dbname && item_typ == CORPSE_SKELETON)
+            return "decaying skeleton";
+
         if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
             buff << "rotting ";
 

@@ -2320,7 +2320,7 @@ short sword:quote
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
 %%%%
-skeleton
+decaying skeleton
 
 A decaying skeleton.
 %%%%
