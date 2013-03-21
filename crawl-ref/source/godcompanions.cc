@@ -27,6 +27,11 @@ companion::companion(const monster& m)
     timestamp = you.elapsed_time;
 }
 
+void init_companions(void)
+{
+    companion_list.clear();
+}
+
 void add_companion(monster* mons)
 {
     companion_list[mons->mid] = companion(*mons);

@@ -6,6 +6,7 @@
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
+#include "godcompanions.h"
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1389,6 +1390,9 @@ static void _setup_generic(const newgame_def& ng)
 
     for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
         you.nemelex_sacrificing = true;
+
+    // Get rid of god companions left from previous games
+    init_companions();
 
     // Create the save file.
     if (Options.no_save)

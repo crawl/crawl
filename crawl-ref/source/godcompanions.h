@@ -23,6 +23,7 @@ struct companion
 
 extern map<mid_t, companion> companion_list;
 
+void init_companions(void);
 void add_companion(monster* mons);
 void remove_companion(monster* mons);
 void remove_enslaved_soul_companion();
