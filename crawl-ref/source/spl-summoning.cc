@@ -1830,10 +1830,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
 
     fail_check();
 
-    const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
-        MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
-
-    mgen_data mg(mon, BEH_FRIENDLY, &you,
+    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you,
                  0, SPELL_SIMULACRUM,
                  you.pos(), MHITYOU,
                  MG_FORCE_BEH, god,
@@ -1857,7 +1854,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
             {
                 sim->mname = name;
                 sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
-                sim->props["dbname"].get_string() = mons_class_name(mon);
+                sim->props["dbname"].get_string() = mons_class_name(MONS_SIMULACRUM);
             }
 
             count++;
@@ -1961,8 +1958,6 @@ bool monster_simulacrum(monster *caster, bool actual)
             bool cast_visible = you.see_cell(caster->pos());
 
             monster_type sim_type = item.mon_type;
-            monster_type mon_type = mons_zombie_size(sim_type) == Z_BIG ?
-                MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
             // Can't create more than the available chunks.
             int how_many = min(8, 4 + random2(100) / 20);
@@ -1978,7 +1973,7 @@ bool monster_simulacrum(monster *caster, bool actual)
                 // Use the original monster type as the zombified type here,
                 // to get the proper stats from it.
                 if (monster *sim = create_monster(
-                        mgen_data(mon_type, SAME_ATTITUDE(caster), caster,
+                        mgen_data(MONS_SIMULACRUM, SAME_ATTITUDE(caster), caster,
                                   0, SPELL_SIMULACRUM,
                                   caster->pos(), caster->foe,
                                   MG_FORCE_BEH | (cast_visible ? MG_DONT_COME : 0),
