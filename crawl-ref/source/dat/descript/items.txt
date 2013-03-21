@@ -1197,15 +1197,16 @@ gain entry.
 %%%%
 horn of Geryon:quote
 
-„Natenczas Wojski chwycił na taśmie przypięty
- Swój róg bawoli, długi, cętkowany, kręty
- Jak wąż boa, oburącz do ust go przycisnął,
- Wzdął policzki jak banię, w oczach krwią zabłysnął,
- Zasunął wpół powieki, wciągnął w głąb pół brzucha
- I do płuc wysłał z niego cały zapas ducha
- I zagrał: róg jak wicher wirowatym dechem,
- Niesie w puszczę muzykę i podwaja echem.”
-    -Adam Mickiewicz, „Pan Tadeusz”
+‘So Joshua called together the priests and said, “Take up the Ark of the
+Lord’s Covenant, and assign seven priests to walk in front of it, each
+carrying a ram’s horn.’
+
+‘When the people heard the sound of the rams’ horns, they shouted as loud
+as they could. Suddenly, the walls of Jericho collapsed, and the Israelites
+charged straight into the town and captured it. They completely destroyed
+everything in it with their swords—men and women, young and old, cattle,
+sheep, goats, and donkeys.’
+    -Joshua 6:6,20-21, New Living Translation
 %%%%
 ice dragon armour
 
