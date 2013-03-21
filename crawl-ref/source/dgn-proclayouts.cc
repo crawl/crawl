@@ -128,8 +128,6 @@ WastesLayout::operator()(const coord_def &p, const uint32_t offset) const
     return ProceduralSample(p, feat, min(sample.changepoint(), changepoint));
 }
 
-
-
 ProceduralSample
 RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
@@ -285,13 +283,12 @@ ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
     dungeon_feature_type feat = DNGN_FLOOR;
 
-    worley::noise_datum fndx = _worley(p, offset, 0.6, 854.3, 0.6, 123.4, 0.2, 0.0, 1);
-    worley::noise_datum fndy = _worley(p, offset, 0.6, 123.2, 0.6, 3623.51, 0.2, 0.0, 1);
-
-    double adjustedx = (fndx.distance[1]-fndx.distance[0]-0.5) * 2.0;
-    double adjustedy = (fndy.distance[1]-fndy.distance[0]-0.5) * 1.5;
-
-    worley::noise_datum fn = _worley(p, offset, 0.16, adjustedx, 0.16, adjustedy, 0.5, 0.0, 1);
+    const static WorleyFunction base(0.16,0.16,0.5,0,0,0);
+    const static WorleyFunction offx(0.6,0.6,0.2,854.3,123.4,0.0);
+    const static WorleyFunction offy(0.6,0.6,0.2,123.2,3623.51,0.0);
+    const static WorleyDistortFunction tfunc(base,offx,2.0,offy,1.5);
+    
+    worley::noise_datum fn = tfunc.datum(p.x,p.y,offset);
 
     // Split the id into four 8-bit numbers to use for randomness
     uint16_t rand[4] = { fn.id[0] >> 24, fn.id[0] >> 16 & 0x000000ff, fn.id[0] >> 8 & 0x000000ff, fn.id[0] & 0x000000ff };
@@ -355,6 +352,7 @@ CityLayout::operator()(const coord_def &p, const uint32_t offset) const
 
 ProceduralSample
 PlainsLayout::operator()(const coord_def &p, const uint32_t offset) const
+OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
     // Wetness gives us features like water, and optimal wetness is required for plants.
     double wet_xoff = 3463.128;
@@ -629,7 +627,7 @@ worley::noise_datum NoiseLayout::_worley(const coord_def &p, const uint32_t offs
 {
     double hx = ((double)p.x * (double)0.8 + xoff) * xmul;
     double hy = ((double)p.y * (double)0.8 + yoff) * ymul;
-    double hz = ((double)offset / (double)80 + zoff) * zmul;
+    double hz = ((double)offset * (double)0.008 + zoff) * zmul;  // Was offset/80, maybe should change faster than this
     return worley::noise(hx, hy, hz);
 }
 
@@ -653,4 +651,51 @@ double NoiseLayout::_optimum_range_mid(const double val, const double rstart, co
     if (val < rmax1)
         return (val - rstart) / (rmax1-rstart);
     return 1.0 - (val - rmax2)/(rend - rmax2);
+}
+
+double ProceduralFunction::operator()(const coord_def &p, const uint32_t offset) const
+{
+    return ProceduralFunction::operator()(p.x,p.y,offset);
+}
+
+double ProceduralFunction::operator()(double x, double y, double z) const
+{
+    return 0;
+}
+
+double SimplexFunction::operator()(double x, double y, double z) const
+{
+    double hx = (x / (double)10 + seed_x) * scale_x;
+    double hy = (y / (double)10 + seed_y) * scale_y;
+    double hz = (z / (double)1000 + seed_z) * scale_z;
+    // Use octaval simplex and scale into a 0..1 range
+    return perlin::fBM(hx, hy, hz, octaves) / 2.0 + 0.5;
+}
+
+double WorleyFunction::operator()(double x, double y, double z) const
+{
+    worley::noise_datum d = this->datum(x,y,z);
+    return d.distance[1]-d.distance[0];
+}
+
+worley::noise_datum WorleyFunction::datum(double x, double y, double z) const
+{
+    double hx = (x * (double)0.8 + seed_x) * scale_x;
+    double hy = (y * (double)0.8 + seed_y) * scale_y;
+    double hz = (z * (double)0.008 + seed_z) * scale_z;  // Was z/80, maybe should change faster than this
+    return worley::noise(hx, hy, hz);
+}
+
+double DistortFunction::operator()(double x, double y, double z) const
+{
+    double offx = off_x(x,y,z);
+    double offy = off_y(x,y,z);
+    return base(x+offx,y+offy,z);
+}
+
+worley::noise_datum WorleyDistortFunction::datum(double x, double y, double z) const
+{
+    double offx = off_x(x,y,z);
+    double offy = off_y(x,y,z);
+    return wbase.datum(x+offx,y+offy,z);
 }
