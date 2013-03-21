@@ -86,6 +86,7 @@ static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
 static beam_type _chaos_beam_flavour();
 static string _beam_type_name(beam_type type);
+static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon);
 
 tracer_info::tracer_info()
 {
@@ -3837,16 +3838,20 @@ void bolt::update_hurt_or_helped(monster* mon)
 
 void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
-    // Update friend or foe encountered.
-    if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+    // Only count tracers as hitting creatures they could potentially affect
+    if (_ench_flavour_affects_monster(flavour, mon))
     {
-        foe_info.count++;
-        foe_info.power += mons_power(mon->type);
-    }
-    else
-    {
-        friend_info.count++;
-        friend_info.power += mons_power(mon->type);
+        // Update friend or foe encountered.
+        if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+        {
+            foe_info.count++;
+            foe_info.power += mons_power(mon->type);
+        }
+        else
+        {
+            friend_info.count++;
+            friend_info.power += mons_power(mon->type);
+        }
     }
 
     handle_stop_attack_prompt(mon);
