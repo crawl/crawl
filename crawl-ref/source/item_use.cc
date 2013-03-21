@@ -2113,6 +2113,7 @@ void drink(int slot)
     // potions on monsters.
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
+    potion_type pot_type = (potion_type)potion.sub_type;
 
     // Identify item and type.
     if (potion_effect(static_cast<potion_type>(potion.sub_type),
@@ -2149,7 +2150,7 @@ void drink(int slot)
         lessen_hunger(40, true);
 
     // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
-    if (potion.sub_type == POT_EXPERIENCE)
+    if (pot_type == POT_EXPERIENCE)
         level_change();
 }
 
