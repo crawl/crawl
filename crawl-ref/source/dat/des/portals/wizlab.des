@@ -979,9 +979,9 @@ KMONS:      | = hell sentinel / brimstone fiend / shadow fiend /\
 :               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
 KMONS:      0% = place:D:20 zombie / guardian mummy w:4
-KMONS:      * = large zombie / mummy priest w:6
+KMONS:      * = zombie / mummy priest w:6
 KMONS:      | = ancient lich / greater mummy
-:           set_random_mon_list("place:D:20 zombie / large zombie / guardian mummy")
+:           set_random_mon_list("place:D:20 zombie / zombie / guardian mummy")
 :           end
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
