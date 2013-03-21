@@ -287,7 +287,7 @@ void debug_monpick()
     {
         branch_type br = (branch_type)i;
 
-        for (int d = 1; d < branch_ood_cap(br); d++)
+        for (int d = 1; d <= branch_ood_cap(br); d++)
         {
             if (!pick_monster_all_branches(absdungeon_depth(br, d),
                                            _not_skeletonable)
