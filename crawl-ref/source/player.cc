@@ -6777,7 +6777,10 @@ void player::petrify(actor *who)
     ASSERT(!crawl_state.game_is_arena());
 
     if (you.res_petrify() > 0)
+    {
+        canned_msg(MSG_YOU_UNAFFECTED);
         return;
+    }
 
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
