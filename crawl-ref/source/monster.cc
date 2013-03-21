@@ -408,7 +408,7 @@ int monster::body_weight(bool /*base*/) const
             weight /= 2;
     }
 
-    if (mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE)
+    if (mc == MONS_SKELETON)
         weight /= 2;
 
     // Slime creature weight is multiplied by the number merged.
@@ -4934,8 +4934,7 @@ bool monster::is_fiery() const
 
 static bool _mons_is_skeletal(int mc)
 {
-    return (mc == MONS_SKELETON_SMALL
-            || mc == MONS_SKELETON_LARGE
+    return (mc == MONS_SKELETON
             || mc == MONS_BONE_DRAGON
             || mc == MONS_SKELETAL_WARRIOR
             || mc == MONS_FLYING_SKULL
