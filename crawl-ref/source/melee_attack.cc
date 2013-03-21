@@ -661,8 +661,7 @@ bool melee_attack::handle_phase_damaged()
         // The message sequences look too weird.  Also, stealing
         // attacks aren't handled until after the damage msg. Also,
         // no attack flavours for dead defenders
-        if (attacker != defender && attk_flavour != AF_STEAL
-            && defender->alive())
+        if (attacker != defender && defender->alive())
         {
             mons_apply_attack_flavour();
             apply_staff_damage();
