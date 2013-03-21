@@ -73,6 +73,7 @@ int mons_depth(monster_type mcls, branch_type branch)
 
 // NOTE: Higher values returned means the monster is "more common".
 // A return value of zero means the monster will never appear. {dlb}
+// To be axed once ZotDef is ported.
 int mons_rarity(monster_type mcls, branch_type branch)
 {
     for (const pop_entry *pe = population[branch].pop; pe->mons; pe++)
@@ -240,10 +241,23 @@ bool branch_has_monsters(branch_type branch)
 }
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+static bool _not_skeletonable(monster_type mt)
+{
+    // Zombifiability in general.
+    if (mons_species(mt) != mt)
+        return true;
+    if (!mons_zombie_size(mt) || mons_is_unique(mt))
+        return true;
+    if (mons_class_holiness(mt) != MH_NATURAL)
+        return true;
+    return !mons_skeleton(mt);
+}
+
 void debug_monpick()
 {
     string fails;
 
+    // Tests for the legacy interface; shouldn't ever happen.
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         branch_type br = (branch_type)i;
@@ -264,6 +278,24 @@ void debug_monpick()
                 fails += make_stringf("%s: no depth for %s\n",
                                       branches[i].abbrevname,
                                       mons_class_name(m));
+            }
+        }
+    }
+    // Legacy tests end.
+
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+    {
+        branch_type br = (branch_type)i;
+
+        for (int d = 1; d < branch_ood_cap(br); d++)
+        {
+            if (!pick_monster_all_branches(absdungeon_depth(br, d),
+                                           _not_skeletonable)
+                && br != BRANCH_ZIGGURAT) // order is ok, check the loop
+            {
+                fails += make_stringf(
+                    "%s: no valid skeletons in any parallel branch\n",
+                    level_id(br, d).describe().c_str());
             }
         }
     }
