@@ -4724,6 +4724,9 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
               || (mon->holiness() == MH_HOLY && mon->type != MONS_HOLY_SWINE);
         break;
 
+    case BEAM_SENTINEL_MARK:
+        rc = false;
+
     default:
         break;
     }
