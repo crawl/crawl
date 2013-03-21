@@ -4902,8 +4902,7 @@ bool monster::polymorph(int pow)
 static bool _mons_is_icy(int mc)
 {
     return (mc == MONS_ICE_BEAST
-            || mc == MONS_SIMULACRUM_SMALL
-            || mc == MONS_SIMULACRUM_LARGE
+            || mc == MONS_SIMULACRUM
             || mc == MONS_ICE_STATUE);
 }
 
