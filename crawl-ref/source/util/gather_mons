@@ -80,6 +80,20 @@ $mons{"freed slave"} = 1;
 # Unlike genus-only monsters, these are not even up to name translations.
 delete $mons{$_} for ("base draconian", "greater demon");
 
+if ($db)
+{
+    # No description needed, but they still should present translated
+    # names for purposes of glyph redefinition.
+    delete $mons{$_} for (split /\n/, <<END);
+small zombie
+large zombie
+small skeleton
+large skeleton
+small simulacrum
+large simulacrum
+END
+}
+
 unless ($db)
 {
     open IN, "util/cpp_version spl-summoning.cc|" or die "Can't read spl-summoning.cc\n";
