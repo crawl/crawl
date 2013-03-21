@@ -1388,8 +1388,9 @@ static void _setup_generic(const newgame_def& ng)
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
 
+    // Enable sacrificing for all Nemelex gift types
     for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
-        you.nemelex_sacrificing = true;
+        you.nemelex_sacrificing[i] = true;
 
     // Get rid of god companions left from previous games
     init_companions();
