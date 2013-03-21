@@ -1419,6 +1419,10 @@ static bool _handle_wand(monster* mons, bolt &beem)
         // These have been deemed "too tricky" at this time {dlb}:
         return false;
 
+    case WAND_DIGGING:
+        // This is handled elsewhere.
+        return false;
+
     // These are wands that monsters will aim at themselves {dlb}:
     case WAND_HASTING:
         if (!mons->has_ench(ENCH_HASTE))
