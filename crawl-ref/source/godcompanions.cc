@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Tracking peramallies granted by Yred and Beogh.
+ * @brief Tracking permallies granted by Yred and Beogh.
 **/
 
 #include "AppHdr.h"
