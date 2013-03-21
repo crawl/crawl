@@ -2488,44 +2488,6 @@ large abomination
 A large and hideous conglomeration of mangled body parts, demonically possessed
 and altered in ways that challenge your sanity.
 %%%%
-large simulacrum
-
-An ice replica of a monster that is animated by the powers of necromancy.
-%%%%
-large simulacrum:quote
-
-“The simulacrum now hides, not the truth, but the fact that there is none, that
-is to say, the continuation of Nothingness.”
-    -Jean Baudrillard, _La Pensée Radicale_. 1994.
-%%%%
-large skeleton
-
-A large skeleton compelled to unlife by the exercise of necromancy.
-%%%%
-large skeleton:quote
-
-“God save us from the skeleton
- Who sitteth at the feast!”
-    -James Jeffrey Roche, _The Skeleton at the Feast_. 1890.
-%%%%
-large zombie
-
-A large corpse raised to undeath by necromancy.
-%%%%
-large zombie:quote
-
-“It seemed that while the zombie came from the grave, it was neither a ghost,
-nor yet a person who had been raised like Lazarus from the dead. The zombie,
-they say, is a soulless human corpse, still dead, but taken from the grave and
-endowed by sorcery with a mechanical semblance of life—it is a dead body which
-is made to walk and act and move as if it were alive. People who have the power
-to do this go to a fresh grave, dig up the body before it has had time to rot,
-galvanize it into movement, and then make of it a servant or slave,
-occasionally for the commission of some crime, more often simply as a drudge
-around the habitation or the farm, setting it dull heavy tasks, and beating it
-like a dumb beast if it slackens.”
-    -William Seabrook, _The Magic Island_. 1929.
-%%%%
 lava fish
 
 A bright red fish that swims through hot lava as easily as other fish swim
@@ -3604,6 +3566,16 @@ hue. Its eyes glow with an otherworldly radiance.
 
 This statue is very brittle; it will disintegrate at once.
 %%%%
+simulacrum
+
+An ice replica of a monster that is animated by the powers of necromancy.
+%%%%
+simulacrum:quote
+
+“The simulacrum now hides, not the truth, but the fact that there is none, that
+is to say, the continuation of Nothingness.”
+    -Jean Baudrillard, _La Pensée Radicale_. 1994.
+%%%%
 siren
 
 A young woman with a fish tail in place of legs. Sirens are capable of casting
@@ -3676,6 +3648,16 @@ skeletal warrior:quote
  Why dost thou haunt me?”
     -Henry Wadsworth Longfellow, “The Skeleton in Armor”. 1841.
 %%%%
+skeleton
+
+A skeleton compelled to unlife by the exercise of necromancy.
+%%%%
+skeleton:quote
+
+“God save us from the skeleton
+ Who sitteth at the feast!”
+    -James Jeffrey Roche, _The Skeleton at the Feast_. 1890.
+%%%%
 sky beast
 
 A strange aerial creature formed of clouds and tortured flesh that sparkles
@@ -3722,30 +3704,6 @@ had shapes, a thousand shapes of horror beyond all memory. There were eyes -
 and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
     -H.P. Lovecraft, _The Unnamable_. 1925.
-%%%%
-small simulacrum
-
-An ice replica of a monster that is animated by the powers of necromancy.
-%%%%
-small simulacrum:quote
-
-<large simulacrum>
-%%%%
-small skeleton
-
-A skeleton compelled to unlife by the exercise of necromancy.
-%%%%
-small skeleton:quote
-
-<large skeleton>
-%%%%
-small zombie
-
-A corpse raised to undeath by necromancy.
-%%%%
-small zombie:quote
-
-<large zombie>
 %%%%
 smoke demon
 
@@ -4438,6 +4396,24 @@ parapet. His study was so filled with them that he found it difficult to make
 his way to his desk.”
     -Charles Mackay, _Memoirs of Extraordinary Popular Delusions_, Vol. III,
      Part I. 1841.
+%%%%
+zombie
+
+A corpse raised to undeath by necromancy.
+%%%%
+zombie:quote
+
+“It seemed that while the zombie came from the grave, it was neither a ghost,
+nor yet a person who had been raised like Lazarus from the dead. The zombie,
+they say, is a soulless human corpse, still dead, but taken from the grave and
+endowed by sorcery with a mechanical semblance of life—it is a dead body which
+is made to walk and act and move as if it were alive. People who have the power
+to do this go to a fresh grave, dig up the body before it has had time to rot,
+galvanize it into movement, and then make of it a servant or slave,
+occasionally for the commission of some crime, more often simply as a drudge
+around the habitation or the farm, setting it dull heavy tasks, and beating it
+like a dumb beast if it slackens.”
+    -William Seabrook, _The Magic Island_. 1929.
 %%%%
 # Specials
 test spawner

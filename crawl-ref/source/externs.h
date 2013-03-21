@@ -415,7 +415,7 @@ public:
 
     bool is_valid() const
     {
-        return (branch != NUM_BRANCHES && depth != -1);
+        return (branch < NUM_BRANCHES && depth > 0);
     }
 
     const level_id &operator = (const level_id &id)

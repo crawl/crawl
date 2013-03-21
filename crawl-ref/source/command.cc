@@ -1635,14 +1635,9 @@ static void _find_description(bool *again, string *error_inout)
                 continue;
 
             monster_type base_type = MONS_NO_MONSTER;
+            // HACK: Set an arbitrary humanoid monster as base type.
             if (mons_class_is_zombified(m_type))
-            {
-                // HACK: Set an arbitrary humanoid monster as base type.
-                if (zombie_class_size(m_type) == Z_BIG)
-                    base_type = MONS_HILL_GIANT;
-                else
-                    base_type = MONS_GOBLIN;
-            }
+                base_type = MONS_GOBLIN;
             monster_info fake_mon(m_type, base_type);
             fake_mon.props["fake"] = true;
 

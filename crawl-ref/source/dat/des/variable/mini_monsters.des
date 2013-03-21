@@ -1762,7 +1762,7 @@ MONS:    deep dwarf artificer ; wand of fire | wand of flame w:5 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
-MONS:    small simulacrum, fire elemental
+MONS:    simulacrum, fire elemental
 ITEM:    empty ebony casket, lamp of fire
 SHUFFLE: 12, 3df / 4eF
 FTILE:   fF'@ = floor_pebble_darkgray
@@ -2298,8 +2298,8 @@ ENDMAP
 
 NAME:   hangedman_weighted_door
 DEPTH:  D:9-, Crypt
-MONS:   large zombie / large skeleton
-KMONS:  A = spectral thing / large simulacrum
+MONS:   zombie / skeleton
+KMONS:  A = spectral thing / simulacrum
 KITEM:  A = any good_item
 KMASK:  .%* = no_monster_gen
 KITEM:  * = star_item
@@ -4892,7 +4892,7 @@ KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer
             deep elf high priest / w:20 place:Elf
 : elseif you.branch() == "Crypt" then
 KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / w:5 curse toe / \
-            w:5 large zombie / w:5 large skeleton / eidolon / w:20 reaper / \
+            w:5 zombie / w:5 skeleton / eidolon / w:20 reaper / \
             soul eater / w:30 place:Crypt
 : elseif you.branch() == "Dis" then
 KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / w:5 hell sentinel / \
@@ -4905,7 +4905,7 @@ KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / lich /
             ancient lich / w:15 place:Tar
 : elseif you.branch() == "Coc" then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
-            w:5 large simulacrum / place:Coc
+            w:5 simulacrum / place:Coc
 : elseif you.branch() == "Zot" then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / killer klown / \
             death cob / w:5 curse toe / w:5 ancient lich

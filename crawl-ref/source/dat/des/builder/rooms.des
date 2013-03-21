@@ -120,7 +120,7 @@ function sroom_morgue(e)
 
     local mons = {}
 
-    mons[1] = "small zombie w:15 / small skeleton w:5"
+    mons[1] = "zombie w:15 / skeleton w:5"
     mons[2] = "eidolon w:1 / rotting hulk w:1 / vampire w:1 / "
               .. "guardian mummy w:1 / shadow w:1"
     mons[3] = "skeletal warrior w:20 ; great mace" .. weap
@@ -155,7 +155,7 @@ function sroom_morgue(e)
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse / nothing w:60"
     else
-        mons[5] = "large zombie / large skeleton"
+        mons[5] = "zombie / skeleton"
         mons[6] = "necromancer w:5"
         bodies = "any corpse / any skeleton / nothing w:40"
     end

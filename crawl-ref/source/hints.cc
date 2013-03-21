@@ -4358,8 +4358,8 @@ bool hints_monster_interesting(const monster* mons)
     if (_mons_is_highlighted(mons))
         return true;
 
-    // The monster is (seriously) out of depth.
-    return (mons_level(mons->type) >= you.depth + 8);
+    // Dangerous.
+    return (mons_threat_level(mons) == MTHRT_NASTY);
 }
 
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
@@ -4401,19 +4401,14 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
         // Don't call friendly monsters dangerous.
         if (!mons_att_wont_attack(mi.attitude))
         {
-            // 8 is the default value for the note-taking of OOD monsters.
-            // Since I'm too lazy to come up with any measurement of my own
-            // I'll simply reuse that one.
-            const int level_diff = mons_level(mi.type)
-                                 - (you.depth + 8);
-
-            if (level_diff >= 0)
+            if (mi.threat == MTHRT_NASTY)
             {
-                ostr << "This kind of monster is usually only encountered "
-                     << (level_diff > 5 ? "much " : "")
-                     << "deeper in the dungeon, so it's probably "
-                     << (level_diff > 5 ? "extremely" : "very")
-                     << " dangerous!\n\n";
+                ostr << "This monster appears to be really dangerous!\n";
+                dangerous = true;
+            }
+            else if (mi.threat == MTHRT_TOUGH)
+            {
+                ostr << "This monster appears to be quite dangerous.\n";
                 dangerous = true;
             }
         }

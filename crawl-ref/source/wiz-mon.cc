@@ -261,7 +261,7 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures[type] = false;
 
-    if (!dgn_place_monster(mspec, -1, place, true, false))
+    if (!dgn_place_monster(mspec, place, true, false))
     {
         mpr("Unable to place monster.", MSGCH_DIAGNOSTICS);
         return;

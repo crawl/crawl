@@ -1820,7 +1820,11 @@ bool kiku_receive_corpses(int pow, coord_def where)
         for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); ++i)
         {
             adjusted_power = min(pow / 4, random2(random2(pow)));
-            mon_type = pick_local_zombifiable_monster(adjusted_power);
+            // Pick a place based on the power.  This may be below the branch's
+            // start, that's ok.
+            level_id lev(you.where_are_you, adjusted_power
+                - absdungeon_depth(you.where_are_you, 0));
+            mon_type = pick_local_zombifiable_monster(lev);
         }
 
         // Create corpse object.
@@ -1976,7 +1980,7 @@ int fedhas_fungal_bloom()
             bool piety = !target->is_summoned();
             switch (mons_genus(target->mons_species()))
             {
-            case MONS_ZOMBIE_SMALL:
+            case MONS_ZOMBIE:
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(target)))
                 {

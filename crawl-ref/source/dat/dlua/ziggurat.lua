@@ -276,7 +276,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "dragon / fire giant / orb of fire", { weight = 2 }),
      with_props("ice beast / polar bear / freezing wraith / ice dragon / " ..
-                "frost giant / ice devil / ice fiend / large simulacrum w:20 / " ..
+                "frost giant / ice devil / ice fiend / simulacrum w:20 / " ..
                 "blizzard demon", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
                 "storm dragon / electric golem / spriggan air mage", { weight = 2 }),
@@ -469,7 +469,7 @@ local function ziggurat_create_loot_at(c)
 
   local function place_loot(what)
     local p = next_loot_spot()
-    dgn.create_item(p.x, p.y, what, 27)
+    dgn.create_item(p.x, p.y, what)
   end
 
   for i = 1, nloot do

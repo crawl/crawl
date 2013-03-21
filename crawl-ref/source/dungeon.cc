@@ -3442,7 +3442,6 @@ static int _place_monster_vector(vector<monster_type> montypes, int num_to_place
     int result = 0;
 
     mgen_data mg;
-    mg.power     = -1;
     mg.behaviour = BEH_SLEEP;
     mg.flags    |= MG_PERMIT_BANDS;
     mg.map_mask |= MMT_NO_MONS;
@@ -3454,17 +3453,12 @@ static int _place_monster_vector(vector<monster_type> montypes, int num_to_place
         if (player_in_hell() &&
             mons_class_can_be_zombified(mg.cls))
         {
-            static const monster_type lut[3][2] =
-            {
-                { MONS_SKELETON_SMALL, MONS_SKELETON_LARGE },
-                { MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE },
-                { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE },
-            };
+            static const monster_type lut[3] =
+                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
 
             mg.base_type = mg.cls;
             int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)]
-                        [mons_zombie_size(mg.base_type) == Z_BIG];
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
         }
 
         else
@@ -3595,7 +3589,6 @@ static void _builder_monsters()
     {
         mgen_data mg;
         mg.behaviour              = BEH_SLEEP;
-        mg.power                  = -1;
         mg.flags                 |= MG_PERMIT_BANDS;
         mg.map_mask              |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
@@ -4045,7 +4038,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     {
         if (tries > 200)
             return NON_ITEM;
-        monster *mon = dgn_place_monster(mspec, -1, coord_def(), true);
+        monster *mon = dgn_place_monster(mspec, coord_def(), true);
         if (!mon)
             continue;
         mon->position = where;
@@ -4281,17 +4274,15 @@ retry:
     return NON_ITEM;
 }
 
-void dgn_place_multiple_items(item_list &list,
-                              const coord_def& where, int level)
+void dgn_place_multiple_items(item_list &list, const coord_def& where)
 {
     const int size = list.size();
     for (int i = 0; i < size; ++i)
-        dgn_place_item(list.get_item(i), where, level);
+        dgn_place_item(list.get_item(i), where);
 }
 
 static void _dgn_place_item_explicit(int index, const coord_def& where,
-                                     vault_placement &place,
-                                     int level)
+                                     vault_placement &place)
 {
     item_list &sitems = place.map.items;
 
@@ -4302,14 +4293,15 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
     }
 
     const item_spec spec = sitems.get_item(index);
-    dgn_place_item(spec, where, level);
+    dgn_place_item(spec, where);
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                      monster *mon,
-                                     const monster_type type,
-                                     const int monster_level)
+                                     const monster_type type)
 {
+    ASSERT(mspec.place.is_valid());
+
     unwind_var<int> save_speedinc(mon->speed_increment);
 
     // Get rid of existing equipment.
@@ -4367,7 +4359,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             }
         }
 
-        int item_level = monster_level;
+        int item_level = mspec.place.absdepth();
 
         if (spec.level >= 0)
             item_level = spec.level;
@@ -4431,30 +4423,33 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 }
 
 
-monster* dgn_place_monster(mons_spec &mspec,
-                           int monster_level, const coord_def& where,
+monster* dgn_place_monster(mons_spec &mspec, coord_def where,
                            bool force_pos, bool generate_awake, bool patrolling)
 {
-    if (mspec.type == -1)
+#if TAG_MAJOR_VERSION == 34
+    if (mspec.type == -1) // or rebuild the des cache
+        return 0;
+#endif
+    if (mspec.type == MONS_NO_MONSTER)
         return 0;
 
-    const monster_type type = static_cast<monster_type>(mspec.type);
+    monster_type type = mspec.type;
     const bool m_generate_awake = (generate_awake || mspec.generate_awake);
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
 
-    if (monster_level == -1)
-        monster_level = env.absdepth0;
+    if (!mspec.place.is_valid())
+        mspec.place = level_id::current();
 
-    const int mlev = mspec.mlevel;
-    if (mlev)
+    if (type == RANDOM_SUPER_OOD || type == RANDOM_MODERATE_OOD)
     {
-        if (mlev > 0)
-            monster_level = mlev;
-        else if (mlev == -8)
-            monster_level = 4 + monster_level * 2;
-        else if (mlev == -9)
-            monster_level += 5;
+        if (brdepth[mspec.place.branch] <= 1)
+            ; // no OODs here
+        else if (type == RANDOM_SUPER_OOD)
+            mspec.place.depth += 4 + mspec.place.depth;
+        else if (type == RANDOM_MODERATE_OOD)
+            mspec.place.depth += 5;
+        type = RANDOM_MONSTER;
     }
 
     if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
@@ -4473,26 +4468,19 @@ monster* dgn_place_monster(mons_spec &mspec,
 
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
-        if (in_bounds(where)
-            && !monster_habitable_grid(montype, grd(where)))
-        {
+        if (in_bounds(where) && !monster_habitable_grid(montype, grd(where)))
             dungeon_terrain_changed(where, habitat2grid(habitat));
-        }
+    }
+
+    if (type == RANDOM_MONSTER)
+    {
+        type = pick_random_monster(mspec.place, mspec.monbase);
+        if (!type)
+            type = RANDOM_MONSTER;
     }
 
     mgen_data mg(type);
 
-    if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
-    {
-        const monster_type mon =
-            pick_random_monster_for_place(mspec.place, mspec.monbase,
-                                          mlev == -9,
-                                          mlev == -8,
-                                          false);
-        mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
-    }
-
-    mg.power     = monster_level;
     mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
     switch (mspec.attitude)
     {
@@ -4533,16 +4521,15 @@ monster* dgn_place_monster(mons_spec &mspec,
     if (mg.colour == -1)
         mg.colour = random_monster_colour();
 
-    coord_def place(where);
-    if (!force_pos && monster_at(place)
+    if (!force_pos && monster_at(where)
         && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
     {
         const monster_type habitat_target =
             mg.cls == RANDOM_MONSTER ? MONS_BAT : mg.cls;
-        place = find_newmons_square_contiguous(habitat_target, where, 0);
+        where = find_newmons_square_contiguous(habitat_target, where, 0);
     }
 
-    mg.pos = place;
+    mg.pos = where;
 
     if (mons_class_is_zombified(mg.base_type))
     {
@@ -4561,7 +4548,7 @@ monster* dgn_place_monster(mons_spec &mspec,
     // Store any extra flags here.
     mg.extra_flags |= mspec.extra_monster_flags;
 
-    monster *mons = place_monster(mg, true, force_pos && place.origin());
+    monster *mons = place_monster(mg, true, force_pos && where.origin());
     if (!mons)
         return 0;
 
@@ -4570,7 +4557,7 @@ monster* dgn_place_monster(mons_spec &mspec,
         mons->spells = mspec.spells[random2(mspec.spells.size())];
 
     if (!mspec.items.empty())
-        _dgn_give_mon_spec_items(mspec, mons, type, monster_level);
+        _dgn_give_mon_spec_items(mspec, mons, type);
 
     if (mspec.props.exists("monster_tile"))
     {
@@ -4621,7 +4608,7 @@ monster* dgn_place_monster(mons_spec &mspec,
 }
 
 static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
-                                int monster_level, const coord_def& where)
+                               const coord_def& where)
 {
     const bool generate_awake
         = mspec.generate_awake || place.map.has_tag("generate_awake");
@@ -4630,18 +4617,16 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
         = mspec.patrolling || place.map.has_tag("patrolling");
 
     mspec.props["map"].get_string() = place.map_name_at(where);
-    return dgn_place_monster(mspec, monster_level, where, false,
-                             generate_awake, patrolling);
+    return dgn_place_monster(mspec, where, false, generate_awake, patrolling);
 }
 
 static bool _dgn_place_one_monster(const vault_placement &place,
-                                    mons_list &mons, int monster_level,
-                                    const coord_def& where)
+                                   mons_list &mons, const coord_def& where)
 {
     for (int i = 0, size = mons.size(); i < size; ++i)
     {
         mons_spec spec = mons.get_monster(i);
-        if (_dgn_place_monster(place, spec, monster_level, where))
+        if (_dgn_place_monster(place, spec, where))
             return true;
     }
     return false;
@@ -4755,7 +4740,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
         env.level_map_mask(where) |= MMT_NO_MIMIC;
 
     item_list &items = mapsp.get_items();
-    dgn_place_multiple_items(items, where, place.level_number);
+    dgn_place_multiple_items(items, where);
 }
 
 static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
@@ -4795,7 +4780,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         int item_made = NON_ITEM;
         object_class_type which_class = OBJ_RANDOM;
         uint8_t which_type = OBJ_RANDOM;
-        int which_depth = place.level_number;
+        int which_depth = env.absdepth0;
         int spec = 250;
 
         if (vgrid == '$')
@@ -4814,7 +4799,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
-            which_depth = 5 + (place.level_number * 2);
+            which_depth = 5 + which_depth * 2;
 
         item_made = items(1, which_class, which_type, true,
                            which_depth, spec);
@@ -4827,7 +4812,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     if (map_def::valid_item_array_glyph(vgrid))
     {
         int slot = map_def::item_array_glyph_to_slot(vgrid);
-        _dgn_place_item_explicit(slot, where, place, place.level_number);
+        _dgn_place_item_explicit(slot, where, place);
     }
 }
 
@@ -4849,25 +4834,17 @@ static void _vault_grid_glyph_mons(vault_placement &place,
     // Handle grids that place monsters {dlb}:
     if (map_def::valid_monster_glyph(vgrid))
     {
-        int monster_level;
-        mons_spec monster_type_thing(RANDOM_MONSTER);
+        mons_spec ms(RANDOM_MONSTER);
 
-        monster_level = place.level_number;
-        if (branches[you.where_are_you].numlevels <= 1)
-            ; // no data that could be used for OODs there
-        else if (vgrid == '8')
-            monster_level = 4 + (place.level_number * 2);
+        if (vgrid == '8')
+            ms.type = RANDOM_SUPER_OOD;
         else if (vgrid == '9')
-            monster_level = 5 + place.level_number;
-
-        if (monster_level > 30) // very high level monsters more common here
-            monster_level = 30;
-
-        if (vgrid != '8' && vgrid != '9' && vgrid != '0')
+            ms.type = RANDOM_MODERATE_OOD;
+        else if (vgrid != '0')
         {
             int slot = map_def::monster_array_glyph_to_slot(vgrid);
-            monster_type_thing = place.map.mons.get_monster(slot);
-            monster_type mt = static_cast<monster_type>(monster_type_thing.type);
+            ms = place.map.mons.get_monster(slot);
+            monster_type mt = ms.type;
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
             if (!place.map.place.empty()
@@ -4883,7 +4860,7 @@ static void _vault_grid_glyph_mons(vault_placement &place,
             }
         }
 
-        _dgn_place_monster(place, monster_type_thing, monster_level, where);
+        _dgn_place_monster(place, ms, where);
     }
 }
 
@@ -4895,7 +4872,7 @@ static void _vault_grid_mapspec_mons(vault_placement &place,
     if (f.glyph >= 0)
         _vault_grid_glyph_mons(place, where, f.glyph);
     mons_list &mons = mapsp.get_monsters();
-    _dgn_place_one_monster(place, mons, place.level_number, where);
+    _dgn_place_one_monster(place, mons, where);
 }
 
 static void _vault_grid_mons(vault_placement &place,
@@ -6387,8 +6364,7 @@ void run_map_epilogues()
 // vault_placement
 
 vault_placement::vault_placement()
-    : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
-      exits(), level_number(env.absdepth0), seen(false)
+    : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(), exits(), seen(false)
 {
 }
 
@@ -6592,13 +6568,12 @@ static void _remember_vault_placement(const vault_placement &place, bool extra)
     // First we store some info on the vault, so that if there's a crash the
     // crash report can list them all.
     env.level_vault_list.push_back(
-        make_stringf("%s%s: (%d,%d) (%d,%d) orient: %d lev: %d",
+        make_stringf("%s%s: (%d,%d) (%d,%d) orient: %d",
                      place.map.name.c_str(),
                      extra ? " (extra)" : "",
                      place.pos.x, place.pos.y,
                      place.size.x, place.size.y,
-                     place.orient,
-                     place.level_number));
+                     place.orient));
 
     // Second we setup some info to be saved in the player's properties
     // hash table, so the information can be included in the character

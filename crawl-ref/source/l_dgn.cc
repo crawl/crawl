@@ -1985,12 +1985,6 @@ LUAFN(_vp_exits)
     return clua_gentable(ls, vp.exits, clua_pushpoint);
 }
 
-LUAFN(_vp_level_number)
-{
-    VP(vp);
-    PLUARET(number, vp.level_number)
-}
-
 static const luaL_reg dgn_vaultplacement_ops[] =
 {
     { "pos", _vp_pos },
@@ -1998,7 +1992,6 @@ static const luaL_reg dgn_vaultplacement_ops[] =
     { "orient", _vp_orient },
     { "map", _vp_map },
     { "exits", _vp_exits },
-    { "level_number", _vp_level_number },
     { NULL, NULL }
 };
 
