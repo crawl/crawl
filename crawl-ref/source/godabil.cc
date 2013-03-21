@@ -1977,7 +1977,7 @@ int fedhas_fungal_bloom()
             bool piety = !target->is_summoned();
             switch (mons_genus(target->mons_species()))
             {
-            case MONS_ZOMBIE_SMALL:
+            case MONS_ZOMBIE:
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(target)))
                 {

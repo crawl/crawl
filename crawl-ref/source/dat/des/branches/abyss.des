@@ -532,7 +532,7 @@ ENDMAP
 NAME:    hangedman_classic_abyss_death
 TAGS:    abyss transparent no_monster_gen
 MONS:    large abomination / ynoxinul / unseen horror / \
-         large skeleton / sixfirhy / smoke demon / neqoxec / \
+         skeleton / sixfirhy / smoke demon / neqoxec / \
          efreet / rakshasa / giant orange brain / very ugly thing / \
          golden eye / hell hog
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \

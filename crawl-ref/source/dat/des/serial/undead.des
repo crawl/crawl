@@ -20,14 +20,13 @@ function init_undead(e)
   e.subst('S = .')
 
   if you.absdepth() <= 3 then
-    e.kmons('.-_ = small zombie / small skeleton / w:300 nothing')
+    e.kmons('.-_ = zombie / skeleton / w:300 nothing')
   elseif you.absdepth() <= 6 then
-    e.kmons('.-_ = w:20 small zombie / large zombie / small skeleton / w:300 nothing')
+    e.kmons('.-_ = w:30 zombie / skeleton / w:300 nothing')
   elseif you.absdepth() <= 12 then
-    e.kmons('.-_ = w:5 small zombie / w:5 large zombie / w:4 mummy / wight / \
-            necrophage / w:300 nothing')
+    e.kmons('.-_ = zombie / w:4 mummy / wight / necrophage / w:300 nothing')
   else
-    e.kmons('.-_ = w:2 guardian mummy / w:8 mummy / large zombie / small zombie / \
+    e.kmons('.-_ = w:2 guardian mummy / w:8 mummy / w:20 zombie / \
             skeletal warrior / rotting hulk / w:1 ghoul / w:300 nothing')
   end
   e.kmons('t = w:2 col:darkgrey plant name:withered name_adjective \

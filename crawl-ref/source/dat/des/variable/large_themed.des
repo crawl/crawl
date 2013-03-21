@@ -352,7 +352,7 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  D:18-, Crypt
-MONS:   flying skull / nothing w:30, small skeleton / large skeleton / nothing
+MONS:   flying skull / nothing w:30, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
 SUBST:  G : GGccV.
 MAP
@@ -1324,19 +1324,17 @@ SUBST:  b = c
 #
 KFEAT:  _ = altar_kikubaaqudgha
 : if you.absdepth() < 19 then
-MONS:   small zombie / large zombie / small skeleton / large skeleton / \
-        w:5 small simulacrum / w:5 large simulacrum
+MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   w:2 necromancer / w:1 deep dwarf necromancer, deep elf death mage, \
         w:5 deep elf death mage / nothing
 MONS:   w:4 soul eater / w:1 reaper, reaper, reaper / nothing
 : elseif you.absdepth() < 24 then
-MONS:   w:5 small zombie / large zombie / w:5 small skeleton / large skeleton / \
-        w:2 small simulacrum / w:3 large simulacrum
+MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   necromancer / w:5 deep dwarf necromancer / w:5 deep elf death mage, lich, \
         lich / deep elf death mage / nothing
 MONS:   soul eater / w:5 reaper, reaper, shadow fiend / w:5 reaper
 : else
-MONS:   large zombie / large skeleton / w:5 large simulacrum
+MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   necromancer / deep elf death mage, \
         w:15 lich / w:5 ancient lich / deep elf death mage, lich / ancient lich
 MONS:   reaper / soul eater, reaper, shadow fiend

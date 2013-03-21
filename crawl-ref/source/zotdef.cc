@@ -138,13 +138,9 @@ static int _mon_strength(monster_type mon_type)
     // Fix for skeletons and zombies
     switch (mon_type)
     {
-        case MONS_SKELETON_SMALL:
-        case MONS_ZOMBIE_SMALL:
+        case MONS_SKELETON:
+        case MONS_ZOMBIE:
             strength += 3;
-            break;
-        case MONS_SKELETON_LARGE:
-        case MONS_ZOMBIE_LARGE:
-            strength += 4;
             break;
         default:
             break;

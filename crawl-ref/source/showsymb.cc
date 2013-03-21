@@ -473,6 +473,21 @@ cglyph_t get_mons_glyph(const monster_info& mi)
         g.ch = mi.props["glyph"].get_int();
     else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
+    else if (mi.type == MONS_ZOMBIE)
+    {
+        g.ch = mons_char(mons_zombie_size(mi.base_type) == Z_BIG ?
+            MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
+    }
+    else if (mi.type == MONS_SKELETON)
+    {
+        g.ch = mons_char(mons_zombie_size(mi.base_type) == Z_BIG ?
+            MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
+    }
+    else if (mi.type == MONS_SIMULACRUM)
+    {
+        g.ch = mons_char(mons_zombie_size(mi.base_type) == Z_BIG ?
+            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
+    }
     else if (mi.type == MONS_SENSED)
         g.ch = mons_char(mi.base_type);
     else

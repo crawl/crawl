@@ -3450,17 +3450,12 @@ static int _place_monster_vector(vector<monster_type> montypes, int num_to_place
         if (player_in_hell() &&
             mons_class_can_be_zombified(mg.cls))
         {
-            static const monster_type lut[3][2] =
-            {
-                { MONS_SKELETON_SMALL, MONS_SKELETON_LARGE },
-                { MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE },
-                { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE },
-            };
+            static const monster_type lut[3] =
+                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
 
             mg.base_type = mg.cls;
             int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)]
-                        [mons_zombie_size(mg.base_type) == Z_BIG];
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
         }
 
         else

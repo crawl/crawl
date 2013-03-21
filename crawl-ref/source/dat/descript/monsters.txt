@@ -1687,18 +1687,6 @@ large abomination
 A large and hideous conglomeration of mangled body parts, demonically possessed
 and altered in ways that challenge your sanity.
 %%%%
-large simulacrum
-
-An ice replica of a monster that is animated by the powers of necromancy.
-%%%%
-large skeleton
-
-A large skeleton compelled to unlife by the exercise of necromancy.
-%%%%
-large zombie
-
-A large corpse raised to undeath by necromancy.
-%%%%
 lava fish
 
 A bright red fish that swims through hot lava as easily as other fish swim
@@ -2289,6 +2277,10 @@ hue. Its eyes glow with an otherworldly radiance.
 
 This statue is very brittle; it will disintegrate at once.
 %%%%
+simulacrum
+
+An ice replica of a monster that is animated by the powers of necromancy.
+%%%%
 siren
 
 A young woman with a fish tail in place of legs. Sirens are capable of casting
@@ -2312,6 +2304,10 @@ skeletal warrior
 The vicious and heavily armed skeleton of a humanoid creature, animated by
 unholy power.
 %%%%
+skeleton
+
+A skeleton compelled to unlife by the exercise of necromancy.
+%%%%
 sky beast
 
 A strange aerial creature formed of clouds and tortured flesh that sparkles
@@ -2332,18 +2328,6 @@ with other nearby globs...
 small abomination
 
 A hideous mass of body parts, part animated dead flesh, part demon.
-%%%%
-small simulacrum
-
-An ice replica of a monster that is animated by the powers of necromancy.
-%%%%
-small skeleton
-
-A skeleton compelled to unlife by the exercise of necromancy.
-%%%%
-small zombie
-
-A corpse raised to undeath by necromancy.
 %%%%
 smoke demon
 
@@ -2757,6 +2741,10 @@ ynoxinul
 
 A winged demon covered in shiny metallic scales. It has a legion of imp minions
 under its command.
+%%%%
+zombie
+
+A corpse raised to undeath by necromancy.
 %%%%
 # Specials
 test spawner

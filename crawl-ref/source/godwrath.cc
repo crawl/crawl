@@ -61,18 +61,13 @@ static bool _yred_random_zombified_hostile()
     const bool skel = one_chance_in(4);
 
     monster_type z_base;
-    monster_type z_type;
 
     do
         z_base = pick_random_zombie();
     while (skel && !mons_skeleton(z_base));
 
-    if (mons_zombie_size(z_base) == Z_BIG)
-        z_type = skel ? MONS_SKELETON_LARGE : MONS_ZOMBIE_LARGE;
-    else
-        z_type = skel ? MONS_SKELETON_SMALL : MONS_ZOMBIE_SMALL;
-
-    mgen_data temp = mgen_data::hostile_at(z_type, "the anger of Yredelemnul",
+    mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
+                                           "the anger of Yredelemnul",
                                            true, 0, 0, you.pos(), 0,
                                            GOD_YREDELEMNUL, z_base);
 

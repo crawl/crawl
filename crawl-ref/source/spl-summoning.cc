@@ -1513,18 +1513,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         return false;
     }
 
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    if (item.sub_type == CORPSE_BODY)
-    {
-        mon = (mons_zombie_size(item.mon_type) == Z_SMALL) ? MONS_ZOMBIE_SMALL
-                                                           : MONS_ZOMBIE_LARGE;
-    }
-    else
-    {
-        mon = (mons_zombie_size(item.mon_type) == Z_SMALL) ? MONS_SKELETON_SMALL
-                                                           : MONS_SKELETON_LARGE;
-    }
+    monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
 
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
 

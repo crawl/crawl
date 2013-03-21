@@ -86,7 +86,7 @@ function sroom_beehive(e)
 end
 
 function sroom_morgue(e)
-    fill_special_room(e, "small zombie w:500 / wight w:167 / necrophage w:167 / "
+    fill_special_room(e, "zombie w:500 / wight w:167 / necrophage w:167 / "
                       .. "wraith w:125 / vampire w:42", nil, true)
 end
 

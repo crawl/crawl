@@ -3792,12 +3792,8 @@ int monster::res_rotting(bool temp) const
         res = 0;
         break;
     case MH_UNDEAD:
-        if (mons_base_char(type) == 'n'
-            || type == MONS_ZOMBIE_SMALL
-            || type == MONS_ZOMBIE_LARGE)
-        {
+        if (mons_base_char(type) == 'n' || type == MONS_ZOMBIE)
             res = 1;
-        }
         else
             res = 3;
         break;
