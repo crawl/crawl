@@ -1893,7 +1893,7 @@ void melee_attack::set_attack_verb()
             attack_verb = "dice";
             verb_degree = "like an onion";
         }
-        else if (defender_genus == MONS_SKELETON_SMALL)
+        else if (defender_genus == MONS_SKELETON)
         {
             attack_verb = "fracture";
             verb_degree = "into splinters";
@@ -1914,7 +1914,7 @@ void melee_attack::set_attack_verb()
             attack_verb = one_chance_in(4) ? "thump" : "sock";
         else if (damage_done < HIT_STRONG)
             attack_verb = "bludgeon";
-        else if (defender_genus == MONS_SKELETON_SMALL)
+        else if (defender_genus == MONS_SKELETON)
         {
             attack_verb = "shatter";
             verb_degree = "into splinters";
