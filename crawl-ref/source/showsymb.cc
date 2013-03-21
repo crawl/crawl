@@ -143,6 +143,31 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
     return colour;
 }
 
+static monster_type _show_mons_type(const monster_info& mi)
+{
+    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
+        return MONS_MERGED_SLIME_CREATURE;
+    else if (mi.type == MONS_ZOMBIE)
+    {
+        return mons_zombie_size(mi.base_type) == Z_BIG ?
+            MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL;
+    }
+    else if (mi.type == MONS_SKELETON)
+    {
+        return mons_zombie_size(mi.base_type) == Z_BIG ?
+            MONS_SKELETON_LARGE : MONS_SKELETON_SMALL;
+    }
+    else if (mi.type == MONS_SIMULACRUM)
+    {
+        return mons_zombie_size(mi.base_type) == Z_BIG ?
+            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
+    }
+    else if (mi.type == MONS_SENSED)
+        return mi.base_type;
+
+    return mi.type;
+}
+
 static int _get_mons_colour(const monster_info& mi)
 {
     if (crawl_state.viewport_monster_hp) // show hp directly on the monster
@@ -150,8 +175,12 @@ static int _get_mons_colour(const monster_info& mi)
 
     int col = mi.colour;
 
-    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
-        col = mons_class_colour(MONS_MERGED_SLIME_CREATURE);
+    // We really shouldn't store unmodified colour.  This hack compares
+    // effective type, but really, all redefinitions should work instantly,
+    // rather than for newly spawned monsters only.
+    monster_type stype = _show_mons_type(mi);
+    if (stype != mi.type && mi.type != MONS_SENSED)
+        col = mons_class_colour(stype);
 
     if (mi.is(MB_BERSERK))
         col = RED;
@@ -343,17 +372,18 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         else
             g.col = _get_mons_colour(*mi);
 
-        const bool override = Options.mon_glyph_overrides.find(mi->type)
+        monster_type stype = _show_mons_type(*mi);
+        const bool override = Options.mon_glyph_overrides.find(stype)
                               != Options.mon_glyph_overrides.end();
         if (mi->props.exists("glyph") && !override)
             g.ch = mi->props["glyph"].get_int();
         else if (show.mons == MONS_SENSED)
             g.ch = mons_char(mi->base_type);
         else
-            g.ch = mons_char(show.mons);
+            g.ch = mons_char(stype);
 
         if (mi->props.exists("glyph") && override)
-            g.col = mons_class_colour(mi->type);
+            g.col = mons_class_colour(stype);
 
         break;
     }
@@ -466,35 +496,17 @@ cglyph_t get_item_glyph(const item_def *item)
 
 cglyph_t get_mons_glyph(const monster_info& mi)
 {
+    monster_type stype = _show_mons_type(mi);
     cglyph_t g;
-    const bool override = Options.mon_glyph_overrides.find(mi.type)
+    const bool override = Options.mon_glyph_overrides.find(stype)
                           != Options.mon_glyph_overrides.end();
     if (mi.props.exists("glyph") && !override)
         g.ch = mi.props["glyph"].get_int();
-    else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
-        g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
-    else if (mi.type == MONS_ZOMBIE)
-    {
-        g.ch = mons_char(mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
-    }
-    else if (mi.type == MONS_SKELETON)
-    {
-        g.ch = mons_char(mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
-    }
-    else if (mi.type == MONS_SIMULACRUM)
-    {
-        g.ch = mons_char(mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
-    }
-    else if (mi.type == MONS_SENSED)
-        g.ch = mons_char(mi.base_type);
     else
-        g.ch = mons_char(mi.type);
+        g.ch = mons_char(stype);
 
     if (mi.props.exists("glyph") && override)
-        g.col = mons_class_colour(mi.type);
+        g.col = mons_class_colour(stype);
     else
         g.col = _get_mons_colour(mi);
     g.col = real_colour(g.col);
