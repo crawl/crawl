@@ -276,9 +276,9 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
             // (distortion etc.), just treat them as not connected.
             if (adjacent(m->pos(), h_pos)
                 && other->type != MONS_KRAKEN
-                && other->type != MONS_ZOMBIE_LARGE
+                && other->type != MONS_ZOMBIE
                 && other->type != MONS_SPECTRAL_THING
-                && other->type != MONS_SIMULACRUM_LARGE
+                && other->type != MONS_SIMULACRUM
                 && !_tentacle_pos_unknown(other, m->pos()))
             {
                 mi.props[key] = h_pos - m->pos();

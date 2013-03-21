@@ -1704,8 +1704,7 @@ int monster_die(monster* mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
-    else if (mons->type == MONS_SIMULACRUM_SMALL
-             || mons->type == MONS_SIMULACRUM_LARGE)
+    else if (mons->type == MONS_SIMULACRUM)
     {
         if (!silent && !mons_reset && !was_banished)
         {
