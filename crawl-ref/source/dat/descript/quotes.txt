@@ -1118,18 +1118,6 @@ shadow
      Life is very long”
     -T.S. Eliot, “The Hollow Men”. 1925.
 %%%%
-small simulacrum
-
-<large simulacrum>
-%%%%
-small skeleton
-
-<large skeleton>
-%%%%
-small zombie
-
-<large zombie>
-%%%%
 toenail golem
 
 “Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
@@ -2335,19 +2323,19 @@ tengu
  And ate the fellow, raw”
     -Emily Dickinson, “A Bird came down the Walk”. ca. 1865.
 %%%%
-large simulacrum
+simulacrum
 
 “The simulacrum now hides, not the truth, but the fact that there is none, that
 is to say, the continuation of Nothingness.”
     -Jean Baudrillard, _La Pensée Radicale_. 1994.
 %%%%
-large skeleton
+skeleton
 
 “God save us from the skeleton
  Who sitteth at the feast!”
     -James Jeffrey Roche, _The Skeleton at the Feast_. 1890.
 %%%%
-large zombie
+zombie
 
 “It seemed that while the zombie came from the grave, it was neither a ghost,
 nor yet a person who had been raised like Lazarus from the dead. The zombie,

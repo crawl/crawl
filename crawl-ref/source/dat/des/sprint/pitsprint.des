@@ -21,9 +21,9 @@ function base_monster_setup(e)
            hobgoblin / jackal band / worm / adder / quokka /\
            gnoll shaman band / orc band / orc priest band / worker ant /\
            giant eyeball / hound / iguana / ogre / orc wizard band /\
-           phantom / scorpion / small skeleton / gnoll sergeant band /\
+           phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
-           necrophage / quasit / small zombie / sky beast / deep elf soldier /\
+           necrophage / quasit / zombie / sky beast / deep elf soldier /\
            giant frog / mummy / orc warrior band / wight band /\
            hungry ghost / shadow / big kobold band / giant centipede /\
            brain worm / warg / wolf / porcupine / black bear /\
@@ -54,15 +54,15 @@ function base_monster_setup(e)
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
            centaur warrior band w:5 / ugly thing band w:5 / wizard /\
-           small simulacrum / rock worm / giant amoeba / ogre mage band w:5 /\
+           simulacrum / rock worm / giant amoeba / ogre mage band w:5 /\
            wolf spider / yaktaur / air elemental / fire elemental /\
            water elemental / earth elemental / deep elf knight band w:5 /\
            deep elf mage band w:3 / deep elf summoner band w:3 /\
            great orb of eyes / naga mage band w:5 / naga warrior band w:5 /\
            necromancer band w:5 / orc knight band w:5 / spiny worm /\
            harpy band w:5 / fire crab / redback band /\
-           vapour / deep elf priest band w:3 / shapeshifter / large zombie /\
-           large skeleton / deep dwarf necromancer / deep dwarf death knight /\
+           vapour / deep elf priest band w:3 / shapeshifter / zombie /\
+           skeleton / deep dwarf necromancer / deep dwarf death knight /\
            eidolon / elephant band w:5 / death yak band w:5 /\
            insubstantial wisp band w:5 / swamp dragon / siren /\
            alligator snapping turtle / anaconda / greater naga /\
@@ -70,7 +70,7 @@ function base_monster_setup(e)
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\
            spriggan druid / spriggan rider / death cob /\
-           hell hound band w:5 / neqoxec / large simulacrum / sixfirhy /\
+           hell hound band w:5 / neqoxec / simulacrum / sixfirhy /\
            chaos spawn / ice devil / sun demon / iron devil / paladin /\
            hell hog band w:5 / alligator band w:5 / minotaur")
   e.kmons("D = dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
@@ -109,8 +109,8 @@ function base_monster_setup(e)
            ball python /\
            bat / kobold / rat / giant gecko / giant mite / gnoll /\
            hobgoblin / jackal band /  adder / quokka /\
-           orc / worker ant / giant eyeball / small skeleton /\
-           small zombie / giant centipede / brain worm / giant mite /\
+           orc / worker ant / giant eyeball / skeleton /\
+           zombie / giant centipede / brain worm / giant mite /\
            green rat / lemure / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
@@ -137,7 +137,7 @@ function base_monster_setup(e)
   e.kmons("P = deep elf annihilator / deep elf death mage /\
            deep elf sorcerer / deep elf high priest / deep elf demonologist /\
            deep elf master archer / deep elf blademaster")
-  e.kmons("Q = large skeleton / large zombie / skeletal warrior band /\
+  e.kmons("Q = skeleton / zombie / skeletal warrior band /\
            ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
            guardian mummy / mummy priest w:5")
   e.kmons("R = greater mummy w:3 / mummy priest / lich / ancient lich /\
@@ -2078,8 +2078,7 @@ KMONS:  b = hill giant /\
 KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
 KMONS:  C = Frederick, Norris, Louise, Rupert
-KMONS:  d = small zombie w:5 / large zombie / small skeleton w:5 /\
-        large skeleton / small simulacrum w:5 / large simulacrum /\
+KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         vampire / vampire mage / vampire knight / ghoul w:5 / rotting hulk /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
         freezing wraith w:3 / flaming corpse / flayed ghost
@@ -2123,7 +2122,7 @@ KMONS:  a = stone giant / frost giant / fire giant / ettin / titan /\
         cyclops / hill giant
 KMONS:  A = titan
 # I'm sorry if you get an undead pit here
-KMONS:  b = large zombie w:20 / large skeleton w:20 / large simulacrum w:20 /\
+KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\
         ancient lich w:5 / vampire knight / mummy priest / lich /\
         greater mummy / bone dragon / ghoul / skeletal warrior /\
         guardian mummy

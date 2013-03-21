@@ -1650,8 +1650,8 @@ KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
              ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
              spear ego:vorpal w:6 . dart ego:dispersal
 # Disclaimer: the following three sets are all Abyss spawns.
-KMONS:   04 = large abomination w:40 / small abomination w:40 / large skeleton w:30 / \
-              small skeleton / chaos spawn w:5 / soul eater / hellwing / orange demon / \
+KMONS:   04 = large abomination w:40 / small abomination w:40 / skeleton w:40 / \
+              chaos spawn w:5 / soul eater / hellwing / orange demon / \
               rotting devil / hell hound / red devil w:5 / lesser demon w:40 / \
               flying skull / freezing wraith / octopode w:5 / base draconian w:5 / \
               ugly thing w:30 / fire elemental w:5 / air elemental w:5
@@ -1749,8 +1749,8 @@ end
 set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spatial vortex w:15 /
                     boggart w:5 / blink frog w:5 / shadow wraith w:5 / unseen horror /
                     ynoxinul / neqoxec / chaos spawn / giant orange brain /
-                    large abomination w:20 / small abomination w:20 / large skeleton w:20 /
-                    small skeleton w:20 / hellwing w:5 / smoke demon w:5 /
+                    large abomination w:20 / small abomination w:20 / skeleton w:40 /
+                    hellwing w:5 / smoke demon w:5 /
                     skeletal warrior w:5 / hell hound w:5 / very ugly thing w:5 /
                     golden eye w:5 / executioner w:2 / shadow demon w:2 / tormentor w:2 / ]])
 

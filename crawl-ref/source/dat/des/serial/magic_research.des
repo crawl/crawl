@@ -78,7 +78,7 @@ ENDMAP
 
 NAME:   hangedman_research_thermodynamics
 TAGS:   no_pool_fixup
-MONS:   small simulacrum, large simulacrum, azure jelly, ice statue
+MONS:   simulacrum, simulacrum, azure jelly, ice statue
 KMONS:  D = ice statue
 KITEM:  D = randbook disc:ice numspells:5 / \
             randbook disc:ice numspells:6, star_item
@@ -171,8 +171,8 @@ ENDMAP
 
 NAME:    hangedman_research_thanatology
 MONS:    macabre mass hd:4 / small abomination
-MONS:    large zombie / large skeleton
-MONS:    spectral thing, large simulacrum
+MONS:    zombie / skeleton
+MONS:    spectral thing, simulacrum
 KMONS:   D = curse skull
 KITEM:   D = randbook disc:necromancy numspells:5 / \
              randbook disc:necromancy numspells:6, star_item

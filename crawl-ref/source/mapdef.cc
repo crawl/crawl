@@ -3990,13 +3990,10 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     };
 
     // This order must match zombie_types, indexed from one.
-    static const monster_type zombie_montypes[][2] =
-    {     // small               // large
-        { MONS_PROGRAM_BUG,      MONS_PROGRAM_BUG },
-        { MONS_ZOMBIE_SMALL,     MONS_ZOMBIE_LARGE },
-        { MONS_SKELETON_SMALL,   MONS_SKELETON_LARGE },
-        { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE },
-        { MONS_SPECTRAL_THING,   MONS_SPECTRAL_THING },
+    static const monster_type zombie_montypes[] =
+    {
+        MONS_PROGRAM_BUG, MONS_ZOMBIE, MONS_SKELETON, MONS_SIMULACRUM,
+        MONS_SPECTRAL_THING,
     };
 
     int mod = ends_with(s, zombie_types);
@@ -4037,7 +4034,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
         return;
     }
 
-    spec.type = zombie_montypes[mod][zombie_size - 1];
+    spec.type = zombie_montypes[mod];
 }
 
 mons_spec mons_list::get_hydra_spec(const string &name) const
@@ -4206,23 +4203,12 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name == "any greater demon" || name == "greater demon")
         return RANDOM_DEMON_GREATER;
 
-    if (name == "small zombie")
-        return MONS_ZOMBIE_SMALL;
-    if (name == "large zombie")
-        return MONS_ZOMBIE_LARGE;
-
-    if (name == "small skeleton")
-        return MONS_SKELETON_SMALL;
-    if (name == "large skeleton")
-        return MONS_SKELETON_LARGE;
-
-    if (name == "spectral thing")
-        return MONS_SPECTRAL_THING;
-
-    if (name == "small simulacrum")
-        return MONS_SIMULACRUM_SMALL;
-    if (name == "large simulacrum")
-        return MONS_SIMULACRUM_LARGE;
+    if (name == "small zombie" || name == "large zombie"
+        || name == "small skeleton" || name == "large skeleton"
+        || name == "small simulacrum" || name == "large simulacrum")
+    {
+        return MONS_PROGRAM_BUG;
+    }
 
     if (name == "small abomination")
         return MONS_ABOMINATION_SMALL;

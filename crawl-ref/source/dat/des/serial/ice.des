@@ -10,13 +10,13 @@ function init_ice(e)
   e.tags('transparent')
   e.weight('2')
   if you.branch() == "Coc" then
-    e.kmons('.- = small simulacrum / large simulacrum w:20 / \
+    e.kmons('.- = simulacrum w:30 / \
                   ice fiend w:1 / blizzard demon w:5 / ice devil / \
                   blue devil / white imp / ice beast w:20 / \
                   ice dragon w:5 / ice dragon simulacrum w:5 / \
                   w:2000 nothing')
   else
-    e.kmons('.- = small simulacrum / large simulacrum / death yak w:1 / \
+    e.kmons('.- = simulacrum w:20 / death yak w:1 / \
                   wolf w:20 / yak / polar bear / white imp w:20 / \
                   ufetubus / ice beast w:15 / w:2000 nothing')
   end

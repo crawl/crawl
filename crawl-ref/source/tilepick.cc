@@ -1306,10 +1306,13 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_MOTH_OF_SUPPRESSION;
 
     // small zombies, etc. ('z')
+    case MONS_ZOMBIE:
     case MONS_ZOMBIE_SMALL:
         return TILEP_MONS_ZOMBIE_SMALL;
+    case MONS_SIMULACRUM:
     case MONS_SIMULACRUM_SMALL:
         return TILEP_MONS_SIMULACRUM_SMALL;
+    case MONS_SKELETON:
     case MONS_SKELETON_SMALL:
         return TILEP_MONS_SKELETON_SMALL;
     case MONS_WIGHT:

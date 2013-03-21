@@ -121,7 +121,7 @@ function choose_mset_1(e)
                tarantella w:5")
 -- Crypt
   elseif rnd < 49 then
-    e.kmons("1 = small zombie / small skeleton / wight w:5 / necrophage / shadow")
+    e.kmons("1 = zombie / skeleton / wight w:5 / necrophage / shadow")
 -- Dwarf
   elseif rnd < 59 then
     e.kmons("1 = deep dwarf artificer / deep dwarf scion / deep dwarf w:50")
@@ -136,7 +136,7 @@ function choose_mset_1(e)
     e.kmons("1 = merfolk")
 -- Hell
   elseif rnd < 79 then
-    e.kmons("1 = small zombie w:5 / small skeleton w:5 / lesser demon w:15 / hell hound w:5")
+    e.kmons("1 = zombie w:5 / skeleton w:5 / lesser demon w:15 / hell hound w:5")
 -- Giant
   elseif rnd < 81 then
     e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:3")
@@ -145,7 +145,7 @@ function choose_mset_1(e)
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental")
 -- Ice
   elseif rnd < 85 then
-    e.kmons("1 = ice beast / polar bear / white imp / small simulacrum")
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum")
 -- Air
   elseif rnd < 87 then
     e.kmons("1 = insubstantial wisp / air elemental w:5")
@@ -166,7 +166,7 @@ function choose_mset_1(e)
     e.kmons("1 = lesser demon / common demon w:2 / pandemonium lord w:1")
 -- Tomb
   elseif rnd < 101 then
-    e.kmons("1 = place:Tomb:3 / mummy w:15 / small zombie")
+    e.kmons("1 = place:Tomb:3 / mummy w:15 / zombie")
 -- Elf
   elseif rnd < 111 then
     e.kmons("1 = place:Elf:1")
@@ -215,8 +215,7 @@ function choose_mset_2(e)
                tarantella w:5 / wolf spider w:5 / redback w:5")
 -- Crypt
   elseif rnd < 44 then
-    e.kmons("1 = small zombie / small skeleton / wight / necrophage /\
-               large zombie w:5 / large skeleton w:5 / shadow")
+    e.kmons("1 = zombie w:20 / skeleton w:20 / wight / necrophage / shadow")
 -- Dwarf
   elseif rnd < 54 then
     e.kmons("1 = deep dwarf artificer / deep dwarf scion / deep dwarf necromancer /\
@@ -233,8 +232,7 @@ function choose_mset_2(e)
     e.kmons("1 = merfolk w:20 / hippogriff / centaur / sheep / cyclops w:3")
 -- Hell
   elseif rnd < 90 then
-    e.kmons("1 =  small zombie w:5 / small skeleton w:5 / lesser demon / hell hound /\
-               large zombie w:5 / large skeleton w:5")
+    e.kmons("1 =  zombie / skeleton / lesser demon / hell hound")
 -- Giant
   elseif rnd < 92 then
     e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5 / hill giant w:5")
@@ -244,7 +242,7 @@ function choose_mset_2(e)
                fire drake / efreet")
 -- Ice
   elseif rnd < 96 then
-    e.kmons("1 = ice beast / polar bear / white imp / small simulacrum /\
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
                freezing wraith / blue devil")
 -- Air
   elseif rnd < 98 then
@@ -316,8 +314,7 @@ function choose_mset_3(e)
     e.kmons("1 = place:Spider:5 w:70 / yellow wasp / red wasp")
 -- Crypt
   elseif rnd < 34 then
-    e.kmons("1 = small zombie w:5 / small skeleton w:5 / large zombie w:5 /\
-                 large skeleton w:5 / skeletal warrior w:5 / ghoul w:2 /\
+    e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
                  necrophage w:5 / vampire w:5 / vampire mage w:5 /\
                  vampire knight w:5 / lich w:2 / ancient lich w:1 / shadow /\
                  wight / necromancer")
@@ -346,7 +343,7 @@ function choose_mset_3(e)
     e.kmons("1 = place:Geh:1")
 -- Tartarus
   elseif rnd < 64 then
-    e.kmons("1 = large zombie / large skeleton / soul eater / shadow dragon w:3 /\
+    e.kmons("1 = zombie / skeleton / soul eater / shadow dragon w:3 /\
                  spectral thing / ghoul w:2")
 -- Dis
   elseif rnd < 69 then
@@ -361,7 +358,7 @@ function choose_mset_3(e)
                fire drake / efreet / dragon / fire giant")
 -- Ice
   elseif rnd < 75 then
-    e.kmons("1 = ice beast / polar bear / white imp / large simulacrum /\
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
                freezing wraith / ice devil / ice dragon / frost giant /\
                blizzard demon")
 -- Air
@@ -450,8 +447,7 @@ local rnd = crawl.random2(149)
                  moth of wrath w:5")
 -- Crypt
   elseif rnd < 34 then
-    e.kmons("1 = small zombie w:5 / small skeleton w:5 / large zombie w:5 /\
-                 large skeleton w:5 / skeletal warrior / ghoul w:7 /\
+    e.kmons("1 = zombie / skeleton / skeletal warrior / ghoul w:7 /\
                  necrophage w:5 / vampire w:5 / vampire mage w:5 /\
                  vampire knight / lich w:5 / ancient lich w:2 / shadow /\
                  wight / necromancer")
@@ -482,7 +478,7 @@ local rnd = crawl.random2(149)
     e.kmons("1 = place:Geh:7")
 -- Tartarus
   elseif rnd < 74 then
-    e.kmons("1 = large zombie / large skeleton / soul eater / shadow dragon w:5 /\
+    e.kmons("1 = zombie / skeleton / soul eater / shadow dragon w:5 /\
                  shadow fiend w:1 / spectral thing place:Tar:7 / ghoul w:5")
 -- Dis
   elseif rnd < 79 then
@@ -498,7 +494,7 @@ local rnd = crawl.random2(149)
                balrug")
 -- Ice
   elseif rnd < 88 then
-    e.kmons("1 = ice beast / polar bear / white imp / large simulacrum /\
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
                freezing wraith / ice devil / ice dragon / frost giant /\
                ice fiend w:5 / blizzard demon")
 -- Air

@@ -2399,13 +2399,13 @@ enum monster_type                      // menv[].type
     MONS_CURSE_TOE,
     MONS_CURSE_SKULL,
     MONS_PROFANE_SERVITOR,
-    MONS_SKELETON_SMALL,
-    MONS_SKELETON_LARGE,
-    MONS_ZOMBIE_SMALL,
-    MONS_ZOMBIE_LARGE,
+    MONS_SKELETON_SMALL,   // recolouring only
+    MONS_SKELETON_LARGE,   // recolouring only
+    MONS_ZOMBIE_SMALL,     // recolouring only
+    MONS_ZOMBIE_LARGE,     // recolouring only
     MONS_SPECTRAL_THING,
-    MONS_SIMULACRUM_SMALL,
-    MONS_SIMULACRUM_LARGE,
+    MONS_SIMULACRUM_SMALL, // recolouring only
+    MONS_SIMULACRUM_LARGE, // recolouring only
 
     // Holies:
     MONS_ANGEL,
@@ -2557,6 +2557,10 @@ enum monster_type                      // menv[].type
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,
     MONS_DIAMOND_OBELISK,
+
+    MONS_ZOMBIE,
+    MONS_SKELETON,
+    MONS_SIMULACRUM,
 
     NUM_MONSTERS,               // used for polymorph
 

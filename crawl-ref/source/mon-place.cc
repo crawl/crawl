@@ -444,14 +444,9 @@ static bool _is_random_monster(monster_type mt)
             || mt == WANDERING_MONSTER);
 }
 
-static bool _is_not_a_large_zombie(monster_type mt)
+static bool _is_not_zombifiable(monster_type mt)
 {
-    return mons_zombie_size(mt) != Z_BIG;
-}
-
-static bool _is_not_a_small_zombie(monster_type mt)
-{
-    return mons_zombie_size(mt) != Z_SMALL;
+    return !mons_zombie_size(mt);
 }
 
 // Caller must use !invalid_monster_type to check if the return value
@@ -479,12 +474,7 @@ monster_type pick_random_monster(level_id place,
     else if (kind == RANDOM_MOBILE_MONSTER)
         return pick_monster(place, mons_class_is_stationary);
     else if (mons_class_is_zombified(kind))
-    {
-        // With this code, we can skip the different mon enums for zombie
-        // sizes hack.  No longer needed to choose a size.
-        return pick_monster(place, zombie_class_size(kind) == Z_BIG ?
-                            _is_not_a_large_zombie : _is_not_a_small_zombie);
-    }
+        return pick_monster(place, _is_not_zombifiable);
     else
         return pick_monster(place);
 }
@@ -1750,19 +1740,8 @@ static bool _good_zombie(monster_type base, monster_type cs,
         return true;
 
     // If skeleton, monster must have a skeleton.
-    if ((cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
-        && !mons_skeleton(base))
-    {
+    if (cs == MONS_SKELETON && !mons_skeleton(base))
         return false;
-    }
-
-    // Size must match, but you can make a spectral thing out of
-    // anything.
-    if (cs != MONS_SPECTRAL_THING
-        && mons_zombie_size(base) != zombie_class_size(cs))
-    {
-        return false;
-    }
 
     return true;
 }
@@ -1830,18 +1809,15 @@ void roll_zombie_hp(monster* mon)
 
     switch (mon->type)
     {
-    case MONS_ZOMBIE_SMALL:
-    case MONS_ZOMBIE_LARGE:
+    case MONS_ZOMBIE:
         hp = hit_points(mon->hit_dice, 6, 5);
         break;
 
-    case MONS_SKELETON_SMALL:
-    case MONS_SKELETON_LARGE:
+    case MONS_SKELETON:
         hp = hit_points(mon->hit_dice, 5, 4);
         break;
 
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_SIMULACRUM_LARGE:
+    case MONS_SIMULACRUM:
         // Simulacra aren't tough, but you can create piles of them. - bwr
         hp = hit_points(mon->hit_dice, 1, 4);
         break;
@@ -1865,20 +1841,17 @@ static void _roll_zombie_ac_ev_mods(monster* mon, int& acmod, int& evmod)
 
     switch (mon->type)
     {
-    case MONS_ZOMBIE_SMALL:
-    case MONS_ZOMBIE_LARGE:
+    case MONS_ZOMBIE:
         acmod = -2;
         evmod = -5;
         break;
 
-    case MONS_SKELETON_SMALL:
-    case MONS_SKELETON_LARGE:
+    case MONS_SKELETON:
         acmod = -6;
         evmod = -7;
         break;
 
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_SIMULACRUM_LARGE:
+    case MONS_SIMULACRUM:
         // Simulacra aren't tough, but you can create piles of them. - bwr
         acmod = -2;
         evmod = -5;
@@ -1910,23 +1883,22 @@ static void _roll_zombie_ac_ev(monster* mon)
 
 void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
+#if TAG_MAJOR_VERSION == 34
+    // Upgrading monster enums is a losing battle, they sneak through too many
+    // channels, like env props, etc.  So convert them on placement, too.
+    if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
+        cs = MONS_ZOMBIE;
+    if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
+        cs = MONS_SKELETON;
+    if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
+        cs = MONS_SIMULACRUM;
+#endif
+
     ASSERT(ztype != MONS_NO_MONSTER);
     ASSERT(!invalid_monster_type(ztype));
     ASSERT(mons_class_is_zombified(cs));
 
     monster_type base = mons_species(ztype);
-
-#ifdef ASSERTS
-    if (zombie_class_size(cs) != Z_NOZOMBIE
-        && zombie_class_size(cs) != mons_zombie_size(base))
-    {
-        // we don't know the place requested
-        die("invalid zombie size: %s for %s, player on: %s",
-            mons_class_name(cs),
-            mons_class_name(ztype),
-            level_id::current().describe().c_str());
-    }
-#endif
 
     // Set type to the original type to calculate appropriate stats.
     mon->type         = ztype;
@@ -1959,11 +1931,8 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
 bool downgrade_zombie_to_skeleton(monster* mon)
 {
-    if ((mon->type != MONS_ZOMBIE_SMALL && mon->type != MONS_ZOMBIE_LARGE)
-        || !mons_skeleton(mon->base_monster))
-    {
+    if (mon->type != MONS_ZOMBIE || !mons_skeleton(mon->base_monster))
         return false;
-    }
 
     int acmod = 0;
     int evmod = 0;
@@ -1978,9 +1947,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     const int old_hp    = mon->hit_points;
     const int old_maxhp = mon->max_hit_points;
 
-    mon->type           = (mons_zombie_size(mon->base_monster) == Z_SMALL) ?
-                              MONS_SKELETON_SMALL : MONS_SKELETON_LARGE;
-
+    mon->type           = MONS_SKELETON;
     mon->colour         = mons_class_colour(mon->type);
     mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
 
@@ -2580,10 +2547,8 @@ static monster_type _band_member(band_type band, int which)
         break;
 
     case BAND_NECROMANCER:                // necromancer
-        mon_type = random_choose_weighted(3, MONS_ZOMBIE_SMALL,
-                                          3, MONS_ZOMBIE_LARGE,
-                                          3, MONS_SKELETON_SMALL,
-                                          3, MONS_SKELETON_LARGE,
+        mon_type = random_choose_weighted(6, MONS_ZOMBIE,
+                                          6, MONS_SKELETON,
                                           1, MONS_NECROPHAGE,
                                           0);
         break;

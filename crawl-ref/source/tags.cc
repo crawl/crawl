@@ -3162,6 +3162,15 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.props.clear();
     mi.props.read(th);
 
+#if TAG_MAJOR_VERSION == 34
+    if (mi.type == MONS_ZOMBIE_SMALL || mi.type == MONS_ZOMBIE_LARGE)
+        mi.type = MONS_ZOMBIE;
+    if (mi.type == MONS_SKELETON_SMALL || mi.type == MONS_SKELETON_LARGE)
+        mi.type = MONS_SKELETON;
+    if (mi.type == MONS_SIMULACRUM_SMALL || mi.type == MONS_SIMULACRUM_LARGE)
+        mi.type = MONS_SIMULACRUM;
+#endif
+
     if (mi.type != MONS_PROGRAM_BUG && mons_species(mi.type) == MONS_PROGRAM_BUG)
     {
         mi.type = MONS_GHOST;
@@ -3548,6 +3557,12 @@ void unmarshallMonster(reader &th, monster& m)
         // It must have belonged to the player.
         m.props["bs_mid"].get_int() = MID_PLAYER;
     }
+    if (m.type == MONS_ZOMBIE_SMALL || m.type == MONS_ZOMBIE_LARGE)
+        m.type = MONS_ZOMBIE;
+    if (m.type == MONS_SKELETON_SMALL || m.type == MONS_SKELETON_LARGE)
+        m.type = MONS_SKELETON;
+    if (m.type == MONS_SIMULACRUM_SMALL || m.type == MONS_SIMULACRUM_LARGE)
+        m.type = MONS_SIMULACRUM;
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)

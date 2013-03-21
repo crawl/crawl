@@ -221,7 +221,7 @@ ENDMAP
 NAME:   minmay_crypt_entry_skeletal_spiral
 ORIENT: float
 TAGS:   crypt_entry vaults_entry_crypt
-MONS:   small skeleton / large skeleton / skeletal warrior
+MONS:   skeleton w:20 / skeletal warrior
 KFEAT:  O = enter_crypt
 MAP
 ...........
@@ -455,9 +455,9 @@ ENDMAP
 NAME:  tombwall_bobbens
 TAGS:  allow_dup
 DEPTH: Crypt
-MONS:  w:50 small zombie / w:100 large zombie / skeletal warrior / ghoul / \
+MONS:  w:150 zombie / skeletal warrior / ghoul / \
        large abomination / small abomination / necrophage / rotting hulk / \
-       w:50 small skeleton / w:100 large skeleton / w:30 nothing
+       w:150 skeleton / w:30 nothing
 MAP
 ccccccccccccccccccccccc
 ccc1c1c1c1c1c1c1c1c1ccc
@@ -473,7 +473,7 @@ NAME:   minicrypt_bobbens
 TAGS:   allow_dup
 DEPTH:  Crypt
 MONS:   necromancer
-MONS:   large zombie/small zombie/large skeleton/small skeleton
+MONS:   zombie/skeleton
 MONS:   flying skull
 MAP
   ccccccc
@@ -524,8 +524,8 @@ TAGS:  no_monster_gen no_item_gen
 ITEM:  gold
 KFEAT: Z = blade trap / needle trap / bolt trap / w:8 zot trap / w:25 floor
 KMONS: Y = Boris / ancient lich
-MONS:  w:3 large zombie / lich / w:3 large skeleton / w:3 bone dragon
-MONS:  small skeleton / small zombie
+MONS:  w:3 zombie / lich / w:3 skeleton / w:3 bone dragon
+MONS:  skeleton / zombie
 KFEAT: v = w:5 ~ / .
 KITEM: v = $ / %
 SUBST: $ = $.*|
@@ -791,8 +791,8 @@ NAME:   st_chilly_death
 TAGS:   no_pool_fixup
 DEPTH:  Crypt
 KMONS:  1 = lich
-KMONS:  2 = small simulacrum w:5 / large simulacrum / nothing w:20
-KMONS:  3 = large simulacrum
+KMONS:  2 = simulacrum w:15 / nothing w:20
+KMONS:  3 = simulacrum
 KMONS:  4 = wraith / shadow wraith / freezing wraith w:30
 KFEAT:  4 = deep_water
 KITEM:  1 = |
@@ -850,7 +850,7 @@ MONS:   lich
 MONS:   necromancer
 MONS:   skeletal warrior
 MONS:   flying skull
-MONS:   w:20 skeletal warrior / w:40 large skeleton / small skeleton / nothing
+MONS:   w:20 skeletal warrior / w:50 skeleton / nothing
 # vampire layout
 : elseif brnd > 4 then
 MONS:   vampire mage
@@ -859,8 +859,7 @@ MONS:   vampire knight
 MONS:   vampire
 MONS:   skeletal warrior/wraith
 MONS:   dancing weapon
-MONS:   vampire / skeletal warrior / large zombie / w:5 small zombie / \
-        wraith / w:5 nothing
+MONS:   vampire / skeletal warrior / w:15 zombie / wraith / w:5 nothing
 # ghost layout
 : elseif brnd > 0 then
 MONS:   curse skull
@@ -870,7 +869,7 @@ MONS:   phantasmal warrior
 MONS:   flayed ghost / wraith / freezing wraith / phantasmal warrior
 MONS:   flying skull
 MONS:   flayed ghost / wraith / freezing wraith / phantasmal warrior / \
-        hungry ghost / large zombie / w:5 small zombie / w:5 nothing
+        hungry ghost / w:15 zombie / w:5 nothing
 # mummy layout - rare
 : else
 MONS:   greater mummy
@@ -963,8 +962,7 @@ KMONS:  N = necromancer
 KFEAT:  H = .
 KMONS:  H = hell knight
 KFEAT:  M = .
-KMONS:  M = large zombie / small zombie / large skeleton / small skeleton / \
-            necrophage
+KMONS:  M = zombie / skeleton / w:5 necrophage
 KFEAT:  h = .
 KMONS:  h = titan zombie/dragon zombie/golden dragon zombie/ghoul
 # red metal walls
@@ -1145,19 +1143,19 @@ KMONS:  G = flayed ghost / hungry ghost / phantom
 KMONS:  H = vampire mage
 KMONS:  I = vampire knight
 KMONS:  J = vampire
-KMONS:  P = large zombie / small zombie / large skeleton / small skeleton
+KMONS:  P = zombie / skeleton
 : else
 KMONS:  H = sphinx
 KMONS:  I = guardian mummy
 KMONS:  J = guardian mummy / mummy
-KMONS:  P = large skeleton / mummy
+KMONS:  P = skeleton / mummy
 : end
 ####### SE monsters (catacombs). Either corporeal or incorporeal undead.
 : if crawl.coinflip() then
 KMONS:  Z = curse skull
 KMONS:  Q = bone dragon
 KMONS:  R = skeletal warrior
-KMONS:  S = large zombie / small zombie / large skeleton / small skeleton
+KMONS:  S = zombie / skeleton
 : else
 KMONS:  Z = curse skull
 KMONS:  Q = spectral iron dragon
@@ -1272,7 +1270,7 @@ SUBST:  D = +, d = cc+
 NSUBST: * = 12:* / 12:% / *:$
 KFEAT:  m = iron_grate
 MONS:   w:3 patrolling lich / w:1 patrolling ancient lich
-MONS:   patrolling large zombie / patrolling small zombie / w:20 nothing
+MONS:   patrolling zombie / nothing
 MONS:   spider / jumping spider / wolf spider / redback / w:25 nothing
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
 MONS:   raven skeleton / w:30 nothing
@@ -1302,7 +1300,7 @@ KMONS:  0 = patrolling reaper w:5 / patrolling soul eater
 KMONS:  A = patrolling deep elf death mage
 KMONS:  B = w:4 necromancer / w:1 deep dwarf necromancer
 KMONS:  C = rotting devil
-KMONS:  E = large skeleton / w:3 small skeleton / nothing
+KMONS:  E = skeleton w:13 / nothing
 KMONS:  F = patrolling reaper
 : end
 SUBST:  n : ncc
@@ -1416,8 +1414,8 @@ SUBST:  - = ^.....
 MONS:   patrolling skeletal warrior w:8 / patrolling wight
 MONS:   ancient lich
 MONS:   bone dragon w:1 / skeletal warrior / lich w:1
-MONS:   flying skull w:20 / large skeleton / small skeleton
-MONS:   w:40 large skeleton / small skeleton / wight
+MONS:   flying skull / skeleton
+MONS:   w:50 skeleton / wight
 MONS:   generate_awake curse skull / generate_awake curse toe
 : elseif brnd > 6 then
 MONS:   patrolling vampire hd:8 col:green name:noble n_suf / patrolling \
@@ -1435,7 +1433,7 @@ MONS:   phantasmal warrior / vampire hd:10 col:blue spells:.;.;haste;.;.;.; \
         name:vampire_warrior n_rpl n_des actual_spells ; long sword | great \
         sword | battleaxe | war axe | broad axe . chain mail w:10 | splint \
         mail w:5 | plate armour w:1
-MONS:   vampire / large zombie / golden dragon zombie w:3 / storm dragon zombie \
+MONS:   vampire / zombie / golden dragon zombie w:3 / storm dragon zombie \
         w:3
 MONS:   generate_awake vampire mage
 : elseif brnd > 2 then
@@ -1443,7 +1441,7 @@ MONS:   patrolling freezing wraith / patrolling phantasmal warrior
 MONS:   ghost moth hd:15
 MONS:   eidolon / shadow wraith
 MONS:   freezing wraith / phantasmal warrior
-MONS:   spectral thing / large simulacrum / shadow wraith / phantasmal warrior \
+MONS:   spectral thing / simulacrum / shadow wraith / phantasmal warrior \
         / spectral storm dragon / spectral ice dragon / spectral iron dragon
 MONS:   generate_awake shadow dragon / generate_awake spectral golden dragon
 : else

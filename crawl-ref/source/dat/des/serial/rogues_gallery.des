@@ -614,7 +614,7 @@ KMONS: O = minotaur name:death_knight n_suf hd:15 god:yredelemnul col:magenta \
            trident ego:draining good_item . \
            chain mail w:10 good_item | splint mail w:5 good_item | \
            plate armour good_item w:1
-KMONS: Z = small zombie / large zombie
+KMONS: Z = zombie
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = any armour good_item
 KITEM: e = any weapon ego:draining good_item
