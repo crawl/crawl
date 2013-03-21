@@ -140,9 +140,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
             else
                 attk_type = AT_HIT;
         }
-        else if (attk_type == AT_TRUNK_SLAP
-                 && (attacker->type == MONS_SKELETON_LARGE
-                     || attacker->type == MONS_SKELETON_SMALL))
+        else if (attk_type == AT_TRUNK_SLAP && attacker->type == MONS_SKELETON)
         {
             // Elephant trunks have no bones inside.
             attk_type = AT_NONE;
