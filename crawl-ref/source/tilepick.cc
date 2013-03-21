@@ -852,13 +852,13 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         z_tile = TILEP_ERROR;
     }
 
-    if (z_type == MONS_SKELETON_SMALL || z_type == MONS_SKELETON_LARGE)
+    if (z_type == MONS_SKELETON)
         z_tile = _zombie_tile_to_skeleton(z_tile);
 
     if (z_type == MONS_SPECTRAL_THING)
         z_tile = _zombie_tile_to_spectral(z_tile);
 
-    if (z_type == MONS_SIMULACRUM_SMALL || z_type == MONS_SIMULACRUM_LARGE)
+    if (z_type == MONS_SIMULACRUM)
         z_tile = _zombie_tile_to_simulacrum(z_tile);
 
     return z_tile;
