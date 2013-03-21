@@ -5643,6 +5643,7 @@ void player::init()
     redraw_title        = false;
 
     flash_colour        = BLACK;
+    flash_where         = nullptr;
 
     time_taken          = 0;
     shield_blocks       = 0;
