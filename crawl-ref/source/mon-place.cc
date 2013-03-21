@@ -3590,7 +3590,7 @@ static void _get_vault_mon_list(vector<mons_spec> &list)
         if (type == -1)
             type = MONS_NO_MONSTER;
 #endif
-        if (type == MONS_NO_MONSTER)
+        if (type == MONS_NO_MONSTER && base != MONS_NO_MONSTER)
         {
             spec.place = level_id::from_packed_place(base);
             ASSERT(spec.place.is_valid());
