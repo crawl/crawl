@@ -553,7 +553,7 @@ NAME:   fedhas_altar_decomposition
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 TAGS:   no_item_gen no_monster_gen no_trap_gen
 DEPTH:  D:6-13
-MONS:   bush, plant, necrophage, small zombie
+MONS:   bush, plant, necrophage, zombie
 KFEAT:  _ = altar_fedhas
 FTILE:  '!12@ = floor_moss
 COLOUR: '!@ = green

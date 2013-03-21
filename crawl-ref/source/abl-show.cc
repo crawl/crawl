@@ -2258,7 +2258,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-        summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), GOD_SHINING_ONE);
+        summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), false);
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:

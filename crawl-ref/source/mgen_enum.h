@@ -82,19 +82,6 @@ enum band_type
     NUM_BANDS                   // always last
 };
 
-enum demon_class_type
-{
-    DEMON_LESSER,                      //    0: Class V
-    DEMON_COMMON,                      //    1: Class II-IV
-    DEMON_GREATER,                     //    2: Class I
-    DEMON_RANDOM,                      //    any of the above
-};
-
-enum holy_being_class_type
-{
-    HOLY_BEING_WARRIOR,                //    0: daeva or angel
-};
-
 enum dragon_class_type
 {
     DRAGON_LIZARD,

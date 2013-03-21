@@ -661,13 +661,22 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
     modifier = M_NORMAL;
     switch (mon->type)
     {
+        case MONS_ZOMBIE:
+#if TAG_MAJOR_VERSION == 34
         case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
+#endif
             modifier = M_ZOMBIE;
             break;
+        case MONS_SKELETON:
+#if TAG_MAJOR_VERSION == 34
         case MONS_SKELETON_LARGE: case MONS_SKELETON_SMALL:
+#endif
             modifier = M_SKELETON;
             break;
+        case MONS_SIMULACRUM:
+#if TAG_MAJOR_VERSION == 34
         case MONS_SIMULACRUM_LARGE: case MONS_SIMULACRUM_SMALL:
+#endif
             modifier = M_SIMULACRUM;
             break;
         case MONS_SPECTRAL_THING:
@@ -688,13 +697,21 @@ kill_monster_desc::kill_monster_desc(const monster_info& mon)
     modifier = M_NORMAL;
     switch (mon.type)
     {
+#if TAG_MAJOR_VERSION == 34
         case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
+#endif
             modifier = M_ZOMBIE;
             break;
+        case MONS_SKELETON:
+#if TAG_MAJOR_VERSION == 34
         case MONS_SKELETON_LARGE: case MONS_SKELETON_SMALL:
+#endif
             modifier = M_SKELETON;
             break;
+        case MONS_SIMULACRUM:
+#if TAG_MAJOR_VERSION == 34
         case MONS_SIMULACRUM_LARGE: case MONS_SIMULACRUM_SMALL:
+#endif
             modifier = M_SIMULACRUM;
             break;
         case MONS_SPECTRAL_THING:

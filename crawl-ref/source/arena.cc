@@ -129,7 +129,7 @@ namespace arena
     coord_def place_a, place_b;
 
     bool cycle_random     = false;
-    monster_type cycle_random_pos = NUM_MONSTERS;
+    uint32_t cycle_random_pos = 0;
 
     FILE *file = NULL;
     int message_pos = 0;
@@ -198,7 +198,7 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const monster* mon = dgn_place_monster(spec, -1,
+                const monster* mon = dgn_place_monster(spec,
                                                        loc, false, true, false);
                 if (!mon)
                 {
@@ -768,7 +768,7 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            monster *mon = dgn_place_monster(spec, -1, pos, false, true);
+            monster *mon = dgn_place_monster(spec, pos, false, true);
 
             if (!mon && fac.active_members == 0 && monster_at(pos))
             {
@@ -797,7 +797,7 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                mon = dgn_place_monster(spec, -1, pos, false, true);
+                mon = dgn_place_monster(spec, pos, false, true);
             }
 
             if (mon)
@@ -1049,8 +1049,7 @@ namespace arena
 
 // Various arena callbacks
 
-monster_type arena_pick_random_monster(const level_id &place, int power,
-                                       int &lev_mons)
+monster_type arena_pick_random_monster(const level_id &place)
 {
     if (arena::random_uniques)
     {
@@ -1067,23 +1066,18 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
     for (int tries = 0; tries <= NUM_MONSTERS; tries++)
     {
-        ++arena::cycle_random_pos;
-        if (arena::cycle_random_pos >= NUM_MONSTERS)
-            arena::cycle_random_pos = MONS_0;
+        monster_type mons = pick_monster_by_hash(place.branch,
+            ++arena::cycle_random_pos);
 
-        if (mons_rarity(arena::cycle_random_pos, place) == 0)
+        if (arena_veto_random_monster(mons))
             continue;
 
-        if (arena_veto_random_monster(arena::cycle_random_pos))
-            continue;
-
-        return arena::cycle_random_pos;
+        return mons;
     }
 
     game_ended_with_error(
         make_stringf("No random monsters for place '%s'",
                      arena::place.describe().c_str()));
-    return NUM_MONSTERS;
 }
 
 bool arena_veto_random_monster(monster_type type)

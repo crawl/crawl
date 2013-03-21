@@ -40,13 +40,11 @@ monster_type pick_random_zombie();
 /* ***********************************************************************
  * Returns a monster class type of a zombie for generation
  * on the player's current level.
- * hack_hd:    Hack to increase monster HD outside main dungeon.
  * cs:         Restrict to monster types that fit this zombie type
  *             (e.g. monsters with skeletons for MONS_SKELETON_SMALL)
  * pos:        Check habitat at position.
  * *********************************************************************** */
-monster_type pick_local_zombifiable_monster(int power,
-                                            bool hack_hd = false,
+monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs = MONS_NO_MONSTER,
                                             const coord_def& pos = coord_def());
 
@@ -56,22 +54,11 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs);
 
 bool downgrade_zombie_to_skeleton(monster* mon);
 
-// Picks a monster eligible for random generation at the given place,
-// optionally picking monsters that can be zombified into the target zombie,
-// and optionally increasing monster level by the provided OOD factors.
-//
-// If want_corpse_capable is true, only monsters that can leave corpses
-// will be considered.
-monster_type pick_random_monster_for_place(const level_id &place,
-                                           monster_type zombie_monster,
-                                           bool moderate_ood,
-                                           bool super_ood,
-                                           bool want_corpse_capable);
-
 class level_id;
 
-monster_type pick_random_monster(const level_id &place,
-                                 bool *chose_ood_monster = NULL);
+monster_type pick_random_monster(level_id place,
+                                 monster_type kind = RANDOM_MONSTER,
+                                 level_id *final_place = nullptr);
 
 conduct_type player_will_anger_monster(monster_type type);
 conduct_type player_will_anger_monster(monster* mon);
@@ -80,9 +67,7 @@ bool player_angers_monster(monster* mon);
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
                       int radius, bool allow_centre, coord_def& empty);
 
-monster_type summon_any_demon(demon_class_type dct);
-
-monster_type summon_any_holy_being(holy_being_class_type hbct);
+monster_type summon_any_demon(monster_type dct);
 
 monster_type summon_any_dragon(dragon_class_type dct);
 

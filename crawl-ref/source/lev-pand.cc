@@ -114,11 +114,8 @@ void pandemonium_mons(void)
     monster_type pan_mons = env.mons_alloc[random2(10)];
 
     if (one_chance_in(40))
-    {
-        do
-            pan_mons = static_cast<monster_type>(random2(NUM_MONSTERS));
-        while (!mons_pan_rare(pan_mons));
-    }
+        pan_mons = pick_monster_no_rarity(BRANCH_PANDEMONIUM);
+
     mgen_data mg(pan_mons);
     mg.place = level_id(BRANCH_PANDEMONIUM);
     mg.flags |= MG_PERMIT_BANDS;

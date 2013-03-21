@@ -39,8 +39,6 @@ struct Branch
     bool has_uniques;
     colour_t floor_colour;          // Zot needs special handling.
     colour_t rock_colour;
-    int (*mons_rarity_function)(monster_type);
-    int (*mons_level_function)(monster_type);
     int travel_shortcut;         // Which key to press for travel.
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
     int ambient_noise;           // affects noise loudness and player stealth
@@ -62,7 +60,6 @@ level_id current_level_parent();
 branch_type str_to_branch(const string &branch, branch_type err = NUM_BRANCHES);
 
 int current_level_ambient_noise();
-bool branch_has_monsters(branch_type branch);
 
 branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);

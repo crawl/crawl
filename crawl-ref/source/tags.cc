@@ -1717,7 +1717,9 @@ static void marshall_vault_placement(writer &th, const vault_placement &vp)
     marshallShort(th, vp.orient);
     marshall_mapdef(th, vp.map);
     marshall_iterator(th, vp.exits.begin(), vp.exits.end(), marshallCoord);
-    marshallShort(th, vp.level_number);
+#if TAG_MAJOR_VERSION == 34
+    marshallShort(th, -1);
+#endif
     marshallByte(th, vp.seen);
 }
 
@@ -1729,7 +1731,9 @@ static vault_placement unmarshall_vault_placement(reader &th)
     vp.orient = static_cast<map_section_type>(unmarshallShort(th));
     vp.map = unmarshall_mapdef(th);
     unmarshall_vector(th, vp.exits, unmarshallCoord);
-    vp.level_number = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    unmarshallShort(th);
+#endif
     vp.seen = !!unmarshallByte(th);
 
     return vp;
@@ -3224,6 +3228,15 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.props.clear();
     mi.props.read(th);
 
+#if TAG_MAJOR_VERSION == 34
+    if (mi.type == MONS_ZOMBIE_SMALL || mi.type == MONS_ZOMBIE_LARGE)
+        mi.type = MONS_ZOMBIE;
+    if (mi.type == MONS_SKELETON_SMALL || mi.type == MONS_SKELETON_LARGE)
+        mi.type = MONS_SKELETON;
+    if (mi.type == MONS_SIMULACRUM_SMALL || mi.type == MONS_SIMULACRUM_LARGE)
+        mi.type = MONS_SIMULACRUM;
+#endif
+
     if (mi.type != MONS_PROGRAM_BUG && mons_species(mi.type) == MONS_PROGRAM_BUG)
     {
         mi.type = MONS_GHOST;
@@ -3612,6 +3625,12 @@ void unmarshallMonster(reader &th, monster& m)
         // It must have belonged to the player.
         m.props["bs_mid"].get_int() = MID_PLAYER;
     }
+    if (m.type == MONS_ZOMBIE_SMALL || m.type == MONS_ZOMBIE_LARGE)
+        m.type = MONS_ZOMBIE;
+    if (m.type == MONS_SKELETON_SMALL || m.type == MONS_SKELETON_LARGE)
+        m.type = MONS_SKELETON;
+    if (m.type == MONS_SIMULACRUM_SMALL || m.type == MONS_SIMULACRUM_LARGE)
+        m.type = MONS_SIMULACRUM;
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)

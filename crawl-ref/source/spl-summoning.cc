@@ -798,24 +798,20 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
     return true;
 }
 
-static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
-                                       monster_type mon, int dur, bool friendly,
-                                       bool quiet)
+// Not a spell. Rather, this is TSO's doing.
+bool summon_holy_warrior(int pow, bool punish)
 {
-    UNUSED(pow);
+    mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA, -1),
+                 punish ? BEH_HOSTILE : BEH_FRIENDLY,
+                 punish ? 0 : &you,
+                 punish ? 0 : min(2 + (random2(pow) / 4), 6),
+                 0, you.pos(), MHITYOU,
+                 MG_FORCE_BEH, GOD_SHINING_ONE);
 
-    mgen_data mg(mon,
-                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                 friendly ? &you : 0,
-                 dur, spell,
-                 you.pos(),
-                 MHITYOU,
-                 MG_FORCE_BEH, god);
-
-    if (!friendly)
+    if (punish)
     {
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-        mg.non_actor_summoner = god_name(god, false);
+        mg.non_actor_summoner = god_name(GOD_SHINING_ONE, false);
     }
 
     monster *summon = create_monster(mg);
@@ -825,32 +821,11 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
 
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-    if (!quiet)
+    if (!punish)
         mpr("You are momentarily dazzled by a brilliant light.");
 
     player_angers_monster(summon);
     return true;
-}
-
-static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
-                                       holy_being_class_type hbct, int dur,
-                                       bool friendly, bool quiet)
-{
-    monster_type mon = summon_any_holy_being(hbct);
-
-    return _summon_holy_being_wrapper(pow, god, spell, mon, dur, friendly,
-                                      quiet);
-}
-
-// Not a spell. Rather, this is TSO's doing.
-bool summon_holy_warrior(int pow, god_type god, int spell,
-                         bool force_hostile, bool permanent,
-                         bool quiet)
-{
-    return _summon_holy_being_wrapper(pow, god, spell, HOLY_BEING_WARRIOR,
-                                      !permanent ? min(2 + (random2(pow) / 4), 6)
-                                                 : 0,
-                                      !force_hostile, quiet);
 }
 
 // This function seems to have very little regard for encapsulation.
@@ -896,10 +871,9 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
                  dur, SPELL_TUKIMAS_DANCE,
                  you.pos(),
                  MHITYOU,
-                 0, god,
-                 MONS_NO_MONSTER, 0, BLACK,
-                 pow);
+                 0, god);
     mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_POWER] = pow;
 
     if (force_hostile)
         mg.non_actor_summoner = god_name(god, false);
@@ -1037,33 +1011,23 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
     return success;
 }
 
-static bool _summon_demon_wrapper(int pow, god_type god, int spell,
-                                  demon_class_type dct, int dur, bool friendly,
-                                  bool charmed, bool quiet)
-{
-    monster_type mon = summon_any_demon(dct);
-
-    return _summon_demon_wrapper(pow, god, spell, mon, dur, friendly, charmed,
-                                 quiet);
-}
-
 static bool _summon_lesser_demon(int pow, god_type god, int spell, bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
+    return _summon_demon_wrapper(pow, god, spell, RANDOM_DEMON_LESSER,
                                  min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
 static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
+    return _summon_demon_wrapper(pow, god, spell, RANDOM_DEMON_COMMON,
                                  min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
 static bool _summon_greater_demon(int pow, god_type god, int spell, bool quiet)
 {
-    monster_type mon = summon_any_demon(DEMON_GREATER);
+    monster_type mon = summon_any_demon(RANDOM_DEMON_GREATER);
 
     const bool charmed = (random2(pow) > 5);
     const bool friendly = (charmed && mons_demon_tier(mon) == 2);
@@ -1560,18 +1524,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         return false;
     }
 
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    if (item.sub_type == CORPSE_BODY)
-    {
-        mon = (mons_zombie_size(item.mon_type) == Z_SMALL) ? MONS_ZOMBIE_SMALL
-                                                           : MONS_ZOMBIE_LARGE;
-    }
-    else
-    {
-        mon = (mons_zombie_size(item.mon_type) == Z_SMALL) ? MONS_SKELETON_SMALL
-                                                           : MONS_SKELETON_LARGE;
-    }
+    monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
 
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
 
@@ -1888,10 +1841,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
 
     fail_check();
 
-    const monster_type mon = mons_zombie_size(sim_type) == Z_BIG ?
-        MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
-
-    mgen_data mg(mon, BEH_FRIENDLY, &you,
+    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you,
                  0, SPELL_SIMULACRUM,
                  you.pos(), MHITYOU,
                  MG_FORCE_BEH, god,
@@ -1915,7 +1865,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
             {
                 sim->mname = name;
                 sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
-                sim->props["dbname"].get_string() = mons_class_name(mon);
+                sim->props["dbname"].get_string() = mons_class_name(MONS_SIMULACRUM);
             }
 
             count++;
@@ -2019,8 +1969,6 @@ bool monster_simulacrum(monster *caster, bool actual)
             bool cast_visible = you.see_cell(caster->pos());
 
             monster_type sim_type = item.mon_type;
-            monster_type mon_type = mons_zombie_size(sim_type) == Z_BIG ?
-                MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
             // Can't create more than the available chunks.
             int how_many = min(8, 4 + random2(100) / 20);
@@ -2036,7 +1984,7 @@ bool monster_simulacrum(monster *caster, bool actual)
                 // Use the original monster type as the zombified type here,
                 // to get the proper stats from it.
                 if (monster *sim = create_monster(
-                        mgen_data(mon_type, SAME_ATTITUDE(caster), caster,
+                        mgen_data(MONS_SIMULACRUM, SAME_ATTITUDE(caster), caster,
                                   0, SPELL_SIMULACRUM,
                                   caster->pos(), caster->foe,
                                   MG_FORCE_BEH | (cast_visible ? MG_DONT_COME : 0),
@@ -2471,8 +2419,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 agent->pos(),
                 agent->mindex(),
                 0, god,
-                MONS_NO_MONSTER, 0, BLACK,
-                0);
+                MONS_NO_MONSTER, 0, BLACK);
         mg.hd = 1 + div_rand_round(pow, 11);
         battlesphere = create_monster(mg);
 

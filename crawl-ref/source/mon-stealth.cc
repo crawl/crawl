@@ -38,13 +38,11 @@ int monster::stealth() const
     if (holiness() == MH_UNDEAD)
     {
         // Zombies are less stealthy.
-        if (type == MONS_ZOMBIE_SMALL)
-            actual_stealth--;
-
-        // Larger zombies even more so.
-        else if (type == MONS_ZOMBIE_LARGE)
-            actual_stealth -= 2;
-
+        if (type == MONS_ZOMBIE)
+        {
+            // Large zombies even more so.
+            actual_stealth -= mons_zombie_size(base_monster);
+        }
         // Other undead are otherwise stealthy.
         else
             actual_stealth++;

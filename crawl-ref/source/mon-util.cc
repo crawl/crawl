@@ -1393,26 +1393,6 @@ bool mons_can_display_wounds(const monster* mon)
     return mons_class_can_display_wounds(mon->type);
 }
 
-// Size based on zombie class.
-zombie_size_type zombie_class_size(monster_type cs)
-{
-    switch (cs)
-    {
-        case MONS_ZOMBIE_SMALL:
-        case MONS_SIMULACRUM_SMALL:
-        case MONS_SKELETON_SMALL:
-            return Z_SMALL;
-        case MONS_ZOMBIE_LARGE:
-        case MONS_SIMULACRUM_LARGE:
-        case MONS_SKELETON_LARGE:
-            return Z_BIG;
-        case MONS_SPECTRAL_THING:
-            return Z_NOZOMBIE;
-        default:
-            die("invalid zombie type");
-    }
-}
-
 int mons_zombie_size(monster_type mc)
 {
     ASSERT(smc);
@@ -1426,10 +1406,10 @@ monster_type mons_zombie_base(const monster* mon)
 
 bool mons_class_is_zombified(monster_type mc)
 {
-    return (mc == MONS_ZOMBIE_SMALL || mc == MONS_ZOMBIE_LARGE
-            || mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE
-            || mc == MONS_SIMULACRUM_SMALL || mc == MONS_SIMULACRUM_LARGE
-            || mc == MONS_SPECTRAL_THING);
+    return mc == MONS_ZOMBIE
+        || mc == MONS_SKELETON
+        || mc == MONS_SIMULACRUM
+        || mc == MONS_SPECTRAL_THING;
 }
 
 bool mons_is_zombified(const monster* mon)
@@ -2203,16 +2183,8 @@ void define_monster(monster* mons)
         init_abomination(mons, 4 + random2(4));
         break;
 
-    case MONS_ZOMBIE_SMALL:
-        hd = (coinflip() ? 1 : 2);
-        break;
-
     case MONS_ABOMINATION_LARGE:
         init_abomination(mons, 8 + random2(4));
-        break;
-
-    case MONS_ZOMBIE_LARGE:
-        hd = 3 + random2(5);
         break;
 
     case MONS_HELL_BEAST:

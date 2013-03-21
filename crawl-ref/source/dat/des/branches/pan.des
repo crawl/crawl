@@ -44,8 +44,8 @@ function pan_lord_setup(_G, name)
                  "Green Death / hellwing",
         Cerebov = "efreet / efreet / orange demon / orange demon / " ..
                  "sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
-        ['Gloorx Vloq'] = "small skeleton / small skeleton / large skeleton / " ..
-                 "large skeleton / soul eater / soul eater / lorocyproca / " ..
+        ['Gloorx Vloq'] = "skeleton / skeleton / skeleton / " ..
+                 "skeleton / soul eater / soul eater / lorocyproca / " ..
                  "executioner / executioner / executioner"
     }
 

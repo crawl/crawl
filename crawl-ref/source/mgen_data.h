@@ -7,6 +7,7 @@
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
 #define TUKIMA_WEAPON "tukima-weapon"
+#define TUKIMA_POWER "tukima-power"
 
 // A structure with all the data needed to whip up a new monster.
 struct mgen_data
@@ -75,11 +76,6 @@ struct mgen_data
     // The colour of the monster.
     int             colour;
 
-    // A measure of how powerful the generated monster should be (for
-    // randomly chosen monsters), usually equal to the absolute depth
-    // that the player is in the dungeon.
-    int             power;
-
     // How close to or far from the player the monster should be created.
     // Is usually used only when the initial position (pos) is unspecified.
     proximity_type  proximity;
@@ -128,7 +124,6 @@ struct mgen_data
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
               int moncolour = BLACK,
-              int monpower = -1,
               proximity_type prox = PROX_ANYWHERE,
               level_id _place = level_id::current(),
               int mhd = 0, int mhp = 0,
@@ -141,7 +136,7 @@ struct mgen_data
           abjuration_duration(abj), summon_type(st), pos(p),
           preferred_grid_feature(DNGN_UNSEEN), foe(mfoe), flags(genflags),
           god(which_god), number(monnumber), colour(moncolour),
-          power(monpower), proximity(prox), place(_place), map_mask(0),
+          proximity(prox), place(_place), map_mask(0),
           hd(mhd), hp(mhp), extra_flags(extflags), mname(monname),
           non_actor_summoner(nas), initial_shifter(is), props()
     {
@@ -183,7 +178,7 @@ struct mgen_data
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         genflags, ngod, base, 0, BLACK, -1,
+                         genflags, ngod, base, 0, BLACK,
                          PROX_ANYWHERE, level_id::current(), 0, 0, 0, "", nsummoner,
                          RANDOM_MONSTER);
     }

@@ -653,7 +653,7 @@ MONS:    eight-headed hydra simulacrum w:2 / \
 SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
 :  elseif you.branch() == "Abyss" then
 MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
-MONS:    large simulacrum w:12 / white draconian / water elemental w:5 / \
+MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
          white very ugly thing w:15 / ice devil w:8
 MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
 MONS:    flaming corpse w:8 / red draconian / fire elemental w:5 / \
@@ -828,8 +828,7 @@ KITEM:   | = nothing
 KMONS:   12 = patrolling lich w:5 / ancient lich
 KMONS:   34 = patrolling curse toe
 KMONS:   56 = patrolling bone dragon
-KMONS:   7 = death cob w:12 / small zombie w:2 / large zombie w:2 / \
-             small skeleton w:2 / large skeleton w:2 / guardian mummy w:4
+KMONS:   7 = death cob w:12 / zombie w:4 / skeleton w:4 / guardian mummy w:4
 KMONS:   8 = patrolling death cob
 KMONS:   ABCD = shadow dragon
 KMONS:   EF = death drake
@@ -1122,7 +1121,7 @@ SUBST:  T=A
 SUBST:  . = ~.........
 SUBST:  ; = ~...
 KMONS:  3 = shadow wraith
-KMONS:  z = skeletal warrior / small zombie / nothing
+KMONS:  z = skeletal warrior / zombie / nothing
 KMONS:  D = shadow dragon
 KMONS:  2 = reaper / soul eater
 MAP
@@ -2191,7 +2190,7 @@ MONS:    lich / ancient lich, shadow dragon / death drake w:1, shadow fiend
 KMONS:   8 = ghoul
 KMONS:   9 = vampire mage / vampire knight
 KMONS:   0 = soul eater
-KMONS:   Z = large skeleton / large zombie / small skeleton / small zombie
+KMONS:   Z = skeleton / zombie
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569
 : serpent_of_hell_setup(_G)

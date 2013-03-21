@@ -269,7 +269,7 @@ TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:18-26
 ORIENT: float
 MONS:   skeletal warrior
-KMONS:  $ = skeletal warrior / large skeleton / bone dragon w:1 / nothing w:40
+KMONS:  $ = skeletal warrior / skeleton / bone dragon w:1 / nothing w:40
 KITEM:  $ = $
 MAP
 ccccccccccccc
@@ -1170,9 +1170,9 @@ ENDMAP
 NAME:    lemuel_MiniTomb
 ORIENT:  float
 DEPTH:   D:15-26, Crypt
-MONS:    large zombie / nothing
+MONS:    zombie / nothing
 MONS:    mummy, patrolling guardian mummy, patrolling greater mummy
-MONS:    large zombie
+MONS:    zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 SUBST:   F = G:99 F:1
@@ -2566,7 +2566,7 @@ ORIENT:  float
 TAGS:    no_monster_gen
 DEPTH:   D:9-, Crypt
 MONS:    patrolling flying skull
-MONS:    small zombie / large zombie / small skeleton / large skeleton
+MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
 KMONS:   4 = Boris / lich / unborn deep dwarf
@@ -3301,7 +3301,7 @@ MONS:    vampire knight ; wand of lightning | wand of draining / \
 KMONS:   A = fire drake / flaming corpse / fire elemental
 KMONS:   B = lindwurm / mottled dragon / efreet w:5
 KMONS:   C = fire crab / hell knight
-KMONS:   D = small simulacrum w:5 / polar bear
+KMONS:   D = simulacrum w:5 / polar bear
 KMONS:   E = harpy simulacrum w:5 / snapping turtle simulacrum w:5 / ice dragon
 KMONS:   F = hydra simulacrum w:5 / golden dragon simulacrum w:5 / azure jelly
 KMONS:   G = insubstantial wisp / air elemental w:5
@@ -3317,7 +3317,7 @@ KMONS:   O = angel / cherub
 KMONS:   P = hellwing / red devil / hell hound
 KMONS:   Q = hell beast / smoke demon / ynoxinul
 KMONS:   R = shadow demon / reaper / cacodemon w:5
-KMONS:   S = eidolon / skeletal warrior / large zombie w:5
+KMONS:   S = eidolon / skeletal warrior / zombie w:5
 KMONS:   T = flayed ghost / guardian mummy / rotting hulk
 KMONS:   U = death ooze / bone dragon / profane servitor w:5
 KMONS:   V = elephant / very ugly thing / wolf spider
@@ -3526,7 +3526,7 @@ SUBST:  ] = ]>
 # Also remove the bits of loot for Hell branches and Zot.
 : if you.branch() == "Crypt" then
 KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / \
-            w:5 curse toe / w:5 large zombie / w:5 large skeleton / eidolon / \
+            w:5 curse toe / w:5 zombie / w:5 skeleton / eidolon / \
             w:20 reaper / soul eater / w:30 place:Crypt
 : elseif you.branch() == "Dis" then
 KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / \
@@ -3543,7 +3543,7 @@ KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / \
 SUBST:  *% = .
 : elseif you.branch() == "Coc" then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
-            w:5 large simulacrum / place:Coc
+            w:5 simulacrum / place:Coc
 SUBST:  *% = .
 : elseif you.branch() == "Zot" then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \

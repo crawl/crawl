@@ -229,8 +229,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
-                "small zombie / small skeleton / wight w:5 / necrophage / large zombie w:5 /\
-                    large skeleton w:5 / shadow w:5 / phantom w:5",
+                "zombie / skeleton / wight w:5 / necrophage /\
+                    shadow w:5 / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly / w:1 brown ooze",
                 "giant cockroach / giant mite / giant centipede / w:5 spider /\
@@ -261,8 +261,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "jelly / w:5 ooze / w:3 brown ooze / giant eyeball / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
                 "deep dwarf scion / deep dwarf artificer / deep dwarf",
-                "small zombie / small skeleton / wight / necrophage / large zombie w:5 /\
-                    large skeleton w:5 / shadow w:5 / phantom w:5 / w:1 josephine",
+                "zombie / skeleton / wight / necrophage /\
+                    shadow w:5 / phantom w:5 / w:1 josephine",
                 "w:7 blue devil / iron devil w:5 / orange demon / red devil w:5 / rotting devil /\
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
@@ -273,8 +273,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:30 sky beast / insubstantial wisp",
                 "w:5 earth elemental / clay golem / w:5 stone golem / w:5 boulder beetle /\
                     w:15 iron devil / w:15 iron imp / w:5 rock worm",
-                "w:20 ice beast / small simulacrum / large simulacrum /\
-                    w:5 water elemental",
+                "w:20 ice beast / w:20 simulacrum / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
                 "kobold / big kobold / w:3 kobold demonologist / w:2 sonja",
@@ -306,8 +305,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
                 "deep dwarf scion / deep dwarf artificer / w:3 deep dwarf death knight /\
                     w:5 deep dwarf berserker",
-                "w:3 skeletal warrior / wight / necrophage / large zombie w:5 /\
-                    large skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
+                "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
+                    skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
                     silent spectre / w:4 josephine",
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
@@ -795,8 +794,8 @@ function arena_sprint_init_boss_table()
     bs[12] = {"efreet / efreet / orange demon / orange demon /\
               sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"small skeleton / small skeleton / large skeleton /\
-              large skeleton / soul eater / soul eater / lorocyproca /\
+    bs[13] = {"skeleton / skeleton / skeleton /\
+              skeleton / soul eater / soul eater / lorocyproca /\
               executioner / executioner / executioner", "gloorx vloq",
               "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
