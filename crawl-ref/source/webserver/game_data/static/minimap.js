@@ -10,8 +10,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         "blue",        // MF_MAP_WALL
         "brown",       // MF_DOOR
         "green",       // MF_ITEM
-        "lightred",    // MF_MONS_FRIENDLY
-        "lightred",    // MF_MONS_PEACEFUL
+        "#EE9090",     // MF_MONS_FRIENDLY
+        "#EE9090",     // MF_MONS_PEACEFUL
         "red",         // MF_MONS_NEUTRAL
         "red",         // MF_MONS_HOSTILE
         "darkgreen",   // MF_MONS_NO_EXP
