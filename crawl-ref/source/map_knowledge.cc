@@ -175,9 +175,15 @@ void map_cell::set_detected_item()
     _item->colour    = Options.detected_item_colour;
 }
 
+static bool _floor_mf(map_feature mf)
+{
+    return mf == MF_FLOOR || mf == MF_WATER || mf == MF_LAVA;
+}
+
 map_feature get_cell_map_feature(const map_cell& cell)
 {
     map_feature mf = MF_SKIP;
+    bool mf_mons_no_exp = false;
     if (cell.invisible_monster())
         mf = MF_MONS_HOSTILE;
     else if (cell.monster() != MONS_NO_MONSTER)
@@ -197,7 +203,7 @@ map_feature get_cell_map_feature(const map_cell& cell)
         case ATT_HOSTILE:
         default:
             if (mons_class_flag(cell.monster(), M_NO_EXP_GAIN))
-                mf = MF_MONS_NO_EXP;
+                mf_mons_no_exp = true;
             else
                 mf = MF_MONS_HOSTILE;
             break;
@@ -210,10 +216,12 @@ map_feature get_cell_map_feature(const map_cell& cell)
         mf = get_feature_def(show).minimap;
     }
 
-    if (mf == MF_SKIP && cell.item())
-        mf = get_feature_def(*cell.item()).minimap;
     if (mf == MF_SKIP)
         mf = get_feature_def(cell.feat()).minimap;
+    if ((mf == MF_SKIP || _floor_mf(mf)) && cell.item())
+        mf = get_feature_def(*cell.item()).minimap;
+    if ((mf == MF_SKIP || _floor_mf(mf)) && mf_mons_no_exp)
+        mf = MF_MONS_NO_EXP;
     if (mf == MF_SKIP)
         mf = MF_UNSEEN;
 
