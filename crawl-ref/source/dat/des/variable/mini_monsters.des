@@ -22,6 +22,18 @@
 # best or else delegate to Random or Others. Be picky with Guardians, please.
 ###############################################################################
 
+# Functionality for some of HangedMan's decor vaults.
+{{
+function init_hm_decor_walldepth(e, variables)
+local a = you.absdepth() * 5
+  if a - 75 > 0 then
+    e.subst(variables .. " : x:50 c:" .. a .. " b:" .. a - 75)
+  else
+    e.subst(variables .. " : x:50 c:" .. a)
+  end
+end
+}}
+
 default-depth: D:9-27, Elf
 
 ###############################################################################
