@@ -791,8 +791,7 @@ public:
 
 bool map_selector::depth_selectable(const map_def &mapdef) const
 {
-    return (mapdef.place.empty()
-            && mapdef.is_usable_in(place)
+    return (mapdef.is_usable_in(place)
             // Some tagged levels cannot be selected as random
             // maps in a specific depth:
             && !mapdef.has_tag_suffix("entry")
