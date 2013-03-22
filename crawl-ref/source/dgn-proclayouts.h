@@ -233,17 +233,10 @@ class ForestLayout : public NoiseLayout
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
 };
 
-class LavaLayout : public NoiseLayout
+class UnderworldLayout : public NoiseLayout
 {
     public:
-        LavaLayout() { };
-        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
-};
-
-class OverworldLayout : public NoiseLayout
-{
-    public:
-        OverworldLayout() { };
+        UnderworldLayout() { };
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
 };
 
@@ -254,7 +247,7 @@ class ProceduralFunction
 {
     public:
         double operator()(const coord_def &p, const uint32_t offset) const;
-        virtual double operator()(double x, double y, double z) const;
+        double operator()(double x, double y, double z) const;
 };
 
 class SimplexFunction : public ProceduralFunction
@@ -267,6 +260,7 @@ class SimplexFunction : public ProceduralFunction
               seed_x(_seed_x), seed_y(_seed_y), seed_z(_seed_z),
               octaves(_octaves) { };
 
+        double operator()(const coord_def &p, const uint32_t offset) const;
         double operator()(double x, double y, double z) const;
 
     private:
@@ -286,6 +280,7 @@ class WorleyFunction : public ProceduralFunction
                         double _seed_x, double _seed_y, double _seed_z = 0)
             : scale_x(_scale_x), scale_y(_scale_y), scale_z(_scale_z),
               seed_x(_seed_x), seed_y(_seed_y), seed_z(_seed_z) { };
+        double operator()(const coord_def &p, const uint32_t offset) const;
         double operator()(double x, double y, double z) const;
         worley::noise_datum datum(double x, double y, double z) const;
 
