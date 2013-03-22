@@ -602,9 +602,6 @@ int ash_detect_portals(bool all)
 
 monster_type ash_monster_tier(const monster *mon)
 {
-    if (mon->friendly())
-        return MONS_SENSED_FRIENDLY;
-
     return monster_type(MONS_SENSED_TRIVIAL + monster_info(mon).threat);
 }
 
