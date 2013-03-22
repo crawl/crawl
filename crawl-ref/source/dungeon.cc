@@ -5912,8 +5912,8 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
     // Look for any clear terrain and abandon the idea of looking
     // nearby now. This is used when taking transit Pandemonium gates,
-    // or landing in Labyrinths. Never land the PC inside a Pan or Lab
-    // vault.
+    // or landing in Labyrinths. Currently the player can land in vaults,
+    // which is considered acceptable.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         if (feat_has_dry_floor(grd(*ri)))
