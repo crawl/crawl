@@ -13,7 +13,7 @@ being infuriated against one's will.
 %%%%
 amulet of clarity:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of conservation
 
@@ -22,7 +22,7 @@ destruction, but not infallibly so.
 %%%%
 amulet of conservation:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of guardian spirit
 
@@ -32,7 +32,7 @@ will fail to provide its protection until more power is available.
 %%%%
 amulet of guardian spirit:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of inaccuracy
 
@@ -41,7 +41,7 @@ monsters via ranged attacks or spells.
 %%%%
 amulet of inaccuracy:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of rage
 
@@ -49,7 +49,7 @@ This amulet enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of rage:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of resist corrosion
 
@@ -58,7 +58,7 @@ acids, although not infallibly so.
 %%%%
 amulet of resist corrosion:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of resist mutation
 
@@ -66,7 +66,7 @@ This amulet protects its wearer from mutations, although not infallibly so.
 %%%%
 amulet of resist mutation:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of the gourmand
 
@@ -76,7 +76,7 @@ digestion are cumulative over time and are initially small.
 %%%%
 amulet of the gourmand:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of warding
 
@@ -85,7 +85,7 @@ summoned, and also makes the wearer more resistant to draining attacks.
 %%%%
 amulet of warding:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of faith
 
@@ -96,7 +96,7 @@ your divine favour when removed.
 %%%%
 amulet of faith:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 amulet of stasis
 
@@ -109,7 +109,7 @@ such as banishment are beyond its ability to block.
 %%%%
 amulet of stasis:quote
 
-<amulet>
+<amulet:quote>
 %%%%
 animal skin
 
@@ -646,7 +646,7 @@ movement.
 %%%%
 chain mail:quote
 
-<leather armour>
+<leather armour:quote>
 %%%%
 cheese
 
@@ -933,7 +933,7 @@ forces of evil.
 %%%%
 eudemon blade:quote
 
-<demon blade>
+<demon blade:quote>
 %%%%
 eveningstar
 
@@ -995,7 +995,7 @@ susceptible to the effects of cold.
 %%%%
 fire dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 fire dragon hide
 
@@ -1005,7 +1005,7 @@ while rendering its wearer susceptible to cold.
 %%%%
 fire dragon hide:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 flail
 
@@ -1075,7 +1075,7 @@ cold.
 %%%%
 gold dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 gold dragon hide
 
@@ -1085,7 +1085,7 @@ cold, but with magical means it may be used to make excellent armour.
 %%%%
 gold dragon hide:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 gold piece
 
@@ -1133,7 +1133,7 @@ hands.
 %%%%
 great sword:quote
 
-<demon blade>
+<demon blade:quote>
 %%%%
 halberd
 
@@ -1216,7 +1216,7 @@ to the effects of fire and heat.
 %%%%
 ice dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 ice dragon hide
 
@@ -1226,7 +1226,7 @@ of cold while rendering its wearer susceptible to fire.
 %%%%
 ice dragon hide:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 javelin
 
@@ -1311,7 +1311,7 @@ A large piece of wood and metal, to be strapped on one arm for defence. {{
 %%%%
 large shield:quote
 
-<buckler>
+<buckler:quote>
 %%%%
 leather armour
 
@@ -1438,7 +1438,7 @@ It is also remarkably smooth, letting sticky flames flow down like water.
 %%%%
 mottled dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 mottled dragon hide
 
@@ -1448,7 +1448,7 @@ attach.
 %%%%
 mottled dragon hide:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 naga barding
 
@@ -1523,7 +1523,7 @@ resistance to negative energies.
 %%%%
 pearl dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 pearl dragon hide
 
@@ -1533,7 +1533,7 @@ to make excellent armour.
 %%%%
 pearl dragon hide:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 piece of ambrosia
 
@@ -1686,7 +1686,7 @@ A terribly venomous potion.
 %%%%
 potion of strong poison:quote
 
-<potion of poison>
+<potion of poison:quote>
 %%%%
 quad damage
 
@@ -1764,7 +1764,7 @@ combat, but slightly uncomfortable due to the added weight.
 %%%%
 ring mail:quote
 
-<leather armour>
+<leather armour:quote>
 %%%%
 ring of dexterity
 
@@ -1773,7 +1773,7 @@ degree to which it has been enchanted.
 %%%%
 ring of dexterity:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of evasion
 
@@ -1782,7 +1782,7 @@ depending on its degree of enchantment.
 %%%%
 ring of evasion:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of fire
 
@@ -1802,7 +1802,7 @@ This accursed ring causes its wearer to hunger considerably more quickly.
 %%%%
 ring of hunger:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of ice
 
@@ -1830,7 +1830,7 @@ the degree to which it has been enchanted.
 %%%%
 ring of intelligence:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of invisibility
 
@@ -1853,7 +1853,7 @@ airborne, so it's ill-suited for longer trips above deadly liquid.
 %%%%
 ring of flight:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of life protection
 
@@ -1863,7 +1863,7 @@ magic.
 %%%%
 ring of life protection:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of magical power
 
@@ -1871,7 +1871,7 @@ This ring increases its wearer's reserves of magical power.
 %%%%
 ring of magical power:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of poison resistance
 
@@ -1879,7 +1879,7 @@ This ring provides protection from the effects of poisons and venom.
 %%%%
 ring of poison resistance:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of protection
 
@@ -1888,7 +1888,7 @@ injury, to a degree dependent on its power.
 %%%%
 ring of protection:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of protection from cold
 
@@ -1896,7 +1896,7 @@ This ring provides protection from cold.
 %%%%
 ring of protection from cold:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of protection from fire
 
@@ -1904,7 +1904,7 @@ This ring provides protection from heat and fire.
 %%%%
 ring of protection from fire:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of protection from magic
 
@@ -1912,7 +1912,7 @@ This ring increases its wearer's resistance to hostile enchantments.
 %%%%
 ring of protection from magic:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of regeneration
 
@@ -1921,7 +1921,7 @@ but also considerably speeds his or her metabolism while doing so.
 %%%%
 ring of regeneration:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of see invisible
 
@@ -1940,7 +1940,7 @@ wearer.
 %%%%
 ring of slaying:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of strength
 
@@ -1949,7 +1949,7 @@ degree dependent on its power.
 %%%%
 ring of strength:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of sustain abilities
 
@@ -1958,7 +1958,7 @@ intelligence.
 %%%%
 ring of sustain abilities:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of sustenance
 
@@ -1966,7 +1966,7 @@ This ring provides energy to its wearer, so that they need eat less often.
 %%%%
 ring of sustenance:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of teleport control
 
@@ -1978,7 +1978,7 @@ subject with residual magical energy.
 %%%%
 ring of teleport control:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of teleportation
 
@@ -1987,7 +1987,7 @@ another place, and can be deliberately activated for the same effect.
 %%%%
 ring of teleportation:quote
 
-<ring>
+<ring:quote>
 %%%%
 ring of wizardry
 
@@ -1995,7 +1995,7 @@ This ring increases the ability of its wearer to use magical spells.
 %%%%
 ring of wizardry:quote
 
-<ring>
+<ring:quote>
 %%%%
 robe
 
@@ -2018,7 +2018,7 @@ this unsuspecting world.
 %%%%
 rod of demonology:quote
 
-<rod>
+<rod:quote>
 %%%%
 rod of destruction
 
@@ -2026,7 +2026,7 @@ This rod contains spells of mayhem and destruction.
 %%%%
 rod of destruction:quote
 
-<rod>
+<rod:quote>
 %%%%
 rod of inaccuracy
 
@@ -2035,7 +2035,7 @@ power.
 %%%%
 rod of inaccuracy:quote
 
-<rod>
+<rod:quote>
 %%%%
 rod of striking
 
@@ -2043,7 +2043,7 @@ This rod allows its wielder to strike foes from afar with force bolts.
 %%%%
 rod of striking:quote
 
-<rod>
+<rod:quote>
 %%%%
 rod of the swarm
 
@@ -2051,7 +2051,7 @@ This rod allows its wielder to summon a swarm of insects.
 %%%%
 rod of the swarm:quote
 
-<rod>
+<rod:quote>
 %%%%
 rod of venom
 
@@ -2059,7 +2059,7 @@ This rod contains offensive spells of poison.
 %%%%
 rod of venom:quote
 
-<rod>
+<rod:quote>
 %%%%
 rod of warding
 
@@ -2067,7 +2067,7 @@ This rod contains spells designed to repel one's enemies.
 %%%%
 rod of warding:quote
 
-<rod>
+<rod:quote>
 %%%%
 royal jelly
 
@@ -2109,7 +2109,7 @@ movement.
 %%%%
 scale mail:quote
 
-<leather armour>
+<leather armour:quote>
 %%%%
 scimitar
 
@@ -2306,7 +2306,7 @@ attacks.
 %%%%
 shield:quote
 
-<buckler>
+<buckler:quote>
 %%%%
 short sword
 
@@ -2390,7 +2390,7 @@ protection, splint mail is quite difficult to move in without proper training.
 %%%%
 splint mail:quote
 
-<leather armour>
+<leather armour:quote>
 %%%%
 staff of air
 
@@ -2400,7 +2400,7 @@ air magic, they can shock those struck by it.
 %%%%
 staff of air:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of channeling
 
@@ -2409,7 +2409,7 @@ own purposes.
 %%%%
 staff of channeling:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of cold
 
@@ -2420,7 +2420,7 @@ also skilled in ice magic.
 %%%%
 staff of cold:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of conjuration
 
@@ -2428,7 +2428,7 @@ This staff increases the power of conjurations cast by its wielder.
 %%%%
 staff of conjuration:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of death
 
@@ -2466,7 +2466,7 @@ greater damage if they are also skilled in earth magic.
 %%%%
 staff of earth:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of energy
 
@@ -2474,7 +2474,7 @@ This staff greatly reduces the hunger cost of the wielder's magical spells.
 %%%%
 staff of energy:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of fire
 
@@ -2503,7 +2503,7 @@ if the victims were normally resistant.
 %%%%
 staff of poison:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of power
 
@@ -2511,7 +2511,7 @@ This staff provides a reservoir of magical power to its wielder.
 %%%%
 staff of power:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of summoning
 
@@ -2521,7 +2521,7 @@ evocations, they can attempt to dismiss summoned creatures that they strike.
 %%%%
 staff of summoning:quote
 
-<staff>
+<staff:quote>
 %%%%
 staff of wizardry
 
@@ -2530,7 +2530,7 @@ spells.
 %%%%
 staff of wizardry:quote
 
-<staff>
+<staff:quote>
 %%%%
 steam dragon armour
 
@@ -2540,7 +2540,7 @@ wearer with much protection, it is extremely light and as supple as cloth.
 %%%%
 steam dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 steam dragon hide
 
@@ -2589,7 +2589,7 @@ discharges.
 %%%%
 storm dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 storm dragon hide
 
@@ -2600,7 +2600,7 @@ excellent armour.
 %%%%
 storm dragon hide:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 strawberry
 
@@ -2636,7 +2636,7 @@ on its wearer.
 %%%%
 swamp dragon armour:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 # Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
 swamp dragon hide
@@ -2650,7 +2650,7 @@ wearer, and it may be turned into proper armour by magical means.
 %%%%
 swamp dragon hide:quote
 
-<steam dragon hide>
+<steam dragon hide:quote>
 %%%%
 throwing net
 
@@ -2707,7 +2707,7 @@ of a quadruple sword.
 %%%%
 triple sword:quote
 
-<demon blade>
+<demon blade:quote>
 %%%%
 trishula
 
@@ -2753,7 +2753,7 @@ regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
 %%%%
 troll leather armour:quote
 
-<troll hide>
+<troll hide:quote>
 %%%%
 wand of cold
 
@@ -2761,7 +2761,7 @@ A magical device which throws great bolts of cold.
 %%%%
 wand of cold:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of confusion
 
@@ -2769,7 +2769,7 @@ A magical device which induces confusion and bewilderment in a target creature.
 %%%%
 wand of confusion:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of digging
 
@@ -2777,7 +2777,7 @@ A magical device which forms tunnels through unworked rock by liquefying it.
 %%%%
 wand of digging:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of disintegration
 
@@ -2786,7 +2786,7 @@ hardest walls — even rigid statues, to say nothing of flesh.
 %%%%
 wand of disintegration:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of draining
 
@@ -2796,7 +2796,7 @@ artificial creatures and even living plants.
 %%%%
 wand of draining:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of enslavement
 
@@ -2804,7 +2804,7 @@ A magical device which causes slavish obedience in a creature.
 %%%%
 wand of enslavement:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of fire
 
@@ -2812,7 +2812,7 @@ A magical device which throws great bolts of fire.
 %%%%
 wand of fire:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of fireball
 
@@ -2820,7 +2820,7 @@ A magical device which throws exploding blasts of flame.
 %%%%
 wand of fireball:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of flame
 
@@ -2828,7 +2828,7 @@ A magical device which throws little bits of flame.
 %%%%
 wand of flame:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of frost
 
@@ -2836,7 +2836,7 @@ A magical device which throws little bits of frost.
 %%%%
 wand of frost:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of hasting
 
@@ -2845,7 +2845,7 @@ at which it is directed.
 %%%%
 wand of hasting:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of heal wounds
 
@@ -2857,7 +2857,7 @@ A magical device which hides a creature from the view of others.
 %%%%
 wand of invisibility:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of lightning
 
@@ -2865,7 +2865,7 @@ A magical device which throws great bolts of lightning.
 %%%%
 wand of lightning:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of magic darts
 
@@ -2874,7 +2874,7 @@ miss.
 %%%%
 wand of magic darts:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of paralysis
 
@@ -2885,7 +2885,7 @@ dagger.
 %%%%
 wand of paralysis:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of polymorph
 
@@ -2894,7 +2894,7 @@ form. It is especially effective against shape-changing creatures.
 %%%%
 wand of polymorph:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of random effects
 
@@ -2902,7 +2902,7 @@ A magical device which can produce a variety of effects.
 %%%%
 wand of random effects:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of slowing
 
@@ -2911,7 +2911,7 @@ creature at which it is directed.
 %%%%
 wand of slowing:quote
 
-<wand>
+<wand:quote>
 %%%%
 wand of teleportation
 
@@ -2919,7 +2919,7 @@ A magical device which causes a creature to be randomly translocated.
 %%%%
 wand of teleportation:quote
 
-<wand>
+<wand:quote>
 %%%%
 war axe
 

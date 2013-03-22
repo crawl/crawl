@@ -900,7 +900,7 @@ milk-tooth is still very sharp.
 %%%%
 baby alligator:quote
 
-<alligator>
+<alligator:quote>
 %%%%
 ball lightning
 
@@ -1701,7 +1701,7 @@ An ugly, silly bat. It sparkles.
 %%%%
 fruity bat:quote
 
-<bat>
+<bat:quote>
 %%%%
 fulminant prism
 
@@ -1739,7 +1739,7 @@ Does this bat merely possess the visage of a ghost, or is it a ghost itself?
 %%%%
 ghost-faced bat:quote
 
-<bat>
+<bat:quote>
 %%%%
 ghoul
 
@@ -1914,7 +1914,7 @@ A huge, bloated bat.
 %%%%
 giga bat:quote
 
-<bat>
+<bat:quote>
 %%%%
 glowing shapeshifter
 
@@ -2005,7 +2005,7 @@ terrifying feats of magic.
 %%%%
 greater mummy:quote
 
-<mummy>
+<mummy:quote>
 %%%%
 greater naga
 
@@ -2249,7 +2249,7 @@ An undead creature in the shape of a bat, made of ice.
 %%%%
 ice bat:quote
 
-<bat>
+<bat:quote>
 %%%%
 ice beast
 
@@ -2654,7 +2654,7 @@ A powerfully muscled merfolk warrior, bearing a deadly weapon.
 %%%%
 merfolk impaler:quote
 
-<merfolk>
+<merfolk:quote>
 %%%%
 merfolk aquamancer
 
@@ -2663,7 +2663,7 @@ glistens as if seen through ocean spray.
 %%%%
 merfolk aquamancer:quote
 
-<merfolk>
+<merfolk:quote>
 %%%%
 merfolk javelineer
 
@@ -2672,7 +2672,7 @@ javelins.
 %%%%
 merfolk javelineer:quote
 
-<merfolk>
+<merfolk:quote>
 %%%%
 mermaid
 
@@ -2711,7 +2711,7 @@ A bat that, despite its name, is not any smaller than a megabat.
 %%%%
 microbat:quote
 
-<bat>
+<bat:quote>
 %%%%
 minotaur
 
@@ -2725,7 +2725,7 @@ licking out from its toothy maw.
 %%%%
 molten gargoyle:quote
 
-<metal gargoyle>
+<metal gargoyle:quote>
 %%%%
 moth
 
@@ -2811,7 +2811,7 @@ is especially skilled in spells dealing with poison and venom.
 %%%%
 naga mage:quote
 
-<naga>
+<naga:quote>
 %%%%
 naga warrior
 
@@ -2819,7 +2819,7 @@ A fearsome naga warrior clad in sturdy armour and wielding a mighty weapon.
 %%%%
 naga warrior:quote
 
-<naga>
+<naga:quote>
 %%%%
 necromancer
 
@@ -2901,7 +2901,7 @@ A young oklob plant, but already dangerous.
 %%%%
 oklob sapling:quote
 
-<oklob plant>
+<oklob plant:quote>
 %%%%
 ooze
 
@@ -3093,7 +3093,7 @@ average bat.
 %%%%
 phase bat:quote
 
-<bat>
+<bat:quote>
 %%%%
 phoenix
 
@@ -3333,7 +3333,7 @@ I guess this bat is well past its sell-by date.
 %%%%
 rotten bat:quote
 
-<bat>
+<bat:quote>
 %%%%
 rotting devil
 
@@ -3629,7 +3629,7 @@ to.
 %%%%
 skeletal bat:quote
 
-<bat>
+<bat:quote>
 %%%%
 skeletal warrior
 
