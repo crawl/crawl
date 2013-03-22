@@ -4382,6 +4382,45 @@ MAP
       ..........
 ENDMAP
 
+NAME:  grunt_potential
+TAGS:  no_pool_fixup
+DEPTH: D:6-27
+: init_hm_decor_walldepth(_G, 'x')
+SHUFFLE: wlvbn
+: if you.absdepth() > 20 then
+SUBST: 9 = 8
+SUBST: 1 = 8
+SUBST: * = |
+NSUBST: % = 4:* / *:.
+NSUBST: 0 = 2:9 / *:0
+: elseif you.absdepth() >= 12 then
+SUBST: 1 = 9
+: else
+SUBST: 1 = 0
+SUBST: * = %
+: end
+KMONS: 0 = 0 band
+KMONS: 9 = 9 band
+MAP
+       @
+    xxx+xxx
+  xxx.....xxx
+ xx..0.w.0..xx
+ x....%w%....x
+xx...wwwww...xx
+x......w......x
+x.....%w%.....x
+x%0...1*1...0%x
+x.....%9%.....x
+x.............x
+xx...lllll...xx
+ x....%.%....x
+ xx...0.0...xx
+  xxx.....xxx
+    xxx+xxx
+       @
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.

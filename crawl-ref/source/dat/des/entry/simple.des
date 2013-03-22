@@ -1893,3 +1893,41 @@ MAP
  ++++++
    @@
 ENDMAP
+
+##############################################################
+NAME:    grunt_entry_crossed_arrows
+ORIENT:  float
+TAGS:    entry no_monster_gen transparent
+SHUFFLE: {([<
+MAP
+....G....
+.xx...xx.
+..xx.xx..
+ ..x+x..
+ ..x+x..
+..xx{xx..
+.++(T[++.
+..xx<xx..
+ ..x+x..
+ ..x+x..
+..xx.xx..
+.xx...xx.
+....G....
+ENDMAP
+
+# Come back for the item later if you want it.
+NAME:    grunt_entry_lava_bath
+ORIENT:  float
+TAGS:    entry no_monster_gen
+SHUFFLE: {([<
+MAP
+    .@...xxxxx
+   ....G.ccccx
+  .......lllcx
+ ...[...llllcx
+@.G..G{.lll%cx
+ ...(...llllcx
+  .......lllcx
+   ....G.ccccx
+    .@...xxxxx
+ENDMAP
