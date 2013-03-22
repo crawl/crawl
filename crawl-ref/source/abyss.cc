@@ -982,12 +982,13 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static DiamondLayout diamond21(2,1);
     const static ColumnLayout column2(2);
     const static ColumnLayout column26(2,6);
+    const static ForestLayout forest;
     const static ProceduralLayout* regularLayouts[] =
     {
-        &diamond30, &diamond21, &column2, &column26,
+        &diamond30, &diamond21, &column2, &column26, &forest,
     };
     const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
-        regularLayouts + 4);
+        regularLayouts + 5);
     const static WorleyLayout worley(123456, layout_vec);
     const static RoilingChaosLayout chaosA(8675309, 450);
     const static RoilingChaosLayout chaosB(7654321, 400);
@@ -1004,24 +1005,23 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
     const static WorleyLayout baseLayout(314159, base_vec, 5.0);
     const static RiverLayout rivers(1800, baseLayout);
+    const static UnderworldLayout underworld;
+    const static ClampLayout underworld_clamped(underworld, 40, true);
+
     if (abyssLayout == NULL)
     {
         const level_id lid = _get_real_level();
         levelLayout = new LevelLayout(lid, 5, rivers);
-        const ProceduralLayout* complex_layout[] = { levelLayout, &rivers };
-        const static vector<const ProceduralLayout*> complex_vec(complex_layout, complex_layout + 2);
+        const ProceduralLayout* complex_layout[] = { levelLayout, &rivers, &underworld_clamped };
+        const static vector<const ProceduralLayout*> complex_vec(complex_layout, complex_layout + 3);
         abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
     }
 
     const ProceduralSample sample = (*abyssLayout)(pt, abyssal_state.depth);
     ASSERT(sample.feat() > DNGN_UNSEEN);
 
-    // Testing layout
-    const static PlainsLayout test;
-    const static ClampLayout clamp(test, 50, true);
-    const ProceduralSample sample2 = clamp(pt, abyssal_state.depth);
-    abyss_sample_queue.push(sample2);
-    return sample2;
+    abyss_sample_queue.push(sample);
+    return sample;
 }
 
 static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
