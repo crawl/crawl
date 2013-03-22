@@ -402,7 +402,8 @@ autopickup = $?!+"/%
         " or =  Jewellery
         !       Potions
         + or :  Books
-        \ or |  Staves
+        |       Staves
+        \       Rods
         0       Orbs
         }       Misc. items
         X       Corpses
