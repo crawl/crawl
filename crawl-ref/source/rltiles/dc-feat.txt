@@ -470,6 +470,9 @@ starry_portal DNGN_STARRY_PORTAL
 %rim 1
 transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 %rim 0
+exit_pandemonium DNGN_EXIT_PANDEMONIUM
+exit_pandemonium_flickering
+
 
 # portal vault entrances
 volcano_portal DNGN_PORTAL_VOLCANO
