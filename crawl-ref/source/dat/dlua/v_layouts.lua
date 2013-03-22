@@ -118,7 +118,7 @@ end
 -- but alternately should be able to wire room generators to create initial terrain. Since rooms can now be created from paint arrays _anyway_,
 -- it seems that pre-painting the layout is completely unneccesary and room generation can do anything ...
 function hypervaults.build_layout(e, name, paint, options)
-  if not crawl.game_started() then return end
+  if e.is_validating() then return; end
 
   if _VAULTS_DEBUG then print("Hypervaults Layout: " .. name) end
 
@@ -149,8 +149,7 @@ end
 -- Build any vaults layout from a paint array, useful to quickly prototype
 -- layouts in layout_vaults.des
 function build_vaults_layout(e, name, paint, options)
-
-  if not crawl.game_started() then return end
+  if e.is_validating() then return; end
 
   if _VAULTS_DEBUG then print("Vaults Layout: " .. name) end
 
@@ -166,7 +165,6 @@ end
 
 function build_vaults_ring_layout(e, corridorWidth, outerPadding)
 
-  if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
 
   local c1 = { x = outerPadding, y = outerPadding }
@@ -187,7 +185,6 @@ end
 function build_vaults_cross_layout(e, corridorWidth, intersect)
 
   -- Ignoring intersect for now
-  if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
 
   local corridorWidth = 3 + crawl.random2avg(3,2)
@@ -205,8 +202,6 @@ end
 
 function build_vaults_big_room_layout(e, minPadding,maxPadding)
   -- The Big Room
-  -- Sorry, no imps
-  if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
   local padx,pady = crawl.random_range(minPadding,maxPadding),crawl.random_range(minPadding,maxPadding)
 
@@ -219,7 +214,6 @@ function build_vaults_big_room_layout(e, minPadding,maxPadding)
 end
 
 function build_vaults_chaotic_city_layout(e)
-  if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
 
   -- Paint entire level with floor
@@ -232,7 +226,6 @@ function build_vaults_chaotic_city_layout(e)
 end
 
 function build_vaults_maze_layout(e,veto_callback, name)
-  if not crawl.game_started() then return end
   local gxm, gym = dgn.max_bounds()
   if name == nil then name = "Maze" end
 
