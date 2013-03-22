@@ -352,8 +352,6 @@ CityLayout::operator()(const coord_def &p, const uint32_t offset) const
 }
 
 ProceduralSample
-PlainsLayout::operator()(const coord_def &p, const uint32_t offset) const
-OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
     // Define various environmental functions based on noise. These factors
