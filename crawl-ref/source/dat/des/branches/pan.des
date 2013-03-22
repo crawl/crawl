@@ -1078,19 +1078,17 @@ ENDMAP
 NAME:  rand_demon_4
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
-# release only one or a few at once
-SUBST: = = +=
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xxxxxxxxx..
-.x$=*=3=|x..
-.xxxxxxx=x..
-.x2=3=2x|x..
-.x=xxxxx=x..
-.x3=*x1=Px..
-.x=x=xxxxx..
-.x*x2=3=2=..
+.x$+*+3+|x..
+.xxxxxxx+x..
+.x2+3+2x|x..
+.x+xxxxx+x..
+.x3+*x1+Px..
+.x+x+xxxxx..
+.x*x2+3+2=..
 .xxxxxxxxx..
 ............
 ............
@@ -1148,12 +1146,12 @@ MAP
 ............
 .xxx....xxx.
 .x|xx=xxx|x.
-.xx=....=xx.
+.xx+....+xx.
 ..x.x++x.x..
 ..x.+P1+.=..
 ..=.+12+.x..
 ..x.x++x.x..
-.xx=....=xx.
+.xx+....+xx.
 .x|xxx=xx|x.
 .xxx....xxx.
 ............
@@ -1186,19 +1184,18 @@ NAME:  rand_demon_9
 TAGS:  pan allow_dup
 # a crapload of greater demons, you fight them in small sets
 MONS:  pandemonium lord, any demon, greater demon
-SUBST: = = =+
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xxxxxxxxxx.
-.x2=3=3=3xx.
-.x=xxxxxx2x.
-.x3x^^^^x=x.
-.x=x^P^^x2x.
-.x3x^^1^x=x.
-.x=x^^^^x3x.
-.x2xxxx=x=x.
-.xx2=2=3x3x.
+.x2+3+3+3xx.
+.x+xxxxxx2x.
+.x3x^^^^x+x.
+.x+x^P^^x2x.
+.x3x^^1^x+x.
+.x+x^^^^x3x.
+.x2xxxx+x+x.
+.xx2+2+3x3x.
 .xxxxxxxx=x.
 ............
 ENDMAP
@@ -1638,7 +1635,7 @@ MARKER: + = lua:props_marker { connected_exclude="true" }
 MARKER: + = lua:restrict_door()
 MARKER: - = lua:props_marker { connected_exclude="true" }
 MARKER: - = lua:restrict_door()
-NSUBST: + = 1:P / 2:2 / 1:3 / *:+
+NSUBST: + = 1:P / 2:2 / 2:3 / *:+
 SUBST: - = +
 : pan_demonic_rune(_G, 'P', true)
 MAP
