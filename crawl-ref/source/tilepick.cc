@@ -272,7 +272,6 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_HELL:
         return TILE_DNGN_RETURN_HELL;
     case DNGN_EXIT_ABYSS:
-    case DNGN_EXIT_PANDEMONIUM:
         return TILE_DNGN_EXIT_ABYSS;
     case DNGN_STONE_ARCH:
         if (you.where_are_you == BRANCH_VESTIBULE_OF_HELL)
@@ -282,6 +281,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_PANDEMONIUM;
     case DNGN_TRANSIT_PANDEMONIUM:
         return TILE_DNGN_TRANSIT_PANDEMONIUM;
+    case DNGN_EXIT_PANDEMONIUM:
+        return TILE_DNGN_EXIT_PANDEMONIUM;
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_HALL_OF_BLADES:
     case DNGN_ENTER_TEMPLE:
