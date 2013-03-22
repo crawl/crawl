@@ -11,7 +11,7 @@
 #            reside in vaults.des.
 ###############################################################################
 
-# Functionality for some of HangedMan's vaults.
+# Functionality for some of HangedMan's decor vaults.
 {{
 function init_hm_decor_walldepth(e, variables)
 local a = you.absdepth() * 5
