@@ -100,6 +100,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
                                     show_diameter);
             $("#right_column").hide();
             messages.hide();
+            minimap.stop_minimap_farview();
         }
         else
         {
