@@ -606,7 +606,7 @@ double SimplexFunction::operator()(double x, double y, double z) const
 {
     double hx = (x / (double)10 + seed_x) * scale_x;
     double hy = (y / (double)10 + seed_y) * scale_y;
-    double hz = (z / (double)2000 + seed_z) * scale_z;
+    double hz = (z / (double)10000 + seed_z) * scale_z;
     // Use octaval simplex and scale into a 0..1 range
     return perlin::fBM(hx, hy, hz, octaves) / 2.0 + 0.5;
 }
@@ -626,7 +626,7 @@ worley::noise_datum WorleyFunction::datum(double x, double y, double z) const
 {
     double hx = (x * (double)0.8 + seed_x) * scale_x;
     double hy = (y * (double)0.8 + seed_y) * scale_y;
-    double hz = (z * (double)0.004 + seed_z) * scale_z;
+    double hz = (z * (double)0.0008 + seed_z) * scale_z;
     return worley::noise(hx, hy, hz);
 }
 
