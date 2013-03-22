@@ -872,12 +872,14 @@ static const pop_entry pop_forest[] =
 
 static const pop_entry pop_abyss[] =
 { // Abyss
+  {  1,  5,    8, DOWN, MONS_HELLEPHANT }
   {  1,  5,   59, FLAT, MONS_BRAIN_WORM },
   {  1,  5,    8, FLAT, MONS_DEATH_DRAKE },
   {  1,  5,   89, FLAT, MONS_BONE_DRAGON },
-  {  1,  5,   21, FLAT, MONS_JELLY },
+  {  1,  5,   21, UP,   MONS_JELLY },
   {  1,  5,   17, FLAT, MONS_GIANT_EYEBALL },
   {  1,  5,   46, FLAT, MONS_EYE_OF_DRAINING },
+  {  1,  5,   35, FLAT, MONS_GOLDEN_EYE }
   {  1,  5,    8, FLAT, MONS_SHINING_EYE },
   {  1,  5,    4, FLAT, MONS_EYE_OF_DEVASTATION },
   {  1,  5,    8, FLAT, MONS_GREAT_ORB_OF_EYES },
@@ -943,7 +945,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,  334, FLAT, MONS_ANCIENT_ZYME },
   {  1,  5,  334, FLAT, MONS_STARCURSED_MASS },
   {  1,  5,  334, FLAT, MONS_THRASHING_HORROR },
-  {  3,  5,   14, FLAT, MONS_CHAOS_BUTTERFLY },
+  // {  3,  5,   14, FLAT, MONS_CHAOS_BUTTERFLY }, // mariposa nunca mas!
   {  1,  5,   89, FLAT, MONS_LURKING_HORROR },
   {  1,  5,   89, FLAT, MONS_SPATIAL_MAELSTROM },
   {  1,  5,   89, FLAT, MONS_APOCALYPSE_CRAB },
