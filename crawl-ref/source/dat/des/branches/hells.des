@@ -120,7 +120,7 @@ end
 
 # This replaces the hardcoded placement of a hell entrance on D:21-27.
 NAME:   hell_entry
-TAGS:   extra allow_dup luniq can_overwrite replace_portal
+TAGS:   extra allow_dup luniq can_overwrite replace_portal transparent
 DEPTH:  D:21-27
 CHANCE: 100%
 : if you.where() == 'D:21' then
@@ -174,7 +174,7 @@ ENDMAP
 # Hellmouth 2 (Lemuel)
 # note that most threats here can't fly
 NAME:   hellmouth_2
-TAGS:   no_monster_gen no_rotate
+TAGS:   no_monster_gen no_rotate transparent
 ORIENT: float
 MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / red devil / hell hound
@@ -213,6 +213,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
+TAGS:   transparent
 MONS:   weight:50 crimson imp / quasit / shadow imp / iron imp / lemure, hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / nothing
