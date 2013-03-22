@@ -548,6 +548,7 @@ default-depth:
 
 NAME: grunt_profane_halls
 TAGS: no_monster_gen
+PLACE: D:$
 DEPTH: D:19-27
 ORIENT: encompass
 SHUFFLE: {[(<
@@ -1318,6 +1319,7 @@ default-depth:
 
 NAME: grunt_runaround
 TAGS: no_monster_gen
+PLACE: D:$
 DEPTH: D:16-27
 ORIENT: encompass
 SUBVAULT: B : grunt_runaround_doors_1
