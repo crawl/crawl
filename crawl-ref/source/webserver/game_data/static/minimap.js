@@ -96,6 +96,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     {
         if (!enabled) return;
 
+        stop_minimap_farview();
+
         var minimap = $("#minimap")[0];
         var bounds = map_knowledge.bounds();
         var mm_w = bounds.right - bounds.left;
@@ -193,7 +195,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         }
     }
 
-    function stop_minimap_farview(ev)
+    function stop_minimap_farview()
     {
         if (farview_old_vc !== undefined)
         {
@@ -219,5 +221,6 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         center: center,
         update: update,
         do_view_center_update: do_view_center_update,
+        stop_minimap_farview: stop_minimap_farview,
     }
 });
