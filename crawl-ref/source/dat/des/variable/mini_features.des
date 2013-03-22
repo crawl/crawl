@@ -1995,6 +1995,132 @@ xxxxxxxxxxxx...Bx
           .....xx
 ENDMAP
 
+NAME:  grunt_decor_arrowhead
+TAGS:  transparent extra decor
+DEPTH: D
+: init_hm_decor_walldepth(_G, 'x')
+SUBST: G : GGGTTV
+MAP
+.........
+.xxxx+xx..
+..xx.G.xx..
+ ..xx...xx..
+  ..xx...xx..
+   ..xx...xx..
+    @.++.G.++.@
+   ..xx...xx..
+  ..xx...xx..
+ ..xx...xx..
+..xx.G.xx..
+.xxxx+xx..
+........
+ENDMAP
+
+NAME:  grunt_decor_resistance
+TAGS:  transparent extra decor
+DEPTH: D
+: init_hm_decor_walldepth(_G, 'x')
+MAP
+ xxxxxxx xxx xxx
+ x.xxx.xxx.xxx.xxx
+..x.x.x.x.x.x.x.x.@
+@.x.x.x.x.x.x.x.x..
+ xxx.xxx.xxx.xxx.x
+   xxx xxx xxx xxx
+ENDMAP
+
+NAME:  grunt_decor_cap
+TAGS:  transparent extra decor
+DEPTH: D
+{{
+-- Kind of a complicated version of init_hm_decor_walldepth to make sure that
+-- the glass matches the wall feature.
+local a = you.absdepth() * 5
+local weights = {["x"] = 50, ["c"] = a}
+if a - 75 > 0 then
+    weights["b"] = a - 75
+end
+local wall = crawl.random_element(weights)
+local glass = 'm'
+if wall == 'c' then
+  glass = 'n'
+end
+subst("x = " .. wall)
+subst("m = " .. glass)
+}}
+MAP
+  .........
+  .xxxwxxx.
+...x.mwm.x...
+.xxx.mwm.xxx.
+.....mwm.....
+.xxx.mwm.xxx.
+...x.mwm.x...
+  .xxxwxxx.
+  .........
+ENDMAP
+
+NAME:  grunt_decor_fettered
+TAGS:  transparent extra decor
+DEPTH: D
+: init_hm_decor_walldepth(_G, 'x')
+MAP
+    xxxxx
+    x.x.xxx
+    x.....@
+xxxxx.x.xxx
+@.....xxx
+xxxxx.xxxxx
+    x.....@
+    x.xxxxx
+    xxx
+ENDMAP
+
+NAME:  grunt_decor_junction
+TAGS:  transparent extra decor no_pool_fixup
+DEPTH: D
+: init_hm_decor_walldepth(_G, 'x')
+KMASK: w = no_monster_gen
+SUBST: w : wwl
+MAP
+     .......
+   ...wwwww.@.
+  ..www.xxxx...
+ ..wwwxxx.x.xx..
+ .wwwwx.x..xxww.
+..wwwwx.....xww..
+.wwwwwx.xxxxxwww.
+.xxxxxx.xwwwwwww.
+@.......xwwwwwww.
+.xxxxxx.xwwwwwww.
+.wwwwwx.xxxwwwww.
+..wwwwx...xxwww..
+ .wwwwx.xx.xxww.
+ ..wwwxxxxx.xx..
+  ..wwwwwwxx...
+   ...wwwww.@.
+     .......
+ENDMAP
+
+NAME: grunt_decor_clamped
+TAGS: transparent extra decor no_pool_fixup
+DEPTH: D
+: init_hm_decor_walldepth(_G, 'x')
+SHUFFLE: GT / GT / TG / ww / ww / ll
+MAP
+xxx                   xxx
+@.xxx               xxx.@
+xx..xxx           xxx..xx
+ xxx..xxxxxxxxxxxxx..xxx
+   xxx..x.......x..xxx
+     xx.+..GTG..+.xx
+   xxx..x.......x..xxx
+ xxx..xxxxxxxxxxxxx..xxx
+xx..xxx           xxx..xx
+@.xxx               xxx.@
+xxx                   xxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

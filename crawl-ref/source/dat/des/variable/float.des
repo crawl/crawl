@@ -5155,3 +5155,42 @@ xx8ACC888xx8CAA.ACC8888CCA8xx
      xxxxxx  ..CCCC.
               .....@
 ENDMAP
+
+NAME:  grunt_bent_corner
+DEPTH: D:16-
+ORIENT: northwest
+KMONS: 8 = 8 band w:20 / 9 band
+KMONS: 9 = 9 band w:20 / 0 band
+KMONS: 0 = 0 band w:20 / nothing
+MAP
+                  cccccc
+  ccccc      cccccc....ccccc
+ cc|**cc   cccc...+c.90...ccc
+ c||*.8c ccc.......c..*9.9..cc
+ c**.8.ccc....*9.9.c+.......*c
+ c*.8..ccc+.9.9*....cccc+cc+cc
+ cc8..+c9.cc.....cccccc...0.*c
+  ccccc....+c.ccccc..+..9%..cc
+     c9.8.9.ccc...%..cc.09.cc
+   ccc....*cc.+.0.9...c+..cc
+   c.+c.9*cc..cc....0..cccc
+  cc..c+.cc%0..cc.0%.cccc
+  c..9.ccc.0..0.c+.ccc
+ cc.....c....0...ccc
+ cc.*9.cc+c.0..c+ccc
+ c..9*.c..cc..cc...cc
+ c.....c.0.cc.+.....cc
+ c..9.cc....+cc..G...c
+cc+...cc%9.0.cc......
+c.ccc.c....%cccc...@
+c...+cc...0.c  cc..
+c.9..cc+c..cc   cc
+c.0*.cc.cc.c
+cc.9.c...+cc
+ c...+.90.cc
+ c.9.c.%9.c
+ cc..c0..cc
+ cc..+..cc
+  cc*c*cc
+   ccccc
+ENDMAP
