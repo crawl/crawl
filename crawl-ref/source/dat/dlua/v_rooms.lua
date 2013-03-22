@@ -737,7 +737,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   -- Have a chance to add doors / windows to each other side of the room
   for n = 0, 3, 1 do
     if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
-      decorate_callback(room,incidental_connections[n],false,true)
+      decorate_callback(state,incidental_connections[n],false,true)
     end
   end
 
