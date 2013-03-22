@@ -656,7 +656,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
 
         if (you_trigger)
-            you.sentinel_mark();
+            you.sentinel_mark(true);
         break;
 
     case TRAP_BLADE:
@@ -1848,7 +1848,7 @@ static trap_type _random_trap_default(int level_number)
         type = TRAP_SHAFT;
     if (one_chance_in(20) && !crawl_state.game_is_sprint())
         type = TRAP_TELEPORT;
-    if (one_chance_in(40))
+    if (one_chance_in(40)  && level_number > 3)
         type = TRAP_ALARM;
 
     return type;

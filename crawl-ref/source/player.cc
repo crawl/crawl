@@ -7500,7 +7500,7 @@ bool player::attempt_escape(int attempts)
     }
 }
 
-void player::sentinel_mark()
+void player::sentinel_mark(bool trap)
 {
     if (duration[DUR_SENTINEL_MARK])
     {
@@ -7510,7 +7510,9 @@ void player::sentinel_mark()
     else
     {
         mpr("A sentinel's mark forms upon you.", MSGCH_WARN);
-        you.increase_duration(DUR_SENTINEL_MARK, random_range(50, 80), 250);
+        you.increase_duration(DUR_SENTINEL_MARK, (trap ? random_range(35, 55)
+                                                       : random_range(50, 80)),
+                              250);
     }
 }
 
