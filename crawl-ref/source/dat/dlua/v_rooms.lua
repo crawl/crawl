@@ -444,7 +444,13 @@ function hypervaults.rooms.decorate_walls(state, connections, door_required, has
   end
 
   if have_door then
-  local num_doors = math.abs(crawl.random2avg(9,4)-4)+1  -- Should tend towards 1 but rarely can be up to 5
+    -- Usually we place one door on a wall
+    local num_doors = 1
+    -- Sometimes have a chance to place more
+    if crawl.one_chance_in(3) then
+      -- Although this still might pick only 1
+      num_doors = math.abs(crawl.random2avg(9,4)-4)+1  -- Should tend towards 1 but rarely can be up to 5
+    end
     for n=1,num_doors,1 do
       -- This could pick a door we've already picked; doesn't matter, this just makes more doors even slightly
       -- less likely
@@ -457,7 +463,7 @@ function hypervaults.rooms.decorate_walls(state, connections, door_required, has
   end
 
   -- Optionally place windows
-  if not has_windows == false and not state.room.no_windows and crawl.one_chance_in(5) then
+  if has_windows and not state.room.no_windows and crawl.one_chance_in(14) then
     local num_windows = math.abs(crawl.random2avg(5,3)-2)+2  -- Should tend towards 2 but rarely can be up to 4
 
     for n=1,num_windows,1 do
@@ -727,11 +733,11 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local decorate_callback = options.decorate_walls_callback
   if decorate_callback == nil then decorate_callback = hypervaults.rooms.decorate_walls end
 
-  decorate_callback(state,door_connections,true)
+  decorate_callback(state,door_connections,true,true)
   -- Have a chance to add doors / windows to each other side of the room
   for n = 0, 3, 1 do
     if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
-      decorate_callback(room,incidental_connections[n],false,has_windows)
+      decorate_callback(room,incidental_connections[n],false,true)
     end
   end
 
