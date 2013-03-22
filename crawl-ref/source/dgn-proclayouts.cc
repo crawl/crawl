@@ -283,7 +283,7 @@ ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
     dungeon_feature_type feat = DNGN_FLOOR;
 
-    const static WorleyFunction base(0.16,0.16,0.5,0,0,0);
+    const static WorleyFunction base(0.32,0.4,0.5,0,0,0);
     const static WorleyFunction offx(0.6,0.6,0.2,854.3,123.4,0.0);
     const static WorleyFunction offy(0.6,0.6,0.2,123.2,3623.51,0.0);
     const static WorleyDistortFunction tfunc(base,offx,2.0,offy,1.5);
@@ -318,6 +318,7 @@ ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
     return ProceduralSample(p, feat, offset + 1); // Delta is always 1 because the layout will be clamped
 }
 
+// An expansive underworld containing seas, rivers, lakes, forests, cities, mountains, and perhaps more...
 ProceduralSample
 ClampLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
@@ -353,90 +354,43 @@ CityLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 PlainsLayout::operator()(const coord_def &p, const uint32_t offset) const
 OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
+UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
-    // Wetness gives us features like water, and optimal wetness is required for plants.
-    double wet_xoff = 3463.128;
-    double wet_yoff = -3737.987;
-    double wet_xmul = 0.5;
-    double wet_ymul = 0.5;
-    double wet_dmul = 3;
-    double wet_doff = 0;
-    double wet_oct = 2;
+    // Define various environmental functions based on noise. These factors
+    // combine to determine what terrain gets drawn at a given coordinate.
 
-    // Height
-    double height_xoff = 7.543;
-    double height_yoff = 2.123;
-    double height_xmul = 0.3; // 0.2;    // Setting muls to 10 produces very dense terrain variation and looks cool
-    double height_ymul = 0.3;// 0.2;
-    double height_dmul = 1;
-    double height_doff = 0;
-    double height_oct = 4; // 4;
-
+    // Wetness gives us features like water, and optimal wetness will be required for plants
+    const static SimplexFunction func_wet(0.5,0.5,3.0,3463.128,-3737.987,0,2);
+    // Terrain height gives us mountains, rivers, ocean
+    const static SimplexFunction func_height(0.3,0.3,1.0,7.543,2.123,0,4);
     // Temperament. Plants struggle to grow in extreme temperatures, and we only see lava in hot places.
-    double hot_xoff = 111.612;
-    double hot_yoff = 11.243;
-    double hot_xmul = 0.1;
-    double hot_ymul = 0.1;
-    double hot_dmul = 2;
-    double hot_doff = 0;
-    double hot_oct = 1;
+    const static SimplexFunction func_hot(0.1,0.1,2.0,111.612,11.243,0,1);
+    // Citification; areas with a high settle factor will tend  to feature "man"-made architecture
+    // TODO: Citi/gentrification could use a worley layer instead (or a mix) to have better geometry
+    // and stop things like wall types suddenly changing halfway through a city.
+    const static SimplexFunction func_city(0.2,0.2,1.0,2.732,22.43,0,1);
+    // Gentrification; some cities are richer than others, this affects wall types
+    // but we can also choose what features to build inside the cities, influencing
+    // features like statues, fountains, plants, regularness, and even monsters/loot
+    const static SimplexFunction func_rich(0.05,0.05,1,9.543,5.543,0,1);
 
-    // Citification; areas with a high settle factor will tend to feature "man"-made architecture
-    double city_xoff = 2.732;
-    double city_yoff = 22.43;
-    double city_xmul = 0.2;  // 0.4 , 0.4
-    double city_ymul = 0.2;
-    double city_dmul = 1;
-    double city_doff = 0;
-    double city_oct = 1;
+    // To create lots of lines everywhere that can often be perpendicular to other#
+    // features; for creating bridges, dividing walls
+    // const static SimplexFunction func_lateral(4,4,1,2000.543,1414.823,0,2);
+    const static WorleyFunction func_lateral(2,2,1,2000.543,1414.823,0);
 
-    // Gentrification; some cities are richer than others, for now this will just affect wall types
-    // but it could be interesting to make architecture more complex and regular in rich areas too,
-    // as well as influencing features like statues, fountains, plants, even monsters/loot
-    double rich_xoff = 9.543;
-    double rich_yoff = 5.543;
-    double rich_xmul = 0.05;
-    double rich_ymul = 0.05;
-    double rich_dmul = 1;
-    double rich_doff = 0;
-    double rich_oct = 1;
-
-    // to create lots of lines everywhere that can often be perpendicular to other features; for creating bridges, dividing walls
-    double lateral_xoff = 2000.543;
-    double lateral_yoff = 1414.823;
-    double lateral_xmul = 4;
-    double lateral_ymul = 4;
-    double lateral_dmul = 1;
-    double lateral_doff = 0;
-    double lateral_oct = 2;
-
-    // jitter needs to be completely random everywhere, so this can be used instead of normal random methods:
+    // Jitter needs to be completely random everywhere, so this can be used instead of normal random methods:
     // if (jitter < (chance_in_1)) { ... }
-    double jitter_xoff = 1123.543;
-    double jitter_yoff = 2451.143;
-    double jitter_xmul = 10;
-    double jitter_ymul = 10;
-    double jitter_dmul = 0.5;
-    double jitter_doff = 0;
-    double jitter_oct = 5;
+    const static SimplexFunction func_jitter(10,10,0.5,1123.543,2451.143,0,5);
 
-    // Based on the various perlin layers, determine environmental parameters at the current spot
-    // printf ("Abyss: %d %d", p.x, p.y);
-    double wet = _perlin(p, offset, wet_xmul, wet_xoff, wet_ymul, wet_yoff, wet_dmul, wet_doff, wet_oct);
-    double height = _perlin(p, offset, height_xmul, height_xoff, height_ymul, height_yoff, height_dmul, height_doff, height_oct);
-
-    // Note: worley noise with x,y multiplied by something below 10 (maybe about 8) produces similar density to Perlin.
-    /*
-    worley::noise_datum n = worley::noise(hx, hy, hz);
-    double height = n.distance[0] - 1.0;
-    double other = n.distance[1] - 1.0;
-    */
-    //printf ("X: %d, Y: %d, HX: %f, HY: %f, HZ: %f, Height: %f, Other: %f\n", p.x, p.y, hx, hy, hz, height, other);
-    double hot = _perlin(p, offset, hot_xmul, hot_xoff, hot_ymul, hot_yoff, hot_dmul, hot_doff, hot_oct);
-    double city = _perlin(p, offset, city_xmul, city_xoff, city_ymul, city_yoff, city_dmul, city_doff, city_oct);
-    double rich = _perlin(p, offset, rich_xmul, rich_xoff, rich_ymul, rich_yoff, rich_dmul, rich_doff, rich_oct);
-    double lateral = _perlin(p, offset, lateral_xmul, lateral_xoff, lateral_ymul, lateral_yoff, lateral_dmul, lateral_doff, lateral_oct);
-    double jitter = _perlin(p, offset, jitter_xmul, jitter_xoff, jitter_ymul, jitter_yoff, jitter_dmul, jitter_doff, jitter_oct);
+    // Compute all our environment factors at the current spot
+    double wet = func_wet(p, offset);
+    double height = func_height(p, offset);
+    double hot = func_hot(p, offset);
+    double city = func_city(p, offset);
+    double rich = func_rich(p, offset);
+    double lateral = func_lateral(p, offset);
+    double jitter = func_jitter(p, offset);
 
     // TODO: The abyss doesn't support all of these yet but would be nice if:
     //  * Clusters of plants around water edge
@@ -447,9 +401,16 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     //  * Pave areas within city
     //  * Borrow some easing functions from somewhere to better control how features vary across bounaries
     //  * Look at surrounding squares to determine gradients - will help with lateral features and also e.g. growing plants on sunlit mountainsides...
+    //  * Use some lateral wetness to try and join mountain streams up to rivers...
+    //  * Petrified trees and other fun stuff in extreme temperatures
+    //  * Cities - Make the decor more interesting, and choose fountain types based on wetness
+    //  * Cities - Pave floor within wall limit
+    //  * Cities - might sometimes want to modify the terrain based on what was here before the city.
+    //             e.g. if the city was built on water then there should be fountains, with lava we get furnaces, etc.
 
-    // TODO: Rather than basing all the factors purely on the perlin layers, we should combine some factors; e.g. cities thrive best at optimal combinations
-    // of wet, height and hot, so the city factor could be based on how close to optimum those three are...
+    //  * Rather than basing all the factors purely on separate perlin layers,
+    //    could combine some factors; e.g. cities thrive best at optimal combinations
+    //    of wet, height and hot, so the city/rich factor could be based on how close to optimum those three are...
 
     // Factors controlling how the environment is mapped to terrain
     /*
@@ -464,16 +425,16 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     double mountain_top_height = 0.95;
     // Default feature
     dungeon_feature_type feat = DNGN_FLOOR;
-    // printf ("Height: %f, Wet: %f", height,wet);
 
     // Lakes and rivers
-    /* height with a mul of 10  looked really nice with:
+    /* TODO: height with a mul of 10  looked really nice with:
     if (height<0.5)
         feat = DNGN_SHALLOW_WATER;
     if (height<0.3)
         feat = DNGN_DEEP_WATER;
     if (height>0.8)
-        feat = DNGN_ROCK_WALL; */
+        feat = DNGN_ROCK_WALL;
+        (but I should implement that as a separate layout) */
     if (height < water_depth)
         feat = DNGN_SHALLOW_WATER;
     if (height < water_deep_depth)
@@ -509,13 +470,12 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     // Forest
     bool enable_forest = true;
     // Forests fill an important gap in the middling height gap between water and mountainous regions
-    double forest_start_height = 0.4; // 0.3,0.7
-    double forest_end_height = 0.6;
+    double forest_start_height = 0.43; // 0.3,0.7
+    double forest_end_height = 0.57;
 
     if (enable_forest)
     {
         // A narrow river running through the middle of forresty heights at good wetness levels
-        // TODO: Use some lateral wetness to try and join mountain streams up to rivers...
         bool is_river = (abs(height-0.5) < (wet/10.0));
         if (is_river)
             feat = DNGN_SHALLOW_WATER;
@@ -530,8 +490,6 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
             _optimum_range(height, forest_start_height, forest_end_height)
             * _optimum_range(wet, 0.5, 0.8)
             * _optimum_range(hot, 0.4, 0.6);
-
-        // TODO: Petrified trees and other fun stuff in extreme temperatures
 
         // Forest should now be 1.0 in the center of the range, 0.0 at the end
         if (jitter < (forest * 0.7))
@@ -560,7 +518,6 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 
     if (enable_city && city >= city_outer_limit) {
         // feat = DNGN_FLOOR;
-
         dungeon_feature_type city_wall = DNGN_ROCK_WALL;
         if (rich > 0.5) city_wall = DNGN_STONE_WALL;
         else if (rich > 0.75) city_wall = DNGN_METAL_WALL;
@@ -583,8 +540,6 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
         if (city >= city_wall_limit)
         {
             // Within outer wall reset all terrain to floor.
-            // TODO: We might sometimes want to modify the terrain based on what was here before the city.
-            // e.g. if the city was built on water then there should be fountains, with lava we get furnaces, etc.
             feat = DNGN_FLOOR;
 
             if (city < (city_wall_limit + city_wall_width))
@@ -600,7 +555,6 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
                 if (city < (city_inner_wall_limit + city_wall_width))
                     feat = city_wall;
                 // Decide on what decor we want within the inner walls
-                // TODO: Make the decor more interesting, and choose fountain types based on wetness
                 else if (jitter > 0.9)
                 {
                     if (rich>0.8)
@@ -612,8 +566,6 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
                     else
                         feat = DNGN_STONE_ARCH;
                 }
-
-                // TOOD: Pave coords within wall limit
             }
         }
     }
@@ -621,22 +573,6 @@ OverworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     int delta = 1;
 
     return ProceduralSample(p, feat, offset + delta);
-}
-
-worley::noise_datum NoiseLayout::_worley(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const
-{
-    double hx = ((double)p.x * (double)0.8 + xoff) * xmul;
-    double hy = ((double)p.y * (double)0.8 + yoff) * ymul;
-    double hz = ((double)offset * (double)0.008 + zoff) * zmul;  // Was offset/80, maybe should change faster than this
-    return worley::noise(hx, hy, hz);
-}
-
-double NoiseLayout::_perlin(const coord_def &p, const uint32_t offset, const double xmul, const double xoff, const double ymul,const double yoff, const double zmul,const double zoff, const int oct) const
-{
-    double hx = ((double)p.x / (double)10 + xoff) * xmul;
-    double hy = ((double)p.y / (double)10 + yoff) * ymul;
-    double hz = ((double)offset / (double)1000 + zoff) * zmul;
-    return perlin::fBM(hx, hy, hz, oct) / 2.0 + 0.5;
 }
 
 double NoiseLayout::_optimum_range(const double val, const double rstart, const double rend) const
@@ -663,13 +599,23 @@ double ProceduralFunction::operator()(double x, double y, double z) const
     return 0;
 }
 
+double SimplexFunction::operator()(const coord_def &p, const uint32_t offset) const
+{
+    return SimplexFunction::operator()(p.x,p.y,offset);
+}
+
 double SimplexFunction::operator()(double x, double y, double z) const
 {
     double hx = (x / (double)10 + seed_x) * scale_x;
     double hy = (y / (double)10 + seed_y) * scale_y;
-    double hz = (z / (double)1000 + seed_z) * scale_z;
+    double hz = (z / (double)2000 + seed_z) * scale_z;
     // Use octaval simplex and scale into a 0..1 range
     return perlin::fBM(hx, hy, hz, octaves) / 2.0 + 0.5;
+}
+
+double WorleyFunction::operator()(const coord_def &p, const uint32_t offset) const
+{
+    return WorleyFunction::operator()(p.x,p.y,offset);
 }
 
 double WorleyFunction::operator()(double x, double y, double z) const
@@ -682,7 +628,7 @@ worley::noise_datum WorleyFunction::datum(double x, double y, double z) const
 {
     double hx = (x * (double)0.8 + seed_x) * scale_x;
     double hy = (y * (double)0.8 + seed_y) * scale_y;
-    double hz = (z * (double)0.008 + seed_z) * scale_z;  // Was z/80, maybe should change faster than this
+    double hz = (z * (double)0.004 + seed_z) * scale_z;
     return worley::noise(hx, hy, hz);
 }
 
