@@ -1848,7 +1848,7 @@ static trap_type _random_trap_default(int level_number)
         type = TRAP_SHAFT;
     if (one_chance_in(20) && !crawl_state.game_is_sprint())
         type = TRAP_TELEPORT;
-    if (one_chance_in(40)  && level_number > 3)
+    if (one_chance_in(40) && level_number > 3)
         type = TRAP_ALARM;
 
     return type;
