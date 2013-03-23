@@ -19,7 +19,7 @@ namespace Version
 }
 
 #if defined(__GNUC__) && defined(__VERSION__)
- #define COMPILER "GCC %s" __VERSION__
+ #define COMPILER "GCC " __VERSION__
 #elif defined(__GNUC__)
  #define COMPILER "GCC (unknown version)"
 #elif defined(TARGET_COMPILER_MINGW)
