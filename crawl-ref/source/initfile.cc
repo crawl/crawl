@@ -2382,6 +2382,8 @@ void game_options::read_option_line(const string &str, bool runscript)
             lang = LANG_HU, lang_name = "hu";
         else if (field == "it" || field == "italian" || field == "italiano")
             lang = LANG_IT, lang_name = "it";
+        else if (field == "ja" || field == "japanese" || field == "日本人")
+            lang = LANG_JA, lang_name = "ja";
         else if (field == "ko" || field == "korean" || field == "한국의")
             lang = LANG_KO, lang_name = "ko";
         else if (field == "lt" || field == "lithuanian" || field == "lietuvos")
