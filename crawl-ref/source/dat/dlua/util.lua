@@ -217,6 +217,20 @@ function util.exists(list, pred)
   return false
 end
 
+function util.indexof(list, item)
+  for _, value in ipairs(list) do
+    if value == item then return _ end
+  end
+  return -1
+end
+
+function util.remove(list, item)
+  local index = util.indexof(list,item)
+  if index>-1 then
+    table.remove(list,index)
+  end
+end
+
 function util.contains(haystack, needle)
   for _, value in ipairs(haystack) do
     if value == needle then
@@ -248,6 +262,10 @@ function util.random_weighted_from(weightfn, list)
                  end
                end)
   return chosen
+end
+
+function util.random_range_real(lower,upper)
+  return lower + crawl.random_real() * (upper-lower)
 end
 
 function util.expand_entity(entity, msg)

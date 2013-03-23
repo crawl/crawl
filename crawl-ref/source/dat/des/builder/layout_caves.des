@@ -1,0 +1,95 @@
+###############################################################################
+# layout_caves.des: Layouts based on cavelike formations, largely using
+#                   procedural noise functions
+###############################################################################
+
+: require("dlua/util.lua")
+: require("dlua/layout/procedural.lua")
+
+NAME:   layout_gehenna_lava_paths
+DEPTH:  Geh
+WEIGHT: 100
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "paths"
+  if is_validating() then return end
+
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  -- Set a scale to produce some nice-sized chunks
+  local scale = util.random_range_real(.5,1.0)
+  local path_break = crawl.random2(101)/500 + 0.2  -- 0.2 .. 0.4
+  local wall_break = crawl.random2(101)/250 + 0.2 + path_break  -- 0.4 .. 1.0
+  local padding = crawl.random_range(5,12)
+  -- Setup a worley function
+  local worley1 = procedural.worley_diff { scale = scale/8 }
+  if (scale > 1.5 and crawl.coinflip()) then
+    -- Distort
+    worley1 = procedural.distort {
+      source = worley1,
+      offsetx = procedural.simplex3d { scale = scale*(util.random_range_real(0.2,0.8)) }, -- was 1.8
+      offsety = procedural.simplex3d { scale = scale*(util.random_range_real(0.2,0.8)) },
+      scale = (util.random_range_real(1,3))/scale/100
+    }
+  end
+
+  for x = 1,gxm-2,1 do
+    for y = 1,gym-2,1 do
+      local val = worley1(x,y) + 1 - procedural.boundary_map(x,1,padding,gxm-2-padding,gxm-2)/2 - procedural.boundary_map(y,1,padding,gym-2-padding,gym-2)/2
+      if (val) > wall_break then
+        mapgrd[x][y] = "x"
+      elseif (val) > path_break then
+        mapgrd[x][y] = "l"
+      else
+        mapgrd[x][y] = "."
+      end
+    end
+  end
+
+}}
+MAP
+ENDMAP
+
+NAME:   layout_gehenna_lava_caves
+DEPTH:  Geh
+WEIGHT: 100
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "caverns"
+  if is_validating() then return end
+
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+  local scale = util.random_range_real(.3,1.8)
+--  local scale = util.random_range_real(0.2,2)
+  local perlin1 = procedural.simplex3d { scale = scale }
+  if crawl.coinflip() then
+    perlin1 = procedural.distort {
+      source = perlin1,
+      offsetx = procedural.simplex3d { scale = util.random_range_real(1,2) },
+      offsety = procedural.simplex3d { scale = util.random_range_real(1,2) },
+      scale = util.random_range_real(0.5,1)/scale
+    }
+  end
+
+  local padding = crawl.random_range(5,12)
+
+  for x = 1,gxm-2,1 do
+    for y = 1,gym-2,1 do
+      local val = perlin1(x,y) * procedural.boundary_map(x,1,padding,gxm-2-padding,gxm-2) * procedural.boundary_map(y,1,padding,gym-2-padding,gym-2)
+      if val < 0.1 then
+        mapgrd[x][y] = "x"
+      elseif val < 0.25 then
+        mapgrd[x][y] = "l"
+      elseif val < 0.6 then
+        mapgrd[x][y] = "."
+      end
+    end
+  end
+
+}}
+MAP
+ENDMAP
