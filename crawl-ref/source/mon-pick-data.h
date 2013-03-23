@@ -453,7 +453,7 @@ static const pop_entry pop_vaults[] =
   {  1,  1,   38, FLAT, MONS_TRAPDOOR_SPIDER },
   {  1,  1,  999, FLAT, MONS_HILL_GIANT },
   {  1,  1,  257, FLAT, MONS_UNSEEN_HORROR },
-  {  1,  1,  187, SEMI, MONS_WRAITH },
+  {  0,  1,  187, SEMI, MONS_WRAITH },
   {  1,  2,   86, DOWN, MONS_BASILISK },
   {  1,  2,  282, FLAT, MONS_HYDRA },
   {  1,  2,   49, DOWN, MONS_BRAIN_WORM },
