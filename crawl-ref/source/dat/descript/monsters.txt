@@ -1824,6 +1824,13 @@ giant eyeball
 A giant floating eyeball, with a mesmerising gaze. Some say giant eyeballs are
 servitors of Jiyva.
 %%%%
+giant eyeball:quote
+
+“El ojo que ves
+ no es ojo porque tú lo veas,
+ es ojo porque te ve.”
+    -Antonio Machado, Campos de Castilla. 1912-1917.
+%%%%
 giant firefly
 
 Unlike its mundane counterparts that are merely half an inch big, this enormous
@@ -2306,6 +2313,18 @@ insubstantial wisp
 
 A thin wisp of floating gas, flickering, disappearing and reforming in a
 disconcertingly random fashion.
+%%%%
+insubstantial wisp:quote
+
+„Dotknij teraz mych czarów
+ Wichrze czarci tańcu
+ Oto płoną błędne ognie
+ Oto bóstwa lasów i gór
+ Których nie przebłagam
+ Ich sny srebrzą się ponad jeziorami
+ Gdzie słyszałem drzewa krzyczące w nocy
+ Wyją błagając o zemstę po raz, po raz, po raz...”
+    Mastiphal, „Nad jeziorami myśli nieśmiertelnej”
 %%%%
 iron devil
 
