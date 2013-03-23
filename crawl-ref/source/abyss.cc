@@ -62,7 +62,7 @@ static const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 
 abyss_state abyssal_state;
 
-static ProceduralLayout *abyssLayout = NULL;
+static ProceduralLayout *abyssLayout = nullptr, *levelLayout = nullptr;
 
 typedef priority_queue<ProceduralSample, vector<ProceduralSample>, ProceduralSamplePQCompare> sample_queue;
 
@@ -1002,8 +1002,8 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     if (abyssLayout == NULL)
     {
         const level_id lid = _get_real_level();
-        ProceduralLayout* dungeon_level = new LevelLayout(lid, 5, rivers);
-        const ProceduralLayout* complex_layout[] = { dungeon_level, &rivers };
+        levelLayout = new LevelLayout(lid, 5, rivers);
+        const ProceduralLayout* complex_layout[] = { levelLayout, &rivers };
         const static vector<const ProceduralLayout*> complex_vec(complex_layout, complex_layout + 2);
         abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
     }
@@ -1332,6 +1332,8 @@ void destroy_abyss()
     {
         delete abyssLayout;
         abyssLayout = nullptr;
+        delete levelLayout;
+        levelLayout = nullptr;
     }
 }
 
