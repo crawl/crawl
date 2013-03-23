@@ -8,7 +8,7 @@
 
 # This will have a very open area in the middle and rubble around the edges
 NAME:   layout_ant_hill
-DEPTH:  D,Lair
+DEPTH:  D:5-25,Lair
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -29,7 +29,7 @@ TAGS: overwritable layout allow_dup unrand
   local from_mid = function(x,y) return 1-math.sqrt(math.pow(midx-x,2) + math.pow(midy-y,2))/minmid end
   local nearest = function(x,y) return math.min(x,y,gxm-1-x,gym-1-y)/minmid end
   local fnear = crawl.coinflip() and from_mid or nearest
-  local map_near = crawl.x_chance_in_y(3,5) -- Mapping the near value produces more what i was going for originally
+  local map_near = crawl.x_chance_in_y(3,5) -- Mapping the near value produces more what I was going for originally
                                     -- as in wider tunnels in the middle leading to narrow ones at the edge
   local sq_near = (not map_near) and crawl.coinflip() -- Squaring the near function produces smaller more enclosed layouts
   -- We don't both map and square since that makes really small layouts (... maybe that's fine)
