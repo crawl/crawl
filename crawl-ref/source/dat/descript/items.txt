@@ -1197,15 +1197,15 @@ gain entry.
 %%%%
 horn of Geryon:quote
 
-‘So Joshua called together the priests and said, “Take up the Ark of the
-Lord’s Covenant, and assign seven priests to walk in front of it, each
-carrying a ram’s horn.’
+‘So Joshua called together the priests and said, “Take up the Ark of the Lord’s
+Covenant, and assign seven priests to walk in front of it, each carrying a
+ram’s horn.’
 
-‘When the people heard the sound of the rams’ horns, they shouted as loud
-as they could. Suddenly, the walls of Jericho collapsed, and the Israelites
+‘When the people heard the sound of the rams’ horns, they shouted as loud as
+they could. Suddenly, the walls of Jericho collapsed, and the Israelites
 charged straight into the town and captured it. They completely destroyed
-everything in it with their swords—men and women, young and old, cattle,
-sheep, goats, and donkeys.’
+everything in it with their swords—men and women, young and old, cattle, sheep,
+goats, and donkeys.’
     -Joshua 6:6,20-21, New Living Translation
 %%%%
 ice dragon armour
@@ -2238,7 +2238,8 @@ Reading this scroll removes curses from the items you are using.
 %%%%
 scroll of summoning
 
-This scroll calls forth several creatures woven from shadow into the shapes of those beings found within the reader's immediate vacinity.
+This scroll calls forth several creatures woven from shadow into the shapes of
+those beings found within the reader's immediate vacinity.
 %%%%
 scroll of teleportation
 

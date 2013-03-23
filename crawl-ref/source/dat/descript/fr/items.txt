@@ -1359,11 +1359,6 @@ scroll of remove curse
 Lire ce parchemin permet de libérer les objets que vous utilisez de leur
 malédictions.
 %%%%
-scroll of unholy creation
-
-Ce parchemin attire morceaux de chair informes des Abysses pour créer une
-terrible créature.
-%%%%
 scroll of teleportation
 
 Lire les mots inscrits sur ce parchemin vous translocalise dans un lieu
@@ -1424,7 +1419,7 @@ Un petit épée, à double tranchant avec une poignée courte. Robuste et facile
 manipuler, cette arme se trouve souvent entre les mains de ceux qui souhaitent
 poignarder leurs ennemis inattentifs.
 %%%%
-skeleton
+decaying skeleton
 
 Un squelette en décomposition.
 %%%%

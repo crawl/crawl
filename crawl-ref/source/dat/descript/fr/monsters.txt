@@ -1561,18 +1561,6 @@ large abomination
 Un conglomérat hideux de membres mutilés, démoniaquement possédé et modifié de
 sorte à défier votre santé mentale.
 %%%%
-large simulacrum
-
-Une réplique de glace d'un monstre créée par les pouvoirs de la nécromancie.
-%%%%
-large skeleton
-
-Un grand squelette animé de la non-vie par la nécromancie.
-%%%%
-large zombie
-
-Un grand cadavre animé de la non-vie par la nécromancie.
-%%%%
 lava fish
 
 Un poisson rouge brillant qui nage dans la lave avec la même aise que les
@@ -2100,6 +2088,10 @@ teinte argentée. Ses yeux brillent d'une lueur d'un autre monde..
 
 Cette statue est très fragile; elle se désintégrera d'un coup.
 %%%%
+simulacrum
+
+Une réplique de glace d'une monstre, animée par les pouvoirs de la nécromancie.
+%%%%
 siren
 
 Une jeune femme avec une queue de poisson à la place des jambes. Les sirènes
@@ -2110,22 +2102,14 @@ skeletal bat
 Une chauve-souris squelette sans la décence de rester immobile comme les
 chauve-souris mortes sont supposées l'être.
 %%%%
+skeleton
+
+Un squelette animé de non-vie par la nécromancie.
+%%%%
 small abomination
 
 Un amas hideux de parties de corps humains, en partie chair morte animée, en
 partie démon.
-%%%%
-small simulacrum
-
-Une réplique de glace d'une monstre, animée par les pouvoirs de la nécromancie.
-%%%%
-small skeleton
-
-Un squelette animé de non-vie par la nécromancie.
-%%%%
-small zombie
-
-Un cadavre animé de non-vie par la nécromancie.
 %%%%
 spatial vortex
 
@@ -2214,6 +2198,10 @@ Un canidé fort et sauvage, avec des dents tranchantes et un gros appétit.
 yellow draconian
 
 Un humanoïde couvert d'écailles avec une queue reptilienne et de petites ailes.
+%%%%
+zombie
+
+Un grand cadavre animé de la non-vie par la nécromancie.
 %%%%
 ancient champion
 
