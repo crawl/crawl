@@ -1,6 +1,12 @@
 /**
  * @file
  * @brief Simple reading of an init file and system variables
+ * @detailed read_init_file is the main function, but read_option_line does
+ * most of the work though. Read through read_init_file to get an overview of
+ * how Crawl loads options. This file also contains a large number of utility
+ * functions for setting particular options and converting between human
+ * readable strings and internal values. (E.g. str_to_enemy_hp_colour,
+ * _weapon_to_str). There is also some code dealing with sorting menus.
 **/
 
 #include "AppHdr.h"
@@ -1438,6 +1444,7 @@ string read_init_file(bool runscript)
 {
     Options.reset_options();
 
+    // Load Lua builtins.
 #ifdef CLUA_BINDINGS
     if (runscript)
     {
@@ -1449,6 +1456,7 @@ string read_init_file(bool runscript)
         }
     }
 
+    // Load default options.
     for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
         Options.include(datafile_path(config_defaults[i]), false, runscript);
 #else
@@ -1456,6 +1464,7 @@ string read_init_file(bool runscript)
     UNUSED(config_defaults);
 #endif
 
+    // Load early binding extra options from the command line BEFORE init.txt.
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
     Options.line_num     = 0;
@@ -1465,6 +1474,7 @@ string read_init_file(bool runscript)
         Options.read_option_line(SysEnv.extra_opts_first[i], true);
     }
 
+    // Load init.txt.
     const string init_file_name(_find_crawlrc());
 
     FileLineInput f(init_file_name.c_str());
@@ -1492,6 +1502,7 @@ string read_init_file(bool runscript)
 #endif
     Options.read_options(f, runscript);
 
+    // Load late binding extra options from the command line AFTER init.txt.
     Options.filename     = "extra opts last";
     Options.basefilename = "extra opts last";
     Options.line_num     = 0;
@@ -1876,6 +1887,14 @@ int game_options::read_explore_stop_conditions(const string &field) const
     return conditions;
 }
 
+// Note the distinction between:
+// 1. aliases "ae := autopickup_exception" "ae += useless_item"
+//    stored in game_options.aliases.
+// 2. variables "$slots := abc" "spell_slots += Dispel undead:$slots"
+//    stored in game_options.variables.
+// 3. constant variables "$slots = abc", "constant = slots".
+//    stored in game_options.variables, but with an extra entry in
+//    game_options.constants.
 void game_options::add_alias(const string &key, const string &val)
 {
     if (key[0] == '$')
