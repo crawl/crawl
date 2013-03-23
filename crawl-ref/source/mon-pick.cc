@@ -44,7 +44,7 @@ int branch_ood_cap(branch_type branch)
     case BRANCH_MAIN_DUNGEON:
         return 31;
     case BRANCH_VAULTS:
-        return 15;
+        return 12;
     case BRANCH_ELVEN_HALLS:
         return 7;
     case BRANCH_TOMB:

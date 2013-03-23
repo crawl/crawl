@@ -447,7 +447,7 @@ static const pop_entry pop_slime[] =
 };
 
 static const pop_entry pop_vaults[] =
-{ // Vaults (OOD cap: 15)
+{ // Vaults (OOD cap: 12)
   { -9,  1,  192, PEAK, MONS_KOMODO_DRAGON },
   { -9,  1,  258, PEAK, MONS_SOLDIER_ANT },
   { -9,  1,  230, PEAK, MONS_TRAPDOOR_SPIDER },
