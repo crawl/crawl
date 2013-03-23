@@ -21,6 +21,7 @@ enum lang_t
     LANG_FR,
     LANG_HU,
     LANG_IT,
+    LANG_JA,
     LANG_KO,
     LANG_LT,
     LANG_LV,
