@@ -20,7 +20,7 @@ enum distrib_type
     SEMI, // 50% chance at range ends, 100% in the middle
     PEAK, // 0% chance just outside range ends, 100% in the middle, range
           // ends typically get ~20% or more
-    UP,   // linearly from near-zero to 100% at the end
+    UP,   // linearly from near-zero to 100%, increasing with depth
     DOWN, // linearly from 100% at the start to near-zero
 };
 
