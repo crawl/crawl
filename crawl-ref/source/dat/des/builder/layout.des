@@ -70,7 +70,7 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  4-22, Pan, !Dis
+DEPTH:  4-22, Pan, !Dis, !Geh
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand
@@ -142,7 +142,7 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   Pan, 4-22, !Dis
+DEPTH:   Pan, 4-22, !Dis, !Geh
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
@@ -211,7 +211,7 @@ ENDMAP
 #
 
 NAME: layout_big_octagon
-DEPTH:   Pan, 4-22, !Dis
+DEPTH:   Pan, 4-22, !Dis, !Geh
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand
@@ -471,7 +471,7 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 #
 NAME: layout_city
-DEPTH: Dis, 15-, !Pan, !Zot
+DEPTH: Dis, 15-, !Pan, !Zot, !Geh
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -652,7 +652,7 @@ MAP
 ENDMAP
 
 NAME: layout_spotty
-DEPTH: 9-22, !Dis
+DEPTH: 9-22, !Dis, !Geh
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -676,7 +676,7 @@ ENDMAP
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
-DEPTH: D:5-27, !Pan, !Dis
+DEPTH: D:5-27
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -703,7 +703,7 @@ TAGS: overwritable layout allow_dup unrand
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 2-, !Pan, !Zot, !Dis
+DEPTH: 2-, !Pan, !Zot, !Dis, !Geh
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
@@ -1258,7 +1258,7 @@ TILE:    G = dngn_statue_iron_golem
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Pan, !Dis
-WEIGHT: 90, 10 (D:1), 200 (Geh), 10 (Zot)
+WEIGHT: 90, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -1269,7 +1269,7 @@ ENDMAP
 
 NAME: layout_bigger_room
 DEPTH: 9-22, !Crypt, !Pan, !Dis
-WEIGHT: 10
+WEIGHT: 10, 10 (Geh)
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
@@ -1279,7 +1279,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Pan, 4-, !Zot
+DEPTH: Pan, 4-, !Zot, !Geh
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
