@@ -531,7 +531,7 @@ short sword
 
 Uma espada com uma lâmina curta e lacerante.
 %%%%
-skeleton
+decaying skeleton
 
 Um esqueleto em decomposição.
 %%%%

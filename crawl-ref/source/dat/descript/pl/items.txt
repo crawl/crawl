@@ -1274,12 +1274,6 @@ scroll of remove curse
 Odczytanie tego zwoju usuwa wszystkie przekleństwa rzucone na przedmioty
 przylegające do twego ciała.
 %%%%
-scroll of unholy creation
-
-Ten zwój czerpie z mocy Otchłani i tworzy paskudną bestię. Bestia ta jest
-przyjaźnie nastawiona do czytającego, chyba że Fedhas lub jeden z dobrych bogów
-ma coś do powiedzenia.
-%%%%
 scroll of teleportation
 
 Odczytanie tego zwoju przeniesie cię w przypadkowe miejsce.
@@ -1331,7 +1325,7 @@ short sword
 
 Miecz z krótkim ostrzem, przydatny do kłucia i cięcia, zwłaszcza w zwarciu.
 %%%%
-skeleton
+decaying skeleton
 
 Kupa kości w trakcie rozkładu.
 %%%%

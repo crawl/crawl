@@ -1,4 +1,3 @@
-
 %%%%
 air elemental fan
 
@@ -1185,11 +1184,6 @@ scroll of remove curse
 
 阅读这个卷轴会移除你装备的物品上的诅咒。
 %%%%
-scroll of unholy creation
-
-这个卷轴将深渊中的肉块召唤到这个世界上，然后将它们组合起来，形成一个可怕的怪兽
-。
-%%%%
 scroll of teleportation
 
 阅读这个卷轴上的文字后过一段时间，你会被传送到一个随机地点。
@@ -1238,7 +1232,7 @@ short sword
 一把小型双刃剑。剑身很结实；剑柄比较短，因此很容易使用。暗杀者们喜欢使用这种武
 器。
 %%%%
-skeleton
+decaying skeleton
 
 一具正在腐朽的骷髅。
 %%%%
