@@ -685,7 +685,7 @@ void wizard_set_abyss()
     if (!cancelable_get_line_autohist(buf, sizeof buf))
         abyss_teleport(true);
 
-    uint32_t x, y, z;
+    uint32_t x = 0, y = 0, z = 0;
     sscanf(buf, "%d %d %d", &x, &y, &z);
     set_abyss_state(coord_def(x,y), z);
 }
