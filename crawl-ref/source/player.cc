@@ -6605,8 +6605,8 @@ bool player::tengu_flight() const
 
 bool player::nightvision() const
 {
-    return (is_undead ||
-           (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2)));
+    return (is_undead
+            || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2)));
 }
 
 monster_type player::mons_species(bool zombie_base) const
