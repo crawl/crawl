@@ -1182,7 +1182,7 @@ endif
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
-compflag.h: $(OBJECTS:.o=.cc) util/gen-cflg.pl
+compflag.h: $(OBJECTS:.o=.cc) util/gen-cflg.pl .cflags
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
 
 build.h: $(OBJECTS:.o=.cc) util/gen_ver.pl
