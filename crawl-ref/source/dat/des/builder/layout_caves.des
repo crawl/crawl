@@ -9,7 +9,7 @@
 # This will have a very open area in the middle and rubble around the edges
 NAME:   layout_ant_hill
 DEPTH:  D:5-25,Lair
-WEIGHT: 10
+WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
