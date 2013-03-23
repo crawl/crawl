@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <signal.h>
 
+#include "abyss.h"
 #include "clua.h"
 #include "coord.h"
 #include "coordit.h"
@@ -89,6 +90,8 @@ static void _dump_compilation_info(FILE* file)
     fprintf(file, ">>>>>>>>>>>\n\n");
 }
 
+extern abyss_state abyssal_state;
+
 static void _dump_level_info(FILE* file)
 {
     fprintf(file, "Place info:\n");
@@ -99,6 +102,18 @@ static void _dump_level_info(FILE* file)
     string place = level_id::current().describe();
 
     fprintf(file, "Level id: %s\n", place.c_str());
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        fprintf(file, "Abyssal state:\n"
+                      "    major_coord = (%d,%d)\n"
+                      "    seed = 0x%" PRIx32 "\n"
+                      "    depth = %" PRId64 "\n"
+                      "    phase = %g\n"
+                      "    nuke_all = %d\n",
+                abyssal_state.major_coord.x, abyssal_state.major_coord.y,
+                abyssal_state.seed, abyssal_state.depth, abyssal_state.phase,
+                abyssal_state.nuke_all);
+    }
 
     debug_dump_levgen();
 }
