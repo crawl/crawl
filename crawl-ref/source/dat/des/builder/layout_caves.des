@@ -6,6 +6,51 @@
 : require("dlua/util.lua")
 : require("dlua/layout/procedural.lua")
 
+# This will have a very open area in the middle and rubble around the edges
+NAME:   layout_ant_hill
+DEPTH:  D,Lair
+WEIGHT: 10
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "caverns"
+  if is_validating() then return end
+
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  local midx,midy = math.floor(gxm/2),math.floor(gym/2)
+  local minmid = math.min(midx,midy)
+
+  local scale = util.random_range_real(2,3.2)/8
+
+  -- Setup a worley function
+  local worleywall = procedural.worley_diff { scale = scale }
+  local from_mid = function(x,y) return 1-math.sqrt(math.pow(midx-x,2) + math.pow(midy-y,2))/minmid end
+  local nearest = function(x,y) return math.min(x,y,gxm-1-x,gym-1-y)/minmid end
+  local fnear = crawl.coinflip() and from_mid or nearest
+  local map_near = crawl.x_chance_in_y(3,5) -- Mapping the near value produces more what i was going for originally
+                                    -- as in wider tunnels in the middle leading to narrow ones at the edge
+  local sq_near = (not map_near) and crawl.coinflip() -- Squaring the near function produces smaller more enclosed layouts
+  -- We don't both map and square since that makes really small layouts (... maybe that's fine)
+
+  for x = 1,gxm-2,1 do
+    for y = 1,gym-2,1 do
+      local val, id = worleywall(x,y)
+      local near = nearest(x,y)
+      if sq_near then near = math.pow(near,2) end
+      if map_near then near = procedural.minmax_map(near,0.1,1.5) end
+      if val < near then
+        mapgrd[x][y] = '.'
+      end
+    end
+  end
+  -- Fill disconnected zones. We know the map center must be floor so this is safe.
+  mapgrd[midx][midy] = '@'
+  fill_disconnected{wanted = '@'}
+  mapgrd[midx][midy] = '.'
+}}
+
 NAME:   layout_gehenna_lava_paths
 DEPTH:  Geh
 WEIGHT: 100
