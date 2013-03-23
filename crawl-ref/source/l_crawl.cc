@@ -33,6 +33,7 @@ module "crawl"
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
+#include "perlin.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -40,6 +41,7 @@ module "crawl"
 #include "stuff.h"
 #include "tutorial.h"
 #include "view.h"
+#include "worley.h"
 
 #ifdef UNIX
 #include <sys/time.h>
@@ -670,6 +672,74 @@ LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
                                                     luaL_checkint(ls, 2)))
 LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
                                                      luaL_checkint(ls, 2)))
+LUARET1(crawl_random_real, number, random_real())
+
+static int crawl_worley(lua_State *ls)
+{
+    double px = lua_tonumber(ls,1);
+    double py = lua_tonumber(ls,2);
+    double pz = lua_tonumber(ls,3);
+
+    worley::noise_datum n = worley::noise(px,py,pz);
+    lua_pushnumber(ls, n.distance[0]);
+    lua_pushnumber(ls, n.distance[1]);
+    lua_pushnumber(ls, n.id[0]);
+    lua_pushnumber(ls, n.id[1]);
+    lua_pushnumber(ls, n.pos[0][0]);
+    lua_pushnumber(ls, n.pos[0][1]);
+    lua_pushnumber(ls, n.pos[0][2]);
+    lua_pushnumber(ls, n.pos[1][0]);
+    lua_pushnumber(ls, n.pos[1][1]);
+    lua_pushnumber(ls, n.pos[1][2]);
+    return 10;
+}
+
+// Supports 2D-4D Simplex noise. The first two parameters are required
+// for 2D noise, the next two are optional for 3D or 4D.
+// TODO: Could support octaves here but maybe it can be handled more
+// flexibly in lua
+static int crawl_simplex(lua_State *ls)
+{
+    int dims = 0;
+    double vals[4];
+    if (lua_isnumber(ls,1))
+    {
+        vals[dims] = lua_tonumber(ls,1);
+        dims++;
+    }
+    if (lua_isnumber(ls,2))
+    {
+        vals[dims] = lua_tonumber(ls,2);
+        dims++;
+    }
+    if (lua_isnumber(ls,3))
+    {
+        vals[dims] = lua_tonumber(ls,3);
+        dims++;
+    }
+    if (lua_isnumber(ls,4))
+    {
+        vals[dims] = lua_tonumber(ls,4);
+        dims++;
+    }
+
+    double result;
+    if (dims < 2) return 0; // TODO: Throw error?
+    switch (dims) {
+    case 2:
+        result = perlin::noise(vals[0],vals[1]);
+        break;
+    case 3:
+        result = perlin::noise(vals[0],vals[1],vals[2]);
+        break;
+    case 4:
+        result = perlin::noise(vals[0],vals[1],vals[2],vals[3]);
+        break;
+    }
+    lua_pushnumber(ls, result);
+
+    return 1;
+}
 
 static int crawl_is_tiles(lua_State *ls)
 {
@@ -904,6 +974,9 @@ static const struct luaL_reg crawl_clib[] =
     { "random_range",   crawl_random_range },
     { "random_element", crawl_random_element },
     { "div_rand_round", crawl_div_rand_round },
+    { "random_real",    crawl_random_real },
+    { "worley",         crawl_worley },
+    { "simplex",        crawl_simplex },
     { "redraw_screen",  crawl_redraw_screen },
     { "c_input_line",   crawl_c_input_line},
     { "getch",          crawl_getch },
