@@ -1335,8 +1335,13 @@ void destroy_abyss()
     {
         delete abyssLayout;
         abyssLayout = nullptr;
+        /* memory leak!
+           Due to static contructors being called only once, only the first
+           real level referenced will be used, even after a restart_after_game.
+           Restoring the leak so people can play trunk while we talk.
         delete levelLayout;
         levelLayout = nullptr;
+        */
     }
 }
 
