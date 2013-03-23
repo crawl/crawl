@@ -91,39 +91,31 @@ static void _create_monster_hide(const item_def corpse)
         return;
 
     monster_type mons_class = corpse.mon_type;
-
-    int o = get_mitm_slot();
-    if (o == NON_ITEM)
-        return;
-
-    item_def& item = mitm[o];
-
-    // These values are common to all: {dlb}
-    item.base_type = OBJ_ARMOUR;
-    item.quantity  = 1;
-    item.plus      = 0;
-    item.plus2     = 0;
-    item.special   = 0;
-    item.flags     = 0;
-    item.colour    = mons_class_colour(mons_class);
+    armour_type type;
 
     // These values cannot be set by a reasonable formula: {dlb}
     if (mons_genus(mons_class) == MONS_TROLL)
         mons_class = MONS_TROLL;
     switch (mons_class)
     {
-    case MONS_DRAGON:         item.sub_type = ARM_FIRE_DRAGON_HIDE;    break;
-    case MONS_TROLL:          item.sub_type = ARM_TROLL_HIDE;          break;
-    case MONS_ICE_DRAGON:     item.sub_type = ARM_ICE_DRAGON_HIDE;     break;
-    case MONS_STEAM_DRAGON:   item.sub_type = ARM_STEAM_DRAGON_HIDE;   break;
-    case MONS_MOTTLED_DRAGON: item.sub_type = ARM_MOTTLED_DRAGON_HIDE; break;
-    case MONS_STORM_DRAGON:   item.sub_type = ARM_STORM_DRAGON_HIDE;   break;
-    case MONS_GOLDEN_DRAGON:  item.sub_type = ARM_GOLD_DRAGON_HIDE;    break;
-    case MONS_SWAMP_DRAGON:   item.sub_type = ARM_SWAMP_DRAGON_HIDE;   break;
-    case MONS_PEARL_DRAGON:   item.sub_type = ARM_PEARL_DRAGON_HIDE;   break;
+    case MONS_DRAGON:         type = ARM_FIRE_DRAGON_HIDE;    break;
+    case MONS_TROLL:          type = ARM_TROLL_HIDE;          break;
+    case MONS_ICE_DRAGON:     type = ARM_ICE_DRAGON_HIDE;     break;
+    case MONS_STEAM_DRAGON:   type = ARM_STEAM_DRAGON_HIDE;   break;
+    case MONS_MOTTLED_DRAGON: type = ARM_MOTTLED_DRAGON_HIDE; break;
+    case MONS_STORM_DRAGON:   type = ARM_STORM_DRAGON_HIDE;   break;
+    case MONS_GOLDEN_DRAGON:  type = ARM_GOLD_DRAGON_HIDE;    break;
+    case MONS_SWAMP_DRAGON:   type = ARM_SWAMP_DRAGON_HIDE;   break;
+    case MONS_PEARL_DRAGON:   type = ARM_PEARL_DRAGON_HIDE;   break;
     default:
         die("an unknown hide drop");
     }
+
+    int o = items(0, OBJ_ARMOUR, type, false, 0, MAKE_ITEM_NO_RACE, 0, 0, -1,
+                  true);
+    if (o == NON_ITEM)
+        return;
+    item_def& item = mitm[o];
 
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum - 1);
