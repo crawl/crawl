@@ -124,8 +124,10 @@ static int _rarity_at(const pop_entry *pop, int depth)
         return rar;
 
     case SEMI: // 100% in the middle, 50% at the edges
-        ASSERT(len > 0);
-        len *= 2;
+        if (len)
+            len *= 2;
+        else
+            len += 2; // a single-level range
         return rar * (len - abs(pop->minr + pop->maxr - 2 * depth))
                    / len;
 
