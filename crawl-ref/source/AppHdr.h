@@ -359,7 +359,7 @@ static inline T move(T x) { return x; } // good enough for our purposes
 // If you are installing Crawl for multiple users, define SAVE_DIR
 // to the directory where saves, bones, and score file will go...
 // end it with a '/'. Only one system user should be able to access
-// these -- usually this means you should place them in ~/crawl/
+// these -- usually this means you should place them in ~/.crawl/
 // unless it's a DGL build.
 
 #if !defined(DB_NDBM) && !defined(DB_DBH) && !defined(USE_SQLITE_DBM)
