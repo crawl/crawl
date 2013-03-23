@@ -1277,7 +1277,7 @@ short sword
 
 Una espada de hoja corta y cortante.
 %%%%
-skeleton
+decaying skeleton
 
 Un esqueleto en descomposición.
 %%%%

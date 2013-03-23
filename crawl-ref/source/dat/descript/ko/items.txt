@@ -1,4 +1,3 @@
-
 %%%%
 air elemental fan
 
@@ -1412,10 +1411,6 @@ scroll of remove curse
 
 착용하고 있는 모든 장비의 저주를 풀어주는 두루마리다.
 %%%%
-scroll of unholy creation
-
-이 두루마리는 어비스에 굴러다니는 살덩어리들을 조합해 끔찍한 괴물을 만들어낸다.
-%%%%
 scroll of teleportation
 
 이 두루마리는 읽는 사람을 무작위한 곳으로 이동시킨다. 이동하기까지 약간의
@@ -1473,7 +1468,7 @@ short sword
 손잡이 부분이 짧은, 작은 양날검이다. 튼튼하고 다루기 쉬워, 적을 암살하고자 하는
 자들의 손에서 꽤 자주 발견된다.
 %%%%
-skeleton
+decaying skeleton
 
 썩어가는 해골이다.
 %%%%

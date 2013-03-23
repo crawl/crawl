@@ -530,17 +530,12 @@ scroll of remove curse
 
 Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.
 %%%%
-scroll of unholy creation
-
-Diese Schriftrolle zieht ungeformte Lumpen aus Fleisch aus dem Abgrund und
-erschafft daraus schreckliche Bestien.
-%%%%
 scroll of teleportation
 
 Liest man die Worte auf dieser Schriftrolle wird sie dich nach kurzer Zeit an
 eine zufällige Position teleportieren.
 %%%%
-skeleton
+decaying skeleton
 
 Ein zerfallendes Skelett.
 %%%%
