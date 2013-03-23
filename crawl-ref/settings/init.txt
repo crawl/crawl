@@ -231,16 +231,16 @@
 #
 # Food is colour coded by default as follows:
 #
-#   yellow     = preferred food                    ($preferred)
-#   darkgrey   = cannot be eaten at all            ($inedible)
-#   lightred   = causes rot                        ($rot-inducing)
-#   magenta    = dangerous to use, mutagenic       ($dangerous, $mutagenic)
-#   red        = considered "evil" by your deity   ($evil)
-#   lightgreen = poisonous                         ($poisonous)
-#   brown      = contaminated, may cause nausea    ($contaminated)
+#   yellow     = preferred food
+#   darkgrey   = cannot be eaten at all
+#   lightred   = causes rot
+#   magenta    = dangerous to use, mutagenic
+#   red        = considered "evil" by your deity
+#   lightgreen = poisonous
+#   brown      = contaminated, may cause nausea
 #
 # You can change colours by using something like
-# $contaminated := magenta
+# menu_colour ^= magenta:contaminated
 
 # You can redefine inventory items like this:
 # menu_colour ^= inventory:magenta:shillelagh
@@ -250,10 +250,10 @@
 # Colouring of messages
 # Messages are colour coded as follows:
 #
-#   lightred   = really important messages  ($danger)
-#   yellow     = significant messages       ($warning)
-#   lightred   = item damaged/destroyed     ($item_dmg [same as $danger])
-#   darkgrey   = boring, message clutter    ($boring)
+#   lightred   = really important messages
+#   yellow     = significant messages
+#   lightred   = item damaged/destroyed
+#   darkgrey   = boring, message clutter
 #
 
 # Notes also use, quite misnamed, menu_colour:

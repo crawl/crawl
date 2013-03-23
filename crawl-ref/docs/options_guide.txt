@@ -287,7 +287,10 @@ This is useful if you wish to prevent an included file from altering
 a variable.
 
 See settings/standard_colours.txt and settings/food_colouring.txt
-for usage of aliases and variables.
+for usage of aliases and variables. Note that changing the variables defined
+in these files will only affect your own configuration file, as the default
+options will have already been loaded. If you want to change them, you will
+have to override the options themselves.
 
 
 1-  Starting Screen.
