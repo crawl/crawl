@@ -506,11 +506,6 @@ leurs tâches, les monstres erreront, les objets périssables se décomposeront,
 les plantes pousseront. Après un moment, vous reviendrez dans le flux temporel,
 tel que vous l'aviez quitté.
 %%%%
-Renounce Religion
-
-Renoncer à votre religion. Votre personnage quittera le service de son dieu (et
-généralement le met en colère).
-%%%%
 Request Jelly
 
 Crée une gelée neutre qui nettoiera le sol et digèrera les objets
@@ -541,6 +536,11 @@ Sacrifie une partie d'une de vos compétences pour en améliorer une autre.
 End Transfer Knowledge
 
 Abandon d'un transfert de compétence en cours.
+%%%%
+Renounce Religion
+
+Renoncer à votre religion. Votre personnage quittera le service de son dieu (et
+généralement le met en colère).
 %%%%
 Make dart trap
 
