@@ -1030,7 +1030,9 @@ void tag_read(reader &inf, tag_type tag_id)
         tag_read_you_dungeon(th);
         tag_read_lost_monsters(th);
         tag_read_lost_items(th);
+#if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() >= TAG_MINOR_COMPANION_LIST)
+#endif
             tag_read_companions(th);
 
         // If somebody SIGHUP'ed out of the skill menu with all skills disabled.

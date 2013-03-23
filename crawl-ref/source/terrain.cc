@@ -1557,9 +1557,6 @@ static const char *dngn_feature_names[] =
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "tree", "open_sea", "endless_lava", "orcish_idol",
 "granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "",
-#if TAG_MAJOR_VERSION != 34
-"",
-#endif
 
 // DNGN_MINMOVE
 "lava", "deep_water",
