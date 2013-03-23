@@ -855,6 +855,9 @@ static void _abyss_shift_level_contents_around_player(
 
 static void _abyss_generate_monsters(int nmonsters)
 {
+    if (crawl_state.disables[DIS_SPAWNS])
+        return;
+
     mgen_data mg;
     mg.proximity = PROX_ANYWHERE;
 
