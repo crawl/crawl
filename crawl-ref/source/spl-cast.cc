@@ -1465,7 +1465,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_summon_greater_demon(powc, god, fail);
 
     case SPELL_SHADOW_CREATURES:
-        return cast_shadow_creatures(god, fail);
+        return cast_shadow_creatures(false, god, fail);
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return cast_summon_horrible_things(powc, god, fail);
