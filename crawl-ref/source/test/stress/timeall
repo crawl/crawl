@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 
-my @TESTS = 1..5;
+my @TESTS = qw(1 2 3 4 5 8);
 my $NTRIES = 5;
 
 !system("./crawl --builddb") or die "Rebuilding the db failed -- bailing.\n";

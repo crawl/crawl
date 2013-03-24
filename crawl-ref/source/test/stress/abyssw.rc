@@ -1,0 +1,41 @@
+# Waiting only in the Abyss, no monsters.
+#
+# Usage: ./crawl --no-save --rc test/stress/abyssw.rc
+#
+# Wizmode is needed.
+
+name = Abyss_walker
+species = mu
+background = fi
+weapon = mace
+restart_after_game = false
+show_gold_turns = true
+show_more = false
+autofight_stop = 0
+
+Lua{
+bot_start = true
+last_turn = -1
+local cmds = {string.char(9), 'u', 'k', 'l', 'n', '.'}
+function ready()
+  local esc = string.char(27)
+  local eol = string.char(13)
+  if you.turns() == 0 and bot_start then
+    bot_start = false
+    crawl.enable_more(false)
+    crawl.sendkeys("&Y" .. esc)
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('confirmations')" .. eol ..
+                   "debug.disable('death')" .. eol ..
+                   "debug.disable('spawns')" .. eol .. esc)
+    crawl.sendkeys("&Y" .. esc)
+    crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
+    crawl.sendkeys("&B")
+  end
+  if you.turns() < 2000 then
+    crawl.sendkeys('5')
+  else
+    crawl.sendkeys("*qyes" .. eol .. esc .. esc)
+  end
+end
+}
