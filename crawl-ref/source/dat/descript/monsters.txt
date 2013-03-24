@@ -64,7 +64,7 @@ Antaeus
 Once a mighty and renowned titan, his arrogance was his undoing. Now he is
 corrupt and tainted, a powerful demon who lords over the frozen wastes of
 Cocytus. His gigantic body seems as though it would be easily struck by your
-attacks; unfortunately, it also seems like it would remain unscathed by all but
+attacks; unfortunately, it also seems as though it would remain unscathed by all but
 the strongest of them.
 %%%%
 Antaeus:quote
