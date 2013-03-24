@@ -787,7 +787,7 @@ monster* zotdef_spawn(bool boss)
 
     // Hack: emulate old mg.power
     mg.place = level_id(BRANCH_MAIN_DUNGEON, you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3) + 1);
-    // but only for item generation/etc, not for actual monster selection.
+    // but only for item generation/etc., not for actual monster selection.
     ASSERT(mt != RANDOM_MONSTER);
 
     monster *mon  = mons_place(mg);
