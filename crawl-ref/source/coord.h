@@ -42,7 +42,7 @@ coord_def clip(const coord_def &p);
 
 // Checks that a given point is within the map, excluding 'margin' squares at
 // the edge of the map.
-bool map_bounds_with_margin(coord_def p, int margin);
+bool map_bounds_with_margin(coord_def p, int margin) PURE;
 
 // Determines if the coordinate is within bounds of an LOS array.
 static inline bool show_bounds(const coord_def &p)
@@ -51,17 +51,17 @@ static inline bool show_bounds(const coord_def &p)
             && p.y >= 0 && p.y < ENV_SHOW_DIAMETER);
 }
 
-int grid_distance(const coord_def& p1, const coord_def& p2);
-int distance2(const coord_def& p1, const coord_def& p2);
-bool adjacent(const coord_def& p1, const coord_def& p2);
+int grid_distance(const coord_def& p1, const coord_def& p2) PURE;
+int distance2(const coord_def& p1, const coord_def& p2) PURE;
+bool adjacent(const coord_def& p1, const coord_def& p2) PURE;
 
 // Conversion between different coordinate systems.
 // XXX: collect all of these here?
 
-coord_def player2grid(const coord_def& pc);
-coord_def grid2player(const coord_def& pc);
-coord_def rotate_adjacent(coord_def vector, int direction);
+coord_def player2grid(const coord_def& pc) PURE;
+coord_def grid2player(const coord_def& pc) PURE;
+coord_def rotate_adjacent(coord_def vector, int direction) PURE;
 
-coord_def clamp_in_bounds(const coord_def &p);
+coord_def clamp_in_bounds(const coord_def &p) PURE;
 
 #endif
