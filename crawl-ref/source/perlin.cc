@@ -29,6 +29,9 @@
  *
  */
 
+#include "AppHdr.h"
+
+#include "perlin.h"
 #include <cmath>
 #include <stdint.h>
 

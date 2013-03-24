@@ -33,7 +33,7 @@ struct generic_cost
         return generic_cost(low, high - low + 1, _rolls);
     }
 
-    int cost() const;
+    int cost() const PURE;
 
     operator bool () const { return base > 0 || add > 0; }
 };
