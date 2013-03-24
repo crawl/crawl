@@ -169,7 +169,9 @@ static inline T move(T x) { return x; } // good enough for our purposes
 # define _WIN32_WINNT 0x501
 #endif
 
+// See the GCC __attribute__ documentation for what these mean.
 // Note: clang does masquerade as GNUC.
+
 #if defined(__GNUC__)
 # define NORETURN __attribute__ ((noreturn))
 #elif defined(_MSC_VER)
@@ -180,9 +182,12 @@ static inline T move(T x) { return x; } // good enough for our purposes
 
 #if defined(__GNUC__)
 # define PURE __attribute__ ((pure))
+# define REALLYPURE __attribute__ ((const))
 #else
 # define PURE
+# define REALLYPURE
 #endif
+
 
 // =========================================================================
 //  Defines for dgamelaunch-specific things.

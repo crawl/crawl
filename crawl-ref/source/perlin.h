@@ -3,9 +3,9 @@
 
 namespace perlin
 {
-    double noise(double xin, double yin);
-    double noise(double xin, double yin, double zin); // Praise be to Zin!
-    double noise(double xin, double yin, double zin, double win);
-    double fBM(double xin, double yin, double zin, uint32_t octaves);
+    double noise(double xin, double yin) REALLYPURE;
+    double noise(double xin, double yin, double zin) REALLYPURE; // Praise Zin!
+    double noise(double xin, double yin, double zin, double win) REALLYPURE;
+    double fBM(double xin, double yin, double zin, uint32_t octaves) REALLYPURE;
 }
 #endif /* PERLIN_H */

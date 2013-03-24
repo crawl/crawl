@@ -118,7 +118,7 @@ struct coord_def
         set(0, 0);
     }
 
-    int distance_from(const coord_def &b) const;
+    int distance_from(const coord_def &b) const PURE;
 
     bool operator == (const coord_def &other) const
     {
