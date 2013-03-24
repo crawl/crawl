@@ -128,6 +128,15 @@ facilités de Sigmund en magie mais compense grâce à un talent pour le combat 
 l'argent. Il meurt d'envie de prouver sa supériorité en tuant de malheureux
 aventuriers a l'aide de son coûteux fléau et de son esprit vif.
 %%%%
+the Enchantress
+
+Une belle femme spriggan, qui règne sur les spriggans vivant ici. Elle porte
+des vêtements opalescents fait de peau de dragon qui brillent de toute les
+couleurs
+
+L'air autour d'elle indiquent ses nombreux sorts d'enchantements puissants
+qu'elle se lance sur elle-même.
+%%%%
 Ereshkigal
 
 Un effrayant archi-diable qui règne sur les enfers mortels du Tartare.
@@ -248,6 +257,14 @@ Un empereur incroyablement puissant sur le chemin de la divinisation.
 Kirke
 
 Une belle enchanteresse.
+%%%%
+the Lernaean hydra
+
+Un ancien monstre, ressemblant a un serpent colossal et qui possède un certain
+nombre de têtes. Les poètes parlent de bien plus de têtes que les potiers
+peuvent peindre sur leur vases, du venin empoisonné giclant de ses yeux, et que
+cette hydre est la gardienne de l'entrée du monde souterrain. Ce qui est vrai
+de tout cela en revanche, vous l'ignorez.
 %%%%
 Louise
 
@@ -1515,6 +1532,11 @@ Une grosse araignée venimeuse, qui tisse sa toile entre ses pattes de devant et
 saute ensuite sur sa proie, la piégeant. Ceux qui l'ont vue en action et qui
 lui ont survécu pour en parler disent que ses sauts sont surnaturels.
 %%%%
+tengu
+
+Un humanoïde avec la tête et les serres d'un oiseau. Sa nature férocement
+agressive disconvient avec son apparence fragile.
+%%%%
 killer bee
 
 Une abeille géante qui veut vous piquer sans discontinuer avec son dard mortel.
@@ -2102,14 +2124,55 @@ skeletal bat
 Une chauve-souris squelette sans la décence de rester immobile comme les
 chauve-souris mortes sont supposées l'être.
 %%%%
+skeletal warrior
+
+Le squelette vicieux d'une créature humanoïde et lourdement armé, animé par un
+pouvoir impie.
+%%%%
 skeleton
 
 Un squelette animé de non-vie par la nécromancie.
+%%%%
+slave
+
+Un humain, autrefois si fier, qui a été magiquement réduit à l'esclavage et qui
+n'est plus qu'une créature timide et minaudante, prête à obéir au doigt et à
+l'œil à son maître. Cependant, l'asservissement magique ne dure qu'aussi
+longtemps que le maître de l'esclave, et ce dernier apprécierait surement
+d'être libéré.
+%%%%
+slime creature
+
+Un globe dégueulasse de limon, qui se faufile sur le sol et qui parfois se fond
+avec d'autres globes avoisinants...
 %%%%
 small abomination
 
 Un amas hideux de parties de corps humains, en partie chair morte animée, en
 partie démon.
+%%%%
+smoke demon
+
+Un démon infernal qui se montre sous un nuage frémissant de fumée. Ayant des
+pouvoirs pyrotechniques considérables, il peut très efficacement attaquer ses
+ennemis à distance.
+%%%%
+snapping turtle
+
+Un testudine querelleur avec une carapace blindée. Son cou est incroyablement
+extensible et il peut mordre de loin. Si effrayé, il se cachera dans sa
+carapace.
+%%%%
+soldier ant
+
+Une fourmi résistante avec une tête disproportionnellement grosse, de fortes
+mandibules et un dard vicieux capable d'injecter un venin douloureux. C'est un
+soldat, et ils sont alors chargés de protéger la colonie des envahisseurs.
+%%%%
+soul eater
+
+Ce démon ressemble à une ombre changeante qui glisse dans l'air. Il irradie
+d'une intense aura de force négative.
 %%%%
 spatial vortex
 
@@ -2119,9 +2182,49 @@ spectral thing
 
 Une hideuse apparition brillante.
 %%%%
+sphinx
+
+Une énorme créature avec la tête d'une femme, le corps d'un lion et les ailes
+d'un gros oiseaux, capable d'embrumer l'esprit des hommes et leur capacitées en
+magie.
+%%%%
+spider
+
+Une araignée ordinaire avec une croix blanche distinctive sur son dos. Tout en
+n'étant pas aussi grotesquement énorme que les autres arachnides trouvable dans
+ce donjon, elle est quand même aussi grosse qu'un petit chat.
+%%%%
+spiny frog
+
+Ces grenouilles font la taille d'un loup, et sont couvertes de petites épines
+et d'ergots, dégouttant de venin. Qui veut goûter du crapaud?
+%%%%
+spiny worm
+
+Un énorme ver noir, son corps segmenté est couvert de plaques hérissées de
+pointes d'une armure chitineuse. Du venin acide coule de sa machoire dentée.
+%%%%
+spirit
+
+L'âme d'une créature sainte, délaissé de son corps. C'est une créature lente et
+timide, mais étant quelque chose de divin, elle doit probablement être sous
+protection céleste.
+%%%%
+spriggan
+
+Un petit humanoïde, ressemblant à un humain ou un elfe en dehors de sa taille.
+Ils bougent à une très grande vitesse et adorent jouer de sales tours aux gens.
+%%%%
 spriggan air mage
 
 Un adepte magique spriggan bénit par les secrets du vent.
+%%%%
+spriggan assassin
+
+Un spriggan habile et subreptice qui poignarde dans le secret.
+
+Ces maîtres de la furtivité on maîtrisé l'art de planter une lame courte juste
+en dessous de votre cinquième côte.
 %%%%
 spriggan baker
 
@@ -2142,10 +2245,37 @@ Un spriggan dont la connexion avec les oiseaux et les bêtes est
 exceptionnellement forte. Dans la nature, ces protecteurs de la terre sont la
 perte des non-écologistes.
 %%%%
+spriggan rider
+
+Montés sur des lucioles géantes, ces cavaliers font en sorte que personne n'ose
+s'immiscer dans les forêts sprigganes et les cairns ne servent qu'a s'en aller.
+%%%%
+steam dragon
+
+Un dragon gris et plutôt petit, avec une peau écailleuse d'aspect résiliente et
+de la vapeur afflue de sa bouche.
+%%%%
+stone giant
+
+Un humanoïde gigantesque avec une peau grise aussi dure que la pierre. Il porte
+des rochers et il est parfaitement capable de les lancer sur de longues
+distances.
+%%%%
+storm dragon
+
+Un dragon imposant et très puissant, ayant une peau d'épaisses écailles mates,
+comme du caoutchouc bleu, et d'énormes ailes écailleuses, le long desquelles
+des étincelles crépitent.
+%%%%
 sun demon
 
 Une figure démoniaque brillante telle la lumière et avec toute la fureur d'une
 étoile déchue.
+%%%%
+swamp dragon
+
+Un gros dragon visqueux, sa peau noueuse est couverte de saletés marécageuses.
+Du gaz nocif s'épand de son museau.
 %%%%
 tarantella
 
@@ -2157,9 +2287,45 @@ tentacle segment
 Partie de la puissante tentacule d'un kraken. Tout dégat qui lui est infligé
 blesse toute la créature.
 %%%%
+tentacled monstrosity
+
+Une masse distordante de tentacules, le tout recouvert d'un mucus putride.
+%%%%
+titan
+
+Cet énorme humanoïde, portant des éclairs à la main, est inhabituellement grand
+et cela même pour des géants.
+%%%%
+toenail golem
+
+Une statue imposante et animée faite entièrement d'écrêtage d'ongle de doigts
+de pieds. Certaines personnes on vraiment trop de temps à perdre.
+%%%%
+toadstool
+
+Une espèce de champignon à courte vie typiquement trouvable sur ou autour des
+corps organiques en état de décomposition.
+%%%%
+tormentor
+
+Un démon maléfique couvert de toute sortes de griffes, pointes et crochets. Il
+est capable d'infliger les tortures des plus agonisantes a ceux qui sont assez
+téméraires pour s'y frotter.
+%%%%
 training dummy
 
 Un mannequin utilisé pour l'entrainement au combat.
+%%%%
+trapdoor spider
+
+Un arachnide rapide qui à la fois surprend ses proies et fait fuir ses ennemis
+en s'occultant lui-même dans les recoins du sol du donjon.
+%%%%
+troll
+
+Le troll de base est une créature humanoïde imposante et physiquement
+puissante. Peu intelligent mais plus porté sur les muscles, sa peau épaisse et
+noueuse se soigne rapidement de la plupart des blessures.
 %%%%
 twister
 
@@ -2174,9 +2340,78 @@ ufetubus
 
 Un démon mineur criant et déblatérant.
 %%%%
+ugly thing
+
+Une chose hideuse. D'après la légende, cette créature mutante est le fruit
+surnaturel d'une expérimentation d'un magicien sur la reproduction. Beurk.
+%%%%
+unborn deep dwarf
+
+Un nain profond qui a aiguisé son empathie avec les pouvoirs de la terre et de
+la mort au prix de sa force vitale naturelle, dépassant sa mortalité d'une
+façon naine particulière.
+%%%%
+unseen horror
+
+Une créature rarement vue par quiconque, et le peu qui l'ont vue auraient
+préféré ne jamais la voir.
+%%%%
+vampire
+
+Un humain maudit par le vampirisme, dans un état à la dérive entre la vie et la
+mort, perpétuellement assoiffé par le sang des vivants. Il a le pouvoir sur les
+bêtes et l'esprit des hommes simples, et il peut aussi prendre la forme d'une
+chauve-souris.
+%%%%
+vampire bat
+
+Une grosse chauve-souris noire avec des crocs vicieux qui se nourrit du sang.
+C'est la forme favorite des vampires pour se déguiser.
+%%%%
+vampire knight
+
+Un noble vampire puissant qui complète ses prouesses au combat avec la magie
+noire.
+%%%%
+vampire mage
+
+Un sorcier qui, par choix ou par accident, a été affligé de la malédiction des
+vampires. Quel que soit, dans sa non-vie, ce magicien à finalement maîtrisé les
+arts de la magie noire.
+%%%%
+vampire mosquito
+
+Un moustique qui s'est nourri d'un sang impur et qui s'est transformé en un
+insecte mort-vivant répugnant et pestilentiel, cherchant à drainer ses victimes
+jusqu'à la dernière goutte.
+%%%%
+vapour
+
+Un nuage d'une vapeur bizarre, seulement visible par ceux qui ont une vision
+surnaturelle. Tant qu'il flotte sans but dans le donjon, il se remplit de
+charge électrique, qui parfois se décharge dans votre direction.
+%%%%
 vault guard
 
 Un gardien des Chambres Fortes, en armure et lourdement armé.
+%%%%
+very ugly thing
+
+Une chose très hideuse. D'après la légende, cette créature mutante très moche
+est le fruit surnaturel d'une expérimentation d'un magicien sur la
+reproduction. Double beurk!
+%%%%
+wandering mushroom
+
+Un gros champignon charnu qui vagabonde lentement dans le donjon. Il est à la
+fois naturellement curieux et incroyablement timide, poursuivant l'objet de sa
+curiosité dès qu'il est hors de vue. Des spores nocifs s'accumulent sur son
+chapeau.
+%%%%
+war dog
+
+Un énorme chien vicieux, entraîné à tuer. Son cou est protégé par un collier à
+pointe massif.
 %%%%
 white draconian
 
