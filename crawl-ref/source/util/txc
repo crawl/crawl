@@ -1,0 +1,1190 @@
+#!/usr/bin/env python
+
+import os, re, sys, codecs, difflib
+from optparse import OptionParser
+from subprocess import Popen, PIPE, call
+from textwrap import TextWrapper
+from collections import defaultdict, OrderedDict, Counter
+from platform import system
+from unicodedata import east_asian_width
+from tempfile import NamedTemporaryFile
+
+usage = "usage: %prog [options] commands\n" \
+        "Without any command, it starts in interactive mode.\n" \
+        "Read docs/translations.txt for details."
+parser = OptionParser(usage=usage)
+parser.add_option("--commit_author", help="Commit author",
+            default="Translators <crawl-ref-discuss@lists.sourceforge.net>")
+parser.add_option("-d", "--diff", help="Diff format (unified, context, n)",
+                  default='n')
+parser.add_option("-f", "--force", action="store_true",
+                  help="Overwrite files even if no change detected")
+parser.add_option("-l", "--language", help="Specify which languages to work on")
+parser.add_option("-r", "--resource", help="Specify which resources to work on")
+parser.add_option("-s", "--source", help="Work on source files (same as -l en)",
+                  action="store_true")
+parser.add_option("-t", "--translations", help="Work on translations",
+                  action="store_true")
+
+(options, args) = parser.parse_args()
+cmd = args[0] if args else ''
+
+# Absolute path to the source directory
+tx_abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+# Absolute path to the git root
+git_root = os.path.abspath(os.path.join(tx_abs_path, "..", ".."))
+
+# Relative path from the git root to the transifex directory
+tx_rel_path = os.path.join('crawl-ref', 'source')
+
+# Absolute path to the transifex config file
+tx_config = os.path.join(tx_abs_path, '.tx', 'config')
+
+# Relative path from the source directory to the descript directory
+descript_tx_path = os.path.join('dat', 'descript')
+
+# Relative path from the git root to the descript directory
+descript_git_path = os.path.join(tx_rel_path, descript_tx_path)
+
+# Absolute path to the descript directory
+descript_abs_path = os.path.join(tx_abs_path, descript_tx_path)
+
+try:
+    os.chdir(descript_abs_path)
+except OSError, e:
+    sys.exit(e)
+
+sep_re = re.compile('[, ]+') # basic separator for user input
+txt_sep_re = re.compile('%{4,}') # txt file entry separator
+cmd_re = re.compile('<(\w)>') # used to find the key in menu command strings
+# Those languages have special wrapping with fullwidth character support
+east_asian_languages = {'ko', 'zh'}
+
+# This object serves as an intermediate step between txt and ini files.
+# Entries are in a raw format: no wrapping, every new line is significant.
+# they are indexed by [(lang, res)][key] and are of type Entry
+raw_entries = defaultdict(OrderedDict)
+
+# Main commands
+def wrap_txt():
+    txt_files.load_files()
+    txt_files.merge_files()
+    txt_files.update()
+    menu.res_files = txt_files
+
+def create_ini():
+    txt_files.load_files()
+    txt_files.merge_files()
+    ini_files.load_files()
+    ini_files.update()
+    menu.res_files = ini_files
+
+def merge_ini():
+    txt_files.load_files()
+    res_index.en_src = False # For en, load the fake translations
+    ini_files.load_files()
+    ini_files.merge_files()
+    res_index.en_src = True
+    txt_files.update()
+    menu.res_files = txt_files
+
+def setup_transifex():
+    """Initialize the transifex config file"""
+
+    os.chdir(os.path.join(git_root, tx_path))
+    call_tx(['init'])
+    tx_set = ['set', '--auto-local', '-s', 'en_AU', '-t', 'INI', '--execute']
+    for res in res_index.default_resources:
+        res_file = res + '.ini'
+        source_file = os.path.join(descript_tx_path, res_file)
+        expr = os.path.join(descript_tx_path, '<lang>', res_file)
+        call_tx(tx_set + ['-r', 'dcss.' + res, expr, '-f', source_file])
+    os.chdir(descript_abs_path)
+
+def call_tx(args, silent = False):
+    """wrapper to call the transifex client"""
+
+    if silent:
+        stderr = open(os.devnull, 'wb')
+    else:
+        stderr = None
+
+    # On windows, we need shell=True to search the PATH for the tx command
+    if sys.platform == 'win32':
+        python_path = os.path.split(sys.executable)[0]
+        tx_path = os.path.join(python_path, 'Scripts', 'tx')
+        call(['python', tx_path] + args, stderr=stderr)
+    else:
+        call(['tx'] + args, stderr=stderr)
+
+# Utility functions
+def title(text):
+    """Add a dash square around a string. Used when showing a diff."""
+    text = "### " + text + " ###"
+    dash_line = "#" * len(text)
+    text = dash_line + "\n" + text + "\n" + dash_line + "\n"
+    return text
+
+def unwrap(text):
+    """Mostly replicates libutil.cc:unwrap_desc"""
+    if not text:
+        return ""
+
+    # Protect all consecutive empty lines
+    text = re.sub("\n{2,}", lambda m: r'\n' * len(m.group(0)), text)
+    text = text.replace("\n ", "\\n ")
+
+    # Don't unwrap lua separator at the beginning of a line
+    text = text.replace("\n}}", "\\n}}")
+    text = text.replace("\n{{", "\\n{{")
+
+    text = text.replace("\n", " ")
+    text = text.replace("\\n", "\n")
+
+    return text
+
+def wrap(text, eac):
+    """Wrap long lines using a TextWrapper object"""
+    lines = []
+    for line in text.splitlines():
+        if line:
+            if eac:
+                lines += FWwrapper.wrap(line)
+            else:
+                lines += wrapper.wrap(line)
+        elif not lines or lines[-1] != '': # remove consecutive empty lines
+            lines += ['']
+    return "\n".join(lines)
+
+def diff(val, new_val):
+    """Returns a diff showing the differences between 2 strings"""
+    try:
+        diff_func = {'unified': difflib.unified_diff,
+                     'context': difflib.context_diff,
+                     'n': difflib.ndiff}[options.diff]
+    except KeyError:
+        sys.exit("Invalid diff option: %s" % options.diff)
+    return "\n".join(diff_func(val, new_val))
+
+def progress(name, i, n):
+    """Generic function for showing the progression of a treatment in percent"""
+    print "\r%s %d%%" % (name, i * 100 / n),
+    if i == n:
+        print
+
+def emphasize(s):
+    """Add terminal control characters to a string to make it bright and
+    underlined. Under windows, control characters are not supported so we just
+    surround the string in chevrons"""
+    if system() != 'Windows':
+        return u'\033[1m\033[4m%s\033[0m' % s
+    else:
+        return '<' + s + '>'
+
+def change_counter(c):
+    return " ".join(["%s:%-3d" % (k, c[k]) if c[k] else " " * (len(k) + 4) \
+                     for k in sorted(res_index.changes)])
+
+# Subclasses to properly handle wrapping fullwidth unicode character which take
+# 2 columns to be displayed on a terminal
+# See http://code.activestate.com/lists/python-list/631628/"""
+class FullWidthUnicode(unicode):
+    def __len__(self):
+        return sum(2 if east_asian_width(c) in 'WFA' else 1 for c in self)
+
+class FullWidthTextWrapper(TextWrapper):
+    def _split(self, text):
+        return map(FullWidthUnicode, TextWrapper._split(self, text))
+
+class ResourceIndex():
+    """Class which holds current language / resource settings and serves as an
+    iterator for ResourceCollection.
+    self.changes holds a list of the types of change currently selected
+    (changed, new, quote or removed). This is used to select which value to
+    display when iterating through entries for showing a diff or writing a
+    resource file.
+    Note that not selecting "removed" only affects diffs and temporary files
+    created for editing. When writing the resource file, removed keys are never
+    written no matter what is in the changes array."""
+
+    def __init__(self):
+        self.default_languages = [ 'en' ]
+        self.default_resources = []
+        self.languages = []
+        self.resources = []
+        self.en_src = True # When True, the english language maps to the source
+                           # files. When False, it maps to the fake translations
+        self.changes = []
+
+        # Initialize languages with directories in the descript dir
+        # and resource with txt files
+        for f in sorted(os.listdir('.')):
+            (basename, ext) = os.path.splitext(f)
+            if ext.lower() == '.txt':
+                self.default_resources.append(basename)
+            elif os.path.isdir(f) and f != 'en':
+                self.default_languages.append(f)
+
+        if options.source:
+            self.languages = ['en']
+        elif options.language:
+            self.set_languages(options.language)
+        elif options.translations:
+            self.languages = self.default_languages[1:]
+        else:
+            self.languages = self.default_languages[:]
+
+        if options.resource:
+            self.set_resources(options.resource)
+        else:
+            self.resources = self.default_resources[:]
+
+    def __iter__(self):
+        return iter([('',r) if self.en_src and l == 'en' else (l, r) \
+                    for l in self.languages for r in self.resources])
+
+    def __len__(self):
+        return len(self.languages) * len(self.resources)
+
+    def __str__(self):
+        s = ''
+        for index_t in "languages", "resources":
+            index = getattr(self, index_t)
+            s += index_t.title() + ": "
+            if self.is_default(index_t):
+                s += "All (%d)\n" % len(index)
+            else:
+                s += ", ".join(index) + "\n"
+        return s
+
+    def is_default(self, index_t):
+        index = getattr(self, index_t)
+        default_index = getattr(self, "default_" + index_t)
+        return len(index) == len(default_index)
+
+    def print_index(self, index_t, only_selected = False):
+        index = getattr(self, index_t)
+        default_index = getattr(self, "default_" + index_t)
+        if only_selected:
+            idx_l = index
+        else:
+            idx_l = [emphasize(i) if i in index else i for i in default_index]
+        print "%s: %s" % (index_t.title(), ", ".join(idx_l))
+
+    def set_index(self, index_t, opt):
+        """When opt is True, the method is being called during program startup
+        with the option value as argument. This reduce the verbosity compared to
+        calling it in interactive mode."""
+
+        if not opt:
+            self.print_index(index_t)
+        index = getattr(self, index_t)
+        default_index = getattr(self, "default_" + index_t)
+
+        if opt:
+            a = opt
+        else:
+            a = raw_input("Select %s (Empty reset to defaults): " % index_t)
+
+        del index[:]
+        for i in sep_re.split(a):
+            if i in default_index:
+                index.append(i)
+            elif i:
+                matches = [m for m in default_index if m.startswith(i)]
+                if len(matches) == 1:
+                    index.append(matches[0])
+                elif not matches:
+                    print >> sys.stderr, "Invalid %s: %s" % (index_t[:-1], i)
+                else:
+                    print >> sys.stderr, "Multiple matches for %s: %s" \
+                                         % (i, ", ".join(matches))
+
+        if not index:
+            setattr(self, index_t, default_index[:])
+            print "Reset %s to default" % index_t
+        elif not opt:
+            print
+            self.print_index(index_t, True)
+
+    def set_languages(self, opt = ''):
+        self.set_index('languages', opt)
+
+    def set_resources(self, opt = ''):
+        self.set_index('resources', opt)
+
+    def set_changes(self, change_t_list):
+        self.changes = change_t_list
+
+    def get_index(self, index_t):
+        return getattr(self, index_t)[0]
+
+    def next_index(self, index_t):
+        element = self.get_index(index_t)
+        default_index = getattr(self, "default_" + index_t)
+        if default_index[-1] == element:
+            setattr(self, index_t, [default_index[0]])
+        else:
+            setattr(self, index_t, [default_index[default_index.index(element) + 1]])
+
+class Entry():
+    """Class for a raw entry. Elements of raw_entries are of this type."""
+    def __init__(self):
+        self.value = ''
+        self.tags = OrderedDict()
+
+    def __getitem__(self, key):
+        if key in self.tags:
+            return self.tags[key]
+        else:
+            return ''
+
+    def __setitem__(self, key, value):
+        self.tags[key] = value
+
+class TxtEntry():
+    """This class is only used when reading a txt file. Instances of this class
+    are never stored, we directly store values in ResourceFile."""
+    def __init__(self):
+        self.key = ""
+        self.value = ""
+        self.key_comment = ""
+        self.value_comment = ""
+
+    def save(self, res_file):
+        res_file.entries[self.key] = self.value
+        if self.key_comment:
+            res_file.key_comment[self.key] = self.key_comment
+        if self.value_comment:
+            res_file.value_comment[self.key] = self.value_comment
+        self.__init__()
+
+class ResourceFile():
+    """Holds all the logic which is common between txt and ini files.
+    self.entries hold the dictionary of key/value read from the file. It is
+    initialized in the subclasses because source files use an OrderedDict.
+    self.diff have a dictionary per change type with the new values."""
+    def __init__(self, lang, res):
+        self.diff = defaultdict(dict)
+        self.language = lang
+        self.resource = res
+        self.path = res + "." + self.ext
+        self.path = os.path.join(lang, self.path)
+        self.git_path = os.path.join(descript_git_path, self.path).replace("\\", "/")
+        self.mtime = 0
+        self.modified = False
+        self.staged = False
+        self.new = False
+
+    def __setitem__(self, key, value):
+        """Called by the subclass which has already done the conversion.
+        Determine the change type and store the new value in the apropriate
+        dict of self.diff"""
+        if key not in self.entries:
+            if key.find(':') != -1 and key.split(':')[1] == 'quote':
+                change_t = 'quote'
+            else:
+                change_t = 'new'
+        elif value != self.entries[key]:
+            change_t = 'changed'
+        else:
+            return
+        self.diff[change_t][key] = value
+
+    def items(self, diff_only):
+        """Returns an iterator to a list of (key, value) tuples, depending on
+        what is selected in res_index.changes and what is found in self.diff.
+        When diff_only is true, only return changed or new values (for diff and
+        edit). When it is false, return the original value for unchanged ones
+        (for writing file)."""
+
+        items = []
+        for key in self.source_keys():
+            found_diff = False
+            # we sort res_index.changes to make sure quotes are treated last.
+            # Conveniently, q comes after c and n.
+            for change_t in sorted(res_index.changes):
+                if change_t == 'removed' or change_t not in self.diff: continue
+                if change_t == 'quote':
+                    # Here, we search only for new quotes.
+                    quote_key = key + ':quote'
+                    if quote_key in self.diff['quote'] \
+                       and quote_key not in self.source_keys():
+                       items.append((quote_key, self.diff['quote'][quote_key]))
+                if key in self.diff[change_t]:
+                    items.append((key, self.diff[change_t][key]))
+                    found_diff = True
+            if not found_diff and not diff_only and key in self.entries:
+                items.append((key, self.entries[key]))
+
+        return iter(items)
+
+    def diff_count(self):
+        """Returns a Counter object representing what's in self.diff"""
+        c = Counter()
+        for change_t in self.diff:
+            count = len(self.diff[change_t])
+            if count:
+                c[change_t] = count
+        return c
+
+    def lang(self):
+        """Source files have self.language empty, but they are in english"""
+        return self.language if self.language else 'en'
+
+    def clear(self, keep_entries = False):
+        if not keep_entries:
+            self.entries.clear()
+        self.diff.clear()
+
+    def changed(self):
+        """Returns true if there are pending change for the file depending on
+        what is selected in res_index.changes"""
+        for change_t in res_index.changes:
+            if change_t in self.diff:
+                return True
+        return False
+
+    def source_keys(self):
+        """Returns an ordered list of the keys of the source corresponding to
+        this resource file. This list is used as a reference when iterating
+        through keys. It helps keep the order consistent and translations can't
+        exist if there isn't a source associated to them anyway."""
+        return self.source_res.entries.keys()
+
+    def diff_txt(self, diff_format):
+        """When diff_format is True, returns a string with a diff for each new
+        or changed entry. When it is False, returns the new value instead (for
+        editing purpose)."""
+        diff_txt = ''
+        for (key, value) in self.items(True):
+            if key in self.entries:
+                orig = self.format_entry(key, self.entries[key])
+            else:
+                orig = ""
+            value = self.format_entry(key, value)
+            if diff_format:
+                diff_txt += diff(orig.splitlines(), value.splitlines()) + "\n"
+            else:
+                diff_txt += value
+            diff_txt += self.separator()
+
+        if 'removed' in res_index.changes and 'removed' in self.diff:
+            for k, v in self.diff['removed'].items():
+                value = self.format_entry(k, v)
+                if diff_format:
+                    diff_txt += diff(value.splitlines(), []) + "\n"
+                else:
+                    diff_txt += value
+                diff_txt += self.separator()
+
+        return diff_txt
+
+    def read_file(self):
+        """Called by the subclasses to handle the basic checks. Returns the
+        content of the file (list of lines) to the subclass which does the
+        actual parsing."""
+        if not os.path.exists(self.path):
+            return []
+
+        # If the corresponding source file isn't loaded we load it first
+        if self.language and not len(self.source_keys()):
+            self.source_res.read_file()
+
+        # Don't reload the file if it hasn't changed since we loaded it before.
+        file_mtime = os.stat(self.path).st_mtime
+        if self.mtime == file_mtime:
+            self.clear(True)
+            return []
+        else:
+            self.clear()
+            self.mtime = file_mtime
+
+        return codecs.open(self.path, encoding='utf-8').readlines()
+
+    def merge_file(self):
+        """Iterate through the entries loaded from the file, convert them in a
+        raw format and store them in raw_entries"""
+        entries = raw_entries[(self.lang(), self.resource)]
+        entries.clear()
+        for (key, value) in self.entries.items():
+            entries[key] = self.raw_entry(value)
+
+    def update(self):
+        """Update the resource file with the content of raw_entries. New values
+        will be converted in the resource format and stored in the appropriate
+        diff dictionary by the __setitem__ methods"""
+        entries = raw_entries[(self.lang(), self.resource)]
+        for key in self.source_keys():
+            # Those 2 lines have been used once to move the quotes out of their own file.
+            # if self.resource != 'quotes' and key in raw_entries[(self.lang(), 'quotes')]:
+                # self[key + ":quote"] = raw_entries[(self.lang(), 'quotes')][key]
+            if key not in entries: continue
+            self[key] = entries[key]
+        self.update_removed_keys()
+
+    def write_file(self):
+        """Write the content of the resource to a file"""
+        f = codecs.open(self.path, "w", encoding='utf-8')
+        f.write(self.header())
+        for key, e in self.items(False):
+            f.write(self.format_entry(key, e))
+            f.write(self.separator())
+        self.modified = True
+        self.mtime = 0
+
+    def update_removed_keys(self):
+        """If the resource has keys which are not present in the source, they
+        will be removed. Store them in self.diff['removed'] to show them in diff
+        and allow editing (useful to fix renamed keys)."""
+        for k in self.entries.keys():
+            if k not in self.source_keys():
+                self.diff['removed'][k] = self.entries[k]
+
+    def edit_file(self):
+        """Create a temporary file with the values of the changed keys, start
+        a text editor, then load the file."""
+        tmp = NamedTemporaryFile(prefix=self.language + "-" + self.resource,
+                                 suffix="." + self.ext, delete=False)
+        tmp.file.write(self.diff_txt(False).encode('utf-8'))
+        tmp.file.close()
+        EDITOR = os.environ.get('EDITOR','vim')
+        try:
+            call([EDITOR, tmp.name])
+        except OSError:
+            print >> sys.stderr, "Cannot start text editor." \
+                                 "Set the EDITOR environement variable."
+            return False
+        tmp_res = self.__class__(self.language, self.resource)
+        tmp_res.path = tmp.name
+        tmp_res.read_file()
+        tmp_res.merge_file()
+        os.remove(tmp.name)
+        self.update()
+        return True
+
+class TxtFile(ResourceFile):
+    """Subclass of ResourceFile to handle files in crawl's native format of
+    description files."""
+    def __init__(self, lang, res):
+        if lang:
+            self.entries = dict()
+            self.source_res = txt_files[('', res)]
+        else:
+            self.entries = OrderedDict()
+            self.source_res = self
+        self.key_comment = dict()
+        self.value_comment = dict()
+        self.ext = 'txt'
+        self.eac = lang in east_asian_languages
+        ResourceFile.__init__(self, lang, res)
+
+    def __setitem__(self, key, entry):
+        """Converts a generic entry in txt format then calls the base class
+        __setitem__ method to store it in the appropriate self.diff dict"""
+        value = ""
+        for tag, tag_value in entry.tags.items():
+            # If it has a quote tag, we store the new quote in its own entry
+            if tag == 'quote':
+                quote_key = key + ':quote'
+                quote_value = wrap(tag_value, self.eac) + "\n"
+                ResourceFile.__setitem__(self, quote_key, quote_value)
+                # If we're adding a foreign quote and the source doesn't have
+                # one, we also create it in the corresponding source
+                if self.language and quote_key not in self.source_keys():
+                    ResourceFile.__setitem__(self.source_res, quote_key, quote_value)
+                    if 'en' not in res_index.languages:
+                        res_index.languages.insert(0, 'en')
+            elif tag_value is True:
+                value += ":%s\n" % tag
+            else:
+                value += ":%s %s\n" % (tag, tag_value)
+        if entry['nowrap']:
+            value += entry.value
+        else:
+            value += wrap(entry.value, self.eac)
+        value += "\n"
+        ResourceFile.__setitem__(self, key, value)
+
+    def format_entry(self, key, value):
+        """Convert the key/value pair in crawl's native desc format"""
+        ret = self.key_comment.get(key, "")
+        ret += key + "\n\n"
+        ret += self.value_comment.get(key, "")
+        ret += value
+        return ret
+
+    def header(self):
+        """Added to the beginning of the file"""
+        return self.separator()
+
+    def separator(self):
+        """Separate entries in the file"""
+        return "%%%%\n"
+
+    def raw_entry(self, value):
+        """Convert a value in txt format to a raw entry."""
+        e = Entry()
+        for line in value.splitlines():
+            if len(line) > 1 and line[0] == ':' and line[1] != ' ':
+                l = line[1:].rstrip().split(' ', 1)
+                e[l[0]] = l[1] if len(l) == 2 else True
+            else:
+                e.value += line + "\n"
+        e.value = e.value.rstrip()
+        if not e['nowrap']:
+            e.value = unwrap(e.value)
+        return e
+
+    def read_file(self):
+        """Parse the content of a txt file and stores it in self.entries"""
+        te = TxtEntry()
+        for line in ResourceFile.read_file(self):
+            if line[0] == '#':
+                if te.key:
+                    te.value_comment += line
+                else:
+                    te.key_comment += line
+            elif txt_sep_re.match(line):
+                if te.key:
+                    te.save(self)
+            elif line[0] == '\n' and not te.value:
+                continue
+            elif not te.key:
+                te.key = line.strip()
+            else:
+                te.value += line
+
+        if te.key:
+            te.save(self)
+
+        return len(self.entries)
+
+    def search_removed_keys(self):
+        # No removed key in the source, it's the reference
+        if self.language:
+            ResourceFile.search_removed_keys(self)
+
+class IniFile(ResourceFile):
+    """Subclass of ResourceFile to handle files in ini format to be pushed to
+    or pulled from transifex."""
+    def __init__(self, lang, res):
+        self.entries = dict()
+        self.source_res = txt_files[('', res)]
+        self.ext = 'ini'
+        ResourceFile.__init__(self, lang, res)
+
+    def __setitem__(self, key, e):
+        """Converts a generic entry in ini format then calls the base class
+        __setitem__ method to store it in the appropriate self.diff dict"""
+
+        # Delete entries with only a link. There's no point in translating them.
+        if len(e.value) > 1 and e.value[0] == '<' and e.value[-1] == '>'\
+           and e.value.find("\n") == -1:
+            if key in self.entries:
+                self.diff['removed'][key] = self.entries[key]
+                del self.entries[key]
+            return
+
+        value = ""
+        for tag, tag_value in e.tags.items():
+            if tag_value is True:
+                value += r":%s\n" % tag
+            else:
+                value += r":%s %s\n" % (tag, tag_value)
+        value += e.value.replace("\n", r'\n') + "\n"
+        ResourceFile.__setitem__(self, key, value)
+
+    def header(self):
+        return ""
+
+    def separator(self):
+        return ""
+
+    def format_entry(self, key, value):
+        """Convert the key/value pair in ini format"""
+        return "%s=%s" % (key, value)
+
+    def read_file(self):
+        """Parse the content of an ini file and stores it in self.entries"""
+        for line in ResourceFile.read_file(self):
+            if not line or line[0] == '#' or line.find('=') == -1: continue
+            (key, value) = line.split('=', 1)
+            self.entries[key] = value.replace('&quot;', '"')
+
+        return len(self.entries)
+
+    def raw_entry(self, value):
+        """Convert a value in ini format to a raw entry."""
+        e = Entry()
+        tag_name = ''
+        for line in value.rstrip().split(r'\n'):
+            if len(line) > 1 and line[0] == ':' and line[1] != ' ':
+                if not e.value:
+                    l = line[1:].split(' ', 1)
+                    e[l[0]] = l[1] if len(l) == 2 else True
+                else:
+                    tag_name = line[1:]
+            elif tag_name:
+                if e[tag_name]:
+                    e[tag_name] += "\n"
+                e[tag_name] += line
+            else:
+                e.value += line + "\n"
+        e.value = e.value.rstrip()
+        return e
+
+class ResourceCollection(OrderedDict):
+    """A container class holding a collection of resource files. It uses
+    res_index to iterate through its resources"""
+    def __init__(self):
+        OrderedDict.__init__(self)
+        self.diff_count = Counter()
+        self.git_count = Counter()
+        self.modified = False
+
+    def __iter__(self):
+        return iter([self[res_i] for res_i in res_index])
+
+    def __len__(self):
+        return len(res_index)
+
+    def clear(self):
+        self.diff_count.clear()
+        self.modified = False
+
+    def paths(self):
+        return [res.path for res in self]
+
+    def merge_files(self):
+        for i, res in enumerate(self, start=1):
+            progress("Merging %s files" % self.ext, i, len(self))
+            res.merge_file()
+
+    def load_files(self):
+        self.clear()
+        n_files = n_entries = 0
+        for i, res in enumerate(self, start=1):
+            progress("Loading %s files" % self.ext, i, len(self))
+            n = res.read_file()
+            if n:
+                n_files += 1
+                n_entries += n
+        if n_files:
+            print "Loaded %d entr%s from %d %s file%s" \
+                  % (n_entries, ["y", "ies"][n_entries!=1],
+                     n_files, self.ext, "s"[n_files==1:])
+
+    def update(self):
+        for i, res in enumerate(self, start=1):
+            progress("Updating %s files" % self.ext, i, len(self))
+            res.update()
+        self.update_diff_count()
+
+    def update_diff_count(self):
+        self.diff_count.clear()
+        for res in self:
+            self.diff_count += res.diff_count()
+        res_index.changes = self.diff_count.keys()
+
+    def diff(self, diff_format):
+        diff_text = ''
+        for res in self:
+            if res.changed():
+                diff_text += title(res.path) + "\n"
+                diff_text += res.diff_txt(diff_format) + "\n"
+        return diff_text
+
+    def show_diff(self):
+        diff_text = self.diff(True)
+        try:
+            Popen("less", stdin=PIPE).communicate(diff_text.encode('utf-8'))
+        except OSError:
+            print diff_text
+
+    def edit_files(self):
+        for res in self:
+            if res.changed():
+                if not res.edit_file():
+                    break
+        self.update_diff_count()
+
+    def write_files(self):
+        for res in self:
+            if options.force or res.changed():
+                res.write_file()
+                for change_t in res_index.changes:
+                    if change_t in res.diff:
+                        del res.diff[change_t]
+        self.update_diff_count()
+
+    def undo_changes(self):
+        for res in self:
+            res.clear(True)
+        self.diff_count.clear()
+
+class TxtCollection(ResourceCollection):
+    """Collection of txt files. It holds a few git methods"""
+    def __init__(self):
+        self.ext = 'txt'
+        ResourceCollection.__init__(self)
+
+    def __missing__(self, key):
+        self[key] = TxtFile(*key)
+        return self[key]
+
+    def refresh_state(self):
+        """Run git status and check the result for each file in the collection"""
+        if not git: return
+
+        git_states = dict()
+        self.git_count.clear()
+        for line in Popen(["git", "status", "--porcelain"] + self.paths(),
+                          stdout=PIPE).communicate()[0].splitlines():
+            git_states[line[3:]] = line[0:2]
+        for res in self:
+            if res.git_path not in git_states:
+                res.modified = res.staged = res.new = False
+                continue
+
+            st = git_states[res.git_path]
+            if st[0] == 'M' or st[0] == 'A':
+                res.staged = True
+                self.git_count['staged'] += 1
+            if st[1] == 'M':
+                res.modified = True
+                self.git_count['modified'] += 1
+            elif st == '??':
+                res.new = True
+                self.git_count['new'] += 1
+
+    def git_status(self):
+        call(["git", "status"] + self.paths())
+
+    def git_add_hunks(self):
+        self.git_add(True)
+
+    def git_add(self, hunks = False):
+        files = []
+        for res in self:
+            if res.modified or res.new:
+                files.append(res.path)
+
+        cmd_list = ['git', 'add']
+        if hunks:
+            cmd_list.append('-p')
+        cmd_list += files
+        call(cmd_list)
+
+    def git_reset(self):
+        files = []
+        for res in self:
+            if res.modified:
+                files.append(res.path)
+            elif res.new:
+                os.remove(res.path)
+
+        cmd_list = ['git', 'checkout']
+        cmd_list += files
+        call(cmd_list)
+
+class IniCollection(ResourceCollection):
+    """Collection of ini files with methods to interface with the transifex
+    client push and pull commands"""
+    def __init__(self):
+        self.ext = 'ini'
+        ResourceCollection.__init__(self)
+
+    def __missing__(self, key):
+        self[key] = IniFile(*key)
+        return self[key]
+
+    def refresh_state(self):
+        self.modified = False
+        for res in self:
+            if res.modified:
+                self.modified = True
+
+    def tx_pull(self):
+        tx_cmd = ['pull']
+        if options.force:
+            tx_cmd.append('-f')
+        all_lang = res_index.is_default('languages')
+        all_res = res_index.is_default('resources')
+        if all_lang and all_res:
+            call_tx(tx_cmd + ['-a'])
+        elif all_res:
+            for lang in res_index.languages:
+                call_tx(tx_cmd + ['-l', lang])
+        elif all_lang:
+            for res in res_index.resources:
+                call_tx(tx_cmd + ['-r', 'dcss.' + res])
+        else:
+            for res in self:
+                call_tx(tx_cmd + ['-l', res.lang(), '-r', 'dcss.' + res.resource])
+
+    def tx_push(self):
+        tx_push = ['push']
+        if options.force:
+            tx_push.append('-f')
+        for res in self:
+            if not res.modified: continue
+            resource = ['-r', 'dcss.' + res.resource]
+            language = ['-l', res.lang()]
+            if not res.language:
+                # We push the source then reset the fake translation resource
+                call_tx(tx_push + ['-s'] + resource)
+                if self[('en', res.resource)].entries:
+                    a = raw_input("Reset the %s fake translation (y/n)? " % res.resource).lower()
+                    if a and a[0] == 'y':
+                        call_tx(['delete', '-f'] + language + resource)
+            else:
+                call_tx(tx_push + ['-t'] + language + resource)
+            res.modified = False
+
+class Menu(OrderedDict):
+    """Create a simple text based interactive menu.
+    The inherited OrderedDict is used to store groups of commands
+    cmds keys are the command hotkey letter, values are either a function or a
+    list whose first member is the function and the next ones are arguments.
+    cmd is the command string, it can be used to queue several commands.
+    res_files points to the current resource file collection which is being
+    worked on."""
+
+    def __init__(self, cmd = ''):
+        OrderedDict.__init__(self)
+        self.cmds = dict()
+        self.cmd = cmd
+        self.menu_desc = ''
+        self.res_files = txt_files
+        self.show_res = len(res_index.languages) == 1
+
+    def __missing__(self, key):
+        self[key] = []
+        return self[key]
+
+    def change_summary(self):
+        if not self.res_files.diff_count:
+            print  "No changes\n"
+            return
+
+        print "Change summary:"
+        lang_total = defaultdict(Counter)
+        padding_size = 5
+
+        for res in self.res_files:
+            if not res.diff: continue
+            if self.show_res:
+                padding_size = max(padding_size, len(res.path))
+            else:
+                lang_total[res.lang()] += res.diff_count()
+
+        cur_lang = ''
+        for res in self.res_files:
+            if not res.diff: continue
+            lang = res.lang()
+            if lang != cur_lang and lang_total[lang]:
+                print "%-*s %s" % (padding_size, lang,
+                                   change_counter(lang_total[lang]))
+            cur_lang = lang
+            if self.show_res:
+                print "%-*s %s" % (padding_size, res.path,
+                                   change_counter(res.diff_count()))
+
+        print "%-*s %s" % (padding_size, 'Total',
+                           change_counter(self.res_files.diff_count))
+        print
+
+    def git_summary(self):
+        if not self.res_files.git_count:
+            return
+
+        padding_size = 5
+        print "Git status:"
+        for key, count in self.res_files.git_count.most_common():
+            print "%-*s: %d" % (padding_size, key, count)
+        print
+
+    def git_commit(self):
+        call(['git', 'commit', '-e', '-s', '-m', '[Transifex]',
+              '--author=' + options.commit_author])
+
+    def toggle_details(self):
+        self.show_res = not self.show_res
+
+    def set_languages(self):
+        res_index.set_languages()
+        self.res_files.update_diff_count()
+        self.show_res = len(res_index.languages) == 1
+
+    def set_resources(self):
+        res_index.set_resources()
+        self.res_files.update_diff_count()
+
+    def set_changes(self):
+        """Creates a submenu to select which kind of change to work on."""
+        submenu = Menu()
+        lbl = "Select entries"
+        change_ts = self.res_files.diff_count.keys()
+        for type in change_ts + ['all']:
+            cmd_lbl = '<' + type[0] + '>' + type[1:]
+            if type == 'all':
+                submenu.add_cmd(lbl, cmd_lbl, [res_index.set_changes, change_ts])
+            else:
+                submenu.add_cmd(lbl, cmd_lbl, [res_index.set_changes, [type]])
+        submenu.build_menu_desc()
+        submenu.show_menu()
+
+    def next_index(self, index_t):
+        """When only one index is selected (language or resource), this commands
+        allows to jump to the next one. It will search for one with pending
+        changes. If none is found after having looped through all of them, we
+        simply select the next one"""
+        current = res_index.get_index(index_t)
+        while 1:
+            res_index.next_index(index_t)
+            self.res_files.update_diff_count()
+            if self.res_files.diff_count or current == res_index.get_index(index_t):
+                break
+
+        # If we haven't found something with a change, we looped. In this case,
+        # we advance one more time.
+        if not self.res_files.diff_count:
+            res_index.next_index(index_t)
+
+        res_index.print_index(index_t, True)
+
+    def add_cmd(self, group, label, cmd):
+        """Adds a command to the menu. The label must contain a letter between
+        chevrons which will be the command hotkey"""
+        m = cmd_re.search(label)
+        if not m: sys.exit("Invalid command: %s" % label)
+        key = m.group(1)
+        if key in self: sys.exit("Duplicate command for key %s: %s and %s" \
+                                 % (key, label, self[key]))
+        if system() != 'Windows':
+            label = label.replace("<" + key  + ">", emphasize(key))
+        self[group].append(label)
+        self.cmds[key] = cmd
+
+    def build_main_menu(self):
+        self.cmds.clear()
+        self.clear()
+        self.menu_desc = ''
+
+        lbl_cmds = "Commands"
+        self.add_cmd(lbl_cmds, 'wrap <t>xt files', wrap_txt)
+        self.add_cmd(lbl_cmds, '<m>erge ini files', merge_ini)
+        self.add_cmd(lbl_cmds, 'update <i>ni files', create_ini)
+        self.add_cmd(lbl_cmds, '<q>uit', sys.exit)
+
+        lbl_review = "Review changes"
+        if self.res_files.diff_count or options.force:
+            self.add_cmd(lbl_review, "<w>rite files", self.res_files.write_files)
+        if self.res_files.diff_count:
+            if self.show_res:
+                self.add_cmd(lbl_review, "<v>iew languages", self.toggle_details)
+            else:
+                self.add_cmd(lbl_review, "<v>iew resources", self.toggle_details)
+            self.add_cmd(lbl_review, "show <d>iff", self.res_files.show_diff)
+            self.add_cmd(lbl_review, "<e>dit", self.res_files.edit_files)
+            self.add_cmd(lbl_review, "e<x>punge changes", self.res_files.undo_changes)
+
+        lbl_select = "Select"
+        self.add_cmd(lbl_select, "<l>anguages", self.set_languages)
+        self.add_cmd(lbl_select, "<r>esources", self.set_resources)
+        if len(self.res_files.diff_count) > 1:
+            self.add_cmd(lbl_select, "chan<g>es", self.set_changes)
+
+        if len(res_index.resources) == 1:
+            self.add_cmd(lbl_select, "<n>ext resource", [self.next_index, 'resources'])
+        elif len(res_index.languages) == 1:
+            self.add_cmd(lbl_select, "<n>ext language", [self.next_index, 'languages'])
+
+        if git:
+            lbl_git = "Git"
+            if self.res_files.git_count:
+                self.add_cmd(lbl_git, "<s>tatus", self.res_files.git_status)
+            if self.res_files.git_count['modified'] or self.res_files.git_count['new']:
+                self.add_cmd(lbl_git, "<a>dd", self.res_files.git_add)
+                self.add_cmd(lbl_git, "select <h>unks", self.res_files.git_add_hunks)
+                self.add_cmd(lbl_git, "chec<k>out", self.res_files.git_reset)
+            if self.res_files.git_count['staged']:
+                self.add_cmd(lbl_git, "<c>ommit", self.git_commit)
+
+        if transifex:
+            lbl_tx = "Transifex"
+            self.add_cmd(lbl_tx, "<p>ull", ini_files.tx_pull)
+            if self.res_files.modified:
+                self.add_cmd(lbl_tx, "p<u>sh", self.res_files.tx_push)
+
+        self.build_menu_desc()
+        print
+        print self.change_summary()
+        self.git_summary()
+
+    def build_menu_desc(self):
+        for group, labels in self.items():
+            self.menu_desc += "%s: %s" % (group, ", ".join(labels)) + "\n"
+
+    def show_menu(self):
+        """It reads the command line argument and treat each letter as a command
+        When there is no more command, it switches to interactive mode."""
+        if not self.cmd:
+            self.cmd = raw_input(self.menu_desc).lower()
+        choice = self.cmd[:1]
+        self.cmd = self.cmd[1:]
+        if choice in self.cmds:
+            func = self.cmds[choice]
+            if isinstance(func, list):
+                # If it's a list, then the first item is the function,
+                # the other ones are arguments
+                func[0](*func[1:])
+            else:
+                func()
+        else:
+            print "Huh?"
+            self.cmd = ""
+
+    def main_menu(self):
+        print res_index,
+        while 1:
+            self.res_files.refresh_state()
+            self.build_main_menu()
+            self.show_menu()
+
+wrapper = TextWrapper(width = 79, break_on_hyphens = False)
+# The hack to support FullWidth seems to have an issue with words the same size
+# as the line and break_long_word. It adds a space at the beginning of the next one.
+# FWwrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False)
+FWwrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False, break_long_words = False)
+
+# We initialize the resource index early because we might need it if we have to
+# initialize the transifex configuration.
+res_index = ResourceIndex()
+
+# Can we use the transifex client?
+try:
+    call_tx([], True)
+    transifex = True
+except OSError:
+    transifex = False
+
+# Is transifex configured?
+if transifex:
+    if not os.path.exists(tx_config):
+        setup_transifex()
+
+# Can we use git?
+try:
+    call(['git'], stdout=open(os.devnull, 'wb'))
+    git = True
+except OSError:
+    git = False
+
+# Create the global variables for managing resources.
+txt_files = TxtCollection()
+ini_files = IniCollection()
+menu = Menu(cmd)
+menu.main_menu()
