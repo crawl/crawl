@@ -1709,10 +1709,26 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     return number_raised;
 }
 
-// XXX: we could check if there's any corpse or skeleton and abort
-// freely before doing any butchering and dead raising.
 spret_type cast_animate_skeleton(god_type god, bool fail)
 {
+    bool found = false;
+
+    for (stack_iterator si(you.pos()); si; ++si)
+    {
+        if (si->base_type == OBJ_CORPSES
+            && mons_class_can_be_zombified(si->mon_type)
+            && mons_skeleton(si->mon_type))
+        {
+            found = true;
+        }
+    }
+
+    if (!found)
+    {
+        mpr("There is nothing here that can be animated!");
+        return SPRET_ABORT;
+    }
+
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
