@@ -3961,17 +3961,17 @@ _build_vault_impl(const map_def *vault,
         dgn_place_stone_stairs(true);
     }
 
+    if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
+        && player_in_branch(BRANCH_SWAMP))
+    {
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
+    }
+
     if (!make_no_exits)
     {
         const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
                             || player_in_branch(BRANCH_SLIME_PITS);
         place.connect(spotty);
-    }
-
-    if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
-        && player_in_branch(BRANCH_SWAMP))
-    {
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
     }
 
     // Fire any post-place hooks defined for this map; any failure
