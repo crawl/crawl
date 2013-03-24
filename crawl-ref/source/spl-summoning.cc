@@ -1099,7 +1099,7 @@ static monster_type _zotdef_shadow()
     return RANDOM_MOBILE_MONSTER;
 }
 
-spret_type cast_shadow_creatures(god_type god, bool fail, bool scroll)
+spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
 {
     fail_check();
     mpr("Wisps of shadow whirl around you...");
