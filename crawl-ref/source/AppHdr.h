@@ -182,10 +182,10 @@ static inline T move(T x) { return x; } // good enough for our purposes
 
 #if defined(__GNUC__)
 # define PURE __attribute__ ((pure))
-# define REALLYPURE __attribute__ ((const))
+# define IMMUTABLE __attribute__ ((const))
 #else
 # define PURE
-# define REALLYPURE
+# define IMMUTABLE
 #endif
 
 
