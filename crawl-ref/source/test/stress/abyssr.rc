@@ -1,0 +1,76 @@
+# A timed through the Abyss.
+#
+# Usage: ./crawl --no-save --rc test/stress/abyss.rc
+#
+# Wizmode is needed.
+
+name = Abyss_walker
+species = mu
+background = be
+# CK is slowed down by constant tension checks.
+weapon = mace
+restart_after_game = false
+show_gold_turns = true
+show_more = false
+autofight_stop = 0
+
+Lua{
+bot_start = true
+last_turn = -1
+local cmds = {string.char(9), 'u', 'k', 'l', 'n', '.'}
+function ready()
+  local esc = string.char(27)
+  local eol = string.char(13)
+  if you.turns() == 0 and bot_start then
+    bot_start = false
+    crawl.enable_more(false)
+    crawl.sendkeys("&Y" .. esc)
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('confirmations')" .. eol ..
+                   "debug.disable('death')" .. eol ..
+                   --# don't let them stop us gearing up
+                   "debug.disable('mon_act')" .. eol .. esc)
+    crawl.sendkeys("&Y" .. esc)
+    crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
+    crawl.sendkeys("&A27" .. eol)
+    crawl.sendkeys("&@27 12 12" .. eol)
+    crawl.sendkeys("&o)demon whip" .. eol .. "chaos" .. eol)
+    crawl.sendkeys("g&o[boots" .. eol .. "running" .. eol)
+    crawl.sendkeys("g&o[gold dragon armour" .. eol .. "flying" .. eol)
+    crawl.sendkeys("g&o[large shield" .. eol .. "reflection" .. eol)
+    crawl.sendkeys("g&o[helmet" .. eol .. "see invis" .. eol)
+    crawl.sendkeys("g&o[gloves" .. eol .. "strength" .. eol)
+    crawl.sendkeys("g&o[cloak" .. eol .. "preservation" .. eol)
+    --# somehow ga doesn't work... why?
+    crawl.sendkeys("gwcWdWeWfWgWhWi")
+    crawl.sendkeys("&tca9" .. eol .. "b9" .. eol .. esc)
+    crawl.sendkeys("&tda2" .. eol .. esc)
+    crawl.sendkeys("&tea12" .. eol .. esc)
+    crawl.sendkeys("&tfa3" .. eol .. esc)
+    crawl.sendkeys("&tga2" .. eol .. esc)
+    crawl.sendkeys("&tha2" .. eol .. esc)
+    crawl.sendkeys("&tia2" .. eol .. esc)
+    crawl.sendkeys("ah") -- flight
+    --# re-enable monsters
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('mon_act', false)" .. eol .. esc)
+    --# exit the Abyss then go back, so it's not the special starting Abyss
+    crawl.sendkeys("&B")
+  end
+  if you.turns() ~= last_turn then
+    command = 1
+    last_turn = you.turns()
+
+    if you.turns() >= 1000 then
+      crawl.sendkeys("*qyes" .. eol .. esc .. esc)
+    end
+  else
+    command = command + 1
+  end
+  --# don't spam
+  if (command == 1) and you.feel_safe() then
+      command = 2
+  end
+  crawl.sendkeys(cmds[command])
+end
+}

@@ -27,6 +27,12 @@ run_one()
     7|kraken)
         $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:20'
     ;;
+    8|abyss_rest)
+        $CRAWL -rc test/stress/abyssw.rc
+    ;;
+    9|abyss_walk)
+        $CRAWL -rc test/stress/abyssr.rc
+    ;;
     test) # Not in "all".
         $CRAWL -test
     ;;
@@ -38,7 +44,7 @@ run_one()
 
 if [ "$*" = "all" ]
   then
-    for x in 1 2 3 4 5 6 7; do run_one "$x";done
+    for x in 1 2 3 4 5 6 7 8 9; do run_one "$x";done
     exit $?
 fi
 
