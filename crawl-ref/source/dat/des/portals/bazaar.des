@@ -1532,6 +1532,35 @@ MAP
 """""""""""""""""""""""""""""""""
 ENDMAP
 
+# 4 random shops
+NAME:   grunt_bazaar_doublecross
+DEPTH:  Bazaar
+ORIENT: encompass
+KFEAT:  A = any shop
+SUBST:  T = G:20 T V U:1
+:       bazaar_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxx
+xT.xxxxxxxxxxx.Tx
+x.A.xxxxxxxxx.A.x
+xxx...xxxxx...xxx
+xxxxx.......xxxxx
+xxxxxxx.T.xxxxxxx
+xxxxx.......xxxxx
+xxx...xxxxx...xxx
+x...xx+.<.+xx...x
+xT.xxxx.T.xxxx.Tx
+x...xx+.>.+xx...x
+xxx...xxxxx...xxx
+xxxxx.......xxxxx
+xxxxxxx.T.xxxxxxx
+xxxxx.......xxxxx
+xxx...xxxxx...xxx
+x.A.xxxxxxxxx.A.x
+xT.xxxxxxxxxxx.Tx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##########################################################################
 # Very rare maps, including dangerous maps (weight 1)
 ##########################################################################

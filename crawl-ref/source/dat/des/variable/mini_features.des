@@ -2121,6 +2121,42 @@ xx..xxx           xxx..xx
 xxx                   xxx
 ENDMAP
 
+NAME:    grunt_decor_one_mirror
+TAGS:    transparent extra decor
+DEPTH:   D
+SUBST:   G = tTTVUG
+MAP
+  ...
+ ..b..
+.bb.bb.
+.b.G.b.
+.bb.bb.
+ ..b..
+  ...
+ENDMAP
+
+NAME:    grunt_decor_mini_mirrors
+TAGS:    transparent extra decor
+DEPTH:   D
+SHUFFLE: AB / BA / BB, CD / DC / DD, EF / FE / FF, IJ / JI / JJ
+SUBST:   ACEI = b, BDFJ = .
+SUBST:   G = tTTVUG
+MAP
+     ...   ...
+    ..b.....b..
+   .bb.bAbBb.bb.
+  .bb.G.bbb.G.bb.
+ .bbbb.bBbAb.bbbb.
+..b.bCbDb.bEbFb.b..
+.b.G.bbb.G.bbb.G.b.
+..b.bDbCb.bFbEb.b..
+ .bbbb.bIbJb.bbbb.
+  .bb.G.bbb.G.bb.
+   .bb.bJbIb.bb.
+    ..b.....b..
+     ...   ...
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
