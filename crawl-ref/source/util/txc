@@ -59,7 +59,7 @@ sep_re = re.compile('[, ]+') # basic separator for user input
 txt_sep_re = re.compile('%{4,}') # txt file entry separator
 cmd_re = re.compile('<(\w)>') # used to find the key in menu command strings
 # Those languages have special wrapping with fullwidth character support
-east_asian_languages = {'ko', 'zh'}
+east_asian_languages = {'ja', 'ko', 'zh'}
 
 # This object serves as an intermediate step between txt and ini files.
 # Entries are in a raw format: no wrapping, every new line is significant.
@@ -186,12 +186,25 @@ def change_counter(c):
     return " ".join(["%s:%-3d" % (k, c[k]) if c[k] else " " * (len(k) + 4) \
                      for k in sorted(res_index.changes)])
 
-# Subclasses to properly handle wrapping fullwidth unicode character which take
-# 2 columns to be displayed on a terminal
-# See http://code.activestate.com/lists/python-list/631628/"""
+"""Subclasses to properly handle wrapping fullwidth unicode character which take
+2 columns to be displayed on a terminal
+See http://code.activestate.com/lists/python-list/631628/"""
 class FullWidthUnicode(unicode):
     def __len__(self):
         return sum(2 if east_asian_width(c) in 'WFA' else 1 for c in self)
+
+    def __getslice__(self, i, j):
+        k = 0
+        while k < i:
+            if east_asian_width(self[k]) in 'WFA':
+                i -= 1
+            k += 1
+        k = i
+        while k < j and k < unicode.__len__(self):
+            if east_asian_width(self[k]) in 'WFA':
+                j -= 1
+            k += 1
+        return FullWidthUnicode(unicode.__getslice__(self, i, j))
 
 class FullWidthTextWrapper(TextWrapper):
     def _split(self, text):
@@ -1155,10 +1168,7 @@ class Menu(OrderedDict):
             self.show_menu()
 
 wrapper = TextWrapper(width = 79, break_on_hyphens = False)
-# The hack to support FullWidth seems to have an issue with words the same size
-# as the line and break_long_word. It adds a space at the beginning of the next one.
-# FWwrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False)
-FWwrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False, break_long_words = False)
+FWwrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False)
 
 # We initialize the resource index early because we might need it if we have to
 # initialize the transifex configuration.
