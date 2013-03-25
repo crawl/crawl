@@ -5546,6 +5546,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             mon_enchant_list old_ench = enchantments;
             FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
             int8_t old_ench_countdown = ench_countdown;
+            string old_name = mname;
 
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
@@ -5557,6 +5558,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             enchantments   = old_ench;
             ench_cache     = old_ench_cache;
             ench_countdown = old_ench_countdown;
+            // Keep the rider's name, if it had one (Mercenary card).
+            if (!old_name.empty())
+                mname = old_name;
 
             mounted_kill(this, fly_died ? MONS_FIREFLY : MONS_SPRIGGAN,
                 !oppressor ? KILL_MISC
@@ -5564,6 +5568,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                   ? KILL_YOU : KILL_MON,
                 (oppressor && oppressor->is_monster())
                   ? oppressor->mindex() : NON_MONSTER);
+
+            // Now clear the name, if the rider just died.
+            if (!fly_died)
+                mname.clear();
 
             if (fly_died && !is_habitable(pos()))
             {
