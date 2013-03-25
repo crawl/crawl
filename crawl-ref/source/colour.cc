@@ -3,6 +3,7 @@
 #include "colour.h"
 
 #include "areas.h"
+#include "branch.h"
 #include "cloud.h"
 #include "dgn-height.h"
 #include "env.h"
@@ -223,7 +224,7 @@ static int _etc_liquefied(int, const coord_def& loc)
     double dist = sqrt(x*x + y*y);
     bool phase = ((int)floor(dir*0.3 + dist*0.5 + (you.frame_no % 54)/2.7))&1;
 
-    if (player_in_branch(BRANCH_SWAMP))
+    if (branches[you.where_are_you].floor_colour == BROWN)
         return phase ? LIGHTRED : RED;
     else
         return phase ? YELLOW : BROWN;
