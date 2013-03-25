@@ -3260,7 +3260,7 @@ bool player_angers_monster(monster* mon)
                 mprf("%s is enraged by your lawfulness!", mname.c_str());
                 break;
             case DID_SPELL_CASTING:
-                mprf("%s is enraged by your antimagic god!", mname.c_str());
+                mprf("%s is enraged by your magic-hating god!", mname.c_str());
                 break;
             default:
                 mprf("%s is enraged by a buggy thing about you!", mname.c_str());
