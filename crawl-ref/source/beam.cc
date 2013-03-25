@@ -1368,13 +1368,6 @@ void bolt::do_fire()
         if (beam_cancelled)
             return;
 
-        if (pos() == target)
-        {
-            passed_target = true;
-            if (stop_at_target())
-                break;
-        }
-
         // Weapons of returning should find an inverse ray
         // through find_ray and setup_retrace, but they didn't
         // always in the past, and we don't want to crash
@@ -1402,6 +1395,13 @@ void bolt::do_fire()
         // the cell.
         if (animate)
             draw(pos());
+
+        if (pos() == target)
+        {
+            passed_target = true;
+            if (stop_at_target())
+                break;
+        }
 
         noise_generated = false;
         ray.advance();
@@ -2761,6 +2761,9 @@ void bolt::affect_place_clouds()
 
     if (name == "blast of calcifying dust")
         place_cloud(CLOUD_PETRIFY, p, random2(4) + 4, agent());
+
+    if (name == "trail of fire")
+        place_cloud(CLOUD_FIRE, p, random2(ench_power) + ench_power, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
