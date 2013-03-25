@@ -104,7 +104,7 @@ enum brand_type // item_def.special
 
     MAX_PAN_LORD_BRANDS = SPWPN_EVASION,
 
-    SPWPN_CONFUSE,
+    SPWPN_CONFUSE, // XXX not a real weapon brand, only for Confusing Touch
     SPWPN_PENETRATION,
     SPWPN_REAPING,
 
