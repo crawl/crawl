@@ -185,9 +185,10 @@ spret_type cast_swiftness(int power, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.in_water())
+    if (you.in_water() || you.liquefied_ground())
     {
-        mpr("The water foams!");
+        mprf("The %s foams!", you.in_water() ? "water"
+                                             : "liquid ground");
         return SPRET_ABORT;
     }
 
