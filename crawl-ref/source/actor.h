@@ -223,7 +223,8 @@ public:
                                    bool damage_inventory = true,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
-    virtual bool can_hibernate(bool holi_only = false) const;
+    virtual bool can_hibernate(bool holi_only = false,
+                               bool intrinsic_only = false) const;
     virtual bool can_sleep() const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
@@ -283,7 +284,7 @@ public:
     virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;
-    virtual int res_negative_energy() const = 0;
+    virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual int res_torment() const = 0;
     virtual int res_wind() const = 0;
     virtual int res_petrify(bool temp = true) const = 0;

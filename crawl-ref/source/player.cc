@@ -6461,9 +6461,9 @@ int player::res_holy_energy(const actor *attacker) const
     return 0;
 }
 
-int player::res_negative_energy() const
+int player::res_negative_energy(bool intrinsic_only) const
 {
-    return player_prot_life();
+    return player_prot_life(!intrinsic_only, true, !intrinsic_only);
 }
 
 int player::res_torment() const
