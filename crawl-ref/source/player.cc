@@ -2212,9 +2212,13 @@ int player_movement_speed(bool ignore_burden)
     if (you.tengu_flight())
         mv--;
 
-    // Swiftness doesn't work in water.
-    if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_water())
+    // Swiftness doesn't work in liquid.
+    if (you.duration[DUR_SWIFTNESS] > 0
+        && !you.in_water()
+        && !you.liquefied_ground())
+    {
         mv -= 2;
+    }
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
@@ -3979,7 +3983,7 @@ static void _display_movement_speed()
 {
     const int move_cost = (player_speed() * player_movement_speed()) / 10;
 
-    const bool water  = you.in_water();
+    const bool water  = you.in_water() || you.liquefied_ground();
     const bool swim   = you.swimming();
 
     const bool fly    = you.flight_mode();
