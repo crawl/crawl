@@ -86,7 +86,8 @@ static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
 static beam_type _chaos_beam_flavour();
 static string _beam_type_name(beam_type type);
-static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon);
+static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
+                                          bool intrinsic_only = false);
 
 tracer_info::tracer_info()
 {
@@ -3839,7 +3840,7 @@ void bolt::update_hurt_or_helped(monster* mon)
 void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Only count tracers as hitting creatures they could potentially affect
-    if (_ench_flavour_affects_monster(flavour, mon))
+    if (_ench_flavour_affects_monster(flavour, mon, true))
     {
         // Update friend or foe encountered.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
@@ -4684,7 +4685,8 @@ bool bolt::has_saving_throw() const
     }
 }
 
-static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
+static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
+                                          bool intrinsic_only)
 {
     bool rc = true;
     switch (flavour)
@@ -4711,11 +4713,11 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon)
         break;
 
     case BEAM_PAIN:
-        rc = !mon->res_negative_energy();
+        rc = !mon->res_negative_energy(intrinsic_only);
         break;
 
     case BEAM_HIBERNATION:
-        rc = mon->can_hibernate();
+        rc = mon->can_hibernate(false, intrinsic_only);
         break;
 
     case BEAM_PORKALATOR:

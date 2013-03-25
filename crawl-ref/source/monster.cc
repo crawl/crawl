@@ -3839,14 +3839,14 @@ int monster::res_holy_energy(const actor *attacker) const
     return 0;
 }
 
-int monster::res_negative_energy() const
+int monster::res_negative_energy(bool intrinsic_only) const
 {
     if (holiness() != MH_NATURAL)
         return 3;
 
     int u = get_mons_resist(this, MR_RES_NEG);
 
-    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT && !intrinsic_only)
     {
         u += scan_artefacts(ARTP_NEGATIVE_ENERGY);
 
