@@ -3907,6 +3907,8 @@ item_info get_item_info(const item_def& item)
         else
             ii.sub_type = NUM_BOOKS;
         ii.special = item.special; // appearance
+        if (item.sub_type == BOOK_MANUAL && item_type_known(item))
+            ii.plus = item.plus; // manual skill
         break;
     case OBJ_RODS:
         if (item_type_known(item))
