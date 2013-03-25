@@ -1544,7 +1544,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_DISTORTION:
     case SPWPN_REACHING:
     case SPWPN_RETURNING:
-    case SPWPN_CONFUSE:
     case SPWPN_ANTIMAGIC:
     case SPWPN_REAPING:
         if (is_range_weapon(item))
@@ -1561,6 +1560,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         break;
 
     case SPWPN_ACID:
+    case SPWPN_CONFUSE:
     case SPWPN_FORBID_BRAND:
     case SPWPN_DEBUG_RANDART:
     case NUM_SPECIAL_WEAPONS:
