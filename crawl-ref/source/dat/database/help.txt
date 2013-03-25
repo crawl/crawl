@@ -237,8 +237,8 @@ By pressing its letter, you can cycle if and how a skill is trained:
 + selected
 <w>* focused</w>       Skill will train faster than others.
 
-Pressing Ctrl+letter selects one skill and deselects all the others.
-It's a useful shortcut when you want to train only one skill.
+Pressing a capital letter selects that skill and deselects all the others.
+This shortcut is useful when you want to train only one skill.
 
 Training can be done in two modes, which are toggled with the <w>/</w> key.
 * automatic:    Skills are trained based on your use of them.
