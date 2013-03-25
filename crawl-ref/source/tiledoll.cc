@@ -317,6 +317,7 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BOOTS]   = 0;
         result.parts[TILEP_PART_BODY]    = 0;
         result.parts[TILEP_PART_ARM]     = 0;
+        result.parts[TILEP_PART_CLOAK]   = 0;
         break;
     default:
         break;
