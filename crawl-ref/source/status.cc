@@ -356,6 +356,18 @@ bool fill_status_info(int status, status_info* inf)
         _describe_speed(inf);
         break;
 
+    case STATUS_LIQUEFIED:
+    {
+        if (you.liquefied_ground())
+        {
+            inf->light_colour = BROWN;
+            inf->light_text   = "SlowM";
+            inf->short_text   = "slowed movement";
+            inf->long_text    = "Your movement is slowed on this liquid ground.";
+        }
+        break;
+    }
+
     case STATUS_SAGE:
         _describe_sage(inf);
         break;
@@ -714,13 +726,6 @@ static void _describe_speed(status_info* inf)
         inf->short_text = "hasted";
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
-    }
-    if (you.liquefied_ground())
-    {
-        inf->light_colour = BROWN;
-        inf->light_text   = "SlowM";
-        inf->short_text   = "slowed movement";
-        inf->long_text    = "Your movement is slowed on this liquid ground.";
     }
 }
 
