@@ -338,7 +338,7 @@ public:
     int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
-    int res_negative_energy() const;
+    int res_negative_energy(bool intrinsic_only = false) const;
     int res_torment() const;
     int res_acid(bool calc_unid = true) const;
     int res_wind() const;

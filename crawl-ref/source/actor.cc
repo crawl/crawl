@@ -158,7 +158,7 @@ void actor::set_position(const coord_def &c)
     areas_actor_moved(this, oldpos);
 }
 
-bool actor::can_hibernate(bool holi_only) const
+bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
 {
     // Undead, nonliving, and plants don't sleep.
     const mon_holy_type holi = holiness();
@@ -172,11 +172,15 @@ bool actor::can_hibernate(bool holi_only) const
             return false;
 
         // The monster is cold-resistant and can't be hibernated.
-        if (res_cold() > 0)
+        if (intrinsic_only && is_monster()
+                ? get_mons_resist(this->as_monster(), MR_RES_COLD)
+                : res_cold() > 0)
+        {
             return false;
+        }
 
         // The monster has slept recently.
-        if (is_monster()
+        if (is_monster() && !intrinsic_only
             && static_cast<const monster* >(this)->has_ench(ENCH_SLEEP_WARY))
         {
             return false;
