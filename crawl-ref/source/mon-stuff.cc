@@ -2606,6 +2606,9 @@ int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     mon.attitude = daddy->attitude;
     mon.damage_friendly = daddy->damage_friendly;
     mon.damage_total = daddy->damage_total;
+    // Keep the rider's name, if it had one (Mercenary card).
+    if (!daddy->mname.empty() && mon.type == MONS_SPRIGGAN)
+        mon.mname = daddy->mname;
     if (daddy->props.exists("reaping_damage"))
     {
         dprf("Mounted kill: marking the other monster as reaped as well.");
