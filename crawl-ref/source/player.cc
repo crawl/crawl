@@ -4168,7 +4168,8 @@ void display_char_status()
         STATUS_SUPPRESSED,
         STATUS_SILENCE,
         DUR_SENTINEL_MARK,
-        STATUS_RECALL
+        STATUS_RECALL,
+        STATUS_LIQUEFIED
     };
 
     status_info inf;

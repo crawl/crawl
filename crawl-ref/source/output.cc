@@ -915,7 +915,8 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_SILENCE,
         STATUS_NO_CTELE,
         DUR_SENTINEL_MARK,
-        STATUS_RECALL
+        STATUS_RECALL,
+        STATUS_LIQUEFIED
     };
 
     status_info inf;
@@ -2366,7 +2367,8 @@ static string _status_mut_abilities(int sw)
         STATUS_CONSTRICTED,
         STATUS_AUGMENTED,
         STATUS_SUPPRESSED,
-        STATUS_RECALL
+        STATUS_RECALL,
+        STATUS_LIQUEFIED
     };
 
     status_info inf;
