@@ -4433,6 +4433,38 @@ xx...lllll...xx
        @
 ENDMAP
 
+# The only ways I can think of to circumvent the alarm trap are to blow up
+# the door from a distance or LRD through to the item from outside; both
+# wake up the monsters anyway.
+NAME:   grunt_tough_drop
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:4-
+KFEAT:  ^ = known teleport trap
+KFEAT:  _ = alarm trap
+KPROP:  8^ = no_rtele_into
+: if you.absdepth() < 9 then
+SUBST: | = %
+SUBST: 8 = 0
+: elseif you.absdepth() < 18 then
+SUBST: | = *
+SUBST: 8 = 999000
+: else
+SUBST: 8 = 889900
+: end
+MAP
+   .....
+   .cnc.
+....n|n....
+.cccc+cccc.
+.c8^n_n^8c.
+.cccc.cccc.
+.c8^n.n^8c.
+.cccc.cccc.
+.c8^n.n^8c.
+.cccc+cccc.
+...........
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
