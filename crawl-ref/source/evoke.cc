@@ -28,6 +28,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "melee_attack.h"
 #include "message.h"
@@ -42,12 +43,17 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
 #include "terrain.h"
 #include "view.h"
 #include "xom.h"
+
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 
 void shadow_lantern_effect()
 {
@@ -681,6 +687,233 @@ static bool _ball_of_energy(void)
     return ret;
 }
 
+static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
+                                          bool jitter_start,
+                                          bolt &beam1, bolt &beam2)
+{
+    const int NUM_TRIES = 10;
+    const int RANGE = 8;
+
+    bolt trace_beam;
+    trace_beam.source = source;
+    trace_beam.target = target;
+    trace_beam.aimed_at_spot = false;
+    trace_beam.is_tracer = true;
+    trace_beam.range = RANGE;
+    trace_beam.fire();
+
+    coord_def aim_dir = (source - target).sgn();
+
+    if (trace_beam.path_taken.back() != source)
+        target = trace_beam.path_taken.back();
+
+    if (jitter_start)
+    {
+        for (int n = 0; n < NUM_TRIES; ++n)
+        {
+            coord_def jitter = target + coord_def(random_range(-2, 2), random_range(-2, 2));
+            if (jitter == target || jitter == source || feat_is_solid(grd(jitter)))
+                continue;
+
+            trace_beam.target = jitter;
+            trace_beam.fire();
+
+            coord_def delta = source - trace_beam.path_taken.back();
+            //Don't try to aim at targets in the opposite direction of main aim
+            if ((abs(aim_dir.x - delta.sgn().x) + abs(aim_dir.y - delta.sgn().y) >= 2)
+                 && !delta.origin())
+                continue;
+
+            target = trace_beam.path_taken.back();
+            break;
+        }
+    }
+
+    vector<coord_def> path = trace_beam.path_taken;
+    unsigned int mid_i = (path.size() / 2);
+    coord_def mid = path[mid_i];
+
+    for (int n = 0; n < NUM_TRIES; ++n)
+    {
+        coord_def jitter = mid + coord_def(random_range(-3, 3), random_range(-3, 3));
+        if (jitter == mid || jitter.distance_from(mid) < 2 || jitter == source
+            || feat_is_solid(grd(jitter))
+            || !cell_see_cell(source, jitter, LOS_NO_TRANS)
+            || !cell_see_cell(target, jitter, LOS_NO_TRANS))
+            continue;
+
+        trace_beam.aimed_at_feet = false;
+        trace_beam.source = jitter;
+        trace_beam.target = target;
+        trace_beam.fire();
+
+        coord_def delta1 = source - jitter;
+        coord_def delta2 = source - trace_beam.path_taken.back();
+
+        //Don't try to aim at targets in the opposite direction of main aim
+        if (abs(aim_dir.x - delta1.sgn().x) + abs(aim_dir.y - delta1.sgn().y) >= 2
+            || abs(aim_dir.x - delta2.sgn().x) + abs(aim_dir.y - delta2.sgn().y) >= 2)
+        {
+            continue;
+        }
+
+        // Don't make l-turns
+        coord_def delta = jitter-target;
+        if (!delta.x || !delta.y)
+            continue;
+
+        bool match = false;
+        for (unsigned int i = 0; i < path.size(); ++i)
+        {
+            if (path[i] == jitter)
+            {
+                match = true;
+                break;
+            }
+        }
+        if (match)
+            continue;
+
+        mid = jitter;
+        break;
+    }
+
+    beam1.source = source;
+    beam1.target = mid;
+    beam1.range = RANGE;
+    beam1.aimed_at_spot = true;
+    beam1.is_tracer = true;
+    beam1.fire();
+    beam1.is_tracer = false;
+
+    beam2.source = mid;
+    beam2.target = target;
+    beam2.range = max(int(RANGE - beam1.path_taken.size()), mid.distance_from(target));
+    beam2.is_tracer = true;
+    beam2.fire();
+    beam2.is_tracer = false;
+
+    vector<coord_def> newpath;
+    newpath.insert(newpath.end(), beam1.path_taken.begin(), beam1.path_taken.end());
+    newpath.insert(newpath.end(), beam2.path_taken.begin(), beam2.path_taken.end());
+
+    return newpath;
+}
+
+static bool _check_path_overlap(const vector<coord_def> &path1,
+                                const vector<coord_def> &path2, int match_len)
+{
+    int max_len = min(path1.size(), path2.size());
+    match_len = min(match_len, max_len-1);
+
+    // Check for overlap with previous path
+    int matchs = 0;
+    for (int i = 0; i < max_len; ++i)
+    {
+        if (path1[i] == path2[i])
+            ++matchs;
+        else
+            matchs = 0;
+
+        if (matchs >= match_len)
+            return true;
+    }
+
+    return false;
+}
+
+static bool _fill_flame_trails(coord_def source, coord_def target,
+                               vector<bolt> &beams, vector<coord_def> &elementals,
+                               int num)
+{
+    const int NUM_TRIES = 10;
+    vector<vector<coord_def> > paths;
+    for (int n = 0; n < num; ++n)
+    {
+        int tries = 0;
+        vector<coord_def> path;
+        bolt beam1, beam2;
+        while (++tries <= NUM_TRIES && path.empty())
+        {
+            path = _get_jitter_path(source, target, !paths.empty(), beam1, beam2);
+            for (unsigned int i = 0; i < paths.size(); ++i)
+            {
+                if (_check_path_overlap(path, paths[i], 3))
+                {
+                    path.clear();
+                    beam1 = bolt();
+                    beam2 = bolt();
+                    break;
+                }
+            }
+        }
+
+        if (!path.empty())
+        {
+            paths.push_back(path);
+            beams.push_back(beam1);
+            beams.push_back(beam2);
+            if (path.size() > 3)
+                elementals.push_back(path.back());
+        }
+    }
+
+    return (!paths.empty());
+}
+
+static bool _lamp_of_fire()
+{
+    bolt base_beam;
+    dist target;
+
+    const int pow = 12 + you.skill(SK_EVOCATIONS, 2);
+    if (spell_direction(target, base_beam, DIR_TARGET, TARG_ANY, 8,
+                        true, true, false, NULL,
+                        "Aim the lamp in which direction?", true, NULL))
+    {
+        mpr("The flames dance!");
+
+        vector<bolt> beams;
+        vector<coord_def> elementals;
+        int num_trails = 1;
+        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
+            ++num_trails;
+        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
+            ++num_trails;
+
+        _fill_flame_trails(you.pos(), target.target, beams, elementals, num_trails);
+
+        for (unsigned int n = 0; n < beams.size(); ++n)
+        {
+            if (beams[n].source == beams[n].target)
+                continue;
+
+            beams[n].flavour     = BEAM_FIRE;
+            beams[n].colour      = RED;
+            beams[n].beam_source = MHITYOU;
+            beams[n].thrower     = KILL_YOU;
+            beams[n].is_beam     = true;
+            beams[n].name        = "trail of fire";
+            beams[n].hit         = 10 + (pow/8);
+            beams[n].damage      = dice_def(2, 4 + pow/4);
+            beams[n].ench_power  = (pow/8);
+            beams[n].fire();
+        }
+
+        for (unsigned int n = 0; n < elementals.size(); ++n)
+        {
+            mgen_data mg(MONS_FIRE_ELEMENTAL, BEH_FRIENDLY, &you, 3,
+                         SPELL_NO_SPELL, elementals[n], 0,
+                         MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
+                         MONS_FIRE_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+            mg.hd = 6 + (pow/14);
+            create_monster(mg);
+        }
+    }
+
+    return true;
+}
+
 bool evoke_item(int slot)
 {
     if (you.form == TRAN_WISP)
@@ -850,13 +1083,9 @@ bool evoke_item(int slot)
             break;
 
         case MISC_LAMP_OF_FIRE:
-            if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            else
-            {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4, 3);
-                pract = (one_chance_in(5) ? 1 : 0);
-            }
+
+            _lamp_of_fire();
+
             break;
 
         case MISC_STONE_OF_EARTH_ELEMENTALS:
