@@ -34,7 +34,7 @@ function callback.oka_monsters_death (data, triggerable, triggerer, marker, ev)
     for slave in iter.slave_iterator("loot_doors", 1) do
       dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
     end
-    crawl.mpr("The gates beind the altar rise, and the entry reopens.")
+    crawl.mpr("The gates behind the altar rise, and the entry reopens.")
   end
 end
 
