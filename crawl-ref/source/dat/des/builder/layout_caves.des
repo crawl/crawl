@@ -6,6 +6,7 @@
 : require("dlua/util.lua")
 : require("dlua/layout/procedural.lua")
 : require("dlua/layout/zonify.lua")
+: require("dlua/layout/hyper.lua")
 
 # The premise here is we pick a random shape function and apply cavelike edges.
 # We optionally apply a fairly large-scale domain distortion to the underlying shape.
@@ -14,7 +15,7 @@
 #       * Some shapes work better in certain branches. Snake/D could occasionally get straight edged shapes.
 #       * Sake should have domain distortion every time
 NAME:   layout_cave_shapes
-DEPTH:  D:5-25,Lair,Snake
+DEPTH:  D:5-25,Lair,Snake,Tar,Coc,Spider
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -121,9 +122,12 @@ TAGS: overwritable layout allow_dup unrand
 }}
 
 # This will have a very open area in the middle and rubble around the edges
+# TODO: This looks very much like a particular instance of cave_shapes. Probably little point keeping it around
+# unless it can do something more interesting?
 NAME:   layout_ant_hill
-DEPTH:  D:5-25,Lair
-WEIGHT: 20
+DEPTH:  D:2-,Lair
+# DEPTH:  D:5-25,Lair
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -164,6 +168,56 @@ TAGS: overwritable layout allow_dup unrand
   fill_disconnected{wanted = '@'}
   mapgrd[midx][midy] = '.'
 }}
+
+# A big cavern with a few huts or caves in it
+# TODO: Use other layouts as the base (e.g. cave_shapes, a river/forest/pools layout like bigger_room,
+# even swamp / shoals) and add rooms to them
+NAME: layout_cave_town
+WEIGHT: 20
+ORIENT: encompass
+DEPTH: D:5-, Snake, Lair
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
+{{
+  if is_validating() then return; end
+
+  -- Similar size calculations to chaotic_city
+  local function room_size_func()
+    return { x = 5 + crawl.random2(7) + crawl.random2(5),y = 3 + crawl.random2(7) + crawl.random2(5) }
+  end
+  local function room_size_func_small()
+    return { x = 4 + crawl.random2(4) + crawl.random2(3),y = 2 + crawl.random2(4) + crawl.random2(3) }
+  end
+  local function room_size_func_big()
+    return { x = 7 + crawl.random2(9) + crawl.random2(7),y = 5 + crawl.random2(9) + crawl.random2(7) }
+  end
+
+  local weights = {
+    { weight = 10, room = hyper.rooms.cavern_vault },
+    { weight = 10, room = hyper.rooms.cave_vault },
+  }
+
+  local chosen = util.random_weighted_from("weight",weights)
+
+  -- This is a very simple approximation of layout_chaotic_city. It's almost identical with a little hyperness.
+  local gxm,gym = dgn.max_bounds()
+  hyper.build_layout(_G,{
+    name = "Hyper City",
+    build_fixture = {
+      { pass = "Primary", type = "build", strategy = hyper.place.strategy_primary, max_rooms = 1, generators = {
+        { generator = "code", paint_callback = hyper.floors.cavern_walls, min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 },
+        { generator = "code", paint_callback = hyper.rooms.cave_walls, min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 }
+      } },
+      { pass = "Rooms", type = "build", strategy = hyper.place.strategy_open, max_rooms = 12, generators = {
+        { generator = "code", class = "room", weight = 5, paint_callback = chosen.room, size_callback = room_size_func_big, room_transform = hyper.rooms.add_walls, max_rooms = 1 },
+        { generator = "code", class = "room", weight = 15, paint_callback = chosen.room, size_callback = room_size_func, room_transform = hyper.rooms.add_walls },
+        { generator = "code", class = "room", weight = 10, paint_callback = chosen.room, size_callback = room_size_func_small, room_transform = hyper.rooms.add_walls },
+      } }
+    }
+  })
+  zonify.grid_fill_zones(1,"rock_wall")
+}}
+MAP
+ENDMAP
 
 NAME:   layout_gehenna_lava_paths
 DEPTH:  Geh
