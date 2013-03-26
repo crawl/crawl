@@ -3199,6 +3199,8 @@ conduct_type player_will_anger_monster(monster_type type)
 {
     monster dummy;
     dummy.type = type;
+    get_spells((mon_spellbook_type)get_monster_data(type)->sec, &dummy);
+    dummy.bind_spell_flags();
 
     return player_will_anger_monster(&dummy);
 }
