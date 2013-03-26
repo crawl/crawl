@@ -21,8 +21,6 @@
 -- room/door placement can work correctly.
 ------------------------------------------------------------------------------
 
-if hyper == nil then hyper = {} end  -- Main namespace for engine
-if hyper.vaults == nil then hyper.vaults = {}   -- Main namespace for V branch related bits
 hypervaults = {}  -- Old namespace, gradually moving everything into hyper.*
 
 require("dlua/v_debug.lua")
@@ -64,7 +62,7 @@ function vaults_default_options()
 
     -- Weightings of various types of room generators.
     room_type_weights = {
-      { generator = "code", paint_callback = hyper.vaults.floor_vault, weight = 50, min_size = 6, max_size = 15 }, -- Floor vault
+      { generator = "code", paint_callback = hypervaults.shapes.floor_vault, weight = 50, min_size = 6, max_size = 15 }, -- Floor vault
       { generator = "code", paint_callback = junction_vault_paint_callback, weight = 10, min_size = 10, max_size = 20, min_corridor = 3, max_corridor = 5 }, -- Floor vault ++
       { generator = "tagged", tag = "vaults_room", weight = 50, max_rooms = 6 },
       { generator = "tagged", tag = "vaults_empty", weight = 40 },

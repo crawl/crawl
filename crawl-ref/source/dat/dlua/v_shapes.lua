@@ -14,7 +14,7 @@ end
 
 -- This version of floor vault adds a staircase somewhere randomly in the middle
 -- In other layouts we don't want to mess with the stairs but in V this will ensure the stairs are in a room, not the corridors
-function hyper.vaults.floor_vault(room, options, gen)
+function hypervaults.shapes.floor_vault(room, options, gen)
 
   local paint = floor_vault_paint_callback(room,options,gen)
   if options.stair_chance ~= nil and crawl.x_chance_in_y(options.stair_chance,100) then
