@@ -1483,7 +1483,7 @@ struct spell_desc
 {
     SPELL_SHADOW_CREATURES, "Shadow Creatures",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_NONE,
      5,
      0,
      -1, -1,
