@@ -11,6 +11,7 @@
 #include "enum.h"
 #include "mon-enum.h"
 #include "player.h"
+#include "mon-mst.h"
 
 struct bolt;
 
@@ -294,6 +295,7 @@ monster_type random_draconian_monster_species();
 
 bool init_abomination(monster* mon, int hd);
 void define_monster(monster* mons);
+void get_spells(mon_spellbook_type book, monster* mon);
 
 void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 

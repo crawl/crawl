@@ -73,8 +73,6 @@ static bool initialised_randmons = false;
 static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
-#include "mon-mst.h"
-
 struct mon_spellbook
 {
     mon_spellbook_type type;
@@ -2072,7 +2070,7 @@ static void _mons_load_spells(monster* mon, mon_spellbook_type book)
     }
 }
 
-static void _get_spells(mon_spellbook_type book, monster* mon)
+void get_spells(mon_spellbook_type book, monster* mon)
 {
     if (book == MST_NO_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
     {
@@ -2289,7 +2287,7 @@ void define_monster(monster* mons)
 
     mons->bind_melee_flags();
 
-    _get_spells((mon_spellbook_type)m->sec, mons);
+    get_spells((mon_spellbook_type)m->sec, mons);
     mons->bind_spell_flags();
 
     // Reset monster enchantments.
