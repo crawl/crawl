@@ -32,7 +32,7 @@ function ready()
     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
     crawl.sendkeys("&B")
   end
-  if you.turns() < 2000 then
+  if you.turns() < 1000 then
     crawl.sendkeys('5')
   else
     crawl.sendkeys("*qyes" .. eol .. esc .. esc)
