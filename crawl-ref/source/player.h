@@ -309,6 +309,7 @@ public:
 
   runrest running;                    // Nonzero if running/traveling.
   bool received_weapon_warning;
+  bool received_noskill_warning;
 
   delay_queue_type delay_queue;       // pending actions
 
