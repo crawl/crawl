@@ -519,11 +519,8 @@ LUAFN(you_teleport_to)
     bool move_monsters = false;
     if (lua_gettop(ls) == 3)
         move_monsters = lua_toboolean(ls, 3);
-    bool override_stasis = false;
-    if (lua_gettop(ls) == 4)
-        override_stasis = lua_toboolean(ls, 4);
 
-    lua_pushboolean(ls, you_teleport_to(place, move_monsters, override_stasis));
+    lua_pushboolean(ls, you_teleport_to(place, move_monsters));
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 
