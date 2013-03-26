@@ -596,7 +596,7 @@ with whatever ambient grit is available.
 %%%%
 Shadow Creatures spell
 
-This spell weaves a creature from shadows and threads of Abyssal matter. The
+This spell weaves a creature from shadows and threads of ethereal matter. The
 creature thus brought into existence will recreate some type of creature found
 in the caster's immediate vicinity. The spell even creates appropriate
 equipment for the creature, which are given a lasting substance by their firm

@@ -3068,7 +3068,6 @@ void read_scroll(int slot)
 
     case SCR_SUMMONING:
         cast_shadow_creatures(true);
-        did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
         break;
 
     case SCR_FOG:
