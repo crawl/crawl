@@ -3906,6 +3906,8 @@ int monster::res_wind() const
 
 int monster::res_petrify(bool temp) const
 {
+    UNUSED(temp);
+
     if (is_insubstantial())
         return 1;
 
