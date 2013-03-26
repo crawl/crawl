@@ -5,6 +5,120 @@
 
 : require("dlua/util.lua")
 : require("dlua/layout/procedural.lua")
+: require("dlua/layout/zonify.lua")
+
+# The premise here is we pick a random shape function and apply cavelike edges.
+# We optionally apply a fairly large-scale domain distortion to the underlying shape.
+# TODO: * Some flooding/river on 1/10 chance (certain branches)
+#       * More shape variety
+#       * Some shapes work better in certain branches. Snake/D could occasionally get straight edged shapes.
+#       * Sake should have domain distortion every time
+NAME:   layout_cave_shapes
+DEPTH:  D:5-25,Lair,Snake
+WEIGHT: 20
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "caverns"
+  if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+  local width = crawl.random_range(10,20)
+  -- TODO: A lot of these functions should be moved into an e.g. procedural.complex namespace
+  local function fcircle()
+    return procedural.distance{ origin = { x = gxm/2, y = gym/2 }, radius = math.min(gxm,gym)/2-2 }
+  end
+  local function fcross()
+    return procedural.sub(1,procedural.max(
+      procedural.bar { position = gym/2,width = width,inner = width/2 },
+      procedural.bar { position = gxm/2,width = width,inner = width/2,horizontal = false } ) )
+  end
+  local shapes = {
+    -- Circle
+    { weight = 12, shape = function()
+        local circle = fcircle()
+        return function(x,y)
+          return procedural.minmax_map(circle(x,y),0.5,1.0)
+        end
+      end},
+    -- Cross
+    { weight = 5, shape = fcross },
+    -- Donut
+    { weight = 8, shape = function()
+        local outer_r = util.random_range_real(0.6,1.0)
+        local circle = fcircle()
+        local cwidth = util.random_range_real(0.2,0.4)
+        local fdonut = function(x,y)
+          return 1-procedural.boundary_map(circle(x,y),outer_r-cwidth,outer_r-cwidth*2/3,outer_r-cwidth/3,outer_r)
+        end
+        -- Optionally draw a bar
+        if crawl.x_chance_in_y(2,3) then
+          -- With one of two methods
+          local fbar
+          if crawl.coinflip() then
+            local horiz = crawl.coinflip()
+            local fbar1 = procedural.bar { horizontal = horiz, position = (horiz and gym or gxm)/2, width = width, inner = width/2 }
+            fbar = function(x,y)
+              local v = 1 - fbar1(x,y)
+              if circle(x,y) > 1 then v = v + (circle(x,y)-1)*10 end
+              return v
+            end
+          else
+            local frad = procedural.radial{ phase = crawl.random_real(), origin = { x = gxm/2, y = gym/2 } }
+            local range = util.random_range_real(0.04,0.2)
+            fbar = function(x,y)
+              local r = frad(x,y)
+              local v = 1 - procedural.boundary_map(r,0,range/3,2*range/3,range) - procedural.boundary_map(r,0.5,0.5+range/3,0.5+2*range/3,0.5+range)
+              -- Cut off outside the circle
+              if circle(x,y) > 1 then v = v + (circle(x,y)-1)*20 end
+              return v
+            end
+          end
+          -- Since we're adding a bar, 2/3 chance for a central chamber
+          if crawl.x_chance_in_y(2,3) then
+            local fdonut1 = fdonut
+            fdonut = function(x,y)
+              return fdonut1(x,y) - procedural.boundary_map(circle(x,y),0.05,0.05+cwidth/3,0.05+cwidth*2/3,0.05+cwidth)
+            end
+          end
+          fdonut = procedural.mul(fdonut,fbar)
+        end
+        return fdonut
+      end },
+    -- Simplex chunks
+    { weight = 20, shape = function()
+        local fsimp = procedural.simplex3d{ scale = util.random_range_real(0.1,0.8) }
+        local fmul = util.random_range_real(2,3)
+        return function(x,y)
+          return fsimp(x,y)*fmul - 1
+        end
+      end
+    }
+  }
+  local shape = util.random_weighted_from("weight",shapes).shape()
+
+  if (crawl.coinflip()) then
+    -- Apply domain distortion
+    shape = procedural.distort {source = shape,
+      scale = crawl.random_range(5,20),
+      offsetx = procedural.simplex3d{ scale = util.random_range_real(0.01,0.2) },
+      offsety = procedural.simplex3d{ scale = util.random_range_real(0.01,0.2) } }
+  end
+  local fcave
+  if crawl.coinflip() then
+    local fsim = procedural.simplex3d{ scale = util.random_range_real(0.8,2) }
+    fcave = function(x,y) return math.abs(fsim(x,y)*2-1) end
+  else
+    -- Scales between .1 and about 8 are good (but .1-.5 most defined)
+    -- TODO: For this random_range (and actually a lot of them) a log scale
+    -- or anything that tends to lower vales would be beneficial since that's
+    -- where all the interesting features happen.
+    fcave = procedural.worley_diff{ scale = util.random_range_real(.3,.8) }
+  end
+  local fdraw = procedural.add(shape,procedural.border{padding=5},fcave)
+  local limit = util.random_range_real(0.65,0.9)
+  procedural.render_map(_G,fdraw,function(value) return value < limit and '.' or 'x' end)
+  zonify.map_fill_zones(_G, 1)
+}}
 
 # This will have a very open area in the middle and rubble around the edges
 NAME:   layout_ant_hill
@@ -93,6 +207,8 @@ TAGS: overwritable layout allow_dup unrand
     end
   end
 
+  zonify.map_fill_zones(_G, 1, 'l')
+
 }}
 MAP
 ENDMAP
@@ -134,6 +250,8 @@ TAGS: overwritable layout allow_dup unrand
       end
     end
   end
+
+  zonify.map_fill_zones(_G, 1, 'l')
 
 }}
 MAP
