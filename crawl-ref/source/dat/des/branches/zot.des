@@ -1814,7 +1814,12 @@ ENDMAP
 
 ####
 # Revenge of the spell-casting oklobs!!!
+#
+# Disabled, the common opinion is that such thing doesn't belong in regular
+# games; sentient oklobs are quite stretching disbelief in a sprint that's
+# themed on Fedhas going mad.
 NAME: grunt_zot_stairs_overgrown
+WEIGHT: 0
 DEPTH: Zot, !Zot:$
 MONS: oklob plant
 MONS: plant col:lightgray name:demonic n_adj
