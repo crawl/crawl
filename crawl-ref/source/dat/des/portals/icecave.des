@@ -92,11 +92,8 @@ function callback.ice_cave_statue_garden_teleporter(data, triggerable,
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
     data.teleport_spot)
 
-  if you.teleport_to(my_slaves[1].x, my_slaves[1].y) then
-    crawl.mpr("Your surroundings suddenly seem different!")
-  else
-    crawl.mpr("There is a strange hissing noise.")
-  end
+  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
+  crawl.mpr("Your surroundings suddenly seem different!")
 end
 
 }}
