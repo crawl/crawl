@@ -2634,8 +2634,8 @@ void maybe_id_ring_see_invis()
 
 void maybe_id_clarity()
 {
-    // If we have clarity without any items
-    if (you.clarity(false, false))
+    // If we have clarity withouot un-IDed items
+    if (you.clarity(false))
         return;
 
     _maybe_id_jewel(NUM_JEWELLERY, AMU_CLARITY, ARTP_CLARITY);
