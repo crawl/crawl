@@ -3054,7 +3054,7 @@ bool bolt::harmless_to_player() const
         return false;
 
     case BEAM_PETRIFY:
-        return (you.res_petrify() > 0 || you.petrified());
+        return (you.res_petrify() || you.petrified());
 
     default:
         return false;

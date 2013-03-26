@@ -3797,13 +3797,13 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         return (mons_intel(mons) >= I_ANIMAL);
 
     case CLOUD_PETRIFY:
-        if (mons->res_petrify() > 0)
+        if (mons->res_petrify())
             return false;
 
         if (extra_careful)
             return true;
 
-        if (mons_intel(mons) >= I_ANIMAL && mons->res_petrify() < 0)
+        if (mons_intel(mons) >= I_ANIMAL)
             return true;
 
         break;
