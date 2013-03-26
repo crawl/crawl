@@ -16,28 +16,34 @@ static const string _get_title_image()
 }
 
 TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
-    m_buf(true, false), m_font_buf(font)
+    m_buf(true, false), m_logo_buf(true, false), m_font_buf(font)
 {
-    // set the texture for the title image
-    m_buf.set_tex(&m_img);
-
     sx = sy = 0;
     dx = dy = 1;
 
-    if (!m_img.load_texture(_get_title_image().c_str(), MIPMAP_NONE))
+    add_tex(m_buf, m_img, _get_title_image().c_str(), width, height);
+    add_tex(m_logo_buf, m_logo_img, "logo.png", width, height);
+}
+
+void TitleRegion::add_tex(VertBuffer &buf, GenericTexture &img, const char *file,
+                          int width, int height)
+{
+    buf.set_tex(&img);
+
+    if (!img.load_texture(file, MIPMAP_NONE))
         return;
 
-    if ((int)m_img.orig_width() < width && (int)m_img.orig_height() < height)
+    if ((int)img.orig_width() < width && (int)img.orig_height() < height)
     {
         // Center
         wx = width;
         wy = height;
-        ox = (wx - m_img.orig_width()) / 2;
-        oy = (wy - m_img.orig_height()) / 2;
+        ox = (wx - img.orig_width()) / 2;
+        oy = (wy - img.orig_height()) / 2;
 
-        GLWPrim rect(0, 0, m_img.width(), m_img.height());
+        GLWPrim rect(0, 0, img.width(), img.height());
         rect.set_tex(0, 0, 1, 1);
-        m_buf.add_primitive(rect);
+        buf.add_primitive(rect);
     }
     else
     {
@@ -46,22 +52,22 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
         {
             // taller than wide (scale to fit width; leave top/bottom borders)
             ox = 0;
-            oy = (height - m_img.orig_height()*width/m_img.orig_width())/2;
-            wx = m_img.width()*width/m_img.orig_width();
-            wy = m_img.height()*width/m_img.orig_width();
+            oy = (height - img.orig_height()*width/img.orig_width())/2;
+            wx = img.width()*width/img.orig_width();
+            wy = img.height()*width/img.orig_width();
         }
         else
         {
             // wider than tall (so scale to fit height; leave left/right borders)
             oy = 0;
-            ox = (width - m_img.orig_width()*height/m_img.orig_height())/2;
-            wx = m_img.width()*height/m_img.orig_height();
-            wy = m_img.height()*height/m_img.orig_height();
+            ox = (width - img.orig_width()*height/img.orig_height())/2;
+            wx = img.width()*height/img.orig_height();
+            wy = img.height()*height/img.orig_height();
         }
 
         GLWPrim rect(0, 0, wx, wy);
         rect.set_tex(0, 0, 1, 1);
-        m_buf.add_primitive(rect);
+        buf.add_primitive(rect);
     }
 }
 
@@ -72,6 +78,7 @@ void TitleRegion::render()
 #endif
     set_transform();
     m_buf.draw();
+    m_logo_buf.draw();
     m_font_buf.draw();
 }
 
