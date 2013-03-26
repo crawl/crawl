@@ -694,7 +694,7 @@ class IniFile(ResourceFile):
 
         # Delete entries with only a link. There's no point in translating them.
         if len(e.value) > 1 and e.value[0] == '<' and e.value[-1] == '>'\
-           and e.value.find("\n") == -1:
+           and e.value.find("\n") == -1 and e.value[1:].find("<") == -1:
             if key in self.entries:
                 self.diff['removed'][key] = self.entries[key]
                 del self.entries[key]
