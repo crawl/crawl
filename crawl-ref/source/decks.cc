@@ -2283,7 +2283,14 @@ static void _water_card(int power, deck_rarity_type rarity)
         mpr("Water floods your area!");
 
         // Flood all visible squares.
+        vector<coord_def> vis;
         for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
+            vis.push_back(*ri);
+
+        // Killing a monster can trigger events that change visibility,
+        // so we need to pre-fetch the list of what's visible.
+        for (vector<coord_def>::const_iterator ri = vis.begin();
+             ri != vis.end(); ++ri)
         {
             coord_def p = *ri;
             destroy_trap(p);
