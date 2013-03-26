@@ -22,7 +22,8 @@
 
 static bool _unsuitable_misled_monster(monster_type mons)
 {
-    return (mons_is_unique(mons)
+    return (invalid_monster_type(mons)
+            || mons_is_unique(mons)
             || mons_is_mimic(mons)
             || mons_is_ghost_demon(mons)
             || mons_class_is_stationary(mons)
@@ -39,8 +40,7 @@ static bool _unsuitable_misled_monster(monster_type mons)
             || mons == MONS_HYPERACTIVE_BALLISTOMYCETE
             || mons == MONS_SHAPESHIFTER
             || mons == MONS_GLOWING_SHAPESHIFTER
-            || mons == MONS_KILLER_KLOWN
-            || mons == MONS_BAT);
+            || mons == MONS_KILLER_KLOWN);
 }
 
 static monster_type _get_misled_monster(monster* mons)
@@ -50,7 +50,7 @@ static monster_type _get_misled_monster(monster* mons)
         mt = random_monster_at_grid(mons->pos());
 
     if (_unsuitable_misled_monster(mt))
-        return MONS_BAT;
+        return MONS_0;
 
     return mt;
 }
@@ -74,7 +74,7 @@ bool update_mislead_monster(monster* mons)
     define_monster(&misled_as);
     mons->props["mislead_as"] = misled_as;
 
-    if (misled_as.type == MONS_BAT)
+    if (misled_as.type == MONS_0)
         return false;
 
     return true;
