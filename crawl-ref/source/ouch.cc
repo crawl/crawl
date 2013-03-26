@@ -691,6 +691,18 @@ bool expose_player_to_element(beam_type flavour, int strength,
     return _expose_invent_to_element(flavour, strength);
 }
 
+static void _lose_level_abilities()
+{
+    if (you.attribute[ATTR_PERM_FLIGHT]
+        && !you.racial_permanent_flight()
+        && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
+    {
+        you.increase_duration(DUR_FLIGHT, 50, 100);
+        you.attribute[ATTR_PERM_FLIGHT] = 0;
+        mpr("You feel your flight won't last long.", MSGCH_WARN);
+    }
+}
+
 void lose_level()
 {
     // Because you.experience is unsigned long, if it's going to be
@@ -712,6 +724,7 @@ void lose_level()
 
     calc_hp();
     calc_mp();
+    _lose_level_abilities();
 
     char buf[200];
     sprintf(buf, "HP: %d/%d MP: %d/%d",
