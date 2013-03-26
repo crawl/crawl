@@ -398,6 +398,7 @@ public:
     bool has_evil_spell() const;
     bool has_unclean_spell() const;
     bool has_chaotic_spell() const;
+    bool has_corpse_violating_spell() const;
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);

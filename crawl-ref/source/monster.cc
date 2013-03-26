@@ -3127,6 +3127,15 @@ bool monster::has_chaotic_spell() const
     return false;
 }
 
+bool monster::has_corpse_violating_spell() const
+{
+     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (is_corpse_violating_spell(spells[i]))
+            return true;
+
+    return false;
+}
+
 bool monster::has_attack_flavour(int flavour) const
 {
     for (int i = 0; i < 4; ++i)
