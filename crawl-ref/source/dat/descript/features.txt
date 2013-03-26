@@ -581,7 +581,7 @@ A stone wall
 A harder obstacle than rock walls. Only the mightiest magic can shatter stone
 walls.
 %%%%
-A teleporter
+A short-range portal
 
 Stepping on this teleporter will send you to another room.
 %%%%
