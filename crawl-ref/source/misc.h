@@ -120,9 +120,9 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
                         bool (*affects)(const actor *victim) = 0);
 
 bool is_orckind(const actor *act);
-
 bool is_dragonkind(const actor *act);
-void swap_with_monster(monster* mon_to_swap);
+
+void swap_with_monster(monster *mon_to_swap);
 
 void wear_id_type(item_def &item);
 void maybe_id_ring_TC();
