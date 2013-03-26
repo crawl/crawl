@@ -764,7 +764,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_MIASMA:
         return act->res_rotting() > 0;
     case CLOUD_PETRIFY:
-        return act->res_petrify() > 0;
+        return act->res_petrify();
     default:
         return false;
     }
