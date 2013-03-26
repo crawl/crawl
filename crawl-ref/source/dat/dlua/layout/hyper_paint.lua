@@ -104,7 +104,7 @@ function hyper.paint.feature_flags(feature_type,options)
   end
 
   local space = (feature == "space")
-  local solid = not space and not feat.has_solid_floor(feature)
+  local solid = not space and not (feat.has_solid_floor(feature) or feat.is_door(feature))
   local wall = feat.is_wall(feature)
   return feature,space,solid,wall
 end

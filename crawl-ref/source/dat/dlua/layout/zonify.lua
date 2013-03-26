@@ -138,16 +138,23 @@ function zonify.grid_map(e)
   return zonify.map(
     { x1 = 0, y1 = 0, x2 = gxm-1, y2 = gym-1 },
     function(x,y)
-      return dgn.in_bounds(x,y) and dgn.grid(x,y) or nil
+      -- Out of bounds
+      if not dgn.in_bounds(x,y) then return nil end
+      return {
+        feat = dgn.grid(x,y),
+        vault = dgn.in_vault(x,y),
+        passable = dgn.is_passable(x,y)
+      }
     end,
     function(val)
-      return feat.has_solid_floor(val) and "floor" or "wall"
+      if val.vault then return "vault" end
+      return val.passable and "floor" or "wall"
     end
   )
 end
 
 function zonify.grid_fill_zones(num_to_keep,feature)
-  if glyph == nil then glyph = 'x' end
+  if feature == nil then feature = 'rock_wall' end
   local zonemap = zonify.grid_map()
   zonify.fill_smallest_zones(zonemap,1,"floor",function(x,y,cell) dgn.grid(x,y,feature) end)
 end
