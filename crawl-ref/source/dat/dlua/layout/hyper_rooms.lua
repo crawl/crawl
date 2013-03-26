@@ -183,7 +183,7 @@ function hyper.rooms.make_tagged_room(chosen,options)
       for n = 0, room.size.x - 1, 1 do
         local inspected = { }
         inspected.feature, inspected.exit, inspected.space = dgn.inspect_map(vplace,n,m)
-        inspected.solid = not feat.has_solid_floor(inspected.feature)
+        inspected.solid = not (feat.has_solid_floor(feature) or feat.is_door(feature))
         inspected.feature = dgn.feature_name(inspected.feature)
         hyper.usage.set_usage(room.grid,n,m,inspected)
       end

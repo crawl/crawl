@@ -146,7 +146,7 @@ function hyper.usage.scan_existing_features(usage_grid,options)
       if mask then count = count + 1 end
       local usage = { feature = dgn.feature_name(feature), vault = mask, anchors = {} }
       usage.space = false
-      usage.solid = not feat.has_solid_floor(feature)
+      usage.solid = not (feat.has_solid_floor(feature) or feat.is_door(feature))
       usage.wall = feat.is_wall(feature)
       hyper.usage.set_usage(usage_grid,x,y,usage)
     end
