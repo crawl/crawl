@@ -697,7 +697,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     return (!is_controlled);
 }
 
-bool you_teleport_to(const coord_def where_to, bool move_monsters, bool override_stasis)
+bool you_teleport_to(const coord_def where_to, bool move_monsters)
 {
     // Attempts to teleport the player from their current location to 'where'.
     // Follows this line of reasoning:
@@ -709,12 +709,6 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters, bool override
     //      found (or a monster can be moved out of the way, with move_monster)
     //      then teleport the player there.
     //   4. If not, give up and return false.
-
-    if (you.no_tele(true, true) && !override_stasis)
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return false;
-    }
 
     bool check_ring_TC = false;
     const coord_def old_pos = you.pos();
