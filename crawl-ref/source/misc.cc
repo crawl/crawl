@@ -2634,7 +2634,7 @@ void maybe_id_ring_see_invis()
 
 void maybe_id_clarity()
 {
-    // If we have clarity withouot un-IDed items
+    // If we have clarity without un-IDed items
     if (you.clarity(false))
         return;
 
