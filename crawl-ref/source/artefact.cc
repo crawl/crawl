@@ -444,6 +444,8 @@ void artefact_desc_properties(const item_def &item,
     // ISFLAG_KNOW_PLUSES set.  For a randart with a base type of, for
     // example, a ring of strength, wearing it sets
     // ISFLAG_KNOW_PLUSES, which reveals the ring's strength plus.
+
+    // XXX has to match player-equip.cc:_equip_jewelry_effect(), sort-of (SamB)
     switch (item.sub_type)
     {
     case RING_INVISIBILITY:
