@@ -69,14 +69,14 @@ TAGS: overwritable layout allow_dup unrand
   local wall_break = crawl.random2(101)/250 + 0.2 + path_break  -- 0.4 .. 1.0
   local padding = crawl.random_range(5,12)
   -- Setup a worley function
-  local worley1 = procedural.worley_diff { scale = scale/8 }
+  local worley1 = procedural.worley_diff { scale = scale/4 }
   if (scale > 1.5 and crawl.coinflip()) then
     -- Distort
     worley1 = procedural.distort {
       source = worley1,
       offsetx = procedural.simplex3d { scale = scale*(util.random_range_real(0.2,0.8)) }, -- was 1.8
       offsety = procedural.simplex3d { scale = scale*(util.random_range_real(0.2,0.8)) },
-      scale = (util.random_range_real(1,3))/scale/100
+      scale = util.random_range_real(1,3)/scale
     }
   end
 
