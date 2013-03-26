@@ -452,6 +452,7 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_CHAOS: return terse ? " (chaos)" : " of chaos";
 
     // buggy brands
+    case SPWPN_CONFUSE: return terse ? " (confuse)" : " of confusion";
     default: return terse ? " (buggy)" : " of bugginess";
     }
 }

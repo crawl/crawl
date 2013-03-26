@@ -3216,9 +3216,9 @@ bool melee_attack::apply_damage_brand()
             obvious_effect = beam_temp.obvious_effect;
         }
 
-        if (attacker->is_player() && damage_brand == SPWPN_CONFUSE)
+        if (attacker->is_player() && damage_brand == SPWPN_CONFUSE
+            && you.duration[DUR_CONFUSING_TOUCH])
         {
-            ASSERT(you.duration[DUR_CONFUSING_TOUCH]);
             you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5)
                                                  * BASELINE_DELAY;
 
