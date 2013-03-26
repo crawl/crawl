@@ -70,12 +70,12 @@ bool update_mislead_monster(monster* mons)
 
     monster misled_as;
     misled_as.type = _get_misled_monster(mons);
+    if (misled_as.type == MONS_0)
+        return false;
+
     misled_as.mid = mons->mid;
     define_monster(&misled_as);
     mons->props["mislead_as"] = misled_as;
-
-    if (misled_as.type == MONS_0)
-        return false;
 
     return true;
 }
