@@ -433,6 +433,10 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
+    // XXX these restrictions are a huge mess, leading to a lot of
+    // complicated code and very little in the way of actual fun.
+    // We should rip them out once we figure out how. (SamB)
+
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
     // might still benefit from it.
@@ -449,11 +453,17 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
                              && !you.inv[you.equip[EQ_GLOVES]].cursed());
 
-    bool knife_butcher    = !barehand_butcher && !you.weapon() && form_can_wield();
+    bool weapon_butcher   = you.weapon() && can_cut_meat(*you.weapon());
+
+    bool knife_butcher    = ((!you.weapon()
+                              || you.has_usable_offhand()
+                              || you.has_usable_tentacle())
+                             && form_can_wield());
 
     bool can_butcher      = (teeth_butcher || barehand_butcher
-                             || birdie_butcher || knife_butcher
-                             || you.weapon() && can_cut_meat(*you.weapon()));
+                             || birdie_butcher
+                             || weapon_butcher
+                             || knife_butcher);
 
     // It makes more sense that you first find out if there's anything
     // to butcher, *then* decide to actually butcher it.
