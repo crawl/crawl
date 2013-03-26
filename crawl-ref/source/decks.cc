@@ -2294,7 +2294,7 @@ static void _water_card(int power, deck_rarity_type rarity)
         {
             coord_def p = *ri;
             destroy_trap(p);
-            if (grd(p) == DNGN_FLOOR)
+            if (grd(p) == DNGN_FLOOR || grd(p) == DNGN_SHALLOW_WATER)
             {
                 dungeon_feature_type new_feature = DNGN_SHALLOW_WATER;
                 if (p != you.pos() && coinflip())
