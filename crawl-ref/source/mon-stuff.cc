@@ -3782,9 +3782,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         // This position could become deep water, and they might drown.
         if (grd(cloud.pos) == DNGN_SHALLOW_WATER)
             return true;
-
-        // Otherwise, it's safe for everyone else.
-        return false;
+        break;
 
     case CLOUD_TORNADO:
         // Ball lightnings are not afraid of a _storm_, duh.  Or elementals.
@@ -3792,7 +3790,9 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
 
         // Locust swarms are too stupid to avoid winds.
-        return (mons_intel(mons) >= I_ANIMAL);
+        if (mons_intel(mons) >= I_ANIMAL)
+            return true;
+        break;
 
     case CLOUD_PETRIFY:
         if (mons->res_petrify())
