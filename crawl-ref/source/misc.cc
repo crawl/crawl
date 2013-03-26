@@ -2623,6 +2623,15 @@ void maybe_id_ring_hunger()
     _maybe_id_jewel(RING_SUSTENANCE, NUM_JEWELLERY, ARTP_METABOLISM);
 }
 
+void maybe_id_ring_see_invis()
+{
+    // If you can see invisible without un-IDed items
+    if (you.can_see_invisible(false))
+        return;
+
+    _maybe_id_jewel(RING_SEE_INVISIBLE, NUM_JEWELLERY, ARTP_EYESIGHT);
+}
+
 void maybe_id_clarity()
 {
     // If we have clarity without any items
