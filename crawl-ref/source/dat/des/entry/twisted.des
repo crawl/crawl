@@ -966,10 +966,6 @@ ENDMAP
 # The gods give you a sneak preview of the powers you could get by
 # following them.
 #
-# There's a very small chance that this could be scummed by LRDing into
-# the cages, but someone at that point probably doesn't have much of a
-# need of the contents of these vaults anyway.
-#
 # The holy creatures and profane servitors spawned in some subvaults
 # can leak halo / umbra through the walls; at this point in the game,
 # it really should only be a visual problem more than anything else.
@@ -981,21 +977,21 @@ SUBVAULT: B : grunt_entry_enticement_altar
 SUBVAULT: C : grunt_entry_enticement_altar
 SUBVAULT: D : grunt_entry_enticement_altar
 MAP
-    cc.@.cc
-  cccn...nccc
- ccAAn...nBBcc
- cAAAn...nBBBc
-ccAAAn...nBBBcc
-cnnnnn...nnnnnc
+    XX.@.XX
+  XXXo...oXXX
+ XXAAo...oBBXX
+ XAAAo...oBBBX
+XXAAAo...oBBBXX
+Xooooo...oooooX
 ......{.(......
 @......T......@
 ......[.<......
-cnnnnn...nnnnnc
-ccCCCn...nDDDcc
- cCCCn...nDDDc
- ccCCn...nDDcc
-  cccn...nccc
-    cc.@.cc
+Xooooo...oooooX
+XXCCCo...oDDDXX
+ XCCCo...oDDDX
+ XXCCo...oDDXX
+  XXXo...oXXX
+    XX.@.XX
 ENDMAP
 
 NAME: grunt_entry_enticement_ashenzari
