@@ -21,8 +21,8 @@
 -- room/door placement can work correctly.
 ------------------------------------------------------------------------------
 
-hyper = {}  -- Main namespace for engine
-hyper.vaults = {}   -- Main namespace for V branch related bits
+if hyper == nil then hyper = {} end  -- Main namespace for engine
+if hyper.vaults == nil then hyper.vaults = {}   -- Main namespace for V branch related bits
 hypervaults = {}  -- Old namespace, gradually moving everything into hyper.*
 
 require("dlua/v_debug.lua")
