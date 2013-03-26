@@ -3633,6 +3633,9 @@ void unmarshallMonster(reader &th, monster& m)
         m.type = MONS_SKELETON;
     if (m.type == MONS_SIMULACRUM_SMALL || m.type == MONS_SIMULACRUM_LARGE)
         m.type = MONS_SIMULACRUM;
+
+    if (m.props.exists("mislead_as") && !you.misled())
+        m.props.erase("mislead_as");
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
