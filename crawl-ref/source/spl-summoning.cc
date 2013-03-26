@@ -1096,7 +1096,7 @@ static monster_type _zotdef_shadow()
             return mc;
     }
 
-    return RANDOM_MOBILE_MONSTER;
+    return RANDOM_COMPATIBLE_MONSTER;
 }
 
 spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
@@ -1104,7 +1104,7 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
     fail_check();
     mpr("Wisps of shadow whirl around you...");
 
-    monster_type critter = RANDOM_MOBILE_MONSTER;
+    monster_type critter = RANDOM_COMPATIBLE_MONSTER;
     if (crawl_state.game_is_zotdef())
         critter = _zotdef_shadow();
 
@@ -1139,7 +1139,8 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 if (testbits(mi->flags, MF_BAND_MEMBER)
                     && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
                 {
-                    player_angers_monster(*mi);
+                    if (player_will_anger_monster(*mi))
+                        monster_die(*mi, KILL_RESET, NON_MONSTER);
                 }
             }
 
