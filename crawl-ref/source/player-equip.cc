@@ -1152,7 +1152,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     // is known. Somehow the player should still be told, preferably
     // by message. (jpeg)
     const bool artefact     = is_artefact(item);
-    const bool known_pluses = item_ident(item, ISFLAG_KNOW_PLUSES);
     const bool known_cursed = item_known_cursed(item);
     const bool known_bad    = (item_type_known(item)
                                && item_value(item) <= 2);
