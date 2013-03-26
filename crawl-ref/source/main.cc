@@ -2178,15 +2178,7 @@ static void _prep_input()
     }
     if (you.seen_invis)
     {
-        if (!you.can_see_invisible(false))
-        {
-            item_def *ring = get_only_unided_ring();
-            if (ring && !is_artefact(*ring)
-                && ring->sub_type == RING_SEE_INVISIBLE)
-            {
-                wear_id_type(*ring);
-            }
-        }
+        maybe_id_ring_see_invis();
         you.seen_invis = false;
     }
 }
