@@ -108,9 +108,6 @@ bool is_unholy_item(const item_def& item)
     case OBJ_WEAPONS:
         retval = is_demonic(item);
         break;
-    case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
-        break;
     case OBJ_BOOKS:
     case OBJ_RODS:
         retval = _is_bookrod_type(item, is_unholy_spell);
@@ -271,9 +268,6 @@ bool is_chaotic_item(const item_def& item)
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION);
-        break;
-    case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING);
         break;
     case OBJ_BOOKS:
     case OBJ_RODS:
