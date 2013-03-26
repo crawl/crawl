@@ -441,6 +441,7 @@ void spawn_random_monsters()
 static bool _is_random_monster(monster_type mt)
 {
     return (mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
+            || mt == RANDOM_COMPATIBLE_MONSTER
             || mt == WANDERING_MONSTER);
 }
 
@@ -452,6 +453,11 @@ static bool _is_not_zombifiable(monster_type mt)
 static bool _has_big_aura(monster_type mt)
 {
     return mt == MONS_MOTH_OF_SUPPRESSION || mt == MONS_SILENT_SPECTRE;
+}
+
+static bool _is_incompatible_monster(monster_type mt)
+{
+    return (mons_class_is_stationary(mt) || player_will_anger_monster(mt));
 }
 
 // Caller must use !invalid_monster_type to check if the return value
@@ -478,6 +484,8 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place, arena_veto_random_monster);
     else if (kind == RANDOM_MOBILE_MONSTER)
         return pick_monster(place, mons_class_is_stationary);
+    else if (kind == RANDOM_COMPATIBLE_MONSTER)
+        return pick_monster(place, _is_incompatible_monster);
     else if (mons_class_is_zombified(kind))
         return pick_monster(place, _is_not_zombifiable);
     else if (crawl_state.game_is_sprint())
