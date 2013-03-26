@@ -3786,8 +3786,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         // Otherwise, it's safe for everyone else.
         return false;
 
-        break;
-
     case CLOUD_TORNADO:
         // Ball lightnings are not afraid of a _storm_, duh.  Or elementals.
         if (mons->res_wind())
@@ -3805,7 +3803,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         if (mons_intel(mons) >= I_ANIMAL)
             return true;
-
         break;
 
     default:
