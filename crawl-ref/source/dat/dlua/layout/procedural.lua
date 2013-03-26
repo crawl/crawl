@@ -11,6 +11,77 @@
 
 procedural = {}
 
+
+-- Add the output of several functions together
+function procedural.add(...)
+  local vars = { ... }
+  return procedural.aggregate(vars,function(t,v) return t+v end)
+end
+
+-- Takes the value of the first function,
+-- subtracts the values of the rest from it
+function procedural.sub(...)
+  local vars = { ... }
+  return procedural.aggregate(vars,function(t,v) return t-v end)
+end
+
+function procedural.mul(...)
+  local vars = { ... }
+  return procedural.aggregate(vars,function(t,v) return t*v end)
+end
+
+function procedural.div(...)
+  local vars = { ... }
+  return procedural.aggregate(vars,function(t,v) return t/v end)
+end
+
+function procedural.aggregate(list,op)
+
+  return function(x,y)
+    local val = 0
+    local r
+    for i,f in ipairs(list) do
+      if type(f) == "function" then
+        r = f(x,y)
+      else
+        r = f
+      end
+      if i==1 then
+        val = r
+      else
+        val = op(val,r)
+      end
+    end
+    return val
+  end
+
+end
+
+-- Creates a function that returns the minimum value of several functions
+function procedural.min(...)
+  local vars = { ... }
+  return function(x,y)
+    local val = nil
+    for i,f in ipairs(vars) do
+      local r = f(x,y)
+      if val == nil or r < val then val = r end
+    end
+    return val
+  end
+end
+-- Creates a function that returns the maximum value of several functions
+function procedural.max(...)
+  local vars = { ... }
+  return function(x,y)
+    local val = nil
+    for i,f in ipairs(vars) do
+      local r = f(x,y)
+      if val == nil or r > val then val = r end
+    end
+    return val
+  end
+end
+
 -- A function that returns 1 around the border edge, and fades to 0 over
 -- a specified number of padding squares.
 function procedural.border(params)
@@ -40,7 +111,7 @@ end
 
 -- Returns distance from a point, useful for circles and ellipses
 function procedural.distance(params)
-  local xo,yo = params.originx,params.originy
+  local xo,yo = params.origin.x,params.origin.y
   local radiusx,radiusy = params.radius,params.radius
   if params.radiusx ~= nil then radiusx = params.radiusx end
   if params.radiusy ~= nil then radiusy = params.radiusy end
@@ -54,13 +125,19 @@ end
 -- Gives the radial value from a point, i.e. the arctangent of the line
 -- from the origin to the point
 function procedural.radial(params)
-  local xo,yo = params.originx,params.originy
+
+  local xo,yo = params.origin.x,params.origin.y
 
   return function(x,y)
     local xd,yd = xo-x,yo-y
     if xd == 0 then return 0 end
-    return math.atan(yd/xd)
+    local r = math.atan(yd/xd) / math.pi * 180
+    if params.phase ~= nil then
+      r = (r + params.phase*360) % 360
+    end
+    return r/360
   end
+
 end
 
 -- Draws a horizontal or vertical bar at the specified position. The bar has
@@ -72,13 +149,16 @@ function procedural.bar(params)
   local horizontal = params.horizontal == nil and true or params.horizontal
   local width = params.width or 1
   local position = params.position or 1
-
+  local positiona,positionb = position,position
+  if params.inner ~= nil then
+    positiona,positionb = position - params.inner/2, position + params.inner/2
+  end
   local start = math.floor(position - width/2)
   local finish = start + width + 1
   if horizontal then
-    return function(x,y) return procedural.boundary_map(y,start,position,position,finish) end
+    return function(x,y) return procedural.boundary_map(y,start,positiona,positionb,finish) end
   end
-  return function(x,y) return procedural.boundary_map(x,start,position,position,finish) end
+  return function(x,y) return procedural.boundary_map(x,start,positiona,positionb,finish) end
 
 end
 
@@ -197,4 +277,19 @@ function procedural.minmax_map(val,min,max)
   if val<min then return 0
   elseif val>max then return 1
   else return (val-min)/(max-min) end
+end
+
+-- Render functions
+function procedural.render_map(e, fval, fresult)
+
+  local gxm,gym = dgn.max_bounds()
+  e.extend_map { width = gxm, height = gym, fill = 'x' }
+  for x = 1,gxm-2,1 do
+    for y = 1,gym-2,1 do
+      local val = fval(x,y)
+      local r = fresult(val)
+      if r ~= nil then e.mapgrd[x][y] = r end
+    end
+  end
+
 end
