@@ -3211,8 +3211,9 @@ conduct_type player_will_anger_monster(monster* mon)
         return DID_UNHOLY;
     if (is_good_god(you.religion) && mon->is_evil())
         return DID_NECROMANCY;
-    if (you.religion == GOD_FEDHAS && mon->holiness() == MH_UNDEAD
-        && !mon->is_insubstantial())
+    if (you.religion == GOD_FEDHAS
+        && ((mon->holiness() == MH_UNDEAD && !mon->is_insubstantial())
+            || mon->has_corpse_violating_spell()))
     {
         return DID_CORPSE_VIOLATION;
     }
