@@ -1198,13 +1198,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         you.redraw_armour_class = true;
         if (item.plus != 0)
         {
-            if (!artefact)
+            if (artefact)
+                fake_rap = ARTP_AC;
+            else
                 ident = ID_KNOWN_TYPE;
-            else if (!known_pluses)
-            {
-                mprf("You feel %s.", item.plus > 0 ?
-                     "well-protected" : "more vulnerable");
-            }
+
             learn_pluses = true;
         }
         break;
@@ -1224,10 +1222,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         you.redraw_evasion = true;
         if (item.plus != 0)
         {
-            if (!artefact)
+            if (artefact)
+                fake_rap = ARTP_EVASION;
+            else
                 ident = ID_KNOWN_TYPE;
-            else if (!known_pluses)
-                mprf("You feel %s.", item.plus > 0? "nimbler" : "more awkward");
+
             learn_pluses = true;
         }
         break;
