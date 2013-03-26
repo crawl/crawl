@@ -127,8 +127,8 @@ end
 function hyper.rooms.cave_vault(room,options,gen)
   return hyper.floors.cave_paint({x = 0, y = 0},{ x = room.size.x-1,y = room.size.y-1}, {
     feature = "floor",
-    wall = "wall",
-    outer_break = 2, -- 1
+    -- wall = "wall",
+    outer_break = 1, -- 2, -- 1
     wall_break = 0.9, -- 0.8
     noise_scale = 4,
     padding = 4 -- 2
@@ -166,17 +166,20 @@ function hyper.floors.cave_paint(corner1,corner2,params)
   local fborder = procedural.border{ x1 = x1-1, y1 = y1-1, x2 = x2+1, y2 = y2+1, padding = padding, additive = true }
   local fwall = procedural.simplex3d { scale = params.noise_scale }
 
+  local fexit = procedural.radial { origin = { x=(x2-x1)/2,y=(y2-y1)/2 }, phase = util.random_range_real(0,1) }
+  local exit_size = util.random_range_real(0.1,.2)
   return {
     { type = "proc", corner1 = corner1, corner2 = corner2, callback = function(x,y,mx,my)
       -- This was another one that made great patterns but loads of dead zones: (with scale = 2 )
       -- local combi = (1-fborder(x,y)) * (0.1+fwall(x,y))
       -- Standard algorithm looked pretty good but some internal junk:
-      -- local combi = fborder(x,y) + fwall(x,y)
-      local combi = fborder(x,y)*2 + fwall(x,y)
+      local combi = fborder(x,y) + fwall(x,y)
+
+      -- local combi = fborder(x,y)*2 + fwall(x,y)
       -- There was an error in this where combi < 0.5, it produced all kinds of wacky looking things but was awesome (scale = 4)
       if combi > params.outer_break then return nil
-      elseif params.wall and combi > params.wall_break then return params.wall, { carvable = true } end
-      return params.feature
+      elseif params.wall and combi > params.wall_break and fexit(x,y)>exit_size then return params.wall, { carvable = true }
+      else return params.feature end
     end }
   }
 end
