@@ -196,6 +196,7 @@ static void mg_build_levels(int niters)
              mg_build_attempts, mg_vetoes,
              mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
 
+        dlua.callfn("dgn_clear_data", "");
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
         you.unique_creatures.init(false);
