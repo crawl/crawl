@@ -45,6 +45,7 @@
 #include "ghost.h"
 #include "godcompanions.h"
 #include "itemname.h"
+#include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "misc.h"
@@ -2778,6 +2779,12 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
     item.props.write(th);
 }
 
+static void _trim_god_gift_inscrip(item_def& item)
+{
+    item.inscription = replace_all(item.inscription, "god gift, ", "");
+    item.inscription = replace_all(item.inscription, "god gift", "");
+}
+
 void unmarshallItem(reader &th, item_def &item)
 {
     item.base_type   = static_cast<object_class_type>(unmarshallByte(th));
@@ -2834,6 +2841,13 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
+
+    if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
+    {
+        _trim_god_gift_inscrip(item);
+        if (is_stackable_item(item))
+            origin_reset(item);
+    }
 #endif
 
     bind_item_tile(item);
