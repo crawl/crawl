@@ -54,8 +54,10 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_LANTERN_OF_SHADOWS:         return TILEP_HAND1_BONE_LANTERN;
         case MISC_HORN_OF_GERYON:             return TILEP_HAND1_HORN;
 
-        case MISC_BOX_OF_BEASTS:
-        case MISC_EMPTY_EBONY_CASKET:         return TILEP_HAND1_BOX;
+#if TAG_MAJOR_VERSION == 34
+        case MISC_EMPTY_EBONY_CASKET:
+#endif
+        case MISC_BOX_OF_BEASTS:              return TILEP_HAND1_BOX;
 
         case MISC_DECK_OF_ESCAPE:
         case MISC_DECK_OF_DESTRUCTION:
