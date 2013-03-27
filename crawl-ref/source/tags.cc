@@ -2779,11 +2779,16 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
     item.props.write(th);
 }
 
+#if TAG_MAJOR_VERSION == 34
 static void _trim_god_gift_inscrip(item_def& item)
 {
     item.inscription = replace_all(item.inscription, "god gift, ", "");
     item.inscription = replace_all(item.inscription, "god gift", "");
+    item.inscription = replace_all(item.inscription, "Psyche", "");
+    item.inscription = replace_all(item.inscription, "Sonja", "");
+    item.inscription = replace_all(item.inscription, "Donald", "");
 }
+#endif
 
 void unmarshallItem(reader &th, item_def &item)
 {
