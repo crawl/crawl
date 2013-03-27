@@ -726,7 +726,6 @@ static iflags_t _full_ident_mask(const item_def& item)
     {
     case OBJ_FOOD:
     case OBJ_CORPSES:
-    case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_ORBS:
         flagset = 0;
@@ -752,6 +751,12 @@ static iflags_t _full_ident_mask(const item_def& item)
         flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
         if (ring_has_pluses(item))
             flagset |= ISFLAG_KNOW_PLUSES;
+        break;
+    case OBJ_MISCELLANY:
+        if (is_deck(item))
+            flagset = ISFLAG_KNOW_TYPE;
+        else
+            flagset = 0;
         break;
     case OBJ_RODS:
     case OBJ_WEAPONS:
