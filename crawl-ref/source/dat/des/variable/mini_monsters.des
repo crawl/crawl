@@ -34,6 +34,31 @@ local a = you.absdepth() * 5
 end
 }}
 
+# Functionality for some Grunt vaults.
+{{
+function grunt_ministairs_setup(e, hatches)
+  if you.branch() == "Crypt" then
+    e.shuffle("GT")
+    e.subst("T = T:20 V Y:1")
+    e.subst("x = c")
+  else
+    e.shuffle("GTt")
+    e.subst("T = T:20 V U:1")
+    if you.branch() == "D" then
+      init_hm_decor_walldepth(e, 'x')
+    end
+  end
+  if hatches then
+    e.shuffle("{[(<}])>")
+  else
+    e.shuffle("{[(}])")
+  end
+  e.subst("+ = +.")
+  e.nsubst(". = 2 = 0:19 .:1 / *:.")
+  e.kmons("0 = 0 band")
+end
+}}
+
 default-depth: D:9-27, Elf
 
 ###############################################################################
@@ -4463,6 +4488,90 @@ MAP
 .c8^n.n^8c.
 .cccc+cccc.
 ...........
+ENDMAP
+
+# Some miniature stair vaults; these all place a couple of monsters,
+# but they're mainly around for the decor (same principle as st's).
+NAME:    grunt_ministairs_1
+TAGS:    extra transparent allow_dup mini_float luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+MAP
+  ...
+ ..G..
+.......
+...{...
+.......
+ G...G
+  ...
+ENDMAP
+
+NAME:    grunt_ministairs_2
+TAGS:    extra transparent allow_dup mini_float luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+MAP
+   .....
+  .G...G.
+ .........
+.G...{...G.
+ .........
+  .G...G.
+   .....
+ENDMAP
+
+NAME:    grunt_ministairs_3
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+MAP
+    @
+xxxx+xxxx
+x.......x
+x.G...G.x
+x.......x
+x.G...G.x
+x.......x
+x.G...G.x
+x...{...x
+xxxxxxxxx
+ENDMAP
+
+NAME:    grunt_ministairs_4
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+NSUBST:  @ = 1:@ / *:.
+MAP
+       .@.
+       @G@
+ xxxxx.....xxxxx
+xx...+xx+xx+...xx
+x{.G..xx.xx..G.(x
+xx...xx...xx...xx
+ xxxxxx.G.xxxxxx
+      x...x
+      xx[xx
+       xxx
+ENDMAP
+
+NAME:    grunt_ministairs_5
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+MAP
+        @
+ xxxxxxx+xxxxxxx
+xx...xx...xx...xx
+x{.G..+.G.+..G.(x
+xx...xx...xx...xx
+ xxxxxxx+xxxxxxx
+      xx.xx
+      x...x
+      x.G.x
+      x...x
+      xx[xx
+       xxx
 ENDMAP
 
 ################################################################
