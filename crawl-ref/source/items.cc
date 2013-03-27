@@ -1116,19 +1116,13 @@ static bool _origin_is_original_equip(const item_def &item)
 
 bool origin_is_god_gift(const item_def& item, god_type *god)
 {
-    god_type junk;
-    if (god == NULL)
-        god = &junk;
-    *god = GOD_NO_GOD;
+    god_type ogod = static_cast<god_type>(-item.orig_monnum);
+    if (ogod <= GOD_NO_GOD || ogod >= NUM_GODS)
+        ogod = GOD_NO_GOD;
 
-    const int iorig = -item.orig_monnum;
-    if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
-    {
-        *god = static_cast<god_type>(iorig);
-        return true;
-    }
-
-    return false;
+    if (god)
+        *god = ogod;
+    return ogod;
 }
 
 bool origin_is_acquirement(const item_def& item, item_source_type *type)
