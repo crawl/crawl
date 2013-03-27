@@ -879,6 +879,7 @@ void game_options::reset_options()
     level_map_title        = true;
 
     assign_item_slot       = SS_FORWARD;
+    show_god_gift          = B_MAYBE;
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
@@ -2637,6 +2638,17 @@ void game_options::read_option_line(const string &str, bool runscript)
             assign_item_slot = SS_FORWARD;
         else if (field == "backward")
             assign_item_slot = SS_BACKWARD;
+    }
+    else if (key == "show_god_gift")
+    {
+        if (field == "yes")
+            show_god_gift = B_TRUE;
+        else if (field == "unid" || field == "unident" || field == "unidentified")
+            show_god_gift = B_MAYBE;
+        else if (field == "no")
+            show_god_gift = B_FALSE;
+        else
+            report_error("Unknown show_god_gift value: %s\n", field.c_str());
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
