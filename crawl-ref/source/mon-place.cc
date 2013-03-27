@@ -2458,7 +2458,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_IRONHEART_PRESERVER:
         natural_leader = true;
-        switch(random2(4))
+        switch(random2(3))
         {
             case 0:
                 band = BAND_DEEP_ELF_HIGH_PRIEST;
@@ -2469,10 +2469,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
                 band_size = 3 + random2(3);
                 break;
             case 2:
-                band = BAND_ORC_KNIGHT;
-                band_size = 5 + random2(5);
-                break;
-            case 3:
                 band = BAND_OGRE_MAGE_EXTERN;
                 band_size = 4 + random2(4);
                 break;
