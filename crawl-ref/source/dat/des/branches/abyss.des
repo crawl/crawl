@@ -1290,6 +1290,27 @@ mmm.....mmm
    .mmm.
 ENDMAP
 
+####
+NAME:  grunt_abyss_rune_the_horror
+TAGS:  abyss_rune ruin_abyss patrolling
+MONS:  unseen horror, thrashing horror, lurking horror
+KITEM: O = abyssal rune of Zot
+MAP
+    ..@..
+  .........
+ ...xm+mx...
+ ..mx.1.xm..
+..xx.2.1.xx..
+..m.1.3.2.m..
+@.+1..O..1+.@
+..m.2.3.1.m..
+..xx.1.2.xx..
+ ..mx.1.xm..
+ ...xm+mx...
+  .........
+    ..@..
+ENDMAP
+
 ###############################################################################
 # abyss exit vaults
 # Note from HangedMan: Don't tag your abyss exit with allow_dup unless
@@ -1940,4 +1961,24 @@ b.x.x.x.x.x.x.b
  a.x.x.x.x.x.a
   a.a.a.a.a.a
    b b b b b
+ENDMAP
+
+####
+# Take a deep breath...
+NAME:  grunt_abyss_exit_deep_breaths
+TAGS:  abyss_exit transparent
+MONS:  ice statue, fire crab, swamp dragon, catoblepas
+: init_abyss_exit(_G, "O")
+MAP
+   xxxxx
+  xxlllxx
+ xxll3llxx
+xxll.O.llxx
+xll..1..llx
+xl.2...2.lx
+xl...4...lx
+xl.......lx
+ll.......ll
+ ..........
+  ...@....
 ENDMAP
