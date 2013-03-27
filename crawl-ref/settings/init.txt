@@ -287,6 +287,7 @@
 # autoinscribe += potion.*mutation:!q
 # autoinscribe_cursed = false
 # autoinscribe += fruit:!e
+# show_god_gift = yes|unident|no
 
 ##### 3-n       Macro related Options #################
 #

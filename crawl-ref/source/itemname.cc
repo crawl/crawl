@@ -296,8 +296,12 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         if (tried)
             insparts.push_back(tried_str);
 
-        if (origin_is_god_gift(*this))
+        if (origin_is_god_gift(*this)
+            && (Options.show_god_gift == B_TRUE
+             || Options.show_god_gift == B_MAYBE && !fully_identified(*this)))
+        {
             insparts.push_back("god gift");
+        }
 
         if (is_artefact(*this))
         {

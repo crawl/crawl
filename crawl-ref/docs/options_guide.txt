@@ -1663,6 +1663,12 @@ autoinscribe_cursed = true
         Automatically inscribes items with "was cursed" when using a scroll of
         remove curse.
 
+show_god_gift = unident|yes|no
+        Appends {god gift} to items that originated as one. If set to
+        "unident", items will lose this tag once their properties are
+        fully known. Regardless of this setting, you can see the item's
+        origin in its description.
+
 3-m     Macro related Options.
 ------------------------------
 

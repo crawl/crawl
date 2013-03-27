@@ -344,6 +344,7 @@ public:
     bool        easy_exit_menu;     // Menus are easier to get out of
 
     int         assign_item_slot;   // How free slots are assigned
+    maybe_bool  show_god_gift;      // Show {god gift} in item names
 
     bool        restart_after_game; // If true, Crawl will not close on game-end
 
