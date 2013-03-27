@@ -296,6 +296,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         if (tried)
             insparts.push_back(tried_str);
 
+        if (origin_is_god_gift(*this))
+            insparts.push_back("god gift");
+
         if (is_artefact(*this))
         {
             string part = artefact_inscription(*this);
