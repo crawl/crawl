@@ -457,7 +457,9 @@ static bool _has_big_aura(monster_type mt)
 
 static bool _is_incompatible_monster(monster_type mt)
 {
-    return (mons_class_is_stationary(mt) || player_will_anger_monster(mt));
+    return mons_class_is_stationary(mt)
+        || mons_is_ghost_demon(mt)
+        || player_will_anger_monster(mt);
 }
 
 // Caller must use !invalid_monster_type to check if the return value
