@@ -2165,9 +2165,11 @@ unsigned int item_value(item_def item, bool ident)
             valued += 400;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case MISC_EMPTY_EBONY_CASKET:
             valued += 20;
             break;
+#endif
 
         default:
             if (is_deck(item))
