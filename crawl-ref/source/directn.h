@@ -234,7 +234,7 @@ private:
     bool just_looking;
     bool needs_path;            // Determine a ray while we're at it?
     bool may_target_monster;
-    bool may_target_self;       // ?? XXX Used only for _init_mlist() currently
+    bool may_target_self;       // If true then player won't be prompted
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
     targetting_behaviour *behaviour; // Can be NULL for default
