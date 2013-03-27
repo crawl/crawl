@@ -85,6 +85,9 @@ Some examples of search strings:
 <w>D:[2-4]</w>       finds everything on Dungeon levels 2-4. Regexes are allowed!
               Note that D:[3-10] will not work as intended, since [x-y] is a
               regex character range.
+<w>\+3</w>           finds all items with a +3 enchantment
+<w>rC\+\+</w>        finds all items with an rC++ resistance. Note with these that
+              the + symbol had to be escaped as \+ due to Regex syntax.
 <w>Lair.*axe</w> and <w>axe && Lair</w> both show all axes in the Lair.
 
 Some shortcuts:
