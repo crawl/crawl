@@ -1292,6 +1292,7 @@ int acquirement_create_item(object_class_type class_wanted,
             {
                 if (_try_give_plain_armour(doodad))
                 {
+                    origin_acquired(doodad, agent);
                     // Only Xom gives negatively enchanted items (75% if not 0).
                     if (doodad.plus < 0 && agent != GOD_XOM)
                         doodad.plus = 0;
