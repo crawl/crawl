@@ -1455,3 +1455,105 @@ xxxxxy.yxxxxxxx
 xxxxy...yxxxxxx
 xxxy.%...yxxxxx
 ENDMAP
+
+###############################################################################
+NAME:    grunt_house_of_mirrors
+TAGS:    no_rtele_into
+DEPTH:   D:15-
+ORIENT:  north
+SHUFFLE: AB / BA / BB, CD / DC / DD, EF / FE / FF
+SHUFFLE: GH / HG / HH, IJ / JI / JJ, KL / LK / LL
+SHUFFLE: MN / NM / NN, OP / PO / PP, QR / RQ / RR
+SUBST:   ACEGIKMOQ = b
+SUBST:   BDFHJLNPR = .
+{{
+  -- This is a list of monsters in D that have attacks that can bounce
+  -- off of green crystal walls (fire, cold, lightning), weighted by
+  -- their normal dungeon weight functions!
+  local function peak(depth, low, high, chance)
+    if depth < low or depth > high then return 0 end
+    local len = high - low + 2
+    return math.floor(chance * (len - math.abs(low + high - 2 * depth)) / len)
+  end
+  local function semi(depth, low, high, chance)
+    if depth < low or depth > high then return 0 end
+    local len = high - low
+    if len == 0 then len = 2 else len = len * 2 end
+    return math.floor(chance * (len - math.abs(low + high - 2 * depth)) / len)
+  end
+  local function flat(depth, low, high, chance)
+    if depth < low or depth > high then return 0 end
+    return chance
+  end
+
+  local function add_mons(mons, newmons, chance)
+      if chance <= 0 then return mons end
+      if mons == nil then return newmons .. " w:" .. chance end
+      return mons .. " / " .. newmons .. " w:" .. chance
+  end
+
+  local function monslist(depth)
+    local mons = nil
+    mons = add_mons(mons, "mottled dragon", semi(depth, 11, 21, 334))
+    mons = add_mons(mons, "efreet", peak(depth, 13, 19, 52))
+    mons = add_mons(mons, "wizard", peak(depth, 14, 22, 89))
+    mons = add_mons(mons, "dragon", peak(depth, 14, 24, 192))
+    mons = add_mons(mons, "ice dragon", semi(depth, 17, 25, 136))
+    mons = add_mons(mons, "necromancer band", peak(depth, 18, 24, 52))
+    mons = add_mons(mons, "orc sorcerer", peak(depth, 21, 27, 25))
+    mons = add_mons(mons, "frost giant", peak(depth, 22, 30, 136))
+    mons = add_mons(mons, "fire giant", peak(depth, 22, 30, 136))
+    mons = add_mons(mons, "lich", peak(depth, 22, 30, 66))
+    mons = add_mons(mons, "hell knight band", peak(depth, 23, 29, 25))
+    mons = add_mons(mons, "storm dragon", peak(depth, 23, 31, 89))
+    mons = add_mons(mons, "deep elf conjurer", flat(depth, 26, 28, 6))
+    mons = add_mons(mons, "golden dragon", peak(depth, 29, 33, 8))
+    mons = add_mons(mons, "titan", peak(depth, 28, 34, 25))
+    mons = add_mons(mons, "deep elf annihilator", peak(depth, 30, 31, 4))
+    if mons == nil then return "nothing" end
+    return mons
+  end
+
+  local ninedepth = you.absdepth() + 5
+  if ninedepth > 31 then ninedepth = 31 end
+
+  kmons("0 = " .. monslist(you.absdepth()))
+  kmons("9 = " .. monslist(ninedepth))
+  kmons("8 = " .. monslist(31)) -- this cap's always hit at D:14-
+}}
+KFEAT: 123456 = .
+validate {{
+  return has_exit_from_glyph('1')
+         and has_exit_from_glyph('2')
+         and has_exit_from_glyph('3')
+         and has_exit_from_glyph('4')
+         and has_exit_from_glyph('5')
+         and has_exit_from_glyph('6')
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xbbbbbbbbbbbbbbbbbbbbbbbx
+xb%*%bbb*|*bbb*|*bbb%*%bx
+xb.9.bbb.8.bbb.8.bbb.9.bx
+xbb1bbbbb.bbbbb.bbbbb3bbx
+xbbb.b.bQb.b2b.bRb.b.bbbx
+xbbbb.9.bbb.9.bbb.9.bbbbx
+xbBbbb.b.bQb.bRb.b.bbbGbx
+xbBBbbbbb.bbbbb.bbbbbGGbx
+xbBBBbbb.0.bbb.0.bbbGGGbx
+xbBBbbbbb.bbbbb.bbbbbGGbx
+xbBbBb.bCbDb.bEbFb.bGbGbx
+xbbbb.0.bbb.0.bbb.0.bbbbx
+xbBbAb.bDbCb5bFbEb.bHbGbx
+xb..bbbbb.bbbbb.bbbbb..bx
+xb.04bbb.0.bbb.0.bbb60.bx
+xb..bbbbb.bbbbb.bbbbb..bx
+xbIbJb.bKbLb.bMbNb.bObPbx
+xbbbb.0.bbb.0.bbb.0.bbbbx
+xbJbIb.bLbKb.bNbMb.bPbObx
+xbIIbbbbb.bbbbb.bbbbbPPbx
+xbIIIbbb...bbb...bbbPPPbx
+xbIIIbbb...bbb...bbbPPPbx
+xbbbbbbb...bbb...bbbbbbbx
+xxxxxxxx.@.xxx.@.xxxxxxxx
+ENDMAP
