@@ -360,12 +360,6 @@ static vector<string> _randart_propnames(const item_def& item,
     return propnames;
 }
 
-void trim_god_gift_inscrip(item_def& item)
-{
-    item.inscription = replace_all(item.inscription, "god gift, ", "");
-    item.inscription = replace_all(item.inscription, "god gift", "");
-}
-
 string artefact_inscription(const item_def& item)
 {
     if (item.base_type == OBJ_BOOKS)

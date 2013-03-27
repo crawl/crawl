@@ -1558,9 +1558,6 @@ int acquirement_create_item(object_class_type class_wanted,
                                             DECK_RARITY_COMMON;
     }
 
-    if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
-        thing.inscription = "god gift";
-
     // Moving this above the move since it might not exist after falling.
     if (thing_created != NON_ITEM && !quiet)
         canned_msg(MSG_SOMETHING_APPEARS);
