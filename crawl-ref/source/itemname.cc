@@ -70,6 +70,26 @@ string quant_name(const item_def &item, int quant,
     return tmp.name(des, terse);
 }
 
+static const char* _interesting_origin(const item_def &item)
+{
+    if (origin_is_god_gift(item))
+        return "god gift";
+    switch (item.orig_monnum - 1)
+    {
+    case MONS_SONJA:
+        if (weapon_skill(item) == SK_SHORT_BLADES)
+            return "Sonja";
+    case MONS_PSYCHE:
+        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_DAGGER)
+            return "Psyche";
+    case MONS_DONALD:
+        if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_SHIELD)
+            return "Donald";
+    default:
+        return 0;
+    }
+}
+
 string item_def::name(description_level_type descrip, bool terse, bool ident,
                       bool with_inscription, bool quantity_in_words,
                       iflags_t ignore_flags) const
@@ -296,11 +316,13 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         if (tried)
             insparts.push_back(tried_str);
 
-        if (origin_is_god_gift(*this)
-            && (Options.show_god_gift == B_TRUE
-             || Options.show_god_gift == B_MAYBE && !fully_identified(*this)))
+        if (const char *orig = _interesting_origin(*this))
         {
-            insparts.push_back("god gift");
+            if (Options.show_god_gift == B_TRUE
+                || Options.show_god_gift == B_MAYBE && !fully_identified(*this))
+            {
+                insparts.push_back(orig);
+            }
         }
 
         if (is_artefact(*this))

@@ -1193,7 +1193,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                      0));
             item.plus  = random2(5);
             item.plus2 = random2(5);
-            item.props["autoinscribe"] = "Psyche";
         }
         break;
 
@@ -1221,7 +1220,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                  2, SPWPN_VENOM,
                                                  1, SPWPN_DRAINING,
                                                  0));
-        item.props["autoinscribe"] = "Sonja";
         break;
 
     case MONS_MAURICE:
@@ -1789,7 +1787,6 @@ static void _give_shield(monster* mon, int level)
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
                 set_equip_desc(*shield, ISFLAG_GLOWING);
             }
-            shield->props["autoinscribe"] = "Donald";
             if (!is_artefact(*shield))
             {
                 shield->props["item_tile_name"] = "shield_donald";
