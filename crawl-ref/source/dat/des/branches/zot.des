@@ -1795,9 +1795,9 @@ ENDMAP
 NAME: grunt_zot_stairs_overgrown
 DEPTH: Zot, !Zot:$
 MONS: oklob plant
-MONS: plant col:lightgray name:demonic n_adj
-MONS: bush col:darkgray name:demonic n_adj
-MONS: fungus col:random name:demonic n_adj
+MONS: plant
+MONS: bush
+MONS: fungus
 SUBST: 2 = 23
 SUBST: . = .:30 2 3 4
 SUBST: : = .
