@@ -928,7 +928,9 @@ static const char* misc_type_name(int type, bool known)
 
     case MISC_CRYSTAL_BALL_OF_ENERGY:    return "crystal ball of energy";
     case MISC_BOX_OF_BEASTS:             return "box of beasts";
+#if TAG_MAJOR_VERSION == 34
     case MISC_EMPTY_EBONY_CASKET:        return "empty ebony casket";
+#endif
     case MISC_AIR_ELEMENTAL_FAN:         return "air elemental fan";
     case MISC_LAMP_OF_FIRE:              return "lamp of fire";
     case MISC_LANTERN_OF_SHADOWS:        return "lantern of shadows";
@@ -3343,8 +3345,10 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_MISCELLANY:
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case MISC_EMPTY_EBONY_CASKET:
             return item_type_known(item);
+#endif
         case MISC_LAMP_OF_FIRE:
             return !you.skill(SK_FIRE_MAGIC);
         case MISC_AIR_ELEMENTAL_FAN:
