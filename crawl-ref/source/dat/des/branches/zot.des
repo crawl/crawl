@@ -70,30 +70,8 @@ function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
   local pos = possible[crawl.random2(#possible) + 1]
   local mons = dgn.mons_at(pos.x, pos.y)
   mons.dismiss()
-  local spec = "oklob plant"
-  if data.count > 8 then
-     if crawl.coinflip() then
-        spec = "oklob plant name:annihilator col:lightblue n_suf "
-        spec = spec .. "spells:poison_arrow;orb_of_destruction;.;.;"
-        spec = spec .. "bolt_of_cold actual_spells"
-     else
-        spec = "oklob plant name:demonologist col:yellow n_suf "
-        spec = spec .. "spells:summon_demon;.;.;summon_demon;.;"
-        spec = spec .. "malign_gateway actual_spells"
-     end
-  elseif data.count > 5 then
-     if crawl.coinflip() then
-        spec = "oklob plant name:conjurer col:blue n_suf "
-        spec = spec .. "spells:stone_arrow;.;.;.;iskenderun's_mystic_blast "
-        spec = spec .. "actual_spells"
-     else
-        spec = "oklob plant name:summoner col:brown n_suf "
-        spec = spec .. "spells:summon_minor_demon;.;.;summon_swarm "
-        spec = spec .. "actual_spells"
-     end
-  end
 
-  dgn.create_monster(pos.x, pos.y, spec)
+  dgn.create_monster(pos.x, pos.y, "oklob plant")
 
   if not you.see_cell(pos.x, pos.y) then return end
 
@@ -1813,13 +1791,8 @@ xx...G...vv4$v$4vv...G...xx
 ENDMAP
 
 ####
-# Revenge of the spell-casting oklobs!!!
-#
-# Disabled, the common opinion is that such thing doesn't belong in regular
-# games; sentient oklobs are quite stretching disbelief in a sprint that's
-# themed on Fedhas going mad.
+# Revenge of the oklobs!!!
 NAME: grunt_zot_stairs_overgrown
-WEIGHT: 0
 DEPTH: Zot, !Zot:$
 MONS: oklob plant
 MONS: plant col:lightgray name:demonic n_adj
