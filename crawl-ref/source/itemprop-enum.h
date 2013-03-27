@@ -104,13 +104,18 @@ enum brand_type // item_def.special
 
     MAX_PAN_LORD_BRANDS = SPWPN_EVASION,
 
+#if TAG_MAJOR_VERSION == 34
     SPWPN_CONFUSE, // XXX not a real weapon brand, only for Confusing Touch
+#endif
     SPWPN_PENETRATION,
     SPWPN_REAPING,
 
     NUM_REAL_SPECIAL_WEAPONS,
 
     SPWPN_ACID,    // acid bite only for the moment
+#if TAG_MAJOR_VERSION != 34
+    SPWPN_CONFUSE, // Confusing Touch only for the moment
+#endif
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
