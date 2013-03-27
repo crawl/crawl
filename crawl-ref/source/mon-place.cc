@@ -3204,9 +3204,10 @@ conduct_type player_will_anger_monster(monster_type type)
 {
     monster dummy;
     dummy.type = type;
-    if (mons_class_is_zombified(type))
-        dummy.type = MONS_ORC; // no spellcasting/etc zombies currently
-    define_monster(&dummy);
+
+    // no spellcasting/etc zombies currently
+    if (!mons_class_is_zombified(type))
+        define_monster(&dummy);
 
     return player_will_anger_monster(&dummy);
 }
