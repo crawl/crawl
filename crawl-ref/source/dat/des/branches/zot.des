@@ -1792,15 +1792,13 @@ ENDMAP
 
 ####
 # Revenge of the oklobs!!!
-NAME: grunt_zot_stairs_overgrown
-DEPTH: Zot, !Zot:$
-MONS: oklob plant
-MONS: plant
-MONS: bush
-MONS: fungus
-SUBST: 2 = 23
-SUBST: . = .:30 2 3 4
-SUBST: : = .
+NAME:   grunt_zot_stairs_overgrown
+DEPTH:  Zot, !Zot:$
+ORIENT: float
+MONS:   oklob plant, plant, bush, fungus
+SUBST:  2 = 23
+SUBST:  . = .:30 2 3 4
+SUBST:  : = .
 {{
 local sm = TriggerableFunction:new {
   func="callback.grunt_zot_stairs_overgrown_start", triggered=false }
