@@ -89,7 +89,6 @@ string get_command_description(const command_type cmd, bool terse);
 void print_description(const string &desc);
 void print_description(const describe_info &inf);
 
-void trim_god_gift_inscrip(item_def& item);
 string artefact_inscription(const item_def& item);
 void add_inscription(item_def &item, string inscrip);
 

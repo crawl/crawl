@@ -4104,10 +4104,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
             props["randbook_title"].get_string());
     }
 
-    // Remove {god gift} from the inscription (could have been added if
-    // the item spec contains "acquire:moloch").
-    trim_god_gift_inscrip(item);
-    // And wipe item origin to remove "this is a god gift!" from there,
+    // Wipe item origin to remove "this is a god gift!" from there,
     // unless we're dealing with a corpse.
     if (!spec.corpselike())
         origin_reset(item);
