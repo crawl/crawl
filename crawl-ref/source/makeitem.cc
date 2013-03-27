@@ -3106,11 +3106,6 @@ int items(bool allow_uniques,
 
     item_def& item(mitm[p]);
 
-    // make_item_randart() might do things differently based upon the
-    // acquirement agent, especially for god gifts.
-    if (agent != -1)
-        origin_acquired(item, agent);
-
     const bool force_good = item_level >= MAKE_GIFT_ITEM;
 
     if (force_ego != 0)
@@ -3166,6 +3161,11 @@ int items(bool allow_uniques,
            || force_type < get_max_subtype(item.base_type));
 
     item.quantity = 1;          // generally the case
+
+    // make_item_randart() might do things differently based upon the
+    // acquirement agent, especially for god gifts.
+    if (agent != -1 && !is_stackable_item(item))
+        origin_acquired(item, agent);
 
     if (force_ego < SP_FORBID_EGO)
     {
