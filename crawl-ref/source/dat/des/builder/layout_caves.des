@@ -169,6 +169,63 @@ TAGS: overwritable layout allow_dup unrand
   mapgrd[midx][midy] = '.'
 }}
 
+# Intended as a series of interconnected roughly geometrically-shaped rooms
+# for e.g. Dis/Zot, came out much more organic like a burrow of caves.
+NAME:   layout_cave_pods
+DEPTH:  Snake,Lair,Spider
+WEIGHT: 20
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "caves"
+  if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+
+  -- TODO: Add some branch-appropriate domain distortion / water
+  -- TODO: Randomise scales of rooms and corridors (need to scale
+  -- corridor width up and down with noise scale too otherwise they end up hugely wrong size)
+  local frooms = procedural.worley_diff{ scale = 0.15 }
+  local fcorridors = procedural.worley_diff{ scale = 0.1 }
+  local fhalls = procedural.sub(fcorridors,procedural.mul(frooms,0.5))
+  local fbord = procedural.border{ padding = 4,additive = true }
+  frooms = procedural.sub(frooms,fbord)
+  fcorridors = procedural.add(fcorridors,procedural.mul(fbord,0.3))
+
+  procedural.render_map(_G, fcorridors, function(v) return (v < 0.08 and '.' or 'x') end)
+  procedural.render_map(_G, frooms, function(v) return (v > 0.4 and '.' or nil) end)
+
+  zonify.map_fill_zones(_G, 1, 'x')
+}}
+MAP
+ENDMAP
+
+# This is a very similar version of the previous one and
+# should really be folded in with randomisation
+NAME:   layout_chambers
+DEPTH:  Snake,Lair,Spider
+WEIGHT: 20
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "chambers"
+  if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+
+  local frooms = procedural.worley_diff{ scale = 0.2 }
+  local fcorridors = procedural.worley_diff{ scale = 0.3 }
+  local fhalls = procedural.sub(fcorridors,procedural.mul(frooms,0.5))
+  local fbord = procedural.border{ padding = 4,additive = true }
+  frooms = procedural.sub(frooms,fbord)
+  fcorridors = procedural.add(fcorridors,procedural.mul(fbord,0.3))
+
+  procedural.render_map(_G, fcorridors, function(v) return (v < .15 and '.' or 'x') end)
+  procedural.render_map(_G, frooms, function(v) return (v > 0.3 and '.' or nil) end)
+
+  zonify.map_fill_zones(_G, 1, 'x')
+}}
+MAP
+ENDMAP
+
 # A big cavern with a few huts or caves in it
 # TODO: Use other layouts as the base (e.g. cave_shapes, a river/forest/pools layout like bigger_room,
 # even swamp / shoals) and add rooms to them
