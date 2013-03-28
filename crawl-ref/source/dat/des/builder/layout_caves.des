@@ -173,7 +173,7 @@ TAGS: overwritable layout allow_dup unrand
 # TODO: Use other layouts as the base (e.g. cave_shapes, a river/forest/pools layout like bigger_room,
 # even swamp / shoals) and add rooms to them
 NAME: layout_cave_town
-WEIGHT: 20
+WEIGHT: 10
 ORIENT: encompass
 DEPTH: D:5-, Snake, Lair
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
@@ -182,13 +182,13 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
   -- Similar size calculations to chaotic_city
   local function room_size_func()
-    return { x = 5 + crawl.random2(7) + crawl.random2(5),y = 3 + crawl.random2(7) + crawl.random2(5) }
+    return { x = 5 + crawl.random2(7) + crawl.random2(5),y = 5 + crawl.random2(7) + crawl.random2(5) }
   end
   local function room_size_func_small()
-    return { x = 4 + crawl.random2(4) + crawl.random2(3),y = 2 + crawl.random2(4) + crawl.random2(3) }
+    return { x = 4 + crawl.random2(4) + crawl.random2(3),y = 4 + crawl.random2(4) + crawl.random2(3) }
   end
   local function room_size_func_big()
-    return { x = 7 + crawl.random2(9) + crawl.random2(7),y = 5 + crawl.random2(9) + crawl.random2(7) }
+    return { x = 7 + crawl.random2(9) + crawl.random2(7),y = 7 + crawl.random2(9) + crawl.random2(7) }
   end
 
   local weights = {
@@ -208,9 +208,9 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
         { generator = "code", paint_callback = hyper.rooms.cave_walls, min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 }
       } },
       { pass = "Rooms", type = "build", strategy = hyper.place.strategy_open, max_rooms = 12, generators = {
-        { generator = "code", class = "room", weight = 5, paint_callback = chosen.room, size_callback = room_size_func_big, room_transform = hyper.rooms.add_walls, max_rooms = 1 },
+        { generator = "code", class = "room", weight = 5, paint_callback = chosen.room, size_callback = room_size_func_big, room_transform = hyper.rooms.add_walls, max_rooms = 3 },
         { generator = "code", class = "room", weight = 15, paint_callback = chosen.room, size_callback = room_size_func, room_transform = hyper.rooms.add_walls },
-        { generator = "code", class = "room", weight = 10, paint_callback = chosen.room, size_callback = room_size_func_small, room_transform = hyper.rooms.add_walls },
+        { generator = "code", class = "room", weight = 10, paint_callback = chosen.room, size_callback = room_size_func_small,  room_transform = hyper.rooms.add_walls },
       } }
     }
   })
