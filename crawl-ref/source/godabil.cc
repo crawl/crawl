@@ -3040,10 +3040,14 @@ bool fedhas_evolve_flora()
     }
 
     target->upgrade_type(upgrade.new_type, true, true);
-    target->god = GOD_FEDHAS;
-    target->attitude = ATT_FRIENDLY;
+
     target->flags |= MF_NO_REWARD;
     target->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+    mons_make_god_gift(target, GOD_FEDHAS);
+
+    target->attitude = ATT_FRIENDLY;
+
     behaviour_event(target, ME_ALERT);
     mons_att_changed(target);
 
