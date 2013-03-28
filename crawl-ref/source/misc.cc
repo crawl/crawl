@@ -1242,9 +1242,12 @@ void search_around()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int skill = you.skill(SK_TRAPS, 240);
+    int base_skill = you.skill(SK_TRAPS, 100);
+    int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
+                + (base_skill/200.0) + 15;
+
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
-        skill += you.piety * 16;
+        skill += you.piety * 2;
 
     int farskill = skill;
     if (int mut = you.mutation[MUT_BLURRY_VISION])
@@ -1282,7 +1285,7 @@ void search_around()
             continue;
         }
 
-        if (effective > ptrap->skill_rnd * 10 - 500)
+        if (effective > ptrap->skill_rnd)
         {
             ptrap->reveal();
             mprf("You found %s trap!",
