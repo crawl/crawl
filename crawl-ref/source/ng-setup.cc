@@ -166,6 +166,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_HEALER:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
     case JOB_PRIEST:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
 
+    case JOB_JESTER:            s =  1; i =  5; d =  6; hp = 13; mp = 1; break;
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
@@ -899,6 +900,21 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_THROWING]     = 2;
         break;
 
+    case JOB_JESTER:
+        you.religion = GOD_NEMELEX_XOBEH;
+        you.piety = 35;
+        you.penance[GOD_XOM] = 200;
+
+        newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_CLUB);
+        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
+        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+
+        you.skills[SK_DODGING]      = 2;
+        you.skills[SK_STEALTH]      = 2;
+        you.skills[SK_THROWING]     = 1;
+        you.skills[SK_SPELLCASTING] = 2;
+        break;
+
     case JOB_HUNTER:
         // Equipment.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
@@ -1123,6 +1139,9 @@ static void _give_basic_spells(job_type which_job)
     case JOB_WIZARD:
     case JOB_CONJURER:
         which_spell = SPELL_MAGIC_DART;
+        break;
+    case JOB_JESTER:
+        which_spell = SPELL_APPORTATION;
         break;
     case JOB_VENOM_MAGE:
         which_spell = SPELL_STING;
