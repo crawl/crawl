@@ -8,6 +8,84 @@
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/hyper.lua")
 
+# A similar idea to layered_grids - pick two or three different noise
+# functions from weighted selections and draw them overwritten.
+NAME:   layout_layer_cave
+DEPTH:  D,Lair,Snake
+WEIGHT: 40
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "caves"
+  if is_validating() then return; end
+
+  local gxm,gym = dgn.max_bounds()
+
+  -- First pass
+  -- These should be sprawling corridors that will connect up the
+  -- bigger features of the second pass
+  local limit = 0.6
+  -- TODO: Implement these functions as rooms and use hyper so we
+  -- can automatically get randomised size/position and door carving
+  local pweights = {
+    -- Cavernous areas
+--    { weight = 10, func = function()
+  --      limit = 0.51
+    --    return procedural.simplex3d { scale = 1 }
+      --end },
+    -- Twisty paths
+    { weight = 10, func = function()
+        limit = 0.2
+        return procedural.abs(procedural.simplex3d { scale = util.random_range_real(.5,1), unit = false })
+      end },
+    -- Angular paths
+    { weight = 10, func = function()
+        limit = 0.3
+        return procedural.worley_diff { scale = util.random_range_real(.2,.4) }
+      end },
+  }
+
+  local primary = procedural.add(
+    util.random_weighted_from("weight",pweights).func(),
+    procedural.mul(procedural.border { padding = 8 }, limit)
+  )
+
+  procedural.render_map(_G,primary,function(v) return v < limit and '.' or 'x' end)
+
+  -- Second pass
+  limit = 0.2
+  local sweights = {
+    { weight = 10, func = nil },
+    -- Large blobby rooms
+    { weight = 10, func = function()
+        limit = util.random_range_real(0.2,0.4)
+        return procedural.simplex3d { scale = util.random_range_real(.2,.4) }
+      end },
+    -- More angular rooms
+    { weight = 10, func = function()
+        limit = 0.5
+        return procedural.sub(1,procedural.worley_diff { scale = util.random_range_real(.02,.1) } )
+      end },
+    -- A big central cavern
+    { weight = 10, func = function()
+        limit = 0.8
+        return procedural.add(
+          procedural.distance { origin = { x = gxm/2, y = gym/2 }, radius = math.min(gxm,gym)/2 },
+          procedural.worley_diff { scale = util.random_range_real(.4,.8) })
+      end },
+  }
+  local schoice = util.random_weighted_from("weight",sweights)
+  if schoice.func ~= nil then
+    local secondary = procedural.add(
+      schoice.func(),
+      procedural.mul(procedural.border { padding = 8 }, limit)
+    )
+    procedural.render_map(_G,secondary,function(v) return v < limit and '.' or nil end)
+  end
+
+  zonify.map_fill_zones(_G, 1, 'x')
+}}
+
 # The premise here is we pick a random shape function and apply cavelike edges.
 # We optionally apply a fairly large-scale domain distortion to the underlying shape.
 # TODO: * Some flooding/river on 1/10 chance (certain branches)
