@@ -4334,9 +4334,9 @@ static void _move_player(coord_def move)
     {
         if (you.made_nervous_by(targ))
         {
-                moving = false;
-                you.turn_is_over = false;
-                return;
+            moving = false;
+            you.turn_is_over = false;
+            return;
         }
     }
 
