@@ -2960,9 +2960,9 @@ bool fedhas_evolve_flora()
         return false;
     }
 
-    monster* const target = monster_at(spelld.target);
+    monster* const plant = monster_at(spelld.target);
 
-    if (!target)
+    if (!plant)
     {
         if (!is_moldy(spelld.target)
             || !mons_class_can_pass(MONS_BALLISTOMYCETE,
@@ -2978,13 +2978,15 @@ bool fedhas_evolve_flora()
 
     }
 
-    if (!_possible_evolution(target, upgrade))
+    if (!_possible_evolution(plant, upgrade))
     {
-        if (target->type == MONS_GIANT_SPORE)
+        if (plant->type == MONS_GIANT_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
-        else  if (mons_is_plant(target))
-            simple_monster_message(target, " has already reached "
-                                   "the pinnacle of evolution.");
+        else  if (mons_is_plant(plant))
+        {
+            simple_monster_message(plant, " has already reached the pinnacle"
+                                   " of evolution.");
+        }
         else
             mpr("Only plants or fungi may be evolved.");
 
@@ -3009,7 +3011,7 @@ bool fedhas_evolve_flora()
         return false;
     }
 
-    switch (target->type)
+    switch (plant->type)
     {
     case MONS_PLANT:
     case MONS_BUSH:
@@ -3026,22 +3028,22 @@ bool fedhas_evolve_flora()
             evolve_desc += " somewhat quickly";
         evolve_desc += ".";
 
-        simple_monster_message(target, evolve_desc.c_str());
+        simple_monster_message(plant, evolve_desc.c_str());
         break;
     }
 
     case MONS_OKLOB_SAPLING:
-        simple_monster_message(target, " appears stronger.");
+        simple_monster_message(plant, " appears stronger.");
         break;
 
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
-        simple_monster_message(target,
+        simple_monster_message(plant,
                                " can now pick up its mycelia and move.");
         break;
 
     case MONS_BALLISTOMYCETE:
-        simple_monster_message(target, " appears agitated.");
+        simple_monster_message(plant, " appears agitated.");
         env.level_state |= LSTATE_GLOW_MOLD;
         break;
 
@@ -3049,28 +3051,28 @@ bool fedhas_evolve_flora()
         break;
     }
 
-    target->upgrade_type(upgrade.new_type, true, true);
+    plant->upgrade_type(upgrade.new_type, true, true);
 
-    target->flags |= MF_NO_REWARD;
-    target->flags |= MF_ATT_CHANGE_ATTEMPT;
+    plant->flags |= MF_NO_REWARD;
+    plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-    mons_make_god_gift(target, GOD_FEDHAS);
+    mons_make_god_gift(plant, GOD_FEDHAS);
 
-    target->attitude = ATT_FRIENDLY;
+    plant->attitude = ATT_FRIENDLY;
 
-    behaviour_event(target, ME_ALERT);
-    mons_att_changed(target);
+    behaviour_event(plant, ME_ALERT);
+    mons_att_changed(plant);
 
     // Try to remove slowly dying in case we are upgrading a
     // toadstool, and spore production in case we are upgrading a
     // ballistomycete.
-    target->del_ench(ENCH_SLOWLY_DYING);
-    target->del_ench(ENCH_SPORE_PRODUCTION);
+    plant->del_ench(ENCH_SLOWLY_DYING);
+    plant->del_ench(ENCH_SPORE_PRODUCTION);
 
-    if (target->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
-        target->add_ench(ENCH_EXPLODING);
+    if (plant->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        plant->add_ench(ENCH_EXPLODING);
 
-    target->hit_dice += you.skill_rdiv(SK_INVOCATIONS);
+    plant->hit_dice += you.skill_rdiv(SK_INVOCATIONS);
 
     if (upgrade.fruit_cost)
         _decrease_amount(collected_fruit, upgrade.fruit_cost);
