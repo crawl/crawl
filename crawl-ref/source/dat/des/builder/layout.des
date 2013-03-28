@@ -6,6 +6,8 @@
 #
 ###############################################################################
 
+: require("dlua/layout/zonify.lua")
+
 {{
     -- Call func num times around a circle of radius centered at (x, y)
     function apply_circle(x, y, num, radius, scale_x, scale_y, func)
@@ -26,13 +28,15 @@
         local in_slime = you.in_branch("slime")
         local elevator = not in_slime
 
-        local stairs = { '}', ')', ']', '(', '[' }
+        -- We now only generate the three downstairs and build spotty
+        -- caves around them (only three bubbles). This means connectivity
+        -- is always guaranteed downstream to the branch end, which is always
+        -- connected, so all bubbles can be traversed.
+        local stairs = { '}', ')', ']' }
 
         local make_floor = function (x, y)
             mapgrd[x][y] = '.'
         end
-
-        if not elevator then table.insert(stairs, '{') end
 
         for i, glyph in ipairs(stairs) do
             local x, y
@@ -625,8 +629,8 @@ MAP
 ENDMAP
 
 NAME: layout_caves
-DEPTH: Orc, Slime
-CHANCE: 100%
+DEPTH: 9-22, !Dis, !Geh, Orc, Slime
+CHANCE: 100% (Orc), 100% (Slime)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -639,36 +643,27 @@ TAGS: overwritable layout allow_dup unrand
     spotty_stairs(mapgrd)
 
     local iterations
-
-    if you.at_branch_bottom() then
-        iterations = 600 + crawl.random2(600)
+    local boxy = false
+    local connected = false
+    if you.in_branch("orc") or you.in_branch("slime") then
+        if you.at_branch_bottom() then
+            iterations = 600 + crawl.random2(600)
+            connected = true
+        else
+            iterations = 100 + crawl.random2(500)
+        end
     else
-        iterations = 100 + crawl.random2(500)
+        -- Normal branches
+        boxy = crawl.coinflip()
+        iterations = 200 + crawl.random2(boxy and 750 or 1500)
     end
 
-    spotty_map { boxy = false, iterations = iterations }
-}}
-MAP
-ENDMAP
-
-NAME: layout_spotty
-DEPTH: 9-22, !Dis, !Geh
-WEIGHT: 10
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
-{{
-    local gxm, gym = dgn.max_bounds()
-
-    extend_map { width = gxm, height = gym, fill = 'x' }
-
-    layout_type "caves"
-
-    spotty_stairs(mapgrd)
-
-    local boxy = crawl.coinflip()
-    local iterations = 200 + crawl.random2(boxy and 750 or 1500)
-
     spotty_map { boxy = boxy, iterations = iterations }
+
+    -- For Orc branch end, fill in all but the largest zone
+    if connected then
+      zonify.map_fill_zones(_G, 1, 'x')
+    end
 }}
 MAP
 ENDMAP
