@@ -310,3 +310,44 @@ TAGS: overwritable layout allow_dup unrand
 }}
 MAP
 ENDMAP
+
+NAME:   layout_ice_bergs
+DEPTH:  Coc
+CHANCE: 100%
+WEIGHT: 5
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand chance_cocytus
+{{
+  layout_type "caverns"
+  if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+
+  -- There is precedent for requiring flight in Coc, so have
+  -- a chance that no paths will get generated between the ice bergs
+  local connect_up = crawl.x_chance_in_y(5,6)
+  local nilresult = 'w'
+  if connect_up then
+    local fcorridors = procedural.worley_diff{ scale = 0.15 }
+    procedural.render_map(_G, fcorridors, function(v) return (v < .1 and 'W' or nilresult) end)
+    nilresult = nil
+  end
+
+  local fbord = procedural.border{ padding = 4,additive = true }
+  local fcave = procedural.add(fbord,procedural.worley_diff { scale = 0.2 })
+  procedural.render_map(_G, fcave, function(v) return (v >= 0.8 and 'x' or nilresult) end)
+
+  local fbergs = procedural.worley_diff{ scale = 0.2 }
+  fbergs = procedural.sub(fbergs,fbord)
+  procedural.render_map(_G, fbergs, function(v)
+    if v > 0.6 then return "x"
+    elseif v > 0.2 then return "."
+    else return nil end
+    -- return (v > 0.3 and '.' or nil)
+  end)
+
+  if connect_up then
+    zonify.map_fill_zones(_G, 1, 'x')
+  end
+}}
+MAP
+ENDMAP
