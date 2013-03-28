@@ -2795,9 +2795,10 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                                MG_FORCE_PLACE,
                                                GOD_FEDHAS)))
         {
+            plant->flags |= MF_NO_REWARD;
+
             if (behavior == BEH_FRIENDLY)
             {
-                plant->flags |= MF_NO_REWARD;
                 plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
                 mons_make_god_gift(plant, GOD_FEDHAS);
