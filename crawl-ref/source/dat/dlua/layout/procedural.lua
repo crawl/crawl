@@ -11,6 +11,14 @@
 
 procedural = {}
 
+------------------------------------------------------------------------------
+-- Aggregate functions
+--
+-- These factories return a function that aggregates several functions or
+-- values together with a mathematical operation. Each one takes a parameter
+-- list which can consist of any mixture of functions and numerical values.
+-- The returned function performs the aggregate of those functions and values
+-- at each x,y coordinate.
 
 -- Add the output of several functions together
 function procedural.add(...)
@@ -25,6 +33,7 @@ function procedural.sub(...)
   return procedural.aggregate(vars,function(t,v) return t-v end)
 end
 
+-- Multiplies together several functions or values
 function procedural.mul(...)
   local vars = { ... }
   return procedural.aggregate(vars,function(t,v) return t*v end)
@@ -33,6 +42,18 @@ end
 function procedural.div(...)
   local vars = { ... }
   return procedural.aggregate(vars,function(t,v) return t/v end)
+end
+
+-- Creates a function that returns the minimum value of several functions
+function procedural.min(...)
+  local vars = { ... }
+  return procedural.aggregate(vars,function(t,v) return math.min(t,v) end)
+end
+
+-- Creates a function that returns the maximum value of several functions
+function procedural.max(...)
+  local vars = { ... }
+  return procedural.aggregate(vars,function(t,v) return math.max(t,v) end)
 end
 
 function procedural.aggregate(list,op)
@@ -57,28 +78,10 @@ function procedural.aggregate(list,op)
 
 end
 
--- Creates a function that returns the minimum value of several functions
-function procedural.min(...)
-  local vars = { ... }
+-- Some non-aggregate function transforms
+function procedural.abs(func)
   return function(x,y)
-    local val = nil
-    for i,f in ipairs(vars) do
-      local r = f(x,y)
-      if val == nil or r < val then val = r end
-    end
-    return val
-  end
-end
--- Creates a function that returns the maximum value of several functions
-function procedural.max(...)
-  local vars = { ... }
-  return function(x,y)
-    local val = nil
-    for i,f in ipairs(vars) do
-      local r = f(x,y)
-      if val == nil or r > val then val = r end
-    end
-    return val
+    return math.abs(func(x,y))
   end
 end
 
