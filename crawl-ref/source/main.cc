@@ -2980,11 +2980,13 @@ static void _update_mold()
     env.level_state &= ~LSTATE_GLOW_MOLD; // we'll restore it if any
 
     for (rectangle_iterator ri(0); ri; ++ri)
+    {
         if (glowing_mold(*ri))
         {
             _update_mold_state(*ri);
             env.level_state |= LSTATE_GLOW_MOLD;
         }
+    }
     for (monster_iterator mon_it; mon_it; ++mon_it)
     {
         if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
