@@ -2091,7 +2091,7 @@ int fedhas_fungal_bloom()
     if (processed_count)
     {
         simple_god_message(" appreciates your contribution to the "
-                           "ecosystem.", GOD_FEDHAS);
+                           "ecosystem.");
         // Doubling the expected value per sacrifice to approximate the
         // extra piety gain blood god worshipers get for the initial kill.
         // -cao
