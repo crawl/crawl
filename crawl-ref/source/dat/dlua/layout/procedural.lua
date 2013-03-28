@@ -109,6 +109,32 @@ function procedural.border(params)
   end
 end
 
+-- Calculates nearest distance to edge of a box. Returns 0 in the
+-- box center, 1 at the box edge.
+-- TODO: Border is basically this with a numerical map applied,
+-- we can get rid of the border implementation and replace it with that
+function procedural.box(params)
+
+  local x1,y1 = 0,0
+  local x2,y2 = dgn.max_bounds()
+  x2 = x2 - 1
+  y2 = y2 - 1
+  if params.x1 ~= nil then x1 = params.x1 end
+  if params.x2 ~= nil then x2 = params.x2 end
+  if params.y1 ~= nil then y1 = params.y1 end
+  if params.y2 ~= nil then y2 = params.y2 end
+
+  -- TODO: Mathematically speaking this is correct but in reality
+  -- we might have to adjust this a little for the grid
+  local minhalf = math.min((x2-x1)/2,(y2-y1)/2)
+
+  return function(x,y)
+    local near = math.min(x-x1,y-y1,x2-x,y2-y)
+    return 1 - near/minhalf
+  end
+
+end
+
 -- Returns distance from a point, useful for circles and ellipses
 function procedural.distance(params)
   local xo,yo = params.origin.x,params.origin.y
@@ -137,9 +163,9 @@ function procedural.radial(params)
       if yd>0 then r = r+180 end
     end
     if params.phase ~= nil then
-      r = (r + params.phase*360) % 360
+      r = (r + params.phase*360)
     end
-    return r/360
+    return (r % 360)/360
   end
 
 end
@@ -231,10 +257,12 @@ function procedural.simplex3d(params)
   local major_offset_x = crawl.random2(1000000)
   local major_offset_y = crawl.random2(1000000)
   local major_offset_z = crawl.random2(1000000)
+
   return function(x,y)
-    return crawl.simplex(x * final_scale_x + major_offset_x,
-                         y * final_scale_y + major_offset_y, major_offset_z)
-                        / 2 + 0.5
+    local result = crawl.simplex(x * final_scale_x + major_offset_x,
+                   y * final_scale_y + major_offset_y, major_offset_z)
+    if params.unit == nil or params.unit then result = result / 2 + 0.5 end
+    return result
   end
 end
 
