@@ -5531,6 +5531,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (!alive())
         return;
 
+    if (has_ench(ENCH_OZOCUBUS_ARMOUR)
+        && (flavour == BEAM_FIRE || flavour == BEAM_LAVA
+            || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
+            || flavour == BEAM_STEAM))
+    {
+        lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
+                           damage * BASELINE_DELAY);
+    }
+
     if (mons_is_tentacle(type) && type != MONS_ELDRITCH_TENTACLE
             && flavour != BEAM_TORMENT_DAMAGE
             && !invalid_monster_index(number)

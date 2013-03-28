@@ -1533,11 +1533,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             else
                 simple_monster_message(mons, " is scalded terribly!");
         }
-        if (doFlavouredEffects && mons->has_ench(ENCH_OZOCUBUS_ARMOUR))
-        {
-            mon_enchant armour = mons->get_ench(ENCH_OZOCUBUS_ARMOUR);
-            mons->lose_ench_duration(armour, hurted * BASELINE_DELAY);
-        }
         break;
 
     case BEAM_WATER:
