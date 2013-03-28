@@ -131,10 +131,10 @@ function procedural.radial(params)
   return function(x,y)
     local xd,yd = xo-x,yo-y
     local r
-    if xd == 0 then r = yd>0 and 180 or 0
+    if yd == 0 then r = (xd>0) and 270 or 90
     else
-      r = math.atan(yd/xd) / math.pi * 180
-      if xd>0 then r = r+180 end
+      r = math.atan(xd/yd) / math.pi * 180
+      if yd>0 then r = r+180 end
     end
     if params.phase ~= nil then
       r = (r + params.phase*360) % 360
