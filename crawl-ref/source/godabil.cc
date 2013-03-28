@@ -1928,9 +1928,9 @@ bool fedhas_passthrough(const monster_info* target)
 
 // Fedhas worshipers can shoot through non-hostile plants, can a
 // particular beam go through a particular monster?
-bool fedhas_shoot_through(const bolt & beam, const monster* victim)
+bool fedhas_shoot_through(const bolt& beam, const monster* victim)
 {
-    actor * originator = beam.agent();
+    actor *originator = beam.agent();
     if (!victim || !originator)
         return false;
 
@@ -2105,23 +2105,23 @@ int fedhas_fungal_bloom()
     return processed_count;
 }
 
-static bool _create_plant(coord_def & target, int hp_adjust = 0)
+static bool _create_plant(coord_def& target, int hp_adjust = 0)
 {
     if (actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target)))
         return 0;
 
-    if (monster *plant = create_monster(mgen_data
-                                     (MONS_PLANT,
-                                      BEH_FRIENDLY,
-                                      &you,
-                                      0,
-                                      0,
-                                      target,
-                                      MHITNOT,
-                                      MG_FORCE_PLACE,
-                                      GOD_FEDHAS)))
+    if (monster *plant = create_monster(mgen_data(MONS_PLANT,
+                                            BEH_FRIENDLY,
+                                            &you,
+                                            0,
+                                            0,
+                                            target,
+                                            MHITNOT,
+                                            MG_FORCE_PLACE,
+                                            GOD_FEDHAS)))
     {
         plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
         plant->max_hit_points += hp_adjust;
         plant->hit_points += hp_adjust;
 
@@ -2325,10 +2325,10 @@ typedef pair<coord_def, int> point_distance;
 // Find the distance from origin to each of the targets, those results
 // are stored in distances (which is the same size as targets). Exclusion
 // is a set of points which are considered disconnected for the search.
-static void _path_distance(const coord_def & origin,
-                           const vector<coord_def> & targets,
+static void _path_distance(const coord_def& origin,
+                           const vector<coord_def>& targets,
                            set<int> exclusion,
-                           vector<int> & distances)
+                           vector<int>& distances)
 {
     queue<point_distance> fringe;
     fringe.push(point_distance(origin,0));
@@ -2372,9 +2372,9 @@ static void _path_distance(const coord_def & origin,
 
 // Find the minimum distance from each point of origin to one of the targets
 // The distance is stored in 'distances', which is the same size as origins.
-static void _point_point_distance(const vector<coord_def> & origins,
-                                  const vector<coord_def> & targets,
-                                  vector<int> & distances)
+static void _point_point_distance(const vector<coord_def>& origins,
+                                  const vector<coord_def>& targets,
+                                  vector<int>& distances)
 {
     distances.clear();
     distances.resize(origins.size(), INT_MAX);
@@ -2409,7 +2409,7 @@ static void _point_point_distance(const vector<coord_def> & origins,
 // We claim danger is proportional to the minimum distances from the point to a
 // (hostile) monster. This function carries out at most 7 searches to calculate
 // the distances in question.
-bool prioritise_adjacent(const coord_def &target, vector<coord_def> & candidates)
+bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
 {
     radius_iterator los_it(target, LOS_RADIUS, true, true, true);
 
@@ -2586,12 +2586,8 @@ bool fedhas_plant_ring_from_fruit()
     // are higher than that number.
 #ifndef USE_TILE_LOCAL
     unsigned not_used = adjacent.size() - unsigned(target_count);
-    for (unsigned i = adjacent.size() - not_used;
-         i < adjacent.size();
-         i++)
-    {
+    for (unsigned i = adjacent.size() - not_used; i < adjacent.size(); i++)
         view_update_at(adjacent[i]);
-    }
 #endif
 #ifdef USE_TILE
     // For tiles we have to clear all overlays and redraw the ones
@@ -2761,7 +2757,6 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     for (unsigned i = 0; i < positions.size(); ++i)
     {
 #ifndef USE_TILE_LOCAL
-
         coord_def temp = grid2view(positions[i]->pos);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
 
@@ -2787,16 +2782,17 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     {
         count++;
         if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                          behavior,
-                                          &you,
-                                          0,
-                                          0,
-                                          positions[i]->pos,
-                                          MHITNOT,
-                                          MG_FORCE_PLACE,
-                                          GOD_FEDHAS)))
+                                            behavior,
+                                            &you,
+                                            0,
+                                            0,
+                                            positions[i]->pos,
+                                            MHITNOT,
+                                            MG_FORCE_PLACE,
+                                            GOD_FEDHAS)))
         {
             rc->flags |= MF_ATT_CHANGE_ATTEMPT;
+
             if (behavior == BEH_FRIENDLY)
             {
                 rc->behaviour = BEH_WANDER;
@@ -2839,7 +2835,7 @@ struct monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
 static bool _possible_evolution(const monster* input,
-                                monster_conversion & possible_monster)
+                                monster_conversion& possible_monster)
 {
     switch (input->type)
     {
@@ -2879,17 +2875,17 @@ bool mons_is_evolvable(const monster* mon)
     return _possible_evolution(mon, temp);
 }
 
-static bool _place_ballisto(const coord_def & pos)
+static bool _place_ballisto(const coord_def& pos)
 {
     if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                  BEH_FRIENDLY,
-                                                  &you,
-                                                  0,
-                                                  0,
-                                                  pos,
-                                                  MHITNOT,
-                                                  MG_FORCE_PLACE,
-                                                  GOD_FEDHAS)))
+                                     BEH_FRIENDLY,
+                                     &you,
+                                     0,
+                                     0,
+                                     pos,
+                                     MHITNOT,
+                                     MG_FORCE_PLACE,
+                                     GOD_FEDHAS)))
     {
         remove_mold(pos);
         mpr("The mold grows into a ballistomycete.");

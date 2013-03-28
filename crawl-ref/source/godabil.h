@@ -49,11 +49,11 @@ bool kiku_take_corpse();
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
-bool fedhas_shoot_through(const bolt & beam, const monster* victim);
+bool fedhas_shoot_through(const bolt& beam, const monster* victim);
 int fedhas_fungal_bloom();
 bool fedhas_sunlight();
 void process_sunlights(bool future = false);
-bool prioritise_adjacent(const coord_def &target, vector<coord_def> &candidates);
+bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);
 bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
 int fedhas_corpse_spores(beh_type behavior = BEH_FRIENDLY,
