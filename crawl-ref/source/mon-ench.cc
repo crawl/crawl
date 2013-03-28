@@ -26,6 +26,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "religion.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -1471,10 +1472,10 @@ void monster::apply_enchantment(const mon_enchant &me)
                 if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
                                         && !actor_at(adjacent))
                 {
-                    beh_type created_behavior = SAME_ATTITUDE(this);
+                    beh_type plant_attitude = SAME_ATTITUDE(this);
 
                     if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                                            created_behavior,
+                                                            plant_attitude,
                                                             NULL,
                                                             0,
                                                             0,
@@ -1482,6 +1483,18 @@ void monster::apply_enchantment(const mon_enchant &me)
                                                             MHITNOT,
                                                             MG_FORCE_PLACE)))
                     {
+                        if (mons_is_god_gift(this, GOD_FEDHAS))
+                        {
+                            plant->flags |= MF_NO_REWARD;
+
+                            if (plant_attitude == BEH_FRIENDLY)
+                            {
+                                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                                mons_make_god_gift(plant, GOD_FEDHAS);
+                            }
+                        }
+
                         plant->behaviour = BEH_WANDER;
                         plant->number = 20;
 

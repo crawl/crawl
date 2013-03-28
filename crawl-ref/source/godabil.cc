@@ -2730,7 +2730,7 @@ int fedhas_rain(const coord_def &target)
 // and make 1 giant spore per corpse.  Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
-int fedhas_corpse_spores(beh_type behavior, bool interactive)
+int fedhas_corpse_spores(beh_type attitude, bool interactive)
 {
     int count = 0;
     vector<stack_iterator> positions;
@@ -2786,7 +2786,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         count++;
 
         if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                               behavior,
+                                               attitude,
                                                &you,
                                                0,
                                                0,
@@ -2797,7 +2797,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         {
             plant->flags |= MF_NO_REWARD;
 
-            if (behavior == BEH_FRIENDLY)
+            if (attitude == BEH_FRIENDLY)
             {
                 plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 

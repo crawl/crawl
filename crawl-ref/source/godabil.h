@@ -56,7 +56,7 @@ void process_sunlights(bool future = false);
 bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);
 bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
-int fedhas_corpse_spores(beh_type behavior = BEH_FRIENDLY,
+int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY,
                          bool interactive = true);
 bool mons_is_evolvable(const monster* mon);
 bool fedhas_evolve_flora();

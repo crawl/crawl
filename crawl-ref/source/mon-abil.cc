@@ -3608,6 +3608,18 @@ void ballisto_on_move(monster* mons, const coord_def& position)
                                                         MHITNOT,
                                                         MG_FORCE_PLACE)))
                 {
+                    if (mons_is_god_gift(mons, GOD_FEDHAS))
+                    {
+                        plant->flags |= MF_NO_REWARD;
+
+                        if (attitude == BEH_FRIENDLY)
+                        {
+                            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                            mons_make_god_gift(plant, GOD_FEDHAS);
+                        }
+                    }
+
                     // Don't leave mold on squares we place ballistos on
                     remove_mold(position);
                     if (you.can_see(plant))
