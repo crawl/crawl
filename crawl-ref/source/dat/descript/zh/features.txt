@@ -405,7 +405,7 @@ A stone wall
 
 这是比普通石墙更难对付的障碍；只有最强力的魔法才能打碎这种石墙。
 %%%%
-A teleporter
+A short-range portal
 
 如果你踩上这个传送器，就会被传送到另一间房间中。
 %%%%
