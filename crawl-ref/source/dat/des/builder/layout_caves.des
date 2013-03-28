@@ -70,17 +70,22 @@ TAGS: overwritable layout allow_dup unrand
     { weight = 10, func = function()
         limit = 0.8
         return procedural.add(
-          procedural.distance { origin = { x = gxm/2, y = gym/2 }, radius = math.min(gxm,gym)/2 },
+          procedural.distance { origin = { x = gxm/2, y = gym/2 }, radius = math.min(gxm,gym)/3 },
           procedural.worley_diff { scale = util.random_range_real(.4,.8) })
       end },
   }
   local schoice = util.random_weighted_from("weight",sweights)
+  -- Add or remove?
+  -- TODO: It produces some very cool variations but sometimes
+  -- results in very small levels. These are still fairly interesting though,
+  -- is it a bad thing? (Should maybe use a separate negative pass anyway)
+  local glyph = crawl.coinflip() and 'x' or '.'
   if schoice.func ~= nil then
     local secondary = procedural.add(
       schoice.func(),
       procedural.mul(procedural.border { padding = 8 }, limit)
     )
-    procedural.render_map(_G,secondary,function(v) return v < limit and '.' or nil end)
+    procedural.render_map(_G,secondary,function(v) return v < limit and glyph or nil end)
   end
 
   zonify.map_fill_zones(_G, 1, 'x')
