@@ -89,7 +89,7 @@ void move_companion_to(const monster* mons, const level_id lid)
 void update_companions()
 {
     for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i )
+         i != companion_list.end(); ++i)
     {
         monster* mons = monster_by_mid(i->first);
         if (mons)
@@ -106,7 +106,7 @@ void update_companions()
 void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
 {
     for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i )
+         i != companion_list.end(); ++i)
     {
         int mid = i->first;
         companion* comp = &i->second;
@@ -192,7 +192,7 @@ void wizard_list_companions()
     }
 
     for (map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end(); ++i )
+        i != companion_list.end(); ++i)
     {
         companion* comp = &i->second;
         monster* mon = &comp->mons.mons;
