@@ -1473,17 +1473,17 @@ void monster::apply_enchantment(const mon_enchant &me)
                 {
                     beh_type created_behavior = SAME_ATTITUDE(this);
 
-                    if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                                      created_behavior,
-                                                      NULL,
-                                                      0,
-                                                      0,
-                                                      adjacent,
-                                                      MHITNOT,
-                                                      MG_FORCE_PLACE)))
+                    if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
+                                                            created_behavior,
+                                                            NULL,
+                                                            0,
+                                                            0,
+                                                            adjacent,
+                                                            MHITNOT,
+                                                            MG_FORCE_PLACE)))
                     {
-                        rc->behaviour = BEH_WANDER;
-                        rc->number = 20;
+                        plant->behaviour = BEH_WANDER;
+                        plant->number = 20;
 
                         if (you.see_cell(adjacent) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
