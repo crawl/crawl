@@ -1058,7 +1058,7 @@ NAME: layout_cocytus
 DEPTH: Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand chance_cocytus
 {{
     layout_type "delve"
 
