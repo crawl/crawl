@@ -706,13 +706,8 @@ bool mons_is_boulder(const monster* mon)
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
 {
-    return mons_is_projectile(mc)
-           || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_FIRE_VORTEX
-           || mc == MONS_SPATIAL_VORTEX
+    return mons_is_conjured(mc)
            || mc == MONS_TWISTER
-           || mc == MONS_BATTLESPHERE
-           || mc == MONS_FULMINANT_PRISM
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
            || mc == MONS_LURKING_HORROR
