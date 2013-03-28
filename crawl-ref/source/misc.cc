@@ -1249,11 +1249,12 @@ void search_around()
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
         skill += you.piety * 2;
 
+     if (you.duration[DUR_SWIFTNESS])
+        skill = skill / 2;
+
     int farskill = skill;
     if (int mut = you.mutation[MUT_BLURRY_VISION])
         farskill >>= mut;
-    if (you.duration[DUR_SWIFTNESS])
-        farskill = farskill * 3 / 4;
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
     int max_dist = div_rand_round(farskill, 32);
