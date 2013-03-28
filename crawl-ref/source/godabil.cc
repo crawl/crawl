@@ -2120,7 +2120,10 @@ static bool _create_plant(coord_def& target, int hp_adjust = 0)
                                             MG_FORCE_PLACE,
                                             GOD_FEDHAS)))
     {
+        plant->flags |= MF_NO_REWARD;
         plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        mons_make_god_gift(plant, GOD_FEDHAS);
 
         plant->max_hit_points += hp_adjust;
         plant->hit_points += hp_adjust;
@@ -2781,22 +2784,28 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     for (unsigned i = 0; i < positions.size(); ++i)
     {
         count++;
-        if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                            behavior,
-                                            &you,
-                                            0,
-                                            0,
-                                            positions[i]->pos,
-                                            MHITNOT,
-                                            MG_FORCE_PLACE,
-                                            GOD_FEDHAS)))
+
+        if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
+                                               behavior,
+                                               &you,
+                                               0,
+                                               0,
+                                               positions[i]->pos,
+                                               MHITNOT,
+                                               MG_FORCE_PLACE,
+                                               GOD_FEDHAS)))
         {
-            rc->flags |= MF_ATT_CHANGE_ATTEMPT;
+            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
             if (behavior == BEH_FRIENDLY)
             {
-                rc->behaviour = BEH_WANDER;
-                rc->foe = MHITNOT;
+                plant->flags |= MF_NO_REWARD;
+                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                mons_make_god_gift(plant, GOD_FEDHAS);
+
+                plant->behaviour = BEH_WANDER;
+                plant->foe = MHITNOT;
             }
         }
 
@@ -2877,16 +2886,21 @@ bool mons_is_evolvable(const monster* mon)
 
 static bool _place_ballisto(const coord_def& pos)
 {
-    if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                     BEH_FRIENDLY,
-                                     &you,
-                                     0,
-                                     0,
-                                     pos,
-                                     MHITNOT,
-                                     MG_FORCE_PLACE,
-                                     GOD_FEDHAS)))
+    if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                                      BEH_FRIENDLY,
+                                                      &you,
+                                                      0,
+                                                      0,
+                                                      pos,
+                                                      MHITNOT,
+                                                      MG_FORCE_PLACE,
+                                                      GOD_FEDHAS)))
     {
+        plant->flags |= MF_NO_REWARD;
+        plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        mons_make_god_gift(plant, GOD_FEDHAS);
+
         remove_mold(pos);
         mpr("The mold grows into a ballistomycete.");
         mpr("Your piety has decreased.");
