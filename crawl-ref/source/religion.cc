@@ -4466,8 +4466,11 @@ static void _place_delayed_monsters()
 
         if (mon)
         {
-            if (you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
+            if (you.religion == GOD_YREDELEMNUL
+                || you.religion == GOD_BEOGH)
+            {
                 add_companion(mon);
+            }
             placed++;
         }
 
