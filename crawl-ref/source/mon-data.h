@@ -807,7 +807,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_HYPERACTIVE_BALLISTOMYCETE, 'f', LIGHTRED, "hyperactive ballistomycete",
-    M_STATIONARY | M_NO_POLY_TO,
+    M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
     MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_BALLISTOMYCETE, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
