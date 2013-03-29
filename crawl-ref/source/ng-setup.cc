@@ -21,6 +21,7 @@
 #include "ng-wanderer.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -903,7 +904,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_JESTER:
         you.religion = GOD_NEMELEX_XOBEH;
         you.piety = 35;
-        you.penance[GOD_XOM] = 200;
+        you.penance[GOD_XOM] = MAX_PENANCE;
 
         newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_CLUB);
         newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
