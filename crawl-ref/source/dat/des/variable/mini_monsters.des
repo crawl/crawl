@@ -815,7 +815,10 @@ ENDMAP
 NAME:   evilmike_quicksilver_bait
 TAGS:   no_monster_gen
 DEPTH:  D:16-
-KITEM:  1 = gold, gold, gold, superb_item, acquire any
+{{
+  local gold = 1 + crawl.random2avg(25,2) + crawl.random2avg(25,2) + crawl.random2(you.absdepth())
+  kitem("1 = gold q:" .. gold .. ", superb_item, acquire any")
+}}
 KMONS:  1 = patrolling quicksilver dragon
 MAP
  ccccccccccccc
