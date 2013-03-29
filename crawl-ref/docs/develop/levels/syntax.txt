@@ -54,7 +54,9 @@ Features
       { upstair is also the stair on which the player will enter the
       dungeon for entry vaults.
  )( - Stone stairs, set 2.
- ][ - Stone stairs, set 3.
+ ][ - Stone stairs, set 3 - minivaults often fail to get this pair if
+      the level isn't very interconnected or if any larger vaults are using
+      any stairs.
 
  >< - escape hatches - you can leave the level by these but will usually
       not land on stairs/hatches
