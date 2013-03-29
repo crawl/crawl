@@ -975,10 +975,6 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
 void dec_penance(god_type god, int val)
 {
-    if (you.char_class == JOB_JESTER && god == GOD_XOM)
-    {
-        return;
-    }
     if (val <= 0 || you.penance[god] <= 0)
         return;
 
