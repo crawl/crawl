@@ -1557,31 +1557,3 @@ xbIIIbbb...bbb...bbbPPPbx
 xbbbbbbb...bbb...bbbbbbbx
 xxxxxxxx.@.xxx.@.xxxxxxxx
 ENDMAP
-
-###############################################################################
-NAME: nicolae_fun_with_auras
-DEPTH: D:20-, Zot
-TAGS: no_monster_gen no_trap_gen no_item_gen
-ORIENT: southwest
-SHUFFLE: [({, 23
-MONS: patrolling moth of suppression, angel, profane servitor
-MONS: ghost moth w:5 / unseen horror / lorocyproca w:5 / vapour / shadow wraith
-MAP
-xxxx@..........@@
-xxxxxxxx........@
-xxxxxxxxxxx...G..
-xxxxx.....xxx....
-xxx.........+x...
-xx.3.........x...
-xx...........xx..
-x....4.4.4....x..
-x......mm.....x..
-x....4m1m4....xx.
-x.....mm......xx.
-x....4.4.4....xx.
-xx...........xxx@
-xx[<.......2.xxxx
-xxx{........xxxxx
-xxxxx.....xxxxxxx
-xxxxxxxxxxxxxxxxx
-ENDMAP
