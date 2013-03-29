@@ -904,7 +904,7 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_JESTER:
         you.religion = GOD_NEMELEX_XOBEH;
-        you.piety = 35;
+        you.piety = 25;
         you.penance[GOD_XOM] = MAX_PENANCE;
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF, -1, 1, 2, 2);
@@ -919,6 +919,8 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_THROWING]     = 1;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_EVOCATIONS]   = 2;
+
+        simple_god_message(" thought your last joke was hilarious!", GOD_XOM );
         break;
 
     case JOB_HUNTER:
