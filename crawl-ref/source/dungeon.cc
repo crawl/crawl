@@ -3993,8 +3993,6 @@ static void _build_postvault_level(vault_placement &place)
     // kind of wallification it wants.
     if (place.map.has_tag("dis"))
         dgn_build_chaotic_city_level(DNGN_METAL_WALL);
-    else if (player_in_branch(BRANCH_SWAMP))
-        dgn_build_swamp_level();
     else if (player_in_branch(BRANCH_SPIDER_NEST))
     {
         int ngb_min = 2;
