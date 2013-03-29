@@ -29,6 +29,9 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
 
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
+
     if (item.base_type == OBJ_STAVES)
     {
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
@@ -296,6 +299,9 @@ tileidx_t tilep_equ_armour(const item_def &item)
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
+
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
@@ -349,6 +355,9 @@ tileidx_t tilep_equ_cloak(const item_def &item)
     if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_CLOAK)
         return 0;
 
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
+
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
@@ -363,6 +372,9 @@ tileidx_t tilep_equ_helm(const item_def &item)
 {
     if (item.base_type != OBJ_ARMOUR)
         return 0;
+
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
 
     if (is_unrandom_artefact(item))
     {
@@ -440,6 +452,9 @@ tileidx_t tilep_equ_gloves(const item_def &item)
     if (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_GLOVES)
         return 0;
 
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
+
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
@@ -454,6 +469,9 @@ tileidx_t tilep_equ_boots(const item_def &item)
 {
     if (item.base_type != OBJ_ARMOUR)
         return 0;
+
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
 
     int etype = enchant_to_int(item);
 
