@@ -407,6 +407,13 @@ void newgame_make_item(int slot, equipment_type eqslot,
     item.plus2     = plus2;
     item.special   = 0;
 
+    if (is_deck(item))
+    {
+        item.plus = 6 + random2(6); // # of cards
+        item.special = DECK_RARITY_COMMON;
+        init_deck(item);
+    }
+
     // If the character is restricted in wearing armour of equipment
     // slot eqslot, hand out replacement instead.
     if (item.base_type == OBJ_ARMOUR && replacement != -1
@@ -912,6 +919,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_CAP);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
         newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
+        newgame_make_item(5, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_WAR);
 
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STAVES]       = 1;
