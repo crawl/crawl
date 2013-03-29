@@ -936,7 +936,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_EVOCATIONS]   = 2;
 
-        simple_god_message(" thought your last joke was hilarious!", GOD_XOM );
+        simple_god_message(" thought your last joke was hilarious!", GOD_XOM);
         break;
 
     case JOB_HUNTER:
