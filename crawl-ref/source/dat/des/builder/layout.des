@@ -1301,7 +1301,13 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if not is_validating() then dgn.layout_swamp() end
+    if is_validating() then return; end
+
+    dgn.layout_swamp()
+
+    -- Prevent tele closets
+    zonify.grid_fill_water_zones(1,"mangrove")
+
 }}
 MAP
 ENDMAP
