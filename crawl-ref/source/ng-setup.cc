@@ -906,14 +906,17 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 35;
         you.penance[GOD_XOM] = MAX_PENANCE;
 
-        newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_CLUB);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
 
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         you.skills[SK_THROWING]     = 1;
         you.skills[SK_SPELLCASTING] = 2;
+        you.skills[SK_EVOCATIONS]   = 2;
         break;
 
     case JOB_HUNTER:
