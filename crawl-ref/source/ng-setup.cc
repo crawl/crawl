@@ -919,7 +919,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_CAP);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_PIE, -1, 4);
         newgame_make_item(5, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_WAR);
         if (you.inv[0].defined())
         {
@@ -933,6 +933,12 @@ static void _give_items_skills(const newgame_def& ng)
             cap.props["item_tile_name"] = "thelm_cap_jester";
             cap.props["worn_tile_name"] = "hood_red"; // TODO: missing!
             bind_item_tile(cap);
+        }
+
+        if (you.inv[4].defined())
+        {
+            item_def& pies(you.inv[4]);
+            set_item_ego_type(pies, OBJ_MISSILES, SPMSL_BLINDING);
         }
 
         you.skills[SK_DODGING]      = 2;

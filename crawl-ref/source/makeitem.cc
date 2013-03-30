@@ -176,6 +176,9 @@ static int _missile_colour(const item_def &item)
     case MI_THROWING_NET:
         item_colour = DARKGREY;
         break;
+    case MI_PIE:
+        item_colour = YELLOW;
+        break;
     default:
         die("invalid missile type");
     }
@@ -1815,6 +1818,9 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
+    case MI_PIE:
+        rc = SPMSL_BLINDING;
+        break;
     case MI_STONE:
         // deliberate fall through
     case MI_LARGE_ROCK:
@@ -1874,6 +1880,9 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_SICKNESS:
     case SPMSL_RAGE:
         return (type == MI_NEEDLE);
+
+    case SPMSL_BLINDING:
+        return (type == MI_PIE);
 
     default:
         if (type == MI_NEEDLE)

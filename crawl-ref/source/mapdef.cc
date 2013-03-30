@@ -4576,6 +4576,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "confusion",
         "sickness",
         "wrath",
+        "blinding",
         NULL
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_SPECIAL_MISSILES);
