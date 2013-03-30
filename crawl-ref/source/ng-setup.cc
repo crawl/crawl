@@ -915,7 +915,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 25;
         you.penance[GOD_XOM] = 50;
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF, -1, 1, 2, 2);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF, -1, 1, 1, 1);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_CAP);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
