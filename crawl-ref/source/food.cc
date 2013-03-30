@@ -455,10 +455,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     bool weapon_butcher   = you.weapon() && can_cut_meat(*you.weapon());
 
-    bool knife_butcher    = ((!you.weapon()
-                              || you.has_usable_offhand()
-                              || you.has_usable_tentacle())
-                             && form_can_wield());
+    bool knife_butcher    = !weapon_butcher && form_can_wield();
 
     bool can_butcher      = (teeth_butcher || barehand_butcher
                              || birdie_butcher
