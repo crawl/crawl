@@ -527,6 +527,9 @@ public:
         next_line = temp_line;
     }
 
+    /**
+     * Consider any formerly-temporary messages permanent.
+     */
     void reset_temp()
     {
         temp_line = next_line;
