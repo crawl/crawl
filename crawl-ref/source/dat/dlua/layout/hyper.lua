@@ -8,7 +8,7 @@ hyper = {}          -- Main namespace for engine
 
 -- This switch dumps helpful diagrams of rooms and layouts out to console.
 -- Only advisable if you start tiles from a command-line.
-hyper.debug = true
+hyper.debug = false
 
 require("dlua/layout/hyper_usage.lua")
 require("dlua/layout/hyper_paint.lua")
