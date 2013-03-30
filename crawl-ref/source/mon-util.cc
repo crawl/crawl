@@ -1076,14 +1076,6 @@ void discover_mimic(const coord_def& pos, bool wake)
         mimic->seen_context = SC_JUST_SEEN;
     }
 
-    // Orb mimics shriek.
-    if (item && item->base_type == OBJ_ORBS)
-    {
-        orb_pickup_noise(pos, 30,
-            "The orb mimic lets out a hideous shriek!",
-            "The orb mimic lets out a furious burst of light!");
-    }
-
     // Just in case there's another one.
     if (mimic_at(pos))
         discover_mimic(pos);
