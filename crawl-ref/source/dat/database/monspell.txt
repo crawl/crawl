@@ -383,6 +383,11 @@ basilisk cast targeted
 wretched star cast
 
 @The_monster@ glows turbulently.
+%%%%
+thrashing horror cast
+
+@The_monster@ churns violently!
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

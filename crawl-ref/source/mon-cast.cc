@@ -1653,6 +1653,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
     case SPELL_FRENZY:
+    case SPELL_MIGHT:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
