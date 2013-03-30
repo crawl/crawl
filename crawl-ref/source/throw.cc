@@ -951,6 +951,26 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
     return true;
 }
 
+static bool _blind_hit_victim(bolt &beam, actor* victim, int dmg)
+{
+    if (beam.is_tracer)
+        return false;
+
+    if (!victim->is_monster())
+    {
+        victim->confuse(beam.agent(), 7);
+        return true;
+    }
+
+    if (victim->as_monster()->has_ench(ENCH_BLIND))
+        return false;
+
+    victim->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                INFINITE_DURATION));
+
+    return true;
+}
+
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 string &ammo_name, bool &returning)
 {
@@ -1084,6 +1104,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     const bool confusion    = ammo_brand == SPMSL_CONFUSION;
     const bool sickness     = ammo_brand == SPMSL_SICKNESS;
     const bool rage         = ammo_brand == SPMSL_RAGE;
+    const bool blinding     = ammo_brand == SPMSL_BLINDING;
 
     ASSERT(!exploding || !is_artefact(item));
 
@@ -1180,6 +1201,12 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             beam.hit_funcs.push_back(_sickness_hit_victim);
         if (rage)
             beam.hit_funcs.push_back(_rage_hit_victim);
+    }
+
+    if (blinding)
+    {
+        beam.hit_verb = "blinds";
+        beam.hit_funcs.push_back(_blind_hit_victim);
     }
 
     if (disperses && item.special != SPMSL_DISPERSAL)
@@ -2489,6 +2516,9 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     case MI_NEEDLE:
         chance = (brand == SPMSL_CURARE ? 6 : 12);
         break;
+
+    case MI_PIE:
+        return true;
 
     case MI_SLING_BULLET:
     case MI_STONE:
