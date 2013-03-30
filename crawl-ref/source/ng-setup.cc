@@ -913,7 +913,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_JESTER:
         you.religion = GOD_NEMELEX_XOBEH;
         you.piety = 25;
-        you.penance[GOD_XOM] = MAX_PENANCE;
+        you.penance[GOD_XOM] = 50;
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF, -1, 1, 2, 2);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
@@ -928,6 +928,7 @@ static void _give_items_skills(const newgame_def& ng)
             cap.props["worn_tile_name"] = "hood_red"; // TODO: missing!
             bind_item_tile(cap);
         }
+
 
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STAVES]       = 1;
