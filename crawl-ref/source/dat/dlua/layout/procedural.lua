@@ -85,6 +85,13 @@ function procedural.abs(func)
   end
 end
 
+-- Negate a function
+function procedural.neg(func)
+  return function(x,y)
+    return -func(x,y)
+  end
+end
+
 -- A function that returns 1 around the border edge, and fades to 0 over
 -- a specified number of padding squares.
 function procedural.border(params)
@@ -140,22 +147,18 @@ end
 
 -- Returns distance from a point, useful for circles and ellipses
 function procedural.distance(params)
-  local xo,yo = params.origin.x,params.origin.y
-  local radiusx,radiusy = params.radius,params.radius
-  if params.radiusx ~= nil then radiusx = params.radiusx end
-  if params.radiusy ~= nil then radiusy = params.radiusy end
-
-  return function(x,y)
-    return math.sqrt(math.pow((xo - x) / radiusx, 2)
-                   + math.pow((yo - y) / radiusy, 2))
-  end
+  local func = primitive.distance
+  if params.radius ~= nil then func = procedural.scale(func,params.radius) end
+  if params.origin ~= nil then func = procedural.translate(func,params.origin) end
+  return func
 end
 
 -- Gives the radial value from a point, i.e. the arctangent of the line
 -- from the origin to the point
 function procedural.radial(params)
 
-  local xo,yo = params.origin.x,params.origin.y
+  local xo,yo = 0,0
+  if params.origin ~= nil then xo,yo = params.origin.x,params.origin.y end
 
   return function(x,y)
     local xd,yd = xo-x,yo-y
@@ -283,6 +286,8 @@ function procedural.simplex4d(params)
   end
 end
 
+-- Domain transformations
+
 -- Creates a domain distortion function to offset one function using two others
 -- for the x,y offsets
 function procedural.distort(params)
@@ -293,6 +298,80 @@ function procedural.distort(params)
   return function(x,y)
     return source(x+offsetx(x,y) * scale,y+offsety(x,y) * scale)
   end
+end
+
+-- Simple transformations
+function procedural.translate(func,xo,yo)
+  if xo == nil then xo,yo = 0,0
+  elseif type(xo) == "table" then xo,yo = xo.x,xo.y
+  elseif yo == nil then yo = xo end
+
+  return function(x,y)
+    return func(x-xo,y-yo)
+  end
+end
+
+function procedural.scale(func,xs,ys)
+  if xs == nil then xs,ys = 1,1
+  elseif type(xs) == "table" then xs,ys = xs.x,xs.y
+  elseif ys == nil then ys = xs end
+
+  return function(x,y)
+    return func(x/xs,y/ys)
+  end
+end
+
+-- Flip in the x-axis
+function procedural.flip_x(func)
+  return function(x,y)
+    return func(-x,y)
+  end
+end
+
+-- Flip in the y-axis
+function procedural.flip_y(func)
+  return function(x,y)
+    return func(x,-y)
+  end
+end
+
+-- Mirror about the x axis (i.e. the y vector is negated)
+function procedural.mirror_x(func)
+  return function(x,y)
+    return func(x,math.abs(y))
+  end
+end
+
+-- Mirror about the y axis (i.e. the x vector is negated)
+function procedural.mirror_y(func)
+  return function(x,y)
+    return func(math.abs(x),y)
+  end
+end
+
+-- TODO: Rotate, matrix
+
+-- Output mapping to an array of ranges
+function procedural.map(func,map,b,c,d)
+  if type(map) ~= "table" then
+    map = { { nil, map, c }, { map, b, c, d }, { b, nil, d } }
+  end
+  return function(x,y)
+    local v = func(x,y)
+    for i,m in ipairs(map) do
+      -- Outer limits
+      if m[1] == nil then
+        if v <= m[2] then return m[3] end
+      elseif m[2] == nil then
+        if v >= m[1] then return m[3] end
+      elseif m[1]<=v and v<=m[2] then
+        return m[3] + (v-m[1])/(m[2]-m[1]) * (m[4]-m[3])
+      end
+    end
+    -- If the map hasn't given us a value, don't alter it
+    return v
+  end
+
 end
 
 -- Utility functions. These don't return a function themselves, just a value.
