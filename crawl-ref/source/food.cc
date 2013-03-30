@@ -2479,9 +2479,7 @@ bool is_preferred_food(const item_def &food)
     }
 
     if (food.base_type == OBJ_MISSILES && food.sub_type == MI_PIE)
-    {
         return !player_mutation_level(MUT_CARNIVOROUS);
-    }
 
     if (food.base_type != OBJ_FOOD)
         return false;
