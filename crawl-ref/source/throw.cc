@@ -965,8 +965,7 @@ static bool _blind_hit_victim(bolt &beam, actor* victim, int dmg)
     if (victim->as_monster()->has_ench(ENCH_BLIND))
         return false;
 
-    victim->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
-                INFINITE_DURATION));
+    victim->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you, 35));
 
     return true;
 }
