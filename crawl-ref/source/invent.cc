@@ -447,6 +447,7 @@ static string _no_selectables_message(int item_selector)
     switch (item_selector)
     {
     case OSEL_ANY:
+    case OSEL_ANY_UNMELDED:
         return "You aren't carrying anything.";
     case OSEL_WIELD:
     case OBJ_WEAPONS:
@@ -1141,6 +1142,9 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     switch (selector)
     {
+    case OSEL_ANY_UNMELDED:
+        return !item_is_melded(i);
+
     case OBJ_ARMOUR:
         return (itype == OBJ_ARMOUR && you_tran_can_wear(i));
 
@@ -1151,7 +1155,8 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_ARMOUR && item_is_equipped(i));
 
     case OSEL_UNIDENT:
-        return !fully_identified(i) || (is_deck(i) && !top_card_is_known(i));
+        return (!fully_identified(i) || (is_deck(i) && !top_card_is_known(i)))
+            && !item_is_melded(i);
 
     case OBJ_MISSILES:
         return (itype == OBJ_MISSILES || itype == OBJ_WEAPONS);
@@ -1832,7 +1837,8 @@ int prompt_invent_item(const char *prompt,
                         int excluded_slot,
                         int *const count,
                         operation_types oper,
-                        bool allow_list_known)
+                        bool allow_list_known,
+                        bool accept_any)
 {
     if (!any_items_to_select(type_expect, false, excluded_slot)
         && type_expect == OSEL_THROWABLE
@@ -1957,7 +1963,12 @@ int prompt_invent_item(const char *prompt,
             if (res != -1)
             {
                 ret = res;
-                if (check_warning_inscriptions(you.inv[ret], oper))
+
+                if (!(accept_any || you.inv[ret].defined()
+                                    && you.inv[ret].link != excluded_slot
+                                    && _is_item_selected(you.inv[ret], type_expect)))
+                    mpr("You can't select that object right now.");
+                else if (check_warning_inscriptions(you.inv[ret], oper))
                     break;
             }
         }
@@ -1980,6 +1991,9 @@ int prompt_invent_item(const char *prompt,
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
+            else if (!(accept_any || you.inv[ret].link != excluded_slot
+                                     && _is_item_selected(you.inv[ret], type_expect)))
+                mpr("You can't select that object right now.");
             else if (check_warning_inscriptions(you.inv[ret], oper))
                 break;
         }
