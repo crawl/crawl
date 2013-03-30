@@ -5,7 +5,112 @@
 
 : require("dlua/util.lua")
 : require("dlua/layout/procedural.lua")
+: require("dlua/layout/procedural_primitives.lua")
 : require("dlua/layout/zonify.lua")
+
+NAME:   layout_hall_layers
+DEPTH:  D:2-,Zot,Lair,Elf
+WEIGHT: 20
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "halls"
+  if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+
+  -- TODO:
+  -- * Even more shape options
+  -- * One or two more layers would be nice
+  -- * Make some layers optional
+  -- * Negative space
+  -- * Invert floor and use interference between layers
+
+  -- A big shape that should span the entire level to make sure everything is connected
+  local shapes1 = {
+    { weight = 10, func = primitive.cross },
+    { weight = 10, func = primitive.ex },
+    { weight = 10, func = function() return procedural.mul(crawl.random_range(4,8),procedural.sub(primitive.distance,primitive.box)) end },
+    -- { weight = 10, func = primitive.rays() },
+--    { weight = 100, func = primitive.spiral }
+  }
+
+  -- A medium sized shape that circles the level
+  local shapes2 = {
+    { weight = 10, func = function() return primitive.ring(gym/3) end },
+    { weight = 10, func = function() return primitive.ringify(primitive.box,gym/3) end },
+    { weight = 10, func = function() return primitive.ringify(primitive.diamond(),2/5*gym) end },
+    { weight = 10, func = function() return primitive.ringify(primitive.octagon(crawl.random_range(5,20)),gym/3) end },
+    { weight = 10, func = function() return primitive.ringify(primitive.hexagon(crawl.random_range(5,15)),gym/3) end },
+    { weight = 10, func = function() return procedural.mul(1.8,primitive.ringify(procedural.scale(primitive.triangle(),1,2),gym/6)) end },
+  }
+
+  -- Smaller shapes to fit in the middle
+  function scale_or_ring(prim, size)
+    if crawl.one_chance_in(3) then
+      -- Larger central shape
+      return procedural.scale(prim,2)
+    elseif crawl.coinflip() then
+      -- Small ring
+      return primitive.ringify(prim,size/2)
+    elseif crawl.one_chance_in(8) then
+      -- Very rarely don't actually scale it - it's quite interesting when
+      -- e.g. circle and diamond overlap at the same size.
+      return primitive.ringify(prim,size)
+    else
+      -- Small ring w/narrower corridors
+      return procedural.scale(primitive.ringify(prim,size),.5)
+    end
+  end
+
+  local shapes3 = {
+    { weight = 10, func = function() return scale_or_ring(primitive.distance,gym/3) end },
+    { weight = 10, func = function() return scale_or_ring(primitive.box,gym/3) end },
+    { weight = 10, func = function() return scale_or_ring(primitive.octagon(crawl.random_range(4,8)),gym/3) end },
+    { weight = 10, func = function() return scale_or_ring(primitive.hexagon(crawl.random_range(4,8)),gym/3) end },
+    { weight = 10, func = function() return scale_or_ring(procedural.scale(primitive.triangle(),1,2),gym/6) end },
+    { weight = 10, func = function() return scale_or_ring(primitive.diamond(),2/5*gym) end },
+    { weight = 10, func = function() return procedural.scale(primitive.ex(),.5) end },
+    { weight = 10, func = function() return primitive.ringify(primitive.ex(),crawl.random_range(gym/6,gym/4)) end },
+    { weight = 10, func = function() return primitive.ringify(primitive.cross(),crawl.random_range(gym/6,gym/4)) end },
+    { weight = 10, func = function() return procedural.mul(crawl.random_range(2,4),primitive.ringify(procedural.sub(primitive.distance,primitive.box),6)) end },
+  }
+
+  local func = procedural.translate(
+    procedural.min(
+      util.random_weighted_from("weight",shapes1).func(),
+      util.random_weighted_from("weight",shapes2).func(),
+      util.random_weighted_from("weight",shapes3).func()
+    ),
+    gxm/2,gym/2
+  )
+
+  local cave = you.in_branch("D") and crawl.coinflip()
+               or you.in_branch("Lair") and crawl.x_chance_in_y(2,3)
+  -- Actual corridor width will be double this
+  local width = 1
+
+  if cave then
+    width = crawl.random_range(3,6)
+  else
+    width = crawl.random_range(2,4)
+  end
+
+  func = procedural.map(func,width/2,width,0,1)
+
+  if cave then
+    func = procedural.add(func,procedural.worley_diff{scale=.5})
+  end
+
+  -- TODO: Package the func(s) into room generators. Then place them using hyper (with a
+  -- symetrically padded placement strategy). Then optionally outline with transparent
+  -- stone and surround in lava like old crosses layout
+
+  procedural.render_map(_G, func, function(v) return (v < 1 and '.' or 'x') end)
+  zonify.map_fill_zones(_G, 1, 'x')
+
+}}
+MAP
+ENDMAP
 
 NAME:   layout_wheels
 DEPTH:  Zot,Snake
@@ -24,6 +129,7 @@ TAGS: overwritable layout allow_dup unrand
   --  * Maybe ruin some walls
   --  * Maybe 2 rings isn't enough and should be rarer/non-existing (and can we get away with more than 6?)
   --  * Tune params a bit for Snake
+  --  * More shapes:
 
   local fcircle
   if crawl.coinflip() then
@@ -96,7 +202,7 @@ ENDMAP
 
 NAME:   layout_ring_interference
 DEPTH:  Zot,Snake
-WEIGHT: 20000
+WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
