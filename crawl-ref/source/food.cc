@@ -2478,7 +2478,7 @@ bool is_preferred_food(const item_def &food)
         return !player_mutation_level(MUT_CARNIVOROUS);
     }
 
-    if (food.sub_type == MI_PIE)
+    if (food.base_type == OBJ_MISSILES && food.sub_type == MI_PIE)
     {
         return !player_mutation_level(MUT_CARNIVOROUS);
     }
