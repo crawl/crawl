@@ -1702,7 +1702,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
-            || confused() || asleep())
+            || confused() || asleep() || has_ench(ENCH_FEAR))
         {
             this->speed_increment += me.duration;
             del_ench(ENCH_WORD_OF_RECALL, true, false);
