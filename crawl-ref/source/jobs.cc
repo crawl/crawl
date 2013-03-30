@@ -15,7 +15,7 @@ static const char * Job_Abbrev_List[ NUM_JOBS ] =
       "St",
 #endif
       "Mo", "Wr", "Wn", "Ar", "AM",
-      "DK", "AK", "Js" };
+      "DK", "AK", "Jr" };
 
 static const char * Job_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest",
