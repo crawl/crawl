@@ -505,7 +505,7 @@ public:
 
         for (size_t i = 0; i < newlines.size(); ++i)
         {
-            temp_line -= make_space(1);
+            make_space(1);
             formatted_string line;
             if (use_first_col())
                 line.add_glyph(_prefix_glyph(first_col));
