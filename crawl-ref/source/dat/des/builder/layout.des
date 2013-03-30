@@ -75,7 +75,7 @@
 #
 NAME:   layout_forbidden_donut
 DEPTH:  4-22, Pan, !Dis, !Geh
-WEIGHT: 10
+WEIGHT: 5
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand
 {{
@@ -147,7 +147,7 @@ ENDMAP
 #
 NAME:    layout_cross
 DEPTH:   Pan, 4-22, !Dis, !Geh
-WEIGHT:  10
+WEIGHT:  5
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 
@@ -216,7 +216,7 @@ ENDMAP
 
 NAME: layout_big_octagon
 DEPTH:   Pan, 4-22, !Dis, !Geh
-WEIGHT:  6 (Pan), 10
+WEIGHT:  6 (Pan), 5
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand
 
@@ -393,7 +393,7 @@ ENDMAP
 #
 NAME: layout_rooms
 DEPTH: Pan, 1-, !Dis, !Zot
-WEIGHT: 60 (Pan), 20
+WEIGHT: 60 (Pan), 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -476,7 +476,7 @@ ENDMAP
 #
 NAME: layout_city
 DEPTH: Dis, 15-, !Pan, !Zot, !Geh
-WEIGHT: 10
+WEIGHT: 3
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -593,7 +593,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
 DEPTH: Pan, 1-, !Dis, !Zot
-WEIGHT: 10
+WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -699,7 +699,7 @@ TAGS: overwritable layout allow_dup unrand
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
 DEPTH: 2-, !Pan, !Zot, !Dis, !Geh
-WEIGHT: 20
+WEIGHT: 3
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
@@ -1253,7 +1253,7 @@ TILE:    G = dngn_statue_iron_golem
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Pan, !Dis, !Zot
-WEIGHT: 90, 10 (D:1), 20 (Geh)
+WEIGHT: 10, 20 (Geh)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -1264,7 +1264,7 @@ ENDMAP
 
 NAME: layout_bigger_room
 DEPTH: 9-22, !Crypt, !Pan, !Dis
-WEIGHT: 10, 10 (Geh)
+WEIGHT: 5, 10 (Geh)
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
@@ -1275,7 +1275,7 @@ ENDMAP
 
 NAME: layout_chaotic_city
 DEPTH: Pan, 4-, !Zot, !Geh
-WEIGHT: 10
+WEIGHT: 3
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
