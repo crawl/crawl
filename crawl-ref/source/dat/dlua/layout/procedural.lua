@@ -10,6 +10,7 @@
 ------------------------------------------------------------------------------
 
 procedural = {}
+require("dlua/layout/procedural_primitives.lua")
 
 ------------------------------------------------------------------------------
 -- Aggregate functions
@@ -92,6 +93,14 @@ function procedural.neg(func)
   end
 end
 
+function procedural.phase(func,rep,offset)
+  return function(x,y)
+    local v = func(x,y)
+    v = (v * rep + offset) % 1
+    return v
+  end
+end
+
 -- A function that returns 1 around the border edge, and fades to 0 over
 -- a specified number of padding squares.
 function procedural.border(params)
@@ -146,6 +155,7 @@ function procedural.box(params)
 end
 
 -- Returns distance from a point, useful for circles and ellipses
+-- Unfortunately it's causing a two-way reference between here and primitives
 function procedural.distance(params)
   local func = primitive.distance
   if params.radius ~= nil then func = procedural.scale(func,params.radius) end
