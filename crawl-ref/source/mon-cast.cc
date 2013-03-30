@@ -1869,11 +1869,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         return false;
     }
-    else if (random2(200) > mons->hit_dice + 50
-             || mons->type == MONS_BALL_LIGHTNING && coinflip())
-    {
+    else if (random2(200) > mons->hit_dice + 50)
         return false;
-    }
     else if (spellcasting_poly && coinflip()) // 50% chance of not casting
         return false;
     else
