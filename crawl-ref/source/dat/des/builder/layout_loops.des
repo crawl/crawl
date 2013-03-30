@@ -1081,8 +1081,8 @@ end
 #  can be difficult to see in the final map.
 #
 NAME:    layout_loops_misc
-DEPTH:   1-, !Dis, !Geh
-WEIGHT:  5 (Pan), 10 (Zot), 20
+DEPTH:   1-, !Dis, !Geh, !Zot
+WEIGHT:  5 (Pan), 20
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 {{
