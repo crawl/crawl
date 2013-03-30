@@ -4,7 +4,7 @@
 -- These procedurals can be used as a base to build up more complex objects
 ------------------------------------------------------------------------------
 
-require("dlua/layout/procedural.lua")
+-- require("dlua/layout/procedural.lua")
 
 primitive = {}
 
@@ -30,25 +30,19 @@ end
 
 -- Returns distance from the origin, useful for circles and ellipses
 function primitive.distance(x,y)
-  return math.sqrt(math.pow(x, 2)
-                  + math.pow(y, 2))
+  return math.sqrt(math.pow(x, 2) + math.pow(y, 2))
 end
 
 -- Gives the radial value from a point, i.e. the arctangent of the line
 -- from the origin to the point
-function primitive.radial(params)
-  return function(x,y)
-    local r
-    if y == 0 then r = (xd>0) and 270 or 90
-    else
-      r = math.atan(x/y) / math.pi * 180
-      if y>0 then r = r+180 end
-    end
-    if params.phase ~= nil then
-      r = (r + params.phase*360)
-    end
-    return (r % 360)/360
+function primitive.radial(x,y)
+  local r
+  if y == 0 then r = (x>0) and 270 or 90
+  else
+    r = math.atan(x/y) / math.pi * 180
+    if y>0 then r = r+180 end
   end
+  return (r % 360)/360
 end
 
 ------------------------------------------------------------------------------
