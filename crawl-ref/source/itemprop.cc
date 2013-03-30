@@ -2072,11 +2072,20 @@ int food_value(const item_def &item)
 {
     ASSERT(item.defined());
 
-    if (item.base_type != OBJ_FOOD) // TRAN_JELLY
+
+    if (item.base_type != OBJ_FOOD && item.sub_type != MI_PIE) // TRAN_JELLY
         return max(1, item_mass(item) * 5);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
     const int carn = player_mutation_level(MUT_CARNIVOROUS);
+
+    if (item.sub_type == MI_PIE)
+    {
+        int ret = 2500;
+        ret += carn * -500;
+        ret += herb * 125;
+        return ret;
+    }
 
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
