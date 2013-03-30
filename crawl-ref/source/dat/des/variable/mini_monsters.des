@@ -4577,6 +4577,64 @@ xx...xx...xx...xx
        xxx
 ENDMAP
 
+NAME:    grunt_ministairs_6
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+NSUBST:  @ = 1:@ / *:.
+MAP
+xxxx .@..xxxx
+x{.xx...xx.[x
+x...x...x...x
+xx.+x...x+.xx
+ xxx.....xxx
+.............
+@.....G.....@
+.............
+ xxx.....xxx
+xx.+x...x+.xx
+x...x...x...x
+x(.xx...xx.<x
+xxxx .@..xxxx
+ENDMAP
+
+NAME:    grunt_ministairs_7
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+MAP
+    @
+  xx+xx
+ xx...xx
+xxG...Gxx
+x.......x
+x.{.G.(.x
+x.......x
+xxG.[.Gxx
+ xx...xx
+  xxxxx
+ENDMAP
+
+NAME:    grunt_ministairs_8
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+MAP
+    xxx
+   xxGx
+  xx..+@
+ xx..Gx
+xx...xx
+xG..xx
+x.{.x
+xG..xx
+xx...xx
+ xx..Gx
+  xx..+@
+   xxGx
+    xxx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
