@@ -299,7 +299,7 @@ static int _fire_prompt_for_item()
     int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
                                    OSEL_THROWABLE, true, true, true, 0, -1,
-                                   NULL, OPER_FIRE);
+                                   NULL, OPER_FIRE, false, true);
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;
