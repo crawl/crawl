@@ -776,7 +776,8 @@ bool prompt_eat_inventory_item(int slot)
     else if (you.species != SP_VAMPIRE)
     {
         if (you.inv[which_inventory_slot].base_type != OBJ_FOOD
-            && you.inv[which_inventory_slot].sub_type != MI_PIE)
+            && (you.inv[which_inventory_slot].base_type != OBJ_MISSILES
+                || you.inv[which_inventory_slot].sub_type != MI_PIE))
         {
             mpr("You can't eat that!");
             return false;
