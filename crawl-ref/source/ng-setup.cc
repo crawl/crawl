@@ -921,6 +921,12 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
         newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
         newgame_make_item(5, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_WAR);
+        if (you.inv[0].defined())
+        {
+            item_def& staff(you.inv[0]);
+            set_item_ego_type(staff, OBJ_WEAPONS, SPWPN_CHAOS);
+        }
+
         if (you.inv[2].defined())
         {
             item_def& cap(you.inv[2]);
@@ -928,7 +934,6 @@ static void _give_items_skills(const newgame_def& ng)
             cap.props["worn_tile_name"] = "hood_red"; // TODO: missing!
             bind_item_tile(cap);
         }
-
 
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STAVES]       = 1;
