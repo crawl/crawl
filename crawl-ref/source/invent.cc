@@ -1966,7 +1966,7 @@ int prompt_invent_item(const char *prompt,
 
                 if (!(accept_any || you.inv[ret].defined()
                                     && you.inv[ret].link != excluded_slot
-                                    && _is_item_selected(you.inv[ret], type_expect)))
+                                    && _item_class_selected(you.inv[ret], type_expect)))
                     mpr("You can't select that object right now.");
                 else if (check_warning_inscriptions(you.inv[ret], oper))
                     break;
@@ -1992,7 +1992,7 @@ int prompt_invent_item(const char *prompt,
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
             else if (!(accept_any || you.inv[ret].link != excluded_slot
-                                     && _is_item_selected(you.inv[ret], type_expect)))
+                                     && _item_class_selected(you.inv[ret], type_expect)))
                 mpr("You can't select that object right now.");
             else if (check_warning_inscriptions(you.inv[ret], oper))
                 break;
