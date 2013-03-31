@@ -1846,7 +1846,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_DART:
-                // Darts also using throwing skills, now.
+                // Darts use throwing skill.
                 exHitBonus += skill_bump(SK_THROWING);
                 exDamBonus += you.skill(SK_THROWING, 3) / 5;
                 break;
@@ -1865,12 +1865,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_THROWING_NET:
-                // Nets use throwing skill.  They don't do any damage!
+                // Nets use throwing skill. They don't do any damage!
                 baseDam = 0;
                 exDamBonus = 0;
                 ammoDamBonus = 0;
 
-                // ...but accuracy is important for this one.
+                // ...but accuracy is important for them.
                 baseHit = 1;
                 exHitBonus += skill_bump(SK_THROWING, 7) / 2;
                 // Adjust for strength and dex.
