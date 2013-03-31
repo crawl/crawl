@@ -1,0 +1,500 @@
+%%%%
+Blork the orc
+
+著しく太った醜悪なオークだ。 He seems to have scavenged a pair of
+rainbow-coloured suspenders from somewhere. They're not helping.
+%%%%
+Cerebov
+
+激怒した凶暴なデーモンだ。 セレボブは輝く黄金の鎧を身につけ、 covered in
+shining golden armour and wielding a huge twisted sword.
+%%%%
+Dispater
+
+鉄の都ディースの支配者だ。
+%%%%
+Ereshkigal
+
+タルタロスの死の地獄を支配する恐るべき大悪魔だ。
+%%%%
+Erica
+
+美貌の女呪術師だ。
+%%%%
+Gloorx Vloq
+
+深淵の暗闇を身に纏った影のような姿の存在だ。
+%%%%
+Ijyb
+
+小さくて不細工なゴブリンだ。何やら青いぼろを着ている。 He claims dominion over
+this level of the dungeon; the punishment for trespassing is death.
+%%%%
+Jessica
+
+邪悪な魔女実習生だ。 She entered the dungeon hoping to find a quiet, secluded
+place where she could study the darker arts without being disturbed.
+%%%%
+Joseph
+
+傭兵のようだ。
+%%%%
+lorocyproca
+
+背が高く痩せさらばえた人型の存在だ。
+生きているかのようにたなびく長いローブを羽織っている。 It thirsts for magical
+energies.
+%%%%
+Mnoleg
+
+不可思議に輝く人影だ。 パンデモニウムの不気味な大気の中を踊っている。
+%%%%
+Xtahua
+
+古代の強力なドラゴンだ。
+%%%%
+the Serpent of Hell gehenna
+
+地獄の業火に燃えて赤く輝く、巨大なドラゴンだ。 It seems to be possessed by the
+very essence of Gehenna and its eternal fire.
+%%%%
+adder
+
+ダンジョンに生息する蛇としては一般的なものだ。 A species of troglodytic reptile
+commonly found in subterranean spaces.
+%%%%
+air elemental
+
+大気の精霊界から召換された精霊だ。 It exists in this world as a swirling vortex
+of air, often dissipating and reforming.
+%%%%
+balrug
+
+巨大で非常に強力なデーモンだ。炎と影とに包まれている。
+%%%%
+black bear
+
+小型の黒い熊だ。 Like all ursines, the black bear will become enraged if badly
+hurt or frightened.
+%%%%
+bone dragon
+
+忌まわしい巨大なアンデッドだ。 the broken bones of many dragons by powerful
+necromantic magic. This creature is unique among dragons in that it lacks a
+typical dragon's fearsome breath.
+%%%%
+Brimstone Fiend
+
+地獄の炎に包まれた巨大で強力なデーモンである。 鱗の生えた大きな翼を持っている。
+One of the most fearsome denizens of any of the Hells.
+%%%%
+crimson imp
+
+小さくて醜い下級デーモンだ。 Its fanged maw seems locked in a permanent malign
+grin, and its horns protrude obscenely from its scaly pate.
+%%%%
+curse skull
+
+空中に浮いてゆっくりと回転している、黒焦げの頭蓋骨だ。
+その黒ずんだ表面に刻まれた神秘的な記号が、ほとんどあらゆる
+攻撃に対しての耐性を暗示している。
+%%%%
+curse toe
+
+切り離された足の指だ。 宙に浮いていて、負のエネルギーの強烈な場を放射している。
+%%%%
+cyclops
+
+額の中央に一つだけ目を持つ巨人だ。 両眼による立体視の欠如にも関らず、 throw
+boulders with fearsome accuracy.
+%%%%
+death yak
+
+普通のダンジョンヤクより大きくて逞しい近縁種だ。
+その小さな赤い目は、生き物の肉への飢えに輝いている。
+%%%%
+dragon
+
+A great reptilian beast with powerful claws on its limbs, covered in thick
+green 全身が分厚い緑の鱗に覆われ、一対のコウモリに似た翼を持つ。
+牙の並んだ顎からはかすかな煙がたなびいている。
+%%%%
+earth elemental
+
+大地の精霊界から召換された精霊だ。
+土と岩の塊に宿ることでこの世界に存在している。
+%%%%
+efreet
+
+灼熱の炎に包まれた、巨大で筋骨逞しい存在だ。
+%%%%
+eye of devastation
+
+宙に浮く巨大な眼球だ。 incandescent energy.
+%%%%
+fire elemental
+
+火の精霊界から召換された精霊だ。
+輝く猛烈な炎の柱に宿ることでこの世界に存在している。
+%%%%
+fire vortex
+
+渦巻く炎の雲だ。
+%%%%
+flayed ghost
+
+A hideous floating undead creature, the anguished spirit of a tortured victim,
+with torn skin hanging おぞましいアンデッドモンスターだ。
+%%%%
+fungus
+
+塊になった灰色の菌類だ。 暗く湿った地下迷宮で活発に生育する。
+%%%%
+megabat
+
+巨大な黒いコウモリだ。
+%%%%
+goliath beetle
+
+噛み砕く力の強い下顎を持つ、巨大な黒い甲虫だ。 非常に固いキチン質の殻を持つ。
+%%%%
+giant gecko
+
+足指の先に吸盤を持ち、壁や天井を上ることができる to walls and ceilings, and
+huge, sharp teeth. It is many times larger than a normal gecko, yet its size
+belies its agility.
+%%%%
+giant orange brain
+
+A huge wrinkled brain, floating just off the floor and glowing with mutagenic
+energies. 時々脈動している。
+%%%%
+glowing shapeshifter
+
+A shapeshifter which has lost control over its 常に変化を続けている。
+%%%%
+green death
+
+膨れあがった体をしたデーモンだ。
+全身が爛れた腫れ物に覆われ、致命的な毒の雲を放っている。
+%%%%
+griffon
+
+大鷲の頭と鉤爪と翼とを持ち、 lion and the wings, head and talons of a great
+eagle.
+%%%%
+guardian mummy
+
+古代の戦士だ。死体に防腐処理を施され、
+呪術によって永遠に死ぬこともなく使役されている。
+%%%%
+hellion
+
+唸りをあげる地獄の業火に包まれた、恐ろしいデーモンだ。
+%%%%
+hellwing
+
+おぞましい骸骨のデーモンだ。古代の干からびた皮の羽を持つ。
+%%%%
+hippogriff
+
+大鷲の頭と鉤爪と翼とを持ち、 horse and the wings, head and talons of a great
+eagle.
+%%%%
+hungry ghost
+
+飢えで死んだ何者かのアンデッドだ。 this creature drains sustenance from the
+bodies of its victims, hoping to inflict its own miserable fate on others.
+%%%%
+hydra
+
+A great and nightmarish lacertilian beast.
+これは複数の頭を持ち、更に頭を殖やす能力がある！
+
+Hitting it with any cutting weapon bigger than a dagger or a quick blade risks
+lopping a head off, which, considering hydra's unique biology, is not what you
+want unless the blade is hot enough to cauterize the wound. Even a troll's
+claws may be enough to rip hydra heads.
+%%%%
+ice beast
+
+恐ろしいモンスターだ。雪と透き通る氷でできた体を持つ。
+その歩みは地面に冷たい水溜りを残していく。
+%%%%
+ice devil
+
+光り輝く氷に覆われた人間サイズのデーモンだ。
+%%%%
+inept item mimic
+
+An apparently abandoned item, actually a small 擬態した姿だ。
+%%%%
+iron devil
+
+金属の皮膚をした見るもおぞましい人間型の存在だ。 While it lacks magical attacks
+and is slow of foot, it makes up for these failings with brute strength.
+%%%%
+item mimic
+
+An apparently abandoned item, actually 実は危険な小型の獣の擬態した姿だ。
+%%%%
+jackal
+
+A small canine scavenger. Packs of these creatures
+この生き物の群れは、ダンジョンの中を死肉を貪るために徘徊する。
+%%%%
+jelly
+
+脈動する酸性の原形質の塊だ。これは何でも消化してしまう。
+そして短時間のうちに増殖していく……。
+%%%%
+jellyfish
+
+脈動する透明な肉塊だ。 below the surface of the water to sting its prey with
+its many tentacles. The tentacles do little harm on their own, but the
+poisonous toxins they inject can cause significant damage to muscle tissue.
+%%%%
+Killer Klown
+
+A comical figure full of life and laughter. It
+あなたに会えてとても嬉しそうにしている……。 cast to its features? Is that red
+face paint or something altogether less pleasant?
+%%%%
+lava worm
+
+溶岩の中を泳ぐ危険な赤いワームだ。
+%%%%
+lemure
+
+かすかに人型をとどめた腐敗した白い肉の塊だ。 It gargles horribly as pus flows
+from its orifices.
+%%%%
+lindwurm
+
+力強い一対の前肢を持つ、蛇のような姿の小型ドラゴンだ。 forelimbs. Its thick
+scales give off an eerie green glow.
+%%%%
+manticore
+
+ひどく醜い交雑生物だ。人間の頭と、ライオンの銅と、
+とても大きな蝙蝠の羽とを持つ。 bristles with spikes that can be loosed at
+potential prey.
+%%%%
+metal gargoyle
+
+生命を持ったおぞましい金属の像だ。
+%%%%
+minotaur
+
+大きく筋肉質な人間の体に雄牛の頭部を持つモンスターだ。
+隔離された迷宮を棲み処としている。
+%%%%
+molten gargoyle
+
+A hideous molten stone statue come to life, with fearsome claws and flames
+licking out 鋭い歯の並んだ口からは酸性の毒液を滴らせている。
+%%%%
+mummy
+
+防腐処理を施され包帯に覆われた体を持つアンデッドだ。
+古代の魔術によって使役されている。 compelled to walk by an ancient curse. It
+radiates a malign aura to those who intrude on its domain.
+%%%%
+necrophage
+
+最も邪悪で不浄なアンデッド被造物で、 腐敗した人間型生物の死体から作成される。
+of humanoid creatures. They exist to spread disease and decay, and gain power
+from the decaying corpses of other beings.
+%%%%
+ogre mage
+
+稀少な血統のオーガで、魔法の使用に長けている。 It usually becomes a chieftain
+among its kin.
+%%%%
+orb of fire
+
+原初の炎そのものの球体だ。 impressive pyrotechnics, and of twisting the very
+flesh of creatures who come into its ken.
+%%%%
+orc
+
+オークは醜い地下の種族であり、豚と人間、そして worst features of humans, pigs
+and several other unpleasant creatures. They tend to run in packs or mobs, and
+delight in outbursts of insane violence.
+%%%%
+plant
+
+ほとんどの植物はダンジョンの不快な環境では生育しないが、 environment, but some
+have managed to adapt and even thrive underground in the absence of the sun.
+%%%%
+polar bear
+
+大きくて非常に力の強い熊だ。 white fur, habituated to cold conditions. Like all
+ursines, the polar bear will become enraged if badly hurt or frightened.
+%%%%
+quicksilver dragon
+
+長い体を曲がりくねらせたドラゴンだ。 蛇に似た姿をしている。 magical energies
+arc from its pointed snout, and it moves with terrifying swiftness.
+%%%%
+reaper
+
+巨大な鎌を手にした、骸骨のような姿の存在だ。
+%%%%
+red devil
+
+A muscular demon covered in spikes and horns. Two
+背中には一対の小さな翼が生えている。
+%%%%
+red wasp
+
+巨大な赤いススメバチだ。邪悪なかかりのついた毒針を持つ。 Potent paralytic
+poison drips from its tip.
+%%%%
+redback
+
+膨れ上がった腹部の背に赤い飛沫模様のある、獰猛な黒い蜘蛛だ。
+その下顎からは致命的な毒が滴っている。
+%%%%
+the royal jelly
+
+とりわけ豪華な、金色をしたゼリー状の存在だ。
+%%%%
+seraph
+
+The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts,
+the mightiest servants 善き Gods. They have six wings and but one face, and are
+said to sometimes take the forms of fiery serpents.
+%%%%
+shadow demon
+
+不可思議な悪魔的存在だ。 常に自身の複数の影の中に霞んでいる。 It weaves
+creatures into existence from the very shadows surrounding it.
+%%%%
+shadow imp
+
+小さくて影のような下級デーモンだ。
+%%%%
+shapeshifter
+
+A disturbing creature with the power to change its form.
+このモンスターが本来の形態で目撃されることは極めて稀だ。
+%%%%
+simulacrum
+
+An ice replica of a monster that is animated by 死霊術の力で操られている。
+%%%%
+skeletal warrior
+
+重武装した凶悪な、人型生物の骸骨だ。 これは邪悪な力によって造られた。
+%%%%
+skeleton
+
+死霊術の働きによってアンデッドにされた骸骨だ。
+%%%%
+spatial vortex
+
+狂ったように転位していく現実構造の歪みだ。
+%%%%
+spectral thing
+
+おぞましい輝く幽霊だ。
+%%%%
+spiny worm
+
+大きな黒いワームだ。たくさんの節がある胴体は刺の生えたキチン質の
+装甲によって覆われている。 鋭い歯の並んだ口からは酸性の毒液を滴らせている。
+%%%%
+steam dragon
+
+A relatively small grey dragon, with a resilient-looking scaly hide and steam
+pouring その顎からは蒸気が立ち昇っている。
+%%%%
+stone giant
+
+岩のように固い灰色の皮膚を持つ巨大な人型生物だ。 It carries several boulders,
+and is perfectly capable of flinging them a great distance.
+%%%%
+sun demon
+
+地に墜ちた星の光と激怒とに輝く、悪魔的な姿をした存在だ。
+%%%%
+swamp drake
+
+沼の泥に覆われた、ぬめぬめした小さなドラゴンだ。
+
+{{
+    if you.can_smell() then
+        return "It smells terrible."
+    end
+}}
+%%%%
+swamp worm
+
+大きなぬるぬるしたワームだ。 この不浄な沼の泥の中を泳ぐのに特化している。
+%%%%
+titan
+
+This huge, bolt-hurling, lightning-limned humanoid is unusually large
+巨人族の中にあってさえ著しく巨大で力強い。
+%%%%
+toenail golem
+
+かりそめの生命を与えられた巨大な像だ。 爪切りで切った足の爪だけで造られている。
+非常に時間の有り余った誰かが造ったのだろう。
+%%%%
+two-headed ogre
+
+肥大した体に二つの頭を持つ、巨大なオーガだ。 bloated ogre body. It is capable
+of holding a weapon in each giant hand.
+%%%%
+ufetubus
+
+金切り声でペチャクチャ喋る下級デーモンだ。
+%%%%
+vault guard
+
+重武装重装甲を備えた宝物庫の番人だ。
+%%%%
+warg
+
+A particularly large and evil-looking wolf, usually
+大抵の場合はオークと一緒にいる。
+%%%%
+water elemental
+
+水の精霊界から召換された精霊だ。
+水域の一部分に宿ることでこの世界に存在している。
+%%%%
+wraith
+
+精神体のアンデッドだ。実体のない骸骨の体に黒い霧を纏っている。 surrounding an
+insubstantial skeletal form. Its eyes burn bright with unholy malevolence and
+hunger for life essence, on which it feeds.
+%%%%
+wretched star
+
+A conflux of unearthly light and energy, awash in unnatural colours and strange
+forms no normal being was meant to perceive. Merely being near it fills your
+body with the disorder アビスの.
+%%%%
+wyvern
+
+A dragon-like creature with a long, sharply pointed tail.
+ワーバーンは本物の竜よりは小型で手強さも劣るが、とりもなおさず
+侮り難い敵である。
+%%%%
+yak
+
+ダンジョンに生息するヤクとしては普通のものだ。
+ぼさぼさした毛皮に覆われていて、一対の危険な角を持つ。
+%%%%
+yellow wasp
+
+巨大なススメバチだ。 chitinous armour. Its deadly venom can render most beings
+unable to move.
+%%%%
+zombie
+
+死霊術によって甦った死体だ。
+%%%%

@@ -1,0 +1,48 @@
+%%%%
+Wrath of Trog
+
+この剣は旧き神トログが失くしたもので、彼のお気に入りの品だった。 the old god
+Trog, before it was lost one day. It induces a bloodthirsty berserker rage in
+anyone who uses it to strike another.
+%%%%
+Mace of Variability
+
+この武器はどうも当てにならない。
+%%%%
+Glaive of Prune
+
+この武器は狂った神の創造物で、 所有者をプルーンに変える呪いがかかっている。
+wielding it into a prune. Fortunately,
+短期間使うだけであれば皮膚が少し紫色になり、 use it briefly with no
+consequences worse than slightly purple skin and a few wrinkles.
+%%%%
+Sword of Power
+
+この武器は力ある者には激しく、 力なき者には穏やかに応える。
+%%%%
+Staff of Olgreb
+
+This was the magical weapon wielded by the
+彼はダンジョンでの探索中に命を落とした。
+これは手にした者に毒への耐性を与え、毒の魔術を操る能力を増大させ、 increases
+the ability of its wielder to use venomous magic, and carries magical powers
+which can be evoked. The tales say that Olgreb researched rare venoms that may
+have some limited effect even on creatures immune to all commonly known
+poisons.
+%%%%
+Vampire's Tooth
+
+This ivory-like dagger looks like it could actually have been created from a
+tooth of some enormous predatory creature, although obviously not an average
+human-sized bloodsucker.
+
+これは致命的な吸血の武器だ。
+%%%%
+Sword of Cerebov
+
+薄気味の悪い炎がこの捩じれた刃を包んでいる。
+%%%%
+knife of Accuracy
+
+この武器はほとんど的を外さないほどに正確だ。
+%%%%
