@@ -959,6 +959,7 @@ crown_gold2
 crown_gold3
 cap_black1 CAP_BLACK
 clown1 CLOWN
+clown2 JESTER
 band_white HEADBAND
 band_red
 band_yellow
