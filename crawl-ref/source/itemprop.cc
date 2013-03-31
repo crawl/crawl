@@ -1218,6 +1218,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
     }
     else if (it.base_type == OBJ_RODS)
     {
+        if (item_is_melded(it))
+            return false;
+
         if (!hide_charged)
             return true;
 
