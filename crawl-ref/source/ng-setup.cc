@@ -931,7 +931,7 @@ static void _give_items_skills(const newgame_def& ng)
         {
             item_def& cap(you.inv[2]);
             cap.props["item_tile_name"] = "thelm_cap_jester";
-            cap.props["worn_tile_name"] = "hood_red"; // TODO: missing!
+            cap.props["worn_tile_name"] = "jester";
             bind_item_tile(cap);
         }
 
