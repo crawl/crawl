@@ -625,7 +625,7 @@ WEIGHT: 8
 # item.
 #
 NAME:      shoalhut_rune
-TAGS:      shoal_rune_simple water_ok no_dump mini_float
+TAGS:      shoal_rune_simple water_ok no_dump mini_float transparent
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.
@@ -647,7 +647,7 @@ ENDMAP
 # Shoal decoy hut
 #
 NAME:      shoalhut
-TAGS:      shoal_hut_simple water_ok no_dump allow_dup mini_float
+TAGS:      shoal_hut_simple water_ok no_dump allow_dup mini_float transparent
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.

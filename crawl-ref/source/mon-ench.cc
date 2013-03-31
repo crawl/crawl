@@ -26,6 +26,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "religion.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -1471,19 +1472,31 @@ void monster::apply_enchantment(const mon_enchant &me)
                 if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
                                         && !actor_at(adjacent))
                 {
-                    beh_type created_behavior = SAME_ATTITUDE(this);
+                    beh_type plant_attitude = SAME_ATTITUDE(this);
 
-                    if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                                      created_behavior,
-                                                      NULL,
-                                                      0,
-                                                      0,
-                                                      adjacent,
-                                                      MHITNOT,
-                                                      MG_FORCE_PLACE)))
+                    if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
+                                                            plant_attitude,
+                                                            NULL,
+                                                            0,
+                                                            0,
+                                                            adjacent,
+                                                            MHITNOT,
+                                                            MG_FORCE_PLACE)))
                     {
-                        rc->behaviour = BEH_WANDER;
-                        rc->number = 20;
+                        if (mons_is_god_gift(this, GOD_FEDHAS))
+                        {
+                            plant->flags |= MF_NO_REWARD;
+
+                            if (plant_attitude == BEH_FRIENDLY)
+                            {
+                                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                                mons_make_god_gift(plant, GOD_FEDHAS);
+                            }
+                        }
+
+                        plant->behaviour = BEH_WANDER;
+                        plant->number = 20;
 
                         if (you.see_cell(adjacent) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
@@ -1689,7 +1702,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
-            || confused() || asleep())
+            || confused() || asleep() || has_ench(ENCH_FEAR))
         {
             this->speed_increment += me.duration;
             del_ench(ENCH_WORD_OF_RECALL, true, false);

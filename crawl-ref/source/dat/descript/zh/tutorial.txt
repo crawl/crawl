@@ -1,7 +1,7 @@
 %%%%
 tutorial intro
 
-你可以按下<w>$cmd[CMD_REPLAY_MESSAGES]</w>随时查看这条信息。 另外，按下
+你可以按下<w>$cmd[CMD_REPLAY_MESSAGES]</w>随时查看这条信息。另外，按下
 <w>Space</w>可以清除<cyan>--更多信息--</cyan> 提示。
 %%%%
 tutorial1 start
@@ -28,8 +28,8 @@ tutorial1 diagonal
 %%%%
 tutorial1 shiftmove
 
-想要快速通过一个通道，可以按下 <w>[Shift]</w> + <w>[数字键盘方向键]</w>（试试打
-开/关上Numlock）或<w>[方向组合键]</w>。
+想要快速通过一个通道，可以按下 <w>[Shift]</w> +
+<w>[数字键盘方向键]</w>（试试打开/关上Numlock）或<w>[方向组合键]</w>。
 %%%%
 tutorial1 downstairs
 
@@ -44,9 +44,10 @@ tutorial1 levelmap
 <w>[左键点击]</w>移动至那里。</localtiles><webtiles>你可以按下
 <w>[$cmd[CMD_DISPLAY_MAP]]</w>查看整个地图，移动鼠标浏览地图内容。按下
 <w>[.]</w> 或 <w>[Enter]</w>可以移动至你鼠标光标的位置。按下<w>[Escape]</w>返回
-正常游戏。</webtiles><console>你可以按下<w>[$cmd[CMD_DISPLAY_MAP]]</w> 查看整个
-地图，并移动鼠标浏览地图内容。按下<w>[.]</w> 或 <w>[Enter]</w>可以移动至你鼠标
-光标的位置。按下 <w>[Escape]</w> 返回游戏。</console>
+正常游戏。</webtiles><console>你可以按下<w>[$cmd[CMD_DISPLAY_MAP]]</w>
+查看整个地图，并移动鼠标浏览地图内容。按下<w>[.]</w> 或
+<w>[Enter]</w>可以移动至你鼠标光标的位置。按下 <w>[Escape]</w>
+返回游戏。</console>
 %%%%
 tutorial1 autoexplore
 
@@ -169,8 +170,8 @@ tutorial2 resting_reminder
 %%%%
 tutorial2 eat_reminder
 
-记住，你可以按<w>[$cmd[CMD_BUTCHER]]</w><localtiles>或者><w>[Shift + 鼠标点击
-]</w>来切下尸体上的肉块，然后按<w>[$cmd[CMD_EAT]]</w><localtiles>或者<w>[鼠标点
+记住，你可以按<w>[$cmd[CMD_BUTCHER]]</w><localtiles>或者><w>[Shift + 鼠标点击 ]
+</w>来切下尸体上的肉块，然后按<w>[$cmd[CMD_EAT]]</w><localtiles>或者<w>[鼠标点
 击]</w></localtiles>食用。
 %%%%
 tutorial2 compare_monster_desc
@@ -198,9 +199,9 @@ tutorial2 darts
 %%%%
 tutorial2 throwing
 
-你可以按<w>[$cmd[CMD_FIRE]]</w><localtiles>或者在物品栏[鼠标点击]它们
-</localtiles>来投掷飞镖。按<w>[$cmd[CMD_TARGET_SELECT]]</w>或者<w>[Enter]</w>来
-确定对自动选定的目标开火。
+你可以按<w>[$cmd[CMD_FIRE]]</w><localtiles>或者在物品栏[鼠标点击]它们 </localti
+les>来投掷飞镖。按<w>[$cmd[CMD_TARGET_SELECT]]</w>或者<w>[Enter]</w>来确定对自
+动选定的目标开火。
 %%%%
 tutorial2 wield_bow
 
@@ -210,9 +211,9 @@ tutorial2 wield_bow
 tutorial2 firing
 
 通过已装备的弓来射出箭的操作与投掷飞镖的操作一样：按
-<w>[$cmd[CMD_FIRE]]</w><localtiles>或<w>[鼠标点击]</w>。在瞄准的时候你可以按
-<w>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w>来选择其他的目标。这只蠕虫在岩浆后面无法
-对你造成任何威胁，但是那个人偶可以射击你，因此先搞定它。按
+<w>[$cmd[CMD_FIRE]]</w><localtiles>或<w>[鼠标点击]</w>。在瞄准的时候你可以按 <w
+>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w>来选择其他的目标。这只蠕虫在岩浆后面无法对
+你造成任何威胁，但是那个人偶可以射击你，因此先搞定它。按
 <w>[$cmd[CMD_TARGET_SELECT]]</w>或者<w>[Enter]</w>确定你的目标。
 %%%%
 tutorial2 travel_reminder
@@ -447,10 +448,9 @@ tutorial5 altar
 %%%%
 tutorial5 religion
 
-按<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles>或点击命令栏里的<w>宗教按钮
-</w>也可以<w>按住Shift并右击</w>你的人物</localtiles>来查看一下你的信仰状态。和
-以前一样，按<w>!</w><localtiles>或<w>右键点击</w>/localtiles>可以调出更详细的说
-明。
+按<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles>或点击命令栏里的<w>宗教按钮 </w>
+也可以<w>按住Shift并右击</w>你的人物</localtiles>来查看一下你的信仰状态。和以前
+一样，按<w>!</w><localtiles>或<w>右键点击</w>/localtiles>可以调出更详细的说明。
 %%%%
 tutorial5 piety_on_kill
 

@@ -460,7 +460,7 @@ A stone wall
 Ein härteres Hindernis als Felswände. Nur die mächtigste Magie kann Steinwände
 zerschmettern.
 %%%%
-A teleporter
+A short-range portal
 
 Dieser Teleporter wird dich in einen anderen Raum bringen.
 %%%%

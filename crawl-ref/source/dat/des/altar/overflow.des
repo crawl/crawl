@@ -49,35 +49,6 @@ default-depth: D
 
 NAME:   ashenzari_altar_1
 TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari decor
-WEIGHT: 5
-KFEAT:  _ = altar_ashenzari
-ITEM:   cursed mundane mace ident:curse / \
-        cursed mundane trident ident:curse / \
-        cursed mundane flail ident:curse w:1 / \
-        cursed mundane whip ident:curse w:1
-#
-### TODO: This still gives book names like "Ashenzari's Almanac of Skeletal
-###       Cooking" and "Ashenzari's Compendium of Skeletal Cooking", whereas
-###       we just want "Ashenzari's Skeletal Cookbook" or similar (no random
-###       component).
-#
-ITEM:   randbook owner:Ashenzari desc:necr title:Skeletal_Cooking \
-                 spells:animate_skeleton numspells:1 /\
-        randbook owner:Ashenzari desc:necr title:Culinary_Necromancy \
-                 spells:animate_skeleton numspells:1 /\
-        randbook owner:Ashenzari desc:necr title:Culinary_Dark_Arts \
-                 spells:animate_skeleton numspells:1 /\
-        randbook owner:Ashenzari desc:necr title:Rapid_Deboning \
-                 spells:animate_skeleton numspells:1
-: interest_check(_G)
-MAP
-...
-d_e
-...
-ENDMAP
-
-NAME:   ashenzari_altar_2
-TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari decor
 KFEAT:  _ = altar_ashenzari
 : interest_check(_G)
 MAP

@@ -463,7 +463,7 @@ Growth
 Use fruit to grow a ring of plants around yourself. If a complete ring cannot
 be formed (because you do not have enough fruit), plants will grow on squares
 adjacent to you that are close to monsters. The plants you create gain bonus HP
-proportional to your invocations skill.
+proportional to your Invocations skill.
 %%%%
 Rain
 
@@ -480,8 +480,8 @@ Evolution
 
 Turn plants and fungi adjacent to you into stronger species. Upgrading fungi
 requires piety, upgrading plants requires fruit. Plants upgraded gain a bonus
-to attack accuracy proportional to the user's invocations skill, and oklob
-plants are more likely to spit acid at higher invocations.
+to attack accuracy proportional to the user's Invocations skill, and oklob
+plants are more likely to spit acid at higher Invocations.
 %%%%
 # Cheibriados
 Bend Time

@@ -1642,3 +1642,171 @@ MAP
  ..1..1..
   ......
 ENDMAP
+
+################################################################################
+# IT IS AN EMPTY, ROTTEN WORLD.
+# LIE DOWN. FORGET YOUR TROUBLES.
+# SMILE.
+NAME:    hangedman_pleasuredromes
+TAGS:    no_monster_gen no_item_gen
+ORIENT:  encompass
+DEPTH:   D:16-27
+MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
+         mottled dragon / swamp drake w:3 / boulder beetle w:5 / \
+         red wasp / tarantella w:2 / redback w:3 / wolf spider / \
+         sea snake w:5 / alligator / hell hound w:2 / rock worm w:5
+MONS:    swamp dragon w:5 / fire crab w:5 / catoblepas w:5 / \
+         dragon w:15 / ice dragon w:15 / orb spider w:1 / spiny worm w:5 / \
+         dire elephant w:9 / anaconda / hydra w:15 / snapping turtle / harpy w:5
+MONS:    ghost moth w:5 / death drake w:5 / golden dragon / iron dragon / \
+         quicksilver dragon w:15 / shadow dragon w:20 / storm dragon w:20 / \
+         hell beast w:5 / hellephant w:5 / shedu band w:2 / phoenix w:3 / \
+         alligator snapping turtle w:5 / emperor scorpion w:5
+MONS:    very ugly thing / very large slime creature / great orb of eyes / \
+         shapeshifter hd:4 w:5 / unseen horror / large abomination w:1 / \
+         eye of draining / flayed ghost w:3 / shadow wraith w:5 / \
+         eidolon w:1 / air elemental / dancing weapon ; short sword good_item
+MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
+         shapeshifter hd:6 w:5 / shapeshifter hd:7 / shapeshifter hd:8 w:5 / \
+         titanic slime creature / chaos spawn w:5 / hydra simulacrum w:3 / \
+         anaconda simulacrum w:3 / harpy simulacrum w:3 / \
+         dire elephant simulacrum w:1 / dancing weapon ; long sword good_item
+MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
+         glowing shapeshifter hd:11 w:30 / glowing shapeshifter hd:12 w:15 / \
+         azure jelly / starcursed mass / tentacled starspawn /  \
+         iron elemental w:5 / dancing weapon w:15 ; glaive good_item
+MONS:    centaur warrior / yaktaur w:5 / orc knight / \
+         deep elf conjurer / deep troll / boggart w:5 / \
+         rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
+         vampire / octopode w:2 ; trident good_item / mermaid w:2 / \
+         vault sentinel w:2 / deep dwarf necromancer w:2 / cyclops w:5 / \
+         kobold demonologist w:3 / skeletal warrior w:5 / phantasmal warrior w:5
+KMONS:   8 = orc high priest / orc sorcerer / naga warrior / naga mage / \
+         yaktaur captain w:5 / ogre mage / deep elf knight w:15 / \
+         hell knight / efreet w:3 / smoke demon w:2 / guardian mummy w:5 / \
+         guardian serpent w:5 / deep dwarf berserker w:5 / vampire mage w:5
+KMONS:   9 = fire giant / frost giant / stone giant / ettin / \
+         orc warlord / ironbrand convoker w:3 / spriggan berserker w:1 / \
+         deep troll shaman w:5 / deep troll earth mage / \
+         minotaur w:5 ; any armour good_item . any weapon good_item / \
+         vampire knight / ghoul w:1 / base draconian w:15 / \
+         spriggan air mage / deep elf death mage w:5
+KMONS:   0 = titan w:15 / lich / sphinx / deep elf annihilator / \
+         deep elf sorcerer / deep elf high priest w:5 / greater naga w:5 / \
+         spriggan defender w:5 / shadow demon w:5 / reaper w:5
+KMONS:   & = draconian knight w:15 / draconian monk w:15 / \
+         draconian annihilator / deep elf demonologist / \
+         deep elf blademaster / deep elf master archer / \
+         daeva w:5 / angel w:5 / lich w:15 / ancient lich w:15 / \
+         mummy priest w:5 / balrug w:5 / executioner w:5
+KMONS:   Z = base draconian
+KFEAT:   z = known zot trap w:499 / floor w:1
+KFEAT:   Z = enter_zot
+SHUFFLE: Y], y}, {([>, HI / HI / IH, JK / JK / KJ
+SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml
+NSUBST:  ] = 1:) / 1:]
+SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
+SUBST:   HJOQRm = x, IKNPSl = ., L : xx., M : xx., j : x.., k : x.., n : x.
+SUBST:   b : b:6 v:1 c:1, @ = 114777, ^ = 224999
+: local Z = you.absdepth()
+: if you.absdepth() < 21 then
+:   subst("2 = !:" .. 22 - Z .. " 2:20")
+:   subst("3 = 2:" .. 25 - Z .. " 3:" .. Z + 4)
+:   subst("5 = $:" .. 22 - Z .. " 5:20")
+:   subst("6 = 5:" .. 25 - Z .. " 6:" .. Z + 4)
+:   subst("8 = ?:" .. 22 - Z .. " 8:20")
+:   subst("9 = 8:" .. 24 - Z .. " 9:" .. Z + 5)
+SUBST:  & = 3:2 6:1 0:4 9:2
+:     if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+SUBST: y = V
+:     end
+SUBST:  yY = T
+: else
+SUBST:  y = Y, & = &:26 0:1
+:   subst("9 = 9:90 0:" .. Z - 11)
+:   subst("8 = 9:" .. Z - 14 .. " 8:20")
+:   subst("5 = 6:" .. Z - 14 .. " 5:20")
+:   subst("2 = 3:" .. Z - 14 .. " 2:20")
+:     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+SUBST:  )]} = ., > = <, " = `
+NSUBST: ' = 1:Z / 2 : Z:1 `:4 / *:`
+:     end
+: end
+SUBST:  '" = .
+: subst("1 = 1:" .. math.max(58 - Z * 2, 16) .. " 2:" .. math.max(Z - 15, 1))
+: subst("4 = 4:" .. math.max(58 - Z * 2, 16) .. " 5:" .. math.max(Z - 15, 1))
+: subst("7 = 7:" .. math.max(58 - Z * 2, 16) .. " 8:" .. math.max(Z - 15, 1))
+SUBST:  ! = 1, $ = 4, ? = 7, 7 = 7:499 .:1
+MARKER: Y = lua:props_marker { portal=1 }
+FTILE:  Z` = floor_marble
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxJ.............xxxxxx
+xxxxxxxxxxx......c.........xxx
+xxxxxxxxx"".....cbc..x......xxx
+xxxxxxxxx".....cbcbc.x......Mxxxx
+xxxxxx'"7.....xF.b.cc...n....Lxxxx
+xxxxxx""1....x...x..cc.x.......xxx
+xxxxxx74.........b..7cc.........xxx
+xxxx"".....x..xxb.bxb.cc..8.....xxx
+xxJx".....x..E...b...b.cc@..n...xxx
+xx.......x.......xx.4x.8cc.x.....xx
+xx.............F...x.b*..cc......xx
+xx.....x..E........xb.bxb.cc.xx..xx
+xx....x..x...........b.7.b9cc....xxxxxxxxxxxxx
+xx...cF..x..F....%...xx.5x..cc...xxxxxxxxxxxxxx
+xx..cb...b......%*.....x.b...bc..xxxx@.%.%.@.xxx
+xx.cbcbxb.bx...%*.*%...xb.bxbcbc.xxxxx........xxx
+xx..cb...b.x.....*%....x.b...bc..xxxxxx........xxx
+xx...cc..x..xx...%...xx..x..cc...xxxxxxx%.......xxx
+xx....cc7b71.b.......b%65b8cc....xxxxxxxx...I.x.xxxx
+xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.^..xxx
+xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
+xx.....x.cc8.x1.xxx.3x*&cc.......xx.......xx...H....xxx
+xxxx..n..@cc.b72.b..2b|cc.....xMx.x.xLx.....x.x.I....xx
+ xxx....8..cc.bxb.bxb.cc.8.xxx...xxx...xxx...x......@xx
+  xx........cc9..b..8cc.........x...x........xx......xx
+  xxxxL....x.cc..x..cc...x.@..SR..@..RS..@.x..xx....%xx
+  xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
+     xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
+    xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
+    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx@xx
+   xxc.xx...............x.x...x.J...H.x...x.x...xxxxxxx
+   xc@.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
+   xc....xx.....nnnnxxxxxx.@..NO..z..ON..@.xxxxxxxxxxxxxxx
+  xc.....xx........nx....x.....c.(.{.c.....x.xxxxxxxxxxxxxx
+  xc.......xx......nx...x.x...x.H...J.x...x.x............xxxxxx
+  xxc......xx.......xx..M..RRR.I.cPc.K.RRR..L......c......xxxxx
+   xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x..Y..cbc........xx
+   xxc.......xx.c....x...x....SR.....RS....x]....xbcbx.......xxx
+    xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
+    x@cc......cb%bc...x..x.@..SR..@..RS..@.x.x.x..1c...x.x....Mxxxx
+    xc..cc..cc.@b.....KJ........x...x.....y....b..7b81.b.........xx
+    xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
+    xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
+     xc.....k..c....xx..KJJ.......xx.....x.x..1c.1ccc1.c1..x.x....xxx
+     xxc..%...c.....xx...KKxx.....xx.......b.47b*cc&cc%b92.b.......xx
+     xxc..%%..c.......xx....xxxx..xx..Y..xb.bcbcbc6x6cbcbcb.bx.....xx
+     xc..k.....c......xx.......xxxxx....x..b..*b9..x..9b*..b..x....xx
+    xxc........c...j....xx......nnnx...x...c.4cc.7|x|*4cc7.c...x...xx
+    xc....cc....c.......xx.c......nx..cb.74c%cc3.|x%*|.2cc*b82.bc..xx
+    xc@.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
+    x.cc......cb'bc......cb%bc....nx..cb..8c%cc3.|*%x.....%C...Bx..xx
+    xc........1"b".cc..cc.@b.......x...x..4c.4cc.*|x....C..x...x...xx
+   xxc.mm....ll4c....cc....c.xx....x....x..b..%c91.x.....%.x..x....xx
+   xc..mm...%ll..c........c..xx....x.....xb.bccccc5x....D.x........xx
+   xc......xx%...c.....k..c....xx..........b..9c*ccc.C%D...........xx
+  xc%.....%xx.....c..%...c.....xx........x.x.5.c.4cc.....D.x.......xx
+  xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx
+  xxc...%xx......c..k.....c......xx..........xb.bcbcCxx..x.......Pxxx
+   xc..ll%...mm..c........c...j....xx..........b..5b........"""JRlxxx
+   xxc2ll....mm.c....cc....c.......xx.cxM....x.x..8c........"'"jxxxxx
+    xc^5........c@.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
+    xxcc......cc.ccxxxxxxcc@cc.....@ccxxxx.......xbcBx......Jjklxxxxx
+     xxxcc%%ccxxxxxx    xxxxxxcc..ccxxx xx........cbx.......Rxxxxxxxx
+       xxxccxxx              xxxccxxx   xxxxx......c......HPlxxxxxxxx
+         xxxx                  xxxx     xxxxxx............Oxxxxxxxxxx
+                                            xxxxxxxxxxxxxxxxxxxxxxxxx
+                                             xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

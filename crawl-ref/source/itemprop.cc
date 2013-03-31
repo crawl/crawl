@@ -812,10 +812,6 @@ void set_equip_race(item_def &item, iflags_t flags)
         break;
 
     case OBJ_MISSILES:
-        if (item.sub_type > MI_MAX_RACIAL)
-            return;
-        break;
-
     default:
         return;
     }
@@ -995,7 +991,8 @@ void set_gloves_random_desc(item_def &item)
 //
 // Ego item functions:
 //
-bool set_item_ego_type(item_def &item, int item_type, int ego_type)
+bool set_item_ego_type(item_def &item, object_class_type item_type,
+                       int ego_type)
 {
     if (item.base_type == item_type && !is_artefact(item))
     {
@@ -1218,6 +1215,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
     }
     else if (it.base_type == OBJ_RODS)
     {
+        if (item_is_melded(it))
+            return false;
+
         if (!hide_charged)
             return true;
 
@@ -2822,7 +2822,7 @@ string food_type_name(int sub_type)
     return Food_prop[Food_index[sub_type]].name;
 }
 
-const char* weapon_base_name(uint8_t subtype)
+const char* weapon_base_name(weapon_type subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
 }

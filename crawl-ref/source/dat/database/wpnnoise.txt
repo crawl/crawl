@@ -1023,6 +1023,9 @@ _SCREAM_
 # Marilyn Manson, "The Reflecting God"
 @The_weapon@ @_screams_@, "WHEN I'M GOD, EVERYONE DIES!!!"
 
+# Ayria, "Horrible Dream"
+@The_weapon@ @_screams_@, "DIFFUSE IT! DESTROY IT! ABUSE IT! ENJOY IT!"
+
 # This and the next are from Planescape: Torment
 @The_weapon@ @_screams_@, "I AM IRON GIVEN PURPOSE!"
 

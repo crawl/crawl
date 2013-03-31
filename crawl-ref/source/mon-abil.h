@@ -17,8 +17,8 @@ void draconian_change_colour(monster* drac);
 bool ugly_thing_mutate(monster* ugly, bool proximity = false);
 bool slime_creature_polymorph(monster* slime);
 
-void ballisto_on_move(monster* mons, const coord_def & pos);
-void activate_ballistomycetes(monster* mons, const coord_def & origin,
+void ballisto_on_move(monster* mons, const coord_def& pos);
+void activate_ballistomycetes(monster* mons, const coord_def& origin,
                               bool player_kill);
 
 bool valid_kraken_connection(const monster* mons);

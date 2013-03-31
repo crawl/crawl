@@ -706,13 +706,8 @@ bool mons_is_boulder(const monster* mon)
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
 {
-    return mons_is_projectile(mc)
-           || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_FIRE_VORTEX
-           || mc == MONS_SPATIAL_VORTEX
+    return mons_is_conjured(mc)
            || mc == MONS_TWISTER
-           || mc == MONS_BATTLESPHERE
-           || mc == MONS_FULMINANT_PRISM
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
            || mc == MONS_LURKING_HORROR
@@ -1079,14 +1074,6 @@ void discover_mimic(const coord_def& pos, bool wake)
     {
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
         mimic->seen_context = SC_JUST_SEEN;
-    }
-
-    // Orb mimics shriek.
-    if (item && item->base_type == OBJ_ORBS)
-    {
-        orb_pickup_noise(pos, 30,
-            "The orb mimic lets out a hideous shriek!",
-            "The orb mimic lets out a furious burst of light!");
     }
 
     // Just in case there's another one.

@@ -98,7 +98,8 @@ SUBST:  c = t-
 KITEM:  Ll = acquire armour / acquire weapon
 KFEAT:  GR = iron_grate
 KFEAT:  XTv = metal_wall
-KFEAT:  ML = floor
+KFEAT:  L = floor
+KFEAT:  M = escape_hatch_down
 KFEAT:  E = runed_door
 KFEAT:  Kk = altar_okawaru
 KFEAT:  - = floor
@@ -154,7 +155,7 @@ lua_marker("L", tloot_grab)
 lua_marker("l", tloot_grab2)
 lua_marker("v", portal_desc { lava_spout=1 })
 lua_marker("R", portal_desc { loot_doors=1 })
-lua_marker("t", portal_desc { veto_fire="veto" })
+lua_marker("t", portal_desc { veto_fire="veto", veto_disintegrate="veto" })
 set_feature_name("tree", "iron tree")
 
 dgn.persist.oka_arena_cages = false

@@ -1054,6 +1054,13 @@ xxXXXXXXXXXXxxxx
 xxXXXXXXXXXXxxxx
 ENDMAP
 
+############################################################################
+# Orc endings.
+#
+# These generally place four random stores; particularly difficult endings
+# might consider placing four good quality stores.
+############################################################################
+
 ##################################################
 NAME:    st_orc_town
 TAGS:    no_rotate no_item_gen
@@ -1301,4 +1308,302 @@ xccccc...........cccccx
 xcccccccccc.ccccccccccx
 xcccccccccc.ccccccccccx
           .@.
+ENDMAP
+
+##################################################
+NAME:   grunt_orc_gardens
+PLACE:  Orc:$
+{{
+  -- There is functionality here for making the enemy sets consist of
+  -- small numbers of cyclopses, ettins, and a stone giant.
+  -- I have yet to decide how fair this will be, so it's a fairly low
+  -- chance until I decide one way or the other if it works.
+  dgn.persist.grunt_orc_gardens_giant_problem = crawl.one_chance_in(8)
+  hook("post_place", function()
+    local stores = { "antique weapon shop", "antique armour shop",
+                     "general shop", "book shop / jewellery shop" }
+    local which = crawl.random2(#stores) + 1
+    dgn.persist.grunt_orc_gardens_store = stores[which]
+    table.remove(stores, which)
+    dgn.persist.grunt_orc_gardens_boss = true
+    dgn.place_maps{tag="grunt_orc_garden", count=1}
+    dgn.persist.grunt_orc_gardens_boss = false
+    for i = 1, 3 do
+      which = crawl.random2(#stores) + 1
+      dgn.persist.grunt_orc_gardens_store = stores[which]
+      table.remove(stores, which)
+      dgn.place_maps{tag="grunt_orc_garden", count=1}
+    end
+  end)
+}}
+
+NAME: grunt_orc_garden
+TAGS: grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
+{{
+  if dgn.persist.grunt_orc_gardens_giant_problem then
+    if dgn.persist.grunt_orc_gardens_boss then
+      mons("stone giant")
+    else
+      mons("ettin")
+    end
+    mons("cyclops")
+    mons("nothing")
+    nsubst("0 : 1:1 / 2:2 / *:.")
+  else
+    if dgn.persist.grunt_orc_gardens_boss then
+       mons("orc warlord")
+    end
+    mons("orc knight / orc sorcerer w:5 / orc high priest w:5")
+    if not dgn.persist.grunt_orc_gardens_boss then
+      mons("nothing")
+    end
+    mons("orc warrior / orc sorcerer w:1 / orc high priest w:1 /"
+         .. "ogre w:1 / troll w:1 / warg w:1")
+    nsubst("0 : 1:1 / *:2")
+  end
+}}
+MONS: nothing w:20 / fungus
+SUBST: . = ..4
+NSUBST: 3 = 5:3 / 1:I / 4:P / *:.
+SUBST: P = .4
+: if is_validating() then
+KFEAT: A = any shop
+: else
+: kfeat("A = " .. dgn.persist.grunt_orc_gardens_store)
+: end
+MAP
+   .....
+ ...PPP...
+ .PPP3PPP.
+..P33333P..
+.PP33033PP.
+.P330A033P.
+.PP33033PP.
+..P33333P..
+ .PPP3PPP.
+ ...PPP...
+   .....
+ENDMAP
+
+##################################################
+NAME:   grunt_orc_community_town_hall
+TAGS:   transparent no_monster_gen no_item_gen
+PLACE:  Orc:$
+KMONS:  O = Saint Roka band / orc warlord band, orc warlord band
+MONS:   orc knight / orc warrior w:30, orc sorcerer / orc wizard w:30
+MONS:   orc high priest / orc priest w:30
+MONS:   orc warrior / orc w:30, orc / nothing
+KFEAT:  _ = altar_beogh
+KFEAT:  A = antique armour shop
+KFEAT:  B = antique weapon shop
+NSUBST: 0 = 2:1 / 3:2 / *:3
+{{
+  local small_house_count = 4 + crawl.random2(3)
+  hook("post_place", function()
+    dgn.place_maps{tag="grunt_orc_community_big_house", count=2}
+    dgn.place_maps{tag="grunt_orc_community_house", count=small_house_count}
+  end)
+}}
+MAP
+   .........
+  ...ccccc...
+ ..ccc._.ccc..
+ .ccA0.O.0Bcc.
+..cccI0.0Iccc..
+.ccccc...ccccc.
+.c..4c.4.c4..c.
+.c.0.+...+.0.c.
+.c4..c.4.c..4c.
+.ccccc.I.ccccc.
+.c4..c.4.c..4c.
+.c.0.+...+.0.c.
+.c..4c...c4..c.
+.ccccc.4.ccccc.
+.ccccI...Icccc.
+..ccc.4.4.ccc..
+ ...cc+++cc...
+   .........
+     .I.I.
+      .@.
+ENDMAP
+
+NAME:    grunt_orc_community_big_house_1
+TAGS:    grunt_orc_community_big_house allow_dup transparent no_monster_gen
+TAGS:    no_item_gen
+KMONS:   A = orc knight / orc sorcerer / orc high priest / \
+             orc warrior / orc wizard / orc priest
+MONS:    orc warrior / orc wizard / orc priest
+MONS:    orc warrior / orc w:30
+KFEAT:   A = any shop
+KFEAT:   _ = altar_beogh
+SHUFFLE: def
+SUBST:   d = +, ef = c
+MAP
+  .......
+ ..ccccc..
+..cc.A.cc..
+.cc.....cc.
+.c.2._.2.c.
+.c1.2I2.1c.
+.c.2...2.c.
+.cc.....cc.
+..cc...cc.
+ ..cdefc..
+  ...@...
+ENDMAP
+
+NAME:    grunt_orc_community_big_house_2
+TAGS:    grunt_orc_community_big_house allow_dup transparent no_monster_gen
+TAGS:    no_item_gen
+KMONS:   A = orc knight / orc sorcerer / orc high priest / \
+             orc warrior / orc wizard / orc priest
+MONS:    orc warrior / orc wizard / orc priest
+MONS:    orc warrior / orc w:30
+KFEAT:   A = any shop
+KFEAT:   _ = altar_beogh
+SHUFFLE: def, ghi
+SUBST:   dg = +, efhi = c
+MAP
+...........
+.ccccccccc.
+.cc2._..cc.
+.c.....1.c.
+.c..2...2c.
+.cghic...c.
+.c.2.c.1.c.
+.c2I2cI.Ic.
+.c...c.A.c.
+.cdefccccc.
+...@.......
+ENDMAP
+
+NAME:    grunt_orc_community_house_1
+TAGS:    grunt_orc_community_house allow_dup transparent no_monster_gen
+TAGS:    no_item_gen
+MONS:    orc warrior / orc priest / orc wizard
+MONS:    orc / nothing
+SHUFFLE: def, I_ / I- / -_ / _- / -I
+SUBST:   d = +, ef = c
+KFEAT:   - = floor
+KFEAT:   _ = altar_beogh
+MAP
+.......
+.ccccc.
+.c1_1c.
+.c2I2c.
+.c.2.c.
+.cdefc.
+...@...
+ENDMAP
+
+NAME:    grunt_orc_community_house_2
+TAGS:    grunt_orc_community_house allow_dup transparent no_monster_gen
+TAGS:    no_item_gen
+MONS:    orc warrior / orc priest / orc wizard
+MONS:    orc / nothing
+SHUFFLE: de, I_ / I- / -_ / _- / -I
+SUBST:   d = +, e = c
+KFEAT:   - = floor
+KFEAT:   _ = altar_beogh
+MAP
+......
+.cccc.
+.c_Ic.
+.c11c.
+.c22c.
+.c.2c.
+.cdec.
+..@....
+ENDMAP
+
+NAME:    grunt_orc_community_house_3
+TAGS:    grunt_orc_community_house allow_dup transparent no_monster_gen
+TAGS:    no_item_gen
+MONS:    orc warrior / orc priest / orc wizard
+MONS:    orc / nothing
+SHUFFLE: def, I_ / I- / -_ / _- / -I
+SUBST:   d = +, ef = c
+KFEAT:   - = floor
+KFEAT:   _ = altar_beogh
+MAP
+.........
+..ccccc..
+.cc.2.cc.
+.c.._..c.
+.c1.I.1c.
+.c.2.2.c.
+.cc...cc.
+..cdefc..
+....@....
+ENDMAP
+
+##################################################
+# The orcs roasted some dungeon creatures, and they're sleeping off the meal.
+NAME:   grunt_orc_tribal_feast
+TAGS:   patrolling no_item_gen no_monster_gen
+PLACE:  Orc:$
+MONS:   orc knight, orc high priest, orc sorcerer
+MONS:   orc warrior, orc priest, orc wizard, orc
+MARKER: O = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
+                              delay = 10, size = 1, excl_rad = 0 }
+: dgn.delayed_decay(_G, 'd', 'yak skeleton')
+: dgn.delayed_decay(_G, 'e', 'rat skeleton')
+KFEAT:  A = any shop
+MAP
+      ccccccc
+     cce.6.5ccc
+   xxc4.1.1..Acc
+   x...e.2....2cc
+  xx.4.d...e...Ac
+ xx.e.e3.O.3.1.Ac
+ x7..4.e..e...3cc
+xx.e.c.d.2.e.Acc
+x..7xc4e.e.6cccc
+x...xcc.5cccc
+x.7..xcccc
+xx....7xxxxx
+ xx.7....6.6.
+  xx....5.1.5
+   xxx.7.....
+     xx.4.@.4
+ENDMAP
+
+##################################################
+# A lot of the opposition here comes from the band of orcs following the
+# leader; if it seems kind of sparse at first glance, think again.
+NAME:   grunt_orc_cross
+TAGS:   patrolling no_item_gen no_monster_gen
+PLACE:  Orc:$
+MONS:   orc knight, orc high priest, orc sorcerer
+MONS:   orc warrior, orc wizard, orc priest
+SHUFFLE: ABCD, EFGH
+KMONS:  A = Saint Roka band / orc warlord band, orc warlord band
+KMONS:  B = Nergalle / orc sorcerer, orc sorcerer
+KMONS:  C = Urug / orc knight, orc knight
+KMONS:  D = Blork the orc / orc wizard, orc wizard
+KFEAT:  E = general shop
+KFEAT:  F = antique armour shop
+KFEAT:  G = antique weapon shop
+KFEAT:  H = book shop / jewellery shop
+KFEAT:  _ = altar_beogh
+MAP
+cccc  c..@..c  cccc
+cE6ccccI.4.Icccc5Fc
+c5..ccc.....ccc..6c
+cc...cc.....cc...cc
+ cc...c..2..c...cc
+  cc.4.......4.cc
+ccccc.........ccccc
+..I....A...B....I..
+...................
+@4..1...._....1..4@
+...................
+..I....C...D....I..
+ccccc.........ccccc
+  cc.4.......4.cc
+ cc...c..3..c...cc
+cc...cc.....cc...cc
+c6..cccI...Iccc..5c
+cG5cccc..4..cccc6Hc
+cccc  c..@..c  cccc
 ENDMAP

@@ -872,6 +872,8 @@ static void _handle_wizard_command(void)
         mpr("Enter Wizard Command (? - help): ", MSGCH_PROMPT);
         cursor_control con(true);
         wiz_command = getchm();
+        if (wiz_command == '*')
+            wiz_command = CONTROL(toupper(getchm()));
     }
 
     if (crawl_state.cmd_repeat_start)
@@ -2980,11 +2982,13 @@ static void _update_mold()
     env.level_state &= ~LSTATE_GLOW_MOLD; // we'll restore it if any
 
     for (rectangle_iterator ri(0); ri; ++ri)
+    {
         if (glowing_mold(*ri))
         {
             _update_mold_state(*ri);
             env.level_state |= LSTATE_GLOW_MOLD;
         }
+    }
     for (monster_iterator mon_it; mon_it; ++mon_it)
     {
         if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
@@ -4334,9 +4338,9 @@ static void _move_player(coord_def move)
     {
         if (you.made_nervous_by(targ))
         {
-                moving = false;
-                you.turn_is_over = false;
-                return;
+            moving = false;
+            you.turn_is_over = false;
+            return;
         }
     }
 

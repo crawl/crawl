@@ -1274,7 +1274,7 @@ void search_around()
         // Own square is not excluded; may be flying.
         // XXX: Currently, flying over a trap will always detect it.
 
-        int effective = (dist <= 1) ? skill : farskill - 256 * dist;
+        int effective = (dist <= 1) ? skill : farskill / (dist * 2 - 1);
 
         trap_def* ptrap = find_trap(*ri);
         if (!ptrap)
