@@ -18,24 +18,17 @@ tutorial1 go_on
 %%%%
 tutorial1 diagonal
 
+:nowrap
 Для передвижения по диагонали используйте <w>[number pad]</w> (если не
 работает, включите/выключите NumLock) или  <w>[vi keys]</w>.
 
-<w></w>  Numpad:       <w>7 8 9</w>           vi-keys:
-<w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w></w>  Numpad:       <w>7 8 9</w>           vi-keys: <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w></w>                 \|/                      \|/
+<w></w>                <w>4</w>-<w>.</w>-<w>6</w>                    <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+<w></w>                 /|\                      /|\
+<w></w>                <w>1 2 3</w>                    <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
-<w></w>                 \|/                         \|/
-
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
-<w></w>                 /|\                         /|\
-
-<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-
-<localtiles>Также вы можете передвигаться по <w>[Mouse
-clicks]</w>.</localtiles>
+<localtiles>Также вы можете передвигаться по <w>[Mouse clicks]</w>.</localtiles>
 %%%%
 tutorial1 shiftmove
 
@@ -117,57 +110,37 @@ tutorial1 upstairs
 %%%%
 tutorial1 exit
 
+:nowrap
 <yellow>Команды передвижения</yellow>
-
-   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT]
-$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
+   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                         \|/
-
-                 <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
+                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
                   /|\                         /|\
-
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-  <w>Shift + направление</w> перемещает вас на несколько клеток в указанном
-направлении.
-
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+  <w>Shift + направление</w> перемещает вас на несколько клеток в указанном направлении.
   <localtiles>Также вы можете передвигаться по <w>щелчку</w> где либо в области
-видимости на<w>миникарте</w>.</localtiles>
+видимости на<w>миникарте</w>.
+</localtiles>
 
 <yellow>Лестницы</yellow>
-
   <w>$cmd[CMD_GO_UPSTAIRS]</w>  вернуться на предыдущий уровень
-
   <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  перейти на следующий уровень
+  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  перейти к ближайшей лестнице (вверх/вниз)
 
-  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  перейти к ближайшей лестнице
-(вверх/вниз)
 
 <yellow>Двери</yellow>
-
   могут быть открыты при передвижении в их направлении
-
   <w>$cmd[CMD_CLOSE_DOOR]</w>  закрыть открытую дверь
 
-  <w>$cmd[CMD_REST]</w>  найти скрытую дверь
 
 <yellow>Путешествие</yellow>
-
   <localtiles>Щелчок мышью по <w>миникарте</w>
-
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> открыть карту уровня,
-перемещение по<w>Enter</w>
-
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  открыть карту уровня,
-перемещение по <w>Enter</w>
-
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> открыть карту уровня, перемещение по<w>Enter</w>
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  открыть карту уровня, перемещение по <w>Enter</w>
   </console><w>$cmd[CMD_EXPLORE]</w>  автоисследование
 
-                                 <cyan>Нажмите <w>любую клавишу</w> для очистки
-экрана...</cyan>
+
+                                 <cyan>Нажмите <w>любую клавишу</w> для очистки экрана...</cyan>
 %%%%
 tutorial2 start
 
@@ -280,38 +253,35 @@ tutorial2 tutorial_end
 %%%%
 tutorial2 exit
 
+:nowrap
 <yellow>Оружие<console> <cyan>)</cyan></console></yellow>
-
   <w>$cmd[CMD_PICKUP]</w>  поднять предмет
-  <w>$cmd[CMD_WIELD_WEAPON]</w> вооружиться оружием <localtiles>  Вы также
-можете сделать это <w>clicking</w> по оружию в вашем инвентаре.</localtiles>
+  <w>$cmd[CMD_WIELD_WEAPON]</w> вооружиться оружием
+<localtiles>  Вы также можете сделать это <w>clicking</w> по оружию в вашем инвентаре.</localtiles>
+
 
 <yellow>Монстры</yellow>
-
 <localtiles>  <w>mouseover</w>  изучить монстра
-  <w>rightclick</w>  прочесть детальное описание</localtiles> <console>
-<w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное
-описание</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное
-описание</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  выстрелить в нацеленного
-монстра
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> прицелиться в другого
-монстра <localtiles>  Вы также можете выстрелить по предмету <w>clicking</w> на
-нем и подтвердив цель с помощью <w>Enter</w>.</localtiles>
+  <w>rightclick</w>  прочесть детальное описание</localtiles>
+<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное описание</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное описание</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  выстрелить в нацеленного монстра
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> прицелиться в другого монстра
+<localtiles>  Вы также можете выстрелить по предмету <w>clicking</w> на нем и подтвердив цель с помощью <w>Enter</w>.</localtiles>
+
 
 <yellow>Отдых</yellow>
-
   <w>$cmd[CMD_MOVE_NOWHERE]</w>  ждать и отдохнуть 1 ход
   <w>$cmd[CMD_REST]</w>  ждать и отдыхать до 100 ходов
 
-<yellow>Трупы<console> <brown>%</brown></console></yellow>
 
+<yellow>Трупы<console> <brown>%</brown></console></yellow>
   <w>$cmd[CMD_BUTCHER]</w>  рубить трупы на куски мяса
   <w>$cmd[CMD_EAT]</w>  поедать куски мяса
-                                 <cyan>Нажмите <w>any key</w> ,чтобы очистить
-этот экран...</cyan>
+
+
+                                 <cyan>Нажмите <w>any key</w> ,чтобы очистить этот экран...</cyan>
 %%%%
 tutorial3 start
 

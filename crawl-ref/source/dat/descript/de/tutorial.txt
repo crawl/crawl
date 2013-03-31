@@ -18,21 +18,13 @@ blaue Feld erreichst.
 %%%%
 tutorial1 diagonal
 
-Du kannst dich diagonal bewegen indem du den <w>[Nummern-Block]</w> (versuche
-Numlock an/aus) oder die <w>[Vorgabe-Tasten]</w>  benutzt.
-
-<w></w>Num-Block:      <w>7 8 9</w>     Vorg.-Tasten: <w>$cmd[CMD_MOVE_UP_LEFT]
-$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
+:nowrap
+Du kannst dich diagonal bewegen indem du den <w>[Nummern-Block]</w> (versuche Numlock an/aus) oder die <w>[Vorgabe-Tasten]</w> benutzt.
+<w></w>Num-Block:      <w>7 8 9</w>     Vorg.-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
 <w></w>                 \|/                         \|/
-
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
+<w></w>                <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
 <w></w>                 /|\                         /|\
-
-<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<w></w>                <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>Du kannst dich auch mit <w>[Maus klicks]</w>bewegen.</localtiles>
 %%%%
@@ -121,57 +113,37 @@ auf deinen Charakter betreten</localtiles>.
 %%%%
 tutorial1 exit
 
+:nowrap
 <yellow>Bewegungsbefehle</yellow>
-
-Num-Block:      <w>7 8 9</w>     Vorg.-Tasten:    <w>$cmd[CMD_MOVE_UP_LEFT]
-$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
+Num-Block:       <w>7 8 9</w>     Vorg.-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                         \|/
-
-                 <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
+                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
                   /|\                         /|\
-
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
   <w>Shift + Richtug</w> bewegt dich mehrere Felder in diese Richtung.
-
-  <localtiles>Mit einem <w>Mausklick</w> irgendwo in Sichtweite oder auf der
-<w>Mini-Karte</w> kannst du dich auch fortbewegen.
+  <localtiles>Mit einem <w>Mausklick</w> irgendwo in Sichtweite oder auf der <w>Mini-Karte</w> kannst du dich auch fortbewegen.
+</localtiles>
 
 <yellow>Treppen</yellow>
-
   <w>$cmd[CMD_GO_UPSTAIRS]</w>  gehe zurück zur vorherigen Ebene
-
   <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  betrete die nächste Ebene
+  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  gehe zur nächsten Treppe die hoch oder runter führt
 
-  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  gehe zur nächsten Treppe die hoch
-oder runter führt
 
 <yellow>Türen</yellow>
-
   können geöffnet werden indem man in sie hinein läuft
-
   <w>$cmd[CMD_CLOSE_DOOR]</w>  schließe eine offene Tür
 
-  <w>$cmd[CMD_REST]</w>  suche nach Geheimtüren
 
 <yellow>Reisen</yellow>
-
   <localtiles>Maus-Klick auf die  <w>Mini-Karte</w>
-
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  betritt die
-Karten-Ebene, reise mit <w>Eingabe</w>
-
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  betritt die Karten-Ebene,
-reise mit <w>Eingabe</w>
-
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  betritt die Karten-Ebene, reise mit <w>Eingabe</w>
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  betritt die Karten-Ebene, reise mit <w>Eingabe</w>
   </console><w>$cmd[CMD_EXPLORE]</w>  Auto-Erkunden
 
-                                 <cyan>Drücke <w>irgendeine Taste</w>um diese
-Meldung zu löschen...</cyan>
+
+                            <cyan>Drücke <w>irgendeine Taste</w> um diese Meldung zu löschen...</cyan>
 %%%%
 tutorial2 start
 
@@ -296,40 +268,36 @@ zu verlassen gehe einfach diese Treppe hinauf.
 %%%%
 tutorial2 exit
 
+:nowrap
 <yellow>Waffen<console> <cyan>)</cyan></console></yellow>
 
   <w>$cmd[CMD_PICKUP]</w>  Gegenstand aufheben
-  <w>$cmd[CMD_WIELD_WEAPON]</w> eine Waffe ausrüsten <localtiles>  Du kannst
-dies auch mit einem <w>Klick</w> auf die Waffe in deinem Inventar-Feld
+  <w>$cmd[CMD_WIELD_WEAPON]</w> eine Waffe ausrüsten
+<localtiles>  Du kannst dies auch mit einem <w>Klick</w> auf die Waffe in deinem Inventar-Feld
 ausführen.</localtiles>
 
 <yellow>Monster</yellow>
-
 <localtiles>  <w>'Maus-Drüber'</w>  ein Monster untersuchen
   <w>Rechts-Klick</w>  lies eine detailliertere Beschreibung</localtiles>
-<console> <w>$cmd[CMD_LOOK_AROUND]</w>  ein Monster untersuchen
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> lies eine
-detailliertere Beschreibung</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>
-ein Monster untersuchen
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> lies eine
-detailliertere Beschreibung</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> feuere Munition auf ein
-vorabgewähltes Monster ab
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> visiere ein anderes
-Monster an <localtiles>  Du kannst einen Gegenstand auch mit einem <w>klick</w>
+<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  ein Monster untersuchen
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> lies eine detailliertere Beschreibung</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w> ein Monster untersuchen
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> lies eine detailliertere Beschreibung</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> feuere Munition auf ein vorabgewähltes Monster ab
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> visiere ein anderes Monster an <localtiles>  Du kannst einen Gegenstand auch mit einem <w>klick</w>
 darauf abfeuern und das Ziel mit <w>Eingabe</w> bestätigen.</localtiles>
 
-<yellow>Rasten</yellow>
 
+<yellow>Rasten</yellow>
   <w>$cmd[CMD_MOVE_NOWHERE]</w>  warte und raste eine einzige Runde
   <w>$cmd[CMD_REST]</w>  warte und raste bis zu 100 Runden
 
-<yellow>Leichen<console> <brown>%</brown></console></yellow>
 
+<yellow>Leichen<console> <brown>%</brown></console></yellow>
   <w>$cmd[CMD_BUTCHER]</w>  zerhacke eine Leiche zu einem Fleischklumpen
   <w>$cmd[CMD_EAT]</w>  iss einen Klumpen Fleisch
-                                 <cyan>Drücke <w>irgendeine Taste</w> um diese
-Meldung zu löschen...</cyan>
+
+
+                            <cyan>Drücke <w>irgendeine Taste</w> um diese Meldung zu löschen...</cyan>
 %%%%
 tutorial3 start
 
@@ -492,8 +460,8 @@ Gut gemacht! Um den Übungskurs zu beenden, gehe einfach diese Stufen hinunter,
 %%%%
 tutorial3 exit
 
+:nowrap
 <yellow>Gegenstands Befehle</yellow>
-
   <w>$cmd[CMD_PICKUP]</w>  einen Gegenstand aufheben
   <w>$cmd[CMD_WEAR_ARMOUR]</w>  einen Rüstungsteil anlegen
   <w>$cmd[CMD_READ]</w>  eine Spruchrolle lesen
@@ -504,27 +472,23 @@ tutorial3 exit
   <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  Schmuck ablegen
   <w>$cmd[CMD_DROP]</w>  einen Gegenstand fallen lassen
 
-  <w></w>Anwendungbefehle sind auch über das Gegenstands-Menü
-verfügbar(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>),so wie auch die Beschreibungen
-der Gegenstände.
-
+  <w></w>Anwendungbefehle sind auch über das Gegenstands-Menü verfügbar(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>),so wie auch die Beschreibungen der Gegenstände.
   <localtiles><w></w>Und natürlich funktionierten <white>Mausklicks</white>
-auch.</localtiles>
+auch.
+</localtiles>
 
 <yellow>Anderes</yellow>
-
   <w>$cmd[CMD_DISPLAY_COMMANDS]?</w>  betrete den Hilfe Bereich
   <w>$cmd[CMD_RESISTS_SCREEN]</w>  Charakter Übersicht anzeigen
   <w>$cmd[CMD_USE_ABILITY]</w>  eine Fähigkeit benutzen
   <w>$cmd[CMD_EXPLORE]</w>  Auto-Erforschen
-  <w>$cmd[CMD_SEARCH_STASHES]</w> suche nach Gegenständen/Besonderheiten die du
-vorher gesehen hattest
+  <w>$cmd[CMD_SEARCH_STASHES]</w> suche nach Gegenständen/Besonderheiten die du vorher gesehen hattest
 
   <localtiles><w></w>Einige dieser Befehle können auch ausgeführt werden indem
-man sie im <w>Befehls-Feld</w> anklickt.</localtiles>
+man sie im <w>Befehls-Feld</w> anklickt.
+</localtiles>
 
-                                 <cyan>Drücke <w>irgendeine Taste</w> um diesen
-Anzeige zu löschen...</cyan>
+                           <cyan>Drücke <w>irgendeine Taste</w> um diesen Anzeige zu löschen...</cyan>
 %%%%
 tutorial5 start
 
@@ -608,31 +572,23 @@ Um den Übungskurs zu verlassen gehe einfach diese Stufen hinunter.
 %%%%
 tutorial5 exit
 
+:nowrap
 <yellow>Religions Befehle</yellow>
-
-  $cmd[CMD_PRAY]  bete an einem Altar um dich einem Gott anzuschließen, oder
-opfere eine Leiche
-
+  $cmd[CMD_PRAY]  bete an einem Altar um dich einem Gott anzuschließen, oder opfere eine Leiche
   $cmd[CMD_USE_ABILITY]  benutze eine göttliche Fähigkeit
-
   $cmd[CMD_DISPLAY_RELIGION]  überprüfe deinen Glaubens-Stand
-
-<localtiles>Ein <w>Rechts-Klick</w> auf deine Spielfigur zeigt öffnet ebenfall
-den Religions-Bildschirm.</localtiles>
+<localtiles>Ein <w>Rechts-Klick</w> auf deine Spielfigur zeigt öffnet ebenfall den Religions-Bildschirm.
+</localtiles>
 
 <yellow>Rasten</yellow>
-
   $cmd[CMD_MOVE_NOWHERE]  warte und raste eine einzige Runde
-
   $cmd[CMD_REST]  warte und raste bis zu 100 Runden
 
+
 <yellow>Andere Befehle</yellow>
-
   $cmd[CMD_DISPLAY_OVERMAP]  zeige eine Übersicht des Verlieses
+  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  durchsuche die Datenbank nach Beschreibungen
 
-  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  durchsuche die Datenbank nach
-Beschreibungen
 
-                                 <cyan>Drücke <w>irgendeine Taste</w> um diesen
-Anzeige zu löschen...</cyan>
+                           <cyan>Drücke <w>irgendeine Taste</w> um diesen Anzeige zu löschen...</cyan>
 %%%%
