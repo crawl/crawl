@@ -734,3 +734,8 @@ eldritch_corner_NW ELDRITCH_OVERLAY_NW
 eldritch_corner_NE ELDRITCH_OVERLAY_NE
 eldritch_corner_SE ELDRITCH_OVERLAY_SE
 eldritch_corner_SW ELDRITCH_OVERLAY_SW
+%sdir mon/tentacles/starspawn_corners
+starspawn_corner_NW STARSPAWN_OVERLAY_NW
+starspawn_corner_NE STARSPAWN_OVERLAY_NE
+starspawn_corner_SE STARSPAWN_OVERLAY_SE
+starspawn_corner_SW STARSPAWN_OVERLAY_SW

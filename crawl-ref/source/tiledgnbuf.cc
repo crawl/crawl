@@ -210,18 +210,26 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_NW, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_NW)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NW, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_NW)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NW, x, y);
             if (bg & TILE_FLAG_KRAKEN_NE)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_NE, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_NE)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NE, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_NE)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SE)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SE, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_SE)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SE, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_SE)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SW)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_SW)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SW, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_SW)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SW, x, y);
         }
 
         if (cell.halo == HALO_MONSTER)

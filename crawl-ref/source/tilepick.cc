@@ -2158,9 +2158,16 @@ enum main_dir
     WEST
 };
 
+enum tentacle_type
+{
+    TYPE_KRAKEN = 0,
+    TYPE_ELDRITCH = 1,
+    TYPE_STARSPAWN = 2
+};
+
 static void _add_tentacle_overlay(const coord_def pos,
                                   const main_dir dir,
-                                  bool is_kraken = true)
+                                  tentacle_type type)
 {
     coord_def next = pos;
     switch (dir)
@@ -2183,28 +2190,36 @@ static void _add_tentacle_overlay(const coord_def pos,
     switch (dir)
     {
         case NORTH: // SW
-            if (is_kraken)
+            if (type == TYPE_KRAKEN)
                 flag = TILE_FLAG_KRAKEN_SW;
-            else
+            else if (type == TYPE_ELDRITCH)
                 flag = TILE_FLAG_ELDRITCH_SW;
+            else
+                flag = TILE_FLAG_STARSPAWN_SW;
             break;
         case EAST: // NW
-            if (is_kraken)
+            if (type == TYPE_KRAKEN)
                 flag = TILE_FLAG_KRAKEN_NW;
-            else
+            else if (type == TYPE_ELDRITCH)
                 flag = TILE_FLAG_ELDRITCH_NW;
+            else
+                flag = TILE_FLAG_STARSPAWN_NW;
             break;
         case SOUTH: // NE
-            if (is_kraken)
+            if (type == TYPE_KRAKEN)
                 flag = TILE_FLAG_KRAKEN_NE;
-            else
+            else if (type == TYPE_ELDRITCH)
                 flag = TILE_FLAG_ELDRITCH_NE;
+            else
+                flag = TILE_FLAG_STARSPAWN_NE;
             break;
         case WEST: // SE
-            if (is_kraken)
+            if (type == TYPE_KRAKEN)
                 flag = TILE_FLAG_KRAKEN_SE;
-            else
+            else if (type == TYPE_ELDRITCH)
                 flag = TILE_FLAG_ELDRITCH_SE;
+            else
+                flag = TILE_FLAG_STARSPAWN_SE;
             break;
         default:
             die("invalid direction");
@@ -2214,7 +2229,7 @@ static void _add_tentacle_overlay(const coord_def pos,
 
 static void _handle_tentacle_overlay(const coord_def pos,
                                      const tileidx_t tile,
-                                     bool is_kraken = true)
+                                     tentacle_type type)
 {
     switch (tile)
     {
@@ -2222,51 +2237,51 @@ static void _handle_tentacle_overlay(const coord_def pos,
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW:
-        _add_tentacle_overlay(pos, NORTH, is_kraken);
+        _add_tentacle_overlay(pos, NORTH, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE:
-        _add_tentacle_overlay(pos, EAST, is_kraken);
+        _add_tentacle_overlay(pos, EAST, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE:
-        _add_tentacle_overlay(pos, SOUTH, is_kraken);
+        _add_tentacle_overlay(pos, SOUTH, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW:
-        _add_tentacle_overlay(pos, WEST, is_kraken);
+        _add_tentacle_overlay(pos, WEST, type);
         break;
     // diagonals
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE:
-        _add_tentacle_overlay(pos, NORTH, is_kraken);
-        _add_tentacle_overlay(pos, SOUTH, is_kraken);
+        _add_tentacle_overlay(pos, NORTH, type);
+        _add_tentacle_overlay(pos, SOUTH, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW:
-        _add_tentacle_overlay(pos, EAST, is_kraken);
-        _add_tentacle_overlay(pos, WEST, is_kraken);
+        _add_tentacle_overlay(pos, EAST, type);
+        _add_tentacle_overlay(pos, WEST, type);
         break;
     // other
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW:
-        _add_tentacle_overlay(pos, NORTH, is_kraken);
-        _add_tentacle_overlay(pos, EAST, is_kraken);
+        _add_tentacle_overlay(pos, NORTH, type);
+        _add_tentacle_overlay(pos, EAST, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE:
-        _add_tentacle_overlay(pos, EAST, is_kraken);
-        _add_tentacle_overlay(pos, SOUTH, is_kraken);
+        _add_tentacle_overlay(pos, EAST, type);
+        _add_tentacle_overlay(pos, SOUTH, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW:
-        _add_tentacle_overlay(pos, SOUTH, is_kraken);
-        _add_tentacle_overlay(pos, WEST, is_kraken);
+        _add_tentacle_overlay(pos, SOUTH, type);
+        _add_tentacle_overlay(pos, WEST, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW:
-        _add_tentacle_overlay(pos, NORTH, is_kraken);
-        _add_tentacle_overlay(pos, WEST, is_kraken);
+        _add_tentacle_overlay(pos, NORTH, type);
+        _add_tentacle_overlay(pos, WEST, type);
         break;
     }
 }
@@ -2275,6 +2290,26 @@ static bool _mons_is_kraken_tentacle(const int mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
             || mtype == MONS_KRAKEN_TENTACLE_SEGMENT);
+}
+
+static tentacle_type _get_tentacle_type(const int mtype)
+{
+    switch (mtype)
+    {
+        case MONS_KRAKEN_TENTACLE:
+        case MONS_KRAKEN_TENTACLE_SEGMENT:
+            return TYPE_KRAKEN;
+        case MONS_ELDRITCH_TENTACLE:
+        case MONS_ELDRITCH_TENTACLE_SEGMENT:
+            return TYPE_ELDRITCH;
+        case MONS_STARSPAWN_TENTACLE:
+        case MONS_STARSPAWN_TENTACLE_SEGMENT:
+            return TYPE_STARSPAWN;
+
+        default:
+            ASSERT("Invalid tentacle type!");
+            return TYPE_KRAKEN; // Silence a warning
+    }
 }
 
 static tileidx_t _tileidx_tentacle(const monster_info& mon)
@@ -2477,7 +2512,7 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         || n_pos.x == t_pos.x && n_pos.y < t_pos.y
            && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
     {
-        _add_tentacle_overlay(t_pos, WEST, _mons_is_kraken_tentacle(mon.type));
+        _add_tentacle_overlay(t_pos, WEST, _get_tentacle_type(mon.type));
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
     }
     if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
@@ -2638,14 +2673,20 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
         {
             tileidx_t tile = _tileidx_tentacle(mon);
-            const bool is_kraken = _mons_is_kraken_tentacle(mon.type);
-            _handle_tentacle_overlay(mon.pos, tile, is_kraken);
+            _handle_tentacle_overlay(mon.pos, tile, _get_tentacle_type(mon.type));
 
-            if (!is_kraken && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
+            if (!_mons_is_kraken_tentacle(mon.type) && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
                 && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
             {
                 tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
+
+                if (mon.type == MONS_STARSPAWN_TENTACLE
+                    || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT)
+                {
+                    tile += TILEP_MONS_STARSPAWN_TENTACLE_N;
+                    tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;
+                }
             }
 
             return tile;
