@@ -301,6 +301,14 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
+    if (unknown_proprt(ARTP_BLINK)
+        && !items_give_ability(item.link, ARTP_BLINK))
+    {
+        if (msg)
+            mpr("You feel jittery for a moment.");
+        artefact_wpn_learn_prop(item, ARTP_BLINK);
+    }
+
     if (unknown_proprt(ARTP_MUTAGENIC))
     {
         if (msg)
