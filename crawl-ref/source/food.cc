@@ -2563,8 +2563,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     if (you.form == TRAN_JELLY)
     {
         // a rather indiscriminating diet
-        return what_isit != OBJ_MISSILES || kindof_thing != MI_STONE &&
-            kindof_thing != MI_LARGE_ROCK;
+        return what_isit != OBJ_MISSILES
+               || kindof_thing != MI_STONE && kindof_thing != MI_LARGE_ROCK;
     }
 
     if (you.species == SP_VAMPIRE)
