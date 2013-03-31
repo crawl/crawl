@@ -1890,7 +1890,8 @@ bool has_launcher(const item_def &ammo)
     return (ammo.sub_type != MI_DART
             && ammo.sub_type != MI_LARGE_ROCK
             && ammo.sub_type != MI_JAVELIN
-            && ammo.sub_type != MI_THROWING_NET);
+            && ammo.sub_type != MI_THROWING_NET
+            && ammo.sub_type != MI_PIE);
 }
 
 // Returns true if item can be reasonably thrown without a launcher.
