@@ -146,9 +146,20 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
-NAME:   layout_wheels
-DEPTH:  Zot:1-4,Snake
-WEIGHT: 20
+{{
+  -- Generates the main onion function
+  local function onion_skin(num_rings)
+    local gxm,gym = dgn.max_bounds()
+
+  end
+}}
+
+# Takes one of the primitive shapes and creates nested corridors in that
+# shape, somewhat like an onion. Carves randomly spaced gaps in the walls
+# to connect everything up.
+NAME:   layout_onion
+DEPTH:  Zot,Snake
+WEIGHT: 200000
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -157,65 +168,84 @@ TAGS: overwritable layout allow_dup unrand
   local gxm,gym = dgn.max_bounds()
 
   -- TODO:
-  --  * Properly implement the gaps (including regular / chaotic position and sizing)
+  --  * Implement chaotic gaps sizing
   --  * Chop the corridors up instead of drawing gaps. Link everything together using zoning once it's implemented,
   --    for now just use some Worley paths.
   --  * Maybe ruin some walls
-  --  * Maybe 2 rings isn't enough and should be rarer/non-existing (and can we get away with more than 6?)
   --  * Tune params a bit for Snake
-  --  * More shapes:
 
-  local fcircle
-  if crawl.coinflip() then
-    fcircle = procedural.distance { radius = math.min(gxm,gym)/2 - 2, origin = { x = gxm/2, y = gym/2 } }
-  else
-    fcircle = procedural.box { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 }
-  end
-  local frad = procedural.radial { origin = { x = gxm/2, y = gym/2 } }
+  local weights = {
+    -- TODO: More shapes are possible; triangle, oval, rectangle, elongated circle,
+    -- actually a generic polygon covers the triangle case, maybe irregular polygons,
+    -- stars,
+    { weight = 10, func = function() return primitive.distance end },
+    { weight = 10, func = function() return primitive.box end },
+    { weight = 10, func = function() return primitive.diamond() end },
+    { weight = 10, func = function() return primitive.octagon(0.25) end },
+    { weight = 10, func = function() return primitive.hexagon(0.25) end },
+    -- ex did produce some interesting stuff but it's not ideal
+    -- { weight = 10, func = function() return primitive.ex() end },
+  }
+
+  local chosen = util.random_weighted_from("weight",weights)
+  local fcircle = chosen.func()
+  local frad = primitive.radial
+
   local wall_break = util.random_range_real(.3,.7)
-  local rings = crawl.random_range(2,6)
-  -- We need at least one hole in each partitioning wall
-  local ring_holes = {}
-  local hole_size = util.random_range_real(0.1,0.6) -- 0.4)
-  for n=1,rings-1,1 do
-    local num_holes = crawl.random2(n+1) + 1 + crawl.random2(n)
-    ring_holes[n] = { num = num_holes,
-                      offset = util.random_range_real(0,1),
-                      phase = util.random_range_real(0.1,0.9)/num_holes,
-                      size = hole_size/num_holes } -- (n/2+.5) }
+
+  -- Make the rings
+  local num_rings = crawl.random2avg(7,2)+2
+
+  -- Make holes in each partitioning wall
+  local rings = {}
+  local hole_size = util.random_range_real(0.1,0.6)
+
+  -- TODO: There are some other functions that could be used to carve holes; e.g. spirals, worley ...
+  local phasering = function(size)
+    local num = crawl.random_range(5*size,20*size)+1
+    return procedural.phase(frad,crawl.random_range(2,10),crawl.random_real())
   end
+
+  local randomring = function(size)
+    local p = 0
+  end
+
+  for n=1,num_rings-1,1 do
+    rings[n] = phasering(n/num_rings)
+  end
+
+  -- Do we create a central room?
   local fill_center = crawl.coinflip()
+
   local fphase = function(x,y)
     local r = fcircle(x,y)
     if r >= 1 then return 0 end
-    local rr = r * rings
+    local rr = r * num_rings
     local level = math.floor(rr)
     r = rr - level
     if fill_center and level == 0 then return 1 end
+
     -- Fill connecting walls?
     if level > 0 and r <= wall_break then
-      local p = frad(x,y)
-      local hole = ring_holes[level]
+      local hole = rings[level]
       if hole ~= nil then
-        p = p / hole.phase
-        local fp = math.floor(p)
-        if fp > 0 and fp <= (hole.num) and (p-fp) < hole.size then return 1 end
+        return hole(x,y)
       end
     end
+
     return r
   end
 
-  -- Quickly, add a bar
-  -- fphase = procedural.add(fphase,procedural.bar { horizontal = true, position = gym/2, width = 5 })
+  -- Position on map
+  fphase = procedural.translate(procedural.scale(fphase,math.min(gxm,gym)/2-2),gxm/2,gym/2)
 
   if you.in_branch("Snake") then
-
     -- Apply distortion
     -- TODO: This whole distortion function is pretty awesome and needs to be in a library
     local fdsx = procedural.simplex3d { scale = util.random_range_real(0.1,1), unit = false }
     local fdsy = procedural.simplex3d { scale = util.random_range_real(0.1,1), unit = false }
     -- Distort more at the edge of the map
-    -- TODO: Will work even better with a more generous easing function
+    -- TODO: Will work even better with a less linear easing function
     local fbox = procedural.box{}
     local fedge = function(x,y)
       return math.max(0,1-fbox(x,y))
@@ -224,7 +254,6 @@ TAGS: overwritable layout allow_dup unrand
     local fdy = procedural.mul(fdsy,fedge)
 
     fphase = procedural.distort { source = fphase, scale = crawl.random_range(5,15), offsetx = fdx, offsety = fdy }
-
   end
 
   procedural.render_map(_G, fphase, function(v) return (v > wall_break and '.' or 'x') end)
@@ -234,7 +263,23 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
-NAME:   layout_ring_interference
+# Takes an inverted version of the onion layout so what were walls
+# are now rooms - connects these up with a noise pattern.
+# Hopefully this should look like ancient abandoned catacombs.
+# TODO: Other ways of connecting up the rooms.
+NAME:   layout_catacombs
+DEPTH:  Crypt
+WEIGHT: 200000
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "halls"
+  if is_validating() then return; end
+}}
+
+# Layers two onions on top of each other to create an
+# interference pattern (with option xor)
+NAME:   layout_onion_interference
 DEPTH:  Zot:1-4,Snake
 WEIGHT: 20
 ORIENT: encompass
