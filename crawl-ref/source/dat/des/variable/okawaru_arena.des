@@ -95,7 +95,10 @@ TAGS:   no_item_gen no_monster_gen generate_awake no_rotate no_hmirror \
         unique_oka_arena_lexackson temple_overflow_okawaru
 KPROP:  cX-EfGKkL = no_tele_into
 SUBST:  c = t-
-KITEM:  Ll = acquire armour / acquire weapon
+# Prizes are formerly "acquire armour" / "acquire weapon".
+# Allies picking these up causes them to be killed and crash the game.
+# The "level:-3" is "superb_item quality" at time of writing.
+KITEM:  Ll = any armour level:-3 no_pickup / any weapon level:-3 no_pickup
 KFEAT:  GR = iron_grate
 KFEAT:  XTv = metal_wall
 KFEAT:  L = floor
