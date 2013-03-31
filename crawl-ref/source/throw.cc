@@ -1789,7 +1789,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (wepClass == OBJ_WEAPONS
             || (wepClass == OBJ_MISSILES
                 && (wepType == MI_STONE || wepType == MI_LARGE_ROCK
-                    || wepType == MI_DART || wepType == MI_JAVELIN)))
+                    || wepType == MI_DART || wepType == MI_JAVELIN
+                    || wepType == MI_PIE)))
         {
             // Elves with elven weapons.
             if (get_equip_race(item) == ISFLAG_ELVEN
@@ -1891,12 +1892,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_THROWING_NET:
-                // Nets use throwing skill.  They don't do any damage!
+            case MI_PIE:
+                // Nets and pies use throwing skill.  They don't do any damage!
                 baseDam = 0;
                 exDamBonus = 0;
                 ammoDamBonus = 0;
 
-                // ...but accuracy is important for this one.
+                // ...but accuracy is important for them.
                 baseHit = 1;
                 exHitBonus += skill_bump(SK_THROWING, 7) / 2;
                 // Adjust for strength and dex.
