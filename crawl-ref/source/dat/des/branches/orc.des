@@ -1061,6 +1061,8 @@ ENDMAP
 # might consider placing four good quality stores.
 ############################################################################
 
+default-depth:
+
 ##################################################
 NAME:    st_orc_town
 TAGS:    no_rotate no_item_gen
