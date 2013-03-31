@@ -296,6 +296,7 @@ skirt_onep_grey SKIRT_ONEP_GREY
 bloody BLOODY
 leather_short LEATHER_SHORT
 china_red2 CHINA_RED2
+robe_jester ROBE_JESTER
 #unrand
 robe_misfortune ROBE_MISFORTUNE
 robe_clouds ROBE_CLOUDS
@@ -614,6 +615,7 @@ quarterstaff QUARTERSTAFF1
 quarterstaff_two QUARTERSTAFF2
 quarterstaff_three QUARTERSTAFF3
 quarterstaff_four QUARTERSTAFF4
+quarterstaff_jester QUARTERSTAFF_JESTER
 sickle SICKLE
 glaive GLAIVE
 glaive2
@@ -959,6 +961,7 @@ crown_gold2
 crown_gold3
 cap_black1 CAP_BLACK
 clown1 CLOWN
+clown2 JESTER
 band_white HEADBAND
 band_red
 band_yellow

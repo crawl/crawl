@@ -1994,6 +1994,12 @@ Artificers
   combat. Those with wands also have some prior experience with scrolls of
   recharging.
 
+Jesters
+  Jesters are entertainers who serve Nemelex Xobeh, and who must use everything
+  in their repertoire to survive. They begin with a traditional weapon and
+  outfit for those of their trade, plus a book of Party Tricks and a card deck.
+  At the start, Xom also watches over them, for good or for ill.
+
 Wanderers
   Wanderers are people who have not learned a specific trade. Instead, they've
   travelled around becoming "jacks-of-all-trades, masters of none". They start

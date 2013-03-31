@@ -1010,7 +1010,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         {
             "Adventurer",
             coord_def(0, 7), 15,
-            {JOB_ARTIFICER, JOB_WANDERER, JOB_UNKNOWN, JOB_UNKNOWN,
+            {JOB_ARTIFICER, JOB_JESTER, JOB_WANDERER, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {

@@ -83,6 +83,11 @@ Ice Elementalist
 Ice Elementalists start with the book of Frost and the Freeze spell. The book's
 other spells are quite versatile.
 %%%%
+Jester
+
+Jesters worship Nemelex Xobeh and are always quick with a joke. Xom finds this
+hilarious.
+%%%%
 Monk
 
 Monks are ready to take on the dungeon wearing just a robe and using their

@@ -559,6 +559,8 @@ lshield_louise LSHIELD_LOUISE
 %sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
+cap_jester THELM_CAP_JESTER
+
 wizard_hat1 THELM_WIZARD_HAT
 wizard_hat2
 

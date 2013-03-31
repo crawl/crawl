@@ -559,6 +559,8 @@ static bool _item_matches(const item_def &item, fire_type types,
             return true;
         if ((types & FIRE_NET) && item.sub_type == MI_THROWING_NET)
             return true;
+        if ((types & FIRE_PIE) && item.sub_type == MI_PIE)
+            return true;
 
         if (types & FIRE_LAUNCHER)
         {
