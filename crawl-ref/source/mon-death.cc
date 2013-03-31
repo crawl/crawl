@@ -91,25 +91,24 @@ bool mons_is_kirke(monster* mons)
 }
 
 /**
- * Convert hogs to neutral humans.
+ * Revert porkalated hogs.
  *
- * Called upon Kirke's death. This does not track members of her band that
- * have been transferred across levels. Non-hogs are ignored. If a monster has
- * an ORIG_MONSTER_KEY prop, it will be returned to its previous state,
- * otherwise it will be converted to a neutral human.
-**/
+ * Called upon Kirke's death. Hogs either from Kirke's band or
+ * subsequently porkalated should be reverted to their original form.
+ * This takes place as a daction to preserve behaviour across levels;
+ * this function simply checks if any are visible and writes a message.
+ */
 void hogs_to_humans()
 {
-    // Simplification: if, in a rare event, another hog which was not created
-    // as a part of Kirke's band happens to be on the level, the player can't
-    // tell them apart anyway.
-    // On the other hand, hogs which left the level are too far away to be
-    // affected by the magic of Kirke's death.
     int any = 0, human = 0;
 
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type != MONS_HOG)
+            continue;
+
+        if (!mi->props.exists("kirke_band")
+            && !mi->props.exists(ORIG_MONSTER_KEY))
             continue;
 
         // Shapeshifters will stop being a hog when they feel like it.
@@ -118,73 +117,10 @@ void hogs_to_humans()
 
         const bool could_see = you.can_see(*mi);
 
-        monster orig;
+        if (could_see) any++;
 
-        if (mi->props.exists(ORIG_MONSTER_KEY))
-            // Copy it, since the instance in props will get deleted
-            // as soon a **mi is assigned to.
-            orig = mi->props[ORIG_MONSTER_KEY].get_monster();
-        else
-        {
-            orig.type     = MONS_HUMAN;
-            orig.attitude = mi->attitude;
-            define_monster(&orig);
-        }
-        orig.mid = mi->mid;
-
-        // Keep at same spot.
-        const coord_def pos = mi->pos();
-        // Preserve relative HP.
-        const float hp
-            = (float) mi->hit_points / (float) mi->max_hit_points;
-        // Preserve some flags.
-        const uint64_t preserve_flags =
-            mi->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
-        // Preserve enchantments.
-        mon_enchant_list enchantments = mi->enchantments;
-
-        // Restore original monster.
-        **mi = orig;
-
-        mi->move_to_pos(pos);
-        mi->enchantments = enchantments;
-        mi->hit_points   = max(1, (int) (mi->max_hit_points * hp));
-        mi->flags        = mi->flags | preserve_flags;
-
-        const bool can_see = you.can_see(*mi);
-
-        // A monster changing factions while in the arena messes up
-        // arena book-keeping.
-        if (!crawl_state.game_is_arena())
-        {
-            // * A monster's attitude shouldn't downgrade from friendly
-            //   or good-neutral because you helped it.  It'd suck to
-            //   lose a permanent ally that way.
-            //
-            // * A monster has to be smart enough to realize that you
-            //   helped it.
-            if (mi->attitude == ATT_HOSTILE
-                && mons_intel(*mi) >= I_NORMAL)
-            {
-                mi->attitude = ATT_GOOD_NEUTRAL;
-                mi->flags   |= MF_WAS_NEUTRAL;
-                mons_att_changed(*mi);
-            }
-        }
-
-        behaviour_event(*mi, ME_EVAL);
-
-        if (could_see && can_see)
-        {
-            any++;
-            if (mi->type == MONS_HUMAN)
-                human++;
-        }
-        else if (could_see && !can_see)
-            mpr("The hog vanishes!");
-        else if (!could_see && can_see)
-            mprf("%s appears from out of thin air!",
-                 mi->name(DESC_A).c_str());
+        if (!mi->props.exists(ORIG_MONSTER_KEY) && could_see)
+            human++;
     }
 
     if (any == 1)
@@ -198,20 +134,18 @@ void hogs_to_humans()
     else if (any > 1)
     {
         if (any == human)
-        {
-            mpr("No longer under Kirke's spell, all hogs revert to their "
+            mpr("No longer under Kirke's spell, the hogs revert to their "
                 "human forms!");
-        }
         else
-        {
-            mpr("No longer under Kirke's spell, all hogs revert to their "
+            mpr("No longer under Kirke's spell, the hogs revert to their "
                 "original forms!");
-        }
     }
 
-    // Revert the player as well.
+    // Revert the player now
     if (you.form == TRAN_PIG)
         untransform();
+
+    add_daction(DACT_KIRKE_HOGS);
 }
 
 /**
