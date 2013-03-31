@@ -449,6 +449,8 @@ static string _no_selectables_message(int item_selector)
     case OSEL_ANY:
     case OSEL_ANY_UNMELDED:
         return "You aren't carrying anything.";
+    case OSEL_SCROLL_TARGET:
+        return "You aren't carrying anything you could use a scroll on.";
     case OSEL_WIELD:
     case OBJ_WEAPONS:
         return "You aren't carrying any weapons.";
@@ -1144,6 +1146,19 @@ static bool _item_class_selected(const item_def &i, int selector)
     {
     case OSEL_ANY_UNMELDED:
         return !item_is_melded(i);
+
+    // Combined filter for valid unided scroll targets
+    // TODO: If the player already ided one of the scrolls then we
+    // could filter the list further. That results in the final scroll
+    // being effectively auto-ided as soon as you hit the menu.
+    case OSEL_SCROLL_TARGET:
+        return !item_is_melded(i)
+            // Any unidentified
+            && (!fully_identified(i) || (is_deck(i) && !top_card_is_known(i))
+                // Rechargeable
+                || item_is_rechargeable(i, true)
+                // Armour
+                || is_enchantable_armour(i, true, true));
 
     case OBJ_ARMOUR:
         return (itype == OBJ_ARMOUR && you_tran_can_wear(i));
@@ -1967,7 +1982,7 @@ int prompt_invent_item(const char *prompt,
                 if (!(accept_any || you.inv[ret].defined()
                                     && you.inv[ret].link != excluded_slot
                                     && _item_class_selected(you.inv[ret], type_expect)))
-                    mpr("You can't select that object right now.");
+                    mpr("That item can't be selected now.");
                 else if (check_warning_inscriptions(you.inv[ret], oper))
                     break;
             }
@@ -1993,7 +2008,7 @@ int prompt_invent_item(const char *prompt,
                 mpr("You don't have any such object.");
             else if (!(accept_any || you.inv[ret].link != excluded_slot
                                      && _item_class_selected(you.inv[ret], type_expect)))
-                mpr("You can't select that object right now.");
+                mpr("That item can't be selected now.");
             else if (check_warning_inscriptions(you.inv[ret], oper))
                 break;
         }
