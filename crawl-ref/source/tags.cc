@@ -2848,6 +2848,13 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    // Upgrade item knowledge to cope with the fix for #1083
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (item.flags & ISFLAG_KNOW_PROPERTIES)
+            item.flags |= ISFLAG_KNOW_TYPE;
+    }
+
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
 

@@ -2016,9 +2016,12 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
     return (you.type_ids[base_type][sub_type] == ID_KNOWN_TYPE);
 }
 
-bool item_type_tried(const item_def& item)
+bool item_type_tried(const item_def &item)
 {
-    if (item_type_known(item))
+    if (!is_artefact(item) && item_type_known(item))
+        return false;
+
+    if (fully_identified(item))
         return false;
 
     if (item.flags & ISFLAG_TRIED)
