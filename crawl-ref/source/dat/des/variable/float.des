@@ -5155,3 +5155,46 @@ xx8ACC888xx8CAA.ACC8888CCA8xx
      xxxxxx  ..CCCC.
               .....@
 ENDMAP
+
+NAME:    hangedman_staggered_hall
+TAGS:    transparent allow_dup no_monster_gen
+ORIENT:  float
+DEPTH:   Elf, Crypt
+: if you.branch() == "Crypt" then
+TAGS:    patrolling
+MONS:    skeletal warrior / eidolon, necromancer / deep dwarf necromancer w:6
+MONS:    necromancer band / vampire mage band w:6
+MONS:    vampire knight w:25 / bone dragon / ghoul / lich
+SUBST:   x = e
+: else
+KMONS:   12 = deep elf conjurer / deep elf knight
+MONS:    deep elf fighter band w:6 / deep elf knight band
+MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
+: end
+SUBST:   a : X., A : Y., b : XX., B : YY.
+SUBST:   c : X.., C : Y., d : XX., D : YY.
+SUBST:   X : xcccbv, Y : ccbv, e = c, % = %%$., * = %***|
+MAP
+     xxx.....................xxx
+     x...........a.........X...x
+     x..X.X...X.Xa....c...XXX..x
+     x.XXXXXXXXXXb...c...d3XXX2x
+     x..X%X%1%X%Xa........XXX..x
+     x...........a.........X...xx
+     xx...Y.........A...........x
+      x..YYY........AY.Y...Y.Y..x
+      x.YYY3D...C...BYYYYYYYYYY.x
+      x..YYY...C....AY*Y%4%Y*Y..x
+xxxxxxx...Y.........A...........x
+x...........A.........Y...xxxxxxx
+x..Y*Y%4%Y*YA....C...YYY..x
+x.YYYYYYYYYYB...C...D3YYY.x
+x..Y.Y...Y.YA........YYY..x
+x...........A.........Y...xx
+xx...X.........a...........x
+ x..XXX........aX%X%1%X%X..x
+ x2XXX3d..c....bXXXXXXXXXX.x
+ x..XXX..c.....aX.X...X.X..x
+ x...X.........a...........x
+ xxx.....................xxx
+ENDMAP

@@ -4635,6 +4635,27 @@ xx...xx
     xxx
 ENDMAP
 
+NAME:    hangedman_minor_gate_pass
+TAGS:    transparent
+DEPTH:   D:4-9
+: if you.absdepth() > 6 then
+SHUFFLE: 0% / 0% / '"
+SUBST:   1 = 0..
+: else
+SHUFFLE: 2% / 2% / 2% / d9 / d9 / '"
+SUBST:   1 = 0...
+: end
+SUBST:   x : xxc, 2 = 0, d = %, '" = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x.1.%.0.x.2.%.2.x.0.%.1.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+@.......................@
+xxxxxxxxxxxx+xxxxxxxxxxxx
+          ..10.
+           .0.
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
