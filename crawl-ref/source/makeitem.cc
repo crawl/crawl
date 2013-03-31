@@ -176,8 +176,9 @@ static int _missile_colour(const item_def &item)
     case MI_THROWING_NET:
         item_colour = DARKGREY;
         break;
-    default:
-        die("invalid missile type");
+    case NUM_SPECIAL_MISSILES:
+    case NUM_REAL_SPECIAL_MISSILES:
+        die("invalid missile brand");
     }
     return item_colour;
 }
@@ -2347,6 +2348,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return (type == ARM_CAP || slot == EQ_SHIELD || !strict);
 
     case NUM_SPECIAL_ARMOURS:
+    case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
     }
 
