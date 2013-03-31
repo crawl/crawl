@@ -924,6 +924,13 @@ static void _give_items_skills(const newgame_def& ng)
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_BLINDING);
         newgame_make_item(5, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_WAR);
 
+        if (you.inv[1].defined())
+        {
+            item_def& robe(you.inv[1]);
+            robe.props["worn_tile_name"] = "robe_jester";
+            bind_item_tile(robe);
+        }
+
         if (you.inv[2].defined())
         {
             item_def& cap(you.inv[2]);
