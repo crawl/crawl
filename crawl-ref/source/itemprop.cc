@@ -811,10 +811,6 @@ void set_equip_race(item_def &item, iflags_t flags)
         break;
 
     case OBJ_MISSILES:
-        if (item.sub_type > MI_MAX_RACIAL)
-            return;
-        break;
-
     default:
         return;
     }
