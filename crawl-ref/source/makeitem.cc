@@ -1958,6 +1958,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    12, MI_SLING_BULLET,
                                    10, MI_NEEDLE,
                                    2,  MI_JAVELIN,
+                                   1,  MI_PIE,
                                    1,  MI_THROWING_NET,
                                    1,  MI_LARGE_ROCK,
                                    0);
@@ -1990,6 +1991,7 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN
+        || item.sub_type == MI_PIE
         || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
         || get_ammo_brand(item) == SPMSL_RETURNING
         || (item.sub_type == MI_DART && get_ammo_brand(item) == SPMSL_POISONED))
