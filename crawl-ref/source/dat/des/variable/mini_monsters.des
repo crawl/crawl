@@ -4635,6 +4635,73 @@ xx...xx
     xxx
 ENDMAP
 
+NAME:    grunt_ministairs_9
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+MAP
+ xx...
+xx..G..
+x.......
+x.....G..
+x..{....@
+x.....G..
+x.......
+xx..G..
+ xx...
+ENDMAP
+
+NAME:    grunt_ministairs_10
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+NSUBST:  @ = 1:@ / *:.
+MAP
+ xx...@...xx
+xx..G...G..xx
+x...........x
+x.....G.....x
+x..{.....(..x
+x.....G.....x
+x...........x
+xx..G...G..xx
+ xx...@...xx
+ENDMAP
+
+NAME:    grunt_ministairs_11
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+NSUBST:  @ = 1:@ / *:.
+MAP
+     @
+ xxxx+xxxx
+xx.......xx
+x.GxxxxxG.x
+x.xx...xx.x
+x.x.G.G.x.x
+x.x..{..x.x
+x.x.G.G.x.x
+x.xx...xx.x
+x.Gxx+xxG.x
+xx.......xx
+ xxxxxxxxx
+ENDMAP
+
+NAME:    grunt_ministairs_12
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+MAP
+xxxxx     xxxxx
+x...xxx xxx...x
+x.{...xxx...[.x
+x.............x
+xxx....G....xxx
+  xxx.....xxx
+    xx.@.xx
+ENDMAP
+
 NAME:    hangedman_minor_gate_pass
 TAGS:    transparent
 DEPTH:   D:4-9
