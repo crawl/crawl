@@ -2370,3 +2370,63 @@ xxxxxxxxxttttWW-.tttxxxxxx
 xxxxxxxxxxtttttttttxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
+# Reminders of progress.
+#
+NAME:    hangedman_lair_in_review
+TAGS:    no_monster_gen no_item_gen
+ORIENT:  float
+PLACE:   Lair:8
+MONS:    basilisk, fire drake, komodo dragon, hydra
+MONS:    manticore, hippogriff, griffon
+KMONS:   8 = catoblepas
+KMONS:   9 = water moccasin
+KMONS:   0 = blink frog
+KMONS:   A = spiny frog
+KMONS:   B = black mamba
+KMONS:   C = elephant slug
+KMONS:   D = agate snail
+KMONS:   E = patrolling boring beetle
+KMONS:   F = boulder beetle
+KMONS:   G = sheep
+KMONS:   H = yak
+KMONS:   I = elephant
+KMONS:   J = death yak
+KMONS:   K = crocodile
+KMONS:   L = war dog
+KMONS:   M = giant slug
+KMONS:   N = wyvern
+KMONS:   P = plant w:12 / fungus w:8 / nothing
+KITEM:   ~ = any good_item
+SHUFFLE: 1'2"3`4^ / 5e6f7g8h / 9i0jAkBl / GGHHIIJJ
+SHUFFLE: 5e6f7g8h / 5e6f7g8h / C-D-E-F-
+SHUFFLE: KLMN, %*~| / %*~| / |~*%
+NSUBST:  a = 2:. / 1 = x:9 .:1 / *:x, b = 2:. / 1 = x:9 .:1 / *:x
+NSUBST:  c = 2:. / 1 = x:9 .:1 / *:x, d = 2:. / 1 = x:9 .:1 / *:x
+SUBST:   X = xx., '"`^efghikl- = ., j = 0, O = 4448BFJ, $ = $$%.
+: lair_small_ending(_G)
+MAP
+               xxx  xxx   xxx  xxx
+             xxxxxxxxxxxxxxxxxxxxxxx
+            xxxxxxxxxx.P.xxxxxxxxxxxx
+           @..xxxxXXP.....XxB84xXPXxxx
+          ....XxxXX.......Xxlh^xX.Xxxx
+         @....XxXX.........d.X$x..Xxx
+        ......XxXP.........ddddd..Xxx
+       .......xxX....ccccc........Xxxx
+      .......Kxx.....c.X$x........PXxx
+     ...x...L.xxP....x`gkxX.......Xxxx
+  xxxxx...xxxxxxxx...x37AxX..x....Xxx
+ xxX....x..Xx962x...xxxxxxxx...xxxxxx
+xxxX.......Xxjf"x....PxxXX.%.x..Pxxx
+xxXP........x$X.b.....xxXP*.....xxxx
+xxxX........bbbbb....Xxx.~.....xxx
+ xxX..aaaaa.........PXxx|O...Pxxx
+ xxX.Xx$X.a.........XXxx..0.7xxxx
+xxxX.Xx'eixX.......XXxxxP..Axxx
+xxxXPXx150xX.....PXXxxxxXP3xxx
+ xxxxxxxxxxxx.P.xxxxxxxxxxxxxx
+  xxxxxxxxxxxxxxxxxxxxxxxxxx
+    xx   xxxx  x xxxx   xx
+ENDMAP

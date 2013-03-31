@@ -1517,3 +1517,22 @@ MAP
    x.000.x
      ...
 ENDMAP
+
+NAME:    hangedman_vaults_snaps
+TAGS:    vaults_room
+MONS:    0 band
+SHUFFLE: X+ / X+ / +X, 1' / 1' / '1
+NSUBST:  1 = 1:1 / 1:000.
+SUBST:   X : xx+, ' = .
+MAP
+.......xxx
+........1x
+.........x
+x..xX+x..xxxx
+x..x..x'.x..x
+x..x.'x..x..x
+xxxx..x+Xx..x
+   x.........
+   x1........
+   xxxx......
+ENDMAP
