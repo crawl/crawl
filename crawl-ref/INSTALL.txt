@@ -204,7 +204,14 @@ Building:
 Building on Mac OS X
 --------------------
 
-Mac builds use the Unix build process described above, but require you
+Before building on Mac OS X, you need a working copy of Xcode and the
+associated command line tools. For recent versions of OS X, Xcode can be
+installed through the AppStore as a free download; the associated command
+line tools can then be installed by opening Xcode, opening the Preferences
+dialog, and clicking Install on the Command Line Tools line in the Download
+tab.
+
+Mac builds then use the Unix build process described above, but require you
 to add 'APPLE_GCC=y' to the 'make' command-line. In addition, to build the
 graphical version of Crawl, you must add 'NO_PKGCONFIG=y' and
 'CONTRIB_SDL=y'.
