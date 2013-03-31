@@ -548,9 +548,6 @@ static bool _item_matches(const item_def &item, fire_type types,
 
     if (item.base_type == OBJ_MISSILES)
     {
-        if ((types & FIRE_PIE) && item.sub_type == MI_PIE)
-            return true;
-
         if ((types & FIRE_DART) && item.sub_type == MI_DART)
             return true;
         if ((types & FIRE_STONE) && item.sub_type == MI_STONE)
@@ -560,6 +557,8 @@ static bool _item_matches(const item_def &item, fire_type types,
         if ((types & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
             return true;
         if ((types & FIRE_NET) && item.sub_type == MI_THROWING_NET)
+            return true;
+        if ((types & FIRE_PIE) && item.sub_type == MI_PIE)
             return true;
 
         if (types & FIRE_LAUNCHER)

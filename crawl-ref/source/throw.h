@@ -24,8 +24,8 @@ enum fire_type
     FIRE_ROCK      = 0x0100,
     FIRE_NET       = 0x0200,
     FIRE_RETURNING = 0x0400,
-    FIRE_INSCRIBED = 0x0800,   // Only used for _get_fire_order
-    FIRE_PIE       = 0x1000,
+    FIRE_PIE       = 0x0800,
+    FIRE_INSCRIBED = 0x1000,   // Only used for _get_fire_order
 };
 
 struct bolt;
