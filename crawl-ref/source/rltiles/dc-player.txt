@@ -615,6 +615,7 @@ quarterstaff QUARTERSTAFF1
 quarterstaff_two QUARTERSTAFF2
 quarterstaff_three QUARTERSTAFF3
 quarterstaff_four QUARTERSTAFF4
+quarterstaff_jester QUARTERSTAFF_JESTER
 sickle SICKLE
 glaive GLAIVE
 glaive2
