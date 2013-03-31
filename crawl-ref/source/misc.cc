@@ -2547,6 +2547,9 @@ void swap_with_monster(monster* mon_to_swap)
     }
 }
 
+/**
+ * Identify a worn piece of jewellery's type.
+ */
 void wear_id_type(item_def &item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
