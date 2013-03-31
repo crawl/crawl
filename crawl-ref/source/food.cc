@@ -2666,6 +2666,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             }
         }
         return false;
+
     case OBJ_MISSILES:
         switch (kindof_thing)
         {
@@ -2677,7 +2678,10 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                     return false;
                 }
                 return true;
+            default:
+                return true;
         }
+
     case OBJ_POTIONS: // called by lua
         if (get_ident_type(OBJ_POTIONS, kindof_thing) != ID_KNOWN_TYPE)
             return true;
