@@ -296,6 +296,7 @@ skirt_onep_grey SKIRT_ONEP_GREY
 bloody BLOODY
 leather_short LEATHER_SHORT
 china_red2 CHINA_RED2
+robe_jester ROBE_JESTER
 #unrand
 robe_misfortune ROBE_MISFORTUNE
 robe_clouds ROBE_CLOUDS
