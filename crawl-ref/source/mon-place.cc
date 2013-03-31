@@ -2269,9 +2269,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(3);
         break;
 
+    case MONS_PRINCE_RIBBIT:
+        natural_leader = true;
+        // Intentional fallthrough
     case MONS_BLINK_FROG:
         band = BAND_BLINK_FROGS;
-        band_size = 2 + random2(3);
+        band_size += 2 + random2(3);
         break;
 
     case MONS_WIGHT:

@@ -262,11 +262,8 @@ TAGS:   uniq_ribbit
 NAME:   uniq_prince_ribbit2
 DEPTH:  Lair:1-3
 WEIGHT: 3
-TAGS:   place_unique uniq_ribbit transparent
-MONS:   Prince Ribbit, blink frog band
-MAP
-1..2
-ENDMAP
+TAGS:   uniq_ribbit
+: place_unique(_G, "Prince Ribbit band")
 
 NAME:   uniq_psyche
 DEPTH:  D:8-13, Orc
