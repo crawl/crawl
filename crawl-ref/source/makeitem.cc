@@ -2835,7 +2835,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         if (one_chance_in(4))
             item.plus = SK_SPELLCASTING + random2(NUM_SKILLS - SK_SPELLCASTING);
         else
-            item.plus = random2(SK_UNARMED_COMBAT);
+            item.plus = random2(SK_UNARMED_COMBAT + 1);
         // Set number of bonus skill points.
         item.plus2 = random_range(2000, 3000);
     }
