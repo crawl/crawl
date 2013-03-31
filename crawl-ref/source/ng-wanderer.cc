@@ -556,7 +556,6 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_DODGING:
     case SK_STEALTH:
     case SK_TRAPS:
-    case SK_STABBING:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     {
@@ -739,7 +738,6 @@ static void _wanderer_decent_equipment(skill_type & skill,
         break;
 
     case SK_TRAPS:
-    case SK_STABBING:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
@@ -763,16 +761,16 @@ static void _wanderer_cover_equip_holes(int & slot)
     if (you.equip[EQ_WEAPON] == -1)
     {
         weapon_type weapon = WPN_CLUB;
-        if (you.dex() > you.strength() || you.skills[SK_STABBING])
+        if (you.dex() > you.strength())
             weapon = WPN_DAGGER;
 
         newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, weapon);
         slot++;
     }
 
-    // Give a dagger if you have stabbing skill.  Maybe this is
+    // Give a dagger if you have stealth skill.  Maybe this is
     // unnecessary?
-    if (you.skills[SK_STABBING])
+    if (you.skills[SK_STEALTH] > 1)
     {
         bool has_dagger = false;
 
@@ -844,7 +842,7 @@ void create_wanderer(void)
 
     // Regardless of roles, players get a couple levels in these skills.
     const skill_type util_skills[] =
-        { SK_THROWING, SK_STABBING, SK_TRAPS, SK_STEALTH,
+        { SK_THROWING, SK_TRAPS, SK_STEALTH,
           SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
     int util_size = ARRAYSZ(util_skills);
