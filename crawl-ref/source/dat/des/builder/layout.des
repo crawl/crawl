@@ -650,7 +650,7 @@ TAGS: overwritable layout allow_dup unrand
             iterations = 600 + crawl.random2(600)
             connected = true
         else
-            iterations = 100 + crawl.random2(500)
+            iterations = 200 + crawl.random2(500)
         end
     else
         -- Normal branches
