@@ -256,7 +256,8 @@ static vector<string> _randart_propnames(const item_def& item,
     // For randart jewellery, note the base jewellery type if it's not
     // covered by artefact_desc_properties()
     if (item.base_type == OBJ_JEWELLERY
-        && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        && (item_ident(item, ISFLAG_KNOW_PROPERTIES)
+            || item_ident(item, ISFLAG_KNOW_TYPE)))
     {
         const char* type = _jewellery_base_ability_string(item.sub_type);
         if (*type)

@@ -1419,7 +1419,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         bool show_msgs = true;
         _equip_artefact_effect(item, &show_msgs, unmeld);
 
-        if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
+        if (ident == ID_KNOWN_TYPE)
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+
+        if (learn_pluses)
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
 
         if (fake_rap != ARTP_NUM_PROPERTIES)
