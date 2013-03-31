@@ -50,11 +50,14 @@ class CrawlHashTable_printer:
         return None
 
     def children(self):
-        # needs libstdc++ printers
+        if not self.val["hash_map"]:
+            return ()
+
         vis = gdb.default_visualizer(self.val["hash_map"].dereference())
         if vis:
             return vis.children()
-        raise NeedLibstdcxxPrinters
+        else:
+            raise NeedLibstdcxxPrinters
 
     def display_hint(self):
         return "map"
@@ -67,11 +70,14 @@ class CrawlVector_printer:
         return None
 
     def children(self):
-        # needs libstdc++ printers
+        if not self.val["vec"]:
+            return ()
+
         vis = gdb.default_visualizer(self.val["vec"])
         if vis:
             return vis.children()
-        raise NeedLibstdcxxPrinters
+        else:
+            raise NeedLibstdcxxPrinters
 
     def display_hint(self):
         return "array"
