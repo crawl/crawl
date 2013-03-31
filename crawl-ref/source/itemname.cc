@@ -421,6 +421,7 @@ static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
     case SPMSL_DISPERSAL:
         return (t == MBN_TERSE ? "disperse" : "dispersal");
     case SPMSL_BLINDING:
+        return (t == MBN_TERSE ? "blind" : "blinding");
     case SPMSL_NORMAL:
         return "";
     default:
