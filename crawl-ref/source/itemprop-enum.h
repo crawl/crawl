@@ -257,7 +257,6 @@ enum missile_type
     MI_ARROW,
     MI_BOLT,
     MI_JAVELIN,
-    MI_MAX_RACIAL = MI_JAVELIN,
 
     MI_STONE,
     MI_LARGE_ROCK,
