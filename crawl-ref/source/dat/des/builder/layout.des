@@ -655,7 +655,7 @@ TAGS: overwritable layout allow_dup unrand
     else
         -- Normal branches
         boxy = crawl.coinflip()
-        iterations = 200 + crawl.random2(boxy and 750 or 1500)
+        iterations = 300 + crawl.random2(boxy and 750 or 1500)
     end
 
     spotty_map { boxy = boxy, iterations = iterations }
