@@ -2073,7 +2073,6 @@ int food_value(const item_def &item)
 {
     ASSERT(item.defined());
 
-
     if (item.base_type != OBJ_FOOD && item.sub_type != MI_PIE) // TRAN_JELLY
         return max(1, item_mass(item) * 5);
 
