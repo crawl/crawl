@@ -1143,7 +1143,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
                 member->flags |= MF_NO_REWARD;
                 member->props["pikel_band"] = true;
             }
-            if (mon->type == MONS_SHEDU)
+            else if (mon->type == MONS_KIRKE)
+                member->props["kirke_band"] = true;
+            else if (mon->type == MONS_SHEDU)
             {
                 // We store these here for later resurrection, etc.
                 member->number = mon->mid;
