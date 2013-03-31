@@ -49,15 +49,154 @@ amulet of warding
 この護符は魔法で召換されたモンスターからの攻撃を防ぐ。また、生命力を奪う攻撃へ
 の耐性を得る。
 %%%%
+amulet of faith
+
+これは装着者への神々の注目を惹きつけるように作られたお守りだ。この天上からの注
+目はあなたの神を容易に満足させるが、あなたの罪を赦しにくくする。そしてこの護符
+を外すといくらかの神聖なる好意を吸収するだろう。
+%%%%
+amulet of stasis
+
+魔法の拘束で綿密に構成された護符であり、装着者をテレポート、減速、加速、または
+金縛りにする魔術や生理的な効果から遮断する。
+
+この護符は多くの転移術に対して有効であるが、追放のような次元転移はこの護符の及
+ぶ範囲を越えている。
+%%%%
+banana
+
+A delicious yellow fruit恐らくは不平等な貿易協定の元で、
+道徳観念のない多国籍企業によって 栽培と輸入をされた。.
+%%%%
+beef jerky
+
+A strip of 保存加工済みの牛肉だ。.
+%%%%
+blessed double sword
+
+二本の鋭利な刃を持つ魔法の武器だ。 It has been enhanced by the Shining One's
+power.
+%%%%
+blessed falchion
+
+切ることを目的とした広刃の剣だ。 It has been enhanced by the Shining One's
+power.
+%%%%
+blessed long sword
+
+切ることを目的とした長い刃の剣だ。 It has been enhanced by the Shining One's
+power.
+%%%%
+blessed scimitar
+
+湾曲した刃を持つ長剣だ。 It has been enhanced by the Shining One's power.
+%%%%
+bottled efreet
+
+いずこかの魔術師に捕らえられ、青銅の瓶に封印された力あるイフリートだ。
+瓶の封印を破ればイフリートは解き放たれ破壊をもたらすだろう。 to wreak havoc —
+possibly on you.
+%%%%
+bow
+
+湾曲した木材と弦からなり、矢を射るのに用いる。
+戦闘において大きなダメージを与えることを期待でき、
+とりわけ熟練者が手にした場合は恐るべき威力を持つ。
+%%%%
 box of beasts
 
 沢山の野生の獣が収納された魔法の匣だ。匣の蓋を開けば、獣を解き放つことができる
 かもしれない
 %%%%
+cap
+
+布もしくは革でできた帽子だ。
+%%%%
+centaur barding
+
+セントールのために造られた鎧だ。 下半身の馬の部分に装着する。
+%%%%
+choko
+
+Aほとんど味がない緑色の野菜だ。 vegetableこれは蔓に実がなる。.
+%%%%
+cloak
+
+布製のクロークだ。
+%%%%
+crossbow
+
+A piece of machinery, used for firing bolts,
+矢を装填するのに若干の時間を必要とする。
+戦闘において非常に大きなダメージを与える。
+%%%%
+crystal ball of energy
+
+使用することで魔力を回復させることができる魔法の道具だ。
+しかし使用には魔力を完全に吸い取られてしまう危険を伴う。
+魔力を奪われる危険の率は使用者の魔力の最大値と現在値の比に 反比例する。 maximum
+energy which the user possesses; a user near his or her full potential will
+find this item most beneficial.
+%%%%
+crystal plate armour
+
+信じ難いほどの重さだが、極めて防御力の高い結晶質の鎧だ。 suit of crystalline
+armour.
+%%%%
+deck of summonings
+
+魔法のカードの一組だ。 wondrous creatures.
+
+It may contain the following cards: the Crusade, the Herd, the Pentagram, the
+Dance, Foxfire, the Bones, Repulsiveness.
+%%%%
+demon blade
+
+地獄の火で鍛えられた恐るべき武器だ。
+%%%%
+disc of storms
+
+この極めて強力なアイテムは、破壊的な雷電の嵐を解き放つ。 storm of electricity.
+Its effectiveness greatly improves in the hands of one skilled in using magical
+devices.
+%%%%
+empty ebony casket
+
+力を使い果たした魔法の匣だ。
+%%%%
+eveningstar
+
+モーニングスターの対極となる武器だ。
+%%%%
+giant club
+
+巨大な木の棍棒だ。 オーガの手で振るわれるために造られている。
+%%%%
+giant spiked club
+
+先端に鋭いスパイクが植えられた巨大な木の棍棒だ。
+%%%%
+glaive
+
+長くて重い刃のついた長柄武器だ。
+%%%%
+helmet
+
+金属製の被り物だ。
+%%%%
+honeycomb
+
+A lump of 巨大なミツバチによって作られた、美味しい蜂の巣だ。.
+%%%%
 horn of Geryon
 
 地獄の入り口の番人であるゲリュオンの角笛だ。伝説によると、いずれかの地獄に訪れ
 ることを欲する定命の者は中に入るためにこれを使わなければならないという。
+%%%%
+lajatang
+
+非常に珍しく、また非常に切れ味鋭い異国の武器だ。 imported weapon, featuring a
+pole with half-moon blades at both ends.
 %%%%
 lamp of fire
 
@@ -69,10 +208,425 @@ lantern of shadows
 
 この邪悪な品は、小さな代償と引き換えに使用者に手を貸す闇の力を召換する。
 %%%%
+meat ration
+
+食べ応えのある 乾し肉の保存食だ。
+%%%%
+orb of zot
+
+このかけがえのないアーティファクトを手に地上に脱出すれば、
+あなたの冒険の旅は達成される。
+%%%%
+pair of gloves
+
+一対の小手だ。
+%%%%
+potion of berserk rage
+
+A potion which 飲んだ者に突発性の激怒を発生させる。
+%%%%
+potion of confusion
+
+A potion which あなたの認知能力を混乱させ、
+あなた自身の行動をまともに制御できなくしてしまう。.
+%%%%
+potion of curing
+
+A blessed fluid which heals some wounds, clears the mind and cures diseases. If
+it is used when one is 永続的な負傷を slightly 治癒する。
+%%%%
+potion of decay
+
+A 衰弱と腐敗の呪いがかかった liquid which causes your flesh to decay before
+your very eyes.
+%%%%
+potion of degeneration
+
+A noxious concoction which あなたの肉体と頭脳と反射神経に
+恐ろしい障害をもたらす。.
+%%%%
+potion of experience
+
+A 実に素晴らしく非常に貴重な drink.
+%%%%
+potion of heal wounds
+
+A magical healing elixir which causes wounds to close and heal almost
+instantly. If it is used when one is 永続的な負傷を 治癒する。
+%%%%
+potion of invisibility
+
+A potion which 他の者の視覚からあなたを隠蔽する。.
+%%%%
+potion of flight
+
+A potion which 飲んだ者に大きな浮力を与える。.
+%%%%
+potion of mutation
+
+A potion which あなたに非常に奇妙な作用を及ぼす。.
+%%%%
+potion of paralysis
+
+A potion which あなたの全身を麻痺させる。.
+%%%%
+potion of porridge
+
+A filling potion of 穀物繊維をたくさん含んだ粥だ。.
+%%%%
+potion of restore abilities
+
+A potion which 飲んだ者の能力を回復させる。. It also allows to use a breath
+weapon again, cancelling the delay.
+%%%%
+potion of slowing
+
+A potion which あなたの動作を遅くする。.
+%%%%
+potion of speed
+
+An enchanted beverage which 飲んだ者の動作を加速する。.
+%%%%
+rambutan
+
+A 小さいが美味しい、南国の fruitこれがどうやってダンジョンに持ちこまれたかは、
+is anyone's guess.
+%%%%
+ring of dexterity
+
+この指輪は装着者の器用さを増加させるか、あるいは減退させる。 wearer, depending
+on the degree to which it has been enchanted.
+%%%%
+ring of evasion
+
+この指輪は装着者の回避能力を上昇させるか、あるいは低下させる。 of avoiding
+attacks, depending on its degree of enchantment.
+%%%%
+ring of fire
+
+この指輪は火の力との更なる接触を装着者にもたらす。|この指輪は冷気と氷の力との更
+なる接触を装着者にもたらす。 装着者は熱に対する耐性を得ると共に、
+火の魔法をより効果的に扱うことが可能になる。
+ただし冷気の影響によって傷つきやすくなってしまう。
+%%%%
+ring of ice
+
+この指輪は火の力との更なる接触を装着者にもたらす。|この指輪は冷気と氷の力との更
+なる接触を装着者にもたらす。 装着者は冷気に対する耐性を得ると共に、
+冷気の魔法をより効果的に扱うことが可能になる。
+ただし火の影響によって傷つきやすくなってしまう。
+%%%%
+ring of intelligence
+
+この指輪は装着者の知力を増加させるか、あるいは減退させる。 its wearer,
+depending on the degree to which it has been enchanted.
+%%%%
+ring of invisibility
+
+この指輪は発動することで装着者を一時的に透明にするが、 from the view of others,
+but increases the speed of his or her metabolism greatly while doing so.
+%%%%
+ring of life protection
+
+この祝福された指輪は負のエネルギーから装着者を保護し、 from negative energy,
+making them partially immune to the draining effects of undead and necromantic
+magic.
+%%%%
+ring of poison resistance
+
+この指輪は毒からの保護をもたらす。
+%%%%
+ring of protection
+
+この指輪は装着者を負傷から保護するか、あるいは負傷を受けやすくする。 them more
+vulnerable to injury, to a degree dependent on its power.
+%%%%
+ring of protection from cold
+
+この指輪は冷気からの保護をもたらす。
+%%%%
+ring of protection from fire
+
+この指輪は熱と火からの保護をもたらす。
+%%%%
+ring of regeneration
+
+この驚くべき指輪は装着者の回復能力を増強するが、 recuperative powers of its
+wearer, but also considerably speeds his or her metabolism while doing so.
+%%%%
+ring of see invisible
+
+この指輪は装着者に、魔法によって視界から隠れているものを 視ることを可能にする。
+%%%%
+ring of strength
+
+この指輪は装着者の腕力を増加させるか、あるいは減退させる。
+効果がどちらであるかは指輪の数値に依存している。
+%%%%
+ring of sustenance
+
+この指輪は装着者にエネルギーを供給するため、
+装着者は食事を必要とする頻度が少なくなる。
+%%%%
+ring of teleport control
+
+この指輪は装着者がどのようなテレポートについてでも目的地を
+制御することを可能にする。ただし完全な正確さは望めない。 perfect accuracy.
+Trying to teleport into a solid
+また、制御されたテレポートは残留した魔法のエネルギーによって least in the case
+of a normal teleportation. Also be wary that controlled teleports will
+contaminate the subject with residual magical energy.
+%%%%
+ring of teleportation
+
+この指輪は時折、装着者を無作為な場所に転位させる力を及ぼす。 translocate its
+wearer to another place, and can be deliberately activated for the same effect.
+%%%%
+rod of destruction
+
+This rod 破壊と荒廃の呪文群を収めている。
+%%%%
+rod of warding
+
+This rod 敵を退けるための呪文群を収めている。
+%%%%
+royal jelly
+
+とりわけ豪華な、金色をしたゼリー状の存在だ。 Consuming it will restore lost
+abilities, in addition to the nutrition it provides.
+%%%%
+rune of zot
+
+ゾットの領域に訪れることを可能にする御守りだ。
+%%%%
+scroll of acquirement
+
+この素晴らしい巻き物は読んだ者の目の前に価値あるアイテムを creation of a
+valuable item, with the reader choosing the type of item to be created. Items
+produced are heavily biased towards something fitting the reader's skills, and
+also towards gear that hasn't been seen yet, but, alas, nothing is guaranteed.
+%%%%
+scroll of amnesia
+
+This scroll allows its reader to selectively erase one spell
+その呪文に占有されていた分の魔力を取り戻すことを可能とする。 up with it.
+%%%%
+scroll of blinking
+
+この巻き物は読んだ者に、正確に制御可能な短距離の a short distance, with precise
+control. ただし制御されたテレポートは使用者を魔法のエネルギーで
+汚染することがあるので注意しなくてはならない。
+%%%%
+scroll of enchant weapon ii
+
+This scroll places an enchantment on the wielded weapon,
+戦闘でより高いダメージをもたらすようにする。 It becomes increasingly less
+likely to succeed when used on highly enchanted weapons, and can only ever
+enchant them up to +9. Magical artefacts cannot be enchanted at all.
+%%%%
+scroll of fear
+
+この巻き物は読み上げた者の視界内にいる相手全てに 恐怖を抱かせる。
+%%%%
+scroll of identify
+
+これはいかなる品物でも鑑定することを可能とする determine the properties of any
+object, and will occasionally allow multiple identifications.
+
+If used on a deck of cards, this scroll will also give away the top card.
+%%%%
+scroll of noise
+
+この悪戯の巻き物は、しばしば邪悪な実習生によって
+魔法使いの荷物の中に忍び込まされて、うるさい騒音を引き起す。
+その他にはこれといって有用な使い途などない。
+%%%%
+scroll of random uselessness
+
+この巻き物は何らかの機能を持っているかのように振る舞い、 uselessness of this
+scroll by the sense of achievement you get from getting it to work at all.
+%%%%
+scroll of remove curse
+
+この巻物を読み上げると、あなたの装備中のアイテムから 呪いが取り除かれる。
+%%%%
+scroll of vorpalise weapon
+
+This scroll enchants the wielded weapon so as to make
+武器がすでに何らかの魔法的な属性を帯びている場合には、
+(つまりエゴつきの武器やアーティファクトには) already affected by some kind of
+permanent branding is not advised. On the other hand, the scroll can make
+permanent the temporary branding of weapons obtained from some spells.
+
+Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha,
+the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
+let such an opportunity for fun go to waste.
+%%%%
+decaying skeleton
+
+肉が朽ちた骨だ。
+%%%%
+slice of pizza
+
+一切れのピザ: a flatbread with tomato sauce, mozzarella di bufala, and basil.
+%%%%
+sling
+
+布切れと皮紐でできた投石器だ。 それほどのダメージは期待できない。 Unlike with
+other launchers, wearing a shield does not slow down its rate of fire.
+%%%%
+staff of channeling
+
+This staff allows its wielder to channel ambient magical energy for
+魔力を回復することを可能にする。
+%%%%
+staff of cold
+
+This staff 手にしている者の氷の魔法の威力を強化し、 and protects him or her
+from the effects of cold. If the wielder is skilled in evocations, they can
+freeze those struck by it, dealing even greater damage if they are also skilled
+in ice magic.
+%%%%
+staff of conjuration
+
+This staff 手にしている者が唱えた妖術の呪文の威力を強化する。
+%%%%
+staff of death
+
+This staff 手にしている者の死霊術の呪文の威力を強化する。 wielder, and protects
+him or her from negative energy. If the wielder is skilled in both evocations
+and necromancy, they can inflict great pain on those living souls they strike.
+%%%%
+staff of earth
+
+This staff 手にしている者の大地の呪文の威力を強化する。 If the wielder is
+skilled in evocations, it can crush those struck by it, dealing even greater
+damage if they are also skilled in earth magic.
+%%%%
+staff of fire
+
+This staff 手にしている者の炎の魔法の威力を強化し、
+更には炎の影響から保護する。 If the wielder is skilled in evocations, they can
+burn those struck by it, dealing even greater damage if they are also skilled
+in fire magic.
+%%%%
+staff of poison
+
+This staff 手にしている者の毒の魔法の威力を強化し、
+更には毒の影響から保護する。 poison. If the wielder is skilled in both
+evocations and poison magic, they can poison creatures struck by it — even if
+the victims were normally resistant.
+%%%%
+staff of power
+
+This staff 手にしている者に追加の魔力をもたらす。
+%%%%
 stone of earth elementals
 
 大地の精霊を召換するための魔法の道具だ。これは幾分信頼性に欠ける品物で、うまく
 発動するまで何度も試みなくてはならない場合が多い。使用には危険を伴うが、使用者
 が然るべき精霊魔法に習熟していればその危険は減少する。especially when trying to
 control multiple elementals at the same time.
+%%%%
+storm dragon armour
+
+Armour made from the scales of
+この鎧はドラゴンの鎧の中では最も重い部類に入るが、 than most dragon scale
+armours, and gives its wearer great resistance to electrical discharges.
+%%%%
+strawberry
+
+A 小さいが美味しい、赤い果物だ.
+%%%%
+wand of cold
+
+この杖は魔法の道具だ。 これは強力な冷気の矢を放つ。
+%%%%
+wand of confusion
+
+この杖は魔法の道具だ。 これは対象に混乱と狼狽を引き起こす。
+%%%%
+wand of digging
+
+この杖は魔法の道具だ。 forms tunnels through unworked rock by liquefying it.
+%%%%
+wand of disintegration
+
+この杖は魔法の道具だ。 disrupts the physical structure of anything but the
+hardest walls — even rigid statues, to say nothing of flesh.
+%%%%
+wand of draining
+
+この杖は魔法の道具だ。 これは対象に負のエネルギーの矢を放つ。
+矢は生命あるモンスターの生命力を衰弱させるが、 but is useless against the
+undead, demons, artificial creatures and even living plants.
+%%%%
+wand of enslavement
+
+この杖は魔法の道具だ。 これは対象に奴隷的な服従をさせる。
+%%%%
+wand of fire
+
+この杖は魔法の道具だ。 これは強力な炎の矢を放つ。
+%%%%
+wand of fireball
+
+この杖は魔法の道具だ。 これは炎の爆風を放つ。
+%%%%
+wand of flame
+
+この杖は魔法の道具だ。 これは少量の炎を放射する。
+%%%%
+wand of frost
+
+この杖は魔法の道具だ。 これは少量の冷気を放射する。
+%%%%
+wand of hasting
+
+この杖は魔法の道具だ。 これは狙った対象に、動きを加速する魔法をかける。
+%%%%
+wand of heal wounds
+
+この杖は魔法の道具だ。 これは対象の傷を治療する。
+%%%%
+wand of invisibility
+
+この杖は魔法の道具だ。 これは対象を他者の視覚から隠蔽する。
+%%%%
+wand of lightning
+
+この杖は魔法の道具だ。 これは強力な稲妻の矢を放つ。
+%%%%
+wand of magic darts
+
+この杖は魔法の道具だ。 これは小さな破壊エネルギーの矢を放つ。 They never miss.
+%%%%
+wand of paralysis
+
+この杖は魔法の道具だ。 can render a creature immobile, incapable of moving any
+of its limbs. A paralysed creature can only breathe, think, and helplessly
+watch as it falls into lava below or you put it out of its misery with your
+dagger.
+%%%%
+wand of polymorph
+
+この杖は魔法の道具だ。これは対象を別の形態に変化させる。It is especially
+effective against shape-changing creatures.
+%%%%
+wand of random effects
+
+この杖は魔法の道具だ。これは変化に富んだ効果を引き起こす。
+%%%%
+wand of slowing
+
+この杖は魔法の道具だ。casts enchantments to slow down the actions of a creature
+at which it is directed.
+%%%%
+wand of teleportation
+
+この杖は魔法の道具だ。これは対象に無作為な空間転位を引き起こす。
+%%%%
+wizard hat
+
+円錐形をした布の帽子だ。
 %%%%
