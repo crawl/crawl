@@ -9,6 +9,71 @@
 : require("dlua/layout/procedural_complex.lua")
 : require("dlua/layout/zonify.lua")
 
+{{
+
+  local onion_weights = {
+    -- TODO: More shapes are possible; triangle, oval, rectangle, elongated circle,
+    -- actually a generic polygon covers the triangle case, maybe irregular polygons,
+    -- stars,
+    { weight = 10, func = function() return primitive.distance end },
+    { weight = 10, func = function() return primitive.box end },
+    { weight = 10, func = function() return primitive.diamond() end },
+    { weight = 10, func = function() return primitive.octagon(0.25) end },
+    { weight = 10, func = function() return primitive.hexagon(0.25) end },
+    -- ex did produce some interesting stuff but it's not ideal
+    -- { weight = 10, func = function() return primitive.ex() end },
+  }
+
+  -- Generates the main onion function
+  function onion_skin(num_rings,wall_break)
+    local chosen = util.random_weighted_from("weight",onion_weights)
+    local fcircle = chosen.func()
+
+    -- Make holes in each partitioning wall
+    local rings = {}
+    local hole_size = util.random_range_real(0.1,0.3) -- 0.6
+
+    -- TODO: There are some other functions that could be used to carve holes; e.g. spirals, worley ...
+    local phasering = function(size)
+      local num = crawl.random_range(5*size,20*size) + 1
+      return procedural.phase(primitive.radial,crawl.random_range(2,10),crawl.random_real())
+    end
+
+    local randomring = function(size)
+      local p = 0
+    end
+
+    for n=1,num_rings-1,1 do
+      rings[n] = phasering(n/num_rings)
+    end
+
+    -- Do we create a central room?
+    local fill_center = crawl.coinflip()
+
+    local fphase = function(x,y)
+      local r = fcircle(x,y)
+      if r >= 1 then return 0 end
+      local rr = r * num_rings
+      local level = math.floor(rr)
+      r = rr - level
+      if fill_center and level == 0 then return 1 end
+
+      -- Fill connecting walls?
+      if level > 0 and r <= wall_break then
+        local hole = rings[level]
+        if hole ~= nil then
+          return hole(x,y)
+        end
+      end
+
+      return r
+    end
+
+    return fphase
+  end
+
+}}
+
 NAME:   layout_hall_layers
 DEPTH:  D:2-,Zot,Lair,Elf
 WEIGHT: 5, 20 (Zot), 10 (Lair), 20 (Elf)
@@ -146,20 +211,12 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
-{{
-  -- Generates the main onion function
-  local function onion_skin(num_rings)
-    local gxm,gym = dgn.max_bounds()
-
-  end
-}}
-
 # Takes one of the primitive shapes and creates nested corridors in that
 # shape, somewhat like an onion. Carves randomly spaced gaps in the walls
 # to connect everything up.
 NAME:   layout_onion
 DEPTH:  Zot,Snake
-WEIGHT: 200000
+WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -169,72 +226,14 @@ TAGS: overwritable layout allow_dup unrand
 
   -- TODO:
   --  * Implement chaotic gaps sizing
-  --  * Chop the corridors up instead of drawing gaps. Link everything together using zoning once it's implemented,
-  --    for now just use some Worley paths.
   --  * Maybe ruin some walls
   --  * Tune params a bit for Snake
-
-  local weights = {
-    -- TODO: More shapes are possible; triangle, oval, rectangle, elongated circle,
-    -- actually a generic polygon covers the triangle case, maybe irregular polygons,
-    -- stars,
-    { weight = 10, func = function() return primitive.distance end },
-    { weight = 10, func = function() return primitive.box end },
-    { weight = 10, func = function() return primitive.diamond() end },
-    { weight = 10, func = function() return primitive.octagon(0.25) end },
-    { weight = 10, func = function() return primitive.hexagon(0.25) end },
-    -- ex did produce some interesting stuff but it's not ideal
-    -- { weight = 10, func = function() return primitive.ex() end },
-  }
-
-  local chosen = util.random_weighted_from("weight",weights)
-  local fcircle = chosen.func()
-  local frad = primitive.radial
 
   local wall_break = util.random_range_real(.3,.7)
 
   -- Make the rings
   local num_rings = crawl.random2avg(7,2)+2
-
-  -- Make holes in each partitioning wall
-  local rings = {}
-  local hole_size = util.random_range_real(0.1,0.6)
-
-  -- TODO: There are some other functions that could be used to carve holes; e.g. spirals, worley ...
-  local phasering = function(size)
-    local num = crawl.random_range(5*size,20*size)+1
-    return procedural.phase(frad,crawl.random_range(2,10),crawl.random_real())
-  end
-
-  local randomring = function(size)
-    local p = 0
-  end
-
-  for n=1,num_rings-1,1 do
-    rings[n] = phasering(n/num_rings)
-  end
-
-  -- Do we create a central room?
-  local fill_center = crawl.coinflip()
-
-  local fphase = function(x,y)
-    local r = fcircle(x,y)
-    if r >= 1 then return 0 end
-    local rr = r * num_rings
-    local level = math.floor(rr)
-    r = rr - level
-    if fill_center and level == 0 then return 1 end
-
-    -- Fill connecting walls?
-    if level > 0 and r <= wall_break then
-      local hole = rings[level]
-      if hole ~= nil then
-        return hole(x,y)
-      end
-    end
-
-    return r
-  end
+  local fphase = onion_skin(num_rings,wall_break)
 
   -- Position on map
   fphase = procedural.translate(procedural.scale(fphase,math.min(gxm,gym)/2-2),gxm/2,gym/2)
@@ -269,12 +268,27 @@ ENDMAP
 # TODO: Other ways of connecting up the rooms.
 NAME:   layout_catacombs
 DEPTH:  Crypt
-WEIGHT: 200000
+WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
   layout_type "halls"
   if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+
+  -- Make the rings
+  local num_rings = crawl.random2avg(6,2)+4
+  local wall_break = util.random_range_real(.5,.8)
+  local fphase = onion_skin(num_rings,wall_break)
+
+  -- Position on map
+  fphase = procedural.translate(procedural.scale(fphase,math.min(gxm,gym)/2-2),gxm/2,gym/2)
+
+  -- Do the render
+  procedural.render_map(_G, fphase, function(v) return (v < wall_break and '.' or 'x') end)
+  procedural.render_map(_G, procedural.worley_diff{scale=util.random_range_real(0.1,0.2) }, function(v) return (v < 0.1 and '.' or nil) end)
+
+  zonify.map_fill_zones(_G, 1, 'x')
 }}
 
 # Layers two onions on top of each other to create an
