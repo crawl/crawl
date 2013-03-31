@@ -1206,10 +1206,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         you.redraw_armour_class = true;
         if (item.plus != 0)
         {
-            if (artefact)
-                fake_rap = ARTP_AC;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_AC;
+            ident = ID_KNOWN_TYPE;
 
             learn_pluses = true;
         }
@@ -1219,10 +1217,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (!you.duration[DUR_INVIS])
         {
             mpr("You become transparent for a moment.");
-            if (artefact)
-                fake_rap = ARTP_INVISIBLE;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_INVISIBLE;
+            ident = ID_KNOWN_TYPE;
         }
         break;
 
@@ -1230,10 +1226,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         you.redraw_evasion = true;
         if (item.plus != 0)
         {
-            if (artefact)
-                fake_rap = ARTP_EVASION;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_EVASION;
+            ident = ID_KNOWN_TYPE;
 
             learn_pluses = true;
         }
@@ -1244,10 +1238,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         {
             notify_stat_change(STAT_STR, item.plus, false, item);
 
-            if (artefact)
-                fake_rap = ARTP_STRENGTH;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_STRENGTH;
+            ident = ID_KNOWN_TYPE;
 
            learn_pluses = true;
         }
@@ -1258,10 +1250,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         {
             notify_stat_change(STAT_DEX, item.plus, false, item);
 
-            if (artefact)
-                fake_rap = ARTP_DEXTERITY;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_DEXTERITY;
+            ident = ID_KNOWN_TYPE;
 
            learn_pluses = true;
         }
@@ -1272,10 +1262,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         {
             notify_stat_change(STAT_INT, item.plus, false, item);
 
-            if (artefact)
-                fake_rap = ARTP_INTELLIGENCE;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_INTELLIGENCE;
+            ident = ID_KNOWN_TYPE;
 
            learn_pluses = true;
         }
@@ -1291,10 +1279,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             canned_msg(MSG_MANA_INCREASE);
 
         calc_mp();
-        if (artefact)
-            fake_rap = ARTP_MAGICAL_POWER;
-        else
-            ident = ID_KNOWN_TYPE;
+
+        fake_rap = ARTP_MAGICAL_POWER;
+        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_FLIGHT:
@@ -1304,10 +1291,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
                 mpr("You feel vaguely more buoyant than before.");
             else
                 mpr("You feel buoyant.");
-            if (artefact)
-                fake_rap = ARTP_FLY;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_FLY;
+            ident = ID_KNOWN_TYPE;
         }
         break;
 
@@ -1325,10 +1310,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (!you.scan_artefacts(ARTP_BERSERK))
         {
             mpr("You feel a brief urge to hack something to bits.");
-            if (artefact)
-                fake_rap = ARTP_BERSERK;
-            else
-                ident = ID_KNOWN_TYPE;
+            fake_rap = ARTP_BERSERK;
+            ident = ID_KNOWN_TYPE;
         }
         break;
 
