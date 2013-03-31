@@ -3598,6 +3598,7 @@ enum daction_type
 #if TAG_MAJOR_VERSION == 34
     DACT_SLIME_NEW_ATTEMPT,
 #endif
+    DACT_KIRKE_HOGS,
     NUM_DACTIONS,
 };
 

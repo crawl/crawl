@@ -20,6 +20,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
+#include "state.h"
 #include "travel.h"
 #include "view.h"
 
@@ -53,6 +54,7 @@ static const char *daction_names[] =
 #if TAG_MAJOR_VERSION == 34
     "slimes allow another conversion attempt",
 #endif
+    "hogs to humans",
 };
 #endif
 
@@ -105,6 +107,14 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     case DACT_SLIME_NEW_ATTEMPT:
         return mons_is_slime(mon);
+
+    case DACT_KIRKE_HOGS:
+        return (mon->type == MONS_HOG
+                && !mon->is_shapeshifter()
+                // Must be one of Kirke's original band
+                // *or* another monster that got porkalated
+                && (mon->props.exists("kirke_band")
+                    || mon->props.exists(ORIG_MONSTER_KEY)));
 
     default:
         return false;
@@ -203,6 +213,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local)
             mon->behaviour = BEH_WANDER;
             break;
 
+        case DACT_KIRKE_HOGS:
+            daction_hog_to_human(mon);
+            break;
+
         // The other dactions do not affect monsters directly.
         default:
             break;
@@ -230,6 +244,7 @@ static void _apply_daction(daction_type act)
     case DACT_SLIME_NEW_ATTEMPT:
     case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_PIKEL_SLAVES:
+    case DACT_KIRKE_HOGS:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))
@@ -274,4 +289,70 @@ void catchup_dactions()
 unsigned int query_da_counter(daction_type c)
 {
     return travel_cache.query_da_counter(c) + count_daction_in_transit(c);
+}
+
+void daction_hog_to_human(monster *mon) {
+    // Hogs to humans
+    monster orig;
+    const bool could_see = you.can_see(mon);
+
+    // Was it a converted monster or original band member?
+    if (mon->props.exists(ORIG_MONSTER_KEY))
+        // Copy it, since the instance in props will get deleted
+        // as soon a **mi is assigned to.
+        orig = mon->props[ORIG_MONSTER_KEY].get_monster();
+    else
+    {
+        orig.type     = MONS_HUMAN;
+        orig.attitude = mon->attitude;
+        define_monster(&orig);
+    }
+    orig.mid = mon->mid;
+    // Keep at same spot.
+    const coord_def pos = mon->pos();
+    // Preserve relative HP.
+    const float hp
+        = (float) mon->hit_points / (float) mon->max_hit_points;
+    // Preserve some flags.
+    const uint64_t preserve_flags =
+        mon->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
+    // Preserve enchantments.
+    mon_enchant_list enchantments = mon->enchantments;
+
+    // Restore original monster.
+    *mon = orig;
+
+    mon->move_to_pos(pos);
+    mon->enchantments = enchantments;
+    mon->hit_points   = max(1, (int) (mon->max_hit_points * hp));
+    mon->flags        = mon->flags | preserve_flags;
+
+    const bool can_see = you.can_see(mon);
+
+    // A monster changing factions while in the arena messes up
+    // arena book-keeping.
+    if (!crawl_state.game_is_arena())
+    {
+        // * A monster's attitude shouldn't downgrade from friendly
+        //   or good-neutral because you helped it.  It'd suck to
+        //   lose a permanent ally that way.
+        //
+        // * A monster has to be smart enough to realize that you
+        //   helped it.
+        if (mon->attitude == ATT_HOSTILE
+            && mons_intel(mon) >= I_NORMAL)
+        {
+            mon->attitude = ATT_GOOD_NEUTRAL;
+            mon->flags   |= MF_WAS_NEUTRAL;
+            mons_att_changed(mon);
+        }
+    }
+
+    behaviour_event(mon, ME_EVAL);
+
+    if (could_see && !can_see)
+        mpr("The hog vanishes!");
+    else if (!could_see && can_see)
+        mprf("%s appears from out of thin air!",
+                mon->name(DESC_A).c_str());
 }
