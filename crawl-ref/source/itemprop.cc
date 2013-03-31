@@ -2082,7 +2082,7 @@ int food_value(const item_def &item)
 
     if (item.sub_type == MI_PIE)
     {
-        int ret = 2500;
+        int ret = 1500;
         ret += carn * -500;
         ret += herb * 125;
         return ret;
