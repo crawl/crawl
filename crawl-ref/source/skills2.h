@@ -99,7 +99,7 @@ static const skill_type skill_display_order[] =
 
     SK_COLUMN_BREAK, SK_TITLE,
 
-    SK_STABBING, SK_TRAPS,
+    SK_TRAPS,
 
     SK_BLANK_LINE,
 

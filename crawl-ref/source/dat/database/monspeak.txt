@@ -1172,6 +1172,7 @@ VISUAL:For a moment, you lose track of @the_monster@.
 
 VISUAL:For a moment, @the_monster@ blends into the shadows.
 %%%%
+# TAG_MAJOR_VERSION == 34
 Stabbing player ghost
 
 @The_monster@ says @to_foe@, "Would you mind turning around for a second?"

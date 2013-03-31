@@ -126,6 +126,7 @@ if they are asleep or otherwise unalert, and increase your chances of monsters
 losing track of you after you leave their vision. Note that monsters become
 more suspicious and observant as you descend.
 %%%%
+# TAG_MAJOR_VERSION == 34
 Stabbing
 
 Stabbing is the skill that governs the likeliness of doing a great amount of

@@ -728,7 +728,6 @@ void hints_gained_new_skill(skill_type skill)
     case SK_FIGHTING:
     case SK_ARMOUR:
     case SK_STEALTH:
-    case SK_STABBING:
     case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:

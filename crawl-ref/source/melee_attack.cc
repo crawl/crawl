@@ -1754,6 +1754,8 @@ int melee_attack::player_apply_final_multipliers(int damage)
 
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
+    int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
+
     if (weapon && weapon->base_type == OBJ_WEAPONS
         && (weapon->sub_type == WPN_CLUB
             || weapon->sub_type == WPN_SPEAR
@@ -1769,7 +1771,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     {
     case SK_SHORT_BLADES:
     {
-        int bonus = (you.dex() * (you.skill(SK_STABBING, 100) + 100)) / 500;
+        int bonus = (you.dex() * (stab_skill + 100)) / 500;
 
         if (weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
@@ -1780,12 +1782,12 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     // fall through
     ok_weaps:
     case SK_LONG_BLADES:
-        damage *= 10 + you.skill_rdiv(SK_STABBING) /
-                       (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 2));
+        damage *= 10 + div_rand_round(stab_skill, 100 *
+                       (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 2)));
         damage /= 10;
         // fall through
     default:
-        damage *= 12 + you.skill_rdiv(SK_STABBING, 1, stab_bonus);
+        damage *= 12 + div_rand_round(stab_skill, 100 * stab_bonus);
         damage /= 12;
         break;
     }
@@ -3963,7 +3965,9 @@ void melee_attack::player_stab_check()
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
     {
-        stab_attempt = x_chance_in_y(you.skill_rdiv(SK_STABBING) + you.dex() + 1,
+        stab_attempt = x_chance_in_y(you.skill_rdiv(wpn_skill, 1, 2)
+                                     + you.skill_rdiv(SK_STEALTH, 1, 2)
+                                     + you.dex() + 1,
                                      roll);
     }
 
@@ -5385,9 +5389,12 @@ int melee_attack::calc_damage()
 
 int melee_attack::apply_defender_ac(int damage, int damage_max)
 {
-    int stab_bypass = stab_bonus
-                      ? random2(you.skill_rdiv(SK_STABBING) / stab_bonus)
-                      : 0;
+    int stab_bypass = 0;
+    if (stab_bonus)
+    {
+        stab_bypass = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
+        stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
+    }
     int after_ac = defender->apply_ac(damage, damage_max, AC_NORMAL,
                                       stab_bypass);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
