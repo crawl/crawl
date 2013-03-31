@@ -572,7 +572,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_STRIKING:
-        beam.name      = "force bolt",
+        beam.name      = "concussive force",
         beam.damage    = dice_def(1, 8),
         beam.colour    = BLACK,
         beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -1653,6 +1653,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
     case SPELL_FRENZY:
+    case SPELL_MIGHT:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -1868,11 +1869,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         return false;
     }
-    else if (random2(200) > mons->hit_dice + 50
-             || mons->type == MONS_BALL_LIGHTNING && coinflip())
-    {
+    else if (random2(200) > mons->hit_dice + 50)
         return false;
-    }
     else if (spellcasting_poly && coinflip()) // 50% chance of not casting
         return false;
     else

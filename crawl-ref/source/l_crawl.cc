@@ -724,8 +724,8 @@ static int crawl_simplex(lua_State *ls)
     }
 
     double result;
-    if (dims < 2) return 0; // TODO: Throw error?
-    switch (dims) {
+    switch (dims)
+    {
     case 2:
         result = perlin::noise(vals[0],vals[1]);
         break;
@@ -735,6 +735,8 @@ static int crawl_simplex(lua_State *ls)
     case 4:
         result = perlin::noise(vals[0],vals[1],vals[2],vals[3]);
         break;
+    default:
+        return 0; // TODO: Throw error?
     }
     lua_pushnumber(ls, result);
 

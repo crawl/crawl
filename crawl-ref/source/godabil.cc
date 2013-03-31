@@ -1928,9 +1928,9 @@ bool fedhas_passthrough(const monster_info* target)
 
 // Fedhas worshipers can shoot through non-hostile plants, can a
 // particular beam go through a particular monster?
-bool fedhas_shoot_through(const bolt & beam, const monster* victim)
+bool fedhas_shoot_through(const bolt& beam, const monster* victim)
 {
-    actor * originator = beam.agent();
+    actor *originator = beam.agent();
     if (!victim || !originator)
         return false;
 
@@ -2091,7 +2091,7 @@ int fedhas_fungal_bloom()
     if (processed_count)
     {
         simple_god_message(" appreciates your contribution to the "
-                           "ecosystem.", GOD_FEDHAS);
+                           "ecosystem.");
         // Doubling the expected value per sacrifice to approximate the
         // extra piety gain blood god worshipers get for the initial kill.
         // -cao
@@ -2105,23 +2105,26 @@ int fedhas_fungal_bloom()
     return processed_count;
 }
 
-static bool _create_plant(coord_def & target, int hp_adjust = 0)
+static bool _create_plant(coord_def& target, int hp_adjust = 0)
 {
     if (actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target)))
         return 0;
 
-    if (monster *plant = create_monster(mgen_data
-                                     (MONS_PLANT,
-                                      BEH_FRIENDLY,
-                                      &you,
-                                      0,
-                                      0,
-                                      target,
-                                      MHITNOT,
-                                      MG_FORCE_PLACE,
-                                      GOD_FEDHAS)))
+    if (monster *plant = create_monster(mgen_data(MONS_PLANT,
+                                            BEH_FRIENDLY,
+                                            &you,
+                                            0,
+                                            0,
+                                            target,
+                                            MHITNOT,
+                                            MG_FORCE_PLACE,
+                                            GOD_FEDHAS)))
     {
+        plant->flags |= MF_NO_REWARD;
         plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        mons_make_god_gift(plant, GOD_FEDHAS);
+
         plant->max_hit_points += hp_adjust;
         plant->hit_points += hp_adjust;
 
@@ -2325,10 +2328,10 @@ typedef pair<coord_def, int> point_distance;
 // Find the distance from origin to each of the targets, those results
 // are stored in distances (which is the same size as targets). Exclusion
 // is a set of points which are considered disconnected for the search.
-static void _path_distance(const coord_def & origin,
-                           const vector<coord_def> & targets,
+static void _path_distance(const coord_def& origin,
+                           const vector<coord_def>& targets,
                            set<int> exclusion,
-                           vector<int> & distances)
+                           vector<int>& distances)
 {
     queue<point_distance> fringe;
     fringe.push(point_distance(origin,0));
@@ -2372,9 +2375,9 @@ static void _path_distance(const coord_def & origin,
 
 // Find the minimum distance from each point of origin to one of the targets
 // The distance is stored in 'distances', which is the same size as origins.
-static void _point_point_distance(const vector<coord_def> & origins,
-                                  const vector<coord_def> & targets,
-                                  vector<int> & distances)
+static void _point_point_distance(const vector<coord_def>& origins,
+                                  const vector<coord_def>& targets,
+                                  vector<int>& distances)
 {
     distances.clear();
     distances.resize(origins.size(), INT_MAX);
@@ -2409,7 +2412,7 @@ static void _point_point_distance(const vector<coord_def> & origins,
 // We claim danger is proportional to the minimum distances from the point to a
 // (hostile) monster. This function carries out at most 7 searches to calculate
 // the distances in question.
-bool prioritise_adjacent(const coord_def &target, vector<coord_def> & candidates)
+bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
 {
     radius_iterator los_it(target, LOS_RADIUS, true, true, true);
 
@@ -2586,12 +2589,8 @@ bool fedhas_plant_ring_from_fruit()
     // are higher than that number.
 #ifndef USE_TILE_LOCAL
     unsigned not_used = adjacent.size() - unsigned(target_count);
-    for (unsigned i = adjacent.size() - not_used;
-         i < adjacent.size();
-         i++)
-    {
+    for (unsigned i = adjacent.size() - not_used; i < adjacent.size(); i++)
         view_update_at(adjacent[i]);
-    }
 #endif
 #ifdef USE_TILE
     // For tiles we have to clear all overlays and redraw the ones
@@ -2731,7 +2730,7 @@ int fedhas_rain(const coord_def &target)
 // and make 1 giant spore per corpse.  Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
-int fedhas_corpse_spores(beh_type behavior, bool interactive)
+int fedhas_corpse_spores(beh_type attitude, bool interactive)
 {
     int count = 0;
     vector<stack_iterator> positions;
@@ -2761,7 +2760,6 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     for (unsigned i = 0; i < positions.size(); ++i)
     {
 #ifndef USE_TILE_LOCAL
-
         coord_def temp = grid2view(positions[i]->pos);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
 
@@ -2786,21 +2784,27 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     for (unsigned i = 0; i < positions.size(); ++i)
     {
         count++;
-        if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                          behavior,
-                                          &you,
-                                          0,
-                                          0,
-                                          positions[i]->pos,
-                                          MHITNOT,
-                                          MG_FORCE_PLACE,
-                                          GOD_FEDHAS)))
+
+        if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
+                                               attitude,
+                                               &you,
+                                               0,
+                                               0,
+                                               positions[i]->pos,
+                                               MHITNOT,
+                                               MG_FORCE_PLACE,
+                                               GOD_FEDHAS)))
         {
-            rc->flags |= MF_ATT_CHANGE_ATTEMPT;
-            if (behavior == BEH_FRIENDLY)
+            plant->flags |= MF_NO_REWARD;
+
+            if (attitude == BEH_FRIENDLY)
             {
-                rc->behaviour = BEH_WANDER;
-                rc->foe = MHITNOT;
+                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                mons_make_god_gift(plant, GOD_FEDHAS);
+
+                plant->behaviour = BEH_WANDER;
+                plant->foe = MHITNOT;
             }
         }
 
@@ -2839,7 +2843,7 @@ struct monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
 static bool _possible_evolution(const monster* input,
-                                monster_conversion & possible_monster)
+                                monster_conversion& possible_monster)
 {
     switch (input->type)
     {
@@ -2879,18 +2883,23 @@ bool mons_is_evolvable(const monster* mon)
     return _possible_evolution(mon, temp);
 }
 
-static bool _place_ballisto(const coord_def & pos)
+static bool _place_ballisto(const coord_def& pos)
 {
-    if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                  BEH_FRIENDLY,
-                                                  &you,
-                                                  0,
-                                                  0,
-                                                  pos,
-                                                  MHITNOT,
-                                                  MG_FORCE_PLACE,
-                                                  GOD_FEDHAS)))
+    if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                                      BEH_FRIENDLY,
+                                                      &you,
+                                                      0,
+                                                      0,
+                                                      pos,
+                                                      MHITNOT,
+                                                      MG_FORCE_PLACE,
+                                                      GOD_FEDHAS)))
     {
+        plant->flags |= MF_NO_REWARD;
+        plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        mons_make_god_gift(plant, GOD_FEDHAS);
+
         remove_mold(pos);
         mpr("The mold grows into a ballistomycete.");
         mpr("Your piety has decreased.");
@@ -2950,9 +2959,9 @@ bool fedhas_evolve_flora()
         return false;
     }
 
-    monster* const target = monster_at(spelld.target);
+    monster* const plant = monster_at(spelld.target);
 
-    if (!target)
+    if (!plant)
     {
         if (!is_moldy(spelld.target)
             || !mons_class_can_pass(MONS_BALLISTOMYCETE,
@@ -2968,13 +2977,15 @@ bool fedhas_evolve_flora()
 
     }
 
-    if (!_possible_evolution(target, upgrade))
+    if (!_possible_evolution(plant, upgrade))
     {
-        if (target->type == MONS_GIANT_SPORE)
+        if (plant->type == MONS_GIANT_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
-        else  if (mons_is_plant(target))
-            simple_monster_message(target, " has already reached "
-                                   "the pinnacle of evolution.");
+        else  if (mons_is_plant(plant))
+        {
+            simple_monster_message(plant, " has already reached the pinnacle"
+                                   " of evolution.");
+        }
         else
             mpr("Only plants or fungi may be evolved.");
 
@@ -2999,7 +3010,7 @@ bool fedhas_evolve_flora()
         return false;
     }
 
-    switch (target->type)
+    switch (plant->type)
     {
     case MONS_PLANT:
     case MONS_BUSH:
@@ -3016,22 +3027,22 @@ bool fedhas_evolve_flora()
             evolve_desc += " somewhat quickly";
         evolve_desc += ".";
 
-        simple_monster_message(target, evolve_desc.c_str());
+        simple_monster_message(plant, evolve_desc.c_str());
         break;
     }
 
     case MONS_OKLOB_SAPLING:
-        simple_monster_message(target, " appears stronger.");
+        simple_monster_message(plant, " appears stronger.");
         break;
 
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
-        simple_monster_message(target,
+        simple_monster_message(plant,
                                " can now pick up its mycelia and move.");
         break;
 
     case MONS_BALLISTOMYCETE:
-        simple_monster_message(target, " appears agitated.");
+        simple_monster_message(plant, " appears agitated.");
         env.level_state |= LSTATE_GLOW_MOLD;
         break;
 
@@ -3039,24 +3050,28 @@ bool fedhas_evolve_flora()
         break;
     }
 
-    target->upgrade_type(upgrade.new_type, true, true);
-    target->god = GOD_FEDHAS;
-    target->attitude = ATT_FRIENDLY;
-    target->flags |= MF_NO_REWARD;
-    target->flags |= MF_ATT_CHANGE_ATTEMPT;
-    behaviour_event(target, ME_ALERT);
-    mons_att_changed(target);
+    plant->upgrade_type(upgrade.new_type, true, true);
+
+    plant->flags |= MF_NO_REWARD;
+    plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+    mons_make_god_gift(plant, GOD_FEDHAS);
+
+    plant->attitude = ATT_FRIENDLY;
+
+    behaviour_event(plant, ME_ALERT);
+    mons_att_changed(plant);
 
     // Try to remove slowly dying in case we are upgrading a
     // toadstool, and spore production in case we are upgrading a
     // ballistomycete.
-    target->del_ench(ENCH_SLOWLY_DYING);
-    target->del_ench(ENCH_SPORE_PRODUCTION);
+    plant->del_ench(ENCH_SLOWLY_DYING);
+    plant->del_ench(ENCH_SPORE_PRODUCTION);
 
-    if (target->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
-        target->add_ench(ENCH_EXPLODING);
+    if (plant->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        plant->add_ench(ENCH_EXPLODING);
 
-    target->hit_dice += you.skill_rdiv(SK_INVOCATIONS);
+    plant->hit_dice += you.skill_rdiv(SK_INVOCATIONS);
 
     if (upgrade.fruit_cost)
         _decrease_amount(collected_fruit, upgrade.fruit_cost);

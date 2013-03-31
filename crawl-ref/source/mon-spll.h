@@ -1831,7 +1831,7 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_FRENZY
+       SPELL_MIGHT
       }
     },
 

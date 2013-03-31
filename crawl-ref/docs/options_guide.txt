@@ -1399,7 +1399,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         several statements in a list, and also several menu_colour
         lines. When using several menu_colour lines, the colour of the
         _first_ matching regex is applied. For a list of colours, check
-        the colour option in 6-a.
+        the colour option in 5-a.
 
         The match specifies which listings are affected by the
         colouring. If you specify 'any', or completely skip the <match>:

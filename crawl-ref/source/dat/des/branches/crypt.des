@@ -1500,3 +1500,105 @@ cccccccc-----ccccc...........................ccc
     .............c
   ........@.......
 ENDMAP
+
+##############################################################################
+#        The death's head, by Grunt.
+#
+NAME:    grunt_crypt_end_deaths_head
+TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror
+PLACE:   Crypt:$
+ORIENT:  encompass
+MONS:    skeletal warrior, flying skull band
+SHUFFLE: Dd / Ee / Ff / Hh / Ii / Jj / Kk / Ll / 34 / 56 / 78 / 90
+KMONS:   D = vampire knight
+KMONS:   d = vampire mage w:2 / vampire
+KMONS:   E = ghoul
+KMONS:   e = rotting hulk / necrophage w:5
+KMONS:   F = necromancer
+KMONS:   f = zombie / skeleton / hell knight w:2
+KMONS:   H = lich
+KMONS:   h = phantasmal warrior / freezing wraith / shadow wraith / wraith
+KMONS:   I = ancient lich
+KMONS:   i = phantasmal warrior / freezing wraith / shadow wraith / wraith
+KMONS:   J = deep dwarf death knight
+KMONS:   j = death cob / skeletal warrior / flayed ghost / flaming corpse
+KMONS:   K = skeletal warrior col:gold name:ancient_champion n_rpl n_des \
+             spells:iron_shot;.;haste;pain;.;. \
+             spells:bolt_of_draining;.;haste;throw_frost;.;. \
+             spells:venom_bolt;.;haste;haunt;.;. \
+             spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells
+KMONS:   k = skeletal warrior
+KMONS:   L = deep elf death mage
+KMONS:   l = large abomination w:2 / small abomination
+KMONS:   3 = curse skull
+KMONS:   4 = nothing
+KMONS:   5 = unborn deep dwarf
+KMONS:   6 = deep dwarf necromancer w:2 / deep dwarf scion w:5 / deep dwarf
+KMONS:   7 = profane servitor
+KMONS:   8 = nothing
+KMONS:   9 = bone dragon
+KMONS:   0 = nothing
+KMONS:   M = greater mummy
+KMONS:   N = mummy priest
+KMONS:   O = guardian mummy
+KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
+SHUFFLE: {[(<
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccc|*$$...M...$$*|ccccccccccccccccccccccccc
+cccccccccccccccccccccc..cc*$$.O...O.$$*cc..cccccccccccccccccccccc
+cccccccccccccccccccc....ccc$$...O...$$ccc....cccccccccccccccccccc
+ccccccccccccccccccc.G.G.c.ccccc+++ccccc.c.G.G.ccccccccccccccccccc
+cccccccccccccccccc......c...............c......cccccccccccccccccc
+ccccccccccccccccc.......c..G..O...O..G..c.......ccccccccccccccccc
+cccccccccccccccc..e.E.e.c......O.O......c.j.J.j..cccccccccccccccc
+cccccccccccccccc........c..G.........G..c........cccccccccccccccc
+ccccccccccccccc....e.e..cc.............cc..j.j....ccccccccccccccc
+ccccccccccccccc..........c.G.........G.c..........ccccccccccccccc
+ccccccccccccccc+c........c....c+++c....c........c+ccccccccccccccc
+cccccccccccccc..cc.G...G.c.N.cc...cc.N.c.G...G.cc..cccccccccccccc
+ccccccccccccccd.cc.......c..cc.....cc..c.......cc.kcccccccccccccc
+ccccccccccccccdDcc...f...cccc...H...cccc..i....ccKkcccccccccccccc
+ccccccccccccccddcc.....f..c...G...G...c..i.....cckkcccccccccccccc
+ccccccccccccccc$$c...F....c.h.......h.c.....I..c$$ccccccccccccccc
+ccccccccccccccc$$c.....f..+.....Y.....+..i.....c$$ccccccccccccccc
+ccccccccccccccc$$cc...f...c.h.......h.c...i...cc$$ccccccccccccccc
+ccccccccccccccc**cc.G.G...c...G...G...c...G.G.cc**ccccccccccccccc
+cccccccccccccccc|cc....cccccc.......cccccc....cc|cccccccccccccccc
+cccccccccccccccc|cc..ccc.l..ccc+++ccc..6.ccc..cc|cccccccccccccccc
+cccccccccccccccccccccc*$..l.+...4...+.6..$*cccccccccccccccccccccc
+ccccccccccccccccccc.c|*$.L..c.......c..5.$*|c.ccccccccccccccccccc
+cccccccccccccccccc..cc*$..lcc.4.3.4.cc6..$*cc..cccccccccccccccccc
+cccccccccccccccccc...c$$.l.c.........c.6.$$c...cccccccccccccccccc
+cccccccccccccccccc.G.cc...ccc...4...ccc...cc.G.cccccccccccccccccc
+ccccccc...cccccccc....ccccc.+c.....c+.ccccc....cccccccc...ccccccc
+ccccccc.[.cccccccc......c....ccccccc....c......cccccccc.{.ccccccc
+ccccccc....ccccccc...2..8..2.ccccccc.2..0..2...ccccccc....ccccccc
+ccccccc.G...ccccccc..........ccccccc..........ccccccc...G.ccccccc
+cccccc.......ccccccc..8.7V8..ccccccc..0V9.0..ccccccc.......cccccc
+ccccc..........ccccccc.......ccccccc.......ccccccc..........ccccc
+cccccc..cc...1....cccccc8....cc...cc....0cccccc....1...cc..cccccc
+cccccccccccc...2...cccccc..1.cc._.cc.1..cccccc...2...cccccccccccc
+ccccccccccccccc.....ccc.cc.............cc.ccc.....ccccccccccccccc
+ccccccccccccccccc....+.G.c....V...V....c.G.+....ccccccccccccccccc
+ccccccccccccccccccc..+...ccc.........ccc...+..ccccccccccccccccccc
+ccccccccccccccccccccccc..c1cccc+++cccc1c..ccccccccccccccccccccccc
+ccccccccccccccccccccccc.2c..+.c1.1c.+..c2.ccccccccccccccccccccccc
+cccccccccccccccccccccc...c+cc.+...+.cc+c...cccccccccccccccccccccc
+cccccccccccccccccccccc..cc.1ccccccccc1.cc..cccccccccccccccccccccc
+ccccccccccccccccccccccc..cc.+.+.1.+.+.cc..ccccccccccccccccccccccc
+cccccccccccccccccccc.c+...ccc.+...+.ccc...+c.cccccccccccccccccccc
+cccccccccccccccccc....+.....ccc+++ccc.....+....cccccccccccccccccc
+ccccccccccccccc.......cc.................cc.......ccccccccccccccc
+cccccccc....c....2..ccccc...1...2...1...ccccc..2....c....cccccccc
+ccccccccc......1..cccccccc....G...G....cccccccc..1......ccccccccc
+cccccccccc..G....ccccccccccc.........ccccccccccc....G..cccccccccc
+ccccccccccc....ccccccccccccccccccccccccccccccccccc....ccccccccccc
+ccccccccccc.(.ccccccccccccccccccccccccccccccccccccc.<.ccccccccccc
+ccccccccccc...ccccccccccccccccccccccccccccccccccccc...ccccccccccc
+ccccccccccc..ccccccccccccccccccccccccccccccccccccccc..ccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP

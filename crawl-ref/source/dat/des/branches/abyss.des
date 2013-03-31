@@ -854,22 +854,6 @@ xxx.y.zzz.Y.xx
   xxxxxxxxxxx
 ENDMAP
 
-NAME: lightli_abyssal_temple
-TAGS: abyss
-MONS: wretched star
-KFEAT: V = iron_grate
-KFEAT: _ = altar_lugonu
-KITEM: _ = star_item
-MAP
-xxxxxxxxxx
-x.xWxlxV1x
-xGbGcGvVxx
-........_x
-xGbGcGvVxx
-x.xWxlxV1x
-xxxxxxxxxx
-ENDMAP
-
 NAME:    hangedman_abyss_river_spirits
 TAGS:    no_monster_gen abyss
 MONS:    smoke demon, efreet, fire elemental, water elemental
@@ -1267,27 +1251,6 @@ xxdd4ded4ddxx
 . .cdcdcdc. .
  x .xxxxx. x
   ... x ...
-ENDMAP
-
-NAME: lightli_abyss_rune_crippling_grates
-TAGS: abyss_rune
-KFEAT: m = iron_grate
-KITEM: O = abyssal rune of Zot
-KMONS: O = starcursed mass
-MONS: wretched star
-ITEM:
-MAP
-   .mmm.
-   .m1m.
-   .mmm.
-...........
-mmm.....mmm
-m1m..O..m1m
-mmm.....mmm
-...........
-   .mmm.
-   .m1m.
-   .mmm.
 ENDMAP
 
 ####

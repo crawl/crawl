@@ -815,7 +815,10 @@ ENDMAP
 NAME:   evilmike_quicksilver_bait
 TAGS:   no_monster_gen
 DEPTH:  D:16-
-KITEM:  1 = gold, gold, gold, superb_item, acquire any
+{{
+  local gold = 1 + crawl.random2avg(25,2) + crawl.random2avg(25,2) + crawl.random2(you.absdepth())
+  kitem("1 = gold q:" .. gold .. ", superb_item, acquire any")
+}}
 KMONS:  1 = patrolling quicksilver dragon
 MAP
  ccccccccccccc
@@ -4572,6 +4575,85 @@ xx...xx...xx...xx
       x...x
       xx[xx
        xxx
+ENDMAP
+
+NAME:    grunt_ministairs_6
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+NSUBST:  @ = 1:@ / *:.
+MAP
+xxxx .@..xxxx
+x{.xx...xx.[x
+x...x...x...x
+xx.+x...x+.xx
+ xxx.....xxx
+.............
+@.....G.....@
+.............
+ xxx.....xxx
+xx.+x...x+.xx
+x...x...x...x
+x(.xx...xx.<x
+xxxx .@..xxxx
+ENDMAP
+
+NAME:    grunt_ministairs_7
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+MAP
+    @
+  xx+xx
+ xx...xx
+xxG...Gxx
+x.......x
+x.{.G.(.x
+x.......x
+xxG.[.Gxx
+ xx...xx
+  xxxxx
+ENDMAP
+
+NAME:    grunt_ministairs_8
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+MAP
+    xxx
+   xxGx
+  xx..+@
+ xx..Gx
+xx...xx
+xG..xx
+x.{.x
+xG..xx
+xx...xx
+ xx..Gx
+  xx..+@
+   xxGx
+    xxx
+ENDMAP
+
+NAME:    hangedman_minor_gate_pass
+TAGS:    transparent
+DEPTH:   D:4-9
+: if you.absdepth() > 6 then
+SHUFFLE: 0% / 0% / '"
+SUBST:   1 = 0..
+: else
+SHUFFLE: 2% / 2% / 2% / d9 / d9 / '"
+SUBST:   1 = 0...
+: end
+SUBST:   x : xxc, 2 = 0, d = %, '" = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x.1.%.0.x.2.%.2.x.0.%.1.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+@.......................@
+xxxxxxxxxxxx+xxxxxxxxxxxx
+          ..10.
+           .0.
 ENDMAP
 
 ################################################################

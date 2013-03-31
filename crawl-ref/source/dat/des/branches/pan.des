@@ -1933,68 +1933,6 @@ x....2.2.2....x
 xxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_venn_diagram_of_death
-TAGS: pan uniq_nicolae_pan_suppression
-ORIENT: float
-NSUBST: P = 1:P / *:.
-MONS: moth of suppression, silent spectre
-MONS: common demon / any demon, greater demon, pandemonium lord
-: pan_demonic_rune(_G, 'P')
-MAP
-          xxxx@@@@@@@xxxx
-       xxxx.............xxxx
-      xx.......ccccc.......xx
-     xx......ccc...ccc......xx
-    xxx.....cc.......cc.....xxx
-   xxx.....cc....P....cc.....xxx
-  xxxx..3..c...........c..3..xxxx
-  xxx.....cc...........cc.....xxx
- xxxx.....c......4......c.....xxxx
- xxxx.....c.............c.....xxxx
- xxx......c.............c......xxx
-xxxx...........................xxxx
-xxxx........ccc.....ccc........xxxx
-xxxx...3....c1c..5..c2c....3...xxxx
-xxxx........ccc.....ccc........xxxx
-xxxx...........................xxxx
- xxx......c.............c......xxx
- xxxx.....c.............c.....xxxx
- xxxx.....c......4......c.....xxxx
-  xxx.....cc...........cc.....xxx
-  xxxx..3..c...........c..3..xxxx
-   xxx.....cc....P....cc.....xxx
-    xxx.....cc.......cc.....xxx
-     xx......ccc...ccc......xx
-      xx.......ccccc.......xx
-       xxxx.............xxxx
-          xxxx@@@@@@@xxxx
-ENDMAP
-
-
-NAME: nicolae_semicircles_of_death
-ORIENT: south
-TAGS: pan uniq_nicolae_pan_suppression
-MONS: moth of suppression, silent spectre
-MONS: common demon / any demon, greater demon
-: pan_demonic_rune(_G, 'P', true)
-MAP
-          xxxx@@@@@@@xxxx
-       xxxx.............xxxx
-      xx.......ccccc.......xx
-     xx......ccc...ccc......xx
-    xxx.....cc.......cc.....xxx
-   xxx.....cc....4....cc.....xxx
-  xxxx.....c...........c.....xxxx
-  xxx.....cc...........cc.....xxx
- xxxx..3..c......P......c..3..xxxx
- xxxx.....c.............c.....xxxx
- xxx......c.............c......xxx
-xxxx.............4.............xxxx
-xxxx........ccc.....ccc........xxxx
-xxxxxxxxxxxxc1cxxxxxc2cxxxxxxxxxxxx
-xxxxxxxxxxxxcccxxxxxcccxxxxxxxxxxxx
-ENDMAP
-
 #############################################################################
 # Pandemonium vaults: non-panlord-related.
 #############################################################################

@@ -1138,47 +1138,6 @@ ttttttttttttttttttttttttttttttttt
 ENDMAP
 
 ###############################################################################
-# A heavy focus on rotting enemies.
-NAME:    led_swamp_rot
-PLACE:   Swamp:$
-TAGS:    no_pool_fixup
-ORIENT:  southwest
-MONS:   bog body / rotting devil / necrophage / hydra zombie w:5, \
-        death drake w:1 / ghoul, \
-        death drake w:1 / death ooze
-SUBST: z = zzzzz1
-SUBST: d = ccczzz
-KPROP: z = no_rtele_into
-SUBST: z = ..twwWWWWW
-SUBST: c = cct
-KITEM: O = decaying rune of zot
-KFEAT: t = mangrove
-MAP
-       @
-tdddzz.zzzzzz
-tdddddz.zdddzzz
-tdddzz.zzzzddzz
-tdccc.zcccdddzz
-tdcc11.z11ccdzz
-tcczz.zzzccddzz
-tczz.zzzzccdzzzz
-tczzz.zzzzccddzzz
-ccdzzz.zzzdccdddzzz
-ccddzzz.zzzdcddddzzz
-ccdd11zz.z11ccddddzzz
-ccdddzzzz..zzccddddzz
-ccddddzzzzz.zzccddzzz
-ccdddzzzzz.zzzzccddzz
-tcdz22zz..z22zzccdddzz
-tcczzzz...zzzzzzccdddzz
-ttczz33.O.33zzztcdddddzz
-ttccttz3.3zzzttccddddttzz
-tttcctttttttttccddddttttz
- tttcccccccccccddddttttt
-  tttttttttttttttt
-ENDMAP
-
-###############################################################################
 # "Everyone said I was daft to build a castle on a swamp..."
 NAME: grunt_swamp_rune_castle
 PLACE: Swamp:$

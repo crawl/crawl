@@ -4048,8 +4048,8 @@ altar of Trog.
 %%%%
 thrashing horror
 
-A seething mass of yellow flesh. It thrashes erratically, sometimes devouring
-friend and foe alike.
+A seething mass of yellow flesh. It thrashes erratically, staggering foes
+beneath the weight of its impacts.
 %%%%
 titan
 
