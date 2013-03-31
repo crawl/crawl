@@ -556,6 +556,15 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             return CC_UNRESTRICTED;
         }
 
+    case JOB_JESTER:
+        switch (speci)
+        {
+        case SP_FELID:
+        case SP_TROLL:
+            return CC_RESTRICTED;
+        default:
+            return CC_UNRESTRICTED;
+        }
     case JOB_WANDERER:
         return CC_RESTRICTED;
 

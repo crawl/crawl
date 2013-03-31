@@ -262,6 +262,7 @@ enum missile_type
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
+    MI_PIE,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
@@ -379,6 +380,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_SICKNESS,                    // sickness/disease
     SPMSL_RAGE,                        // berserk rage
     NUM_REAL_SPECIAL_MISSILES,
+    SPMSL_BLINDING,                    // blinding
     NUM_SPECIAL_MISSILES,
 };
 

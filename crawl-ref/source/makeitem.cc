@@ -176,6 +176,9 @@ static int _missile_colour(const item_def &item)
     case MI_THROWING_NET:
         item_colour = DARKGREY;
         break;
+    case MI_PIE:
+        item_colour = YELLOW;
+        break;
     case NUM_SPECIAL_MISSILES:
     case NUM_REAL_SPECIAL_MISSILES:
         die("invalid missile brand");
@@ -1816,6 +1819,9 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
+    case MI_PIE:
+        rc = SPMSL_BLINDING;
+        break;
     case MI_STONE:
         // deliberate fall through
     case MI_LARGE_ROCK:
@@ -1875,6 +1881,9 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_SICKNESS:
     case SPMSL_RAGE:
         return (type == MI_NEEDLE);
+
+    case SPMSL_BLINDING:
+        return (type == MI_PIE);
 
     default:
         if (type == MI_NEEDLE)
@@ -1950,6 +1959,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    12, MI_SLING_BULLET,
                                    10, MI_NEEDLE,
                                    2,  MI_JAVELIN,
+                                   1,  MI_PIE,
                                    1,  MI_THROWING_NET,
                                    1,  MI_LARGE_ROCK,
                                    0);
@@ -1988,6 +1998,8 @@ static void _generate_missile_item(item_def& item, int force_type,
     {
         item.quantity = random_range(2, 8);
     }
+    else if (item.sub_type == MI_PIE)
+        item.quantity = random_range(1, 4);
     else if (get_ammo_brand(item) != SPMSL_NORMAL)
         item.quantity = 1 + random2(7) + random2(10) + random2(10);
     else
