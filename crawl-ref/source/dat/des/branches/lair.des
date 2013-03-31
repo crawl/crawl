@@ -2430,3 +2430,65 @@ xxxXPXx150xX.....PXXxxxxXP3xxx
   xxxxxxxxxxxxxxxxxxxxxxxxxx
     xx   xxxx  x xxxx   xx
 ENDMAP
+
+##############################################################################
+# The beastmaster's lair.
+# Inspired by discussions of deep troll professionals and the prospect of a
+# "beastmaster"; here he lives, with packs of beasts and one powerful
+# personal pet.
+#
+# On his own the boss shouldn't be *extremely* threatening - it's his pet
+# and the inner welcoming party that add enough danger that this ending
+# stands on its own.
+#
+NAME:    grunt_lair_end_beastmaster
+TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
+PLACE:   Lair:$
+ORIENT:  northeast
+MONS:    deep troll shaman, dire elephant / hydra / lindwurm
+MONS:    catoblepas, death yak band
+MONS:    elephant, wolf, black bear / grizzly bear
+KMONS:   P = plant / fungus w:2 / bush w:1 / nothing w:13
+SHUFFLE: 567
+SUBST:   C = cx..
+SUBST:   P = P:19 t:1
+NSUBST:  % = 2:| / 3:* / *:%
+{{
+  local elephantsize = 2 + crawl.random2(4)
+  local wolfsize = 3 + crawl.random2(5)
+  local bearsize = 1 + crawl.random2(3)
+  nsubst("5 = " .. elephantsize .. ":5 / *:.")
+  nsubst("6 = " .. wolfsize .. ":6 / *:.")
+  nsubst("7 = " .. bearsize .. ":7 / *:.")
+  dgn.delayed_decay(_G, 'd', "human skeleton / orc skeleton / elf skeleton"
+                             .. " / dwarf skeleton / ogre skeleton w:1"
+                             .. " / naga skeleton w:1 / minotaur skeleton w:1"
+                             .. " / merfolk skeleton w:1")
+}}
+MAP
+                xxxxxx
+          xxxxxxx5P.Pxx
+         xxP..5.5..P..xxxxxx
+        xxP5d5.5.5P.P..xxP.xxx
+       xx.5.5.5ccccccc....P..x
+       x...5.ccc.d...ccc.P..xx
+      xx.P.ccc..d......d...Px
+     xx..ccc...G..C..3..d..xx
+    xx..ccc.G....CcC..4..c.x
+    x.P.ccc..d..CcCcC...cc.x
+    x..ccc%.G..G.CcC...ccP.x
+   xx..ccc%%.2.dG.C..d.c...x
+   x...cccc%%.1.....G.ccP..x
+   x.P.ccccc%%.Gd.G...c..P.x
+  xx....ccccc%%.....ccc...xx
+ xx.d..Pccccccc%cccccP.6..x
+xx.P..7..cccccccc.P.6.6.Pxx
+..7..7.7P..ccP..P6.6d6.Pxx
+.P.7..7..d....P...6.6.xxx
+d.P.7P..P.xxxx.P..P6.xx
+.P.7..7..xx  xxx.P..xx
+..P.P..xxx     xxxxxx
+.P.P..xx
+..P.dxx
+@....x
+ENDMAP
