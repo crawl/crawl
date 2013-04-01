@@ -2951,6 +2951,11 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
         return false;
 
+    // Anyone can displace a submerged monster (otherwise monsters can
+    // get stuck behind a trapdoor spider, giving away its presence).
+    if (mpushee->submerged())
+        return true;
+
     if (!monster_shover(mpusher))
         return false;
 
