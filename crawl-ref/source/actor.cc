@@ -169,7 +169,7 @@ bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
     {
         // The monster is cold-resistant and can't be hibernated.
         if (intrinsic_only && is_monster()
-                ? get_mons_resist(this->as_monster(), MR_RES_COLD)
+                ? get_mons_resist(this->as_monster(), MR_RES_COLD) > 0
                 : res_cold() > 0)
         {
             return false;
