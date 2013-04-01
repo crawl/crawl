@@ -955,8 +955,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_THROWING]     = 1;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_EVOCATIONS]   = 2;
-
-        simple_god_message(" thought your last joke was hilarious!", GOD_XOM);
         break;
 
     case JOB_HUNTER:
@@ -1457,6 +1455,11 @@ static void _setup_generic(const newgame_def& ng)
 
     // Get rid of god companions left from previous games
     init_companions();
+
+    // Jester flavour.  Maybe this should be elsewhere, but it certainly
+    // shouldn't be earlier.
+    if (you.char_class == JOB_JESTER)
+        simple_god_message(" thought your last joke was hilarious!", GOD_XOM);
 
     // Create the save file.
     if (Options.no_save)
