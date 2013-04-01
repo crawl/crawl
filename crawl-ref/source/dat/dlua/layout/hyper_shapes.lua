@@ -2,6 +2,11 @@
 -- hyper_shapes.lua:
 --
 -- Creates shapes for layout paint arrays
+--
+-- TODO: Largely this file is redundant in favour of better placement
+-- strategies. The interesting things here are size functions; cave rooms
+-- (which should either go into a caves include or just layout_caves.des);
+-- and a few misc functions and of course floor vault.
 
 require("dlua/layout/procedural.lua")
 
@@ -75,11 +80,9 @@ end
 --       for specifying arbitrary properties of the returned paint, *or*
 --       some sort of filter util which does the same on a whole batch afterward.
 function hyper.shapes.draw_box(corner1, corner2)
-
   return {
     { type = "floor", corner1 = corner1, corner2 = corner2, open = true },
   }
-
 end
 
 ---------------------------------------------------------------------
@@ -184,82 +187,6 @@ function hyper.floors.cave_paint(corner1,corner2,params)
   }
 end
 
--- Draws a floor plan based on omnigrid
-function hyper.floors.floor_plan_omnigrid(room,options,gen)
-
-  local paint = hyper.layout.omnigrid_primitive{
-    guaranteed_divides = 0,
-    subdivide_initial_chance = 80,  -- 20% chance of a donut
-    fill_chance = 100,
-    corridor_width = 8,
-    minimum_size = 12,
-    jitter = true,
-    jitter_min = -2,
-    jitter_max = 2,
-    outer_corridor = true,
-    size = room.size,
-    paint_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil,
-    floor_func = crawl.one_chance_in(2) and hyper.floors.cave_paint or nil
-  }
-  return paint
-end
-
-function hyper.floors.floor_plan_finegrid(room,options,gen)
-  local corridor_width = crawl.random_range(1,3)
-  local jitters = {
-    { weight = 20, jitter = false },
-    { weight = 10, jitter = true, jitter_min = -3, jitter_max = 0 },
-    -- With high jitter, it turns into really chaotic random architecture
-    { weight = 5, jitter = true, jitter_min = -2, jitter_max = 1 },
-    { weight = 5, jitter = true, jitter_min = -2, jitter_max = 2 }
-  }
-  local chosen = util.random_weighted_from("weight",jitters)
-
-  local paint = hyper.layout.omnigrid_primitive{
-    guaranteed_divides = 6,
-    subdivide_initial_chance = 100,  -- 20% chance of a donut
-    subdivide_level_multiplier = 0.98,
-    corridor_width = corridor_width,
-    fill_chance = 80,
-    minimum_size = 6,
-    jitter = chosen.jitter,
-    jitter_min = chosen.jitter_min,
-    jitter_max = chosen.jitter_max,
-    size = room.size,
-    paint_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil,
-    floor_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil
-  }
-  return paint
-end
-
-function hyper.floors.floor_plan_microgrid(room,options,gen)
-  local paint = hyper.layout.omnigrid_primitive{
-    guaranteed_divides = 5,
-    subdivide_initial_chance = 100,  -- 20% chance of a donut
-    subdivide_level_multiplier = util.random_range_real(0.9,0.999),
-    corridor_width = 1,
-    fill_chance = crawl.random_range(50,90),
-    minimum_size = 2,
-    jitter = false,
-    size = room.size,
-    paint_func = crawl.one_chance_in(5) and hyper.floors.cave_paint or nil,
-    floor_func = crawl.one_chance_in(4) and hyper.floors.cave_paint or nil
-  }
-  return paint
-end
-
--- Layer any two of the other grid plans over each other
-function hyper.floors.floor_plan_combigrid(room,options,gen)
-  local which = { hyper.floors.floor_plan_omnigrid, hyper.floors.floor_plan_finegrid, hyper.floors.microgrid }
-  local whichnum = crawl.random2(#which)
-  table.remove(which,whichnum+1)
-  local paint = {}
-  for i,plan in which do
-    util.append(paint,plan(room,options,gen))
-  end
-  return paint
-end
-
 function hyper.rooms.junction_vault(room,options,gen)
 
   local floor = hyper.rooms.floor_vault(room,options,gen)
@@ -271,57 +198,4 @@ function hyper.rooms.junction_vault(room,options,gen)
   local corner1 = { x = crawl.random_range(corridor_width,room.size.x), y = crawl.random_range(corridor_width,room.size.y) }
   table.insert(floor, { type = "space", corner1 = corner1, corner2 = { x = corner1.x + room.size.x - 1 - corridor_width, y = corner1.y + room.size.y - 1 - corridor_width }, wrap = true })
   return floor
-end
-
----------------------------------------------------------------------
--- Floor functions
---
--- Describe initial floor layouts to paint the entire grid with.
---
--- TODO: Basically completely redundant now
-
-
-
-function hyper.floors.full_size_room()
-  local gxm, gym = dgn.max_bounds()
-
-  local paint = {
-    { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm-2, y = gym-2 } }
-  }
-  return paint
-end
-
-function hyper.floors.three_quarters_size_room()
-  local gxm, gym = dgn.max_bounds()
-
-  local paint = {
-    { type = "floor", corner1 = { x = 11, y = 11 }, corner2 = { x = gxm-12, y = gym-12 } }
-  }
-  return paint
-end
-
-function hyper.floors.small_central_room()
-  local gxm, gym = dgn.max_bounds()
-  -- Put a single empty room somewhere roughly central. All rooms will be built off from each other following this
-  local x1 = crawl.random_range(30, gxm-70)
-  local y1 = crawl.random_range(30, gym-70)
-
-  local paint = {
-    { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + crawl.random_range(4,6), y = y1 + crawl.random_range(4,6) } }
-  }
-  return paint
-end
-
-function hyper.floors.small_edge_room()
-  local gxm, gym = dgn.max_bounds()
-  local normal = hyper.normals[crawl.random2(4)+1]
-  local size = { x = crawl.random_range(4,8), y = crawl.random_range(4,8) }
-
-  local x1 = math.floor((normal.x + 1)*(gxm - 10 - size.x)/2 + 5)
-  local y1 = math.floor((normal.y + 1)*(gym - 10 - size.y)/2 + 5)
-
-  local paint = {
-    { type = "floor", corner1 = { x = x1, y = y1 }, corner2 = { x = x1 + size.x - 1, y = y1 + size.y - 1 } }
-  }
-  return paint
 end

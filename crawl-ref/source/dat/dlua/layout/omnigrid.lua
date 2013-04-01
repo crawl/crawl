@@ -3,9 +3,9 @@
 --
 ------------------------------------------------------------------------------
 
-hyper.layout = {}
+omnigrid = {}
 
-function hyper.layout.omnigrid_defaults()
+function omnigrid.omnigrid_defaults()
   local gxm,gym = dgn.max_bounds()
   local options = {
     subdivide_initial_chance = 100, -- % chance of subdividing at first level, if < 100 then we might just get chaotic city
@@ -25,12 +25,12 @@ function hyper.layout.omnigrid_defaults()
 end
 
 -- Builds the paint array for omnigrid
-function hyper.layout.omnigrid_primitive(params)
-  local options = hyper.layout.omnigrid_defaults()
+function omnigrid.omnigrid_paint(params)
+  local options = omnigrid.omnigrid_defaults()
   if params ~= nil then hyper.merge_options(options,params) end
 
   local gxm,gym = options.size.x,options.size.y
-  local results = hyper.layout.omnigrid_subdivide(0,0,gxm-1,gym-1,options)
+  local results = omnigrid.omnigrid_subdivide(0,0,gxm-1,gym-1,options)
   local paint = {}
   if params.floor_func ~= nil then
     util.append(paint,params.floor_func({ x = 0, y = 0},{ x = gxm-1, y = gym-1 },corner2,options.feature_type))
@@ -76,7 +76,7 @@ function hyper.layout.omnigrid_primitive(params)
   return paint
 end
 
-function hyper.layout.omnigrid_subdivide(x1,y1,x2,y2,options,results,chance,depth)
+function omnigrid.omnigrid_subdivide(x1,y1,x2,y2,options,results,chance,depth)
   -- Default parameters
   if results == nil then results = { } end
   if chance == nil then chance = options.subdivide_initial_chance end
@@ -116,13 +116,13 @@ function hyper.layout.omnigrid_subdivide(x1,y1,x2,y2,options,results,chance,dept
     if which == "x" then
       local pos = crawl.random_range(options.minimum_size,width-options.minimum_size)
       -- Create the two new areas
-      hyper.layout.omnigrid_subdivide(x1,y1,x1 + pos - 1,y2,options,results,new_chance,new_depth)
-      hyper.layout.omnigrid_subdivide(x1 + pos,y1,x2,y2,options,results,new_chance,new_depth)
+      omnigrid.omnigrid_subdivide(x1,y1,x1 + pos - 1,y2,options,results,new_chance,new_depth)
+      omnigrid.omnigrid_subdivide(x1 + pos,y1,x2,y2,options,results,new_chance,new_depth)
     else
       local pos = crawl.random_range(options.minimum_size,height-options.minimum_size)
       -- Create the two new areas
-      hyper.layout.omnigrid_subdivide(x1,y1,x2,y1 + pos - 1,options,results,new_chance,new_depth)
-      hyper.layout.omnigrid_subdivide(x1,y1 + pos,x2,y2,options,results,new_chance,new_depth)
+      omnigrid.omnigrid_subdivide(x1,y1,x2,y1 + pos - 1,options,results,new_chance,new_depth)
+      omnigrid.omnigrid_subdivide(x1,y1 + pos,x2,y2,options,results,new_chance,new_depth)
     end
   end
 
