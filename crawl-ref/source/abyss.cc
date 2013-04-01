@@ -33,6 +33,7 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-pick.h"
@@ -1762,6 +1763,23 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 
     if (feat == DNGN_EXIT_ABYSS)
         feat = DNGN_ENTER_ABYSS;
+
+    // If we are trying to place a wall on top of a creature or item, try to
+    // move it aside. If this fails, simply place floor instead.
+    actor* act = actor_at(c);
+    if (feat_is_solid(feat) && (igrd(c) != NON_ITEM || act))
+    {
+        coord_def newpos;
+        get_push_space(c, newpos, act, true);
+        if (!newpos.origin())
+        {
+            move_items(c, newpos);
+            if (act)
+                actor_at(c)->move_to_pos(newpos);
+        }
+        else
+            feat = DNGN_FLOOR;
+    }
 
     dungeon_terrain_changed(c, feat, true, preserve_feat, true);
     if (feat == DNGN_ROCK_WALL)
