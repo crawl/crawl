@@ -11,8 +11,8 @@
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
 NAME:   layout_layer_cave
-DEPTH:  D,Lair,Snake
-WEIGHT: 40
+DEPTH:  D:3-27,Lair,Snake
+WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -96,7 +96,8 @@ TAGS: overwritable layout allow_dup unrand
 # TODO: * Some flooding/river on 1/10 chance (certain branches)
 #       * More shape variety
 #       * Some shapes work better in certain branches. Snake/D could occasionally get straight edged shapes.
-#       * Sake should have domain distortion every time
+#       * Snake should have domain distortion every time (use the one from Halls)
+#       * It should be possible to fold most of these effects into layer_cave
 NAME:   layout_cave_shapes
 DEPTH:  D:5-25,Lair,Snake,Tar,Coc,Spider
 WEIGHT: 20
@@ -130,7 +131,7 @@ TAGS: overwritable layout allow_dup unrand
     { weight = 8, shape = function()
         local outer_r = util.random_range_real(0.6,1.0)
         local circle = fcircle()
-        local cwidth = util.random_range_real(0.2,0.4)
+        local cwidth = util.random_range_real(0.3,0.5)
         local fdonut = function(x,y)
           return 1-procedural.boundary_map(circle(x,y),outer_r-cwidth,outer_r-cwidth*2/3,outer_r-cwidth/3,outer_r)
         end
@@ -208,8 +209,7 @@ TAGS: overwritable layout allow_dup unrand
 # TODO: This looks very much like a particular instance of cave_shapes. Probably little point keeping it around
 # unless it can do something more interesting?
 NAME:   layout_ant_hill
-DEPTH:  D:2-,Lair
-# DEPTH:  D:5-25,Lair
+DEPTH:  D:5-25,Lair
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -286,7 +286,7 @@ ENDMAP
 # should really be folded in with randomisation
 NAME:   layout_chambers
 DEPTH:  Snake,Lair,Spider
-WEIGHT: 20
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -313,7 +313,7 @@ ENDMAP
 # TODO: Use other layouts as the base (e.g. cave_shapes, a river/forest/pools layout like bigger_room,
 # even swamp / shoals) and add rooms to them
 NAME: layout_cave_town
-WEIGHT: 10
+WEIGHT: 0
 ORIENT: encompass
 DEPTH: D:5-, Snake, Lair
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
@@ -454,7 +454,7 @@ ENDMAP
 NAME:   layout_ice_bergs
 DEPTH:  Coc
 CHANCE: 100%
-WEIGHT: 5
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand chance_cocytus
 {{
@@ -462,9 +462,10 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
 
-  -- There is precedent for requiring flight in Coc, so have
-  -- a chance that no paths will get generated between the ice bergs
-  local connect_up = crawl.x_chance_in_y(5,6)
+  -- There is precedent for requiring flight in Coc, so could have
+  -- a chance that not all bergs will get connected up
+  -- Disabled until it's implemented better
+  local connect_up = true -- crawl.x_chance_in_y(5,6)
   local nilresult = 'w'
   if connect_up then
     local fcorridors = procedural.worley_diff{ scale = 0.15 }
