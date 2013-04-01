@@ -82,7 +82,7 @@
 # it does all kinds of interesting things.
 NAME: layout_layered_grid
 DEPTH:  D, Zot, Elf, Crypt, Snake, Dis, Lair
-WEIGHT: 20000
+WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
 {{
