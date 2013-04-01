@@ -8,13 +8,81 @@
 : require("dlua/layout/hyper.lua")
 : require("dlua/layout/omnigrid.lua")
 
+{{
+
+  -- Draws a floor plan based on omnigrid
+  function hyper.floors.floor_plan_omnigrid(room,options,gen)
+
+    local paint = omnigrid.omnigrid_paint{
+      guaranteed_divides = 0,
+      subdivide_initial_chance = 80,  -- 20% chance of a donut
+      fill_chance = 100,
+      corridor_width = 8,
+      minimum_size = 12,
+      jitter = true,
+      jitter_min = -2,
+      jitter_max = 2,
+      outer_corridor = true,
+      size = room.size,
+      paint_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil,
+      floor_func = crawl.one_chance_in(2) and hyper.floors.cave_paint or nil
+    }
+    return paint
+  end
+
+  function hyper.floors.floor_plan_finegrid(room,options,gen)
+    local corridor_width = crawl.random_range(1,3)
+    local jitters = {
+      { weight = 20, jitter = false },
+      { weight = 10, jitter = true, jitter_min = -3, jitter_max = 0 },
+      -- With high jitter, it turns into really chaotic random architecture
+      { weight = 5, jitter = true, jitter_min = -2, jitter_max = 1 },
+      { weight = 5, jitter = true, jitter_min = -2, jitter_max = 2 }
+    }
+    local chosen = util.random_weighted_from("weight",jitters)
+
+    local paint = omnigrid.omnigrid_paint{
+      guaranteed_divides = 6,
+      subdivide_initial_chance = 100,  -- 20% chance of a donut
+      subdivide_level_multiplier = 0.98,
+      corridor_width = corridor_width,
+      fill_chance = 80,
+      minimum_size = 6,
+      jitter = chosen.jitter,
+      jitter_min = chosen.jitter_min,
+      jitter_max = chosen.jitter_max,
+      size = room.size,
+      paint_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil,
+      floor_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil
+    }
+    return paint
+  end
+
+  function hyper.floors.floor_plan_microgrid(room,options,gen)
+    local paint = omnigrid.omnigrid_paint{
+      guaranteed_divides = 5,
+      subdivide_initial_chance = 100,  -- 20% chance of a donut
+      subdivide_level_multiplier = util.random_range_real(0.9,0.999),
+      corridor_width = 1,
+      fill_chance = crawl.random_range(50,90),
+      minimum_size = 2,
+      jitter = false,
+      size = room.size,
+      paint_func = crawl.one_chance_in(5) and hyper.floors.cave_paint or nil,
+      floor_func = crawl.one_chance_in(4) and hyper.floors.cave_paint or nil
+    }
+    return paint
+  end
+
+}}
+
 # Generates up to 3 grids of different granularities, then layers
 # then on top of each other. At its simplest reduction this looks like
 # forbidden_donut but with a randomly-placed hole. At its most complex
 # it does all kinds of interesting things.
 NAME: layout_layered_grid
 DEPTH:  D, Zot, Elf, Crypt, Snake, Dis, Lair
-WEIGHT: 20
+WEIGHT: 20000
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
 {{
