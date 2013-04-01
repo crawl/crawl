@@ -868,13 +868,13 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         // Make sure we have a legitimate tile.
         proceed = false;
-        if (!zin)
+        if (!zin && !monster_at(*ai))
         {
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
                 if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
         }
-        else if (!feat_is_solid(grd(*ai)))
+        else if (zin && !feat_is_solid(grd(*ai)))
             proceed = true;
 
         if (proceed)
