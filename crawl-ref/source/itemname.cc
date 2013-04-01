@@ -3247,7 +3247,7 @@ bool is_useless_item(const item_def &item, bool temp)
                         && you.species != SP_GHOUL);
 
         case AMU_FAITH:
-            return (you.species == SP_DEMIGOD);
+            return (you.species == SP_DEMIGOD && !you.religion);
 
         case RING_LIFE_PROTECTION:
             return (player_prot_life(false, temp, false) == 3);
