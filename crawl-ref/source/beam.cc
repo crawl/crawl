@@ -5655,13 +5655,16 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_TELEPORT)
         return !mon->wont_attack();
 
-    // degeneration / sleep / enslave soul
+    // degeneration / enslave soul
     if (flavour == BEAM_DEGENERATE
-        || flavour == BEAM_HIBERNATION
         || flavour == BEAM_ENSLAVE_SOUL)
     {
         return (mon->holiness() == MH_NATURAL);
     }
+
+    // sleep
+    if (flavour == BEAM_HIBERNATION)
+        return mon->can_hibernate(true);
 
     // dispel undead
     if (flavour == BEAM_DISPEL_UNDEAD)

@@ -225,7 +225,7 @@ public:
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
-    virtual bool can_sleep() const;
+    virtual bool can_sleep(bool holi_only = false) const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
