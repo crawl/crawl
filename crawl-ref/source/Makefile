@@ -240,9 +240,6 @@ ifeq ($(uname_S),Darwin)
 	endif
 	COPY_FONTS = yes
 endif
-ifdef USE_LUAJIT
-	BUILD_LUA := YesPlease
-endif
 ifdef USE_ICC
 	NO_RDYNAMIC := YesPlease
 endif
@@ -570,18 +567,26 @@ ifndef BUILD_LUA
   endif
 endif
 ifndef BUILD_LUA
-  ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
-    ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
-      BUILD_LUA = yes
+  ifneq ($(USE_LUAJIT),)
+    ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
+      LUA_PACKAGE = luajit
     else
-      ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
-        LUA_PACKAGE = lua
-      else
-        BUILD_LUA = yes
-      endif
+      BUILD_LUA = yes
     endif
   else
-    LUA_PACKAGE = lua5.1
+    ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
+      ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
+        BUILD_LUA = yes
+      else
+        ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+          LUA_PACKAGE = lua
+        else
+          BUILD_LUA = yes
+        endif
+      endif
+    else
+      LUA_PACKAGE = lua5.1
+    endif
   endif
 endif
 ifndef BUILD_LUA
