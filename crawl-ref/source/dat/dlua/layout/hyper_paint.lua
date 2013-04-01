@@ -154,7 +154,7 @@ function hyper.paint.inside_custom(x,y,item)
   return item.shape_type(x,y,ax,ay,item)
 end
 
-local function hyper.paint.determine_usage_from_layout(layout_grid,options)
+function hyper.paint.determine_usage_from_layout(layout_grid,options)
 
   usage_restricted_count = 0
   usage_open_count = 0
