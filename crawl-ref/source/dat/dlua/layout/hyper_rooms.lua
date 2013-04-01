@@ -173,7 +173,7 @@ function hyper.rooms.make_tagged_room(chosen,options)
     -- single orient tag makes the other walls ineligible
     room.tags = {}
     for n = 0, 3, 1 do
-      if dgn.has_tag(room.map,"vaults_orient_" .. hyper.normals[n+1].name) then
+      if dgn.has_tag(room.map,"vaults_orient_" .. vector.normals[n+1].name) then
         room.has_orient = true
         room.tags[n] = true
       end
@@ -224,7 +224,7 @@ function hyper.rooms.analyse_room(room,options)
 
     if not has_exits or cell.exit then
       -- Analyse squares around it
-      for i,normal in ipairs(room.allow_diagonals and hyper.directions or hyper.normals) do
+      for i,normal in ipairs(room.allow_diagonals and vector.directions or vector.normals) do
         local near_pos = { x = n + normal.x,y = m + normal.y }
         local near_cell = hyper.usage.get_usage(room.grid,near_pos.x,near_pos.y)
         if near_cell == nil or near_cell.space then
@@ -284,7 +284,7 @@ function hyper.rooms.add_walls(room, options)
       else
         -- Otherwise check if we're bordering any open squares and therefore need to draw a wall.
         local any_open = false
-        for i,normal in ipairs(hyper.directions) do
+        for i,normal in ipairs(vector.directions) do
           local near_cell = hyper.usage.get_usage(room.grid,n+normal.x-1,m+normal.y-1)
           if near_cell == nil then near_cell = { space = true } end
           if not near_cell.space and not near_cell.solid then
@@ -299,7 +299,7 @@ function hyper.rooms.add_walls(room, options)
           -- TODO: Allow diagonal doors here too. Diagonals are problematic (in the previous loop and in analyse_room) because we'd get overlapping anchors
           --       with adjacent walls, this really doesn't sound good.
           local wall_usage = { feature = "rock_wall", wall = true, protect = true }
-          for i,normal in ipairs(hyper.normals) do
+          for i,normal in ipairs(vector.normals) do
             local near = hyper.usage.get_usage(room.grid,n+normal.x-1,m+normal.y-1)
             if near ~= nil and near.connected then
               wall_usage.carvable = true
@@ -343,7 +343,7 @@ function hyper.rooms.add_buffer(room, options)
       else
         -- Otherwise check if we're bordering any non-space and therefore need to create a buffer
         local any_open = false
-        for i,normal in ipairs(hyper.directions) do
+        for i,normal in ipairs(vector.directions) do
           local near_cell = hyper.usage.get_usage(room.grid,n+normal.x-1,m+normal.y-1)
           if near_cell == nil then near_cell = { space = true } end
           if not near_cell.space then

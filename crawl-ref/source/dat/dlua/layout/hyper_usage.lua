@@ -165,17 +165,17 @@ function hyper.usage.analyse_grid_usage(usage_grid,options)
       if not usage.vault then
         -- Check walls for carvability
         if usage.wall then
-          for i,normal in ipairs(hyper.normals) do
+          for i,normal in ipairs(vector.normals) do
             local near = hyper.usage.get_usage(usage_grid,x+normal.x,y+normal.y)
             if near ~= nil and not near.solid then
               usage.carvable = true
-              table.insert(usage.anchors,{ normal = hyper.normals[(normal.dir+2)%4 + 1], pos = { x=0,y=0 }, grid_pos = { x=x,y=y }})
+              table.insert(usage.anchors,{ normal = vector.normals[(normal.dir+2)%4 + 1], pos = { x=0,y=0 }, grid_pos = { x=x,y=y }})
             end
           end
         -- Check open spaces for bordering walls
         elseif not usage.solid then
           local no_wall = true
-          for i,normal in ipairs(hyper.directions) do
+          for i,normal in ipairs(vector.directions) do
             local near = hyper.usage.get_usage(usage_grid,x+normal.x,y+normal.y)
             if near ~= nil and near.solid then usage.buffer = true end
           end

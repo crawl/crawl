@@ -47,7 +47,7 @@ function hyper.fort.shape_fort(params)
   }
 
   -- Paint corner crennelations
-  for i, n in ipairs(hyper.diagonals) do
+  for i, n in ipairs(vector.diagonals) do
     local cx = ((n.x + 1) / 2) * (params.size.x - corners)
     local cy = ((n.y + 1) / 2) * (params.size.y - corners)
     table.insert(paint, { type = "floor", corner1 = { x = cx, y = cy }, corner2 = { x = cx + corners - 1, y = cy + corners - 1 } })
