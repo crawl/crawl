@@ -788,10 +788,10 @@ SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche race:orcish / good_item executioner's axe race:orcish
-ITEM:   potion of experience q:2 / scroll of acquirement q:2 /\
-        scroll of enchant armour q:4 / scroll of enchant weapon III q:3 /\
+ITEM:   potion of experience / scroll of acquirement /\
+        scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
         legendary deck of wonders
-SUBST:  d = de|
+NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
