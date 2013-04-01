@@ -160,17 +160,13 @@ void actor::set_position(const coord_def &c)
 
 bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
 {
-    // Undead, nonliving, and plants don't sleep.
-    const mon_holy_type holi = holiness();
-    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+    // Undead, nonliving, and plants don't sleep. If the monster is
+    // berserk or already asleep, it doesn't sleep either.
+    if (!can_sleep(holi_only))
         return false;
 
     if (!holi_only)
     {
-        // The monster is berserk or already asleep.
-        if (!can_sleep())
-            return false;
-
         // The monster is cold-resistant and can't be hibernated.
         if (intrinsic_only && is_monster()
                 ? get_mons_resist(this->as_monster(), MR_RES_COLD)
@@ -190,12 +186,16 @@ bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
     return true;
 }
 
-bool actor::can_sleep() const
+bool actor::can_sleep(bool holi_only) const
 {
     const mon_holy_type holi = holiness();
     if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
         return false;
-    return !(berserk() || asleep());
+
+    if (!holi_only)
+        return !(berserk() || asleep());
+
+    return true;
 }
 
 void actor::shield_block_succeeded(actor *foe)
