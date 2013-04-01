@@ -1137,7 +1137,7 @@ void TilesFramework::_send_cursor(cursor_type type)
     else
     {
         if (m_origin.equals(-1, -1))
-            fprintf(stderr, "m_origin not set in _send_cursor\n");
+            m_origin = m_cursor[type];
         send_message("{\"msg\":\"cursor\",\"id\":%d,\"loc\":{\"x\":%d,\"y\":%d}}",
                      type, m_cursor[type].x - m_origin.x,
                      m_cursor[type].y - m_origin.y);
