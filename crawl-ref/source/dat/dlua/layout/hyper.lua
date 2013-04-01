@@ -10,6 +10,7 @@ hyper = {}          -- Main namespace for engine
 -- Only advisable if you start tiles from a command-line.
 hyper.debug = false
 
+require("dlua/layout/vector.lua")
 require("dlua/layout/hyper_usage.lua")
 require("dlua/layout/hyper_paint.lua")
 require("dlua/layout/hyper_place.lua")
@@ -17,13 +18,11 @@ require("dlua/layout/hyper_strategy.lua")
 require("dlua/layout/hyper_rooms.lua")
 require("dlua/layout/hyper_shapes.lua")
 require("dlua/layout/hyper_decor.lua")
--- require("dlua/layout/hyper_layouts.lua")
--- require("dlua/layout/hyper_fort.lua")
 require("dlua/layout/hyper_debug.lua")
 
 -- The four directions and their associated vector normal and name.
 -- This helps us manage orientation of rooms.
-hyper.normals = {
+vector.normals = {
   { x = 0, y = -1, dir = 0, name="n" },
   { x = -1, y = 0, dir = 1, name="w" },
   { x = 0, y = 1, dir = 2, name="s" },
@@ -31,7 +30,7 @@ hyper.normals = {
 }
 
 -- Sometimes it's useful to have a list of diagonal vectors also
-hyper.diagonals = {
+vector.diagonals = {
   { x = -1, y = -1, dir = 0.5, name="nw" },
   { x = -1, y = 1, dir = 1.5, name="sw" },
   { x = 1, y = 1, dir = 2.5, name="se" },
@@ -39,7 +38,7 @@ hyper.diagonals = {
 }
 
 -- All 8 directions (although not in logical order)
-hyper.directions = util.append({},hyper.normals,hyper.diagonals)
+vector.directions = util.append({},vector.normals,vector.diagonals)
 
 -- Default options table
 function hyper.default_options()
@@ -177,40 +176,4 @@ function hyper.merge_options(base,to_merge)
     base[key] = val
   end
   return base
-end
-
-------------------------------------------------------------------------------
--- Math functions.
---
--- Mainly dealing with vectors
-
-hyper.math = {}
-
--- Moves from a start point along a movement vector mapped to actual vectors xVector/yVector
--- This allows us to deal with coords independently of how they are rotated to the dungeon grid
-function hyper.math.mapped_vector_add(start, move, xVector, yVector)
-
-  return {
-    x = start.x + (move.x * xVector.x) + (move.y * yVector.x),
-    y = start.y + (move.x * xVector.y) + (move.y * yVector.y)
-  }
-
-end
-
--- Rotates a vector anticlockwise by 90 degree increments * count
--- Highly rudimentary, not actually used for anything, keeping around for now in case.
-function hyper.math.vector_rotate(vec, count)
-  if count > 0 then
-    local rotated = { x = -vec.y, y = vec.x }
-    count = count - 1
-    if count <= 0 then return rotated end
-    return vector_rotate(rotated,count)
-  end
-  if count < 0 then
-    local rotated = { x = vec.y, y = -vec.x }
-    count = count + 1
-    if count >= 0 then return rotated end
-    return vector_rotate(rotated,count)
-  end
-  return vec
 end

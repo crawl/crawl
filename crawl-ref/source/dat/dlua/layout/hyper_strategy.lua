@@ -109,7 +109,7 @@ function hyper.place.anchor_wall(place,room,build,usage_grid,options)
 
   if not place.usage.solid or #(place.usage.anchors) == 0 then
     -- Pick a random rotation for the door wall
-    v_normal_dir = util.random_from(hyper.normals).dir
+    v_normal_dir = util.random_from(vector.normals).dir
   else
     -- If placing a room in an existing wall we have the normal stored already in the usage data
     local anchor = util.random_from(place.usage.anchors)
@@ -150,7 +150,7 @@ function hyper.place.anchor_wall_old(place,room,build,usage_grid,options)
   -- In open space we can pick a random normal for the door
   if not usage.solid and #(usage.anchors) == 0 then
     -- Pick a random rotation for the door wall
-    v_normal = hyper.normals[crawl.random_range(1,4)]
+    v_normal = vector.normals[crawl.random_range(1,4)]
     v_normal_dir = v_normal.dir
 
   -- If placing a room in an existing wall we have the normal stored already in the usage data
