@@ -2749,7 +2749,7 @@ static bool _find_square(coord_def &mfp, int direction,
         if (!crawl_view.in_viewport_g(targ))
             continue;
 
-        if (!in_bounds(targ))
+        if (!in_bounds(targ) && !hitfunc->can_affect_walls())
             continue;
 
         if ((onlyVis || onlyHidden) && onlyVis != you.see_cell(targ))
