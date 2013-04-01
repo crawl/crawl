@@ -920,11 +920,11 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF, -1, 1, 1, 1);
         set_item_ego_type(you.inv[0], OBJ_WEAPONS, SPWPN_CHAOS);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_CAP);
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_PIE, -1, 4);
-        set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_BLINDING);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_PIE, -1, 4);
+        set_item_ego_type(you.inv[1], OBJ_MISSILES, SPMSL_BLINDING);
+        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_CAP);
+        newgame_make_item(4, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
         newgame_make_item(5, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_WAR);
 
         if (you.inv[0].defined())
@@ -934,16 +934,16 @@ static void _give_items_skills(const newgame_def& ng)
             bind_item_tile(staff);
         }
 
-        if (you.inv[1].defined())
+        if (you.inv[2].defined())
         {
-            item_def& robe(you.inv[1]);
+            item_def& robe(you.inv[2]);
             robe.props["worn_tile_name"] = "robe_jester";
             bind_item_tile(robe);
         }
 
-        if (you.inv[2].defined())
+        if (you.inv[3].defined())
         {
-            item_def& cap(you.inv[2]);
+            item_def& cap(you.inv[3]);
             cap.props["item_tile_name"] = "thelm_cap_jester";
             cap.props["worn_tile_name"] = "jester";
             bind_item_tile(cap);
