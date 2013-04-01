@@ -3282,7 +3282,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(travel_key_stop);
     else if (key == "auto_sacrifice")
     {
-        if (field == "prompt" || field == "ask")
+        if (field == "prompt_ignore")
+            auto_sacrifice = OPT_PROMPT_IGNORE;
+        else if (field == "prompt" || field == "ask")
             auto_sacrifice = OPT_PROMPT;
         else if (field == "before_explore")
             auto_sacrifice = OPT_BEFORE_EXPLORE;
