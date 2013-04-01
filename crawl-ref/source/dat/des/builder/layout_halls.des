@@ -102,7 +102,7 @@ TAGS: overwritable layout allow_dup unrand
     { weight = 3, func = primitive.ex },
     { weight = 10, func = function() return procedural.mul(crawl.random_range(4,8),procedural.sub(primitive.distance,primitive.box)) end },
     -- Rays
-    { weight = 5, func = function() return procedural.mul(width*4,procedural.phase(primitive.radial, crawl.random_range(2,8), crawl.random_real())) end },
+    { weight = 5, func = function() return procedural.mul(width*8,procedural.phase(primitive.radial, crawl.random_range(4,8), crawl.random_real())) end },
   }
 
   -- A medium sized shape that circles the level
@@ -229,7 +229,7 @@ TAGS: overwritable layout allow_dup unrand
   --  * Maybe ruin some walls
   --  * Tune params a bit for Snake
 
-  local wall_break = util.random_range_real(.3,.7)
+  local wall_break = util.random_range_real(.4,.7)
 
   -- Make the rings
   local num_rings = crawl.random2avg(7,2)+2
@@ -252,7 +252,7 @@ TAGS: overwritable layout allow_dup unrand
     local fdx = procedural.mul(fdsx,fedge)
     local fdy = procedural.mul(fdsy,fedge)
 
-    fphase = procedural.distort { source = fphase, scale = crawl.random_range(5,15), offsetx = fdx, offsety = fdy }
+    fphase = procedural.distort { source = fphase, scale = crawl.random_range(4,8), offsetx = fdx, offsety = fdy }
   end
 
   procedural.render_map(_G, fphase, function(v) return (v > wall_break and '.' or 'x') end)
