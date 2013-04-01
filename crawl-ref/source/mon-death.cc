@@ -104,7 +104,9 @@ void hogs_to_humans()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type != MONS_HOG)
+        if (!(mi->type == MONS_HOG
+              || mi->type == MONS_HELL_HOG
+              || mi->type == MONS_HOLY_SWINE))
             continue;
 
         if (!mi->props.exists("kirke_band")
