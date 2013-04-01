@@ -909,9 +909,14 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_JESTER:
-        you.religion = GOD_NEMELEX_XOBEH;
-        you.piety = 25;
-        you.penance[GOD_XOM] = 50;
+        if (you.species != SP_DEMIGOD)
+        {
+            you.religion = GOD_NEMELEX_XOBEH;
+            you.piety = 25;
+            you.penance[GOD_XOM] = 50;
+        } else {
+            you.penance[GOD_XOM] = 75;
+        }
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF, -1, 1, 1, 1);
         set_item_ego_type(you.inv[0], OBJ_WEAPONS, SPWPN_CHAOS);

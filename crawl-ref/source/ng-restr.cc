@@ -559,6 +559,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case JOB_JESTER:
         switch (speci)
         {
+        case SP_DEMIGOD:
         case SP_FELID:
         case SP_TROLL:
             return CC_RESTRICTED;
