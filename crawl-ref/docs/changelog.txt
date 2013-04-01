@@ -17,7 +17,7 @@ Branches, environment
 * The Abyss no longer exists in Sprint.
 * Three new Sprint maps: "Thunderdome" by evilmike, "The Pits" and "Arena of
   Blood" both by st.
-* A new layout for Cocytus.
+* New layouts for Cocytus, Gehenna, Snake, and the main Dungeon.
 * New Lair branch ending vaults, and many other new vaults.
 * "Special rooms" (kobold/orc rooms, beehives, morgues, jelly pits) have been
   adjusted, now appear at more appropriate depths and layouts, and no longer
@@ -74,8 +74,6 @@ Monsters
     - Thrashing horror: moves like a bat, tramples, and frenzies.
     - Spatial maelstrom: incorporeal vortex that turns walls into spatial
       vortices.
-    - Chaos butterfly: is surrounded by rain, summons twisters, and
-      has a chaos attack.
 * New deep troll specialist monsters, appearing in late-D deep troll packs:
     - Deep troll shamans: cast Might Other and Haste Other on their
       accompanying deep troll packs.
@@ -159,6 +157,8 @@ Items
   type, not necessarily the ability to wield it.
 * All troll-genus monsters can drop troll hides.
 * Monsters don't drop animal skins.
+* Scroll of unholy creation is replaced with scroll of summoning, which
+  summons a few level-appropriate monsters.
 * Potion of water is removed.
 * Potion of decay rots HP immediately rather than giving the "Rot" status.
 * Plain (non-magic, non-quarter-) staves are removed.
@@ -182,7 +182,6 @@ Items
 * Cloak of the Thief can be evoked for fog.
 * Robe of Folly is now a robe of the Archmagi with Int+5 and MR-100, to
   differentiate it from the strictly bad Robe of Misfortune.
-* Scroll of vulnerability properly cancels petrification.
 * Plutonium sword sometimes causes transmutation miscast effects against the
   defender.
 * The "Contam" artefact property no longer causes contamination over time,
@@ -201,11 +200,11 @@ Gods
 * Jiyva's paralyse ability no longer affects non-fellow slimes (such as
   shapeshifters), and followers are no longer warned about attacking them.
 * New Xom effects: loud noises, blink monsters, enchant monster (petrify,
-  slow, paralysis, enslavement; haste, might, invisibility).
+  slow, paralysis, enslavement; haste, might, invisibility), summon shadow
+  creatures.
 * Xom does not reduce stats as drastically, unless bored.
 * Xom will not animate or swap weapons in the Abyss, and will not hostilely
   animate your weapon at all anymore.
-* Xom will sometimes summon shadow creatures instead of demons.
 * Gods can no longer grant permanent brands to friendly dancing weapons.
 * Zin's vitalisation protects against paralysing attacks.
 * Vehumet is overhauled: Now grants damaging spells one-at-a-time (available
