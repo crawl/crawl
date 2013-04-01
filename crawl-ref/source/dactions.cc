@@ -109,7 +109,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mons_is_slime(mon);
 
     case DACT_KIRKE_HOGS:
-        return (mon->type == MONS_HOG
+        return ((mon->type == MONS_HOG
+                 || mon->type == MONS_HELL_HOG
+                 || mon->type == MONS_HOLY_SWINE)
                 && !mon->is_shapeshifter()
                 // Must be one of Kirke's original band
                 // *or* another monster that got porkalated
