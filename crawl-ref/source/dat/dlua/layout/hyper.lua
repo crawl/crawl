@@ -54,7 +54,7 @@ function hyper.default_options()
 
     -- Weightings of various types of room generators. The plan is to better support code vaults here.
     room_type_weights = {
-      { generator = "code", paint_callback = hyper.rooms.floor_vault, weight = 1, min_size = 4, max_size = 40, empty = true }, -- Floor vault
+      { generator = "code", paint_callback = rooms.primitive.floor, weight = 1, min_size = 4, max_size = 40, empty = true }, -- Floor vault
     },
 
     -- Rock seems a sensible default
