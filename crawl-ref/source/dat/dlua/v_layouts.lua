@@ -52,12 +52,12 @@ function vaults_default_options()
 
   -- Main options table
   local options = {
-    max_rooms = 20, -- Maximum number of rooms to attempt to place
+    max_rooms = 27, -- Maximum number of rooms to attempt to place
     max_room_depth = 0, -- No max depth (not implemented yet anyway)
     min_distance_from_wall = 2, -- Room must be at least this far from outer walls (in open areas). Reduces chokepoints.
     -- The following settings (in addition to max_rooms) can adjust how long it takes to build a level, at the expense of potentially less intereting layouts
-    max_room_tries = 10, -- How many *consecutive* rooms can fail to place before we exit the entire routine
-    max_place_tries = 20, -- How many times we will attempt to place *each room* before picking another
+    max_room_tries = 20, -- How many *consecutive* rooms can fail to place before we exit the entire routine
+    max_place_tries = 50, -- How many times we will attempt to place *each room* before picking another
 
     -- Special option for Vaults (handled in hyper.vaults.floor_vault) - chance out of 100 of placing a stair somewhere in the middle of the floor vault
     stair_chance = 80,
@@ -129,6 +129,7 @@ function hypervaults.build_layout(e, name, paint, options)
   else
     e.layout_type "hypervaults" -- TODO: Lowercase and underscorise the name?
   end
+
   local default_options = hypervaults.default_options()
   if options ~= null then hypervaults.merge_options(default_options,options) end
 
@@ -160,7 +161,6 @@ function build_vaults_layout(e, name, paint, options)
 
   local data = paint_vaults_layout(paint, defaults)
   local rooms = place_vaults_rooms(e, data, defaults.max_rooms, defaults)
-
 end
 
 function build_vaults_ring_layout(e, corridorWidth, outerPadding)
@@ -209,7 +209,7 @@ function build_vaults_big_room_layout(e, minPadding,maxPadding)
   local paint = {
     { type = "floor", corner1 = { x = padx, y = pady }, corner2 = { x = gxm - padx - 1, y = gym - pady - 1 } }
   }
-  build_vaults_layout(e, "Big Room", paint, { max_room_depth = 4 })
+  build_vaults_layout(e, "Big Room", paint, { max_room_depth = 4, max_rooms = 23, max_room_tries = 12, max_place_tries = 30 })
 
 end
 
@@ -221,7 +221,7 @@ function build_vaults_chaotic_city_layout(e)
     { type = "floor", corner1 = { x = 1, y = 1 }, corner2 = { x = gxm - 2, y = gym - 2 } }
   }
 
-  build_vaults_layout(e, "Choatic City", paint, { max_room_depth = 5, max_rooms = 30 })
+  build_vaults_layout(e, "Chaotic City", paint, { max_room_depth = 5, max_rooms = 25, max_room_tries = 10, max_place_tries = 20 })
 
 end
 
