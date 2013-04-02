@@ -1162,9 +1162,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 
     // XXX has to match artefact.cc:_artefact_desc_properties(), sort-of (SamB)
 
-    // Also see <https://crawl.develz.org/mantis/view.php?id=1083>:
-    // "Randart jewellery of various base types not auto-identified".
-
     const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);
     const bool known_bad    = (item_type_known(item)
@@ -1186,18 +1183,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 
     case RING_FIRE:
         mpr("You feel more attuned to fire.");
-        // XXX unhandled artefact (#1083)
         ident = ID_KNOWN_TYPE;
         break;
 
     case RING_ICE:
         mpr("You feel more attuned to ice.");
-        // XXX unhandled artefact (#1083)
         ident = ID_KNOWN_TYPE;
         break;
 
     case RING_WIZARDRY:
-        // XXX unhandled artefact (#1083)
         ident = ID_KNOWN_TYPE;
         break;
 
@@ -1327,7 +1321,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (you.religion != GOD_NO_GOD)
         {
             mpr("You feel a surge of divine interest.", MSGCH_GOD);
-            // XXX unhandled artefact (#1083)
             ident = ID_KNOWN_TYPE;
         }
         break;
@@ -1341,7 +1334,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             && player_mutation_level(MUT_HERBIVOROUS) < 3)
         {
             mpr("You feel a craving for the dungeon's cuisine.");
-            // XXX unhandled artefact (#1083)
             ident = ID_KNOWN_TYPE;
         }
         break;
@@ -1359,7 +1351,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             mpr("You feel your power drawn to a protective spirit.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Now linked to your health, your magic stops regenerating.");
-            // XXX unhandled artefact (#1083)
             ident = ID_KNOWN_TYPE;
         }
         break;
@@ -1369,7 +1360,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         // drink anything.  Not worth complicating the code, IMHO. [1KB]
         if (player_mutation_level(MUT_SLOW_HEALING) < 3)
         {
-            // XXX unhandled artefact (#1083)
             ident = ID_KNOWN_TYPE;
         }
         break;
@@ -1387,7 +1377,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
                  (amount > 250) ? " massive" :
                  (amount >  50) ? " violent" :
                                   "");
-            // XXX unhandled artefact (#1083)
             ident = ID_KNOWN_TYPE;
 
             contaminate_player(pow(amount, 0.333), item_type_known(item));
@@ -1427,7 +1416,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         bool show_msgs = true;
         _equip_artefact_effect(item, &show_msgs, unmeld);
 
-        if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
+        if (ident == ID_KNOWN_TYPE)
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+
+        if (learn_pluses)
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
 
         if (fake_rap != ARTP_NUM_PROPERTIES)

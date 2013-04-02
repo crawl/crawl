@@ -2547,12 +2547,15 @@ void swap_with_monster(monster* mon_to_swap)
     }
 }
 
+/**
+ * Identify a worn piece of jewellery's type.
+ */
 void wear_id_type(item_def &item)
 {
-    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
+    if (item_ident(item, ISFLAG_KNOW_TYPE))
         return;
     set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
-    set_ident_flags(item, ISFLAG_KNOW_PROPERTIES);
+    set_ident_flags(item, ISFLAG_KNOW_TYPE);
     mprf("You are wearing: %s",
          item.name(DESC_INVENTORY_EQUIP).c_str());
 }
@@ -2567,20 +2570,18 @@ static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
         bool artefact = (player_wearing_slot(i)
                          && is_artefact(you.inv[you.equip[i]]));
 
-        if (i == EQ_AMULET && amulet_type == NUM_JEWELLERY
-            && (artp == ARTP_NUM_PROPERTIES || !artefact))
-        {
-            continue;
-        }
+        bool art_relevant = artefact && artp != ARTP_NUM_PROPERTIES;
 
-        if (i != EQ_AMULET && ring_type == NUM_JEWELLERY
-            && (artp == ARTP_NUM_PROPERTIES || !artefact))
-        {
+        if (i == EQ_AMULET && amulet_type == NUM_JEWELLERY && !art_relevant)
             continue;
-        }
+
+        if (i != EQ_AMULET && ring_type == NUM_JEWELLERY && !art_relevant)
+            continue;
 
         if (player_wearing_slot(i)
-            && !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
+            && !item_ident(you.inv[you.equip[i]], art_relevant
+                                                  ? ISFLAG_KNOW_PROPERTIES
+                                                  : ISFLAG_KNOW_TYPE))
         {
             ++num_unknown;
         }
