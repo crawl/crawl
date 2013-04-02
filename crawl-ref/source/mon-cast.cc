@@ -1792,7 +1792,8 @@ void mons_word_of_recall(monster* mons)
     for (unsigned int i = 0; i < mon_list.size(); ++i)
     {
         coord_def empty;
-        if (empty_surrounds(mons->pos(), DNGN_FLOOR, 3, false, empty)
+        if (find_habitable_spot_near(mons->pos(), mons_base_type(mon_list[i]),
+                                     3, false, empty)
             && mon_list[i]->move_to_pos(empty))
         {
             mon_list[i]->behaviour = BEH_SEEK;
