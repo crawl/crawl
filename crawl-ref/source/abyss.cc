@@ -406,6 +406,10 @@ static bool _abyss_check_place_feat(coord_def p,
             && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit"))
         {
             *use_map = false;
+
+            // Link the vault-placed items.
+            fixup_misplaced_items();
+            link_items();
         }
         else
             grd(p) = which_feat;
