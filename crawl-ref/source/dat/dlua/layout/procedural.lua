@@ -260,10 +260,16 @@ end
 -- Returns a function that computes the difference between distance[0] and
 -- distance[1] for a given Worley function
 function procedural.worley_diff(params)
-  local worley = procedural.worley(params)
+  local final_scale_x = params.scale * 0.8
+  local final_scale_y = params.scale * 0.8
+  local major_offset_x = crawl.random2(1000000)
+  local major_offset_y = crawl.random2(1000000)
+  local major_offset_z = crawl.random2(1000000)
   return function(x,y)
-    local data = worley(x,y)
-    return data.d[2]-data.d[1], data.id[1]
+    local d1,d2,id1 =
+        crawl.worley(x * final_scale_x + major_offset_x,
+                     y * final_scale_y + major_offset_y, major_offset_z)
+    return d2-d1, id1
   end
 end
 
