@@ -276,7 +276,6 @@ static bool _altar_prayer()
             you.one_time_ability_used[you.religion] = true;
             did_something = true;
             take_note(Note(NOTE_GOD_GIFT, you.religion));
-            mitm[thing_created].inscription = "god gift";
         }
 
         // Return early so we don't offer our Necronomicon to Kiku.
