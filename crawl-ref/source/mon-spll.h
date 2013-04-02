@@ -1872,7 +1872,7 @@
       {
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_HASTE,
+       SPELL_NO_SPELL,
        SPELL_HASTE_OTHER,
        SPELL_MIGHT_OTHER,
        SPELL_MINOR_HEALING,
