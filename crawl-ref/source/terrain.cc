@@ -1381,7 +1381,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     {
         if (allow_shift)
         {
-            escape = empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty)
+            escape = find_habitable_spot_near(you.pos(), MONS_HUMAN, 1, false, empty)
                      || you.check_clinging(false);
             clinging = you.is_wall_clinging();
         }
