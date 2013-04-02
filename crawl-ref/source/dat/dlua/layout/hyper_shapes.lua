@@ -85,33 +85,6 @@ function hyper.shapes.draw_box(corner1, corner2)
   }
 end
 
----------------------------------------------------------------------
--- Room functions
---
--- These generate code rooms and are used by "code" generators in
--- the options tables.
-
--- TODO: These functions are 'rooms' not 'shapes'. They probably can't go in hyper_rooms.lua but where...?
--- A square room made of floor
-function hyper.rooms.floor_vault(room,options)
-  return {
-    { type = "floor", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 } },
-  }
-end
-
--- A square room made of wall
-function hyper.rooms.wall_vault(room,options)
-  return {
-    { type = "wall", corner1 = { x = 0, y = 0 }, corner2 = { x = room.size.x - 1, y = room.size.y - 1 } },
-  }
-end
-
-function hyper.rooms.bubble_vault(room,options,gen)
-  return {
-    { type = "floor", corner1 = { x = 0, y = 0}, corner2 = { x = room.size.x - 1, y = room.size.y - 1 }, shape = "ellipse" },
-  }
-end
-
 -- A really heavily distorted small room. Tends to have connectivity pockets.
 -- TODO: Some sort of conectivity analyser that works out where to put doors
 function hyper.rooms.cavern_vault(room,options,gen)
@@ -189,7 +162,7 @@ end
 
 function hyper.rooms.junction_vault(room,options,gen)
 
-  local floor = hyper.rooms.floor_vault(room,options,gen)
+  local floor = rooms.primitive.floor(room,options,gen)
 
   local max_corridor = math.min(gen.max_corridor, math.floor(math.min(room.size.x,room.size.y)/2))
   local corridor_width = crawl.random_range(gen.min_corridor,max_corridor)

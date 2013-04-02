@@ -42,6 +42,8 @@ function hyper.paint.paint_grid(paint, options, usage_grid)
     if item.corner2 == nil then item.corner2 = { x = usage_grid.width-1, y = usage_grid.height-1 } end
 
     -- Paint features onto grid
+    -- PERF: Can slightly optimise this loop (which could be important since it gets called a lot)
+    -- by deciding which function we're going to use first rather than have this unwieldy if statement
     if shape_type == "quad" or shape_type == "ellipse" or shape_type == "trapese" or item.type == "proc" then
       -- Set layout details in the painted area
       for x = item.corner1.x, item.corner2.x, 1 do
