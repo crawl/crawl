@@ -3169,22 +3169,12 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
 
-    const dungeon_feature_type feat_preferred =
-        _monster_primary_habitat_feature(mons_class);
-    const dungeon_feature_type feat_nonpreferred =
-        _monster_secondary_habitat_feature(mons_class);
-
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water or lava this function would work.  -- bwr
-    if (empty_surrounds(p, feat_preferred, 2, true, empty))
-        pos = empty;
 
-    if (feat_nonpreferred != feat_preferred && !in_bounds(pos)
-        && empty_surrounds(p, feat_nonpreferred, 2, true, empty))
-    {
+    if (find_habitable_spot_near(p, mons_class, 2, true, empty))
         pos = empty;
-    }
 
     return pos;
 }
@@ -3367,8 +3357,8 @@ monster* create_monster(mgen_data mg, bool fail_msg)
     return summd;
 }
 
-bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
-                     int radius, bool allow_centre, coord_def& empty)
+bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
+                              int radius, bool allow_centre, coord_def& empty)
 {
     // XXX: A lot of hacks that could be avoided by passing the
     //      monster generation data through.
@@ -3386,8 +3376,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
         if (!cell_see_cell(where, *ri, LOS_NO_TRANS))
             continue;
 
-        success =
-            (grd(*ri) == spc_wanted) || feat_compatible(spc_wanted, grd(*ri));
+        success = monster_habitable_grid(mon_type, grd(*ri));
 
         if (success && one_chance_in(++good_count))
             empty = *ri;

@@ -64,8 +64,8 @@ conduct_type player_will_anger_monster(monster_type type);
 conduct_type player_will_anger_monster(monster* mon);
 bool player_angers_monster(monster* mon);
 
-bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
-                      int radius, bool allow_centre, coord_def& empty);
+bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
+                              int radius, bool allow_centre, coord_def& empty);
 
 monster_type summon_any_demon(monster_type dct);
 
