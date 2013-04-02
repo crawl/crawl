@@ -19,18 +19,19 @@ function zonify.map(bounds,fcell,fgroup)
     end
     return zonegrid[y][x]
   end
-  zonify.walk({x=x1,y=y1},zonemap,fgrid,fcell,fgroup)
+  zonify.walk(x1,y1,zonemap,fgrid,fcell,fgroup)
   return zonemap
 end
 
 -- Recursively walks cells (like a flood fill) to discover all
 -- cells in the defined zone
-function zonify.walk(pos,zonemap,fgrid,fcell,fgroup,from,zone)
-  local x,y = pos.x,pos.y
+function zonify.walk(x,y,zonemap,fgrid,fcell,fgroup,from,zone)
   local grid = fgrid(x,y)
   if grid ~= nil then return end
   local cell = fcell(x,y)
   if cell == nil then return end
+  cell.x,cell.y = x, y
+
   -- This is a currently unexplored cell
   local group = fgroup(cell)
   if group == nil then return end
@@ -45,21 +46,21 @@ function zonify.walk(pos,zonemap,fgrid,fcell,fgroup,from,zone)
   end
 
   if group == zone.group then
-    table.insert(zone.cells, { pos = pos, cell = cell })
+    table.insert(zone.cells, cell)
     fgrid(x,y,zone)
     -- Now recursively check all directions for more zones
     for i,dir in ipairs(vector.directions) do
-      local nx,ny = pos.x+dir.x,pos.y+dir.y
-      zonify.walk({x=nx,y=ny},zonemap,fgrid,fcell,fgroup,cell,zone)
+      local nx,ny = x + dir.x,y + dir.y
+      zonify.walk(nx,ny,zonemap,fgrid,fcell,fgroup,cell,zone)
     end
   else
-    table.insert(zone.borders,{ pos = pos, anchor = { pos = pos, cell = from }, cell = cell, group = group } )
+    table.insert(zone.borders,{ x = x, y = y }) -- Don't need this info (yet): from_cell = from, cell = cell, group = group } )
   end
   if newzone then
     zone.done = true
     -- Recurse with a new zone for each bordering square
     for i,b in ipairs(zone.borders) do
-      zonify.walk(b.pos,zonemap,fgrid,fcell,fgroup,nil,nil)
+      zonify.walk(b.x,b.y,zonemap,fgrid,fcell,fgroup,nil,nil)
     end
   end
 end
@@ -90,7 +91,7 @@ function zonify.fill_smallest_zones(zonemap,num_to_keep,fgroup,ffill)
       for i,zone in ipairs(group) do
         if zone ~= largest then
           for c,cell in ipairs(zone.cells) do
-            ffill(cell.pos.x,cell.pos.y,cell)
+            ffill(cell.x,cell.y,cell)
           end
         end
       end
@@ -111,10 +112,10 @@ function zonify.map_map(e)
   return zonify.map(
     { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 },
     function(x,y)
-      return dgn.in_bounds(x,y) and e.mapgrd[x][y] or nil
+      return dgn.in_bounds(x,y) and { glyph = e.mapgrd[x][y] } or nil
     end,
     function(val)
-      return string.find(wall,val,1,true) and "wall" or "floor"
+      return string.find(wall,val.glyph,1,true) and "wall" or "floor"
     end
   )
 
