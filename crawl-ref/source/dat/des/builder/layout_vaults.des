@@ -152,7 +152,7 @@ WEIGHT: 50
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_grid
-: build_vaults_layout(_G, "Omnigrid", layout_primitive_omnigrid())
+: build_vaults_layout(_G, "Omnigrid", layout_primitive_omnigrid(), { max_rooms = 20, max_room_tries = 10, max_place_tries = 20 })
 MAP
 ENDMAP
 
@@ -195,7 +195,7 @@ CHANCE: 100%
     end
   end
 
-  build_vaults_layout(_G, "Quadrants", paint)
+  build_vaults_layout(_G, "Quadrants", paint, { max_rooms = 20, max_room_tries = 10, max_place_tries = 30 } )
 }}
 MAP
 ENDMAP
@@ -237,7 +237,7 @@ ENDMAP
 
 NAME: layout_vaults_maze
 DEPTH: Vaults
-WEIGHT: 0
+WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_maze
@@ -248,7 +248,7 @@ ENDMAP
 # Snakey maze consitently struggles to place rooms. Set to weight zero for now.
 NAME: layout_vaults_maze_snakey
 DEPTH: Vaults
-WEIGHT: 0
+WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_maze
@@ -258,7 +258,7 @@ ENDMAP
 
 NAME: layout_vaults_maze_bifur
 DEPTH: Vaults
-WEIGHT: 0
+WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_maze
