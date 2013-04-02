@@ -3039,9 +3039,7 @@ static monsterentry mondata[] = {
     600, 10, MONS_GIANT_FROG, MONS_GIANT_FROG, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 3, 5, 0 },
-    // XXX: Will be Z_SMALL, but is Z_BIG until code for zombie spawns
-    // is no longer based on zombie size
-    0, 12, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_CROAK,
+    0, 12, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_CROAK,
     I_REPTILE, HT_AMPHIBIOUS, FL_NONE, 15, SWIM_ENERGY(6),
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -3053,9 +3051,7 @@ static monsterentry mondata[] = {
     700, 16, MONS_GIANT_FROG, MONS_SPINY_FROG, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_MEDIUM, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
-    // XXX: Will be Z_SMALL, but is Z_BIG until code for zombie spawns
-    // is no longer based on zombie size
-    6, 9, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_CROAK,
+    6, 9, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_CROAK,
     I_REPTILE, HT_AMPHIBIOUS, FL_NONE, 12, SWIM_ENERGY(6),
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
