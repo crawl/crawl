@@ -2941,11 +2941,6 @@ bool is_bad_item(const item_def &item, bool temp)
                 return false;
         case SCR_CURSE_JEWELLERY:
             return (you.religion != GOD_ASHENZARI);
-        case SCR_SUMMONING:
-            // Summoning will sometimes produce unholy monsters (and anger
-            // your god, if you are worshipping a good one. (Use temp to
-            // allow autopickup to prevent monsters from reading it.)
-            return (temp && is_good_god(you.religion));
         default:
             return false;
         }
