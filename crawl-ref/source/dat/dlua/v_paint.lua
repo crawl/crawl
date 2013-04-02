@@ -116,15 +116,28 @@ local function determine_usage_from_layout(layout_grid,options)
   local gxm, gym = layout_grid.width,layout_grid.height
   local usage_grid = new_usage(gxm,gym)
 
+  local function gridsum(grid,list)
+    local sum = 0
+    for i,pos in ipairs(list) do
+      if grid[pos.y][pos.x].solid then sum = sum + 1 end
+    end
+    return sum
+  end
+
+  local local_grid = { }
+  for yl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
+    local_grid[yl] = { }
+  end
+
+  local adjacent_vectors = { {x=-1,y=0},{x=1,y=0},{x=0,y=-1},{x=0,y=1} }
+  local diagonal_vectors = { {x=-1,y=-1},{x=1,y=-1},{x=-1,y=1},{x=1,y=1} }
+
   for x = 0, gxm-1, 1 do
     for y = 0, gym-1, 1 do
-
       -- We need to know the local layout grid around this square
-      local local_grid = { }
       -- This flag will track if there is only floor in the area
       local only_floor = true
       for yl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
-        local_grid[yl] = { }
         for xl = -options.min_distance_from_wall, options.min_distance_from_wall, 1 do
           local cell = get_layout(layout_grid,x + xl,y + yl)
           local_grid[yl][xl] = cell
@@ -140,14 +153,6 @@ local function determine_usage_from_layout(layout_grid,options)
         -- Are we dealing with floor or wall?
         if local_grid[0][0].solid then -- Wall
 
-          local function gridsum(grid,list)
-            local sum = 0
-            for i,pos in ipairs(list) do
-              if grid[pos.y][pos.x].solid then sum = sum + 1 end
-            end
-            return sum
-          end
-
           -- A wall can either be usage "none" meaning parts of a room could later be built over it;
           -- or it can be "eligible" meaning it can be used as a connecting wall/door to a room;
           -- or it can be "restricted" meaning its geometry is not suited for a connecting wall or it has already been used
@@ -158,7 +163,7 @@ local function determine_usage_from_layout(layout_grid,options)
           -- open or none. It's more important to find all squares that *could* be eligible.
 
           -- Sum the adjacent squares
-          local adjacent_sum = gridsum(local_grid, { {x=-1,y=0},{x=1,y=0},{x=0,y=-1},{x=0,y=1} })
+          local adjacent_sum = gridsum(local_grid, adjacent_vectors)
           -- Eligible squares have floor on only one side
           -- This ignores diagonals (which is where complex geometry will produce some eligible squares that aren't
           -- really eligible). But it's complicated because we're after diagonals only on the side where the floor is.
@@ -168,25 +173,25 @@ local function determine_usage_from_layout(layout_grid,options)
           if adjacent_sum == 3 then
            -- Floor to the north
             if not local_grid[-1][0].solid then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = 1 }, depth = 1})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = adjacent_vectors[4], depth = 1})
             end
             -- Floor to the south
             if not local_grid[1][0].solid then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 0, y = -1 }, depth = 1})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = adjacent_vectors[3], depth = 1})
             end
             -- Floor to the west
             if not local_grid[0][-1].solid then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = 1, y = 0 }, depth = 1})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = adjacent_vectors[2], depth = 1})
             end
             -- Floor to the east
             if not local_grid[0][1].solid then
-              set_usage(usage_grid,x,y, { usage = "eligible", normal = { x = -1, y = 0 }, depth = 1})
+              set_usage(usage_grid,x,y, { usage = "eligible", normal = adjacent_vectors[1], depth = 1})
             end
           else
             -- Wall all around?
             if adjacent_sum == 4 then
 
-              local diagonal_sum = gridsum(local_grid, { {x=-1,y=-1},{x=1,y=-1},{x=-1,y=1},{x=1,y=1} })
+              local diagonal_sum = gridsum(local_grid, diagonal_vectors)
 
               -- Wall mostly all around? (We allow one missing corner otherwise rooms can't overlap corners
               -- and logically it's fine for any wall to be placed there, other missing holes will fail the placement
@@ -201,14 +206,13 @@ local function determine_usage_from_layout(layout_grid,options)
 
             end
           end
+
         else -- Floor
 
           -- We already know there is a wall nearby, so this square is restricted
           set_usage(usage_grid,x,y, { usage = "restricted", reason = "border" })
-
         end
       end
-
     end
   end
   return usage_grid
@@ -281,7 +285,7 @@ function paint_grid(paint, options, grid)
     elseif shape_type == "plot" then
       if item.points ~= nil then
         for i,pos in ipairs(item.points) do
-          set_layout(layout_grid, pos.x, pos.y,{ solid = solid, feature = feature, empty = empty })
+          set_layout(layout_grid, pos.x, pos.y, { solid = solid, feature = feature, empty = empty })
         end
       else
         set_layout(layout_grid, item.x, item.y, { solid = solid, feature = feature, empty = empty })
@@ -327,7 +331,6 @@ function paint_vaults_layout(paint, options, layout_grid)
       end
     end
   end
-
   return usage_grid
 
 end
