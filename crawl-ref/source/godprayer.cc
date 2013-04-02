@@ -238,52 +238,49 @@ static bool _altar_prayer()
         && !player_under_penance()
         && you.piety > 160)
     {
-        simple_god_message(
-            " will bloody your weapon with pain or grant you the Necronomicon.");
-
-        bool kiku_did_bless_weapon = false;
-
-        item_def *wpn = you.weapon();
-
-        // Does the player want a pain branding?
-        if (wpn && get_weapon_brand(*wpn) != SPWPN_PAIN)
+        if (you.species != SP_FELID)
         {
-            kiku_did_bless_weapon =
-                _bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED);
-            did_something = kiku_did_bless_weapon;
-        }
-        else
-            mpr("You have no weapon to bloody with pain.");
+            simple_god_message(
+                " will bloody your weapon with pain or grant you the Necronomicon.");
 
-        // If not, ask if the player wants a Necronomicon.
-        if (!kiku_did_bless_weapon)
-        {
+            item_def *wpn = you.weapon();
+
+            // Does the player want a pain branding?
+            if (wpn && get_weapon_brand(*wpn) != SPWPN_PAIN)
+            {
+                if (_bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
+                    return true;
+            }
+            else
+                mpr("You have no weapon to bloody with pain.");
+
+            // If not, ask if the player wants a Necronomicon.
             if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
                 return false;
+        }
 
-            int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
-                                      MAKE_ITEM_RANDOM_RACE,
-                                      0, 0, you.religion);
+        int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
+                                  MAKE_ITEM_RANDOM_RACE,
+                                  0, 0, you.religion);
 
-            if (thing_created == NON_ITEM)
-                return false;
+        if (thing_created == NON_ITEM)
+            return false;
 
-            move_item_to_grid(&thing_created, you.pos());
+        move_item_to_grid(&thing_created, you.pos());
 
-            if (thing_created != NON_ITEM)
-            {
-                simple_god_message(" grants you a gift!");
-                more();
+        if (thing_created != NON_ITEM)
+        {
+            simple_god_message(" grants you a gift!");
+            more();
 
-                you.one_time_ability_used[you.religion] = true;
-                did_something = true;
-                take_note(Note(NOTE_GOD_GIFT, you.religion));
-                mitm[thing_created].inscription = "god gift";
-            }
+            you.one_time_ability_used[you.religion] = true;
+            did_something = true;
+            take_note(Note(NOTE_GOD_GIFT, you.religion));
+            mitm[thing_created].inscription = "god gift";
         }
 
         // Return early so we don't offer our Necronomicon to Kiku.
-        return did_something;
+        return true;
     }
 
     return did_something;
