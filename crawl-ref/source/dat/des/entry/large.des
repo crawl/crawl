@@ -67,9 +67,8 @@ ENDMAP
 # 33 x 25
 NAME:    dpeg_entry_central
 TAGS:    entry
-MONS:    gnoll, jackal, worm
 ORIENT:  float
-SHUFFLE: {[(], 0123, @ABC
+SHUFFLE: {[(], @ABC
 SUBST:   A=@x, B=@x, C=@x
 MAP
           xxxxxx@xxxxxx
@@ -81,13 +80,13 @@ MAP
   xx..xxxxx...........xxxxx..xx
  xx..xxxxx......x......xxxxx..xx
 xx..xxxxx......xxx......xxxxx..x
-xx.xxxxx......xx1xx......xxxxx.xx
-x..xxxx......xx.%.xx......xxxx..x
-x.xxxx......xx.....xx......xxxx.x
-A.......(..xx1%.}.%1xx..[.......C
-x.xxxx......xx.....xx......xxxx.x
-x..xxxx......xx.%.xx......xxxx..x
-xx.xxxxx......xx1xx......xxxxx.xx
+xx.xxxxx......xxxxx......xxxxx.xx
+x..xxxx......xxxxxxx......xxxx..x
+x.xxxx......xxxxxxxxx......xxxx.x
+A.......(..xxxxxxxxxxx..[.......C
+x.xxxx......xxxxxxxxx......xxxx.x
+x..xxxx......xxxxxxx......xxxx..x
+xx.xxxxx......xxxxx......xxxxx.xx
  x..xxxxx......xxx......xxxxx..x
  xx..xxxxx......x......xxxxx..xx
   xx..xxxxx...........xxxxx..xx
