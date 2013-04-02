@@ -2785,12 +2785,16 @@ static void _gain_piety_point()
                     simple_god_message(" will now cure all your mutations... once.");
                     break;
                 case GOD_SHINING_ONE:
+                    if (you.species == SP_FELID)
+                        break;
                     simple_god_message(" will now bless your weapon at an altar... once.");
                     break;
                 case GOD_KIKUBAAQUDGHA:
                     simple_god_message(" will now enhance your necromancy at an altar... once.");
                     break;
                 case GOD_LUGONU:
+                    if (you.species == SP_FELID)
+                        break;
                     simple_god_message(" will now corrupt your weapon at an altar... once.");
                     break;
                 case GOD_JIYVA:
@@ -2858,7 +2862,7 @@ void lose_piety(int pgn)
                 simple_god_message(
                     " is no longer ready to cure all your mutations.");
             }
-            else if (you.religion == GOD_SHINING_ONE)
+            else if (you.religion == GOD_SHINING_ONE && you.species != SP_FELID)
             {
                 simple_god_message(
                     " is no longer ready to bless your weapon.");
@@ -2868,7 +2872,7 @@ void lose_piety(int pgn)
                 simple_god_message(
                     " is no longer ready to enhance your necromancy.");
             }
-            else if (you.religion == GOD_LUGONU)
+            else if (you.religion == GOD_LUGONU && you.species != SP_FELID)
             {
                 simple_god_message(
                     " is no longer ready to corrupt your weapon.");
