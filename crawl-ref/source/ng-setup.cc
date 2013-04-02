@@ -619,8 +619,8 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 100;
         you.gift_timeout = max(5, random2(40) + random2(40));
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
-                           2, 2);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        set_item_ego_type(you.inv[0], OBJ_WEAPONS, SPWPN_CHAOS);
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
