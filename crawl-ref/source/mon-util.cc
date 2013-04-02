@@ -2336,6 +2336,14 @@ void define_monster(monster* mons)
         mons->ghost_demon_init();
     }
 
+    // Load with dummy values so certain monster properties can be queried
+    // before placement without crashing (proper setup is done later here)
+    case MONS_DANCING_WEAPON:
+    {
+        ghost_demon ghost;
+        mons->set_ghost(ghost);
+    }
+
     default:
         break;
     }
