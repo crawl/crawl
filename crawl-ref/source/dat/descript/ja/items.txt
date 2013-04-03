@@ -1,9 +1,9 @@
 %%%%
 air elemental fan
 
-大気の精霊を召換するための魔法の道具だ。これは幾分信頼性に欠ける品物で、うまく
-発動するまで何度も試みなくてはならない場合が多い。使用には危険を伴うが、使用者
-が然るべき精霊魔法に習熟していればその危険は減少する。
+大気の精霊を召換するための魔法の道具だ。これは幾分信頼性に欠ける品物で、
+うまく発動するまで何度も試みなくてはならない場合が多い。使用には危険を伴うが、
+使用者が然るべき精霊魔法に習熟していればその危険は減少する。
 %%%%
 amulet of clarity
 
@@ -11,14 +11,14 @@ amulet of clarity
 %%%%
 amulet of conservation
 
-この護符は着用者の所持品を破壊から保護する。ただし保護は絶対確実というわけでは
-ない。
+この護符は着用者の所持品を破壊から保護する。
+ただし保護は絶対確実というわけではない。
 %%%%
 amulet of guardian spirit
 
-この護符は装着者の魔法のエネルギーが吸われる代わりに、損傷を少なくする。魔力を
-使い果たしてしまったら、このspiritは多くの力が戻るまで保護ができなくなるだろう
-。
+この護符は装着者の魔法のエネルギーが吸われる代わりに、損傷を少なくする。
+魔力を使い果たしてしまったら、
+このspiritは多くの力が戻るまで保護ができなくなるだろう。
 %%%%
 amulet of inaccuracy
 
@@ -30,43 +30,45 @@ amulet of rage
 %%%%
 amulet of resist corrosion
 
-この護符は装着者の防具と武器を酸による腐蝕から保護する。ただし保護は絶対確実と
-いうわけではない。
+この護符は装着者の防具と武器を酸による腐蝕から保護する。
+ただし保護は絶対確実というわけではない。
 %%%%
 amulet of resist mutation
 
-この護符は着用者を突然変異から保護する。ただし保護は絶対確実というわけではない
-。
+この護符は着用者を突然変異から保護する。
+ただし保護は絶対確実というわけではない。
 %%%%
 amulet of the gourmand
 
-この護符は装着者を新鮮な生肉を食べることによる吐き気から守り、空腹でなくとも消
-化できるようにする。しかし、この装着者の消化機能への効果は時間が経つにつれて累
-積するものであり、初めはあまり効果がない。
+この護符は装着者を新鮮な生肉を食べることによる吐き気から守り、
+空腹でなくとも消化できるようにする。しかし、
+この装着者の消化機能への効果は時間が経つにつれて累積するものであり、
+初めはあまり効果がない。
 %%%%
 amulet of warding
 
-この護符は魔法で召換されたモンスターからの攻撃を防ぐ。また、生命力を奪う攻撃へ
-の耐性を得る。
+この護符は魔法で召換されたモンスターからの攻撃を防ぐ。また、
+生命力を奪う攻撃への耐性を得る。
 %%%%
 amulet of faith
 
-これは装着者への神々の注目を惹きつけるように作られたお守りだ。この天上からの注
-目はあなたの神を容易に満足させるが、あなたの罪を赦しにくくする。そしてこの護符
-を外すといくらかの神聖なる好意を吸収するだろう。
+これは装着者への神々の注目を惹きつけるように作られたお守りだ。
+この天上からの注目はあなたの神を容易に満足させるが、
+あなたの罪を赦しにくくする。
+そしてこの護符を外すといくらかの神聖なる好意を吸収するだろう。
 %%%%
 amulet of stasis
 
-魔法の拘束で綿密に構成された護符であり、装着者をテレポート、減速、加速、または
-金縛りにする魔術や生理的な効果から遮断する。
+魔法の拘束で綿密に構成された護符であり、装着者をテレポート、減速、加速、
+または金縛りにする魔術や生理的な効果から遮断する。
 
-この護符は多くの転移術に対して有効であるが、追放のような次元転移はこの護符の及
-ぶ範囲を越えている。
+この護符は多くの転移術に対して有効であるが、
+追放のような次元転移はこの護符の及ぶ範囲を越えている。
 %%%%
 banana
 
 A delicious yellow fruit恐らくは不平等な貿易協定の元で、
-道徳観念のない多国籍企業によって 栽培と輸入をされた。.
+道徳観念のない多国籍企業によって栽培と輸入をされた。.
 %%%%
 beef jerky
 
@@ -105,8 +107,8 @@ bow
 %%%%
 box of beasts
 
-沢山の野生の獣が収納された魔法の匣だ。匣の蓋を開けば、獣を解き放つことができる
-かもしれない
+沢山の野生の獣が収納された魔法の匣だ。匣の蓋を開けば、
+獣を解き放つことができるかもしれない
 %%%%
 cap
 
@@ -114,7 +116,7 @@ cap
 %%%%
 centaur barding
 
-セントールのために造られた鎧だ。 下半身の馬の部分に装着する。
+セントールのために造られた鎧だ。下半身の馬の部分に装着する。
 %%%%
 choko
 
@@ -134,7 +136,7 @@ crystal ball of energy
 
 使用することで魔力を回復させることができる魔法の道具だ。
 しかし使用には魔力を完全に吸い取られてしまう危険を伴う。
-魔力を奪われる危険の率は使用者の魔力の最大値と現在値の比に 反比例する。 maximum
+魔力を奪われる危険の率は使用者の魔力の最大値と現在値の比に反比例する。 maximum
 energy which the user possesses; a user near his or her full potential will
 find this item most beneficial.
 %%%%
@@ -170,7 +172,7 @@ eveningstar
 %%%%
 giant club
 
-巨大な木の棍棒だ。 オーガの手で振るわれるために造られている。
+巨大な木の棍棒だ。オーガの手で振るわれるために造られている。
 %%%%
 giant spiked club
 
@@ -200,9 +202,9 @@ pole with half-moon blades at both ends.
 %%%%
 lamp of fire
 
-炎の精霊を召換するための魔法の道具だ。これは幾分信頼性に欠ける品物で、うまく発
-動するまで何度も試みなくてはならない場合が多い。使用には危険を伴うが、使用者が
-然るべき精霊魔法に習熟していればその危険は減少する。
+炎の精霊を召換するための魔法の道具だ。これは幾分信頼性に欠ける品物で、
+うまく発動するまで何度も試みなくてはならない場合が多い。使用には危険を伴うが、
+使用者が然るべき精霊魔法に習熟していればその危険は減少する。
 %%%%
 lantern of shadows
 
@@ -210,7 +212,7 @@ lantern of shadows
 %%%%
 meat ration
 
-食べ応えのある 乾し肉の保存食だ。
+食べ応えのある乾し肉の保存食だ。
 %%%%
 orb of zot
 
@@ -242,8 +244,8 @@ your very eyes.
 %%%%
 potion of degeneration
 
-A noxious concoction which あなたの肉体と頭脳と反射神経に
-恐ろしい障害をもたらす。.
+A noxious concoction which
+あなたの肉体と頭脳と反射神経に恐ろしい障害をもたらす。.
 %%%%
 potion of experience
 
@@ -252,7 +254,7 @@ A 実に素晴らしく非常に貴重な drink.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
-instantly. If it is used when one is 永続的な負傷を 治癒する。
+instantly. If it is used when one is 永続的な負傷を治癒する。
 %%%%
 potion of invisibility
 
@@ -304,15 +306,17 @@ attacks, depending on its degree of enchantment.
 %%%%
 ring of fire
 
-この指輪は火の力との更なる接触を装着者にもたらす。|この指輪は冷気と氷の力との更
-なる接触を装着者にもたらす。 装着者は熱に対する耐性を得ると共に、
+この指輪は火の力との更なる接触を装着者にもたらす。
+|この指輪は冷気と氷の力との更なる接触を装着者にもたらす。
+装着者は熱に対する耐性を得ると共に、
 火の魔法をより効果的に扱うことが可能になる。
 ただし冷気の影響によって傷つきやすくなってしまう。
 %%%%
 ring of ice
 
-この指輪は火の力との更なる接触を装着者にもたらす。|この指輪は冷気と氷の力との更
-なる接触を装着者にもたらす。 装着者は冷気に対する耐性を得ると共に、
+この指輪は火の力との更なる接触を装着者にもたらす。
+|この指輪は冷気と氷の力との更なる接触を装着者にもたらす。
+装着者は冷気に対する耐性を得ると共に、
 冷気の魔法をより効果的に扱うことが可能になる。
 ただし火の影響によって傷つきやすくなってしまう。
 %%%%
@@ -356,7 +360,7 @@ wearer, but also considerably speeds his or her metabolism while doing so.
 %%%%
 ring of see invisible
 
-この指輪は装着者に、魔法によって視界から隠れているものを 視ることを可能にする。
+この指輪は装着者に、魔法によって視界から隠れているものを視ることを可能にする。
 %%%%
 ring of strength
 
@@ -370,11 +374,10 @@ ring of sustenance
 %%%%
 ring of teleport control
 
-この指輪は装着者がどのようなテレポートについてでも目的地を
-制御することを可能にする。ただし完全な正確さは望めない。 perfect accuracy.
-Trying to teleport into a solid
-また、制御されたテレポートは残留した魔法のエネルギーによって least in the case
-of a normal teleportation. Also be wary that controlled teleports will
+この指輪は装着者がどのようなテレポートについてでも目的地を制御することを可能に
+する。ただし完全な正確さは望めない。 perfect accuracy. Trying to teleport into
+a solid また、制御されたテレポートは残留した魔法のエネルギーによって least in
+the case of a normal teleportation. Also be wary that controlled teleports will
 contaminate the subject with residual magical energy.
 %%%%
 ring of teleportation
@@ -414,8 +417,8 @@ This scroll allows its reader to selectively erase one spell
 scroll of blinking
 
 この巻き物は読んだ者に、正確に制御可能な短距離の a short distance, with precise
-control. ただし制御されたテレポートは使用者を魔法のエネルギーで
-汚染することがあるので注意しなくてはならない。
+control. ただし制御されたテレポートは使用者を魔法のエネルギーで汚染することがあ
+るので注意しなくてはならない。
 %%%%
 scroll of enchant weapon ii
 
@@ -426,7 +429,7 @@ enchant them up to +9. Magical artefacts cannot be enchanted at all.
 %%%%
 scroll of fear
 
-この巻き物は読み上げた者の視界内にいる相手全てに 恐怖を抱かせる。
+この巻き物は読み上げた者の視界内にいる相手全てに恐怖を抱かせる。
 %%%%
 scroll of identify
 
@@ -437,9 +440,9 @@ If used on a deck of cards, this scroll will also give away the top card.
 %%%%
 scroll of noise
 
-この悪戯の巻き物は、しばしば邪悪な実習生によって
-魔法使いの荷物の中に忍び込まされて、うるさい騒音を引き起す。
-その他にはこれといって有用な使い途などない。
+この悪戯の巻き物は、
+しばしば邪悪な実習生によって魔法使いの荷物の中に忍び込まされて、
+うるさい騒音を引き起す。その他にはこれといって有用な使い途などない。
 %%%%
 scroll of random uselessness
 
@@ -448,7 +451,7 @@ scroll by the sense of achievement you get from getting it to work at all.
 %%%%
 scroll of remove curse
 
-この巻物を読み上げると、あなたの装備中のアイテムから 呪いが取り除かれる。
+この巻物を読み上げると、あなたの装備中のアイテムから呪いが取り除かれる。
 %%%%
 scroll of vorpalise weapon
 
@@ -472,7 +475,7 @@ slice of pizza
 %%%%
 sling
 
-布切れと皮紐でできた投石器だ。 それほどのダメージは期待できない。 Unlike with
+布切れと皮紐でできた投石器だ。それほどのダメージは期待できない。 Unlike with
 other launchers, wearing a shield does not slow down its rate of fire.
 %%%%
 staff of channeling
@@ -505,17 +508,15 @@ damage if they are also skilled in earth magic.
 %%%%
 staff of fire
 
-This staff 手にしている者の炎の魔法の威力を強化し、
-更には炎の影響から保護する。 If the wielder is skilled in evocations, they can
-burn those struck by it, dealing even greater damage if they are also skilled
-in fire magic.
+This staff 手にしている者の炎の魔法の威力を強化し、更には炎の影響から保護する。
+If the wielder is skilled in evocations, they can burn those struck by it,
+dealing even greater damage if they are also skilled in fire magic.
 %%%%
 staff of poison
 
-This staff 手にしている者の毒の魔法の威力を強化し、
-更には毒の影響から保護する。 poison. If the wielder is skilled in both
-evocations and poison magic, they can poison creatures struck by it — even if
-the victims were normally resistant.
+This staff 手にしている者の毒の魔法の威力を強化し、更には毒の影響から保護する。
+poison. If the wielder is skilled in both evocations and poison magic, they can
+poison creatures struck by it — even if the victims were normally resistant.
 %%%%
 staff of power
 
@@ -523,10 +524,10 @@ This staff 手にしている者に追加の魔力をもたらす。
 %%%%
 stone of earth elementals
 
-大地の精霊を召換するための魔法の道具だ。これは幾分信頼性に欠ける品物で、うまく
-発動するまで何度も試みなくてはならない場合が多い。使用には危険を伴うが、使用者
-が然るべき精霊魔法に習熟していればその危険は減少する。especially when trying to
-control multiple elementals at the same time.
+大地の精霊を召換するための魔法の道具だ。これは幾分信頼性に欠ける品物で、
+うまく発動するまで何度も試みなくてはならない場合が多い。使用には危険を伴うが、
+使用者が然るべき精霊魔法に習熟していればその危険は減少する。especially when
+trying to control multiple elementals at the same time.
 %%%%
 storm dragon armour
 
@@ -540,11 +541,11 @@ A 小さいが美味しい、赤い果物だ.
 %%%%
 wand of cold
 
-この杖は魔法の道具だ。 これは強力な冷気の矢を放つ。
+この杖は魔法の道具だ。これは強力な冷気の矢を放つ。
 %%%%
 wand of confusion
 
-この杖は魔法の道具だ。 これは対象に混乱と狼狽を引き起こす。
+この杖は魔法の道具だ。これは対象に混乱と狼狽を引き起こす。
 %%%%
 wand of digging
 
@@ -557,49 +558,49 @@ hardest walls — even rigid statues, to say nothing of flesh.
 %%%%
 wand of draining
 
-この杖は魔法の道具だ。 これは対象に負のエネルギーの矢を放つ。
+この杖は魔法の道具だ。これは対象に負のエネルギーの矢を放つ。
 矢は生命あるモンスターの生命力を衰弱させるが、 but is useless against the
 undead, demons, artificial creatures and even living plants.
 %%%%
 wand of enslavement
 
-この杖は魔法の道具だ。 これは対象に奴隷的な服従をさせる。
+この杖は魔法の道具だ。これは対象に奴隷的な服従をさせる。
 %%%%
 wand of fire
 
-この杖は魔法の道具だ。 これは強力な炎の矢を放つ。
+この杖は魔法の道具だ。これは強力な炎の矢を放つ。
 %%%%
 wand of fireball
 
-この杖は魔法の道具だ。 これは炎の爆風を放つ。
+この杖は魔法の道具だ。これは炎の爆風を放つ。
 %%%%
 wand of flame
 
-この杖は魔法の道具だ。 これは少量の炎を放射する。
+この杖は魔法の道具だ。これは少量の炎を放射する。
 %%%%
 wand of frost
 
-この杖は魔法の道具だ。 これは少量の冷気を放射する。
+この杖は魔法の道具だ。これは少量の冷気を放射する。
 %%%%
 wand of hasting
 
-この杖は魔法の道具だ。 これは狙った対象に、動きを加速する魔法をかける。
+この杖は魔法の道具だ。これは狙った対象に、動きを加速する魔法をかける。
 %%%%
 wand of heal wounds
 
-この杖は魔法の道具だ。 これは対象の傷を治療する。
+この杖は魔法の道具だ。これは対象の傷を治療する。
 %%%%
 wand of invisibility
 
-この杖は魔法の道具だ。 これは対象を他者の視覚から隠蔽する。
+この杖は魔法の道具だ。これは対象を他者の視覚から隠蔽する。
 %%%%
 wand of lightning
 
-この杖は魔法の道具だ。 これは強力な稲妻の矢を放つ。
+この杖は魔法の道具だ。これは強力な稲妻の矢を放つ。
 %%%%
 wand of magic darts
 
-この杖は魔法の道具だ。 これは小さな破壊エネルギーの矢を放つ。 They never miss.
+この杖は魔法の道具だ。これは小さな破壊エネルギーの矢を放つ。 They never miss.
 %%%%
 wand of paralysis
 
