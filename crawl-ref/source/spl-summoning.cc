@@ -2655,7 +2655,7 @@ void reset_battlesphere(monster* mons)
 
 bool fire_battlesphere(monster* mons)
 {
-    if (!mons || !mons->type == MONS_BATTLESPHERE)
+    if (!mons || mons->type != MONS_BATTLESPHERE)
         return false;
 
     actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
