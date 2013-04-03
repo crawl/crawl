@@ -633,10 +633,8 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
         switch (chr)
         {
         case "-":
-            if (menu.tag == "inventory") {
-                update_server_scroll();
-                return true; // Don't capture - for wield prompts
-            }
+            if (menu.tag == "inventory" || menu.tag == "stash")
+                break; // Don't capture - for wield prompts or stash search
 
         case "<":
         case ";":
