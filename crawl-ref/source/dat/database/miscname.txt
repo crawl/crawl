@@ -49,9 +49,13 @@ charcoal
 
 chartreuse
 
+cobalt blue
+
 copper
 
 cyan
+
+dun
 
 gold
 
@@ -62,6 +66,8 @@ grey
 gridelin
 
 indigo
+
+lavender
 
 leaf green
 
@@ -90,6 +96,8 @@ scarlet
 silver
 
 umber
+
+viridian
 
 white
 
