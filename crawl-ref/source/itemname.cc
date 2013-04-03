@@ -665,6 +665,7 @@ static const char* potion_type_name(int potiontype)
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
     case POT_FIZZING:           return "fizzing liquid";
+    case POT_VICISSITUDE:       return "vicissitude";
     default:                    return "bugginess";
     }
 }
@@ -3183,6 +3184,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
+        case POT_VICISSITUDE:
             return (you.is_undead
                         && (you.species != SP_VAMPIRE
                             || temp && you.hunger_state < HS_SATIATED));

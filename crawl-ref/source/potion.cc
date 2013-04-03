@@ -424,6 +424,15 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
         break;
 
+    case POT_VICISSITUDE:
+        mpr("You feel fantastic!");
+        mutate(RANDOM_GOOD_MUTATION, "potion of vicissitude", false);
+
+        learned_something_new(HINT_YOU_MUTATED);
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
+        break;
+
+
     case POT_RESISTANCE:
         mpr("You feel protected.", MSGCH_DURATION);
         you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);

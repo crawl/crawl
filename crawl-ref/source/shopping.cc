@@ -1852,6 +1852,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
             case POT_GAIN_STRENGTH:
+            case POT_VICISSITUDE:
                 valued += 350;
                 break;
 
