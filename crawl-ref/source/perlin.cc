@@ -91,7 +91,8 @@ namespace perlin
         49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
         138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180};
 
-    static const uint8_t permMod12(const uint32_t x) {
+    static IMMUTABLE uint8_t permMod12(const uint32_t x)
+    {
         return perm[x] % 12;
     }
 
