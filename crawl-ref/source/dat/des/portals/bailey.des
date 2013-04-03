@@ -471,8 +471,7 @@ NSUBST: e = 1:e / *:d
 ITEM:   potion of curing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of speed w:2 / potion of berserk rage w:3
 ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
-        potion of gain intelligence q:2 / potion of gain strength q:2 /\
-        potion of gain dexterity q:2
+        potion of vicissitude q:2 w:30
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
@@ -645,8 +644,7 @@ ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
         scroll of enchant weapon i w:2 / scroll of enchant weapon ii w:2 / \
         scroll of enchant weapon iii w:1 / scroll of enchant armour w:5
-ITEM:   potion of gain strength / potion of gain intelligence / \
-        potion of gain dexterity / potion of cure mutation    / \
+ITEM:   potion of vicissitude w:30 / potion of cure mutation / \
         potion of experience / scroll of acquirement
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
@@ -930,7 +928,7 @@ TAGS:   bailey_polearm no_item_gen no_monster_gen
 KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
             potion of speed w:3 / potion of berserk rage w:2 /\
             potion of invisibility w:3 / potion of experience w:1 /\
-            potion of gain strength w:1 / potion of resistance w:1
+            potion of vicissitude w:1 / potion of resistance w:1
 KITEM:  ? = scroll of enchant weapon I / scroll of enchant weapon II /\
             scroll of enchant weapon III w:5 / scroll of vorpalise weapon w:1 /\
             scroll of enchant armour / scroll of acquirement w:1 /\

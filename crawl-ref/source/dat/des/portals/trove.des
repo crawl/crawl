@@ -821,8 +821,7 @@ WEIGHT:  5
 ORIENT:  encompass
 ITEM:    potion of curing / potion of heal wounds / \
          potion of curing q:2 / potion of heal wounds q:2
-ITEM:    potion of experience / potion of gain strength / \
-         potion of gain intelligence / potion of gain dexterity
+ITEM:    potion of experience / potion of vicissitude w:30
 ITEM:    potion of might / potion of resistance / \
          potion of magic / potion of speed / \
          potion of might q:2 / potion of resistance q:2 / \
