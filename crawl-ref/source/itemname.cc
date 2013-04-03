@@ -408,8 +408,10 @@ static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
         return (t == MBN_TERSE ? "sleep" : "sleeping");
     case SPMSL_CONFUSION:
         return (t == MBN_TERSE ? "conf" : "confusion");
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SICKNESS:
         return (t == MBN_TERSE ? "sick" : "sickness");
+#endif
     case SPMSL_RAGE:
         return "frenzy";
     case SPMSL_RETURNING:

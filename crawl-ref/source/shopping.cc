@@ -1508,7 +1508,9 @@ unsigned int item_value(item_def item, bool ident)
             case SPMSL_SLOW:
             case SPMSL_SLEEP:
             case SPMSL_CONFUSION:
+#if TAG_MAJOR_VERSION == 34
             case SPMSL_SICKNESS:
+#endif
             case SPMSL_RAGE:
                 valued *= 23;
                 break;

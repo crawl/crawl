@@ -1159,9 +1159,11 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_CONFUSION:
             description += "It is tipped with a substance that causes confusion.";
             break;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SICKNESS:
             description += "It has been contaminated by something likely to cause disease.";
             break;
+#endif
         case SPMSL_RAGE:
             description += "It is tipped with a substance that causes a mindless, "
                 "berserk rage, making people attack friend and foe alike.";

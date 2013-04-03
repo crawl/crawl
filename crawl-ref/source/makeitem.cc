@@ -1774,7 +1774,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
         rc = random_choose_weighted(20, SPMSL_SLEEP,
                                     20, SPMSL_SLOW,
-                                    20, SPMSL_SICKNESS,
                                     20, SPMSL_CONFUSION,
                                     10, SPMSL_PARALYSIS,
                                     10, SPMSL_RAGE,
@@ -1877,7 +1876,9 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_PARALYSIS:
     case SPMSL_SLOW:
     case SPMSL_SLEEP:
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_CONFUSION:
+#endif
     case SPMSL_SICKNESS:
     case SPMSL_RAGE:
         return (type == MI_NEEDLE);
