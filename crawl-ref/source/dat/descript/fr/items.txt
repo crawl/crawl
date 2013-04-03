@@ -962,18 +962,6 @@ potion of experience
 
 Une potion aussi rare que merveilleuse.
 %%%%
-potion of gain dexterity
-
-Une potion de mutation bénéfique.
-%%%%
-potion of gain intelligence
-
-Une potion de mutation bénéfique.
-%%%%
-potion of gain strength
-
-Une potion de mutation bénéfique.
-%%%%
 potion of heal wounds
 
 Un élixir de guérison magique qui permet aux blessures de se refermer et guérir

@@ -1016,18 +1016,6 @@ potion of experience
 매우 희귀하고 굉장한 물약이다. 마시면 머릿속에 자신이 겪어보지 못했던 희귀한
 경험들이 들어온다.
 %%%%
-potion of gain dexterity
-
-유용한 돌연변이를 일으키는 물약. 마시면 조금 더 민첩해진다.
-%%%%
-potion of gain intelligence
-
-유용한 돌연변이를 일으키는 물약. 마시면 조금 더 똑똑해진다.
-%%%%
-potion of gain strength
-
-유용한 돌연변이를 일으키는 물약. 마시면 조금 더 강력해진다.
-%%%%
 potion of heal wounds
 
 순식간에 상처를 치료하는 물약으로, 다른 곳에서는 엘릭서라고 부르는 듯하다.

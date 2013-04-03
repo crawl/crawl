@@ -918,18 +918,6 @@ potion of experience
 
 Una bebida rarísima y verdaderamente maravillosa.
 %%%%
-potion of gain dexterity
-
-Una poción de mutación benigna
-%%%%
-potion of gain intelligence
-
-Una poción de mutación benigna
-%%%%
-potion of gain strength
-
-Una poción de mutación benigna
-%%%%
 potion of heal wounds
 
 Un elixir de curación mágica que hace que las heridas se cierren y sanen casi

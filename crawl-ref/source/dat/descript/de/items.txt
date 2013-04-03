@@ -439,18 +439,6 @@ potion of experience
 
 Ein wirklich wundervoller und sehr seltenes Getränk.
 %%%%
-potion of gain dexterity
-
-Ein Trank der Nützlichen Mutation.
-%%%%
-potion of gain intelligence
-
-Ein Trank der Nützlichen Mutation.
-%%%%
-potion of gain strength
-
-Ein Trank der Nützlichen Mutation.
-%%%%
 potion of invisibility
 
 Ein Trank der dich vor der Sicht Anderer versteckt.

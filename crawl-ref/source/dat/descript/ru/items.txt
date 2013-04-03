@@ -692,18 +692,6 @@ potion of experience
 
 Поистине восхитительный и очень редкий напиток.
 %%%%
-potion of gain dexterity
-
-Зелье полезной мутации.
-%%%%
-potion of gain intelligence
-
-Зелье полезной мутации.
-%%%%
-potion of gain strength
-
-Зелье полезной мутации.
-%%%%
 potion of heal wounds
 
 Магический эликсир, который почти мгновенно прекращает кровотечение и заживляет
