@@ -77,7 +77,7 @@ bool form_can_wear(transformation_type form)
 
 bool form_can_fly(transformation_type form)
 {
-    if (you.racial_permanent_flight())
+    if (you.racial_permanent_flight() && you.permanent_flight())
         return true;
     return (form == TRAN_DRAGON || form == TRAN_BAT || form == TRAN_WISP);
 }
@@ -520,7 +520,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
         return true;
     }
 
-    if (!you.flight_mode())
+    if (!you.duration[DUR_FLIGHT] && !you.attribute[ATTR_PERM_FLIGHT])
         return false;
 
     int sources = you.evokable_flight();
