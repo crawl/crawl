@@ -132,7 +132,6 @@ namespace arena
     static uint32_t cycle_random_pos = 0;
 
     static FILE *file = NULL;
-    static int message_pos = 0;
     static level_id place(BRANCH_MAIN_DUNGEON, 20);
 
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
@@ -517,14 +516,6 @@ namespace arena
         setup_others();
     }
 
-    // Temporarily reset crawl_state.type to force a --more-- to happen.
-    static void more()
-    {
-        unwind_var<game_type> type(crawl_state.type, GAME_TYPE_NORMAL);
-
-        ::more();
-    }
-
     static void count_foes()
     {
         int orig_a = faction_a.active_members;
@@ -593,31 +584,6 @@ namespace arena
         count_foes();
 
         return (faction_a.active_members > 0 && faction_b.active_members > 0);
-    }
-
-    static void report_foes()
-    {
-        for (monster_iterator mons; mons; ++mons)
-        {
-            if (mons->type == MONS_SIGMUND)
-            {
-                coord_def where;
-                if (mons->get_foe())
-                    where = mons->get_foe()->pos();
-                mprf("%s (%d,%d) foe: %s (%d,%d)",
-                     mons->name(DESC_PLAIN).c_str(),
-                     mons->pos().x, mons->pos().y,
-                     mons->get_foe()? mons->get_foe()->name(DESC_PLAIN).c_str()
-                     : "(none)",
-                     where.x, where.y);
-            }
-        }
-    }
-
-    static void fixup_foes()
-    {
-        for (monster_iterator mons; mons; ++mons)
-            behaviour_event(*mons, ME_DISTURB, 0, mons->pos());
     }
 
     static void dump_messages()
