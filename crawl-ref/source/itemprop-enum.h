@@ -377,7 +377,9 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_SLOW,                        // makes slow
     SPMSL_SLEEP,                       // sleep
     SPMSL_CONFUSION,                   // confusing
+#if TAG_MAJOR_VERSION == 34
     SPMSL_SICKNESS,                    // sickness/disease
+#endif
     SPMSL_RAGE,                        // berserk rage
     NUM_REAL_SPECIAL_MISSILES,
     SPMSL_BLINDING,                    // blinding
