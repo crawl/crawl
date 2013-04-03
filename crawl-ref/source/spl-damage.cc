@@ -1643,13 +1643,11 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
-        if (you.airborne())
-            damage /= 2;
         ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "static electricity");
     }
     else if (mons == NULL)
         return 0;
-    else if (mons->res_elec() > 0 || mons_flies(mons))
+    else if (mons->res_elec() > 0)
         return 0;
     else
     {
@@ -1696,7 +1694,7 @@ static bool _safe_discharge(coord_def where, vector<const monster *> &exclude)
         if (find(exclude.begin(), exclude.end(), mon) == exclude.end())
         {
             // Harmless to these monsters, so don't prompt about hitting them
-            if (mon->res_elec() > 0 || mons_flies(mon))
+            if (mon->res_elec() > 0)
                 continue;
 
             if (stop_attack_prompt(mon, false, where))
