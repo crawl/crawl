@@ -625,6 +625,7 @@ i-archery BRAND_ARM_ARCHERY BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand
+%rim 0
 gem_iron WAND_OFFSET UNSEEN_WAND
 gem_brass
 gem_bone
@@ -637,6 +638,7 @@ gem_ivory
 gem_glass
 gem_lead
 gem_plastic
+%rim 1
 
 %sdir item/wand
 i-flame WAND_FLAME WAND_ID_FIRST
