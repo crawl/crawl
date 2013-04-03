@@ -2655,8 +2655,11 @@ void move_child_tentacles(monster* mons)
 
         if (pull_constrictee)
         {
-            mprf("The tentacle pulls %s backwards!",
-                 constrictee->name(DESC_THE).c_str());
+            if (you.can_see(tentacle))
+            {
+                mprf("The tentacle pulls %s backwards!",
+                     constrictee->name(DESC_THE).c_str());
+            }
 
             if (constrictee->as_player())
                 move_player_to_grid(old_pos, false, true);
