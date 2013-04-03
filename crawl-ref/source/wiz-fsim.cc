@@ -42,7 +42,7 @@
 
 #ifdef WIZARD
 
-fight_data null_fight = {0.0, 0, 0, 0.0, 0, 0.0};
+fight_data null_fight = {0.0, 0, 0, 0.0, 0, 0.0, 0.0};
 typedef map<skill_type, int8_t> skill_map;
 typedef map<skill_type, int8_t>::iterator skill_map_iterator;
 
