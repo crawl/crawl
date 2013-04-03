@@ -908,18 +908,6 @@ potion of experience
 
 一瓶非常罕见的极佳饮品。
 %%%%
-potion of gain dexterity
-
-一瓶基因改良药水。
-%%%%
-potion of gain intelligence
-
-一瓶基因改良药水。
-%%%%
-potion of gain strength
-
-一瓶基因改良药水。
-%%%%
 potion of heal wounds
 
 饮用这瓶魔法药水可以让你的创伤在极短时间内愈合。如果在生命值全满或接近全满时饮

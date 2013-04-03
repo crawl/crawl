@@ -873,18 +873,6 @@ potion of experience
 
 Prawdziwie cudowny napitek, który trwale zwiększa umiejętności pijącego.
 %%%%
-potion of gain dexterity
-
-Eliksir który powoduje korzystną mutację.
-%%%%
-potion of gain intelligence
-
-Eliksir który powoduje korzystną mutację.
-%%%%
-potion of gain strength
-
-Eliksir który powoduje korzystną mutację.
-%%%%
 potion of heal wounds
 
 Eliksir który w sporym stopniu leczy rany, nie potrafi jednak uleczyć innych
