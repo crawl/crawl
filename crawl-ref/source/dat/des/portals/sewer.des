@@ -282,8 +282,7 @@ ITEM:     potion of heal wounds / potion of curing
 ITEM:     potion of curing / potion of curing q:2 w:5 / \
           potion of heal wounds / potion of heal wounds q:2 w:5
 KITEM:    f = potion of flight q:2 ident:type, potion of restore abilities w:7 / \
-          potion of gain intelligence / potion of gain strength / \
-          potion of gain dexterity
+          potion of vicissitude w:30
 KFEAT:    f = shallow_water
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
 MAP
