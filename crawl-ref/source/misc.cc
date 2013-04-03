@@ -2322,6 +2322,9 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first)
 {
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return false;
+
     if (you.confused() || !you.can_see(mon))
         return false;
 
@@ -2372,6 +2375,9 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 bool stop_attack_prompt(targetter &hitfunc, string verb,
                         bool (*affects)(const actor *victim))
 {
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return false;
+
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
