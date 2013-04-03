@@ -2687,7 +2687,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              230, POT_DEGENERATION,
                                              180, POT_CURE_MUTATION,
                                              125, POT_STRONG_POISON,
-                                              90, POT_VICISSITUDE,
+                                              90, POT_BENEFICIAL_MUTATION,
                                               85, POT_BLOOD,
                                               60, POT_PORRIDGE,
                                               10, POT_EXPERIENCE,
@@ -2706,7 +2706,7 @@ static void _generate_potion_item(item_def& item, int force_type,
     if (item.sub_type == POT_GAIN_STRENGTH
         || item.sub_type == POT_GAIN_DEXTERITY
         || item.sub_type == POT_GAIN_INTELLIGENCE
-        || item.sub_type == POT_VICISSITUDE
+        || item.sub_type == POT_BENEFICIAL_MUTATION
         || item.sub_type == POT_EXPERIENCE
         || item.sub_type == POT_RESTORE_ABILITIES)
     {

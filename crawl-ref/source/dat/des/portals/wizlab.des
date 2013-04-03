@@ -1162,7 +1162,7 @@ COLOUR:     W = green
 :           door_verb_open="You part the %s%s.",
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
-KITEM:      $ = w:45 potion of mutation / w:15 potion of vicissitude / \
+KITEM:      $ = w:45 potion of mutation / w:15 potion of beneficial mutation / \
             w:1 potion of cure mutation
 KITEM:      * = gold
 KITEM:      % = amulet of resist mutation good_item
@@ -1432,7 +1432,7 @@ KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
 ITEM:       potion of experience, manual of fighting / manual of armour / manual of \
             spellcasting, manual of staves / manual of fighting / manual of dodging,\
-            potion of vicissitude
+            potion of beneficial mutation
 LFLOORCOL:  white
 KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures \
             nas:old_memories tile:mons_human_monk seen / deep troll name:monk n_suf \

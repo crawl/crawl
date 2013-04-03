@@ -2877,7 +2877,7 @@ enum potion_type
     POT_BLOOD,
     POT_BLOOD_COAGULATED,
     POT_FIZZING,
-    POT_VICISSITUDE, // XXX: Name me.
+    POT_BENEFICIAL_MUTATION,
     NUM_POTIONS
 };
 
