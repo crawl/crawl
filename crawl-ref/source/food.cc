@@ -2447,7 +2447,7 @@ bool is_inedible(const item_def &item)
         return true;
     }
 
-    if (item.base_type == OBJ_MISSILES && !item.sub_type == MI_PIE
+    if (item.base_type == OBJ_MISSILES && item.sub_type != MI_PIE
         || you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
     {
         return true;
