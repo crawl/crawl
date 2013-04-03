@@ -2890,10 +2890,6 @@ brand_type melee_attack::random_chaos_brand()
             if (defender->is_icy())
                 susceptible = false;
             break;
-        case SPWPN_ELECTROCUTION:
-            if (defender->airborne())
-                susceptible = false;
-            break;
         case SPWPN_VENOM:
             if (defender->holiness() == MH_UNDEAD)
                 susceptible = false;
@@ -3047,7 +3043,7 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_ELECTROCUTION:
         noise_factor += 800 / max(1, damage_done);
-        if (defender->airborne() || defender->res_elec() > 0)
+        if (defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
         {
@@ -3061,9 +3057,8 @@ bool melee_attack::apply_damage_brand()
             // Check for arcing in water, and add the final effect.
             const coord_def& pos = defender->pos();
 
-            // We know the defender is neither airborne nor electricity
-            // resistant, from above, but we still have to make sure it
-            // is in water (and not clinging above it).
+            // We know the defender isn't electricity resistant, from
+            // above, but we still have to make sure it is in water.
             if (_conduction_affected(pos))
                 (new lightning_fineff(attacker, pos))->schedule();
         }
@@ -4433,9 +4428,6 @@ void melee_attack::mons_apply_attack_flavour()
                 attacker->get_experience_level() +
                 random2(attacker->get_experience_level() / 2));
         special_damage_flavour = BEAM_ELECTRICITY;
-
-        if (defender->airborne())
-            special_damage = special_damage * 2 / 3;
 
         if (needs_message && special_damage)
         {
