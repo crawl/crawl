@@ -39,20 +39,23 @@ namespace perlin
 {
     // Inner class to speed upp gradient computations
     // ([in Java,] array access is a lot slower than member access)
-    class Grad {
+    class Grad
+    {
         public:
             const double x, y, z, w;
             Grad(double _x, double _y, double _z) : x(_x), y(_y), z(_z), w(0) {}
             Grad(double _x, double _y, double _z, double _w) : x(_x), y(_y), z(_z), w(_w) {}
     };
 
-    const Grad grad3[] = {
+    static const Grad grad3[] =
+    {
         Grad(1,1,0), Grad(-1,1,0), Grad(1,-1,0), Grad(-1,-1,0),
         Grad(1,0,1), Grad(-1,0,1), Grad(1,0,-1), Grad(-1,0,-1),
         Grad(0,1,1), Grad(0,-1,1), Grad(0,1,-1), Grad(0,-1,-1)
     };
 
-    const Grad grad4[]= {
+    static const Grad grad4[] =
+    {
         Grad(0,1,1,1),  Grad(0,1,1,-1),  Grad(0,1,-1,1),  Grad(0,1,-1,-1),
         Grad(0,-1,1,1), Grad(0,-1,1,-1), Grad(0,-1,-1,1), Grad(0,-1,-1,-1),
         Grad(1,0,1,1),  Grad(1,0,1,-1),  Grad(1,0,-1,1),  Grad(1,0,-1,-1),
@@ -63,7 +66,7 @@ namespace perlin
         Grad(-1,1,1,0), Grad(-1,1,-1,0), Grad(-1,-1,1,0), Grad(-1,-1,-1,0)
     };
 
-    const uint8_t perm[] = {151,160,137,91,90,15,
+    static const uint8_t perm[] = {151,160,137,91,90,15,
         131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
         190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
         88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
@@ -97,34 +100,39 @@ namespace perlin
     }
 
     // Skewing and unskewing factors for 2, 3, and 4 dimensions
-    const double F2 = 0.5*(sqrt(3.0)-1.0);
-    const double G2 = (3.0-sqrt(3.0))/6.0;
-    const double F3 = 1.0/3.0;
-    const double G3 = 1.0/6.0;
-    const double F4 = (sqrt(5.0)-1.0)/4.0;
-    const double G4 = (5.0-sqrt(5.0))/20.0;
+    static const double F2 = 0.5*(sqrt(3.0)-1.0);
+    static const double G2 = (3.0-sqrt(3.0))/6.0;
+    static const double F3 = 1.0/3.0;
+    static const double G3 = 1.0/6.0;
+    static const double F4 = (sqrt(5.0)-1.0)/4.0;
+    static const double G4 = (5.0-sqrt(5.0))/20.0;
 
     // Use uint64_t so that noise() can work sensibly for
     // coordinates from the full range of uint32_t; otherwise scaling,
     // signedness, and skew will give us considerably less than that.
-    static uint64_t fastfloor(const double x) {
+    static uint64_t fastfloor(const double x)
+    {
         uint64_t xi = (uint64_t) x;
         return x<xi ? xi-1 : xi;
     }
 
-    static double dot(Grad g, double x, double y) {
+    static double dot(Grad g, double x, double y)
+    {
         return g.x*x + g.y*y;
     }
-    static double dot(Grad g, double x, double y, double z) {
+    static double dot(Grad g, double x, double y, double z)
+    {
         return g.x*x + g.y*y + g.z*z;
     }
-    static double dot(Grad g, double x, double y, double z, double w) {
+    static double dot(Grad g, double x, double y, double z, double w)
+    {
         return g.x*x + g.y*y + g.z*z + g.w*w;
     }
 
 
     // 2D simplex noise
-    double noise(double xin, double yin) {
+    double noise(double xin, double yin)
+    {
         double n0, n1, n2; // Noise contributions from the three corners
         // Skew the input space to determine which simplex cell we're in
         double s = (xin+yin)*F2; // Hairy factor for 2D
@@ -178,7 +186,8 @@ namespace perlin
     }
 
     // 3D simplex noise
-    double noise(double xin, double yin, double zin) {
+    double noise(double xin, double yin, double zin)
+    {
         double n0, n1, n2, n3; // Noise contributions from the four corners
         // Skew the input space to determine which simplex cell we're in
         double s = (xin+yin+zin)*F3; // Very nice and simple skew factor for 3D
@@ -260,7 +269,8 @@ namespace perlin
 
 
     // 4D simplex noise, better simplex rank ordering method 2012-03-09
-    double noise(double x, double y, double z, double w) {
+    double noise(double x, double y, double z, double w)
+    {
 
         double n0, n1, n2, n3, n4; // Noise contributions from the five corners
         // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
@@ -379,7 +389,8 @@ namespace perlin
 
     // This is *not* in Stefan Gustavson's Java original
     // FIXME: what does it do?
-    double fBM(double x, double y, double z, uint32_t octaves) {
+    double fBM(double x, double y, double z, uint32_t octaves)
+    {
         if (octaves < 1)
             return 0.0;
         if (octaves == 1)
