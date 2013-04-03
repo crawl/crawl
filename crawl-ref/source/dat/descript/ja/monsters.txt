@@ -6,8 +6,8 @@ rainbow-coloured suspenders from somewhere. They're not helping.
 %%%%
 Cerebov
 
-激怒した凶暴なデーモンだ。 セレボブは輝く黄金の鎧を身につけ、 covered in
-shining golden armour and wielding a huge twisted sword.
+激怒した凶暴なデーモンだ。セレボブは輝く黄金の鎧を身につけ、 covered in shining
+golden armour and wielding a huge twisted sword.
 %%%%
 Dispater
 
@@ -47,7 +47,7 @@ energies.
 %%%%
 Mnoleg
 
-不可思議に輝く人影だ。 パンデモニウムの不気味な大気の中を踊っている。
+不可思議に輝く人影だ。パンデモニウムの不気味な大気の中を踊っている。
 %%%%
 Xtahua
 
@@ -85,7 +85,7 @@ typical dragon's fearsome breath.
 %%%%
 Brimstone Fiend
 
-地獄の炎に包まれた巨大で強力なデーモンである。 鱗の生えた大きな翼を持っている。
+地獄の炎に包まれた巨大で強力なデーモンである。鱗の生えた大きな翼を持っている。
 One of the most fearsome denizens of any of the Hells.
 %%%%
 crimson imp
@@ -96,22 +96,22 @@ grin, and its horns protrude obscenely from its scaly pate.
 curse skull
 
 空中に浮いてゆっくりと回転している、黒焦げの頭蓋骨だ。
-その黒ずんだ表面に刻まれた神秘的な記号が、ほとんどあらゆる
-攻撃に対しての耐性を暗示している。
+その黒ずんだ表面に刻まれた神秘的な記号が、
+ほとんどあらゆる攻撃に対しての耐性を暗示している。
 %%%%
 curse toe
 
-切り離された足の指だ。 宙に浮いていて、負のエネルギーの強烈な場を放射している。
+切り離された足の指だ。宙に浮いていて、負のエネルギーの強烈な場を放射している。
 %%%%
 cyclops
 
-額の中央に一つだけ目を持つ巨人だ。 両眼による立体視の欠如にも関らず、 throw
+額の中央に一つだけ目を持つ巨人だ。両眼による立体視の欠如にも関らず、 throw
 boulders with fearsome accuracy.
 %%%%
 death yak
 
-普通のダンジョンヤクより大きくて逞しい近縁種だ。
-その小さな赤い目は、生き物の肉への飢えに輝いている。
+普通のダンジョンヤクより大きくて逞しい近縁種だ。その小さな赤い目は、
+生き物の肉への飢えに輝いている。
 %%%%
 dragon
 
@@ -148,7 +148,7 @@ with torn skin hanging おぞましいアンデッドモンスターだ。
 %%%%
 fungus
 
-塊になった灰色の菌類だ。 暗く湿った地下迷宮で活発に生育する。
+塊になった灰色の菌類だ。暗く湿った地下迷宮で活発に生育する。
 %%%%
 megabat
 
@@ -156,7 +156,7 @@ megabat
 %%%%
 goliath beetle
 
-噛み砕く力の強い下顎を持つ、巨大な黒い甲虫だ。 非常に固いキチン質の殻を持つ。
+噛み砕く力の強い下顎を持つ、巨大な黒い甲虫だ。非常に固いキチン質の殻を持つ。
 %%%%
 giant gecko
 
@@ -175,8 +175,8 @@ A shapeshifter which has lost control over its 常に変化を続けている。
 %%%%
 green death
 
-膨れあがった体をしたデーモンだ。
-全身が爛れた腫れ物に覆われ、致命的な毒の雲を放っている。
+膨れあがった体をしたデーモンだ。全身が爛れた腫れ物に覆われ、
+致命的な毒の雲を放っている。
 %%%%
 griffon
 
@@ -208,8 +208,8 @@ bodies of its victims, hoping to inflict its own miserable fate on others.
 %%%%
 hydra
 
-A great and nightmarish lacertilian beast.
-これは複数の頭を持ち、更に頭を殖やす能力がある！
+A great and nightmarish lacertilian beast. これは複数の頭を持ち、
+更に頭を殖やす能力がある！
 
 Hitting it with any cutting weapon bigger than a dagger or a quick blade risks
 lopping a head off, which, considering hydra's unique biology, is not what you
@@ -240,8 +240,8 @@ An apparently abandoned item, actually 実は危険な小型の獣の擬態し�
 %%%%
 jackal
 
-A small canine scavenger. Packs of these creatures
-この生き物の群れは、ダンジョンの中を死肉を貪るために徘徊する。
+A small canine scavenger. Packs of these creatures この生き物の群れは、
+ダンジョンの中を死肉を貪るために徘徊する。
 %%%%
 jelly
 
@@ -302,9 +302,9 @@ radiates a malign aura to those who intrude on its domain.
 %%%%
 necrophage
 
-最も邪悪で不浄なアンデッド被造物で、 腐敗した人間型生物の死体から作成される。
-of humanoid creatures. They exist to spread disease and decay, and gain power
-from the decaying corpses of other beings.
+最も邪悪で不浄なアンデッド被造物で、腐敗した人間型生物の死体から作成される。 of
+humanoid creatures. They exist to spread disease and decay, and gain power from
+the decaying corpses of other beings.
 %%%%
 ogre mage
 
@@ -334,8 +334,8 @@ ursines, the polar bear will become enraged if badly hurt or frightened.
 %%%%
 quicksilver dragon
 
-長い体を曲がりくねらせたドラゴンだ。 蛇に似た姿をしている。 magical energies
-arc from its pointed snout, and it moves with terrifying swiftness.
+長い体を曲がりくねらせたドラゴンだ。蛇に似た姿をしている。 magical energies arc
+from its pointed snout, and it moves with terrifying swiftness.
 %%%%
 reaper
 
@@ -368,7 +368,7 @@ said to sometimes take the forms of fiery serpents.
 %%%%
 shadow demon
 
-不可思議な悪魔的存在だ。 常に自身の複数の影の中に霞んでいる。 It weaves
+不可思議な悪魔的存在だ。常に自身の複数の影の中に霞んでいる。 It weaves
 creatures into existence from the very shadows surrounding it.
 %%%%
 shadow imp
@@ -386,7 +386,7 @@ An ice replica of a monster that is animated by 死霊術の力で操られて�
 %%%%
 skeletal warrior
 
-重武装した凶悪な、人型生物の骸骨だ。 これは邪悪な力によって造られた。
+重武装した凶悪な、人型生物の骸骨だ。これは邪悪な力によって造られた。
 %%%%
 skeleton
 
@@ -402,8 +402,9 @@ spectral thing
 %%%%
 spiny worm
 
-大きな黒いワームだ。たくさんの節がある胴体は刺の生えたキチン質の
-装甲によって覆われている。 鋭い歯の並んだ口からは酸性の毒液を滴らせている。
+大きな黒いワームだ。
+たくさんの節がある胴体は刺の生えたキチン質の装甲によって覆われている。
+鋭い歯の並んだ口からは酸性の毒液を滴らせている。
 %%%%
 steam dragon
 
@@ -431,7 +432,7 @@ swamp drake
 %%%%
 swamp worm
 
-大きなぬるぬるしたワームだ。 この不浄な沼の泥の中を泳ぐのに特化している。
+大きなぬるぬるしたワームだ。この不浄な沼の泥の中を泳ぐのに特化している。
 %%%%
 titan
 
@@ -440,7 +441,7 @@ This huge, bolt-hurling, lightning-limned humanoid is unusually large
 %%%%
 toenail golem
 
-かりそめの生命を与えられた巨大な像だ。 爪切りで切った足の爪だけで造られている。
+かりそめの生命を与えられた巨大な像だ。爪切りで切った足の爪だけで造られている。
 非常に時間の有り余った誰かが造ったのだろう。
 %%%%
 two-headed ogre
@@ -481,13 +482,13 @@ body with the disorder アビスの.
 wyvern
 
 A dragon-like creature with a long, sharply pointed tail.
-ワーバーンは本物の竜よりは小型で手強さも劣るが、とりもなおさず
-侮り難い敵である。
+ワーバーンは本物の竜よりは小型で手強さも劣るが、
+とりもなおさず侮り難い敵である。
 %%%%
 yak
 
-ダンジョンに生息するヤクとしては普通のものだ。
-ぼさぼさした毛皮に覆われていて、一対の危険な角を持つ。
+ダンジョンに生息するヤクとしては普通のものだ。ぼさぼさした毛皮に覆われていて、
+一対の危険な角を持つ。
 %%%%
 yellow wasp
 

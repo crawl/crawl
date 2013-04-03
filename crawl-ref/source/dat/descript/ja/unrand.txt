@@ -11,24 +11,23 @@ Mace of Variability
 %%%%
 Glaive of Prune
 
-この武器は狂った神の創造物で、 所有者をプルーンに変える呪いがかかっている。
+この武器は狂った神の創造物で、所有者をプルーンに変える呪いがかかっている。
 wielding it into a prune. Fortunately,
 短期間使うだけであれば皮膚が少し紫色になり、 use it briefly with no
 consequences worse than slightly purple skin and a few wrinkles.
 %%%%
 Sword of Power
 
-この武器は力ある者には激しく、 力なき者には穏やかに応える。
+この武器は力ある者には激しく、力なき者には穏やかに応える。
 %%%%
 Staff of Olgreb
 
 This was the magical weapon wielded by the
-彼はダンジョンでの探索中に命を落とした。
-これは手にした者に毒への耐性を与え、毒の魔術を操る能力を増大させ、 increases
-the ability of its wielder to use venomous magic, and carries magical powers
-which can be evoked. The tales say that Olgreb researched rare venoms that may
-have some limited effect even on creatures immune to all commonly known
-poisons.
+彼はダンジョンでの探索中に命を落とした。これは手にした者に毒への耐性を与え、
+毒の魔術を操る能力を増大させ、 increases the ability of its wielder to use
+venomous magic, and carries magical powers which can be evoked. The tales say
+that Olgreb researched rare venoms that may have some limited effect even on
+creatures immune to all commonly known poisons.
 %%%%
 Vampire's Tooth
 

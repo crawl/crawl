@@ -6,8 +6,9 @@ tutorial intro
 %%%%
 tutorial1 start
 
-本课程中你将学习如何移动以及如何探索地城。你可以<localtiles>用<w>[鼠标]</w>单击
-某个你想去的地方来移动，或者 </localtiles>使用<w>[方向键]</w>。
+本课程中你将学习如何移动以及如何探索地城。
+你可以<localtiles>用<w>[鼠标]</w>单击某个你想去的地方来移动，或者
+</localtiles>使用<w>[方向键]</w>。
 %%%%
 tutorial1 go_on
 
@@ -43,16 +44,15 @@ tutorial1 levelmap
 </tiles><localtiles>你可以用<w>[鼠标右键点击]</w>来仔细查看地图的一部分，也可以
 <w>[左键点击]</w>移动至那里。</localtiles><webtiles>你可以按下
 <w>[$cmd[CMD_DISPLAY_MAP]]</w>查看整个地图，移动鼠标浏览地图内容。按下
-<w>[.]</w> 或 <w>[Enter]</w>可以移动至你鼠标光标的位置。按下<w>[Escape]</w>返回
-正常游戏。</webtiles><console>你可以按下<w>[$cmd[CMD_DISPLAY_MAP]]</w>
-查看整个地图，并移动鼠标浏览地图内容。按下<w>[.]</w> 或
-<w>[Enter]</w>可以移动至你鼠标光标的位置。按下 <w>[Escape]</w>
-返回游戏。</console>
+<w>[.]</w> 或 <w>[Enter]</w>可以移动至你鼠标光标的位置。按下<w>[Escape]</w
+>返回正常游戏。</webtiles><console>你可以按下<w>[$cmd[CMD_DISPLAY_MAP]]</w>
+查看整个地图，并移动鼠标浏览地图内容。按下<w>[.]</w> 或 <w>[Enter]</w
+>可以移动至你鼠标光标的位置。按下 <w>[Escape]</w> 返回游戏。</console>
 %%%%
 tutorial1 autoexplore
 
-长时间手动探索地图会比较乏味，你也可以试试按下<w>[$cmd[CMD_EXPLORE]]</w>启动自
-动探索。
+长时间手动探索地图会比较乏味，你也可以试试按下<w>[$cmd[CMD_EXPLORE]]</w
+>启动自动探索。
 %%%%
 tutorial1 exclusion
 
@@ -145,8 +145,8 @@ tutorial2 melee
 %%%%
 tutorial2 resting
 
-非常好！你可以通过按<w>$cmd[CMD_REST]</w>来休息以恢复损失的生命值。这将会使你休
-息并同时搜索周围，最多持续100回合，但会被一些特定的重要事件打断。
+非常好！你可以通过按<w>$cmd[CMD_REST]</w>来休息以恢复损失的生命值。
+这将会使你休息并同时搜索周围，最多持续100回合，但会被一些特定的重要事件打断。
 %%%%
 tutorial2 chop_corpses
 
@@ -200,8 +200,8 @@ tutorial2 darts
 tutorial2 throwing
 
 你可以按<w>[$cmd[CMD_FIRE]]</w><localtiles>或者在物品栏[鼠标点击]它们 </localti
-les>来投掷飞镖。按<w>[$cmd[CMD_TARGET_SELECT]]</w>或者<w>[Enter]</w>来确定对自
-动选定的目标开火。
+les>来投掷飞镖。按<w>[$cmd[CMD_TARGET_SELECT]]</w>或者<w>[Enter]</w
+>来确定对自动选定的目标开火。
 %%%%
 tutorial2 wield_bow
 
@@ -212,9 +212,9 @@ tutorial2 firing
 
 通过已装备的弓来射出箭的操作与投掷飞镖的操作一样：按
 <w>[$cmd[CMD_FIRE]]</w><localtiles>或<w>[鼠标点击]</w>。在瞄准的时候你可以按 <w
->[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w>来选择其他的目标。这只蠕虫在岩浆后面无法对
-你造成任何威胁，但是那个人偶可以射击你，因此先搞定它。按
-<w>[$cmd[CMD_TARGET_SELECT]]</w>或者<w>[Enter]</w>确定你的目标。
+>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w>来选择其他的目标。
+这只蠕虫在岩浆后面无法对你造成任何威胁，但是那个人偶可以射击你，因此先搞定它。
+按 <w>[$cmd[CMD_TARGET_SELECT]]</w>或者<w>[Enter]</w>确定你的目标。
 %%%%
 tutorial2 travel_reminder
 
@@ -226,8 +226,8 @@ tutorial2 explore
 %%%%
 tutorial2 tutorial_end
 
-恭喜你！你已经成功地从你的第一批敌人手中活下来了！只要从楼梯走下去就可以退出教
-程。
+恭喜你！你已经成功地从你的第一批敌人手中活下来了
+！只要从楼梯走下去就可以退出教程。
 %%%%
 tutorial2 exit
 
@@ -267,14 +267,14 @@ tutorial3 start
 %%%%
 tutorial3 armour
 
-按<w>[$cmd[CMD_PICKUP]]</w>来捡起这双靴子，并按<w>[$cmd[CMD_WEAR_ARMOUR]]</w>来
-穿上它们。<localtiles>或者在物品栏内的图标上<w>[鼠标点击]</w>，也能收到同样的效
-果。</localtiles>
+按<w>[$cmd[CMD_PICKUP]]</w>来捡起这双靴子，并按<w>[$cmd[CMD_WEAR_ARMOUR]]</w
+>来穿上它们。<localtiles>或者在物品栏内的图标上<w>[鼠标点击]</w
+>，也能收到同样的效果。</localtiles>
 %%%%
 tutorial3 autopickup
 
-有些种类的物品<tiles>（周围有一个绿框的那种）</tiles>会在你踩上去的时候自动拾取
-。
+有些种类的物品<tiles>（周围有一个绿框的那种）</tiles
+>会在你踩上去的时候自动拾取。
 %%%%
 tutorial3 scroll
 
@@ -285,27 +285,28 @@ altiles>来阅读这张卷轴。
 tutorial3 scroll_noautopickup
 
 在周围有怪物的时候，自动拾取不会生效。你可以现在就按<w>[$cmd[CMD_PICKUP]]</w><l
-ocaltiles>或<w>[点击]</w>你的角色</localtiles>来拾起它，或者你也可以先干掉附近
-的敌人然后再拾取它。
+ocaltiles>或<w>[点击]</w>你的角色</localtiles>来拾起它
+，或者你也可以先干掉附近的敌人然后再拾取它。
 %%%%
 tutorial3 ego_weapon
 
 有<lightblue>符文</lightblue>或<lightblue>发光</lightblue>词缀的物品要么有附加
 值，要么有特殊属性，也可能两个都有。你必须得按<w>[$cmd[CMD_WIELD_WEAPON]]</w><l
-ocaltiles>或在物品栏内的图标上<w>[鼠标点击]</w></localtiles>来装备这把弯刀才能
-知道它的具体属性。
+ocaltiles>或在物品栏内的图标上<w>[鼠标点击]</w></localtiles
+>来装备这把弯刀才能知道它的具体属性。
 %%%%
 tutorial3 inventory
 
-如果你想查阅新武器的描述，只要在物品栏（<w>[$cmd[CMD_DISPLAY_INVENTORY]]</w>）
-中找到并选中它即可。<localtiles>你也可以<w>[鼠标悬停]</w>或在物品栏内的图标上<w
->[右击]</w>来收到同样效果</localtiles>。另外要注意的是，所有与物品有关的指令在
-物品描述界面同样有效。
+如果你想查阅新武器的描述，只要在物品栏（<w>[$cmd[CMD_DISPLAY_INVENTORY]]</w
+>）中找到并选中它即可。
+<localtiles>你也可以<w>[鼠标悬停]</w>或在物品栏内的图标上<w
+>[右击]</w>来收到同样效果</localtiles>。另外要注意的是
+，所有与物品有关的指令在物品描述界面同样有效。
 %%%%
 tutorial3 battle
 
-如果你成功让一个怪物中毒了，暂时撤退并让毒药杀死它可能会比较好。如果有必要，你
-也可以暂时撤退来让伤势回复。
+如果你成功让一个怪物中毒了，暂时撤退并让毒药杀死它可能会比较好。如果有必要
+，你也可以暂时撤退来让伤势回复。
 %%%%
 tutorial3 downstairs
 
@@ -316,21 +317,23 @@ s>来走下楼梯。
 tutorial3 command_help
 
 如果这么多指令让你感觉有点头晕，你也可以在指令帮助（<w>[$cmd[CMD_DISPLAY_COMMAN
-DS]]</w>）中查找各个指令。<localtiles>部分指令也可以通过点击屏幕右边的<w>指令面
-板</w>来实现。</localtiles>和以前一样，你可以按<w>[$cmd[CMD_REPLAY_MESSAGES]]</
-w>来查阅过去的信息。
+DS]]</w>）中查找各个指令。
+<localtiles>部分指令也可以通过点击屏幕右边的<w>指令面板</w>来实现。
+</localtiles>和以前一样，你可以按<w>[$cmd[CMD_REPLAY_MESSAGES]]</ w
+>来查阅过去的信息。
 %%%%
 tutorial3 potion
 
-你可以按<w>[$cmd[CMD_QUAFF]]</w><localtiles>或<w>[右键点击]</w></localtiles>来
-饮用一瓶药水。
+你可以按<w>[$cmd[CMD_QUAFF]]</w><localtiles>或<w>[右键点击]</w></localtiles
+>来饮用一瓶药水。
 %%%%
 tutorial3 artefact_armour
 
 有<w>不寻常名字</w>的物品就是神器了。神器可能有各种特殊的属性。有些物品（例如这
-件披风）很有名，因此一开始就已经被鉴定；其他一些神器则是随机出现的，并且属性也
-是未知。试试按<w>[$cmd[CMD_WEAR_ARMOUR]]</w><localtiles>或在物品栏中<w>鼠标点击
-</w>来装备这件披风。
+件披风）很有名，因此一开始就已经被鉴定；其他一些神器则是随机出现的
+，并且属性也是未知。
+试试按<w>[$cmd[CMD_WEAR_ARMOUR]]</w><localtiles>或在物品栏中<w>鼠标点击 </w
+>来装备这件披风。
 %%%%
 tutorial3 wand_fire
 
@@ -346,8 +349,8 @@ DESCRIBE]]</w> <localtiles>或<w>[鼠标悬停]</w>在墙上<w>[右击]</w></loc
 tutorial3 amulet
 
 你可以按<w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles>或在物品栏内<w>[鼠标点击]<
-/w></localtiles>来戴上一件首饰。有些首饰只要戴上就会自动鉴定，另一些则需要其他
-的鉴定方式。
+/w></localtiles>来戴上一件首饰。有些首饰只要戴上就会自动鉴定
+，另一些则需要其他的鉴定方式。
 %%%%
 tutorial3 scroll_id
 
@@ -382,15 +385,16 @@ tutorial3 autoexplore_reminder
 tutorial3 go_shopping
 
 你现在有钱去商店买东西啦！要想回到商店，最快捷的方法就是搜索它。按下<w>[$cmd[CM
-D_SEARCH_STASHES]]</w>然后输入"<w>商店</w>"。选中搜索到的结果，然后你就会向目标
-地点移动。<localtiles>你也可以<w>[点击]</w>指令面板上的搜索按钮，或者通过小地图
-来回到商店。</localtiles>
+D_SEARCH_STASHES]]</w>然后输入"<w>商店</w>"。选中搜索到的结果
+，然后你就会向目标地点移动。
+<localtiles>你也可以<w>[点击]</w>指令面板上的搜索按钮
+，或者通过小地图来回到商店。</localtiles>
 %%%%
 tutorial3 optional_battle
 
 小心，前面有一场<lightred>困难的战斗</lightred>。你可以试试在战斗中使用你学到的
-知识，也可以尝试直奔那个小岛上的出口。不管怎么说，如果你还没在商店里买过东西，
-最好先去一下。
+知识，也可以尝试直奔那个小岛上的出口。不管怎么说，如果你还没在商店里买过东西
+，最好先去一下。
 %%%%
 tutorial3 tutorial_end
 
@@ -441,16 +445,18 @@ tutorial5 altar
 
 你可以站在祭坛上按<w>$cmd[CMD_PRAY]</w><localtiles>（或者点击<w>命令栏</w>或者
 <w>按住Shift点击</w>你的角色）</localtiles>来祈祷，这样你就可以知道这个神能给你
-什么好处，并且可以加入教会。如果你在宗教界面上按<w>!</w><localtiles>或<w>右键点
-击</w>界面</localtiles>，你还可以看到更详细的说明。
+什么好处，并且可以加入教会。
+如果你在宗教界面上按<w>!</w><localtiles>或<w>右键点击</w>界面</localtiles
+>，你还可以看到更详细的说明。
 
 输入大写的<w>Y</w>来确认你的选择。
 %%%%
 tutorial5 religion
 
 按<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles>或点击命令栏里的<w>宗教按钮 </w>
-也可以<w>按住Shift并右击</w>你的人物</localtiles>来查看一下你的信仰状态。和以前
-一样，按<w>!</w><localtiles>或<w>右键点击</w>/localtiles>可以调出更详细的说明。
+也可以<w>按住Shift并右击</w>你的人物</localtiles>来查看一下你的信仰状态。
+和以前一样，按<w>!</w><localtiles>或<w>右键点击</w>/localtiles
+>可以调出更详细的说明。
 %%%%
 tutorial5 piety_on_kill
 
@@ -474,14 +480,15 @@ tutorial5 berserk
 %%%%
 tutorial5 exhaustion
 
-狂暴之后，你会感到筋疲力尽。在疲劳状态下，你无法再次狂暴，而且行动速度也会减慢
-。最好是按<w>$cmd[CMD_REST]</w><localtiles>（或通过<w>命令栏
+狂暴之后，你会感到筋疲力尽。在疲劳状态下，你无法再次狂暴
+，而且行动速度也会减慢。
+最好是按<w>$cmd[CMD_REST]</w><localtiles>（或通过<w>命令栏
 </w>）</localtiles>来休息一会，等到精力恢复了再出发。
 %%%%
 tutorial5 hunger
 
-你无法在非常饥饿的时候狂暴，因此你应该随时携带一些食物。这意味着有的时候，你必
-须得选择是要把一具尸体吃掉还是将它献给塔洛格。
+你无法在非常饥饿的时候狂暴，因此你应该随时携带一些食物。这意味着有的时候
+，你必须得选择是要把一具尸体吃掉还是将它献给塔洛格。
 %%%%
 tutorial5 berserk2
 
