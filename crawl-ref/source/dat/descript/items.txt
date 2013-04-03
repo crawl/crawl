@@ -1620,18 +1620,6 @@ potion of experience
 
 A truly wonderful and very rare drink.
 %%%%
-potion of gain dexterity
-
-A potion of beneficial mutation.
-%%%%
-potion of gain intelligence
-
-A potion of beneficial mutation.
-%%%%
-potion of gain strength
-
-A potion of beneficial mutation.
-%%%%
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
@@ -1700,6 +1688,10 @@ A terribly venomous potion.
 potion of strong poison:quote
 
 <potion of poison:quote>
+%%%%
+potion of vicissitude
+
+A potion of beneficial mutation.
 %%%%
 quad damage
 

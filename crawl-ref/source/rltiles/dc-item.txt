@@ -954,7 +954,8 @@ i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
-i-fizzing POT_FIZZING POT_ID_LAST
+i-fizzing POT_FIZZING
+i-good-mutation POT_VICISSITUDE POT_ID_LAST
 %back none
 %rim 1
 
