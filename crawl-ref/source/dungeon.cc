@@ -3059,13 +3059,9 @@ static void _place_traps()
             // Disallow shaft construction in corridors!
             if (_shaft_is_in_corridor(ts.pos))
             {
-                // Choose again!
-                ts.type = random_trap_for_place();
-
-                // If we get shaft a second time, turn it into an alarm trap, or
-                // if we got nothing.
-                if (ts.type == TRAP_SHAFT || ts.type >= NUM_TRAPS)
-                    ts.type = TRAP_ALARM;
+                // Reroll until we get a different type of trap
+                while (ts.type == TRAP_SHAFT || ts.type >= NUM_TRAPS)
+                    ts.type = random_trap_for_place();
             }
         }
 
