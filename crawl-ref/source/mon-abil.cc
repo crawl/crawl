@@ -456,14 +456,14 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
     if (newhd < 6)
     {
-        // Not big enough for an abomination yet
+        // Not big enough for an abomination yet.
         new_type = MONS_MACABRE_MASS;
         mhp = merge_to->max_hit_points + crawlie->max_hit_points;
         hp = merge_to->hit_points += crawlie->hit_points;
     }
     else
     {
-        // Need 11 HD and 3 corpses for a large abomination
+        // Need 11 HD and 3 corpses for a large abomination.
         if (newhd < 11
             || (crawlie->type == MONS_CRAWLING_CORPSE
                 && merge_to->type == MONS_CRAWLING_CORPSE))
@@ -482,14 +482,14 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
         if (merge_to->type == MONS_ABOMINATION_SMALL)
         {
-            // Adding to an existing abomination
+            // Adding to an existing abomination.
             const int hp_gain = hit_points(addhd, 2, 5);
             mhp = merge_to->max_hit_points + hp_gain;
             hp = merge_to->hit_points + hp_gain;
         }
         else
         {
-            // Making a new abomination
+            // Making a new abomination.
             hp = mhp = hit_points(newhd, 2, 5);
         }
     }
@@ -550,7 +550,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     else if (you.can_see(crawlie))
         mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
 
-    // Now kill the other monster
+    // Now kill the other monster.
     monster_die(crawlie, KILL_DISMISSED, NON_MONSTER, true);
 
     return true;
