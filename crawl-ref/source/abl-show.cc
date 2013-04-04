@@ -384,6 +384,8 @@ static const ability_def Ability_List[] =
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
       0, 0, 0, 0, 0, ABFLAG_NONE},
 
+    { ABIL_STOP_RECALL, "Stop recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
+
     // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, 10, ABFLAG_ZOTDEF},
     { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, 5, ABFLAG_ZOTDEF},
@@ -871,6 +873,11 @@ static ability_type _fixup_ability(ability_type ability)
         else
             return ABIL_YRED_ANIMATE_REMAINS;
 
+    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
+    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+        if (!you.recall_list.empty())
+            return ABIL_STOP_RECALL;
+
     default:
         return ability;
     }
@@ -1075,6 +1082,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_SCRYING:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
+    case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
         break;
@@ -2573,6 +2581,11 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         start_recall(2);
+        break;
+
+    case ABIL_STOP_RECALL:
+        mpr("You stop recalling your allies.");
+        end_recall();
         break;
 
     case ABIL_FEDHAS_SUNLIGHT:
