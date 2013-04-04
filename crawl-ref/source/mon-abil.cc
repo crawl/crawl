@@ -521,16 +521,20 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         if (you.can_see(crawlie))
         {
             if (crawlie->type == old_type)
+            {
                 mprf("Two %s merge%s%s.",
                      pluralise(crawlie->name(DESC_PLAIN)).c_str(),
                      changed ? " to form " : "",
                      changed ? merge_to->name(DESC_A).c_str() : "");
+            }
             else
+            {
                 mprf("%s merges with %s%s%s.",
                      crawlie->name(DESC_A).c_str(),
                      old_name.c_str(),
                      changed ? " to form " : "",
                      changed ? merge_to->name(DESC_A).c_str() : "");
+            }
         }
         else if (changed)
         {
