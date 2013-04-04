@@ -488,8 +488,10 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
             hp = merge_to->hit_points + hp_gain;
         }
         else
+        {
             // Making a new abomination
             hp = mhp = hit_points(newhd, 2, 5);
+        }
     }
 
     const monster_type old_type = merge_to->type;
