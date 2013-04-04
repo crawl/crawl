@@ -32,6 +32,7 @@
 #include "mapmark.h"
 #include "melee_attack.h"
 #include "message.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -914,6 +915,221 @@ static bool _lamp_of_fire()
     return true;
 }
 
+struct dist_sorter
+{
+    coord_def pos;
+    bool operator()(const monster* a, const monster* b)
+    {
+        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
+    }
+};
+
+static int _gale_push_dist(const monster* mons)
+{
+    int dist = 1 + you.skill_rdiv(SK_EVOCATIONS, 1, 10);
+
+    if (mons->airborne())
+        dist++;
+
+    if (mons->body_size(PSIZE_BODY) < SIZE_MEDIUM)
+        dist++;
+    else if (mons->body_size(PSIZE_BODY) > SIZE_BIG)
+        dist /= 2;
+    else if (mons->body_size(PSIZE_BODY) > SIZE_MEDIUM)
+        dist -= 1;
+
+    int range = mons->pos().distance_from(you.pos());
+    if (range > 5)
+        dist -= 2;
+    else if (range > 2)
+        dist--;
+
+    if (dist < 0)
+        return 0;
+    else
+        return dist;
+}
+
+static bool _fan_of_gales()
+{
+    vector<monster*> mon_list;
+
+    int radius = min(7, 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (mi->res_wind() > 0
+            || !cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
+            || mi->pos().distance_from(you.pos()) > radius)
+        {
+            continue;
+        }
+
+        mon_list.push_back(*mi);
+    }
+
+    dist_sorter sorter = {you.pos()};
+    sort(mon_list.begin(), mon_list.end(), sorter);
+
+    bolt wind_beam;
+    wind_beam.hit = AUTOMATIC_HIT;
+    wind_beam.is_beam = true;
+    wind_beam.affects_nothing = true;
+    wind_beam.source = you.pos();
+    wind_beam.range = LOS_RADIUS;
+    wind_beam.is_tracer = true;
+
+    counted_monster_list affected_monsters;
+
+    for (unsigned int i = 0; i < mon_list.size(); ++i)
+    {
+        wind_beam.target = mon_list[i]->pos();
+        wind_beam.fire();
+
+        int push = _gale_push_dist(mon_list[i]);
+        bool pushed = false;
+
+        for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1 && push; ++j)
+        {
+            if (wind_beam.path_taken[j] == mon_list[i]->pos())
+            {
+                coord_def newpos = wind_beam.path_taken[j+1];
+                if (!actor_at(newpos) && !feat_is_solid(grd(newpos))
+                    && mon_list[i]->can_pass_through(newpos)
+                    && mon_list[i]->is_habitable(newpos))
+                {
+                    mon_list[i]->move_to_pos(newpos);
+                    --push;
+                    pushed = true;
+                }
+                else //Try to find an alternate route to push
+                {
+                    for (distance_iterator di(newpos, false, true, 1 ); di; ++di)
+                    {
+                        if (di->distance_from(you.pos()) == newpos.distance_from(you.pos())
+                            && !actor_at(*di) && !feat_is_solid(grd(*di))
+                            && mon_list[i]->can_pass_through(*di)
+                            && mon_list[i]->is_habitable(*di))
+                        {
+                            mon_list[i]->move_to_pos(*di);
+                            --push;
+                            pushed = true;
+
+                            // Adjust wind path for moved monster
+                            wind_beam.target = *di;
+                            wind_beam.fire();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (pushed)
+        {
+            mon_list[i]->speed_increment -= random2(6) + 4;
+            affected_monsters.add(mon_list[i]);
+        }
+    }
+
+    // Now move clouds
+    vector<int> cloud_list;
+    for (distance_iterator di(you.pos(), true, true, radius + 2); di; ++di)
+    {
+        if (env.cgrid(*di) != EMPTY_CLOUD && cell_see_cell(you.pos(), *di, LOS_SOLID))
+            cloud_list.push_back(env.cgrid(*di));
+    }
+
+    for (int i = cloud_list.size() - 1; i >= 0; --i)
+    {
+        wind_beam.target = env.cloud[cloud_list[i]].pos;
+        wind_beam.fire();
+
+        int dist = env.cloud[cloud_list[i]].pos.distance_from(you.pos());
+        int push = (dist > 5 ? 2 : dist > 2 ? 3 : 4);
+
+        for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1 && push; ++j)
+        {
+            if (env.cgrid(wind_beam.path_taken[j]) == cloud_list[i])
+            {
+                coord_def newpos = wind_beam.path_taken[j+1];
+                if (!feat_is_solid(grd(newpos)) && env.cgrid(newpos) == EMPTY_CLOUD)
+                {
+                    swap_clouds(newpos, wind_beam.path_taken[j]);
+                    --push;
+                }
+                else //Try to find an alternate route to push
+                {
+                    for (distance_iterator di(wind_beam.path_taken[j], false, true, 1); di; ++di)
+                    {
+                        if (di->distance_from(you.pos()) == newpos.distance_from(you.pos())
+                            && !feat_is_solid(grd(*di)) && env.cgrid(*di) == EMPTY_CLOUD)
+                        {
+                            swap_clouds(*di, wind_beam.path_taken[j]);
+                            --push;
+                            wind_beam.target = *di;
+                            wind_beam.fire();
+                            j--;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (you.skill(SK_EVOCATIONS) > 12)
+        mpr("A mighty gale blasts forth from the fan!");
+    else
+        mpr("A fierce wind blows from the fan.");
+
+    if (!affected_monsters.empty())
+    {
+        const string message =
+            make_stringf("%s %s blown away by the wind.",
+                         affected_monsters.describe().c_str(),
+                         affected_monsters.count() == 1? "is" : "are");
+        if (strwidth(message) < get_number_of_cols() - 2)
+            mpr(message.c_str());
+        else
+            mpr("The monsters around you are blown away!");
+    }
+
+    vector<coord_def> elementals;
+    for (radius_iterator ri(you.pos(), radius, C_ROUND, NULL, true); ri; ++ri)
+    {
+        if (ri->distance_from(you.pos()) >= 3 && !monster_at(*ri)
+            && !feat_is_solid(grd(*ri))
+            && cell_see_cell(you.pos(), *ri, LOS_NO_TRANS))
+        {
+            elementals.push_back(*ri);
+        }
+    }
+    random_shuffle(elementals.begin(), elementals.end());
+
+    int num_elementals = 1;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
+        ++num_elementals;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
+        ++num_elementals;
+
+    bool created = false;
+    for (int n = 0; n < min(num_elementals, (int)elementals.size()); ++n)
+    {
+        mgen_data mg (MONS_AIR_ELEMENTAL, BEH_FRIENDLY, &you, 3, SPELL_NO_SPELL,
+                      elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE,
+                      GOD_NO_GOD, MONS_AIR_ELEMENTAL, 0, BLACK,
+                      PROX_CLOSE_TO_PLAYER);
+        mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+        if (create_monster(mg))
+            created = true;
+    }
+    if (created)
+        mpr("The winds coalesce and take form.");
+
+    return true;
+}
+
 bool evoke_item(int slot)
 {
     if (you.form == TRAN_WISP)
@@ -1073,13 +1289,7 @@ bool evoke_item(int slot)
             break;
 
         case MISC_AIR_ELEMENTAL_FAN:
-            if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            else
-            {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4, 3);
-                pract = (one_chance_in(5) ? 1 : 0);
-            }
+            _fan_of_gales();
             break;
 
         case MISC_LAMP_OF_FIRE:
