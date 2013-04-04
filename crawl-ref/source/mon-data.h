@@ -2350,7 +2350,7 @@ static monsterentry mondata[] =
     // them MH_DEMONIC|MH_UNDEAD, but this is mostly the same as just
     // MH_UNDEAD (save for some god interactions).
     MONS_ABOMINATION_SMALL, 'x', LIGHTRED, "small abomination",
-    M_NO_FLAGS,
+    M_NO_REGEN,
     MR_NO_FLAGS,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_SMALL, MH_UNDEAD, -5,
     { {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4378,7 +4378,7 @@ static monsterentry mondata[] =
 {
     // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_ABOMINATION_LARGE, 'X', LIGHTRED, "large abomination",
-    M_NO_FLAGS,
+    M_NO_REGEN,
     MR_NO_FLAGS,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, MH_UNDEAD, -7,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
