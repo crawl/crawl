@@ -550,7 +550,6 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     return true;
 }
 
-
 // Actually merge two slime creature, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
 static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
