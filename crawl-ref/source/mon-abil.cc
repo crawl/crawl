@@ -441,7 +441,7 @@ static void _lose_turn(monster* mons, bool has_gone)
 // abomination.
 static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 {
-    int orighd = merge_to->hit_dice;
+    const int orighd = merge_to->hit_dice;
     int addhd = crawlie->hit_dice;
 
     // Need twice as many HD past 15.
@@ -492,8 +492,8 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
             hp = mhp = hit_points(newhd, 2, 5);
     }
 
-    monster_type old_type = merge_to->type;
-    string old_name = merge_to->name(DESC_A);
+    const monster_type old_type = merge_to->type;
+    const string old_name = merge_to->name(DESC_A);
 
     // Change the monster's type if we need to.
     if (new_type != old_type)
@@ -517,7 +517,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     // Messaging.
     if (you.can_see(merge_to))
     {
-        bool changed = new_type != old_type;
+        const bool changed = new_type != old_type;
         if (you.can_see(crawlie))
         {
             if (crawlie->type == old_type)
