@@ -38,7 +38,7 @@ default-depth: D:12-26
 # Elevator
 #
 NAME:    lemuel_elevator
-TAGS:    allow_dup extra
+TAGS:    allow_dup extra luniq_staircase
 DEPTH:   D:2-26, Elf:2, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
 ORIENT:  float
 SUBST:   m:mn
