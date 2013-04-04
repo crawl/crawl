@@ -456,6 +456,13 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     const int orighd = merge_to->hit_dice;
     int addhd = crawlie->hit_dice;
 
+    // Abomination is fully healed.
+    if (merge_to->type == MONS_ABOMINATION_LARGE
+        && merge_to->max_hit_points == merge_to->hit_points)
+    {
+        return false;
+    }
+
     // Need twice as many HD past 15.
     if (orighd > 15)
         addhd = (1 + addhd)/2;
@@ -498,6 +505,17 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
             const int hp_gain = hit_points(addhd, 2, 5);
             mhp = merge_to->max_hit_points + hp_gain;
             hp = merge_to->hit_points + hp_gain;
+            hp += hp/10;
+        }
+        else if (merge_to->type == MONS_ABOMINATION_LARGE)
+        {
+            // Healing an existing abomination.
+            mhp = merge_to->max_hit_points;
+            hp = merge_to->hit_points;
+            if (mhp <= hp + mhp/10)
+                hp = mhp;
+            else
+                hp += mhp/10;
         }
         else
         {
@@ -716,6 +734,7 @@ static bool _crawlie_is_mergeable(monster *mons)
     switch (mons->type)
     {
     case MONS_ABOMINATION_SMALL:
+    case MONS_ABOMINATION_LARGE:
     case MONS_CRAWLING_CORPSE:
     case MONS_MACABRE_MASS:
         break;
