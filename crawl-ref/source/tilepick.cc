@@ -4313,6 +4313,7 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 break;
             case MI_THROWING_NET:
                 ch = TILE_MI_THROWING_NET0;
+                break;
             case MI_PIE:
                 ch = TILE_MI_PIE0;
             default:
@@ -5065,6 +5066,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_DELAYED_FIREBALL;
     case ABIL_END_TRANSFORMATION:
         return TILEG_ABILITY_END_TRANSFORMATION;
+    case ABIL_STOP_RECALL:
+        return TILEG_ABILITY_STOP_RECALL;
 
     // Species-specific abilities.
     // Demonspawn-only
