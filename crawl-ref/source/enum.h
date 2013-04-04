@@ -178,6 +178,9 @@ enum ability_type
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
 
+    // For both Yred and Beogh
+    ABIL_STOP_RECALL,
+
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
 
