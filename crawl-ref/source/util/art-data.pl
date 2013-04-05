@@ -566,7 +566,7 @@ sub art_to_str
 
 sub write_data
 {
-    print "    Genarating $ART_DATA\n";
+    print "    Generating $ART_DATA\n";
 
     unless (open(HEADER, ">", $ART_DATA))
     {
@@ -656,7 +656,7 @@ sub unrand_enum_constants() {
 
 sub write_enums
 {
-    print "    Genarating $ART_ENUM\n";
+    print "    Generating $ART_ENUM\n";
 
     my $unrand_enum = unrand_enum_constants();
 
