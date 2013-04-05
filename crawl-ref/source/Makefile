@@ -1345,7 +1345,8 @@ clean: clean-rltiles clean-webserver clean-android
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty
+	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
+            rltiles/tiledef-unrand.cc
 	$(RM) -r build-win
 	$(RM) -r build
 
