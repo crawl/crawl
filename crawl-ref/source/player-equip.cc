@@ -1359,9 +1359,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         // To be exact, bloodless vampires should get the id only after they
         // drink anything.  Not worth complicating the code, IMHO. [1KB]
         if (player_mutation_level(MUT_SLOW_HEALING) < 3)
-        {
             ident = ID_KNOWN_TYPE;
-        }
         break;
 
     case AMU_STASIS:
