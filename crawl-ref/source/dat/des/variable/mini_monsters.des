@@ -1803,7 +1803,7 @@ MONS:    deep dwarf artificer ; wand of fire | wand of flame w:5 . \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
 MONS:    simulacrum, fire elemental
-ITEM:    empty ebony casket, lamp of fire
+ITEM:    nothing, lamp of fire
 SHUFFLE: 12, 3df / 4eF
 FTILE:   fF'@ = floor_pebble_darkgray
 COLOUR:  fF'@ = white
