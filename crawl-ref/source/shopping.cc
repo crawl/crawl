@@ -1851,9 +1851,11 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case POT_CURE_MUTATION:
+#if TAG_MAJOR_VERSION == 34
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
             case POT_GAIN_STRENGTH:
+#endif
             case POT_BENEFICIAL_MUTATION:
                 valued += 350;
                 break;

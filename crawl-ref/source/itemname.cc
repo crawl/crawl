@@ -644,9 +644,11 @@ static const char* potion_type_name(int potiontype)
     case POT_MIGHT:             return "might";
     case POT_AGILITY:           return "agility";
     case POT_BRILLIANCE:        return "brilliance";
+#if TAG_MAJOR_VERSION == 34
     case POT_GAIN_STRENGTH:     return "gain strength";
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
+#endif
     case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
     case POT_SLOWING:           return "slowing";
@@ -2914,9 +2916,11 @@ bool is_good_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_CURE_MUTATION:
+#if TAG_MAJOR_VERSION == 34
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
+#endif
         case POT_EXPERIENCE:
             return true;
         default:
@@ -3183,9 +3187,11 @@ bool is_useless_item(const item_def &item, bool temp)
                             || temp && you.hunger_state <= HS_SATIATED));
 
         case POT_CURE_MUTATION:
+#if TAG_MAJOR_VERSION == 34
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
+#endif
         case POT_BENEFICIAL_MUTATION:
             return (you.is_undead
                         && (you.species != SP_VAMPIRE

@@ -2704,10 +2704,12 @@ static void _generate_potion_item(item_def& item, int force_type,
         item.sub_type = stype;
     }
 
-    if (item.sub_type == POT_GAIN_STRENGTH
+    if (item.sub_type == POT_BENEFICIAL_MUTATION
+#if TAG_MAJOR_VERSION == 34
+        || item.sub_type == POT_GAIN_STRENGTH
         || item.sub_type == POT_GAIN_DEXTERITY
         || item.sub_type == POT_GAIN_INTELLIGENCE
-        || item.sub_type == POT_BENEFICIAL_MUTATION
+#endif
         || item.sub_type == POT_EXPERIENCE
         || item.sub_type == POT_RESTORE_ABILITIES)
     {
