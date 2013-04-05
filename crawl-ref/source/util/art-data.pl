@@ -566,6 +566,8 @@ sub art_to_str
 
 sub write_data
 {
+    print "    Genarating $ART_DATA\n";
+
     unless (open(HEADER, ">", $ART_DATA))
     {
         die "Couldn't open '$ART_DATA' for writing: $!\n";
@@ -654,6 +656,8 @@ sub unrand_enum_constants() {
 
 sub write_enums
 {
+    print "    Genarating $ART_ENUM\n";
+
     my $unrand_enum = unrand_enum_constants();
 
     open my $artenum, '>', $ART_ENUM or die "Can't write $ART_ENUM: $!\n";
@@ -690,7 +694,7 @@ ARTENUM
 sub write_tiles
 {
     my $tilefile = "dc-unrand.txt";
-    print "    GEN $tilefile\n";
+    print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
     unless (open(TILES, ">$tilefile"))
@@ -883,7 +887,7 @@ HEADER_END
     # Create tiledef-unrand.cc for the function unrandart_to_tile().
     # Should we also create tiledef-unrand.h this way?
     $tilefile = "tiledef-unrand.cc";
-    print "    GEN $tilefile\n";
+    print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
     unless (open(TILES, ">$tilefile"))
