@@ -244,6 +244,8 @@ enum misc_item_type
 
     MISC_QUAD_DAMAGE, // Sprint only
 
+    MISC_PHIAL_OF_FLOODS,
+
     NUM_MISCELLANY, // mv: used for random generation
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
     MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,

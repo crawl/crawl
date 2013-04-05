@@ -1367,6 +1367,69 @@ static bool _stone_of_tremors()
     return false;
 }
 
+static bool _phial_of_floods()
+{
+    dist target;
+    bolt beam;
+
+    zappy(ZAP_PRIMAL_WAVE, 25 + you.skill(SK_EVOCATIONS, 8), beam);
+    beam.range = LOS_RADIUS;
+    beam.thrower = KILL_YOU;
+    beam.name = "flood of elemental water";
+    beam.aimed_at_spot = true;
+
+    if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
+                        LOS_RADIUS, true, true, false, NULL,
+                        "Aim the phial where?"))
+    {
+        beam.fire();
+
+        vector<coord_def> elementals;
+        // Flood the endpoint
+        coord_def center = beam.path_taken.back();
+        int num = 5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7);
+        int dur = 40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3);
+        for (distance_iterator di(center, true, false, 2); di && (num > 0); ++di)
+        {
+            if ((grd(*di) == DNGN_FLOOR || grd(*di) == DNGN_SHALLOW_WATER)
+                && cell_see_cell(center, *di, LOS_NO_TRANS))
+            {
+                num--;
+                temp_change_terrain(*di, DNGN_SHALLOW_WATER,
+                                    random_range(dur*2, dur*3) - (di.radius()*20),
+                                    TERRAIN_CHANGE_FLOOD);
+                elementals.push_back(*di);
+            }
+        }
+
+        int num_elementals = 1;
+        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
+            ++num_elementals;
+        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
+            ++num_elementals;
+
+        bool created = false;
+        num = min(num_elementals,
+                  min((int)elementals.size(), (int)elementals.size() / 5 + 1));
+        for (int n = 0; n < num; ++n)
+        {
+            mgen_data mg (MONS_WATER_ELEMENTAL, BEH_FRIENDLY, &you, 3,
+                          SPELL_NO_SPELL, elementals[n], 0,
+                          MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
+                          MONS_WATER_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+            mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+            if (create_monster(mg))
+                created = true;
+        }
+        if (created)
+            mpr("The water rises up and takes form.");
+
+        return true;
+    }
+
+    return false;
+}
+
 bool evoke_item(int slot)
 {
     if (you.form == TRAN_WISP)
@@ -1537,6 +1600,10 @@ bool evoke_item(int slot)
 
         case MISC_STONE_OF_EARTH_ELEMENTALS:
             _stone_of_tremors();
+            break;
+
+        case MISC_PHIAL_OF_FLOODS:
+            _phial_of_floods();
             break;
 
         case MISC_HORN_OF_GERYON:
