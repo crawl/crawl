@@ -753,6 +753,19 @@ bool melee_attack::handle_phase_damaged()
     if (shroud_broken)
         mpr("Your shroud falls apart!", MSGCH_WARN);
 
+    if (defender->is_player() && you.mutation[MUT_JELLY_GROWTH]
+        && x_chance_in_y(damage_done, you.hp_max))
+    {
+        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
+                     you.pos(), MHITNOT, 0, you.religion);
+
+        if (create_monster(mg))
+        {
+            mpr("Your attached jelly is knocked off by the blow!");
+            you.mutation[MUT_JELLY_GROWTH] = 0;
+        }
+    }
+
     return true;
 }
 
@@ -800,7 +813,10 @@ bool melee_attack::handle_phase_end()
 
     // Check for passive mutation effects.
     if (defender->is_player() && defender->alive() && attacker != defender)
+    {
         mons_do_eyeball_confusion();
+        tendril_disarm();
+    }
 
     // This may invalidate both the attacker and defender.
     fire_final_effects();
@@ -4724,6 +4740,40 @@ void melee_attack::mons_do_eyeball_confusion()
                                           30 + random2(100)));
             }
         }
+    }
+}
+
+void melee_attack::tendril_disarm()
+{
+    monster *mon = attacker->as_monster();
+    item_def *mons_wpn = mon->mslot_item(MSLOT_WEAPON);
+
+    if (!mons_wpn)
+        return;
+
+    // assume the player would not pull weapons into terrain that would destroy them
+    if (!((feat_has_solid_floor(grd(you.pos()))
+           && feat_has_solid_floor(grd(mon->pos())))
+          || (feat_is_watery(grd(you.pos())) && species_likes_water(you.species)
+              && grd(mon->pos()) != DNGN_LAVA)))
+    {
+        return;
+    }
+
+    if (you.mutation[MUT_TENDRILS]
+        && attacker->alive()
+        && adjacent(you.pos(), mon->pos())
+        && you.can_see(mon)
+        && one_chance_in(5)
+        && (random2(you.dex()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->hit_dice * 1.5 : mon->hit_dice
+            || random2(you.strength()) > (mons_class_flag(mon->type, M_FIGHTER)) ? mon->hit_dice * 1.5 : mon->hit_dice)
+        && !mons_wpn->cursed())
+    {
+        mprf("Your tendrils lash around %s %s and pull it to the ground!",
+             apostrophise(mon->name(DESC_THE)).c_str(), mons_wpn->name(DESC_PLAIN).c_str());
+
+        mon->drop_item(MSLOT_WEAPON, false);
+        move_top_item(mon->pos(), you.pos());
     }
 }
 

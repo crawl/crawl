@@ -483,10 +483,14 @@ int detect_items(int pow)
         map_radius = 8 + random2(8) + pow;
     else
     {
-        ASSERT(you.religion == GOD_ASHENZARI);
-        map_radius = min(you.piety / 20, LOS_RADIUS);
-        if (map_radius <= 0)
-            return 0;
+        if (you.religion == GOD_ASHENZARI)
+        {
+            map_radius = min(you.piety / 20, LOS_RADIUS);
+            if (map_radius <= 0)
+                return 0;
+        }
+        else // MUT_JELLY_GROWTH
+            map_radius = 6;
     }
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)

@@ -3128,8 +3128,11 @@ static void _player_reacts_to_monsters()
     if (player_mutation_level(MUT_ANTENNAE) || you.religion == GOD_ASHENZARI)
         check_antennae_detect();
 
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+    if ((you.religion == GOD_ASHENZARI && !player_under_penance())
+        || you.mutation[MUT_JELLY_GROWTH])
+    {
         detect_items(-1);
+    }
 
     if (you.duration[DUR_TELEPATHY])
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /

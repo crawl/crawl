@@ -3684,6 +3684,17 @@ void bolt::affect_player()
                 was_affected = true;
             }
         }
+
+        if (you.mutation[MUT_JELLY_MISSILE]
+            && you.hp < you.hp_max
+            && !you.duration[DUR_DEATHS_DOOR]
+            && is_item_jelly_edible(*item)
+            && coinflip())
+        {
+            mprf("Your attached jelly eats %s!", item->name(DESC_THE).c_str());
+            inc_hp(random2(hurted / 2));
+            mpr("You feel a little better.");
+        }
     }
 
     // Sticky flame.
