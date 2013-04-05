@@ -3768,7 +3768,8 @@ void bolt::affect_player()
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
          || (name == "chilling blast" && you.airborne())
-         || (name == "lance of force" && hurted > 0))
+         || (name == "lance of force" && hurted > 0)
+         || (name == "flood of elemental water"))
     {
         beam_hits_actor(&you);
     }
@@ -4205,7 +4206,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
           (name == "freezing breath" && mon->flight_mode()) ||
-          (name == "lance of force" && dmg > 0))
+          (name == "lance of force" && dmg > 0) ||
+          (name == "flood of elemental water"))
         beam_hits_actor(mon);
 
     if (name == "spray of energy")

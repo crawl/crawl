@@ -946,6 +946,7 @@ static const char* misc_type_name(int type, bool known)
     case MISC_BOTTLED_EFREET:            return "bottled efreet";
     case MISC_STONE_OF_EARTH_ELEMENTALS: return "stone of earth elementals";
     case MISC_QUAD_DAMAGE:               return "quad damage";
+    case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
 
     case MISC_RUNE_OF_ZOT:
     default:
