@@ -154,11 +154,8 @@ bool validate_player_name(const string &name, bool verbose)
     ucs_t c;
     for (const char *str = name.c_str(); int l = utf8towc(&c, str); str += l)
     {
-        // Note that this includes systems which may be using the
-        // packaging system.  The packaging system is very simple
-        // and doesn't take the time to escape every character that
-        // might be a problem for some random shell or OS... so we
-        // play it very conservative here.  -- bwr
+        // The technical reasons are gone, but enforcing some sanity doesn't
+        // hurt.
         if (!iswalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
         {
             if (verbose)
