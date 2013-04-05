@@ -319,7 +319,7 @@ void up_stairs(dungeon_feature_type force_stair)
 
     if (you.form == TRAN_TREE)
     {
-        mpr("You cannot move.");
+        canned_msg(MSG_CANNOT_MOVE);
         return;
     }
 
@@ -649,7 +649,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
     if (you.form == TRAN_TREE)
     {
-        mpr("You cannot move.");
+        canned_msg(MSG_CANNOT_MOVE);
         return;
     }
 
