@@ -2036,16 +2036,6 @@ static void _eating(item_def& food)
         food.sub_type : -2, duration);
 
     lessen_hunger(food_value, true);
-
-    if (player_mutation_level(MUT_FOOD_JELLY)
-        && x_chance_in_y(food_value, HUNGER_MAXIMUM))
-    {
-        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
-                     you.pos(), MHITNOT, 0, you.religion);
-
-        if (create_monster(mg))
-            mprf("A jelly spawns from your body.");
-    }
 }
 
 // Handle messaging at the end of eating.

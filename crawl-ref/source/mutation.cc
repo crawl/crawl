@@ -874,7 +874,7 @@ static mutation_type _get_random_slime_mutation()
 {
     const mutation_type slime_muts[] = {
         MUT_GELATINOUS_BODY, MUT_EYEBALLS, MUT_TRANSLUCENT_SKIN,
-        MUT_PSEUDOPODS, MUT_FOOD_JELLY, MUT_ACIDIC_BITE
+        MUT_PSEUDOPODS, MUT_ACIDIC_BITE
     };
 
     return RANDOM_ELEMENT(slime_muts);
@@ -905,7 +905,7 @@ static bool _is_slime_mutation(mutation_type m)
 {
     return (m == MUT_GELATINOUS_BODY || m == MUT_EYEBALLS
             || m == MUT_TRANSLUCENT_SKIN || m == MUT_PSEUDOPODS
-            || m == MUT_FOOD_JELLY || m == MUT_ACIDIC_BITE);
+            || m == MUT_ACIDIC_BITE);
 }
 
 static mutation_type _get_random_xom_mutation()
