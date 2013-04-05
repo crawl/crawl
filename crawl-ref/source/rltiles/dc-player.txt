@@ -740,22 +740,41 @@ bladehands BLADEHAND
 %parts_ctg HAND2
 %sdir player/hand2
 
-buckler_round BUCKLER_ROUND
+##random shields
+buckler_round BUCKLER_ROUND BUCKLER_FIRST_NORM
+buckler_round2 BUCKLER_ROUND2
+buckler_round3 BUCKLER_ROUND3
+buckler_rb BUCKLER_RB
+buckler_green BUCKLER_GREEN
+buckler_spiral BUCKLER_SPIRAL BUCKLER_LAST_NORM
+
+shield_knight_blue SHIELD_KNIGHT_BLUE SHIELD_FIRST_NORM
+shield_knight_gray SHIELD_KNIGHT_GRAY
+shield_knight_rw SHIELD_KNIGHT_RW
+shield_kite1 SHIELD_KITE1
+shield_kite2 SHIELD_KITE2
+shield_kite3 SHIELD_KITE3
+shield_kite4 SHIELD_KITE4 SHIELD_LAST_NORM
+
+lshield_long_red LARGE_SHIELD_LONG_RED LSHIELD_FIRST_NORM
+lshield_gold LARGE_SHIELD_GOLD
+lshield_green LARGE_SHIELD_GREEN
+lshield_quartered LARGE_SHIELD_QUARTERED
+lshield_teal LARGE_SHIELD_TEAL
+lshield_spiral LARGE_SHIELD_SPIRAL LSHIELD_LAST_NORM
+
+##unrand (or unique) shields
 buckler_spriggan BUCKLER_SPRIGGAN
 
-shield_knight_blue SHIELD_KNIGHT_BLUE
 shield_donald SHIELD_DONALD
 shield_bullseye SHIELD_BULLSEYE
 shield_gong SHIELD_GONG
 shield_of_resistance SHIELD_OF_RESISTANCE
 
-lshield_long_red LARGE_SHIELD_LONG_RED
 lshield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
 lshield_louise LSHIELD_LOUISE
 
 %sdir player/hand2/doll_only
-
-buckler_round2 BUCKLER_ROUND2
 
 shield_middle_round SHIELD_MIDDLE_ROUND
 shield_skull SHIELD_SKULL
@@ -769,14 +788,7 @@ shield_round5 SHIELD_ROUND5
 shield_round6 SHIELD_ROUND6
 shield_round7 SHIELD_ROUND7
 
-shield_knight_gray SHIELD_KNIGHT_GRAY
-shield_knight_rw SHIELD_KNIGHT_RW
 shield_middle_unicorn SHIELD_MIDDLE_UNICORN
-shield_kite1 SHIELD_KITE1
-shield_kite2 SHIELD_KITE2
-shield_kite3 SHIELD_KITE3
-shield_kite4 SHIELD_KITE4
-
 shield_middle_gray SHIELD_MIDDLE_GRAY
 shield_diamond_yellow SHIELD_DIAMOND_YELLOW
 shield_middle_brown SHIELD_MIDDLE_BROWN
