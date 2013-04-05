@@ -1454,10 +1454,9 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
-.PHONY: art-data
-art-data: art-data.txt util/art-data.pl art-func.h
+art-data.h: art-data.txt util/art-data.pl art-func.h
 	util/art-data.pl
-art-data.h art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data
+art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 
 mon-mst.h: mon-spll.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
@@ -1483,7 +1482,7 @@ macro.o: cmd-name.h
 # RLTiles
 #
 
-.PHONY: build-rltiles
+#.PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 ifdef ANDROID
         # force submake to run properly
