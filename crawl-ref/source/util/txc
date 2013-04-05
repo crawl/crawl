@@ -116,9 +116,9 @@ def call_tx(args, silent = False):
     if sys.platform == 'win32':
         python_path = os.path.split(sys.executable)[0]
         tx_path = os.path.join(python_path, 'Scripts', 'tx')
-        call(['python', tx_path] + args, stderr=stderr)
+        return call(['python', tx_path] + args, stderr=stderr)
     else:
-        call(['tx'] + args, stderr=stderr)
+        return call(['tx'] + args, stderr=stderr)
 
 # Utility functions
 def title(text):
@@ -979,14 +979,15 @@ class IniCollection(ResourceCollection):
             language = ['-l', res.lang()]
             if not res.language:
                 # We push the source then reset the fake translation resource
-                call_tx(tx_push + ['-s'] + resource)
+                ret = call_tx(tx_push + ['-s'] + resource)
                 if self[('en', res.resource)].entries:
                     a = raw_input("Reset the %s fake translation (y/n)? " % res.resource).lower()
                     if a and a[0] == 'y':
                         call_tx(['delete', '-f'] + language + resource)
             else:
-                call_tx(tx_push + ['-t'] + language + resource)
-            res.modified = False
+                ret = call_tx(tx_push + ['-t'] + language + resource)
+            if ret == 0:
+                res.modified = False
 
 class Menu(OrderedDict):
     """Create a simple text based interactive menu.
