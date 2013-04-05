@@ -287,9 +287,15 @@ tileidx_t tilep_equ_shield(const item_def &item)
 
     switch (item.sub_type)
     {
-        case ARM_SHIELD:       return TILEP_HAND2_SHIELD_KNIGHT_BLUE;
-        case ARM_BUCKLER:      return TILEP_HAND2_BUCKLER_ROUND;
-        case ARM_LARGE_SHIELD: return TILEP_HAND2_LARGE_SHIELD_LONG_RED;
+        case ARM_SHIELD:
+            return _modrng(item.rnd, TILEP_HAND2_SHIELD_FIRST_NORM,
+                           TILEP_HAND2_SHIELD_LAST_NORM);
+        case ARM_BUCKLER:
+            return _modrng(item.rnd, TILEP_HAND2_BUCKLER_FIRST_NORM,
+                           TILEP_HAND2_BUCKLER_LAST_NORM);
+        case ARM_LARGE_SHIELD:
+            return _modrng(item.rnd, TILEP_HAND2_LSHIELD_FIRST_NORM,
+                           TILEP_HAND2_LSHIELD_LAST_NORM);
         default: return 0;
     }
 }
