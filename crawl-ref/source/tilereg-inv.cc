@@ -119,7 +119,7 @@ void InventoryRegion::pack_buffers()
                 m_buf.add_main_tile(item.special, x, y, 0, 0);
 
             if (item.flag & TILEI_FLAG_TRIED)
-                m_buf.add_icons_tile(TILEI_TRIED, x, y, 0, TILE_Y / 2);
+                m_buf.add_icons_tile(TILEI_TRIED, x, y, 3, TILE_Y / 2);
 
             if (item.flag & TILEI_FLAG_INVALID)
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
