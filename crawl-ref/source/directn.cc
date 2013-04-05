@@ -961,7 +961,8 @@ bool direction_chooser::move_is_ok() const
 
             if (!may_target_self && (mode == TARG_ENEMY
                                      || mode == TARG_HOSTILE
-                                     || mode == TARG_HOSTILE_SUBMERGED))
+                                     || mode == TARG_HOSTILE_SUBMERGED
+                                     || mode == TARG_HOSTILE_UNDEAD))
             {
                 if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
