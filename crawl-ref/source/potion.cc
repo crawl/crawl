@@ -109,8 +109,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         }
         break;
 
-      case POT_BLOOD:
-      case POT_BLOOD_COAGULATED:
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
         if (you.species == SP_VAMPIRE)
         {
             // No healing anymore! (jpeg)
