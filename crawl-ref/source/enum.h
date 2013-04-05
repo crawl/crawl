@@ -565,6 +565,7 @@ enum canned_message_type
     MSG_DECK_EXHAUSTED,
     MSG_EVOCATION_SUPPRESSED,
     MSG_BEING_WATCHED,
+    MSG_CANNOT_MOVE,
 };
 
 enum char_set_type

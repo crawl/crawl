@@ -4451,7 +4451,7 @@ static void _move_player(coord_def move)
     else if (!targ_pass && !attacking)
     {
         if (you.form == TRAN_TREE)
-            mpr("You cannot move.");
+            canned_msg(MSG_CANNOT_MOVE);
         else if (grd(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");
         else if (grd(targ) == DNGN_LAVA_SEA)

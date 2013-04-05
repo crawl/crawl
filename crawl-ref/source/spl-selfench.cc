@@ -181,7 +181,7 @@ spret_type cast_swiftness(int power, bool fail)
 {
     if (you.form == TRAN_TREE)
     {
-        mpr("You cannot move.");
+        canned_msg(MSG_CANNOT_MOVE);
         return SPRET_ABORT;
     }
 
