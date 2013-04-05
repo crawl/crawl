@@ -111,6 +111,7 @@ private:
     void do_spines();
     void do_passive_freeze();
     void emit_foul_stench();
+    void tendril_disarm();
     /* Race Effects */
     void do_minotaur_retaliation();
 
