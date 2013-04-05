@@ -128,7 +128,7 @@ DEPS := $(OBJECTS:%.o=%.d) $(INPUTS:%=%.d)
 
 clean:
 	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) \
-		$(DEPS) $(JAVASCRIPT) .cflags tiledef-unrand.cc
+		$(DEPS) $(JAVASCRIPT) .cflags
 
 distclean: clean
 
