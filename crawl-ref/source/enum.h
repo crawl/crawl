@@ -2762,7 +2762,9 @@ enum mutation_type
     // Jiyva-specific mutations
     MUT_ACIDIC_BITE,
     MUT_EYEBALLS,
+#if TAG_MAJOR_VERSION == 34
     MUT_FOOD_JELLY,
+#endif
     MUT_GELATINOUS_BODY,
     MUT_PSEUDOPODS,
     MUT_TRANSLUCENT_SKIN,

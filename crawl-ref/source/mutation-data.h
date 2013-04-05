@@ -1169,6 +1169,7 @@
   "pseudopods"
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_FOOD_JELLY,                     0,  1, false,  true, false,
   "spawn jellies when eating",
 
@@ -1178,6 +1179,7 @@
 
   "jelly spawner"
 },
+#endif
 
 { MUT_ACIDIC_BITE,                    0,  1, false,  true,  true,
   "acidic bite",
