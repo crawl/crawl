@@ -1876,10 +1876,10 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_PARALYSIS:
     case SPMSL_SLOW:
     case SPMSL_SLEEP:
-#if TAG_MAJOR_VERSION == 34
     case SPMSL_CONFUSION:
-#endif
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SICKNESS:
+#endif
     case SPMSL_RAGE:
         return (type == MI_NEEDLE);
 
