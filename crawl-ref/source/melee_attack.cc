@@ -831,6 +831,10 @@ bool melee_attack::attack()
     if (can_cleave && !cleaving)
         cleave_setup();
 
+    // Attacker might have died from effects of cleaving handled prior to this
+    if (!attacker->alive())
+        return false;
+
     // We might have killed the kraken target by cleaving a tentacle.
     if (!defender->alive())
     {
