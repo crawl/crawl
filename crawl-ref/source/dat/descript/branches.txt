@@ -98,8 +98,7 @@ The amorphous realm of acids, jellies and slimes. Any trace of intelligent
 beings has long been dissolved. Still, there are rumours of great treasures
 deep down, hidden safely away in secret chambers without door or window for
 acid to leak in. Well-known is the fact that even the walls of this horrible
-place are dripping with painful acid, and more so the deeper you get.
-is well-known.
+place are dripping with painful acid, growing more caustic as you descend.
 
 The Slime Pits are six levels deep and contain the slimy rune. The entry is
 between Lair:6 and Lair:8.
