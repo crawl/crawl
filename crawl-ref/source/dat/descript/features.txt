@@ -431,6 +431,7 @@ goods.
 A slime covered rock wall
 
 This rock wall is thickly coated with bright green slime. Ewwwwww.
+You caution is founded, for these walls hurt. The deeper, the more painful!
 %%%%
 A snail-covered altar of Cheibriados
 
