@@ -192,7 +192,7 @@ Items
   one-handed for normal-size races.
 * The wand of polymorph other is now the wand of polymorph; use of it against
   the player will turn them into a random form (including several new forms -
-  tree form, wisp form, and porcupine form).
+  tree form, wisp form, porcupine form and fungus form).
 
 Gods
 ----
