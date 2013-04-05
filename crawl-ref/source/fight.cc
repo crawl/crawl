@@ -405,6 +405,11 @@ static bool _cleave_dont_harm(const actor* attacker, const actor* defender)
 void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
                         list<actor*> &targets)
 {
+    // Prevent scanning invalid coordinates if the attacker dies partway through
+    // a cleave (due to hitting explosive creatures, or perhaps other things)
+    if (!attacker->alive())
+        return;
+
     const coord_def atk = attacker->pos();
     coord_def atk_vector = def - atk;
 
