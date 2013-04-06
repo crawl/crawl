@@ -1914,8 +1914,15 @@ enum map_marker_type
     MAT_PHOENIX,
     MAT_POSITION,
     MAT_DOOR_SEAL,
+    MAT_TERRAIN_CHANGE,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
+};
+
+enum terrain_change_type
+{
+    TERRAIN_CHANGE_GENERIC,
+    TERRAIN_CHANGE_FLOOD
 };
 
 enum map_feature
