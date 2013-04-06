@@ -117,6 +117,7 @@ static void _create_monster_hide(const item_def corpse)
         return;
     item_def& item = mitm[o];
 
+    do_uncurse_item(item, false);
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum - 1);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
