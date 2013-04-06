@@ -111,7 +111,7 @@ static void _create_monster_hide(const item_def corpse)
         die("an unknown hide drop");
     }
 
-    int o = items(0, OBJ_ARMOUR, type, false, 0, MAKE_ITEM_NO_RACE, 0, 0, -1,
+    int o = items(0, OBJ_ARMOUR, type, true, 0, MAKE_ITEM_NO_RACE, 0, 0, -1,
                   true);
     if (o == NON_ITEM)
         return;
