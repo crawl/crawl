@@ -3694,6 +3694,7 @@ void bolt::affect_player()
             mprf("Your attached jelly eats %s!", item->name(DESC_THE).c_str());
             inc_hp(random2(hurted / 2));
             mpr("You feel a little better.");
+            drop_item = false;
         }
     }
 
