@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "dgn-labyrinth.h"
+
 #include "coordit.h"
 #include "dungeon.h"
 #include "items.h"
