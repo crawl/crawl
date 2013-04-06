@@ -202,17 +202,17 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
 #if TAG_MAJOR_VERSION == 34
     case POT_GAIN_STRENGTH:
-        if (mutate(MUT_STRONG, "potion of gain strength", true, false, false, true))
+        if (mutate(MUT_STRONG, "potion of gain strength"))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_DEXTERITY:
-        if (mutate(MUT_AGILE, "potion of gain dexterity", true, false, false, true))
+        if (mutate(MUT_AGILE, "potion of gain dexterity"))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_INTELLIGENCE:
-        if (mutate(MUT_CLEVER, "potion of gain intelligence", true, false, false, true))
+        if (mutate(MUT_CLEVER, "potion of gain intelligence"))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 #endif
