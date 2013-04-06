@@ -1,5 +1,7 @@
 #include "AppHdr.h"
 
+#include "sprint.h"
+
 #include "externs.h"
 #include "maps.h"
 #include "mon-util.h"

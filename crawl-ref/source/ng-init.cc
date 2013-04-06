@@ -8,6 +8,8 @@
 
 #include "AppHdr.h"
 
+#include "ng-init.h"
+
 #include "branch.h"
 #include "describe.h"
 #include "dungeon.h"

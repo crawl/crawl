@@ -15,6 +15,8 @@
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 
+#include "ctest.h"
+
 #include "clua.h"
 #include "cluautil.h"
 #include "dlua.h"
