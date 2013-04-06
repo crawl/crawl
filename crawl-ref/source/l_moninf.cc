@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
+#include "l_defs.h"
 
 #include "cluautil.h"
 #include "coord.h"

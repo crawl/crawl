@@ -5,6 +5,9 @@
 
 #include "AppHdr.h"
 
+#include "kills.h"
+#include "l_libs.h"
+
 #include <algorithm>
 
 #include "describe.h"
@@ -17,7 +20,6 @@
 #include "place.h"
 #include "travel.h"
 #include "tags.h"
-#include "kills.h"
 #include "clua.h"
 #include "options.h"
 #include "unwind.h"
