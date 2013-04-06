@@ -129,7 +129,7 @@ KFEAT:  ^ = gas trap
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
               data={triggered=false, cloud_type="seething chaos", cloud_size_mod=0.8,
-                cloud_message="Space ruptures around you!" } }
+                cloud_message="A rupture in space tears open!" } }
   tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
   lua_marker('^', tm)
 }}
