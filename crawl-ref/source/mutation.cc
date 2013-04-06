@@ -1288,26 +1288,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
     }
 
-    bool rotting = _undead_rot();
-
-    if (you.is_undead == US_SEMI_UNDEAD)
-    {
-        // The stat gain mutations always come through at Satiated or
-        // higher (mostly for convenience), and, for consistency, also
-        // their negative counterparts.
-        if (which_mutation == MUT_STRONG || which_mutation == MUT_CLEVER
-            || which_mutation == MUT_AGILE || which_mutation == MUT_WEAK
-            || which_mutation == MUT_DOPEY || which_mutation == MUT_CLUMSY)
-        {
-            if (you.hunger_state >= HS_SATIATED)
-                rotting = false;
-        }
-        // Else, chances depend on hunger state.
-    }
-
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (rotting && !demonspawn)
+    if (_undead_rot() && !demonspawn)
     {
         if (no_rot)
             return false;
