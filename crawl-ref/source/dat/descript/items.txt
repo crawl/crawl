@@ -1528,7 +1528,7 @@ pearl dragon armour:quote
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
-form it does not provide much protection, but with magical means it may be used
+form it does not provide much protection, but by magical means it may be used
 to make excellent armour.
 %%%%
 pearl dragon hide:quote
@@ -1537,7 +1537,7 @@ pearl dragon hide:quote
 %%%%
 pie
 
-A custard pie. It appears strangely dangerous.
+A custard pie. It appears anachronistically dangerous.
 %%%%
 pie:quote
 
