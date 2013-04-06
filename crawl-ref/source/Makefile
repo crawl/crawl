@@ -120,7 +120,7 @@ CFOPTIMIZE := -O2
 endif # USE_ICC
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
-CFWARN := -Wall -Wformat-security
+CFWARN := -Wall -Wformat-security -Wmissing-declarations
 CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
