@@ -185,6 +185,31 @@ public:
     dungeon_feature_type old_feature;
 };
 
+// A marker for temporary terrain changes
+class map_terrain_change_marker : public map_marker
+{
+public:
+    map_terrain_change_marker (const coord_def& pos = coord_def(0, 0),
+                    dungeon_feature_type oldfeat = DNGN_FLOOR,
+                    dungeon_feature_type newfeat = DNGN_FLOOR,
+                    int dur = 0, terrain_change_type type = TERRAIN_CHANGE_GENERIC,
+                    int mnum = MONS_NO_MONSTER);
+
+    void write (writer &) const;
+    void read (reader &);
+    map_marker *clone() const;
+    string debug_describe() const;
+
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    int duration;
+    int mon_num;
+    dungeon_feature_type old_feature;
+    dungeon_feature_type new_feature;
+    terrain_change_type  change_type;
+};
+
 // A marker powered by Lua.
 class map_lua_marker : public map_marker, public dgn_event_listener
 {
