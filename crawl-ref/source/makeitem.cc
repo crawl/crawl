@@ -3669,7 +3669,7 @@ void makeitem_tests()
         if (coinflip())
             item.special = SPARM_NORMAL;
         else
-            item.special = random2(NUM_SPECIAL_ARMOURS);
+            item.special = random2(NUM_REAL_SPECIAL_ARMOURS);
         _generate_armour_item(item,
                               coinflip(),
                               coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS),
