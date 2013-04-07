@@ -2296,8 +2296,14 @@ void check_item_knowledge(bool unknown_items)
 
 #if TAG_MAJOR_VERSION == 34
             // Water is never interesting either. [1KB]
-            if (i == OBJ_POTIONS && j == POT_WATER)
+            if (i == OBJ_POTIONS
+                && (j == POT_WATER
+                 || j == POT_GAIN_STRENGTH
+                 || j == POT_GAIN_DEXTERITY
+                 || j == POT_GAIN_INTELLIGENCE))
+            {
                 continue;
+            }
 
             if (i == OBJ_JEWELLERY && j == AMU_CONTROLLED_FLIGHT)
                 continue;
