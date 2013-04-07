@@ -361,8 +361,10 @@ function hyper.place.analyse_vault_post_placement(usage_grid,room,result,options
 end
 
 -- TODO: This is the post-everything function for V so we can be very
---       specific about how stairs are handled, but really it doesn't do any harm to run on all layouts ...?
-function hyper.place.place_vaults_rooms(results,usage_grid, options)
+-- specific about how stairs are handled. It probably shouldn't be in
+-- this include since it relies on the post-placement-analysis from V
+-- and typically we want to let stairs place randomly anyway.
+function hyper.place.restore_stairs(results, usage_grid, options)
 
   -- Now we need some stairs
   local stairs = { }
