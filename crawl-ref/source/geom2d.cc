@@ -100,15 +100,10 @@ bool ray::to_next_cell(const grid &g)
     return false;
 }
 
-vector normal(const form &f)
-{
-    return vector(f.a, f.b);
-}
-
 vector reflect(const vector &v, const form &f)
 {
-    vector n = normal(f);
-    return (v - 2 * f(v)/f(n) * n);
+    vector normal = vector(f.a, f.b);
+    return (v - 2 * f(v)/f(normal) * normal);
 }
 
 
