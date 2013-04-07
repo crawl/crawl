@@ -169,7 +169,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_HEALER:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
     case JOB_PRIEST:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
 
-    case JOB_JESTER:            s =  1; i =  5; d =  6; hp = 13; mp = 1; break;
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
@@ -908,55 +907,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_THROWING]     = 2;
         break;
 
-    case JOB_JESTER:
-        if (you.species != SP_DEMIGOD)
-        {
-            you.religion = GOD_NEMELEX_XOBEH;
-            you.piety = 25;
-            you.penance[GOD_XOM] = 50;
-        }
-        else
-            you.penance[GOD_XOM] = 75;
-
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF, -1, 1, 1, 1);
-        set_item_ego_type(you.inv[0], OBJ_WEAPONS, SPWPN_CHAOS);
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_PIE, -1, 4);
-        set_item_ego_type(you.inv[1], OBJ_MISSILES, SPMSL_BLINDING);
-        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_CAP);
-        newgame_make_item(4, EQ_NONE, OBJ_BOOKS, BOOK_PARTY_TRICKS);
-        newgame_make_item(5, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_WAR);
-
-        if (you.inv[0].defined())
-        {
-            item_def& staff(you.inv[0]);
-            staff.props["worn_tile_name"] = "quarterstaff_jester";
-            bind_item_tile(staff);
-        }
-
-        if (you.inv[2].defined())
-        {
-            item_def& robe(you.inv[2]);
-            robe.props["worn_tile_name"] = "robe_jester";
-            bind_item_tile(robe);
-        }
-
-        if (you.inv[3].defined())
-        {
-            item_def& cap(you.inv[3]);
-            cap.props["item_tile_name"] = "thelm_cap_jester";
-            cap.props["worn_tile_name"] = "jester";
-            bind_item_tile(cap);
-        }
-
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STAVES]       = 1;
-        you.skills[SK_STEALTH]      = 1;
-        you.skills[SK_THROWING]     = 1;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_EVOCATIONS]   = 2;
-        break;
-
     case JOB_HUNTER:
         // Equipment.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
@@ -1181,9 +1131,6 @@ static void _give_basic_spells(job_type which_job)
     case JOB_WIZARD:
     case JOB_CONJURER:
         which_spell = SPELL_MAGIC_DART;
-        break;
-    case JOB_JESTER:
-        which_spell = SPELL_APPORTATION;
         break;
     case JOB_VENOM_MAGE:
         which_spell = SPELL_STING;
@@ -1455,11 +1402,6 @@ static void _setup_generic(const newgame_def& ng)
 
     // Get rid of god companions left from previous games
     init_companions();
-
-    // Jester flavour.  Maybe this should be elsewhere, but it certainly
-    // shouldn't be earlier.
-    if (you.char_class == JOB_JESTER)
-        simple_god_message(" thought your last joke was hilarious!", GOD_XOM);
 
     // Create the save file.
     if (Options.no_save)
