@@ -2968,6 +2968,12 @@ static bool _invisibility_is_useless(const bool temp)
 
 bool is_useless_item(const item_def &item, bool temp)
 {
+    // During game startup, no item is useless.  If someone re-glyphs an item
+    // based on its uselessness, the glyph-to-item cache will use the useless
+    // value even if your god or species can make use of it.
+    if (you.species == SP_UNKNOWN)
+        return false;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
