@@ -951,10 +951,12 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             if (!unmeld && you.spirit_shield() < 2)
             {
                 dec_mp(you.magic_points);
-                mpr("You feel spirits watching over you.");
+                mpr("You feel your power drawn to a protective spirit.");
                 if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
             }
+            else
+                mpr("You feel spirits watching over you.");
             break;
 
         case SPARM_ARCHERY:
@@ -1216,12 +1218,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case RING_INVISIBILITY:
-        if (!you.duration[DUR_INVIS])
-        {
-            mpr("You become transparent for a moment.");
-            fake_rap = ARTP_INVISIBLE;
-            ident = ID_KNOWN_TYPE;
-        }
+        mprf("You become %stransparent for a moment.",
+             you.duration[DUR_INVIS] ? "more " : "");
+        fake_rap = ARTP_INVISIBLE;
+        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_EVASION:
@@ -1287,15 +1287,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case RING_FLIGHT:
-        if (!you.scan_artefacts(ARTP_FLY))
-        {
-            if (you.airborne())
-                mpr("You feel vaguely more buoyant than before.");
-            else
-                mpr("You feel buoyant.");
-            fake_rap = ARTP_FLY;
-            ident = ID_KNOWN_TYPE;
-        }
+        mprf("You feel %sbuoyant.", you.airborne() ? "more " : "");
+        fake_rap = ARTP_FLY;
+        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_TELEPORTATION:
@@ -1309,12 +1303,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case AMU_RAGE:
-        if (!you.scan_artefacts(ARTP_BERSERK))
-        {
-            mpr("You feel a brief urge to hack something to bits.");
-            fake_rap = ARTP_BERSERK;
-            ident = ID_KNOWN_TYPE;
-        }
+        mpr("You feel a brief urge to hack something to bits.");
+        fake_rap = ARTP_BERSERK;
+        ident = ID_KNOWN_TYPE;
         break;
 
     case AMU_FAITH:
@@ -1351,8 +1342,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             mpr("You feel your power drawn to a protective spirit.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Now linked to your health, your magic stops regenerating.");
-            ident = ID_KNOWN_TYPE;
         }
+        else
+            mpr("You feel spirits watching over you.");
+        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_REGENERATION:
