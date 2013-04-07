@@ -78,6 +78,7 @@ LUAFN(debug_flush_map_memory)
 {
     dgn_flush_map_memory();
     init_level_connectivity();
+    you.unique_creatures.init(false);
     return 0;
 }
 
