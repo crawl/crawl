@@ -10,7 +10,7 @@ hyper = {}          -- Main namespace for engine
 -- Only advisable if you start tiles from a command-line.
 hyper.debug = false
 -- Outputs some profiling information on the layout build
-hyper.profile = true
+hyper.profile = false
 
 require("dlua/layout/vector.lua")
 require("dlua/layout/hyper_usage.lua")
@@ -78,12 +78,12 @@ end
 function hyper.build_layout(e, options)
   if not options.test and e.is_validating() then return true end
 
+  name = options.name or "Hyper"
+
   if hyper.profile then
-    profiler.start()
+    profiler.start(name)
     profiler.push("InitOptions")
   end
-
-  name = options.name or "Hyper"
 
   if hyper.debug then print("Hyper Layout: " .. name) end
   name = string.lower(name)
@@ -140,6 +140,10 @@ function hyper.build_layout(e, options)
       or type(item.enabled) == "function" and item.enabled(item,main_state)
       or item.enabled == true then
 
+      if hyper.profile then
+        profiler.push("BuildPass", { pass = item.pass })
+      end
+
       -- Applies a paint table to the whole layout
       -- Here for legacy purposes, generally use "place" or just "build" to setup initial layout
       -- TODO: Eventually convert old layouts to use build/place large rooms and remove this
@@ -155,10 +159,16 @@ function hyper.build_layout(e, options)
       -- Places a single room or feature, usually at a specified position; just shortcuts some of the fluff you'd
       -- need to do the same in "build"
       elseif item.type == "place" then
+        -- TODO:
       -- Perform a filter/transform operation on the whole usage/feature grid or a region of it
       elseif item.type == "filter" then
         hyper.usage.filter_usage(main_state.usage_grid, item.filter, item.transform, item.region)
       end
+
+      if hyper.profile then
+        profiler.pop()
+      end
+
     end
 
   end
