@@ -18,5 +18,7 @@ bool is_tiles();
 static inline constexpr bool is_tiles() { return false; }
 #endif
 
+extern int unixcurses_get_vi_key(int keyin);
+
 #endif
 #endif
