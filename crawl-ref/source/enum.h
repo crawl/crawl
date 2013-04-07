@@ -2758,8 +2758,6 @@ enum mutation_type
     MUT_WEAK,
     MUT_WILD_MAGIC,
     MUT_UNBREATHING,
-
-    // Jiyva-specific mutations
     MUT_ACIDIC_BITE,
     MUT_EYEBALLS,
 #if TAG_MAJOR_VERSION == 34
@@ -2768,7 +2766,6 @@ enum mutation_type
     MUT_GELATINOUS_BODY,
     MUT_PSEUDOPODS,
     MUT_TRANSLUCENT_SKIN,
-
     MUT_EVOLUTION,
     MUT_AUGMENTATION,
     MUT_TENDRILS,
