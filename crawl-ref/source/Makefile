@@ -688,8 +688,8 @@ INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 endif # TILES
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
-CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
-CFWARN   += $(shell w=-Wmissing-declarations;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN   += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
