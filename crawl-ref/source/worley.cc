@@ -39,7 +39,7 @@
 namespace worley
 {
     /* This macro is a *lot* faster than using (int32_t)floor() on an x86 CPU.
-       It actually speeds up the entire Worley() call with almost 10%.
+       It actually speeds up the entire _worley() call with almost 10%.
        Added by Stefan Gustavson, October 2003. */
 #define LFLOOR(x) ((x)<0 ? ((int32_t)x-1) : ((int32_t)x) )
 
@@ -69,7 +69,7 @@ namespace worley
 
 
     /* The main function! */
-    void Worley(double at[3], int32_t max_order,
+    static void _worley(double at[3], int32_t max_order,
             double *F, double (*delta)[3], uint32_t *ID)
     {
         double x2,y2,z2, mx2, my2, mz2;
@@ -287,7 +287,7 @@ cases.]
         double delta[2][3];
         uint32_t id[2];
 
-        Worley(point, 2, F, delta, id);
+        _worley(point, 2, F, delta, id);
 
         noise_datum datum;
         datum.distance[0] = F[0];
