@@ -284,12 +284,6 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand
     local circle_radius = 2 + crawl.random2(6) + pillar_radius * 2 + num / 2
     local fill = crawl.random_element(pillar_fill)
 
-    -- beautification hack: no "circle" pillars of radius 1
-    if pfunc == make_circle and pillar_radius == 1 then
-        fill = crawl.random_element({"G", "X", "t"})
-        kfeat("X = stone_arch")
-    end
-
     -- Finally, make the pillars
     local make_pillar = function(x, y)
         return pfunc({
@@ -1093,9 +1087,9 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus
     for i = 1, crawl.random_range(40, 60) do
         local x = crawl.random_range(map_x_min, map_x_max)
         local y = crawl.random_range(map_y_min, map_y_max)
-        local radius = crawl.random_range(1, 2)
+        local radius = crawl.random_range(0, 1)
         if crawl.one_chance_in(15) then
-            radius = crawl.random_range(3, 4)
+            radius = crawl.random_range(2, 4)
         end
 
         make_circle ({ x = x, y = y, radius = radius, fill = '.'})

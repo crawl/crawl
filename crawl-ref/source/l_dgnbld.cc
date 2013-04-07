@@ -512,9 +512,10 @@ LUAFN(dgn_make_circle)
     if (!_valid_coord(ls, lines, x, y))
         return 0;
 
+    float radius_squared_max = (radius + 0.5f) * (radius + 0.5f);
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
-            if (rx * rx + ry * ry < radius * radius)
+            if (rx * rx + ry * ry < radius_squared_max)
                 lines(x + rx, y + ry) = fill;
 
     return 0;
