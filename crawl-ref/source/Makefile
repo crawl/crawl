@@ -120,7 +120,7 @@ CFOPTIMIZE := -O2
 endif # USE_ICC
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
-CFWARN := -Wall -Wformat-security -Wmissing-declarations
+CFWARN := -Wall -Wformat-security
 CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
@@ -689,6 +689,7 @@ endif # TILES
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
 CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN   += $(shell w=-Wmissing-declarations;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
