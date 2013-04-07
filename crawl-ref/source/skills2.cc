@@ -146,6 +146,8 @@ int get_skill_progress(skill_type sk, int level, int points, int scale)
 
     const int needed = skill_exp_needed(level + 1, sk);
     const int prev_needed = skill_exp_needed(level, sk);
+    if (needed == 0) // invalid race, letitimate at startup
+        return 0;
     // A scale as small as 92 would overflow with 31 bits if skill_rdiv()
     // is involved: needed can be 91985, skill_rdiv() multiplies by 256.
     const int64_t amt_done = points - prev_needed;
