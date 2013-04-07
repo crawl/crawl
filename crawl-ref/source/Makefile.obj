@@ -46,6 +46,7 @@ dgn-proclayouts.o \
 dgn-shoals.o \
 dgn-swamp.o \
 dgnevent.o \
+diffusion.o \
 directn.o \
 dlua.o \
 dungeon.o \
