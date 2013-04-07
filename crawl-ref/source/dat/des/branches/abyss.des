@@ -1226,8 +1226,8 @@ KMONS:   34 = guardian serpent perm_ench:shapeshifter
 KITEM:   24d = scroll of curse weapon w:5 q:1 / \
          scroll of random uselessness q:1 / sultana q:1 w:5 / \
          club w:5 / stone q:1 / \
-         mundane dart q:1 / needle q:1 ego:confusion / mundane animal skin / \
-         gold q:1
+         mundane dart q:1 / needle q:1 ego:sickness / mundane animal skin / \
+         empty ebony casket w:5 / gold q:1
 KITEM:   13e = rod of striking w:2 / wand of slowing / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / lamp of fire w:2 / \
          plain deck w:2 / whip not_cursed ego:reaching w:2 / \
