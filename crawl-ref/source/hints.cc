@@ -55,7 +55,6 @@
 #include "tags.h"
 #include "terrain.h"
 #include "travel.h"
-#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
