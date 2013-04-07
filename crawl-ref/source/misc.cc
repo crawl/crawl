@@ -2017,10 +2017,11 @@ void timeout_door_seals(int duration, bool force)
         if (seal->duration <= 0 || !mon_src || !mon_src->alive())
         {
             grd(seal->pos) = seal->old_feature;
-            env.markers.remove(seal);
             set_terrain_changed(seal->pos);
             if (you.see_cell(seal->pos))
                 ++num_faded_seen;
+
+            env.markers.remove(seal);
         }
     }
 
