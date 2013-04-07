@@ -136,6 +136,9 @@ wstring utf8_to_16(const char *s)
 }
 #endif
 
+#ifndef TARGET_OS_WINDOWS
+static
+#endif
 string utf16_to_8(const utf16_t *s)
 {
     string d;
