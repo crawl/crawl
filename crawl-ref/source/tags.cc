@@ -544,13 +544,13 @@ void marshall_level_id(writer& th, const level_id& id)
     marshallShort(th, id.packed_place());
 }
 
-void marshall_level_id_set(writer& th, const set<level_id>& id)
+static void _marshall_level_id_set(writer& th, const set<level_id>& id)
 {
     marshallSet(th, id, marshall_level_id);
 }
 
 // XXX: Redundant with level_pos.save()/load().
-void marshall_level_pos(writer& th, const level_pos& lpos)
+static void _marshall_level_pos(writer& th, const level_pos& lpos)
 {
     marshallInt(th, lpos.pos.x);
     marshallInt(th, lpos.pos.y);
@@ -593,14 +593,14 @@ level_id unmarshall_level_id(reader& th)
     return level_id::from_packed_place(unmarshallShort(th));
 }
 
-set<level_id> unmarshall_level_id_set(reader& th)
+static set<level_id> _unmarshall_level_id_set(reader& th)
 {
     set<level_id> id;
     unmarshallSet(th, id, unmarshall_level_id);
     return id;
 }
 
-level_pos unmarshall_level_pos(reader& th)
+static level_pos _unmarshall_level_pos(reader& th)
 {
     level_pos lpos;
     lpos.pos.x = unmarshallInt(th);
@@ -1492,15 +1492,15 @@ static void tag_construct_you_dungeon(writer &th)
     marshallInt(th, root_branch);
 
     marshallMap(th, stair_level,
-                _marshall_as_int<branch_type>, marshall_level_id_set);
+                _marshall_as_int<branch_type>, _marshall_level_id_set);
     marshallMap(th, shops_present,
-                marshall_level_pos, _marshall_as_int<shop_type>);
+                _marshall_level_pos, _marshall_as_int<shop_type>);
     marshallMap(th, altars_present,
-                marshall_level_pos, _marshall_as_int<god_type>);
+                _marshall_level_pos, _marshall_as_int<god_type>);
     marshallMap(th, portals_present,
-                marshall_level_pos, _marshall_as_int<branch_type>);
+                _marshall_level_pos, _marshall_as_int<branch_type>);
     marshallMap(th, portal_notes,
-                marshall_level_pos, marshallStringNoMax);
+                _marshall_level_pos, marshallStringNoMax);
     marshallMap(th, level_annotations,
                 marshall_level_id, marshallStringNoMax);
     marshallMap(th, level_exclusions,
@@ -2535,15 +2535,15 @@ static void tag_read_you_dungeon(reader &th)
 
     unmarshallMap(th, stair_level,
                   unmarshall_int_as<branch_type>,
-                  unmarshall_level_id_set);
+                  _unmarshall_level_id_set);
     unmarshallMap(th, shops_present,
-                  unmarshall_level_pos, unmarshall_int_as<shop_type>);
+                  _unmarshall_level_pos, unmarshall_int_as<shop_type>);
     unmarshallMap(th, altars_present,
-                  unmarshall_level_pos, unmarshall_int_as<god_type>);
+                  _unmarshall_level_pos, unmarshall_int_as<god_type>);
     unmarshallMap(th, portals_present,
-                  unmarshall_level_pos, unmarshall_int_as<branch_type>);
+                  _unmarshall_level_pos, unmarshall_int_as<branch_type>);
     unmarshallMap(th, portal_notes,
-                  unmarshall_level_pos, unmarshallStringNoMax);
+                  _unmarshall_level_pos, unmarshallStringNoMax);
     unmarshallMap(th, level_annotations,
                   unmarshall_level_id, unmarshallStringNoMax);
     unmarshallMap(th, level_exclusions,
