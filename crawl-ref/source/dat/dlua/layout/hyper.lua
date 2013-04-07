@@ -105,7 +105,8 @@ function hyper.build_layout(e, options)
 
   local gxm,gym = dgn.max_bounds()
   local main_state = {
-    usage_grid = hyper.usage.new_usage(gxm,gym),
+    usage_grid = hyper.usage.new_usage(gxm,gym,
+                                       hyper.usage.grid_initialiser),
     results = {}
   }
 
@@ -124,9 +125,9 @@ function hyper.build_layout(e, options)
   end
 
   -- Scan the existing dungeon grid and update the usage grid accordingly
-  -- TODO: Would be a slight performance boost if we first check if we're the primary layout, in which case there's
-  --       no need for this scan.
-  hyper.usage.scan_existing_features(main_state.usage_grid)
+  -- TODO: Would be a performance boost not running this if we're the
+  -- primary layout anyway and just assume no existing anchors etc.
+  hyper.usage.analyse_grid_usage(main_state.usage_grid,options)
 
   if hyper.profile then
     profiler.pop()

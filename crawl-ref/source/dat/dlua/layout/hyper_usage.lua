@@ -6,15 +6,22 @@
 
 hyper.usage = {}
 
-function hyper.usage.new_usage(width, height)
+function hyper.usage.new_usage(width, height, initialiser)
   usage_grid = { eligibles = { open = {}, closed = {} }, anchors = {}, width = width, height = height }
+
+  if initialiser == nil then
+    initialiser = function()
+      return { feature = "space", solid = true, space = true, carvable = true, vault = false, anchors = {} }
+    end
+  end
 
   for y = 0, (height-1), 1 do
     usage_grid[y] = { }
     for x = 0, (width-1), 1 do
-      usage_grid[y][x] = { usage = "none", solid = true, feature = "space", space = true, carvable = true }
+      usage_grid[y][x] = initialiser(x,y)
     end
   end
+
   return usage_grid
 end
 
@@ -59,7 +66,7 @@ function hyper.usage.set_usage(usage_grid,x,y,usage)
   if current.eligibles_index ~= nil then
     table.remove(usage_grid.eligibles[current.eligibles_which],current.eligibles_index)
   end
-  if current.anchors ~= nil then
+  if current ~= usage and current.anchors ~= nil then
     for i,anchor in ipairs(current.anchors) do
       -- TODO: util.remove will be pretty slow on large lists (which is why for eligibles we cache the index)
       --       ...this shouldn't be a huge problem for anchors since there aren't typically tons of them but it's something to watch out for...
@@ -134,39 +141,50 @@ function hyper.usage.filter_usage(usage_grid,filter,transform,region)
   end
 end
 
--- Scan the existing dungeon grid for features and vaults. This is important for primary vaults placed prior
--- to Hyper running, these vaults may have ORIENT: float in the main dungeon, or ORIENT: direction in branch ends.
-function hyper.usage.scan_existing_features(usage_grid,options)
-  local gxm,gym = dgn.max_bounds()
-  local count = 0
-  for x = 0,gxm-1,1 do
-    for y = 0,gym-1,1 do
-      local feature = dgn.grid(x,y)
-      local mask = dgn.in_vault(x,y)
-      if mask then count = count + 1 end
-      local usage = { feature = dgn.feature_name(feature), vault = mask, anchors = {} }
-      usage.space = false
-      usage.solid = not (feat.has_solid_floor(feature) or feat.is_door(feature))
-      usage.wall = feat.is_wall(feature)
-      hyper.usage.set_usage(usage_grid,x,y,usage)
-    end
-  end
-  hyper.usage.analyse_grid_usage(usage_grid,options)
+function hyper.usage.from_feature_name(feature_name)
+  return hyper.usage.from_feature(dgn.feature(feature_num))
+end
+
+-- Initialises a usage grid coord by inspecting the
+-- existing dungeon grid
+function hyper.usage.grid_initialiser(x,y)
+
+  local feature = dgn.grid(x,y)
+  local mask = dgn.in_vault(x,y)
+
+  return { feature = feature,
+           vault = mask,
+           anchors = {},
+           space = false,
+           carvable = false,
+           solid = not (feat.has_solid_floor(feature) or feat.is_door(feature)),
+           wall = feat.is_wall(feature)
+         }
+
 end
 
 -- Scan a grid and determine potential usage of features.
--- Features on the edge of the map can be flagged for external connection - this allows this grid to be joined onto existing features on the map.
--- Features inside the map can be flagged for internal connection - e.g. placing rooms within rooms, or carving into a rock area inside the room.
+-- Features on the edge of the map can be flagged for external connection
+-- - this allows this grid to be joined onto existing features on the map.
+-- Features inside the map can be flagged for internal connection
+-- - e.g. placing rooms within rooms, or carving into a rock area inside the room.
 function hyper.usage.analyse_grid_usage(usage_grid,options)
+
+  local get = hyper.usage.get_usage
+  local set = hyper.usage.set_usage
+
+  -- TODO: An optimised zonify would do this job pretty well and
+  -- possibly get more useful information.
+
   for x = 0, usage_grid.width-1, 1 do
     for y = 0, usage_grid.height-1, 1 do
-      local usage = hyper.usage.get_usage(usage_grid,x,y)
+      local usage = get(usage_grid,x,y)
       -- Ignore vaults
       if not usage.vault then
         -- Check walls for carvability
         if usage.wall then
           for i,normal in ipairs(vector.normals) do
-            local near = hyper.usage.get_usage(usage_grid,x+normal.x,y+normal.y)
+            local near = get(usage_grid,x+normal.x,y+normal.y)
             if near ~= nil and not near.solid then
               usage.carvable = true
               table.insert(usage.anchors,{ normal = vector.normals[(normal.dir+2)%4 + 1], pos = { x=0,y=0 }, grid_pos = { x=x,y=y }})
@@ -180,7 +198,9 @@ function hyper.usage.analyse_grid_usage(usage_grid,options)
             if near ~= nil and near.solid then usage.buffer = true end
           end
         end
-        hyper.usage.set_usage(usage_grid,x,y,usage)
+        -- Reapply the usage - this will update the
+        -- global anchors list
+        set(usage_grid,x,y,usage)
       end
     end
   end
