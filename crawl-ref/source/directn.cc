@@ -64,6 +64,7 @@
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "viewmap.h"
 #include "wiz-mon.h"
 #include "spl-goditem.h"
 
