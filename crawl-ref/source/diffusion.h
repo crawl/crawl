@@ -52,33 +52,9 @@ class DiffusionGrid {
     {
         arr = FixedArray< float, GXM, GYM>(DBL_MIN);
     }
-
-    void addPoint(float f, coord_def c)
-    {
-        DiffusionElement de = score(f, c);
-        diffeq.push(de);
-        arr(c) = de.f;
-    }
-
-    FixedArray< float, GXM, GYM > process()
-    {
-        while (!diffeq.empty()) {
-            DiffusionElement e = diffeq.top();
-            for (adjacent_iterator ai(e.c); ai; ++ai)
-            {
-                if (arr(e.c) == DBL_MIN) {
-                    addPoint(e.f, e.c);
-                }
-            }
-            diffeq.pop();
-        }
-        return arr;
-    }
-
-    void clear()
-    {
-        arr = FixedArray< float, GXM, GYM >(DBL_MIN);
-    }
+    void addPoint(float, coord_def);
+    FixedArray< float, GXM, GYM > process();
+    void clear();
   protected:
     virtual DiffusionElement score(float f, coord_def c);
   private:
