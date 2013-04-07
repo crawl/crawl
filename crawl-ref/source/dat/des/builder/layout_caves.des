@@ -341,11 +341,13 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
   -- This is a very simple approximation of layout_chaotic_city. It's almost identical with a little hyperness.
   local gxm,gym = dgn.max_bounds()
   hyper.build_layout(_G,{
-    name = "Hyper City",
+    name = "Cave Town",
     build_fixture = {
       { pass = "Primary", type = "build", strategy = hyper.place.strategy_primary, max_rooms = 1, generators = {
-        { generator = "code", paint_callback = hyper.floors.cavern_walls, min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 },
-        { generator = "code", paint_callback = hyper.rooms.cave_walls, min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 }
+        { generator = "code", paint_callback = hyper.floors.cavern_walls, analyse = false,
+          min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 },
+        { generator = "code", paint_callback = hyper.rooms.cave_walls, analyse = false,
+          min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 }
       } },
       { pass = "Rooms", type = "build", strategy = hyper.place.strategy_open, max_rooms = 12, generators = {
         { generator = "code", class = "room", weight = 5, paint_callback = chosen.room, size_callback = room_size_func_big, room_transform = hyper.rooms.add_walls, max_rooms = 3 },
