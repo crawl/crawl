@@ -338,14 +338,6 @@ uint8_t unmarshallUByte(reader &th)
     return th.readByte();
 }
 
-void marshallShort(vector<unsigned char>& buf, short data)
-{
-    CHECK_INITIALIZED(data);
-    COMPILE_CHECK(sizeof(data) == 2);
-    buf.push_back((unsigned char) ((data & 0xFF00) >> 8));
-    buf.push_back((unsigned char) ((data & 0x00FF)   ));
-}
-
 // Marshall 2 byte short in network order.
 void marshallShort(writer &th, short data)
 {
@@ -363,15 +355,6 @@ int16_t unmarshallShort(reader &th)
     int16_t b2 = th.readByte();
     int16_t data = (b1 << 8) | (b2 & 0x00FF);
     return data;
-}
-
-void marshallInt(vector<unsigned char>& buf, int32_t data)
-{
-    CHECK_INITIALIZED(data);
-    buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
-    buf.push_back((unsigned char) ((data & 0x00FF0000) >> 16));
-    buf.push_back((unsigned char) ((data & 0x0000FF00) >>  8));
-    buf.push_back((unsigned char) ((data & 0x000000FF)    ));
 }
 
 // Marshall 4 byte int in network order.
