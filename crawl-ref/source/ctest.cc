@@ -91,6 +91,7 @@ static void _init_test_bindings()
     luaL_openlib(dlua, "crawl", crawl_test_lib, 0);
     dlua.execfile("dlua/test.lua", true, true);
     initialise_branch_depths();
+    initialise_item_descriptions();
 }
 
 static bool _is_test_selected(const string &testname)
