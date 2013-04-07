@@ -637,10 +637,10 @@ bool InvMenu::allow_easy_exit() const
     return (type == MT_KNOW || Menu::allow_easy_exit());
 }
 
-template <string (*proc)(const InvEntry *a)>
+template <const string &(InvEntry::*method)() const>
 static int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
-    return proc(a).compare(proc(b));
+    return (a->*method)().compare((b->*method)());
 }
 
 template <typename T, T (*proc)(const InvEntry *a)>
@@ -649,19 +649,32 @@ static int compare_item(const InvEntry *a, const InvEntry *b)
     return (int(proc(a)) - int(proc(b)));
 }
 
+template <typename T, T (InvEntry::*method)() const>
+static int compare_item(const InvEntry *a, const InvEntry *b)
+{
+    return (int((a->*method)()) - int((b->*method)()));
+}
+
+template <typename T, T (InvEntry::*method)() const>
+static int compare_item_rev(const InvEntry *a, const InvEntry *b)
+{
+    return (int((b->*method)()) - int((a->*method)()));
+}
+
+template <item_sort_fn cmp>
+static int compare_reverse(const InvEntry *a, const InvEntry *b)
+{
+    return -cmp(a, b);
+}
+
 // C++ needs anonymous subs already!
-string sort_item_basename(const InvEntry *a)
-{
-    return a->get_basename();
-}
-string sort_item_qualname(const InvEntry *a)
-{
-    return a->get_qualname();
-}
-string sort_item_fullname(const InvEntry *a)
-{
-    return a->get_fullname();
-}
+// Some prototypes to prevent warnings; we can't make these static because
+// they're used as template parameters.
+int sort_item_qty(const InvEntry *a);
+int sort_item_slot(const InvEntry *a);
+bool sort_item_identified(const InvEntry *a);
+bool sort_item_charged(const InvEntry *a);
+
 int sort_item_qty(const InvEntry *a)
 {
     return a->quantity;
@@ -669,36 +682,6 @@ int sort_item_qty(const InvEntry *a)
 int sort_item_slot(const InvEntry *a)
 {
     return a->item->link;
-}
-
-int sort_item_freshness(const InvEntry *a)
-{
-    return a->item_freshness();
-}
-
-bool sort_item_curse(const InvEntry *a)
-{
-    return a->is_item_cursed();
-}
-
-bool sort_item_glowing(const InvEntry *a)
-{
-    return !a->is_item_glowing();
-}
-
-bool sort_item_ego(const InvEntry *a)
-{
-    return !a->is_item_ego();
-}
-
-bool sort_item_art(const InvEntry *a)
-{
-    return !a->is_item_art();
-}
-
-bool sort_item_equipped(const InvEntry *a)
-{
-    return !a->is_item_equipped();
 }
 
 bool sort_item_identified(const InvEntry *a)
@@ -750,19 +733,19 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
         item_sort_fn cmp;
     } cmp_map[]  =
       {
-          { "basename",  compare_item_str<sort_item_basename> },
-          { "qualname",  compare_item_str<sort_item_qualname> },
-          { "fullname",  compare_item_str<sort_item_fullname> },
-          { "curse",     compare_item<bool, sort_item_curse> },
-          { "glowing",   compare_item<bool, sort_item_glowing> },
-          { "ego",       compare_item<bool, sort_item_ego> },
-          { "art",       compare_item<bool, sort_item_art> },
-          { "equipped",  compare_item<bool, sort_item_equipped> },
+          { "basename",  compare_item_str<&InvEntry::get_basename> },
+          { "qualname",  compare_item_str<&InvEntry::get_qualname> },
+          { "fullname",  compare_item_str<&InvEntry::get_fullname> },
+          { "curse",     compare_item<bool, &InvEntry::is_item_cursed> },
+          { "glowing",   compare_item_rev<bool, &InvEntry::is_item_glowing> },
+          { "ego",       compare_item_rev<bool, &InvEntry::is_item_ego> },
+          { "art",       compare_item_rev<bool, &InvEntry::is_item_art> },
+          { "equipped",  compare_item_rev<bool, &InvEntry::is_item_equipped> },
           { "identified",compare_item<bool, sort_item_identified> },
           { "charged",   compare_item<bool, sort_item_charged>},
           { "qty",       compare_item<int, sort_item_qty> },
           { "slot",      compare_item<int, sort_item_slot> },
-          { "freshness", compare_item<int, sort_item_freshness> }
+          { "freshness", compare_item<int, &InvEntry::item_freshness> }
       };
 
     list.clear();
@@ -788,7 +771,7 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
     if (list.empty())
     {
         list.push_back(
-            item_comparator(compare_item_str<sort_item_fullname>));
+            item_comparator(compare_item_str<&InvEntry::get_fullname>));
     }
 }
 
