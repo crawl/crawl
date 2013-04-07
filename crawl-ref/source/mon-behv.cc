@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
+#include "diffusion.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
@@ -32,6 +33,8 @@
 #include "hints.h"
 #include "view.h"
 #include "shout.h"
+
+static DiffusionGrid *diffusion_grid = new PlayerGrid();
 
 static void _set_nearest_monster_foe(monster* mons);
 
@@ -175,6 +178,9 @@ void handle_behaviour(monster* mon)
             }
         }
     }
+    mon->behaviour = BEH_SEEK;
+    mon->target = diffusion_grid->climb(mon->pos());
+    return;
 
     bool changed = true;
     bool isFriendly = mon->friendly();
@@ -1364,4 +1370,10 @@ void shake_off_monsters(const actor* target)
             m->foe_memory = min(m->foe_memory, 7);
         }
     }
+}
+
+void update_diffusion_grid()
+{
+    diffusion_grid->clear();
+    diffusion_grid->process();
 }

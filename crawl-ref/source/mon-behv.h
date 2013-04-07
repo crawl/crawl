@@ -27,6 +27,8 @@ void behaviour_event(monster* mon, mon_event_type event_type,
                      const actor *agent = 0, coord_def src_pos = coord_def(),
                      bool allow_shout = true);
 
+void update_diffusion_grid();
+
 // This function is somewhat low level; you should probably use
 // behaviour_event(mon, ME_EVAL) instead.
 void handle_behaviour(monster* mon);

@@ -89,6 +89,7 @@
 #include "misc.h"
 #include "mislead.h"
 #include "mon-act.h"
+#include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -3227,6 +3228,8 @@ void world_reacts()
     update_monsters_in_view();
 
     reset_show_terrain();
+
+    update_diffusion_grid();
 
     crawl_state.clear_mon_acting();
 

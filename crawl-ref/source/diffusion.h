@@ -8,12 +8,15 @@
 
 #include "AppHdr.h"
 
-#include <float.h>
+#include <limits.h>
 #include <queue>
 #include <vector>
 
 #include "coordit.h"
+#include "dungeon.h"
 #include "externs.h"
+#include "player.h"
+#include "terrain.h"
 
 class DECompare;
 class DiffusionElement;
@@ -27,10 +30,10 @@ typedef std::priority_queue<
 class DiffusionElement
 {
     public:
-        DiffusionElement(const float _f, const coord_def &_c) :
+        DiffusionElement(const int _f, const coord_def &_c) :
             f(_f), c(_c) {}
     private:
-        float f;
+        int f;
         coord_def c;
     friend class DECompare;
     friend class DiffusionGrid;
@@ -47,19 +50,32 @@ class DECompare
 };
 
 class DiffusionGrid {
-  public:
-    DiffusionGrid()
-    {
-        arr = FixedArray< float, GXM, GYM>(DBL_MIN);
-    }
-    void addPoint(float, coord_def);
-    FixedArray< float, GXM, GYM > process();
-    void clear();
-  protected:
-    virtual DiffusionElement score(float f, coord_def c);
-  private:
-    FixedArray< float, GXM, GYM > arr;
-    diffusion_queue diffeq;
+    public:
+        DiffusionGrid()
+        {
+            arr = FixedArray< int, GXM, GYM>(INT_MAX);
+            processed = false;
+        }
+        ~DiffusionGrid() {}
+        void addPoint(int, coord_def);
+        coord_def climb(coord_def);
+        void clear();
+        void process();
+    protected:
+        virtual void initialize() = 0;
+        virtual DiffusionElement score(int f, coord_def c) = 0;
+        FixedArray< int, GXM, GYM > arr;
+    private:
+        bool processed;
+        diffusion_queue diffeq;
+};
+
+class PlayerGrid : public DiffusionGrid {
+    public:
+        PlayerGrid() {}
+    protected:
+        void initialize();
+        DiffusionElement score(int f, coord_def c);
 };
 
 #endif /* DIFFUSION_H */
