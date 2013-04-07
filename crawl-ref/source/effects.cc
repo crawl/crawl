@@ -49,6 +49,7 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mislead.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-iter.h"

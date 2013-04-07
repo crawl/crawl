@@ -17,8 +17,6 @@
 
 #include <queue>
 
-extern int unixcurses_get_vi_key(int keyin);
-
 static keycode_type _numpad2vi(keycode_type key)
 {
 #if defined(UNIX) && !defined(USE_TILE_LOCAL)
