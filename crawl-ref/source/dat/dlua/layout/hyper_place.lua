@@ -38,6 +38,13 @@ function hyper.place.build_rooms(build,usage_grid,options)
 
   -- Init local variables
   local results, rooms_placed, times_failed, total_failed, room_count, total_rooms_placed = { }, 0, 0, 0, build.max_rooms or options.max_rooms or 10, options.rooms_placed or 0
+
+  if hyper.profile then
+    profiler.push("PlaceRoom", { failed = times_failed })
+  end
+
+  local post_place = (build.post_placement_callback or options.post_placement_callback)
+
   -- Keep trying to place rooms until we've had max_room_tries fail in a row or we reach the max
   while rooms_placed < room_count and times_failed < options.max_room_tries do
     local placed = false
@@ -60,9 +67,7 @@ function hyper.place.build_rooms(build,usage_grid,options)
         rooms_placed = rooms_placed + 1
         total_rooms_placed = total_rooms_placed + 1
         options.rooms_placed = total_rooms_placed
-        times_failed = 0 -- Reset fail count
         -- Perform analysis for stairs (and perform inner wall substitution if applicable)
-        local post_place = (build.post_placement_callback or options.post_placement_callback)
         if post_place ~= nil then post_place(usage_grid,room,result,options) end
 
         table.insert(results,result)
@@ -71,6 +76,14 @@ function hyper.place.build_rooms(build,usage_grid,options)
           if room.generator_used.placed_count == nil then room.generator_used.placed_count = 0 end
           room.generator_used.placed_count = room.generator_used.placed_count + 1
         end
+
+        if hyper.profile then
+          profiler.pop()
+          profiler.push("PlaceRoom", { failed = total_failed, failed_in_a_row = times_failed })
+        end
+
+        times_failed = 0 -- Reset fail count
+
       end
 
     end
@@ -82,6 +95,12 @@ function hyper.place.build_rooms(build,usage_grid,options)
 
     -- dump_usage_grid_v3(usage_grid)
 
+  end
+
+  if hyper.profile then
+    profiler.pop()
+    profiler.push("PlacedRooms", { failed = total_failed, placed = rooms_placed })
+    profiler.pop()
   end
 
   -- TODO: Return some useful stats in results (total placements, total failures, so forth)
@@ -96,6 +115,10 @@ function hyper.place.place_room(room,build,usage_grid,options)
   local done = false
 
   local state
+
+  if hyper.profile then
+    profiler.push("PlaceRoom")
+  end
 
   -- TODO: Can optimise this (and a few other similarly cascading selectors) by copying such options down onto the generator.
   -- TODO: Further to this, could be handy to override individual callbacks in the strategy rather than just the whole thing
@@ -124,6 +147,11 @@ function hyper.place.place_room(room,build,usage_grid,options)
     end
   end
   if not done then return { placed = false } end
+
+  if hyper.profile then
+    profiler.pop()
+  end
+
   return { placed = done, coords_list = state.coords, state = state }
 end
 
@@ -258,6 +286,8 @@ function hyper.place.apply_room(state,room,build,usage_grid,options)
 
     local room_cell,grid_cell,grid_coord = coord.room_cell,coord.grid_usage,coord.grid_pos
     -- Update directions
+    -- TODO: Should ensure cells always have anchors then following line isn't needed
+    if room_cell.anchors == nil then room_cell.anchors = {} end
     for a,anchor in ipairs(room_cell.anchors) do
       local u_wall_dir = (anchor.normal.dir + final_orient) % 4
       anchor.normal = vector.normals[u_wall_dir+1]
