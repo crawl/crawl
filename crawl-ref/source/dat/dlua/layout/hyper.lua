@@ -9,6 +9,8 @@ hyper = {}          -- Main namespace for engine
 -- This switch dumps helpful diagrams of rooms and layouts out to console.
 -- Only advisable if you start tiles from a command-line.
 hyper.debug = false
+-- Outputs some profiling information on the layout build
+hyper.profile = true
 
 require("dlua/layout/vector.lua")
 require("dlua/layout/hyper_usage.lua")
@@ -19,6 +21,7 @@ require("dlua/layout/hyper_rooms.lua")
 require("dlua/layout/hyper_shapes.lua")
 require("dlua/layout/hyper_decor.lua")
 require("dlua/layout/hyper_debug.lua")
+require("dlua/profiler.lua")
 
 -- The four directions and their associated vector normal and name.
 -- This helps us manage orientation of rooms.
@@ -75,6 +78,11 @@ end
 function hyper.build_layout(e, options)
   if not options.test and e.is_validating() then return true end
 
+  if hyper.profile then
+    profiler.start()
+    profiler.push("InitOptions")
+  end
+
   name = options.name or "Hyper"
 
   if hyper.debug then print("Hyper Layout: " .. name) end
@@ -88,6 +96,11 @@ function hyper.build_layout(e, options)
   -- Map legacy global options to a single build fixture, rather than edit each layout right now
   if options.build_fixture == nil then
     options.build_fixture = { { type = "build", generators = options.room_type_weights } }
+  end
+
+  if hyper.profile then
+    profiler.pop()
+    profiler.push("InitUsage")
   end
 
   local gxm,gym = dgn.max_bounds()
@@ -105,10 +118,20 @@ function hyper.build_layout(e, options)
     end
   end
 
+  if hyper.profile then
+    profiler.pop()
+    profiler.push("ScanUsage")
+  end
+
   -- Scan the existing dungeon grid and update the usage grid accordingly
   -- TODO: Would be a slight performance boost if we first check if we're the primary layout, in which case there's
   --       no need for this scan.
   hyper.usage.scan_existing_features(main_state.usage_grid)
+
+  if hyper.profile then
+    profiler.pop()
+    profiler.push("BuildFixture")
+  end
 
   -- Perform each task in the build fixture
   for i, item in ipairs(options.build_fixture) do
@@ -140,12 +163,22 @@ function hyper.build_layout(e, options)
   end
 
   -- Updates the dungeon grid
-  -- TODO: Right now it happens room-by-room so I've commented this out. But there might be a small performance gain in only
-  -- applying everything right at the end.
+  -- TODO: Right now it happens room-by-room so I've commented this out.
+  -- But there should be a performance gain in only applying everything right at the end.
   -- hyper.usage.apply_usage(usage_grid)
 
   if options.post_fixture_callback ~= nil then
+    if hyper.profile then
+      profiler.pop()
+      profiler.push("PostFixture")
+    end
+
     options.post_fixture_callback(main_state,options)
+  end
+
+  if hyper.profile then
+    profiler.pop()
+    profiler.push("VaultMask")
   end
 
   -- Set MMT_VAULT across the whole map depending on usage. This prevents the dungeon builder
@@ -156,6 +189,11 @@ function hyper.build_layout(e, options)
     if usage ~= nil and usage.protect then
       dgn.set_map_mask(p.x,p.y)
     end
+  end
+
+  if hyper.profile then
+    profiler.pop()
+    profiler.stop()
   end
 
   return main_state
