@@ -125,7 +125,6 @@ bool is_dragonkind(const actor *act);
 void swap_with_monster(monster *mon_to_swap);
 
 void wear_id_type(item_def &item);
-void maybe_id_ring_TC();
 void maybe_id_ring_hunger();
 void maybe_id_ring_see_invis();
 void maybe_id_clarity();

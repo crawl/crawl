@@ -1736,12 +1736,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     return re;
 }
 
-bool player_control_teleport(bool calc_unid, bool temp, bool items)
+bool player_control_teleport(bool temp)
 {
     return ((temp && you.duration[DUR_CONTROL_TELEPORT])
-            || (items
-                && you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
-                && !you.suppressed())
             || crawl_state.game_is_zotdef());
 }
 

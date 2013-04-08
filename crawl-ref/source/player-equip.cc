@@ -1180,7 +1180,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     case RING_SUSTAIN_ABILITIES:
     case RING_SUSTENANCE:
     case RING_SLAYING:
-    case RING_TELEPORT_CONTROL:
         break;
 
     case RING_FIRE:
@@ -1299,6 +1298,12 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             // keep in sync with player_teleport
             mprf("You feel slightly %sjumpy.",
                  (player_teleport(false) > 8) ? "more " : "");
+        ident = ID_KNOWN_TYPE;
+        break;
+
+    case RING_TELEPORT_CONTROL:
+        mprf("You feel %scontrolled for a moment.",
+              you.duration[DUR_CONTROL_TELEPORT] ? "more " : "");
         ident = ID_KNOWN_TYPE;
         break;
 

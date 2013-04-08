@@ -89,7 +89,8 @@ enum ability_type
     ABIL_EVOKE_STOP_LEVITATING,
 #endif
     ABIL_EVOKE_FOG,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_FOG,
+    ABIL_EVOKE_TELEPORT_CONTROL,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_TELEPORT_CONTROL,
 
     // Divine abilities
     // Zin

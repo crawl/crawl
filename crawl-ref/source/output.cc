@@ -2136,7 +2136,7 @@ static vector<formatted_string> _get_overview_resistances(
     }
     cols.add_formatted(1, buf, false);
 
-    int rctel = player_control_teleport(calc_unid);
+    int rctel = player_control_teleport();
     rctel = allow_control_teleport(true) ? rctel : -1;
     const int rflyi = you.airborne();
     snprintf(buf, sizeof buf,
