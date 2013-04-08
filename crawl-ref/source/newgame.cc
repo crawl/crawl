@@ -182,7 +182,7 @@ static bool _is_job_valid_choice(job_type job)
         return false;
 
 #if TAG_MAJOR_VERSION == 34
-    if (job == JOB_STALKER)
+    if (job == JOB_STALKER || job == JOB_JESTER)
         return false;
 #endif
 
