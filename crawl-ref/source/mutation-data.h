@@ -267,7 +267,8 @@
   "clumsy"
 },
 
-{ MUT_TELEPORT_CONTROL,               2,  1, false, false, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_TELEPORT_CONTROL,               0,  1, false, false, false,
   "teleport control",
 
   {"You can control translocations.", "", ""},
@@ -276,6 +277,7 @@
 
   "teleport control"
 },
+#endif
 
 { MUT_TELEPORT,                       3,  3,  true, false, false,
   "teleportitis",

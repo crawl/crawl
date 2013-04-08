@@ -798,7 +798,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_SHOCK_RESISTANCE:
     case MUT_REGENERATION:
     case MUT_SLOW_METABOLISM:
-    case MUT_TELEPORT_CONTROL:
     case MUT_MAGIC_RESISTANCE:
     case MUT_CLARITY:
     case MUT_MUTATION_RESISTANCE:

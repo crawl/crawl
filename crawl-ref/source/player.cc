@@ -1742,7 +1742,7 @@ bool player_control_teleport(bool calc_unid, bool temp, bool items)
             || (items
                 && you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid)
                 && !you.suppressed())
-            || player_mutation_level(MUT_TELEPORT_CONTROL));
+            || crawl_state.game_is_zotdef());
 }
 
 int player_res_torment(bool, bool temp)

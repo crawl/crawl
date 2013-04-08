@@ -339,10 +339,6 @@ void give_basic_mutations(species_type speci)
         break;
     }
 
-    // Zot def games come with teleport control
-    if (crawl_state.game_is_zotdef())
-        you.mutation[MUT_TELEPORT_CONTROL] = 1;
-
     // Some mutations out-sourced because they're
     // relevant during character choice.
     you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
