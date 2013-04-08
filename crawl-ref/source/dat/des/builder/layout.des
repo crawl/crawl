@@ -279,7 +279,7 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand
     -- too large, close, or large in number can entirely surround the center.
     local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]
     local num = 3 + crawl.random2(9)
-    local pillar_radius = 1 -- + crawl.random2((pfunc == make_diamond) and 3 or 2)
+    local pillar_radius = 1 + crawl.random2((pfunc == make_diamond) and 3 or 2)
     local circle_radius = 2 + crawl.random2(6) + pillar_radius * 2 + num / 2
     local fill = crawl.random_element(pillar_fill)
 
