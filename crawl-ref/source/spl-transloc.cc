@@ -390,9 +390,15 @@ void you_teleport(void)
 
         int teleport_delay = 3 + random2(3);
 
+        // Doesn't care whether the cTele will actually work or not.
+        if (player_control_teleport())
+        {
+            mpr("You feel your translocation being delayed.");
+            teleport_delay += 1 + random2(3);
+        }
         if (player_in_branch(BRANCH_ABYSS) && !one_chance_in(5))
         {
-            mpr("You have a feeling this translocation may take a while to kick in...");
+            mpr("You feel the power of the Abyss delaying your translocation.");
             teleport_delay += 5 + random2(10);
         }
         else if (orb_haloed(you.pos()) && coinflip())
