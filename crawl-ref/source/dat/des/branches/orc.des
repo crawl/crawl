@@ -1063,12 +1063,6 @@ ENDMAP
 
 default-depth:
 
-##################################################
-# Orc endings!
-# They should have four shops.
-
-default-depth:
-
 NAME:    st_orc_town
 TAGS:    no_rotate no_item_gen
 PLACE:   Orc:4
