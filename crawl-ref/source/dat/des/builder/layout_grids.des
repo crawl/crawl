@@ -150,7 +150,8 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
   layout_type "corridors"
   local edge = crawl.x_chance_in_y(1,4)
-  render_grid(_G, "Big Grid",
+
+  render_grid(_G, "Small Grid",
     {
       guaranteed_divides = 4,
       subdivide_initial_chance = 120,
@@ -165,6 +166,60 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
       jitter_min = -1,
       jitter_max = crawl.random_range(0,1),
     } )
+}}
+
+NAME:   layout_long_grid
+DEPTH:  Dis, D, Lair
+WEIGHT: 10
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+{{
+  if is_validating() then return; end
+  local min_size = you.in_branch("lair") and 1 or 2
+  local max_size = you.in_branch("lair") and 4 or 3
+  local size = crawl.random_range(min_size,max_size)
+  layout_type "corridors"
+  local grid_opts = {
+    -- Keep subdividing until the areas are too small
+    subdivide_initial_chance = 100,
+    subdivide_level_multiplier = 1,
+    minimum_size_x = size * 2,
+    minimum_size_y = you.in_branch("dis")
+                       and size * crawl.random_range(3,5)
+                       or size * crawl.random_range(4,6),
+  }
+  local min_fill = 40 + size * 10
+  local max_fill = 80 + size * 5
+
+  local paint_opts = {
+    fill_chance = crawl.random_range(min_fill,max_fill),
+    corridor_width = size,
+    outer_corridor = you.in_branch("lair"),
+    jitter = false,
+  }
+
+  -- In D, for fairness, allow some corridors
+  if you.in_branch("D")
+    or (you.in_branch("lair") and size>1 and crawl.one_chance_in(3)) then
+    paint_opts.corridor_width = 1
+    paint_opts.jitter = true
+    paint_opts.jitter_min = -1
+    paint_opts.jitter_max = 0
+    if you.in_branch("D") then paint_opts.outer_corridor = crawl.coinflip() end
+  end
+
+  -- Choose an axis and switch sizes
+  local which = "x"
+  if crawl.coinflip() then
+    which = "y"
+    grid_opts.minimum_size_x,grid_opts.minimum_size_y = grid_opts.minimum_size_y,grid_opts.minimum_size_x
+  end
+  -- The effect this callback has is to keep subdividing a given axis
+  -- until we reach the minimum size - *then* start dividing the other axis
+  grid_opts.choose_axis = function(width,height,depth)
+    return which
+  end
+  render_grid(_G, "Long Grid", grid_opts, paint_opts)
 }}
 
 # Generates up to 3 grids of different granularities, then layers
