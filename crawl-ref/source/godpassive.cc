@@ -379,6 +379,7 @@ static bool _jewel_auto_id(const item_def& item)
                 && player_mutation_level(MUT_HERBIVOROUS) < 3);
     case RING_INVISIBILITY:
     case RING_TELEPORTATION:
+    case RING_TELEPORT_CONTROL:
     case RING_MAGICAL_POWER:
     case RING_FLIGHT:
     case RING_ICE:

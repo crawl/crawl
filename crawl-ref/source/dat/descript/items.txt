@@ -1975,11 +1975,11 @@ ring of sustenance:quote
 %%%%
 ring of teleport control
 
-This ring allows its wearer to control the destination of any teleportation,
-although without perfect accuracy. Trying to teleport into a solid object will
-result in a random teleportation, at least in the case of a normal
-teleportation. Also be wary that controlled teleports will contaminate the
-subject with residual magical energy.
+This ring can be evoked to allow its wearer to control the destination of any
+teleportation, although without perfect accuracy. Trying to teleport into a
+solid object will result in a random teleportation, at least in the case of a
+normal teleportation. Also be wary that controlled teleports will contaminate
+the subject with residual magical energy.
 %%%%
 ring of teleport control:quote
 

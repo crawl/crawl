@@ -131,6 +131,12 @@ Evoke Fog
 
 Release a thick cloud of fog to obscure vision.
 %%%%
+Evoke Teleport Control
+
+Gain the ability to to control translocations for a duration. Be wary that
+controlled teleports will cause the subject to become contaminated with magical
+energy.
+%%%%
 End Transformation
 
 Revert to your normal form, with a short delay.

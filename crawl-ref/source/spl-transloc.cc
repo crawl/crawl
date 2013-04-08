@@ -333,7 +333,6 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         mpr("You may select the general direction of your translocation.");
         // FIXME: handle aborts here, don't waste the turn
         cast_semi_controlled_blink(100, false);
-        maybe_id_ring_TC();
     }
     else if (you.attempt_escape(2))
     {
@@ -424,8 +423,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
     return is_feat_dangerous(grd(cell), true) && !wizard_tele;
 }
 
-static void _handle_teleport_update(bool large_change, bool check_ring_TC,
-                                    const coord_def old_pos)
+static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 {
     if (large_change)
     {
@@ -445,10 +443,6 @@ static void _handle_teleport_update(bool large_change, bool check_ring_TC,
 
         handle_interrupted_swap(true);
     }
-
-    // Might identify unknown ring of teleport control.
-    if (check_ring_TC)
-        maybe_id_ring_TC();
 
 #ifdef USE_TILE
     if (you.species == SP_MERFOLK)
@@ -507,12 +501,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     coord_def pos(1, 0);
     const coord_def old_pos = you.pos();
     bool      large_change  = false;
-    bool      check_ring_TC = false;
 
     if (is_controlled)
     {
-        check_ring_TC = true;
-
         // Only have the messages and the more prompt for non-wizard.
         if (!wizard_tele)
         {
@@ -553,7 +544,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 }
                 if (!wizard_tele)
                     contaminate_player(1, true);
-                maybe_id_ring_TC();
                 return false;
             }
 
@@ -693,7 +683,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         move_player_to_grid(newpos, false, true);
     }
 
-    _handle_teleport_update(large_change, check_ring_TC, old_pos);
+    _handle_teleport_update(large_change, old_pos);
     return (!is_controlled);
 }
 
@@ -710,7 +700,6 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     //      then teleport the player there.
     //   4. If not, give up and return false.
 
-    bool check_ring_TC = false;
     const coord_def old_pos = you.pos();
     coord_def where = where_to;
     coord_def old_where = where_to;
@@ -762,7 +751,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     move_player_to_grid(where, false, true);
 
-    _handle_teleport_update(large_change, check_ring_TC, old_pos);
+    _handle_teleport_update(large_change, old_pos);
     return true;
 }
 

@@ -249,6 +249,7 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_FLIGHT, "Evoke Flight", 1, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_FOG, "Evoke Fog", 2, 0, 250, 0, 0, ABFLAG_NONE},
+    { ABIL_EVOKE_TELEPORT_CONTROL, "Evoke Teleport Control", 4, 0, 200, 0, 0, ABFLAG_NONE},
 
     { ABIL_END_TRANSFORMATION, "End Transformation", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -1050,6 +1051,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_FOG:
+    case ABIL_EVOKE_TELEPORT_CONTROL:
         failure = 50 - you.skill(SK_EVOCATIONS, 2);
         break;
         // end item abilities - some possibly mutagenic {dlb}
@@ -2180,6 +2182,10 @@ static bool _do_ability(const ability_def& abil)
         big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
+    case ABIL_EVOKE_TELEPORT_CONTROL:
+        cast_teleport_control(30 + you.skill(SK_EVOCATIONS, 2), false);
+        break;
+
     case ABIL_STOP_FLYING:
         you.duration[DUR_FLIGHT] = 0;
         you.attribute[ATTR_PERM_FLIGHT] = 0;
@@ -3247,6 +3253,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         {
             _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
         }
+
+        if (you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL))
+            _add_talent(talents, ABIL_EVOKE_TELEPORT_CONTROL, check_confused);
     }
 
     // Find hotkeys for the non-hotkeyed talents.
