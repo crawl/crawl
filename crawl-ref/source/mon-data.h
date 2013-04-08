@@ -2062,9 +2062,7 @@ static monsterentry mondata[] = {
     600, 10, MONS_SNAPPING_TURTLE, MONS_SNAPPING_TURTLE, MH_NATURAL, -3,
     { {AT_BITE, AF_REACH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 6, 0 },
-    // XXX: Will be Z_SMALL, but is Z_BIG until code for zombie spawns
-    // is no longer based on zombie size.
-    16, 5, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_HISS,
+    16, 5, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS,
     I_REPTILE, HT_AMPHIBIOUS, FL_NONE, 9, {10, 6, 8, 8, 8, 8, 8, 80},
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -2404,9 +2402,7 @@ static monsterentry mondata[] = {
     300, 10, MONS_MOTH, MONS_MOTH_OF_WRATH, MH_NATURAL, -3,
     { {AT_BITE, AF_RAGE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 3, 5, 0 },
-    // XXX: Will be Z_SMALL, but is Z_NOZOMBIE until code for zombie
-    // spawns is no longer based on zombie size.
-    0, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT,
+    0, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT,
     I_INSECT, HT_LAND, FL_WINGED, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
@@ -3198,9 +3194,7 @@ static monsterentry mondata[] = {
     900, 10, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 35}, {AT_GORE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
     { 13, 3, 5, 0 },
-    // XXX: Will be Z_SMALL, but is Z_BIG until code for zombie spawns
-    // is no longer based on zombie size.
-    5, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_BELLOW,
+    5, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_BELLOW,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -3239,9 +3233,7 @@ static monsterentry mondata[] = {
     { {AT_CLAW, AF_PLAIN, 19}, {AT_CLAW, AF_STEAL_FOOD, 14}, AT_NO_ATK,
        AT_NO_ATK },
     { 7, 3, 5, 0 },
-    // XXX: Will be Z_SMALL, but is Z_BIG until code for zombie spawns
-    // is no longer based on zombie size.
-    2, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SCREECH,
+    2, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SCREECH,
     I_NORMAL, HT_LAND, FL_WINGED, 25, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_FOOD, SIZE_MEDIUM
 },
