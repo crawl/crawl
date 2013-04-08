@@ -1245,6 +1245,11 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.temp_mutations[j]);
     }
 
+#if TAG_MAJOR_VERSION == 34
+    if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
+        you.mutation[MUT_TELEPORT_CONTROL] = 0;
+#endif
+
     marshallByte(th, you.demonic_traits.size());
     for (j = 0; j < int(you.demonic_traits.size()); ++j)
     {

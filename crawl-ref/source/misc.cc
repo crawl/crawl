@@ -2621,11 +2621,8 @@ static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
 // AutoID an equipped ring of teleport.
 void maybe_id_ring_TC()
 {
-    if (you.duration[DUR_CONTROL_TELEPORT]
-        || player_mutation_level(MUT_TELEPORT_CONTROL))
-    {
+    if (you.duration[DUR_CONTROL_TELEPORT])
         return;
-    }
 
     _maybe_id_jewel(RING_TELEPORT_CONTROL);
 }
