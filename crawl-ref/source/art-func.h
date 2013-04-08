@@ -472,7 +472,8 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
-        make_hungry(4500, false, false);
+        if (!unmeld)
+            make_hungry(4500, false, false);
     }
     else if (you.species == SP_VAMPIRE)
         _equip_mpr(show_msgs, "You feel a bloodthirsty glee!");
