@@ -92,18 +92,16 @@ static bool _build_level_vetoable(bool enable_random_maps,
 static void _build_dungeon_level(dungeon_feature_type dest_stairs_type);
 static bool _valid_dungeon_level();
 
-static void _builder_by_type();
-static void _builder_normal();
+static bool _builder_by_type();
+static bool _builder_normal();
 static void _builder_items();
 static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
-static void _place_specific_stair(dungeon_feature_type stair,
-                                  const string &tag = "");
 static void _place_spec_shop(const coord_def& where,
                              shop_spec* spec, bool representative = false);
 static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
                                  int charges = 0);
-static void _place_branch_entrances();
+static void _place_branch_entrances(bool use_vaults);
 static void _place_extra_vaults();
 static void _place_chance_vaults();
 static void _place_minivaults(void);
@@ -2235,7 +2233,7 @@ static void _place_item_mimics()
 
 static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 {
-    _builder_by_type();
+    bool place_vaults = _builder_by_type();
 
     if (player_in_branch(BRANCH_LABYRINTH))
         return;
@@ -2276,10 +2274,18 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     // no guarantees, seeing this is a minivault.
     if (crawl_state.game_standard_levelgen())
     {
-        _place_chance_vaults();
-        _place_minivaults();
-        _place_branch_entrances();
-        _place_extra_vaults();
+        if (place_vaults)
+        {
+            // Moved branch entries to place first so there's a good
+            // chance of having room for a vault
+            _place_branch_entrances(true);
+            _place_chance_vaults();
+            _place_minivaults();
+            _place_extra_vaults();
+        }
+        else
+            // Place any branch entries vaultlessly
+            _place_branch_entrances(false);
 
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
@@ -2457,7 +2463,7 @@ static void _prepare_water()
     }
 }
 
-static void _pan_level()
+static bool _pan_level()
 {
     const char *pandemon_level_names[] =
         { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
@@ -2494,6 +2500,7 @@ static void _pan_level()
         ASSERT(vault);
 
         _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+        return (vault->orient != MAP_ENCOMPASS);
     }
     else
     {
@@ -2501,7 +2508,10 @@ static void _pan_level()
         ASSERT(vault);
 
         if (vault->orient == MAP_ENCOMPASS)
+        {
             _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+            return false;
+        }
         else
         {
             const map_def *layout;
@@ -2513,25 +2523,37 @@ static void _pan_level()
 
             dgn_check_connectivity = true;
             _build_secondary_vault(vault);
+            return true;
         }
     }
 }
 
-static void _builder_by_type()
+// Returns true if we want the dungeon builder
+// to place more vaults after this
+static bool _builder_by_type()
 {
     if (player_in_branch(BRANCH_LABYRINTH))
+    {
         dgn_build_labyrinth_level();
+        // Labs placed their minivaults already
+        return false;
+    }
     else if (player_in_branch(BRANCH_ABYSS))
+    {
         generate_abyss();
+        // Should place some vaults in abyss because
+        // there's never an encompass vault
+        return true;
+    }
     else if (player_in_branch(BRANCH_PANDEMONIUM))
     {
         // Generate a random monster table for Pan.
         init_pandemonium();
         setup_vault_mon_list();
-        _pan_level();
+        return _pan_level();
     }
     else
-        _builder_normal();
+        return _builder_normal();
 }
 
 static const map_def *_dgn_random_map_for_place(bool minivault)
@@ -2974,7 +2996,7 @@ static void _place_minivaults(void)
     }
 }
 
-static void _builder_normal()
+static bool _builder_normal()
 {
     const map_def *vault = _dgn_random_map_for_place(false);
 
@@ -2982,7 +3004,9 @@ static void _builder_normal()
     {
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
-        return;
+        // Only place subsequent random vaults on non-encompass maps
+        // and not at the branch end
+        return (vault->orient != MAP_ENCOMPASS);
     }
 
     if (use_random_maps)
@@ -2996,7 +3020,9 @@ static void _builder_normal()
     {
         env.level_build_method += " random_map_in_depth";
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
-        return;
+        // Only place subsequent random vaults on non-encompass maps
+        // and not at the branch end
+        return (vault->orient != MAP_ENCOMPASS);
     }
 
     vault = random_map_for_tag("layout", true, true);
@@ -3005,6 +3031,7 @@ static void _builder_normal()
         die("Couldn't pick a layout.");
 
     _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
+    return true;
 }
 
 // Used to nuke shafts placed in corridors on low levels - it's just
@@ -3257,17 +3284,10 @@ static bool _place_vault_by_tag(const string &tag)
     const map_def *vault = random_map_for_tag(tag, true);
     if (!vault)
         return false;
-
     return _build_secondary_vault(vault);
 }
 
-static void _place_specific_stair(dungeon_feature_type stair, const string &tag)
-{
-    if (tag.empty() || !_place_vault_by_tag(tag))
-        _place_specific_feature(stair);
-}
-
-static void _place_branch_entrances()
+static void _place_branch_entrances(bool use_vaults)
 {
     // Find what branch entrances are already placed, and what branch
     // entrances (or mimics thereof) could be placed here.
@@ -3325,14 +3345,24 @@ static void _place_branch_entrances()
             && player_in_branch(b->parent_branch)
             && (you.depth == startdepth[i] || mimic))
         {
-            // Place a stair.
+            // Placing a stair.
             dprf("Placing stair to %s", b->shortname);
 
-            string entry_tag = string(b->abbrevname);
-            entry_tag += "_entry";
-            lowercase(entry_tag);
+            // Attempt to place an entry vault if allowed
+            if (use_vaults)
+            {
+                string entry_tag = string(b->abbrevname);
+                entry_tag += "_entry";
+                lowercase(entry_tag);
 
-            _place_specific_stair(b->entry_stairs, entry_tag);
+                if (_place_vault_by_tag(entry_tag))
+                    return;
+            }
+
+            // Otherwise place a single stair feature
+            const coord_def stair_pos = _place_specific_feature(b->entry_stairs);
+            // Don't allow subsequent vaults to overwrite the branch stair
+            env.level_map_mask(stair_pos) |= MMT_VAULT;
         }
     }
 }
