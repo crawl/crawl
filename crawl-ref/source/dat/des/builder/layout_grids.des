@@ -111,7 +111,7 @@
 }}
 
 NAME:   layout_big_grid
-DEPTH:  D, Lair
+DEPTH:  D:10-, Lair
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
@@ -141,7 +141,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 }}
 
 NAME:   layout_small_grid
-DEPTH:  Dis, D, Lair
+DEPTH:  Dis, D:5-, Lair
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
@@ -198,7 +198,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
     jitter = false,
   }
 
-  -- In D, for fairness, allow some corridors
+  -- In D, for fairness, allow some narrow corridors (sometimes in Lair)
   if you.in_branch("D")
     or (you.in_branch("lair") and size>1 and crawl.one_chance_in(3)) then
     paint_opts.corridor_width = 1
