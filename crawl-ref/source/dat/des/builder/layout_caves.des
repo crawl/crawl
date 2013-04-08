@@ -456,7 +456,6 @@ ENDMAP
 NAME:   layout_ice_bergs
 DEPTH:  Coc
 CHANCE: 100%
-WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand chance_cocytus
 {{
