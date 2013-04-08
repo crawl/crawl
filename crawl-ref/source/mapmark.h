@@ -193,7 +193,7 @@ public:
                     dungeon_feature_type oldfeat = DNGN_FLOOR,
                     dungeon_feature_type newfeat = DNGN_FLOOR,
                     int dur = 0, terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                    int mnum = MONS_NO_MONSTER);
+                    int mnum = 0);
 
     void write (writer &) const;
     void read (reader &);
