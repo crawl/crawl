@@ -1652,6 +1652,7 @@ ENDMAP
 NAME:    hangedman_pleasuredromes
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  encompass
+PLACE:   D:$
 DEPTH:   D:16-27
 MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
          mottled dragon / swamp drake w:3 / boulder beetle w:5 / \
