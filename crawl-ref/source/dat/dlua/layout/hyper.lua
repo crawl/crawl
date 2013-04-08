@@ -20,6 +20,7 @@ require("dlua/layout/hyper_strategy.lua")
 require("dlua/layout/hyper_rooms.lua")
 require("dlua/layout/hyper_shapes.lua")
 require("dlua/layout/hyper_decor.lua")
+require("dlua/layout/rooms_primitive.lua")
 require("dlua/layout/hyper_debug.lua")
 require("dlua/profiler.lua")
 
