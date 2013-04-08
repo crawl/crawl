@@ -92,6 +92,8 @@ void timeout_malign_gateways(int duration);
 
 void timeout_door_seals(int duration, bool force = false);
 
+void timeout_terrain_changes(int duration, bool force = false);
+
 void setup_environment_effects();
 
 // Lava smokes, swamp water mists.

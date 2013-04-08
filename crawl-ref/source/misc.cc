@@ -2036,6 +2036,30 @@ void timeout_door_seals(int duration, bool force)
         mpr("The seal upon the door fades away.");
 }
 
+void timeout_terrain_changes(int duration, bool force)
+{
+    if (!duration && !force)
+        return;
+
+    vector<map_marker*> markers = env.markers.get_all(MAT_TERRAIN_CHANGE);
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+        if (marker->duration != INFINITE_DURATION)
+            marker->duration -= duration;
+
+        monster* mon_src = monster_by_mid(marker->mon_num);
+        if (marker->duration <= 0
+            || (marker->mon_num != 0 && (!mon_src || !mon_src->alive())))
+        {
+            revert_terrain_change(marker->pos, marker->change_type);
+        }
+    }
+}
+
 void bring_to_safety()
 {
     if (player_in_branch(BRANCH_ABYSS))
@@ -2248,6 +2272,7 @@ void run_environment_effects()
     timeout_malign_gateways(you.time_taken);
     timeout_phoenix_markers(you.time_taken);
     timeout_door_seals(you.time_taken);
+    timeout_terrain_changes(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)
