@@ -577,8 +577,8 @@ void check_map_validity()
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
-        ASSERT(feat > DNGN_UNSEEN);
-        ASSERT(feat < NUM_FEATURES);
+        if (feat <= DNGN_UNSEEN || feat >= NUM_FEATURES)
+            die("invalid feature %d at (%d,%d)", feat, ri->x, ri->y);
         const char *name = dungeon_feature_name(feat);
         ASSERT(name);
         ASSERT(*name); // placeholders get empty names
