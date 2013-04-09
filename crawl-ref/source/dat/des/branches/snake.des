@@ -982,3 +982,52 @@ cc15cccww6wnn666nnw6wwccc51cc
           ccc===ccc
           cc..@..cc
 ENDMAP
+
+################################################################################
+
+NAME:   grunt_snake_rune_serpentine_throne
+PLACE:  Snake:$
+ORIENT: north
+KMONS:  L = Lamia band
+KITEM:  O = serpentine rune of Zot
+KFEAT:  A = altar_okawaru / altar_makhleb / altar_trog
+MONS:   greater naga / naga warrior w:5 / naga mage w:5
+MONS:   naga warrior / naga, naga mage / naga, naga / nothing
+MONS:   anaconda / guardian serpent
+veto {{ return you.uniques("Lamia") }}
+MAP
+     ccccccc
+   ccc..O..ccc
+  cc4.3...3.4cc
+  c..1.ccc.1..c
+ cc.3.cc.cc.3.cc
+ c...cc._.cc...c
+cc......L......cc
+c..5..G...G..5..c
+c..T.2.1.1.2.T..c
+c...3.G...G.3...c
+c..4.2.1.1.2.4..c
+c.4.3.G...G.3.4.c
+c..4T2.1.1.2T4..c
+c.4.3.G...G.3.4.c
+c..4.2.1.1.2.4..c
+c...3.G...G.3...c
+cc.T.2.....2.T.cc
+ c....G.5.G....c
+ cc.5..5.5..5.cc
+  c.....T.....c
+  cc..4...4..cc
+   ccc.4.4.ccc
+     cc...ccxx
+     x.......xx
+     xx....5..xx
+      xxxx...4.xx
+         xxx3.1.x
+   xxxxxxxx..2.4x
+ xxx...5.5....3xx
+xx.4....5....xxx
+x.1.3xxxxxxxxx
+x4.2........xx
+xx3..........x
+ xxxxxxx..@..xx
+ENDMAP

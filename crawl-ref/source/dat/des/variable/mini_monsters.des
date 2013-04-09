@@ -4702,6 +4702,64 @@ xxx....G....xxx
     xx.@.xx
 ENDMAP
 
+NAME:    grunt_ministairs_13
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+MAP
+   @         @
+ xx+xx     xx+xx
+ x...xxx xxx...x
+@+.G...xxx...G.+@
+ x.............x
+ xxx....{....xxx
+   xxx.....xxx
+     xx.G.xx
+   xxx.....xxx
+ xxx....(....xxx
+ x.............x
+@+.G...xxx...G.+@
+ x...xxx xxx...x
+ xx+xx     xx+xx
+   @         @
+ENDMAP
+
+NAME:    grunt_ministairs_14
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, false)
+MAP
+      @
+     xxx
+     x.xx
+xxxxxx..xx
+x........xx
+x.{...G...+@
+x........xx
+xxxxxx..xx
+     x.xx
+     x+x
+      @
+ENDMAP
+
+NAME:    grunt_ministairs_15
+TAGS:    extra transparent allow_dup luniq_grunt_ministairs
+DEPTH:   D, !D:1, Zot, Snake, Elf, Crypt
+: grunt_ministairs_setup(_G, true)
+MAP
+     @     @
+    x+x   x+x
+   xx.x   x.xx
+  xx..xxxxx..xx
+ xx...........xx
+@+...G..{..G...+@
+ xx...........xx
+  xx..xxxxx..xx
+   xx.x   x.xx
+    x+x   x+x
+     @     @
+ENDMAP
+
 NAME:    hangedman_minor_gate_pass
 TAGS:    transparent
 DEPTH:   D:4-9
