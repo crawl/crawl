@@ -2871,44 +2871,38 @@ bool recruit_mercenary(int mid)
 static void _alchemist_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    int gold_used = min(you.gold, random2avg(100, 2) * (1 + power_level));
-    bool done_stuff = false;
+    const int orig_gold = you.gold;
+    int gold_available = min(you.gold, random2avg(100, 2) * (1 + power_level));
 
-    you.del_gold(gold_used);
-    dprf("%d gold available to spend.", gold_used);
+    you.del_gold(gold_available);
+    dprf("%d gold available to spend.", gold_available);
 
-    // Spend some gold to regain health
-    int hp = min(gold_used / 3, you.hp_max - you.hp);
+    // Spend some gold to regain health.
+    int hp = min(gold_available / 3, you.hp_max - you.hp);
     if (hp > 0)
     {
         inc_hp(hp);
-        gold_used -= hp * 2;
-        done_stuff = true;
+        gold_available -= hp * 2;
         mpr("You feel better.");
-        dprf("Gained %d health, %d gold remaining.", hp, gold_used);
+        dprf("Gained %d health, %d gold remaining.", hp, gold_available);
     }
-
-    // Maybe spend some more gold to regain magic
-    if (x_chance_in_y(power_level + 1, 5))
+    // Maybe spend some more gold to regain magic.
+    int mp = min(gold_available / 5, you.max_magic_points - you.magic_points);
+    if (mp > 0 && x_chance_in_y(power_level + 1, 5))
     {
-        int mp = min(gold_used / 5, you.max_magic_points - you.magic_points);
-        if (mp > 0)
-        {
-            inc_mp(mp);
-            gold_used -= mp * 5;
-            done_stuff = true;
-            mpr("You feel your power returning.");
-            dprf("Gained %d magic, %d gold remaining.", mp, gold_used);
-        }
+        inc_mp(mp);
+        gold_available -= mp * 5;
+        mpr("You feel your power returning.");
+        dprf("Gained %d magic, %d gold remaining.", mp, gold_available);
     }
 
-    if (done_stuff)
-        mpr("Some of your gold vanishes!");
+    // Add back any remaining gold.
+    you.add_gold(gold_available);
+    const int gold_used = orig_gold - you.gold;
+    if (gold_used > 0)
+        mprf("%d of your gold pieces vanish!", gold_used);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
-
-    // Add back any remaining gold
-    you.add_gold(gold_used);
 }
 
 static int _card_power(deck_rarity_type rarity)
