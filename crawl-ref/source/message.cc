@@ -1529,7 +1529,7 @@ void clear_message_store()
     buffer.clear();
 }
 
-string get_last_messages(int mcount)
+string get_last_messages(int mcount, bool full)
 {
     flush_prev_message();
 
@@ -1543,11 +1543,9 @@ string get_last_messages(int mcount)
         const message_item msg = msgs[i];
         if (!msg)
             break;
-        if (is_channel_dumpworthy(msg.channel))
-        {
+        if (full || is_channel_dumpworthy(msg.channel))
             text = msg.pure_text() + "\n" + text;
-            mcount--;
-        }
+        mcount--;
     }
 
     // An extra line of clearance.

@@ -675,7 +675,7 @@ void do_crash_dump()
     {
         fprintf(file, "\nMessages:\n");
         fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
-        string messages = get_last_messages(NUM_STORED_MESSAGES);
+        string messages = get_last_messages(NUM_STORED_MESSAGES, true);
         fprintf(file, "%s", messages.c_str());
         fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
     }
