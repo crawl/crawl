@@ -602,7 +602,7 @@ void game_options::set_activity_interrupt(
         FixedBitVector<NUM_AINTERRUPTS> &refints =
             activity_interrupts[delay];
 
-        refints |= eints;
+        eints |= refints;
         return;
     }
 
