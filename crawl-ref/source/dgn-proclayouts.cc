@@ -291,7 +291,7 @@ ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
     worley::noise_datum fn = tfunc.datum(p.x,p.y,offset);
 
     // Split the id into some 8-bit numbers to use for randomness
-    uint8_t rand[2] = { fn.id[0] >> 24, fn.id[0] >> 16 & 0x000000ff };
+    uint8_t rand[2] = { (uint8_t)(fn.id[0] >> 24), (uint8_t)(fn.id[0] >> 16) };
         // , fn.id[0] >> 8 & 0x000000ff, fn.id[0] & 0x000000ff };
 
     double diff = fn.distance[1]-fn.distance[0];
