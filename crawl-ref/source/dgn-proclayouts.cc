@@ -290,28 +290,31 @@ ForestLayout::operator()(const coord_def &p, const uint32_t offset) const
 
     worley::noise_datum fn = tfunc.datum(p.x,p.y,offset);
 
-    // Split the id into four 8-bit numbers to use for randomness
-    uint16_t rand[4] = { fn.id[0] >> 24, fn.id[0] >> 16 & 0x000000ff, fn.id[0] >> 8 & 0x000000ff, fn.id[0] & 0x000000ff };
+    // Split the id into some 8-bit numbers to use for randomness
+    uint8_t rand[2] = { fn.id[0] >> 24, fn.id[0] >> 16 & 0x000000ff };
+        // , fn.id[0] >> 8 & 0x000000ff, fn.id[0] & 0x000000ff };
 
     double diff = fn.distance[1]-fn.distance[0];
-    // 50% chance of trees
-    if (rand[0]<0x80)
+    float size_factor = (float)rand[1]/(255.0 * 2.0) + 0.15;
+    // 75% chance of trees
+    if (rand[0]<0xC0)
     {
-        if (diff > 0.3)
+        // Size of clump depends on factor
+        if (diff > size_factor)
             feat = DNGN_TREE;
     }
     // Small chance of henge
-    else if (rand[0]<0x90)
+    else if (rand[0]<0xC8)
     {
-        if (diff > 0.5 && diff < 0.6)
+        if (diff > (size_factor+0.3) && diff < (size_factor+0.4))
             feat = DNGN_STONE_ARCH;
     }
     // Somewhat under 25% chance of pool
-    else if (rand[0]<0xC0)
+    else if (rand[0]<0xE0)
     {
-        if (diff > 0.8)
+        if (diff > size_factor*2.0)
             feat = DNGN_DEEP_WATER;
-        else if (diff > 0.4)
+        else if (diff > size_factor)
             feat = DNGN_SHALLOW_WATER;
     }
     // 25% chance of empty cell
