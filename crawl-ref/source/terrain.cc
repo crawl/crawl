@@ -1685,9 +1685,9 @@ void nuke_wall(const coord_def& p)
 
     remove_mold(p);
 
-    grd(p) = (grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    revert_terrain_to(p, ((grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER
+                                                    : DNGN_FLOOR));
     env.level_map_mask(p) |= MMT_NUKED;
-    set_terrain_changed(p);
 }
 
 /*
