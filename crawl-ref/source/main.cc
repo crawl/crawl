@@ -238,7 +238,7 @@ static void _handle_wizard_command(void);
 
 #ifdef USE_SDL
 # include <SDL_main.h>
-# ifdef __GNUC__
+# if defined(__GNUC__) && !defined(__clang__)
 // SDL plays nasty tricks with main() (actually, _SDL_main()), which for
 // Windows builds somehow fail with -fwhole-program.  Thus, exempt SDL_main()
 // from this treatment.
