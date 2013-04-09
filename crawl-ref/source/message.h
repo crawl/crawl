@@ -110,7 +110,7 @@ void replay_messages();
 
 void set_more_autoclear(bool on);
 
-string get_last_messages(int mcount);
+string get_last_messages(int mcount, bool full = false);
 void get_recent_messages(vector<string> &messages,
                          vector<msg_channel_type> &channels);
 
