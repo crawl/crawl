@@ -1517,27 +1517,27 @@ KMONS:   e = rotting hulk / necrophage w:5
 KMONS:   F = necromancer
 KMONS:   f = zombie / skeleton / hell knight w:2
 KMONS:   H = lich
-KMONS:   h = phantasmal warrior / freezing wraith / shadow wraith / wraith
 KMONS:   I = ancient lich
-KMONS:   i = phantasmal warrior / freezing wraith / shadow wraith / wraith
+KMONS:   hi = phantasmal warrior / freezing wraith / shadow wraith / wraith
 KMONS:   J = deep dwarf death knight
 KMONS:   j = death cob / skeletal warrior / flayed ghost / flaming corpse
 KMONS:   K = skeletal warrior col:gold name:ancient_champion n_rpl n_des \
+             tile:mons_ancient_champion \
              spells:iron_shot;.;haste;pain;.;. \
              spells:bolt_of_draining;.;haste;throw_frost;.;. \
              spells:venom_bolt;.;haste;haunt;.;. \
-             spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells
+             spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells ; \
+             plate armour good_item . \
+             great sword good_item | great mace good_item | battleaxe good_item
 KMONS:   k = skeletal warrior
 KMONS:   L = deep elf death mage
 KMONS:   l = large abomination w:2 / small abomination
 KMONS:   3 = curse skull
-KMONS:   4 = nothing
 KMONS:   5 = unborn deep dwarf
 KMONS:   6 = deep dwarf necromancer w:2 / deep dwarf scion w:5 / deep dwarf
 KMONS:   7 = profane servitor
-KMONS:   8 = nothing
 KMONS:   9 = bone dragon
-KMONS:   0 = nothing
+KMONS:   480 = nothing
 KMONS:   M = greater mummy
 KMONS:   N = mummy priest
 KMONS:   O = guardian mummy

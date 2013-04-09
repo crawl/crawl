@@ -1676,8 +1676,8 @@ MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
          dire elephant simulacrum w:1 / dancing weapon ; long sword good_item
 MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
          glowing shapeshifter hd:11 w:30 / glowing shapeshifter hd:12 w:15 / \
-         azure jelly / starcursed mass / tentacled starspawn /  \
-         iron elemental w:5 / dancing weapon w:15 ; glaive good_item
+         azure jelly / iron elemental w:5 / \
+         dancing weapon w:15 ; glaive good_item
 MONS:    centaur warrior / yaktaur w:5 / orc knight / \
          deep elf conjurer / deep troll / boggart w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \

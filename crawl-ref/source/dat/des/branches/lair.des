@@ -2453,13 +2453,10 @@ SHUFFLE: 567
 SUBST:   C = cx..
 SUBST:   P = P:19 t:1
 NSUBST:  % = 2:| / 3:* / *:%
+NSUBST:  5 = 2:5 / 3 = 5. / *:.
+NSUBST:  6 = 3:6 / 4 = 6. / *:.
+NSUBST:  7 = 1:7 / 2 = 7. / *:.
 {{
-  local elephantsize = 2 + crawl.random2(4)
-  local wolfsize = 3 + crawl.random2(5)
-  local bearsize = 1 + crawl.random2(3)
-  nsubst("5 = " .. elephantsize .. ":5 / *:.")
-  nsubst("6 = " .. wolfsize .. ":6 / *:.")
-  nsubst("7 = " .. bearsize .. ":7 / *:.")
   dgn.delayed_decay(_G, 'd', "human skeleton / orc skeleton / elf skeleton"
                              .. " / dwarf skeleton / ogre skeleton w:1"
                              .. " / naga skeleton w:1 / minotaur skeleton w:1"
