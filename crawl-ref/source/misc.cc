@@ -2668,6 +2668,7 @@ void maybe_id_resist(beam_type flavour)
 
     case BEAM_POISON:
     case BEAM_POISON_ARROW:
+    case BEAM_MEPHITIC:
         if (player_res_poison(false))
             return;
         _maybe_id_jewel(RING_POISON_RESISTANCE, NUM_JEWELLERY, ARTP_POISON);
