@@ -74,6 +74,12 @@ function castle_lemuel_subvault_setup(e)
             e.mons("plant / w:1 oklob plant")
         end
         e.mons("plant")
+        if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+            e.kfeat("3 = enter_zot")
+            -- Ugly hack to get around kfeat overwriting the mons definition.
+            e.kmons("3 = red draconian scorcher / white draconian zealot"
+                    .. " / yellow draconian caller / black draconian shifter")
+        end
 end
 }}
 
@@ -164,6 +170,7 @@ ENDMAP
 ############################################################################
 NAME:     lemuel_castle_with_subvaults
 DEPTH:    D:3-27
+PLACE:    D:27
 ORIENT:   northwest
 : castle_lemuel_subvault_setup(_G)
 SUBVAULT: A : lemuel_castle_interior
