@@ -1025,15 +1025,18 @@ int actor_apply_cloud(actor *act)
     const cloud_struct &cloud(env.cloud[cl]);
     const bool player = act->is_player();
     monster *mons = !player? act->as_monster() : NULL;
+    const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (_actor_cloud_immune(act, cloud))
+    {
+        maybe_id_resist(cloud_flavour);
         return 0;
+    }
 
     const int resist = _actor_cloud_resist(act, cloud);
     const int cloud_max_base_damage =
         _actor_cloud_base_damage(act, cloud, resist, true);
     const int final_damage = _actor_cloud_damage(act, cloud, false);
-    const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (player || final_damage > 0
         || _cloud_has_negative_side_effects(cloud.type))
