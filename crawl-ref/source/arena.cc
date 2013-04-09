@@ -15,7 +15,6 @@
 #include "externs.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
-#include "l_defs.h"
 #include "libutil.h"
 #include "los.h"
 #include "macro.h"
@@ -34,6 +33,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
