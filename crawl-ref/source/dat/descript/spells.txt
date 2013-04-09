@@ -145,8 +145,11 @@ This spell creates a column of roaring flame.
 %%%%
 Control Teleport spell
 
-This spell allows the caster to control translocations. Be wary that controlled
-teleports will cause the subject to become contaminated with magical energy.
+This spell allows the caster to control their next translocation - either
+by selecting an approximate target for a teleport, or by selecting a direction
+for a blink. Be wary that controlled translocations will cause the subject to
+become contaminated with magical energy, and that controlled teleports will
+take longer to trigger than uncontrolled ones.
 %%%%
 Control Undead spell
 

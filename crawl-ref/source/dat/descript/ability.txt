@@ -133,9 +133,11 @@ Release a thick cloud of fog to obscure vision.
 %%%%
 Evoke Teleport Control
 
-Gain the ability to to control translocations for a duration. Be wary that
-controlled teleports will cause the subject to become contaminated with magical
-energy.
+Gain the ability to control your next translocation - either by selecting an
+approximate target for a teleport, or by selecting a direction for a blink. Be
+wary that controlled translocations will cause the subject to become
+contaminated with magical energy, and that controlled teleports will take
+longer to trigger than uncontrolled ones.
 %%%%
 End Transformation
 
