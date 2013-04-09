@@ -105,7 +105,7 @@ function zonify.map_map(e)
 
   -- TODO: Are there mapgrid function to check solidity after SUBST etc.?
   local floor = ".W+"
-  local wall = "wlxcv"
+  -- local wall = "wlxcvt"
 
   -- TODO: Can we check size of current map after extend_map?
   local gxm,gym = dgn.max_bounds()
@@ -115,7 +115,7 @@ function zonify.map_map(e)
       return dgn.in_bounds(x,y) and { glyph = e.mapgrd[x][y] } or nil
     end,
     function(val)
-      return string.find(wall,val.glyph,1,true) and "wall" or "floor"
+      return string.find(floor,val.glyph,1,true) and "floor" or "wall"
     end
   )
 
