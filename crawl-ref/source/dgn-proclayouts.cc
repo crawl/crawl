@@ -372,12 +372,12 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     // features like statues, fountains, plants, regularness, and even monsters/loot
     const static SimplexFunction func_rich(0.05,0.05,1,9.543,5.543,0,1);
 
-    // To create lots of lines everywhere that can often be perpendicular to other#
+    // To create lots of lines everywhere that can often be perpendicular to other
     // features; for creating bridges, dividing walls
-    // const static SimplexFunction func_lateral(4,4,1,2000.543,1414.823,0,2);
-    const static WorleyFunction func_lateral(2,2,1,2000.543,1414.823,0);
+    const static WorleyFunction func_lateral(0.2,0.2,1,2000.543,1414.823,0);
 
-    // Jitter needs to be completely random everywhere, so this can be used instead of normal random methods:
+    // Jitter needs to be completely random everywhere, so this can be used
+    // instead of normal random methods:
     // if (jitter < (chance_in_1)) { ... }
     const static SimplexFunction func_jitter(10,10,0.5,1123.543,2451.143,0,5);
 
@@ -393,46 +393,35 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     // TODO: The abyss doesn't support all of these yet but would be nice if:
     //  * Clusters of plants around water edge
     //  * Hot and wet areas are "tropical" with plants/trees/mangroves (and steam)
-    //  * Extremely hot or cold areas should generate fire or ice clouds respectively. If an "ice" feature were ever created this would be a good place for it.
-    //  * Wet cities have flooding, pools, fountains, aqueducts
+    //  * Extremely hot or cold areas should generate fire or ice clouds respectively.
+    //    If an "ice" feature were ever created this would be a good place for it.
+    //  * Wet cities have
     //  * City + water areas have lateral bridges
-    //  * Pave areas within city
-    //  * Borrow some easing functions from somewhere to better control how features vary across bounaries
-    //  * Look at surrounding squares to determine gradients - will help with lateral features and also e.g. growing plants on sunlit mountainsides...
+    //  * Borrow some easing functions from somewhere to better
+    //    control how features vary across bounaries
+    //  * Look at surrounding squares to determine gradients - will help
+    //    with lateral features and also e.g. growing plants on sunlit mountainsides...
     //  * Use some lateral wetness to try and join mountain streams up to rivers...
     //  * Petrified trees and other fun stuff in extreme temperatures
     //  * Cities - Make the decor more interesting, and choose fountain types based on wetness
     //  * Cities - Pave floor within wall limit
     //  * Cities - might sometimes want to modify the terrain based on what was here before the city.
-    //             e.g. if the city was built on water then there should be fountains, with lava we get furnaces, etc.
-
+    //             e.g. if the city was built on water then there should be fountains,
+    //             flooding, pools, aqueducts, with lava we get furnaces, etc.
     //  * Rather than basing all the factors purely on separate perlin layers,
     //    could combine some factors; e.g. cities thrive best at optimal combinations
     //    of wet, height and hot, so the city/rich factor could be based on how close to optimum those three are...
 
     // Factors controlling how the environment is mapped to terrain
-    /*
-    double dryness = ((1.0-wet)*0.5+0.5);
-    double water_depth = -0.8 * dryness;
-    double water_deep_depth = -0.9 * dryness;
-    */
-    double water_depth = 0.2 * wet; // 0.4,0.2
+    double water_depth = 0.2 * wet;
     double water_deep_depth = 0.07 * wet;
-    // Good values for mountains: 0.75/0.95
     double mountain_height = 0.8;
     double mountain_top_height = 0.95;
+
     // Default feature
     dungeon_feature_type feat = DNGN_FLOOR;
 
     // Lakes and rivers
-    /* TODO: height with a mul of 10  looked really nice with:
-    if (height<0.5)
-        feat = DNGN_SHALLOW_WATER;
-    if (height<0.3)
-        feat = DNGN_DEEP_WATER;
-    if (height>0.8)
-        feat = DNGN_ROCK_WALL;
-        (but I should implement that as a separate layout) */
     if (height < water_depth)
         feat = DNGN_SHALLOW_WATER;
     if (height < water_deep_depth)
@@ -450,25 +439,11 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
                 feat = DNGN_ROCK_WALL;
         }
     }
-    /*
-    if (wet > 0.9)
-    {
-        feat = DNGN_DEEP_WATER;
-        if (hot > 0.7)
-            feat = DNGN_LAVA;
-    }
-    else if (wet > 0.88)
-    {
-        feat = DNGN_SHALLOW_WATER;
-        if (hot > 0.7)
-            feat = DNGN_DEEP_WATER;
-    }
-    */
 
     // Forest
     bool enable_forest = true;
     // Forests fill an important gap in the middling height gap between water and mountainous regions
-    double forest_start_height = 0.43; // 0.3,0.7
+    double forest_start_height = 0.43;
     double forest_end_height = 0.57;
 
     if (enable_forest)
@@ -477,12 +452,7 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
         bool is_river = (abs(height-0.5) < (wet/10.0));
         if (is_river)
             feat = DNGN_SHALLOW_WATER;
-        // if (  0.4 < height < 0.6 && wet > 0.5)
-        /*
-        double forest = (height - forest_start_height) / (forest_end_height - forest_start_height);
-        forest = max(0.0,min(1.0,forest));
-        forest = 1.0 - 2.0 * abs(forest - 0.5);
-        */
+
         // Forests are somewhat finnicky about their conditions now
         double forest =
             _optimum_range(height, forest_start_height, forest_end_height)
@@ -490,9 +460,9 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
             * _optimum_range(hot, 0.4, 0.6);
 
         // Forest should now be 1.0 in the center of the range, 0.0 at the end
-        if (jitter < (forest * 0.7))
+        if (jitter < (forest * 0.5))
         {
-            if (is_river && jitter < forest / 2.0)
+            if (is_river)
             {
                 if (forest > 0.5 && wet > 0.5)
                     feat = DNGN_MANGROVE;
@@ -504,18 +474,16 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 
     // City
     double city_outer_limit = 0.4;
-    double city_wall_limit = 0.65; // 0.6
+    double city_wall_limit = 0.65;
     double city_wall_width = 0.05;
-    double city_inner_wall_limit = 0.8; // 0.8
+    double city_inner_wall_limit = 0.8;
     bool enable_city = true;
 
     // Cities become less likely at extreme heights and depths
-    // double extreme_proximity = max(0.0,abs(height-0.5)-0.25) * 4.0;
     double extreme_proximity = max(0.0,abs(height-0.5)-0.3) * 5.0;
     city = city * (1.0 - extreme_proximity);
 
     if (enable_city && city >= city_outer_limit) {
-        // feat = DNGN_FLOOR;
         dungeon_feature_type city_wall = DNGN_ROCK_WALL;
         if (rich > 0.5) city_wall = DNGN_STONE_WALL;
         else if (rich > 0.75) city_wall = DNGN_METAL_WALL;
@@ -526,14 +494,15 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
         if (jitter>0.7 && jitter<0.75) city_wall = DNGN_CLEAR_STONE_WALL;
 
         // Outer cloisters
-        /*
-        if (city < city_wall_limit) {
+        if (city < city_wall_limit)
+        {
             if ((lateral >= 0.3 && lateral < 0.4 || lateral >= 0.6 && lateral < 0.7)
                  || (lateral >= 0.4 && lateral < 0.6 && city < (city_outer_limit+city_wall_width)))
                 feat = city_wall;
             else if (lateral >= 0.4 && lateral < 0.6)
                 feat = DNGN_FLOOR;
-        }*/
+        }
+
         // Main outer wall
         if (city >= city_wall_limit)
         {
@@ -542,11 +511,6 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 
             if (city < (city_wall_limit + city_wall_width))
                 feat = city_wall;
-            /*
-            else if (city <= 0.7) {
-                if (lateral > 0.0 && lateral < 0.1 || lateral > 0.5 || lateral < 0.6)
-                    feat = city_wall;
-            }*/
             // Wall of inner halls
             else if (city >= city_inner_wall_limit)
             {
