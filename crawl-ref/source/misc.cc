@@ -2560,7 +2560,7 @@ void swap_with_monster(monster* mon_to_swap)
  */
 void wear_id_type(item_def &item)
 {
-    if (item_ident(item, ISFLAG_KNOW_TYPE))
+    if (item_type_known(item))
         return;
     set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
     set_ident_flags(item, ISFLAG_KNOW_TYPE);
