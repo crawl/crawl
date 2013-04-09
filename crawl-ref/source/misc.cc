@@ -1964,52 +1964,12 @@ void timeout_tombs(int duration)
     }
 }
 
-void timeout_door_seals(int duration, bool force)
-{
-    if (!duration && !force)
-        return;
-
-    vector<map_marker*> markers = env.markers.get_all(MAT_DOOR_SEAL);
-
-    int num_faded_seen = 0;
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        map_door_seal_marker *seal = dynamic_cast<map_door_seal_marker*>(markers[i]);
-
-        // If there is somehow no longer a sealed door at this location
-        // (for example, a monster opened it, or ate it, you blew it up)
-        // simply remove the marker silently
-        if (grd(seal->pos) != DNGN_SEALED_DOOR)
-        {
-            env.markers.remove(seal);
-            continue;
-        }
-
-        seal->duration -= duration;
-
-        monster* mon_src = monster_by_mid(seal->mon_num);
-        if (seal->duration <= 0 || !mon_src || !mon_src->alive() || mon_src->pacified())
-        {
-            grd(seal->pos) = seal->old_feature;
-            set_terrain_changed(seal->pos);
-            if (you.see_cell(seal->pos))
-                ++num_faded_seen;
-
-            env.markers.remove(seal);
-        }
-    }
-
-    if (num_faded_seen > 1)
-        mpr("The seals upon the doors fade away.");
-    else if (num_faded_seen > 0)
-        mpr("The seal upon the door fades away.");
-}
-
 void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)
         return;
+
+    int num_seen[NUM_TERRAIN_CHANGE_TYPES] = {0};
 
     vector<map_marker*> markers = env.markers.get_all(MAT_TERRAIN_CHANGE);
 
@@ -2023,11 +1983,19 @@ void timeout_terrain_changes(int duration, bool force)
 
         monster* mon_src = monster_by_mid(marker->mon_num);
         if (marker->duration <= 0
-            || (marker->mon_num != 0 && (!mon_src || !mon_src->alive())))
+            || (marker->mon_num != 0
+                && (!mon_src || !mon_src->alive() || mon_src->pacified())))
         {
+            if (you.see_cell(marker->pos))
+                num_seen[marker->change_type]++;
             revert_terrain_change(marker->pos, marker->change_type);
         }
     }
+
+    if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
+        mpr("The seals upon the doors fade away.");
+    else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
+        mpr("The seal upon the door fades away.");
 }
 
 void bring_to_safety()
@@ -2241,7 +2209,6 @@ void run_environment_effects()
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
     timeout_phoenix_markers(you.time_taken);
-    timeout_door_seals(you.time_taken);
     timeout_terrain_changes(you.time_taken);
 }
 
