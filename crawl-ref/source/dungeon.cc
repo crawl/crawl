@@ -3356,7 +3356,8 @@ static void _place_branch_entrances(bool use_vaults)
                 lowercase(entry_tag);
 
                 if (_place_vault_by_tag(entry_tag))
-                    return;
+                    // Placed this entrance, carry on to subsequent branches
+                    continue;
             }
 
             // Otherwise place a single stair feature
