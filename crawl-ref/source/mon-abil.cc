@@ -1701,15 +1701,8 @@ static bool _seal_doors(const monster* warden)
             for (set<coord_def>::const_iterator i = all_door.begin();
                  i != all_door.end(); ++i)
             {
-                map_door_seal_marker *sealmarker =
-                    new map_door_seal_marker(*i, seal_duration, warden->mid,
-                                             DNGN_CLOSED_DOOR);
-                env.markers.add(sealmarker);
-                env.markers.clear_need_activate();
-
-                grd(*i) = DNGN_SEALED_DOOR;
-                set_terrain_changed(*i);
-
+                temp_change_terrain(*i, DNGN_SEALED_DOOR, seal_duration,
+                                    TERRAIN_CHANGE_DOOR_SEAL, warden);
                 had_effect = true;
             }
         }

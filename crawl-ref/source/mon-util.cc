@@ -2890,7 +2890,7 @@ void mons_pacify(monster* mon, mon_attitude_type att)
     if (mons_is_kirke(mon))
         hogs_to_humans();
     if (mon->type == MONS_VAULT_WARDEN)
-        timeout_door_seals(0, true);
+        timeout_terrain_changes(0, true);
 
     mons_att_changed(mon);
 }

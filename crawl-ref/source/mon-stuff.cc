@@ -2412,7 +2412,7 @@ int monster_die(monster* mons, killer_type killer,
             phoenix_died(mons);
     }
     else if (mons->type == MONS_VAULT_WARDEN)
-        timeout_door_seals(0, true);
+        timeout_terrain_changes(0, true);
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())
