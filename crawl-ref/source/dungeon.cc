@@ -2281,11 +2281,14 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
             _place_branch_entrances(true);
             _place_chance_vaults();
             _place_minivaults();
-            _place_extra_vaults();
         }
         else
             // Place any branch entries vaultlessly
             _place_branch_entrances(false);
+
+        // Always place extra vaults - important things like Abyss
+        // entries are placed this way
+        _place_extra_vaults();
 
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
