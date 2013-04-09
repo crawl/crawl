@@ -545,8 +545,11 @@ void banished(const string &who)
     down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 
     // Xom just might decide to interfere.
-    if (you.religion == GOD_XOM && who != "Xom" && who != "wizard command")
+    if (you.religion == GOD_XOM && who != "Xom" && who != "wizard command"
+        && who != "a distortion unwield")
+    {
         xom_maybe_reverts_banishment(false, false);
+    }
 }
 
 bool forget_spell(void)
