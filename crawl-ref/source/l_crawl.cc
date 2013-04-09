@@ -672,6 +672,7 @@ LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_checkint(ls, 1),
                                                      luaL_checkint(ls, 2)))
 LUARET1(crawl_random_real, number, random_real())
 
+// Get the full worley noise datum for a given point
 static int crawl_worley(lua_State *ls)
 {
     double px = lua_tonumber(ls,1);
@@ -690,6 +691,41 @@ static int crawl_worley(lua_State *ls)
     lua_pushnumber(ls, n.pos[1][1]);
     lua_pushnumber(ls, n.pos[1][2]);
     return 10;
+}
+
+// Simpler return value for normal situations where we just
+// want the difference between the nearest point distances.
+// Also returns the id in case we want a per-node number.
+static int crawl_worley_diff(lua_State *ls)
+{
+    double px = lua_tonumber(ls,1);
+    double py = lua_tonumber(ls,2);
+    double pz = lua_tonumber(ls,3);
+
+    worley::noise_datum n = worley::noise(px,py,pz);
+    lua_pushnumber(ls, n.distance[1]-n.distance[0]);
+    lua_pushnumber(ls, n.id[0]);
+
+    return 2;
+}
+
+// Splits a 32-bit integer into four bytes. This is useful
+// in conjunction with worley ids to get four random numbers
+// instead of one from the current node id.
+static int crawl_split_bytes(lua_State *ls)
+{
+    uint32_t val = lua_tonumber(ls,1);
+    uint8_t bytes[4] = {
+        (uint8_t)(val >> 24),
+        (uint8_t)(val >> 16),
+        (uint8_t)(val >> 8),
+        (uint8_t)(val)
+    };
+    lua_pushnumber(ls, bytes[0]);
+    lua_pushnumber(ls, bytes[1]);
+    lua_pushnumber(ls, bytes[2]);
+    lua_pushnumber(ls, bytes[3]);
+    return 4;
 }
 
 // Supports 2D-4D Simplex noise. The first two parameters are required
@@ -976,7 +1012,10 @@ static const struct luaL_reg crawl_clib[] =
     { "div_rand_round", crawl_div_rand_round },
     { "random_real",    crawl_random_real },
     { "worley",         crawl_worley },
+    { "worley_diff",    crawl_worley_diff },
+    { "split_bytes",    crawl_split_bytes },
     { "simplex",        crawl_simplex },
+
     { "redraw_screen",  crawl_redraw_screen },
     { "c_input_line",   crawl_c_input_line},
     { "getch",          crawl_getch },
