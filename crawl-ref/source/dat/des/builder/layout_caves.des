@@ -11,7 +11,7 @@
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
 NAME:   layout_layer_cave
-DEPTH:  D:3-27,Lair,Snake
+DEPTH:  D:3-26,Lair,Snake
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
