@@ -1447,7 +1447,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // this for Boris here allows for multiple Borises in the dungeon at
     // the same time. - bwr
     if (mons_is_unique(mg.cls))
-        you.unique_creatures[mg.cls] = true;
+        you.unique_creatures.set(mg.cls);
 
     if (mons_class_flag(mg.cls, M_INVIS))
         mon->add_ench(ENCH_INVIS);

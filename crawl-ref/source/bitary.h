@@ -94,6 +94,13 @@ public:
             data[i] &= x.data[i];
         return *this;
     }
+
+    void init(bool value)
+    {
+        long fill = value ? ~(long)0 : 0;
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
+            data[i] = fill;
+    }
 };
 
 template <unsigned int SIZEX, unsigned int SIZEY> class FixedBitArray

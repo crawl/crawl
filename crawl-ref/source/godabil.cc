@@ -1299,7 +1299,7 @@ bool zin_remove_all_mutations()
         return false;
     }
 
-    you.one_time_ability_used[GOD_ZIN] = true;
+    you.one_time_ability_used.set(GOD_ZIN);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     simple_god_message(" draws all chaos from your body!");

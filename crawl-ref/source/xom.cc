@@ -2452,15 +2452,6 @@ static item_def* _tran_get_eq(equipment_type eq)
     return NULL;
 }
 
-// Which types of dungeon features are in view?
-static void _get_in_view(FixedVector<bool, NUM_FEATURES>& in_view)
-{
-    in_view.init(false);
-
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
-        in_view[grd(*ri)] = true;
-}
-
 static void _xom_zero_miscast()
 {
     vector<string> messages;
@@ -2483,8 +2474,9 @@ static void _xom_zero_miscast()
     ///////////////////////////////////
     // Dungeon feature dependent stuff.
 
-    FixedVector<bool, NUM_FEATURES> in_view;
-    _get_in_view(in_view);
+    FixedBitVector<NUM_FEATURES> in_view;
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+        in_view.set(grd(*ri));
 
     if (in_view[DNGN_LAVA])
         messages.push_back("The lava spits out sparks!");

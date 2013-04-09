@@ -823,7 +823,7 @@ void wizard_recreate_level()
         if (mons_is_unique(mi->type))
         {
             remove_unique_annotation(*mi);
-            you.unique_creatures[mi->type] = false;
+            you.unique_creatures.set(mi->type, false);
             mi->flags |= MF_TAKING_STAIRS; // no Abyss transit
         }
     }

@@ -1930,9 +1930,9 @@ static void tag_read_you(reader &th)
     for (i = count; i < NUM_EQUIP; ++i)
         you.equip[i] = -1;
     for (i = 0; i < count; ++i)
-        you.melded[i] = unmarshallBoolean(th);
+        you.melded.set(i, unmarshallBoolean(th));
     for (i = count; i < NUM_EQUIP; ++i)
-        you.melded[i] = false;
+        you.melded.set(i, false);
 
     you.magic_points              = unmarshallByte(th);
     you.max_magic_points          = unmarshallByte(th);
@@ -2171,13 +2171,13 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; i++)
         you.num_total_gifts[i] = unmarshallShort(th);
     for (i = 0; i < count; i++)
-        you.one_time_ability_used[i] = unmarshallBoolean(th);
+        you.one_time_ability_used.set(i, unmarshallBoolean(th));
     for (i = 0; i < count; i++)
         you.piety_max[i] = unmarshallByte(th);
     count = unmarshallByte(th);
     ASSERT(count == NUM_NEMELEX_GIFT_TYPES);
     for (i = 0; i < count; i++)
-        you.nemelex_sacrificing[i] = unmarshallBoolean(th);
+        you.nemelex_sacrificing.set(i, unmarshallBoolean(th));
 
     you.gift_timeout   = unmarshallByte(th);
 
@@ -2282,7 +2282,7 @@ static void tag_read_you(reader &th)
 #endif
     count = unmarshallByte(th);
     for (i = 0; i < count; i++)
-        you.branches_left[i] = unmarshallBoolean(th);
+        you.branches_left.set(i, unmarshallBoolean(th));
 #if TAG_MAJOR_VERSION == 34
     }
     else
@@ -2432,9 +2432,9 @@ static void tag_read_you_items(reader &th)
     count = unmarshallUByte(th);
     COMPILE_CHECK(NUM_FIXED_BOOKS <= 256);
     for (j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
-        you.had_book[j] = unmarshallByte(th);
+        you.had_book.set(j, unmarshallByte(th));
     for (j = count; j < NUM_FIXED_BOOKS; ++j)
-        you.had_book[j] = 0;
+        you.had_book.set(j, false);
     for (j = NUM_FIXED_BOOKS; j < count; ++j)
         unmarshallByte(th);
 
@@ -2442,9 +2442,9 @@ static void tag_read_you_items(reader &th)
     count = unmarshallShort(th);
     ASSERT(count >= 0);
     for (j = 0; j < count && j < NUM_SPELLS; ++j)
-        you.seen_spell[j] = unmarshallByte(th);
+        you.seen_spell.set(j, unmarshallByte(th));
     for (j = count; j < NUM_SPELLS; ++j)
-        you.seen_spell[j] = 0;
+        you.seen_spell.set(j, false);
     for (j = NUM_SPELLS; j < count; ++j)
         unmarshallByte(th);
 
@@ -2507,13 +2507,13 @@ static void tag_read_you_dungeon(reader &th)
 {
     // how many unique creatures?
     int count = unmarshallShort(th);
-    you.unique_creatures.init(false);
+    you.unique_creatures.reset();
     for (int j = 0; j < count; ++j)
     {
         const bool created = unmarshallBoolean(th);
 
         if (j < NUM_MONSTERS)
-            you.unique_creatures[j] = created;
+            you.unique_creatures.set(j, created);
     }
 
     // how many branches?

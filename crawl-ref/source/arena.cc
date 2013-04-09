@@ -411,7 +411,7 @@ namespace arena
         for (int i = 0; i < MAX_MONSTERS; i++)
             to_respawn[i] = -1;
 
-        unwind_var< FixedVector<bool, NUM_MONSTERS> >
+        unwind_var< FixedBitVector<NUM_MONSTERS> >
             uniq(you.unique_creatures);
 
         place_a = dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I);
@@ -1024,7 +1024,7 @@ monster_type arena_pick_random_monster(const level_id &place)
         const vector<monster_type> &uniques = arena::uniques_list;
 
         const monster_type type = uniques[random2(uniques.size())];
-        you.unique_creatures[type] = false;
+        you.unique_creatures.set(type, false);
 
         return type;
     }

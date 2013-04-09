@@ -90,7 +90,7 @@ bool unequip_item(equipment_type slot, bool msg)
         if (!you.melded[slot])
             _unequip_effect(slot, item_slot, false, msg);
         else
-            you.melded[slot] = false;
+            you.melded.set(slot, false);
         ash_check_bondage();
         return true;
     }
@@ -104,7 +104,7 @@ bool meld_slot(equipment_type slot, bool msg)
 
     if (you.equip[slot] != -1 && !you.melded[slot])
     {
-        you.melded[slot] = true;
+        you.melded.set(slot);
         _unequip_effect(slot, you.equip[slot], true, msg);
         return true;
     }
@@ -118,7 +118,7 @@ bool unmeld_slot(equipment_type slot, bool msg)
 
     if (you.equip[slot] != -1 && you.melded[slot])
     {
-        you.melded[slot] = false;
+        you.melded.set(slot, false);
         _equip_effect(slot, you.equip[slot], true, msg);
         return true;
     }

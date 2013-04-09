@@ -104,7 +104,7 @@ static void _initialize()
     env.map_knowledge.init(map_cell());
     env.pgrid.init(0);
 
-    you.unique_creatures.init(false);
+    you.unique_creatures.reset();
     you.unique_items.init(UNIQ_NOT_EXISTS);
 
     // Set up the Lua interpreter for the dungeon builder.

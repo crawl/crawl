@@ -199,7 +199,7 @@ static void mg_build_levels(int niters)
         dlua.callfn("dgn_clear_data", "");
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
-        you.unique_creatures.init(false);
+        you.unique_creatures.reset();
         init_level_connectivity();
         if (!mg_build_dungeon())
             break;

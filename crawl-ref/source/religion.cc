@@ -1977,7 +1977,7 @@ void vehumet_accept_gift(spell_type spell)
     if (it != you.vehumet_gifts.end())
     {
         you.vehumet_gifts.erase(it);
-        you.seen_spell[spell] = true;
+        you.seen_spell.set(spell);
         you.duration[DUR_VEHUMET_GIFT] = 0;
     }
 }
@@ -2805,7 +2805,7 @@ static void _gain_piety_point()
                     if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
                         dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
-                    you.one_time_ability_used[you.religion] = true;
+                    you.one_time_ability_used.set(you.religion);
                     break;
                 default:
                     break;

@@ -1092,7 +1092,7 @@ static void _do_lost_monsters()
     if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
             if (mons_is_unique(mi->type) && !(mi->flags & MF_TAKING_STAIRS))
-                you.unique_creatures[mi->type] = false;
+                you.unique_creatures.set(mi->type, false);
 }
 
 // Should be called after _grab_followers(), so that items carried by
