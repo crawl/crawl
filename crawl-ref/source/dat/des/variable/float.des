@@ -5153,3 +5153,70 @@ xx...X.........a...........x
  x...X.........a...........x
  xxx.....................xxx
 ENDMAP
+
+# The air twists around and strikes you! The ettin shouts in stereo!
+# The spriggan berserker goes berserk!
+# The spriggan berserker moves out of view.
+# You hear a shout! x27
+#
+# (Arguably doesn't work as well in Zot / entering Zot, but moths of wrath...)
+NAME:   grunt_twist_and_shout
+ORIENT: float
+DEPTH:  D:16-27, Zot, !Zot:$
+PLACE:  D:27
+{{
+  if you.branch() == "Zot" then
+     kmons("1 = draconian annihilator band")
+     kmons("2 = moth of wrath")
+     kmons("3 = base draconian")
+     kfeat("1 = stone_stairs_down_i / stone_stairs_down_ii / "
+           .. "stone_stairs_down_iii / escape_hatch_down")
+     subst("* = .")
+  elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+     colour(".+123* = magenta")
+     ftile(".+123* = floor_hall")
+     kfeat("1 = enter_zot")
+     kmons("1 = nonbase draconian")
+     kmons("2 = moth of wrath")
+     kmons("3 = base draconian")
+     kmons("* = golden dragon / shadow dragon / storm dragon / bone dragon"
+           .. " / dragon / ice dragon")
+     colour("c = lightmagenta")
+  else
+     local bigweight = you.absdepth() - 16
+     local littleweight = 27 - you.absdepth()
+     kmons("1 = titan w:" .. bigweight
+           .. " / spriggan air mage w:" .. littleweight)
+     kmons("2 = ettin w:" .. 2*bigweight
+           .. " / spriggan berserker w:" .. littleweight
+           .. " / deep dwarf berserker w:" .. littleweight)
+     kmons("3 = nothing")
+     kitem("1 = superb_item")
+     kitem("2 = any")
+  end
+}}
+SUBST:  G = GTt
+NSUBST: @ = 1:@ / *:.
+MAP
+ .x...   .@.   .x...
+...x...  ...  ...x...
+..3x3.x...G.....3x3.x
+.xx2xx.c.......xx2xx.
+x.3x..c.......x..x3..
+...x..c..cccccc..x...
+ ...xcc.cc....ccc.x.
+  ...c..c........c.
+  ...c..c+ccccc....
+.....c..c.*.+.cc.....
+@.G..c..c*1*c..c..G.@
+.....cc.+.*.c..c.....
+  ....ccccc+c..c...
+  .c........c..c...
+ .x.ccc....cc.ccx...
+...x..cccccc..c..x...
+..3x..x.......c..x3.x
+.xx2xx.......c.xx2xx.
+x.3x3.....G...x.3x3..
+...x...  ...  ...x...
+ ...x.   .@.   ...x.
+ENDMAP
