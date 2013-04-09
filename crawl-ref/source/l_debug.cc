@@ -78,7 +78,7 @@ LUAFN(debug_flush_map_memory)
 {
     dgn_flush_map_memory();
     init_level_connectivity();
-    you.unique_creatures.init(false);
+    you.unique_creatures.reset();
     return 0;
 }
 
@@ -248,7 +248,7 @@ LUAFN(debug_handle_monster_move)
     return 0;
 }
 
-static FixedVector<bool, NUM_MONSTERS> saved_uniques;
+static FixedBitVector<NUM_MONSTERS> saved_uniques;
 
 LUAFN(debug_save_uniques)
 {
@@ -258,18 +258,18 @@ LUAFN(debug_save_uniques)
 
 LUAFN(debug_reset_uniques)
 {
-    you.unique_creatures.init(false);
+    you.unique_creatures.reset();
     return 0;
 }
 
 LUAFN(debug_randomize_uniques)
 {
-    you.unique_creatures.init(false);
+    you.unique_creatures.reset();
     for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {
         if (!mons_is_unique(mt))
             continue;
-        you.unique_creatures[mt] = coinflip();
+        you.unique_creatures.set(mt, coinflip());
     }
     return 0;
 }
@@ -280,11 +280,10 @@ static bool _check_uniques()
 {
     bool ret = true;
 
-    FixedVector<bool, NUM_MONSTERS> uniques_on_level;
-    uniques_on_level.init(false);
+    FixedBitVector<NUM_MONSTERS> uniques_on_level;
     for (monster_iterator mi; mi; ++mi)
         if (mons_is_unique(mi->type))
-            uniques_on_level[mi->type] = true;
+            uniques_on_level.set(mi->type);
 
     for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {

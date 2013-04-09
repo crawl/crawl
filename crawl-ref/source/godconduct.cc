@@ -1090,15 +1090,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 // since a Beogh worshipper zapping an orc with lightning might cause it to
 // become a follower on the first hit, and the second hit would be
 // against a friendly orc.
-static FixedVector<bool, MAX_MONSTERS> _first_attack_conduct;
-static FixedVector<bool, MAX_MONSTERS> _first_attack_was_unchivalric;
-static FixedVector<bool, MAX_MONSTERS> _first_attack_was_friendly;
+static FixedBitVector<MAX_MONSTERS> _first_attack_conduct;
+static FixedBitVector<MAX_MONSTERS> _first_attack_was_unchivalric;
+static FixedBitVector<MAX_MONSTERS> _first_attack_was_friendly;
 
 void god_conduct_turn_start()
 {
-    _first_attack_conduct.init(true);
-    _first_attack_was_unchivalric.init(false);
-    _first_attack_was_friendly.init(false);
+    _first_attack_conduct.reset();
+    _first_attack_was_unchivalric.reset();
+    _first_attack_was_friendly.reset();
 }
 
 void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
@@ -1108,28 +1108,28 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
 
     if (mon->friendly())
     {
-        if (_first_attack_conduct[midx]
+        if (!_first_attack_conduct[midx]
             || _first_attack_was_friendly[midx])
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
-            _first_attack_was_friendly[midx] = true;
+            _first_attack_was_friendly.set(midx);
         }
     }
     else if (mon->neutral())
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
     if (is_unchivalric_attack(&you, mon)
-        && (_first_attack_conduct[midx]
+        && (!_first_attack_conduct[midx]
             || _first_attack_was_unchivalric[midx]))
     {
         conduct[1].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
-        _first_attack_was_unchivalric[midx] = true;
+        _first_attack_was_unchivalric.set(midx);
     }
 
     if (mon->is_holy())
         conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 
-    _first_attack_conduct[midx] = false;
+    _first_attack_conduct.set(midx);
 }
 
 void enable_attack_conducts(god_conduct_trigger conduct[3])

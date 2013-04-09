@@ -79,7 +79,7 @@ public:
   int zigs_completed, zig_max;
 
   FixedVector<int8_t, NUM_EQUIP> equip;
-  FixedVector<bool, NUM_EQUIP> melded;
+  FixedBitVector<NUM_EQUIP> melded;
   unsigned short unrand_reacts;
 
   FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup;
@@ -126,7 +126,7 @@ public:
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
   FixedVector<int8_t, NUM_SKILLS>  train_alt; //<! config of the other mode.
   FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
-  FixedVector<bool, NUM_SKILLS> can_train; //!<Is training this skill allowed
+  FixedBitVector<NUM_SKILLS> can_train; //!<Is training this skill allowed
   FixedVector<unsigned int, NUM_SKILLS> skill_points;
   FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
                                                     //<!gained by crosstraining
@@ -163,7 +163,7 @@ public:
 
   FixedArray<uint8_t, 6, MAX_SUBTYPES> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
-  FixedVector<bool, NUM_MONSTERS> unique_creatures;
+  FixedBitVector<NUM_MONSTERS> unique_creatures;
 
   // NOTE: The kills member is a pointer to a KillMaster object,
   // rather than the object itself, so that we can get away with
@@ -191,11 +191,11 @@ public:
   FixedVector<uint8_t, NUM_GODS>  worshipped;
   FixedVector<short,   NUM_GODS>  num_current_gifts;
   FixedVector<short,   NUM_GODS>  num_total_gifts;
-  FixedVector<bool,    NUM_GODS>  one_time_ability_used;
+  FixedBitVector<   NUM_GODS>  one_time_ability_used;
   FixedVector<uint8_t, NUM_GODS>  piety_max;
 
   // Nemelex sacrifice toggles
-  FixedVector<bool, NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
+  FixedBitVector<NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
@@ -212,8 +212,8 @@ public:
   int earth_attunement; // nomes only
   int magic_contamination;
 
-  FixedVector<bool, NUM_FIXED_BOOKS> had_book;
-  FixedVector<bool, NUM_SPELLS>      seen_spell;
+  FixedBitVector<NUM_FIXED_BOOKS> had_book;
+  FixedBitVector<NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
   FixedBitVector<NUM_MISCELLANY>     seen_misc;
@@ -282,7 +282,7 @@ public:
   map<pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
   // Which branches have been noted to have been left during this game.
-  FixedVector<bool, NUM_BRANCHES> branches_left;
+  FixedBitVector<NUM_BRANCHES> branches_left;
 
   // For now, only control the speed of abyss morphing.
   int abyss_speed;

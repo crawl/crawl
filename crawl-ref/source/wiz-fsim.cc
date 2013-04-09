@@ -249,7 +249,7 @@ static monster* _init_fsim()
             // Wizmode users should be able to conjure up uniques even if they
             // were already created.
             if (mons_is_unique(mtype) && you.unique_creatures[mtype])
-                you.unique_creatures[mtype] = false;
+                you.unique_creatures.set(mtype, false);
         }
 
         mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false, 0, 0,

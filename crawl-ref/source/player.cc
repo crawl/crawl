@@ -5460,7 +5460,7 @@ void player::init()
     zig_max          = 0;
 
     equip.init(-1);
-    melded.init(false);
+    melded.reset();
     unrand_reacts   = 0;
 
     symbol          = MONS_PLAYER;
@@ -5523,7 +5523,7 @@ void player::init()
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
-    unique_creatures.init(false);
+    unique_creatures.reset();
     force_autopickup.init(0);
 
     if (kills)
@@ -5545,7 +5545,7 @@ void player::init()
     worshipped.init(0);
     num_current_gifts.init(0);
     num_total_gifts.init(0);
-    one_time_ability_used.init(false);
+    one_time_ability_used.reset();
     piety_max.init(0);
     exp_docked       = 0;
     exp_docked_total = 0;
@@ -5558,8 +5558,8 @@ void player::init()
     earth_attunement = 0;
     magic_contamination = 0;
 
-    had_book.init(false);
-    seen_spell.init(false);
+    had_book.reset();
+    seen_spell.reset();
     seen_weapon.init(0);
     seen_armour.init(0);
     seen_misc.reset();
@@ -5627,7 +5627,7 @@ void player::init()
 
     action_count.clear();
 
-    branches_left.init(false);
+    branches_left.reset();
 
     // Volatile (same-turn) state:
     turn_is_over     = false;
@@ -5685,7 +5685,7 @@ void player::init_skills()
     train.init(false);
     train_alt.init(false);
     training.init(0);
-    can_train.init(false);
+    can_train.reset();
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);

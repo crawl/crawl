@@ -374,7 +374,7 @@ static void _check_start_train()
 
         if (!you.can_train[*it] && you.train[*it])
             skills.insert(*it);
-        you.can_train[*it] = true;
+        you.can_train.set(*it);
     }
 
     reset_training();
@@ -414,7 +414,7 @@ static void _check_stop_train()
 
         if (skill_trained(*it) && you.training[*it])
             skills.insert(*it);
-        you.can_train[*it] = false;
+        you.can_train.set(*it, false);
     }
 
     if (!skills.empty())
@@ -464,7 +464,7 @@ void init_can_train()
     // Clear everything out, in case this isn't the first game.
     you.start_train.clear();
     you.stop_train.clear();
-    you.can_train.init(false);
+    you.can_train.reset();
 
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -473,7 +473,7 @@ void init_can_train()
         if (is_useless_skill(sk))
             continue;
 
-        you.can_train[sk] = true;
+        you.can_train.set(sk);
         if (training_restricted(sk))
             you.stop_train.insert(sk);
     }

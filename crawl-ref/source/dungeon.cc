@@ -199,7 +199,7 @@ static void _mark_solid_squares();
 
 // A mask of vaults and vault-specific flags.
 vector<vault_placement> Temp_Vaults;
-static FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
+static FixedBitVector<NUM_MONSTERS> temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 const map_bitmask *Vault_Placement_Mask = NULL;
@@ -4878,7 +4878,7 @@ static void _vault_grid_glyph_mons(vault_placement &place,
                      "else; please file a bug report.",
                      mons_type_name(mt, DESC_THE).c_str());
                 // Force it to be generated anyway.
-                you.unique_creatures[mt] = false;
+                you.unique_creatures.set(mt, false);
             }
         }
 

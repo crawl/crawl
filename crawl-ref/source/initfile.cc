@@ -552,8 +552,8 @@ void game_options::set_default_activity_interrupts()
     for (int adelay = 0; adelay < NUM_DELAYS; ++adelay)
         for (int aint = 0; aint < NUM_AINTERRUPTS; ++aint)
         {
-            activity_interrupts[adelay][aint]
-                = is_delay_interruptible(static_cast<delay_type>(adelay));
+            activity_interrupts[adelay].set(aint,
+                is_delay_interruptible(static_cast<delay_type>(adelay)));
         }
 
     const char *default_activity_interrupts[] = {
@@ -588,15 +588,8 @@ void game_options::set_default_activity_interrupts()
         read_option_line(default_activity_interrupts[i], false);
 }
 
-void game_options::clear_activity_interrupts(
-        FixedVector<bool, NUM_AINTERRUPTS> &eints)
-{
-    for (int i = 0; i < NUM_AINTERRUPTS; ++i)
-        eints[i] = false;
-}
-
 void game_options::set_activity_interrupt(
-        FixedVector<bool, NUM_AINTERRUPTS> &eints,
+        FixedBitVector<NUM_AINTERRUPTS> &eints,
         const string &interrupt)
 {
     if (interrupt.find(interrupt_prefix) == 0)
@@ -606,13 +599,10 @@ void game_options::set_activity_interrupt(
         if (delay == NUM_DELAYS)
             return report_error("Unknown delay: %s\n", delay_name.c_str());
 
-        FixedVector<bool, NUM_AINTERRUPTS> &refints =
+        FixedBitVector<NUM_AINTERRUPTS> &refints =
             activity_interrupts[delay];
 
-        for (int i = 0; i < NUM_AINTERRUPTS; ++i)
-            if (refints[i])
-                eints[i] = true;
-
+        refints |= eints;
         return;
     }
 
@@ -623,7 +613,7 @@ void game_options::set_activity_interrupt(
                             interrupt.c_str());
     }
 
-    eints[ai] = true;
+    eints.set(ai);
 }
 
 void game_options::set_activity_interrupt(const string &activity_name,
@@ -636,29 +626,28 @@ void game_options::set_activity_interrupt(const string &activity_name,
         return report_error("Unknown delay: %s\n", activity_name.c_str());
 
     vector<string> interrupts = split_string(",", interrupt_names);
-    FixedVector<bool, NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
+    FixedBitVector<NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
 
     if (remove_interrupts)
     {
-        FixedVector<bool, NUM_AINTERRUPTS> refints;
-        clear_activity_interrupts(refints);
+        FixedBitVector<NUM_AINTERRUPTS> refints;
         for (int i = 0, size = interrupts.size(); i < size; ++i)
             set_activity_interrupt(refints, interrupts[i]);
 
         for (int i = 0; i < NUM_AINTERRUPTS; ++i)
             if (refints[i])
-                eints[i] = false;
+                eints.set(i, false);
     }
     else
     {
         if (!append_interrupts)
-            clear_activity_interrupts(eints);
+            eints.reset();
 
         for (int i = 0, size = interrupts.size(); i < size; ++i)
             set_activity_interrupt(eints, interrupts[i]);
     }
 
-    eints[AI_FORCE_INTERRUPT] = true;
+    eints.set(AI_FORCE_INTERRUPT);
 }
 
 #if defined(DGAMELAUNCH)

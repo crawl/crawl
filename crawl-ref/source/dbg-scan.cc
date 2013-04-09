@@ -71,8 +71,7 @@ void debug_item_scan(void)
     int   i;
     char  name[256];
 
-    FixedVector<bool, MAX_ITEMS> visited;
-    visited.init(false);
+    FixedBitVector<MAX_ITEMS> visited;
 
     // First we're going to check all the stacks on the level:
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -124,7 +123,7 @@ void debug_item_scan(void)
                      "Potential INFINITE STACK at (%d, %d)", ri->x, ri->y);
                 break;
             }
-            visited[obj] = true;
+            visited.set(obj);
         }
     }
 

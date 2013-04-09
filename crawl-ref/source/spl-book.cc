@@ -414,7 +414,7 @@ void mark_had_book(const item_def &book)
         if (stype == SPELL_NO_SPELL)
             continue;
 
-        you.seen_spell[stype] = true;
+        you.seen_spell.set(stype);
     }
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
@@ -428,7 +428,7 @@ void mark_had_book(int booktype)
 {
     ASSERT(booktype >= 0 && booktype <= MAX_FIXED_BOOK);
 
-    you.had_book[booktype] = true;
+    you.had_book.set(booktype);
 }
 
 void inscribe_book_highlevel(item_def &book)

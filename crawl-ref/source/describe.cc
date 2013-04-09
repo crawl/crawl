@@ -4251,7 +4251,7 @@ static void _detailed_god_description(god_type which_god)
         && keyin >= 'a' && keyin < 'a' + (char) NUM_NEMELEX_GIFT_TYPES)
     {
         const int num = keyin - 'a';
-        you.nemelex_sacrificing[num] = !you.nemelex_sacrificing[num];
+        you.nemelex_sacrificing.set(num, !you.nemelex_sacrificing[num]);
         _detailed_god_description(which_god);
     }
     else if (keyin == '!' || keyin == CK_MOUSE_CMD)
