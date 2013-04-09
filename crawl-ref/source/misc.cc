@@ -2572,32 +2572,6 @@ static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
                             jewellery_type amulet_type = NUM_JEWELLERY,
                             artefact_prop_type artp = ARTP_NUM_PROPERTIES)
 {
-    int num_unknown = 0;
-    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
-    {
-        bool artefact = (player_wearing_slot(i)
-                         && is_artefact(you.inv[you.equip[i]]));
-
-        bool art_relevant = artefact && artp != ARTP_NUM_PROPERTIES;
-
-        if (i == EQ_AMULET && amulet_type == NUM_JEWELLERY && !art_relevant)
-            continue;
-
-        if (i != EQ_AMULET && ring_type == NUM_JEWELLERY && !art_relevant)
-            continue;
-
-        if (player_wearing_slot(i)
-            && !item_ident(you.inv[you.equip[i]], art_relevant
-                                                  ? ISFLAG_KNOW_PROPERTIES
-                                                  : ISFLAG_KNOW_TYPE))
-        {
-            ++num_unknown;
-        }
-    }
-
-    if (num_unknown != 1)
-        return;
-
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
         if (player_wearing_slot(i))
@@ -2626,19 +2600,11 @@ void maybe_id_ring_hunger()
 
 void maybe_id_ring_see_invis()
 {
-    // If you can see invisible without un-IDed items
-    if (you.can_see_invisible(false))
-        return;
-
     _maybe_id_jewel(RING_SEE_INVISIBLE, NUM_JEWELLERY, ARTP_EYESIGHT);
 }
 
 void maybe_id_clarity()
 {
-    // If we have clarity without un-IDed items
-    if (you.clarity(false))
-        return;
-
     _maybe_id_jewel(NUM_JEWELLERY, AMU_CLARITY, ARTP_CLARITY);
 }
 
@@ -2648,48 +2614,34 @@ void maybe_id_resist(beam_type flavour)
     {
     case BEAM_FIRE:
     case BEAM_LAVA:
-        if (player_res_fire(false))
-            return;
         _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
         break;
 
     case BEAM_COLD:
     case BEAM_ICE:
-        if (player_res_cold(false))
-            return;
         _maybe_id_jewel(RING_PROTECTION_FROM_COLD, NUM_JEWELLERY, ARTP_COLD);
         break;
 
     case BEAM_ELECTRICITY:
-        if (player_res_electricity(false))
-            return;
         _maybe_id_jewel(NUM_JEWELLERY, NUM_JEWELLERY, ARTP_ELECTRICITY);
         break;
 
     case BEAM_POISON:
     case BEAM_POISON_ARROW:
     case BEAM_MEPHITIC:
-        if (player_res_poison(false))
-            return;
         _maybe_id_jewel(RING_POISON_RESISTANCE, NUM_JEWELLERY, ARTP_POISON);
         break;
 
     case BEAM_NEG:
-        if (player_prot_life(false))
-            return;
         _maybe_id_jewel(RING_LIFE_PROTECTION, AMU_WARDING, ARTP_NEGATIVE_ENERGY);
         break;
 
     case BEAM_STEAM:
-        if (player_res_steam(false))
-            return;
         // rF+ grants rSteam, all possibly unidentified sources of rSteam are rF
         _maybe_id_jewel(RING_PROTECTION_FROM_FIRE, NUM_JEWELLERY, ARTP_FIRE);
         break;
 
     case BEAM_MALMUTATE:
-        if (player_mutation_level(MUT_MUTATION_RESISTANCE))
-            return;
         _maybe_id_jewel(NUM_JEWELLERY, AMU_RESIST_MUTATION);
         break;
 
