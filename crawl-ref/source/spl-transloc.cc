@@ -161,7 +161,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
         // abort still wastes the turn
         if (high_level_controlled_blink && coinflip())
-            return (cast_semi_controlled_blink(pow, false) ? 1 : 0);
+            return (cast_semi_controlled_blink(pow, false, false) ? 1 : 0);
         random_blink(false);
     }
     else if (!allow_control_teleport(true) && !wizard_blink)
@@ -171,7 +171,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         mpr("A powerful magic interferes with your control of the blink.");
         // FIXME: cancel shouldn't waste a turn here -- need to rework Abyss handling
         if (high_level_controlled_blink)
-            return (cast_semi_controlled_blink(pow, false/*true*/) ? 1 : -1);
+            return (cast_semi_controlled_blink(pow, false/*true*/, false) ? 1 : -1);
         random_blink(false);
     }
     else
@@ -332,7 +332,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
     {
         mpr("You may select the general direction of your translocation.");
         // FIXME: handle aborts here, don't waste the turn
-        cast_semi_controlled_blink(100, false);
+        cast_semi_controlled_blink(100, false, true);
     }
     else if (you.attempt_escape(2))
     {
@@ -624,6 +624,12 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 // Controlling teleport contaminates the player. - bwr
                 if (!wizard_tele)
                     contaminate_player(1, true);
+            }
+            // End teleport control.
+            if (you.duration[DUR_CONTROL_TELEPORT])
+            {
+                mpr("You feel uncertain.", MSGCH_DURATION);
+                you.duration[DUR_CONTROL_TELEPORT] = 0;
             }
         }
     }
@@ -1025,7 +1031,7 @@ static bool _quadrant_blink(coord_def dir, int pow)
     return true;
 }
 
-spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
+spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool end_ctele, bool fail)
 {
     dist bmove;
     direction_chooser_args args;
@@ -1061,6 +1067,12 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     {
         // Controlled blink causes glowing.
         contaminate_player(1, true);
+        // End teleport control if this was a random blink upgraded by cTele.
+        if (end_ctele && you.duration[DUR_CONTROL_TELEPORT])
+        {
+            mpr("You feel uncertain.", MSGCH_DURATION);
+            you.duration[DUR_CONTROL_TELEPORT] = 0;
+        }
     }
 
     return SPRET_SUCCESS;
