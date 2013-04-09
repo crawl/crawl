@@ -1922,7 +1922,9 @@ enum map_marker_type
 enum terrain_change_type
 {
     TERRAIN_CHANGE_GENERIC,
-    TERRAIN_CHANGE_FLOOD
+    TERRAIN_CHANGE_FLOOD,
+    TERRAIN_CHANGE_TOMB,
+    TERRAIN_CHANGE_IMPRISON
 };
 
 enum map_feature
