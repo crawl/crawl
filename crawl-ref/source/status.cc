@@ -43,7 +43,7 @@ static duration_def duration_data[] =
     { DUR_CONFUSING_TOUCH, true,
       BLUE, "Touch", "confusing touch", "" },
     { DUR_CONTROL_TELEPORT, true,
-      MAGENTA, "cTele", "", "You can control teleportations." },
+      MAGENTA, "cTele", "controlling teleports", "You can control teleportations." },
     { DUR_CORONA, false,
       YELLOW, "Corona", "", "" },
     { DUR_DEATH_CHANNEL, true,
@@ -61,13 +61,13 @@ static duration_def duration_data[] =
     { DUR_LIQUID_FLAMES, false,
       RED, "Fire", "liquid flames", "You are covered in liquid flames." },
     { DUR_LOWERED_MR, false,
-      RED, "-MR", "", "" },
+      RED, "-MR", "vulnerable", "" },
     { DUR_MAGIC_SHIELD, false,
       0, "", "shielded", "" },
     { DUR_MIGHT, false,
       0, "", "mighty", "You are mighty." },
     { DUR_MISLED, true,
-      LIGHTMAGENTA, "Misled", "", "" },
+      LIGHTMAGENTA, "Misled", "misled", "" },
     { DUR_PARALYSIS, false,
       RED, "Para", "paralysed", "You are paralysed." },
     { DUR_PETRIFIED, false,
@@ -77,7 +77,7 @@ static duration_def duration_data[] =
     { DUR_JELLY_PRAYER, false,
       WHITE, "Pray", "praying", "You are praying." },
     { DUR_RESISTANCE, true,
-      LIGHTBLUE, "Resist", "", "You resist elements." },
+      LIGHTBLUE, "Resist", "resistant", "You resist elements." },
     { DUR_SLAYING, false,
       0, "", "deadly", "" },
     { DUR_SLIMIFY, true,
@@ -89,7 +89,7 @@ static duration_def duration_data[] =
     { DUR_SWIFTNESS, true,
       BLUE, "Swift", "swift", "You can move swiftly." },
     { DUR_TELEPATHY, false,
-      LIGHTBLUE, "Emp", "", "" },
+      LIGHTBLUE, "Emp", "empathic", "" },
     { DUR_TELEPORT, false,
       LIGHTBLUE, "Tele", "about to teleport", "You are about to teleport." },
     { DUR_DEATHS_DOOR, true,
@@ -97,11 +97,11 @@ static duration_def duration_data[] =
     { DUR_PHASE_SHIFT, true,
       0, "", "phasing", "You are out of phase with the material plane." },
     { DUR_QUAD_DAMAGE, true,
-      BLUE, "Quad", "", "" },
+      BLUE, "Quad", "quad damage", "" },
     { DUR_SILENCE, true,
       BLUE, "Sil", "silence", "You radiate silence." },
     { DUR_STEALTH, false,
-      BLUE, "Stlth", "", "" },
+      BLUE, "Stlth", "especially stealthy", "" },
     { DUR_AFRAID, true,
       RED, "Fear", "afraid", "You are terrified." },
     { DUR_MIRROR_DAMAGE, false,
@@ -604,6 +604,7 @@ static void _describe_hunger(status_info* inf)
     case HS_STARVING:
         inf->light_colour = RED;
         inf->light_text   = (vamp ? "Bloodless" : "Starving");
+        inf->short_text   = (vamp ? "bloodless" : "starving");
         break;
     case HS_SATIATED: // no status light
     default:
