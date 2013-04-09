@@ -1770,11 +1770,9 @@ bool player_in_a_dangerous_place(bool *invis)
     return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
 }
 
-static void _drop_tomb(const coord_def& pos, bool premature)
+static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
 {
     int count = 0;
-    bool zin = false;
-
     monster* mon = monster_at(pos);
 
     // Don't wander on duty!
@@ -1785,56 +1783,27 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         // "Normal" tomb (card or monster spell)
-        if ((grd(*ai) == DNGN_ROCK_WALL || grd(*ai) == DNGN_CLEAR_ROCK_WALL)
-            && (env.markers.property_at(*ai, MAT_ANY, "tomb") == "card"
-                || env.markers.property_at(*ai, MAT_ANY, "tomb") == "monster"))
+        if (!zin && revert_terrain_change(*ai, TERRAIN_CHANGE_TOMB))
         {
-            vector<map_marker*> markers = env.markers.get_markers_at(*ai);
-            for (int i = 0, size = markers.size(); i < size; ++i)
-            {
-                map_marker *mark = markers[i];
-                if (mark->property("tomb") == "card"
-                    || mark->property("tomb") == "monster")
-                {
-                    env.markers.remove(mark);
-                }
-            }
-
-            env.markers.clear_need_activate();
-
-            grd(*ai) = DNGN_FLOOR;
-            set_terrain_changed(*ai);
             count++;
             if (you.see_cell(*ai))
                 seen_change = true;
         }
-
         // Zin's Imprison.
-        if (grd(*ai) == DNGN_METAL_WALL
-            && env.markers.property_at(*ai, MAT_ANY, "tomb") == "Zin")
+        else if (zin && revert_terrain_change(*ai, TERRAIN_CHANGE_IMPRISON))
         {
-            zin = true;
-
-            dungeon_feature_type old_feat = DNGN_FLOOR;
             vector<map_marker*> markers = env.markers.get_markers_at(*ai);
             for (int i = 0, size = markers.size(); i < size; ++i)
             {
                 map_marker *mark = markers[i];
-                if (mark->property("tomb") == "Zin")
+                if (mark->property("feature_description")
+                    == "a gleaming silver wall")
                 {
-                    string old_feat_name = mark->property("old_feat");
-                    if (old_feat_name != "")
-                        old_feat = dungeon_feature_by_name(old_feat_name);
                     env.markers.remove(mark);
                 }
             }
 
-            env.markers.clear_need_activate();
-
-            grd(*ai) = old_feat;
             env.grid_colours(*ai) = 0;
-
-            set_terrain_changed(*ai);
             tile_clear_flavour(*ai);
             tile_init_flavour(*ai);
             count++;
@@ -1974,10 +1943,11 @@ void timeout_tombs(int duration)
         // Empty tombs disappear early.
         monster* mon_entombed = monster_at(cmark->pos);
         bool empty_tomb = !(mon_entombed || you.pos() == cmark->pos);
+        bool zin = (cmark->source == -GOD_ZIN);
 
         if (cmark->duration <= 0 || empty_tomb)
         {
-            _drop_tomb(cmark->pos, empty_tomb);
+            _drop_tomb(cmark->pos, empty_tomb, zin);
 
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
