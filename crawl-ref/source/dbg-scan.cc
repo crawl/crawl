@@ -560,8 +560,6 @@ void debug_mons_scan()
 }
 #endif
 
-// These are nearly completely redundant, and should be useless, except for
-// some recent Abyss breakage.
 void check_map_validity()
 {
 #ifdef ASSERTS
