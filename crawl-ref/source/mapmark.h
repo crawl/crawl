@@ -164,6 +164,7 @@ public:
     coord_def corpse_pos;
 };
 
+#if TAG_MAJOR_VERSION == 34
 // A marker for sealed doors
 class map_door_seal_marker : public map_marker
 {
@@ -184,6 +185,7 @@ public:
     int mon_num;
     dungeon_feature_type old_feature;
 };
+#endif
 
 // A marker for temporary terrain changes
 class map_terrain_change_marker : public map_marker

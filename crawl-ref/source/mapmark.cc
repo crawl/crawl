@@ -35,7 +35,9 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_malign_gateway_marker::read,
     &map_phoenix_marker::read,
     &map_position_marker::read,
+#if TAG_MAJOR_VERSION == 34
     &map_door_seal_marker::read,
+#endif
     &map_terrain_change_marker::read,
 };
 
@@ -717,6 +719,7 @@ string map_phoenix_marker::debug_describe() const
     return make_stringf("Phoenix marker (%d, %d)", duration, mon_num);
 }
 
+#if TAG_MAJOR_VERSION == 34
 ////////////////////////////////////////////////////////////////////////////
 // map_door_seal_marker
 
@@ -761,6 +764,7 @@ string map_door_seal_marker::debug_describe() const
 {
     return make_stringf("Door seal marker (%d, %d)", duration, mon_num);
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////
 // map_terrain_change_marker
