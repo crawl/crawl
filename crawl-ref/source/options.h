@@ -5,14 +5,13 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
-// Intended to be somewhat generic
-enum option_value {
-    OPT_AUTO = -1,
-    OPT_NO,
-    OPT_YES,
-    OPT_PROMPT,
-    OPT_BEFORE_EXPLORE,
-    OPT_PROMPT_IGNORE
+enum autosac_type
+{
+    AS_NO,
+    AS_YES,
+    AS_PROMPT,
+    AS_BEFORE_EXPLORE,
+    AS_PROMPT_IGNORE,
 };
 
 struct message_filter
@@ -314,7 +313,7 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    option_value auto_sacrifice;
+    autosac_type auto_sacrifice;
 
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;
@@ -438,7 +437,7 @@ public:
     int         tile_map_pixels;
     int         tile_cell_pixels;
     bool        tile_filter_scaling;
-    option_value tile_use_small_layout;
+    maybe_bool  tile_use_small_layout;
 #endif
 
 #ifdef USE_TILE

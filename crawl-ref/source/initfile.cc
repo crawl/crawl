@@ -900,7 +900,7 @@ void game_options::reset_options()
     explore_wall_bias      = 0;
     explore_improved       = false;
     travel_key_stop        = true;
-    auto_sacrifice         = OPT_NO;
+    auto_sacrifice         = AS_NO;
 
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
@@ -1029,7 +1029,7 @@ void game_options::reset_options()
                                              "command, spell, ability, "
                                              "monster");
 # endif
-    tile_use_small_layout = OPT_AUTO;
+    tile_use_small_layout = B_MAYBE;
 #endif
 
 #ifdef USE_TILE
@@ -3272,13 +3272,13 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "auto_sacrifice")
     {
         if (field == "prompt_ignore")
-            auto_sacrifice = OPT_PROMPT_IGNORE;
+            auto_sacrifice = AS_PROMPT_IGNORE;
         else if (field == "prompt" || field == "ask")
-            auto_sacrifice = OPT_PROMPT;
+            auto_sacrifice = AS_PROMPT;
         else if (field == "before_explore")
-            auto_sacrifice = OPT_BEFORE_EXPLORE;
+            auto_sacrifice = AS_BEFORE_EXPLORE;
         else
-            auto_sacrifice = _read_bool(field, false) ? OPT_YES : OPT_NO;
+            auto_sacrifice = _read_bool(field, false) ? AS_YES : AS_NO;
     }
     else if (key == "sound")
     {
@@ -3567,11 +3567,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_use_small_layout")
     {
         if (field == "true")
-            tile_use_small_layout = OPT_YES;
+            tile_use_small_layout = B_TRUE;
         else if (field == "false")
-            tile_use_small_layout = OPT_NO;
+            tile_use_small_layout = B_FALSE;
         else
-            tile_use_small_layout = OPT_AUTO;
+            tile_use_small_layout = B_MAYBE;
     }
 #endif
 #ifdef USE_TILE

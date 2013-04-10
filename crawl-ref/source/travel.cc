@@ -999,7 +999,7 @@ command_type travel()
                 {
                     if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
                          || sacrificeable && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE))
-                        && (Options.auto_sacrifice != OPT_YES || !sacrificeable
+                        && (Options.auto_sacrifice != AS_YES || !sacrificeable
                             || stack || !_can_sacrifice(newpos)))
                     {
                         explore_stopped_pos = newpos;
@@ -2976,7 +2976,7 @@ void start_explore(bool grab_items)
         const LevelStashes *lev = StashTrack.find_current_level();
         if (lev && lev->sacrificeable(you.pos()))
         {
-            if (Options.auto_sacrifice == OPT_PROMPT)
+            if (Options.auto_sacrifice == AS_PROMPT)
             {
                 mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
                 for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
@@ -2985,15 +2985,15 @@ void start_explore(bool grab_items)
 
             }
 
-            if ((Options.auto_sacrifice == OPT_YES
-                 || Options.auto_sacrifice == OPT_BEFORE_EXPLORE
-                 || Options.auto_sacrifice == OPT_PROMPT
+            if ((Options.auto_sacrifice == AS_YES
+                 || Options.auto_sacrifice == AS_BEFORE_EXPLORE
+                 || Options.auto_sacrifice == AS_PROMPT
                     && yesno("Do you want to sacrifice the items here? ", true, 'n'))
                 && _can_sacrifice(you.pos()))
             {
                 pray();
             }
-            else if (Options.auto_sacrifice == OPT_PROMPT_IGNORE)
+            else if (Options.auto_sacrifice == AS_PROMPT_IGNORE)
             {
                 // Make Escape => 'n' and stop run.
                 explicit_keymap map;
