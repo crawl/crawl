@@ -324,6 +324,7 @@ bool monster::can_drown() const
     {
     case HT_WATER:
     case HT_LAVA:
+    case HT_AMPHIBIOUS:
         return false;
     default:
         break;
@@ -332,7 +333,7 @@ bool monster::can_drown() const
     // Mummies can fall apart in water or be incinerated in lava.
     // Ghouls and vampires can drown in water or lava.  Others just
     // "sink like a rock", to never be seen again.
-    return (!res_water_drowning()
+    return (!is_unbreathing()
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE);
@@ -3736,7 +3737,7 @@ int monster::res_asphyx() const
 
 int monster::res_water_drowning() const
 {
-    if (is_unbreathing())
+    if (is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX))
         return 1;
 
     switch (mons_habitat(this))

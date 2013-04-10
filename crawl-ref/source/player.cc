@@ -6414,7 +6414,9 @@ int player::res_elec() const
 int player::res_water_drowning() const
 {
     return (is_unbreathing()
-            || (you.species == SP_MERFOLK && !form_changed_physiology()));
+            || (you.species == SP_MERFOLK && !form_changed_physiology())
+            || (you.species == SP_OCTOPODE && !form_changed_physiology())
+            || you.form == TRAN_ICE_BEAST);
 }
 
 int player::res_asphyx() const
