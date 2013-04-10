@@ -2848,22 +2848,24 @@ static int _xom_miscast(const int max_level, const bool nasty,
         }
     }
 
-    // Take a note.
-    string desc = "miscast effect";
-#ifdef NOTE_DEBUG_XOM
-    static char level_buf[20];
-    snprintf(level_buf, sizeof(level_buf), " level %d%s",
-             level, (nasty ? " (nasty)" : ""));
-    desc += level_buf;
-#endif
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
-
     if (level == 0 && one_chance_in(3))
     {
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "silly message"), true);
         god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
         _xom_zero_miscast();
         return XOM_BAD_MISCAST_PSEUDO;
     }
+
+    // Take a note.
+    const char* levels[4] = { "harmless", "mild", "medium", "severe" };
+    int school = 1 << random2(SPTYP_LAST_EXPONENT);
+    string desc = make_stringf("%s %s miscast", levels[level],
+                               spelltype_short_name(school));
+#ifdef NOTE_DEBUG_XOM
+    if (nasty)
+        desc += " (Xom was nasty)";
+#endif
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
 
     string hand_str;
     bool   can_plural;
@@ -2876,8 +2878,8 @@ static int _xom_miscast(const int max_level, const bool nasty,
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, level, cause_str, NH_DEFAULT,
-                  lethality_margin, hand_str, can_plural);
+    MiscastEffect(&you, -GOD_XOM, (spschool_flag_type)school, level, cause_str,
+                  NH_DEFAULT, lethality_margin, hand_str, can_plural);
 
     // Not worth distinguishing unless debugging.
     return XOM_BAD_MISCAST_MAJOR;
