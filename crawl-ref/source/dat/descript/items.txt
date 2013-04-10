@@ -2022,58 +2022,30 @@ rod of demonology
 This rod contains spells of summoning, some of which can unleash demons unto
 this unsuspecting world.
 %%%%
-rod of demonology:quote
-
-<rod:quote>
-%%%%
 rod of destruction
 
 This rod contains spells of mayhem and destruction.
-%%%%
-rod of destruction:quote
-
-<rod:quote>
 %%%%
 rod of inaccuracy
 
 This rod allows its wielder to fire a powerful but extremely inaccurate bolt of
 power.
 %%%%
-rod of inaccuracy:quote
-
-<rod:quote>
-%%%%
 rod of striking
 
 This rod allows its wielder to strike foes from afar with force bolts.
-%%%%
-rod of striking:quote
-
-<rod:quote>
 %%%%
 rod of the swarm
 
 This rod allows its wielder to summon a swarm of insects.
 %%%%
-rod of the swarm:quote
-
-<rod:quote>
-%%%%
 rod of venom
 
 This rod contains offensive spells of poison.
 %%%%
-rod of venom:quote
-
-<rod:quote>
-%%%%
 rod of warding
 
 This rod contains spells designed to repel one's enemies.
-%%%%
-rod of warding:quote
-
-<rod:quote>
 %%%%
 royal jelly
 
