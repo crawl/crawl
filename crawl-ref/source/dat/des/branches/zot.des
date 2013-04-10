@@ -136,6 +136,8 @@ end
 ##############################################################################
 
 # Old-style three stairs
+# NOTE: Not currently used since the large entries are placing as
+#       primary vaults instead
 #
 NAME:   zot_entry_traditional
 TAGS:   zot_entry
@@ -168,11 +170,11 @@ ENDMAP
 
 ###########################
 # Something to give the builder a chance if massive vaults keep failing.
+# NOTE: Not currently used since the large entries are placing as
+#       primary vaults instead
 #
 NAME:   zot_entry_small
 TAGS:   zot_entry
-PLACE:  D:27
-ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: c = lightmagenta
 COLOUR: .+ = magenta
