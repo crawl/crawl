@@ -299,11 +299,12 @@ WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-  -- TODO: * 50% of the time this layout looks great. But often we end up with very long unbroken corridors and
-  -- there should be some semblance of the hole carving algorithm from the first version.
-  -- * Secondly, the negative interference produces some of the best layouts. But also it can break connectivity
-  -- so we end up with tiny levels.
-  -- * Might be nice to try 3 or 4 things interfering (how would this work with negatives?)
+
+  -- TODO: This comes out with really stunning layouts 80% of the time
+  -- but sometimes they're small and weird-looking. Needs more tweaking.
+  -- Ideas:
+  --  * Convert to use the other shape functions
+  --  * Layer different shapes instead of the same two
 
   layout_type "halls"
   if is_validating() then return; end
@@ -311,19 +312,19 @@ TAGS: overwritable layout allow_dup unrand
 
   local fcircle
   if crawl.coinflip() then
-    fcircle = procedural.distance { radius = math.min(gxm,gym)/2.5 - 2, origin = { x = gxm/2, y = gym/2 } }
+    fcircle = procedural.distance { radius = math.min(gxm,gym)/2.2 - 2, origin = { x = gxm/2, y = gym/2 } }
   else
-    local padx,pady = crawl.random_range(2,10),crawl.random_range(2,10)
+    local padx,pady = crawl.random_range(2,5),crawl.random_range(2,5)
     fcircle = procedural.box { x1 = padx, y1 = pady, x2 = gxm-1-padx, y2 = gym-1-pady }
   end
 
   local wall_break = util.random_range_real(.4,.6)
-  local rings = crawl.random_range(4,8)
+  local rings = crawl.random_range(5,8)
 
   local fill_center = crawl.coinflip()
   local frings = function(x,y)
     local r = fcircle(x,y)
-    if r >= 1 then return 0 end
+    if r >= 1 then return -1 end
     local rr = r * rings
     local level = math.floor(rr)
     r = rr - level
@@ -350,17 +351,62 @@ TAGS: overwritable layout allow_dup unrand
 
   -- Generate the interference pattern by combining two coords
   -- from the original func
+  local cardinal = crawl.coinflip()
+  local basedirs
+  if cardinal then
+    basedirs = vector.diagonals
+  else
+    basedirs = {}
+    local dir = { x = util.random_range_real(0.5,1), y = util.random_range_real(0.5,1) }
+    for n=1,4,1 do
+      basedirs[n] = { x = vector.diagonals[n].x*dir.x, y = vector.diagonals[n].y*dir.y }
+    end
+  end
+
+  local dist = crawl.random_range(3,6)
+  local dirs = {}
+  for n=1,4,1 do
+    dirs[n] = { x = basedirs[n].x*dist, y = basedirs[n].y*dist }
+  end
+
   local xor = crawl.coinflip()
-  local dir = util.random_from(vector.directions)
-  local dist = crawl.random_range(4,8)
-  local offx,offy = dist*dir.x,dist*dir.y
-  local fphase = function(x,y)
-    local r1 = frings(x-offx,y-offy)
-    local r2 = frings(x+offx,y+offy)
-    if xor and r1>wall_break and r2>wall_break then
-      return r1-r2
-    else
-      return math.max(r1,r2)
+
+  local vals = {}
+  local fvals = function(x,y)
+    for n=1,4,1 do
+      vals[n] = frings(x+dirs[n].x,y+dirs[n].y)
+    end
+    return vals
+  end
+
+  local fphase
+  local two_or_four = crawl.coinflip()
+  if xor then
+    fphase = function(x,y)
+      local vals = fvals(x,y)
+      if two_or_four then
+        if vals[1] < 0 or vals[2] < 0 or vals[3] < 0 or vals[4] < 0 then return 0 end
+        if vals[1] > wall_break and vals[2] > wall_break or vals[3] > wall_break and vals[4] > wall_break then
+          return vals[1] - vals[2] + vals[3] - vals[4]
+        end
+      else
+        if vals[1] < 0 or vals[3] < 0 then return 0 end
+        if vals[1] > wall_break and vals[3] > wall_break then
+          return vals[1] - vals[3]
+        end
+      end
+      return 1
+    end
+  else
+    fphase = function(x,y)
+      local vals = fvals(x,y)
+      if two_or_four then
+        if vals[1] < 0 or vals[2] < 0 or vals[3] < 0 or vals[4] < 0 then return 0 end
+        return math.max(vals[1],vals[2],vals[3],vals[4])
+      else
+        if vals[1] < 0 or vals[3] < 0 then return 0 end
+        return math.max(vals[1],vals[3])
+      end
     end
   end
 
