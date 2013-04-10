@@ -2783,7 +2783,7 @@ void melee_attack::chaos_affects_attacker()
         }
     }
 
-    if (attacker->is_player() && !you.form && one_chance_in(1000))
+    if (attacker->is_player() && !you.form && one_chance_in(500))
     {
         // Non-weapon using forms are uncool here: you'd need to run away
         // instead of continuing the fight.
