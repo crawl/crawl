@@ -1,6 +1,5 @@
 ###############################################################################
-# layout_caves.des: Layouts based on cavelike formations, largely using
-#                   procedural noise functions
+# layout_halls.des: Hall-like formations featuring rooms and corridors
 ###############################################################################
 
 : require("dlua/util.lua")
@@ -53,7 +52,7 @@
 
     local fphase = function(x,y)
       local r = fcircle(x,y)
-      if r >= 1 then return 0 end
+      if r >= 1 then return -1 end
       local rr = r * num_rings
       local level = math.floor(rr)
       r = rr - level
@@ -227,7 +226,6 @@ TAGS: overwritable layout allow_dup unrand
 
   -- TODO:
   --  * Implement chaotic gaps sizing
-  --  * Maybe ruin some walls
   --  * Tune params a bit for Snake
 
   local wall_break = util.random_range_real(.4,.7)
@@ -258,7 +256,7 @@ TAGS: overwritable layout allow_dup unrand
 
   procedural.render_map(_G, fphase, function(v) return (v > wall_break and '.' or 'x') end)
 
-  zonify.map_fill_zones(_G, 1, 'x')
+  -- zonify.map_fill_zones(_G, 1, 'x')
 }}
 MAP
 ENDMAP
@@ -266,28 +264,69 @@ ENDMAP
 # Takes an inverted version of the onion layout so what were walls
 # are now rooms - connects these up with a noise pattern.
 # Hopefully this should look like ancient abandoned catacombs.
-# TODO: Other ways of connecting up the rooms.
+# TODO: Other ways of connecting up the rooms. Need something starting
+# in the centre and spreading out in a branching way, like particle diffusion.
 NAME:   layout_catacombs
-DEPTH:  Crypt
-WEIGHT: 0
+DEPTH:  Crypt,Tar
+WEIGHT: 50, 100 (Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-  layout_type "halls"
+  layout_type "catacombs"
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
 
   -- Make the rings
-  local num_rings = crawl.random2avg(6,2)+4
-  local wall_break = util.random_range_real(.5,.8)
+  local num_rings = crawl.random2avg(4,2)+4
+  local wall_break = util.random_range_real(0.4,0.7)
   local fphase = onion_skin(num_rings,wall_break)
 
   -- Position on map
-  fphase = procedural.translate(procedural.scale(fphase,math.min(gxm,gym)/2-2),gxm/2,gym/2)
+  fphase = procedural.translate(procedural.scale(fphase,math.min(gxm,gym)/(crawl.random2(3)/2+1)),
+                                gxm/2,gym/2)
+
+  -- NOTE: The following didn't quite work but was pretty cool. Attempted to 'erode' the
+  -- level by drawing noise layers over it. It mostly managed to connect everything but
+  -- was just a bit too messy.
+  --local fconnect = procedural.sub(1,
+  --  procedural.abs(procedural.simplex3d { scale = 4, unit = false }),
+  --  procedural.abs(procedural.simplex3d { scale = 4, unit = false })
+  --)
+
+  local use_water = you.in_branch("crypt") and crawl.one_chance_in(4)
+
+  -- Pick a connector function to link up the rooms
+  local fconnect
+  if crawl.coinflip() then
+    fconnect = complex.rays(crawl.random_range(5,10), crawl.random_real(), util.random_range_real(30,35), util.random_range_real(0.1,0.2))
+    -- Distort more the further out the rays go
+    local fdsx = procedural.simplex3d { scale = util.random_range_real(.5,1), unit = false }
+    local fdsy = procedural.simplex3d { scale = util.random_range_real(.5,1), unit = false }
+    local fedge = procedural.min(1,procedural.div(primitive.distance,math.min(gxm,gym)/2))
+    local fdx = procedural.mul(fdsx,fedge)
+    local fdy = procedural.mul(fdsy,fedge)
+    fconnect = procedural.distort { source = fconnect, scale = crawl.random_range(10,20), offsetx = fdx, offsety = fdy }
+    fconnect = procedural.translate(fconnect,gxm/2,gym/2)
+    use_water = false
+  else
+    fconnect = procedural.abs(procedural.simplex3d { scale = util.random_range_real(0.6,0.8), unit = false })
+  end
+
+  local connect_glyph = '.'
+  local water_glyph = 'W'
 
   -- Do the render
-  procedural.render_map(_G, fphase, function(v) return (v < wall_break and '.' or 'x') end)
-  procedural.render_map(_G, procedural.worley_diff{scale=util.random_range_real(0.1,0.2) }, function(v) return (v < 0.1 and '.' or nil) end)
+  procedural.render_map(_G, fphase, function(v,x,y)
+    local vconn = fconnect(x,y)
+    if vconn < 0.1 then
+      if use_water and (v == -1 or vconn < 0.06) then
+        return water_glyph
+      elseif v > -1 then
+        return connect_glyph
+      end
+    end
+    return (v < wall_break and v > -1 and '.' or 'x')
+  end)
 
   zonify.map_fill_zones(_G, 1, 'x')
 }}
