@@ -1913,7 +1913,9 @@ enum map_marker_type
     MAT_MALIGN,
     MAT_PHOENIX,
     MAT_POSITION,
+#if TAG_MAJOR_VERSION == 34
     MAT_DOOR_SEAL,
+#endif
     MAT_TERRAIN_CHANGE,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
