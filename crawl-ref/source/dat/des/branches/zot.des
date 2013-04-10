@@ -135,39 +135,6 @@ end
 ##############################################################################
 ##############################################################################
 
-# Old-style three stairs
-# NOTE: Not currently used since the large entries are placing as
-#       primary vaults instead
-#
-NAME:   zot_entry_traditional
-TAGS:   zot_entry
-KFEAT:  O = enter_zot
-{{
-  hook("post_place", function()
-    dgn.place_maps { tag = "zot_entry_secondary", count = 2 }
-    if crawl.one_chance_in(100) then
-      dgn.place_maps { tag = "zot_entry_secondary_mimic", count = 1 }
-    end
-  end)
-}}
-MAP
-O
-ENDMAP
-
-NAME:   zot_entry_traditional_secondary
-TAGS:   zot_entry_secondary allow_dup
-KFEAT:  O = enter_zot
-MAP
-O
-ENDMAP
-
-NAME:   zot_entry_traditional_secondary_mimic
-TAGS:   zot_entry_secondary_mimic
-KFEAT:  O = enter_zot mimic
-MAP
-O
-ENDMAP
-
 ###########################
 # Something to give the builder a chance if massive vaults keep failing.
 # NOTE: Not currently used since the large entries are placing as
