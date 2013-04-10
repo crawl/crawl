@@ -270,26 +270,21 @@ end
 
 -- Provides the full data from a Worley call, should not be directly used
 -- e.g.  as a transform
-
 function procedural.worley(params)
   local final_scale_x = params.scale * 0.8
   local final_scale_y = params.scale * 0.8
+  local final_scale_z = params.scale * 0.8
   local major_offset_x = crawl.random2(1000000)
   local major_offset_y = crawl.random2(1000000)
   local major_offset_z = crawl.random2(1000000)
-  return function(x,y)
+  return function(x,y,z)
+    if z == nil then z = 0 end
     local d1,d2,id1,id2,pos1x,pos1y,pos1z,pos2x,pos2y,pos2z =
         crawl.worley(x * final_scale_x + major_offset_x,
-                     y * final_scale_y + major_offset_y, major_offset_z)
+                     y * final_scale_y + major_offset_y,
+                     z * final_scale_z + major_offset_z)
     return {
       d = { d1,d2 },
-
-      -- Transform the ids into a 0..1 range so this gives us a random
-      -- number unique to the whole node.
-
-      -- TODO: It'll often be more useful to split the id up into bytes or
-      -- even bits so we have more random numbers and flags available, but
-      -- for optimisation purposes we only want them if necessary...
       id = { id1,id2 },
       pos = { { x = pos1x, y = pos1y, z = pos1z },
               { x = pos2x, y = pos2y, z = pos2z } }
@@ -302,13 +297,16 @@ end
 function procedural.worley_diff(params)
   local final_scale_x = params.scale * 0.8
   local final_scale_y = params.scale * 0.8
+  local final_scale_z = params.scale * 0.8
   local major_offset_x = crawl.random2(1000000)
   local major_offset_y = crawl.random2(1000000)
   local major_offset_z = crawl.random2(1000000)
-  return function(x,y)
+  return function(x,y,z)
+    if z == nil then z = 0 end
     local diff, id =
         crawl.worley_diff(x * final_scale_x + major_offset_x,
-                          y * final_scale_y + major_offset_y, major_offset_z)
+                          y * final_scale_y + major_offset_y,
+                          z * final_scale_z + major_offset_z)
     return diff, id
   end
 end
@@ -316,14 +314,17 @@ end
 function procedural.simplex3d(params)
   local final_scale_x = params.scale / 10
   local final_scale_y = params.scale / 10
+  local final_scale_z = params.scale / 10
 
   local major_offset_x = util.random_range_real(0,1)
   local major_offset_y = util.random_range_real(0,1)
   local major_offset_z = util.random_range_real(0,1)
   local unit = (params.unit == nil or params.unit) and true or false
-  return function(x,y)
+  return function(x,y,z)
+    if z == nil then z = 0 end
     local result = crawl.simplex((x + major_offset_x) * final_scale_x,
-                   (y + major_offset_y) * final_scale_y, major_offset_z)
+                                 (y + major_offset_y) * final_scale_y,
+                                 (z + major_offset_z) * final_scale_z)
     if unit then result = result / 2.0 + 0.5 end
     return result
   end
