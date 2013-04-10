@@ -316,15 +316,15 @@ function procedural.simplex3d(params)
   local final_scale_y = params.scale / 10
   local final_scale_z = params.scale / 10
 
-  local major_offset_x = util.random_range_real(0,1)
-  local major_offset_y = util.random_range_real(0,1)
-  local major_offset_z = util.random_range_real(0,1)
+  local major_offset_x = 100 + util.random_range_real(0,1)
+  local major_offset_y = 100 + util.random_range_real(0,1)
+  local major_offset_z = 100 + util.random_range_real(0,1)
   local unit = (params.unit == nil or params.unit) and true or false
   return function(x,y,z)
     if z == nil then z = 0 end
-    local result = crawl.simplex((x + major_offset_x) * final_scale_x,
-                                 (y + major_offset_y) * final_scale_y,
-                                 (z + major_offset_z) * final_scale_z)
+    local result = crawl.simplex(x * final_scale_x + major_offset_x,
+                                 y * final_scale_y + major_offset_y,
+                                 z * final_scale_z + major_offset_z)
     if unit then result = result / 2.0 + 0.5 end
     return result
   end
