@@ -1513,7 +1513,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_WATER:
         hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      mons->res_asphyx(),
+                                      mons->res_water_drowning(),
                                       hurted, true);
         if (doFlavouredEffects)
         {
