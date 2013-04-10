@@ -1578,7 +1578,7 @@ enum enchant_type
     ENCH_SCREAMED,      // Starcursed scream timer
     ENCH_WORD_OF_RECALL,// Chanting word of recall
     ENCH_INJURY_BOND,
-    // Update enchantment names in monster.cc when adding or removing
+    // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
 };
