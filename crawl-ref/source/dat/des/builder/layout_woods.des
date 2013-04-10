@@ -10,8 +10,8 @@
 # A twisty turny forest maze
 # Can appear in Crypt, Dis and Tar looking a little different ...
 NAME:   layout_twisted_forest
-DEPTH:  D:15-25,Lair,Crypt
-WEIGHT: 2, 5 (Crypt)
+DEPTH:  D:15-25,Lair
+WEIGHT: 2
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -23,32 +23,43 @@ TAGS: overwritable layout allow_dup unrand
   --  * More layout variance between branches (plus actual crypts in crypt)
   --  * Make the scale of everything generally more variable
 
-  local gxm,gym = dgn.max_bounds()
-  extend_map { width = gxm, height = gym, fill = 'x' }
-
-  local streams = crawl.one_chance_in(3)
+  local streams = crawl.one_chance_in(4)
+  local lakes = true
 
   local scale = 1 -- util.random_range_real(1,2)
   local tree_feature = 't'
   local plant_mons = "plant"
   if you.in_branch("dis") then
-    tree_feature = "g"
-    kfeat("g = iron_grate")
     plant_mons = "plant name:metallic n_adj col:darkgrey tile:mons_withered_plant / nothing"
     streams = false
+    tile("t = dngn_tree_dead")
+    colour("t = w:5 red / w:10 darkgrey / w:5 lightgrey / w:2 brown")
+    set_feature_name("tree", "iron tree")
+    water_glyph = "l"
+    deep_water_glyph = "l"
   elseif you.in_branch("tar") then
     tree_feature = "G"
     plant_mons = "plant name:petrified n_adj col:lightgrey tile:mons_withered_plant / nothing"
+    colour("G = w:5 lightgrey / w:5 darkgrey")
+    set_feature_name("granite_statue", "petrified tree")
     streams = false
+    lakes = false
   elseif you.in_branch("crypt") then
     streams = false
     scale = 0.5
     plant_mons = "w:2 col:darkgrey plant name:withered name_adjective               \
                   tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
                   name_adjective tile:mons_withered_plant"
+    kmons("1 = " .. plant_mons)
+    colour("t = w:5 lightgrey / w:5 darkgrey / brown")
     set_feature_name("tree", "dead tree")
+    lakes = false
+    -- TODO: Graves instead of lakes
   end
   kmons("1 = " .. plant_mons)
+
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
 
   -- Setup worley functions
   local fwall = procedural.sub(1, procedural.border { padding = 5 },
