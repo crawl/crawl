@@ -615,12 +615,14 @@ FOOTER
     close(HEADER);
 }
 
-sub guard_constant($) {
+sub guard_constant($)
+{
     (my $name = shift) =~ tr/a-zA-Z0-9/_/c;
     $name
 }
 
-sub unrand_enum_constants() {
+sub unrand_enum_constants()
+{
     my $result = '';
     my $i;
     my $longest_enum = 0;
@@ -1063,7 +1065,8 @@ sub read_data
 chdir("..")     if (-e "../art-data.txt");
 chdir("source") if (-e "source/art-data.txt");
 
-for my $wanted (qw/art-data.txt art-func.h artefact.h/) {
+for my $wanted (qw/art-data.txt art-func.h artefact.h/)
+{
     die "Can't read $wanted" unless -r $wanted;
 }
 

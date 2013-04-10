@@ -486,7 +486,8 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     double extreme_proximity = max(0.0,abs(height-0.5)-0.3) * 5.0;
     city = city * (1.0 - extreme_proximity);
 
-    if (enable_city && city >= city_outer_limit) {
+    if (enable_city && city >= city_outer_limit)
+    {
         dungeon_feature_type city_wall = DNGN_ROCK_WALL;
         if (rich > 0.5) city_wall = DNGN_STONE_WALL;
         else if (rich > 0.75) city_wall = DNGN_METAL_WALL;
