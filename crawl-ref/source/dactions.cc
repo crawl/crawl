@@ -293,7 +293,8 @@ unsigned int query_da_counter(daction_type c)
     return travel_cache.query_da_counter(c) + count_daction_in_transit(c);
 }
 
-void daction_hog_to_human(monster *mon) {
+void daction_hog_to_human(monster *mon)
+{
     // Hogs to humans
     monster orig;
     const bool could_see = you.can_see(mon);

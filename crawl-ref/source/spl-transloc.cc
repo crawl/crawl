@@ -186,7 +186,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             args.top_prompt = "Blink to where?";
             direction(beam, args);
 
-            if (crawl_state.seen_hups) {
+            if (crawl_state.seen_hups)
+            {
                 mpr("Cancelling blink due to HUP.");
                 return -1;
             }
