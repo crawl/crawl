@@ -1,3 +1,22 @@
+Stone Soup 0.13 (up to 0.13-a0-317-gaae6efa)
+--------------------------------------------
+
+Branches, environment
+---------------------
+* Several new layouts.
+
+Character
+---------
+* Stabbing skill is no more; stabs now depend upon the average of the
+  character's stealth and weapon skill.
+* Chaos knights start with a +0 chaos weapon instead of a +2 normal weapon.
+
+Items
+-----
+* Potions of gain <ability> have been replaced by potions of beneficial
+  mutation, which grant the player a single beneficial mutation.
+* Needles of sickness have been removed.
+
 Stone Soup 0.12 (2013XXYY)
 --------------------------
 
