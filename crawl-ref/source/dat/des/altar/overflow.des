@@ -185,12 +185,13 @@ ENDMAP
 NAME:   cheibriados_altar_wand_db
 TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados patrolling
 DEPTH:  D:2-9
+WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
-MONS:   goblin; wand of slowing / \
-        hobgoblin; wand of slowing / \
-        gnoll; wand of slowing / \
-        orc; wand of slowing / \
-        kobold; wand of slowing
+MONS:   goblin; wand of slowing ident:type / \
+        hobgoblin; wand of slowing ident:type / \
+        gnoll; wand of slowing ident:type / \
+        orc; wand of slowing ident:type / \
+        kobold; wand of slowing ident:type
 MONS:   goblin / hobgoblin / gnoll / orc / kobold
 NSUBST: 2 = 1:1 / *:2
 MAP
