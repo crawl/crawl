@@ -20,3 +20,20 @@ function complex.cog(teeth,inner,gap,offset)
     return d
   end
 end
+
+-- Creates a number of rays around the origin. Offset is 0..1 to denote
+-- rotation. If converge is non-nil then the rays will be even-sized
+-- all the way along instead of diverging in size; they will converge
+-- at the radius given by converge.
+function complex.rays(num,offset,converge,diverge)
+  local frad = procedural.phase(primitive.radial, num, offset)
+  if even == false then return frad end
+  if diverge == nil then diverge = 0 end
+  return function(x,y)
+    local a = frad(x,y)
+    local r = primitive.distance(x,y)
+    -- TODO: Work out divergence. It means (r/converge) has to tend
+    -- more towards 1 for higher values of r.
+    return a * r / converge
+  end
+end
