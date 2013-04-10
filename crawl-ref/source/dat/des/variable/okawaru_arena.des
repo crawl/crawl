@@ -151,7 +151,7 @@ lua_marker("E", portal_desc { iron_doors=1,
                               door_open_prompt=
                                 "It reads,\n"
                                 .. "\"Warrior's weapon\n"
-                                .. " gracefuly paints petals red.\n"
+                                .. " gracefully paints petals red.\n"
                                 .. " Honourable art.\"\n"
                                 .. "Proceed?" })
 lua_marker("L", tloot_grab)
