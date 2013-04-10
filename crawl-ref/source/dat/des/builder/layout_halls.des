@@ -7,6 +7,7 @@
 : require("dlua/layout/procedural.lua")
 : require("dlua/layout/procedural_primitives.lua")
 : require("dlua/layout/procedural_complex.lua")
+: require("dlua/layout/procedural_transform.lua")
 : require("dlua/layout/zonify.lua")
 
 {{
@@ -411,6 +412,81 @@ TAGS: overwritable layout allow_dup unrand
   end
 
   procedural.render_map(_G, fphase, function(v) return (v > wall_break and '.' or 'x') end)
+
+  zonify.map_fill_zones(_G, 1, 'x')
+}}
+MAP
+ENDMAP
+
+# This maps the x,y domain to a 3D cylinder extruded along the y-axis in the
+# Worley space. This creates a strong sense of repetition and symmetry along
+# the horizontal whilst still allowing the patterns to connect.
+# Somehow, particularly in Zot, the shapes have a tendency to come out looking like
+# people, faces, skulls... sort of like a folded paper cutting.
+NAME:   layout_cathedral_of_symmetry
+DEPTH:  Zot,Tar
+WEIGHT: 20, 100(Tar)
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  layout_type "halls"
+  if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+
+  -- zscale controls the symmetry within each repetition because with 0
+  -- the coord bounces back and forth along a line instead of tracing
+  -- a circle. Increasing towards 1 results in less and less symmetry until
+  -- we get a standard worley pattern at 1.
+  local zscale = 0
+
+  -- zoff gradually increases the z-axis offset as we move along x.
+  -- A non-zero value results in each repetition looking slightly different.
+  local zoff = 0
+
+  -- How many times to loop the pattern. Use multiples of 0.5 to
+  -- take advantage of the symmetrical nature of the algorithm
+  local reps = (crawl.random2(8)+1)/2
+
+  -- Offsets the whole pattern by a given multiple of repetitions.
+  -- This means the large symmetrical parts can be in the middle or on
+  -- the edge. Using multiples of 0.25 as these create a distinct geometry.
+  local xoff = crawl.random2(4)/4
+
+  -- Note: varying the scales is very tricky. At higher reps we can't get
+  -- away with so much variance.
+  -- Vertical axis scale
+  local yscale = 1
+  -- Scale of the underlying worley
+  local wscale = .2
+
+  if you.in_branch("tar") then
+    -- Tar works best with a lot of dissonance but occasionally
+    -- repeating elements
+    zscale = util.random_range_real(0.2,0.6)
+    zoff = util.random_range_real(0.1,0.3)
+    yscale = util.random_range_real(.4,1)/reps + reps/10
+    wscale = util.random_range_real(.06, .1)
+  else
+    -- In Zot we want a strong set of symmetry and repetition
+    zscale = util.random_range_real(0,0.05)
+    zoff = util.random_range_real(0,0.25)
+    yscale = util.random_range_real(.1,.4)/reps + reps/10
+    wscale = util.random_range_real(.05, .08)
+  end
+
+  local scale = 80/reps
+  local breakpoint = 0.3
+  local fbase = procedural.worley_diff{ scale = wscale }
+  fbase = procedural.transform.wrapped_cylinder(fbase,scale,scale,zscale,zoff)
+  fbase = procedural.scale(fbase,1,yscale)
+  fbase = procedural.translate(fbase,scale*xoff/2,0)
+  fbase = procedural.add(fbase,procedural.mul(breakpoint,procedural.border{padding=5}))
+
+  procedural.render_map(_G, fbase, function(v) return (v < breakpoint and '.' or 'x') end)
+
+  procedural.render_map(_G, fbase, function(v,x,y)
+    return (v < .3 and '.' or 'x')
+  end)
 
   zonify.map_fill_zones(_G, 1, 'x')
 }}
