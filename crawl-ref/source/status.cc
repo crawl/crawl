@@ -553,6 +553,25 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case DUR_WATER_HOLD:
+        inf->light_text   = "Engulf";
+        if (you.res_water_drowning())
+        {
+            inf->short_text   = "engulfed";
+            inf->long_text    = "You are engulfed in water.";
+            if (you.can_swim())
+                inf->light_colour = DARKGREY;
+            else
+                inf->light_colour = YELLOW;
+        }
+        else
+        {
+            inf->short_text   = "engulfed (cannot breathe)";
+            inf->long_text    = "You are engulfed in water and unable to breathe.";
+            inf->light_colour = RED;
+        }
+        break;
+
     default:
         if (!found)
         {

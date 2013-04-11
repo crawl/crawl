@@ -2845,6 +2845,10 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SICKENING, delay);
 
+    _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);
+    if (you.duration[DUR_WATER_HOLD])
+        handle_player_drowning(delay);
+
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
@@ -4388,6 +4392,19 @@ static void _move_player(coord_def move)
             stop_running();
             you.turn_is_over = false;
             return;
+        }
+
+        if (you.duration[DUR_WATER_HOLD])
+        {
+            if (you.can_swim())
+                mpr("You deftly slip free of the water engulfing you.");
+            else //Unless you're a natural swimmer, this takes longer than normal
+            {
+                mpr("With effort, you pull free of the water engulfing you.");
+                you.time_taken = you.time_taken * 3 / 2;
+            }
+            you.duration[DUR_WATER_HOLD] = 1;
+            you.props.erase("water_holder");
         }
 
         if (swap)

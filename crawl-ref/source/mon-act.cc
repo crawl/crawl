@@ -133,6 +133,20 @@ static void _monster_regenerate(monster* mons)
     }
 }
 
+static void _escape_water_hold(monster* mons)
+{
+    if (mons->has_ench(ENCH_WATER_HOLD))
+    {
+        if (mons_habitat(mons) != HT_AMPHIBIOUS
+            && mons_habitat(mons) != HT_WATER)
+        {
+            mons->speed_increment -= 5;
+        }
+        simple_monster_message(mons, " pulls free of the water.");
+        mons->del_ench(ENCH_WATER_HOLD);
+    }
+}
+
 static bool _swap_monsters(monster* mover, monster* moved)
 {
     // Can't swap with a stationary monster.
@@ -213,6 +227,8 @@ static bool _swap_monsters(monster* mover, monster* moved)
         mprf("%s and %s swap places.", mover->name(DESC_THE).c_str(),
              moved->name(DESC_THE).c_str());
     }
+
+    _escape_water_hold(mover);
 
     return true;
 }
@@ -3446,6 +3462,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 #else
     _swim_or_move_energy(mons);
 #endif
+
+    _escape_water_hold(mons);
 
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(mons, DNGN_DEEP_WATER))

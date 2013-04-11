@@ -532,7 +532,7 @@ bool melee_attack::handle_phase_hit()
     if (check_unrand_effects() || stop_hit)
         return false;
 
-    if (damage_done > 0 || attk_flavour == AF_CRUSH)
+    if (damage_done > 0 || attk_flavour == AF_CRUSH || attk_flavour == AF_DROWN)
     {
         if (!handle_phase_damaged())
             return false;
@@ -4747,6 +4747,34 @@ void melee_attack::mons_apply_attack_flavour()
         // if you got grabbed, interrupt stair climb and passwall
         if (defender->is_player())
             stop_delay(true);
+        break;
+
+    case AF_DROWN:
+        if (x_chance_in_y(2, 3) && attacker->can_constrict(defender))
+        {
+            if (defender->is_player() && !you.duration[DUR_WATER_HOLD]
+                && !you.duration[DUR_WATER_HOLD_IMMUNITY])
+            {
+                you.duration[DUR_WATER_HOLD] = 10;
+                you.props["water_holder"].get_int() = attacker->as_monster()->mid;
+            }
+            else if (defender->is_monster()
+                     && !defender->as_monster()->has_ench(ENCH_WATER_HOLD))
+            {
+                defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, 1,
+                                                             attacker, 1));
+            }
+            else
+                return; //Didn't apply effect; no message
+
+            if (needs_message)
+            {
+                mprf("%s %s %s in water!",
+                     atk_name(DESC_THE).c_str(),
+                     attacker->conj_verb("engulf").c_str(),
+                     defender_name().c_str());
+            }
+        }
         break;
     }
 }

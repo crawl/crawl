@@ -1837,7 +1837,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
 
-    if ((silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
+    if ((silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
+         || (mons->has_ench(ENCH_WATER_HOLD) && !mons->res_water_drowning()))
         && (priest || wizard || spellcasting_poly
             || mons_class_flag(mons->type, M_SPELL_NO_SILENT)))
     {

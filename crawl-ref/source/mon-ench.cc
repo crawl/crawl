@@ -30,6 +30,7 @@
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
@@ -1726,6 +1727,24 @@ void monster::apply_enchantment(const mon_enchant &me)
             decay_enchantment(me);
         break;
 
+    case ENCH_WATER_HOLD:
+        if (!me.agent()
+            || (me.agent() && !adjacent(me.agent()->as_monster()->pos(), pos())))
+        {
+            del_ench(ENCH_WATER_HOLD);
+        }
+        else
+        {
+            if (!res_water_drowning())
+            {
+                lose_ench_duration(me, -speed_to_duration(speed));
+                int dam = div_rand_round((50 + stepdown((float)me.duration, 30.0))
+                                          * speed_to_duration(speed),
+                            BASELINE_DELAY * 10);
+                hurt(me.agent(), dam);
+            }
+        }
+
     default:
         break;
     }
@@ -1857,7 +1876,7 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "buggy",
+    "drowning", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

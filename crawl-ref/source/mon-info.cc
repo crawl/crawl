@@ -159,6 +159,11 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_WORD_OF_RECALL;
     case ENCH_INJURY_BOND:
         return MB_INJURY_BOND;
+    case ENCH_WATER_HOLD:
+        if (mons.res_water_drowning())
+            return MB_WATER_HOLD;
+        else
+            return MB_WATER_HOLD_DROWN;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1449,6 +1454,14 @@ vector<string> monster_info::attributes() const
         v.push_back("chanting recall");
     if (is(MB_INJURY_BOND))
         v.push_back("sheltered from injuries");
+    if (is(MB_WATER_HOLD))
+        v.push_back("engulfed in water");
+    if (is(MB_WATER_HOLD_DROWN))
+    {
+        v.push_back("engulfed in water");
+        v.push_back("unable to breathe");
+    }
+
     return v;
 }
 

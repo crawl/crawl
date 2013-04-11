@@ -88,6 +88,8 @@ enum monster_info_flags
     MB_SCREAMED,
     MB_WORD_OF_RECALL,
     MB_INJURY_BOND,
+    MB_WATER_HOLD,
+    MB_WATER_HOLD_DROWN,
     NUM_MB_FLAGS
 };
 

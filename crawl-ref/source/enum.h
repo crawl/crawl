@@ -1488,6 +1488,8 @@ enum duration_type
 #endif
     DUR_SENTINEL_MARK,
     DUR_SICKENING,
+    DUR_WATER_HOLD,
+    DUR_WATER_HOLD_IMMUNITY,
     NUM_DURATIONS
 };
 
@@ -1578,6 +1580,7 @@ enum enchant_type
     ENCH_SCREAMED,      // Starcursed scream timer
     ENCH_WORD_OF_RECALL,// Chanting word of recall
     ENCH_INJURY_BOND,
+    ENCH_WATER_HOLD,      // Silence and asphyxiation damage
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
