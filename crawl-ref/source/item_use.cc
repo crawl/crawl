@@ -2889,6 +2889,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot read scrolls while unable to breathe!");
+        return;
+    }
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);

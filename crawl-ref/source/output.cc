@@ -917,6 +917,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SENTINEL_MARK,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
+        DUR_WATER_HOLD
     };
 
     status_info inf;

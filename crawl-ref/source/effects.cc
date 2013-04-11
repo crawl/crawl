@@ -952,6 +952,12 @@ void yell(bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot shout while unable to breathe!");
+        return;
+    }
+
     bool targ_prev = false;
     int mons_targd = MHITNOT;
     dist targ;
@@ -2248,7 +2254,8 @@ void handle_time()
     handle_god_time();
 
     if (player_mutation_level(MUT_SCREAM)
-        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100)
+        && !(you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()))
     {
         yell(true);
     }

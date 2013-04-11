@@ -4280,7 +4280,8 @@ orcs.
 water elemental
 
 A spirit drawn from the elemental plane of water. It exists on this world as
-part of a body of water.
+part of a body of water and can engulf other beings in its form, depriving them
+of breath and voice.
 %%%%
 water moccasin
 
