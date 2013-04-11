@@ -44,7 +44,7 @@ public:
     // autopickup.
     bool pickup_eligible() const;
 
-    // Returns true if this Stash contains items that can be sacrificied
+    // Returns true if this Stash contains items that can be sacrificed
     bool sacrificeable() const;
 
     // Returns true if this Stash contain items not handled by autopickup and
@@ -253,7 +253,7 @@ public:
     bool  needs_stop(const coord_def &c) const;
 
     // Returns true if the items at c contains at least one that can be
-    // sacrificied
+    // sacrificed
     bool sacrificeable(const coord_def &c) const;
 
     // Add stash at (x,y), or player's current location if no parameters are
