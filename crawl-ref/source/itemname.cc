@@ -1711,7 +1711,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
         else
         {
-            if (is_deck(*this))
+            // NUM_MISCELLANY indicates unidentified deck for item_info
+            if (is_deck(*this) || item_typ == NUM_MISCELLANY)
             {
                 if (basename)
                 {
@@ -1726,7 +1727,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 if (!dbname)
                     buff << deck_rarity_name(deck_rarity(*this)) << ' ';
             }
-            buff << misc_type_name(item_typ, know_type);
+            if (item_typ == NUM_MISCELLANY)
+                buff << misc_type_name(MISC_DECK_OF_ESCAPE, false);
+            else
+                buff << misc_type_name(item_typ, know_type);
             if (is_deck(*this) && !dbname
                 && (top_card_is_known(*this) || plus2 != 0))
             {
