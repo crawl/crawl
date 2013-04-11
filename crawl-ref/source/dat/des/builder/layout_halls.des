@@ -461,7 +461,7 @@ ENDMAP
 # Worley space. This creates a strong sense of repetition and symmetry along
 # the horizontal whilst still allowing the patterns to connect.
 # Somehow, particularly in Zot, the shapes have a tendency to come out looking like
-# people, faces, skulls... sort of like a folded paper cutting.
+# people, faces, skulls... kind of like a paper doll chain.
 NAME:   layout_cathedral_of_symmetry
 DEPTH:  Zot,Tar
 WEIGHT: 20, 100(Tar)
@@ -498,6 +498,9 @@ TAGS: overwritable layout allow_dup unrand
   -- Scale of the underlying worley
   local wscale = .2
 
+  local border = crawl.random_range(3,6)
+  local margin = crawl.random_range(0,5)
+
   if you.in_branch("tar") then
     -- Tar works best with a lot of dissonance but occasionally
     -- repeating elements
@@ -506,6 +509,14 @@ TAGS: overwritable layout allow_dup unrand
     yscale = util.random_range_real(.4,1)/reps + reps/10
     wscale = util.random_range_real(.06, .1)
   else
+    -- Zot:5
+    if you.at_branch_bottom() then
+      reps = crawl.random2(4)+0.5
+      xoff = 0
+      border = 6
+      margin = 8
+    end
+
     -- In Zot we want a strong set of symmetry and repetition
     zscale = util.random_range_real(0,0.05)
     zoff = util.random_range_real(0,0.25)
@@ -519,7 +530,7 @@ TAGS: overwritable layout allow_dup unrand
   fbase = procedural.transform.wrapped_cylinder(fbase,scale,scale,zscale,zoff)
   fbase = procedural.scale(fbase,1,yscale)
   fbase = procedural.translate(fbase,scale*xoff/2,0)
-  fbase = procedural.add(fbase,procedural.mul(breakpoint,procedural.border{padding=5}))
+  fbase = procedural.add(fbase,procedural.mul(breakpoint,procedural.border{padding=border,margin=margin}))
 
   procedural.render_map(_G, fbase, function(v) return (v < breakpoint and '.' or 'x') end)
 
