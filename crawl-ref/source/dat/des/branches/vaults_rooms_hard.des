@@ -871,3 +871,90 @@ x...x+...+x...x
      .000.
       ...
 ENDMAP
+
+NAME: nicolae_vaults_branching_niches
+TAGS: vaults_hard vaults_orient_s no_monster_gen no_item_gen
+SUBST: + : +.
+KMONS: m = 0 band w:12 / 9 w:3 / 8 w:1 / nothing w:6
+KITEM: m = nothing / % / $ / * w:5 / | w:1
+MAP
+xmxxxmxxxmxxxmx
+x+xxx+xxx+xxx+x
+x.....xxx.....x
+x+x.x+xxx+x.x+x
+xmx.xmxxxmx.xmx
+xxx.xxxxxxx.xxx
+xxx.........xxx
+xxx.xxx.xxx.xxx
+xmx.xmx.xmx.xmx
+x+x.x+x.x+x.x+x
+x.....x.x.....x
+x+xxx+x.x+xxx+x
+xmxxxmx.xmxxxmx
+xxxxxxx.xxxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_c_with_doors
+TAGS: vaults_hard vaults_orient_e no_monster_gen no_item_gen
+NSUBST: A = 1:+ / *:x
+SUBST: $ = $$%, B = 0., 0 = 900
+KMONS: 0 = 0 band
+MAP
+xxxxxxxxxxx
+xB.B...B..x
+x.$$xAxAxAx
+xB$$xBxBxBx
+x.xxx+x+x+x
+x.AB+......
+xBxxx.(..(.
+x.AB+.(..(.
+xBxxx.(..(.
+x.AB+......
+x.xxx+x+x+x
+xB$$xBxBxBx
+x.$$xAxAxAx
+xB.B...B..x
+xxxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_meeting
+TAGS: vaults_hard vaults_orient_s patrolling no_monster_gen
+KMONS: S = vault sentinel
+KMONS: G = vault guard
+KMONS: W = vault warden
+KMONS: P = ironheart preserver
+KMONS: C = ironbrand convoker
+SUBST: | = ||*
+MAP
+   xxxxxxx
+ xxx%*|*%xxx
+xxG+..S..+Gxx
+x..xnnnnnx..x
+x.P...C...P.x
+x...........x
+x..W.....W..x
+xx...GGG...xx
+ xxxx+++xxxx
+   xx...xx
+    x...x
+ENDMAP
+
+NAME: nicolae_vaults_quartermaster
+TAGS: vaults_hard
+NSUBST: 0 = 1:9 / *:0
+KFEAT: % = alarm trap / . w:30
+KITEM: % = any
+KMONS: 0 = 0 band
+MAP
+xxxxx.xxxxx
+x...+0+...x
+x.x.xxx.x.x
+x..0%x%0..x
+x+x%xxx%x+x
+.0xxxxxxx0.
+x+x%xxx%x+x
+x..0%x%0..x
+x.x.xxx.x.x
+x...+0+...x
+xxxxx.xxxxx
+ENDMAP
