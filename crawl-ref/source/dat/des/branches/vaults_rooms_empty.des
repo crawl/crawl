@@ -1357,3 +1357,85 @@ x...(...x
  .......
   .....
 ENDMAP
+
+NAME: nicolae_vaults_hallways_thing
+TAGS: vaults_empty
+SUBST: a : x.
+MAP
+aaxx..xxx..xxaa
+aaax..xxx..xaaa
+xaaa..xxx..aaax
+xxaa..xxx..aaxx
+....(.xxx.(....
+.......x.......
+xxxxx.....xxxxx
+xxxxxx.(.xxxxxx
+xxxxx.....xxxxx
+.......x.......
+....(.xxx.(....
+xxaa..xxx..aaxx
+xaaa..xxx..aaax
+aaax..xxx..xaaa
+aaxx..xxx..xxaa
+ENDMAP
+
+NAME: nicolae_vaults_little_ls
+TAGS: vaults_empty
+SUBST: g : xg
+NSUBST: a = 1:+ / *:x
+NSUBST: b = 1:+ / *:x
+NSUBST: c = 1:+ / *:x
+NSUBST: d = 1:+ / *:x
+NSUBST: e = 1:+ / *:x
+NSUBST: f = 1:+ / *:x
+NSUBST: g = 1:+ / *:x
+NSUBST: h = 1:+ / *:x
+SUBST: x = x:80 n:10 +:5
+MAP
+x.a.b.c.x
+..a.b.c..
+aaa.b.ccc
+....b....
+ddddxeeee
+....g....
+fff.g.hhh
+..f.g.h..
+x.f.g.h.x
+ENDMAP
+
+NAME: nicolae_vaults_little_squares_5
+TAGS: vaults_empty allow_dup
+NSUBST: a = 1:+ / *:xx+
+NSUBST: b = 1:+ / *:xx+
+SHUFFLE: cd
+SUBST: c : +, d = x+
+MAP
+xxxxx..xx
+xxxxx..xx
+xx..xbx..
+xx..c.b..
+xxxcxdxxx
+..a.d..xx
+..xax..xx
+xx..xxxxx
+xx..xxxxx
+ENDMAP
+
+NAME: nicolae_vaults_little_squares_6
+TAGS: vaults_empty allow_dup
+SHUFFLE: AB, CD
+SUBST: AC : +
+NSUBST: B = 1:+ / *:xx+
+NSUBST: D = 1:+ / *:xx+
+NSUBST: E = 1:+ / *:xx+
+NSUBST: F = 1:+ / *:xx+
+MAP
+...xxx..
+.(.E.C..
+...xCxDx
+xExx.D.x
+x.A.xxFx
+xAxBx...
+..B.F.(.
+..xxx...
+ENDMAP

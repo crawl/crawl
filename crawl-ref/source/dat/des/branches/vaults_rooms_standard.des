@@ -1536,3 +1536,172 @@ xxxx..x+Xx..x
    x1........
    xxxx......
 ENDMAP
+
+NAME: nicolae_vaults_alarming
+TAGS: vaults_room
+NSUBST: s = 1:S / *:.
+KITEM: i = any
+KMONS: S = vault sentinel
+KFEAT: i = alarm trap / .
+MAP
+xxsxsxx
+xi...ix
+s.....s
+x..(..x
+s.....s
+xi...ix
+xxsxsxx
+ENDMAP
+
+NAME: nicolae_vaults_arrows
+TAGS: vaults_room
+SUBST: $ = $:27 %:9 *:3 |:1
+KMONS: 0 = 0 band
+MAP
+xxxxxxxxx...xxxxxxxxx
+x......$n...n$......x
+x.0.xxxxx...xxxxx.0.x
+x....xx...0...xx....x
+x.x...xx.....xx...x.x
+x.xx...xx...xx...xx.x
+x.xxx...xx.xx...xxx.x
+x$x.xx...x+x...xx.x$x
+xnx..xx.......xx..xnx
+......xx.....xx......
+...0...+..0..+...0...
+......xx.....xx......
+xnx..xx.......xx..xnx
+x$x.xx...x+x...xx.x$x
+x.xxx...xx.xx...xxx.x
+x.xx...xx...xx...xx.x
+x.x...xx.....xx...x.x
+x....xx...0...xx....x
+x.0.xxxxx...xxxxx.0.x
+x......$n...n$......x
+xxxxxxxxx...xxxxxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_big_ls
+TAGS: vaults_room
+SUBST: g : xg
+NSUBST: a = 1:+ / *:x
+NSUBST: b = 1:+ / *:x
+NSUBST: c = 1:+ / *:x
+NSUBST: d = 1:+ / *:x
+NSUBST: e = 1:+ / *:x
+NSUBST: f = 1:+ / *:x
+NSUBST: g = 1:+ / *:x
+NSUBST: h = 1:+ / *:x
+NSUBST: i = 1:+ / *:x
+NSUBST: j = 1:+ / *:x
+NSUBST: k = 1:+ / *:x
+NSUBST: l = 1:+ / *:x
+SUBST: x = x:80 n:10 +:5
+SUBST: . = .:75 %:5 0:5
+KMONS: 0 = 0 band
+MAP
+x.a.b.c.d.e.x
+..a.b.c.d.e..
+aaa.b.c.d.eee
+....b.c.d....
+bbbbb.c.ddddd
+......c......
+ffffffxgggggg
+......j......
+hhhhh.j.kkkkk
+....h.j.k....
+iii.h.j.k.lll
+..i.h.j.k.l..
+x.i.h.j.k.l.x
+ENDMAP
+
+NAME: nicolae_vaults_border_crossing
+TAGS: vaults_room
+SHUFFLE: AB
+KMONS: W = vault warden
+SUBST: G : xxx...GTb, A : +, B : +x
+KMONS: 0 = 0 band
+MAP
+x.0.0.x
+xx...xx
+xG.W.Gx
+xxABAxx
+xG.W.Gx
+xx...xx
+x.0.0.x
+ENDMAP
+
+NAME: nicolae_vaults_stairing_the_circle
+TAGS: vaults_room
+NSUBST: ( = 1:0 / 2:0( / 2:0(( / *:(.
+KMONS: 0 = 0 band
+MAP
+  xxx.....xxx
+ xx....(....xx
+xx..(.....(..xx
+x.....xxx.....x
+x.(.xxxxxxx.(.x
+....xxxxxxx....
+...xxxxxxxxx...
+.(.xxxxxxxxx.(.
+...xxxxxxxxx...
+....xxxxxxx....
+x.(.xxxxxxx.(.x
+x.....xxx.....x
+xx..(.....(..xx
+ xx....(....xx
+  xxx.....xxx
+ENDMAP
+
+NAME: nicolae_vaults_what_the_h
+TAGS: vaults_room
+SUBST: % = %$
+KMONS: 0 = 0 band
+MAP
+...........
+....x0x....
+..(.xxx.(..
+....x%x....
+.xxx...xxx.
+.0x%.(.%x0.
+.xxx...xxx.
+....x%x....
+..(.xxx.(..
+....x0x....
+...........
+ENDMAP
+
+NAME: nicolae_vaults_windows_and_doors_thing
+TAGS: vaults_room no_monster_gen
+SHUFFLE: AC/BD, EF
+SUBST: B = m, C = 0, D = %, E = +, F : xxxm
+NSUBST: A = 1:+ / *:x
+KMONS: 0 = 0 band
+MAP
+...........
+.xAxBxxxxx.
+.x.xDFC..A.
+.x.E.xxExx.
+.xCx....DB.
+.xFx.(.xFx.
+.BD....xCx.
+.xxExx.E.x.
+.A..CFDx.x.
+.xxxxxBxAx.
+...........
+ENDMAP
+
+NAME: nicolae_vaults_yaktaur_gun_rack
+TAGS: vaults_room no_monster_gen no_item_gen
+MONS: yaktaur w:8 / yaktaur band w:4 / yaktaur captain w:2 / yaktaur captain band w:1
+KITEM: b = bolt w:3 / bolt good_item w:2
+KITEM: c = crossbow w:4 / crossbow good_item w:1
+MAP
+xxxxxxx
+xcccccx
+x......
+x.1....
+x......
+xbbbbbx
+xxxxxxx
+ENDMAP

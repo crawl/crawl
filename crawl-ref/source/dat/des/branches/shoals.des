@@ -602,6 +602,226 @@ xxxcxxxxxcxxxxW@Wxxxxcxxx
  xxxx  xxxxx        xxxx
 ENDMAP
 
+NAME: nicolae_shoals_so_close
+DEPTH: Shoals:1-4
+TAGS: no_pool_fixup water_ok no_item_gen no_trap_gen no_monster_gen
+KPROP: YycfZ. = no_tide
+KPROP: ZYcf. = no_rtele_into
+KMONS: c = patrolling hungry ghost
+NSUBST: f = 1:g / 2:f / *:.
+KITEM: g = meat ration / bread ration / beef jerky
+KITEM: f = meat ration / bread ration / nothing w:20
+: dgn.delayed_decay(_G, 'c', 'human skeleton')
+SUBST: Z = yY
+KFEAT: y = w
+KFEAT: Y = W
+MAP
+    wwwwwww
+   wwwwwwwww
+  wwwyyyyywww
+ wwwyyyyyyywww
+wwwyyZZZZyyywww
+wwyyZZYYYZyyywww
+wwyyZY...YZyyyww
+wwyyZY.c.Yyyyyyw
+wwyyZY..Yyyffyyw
+ wwyyZYYyyyffyyw
+  wwyyyyyyyyyyww
+   wwyyyyyyyyww
+    wwwwwwwwww
+ENDMAP
+
+NAME: nicolae_shoals_c_island
+DEPTH: Shoals:1-4
+TAGS: water_ok no_pool_fixup
+KPROP: .wW}xtC = no_tide
+SHUFFLE: }])
+SUBST: y = Ww, z = w
+KFEAT: C = any shop
+MAP
+       xxxxxx
+    xtttttttxx
+  xtt.........xz
+ xx....WWWWW...xz
+ x...xwwwWwww...z
+ x..xwwwwWwwwww.z
+yx..xwwwWWWwwwwwz
+x..xxwwwW}Wwwwwwz
+xCx..wwwWWWwwww.z
+x..t.twwwwwwwww.z
+yttt.ttwwwwwww..z
+ tt....xxwwww...z
+  ttt..........yz
+   yyy........yz
+     yyy....yyz
+       yyyyyy
+ENDMAP
+
+NAME: nicolae_shoals_dead_sea_scrolls
+DEPTH: Shoals
+SUBST: Z = PWs., p = P.., s = sW
+KMONS: Ps = plant
+KPROP: .WwpPsd = no_tide
+KFEAT: y = w
+KFEAT: s = W
+KITEM: d = any scroll w:30 / nothing w:20 / any randbook w:1
+MAP
+ xxxxx
+xxxxdxxxx
+xxddxPxxxxx
+xxddxpPxxxx
+xxxxxppppxx
+xxxpp...ppxx
+xxpp..ZZZZZxy
+xxpp.ZZwwwwwyy
+xxxp.ZZwwwwwyy
+xxxx..Zwwwwyyy
+ xxx..Zwwwwyyy
+  xx..Zwwwyyy
+    @@Zwwwyy
+ENDMAP
+
+NAME: nicolae_shoals_siren_and_animal_friends
+DEPTH: Shoals
+TAGS: patrolling no_monster_gen
+SUBST: w = f:4 w W
+KMONS: f = bat w:5 / big fish w:5 / griffon / harpy / hippogriff / \
+       kraken w:1 / raven w:5 / sea snake / shark / sky beast w:1 / \
+       snapping turtle / steam dragon w:1 / alligator w:5 / \
+       alligator snapping turtle / fire crab w:1 / anaconda w:1 / \
+       water moccasin w:5 / electric eel w:1
+KMONS: s = siren
+KFEAT: sf = w
+MAP
+  www
+ wwwww
+wwwwwww
+wwwswww
+wwwwwww
+ wwwww
+  www
+ENDMAP
+
+NAME: nicolae_shoals_hunting_party
+DEPTH: Shoals:2-5
+TAGS: no_item_gen no_monster_gen
+KMONS: i = merfolk impaler band / merfolk javelineer band
+SUBST: : = .:3 h:1, W = .W
+: dgn.delayed_decay(_G, 'h', 'big fish corpse / giant goldfish corpse / snapping turtle corpse / shark corpse')
+MAP
+WWWWWWW
+WW:::WW
+W:::::W
+W:i:i:W
+W:::::W
+WW:::WW
+WWWWWWW
+ENDMAP
+
+NAME: nicolae_shoals_isolated_beach
+DEPTH: Shoals:2-5
+TAGS: water_ok no_pool_fixup
+NSUBST: { = 1:{ / *:.
+SUBST: b = .wW, r = ..Wxx
+KPROP: wW.{x1 = no_tide
+SHUFFLE: {([
+KMONS: 1 = merfolk / merfolk impaler w:5 / mermaid w:5 / nothing w:20
+KFEAT: : = . / W
+KFEAT: y = w
+MAP
+    yyyyyyyy
+   yywwwwwwyy
+  yywwbbbbwwyy
+ yyywb{.1.bwwyy
+yyxxxxxrr.bwwwyy
+yxxr{.1.1rbbww::
+yxr{rr.rr..bww:@
+yxr{rr{rr1.bww:@
+yxr{rr.rr..bww:@
+yxxr{.1.1rbbww::
+yyxxxxxrr.bwwwyy
+ yyywb{.1.bwwyy
+  yywwbbbbwwyy
+   yywwwwwwyy
+    yyyyyyyy
+ENDMAP
+
+NAME: nicolae_shoals_wave_tunnel
+DEPTH: Shoals
+TAGS: water_ok transparent
+SUBST: b = .W, + = .++
+KMONS: m = merfolk / nothing w:5
+MAP
+    xxxxxxxxxwwwwwwwxxxxx
+   xx.......xxbbbbbxx...@
+  xx....m....xx.m.xx...m@
+xxx.m.......m.xx+xx.m...@
+@...m.xx+xx.m.......m.xxx
+@m...xx.m.xx....m....xx
+@...xxbbbbbxx.......xx
+xxxxxwwwwwwwxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_shoals_flooded_hall
+DEPTH: Shoals:1-4
+SHUFFLE: }}]]))>
+KPROP: .123wqx = no_tide
+SUBST: . = ....W, w = wWW..., q = w, x = xxxc
+KFEAT: 123 = . w:40 / W
+KMONS: 1 = merfolk / nothing w:5
+KMONS: 2 = merfolk / merfolk aquamancer / merfolk javelineer / merfolk impaler / nothing w:45
+KMONS: 3 = mermaid / siren w:5 / nothing w:5
+MAP
+     .......
+   ...xxxxx...
+  .1..x.3.x..1..
+ ....xx.2.xx........
+..xxxx..w..xxxxxxxx.
+.xx..2.www.2..1..1.@
+.x}1wwwwqwwwwwwwwww@
+.x]1wwwwqwwwwwwwwww@
+.xx..2.www.2..1..1.@
+..xxxx..w..xxxxxxxx.
+ ....xx.2.xx........
+  .1..x.3.x..1..
+   ...xxxxx...
+     .......
+ENDMAP
+
+NAME: nicolae_shoals_water_elemental_grotto
+DEPTH: Shoals:1-4
+TAGS: no_pool_fixup no_monster_gen no_trap_gen no_item_gen water_ok
+KPROP: .xrR-Ww = no_tide
+NSUBST: - = 1:] / *:-
+NSUBST: - = 3:z / *:-
+SUBST: r = xx:, R = xxW, ] = ]}):
+KMONS: - = nothing w:20 / plant w:5 / water elemental w:1
+KMONS: z = water elemental
+KFEAT: -z = . / W
+KMONS: W = nothing w:50 / plant
+KFEAT: m = w
+MARKER: m = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
+        pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
+        size_max = 3, spread_rate = 33 }
+MAP
+   xxxx.......
+  xxxx...xxxx@
+ xx.....xxrrxx
+ x..x..xxwWrrxx
+xx..xxxxmwW--Rxx
+xm--r-WwwWW--Rwx
+xr----WWWW---rRx
+xr------------rx
+xr------WWWW--rx
+xxr----WWmwW--rx
+ xrRWWWWWWWW-rxx
+ xxRWmWW-----rxx
+ xxRwWW-----rrx
+  xxRRR----rmxx
+  xxxxrrrrrrxx
+     xxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps
