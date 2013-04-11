@@ -3121,7 +3121,8 @@ bool bad_deck(const item_def &item)
 
 deck_rarity_type deck_rarity(const item_def &item)
 {
-    ASSERT(is_deck(item));
+    // NUM_MISCELLANY indicates unidentified deck for item_info
+    ASSERT(item.sub_type == NUM_MISCELLANY || is_deck(item));
 
     return static_cast<deck_rarity_type>(item.special);
 }
