@@ -1336,10 +1336,6 @@ void mons_relocated(monster* mons)
 
     }
 
-    // Make boulders stop rolling.
-    if (mons_is_boulder(mons))
-        mons->del_ench(ENCH_ROLLING, false);
-
     mons->clear_clinging();
 }
 
@@ -3291,7 +3287,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons_is_projectile(mons->type))
+    if (mons->is_projectile())
     {
         if (!quiet)
             mpr("It's unwise to walk into this.");

@@ -70,7 +70,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     else if (attacker->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
-        // Can't damage orbs or boulders this way.
+        // Can't damage orbs this way.
         if (mons_is_projectile(defender->type) && !you.confused())
         {
             you.turn_is_over = false;

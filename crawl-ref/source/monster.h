@@ -488,6 +488,7 @@ public:
     bool is_child_tentacle_segment() const;
 
     bool is_divine_companion() const;
+    bool is_projectile() const;
 
 private:
     void init_with(const monster& mons);

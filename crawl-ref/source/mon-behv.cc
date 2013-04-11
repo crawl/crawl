@@ -936,7 +936,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
         && (foe->friendly() != friendly
             || neutral && !foe->neutral())
         && mon->can_see(foe)
-        && !mons_is_projectile(foe->type)
+        && !foe->is_projectile()
         && summon_can_attack(mon, p)
         && (friendly || !is_sanctuary(p))
         && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))

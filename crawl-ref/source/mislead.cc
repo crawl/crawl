@@ -61,7 +61,7 @@ bool update_mislead_monster(monster* mons)
     if (mons_is_unique(mons->type) || !mons->mname.empty()
         || mons->props.exists("monster_tile")
         || mons->props.exists("mislead_as")
-        || mons_is_projectile(mons->type)
+        || mons_is_projectile(mons->type) // Only orbs, not boulders
         || mons_is_tentacle_segment(mons->type)
         || mons->type == MONS_MARA_FAKE)
     {

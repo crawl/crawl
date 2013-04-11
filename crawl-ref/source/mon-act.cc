@@ -1881,7 +1881,7 @@ void handle_monster_move(monster* mons)
         }
         old_energy = mons->speed_increment;
 
-        if (mons_is_projectile(mons->type) || mons_is_boulder(mons))
+        if (mons->is_projectile())
         {
             if (iood_act(*mons))
                 return;

@@ -888,7 +888,7 @@ static bool _follows_orders(monster* mon)
             && mon->type != MONS_GIANT_SPORE
             && mon->type != MONS_BATTLESPHERE
             && !mon->berserk()
-            && !mons_is_projectile(mon->type));
+            && !mon->is_projectile());
 }
 
 // Sets foe target of friendly monsters.
@@ -2381,7 +2381,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (mon->type == MONS_GIANT_SPORE)
         return;
 
-    if (mon->type == MONS_ORB_OF_DESTRUCTION)
+    if (mon->is_projectile())
     {
         iood_catchup(mon, turns);
         return;

@@ -2919,7 +2919,7 @@ void monster::moveto(const coord_def& c, bool clear_net)
     if (clear_net && c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
-    if (mons_is_projectile(type))
+    if (is_projectile())
     {
         // Assume some means of displacement, normal moves will overwrite this.
         props["iood_x"].get_float() += c.x - pos().x;
@@ -5971,4 +5971,9 @@ bool monster::is_divine_companion() const
             && (mons_is_god_gift(this, GOD_BEOGH)
                 || mons_is_god_gift(this, GOD_YREDELEMNUL))
             && mons_can_use_stairs(this));
+}
+
+bool monster::is_projectile() const
+{
+    return (mons_is_projectile(this) || mons_is_boulder(this));
 }
