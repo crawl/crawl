@@ -153,6 +153,12 @@ function procedural.border(params)
   if params.y1 ~= nil then y1 = params.y1 end
   if params.y2 ~= nil then y2 = params.y2 end
   local padding = params.padding == nil and 10 or params.padding
+  if params.margin ~= nil then
+    x1 = x1 + params.margin
+    x2 = x2 - params.margin
+    y1 = y1 + params.margin
+    y2 = y2 - params.margin
+  end
   if params.additive then
     return function(x,y)
       local nearx = math.min(x-x1,x2-x)
