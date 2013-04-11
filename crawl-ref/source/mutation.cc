@@ -2167,12 +2167,14 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
             return levels; // a partial success was still possible
         }
         else if (you.mutation[which_mut] == cap
+                 && you.innate_mutations[which_mut] > 0
                  && you.innate_mutations[which_mut] == cap-1)
         {
             // [rpb] primarily for demonspawn, if the mutation level is already
-            // at the cap for this facet, but the innate mutation says that the
-            // mutation is one less than the cap, we are permafying a temporary
-            // mutation. This fails to produce any output normally.
+            // at the cap for this facet, the innate mutation level is greater
+            // than zero, and the innate mutation level for the mutation
+            // in question is one less than the cap, we are permafying a
+            // temporary mutation. This fails to produce any output normally.
             mpr("Your mutations feel more permanent.", MSGCH_MUTATION);
         }
         levels++;
