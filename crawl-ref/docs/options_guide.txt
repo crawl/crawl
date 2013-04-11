@@ -846,7 +846,7 @@ explore_stop += greedy_sacrificeable
             nothing eligible for autopickup.
 
         greedy_sacrificeable: Visit and stop at stacks containing items which
-            can be sacrificied to your god.
+            can be sacrificed to your god.
 
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
@@ -881,8 +881,8 @@ auto_sacrifice = false
        If set to true, eligible items will be automatically sacrificed during
        auto-explore.
        When set to "before_explore", if you are standing on items which can be
-       sacricied when you start auto-explore, they will be automatically
-       sacrificied.
+       sacrificed when you start auto-explore, they will be automatically
+       sacrificed.
        When set to "prompt", you will have a confirmation prompt before the
        items are sacrificed.
        When set to "prompt_ignore", items will not be automatically sacrificed,
