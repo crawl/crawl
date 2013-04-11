@@ -559,7 +559,8 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     pos = pos,
     wall = chosen_wall,
     base = room_base,
-    dir = final_orient
+    dir = final_orient,
+    usage_grid = usage_grid
   }
 
   -- Layout configuration can now veto this room placement with a callback
@@ -659,6 +660,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
 
   local incidental_connections = { }
   local door_connections = { }
+  local open_connections = { }
   for i, coord in ipairs(coords_list) do
 
     -- Paint walls
@@ -688,9 +690,9 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
       local grid_coord = coord.grid_pos
       local current_usage = coord.grid_usage
 
-      if usage.usage == "open" and current_usage.usage == "open" and mask_cell.connected then
+      if current_usage.usage == "open" and mask_cell.connected then
         -- Count all sides as door connections; potentially we'll get doors on multiple side
-        table.insert(door_connections, { room_coord = coord.room_pos, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
+        table.insert(open_connections, { room_coord = coord.room_pos, grid_pos = grid_coord, usage = current_usage, mask = mask_cell })
       end
       if (current_usage.usage == "eligible" and usage.usage == "eligible") or (current_usage.usage == "eligible_open" and usage.usage == "eligible_open") then
       -- Overlapping cells with current room, these are potential door wall candidates
@@ -733,7 +735,9 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
   local decorate_callback = options.decorate_walls_callback
   if decorate_callback == nil then decorate_callback = hypervaults.rooms.decorate_walls end
 
-  decorate_callback(state,door_connections,true,true)
+  if #open_connections > 0 then decorate_callback(state,open_connections,true,true) end
+  if #door_connections > 0 then decorate_callback(state,door_connections,true,true) end
+
   -- Have a chance to add doors / windows to each other side of the room
   for n = 0, 3, 1 do
     if incidental_connections[n] ~= nil and #(incidental_connections[n]) > 0 then
