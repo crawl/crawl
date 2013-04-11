@@ -1897,8 +1897,8 @@ static void tag_read_you(reader &th)
     you.hunger          = unmarshallShort(th);
     you.fishtail        = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
-            unmarshallInt(th);
+    if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
+        unmarshallInt(th);
 #endif
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
     ASSERT(you.form >= TRAN_NONE && you.form <= LAST_FORM);
