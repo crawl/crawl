@@ -196,7 +196,7 @@ enum explore_stop_type
     ES_BRANCH                    = 0x4000,
     ES_RUNED_DOOR                = 0x8000,
 
-    // Explored into view of an item which can be sacrificied
+    // Explored into view of an item which can be sacrificed
     ES_GREEDY_SACRIFICEABLE      = 0x10000,
 };
 
