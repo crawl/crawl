@@ -1098,7 +1098,6 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
-    marshallInt(th, you.earth_attunement);
     marshallInt(th, you.form);
 
     j = min<int>(you.sage_skills.size(), 32767);
@@ -1897,7 +1896,10 @@ static void tag_read_you(reader &th)
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
     you.fishtail        = unmarshallBoolean(th);
-    you.earth_attunement= unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
+#endif
+    unmarshallInt(th);
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
     ASSERT(you.form >= TRAN_NONE && you.form <= LAST_FORM);
 
