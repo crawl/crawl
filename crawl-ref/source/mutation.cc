@@ -2108,16 +2108,12 @@ _schedule_ds_mutations(vector<mutation_type> muts)
     vector<player::demon_trait> out;
 
     for (int level = 2; level <= 27; ++level)
-    {
-        int ct = coinflip() ? 2 : 1;
-
-        for (int i = 0; i < ct; ++i)
-            slots_left.push_back(level);
-    }
+        slots_left.push_back(level);
 
     while (!muts_left.empty())
     {
-        if (x_chance_in_y(muts_left.size(), slots_left.size()))
+        if (out.empty() // always give a mutation at XL 2
+            || x_chance_in_y(muts_left.size(), slots_left.size()))
         {
             player::demon_trait dt;
 
