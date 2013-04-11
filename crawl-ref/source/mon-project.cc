@@ -605,21 +605,25 @@ static bool _iood_catchup_move(monster& mon)
 void iood_catchup(monster* mons, int pturns)
 {
     monster& mon = *mons;
-    ASSERT(mons_is_projectile(mon.type));
+    ASSERT(mon.is_projectile());
 
     const int moves = pturns * mon.speed / BASELINE_DELAY;
 
-    if (moves > 50)
+    // Handle some cases for IOOD only
+    if (mons_is_projectile(mons))
     {
-        _iood_stop(mon, false);
-        return;
-    }
+        if (moves > 50)
+        {
+            _iood_stop(mon, false);
+            return;
+        }
 
-    if (mon.props["iood_kc"].get_byte() == KC_YOU)
-    {
-        // Left player's vision.
-        _iood_stop(mon, false);
-        return;
+        if (mon.props["iood_kc"].get_byte() == KC_YOU)
+        {
+            // Left player's vision.
+            _iood_stop(mon, false);
+            return;
+        }
     }
 
     for (int i = 0; i < moves; ++i)
