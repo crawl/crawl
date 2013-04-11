@@ -209,7 +209,6 @@ public:
 
   vector<demon_trait> demonic_traits;
 
-  int earth_attunement; // nomes only
   int magic_contamination;
 
   FixedBitVector<NUM_FIXED_BOOKS> had_book;
