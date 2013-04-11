@@ -140,7 +140,8 @@ bool TilesFramework::initialise()
     int bufsize = 64 * 1024;
     if (setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize)))
         die("Can't set buffer size!");
-    m_max_msg_size = bufsize;
+    // Need small maximum message size to avoid crashes in OS X
+    m_max_msg_size = 2048;
 
     if (m_await_connection)
         _await_connection();
@@ -205,8 +206,8 @@ void TilesFramework::finish_message()
                 }
                 else if (errno == ENOBUFS)
                 {
-                    // Wait for half a second, then try again
-                    usleep(500 * 1000);
+                    // Wait for up to half a second, then try again
+                    usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
                 }
                 else
                     die("Socket write error: %s", strerror(errno));
