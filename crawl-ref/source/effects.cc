@@ -65,6 +65,7 @@
 #include "player-stats.h"
 #include "player.h"
 #include "religion.h"
+#include "shopping.h"
 #include "shout.h"
 #include "skills.h"
 #include "skills2.h"
@@ -3066,6 +3067,8 @@ static void _update_corpses(int elapsedTime)
 
         if (it.base_type == OBJ_POTIONS)
         {
+            if (is_shop_item(it))
+                continue;
             maybe_coagulate_blood_potions_floor(c);
             continue;
         }
