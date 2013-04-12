@@ -70,7 +70,7 @@ const mutation_def& get_mutation_def(mutation_type mut);
 bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
-            bool stat_gain_potion = false, bool demonspawn = false,
+            bool beneficial = false, bool demonspawn = false,
             bool no_rot = false,
             bool temporary = false);
 
