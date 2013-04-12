@@ -440,29 +440,58 @@ void inscribe_book_highlevel(item_def &book)
     }
 }
 
-int read_book(item_def &book, read_book_action_type action)
-{
+/**
+ * Identify a held book/rod, if appropriate.
+ * @return whether we can see its spells
+ */
+bool maybe_id_book(item_def &book, bool silent) {
+    if (book.base_type != OBJ_BOOKS && book.base_type != OBJ_RODS)
+        return false;
+
+    if (book.base_type == OBJ_BOOKS && book.sub_type == BOOK_DESTRUCTION)
+    {
+        ASSERT(fully_identified(book));
+        return false;
+    }
+
+    if (book.base_type == OBJ_BOOKS && book.sub_type == BOOK_MANUAL)
+    {
+        set_ident_flags(book, ISFLAG_IDENT_MASK);
+        return false;
+    }
+
     if (book.base_type == OBJ_BOOKS && !item_type_known(book)
         && !player_can_memorise_from_spellbook(book))
     {
-        mpr("This book is beyond your current level of understanding.");
-        more();
+        if (!silent)
+        {
+            mpr("This book is beyond your current level of understanding.");
+            more();
+        }
 
         inscribe_book_highlevel(book);
-        return 0;
+        return false;
     }
+
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+
+    if (book.base_type == OBJ_BOOKS)
+        mark_had_book(book);
+
+    return true;
+}
+
+int read_book(item_def &book, read_book_action_type action)
+{
+    if (!maybe_id_book(book))
+        return 0;
 
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "read_book");
 #endif
 
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-
     // Remember that this function is called for rods as well.
     const int keyin = spellbook_contents(book, action);
-
-    if (book.base_type == OBJ_BOOKS)
-        mark_had_book(book);
 
     if (!crawl_state.is_replaying_keys())
         redraw_screen();
