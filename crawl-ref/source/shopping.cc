@@ -28,6 +28,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
+#include "misc.h"
 #include "notes.h"
 #include "options.h"
 #include "place.h"
@@ -1057,6 +1058,9 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
+
+    if (is_blood_potion(item))
+        init_stack_blood_potions(item, -1);
 
     const int quant = item.quantity;
     // Note that item will be invalidated if num == item.quantity.
