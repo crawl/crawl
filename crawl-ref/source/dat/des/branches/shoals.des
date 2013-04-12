@@ -688,7 +688,7 @@ SUBST: w = f:4 w W
 KMONS: f = bat w:5 / big fish w:5 / griffon / harpy / hippogriff / \
        kraken w:1 / raven w:5 / sea snake / shark / sky beast w:1 / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
-       alligator snapping turtle / fire crab w:1 / anaconda w:1 / \
+       alligator snapping turtle / anaconda w:1 / \
        water moccasin w:5 / electric eel w:1
 KMONS: s = siren
 KFEAT: sf = w
