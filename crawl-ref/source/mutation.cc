@@ -1238,8 +1238,8 @@ static bool _undead_rot()
 }
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
-            bool force_mutation, bool god_gift, bool demonspawn, bool no_rot,
-            bool temporary)
+            bool force_mutation, bool god_gift, bool stat_gain_potion,
+            bool demonspawn, bool no_rot, bool temporary)
 {
     if (!god_gift)
     {
@@ -1265,7 +1265,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (!god_gift)
         {
             if ((you.rmut_from_item()
-                 && !one_chance_in(temporary ? 3 : 10))
+                 && !one_chance_in(temporary ? 3 : 10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
                     && !one_chance_in(temporary ? 2 : 3)))
@@ -1280,7 +1280,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         // Zin's protection.
         if (you.religion == GOD_ZIN
             && (x_chance_in_y(you.piety, MAX_PIETY)
-                || x_chance_in_y(you.piety, MAX_PIETY + 22)))
+                || x_chance_in_y(you.piety, MAX_PIETY + 22))
+            && !stat_gain_potion)
         {
             simple_god_message(" protects your body from mutation!");
             return false;
@@ -2168,7 +2169,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
             mpr("Your mutations feel more permanent.", MSGCH_MUTATION);
         }
         else if (you.mutation[which_mut] < cap
-            && !mutate(which_mut, reason, false, true, false, true))
+            && !mutate(which_mut, reason, false, true, false, false, true))
         {
             return levels; // a partial success was still possible
         }
@@ -2203,7 +2204,7 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
 
     int old_level = you.mutation[which_mut];
 
-    if (mutate(which_mut, reason, false, false, false, false, false, true))
+    if (mutate(which_mut, reason, false, false, false, false, false, false, true))
     {
         // Only increment temp mutation tracking if we actually gained a mutation.
         if (you.mutation[which_mut] > old_level)
