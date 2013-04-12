@@ -311,7 +311,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            true, true, true, '-', -1, NULL, OPER_WIELD, false, true);
+                            true, true, true, '-', -1, NULL, OPER_WIELD);
         }
         else
             item_slot = SLOT_BARE_HANDS;

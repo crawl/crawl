@@ -182,11 +182,12 @@ void choose_item_for_quiver()
         mpr("You can't grasp things well enough to throw them.");
         return;
     }
+
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
                                   MT_INVLIST,
                                   OSEL_THROWABLE, true, true, true, '-',
                                   you.equip[EQ_WEAPON], NULL, OPER_QUIVER,
-                                  false, true);
+                                  false);
 
     if (prompt_failed(slot))
         return;
