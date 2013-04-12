@@ -426,20 +426,24 @@ static vector<int> _shop_get_stock(int shopidx)
     return result;
 }
 
+static int _bargain_cost(int value)
+{
+    // 20% discount
+    value *= 8;
+    value /= 10;
+
+    return max(value, 1);
+}
+
 static int _shop_get_item_value(const item_def& item, int greed, bool id,
                                 bool ignore_bargain = false)
 {
     int result = (greed * item_value(item, id) / 10);
-    if (you.duration[DUR_BARGAIN] && !ignore_bargain) // 20% discount
-    {
-        result *= 8;
-        result /= 10;
-    }
 
-    if (result < 1)
-        result = 1;
+    if (you.duration[DUR_BARGAIN] && !ignore_bargain)
+        result = _bargain_cost(result);
 
-    return result;
+    return max(result, 1);
 }
 
 static string _shop_print_stock(const vector<int>& stock,
@@ -2951,6 +2955,10 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         CrawlHashTable &thing = (*list)[i];
         level_pos      pos    = thing_pos(thing);
         int            cost   = thing_cost(thing);
+        string         normal;
+
+        if (you.duration[DUR_BARGAIN])
+            cost = _bargain_cost(cost);
 
         string etitle =
             make_stringf("[%s] %s (%d gp)", short_place_name(pos.id).c_str(),
@@ -3027,7 +3035,9 @@ void ShoppingList::display()
 
         if (shopmenu.menu_action == Menu::ACT_EXECUTE)
         {
-            const int cost = thing_cost(*thing);
+            int cost = thing_cost(*thing);
+            if (you.duration[DUR_BARGAIN])
+                cost = _bargain_cost(cost);
 
             if (cost > you.gold)
             {
