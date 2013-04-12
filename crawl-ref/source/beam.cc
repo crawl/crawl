@@ -2200,14 +2200,6 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     pbolt.is_tracer = false;
 }
 
-static void _create_feat_at(coord_def center,
-                            dungeon_feature_type overwriteable,
-                            dungeon_feature_type newfeat)
-{
-    if (grd(center) == overwriteable)
-        dungeon_terrain_changed(center, newfeat, true, false, true);
-}
-
 static coord_def _random_point_hittable_from(const coord_def &c,
                                             int radius,
                                             int margin = 1,
@@ -2232,13 +2224,15 @@ static void _create_feat_splash(coord_def center,
                                 int nattempts)
 {
     // Always affect center.
-    _create_feat_at(center, overwriteable, newfeat);
+    temp_change_terrain(center, DNGN_SHALLOW_WATER, 100 + random2(100),
+                        TERRAIN_CHANGE_FLOOD);
     for (int i = 0; i < nattempts; ++i)
     {
         const coord_def newp(_random_point_hittable_from(center, radius));
-        if (newp.origin() || grd(newp) != overwriteable)
+        if (newp.origin() || (grd(newp) != DNGN_FLOOR && grd(newp) != DNGN_SHALLOW_WATER))
             continue;
-        _create_feat_at(newp, overwriteable, newfeat);
+        temp_change_terrain(newp, DNGN_SHALLOW_WATER, 100 + random2(100),
+                            TERRAIN_CHANGE_FLOOD);
     }
 }
 
@@ -2478,7 +2472,7 @@ void bolt::affect_endpoint()
                             DNGN_FLOOR,
                             DNGN_SHALLOW_WATER,
                             2,
-                            random_range(1, 9, 2));
+                            random_range(3, 12, 2));
     }
 
     // FIXME: why don't these just have is_explosion set?
