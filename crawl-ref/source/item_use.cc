@@ -2739,7 +2739,7 @@ static bool _scroll_modify_item(item_def scroll)
         }
         break;
     case SCR_RECHARGING:
-        if (item_is_rechargeable(item, false, true))
+        if (item_is_rechargeable(item, false))
         {
             if (recharge_wand(item_slot, false))
                 return true;

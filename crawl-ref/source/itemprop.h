@@ -69,8 +69,7 @@ bool  hide2armour(item_def &item);
 int   fit_armour_size(const item_def &item, size_type size) PURE;
 bool  check_armour_size(const item_def &item, size_type size) PURE;
 
-bool item_is_rechargeable(const item_def &it, bool hide_charged = false,
-                          bool weapons = false) PURE;
+bool item_is_rechargeable(const item_def &it, bool hide_charged = false) PURE;
 int wand_charge_value(int type) PURE;
 int wand_max_charges(int type) PURE;
 bool is_offensive_wand(const item_def &item) PURE;
