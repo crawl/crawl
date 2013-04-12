@@ -1511,6 +1511,14 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
+    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
+        if (all_skills_maxed(true))
+        {
+            mpr("You have nothing more to learn.");
+            return false;
+        }
+        return true;
+
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
