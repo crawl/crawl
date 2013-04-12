@@ -1196,7 +1196,7 @@ bool check_armour_size(const item_def &item, size_type size)
 // Returns whether a wand or rod can be charged.
 // If hide_charged is true, wands known to be full will return false.
 // (This distinction is necessary because even full wands/rods give a message.)
-bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
+bool item_is_rechargeable(const item_def &it, bool hide_charged)
 {
     // These are obvious...
     if (it.base_type == OBJ_WANDS)

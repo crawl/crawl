@@ -751,7 +751,7 @@ bool prompt_eat_inventory_item(int slot)
                 prompt_invent_item(you.species == SP_VAMPIRE ? "Drain what?"
                                                              : "Eat which item?",
                                    MT_INVLIST,
-                                   you.form == TRAN_JELLY ? OSEL_ANY_UNMELDED :
+                                   you.form == TRAN_JELLY ? OSEL_ANY :
                                    you.species == SP_VAMPIRE ? (int)OSEL_VAMP_EAT
                                                              : OBJ_FOOD,
                                    true, true, true, 0, -1, NULL,

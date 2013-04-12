@@ -30,8 +30,7 @@ enum object_selector
     OSEL_CURSED_WORN             = -14,
     OSEL_UNCURSED_WORN_ARMOUR    = -15,
     OSEL_UNCURSED_WORN_JEWELLERY = -16,
-    OSEL_ANY_UNMELDED            = -17,
-    OSEL_SCROLL_TARGET           = -18,
+    OSEL_SCROLL_TARGET           = -17,
 };
 
 #define SLOT_BARE_HANDS      -2
@@ -192,8 +191,7 @@ int prompt_invent_item(const char *prompt,
                         int excluded_slot = -1,
                         int *const count = NULL,
                         operation_types oper = OPER_ANY,
-                        bool allow_list_known = false,
-                        bool accept_any = false);
+                        bool allow_list_known = false);
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,
