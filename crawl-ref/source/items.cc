@@ -1795,6 +1795,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     god_id_item(item);
     maybe_id_weapon(item);
+    maybe_id_book(item, true);
 
     note_inscribe_item(item);
 

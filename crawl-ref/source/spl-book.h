@@ -28,6 +28,7 @@ void mark_had_book(const item_def &book);
 void mark_had_book(int booktype);
 void inscribe_book_highlevel(item_def &book);
 
+bool maybe_id_book(item_def &book, bool silent = false);
 int read_book(item_def &item, read_book_action_type action);
 
 bool player_can_memorise(const item_def &book);
