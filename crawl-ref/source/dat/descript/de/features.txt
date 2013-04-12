@@ -327,11 +327,6 @@ der nichts zurückerstattet und an nichts interessiert ist, was du ihm anbieten
 könntest. Manche Geschäfte verkaufen antike Gegenstände unbekannter Herkunft,
 und geben wenig Auskunft über die Qualität oder die Art ihrer Güter.
 %%%%
-A slime covered rock wall
-
-Diese Felswand ist von einer dicken, hellgrünen Schleimschicht überzogen.
-Iiiiiih.
-%%%%
 A snail-covered altar of Cheibriados
 
 Dieser Altar scheint unbeweglicher als die anderen zu sein.

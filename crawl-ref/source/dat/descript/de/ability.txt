@@ -213,10 +213,6 @@ Belebe eine einzige Leiche bzw. ein einziges Skelett als deinen Anhänger
 wieder. Denk daran, dass Zombies und Skelette die Ebene, auf der sie erstellt
 wurden, nicht verlassen können.
 %%%%
-Recall Undead Slaves
-
-Rufe deine Untoten Anhänger zurück zu deiner unmittelbaren Umgebung.
-%%%%
 Injury Mirror
 
 Verletzt angreifende Monster indem es den Schaden, welche diese dir zufügen,
@@ -453,10 +449,6 @@ Smiting
 
 Erschlage einen Gegner in deinem Sichtbereich. Es benötig keinen geraden Weg,
 sondern es reicht den Gegner zu sehen.
-%%%%
-Recall Orcish Followers
-
-Rufe deine Orkischen Anhänger zurück zu deiner unmittelbaren Umgebung.
 %%%%
 Sunlight
 

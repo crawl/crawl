@@ -147,12 +147,6 @@ Ten czar tworzy kolumnę ognia w dowolnej wolnej przestrzeni. Stanowi ona
 tymczasową zaporę przeciw wrogom którzy boją się poparzeń — i zadaje spore
 obrażenia tym którzy w nią wejdą.
 %%%%
-Control Teleport spell
-
-Ten czar pozwala przez krótki okres kontrolować czary przemieszczeń.
-
-Uwaga: kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
-%%%%
 Control Undead spell
 
 Ten czar próbuje zniewolić nieumarłych na których zostanie rzucony.

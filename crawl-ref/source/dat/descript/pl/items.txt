@@ -1068,14 +1068,6 @@ ring of sustenance
 
 Ten pierścień znacznie spowalnia zużycie pokarmu przez swego właściciela.
 %%%%
-ring of teleport control
-
-Ten pierścień pozwala na wpływ na miejsce docelowe teleportacji, niestety z
-pewnym rozrzutem. Próba teleportu w miejsce już zajęte skutkuje zupełnie losową
-teleportacją. Pierścień ten pozwala także na zablokowanie teleportacji.
-Kontrolowanie teleportacji skutkuje magicznym skażeniem, tak więc nadużywanie
-nie jest wskazane.
-%%%%
 ring of teleportation
 
 Ten pierścień od czasu do czasu przenosi swego nosiciela w przypadkowe miejsce.

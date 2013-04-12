@@ -99,11 +99,6 @@ Conjure Flame spell
 
 この呪文は唸りをあげる炎の円柱を生成する。
 %%%%
-Control Teleport spell
-
-This spell allows the caster to control translocations. ただし制御されたテレポ
-ートは使用者を魔法のエネルギーで汚染することがあるので注意しなくてはならない。
-%%%%
 Control Undead spell
 
 この呪文は術者の近辺にいるアンデッドを奴隷化しようと試みる。
