@@ -20,6 +20,8 @@ parser.add_option("-d", "--diff", help="Diff format (unified, context, n)",
                   default='n')
 parser.add_option("-f", "--force", action="store_true",
                   help="Overwrite files even if no change detected")
+parser.add_option("-i", "--invalidate", action="store_true",
+                  help="On merge, remove invalidated entries")
 parser.add_option("-l", "--language", help="Specify which languages to work on")
 parser.add_option("-r", "--resource", help="Specify which resources to work on")
 parser.add_option("-s", "--source", help="Work on source files (same as -l en)",
@@ -459,7 +461,8 @@ class ResourceFile():
                 if key in self.diff[change_t]:
                     items.append((key, self.diff[change_t][key]))
                     found_diff = True
-            if not found_diff and not diff_only and key in self.entries:
+            if not found_diff and not diff_only and key in self.entries \
+               and not key in self.diff['removed']:
                 items.append((key, self.entries[key]))
 
         return iter(items)
@@ -566,7 +569,8 @@ class ResourceFile():
                 # self[key + ":quote"] = raw_entries[(self.lang(), 'quotes')][key]
             if key not in entries: continue
             self[key] = entries[key]
-        self.update_removed_keys()
+        if self.lang() != 'en':
+            self.update_removed_keys()
 
     def write_file(self):
         """Write the content of the resource to a file"""
@@ -582,8 +586,10 @@ class ResourceFile():
         """If the resource has keys which are not present in the source, they
         will be removed. Store them in self.diff['removed'] to show them in diff
         and allow editing (useful to fix renamed keys)."""
+        entries = raw_entries[(self.lang(), self.resource)]
         for k in self.entries.keys():
-            if k not in self.source_keys():
+            if k not in self.source_keys() \
+               or options.invalidate and k not in entries:
                 self.diff['removed'][k] = self.entries[k]
 
     def edit_file(self):
