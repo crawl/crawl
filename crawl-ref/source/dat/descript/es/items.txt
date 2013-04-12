@@ -1096,15 +1096,6 @@ ring of sustenance
 Este anillo proporciona sustento a su portador, de tal forma que necesita comer
 con menos frecuencia.
 %%%%
-ring of teleport control
-
-Este anillo le permite a su portador controlar el destino de cualquier
-teletransportación, aunque no con perfecta precisión. Intentar teletranspotarse
-a la posición de un objeto sólido, resultará en una teletransportación a una
-posición completamente aleatoria. También debes tener presente, que las
-teletransportaciones controladas te contaminarán con energías mágicas
-resisduales.
-%%%%
 ring of teleportation
 
 Este anillo ocasionalmente activará su poder para teletranspotar a su portador

@@ -92,19 +92,6 @@ calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
 Pantano, los Bancos de Arena y el Nido de las Arañas. Si el Nido está presente,
 su entrada se encuentra entre la Guarida:3 y Guarida:6
 %%%%
-Slime Pits
-
-El reino amorfo de los ácidos, gelatinas y mucosas. Cualquier rastro de seres
-inteligentes ha sido disuelto hace tiempo. Aún así, hay rumores de grandes
-tesoros muy adentro, escondidos en cámaras secretas sin El reino amorfo de los
-ácidos, gelatinas y mucosas. Cualquier rastro de seres inteligentes ha sido
-disuelto hace tiempo. Aún así, hay rumores de grandes tesoros muy adentro,
-escondidos en cámaras secretas sin ventanas o puertas evitando que el ácido
-pudiera colarse dentro.
-
-Los Fosos Cenagosos tienen seis niveles y contienen la Runa Cenagosa. La
-entrada está situada entre Guarida:6 y Guarida:8.
-%%%%
 Vaults
 
 Posiblemente construidas por algún hombre poderoso y loco, se cuenta de las

@@ -129,11 +129,6 @@ Conjure Flame spell
 
 这道法术创造出一团火云。
 %%%%
-Control Teleport spell
-
-这道法术允许施法者控制传送法术的目标地点。注意
-，进行受控传送会导致传送者的身体被魔法能量污染。
-%%%%
 Control Undead spell
 
 这道法术尝试让施法者周围的所有不死生物都变成施法者的奴仆。

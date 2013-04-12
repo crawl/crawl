@@ -103,16 +103,6 @@ ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und Spinnennestern
 ausgestattet. Ist das Spinnennest vorhanden dann findet man den Eingang
 zwischen der Höhle 3 und Höhle 6.
 %%%%
-Slime Pits
-
-Das gestaltlose Reich der Säure, Quallen und des Schleims. Jegliche Spur von
-Intelligenz löste sich vor langer Zeit auf. Dennoch, Gerüchten zu Folge sollen
-tief unten riesige Reichtümer liegen, welche in einer geheimen säurefesten
-Kammer ohne Türen oder Fenstern gesichert aufbewahrt sind.
-
-Die Schleimgruben sind sechs Ebenen tief und beinhalten die Schleimige Rune.
-Der Eingang befindet sich zwischen dem Versteck 6 und 8.
-%%%%
 Vaults
 
 Möglicherweise von einem mächtigen Geisteskranken erschaffen sollen die Gewölbe
