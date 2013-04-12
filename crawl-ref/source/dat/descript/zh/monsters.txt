@@ -2529,10 +2529,6 @@ apple tree
 这棵树上结的果子能喂饱一头饥饿的老虎。不，我没说错
 ——你将担任作为食物链中间一环的重任。
 %%%%
-apricot tree
-
-<apple tree>
-%%%%
 archer statue
 
 一尊精美的大理石雕像，塑造着一位美丽的精灵弓箭手。
@@ -2567,10 +2563,6 @@ charred statue
 Cigotuvi's Monster
 
 这个可怕的东西看起来是用所有能想象到的怪物的身体部分拼起来的。
-%%%%
-citrus tree
-
-<apple tree>
 %%%%
 chilling statue
 
@@ -2670,10 +2662,6 @@ grape vine
 没有园丁给这株葡萄藤提供可以攀爬的东西
 ，而且它也没幸运到它的种子正好掉在可以攀爬的东西旁。尽管如此
 ，要穿过这株葡萄藤还是非常困难。
-%%%%
-greater air elemental
-
-<air elemental>
 %%%%
 grey elf
 
@@ -2776,10 +2764,6 @@ mummy summoner
 ，被迫永远作为不死生物行走在世间。即使现在是已死之躯
 ，它依然保有召唤大群炼狱恶魔的能力。
 %%%%
-mummy warrior
-
-<guardian mummy>
-%%%%
 musa plant
 
 这株灌木植物能长出香蕉来。或者它们是叫香蕉焦？还是香蕉焦焦
@@ -2794,33 +2778,9 @@ oklob plant annihilator
 一株普通的植物能获取智能，还能施放法术，这确实很难以置信，但事实摆在你眼前
 ，不由你不信。这是什么奇怪的妖法？
 %%%%
-oklob plant conjurer
-
-<oklob plant annihilator>
-%%%%
-oklob plant demonologist
-
-<oklob plant annihilator>
-%%%%
-oklob plant meteorologist
-
-<oklob plant annihilator>
-%%%%
-oklob plant shifter
-
-<oklob plant annihilator>
-%%%%
-oklob plant summoner
-
-<oklob plant annihilator>
-%%%%
 oklob sapling priest
 
 这株幼年酸箭草似乎在念某种咒语……呃，啥鬼？！
-%%%%
-oklob sapling wizard
-
-<oklob plant annihilator>
 %%%%
 orb of electricity
 
@@ -2861,10 +2821,6 @@ pristine statue
 一个栩栩如生的斑岩雕像，描绘着一个正准备射击的弓箭手，腰边绑着一捆箭。
 雕像上的每一根箭矢都是精美的雕塑，看上去简直像是可以拿下来用在真正的弓上一样。
 %%%%
-pyrus tree
-
-<apple tree>
-%%%%
 sacrificial human
 
 看起来，她好像本来是要被在某个恶魔召唤仪式中被作为祭品献祭的。
@@ -2882,10 +2838,6 @@ skeletal archer
 
 谁说没有血肉就不能当上神箭手了？这些骷髅能轻松把你变成一只流血的刺猬。
 反正到头来，你们这些长肉的家伙存在价值就只是被作成弓弦而已。
-%%%%
-soapberry tree
-
-<apple tree>
 %%%%
 spooky statue
 
@@ -2955,10 +2907,6 @@ vampire enchanter
 但不管怎么说，变成不死生物只是使它变得更为强大
 ；大部分人直到被它的迅捷剑捅穿心脏才意识到它的存在。
 %%%%
-vampire noble
-
-<vampire>
-%%%%
 vampire warrior
 
 这名强大的吸血鬼只会用魔法来强化它自身的能力；对付讨厌的入侵者时
@@ -3006,64 +2954,4 @@ zot statue
 ，上面的小水晶块还发出微微的闪光。
 你完全无法判断这尊雕像到底是代表着某种生物或某个人物，还是纯粹的抽象艺术品。
 只有一件事确凿无疑：这是一件非常让人不安的艺术品。
-%%%%
-ancient emperor scorpion
-
-<emperor scorpion>
-%%%%
-big bog body
-
-<bog body>
-%%%%
-dark black mamba
-
-<black mamba>
-%%%%
-dire wolf spider
-
-<wolf spider>
-%%%%
-elder swamp dragon
-
-<swamp dragon>
-%%%%
-giant anaconda
-
-<anaconda>
-%%%%
-greater ghost moth
-
-<ghost moth>
-%%%%
-greater orb of eyes
-
-<great orb of eyes>
-%%%%
-hardcore manticore
-
-<manticore>
-%%%%
-harpy queen
-
-<harpy>
-%%%%
-naga archmage
-
-<naga mage>
-%%%%
-naga warlord
-
-<naga warrior>
-%%%%
-stinky swamp drake
-
-<swamp drake>
-%%%%
-sulfuric acid blob
-
-<acid blob>
-%%%%
-vault guard captain
-
-<vault guard>
 %%%%

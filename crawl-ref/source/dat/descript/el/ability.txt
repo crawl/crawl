@@ -123,10 +123,6 @@ Turn Visible
 
 Γίνε ορατός και πάλι.
 %%%%
-Evoke Flight
-
-<Fly>
-%%%%
 Stop Flying
 
 Σταμάτα να πετάς.

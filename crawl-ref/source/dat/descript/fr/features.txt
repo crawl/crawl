@@ -772,10 +772,6 @@ The dimension's edge
 A la frontière de ce plan minuscule et isolé, l'espace lui-même se dissout dans
 le néant. Pénétrer ou altérer ce vide sombre est impossible.
 %%%%
-A wall of crystal
-
-<A wall of green crystal>
-%%%%
 A damp floor
 
 Peut-être est-ce du à l'humidité, ou à la présence constante de nuage, mais le

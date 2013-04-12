@@ -652,42 +652,6 @@ The open sea
 Nichts außer endlosem Wind und Wellen, und kein Leuchtturm in Sicht. Du würdest
 sehr schnell hoffnungslos verloren sein - riskiere es lieber nicht.
 %%%%
-A large open door
-
-<eine offene Tür>
-%%%%
-An open gate
-
-<eine offene Tür>
-%%%%
-A huge open gate
-
-<eine offene Tür>
-%%%%
-A large closed door
-
-<eine geschlossene Tür>
-%%%%
-A closed gate
-
-<eine geschlossene Tür>
-%%%%
-A huge closed gate
-
-<eine geschlossene Tür>
-%%%%
-A large runed door
-
-<eine mit Runen bemalte Tür>
-%%%%
-A runed gate
-
-<eine mit Runen bemalte Tür>
-%%%%
-A huge runed gate
-
-<eine mit Runen bemalte Tür>
-%%%%
 An empty arch of stone
 
 Dies ist das Portal, durch das du hierher kamst; nun scheint es seiner Magie
@@ -811,10 +775,6 @@ The dimension's edge
 Am Rand dieser winzigen, isolierten Ebene löst sich die Welt selbst in
 Vergessenheit auf. Es ist unmöglich, dieses dunkle Nichts zu betreten oder zu
 beeinflussen.
-%%%%
-A wall of crystal
-
-<Eine Wand aus grünem Kristall>
 %%%%
 A damp floor
 

@@ -2447,18 +2447,10 @@ antique lich
 
 Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
 %%%%
-apricot tree
-
-<apple tree>
-%%%%
 Cigotuvi's Monster
 
 Cette assemblage terrifiant semble avoir été construit a partir de morceaux de
 corps de toutes les créatures monstrueuses imaginables.
-%%%%
-citrus tree
-
-<apple tree>
 %%%%
 deformed humanoid
 
@@ -2521,39 +2513,11 @@ surface. Après des années de guerre avec les orcs, plus grands mais autrement
 similaires, les nains des montagnes furent conquis et déportés de leurs terres.
 Celui-ci à été importé des côtes étrangères.
 %%%%
-mummy warrior
-
-<guardian mummy>
-%%%%
 oklob plant annihilator
 
 Il pourrait sembler inconcevable qu'une simple plante puisse atteindre la
 sensibilité et l'usabilité de la magie, mais c'est ce que vous voyez ici.
 Quelle est cette sorcellerie ?
-%%%%
-oklob plant conjurer
-
-<oklob plant annihilator>
-%%%%
-oklob plant demonologist
-
-<oklob plant annihilator>
-%%%%
-oklob plant meteorologist
-
-<oklob plant annihilator>
-%%%%
-oklob plant shifter
-
-<oklob plant annihilator>
-%%%%
-oklob plant summoner
-
-<oklob plant annihilator>
-%%%%
-oklob sapling wizard
-
-<oklob plant annihilator>
 %%%%
 orc berserker
 
@@ -2565,10 +2529,6 @@ Une statue de porphyre impeccablement sculptée représentant un archer sur le
 point de tirer une flèche, avec un carquois plein attaché à sa hanche. Ces
 flèches sculptées individuellement semblent presque comme si on pouvait les
 prendre une par une et les utiliser avec un vrai arc.
-%%%%
-pyrus tree
-
-<apple tree>
 %%%%
 sickly siren
 
@@ -2583,8 +2543,4 @@ tengu aerator
 
 This particularly ferocious tengu is well on its way towards mastery of air
 magic.
-%%%%
-vampire noble
-
-<vampire>
 %%%%

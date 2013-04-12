@@ -120,10 +120,6 @@ Turn Visible
 
 Werde wieder sichtbar.
 %%%%
-Evoke Flight
-
-<Fliege>
-%%%%
 Stop Flying
 
 Höre auf zu fliegen.

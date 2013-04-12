@@ -114,10 +114,6 @@ Turn Visible
 
 Вы снова видимы.
 %%%%
-Evoke Flight
-
-<Fly>
-%%%%
 Stop Flying
 
 Прекратить полет.
