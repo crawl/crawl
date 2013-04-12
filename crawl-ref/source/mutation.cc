@@ -1271,10 +1271,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     && !one_chance_in(temporary ? 2 : 3)))
             {
                 if (failMsg)
-                {
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
-                    maybe_id_resist(BEAM_MALMUTATE);
-                }
+                maybe_id_resist(BEAM_MALMUTATE);
                 return false;
             }
         }
