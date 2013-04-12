@@ -56,6 +56,7 @@ public:
 
     void del_things_from(const level_id &lid);
 
+    void item_type_identified(object_class_type base_type, int sub_type);
     unsigned int cull_identical_items(const item_def& item, int cost = -1);
 
     void gold_changed(int old_amount, int new_amount);

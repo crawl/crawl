@@ -2830,6 +2830,34 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     return to_del.size();
 }
 
+void ShoppingList::item_type_identified(object_class_type base_type,
+                                        int sub_type)
+{
+    // Dead men can't update their shopping lists.
+    if (!crawl_state.need_save)
+        return;
+
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        CrawlHashTable &thing = (*list)[i];
+
+        if (!thing_is_item(thing))
+            continue;
+
+        const item_def& item = get_thing_item(thing);
+
+        if (item.base_type != base_type || item.sub_type != sub_type)
+            continue;
+
+        shop_struct *shop = get_shop(thing_pos(thing).pos);
+        if (shoptype_identifies_stock(shop->type))
+            continue;
+
+        thing[SHOPPING_THING_COST_KEY] =
+            _shop_get_item_value(item, shop->greed, false, true);
+    }
+}
+
 int ShoppingList::size() const
 {
     ASSERT(list);
