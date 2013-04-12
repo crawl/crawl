@@ -2847,7 +2847,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 void ShoppingList::forget_pos(const level_pos &pos)
 {
     if (!crawl_state.need_save)
-        return; // Shopping list is unitialized and uneeded.
+        return; // Shopping list is uninitialized and unneeded.
 
     for (unsigned int i = 0; i < list->size(); i++)
     {
