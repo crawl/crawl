@@ -2955,7 +2955,6 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         CrawlHashTable &thing = (*list)[i];
         level_pos      pos    = thing_pos(thing);
         int            cost   = thing_cost(thing);
-        string         normal;
 
         if (you.duration[DUR_BARGAIN])
             cost = _bargain_cost(cost);
