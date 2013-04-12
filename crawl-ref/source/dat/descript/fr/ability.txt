@@ -208,7 +208,7 @@ squelettes ne peuvent quitter l'étage dans lequel ils ont été créés.
 Recall Undead Slaves
 
 Rappelle autour de vous vos serviteurs morts-vivants, où qu'ils soient
-actuellement dans le niveau.
+actuellement dans le donjon.
 %%%%
 Injury Mirror
 
@@ -446,7 +446,7 @@ directe libre, juste que l'ennemi soit visible.
 Recall Orcish Followers
 
 Rappelle autour de vous vos serviteurs orcs, où qu'ils soient actuellement dans
-le niveau.
+le donjon.
 %%%%
 Sunlight
 

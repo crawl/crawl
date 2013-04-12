@@ -1154,8 +1154,9 @@ ring of teleport control
 Cette bague permet à son porteur de contrôler la destination de toute
 téléportation, mais sans avoir une précision parfaite. Essayer de se téléporter
 dans un objet solide se traduira par une téléportation aléatoire, du moins dans
-le cas d'une téléportation normale. Méfiez-vous également car une téléportation
-contrôlée contamine le sujet avec de l'énergie magique résiduelle.
+le cas d'une téléportation normale. Méfiez-vous également car une translocation
+contrôlée contamine le sujet avec de l'énergie magique résiduelle, et une
+teleportation contrôlée met plus de temps à se déclencher qu'une non-contrôlée.
 %%%%
 ring of teleportation
 

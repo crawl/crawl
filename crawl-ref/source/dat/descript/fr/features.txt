@@ -329,7 +329,9 @@ leurs biens.
 %%%%
 A slime covered rock wall
 
-Cette paroi est couverte d'une fine couche de slime vert vif. Beurk.
+Cette paroi est couverte d'une fine couche de slime vert vif. Beurk. Elle est
+acide au toucher et semble devenir plus caustique à mesure que vous descendez
+dans les profondeurs.
 %%%%
 A snail-covered altar of Cheibriados
 
