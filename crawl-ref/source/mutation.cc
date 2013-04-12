@@ -1238,7 +1238,7 @@ static bool _undead_rot()
 }
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
-            bool force_mutation, bool god_gift, bool stat_gain_potion,
+            bool force_mutation, bool god_gift, bool beneficial,
             bool demonspawn, bool no_rot, bool temporary)
 {
     if (!god_gift)
@@ -1265,7 +1265,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (!god_gift)
         {
             if ((you.rmut_from_item()
-                 && !one_chance_in(temporary ? 3 : 10) && !stat_gain_potion)
+                 && !one_chance_in(temporary ? 3 : 10) && !beneficial)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
                     && !one_chance_in(temporary ? 2 : 3)))
@@ -1280,8 +1280,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         // Zin's protection.
         if (you.religion == GOD_ZIN
             && (x_chance_in_y(you.piety, MAX_PIETY)
-                || x_chance_in_y(you.piety, MAX_PIETY + 22))
-            && !stat_gain_potion)
+                || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
             simple_god_message(" protects your body from mutation!");
             return false;
