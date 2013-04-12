@@ -415,8 +415,11 @@ bool god_id_item(item_def& item, bool silent)
 
         ided = ISFLAG_KNOW_CURSE;
 
-        if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
+        if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
+            && item_needs_autopickup(item))
+        {
             item.props["needs_autopickup"] = true;
+        }
 
         if (is_weapon(item) || item.base_type == OBJ_ARMOUR)
             ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
