@@ -675,7 +675,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             {
                 const item_def& item = mitm[stock[i]];
                 const int cost = _shop_get_item_value(item, shop.greed,
-                                                      id_stock);
+                                                      id_stock, true);
 
                 unsigned int num = shopping_list.cull_identical_items(item,
                                                                       cost);
@@ -898,7 +898,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                         {
                             // Ignore Bargaining.
                             const int cost = _shop_get_item_value(item,
-                                        shop.greed, id_stock, false);
+                                        shop.greed, id_stock, true);
                             shopping_list.add_thing(item, cost);
                         }
                         in_list[i]  = true;
