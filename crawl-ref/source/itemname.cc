@@ -2092,6 +2092,8 @@ void set_ident_type(object_class_type basetype, int subtype,
     {
         you.type_ids[basetype][subtype] = setting;
         request_autoinscribe();
+        if (setting == ID_KNOWN_TYPE)
+            shopping_list.item_type_identified(basetype, subtype);
     }
 }
 
