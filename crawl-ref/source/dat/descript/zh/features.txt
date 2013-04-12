@@ -571,42 +571,6 @@ The open sea
 前方只有无尽的风浪；在你视野可及之处都没有一座灯塔。
 如果继续前进，过不了多久，你就要永远迷失在海中了——所以还是别那么干的好。
 %%%%
-A large open door
-
-<An open door>
-%%%%
-An open gate
-
-<An open door>
-%%%%
-A huge open gate
-
-<An open door>
-%%%%
-A large closed door
-
-<An open door>
-%%%%
-A closed gate
-
-<An open door>
-%%%%
-A huge closed gate
-
-<An open door>
-%%%%
-A large runed door
-
-<An open door>
-%%%%
-A runed gate
-
-<An open door>
-%%%%
-A huge runed gate
-
-<An open door>
-%%%%
 An empty arch of stone
 
 你是从这扇门中穿过来的；现在它的魔力似乎已经耗尽了。
@@ -717,10 +681,6 @@ The dimension's edge
 
 在这个孤独的微型位面边缘，就连空间本身就消失在虚无之中。
 你不可能踏入这片黑色虚空，也不可能改变它。
-%%%%
-A wall of crystal
-
-<A wall of green crystal>
 %%%%
 A damp floor
 

@@ -121,10 +121,6 @@ Turn Visible
 
 Te vuelves visible de nuevo.
 %%%%
-Evoke Flight
-
-<Fly>
-%%%%
 Stop Flying
 
 Paras de volar.

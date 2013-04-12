@@ -111,10 +111,6 @@ Turn Visible
 
 투명화를 해제한다.
 %%%%
-Evoke Flight
-
-<Fly>
-%%%%
 Stop Flying
 
 비행을 그만둔다.
