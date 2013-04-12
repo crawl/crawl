@@ -1220,10 +1220,14 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
-static bool _undead_rot()
+static bool _undead_rot(bool is_beneficial_mutation)
 {
     if (you.is_undead == US_SEMI_UNDEAD)
     {
+        // Let beneficial mutation potions work at satiated or higher
+        // for convenience
+        if (is_beneficial_mutation && you.hunger_state >= HS_SATIATED)
+            return false;
         switch (you.hunger_state)
         {
         case HS_SATIATED:  return !one_chance_in(3);
@@ -1289,7 +1293,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (_undead_rot() && !demonspawn)
+    if (_undead_rot(beneficial) && !demonspawn)
     {
         if (no_rot)
             return false;
@@ -1628,7 +1632,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
         }
 
-        if (_undead_rot())
+        if (_undead_rot(false))
             return false;
     }
 
