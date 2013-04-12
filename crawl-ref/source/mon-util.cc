@@ -1536,8 +1536,7 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
         break;
     }
 
-    if (mons->type == MONS_SIMULACRUM_LARGE
-        || mons->type == MONS_SIMULACRUM_SMALL)
+    if (mons->type == MONS_SIMULACRUM)
     {
         attk.flavour = AF_COLD;
     }
