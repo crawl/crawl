@@ -70,13 +70,15 @@ const mutation_def& get_mutation_def(mutation_type mut);
 bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
-            bool demonspawn = false, bool no_rot = false,
+            bool stat_gain_potion = false, bool demonspawn = false,
+            bool no_rot = false,
             bool temporary = false);
 
 static inline bool give_bad_mutation(const string &reason, bool failMsg = true,
                                      bool force_mutation = false)
 {
-    return mutate(RANDOM_BAD_MUTATION, reason, failMsg, force_mutation);
+    return mutate(RANDOM_BAD_MUTATION, reason, failMsg, force_mutation,
+                  false, false, false);
 }
 
 void display_mutations();
