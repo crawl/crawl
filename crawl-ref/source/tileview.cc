@@ -825,13 +825,13 @@ static void _tile_place_invisible_monster(const coord_def &gc)
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
-    if (env.map_knowledge(gc).feat() == DNGN_SHALLOW_WATER)
-        return;
-
-    if (you.see_cell(gc))
-        env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
-    else
-        env.tile_bk_fg(gc) = TILE_UNSEEN_MONSTER;
+    if (env.map_knowledge(gc).feat() != DNGN_SHALLOW_WATER)
+    {
+        if (you.see_cell(gc))
+            env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
+        else
+            env.tile_bk_fg(gc) = TILE_UNSEEN_MONSTER;
+    }
 
     if (env.map_knowledge(gc).item())
         _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
