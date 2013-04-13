@@ -828,16 +828,13 @@ static void _tile_place_invisible_monster(const coord_def &gc)
     if (env.map_knowledge(gc).feat() == DNGN_SHALLOW_WATER)
         return;
 
-    tileidx_t t = TILE_UNSEEN_MONSTER;
-    if (!you.see_cell(gc))
-    {
-        env.tile_bk_fg(gc) = t;
-        return;
-    }
-    if (you.visible_igrd(gc) != NON_ITEM)
-        t |= TILE_FLAG_S_UNDER;
+    if (you.see_cell(gc))
+        env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
+    else
+        env.tile_bk_fg(gc) = TILE_UNSEEN_MONSTER;
 
-    env.tile_fg(ep) = t;
+    if (env.map_knowledge(gc).item())
+        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
 }
 
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
