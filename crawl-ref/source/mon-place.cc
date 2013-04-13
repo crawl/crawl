@@ -2462,7 +2462,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_IRONHEART_PRESERVER:
         natural_leader = true;
-        switch(random2(3))
+        switch (random2(3))
         {
             case 0:
                 band = BAND_DEEP_ELF_HIGH_PRIEST;
