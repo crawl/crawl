@@ -2658,21 +2658,6 @@ struct spell_desc
      false,
 },
 
-#if TAG_MAJOR_VERSION == 34
-{
-    SPELL_RESURRECT, "Resurrection",
-     SPTYP_NONE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
-     6,
-     200,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     true,
-     false
-},
-#endif
-
 {
     SPELL_HOLY_LIGHT, "Holy Light",
      SPTYP_CONJURATION,
