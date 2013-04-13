@@ -975,9 +975,6 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE
         || spell_cast == SPELL_MISLEAD
-#if TAG_MAJOR_VERSION == 34
-        || spell_cast == SPELL_RESURRECT
-#endif
         || spell_cast == SPELL_HOLY_FLAMES
         || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
 }
@@ -1015,9 +1012,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_BRAIN_FEED:
         case SPELL_MISLEAD:
         case SPELL_SMITING:
-#if TAG_MAJOR_VERSION == 34
-        case SPELL_RESURRECT:
-#endif
         case SPELL_AIRSTRIKE:
         case SPELL_HOLY_FLAMES:
             return true;
@@ -2041,12 +2035,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     spell_cast = hspell_pass[random2(5)];
                 }
 
-                if (spell_cast == SPELL_NO_SPELL
-#if TAG_MAJOR_VERSION == 34
-                    // XXX: Resurrect is a do-nothing spell. Remove it!
-                    || spell_cast == SPELL_RESURRECT
-#endif
-                    )
+                if (spell_cast == SPELL_NO_SPELL)
                     continue;
 
                 // Setup the spell.
