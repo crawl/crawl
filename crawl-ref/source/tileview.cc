@@ -854,7 +854,17 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     {
         // If necessary add item brand.
         if (env.map_knowledge(gc).item())
+        {
             t |= TILE_FLAG_S_UNDER;
+
+            if (item_needs_autopickup(*env.map_knowledge(gc).item()))
+            {
+                if (you.see_cell(gc))
+                    env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+                else
+                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+            }
+        }
     }
     else
     {
