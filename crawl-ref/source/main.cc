@@ -4172,8 +4172,8 @@ static void _move_player(coord_def move)
 
         if (dangerous != DNGN_FLOOR || bad_mons)
         {
-            string prompt = "Are you sure you want to move while confused "
-                            "and next to ";
+            string prompt = "Are you sure you want to stumble around while "
+                            "confused and next to ";
 
             if (dangerous != DNGN_FLOOR)
                 prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
@@ -4187,6 +4187,10 @@ static void _move_player(coord_def move)
                 prompt += bad_adj + name + bad_suff;
             }
             prompt += "?";
+
+            monster* targ = monster_at(you.pos() + move);
+            if (targ && !targ->wont_attack() && you.can_see(targ))
+                prompt += " (Use ctrl+direction to attack without moving)";
 
             if (!crawl_state.disables[DIS_CONFIRMATIONS]
                 && !yesno(prompt.c_str(), false, 'n'))
