@@ -444,7 +444,8 @@ void inscribe_book_highlevel(item_def &book)
  * Identify a held book/rod, if appropriate.
  * @return whether we can see its spells
  */
-bool maybe_id_book(item_def &book, bool silent) {
+bool maybe_id_book(item_def &book, bool silent)
+{
     if (book.base_type != OBJ_BOOKS && book.base_type != OBJ_RODS)
         return false;
 
