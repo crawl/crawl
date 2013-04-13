@@ -2430,15 +2430,15 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     int keyin;
     vector<command_type> actions;
     actions.push_back(CMD_ADJUST_INVENTORY);
+    if (item_equip_slot(item) == EQ_WEAPON)
+        actions.push_back(CMD_UNWIELD_WEAPON);
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
     case OBJ_RODS:
     case OBJ_MISCELLANY:
-        if (item_is_equipped(item))
-            actions.push_back(CMD_UNWIELD_WEAPON);
-        else
+        if (!item_is_equipped(item))
         {
             if (item_is_wieldable(item))
                 actions.push_back(CMD_WIELD_WEAPON);
