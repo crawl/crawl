@@ -161,14 +161,6 @@ Suddenly, a bright light shines from nowhere!
 
 An intense light blinds you for a moment.
 %%%%
-Summon Holies cast
-
-@The_monster@ calls forth @possessive@ holy kin!
-%%%%
-unseen Summon Holies cast
-
-Holy kin are called forth!
-%%%%
 Holy Flames cast
 
 @The_monster@ calls forth blessed flames!
