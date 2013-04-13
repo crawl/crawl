@@ -29,6 +29,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mgen_data.h"
@@ -120,14 +121,21 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("Your weapon cannot reach that far!");
         return false; // Shouldn't happen with confused swings
     }
-    else if (!feat_is_reachable_past(grd(first_middle))
-             && !feat_is_reachable_past(grd(second_middle)))
+
+    // Calculate attack delay now in case we have to apply it.
+    melee_attack attk(&you, NULL);
+    const int attack_delay = attk.calc_attack_delay();
+
+    if (!feat_is_reachable_past(grd(first_middle))
+        && !feat_is_reachable_past(grd(second_middle)))
     {
         // Might also be a granite statue/orcish idol which you
         // can reach _past_.
         if (you.confused())
         {
             mpr("You swing wildly and hit a wall.");
+            you.time_taken = attack_delay;
+            make_hungry(3, true);
             return true;
         }
         else
@@ -172,6 +180,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
                 {
                     // Let's assume friendlies cooperate.
                     mpr("You could not reach far enough!");
+                    you.time_taken = attack_delay;
+                    make_hungry(3, true);
                     return true;
                 }
             }
@@ -198,6 +208,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         }
         else
             mpr("You attack empty space.");
+        you.time_taken = attack_delay;
+        make_hungry(3, true);
         return true;
     }
     else if (!fight_melee(&you, mons))
@@ -207,6 +219,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             // turn_is_over may have been reset to false by fight_melee, but
             // a failed attempt to reach further should not be free; instead,
             // charge the same as a successful attempt.
+            you.time_taken = attack_delay;
+            make_hungry(3, true);
             you.turn_is_over = true;
         }
         else
