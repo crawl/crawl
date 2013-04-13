@@ -623,6 +623,16 @@ IDEF(snakable)
     return 1;
 }
 
+IDEF(god_gift)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, origin_is_god_gift(*item));
+
+    return 1;
+}
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1040,6 +1050,7 @@ static ItemAccessor item_attrs[] =
     { "artefact",          l_item_artefact },
     { "branded",           l_item_branded },
     { "snakable",          l_item_snakable },
+    { "god_gift",          l_item_god_gift },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
     { "cursed",            l_item_cursed },
