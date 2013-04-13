@@ -473,6 +473,13 @@ bool melee_attack::handle_phase_dodged()
     return true;
 }
 
+static bool _flavour_triggers_damageless(attack_flavour flavour)
+{
+    return (flavour == AF_CRUSH
+            || flavour == AF_DROWN
+            || flavour == AF_PURE_FIRE);
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -532,7 +539,7 @@ bool melee_attack::handle_phase_hit()
     if (check_unrand_effects() || stop_hit)
         return false;
 
-    if (damage_done > 0 || attk_flavour == AF_CRUSH || attk_flavour == AF_DROWN)
+    if (damage_done > 0 || _flavour_triggers_damageless(attk_flavour))
     {
         if (!handle_phase_damaged())
             return false;
@@ -4460,9 +4467,6 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_FIRE:
         base_damage = attacker->get_experience_level()
                       + random2(attacker->get_experience_level());
-        if (attacker->type == MONS_FIRE_VORTEX)
-            attacker->as_monster()->suicide(-10);
-
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
@@ -4775,6 +4779,31 @@ void melee_attack::mons_apply_attack_flavour()
                      defender_name().c_str());
             }
         }
+        break;
+
+    case AF_PURE_FIRE:
+        if (attacker->type == MONS_FIRE_VORTEX)
+            attacker->as_monster()->suicide(-10);
+
+        special_damage = (attacker->get_experience_level() * 3 / 2
+                          + random2(attacker->get_experience_level()));
+        special_damage = defender->apply_ac(special_damage, 0, AC_HALF);
+        special_damage = resist_adjust_damage(defender,
+                                              BEAM_FIRE,
+                                              defender->res_fire(),
+                                              special_damage);
+
+        if (needs_message && special_damage)
+        {
+            mprf("%s %s %s!",
+                    atk_name(DESC_THE).c_str(),
+                    attacker->conj_verb("burn").c_str(),
+                    def_name(DESC_THE).c_str());
+
+            _print_resist_messages(defender, special_damage, BEAM_FIRE);
+        }
+
+        defender->expose_to_element(BEAM_FIRE, 2);
         break;
     }
 }
