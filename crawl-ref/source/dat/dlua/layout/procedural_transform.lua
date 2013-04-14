@@ -40,3 +40,21 @@ function procedural.transform.polar(source,radius,sx,sy)
   end
 
 end
+
+-- Inverse of the polar transform
+function procedural.transform.polar_inverse(source,radius,sx,sy)
+  local frad = procedural.radial{}
+  if sx == nil then sx = 1 end
+  if sy == nil then sy = 1 end
+
+  return function(x,y)
+
+    local a = x / sx
+    local r = radius * y / sy
+
+    -- TODO: Check that this is properly the inverse of polar; it might have
+    -- been flipped or rotated; although this doesn't matter slightly for current layouts
+    return source(math.sin(a*2*math.pi)*r, math.cos(a*2*math.pi)*r)
+  end
+
+end
