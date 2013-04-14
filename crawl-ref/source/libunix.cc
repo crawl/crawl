@@ -241,7 +241,7 @@ int getchk()
     tiles.redraw();
     tiles.await_input(c, true);
 
-    if (c > 0)
+    if (c != 0)
         return c;
 #endif
 

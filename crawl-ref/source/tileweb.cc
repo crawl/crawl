@@ -382,7 +382,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             {
                 c = _receive_control_message();
 
-                if (c > 0)
+                if (c != 0)
                     return true;
             }
 
