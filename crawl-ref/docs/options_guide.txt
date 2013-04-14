@@ -57,7 +57,7 @@ The contents of this text are:
                 easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
-                autofight_throw
+                autofight_throw, autofight_throw_nomove
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
