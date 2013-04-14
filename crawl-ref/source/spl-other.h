@@ -9,6 +9,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail);
 spret_type cast_death_channel(int pow, god_type god, bool fail);
 spret_type cast_recall(bool fail);
 void start_recall(int type);
+void recall_orders(monster *mons);
 void do_recall(int time);
 void end_recall();
 

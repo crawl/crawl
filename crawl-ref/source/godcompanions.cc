@@ -16,6 +16,7 @@
 #include "mon-util.h"
 #include "religion.h"
 #include "stuff.h"
+#include "spl-other.h"
 #include "branch.h"
 
 map<mid_t, companion> companion_list;
@@ -163,6 +164,9 @@ bool recall_offlevel_ally(mid_t mid)
             mons->timeout_enchantments(turns / 10);
         }
         you.moveto(old_pos);
+        // Do this after returning the player to the proper position
+        // because it uses player position
+        recall_orders(mons);
 
         return true;
     }
