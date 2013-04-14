@@ -23,14 +23,19 @@ function procedural.transform.wrapped_cylinder(source,period,radius,zscale,zoff)
 
 end
 
-function procedural.transform.inverse_polar(source,radius)
+-- Transforms a cartesian domain into a polar one. In other words, it takes
+-- a rectangular shape and transforms it into a circular one, where y becomes
+-- the radius, and x becomes the angle about the origin.
+function procedural.transform.polar(source,radius,sx,sy)
   local frad = procedural.radial{}
+  if sx == nil then sx = 1 end
+  if sy == nil then sy = 1 end
 
   return function(x,y)
 
     local a = frad(x,y)
     local r = math.sqrt(x^2+y^2)/radius
-    return source(a,r)
+    return source(a*sx,r*sy)
 
   end
 

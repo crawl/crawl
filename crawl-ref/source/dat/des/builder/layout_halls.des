@@ -459,9 +459,8 @@ ENDMAP
 
 # This maps the x,y domain to a 3D cylinder extruded along the y-axis in the
 # Worley space. This creates a strong sense of repetition and symmetry along
-# the horizontal whilst still allowing the patterns to connect.
-# Somehow, particularly in Zot, the shapes have a tendency to come out looking like
-# people, faces, skulls... kind of like a paper doll chain.
+# the horizontal whilst still allowing the patterns to connect. Optionally
+# it applies a polar transform producing something sometimes like a spiderweb.
 NAME:   layout_cathedral_of_symmetry
 DEPTH:  Zot,Tar
 WEIGHT: 20, 100(Tar)
@@ -501,6 +500,8 @@ TAGS: overwritable layout allow_dup unrand
   local border = crawl.random_range(3,6)
   local margin = crawl.random_range(0,5)
 
+  local polarise = false
+
   if you.in_branch("tar") then
     -- Tar works best with a lot of dissonance but occasionally
     -- repeating elements
@@ -508,6 +509,7 @@ TAGS: overwritable layout allow_dup unrand
     zoff = util.random_range_real(0.1,0.3)
     yscale = util.random_range_real(.4,1)/reps + reps/10
     wscale = util.random_range_real(.06, .1)
+    polarise = crawl.one_chance_in(4)
   else
     -- Zot:5
     if you.at_branch_bottom() then
@@ -522,6 +524,7 @@ TAGS: overwritable layout allow_dup unrand
     zoff = util.random_range_real(0,0.25)
     yscale = util.random_range_real(.1,.4)/reps + reps/10
     wscale = util.random_range_real(.05, .08)
+    polarise = crawl.coinflip()
   end
 
   local scale = 80/reps
@@ -530,6 +533,12 @@ TAGS: overwritable layout allow_dup unrand
   fbase = procedural.transform.wrapped_cylinder(fbase,scale,scale,zscale,zoff)
   fbase = procedural.scale(fbase,1,yscale)
   fbase = procedural.translate(fbase,scale*xoff/2,0)
+  -- Perform polar transform.
+  -- TODO: On certain settings this starts looking like a giant spiderweb. Should enable this
+  -- layout in Spider with tuned settings and polarise = true
+  if polarise then
+    fbase = procedural.translate(procedural.transform.polar(fbase,gym/2,gxm,gym),gxm/2,gym/2)
+  end
   fbase = procedural.add(fbase,procedural.mul(breakpoint,procedural.border{padding=border,margin=margin}))
 
   procedural.render_map(_G, fbase, function(v) return (v < breakpoint and '.' or 'x') end)
