@@ -690,12 +690,13 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_SKALD:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1, 1);
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
+        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_BERSERK_RAGE);
 
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
