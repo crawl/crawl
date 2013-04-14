@@ -277,11 +277,12 @@ int cast_selective_amnesia(string *pre_msg)
     int slot;
 
     // Pick a spell to forget.
+    mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+    keyin = list_spells(false, false, false);
+	redraw_screen();
+
     while (true)
     {
-        mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
-        keyin = get_ch();
-
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
@@ -297,6 +298,7 @@ int cast_selective_amnesia(string *pre_msg)
         if (!isaalpha(keyin))
         {
             mesclr();
+            keyin = get_ch();
             continue;
         }
 
@@ -304,7 +306,11 @@ int cast_selective_amnesia(string *pre_msg)
         slot = get_spell_slot_by_letter(keyin);
 
         if (spell == SPELL_NO_SPELL)
+        {
             mpr("You don't know that spell.");
+            mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+            keyin = get_ch();
+        }
         else
             break;
     }
