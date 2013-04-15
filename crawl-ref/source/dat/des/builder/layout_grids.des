@@ -27,6 +27,15 @@
 
   end
 
+  function padded_bounds(minpad,maxpad)
+    local gxm,gym = dgn.max_bounds()
+    local x1,y1,x2,y2 = 1,1,gxm-2,gym-2
+    return { x1 = x1 + crawl.random_range(minpad,maxpad),
+             y1 = y1 + crawl.random_range(minpad,maxpad),
+             x2 = x2 - crawl.random_range(minpad,maxpad),
+             y2 = y2 - crawl.random_range(minpad,maxpad) }
+  end
+
   -- Generate a floor plan based on omnigrid subdivision
   function omnigrid_floor_plan(room,options,gen)
 
@@ -179,6 +188,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
   local max_size = you.in_branch("lair") and 4 or 3
   local size = crawl.random_range(min_size,max_size)
   layout_type "corridors"
+
   local grid_opts = {
     -- Keep subdividing until the areas are too small
     subdivide_initial_chance = 100,
@@ -188,6 +198,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
                        and size * crawl.random_range(3,5)
                        or size * crawl.random_range(4,6),
   }
+
   local min_fill = 40 + size * 10
   local max_fill = 80 + size * 5
 
@@ -262,7 +273,90 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
       } }
     }
   }
+    hyper.build_layout(_G,build)
+  zonify.grid_fill_zones(1, "rock_wall")
+}}
 
-  hyper.build_layout(_G,build)
+# Draws a random grid but can use a variety of different shapes to draw each grid area.
+NAME:   layout_grid_shapes
+DEPTH:  D:5-, Lair, Snake
+WEIGHT: 8
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+{{
+  if is_validating() then return; end
+
+  -- TODO: This is almost Zot-worthy and maybe some other branches but it doesn't quite
+  -- look impressive enough yet. And it need enough variation options to be customised
+  -- more in each branch as it is. This can be done a few ways: specific shapes for
+  -- different branches; changing subdivide options; caves on/off; corridor widths;
+  -- distortion functions on the shapes (in snake); different types of cavey func; etc.
+  -- Also once grid connectivity stuff is worked out, would be good to not draw some
+  -- of the outer shapes whilst not breaking connectivity.
+
+  layout_type "open"
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  local grid_opts = {
+    guaranteed_divides = 2,
+    subdivide_initial_chance = 100,
+    subdivide_level_multiplier = .9,
+    minimum_size = 8,
+  }
+
+  local cavey = crawl.coinflip()
+
+  local max_corridor = crawl.random_range(cavey and 4 or 2,10)
+  local bounds = padded_bounds(max_corridor,max_corridor + crawl.random_range(1,6))
+  local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+
+  -- TODO: Allow specifying different inner and outer shapes. This will make it easy to do a multishape option
+  -- but always have a big enough outer shape. Also, more shapes (including rounded corners rect.)
+  local shapes = {
+    { weight = 10, func = function(w,h)
+                            return procedural.scale(procedural.translate(primitive.distance,1),w/2,h/2)
+                          end },
+    { weight = 10, func = function(w,h)
+                            return procedural.scale(procedural.translate(primitive.octagon(.25),1),w/2,h/2)
+                          end },
+    { weight = 10, func = function(w,h)
+                            return procedural.scale(procedural.translate(primitive.diamond(),1),w/2,h/2)
+                          end }
+  }
+
+  local shape = util.random_weighted_from("weight",shapes).func
+  local fshape = shape
+  -- Convert shape to a cavey one
+  if cavey then
+    local fcave = procedural.worley_diff { scale = .5 }
+    fshape = function(w,h)
+      local base = shape(w,h)
+      return function(x,y,gx,gy)
+        return base(x,y) + fcave(gx,gy)/4
+      end
+    end
+  end
+
+  for i,area in ipairs(grid) do
+    -- Work out dimensions and half-corridor size for this block
+    area.w,area.h = area.x2 - area.x1 + 1,area.y2 - area.y1 + 1
+    area.corridor = math.min(math.floor(math.min(area.w,area.h)/4),math.floor(max_corridor/2))
+    -- Draw the bigger container shape
+    procedural.render_map_area(_G,area.x1-area.corridor,area.y1-area.corridor,
+                               area.x2+area.corridor,area.y2+area.corridor,
+                               fshape(area.w+2*area.corridor,area.h+2*area.corridor),'.')
+  end
+
+  for i,area in ipairs(grid) do
+    -- Chance of not filling increases the smaller the areas are
+    if crawl.random_real() < (.5 + math.max(area.w,area.h) / (math.max(gxm,gym) * 2)) then
+      -- Draw the central column
+      procedural.render_map_area(_G,area.x1+area.corridor,area.y1+area.corridor,
+                                 area.x2-area.corridor,area.y2-area.corridor,
+                                 fshape(area.w-2*area.corridor,area.h-2*area.corridor),'x')
+    end
+  end
+
   zonify.grid_fill_zones(1, "rock_wall")
 }}
