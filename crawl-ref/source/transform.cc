@@ -93,7 +93,7 @@ bool form_can_swim(transformation_type form)
     if (you.species == SP_MERFOLK && !form_changed_physiology(form))
         return true;
 
-    if (you.species == SP_OCTOPODE)
+    if (you.species == SP_OCTOPODE && !form_changed_physiology(form))
         return true;
 
     size_type size = you.transform_size(form, PSIZE_BODY);
@@ -106,7 +106,7 @@ bool form_can_swim(transformation_type form)
 bool form_likes_water(transformation_type form)
 {
     return (form_can_swim(form) || you.species == SP_GREY_DRACONIAN
-            || you.species == SP_OCTOPODE && !form_changed_physiology(form));
+                                   && !form_changed_physiology(form));
 }
 
 bool form_has_mouth(transformation_type form)
