@@ -27,7 +27,7 @@ enum dgn_event_type
     DET_ITEM_PICKUP     = 0x0200,
     DET_ITEM_MOVED      = 0x0400,
     DET_FEAT_CHANGE     = 0x0800,
-    DET_WALL_HIT        = 0x1000,
+    DET_UNUSED          = 0x1000,   // open for grabs
     DET_DOOR_OPENED     = 0x2000,
     DET_DOOR_CLOSED     = 0x4000,
     DET_HP_WARNING      = 0x8000,
@@ -39,7 +39,7 @@ enum dgn_event_type
 
     DET_POSITION_MASK   = DET_MONSTER_MOVED | DET_PLAYER_MOVED
                         | DET_PLAYER_IN_LOS | DET_ITEM_PICKUP
-                        | DET_ITEM_MOVED | DET_FEAT_CHANGE | DET_WALL_HIT
+                        | DET_ITEM_MOVED | DET_FEAT_CHANGE
                         | DET_DOOR_OPENED | DET_DOOR_CLOSED
                         | DET_PRESSURE_PLATE,
 };

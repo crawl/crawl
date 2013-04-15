@@ -74,7 +74,7 @@ static const char *dgn_event_type_names[] =
 "none", "turn", "mons_move", "player_move", "leave_level",
 "entering_level", "entered_level", "player_los", "player_climb",
 "monster_dies", "item_pickup", "item_moved", "feat_change",
-"wall_hit", "door_opened", "door_closed", "hp_warning",
+"unused", "door_opened", "door_closed", "hp_warning",
 "pressure_plate",
 };
 

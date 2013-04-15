@@ -1161,17 +1161,6 @@ bool bolt::hit_wall()
         // Well, we warned them.
     }
 
-    // Press trigger/switch/button in wall if hit by something solid
-    // or solid-ish.
-    if (in_bounds(pos()) && !is_explosion && !is_tracer && !monster_at(pos())
-        && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
-    {
-        dgn_event event(DET_WALL_HIT, pos());;
-        event.arg1  = beam_source;
-
-        dungeon_events.fire_vetoable_position_event(event, target);
-    }
-
     if (in_bounds(pos()) && can_affect_wall(feat))
         affect_wall();
     else if (is_bouncy(feat) && !in_explosion_phase)
