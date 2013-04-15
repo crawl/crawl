@@ -589,6 +589,7 @@ nunchaku NUNCHAKU
 
 ## polearms
 spear SPEAR
+spear2
 spear_two SPEAR2
 spear_three SPEAR3
 spear_four SPEAR4
@@ -611,6 +612,7 @@ scythe_slant SCYTHE_SLANT
 pike PIKE
 staff STAFF
 quarterstaff QUARTERSTAFF1
+quarterstaff2
 quarterstaff_two QUARTERSTAFF2
 quarterstaff_three QUARTERSTAFF3
 quarterstaff_four QUARTERSTAFF4
