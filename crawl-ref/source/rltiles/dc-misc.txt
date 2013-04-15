@@ -143,6 +143,8 @@ cloud_calc_dust1
 cloud_calc_dust2
 cloud_calc_dust3
 
+cloud_forest_fire CLOUD_FOREST_FIRE
+
 %sdir mon
 fungi_plants/giant_spore SPORE_OVERLAY
 
