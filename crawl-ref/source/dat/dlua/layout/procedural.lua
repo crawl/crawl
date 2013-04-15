@@ -471,3 +471,17 @@ function procedural.render_map(e, fval, fresult)
   end
 
 end
+
+function procedural.render_map_area(e,x1,y1,x2,y2,fval,brush,space)
+  local fbrush
+  if type(brush)=="string" then
+    fbrush = function(v) return (v <= 1) and brush or space end
+  end
+  for x = x1,x2,1 do
+    for y = y1,y2,1 do
+      local val = fval(x-x1,y-y1,x,y)
+      local r = fbrush(val,x,y)
+      if r ~= nil then e.mapgrd[x][y] = r end
+    end
+  end
+end
