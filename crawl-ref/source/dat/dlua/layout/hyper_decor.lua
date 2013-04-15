@@ -72,7 +72,8 @@ function hyper.rooms.decorate_walls(state, connections, door_required, has_windo
   end
 
   -- Optionally place windows
-  if has_windows == false or state.room.no_windows or not crawl.one_chance_in(5) then return end
+  if has_windows == false or state.room.no_windows
+     or state.options.no_windows or not crawl.one_chance_in(5) then return end
 
   -- Choose feature for window
   -- TODO: Pick other features in way that's similarly overrideable at multiple levels

@@ -58,8 +58,8 @@
       jitter_max = 2,
       outer_corridor = true,
       size = room.size,
-      paint_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil,
-      floor_func = crawl.one_chance_in(2) and hyper.floors.cave_paint or nil
+      paint_func = crawl.one_chance_in(3) and hyper.caves.cave_paint or nil,
+      floor_func = crawl.one_chance_in(2) and hyper.caves.cave_paint or nil
     }
     return paint
   end
@@ -86,8 +86,8 @@
       jitter_min = chosen.jitter_min,
       jitter_max = chosen.jitter_max,
       size = room.size,
-      paint_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil,
-      floor_func = crawl.one_chance_in(3) and hyper.floors.cave_paint or nil
+      paint_func = crawl.one_chance_in(3) and hyper.caves.cave_paint or nil,
+      floor_func = crawl.one_chance_in(3) and hyper.caves.cave_paint or nil
     }
     return paint
   end
@@ -102,8 +102,8 @@
       minimum_size = 2,
       jitter = false,
       size = room.size,
-      paint_func = crawl.one_chance_in(5) and hyper.floors.cave_paint or nil,
-      floor_func = crawl.one_chance_in(4) and hyper.floors.cave_paint or nil
+      paint_func = crawl.one_chance_in(5) and hyper.caves.cave_paint or nil,
+      floor_func = crawl.one_chance_in(4) and hyper.caves.cave_paint or nil
     }
     return paint
   end
@@ -112,7 +112,7 @@
 
 NAME:   layout_big_grid
 DEPTH:  D:10-, Lair
-WEIGHT: 10
+WEIGHT: 3
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
 {{
@@ -142,7 +142,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
 NAME:   layout_small_grid
 DEPTH:  Dis, D:5-, Lair
-WEIGHT: 10
+WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
 {{
@@ -170,7 +170,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
 NAME:   layout_long_grid
 DEPTH:  Dis, D, Lair
-WEIGHT: 10
+WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
 {{
