@@ -1,6 +1,5 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20110403 for Dungeon Crawl Stone Soup 0.8.0.)
 
 Getting DCSS to run
 -------------------
