@@ -4,4 +4,8 @@
 function callback.grunt_victim_ignite(data, triggerable, triggerer, marker, ev)
   -- the victims don't spawn before; do nothing
 end
+
+function callback.ldierk_statue_collapse(data, triggerable, triggerer, marker, ev)
+  -- wall_hit events removed; do nothing
+end
 }}

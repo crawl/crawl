@@ -3521,18 +3521,9 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         {
             bool do_msg = true;
 
-            // Press trigger/switch/button in wall.
-            if (feat_is_solid(feat))
-            {
-                dgn_event event(DET_WALL_HIT, target);
-                event.arg1  = NON_MONSTER;
-
-                // Listener can veto the event to prevent the "You swing at
-                // nothing" message.
-                do_msg =
-                    dungeon_events.fire_vetoable_position_event(event,
-                                                                target);
-            }
+            // Don't waste a turn if feature is solid.
+            if (feat_is_solid(feat) && !you.confused())
+                return true;
             else
             {
                 list<actor*> cleave_targets;

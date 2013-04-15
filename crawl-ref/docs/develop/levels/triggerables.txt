@@ -487,9 +487,6 @@ parameters for each.
         countdown is performed.
    * entered_level: Called when player enters the level, after all level
         setup code has completed.
-   * wall_hit: Called whenever the relevant wall is hit with a solid object
-        (such as a missile or a wielded weapon using Ctrl+direction), or a bolt
-        spell (ice bolt, Lehudib's Crystal Spear, etc).
 
 F.     Master and slaves
 ========================
