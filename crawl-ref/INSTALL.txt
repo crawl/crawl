@@ -38,20 +38,20 @@ The rest of the file deals with compiling from the source.
 Building Dungeon Crawl Stone Soup
 ---------------------------------
 
-Crawl Stone Soup is known to compile successfully on the following platforms
-as of version 0.8:
+Crawl Stone Soup is known to run on the following platforms as of version
+0.12:
 
-- Any Unix with a recent gcc (and g++), GNU make and libncursesw, including
-  Linux and Mac OS X.  "Recent" is defined as gcc 4.1 or newer.
-- Microsoft Windows NT/2000/XP.
+- Any Unix with GNU or BSD userland.
+- Mac OS X.
+- Android.
+- Microsoft Windows 2000/XP/Vista/7/8
 
-The only officially supported compiler is gcc (available on almost all
-Unixes, and as MinGW for Windows).
+The only officially supported compilers are gcc (4.1 or newer) and clang
+(3.0 or newer), with strong preference for the former.  On Windows, gcc is
+usually available as MinGW.
 
-On other platforms, your mileage may wary, but you should be able to build
-Crawl on pretty much any operating system with a modern C++ compiler (full
-support for the standard C++ library, in particular <string>, the collection
-classes and <algorithm> is necessary) and the curses library.
+There's no reason Crawl shouldn't work on other modern systems, especially
+Unixy ones, although some porting may be needed.
 
 Windows 9X and ME are no longer supported but you may probably build for
 them with relatively minor changes.
