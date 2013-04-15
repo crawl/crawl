@@ -291,6 +291,14 @@ without her? She was the army, herself.”
     -Mark Twain, _Personal Recollections of Joan of Arc, by the Sieur Louis de
      Conte_, Book II, chap. 40 “Treachery Conquers Joan”. 1896.
 %%%%
+book:quote
+
+“On leaf of palm, on sedge-wrought roll;
+On plastic clay and leathern scroll,
+Man wrote his thoughts; the ages passed,
+And lo! the Press was found at last!”
+    -John Greenleaf Whittier, _The Library_, st. 4.
+%%%%
 book of air
 
 A primer on the elemental magics of Air. The pages often flip themselves, as if
@@ -1407,6 +1415,10 @@ manual
 
 A valuable book which allows one to practise a certain skill more efficiently.
 %%%%
+manual:quote
+
+<book:quote>
+%%%%
 meat ration
 
 A filling ration of dried and preserved meats.
@@ -2103,6 +2115,16 @@ whose frozen crescents the wind and violence of battle seemed to be living on.�
     -Jorge Luis Borges, _The Form of the Sword_. 1953.
      trans. Andrew Hurley.
 %%%%
+scroll:quote
+
+“To drift with every passion till my soul
+Is a stringed lute on which all winds can play,
+Is it for this that I have given away
+Mine ancient wisdom, and austere control?
+Methinks my life is a twice-written scroll
+Scrawled over on some boyish holiday.”
+    -Oscar Wilde, _Helas_. 1881.
+%%%%
 scroll of acquirement
 
 This wonderful scroll causes the creation of a valuable item, with the reader
@@ -2110,10 +2132,18 @@ choosing the type of item to be created. Items produced are heavily biased
 towards something fitting the reader's skills, and also towards gear that
 hasn't been seen yet, but, alas, nothing is guaranteed.
 %%%%
+scroll of acquirement:quote
+
+<scroll:quote>
+%%%%
 scroll of amnesia
 
 This scroll allows its reader to selectively erase one spell from memory to
 recapture the magical energy bound up with it.
+%%%%
+scroll of amnesia:quote
+
+<scroll:quote>
 %%%%
 scroll of blinking
 
@@ -2121,17 +2151,33 @@ This scroll allows its reader to teleport a short distance, with precise
 control. Be wary that controlled teleports will cause the subject to become
 contaminated with magical energy.
 %%%%
+scroll of blinking:quote
+
+<scroll:quote>
+%%%%
 scroll of curse armour
 
 This scroll places a curse on a worn piece of armour.
+%%%%
+scroll of curse armour:quote
+
+<scroll:quote>
 %%%%
 scroll of curse jewellery
 
 This scroll places a curse on an equipped amulet or a ring.
 %%%%
+scroll of curse jewellery:quote
+
+<scroll:quote>
+%%%%
 scroll of curse weapon
 
 This scroll places a curse on a wielded weapon.
+%%%%
+scroll of curse weapon:quote
+
+<scroll:quote>
 %%%%
 scroll of enchant armour
 
@@ -2142,12 +2188,20 @@ AC.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
+scroll of enchant armour:quote
+
+<scroll:quote>
+%%%%
 scroll of enchant weapon i
 
 This scroll places an enchantment on the wielded weapon, making it more
 accurate in combat. It becomes increasingly less likely to succeed when used on
 highly enchanted weapons, and can only ever enchant them up to +9. Magical
 artefacts cannot be enchanted at all.
+%%%%
+scroll of enchant weapon i:quote
+
+<scroll:quote>
 %%%%
 scroll of enchant weapon ii
 
@@ -2156,6 +2210,10 @@ greater damage in combat. It becomes increasingly less likely to succeed when
 used on highly enchanted weapons, and can only ever enchant them up to +9.
 Magical artefacts cannot be enchanted at all.
 %%%%
+scroll of enchant weapon ii:quote
+
+<scroll:quote>
+%%%%
 scroll of enchant weapon iii
 
 This scroll enchants the wielded weapon to be far more effective in combat,
@@ -2163,18 +2221,34 @@ increasing both accuracy and damage. It becomes increasingly less likely to
 succeed when used on highly enchanted weapons, and can only ever enchant them
 up to +9. Magical artefacts cannot be enchanted at all.
 %%%%
+scroll of enchant weapon iii:quote
+
+<scroll:quote>
+%%%%
 scroll of fear
 
 This scroll causes great fear in those who see the one who reads it.
+%%%%
+scroll of fear:quote
+
+<scroll:quote>
 %%%%
 scroll of fog
 
 This scroll surrounds the reader with a dense cloud of fog.
 %%%%
+scroll of fog:quote
+
+<scroll:quote>
+%%%%
 scroll of holy word
 
 This scroll calls on the powers of Heaven to cause great damage to any nearby
 unholy creature — including you!
+%%%%
+scroll of holy word:quote
+
+<scroll:quote>
 %%%%
 scroll of identify
 
@@ -2183,25 +2257,45 @@ and will occasionally allow multiple identifications.
 
 If used on a deck of cards, this scroll will also give away the top card.
 %%%%
+scroll of identify:quote
+
+<scroll:quote>
+%%%%
 scroll of immolation
 
 This scroll is treated with an incredibly flammable substance, which explodes
 violently when the scroll is opened and read, scorching the reader and anything
 else nearby.
 %%%%
+scroll of immolation:quote
+
+<scroll:quote>
+%%%%
 scroll of magic mapping
 
 This scroll reveals the surroundings of the one who reads it.
+%%%%
+scroll of magic mapping:quote
+
+<scroll:quote>
 %%%%
 scroll of noise
 
 This prank scroll, often slipped into a wizard's backpack by a devious
 apprentice, causes a loud noise. It is not otherwise noted for its usefulness.
 %%%%
+scroll of noise:quote
+
+<scroll:quote>
+%%%%
 scroll of random uselessness
 
 It is easy to be blinded to the essential uselessness of this scroll by the
 sense of achievement you get from getting it to work at all.
+%%%%
+scroll of random uselessness:quote
+
+<scroll:quote>
 %%%%
 scroll of recharging
 
@@ -2210,25 +2304,45 @@ reader. When used on a rod, it also increases the size of the rod's power
 storage, increases the rate at which it regenerates power, and even improves
 its melee combat qualities.
 %%%%
+scroll of recharging:quote
+
+<scroll:quote>
+%%%%
 scroll of remove curse
 
 Reading this scroll removes curses from the items you are using.
+%%%%
+scroll of remove curse:quote
+
+<scroll:quote>
 %%%%
 scroll of summoning
 
 This scroll calls forth several creatures woven from shadow into the shapes of
 those beings found within the reader's immediate vacinity.
 %%%%
+scroll of summoning:quote
+
+<scroll:quote>
+%%%%
 scroll of teleportation
 
 Reading the words on this scroll translocates you to a random position after a
 short delay.
+%%%%
+scroll of teleportation:quote
+
+<scroll:quote>
 %%%%
 scroll of torment
 
 This scroll calls on the powers of darkness to inflict great pain on any nearby
 creature — including you! This halves the resilience of all living creatures,
 although is never directly fatal.
+%%%%
+scroll of torment:quote
+
+<scroll:quote>
 %%%%
 scroll of vorpalise weapon
 
@@ -2242,12 +2356,20 @@ Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha,
 the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
 let such an opportunity for fun go to waste.
 %%%%
+scroll of vorpalise weapon:quote
+
+<scroll:quote>
+%%%%
 scroll of vulnerability
 
 This scroll cancels all magical enchantments from the reader and from beings in
 the vicinity. Also, the magical resistances of the reader and nearby beings are
 halved for a short duration. The latter effect does not apply to beings fully
 immune to magic.
+%%%%
+scroll of vulnerability:quote
+
+<scroll:quote>
 %%%%
 scroll of silence
 
@@ -2263,6 +2385,10 @@ times out.
 
 Note that demons do not need sound to cast spells; certain necromantic fixtures
 have this property as well.
+%%%%
+scroll of silence:quote
+
+<scroll:quote>
 %%%%
 scythe
 
@@ -2658,6 +2784,10 @@ tome of destruction
 
 An extremely powerful but unpredictable book of wild magic. Warning: Reading
 may be hazardous to you or your surroundings!
+%%%%
+tome of destruction:quote
+
+<book:quote>
 %%%%
 trident
 
