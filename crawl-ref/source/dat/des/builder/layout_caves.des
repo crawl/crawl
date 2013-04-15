@@ -7,6 +7,7 @@
 : require("dlua/layout/procedural.lua")
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/hyper.lua")
+: require("dlua/layout/hyper_caves.lua")
 
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
@@ -351,9 +352,9 @@ ENDMAP
 # TODO: Use other layouts as the base (e.g. cave_shapes, a river/forest/pools layout like bigger_room,
 # even swamp / shoals) and add rooms to them
 NAME: layout_cave_town
-WEIGHT: 0
+WEIGHT: 8
 ORIENT: encompass
-DEPTH: D:5-, Snake, Lair
+DEPTH: D:2-26, Snake, Lair
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
 {{
   if is_validating() then return; end
@@ -369,28 +370,29 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
     return { x = 7 + crawl.random2(9) + crawl.random2(7),y = 7 + crawl.random2(9) + crawl.random2(7) }
   end
 
-  local weights = {
-    { weight = 10, room = hyper.rooms.cavern_vault },
-    { weight = 10, room = hyper.rooms.cave_vault },
-  }
+  local chosen,params = hyper.caves.random_cave_room()
+  local transform = not params.wall and hyper.rooms.add_walls or nil
 
-  local chosen = util.random_weighted_from("weight",weights)
+  local is_random = false -- crawl.coinflip()
 
-  -- This is a very simple approximation of layout_chaotic_city. It's almost identical with a little hyperness.
   local gxm,gym = dgn.max_bounds()
   hyper.build_layout(_G,{
     name = "Cave Town",
+    no_windows = true,
     build_fixture = {
       { pass = "Primary", type = "build", strategy = hyper.place.strategy_primary, max_rooms = 1, generators = {
-        { generator = "code", paint_callback = hyper.floors.cavern_walls, analyse = false,
+        { generator = "code", paint_callback = hyper.caves.cavern_walls, analyse = false,
           min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 },
-        { generator = "code", paint_callback = hyper.rooms.cave_walls, analyse = false,
+        { generator = "code", paint_callback = hyper.caves.cave_walls, analyse = false,
           min_size_x = gxm-12, max_size_x = gxm-2, min_size_y = gym-12, max_size_y = gym-2, place_padding = 1 }
       } },
-      { pass = "Rooms", type = "build", strategy = hyper.place.strategy_open, max_rooms = 12, generators = {
-        { generator = "code", class = "room", weight = 5, paint_callback = chosen.room, size_callback = room_size_func_big, room_transform = hyper.rooms.add_walls, max_rooms = 3 },
-        { generator = "code", class = "room", weight = 15, paint_callback = chosen.room, size_callback = room_size_func, room_transform = hyper.rooms.add_walls },
-        { generator = "code", class = "room", weight = 10, paint_callback = chosen.room, size_callback = room_size_func_small,  room_transform = hyper.rooms.add_walls },
+      { pass = "Rooms1", type = "build", strategy = hyper.place.strategy_open, max_rooms = crawl.random_range(1,3), generators = {
+        { generator = "code", class = "room", weight = 5, paint_callback = chosen, size_callback = room_size_func_big, room_transform = transform },
+      } },
+      { pass = "Rooms2", type = "build", strategy = is_random and hyper.place.strategy_random or hyper.place.strategy_open,
+        max_rooms = is_random and crawl.random_range(12,18) or crawl.random_range(8,12), generators = {
+        { generator = "code", class = "room", weight = 15, paint_callback = chosen, size_callback = room_size_func, room_transform = transform },
+        { generator = "code", class = "room", weight = 10, paint_callback = chosen, size_callback = room_size_func_small, room_transform = transform },
       } }
     }
   })
@@ -459,7 +461,6 @@ TAGS: overwritable layout allow_dup unrand
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
   local scale = util.random_range_real(.3,1.8)
---  local scale = util.random_range_real(0.2,2)
   local perlin1 = procedural.simplex3d { scale = scale }
   if crawl.coinflip() then
     perlin1 = procedural.distort {

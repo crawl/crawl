@@ -305,7 +305,7 @@ function hyper.place.apply_room(state,room,build,usage_grid,options)
         if grid_cell.room == usage.room then
           -- Original wall
           table.insert(door_connections, wall_info)
-        else
+        elseif room_cell.anchors ~= nil and room_cell.anchors[1] ~= nil then
           -- Incidental overlay
           table.insert(incidental_connections[room_cell.anchors[1].normal.dir], wall_info)
         end
