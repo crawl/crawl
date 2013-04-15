@@ -4518,6 +4518,10 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch += random2(tile_main_count(ch));
                 break;
 
+            case CLOUD_FOREST_FIRE:
+                ch = TILE_CLOUD_FOREST_FIRE;
+                break;
+
             default:
                 ch = TILE_CLOUD_GREY_SMOKE;
                 break;
