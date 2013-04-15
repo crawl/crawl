@@ -1162,8 +1162,6 @@ NAME: grunt_entry_enticement_vehumet
 TAGS: grunt_entry_enticement_altar unrand
 MONS: deep elf annihilator, draconian annihilator
 SHUFFLE: de, 12, KL
-ITEM: unobtainable book of power ident:all
-ITEM: unobtainable book of annihilations ident:all
 KFEAT: _ = altar_vehumet
 MARKER: K = lua:fog_machine { cloud_type = "flame", \
                               pow_min = 10, pow_max = 10, delay = 10, \
@@ -1174,9 +1172,9 @@ MARKER: L = lua:fog_machine { cloud_type = "freezing vapour", \
                               size = 1, spread_rate = 0, \
                               walk_dist = 0, excl_rad = 0 }
 MAP
- Kd
+ K.
 L_1
-e2.
+.2.
 ENDMAP
 
 NAME: grunt_entry_enticement_xom
