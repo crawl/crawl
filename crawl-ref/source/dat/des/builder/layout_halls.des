@@ -255,8 +255,8 @@ TAGS: overwritable layout allow_dup unrand
   end
 
   procedural.render_map(_G, fphase, function(v) return (v > wall_break and '.' or 'x') end)
+  zonify.map_fill_zones(_G, 1, 'x')
 
-  -- zonify.map_fill_zones(_G, 1, 'x')
 }}
 MAP
 ENDMAP
@@ -542,11 +542,6 @@ TAGS: overwritable layout allow_dup unrand
   fbase = procedural.add(fbase,procedural.mul(breakpoint,procedural.border{padding=border,margin=margin}))
 
   procedural.render_map(_G, fbase, function(v) return (v < breakpoint and '.' or 'x') end)
-
-  procedural.render_map(_G, fbase, function(v,x,y)
-    return (v < .3 and '.' or 'x')
-  end)
-
   zonify.map_fill_zones(_G, 1, 'x')
 }}
 MAP
