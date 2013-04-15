@@ -294,9 +294,9 @@ without her? She was the army, herself.”
 book:quote
 
 “On leaf of palm, on sedge-wrought roll;
-On plastic clay and leathern scroll,
-Man wrote his thoughts; the ages passed,
-And lo! the Press was found at last!”
+ On plastic clay and leathern scroll,
+ Man wrote his thoughts; the ages passed,
+ And lo! the Press was found at last!”
     -John Greenleaf Whittier, _The Library_, st. 4.
 %%%%
 book of air
@@ -2118,11 +2118,11 @@ whose frozen crescents the wind and violence of battle seemed to be living on.�
 scroll:quote
 
 “To drift with every passion till my soul
-Is a stringed lute on which all winds can play,
-Is it for this that I have given away
-Mine ancient wisdom, and austere control?
-Methinks my life is a twice-written scroll
-Scrawled over on some boyish holiday.”
+ Is a stringed lute on which all winds can play,
+ Is it for this that I have given away
+ Mine ancient wisdom, and austere control?
+ Methinks my life is a twice-written scroll
+ Scrawled over on some boyish holiday.”
     -Oscar Wilde, _Helas_. 1881.
 %%%%
 scroll of acquirement
