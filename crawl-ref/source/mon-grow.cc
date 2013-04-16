@@ -217,7 +217,7 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
         return false;
 
     // Only monsters that you can gain XP from can level-up.
-    if (mons_class_flag(type, M_NO_EXP_GAIN))
+    if (mons_class_flag(type, M_NO_EXP_GAIN) || is_summoned())
         return false;
 
     // Avoid wrap-around.
