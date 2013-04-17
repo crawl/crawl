@@ -2172,7 +2172,6 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     int levels = 0;
     while (how_much-- > 0)
     {
-    dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutations[which_mut]);
         if (you.mutation[which_mut] == cap
             && you.innate_mutations[which_mut] > 0
             && you.innate_mutations[which_mut] == cap-1)
