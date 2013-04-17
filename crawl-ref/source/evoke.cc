@@ -1430,6 +1430,11 @@ static bool _phial_of_floods()
     return false;
 }
 
+static void _expend_elemental_evoker(item_def &item)
+{
+    item.plus = 10;
+}
+
 bool evoke_item(int slot)
 {
     if (you.form == TRAN_WISP)
@@ -1589,21 +1594,44 @@ bool evoke_item(int slot)
             break;
 
         case MISC_AIR_ELEMENTAL_FAN:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
             _fan_of_gales();
+            _expend_elemental_evoker(item);
             break;
 
         case MISC_LAMP_OF_FIRE:
-
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
             _lamp_of_fire();
+            _expend_elemental_evoker(item);
 
             break;
 
         case MISC_STONE_OF_EARTH_ELEMENTALS:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
             _stone_of_tremors();
+            _expend_elemental_evoker(item);
             break;
 
         case MISC_PHIAL_OF_FLOODS:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
             _phial_of_floods();
+            _expend_elemental_evoker(item);
             break;
 
         case MISC_HORN_OF_GERYON:
