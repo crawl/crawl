@@ -1459,7 +1459,7 @@ static void _portal_card(int power, deck_rarity_type rarity)
     if (x_chance_in_y(control_level, 2))
         controlled = true;
 
-    int threshold = 6;
+    int threshold = 9;
     const bool was_controlled = player_control_teleport();
     const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0
                                 && you.duration[DUR_CONTROL_TELEPORT]
