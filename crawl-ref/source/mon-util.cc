@@ -4523,3 +4523,24 @@ void reset_all_monsters()
 
     env.mid_cache.clear();
 }
+
+bool mons_is_recallable(actor* caller, monster* targ)
+{
+    // For player, only recall friendly monsters
+    if (caller == &you)
+    {
+        if (!targ->friendly())
+            return false;
+    }
+    // Monster recall requires same attitude and at least normal intelligence
+    else if (mons_intel(targ) < I_NORMAL
+             || targ->attitude != caller->as_monster()->attitude)
+    {
+        return false;
+    }
+
+    return (targ->alive()
+            && !mons_class_is_stationary(targ->type)
+            && !mons_is_conjured(targ->type)
+            && monster_habitable_grid(targ, DNGN_FLOOR)); //XXX?
+}

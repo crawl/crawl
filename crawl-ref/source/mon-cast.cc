@@ -1722,15 +1722,6 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
         god = mons->god;
 }
 
-static bool _recallable(monster* caller, monster* targ)
-{
-    return (targ->alive() && mons_intel(targ) >= I_NORMAL
-            && targ->attitude == caller->attitude
-            && !mons_class_is_stationary(targ->type)
-            && !mons_is_conjured(targ->type)
-            && monster_habitable_grid(targ, DNGN_FLOOR)); //XXX?
-}
-
 // Is it worth bothering to invoke recall? (Currently defined by there being at
 // least 3 things we could actually recall, and then with a probability inversely
 // proportional to how many HD of allies are current nearby)
@@ -1739,7 +1730,7 @@ static bool _should_recall(monster* caller)
     int num = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (_recallable(caller, *mi) && !caller->can_see(*mi))
+        if (mons_is_recallable(caller, *mi) && !caller->can_see(*mi))
             ++num;
     }
 
@@ -1771,7 +1762,7 @@ void mons_word_of_recall(monster* mons)
         if (*mi == mons)
             continue;
 
-        if (!_recallable(mons, *mi))
+        if (!mons_is_recallable(mons, *mi))
             continue;
 
         // Don't recall things that are already close to us
