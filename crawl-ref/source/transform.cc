@@ -111,7 +111,8 @@ bool form_has_mouth(transformation_type form)
 {
     return form != TRAN_TREE
         && form != TRAN_WISP
-        && form != TRAN_JELLY;
+        && form != TRAN_JELLY
+        && form != TRAN_FUNGUS;
 }
 
 bool form_can_butcher_barehanded(transformation_type form)
