@@ -4336,6 +4336,7 @@ static void _move_player(coord_def move)
     {
         if (you.made_nervous_by(targ))
         {
+            mpr("You're too terrified to move while being watched!");
             moving = false;
             you.turn_is_over = false;
             return;
