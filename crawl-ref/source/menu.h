@@ -438,6 +438,8 @@ protected:
     virtual void webtiles_write_title() const;
     virtual void webtiles_write_item(int index, const MenuEntry *me) const;
 
+    void webtiles_new_first_entry();
+
     int _webtiles_section_start;
     int _webtiles_section_end;
 

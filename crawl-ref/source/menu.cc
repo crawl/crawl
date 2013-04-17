@@ -1603,6 +1603,26 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
 
     tiles.json_close_object();
 }
+
+void Menu::webtiles_new_first_entry()
+{
+    if (first_entry < webtiles_section_start()
+        || webtiles_section_end() <= first_entry)
+    {
+        _webtiles_section_start = first_entry;
+        while (_webtiles_section_start > 0
+               && items[_webtiles_section_start]->level != MEL_TITLE)
+        {
+            _webtiles_section_start--;
+        }
+        _webtiles_section_end = first_entry + 1;
+        while (_webtiles_section_end < (int) items.size()
+               && items[_webtiles_section_end]->level != MEL_TITLE)
+        {
+            _webtiles_section_end++;
+        }
+    }
+}
 #endif // USE_TILE_WEB
 
 /////////////////////////////////////////////////////////////////
@@ -1859,22 +1879,7 @@ bool formatted_scroller::jump_to(int i)
         first_entry = i - 1;
 
 #ifdef USE_TILE_WEB
-    if (first_entry < webtiles_section_start()
-        || webtiles_section_end() <= first_entry)
-    {
-        _webtiles_section_start = first_entry;
-        while (_webtiles_section_start > 0
-               && items[_webtiles_section_start]->level != MEL_TITLE)
-        {
-            _webtiles_section_start--;
-        }
-        _webtiles_section_end = first_entry + 1;
-        while (_webtiles_section_end < (int) items.size()
-               && items[_webtiles_section_end]->level != MEL_TITLE)
-        {
-            _webtiles_section_end++;
-        }
-    }
+    webtiles_new_first_entry();
     webtiles_write_menu(true);
 #endif
 
@@ -1966,6 +1971,7 @@ vector<MenuEntry *> formatted_scroller::show(bool reuse_selections)
     {
         _webtiles_section_end++;
     }
+    webtiles_new_first_entry();
 #endif
     return Menu::show(reuse_selections);
 }
