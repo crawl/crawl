@@ -3657,7 +3657,7 @@ bool get_item_by_name(item_def *item, char* specs,
         break;
 
     case OBJ_MISCELLANY:
-        if (!item_is_rune(*item) && !is_deck(*item))
+        if (!item_is_rune(*item) && !is_deck(*item) && !is_elemental_evoker(*item))
             item->plus = 50;
         break;
 

@@ -1765,6 +1765,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
                 buff << "}";
             }
+            else if (is_elemental_evoker(*this) && !evoker_is_charged(*this)
+                     && !dbname)
+            {
+                buff << " (inert)";
+            }
         }
         break;
 
@@ -3389,9 +3394,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return item_type_known(item);
 #endif
         case MISC_LAMP_OF_FIRE:
-            return !you.skill(SK_FIRE_MAGIC);
         case MISC_AIR_ELEMENTAL_FAN:
-            return !you.skill(SK_AIR_MAGIC);
+        case MISC_STONE_OF_EARTH_ELEMENTALS:
+        case MISC_PHIAL_OF_FLOODS:
+            return !evoker_is_charged(item);
+
         case MISC_HORN_OF_GERYON:
             return item.plus2;
         default:

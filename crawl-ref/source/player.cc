@@ -2985,6 +2985,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
             _remove_temp_mutations();
     }
+
+    recharge_elemental_evokers(exp_gained);
 }
 
 static void _draconian_scale_colour_message()

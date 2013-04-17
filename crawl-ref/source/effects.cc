@@ -3188,3 +3188,43 @@ void slime_wall_damage(actor* act, int delay)
         mon->hurt(NULL, dam, BEAM_ACID);
     }
 }
+
+void recharge_elemental_evokers(int exp)
+{
+    vector<item_def*> evokers;
+    for (int item = 0; item < ENDOFPACK; ++item)
+    {
+        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus > 0)
+            evokers.push_back(&you.inv[item]);
+    }
+
+    int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
+                             you.experience_level * 425),
+                        you.experience_level*4 + 30)
+                    / (4 + you.skill_rdiv(SK_EVOCATIONS, 2, 7));
+
+    if (!evokers.empty())
+    {
+        random_shuffle(evokers.begin(), evokers.end());
+        item_def* evoker = evokers.back();
+        while (exp >= you.attribute[ATTR_EVOKER_XP])
+        {
+            exp -= you.attribute[ATTR_EVOKER_XP];
+            you.attribute[ATTR_EVOKER_XP] = xp_factor;
+            evoker->plus--;
+            if (evoker->plus == 0)
+            {
+                mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
+                evokers.pop_back();
+                if (!evokers.empty())
+                    evoker = evokers.back();
+                else
+                {
+                    you.attribute[ATTR_EVOKER_XP] = xp_factor;
+                    return;
+                }
+            }
+        }
+        you.attribute[ATTR_EVOKER_XP] -= exp;
+    }
+}
