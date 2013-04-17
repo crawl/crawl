@@ -2006,7 +2006,7 @@ static vector<demon_mutation_info> _select_ds_mutations()
     if (one_chance_in(10))
     {
         ct_of_tier[0] = 3;
-        ct_of_tier[1] = 0;
+        ct_of_tier[1] = 1;
     }
 
 try_again:
