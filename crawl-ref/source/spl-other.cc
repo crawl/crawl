@@ -192,19 +192,7 @@ void start_recall(int type)
     you.recall_list.clear();
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_NO_MONSTER)
-            continue;
-
-        if (!mi->friendly())
-            continue;
-
-        if (mons_class_is_stationary(mi->type)
-            || mons_is_conjured(mi->type))
-        {
-            continue;
-        }
-
-        if (!monster_habitable_grid(*mi, DNGN_FLOOR))
+        if (!mons_is_recallable(&you, *mi))
             continue;
 
         if (type == 1) // undead
