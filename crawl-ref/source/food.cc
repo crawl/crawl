@@ -277,10 +277,10 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
         const string msg = make_stringf("You could %s this corpse's blood instead. Continue anyway?",
                                         can_bottle_blood_from_corpse(corpse.mon_type)
                                         ? "drain or bottle" : "drain");
-        if (Options.confirm_butcher == CONFIRM_NEVER
-            || !yesno(msg.c_str(), true, 'n'))
+        if (Options.confirm_butcher != CONFIRM_NEVER)
         {
-            return false;
+            if (!yesno(msg.c_str(), true, 'n'))
+                return false;
         }
     }
 
