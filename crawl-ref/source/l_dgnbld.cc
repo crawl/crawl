@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include <cmath>
+#include <vector>
 
 #include "dungeon.h"
 #include "dgn-delve.h"
@@ -218,6 +219,128 @@ static int _count_passable_neighbors(lua_State *ls, map_lines &lines, coord_def 
                                      const char *passable = traversable_glyphs)
 {
     return _count_passable_neighbors(ls, lines, point.x, point.y, passable);
+}
+
+static vector<coord_def> _get_pool_seed_positions(
+                                                vector<vector<int> > pool_index,
+                                                int pool_size,
+                                                int min_seperation)
+{
+    const int NO_POOL   = 999997; // must match dgn_add_pools
+
+    if(pool_size < 1)
+        pool_size = 1;
+
+    // 1. Find all floor positions
+
+    vector<coord_def> floor_positions;
+
+    for(unsigned int x = 0; x < pool_index.size(); x++)
+        for(unsigned int y = 0; y < pool_index[x].size(); y++)
+        {
+            if(pool_index[x][y] == NO_POOL)
+                floor_positions.push_back(coord_def(x, y));
+        }
+
+    // 2. Choose the pool seed positions
+
+    int min_seperation_squared = min_seperation * min_seperation;
+    int pool_count_goal = (floor_positions.size() + random2(pool_size))
+                          / pool_size;
+
+    vector<coord_def> seeds;
+
+    for (int i = 0; i < pool_count_goal; i++)
+    {
+        if (floor_positions.empty())
+        {
+            // give up if no more positions
+            break;
+        }
+
+        // choose a random position
+        int chosen_index = random2(floor_positions.size());
+        coord_def chosen_coord = floor_positions[chosen_index];
+        floor_positions[chosen_index] = floor_positions.back();
+        floor_positions.pop_back();
+
+        // check if it is too close to another seed
+        bool too_close = false;
+        for (unsigned int j = 0; j < seeds.size(); j++)
+        {
+            int diff_x = chosen_coord.x - seeds[j].x;
+            int diff_y = chosen_coord.y - seeds[j].y;
+            int distance_squared = diff_x * diff_x + diff_y * diff_y;
+
+            if (distance_squared < min_seperation_squared)
+            {
+                too_close = true;
+                break;
+            }
+        }
+
+        // if not too close, add it to the list
+        if (!too_close)
+            seeds.push_back(chosen_coord);
+    }
+
+    // 3. Return the pool seeds
+
+    return seeds;
+}
+
+// This function assumes the table is on the top of the lua stack.
+static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
+                                                 const char *name)
+{
+    // We will go through the table and put each possible pool
+    //  fill glyph in a vector once for each weight.  This will
+    //  make it easy to select random ones with the correct
+    //  distribution when we need to.
+    vector<char> fill_glyphs;
+
+    lua_pushstring(ls, name);
+    lua_gettable(ls, -2);
+    if (!lua_isnil(ls, -1) && lua_istable(ls, -1))
+    {
+        // For some reason, LUA requires us to have a dummy
+        //  value to remove from the stack whenever we do a
+        //  table lookup.  Here is the first one
+        lua_pushnil(ls);
+
+        // table is now at -2
+        while (lua_next(ls, -2) != 0)
+        {
+            // uses 'key' (at index -2) and 'value' (at index -1)
+            if(lua_type(ls, -2) == LUA_TSTRING
+               && lua_type(ls, -1) == LUA_TNUMBER)
+            {
+                // we use first character of string as glyph
+                char glyph = (lua_tostring(ls, -2))[0];
+
+                int count = lua_tointeger(ls, -1);
+                // sanity-check
+                if(count > 10000)
+                    count = 10000;
+
+                if(glyph != '\0')
+                {
+                    for(int i = 0; i < count; i++)
+                        fill_glyphs.push_back(glyph);
+                }
+            }
+
+            // removes 'value'; keeps 'key' for next iteration
+            lua_pop(ls, 1);
+        }
+    }
+    lua_pop(ls, 1);
+
+    // We might have not got anything, if so, use floor
+    if(fill_glyphs.size() == 0)
+        fill_glyphs.push_back('.');
+
+    return fill_glyphs;
 }
 
 
@@ -695,6 +818,114 @@ LUAFN(dgn_octa_room)
     return 0;
 }
 
+LUAFN(dgn_remove_isolated_glyphs)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, find, "");
+    TABLE_CHAR(ls, replace, '.');
+    TABLE_INT(ls, percent, 100);
+    TABLE_BOOL(ls, boxy, false);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    // we never change the border
+    if(x1 < 1)
+        x1 = 1;
+    if(x2 >= lines.width() - 1)
+        x2 = lines.width() - 2;
+    if(y1 < 1)
+        y1 = 1;
+    if(y2 >= lines.height() - 1)
+        y2 = lines.height() - 2;
+
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+            if (strchr(find, lines(x, y)) && x_chance_in_y(percent, 100))
+            {
+                bool do_replace = true;
+                for (radius_iterator ri(coord_def(x, y), 1,
+                                        (boxy ? C_SQUARE : C_POINTY),
+                                        NULL, true);                 ri; ++ri)
+                {
+                    if (_valid_coord(ls, lines, ri->x, ri->y, false))
+                        if (strchr(find, lines(*ri)))
+                        {
+                            do_replace = false;
+                            break;
+                        }
+                }
+                if(do_replace)
+                    lines(x, y) = replace;
+            }
+
+    return 0;
+}
+
+LUAFN(dgn_widen_paths)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, find, "");
+    TABLE_CHAR(ls, replace, '.');
+    TABLE_STR(ls, passable, traversable_glyphs);
+    TABLE_INT(ls, percent, 100);
+    TABLE_BOOL(ls, boxy, false);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    // we never change the border
+    if(x1 < 1)
+        x1 = 1;
+    if(x2 >= lines.width() - 1)
+        x2 = lines.width() - 2;
+    if(y1 < 1)
+        y1 = 1;
+    if(y2 >= lines.height() - 1)
+        y2 = lines.height() - 2;
+
+    float antifraction_each = 1.0 - percent / 100.0f;
+    float antifraction_current = 1.0;
+    int percent_for_neighbours[9];
+    for (int i = 0; i < 9; i++)
+    {
+        percent_for_neighbours[i] = 100 - (int)(antifraction_current * 100);
+        antifraction_current *= antifraction_each;
+    }
+
+    // We do not replace this as we go to avoid favouring some directions.
+    vector<coord_def> coord_to_replace;
+
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+            if (strchr(find, lines(x, y)))
+            {
+                int neighbour_count = 0;
+                for (radius_iterator ri(coord_def(x, y), 1,
+                                        (boxy ? C_SQUARE : C_POINTY),
+                                        NULL, true);                 ri; ++ri)
+                {
+                    if (_valid_coord(ls, lines, ri->x, ri->y, false))
+                        if (strchr(passable, lines(*ri)))
+                            neighbour_count++;
+                }
+
+                // store this coordinate if needed
+                if(x_chance_in_y(percent_for_neighbours[neighbour_count], 100))
+                    coord_to_replace.push_back(coord_def(x, y));
+            }
+
+    // now go through and actually replace the positions
+    for (unsigned int i = 0; i < coord_to_replace.size(); i++)
+        lines(coord_to_replace[i]) = replace;
+
+    return 0;
+}
+
 LUAFN(dgn_replace_area)
 {
     LINES(ls, 1, lines);
@@ -789,6 +1020,69 @@ LUAFN(dgn_replace_random)
 
     int idx = random2(loc.size());
     lines(loc[idx]) = replace;
+
+    return 0;
+}
+
+LUAFN(dgn_replace_closest)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, 0);
+    TABLE_INT(ls, y, 0);
+    TABLE_CHAR(ls, find, '\0');
+    TABLE_CHAR(ls, replace, '\0');
+    TABLE_BOOL(ls, required, false);
+
+    coord_def center(x, y);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    int count = (x2 - x1 + 1) * (y2 - y1 + 1);
+    if (!count)
+    {
+        if (required)
+            luaL_error(ls, "%s", "No elements to replace");
+        return 0;
+    }
+
+    vector<coord_def> loc;
+    loc.reserve(count);
+
+    int best_distance = 10000;
+    unsigned int best_count = 0;
+    coord_def best_coord;
+
+    for (int this_y = y1; this_y <= y2; ++this_y)
+        for (int this_x = x1; this_x <= x2; ++this_x)
+            if (lines(this_x, this_y) == find)
+            {
+                coord_def here(this_x, this_y);
+                int distance = here.distance_from(center);
+                if(distance < best_distance)
+                {
+                    best_distance = distance;
+                    best_count = 1;
+                    best_coord = here;
+                }
+                else if (distance == best_distance)
+                {
+                    best_count++;
+                    if(one_chance_in(best_count))
+                        best_coord = here;
+                }
+            }
+
+    if (best_count == 0)
+    {
+        if (required)
+            return luaL_error(ls, "Could not find '%c'", find);
+        return 0;
+    }
+
+    lines(best_coord) = replace;
 
     return 0;
 }
@@ -894,6 +1188,174 @@ LUAFN(dgn_spotty_map)
                 lines(*ai) = fill;
         }
     }
+
+    return 0;
+}
+
+LUAFN(dgn_add_pools)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, replace, ".");
+    TABLE_CHAR(ls, border, '.');
+    TABLE_INT(ls, pool_size, 100);
+    TABLE_INT(ls, seed_seperation, 2);
+
+    vector<char> fill_glyphs = _pool_fill_glyphs_from_table(ls, "contents");
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    int size_x = x2 - x1 + 1;
+    int size_y = y2 - y1 + 1;
+
+    //
+    //  The basic ideas here is that we place a number of
+    //    pool "seeds" on the map and spread them outward
+    //    randomly until they run into each other.  We never
+    //    fill in the last cell, so they never actually
+    //    touch and we get paths between them.
+    //
+    //  The algorithm we use to spread the pools is like a
+    //    depth-/breadth-first search, except that:
+    //      1. We choose a random element from the open list
+    //      2. We have multiple starting locations, each
+    //         with its own "closed" value
+    //      3. We mark all cells bordered by 2 (or more)
+    //         distinct non-BORDER closed values with special
+    //         closed value BORDER
+    //
+    //  In the end, we used the "closed" values to determine
+    //    which pool we are in.  The BORDER value indicates
+    //    a path between pools.
+    //
+
+    // NO_POOL
+    //  -> must be lowest constant
+    //  -> must match _get_pool_seed_positions
+    const int NO_POOL   = 999997;
+    const int IN_LIST   = 999998;
+    const int BORDER    = 999999;
+    const int FORBIDDEN = 1000000;
+
+    // Step 1: Make a 2D array to store which pool each cell is part of
+    //    -> We use nested vectors to store this.  We cannot use
+    //       a fixedarray because we don't know the size at
+    //       compile time.
+
+    vector<vector<int> > pool_index(size_x, vector<int>(size_y, FORBIDDEN));
+    for(int x = 0; x < size_x; x++)
+        for(int y = 0; y < size_y; y++)
+	    {
+            if(strchr(replace, lines(x + x1, y + y1)))
+                pool_index[x][y] = NO_POOL;
+        }
+
+    // Step 2: Place the pool seeds and add their neighbours to the open list
+
+    vector<coord_def> pool_seeds = _get_pool_seed_positions(pool_index,
+                                                            pool_size,
+                                                            seed_seperation);
+    vector<coord_def> open_list;
+
+    for(unsigned int pool = 0; pool < pool_seeds.size(); pool++)
+    {
+        int x = pool_seeds[pool].x;
+        int y = pool_seeds[pool].y;
+
+        pool_index[x][y] = pool;
+
+        // add neighbours to open list
+        for (orth_adjacent_iterator ai(pool_seeds[pool]); ai; ++ai)
+            if (_valid_coord(ls, lines, ai->x, ai->y, false))
+            {
+                pool_index[ai->x][ai->y] = IN_LIST;
+                open_list.push_back(*ai);
+            }
+    }
+
+    // Step 3: Spread out pools as far as possible
+
+    while(!open_list.empty())
+    {
+        // remove a random position from the open list
+        int index_chosen = random2(open_list.size());
+        coord_def chosen_coord = open_list[index_chosen];
+        open_list[index_chosen] = open_list.back();
+        open_list.pop_back();
+
+        // choose which neighbouring pool to join
+        int chosen_pool = NO_POOL;
+        for (adjacent_iterator ai(chosen_coord); ai; ++ai)
+            if (_valid_coord(ls, lines, ai->x, ai->y, false))
+            {
+                int neighbour_pool = pool_index[ai->x][ai->y];
+                if(neighbour_pool < NO_POOL)
+                {
+                    // this is a valid pool, consider it
+                    if(chosen_pool == NO_POOL)
+                        chosen_pool = neighbour_pool;
+                    else if(chosen_pool == neighbour_pool)
+                        ; // already correct
+                    else
+                    {
+                        // this is the path between pools
+                        chosen_pool = BORDER;
+                        break;
+                    }
+                }
+                else if (neighbour_pool == FORBIDDEN)
+                {
+                    // next to a wall
+                    chosen_pool = BORDER;
+                    break;
+                }
+            }
+
+        if(chosen_pool != NO_POOL)
+        {
+            // add this cell to the appropriate pool
+            pool_index[chosen_coord.x][chosen_coord.y] = chosen_pool;
+
+            // add neighbours to open list
+            for (orth_adjacent_iterator ai(chosen_coord); ai; ++ai)
+                if (_valid_coord(ls, lines, ai->x, ai->y, false)
+                    && pool_index[ai->x][ai->y] == NO_POOL)
+                {
+                    pool_index[ai->x][ai->y] = IN_LIST;
+                    open_list.push_back(*ai);
+                }
+        }
+        else
+        {
+            // a default, although I do not know why we ever get here
+            pool_index[chosen_coord.x][chosen_coord.y] = NO_POOL;
+        }
+    }
+
+    // Step 4: Add the pools to the map
+
+    vector<char> pool_glyphs(pool_seeds.size(), '\0');
+    for(unsigned int i = 0; i < pool_glyphs.size(); i++)
+        pool_glyphs[i] = fill_glyphs[random2(fill_glyphs.size())];
+
+    for(int x = 0; x < size_x; x++)
+        for(int y = 0; y < size_y; y++)
+	    {
+            int index = pool_index[x][y];
+            if(index < (int)(pool_glyphs.size()))
+                lines(x + x1, y + y1) = pool_glyphs[index];
+            else if(index == NO_POOL || index == BORDER)
+                lines(x + x1, y + y1) = border;
+            else if(index == FORBIDDEN)
+                ; // leave it alone
+            else
+            {
+                return luaL_error(ls, "Invalid pool index %i/%i at (%i, %i)",
+                                  index, pool_glyphs.size(), x + x1, y + y1);
+            }
+        }
 
     return 0;
 }
@@ -1037,11 +1499,15 @@ const struct luaL_reg dgn_build_dlib[] =
     { "make_box_doors", &dgn_make_box_doors },
     { "mapgrd_table", dgn_mapgrd_table },
     { "octa_room", &dgn_octa_room },
+    { "remove_isolated_glyphs", &dgn_remove_isolated_glyphs },
+    { "widen_paths", &dgn_widen_paths },
     { "replace_area", &dgn_replace_area },
     { "replace_first", &dgn_replace_first },
     { "replace_random", &dgn_replace_random },
+    { "replace_closest", &dgn_replace_closest },
     { "smear_map", &dgn_smear_map },
     { "spotty_map", &dgn_spotty_map },
+    { "add_pools", &dgn_add_pools },
     { "delve", &dgn_delve },
     { "width", dgn_width },
     { "layout_type", &dgn_layout_type },

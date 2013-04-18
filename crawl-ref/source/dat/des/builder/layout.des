@@ -621,6 +621,12 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
+##############################################################
+# layout_caves
+#
+# One (sometimes more) large open caverns with irregular
+# walls.
+#
 NAME: layout_caves
 DEPTH: 9-22, !Dis, !Geh, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
@@ -661,6 +667,7 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
+##############################################################
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
@@ -689,6 +696,7 @@ TAGS: overwritable layout allow_dup unrand
     end
 }}
 
+##############################################################
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
 DEPTH: 2-, !Pan, !Zot, !Dis, !Geh
