@@ -2063,6 +2063,16 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_MISCELLANY:
         if (is_deck(item))
             description << _describe_deck(item);
+        if (is_elemental_evoker(item))
+        {
+            description << "\nOnce released, the spirits within this device "
+                           "will dissipate, leaving it inert, though new ones "
+                           "may be attracted as its bearer battles through the "
+                           "dungeon and grows in power and wisdom.";
+
+            if (!evoker_is_charged(item))
+                description << "\n\nThe device is presently inert.";
+        }
         break;
 
     case OBJ_POTIONS:
