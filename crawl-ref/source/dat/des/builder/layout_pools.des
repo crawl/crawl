@@ -1,346 +1,28 @@
-###############################################################################
-# layout_pools.des: The "pools" layout vaults go here.  These layouts are each
-#                   a large, irregular open area mostly filled with clumps of
-#                   some glyph. These are not true vaults, in that the dungeon
-#                   builder can add other vaults on top of them.
+##############################################################
+# layout_pools.des
 #
-###############################################################################
-
-{{
-    -- replace all cells with the specified glyph bordered by
-    --  floor in all four cardinal directions
-    function remove_isolated_glyphs (e, replace, percent)
-        local gxm, gym = dgn.max_bounds()
-
-        for x = 1, gxm - 2 do
-            for y = 1, gym - 2 do
-                if e.mapgrd[x    ][y    ] == replace and
-                   e.mapgrd[x + 1][y    ] == '.' and
-                   e.mapgrd[x - 1][y    ] == '.' and
-                   e.mapgrd[x    ][y + 1] == '.' and
-                   e.mapgrd[x    ][y - 1] == '.' and
-                   crawl.random2(100) < percent then
-                    e.mapgrd[x][y] = '.'
-                end
-            end
-        end
-    end
-
-    -- replace all cells with the specified glyph bordered by at
-    --  least on floor with floor cells
-    function widen_paths (e, replace, percent)
-        local gxm, gym = dgn.max_bounds()
-
-        for x = 1, gxm - 2 do
-            for y = 1, gym - 2 do
-                if e.mapgrd[x][y] == replace and
-                   crawl.random2(100) < percent then
-                    if e.mapgrd[x - 1][y    ] == '.' or
-                       e.mapgrd[x + 1][y    ] == '.' or
-                       e.mapgrd[x    ][y - 1] == '.' or
-                       e.mapgrd[x    ][y + 1] == '.' then
-                        e.mapgrd[x][y] = '_'
-                    end
-                end
-            end
-        end
-        e.subst("_ = .")
-    end
+# These layouts are based on the add_pools function.  They
+#  divide the map into a bunch of irregular areas jammed aginst
+#  each other.  The layout may use either the areas themsleves
+#  are the paths between them.  These are not true vaults, in
+#  that the dungeon builder can add other vaults on top of them.
+#
 
 
 
-    -- the relative positions of a cell's neighbours
-    --  these go with the add_pools function
-    local NEIGHBOUR_COUNT = 4
-    local NEIGHBOUR_OFFSETS = { { x=1,  y=0  },
-                                { x=-1, y=0  },
-                                { x=0,  y=1  },
-                                { x=0,  y=-1 } }
-
-    --
-    --  add_pools
-    --
-    --  Purpose: To fill the portion of the map with the
-    --           specified floor glyph with irregular areas of
-    --           the specified pool glyphs, seperated by paths
-    --           of the floor glyph.  There is always a path
-    --           around the pools.  Border cells are excluded.
-    --  Parameter(s):
-    --      <1> e: The global enviroment
-    --      <2> floor: The floor glyph
-    --      <3> pool_elements: The pool glyphs, in the format
-    --                         required for the
-    --                         crawl.random_element function
-    --      <4> pool_frequency: The number of pools to place,
-    --                          expressed as a fraction from
-    --                          0.0 (no pools) to
-    --                          1.0 (1 pool per floor cell)
-    --  Precondition(s):
-    --      <1> e ~= nil
-    --      <2> pool_elements ~= nil
-    --      <3> pool_frequency >= 0
-    --      <4> pool_frequency <= 1
-    --  Returns: N/A
-    --  Side Effect: Pools of types choosen randomly from
-    --               pool_elements are added to the portion of
-    --               mapgrd filled with floor glyphs.  A
-    --               differant pool type is chosen for each
-    --               pool.  The number of pools is equal to
-    --               pool_fraction times the number fo cells
-    --               that originally had glyph floor.
-    --
-    --  TODO: translate this function to C++
-    --
-
-    function add_pools (e, floor, pool_elements, pool_frequency)
-        assert(e ~= nil, "e cannot be nil")
-        assert(pool_elements ~= nil, "pool_elements cannot be nil")
-        assert(pool_frequency >= 0, "pool_frequency must be >= 0")
-        assert(pool_frequency <= 1, "pool_frequency must be <= 1")
-
-        --
-        --  The basic ideas here is that we place a number of
-        --    pool "seeds" on the map and spread them outward
-        --    randomly until they run into each other.  We never
-        --    fill in the last cell, so they never actually
-        --    touch and we get paths between them.
-        --
-        --  The algorithm we use to spread the pools is like a
-        --    depth-/breadth-first search, except that:
-        --      1. We choose a random element from the open list
-        --      2. We have multiple starting locations, each
-        --         with its own "closed" value
-        --      3. We mark all cells bordered by 2 (or more)
-        --         non-BORDER closed values with special closed
-        --         value BORDER
-        --
-        --  In the end, we used the "closed" values to determine
-        --    which pool we are in.  The BORDER value indicates
-        --    a path between pools.
-        --
-
-        local NO_POOL   = 999997  -- must be lowest constant
-        local IN_LIST   = 999998
-        local BORDER    = 999999
-        local FORBIDDEN = 1000000
-
-        -- The minimum seperation distance for pool seeds
-        local MIN_SEED_SEPERATION_DISTANCE = 2
-
-        local gxm, gym = dgn.max_bounds()
-
-
-
-        -- a helper function to select the pool seed positions
-        function getPoolSeedPositions (aa_pool_index,
-                                       pool_frequency,
-                                       min_seperation)
-            assert(aa_pool_index ~= nil, "aa_pool_index cannot be nil")
-            assert(pool_frequency >= 0, "pool_frequency must be >= 0")
-            assert(pool_frequency <= 1, "pool_frequency must be <= 1")
-            assert(min_seperation > 0, "min_seperation must be positive")
-
-            local gxm, gym = dgn.max_bounds()
-
-            -- 1. Find all floor positions
-
-            local a_floor_positions = {}
-            a_floor_positions.count = 0
-
-            for x = 1, gxm - 2 do
-                for y = 1, gym - 2 do
-                    if aa_pool_index[x][y] == NO_POOL then
-                        a_floor_positions[a_floor_positions.count] = {}
-                        a_floor_positions[a_floor_positions.count].x = x
-                        a_floor_positions[a_floor_positions.count].y = y
-                        a_floor_positions.count = a_floor_positions.count + 1
-                    end
-                end
-            end
-
-            -- 2. Choose the pool seed positions
-
-            local min_seperation_squared = min_seperation * min_seperation
-            local pool_count_goal = math.floor(a_floor_positions.count *
-                                               pool_frequency)
-
-            local a_seeds = {}
-            a_seeds.count = 0
-
-            for i = 1, pool_count_goal do
-                -- choose a random position
-                if a_floor_positions.count <= 0 then
-                    -- give up if no more positions
-                    break
-                end
-
-                local index_chosen = crawl.random2(a_floor_positions.count)
-                local x = a_floor_positions[index_chosen].x
-                local y = a_floor_positions[index_chosen].y
-                a_floor_positions.count = a_floor_positions.count - 1
-                a_floor_positions[index_chosen].x =
-                                a_floor_positions[a_floor_positions.count].x
-                a_floor_positions[index_chosen].y =
-                                a_floor_positions[a_floor_positions.count].y
-
-                -- check if it is too close to another seed
-                local too_close = false
-                for j = 0, a_seeds.count - 1 do
-                    local diff_x = x - a_seeds[j].x
-                    local diff_y = y - a_seeds[j].y
-                    local distance_squared = diff_x * diff_x + diff_y * diff_y
-
-                    if distance_squared < min_seperation_squared then
-                        too_close = true
-                        break
-                   end
-                end
-
-                -- if not too close, add it to the list
-                if not too_close then
-                    a_seeds[a_seeds.count] = {}
-                    a_seeds[a_seeds.count].x = x
-                    a_seeds[a_seeds.count].y = y
-                    a_seeds.count = a_seeds.count + 1
-                end
-            end
-
-            -- 3. Return the pool seeds
-
-            return a_seeds
-        end
-
-        -- a helper function to add a cell's neighbours to the open list
-        function add_neighbours_to_open_list (aa_pool_index, x, y, a_open_list)
-            local gxm, gym = dgn.max_bounds()
-
-            for n = 1, NEIGHBOUR_COUNT do
-                nx = x + NEIGHBOUR_OFFSETS[n].x
-                ny = y + NEIGHBOUR_OFFSETS[n].y
-
-                assert(nx >= 0,   "nx must be >= 0")
-                assert(nx <  gxm, "nx must be <  gxm")
-                assert(ny >= 0,   "ny must be >= 0")
-                assert(ny <  gym, "ny must be <  gym")
-
-                if aa_pool_index[nx][ny] == NO_POOL then
-                    aa_pool_index[nx][ny] = IN_LIST
-                    a_open_list[a_open_list.count] = {}
-                    a_open_list[a_open_list.count].x = nx
-                    a_open_list[a_open_list.count].y = ny
-                    a_open_list.count = a_open_list.count + 1
-                end
-            end
-        end
-
-
-
-        -- Step 1: Make a 2D array to store which pool each cell is part of
-
-        local aa_pool_index = {}
-        for x = 1, gxm - 2 do
-            aa_pool_index[x] = {}
-
-            for y = 1, gym - 2 do
-                if e.mapgrd[x][y] == floor then
-                    aa_pool_index[x][y] = NO_POOL
-                else
-                    aa_pool_index[x][y] = FORBIDDEN
-                end
-            end
-        end
-
-        -- Step 2: Place the pool seeds and add neighbours to the open list
-
-        local a_pool_position = getPoolSeedPositions(
-                                               aa_pool_index,
-                                               pool_frequency,
-                                               MIN_SEED_SEPERATION_DISTANCE)
-        local a_open_list = {}
-        a_open_list.count = 0
-
-        for p = 0, a_pool_position.count - 1 do
-            local x = a_pool_position[p].x
-            local y = a_pool_position[p].y
-
-            aa_pool_index[x][y] = p
-            add_neighbours_to_open_list(aa_pool_index, x, y, a_open_list)
-        end
-
-        -- Step 3: Spread out pools as far as possible
-
-        while a_open_list.count > 0 do
-            -- remove a random position from the open list
-            local index_chosen = crawl.random2(a_open_list.count)
-            local x = a_open_list[index_chosen].x
-            local y = a_open_list[index_chosen].y
-            a_open_list.count = a_open_list.count - 1
-            a_open_list[index_chosen].x = a_open_list[a_open_list.count].x
-            a_open_list[index_chosen].y = a_open_list[a_open_list.count].y
-
-            -- choose which neighbouring pool to join
-            local chosen_pool = NO_POOL
-            for n = 1, NEIGHBOUR_COUNT do
-                nx = x + NEIGHBOUR_OFFSETS[n].x
-                ny = y + NEIGHBOUR_OFFSETS[n].y
-
-                assert(nx >= 0,   "nx must be >= 0")
-                assert(nx <  gxm, "nx must be <  gxm")
-                assert(ny >= 0,   "ny must be >= 0")
-                assert(ny <  gym, "ny must be <  gym")
-
-                neighbour_pool = aa_pool_index[nx][ny]
-
-                if neighbour_pool < NO_POOL then
-                    -- valid pool
-                    if chosen_pool == NO_POOL or
-                       chosen_pool == neighbour_pool then
-                        chosen_pool = neighbour_pool
-                    else
-                        -- between pools
-                        chosen_pool = BORDER
-                    end
-                end
-
-                if neighbour_pool == FORBIDDEN then
-                    -- next to a wall
-                    chosen_pool = BORDER
-                end
-            end
-            -- assert(chosen_pool ~= NO_POOL, "no neighbouring pools")
-
-            if chosen_pool ~= NO_POOL then
-            -- add this cell to the appropriate pool
-            aa_pool_index[x][y] = chosen_pool
-            add_neighbours_to_open_list(aa_pool_index, x, y, a_open_list)
-            end
-        end
-
-        -- Step 4: Add the pools to the map
-
-        local a_pool_glyph = {}
-        for p = 0, a_pool_position.count - 1 do
-            a_pool_glyph[p] = crawl.random_element(pool_elements)
-        end
-
-        for x = 1, gxm - 2 do
-            for y = 1, gym - 2 do
-                if aa_pool_index[x][y] < NO_POOL then
-                    e.mapgrd[x][y] = a_pool_glyph[aa_pool_index[x][y]]
-                end
-            end
-        end
-    end
-}}
-
-
-
+##############################################################
 #
 # Gehenna layout constants and functions
 #
 # These are collected together here instead of in the layout
 #  vaults because they are each used in more than one.
 #
+# These maps have a small chance of placing the up stairs.
+#  This is handlied by always generating the layout as if
+#  the stairs were to be placed, but only sometimes adding
+#  them.
+#
+
 {{
     -- Increasing this makes the caves bigger
     CANYON_SIZE_FACTOR = 100
@@ -378,13 +60,6 @@
         local branch_depth = dgn.br_depth(you.branch())
         local depth_fraction = (you.depth() / branch_depth)
 
-        local pool_frequency = 0.025 - depth_fraction * 0.01
-        if pool_frequency < 0 then
-            pool_frequency = 0
-        elseif pool_frequency > 1 then
-            pool_frequency = 1
-        end
-
         local pool_contents = {}
         pool_contents["c"] = branch_depth * 2 - you.depth()
         pool_contents["l"] = branch_depth     + you.depth()
@@ -393,13 +68,15 @@
             pool_contents["."] = nil
         end
 
-        widen_paths(e, 'x', 25)
-        add_pools(e, '.', pool_contents, pool_frequency)
-        widen_paths(e, 'c', 95)
+        e.widen_paths { find = "x", percent = 10 }
+        e.add_pools { replace = ".",
+                      pool_size = 60 - 25 * depth_fraction,
+                      contents = pool_contents }
+        e.widen_paths { find = "c", percent = 90 }
         e.subst("c = x")
-        remove_isolated_glyphs(e, 'x', 75)
-        widen_paths(e, 'l', 80)
-        remove_isolated_glyphs(e, 'l', 90)
+        e.remove_isolated_glyphs { find = "x", percent = 75 }
+        e.widen_paths { find = "l", percent = 60 }
+        e.remove_isolated_glyphs { find = "l", percent = 90, boxy = true }
     end
 }}
 
@@ -409,47 +86,127 @@
 # layout_pools
 #
 # This layout creates an irregular cave with clumps of rock and
-#  a few pools of water.  There are more pools at deeper depths.
-#  Starting at depth 19, there is an increasing chance of lava
-#  pools instead of water pools (never mixed).
+#  possibly a few pools of water.  There are more pools at
+#  deeper depths.  Starting at depth 19, there is an increasing
+#  chance of lava pools instead of water pools (never mixed).
 #
 NAME: layout_pools
-DEPTH: D:4-
-WEIGHT: 5
+DEPTH: D:9-
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
 
-    layout_type "pools"
+    layout_type "caves"
 
     -- without a starting floor patch, spotty_map will crash
     mapgrd[gxm/2][gym/2] = '.'
     spotty_map { boxy = false, iterations = 1000 }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
-    local pool_frequency = 0.04 + crawl.random2(60) / 1000
     local pool_contents = {}
-    pool_contents["w"] = you.absdepth() * crawl.random2(100) / 100
     pool_contents["."] = 40
     pool_contents["x"] = 40 - you.absdepth()
-    if you.absdepth() >= 19 + crawl.random2(8) then
-        pool_contents["l"] = pool_contents["w"]
-        pool_contents["w"] = nil
+    if crawl.coinflip() then
+        if you.absdepth() >= 19 + crawl.random2(8) then
+            pool_contents["l"] = you.absdepth() * crawl.random2(100) / 100
+        else
+            pool_contents["w"] = you.absdepth() * crawl.random2(100) / 100
+        end
     end
 
-    add_pools(_G, '.', pool_contents, pool_frequency)
-    remove_isolated_glyphs(_G, 'x', 80)
-    widen_paths(_G, 'x', 60)
-    widen_paths(_G, 'l', 80)
-    remove_isolated_glyphs(_G, 'l', 75)
+    add_pools { replace = ".",
+                pool_size = 10 + crawl.random2(15),
+                contents = pool_contents,
+                frequency = pool_frequency }
+
+    widen_paths { find = "x", percent = 30 }
+    remove_isolated_glyphs { find = "x", percent = 80 }
+    widen_paths { find = "l", percent = 30 }
+    remove_isolated_glyphs { find = "l", percent = 75, boxy = true }
+}}
+MAP
+ENDMAP
+
+#############################################################
+# layout_honeycomb
+#
+# This layout is composed of a series of irregular rooms
+#  directly beside each other.  They are sometimes connected
+#  by doors and sometimes just by holes in the wall.
+#
+NAME: layout_honeycomb
+DEPTH: D:15-
+WEIGHT: 10
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map { width = gxm, height = gym, fill = 'x' }
+
+    layout_type "rooms"
+
+    make_circle { x = gxm/2, y = gym/2, radius = 10 }
+    mapgrd[gxm/2][gym/2] = '.'
+    spotty_map { boxy = true, iterations = 1200 }
+    widen_paths { find = "x", percent = 50 }
+    remove_isolated_glyphs { find = "x", percent = 100 }
+
+    local fill = '.'
+    local border = 'x'
+    local connection = crawl.random_element({[fill] = 1, ["+"] = 2})
+
+    add_pools { replace = ".",
+                contents = {[fill] = 1},
+                pool_size = 25 + crawl.random2(25),
+                border = border }
+
+    -- connect rooms
+    for i = 1, crawl.random_range(800, 1200) do
+        local x = crawl.random_range(1, gxm - 2)
+        local y = crawl.random_range(1, gym - 2)
+
+        if mapgrd[x][y] == border then
+            if mapgrd[x + 1][y] == border and
+               mapgrd[x - 1][y] == border and
+               mapgrd[x][y + 1] == fill and
+               mapgrd[x][y - 1] == fill then
+                mapgrd[x][y] = connection
+            elseif mapgrd[x + 1][y] == fill and
+                   mapgrd[x - 1][y] == fill and
+                   mapgrd[x][y + 1] == border and
+                   mapgrd[x][y - 1] == border then
+                mapgrd[x][y] = connection
+            end
+        end
+    end
+
+    replace_closest { x = gxm/2, y = gym/2, find = fill, replace = '@' }
+    fill_disconnected{wanted = '@'}
+    subst("@ = " .. fill)
+
+    -- This is the random_wall_material function from layout.des
+    if crawl.one_chance_in(20) then
+        e.subst('x : ccv')
+    end
+}}
+# Enforce minimum floor size - this is important
+validate {{
+    if count_feature_in_box { feat="."} < 600 then
+        return false
+    else
+        return true
+    end
 }}
 MAP
 ENDMAP
 
 ##############################################################
-# layout_gehenna_???
+# Gehenna layouts
+#
+# NOTE: There are other Gehenna layouts in other files.
 #
 # These layouts are long canyons with lava pools in them and
 #  rock "pools" to provide cover.  The up stairs may be placed
@@ -481,7 +238,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -503,7 +260,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (4 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP1   ][STAIRS_Y_1] = '{'
@@ -536,7 +293,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -571,7 +328,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     end
 
     spotty_map { boxy = false, iterations = (5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP1   ][STAIRS_Y_1] = '{'
@@ -605,7 +362,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -633,7 +390,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP1  ][STAIRS_Y_UP1]    = '{'
@@ -667,7 +424,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -697,7 +454,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (7 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_1 ][STAIRS_Y_UP1]   = '{'
@@ -730,7 +487,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -754,7 +511,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (4.5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP1 ][STAIRS_Y_1]     = '{'
@@ -789,7 +546,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP   = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -809,7 +566,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP  ][STAIRS_Y_1] = '{'
@@ -842,7 +599,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -865,7 +622,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (7.5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP  ][STAIRS_Y_1] = '{'
@@ -898,7 +655,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -933,7 +690,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (6 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP  ][STAIRS_Y_1] = '{'
@@ -966,7 +723,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    layout_type "pools"
+    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -1001,7 +758,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate
                 fill = '.' }
 
     spotty_map { boxy = false, iterations = (5.5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs(_G, 'x', 100)
+    remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
         mapgrd[STAIRS_X_UP1 ][STAIRS_Y_1]     = '{'
