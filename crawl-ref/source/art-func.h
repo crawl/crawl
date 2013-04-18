@@ -588,7 +588,7 @@ static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
     if (one_chance_in(10))
-        cast_summon_demon(50+random2(100), attacker->deity());
+        cast_summon_demon(50+random2(100));
 
     if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
