@@ -919,9 +919,11 @@ static bool _lamp_of_fire()
             mg.hd = 6 + (pow/14);
             create_monster(mg);
         }
+
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 struct dist_sorter
@@ -1603,8 +1605,10 @@ bool evoke_item(int slot)
                 mpr("That is presently inert.");
                 return false;
             }
-            _lamp_of_fire();
-            _expend_elemental_evoker(item);
+            if (_lamp_of_fire())
+                _expend_elemental_evoker(item);
+            else
+                return false;
 
             break;
 
@@ -1614,8 +1618,10 @@ bool evoke_item(int slot)
                 mpr("That is presently inert.");
                 return false;
             }
-            _stone_of_tremors();
-            _expend_elemental_evoker(item);
+            if (_stone_of_tremors())
+                _expend_elemental_evoker(item);
+            else
+                return false;
             break;
 
         case MISC_PHIAL_OF_FLOODS:
@@ -1624,8 +1630,10 @@ bool evoke_item(int slot)
                 mpr("That is presently inert.");
                 return false;
             }
-            _phial_of_floods();
-            _expend_elemental_evoker(item);
+            if (_phial_of_floods())
+                _expend_elemental_evoker(item);
+            else
+                return false;
             break;
 
         case MISC_HORN_OF_GERYON:
