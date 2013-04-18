@@ -691,6 +691,16 @@ static bool _ball_of_energy(void)
     return ret;
 }
 
+static int _num_evoker_elementals()
+{
+    int n = 1;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
+        ++n;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
+        ++n;
+    return n;
+}
+
 static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
                                           bool jitter_start,
                                           bolt &beam1, bolt &beam2)
@@ -879,11 +889,7 @@ static bool _lamp_of_fire()
 
         vector<bolt> beams;
         vector<coord_def> elementals;
-        int num_trails = 1;
-        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
-            ++num_trails;
-        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
-            ++num_trails;
+        int num_trails = _num_evoker_elementals();
 
         _fill_flame_trails(you.pos(), target.target, beams, elementals, num_trails);
 
@@ -1110,11 +1116,7 @@ static bool _fan_of_gales()
     }
     random_shuffle(elementals.begin(), elementals.end());
 
-    int num_elementals = 1;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
-        ++num_elementals;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
-        ++num_elementals;
+    int num_elementals = _num_evoker_elementals();
 
     bool created = false;
     for (int n = 0; n < min(num_elementals, (int)elementals.size()); ++n)
@@ -1309,11 +1311,7 @@ static void _tremor_at(coord_def start, coord_def delta)
         delay(20);
     }
 
-    int num_elementals = 1;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
-        ++num_elementals;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
-        ++num_elementals;
+    int num_elementals = _num_evoker_elementals();
 
     vector<coord_def> elementals;
     for (unsigned int i = 0; i < rocks.size(); ++i)
@@ -1402,11 +1400,7 @@ static bool _phial_of_floods()
             }
         }
 
-        int num_elementals = 1;
-        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
-            ++num_elementals;
-        if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
-            ++num_elementals;
+        int num_elementals = _num_evoker_elementals();
 
         bool created = false;
         num = min(num_elementals,
