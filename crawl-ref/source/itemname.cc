@@ -938,13 +938,13 @@ static const char* misc_type_name(int type, bool known)
 #if TAG_MAJOR_VERSION == 34
     case MISC_EMPTY_EBONY_CASKET:        return "empty ebony casket";
 #endif
-    case MISC_AIR_ELEMENTAL_FAN:         return "air elemental fan";
+    case MISC_FAN_OF_GALES:              return "fan of gales";
     case MISC_LAMP_OF_FIRE:              return "lamp of fire";
     case MISC_LANTERN_OF_SHADOWS:        return "lantern of shadows";
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
     case MISC_DISC_OF_STORMS:            return "disc of storms";
     case MISC_BOTTLED_EFREET:            return "bottled efreet";
-    case MISC_STONE_OF_EARTH_ELEMENTALS: return "stone of earth elementals";
+    case MISC_STONE_OF_TREMORS:          return "stone of tremors";
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
 
@@ -3394,8 +3394,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return item_type_known(item);
 #endif
         case MISC_LAMP_OF_FIRE:
-        case MISC_AIR_ELEMENTAL_FAN:
-        case MISC_STONE_OF_EARTH_ELEMENTALS:
+        case MISC_FAN_OF_GALES:
+        case MISC_STONE_OF_TREMORS:
         case MISC_PHIAL_OF_FLOODS:
             return !evoker_is_charged(item);
 

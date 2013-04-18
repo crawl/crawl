@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-A magical device for summoning air elementals. It is rather unreliable, and
-usually requires several attempts to function correctly. Using it carries an
-element of risk, which is reduced if one is skilled in the appropriate
-elemental magic.
-%%%%
 amulet of clarity
 
 This amulet protects its wearer from some forms of mental confusion, including
@@ -995,6 +988,12 @@ falchion:quote
  And these same crosses spoil me.”
     -William Shakespeare, _King Lear_, V, iii. 1608.
 %%%%
+fan of gales
+
+An enchanted fan inhabited by benevolent air spirits. Swinging the fan unleashes
+a blast of wind around the bearer and sets the spirits free to sweep away the
+bearer's enemies.
+%%%%
 fire dragon armour
 
 Armour made from the scales of a fire-breathing dragon. It provides great
@@ -1272,10 +1271,8 @@ lajatang:quote
 %%%%
 lamp of fire
 
-A magical device for summoning fire elementals. It is rather unreliable, and
-usually requires several attempts to function correctly. Using it carries an
-element of risk, which is reduced if one is skilled in the appropriate
-elemental magic.
+A magical lamp inhabited by benevolent fire spirits. Unlatching the case sets
+the spirits free to dance about in a blaze upon the bearer's enemies.
 %%%%
 lantern of shadows
 
@@ -1546,6 +1543,12 @@ to make excellent armour.
 pearl dragon hide:quote
 
 <steam dragon hide:quote>
+%%%%
+phial of floods
+
+An enchanted vessel brimming over with elemental water. Removing the stopper
+unleashes a torrent of water from the phial and sets free the water spirits
+that dwell within it.
 %%%%
 pie
 
@@ -2661,13 +2664,12 @@ stone:quote
  In casual simplicity —”
     -Emily Dickinson, “How happy is the little Stone”. ca. 1865.
 %%%%
-stone of earth elementals
+stone of tremors
 
-A magical device for summoning earth elementals. It is rather unreliable, and
-usually requires several attempts to function correctly. Using it carries an
-element of risk, which is reduced if one is skilled in the appropriate
-elemental magic, especially when trying to control multiple elementals at the
-same time.
+A polished stone inhabited by benevolent earth spirits. Pressing it against a
+rocky surface will send powerful shockwaves through it as the spirits seek solid
+form within the rock, pelting nearby creatures with falling rubble in the
+process.
 %%%%
 storm dragon armour
 

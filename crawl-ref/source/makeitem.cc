@@ -606,11 +606,11 @@ void item_colour(item_def &item)
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:
-        case MISC_STONE_OF_EARTH_ELEMENTALS:
+        case MISC_STONE_OF_TREMORS:
             item.colour = BROWN;
             break;
 
-        case MISC_AIR_ELEMENTAL_FAN:
+        case MISC_FAN_OF_GALES:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
         case MISC_DISC_OF_STORMS:
         case MISC_HORN_OF_GERYON:

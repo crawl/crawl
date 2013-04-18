@@ -4068,13 +4068,13 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_BOTTLED_EFREET:
         return TILE_MISC_BOTTLED_EFREET;
 
-    case MISC_AIR_ELEMENTAL_FAN:
+    case MISC_FAN_OF_GALES:
         return TILE_MISC_AIR_ELEMENTAL_FAN;
 
     case MISC_LAMP_OF_FIRE:
         return TILE_MISC_LAMP_OF_FIRE;
 
-    case MISC_STONE_OF_EARTH_ELEMENTALS:
+    case MISC_STONE_OF_TREMORS:
         return TILE_MISC_STONE_OF_EARTH_ELEMENTALS;
 
     case MISC_LANTERN_OF_SHADOWS:
