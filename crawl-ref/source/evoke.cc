@@ -1589,7 +1589,7 @@ bool evoke_item(int slot)
                 pract = 2;
             break;
 
-        case MISC_AIR_ELEMENTAL_FAN:
+        case MISC_FAN_OF_GALES:
             if (!evoker_is_charged(item))
             {
                 mpr("That is presently inert.");
@@ -1612,7 +1612,7 @@ bool evoke_item(int slot)
 
             break;
 
-        case MISC_STONE_OF_EARTH_ELEMENTALS:
+        case MISC_STONE_OF_TREMORS:
             if (!evoker_is_charged(item))
             {
                 mpr("That is presently inert.");

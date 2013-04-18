@@ -719,14 +719,14 @@ static int _acquirement_misc_subtype()
         result = MISC_LAMP_OF_FIRE;
     }
     if (x_chance_in_y(you.skills[SK_AIR_MAGIC], 27)
-        && !you.seen_misc[MISC_AIR_ELEMENTAL_FAN])
+        && !you.seen_misc[MISC_FAN_OF_GALES])
     {
-        result = MISC_AIR_ELEMENTAL_FAN;
+        result = MISC_FAN_OF_GALES;
     }
     if (one_chance_in(4)
-        && !you.seen_misc[MISC_STONE_OF_EARTH_ELEMENTALS])
+        && !you.seen_misc[MISC_STONE_OF_TREMORS])
     {
-        result = MISC_STONE_OF_EARTH_ELEMENTALS;
+        result = MISC_STONE_OF_TREMORS;
     }
     if (one_chance_in(4) && !you.seen_misc[MISC_LANTERN_OF_SHADOWS])
         result = MISC_LANTERN_OF_SHADOWS;
