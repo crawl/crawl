@@ -2486,7 +2486,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         item.plus = armour_max_enchant(item);
 
     if (armour_is_hide(item))
+    {
+        do_uncurse_item(item, false);
         item.plus = 0;
+    }
 
     if (item.sub_type == ARM_GLOVES)
         set_gloves_random_desc(item);
