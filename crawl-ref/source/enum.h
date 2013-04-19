@@ -2678,6 +2678,7 @@ enum mutation_type
     MUT_BIG_WINGS,
     MUT_BEAK,           // head
     MUT_CLAWS,          // hands
+    MUT_RUNED_HANDS,    // hands
     MUT_FANGS,
     MUT_HOOVES,         // feet
     MUT_HORNS,          // head

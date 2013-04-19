@@ -61,6 +61,7 @@ static const body_facet_def _body_facets[] =
     { EQ_HELMET, MUT_ANTENNAE, 1 },
     //{ EQ_HELMET, MUT_BEAK, 1 },
     { EQ_GLOVES, MUT_CLAWS, 3 },
+    { EQ_GLOVES, MUT_RUNED_HANDS, 3 },
     { EQ_BOOTS, MUT_HOOVES, 3 },
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
@@ -830,6 +831,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BLURRY_VISION:
     case MUT_FRAIL:
     case MUT_CLAWS:
+    case MUT_RUNED_HANDS:
     case MUT_FANGS:
     case MUT_HOOVES:
     case MUT_TALONS:
@@ -1153,7 +1155,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Felids have innate claws, and unlike trolls/ghouls, there are no
     // increases for them.  And octopodes have no hands.
     if ((you.species == SP_FELID || you.species == SP_OCTOPODE)
-         && mutat == MUT_CLAWS)
+         && (mutat == MUT_CLAWS || mutat == MUT_RUNED_HANDS))
     {
         return true;
     }
@@ -1477,7 +1479,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
 
     case MUT_CLAWS:
-        // Claws force gloves off at 3.
+    case MUT_RUNED_HANDS:
+        // Claws and runed hands force gloves off at 3.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
@@ -1887,6 +1890,8 @@ static const facet_def _demon_facets[] =
 {
     // Body Slot facets
     { 0, { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
+      { -33, -33, -33 } },
+    { 0, { MUT_RUNED_HANDS, MUT_RUNED_HANDS, MUT_RUNED_HANDS },
       { -33, -33, -33 } },
     { 0, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
       { -33, -33, -33 } },

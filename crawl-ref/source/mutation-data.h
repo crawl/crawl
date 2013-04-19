@@ -714,6 +714,24 @@
   "claws"
 },
 
+{ MUT_RUNED_HANDS,                    2,  3, false,  true,  true,
+  "runed hands",
+
+  {"You have weak runes imbued into your hands.",
+   "You have runes imbued into your hands.",
+   "You have powerful runes imbued into your hands."},
+
+  {"Your hands glow with a faint magical rune.",
+   "Your hands glow with a magical rune.",
+   "Your hands glow with a strong magical rune."},
+
+  {"Your hands lose all trace of their runes.",
+   "Your runed hands glow fainter.",
+   "Your runed hands glow fainter."},
+
+  "runed hands"
+},
+
 { MUT_FANGS,                          1,  3, false,  true,  true,
   "fangs",
 

@@ -440,11 +440,12 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         {
             power *= 10 + 5 * player_mutation_level(MUT_WILD_MAGIC);
             power /= 10;
-        }
 
-        // Augmentation boosts spell power at high HP.
-        if (!fail_rate_check)
-        {
+            // Runed hands boost spell power by 20, 40, or 60%
+            power *= 10 + 2.5 * player_mutation_level(MUT_RUNED_HANDS);
+            power /= 10;
+
+            // Augmentation boosts spell power at high HP.
             power *= 10 + 4 * augmentation_amount();
             power /= 10;
         }
