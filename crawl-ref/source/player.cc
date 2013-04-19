@@ -338,8 +338,11 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
         if (feat_is_water(new_grid) && !you.can_swim() && !beogh_water_walk())
         {
-            you.time_taken *= 13 + random2(8);
-            you.time_taken /= 10;
+            if (stepped)
+            {
+                you.time_taken *= 13 + random2(8);
+                you.time_taken /= 10;
+            }
             const bool will_cling = you.can_cling_to_walls()
                                     && cell_is_clingable(you.pos());
 
