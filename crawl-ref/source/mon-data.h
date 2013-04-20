@@ -2601,7 +2601,7 @@ static monsterentry mondata[] = {
     MONS_SERAPH, 'A', LIGHTMAGENTA, "seraph",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS_LIGHT,
     MR_RES_POISON | MR_RES_ELEC | mrd(MR_RES_FIRE, 3),
-    0, 10, MONS_ANGEL, MONS_SERAPH, MH_HOLY, -8,
+    0, 10, MONS_ANGEL, MONS_SERAPH, MH_HOLY, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK,
        AT_NO_ATK },
     { 25, 6, 5, 0 },
