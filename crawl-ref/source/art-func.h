@@ -138,7 +138,8 @@ static void _curses_miscast(actor* victim, int power, int fail)
 static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
-    _curses_miscast(&you, random2(9), random2(70));
+    if (!unmeld)
+        _curses_miscast(&you, random2(9), random2(70));
 }
 
 static void _CURSES_world_reacts(item_def *item)
