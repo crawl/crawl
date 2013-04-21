@@ -100,7 +100,12 @@ endif
 %.png: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) -i $<
 
+ifdef TILES
+# Keep coordinates fresh
+tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN) %.png
+else
 tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
+endif
 	$(QUIET_GEN)$(TILEGEN) -c $<
 
 # CFLAGS difference check
