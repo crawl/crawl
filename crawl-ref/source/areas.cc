@@ -54,7 +54,6 @@ struct area_centre
     explicit area_centre (area_centre_type t, coord_def c, int r) : type(t), centre(c), radius(r) { }
 };
 
-// currently, only 4 of 32 bits are used, but meh...
 typedef FixedArray<uint32_t, GXM, GYM> propgrid_t;
 
 static vector<area_centre> _agrid_centres;
