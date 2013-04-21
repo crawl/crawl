@@ -7,8 +7,9 @@
 {{
 function init_sigils(e)
   e.tags('transparent extra decor serial_sigils')
-  e.colour('c = lightred')
-  e.colour('. = magenta')
+-- Crazy colors be crazy
+--  e.colour('c = lightred')
+--  e.colour('. = magenta')
   e.tile('c = wall_stone_dark')
   e.ftile('. = floor_volcanic')
   e.ftile('c = floor_pebble_darkgray w:99 / floor_rough_red w:1')
