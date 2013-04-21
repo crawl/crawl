@@ -527,6 +527,12 @@ string describe_mutations(bool center_title)
         have_any = true;
         break;
 
+    case SP_DJINNI:
+        result += "You are immune to any form of fire, even holy or hellish.\n";
+        result += "You are specially vulnerable to cold.\n";
+        have_any = true;
+        break;
+
     default:
         break;
     }
@@ -1165,6 +1171,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     {
         return true;
     }
+
+    // Heat doesn't hurt fire.
+    if (you.species == SP_DJINNI && mutat == MUT_HEAT_RESISTANCE)
+        return true;
 
     equipment_type eq_type = EQ_NONE;
 

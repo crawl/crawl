@@ -1428,6 +1428,9 @@ int player_likes_chunks(bool permanently)
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_fire(bool calc_unid, bool temp, bool items)
 {
+    if (you.species == SP_DJINNI)
+        return 4; // full immunity
+
     int rf = 0;
 
     // All effects negated by magical suppression should go in here.
@@ -1634,6 +1637,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc = -3;
     else if (rc > 3)
         rc = 3;
+
+    // species:
+    if (you.species == SP_DJINNI)
+        rc = (rc - 1) >> 1; // >> has sane rather than C++ish rounding
 
     return rc;
 }
@@ -6385,6 +6392,13 @@ int player::res_acid(bool calc_unid) const
 int player::res_fire() const
 {
     return player_res_fire();
+}
+
+int player::res_holy_fire() const
+{
+    if (you.species == SP_DJINNI)
+        return 3;
+    return actor::res_holy_fire();
 }
 
 int player::res_steam() const
