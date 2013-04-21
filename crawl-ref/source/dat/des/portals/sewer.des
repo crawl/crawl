@@ -19,7 +19,10 @@ function sewer_portal(e)
 
   local messager =
     timed_msg {
-      visible = true,
+       initmsg = { "You hear the sound of rushing water.",
+                  "The entrance to the sewer is on this level "
+                  .. "Hurry and find its entrance before "
+                  .. "the portal rusts away!" },
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
       messages = time_messages(timeout_turns/10,
