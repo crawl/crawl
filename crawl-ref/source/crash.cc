@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief UNIX specific crash handling functions.
+ * @brief UNIX-style crash handling functions (also used on Windows).
 **/
 
 #include "AppHdr.h"
