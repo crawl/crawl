@@ -391,10 +391,6 @@ public:
         : branch(br), depth(dep)
     {
     }
-    level_id(const level_id &ot)
-        : branch(ot.branch), depth(ot.depth)
-    {
-    }
 
     static level_id parse_level_id(const string &s) throw (string);
     static level_id from_packed_place(const unsigned short place);
@@ -416,13 +412,6 @@ public:
     bool is_valid() const
     {
         return (branch < NUM_BRANCHES && depth > 0);
-    }
-
-    const level_id &operator = (const level_id &id)
-    {
-        branch     = id.branch;
-        depth      = id.depth;
-        return *this;
     }
 
     bool operator == (const level_id &id) const
