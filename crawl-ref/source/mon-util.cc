@@ -94,6 +94,13 @@ static int _mons_exp_mod(monster_type mclass);
 
 // Macro that saves some typing, nothing more.
 #define smc get_monster_data(mc)
+// ASSERT(smc) was getting really old
+#define ASSERT_smc()                                                    \
+    do {                                                                \
+        if (!get_monster_data(mc))                                      \
+            die("bogus mc (no monster data): %s (%d)",                  \
+                mons_type_name(mc, DESC_PLAIN).c_str(), mc);            \
+    } while (false)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 
@@ -589,13 +596,13 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid) const
 
 mon_holy_type mons_class_holiness(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->holiness;
 }
 
 bool mons_class_is_confusable(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return (smc->resist_magic < MAG_IMMUNE
             && mons_class_holiness(mc) != MH_NONLIVING
             && mons_class_holiness(mc) != MH_PLANT);
@@ -1152,13 +1159,13 @@ bool mons_foe_is_mons(const monster* mons)
 
 int mons_weight(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->weight;
 }
 
 corpse_effect_type mons_corpse_effect(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->corpse_thingy;
 }
 
@@ -1174,7 +1181,7 @@ monster_type mons_genus(monster_type mc)
     if (mc == MONS_NO_MONSTER)
         return MONS_NO_MONSTER;
 
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->genus;
 }
 
@@ -1264,7 +1271,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
 // loudness for a Pandemonium lord trying to shout.
 shout_type mons_shouts(monster_type mc, bool demon_shout)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     shout_type u = smc->shouts;
 
     // Pandemonium lords use this to get the noises.
@@ -1318,7 +1325,7 @@ char mons_base_char(monster_type mc)
 
 mon_itemuse_type mons_class_itemuse(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->gmon_use;
 }
 
@@ -1332,7 +1339,7 @@ mon_itemuse_type mons_itemuse(const monster* mon)
 
 static mon_itemeat_type _mons_class_itemeat(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->gmon_eat;
 }
 
@@ -1349,7 +1356,7 @@ mon_itemeat_type mons_itemeat(const monster* mon)
 
 int mons_class_colour(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return (monster_symbols[mc].colour);
 }
 
@@ -1382,7 +1389,7 @@ bool mons_can_display_wounds(const monster* mon)
 
 int mons_zombie_size(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->zombie_size;
 }
 
@@ -1576,7 +1583,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (zombified && mc != MONS_KRAKEN_TENTACLE)
         mc = mons_zombie_base(mon);
 
-    ASSERT(smc);
+    ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
 
     if (attk.type == AT_RANDOM)
@@ -1620,7 +1627,7 @@ static int _mons_damage(monster_type mc, int rt)
 {
     if (rt < 0 || rt > 3)
         rt = 0;
-    ASSERT(smc);
+    ASSERT_smc();
     return (smc->attack[rt].damage);
 }
 
@@ -2457,10 +2464,9 @@ string mons_type_name(monster_type mc, description_level_type desc)
     }
 
     const monsterentry *me = get_monster_data(mc);
-    ASSERT(me != NULL);
     if (me == NULL)
     {
-        result += make_stringf("invalid type %d", mc);
+        result += make_stringf("invalid monster_type %d", mc);
         return result;
     }
 
@@ -2537,13 +2543,13 @@ monsterentry *get_monster_data(monster_type mc)
 
 static int _mons_exp_mod(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->exp_mod;
 }
 
 int mons_class_base_speed(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->speed;
 }
 
@@ -2566,7 +2572,7 @@ int mons_base_speed(const monster* mon)
 
 mon_intel_type mons_class_intel(monster_type mc)
 {
-    ASSERT(smc);
+    ASSERT_smc();
     return smc->intel;
 }
 
@@ -2651,7 +2657,7 @@ bool intelligent_ally(const monster* mon)
 int mons_power(monster_type mc)
 {
     // For now, just return monster hit dice.
-    ASSERT(smc);
+    ASSERT_smc();
     return mons_class_hit_dice(mc);
 }
 
