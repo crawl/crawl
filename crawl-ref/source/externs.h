@@ -600,12 +600,14 @@ public:
     int mp;
     int hp;
     coord_def pos;
+    int travel_speed;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 
 public:
     runrest();
     void initialise(int rdir, int mode);
+    void init_travel_speed();
 
     // returns runmode
     operator int () const;

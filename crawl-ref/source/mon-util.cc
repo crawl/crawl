@@ -4550,3 +4550,13 @@ bool mons_is_recallable(actor* caller, monster* targ)
             && !mons_is_conjured(targ->type)
             && monster_habitable_grid(targ, DNGN_FLOOR)); //XXX?
 }
+
+vector<monster* > get_on_level_followers()
+{
+    vector<monster* > mon_list;
+    for (monster_iterator mi; mi; ++mi)
+        if (mons_is_recallable(&you, *mi) && mi->foe == MHITYOU)
+            mon_list.push_back(*mi);
+
+    return mon_list;
+}
