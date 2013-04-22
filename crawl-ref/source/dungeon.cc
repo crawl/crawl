@@ -2336,43 +2336,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _fixup_hell_stairs();
 }
 
-void dgn_set_colours_from_monsters()
-{
-    env.floor_colour = LIGHTGREY;
-    env.rock_colour = LIGHTRED;
-    int floor_m = -1;
-
-    for (int m = 9; m >= 0; --m)
-    {
-        if (env.mons_alloc[m] <= 0 || env.mons_alloc[m] >= NUM_MONSTERS)
-            continue;
-        colour_t col = mons_class_colour(env.mons_alloc[m]);
-
-        // Don't use silence or halo colours, or elemental floors.
-        if (col == BLACK || col == CYAN || col == YELLOW || col > WHITE)
-            continue;
-
-        floor_m = m;
-        env.floor_colour = col;
-        break;
-    }
-
-    for (int m = 9; m >= 0; --m)
-    {
-        if (m == floor_m)
-            continue; // don't use the same mon for floor and rock
-        if (env.mons_alloc[m] <= 0 || env.mons_alloc[m] >= NUM_MONSTERS)
-            continue;
-        colour_t col = mons_class_colour(env.mons_alloc[m]);
-
-        if (col == BLACK || col == LIGHTGREY)
-            continue;
-
-        env.rock_colour = col;
-        break;
-    }
-}
-
 static void _dgn_set_floor_colours()
 {
     colour_t old_floor_colour = env.floor_colour;
@@ -2381,9 +2344,6 @@ static void _dgn_set_floor_colours()
     const int youbranch = you.where_are_you;
     env.floor_colour    = branches[youbranch].floor_colour;
     env.rock_colour     = branches[youbranch].rock_colour;
-
-    if (player_in_branch(BRANCH_PANDEMONIUM) || player_in_branch(BRANCH_ABYSS))
-        dgn_set_colours_from_monsters();
 
     if (old_floor_colour != BLACK)
         env.floor_colour = old_floor_colour;

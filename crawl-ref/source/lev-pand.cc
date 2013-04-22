@@ -10,6 +10,7 @@
 #include "lev-pand.h"
 
 #include "externs.h"
+#include "colour.h"
 #include "dungeon.h"
 #include "env.h"
 #include "mon-place.h"
@@ -17,11 +18,32 @@
 #include "mon-pick.h"
 #include "random.h"
 
+static colour_t _pan_floor_colour()
+{
+    colour_t col;
+
+    do
+        col = random_colour();
+    // Don't use halo colours for floors.
+    while (col == DARKGREY || col == CYAN || col == YELLOW);
+
+    return col;
+}
+
+static colour_t _pan_rock_colour()
+{
+    colour_t col;
+
+    do
+        col = random_colour();
+    // Don't use rock or metal colours for walls.
+    while (col == DARKGREY || col == LIGHTGREY || col == CYAN);
+
+    return col;
+}
+
 void init_pandemonium(void)
 {
-    // colour of monster 9 is colour of floor, 8 is colour of rock
-    // IIRC, BLACK is set to LIGHTGREY
-
     for (int pc = 0; pc < 10; ++pc)
     {
         env.mons_alloc[pc] = random_choose(
@@ -100,12 +122,8 @@ void init_pandemonium(void)
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_HELL_SENTINEL;
 
-    // Set at least some specific monsters for the special levels - this
-    // can also be used to set some colours.
-
-    env.floor_colour = BLACK;
-    env.rock_colour  = BLACK;
-    dgn_set_colours_from_monsters();
+    env.floor_colour = _pan_floor_colour();
+    env.rock_colour  = _pan_rock_colour();
 }
 
 void pandemonium_mons(void)
