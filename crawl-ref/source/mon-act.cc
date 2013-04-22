@@ -1700,7 +1700,7 @@ static int _tentacle_move_speed(monster_type type)
         return 0;
 }
 
-void pre_monster_move(monster* mons)
+static void _pre_monster_move(monster* mons)
 {
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
@@ -2267,6 +2267,12 @@ void handle_monster_move(monster* mons)
             mons->number -= 100;
         }
     }
+}
+
+static void _post_monster_move(monster* mons)
+{
+    if (invalid_monster(mons))
+        return;
 
     mons->handle_constriction();
 
@@ -2292,8 +2298,8 @@ void handle_monsters(bool with_noise)
 
     for (monster_iterator mi; mi; ++mi)
     {
-        pre_monster_move(*mi);
-        if (!invalid_monster(*mi) && mi->has_action_energy())
+        _pre_monster_move(*mi);
+        if (!invalid_monster(*mi) && mi->alive() && mi->has_action_energy())
             monster_queue.push(pair<monster *, int>(*mi, mi->speed_increment));
     }
 
@@ -2303,7 +2309,7 @@ void handle_monsters(bool with_noise)
         const int oldspeed = monster_queue.top().second;
         monster_queue.pop();
 
-        if (invalid_monster(mon) || !mon->has_action_energy())
+        if (invalid_monster(mon) || !mon->alive() || !mon->has_action_energy())
             continue;
 
         // Only move the monster if nothing else has played with its energy
@@ -2315,6 +2321,7 @@ void handle_monsters(bool with_noise)
         if (oldspeed == mon->speed_increment)
         {
             handle_monster_move(mon);
+            _post_monster_move(mon);
             fire_final_effects();
         }
 

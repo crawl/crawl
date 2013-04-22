@@ -20,7 +20,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 bool mons_can_move_towards_target(const monster* mon);
 
 void handle_monsters(bool with_noise = false);
-void pre_monster_move(monster* mon);
 void handle_monster_move(monster* mon);
 
 #define ENERGY_SUBMERGE(entry) (max(entry->energy_usage.swim / 2, 1))
