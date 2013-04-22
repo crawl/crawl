@@ -605,9 +605,25 @@ bool is_resting()
     return you.running.is_rest();
 }
 
+static int _slowest_ally_speed()
+{
+    vector<monster* > followers = get_on_level_followers();
+    int min_speed = INT_MAX;
+    for (vector<monster* >::iterator fol = followers.begin();
+         fol != followers.end(); ++fol)
+    {
+        int speed = (*fol)->speed * BASELINE_DELAY
+                    / (*fol)->action_energy(EUT_MOVE);
+        if (speed < min_speed)
+            min_speed = speed;
+    }
+    return min_speed;
+}
+
 static void _start_running()
 {
     _userdef_run_startrunning_hook();
+    you.running.init_travel_speed();
 
     if (you.running < 0)
         start_delay(DELAY_TRAVEL, 1);
@@ -3942,6 +3958,7 @@ void runrest::initialise(int dir, int mode)
     // Note HP and MP for reference.
     hp = you.hp;
     mp = you.magic_points;
+    init_travel_speed();
 
     if (dir == RDIR_REST)
     {
@@ -3969,6 +3986,14 @@ void runrest::initialise(int dir, int mode)
         start_delay(DELAY_REST, 1);
     else
         start_delay(DELAY_RUN, 1);
+}
+
+void runrest::init_travel_speed()
+{
+    if (you.travel_ally_pace)
+        travel_speed = _slowest_ally_speed();
+    else
+        travel_speed = 0;
 }
 
 runrest::operator int () const
@@ -4123,7 +4148,7 @@ void runrest::clear()
 {
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
-    mp = hp = 0;
+    mp = hp = travel_speed = 0;
 
     _reset_zigzag_info();
 }

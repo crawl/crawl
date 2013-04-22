@@ -5619,6 +5619,7 @@ void player::init()
     travel_z         = level_id();
 
     running.clear();
+    travel_ally_pace = false;
     received_weapon_warning = false;
     received_noskill_warning = false;
     ash_init_bondage(this);

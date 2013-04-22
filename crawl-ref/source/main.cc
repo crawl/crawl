@@ -986,6 +986,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
     case CMD_TOGGLE_FRIENDLY_PICKUP:
+    case CMD_TOGGLE_TRAVEL_SPEED:
     case CMD_ADJUST_INVENTORY:
     case CMD_QUIVER_ITEM:
     case CMD_REPLAY_MESSAGES:
@@ -1745,6 +1746,18 @@ static void _toggle_friendly_pickup()
     _print_friendly_pickup_setting(true);
 }
 
+static void _toggle_travel_speed()
+{
+    you.travel_ally_pace = !you.travel_ally_pace;
+    if (you.travel_ally_pace)
+        mpr("You pace your travel speed to your slowest ally.");
+    else
+    {
+        mpr("You travel at normal speed.");
+        you.running.travel_speed = 0;
+    }
+}
+
 static void _do_rest()
 {
     if (you.hunger_state == HS_STARVING && !you_min_hunger())
@@ -1918,6 +1931,7 @@ void process_command(command_type cmd)
 
     case CMD_TOGGLE_FRIENDLY_PICKUP:     _toggle_friendly_pickup(); break;
     case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
+    case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
 
         // Map commands.
@@ -4404,6 +4418,12 @@ static void _move_player(coord_def move)
 
         you.time_taken *= player_movement_speed();
         you.time_taken = div_rand_round(you.time_taken, 10);
+
+        if (you.running && you.running.travel_speed)
+        {
+            you.time_taken = max(you.time_taken,
+                                 div_round_up(100, you.running.travel_speed));
+        }
 
 #ifdef EUCLIDEAN
         if (move.abs() == 2)
