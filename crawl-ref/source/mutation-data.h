@@ -1098,6 +1098,36 @@
   "augmentation"
 },
 
+{ MUT_MANA_SHIELD,                    0,  1, false, false, false,
+  "mana shield",
+
+  {"When hurt, damage is shared between your health and your mana reserves.", "", ""},
+  {"You feel your magical essence form a protective shroud around your flesh.", "", ""},
+  {"", "", ""},
+
+  "mana shield"
+},
+
+{ MUT_MANA_REGENERATION,              0,  1, false, false, false,
+  "mana regeneration",
+
+  {"You regenerate mana rapidly.", "", ""},
+  {"You feel your mana shroud grow more resilient.", "", ""},
+  {"", "", ""},
+
+  "mana regeneration"
+},
+
+{ MUT_MANA_LINK,                      0,  1, false, false, false,
+  "mana link",
+
+  {"When low on mana, you restore mana in place of health.", "", ""},
+  {"You feel your life force and your magical essence meld.", "", ""},
+  {"", "", ""},
+
+  "mana link"
+},
+
 // Jiyva only mutations
 { MUT_GELATINOUS_BODY,                0,  3, false,  true,  true,
   NULL,
