@@ -203,7 +203,7 @@ const Branch branches[NUM_BRANCHES] = {
       DNGN_ENTER_PANDEMONIUM, DNGN_EXIT_PANDEMONIUM,
       "Pandemonium", "Pandemonium", "Pan",
       NULL,
-      true, BLACK, BLACK, // set specially from monster set
+      true, BLACK, BLACK, // set specially
       'R', false, 0 },
 
     { BRANCH_ZIGGURAT, NUM_BRANCHES, -1, -1, 27, 27,

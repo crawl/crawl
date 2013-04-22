@@ -195,9 +195,6 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 // Generate 3 stone stairs in both directions.
 void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
-// Set floor/wall colour based on the mons_alloc array. Used for
-// Abyss and Pan.
-void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 const vault_placement *dgn_place_map(const map_def *map,
