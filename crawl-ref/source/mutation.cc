@@ -803,6 +803,9 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_MUTATION_RESISTANCE:
     case MUT_ROBUST:
     case MUT_HIGH_MAGIC:
+    case MUT_MANA_SHIELD:
+    case MUT_MANA_REGENERATION:
+    case MUT_MANA_LINK:
         amusement /= 2;  // not funny
         break;
 
@@ -1927,6 +1930,8 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
       { -33, 0, 0 } },
     { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
+      { -33, 0, 0 } },
+    { 2, { MUT_MANA_SHIELD, MUT_MANA_REGENERATION, MUT_MANA_LINK },
       { -33, 0, 0 } },
     // Tier 3 facets
     { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },

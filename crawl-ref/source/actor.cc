@@ -388,11 +388,18 @@ int actor::evokable_flight(bool calc_unid) const
 
 int actor::spirit_shield(bool calc_unid, bool items) const
 {
-    if (suppressed() || !items)
-        return 0;
+    int ss = 0;
 
-    return wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD, calc_unid)
-           + wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid);
+    if (items && !suppressed())
+    {
+        ss += wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD, calc_unid);
+        ss += wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid);
+    }
+
+    if (is_player())
+        ss += player_mutation_level(MUT_MANA_SHIELD);
+
+    return ss;
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
