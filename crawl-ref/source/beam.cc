@@ -3022,7 +3022,8 @@ bool bolt::harmless_to_player() const
         return (player_prot_life(false) >= 3);
 
     case BEAM_POISON:
-        return (player_res_poison(false) >= 3);
+        return (player_res_poison(false) >= 3
+                || is_big_cloud && player_res_poison(false) > 0);
 
     case BEAM_MEPHITIC:
         return (player_res_poison(false) > 0 || you.clarity(false)
