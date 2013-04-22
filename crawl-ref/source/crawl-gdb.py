@@ -64,13 +64,13 @@ class item_def_printer:
             'OBJ_CORPSES':   'corpse_type',
             # 'OBJ_GOLD':
             'OBJ_RODS':      'rod_type'
-            }.get(f, 'uint8_t')
+            }.get(ty, 'uint8_t')
         sub_ty = str(self.val['sub_type'].cast(gdb.lookup_type(sub_type_type)))
 
         yield f('base_type')
         yield g('sub_type', sub_type_type)
 
-        if ty == 'OBJ_CORPSE' or (ty == 'OBJ_FOOD' and sub_ty == 'FOOD_CHUNK'):
+        if ty == 'OBJ_CORPSES' or (ty == 'OBJ_FOOD' and sub_ty == 'FOOD_CHUNK'):
             yield f('mon_type')
         else:
             yield f('plus')
