@@ -39,6 +39,7 @@
 #include "misc.h"
 #include "player-stats.h"
 #include "godconduct.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -907,6 +908,7 @@ static bool _lamp_of_fire()
             beams[n].hit         = 10 + (pow/8);
             beams[n].damage      = dice_def(2, 4 + pow/4);
             beams[n].ench_power  = (pow/8);
+            beams[n].loudness    = 5;
             beams[n].fire();
         }
 
@@ -1094,6 +1096,8 @@ static bool _fan_of_gales()
     else
         mpr("A fierce wind blows from the fan.");
 
+    noisy(8, you.pos());
+
     if (!affected_monsters.empty())
     {
         const string message =
@@ -1267,6 +1271,7 @@ static void _tremor_at(coord_def start, coord_def delta)
     rubble.flavour     = BEAM_MMISSILE;
     rubble.thrower     = KILL_YOU;
     rubble.is_beam     = false;
+    rubble.loudness    = 10;
     rubble.draw_delay  = 0;
 
     vector<coord_def> affected;
