@@ -78,9 +78,17 @@
         e.widen_paths { find = "l", percent = 60 }
         e.remove_isolated_glyphs { find = "l", percent = 90, boxy = true }
     end
+
+    -- Duplicate of function in layout.des header
+    function random_wall_material(e)
+        if not you.in_branch("Lair") and not you.in_branch("Zot")
+           and not you.in_branch("Dis")
+           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
+            e.subst('x : ccv')
+        end
+    end
+
 }}
-
-
 
 ##############################################################
 # layout_pools
@@ -126,6 +134,8 @@ TAGS: overwritable layout allow_dup unrand
     remove_isolated_glyphs { find = "x", percent = 80 }
     widen_paths { find = "l", percent = 30 }
     remove_isolated_glyphs { find = "l", percent = 75, boxy = true }
+
+    random_wall_material(_G)
 }}
 MAP
 ENDMAP
@@ -138,7 +148,7 @@ ENDMAP
 #  by doors and sometimes just by holes in the wall.
 #
 NAME: layout_honeycomb
-DEPTH: D:15-
+DEPTH: D:12-,Snake:1-4,Dis
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -187,10 +197,7 @@ TAGS: overwritable layout allow_dup unrand
     fill_disconnected{wanted = '@'}
     subst("@ = " .. fill)
 
-    -- This is the random_wall_material function from layout.des
-    if crawl.one_chance_in(20) then
-        e.subst('x : ccv')
-    end
+    random_wall_material(_G)
 }}
 # Enforce minimum floor size - this is important
 validate {{
