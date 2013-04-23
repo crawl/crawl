@@ -1247,7 +1247,7 @@ LUAFN(dgn_add_pools)
     vector<vector<int> > pool_index(size_x, vector<int>(size_y, FORBIDDEN));
     for(int x = 0; x < size_x; x++)
         for(int y = 0; y < size_y; y++)
-	    {
+        {
             if(strchr(replace, lines(x + x1, y + y1)))
                 pool_index[x][y] = NO_POOL;
         }
@@ -1342,7 +1342,7 @@ LUAFN(dgn_add_pools)
 
     for(int x = 0; x < size_x; x++)
         for(int y = 0; y < size_y; y++)
-	    {
+            {
             int index = pool_index[x][y];
             if(index < (int)(pool_glyphs.size()))
                 lines(x + x1, y + y1) = pool_glyphs[index];
