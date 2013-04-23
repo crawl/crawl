@@ -2945,8 +2945,9 @@ static void _regenerate_hp_and_mp(int delay)
 
     while (tmp >= 100)
     {
-        if (you.mutation[MUT_MANA_LINK] // at low mp, "mana link" restores mp in place of hp
-           && you.magic_points < you.max_magic_points * 2 / 3)
+        // at low mp, "mana link" restores mp in place of hp
+        if (you.mutation[MUT_MANA_LINK]
+            && !x_chance_in_y(you.magic_points, you.max_magic_points))
         {
             inc_mp(1);
         }
