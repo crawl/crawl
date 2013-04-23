@@ -201,11 +201,7 @@ TAGS: overwritable layout allow_dup unrand
 }}
 # Enforce minimum floor size - this is important
 validate {{
-    if count_feature_in_box { feat="."} < 600 then
-        return false
-    else
-        return true
-    end
+    return count_feature_in_box { feat="." } > 600
 }}
 MAP
 ENDMAP
