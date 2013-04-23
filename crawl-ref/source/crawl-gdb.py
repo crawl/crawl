@@ -3,6 +3,56 @@
 import gdb.printing
 
 
+## Copied from gdb.printing because, having an initial underscore,
+## it's probably not a stable interface...
+# A helper class for printing enum types.  This class is instantiated
+# with a list of enumerators to print a particular Value.
+class _EnumInstance:
+    def __init__(self, enumerators, val):
+        self.enumerators = enumerators
+        self.val = val
+
+    def to_string(self):
+        flag_list = []
+        v = long(self.val)
+        any_found = False
+        for (e_name, e_value) in self.enumerators:
+            if v & e_value != 0:
+                flag_list.append(e_name)
+                v = v & ~e_value
+                any_found = True
+        if not any_found or v != 0:
+            # Leftover value.
+            flag_list.append('<unknown: 0x%x>' % v)
+        return "0x%x [%s]" % (self.val, " | ".join(flag_list))
+
+def is_pow2(x):
+    # From http://stackoverflow.com/questions/600293/600306
+    return (x != 0) and ((x & (x - 1)) == 0)
+
+class FlagsPrinter(gdb.printing.PrettyPrinter):
+    """Print values of enum types, assuming that every bit is really a
+    flag, and that other enumerators are just masks/shorthand."""
+
+    def __init__(self, enum_type):
+        super(FlagsPrinter, self).__init__(enum_type)
+        self.initialized = False
+
+    def __call__(self, val):
+        if not self.initialized:
+            flags = gdb.lookup_type(self.name)
+            self.enumerators = [(field.name, field.enumval)
+                                for field in flags.fields()
+                                if is_pow2(field.enumval)]
+            self.enumerators.sort(key = lambda x: x[1])
+            self.initialized = True
+
+        if self.enabled:
+            return _EnumInstance(self.enumerators, val)
+        else:
+            return None
+
+
 class NeedLibstdcxxPrinters(Exception):
     def __str__(self):
         return """Oops!!!
@@ -86,7 +136,7 @@ class item_def_printer:
         yield f('colour')
         yield f('rnd')
         yield f('quantity')
-        yield f('flags')
+        yield g('flags', 'item_status_flag_type')
 
         yield f('pos')
         yield f('link')
@@ -204,6 +254,10 @@ def build_pretty_printer():
     pp.add_printer('CrawlHashTable', '^CrawlHashTable$', CrawlHashTable_printer)
     pp.add_printer('CrawlVector', '^CrawlVector$', CrawlVector_printer)
     pp.add_printer('CrawlStoreValue', '^CrawlStoreValue$', CrawlStoreValue_printer)
+
+    # XXX we really want to set this printer on iflags_t, but that doesn't work
+    pp.add_printer('item_status_flag_type', '^item_status_flag_type$',
+                   FlagsPrinter('item_status_flag_type'))
 
     return pp
 
