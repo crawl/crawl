@@ -29,6 +29,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "mgen_data.h"
+#include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -2882,6 +2883,8 @@ void mons_pacify(monster* mon, mon_attitude_type att)
         elven_twins_pacify(mon);
     if (mons_is_kirke(mon))
         hogs_to_humans();
+    if (mon->type == MONS_VAULT_WARDEN)
+        timeout_door_seals(0, true);
 
     mons_att_changed(mon);
 }

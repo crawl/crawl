@@ -2014,7 +2014,7 @@ void timeout_door_seals(int duration, bool force)
         seal->duration -= duration;
 
         monster* mon_src = monster_by_mid(seal->mon_num);
-        if (seal->duration <= 0 || !mon_src || !mon_src->alive())
+        if (seal->duration <= 0 || !mon_src || !mon_src->alive() || mon_src->pacified())
         {
             grd(seal->pos) = seal->old_feature;
             set_terrain_changed(seal->pos);
