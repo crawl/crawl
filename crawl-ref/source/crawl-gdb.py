@@ -132,7 +132,23 @@ class item_def_printer:
             }.get((ty, sub_ty), 'short')
         yield g('plus2', plus2typename)
 
-        yield f('special')
+        flags = self.val['flags']
+        is_artefact = bool(flags & gdb.parse_and_eval('ISFLAG_ARTEFACT_MASK'))
+        is_unrand   = bool(flags & gdb.parse_and_eval('ISFLAG_UNRANDART'))
+
+        if is_artefact:
+            if is_unrand:
+                special_type = 'unrand_type'
+            else:
+                special_type = 'int'
+        else:
+            special_type = {
+                'OBJ_WEAPONS':  'brand_type',
+                'OBJ_MISSILES': 'special_missile_type',
+                'OBJ_ARMOUR':   'special_armour_type',
+                }.get(ty, 'int')
+        yield g('special', special_type)
+
         yield f('colour')
         yield f('rnd')
         yield f('quantity')
