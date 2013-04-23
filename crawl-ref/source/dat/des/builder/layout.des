@@ -1188,6 +1188,9 @@ TAGS: overwritable layout allow_dup unrand
 {{
     local subdivide_threshold = 12
 
+    -- Create the alternate version? (based on techniques used in layout_honeycomb)
+    local alt = crawl.x_chance_in_y(2,3)
+
     function room(x1, y1, x2, y2)
         if x1 < x2 and y1 < y2 then
            local floor_type = '.'
@@ -1223,7 +1226,9 @@ TAGS: overwritable layout allow_dup unrand
                local x3 = x1 + 4 + crawl.random2(x2 - x1 - 7)
                fill(x1, y1, x3, y2, 1)
                fill(x3, y1, x2, y2, 1)
-               replace_random { x1=x3, y1=y1+1, x2=x3, y2=y2-1, find='x', replace='+' }
+               if not alt then
+                   replace_random { x1=x3, y1=y1+1, x2=x3, y2=y2-1, find='x', replace='+' }
+               end
            end
         else
             if y2 - y1 < subdivide_threshold then
@@ -1236,8 +1241,10 @@ TAGS: overwritable layout allow_dup unrand
                local y3 = y1 + 4 + crawl.random2(y2 - y1 - 7)
                fill(x1, y1, x2, y3, 0)
                fill(x1, y3, x2, y2, 0)
-               replace_random { x1=x1+1, y1=y3, x2=x2-1, y2=y3, find='x', replace='+' }
-           end
+               if not alt then
+                   replace_random { x1=x1+1, y1=y3, x2=x2-1, y2=y3, find='x', replace='+' }
+               end
+            end
         end
     end
 
@@ -1248,6 +1255,42 @@ TAGS: overwritable layout allow_dup unrand
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
     fill(7, 7, gxm-8, gym-8, 0)
+
+    local border,fill = 'x','.'
+    local connection = crawl.random_element({[fill] = 1, ["+"] = 4})
+
+    -- Alternate version, connect rooms at the end.
+    -- TODO: There is an identical loop in layout_homeycomb with different
+    -- iteration count; move this to a library or C++.
+    if alt then
+      for i = 1, crawl.random_range(400, 800) do
+          local x = crawl.random_range(1, gxm - 2)
+          local y = crawl.random_range(1, gym - 2)
+
+          if mapgrd[x][y] == border then
+              if mapgrd[x + 1][y] == border and
+                 mapgrd[x - 1][y] == border and
+                 mapgrd[x][y + 1] == fill and
+                 mapgrd[x][y - 1] == fill then
+                  mapgrd[x][y] = connection
+              elseif mapgrd[x + 1][y] == fill and
+                     mapgrd[x - 1][y] == fill and
+                     mapgrd[x][y + 1] == border and
+                     mapgrd[x][y - 1] == border then
+                  mapgrd[x][y] = connection
+              end
+          end
+      end
+      zonify.map_fill_zones(_G, 1, 'x')
+    end
+}}
+# Enforce minimum floor size - this is important with the alt version
+validate {{
+    if count_feature_in_box { feat="."} < 1200 then
+        return false
+    else
+        return true
+    end
 }}
 COLOUR:  G : cyan
 TILE:    G = dngn_statue_iron_golem
