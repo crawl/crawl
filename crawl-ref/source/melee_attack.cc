@@ -1463,15 +1463,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     did_hit = true;
 
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
-
     aux_damage  = random2(aux_damage);
-
     aux_damage  = player_apply_fighting_skill(aux_damage, true);
-
     aux_damage  = player_apply_misc_modifiers(aux_damage);
-
     aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
-
     aux_damage  = player_apply_final_multipliers(aux_damage);
 
     const int pre_ac_dmg = aux_damage;
@@ -1557,6 +1552,24 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              aux_verb.c_str(),
              defender->name(DESC_THE).c_str(),
              you.can_see(defender) ? ", but do no damage" : "");
+    }
+
+    // [rpb] Unarmed punches with runed hands provides the antimagic effect
+    // at a slightly less significant power than for primary attacks. The
+    // effect is applied this late because we want output to occur after
+    // the typical attack phrases.
+    if (player_mutation_level(MUT_RUNED_HANDS))
+    {
+        int power = damage_done *
+            (1 + player_mutation_level(MUT_RUNED_HANDS) * 0.15);
+        antimagic_affects_defender(power*2);
+
+        if (!special_damage_message.empty())
+        {
+            mprf("%s", special_damage_message.c_str());
+
+            special_damage_message.clear();
+        }
     }
 
     if (defender->as_monster()->hit_points < 1)
@@ -2380,11 +2393,14 @@ bool melee_attack::distortion_affects_defender()
     return false;
 }
 
-void melee_attack::antimagic_affects_defender()
+void melee_attack::antimagic_affects_defender(int power)
 {
+    // [rpb] We expect power to come in unscaled
+    power *= 2;
+
     if (defender->is_player())
     {
-        int mp_loss = min(you.magic_points, random2(damage_done * 2));
+        int mp_loss = min(you.magic_points, random2(power));
         if (!mp_loss)
             return;
         mpr("You feel your power leaking away.", MSGCH_WARN);
@@ -2397,7 +2413,7 @@ void melee_attack::antimagic_affects_defender()
     {
         defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                 attacker, // doesn't matter
-                                random2(damage_done * 2) * BASELINE_DELAY));
+                                random2(power) * BASELINE_DELAY));
         special_damage_message =
                     apostrophise(defender->name(DESC_THE))
                     + " magic leaks into the air.";
@@ -3018,6 +3034,17 @@ bool melee_attack::apply_damage_brand()
         return false;
     }
 
+    // [rpb] MUT_RUNED_HANDS allows for antimagic on unarmed attacks
+    // (mut level 2) and on unbranded weapons (level 3) at +15/30/45% power
+    if (attacker->is_player() && brand == SPWPN_NORMAL
+        && player_mutation_level(MUT_RUNED_HANDS)
+        && (!weapon || player_mutation_level(MUT_RUNED_HANDS) > 2))
+    {
+        int power = damage_done *
+            (1 + player_mutation_level(MUT_RUNED_HANDS) * 0.15);
+        antimagic_affects_defender(power*2);
+    }
+
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ORC_SLAYING
@@ -3252,7 +3279,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ANTIMAGIC:
-        antimagic_affects_defender();
+        antimagic_affects_defender(damage_done);
         break;
     }
 
@@ -4647,7 +4674,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
-        antimagic_affects_defender();
+        antimagic_affects_defender(damage_done);
         break;
 
     case AF_PAIN:

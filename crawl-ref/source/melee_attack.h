@@ -120,7 +120,7 @@ private:
     /* Brand / Attack Effects */
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
-    void antimagic_affects_defender();
+    void antimagic_affects_defender(int power);
     void pain_affects_defender();
     void chaos_affects_defender();
     void chaos_affects_attacker();
