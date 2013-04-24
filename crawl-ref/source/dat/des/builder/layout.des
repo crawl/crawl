@@ -1202,10 +1202,15 @@ TAGS: overwritable layout allow_dup unrand
               -- decorative statues
               local x3 = crawl.random_range(x1+2, x2-2)
               local y3 = crawl.random_range(y1+2, y2-2)
-              mapgrd[x3][y3] = 'G'
-              mapgrd[x1+x2-x3][y3] = 'G'
-              mapgrd[x3][y1+y2-y3] = 'G'
-              mapgrd[x1+x2-x3][y1+y2-y3] = 'G'
+              local x4 = x1+x2-x3
+              local y4 = y1+y2-y3
+
+              if math.abs(x3 - x4) ~= 1 and math.abs(y3 - y4) ~= 1 then
+                  mapgrd[x3][y3] = 'G'
+                  mapgrd[x4][y3] = 'G'
+                  mapgrd[x3][y4] = 'G'
+                  mapgrd[x4][y4] = 'G'
+               end
            end
 
            if (x1+x2) % 2 == 0 and (y1+y2) % 2 == 0
@@ -1331,6 +1336,8 @@ validate {{
 }}
 COLOUR:  G : cyan
 TILE:    G = dngn_statue_iron_golem
+MAP
+ENDMAP
 
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
