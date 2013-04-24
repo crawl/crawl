@@ -214,13 +214,11 @@ ENDMAP
 # room with some number of pillars in the middle. The stairs
 # are generally all grouped together.
 #
-
 NAME: layout_big_octagon
 DEPTH:   Pan, 4-22, !Dis, !Geh
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand
-
 {{
     -- Step 1: Big octagon.
 
