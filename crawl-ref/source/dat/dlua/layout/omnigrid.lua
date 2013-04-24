@@ -84,12 +84,11 @@ function omnigrid.subdivide(x1,y1,x2,y2,options)
   if options.minimum_size ~= nil then
     options.minimum_size_x,options.minimum_size_y = options.minimum_size,options.minimum_size
   end
-  local results = {}
-  return omnigrid.subdivide_recursive(x1,y1,x2,y2,options,results,
+  return omnigrid.subdivide_recursive(x1,y1,x2,y2,options,
                                       options.subdivide_initial_chance,0)
 end
 
-function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,results,chance,depth)
+function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,chance,depth)
 
   local subdiv_x, subdiv_y, subdivide = true,true,true
   local width,height = x2-x1+1,y2-y1+1
@@ -112,8 +111,10 @@ function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,results,chance,depth)
 
   if not subdivide then
     -- End of subdivision; add an area
-    table.insert(results, { x1=x1,y1=y1,x2=x2,y2=y2,depth=depth })
+    return { { x1=x1,y1=y1,x2=x2,y2=y2,depth=depth,borders={} } }
   else
+    local results = {}
+
     -- Choose axis? (Force it if one is too small)
     local which = "x"
     if not subdiv_x then which = "y"
@@ -127,16 +128,62 @@ function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,results,chance,depth)
     if which == "x" then
       local pos = crawl.random_range(options.minimum_size_x,width-options.minimum_size_x)
       -- Create the two new areas
-      omnigrid.subdivide_recursive(x1,y1,x1 + pos - 1,y2,options,results,new_chance,new_depth)
-      omnigrid.subdivide_recursive(x1 + pos,y1,x2,y2,options,results,new_chance,new_depth)
+      local resa = omnigrid.subdivide_recursive(x1,y1,x1 + pos - 1,y2,options,new_chance,new_depth)
+      local resb = omnigrid.subdivide_recursive(x1 + pos,y1,x2,y2,options,new_chance,new_depth)
+      -- Compare the two sets of results to create borders
+      for ia,a in ipairs(resa) do
+        table.insert(results,a)
+        if a.x2 == (x1+pos-1) then
+          for ib,b in ipairs(resb) do
+            if b.x1 == x1 + pos then
+              -- These two are bordering. The border is the horizontal intersection of the two lines.
+              local by1 = math.max(a.y1,b.y1)
+              local by2 = math.min(a.y2,b.y2)
+              -- If there's an actual intersection
+              if (by1<=by2) then
+                local b1 = { with = b, dir = 3, x1 = a.x2, x2 = a.x2, y1 = by1, y2 = by2, len = by2-by1+1 }
+                local b2 = { with = a, dir = 1, x1 = b.x1, x2 = b.x1, y1 = by1, y2 = by2, len = by2-by1+1 }
+                b1.inverse,b2.inverse = b2,b1
+                table.insert(a.borders,b1)
+                table.insert(b.borders,b2)
+              end
+            end
+          end
+        end
+      end
+      for ib,b in ipairs(resb) do
+        table.insert(results,b)
+      end
     else
       local pos = crawl.random_range(options.minimum_size_y,height-options.minimum_size_y)
       -- Create the two new areas
-      omnigrid.subdivide_recursive(x1,y1,x2,y1 + pos - 1,options,results,new_chance,new_depth)
-      omnigrid.subdivide_recursive(x1,y1 + pos,x2,y2,options,results,new_chance,new_depth)
+      local resa = omnigrid.subdivide_recursive(x1,y1,x2,y1 + pos - 1,options,new_chance,new_depth)
+      local resb = omnigrid.subdivide_recursive(x1,y1 + pos,x2,y2,options,new_chance,new_depth)
+      -- Compare the two sets of results to create borders
+      for ia,a in ipairs(resa) do
+        table.insert(results,a)
+        if a.y2 == (y1+pos-1) then
+          for ib,b in ipairs(resb) do
+            if b.y1 == y1 + pos then
+              -- These two are bordering. The border is the horizontal intersection of the two lines.
+              local bx1 = math.max(a.x1,b.x1)
+              local bx2 = math.min(a.x2,b.x2)
+              -- If there's an actual intersection
+              if (bx1<=bx2) then
+                local b1 = { with = b, dir = 2, x1 = bx1, x2 = bx2, y1 = a.y2, y2 = a.y2, len = bx2-bx1+1 }
+                local b2 = { with = a, dir = 0, x1 = bx1, x2 = bx2, y1 = b.y1, y2 = b.y1, len = bx2-bx1+1 }
+                b1.inverse,b2.inverse = b2,b1
+                table.insert(a.borders,b1)
+                table.insert(b.borders,b2)
+              end
+            end
+          end
+        end
+      end
+      for ib,b in ipairs(resb) do
+        table.insert(results,b)
+      end
     end
+    return results
   end
-
-  return results
-
 end
