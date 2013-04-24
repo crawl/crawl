@@ -811,13 +811,7 @@ bool melee_attack::handle_phase_end()
                               effective_attack_number);
     }
 
-    // Check for passive mutation effects with player being attacker.
-    if (attacker->is_player() && attacker->alive() && attacker != defender)
-    {
-        seal_spell();
-    }
-
-    // Check for passive mutation effects with player being defender.
+    // Check for passive mutation effects.
     if (defender->is_player() && defender->alive() && attacker != defender)
     {
         mons_do_eyeball_confusion();
@@ -4873,33 +4867,6 @@ void melee_attack::emit_foul_stench()
         {
             mpr("You emit a cloud of foul miasma!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
-        }
-    }
-}
-
-void melee_attack::seal_spell()
-{
-    if (defender->alive()
-        && defender->can_be_sealed()
-        && attacker->can_seal_spell()
-        && one_chance_in(1))
-    {
-        if (defender->is_monster()) {
-            // Loop through monster spells looking for one to seal
-            monster_spells hspell_pass(mons->spells);
-
-            for (int i = NUM_MONSTER_SPELL_SLOTS - 1, int j = i; i >= 0; --i)
-            {
-                if (hspell_pass[i] == SPELL_NO_SPELL)
-                    continue;
-
-                if (coinflip())
-                    j = i;
-            }
-        }
-        else
-        {
-            // Seal player spell
         }
     }
 }

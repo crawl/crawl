@@ -569,8 +569,6 @@ public:
     bool can_safely_mutate() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
-    bool can_be_sealed() const;
-    bool can_seal_spells() const;
     bool mutate(const string &reason);
     bool polymorph(int pow);
     void backlight();

@@ -4862,16 +4862,6 @@ bool monster::can_bleed(bool /*allow_tran*/) const
     return mons_has_blood(type);
 }
 
-bool monster::can_be_sealed() const
-{
-    return is_unholy(false);
-}
-
-bool monster::can_seal_spells() const
-{
-    return false;
-}
-
 bool monster::mutate(const string &reason)
 {
     if (!can_mutate())

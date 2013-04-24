@@ -112,7 +112,6 @@ private:
     void do_passive_freeze();
     void emit_foul_stench();
     void tendril_disarm();
-    void seal_spell();
     /* Race Effects */
     void do_minotaur_retaliation();
 
