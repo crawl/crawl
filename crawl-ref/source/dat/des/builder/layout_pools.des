@@ -8,6 +8,8 @@
 #  that the dungeon builder can add other vaults on top of them.
 #
 
+: require("dlua/layout/zonify.lua")
+
 
 
 ##############################################################
@@ -148,7 +150,7 @@ ENDMAP
 #  by doors and sometimes just by holes in the wall.
 #
 NAME: layout_honeycomb
-DEPTH: D:12-,Snake:1-4,Dis
+DEPTH: D:12-, Snake:1-4, Dis
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -160,42 +162,24 @@ TAGS: overwritable layout allow_dup unrand
 
     make_circle { x = gxm/2, y = gym/2, radius = 10 }
     mapgrd[gxm/2][gym/2] = '.'
-    spotty_map { boxy = true, iterations = 1200 }
+    spotty_map { boxy = true, iterations = 1500 }
     widen_paths { find = "x", percent = 50 }
     remove_isolated_glyphs { find = "x", percent = 100 }
 
-    local fill = '.'
-    local border = 'x'
-    local connection = crawl.random_element({[fill] = 1, ["+"] = 2})
-
-    add_pools { replace = ".",
-                contents = {[fill] = 1},
-                pool_size = 25 + crawl.random2(25),
-                border = border }
-
-    -- connect rooms
-    for i = 1, crawl.random_range(800, 1200) do
-        local x = crawl.random_range(1, gxm - 2)
-        local y = crawl.random_range(1, gym - 2)
-
-        if mapgrd[x][y] == border then
-            if mapgrd[x + 1][y] == border and
-               mapgrd[x - 1][y] == border and
-               mapgrd[x][y + 1] == fill and
-               mapgrd[x][y - 1] == fill then
-                mapgrd[x][y] = connection
-            elseif mapgrd[x + 1][y] == fill and
-                   mapgrd[x - 1][y] == fill and
-                   mapgrd[x][y + 1] == border and
-                   mapgrd[x][y - 1] == border then
-                mapgrd[x][y] = connection
-            end
-        end
+    local connection = {}
+    if you.in_branch("snake") then
+        connection = '.'
+    else
+        connection = crawl.random_element({['.'] = 1, ['+'] = 2})
     end
 
-    replace_closest { x = gxm/2, y = gym/2, find = fill, replace = '@' }
-    fill_disconnected{wanted = '@'}
-    subst("@ = " .. fill)
+    add_pools { replace = ".",
+                contents = {['.'] = 1},
+                pool_size = 25 + crawl.random2(25),
+                border = 'x' }
+    connect_adjacent_rooms { wall = "x", floor = ".", replace = connection,
+                             min = 1000, max = 1500 }
+    zonify.map_fill_zones(_G, 1, 'x')
 
     random_wall_material(_G)
 }}

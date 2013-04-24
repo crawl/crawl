@@ -926,6 +926,74 @@ LUAFN(dgn_widen_paths)
     return 0;
 }
 
+LUAFN(dgn_connect_adjacent_rooms)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, wall, "x");
+    TABLE_STR(ls, floor, ".");
+    TABLE_CHAR(ls, replace, '.');
+    TABLE_INT(ls, max, 1);
+    TABLE_INT(ls, min, max);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    // we never go right up to the border to avoid looking off the map edge
+    if(x1 < 1)
+        x1 = 1;
+    if(x2 >= lines.width() - 1)
+        x2 = lines.width() - 2;
+    if(y1 < 1)
+        y1 = 1;
+    if(y2 >= lines.height() - 1)
+        y2 = lines.height() - 2;
+
+    if (min < 0)
+        return luaL_error(ls, "Invalid min connections: %i", min);
+    if (max < min)
+    {
+        return luaL_error(ls, "Invalid max connections: %i (min is %i)",
+                          max, min);
+    }
+
+    int count = min + random2(max - min + 1);
+    for (random_rectangle_iterator ri(coord_def(x1, y1),
+                                      coord_def(x2, y2)); ri; ++ri)
+    {
+        if(count <= 0)
+        {
+            // stop when have checked enough spots
+            return 0;
+        }
+
+        int x = ri->x;
+        int y = ri->y;
+
+        if (strchr(wall, lines(*ri)))
+        {
+            if (   strchr(wall,  lines(x - 1, y))
+                && strchr(wall,  lines(x + 1, y))
+                && strchr(floor, lines(x,     y - 1))
+                && strchr(floor, lines(x,     y + 1)))
+            {
+                lines(*ri) = replace;
+            }
+            else if (   strchr(floor, lines(x - 1, y))
+                     && strchr(floor, lines(x + 1, y))
+                     && strchr(wall,  lines(x,     y - 1))
+                     && strchr(wall,  lines(x,     y + 1)))
+            {
+                lines(*ri) = replace;
+            }
+        }
+        count--;
+    }
+
+    return 0;
+}
+
 LUAFN(dgn_replace_area)
 {
     LINES(ls, 1, lines);
@@ -1501,6 +1569,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "octa_room", &dgn_octa_room },
     { "remove_isolated_glyphs", &dgn_remove_isolated_glyphs },
     { "widen_paths", &dgn_widen_paths },
+    { "connect_adjacent_rooms", &dgn_connect_adjacent_rooms },
     { "replace_area", &dgn_replace_area },
     { "replace_first", &dgn_replace_first },
     { "replace_random", &dgn_replace_random },
