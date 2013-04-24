@@ -3898,19 +3898,18 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
         if (!scaled)
             return final_delay;
 
+        int scaling = you.time_taken;
+
         if (you.duration[DUR_FINESSE])
         {
             ASSERT(!you.duration[DUR_BERSERK]);
             // Need to undo haste by hand.
             if (you.duration[DUR_HASTE])
-                you.time_taken = haste_mul(you.time_taken);
-            you.time_taken = div_rand_round(you.time_taken, 2);
+                scaling = haste_mul(scaling);
+            scaling = div_rand_round(scaling, 2);
         }
 
-        dprf(DIAG_COMBAT, "Weapon speed: %d; min: %d; attack time: %d",
-             final_delay, min_delay, you.time_taken);
-
-        return max(2, div_rand_round(you.time_taken * final_delay, 10));
+        return max(2, div_rand_round(scaling * final_delay, 10));
     }
     else
     {
