@@ -161,7 +161,7 @@ void MiscastEffect::init()
     else if (!invalid_monster_index(kill_source))
     {
         monster* mon_source = &menv[kill_source];
-        ASSERT(mon_source->type != -1);
+        ASSERT(mon_source->type != MONS_NO_MONSTER);
 
         act_source = guilty = mon_source;
 

@@ -130,8 +130,10 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 luaL_argerror(ls, list_pos, err.c_str());
                 return 0;
             }
-            if (mon.type == -1)
+#if TAG_MAJOR_VERSION == 34
+            if ((int)mon.type == -1)
                 mon.type = MONS_PROGRAM_BUG;
+#endif
             if (mon.type == MONS_NO_MONSTER)
                 name = "nothing";
             else
@@ -180,7 +182,7 @@ static int dgn_mons_from_mid(lua_State *ls)
 
     monster* mons = monster_by_mid(mid);
 
-    if (mons->type != -1)
+    if (mons->type != MONS_NO_MONSTER)
         push_monster(ls, mons);
     else
         lua_pushnil(ls);
