@@ -611,7 +611,7 @@ static void _fill_player_doll(player_save_info &p, package *save)
     if (!success) // Use default doll instead.
     {
         job_type job = get_job_by_name(p.class_name.c_str());
-        if (job == -1)
+        if (job == JOB_UNKNOWN)
             job = JOB_FIGHTER;
 
         tilep_job_default(job, &equip_doll);

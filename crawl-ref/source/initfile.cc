@@ -138,7 +138,7 @@ template<class A, class B> static void _merge_lists(A &dest, const B &src,
     dest.insert(prepend ? dest.begin() : dest.end(), src.begin(), src.end());
 }
 
-// Returns -1 if unmatched else returns 0-15.
+// Returns MSGCOL_NONE if unmatched else returns 0-15.
 static msg_colour_type _str_to_channel_colour(const string &str)
 {
     int col = str_to_colour(str);
@@ -155,7 +155,7 @@ static msg_colour_type _str_to_channel_colour(const string &str)
             ret = MSGCOL_ALTERNATE;
     }
     else
-        ret = msg_colour(str_to_colour(str));
+        ret = msg_colour(col);
 
     return ret;
 }
@@ -2545,7 +2545,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         const int chnl = str_to_channel(subkey);
         const msg_colour_type col  = _str_to_channel_colour(field);
 
-        if (chnl != -1 && col != -1)
+        if (chnl != -1 && col != MSGCOL_NONE)
             channels[chnl] = col;
         else if (chnl == -1)
             fprintf(stderr, "Bad channel -- %s\n", subkey.c_str());
