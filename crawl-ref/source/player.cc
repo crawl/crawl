@@ -3429,6 +3429,7 @@ void level_change(bool skip_attribute_increase)
 
                             gave_message = true;
                         }
+
                         perma_mutate(you.demonic_traits[i].mutation, 1,
                                      "demonic ancestry");
                     }
