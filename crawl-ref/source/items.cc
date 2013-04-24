@@ -2722,13 +2722,13 @@ static bool _interesting_explore_pickup(const item_def& item)
         return true;
     }
 
-    vector<text_pattern> &ignore = Options.explore_stop_pickup_ignore;
-    if (!ignore.empty())
+    vector<text_pattern> &ignores = Options.explore_stop_pickup_ignore;
+    if (!ignores.empty())
     {
         const string name = item.name(DESC_PLAIN);
 
-        for (unsigned int i = 0; i < ignore.size(); i++)
-            if (ignore[i].matches(name))
+        for (unsigned int i = 0; i < ignores.size(); i++)
+            if (ignores[i].matches(name))
                 return false;
     }
 
