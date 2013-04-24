@@ -18,6 +18,35 @@ private:
     coord_def current, topleft, bottomright;
 };
 
+/**
+ * @class random_rectangle_iterator
+ * Iterator over coordinates in a rectangular region in a
+ * random order.  This interator does not favour any given
+ * direction, but is slower than rectangle_iterator.
+ *
+ * When this iterator has returned all elements, it will just
+ * return the top left corner forever.
+ */
+class random_rectangle_iterator : public iterator<forward_iterator_tag,
+                                                  coord_def>
+{
+public:
+    random_rectangle_iterator(const coord_def& corner1,
+                              const coord_def& corner2);
+    explicit random_rectangle_iterator(int x_border_dist,
+                                       int y_border_dist = -1);
+    operator bool() const PURE;
+    coord_def operator *() const PURE;
+    const coord_def* operator->() const PURE;
+
+    void operator ++ ();
+    void operator ++ (int);
+private:
+    coord_def top_left;
+    vector<coord_def> remaining;
+    int current;
+};
+
 class circle_iterator
 {
     const circle_def &circle;
