@@ -2482,7 +2482,15 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
 {
     PlaceInfo place_info;
 
+#if TAG_MAJOR_VERSION == 34
+    int br = unmarshallInt(th);
+    if (br == -1)
+        br = NUM_BRANCHES;
+    ASSERT(br >= 0);
+    place_info.branch      = static_cast<branch_type>(br);
+#else
     place_info.branch      = static_cast<branch_type>(unmarshallInt(th));
+#endif
 
     place_info.num_visits  = unmarshallInt(th);
     place_info.levels_seen = unmarshallInt(th);

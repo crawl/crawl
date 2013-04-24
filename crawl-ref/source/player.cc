@@ -5593,7 +5593,6 @@ void player::init()
     vault_list.clear();
 
     global_info = PlaceInfo();
-    global_info.make_global();
     global_info.assert_validity();
 
     if (m_quiver)
