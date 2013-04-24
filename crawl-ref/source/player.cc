@@ -7184,6 +7184,19 @@ bool player::can_bleed(bool allow_tran) const
     return true;
 }
 
+bool player::can_be_sealed() const
+{
+    // Some mirroring here, monsters cannot be sealed if they are unholy, but
+    if (you.form == TRAN_LICH)
+        return false;
+    return true;
+}
+
+bool player::can_seal_spells()  const
+{
+    return (player_mutation_level(MUT_RUNED_HANDS) > 0);
+}
+
 bool player::mutate(const string &reason)
 {
     ASSERT(!crawl_state.game_is_arena());

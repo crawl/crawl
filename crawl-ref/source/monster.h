@@ -42,6 +42,7 @@ public:
     vector<coord_def> travel_path;
     FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;
+    FixedVector<bool, NUM_MONSTER_SPELL_SLOTS> sealed_spells;
     mon_attitude_type attitude;
     beh_type behaviour;
     unsigned short foe;
@@ -307,6 +308,8 @@ public:
     bool can_safely_mutate() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
+    bool can_be_sealed() const;
+    bool can_seal_spells() const;
     bool mutate(const string &reason);
     bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
