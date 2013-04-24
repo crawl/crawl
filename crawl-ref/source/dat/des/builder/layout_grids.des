@@ -360,3 +360,126 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
   zonify.grid_fill_zones(1, "rock_wall")
 }}
+
+# Builds a complex maze by starting off with a subdivided grid then iteratively linking
+# up rooms until all original cells are connected.
+# TODO: Needs more variation, doors, detreeifying, and per-branch variations.
+NAME:   layout_grid_maze
+DEPTH:  D:5-, Lair, Snake, Dis
+WEIGHT: 8
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+{{
+  if is_validating() then return; end
+
+  layout_type "open"
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  local thin = crawl.coinflip()
+
+  local grid_opts = {
+    guaranteed_divides = 2,
+    subdivide_initial_chance = 100,
+    subdivide_level_multiplier = .99,
+    minimum_size = thin and 3 or 4,
+  }
+  local bounds = padded_bounds(2,10)
+  local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+
+  local groups = {}
+  local count = #grid
+  for i,cell in ipairs(grid) do
+    local group = { cell }
+    cell.group = group
+    groups[group] = group
+  end
+
+  local function mergegroup(a,b)
+    for i,cell in ipairs(b) do
+      cell.group = a
+      table.insert(a,cell)
+    end
+    groups[b] = nil
+    count = count - 1
+  end
+
+  local bail = false
+  local iters = 0
+  -- Cell weighting
+  local function wcell(c)
+    if c.borders_left == nil then c.borders_left = #(c.borders) end
+    return c.borders_left
+  end
+  -- Border weighting
+  local minbord = thin and 2 or 3
+  local function wbord(b)
+    -- Ensure border hasn't already been connected (given a style)
+    -- and also that it's of enough length to actually create a path
+    -- between the rooms
+    return b.style == nil and b.len >= minbord and 10 or 0
+  end
+
+  while not bail do
+    iters = iters + 1
+
+    -- Randomly pick a group
+    local group = util.random_weighted_keys(function(k,v) return v ~= nil and (1000/#(v)) or 0 end, groups)
+    -- Pick a cell from the group
+    local cell = group and util.random_weighted_from(wcell, group)
+    local border = cell and util.random_weighted_from(wbord, cell.borders)
+    if border and border.style == nil and border.with.group ~= cell.group then
+      border.style = "open"
+      border.inverse.style = "open"
+      cell.borders_left = cell.borders_left - 1
+      if border.with.borders_left == nil then border.with.borders_left = #(border.with.borders) end
+      border.with.borders_left = border.with.borders_left - 1
+      mergegroup(group,border.with.group)
+    end
+
+    -- Main exit condition; once we've reduced to a single group
+    if count == 1 or iters > 500 then bail = true end
+  end
+
+  local function renderborderthin(cell,b)
+    -- Only fill bottom and right borders. These borders won't
+    -- exist for cells on the bottom or right of the grid so we
+    -- don't need to worry about them.
+    if b.dir>1 then
+      if b.style ~= "open" then
+        if b.dir==2 and b.x1 == cell.x1 then
+          fill_area { x1 = b.x1-1, y1 = b.y1, x2 = b.x2, y2 = b.y2, fill = 'x' }
+        elseif b.dir==3 and b.y1 == cell.y1 then
+          fill_area { x1 = b.x1, y1 = b.y1-1, x2 = b.x2, y2 = b.y2, fill = 'x' }
+        else
+          fill_area { x1 = b.x1, y1 = b.y1, x2 = b.x2, y2 = b.y2, fill = 'x' }
+        end
+      end
+    end
+  end
+
+  local function renderborderthick(cell,b)
+    if b.style ~= "open" then
+      fill_area { x1 = b.x1, y1 = b.y1, x2 = b.x2, y2 = b.y2, fill = 'x' }
+    end
+  end
+
+  local renderborder = thin and renderborderthin or renderborderthick
+
+  local function rendercell(cell)
+    fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
+    for i,b in ipairs(cell.borders) do
+      renderborder(cell,b)
+    end
+  end
+
+  -- Render everything and see if it works!!
+  for i,area in ipairs(grid) do
+    rendercell(area)
+  end
+
+  zonify.map_fill_zones(_G, 1, 'x')
+
+}}
+MAP
+ENDMAP
