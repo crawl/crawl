@@ -30,7 +30,6 @@ public:
     PlaceInfo();
 
     bool is_global() const;
-    void make_global();
 
     void assert_validity() const;
 
