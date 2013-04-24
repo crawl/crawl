@@ -1508,6 +1508,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         update_vision_range();
         break;
 
+    case MUT_DEMONIC_GUARDIAN:
+        if (you.religion == GOD_OKAWARU)
+        {
+            mpr("Your demonic guardian will not assist you as long as you "
+                "worship Okawaru.", MSGCH_MUTATION);
+        }
+        break;
+
     default:
         break;
     }
