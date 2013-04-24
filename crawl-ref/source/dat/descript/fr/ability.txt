@@ -120,6 +120,23 @@ Turn Visible
 
 Redevenir visible à nouveau.
 %%%%
+Stop Flying
+
+Arrêter de voler
+%%%%
+Evoke Fog
+
+Relâches un large et épais brouillard pour diminuer la vision.
+%%%%
+Evoke Teleport Control
+
+Gain de la capacité de contrôler la prochaine translocation - soit en
+sélectionnant une cible approximative pour une téléportation, soit en
+sélectionnant une direction pour un saut éclair. Faites attention au fait que
+les translocations contrôlées peuvent vous contaminer avec de l'énergie
+magique, et que les téléportations contrôlées vous prendront plus de temps à
+incanter que les non-contrôlées.
+%%%%
 End Transformation
 
 Revenir à votre forme normale, avec un léger retard.
@@ -448,6 +465,10 @@ Recall Orcish Followers
 Rappelle autour de vous vos serviteurs orcs, où qu'ils soient actuellement dans
 le donjon.
 %%%%
+Stop Recall
+
+Arrêter de rappeler vos adeptes.
+%%%%
 Sunlight
 
 Appelez la lumière du jour sur une petite portion du donjon. Les monstres
@@ -536,6 +557,12 @@ Sacrifie une partie d'une de vos compétences pour en améliorer une autre.
 End Transfer Knowledge
 
 Abandon d'un transfert de compétence en cours.
+%%%%
+Memorise spell
+
+Vous apprenez directement un sort destructeur offert par Vehumet. L'offre
+expirera après un court moment. Consulter l'écran de Religion (^) pour voir
+quel sort a été offert.
 %%%%
 Renounce Religion
 

@@ -100,6 +100,10 @@ tutorial1 door
 Pour ouvrir les portes fermées, marchez dans sa direction. Pour fermer une
 porte ouverte, pressez <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
 %%%%
+tutorial1 close_door
+
+Pour fermer une porte ouverte, appuyez sur <input>$cmd[CMD_CLOSE_DOOR]</input>.
+%%%%
 tutorial1 water
 
 Notez que vous pouvez vous déplacer en eau peu profonde mais pas en eau
@@ -296,7 +300,7 @@ tutorial2 exit
 %%%%
 tutorial3 start
 
-Cette porte sur les objets, et comment les utiliser.
+Cette leçon porte sur les objets, et comment les utiliser.
 %%%%
 tutorial3 armour
 
@@ -331,6 +335,103 @@ tutorial3 gold
 
 L'or peut être dépensé dans les magasins. Il ne pèse rien, et ne peut être
 abandonné.
+%%%%
+tutorial3 shop
+
+Les magasins offrent une variété d'objets, mais ils achètent les objets à
+personne.
+%%%%
+tutorial3 optional_battle
+
+Attention, ce chemin mène à <lightred>un combat difficile</lightred>. Vous
+devez choisir d'utiliser ce que vous avez appris jusqu'à présent dans un
+combat, ou essayer d'atteindre une autre sortie sur cette île. Dans tous les
+cas, cela peut être une bonne idée de faire des achats, si vous n'en avez pas
+encore fait.
+%%%%
+tutorial3 tutorial_end
+
+Bien joué! Pour sortir du tutoriel, descendez simplement ces escaliers.
+%%%%
+tutorial3 exit
+
+:nowrap
+<yellow>Commandes avec les objets</yellow>
+  <w>$cmd[CMD_PICKUP]</w>  prendre un objet
+  <w>$cmd[CMD_WEAR_ARMOUR]</w>  mettre une partie d'armure
+  <w>$cmd[CMD_READ]</w>  lire un parchemin
+  <w>$cmd[CMD_WIELD_WEAPON]</w>  équiper une arme
+  <w>$cmd[CMD_QUAFF]</w>  boire une potion
+  <w>$cmd[CMD_EVOKE]</w>  utiliser un bâton
+  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  mettre un bijou
+  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  enlever un bijou
+  <w>$cmd[CMD_DROP]</w>  lâcher un objet
+
+  <w></w>Les commandes d'utilisation sont aussi disponibles depuis le menu de l'inventaire (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), autant que les descriptions des objets.
+  <localtiles><w></w>Et bien sûr, <white>les clics de souris</white> marchent également.
+</localtiles>
+
+<yellow>Autres</yellow>
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> Accéder à la commande d'aide
+  <w>$cmd[CMD_RESISTS_SCREEN]</w>  Afficher la vue d'ensemble du personnage
+  <w>$cmd[CMD_USE_ABILITY]</w>  Utilisé une habilité
+  <w>$cmd[CMD_EXPLORE]</w>  Explorer automatiquement
+  <w>$cmd[CMD_SEARCH_STASHES]</w>  Chercher les objets/caractéristiques déjà vues
+
+  <localtiles><w></w>Plusieurs de ces commandes peuvent aussi être executées en cliquant dans le <w>Tableau de Commandes</w>.
+</localtiles>
+
+                       <cyan>Appuyez <w>n'importe quelle touche</w> pour sortir de cet écran...</cyan>
+%%%%
+tutorial4 start
+
+Cette partie vous explique comment un sort s'apprend et se lance.
+%%%%
+tutorial4 mephitic_cloud
+
+Nuage Mephitic est un sort de niveau 3, donc vous ne pouvez pas encore le
+mémoriser. Buvez cette potion d'expérience (with
+<input>$cmd[CMD_QUAFF]</input><localtiles> or
+<input>mouseclick</input></localtiles>) pour gagner un niveau, puis mémoriser
+le sort!
+
+Au niveau 3, vous serez en mesure d'augmenter une de vos caractéristiques -
+choisir <input>I<input>ntelligence aidera à lancer des sorts plus efficacement.
+%%%%
+tutorial4 aiming_clouds
+
+Le Nuage Mephitic couvre une zone de fumées nocives quand il est lancé, et vous
+serez capable de voir la zone affectée quand vous la visez. Essayez d'attraper
+plusieurs ennemis dans un seul nuage pour être plus efficace avec votre magie.
+%%%%
+tutorial4 spell_hunger
+
+Lancer des sorts vous rend réellement affamé. La faim liée au sort est plus
+grande pour des sorts plus durs et peut être réduite par une intelligence haute
+et en entraînant l'habilité de lancer des sorts.
+%%%%
+tutorial4 forget_spell
+
+Gagner un niveau d'expérience et faire grimper l'habilité à lancer des sorts
+vous donne des emplacements de sorts. Vous pouvez aussi <w>oublier un sort
+mémorisé</w> afin de faire une place pour un nouveau sort. La manière la plus
+simple pour faire cela est avec un parchemin d'amnésie. Lisez simplement le
+parchemin (avec <input>$cmd[CMD_READ]</input><localtiles> ou en
+<input>cliquant</input> dessus</localtiles>), et ensuite selectionnez le sort
+que vous souhaitez oublier.
+%%%%
+tutorial4 memorise2
+
+A nouveau, mémorisez un nouveau sort avec
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> ou en
+<input>cliquant</input> sur le tableau de mémorisation et sélectionnez le titre
+du sort</localtiles>. Et maintenant montez-vous une armée de morts-vivants!
+%%%%
+tutorial4 displace_allies
+
+Aviez-vous noter que vous pouvez échanger vos positions avec vos alliés en vous
+déplaçant dans leur direction? Parmi d'autres choses, déplacer une créature
+alliée peut être un bon moyen d'échapper un combat.
 %%%%
 tutorial5 start
 

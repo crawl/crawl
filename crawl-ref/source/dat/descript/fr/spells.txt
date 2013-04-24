@@ -770,6 +770,10 @@ Throw Frost spell
 
 Ce sort projette un petit missile de froid.
 %%%%
+Thunderbolt spell
+
+Ce sort crée un arc électrique.
+%%%%
 Tornado spell
 
 Ce sort transforme l'air ambiant autour du sorcier en un puissant tourbillon,
