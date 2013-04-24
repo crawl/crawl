@@ -55,6 +55,11 @@ Azrael
 
 Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
 %%%%
+Blork the orc
+
+Un orc particulièrement gros et moche. Il semble avoir récupéré une paire de
+bretelles irisées de quelque part. Ça ne l'arrange pas.
+%%%%
 Boris
 
 Une ancienne et puissante liche. Comme toutes liches, Boris est immortel et
@@ -165,6 +170,25 @@ Frederick
 
 Un combattant-magicien svelte qui porte un monocle cerclé d'or et cherche un
 adversaire approprié et de valeur. Vous ne faites surement pas l'affaire.
+%%%%
+Fannar
+
+Un sorcier elfe au cœur de pierre, drapé dans ses robes de haut officier. Il se
+murmure sinistrement à lui même en rôdant dans le donjon, laissant des cristaux
+de glace dans l'air derrière lui.
+
+Dans son long passé, la sagesse de Fannar et son talent précoce avec la magie
+de glace lui a fait gagner la place très convoitée de magistrat le plaçant à la
+charge de renforcer la loi à travers les Halls Elfiques. De tout les comptes,
+il fut connu pour être bienveillant, juste et passioné sur le fait de garder
+les elfes en dehors de la corruption et du crime. Même si ses proches
+commençaient à se tremper avec la nécromancie et la magie démoniaque.
+
+Au long des siècle de son mandant, la dévotion de Fannar pour la justice l'a
+mené à la paranoïa et au despotisme. Même ses partisans les plus proches
+commencent à chuchoter que son pouvoir magique commence à devenir
+auto-destructif. Fannar essaye cependant d'empêcher les elfes de sombrer dans
+le mal, refusant ou étant incapable de constater qu'il a raté il y a longtemps.
 %%%%
 Gastronok
 
@@ -452,6 +476,30 @@ Xtahua
 
 Un ancien dragon puissant.
 %%%%
+the Serpent of Hell gehenna
+
+Un gros dragon rouge brillant, brulant des flammes de l'enfer. Il semble être
+possédé par l'essence même de Gehenna et ses feux éternels.
+%%%%
+the Serpent of Hell cocytus
+
+Vous pouvez difficilement bouger dans ce froid atroce qui vous glace le sang.
+Ça s'émane de ce dragon blanc et massif. Vos yeux souffrent de la faible
+température, et des éclats de lueur de la glace qui recouvre cette bête
+démoniaque.
+%%%%
+the Serpent of Hell dis
+
+Une bête imposante avec une armurerie de lames en guise de dents. Chaque
+écaille est un bouclier avec un rebord tranchant. Elle vous regarde avec une
+paire de sphères chromées sans traits.
+%%%%
+the Serpent of Hell tartarus
+
+Une paire de yeux magenta épouvantables se tiennent dans l'obscurité devant
+vous. Vous pouvez à peine distinguer la silhouette du vaste dragon sinueux qui
+s'y tient. Sa malveillance envers vous est palpable.
+%%%%
 acid blob
 
 Une masse de chair purulente d'acide mortel.
@@ -593,6 +641,12 @@ bone dragon
 Une énorme abomination mort-vivante, reconstituée d'os cassés de nombreux
 dragons par de la puissante magie nécromantique. Cette créature se distingue
 des autres dragons de par son absence de souffle.
+%%%%
+bog body
+
+Une créature mort-vivante conservée par les eaux saumâtres d'une tourbière.
+Même si elle a été réanimée par quelque magie méconnue, cette magie ne peut
+l'empêcher de se décomposer.
 %%%%
 boring beetle
 
@@ -1027,6 +1081,10 @@ eye of draining
 
 Une horreur flottante qui se sert dans votre mana.
 %%%%
+feature mimic
+
+Une bestiole vicieuse qui se fait passer pour un objet quelconque du donjon.
+%%%%
 felid
 
 Une créature féline qui a reçu la sentience par des moyens magiques. Elle
@@ -1071,6 +1129,12 @@ flying skull
 
 Un crâne mort-vivant maintenu en l'air et voletant rapidement sur de la magie
 impure. Il émet régulièrement des cris à vous glacer le sang.
+%%%%
+freed slave
+
+Un humain qui vient de se faire libérer de son asservissement magique. Il
+essaye de se tenir fièrement devant vous, en dépit de sa crainte persistante et
+de son apparence négligée.
 %%%%
 freezing wraith
 
@@ -1122,6 +1186,12 @@ giant amoeba
 
 Un organisme massif et palpitant qui utilise des épais pseudopodes de
 protoplasme pour suinter dans tout le donjon à la recherche de nourriture.
+%%%%
+worker ant
+
+Un insecte sans ailes avec des mandibules acérées capable d'injecter un poison
+mortel. C'est une ouvrière, et sa tâche est de récupérer de la nourriture -
+n'importe quel être vivant qu'elle rencontre est un repas potentiel.
 %%%%
 bat
 
@@ -1435,6 +1505,14 @@ l'hydre, n'est pas vraiment ce que vous désirez sauf si votre lame est assez
 chaude pour cautériser la plaie. Même les griffes d'un troll sont suffisantes
 pour arracher une tête d'hydre.
 %%%%
+hyperactive ballistomycete
+
+Ce ballistomycete est dans un état de surproduction. Il est complètement ravagé
+par l'explosion des spores, détruisant tout autour de lui, et va en fin de
+compte mourir de ses propres spores.
+
+Prenez vos distances!
+%%%%
 ice bat
 
 Un mort vivant à l'aspect d'une chauve souris, composé de glace.
@@ -1469,6 +1547,12 @@ iguana
 Un lézard vert avec de puissantes mâchoires et des dents aiguisées, recherché
 pour sa chair.
 %%%%
+inept feature mimic
+
+Un prédateur se faisant passer pour un objet quelconque du donjon. Celui-là est
+moins dangereux que la plupart des mimiques, mais il peut toujours dévorer des
+gens comme vous.
+%%%%
 inept item mimic
 
 Apparemment un objet abandonné, mais en réalité, une bête déguisée.
@@ -1495,6 +1579,12 @@ iron elemental
 Un esprit rare et puissant du plan élémentaire de la terre, il existe en ce
 monde sous la forme d'une immense masse de fer.
 %%%%
+the iron giant
+
+Gigantesque, maladroit et particulièrement lourd, ce monolithe rouillé peut
+délivrer de sacrés coups de poings. C'est très possiblement le plus grand géant
+que vous ayez jamais vu.
+%%%%
 iron golem
 
 Une grande statue de métal lourde et très solide, dont le pouvoir de locomotion
@@ -1508,6 +1598,11 @@ iron troll
 
 Un énorme troll aux membres puissant et recouvert de plaques qui ressemblent
 légèrement à du fer rouillé, particulièrement à cause de leur dureté.
+%%%%
+item mimic
+
+Semble être un objet abandonné, en fait c'est une vicieuse petite bête
+déguisée.
 %%%%
 jackal
 
@@ -1626,6 +1721,12 @@ mad acolyte of Lugonu
 Un disciple dément de Lugonu. Les années passées dans les abysses on eu raison
 de son faible esprit.
 %%%%
+mad wizard
+
+Délirer sur comment les rats pourraient dominer le monde n'est pas un signe
+d'une bonne santé mentale. Vous feriez mieux de prendre vos distances. D'autant
+que ce sont les écureuils qui vont gagner, c'est moi qui vous le dit!
+%%%%
 manticore
 
 Un croisement hideux, comprenant les caractéristiques d'un humain et d'un lion
@@ -1682,6 +1783,14 @@ moth
 
 Même si cette phalène est inhabituellement grosse et agressive, elle est plutôt
 banale comparée aux autres papillons de nuit trouvables dans le donjon.
+%%%%
+moth of suppression
+
+Une phalène à l'air graisseuse et malade, voletant tristement dans l'air.
+L'atmosphère qui l'entoure semble chatoyer avec une brume grise et
+poussiéreuse. Vues comme une nuisance, ces créatures furent chassée de la
+surface à cause de leur effet inhibiteur naturel sur les objets magiques à leur
+proximité.
 %%%%
 moth of wrath
 
@@ -1803,6 +1912,15 @@ Orb Guardian
 Une énorme créature mauve, brillante avec quatre membres et des sens accrus,
 créée par l'Orbe pour veiller sur elle-même. Il défendra l'Orbe avec violence
 et méticulosité.
+%%%%
+orb of destruction
+
+Ce globe de magie pure est un projectile conjuré qui cible une victime
+désignée, bien qu'elle ait une inertie massive. Quelqu'un d'agile et
+intelligent se dégagerait de son chemin, la laissant endommager ses alentours
+ou faire des cercles. Soyez sûrs de vous tenir à plus de deux pas de cette
+orbe, car elle n'est pas affectées par les mouvements infimes, y compris ceux
+de la capacité à esquiver.
 %%%%
 orb of fire
 
@@ -1975,6 +2093,19 @@ Un oiseau charognard opportuniste qui est un peu proactif dans la production de
 charognes. Il a un attrait particulièrement malsain pour les globes oculaires
 et tout ce qui y ressemble, comme les oignons marinés, les noix et les olives.
 %%%%
+ravenous feature mimic
+
+Un prédateur tentaculaire et mortellement venimeux avec le pouvoir de se
+métamorphoser et de se faire passer pour une partie du donjon ordinaire, de
+sorte à attraper les passants ignorants et de les broyer avec son emprise
+mortelle.
+%%%%
+ravenous item mimic
+
+Un prédateur tentaculaire et mortellement venimeux avec le pouvoir de se
+métamorphoser en un petit objet. En dépit de sa petite taille, ce n'est pas une
+créature vivante et ses tentacules sont plus dures que l'acier.
+%%%%
 reaper
 
 Une créature squelettique armée d'une faux géante.
@@ -2006,6 +2137,28 @@ Un large vers qui se déplace dans la roche sans encombre aucune.
 rotten bat
 
 Je suppose que cette chauve-souris à largement dépasser sa date de péremption.
+%%%%
+rotting devil
+
+Une misérable créature hideuse couverte de plaies purulentes, affecté par
+quelque maladie horrible. Des morceaux tombent petit à petit de son corps
+tandis qu'il se traîne vers sa prochaine victime.
+
+{{
+    if you.can_smell() then
+        if you.saprovorous() == 3 then
+            return "Il sent drôlement bon."
+        else
+            return "Il empeste."
+        end
+    end
+}}
+%%%%
+rotting hulk
+
+Un cadavre réanimé, traînant des pieds. Piégé par un état de transe maléfique
+dans une parodie grotesque de la vie, ce corps infecté et en état de
+décomposition titube, cherchant à punir les vivants.
 %%%%
 the royal jelly
 
@@ -2250,6 +2403,13 @@ spriggan rider
 Montés sur des lucioles géantes, ces cavaliers font en sorte que personne n'ose
 s'immiscer dans les forêts sprigganes et les cairns ne servent qu'a s'en aller.
 %%%%
+statue
+
+Aux premiers abords, ce morceau de granit sculpté à l'air inerte. La lueur
+rouge provenant de ses yeux, laissent cependant penser que ce n'est pas de la
+simple pierre. Bien qu'elle est enracinée dans sa base, vous êtes certain
+qu'elle peut quand même bouger.
+%%%%
 steam dragon
 
 Un dragon gris et plutôt petit, avec une peau écailleuse d'aspect résiliente et
@@ -2260,6 +2420,10 @@ stone giant
 Un humanoïde gigantesque avec une peau grise aussi dure que la pierre. Il porte
 des rochers et il est parfaitement capable de les lancer sur de longues
 distances.
+%%%%
+stone golem
+
+Une énorme statue animée par magie et faite d'un basalte incroyablement dur.
 %%%%
 storm dragon
 
@@ -2277,6 +2441,21 @@ swamp dragon
 Un gros dragon visqueux, sa peau noueuse est couverte de saletés marécageuses.
 Du gaz nocif s'épand de son museau.
 %%%%
+swamp drake
+
+Un petit dragon visqueux, couvert de saletées marécageuse.
+
+{{
+    if you.can_smell() then
+        return "Il pue horriblement."
+    end
+}}
+%%%%
+swamp worm
+
+Un énorme ver visqueux, expert en la matière de nager au travers des marécages
+fétides.
+%%%%
 tarantella
 
 Une petite araignée mais très redoutée, au poison redoutable causant même aux
@@ -2290,6 +2469,11 @@ blesse toute la créature.
 tentacled monstrosity
 
 Une masse distordante de tentacules, le tout recouvert d'un mucus putride.
+%%%%
+terrified wizard
+
+Ce gars s'est fait prendre par les haïsseurs de la magie, et il va se faire
+sacrifier sur l'autel de Trog.
 %%%%
 titan
 
@@ -2413,6 +2597,21 @@ war dog
 Un énorme chien vicieux, entraîné à tuer. Son cou est protégé par un collier à
 pointe massif.
 %%%%
+warg
+
+Un loup particulièrement gros et à l'air mauvais, couramment trouvé en
+compagnie des orcs.
+%%%%
+water elemental
+
+Un esprit du plan élémentaire de l'eau, il existe en ce monde sous la forme
+d'une étendue d'eau.
+%%%%
+water moccasin
+
+Un serpent brun extrêmement venimeux. Il vit habituellement près de l'eau et
+est un nageur accompli.
+%%%%
 white draconian
 
 Un humanoïde couvert d'écailles avec une queue reptilienne et de petites ailes.
@@ -2426,17 +2625,138 @@ wight
 Un ancien guerrier, maintenu dans ce perpétuel état de non-vie par son désir de
 mourir au combat.
 %%%%
+wizard
+
+Une personne plutôt farfelue, s'essayant dans toutes sortes d'arcanités.
+%%%%
 wolf
 
 Un canidé fort et sauvage, avec des dents tranchantes et un gros appétit.
+%%%%
+wolf spider
+
+Une araignée chasseuse poilue et très rapide avec des mandibules vicieuses,
+errant dans le donjon en quête de proie qu'elle tue de son venin mortel.
+%%%%
+worm
+
+Un annélide géant, luisant de bave et possédant des dents inhabituellement
+larges.
+%%%%
+wraith
+
+Cet esprit mort-vivant apparaît sous forme d'un nuage de brume noire entourant
+une forme squelettique incorporelle. Ses yeux brûlent d'une malveillance
+malsaine et d'une faim d'essence vitale, dont il se nourrit.
+%%%%
+wyvern
+
+Un créature similaire au dragon avec une queue longue et pointue. Cependant
+plus petit et moins redoutable que les vrais dragons, les vouivres sont malgré
+tout un ennemi à ne pas négliger.
+%%%%
+yak
+
+Le yak des donjons commun, recouvert de poils de yak hirsutes et portant une
+vilaine paire de cornes de yak.
+%%%%
+yaktaur
+
+Un hybride avec le torse d'un homme robuste sur le corps d'un yak. Même s'ils
+excellent au combat à distance, ils sont aussi des ennemis redoutables au
+combat rapproché.
+%%%%
+yaktaur captain
+
+Un yaktaure exceptionnellement fort et brutal, il est capable de donner des
+ordres à ses congénères plus faibles pour appliquer sa domination.
 %%%%
 yellow draconian
 
 Un humanoïde couvert d'écailles avec une queue reptilienne et de petites ailes.
 %%%%
+yellow wasp
+
+Une guêpe géante couverte d'épaisses plaques d'armures chitineuses jaunes. Son
+venin mortel peut paralyser la plupart des êtres.
+%%%%
+ynoxinul
+
+Un démon ailé couvert d'écailles métalliques. Il a une légion de sbires
+diablotins à son commandement.
+%%%%
 zombie
 
 Un grand cadavre animé de la non-vie par la nécromancie.
+%%%%
+test spawner
+
+(Si vous voyez cela en dehors du mode mage ou de l'arène, c'est que c'est un
+bug.)
+
+Peut importe ce que c'est, c'est capable de générer des monstres à l'infini en
+lançant le sort "créatures de l'ombre", et il est pratiquement indestructible.
+
+Pour le détruire, il faut faire descendre le pilier de l’ascenseur central,
+puis envoyer des roquettes dans le trou qui donne sur son cerveau alors exposé
+quand le pilier atteint une hauteur appropriée. Vous pouvez expédier d'autres
+roquettes en sautant.
+
+Oh attendez, je me suis trompé de jeu.
+%%%%
+sensed monster
+
+Grâce à vos antennes, vous savez qu'il y a une créature dans le coin,
+cependant, vous n'avez aucune idée de ce que ça peut être.
+%%%%
+trivial sensed monster
+
+Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature par ici, et
+qu'il ne devrait pas vous causer trop de soucis.
+%%%%
+easy sensed monster
+
+Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature dans les
+environs, et que vous devriez être capable de la vaincre sans trop vous
+risquer.
+%%%%
+tough sensed monster
+
+Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature aux alentours,
+et qu'elle est plutôt dangereuse.
+%%%%
+nasty sensed monster
+
+Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature pas loin, et
+que vous devriez avoir peur. Très peur.
+%%%%
+friendly sensed monster
+
+Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature par là, et
+qu'elle fait partie de vos alliés.
+%%%%
+Cloud Mage
+
+Cet étrange magicien maîtrise parfaitement les nuages, et ses gestes mystiques
+sont aussi habiles que préssentis.
+%%%%
+Hellbinder
+
+Un lanceur de sorts très puissant, auréolé d'énergie arcane, et marmonnant les
+incantations les plus profanes que vous avez jamais entendues.
+%%%%
+Statue of Wucad Mu
+
+Cette statue, faite d'un beau cristal orange vitreux, représente un mystique
+connu sous le nom de Wucad Mu, qui maîtrisa la matière de l'esprit. Prenez
+garde aux pouvoirs de cette statue, vous n'avez aucune chance au combat mental
+contre elle.
+
+Cette statue est très fragile; elle se désintégrera d'un coup.
+%%%%
+air elementalist statue
+
+Une statue délicate d'un tengu planant dans les airs. Il a l'air incorporel.
 %%%%
 ancient champion
 
@@ -2447,14 +2767,82 @@ antique lich
 
 Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
 %%%%
+apple tree
+
+Cet arbre porte des fruits qui pourraient nourrir un tigre affamé. Et ce n'est
+pas faux - vous êtes donc au milieu de la chaîne alimentaire.
+%%%%
+bittermelon vine
+
+Une plante ordinaire, faisant pousser des fruits à peine comestibles. Il sont
+nutritifs, mais absolument pas bon au goût.
+%%%%
+black sheep
+
+À première vue, ce mouton a simplement une pigmentation différente, mais vous
+n'êtes pas aussi facilement dupé par son apparence. Avec la chance que vous
+avez, c'est un mouton qui se cache sous une peau de loup _puis_ sous une autre
+peau de mouton pour mieux vous tromper.
+
+Ou peut-être que c'est juste un mouton après tout.
+%%%%
+charred statue
+
+On dirait que cette statue a été imprégnée de magie de feu, lui permettant de
+vous envoyer des conjurations basées sur le feu. Heureusement, elle à l'air
+d'avoir été faite maladroitement et sa carbonisation prouve qu'elle à du mal à
+se servir de sa magie.
+%%%%
 Cigotuvi's Monster
 
 Cette assemblage terrifiant semble avoir été construit a partir de morceaux de
 corps de toutes les créatures monstrueuses imaginables.
 %%%%
+chilling statue
+
+Cette statue grotesque, taillée dans de la glace bleue, refroidit ses environs.
+C'est comme si elle absorbait la chaleur de son environnement.
+%%%%
+conjurer statue
+
+Cette statue semble exploiter les plus puissantes conjurations pures jamais
+élaborées par Iskenderun. Cela n'a pas l'air d'être son genre, vu que la
+légende la décrit comme une félide femelle, mais, si j'étais vous, je ferais
+plutôt attention aux orbes de magie qui volent vers vous qu'à l'apparence de
+cette statue.
+%%%%
+crystal guardian
+
+Ce golem de cristal est ensorcellé de sorte à ce qu'il soit immunisé à à peu
+près toute sorte de magie, et il peut tirer de puissants rayons de feu ou de
+glace sur les intrus.
+%%%%
+decayed bog body
+
+Une figure mort-vivante préservée par les eaux saumâtres des marais. Celle-ci
+semble s'être pas mal décomposée et elle à l'air faible.
+%%%%
 deformed humanoid
 
 La pauvre créature semble hideusement déformée.
+%%%%
+demonic plant
+
+Comme les démons sont formés dans une parodie d'être vivants, cette ... chose
+... semble être la parodie d'une plante. Les couleurs ne vont pas, et les
+plantes normales n'ont pas d'appendices mystérieux ni de tentacules qui se
+tordent. Heureusement, celle-là semble être inoffensive, mais avec les démons,
+on ne sait jamais.
+%%%%
+earth elementalist statue
+
+Une statue simple d'un nain portant une pioche. Elle à l'air incroyablement
+lourde.
+%%%%
+fire elementalist statue
+
+Une statue richement travaillée d'un orc brandissant une torche, taillée dans
+le basalte noir. L'air autour d'elle semble trembler.
 %%%%
 firespitter statue
 
@@ -2465,6 +2853,11 @@ lueur ardente dans ses yeux vides.
 flesh golem
 
 Un monticule animé de chair difforme.
+%%%%
+frost-covered statue
+
+Une statue maladroitement faite d'un mage. Sa magie continue de fuir, vous
+laissant savoir de quel genre de sorts s'attendre: ceux qui sont froids.
 %%%%
 glowing angel
 
@@ -2477,6 +2870,13 @@ gourd plant
 
 Cette vigne robuste abrite des fruits nutritifs, mais n'ayant presque aucun
 goût.
+%%%%
+grape vine
+
+Sans jardinier pour lui fournir quelque chose pour se caler, et n'étant pas
+assez chanceuse pour que ses pousses tombent près de quelque chose sur lequel
+grimper, cette vigne est pourtant toujours remarquablement difficile à
+franchir.
 %%%%
 grey elf
 
@@ -2501,6 +2901,12 @@ hungry kobold
 
 Ce kobold semble énervé du fait d'avoir été interrompu durant son repas.
 %%%%
+lasher statue
+
+Cette statue représente un esclavagiste barbare avec un fouet barbelé. Il
+semble qu'il arrive à bouger son bras armé. Préparez-vous à vous faire
+flageller...
+%%%%
 malarious mermaid
 
 Une jeune femme avec une queue de poisson en guise de jambes. Elle à l'air
@@ -2513,15 +2919,31 @@ surface. Après des années de guerre avec les orcs, plus grands mais autrement
 similaires, les nains des montagnes furent conquis et déportés de leurs terres.
 Celui-ci à été importé des côtes étrangères.
 %%%%
+musa plant
+
+Cette plante broussailleuse peut faire pousser des bananes. À moins que ce soit
+des banananes? Ou des bananananes? Enfin bref ces machins jaunes et tordus.
+%%%%
 oklob plant annihilator
 
 Il pourrait sembler inconcevable qu'une simple plante puisse atteindre la
 sensibilité et l'usabilité de la magie, mais c'est ce que vous voyez ici.
 Quelle est cette sorcellerie ?
 %%%%
+oklob sapling priest
+
+Cette jeune plante oklob semble marmonner quelques oraisons... euh, quoi?!?
+%%%%
 orc berserker
 
 Un ogre résistant, fort et surtout particulièrement énervé.
+%%%%
+petrified plant
+
+Quelque chose à transformé ces plantes ordinaires en pierre. Il est préférable
+de ne pas s'attarder ici. Si la chose qui a pétrifié ces plantes vous attrape,
+nous serions alors coincés avec une statue aussi moche que vous pour des
+années.
 %%%%
 pristine statue
 
@@ -2530,17 +2952,114 @@ point de tirer une flèche, avec un carquois plein attaché à sa hanche. Ces
 flèches sculptées individuellement semblent presque comme si on pouvait les
 prendre une par une et les utiliser avec un vrai arc.
 %%%%
+sacrificial human
+
+Au vu de cette chose, elle devait être sacrifiée dans quelque rituel
+d'invocation de démon.
+%%%%
 sickly siren
 
 Une jeune femme avec une queue de poisson en guise de jambes. Elle à l'air
 malade mais est toujours capable de charmer son public.
 %%%%
+skeletal archer
+
+Depuis quand il faut avoir de la chair pour pouvoir être un maître archer? Ces
+compagnons squelettiques peuvent vous transformer en un hérisson sanguinolent
+sans encombre. Les êtres pleins de viande comme vous ne sont bons qu'a fournir
+des tendons pour faire de nouvelles cordes à arc.
+%%%%
+spooky statue
+
+Vous sentez une présence fantomatique autour de cette statue, et elle n'est pas
+des plus amicales.
+%%%%
+spriggan necromancer
+
+Faire lever les morts, puis courir derrière eux... ces petits tours commencent
+à devenir ennuyeux.
+%%%%
+spriggan shepherd
+
+Étant incapable de digérer la viande, les spriggans on besoin de beaucoup de
+lait pour tenir un régime sain. Ces gars gardent les animaux des prédateurs et
+des vandales comme vous, brandissant une canne courbée qui à l'air d'être un
+bon outil pour vous apprendre le respect.
+%%%%
 strange machine
 
 Une machine scintillante en argent.
+%%%%
+strawberry plant
+
+Les radiations qui on rendu les cafards et les araignées de la taille d'un
+petit chien, n'ont pas épargné ce modeste framboisier non plus. Heureusement,
+même de cette taille, il semble être inoffensif.
 %%%%
 tengu aerator
 
 This particularly ferocious tengu is well on its way towards mastery of air
 magic.
+%%%%
+water elementalist statue
+
+Une lisse statue charmante d'une belle sirène se baignant dans une fontaine,
+elle est taillée dans du travertin d'un rose pâle et crémeux. Elle étincelle
+doucement à la lumière, comme si elle était aspergée d'eau.
+%%%%
+young spriggan druid
+
+Un jeune membre de l'ordre des spriggans jurés à protéger la nature. Tout en
+étant moins dangereux que ses aînés, celui-là est parfaitement capable de
+s'occuper des intrus comme vous.
+
+{{
+    if you.god() == "Fedhas" then
+        return "Ces druides pourris ne s'occupent que des animaux"
+               "au lieu de s'occuper correctement des plantes"
+               "comme Fedhas l'ordonne."
+    end
+}}
+%%%%
+vampire warrior
+
+Ce vampire, redoutable au combat, utilise la magie uniquement pour s'améliorer
+lui-même, préférant le combat au corps à corps pour les intrus agaçants.
+%%%%
+vine covered stone golem
+
+Tout en étant fait d'une vielle pierre ordinaire, couvert de mousse et de
+lierre, ce golem à toujours besoin d'être respecté. Il est toujours aussi dur
+que la pierre après tout, et son poids peut causer des dégâts considérables
+s'il est concentré sur un coup.
+%%%%
+warrior statue
+
+Cette statue montre un guerrier bourru, portant une vilaine épée à deux mains.
+D'autant qu'il paraît capable de bouger ses bras, se tenir à distance semble
+être le seul moyen de garder vos organes vitaux en bon état.
+%%%%
+withered plant
+
+Cette plante à perdu la guerre contre les influences drainantes, et même si sa
+forme physique reste intacte, son corps sans vie reste ici, indécomposé, tant
+que les petites créatures qui voudraient s'en nourrir naturellement préféreront
+s'en écarter. Et on dirait que cette plante est morte il y a des {{ if
+you.branch() == "Crypt" or you.branch() == "Tomb" then return "siècles"; else
+return "années"; end }} .
+%%%%
+wizard statue
+
+Dans ces terres de magie, il serait insensé de croire qu'une statue d'un
+magicien serait un morceau de pierre inerte. Les mains de cette statue et son
+bâton n'ont que très peu de poussière comparé au reste du corps, ce qui laisse
+penser qu'elle est capable de faire des gestes magiques. Le piège est évident
+mais s'en occuper l'est beaucoup moins.
+%%%%
+zot statue
+
+Cette statue complètement bizarre, taillée dans une simple bout de gabbro noir,
+scintille de petits cristaux. Il est impossible de dire si cette statue devait
+représenter une créature ou une personne, ou alors si elle est totalement
+abstraite. Une seule chose est certaine: elle est profondément dérangeante.
 %%%%

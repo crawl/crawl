@@ -972,6 +972,10 @@ potion of invisibility
 
 Une potion qui vous cache de la vue des autres.
 %%%%
+potion of flight
+
+Une potion qui confère une grande flottabilité à celui qui la boit.
+%%%%
 potion of magic
 
 Une potion précieuse qui accorde à une personne une infusion d'énergie magique.
@@ -1083,6 +1087,12 @@ Cet puissant anneau peut être activé pour cacher son porteur de la vue des
 autres, mais augmente grandement la vitesse de son métabolisme en faisant
 ainsi.
 %%%%
+ring of flight
+
+Cet anneau permet son porteur de voler. Le pouvoir de l'anneau ne peut pas être
+utilisé en vol, donc c'est peu conseillé pour les longs trajets au-dessus d'un
+liquide mortel.
+%%%%
 ring of life protection
 
 Cet anneau bénit protège la force vitale de son porteur contre l'énergie
@@ -1188,6 +1198,10 @@ rod of striking
 
 Ce sceptre permet à son possesseur de frapper ses ennemis à distance avec des
 projectiles d’énergie.
+%%%%
+rod of the swarm
+
+Cette baguette permet à son porteur d'invoquer un essai d'insectes.
 %%%%
 rod of venom
 
@@ -1714,7 +1728,10 @@ ne ratent jamais.
 %%%%
 wand of paralysis
 
-Un outil magique qui peut immobiliser une créature.
+Un outil magique qui peut immobiliser une créature, incapable de bouger
+n'importe lequel de ses membres. Une créature paralysée peut juste respirer,
+réfléchir, et observer d'un air impuissant comme il tombe dans la lave en
+dessous ou vous sortez sa misère avec votre dague.
 %%%%
 wand of polymorph
 
