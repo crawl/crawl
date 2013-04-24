@@ -1958,6 +1958,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 else
                     count_action(CACT_THROW, item.sub_type | (OBJ_WEAPONS << 16));
         }
+		
+		if (you.duration[DUR_FINESSE])
+        {
+            ASSERT(!you.duration[DUR_BERSERK]);
+            // Need to undo haste by hand.
+            if (you.duration[DUR_HASTE])
+                you.time_taken = haste_mul(you.time_taken);
+            you.time_taken = div_rand_round(you.time_taken, 2);
+        }
     }
 
     // Dexterity bonus, and possible skill increase for silly throwing.
