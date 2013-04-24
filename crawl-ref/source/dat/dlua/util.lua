@@ -264,6 +264,25 @@ function util.random_weighted_from(weightfn, list)
   return chosen
 end
 
+function util.random_weighted_keys(weightfn, list)
+  if type(weightfn) ~= "function" then
+    local weightkey = weightfn
+    weightfn = function (table)
+                 return table[weightkey]
+               end
+  end
+  local cweight = 0
+  local chosen = nil
+  for k,v in pairs(list) do
+    local wt = weightfn(k,v) or 10
+    cweight = cweight + wt
+    if crawl.random2(cweight) < wt then
+      chosen = v
+    end
+  end
+  return chosen
+end
+
 function util.random_range_real(lower,upper)
   return lower + crawl.random_real() * (upper-lower)
 end
