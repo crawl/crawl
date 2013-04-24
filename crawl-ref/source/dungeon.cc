@@ -4418,7 +4418,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
                            bool force_pos, bool generate_awake, bool patrolling)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (mspec.type == -1) // or rebuild the des cache
+    if ((int)mspec.type == -1) // or rebuild the des cache
         return 0;
 #endif
     if (mspec.type == MONS_NO_MONSTER)

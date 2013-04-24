@@ -2846,7 +2846,7 @@ void bolt::affect_place_explosion_clouds()
 void bolt::internal_ouch(int dam)
 {
     monster* monst = NULL;
-    if (!invalid_monster_index(beam_source) && menv[beam_source].type != -1)
+    if (!invalid_monster_index(beam_source))
         monst = &menv[beam_source];
 
     const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();

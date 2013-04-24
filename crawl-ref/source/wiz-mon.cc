@@ -206,7 +206,7 @@ void wizard_create_spec_monster_name()
     }
 
     mons_spec mspec = mlist.get_monster(0);
-    if (mspec.type == -1)
+    if (mspec.type == MONS_NO_MONSTER)
     {
         mpr("Such a monster couldn't be found.", MSGCH_DIAGNOSTICS);
         return;

@@ -3466,8 +3466,8 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
 
 #if TAG_MAJOR_VERSION == 34
     // Force rebuild of the des cache to drop this check.
-    if (pick.type < -1)
-        pick = (monster_type)(-100 - pick.type);
+    if ((int)pick.type < -1)
+        pick = (monster_type)(-100 - (int)pick.type);
 #endif
 
     if (slot.fix_slot)

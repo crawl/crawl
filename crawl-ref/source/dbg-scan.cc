@@ -372,7 +372,7 @@ void debug_mons_scan()
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
                          pos.x, pos.y, full.c_str(), j);
                 }
-                else if (m2->type != -1)
+                else if (m2->type != MONS_NO_MONSTER)
                 {
                     mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s,"
                                      "midx = %d",
