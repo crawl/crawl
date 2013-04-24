@@ -54,9 +54,27 @@
 
 NORETURN void AssertFailed(const char *expr, const char *file, int line);
 
+#ifdef __clang__
+# define WARN_PUSH _Pragma("GCC diagnostic push")
+# define WARN_POP  _Pragma("GCC diagnostic pop")
+# define IGNORE_ASSERT_WARNINGS _Pragma("GCC diagnostic ignored \"-Wtautological-constant-out-of-range-compare\"")
+#elif __GNUC__ * 100 + __GNUC_MINOR__ >= 406
+# define WARN_PUSH _Pragma("GCC diagnostic push")
+# define WARN_POP  _Pragma("GCC diagnostic pop")
+# define IGNORE_ASSERT_WARNINGS _Pragma("GCC diagnostic ignored \"-Wtype-limits\"")
+#else
+// gcc-4.2 has a worse variant, but I don't care enough
+# define WARN_PUSH
+# define WARN_POP
+# define IGNORE_ASSERT_WARNINGS
+#endif
+
 #define ASSERT(p)                                       \
     do {                                                \
+        WARN_PUSH                                       \
+        IGNORE_ASSERT_WARNINGS                          \
         if (!(p)) AssertFailed(#p, __FILE__, __LINE__); \
+        WARN_POP                                        \
     } while (false)
 
 #define VERIFY(p)       ASSERT(p)
