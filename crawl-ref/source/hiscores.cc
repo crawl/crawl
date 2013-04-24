@@ -1003,12 +1003,8 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("ev", "%d", ev);
     fields->add_field("sh", "%d", sh);
 
-    // Don't write No God to save some space.
-    if (god != -1)
-    {
-        fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
-                          god_name(god).c_str());
-    }
+    fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
+                      god_name(god).c_str());
 
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);
@@ -1785,7 +1781,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
-        if (race != SP_DEMIGOD && god != -1)
+        if (race != SP_DEMIGOD && god != GOD_NO_GOD)
         {
             if (god == GOD_XOM)
             {
@@ -1795,7 +1791,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                 desc += scratch;
                 desc += _hiscore_newline_string();
             }
-            else if (god != GOD_NO_GOD)
+            else
             {
                 // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
