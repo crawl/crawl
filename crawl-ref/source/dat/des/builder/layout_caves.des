@@ -13,7 +13,7 @@
 # functions from weighted selections and draw them overwritten.
 NAME:   layout_layer_cave
 DEPTH:  D:3-26,Lair,Snake
-WEIGHT: 20
+WEIGHT: 15, 20(Lair)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -100,8 +100,8 @@ TAGS: overwritable layout allow_dup unrand
 #       * Snake should have domain distortion every time (use the one from Halls)
 #       * It should be possible to fold most of these effects into layer_cave
 NAME:   layout_cave_shapes
-DEPTH:  D:5-25,Lair,Snake,Tar,Coc,Spider
-WEIGHT: 20
+DEPTH:  D:5-25,Lair,Snake,Tar
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -207,11 +207,12 @@ TAGS: overwritable layout allow_dup unrand
 }}
 
 # This will have a very open area in the middle and rubble around the edges
-# TODO: This looks very much like a particular instance of cave_shapes. Probably little point keeping it around
-# unless it can do something more interesting?
+# TODO: This looks very close to a particular instance of cave_shapes. Probably little point keeping it around
+# unless it can do something more interesting? Leaving it in for now because cave_shapes doesn't exactly
+# reproduce this (but could be modified to, and as a result produce more variation itself).
 NAME:   layout_ant_hill
 DEPTH:  D:5-25,Lair
-WEIGHT: 10
+WEIGHT: 3, 10 (Lair)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
