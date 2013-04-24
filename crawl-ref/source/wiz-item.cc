@@ -185,7 +185,7 @@ void wizard_create_spec_object()
             dummy.number = prompt_for_int("How many heads? ", false);
 
         if (fill_out_corpse(&dummy, dummy.type,
-                            mitm[thing_created], true) == -1)
+                            mitm[thing_created], true) == MONS_NO_MONSTER)
         {
             mpr("Failed to create corpse.");
             mitm[thing_created].clear();

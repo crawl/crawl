@@ -3593,7 +3593,7 @@ static void _get_vault_mon_list(vector<mons_spec> &list)
         mons_spec spec;
 
 #if TAG_MAJOR_VERSION == 34
-        if (type == -1)
+        if ((int)type == -1)
             type = MONS_NO_MONSTER;
 #endif
         if (type == MONS_NO_MONSTER && base != MONS_NO_MONSTER)

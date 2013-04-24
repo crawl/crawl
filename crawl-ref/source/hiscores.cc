@@ -1165,7 +1165,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_ROLLING)
         && !invalid_monster_index(death_source)
-        && menv[death_source].type != -1)
+        && menv[death_source].type != MONS_NO_MONSTER)
     {
         const monster* mons = &menv[death_source];
 
