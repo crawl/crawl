@@ -1190,7 +1190,7 @@ TAGS: overwritable layout allow_dup unrand
 {{
     local subdivide_threshold = 12
 
-    -- Create the alternate version? (based on techniques used in layout_honeycomb)
+    -- Create the alternate version?
     local alt = crawl.x_chance_in_y(2,3)
 
     function room(x1, y1, x2, y2)
@@ -1250,6 +1250,52 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
+    function is_empty_wall_x(x, y)
+        -- check in -X direction for irregularities before corner
+        local x1 = x
+        while mapgrd[x1][y + 1] == '.' and mapgrd[x1][y - 1] == '.' do
+            if mapgrd[x1][y] ~= 'x' then
+               return false
+            end
+            x1 = x1 - 1
+        end
+
+        -- check in +X direction for irregularities before corner
+        local x1 = x
+        while mapgrd[x1][y + 1] == '.' and mapgrd[x1][y - 1] == '.' do
+            if mapgrd[x1][y] ~= 'x' then
+               return false
+            end
+            x1 = x1 + 1
+        end
+
+        -- otherwise, good
+        return true
+    end
+
+    function is_empty_wall_y(x, y)
+        -- check in -Y direction for irregularities before corner
+        local y1 = y
+        while mapgrd[x + 1][y1] == '.' and mapgrd[x - 1][y1] == '.' do
+            if mapgrd[x][y1] ~= 'x' then
+               return false
+            end
+            y1 = y1 - 1
+        end
+
+        -- check in +Y direction for irregularities before corner
+        local y1 = y
+        while mapgrd[x + 1][y1] == '.' and mapgrd[x - 1][y1] == '.' do
+            if mapgrd[x][y1] ~= 'x' then
+               return false
+            end
+            y1 = y1 + 1
+        end
+
+        -- otherwise, good
+        return true
+    end
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
@@ -1262,28 +1308,21 @@ TAGS: overwritable layout allow_dup unrand
     local connection = crawl.random_element({[fill] = 1, ["+"] = 4})
 
     -- Alternate version, connect rooms at the end.
-    -- TODO: There is an identical loop in layout_homeycomb with different
-    -- iteration count; move this to a library or C++.
     if alt then
-      for i = 1, crawl.random_range(400, 800) do
-          local x = crawl.random_range(1, gxm - 2)
-          local y = crawl.random_range(1, gym - 2)
-
-          if mapgrd[x][y] == border then
-              if mapgrd[x + 1][y] == border and
-                 mapgrd[x - 1][y] == border and
-                 mapgrd[x][y + 1] == fill and
-                 mapgrd[x][y - 1] == fill then
-                  mapgrd[x][y] = connection
-              elseif mapgrd[x + 1][y] == fill and
-                     mapgrd[x - 1][y] == fill and
-                     mapgrd[x][y + 1] == border and
-                     mapgrd[x][y - 1] == border then
-                  mapgrd[x][y] = connection
-              end
-          end
-      end
-      zonify.map_fill_zones(_G, 1, 'x')
+        for i = 1, crawl.random_range(400, 800) do
+            local x = crawl.random_range(1, gxm - 2)
+            local y = crawl.random_range(1, gym - 2)
+            if mapgrd[x][y] == 'x' then
+                if mapgrd[x][y + 1] == '.' and mapgrd[x][y - 1] == '.'
+                   and is_empty_wall_x(x, y) then
+                    mapgrd[x][y] = '+'
+                elseif mapgrd[x + 1][y] == '.' and mapgrd[x - 1][y] == '.'
+                   and is_empty_wall_y(x, y) then
+                    mapgrd[x][y] = '+'
+                end
+            end
+        end
+        zonify.map_fill_zones(_G, 1, 'x')
     end
 }}
 # Enforce minimum floor size - this is important with the alt version
