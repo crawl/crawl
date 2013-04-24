@@ -178,7 +178,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 }}
 
 NAME:   layout_long_grid
-DEPTH:  Dis, D, Lair
+DEPTH:  Dis, D:2-, Lair
 WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
@@ -376,71 +376,23 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
+  -- Use thin or thick walls?
   local thin = crawl.coinflip()
 
   local grid_opts = {
-    guaranteed_divides = 2,
+    guaranteed_divides = 5,
     subdivide_initial_chance = 100,
-    subdivide_level_multiplier = .99,
-    minimum_size = thin and 3 or 4,
+    subdivide_level_multiplier = util.random_range_real(.97,.99),
+    minimum_size = crawl.random_range(thin and 3 or 4,thin and 5 or 6)
   }
+
   local bounds = padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
-  local groups = {}
-  local count = #grid
-  for i,cell in ipairs(grid) do
-    local group = { cell }
-    cell.group = group
-    groups[group] = group
-  end
+  -- Connect up the cells
+  local groups = omnigrid.connect { grid = grid, min_border_length = thin and 2 or 3 }
 
-  local function mergegroup(a,b)
-    for i,cell in ipairs(b) do
-      cell.group = a
-      table.insert(a,cell)
-    end
-    groups[b] = nil
-    count = count - 1
-  end
-
-  local bail = false
-  local iters = 0
-  -- Cell weighting
-  local function wcell(c)
-    if c.borders_left == nil then c.borders_left = #(c.borders) end
-    return c.borders_left
-  end
-  -- Border weighting
-  local minbord = thin and 2 or 3
-  local function wbord(b)
-    -- Ensure border hasn't already been connected (given a style)
-    -- and also that it's of enough length to actually create a path
-    -- between the rooms
-    return b.style == nil and b.len >= minbord and 10 or 0
-  end
-
-  while not bail do
-    iters = iters + 1
-
-    -- Randomly pick a group
-    local group = util.random_weighted_keys(function(k,v) return v ~= nil and (1000/#(v)) or 0 end, groups)
-    -- Pick a cell from the group
-    local cell = group and util.random_weighted_from(wcell, group)
-    local border = cell and util.random_weighted_from(wbord, cell.borders)
-    if border and border.style == nil and border.with.group ~= cell.group then
-      border.style = "open"
-      border.inverse.style = "open"
-      cell.borders_left = cell.borders_left - 1
-      if border.with.borders_left == nil then border.with.borders_left = #(border.with.borders) end
-      border.with.borders_left = border.with.borders_left - 1
-      mergegroup(group,border.with.group)
-    end
-
-    -- Main exit condition; once we've reduced to a single group
-    if count == 1 or iters > 500 then bail = true end
-  end
-
+  -- Set up the render functions
   local function renderborderthin(cell,b)
     -- Only fill bottom and right borders. These borders won't
     -- exist for cells on the bottom or right of the grid so we
@@ -473,7 +425,6 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
     end
   end
 
-  -- Render everything and see if it works!!
   for i,area in ipairs(grid) do
     rendercell(area)
   end

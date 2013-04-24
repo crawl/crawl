@@ -187,3 +187,75 @@ function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,chance,depth)
     return results
   end
 end
+
+function omnigrid.connect(options)
+
+  local grid = options.grid
+  local groups = options.groups
+
+  local count = 0
+  if groups == nil then
+    groups = { }
+    for i,cell in ipairs(grid) do
+      local group = { cell }
+      cell.group = group
+      cell.borders_left = #(cell.borders)
+      groups[group] = group
+    end
+    count = #grid
+  else
+    -- Slow way to count a previously-created groups list; Lua doesn't
+    -- have a function for counting number of hash keys
+    for k,v in pairs(groups) do
+      if v ~= nil then count = count + 1 end
+    end
+  end
+
+  local function mergegroup(a,b)
+    for i,cell in ipairs(b) do
+      cell.group = a
+      table.insert(a,cell)
+    end
+    groups[b] = nil
+    count = count - 1
+  end
+
+  local bail = false
+  local iters = 0
+  local minbord = options.min_border_length or 2
+  local maxiters = options.max_iterations or 500
+  local mingroups = options.min_groups or 1
+
+  -- Setup default callbacks
+  local fbail = options.bailfunc or function(groups,count) return count <= mingroups end
+  local fstyle = options.stylefunc or function() return "open" end
+  local wcell = options.cellweight or function(c) return c.borders_left end
+  local wgroup = options.groupweight or function(k,v) return v ~= nil and math.ceil(1000/#(v)) or 0 end
+  -- Ensure border hasn't already been connected (given a style)
+  -- and also that it's of enough length to actually create a path
+  -- between the rooms
+  local wbord = options.borderweight or function(b) return b.style == nil and b.len >= minbord and 10 or 0 end
+
+  while not bail do
+    iters = iters + 1
+
+    -- Randomly pick a group
+    local group = util.random_weighted_keys(wgroup, groups)
+    -- Pick a cell from the group
+    local cell = group and util.random_weighted_from(wcell, group)
+    local border = cell and util.random_weighted_from(wbord, cell.borders)
+    if border and border.style == nil and border.with.group ~= cell.group then
+      local style = fstyle(border,cell,groups,count)
+      border.style = style
+      border.inverse.style = style
+      cell.borders_left = cell.borders_left - 1
+      border.with.borders_left = border.with.borders_left - 1
+      mergegroup(group,border.with.group)
+    end
+
+    -- Main exit condition; once we've reduced to a single group
+    if fbail(groups,count) or iters > maxiters then bail = true end
+  end
+
+  return groups
+end
