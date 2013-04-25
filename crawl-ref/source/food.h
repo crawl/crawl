@@ -60,7 +60,7 @@ void finished_eating_message(int food_type);
 
 int you_max_hunger();
 int you_min_hunger();
-bool you_foodless();
+bool you_foodless(bool can_eat = false);
 
 void handle_starvation();
 string hunger_cost_string(const int hunger);

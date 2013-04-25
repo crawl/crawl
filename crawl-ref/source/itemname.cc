@@ -3227,7 +3227,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_PORRIDGE:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return !can_ingest(item, true, false);
+            return !can_ingest(item, true, false) || you.species == SP_DJINNI;
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
@@ -3348,7 +3348,19 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_FOOD:
         if (item.sub_type == NUM_FOODS)
             break;
-        if (!is_inedible(item))
+
+        if (you.species == SP_DJINNI)
+        {
+            // Only comestibles with effects beyond nutrition have an use.
+            if (item.sub_type == FOOD_AMBROSIA
+                || item.sub_type == FOOD_ROYAL_JELLY
+                || item.sub_type == FOOD_CHUNK
+                   && mons_corpse_effect(item.mon_type) == CE_MUTAGEN)
+            {
+                return false;
+            }
+        }
+        else if (!is_inedible(item))
             return false;
 
         if (item.sub_type == FOOD_CHUNK
