@@ -39,7 +39,6 @@
 #include "clua.h"
 #include "coord.h"
 #include "coordit.h"
-#include "debug.h"
 #include "delay.h"
 #include "dactions.h"
 #include "dgn-overview.h"

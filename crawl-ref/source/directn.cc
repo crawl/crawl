@@ -25,7 +25,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dbg-util.h"
-#include "debug.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "fprop.h"

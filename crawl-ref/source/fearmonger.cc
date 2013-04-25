@@ -8,7 +8,6 @@
 #include "player.h"
 
 #include "coord.h"
-#include "debug.h"
 #include "env.h"
 #include "fprop.h"
 #include "mon-util.h"

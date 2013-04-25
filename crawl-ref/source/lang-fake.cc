@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 #include "lang-fake.h"
 
-#include "debug.h"
 #include "libutil.h"
 #include "options.h"
 #include "unicode.h"

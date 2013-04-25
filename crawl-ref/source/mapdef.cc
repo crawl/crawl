@@ -19,7 +19,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "cluautil.h"
-#include "debug.h"
 #include "decks.h"
 #include "describe.h"
 #include "directn.h"

@@ -10,7 +10,6 @@
 #include "abyss.h"
 
 #include "cio.h"
-#include "debug.h"
 #include "dbg-util.h"
 #include "food.h"
 #include "godprayer.h"

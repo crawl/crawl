@@ -7,8 +7,6 @@
 
 #include "bitary.h"
 
-#include "debug.h"
-
 bit_vector::bit_vector(unsigned long s)
     : size(s)
 {

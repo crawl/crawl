@@ -4,7 +4,6 @@
 **/
 
 #include "AppHdr.h"
-#include "debug.h"
 #include "geom2d.h"
 
 #include <cmath>

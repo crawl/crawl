@@ -21,7 +21,6 @@
 #include "clua.h"
 #include "command.h"
 #include "database.h"
-#include "debug.h"
 #include "delay.h"
 #include "effects.h"
 #include "env.h"

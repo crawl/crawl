@@ -5,8 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "debug.h"
-
 #include <errno.h>
 #include <signal.h>
 

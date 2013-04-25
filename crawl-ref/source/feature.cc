@@ -3,7 +3,6 @@
 #include "feature.h"
 
 #include "colour.h"
-#include "debug.h"
 #include "options.h"
 #include "show.h"
 
