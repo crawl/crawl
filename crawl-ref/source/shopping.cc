@@ -502,11 +502,6 @@ static string _shop_print_stock(const vector<int>& stock,
         else
             cprintf("%c - ", c);
 
-        const bool unknown = item_type_has_ids(item.base_type)
-                             && item_type_known(item)
-                             && get_ident_type(item) != ID_KNOWN_TYPE
-                             && !is_artefact(item);
-
         // Colour stock according to menu colours.
         const string colprf = item_prefix(item);
         const int col = menu_colour(item.name(DESC_A),
@@ -514,7 +509,7 @@ static string _shop_print_stock(const vector<int>& stock,
         textcolor(col != -1 ? col : LIGHTGREY);
 
         string item_name = item.name(DESC_A, false, id);
-        if (unknown)
+        if (shop_item_unknown(item))
             item_name += " (unknown)";
 
         cprintf("%s%5d gold", chop_string(item_name, 56).c_str(), gp_value);
@@ -2494,6 +2489,14 @@ bool is_shop_item(const item_def &item)
     return (item.pos.x == 0 && item.pos.y >= 5 && item.pos.y < (MAX_SHOPS + 5));
 }
 
+bool shop_item_unknown(const item_def &item)
+{
+    return (item_type_has_ids(item.base_type)
+            && item_type_known(item)
+            && get_ident_type(item) != ID_KNOWN_TYPE
+            && !is_artefact(item));
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 // TODO:
@@ -2956,17 +2959,21 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
     menu_letter hotkey;
     for (unsigned i = 0; i < list->size(); ++i, ++hotkey)
     {
-        CrawlHashTable &thing = (*list)[i];
-        level_pos      pos    = thing_pos(thing);
-        int            cost   = thing_cost(thing);
+        CrawlHashTable &thing  = (*list)[i];
+        level_pos      pos     = thing_pos(thing);
+        int            cost    = thing_cost(thing);
+        bool           unknown = false;
+
+        if (thing_is_item(thing))
+            unknown = shop_item_unknown(get_thing_item(thing));
 
         if (you.duration[DUR_BARGAIN])
             cost = _bargain_cost(cost);
 
         string etitle =
-            make_stringf("[%s] %s (%d gp)", short_place_name(pos.id).c_str(),
+            make_stringf("[%s] %s%s (%d gp)", short_place_name(pos.id).c_str(),
                          name_thing(thing, DESC_A).c_str(),
-                         cost);
+                         unknown ? " (unknown)" : "", cost);
 
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
