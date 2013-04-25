@@ -974,6 +974,8 @@ command_type travel()
         // and we need to figure out where to travel to next.
         if (!_find_transtravel_square(level_target.p) || !you.running.pos.x)
             stop_running();
+        else
+            you.running.init_travel_speed();
     }
 
     if (you.running < 0)
