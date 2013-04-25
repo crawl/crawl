@@ -717,17 +717,17 @@
 { MUT_RUNED_HANDS,                    2,  3, false,  true,  true,
   "runed hands",
 
-  {"You have weak runes imbued into your hands.",
-   "You have runes imbued into your hands.",
-   "You have powerful runes imbued into your hands."},
+  {"You have faintly glowing runes of magical repulsion etched into your hands.",
+   "You have potent runes of magical repulsion etched into your hands.",
+   "You have exquisitely formed runes of magical repulsion etched into your hands."},
 
-  {"Your hands glow with a faint magical rune.",
-   "Your hands glow with a magical rune.",
-   "Your hands glow with a strong magical rune."},
+  {"Opalescent runes etch themselves into your hands",
+   "Your runes become more intricate.",
+   "Your runed intermesh and glow violently with a palpable aura."},
 
-  {"Your hands lose all trace of their runes.",
-   "Your runed hands glow fainter.",
-   "Your runed hands glow fainter."},
+  {"The runes on your hands vanish abruptly.",
+   "The runes on your hands glow less intricate.",
+   "The aura fades from your hands as the runic patterns are unlinked."},
 
   "runed hands"
 },
