@@ -979,7 +979,7 @@ void origin_set_monster(item_def &item, const monster* mons)
     if (!origin_known(item))
     {
         if (!item.orig_monnum)
-            item.orig_monnum = mons->type + 1;
+            item.orig_monnum = mons->type;
         item.orig_place = get_packed_place();
     }
 }
@@ -1079,7 +1079,7 @@ static void _origin_freeze(item_def &item, const coord_def& where)
 
 static string _origin_monster_name(const item_def &item)
 {
-    const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
+    const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
     if (monnum == MONS_PLAYER_GHOST)
         return "a player ghost";
     else if (monnum == MONS_PANDEMONIUM_LORD)
@@ -1095,7 +1095,7 @@ static string _origin_place_desc(const item_def &item)
 bool origin_describable(const item_def &item)
 {
     return (origin_known(item)
-            && (item.orig_place != 0xFFFFU || item.orig_monnum == -1)
+            && item.orig_place != 0xFFFFU
             && !is_stackable_item(item)
             && item.quantity == 1
             && item.base_type != OBJ_CORPSES
@@ -1187,7 +1187,7 @@ string origin_desc(const item_def &item)
                 break;
             }
         }
-        else if (item.orig_monnum - 1 == MONS_DANCING_WEAPON)
+        else if (item.orig_monnum == MONS_DANCING_WEAPON)
             desc += "You subdued it ";
         else
         {

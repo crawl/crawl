@@ -262,7 +262,7 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.sub_type    = CORPSE_BODY;
     corpse.special     = FRESHEST_CORPSE;  // rot time
     corpse.quantity    = 1;
-    corpse.orig_monnum = mtype + 1;
+    corpse.orig_monnum = mtype;
 
     if (mtype == MONS_ROTTING_HULK)
         corpse.special = ROTTING_CORPSE;

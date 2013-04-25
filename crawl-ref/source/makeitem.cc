@@ -2616,9 +2616,9 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     // Happens with ghoul food acquirement -- use place_chunks() outherwise
     if (item.sub_type == FOOD_CHUNK)
     {
-        // Set chunk flavour (default to common dungeon rat steaks):
+        // Set chunk flavour:
         item.plus = _choose_random_monster_corpse();
-        item.orig_monnum = item.plus + 1;
+        item.orig_monnum = item.plus;
         // Set duration.
         item.special = (10 + random2(11)) * 10;
     }

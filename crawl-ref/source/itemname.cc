@@ -74,7 +74,7 @@ static const char* _interesting_origin(const item_def &item)
 {
     if (origin_is_god_gift(item))
         return "god gift";
-    switch (item.orig_monnum - 1)
+    switch (item.orig_monnum)
     {
     case MONS_SONJA:
         if (weapon_skill(item) == SK_SHORT_BLADES)

@@ -1383,7 +1383,7 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
 
         // Stop equipping monster if the item probably didn't originally
         // belong to the monster.
-        if ((origin_known(item) && (item.orig_monnum - 1) != monnum)
+        if ((origin_known(item) && item.orig_monnum != monnum)
             || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
             || item.base_type == OBJ_CORPSES)
         {
@@ -1538,7 +1538,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
 
-    const monster_type monnum = static_cast<monster_type>(item.orig_monnum - 1);
+    const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
@@ -1874,7 +1874,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
                  you.pos(), MHITYOU,
                  MG_FORCE_BEH, god,
                  flesh->sub_type == FOOD_CHUNK ?
-                     static_cast<monster_type>(flesh->orig_monnum - 1) :
+                     static_cast<monster_type>(flesh->orig_monnum) :
                      sim_type);
 
     // Can't create more than the available chunks.
@@ -2005,7 +2005,7 @@ bool monster_simulacrum(monster *caster, bool actual)
             int created = 0;
             int seen = 0;
 
-            sim_type = static_cast<monster_type>(item.orig_monnum - 1);
+            sim_type = static_cast<monster_type>(item.orig_monnum);
 
             for (int i = 0; i < how_many; ++i)
             {

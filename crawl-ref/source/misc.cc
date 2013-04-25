@@ -119,7 +119,7 @@ static void _create_monster_hide(const item_def corpse)
 
     do_uncurse_item(item, false);
     const monster_type montype =
-        static_cast<monster_type>(corpse.orig_monnum - 1);
+        static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
         item.inscription = mons_type_name(montype, DESC_PLAIN);
 
