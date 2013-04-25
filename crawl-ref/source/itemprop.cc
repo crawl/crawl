@@ -70,10 +70,8 @@ static const armour_def Armour_prop[NUM_ARMOURS] =
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_SCALE_MAIL,           "scale mail",             6, -3,  350,
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_CHAIN_MAIL,           "chain mail",             7, -4,  400,
+    { ARM_CHAIN_MAIL,           "chain mail",             8, -4,  400,
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_SPLINT_MAIL,          "splint mail",            8, -5,  550,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -6,  650,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -8, 1200,
@@ -839,12 +837,8 @@ void set_equip_race(item_def &item, iflags_t flags)
             }
             break;
         case OBJ_ARMOUR:
-            if (item.sub_type == ARM_SPLINT_MAIL
-                || item.sub_type == ARM_PLATE_ARMOUR
-                || is_hard_helmet(item))
-            {
+            if (item.sub_type == ARM_PLATE_ARMOUR || is_hard_helmet(item))
                 return;
-            }
             break;
         case OBJ_MISSILES:
             if (item.sub_type == MI_BOLT)

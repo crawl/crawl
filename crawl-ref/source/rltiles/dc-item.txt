@@ -481,10 +481,6 @@ elven_chain_mail ARM_CHAIN_MAIL_ELF
 orcish_chain_mail ARM_CHAIN_MAIL_ORC
 orcish_chain_mail2
 
-splint_mail1 ARM_SPLINT_MAIL
-splint_mail2
-splint_mail3
-
 plate1 ARM_PLATE_ARMOUR
 plate2
 plate3
