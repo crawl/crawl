@@ -363,21 +363,22 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
 # Builds a complex maze by starting off with a subdivided grid then iteratively linking
 # up rooms until all original cells are connected.
-# TODO: Needs more variation, doors, detreeifying, and per-branch variations.
+# TODO: Needs per-branch variations.
 NAME:   layout_grid_maze
 DEPTH:  D:5-, Lair, Snake, Dis
-WEIGHT: 8
+WEIGHT: 5, 20 (Dis)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
 {{
   if is_validating() then return; end
 
-  layout_type "open"
+  layout_type "maze"
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
-  -- Use thin or thick walls?
-  local thin = crawl.coinflip()
+  local thin = crawl.one_chance_in(3)       -- Use thin or thick walls?
+  local detree = crawl.x_chance_in_y(9,10)  -- Cut out more walls to make a less tree-like layout
+  local doors = crawl.x_chance_in_y(2,3)    -- Create doors sometimes instead of just holes in walls
 
   local grid_opts = {
     guaranteed_divides = 5,
@@ -390,8 +391,15 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Connect up the cells
-  local groups = omnigrid.connect { grid = grid, min_border_length = thin and 2 or 3 }
-
+  local minbord = thin and 2 or 3
+  local fstyle = function() return doors and crawl.one_chance_in(3) and "door" or "open" end
+  local groups = omnigrid.connect { grid = grid, min_border_length = minbord, style_func = fstyle }
+  if detree then
+    groups = omnigrid.connect { grid = grid, groups = groups,
+                                max_iterations = crawl.random_range(math.ceil(#grid/20),math.floor(#grid/5)),
+                                border_weight = function(b) return b.style == nil and b.len >= minbord and 10 or 0 end,
+                                min_groups = -1, style_func = fstyle }
+  end
   -- Set up the render functions
   local function renderborderthin(cell,b)
     -- Only fill bottom and right borders. These borders won't
@@ -406,6 +414,10 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
         else
           fill_area { x1 = b.x1, y1 = b.y1, x2 = b.x2, y2 = b.y2, fill = 'x' }
         end
+        -- Maybe paint a door
+        if b.style == "door" then
+          mapgrd[crawl.div_rand_round(b.x1+b.x2,2)][crawl.div_rand_round(b.y1+b.y2,2)] = '+'
+        end
       end
     end
   end
@@ -413,6 +425,16 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
   local function renderborderthick(cell,b)
     if b.style ~= "open" then
       fill_area { x1 = b.x1, y1 = b.y1, x2 = b.x2, y2 = b.y2, fill = 'x' }
+      if b.style == "door" then
+        -- Choose whether door is placed on this or opposite wall side
+        -- A gap will be painted on the side that doesn't get the door
+        if b.inverse.door_side == nil then
+          b.door_side = crawl.coinflip()
+        else
+          b.door_side = not b.inverse.door_side
+        end
+        mapgrd[math.floor((b.x1+b.x2)/2)][math.floor((b.y1+b.y2)/2)] = b.door_side and '+' or '.'
+      end
     end
   end
 
