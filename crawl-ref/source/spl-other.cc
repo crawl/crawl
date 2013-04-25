@@ -103,6 +103,8 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("A conflicting enchantment prevents the spell from "
                 "coming into effect.");
         }
+        else if (you.species == SP_DJINNI)
+            mpr("Draw from your essence to power your essence... yeah right.");
         else if (!you.can_bleed(false))
         {
             mpr("You don't have enough blood to draw power from your "
