@@ -477,19 +477,6 @@ void warn_shield_penalties()
         _warn_launcher_shield_slowdown(*weapon);
 }
 
-void warn_armour_penalties()
-{
-    const int penalty = 3 * you.unadjusted_body_armour_penalty() - you.strength();
-
-    if (penalty > 0)
-    {
-        mprf(MSGCH_WARN, "Your low strength makes using this armour %smore difficult.",
-             (penalty < 3) ? "a little " :
-             (penalty < 5) ? "" :
-                             "a lot ");
-    }
-}
-
 bool item_is_worn(int inv_slot)
 {
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
