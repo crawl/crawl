@@ -24,7 +24,6 @@
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
-#include "debug.h"
 #include "decks.h"
 #include "delay.h"
 #include "directn.h"

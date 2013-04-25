@@ -21,7 +21,6 @@
 #include "cio.h"
 #include "colour.h"
 #include "database.h"
-#include "debug.h"
 #include "decks.h"
 #include "describe.h"
 #include "directn.h"

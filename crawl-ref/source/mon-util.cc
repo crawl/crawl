@@ -14,7 +14,6 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "debug.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"

@@ -26,7 +26,6 @@
 #include "chardump.h"
 #include "coordit.h"
 #include "database.h"
-#include "debug.h"
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"

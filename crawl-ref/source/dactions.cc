@@ -8,7 +8,6 @@
 #include "dactions.h"
 
 #include "coordit.h"
-#include "debug.h"
 #include "decks.h"
 #include "dungeon.h"
 #include "env.h"

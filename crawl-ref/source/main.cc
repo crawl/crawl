@@ -50,7 +50,6 @@
 #include "database.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
-#include "debug.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"

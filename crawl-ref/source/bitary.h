@@ -9,7 +9,6 @@
 #ifndef BITARY_H
 #define BITARY_H
 
-#include "debug.h"
 #include "defines.h"
 
 class bit_vector

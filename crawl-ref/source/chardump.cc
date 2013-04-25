@@ -25,7 +25,6 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
-#include "debug.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"

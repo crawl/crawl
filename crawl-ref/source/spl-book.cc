@@ -17,7 +17,6 @@
 #include "cio.h"
 #include "colour.h"
 #include "database.h"
-#include "debug.h"
 #include "delay.h"
 #include "describe.h"
 #include "effects.h"

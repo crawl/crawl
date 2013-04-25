@@ -52,7 +52,6 @@
 #include "coord.h"
 #include "coord-circle.h"
 #include "coordit.h"
-#include "debug.h"
 #include "externs.h"
 #include "geom2d.h"
 #include "losglobal.h"

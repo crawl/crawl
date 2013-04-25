@@ -30,8 +30,6 @@
 # include <android/log.h>
 #endif
 
-#include "debug.h"
-
 /////////////////////////////////////////////////////////////////////////////
 // Static functions from GLStateManager
 

@@ -407,6 +407,7 @@ static inline void UNUSED(const volatile T &)
 # include "msvc.h"
 #endif
 
+#include "debug.h"
 #include "externs.h"
 
 #ifdef TARGET_COMPILER_VC

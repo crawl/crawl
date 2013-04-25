@@ -26,7 +26,6 @@
 #include "dactions.h"
 #include "describe.h"
 #include "dbg-util.h"
-#include "debug.h"
 #include "decks.h"
 #include "delay.h"
 #include "dgnevent.h"

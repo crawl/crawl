@@ -21,7 +21,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
-#include "debug.h"
 #include "godabil.h"
 #include "stuff.h"
 #include "env.h"
