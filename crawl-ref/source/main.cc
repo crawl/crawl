@@ -2951,9 +2951,7 @@ static void _regenerate_hp_and_mp(int delay)
             inc_mp(1);
         }
         else // standard hp regeneration
-        {
             inc_hp(1);
-        }
         tmp -= 100;
     }
 
