@@ -1997,7 +1997,7 @@ ITEM: meat ration, bread ration
 MAP
 xxxxxxxxxx
 xvvv....xx
-xvl=.222.x
+xvl+.222.x
 xvvv.212.x
 xxxx...xxx
 xxx.x..xxx
