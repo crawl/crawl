@@ -2202,9 +2202,11 @@ void handle_time()
     if (coinflip())
     {
         // [ds] Move magic contamination effects closer to b26 again.
-        const bool glow_effect =
-            (get_contamination_level() > 1
-             && x_chance_in_y(you.magic_contamination, 12));
+        const bool glow_effect = you.species == SP_DJINNI ?
+            get_contamination_level() > 2
+                && x_chance_in_y(you.magic_contamination, 24):
+            get_contamination_level() > 1
+                && x_chance_in_y(you.magic_contamination, 12);
 
         if (glow_effect && is_sanctuary(you.pos()))
         {
