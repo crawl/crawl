@@ -135,9 +135,10 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-bool you_foodless()
+bool you_foodless(bool can_eat)
 {
     return you.is_undead == US_UNDEAD
+        || you.species == SP_DJINNI && !can_eat
         || you.form == TRAN_FUNGUS
         || you.form == TRAN_TREE
         || you.form == TRAN_WISP;
@@ -806,7 +807,7 @@ bool prompt_eat_inventory_item(int slot)
 
 static bool _eat_check(bool check_hunger = true, bool silent = false)
 {
-    if (you_foodless())
+    if (you_foodless(true))
     {
         if (!silent)
         {
@@ -2418,7 +2419,7 @@ bool is_inedible(const item_def &item)
         return !can_ingest(item, true, false);
 
     // Mummies, liches, trees and wisps don't eat.
-    if (you_foodless())
+    if (you_foodless(true))
         return true;
 
     if (food_is_rotten(item)
@@ -2455,7 +2456,7 @@ bool is_inedible(const item_def &item)
 bool is_preferred_food(const item_def &food)
 {
     // Mummies/etc don't eat.
-    if (you_foodless())
+    if (you_foodless(true))
         return false;
 
     // Vampires don't really have a preferred food type, but they really
@@ -2464,7 +2465,7 @@ bool is_preferred_food(const item_def &food)
         return is_blood_potion(food);
 
     if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
-        && item_type_known(food))
+        && item_type_known(food) && you.species != SP_DJINNI)
     {
         return !player_mutation_level(MUT_CARNIVOROUS);
     }

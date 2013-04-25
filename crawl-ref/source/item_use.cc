@@ -2023,7 +2023,7 @@ static void _vampire_corpse_help()
 
 void drink(int slot)
 {
-    if (you_foodless())
+    if (you_foodless(true))
     {
         if (you.form == TRAN_TREE)
             mpr("It'd take too long for a potion to reach your roots.");
