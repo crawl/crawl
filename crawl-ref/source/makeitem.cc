@@ -2150,7 +2150,6 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
         case ARM_RING_MAIL:
         case ARM_SCALE_MAIL:
         case ARM_CHAIN_MAIL:
-        case ARM_SPLINT_MAIL:
         case ARM_PLATE_ARMOUR:
             if (item.sub_type <= ARM_CHAIN_MAIL && one_chance_in(6))
                 rc = ISFLAG_ELVEN;
@@ -3510,8 +3509,7 @@ static armour_type _get_random_armour_type(int item_level)
         // Medium-level armours.
         const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
                                            ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
-                                           ARM_PLATE_ARMOUR };
+                                           ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR };
 
         armtype = RANDOM_ELEMENT(medarmours);
     }

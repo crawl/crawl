@@ -35,6 +35,7 @@ enum tag_minor_version
     TAG_MINOR_INCREMENTAL_RECALL,  // Made recall incremental
     TAG_MINOR_GOD_GIFT,            // Remove {god gift} from inscriptions.
     TAG_MINOR_NOME_NO_MORE,        // Remove unused gnome variable.
+    TAG_MINOR_NO_SPLINT,           // Remove splint mail
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

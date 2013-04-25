@@ -1610,10 +1610,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 150;
             break;
 
-        case ARM_SPLINT_MAIL:
-            valued += 140;
-            break;
-
         case ARM_TROLL_HIDE:
             valued += 130;
             break;
