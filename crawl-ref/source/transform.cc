@@ -638,6 +638,9 @@ static bool _transformation_is_safe(transformation_type which_trans,
             return false;
     }
 
+    if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
+        return false; // melting is fatal...
+
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
