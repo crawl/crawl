@@ -141,8 +141,8 @@ function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,chance,depth)
               local by2 = math.min(a.y2,b.y2)
               -- If there's an actual intersection
               if (by1<=by2) then
-                local b1 = { with = b, dir = 3, x1 = a.x2, x2 = a.x2, y1 = by1, y2 = by2, len = by2-by1+1 }
-                local b2 = { with = a, dir = 1, x1 = b.x1, x2 = b.x1, y1 = by1, y2 = by2, len = by2-by1+1 }
+                local b1 = { of = a, with = b, dir = 3, x1 = a.x2, x2 = a.x2, y1 = by1, y2 = by2, len = by2-by1+1 }
+                local b2 = { of = b, with = a, dir = 1, x1 = b.x1, x2 = b.x1, y1 = by1, y2 = by2, len = by2-by1+1 }
                 b1.inverse,b2.inverse = b2,b1
                 table.insert(a.borders,b1)
                 table.insert(b.borders,b2)
@@ -170,8 +170,8 @@ function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,chance,depth)
               local bx2 = math.min(a.x2,b.x2)
               -- If there's an actual intersection
               if (bx1<=bx2) then
-                local b1 = { with = b, dir = 2, x1 = bx1, x2 = bx2, y1 = a.y2, y2 = a.y2, len = bx2-bx1+1 }
-                local b2 = { with = a, dir = 0, x1 = bx1, x2 = bx2, y1 = b.y1, y2 = b.y1, len = bx2-bx1+1 }
+                local b1 = { of = a, with = b, dir = 2, x1 = bx1, x2 = bx2, y1 = a.y2, y2 = a.y2, len = bx2-bx1+1 }
+                local b2 = { of = b, with = a, dir = 0, x1 = bx1, x2 = bx2, y1 = b.y1, y2 = b.y1, len = bx2-bx1+1 }
                 b1.inverse,b2.inverse = b2,b1
                 table.insert(a.borders,b1)
                 table.insert(b.borders,b2)
@@ -212,6 +212,7 @@ function omnigrid.connect(options)
   end
 
   local function mergegroup(a,b)
+    if a == b then return; end
     for i,cell in ipairs(b) do
       cell.group = a
       table.insert(a,cell)
@@ -227,14 +228,14 @@ function omnigrid.connect(options)
   local mingroups = options.min_groups or 1
 
   -- Setup default callbacks
-  local fbail = options.bailfunc or function(groups,count) return count <= mingroups end
-  local fstyle = options.stylefunc or function() return "open" end
-  local wcell = options.cellweight or function(c) return c.borders_left end
-  local wgroup = options.groupweight or function(k,v) return v ~= nil and math.ceil(1000/#(v)) or 0 end
+  local fbail = options.bail_func or function(groups,count) return count <= mingroups end
+  local fstyle = options.style_func or function() return options.default_style or "open" end
+  local wcell = options.cell_weight or function(c) return c.borders_left end
+  local wgroup = options.group_weight or function(k,v) return v ~= nil and math.ceil(1000/#(v)) or 0 end
   -- Ensure border hasn't already been connected (given a style)
   -- and also that it's of enough length to actually create a path
   -- between the rooms
-  local wbord = options.borderweight or function(b) return b.style == nil and b.len >= minbord and 10 or 0 end
+  local wbord = options.border_weight or function(b) return b.style == nil and b.len >= minbord and b.with.group ~= b.of.group and 10 or 0 end
 
   while not bail do
     iters = iters + 1
@@ -244,12 +245,15 @@ function omnigrid.connect(options)
     -- Pick a cell from the group
     local cell = group and util.random_weighted_from(wcell, group)
     local border = cell and util.random_weighted_from(wbord, cell.borders)
-    if border and border.style == nil and border.with.group ~= cell.group then
+    if border then
       local style = fstyle(border,cell,groups,count)
+      local new = (border.style == nil)
       border.style = style
       border.inverse.style = style
-      cell.borders_left = cell.borders_left - 1
-      border.with.borders_left = border.with.borders_left - 1
+      if new then
+        cell.borders_left = cell.borders_left - 1
+        border.with.borders_left = border.with.borders_left - 1
+      end
       mergegroup(group,border.with.group)
     end
 
