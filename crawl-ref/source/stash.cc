@@ -824,8 +824,10 @@ void ShopInfo::add_item(const item_def &sitem, unsigned price)
 
 string ShopInfo::shop_item_name(const shop_item &si) const
 {
-    return make_stringf("%s (%u gold)",
-                        Stash::stash_item_name(si.item).c_str(), si.price);
+    return make_stringf("%s%s (%u gold)",
+                        Stash::stash_item_name(si.item).c_str(),
+                        shop_item_unknown(si.item) ? " (unknown)" : "",
+                        si.price);
 }
 
 string ShopInfo::shop_item_desc(const shop_item &si) const
