@@ -62,6 +62,8 @@
 #include "AppHdr.h"
 
 #ifndef UNIX
+#include "unicode.h"
+
 struct interval
 {
     ucs_t first;
