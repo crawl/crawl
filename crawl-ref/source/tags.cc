@@ -2818,6 +2818,10 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.orig_place  = unmarshallShort(th);
     item.orig_monnum = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ORIG_MONNUM && item.orig_monnum > 0)
+        item.orig_monnum--;
+#endif
     item.inscription = unmarshallString(th, 80);
 
     item.props.clear();
