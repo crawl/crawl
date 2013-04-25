@@ -846,7 +846,7 @@ void tile_list_processor::add_abstracts(
             fprintf(fp,
                 "    else\n"
                 "    {\n"
-                "        assert(idx < %s);\n"
+                "        ASSERT(idx < %s);\n"
                 "        ",
                 uc_max_enum[i].c_str());
         }
@@ -1092,11 +1092,8 @@ bool tile_list_processor::write_data(bool image, bool code)
         }
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
+        fprintf(fp, "#include \"AppHdr.h\"\n");
         fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
-        fprintf(fp, "#include <string>\n");
-        fprintf(fp, "#include <cstring>\n");
-        fprintf(fp, "#include <cassert>\n");
-        fprintf(fp, "using namespace std;\n\n");
 
         fprintf(fp, "static unsigned int _tile_%s_count[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
@@ -1105,7 +1102,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "};\n\n");
 
         fprintf(fp, "unsigned int tile_%s_count(tileidx_t idx)\n{\n", lcname.c_str());
-        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+        fprintf(fp, "    ASSERT(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
@@ -1118,7 +1115,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "};\n\n");
 
         fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx)\n{\n", lcname.c_str());
-        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+        fprintf(fp, "    ASSERT(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_basetiles[idx - %s] + %s;\n",
                 lcname.c_str(), m_start_value.c_str(), m_start_value.c_str());
@@ -1132,7 +1129,7 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         fprintf(fp, "int tile_%s_probs(tileidx_t idx)\n{\n",
                     lcname.c_str());
-        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+        fprintf(fp, "    ASSERT(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_probs[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
@@ -1167,7 +1164,7 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         fprintf(fp, "const char *tile_%s_name(tileidx_t idx)\n{\n",
                 lcname.c_str());
-        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+        fprintf(fp, "    ASSERT(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_name[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
@@ -1187,7 +1184,7 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         fprintf(fp, "tile_info &tile_%s_info(tileidx_t idx)\n{\n",
                 lcname.c_str());
-        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+        fprintf(fp, "    ASSERT(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_info[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
@@ -1246,7 +1243,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp,
             "bool tile_%s_index(const char *str, tileidx_t *idx)\n"
             "{\n"
-            "    assert(str);\n"
+            "    ASSERT(str);\n"
             "    if (!str)\n"
             "        return false;\n"
             "\n"
@@ -1264,7 +1261,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp,
             "bool tile_%s_equal(tileidx_t tile, tileidx_t idx)\n"
             "{\n"
-            "    assert(tile >= %s && tile < %s);\n"
+            "    ASSERT(tile >= %s && tile < %s);\n"
             "    return (idx >= tile && idx < tile + tile_%s_count(tile));\n"
             "}\n\n",
             lcname.c_str(), m_start_value.c_str(), max.c_str(), lcname.c_str());
@@ -1327,10 +1324,9 @@ bool tile_list_processor::write_data(bool image, bool code)
         }
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
-        fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
-        fprintf(fp, "#include <cassert>\n");
-        fprintf(fp, "using namespace std;\n\n");
-        fprintf(fp, "\n\n");
+        fprintf(fp, "#include \"AppHdr.h\"\n");
+        fprintf(fp, "#include \"tiledef-%s.h\"\n", lcname.c_str());
+        fprintf(fp, "\n");
 
         vector<string> uc_max_enum;
         for (size_t i = 0; i < m_abstract.size(); ++i)
