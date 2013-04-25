@@ -1377,8 +1377,6 @@ int rod_spell(int rod)
 
     if (you.is_undead == US_UNDEAD)
         food = 0;
-    else
-        food = calc_hunger(food);
 
     if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
         && !you.is_undead)
