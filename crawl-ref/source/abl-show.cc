@@ -667,13 +667,16 @@ const string make_cost_description(ability_type ability)
         ret << " ZP";
     }
 
-    if (abil.food_cost && !you_foodless()
+    if (abil.food_cost && !you_foodless(true)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << "Food";   // randomised and exact amount hidden from player
+        if (you.species == SP_DJINNI)
+            ret << "Glow";
+        else
+            ret << "Food";   // randomised and exact amount hidden from player
     }
 
     if (abil.piety_cost)
@@ -814,11 +817,14 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.zp_cost;
     }
 
-    if (abil.food_cost && !you_foodless()
+    if (abil.food_cost && !you_foodless(true)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         have_cost = true;
-        ret << "\nHunger : ";
+        if (you.species == SP_DJINNI)
+            ret << "\nGlow : ";
+        else
+            ret << "\nHunger : ";
         ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
 

@@ -768,10 +768,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     if (you.is_undead != US_UNDEAD)
     {
-        const int spellh = calc_hunger(spell_hunger(spell));
-        if (spellh > 0)
+        const int spellh = spell_hunger(spell);
+        if (calc_hunger(spellh) > 0)
         {
-            make_hungry(spellh, true);
+            make_hungry(spellh, true, true);
             learned_something_new(HINT_SPELL_HUNGER);
         }
     }

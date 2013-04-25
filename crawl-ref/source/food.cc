@@ -68,7 +68,7 @@ static void _heal_from_food(int hp_amt, bool unrot = false,
  *  BEGIN PUBLIC FUNCTIONS
  */
 void make_hungry(int hunger_amount, bool suppress_msg,
-                 bool allow_reducing)
+                 bool magic)
 {
     if (crawl_state.disables[DIS_HUNGER])
         return;
@@ -80,10 +80,21 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         return;
     }
 
+    // Lich/tree form djinn don't get exempted from food costs: infinite
+    // healing from channeling would be just too good.
+    if (you.species == SP_DJINNI)
+    {
+        if (!magic)
+            return;
+
+        contaminate_player(div_rand_round(hunger_amount, 250), true);
+        return;
+    }
+
     if (you_foodless())
         return;
 
-    if (allow_reducing)
+    if (magic)
         hunger_amount = calc_hunger(hunger_amount);
 
     if (hunger_amount == 0 && !suppress_msg)
@@ -2886,7 +2897,7 @@ void handle_starvation()
 
 string hunger_cost_string(const int hunger)
 {
-    if (you_foodless())
+    if (you_foodless(true))
         return "N/A";
 
 #ifdef WIZARD
