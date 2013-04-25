@@ -1005,19 +1005,6 @@ void origin_set_inventory(void (*oset)(item_def &item))
             oset(you.inv[i]);
 }
 
-static int _first_corpse_monnum(const coord_def& where)
-{
-    // We could look for a corpse on this square and assume that the
-    // items belonged to it, but that is unsatisfactory.
-
-    // Actually, it would be easy to add the monster type to a corpse
-    // (or to another item) by setting orig_monnum when the monster dies
-    // (already done for unique monsters to get named zombies), but
-    // personally, I rather like the way the player can't tell where an
-    // item came from if he just finds it lying on the floor. (jpeg)
-    return 0;
-}
-
 static string _milestone_rune(const item_def &item)
 {
     return string("found ") + item.name(DESC_A) + ".";
@@ -1052,15 +1039,12 @@ static void _check_note_item(item_def &item)
 
 void origin_set(const coord_def& where)
 {
-    int monnum = _first_corpse_monnum(where);
     unsigned short pplace = get_packed_place();
     for (stack_iterator si(where); si; ++si)
     {
         if (origin_known(*si))
             continue;
 
-        if (!si->orig_monnum)
-            si->orig_monnum = static_cast<short>(monnum);
         si->orig_place  = pplace;
     }
 }
@@ -1069,9 +1053,6 @@ static void _origin_freeze(item_def &item, const coord_def& where)
 {
     if (!origin_known(item))
     {
-        if (!item.orig_monnum && where.x != -1 && where.y != -1)
-            item.orig_monnum = _first_corpse_monnum(where);
-
         item.orig_place = get_packed_place();
         _check_note_item(item);
     }
