@@ -2747,7 +2747,7 @@ retry:
         break;
 
     case SCR_RECHARGING:
-        if (item_is_rechargeable(item, false) && recharge_wand(item_slot, false))
+        if (item_is_rechargeable(item) && recharge_wand(item_slot, false))
             return true;
         id_prop = "SCR_RC";
         break;

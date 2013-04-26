@@ -1932,7 +1932,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_RECHARGING:
-        if (recharge_wand(-1) <= 0)
+        if (recharge_wand() <= 0)
             return false; // fail message is already given
         break;
 
