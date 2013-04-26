@@ -23,6 +23,8 @@
 #include "travel.h"
 #include "view.h"
 
+static void _daction_hog_to_human(monster *mon);
+
 #ifdef DEBUG_DIAGNOSTICS
 static const char *daction_names[] =
 {
@@ -215,7 +217,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local)
             break;
 
         case DACT_KIRKE_HOGS:
-            daction_hog_to_human(mon);
+            _daction_hog_to_human(mon);
             break;
 
         // The other dactions do not affect monsters directly.
@@ -292,7 +294,7 @@ unsigned int query_da_counter(daction_type c)
     return travel_cache.query_da_counter(c) + count_daction_in_transit(c);
 }
 
-void daction_hog_to_human(monster *mon)
+static void _daction_hog_to_human(monster *mon)
 {
     // Hogs to humans
     monster orig;

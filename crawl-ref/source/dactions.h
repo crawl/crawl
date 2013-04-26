@@ -10,6 +10,5 @@ unsigned int query_da_counter(daction_type c);
 
 bool mons_matches_daction(const monster* mon, daction_type act);
 void apply_daction_to_mons(monster* mons, daction_type act, bool local);
-void daction_hog_to_human(monster* mons);
 
 #endif
