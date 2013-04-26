@@ -1447,7 +1447,7 @@ MONS:   patrolling guardian mummy
 MONS:   greater mummy
 MONS:   mummy priest w:8 / guardian mummy hd:9 col:lightcyan spells:.;.;haste;\
         .;.;.; name:mummy_warrior n_rpl n_des actual_spells ; long sword | great \
-        sword | battleaxe | war axe | broad axe . chain mail w:15 \
+        sword | battleaxe | war axe | broad axe . chain mail w:15 | \
         plate armour w:1
 MONS:   guardian mummy
 MONS:   bog body / mummy / guardian mummy
