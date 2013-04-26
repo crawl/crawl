@@ -1075,7 +1075,7 @@ TAGS:    no_rotate
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
-ITEM:    disc of storms, air elemental fan, staff of air, book of the sky
+ITEM:    disc of storms, fan of gales, staff of air, book of the sky
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
