@@ -568,7 +568,7 @@ MONS:    rakshasa, guardian serpent / great orb of eyes
 ITEM:    potion of might / potion of speed / potion of heal wounds w:12 / \
          wand of lightning / wand of draining / wand of slowing w:5 / \
          wand of confusion w:5 / wand of fire w:1 / wand of cold w:1 / \
-         ring mail good_item / splint mail good_item w:12 / shield / \
+         ring mail good_item / chain mail good_item w:12 / shield / \
          spear good_item / trident good_item / any weapon w:12 / \
          any w:2
 SUBST:   x = ccccvbb
@@ -795,8 +795,7 @@ MONS:    bone dragon / tentacled starspawn / starcursed mass / \
 ITEM:    superb_item, piece of ambrosia q:2 / royal jelly q:2
 ITEM:    dart good_item q:100, any magical staff
 ITEM:    scroll of magic mapping q:4 / scroll of random uselessness q:4
-ITEM:    ring mail randart / scale mail randart / chain mail randart / \
-         splint mail randart
+ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
 ITEM:    demon blade ego:chaos ident:type / \
          demon trident ego:chaos ident:type / \
          demon whip ego:chaos ident:type

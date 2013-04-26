@@ -5109,7 +5109,7 @@ SUBST: k = IJKL
 SUBST: k = KLMNO
 : end
 KMONS: A = Blork the orc / human; long sword | falchion . chain mail . shield
-KMONS: B = human / human; great sword . splint mail|plate armour
+KMONS: B = human / human; great sword . chain mail|plate armour
 KMONS: C = Urug / elf; sabre | long sword . leather armour . buckler | nothing
 KMONS: D = Joseph / elf; long sword | scimitar . chain mail . shield
 KMONS: E = Erica / orc knight
@@ -5123,7 +5123,7 @@ KMONS: L = Agnes / deep elf knight
 KMONS: M = Rupert / vampire knight
 KMONS: N = Wiglaf / vault guard
 KMONS: O = Frederick / draconian knight
-KMONS: W = human; short sword . splint mail | chain mail . large shield
+KMONS: W = human; short sword . chain mail . large shield
 KMONS: X = human; scimitar . scale mail|chain mail . shield
 KMONS: Y = human; sabre | long sword . robe | leather armour . buckler | nothing
 KMONS: Z = orc; falchion | long sword . ring mail | scale mail . shield | nothing
@@ -5146,7 +5146,7 @@ DEPTH:  D:17-
 WEIGHT: 3
 MONS:   silver statue
 MONS:   patrolling hell knight ; broad axe unrand:obsidian_axe . \
-                                 chain mail | splint mail | plate armour . \
+                                 chain mail w:20 | plate armour . \
                                  shield | large shield
 MONS:   patrolling hell knight
 MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
@@ -5184,13 +5184,11 @@ WEIGHT: 3
 # KMONS is used here to get the fallback to work properly.
 KMONS:  W = Wiglaf ; war axe unrand:arga . \
                      shield race:dwarven . \
-                     chain mail w:3 race:dwarven | \
-                     splint mail w:5 race:dwarven | \
+                     chain mail w:8 race:dwarven | \
                      plate armour w:10 race:dwarven | \
                      crystal plate armour w:1 race:dwarven, \
             deep dwarf berserker ; war axe unrand:arga . \
-                                   chain mail w:5 race:dwarven | \
-                                   splint mail w:2 race:dwarven | \
+                                   chain mail w:7 race:dwarven | \
                                    plate armour w:1 race:dwarven
 KMONS:  J = Jorgrun, deep dwarf necromancer
 MONS:   deep dwarf berserker
@@ -5223,8 +5221,7 @@ DEPTH:  D:20-, Crypt
 WEIGHT: 3
 MONS:   deep dwarf death knight ; \
         great sword unrand:sword_of_the_doom_knight . \
-        chain mail race:dwarven w:5 | \
-        splint mail race:dwarven w:2 | \
+        chain mail race:dwarven w:7 | \
         plate armour race:dwarven w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
 MONS:   rotting hulk / freezing wraith / phantasmal warrior / \
