@@ -230,8 +230,8 @@ function omnigrid.connect(options)
   -- Setup default callbacks
   local fbail = options.bail_func or function(groups,count) return count <= mingroups end
   local fstyle = options.style_func or function() return options.default_style or "open" end
-  local wcell = options.cell_weight or function(c) return c.borders_left end
   local wgroup = options.group_weight or function(k,v) return v ~= nil and math.ceil(1000/#(v)) or 0 end
+  local wcell = options.cell_weight or function(c) return c.borders_left end
   -- Ensure border hasn't already been connected (given a style)
   -- and also that it's of enough length to actually create a path
   -- between the rooms
@@ -258,7 +258,7 @@ function omnigrid.connect(options)
     end
 
     -- Main exit condition; once we've reduced to a single group
-    if fbail(groups,count) or iters > maxiters then bail = true end
+    if fbail(groups,count) or iters > maxiters or group == nil then bail = true end
   end
 
   return groups
