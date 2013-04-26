@@ -817,7 +817,8 @@ void tile_list_processor::add_abstracts(
     FILE *fp,
     const char *format,
     const vector<string> &lc_enum,
-    const vector<string> &uc_max_enum)
+    const vector<string> &uc_max_enum,
+    bool is_js)
 {
     assert(lc_enum.size() == uc_max_enum.size());
     assert(!lc_enum.empty());
@@ -846,8 +847,9 @@ void tile_list_processor::add_abstracts(
             fprintf(fp,
                 "    else\n"
                 "    {\n"
-                "        ASSERT(idx < %s);\n"
+                "        %s(idx < %s);\n"
                 "        ",
+                is_js ? "assert" : "ASSERT",
                 uc_max_enum[i].c_str());
         }
         fprintf(fp, format, lc_enum[i].c_str());
@@ -1695,19 +1697,19 @@ bool tile_list_processor::write_data(bool image, bool code)
                 lc_enum.push_back(m_abstract[i].first);
 
             fprintf(fp, "exports.get_tile_info = function (idx)\n{\n");
-            add_abstracts(fp, "return (%s.get_tile_info(idx));", lc_enum, uc_max_enum);
+            add_abstracts(fp, "return (%s.get_tile_info(idx));", lc_enum, uc_max_enum, true);
             fprintf(fp, "};\n\n");
 
             fprintf(fp, "exports.tile_count = function (idx)\n{\n");
-            add_abstracts(fp, "return (%s.tile_count(idx));", lc_enum, uc_max_enum);
+            add_abstracts(fp, "return (%s.tile_count(idx));", lc_enum, uc_max_enum, true);
             fprintf(fp, "};\n\n");
 
             fprintf(fp, "exports.basetile = function (idx)\n{\n");
-            add_abstracts(fp, "return (%s.basetile(idx));", lc_enum, uc_max_enum);
+            add_abstracts(fp, "return (%s.basetile(idx));", lc_enum, uc_max_enum, true);
             fprintf(fp, "};\n\n");
 
             fprintf(fp, "exports.get_img = function (idx) {\n");
-            add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum);
+            add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum, true);
             fprintf(fp, "};\n\n");
         }
 

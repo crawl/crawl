@@ -24,7 +24,8 @@ protected:
         FILE *fp,
         const char *format,
         const vector<string> &lc_enum,
-        const vector<string> &uc_max_enum);
+        const vector<string> &uc_max_enum,
+        bool is_js = false);
 
     string m_name;
 
