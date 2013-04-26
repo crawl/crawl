@@ -1462,7 +1462,7 @@ KMONS: 8 = patrolling frost giant
 KMONS: L = patrolling ancient lich
 KMONS: g = patrolling orb guardian
 KMONS: y = patrolling moth of wrath
-KITEM: % = stone of earth elementals
+KITEM: % = stone of tremors
 {{
 lua_marker("A", portal_desc { spawn_spot = 1 })
 
