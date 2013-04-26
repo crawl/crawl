@@ -20,17 +20,17 @@ function ice_cave_portal(e)
 
   local messager =
     timed_msg {
-       initmsg = { "You feel a wave of frost pass through the air.",
-                  "The entrance to the ice cave is on this level "
-                  .. "Hurry and find its entrance before "
-                  .. "the portal melts!" },
-      -- $F{xxx} will be substituted with the 'entity' property of the timed
-      -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns_short,
-                               "The level seems slightly warmer",
-                               "The level begins to heat up.",
-                               "The heat is now above the melting point of ice.",
-                               "The temperature has almost returned to normal.")
+      initmsg = { "You feel a wave of frost pass over you.",
+                  "There is an entrance to an ice cave on this level. "
+                  .. "Hurry and find it before the portal melts!" },
+      finalmsg = "The crackling of melting ice is subsiding rapidly.",
+      verb = 'crackling',
+      noisemaker = 'melting archway',
+      ranges = {
+        { 5000, 'faint ' },  { 4000, '' },
+        { 2500, 'steady ' }, { 1500, 'rapid ' },
+        { 0, 'loud ' }
+      }
     }
 
   dgn.persist.ice_cave_hard = ice_cave_difficulty()

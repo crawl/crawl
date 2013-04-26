@@ -90,18 +90,20 @@ function wizlab_portal (e)
     local timeout_turns_long = crawl.random_range(2700, 3300)
     local timeout_turns_short = timeout_turns_long/10
     local messager =
-        timed_msg {
-             initmsg = { "You hear the crackle of arcane power.",
-                  "There is an entrance to a wizlab on this level! "
-                  .. "Hurry and find its entrance before "
-                  .. "the portal closes forever!" },
-            -- $F{xxx} will be substituted with the 'entity' property of the timed
-            -- marker, or with the desc property (if entity is not set).
-            messages = time_messages(timeout_turns_short,
-                            "The flow of magic on this level begins to slow down.",
-                            "The flow of magic on this level has slowed.",
-                            "The flow of magic on this level has slowed to the point of nonexistance.",
-                            "The flow of magic on this level is almost unobservable.")
+      timed_msg {
+           initmsg = { "You hear the crackle of arcane power.",
+                       "There is an entrance to a wizard's laboratory on"
+                       .. " this level! Hurray and find it before the "
+                       .. "portal closes forever!" },
+        finalmsg = "The crackle of the magical portal is almost imperceptible now.",
+
+        verb = 'crackle',
+        noisemaker = 'magical portal',
+        ranges = {
+          { 5000, 'rapid ' },  { 4000, '' },
+          { 2500, 'slow ' }, { 1500, 'irregular ' },
+          { 0, 'erratic ' }
+        }
     }
 
     e.lua_marker('O',

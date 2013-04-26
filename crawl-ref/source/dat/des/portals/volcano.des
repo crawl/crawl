@@ -47,19 +47,20 @@ function volcano_portal (e)
     local timeout_turns_short = timeout_turns_long/10
 
     local messager =
-        timed_msg {
-             initmsg = { "As you walk down the stairs, you feel an oppresive heat about you.",
-                  "There is a volcano on this level "
-                  .. "Hurry and find its entrance before "
-                  .. "the tunnel falls in on itself!" },
-            -- $F{xxx} will be substituted with the 'entity' property of the timed
-            -- marker, or with the desc property (if entity is not set).
-            messages = time_messages(timeout_turns_short,
-                            "You hear the sound of falling rocks.",
-                            "The sound of falling rocks has become omnipresent.",
-                            "As the sound of falling rocks becomes more irregular, the level begins to cool.",
-                            "The temperature has almost returned to normal.")
-    }
+      timed_msg {
+        initmsg = { "You feel an oppresive heat about you.",
+                    "There is an entrance to a volcano on this level. "
+                    .. "Hurry and find it before the entrance collapses!" },
+        finalmsg = "The sound of falling rocks suddenly begins to subside.",
+
+        verb = 'falling',
+        noisemaker = 'rocks',
+        ranges = {
+          { 5000, 'slow ' },  { 4000, '' },
+          { 2500, 'brisk ' }, { 1500, 'quick ' },
+          { 0, 'rapid ' }
+        }
+      }
 
     e.lua_marker('O',
       timed_marker {
