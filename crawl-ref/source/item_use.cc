@@ -2697,9 +2697,9 @@ static bool _scroll_modify_item(item_def scroll)
 {
     ASSERT(scroll.base_type == OBJ_SCROLLS);
 
-    // Get the slot of the scroll just read.
-    int item_slot = scroll.link;
+    int item_slot;
 
+retry:
     do
     {
         // Get the slot of the item the scroll is to be used on.
@@ -2723,6 +2723,17 @@ static bool _scroll_modify_item(item_def scroll)
 
     item_def &item = you.inv[item_slot];
 
+    if (item_is_melded(you.inv[item_slot]))
+    {
+        mpr("This item is melded into your body!");
+        if (Options.auto_list)
+            more();
+        goto retry;
+    }
+
+    bool show_msg = true;
+    const char* id_prop = nullptr;
+
     switch (scroll.sub_type)
     {
     case SCR_IDENTIFY:
@@ -2732,26 +2743,15 @@ static bool _scroll_modify_item(item_def scroll)
             return true;
         }
         else
-        {
-            you.type_id_props["SCR_ID"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-        }
+            id_prop = "SCR_ID";
         break;
+
     case SCR_RECHARGING:
-        if (item_is_rechargeable(item, false))
-        {
-            if (recharge_wand(item_slot, false))
-                return true;
-            you.type_id_props["SCR_RC"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-            return false;
-        }
-        else
-        {
-            you.type_id_props["SCR_RC"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-        }
+        if (item_is_rechargeable(item, false) && recharge_wand(item_slot, false))
+            return true;
+        id_prop = "SCR_RC";
         break;
+
     case SCR_ENCHANT_ARMOUR:
         if (is_enchantable_armour(item, true))
         {
@@ -2759,23 +2759,23 @@ static bool _scroll_modify_item(item_def scroll)
             // (If so, already prints the "Nothing happens" message.)
             if (_handle_enchant_armour(item_slot) > 0)
                 return true;
-            you.type_id_props["SCR_EA"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-            return false;
+            show_msg = false;
         }
-        else
-        {
-            you.type_id_props["SCR_EA"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-        }
+
+        id_prop = "SCR_EA";
         break;
+
     default:
         mprf("Buggy scroll %d can't modify item!", scroll.sub_type);
         break;
     }
 
+    if (id_prop)
+        you.type_id_props[id_prop] = item.name(DESC_PLAIN, false, false, false);
+
     // Oops, wrong item...
-    canned_msg(MSG_NOTHING_HAPPENS);
+    if (show_msg)
+        canned_msg(MSG_NOTHING_HAPPENS);
     return false;
 }
 
