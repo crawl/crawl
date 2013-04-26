@@ -172,9 +172,9 @@ static void _update_agrid()
 
     }
 
-    if (you.char_direction == GDT_ASCENDING && !you.duration[DUR_TIME_STEP])
+    if (you.char_direction == GDT_ASCENDING && !you.pos().origin())
     {
-        ASSERT(!env.orb_pos.origin());
+        ASSERT(env.orb_pos == you.pos());
 
         const int r = 5;
         _agrid_centres.push_back(area_centre(AREA_ORB, env.orb_pos, r));
