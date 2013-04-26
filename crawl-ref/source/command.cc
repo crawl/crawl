@@ -2227,7 +2227,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 #ifdef USE_TILE_LOCAL
     _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
 #else
-#if USE_TILE_WEB
+#ifdef USE_TILE_WEB
     if (tiles.is_controlled_from_web())
         cols.add_formatted(0, "<w>F12</w> : read messages (online play only)",
                            false);
