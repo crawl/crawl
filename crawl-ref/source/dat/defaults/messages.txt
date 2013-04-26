@@ -52,6 +52,7 @@ msc += $warning:rusting.*drain
 msc += $warning:drain falling apart
 msc += $warning:oppressive heat
 msc += $warning:falling.*rocks
+msc += $warning:rumble.*avalanche of rocks
 msc += $warning:crackle.*arcane power
 msc += $warning:crackle.*magical portal
 msc += lightcyan:LOW MAGIC WARNING

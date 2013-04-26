@@ -48,13 +48,13 @@ function volcano_portal (e)
 
     local messager =
       timed_msg {
-        initmsg = { "You feel an oppresive heat about you.",
+        initmsg = { "You feel an oppressive heat about you.",
                     "There is an entrance to a volcano on this level. "
                     .. "Hurry and find it before the entrance collapses!" },
         finalmsg = "The sound of falling rocks suddenly begins to subside.",
 
-        verb = 'falling',
-        noisemaker = 'rocks',
+        verb = 'rumble',
+        noisemaker = 'avalanche of rocks',
         ranges = {
           { 5000, 'slow ' },  { 4000, '' },
           { 2500, 'brisk ' }, { 1500, 'quick ' },
