@@ -151,7 +151,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     function set_input_mode(mode)
     {
         if (mode == input_mode) return;
-        log("input mode: " + mode + "/" + enums.reverse_lookup(enums.mouse_mode, mode));
         input_mode = mode;
         if (mode == enums.mouse_mode.COMMAND)
             messages.new_command();
