@@ -945,6 +945,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_GRANITE_STATUE:
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
+    case DNGN_SEALED_DOOR:
         // XXX: When silenced, features disappear without message.
         // XXX: For doors, we only issue a sound where the beam hit.
         //      If someone wants to improve on the door messaging,
@@ -1032,6 +1033,7 @@ void bolt::nuke_wall_effect()
 
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
+    case DNGN_SEALED_DOOR:
     {
         set<coord_def> doors = connected_doors(pos());
         set<coord_def>::iterator it;
@@ -2690,7 +2692,8 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
             || wall == DNGN_CLOSED_DOOR
-            || wall == DNGN_RUNED_DOOR)
+            || wall == DNGN_RUNED_DOOR
+            || wall == DNGN_SEALED_DOOR)
         {
             return B_TRUE;
         }
