@@ -20,16 +20,17 @@ function sewer_portal(e)
   local messager =
     timed_msg {
        initmsg = { "You hear the sound of rushing water.",
-                  "The entrance to the sewer is on this level "
-                  .. "Hurry and find its entrance before "
-                  .. "the portal rusts away!" },
-      -- $F{xxx} will be substituted with the 'entity' property of the timed
-      -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns/10,
-                               "$F{The} is slowly rusting away.",
-                               "$F{The} is rusting away.",
-                               "$F{The} is quickly rusting away.",
-                               "$F{The} is falling apart.")
+                   "There is an entrance to a sewer on this level. "
+                   .. "Hurry and find it before the portal rusts away!" },
+      finalmsg = "You hear the drain falling apart.",
+
+      verb = 'rusting',
+      noisemaker = 'drain',
+      ranges = {
+        { 5000, 'slow ' },  { 4000, '' },
+        { 2500, 'brisk ' }, { 1500, 'quick ' },
+        { 0, 'rapid ' }
+      }
     }
 
   e.lua_marker('O',

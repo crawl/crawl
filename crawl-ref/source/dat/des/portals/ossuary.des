@@ -18,17 +18,19 @@ function ossuary_portal(e)
 
   local messager =
     timed_msg {
-       initmsg = { "You hear the hiss of moving sand.",
-                  "The entrance to the ossuary is on this level "
-                  .. "Hurry and find its entrance before "
-                  .. "the portal is buried!" },
-      -- $F{xxx} will be substituted with the 'entity' property of the timed
-      -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns_short,
-          "The hiss of flowing sand begins to slow.",
-          "The hiss of flowing sand is becoming more faint.",
-          "The hiss of flowing sand has become irregular.",
-          "The hiss of flowing sand is almost imperceptable now.")
+      initmsg = { "You hear the hiss of flowing sand.",
+                  "There is an entrance to an ossuary on this level. "
+                  .. "Hurry and find it before the portal is buried!" },
+      finalmsg = "The hiss of flowing sand is almost imperceptible now.",
+
+      verb = 'hiss',
+      -- This is always preceeded by an article, so...
+      noisemaker = 'avalanche of sand',
+      ranges = {
+        { 5000, 'rapid ' },  { 4000, '' },
+        { 2500, 'slow ' }, { 1500, 'irregular ' },
+        { 0, 'erratic ' }
+      }
     }
 
   e.lua_marker('O',

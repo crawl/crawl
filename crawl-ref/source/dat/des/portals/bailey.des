@@ -18,17 +18,18 @@ function bailey_portal(e, ptype, trowel)
 
   local messager =
     timed_msg {
-         initmsg = { "You hear the roar of battle.",
-                  "The entrance to the bailey is on this level "
-                  .. "Hurry and find its entrance before "
-                  .. "the portal closes forever!" },
-      -- $F{xxx} will be substituted with the 'entity' property of the timed
-      -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns_short,
-                               "You hear a creaking noise, as though $F{a} was being lowered.",
-                               "You hear $F{the} being lowered.",
-                               "You hear $F{the} being lowered.",
-                               "$F{The} is probably going to close soon.")
+      initmsg = { "You hear the roar of battle.",
+                  "There is an entrance to a bailey on this level. "
+                  .. "Hurry and find it before the portal closes forever!" },
+      finalmsg = "$F{The} is probably going to close soon.",
+
+      verb = 'creaking',
+      noisemaker = 'oriflamme',
+        ranges = {
+          { 5000, 'faint ' },  { 4000, '' },
+          { 2500, 'steady ' }, { 1500, 'rapid ' },
+          { 0, 'frantic ' }
+      }
     }
 
   dgn.persist.bailey_type = "bailey_" .. ptype
