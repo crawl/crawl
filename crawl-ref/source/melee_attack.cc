@@ -4805,6 +4805,22 @@ void melee_attack::mons_apply_attack_flavour()
 
         defender->expose_to_element(BEAM_FIRE, 2);
         break;
+
+    case AF_DRAIN_SPEED:
+        if (coinflip() && !defender->res_negative_energy())
+        {
+            if (needs_message)
+            {
+                mprf("%s %s %s vigor!",
+                     atk_name(DESC_THE).c_str(),
+                     attacker->conj_verb("drain").c_str(),
+                     def_name(DESC_ITS).c_str());
+            }
+
+            special_damage = 1 + random2(damage_done) / 2;
+            defender->slow_down(attacker, 3 + random2(5));
+        }
+        break;
     }
 }
 
