@@ -4821,6 +4821,31 @@ void melee_attack::mons_apply_attack_flavour()
             defender->slow_down(attacker, 3 + random2(5));
         }
         break;
+
+    case AF_VULN:
+        if (one_chance_in(3))
+        {
+            bool visible_effect = false;
+            if (defender->is_player())
+            {
+                if (!you.duration[DUR_LOWERED_MR])
+                    visible_effect = true;
+                you.increase_duration(DUR_LOWERED_MR, 20 + random2(20), 40);
+            }
+            else
+            {
+                if (!defender->as_monster()->has_ench(ENCH_LOWERED_MR))
+                    visible_effect = true;
+                mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, attacker, 20 + random2(20));
+                defender->as_monster()->add_ench(lowered_mr);
+            }
+
+            if (needs_message && visible_effect)
+            {
+                mprf("%s magical defenses are striped away!",
+                     def_name(DESC_ITS).c_str());
+            }
+        }
     }
 }
 

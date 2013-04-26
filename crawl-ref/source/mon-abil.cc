@@ -55,6 +55,7 @@
 #include "target.h"
 #include "items.h"
 #include "mapmark.h"
+#include "teleport.h"
 
 #include <algorithm>
 #include <queue>
@@ -2986,6 +2987,19 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (one_chance_in(7) || mons->caught() && one_chance_in(3))
             used = monster_blink(mons);
         break;
+
+    case MONS_PHANTASMAL_WARRIOR:
+    {
+        actor *foe = mons->get_foe();
+        if (mons->no_tele(true, false))
+            break;
+        if (foe && foe->pos().distance_from(mons->pos()) > 2 && one_chance_in(3))
+        {
+            blink_close(mons);
+            used = true;
+        }
+        break;
+    }
 
     case MONS_SKY_BEAST:
         if (one_chance_in(8))
