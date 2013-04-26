@@ -83,9 +83,9 @@
 y  HPP MPP
  */
 #include <stdarg.h>
-#define CGOTOXY cgotoxy_touchui
-#define CPRINTF cprintf_touchui
-#define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf_touchui
+#define CGOTOXY _cgotoxy_touchui
+#define CPRINTF _cprintf_touchui
+#define NOWRAP_EOL_CPRINTF _nowrap_eol_cprintf_touchui
 
 enum touchui_states
 {
@@ -118,7 +118,7 @@ enum touchui_states
     TOUCH_V_LIGHT = 0x010B,
 };
 touchui_states TOUCH_UI_STATE = TOUCH_S_INIT;
-void cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
+static void _cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
 {
 //    printf("go to (%d,%d): ",x,y);
     if (tiles.is_using_small_layout())
@@ -200,7 +200,7 @@ void cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
     cgotoxy(x,y,region);
 }
 
-void cprintf_touchui(const char *format, ...)
+static void _cprintf_touchui(const char *format, ...)
 {
     va_list args;
     string  buf;
@@ -256,7 +256,7 @@ void cprintf_touchui(const char *format, ...)
     va_end(args);
 }
 
-void nowrap_eol_cprintf_touchui(const char *format, ...)
+static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 {
     va_list args;
     string  buf;
