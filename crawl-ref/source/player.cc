@@ -2544,7 +2544,7 @@ int player_evasion(ev_ignore_type evit)
     // The 1 EVP of leather armour may still incur an
     // adjusted_evasion_penalty, however.
     const int armour_dodge_penalty = max(0,
-        (30 * div_rand_round(you.adjusted_body_armour_penalty(scale, true), 3)
+        (10 * you.adjusted_body_armour_penalty(scale, true)
          - 30 * scale)
         / max(1, (int) you.strength()));
 
@@ -6017,9 +6017,10 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
     }
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
-    return ((2 * base_ev_penalty * base_ev_penalty / (5 * (strength() +3)))
+    return (2 * base_ev_penalty * base_ev_penalty
             * (450 - skill(SK_ARMOUR, 10))
             * scale
+            / (5 * (strength() +3))
             / 450);
 }
 
