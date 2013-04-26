@@ -4348,6 +4348,12 @@ void bolt::affect_monster(monster* mon)
         }
     }
 
+    if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL && !is_tracer)
+    {
+        if (you.see_cell(mon->pos()))
+            mprf("The %s passes through %s", name.c_str(), mon->name(DESC_THE).c_str());
+    }
+
     if (ignores_monster(mon))
     {
         apply_hit_funcs(mon, 0);
@@ -4667,6 +4673,9 @@ bool bolt::ignores_monster(const monster* mon) const
 
     // Fire storm creates these, so we'll avoid affecting them.
     if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
+        return true;
+
+    if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
         return true;
 
     return false;
