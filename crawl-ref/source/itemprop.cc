@@ -135,9 +135,9 @@ static const armour_def Armour_prop[NUM_ARMOURS] =
         true,  EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM },
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
-    { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -7,  100,
+    { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -6,  100,
         true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
-    { ARM_NAGA_BARDING,         "naga barding",           4,  -7,  100,
+    { ARM_NAGA_BARDING,         "naga barding",           4,  -6,  100,
         true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis

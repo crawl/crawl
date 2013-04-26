@@ -658,12 +658,12 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 
     // Bonus for bounded armour depends on body armour type.
     case (ET_ARMOUR):
-        if (evp < 2)
+        if (evp < 6)
         {
             boost[SK_STEALTH] = bondage;
             boost[SK_DODGING] = bondage;
         }
-        else if (evp < 4)
+        else if (evp < 12)
         {
             boost[SK_DODGING] = bondage;
             boost[SK_ARMOUR] = bondage;
