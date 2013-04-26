@@ -2369,7 +2369,7 @@ static int _player_armour_racial_bonus(const item_def& item)
 bool is_effectively_light_armour(const item_def *item)
 {
     return (!item
-            || (abs(property(*item, PARM_EVASION)) < 2));
+            || (abs(property(*item, PARM_EVASION)) < 6));
 }
 
 bool player_effectively_in_light_armour()
@@ -2420,7 +2420,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
 
         // [ds] Evasion modifiers for armour are negatives, change
         // those to positive for penalty calc.
-        const int penalty = -property(you.inv[you.equip[i]], PARM_EVASION);
+        const int penalty = (-property(you.inv[you.equip[i]], PARM_EVASION))/3;
         if (penalty > 0)
             piece_armour_evasion_penalty += penalty;
     }
@@ -3763,8 +3763,9 @@ int check_stealth(void)
         if (arm)
         {
             // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
+            // Now 2 * EP^2 / 3 after EP rescaling.
             const int ep = -property(*arm, PARM_EVASION);
-            const int penalty = 6 * ep * ep;
+            const int penalty = 2 * ep * ep / 3;
     #if 0
             dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
     #endif
