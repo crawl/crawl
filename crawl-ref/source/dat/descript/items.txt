@@ -2487,16 +2487,6 @@ spiked flail
 A flail improved by a longer chain and the addition of spikes on the striking
 head.
 %%%%
-splint mail
-
-A heavy suit of body armour consisting of narrow strips of metal which are
-attached lengthwise to a thick leather backing. While offering great
-protection, splint mail is quite difficult to move in without proper training.
-%%%%
-splint mail:quote
-
-<leather armour:quote>
-%%%%
 staff of air
 
 This staff increases the power of air spells cast by its wielder, and insulates

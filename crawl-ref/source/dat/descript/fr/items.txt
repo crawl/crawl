@@ -1462,13 +1462,6 @@ spiked flail
 Un fléau amélioré par l'addition de pointes sur la tête de frappe, et une
 chaîne plus longue.
 %%%%
-splint mail
-
-Une armure lourde pour le torse composé d'étroites bandes de métal attachées
-sur sa longueur par dessus un épais support en cuir. Tout en offrant une grande
-protection, Il est assez difficile de se déplacer avec sans un entrainement
-adéquate.
-%%%%
 staff of air
 
 Ce bâton augmente la puissance des sorts d'air lancés par son porteur, et
