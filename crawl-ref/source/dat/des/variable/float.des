@@ -3291,13 +3291,13 @@ MONS:    spriggan rider ; wand of frost . crossbow ego:flame . bolt q:25 / \
 MONS:    two-headed ogre ; giant club ego:holy_wrath . \
          great mace ego:draining . wand of confusion | wand of slowing
 MONS:    rakshasa ; scythe ego:anti-magic | trident ego:anti-magic . \
-         dart ego:exploding q:25 / mermaid ; splint mail . javelin ego:poisoned q:6
+         dart ego:exploding q:25 / mermaid ; chain mail . javelin ego:poisoned q:6
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
 MONS:    ettin ; giant club ego:holy_wrath . great mace ego:draining . \
          wand of confusion | wand of slowing / golden dragon
 MONS:    vampire knight ; wand of lightning | wand of draining / \
-         greater naga ; splint mail . halberd ego:anti-magic | glaive ego:anti-magic
+         greater naga ; chain mail . halberd ego:anti-magic | glaive ego:anti-magic
 KMONS:   A = fire drake / flaming corpse / fire elemental
 KMONS:   B = lindwurm / mottled dragon / efreet w:5
 KMONS:   C = fire crab / hell knight

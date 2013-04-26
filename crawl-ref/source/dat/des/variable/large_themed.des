@@ -1434,8 +1434,8 @@ SUBST: y = x..
 SUBST: ; = %A.....l
 KITEM: % = dwarf skeleton
 : dgn.delayed_decay(_G, '%', 'dwarf skeleton')
-KITEM: A = any weapon race:dwarven w:20 /  chain mail race:dwarven w:30 / \
-           splint mail race:dwarven w:30 / plate armour race:dwarven w:19 / \
+KITEM: A = any weapon race:dwarven w:20 /  chain mail race:dwarven w:60 / \
+           plate armour race:dwarven w:19 / \
            crystal plate armour race:dwarven w:1
 MAP
 xxxxxxxxxxxxxxx

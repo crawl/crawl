@@ -214,7 +214,7 @@ NAME: grunt_rogue_mifi
 TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_fi
 KMONS: O = minotaur name:fighter n_suf hd:15 god:okawaru ; \
            great sword good_item | battleaxe good_item | trident good_item . \
-           chain mail w:10 good_item | splint mail w:5 good_item | \
+           chain mail w:15 good_item | \
            plate armour good_item w:1
 SHUFFLE: dh, ei, fj, gk
 KITEM: df = any armour good_item
@@ -233,7 +233,7 @@ KMONS: O = minotaur name:berserker n_suf hd:15 god:trog \
            great sword ego:anti-magic good_item | \
            battleaxe ego:anti-magic good_item | \
            trident ego:anti-magic good_item . \
-           chain mail w:10 good_item | splint mail w:5 good_item | \
+           chain mail w:15 good_item | \
            plate armour good_item w:1
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = any armour good_item
@@ -326,7 +326,7 @@ ENDMAP
 NAME: grunt_rogue_mimo
 TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_mi uniq_grunt_rogue_mo
 KMONS: O = minotaur name:monk n_suf hd:15 god:okawaru ; \
-           chain mail w:10 good_item | splint mail w:5 good_item | \
+           chain mail w:15 good_item | \
            plate armour good_item w:1
 SHUFFLE: dh, ei, fj, gk
 KITEM: defg = any armour good_item
@@ -363,8 +363,7 @@ WEIGHT: 0
 TAGS: grunt_rogue_subvault unrand patrolling uniq_grunt_rogue_dd uniq_grunt_rogue_be
 KMONS: O = deep dwarf berserker hd:15 god:trog ; \
            battleaxe good_item | executioner's axe good_item w:5 . \
-           chain mail good_item w:10 | \
-           splint mail good_item w:5 | \
+           chain mail good_item w:15 | \
            plate armour good_item w:1
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = any armour good_item
@@ -405,8 +404,7 @@ KMONS: O = orc high priest hd:15 god:beogh ; \
            executioner's axe race:orcish good_item w:5 | \
            dire flail race:orcish good_item | \
            great mace race:orcish good_item w:5 . \
-           chain mail race:orcish w:10 good_item | \
-           splint mail race:orcish w:5 good_item | \
+           chain mail race:orcish w:15 good_item | \
            plate armour race:orcish good_item w:1
 KMONS: H = orc knight
 KMONS: I = orc sorcerer
@@ -446,8 +444,7 @@ KMONS: O = orc warlord god:okawaru ; \
            executioner's axe race:orcish good_item w:5 | \
            dire flail race:orcish good_item | \
            great mace race:orcish good_item w:5 . \
-           chain mail race:orcish w:10 good_item | \
-           splint mail race:orcish w:5 good_item | \
+           chain mail race:orcish w:15 good_item | \
            plate armour race:orcish good_item w:1
 SHUFFLE: dh, ei, fj, gk
 KITEM: df = any armour race:orcish good_item
@@ -613,7 +610,7 @@ KMONS: O = minotaur name:death_knight n_suf hd:15 god:yredelemnul col:magenta \
            great sword ego:draining good_item | \
            battleaxe ego:draining good_item | \
            trident ego:draining good_item . \
-           chain mail w:10 good_item | splint mail w:5 good_item | \
+           chain mail w:15 good_item | \
            plate armour good_item w:1
 KMONS: Z = zombie
 SHUFFLE: dh, ei, fj, gk
@@ -651,7 +648,7 @@ KMONS: O = orc warlord name:orc_berserker n_rpl n_des n_noc hd:15 god:trog \
            great sword ego:anti-magic good_item | \
            battleaxe ego:anti-magic good_item | \
            trident ego:anti-magic good_item . \
-           chain mail w:10 good_item | splint mail w:5 good_item | \
+           chain mail w:15 good_item | \
            plate armour good_item w:1
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = any armour good_item
@@ -732,7 +729,7 @@ KMONS: O = demonspawn name:berserker n_suf hd:15 god:trog col:lightred \
            great sword ego:anti-magic good_item | \
            battleaxe ego:anti-magic good_item | \
            trident ego:anti-magic good_item . \
-           chain mail w:10 good_item | splint mail w:5 good_item | \
+           chain mail w:15 good_item | \
            plate armour good_item w:1
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = any armour good_item

@@ -1419,18 +1419,18 @@ MONS:   generate_awake curse skull / generate_awake curse toe
 MONS:   patrolling vampire hd:8 col:green name:noble n_suf / patrolling \
         vampire hd:10 col:blue spells:.;.;haste;.;.;.; name:vampire_warrior \
         n_rpl n_des actual_spells ; long sword | great sword | battleaxe | \
-        war axe | broad axe . chain mail w:10 | splint mail w:5 | plate armour \
+        war axe | broad axe . chain mail w:15 | plate armour \
         w:1
 # Using KMONS with fallback to vampire knight:
 KMONS:  2 = vampire knight / Jory, vampire knight
 MONS:   dancing weapon ; any weapon ego:vampiricism / vampire hd:10 col:blue \
         spells:.;.;haste;.;.;.; name:vampire_warrior n_rpl n_des actual_spells \
         ; long sword | great sword | battleaxe | war axe | broad axe . chain \
-        mail w:10 | splint mail w:5 | plate armour w:1
+        mail w:15 | plate armour w:1
 MONS:   phantasmal warrior / vampire hd:10 col:blue spells:.;.;haste;.;.;.; \
         name:vampire_warrior n_rpl n_des actual_spells ; long sword | great \
-        sword | battleaxe | war axe | broad axe . chain mail w:10 | splint \
-        mail w:5 | plate armour w:1
+        sword | battleaxe | war axe | broad axe . chain mail w:15 | \
+        plate armour w:1
 MONS:   vampire / zombie / golden dragon zombie w:3 / storm dragon zombie \
         w:3
 MONS:   generate_awake vampire mage
@@ -1447,8 +1447,8 @@ MONS:   patrolling guardian mummy
 MONS:   greater mummy
 MONS:   mummy priest w:8 / guardian mummy hd:9 col:lightcyan spells:.;.;haste;\
         .;.;.; name:mummy_warrior n_rpl n_des actual_spells ; long sword | great \
-        sword | battleaxe | war axe | broad axe . chain mail w:10 | splint mail \
-        w:5 | plate armour w:1
+        sword | battleaxe | war axe | broad axe . chain mail w:15 \
+        plate armour w:1
 MONS:   guardian mummy
 MONS:   bog body / mummy / guardian mummy
 MONS:   generate_awake sphinx

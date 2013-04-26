@@ -189,8 +189,8 @@ end
 
 function setup_loot (e)
     e.item(make_fiery_armour(e,  {"robe w:30", "animal skin w:30", "leather armour w:30",
-                                  "ring mail w:30", "scale mail w:20", "chain mail w:20",
-                                  "splint mail w:20", "plate armour w:10", "pair of gloves w:5",
+                                  "ring mail w:30", "scale mail w:20", "chain mail w:40",
+                                  "plate armour w:10", "pair of gloves w:5",
                                   "helmet w:6", "pair of boots w:3", "cap w:2", "wizard hat w:2",
                                   "shield w:1", "buckler w:3"}) ..
                                   " / fire dragon armour w:5")
@@ -244,7 +244,6 @@ function fiery_guardians (e, village)
                             .. " | great sword race:orcish " .. flame
                             .. " | glaive race:orcish " .. flame
                             .. " . chain mail race:orcish " .. res
-                            .. " | splint mail race:orcish " .. res
         local magestuff = "spear " .. flame
                           .. " | whip " .. flame
                           .. " . robe " .. res
@@ -313,7 +312,6 @@ function fiery_guardians (e, village)
                            .. " | halberd " .. flame
                            .. " | war axe " .. flame
                            .. " . chain mail " .. res
-                           .. " | splint mail " .. res
         local set_weight = crawl.random2(8)
         if set_weight < 3 then
             -- "Lair"-esque monster pack.
