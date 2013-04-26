@@ -1338,12 +1338,6 @@ spiked flail
 
 Broń podobna do cepa, z kolczastą kulą zamiast bijaka.
 %%%%
-splint mail
-
-Zbroja z prostokątnych metalowych płytek, połączonych metalowymi kółkami. Daje
-to bardzo dobrą ochronę przed ciosami — co prawda znacznie gorszą niż pełna
-zbroja płytowa, jednak umożliwia ona dużo większą swobodę ruchów.
-%%%%
 staff of air
 
 Ten kij zwiększa moc czarów Magii Powietrza, a także zapewnia ochronę przed
