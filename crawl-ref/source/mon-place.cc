@@ -2768,7 +2768,7 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_MERFOLK_AQUAMANCER:
         return random_choose_weighted( 8, MONS_MERFOLK,
-                                      10, MONS_ICE_BEAST,
+                                      10, MONS_WATER_ELEMENTAL,
                                        0);
 
     case BAND_MERFOLK_IMPALER:
