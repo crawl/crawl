@@ -93,7 +93,7 @@ function wizlab_portal (e)
       timed_msg {
            initmsg = { "You hear the crackle of arcane power.",
                        "There is an entrance to a wizard's laboratory on"
-                       .. " this level! Hurray and find it before the "
+                       .. " this level! Hurry and find it before the "
                        .. "portal closes forever!" },
         finalmsg = "The crackle of the magical portal is almost imperceptible now.",
 
