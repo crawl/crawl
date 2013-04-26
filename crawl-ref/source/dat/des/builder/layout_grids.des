@@ -279,10 +279,10 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
 # Draws a random grid but can use a variety of different shapes to draw each grid area.
 NAME:   layout_grid_shapes
-DEPTH:  D:5-, Lair, Snake
-WEIGHT: 8
+DEPTH:  D:5-, Lair, Snake, Pan
+WEIGHT: 8, 20(Pan)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+TAGS: overwritable layout allow_dup unrand
 {{
   if is_validating() then return; end
 
@@ -365,10 +365,10 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 # up rooms until all original cells are connected.
 # TODO: Needs per-branch variations.
 NAME:   layout_grid_maze
-DEPTH:  D:5-, Lair, Snake, Dis
-WEIGHT: 5, 20 (Dis)
+DEPTH:  D:5-, Lair, Snake, Dis, Pan
+WEIGHT: 5, 20 (Dis), 10 (Pan)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
+TAGS: overwritable layout allow_dup unrand
 {{
   if is_validating() then return; end
 
