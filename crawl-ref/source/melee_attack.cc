@@ -4336,9 +4336,33 @@ void melee_attack::splash_defender_with_acid(int strength)
     }
 }
 
+static void _print_resist_messages(actor* defender, int base_damage,
+                                   beam_type flavour)
+{
+    // check_your_resists is used for the player case to get additional
+    // effects such as Xom amusement, melting of icy effects, etc.
+    // mons_adjust_flavoured is used for the monster case to get all of the
+    // special message handling ("The ice beast melts!") correct.
+    // XXX: there must be a nicer way to do this, especially because we're
+    // basically calculating the damage twice in the case where messages
+    // are needed.
+    if (defender->is_player())
+        (void)check_your_resists(base_damage, flavour, "");
+    else
+    {
+        bolt beam;
+        beam.flavour = flavour;
+        (void)mons_adjust_flavoured(defender->as_monster(),
+                                    beam,
+                                    base_damage,
+                                    true);
+    }
+}
+
 void melee_attack::mons_apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
+    int base_damage = 0;
 
     attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOS)
@@ -4390,6 +4414,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIRE:
+        base_damage = attacker->get_experience_level()
+                      + random2(attacker->get_experience_level());
         if (attacker->type == MONS_FIRE_VORTEX)
             attacker->as_monster()->suicide(-10);
 
@@ -4397,29 +4423,33 @@ void melee_attack::mons_apply_attack_flavour()
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
                                  defender->res_fire(),
-                                 attacker->get_experience_level()
-                                 + random2(attacker->get_experience_level()));
+                                 base_damage);
+        special_damage_flavour = BEAM_FIRE;
 
-        if (needs_message && special_damage)
+        if (needs_message && base_damage)
         {
             mprf("%s %s engulfed in flames%s",
                  def_name(DESC_THE).c_str(),
                  defender->conj_verb("are").c_str(),
                  special_attack_punctuation().c_str());
+
+            _print_resist_messages(defender, base_damage, BEAM_FIRE);
         }
 
         defender->expose_to_element(BEAM_FIRE, 2);
         break;
 
     case AF_COLD:
+        base_damage = attacker->get_experience_level()
+                      + random2(2 * attacker->get_experience_level());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_COLD,
                                  defender->res_cold(),
-                                 attacker->get_experience_level() +
-                                 random2(2 * attacker->get_experience_level()));
+                                 base_damage);
+        special_damage_flavour = BEAM_COLD;
 
-        if (needs_message && special_damage)
+        if (needs_message && base_damage)
         {
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
@@ -4427,28 +4457,32 @@ void melee_attack::mons_apply_attack_flavour()
                  defender_name().c_str(),
                  special_attack_punctuation().c_str());
 
+            _print_resist_messages(defender, base_damage, BEAM_COLD);
         }
 
         defender->expose_to_element(BEAM_COLD, 2);
         break;
 
     case AF_ELEC:
+        base_damage = attacker->get_experience_level()
+                      + random2(attacker->get_experience_level() / 2);
+
         special_damage =
-            resist_adjust_damage(
-                defender,
-                BEAM_ELECTRICITY,
-                defender->res_elec(),
-                attacker->get_experience_level() +
-                random2(attacker->get_experience_level() / 2));
+            resist_adjust_damage(defender,
+                                 BEAM_ELECTRICITY,
+                                 defender->res_elec(),
+                                 base_damage);
         special_damage_flavour = BEAM_ELECTRICITY;
 
-        if (needs_message && special_damage)
+        if (needs_message && base_damage)
         {
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
                  defender_name().c_str(),
                  special_attack_punctuation().c_str());
+
+            _print_resist_messages(defender, base_damage, BEAM_ELECTRICITY);
         }
 
         dprf(DIAG_COMBAT, "Shock damage: %d", special_damage);
