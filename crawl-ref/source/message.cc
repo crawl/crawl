@@ -629,10 +629,18 @@ class message_store
     int unsent; // number of messages not yet sent to the webtiles client
     bool prev_unsent;
     int client_rollback;
+#ifdef USE_TILE_WEB
+    bool send_ignore_one;
+#endif
 
 public:
     message_store() : last_of_turn(false), temp(0),
-                      unsent(0), prev_unsent(false), client_rollback(0) {}
+                      unsent(0), prev_unsent(false),
+                      client_rollback(0)
+#ifdef USE_TILE_WEB
+                      , send_ignore_one(false)
+#endif
+    {}
 
     void add(const message_item& msg)
     {
@@ -661,7 +669,15 @@ public:
             temp++;
         else
             reset_temp();
+#ifdef USE_TILE_WEB
+        // ignore this message until it's actually displayed in case we run out
+        // of space and have to display --more-- instead
+        send_ignore_one = true;
+#endif
         msgwin.add_item(msg.with_repeats(), p, _temporary);
+#ifdef USE_TILE_WEB
+        send_ignore_one = false;
+#endif
     }
 
     void roll_back()
@@ -724,7 +740,7 @@ public:
     void send(int old_msgs = 0)
     {
         unsent += old_msgs;
-        if (unsent == 0) return;
+        if (unsent == 0 || (send_ignore_one && unsent == 1)) return;
 
         if (client_rollback > 0)
         {
@@ -734,7 +750,7 @@ public:
         if (old_msgs > 0)
             tiles.json_write_int("old_msgs", old_msgs);
         tiles.json_open_array("messages");
-        for (int i = -unsent; i < 0; ++i)
+        for (int i = -unsent; i < (send_ignore_one ? -1 : 0); ++i)
         {
             message_item& msg = msgs[i];
             tiles.json_open_object();
@@ -756,7 +772,7 @@ public:
             tiles.json_close_object();
         }
         tiles.json_close_array();
-        unsent = 0;
+        unsent = send_ignore_one ? 1 : 0;
         prev_unsent = false;
     }
 #endif
