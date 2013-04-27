@@ -4254,6 +4254,7 @@ bool tso_unchivalric_attack_safe_monster(const monster* mon)
     const mon_holy_type holiness = mon->holiness();
     return (mons_intel(mon) < I_NORMAL
             || mon->undead_or_demonic()
+            || mon->is_shapeshifter()
             || !mon->is_holy() && holiness != MH_NATURAL);
 }
 
