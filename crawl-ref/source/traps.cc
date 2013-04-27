@@ -226,7 +226,7 @@ bool trap_def::is_safe(actor* act) const
         act = &you;
 
     // Shaft and mechanical traps are safe when flying or clinging.
-    if ((act->airborne() || act->can_cling_to(pos))
+    if ((act->airborne() || act->can_cling_to(pos) || you.species == SP_DJINNI)
         && category() != DNGN_TRAP_MAGICAL)
     {
         return true;

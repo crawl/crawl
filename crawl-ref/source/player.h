@@ -975,6 +975,7 @@ void dec_haste_player(int delay);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player();
+bool is_hovering();
 
 void dec_disease_player(int delay);
 

@@ -426,8 +426,11 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
                        bool ignore_items)
 {
-    if (you.permanent_flight() || you.airborne() && !permanently)
+    if (you.permanent_flight() || you.species == SP_DJINNI
+        || you.airborne() && !permanently)
+    {
         return false;
+    }
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
              || grid == DNGN_LAVA)
     {
@@ -2288,6 +2291,9 @@ int player_speed(void)
         ps *= 15;
         ps /= 10;
     }
+
+    if (is_hovering())
+        ps = ps * 3 / 2;
 
     return ps;
 }
@@ -4180,6 +4186,7 @@ void display_char_status()
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
         STATUS_CLINGING,
+        STATUS_HOVER,
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         STATUS_BACKLIT,
@@ -5377,6 +5384,14 @@ bool land_player()
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false, true);
     return true;
+}
+
+bool is_hovering()
+{
+    return you.species == SP_DJINNI
+           && !feat_has_dry_floor(grd(you.pos()))
+           && !you.airborne()
+           && !you.is_wall_clinging();
 }
 
 int count_worn_ego(int which_ego)
