@@ -927,6 +927,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
         STATUS_CLINGING,
+        STATUS_HOVER,
         DUR_TORNADO,
         DUR_LIQUEFYING,
         DUR_HEROISM,
