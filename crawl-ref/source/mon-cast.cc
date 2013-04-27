@@ -2813,7 +2813,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     int retval = -1;
 
-    const int pow = min(mons->hit_dice * 12, 200);
+    const int pow = min(mons->hit_dice * 18, 200);
 
     for (actor_iterator ai(mons->get_los()); ai; ++ai)
     {
