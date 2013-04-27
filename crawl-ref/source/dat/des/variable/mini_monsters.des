@@ -5087,31 +5087,30 @@ TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:17-
 WEIGHT: 3
 MONS:   silver statue
-MONS:   patrolling hell knight ; broad axe unrand:obsidian_axe . \
-                                 chain mail | splint mail | plate armour . \
-                                 shield | large shield
 MONS:   patrolling hell knight
 MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
         ynoxinul / chaos spawn
 MONS:   blue devil / iron devil / orange demon / red devil / rotting devil / \
         sixfirhy
-KPROP:  ._cGO12345 = bloody / nothing w:20
+KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb
+KFEAT:  - = altar_makhleb
+KITEM:  - = broad axe unrand:obsidian_axe
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0}
 MAP
       ccccc
       cO1Oc
-      c3_3c
-     cc424cc
-    cc5.4.5cc
-   cc.G5.5G.cc
-  ccc5.....5ccc
-.ccOc.G5.5G.cOcc.
-.c5.c.......c.5c.
-@+.3+.G.4.G.+3.+@
-.c5.c..._...c.5c.
+      c2-2c
+     cc323cc
+    cc4.3.4cc
+   cc.G4.4G.cc
+  ccc4.....4ccc
+.ccOc.G4.4G.cOcc.
+.c4.c.......c.4c.
+@+.2+.G.3.G.+2.+@
+.c4.c..._...c.4c.
 .ccOcc.O1O.ccOcc.
 ..ccccccccccccc..
  ...............
