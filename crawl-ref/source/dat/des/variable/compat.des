@@ -4,4 +4,12 @@
 function callback.grunt_victim_ignite(data, triggerable, triggerer, marker, ev)
   -- the victims don't spawn before; do nothing
 end
+
+function callback.wall_jericho_stepped(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.wall_jericho_tick(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
 }}
