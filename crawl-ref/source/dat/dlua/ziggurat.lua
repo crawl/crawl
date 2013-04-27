@@ -487,7 +487,7 @@ end
 function ziggurat_loot_spot(e, key)
   e.lua_marker(key, portal_desc { ziggurat_loot = "X" })
   e.kfeat(key .. " = .")
-  e.marker("@ = feat: permarock_wall")
+  e.marker("@ = lua:props_marker({ door_restrict=\"veto\" })")
   e.kfeat("@ = +")
 end
 
@@ -495,13 +495,6 @@ local has_loot_chamber = false
 
 local function ziggurat_create_loot_vault(entry, exit)
   local inc = (exit - entry):sgn()
-
-  local function find_door_spot(p)
-    while not feat.is_wall(p.x, p.y) do
-      p = p + inc
-    end
-    return p
-  end
 
   local connect_point = exit - inc * 3
   local map = dgn.map_by_tag("ziggurat_loot_chamber")
