@@ -2398,7 +2398,8 @@ static void _check_doors()
             if (feat_is_solid(grd(*rai)))
                 solid_count++;
 
-        _set_grd(*ri, solid_count < 2 ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
+        if (solid_count < 2)
+            _set_grd(*ri, DNGN_FLOOR);
     }
 }
 
