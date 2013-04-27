@@ -2303,8 +2303,16 @@ void handle_monsters(bool with_noise)
             monster_queue.push(pair<monster *, int>(*mi, mi->speed_increment));
     }
 
-    while (monster_queue.size())
+    int tries = 0; // infinite loop protection, shouldn't be ever needed
+    while (!monster_queue.empty())
     {
+        if (tries++ > 32767)
+        {
+            die("infinite handle_monsters() loop, mons[0 of %d] is %s",
+                (int)monster_queue.size(),
+                monster_queue.top().first->name(DESC_PLAIN, true).c_str());
+        }
+
         monster *mon = monster_queue.top().first;
         const int oldspeed = monster_queue.top().second;
         monster_queue.pop();
