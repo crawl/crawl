@@ -2311,6 +2311,9 @@ void check_item_knowledge(bool unknown_items)
 
             if (i == OBJ_JEWELLERY && j == AMU_CONTROLLED_FLIGHT)
                 continue;
+
+            if (i == OBJ_STAVES && j == STAFF_ENCHANTMENT)
+                continue;
 #endif
 
             if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
@@ -2369,6 +2372,11 @@ void check_item_knowledge(bool unknown_items)
         // Missiles
         for (int i = 0; i < NUM_MISSILES; i++)
         {
+#if TAG_MAJOR_VERSION == 34
+            if (i == MI_PIE)
+                continue;
+#endif
+
             item_def* ptmp = new item_def;
             if (ptmp != 0)
             {
