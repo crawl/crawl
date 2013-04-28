@@ -656,7 +656,8 @@ bool you_can_wear(int eq, bool special_armour)
         // These species cannot wear boots.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE)
+            || you.species == SP_OGRE
+            || you.species == SP_DJINNI)
         {
             return false;
         }
@@ -713,6 +714,7 @@ bool player_has_feet(bool temp)
     if (you.species == SP_NAGA
         || you.species == SP_FELID
         || you.species == SP_OCTOPODE
+        || you.species == SP_DJINNI
         || you.fishtail && temp)
     {
         return false;
