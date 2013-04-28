@@ -67,6 +67,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
+#include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
 
@@ -1555,6 +1556,16 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
+static void _fish(item_def &item, short quant = 0)
+{
+    if (you.species != SP_DJINNI || !feat_is_watery(grd(you.pos())))
+        return;
+
+    unwind_var<short> partial(item.quantity, quant ? quant : item.quantity);
+    mprf("You fish the %s out of the water.", item.name(DESC_PLAIN).c_str());
+    you.time_taken += 5;
+}
+
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player(int obj, int quant_got, bool quiet,
@@ -1584,6 +1595,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     // Gold has no mass, so we handle it first.
     if (it.base_type == OBJ_GOLD)
     {
+        _fish(it);
         _got_gold(it, quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
 
@@ -1601,6 +1613,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         if (!quiet)
         {
+            _fish(it);
             mprf("You pick up the %s rune and feel its power.",
                  rune_type_name(it.plus));
             int nrunes = runes_in_pack();
@@ -1681,6 +1694,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
+                if (!quiet)
+                    _fish(it, quant_got);
 
                 _check_note_item(it);
 
@@ -1724,14 +1739,12 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     if (!quiet && partial_pickup)
         mpr("You can only carry some of what is here.");
+    if (!quiet)
+        _fish(it, quant_got);
 
     int freeslot = find_free_slot(it);
-    if (freeslot < 0 || freeslot >= ENDOFPACK
-        || you.inv[freeslot].defined())
-    {
-        // Something is terribly wrong.
-        return -1;
-    }
+    ASSERT(freeslot >= 0 && freeslot < ENDOFPACK);
+    ASSERT(!you.inv[freeslot].defined());
 
     if (it.base_type == OBJ_ORBS
         && you.char_direction == GDT_DESCENDING)
