@@ -803,7 +803,8 @@ bool evoke_item(int slot)
             canned_msg(MSG_TOO_HUNGRY);
             return false;
         }
-        else if (you.magic_points >= you.max_magic_points)
+        else if (you.magic_points >= you.max_magic_points
+                 && (you.species != SP_DJINNI || you.hp == you.hp_max))
         {
             mpr("Your reserves of magic are already full.");
             return false;
