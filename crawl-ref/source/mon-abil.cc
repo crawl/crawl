@@ -3572,8 +3572,18 @@ void mon_nearby_ability(monster* mons)
 
             interrupt_activity(AI_MONSTER_ATTACKS, mons);
 
-            int mp = min(5 + random2avg(13, 3), you.magic_points);
-            dec_mp(mp);
+            int mp = 5 + random2avg(13, 3);
+            if (you.species != SP_DJINNI)
+                mp = min(mp, you.magic_points);
+            else
+            {
+                // Cap draining somehow, otherwise a ghost moth will heal
+                // itself every turn.  Other races don't have such a problem
+                // because they drop to 0 mp nearly immediately.
+                mp = mp * (you.hp_max - you.duration[DUR_ANTIMAGIC] / 3)
+                        / you.hp_max;
+            }
+            drain_mp(mp);
 
             mons->heal(mp, true); // heh heh {dlb}
         }

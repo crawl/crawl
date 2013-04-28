@@ -2387,7 +2387,7 @@ void melee_attack::antimagic_affects_defender()
         if (!mp_loss)
             return;
         mpr("You feel your power leaking away.", MSGCH_WARN);
-        dec_mp(mp_loss);
+        drain_mp(mp_loss);
         obvious_effect = true;
     }
     else if (defender->as_monster()->can_use_spells()

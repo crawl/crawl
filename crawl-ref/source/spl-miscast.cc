@@ -1505,9 +1505,9 @@ void MiscastEffect::_divination_you(int severity)
             break;
         case 1:
             mpr("You lose your focus.");
-            if (you.magic_points > 0)
+            if (you.magic_points > 0 || you.species == SP_DJINNI)
             {
-                dec_mp(3 + random2(10));
+                drain_mp(3 + random2(10));
                 mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
             }
             break;
@@ -1521,9 +1521,9 @@ void MiscastEffect::_divination_you(int severity)
         {
         case 0:
             mpr("You lose concentration completely!");
-            if (you.magic_points > 0)
+            if (you.magic_points > 0 || you.species == SP_DJINNI)
             {
-                dec_mp(5 + random2(20));
+                drain_mp(5 + random2(20));
                 mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
             }
             break;

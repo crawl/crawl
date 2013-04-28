@@ -30,6 +30,8 @@ static duration_def duration_data[] =
 {
     { DUR_AGILITY, false,
       0, "", "agile", "You are agile." },
+    { DUR_ANTIMAGIC, true,
+      RED, "-Mag", "antimagic", "You have trouble accessing your magic." },
     { DUR_BARGAIN, true,
       BLUE, "Brgn", "charismatic", "You get a bargain in shops." },
     { DUR_BERSERK, true,

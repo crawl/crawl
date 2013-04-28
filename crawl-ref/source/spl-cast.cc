@@ -1159,8 +1159,15 @@ spret_type your_spells(spell_type spell, int powc,
                                       : GOD_NO_GOD;
 
     int fail = 0;
+    bool antimagic = false; // lost time but no other penalty
 
-    if (allow_fail)
+    if (allow_fail && you.duration[DUR_ANTIMAGIC]
+        && x_chance_in_y(DUR_ANTIMAGIC / 3, you.hp_max))
+    {
+        mpr("You fail to access your magic.");
+        fail = antimagic = true;
+    }
+    else if (allow_fail)
     {
         int spfl = random2avg(100, 3);
 
@@ -1226,6 +1233,9 @@ spret_type your_spells(spell_type spell, int powc,
 
     case SPRET_FAIL:
     {
+        if (antimagic)
+            return SPRET_FAIL;
+
         mprf("You miscast %s.", spell_title(spell));
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);

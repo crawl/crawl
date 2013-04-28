@@ -816,9 +816,9 @@ static bool _sif_muna_retribution()
         break;
 
     case 8:
-        if (you.magic_points > 0)
+        if (you.magic_points > 0 || you.species == SP_DJINNI)
         {
-            dec_mp(100);  // This should zero it.
+            drain_mp(100);  // This should zero it.
             mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
         }
         break;
