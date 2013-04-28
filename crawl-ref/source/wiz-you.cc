@@ -805,7 +805,8 @@ static const char* dur_names[] =
     "battlesphere",
 #endif
     "sentinel's mark",
-    "sickening"
+    "sickening",
+    "antimagic",
 };
 
 void wizard_edit_durations(void)

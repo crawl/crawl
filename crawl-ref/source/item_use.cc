@@ -2424,7 +2424,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_ANTIMAGIC:
         mprf("%s repels your magic.", itname.c_str());
-        dec_mp(you.magic_points);
+        drain_mp(you.species == SP_DJINNI ? 100 : you.magic_points);
         success = false;
         break;
 

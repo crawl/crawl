@@ -1488,6 +1488,7 @@ void scorefile_entry::init(time_t dt)
         STATUS_SPEED, DUR_INVIS, DUR_POISONING,
         STATUS_MISSILES, DUR_SURE_BLADE, DUR_TRANSFORMATION,
         STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
+        DUR_ANTIMAGIC,
     };
 
     status_info inf;

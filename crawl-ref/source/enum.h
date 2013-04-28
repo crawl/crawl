@@ -1485,6 +1485,7 @@ enum duration_type
 #endif
     DUR_SENTINEL_MARK,
     DUR_SICKENING,
+    DUR_ANTIMAGIC,
     NUM_DURATIONS
 };
 

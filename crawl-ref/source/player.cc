@@ -3922,6 +3922,9 @@ int get_expiration_threshold(duration_type dur)
     case DUR_NAUSEA:
         return (20 * BASELINE_DELAY);
 
+    case DUR_ANTIMAGIC:
+        return you.hp_max; // not so severe anymore
+
     default:
         return 0;
     }
@@ -4147,6 +4150,7 @@ void display_char_status()
         DUR_LIQUID_FLAMES,
         DUR_FIRE_SHIELD,
         DUR_ICY_ARMOUR,
+        DUR_ANTIMAGIC,
         STATUS_MISSILES,
         DUR_JELLY_PRAYER,
         STATUS_REGENERATION,
@@ -4485,6 +4489,18 @@ void dec_mp(int mp_loss)
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = true;
+}
+
+void drain_mp(int loss)
+{
+    if (you.species != SP_DJINNI)
+        return dec_mp(loss);
+
+    if (loss <= 0)
+        return;
+
+    you.duration[DUR_ANTIMAGIC] = min(you.duration[DUR_ANTIMAGIC] + loss * 3,
+                                      1000); // so it goes away after one '5'
 }
 
 bool enough_hp(int minimum, bool suppress_msg)
