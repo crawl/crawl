@@ -473,11 +473,19 @@ void init_skill_order(void)
 void calc_hp()
 {
     you.hp_max = get_real_hp(true, false);
+    if (you.species == SP_DJINNI)
+        you.hp_max += get_real_mp(true);
     deflate_hp(you.hp_max, false);
 }
 
 void calc_mp()
 {
+    if (you.species == SP_DJINNI)
+    {
+        you.magic_points = you.max_magic_points = 0;
+        return calc_hp();
+    }
+
     you.max_magic_points = get_real_mp(true);
     you.magic_points = min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;

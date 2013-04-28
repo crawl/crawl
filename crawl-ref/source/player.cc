@@ -4460,6 +4460,9 @@ void dec_mp(int mp_loss)
     if (mp_loss < 1)
         return;
 
+    if (you.species == SP_DJINNI)
+        return dec_hp(mp_loss * DJ_MP_RATE, false);
+
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
@@ -4483,7 +4486,11 @@ bool enough_hp(int minimum, bool suppress_msg)
     if (you.hp < minimum + 1)
     {
         if (!suppress_msg)
-            mpr("You haven't enough vitality at the moment.");
+        {
+            mpr(you.species != SP_DJINNI ?
+                "You haven't enough vitality at the moment." :
+                "You haven't enough essence at the moment.");
+        }
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
@@ -4495,30 +4502,26 @@ bool enough_hp(int minimum, bool suppress_msg)
 
 bool enough_mp(int minimum, bool suppress_msg, bool include_items)
 {
+    if (you.species == SP_DJINNI)
+        return enough_hp(minimum * DJ_MP_RATE, suppress_msg);
+
     ASSERT(!crawl_state.game_is_arena());
 
-    bool rc = false;
-
-    if (get_real_mp(include_items) < minimum)
+    if (you.magic_points < minimum)
     {
         if (!suppress_msg)
-            mpr("You haven't enough magic capacity.");
-    }
-    else if (you.magic_points < minimum)
-    {
-        if (!suppress_msg)
-            mpr("You haven't enough magic at the moment.");
-    }
-    else
-        rc = true;
-
-    if (!rc)
-    {
+        {
+            if (get_real_mp(include_items) < minimum)
+                mpr("You haven't enough magic capacity.");
+            else
+                mpr("You haven't enough magic at the moment.");
+        }
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
+        return false;
     }
 
-    return rc;
+    return true;
 }
 
 bool enough_zp(int minimum, bool suppress_msg)
@@ -4543,6 +4546,9 @@ void inc_mp(int mp_gain)
 
     if (mp_gain < 1)
         return;
+
+    if (you.species == SP_DJINNI)
+        return inc_hp(mp_gain * DJ_MP_RATE);
 
     bool wasnt_max = (you.magic_points < you.max_magic_points);
 

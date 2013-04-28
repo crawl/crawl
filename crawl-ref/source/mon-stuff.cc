@@ -1960,7 +1960,9 @@ int monster_die(monster* mons, killer_type killer,
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0))
             {
-                if (you.magic_points < you.max_magic_points)
+                if (you.species != SP_DJINNI ?
+                        you.magic_points < you.max_magic_points :
+                        you.hp < you.hp_max)
                 {
                     int mana = (you.religion == GOD_VEHUMET) ?
                             1 + random2(mons->hit_dice / 2) :
