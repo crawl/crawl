@@ -60,8 +60,6 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
 
     function display_menu()
     {
-        client.set_layer("normal");
-
         var menu_div = $("<div>");
         menu_div.addClass("menu_" + menu.tag);
         menu.elem = menu_div;
