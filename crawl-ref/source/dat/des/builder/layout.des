@@ -1255,51 +1255,7 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
-    function is_empty_wall_x(x, y)
-        -- check in -X direction for irregularities before corner
-        local x1 = x
-        while mapgrd[x1][y + 1] == '.' and mapgrd[x1][y - 1] == '.' do
-            if mapgrd[x1][y] ~= 'x' then
-               return false
-            end
-            x1 = x1 - 1
-        end
-
-        -- check in +X direction for irregularities before corner
-        local x1 = x
-        while mapgrd[x1][y + 1] == '.' and mapgrd[x1][y - 1] == '.' do
-            if mapgrd[x1][y] ~= 'x' then
-               return false
-            end
-            x1 = x1 + 1
-        end
-
-        -- otherwise, good
-        return true
-    end
-
-    function is_empty_wall_y(x, y)
-        -- check in -Y direction for irregularities before corner
-        local y1 = y
-        while mapgrd[x + 1][y1] == '.' and mapgrd[x - 1][y1] == '.' do
-            if mapgrd[x][y1] ~= 'x' then
-               return false
-            end
-            y1 = y1 - 1
-        end
-
-        -- check in +Y direction for irregularities before corner
-        local y1 = y
-        while mapgrd[x + 1][y1] == '.' and mapgrd[x - 1][y1] == '.' do
-            if mapgrd[x][y1] ~= 'x' then
-               return false
-            end
-            y1 = y1 + 1
-        end
-
-        -- otherwise, good
-        return true
-    end
+    layout_type "rooms"
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
@@ -1314,19 +1270,8 @@ TAGS: overwritable layout allow_dup unrand
 
     -- Alternate version, connect rooms at the end.
     if alt then
-        for i = 1, crawl.random_range(400, 800) do
-            local x = crawl.random_range(1, gxm - 2)
-            local y = crawl.random_range(1, gym - 2)
-            if mapgrd[x][y] == 'x' then
-                if mapgrd[x][y + 1] == '.' and mapgrd[x][y - 1] == '.'
-                   and is_empty_wall_x(x, y) then
-                    mapgrd[x][y] = '+'
-                elseif mapgrd[x + 1][y] == '.' and mapgrd[x - 1][y] == '.'
-                   and is_empty_wall_y(x, y) then
-                    mapgrd[x][y] = '+'
-                end
-            end
-        end
+        connect_adjacent_rooms2 { max = crawl.random_range(500, 750),
+                                  replace = '+' }
         zonify.map_fill_zones(_G, 1, 'x')
     end
 }}
