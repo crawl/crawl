@@ -926,6 +926,10 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "wisp-form";
         inf->long_text  = "You are an insubstantial wisp.";
         break;
+    case TRAN_ZOMBIE:
+        inf->light_text = "Zed";
+        inf->short_text = "zombie-form";
+        inf->long_text  = "You are an animated corpse.";
     case TRAN_NONE:
         break;
     }

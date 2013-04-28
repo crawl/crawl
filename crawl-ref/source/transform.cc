@@ -55,6 +55,7 @@ static const char* form_names[] =
     "wisp",
     "jelly",
     "fungus",
+    "zombie"
 };
 
 const char* transform_name(transformation_type form)
@@ -155,6 +156,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     // Some forms can wear everything.
     case TRAN_NONE:
     case TRAN_LICH:
+    case TRAN_ZOMBIE:
     case TRAN_APPENDAGE: // handled as mutations
         return true;
 
@@ -450,6 +452,8 @@ monster_type transform_mons()
         return MONS_ANIMATED_TREE;
     case TRAN_WISP:
         return MONS_INSUBSTANTIAL_WISP;
+    case TRAN_ZOMBIE:
+        return MONS_ZOMBIE;
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:
@@ -667,6 +671,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_JELLY:
     case TRAN_TREE:
     case TRAN_WISP:
+    case TRAN_ZOMBIE:
         return min(15 + random2(pow) + random2(pow / 2), 100);
     case TRAN_NONE:
         return 0;
@@ -746,6 +751,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         {
         case TRAN_STATUE:
         case TRAN_LICH:
+        case TRAN_ZOMBIE:
             break;
         default:
             skip_wielding = true;
@@ -845,6 +851,12 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "pig";
         msg       = "You have been turned into a pig!";
         you.transform_uncancellable = true;
+        break;
+
+    case TRAN_ZOMBIE:
+        tran_name = "zombie";
+        dex       -= 3;
+        msg       += "a living corpse!";
         break;
 
     case TRAN_APPENDAGE:
@@ -1050,6 +1062,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_LICH:
+    case TRAN_ZOMBIE:
         // undead cannot regenerate -- bwr
         if (you.duration[DUR_REGENERATION])
         {
@@ -1203,6 +1216,12 @@ void untransform(bool skip_wielding, bool skip_move)
         you.is_undead = US_ALIVE;
         break;
 
+    case TRAN_ZOMBIE:
+        mpr("You feel alive.", MSGCH_DURATION);
+        notify_stat_change(STAT_DEX, 3, true,
+                "losing the zombie transformation");
+        you.is_undead = US_ALIVE;
+        break;
     case TRAN_PIG:
     case TRAN_JELLY:
     case TRAN_PORCUPINE:

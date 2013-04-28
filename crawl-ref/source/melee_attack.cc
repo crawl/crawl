@@ -2028,6 +2028,7 @@ void melee_attack::set_attack_verb()
         case TRAN_FUNGUS:
         case TRAN_ICE_BEAST:
         case TRAN_JELLY: // ?
+        case TRAN_ZOMBIE:
             if (damage_done < HIT_WEAK)
                 attack_verb = "hit";
             else if (damage_done < HIT_MED)
@@ -3770,6 +3771,7 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_FUNGUS:
             case TRAN_TREE:
             case TRAN_WISP:
+            case TRAN_ZOMBIE:
                 mhit += maybe_random2(10, random);
                 break;
             case TRAN_BAT:
@@ -5300,6 +5302,7 @@ int melee_attack::calc_base_unarmed_damage()
             damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
             break;
         case TRAN_STATUE: // multiplied by 1.5 later
+        case TRAN_ZOMBIE:
             damage = 6 + div_rand_round(you.strength(), 3);
             break;
         case TRAN_DRAGON: // +6 from claws

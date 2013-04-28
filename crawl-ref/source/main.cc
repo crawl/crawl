@@ -1434,6 +1434,12 @@ static void _go_upstairs()
 
     const dungeon_feature_type ygrd = grd(you.pos());
 
+    if (you.form == TRAN_ZOMBIE)
+    {
+        mprf("Zombies can't use stairs.");
+        return;
+    }
+
     if (_stairs_check_mesmerised())
         return;
 
@@ -1526,6 +1532,12 @@ static void _go_downstairs()
 
     const bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
                         && ygrd != DNGN_UNDISCOVERED_TRAP);
+
+    if (!shaft && you.form == TRAN_ZOMBIE)
+    {
+        mprf("Zombies can't use stairs.");
+        return;
+    }
 
     if (_stairs_check_mesmerised())
         return;

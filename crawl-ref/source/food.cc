@@ -140,7 +140,8 @@ bool you_foodless()
     return you.is_undead == US_UNDEAD
         || you.form == TRAN_FUNGUS
         || you.form == TRAN_TREE
-        || you.form == TRAN_WISP;
+        || you.form == TRAN_WISP
+        || you.form == TRAN_ZOMBIE;
 }
 
 /**

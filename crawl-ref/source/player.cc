@@ -515,6 +515,8 @@ bool is_player_same_species(const monster_type mon, bool transform)
             return (mons_genus(mon) == MONS_HOG);
         case TRAN_JELLY:
             return (mons_genus(mon) == MONS_JELLY);
+        case TRAN_ZOMBIE:
+            return (mons_genus(mon) == MONS_ZOMBIE);
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
@@ -1269,6 +1271,9 @@ int player_regen()
         rr /= 3;
     }
 
+    if (you.form == TRAN_ZOMBIE)
+        rr = 0;
+
     if (you.stat_zero[STAT_STR])
         rr /= 4;
 
@@ -1573,6 +1578,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
                 rc += 2;
             break;
         }
+        case TRAN_ZOMBIE:
+            rc += 2;
+            break;
         case TRAN_LICH:
             rc++;
             break;
@@ -1752,6 +1760,7 @@ int player_res_torment(bool, bool temp)
             || you.form == TRAN_FUNGUS
             || you.form == TRAN_TREE
             || you.form == TRAN_WISP
+            || you.form == TRAN_ZOMBIE
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
             || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
@@ -1771,7 +1780,8 @@ int player_kiku_res_torment()
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     if (you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
-            : you.is_undead && (temp || you.form != TRAN_LICH))
+            : you.is_undead
+            && (temp || (you.form != TRAN_LICH && you.form != TRAN_ZOMBIE)))
     {
         return 3;
     }
@@ -2119,6 +2129,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         case TRAN_FUNGUS:
         case TRAN_TREE:
         case TRAN_LICH:
+        case TRAN_ZOMBIE:
             pl += 3;
             break;
         default:
@@ -3715,6 +3726,7 @@ int check_stealth(void)
         race_mod = 15;
         break;
     case TRAN_STATUE:
+    case TRAN_ZOMBIE:
         race_mod -= 3; // depends on the base race
         break;
     case TRAN_DRAGON:
@@ -5862,6 +5874,8 @@ string player::shout_verb() const
         return "gurgle";
     case TRAN_WISP:
         return "whoosh"; // any wonder why?
+    case TRAN_ZOMBIE:
+        return coinflip() ? "moan" : "groan";
 
     default:
         if (you.species == SP_FELID)
@@ -6167,6 +6181,7 @@ int player::armour_class() const
         case TRAN_NONE:
         case TRAN_APPENDAGE:
         case TRAN_BLADE_HANDS:
+        case TRAN_ZOMBIE:
         case TRAN_LICH:  // can wear normal body armour (no bonus)
             break;
 
@@ -6440,7 +6455,7 @@ int player::res_rotting(bool temp) const
         return 0; // no permanent resistance
 
     case US_UNDEAD:
-        if (!temp && you.form == TRAN_LICH)
+        if (!temp && you.form == TRAN_LICH || you.form == TRAN_ZOMBIE)
             return 0;
         return 3; // full immunity
     }
@@ -7225,6 +7240,7 @@ bool player::polymorph(int pow)
             100, TRAN_TREE,
             100, TRAN_PORCUPINE,
             100, TRAN_WISP,
+             50, TRAN_ZOMBIE,
              20, TRAN_SPIDER,
              20, TRAN_ICE_BEAST,
               5, TRAN_STATUE,
