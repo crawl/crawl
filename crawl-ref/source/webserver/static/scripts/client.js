@@ -152,9 +152,14 @@ function (exports, $, key_conversion, chat, comm) {
 
         if (e.ctrlKey || e.altKey)
         {
-            log("CTRL key: " + e.ctrlKey + " " + e.which
-                + " " + String.fromCharCode(e.which));
-            return;
+            // allow AltGr keys on various non-english keyboard layouts, not
+            // needed for Mozilla where neither ctrlKey or altKey is set
+            if ($.browser.mozilla || !e.ctrlKey || !e.altKey)
+            {
+                log("CTRL key: " + e.ctrlKey + " " + e.which
+                    + " " + String.fromCharCode(e.which));
+                return;
+            }
         }
 
         if ((e.which == 0) ||
