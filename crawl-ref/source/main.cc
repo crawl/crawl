@@ -1436,7 +1436,7 @@ static void _go_upstairs()
 
     if (you.form == TRAN_ZOMBIE)
     {
-        mprf("Zombies can't use stairs.");
+        mpr("Zombies can't use stairs.");
         return;
     }
 
@@ -1535,7 +1535,7 @@ static void _go_downstairs()
 
     if (!shaft && you.form == TRAN_ZOMBIE)
     {
-        mprf("Zombies can't use stairs.");
+        mpr("Zombies can't use stairs.");
         return;
     }
 
