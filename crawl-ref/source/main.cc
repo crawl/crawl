@@ -4273,11 +4273,10 @@ static void _move_player(coord_def move)
         monster* current = monster_at(you.pos());
         if (!current || !fedhas_passthrough(current))
         {
-            // Probably need better messages. -cao
-            if (mons_genus(targ_monst->type) == MONS_FUNGUS)
-                mprf("You walk carefully through the fungus.");
-            else
-                mprf("You walk carefully through the plants.");
+            // Probably need a better message. -cao
+            mprf("You walk carefully through the %s.",
+                 mons_genus(targ_monst->type) == MONS_FUNGUS ? "fungus"
+                                                             : "plants");
         }
         targ_monst = NULL;
     }
