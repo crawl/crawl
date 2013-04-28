@@ -1869,7 +1869,7 @@ static int _power_to_barcount(int power)
     if (power == -1)
         return -1;
 
-    const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
+    const int breakpoints[] = { 10, 15, 25, 35, 50, 75, 100, 150, 200 };
     return (breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 
