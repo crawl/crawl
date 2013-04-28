@@ -1251,11 +1251,8 @@ void append_armour_stats(string &description, const item_def &item)
     _append_value(description, property(item, PARM_AC), false);
     description += "       ";
 
-    if (get_armour_slot(item) == EQ_BODY_ARMOUR)
-        description += "Base evasion modifier: ";
-    else
-        description += "Evasion modifier: ";
-    _append_value(description, property(item, PARM_EVASION), true);
+    description += "Encumbrance rating: ";
+    _append_value(description, -property(item, PARM_EVASION), false);
 }
 
 void append_missile_info(string &description)
