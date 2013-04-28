@@ -451,7 +451,7 @@ static void _update_monster(monster* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    if (you.see_cell(gp))
+    if (you.see_cell(gp)) // XXX this prevents detecting invisible monsters
         env.map_knowledge(gp).clear_data();
     else if (!env.map_knowledge(gp).known())
         return;
