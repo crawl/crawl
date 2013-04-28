@@ -2,15 +2,8 @@
 # Sprint VII, by st
 ################################################################################
 #
-# Comments:
-#
-# - The named doors should give a "found door to x" message when they come into
-#   view and should be coloured, however I have ran out of energy to add the
-#   messages and a bug prevents colouring doors or using runed doors in sprint.
-#
-# - Performance is noticably bad while resting on the map.
-#
-# Thanks to elliott, HangedMan, Nomi and N78291 for the early testing/feedback.
+# Thanks to elliott, HangedMan, Nomi, N78291 and monqy for the early testing
+# and feedback.
 #
 ################################################################################
 {{
@@ -358,21 +351,26 @@ end
 function general_setup(e)
   e.tags("no_rotate no_hmirror no_vmirror")
   e.tags("no_monster_gen no_item_gen no_trap_gen no_pool_fixup")
-  e.kfeat("& = runed_door")
+  e.kfeat("& = closed_door")
   e.marker("& = lua:restrict_door()")
-  e.kfeat("~ = runed_door")
+  e.colour("& = lightgrey")
+  e.kfeat("~ = closed_door")
   e.marker("~ = lua:restrict_door()")
-  e.kfeat("< = runed_door")
+  e.kfeat("< = closed_door")
   e.marker("< = lua:restrict_door()")
-  e.kfeat("> = runed_door")
+  e.kfeat("> = closed_door")
   e.marker("> = lua:restrict_door()")
-  e.kfeat("# = runed_door")
+  e.kfeat("# = closed_door")
   e.marker("# = lua:restrict_door()")
-  e.kfeat("_ = runed_door")
+  e.kfeat("_ = closed_door")
   e.marker("_ = lua:restrict_door()")
+  e.kfeat("= = closed_door")
+  e.marker("= = lua:restrict_door()")
+  e.colour("=~<>#_ = yellow")
   e.kfeat("@ = floor")
-  e.colour("@ = yellow")
-  e.ftile("@ = floor_crypt")
+--  e.colour("@ = yellow")
+--  e.ftile("@ = floor_crypt")
+  dgn.set_random_mon_list("small abomination / nothing")
 end
 
 function metal_vault_setup(e)
@@ -674,7 +672,7 @@ SUBVAULT: U : equipment_1
 KITEM: a = bread ration q:7, \
        meat ration q:7, \
        strawberry q:40
-KITEM: b = scroll of summoning ident:all q:2, \
+KITEM: b = scroll of summoning ident:all q:1, \
        scroll of amnesia q:5 ident:all, \
        scroll of remove curse q:3 ident:all, \
        scroll of vulnerability q:2 ident:all
@@ -736,11 +734,11 @@ vvvvvvvvvvvv
 vTTTTTTTTTTv
 vTTTTTTTTTTv
 vvvvvvv~vvvv
-vUUUUU&@&adv
+vUUUUU+@+adv
 vUUUUUv.vbcv
-vvvvvvv&vvvv
+vvvvvvv+vvvv
 v.........G@
-v&vvvvv&vvvv
+v+vvvvv&vvvv
 v.vZZZZZZZZv
 v.vZZZZZZZZv
 v.vZZZZZZZZv
@@ -1065,7 +1063,7 @@ TILE:    v = wall_crypt_metal
 : lua_marker('>', props_marker {
 :           door_description_suffix=" to the Metal Vault (Medium)",
 :           })
-: lua_marker('+', props_marker {
+: lua_marker('_', props_marker {
 :           door_description_suffix=" to the Entrance Hall (Safe)",
 :           })
 : lua_marker('#', props_marker {
@@ -1079,7 +1077,7 @@ v...............@#
 ~@..............@#
 v......v..v......v
 v...@.....@@.....v
-vvvv+vvvvv>>vvvvvv
+vvvv_vvvvv>>vvvvvv
 v...@...v
 v.......v
 v.......v
@@ -1113,7 +1111,7 @@ TILE:    v = wall_crypt_metal
 : lua_marker('_', props_marker {
 :           door_description_suffix=" to a Minivault (Hard)",
 :           })
-: lua_marker('&', props_marker {
+: lua_marker('=', props_marker {
 :           door_description_suffix=" leading to the Armoury (Hard)",
 :           })
 MAP
@@ -1129,7 +1127,7 @@ v..v....v..v
 v..v....v..v
 v.........@>
 v..@@....@@>
-vvv__vvvv&&v
+vvv__vvvv==v
 ENDMAP
 
 
@@ -1152,11 +1150,11 @@ v@@v2.............vvv22vv....v!!v*av
 v..vv1.............v.2vv.v2v2v!!v**v
 v..vvvv222v+vvvvvv...vv......v!!v**v
 v..v..vvvvv.vv2.3vv+vv1v1v2v2v!!v**v
-v..v....vv...v...v...v.......vv&vv&v
-v..&....2v...v...v...v.......v.....v
-v..&....1+...+.|.+.2.+......3&.....v
-v..&....2v...v...v...v.......v.....v
-v..v....vv...v...v...v.......vv&vv&v
+v..v....vv...v...v...v.......vv+vv+v
+v..+....2v...v...v...v.......v.....v
+v..+....1+...+.|.+.2.+......3&.....v
+v..+....2v...v...v...v.......v.....v
+v..v....vv...v...v...v.......vv+vv+v
 v..v..vvvvv.vv2.3vv+vv1v1v2v2v|*v??v
 v..vvvv222v+vvvvvv...vv......v|*v??v
 v..vv1.............v.2vv.v2v2v*|v??v
@@ -1176,7 +1174,7 @@ v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v@@....vvvv2.......2vv**a**&2.2&*a*v
 v......vvvvv2.....1vvv*****vv.vv|||v
 vv....vvvvvvvv...vvvvvvvvvvv.2.vvvvv
-vvv&&vvvvvv..+...+.2vv.3vv.......vvv
+vvv++vvvvvv..+...+.2vv.3vv.......vvv
 vv....vvv...2vv+vv.....vv....1..2.vv
 v...1..v....vv...vv....v...........v
 v2.....+...2+.2.2.+..2.+..1..1...3.v
@@ -1228,9 +1226,9 @@ v......+..+....1vv..23..vv....vvv?!v
 v...2.vv..vv2....vv....vv.1v2vv!?!?v
 v..2vvv....vvv2...v2...v.....v!?!?!v
 v..vv2......2vvv.vvv..vv.v.v2v?!?!?v
-v++v...v..v...v...2v..v......vvv&vvv
+v++v...v..v...v...2v..v......vvv+vvv
 v.......12....+.1..+..+...1.3&.....v
-v++v...v..v...v...2v..v......vvv&vvv
+v++v...v..v...v...2v..v......vvv+vvv
 v..vv2......2vvv.vvv..vv.v.v2v***|*v
 v..2vvv....vvv2...v2...v.....v*|a**v
 v....2vv..vv2....vv....vv.1v2vv***|v
@@ -1684,7 +1682,7 @@ WEIGHT: 5
 : iron_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvv
-vv6vv+6+''''''d''''''v
+vv6vv+6&''''''d''''''v
 v+vv6vvv'''''''''''''v
 vv.vv+vvvvvvvvvvvvvvvv
 v.6.+5v6v6+.+6v6vv+5vv
@@ -1779,8 +1777,8 @@ MAP
 vvvv        v.3v.....v0030v3....3v0300v.....v..v
 v..v        v..v..vvvv....vvv..vvv....vvvv..v3.v
 v..v        v2.v..&4....................4&..v..v
-&@.v        v..v..vvvv................vvvv..v.2v
-&@.vvvvvvvvvv..v.....v..vvvv9999vvvv..v.....v..v
+_@.v        v..v..vvvv................vvvv..v.2v
+_@.vvvvvvvvvv..v.....v..vvvv9999vvvv..v.....v..v
 v......22......vaavaav..veev9889vffv..vbbvbbv..v
 v..............vaavaav00&eevv99vvff&00vbbvbbv@@v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
@@ -1802,8 +1800,8 @@ MAP
 vvvv        v.3vvvv...vvvvvvv..vvvvvvv...vvvv..v
 v..v        v..v.........v........v.........v3.v
 v..v        v2.v4..........................4v..v
-&@.v        v..v.0...0...v99999999v...0...0.v.2v
-&@.vvvvvvvvvv..vv&vvv&vv.vvvv88vvvv.vv&vvv&vv..v
+_@.v        v..v.0...0...v99999999v...0...0.v.2v
+_@.vvvvvvvvvv..vv&vvv&vv.vvvv88vvvv.vv&vvv&vv..v
 v......22......vaaaavccv.veevvvvffv.vddvbbbbv..v
 v..............vaaaavccv0&eevvvvff&0vddvbbbbv@@v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
@@ -1826,8 +1824,8 @@ MAP
 vvvv        v.3vaaavcvev............vfvdvbbbv..v
 v..v        v..vv.vvcvev.v.v....v.v.vfvdvv.vv3.v
 v..v        v2.vaaav&v&v............v&v&vbbbv..v
-&@.v        v..vavav040v.v.v....v.v.v040vbvbv.2v
-&@.vvvvvvvvvv..vaaav........9999........vbbbv..v
+_@.v        v..vavav040v.v.v....v.v.v040vbvbv.2v
+_@.vvvvvvvvvv..vaaav........9999........vbbbv..v
 v......22......v&vvv.v.v.v.v9889v.v.v.v.vvv&v..v
 v..............v0......v030v9999v030v......0v@@v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
