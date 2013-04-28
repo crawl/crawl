@@ -1896,7 +1896,9 @@ void melee_attack::set_attack_verb()
             else
             {
                 const char* pierce_desc[][2] = {{"spit", "like a pig"},
-                                                {"skewer", "like a kebab"}};
+                                                {"skewer", "like a kebab"},
+                                                {"stick", "like a pincushion"},
+                                                {"perforate", "like a sieve"}};
                 const int choice = random2(ARRAYSZ(pierce_desc));
                 attack_verb = pierce_desc[choice][0];
                 verb_degree = pierce_desc[choice][1];
@@ -1919,11 +1921,18 @@ void melee_attack::set_attack_verb()
             attack_verb = "fracture";
             verb_degree = "into splinters";
         }
+        else if (defender_genus == MONS_HOG)
+        {
+            attack_verb = "carve";
+            verb_degree = "like a proverbial ham";
+        }
         else
         {
             const char* pierce_desc[][2] = {{"open",    "like a pillowcase"},
                                             {"slice",   "like a ripe choko"},
-                                            {"cut",     "into ribbons"}};
+                                            {"cut",     "into ribbons"},
+                                            {"carve",   "like a ham"},
+                                            {"chop",    "into pieces"}};
             const int choice = random2(ARRAYSZ(pierce_desc));
             attack_verb = pierce_desc[choice][0];
             verb_degree = pierce_desc[choice][1];
@@ -1946,7 +1955,8 @@ void melee_attack::set_attack_verb()
             const char* pierce_desc[][2] = {{"crush",   "like a grape"},
                                             {"beat",    "like a drum"},
                                             {"hammer",  "like a gong"},
-                                            {"pound",   "like an anvil"}};
+                                            {"pound",   "like an anvil"},
+                                            {"flatten", "like a pancake"}};
             const int choice = random2(ARRAYSZ(pierce_desc));
             attack_verb = pierce_desc[choice][0];
             verb_degree = pierce_desc[choice][1];
