@@ -81,13 +81,8 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line);
 
 #else
 
-#define ASSERT_SAVE(p)  ((void) 0)
 #define ASSERT(p)       ((void) 0)
 #define VERIFY(p)       do {if (p) ;} while (false)
-
-static inline void __DUMMY_TRACE__(...)
-{
-}
 
 #endif
 
