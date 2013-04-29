@@ -88,6 +88,7 @@
 #include "misc.h"
 #include "mislead.h"
 #include "mon-act.h"
+#include "mon-abil.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -2848,6 +2849,25 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
+
+    if (you.duration[DUR_FLAYED])
+    {
+        bool near_ghost = false;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_FLAYED_GHOST && !mi->wont_attack()
+                && you.see_cell(mi->pos()))
+            {
+                near_ghost = true;
+                break;
+            }
+        }
+        if (!near_ghost)
+        {
+            if (_decrement_a_duration(DUR_FLAYED, delay))
+                heal_flayed_effect(&you);
+        }
+    }
 
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);

@@ -1657,7 +1657,8 @@ dungeon, seeking to share its fate with others.
 flayed ghost
 
 A hideous floating undead creature, the anguished spirit of a tortured victim,
-with torn skin hanging from an emaciated body.
+with torn skin hanging from an emaciated body. It restlessly stalks the dungeon,
+inflicting the anguish it felt in life upon those still living.
 %%%%
 flying skull
 

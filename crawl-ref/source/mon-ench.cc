@@ -25,6 +25,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -802,6 +803,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_FLAYED:
+        heal_flayed_effect(this);
+        break;
+
     default:
         break;
     }
@@ -909,6 +914,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
+        case ENCH_FLAYED:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1744,6 +1750,25 @@ void monster::apply_enchantment(const mon_enchant &me)
                 hurt(me.agent(), dam);
             }
         }
+        break;
+
+    case ENCH_FLAYED:
+    {
+        bool near_ghost = false;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_FLAYED_GHOST && !mons_aligned(this, *mi)
+                && see_cell(mi->pos()))
+            {
+                near_ghost = true;
+                break;
+            }
+        }
+        if (!near_ghost)
+            decay_enchantment(me);
+
+        break;
+    }
 
     default:
         break;
@@ -1876,7 +1901,8 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "buggy",
+    "drowning", "flayed",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

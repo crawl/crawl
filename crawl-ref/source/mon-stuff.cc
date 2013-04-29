@@ -1399,6 +1399,24 @@ static int _destroy_tentacles(monster* head)
     return seen;
 }
 
+static void _end_flayed_effect(monster* mons)
+{
+    if (you.duration[DUR_FLAYED] && !mons->wont_attack()
+        && cell_see_cell(mons->pos(), you.pos(), LOS_DEFAULT))
+    {
+        heal_flayed_effect(&you);
+    }
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(mons, *mi)
+            && cell_see_cell(mons->pos(), mi->pos(), LOS_DEFAULT))
+        {
+            heal_flayed_effect(*mi);
+        }
+    }
+}
+
 static string _killer_type_name(killer_type killer)
 {
     switch (killer)
@@ -1540,6 +1558,10 @@ int monster_die(monster* mons, killer_type killer,
 
     // ... and liquefiers.
     mons->del_ench(ENCH_LIQUEFYING);
+
+    // Clean up any blood from the flayed effect
+    if (mons->has_ench(ENCH_FLAYED))
+        heal_flayed_effect(mons, true, true);
 
     crawl_state.inc_mon_acting(mons);
 
@@ -2413,6 +2435,8 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_VAULT_WARDEN)
         timeout_terrain_changes(0, true);
+    else if (mons->type == MONS_FLAYED_GHOST)
+        _end_flayed_effect(mons);
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())

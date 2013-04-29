@@ -4183,7 +4183,8 @@ void display_char_status()
         DUR_SENTINEL_MARK,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
-        DUR_WATER_HOLD
+        DUR_WATER_HOLD,
+        DUR_FLAYED,
     };
 
     status_info inf;
