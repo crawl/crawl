@@ -85,7 +85,8 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
     ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
-    ASSERT(level >= 0 && level <= 3);
+    ASSERT(level >= 0);
+    ASSERT(level <= 3);
 
     init();
     do_miscast();
@@ -216,7 +217,8 @@ void MiscastEffect::init()
             source_known = true;
     }
 
-    ASSERT(kc != KC_NCATEGORIES && kt != KILL_NONE);
+    ASSERT(kc != KC_NCATEGORIES);
+    ASSERT(kt != KILL_NONE);
 
     if (death_curse && !invalid_monster_index(kill_source))
     {
@@ -253,7 +255,8 @@ string MiscastEffect::get_default_cause(bool attribute_to_user) const
 {
     // This is only for true miscasts, which means both a spell and that
     // the source of the miscast is the same as the target of the miscast.
-    ASSERT(source >= 0 && source <= NON_MONSTER);
+    ASSERT(source >= 0);
+    ASSERT(source <= NON_MONSTER);
     ASSERT(spell != SPELL_NO_SPELL);
     ASSERT(school == SPTYP_NONE);
 
@@ -285,7 +288,8 @@ bool MiscastEffect::neither_end_silenced()
 
 void MiscastEffect::do_miscast()
 {
-    ASSERT(recursion_depth >= 0 && recursion_depth < MAX_RECURSE);
+    ASSERT(recursion_depth >= 0);
+    ASSERT(recursion_depth < MAX_RECURSE);
 
     if (recursion_depth == 0)
         did_msg = false;
@@ -549,7 +553,8 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
 bool MiscastEffect::_explosion()
 {
     ASSERT(!beam.name.empty());
-    ASSERT(beam.damage.num != 0 && beam.damage.size != 0);
+    ASSERT(beam.damage.num != 0);
+    ASSERT(beam.damage.size != 0);
     ASSERT(beam.flavour != BEAM_NONE);
 
     int max_dam = beam.damage.num * beam.damage.size;

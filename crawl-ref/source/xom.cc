@@ -206,7 +206,8 @@ bool xom_is_nice(int tension)
                                    random2(tension)));
 
         const int effective_piety = you.piety + tension_bonus;
-        ASSERT(effective_piety >= 0 && effective_piety <= MAX_PIETY);
+        ASSERT(effective_piety >= 0);
+        ASSERT(effective_piety <= MAX_PIETY);
 
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
@@ -2815,7 +2816,8 @@ static void _get_hand_type(string &hand, bool &can_plural)
 static int _xom_miscast(const int max_level, const bool nasty,
                         bool debug = false)
 {
-    ASSERT(max_level >= 0 && max_level <= 3);
+    ASSERT(max_level >= 0);
+    ASSERT(max_level <= 3);
 
     const char* speeches[4] = {
         "zero miscast effect",
@@ -3835,7 +3837,8 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         // This should only happen if the player used wizard mode to
         // escape from death via stat loss, or if the player used wizard
         // mode to escape death from deep water or lava.
-        ASSERT(you.wizard && !you.did_escape_death());
+        ASSERT(you.wizard);
+        ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(grd(you.pos())))
         {
             mpr("Player is standing in deadly terrain, skipping Xom act.",

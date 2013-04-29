@@ -420,7 +420,8 @@ static bool _mons_can_zap_dig(const monster* mons)
 static void _set_mons_move_dir(const monster* mons,
                                coord_def* dir, coord_def* delta)
 {
-    ASSERT(dir && delta);
+    ASSERT(dir);
+    ASSERT(delta);
 
     // Some calculations.
     if ((mons_class_flag(mons->type, M_BURROWS)
@@ -3337,7 +3338,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     m2->clear_far_constrictions();
 
     const int m2i = m2->mindex();
-    ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
+    ASSERT(m2i >= 0);
+    ASSERT(m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
     _swim_or_move_energy(m2);
 

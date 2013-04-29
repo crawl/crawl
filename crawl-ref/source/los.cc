@@ -256,7 +256,8 @@ static bool _is_better(const cellray& a, const cellray& b)
     // Only compare cellrays with equal target.
     ASSERT(a.target() == b.target());
     // calc_params() has been called.
-    ASSERT(a.imbalance >= 0 && b.imbalance >= 0);
+    ASSERT(a.imbalance >= 0);
+    ASSERT(b.imbalance >= 0);
     if (a.imbalance < b.imbalance)
         return true;
     else if (a.imbalance > b.imbalance)
@@ -561,7 +562,8 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
                   const opacity_func& opc, const circle_def& bds,
                   bool cycle)
 {
-    ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
+    ASSERT(target.x >= 0 && target.y >= 0);
+    ASSERT(!target.origin());
     if (!bds.contains(target))
         return false;
 

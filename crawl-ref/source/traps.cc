@@ -1108,8 +1108,10 @@ trap_def* find_trap(const coord_def& pos)
 
     unsigned short t = env.tgrid(pos);
 
-    ASSERT(t != NON_ENTITY && t < MAX_TRAPS);
-    ASSERT(env.trap[t].pos == pos && env.trap[t].type != TRAP_UNASSIGNED);
+    ASSERT(t != NON_ENTITY);
+    ASSERT(t < MAX_TRAPS);
+    ASSERT(env.trap[t].pos == pos);
+    ASSERT(env.trap[t].type != TRAP_UNASSIGNED);
 
     return (&env.trap[t]);
 }

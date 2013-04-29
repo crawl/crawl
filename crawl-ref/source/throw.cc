@@ -822,7 +822,8 @@ static int _blowgun_power_roll(bolt &beam)
         blowgun = agent->weapon();
     }
 
-    ASSERT(blowgun && blowgun->sub_type == WPN_BLOWGUN);
+    ASSERT(blowgun);
+    ASSERT(blowgun->sub_type == WPN_BLOWGUN);
 
     return (base_power + blowgun->plus);
 }
@@ -845,7 +846,8 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 
     const int skill = you.skill_rdiv(SK_THROWING);
     const item_def* wp = agent->weapon();
-    ASSERT(wp && wp->sub_type == WPN_BLOWGUN);
+    ASSERT(wp);
+    ASSERT(wp->sub_type == WPN_BLOWGUN);
     const int enchantment = wp->plus;
 
     // You have a really minor chance of hitting with no skills or good

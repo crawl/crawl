@@ -488,7 +488,8 @@ void player_quiver::load(reader& inf)
 
     unmarshallItem(inf, m_last_weapon);
     m_last_used_type = (ammo_t)unmarshallInt(inf);
-    ASSERT(m_last_used_type >= AMMO_THROW && m_last_used_type < NUM_AMMO);
+    ASSERT(m_last_used_type >= AMMO_THROW);
+    ASSERT(m_last_used_type < NUM_AMMO);
 
     const unsigned int count = unmarshallInt(inf);
     ASSERT(count <= ARRAYSZ(m_last_used_of_type));

@@ -2955,7 +2955,8 @@ static void _regenerate_hp_and_mp(int delay)
         tmp -= 100;
     }
 
-    ASSERT(tmp >= 0 && tmp < 100);
+    ASSERT(tmp >= 0);
+    ASSERT(tmp < 100);
     you.hit_points_regeneration = tmp;
 
     // XXX: Don't let DD use guardian spirit for free HP, since their
@@ -2982,7 +2983,8 @@ static void _regenerate_hp_and_mp(int delay)
         tmp -= 100;
     }
 
-    ASSERT(tmp >= 0 && tmp < 100);
+    ASSERT(tmp >= 0);
+    ASSERT(tmp < 100);
     you.magic_points_regeneration = tmp;
 }
 

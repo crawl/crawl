@@ -60,7 +60,8 @@ static const char* form_names[] =
 const char* transform_name(transformation_type form)
 {
     COMPILE_CHECK(ARRAYSZ(form_names) == LAST_FORM + 1);
-    ASSERT(form >= 0 && form <= LAST_FORM);
+    ASSERT(form >= 0);
+    ASSERT(form <= LAST_FORM);
     return form_names[form];
 }
 

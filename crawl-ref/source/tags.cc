@@ -787,7 +787,8 @@ string unmarshallString(reader &th, int maxSize)
         return "";
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
-    ASSERT(slen >= 0 && slen < maxSize);
+    ASSERT(slen >= 0);
+    ASSERT(slen < maxSize);
     const string res(buffer, slen);
     delete [] buffer;
     return res;
@@ -1901,10 +1902,12 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 #endif
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
-    ASSERT(you.form >= TRAN_NONE && you.form <= LAST_FORM);
+    ASSERT(you.form >= TRAN_NONE);
+    ASSERT(you.form <= LAST_FORM);
 
     count = unmarshallShort(th);
-    ASSERT(count >= 0 && count <= 32767);
+    ASSERT(count >= 0);
+    ASSERT(count <= 32767);
     you.sage_skills.resize(count, SK_NONE);
     you.sage_xp.resize(count, 0);
     you.sage_bonus.resize(count, 0);
@@ -1927,7 +1930,8 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; ++i)
     {
         you.equip[i] = unmarshallByte(th);
-        ASSERT(you.equip[i] >= -1 && you.equip[i] < ENDOFPACK);
+        ASSERT(you.equip[i] >= -1);
+        ASSERT(you.equip[i] < ENDOFPACK);
     }
     for (i = count; i < NUM_EQUIP; ++i)
         you.equip[i] = -1;
@@ -1991,7 +1995,8 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; i++)
     {
         int s = unmarshallByte(th);
-        ASSERT(s >= -1 && s < MAX_KNOWN_SPELLS);
+        ASSERT(s >= -1);
+        ASSERT(s < MAX_KNOWN_SPELLS);
         you.spell_letter_table[i] = s;
     }
 
@@ -2004,7 +2009,9 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; i++)
     {
         int a = unmarshallShort(th);
-        ASSERT(a >= -1 && a != 0 && a < NUM_ABILITIES);
+        ASSERT(a >= -1);
+        ASSERT(a != 0);
+        ASSERT(a < NUM_ABILITIES);
         you.ability_letter_table[i] = static_cast<ability_type>(a);
 #if TAG_MAJOR_VERSION == 34
         if (you.ability_letter_table[i] == ABIL_FLY
@@ -2126,7 +2133,8 @@ static void tag_read_you(reader &th)
 
     // how many mutations/demon powers?
     count = unmarshallShort(th);
-    ASSERT(count >= 0 && count <= NUM_MUTATIONS);
+    ASSERT(count >= 0);
+    ASSERT(count <= NUM_MUTATIONS);
     for (j = 0; j < count; ++j)
     {
         you.mutation[j]         = unmarshallUByte(th);
@@ -2150,9 +2158,11 @@ static void tag_read_you(reader &th)
     {
         player::demon_trait dt;
         dt.level_gained = unmarshallByte(th);
-        ASSERT(dt.level_gained > 1 && dt.level_gained <= 27);
+        ASSERT(dt.level_gained > 1);
+        ASSERT(dt.level_gained <= 27);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
-        ASSERT(dt.mutation >= 0 && dt.mutation < NUM_MUTATIONS);
+        ASSERT(dt.mutation >= 0);
+        ASSERT(dt.mutation < NUM_MUTATIONS);
         you.demonic_traits.push_back(dt);
     }
 
@@ -3424,7 +3434,8 @@ static void tag_read_level(reader &th)
 
     // how many clouds?
     const int num_clouds = unmarshallShort(th);
-    ASSERT(num_clouds >= 0 && num_clouds <= MAX_CLOUDS);
+    ASSERT(num_clouds >= 0);
+    ASSERT(num_clouds <= MAX_CLOUDS);
     for (int i = 0; i < num_clouds; i++)
     {
         env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
@@ -3459,7 +3470,8 @@ static void tag_read_level(reader &th)
 
     // how many shops?
     const int num_shops = unmarshallShort(th);
-    ASSERT(num_shops >= 0 && num_shops <= MAX_SHOPS);
+    ASSERT(num_shops >= 0);
+    ASSERT(num_shops <= MAX_SHOPS);
     for (int i = 0; i < num_shops; i++)
     {
         env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
@@ -3520,7 +3532,8 @@ static void tag_read_level_items(reader &th)
 {
     // how many traps?
     const int trap_count = unmarshallShort(th);
-    ASSERT(trap_count >= 0 && trap_count <= MAX_TRAPS);
+    ASSERT(trap_count >= 0);
+    ASSERT(trap_count <= MAX_TRAPS);
     for (int i = 0; i < trap_count; ++i)
     {
         env.trap[i].type =
@@ -3547,7 +3560,8 @@ static void tag_read_level_items(reader &th)
 
     // how many items?
     const int item_count = unmarshallShort(th);
-    ASSERT(item_count >= 0 && item_count <= MAX_ITEMS);
+    ASSERT(item_count >= 0);
+    ASSERT(item_count <= MAX_ITEMS);
     for (int i = 0; i < item_count; ++i)
         unmarshallItem(th, mitm[i]);
     for (int i = item_count; i < MAX_ITEMS; ++i)
@@ -3706,7 +3720,8 @@ static void tag_read_level_monsters(reader &th)
 
     // how many monsters?
     count = unmarshallShort(th);
-    ASSERT(count >= 0 && count <= MAX_MONSTERS);
+    ASSERT(count >= 0);
+    ASSERT(count <= MAX_MONSTERS);
 
     for (i = 0; i < count; i++)
     {

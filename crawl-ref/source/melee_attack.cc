@@ -2556,7 +2556,8 @@ void melee_attack::chaos_affects_defender()
     {
     case CHAOS_CLONE:
     {
-        ASSERT(can_clone && clone_chance > 0);
+        ASSERT(can_clone);
+        ASSERT(clone_chance > 0);
         ASSERT(defender->is_monster());
 
         if (monster *clone = clone_mons(defender->as_monster(), true,
@@ -2580,12 +2581,14 @@ void melee_attack::chaos_affects_defender()
     }
 
     case CHAOS_POLY:
-        ASSERT(can_poly && poly_chance > 0);
+        ASSERT(can_poly);
+        ASSERT(poly_chance > 0);
         beam.flavour = BEAM_POLYMORPH;
         break;
 
     case CHAOS_POLY_UP:
-        ASSERT(can_poly && poly_up_chance > 0);
+        ASSERT(can_poly);
+        ASSERT(poly_up_chance > 0);
         ASSERT(defender->is_monster());
 
         obvious_effect = you.can_see(defender);
@@ -2594,7 +2597,8 @@ void melee_attack::chaos_affects_defender()
 
     case CHAOS_MAKE_SHIFTER:
     {
-        ASSERT(can_poly && shifter_chance > 0);
+        ASSERT(can_poly);
+        ASSERT(shifter_chance > 0);
         ASSERT(!is_shifter);
         ASSERT(defender->is_monster());
 
@@ -2635,7 +2639,8 @@ void melee_attack::chaos_affects_defender()
     }
 
     case CHAOS_RAGE:
-        ASSERT(can_rage && rage_chance > 0);
+        ASSERT(can_rage);
+        ASSERT(rage_chance > 0);
         defender->go_berserk(false);
         obvious_effect = you.can_see(defender);
         break;
@@ -2818,7 +2823,8 @@ void melee_attack::do_miscast()
         return;
 
     ASSERT(miscast_target != NULL);
-    ASSERT(miscast_level >= 0 && miscast_level <= 3);
+    ASSERT(miscast_level >= 0);
+    ASSERT(miscast_level <= 3);
     ASSERT(count_bits(miscast_type) == 1);
 
     if (!miscast_target->alive())

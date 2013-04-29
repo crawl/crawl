@@ -1610,7 +1610,8 @@ static bool _should_force_door_shut(const coord_def& door)
 
 static bool _seal_doors(const monster* warden)
 {
-    ASSERT(warden && warden->type == MONS_VAULT_WARDEN);
+    ASSERT(warden);
+    ASSERT(warden->type == MONS_VAULT_WARDEN);
 
     int num_closed = 0;
     int seal_duration = 80 + random2(80);
