@@ -52,6 +52,7 @@ octopode2
 octopode3
 octopode4
 octopode5
+djinni DJINNI
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
