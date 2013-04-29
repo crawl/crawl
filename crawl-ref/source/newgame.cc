@@ -1304,7 +1304,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 return;
             case M_HELP:
                  // access to the help files
-                list_commands('1');
+                list_commands('2');
                 return _prompt_job(ng, ng_choice, defaults);
             case M_APTITUDES:
                 list_commands('%', false, _highlight_pattern(ng));
