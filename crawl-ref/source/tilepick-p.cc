@@ -665,6 +665,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FELID;
     case SP_OCTOPODE:
         return TILEP_BASE_OCTOPODE;
+    case SP_DJINNI:
+        return TILEP_BASE_DJINNI;
     default:
         return TILEP_BASE_HUMAN;
     }
