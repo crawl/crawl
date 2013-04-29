@@ -1060,11 +1060,12 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
     return demon;
 }
 
-static bool _player_is_dead()
+static bool _player_is_dead(bool soon = true)
 {
-    return (you.hp <= 0 || you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0
-            || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
-            || you.did_escape_death());
+    return you.hp <= 0
+        || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
+        || you.did_escape_death()
+        || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
 }
 
 static int _xom_do_potion(bool debug = false)
@@ -3835,8 +3836,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 #endif
 
-#ifdef WIZARD
-    if (_player_is_dead())
+    if (_player_is_dead(false))
     {
         // This should only happen if the player used wizard mode to
         // escape from death via stat loss, or if the player used wizard
@@ -3854,9 +3854,8 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         }
         return XOM_PLAYER_DEAD;
     }
-#else
-    ASSERT(!_player_is_dead());
-#endif
+    else if (_player_is_dead())
+        return XOM_PLAYER_DEAD;
 
     sever = max(1, sever);
 
