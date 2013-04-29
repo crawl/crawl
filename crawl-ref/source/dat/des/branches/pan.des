@@ -694,9 +694,6 @@ ENDMAP
 #############################################################################
 # Cerebov
 #
-# You might not want to teleport too much on this level - unless you can
-# reliably teleport away again.
-#
 NAME:      cerebov
 TAGS:      cerebov uniq_cerebov
 ORIENT:    northeast
@@ -705,10 +702,7 @@ MONS:      patrolling Cerebov, Balrug, brimstone fiend
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
-COLOUR:     n = blue
-TILE:       n = dngn_metal_wall_cracked
 TILE:       v = dngn_metal_wall_brown
-:           set_feature_name("clear_stone_wall", "cracked metal wall")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -717,9 +711,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .............v$$$v.............xxxx
 .............v|||v.............xxxx
 .............v$$$v.............xxxx
-.vvvvv...vvvvvvvvvvvvv...vvvvv.xxxx
+.vvvvv...vvvvvv+vvvvvv...vvvvv.xxxx
 .v|$|vvvvv...........vvvvv$|$v.xxxx
-.v$|$v.....vvvvvvvvv.....v|$|v.xxxx
+.v$|$+.....vvvvvvvvv.....+|$|v.xxxx
 .v|$|v.vvvvvvvvOvvvvvvvv.v$|$v.xxxx
 .vvvvv.vvvvvv..3..vvvvvv.vvvvv.xxxx
 ...v...vv.....vvv.....vv...v...xxxx
@@ -729,12 +723,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ...v...vv..2.......2..vv...v...xxxx
 .vvvvv.vv..2.......2..vv.vvvvv.xxxx
 .v|$|v.vv.............vv.v$|$v.xxxx
-.v|$|v.vv...vv...vv...vv.v$|$v.xxxx
+.v|$|+.vv...vv...vv...vv.+$|$v.xxxx
 .v|$|v.vv...vv+++vv...vv.v$|$v.xxxx
 .vvvvv.vvvvvvv...vvvvvvv.vvvvv.xxxx
 ....v..vvvvvvv...vvvvvvv..v....xxxx
 ....vv...................vv....xxxx
-.....vv.vvvnv..2..vvvvv.vv.....xxxx
+.....vv.vv+vv..2..vv+vv.vv.....xxxx
 ......vvv|||v.....v$$$vvv......xxxx
 ........v|$|vv...vv$|$v........xxxx
 ........v|||v.....v$$$v........xxxx

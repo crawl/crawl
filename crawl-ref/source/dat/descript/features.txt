@@ -1010,12 +1010,6 @@ Frost-covered floor
 
 Frost-covered floor. It crunches satisfyingly underfoot.
 %%%%
-# Pan: Cerebov
-A cracked metal wall
-
-This metal wall has suffered some damage. Alas, the hole is not big enough to
-crawl through.
-%%%%
 # Pan: the holy level
 A golden statue
 
@@ -1025,7 +1019,7 @@ A silver wall
 
 This wall is made of pure silver.
 %%%%
-# Slime:7
+# Slime:$
 A rune carved stone wall
 
 This strangely slime-free stone wall is carved all over with countless mystical
@@ -1036,7 +1030,7 @@ A sarcophagus
 
 An ancient sarcophagus. It appears to be empty.
 %%%%
-# Vaults:8
+# Vaults:$
 A heavily etched metal wall
 
 This metal wall is etched with murals depicting, in great and gruesome detail,
