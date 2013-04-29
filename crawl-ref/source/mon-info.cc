@@ -164,6 +164,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_WATER_HOLD;
         else
             return MB_WATER_HOLD_DROWN;
+    case ENCH_FLAYED:
+        return MB_FLAYED;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1461,7 +1463,8 @@ vector<string> monster_info::attributes() const
         v.push_back("engulfed in water");
         v.push_back("unable to breathe");
     }
-
+    if (is(MB_FLAYED))
+        v.push_back("covered in terrible wounds");
     return v;
 }
 

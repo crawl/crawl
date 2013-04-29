@@ -1491,6 +1491,7 @@ enum duration_type
     DUR_SICKENING,
     DUR_WATER_HOLD,
     DUR_WATER_HOLD_IMMUNITY,
+    DUR_FLAYED,
     NUM_DURATIONS
 };
 
@@ -1582,6 +1583,7 @@ enum enchant_type
     ENCH_WORD_OF_RECALL,// Chanting word of recall
     ENCH_INJURY_BOND,
     ENCH_WATER_HOLD,      // Silence and asphyxiation damage
+    ENCH_FLAYED,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

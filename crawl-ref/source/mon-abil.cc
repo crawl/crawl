@@ -1728,6 +1728,149 @@ static bool _seal_doors(const monster* warden)
     return false;
 }
 
+static bool _flay_creature(monster* mon, actor* victim)
+{
+    int dam;
+    bool was_flayed = false;
+
+    if (victim->holiness() != MH_NATURAL)
+        return false;
+
+    if (victim->is_player())
+    {
+        dam = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
+        dam = min(dam, max(0, you.hp - 15 - random2(10)));
+        if (dam < 10)
+            return false;
+
+        if (you.duration[DUR_FLAYED])
+            was_flayed = true;
+
+        you.increase_duration(DUR_FLAYED, 3 + random2(5), 15);
+    }
+    else
+    {
+        monster* mon_victim = victim->as_monster();
+
+        dam = (6 + (mon_victim->hit_points * 18 / mon_victim->max_hit_points))
+                   * mon_victim->max_hit_points / 100;
+        dam = min(dam, max(0, mon_victim->hit_points - 15 - random2(10)));
+        if (dam < 10)
+            return false;
+
+        if (mon_victim->has_ench(ENCH_FLAYED))
+        {
+            was_flayed = true;
+            mon_enchant flayed = mon_victim->get_ench(ENCH_FLAYED);
+            flayed.duration = min(flayed.duration + 30 + random2(50), 150);
+            mon_victim->update_ench(flayed);
+        }
+        else
+        {
+            mon_enchant flayed(ENCH_FLAYED, 1, mon, 30 + random2(50));
+            mon_victim->add_ench(flayed);
+        }
+    }
+
+    if (you.can_see(mon))
+    {
+        bool silent = silenced(mon->pos()) || silenced(you.pos());
+        int msg_type =  (silent ? random2(2) : random2(3) + 1);
+
+        switch (msg_type)
+        {
+            case 0:
+                mprf(MSGCH_MONSTER_SPELL, "%s moans in silent anguish.",
+                    mon->name(DESC_THE).c_str());
+                break;
+            case 1:
+                mprf(MSGCH_MONSTER_SPELL, "%s stares at %s with tortured malice.",
+                    mon->name(DESC_THE).c_str(), victim->name(DESC_THE).c_str());
+                break;
+            case 2:
+                mprf(MSGCH_MONSTER_SPELL, "%s cries, \"Suffer as I suffered!\"",
+                    mon->name(DESC_THE).c_str());
+                break;
+            case 3:
+                mprf(MSGCH_MONSTER_SPELL, "%s cries, \"Feel what I felt!\"",
+                    mon->name(DESC_THE).c_str());
+                break;
+        }
+    }
+
+    if (you.can_see(victim))
+    {
+        if (was_flayed)
+        {
+            mprf("Terrible wounds spread across more of %s body!",
+                 victim->name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("Terrible wounds open up all over %s body!",
+                 victim->name(DESC_ITS).c_str());
+        }
+    }
+
+    victim->hurt(mon, dam, BEAM_NONE, true);
+    victim->props["flay_damage"].get_int() += dam;
+
+    vector<coord_def> old_blood;
+    CrawlVector &new_blood = victim->props["flay_blood"].get_vector();
+
+    // Find current blood splatters
+    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    {
+        if (env.pgrid(*ri) & FPROP_BLOODY)
+            old_blood.push_back(*ri);
+    }
+
+    blood_spray(victim->pos(), victim->type, 20);
+
+    // Compute and store new blood splatters
+    unsigned int i = 0;
+    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    {
+        if (env.pgrid(*ri) & FPROP_BLOODY)
+        {
+            if (i < old_blood.size() && old_blood[i] == *ri)
+                ++i;
+            else
+                new_blood.push_back(*ri);
+        }
+    }
+
+    return true;
+}
+
+void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
+{
+    if (!blood_only)
+    {
+        if (act->is_player())
+            you.duration[DUR_FLAYED] = 0;
+        else
+            act->as_monster()->del_ench(ENCH_FLAYED, true, false);
+
+        if (you.can_see(act) && !quiet)
+        {
+            mprf("The terrible wounds on %s body vanish.",
+                 act->name(DESC_ITS).c_str());
+        }
+
+        act->heal(act->props["flay_damage"].get_int());
+        act->props.erase("flay_damage");
+    }
+
+    CrawlVector &blood = act->props["flay_blood"].get_vector();
+
+    for (int i = 0; i < blood.size(); ++i)
+    {
+        env.pgrid(blood[i].get_coord()) &= ~FPROP_BLOODY;
+    }
+    act->props.erase("flay_blood");
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -3433,6 +3576,21 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 used = true;
         }
         break;
+
+    case MONS_FLAYED_GHOST:
+    {
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        actor *foe = mons->get_foe();
+        if (foe && mons->can_see(foe) && one_chance_in(5))
+        {
+            if (_flay_creature(mons, foe))
+                used = true;
+        }
+
+        break;
+    }
 
     default:
         break;

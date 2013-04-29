@@ -808,7 +808,8 @@ static const char* dur_names[] =
     "sentinel's mark",
     "sickening",
     "drowning",
-    "drowning immunity"
+    "drowning immunity",
+    "flayed"
 };
 
 void wizard_edit_durations(void)
