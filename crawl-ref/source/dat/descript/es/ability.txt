@@ -161,12 +161,6 @@ protege de la enfermedad, de envenenamientos, petrificación, confusión y
 descomposición, además de incrementar y mantener temporalmente tu Fuerza,
 Inteligencia y Destreza.
 %%%%
-Imprison
-
-Temporalmente se aprisiona en muros de plata a un monstruo que no tenga nada
-alrededor. La duración de la prisión aumenta mediante Invocaciones, pero los
-enemigos más poderosos serán capaces de escapar más fácilmente.
-%%%%
 Sanctuary
 
 Por un breve espacio de tiempo estás a salvo en un refugio divino. Mientras

@@ -159,12 +159,6 @@ Kondition schützt dich vor Krankheit, Vergiftung, Versteinerung, Verwirrung und
 Verwesung. Sie erhöht und erhält zeitweise deine Stärke, Intelligenz und
 Geschicklichkeit.
 %%%%
-Imprison
-
-Sperre ein Monster vorübergehen in luftleerem Raum umschlossen von silbernen
-Wänden ein. Die Dauer des Gefängnisses wird durch deine Anrufungs-Fähigkeit
-erhöht, aber stärkere Gegner werden einfacher ausbrechen können.
-%%%%
 Sanctuary
 
 Für eine kurze Dauer bekommst du Sicherheit in der göttlichen Zuflucht. Solange

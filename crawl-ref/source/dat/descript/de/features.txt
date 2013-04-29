@@ -932,11 +932,6 @@ A weirdly glowing ball
 
 Dieser schwebende Ball verbreitet ein schimmerndes Licht.
 %%%%
-A very old granite statue
-
-Ein Riss durchzieht die Statue in Brusthöhe. Vielleicht wird sie zerbrechen,
-wenn du dagegen schlägst?
-%%%%
 A sealed sarcophagus
 
 Dieser antike Sarkophag ist dicht verschlossen.

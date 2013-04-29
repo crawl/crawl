@@ -933,11 +933,6 @@ A weirdly glowing ball
 
 Cette boule flottante irradie d'une lumière chatoyante.
 %%%%
-A very old granite statue
-
-Il y a une fissure en travers de sa poitrine. Peut être arriverez vous à la
-brisez si vous la frappez.
-%%%%
 A sealed sarcophagus
 
 Ce sarcophage antique est hermétiquement fermé.
