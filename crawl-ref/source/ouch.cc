@@ -130,6 +130,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       you.res_water_drowning(), hurted, true);
         if (!hurted && doEffects)
             mpr("You shrug off the wave.");
+        else if (hurted > original && doEffects)
+        {
+            mpr("The water douses you terribly!");
+            xom_is_stimulated(200);
+        }
         break;
 
     case BEAM_STEAM:

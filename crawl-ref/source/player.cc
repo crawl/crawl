@@ -6457,8 +6457,20 @@ int player::res_elec() const
 
 int player::res_water_drowning() const
 {
-    return (is_unbreathing()
-            || (you.species == SP_MERFOLK && !form_changed_physiology()));
+    int rw = 0;
+
+    if (is_unbreathing()
+        || (you.species == SP_MERFOLK && !form_changed_physiology()))
+    {
+        rw++;
+    }
+
+    // A fiery lich/hot statue suffers from quenching but not drowning, so
+    // neutral resistance sounds ok.
+    if (you.species == SP_DJINNI)
+        rw--;
+
+    return rw;
 }
 
 int player::res_asphyx() const
