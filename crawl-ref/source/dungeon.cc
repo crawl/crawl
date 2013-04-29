@@ -5009,7 +5009,8 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
             path.push_back(curr);
 
         const int dist = travel_point_distance[curr.x][curr.y];
-        ASSERT(dist < 0 && dist != -1000);
+        ASSERT(dist < 0);
+        ASSERT(dist != -1000);
         curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
     }
     if (!map_masked(curr, mapmask))

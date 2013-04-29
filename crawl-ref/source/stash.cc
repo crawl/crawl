@@ -887,7 +887,8 @@ public:
 
     string get_text(const bool = false) const
     {
-        ASSERT(level == MEL_ITEM && hotkeys.size());
+        ASSERT(level == MEL_ITEM);
+        ASSERT(hotkeys.size());
         char buf[300];
         snprintf(buf, sizeof buf, " %c %c %s",
                  hotkeys[0], on_list ? '$' : '-', text.c_str());

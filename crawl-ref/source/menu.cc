@@ -1118,7 +1118,8 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
-        ASSERT(idx >= TILE_MAIN_MAX && idx < TILEP_PLAYER_MAX);
+        ASSERT(idx >= TILE_MAIN_MAX);
+        ASSERT(idx < TILEP_PLAYER_MAX);
 
         int ymax = TILE_Y;
 
@@ -1694,7 +1695,8 @@ void column_composer::add_formatted(int ncol,
                                     bool (*tfilt)(const string &),
                                     int  margin)
 {
-    ASSERT(ncol >= 0 && ncol < (int) columns.size());
+    ASSERT(ncol >= 0);
+    ASSERT(ncol < (int) columns.size());
 
     column &col = columns[ncol];
     vector<string> segs = split_string("\n", s, false, true);
@@ -3050,7 +3052,8 @@ void SaveMenuItem::_pack_doll()
         if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
-        ASSERT(idx >= TILE_MAIN_MAX && idx < TILEP_PLAYER_MAX);
+        ASSERT(idx >= TILE_MAIN_MAX);
+        ASSERT(idx < TILEP_PLAYER_MAX);
 
         int ymax = TILE_Y;
 

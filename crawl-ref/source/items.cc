@@ -1427,7 +1427,8 @@ void merge_item_stacks(item_def &source, item_def &dest, int quant)
     if (quant == -1)
         quant = source.quantity;
 
-    ASSERT(quant > 0 && quant <= source.quantity);
+    ASSERT(quant > 0);
+    ASSERT(quant <= source.quantity);
 
     if (is_blood_potion(source) && is_blood_potion(dest))
        merge_blood_potion_stacks(source, dest, quant);

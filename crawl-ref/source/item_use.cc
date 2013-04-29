@@ -1229,7 +1229,8 @@ static bool _swap_rings(int ring_slot)
     // putting on the ring at all.  If it becomes possible for just
     // one ring slot to be melded, the subsequent code will need to
     // be revisited, so prevent that, too.
-    ASSERT(!you.melded[EQ_LEFT_RING] && !you.melded[EQ_RIGHT_RING]);
+    ASSERT(!you.melded[EQ_LEFT_RING]);
+    ASSERT(!you.melded[EQ_RIGHT_RING]);
 
     if (lring->cursed() && rring->cursed())
     {

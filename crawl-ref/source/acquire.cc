@@ -905,7 +905,8 @@ static int _spell_weight(spell_type spell)
 // weights of all unknown spells in the book.
 static int _book_weight(book_type book)
 {
-    ASSERT(book >= 0 && book <= MAX_FIXED_BOOK);
+    ASSERT(book >= 0);
+    ASSERT(book <= MAX_FIXED_BOOK);
 
     int total_weight = 0;
     for (int i = 0; i < SPELLBOOK_SIZE; i++)

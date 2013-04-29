@@ -4251,7 +4251,8 @@ mon_body_shape get_mon_shape(const monster_type mc)
 
 string get_mon_shape_str(const mon_body_shape shape)
 {
-    ASSERT(shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_MISC);
+    ASSERT(shape >= MON_SHAPE_HUMANOID);
+    ASSERT(shape <= MON_SHAPE_MISC);
 
     static const char *shape_names[] =
     {

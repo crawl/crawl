@@ -362,13 +362,15 @@ void autoid_unrand(item_def &item)
 
 unique_item_status_type get_unique_item_status(int art)
 {
-    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    ASSERT(art > UNRAND_START);
+    ASSERT(art < UNRAND_LAST);
     return you.unique_items[art - UNRAND_START];
 }
 
 static void _set_unique_item_status(int art, unique_item_status_type status)
 {
-    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    ASSERT(art > UNRAND_START);
+    ASSERT(art < UNRAND_LAST);
     you.unique_items[art - UNRAND_START] = status;
 }
 

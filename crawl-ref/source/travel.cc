@@ -3609,7 +3609,8 @@ void LevelInfo::load(reader& inf, int minorVersion)
     unmarshallExcludes(inf, minorVersion, excludes);
 
     int n_count = unmarshallByte(inf);
-    ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
+    ASSERT(n_count >= 0);
+    ASSERT(n_count <= NUM_DA_COUNTERS);
     for (int i = 0; i < n_count; i++)
         da_counters[i] = unmarshallShort(inf);
 }
@@ -3969,7 +3970,8 @@ void runrest::initialise(int dir, int mode)
     }
     else
     {
-        ASSERT(dir >= 0 && dir <= 7);
+        ASSERT(dir >= 0);
+        ASSERT(dir <= 7);
 
         pos = Compass[dir];
         runmode = mode;

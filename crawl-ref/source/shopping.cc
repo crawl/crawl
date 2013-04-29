@@ -2373,8 +2373,10 @@ shop_struct *get_shop(const coord_def& where)
         return NULL;
 
     unsigned short t = env.tgrid(where);
-    ASSERT(t != NON_ENTITY && t < MAX_SHOPS);
-    ASSERT(env.shop[t].pos == where && env.shop[t].type != SHOP_UNASSIGNED);
+    ASSERT(t != NON_ENTITY);
+    ASSERT(t < MAX_SHOPS);
+    ASSERT(env.shop[t].pos == where);
+    ASSERT(env.shop[t].type != SHOP_UNASSIGNED);
 
     return (&env.shop[t]);
 }
@@ -2591,7 +2593,8 @@ bool ShoppingList::is_on_list(string desc, const level_pos* _pos) const
 
 void ShoppingList::del_thing_at_index(int idx)
 {
-    ASSERT(idx >= 0 && idx < list->size());
+    ASSERT(idx >= 0);
+    ASSERT(idx < list->size());
     list->erase(idx);
     refresh();
 }

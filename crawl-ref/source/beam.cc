@@ -677,7 +677,8 @@ void bolt::initialise_fire()
     }
 
     ASSERT(in_bounds(source));
-    ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
+    ASSERT(flavour > BEAM_NONE);
+    ASSERT(flavour < BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->defined());
     ASSERT(range >= 0);
     ASSERT(!aimed_at_feet || source == target);
@@ -2524,7 +2525,8 @@ bool bolt::stop_at_target() const
 
 void bolt::drop_object()
 {
-    ASSERT(item != NULL && item->defined());
+    ASSERT(item != NULL);
+    ASSERT(item->defined());
 
     // Conditions: beam is missile and not tracer.
     if (is_tracer || !was_missile)

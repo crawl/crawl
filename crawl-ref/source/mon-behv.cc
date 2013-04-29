@@ -571,7 +571,8 @@ void handle_behaviour(monster* mon)
                     break;
             }
 
-            ASSERT((proxFoe || isFriendly) && mon->foe != MHITNOT);
+            ASSERT(proxFoe || isFriendly);
+            ASSERT(mon->foe != MHITNOT);
 
             // Monster can see foe: set memory in case it loses sight.
             // Hack: smarter monsters will tend to pursue the player longer.
