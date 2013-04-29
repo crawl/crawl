@@ -3035,14 +3035,20 @@ bool bolt::harmless_to_player() const
     case BEAM_ELECTRICITY:
         return player_res_electricity(false);
 
-    case BEAM_FIRE:
+    case BEAM_PETRIFY:
+        return (you.res_petrify() || you.petrified());
+
     case BEAM_COLD:
     case BEAM_ACID:
         // Fire and ice can destroy inventory items, acid damage equipment.
         return false;
 
-    case BEAM_PETRIFY:
-        return (you.res_petrify() || you.petrified());
+    case BEAM_FIRE:
+    case BEAM_HELLFIRE:
+    case BEAM_HOLY_FLAME:
+    case BEAM_NAPALM:
+    case BEAM_LAVA:
+        return you.species == SP_DJINNI;
 
     default:
         return false;
