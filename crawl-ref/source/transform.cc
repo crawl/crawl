@@ -23,6 +23,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "mon-abil.h"
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
@@ -1103,6 +1104,18 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     you.check_clinging(false);
+
+    // If we are no longer living, end an effect that afflicts only the living
+    if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
+    {
+        // Heal a little extra if we gained max hp from this transformation
+        if (form_hp_mod() != 10)
+        {
+            int dam = you.props["flay_damage"].get_int();
+            you.heal((dam * form_hp_mod() / 10) - dam);
+        }
+        heal_flayed_effect(&you);
+    }
 
     // This only has an effect if the transformation happens passively,
     // for example if Xom decides to transform you while you're busy
