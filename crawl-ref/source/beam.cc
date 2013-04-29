@@ -3047,7 +3047,6 @@ bool bolt::harmless_to_player() const
     case BEAM_HELLFIRE:
     case BEAM_HOLY_FLAME:
     case BEAM_NAPALM:
-    case BEAM_LAVA:
         return you.species == SP_DJINNI;
 
     default:
