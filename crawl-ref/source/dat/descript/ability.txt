@@ -165,9 +165,8 @@ Dexterity.
 %%%%
 Imprison
 
-Temporarily imprison a monster surrounded by empty space in walls of silver.
-The duration of the prison is increased by Invocations skill, but strong
-enemies will be able to break free more easily.
+Temporarily imprison a monster in walls of silver. The duration of the prison
+is increased by Invocations skill.
 %%%%
 Sanctuary
 
