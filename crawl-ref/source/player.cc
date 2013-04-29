@@ -372,6 +372,11 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
     }
+    else if (you.species == SP_DJINNI && !feat_has_dry_floor(new_grid)
+             && feat_has_dry_floor(old_feat))
+    {
+        mprf("You heave yourself high above the %s.", feat_type_name(new_grid));
+    }
 
     const bool was_clinging = you.is_wall_clinging();
     const bool is_clinging = stepped && you.check_clinging(stepped);
