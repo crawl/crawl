@@ -170,9 +170,8 @@ et temporairement augmente et soutien votre Force, Dextérité et Intelligence.
 %%%%
 Imprison
 
-Emprisonne temporairement un monstre, entouré d'espaces vides, dans des murs
-d'argent. La durée de la prison est accrue avec la compétence Invocations mais,
-les ennemis puissants seront capables d'en sortir par la force plus facilement.
+Emprisonne temporairement un monstre dans des murs d'argent. La durée de la
+prison est accrue avec la compétence Invocations.
 %%%%
 Sanctuary
 

@@ -982,10 +982,6 @@ A weirdly glowing ball
 
 공중에 떠있는 구체로, 은은한 빛을 내고 있다.
 %%%%
-A very old granite statue
-
-석상의 가슴팍 부분에 큰 균열이 생겨있다. 툭 하고 건드리면 부서질 것 같다.
-%%%%
 A sealed sarcophagus
 
 돌로 만든 고대의 관이다. 단단하게 닫혀있다.

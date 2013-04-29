@@ -821,10 +821,6 @@ A weirdly glowing ball
 
 这个悬浮在半空中的球体向四周辐射出微光。
 %%%%
-A very old granite statue
-
-在它的胸口处有一道裂痕。也许你可以击打那里来打碎它？
-%%%%
 A sealed sarcophagus
 
 这个古代石棺被封死了。

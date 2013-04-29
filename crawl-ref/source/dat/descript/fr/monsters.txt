@@ -228,12 +228,12 @@ Ignacio
 
 Alors qu'un mortel ne peut pas se transformer en démon sans intervention
 divine, c'est pourtant ce qui est arrivé à Ignace après que Makhleb ait vu son
-amourdu travail et lui ait sourit. Il est maintenant condamné à poursuivre la
+amour du travail et lui ait sourit. Il est maintenant condamné à poursuivre la
 joie de sa vie pour l'éternité.
 
 Même si sa nouvelle forme inclut un certain nombre de grosses lames d'un
 tranchant remarquable venant de ses appendices démoniaques, il garde sa hache
-favorite et il vous laissera volontier essayer ses tranchants.
+favorite et il vous laissera volontiers essayer ses tranchants.
 %%%%
 Ijyb
 
@@ -619,6 +619,13 @@ black mamba
 
 Un grand serpent tropical incroyablement rapide dont la morsure véhicule un
 poison mortel.
+%%%%
+blink frog
+
+Une espèce de grenouilles géantes qui possède la capacité de faire des sauts
+éclairs à volonté. Elle peut faire des sauts éclairs elle-même pour s'approcher
+de sa proie, ou faire un saut éclair pour s'échapper. Elle est communément
+trouvée en groupe.
 %%%%
 blizzard demon
 
@@ -1927,6 +1934,11 @@ orb of fire
 Un globe de feu originel brut, capable d'un pyrotechnie impressionnante, et de
 déformer la chaire des créatures qui viennent à sa portée.
 %%%%
+orb spider
+
+Une araignée sinistrement brillante avec des filets d'énergie pure qui émergent
+de ses filières. Elle semble vouloir garder ses distances.
+%%%%
 orc
 
 Une laide race souterraine, les orcs combinent les pires attributs des humains,
@@ -1965,6 +1977,12 @@ orc warrior
 
 Un soldat orc expérimenté et bien armé, capable de commander un petit groupe de
 ses semblables.
+%%%%
+orc wizard
+
+Alors que les orcs préfèrent généralement le combat physique, certains d'entre
+eux optiennent la maîtrise des arts occultes - cependant toujours dans un but
+martial.
 %%%%
 pale draconian
 
@@ -2043,6 +2061,14 @@ program bug
 
 Un monstre vorace et incroyablement buggé. Veuillez rapporter son existence aux
 développeurs de Devteam.
+%%%%
+pulsating lump
+
+Un blob répugnant de toute sortes de matières organiques - muscle, tripes,
+nerf, viscère, moelle - empilés aléatoirement en une seule masse contorsionnée.
+Sa chair altérée est mutagène au contact; mais sans aucune forme d'agencement
+structurel de ses parties, il lui manque la coordination nécessaire pour se
+déplacer rapidement.
 %%%%
 purple draconian
 
@@ -2271,6 +2297,15 @@ siren
 
 Une jeune femme avec une queue de poisson à la place des jambes. Les sirènes
 sont capables de lancer un sort très puissant à ceux qui les écoutent.
+%%%%
+sixfirhy
+
+Une petite créature vile qui bouge par saccades, s'arrêtant puis dardant à une
+vitesse fulgurante. Elle à l'air de lancer des étincelles autour d'elle.
+
+Cette bête peut se soigner avec les dégâts électriques, cependant, si elle se
+fait toucher par plus qu'elle ne peut en maîtriser, cela pourrait avoir des
+résultats plutôt violents.
 %%%%
 skeletal bat
 
@@ -2834,6 +2869,11 @@ plantes normales n'ont pas d'appendices mystérieux ni de tentacules qui se
 tordent. Heureusement, celle-là semble être inoffensive, mais avec les démons,
 on ne sait jamais.
 %%%%
+drunken dwarf
+
+Notre camarade de courte taille doit sûrement travailler en tant que testeur de
+bière, et il en profite même un peu trop.
+%%%%
 earth elementalist statue
 
 Une statue simple d'un nain portant une pioche. Elle à l'air incroyablement
@@ -2900,6 +2940,12 @@ Il a l'air d'une piètre représentation d'un moine; rien de plus qu'un souvenir
 hungry kobold
 
 Ce kobold semble énervé du fait d'avoir été interrompu durant son repas.
+%%%%
+kamikaze kobold
+
+Ce kobold est soit fou soit un martyr pour quelques croyances koboldes
+obscures, il est enchanté pour exploser dans une gerbe de feu. Vous ferez mieux
+de vous tenir à distance.
 %%%%
 lasher statue
 
