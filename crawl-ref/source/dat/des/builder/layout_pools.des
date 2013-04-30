@@ -151,7 +151,7 @@ ENDMAP
 #
 NAME: layout_honeycomb
 DEPTH: D:12-, Snake:1-4, Dis
-WEIGHT: 10
+WEIGHT: 10, 20(Dis)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -178,7 +178,9 @@ TAGS: overwritable layout allow_dup unrand
                 pool_size = 25 + crawl.random2(25),
                 border = 'x' }
     connect_adjacent_rooms { wall = "x", floor = ".", replace = connection,
-                             min = 1000, max = 1500 }
+                             min = 900, max = 1300, check_empty = true }
+    connect_adjacent_rooms { wall = "x", floor = ".", replace = connection,
+                             min = 100, max = 200, check_empty = false }
     zonify.map_fill_zones(_G, 1, 'x')
 
     random_wall_material(_G)

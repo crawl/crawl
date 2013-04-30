@@ -345,100 +345,41 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
 
 // These functions check for irregularities before the first
 //  corner along a wall in the indicated direction.
-static bool _wall_is_empty_x_minus(map_lines &lines,
-                                   int x, int y,
-                                   const char* wall, const char* floor)
+static bool _wall_is_empty(map_lines &lines,
+                           int x, int y,
+                           const char* wall, const char* floor,
+                           bool horiz = false)
 {
-    for(int x1 = x; x1 >= 0; x1--)
+    coord_def normal(horiz ? 0 : 1, horiz ? 1 : 0);
+    for (int d = 1; d >= -1; d-=2)
     {
-        if(!lines.in_bounds(coord_def(x1, y + 1))
-           || !strchr(floor, lines(x1, y + 1)))
-        {
-            return true;
-        }
-        if(!lines.in_bounds(coord_def(x1, y - 1))
-           || !strchr(floor, lines(x1, y - 1)))
-        {
-            return true;
-        }
+        coord_def length(horiz ? d : 0, horiz ? 0 : d);
+        int n = 1;
 
-        if(!strchr(wall, lines(x1, y)))
-            return false;
+        while (true)
+        {
+            coord_def pos(x + length.x*n,y + length.y*n);
+            if(!lines.in_bounds(coord_def(pos.x + normal.x, pos.y + normal.y))
+               || !strchr(floor, lines(pos.x + normal.x, pos.y + normal.y)))
+            {
+                break;
+            }
+            if(!lines.in_bounds(coord_def(pos.x - normal.x, pos.y - normal.y))
+               || !strchr(floor, lines(pos.x - normal.x, pos.y - normal.y)))
+            {
+                break;
+            }
+
+            if(!strchr(wall, lines(pos.x, pos.y)))
+                return false;
+
+            n++;
+        }
     }
 
     // hit the edge of the map, so this is good
     return true;
 }
-
-static bool _wall_is_empty_x_plus(map_lines &lines,
-                                  int x, int y,
-                                  const char* wall, const char* floor)
-{
-    for(int x1 = x; x1 < lines.width(); x1++)
-    {
-        if(!lines.in_bounds(coord_def(x1, y + 1))
-           || !strchr(floor, lines(x1, y + 1)))
-        {
-            return true;
-        }
-        if(!lines.in_bounds(coord_def(x1, y - 1))
-           || !strchr(floor, lines(x1, y - 1)))
-        {
-            return true;
-        }
-
-        if(!strchr(wall, lines(x1, y)))
-            return false;
-    }
-    return true;
-}
-
-static bool _wall_is_empty_y_minus(map_lines &lines,
-                                   int x, int y,
-                                   const char* wall, const char* floor)
-{
-    for(int y1 = y; y1 >= 0; y1--)
-    {
-        if(!lines.in_bounds(coord_def(x + 1, y1))
-           || !strchr(floor, lines(x + 1, y1)))
-        {
-            return true;
-        }
-        if(!lines.in_bounds(coord_def(x - 1, y1))
-           || !strchr(floor, lines(x - 1, y1)))
-        {
-            return true;
-        }
-
-        if(!strchr(wall, lines(x, y1)))
-            return false;
-    }
-    return true;
-}
-
-static bool _wall_is_empty_y_plus(map_lines &lines,
-                                  int x, int y,
-                                  const char* wall, const char* floor)
-{
-    for(int y1 = y; y1 < lines.height(); y1++)
-    {
-        if(!lines.in_bounds(coord_def(x + 1, y1))
-           || !strchr(floor, lines(x + 1, y1)))
-        {
-            return true;
-        }
-        if(!lines.in_bounds(coord_def(x - 1, y1))
-           || !strchr(floor, lines(x - 1, y1)))
-        {
-            return true;
-        }
-
-        if(!strchr(wall, lines(x, y1)))
-            return false;
-    }
-    return true;
-}
-
 
 LUAFN(dgn_count_feature_in_box)
 {
@@ -1031,6 +972,7 @@ LUAFN(dgn_connect_adjacent_rooms)
     TABLE_CHAR(ls, replace, '.');
     TABLE_INT(ls, max, 1);
     TABLE_INT(ls, min, max);
+    TABLE_BOOL(ls, check_empty, false);
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
@@ -1069,85 +1011,19 @@ LUAFN(dgn_connect_adjacent_rooms)
 
         if (strchr(wall, lines(*ri)))
         {
-            if (   strchr(wall,  lines(x - 1, y))
-                && strchr(wall,  lines(x + 1, y))
-                && strchr(floor, lines(x,     y - 1))
-                && strchr(floor, lines(x,     y + 1)))
-            {
-                lines(*ri) = replace;
-            }
-            else if (   strchr(floor, lines(x - 1, y))
-                     && strchr(floor, lines(x + 1, y))
-                     && strchr(wall,  lines(x,     y - 1))
-                     && strchr(wall,  lines(x,     y + 1)))
-            {
-                lines(*ri) = replace;
-            }
-        }
-        count--;
-    }
-
-    return 0;
-}
-
-LUAFN(dgn_connect_adjacent_rooms2)
-{
-    LINES(ls, 1, lines);
-
-    TABLE_STR(ls, wall, "x");
-    TABLE_STR(ls, floor, ".");
-    TABLE_CHAR(ls, replace, '.');
-    TABLE_INT(ls, max, 1);
-    TABLE_INT(ls, min, max);
-
-    int x1, y1, x2, y2;
-    if (!_coords(ls, lines, x1, y1, x2, y2))
-        return 0;
-
-    // we never go right up to the border to avoid looking off the map edge
-    if(x1 < 1)
-        x1 = 1;
-    if(x2 >= lines.width() - 1)
-        x2 = lines.width() - 2;
-    if(y1 < 1)
-        y1 = 1;
-    if(y2 >= lines.height() - 1)
-        y2 = lines.height() - 2;
-
-    if (min < 0)
-        return luaL_error(ls, "Invalid min connections: %i", min);
-    if (max < min)
-    {
-        return luaL_error(ls, "Invalid max connections: %i (min is %i)",
-                          max, min);
-    }
-
-    int count = min + random2(max - min + 1);
-    for (random_rectangle_iterator ri(coord_def(x1, y1),
-                                      coord_def(x2, y2)); ri; ++ri)
-    {
-        if(count <= 0)
-        {
-            // stop when have checked enough spots
-            return 0;
-        }
-
-        int x = ri->x;
-        int y = ri->y;
-
-        if (strchr(wall, lines(*ri)))
-        {
-            if (   strchr(floor, lines(x, y - 1))
+            if (strchr(floor, lines(x, y - 1))
                 && strchr(floor, lines(x, y + 1))
-                && _wall_is_empty_x_plus (lines, x, y, wall, floor)
-                && _wall_is_empty_x_minus(lines, x, y, wall, floor))
+                && (check_empty ? _wall_is_empty(lines, x, y, wall, floor, true)
+                   : (strchr(wall, lines(x - 1, y))
+                      && strchr(wall, lines(x + 1, y)))))
             {
                 lines(*ri) = replace;
             }
-            else if (   strchr(floor, lines(x - 1, y))
+            else if (strchr(floor, lines(x - 1, y))
                      && strchr(floor, lines(x + 1, y))
-                     && _wall_is_empty_y_plus (lines, x, y, wall, floor)
-                     && _wall_is_empty_y_minus(lines, x, y, wall, floor))
+                     && (check_empty ? _wall_is_empty(lines, x, y, wall, floor, false)
+                        : (strchr(wall, lines(x, y - 1))
+                           && strchr(wall, lines(x, y + 1)))))
             {
                 lines(*ri) = replace;
             }
@@ -1734,7 +1610,6 @@ const struct luaL_reg dgn_build_dlib[] =
     { "remove_isolated_glyphs", &dgn_remove_isolated_glyphs },
     { "widen_paths", &dgn_widen_paths },
     { "connect_adjacent_rooms", &dgn_connect_adjacent_rooms },
-    { "connect_adjacent_rooms2", &dgn_connect_adjacent_rooms2 },
     { "replace_area", &dgn_replace_area },
     { "replace_first", &dgn_replace_first },
     { "replace_random", &dgn_replace_random },

@@ -207,8 +207,9 @@ TAGS:   overwritable layout allow_dup unrand
   end
 
   -- Create doors
-  connect_adjacent_rooms { wall = "x", floor = ".", replace = "+",
-                           min = 200, max = 800 }
+  connect_adjacent_rooms { replace = "+", min = 100, max = 400, check_empty = true }
+  -- Create a small number of extra doors (allowing more than one door on some wall)
+  connect_adjacent_rooms { replace = "+", min = 0, max = 10 }
 
   -- Fill disconnects
   zonify.map_fill_zones(_G, 1, 'x')
