@@ -605,8 +605,12 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         rc = true, undead = false;
     }
 
-    if (you.species == SP_DJINNI && spell == SPELL_ICE_FORM)
+    if (you.species == SP_DJINNI
+        && (spell == SPELL_ICE_FORM
+         || spell == SPELL_DEATHS_DOOR))
+    {
         rc = true, undead = false;
+    }
 
     return rc;
 }
