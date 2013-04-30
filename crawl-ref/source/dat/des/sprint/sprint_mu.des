@@ -1146,8 +1146,7 @@ KMONS: O = col:brown generate_awake statue name:earth_elementalist name_adjectiv
 KMONS: d = col:lightgrey generate_awake statue name:air_elementalist name_adjective hp:25 \
  spells:summon_air_elementals;cantrip \
  tile:mons_air_elementalist_statue
-KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
-       name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
+KMONS: e = ancient champion spells:venom_bolt;.;haste;haunt;.;. actual_spells \
        ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
        battleaxe ego:vorpal | battleaxe ego:pain | \
        w:3 executioner's axe ego:vorpal

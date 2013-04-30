@@ -1343,6 +1343,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_WIGHT;
     case MONS_SKELETAL_WARRIOR:
         return TILEP_MONS_SKELETAL_WARRIOR;
+    case MONS_ANCIENT_CHAMPION:
+        return TILEP_MONS_ANCIENT_CHAMPION;
     case MONS_FLYING_SKULL:
         return TILEP_MONS_FLYING_SKULL;
     case MONS_FLAMING_CORPSE:

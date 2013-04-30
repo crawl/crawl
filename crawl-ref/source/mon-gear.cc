@@ -1369,6 +1369,29 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_DEMON_BLADE;
         break;
 
+    case MONS_ANCIENT_CHAMPION:
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_GREAT_MACE,
+                                      WPN_BATTLEAXE,
+                                      WPN_GREAT_SWORD,
+                                      -1);
+
+        if (x_chance_in_y(2, 3))
+        {
+            set_item_ego_type(item, OBJ_WEAPONS,
+                              random_choose_weighted(12, SPWPN_DRAINING,
+                                                      7, SPWPN_VORPAL,
+                                                      4, SPWPN_FREEZING,
+                                                      4, SPWPN_FLAMING,
+                                                      2, SPWPN_PAIN,
+                                                      0));
+        }
+
+        item.plus  += random2(4);
+        item.plus2 += random2(4);
+        break;
+
     default:
         break;
     }
@@ -1976,6 +1999,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_IRONHEART_PRESERVER:
+    case MONS_ANCIENT_CHAMPION:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR, -1);
         break;
