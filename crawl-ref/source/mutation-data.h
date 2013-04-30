@@ -723,7 +723,7 @@
 
   {"Opalescent runes etch themselves into your hands",
    "Your runes become more intricate.",
-   "Your runed intermesh and glow violently with a palpable aura."},
+   "Your runes intermesh and glow violently with a palpable aura."},
 
   {"The runes on your hands vanish abruptly.",
    "The runes on your hands glow less intricate.",
