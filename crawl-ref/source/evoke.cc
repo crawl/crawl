@@ -343,6 +343,13 @@ static bool _efreet_flask(int slot)
 
 static bool _check_crystal_ball()
 {
+    if (you.species == SP_DJINNI)
+    {
+        mpr("These balls have not yet been approved for use by djinn. "
+            "(OOC: they're supposed to work, but need a redesign.)");
+        return false;
+    }
+
     if (you.intel() <= 1)
     {
         mpr("You lack the intelligence to focus on the shapes in the ball.");
