@@ -1270,8 +1270,8 @@ TAGS: overwritable layout allow_dup unrand
 
     -- Alternate version, connect rooms at the end.
     if alt then
-        connect_adjacent_rooms2 { max = crawl.random_range(500, 750),
-                                  replace = '+' }
+        connect_adjacent_rooms { max = crawl.random_range(500, 750),
+                                 min = 250, replace = '+', check_empty = true }
         zonify.map_fill_zones(_G, 1, 'x')
     end
 }}
