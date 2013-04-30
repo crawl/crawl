@@ -3078,7 +3078,9 @@ its claws burn with the sear of holy wrath.
 phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle and recalled
-to this plane by unholy magic.
+to this plane by unholy magic. The blade it wields is ethereal, passing easily
+through shields and armour, and rendering those it strikes more susceptible to
+magic.
 %%%%
 phantom
 
