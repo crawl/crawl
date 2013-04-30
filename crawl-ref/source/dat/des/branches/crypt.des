@@ -668,25 +668,6 @@ x.........xxx...xxx.........x
 xxxxxxxxxxxxx.@.xxxxxxxxxxxxx
 ENDMAP
 
-NAME:  kb_skeletal_archery
-DEPTH: Crypt, Tar
-KMONS: 1 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
-           spells:. ; longbow . arrow q:30
-KMONS: 2 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
-           spells:. ; bow . arrow q:30
-KITEM: 2 = |
-MAP
-xxxxxxxxxxxxxxx
-x............1x
-x............1x
-x............1x
-+............2x
-x............1x
-x............1x
-x............1x
-xxxxxxxxxxxxxxx
-ENDMAP
-
 NAME:   st_shrine_of_skulls
 DEPTH:  Crypt
 MONS:   flying skull band, lich
@@ -1274,8 +1255,7 @@ MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 no
 MONS:   raven skeleton / w:30 nothing
 MONS:   w:3 guardian mummy / w:1 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
-KMONS:  8 = statue name:spooky n_adj spells:haunt tile:mons_spooky_statue \
-            col:death
+KMONS:  z = curse skull
 SHUFFLE: 9H
 : if crawl.coinflip() then
 # Temple of yred
@@ -1308,7 +1288,7 @@ KFEAT: ABCEFH = .
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-ttt"""ttttttttvvvvvvvvTttTtttttttttttttttttttttttTTTT...Tttttw8wtttttwttt8.??ttt
+ttt"""ttttttttvvvvvvvvTttTtttttttttttttttttttttttTTTT...Tttttwwztttttwtttz.??ttt
 tt""("ttttttttv%--v-4v.....TtttttttttTTTTtttttttT....TTT..ttwwwwwttwwwtwW..?Tttt
 ttT""ttttTTTttv4-4v4-v..T.t..TTTtttTT...TTTT.ttTT.TTttttT..WWWwwwwwwwwwwwwwW.Ttt
 ttT"TttTT..t..v---vvv.T....T..t..TTt.TTT.t....T..TtttttttTTTWWWwwwwwwwwwwwwwWttt
@@ -1416,20 +1396,18 @@ MONS:   flying skull / skeleton
 MONS:   w:50 skeleton / wight
 MONS:   generate_awake curse skull / generate_awake curse toe
 : elseif brnd > 6 then
-MONS:   patrolling vampire hd:8 col:green name:noble n_suf / patrolling \
-        vampire hd:10 col:blue spells:.;.;haste;.;.;.; name:vampire_warrior \
-        n_rpl n_des actual_spells ; long sword | great sword | battleaxe | \
+MONS:   patrolling vampire ; scimitar | great sword | battleaxe | \
         war axe | broad axe . chain mail w:15 | plate armour \
         w:1
 # Using KMONS with fallback to vampire knight:
 KMONS:  2 = vampire knight / Jory, vampire knight
-MONS:   dancing weapon ; any weapon ego:vampiricism / vampire hd:10 col:blue \
-        spells:.;.;haste;.;.;.; name:vampire_warrior n_rpl n_des actual_spells \
-        ; long sword | great sword | battleaxe | war axe | broad axe . chain \
+MONS:   dancing weapon ; any weapon ego:vampiricism /\
+        vampire ; scimitar | great sword | battleaxe |\
+        war axe | broad axe . chain \
         mail w:15 | plate armour w:1
-MONS:   phantasmal warrior / vampire hd:10 col:blue spells:.;.;haste;.;.;.; \
-        name:vampire_warrior n_rpl n_des actual_spells ; long sword | great \
-        sword | battleaxe | war axe | broad axe . chain mail w:15 | \
+MONS:   phantasmal warrior /\
+        vampire ; scimitar | great sword | battleaxe |\
+        war axe | broad axe . chain mail w:15 | \
         plate armour w:1
 MONS:   vampire / zombie / golden dragon zombie w:3 / storm dragon zombie \
         w:3
@@ -1445,8 +1423,7 @@ MONS:   generate_awake shadow dragon / generate_awake spectral golden dragon
 : else
 MONS:   patrolling guardian mummy
 MONS:   greater mummy
-MONS:   mummy priest w:8 / guardian mummy hd:9 col:lightcyan spells:.;.;haste;\
-        .;.;.; name:mummy_warrior n_rpl n_des actual_spells ; long sword | great \
+MONS:   mummy priest w:8 / guardian mummy ; long sword | great \
         sword | battleaxe | war axe | broad axe . chain mail w:15 | \
         plate armour w:1
 MONS:   guardian mummy

@@ -355,15 +355,14 @@ SUBST:   T = t / t / P / .
 KMONS:   P = plant / plant / bush / nothing
 KMONS:   R = plant
 KMONS:   Q = bush
-KMONS:   d = spriggan spells:pain;bolt_of_draining;animate_dead name:necromancer n_suf col:magenta
-KMONS:   e = bat skeleton name:skeletal_bat n_rpl n_spe n_des n_zom
+KMONS:   e = bat skeleton
 KMONS:   K = giant firefly
 KITEM:   f = dagger / short sword / sabre / flail / whip / blowgun / bow
 KITEM:   g = robe / cloak / cap / buckler / steam dragon armour w:1
-KMONS:   L = spriggan col:white name:baker n_suf ; robe . dagger
+KMONS:   L = spriggan ; robe . dagger
 KITEM:   h = bread ration q:2
 KMONS:   M = yak
-KMONS:   N = spriggan name:shepherd n_suf ; robe . quarterstaff
+KMONS:   N = spriggan ; robe . quarterstaff
 KITEM:   i = cheese q:3
 COLOUR:  "MN = green
 COLOUR:  C = white
@@ -439,7 +438,7 @@ ttT""MM"MM"TTTttttttttttttt..tttttttttttttttttttttt...ttttttttt....xxxxxxxxxxxxx
 tt""""M""""Tttttttttttttttttt..ttt.......ttttttttt.......tttt...xxxxxxxxexxxexxx
 tt".MM""NTTtttttttttttttttttttt....tttt.......ttt...ttttt.......xxxxx..exxxxeexx
 tt""M""""Ttttttttttttttttttttttttttttttt...ttt..t..ttttttttxxxxx......xx.exx..xx
-ttt""""TTTtttttttttttttttttttttttttttttttttttttt.tttttttxxxxxxxxxx....xxx.d.xxxx
+ttt""""TTTtttttttttttttttttttttttttttttttttttttt.tttttttxxxxxxxxxx....xxx.1.xxxx
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -725,11 +724,7 @@ NSUBST: 5 = 1:6 / *:5
 KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
 KMONS: 5 = ice devil
 KMONS: 6 = blizzard demon / ice dragon
-KMONS: 8 = ice statue name:chilling_statue name_replace name_descriptor \
-           hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
-           ozocubu's_refrigeration;freezing_cloud;\
-           ozocubu's_refrigeration;ozocubu's_refrigeration \
-           tile:mons_chilling_statue
+KMONS: 8 = ice statue
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen

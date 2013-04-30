@@ -14,12 +14,10 @@
 #   -> D:10-12 deep water, giant goldfish, big fish, jellyfish
 #   -> D:13-15 deep water, electric eel, shark, sea snake, snapping turtle
 #   -> D:16-18 ice, polar bear, yak, death yak, wolf
-#   -> D:19-21 ice, ice beast, ice bat, simulacrum, freezing clouds
+#   -> D:19-21 ice, ice beast, simulacrum, freezing clouds
 #   -> D:22-24 lava, fire vortex, lava fish, lava snake, salamander
 #   -> D:25-27 lava, fire vortex, fire bat, lava worm, fire elemental
 #   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond ob
-#
-# Yes, I "borrowed" the ice bat from the goddamned_bats minivault.
 #
 # Most of these vaults come in three sizes/shapes depending on
 #  which characters of w, D and E turn into water.
@@ -149,8 +147,7 @@ function init_aquarium(e)
     e.ftile('_ = floor_frozen')
     e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
                  w:4  generate_awake ice beast /
-                 w:1  generate_awake bat simulacrum
-                      name:ice_bat n_rpl n_des n_spe n_zom /
+                 w:1  generate_awake bat simulacrum /
                  w:1  generate_awake red wasp simulacrum /
                  w:1  generate_awake orc simulacrum /
                  w:1  generate_awake yaktaur simulacrum /

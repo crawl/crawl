@@ -572,15 +572,7 @@ ENDMAP
 
 NAME: grunt_witch_cave
 DEPTH: Swamp
-: if crawl.coinflip() then
-MONS: wizard hd:10 name:witch n_rpl n_des n_noc col:lightgreen \
-      spells:poisonous_cloud;summon_hydra;cause_fear;slow;.;. ; \
-      robe . quarterstaff . ring of poison resistance
-: else
-MONS: wizard hd:10 name:witch n_rpl n_des n_noc col:lightgreen \
-      spells:venom_bolt;summon_hydra;mesmerise;confuse;.;. ; \
-      robe . quarterstaff . ring of poison resistance
-: end
+MONS: wizard
 MONS: hydra
 {{
   dgn.delayed_decay(_G, 'd',
