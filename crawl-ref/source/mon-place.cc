@@ -2290,6 +2290,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(3);
         break;
 
+    case MONS_ANCIENT_CHAMPION:
+        natural_leader = true;
+        // Intentional fallthrough
     case MONS_SKELETAL_WARRIOR:
         band = BAND_SKELETAL_WARRIORS;
         band_size = 2 + random2(3);

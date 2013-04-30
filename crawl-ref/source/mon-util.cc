@@ -2038,6 +2038,13 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[5] = MST_NECROMANCER_II;
         break;
 
+    case MONS_ANCIENT_CHAMPION:
+        book[0] = MST_ANCIENT_CHAMPION_I;
+        book[1] = MST_ANCIENT_CHAMPION_II;
+        book[2] = MST_ANCIENT_CHAMPION_III;
+        book[3] = MST_ANCIENT_CHAMPION_IV;
+        break;
+
     default:
         retval = false;
         break;

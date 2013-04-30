@@ -1910,6 +1910,50 @@
        SPELL_SHADOW_CREATURES,
        SPELL_SHADOW_CREATURES
       }
-    }
+    },
+
+    {  MST_ANCIENT_CHAMPION_I,
+      {
+       SPELL_IRON_SHOT,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_PAIN,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ANCIENT_CHAMPION_II,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_THROW_FROST,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ANCIENT_CHAMPION_III,
+      {
+       SPELL_VENOM_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_HAUNT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ANCIENT_CHAMPION_IV,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_SLOW,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 
 #endif
