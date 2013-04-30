@@ -32,14 +32,7 @@ fire_bat MONS_FIRE_BAT
 raven MONS_RAVEN
 mon/holy/phoenix MONS_PHOENIX
 %sdir mon/vault
-%rim 0
-microbat MONS_MICROBAT
-%rim 1
 megabat MONS_MEGABAT
-gigabat MONS_GIGABAT
-fruity_bat MONS_FRUITY_BAT
-ice_bat MONS_ICE_BAT
-phase_bat MONS_PHASE_BAT
 %sdir mon/abyss
 %rim 0
 cbutterfly MONS_CHAOS_BUTTERFLY
@@ -209,7 +202,6 @@ polar_bear MONS_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
-mon/vault/black_sheep MONS_BLACK_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
 catoblepas MONS_CATOBLEPAS
@@ -418,8 +410,6 @@ silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
-spooky_statue MONS_SPOOKY_STATUE
-chilling_statue MONS_CHILLING_STATUE
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
 fire_elementalist_statue MONS_FIRE_ELEMENTALIST_STATUE
@@ -661,8 +651,6 @@ sphinx MONS_SPHINX
 tengu MONS_TENGU
 %sdir mon/holy
 shedu MONS_SHEDU
-%sdir mon/vault
-tengu_conjurer MONS_TENGU_CONJURER
 %sdir mon/unique
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
