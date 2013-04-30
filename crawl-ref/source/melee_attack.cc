@@ -4153,6 +4153,18 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     {
         perceived_attack = true;
 
+        if (attacker->is_monster()
+            && attacker->as_monster()->type == MONS_PHANTASMAL_WARRIOR)
+        {
+            if (needs_message && verbose)
+            {
+                mprf("%s blade passes through %s shield.",
+                    atk_name(DESC_ITS).c_str(),
+                    def_name(DESC_ITS).c_str());
+                return false;
+            }
+        }
+
         if (needs_message && verbose)
         {
             mprf("%s %s %s attack.",
@@ -5575,7 +5587,8 @@ int melee_attack::calc_damage()
         if (cleaving)
             damage = cleave_damage_mod(damage);
 
-        return apply_defender_ac(damage, damage_max);
+        return apply_defender_ac(damage, damage_max,
+                                 as_mon->type == MONS_PHANTASMAL_WARRIOR);
     }
     else
     {
@@ -5609,7 +5622,7 @@ int melee_attack::calc_damage()
     return 0;
 }
 
-int melee_attack::apply_defender_ac(int damage, int damage_max)
+int melee_attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
 {
     int stab_bypass = 0;
     if (stab_bonus)
@@ -5617,7 +5630,8 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
         stab_bypass = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
         stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
     }
-    int after_ac = defender->apply_ac(damage, damage_max, AC_NORMAL,
+    int after_ac = defender->apply_ac(damage, damage_max,
+                                      half_ac ? AC_HALF : AC_NORMAL,
                                       stab_bypass);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
