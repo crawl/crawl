@@ -289,16 +289,6 @@ MAP
 .......
 ENDMAP
 
-NAME:   african_american_sheep
-DEPTH:  Shoals
-MONS:   sheep, sheep name:black n_adj n_spe col:darkgrey tile:mons_black_sheep
-MAP
-  ....
- ..11..
-.12.1..
-......
-ENDMAP
-
 NAME:   hangedman_shoal_octodias
 DEPTH:  Shoals
 TAGS:   mini_float

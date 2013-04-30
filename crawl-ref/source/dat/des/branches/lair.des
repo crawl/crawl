@@ -465,7 +465,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d:6 .:150 1:10 2:4
 # "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
+MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -500,7 +500,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
+MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -526,7 +526,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
+MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -615,7 +615,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d 1 .:50
-MONS:   plant name:gourd name_adjective
+MONS:   plant
 ITEM:   choko q:1 / choko q:2 / choko q:3 w:2
 MAP
 .....
@@ -637,7 +637,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:soapberry_tree name_replace name_descriptor
+MONS:   plant
 : if crawl.coinflip() then
 ITEM:   lychee q:1 / lychee q:2 / lychee q:3 w:2
 : else
@@ -663,7 +663,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:citrus_tree name_replace name_descriptor
+MONS:   plant
 : if crawl.coinflip() then
 ITEM:   orange q:1 / orange q:2 / orange q:3 w:2
 : else
@@ -689,7 +689,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:apple_tree name_replace name_descriptor
+MONS:   plant
 ITEM:   apple q:1 / apple q:2 / apple q:3 w:2
 MAP
 .'''.
@@ -711,7 +711,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:apricot_tree name_replace name_descriptor
+MONS:   plant
 ITEM:   apricot q:1 / apricot q:2 / apricot q:3 w:2
 MAP
 .'''.
@@ -733,7 +733,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:pyrus_tree name_replace name_descriptor
+MONS:   plant
 ITEM:   pear q:1 / pear q:2 / pear q:3 w:2
 MAP
 .'''.
@@ -754,7 +754,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d 1 .:34
-MONS:   plant name:bittermelon_vine name_replace name_descriptor
+MONS:   plant
 ITEM:   snozzcumber q:1 / snozzcumber q:2 / snozzcumber q:3 w:2
 MAP
 .....
@@ -775,7 +775,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d 1 .:34
-MONS: plant name:grape_vine name_replace name_descriptor
+MONS: plant
 : if crawl.coinflip() then
 ITEM:   grape q:1 w:3 / grape q:2 w:5 / grape q:3 / \
         grape q:4 w:7 / grape q:5 w:5 / grape q:6 w:2
@@ -803,7 +803,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 NSUBST: ' = 1:d / *:.
 NSUBST: . = 1:1 / *=.....1
-MONS:   plant name:musa name_adjective
+MONS:   plant
 ITEM:   banana q:6 w:2 / banana q:7 w:4 / banana q:10 / banana q:12 / \
         banana q:14 w:4 / banana q:16 w:2
 MAP
@@ -824,7 +824,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 NSUBST: . = 2:1 / *=ddd..1
-MONS:   plant name:strawberry name_adjective
+MONS:   plant
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -2041,7 +2041,7 @@ MONS:   red devil / rotting devil w:20 / hellwing w:50
 MONS:   orange demon
 MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
-MONS:   wizard col:red hd:13 name:crazed n_adj n_noc tile:mons_hell_wizard
+MONS:   wizard
 KITEM:  / = acquire any
 MAP
    ...TTTT....  .............................

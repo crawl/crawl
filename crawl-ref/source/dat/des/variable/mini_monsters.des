@@ -479,57 +479,6 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
-NAME:   goddamned_bats
-DEPTH:  D:3-12, Lair:1-3, Orc:1-2
-# Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
-# and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
-KMONS:  2 = bat name:microbat n_rpl n_des n_spe n_noc col:magenta tile:mons_microbat
-# Can we spell them this way?  Please?
-KMONS:  3 = bat name:fruity n_adj n_des n_spe n_noc col:lightmagenta tile:mons_fruity_bat
-KMONS:  4 = bat name:giga n_adj n_des n_spe n_noc hd:4 col:brown tile:mons_gigabat
-# Way harder than the rest here.
-KMONS:  5 = vampire bat
-# In RL, they sit put, not moving a finger.  Lazy bastards.
-KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_des n_spe n_zom
-# The only here without a basis in reality.
-KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_des n_spe n_zom
-# There are actual "ghost bats" too, but near-extinct, while ghost-faceds
-# have a number of species and are widespread.
-KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_des n_spe n_zom
-# Just an US WW2 military project, but that's good enough.
-KMONS:  9 = fire bat hd:1
-KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
-# Correction, this one, added because of a tile, is not real as well.
-KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
-# Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
-KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
-: if you.absdepth() > 6 then
-TAGS:   extra
-: end
-MAP
-       xxxxx
-      xxxxxxx
-     xxxx7xxx
-    xxxxx.xxx
-   xxx9..xxx
-  xxx9..0xxx
-  xx.9..xxxxx
-  xxx....xxxx
-  xx88.xx.xxxx
-  xxxxxxxx.xxxx
- xxxxxxxxx.AAxx
-xxx.4xxxx..x..xx
-xxx12.xxx.xx...xx
-xxxx.xxx.xxxx6..x
-xxxxxBxx.xxxx66.x
-xx33.x...xxxxx.xxx
-xxxxxxx...xxxxx.xx
- xxxx21xx.xxxxx5xx
-  xxxxxxx.xxxxxxx
-    xxxx@xx
-ENDMAP
-
 NAME:   saegor_snake_ambush
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:3-5
@@ -1313,11 +1262,11 @@ KMONS:   7 =  kobold ; dagger . dart
 : else
 KMONS:   7 =  big kobold ; dagger . throwing net q:2
 : end
-KMONS:   1 = kobold name:hungry name_adjective name_nocorpse ; nothing
+KMONS:   1 = kobold ; nothing
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
 : dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
-KMONS:   5 = att:neutral halfling hd:1 name:young name_adjective name_species
+KMONS:   5 = halfling att:neutral
 KFEAT:   6 = net trap
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
@@ -1575,8 +1524,6 @@ DEPTH:   D:9-18, Shoals, Swamp
 TAGS:    no_pool_fixup
 MONS:    tengu
 MONS:    tengu ; war axe / tengu ; long sword / tengu ; scimitar
-MONS:    tengu name:conjurer n_suf n_des spells:airstrike;magic_dart;iskenderun's_mystic_blast \
-         tile:mons_tengu_conjurer col:blue
 : if you.branch() == "Swamp" then
 KFEAT:  t = mangrove
 : end
@@ -1584,7 +1531,7 @@ MAP
  .........
 ..wwwww.1..
 .wwttwww.2.
-.wtt3.tww..
+.wtt2.tww..
 .wwwt.2....
 ..wwwwww2..
  .........
@@ -2562,45 +2509,6 @@ MAP
 G
 ENDMAP
 
-# Caryatid's revenge (1KB)
-NAME:   archer_statue
-DEPTH:  D:8-, Elf
-MONS:   statue tile:mons_statue_archer name:archer name_adjective; \
-        longbow . arrow q:30
-MAP
-    ccc
-ccccc1ccccc
-...........
-...........
- .........
-   .....
-ENDMAP
-
-# IOOD testing grounds
-NAME:   iood_simple
-DEPTH:  D:18-
-MONS:   statue hd:12 spells:orb_of_destruction tile:mons_statue_mage \
-        col:vehumet name:conjurer n_adj
-MAP
-       ...
-    .........
-   ...........
-  .............
- ...............
- ...............
- ...............
-.................
-........1........
-.................
- ...............
- ...............
- ...............
-  .............
-   ...........
-    .........
-       ...
-ENDMAP
-
 # Greed's colour
 NAME:    david_greed
 WEIGHT:  4
@@ -2645,35 +2553,6 @@ Wbb.........bW
 Wbb1...1...1bW
 WbbbbbbbbbbbbW
 WWWWWWWWWWWWWW
-ENDMAP
-
-NAME:  minmay_archer_statue_crystal
-DEPTH: D:10-, Elf
-MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
-       longbow ego:frost | longbow ego:flame . arrow q:40
-MAP
-xx@xxx@xx
-xb.bbb.bx
-@.......@
-xb.....bx
-xb..1..bx
-xb.....bx
-@.......@
-xb.bbb.bx
-xx@xxx@xx
-ENDMAP
-
-NAME:  minmay_archer_statue_bushes
-DEPTH: D:8-, Elf
-MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
-       longbow . arrow q:40
-MONS:  bush
-MAP
-.....
-.222.
-.212.
-.222.
-.....
 ENDMAP
 
 NAME:  minmay_more_statues
@@ -4840,36 +4719,6 @@ ENDMAP
 #          the second time), OOD monsters that can be easily
 #          escaped, and not using overpowered/useless unrandarts.
 ################################################################
-
-# Piercer
-#
-NAME:   minmay_guarded_unrand_piercer
-DEPTH:  D:10-
-WEIGHT: 3
-MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
-        good_item longbow . good_item arrow q:20
-MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
-        longbow unrand:piercer . good_item arrow q:20
-MAP
-       ...
-    .........
-   ...........
-  .............
- ...............
- ...............
- ...............
-.......1.1.......
-.................
-.......1.2.......
- ...............
- ...............
- ...............
-  .............
-   ...........
-    .........
-       ...
-ENDMAP
-
 # Robustness
 #
 NAME:   minmay_guarded_unrand_robustness
@@ -5274,8 +5123,7 @@ ENDMAP
 # This wizard likes to experiment!
 NAME:    laboratory_2
 TAGS:    uniq_laboratory_2
-MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph;\
-         paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
+MONS:    wizard
 DEPTH:   D:10-26
 MONS:    laboratory rat
 MAP

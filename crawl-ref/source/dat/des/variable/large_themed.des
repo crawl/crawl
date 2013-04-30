@@ -923,50 +923,6 @@ xxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-# A variety of statues, with loot. (1KB)
-#
-NAME:    statue_cache
-ORIENT:  north
-TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf
-SHUFFLE: 12, 34, 56, 89
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:flame . bolt q:30
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:frost . bolt q:30
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:freezing good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:freezing good_item
-MONS: silver statue
-KMONS: 8 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:lehudib's_crystal_spear;iskenderun's_mystic_blast;slow;stone_arrow
-KMONS: 9 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:freezing_cloud;mephitic_cloud;throw_icicle;confuse
-MAP
-  cccccccccccccc
-  cccccccc7ccccc
-  cccccc.....ccc
-  cccc..ccccc.cc
-  ccc.ccccc5c.cc
-  ccc.cccccc.ccc
-  cc8.9cc3c.c6cc
-  c$$$$$cc.ccccc
-  c|*|*|c.c4cccc
-ccccccccc.ccccccccc
-........1.2........
-...................
-...................
- .................
-   .............
-      ...@...
-ENDMAP
-
 ################################################################################
 # Wizard Prison
 #
@@ -999,7 +955,7 @@ MONS:   draconian shifter / draconian annihilator / lich  / \
         deep elf annihilator / deep elf demonologist
 NSUBST: 4 = 6:5 / *:4
 MONS:   ancient lich
-MONS:   human name:sacrificial n_adj n_noc att:neutral
+MONS:   human att:neutral
 NSUBST: 4 = 1:7 / *:4
 ITEM:   acquire any
 SUBST:  - = .
@@ -1065,7 +1021,7 @@ NSUBST: 3 = 1:3 / 1:9
 : elseif you.absdepth() < 24 then
 NSUBST: 4 = 2:4 / 1:5
 : end
-MONS:   human name:sacrificial n_adj n_spe att:neutral
+MONS:   human att:neutral
 KMONS:  7 = patrolling hell knight
 ITEM:   acquire any
 SUBST:  '" = ., b = v
