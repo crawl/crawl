@@ -4521,12 +4521,6 @@ frost-covered statue
 An ineptly made statue of a mage. Its magic keeps leaking, letting you know
 what kind of spells you can expect: cold-based ones.
 %%%%
-glowing angel
-
-A divine agent of Zin, it is a towering winged figure with an aura of brilliant
-white light. This angel's face, though, is marked by a scowl, as if its zeal
-against any real or perceived vice overshadows its goodness.
-%%%%
 greater air elemental
 
 <air elemental>
@@ -4720,6 +4714,12 @@ In this land of magic, it'd be foolish to assume that a statue of a wizard is
 always an inert piece of rock. This statue's hands and staff have very little
 dust compared to the base, suggesting it is capable of making magical gestures.
 The trap is too obvious, but dealing with it might not be.
+%%%%
+zin angel
+
+A divine agent of Zin, it is a towering winged figure with an aura of brilliant
+white light. This angel's face, though, is marked by a scowl, as if its zeal
+against any real or perceived vice overshadows its goodness.
 %%%%
 zot statue
 

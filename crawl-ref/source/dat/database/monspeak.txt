@@ -6898,7 +6898,7 @@ cherub
 #################################
 # Monsters who worship Zin
 #################################
-glowing angel
+zin angel
 
 w:40
 @The_monster@ recites @_axioms_of_law_@
