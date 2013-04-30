@@ -904,6 +904,8 @@ function (exports, $, key_conversion, chat, comm) {
             return false; // buggy Blob builder
         if (b.safari)
             return false;
+        if (b.opera) // JavaScript errors in version 12.15
+            return false;
         return true;
     }
 
