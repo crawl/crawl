@@ -4009,7 +4009,7 @@ static int _piety_level(int piety)
            (piety >=  75) ? 4 :
            (piety >=  50) ? 3 :
            (piety >=  30) ? 2 :
-           (piety >    5) ? 1
+           (piety >    0) ? 1
                           : 0;
 }
 
