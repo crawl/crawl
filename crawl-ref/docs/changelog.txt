@@ -84,7 +84,7 @@ Character
 * Tengu are better at gaining levels.
 * Levels 1 and 2 of the teleportitis mutation teleport you only a limited
   distance.
-* The augmentation and powered by pain demonspawn mutations have been improved.
+* The augmentation and powered by pain Demonspawn mutations have been improved.
 
 Monsters
 --------
@@ -158,7 +158,7 @@ Spells
 * Condensation Shield's SH bonus no longer cares about Shields skill or
   intelligence.
 * The blinking component of the Dispersal spell is irresistible.
-* Venom Bolt and Bolt of Magma do more damage, Teleport Other works more often.
+* Venom Bolt and Bolt of Magma do more damage; Teleport Other works more often.
 * Recall is now gradual instead of instant: one ally is recalled every 3-6
   aut.
 
@@ -192,7 +192,7 @@ Items
 * The "*Rage" artefact property triggers much less often (except for Wrath of
   Trog).
 * Improved fixedarts: Spear of the Botono, Robe of Night, Cloak of the Thief,
-  Robe of Folly, Plutonium sword.
+  Robe of Folly, plutonium sword.
 * The hand-and-a-half weapon category is gone; such weapons are now
   one-handed for normal-size races.
 
