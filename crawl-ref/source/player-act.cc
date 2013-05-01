@@ -71,15 +71,6 @@ void player::moveto(const coord_def &c, bool clear_net)
     set_position(c);
 
     clear_far_constrictions();
-
-    if (you.duration[DUR_QUAD_DAMAGE])
-        invalidate_agrid(true);
-
-    if (player_has_orb())
-    {
-        env.orb_pos = c;
-        invalidate_agrid(true);
-    }
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)
@@ -111,6 +102,15 @@ void player::set_position(const coord_def &c)
     {
         reset_prev_move();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
+
+        if (you.duration[DUR_QUAD_DAMAGE])
+            invalidate_agrid(true);
+
+        if (player_has_orb())
+        {
+            env.orb_pos = c;
+            invalidate_agrid(true);
+        }
     }
 }
 
