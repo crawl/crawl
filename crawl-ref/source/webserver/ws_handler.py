@@ -129,6 +129,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.total_message_bytes = 0
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
+        self.message_queue = []
+        self.message_queue_time = None;
 
         self.subprotocol = None
 
@@ -214,16 +216,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return not self.is_running() and self.watched_game is None
 
     def send_lobby(self):
-        self.send_message("lobby_clear")
+        self.queue_message("lobby_clear")
         from process_handler import processes
         for process in processes.values():
-            self.send_message("lobby_entry", **process.lobby_entry())
+            self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
 
     def send_game_links(self):
         # Rerender Banner
         banner_html = self.render_string("banner.html", username = self.username)
-        self.send_message("html", id = "banner", content = banner_html)
+        self.queue_message("html", id = "banner", content = banner_html)
         play_html = self.render_string("game_links.html", games = config.games)
         self.send_message("set_game_links", content = play_html)
 
@@ -356,7 +358,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.username = None
             self.close()
             return
-        self.send_message("login_success", username = username)
+        self.queue_message("login_success", username = username)
         self.send_game_links()
 
     def login(self, username, password):
@@ -483,10 +485,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # JSON
             self.process.handle_input(message)
 
-    def write_message(self, msg):
+    def flush_messages(self):
+        if len(self.message_queue) == 0:
+            return
+        d = datetime.datetime.now() - self.message_queue_time
+        print((d.seconds * 1000000 + d.microseconds) / 1000)
+        self.message_queue_time = None
+        msg = "{'msgs': [" + ",".join(self.message_queue) + "] }"
+        self.message_queue = []
+
         try:
-            if self.client_closed: return
-            msg = utf8(msg)
             self.total_message_bytes += len(msg)
             if self.deflate:
                 # Compress like in deflate-frame extension:
@@ -504,11 +512,25 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.warning("Exception trying to send message.", exc_info = True)
             self.ws_connection._abort()
 
+    def write_message(self, msg, send=True):
+        if self.client_closed: return
+        if self.message_queue_time == None:
+            self.message_queue_time = datetime.datetime.now()
+        self.message_queue.append(utf8(msg))
+        print(str(datetime.datetime.now()) + ": " + msg[0:50].strip())
+        if send:
+            self.flush_messages();
+
     def send_message(self, msg, **data):
         """Sends a JSON message to the client."""
         data["msg"] = msg
         if not self.client_closed:
             self.write_message(json_encode(data))
+
+    def queue_message(self, msg, **data):
+        data["msg"] = msg
+        if not self.client_closed:
+            self.write_message(json_encode(data), False)
 
     def on_close(self):
         if self.process is None and self in sockets:

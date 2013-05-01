@@ -242,6 +242,11 @@ void TilesFramework::send_message(const char *format, ...)
     finish_message();
 }
 
+void TilesFramework::flush_messages()
+{
+    send_message("*{\"msg\":\"flush_messages\"}");
+}
+
 void TilesFramework::_await_connection()
 {
     while (m_dest_addrs.size() == 0)
@@ -302,7 +307,10 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         c = (int) keycode->number_;
     }
     else if (msgtype == "spectator_joined")
+    {
         _send_everything();
+        flush_messages();
+    }
     else if (msgtype == "menu_scroll")
     {
         JsonWrapper first = json_find_member(obj.node, "first");
@@ -352,7 +360,10 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             FD_SET(m_sock, &fds);
 
             if (block)
+            {
+                tiles.flush_messages();
                 result = select(maxfd + 1, &fds, NULL, NULL, NULL);
+            }
             else
             {
                 timeval timeout;
