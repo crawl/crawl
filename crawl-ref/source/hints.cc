@@ -1960,8 +1960,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Chunks that are described as <brown>contaminated</brown> will "
                 "occasionally make you nauseated when eaten. However, since food is "
                 "scarce in the dungeon, you'll often have to risk it.\n"
-                "While nauseated, you can't stomach anything, and your attributes "
-                "may occasionally decrease. Just go around, hunt for better food.";
+                "While nauseated, you can't stomach anything else unless you're "
+                "almost starving.";
             break;
 
     case HINT_YOU_SICK:
