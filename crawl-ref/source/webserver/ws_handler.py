@@ -489,7 +489,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if len(self.message_queue) == 0:
             return
         d = datetime.datetime.now() - self.message_queue_time
-        print((d.seconds * 1000000 + d.microseconds) / 1000)
         self.message_queue_time = None
         msg = "{'msgs': [" + ",".join(self.message_queue) + "] }"
         self.message_queue = []
@@ -517,7 +516,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.message_queue_time == None:
             self.message_queue_time = datetime.datetime.now()
         self.message_queue.append(utf8(msg))
-        print(str(datetime.datetime.now()) + ": " + msg[0:50].strip())
         if send:
             self.flush_messages();
 
