@@ -1,9 +1,15 @@
 Stone Soup 0.12 (2013XXYY)
 --------------------------
 
+0.12 highlights
+---------------
+* Axes have a cleaving attack, hitting up to 7 enemies around you.
+* Abyss has multiple levels of increasing difficulty, and has more variety.
+* The Vaults branch is five levels deep, with a distinct layout.
+* Secret doors are no more.
+
 Branches, environment
 ---------------------
-* Vaults is now five levels long, and has an entirely new layout.
 * The Hall of Blades layout has been adjusted, and now contains two weapons
   with "interesting brands" instead of just one.
 * The Abyss is revamped yet again. It now contains five (still infinite)
