@@ -618,3 +618,191 @@ XXXXXXcccccccc"""""""""ccccccc"""""""ccccc"""""""""""""ccccc""""ccccccccccXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
+
+##############################################################################
+# Ereshkigal (Tartarus) by Grunt
+##############################################################################
+
+NAME:   tar_grunt
+TAGS:   overwritable
+ORIENT: encompass
+MONS:   shadow imp, soul eater
+{{
+  extend_map{width = 70, height = 70}
+  fill_area{fill = '.', border = 'x'}
+  nsubst('. = 10:1 / 10:2 / *:.')
+  tar_setup(_G)
+  hook("post_place", function()
+    local map, vplace = dgn.resolve_map(dgn.map_by_tag("tar_grunt_ereshkigal"))
+    local x = (dgn.GXM / 2) - 5 + crawl.random2(11)
+    local y = (dgn.GYM / 2) - 5 + crawl.random2(11)
+    local res = dgn.place_map(map, false, true, x, y)
+    if not res then
+      error("Failed to place Ereshkigal chamber somehow!")
+    end
+    dgn.place_maps{tag="tar_grunt_big_loot",    count=1, die_on_error = true}
+    dgn.place_maps{tag="tar_grunt_small_loot",  count=3}
+    dgn.place_maps{tag="tar_grunt_small_decoy", count=3}
+    dgn.place_maps{tag="tar_grunt_decor",       count=6}
+  end)
+}}
+
+NAME:    tar_grunt_ereshkigal
+TAGS:    tar_grunt_ereshkigal unrand
+MONS:    patrolling Ereshkigal, Shadow Fiend, shadow demon / reaper
+MONS:    lich / ancient lich w:5
+SHUFFLE: lLeE / LleE / LlEe / lLEe / eElL / EelL / EeLl / eELl
+SHUFFLE: fFgG / FfgG / FfGg / fFGg / gGfF / GgfF / GgFf / gGFf
+SHUFFLE: hHiI / HhiI / HhIi / hHIi / iIhH / IihH / IiHh / iIHh
+SHUFFLE: jJkK / JjkK / JjKk / jJKk / kKjJ / KkjJ / KkJj / kKJj
+SUBST:   efghijkl = ., FHL = c, EGIJK = +
+KMASK:   O = no_item_gen
+KITEM:   O = bone rune of Zot
+: serpent_of_hell_setup(_G)
+MAP
+cccccccccccccccccccc
+c..F..c$$O$$$c..H..c
+c..F3.c$$$$$$c.3H..c
+cffc..c$....$c..chhc
+c..c..c..12..c..c..c
+c..c..c......c..c..c
+c..c..c......c..c..c
+c..c..c......c..c..c
+cggc..ccc++ccc..ciic
+c..G....c..c....I..c
+c..G....c..c....I..c
+c..ccc..c..c..ccc..c
+c..ccc..c..c..ccc..c
+c..c..3.c..c.3..c..c
+c..c....c..c....c..c
+c..cjjccc..ccckkc..c
+c3.c..J..2...K..c.3c
+c..c..J...3..K..c..c
+cllcccccccccccccceec
+c..L......3.....E..c
+c3.L.....3......E.3c
+ccccccccc++ccccccccc
+       ..7....
+       xx..xx
+       xx.Dxx
+       ......
+       xx..xx
+       xx..xx
+       ......
+        x..x
+        ....
+        x..x
+        ....
+        x..x
+        ....
+        x..x
+ENDMAP
+
+NAME: tar_grunt_big_loot
+TAGS: tar_grunt_big_loot unrand
+MONS: Shadow Fiend / shadow dragon, shadow demon / reaper
+MONS: lich / w:5 ancient lich
+MAP
+..................
+.cccccccccccccccc.
+.c|$x.2c||c2.x$|c.
+.c$.x..c||c..x.$c.
+.c..c..c||c..c..c.
+.c..c$|c$$c|$c..c.
+.c..c|$c$$c$|c..c.
+.c..c..c$$c..c..c.
+.c..c..c22c..c..c.
+.c2.c3.c13c.3c.2c.
+.c..cxxcxxcxxc..c.
+.c..c$...1..$c..c.
+.c..c|$.3..$|c..c.
+.c..cccccccccc..c.
+.c$.x..1..2..x.$c.
+.c|$x........x$|c.
+.ccccccc++ccccccc.
+........@@........
+ENDMAP
+
+NAME: tar_grunt_small_loot
+TAGS: tar_grunt_small_loot allow_dup unrand
+MONS: shadow demon w:20 / reaper w:15 / shadow wraith w:10 / soul eater w:5
+MAP
+xxxxxxx
+x..$..x
+x.$|$.x
+x$|1|$x
+x.$|$.x
+x..$..x
+xxxxxxx
+ENDMAP
+
+NAME: tar_grunt_small_decoy
+TAGS: tar_grunt_small_decoy allow_dup unrand
+MAP
+xxxxxxx
+xxxxxxx
+xxxxxxx
+xxxxxxx
+xxxxxxx
+xxxxxxx
+xxxxxxx
+ENDMAP
+
+NAME: tar_grunt_decor_1
+TAGS: tar_grunt_decor allow_dup unrand
+SUBST: G : GV
+MAP
+...
+.G.
+...
+ENDMAP
+
+NAME: tar_grunt_decor_3
+TAGS: tar_grunt_decor allow_dup unrand
+SUBST: G : GV
+MAP
+ .....
+...G...
+.G...G.
+.......
+ENDMAP
+
+NAME: tar_grunt_decor_4
+TAGS: tar_grunt_decor allow_dup unrand
+SUBST: G : GV
+MAP
+......
+.G..G.
+......
+......
+.G..G.
+......
+ENDMAP
+
+NAME: tar_grunt_decor_6
+TAGS: tar_grunt_decor allow_dup unrand
+SUBST: G : GV
+MAP
+ ......
+ .G..G.
+........
+.G....G.
+........
+ .G..G.
+ ......
+ENDMAP
+
+NAME: tar_grunt_decor_8
+TAGS: tar_grunt_decor allow_dup unrand
+SUBST: G : GV
+MAP
+  ......
+ ..G..G..
+..........
+.G......G.
+..........
+.G......G.
+..........
+ ..G..G..
+  ......
+ENDMAP

@@ -558,3 +558,92 @@ LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
 LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
 LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 ENDMAP
+
+##############################################################################
+# Asmodeus (Gehenna) by Grunt
+##############################################################################
+
+NAME:    geh_grunt
+ORIENT:  encompass
+MONS:    patrolling Asmodeus, Brimstone Fiend, balrug
+MONS:    hellion, sun demon, fire giant, red devil / crimson imp w:20
+KMONS:   9 = molten gargoyle
+SHUFFLE: {[(<
+SUBST:   - = ll.
+SUBST:   _ = ..l
+KFEAT:   L = endless_lava
+: serpent_of_hell_setup(_G)
+: dgn.seen_replace_feat("rock_wall", "endless_lava")
+: geh_setup(_G)
+MAP
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+Llllllllllllllllllll--------------cc--------------lllllllllllllllllllL
+Lllllllllllllllllll-_____________cccc_____________-llllllllllllllllllL
+Llllllllllllllllll-________.....cccccc.....________-lllllllllllllllllL
+Lllllllllllllllll-____.........cccccccc.........____-llllllllllllllllL
+Llllllllllllllll-___..........cccc||cccc..........___-lllllllllllllllL
+Lllllllllllllll-_............cccc$23$cccc............_-llllllllllllllL
+Llllllllllllll-_..cccccccccccccc$$$$$$cccccccccccccc.._-lllllllllllllL
+Lllllllllllll-_...cccccccccccccc++cc++cccccccccccccc..._-llllllllllllL
+Llllllllllll-_....cccccccccccccc++cc++cccccccccccccc...._-lllllllllllL
+Llllllllllll-_....ccc.....+cc............cc+.....ccc...._-lllllllllllL
+Lllllllllll-_.....ccc.5..+++....7.6D.7....+++..5.ccc....._-llllllllllL
+Lllllllllll-_.....ccc...cc+................+cc...ccc....._-llllllllllL
+Llllllllll-_......ccc..cccccccc++cccc++cccccccc..ccc......_-lllllllllL
+Llllllllll-_......ccc.+cccccccc++cccc++cccccccc+.ccc......_-lllllllllL
+Llllllllll-_......ccc+++cc.......cccc.......cc+++ccc......_-lllllllllL
+Lllllllll-_.......cccc+.cc.G....+cccc+....G.cc.+cccc......._-llllllllL
+Lllllllll-_.......cccc..cc.....+++||+++.....cc..cccc......._-llllllllL
+Lllllllll-_......cccc...cc....cc+$34$+cc....cc...cccc......_-llllllllL
+Llllllll-_......ccccc...cc.4.cccccccccccc.4.cc...ccccc......_-lllllllL
+Llllllll-_.....cccccc...cc..+cccccccccccc+..cc...cccccc....._-lllllllL
+Llllllll-_....cccc$++.7.cc.+++cc$$O|$$cc+++.cc.7.++$cccc...._-lllllllL
+Llllllll-_...cccc$$++...cccc+$cc$$$$$$cc$+cccc...++$$cccc..._-lllllllL
+Llllllll-_..cccc|2$ccccccccc3|cc$$12$$cc|4ccccccccc$2|cccc.._-lllllllL
+Llllllll-_..cccc|3$ccccccccc4|cc$$..$$cc|3ccccccccc$3|cccc.._-lllllllL
+Llllllll-_...cccc$$++...cccc+$cc$....$cc$+cccc...++$$cccc..._-lllllllL
+Llllllll-_....cccc$++.5.cc.+++cc......cc+++.cc.5.++$cccc...._-lllllllL
+Llllllll-_.....cccccc...cc..+ccccc++ccccc+..cc...cccccc....._-lllllllL
+Llllllll-_......ccccc...cc...ccccc++ccccc...cc...ccccc......_-lllllllL
+Ll-llllll-_......cccc...cc....cc+.23.+cc....cc...cccc......_-llllll-lL
+Ll-llllll-_.......cccc..cc.....+++..+++.....cc..cccc......._-llllll-lL
+Ll-llllll-_.......cccc+.cc.G..4.+cccc+.4..G.cc.+cccc......._-llllll-lL
+Ll-lllllll-_......ccc+++cc.......cccc.......cc+++ccc......_-lllllll-lL
+Ll-lllllll-_......ccc.+cccccccccccccccccccccccc+.ccc......_-lllllll-lL
+Ll--llllll-_......ccc..cccccccccccccccccccccccc..ccc......_-llllll--lL
+Ll--lllllll-_.....ccc...cc+................+cc...ccc....._-lllllll--lL
+Ll--lllllll-_.....ccc.7..+++....7.56.7....+++..7.ccc....._-lllllll--lL
+Ll-_-lllllll-_....ccc.....+cc............cc+.....ccc...._-lllllll-_-lL
+Ll-_-lllllll-_....ccccccccccccc++cccc++ccccccccccccc...._-lllllll-_-lL
+Ll-__-lllllll-_...ccccccccccccc++cccc++ccccccccccccc..._-lllllll-__-lL
+Ll-__-llllllll-_..cccccccccccccc......cccccccccccccc.._-llllllll-__-lL
+Ll-_._-llllllll-_............cccc....cccc............_-llllllll-_._-lL
+Ll-_.._-llllllll-_............cccc..cccc............_-llllllll-_.._-lL
+Ll-_.._-lllllllll-_............ccc++ccc............_-lllllllll-_.._-lL
+Ll-_.9._-llllllll-_.............cc..cc............._-llllllll-_.9._-lL
+Ll-_...._-llllll-_.__............c..c............__._-llllll-_...._-lL
+Ll-_....._-llll-_._--___......9..++++..9......___--_._-llll-_....._-lL
+Ll-_......_-ll-_._-lll--___................___--lll-_._-ll-_......_-lL
+Ll-_......._--_._-llllll---___..9....9..___---llllll-_._--_......._-lL
+Ll-_........__._-llllllllll---__________---llllllllll-_.__........_-lL
+Ll-_.........._-llllllllllllll----------llllllllllllll-_.........._-lL
+Ll-_.........._--llllllllllllllllllllllllllllllllllll--_.........._-lL
+Ll-_...........__-llllllllllllllllllllllllllllllllll-__..........._-lL
+Ll-_............._--llllllllllllllllllllllllllllll--_....__......._-lL
+Ll-_.._____.......__--llllllllllllllllllllllllll--__...._--_......_-lL
+Ll-_._-----__...9...__---llllllllllllllllllll---__...9._-ll-_....._-lL
+Ll-__-lllll--_........___-----llllllllll-----___......_-lll-_....._-lL
+Ll-_-llllllll-_.........._____----------_____........._-llll-_...._-lL
+Ll-__-llllllll-_..............__________............._-lllll-_...._-lL
+Ll-_._--llllll-_...................................._-lllll-_....._-lL
+Lll-_.__--ll--_...................................._-llll--_....._-llL
+Lll-__..__--__......................................_-ll-__......_-llL
+Llll-__...__...................(.{..[.<.............._--_......__-lllL
+Lllll--_____..........................................__.._____--llllL
+Lllllll-----__________..........................__________-----llllllL
+Llllllllllll----------__________________________----------lllllllllllL
+Llllllllllllllllllllll--------------------------lllllllllllllllllllllL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+ENDMAP

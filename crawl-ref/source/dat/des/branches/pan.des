@@ -522,6 +522,56 @@ xccccccccccccc...ccxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxc.@.cxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:    mnoleg_grunt
+ORIENT:  west
+TAGS:    mnoleg uniq_mnoleg
+: pan_lord_setup(_G, 'Mnoleg')
+TILE:    c = dngn_stone_wall_yellow
+SHUFFLE: Od, 1e
+KFEAT:   d = .
+KFEAT:   e = .
+MONS:    patrolling Mnoleg, patrolling cacodemon, neqoxec
+MONS:    tentacled monstrosity, large abomination, very ugly thing band
+epilogue{{
+  pan_lord_epilogue('Mnoleg')
+}}
+MAP
+xxxxx@.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxc..cccc.............cccccccccccc..cx
+xxxxc..ccc.......2.......cccccccccc...cx
+xxxxc..cc....ccccc...cc.3.cccccccc..2.cx
+xxxxc........cccc...cccc..ccccccc.....cx
+xxxxc.3......ccc...ccccc..cccccc......cx
+xxxxc....cc..cc...ccccc...ccccc...cc..cx
+xxxxc...ccc..c...ccccc...ccccc...ccc..cx
+xxxxc..ccc...c..cccccc..ccccc...ccc...cx
+xxxxccccc...cc..cccccc..cccc...ccc...ccx
+xxxxcccc...ccc.6.ccccc...cc...ccc...cccx
+xxxxccc...ccccc...ccccc......ccc...ccccx
+xxxxcc...ccccccc...ccccc.3..ccc...cccccx
+xxxxc...ccc..cccc..5..ccc..ccc...ccc..cx
+xxxxc..ccc....ccc.2....cccccc...ccc...cx
+xxxxc..cc.6....cc..cc.3..ccc...ccc..3.cx
+xxxxc.5....cc.5..4.cd1cc...5..ccc.....cx
+xxxxc.....ccc..5...cceOc.4..5.cc....5.cx
+xxxxc.3..ccc...ccc..3.cc..cc....6.cc..cx
+xxxxc...ccc...cccccc....2.ccc....ccc..cx
+xxxxc..ccc...ccc..ccc..5..cccc..ccc...cx
+xxxxccccc...ccc..3.ccccc...ccccccc...ccx
+xxxxcccc...ccc......ccccc...ccccc...cccx
+xxxxccc...ccc...cc...ccccc.6.ccc...ccccx
+xxxxcc...ccc...cccc..cccccc..cc...cccccx
+xxxxc...ccc...ccccc..cccccc..c...ccc..cx
+xxxxc..ccc...ccccc...ccccc...c..ccc...cx
+xxxxc..cc...ccccc...ccccc...cc..cc....cx
+xxxxc......cccccc..ccccc...ccc......3.cx
+xxxxc.....ccccccc..cccc...cccc........cx
+xxxxc.2..cccccccc.3.cc...ccccc....cc..cx
+xxxxc...cccccccccc.......2.......ccc..cx
+xxxxc..cccccccccccc.............cccc..cx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.@xx
+ENDMAP
+
 
 #######################################################################
 # Lom Lobon
@@ -690,6 +740,64 @@ cccccwwwwww............wwwwwwwwwcccccccc
 cccccccccccccccc..@..ccccccccccccccccccc
 ENDMAP
 
+NAME:    lom_lobon_grunt
+TAGS:    lom_lobon no_pool_fixup uniq_lom_lobon
+ORIENT:  north
+: pan_lord_setup(_G, 'Lom Lobon')
+MONS: patrolling Lom Lobon
+MONS: draconian annihilator / deep elf annihilator / \
+      wizard w:20 / rakshasa w:20 / giant orange brain / \
+      blizzard demon / green death / titan w:5 / \
+      spriggan air mage w:5 / lich w:5
+SUBST:   W = ww.
+SUBST:   - = ..w
+epilogue{{
+  pan_lord_epilogue('Lom Lobon')
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxwwwwwwbbbbbbbbbwwwwwwxxxxxxxxwwwwwxxxxxxxxxxxxx
+xxxxxxxxxwwwwbbbbwwwwwwwbbbbwwwwwwwwwwwwwwwwwwwxxxxxxxxxx
+xxxxxxxxwwwbbbwwwwWWWWWWwwwbbbwwwwwwwwwWWWwwwwwwxxxxxxxxx
+xxxxxxxwwwbbwwwwWW------WWWwwbbwwwwwwwW---Wwwwwwwwwxxxxxx
+xxxxxxwwwbbwwwWW--..2...---WWwbbwwwwwW-$$$-Wwwwwwwwwwxxxx
+xxxxxwwwbbwwwW--...........--WwbbwwwwW-.U.-Wwwwwwwwwwxxxx
+xxxxwwwbbwwwW-...------......-WwbbwwwW-2.2-Wwwwwwwwwwwxxx
+xxxwwwbbwwwW-..--WWWWWW----.2.-WwbbwwwW---Wwwwwwwwwwwwwxx
+xxxwwbbwwwW-..-WWwwwwwwWWWW--..-WwbbwwwWWWwwwwwwwwwwwwwwx
+xxwwwbwwwbb...bbwwwwwwwwwwwWW-..-WwbwwwwwwwwWWWWwwwwwwwwx
+xxwwbbwbbb..2..bbbwwwwwwwwwwW-..-WwbbwwwwwWW----WWwwwwwwx
+xxwwbwbb.........bbwwwwwwwwwwW-..-WwbwwwwW--.2.2--Wwwwwwx
+xwwwbbb...........bbwwwwwwwwwW-..-WwbwwwwW-.......-Wwwwwx
+xwwbbb.............bwwwwwwwwwW-..-WwbbwwwW-...U....-Wwwwx
+xwwbbbbb...........bbwwwWWWwwwW-2.-WwwwwW-...2.2...-Wwwwx
+xwwbb..bb...........bwwW---WwwW-...-WWWW-.2..---....-Wwwx
+xwwbb...b...........bwW-$.2-WwW-....----....-WWW-...-Wwwx
+xwwbbO2.+.2...1...2.bwW-$U.-WwW-.U.2.......-WwwwW-...-Wwx
+xwwbb...b...........bwW-$.2-WwW-....-------WwwwwwW-2.-Wwx
+xwwbb..bb...........bwwW---WwwW-...-WWWWWWWwwwwwwW-..-Wwx
+xwwbbbbb...........bbwwwWWWwwwW-2.-WwwwwwwwwwwwwwW-..-Wwx
+xwwbbb.............bwwwwwwwwwW-..-WwbbwwxxxxxxwwwW-..-Wwx
+xwwwbbb...........bbwwwwwwwwwW-..-WwbwwwxxxxxxxwwW-.2-Wwx
+xxwwbwbb.........bbwwwwwwwwwwW-..-WwbwwxxxxxxxxxwW-..-Wwx
+xxwwbbwbbb..2..bbbwwwwwwwwwwW-..-WwbbwwxxxxxxxxxwW-..-Wwx
+xxwwwbwwwbb...bbwwwwwwwwwwwWW-..-WwbwwwxxxxxxxxxW-...-Wxx
+xxxwwbbwwwW-..-WWwwwwwwWWWW--..-WwbbwwxxxxxxxxxW-.2.-Wxxx
+xxxwwwbbwwwW-..--WWWWWW----.2.-WwbbwwwxxxxxxxxxW-...-Wxxx
+xxxxwwwbbwwwW-...------......-WwbbwwwxxxxxxxxxW-....-Wxxx
+xxxxxwwwbbwwwW--...........--WwbbwwwxxxxxxxxxW-....-Wxxxx
+xxxxxxwwwbbwwwWW--..2...---WWwbbwwwxxxxxxxxxxW-...-Wxxxxx
+xxxxxxxwwwbbwwwwWW------WWWwwbbwwwxxxxxxxxxxxW-...-Wxxxxx
+xxxxxxxxwwwbbbwwwwWWWWWWwwwbbbwwwxxxxxxxxxxxW-.2.-Wxxxxxx
+xxxxxxxxxwwwwbbbbwwwwwwwbbbbwwwwxxxxxxxxxxxxW-...-Wxxxxxx
+xxxxxxxxxxwwwwwwbbbbbbbbbwwwwwwxxxxxxxxxxxxxW-..-Wxxxxxxx
+xxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxW-..-Wxxxxxxx
+xxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxW-..-Wxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-.@@.-xxxxxxx
+ENDMAP
+
 
 #############################################################################
 # Cerebov
@@ -845,6 +953,52 @@ xx..........................................
 xx..........................................
 ENDMAP
 
+NAME:   cerebov_grunt
+TAGS:   cerebov uniq_cerebov
+ORIENT: northwest
+: pan_lord_setup(_G, 'Cerebov')
+MONS:   patrolling Cerebov, balrug, brimstone fiend
+MONS:   sun demon, red devil / crimson imp w:20
+epilogue{{
+  pan_lord_epilogue('Cerebov')
+}}
+TILE:   v = dngn_metal_wall_brown
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx...........................
+xxxx...........vvvvv...........
+xxxx...........v|||v...........
+xxxx...........v|||v...........
+xxxx.........vvv|||vvv.........
+xxxx........vvvvv+vvvvv........
+xxxx.......vvv...4...vvv.......
+xxxx......vvv.........vvv......
+xxxx.....vvv....vvv....vvv.....
+xxxx.vvvvvv..2.vvOvv.2..vvvvvv.
+xxxx.v|$$v....vv$3$vv....v$||v.
+xxxx.v||$+4.vvv$vvv$vvv.4+$$|v.
+xxxx.v|$$v..vll2$$$2llv..v$||v.
+xxxx.vvvvv..vll$.1.$llv..vvvvv.
+xxxx....vv..vvl.2.2.lvv..vv....
+xxxx....vv...vl.vvv.lv...vv....
+xxxx....vvv..v.lllll.v..vvv....
+xxxx.....vv.2..lllll..2.vv.....
+xxxx.....vvv....lll....vvv.....
+xxxx......vv...........vv......
+xxxx......vv.4.......4.vv......
+xxxx.....vvv+v.......v+vvv.....
+xxxx.....v$$$vvv...vvv|||v.....
+xxxx.....v$|$vvv+++vvv|$|v.....
+xxxx.....v$$$vvv...vvv|||v.....
+xxxx.....vvvvv.5...5.vvvvv.....
+xxxx...........................
+xxxx..........5..2..5..........
+xxxx...........................
+xxxx...........5...5...........
+xxxx.............@.............
+ENDMAP
+
 
 ##############################################################################
 # Gloorx Vloq
@@ -986,6 +1140,55 @@ x4x.V.x.x.V.x.x.V.x.x.V.x.x.V.4xx
 x.4..........................4.xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   gloorx_vloq_grunt
+TAGS:   gloorx_vloq uniq_gloorx_vloq
+ORIENT: west
+: pan_lord_setup(_G, 'Gloorx Vloq')
+TILE:   c = dngn_stone_wall_darkgray
+MONS:   patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
+epilogue{{
+  pan_lord_epilogue('Gloorx Vloq')
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx.......................xxxxxx
+xxxxx...3.x...x...x...x...x.3...xxxx
+xxxx.............................xxx
+xxx....x..ccccccccccccccccc...x...xx
+xxx.3.....c...x...x...x...cc...x..xx
+xx........c....x.x.x.x.x.x.cc......x
+xx.x.xx.x.c.....x...x...x...cc..3..x
+xx.....4..+......x.x.x.x.x.x.cc....x
+xx........+.......x...x.2.x...cc...x
+xx.....4..+......x.x.x.x.x.x.x.cc..x
+xx.x.xx.x.c.....x...x...x...x...c..x
+xxx......xc....ccccccccc.x.x.x.xc..x
+xx.x....x.c...ccccc.2.x...x.2.xcc..x
+xxx.x..x.xccccc....x.x.x.x.x.x.xc..x
+xx.x.xx.x.cc........x...x...x...c4.x
+xx..x..x..c.c......x.x.x.x.x.x.xc...
+xx..x..x..cOc.1...x...x.2.x...xcc..@
+xx.x.xx.x.c.c......x.x.x.x.x.x.xc...
+xxx.x..x.xcc........x...x...x...c4.x
+xx.x....x.ccccc....x.x.x.x.x.x.xc..x
+xxx......xc...ccccc.2.x...x.2.xcc..x
+xx........c....ccccccccc.x.x.x.xc..x
+xx.x.xx.x.c.....x...x...x...x...c..x
+xx.....4..+......x.x.x.x.x.x.x.cc..x
+xx........+.......x...x.2.x...cc...x
+xx.....4..+......x.x.x.x.x.x.cc....x
+xx.x.xx.x.c.....x...x...x...cc..3..x
+xx........c....x.x.x.x.x.x.cc......x
+xxx.3.....c...x...x...x...cc...x..xx
+xxx....x..ccccccccccccccccc...x...xx
+xxxx.............................xxx
+xxxxx...3.x...x...x...x...x.3...xxxx
+xxxxxxx.......................xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
