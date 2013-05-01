@@ -2267,11 +2267,10 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
         const int chance = random2(25);
         monster_type mon = ((chance > 22) ? MONS_PHANTOM :            //  8%
                             (chance > 20) ? MONS_HUNGRY_GHOST :       //  8%
-                            (chance > 18) ? MONS_FLAYED_GHOST :       //  8%
-                            (chance > 16) ? MONS_SHADOW_WRAITH:       //  8%
-                            (chance >  6) ? MONS_WRAITH :             // 40%
-                            (chance >  2) ? MONS_FREEZING_WRAITH      // 16%
-                                          : MONS_PHANTASMAL_WARRIOR); // 12%
+                            (chance > 18) ? MONS_SHADOW_WRAITH:       //  8%
+                            (chance >  8) ? MONS_WRAITH :             // 41%
+                            (chance >  4) ? MONS_FREEZING_WRAITH      // 16%
+                                          : MONS_PHANTASMAL_WARRIOR); // 16%
 
         if (monster *mons = create_monster(
                 mgen_data(mon,
