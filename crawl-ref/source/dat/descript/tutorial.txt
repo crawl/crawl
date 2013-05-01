@@ -49,8 +49,8 @@ tutorial1 levelmap
 What's this? To find out where you are, <tiles>have a look at the
 <w>minimap</w> to the right of the screen.</tiles><localtiles> You can have a
 closer look at a part of the map with a <input>right mouseclick</input> and
-also can travel there with a <input>leftclick</input>.</localtiles>
-<webtiles>You can enter the overmap view with
+also can travel there with a <input>leftclick</input>.</localtiles><webtiles>
+You can enter the overmap view with
 <input>$cmd[CMD_DISPLAY_MAP]</input> and then move the cursor around to look
 around the level. You also can travel wherever your cursor is pointing by
 pressing <input>.</input> or <input>Enter</input>. Press <input>Escape</input>
@@ -124,7 +124,7 @@ tutorial1 exit
                   /|\                         /|\
                  <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
-  <w>Shift + direction</w> moves you several squares into this direction.
+  <w>Shift + direction</w> moves you several squares in this direction.
 <localtiles>  You also can move by <w>clicking</w> somewhere in sight or on the <w>minimap</w>.
 </localtiles>
 
@@ -339,7 +339,7 @@ An item described as <lightblue>runed</lightblue> or
 <lightblue>glowing</lightblue> will always be enchanted, or have special
 properties, or both. You need to wield this scimitar (with
 <input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> or by <input>clicking</input>
-on it in the inventory panel) to find out what those are.
+on it in the inventory panel</localtiles>) to find out what those are.
 %%%%
 tutorial3 inventory
 
@@ -349,7 +349,7 @@ tutorial3 inventory
 To view the description of your new weapon, find and select it in your
 inventory (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>). <localtiles>You can
 also <input>mouseover</input> or <input>right click</input> it in the inventory
-panel</localtiles>. Notice that all the item commands also work from the item
+panel. </localtiles>Notice that all the item commands also work from the item
 description screens.
 %%%%
 tutorial3 battle
@@ -385,7 +385,7 @@ tutorial3 artefact_armour
 Items with <w>unusual names</w> are artefacts. Artefacts can have a number of
 special properties. Some items (such as this cloak) are known and come
 pre-identified, others are random and have unknown properties. Try equipping
-this cloak with <input>$cmd[CMD_WEAR_ARMOUR]</input> <localtiles>or
+this cloak with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or
 <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%
 tutorial3 wand_fire
@@ -411,10 +411,11 @@ another way of identifying them.
 tutorial3 scroll_id
 
 An important way to identify unknown items is by reading scrolls of identify.
-Try this scroll on your amulet, with <input>$cmd[CMD_READ]</input><localtiles>
-or by <input>clicking</input> it in the inventory panel</localtiles>, and then
-choosing the amulet from the item list with its assigned letter<localtiles> or
-by <input>mouseclick</input></localtiles>.
+Try this scroll on your amulet by reading it with
+<input>$cmd[CMD_READ]</input><localtiles> or by <input>clicking</input> it in
+the inventory panel</localtiles>, and then choosing the amulet from the item
+list with its assigned letter<localtiles> or by
+<input>mouseclick</input></localtiles>.
 %%%%
 tutorial3 drop
 
@@ -605,7 +606,7 @@ tutorial4 heavy_armour
 # TODO: Split taking off into separate item.
 Heavy armour really hampers spellcasting. Try putting on that mail and shield
 (with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or by
-<input>clicking</input> on them)</localtiles>, and compare your spellcasting
+<input>clicking</input> on them</localtiles>), and compare your spellcasting
 success rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
 <input>mouseovering</input> your memorised spells</localtiles>. You can take
 armour off again with <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> or,
@@ -654,10 +655,11 @@ In this lesson you're going to learn about gods and how to use their powers.
 %%%%
 tutorial5 dungeon_overview
 
-Trog is just one of many gods. In a real game, you check
-<input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> or <input>click the
-dungeon overmap button</input> in the command panel</localtiles> for a list of
-all altars and other interesting features found so far.
+Up ahead is an altar to Trog the Wrathful! Trog is just one of many gods. In a
+real game, you check <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> or
+<input>click the dungeon overmap button</input> in the command
+panel</localtiles> for a list of all altars and other interesting features found
+so far.
 %%%%
 tutorial5 altar
 
@@ -707,7 +709,7 @@ tutorial5 exhaustion
 
 A berserker rage is truly exhausting. While fatigued, you cannot berserk again
 and are also slowed. It's best to rest with <input>$cmd[CMD_REST]</input>
-<localtiles>(or via the <w>command panel</w>)</localtiles> until you feel fit
+<localtiles>(or via the <w>command panel</w>) </localtiles>until you feel fit
 again.
 %%%%
 tutorial5 hunger

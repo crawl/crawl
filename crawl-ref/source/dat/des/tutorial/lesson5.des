@@ -31,14 +31,13 @@ COLOUR:  ABCDEHIJ = lightblue
 FTILE:   ABCDEHIJ = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
-NSUBST:  M = 2:= / *:m
 ITEM:    mace ego:none not_cursed
 ITEM:    book of clouds
 MONS:    rat always_corpse
 MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
-MONS:    gnoll ; flail ego:none not_cursed
+MONS:    gnoll ; mace ego:none not_cursed
 MONS:    orc wizard spells:magic_dart;.;.;.;blink;blink
-MARKER:  = = lua:tutorial5.msg("dungeon_overview")
+MARKER:  A = lua:tutorial5.msg("dungeon_overview")
 MARKER:  _ = lua:tutorial5.msg("altar")
 MARKER:  B = lua:tutorial5.msg("religion")
 MARKER:  C = lua:tutorial5.msg("piety_on_kill")
@@ -82,14 +81,14 @@ xxxxxx.xxxxxxxxxxxxDxxxxxxxxxxxxxxx.xxxxx...2...xx
 xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxxxx..4.xxx
 xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxx..xxxxxx.]xxxx
 xt........txxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
-x..mmmMmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxx...xxxxxxxx
+x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxx...xxxxxxxx
 x..mYbbbYm..xxxxxxxExxxxxxxxxxxxxxxxxx..1...xxxxxx
-x..Mbb_bbM..xxxxxxx.xxxxxxxxxxxxxxxxxxx..1...xxxxx
+x...bb_bb...xxxxxxx.xxxxxxxxxxxxxxxxxxx..1...xxxxx
 x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
-x..mmmmmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
+x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
 xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxIxxxx
 xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxx..xxxxx
-xxxxxx.xxxxxxxxxx............F.....3.H.....xxxxxxx
+xxxxxxAxxxxxxxxxx............F.....3.H.....xxxxxxx
 xxxxxx.xxxxxxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
 xxxxxx.xxxxxxxxxx.2...xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
