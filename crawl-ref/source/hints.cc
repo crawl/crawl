@@ -1394,7 +1394,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 if (found != string::npos)
                     glyph.replace(found, 1, "percent");
                 text << glyph;
-                text << " </console> is a corpse.";
+                text << "</console> is a corpse.";
 #ifdef USE_TILE
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
                 tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
@@ -1582,9 +1582,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "are some kind of escape hatch. You can use them to "
                 "quickly leave a level with <w>%</w> and <w>%</w>, "
-                "respectively "
+                "respectively"
 #ifdef USE_TILE
-                "(or by using your <w>left mouse button</w> in combination "
+                " (or by using your <w>left mouse button</w> in combination "
                 "with the <w>Shift key</w>)"
 #endif
                 ", but will usually be unable to return right away.";
@@ -1902,7 +1902,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "One of your skills just passed a whole integer point. The "
                 "skills you use are automatically trained whenever you gain "
                 "experience (by killing monsters). By default, experience goes "
-                "towards skill you actively use, although you may choose "
+                "towards skills you actively use, although you may choose "
                 "otherwise. To view or manage your skill set, type <w>%</w>.";
 
         cmd.push_back(CMD_DISPLAY_SKILLS);
@@ -2114,9 +2114,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         text << "One or more of the chunks or corpses you carry has started "
                 "to rot. Few species can digest these, so you might just as "
-                "well <w>%</w>rop them now."
+                "well <w>%</w>rop them now. "
                 "When selecting items from a menu, there's a shortcut "
-                "(<w>&</w>) to select all items in your inventory at once "
+                "(<w>,</w>) to select all items in your inventory at once "
                 "that are useless to you.";
         cmd.push_back(CMD_DROP);
         break;
@@ -3581,7 +3581,7 @@ void hints_describe_item(const item_def &item)
                 if (item.sub_type == FOOD_CHUNK)
                 {
                     ostr << "Note that most species refuse to eat raw meat "
-                            "unless really hungry. ";
+                            "unless hungry. ";
 
                     if (food_is_rotten(item))
                     {
@@ -3778,7 +3778,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << ", or offered as a sacrifice to "
                      << god_name(you.religion)
-                     << " <w>%</w>raying over them.";
+                     << " by <w>%</w>raying over them";
                 cmd.push_back(CMD_PRAY);
             }
             ostr << ". ";
