@@ -1346,6 +1346,26 @@ cccccccnccc
        @
 ENDMAP
 
+NAME:   bh_babel_library
+DEPTH:  D:14-20
+KFEAT:  ^ : known shaft trap
+KMONS:  1 : wizard
+ITEM:   randbook numspells:5 title:Dhcmrlchtdj
+ITEM:   bread ration
+MAP
+    xxx@@xxx
+   xx......xx
+  xx........xx
+ xx.1.....e..xx
+xx............xx
+@......^^......@
+@......^^......@
+xx............xx
+ xx.d......1.xx
+  xx........xx
+   xx......xx
+    xxx@@xxx
+ENDMAP
 #################################################################
 # checkpoints with guards to alert nearby monsters, by Core Xii
 NAME:   corexii_checkpoint_a
