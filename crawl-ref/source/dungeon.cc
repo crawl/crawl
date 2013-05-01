@@ -2437,6 +2437,16 @@ static bool _pan_level()
     PlaceInfo &place_info = you.get_place_info();
     bool all_demons_generated = true;
 
+    if (you.props.exists("force_map"))
+    {
+        const map_def *vault =
+            find_map_by_name(you.props["force_map"].get_string());
+        ASSERT(vault);
+
+        _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+        return (vault->orient != MAP_ENCOMPASS);
+    }
+
     for (int i = 0; i < 4; i++)
     {
         if (!you.uniq_map_tags.count(string("uniq_") + pandemon_level_names[i]))
