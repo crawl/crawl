@@ -1584,6 +1584,7 @@ enum enchant_type
     ENCH_INJURY_BOND,
     ENCH_WATER_HOLD,      // Silence and asphyxiation damage
     ENCH_FLAYED,
+    ENCH_HAUNTING,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

@@ -807,6 +807,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         heal_flayed_effect(this);
         break;
 
+    case ENCH_HAUNTING:
+    {
+        mon_enchant abj = get_ench(ENCH_ABJ);
+        abj.degree = 1;
+        abj.duration = min(5 + random2(30), abj.duration);
+        update_ench(abj);
+        break;
+    }
+
     default:
         break;
     }
@@ -1770,6 +1779,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
     }
 
+    case ENCH_HAUNTING:
+        if (!me.agent() || !me.agent()->alive())
+            del_ench(ENCH_HAUNTING);
+        break;
+
     default:
         break;
     }
@@ -1901,7 +1915,7 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "flayed",
+    "drowning", "flayed", "haunting",
     "buggy",
 };
 
