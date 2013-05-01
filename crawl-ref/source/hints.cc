@@ -1854,6 +1854,14 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_NEW_LEVEL:
         if (you.skills[SK_SPELLCASTING])
         {
+            if (!crawl_state.game_is_hints())
+            {
+                text << "Gaining an experience level allows you to learn more "
+                        "difficult spells. However, you don't have any level "
+                        "two spells in your current spellbook, so you'll just "
+                        "have to keep exploring!";
+                break;
+            }
             text << "Gaining an experience level allows you to learn more "
                     "difficult spells. Time to memorise your second spell "
                     "with <w>%</w>"
@@ -1895,9 +1903,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "skills you use are automatically trained whenever you gain "
                 "experience (by killing monsters). By default, experience goes "
                 "towards skill you actively use, although you may choose "
-                "otherwise. You can train your skills or pick up new ones by "
-                "performing the corresponding actions. To view or manage your "
-                "skill set, type <w>%</w>.";
+                "otherwise. To view or manage your skill set, type <w>%</w>.";
 
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
