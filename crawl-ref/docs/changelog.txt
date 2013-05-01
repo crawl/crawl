@@ -1,21 +1,38 @@
-Stone Soup 0.13 (up to 0.13-a0-317-gaae6efa)
+Stone Soup 0.13 (up to 0.13-a0-557-gcd82a8c)
 --------------------------------------------
 
 Branches, environment
 ---------------------
 * Several new layouts.
+* All portal vaults entrances that time out are now announced.
 
 Character
 ---------
+* The nausea status from eating contaminated chunks has been removed;
+  contaminated chunks now give less nutrition for characters that can't
+  handle them.
 * Stabbing skill is no more; stabs now depend upon the average of the
   character's stealth and weapon skill.
 * Chaos knights start with a +0 chaos weapon instead of a +2 normal weapon.
+* New tier 2 demonspawn mutation- "magic shield", giving spirit shield
+  at level one, improved magic regeneration at level two, and regenerating
+  mana in place of health as a function of current magic level at level
+  three.
+
+Monsters
+--------
+* Monster actions are now taken in order of speed, rather than any given
+  monster taking all of its actions at once.
+* A large number of vault-specific monsters have been removed.
 
 Items
 -----
+* The dependence of armour penalties on strength has been adjusted; there
+  are no longer magic strength numbers for lowest possible penalties.
 * Potions of gain <ability> have been replaced by potions of beneficial
   mutation, which grant the player a single beneficial mutation.
 * Needles of sickness have been removed.
+* Splint mail has been removed; chain mail is now 8 AC to compensate.
 
 Stone Soup 0.12 (20130501)
 --------------------------
