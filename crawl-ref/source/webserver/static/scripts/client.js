@@ -991,7 +991,8 @@ function (exports, $, key_conversion, chat, comm) {
             "Blob" in window &&
             "FileReader" in window &&
             "ArrayBuffer" in window &&
-            inflate_works_on_ua())
+            inflate_works_on_ua() &&
+            !$.cookie("no-compression"))
         {
             inflater = new Inflater();
         }
