@@ -1592,7 +1592,7 @@ A huge eyeball, encased in a levitating globe of incandescent energy.
 %%%%
 eye of draining
 
-A hovering horror that waxes strong on mana.
+A hovering horror that waxes strong on magic.
 %%%%
 feature mimic
 

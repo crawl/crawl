@@ -239,13 +239,13 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Xom revived you";
             break;
         case NOTE_MP_CHANGE:
-            result << "Mana: " << first << "/" << second;
+            result << "Magic: " << first << "/" << second;
             break;
         case NOTE_MAXHP_CHANGE:
             result << "Reached " << first << " max hit points";
             break;
         case NOTE_MAXMP_CHANGE:
-            result << "Reached " << first << " max mana";
+            result << "Reached " << first << " max magic points";
             break;
         case NOTE_XP_LEVEL_CHANGE:
             result << "Reached XP level " << first << ". " << name;
