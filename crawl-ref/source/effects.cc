@@ -896,7 +896,8 @@ static bool _follows_orders(monster* mon)
             && mon->type != MONS_GIANT_SPORE
             && mon->type != MONS_BATTLESPHERE
             && !mon->berserk()
-            && !mon->is_projectile());
+            && !mon->is_projectile()
+            && !mon->has_ench(ENCH_HAUNTING));
 }
 
 // Sets foe target of friendly monsters.

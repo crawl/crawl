@@ -2283,6 +2283,11 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
             if (player_angers_monster(mons))
                 friendly = false;
+            else
+            {
+                mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
+                mons->foe = mi;
+            }
         }
     }
 
