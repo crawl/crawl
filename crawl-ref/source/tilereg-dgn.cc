@@ -616,7 +616,7 @@ static bool _cast_spell_on_target(actor* target)
 
     if (spell_mana(spell) > you.magic_points)
     {
-        mpr("You don't have enough mana to cast that spell.");
+        mpr("You don't have enough magic to cast that spell.");
         return true;
     }
 

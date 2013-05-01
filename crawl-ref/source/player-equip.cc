@@ -517,7 +517,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             if ((you.max_magic_points + 13) *
                 (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
             {
-                mpr("You feel your mana capacity is already quite full.");
+                mpr("You feel your magic capacity is already quite full.");
             }
             else
                 canned_msg(MSG_MANA_INCREASE);
@@ -1275,7 +1275,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if ((you.max_magic_points + 9) *
             (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
         {
-            mpr("You feel your mana capacity is already quite full.");
+            mpr("You feel your magic capacity is already quite full.");
         }
         else
             canned_msg(MSG_MANA_INCREASE);

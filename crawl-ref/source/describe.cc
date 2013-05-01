@@ -416,7 +416,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
         { ARTP_MAGIC, "It affects your resistance to hostile enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},
-        { ARTP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
+        { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
         { ARTP_EYESIGHT, "It enhances your eyesight.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It lets you fly.", false},
@@ -1997,7 +1997,7 @@ string get_item_description(const item_def &item, bool verbose,
         if (verbose)
         {
             description <<
-                "\nIt uses its own mana reservoir for casting spells, and "
+                "\nIt uses its own magic reservoir for casting spells, and "
                 "recharges automatically according to the recharging "
                 "rate.";
 

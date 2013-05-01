@@ -1099,33 +1099,33 @@
 },
 
 { MUT_MANA_SHIELD,                    0,  1, false, false, false,
-  "mana shield",
+  "magic shield",
 
-  {"When hurt, damage is shared between your health and your mana reserves.", "", ""},
+  {"When hurt, damage is shared between your health and your magic reserves.", "", ""},
   {"You feel your magical essence form a protective shroud around your flesh.", "", ""},
   {"", "", ""},
 
-  "mana shield"
+  "magic shield"
 },
 
 { MUT_MANA_REGENERATION,              0,  1, false, false, false,
-  "mana regeneration",
+  "magic regeneration",
 
-  {"You regenerate mana rapidly.", "", ""},
-  {"You feel your mana shroud grow more resilient.", "", ""},
+  {"You regenerate magic rapidly.", "", ""},
+  {"You feel your magic shroud grow more resilient.", "", ""},
   {"", "", ""},
 
-  "mana regeneration"
+  "magic regeneration"
 },
 
 { MUT_MANA_LINK,                      0,  1, false, false, false,
-  "mana link",
+  "magic link",
 
-  {"When low on mana, you restore mana in place of health.", "", ""},
+  {"When low on magic, you restore magic in place of health.", "", ""},
   {"You feel your life force and your magical essence meld.", "", ""},
   {"", "", ""},
 
-  "mana link"
+  "magic link"
 },
 
 // Jiyva only mutations
