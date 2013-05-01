@@ -285,7 +285,7 @@ ENDMAP
 ##############################################################################
 NAME:     iron_city_of_dis
 TAGS:     no_rotate
-WEIGHT:   20
+WEIGHT:   30
 ORIENT:   north
 SUBVAULT: A : dis_castle
 SUBVAULT: B : dis_divider
@@ -439,6 +439,52 @@ MAP
 ............................7.........7........vvvvvvvv.............
 ...........................7...........7.......v5v..v5v.............
 ............................7.........7.............................
+ENDMAP
+
+NAME:   dis_grunt
+ORIENT: north
+TAGS:   dis_castle no_rotate no_vmirror
+MONS:   patrolling Dispater, Hell Sentinel, iron dragon
+MONS:   iron devil / iron imp w:20
+MONS:   iron troll, quicksilver dragon, cacodemon
+NSUBST: G = 4:8 / *:G
+TILE:   G = dngn_statue_iron_golem
+COLOUR: G = cyan
+KMONS:  8 = iron golem
+KMONS:  9 = metal gargoyle
+: dis_rune(_G)
+: serpent_of_hell_setup(_G)
+MAP
+....................................................................
+....................................................................
+...............vv9.vv9.vv9.vvvvvvvvvvvvvvvvvvv9.vv9.vv9.vv9.vvvvvv..
+.............vvvvvvvvvvvvvvv.....+$$$v||v....vvvvvvvvvvvvvvvv....v..
+...........vvv.............v.4.5.+$$$v2|v.......vvvvvvvvvv.......v..
+.........vvvvv.G.G.G.G.G.G.v..3..v$2$v$$v..7....vvvvvvvvvv....2..v..
+......vvvvvvvv.............+...4.v|||v$$v.......vvvvvvvvvv.......v..
+......vv.....+......3......+.....vvvvv++vv.......vvvvvvvv.......vv..
+......9v.5.4.+....5...4....vvvvvvv...v4.5v........vvvvvv........v9..
+......vv.....+.............vvvvv.....v.3.v......................v...
+......vv...G.vvvvvv+++vvvvvvvvv..4.9.+..4vvvvv..............vvvvvv..
+.vv...9v.....v.............vvv.......+...vvvvvv............vvvvvvv..
+.vvv++vv...3.v.G.G.....G.G.vv..G.G.G.vvvvvvvvvvv..........vvvvvvv9..
+..v...4v...G.v.............v..4.8....vvvvvvvvvvv...v++v...vvvvvvv...
+..+....+.....v..4....2...5.+.....D...+....2....+...+||+...vvvvvvvv..
+..+....+.....v..5..9.....4.+.....2...+.........+...+||+...vvvvvvvv..
+..v...4v...G.v.............v..4.8....vvvvvvvvvvv...v++v...vvvvvvv...
+.vvv++vv...3.v.G.G.....G.G.vv..G.G.G.vvvvvvvvvvv..........vvvvvvv9..
+.vv...9v.....v.............vvv.......+...vvvvvv............vvvvvvv..
+......vv...G.vvvvvv+++vvvvvvvvv..4.9.+..4vvvvv..............vvvvvv..
+......vv.....+.............vvvvv.....v.3.v......................v...
+......9v.5.4.+....4...5....vvvvvvv...v5.4v........vvvvvv........v9..
+......vv.....+......3......+.....vvvvv++vv.......vvvvvvvv.......vv..
+......vvvvvvvv.............+...4.v$$$v$$v.......vvvvvvvvvv.......v..
+.........vvvvv.G.G.G.G.G.G.v..3..v$$$v$$v..1....vvvvvvvvvv....7..v..
+...........vvv.............v.4.5.+$2$v2|v.......vvvvvvvvvv.......v..
+.............vvvvvvvvvvvvvvv.....+|||v||vO...vvvvvvvvvvvvvvvv....v..
+...............vv9.vv9.vv9.vvvvvvvvvvvvvvvvvvv9.vv9.vv9.vv9.vvvvvv..
+....................................................................
+....................................................................
 ENDMAP
 
 NAME:    dis_wall_1

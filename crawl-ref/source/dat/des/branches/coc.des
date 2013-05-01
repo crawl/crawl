@@ -325,3 +325,87 @@ MAP
 ################################################################################
 ################################################################################
 ENDMAP
+
+##############################################################################
+# Antaeus (Cocytus) by Grunt
+##############################################################################
+
+NAME:    coc_grunt
+ORIENT:  encompass
+MONS:    patrolling Antaeus, Ice Fiend, ice dragon / nothing
+MONS:    ice devil w:5 / blue devil w:4 / white imp w:4 / ice dragon w:3 / \
+         freezing wraith w:2 / frost giant w:1
+: set_border_fill_type('open_sea')
+KFEAT:   X = open_sea
+NSUBST:  H = 1:D / 1:8 / *:.
+KFEAT:   D = floor
+: serpent_of_hell_setup(_G)
+KMONS:   8 = ice statue
+KITEM:   d = superb_item
+KITEM:   e = gold
+KMONS:   de = Ice Fiend
+SHUFFLE: |d / $e
+: dgn.seen_replace_feat("rock_wall", "open_sea")
+: coc_setup(_G)
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccccccccccc
+Xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccccccc
+Xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccccc
+Xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccccc
+Xww...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccc
+Xw..{..........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccc
+Xw....(...............wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccc
+Xw..[............4......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccc
+Xww......................wwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwcccc
+Xwwwwwwww......4...4......wwwwww........4.....wwwwwwwwwwwwwwwwwwwwcccc
+Xwwwwwwwwwww.............wwwww........3........wwwwwwwwwwwwwwwwwwwwccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....4.........wwwwwwwww.....wwwwwwwwcc
+cccwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........wwwwwwwwwwwwww..4..wwwwwwwwc
+cccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwc
+ccccccccwwwwwwwwcccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwc
+cccccccccccccccccccccccccccccccccccccwwwwwwwwwwcccccccwwwwww.2.wwwwwwX
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwww...wwwwwwX
+cccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwww..H.wwwwwwX
+cccccccccccccccccccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwX
+cccccccccccccccccwwwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.4..wwwwwwwX
+ccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwwwX
+cccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwww.....wwwwwwwwwX
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww......4.......wwwwwwwwwwwwwwwwwwcc
+Xwwwwwwwwwwwwwwwwwwwwww.wwwwwww.........3........wwwwwwwwwwwwwwwwwcccc
+Xwwwwwwwwwwwwwwwwww...4..wwww.........4.........wwwwwwwwwwwwwwwwcccccc
+Xwwwwwww.....wwww...3...wwwww..............wwwwwwwwwwwwwwwwwwwcccccccc
+Xwwwwww.......www.4....wwwwwww......wwwwwwwwwwwwwwwwwwwwwwwwwccccccccc
+Xwwww...4....wwwww...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccccccccccc
+Xwwww.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccccccccccc
+Xwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccccccccccccccccccccccccccc
+Xwww...wwwwwwwwwwwwwwccccccccccccccccccccccccccccccccccccccccccccccccc
+Xwww.H.wwwwwcccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+Xwww...wwwwwwwwwwwwwcccccccccccccccccccccccccccccccccccccccccccccccccc
+Xwww..2.wwwwwwwwwwwwwwwwwwcccccccccccccccccccccccccccccccccccccccccccc
+Xwwww...wwwwwwwwwwwwwwwwwwwwcccccccccccccccccwwwwwwwwwwwwwwwcccccccccc
+Xwwww.4..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccc
+cwwwwww.....wwwww........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccwwwwwww...ww......4......wwwwwwwwwwww..........wwwwwwwwwwwwwwwwwwwwX
+ccccwwwwwwwwwwww......3.....wwwwwwwww......3.4......wwwwwwwwwwwwwwwwwX
+ccccccccccwwwwwwww......4........ww......4...........wwwwwwwwwwwwwwwwX
+ccccccccccccccccwwwwww..........wwwww........wwwwww..www...wwwwwwwwwwX
+ccccccccccccccccccccwwwwww..wwwwwwwwww....wwwwwwwwwwwwwww...wwwwwwwwwX
+cccwwwwwwwwwwwwwcccccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwX
+ccwwwwwww......wwwcccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwwww..4..wwwwwwX
+cwwwwwww........wwwccccccccccccccccccwwwwwwwwwwwwwwwwwwwwww....wwwwwwX
+Xwwwwww.....3.....wwwccccccccccccccccccccccccccccccwwwwwwww..2..wwwwwX
+Xwwwww..........4..wwwwcccccccccccccccccccccccccccccccccwww.....wwwwwX
+Xwwwww....ccccc....wwwwwccccccccccccccccccccccccccccccccwww..H..wwwwwX
+Xwwww....cc|d|cc...wwwwwwwwwwwcccccccwwwwwwwwwwwwwwwwwwwwww.....wwwwwX
+Xwww.....c|||d|c....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.4..wwwwwwX
+Xwww...4.+..1.Oc.3..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...wwwwwwwX
+Xwww.....c$$$e$c....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...wwwwwwwwc
+Xwwww....cc$e$cc....ww.4..wwwwwwwwwwwwww..........wwwwwww...wwwwwwwwcc
+Xwwww.....ccccc.....ww.....wwwwwwww......4........wwww.....wwwwwwwwccc
+Xwwwww..........4..www..3.4..www.......3....ww...wwwwww..wwwwwwwwwcccc
+Xwwwwww.....3.....wwwww......www.....4....wwwwwwwwwwwwwwwwwwwwwwwwcccc
+Xwwwwwww........wwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwccccc
+Xwwwwwwww.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccc
+Xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccc
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccccccc
+ENDMAP
