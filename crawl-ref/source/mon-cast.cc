@@ -2509,8 +2509,7 @@ static monster_type _pick_random_wraith()
     static monster_type wraiths[] =
     {
         MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
-        MONS_PHANTASMAL_WARRIOR, MONS_PHANTOM, MONS_HUNGRY_GHOST,
-        MONS_FLAYED_GHOST
+        MONS_PHANTASMAL_WARRIOR, MONS_PHANTOM, MONS_HUNGRY_GHOST
     };
 
     return RANDOM_ELEMENT(wraiths);
