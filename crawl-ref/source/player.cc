@@ -3693,6 +3693,7 @@ int check_stealth(void)
         case SP_TROLL:
         case SP_OGRE:
         case SP_CENTAUR:
+        case SP_DJINNI:
             race_mod = 9;
             break;
         case SP_MINOTAUR:

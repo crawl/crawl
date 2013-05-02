@@ -1247,7 +1247,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_THROWING,       -1),
     APT(SP_DJINNI,          SK_ARMOUR,          1),
     APT(SP_DJINNI,          SK_DODGING,        -1),
-    APT(SP_DJINNI,          SK_STEALTH,         0),
+    APT(SP_DJINNI,          SK_STEALTH,        -1),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_DJINNI,          SK_STABBING,       -1),
 #endif
@@ -1256,10 +1256,10 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_UNARMED_COMBAT, -1),
     APT(SP_DJINNI,          SK_SPELLCASTING,    1),
     APT(SP_DJINNI,          SK_CONJURATIONS,    1),
-    APT(SP_DJINNI,          SK_HEXES,           0),
+    APT(SP_DJINNI,          SK_HEXES,           2),
     APT(SP_DJINNI,          SK_CHARMS,          0),
     APT(SP_DJINNI,          SK_SUMMONINGS,      0),
-    APT(SP_DJINNI,          SK_NECROMANCY,     -1),
+    APT(SP_DJINNI,          SK_NECROMANCY,     -2),
     APT(SP_DJINNI,          SK_TRANSLOCATIONS,  0),
     APT(SP_DJINNI,          SK_TRANSMUTATIONS,  0),
     APT(SP_DJINNI,          SK_FIRE_MAGIC,      3),
