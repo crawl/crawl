@@ -13,10 +13,11 @@ ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
 endif
 CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
              $(shell dpkg-buildflags --get LDFLAGS) \
-             $(shell dpkg-buildflags --get CPPFLAGS) -flto=jobserver
-
-# It would be nice to be able to add -fno-fat-lto-objects to $CFOPTIMIZE,
-# but the buildds do not support that yet.
+             $(shell dpkg-buildflags --get CPPFLAGS) \
+             -flto=jobserver -fwhole-program
+ifeq ($(shell g++ -x c++ /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
+  CFOPTIMIZE += -fno-fat-lto-objects
+endif
 
 ifeq (,$(filter terse%,$(DEB_BUILD_OPTIONS))$(filter quiet%,$(DEB_BUILD_OPTIONS)))
         VERBOSE=V=y
