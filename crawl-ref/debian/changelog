@@ -1,3 +1,13 @@
+crawl (2:0.12.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Revert -Os, benchmarks show it greatly reduces speed even on cache
+    starved machines, and Crawl is too CPU hungry for small disk savings
+    to matter.
+  * Autodetect -fno-fat-lto-objects.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 02 May 2013 14:03:18 +0200
+
 crawl (2:0.11.2-2) experimental; urgency=low
 
   * Don't use -fno-fat-lto-objects, the buildds do not support that yet.
