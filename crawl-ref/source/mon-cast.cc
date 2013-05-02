@@ -2658,12 +2658,8 @@ static bool _mons_vampiric_drain(monster *mons)
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return false;
 
-    int fnum = 5;
-    int fden = 5;
-    if (mons->is_actual_spellcaster())
-        fnum = 8;
-    int pow = random2((mons->hit_dice * fnum)/fden);
-    int hp_cost = 3 + random2avg(9, 2) + 1 + pow / 7;
+    int pow = mons->hit_dice * 12;
+    int hp_cost = 3 + random2avg(9, 2) + 1 + random2(pow) / 7;
 
     hp_cost = min(hp_cost, target->stat_hp());
     hp_cost = min(hp_cost, mons->max_hit_points - mons->hit_points);
@@ -2692,7 +2688,7 @@ static bool _mons_vampiric_drain(monster *mons)
     if (target->is_player())
     {
         ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, "by vampiric draining");
-        if (mons->heal(hp_cost / 2))
+        if (mons->heal(hp_cost * 2 / 3))
         {
             simple_monster_message(mons,
                 " draws life force from you and is healed!");
@@ -2703,7 +2699,7 @@ static bool _mons_vampiric_drain(monster *mons)
         monster* mtarget = target->as_monster();
         const string targname = mtarget->name(DESC_THE);
         mtarget->hurt(mons, hp_cost);
-        if (mons->heal(hp_cost / 2))
+        if (mons->heal(hp_cost * 2 / 3))
         {
             simple_monster_message(mons,
                 make_stringf(" draws life force from %s and is healed!",
