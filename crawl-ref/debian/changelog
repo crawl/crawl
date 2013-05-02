@@ -1,3 +1,30 @@
+crawl (2:0.11.2-2) experimental; urgency=low
+
+  * Don't use -fno-fat-lto-objects, the buildds do not support that yet.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 20 Feb 2013 14:27:41 +0100
+
+crawl (2:0.11.2-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 20 Feb 2013 13:04:51 +0100
+
+crawl (2:0.11.1-2) experimental; urgency=low
+
+  * Enable link time optimization (LTO).
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 05 Dec 2012 14:03:18 +0100
+
+crawl (2:0.11.1-1) experimental; urgency=low
+
+  * New upstream release. Closes: #693593
+  * Update debian/watch file to search for .xz compressed tarballs.
+  * Remove dont-redefine-fdatasync patch, it is no longer necessary.
+  * Move tile graphics to its own package, crawl-tiles-data.
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 02 Dec 2012 00:15:02 +0100
+
 crawl (2:0.10.3-3) unstable; urgency=low
 
   * Work around dpkg failing to replace a directory with a symlink.
