@@ -13,7 +13,7 @@ ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
 endif
 CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
              $(shell dpkg-buildflags --get LDFLAGS) \
-             $(shell dpkg-buildflags --get CPPFLAGS) -Os -flto=jobserver
+             $(shell dpkg-buildflags --get CPPFLAGS) -flto=jobserver
 
 # It would be nice to be able to add -fno-fat-lto-objects to $CFOPTIMIZE,
 # but the buildds do not support that yet.
