@@ -985,9 +985,6 @@ static void _get_status_lights(vector<status_light>& out)
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        if (statuses[i] == STATUS_CONTAMINATION && you.species == SP_DJINNI)
-            continue;
-
         fill_status_info(statuses[i], &inf);
         if (!inf.light_text.empty())
         {

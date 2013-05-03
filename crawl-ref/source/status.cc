@@ -632,7 +632,8 @@ static void _describe_glow(status_info* inf)
         inf->light_colour = DARKGREY;
         if (cont > 1)
             inf->light_colour = _bad_ench_colour(cont, 2, 3);
-        inf->light_text = "Contam";
+        if (cont > 1 || you.species != SP_DJINNI)
+            inf->light_text = "Contam";
     }
 
     if (cont > 0)
