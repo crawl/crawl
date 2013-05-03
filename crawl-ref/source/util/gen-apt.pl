@@ -270,4 +270,7 @@ sub load_mods
     {
         die "Can't find table: $_ in $modfile\n" unless $SPECIES_SKILLS{Spriggan}{$_};
     }
+
+    $SPECIES_SKILLS{Djinni}{'Hit Points'} = -99;
+    $SPECIES_SKILLS{Djinni}{'Magic Points'} = -99;
 }
