@@ -528,8 +528,8 @@ string describe_mutations(bool center_title)
         break;
 
     case SP_DJINNI:
-        result += "You are immune to any form of fire, even holy or hellish.\n";
-        result += "You are specially vulnerable to cold.\n";
+        result += "You are immune to all types of fire, even holy and hellish.\n";
+        result += "You are especially vulnerable to cold.\n";
         result += "You need no food.\n";
         result += "You have no legs.\n";
         have_any = true;
