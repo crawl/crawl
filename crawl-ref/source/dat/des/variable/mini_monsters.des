@@ -1346,6 +1346,8 @@ cccccccnccc
        @
 ENDMAP
 
+# Inspired by Jorge Borges' novel "The library of babel".
+# Title of the book intentional.
 NAME:   bh_babel_library
 DEPTH:  D:14-20
 KFEAT:  ^ : known shaft trap
