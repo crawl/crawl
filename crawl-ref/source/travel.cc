@@ -424,12 +424,19 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
     const map_cell& levelmap_cell = env.map_knowledge(c);
+    const monster_info *minfo = levelmap_cell.monsterinfo();
+
+    // Can't swap with monsters caught in nets
+    if (minfo && minfo->attitude >= ATT_STRICT_NEUTRAL
+        && (minfo->is(MB_CAUGHT) || minfo->is(MB_WEBBED)) && !try_fallback)
+    {
+        return false;
+    }
 
     // Travel will not voluntarily cross squares blocked by immobile
     // monsters.
     if (!ignore_danger && !ignore_hostile)
     {
-        const monster_info *minfo = levelmap_cell.monsterinfo();
         if (minfo && _monster_blocks_travel(minfo))
             return false;
     }
