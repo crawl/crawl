@@ -1284,6 +1284,191 @@ TILE:    G = dngn_statue_iron_golem
 MAP
 ENDMAP
 
+##############################################################
+# layout_overlapping_boxes
+#
+# This layout places many overlapping boxes and then connects
+# the resulting mess into a layout.
+#
+NAME: layout_overlapping_boxes
+DEPTH: Dis
+WEIGHT: 10
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    layout_type "rooms"
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+    fill_area{fill="x"}
+
+    local xmin_half = 6
+    local xmax_half = gxm / 2 - 6
+    local ymin_half = 3
+    local ymax_half = gym / 2 - 3
+
+    for i = 1, 100 do
+        local xs
+        local ys
+        if crawl.one_chance_in(8) then
+            xs = crawl.random_range(2, 3)
+            ys = crawl.random_range(6, 15)
+        elseif crawl.one_chance_in(7) then
+            xs = crawl.random_range(6, 15)
+            ys = crawl.random_range(2, 3)
+        else
+            xs = crawl.random_range(3, 6)
+            ys = crawl.random_range(3, 6)
+        end
+        local x = crawl.random_range(xmin_half, xmax_half - xs)
+        local y = crawl.random_range(ymin_half, ymax_half - ys)
+        make_box { x1 = x*2, y1 = y*2, x2 = (x + xs)*2, y2 = (y + ys)*2,
+                   wall = 'x', floor = '.' }
+    end
+
+    connect_adjacent_rooms { wall = "x", floor = ".", replace = '+',
+                             max = 800, check_empty = true }
+    zonify.map_fill_zones(_G, 1, 'x')
+}}
+# Enforce minimum floor size
+validate {{
+    return count_feature_in_box { feat="." } > 1200
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_jigsaw
+#
+# A grid of irregular rooms with walls between them.  The
+#  effect of this is that it is not always obvious whether you
+#  are inside a room or outside.
+#
+NAME: layout_jigsaw
+DEPTH: Dis
+WEIGHT: 10
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    local ROOMS_ACROSS = 4
+    local ROOM_SIZE = 11
+    local ROOM_SEPERATION = 2
+    local EDGE_IN = 5
+    local ROOM_IN = 4
+
+    local ROOM_SPACING = ROOM_SIZE + ROOM_SEPERATION
+    local MAP_SIZE = ROOM_SPACING * ROOMS_ACROSS + ROOM_SEPERATION
+                     + EDGE_IN * 2
+    local FIRST_ROOM = EDGE_IN + ROOM_SEPERATION
+    local DOOR_OFFSET_MIN = FIRST_ROOM + ROOM_IN - 1
+    local DOOR_OFFSET_MAX = FIRST_ROOM + ROOM_SIZE - ROOM_IN
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+
+    layout_type "rooms"
+
+    assert(MAP_SIZE < gxm, "Map size is too large")
+    assert(MAP_SIZE < gym, "Map size is too large")
+    make_irregular_box { x1    = 0,            y1    = 0,
+                         x2    = MAP_SIZE - 1, y2    = MAP_SIZE - 1,
+                         div_x = MAP_SIZE / 4, div_y = MAP_SIZE / 4,
+                         in_x  = EDGE_IN,      in_y  = EDGE_IN;
+                         door_count = 0 }
+
+    -- add rooms in a grid
+    for i = 0, ROOMS_ACROSS - 1 do
+        for j = 0, ROOMS_ACROSS - 1 do
+            local x = FIRST_ROOM + i * ROOM_SPACING
+            local y = FIRST_ROOM + j * ROOM_SPACING
+
+            make_irregular_box { x1 = x, x2 = x + ROOM_SIZE - 1,
+                                 y1 = y, y2 = y + ROOM_SIZE - 1,
+                                 div_x = 3, div_y = 3,
+                                 in_x = ROOM_IN, in_y = ROOM_IN,
+                                 door_count = crawl.random_range(1, 3) }
+        end
+    end
+
+    -- add horizontal walls
+    for i = 0, ROOMS_ACROSS do
+        for j = 0, ROOMS_ACROSS - 1 do
+            local x = EDGE_IN + i * ROOM_SPACING
+                      + crawl.random_range(0, ROOM_SEPERATION - 1)
+            local y = crawl.random_range(DOOR_OFFSET_MIN, DOOR_OFFSET_MAX)
+                      + j * ROOM_SPACING
+
+            -- add door
+            mapgrd[x][y] = '+'
+
+            -- build wall to left
+            local x1 = x
+            while x1 > 0 and mapgrd[x1][y + 1] ~= 'x'
+                  and mapgrd[x1][y - 1] ~= 'x' and mapgrd[x1 - 1][y] ~= 'x' do
+                x1 = x1 - 1
+                mapgrd[x1][y] = 'x'
+            end
+
+            -- build wall to right
+            local x1 = x
+            while x1 < MAP_SIZE - 2 and mapgrd[x1][y + 1] ~= 'x'
+                  and mapgrd[x1][y - 1] ~= 'x' and mapgrd[x1 + 1][y] ~= 'x' do
+                x1 = x1 + 1
+                mapgrd[x1][y] = 'x'
+            end
+        end
+    end
+
+    -- add vertical walls
+    for i = 0, ROOMS_ACROSS - 1 do
+        for j = 0, ROOMS_ACROSS do
+            local x = crawl.random_range(DOOR_OFFSET_MIN, DOOR_OFFSET_MAX)
+                      + i * ROOM_SPACING
+            local y = EDGE_IN + j * ROOM_SPACING
+                      + crawl.random_range(0, ROOM_SEPERATION - 1)
+
+            -- add door
+            mapgrd[x][y] = '+'
+
+            -- build wall to top
+            local y1 = y
+            while y1 > 0 and mapgrd[x + 1][y1] ~= 'x'
+                  and mapgrd[x - 1][y1] ~= 'x' and mapgrd[x][y1 - 1] ~= 'x' do
+                y1 = y1 - 1
+                mapgrd[x][y1] = 'x'
+            end
+
+            -- build wall to bottom
+            local y1 = y
+            while y1 < MAP_SIZE - 2 and mapgrd[x + 1][y1] ~= 'x'
+                  and mapgrd[x - 1][y1] ~= 'x' and mapgrd[x][y1 + 1] ~= 'x' do
+                y1 = y1 + 1
+                mapgrd[x][y1] = 'x'
+            end
+        end
+    end
+
+    --
+    -- We do need this: the walls we add can seal off areas
+    --
+    -- e.g.
+    -- ..xxxxx..
+    -- .xx...x..    x is existing room
+    -- .x..xxx..
+    -- xx..x*vvv    v is new wall (really made of 'x's)
+    -- x...xxx..
+    -- xxx...x..    * is isolated location
+    -- ..xxxxx..
+    --
+    -- Also, we might block all the doors to a room
+    --
+
+    zonify.map_fill_zones(_G, 1, 'x')
+}}
+MAP
+ENDMAP
+
+##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Pan, !Dis
