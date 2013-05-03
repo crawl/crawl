@@ -430,6 +430,7 @@ int species_hp_modifier(species_type species)
     case SP_SLUDGE_ELF:
     case SP_HALFLING:
     case SP_OCTOPODE:
+    case SP_DJINNI:
         return -1;
     default:
         return 0;
