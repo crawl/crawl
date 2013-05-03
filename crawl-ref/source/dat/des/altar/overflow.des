@@ -1911,7 +1911,7 @@ ENDMAP
 # B places the altar to a guaranteed god.
 NAME:     general_overflow_altar
 DEPTH:    D:2-16
-WEIGHT:   2
+WEIGHT:   10
 TAGS:     no_monster_gen no_pool_fixup temple_overflow_1
 SHUFFLE:  xXY / xXY / xXY / abc
 SHUFFLE:  XY
