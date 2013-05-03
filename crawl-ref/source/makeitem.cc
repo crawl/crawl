@@ -127,7 +127,7 @@ static int _weapon_colour(const item_def &item)
             item_colour = LIGHTCYAN;
             break;
         case SK_AXES:
-            item_colour = DARKGREY;
+            item_colour = MAGENTA;
             break;
         case SK_MACES_FLAILS:
             item_colour = LIGHTGREY;
