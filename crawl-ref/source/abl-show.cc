@@ -639,16 +639,24 @@ const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
     string ret;
+    int ep = 0;
     if (abil.mp_cost)
-    {
-        ret += make_stringf(", %d %sMP", abil.mp_cost,
-            abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
-    }
+        if (you.species == SP_DJINNI)
+        {
+            ep += abil.mp_cost * DJ_MP_RATE;
+            ASSERT(!(abil.flags & ABFLAG_PERMANENT_MP));
+        }
+        else
+        {
+            ret += make_stringf(", %d %sMP", abil.mp_cost,
+                abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
+        }
 
-    if (abil.hp_cost)
+    if (abil.hp_cost || ep)
     {
-        ret += make_stringf(", %d %sHP", (int)abil.hp_cost,
-            abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "");
+        ret += make_stringf(", %d %s%s", ep + (int)abil.hp_cost,
+            abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
+            you.species == SP_DJINNI ? "EP" : "HP");
     }
 
     if (abil.zp_cost)
