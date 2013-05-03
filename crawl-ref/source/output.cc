@@ -305,6 +305,11 @@ class colour_bar
 {
     typedef unsigned short color_t;
  public:
+    color_t m_default;
+    color_t m_change_pos;
+    color_t m_change_neg;
+    color_t m_empty;
+
     colour_bar(color_t default_colour,
                color_t change_pos,
                color_t change_neg,
@@ -313,8 +318,7 @@ class colour_bar
         : m_default(default_colour), m_change_pos(change_pos),
           m_change_neg(change_neg), m_empty(empty),
           m_old_disp(-1),
-          m_request_redraw_after(0),
-          m_round(round)
+          m_request_redraw_after(0)
     {
         // m_old_disp < 0 means it's invalid and needs to be initialised.
     }
@@ -335,8 +339,6 @@ class colour_bar
         }
 
         const int width = crawl_view.hudsz.x - (ox - 1);
-        if (m_round)
-            val += max_val / 2 / width;
         const int disp  = width * val / max_val;
         const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
         m_old_disp = disp;
@@ -405,8 +407,6 @@ class colour_bar
         }
 
         const int height   = bar_width * (obase-oy+1);
-        if (m_round)
-            val += max_val / 2 / height;
         const int disp     = height * val / max_val;
         const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
 
@@ -441,24 +441,20 @@ class colour_bar
     }
 
  private:
-    const color_t m_default;
-    const color_t m_change_pos;
-    const color_t m_change_neg;
-    const color_t m_empty;
     int m_old_disp;
     int m_request_redraw_after; // force a redraw at this turn count
-    bool m_round;
 };
 
 static colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
-static colour_bar EP_Bar1(LIGHTMAGENTA, MAGENTA, BLUE, DARKGREY, true);
-static colour_bar EP_Bar2(LIGHTMAGENTA, MAGENTA, BLUE, DARKGREY);
+static colour_bar EP_Bar(LIGHTMAGENTA, MAGENTA, BLUE, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
 static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
 static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
+
+colour_bar Contam_Bar(DARKGREY, DARKGREY, DARKGREY, DARKGREY);
 
 // ----------------------------------------------------------------------
 // Status display
@@ -565,6 +561,46 @@ static void _print_stats_mp(int x, int y)
     MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
+static void _print_stats_contam(int x, int y)
+{
+    if (you.species != SP_DJINNI)
+        return;
+
+    int max_contam = 30;
+    int contam = min(you.magic_contamination, max_contam);
+
+    // Calculate colour
+    int contam_level = get_contamination_level();
+
+    if (contam_level > 3)
+    {
+        Contam_Bar.m_default = RED;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
+    }
+    else if (contam_level > 2)
+    {
+        Contam_Bar.m_default = LIGHTRED;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
+    }
+    else if (contam_level > 1)
+    {
+        Contam_Bar.m_default = YELLOW;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = BROWN;
+    }
+    else
+    {
+        Contam_Bar.m_default = DARKGREY;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = DARKGREY;
+    }
+
+#ifdef TOUCH_UI
+    if (tiles.is_using_small_layout())
+        Contam_Bar.vdraw(6, 10, contam, max_contam);
+    else
+#endif
+    Contam_Bar.draw(19, y, contam, max_contam);
+}
+
 static void _print_stats_hp(int x, int y)
 {
     int max_max_hp = get_real_hp(true, true);
@@ -617,20 +653,14 @@ static void _print_stats_hp(int x, int y)
         if (you.species != SP_DJINNI)
             HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
         else
-        {
-            EP_Bar1.vdraw(2, 10, you.hp, you.hp_max);
-            EP_Bar2.vdraw(6, 10, you.hp, you.hp_max);
-        }
+            EP_Bar.vdraw(2, 10, you.hp, you.hp_max);
     }
     else
 #endif
     if (you.species != SP_DJINNI)
         HP_Bar.draw(19, y, you.hp, you.hp_max);
     else
-    {
-        EP_Bar1.draw(19, y, you.hp, you.hp_max);
-        EP_Bar2.draw(19, y + 1, you.hp, you.hp_max);
-    }
+        EP_Bar.draw(19, y, you.hp, you.hp_max);
 }
 
 static short _get_stat_colour(stat_type stat)
@@ -955,6 +985,9 @@ static void _get_status_lights(vector<status_light>& out)
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
+        if (statuses[i] == STATUS_CONTAMINATION && you.species == SP_DJINNI)
+            continue;
+
         fill_status_info(statuses[i], &inf);
         if (!inf.light_text.empty())
         {
@@ -1181,6 +1214,7 @@ void print_stats(void)
     }
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
+    _print_stats_contam(1, 4);
     if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, 5); }
     if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, 6); }
 
@@ -1310,8 +1344,11 @@ void draw_border(void)
     textcolor(Options.status_caption_colour);
 
     //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
-    if (you.species != SP_DJINNI)
-        CGOTOXY(1, 4, GOTO_STAT), CPRINTF("Magic:");
+    CGOTOXY(1, 4, GOTO_STAT);
+    if (you.species == SP_DJINNI)
+        CPRINTF("Contam:");
+    else
+        CPRINTF("Magic:");
     CGOTOXY(1, 5, GOTO_STAT); CPRINTF("AC:");
     CGOTOXY(1, 6, GOTO_STAT); CPRINTF("EV:");
     CGOTOXY(1, 7, GOTO_STAT); CPRINTF("SH:");
