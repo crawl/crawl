@@ -206,10 +206,8 @@ static int _armour_colour(const item_def &item)
         break;
       case ARM_CAP:
       case ARM_WIZARD_HAT:
-        item_colour = MAGENTA;
-        break;
       case ARM_HELMET:
-        item_colour = DARKGREY;
+        item_colour = MAGENTA;
         break;
       case ARM_BOOTS:
         item_colour = BLUE;
