@@ -10,6 +10,7 @@
 
 #include "dungeon.h"
 #include "dgn-delve.h"
+#include "dgn-irregular-box.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
 #include "dgn-layouts.h"
@@ -576,13 +577,13 @@ LUAFN(dgn_find_in_area)
     if (!_coords(ls, lines, x1, y1, x2, y2))
         return 0;
 
-    TABLE_CHAR(ls, find, 'x');
+    TABLE_STR(ls, find, "x");
 
     int x, y;
 
     for (x = x1; x <= x2; x++)
         for (y = y1; y <= y2; y++)
-            if (lines(x, y) == find)
+            if (strchr(find, lines(x, y)))
             {
                 lua_pushboolean(ls, true);
                 return 1;
@@ -807,6 +808,29 @@ LUAFN(dgn_make_box_doors)
 
     lua_pushnumber(ls, door_count);
     return 1;
+}
+
+LUAFN(dgn_make_irregular_box)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    TABLE_CHAR(ls, floor, '.');
+    TABLE_CHAR(ls, wall, 'x');
+    TABLE_CHAR(ls, door, '+');
+    TABLE_INT(ls, door_count, 1);
+    TABLE_INT(ls, div_x, 1);
+    TABLE_INT(ls, div_y, 1);
+    TABLE_INT(ls, in_x, 10000);
+    TABLE_INT(ls, in_y, 10000);
+
+    make_irregular_box(lines, x1, y1, x2, y2,
+                       div_x, div_y, in_x, in_y,
+                       floor, wall, door, door_count);
+    return 0;
 }
 
 // Return a metatable for a point on the map_lines grid.
@@ -1605,6 +1629,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "make_square", &dgn_make_square },
     { "make_box", &dgn_make_box },
     { "make_box_doors", &dgn_make_box_doors },
+    { "make_irregular_box", &dgn_make_irregular_box },
     { "mapgrd_table", dgn_mapgrd_table },
     { "octa_room", &dgn_octa_room },
     { "remove_isolated_glyphs", &dgn_remove_isolated_glyphs },

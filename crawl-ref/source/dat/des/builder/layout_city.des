@@ -214,3 +214,113 @@ TAGS:   overwritable layout allow_dup unrand
   -- Fill disconnects
   zonify.map_fill_zones(_G, 1, 'x')
 }}
+
+##############################################################
+# layout_irregular_city
+#
+# A map with many boxes, about half of which are rectangular
+#  and most of which are hollow.
+#
+# If you think this layout makes a lot of place attempts, look
+#  at layout_chaotic_city in dgn_layouts.cc.  It can make as
+#  many as 5000, although 4000 is more likely.
+#
+NAME: layout_irregular_city
+DEPTH: D:10-, Dis, Pan
+WEIGHT: 10
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    local stage_count = 3
+
+    local min_size      = { 15,   6,    4 }
+    local max_size      = { 40,  18,   10 }
+    local max_doors     = {  8,   4,    2 }
+    local percent_solid = {  0,  10,   40 }
+    local in_distance   = {  6,   5,    3 }
+
+    local base_wall_type = crawl.random_element
+    {   ['x'] = 7,
+        ['c'] = 2,
+        ['v'] = 1   }
+    if you.in_branch("Dis") then
+        base_wall_type = 'x'
+    end
+    local base_wall_frequency = crawl.random_range(0, 900)
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = base_wall_type}
+
+    layout_type "city"
+
+    make_irregular_box { x1 = 5, y1 = 5, x2 = gxm - 6, y2 = gym - 6,
+                         div_x = gxm / 6, div_y = gym / 6,
+                         in_x = 8, in_y = 8;
+                         door_count = 0, wall = base_wall_type }
+    local min_x = 8
+    local max_x = gxm - 9
+    local min_y = 8
+    local max_y = gym - 9
+
+    local stage_end = {}
+    if crawl.coinflip() then
+        stage_end[1] = crawl.random_range(10, 25)
+    else
+        stage_end[1] = 0
+    end
+    if crawl.x_chance_in_y(2, 3) then
+        stage_end[2] = stage_end[1] + crawl.random_range(50, 200)
+    else
+        stage_end[2] = stage_end[1]
+    end
+    stage_end[3] = stage_end[2] + crawl.random_range(500, 1000)
+
+    local current_stage = 1
+    for i = 1, stage_end[stage_count] do
+        while i > stage_end[current_stage] do
+            current_stage = current_stage + 1
+        end
+
+        local size_x = crawl.random_range(min_size[current_stage],
+                                          max_size[current_stage])
+        local size_y = crawl.random_range(min_size[current_stage],
+                                          max_size[current_stage])
+        local x = crawl.random_range(min_x, max_x - size_x)
+        local y = crawl.random_range(min_y, max_y - size_y)
+
+        local blocked = find_in_area {x1 = x - 1, x2 = x + size_x + 1,
+                                      y1 = y - 1, y2 = y + size_y + 1,
+                                      find = "xcvb+" }
+        if not blocked then
+            local door_count = crawl.random_range(1, max_doors[current_stage])
+            local floor = '.'
+            local wall = crawl.random_element
+            {   [base_wall_type] = base_wall_frequency,
+                ['x']            = 50,
+                ['c']            = 30,
+                ['v']            = 20,
+                ['b']            = 1   }
+
+            if you.in_branch("Dis") then
+                wall = 'x'
+            end
+
+            if crawl.x_chance_in_y(percent_solid[current_stage], 100) then
+                door_count = 0
+                floor = wall
+            end
+
+            local div_x = size_x / crawl.random_range(4, 8)
+            local div_y = size_y / crawl.random_range(4, 8)
+            make_irregular_box { x1 = x, x2 = x + size_x,
+                                 y1 = y, y2 = y + size_y,
+                                 div_x = div_x, div_y = div_y,
+                                 in_x = in_distance[current_stage],
+                                 in_y = in_distance[current_stage],
+                                 door_count = door_count,
+                                 wall = wall, floor = floor }
+        end
+    end
+}}
+MAP
+ENDMAP
