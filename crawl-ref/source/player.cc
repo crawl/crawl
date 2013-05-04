@@ -5419,7 +5419,7 @@ void player::init()
     position.reset();
 
 #ifdef WIZARD
-    wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
+    wizard = Options.wiz_mode == WIZ_YES;
 #else
     wizard = false;
 #endif

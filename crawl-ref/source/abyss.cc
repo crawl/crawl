@@ -1262,7 +1262,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
     _abyss_apply_terrain(abyss_genlevel_mask);
 
-    bool use_vaults = (you.char_direction == GDT_GAME_START ? false : true);
+    bool use_vaults = you.char_direction != GDT_GAME_START;
 
     if (use_vaults)
     {
