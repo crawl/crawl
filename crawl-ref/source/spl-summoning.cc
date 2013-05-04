@@ -2550,19 +2550,26 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
 
         // If the player beam is targeted at a creature, aim at this creature.
         // Otherwise, aim at the furthest creature in the player beam path
-        bolt testbeam;
-        zappy(spell_to_zap(spell), powc, testbeam);
+        bolt testbeam = beam;
+        testbeam.is_tracer = true;
+        zap_type ztype = spell_to_zap(spell);
+
+        // Fallback for non-standard spell zaps
+        if (ztype == NUM_ZAPS)
+            ztype = ZAP_MAGIC_DART;
+
+        // This is so that reflection and pathing rules for the parent beam
+        // will be obeyed when figuring out what is being aimed at
+        zappy(ztype, powc, testbeam);
 
         battlesphere->props["firing_target"] = beam.target;
         battlesphere->props.erase("foe");
         if (!actor_at(beam.target))
         {
-            beam.is_tracer = true;
-            beam.fire();
-            beam.is_tracer = false;
+            testbeam.fire();
 
-            for (vector<coord_def>::const_reverse_iterator i = beam.path_taken.rbegin();
-                i != beam.path_taken.rend(); ++i)
+            for (vector<coord_def>::const_reverse_iterator i = testbeam.path_taken.rbegin();
+                i != testbeam.path_taken.rend(); ++i)
             {
                 if (*i != battlesphere->pos() && monster_at(*i))
                 {
