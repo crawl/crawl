@@ -2038,7 +2038,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                      || spell_cast == SPELL_HEAL_OTHER
                      || spell_cast == SPELL_MIGHT_OTHER)
                         && !_set_allied_target(mons, beem,
-                               (mons->type == MONS_IRONBRAND_CONVOKER ? true : false)))
+                               mons->type == MONS_IRONBRAND_CONVOKER))
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
