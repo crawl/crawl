@@ -94,6 +94,9 @@ static int _weapon_colour(const item_def &item)
     if (is_artefact(item))
         return _exciting_colour();
 
+    if (is_demonic(item))
+        return LIGHTRED;
+
     if (is_range_weapon(item))
     {
         switch (range_skill(item))
@@ -248,10 +251,7 @@ void item_colour(item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (is_demonic(item))
-            item.colour = random_uncommon_colour();
-        else
-            item.colour = _weapon_colour(item);
+        item.colour = _weapon_colour(item);
         break;
 
     case OBJ_MISSILES:
