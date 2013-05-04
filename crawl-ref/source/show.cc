@@ -401,8 +401,7 @@ static void _update_monster(monster* mons)
             you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
         }
 
-        bool show_location = (mons->friendly()
-                              || (mons->constricted_by == MID_PLAYER));
+        bool show_location = (mons->constricted_by == MID_PLAYER);
 
         // maybe show unstealthy invis monsters
         if (show_location
