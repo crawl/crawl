@@ -1296,9 +1296,10 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
+# XXX: Disabled until we can annoy the player less with water monsters.
 NAME: layout_bigger_room
 DEPTH: 9-22, !Crypt, !Pan, !Dis
-WEIGHT: 10, 10 (Geh)
+WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
