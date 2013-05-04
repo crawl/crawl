@@ -1201,15 +1201,13 @@ MAP
 .....
 ENDMAP
 
-# Features berserk monsters, so we're careful: no intelligent monsters, so you
-# close the door. Provide a chokepoint.
 NAME:   tgw_trog
 TAGS:   no_item_gen no_monster_gen patrolling
 TAGS:   temple_overflow_trog uniq_altar_trog
 DEPTH:  D:2-9
 KFEAT:  _ = altar_trog
 KPROP:  1 = no_rtele_into
-MONS:   moth of wrath, rat / worm w:5
+MONS:   moth of wrath, rat / giant newt
 ITEM:   any weapon
 NSUBST: M = 4:d / *:.
 SUBST:  + = +....
