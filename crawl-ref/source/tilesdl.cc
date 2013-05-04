@@ -106,16 +106,35 @@ TilesFramework::~TilesFramework()
 static void _init_consoles()
 {
 #ifdef TARGET_OS_WINDOWS
+    // Windows has an annoying habbit of disconnecting GUI apps from
+    // consoles at startup, and insisting that console apps start with
+    // consoles.
+    //
+    // We build tiles as a GUI app, so we work around this by
+    // reconnecting ourselves to the parent process's console (if
+    // any), on capable systems.
+
+    // The AttachConsole() function is XP/2003 Server and up, so we
+    // need to do the GetModuleHandle()/GetProcAddress() dance.
     typedef BOOL (WINAPI *ac_func)(DWORD);
     ac_func attach_console = (ac_func)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "AttachConsole");
 
     if (attach_console)
     {
-        // Redirect output to the console
-        attach_console((DWORD)-1);
-        freopen("CONOUT$", "wb", stdout);
-        freopen("CONOUT$", "wb", stderr);
+        // Direct output to the console if it isn't already directed
+        // somewhere.
+
+        // Grab our parent's console (if any), unless we somehow
+        // already have a console.
+        attach_console((DWORD)-1); // ATTACH_PARENT_PROCESS
+
+        // If stdout/stderr aren't already wired up, assume Windows
+        // cut us off for being a GUI app
+        if (GetStdHandle(STD_OUTPUT_HANDLE) == INVALID_HANDLE_VALUE)
+            freopen("CONOUT$", "wb", stdout);
+        if (GetStdHandle(STD_ERROR_HANDLE) == INVALID_HANDLE_VALUE)
+            freopen("CONOUT$", "wb", stderr);
     }
 #endif
 }
