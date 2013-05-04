@@ -1,3 +1,8 @@
+Stone Soup 0.12.1 (20130504)
+----------------------------
+* Fix a Dazzling Sphere + Battlesphere crash on Windows.
+* Add a missing cloak of the Thief ability tile.
+
 Stone Soup 0.12 (20130501)
 --------------------------
 
