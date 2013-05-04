@@ -3980,8 +3980,8 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     if (!determine_damage(mon, preac, post, final, messages))
         return;
 
-    // Check only if actual damage.
-    if (final > 0)
+    // Check only if actual damage and the monster is worth caring about.
+    if (final > 0 && !mons_is_firewood(mon))
     {
         ASSERT(preac > 0);
 
