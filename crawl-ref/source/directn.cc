@@ -2400,7 +2400,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
                                            dp.x, dp.y);
-        if (x != B_MAYBE)
+        if (x != MB_MAYBE)
             return tobool(x);
     }
 #endif
@@ -2443,7 +2443,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster_expl", "dd",
                                            dp.x, dp.y);
-        if (x != B_MAYBE)
+        if (x != MB_MAYBE)
             return tobool(x);
     }
 #endif

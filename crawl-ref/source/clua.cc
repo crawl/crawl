@@ -493,7 +493,7 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     error.clear();
     lua_State *ls = state();
     if (!ls)
-        return B_MAYBE;
+        return MB_MAYBE;
 
     int stacktop = lua_gettop(ls);
 
@@ -501,12 +501,12 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     if (!lua_isfunction(ls, -1))
     {
         lua_pop(ls, 1);
-        CL_RESETSTACK_RETURN(ls, stacktop, B_MAYBE);
+        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
     }
 
     bool ret = calltopfn(ls, params, args, 1);
     if (!ret)
-        CL_RESETSTACK_RETURN(ls, stacktop, B_MAYBE);
+        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
 
     maybe_bool r = frombool(lua_toboolean(ls, -1));
     CL_RESETSTACK_RETURN(ls, stacktop, r);

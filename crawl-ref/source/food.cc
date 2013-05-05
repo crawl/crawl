@@ -2886,7 +2886,7 @@ static int _chunk_mass()
 maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
 {
     if (Options.auto_drop_chunks == ADC_NEVER)
-        return B_FALSE;
+        return MB_FALSE;
 
     int num_needed = 1 + (weight_needed - 1) / _chunk_mass();
 
@@ -2894,7 +2894,7 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
                   || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
 
     int nchunks = 0;
-    maybe_bool result = B_FALSE;
+    maybe_bool result = MB_FALSE;
 
     vector<pair<int, int> > chunk_slots;
     for (int slot = 0; slot < ENDOFPACK; slot++)
@@ -2915,8 +2915,8 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
             if (!drop_item(slot, item.quantity))
                 return result; // level full, error out
             if (num_needed <= 0)
-                return B_TRUE;
-            result = B_MAYBE; // at least a bit lighter
+                return MB_TRUE;
+            result = MB_MAYBE; // at least a bit lighter
             continue;
         }
 
@@ -2954,9 +2954,9 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
             return result; // level full, error out
 
         if (num_needed -= quant <= 0)
-            return B_TRUE;
+            return MB_TRUE;
 
-        result = B_MAYBE; // at least a bit lighter
+        result = MB_MAYBE; // at least a bit lighter
     }
 
     return result;

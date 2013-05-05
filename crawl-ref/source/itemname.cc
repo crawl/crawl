@@ -318,8 +318,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
         if (const char *orig = _interesting_origin(*this))
         {
-            if (Options.show_god_gift == B_TRUE
-                || Options.show_god_gift == B_MAYBE && !fully_identified(*this))
+            if (Options.show_god_gift == MB_TRUE
+                || Options.show_god_gift == MB_MAYBE && !fully_identified(*this))
             {
                 insparts.push_back(orig);
             }

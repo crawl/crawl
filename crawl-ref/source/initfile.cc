@@ -870,7 +870,7 @@ void game_options::reset_options()
     level_map_title        = true;
 
     assign_item_slot       = SS_FORWARD;
-    show_god_gift          = B_MAYBE;
+    show_god_gift          = MB_MAYBE;
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
@@ -1029,7 +1029,7 @@ void game_options::reset_options()
                                              "command, spell, ability, "
                                              "monster");
 # endif
-    tile_use_small_layout = B_MAYBE;
+    tile_use_small_layout = MB_MAYBE;
 #endif
 
 #ifdef USE_TILE
@@ -2633,11 +2633,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "show_god_gift")
     {
         if (field == "yes")
-            show_god_gift = B_TRUE;
+            show_god_gift = MB_TRUE;
         else if (field == "unid" || field == "unident" || field == "unidentified")
-            show_god_gift = B_MAYBE;
+            show_god_gift = MB_MAYBE;
         else if (field == "no")
-            show_god_gift = B_FALSE;
+            show_god_gift = MB_FALSE;
         else
             report_error("Unknown show_god_gift value: %s\n", field.c_str());
     }
@@ -3567,11 +3567,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_use_small_layout")
     {
         if (field == "true")
-            tile_use_small_layout = B_TRUE;
+            tile_use_small_layout = MB_TRUE;
         else if (field == "false")
-            tile_use_small_layout = B_FALSE;
+            tile_use_small_layout = MB_FALSE;
         else
-            tile_use_small_layout = B_MAYBE;
+            tile_use_small_layout = MB_MAYBE;
     }
 #endif
 #ifdef USE_TILE
@@ -3947,7 +3947,7 @@ static struct es_command
     { ES_INFO,    "info",    false, 0, 0, },
 };
 
-#define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while (0)
+#define FAIL(...) do { fprintf(stderr, __VA_ARGS__); return; } while (0)
 static void _edit_save(int argc, char **argv)
 {
     if (argc <= 1 || !strcmp(argv[1], "help"))
@@ -3971,15 +3971,15 @@ static void _edit_save(int argc, char **argv)
         if (!strcmp(es_commands[nc].name, cmdn))
         {
             if (argc < es_commands[nc].min_args + 2)
-                ERR("Too few arguments for %s.\n", cmdn);
+                FAIL("Too few arguments for %s.\n", cmdn);
             else if (argc > es_commands[nc].max_args + 2)
-                ERR("Too many arguments for %s.\n", cmdn);
+                FAIL("Too many arguments for %s.\n", cmdn);
             cmd = es_commands[nc].cmd;
             rw = es_commands[nc].rw;
             break;
         }
     if (cmd == NUM_ES)
-        ERR("Unknown command: %s.\n", cmdn);
+        FAIL("Unknown command: %s.\n", cmdn);
 
     try
     {
@@ -4000,9 +4000,9 @@ static void _edit_save(int argc, char **argv)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                ERR("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
-                ERR("No such chunk in the save file.\n");
+                FAIL("No such chunk in the save file.\n");
             chunk_reader inc(&save, chunk);
 
             const char *file = (argc == 4) ? argv[3] : "chunk";
@@ -4027,7 +4027,7 @@ static void _edit_save(int argc, char **argv)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                ERR("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"%s\".\n", chunk);
 
             const char *file = (argc == 4) ? argv[3] : "chunk";
             FILE *f;
@@ -4052,9 +4052,9 @@ static void _edit_save(int argc, char **argv)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                ERR("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
-                ERR("No such chunk in the save file.\n");
+                FAIL("No such chunk in the save file.\n");
 
             save.delete_chunk(chunk);
         }
@@ -4069,7 +4069,7 @@ static void _edit_save(int argc, char **argv)
                 chunk_reader in(&save, list[i]);
                 chunk_writer out(&save2, list[i]);
 
-                while (len_t s = in.read(buf, sizeof(buf)))
+                while (plen_t s = in.read(buf, sizeof(buf)))
                     out.write(buf, s);
             }
             save2.commit();
@@ -4080,10 +4080,10 @@ static void _edit_save(int argc, char **argv)
         {
             vector<string> list = save.list_chunks();
             sort(list.begin(), list.end(), numcmpstr);
-            len_t nchunks = list.size();
-            len_t frag = save.get_chunk_fragmentation("");
-            len_t flen = save.get_size();
-            len_t slack = save.get_slack();
+            plen_t nchunks = list.size();
+            plen_t frag = save.get_chunk_fragmentation("");
+            plen_t flen = save.get_size();
+            plen_t slack = save.get_slack();
             printf("Chunks: (size compressed/uncompressed, fragments, name)\n");
             for (size_t i = 0; i < list.size(); i++)
             {
@@ -4093,8 +4093,8 @@ static void _edit_save(int argc, char **argv)
 
                 char buf[16384];
                 chunk_reader in(&save, list[i]);
-                len_t clen = 0;
-                while (len_t s = in.read(buf, sizeof(buf)))
+                plen_t clen = 0;
+                while (plen_t s = in.read(buf, sizeof(buf)))
                     clen += s;
                 printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, list[i].c_str());
             }
@@ -4112,7 +4112,7 @@ static void _edit_save(int argc, char **argv)
         fprintf(stderr, "Error: %s\n", fe.msg.c_str());
     }
 }
-#undef ERR
+#undef FAIL
 
 static bool _check_extra_opt(char* _opt)
 {

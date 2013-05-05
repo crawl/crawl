@@ -220,11 +220,11 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 {
     item_was_destroyed(item);
     if (!mons_skeleton(item.mon_type))
-        skeleton = B_FALSE;
-    if (skeleton == B_TRUE || skeleton == B_MAYBE && one_chance_in(3))
+        skeleton = MB_FALSE;
+    if (skeleton == MB_TRUE || skeleton == MB_MAYBE && one_chance_in(3))
     {
         if (chunks)
-            _turn_corpse_into_skeleton_and_chunks(item, skeleton != B_TRUE);
+            _turn_corpse_into_skeleton_and_chunks(item, skeleton != MB_TRUE);
         else
         {
             _maybe_bleed_monster_corpse(item);

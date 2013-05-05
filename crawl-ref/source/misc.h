@@ -29,7 +29,7 @@ int get_max_corpse_chunks(monster_type mons_class);
 void turn_corpse_into_skeleton(item_def &item);
 void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
                              bool make_hide = true);
-void butcher_corpse(item_def &item, maybe_bool skeleton = B_MAYBE,
+void butcher_corpse(item_def &item, maybe_bool skeleton = MB_MAYBE,
                     bool chunks = true);
 
 void init_stack_blood_potions(item_def &stack, int age = -1);

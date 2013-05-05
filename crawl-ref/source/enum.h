@@ -3572,9 +3572,9 @@ enum montravel_target_type
 
 enum maybe_bool
 {
-    B_FALSE,
-    B_MAYBE,
-    B_TRUE,
+    MB_FALSE,
+    MB_MAYBE,
+    MB_TRUE,
 };
 
 enum reach_type
