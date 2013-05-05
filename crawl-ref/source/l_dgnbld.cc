@@ -1593,7 +1593,8 @@ LUAFN(dgn_layout_bigger_room)
 
 LUAFN(dgn_layout_chaotic_city)
 {
-    dgn_build_chaotic_city_level(NUM_FEATURES);
+    const dungeon_feature_type feature = check_lua_feature(ls, 2, true);
+    dgn_build_chaotic_city_level(feature == DNGN_UNSEEN ? NUM_FEATURES : feature);
     return 0;
 }
 
