@@ -47,7 +47,7 @@
 # - Differentiate in D a little
 # - Add decor in rooms if enough space - pillars, statues, whatever.
 NAME:   layout_stronghold
-DEPTH:  D:10-,Dis,Lair,Pan
+DEPTH:  D:10-,Dis:1-6,Lair,Pan
 WEIGHT: 5, 20(Dis), 10(Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand
@@ -226,10 +226,10 @@ TAGS:   overwritable layout allow_dup unrand
 #  many as 5000, although 4000 is more likely.
 #
 NAME: layout_irregular_city
-DEPTH: D:10-, Dis, Pan
+DEPTH: D:10-, Dis:1-6, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror
 {{
     local stage_count = 3
 
@@ -290,7 +290,7 @@ TAGS: overwritable layout allow_dup unrand
 
         local blocked = find_in_area {x1 = x - 1, x2 = x + size_x + 1,
                                       y1 = y - 1, y2 = y + size_y + 1,
-                                      find = "xcvb+" }
+                                      find = "xcvb+", find_vault = true }
         if not blocked then
             local door_count = crawl.random_range(1, max_doors[current_stage])
             local floor = '.'

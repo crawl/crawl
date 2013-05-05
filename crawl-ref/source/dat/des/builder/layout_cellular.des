@@ -12,7 +12,7 @@
 # Dis, but with some tweaking could do nice stuff in other branches (or maybe just
 # make different versions of a similar algorithm).
 NAME:   layout_cellular_growth
-DEPTH:  Dis, Pan
+DEPTH:  Dis:1-6, Pan
 WEIGHT: 20 (Dis), 10 (Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
