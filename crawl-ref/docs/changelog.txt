@@ -2,6 +2,7 @@ Stone Soup 0.12.1 (20130504)
 ----------------------------
 * Fix a Dazzling Sphere + Battlesphere crash on Windows.
 * Add a missing cloak of the Thief ability tile.
+* Add a mention of cursed blunt butchery in 0.12 to this changelog.
 
 Stone Soup 0.12 (20130501)
 --------------------------
@@ -70,6 +71,8 @@ Character
 * Levels 1 and 2 of the teleportitis mutation teleport you only a limited
   distance.
 * The augmentation and powered by pain Demonspawn mutations have been improved.
+* You can butcher while wielding a cursed or otherwise unswappable blunt
+  weapon.
 
 Monsters
 --------
