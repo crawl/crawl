@@ -516,10 +516,12 @@ TAGS: overwritable layout allow_dup unrand
     local by2 = 0
     local i, j
 
-    wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
-
-    if crawl.one_chance_in(100) then
+    if you.branch() == "Dis" then
+        wall_type = 'x'
+    elseif crawl.one_chance_in(100) then
         wall_type = 'b'
+    else
+        wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
     end
 
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
@@ -534,15 +536,17 @@ TAGS: overwritable layout allow_dup unrand
             b2 = ys + 11 - crawl.random2avg(5, 2);
 
             if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
-                wall_type_room = crawl.random_element {
-                    [wall_type] = 216,
-                    ['c'] = 9,
-                    ['x'] = 9,
-                    ['v'] = 5
-                }
-
-                if crawl.one_chance_in(250) then
+                if you.branch() == "Dis" then
+                    wall_type_room = wall_type
+                elseif crawl.one_chance_in(250) then
                     wall_type_room = "b"
+                else
+                    wall_type_room = crawl.random_element {
+                        [wall_type] = 216,
+                        ['c'] = 9,
+                        ['x'] = 9,
+                        ['v'] = 5
+                    }
                 end
 
                 table.insert(rooms, {a1, a2, b1, b2})
@@ -1499,7 +1503,9 @@ WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if not is_validating() then layout_chaotic_city() end
+    if not is_validating() then
+      layout_chaotic_city((you.branch() == "Dis") and "metal_wall" or nil)
+    end
 }}
 MAP
 ENDMAP
