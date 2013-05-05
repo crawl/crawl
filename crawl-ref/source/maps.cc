@@ -45,9 +45,9 @@
 # error BYTE_ORDER is not defined
 #endif
 #if BYTE_ORDER == LITTLE_ENDIAN
-# define WORD_LEN sizeof(long)
+# define WORD_LEN (int8_t)sizeof(long)
 #else
-# define WORD_LEN -sizeof(long)
+# define WORD_LEN -(int8_t)sizeof(long)
 #endif
 
 static map_section_type _write_vault(map_def &mdef,
