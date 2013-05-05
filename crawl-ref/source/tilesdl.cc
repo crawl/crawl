@@ -129,12 +129,13 @@ static void _init_consoles()
         // already have a console.
         attach_console((DWORD)-1); // ATTACH_PARENT_PROCESS
 
-        // If stdout/stderr aren't already wired up, assume Windows
-        // cut us off for being a GUI app
-        if (GetStdHandle(STD_OUTPUT_HANDLE) == INVALID_HANDLE_VALUE)
-            freopen("CONOUT$", "wb", stdout);
-        if (GetStdHandle(STD_ERROR_HANDLE) == INVALID_HANDLE_VALUE)
-            freopen("CONOUT$", "wb", stderr);
+        // FIXME: this overrides redirection.
+        //
+        // We can get the current stdout/stderr handles with
+        // GetStdHandle, but we can't check their validity by
+        // comparing against either INVALID_HANDLE_VALUE or 0 ...
+        freopen("CONOUT$", "wb", stdout);
+        freopen("CONOUT$", "wb", stderr);
     }
 #endif
 }
