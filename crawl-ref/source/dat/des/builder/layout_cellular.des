@@ -1,0 +1,127 @@
+###############################################################################
+# layout_cellular.des: Tiling grids with cellular operations
+###############################################################################
+
+: require("dlua/util.lua")
+: require("dlua/layout/zonify.lua")
+: require("dlua/layout/omnigrid.lua")
+
+# Acts like a cellular automaton, growing wall shapes in an irregular cell grid
+# from starting ceeds according to different sets of rules.
+# TODO: With the current rules and parameters it looks most like an iron maze for
+# Dis, but with some tweaking could do nice stuff in other branches (or maybe just
+# make different versions of a similar algorithm).
+NAME:   layout_cellular_growth
+DEPTH:  Dis, Pan
+WEIGHT: 20 (Dis), 10 (Pan)
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  if is_validating() then return; end
+
+  layout_type "maze"
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  local grid_opts = {
+    -- Maximum size means we don't have to worry about chance so rigidly
+    maximum_size = crawl.random_range(5,8),
+    -- TODO: Having a minimum size of 1 looks great but is really slow until the
+    -- border counting is optimised, it also requires a higher number of seeds/iters than normal
+    minimum_size = crawl.random_range(2,4),
+    subdivide_initial_chance = 90,
+    subdivide_level_multiplier = .9,
+  }
+
+  local bounds = padded_bounds(2,10)
+  local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+
+  -- Counts adjacent wall cells.
+  -- TODO: Convert this into a handy library function. Actually the function is probably
+  -- a waste and quite inoptimal; should just keep this tracking data stored as cells are
+  -- tiled and merged.
+  local function count_adjacent(cell,count_bord,count_diag)
+    -- The rules: we need to know how many wall groups this cell
+    -- borders, and how many wall cells per group are bordered.
+    local track = {}
+    local gcount = 0
+    local lists = {}
+    if count_bord then table.insert(lists,cell.borders) end
+    if count_diag then table.insert(lists,cell.diagonals) end
+    for n,list in ipairs(lists) do
+      for i,b in ipairs(list) do
+        if b.with.tile == "wall" then
+          if track[b.with.group] == nil then
+            track[b.with.group] = 0
+            gcount = gcount + 1
+          end
+          track[b.with.group] = track[b.with.group] + 1
+        end
+      end
+    end
+    return gcount,track
+  end
+
+  -- Begin with a number of "seed" cells that will grow to form structures
+  local seeds = crawl.random_range(1,20)
+  groups = omnigrid.tilepick { grid = grid, max_iterations = seeds, tiles = { "wall" },
+                               -- Weight cells so we don't pick any that already border something,
+                               -- not even the edge
+                               cell_weight = function(cell)
+                                 if cell.tile ~= nil then return 0 end
+                                 if #(cell.edges) > 0 then return 0 end
+                                 local gcount,track = count_adjacent(cell,true,true)
+                                 if gcount>0 then return 0 end
+                                 return 10
+                               end }
+
+  local method = crawl.random2(3)
+
+  -- Now place more tiles adjacent to these ones
+  omnigrid.tilepick { grid = grid, groups = groups, tiles = { "wall" },
+                      max_iterations = 1000,
+                      cell_weight = function(cell)
+                        -- Ignore used cells
+                        if cell.tile ~= nil then return 0 end
+                        -- Some counting: we want
+                        local gcount,track = count_adjacent(cell, true, true)
+                        -- An edge cell that doesn't border any groups has a *small* chance
+                        if gcount == 0 and #(cell.edges) > 0 then return 2 end
+                        -- Otherwise only allowed to border one group
+                        if gcount ~= 1 then return 0 end
+                        -- And in this case it can't be an edge
+                        -- TODO: Allow edge cells to join to other edge cells
+                        if #(cell.edges) > 0 then return 0 end
+                        -- Check we have exactly one actually bordering group
+                        local acount,atrack = count_adjacent(cell, true, false)
+                        if acount ~= 1 then return 0 end
+                        -- Return the first, since there's only 1
+                        for g,c in pairs(atrack) do
+                          if method == 0 then
+                            -- Don't create blocks at all
+                            return c == 1 and 10 or 0
+                          elseif method == 1 then
+                            -- Prefer cells with less wall borders, to encourage spreading
+                            return math.ceil(100/c)
+                          elseif method == 2 then
+                            -- Allow fully blobby areas
+                            return 10
+                          end
+                        end
+                      end }
+
+  -- TODO: Rounded corners (and other render modes)
+
+  -- Very simple rendering; just clear the floor cells
+  for i,cell in ipairs(grid) do
+    if cell.tile ~= "wall" then
+      fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
+    end
+  end
+
+  -- This shouldn't be needed if everything is working properly
+  zonify.map_fill_zones(_G, 1, 'x')
+
+}}
+MAP
+ENDMAP
