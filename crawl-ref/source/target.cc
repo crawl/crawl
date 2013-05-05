@@ -101,7 +101,7 @@ bool targetter_beam::set_aim(coord_def a)
              i != path_taken.end(); ++i)
         {
             if (cell_is_solid(*i)
-                && tempbeam.affects_wall(grd(*i)) != B_TRUE)
+                && tempbeam.affects_wall(grd(*i)) != MB_TRUE)
                 break;
             tempbeam2.target = *i;
             if (anyone_there(*i)
@@ -149,7 +149,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
          i != path_taken.end(); ++i)
     {
         if (cell_is_solid(*i)
-            && beam.affects_wall(grd(*i)) != B_TRUE
+            && beam.affects_wall(grd(*i)) != MB_TRUE
             && max_expl_rad > 0)
             break;
 
@@ -161,9 +161,9 @@ aff_type targetter_beam::is_affected(coord_def loc)
             else if (cell_is_solid(*i))
             {
                 maybe_bool res = beam.affects_wall(grd(*i));
-                if (res == B_TRUE)
+                if (res == MB_TRUE)
                     return current;
-                else if (res == B_MAYBE)
+                else if (res == MB_MAYBE)
                     return AFF_MAYBE;
                 else
                     return AFF_NO;
@@ -185,11 +185,11 @@ aff_type targetter_beam::is_affected(coord_def loc)
     if (max_expl_rad > 0 && (loc - c).rdist() <= 9)
     {
         maybe_bool aff_wall = beam.affects_wall(grd(loc));
-        if (!feat_is_solid(grd(loc)) || aff_wall != B_FALSE)
+        if (!feat_is_solid(grd(loc)) || aff_wall != MB_FALSE)
         {
             coord_def centre(9,9);
             if (exp_map_min(loc - c + centre) < INT_MAX)
-                return (!feat_is_solid(grd(loc)) || aff_wall == B_TRUE)
+                return (!feat_is_solid(grd(loc)) || aff_wall == MB_TRUE)
                        ? AFF_YES : AFF_MAYBE;
             if (exp_map_max(loc - c + centre) < INT_MAX)
                 return AFF_MAYBE;

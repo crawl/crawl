@@ -1077,22 +1077,22 @@ bool TilesFramework::is_using_small_layout()
 #ifdef TOUCH_UI
     switch (Options.tile_use_small_layout)
     {
-    case B_TRUE:
+    case MB_TRUE:
         return true;
-    case B_FALSE:
+    case MB_FALSE:
         return false;
-    case B_MAYBE:
+    case MB_MAYBE:
     default:
 #ifdef __ANDROID__
         Options.tile_use_small_layout = (SDL_ANDROID_GetY16Inches()<40) ?
-            B_TRUE : B_FALSE; // about 2.5" high
+            MB_TRUE : MB_FALSE; // about 2.5" high
 #else
-        Options.tile_use_small_layout = (m_windowsz.x<=480) ? B_TRUE : B_FALSE;
+        Options.tile_use_small_layout = (m_windowsz.x<=480) ? MB_TRUE : MB_FALSE;
 #endif
-        return Options.tile_use_small_layout == B_TRUE;
+        return Options.tile_use_small_layout == MB_TRUE;
     }
 #else
-    return Options.tile_use_small_layout == B_TRUE;
+    return Options.tile_use_small_layout == MB_TRUE;
 #endif
 }
 void TilesFramework::zoom_dungeon(bool in)

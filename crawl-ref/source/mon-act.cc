@@ -2590,7 +2590,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     }
 
     // Butcher the corpse without leaving chunks.
-    butcher_corpse(item, B_MAYBE, false);
+    butcher_corpse(item, MB_MAYBE, false);
 
     return true;
 }
