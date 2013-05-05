@@ -365,7 +365,7 @@ TAGS: overwritable layout allow_dup unrand
 # up rooms until all original cells are connected.
 # TODO: Needs per-branch variations.
 NAME:   layout_grid_maze
-DEPTH:  D:5-, Lair, Dis, Pan
+DEPTH:  D:5-, Lair, Dis:1-6, Pan
 WEIGHT: 5, 20 (Dis), 10 (Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand

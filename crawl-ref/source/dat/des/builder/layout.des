@@ -467,7 +467,7 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 #
 NAME:   layout_city
-DEPTH:  Dis, 15-, !Pan, !Zot, !Geh
+DEPTH:  Dis:1-6, D:15-, Snake, Elf
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
@@ -1190,7 +1190,7 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus
 ##############################################################
 # layout_dis, by rwbarton
 NAME: layout_dis
-DEPTH: Dis
+DEPTH: Dis:1-6
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -1298,7 +1298,7 @@ ENDMAP
 # the resulting mess into a layout.
 #
 NAME: layout_overlapping_boxes
-DEPTH: Dis
+DEPTH: Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -1352,7 +1352,7 @@ ENDMAP
 #  are inside a room or outside.
 #
 NAME: layout_jigsaw
-DEPTH: Dis
+DEPTH: Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
