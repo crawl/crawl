@@ -1,6 +1,6 @@
-Stone Soup 0.12.1 (20130504)
+Stone Soup 0.12.1 (20130505)
 ----------------------------
-* Fix a Dazzling Sphere + Battlesphere crash on Windows.
+* Fix a Dazzling Spray + Battlesphere crash on Windows.
 * Add a missing cloak of the Thief ability tile.
 * Add a mention of cursed blunt butchery in 0.12 to this changelog.
 
