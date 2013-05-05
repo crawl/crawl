@@ -180,6 +180,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && !crawl_state.game_is_zotdef()
         && !you.is_undead
+        && !you_foodless()
         && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)

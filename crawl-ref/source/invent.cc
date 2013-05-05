@@ -1725,7 +1725,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         }
 
         if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
-            && !you.is_undead && !crawl_state.game_is_zotdef())
+            && !you.is_undead && !crawl_state.game_is_zotdef()
+            && !you_foodless())
         {
             return true;
         }
