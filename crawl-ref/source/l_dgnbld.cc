@@ -573,6 +573,7 @@ LUAFN(dgn_find_in_area)
     TABLE_INT(ls, y1, -1);
     TABLE_INT(ls, x2, -1);
     TABLE_INT(ls, y2, -1);
+    TABLE_BOOL(ls, find_vault, false);
 
     if (!_coords(ls, lines, x1, y1, x2, y2))
         return 0;
@@ -583,7 +584,9 @@ LUAFN(dgn_find_in_area)
 
     for (x = x1; x <= x2; x++)
         for (y = y1; y <= y2; y++)
-            if (strchr(find, lines(x, y)))
+            if (strchr(find, lines(x, y))
+                || (find_vault && (env.level_map_mask(coord_def(x,y))
+                                   & MMT_VAULT)))
             {
                 lua_pushboolean(ls, true);
                 return 1;
