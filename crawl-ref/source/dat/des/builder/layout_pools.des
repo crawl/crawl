@@ -150,8 +150,8 @@ ENDMAP
 #  by doors and sometimes just by holes in the wall.
 #
 NAME: layout_honeycomb
-DEPTH: D:12-, Snake:1-4, Dis
-WEIGHT: 10, 20(Dis)
+DEPTH: D:12-, Snake:1-4, Tar
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{

@@ -120,7 +120,7 @@
 }}
 
 NAME:   layout_big_grid
-DEPTH:  D:10-, Lair
+DEPTH:  D:5-, Lair
 WEIGHT: 3
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
@@ -150,7 +150,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 }}
 
 NAME:   layout_small_grid
-DEPTH:  Dis, D:5-, Lair
+DEPTH:  D:3-, Lair
 WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
@@ -178,7 +178,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 }}
 
 NAME:   layout_long_grid
-DEPTH:  Dis, D:2-, Lair
+DEPTH:  D:3-, Lair
 WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror
@@ -238,7 +238,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 # forbidden_donut but with a randomly-placed hole. At its most complex
 # it does all kinds of interesting things.
 NAME: layout_layered_grid
-DEPTH:  D, Zot, Elf, Crypt, Snake, Dis, Lair
+DEPTH:  D, Crypt, Lair
 WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
@@ -279,7 +279,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
 
 # Draws a random grid but can use a variety of different shapes to draw each grid area.
 NAME:   layout_grid_shapes
-DEPTH:  D:5-, Lair, Snake, Pan
+DEPTH:  Snake, Pan
 WEIGHT: 8, 20(Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -305,7 +305,7 @@ TAGS: overwritable layout allow_dup unrand
     minimum_size = 8,
   }
 
-  local cavey = crawl.coinflip()
+  local cavey = you.in_branch("snake")
 
   local max_corridor = crawl.random_range(cavey and 4 or 2,10)
   local bounds = padded_bounds(max_corridor,max_corridor + crawl.random_range(1,6))
@@ -365,7 +365,7 @@ TAGS: overwritable layout allow_dup unrand
 # up rooms until all original cells are connected.
 # TODO: Needs per-branch variations.
 NAME:   layout_grid_maze
-DEPTH:  D:5-, Lair, Snake, Dis, Pan
+DEPTH:  D:5-, Lair, Dis, Pan
 WEIGHT: 5, 20 (Dis), 10 (Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand

@@ -47,7 +47,7 @@
 # - Differentiate in D a little
 # - Add decor in rooms if enough space - pillars, statues, whatever.
 NAME:   layout_stronghold
-DEPTH:  D:5-,Dis,Lair,Pan
+DEPTH:  D:10-,Dis,Lair,Pan
 WEIGHT: 5, 20(Dis), 10(Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand

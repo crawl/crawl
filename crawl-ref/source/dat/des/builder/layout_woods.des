@@ -7,8 +7,8 @@
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/hyper.lua")
 
-# A twisty turny forest maze
-# Can appear in Crypt, Dis and Tar looking a little different ...
+# A twisty turny forest maze. The idea was to have slight variations in tree
+# types in Dis, Crypt, Tar...
 NAME:   layout_twisted_forest
 DEPTH:  D:15-25,Lair
 WEIGHT: 2
