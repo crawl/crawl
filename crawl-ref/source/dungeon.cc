@@ -3992,12 +3992,7 @@ _build_vault_impl(const map_def *vault,
 
 static void _build_postvault_level(vault_placement &place)
 {
-    // Does this level require Dis treatment (metal wallification)?
-    // XXX: Change this so the level definition can explicitly state what
-    // kind of wallification it wants.
-    if (place.map.has_tag("dis"))
-        dgn_build_chaotic_city_level(DNGN_METAL_WALL);
-    else if (player_in_branch(BRANCH_SPIDER_NEST))
+    if (player_in_branch(BRANCH_SPIDER_NEST))
     {
         int ngb_min = 2;
         int ngb_max = random_range(3, 8);
