@@ -466,11 +466,11 @@ ENDMAP
 #
 # This replaces dungeon.cc:_city_level().
 #
-NAME: layout_city
-DEPTH: Dis, 15-, !Pan, !Zot, !Geh
+NAME:   layout_city
+DEPTH:  Dis, 15-, !Pan, !Zot, !Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 {{
     function treasure_area (x1, y1, x2, y2)
         x2 = x2 + 1
@@ -535,7 +535,10 @@ TAGS: overwritable layout allow_dup unrand
             b1 = xs + 11 - crawl.random2avg(5, 2);
             b2 = ys + 11 - crawl.random2avg(5, 2);
 
-            if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
+            if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2}
+                and not find_in_area {x1 = a1 - 1, y1 = a2 - 1,
+                                      x2 = b1 + 1, y2 = b2 + 1,
+                                      find = "xcvb+", find_vault = true } then
                 if you.branch() == "Dis" then
                     wall_type_room = wall_type
                 elseif crawl.one_chance_in(250) then
