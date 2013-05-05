@@ -170,7 +170,7 @@ static vector<int> _calculate_random_wall_distances(int first_value,
 
 static void _draw_wall_t(vector<vector<char> >& map,
                          vector<coord_def>& wall_cells,
-                         const vector<int>& div_t,
+                         const vector<int>& di_t,
                          const vector<int>& in_t,
                          char wall_glyph)
 {
@@ -179,7 +179,7 @@ static void _draw_wall_t(vector<vector<char> >& map,
         if(i > 0)
         {
             // connect to previous division
-            int x = div_t[i];
+            int x = di_t[i];
             int ym = in_t[i];
             int yp = in_t[i - 1];
             if(ym > yp)
@@ -193,9 +193,9 @@ static void _draw_wall_t(vector<vector<char> >& map,
 
         // add this division
         int y = in_t[i];
-        map[div_t[i    ]][y] = wall_glyph;
-        map[div_t[i + 1]][y] = wall_glyph;
-        for(int x = div_t[i] + 1; x < div_t[i + 1]; x++)
+        map[di_t[i    ]][y] = wall_glyph;
+        map[di_t[i + 1]][y] = wall_glyph;
+        for(int x = di_t[i] + 1; x < di_t[i + 1]; x++)
         {
             map[x][y] = wall_glyph;
             wall_cells.push_back(coord_def(x, y));
@@ -205,7 +205,7 @@ static void _draw_wall_t(vector<vector<char> >& map,
 
 static void _draw_wall_b(vector<vector<char> >& map,
                          vector<coord_def>& wall_cells,
-                         const vector<int>& div_b,
+                         const vector<int>& di_b,
                          const vector<int>& in_b,
                          char wall_glyph,
                          int size_y)
@@ -215,7 +215,7 @@ static void _draw_wall_b(vector<vector<char> >& map,
         if(i > 0)
         {
             // connect to previous division
-            int x = div_b[i];
+            int x = di_b[i];
             int ym = size_y - 1 - in_b[i];
             int yp = size_y - 1 - in_b[i - 1];
             if(ym > yp)
@@ -229,9 +229,9 @@ static void _draw_wall_b(vector<vector<char> >& map,
 
         // add this division
         int y = size_y - 1 - in_b[i];
-        map[div_b[i    ]][y] = wall_glyph;
-        map[div_b[i + 1]][y] = wall_glyph;
-        for(int x = div_b[i] + 1; x < div_b[i + 1]; x++)
+        map[di_b[i    ]][y] = wall_glyph;
+        map[di_b[i + 1]][y] = wall_glyph;
+        for(int x = di_b[i] + 1; x < di_b[i + 1]; x++)
         {
             map[x][y] = wall_glyph;
             wall_cells.push_back(coord_def(x, y));
@@ -241,7 +241,7 @@ static void _draw_wall_b(vector<vector<char> >& map,
 
 static void _draw_wall_l(vector<vector<char> >& map,
                          vector<coord_def>& wall_cells,
-                         const vector<int>& div_l,
+                         const vector<int>& di_l,
                          const vector<int>& in_l,
                          char wall_glyph)
 {
@@ -250,7 +250,7 @@ static void _draw_wall_l(vector<vector<char> >& map,
         if(i > 0)
         {
             // connect to previous division
-            int y = div_l[i];
+            int y = di_l[i];
             int xm = in_l[i];
             int xp = in_l[i - 1];
             if(xm > xp)
@@ -264,9 +264,9 @@ static void _draw_wall_l(vector<vector<char> >& map,
 
         // add this division
         int x = in_l[i];
-        map[x][div_l[i    ]] = wall_glyph;
-        map[x][div_l[i + 1]] = wall_glyph;
-        for(int y = div_l[i] + 1; y < div_l[i + 1]; y++)
+        map[x][di_l[i    ]] = wall_glyph;
+        map[x][di_l[i + 1]] = wall_glyph;
+        for(int y = di_l[i] + 1; y < di_l[i + 1]; y++)
         {
             map[x][y] = wall_glyph;
             wall_cells.push_back(coord_def(x, y));
@@ -276,7 +276,7 @@ static void _draw_wall_l(vector<vector<char> >& map,
 
 static void _draw_wall_r(vector<vector<char> >& map,
                          vector<coord_def>& wall_cells,
-                         const vector<int>& div_r,
+                         const vector<int>& di_r,
                          const vector<int>& in_r,
                          char wall_glyph,
                          int size_x)
@@ -286,7 +286,7 @@ static void _draw_wall_r(vector<vector<char> >& map,
         if(i > 0)
         {
             // connect to previous division
-            int y = div_r[i];
+            int y = di_r[i];
             int xm = size_x - 1 - in_r[i];
             int xp = size_x - 1 - in_r[i - 1];
             if(xm > xp)
@@ -300,9 +300,9 @@ static void _draw_wall_r(vector<vector<char> >& map,
 
         // add this division
         int x = size_x - 1 - in_r[i];
-        map[x][div_r[i    ]] = wall_glyph;
-        map[x][div_r[i + 1]] = wall_glyph;
-        for(int y = div_r[i] + 1; y < div_r[i + 1]; y++)
+        map[x][di_r[i    ]] = wall_glyph;
+        map[x][di_r[i + 1]] = wall_glyph;
+        for(int y = di_r[i] + 1; y < di_r[i + 1]; y++)
         {
             map[x][y] = wall_glyph;
             wall_cells.push_back(coord_def(x, y));
@@ -421,7 +421,7 @@ static void _fill_outside(vector<vector<char> >& map,
 
 
 void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
-                        int div_x, int div_y, int in_x, int in_y,
+                        int di_x, int di_y, int in_x, int in_y,
                         char floor_glyph, char wall_glyph,
                         char door_glyph, int door_count)
 {
@@ -448,10 +448,10 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         y2 = y1;
     if(y2 >= map.height())
         y2 = map.height() - 1;
-    if(div_x < 0)
-        div_x = 0;
-    if(div_y < 0)
-        div_y = 0;
+    if(di_x < 0)
+        di_x = 0;
+    if(di_y < 0)
+        di_y = 0;
     if(in_x < 0)
         in_x = 0;
     if(in_y < 0)
@@ -511,14 +511,14 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         //  -> we keep the lists sorted
         //
 
-        vector<int> div_t = _calculate_random_values(in_tl.x, size_x - 1 - in_tr.x,
-                                                     div_x, MIN_SEPERATION);
-        vector<int> div_b = _calculate_random_values(in_bl.x, size_x - 1 - in_br.x,
-                                                     div_x, MIN_SEPERATION);
-        vector<int> div_l = _calculate_random_values(in_tl.y, size_y - 1 - in_bl.y,
-                                                     div_y, MIN_SEPERATION);
-        vector<int> div_r = _calculate_random_values(in_tr.y, size_y - 1 - in_br.y,
-                                                     div_y, MIN_SEPERATION);
+        vector<int> di_t = _calculate_random_values(in_tl.x, size_x - 1 - in_tr.x,
+                                                     di_x, MIN_SEPERATION);
+        vector<int> di_b = _calculate_random_values(in_bl.x, size_x - 1 - in_br.x,
+                                                     di_x, MIN_SEPERATION);
+        vector<int> di_l = _calculate_random_values(in_tl.y, size_y - 1 - in_bl.y,
+                                                     di_y, MIN_SEPERATION);
+        vector<int> di_r = _calculate_random_values(in_tr.y, size_y - 1 - in_br.y,
+                                                     di_y, MIN_SEPERATION);
 
         //
         // Calculate wall distance from maximal box bounds
@@ -529,16 +529,16 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
 
         vector<int> in_t = _calculate_random_wall_distances(in_tl.y, in_tr.y,
                                                             in_y,
-                                                            div_t.size() - 1);
+                                                            di_t.size() - 1);
         vector<int> in_b = _calculate_random_wall_distances(in_bl.y, in_br.y,
                                                             in_y,
-                                                            div_b.size() - 1);
+                                                            di_b.size() - 1);
         vector<int> in_l = _calculate_random_wall_distances(in_tl.x, in_bl.x,
                                                             in_x,
-                                                            div_l.size() - 1);
+                                                            di_l.size() - 1);
         vector<int> in_r = _calculate_random_wall_distances(in_tr.x, in_br.x,
                                                             in_x,
-                                                            div_r.size() - 1);
+                                                            di_r.size() - 1);
 
         //
         // Reconnect corners if needed
@@ -546,14 +546,14 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         //     to the box edge above
         //
 
-        div_t.front() = in_l.front();
-        div_t.back()  = size_x - 1 - in_r.front();
-        div_b.front() = in_l.back();
-        div_b.back()  = size_x - 1 - in_r.back();
-        div_l.front() = in_t.front();
-        div_l.back()  = size_y - 1 - in_b.front();
-        div_r.front() = in_t.back();
-        div_r.back()  = size_y - 1 - in_b.back();
+        di_t.front() = in_l.front();
+        di_t.back()  = size_x - 1 - in_r.front();
+        di_b.front() = in_l.back();
+        di_b.back()  = size_x - 1 - in_r.back();
+        di_l.front() = in_t.front();
+        di_l.back()  = size_y - 1 - in_b.front();
+        di_r.front() = in_t.back();
+        di_r.back()  = size_y - 1 - in_b.back();
 
         //
         // Draw the box we calculated to our temporary map.
@@ -571,10 +571,10 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
 
         vector<coord_def> wall_cells;
 
-        _draw_wall_t(new_glyphs, wall_cells, div_t, in_t, wall_glyph);
-        _draw_wall_b(new_glyphs, wall_cells, div_b, in_b, wall_glyph, size_y);
-        _draw_wall_l(new_glyphs, wall_cells, div_l, in_l, wall_glyph);
-        _draw_wall_r(new_glyphs, wall_cells, div_r, in_r, wall_glyph, size_x);
+        _draw_wall_t(new_glyphs, wall_cells, di_t, in_t, wall_glyph);
+        _draw_wall_b(new_glyphs, wall_cells, di_b, in_b, wall_glyph, size_y);
+        _draw_wall_l(new_glyphs, wall_cells, di_l, in_l, wall_glyph);
+        _draw_wall_r(new_glyphs, wall_cells, di_r, in_r, wall_glyph, size_x);
 
         // add doors
         for(int i = 0; i < door_count && !wall_cells.empty(); i++)
