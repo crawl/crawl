@@ -2551,6 +2551,15 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         // If the player beam is targeted at a creature, aim at this creature.
         // Otherwise, aim at the furthest creature in the player beam path
         bolt testbeam = beam;
+
+        if (agent->is_player())
+            testbeam.thrower = KILL_YOU_MISSILE;
+        else
+        {
+            testbeam.thrower = KILL_MON_MISSILE;
+            testbeam.beam_source = agent->mindex();
+        }
+
         testbeam.is_tracer = true;
         zap_type ztype = spell_to_zap(spell);
 
