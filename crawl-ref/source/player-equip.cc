@@ -640,7 +640,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         break;
                     }
 
-                    if (you.is_undead == US_ALIVE)
+                    if (you.is_undead == US_ALIVE && !you_foodless())
                     {
                         mpr("You feel a dreadful hunger.");
                         // takes player from Full to Hungry
