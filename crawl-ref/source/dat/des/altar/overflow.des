@@ -726,7 +726,6 @@ KMONS:  2 = hound skeleton
 : end
 KFEAT:  _ = altar_makhleb
 KPROP:  y' = bloody
-COLOUR: c = darkgrey
 TILE:   c = wall_hall
 SUBST:  ' = .
 SUBST:  y = x
@@ -750,7 +749,6 @@ TAGS:   uniq_altar_makhleb temple_overflow_makhleb no_monster_gen mini_float
 DEPTH:  2-9
 KFEAT:  _ = altar_makhleb
 KMONS:  _ = hound perm_ench:bleeding
-COLOUR: c = darkgrey
 TILE:   c = wall_hall
 SUBST:  y = xx.
 : interest_check(_G)
@@ -769,7 +767,6 @@ TAGS:   no_monster_gen temple_overflow_makhleb mini_float
 DEPTH:  2-9
 MONS:   iron imp w:1 / shadow imp w:1 / crimson imp
 KFEAT:  _ = altar_makhleb
-COLOUR: c' = darkgrey
 TILE:   c = wall_hall
 FTILE:  A_'1 = floor_grey_dirt
 SUBST:  ' = .
@@ -862,7 +859,6 @@ MONS:    ooze
 KFEAT:   _ = altar_nemelex_xobeh
 SHUFFLE:  12_
 COLOUR:  12' = random
-COLOUR:  x = darkgrey
 TILE:    x = wall_pebble_darkgray
 MAP
     .....
@@ -931,7 +927,6 @@ DEPTH:  D:2-9
 KFEAT:  _ = altar_nemelex_xobeh
 KFEAT:  o = known shaft trap
 NSUBST: ' = 6:o / *:.
-COLOUR: x = darkgrey
 TILE:   x = wall_pebble_darkgray
 MAP
      .....
@@ -1287,7 +1282,6 @@ KPROP:  1y" = bloody
 KFEAT:  _ = altar_trog
 KFEAT:  ^ = known shaft trap
 KFEAT:  m = iron_grate
-COLOUR: m = darkgrey
 SUBST:  y = x
 SUBST:  " = .
 MAP
@@ -1313,7 +1307,6 @@ NSUBST: T = 6:1 / *:.
 SUBST:  . = d....
 KFEAT:  _ = altar_trog
 KFEAT:  m = iron_grate
-COLOUR: m = darkgrey
 : interest_check(_G)
 MAP
   xxxxx
@@ -1713,7 +1706,6 @@ KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
 KPROP:  $ = no_rtele_into
 COLOUR: c = white
-COLOUR: m = darkgrey
 TILE:   c = wall_church
 FTILE:  _.m+$ = floor_limestone
 : interest_check(_G)
@@ -1764,7 +1756,6 @@ ITEM:   any scroll
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
 KPROP:  ? = no_rtele_into
-COLOUR: m = darkgrey
 COLOUR: c = white
 TILE:   c = wall_church
 FTILE:  _.m+d = floor_limestone
