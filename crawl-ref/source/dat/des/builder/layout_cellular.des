@@ -261,10 +261,6 @@ TAGS: overwritable layout allow_dup unrand
 {{
   if is_validating() then return; end
 
-  -- TODO: Less doors, random door positions, add windows, and for
-  -- non-open version start with more areas then link them up. For
-  -- open version de-square the map border.
-
   layout_type "roguey"
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
