@@ -3371,6 +3371,13 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     if (!me1 || !me2)
         return false;
 
+    // Fannar's ice beasts can push past Fannar, who benefits from this.
+    // Similarly, he refuses to push past them unless he's fleeing.
+    if (m1->type == MONS_FANNAR && m2->type == MONS_ICE_BEAST)
+        return fleeing;
+    if (m1->type == MONS_ICE_BEAST && m2->type == MONS_FANNAR)
+        return true;
+
     // Band leaders can displace followers regardless of type considerations.
     // -cao
     if (m2->props.exists("band_leader"))
