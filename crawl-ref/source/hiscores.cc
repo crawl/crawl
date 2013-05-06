@@ -1159,6 +1159,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
             || death_type == KILLED_BY_DISINT
+            || death_type == KILLED_BY_ACID
             || death_type == KILLED_BY_SPORE
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
@@ -2256,7 +2257,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_ACID:
-        desc += terse? "acid" : "Splashed by acid";
+        if (terse)
+            desc += "acid";
+        else
+        {
+            desc += "Splashed with acid";
+            if (!death_source_desc().empty())
+                desc += " by " + death_source_desc();
+        }
         needs_damage = true;
         break;
 

@@ -4341,7 +4341,7 @@ void melee_attack::splash_defender_with_acid(int strength)
     if (defender->is_player())
     {
         mpr("You are splashed with acid!");
-        splash_with_acid(strength);
+        splash_with_acid(strength, attacker->mindex());
     }
     else
     {

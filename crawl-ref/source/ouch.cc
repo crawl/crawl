@@ -359,7 +359,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     return hurted;
 }
 
-void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message)
+void splash_with_acid(int acid_strength, int death_source, bool corrode_items, string hurt_message)
 {
     int dam = 0;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
@@ -398,7 +398,7 @@ void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message
         if (post_res_dam < dam)
             canned_msg(MSG_YOU_RESIST);
 
-        ouch(post_res_dam, NON_MONSTER, KILLED_BY_ACID);
+        ouch(post_res_dam, death_source, KILLED_BY_ACID);
     }
 }
 
