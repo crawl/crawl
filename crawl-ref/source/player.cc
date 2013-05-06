@@ -3064,7 +3064,7 @@ static void _felid_extra_life()
     }
 }
 
-void level_change(bool skip_attribute_increase)
+void level_change(int source, const char* aux, bool skip_attribute_increase)
 {
     const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD
                       || crawl_state.repeat_cmd == CMD_WIZARD;
@@ -3074,7 +3074,7 @@ void level_change(bool skip_attribute_increase)
     you.redraw_experience = true;
 
     while (you.experience < exp_needed(you.experience_level))
-        lose_level();
+        lose_level(source, aux);
 
     while (you.experience_level < 27
            && you.experience >= exp_needed(you.experience_level + 1))
@@ -5076,7 +5076,7 @@ bool miasma_player(string source, string source_aux)
     return success;
 }
 
-bool napalm_player(int amount)
+bool napalm_player(int amount, string source, string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5088,6 +5088,9 @@ bool napalm_player(int amount)
 
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mpr("You are covered in liquid flames!", MSGCH_WARN);
+
+    you.props["napalmer"] = source;
+    you.props["napalm_aux"] = source_aux;
 
     return true;
 }
@@ -5103,6 +5106,8 @@ void dec_napalm_player(int delay)
         else
             mpr("You dip into the water, and the flames go out!", MSGCH_WARN);
         you.duration[DUR_LIQUID_FLAMES] = 0;
+        you.props.erase("napalmer");
+        you.props.erase("napalm_aux");
         return;
     }
 
@@ -5138,6 +5143,11 @@ void dec_napalm_player(int delay)
         remove_ice_armour();
 
     you.duration[DUR_LIQUID_FLAMES] -= delay;
+    if (you.duration[DUR_LIQUID_FLAMES] <= 0)
+    {
+        you.props.erase("napalmer");
+        you.props.erase("napalm_aux");
+    }
 }
 
 bool slow_player(int turns)
@@ -6714,9 +6724,9 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return true;
 }
 
-bool player::drain_exp(actor *who, bool quiet, int pow)
+bool player::drain_exp(actor *who, const char *aux, bool quiet, int pow)
 {
-    return ::drain_exp();
+    return ::drain_exp(!quiet, who->mindex(), aux);
 }
 
 void player::confuse(actor *who, int str)

@@ -4100,8 +4100,10 @@ god_type monster::deity() const
     return god;
 }
 
-bool monster::drain_exp(actor *agent, bool quiet, int pow)
+bool monster::drain_exp(actor *agent, const char *aux, bool quiet, int pow)
 {
+    UNUSED(aux);
+
     if (x_chance_in_y(res_negative_energy(), 3))
         return false;
 

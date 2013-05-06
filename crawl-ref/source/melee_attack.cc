@@ -2257,7 +2257,11 @@ void melee_attack::drain_defender()
     special_damage = 1 + random2(damage_done)
                          / (2 + defender->res_negative_energy());
 
-    if (defender->drain_exp(attacker, true))
+    if (defender->drain_exp(attacker,
+                            weapon
+                              ? weapon->name(DESC_PLAIN, false, true).c_str()
+                              : NULL,
+                            true))
     {
         if (defender->is_player())
             obvious_effect = true;
@@ -4325,7 +4329,7 @@ void melee_attack::mons_do_napalm()
         }
 
         if (defender->is_player())
-            napalm_player(random2avg(7, 3) + 1);
+            napalm_player(random2avg(7, 3) + 1, atk_name(DESC_A));
         else
         {
             napalm_monster(

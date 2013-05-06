@@ -1771,7 +1771,7 @@ void MiscastEffect::_necromancy(int severity)
                 if (one_chance_in(3))
                 {
                     do_msg();
-                    target->drain_exp(act_source);
+                    target->drain_exp(act_source, cause.c_str());
                     break;
                 }
             }
@@ -1848,7 +1848,7 @@ void MiscastEffect::_necromancy(int severity)
                 || !avoid_lethal(you.hp))
             {
                 do_msg();
-                target->drain_exp(act_source);
+                target->drain_exp(act_source, cause.c_str());
                 break;
             }
 
@@ -2182,7 +2182,7 @@ void MiscastEffect::_fire(int severity)
             do_msg();
 
             if (target->is_player())
-                napalm_player(random2avg(7,3)  + 1);
+                napalm_player(random2avg(7,3) + 1, cause);
             else
             {
                 monster* mon_target = target_as_monster();

@@ -1160,6 +1160,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_BEAM
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_ACID
+            || death_type == KILLED_BY_DRAINING
+            || death_type == KILLED_BY_BURNING
             || death_type == KILLED_BY_SPORE
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
@@ -1267,6 +1269,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     {
         death_source_name = you.props["poisoner"].get_string();
         auxkilldata = you.props["poison_aux"].get_string();
+    }
+
+    if (death_type == KILLED_BY_BURNING)
+    {
+        death_source_name = you.props["napalmer"].get_string();
+        auxkilldata = you.props["napalm_aux"].get_string();
     }
 }
 
@@ -2095,7 +2103,21 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_DRAINING:
-        desc += terse? "drained" : "Was drained of all life";
+        if (terse)
+            desc += "drained";
+        else
+        {
+            desc += "Drained of all life";
+            if (!death_source_desc().empty())
+            {
+                desc += " by " + death_source_desc();
+
+                if (!auxkilldata.empty())
+                    needs_beam_cause_line = true;
+            }
+            else if (!auxkilldata.empty())
+                desc += " by " + auxkilldata;
+        }
         break;
 
     case KILLED_BY_STARVATION:
@@ -2108,7 +2130,18 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_BURNING:     // sticky flame
-        desc += terse? "burnt" : "Burnt to a crisp";
+        if (terse)
+            desc += "burnt";
+        else if (!death_source_desc().empty())
+        {
+            desc += "Incinerated by " + death_source_desc();
+
+            if (!auxkilldata.empty())
+                needs_beam_cause_line = true;
+        }
+        else
+            desc += "Burnt to a crisp";
+
         needs_damage = true;
         break;
 
