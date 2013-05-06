@@ -216,7 +216,7 @@ TAGS: overwritable layout allow_dup unrand
       fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='x' }
       fill_area{x1=cell.x1+1, y1=cell.y1+1, x2=cell.x2-1, y2=cell.y2-1, fill='.' }
       -- Loop through borders and carve them
-      for i,b in ipairs(cell.borders) do
+      for n,b in ipairs(cell.borders) do
         local pos = midpos(b)
         if b.len >= 3 then
           if cell.group == b.with.group then
@@ -247,6 +247,99 @@ TAGS: overwritable layout allow_dup unrand
 
   -- This shouldn't be needed if everything is working properly
   zonify.map_fill_zones(_G, 1, 'x')
+
+}}
+MAP
+ENDMAP
+
+# A bit similar to roguey but better architecture.
+NAME:   layout_gridlike
+DEPTH:  D:10-, Snake, Elf, Pan
+WEIGHT: 20, 50(D)
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  if is_validating() then return; end
+
+  -- TODO: Less doors, random door positions, add windows, and for
+  -- non-open version start with more areas then link them up. For
+  -- open version de-square the map border.
+
+  layout_type "roguey"
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  local open = crawl.coinflip()
+
+  local min = crawl.random_range(5,8)
+  local max = crawl.random_range(min,13)
+  local grid_opts = {
+    minimum_size = min,
+    maximum_size = max,
+    subdivide_initial_chance = 90,
+    subdivide_level_multiplier = .9,
+  }
+
+  local bounds = padded_bounds(2,8)
+  local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+
+  -- Seed a number of buildings
+  groups = omnigrid.tilepick { grid = grid, tiles = { "room", "corridor", "corridor" },
+                               cell_weight = function(cell,tile)
+                                 if cell.tile ~= nil then return 0 end
+                                 if tile == "room" then
+                                   local rcount,rtrack = count_adjacent(cell, true, false, "room")
+                                   local rdcount,rdtrack = count_adjacent(cell, true, true, "room")
+                                   if rcount == 1 and rdcount == 1 then
+                                     -- Less likely to attach to bigger groups
+                                     for g,c in pairs(rtrack) do
+                                       return math.ceil(20/#g)
+                                     end
+                                   elseif rdcount == 0 then
+                                     return 10
+                                   else return 0 end
+                                 elseif tile == "corridor" then
+                                   return 10
+                                 end
+                               end }
+  local function midpos(b)
+    return { x = (b.x1==b.x2) and b.x1 or crawl.random_range(b.x1+1,b.x2-1),
+             y = (b.y1==b.y2) and b.y1 or crawl.random_range(b.y1+1,b.y2-1) }
+  end
+
+  -- Render all the cells
+  for i,cell in ipairs(grid) do
+    if cell.tile == "room" then
+      -- TODO: Some partitioning walls (steal midpos again)
+      fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
+    elseif cell.tile == "corridor" then
+      -- Pick midpos for cell
+      local cmid = midpos(cell)
+      -- Connect up corridors
+      for n,b in ipairs(cell.borders) do
+        if b.len>3 and (b.with.tile=="room" or b.with.tile=="corridor") then
+          -- Choose the origin for the corridor
+          b.pos = b.inverse.pos or midpos(b)
+          -- Might inherit pos from the opposite border
+          local pos = b.pos
+          -- But make sure we use the right x or y coord depending on the border orientation
+          if b.x1==b.x2 then pos.x = b.x1
+          else pos.y = b.y1 end
+
+          -- We'll draw a right-angled line from here to cpos. The first part of the line
+          -- has to go in the direction indicated by d.dir.
+          local bendpos = (b.dir % 2 == 0) and { x = pos.x, y = cmid.y } or { x = cmid.x, y = pos.y }
+          fill_area{x1=pos.x, y1=pos.y, x2=bendpos.x, y2=bendpos.y, fill='.' }
+          fill_area{x1=bendpos.x, y1=bendpos.y, x2=cmid.x, y2=cmid.y, fill='.' }
+
+          -- If connected to a room, create a door there
+          if b.with.tile == "room" then
+            mapgrd[pos.x][pos.y] = "+"
+          end
+        end
+      end
+    end
+  end
 
 }}
 MAP
