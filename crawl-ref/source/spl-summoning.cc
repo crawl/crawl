@@ -2857,7 +2857,7 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
     int hd = div_rand_round(pow, 10);
 
     mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
-                                  3, SPELL_SUMMON_SMALL_MAMMALS,
+                                  3, SPELL_FULMINANT_PRISM,
                                   where, MHITYOU, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
