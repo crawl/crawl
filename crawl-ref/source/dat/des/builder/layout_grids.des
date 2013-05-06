@@ -7,6 +7,7 @@
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/hyper.lua")
 : require("dlua/layout/omnigrid.lua")
+: require("dlua/layout/vector.lua")
 
 {{
 
@@ -194,9 +195,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
     subdivide_initial_chance = 100,
     subdivide_level_multiplier = 1,
     minimum_size_x = size * 2,
-    minimum_size_y = you.in_branch("dis")
-                       and size * crawl.random_range(3,5)
-                       or size * crawl.random_range(4,6),
+    minimum_size_y = size * crawl.random_range(4,6),
   }
 
   local min_fill = 40 + size * 10
@@ -363,10 +362,10 @@ TAGS: overwritable layout allow_dup unrand
 
 # Builds a complex maze by starting off with a subdivided grid then iteratively linking
 # up rooms until all original cells are connected.
-# TODO: Needs per-branch variations.
+# TODO: Fortify edges; randomise door positions; something unique in Pan; maybe an Elf version
 NAME:   layout_grid_maze
-DEPTH:  D:5-, Lair, Dis:1-6, Pan
-WEIGHT: 5, 20 (Dis), 10 (Pan)
+DEPTH:  D:8-, Lair, Tar, Pan
+WEIGHT: 5, 50(Tar), 10 (Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -379,6 +378,13 @@ TAGS: overwritable layout allow_dup unrand
   local thin = crawl.one_chance_in(3)       -- Use thin or thick walls?
   local detree = crawl.x_chance_in_y(9,10)  -- Cut out more walls to make a less tree-like layout
   local doors = crawl.x_chance_in_y(2,3)    -- Create doors sometimes instead of just holes in walls
+  local fortify = you.branch() == "Tar"     -- Add wall crennelations?
+
+  if you.branch() == "Lair" or you.branch() == "Snake" then
+    thin = false
+  elseif you.branch() == "D" then
+    thin = true
+  end
 
   local grid_opts = {
     guaranteed_divides = 5,
@@ -386,6 +392,10 @@ TAGS: overwritable layout allow_dup unrand
     subdivide_level_multiplier = util.random_range_real(.97,.99),
     minimum_size = crawl.random_range(thin and 3 or 4,thin and 5 or 6)
   }
+
+  if you.branch() == "Dis" then
+    grid_opts.minimum_size = math.max(grid_opts.minimum_size, thin and 4 or 5)
+  end
 
   local bounds = padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
@@ -400,6 +410,34 @@ TAGS: overwritable layout allow_dup unrand
                                 border_weight = function(b) return b.style == nil and b.len >= minbord and 10 or 0 end,
                                 min_groups = -1, style_func = fstyle }
   end
+
+  local function maybefortify(b)
+    -- Fortify the wall
+    if fortify and b.len>=3 then
+      -- TODO: This algorithm (decorating procedurally along a wall) has more potential use
+      local horiz = (b.y1==b.y2)
+      local norm = vector.normals[b.dir+1]
+      -- Choose a random end of the wall to start from
+      local from_end = crawl.coinflip()
+      -- Offset by the negative normal to move to a grid inside the room.
+      local end1 = { x = b.x1 - norm.x, y = b.y1 - norm.y }
+      local end2 = { x = b.x2 - norm.x, y = b.y2 - norm.y }
+      if from_end then end1,end2 = end2,end1 end
+      local bail = false
+      local draw = true
+      while not bail do
+        if horiz then end1.x = end1.x + (from_end and -1 or 1)
+        else end1.y = end1.y + (from_end and -1 or 1) end
+        if (end1.x==end2.x and end1.y==end2.y) then
+          bail = true
+        elseif draw and (b.mid == nil or (end1.x ~= b.mid.x and end1.y ~= b.mid.y)) then
+          mapgrd[end1.x][end1.y] = "x"
+        end
+        draw = not draw
+      end
+    end
+  end
+
   -- Set up the render functions
   local function renderborderthin(cell,b)
     -- Only fill bottom and right borders. These borders won't
@@ -415,10 +453,18 @@ TAGS: overwritable layout allow_dup unrand
           fill_area { x1 = b.x1, y1 = b.y1, x2 = b.x2, y2 = b.y2, fill = 'x' }
         end
         -- Maybe paint a door
+        b.mid = { x = math.floor((b.x1+b.x2)/2), y = math.floor((b.y1+b.y2)/2) }
         if b.style == "door" then
-          mapgrd[crawl.div_rand_round(b.x1+b.x2,2)][crawl.div_rand_round(b.y1+b.y2,2)] = '+'
+          mapgrd[b.mid.x][b.mid.y] = '+'
         end
+        maybefortify(b)
       end
+    elseif b.style ~= "open" then
+      -- Fortify non-rendered wall side
+      local norm = vector.normals[b.dir+1]
+      local b2 = {x1=b.x1+norm.x,x2=b.x2+norm.x,y1=b.y1+norm.y,y2=b.y2+norm.y,dir=b.dir,mid=b.mid,len=b.len}
+      b2.mid = { x = math.floor((b2.x1+b2.x2)/2), y = math.floor((b2.y1+b2.y2)/2) }
+      maybefortify(b2)
     end
   end
 
@@ -433,8 +479,10 @@ TAGS: overwritable layout allow_dup unrand
         else
           b.door_side = not b.inverse.door_side
         end
-        mapgrd[math.floor((b.x1+b.x2)/2)][math.floor((b.y1+b.y2)/2)] = b.door_side and '+' or '.'
+        b.mid = { x = math.floor((b.x1+b.x2)/2), y = math.floor((b.y1+b.y2)/2) }
+        mapgrd[b.mid.x][b.mid.y] = b.door_side and '+' or '.'
       end
+      maybefortify(b)
     end
   end
 
