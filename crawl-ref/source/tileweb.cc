@@ -164,7 +164,7 @@ void TilesFramework::write_message(const char *format, ...)
 
     va_list  argp;
     va_start(argp, format);
-    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) < 0) 
+    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) < 0)
         die("Webtiles message format error! (%s)", format);
     else if (len >= (int)sizeof(buf))
         die("Webtiles message too long! (%d)", len);
