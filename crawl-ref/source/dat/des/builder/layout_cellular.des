@@ -6,6 +6,33 @@
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/omnigrid.lua")
 
+{{
+  -- Counts adjacent tiled groups.
+  -- TODO: Add a way to track the data we need during merging, it gets fairly
+  -- expensive to compute this data every pass for a fine grid
+  function count_adjacent(cell,count_bord,count_diag,tile)
+    -- The rules: we need to know how many wall groups this cell
+    -- borders, and how many wall cells per group are bordered.
+    local gcount = 0
+    local track = {}
+    local lists = {}
+    if count_bord then table.insert(lists,cell.borders) end
+    if count_diag then table.insert(lists,cell.diagonals) end
+    for n,list in ipairs(lists) do
+      for i,b in ipairs(list) do
+        if tile == nil and b.with.tile ~= nil or tile ~= nil and b.with.tile == tile then
+          if track[b.with.group] == nil then
+            track[b.with.group] = 0
+            gcount = gcount + 1
+          end
+          track[b.with.group] = track[b.with.group] + 1
+        end
+      end
+    end
+    return gcount,track
+  end
+}}
+
 # Acts like a cellular automaton, growing wall shapes in an irregular cell grid
 # from starting ceeds according to different sets of rules.
 # TODO: With the current rules and parameters it looks most like an iron maze for
@@ -36,32 +63,6 @@ TAGS: overwritable layout allow_dup unrand
   local bounds = padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
-  -- Counts adjacent wall cells.
-  -- TODO: Convert this into a handy library function. Actually the function is probably
-  -- a waste and quite inoptimal; should just keep this tracking data stored as cells are
-  -- tiled and merged.
-  local function count_adjacent(cell,count_bord,count_diag)
-    -- The rules: we need to know how many wall groups this cell
-    -- borders, and how many wall cells per group are bordered.
-    local track = {}
-    local gcount = 0
-    local lists = {}
-    if count_bord then table.insert(lists,cell.borders) end
-    if count_diag then table.insert(lists,cell.diagonals) end
-    for n,list in ipairs(lists) do
-      for i,b in ipairs(list) do
-        if b.with.tile == "wall" then
-          if track[b.with.group] == nil then
-            track[b.with.group] = 0
-            gcount = gcount + 1
-          end
-          track[b.with.group] = track[b.with.group] + 1
-        end
-      end
-    end
-    return gcount,track
-  end
-
   -- Begin with a number of "seed" cells that will grow to form structures
   local seeds = crawl.random_range(1,20)
   groups = omnigrid.tilepick { grid = grid, max_iterations = seeds, tiles = { "wall" },
@@ -83,7 +84,7 @@ TAGS: overwritable layout allow_dup unrand
                       cell_weight = function(cell)
                         -- Ignore used cells
                         if cell.tile ~= nil then return 0 end
-                        -- Some counting: we want
+                        -- Some counting: firstly how many total cells are bordering and diagonal
                         local gcount,track = count_adjacent(cell, true, true)
                         -- An edge cell that doesn't border any groups has a *small* chance
                         if gcount == 0 and #(cell.edges) > 0 then return 2 end
@@ -92,7 +93,7 @@ TAGS: overwritable layout allow_dup unrand
                         -- And in this case it can't be an edge
                         -- TODO: Allow edge cells to join to other edge cells
                         if #(cell.edges) > 0 then return 0 end
-                        -- Check we have exactly one actually bordering group
+                        -- Check we have exactly one actually adjacent group
                         local acount,atrack = count_adjacent(cell, true, false)
                         if acount ~= 1 then return 0 end
                         -- Return the first, since there's only 1
@@ -116,6 +117,131 @@ TAGS: overwritable layout allow_dup unrand
   for i,cell in ipairs(grid) do
     if cell.tile ~= "wall" then
       fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
+    end
+  end
+
+  -- This shouldn't be needed if everything is working properly
+  zonify.map_fill_zones(_G, 1, 'x')
+
+}}
+MAP
+ENDMAP
+
+# A bit similar to stronghold but better architecture.
+NAME:   layout_gridville
+DEPTH:  D:15-, Snake, Dis:1-6, Pan
+WEIGHT: 10, 20(Dis)
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+  if is_validating() then return; end
+
+  -- TODO: Less doors, random door positions, add windows, and for
+  -- non-open version start with more areas then link them up. For
+  -- open version de-square the map border.
+
+  layout_type "city"
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  local open = crawl.coinflip()
+
+  local min = crawl.random_range(3,5)
+  local max = crawl.random_range(min,8)
+  local grid_opts = {
+    minimum_size = min,
+    maximum_size = max,
+    subdivide_initial_chance = 90,
+    subdivide_level_multiplier = .9,
+  }
+
+  local bounds = padded_bounds(2,8)
+  local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+
+  -- Seed a number of buildings
+  local seeds = open and crawl.random_range(2,8) or 1
+  groups = omnigrid.tilepick { grid = grid, max_iterations = seeds, tiles = { "city" },
+                               -- Weight cells so we don't pick any that already border something,
+                               -- not even the edge
+                               cell_weight = function(cell)
+                                 if cell.tile ~= nil then return 0 end
+                                 if #(cell.edges) > 0 then return 0 end
+                                 local gcount,track = count_adjacent(cell, true, true)
+                                 if gcount > 0 then return 0 end
+                                 return 10
+                               end }
+
+  local method = 2 -- crawl.random2(3)
+
+  -- Now place more tiles adjacent to these ones
+  omnigrid.tilepick { grid = grid, groups = groups, tiles = { "city" },
+                      max_iterations = 500,
+                      cell_weight = function(cell)
+                        -- Ignore used cells and edge cells
+                        if cell.tile ~= nil or #(cell.edges) > 0 then return 0 end
+                        -- Count neighbouring cities
+                        local gcount,track = count_adjacent(cell, true, true, "city")
+                        -- We want exactly one bordering group
+                        if gcount ~= 1 then return 0 end
+                        -- And it has to actually be adjacent
+                        local acount,atrack = count_adjacent(cell, true, false)
+                        if acount ~= 1 then return 0 end
+                        -- Return the first, since there's only 1
+                        for g,c in pairs(atrack) do
+                          if method == 0 then
+                            -- Don't create blocks at all
+                            return c == 1 and 10 or 0
+                          elseif method == 1 then
+                            -- Prefer cells with less wall borders, to encourage spreading
+                            return math.ceil(100/c)
+                          elseif method == 2 then
+                            -- Allow fully blobby areas
+                            return 10
+                          end
+                        end
+                      end }
+
+  local function midpos(b)
+    return { x = crawl.div_rand_round(b.x2+b.x1,2), y = crawl.div_rand_round(b.y2+b.y1,2) }
+  end
+
+  -- Render all the cells
+  for i,cell in ipairs(grid) do
+    if cell.tile == nil then -- "floor" then
+      if open then
+        fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
+      end
+    elseif cell.tile == "city" then
+      -- Start with a hollow box
+      fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='x' }
+      fill_area{x1=cell.x1+1, y1=cell.y1+1, x2=cell.x2-1, y2=cell.y2-1, fill='.' }
+      -- Loop through borders and carve them
+      for i,b in ipairs(cell.borders) do
+        local pos = midpos(b)
+        if b.len >= 3 then
+          if cell.group == b.with.group then
+            -- Internal door. Decide which side it's going to go
+            if b.has_door == nil then
+              if crawl.x_chance_in_y(2,3) then
+                b.has_door,b.inverse.has_door = false
+              else
+                b.has_door = crawl.coinflip()
+                b.inverse.has_door = not b.has_door
+              end
+            end
+            -- Draw door
+            if b.has_door then mapgrd[pos.x][pos.y] = '+'
+            -- Or erase the wall
+            elseif b.x1==b.x2 then fill_area{x1 = b.x1, y1 = b.y1 + 1, x2 = b.x2, y2 = b.y2 - 1, fill='.' }
+            else fill_area{x1 = b.x1 + 1, y1 = b.y1, x2 = b.x2 - 1, y2 = b.y2, fill='.' } end
+          else
+            -- Door to outside
+            if open then
+              mapgrd[pos.x][pos.y] = '+'
+            end
+          end
+        end
+      end
     end
   end
 
