@@ -4744,7 +4744,7 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
-    case SPELL_SUMMON_SMALL_MAMMALS:     return TILEG_SUMMON_SMALL_MAMMALS;
+    case SPELL_SUMMON_SMALL_MAMMAL:      return TILEG_SUMMON_SMALL_MAMMAL;
     case SPELL_RECALL:                   return TILEG_RECALL;
     case SPELL_CALL_CANINE_FAMILIAR:     return TILEG_CALL_CANINE_FAMILIAR;
     case SPELL_CALL_IMP:                 return TILEG_CALL_IMP;

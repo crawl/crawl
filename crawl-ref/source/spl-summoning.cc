@@ -83,35 +83,26 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_summon_small_mammals(int pow, god_type god, bool fail)
+spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
     fail_check();
     bool success = false;
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    int count = (pow == 25) ? 2 : 1;
+    if (x_chance_in_y(10, pow + 1))
+        mon = coinflip() ? MONS_BAT : MONS_RAT;
+    else
+        mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
 
-    for (int i = 0; i < count; ++i)
+    if (!create_monster(
+            mgen_data(mon, BEH_FRIENDLY, &you,
+                      3, SPELL_SUMMON_SMALL_MAMMAL,
+                      you.pos(), MHITYOU,
+                      0, god)))
     {
-        if (x_chance_in_y(10, pow + 1))
-            mon = coinflip() ? MONS_BAT : MONS_RAT;
-        else
-            mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
-
-        if (create_monster(
-                mgen_data(mon, BEH_FRIENDLY, &you,
-                          3, SPELL_SUMMON_SMALL_MAMMALS,
-                          you.pos(), MHITYOU,
-                          0, god)))
-        {
-            success = true;
-        }
-
-    }
-
-    if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     return SPRET_SUCCESS;
 }

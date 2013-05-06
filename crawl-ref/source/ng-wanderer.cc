@@ -592,7 +592,7 @@ static void _give_wanderer_spell(skill_type skill)
         break;
 
     case SK_SUMMONINGS:
-        spell = SPELL_SUMMON_SMALL_MAMMALS;
+        spell = SPELL_SUMMON_SMALL_MAMMAL;
         break;
 
     case SK_NECROMANCY:

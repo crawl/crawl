@@ -752,9 +752,9 @@ Summon Scorpions spell
 This spell summons one or more scorpions (some of which may not be bound to the
 caster's service).
 %%%%
-Summon Small Mammals spell
+Summon Small Mammal spell
 
-This spell summons one or two small creatures to the caster's aid.
+This spell summons a small creature to the caster's aid.
 %%%%
 Summon Swarm spell
 
