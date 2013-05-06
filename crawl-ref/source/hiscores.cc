@@ -2183,7 +2183,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_TARGETTING:
-        desc += terse? "shot self" : "Killed themself with bad targetting";
+        if (terse)
+            desc += "shot self";
+        else
+        {
+            desc += "Killed themself with ";
+            if (auxkilldata.empty())
+                desc += "bad targetting";
+            else
+                desc += "a badly aimed " + auxkilldata;
+        }
         needs_damage = true;
         break;
 
