@@ -1882,7 +1882,11 @@ bool formatted_scroller::jump_to(int i)
 
 #ifdef USE_TILE_WEB
     webtiles_update_section_boundaries();
-    webtiles_write_menu(true);
+    if (tiles.is_in_menu(this))
+    {
+        webtiles_write_menu(true);
+        tiles.finish_message();
+    }
 #endif
 
     return true;

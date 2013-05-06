@@ -125,6 +125,7 @@ public:
     void push_menu(Menu* m);
     void push_crt_menu(string tag);
     bool is_in_crt_menu();
+    bool is_in_menu(Menu* m);
     void pop_menu();
     void close_all_menus();
 
