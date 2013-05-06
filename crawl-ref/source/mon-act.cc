@@ -1313,6 +1313,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     bolt theBeam = mons_spell_beam(mons, mzap, power, check_validity);
     beem         = _generate_item_beem(beem, theBeam, mons);
+    beem.aux_source =
+        rod.name(DESC_QUALNAME, false, true, false, false);
 
     if (mons->confused())
     {
