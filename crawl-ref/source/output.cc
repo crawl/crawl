@@ -2136,13 +2136,9 @@ static vector<formatted_string> _get_overview_resistances(
     }
     cols.add_formatted(1, buf, false);
 
-    int rctel = player_control_teleport();
-    rctel = allow_control_teleport(true) ? rctel : -1;
     const int rflyi = you.airborne();
     snprintf(buf, sizeof buf,
-             "%sCtrl.Telep.: %s\n"
              "%sFlight     : %s\n",
-             _determine_colour_string(rctel, 1), _itosym1(rctel),
              _determine_colour_string(rflyi, 1), _itosym1(rflyi));
     cols.add_formatted(1, buf, false);
 
