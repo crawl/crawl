@@ -1810,8 +1810,9 @@ monster_type pick_local_zombifiable_monster(level_id place,
     }
     else
     {
-        // all zombies are OOD by 4
-        place.depth += 4;
+        // Zombies tend to be weaker than their normal counterparts;
+        // thus, make them OOD proportional to the current dungeon depth.
+        place.depth += 1 + div_rand_round(place.absdepth(), 5);
     }
 
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
