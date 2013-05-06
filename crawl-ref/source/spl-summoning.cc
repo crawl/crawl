@@ -86,7 +86,6 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
 spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
     fail_check();
-    bool success = false;
 
     monster_type mon = MONS_PROGRAM_BUG;
 
