@@ -200,19 +200,17 @@ ENDMAP
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen
 ORIENT: float
-KMONS:  1 = lava worm / lava snake / lava fish
-KFEAT:  1 = l
-KMONS:  2 = fire drake
+KMONS:  1 = fire drake
 SUBST:  L = l.
 KFEAT:  O = enter_lair
 MAP
 .........
-...1Lll..
+...lLll..
 ..lllllL.
-..ll2Ll1.
+..ll1Lll.
 .LlLOLll.
 .ll.Llll.
-.l.1lll..
+.l.llll..
 ..lllL...
 .........
 ENDMAP
