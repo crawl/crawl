@@ -1026,7 +1026,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     switch (spell_cast)
     {
     case SPELL_STICKS_TO_SNAKES:
-    case SPELL_SUMMON_SMALL_MAMMALS:
+    case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_VAMPIRIC_DRAINING:
     case SPELL_MIRROR_DAMAGE:
     case SPELL_MAJOR_HEALING:
@@ -3468,7 +3468,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #if TAG_MAJOR_VERSION == 34
     case SPELL_VAMPIRE_SUMMON:
 #endif
-    case SPELL_SUMMON_SMALL_MAMMALS:
+    case SPELL_SUMMON_SMALL_MAMMAL:
         sumcount2 = 1 + random2(3);
 
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)

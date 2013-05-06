@@ -1133,7 +1133,7 @@ static void _give_basic_spells(job_type which_job)
         which_spell = SPELL_STING;
         break;
     case JOB_SUMMONER:
-        which_spell = SPELL_SUMMON_SMALL_MAMMALS;
+        which_spell = SPELL_SUMMON_SMALL_MAMMAL;
         break;
     case JOB_NECROMANCER:
         which_spell = SPELL_PAIN;

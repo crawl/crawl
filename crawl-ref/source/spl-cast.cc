@@ -1415,8 +1415,8 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_BUTTERFLIES:
         return cast_summon_butterflies(powc, god, fail);
 
-    case SPELL_SUMMON_SMALL_MAMMALS:
-        return cast_summon_small_mammals(powc, god, fail);
+    case SPELL_SUMMON_SMALL_MAMMAL:
+        return cast_summon_small_mammal(powc, god, fail);
 
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
