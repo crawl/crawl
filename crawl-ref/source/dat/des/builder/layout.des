@@ -384,7 +384,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 1-, !Dis
+DEPTH: Pan, 1-, !Dis, !Tar
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -591,7 +591,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 1-, !Dis
+DEPTH: Pan, 1-, !Dis, !Tar
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -709,7 +709,7 @@ TAGS: overwritable layout allow_dup unrand
 ##############################################################
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 2-, !Pan, !Zot, !Dis, !Geh
+DEPTH: 2-, !Pan, !Zot, !Dis, !Geh, !Tar
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand
@@ -1478,7 +1478,7 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: 1-, !Pan, !Dis
+DEPTH: 1-, !Pan, !Dis, !Tar
 WEIGHT: 90, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -1501,7 +1501,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Pan, 4-, !Zot, !Geh
+DEPTH: Pan, 4-, !Zot, !Geh, !Tar
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand

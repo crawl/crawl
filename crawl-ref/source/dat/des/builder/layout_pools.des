@@ -151,7 +151,7 @@ ENDMAP
 #
 NAME: layout_honeycomb
 DEPTH: D:12-, Snake:1-4, Tar
-WEIGHT: 10
+WEIGHT: 10, 80(Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{

@@ -255,7 +255,7 @@ ENDMAP
 # in the centre and spreading out in a branching way, like particle diffusion.
 NAME:   layout_catacombs
 DEPTH:  Crypt,Tar
-WEIGHT: 50, 100 (Tar)
+WEIGHT: 50, 50 (Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -437,7 +437,7 @@ ENDMAP
 # it applies a polar transform producing something sometimes like a spiderweb.
 NAME:   layout_cathedral_of_symmetry
 DEPTH:  Zot,Tar
-WEIGHT: 20, 100(Tar)
+WEIGHT: 20, 50(Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{

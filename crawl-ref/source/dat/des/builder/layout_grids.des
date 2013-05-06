@@ -365,7 +365,7 @@ TAGS: overwritable layout allow_dup unrand
 # TODO: Fortify edges; randomise door positions; something unique in Pan; maybe an Elf version
 NAME:   layout_grid_maze
 DEPTH:  D:8-, Lair, Tar, Pan
-WEIGHT: 5, 50(Tar), 10 (Pan)
+WEIGHT: 5, 80(Tar), 10 (Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
