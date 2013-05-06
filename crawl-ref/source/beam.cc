@@ -1657,7 +1657,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (mons->observable())
                 pbolt.obvious_effect = true;
 
-            mons->drain_exp(pbolt.agent());
+            mons->drain_exp(pbolt.agent(), pbolt.aux_source.c_str());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_NECROMANCY, 2, pbolt.effect_known);
@@ -3700,7 +3700,7 @@ void bolt::affect_player()
     {
         if (!player_res_sticky_flame())
         {
-            napalm_player(random2avg(7, 3) + 1);
+            napalm_player(random2avg(7, 3) + 1, get_source_name(), aux_source);
             was_affected = true;
         }
     }

@@ -419,7 +419,8 @@ public:
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    bool drain_exp(actor *, bool quiet = false, int pow = 3);
+    bool drain_exp(actor *, const char* aux = NULL, bool quiet = false,
+                   int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,

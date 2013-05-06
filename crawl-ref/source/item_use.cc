@@ -2347,7 +2347,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_DRAINING:
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
-        drain_exp();
+        drain_exp(true, NON_MONSTER, "draining affixation");
         break;
 
     case SPWPN_VENOM:

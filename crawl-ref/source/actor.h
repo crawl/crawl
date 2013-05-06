@@ -199,7 +199,8 @@ public:
     virtual bool can_bleed(bool allow_tran = true) const = 0;
     virtual bool mutate(const string &reason) = 0;
     virtual bool polymorph(int pow) = 0;
-    virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 3) = 0;
+    virtual bool drain_exp(actor *agent, const char *aux = NULL,
+                           bool quiet = false, int pow = 3) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,
                      bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,

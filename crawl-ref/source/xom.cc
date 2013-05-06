@@ -3251,6 +3251,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     // Drains stats or experience, or torments the player.
     const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
+    const string aux = "the vengeance of Xom";
 
     if (coinflip())
     {
@@ -3268,7 +3269,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
             return XOM_DID_NOTHING;
 
         god_speaks(GOD_XOM, speech.c_str());
-        lose_stat(stat, loss, true, "the vengeance of Xom");
+        lose_stat(stat, loss, true, aux.c_str());
 
         // Take a note.
         const char* sstr[3] = { "Str", "Int", "Dex" };
@@ -3289,11 +3290,11 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp();
+            drain_exp(true, NON_MONSTER, aux.c_str());
             if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp();
+                drain_exp(true, NON_MONSTER, aux.c_str());
             if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp();
+                drain_exp(true, NON_MONSTER, aux.c_str());
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
