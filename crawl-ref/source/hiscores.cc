@@ -2259,12 +2259,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_ACID:
         if (terse)
             desc += "acid";
-        else
+        else if (!death_source_desc().empty())
         {
-            desc += "Splashed with acid";
-            if (!death_source_desc().empty())
-                desc += " by " + death_source_desc();
+            desc += "Splashed by "
+                    + apostrophise(death_source_desc())
+                    + " acid";
         }
+        else
+            desc += "Splashed with acid";
         needs_damage = true;
         break;
 
