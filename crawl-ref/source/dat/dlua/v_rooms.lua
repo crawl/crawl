@@ -174,7 +174,7 @@ local function pick_room(e, options)
       -- if those walls are connected, i.e. border onto a passable square in such a way that they can be used as a door.
       room.walls = { }
       room.mask_grid = { }
-      local has_exits = false
+      local has_exits = room.has_orient and true or false
       for m = -1, room.size.y, 1 do
         room.mask_grid[m] = {}
         for n = -1, room.size.x, 1 do
@@ -239,7 +239,7 @@ local function pick_room(e, options)
           if wall_mask.connected then
             local cell = wall_mask.exit_cell
             local is_open = true
-            if cell.space or (has_exits and not cell.exit) then
+            if cell.space or (has_exits and not cell.exit and not (room.has_orient and room.tags[wall_mask.dir])) then
               is_open = false
             end
             wall_mask.cell.open = is_open
