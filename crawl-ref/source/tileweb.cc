@@ -454,7 +454,12 @@ void TilesFramework::push_crt_menu(string tag)
 
 bool TilesFramework::is_in_crt_menu()
 {
-    return !m_menu_stack.empty() && m_menu_stack.back().menu == NULL;
+    return is_in_menu(NULL);
+}
+
+bool TilesFramework::is_in_menu(Menu* m)
+{
+    return !m_menu_stack.empty() && m_menu_stack.back().menu == m;
 }
 
 void TilesFramework::pop_menu()
