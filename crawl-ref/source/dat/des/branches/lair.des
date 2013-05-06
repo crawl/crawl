@@ -65,7 +65,7 @@ ENDMAP
 #
 NAME:   david_lair_shrubbed
 TAGS:   lair_entry
-MONS:   plant, fire drake
+MONS:   plant, komodo dragon
 SUBST:  ' = 1.
 ORIENT: float
 KFEAT:  O = enter_lair
