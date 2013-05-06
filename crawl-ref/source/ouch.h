@@ -62,8 +62,8 @@ enum kill_method_type
 
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam = 0, bool doEffects = true);
-void splash_with_acid(int acid_strength, bool corrode_items = true,
-                      string hurt_msg = "");
+void splash_with_acid(int acid_strength, int death_source, 
+                      bool corrode_items = true, string hurt_msg = "");
 
 class actor;
 int actor_to_death_source(const actor* agent);

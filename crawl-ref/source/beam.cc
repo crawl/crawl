@@ -3707,7 +3707,7 @@ void bolt::affect_player()
 
     // Acid.
     if (flavour == BEAM_ACID)
-        splash_with_acid(5, affects_items);
+        splash_with_acid(5, beam_source, affects_items);
 
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
