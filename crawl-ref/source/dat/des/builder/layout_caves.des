@@ -12,7 +12,7 @@
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
 NAME:   layout_layer_cave
-DEPTH:  D:3-26,Lair,Snake
+DEPTH:  D:10-26,Lair,Snake
 WEIGHT: 15, 20(Lair)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -100,7 +100,7 @@ TAGS: overwritable layout allow_dup unrand
 #       * Snake should have domain distortion every time (use the one from Halls)
 #       * It should be possible to fold most of these effects into layer_cave
 NAME:   layout_cave_shapes
-DEPTH:  D:5-25,Lair,Snake,Tar
+DEPTH:  D:15-25,Lair,Snake
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -260,7 +260,7 @@ TAGS: overwritable layout allow_dup unrand
 # ... it just looks more cave-like.
 NAME:   layout_waterfall
 DEPTH:  D:5-25,Tar
-WEIGHT: 5, 100(Tar)
+WEIGHT: 5, 50(Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
