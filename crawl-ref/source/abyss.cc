@@ -1132,7 +1132,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
 static int _abyssal_stair_chance()
 {
-    return 3500 - (200 * you.depth / 3);
+    return (you.char_direction == GDT_GAME_START ? 0 : 3500 - (200 * you.depth / 3));
 }
 
 static void _nuke_all_terrain(bool vaults)
