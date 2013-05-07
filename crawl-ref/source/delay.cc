@@ -1397,7 +1397,7 @@ static bool _auto_eat(delay_type type)
 {
     return Options.auto_eat_chunks
            && (!you.gourmand()
-               || you.duration[DUR_GOURMAND] >= GOURMAND_MAX
+               || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
                || you.hunger_state < HS_SATIATED)
            && (type == DELAY_REST || type == DELAY_TRAVEL);
 }
