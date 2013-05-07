@@ -259,7 +259,7 @@ TAGS: overwritable layout allow_dup unrand
 # produces the same kind of symmetries. It could be an alternate algorithm there but
 # ... it just looks more cave-like.
 NAME:   layout_waterfall
-DEPTH:  D:5-25,Tar
+DEPTH:  D:10-25,Tar
 WEIGHT: 5, 50(Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
