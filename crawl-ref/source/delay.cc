@@ -1393,12 +1393,13 @@ static command_type _get_running_command()
     return direction_to_command(you.running.pos.x, you.running.pos.y);
 }
 
-static bool _auto_eat()
+static bool _auto_eat(delay_type type)
 {
     return Options.auto_eat_chunks
            && (!you.gourmand()
                || you.duration[DUR_GOURMAND] >= GOURMAND_MAX
-               || you.hunger_state < HS_SATIATED);
+               || you.hunger_state < HS_SATIATED)
+           && (type == DELAY_REST || type == DELAY_TRAVEL);
 }
 
 static void _handle_run_delays(const delay_queue_item &delay)
@@ -1423,7 +1424,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
         stop_running();
     else
     {
-        if (_auto_eat())
+        if (_auto_eat(delay.type))
         {
             const interrupt_block block_interrupts;
             if (prompt_eat_chunks(true) == 1)
@@ -1836,8 +1837,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     }
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
-    if (delay_is_run(delay) && ai == AI_HUNGRY
-        && _auto_eat() && prompt_eat_chunks(true) == 1)
+    if (ai == AI_HUNGRY && _auto_eat(delay) && prompt_eat_chunks(true) == 1)
     {
         return false;
     }
