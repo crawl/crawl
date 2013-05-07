@@ -1396,7 +1396,9 @@ static command_type _get_running_command()
 static bool _auto_eat()
 {
     return Options.auto_eat_chunks
-           && (!you.gourmand() || you.duration[DUR_GOURMAND] >= GOURMAND_MAX);
+           && (!you.gourmand()
+               || you.duration[DUR_GOURMAND] >= GOURMAND_MAX
+               || you.hunger_state < HS_SATIATED);
 }
 
 static void _handle_run_delays(const delay_queue_item &delay)
