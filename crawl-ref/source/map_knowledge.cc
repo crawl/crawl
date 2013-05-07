@@ -80,12 +80,11 @@ void clear_map(bool clear_items, bool clear_mons)
             cell.clear_item();
 
         if (clear_mons && !mons_class_is_stationary(cell.monster()))
-        {
             cell.clear_monster();
+
 #ifdef USE_TILE
-            tile_clear_monster(p);
+        tile_reset_fg(p);
 #endif
-        }
     }
 }
 

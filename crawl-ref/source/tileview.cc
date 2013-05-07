@@ -893,10 +893,10 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
-void tile_clear_monster(const coord_def &gc)
+void tile_reset_fg(const coord_def &gc)
 {
-    env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_bk_fg(gc), true);
-    tile_clear_map(gc);
+    tile_draw_map_cell(gc, true);
+    tiles.update_minimap(gc);
 }
 
 void tile_reset_feat(const coord_def &gc)

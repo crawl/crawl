@@ -4999,7 +4999,7 @@ void monster::check_redraw(const coord_def &old, bool clear_tiles) const
 #ifdef USE_TILE
             if (clear_tiles && !see_old)
             {
-                tile_clear_monster(old);
+                tile_reset_fg(old);
                 if (mons_is_feat_mimic(type))
                     tile_reset_feat(old);
             }
