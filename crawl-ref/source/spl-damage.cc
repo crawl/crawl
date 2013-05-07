@@ -365,6 +365,7 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
     flash_view(GREEN, &hitfunc);
     more();
     mesclr();
+    flash_view(0);
 
     // Determine whether the player is hit by the radiance. {dlb}
     if (you.duration[DUR_INVIS])
@@ -458,6 +459,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
     flash_view(LIGHTCYAN, &hitfunc);
     more();
     mesclr();
+    flash_view(0);
 
     // Handle the player.
     const dice_def dam_dice(3, 5 + pow / 10);
