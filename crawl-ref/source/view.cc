@@ -753,6 +753,7 @@ void flash_view_delay(colour_t colour, int flash_delay, targetter *where)
     }
 
     delay(flash_delay);
+    flash_view(0);
 }
 
 static void _debug_pane_bounds()

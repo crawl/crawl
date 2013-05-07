@@ -743,6 +743,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         flash_view(flash_colour, &hitfunc);
         more();
         mesclr();
+        flash_view(0);
     }
     else if (actual)
     {
