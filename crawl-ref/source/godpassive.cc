@@ -177,7 +177,7 @@ void ash_check_bondage(bool msg)
         if (i == EQ_WEAPON)
             s = ET_WEAPON;
         else if (i == EQ_SHIELD)
-            s= ET_SHIELD;
+            s = ET_SHIELD;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
         // Octopodes don't count these slots:
