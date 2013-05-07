@@ -22,6 +22,7 @@
 #include "godconduct.h"
 #include "los.h"
 #include "losglobal.h"
+#include "mapmark.h"
 #include "melee_attack.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1432,4 +1433,75 @@ void remove_tornado_clouds(mid_t whose)
     for (int i = 0; i < MAX_CLOUDS; i++)
         if (env.cloud[i].type == CLOUD_TORNADO && env.cloud[i].source == whose)
             delete_cloud(i);
+}
+
+static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
+                          int &remaining, int ratio = 10,
+                          mid_t agent_mid = NON_ENTITY, kill_category kcat = KC_OTHER)
+{
+    bolt beam;
+    beam.target = pos;
+    beam.use_target_as_pos = true;
+    explosion_map exp_map;
+    exp_map.init(INT_MAX);
+    beam.determine_affected_cells(exp_map, coord_def(), 0,
+                                  radius, true, true);
+
+    coord_def centre(9,9);
+    for (distance_iterator di(pos, true, false); di; ++di)
+    {
+        if (di.radius() > radius)
+            return;
+
+        if ((exp_map(*di - pos + centre) < INT_MAX) && env.cgrid(*di) == EMPTY_CLOUD
+            && (di.radius() < radius || x_chance_in_y(ratio, 100)))
+        {
+            place_cloud(type, *di, pow + random2(pow), NULL);
+            --remaining;
+
+            // Setting this way since the agent of the cloud may be dead before
+            // cloud is placed, so no agent exists to pass to place_cloud (though
+            // proper blame should still be assigned)
+            if (env.cgrid(*di) != EMPTY_CLOUD)
+            {
+                env.cloud[env.cgrid(*di)].source = agent_mid;
+                env.cloud[env.cgrid(*di)].whose = kcat;
+            }
+        }
+
+        // Placed all clouds for this spreader
+        if (remaining == 0)
+            return;
+    }
+}
+
+void run_cloud_spreaders(int dur)
+{
+    if (!dur)
+        return;
+
+    vector<map_marker*> markers = env.markers.get_all(MAT_CLOUD_SPREADER);
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_cloud_spreader_marker *mark = dynamic_cast<map_cloud_spreader_marker*>(markers[i]);
+
+        mark->speed_increment += dur;
+        int rad = max(1, min(mark->speed_increment / mark->speed, mark->max_rad));
+        int ratio = (mark->speed_increment - (rad * mark->speed)) * 100 / mark->speed;
+
+        if (ratio == 0)
+        {
+            rad--;
+            ratio = 100;
+        }
+
+        _spread_cloud(mark->pos, mark->ctype, rad, mark->duration,
+                        mark->remaining, ratio, mark->agent_mid, mark->kcat);
+        if ((rad == mark->max_rad && ratio >= 100) || mark->remaining == 0)
+        {
+            env.markers.remove(mark);
+            break;
+        }
+    }
 }

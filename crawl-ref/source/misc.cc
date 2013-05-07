@@ -2210,6 +2210,7 @@ void run_environment_effects()
     timeout_malign_gateways(you.time_taken);
     timeout_phoenix_markers(you.time_taken);
     timeout_terrain_changes(you.time_taken);
+    run_cloud_spreaders(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)

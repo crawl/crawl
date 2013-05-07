@@ -212,6 +212,33 @@ public:
     terrain_change_type  change_type;
 };
 
+class map_cloud_spreader_marker : public map_marker
+{
+public:
+    map_cloud_spreader_marker(const coord_def &pos = coord_def(0, 0),
+                              cloud_type type = CLOUD_NONE,
+                              int speed = 10, int amount = 35,
+                              int max_radius = LOS_RADIUS, int dur = 10,
+                              actor* agent = NULL);
+
+    void write(writer &) const;
+    void read(reader &);
+    map_marker *clone() const;
+    string debug_describe() const;
+
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    cloud_type ctype;
+    int speed;
+    int remaining;
+    int max_rad;
+    int duration;
+    int speed_increment;
+    mid_t agent_mid;
+    kill_category kcat;
+};
+
 // A marker powered by Lua.
 class map_lua_marker : public map_marker, public dgn_event_listener
 {
