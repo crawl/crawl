@@ -1486,7 +1486,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // transformations:
         switch (you.form)
         {
-        case TRAN_FUNGUS:
         case TRAN_TREE:
             if (you.religion == GOD_FEDHAS && !player_under_penance())
                 break;
