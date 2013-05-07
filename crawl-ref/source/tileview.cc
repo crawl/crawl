@@ -895,6 +895,8 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 
 void tile_reset_fg(const coord_def &gc)
 {
+    // remove autopickup cursor, it will be added back if necessary
+    env.tile_bk_bg(gc) &= ~TILE_FLAG_CURSOR3;
     tile_draw_map_cell(gc, true);
     tiles.update_minimap(gc);
 }
