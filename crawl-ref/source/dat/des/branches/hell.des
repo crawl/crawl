@@ -1,0 +1,449 @@
+##############################################################################
+# hell.des: Vestibule entry vaults; the Vestibule itself.
+#           Vaults specific to the Hell branches should go to one of
+#           dis.des, geh.des, coc.des, or tar.des.
+##############################################################################
+
+
+##############################################################################
+# Vestibule entries
+##############################################################################
+
+# This replaces the hardcoded placement of a hell entrance on D:21-27.
+NAME:   hell_entry
+TAGS:   extra allow_dup luniq can_overwrite replace_portal transparent
+DEPTH:  D:21-27
+CHANCE: 100%
+: if you.where() == 'D:21' then
+KFEAT: O = enter_hell no_mimic
+: else
+KFEAT: O = enter_hell
+: end
+MAP
+O
+ENDMAP
+
+default-depth: D:14-26
+
+##############################################################################
+# Hellmouth (Lemuel)
+# note that most threats here can't fly
+NAME:   hellmouth_1
+TAGS:   no_rotate
+MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
+        red devil / hell hound
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / wand of draining ident:type
+ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
+        grand grimoire / scroll of torment ident:type
+KFEAT:  A = enter_hell
+ORIENT: float
+SUBST:  d=de, ?:?.l, ?=l.
+
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxlllxxxxxxxx
+xxxxxxlllAlllxxxxxx
+xxxlllll.d.llll?xxx
+xlllllll121lllll?.x
+x?lllllll1llll?...x
+x.??llllllll?.....x
+x...?llllll?......x
+x....?lllll.......x
+xxx...?lll?.....xxx
+xxxx...lll?....xxxx
+xxxxx.?ll?....xxxxx
+xxxxx?lll.....xxxxx
+xxxxxxlll?...xxxxxx
+xxxxxxxlll...xxxxxx
+xxxxxxxxll?.xxxxxxx
+xxxxxxxxll?.xxxxxxx
+xxxxxxxxl?@xxxxxxxx
+ENDMAP
+
+##############################################################################
+# Hellmouth 2 (Lemuel)
+# note that most threats here can't fly
+NAME:   hellmouth_2
+TAGS:   no_monster_gen no_rotate transparent
+ORIENT: float
+MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
+MONS:   hellion / rotting devil / iron devil / red devil / hell hound
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / wand of draining ident:type
+ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
+        grand grimoire / scroll of torment ident:type
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / w:30 nothing
+KFEAT:  A = enter_hell
+SUBST:  d=de, ?:?.l, ?=l.
+SUBST:  b : b:30 c v .
+MAP
+..........................
+.......bbbbbbbbbbbb.......
+....bbbb..........bbbb....
+..bbb....llllllll....bbb..
+.bb....llllllllllll....bb.
+.b....llllllllllllll....b.
+.b....llllll??llllll....b.
+.b...?lll??.....?lll?...b.
+.b...?ll?...111...ll?...b.
+@+...?l?...11211d..l?...b.
+@+...?l?...12A21|f.l?...b.
+.b...?ll...11211d.ll?...b.
+.b...?lll?..111..lll?...b.
+.b....llll?.....llll....b.
+.b....llllll??llllll....b.
+.bb....llllllllllll....bb.
+..bbb....llllllll....bbb..
+....bbbb..........bbbb....
+.......bbbbbbbbbbbb.......
+..........................
+ENDMAP
+
+##############################################################################
+# Hellmouth 3 (Lemuel)
+NAME:   hellmouth_3
+TAGS:   transparent
+MONS:   weight:50 crimson imp / quasit / shadow imp / iron imp / lemure, hell hound
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / nothing
+ORIENT: float
+KFEAT:  A = enter_hell
+SUBST:  ? : . l ?:40, ?=l.
+MAP
+              ..??..      ....
+   .....     .......     ..??.
+  ..??...   ....l?..    ......
+ ..?ll?........?l?..   .......
+..?lll?.........l.... .....
+...?l........??l?.........
+ ..........??lll?.........
+ ........?lllllll?........
+  .....?llllllllll??.....
+  ....?lll111111llll?....
+   ...?llll12Ad1lll.......
+   ....?lll11111ll?.......
+   .....?lllll1ll?.........
+ ........??llllll......?....
+...........?llll?.....ll?...
+..?..  .....?ll?.......ll?..
+.?...   ...................
+....      ........??..
+ENDMAP
+
+
+##############################################################################
+# Vestibule of Hell and Geryon
+##############################################################################
+
+default-depth:
+
+#########################################################################
+# The ancient map.
+#
+NAME:   vestibule_of_hell
+PLACE:  Hell
+ORIENT: encompass
+TAGS:   no_rotate no_dump
+MARKER: D=feat:enter_dis
+MARKER: G=feat:enter_gehenna
+MARKER: C=feat:enter_cocytus
+MARKER: T=feat:enter_tartarus
+SUBST:  D=A, G=A, C=A, T=A
+MONS:   Geryon
+: if crawl.one_chance_in(4) then
+MONS:   Murray
+NSUBST: . = 1:2 / *:.
+: end
+FTILE:  +'T = floor_infernal_blank
+TILE:   c = dngn_stone_dark
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v'''''v..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.....v'''''v.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx........v'''''v........xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx..........v''D''v..........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx............v'''''v............xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx.............v'''''v.............xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx..............vvv+vvv..............xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.....................................xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.......................................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.........................................xxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...........................................xxxxxxxxxxxxxx
+xxxxxxxxxxxx.............................................xxxxxxxxxxxxx
+xxxxxxxxxxx...............................................xxxxxxxxxxxx
+xxxxxxxxxx.................................................xxxxxxxxxxx
+xxxxxxxxx...................................................xxxxxxxxxx
+xxxxxxxx.....................................................xxxxxxxxx
+xxxxxxxx.....................................................xxxxxxxxx
+xxxxxxx.......................................................xxxxxxxx
+xxxxxxx.......................................................xxxxxxxx
+xxxxxx.........................................................xxxxxxx
+xxxxxx............................{......................cccc..xxxxxxx
+xxxxxx...................................................ccccccccxxxxx
+xxxxx...l.l..............................................cccc'''cxxxxx
+xxxxx..l.l.l.l.............................................c''''cxxxxx
+xxxxx.l.l.l.l.l............................................c''''cxxxxx
+xxxx.l.l.l.l.l.............................................c'''ccccxxx
+xxxxl.l.l.l.l.l............................................+'''c''ccxx
+xxxx.l.l.l.G.l.l.................<1<.......................+'''+'T'cxx
+xxxxl.l.l.l.l.l.l.................<........................+'''c''ccxx
+xxxx.l.l.l.l.l.l...........................................c'''ccccxxx
+xxxxx.l.l.l.l.l.l..........................................c''''cxxxxx
+xxxxx..l.l.l.l.............................................c''''cxxxxx
+xxxxx.....l.l............................................cccc'''cxxxxx
+xxxxxx......................[...........(................ccccccccxxxxx
+xxxxxx...................................................cccc..xxxxxxx
+xxxxxx.........................................................xxxxxxx
+xxxxxxx.......................................................xxxxxxxx
+xxxxxxx.......................................................xxxxxxxx
+xxxxxxxx.....................................................xxxxxxxxx
+xxxxxxxx.....................................................xxxxxxxxx
+xxxxxxxxx...................................................xxxxxxxxxx
+xxxxxxxxxx....................wwwww........................xxxxxxxxxxx
+xxxxxxxxxxx..................wwwwwwww.....................xxxxxxxxxxxx
+xxxxxxxxxxxx..............wwwwwwwwwwwww..................xxxxxxxxxxxxx
+xxxxxxxxxxxxx...........w..wwww..wwwww..w...............xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx..........w...ww.....ww..wwwww...........xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.........ww......ww....wwwwwwwww.......xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.........ww....wwwww..wwwwwwwwww.....xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.........ww....wwwww..wwwwwwwwww...xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx........wwww.........wwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx......wwwwwww....wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx...wwwwwwwwwwCwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+######################################################################
+# The main vault for Vestibule w/subvaults (by Mu.)
+#
+NAME:     vestibule_of_hell_mu
+PLACE:    Hell
+ORIENT:   encompass
+WEIGHT:   20
+TAGS:     no_rotate no_dump
+SUBVAULT: A : vestibule_dis
+SUBVAULT: B : vestibule_tar
+SUBVAULT: C : vestibule_coc
+SUBVAULT: D : vestibule_geh
+SUBVAULT: E : vestibule_geryon
+SHUFFLE:  ABCD
+SUBST:    ABCDE = .
+: if crawl.coinflip() then
+  : if crawl.coinflip() then
+MONS:   Murray
+NSUBST: : = 1:1 / *:.
+  : else
+SUBST: : = .
+  : end
+: else
+SUBST: : = x
+: end
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxxxxxxxxxxxx
+xxxxxxxxxxx::AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA::xxxxxxxxxxx
+xxxxxxxxxx::::AAAAAAAAAAAAAAAAAAAAAAAAAAAAA::::xxxxxxxxxx
+xxxxxxxxx::::::AAAAAAAAAAAAAAAAAAAAAAAAAAA::::::xxxxxxxxx
+xxxxxxxx::::::::AAAAAAAAAAAAAAAAAAAAAAAAA::::::::xxxxxxxx
+xxxxxxx::::::::::AAAAAAAAAAAAAAAAAAAAAAA::::::::::xxxxxxx
+xxxxxx::::::::::::AAAAAAAAAAAAAAAAAAAAA::::::::::::xxxxxx
+xxxxx::::::::::::::AAAAAAAAAAAAAAAAAAA::::::::::::::xxxxx
+xxxxC:::::::::::::::AAAAAAAAAAAAAAAAA:::::::::::::::Dxxxx
+xxxxCC:::::::::::::::AAAAAAAAAAAAAAA:::::::::::::::DDxxxx
+xxxxCCC:::::::::::::::AAAAAAAAAAAAA:::::::::::::::DDDxxxx
+xxxxCCCC:::::::::::::::AAAAAAAAAAA:::::::::::::::DDDDxxxx
+xxxxCCCCC:::::::::::::::AAAAAAAAA:::::::::::::::DDDDDxxxx
+xxxxCCCCCC:::::::::::::::AAAAAAA:::::::::::::::DDDDDDxxxx
+xxxxCCCCCCC:::::::::::::::AAAAA:::::::::::::::DDDDDDDxxxx
+xxxxCCCCCCCC:::::::::::::::AAA:::::::::::::::DDDDDDDDxxxx
+xxxxCCCCCCCCC::::::::::::::EEE::::::::::::::DDDDDDDDDxxxx
+xxxxCCCCCCCCCC::::::::::::EEEEE::::::::::::DDDDDDDDDDxxxx
+xxxxCCCCCCCCCCC::::::::::EEEEEEE::::::::::DDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCC::::::::EEEEEEEEE::::::::DDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCC::::::EEEEEEEEEEE::::::DDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCC::::EEEEEEEEEEEEE::::DDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCC::EEEEEEEEEEEEEEE::DDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCCCEEEEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCCCEEEEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCCCEEEEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCC::EEEEEEEEEEEEEEE::DDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCC::::EEEEEEEEEEEEE::::DDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCC::::::EEEEEEEEEEE::::::DDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCC::::::::EEEEEEEEE::::::::DDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCC::::::::::EEEEEEE::::::::::DDDDDDDDDDDxxxx
+xxxxCCCCCCCCCC::::::::::::EEEEE::::::::::::DDDDDDDDDDxxxx
+xxxxCCCCCCCCC::::::::::::::EEE::::::::::::::DDDDDDDDDxxxx
+xxxxCCCCCCCC:::::::::::::::BBB:::::::::::::::DDDDDDDDxxxx
+xxxxCCCCCCC:::::::::::::::BBBBB:::::::::::::::DDDDDDDxxxx
+xxxxCCCCCC:::::::::::::::BBBBBBB:::::::::::::::DDDDDDxxxx
+xxxxCCCCC:::::::::::::::BBBBBBBBB:::::::::::::::DDDDDxxxx
+xxxxCCCC:::::::::::::::BBBBBBBBBBB:::::::::::::::DDDDxxxx
+xxxxCCC:::::::::::::::BBBBBBBBBBBBB:::::::::::::::DDDxxxx
+xxxxCC:::::::::::::::BBBBBBBBBBBBBBB:::::::::::::::DDxxxx
+xxxxC:::::::::::::::BBBBBBBBBBBBBBBBB:::::::::::::::Dxxxx
+xxxxx::::::::::::::BBBBBBBBBBBBBBBBBBB::::::::::::::xxxxx
+xxxxxx::::::::::::BBBBBBBBBBBBBBBBBBBBB::::::::::::xxxxxx
+xxxxxxx::::::::::BBBBBBBBBBBBBBBBBBBBBBB::::::::::xxxxxxx
+xxxxxxxx::::::::BBBBBBBBBBBBBBBBBBBBBBBBB::::::::xxxxxxxx
+xxxxxxxxx::::::BBBBBBBBBBBBBBBBBBBBBBBBBBB::::::xxxxxxxxx
+xxxxxxxxxx::::BBBBBBBBBBBBBBBBBBBBBBBBBBBBB::::xxxxxxxxxx
+xxxxxxxxxxx::BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB::xxxxxxxxxxx
+xxxxxxxxxxxxBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+######################### Vestibule Tartarus
+NAME: vestibule_tar_mu
+TAGS: vestibule_tar
+MARKER: T=feat:enter_tartarus
+FTILE:  =~T3Dz+'; = floor_infernal_blank
+TILE:   c = dngn_stone_dark
+SUBST:  T=A
+SUBST:  . = ~.........
+SUBST:  ; = ~...
+KMONS:  3 = shadow wraith
+KMONS:  z = skeletal warrior / zombie / nothing
+KMONS:  D = shadow dragon
+KMONS:  2 = reaper / soul eater
+MAP
+ccccccccccccccccccccccccccccccccc
+ ccczz+'''''';;;;;;;''''''+zzccc
+  cczzc''3''c';;T;;'c''3''czzcc
+   c+ccc''''''c;;;c''''''ccc+c
+    .cccc'''''''D'''''''cccc.
+     ..ccc'''''''''''''ccc..
+      .cccc'''cc+cc'''cccc.
+       ..cccc'c'''c'cccc..
+        .cccc'cz'zc'cccc.
+         ..cccczzzcccc..
+          .cccc'''cccc.
+           ..ccc'ccc..
+            .c2c'c2c.
+             ..c+c..
+              .c.c.
+               ...
+ENDMAP
+
+######################### Vestibule Gehenna
+NAME: vestibule_geh_mu
+TAGS: vestibule_geh
+MARKER: G=feat:enter_gehenna
+SUBST:  G=A
+SUBST:  L = l.
+KMONS:  5 = crimson imp
+KMONS:  2 = hellion
+KMONS:  3 = red devil
+KMONS:  2 = reaper / soul eater
+FTILE:  x'5a2V+ = floor_infernal_blank
+MAP
+lllllllllllllllllllllllllllllllll
+ Lllllllllllllllllllllllllllllll
+  LllxxxxxxxxxxxxxxxxxxxxxxxllL
+   Lllxx'''''''''''''''''xxllL
+    Lllxx''5''''G''''5''xxllL
+     Lllxx'''''''''''''xxllL
+      Lllxx''V''2''V''xxllL
+       Lllxx'''''''''xxllL
+        Lllxx'''''''xxllL
+         Lllxxx+++xxxllL
+          Lllxx...xxllL
+           Lll..3..llL
+            Lll...llL
+             Lll.llL
+              ll.ll
+               l.l
+ENDMAP
+
+######################### Vestibule Cocytus
+NAME: vestibule_coc_mu
+TAGS: vestibule_coc
+MARKER: C=feat:enter_cocytus
+SUBST:  C=A
+SUBST:  8 = 8 .:59
+KMONS:  8 = ice statue
+KMONS:  3 = blue devil
+KMONS:  2 = ice devil
+MAP
+...........wwwwwwwwwww...........
+ ....33...wwwwwwwwwwwww...33....
+  ....3...wwwwww8wwwwww...3....
+   ......wwwww.....wwwww......
+    .....wwww...C...wwww.....
+     ....wwww.......wwww....
+      ...www8..T.T..8www...
+       ..wwww.......wwww..
+        ..www..T.T..www..
+         ..www.....www..
+          ...ww...ww...
+           .....2.....
+            .........
+             .......
+              .....
+               ...
+ENDMAP
+
+######################### Vestibule Dis
+NAME: vestibule_dis_mu
+TAGS: vestibule_dis
+MARKER: D=feat:enter_dis
+SUBST:  D=A
+KMONS:  8 = iron golem
+KMONS:  3 = iron devil
+KMONS:  6 = metal gargoyle
+FTILE:  'A+ = floor_infernal_blank
+MAP
+.............v.vvv.v.............
+ ...vv....v...vv'vv...v....vv...
+  ..6v.....vv.v'D'v.vv.....v6..
+   .......v...vv'vv...v.......
+    ...vv....v.v+v.v....vv...
+     ..6v..3...8.8...3..v6..
+      .....................
+       ...vv...v.v...vv...
+        ..6v.........v6..
+         ...............
+          ...vv...vv...
+           ..6v...v6..
+            .........
+             .......
+              .....
+               ...
+ENDMAP
+
+######################### Vestibule Geryon
+NAME: vestibule_geryon_mu
+TAGS: vestibule_geryon
+MONS: Geryon
+MAP
+       ...
+      ..<..
+     ...1...
+    .........
+   ...........
+  .............
+ ...............
+........(........
+.<.............<.
+.......{.[.......
+ ...............
+  .............
+   ...........
+    .........
+     .......
+      ..<..
+       ...
+ENDMAP
