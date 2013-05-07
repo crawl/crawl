@@ -1924,6 +1924,7 @@ enum map_marker_type
     MAT_DOOR_SEAL,
 #endif
     MAT_TERRAIN_CHANGE,
+    MAT_CLOUD_SPREADER,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };
