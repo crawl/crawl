@@ -24,6 +24,7 @@ body {
 }
 
 #player_list th.header {
+    cursor: pointer;
     padding-left: 1px;
     padding-right: 17px;
 }
