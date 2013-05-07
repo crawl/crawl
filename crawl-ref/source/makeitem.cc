@@ -177,7 +177,7 @@ static int _missile_colour(const item_def &item)
         item_colour = RED;
         break;
     case MI_THROWING_NET:
-        item_colour = DARKGREY;
+        item_colour = MAGENTA;
         break;
     case MI_PIE:
         item_colour = YELLOW;
