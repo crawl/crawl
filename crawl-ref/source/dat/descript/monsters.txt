@@ -3623,6 +3623,21 @@ iron, and laughed its laughter of nails rattling.
 pounding and pounding, and the mouth answering.”
     -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
 %%%%
+skeletal archer
+
+Since when is having flesh a requirement to be a master archer? These skeletal
+fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
+only good for a supply of sinew for bowstrings anyway.
+%%%%
+skeletal archer:quote
+
+“For a glory of all evil spirits rise for victory
+ Pain for pain, blood for blood
+ Pagan warriors moved quickly forward
+ Bows are ready to shoot out their searing
+ Darts...”
+    -Mastiphal, “For a Glory of All Evil spirits”
+%%%%
 skeletal bat
 
 A bat skeleton without the decency to lie unmoving like dead bats are supposed

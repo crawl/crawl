@@ -668,6 +668,25 @@ x.........xxx...xxx.........x
 xxxxxxxxxxxxx.@.xxxxxxxxxxxxx
 ENDMAP
 
+NAME:  kb_skeletal_archery
+DEPTH: Crypt, Tar
+KMONS: 1 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
+           spells:. ; longbow . arrow q:30
+KMONS: 2 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
+           spells:. ; bow . arrow q:30
+KITEM: 2 = |
+MAP
+xxxxxxxxxxxxxxx
+x............1x
+x............1x
+x............1x
+.............2x
+x............1x
+x............1x
+x............1x
+xxxxxxxxxxxxxxx
+ENDMAP
+
 NAME:   st_shrine_of_skulls
 DEPTH:  Crypt
 MONS:   flying skull band, lich
