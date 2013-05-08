@@ -481,10 +481,10 @@ explode, causing damage to you or your enemies.
 %%%%
 Evolution
 
-Turn plants and fungi adjacent to you into stronger species. Upgrading fungi
-requires piety, upgrading plants requires fruit. Plants upgraded gain a bonus
-to attack accuracy proportional to the user's Invocations skill, and oklob
-plants are more likely to spit acid at higher Invocations.
+Turn plants and fungi into stronger species. Upgrading fungi requires piety,
+upgrading plants requires fruit. Plants upgraded gain a bonus to attack
+accuracy proportional to the user's Invocations skill, and oklob plants are
+more likely to spit acid at higher Invocations.
 %%%%
 # Cheibriados
 Bend Time
