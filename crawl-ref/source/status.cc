@@ -133,6 +133,8 @@ static duration_def duration_data[] =
       MAGENTA, "Mark", "marked", "You are marked for hunting." },
     { DUR_FLAYED, true,
       RED, "Flay", "flayed", "You are covered in terrible wounds." },
+    { DUR_RETCHING, true,
+      RED, "Retch", "retching", "You are retching with violent nausea." },
 };
 
 static int duration_index[NUM_DURATIONS];

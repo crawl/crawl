@@ -1613,7 +1613,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
-                if (food_is_rotten(*this) && it_plus != MONS_ROTTING_HULK)
+                if (food_is_rotten(*this) && it_plus != MONS_PLAGUE_SHAMBLER)
                     buff << "rotting ";
 
                 buff << "chunk of "
@@ -1874,7 +1874,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
 
-        if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
+        if (food_is_rotten(*this) && !dbname && it_plus != MONS_PLAGUE_SHAMBLER)
             buff << "rotting ";
 
         uint64_t name_type, name_flags = 0;

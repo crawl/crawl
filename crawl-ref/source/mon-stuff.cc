@@ -40,6 +40,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "makeitem.h"
+#include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -265,7 +266,7 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.quantity    = 1;
     corpse.orig_monnum = mtype;
 
-    if (mtype == MONS_ROTTING_HULK)
+    if (mtype == MONS_PLAGUE_SHAMBLER)
         corpse.special = ROTTING_CORPSE;
 
     if (mons)
@@ -2437,6 +2438,20 @@ int monster_die(monster* mons, killer_type killer,
         timeout_terrain_changes(0, true);
     else if (mons->type == MONS_FLAYED_GHOST)
         _end_flayed_effect(mons);
+    else if (mons->type == MONS_PLAGUE_SHAMBLER && !was_banished
+             && !mons->pacified() && (!summoned || duration > 0) && !wizard)
+    {
+        if (you.can_see(mons))
+            mprf("Miasma billows from the fallen %s!", mons->name(DESC_PLAIN).c_str());
+
+        map_cloud_spreader_marker *marker =
+            new map_cloud_spreader_marker(mons->pos(), CLOUD_MIASMA, 10,
+                                          18 + random2(7), 4, 8, mons);
+        // Start the cloud at radius 1, regardless of the speed of the killing blow
+        marker->speed_increment -= you.time_taken;
+        env.markers.add(marker);
+        env.markers.clear_need_activate();
+    }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())

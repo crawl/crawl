@@ -455,7 +455,7 @@ NAME:  tombwall_bobbens
 TAGS:  allow_dup
 DEPTH: Crypt
 MONS:  w:150 zombie / skeletal warrior / ghoul / \
-       large abomination / small abomination / necrophage / rotting hulk / \
+       large abomination / small abomination / necrophage / plague shambler / \
        w:150 skeleton / w:30 nothing
 MAP
 ccccccccccccccccccccccc
@@ -1418,7 +1418,7 @@ KMONS:  H = w:20 patrolling unborn deep dwarf / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling deep dwarf death knight
 KMONS:  B = skeletal warrior
-KMONS:  C = necrophage / rotting hulk
+KMONS:  C = necrophage / plague shambler
 KMONS:  E = flayed ghost / w:4 hungry ghost / w:1 phantom / w:1 shadow / nothing
 KMONS:  F = patrolling bone dragon / patrolling unborn deep dwarf
 : else
@@ -1643,7 +1643,7 @@ SHUFFLE: Dd / Ee / Ff / Hh / Ii / Jj / Kk / Ll / 34 / 56 / 78 / 90
 KMONS:   D = vampire knight
 KMONS:   d = vampire mage w:2 / vampire
 KMONS:   E = ghoul
-KMONS:   e = rotting hulk / necrophage w:5
+KMONS:   e = plague shambler / necrophage w:5
 KMONS:   F = necromancer
 KMONS:   f = zombie / skeleton / hell knight w:2
 KMONS:   H = lich

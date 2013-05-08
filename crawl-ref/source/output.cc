@@ -919,6 +919,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_LIQUEFIED,
         DUR_WATER_HOLD,
         DUR_FLAYED,
+        DUR_RETCHING,
     };
 
     status_info inf;
@@ -2368,7 +2369,8 @@ static string _status_mut_abilities(int sw)
         STATUS_SUPPRESSED,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
-        DUR_FLAYED
+        DUR_FLAYED,
+        DUR_RETCHING,
     };
 
     status_info inf;

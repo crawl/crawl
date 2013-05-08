@@ -39,7 +39,7 @@ function base_monster_setup(e)
            elephant / death yak / war dog band / sheep band /\
            raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / mermaid w:3 / sea snake / snapping turtle /\
-           tarantella / jumping spider / demonic crawler / rotting hulk /\
+           tarantella / jumping spider / demonic crawler / plague shambler /\
            flaming corpse / small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
            red devil / centaur band / deep dwarf artificer")
@@ -2072,7 +2072,7 @@ KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
 KMONS:  C = Frederick, Norris, Louise, Rupert
 KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
-        vampire / vampire mage / vampire knight / ghoul w:5 / rotting hulk /\
+        vampire / vampire mage / vampire knight / ghoul w:5 / plague shambler /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
         freezing wraith w:3 / flaming corpse / flayed ghost
 KMONS:  D = lich

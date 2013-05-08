@@ -4185,6 +4185,7 @@ void display_char_status()
         STATUS_LIQUEFIED,
         DUR_WATER_HOLD,
         DUR_FLAYED,
+        DUR_RETCHING,
     };
 
     status_info inf;
@@ -7060,7 +7061,7 @@ int player::has_usable_tentacles(bool allow_tran) const
     return has_tentacles(allow_tran);
 }
 
-bool player::sicken(int amount, bool allow_hint)
+bool player::sicken(int amount, bool allow_hint, bool quiet)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7073,7 +7074,8 @@ bool player::sicken(int amount, bool allow_hint)
         return false;
     }
 
-    mpr("You feel ill.");
+    if (!quiet)
+        mpr("You feel ill.");
 
     disease += amount * BASELINE_DELAY;
     if (disease > 210 * BASELINE_DELAY)

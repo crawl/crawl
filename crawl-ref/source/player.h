@@ -586,7 +586,7 @@ public:
 
     void make_hungry(int nutrition, bool silent = true);
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount, bool allow_hint = true);
+    bool sicken(int amount, bool allow_hint = true, bool quiet = false);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *);
     bool fully_petrify(actor *foe, bool quiet = false);
