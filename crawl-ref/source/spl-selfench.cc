@@ -16,6 +16,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "shout.h"
 #include "spl-cast.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -315,6 +316,48 @@ int cast_selective_amnesia(string *pre_msg)
     }
 
     return 1;
+}
+
+spret_type cast_infusion(int pow, bool fail)
+{
+	fail_check();
+	you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
+	you.props["infusion_bonus"] = 2 + pow/13;
+	mpr("Your attacks are magically infused.");
+
+	return SPRET_SUCCESS;
+}
+
+spret_type cast_song_of_slaying(int pow, bool fail)
+{
+	fail_check();
+	// rescasting song of slaying resets the slaying bonus, so extending any previous songs doesn't make sense
+	// supposed to last a long time??
+
+	// i dont know if this is supposed to be literal singing
+	// it seems kind of silly
+
+	if (you.duration[DUR_SONG_OF_SLAYING])
+	{
+		mpr("You start a new song!");
+	}
+	else 
+	{
+		mpr("You start singing a song of slaying.");
+	}
+	you.increase_duration(DUR_SONG_OF_SLAYING, 20+pow/3, 20+pow/3);
+
+	noisy(5, you.pos());
+
+	you.props["song_of_slaying_bonus"] = 0;
+	return SPRET_SUCCESS;
+}
+
+spret_type cast_spirit_shield(int pow, bool fail)
+{
+	fail_check();
+	you.increase_duration(DUR_SPIRIT_SHIELD, 10 + roll_dice(2, pow), 50);
+	return SPRET_SUCCESS;
 }
 
 spret_type cast_silence(int pow, bool fail)

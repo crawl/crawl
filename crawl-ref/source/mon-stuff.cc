@@ -1795,6 +1795,13 @@ int monster_die(monster* mons, killer_type killer,
         targ_holy = MH_DEMONIC;
     }
 
+	// Adjust song of slaying bonus
+	if(killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp
+	|| killer == KILL_MON && you.duration[DUR_SONG_OF_SLAYING] && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON)
+	{
+		you.props["song_of_slaying_bonus"] = you.props["song_of_slaying_bonus"].get_int() + 1;
+	}
+
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.
@@ -3375,6 +3382,10 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
 {
     if (crawl_state.game_is_arena())
         return true;
+
+	// spectral weapons should never attack on their own
+	if (mons->type == MONS_SPECTRAL_WEAPON)
+		return false;
 
     if (!mons->friendly() || !mons->is_summoned())
         return true;
