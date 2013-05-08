@@ -977,6 +977,7 @@ void dungeon_terrain_changed(const coord_def &pos,
         env.grid_colours(pos) = BLACK;
         // Reset feature tile
         env.tile_flv(pos).feat = 0;
+        env.tile_flv(pos).feat_idx = 0;
 
         if (is_notable_terrain(nfeat) && you.see_cell(pos))
             seen_notable_thing(nfeat, pos);
