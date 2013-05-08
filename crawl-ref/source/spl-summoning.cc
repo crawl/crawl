@@ -818,6 +818,64 @@ bool summon_holy_warrior(int pow, bool punish)
     return true;
 }
 
+///// uuuuuuu
+//// not at all what it should be yet!
+//// literally this is just tukima without unwielding, and it shouldn't be
+spret_type cast_spectral_weapon(int pow, bool fail)
+{
+    const int dur = min(2 + (random2(pow) / 5), 6);
+	// probably shouldn't duplicate this code!!
+	item_def* wpn = you.weapon();
+    if (!wpn
+        || !is_weapon(*wpn)
+        || is_range_weapon(*wpn))
+    {
+        if (wpn)
+        {
+            mprf("%s vibrate%s crazily for a second.",
+                 wpn->name(DESC_YOUR).c_str(),
+                 wpn->quantity > 1 ? "" : "s");
+        }
+        else
+            mprf("Your %s twitch.", you.hand_name(true).c_str());
+
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+    item_def cp = *wpn;
+
+	// you can only ever have one spectral weapon, kill any existing ones
+	if (you.props.exists("spectral_weapon"))
+	{
+        	monster *old_mons = monster_by_mid(you.props["spectral_weapon"].get_int());
+		monster_die(old_mons, KILL_RESET, NON_MONSTER);
+	}
+
+    mgen_data mg(MONS_SPECTRAL_WEAPON,
+                 BEH_FRIENDLY,
+                 &you,
+                 dur, SPELL_SPECTRAL_WEAPON,
+                 you.pos(),
+                 MHITYOU,
+                 0, GOD_NO_GOD);
+
+    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_POWER] = pow;
+
+    monster *mons = create_monster(mg);
+	
+	you.props["spectral_weapon"].get_int() = mons->mid;
+	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
+	mons->hit_dice = skill_with_weapon;
+	mons->ac = 3 + skill_with_weapon/2;
+	mons->ev = 3 + skill_with_weapon/2;
+
+	mpr("You create a spectral weapon.");
+
+    return SPRET_SUCCESS;
+}
+
 // This function seems to have very little regard for encapsulation.
 spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
                               bool fail)

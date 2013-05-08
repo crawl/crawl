@@ -1127,6 +1127,21 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
     {
+	// This is checking for the Spirit shield spell, not the amulet
+	if (you.duration[DUR_SPIRIT_SHIELD] && you.magic_points>0)
+	{
+		if (dam>you.magic_points)
+		{
+			dam = dam - you.magic_points;
+			dec_mp(you.magic_points);
+		}
+		else
+		{
+			dec_mp(dam);
+			dam = 0;
+			return;
+		}	
+	}
         if (you.spirit_shield() && death_type != KILLED_BY_POISON)
         {
             // round off fairly (important for taking 1 damage at a time)

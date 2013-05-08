@@ -510,6 +510,19 @@ bool melee_attack::handle_phase_hit()
     // messages, etc.
     damage_done = calc_damage();
 
+	if (attacker->is_player() && you.duration[DUR_INFUSION])
+	{
+		if (you.magic_points>0)
+		{
+			damage_done += you.props["infusion_bonus"].get_int();
+			dec_mp(1);
+		}
+		else // Slight buff to infusion -- always let it add at least 1 dmg
+		{
+			damage_done += 1;
+		}
+	}
+
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.  We muse
     if (attacker->is_player())
@@ -4236,7 +4249,7 @@ string melee_attack::mons_attack_desc()
         ret = " from afar";
     }
 
-    if (weapon && attacker->type != MONS_DANCING_WEAPON)
+    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON)
         ret += " with " + weapon->name(DESC_A);
 
     return ret;
