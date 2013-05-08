@@ -3,6 +3,7 @@
 
 #include "godpassive.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "coord.h"
@@ -205,7 +206,14 @@ void ash_check_bondage(bool msg)
                         cursed[ET_SHIELD] = 3;
                     }
                     else
+                    {
                         cursed[s]++;
+                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item)
+                            && item.special == UNRAND_LEAR)
+                        {
+                            cursed[s] += 3;
+                        }
+                    }
                 }
             }
         }
