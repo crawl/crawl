@@ -3202,6 +3202,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 }
                 break;
 
+            case SP_GROTESK:
             case SP_HILL_ORC:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
@@ -6484,6 +6485,9 @@ int player::res_wind() const
 
 int player::res_petrify(bool temp) const
 {
+    if (player_mutation_level(MUT_PETRIFICATION_RESISTANCE))
+        return 1;
+
     if (temp && (you.form == TRAN_STATUE || you.form == TRAN_WISP))
         return 1;
     return 0;
