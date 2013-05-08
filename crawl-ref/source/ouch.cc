@@ -24,6 +24,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
@@ -382,6 +383,10 @@ void splash_with_acid(int acid_strength, int death_source, bool corrode_items, s
                 corrode_item(*item, &you);
         }
     }
+
+    // Covers head, hands and feet.
+    if (player_equip_unrand(UNRAND_LEAR))
+        dam = !wearing_cloak;
 
     // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
     // (randomized), Fe 5.  Fur helps only against naked spots.

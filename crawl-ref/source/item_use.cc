@@ -9,6 +9,7 @@
 
 #include "abl-show.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
@@ -618,6 +619,54 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
         else if (verbose)
             mpr("You can't wear that!");
+        return false;
+    }
+
+    // Lear's hauberk covers also head, hands and legs.
+    if (is_unrandom_artefact(item) && item.special == UNRAND_LEAR)
+    {
+        if (!player_has_feet(!ignore_temporary))
+        {
+            if (verbose)
+                mpr("You have no feet.");
+            return false;
+        }
+
+        if (!ignore_temporary)
+        {
+            for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
+            {
+                // No strange race can wear this.
+                const char* parts[] = { "head", "hands", "feet" };
+                // Auto-disrobing would be nice.
+                if (you.equip[s] != -1)
+                {
+                    if (verbose)
+                        mprf("You'd need your %s free.", parts[s - EQ_HELMET]);
+                    return false;
+                }
+
+                if (!you_tran_can_wear(s, true))
+                {
+                    if (verbose)
+                    {
+                        mprf(you_tran_can_wear(s) ? "The hauberk won't fit your %s."
+                                                  : "You have no %s!",
+                             parts[s - EQ_HELMET]);
+                    }
+                    return false;
+                }
+            }
+        }
+    }
+    else if (slot >= EQ_HELMET && slot <= EQ_BOOTS
+             && !ignore_temporary
+             && player_equip_unrand(UNRAND_LEAR))
+    {
+        // The explanation is iffy for loose headgear, especially crowns:
+        // kings loved hooded hauberks, according to portraits.
+        if (verbose)
+            mpr("You can't wear this over your hauberk.");
         return false;
     }
 
