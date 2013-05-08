@@ -74,6 +74,7 @@ static void _species_stat_init(species_type which_species)
     case SP_HILL_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
     case SP_CENTAUR:            sb =  8; ib =  5; db =  2;      break;  // 15
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
+    case SP_GROTESK:            sb = 8;  ib =  6; db =  4;      break;  // 18
 
     case SP_MERFOLK:            sb =  6; ib =  5; db =  7;      break;  // 18
     case SP_TENGU:              sb =  6; ib =  6; db =  7;      break;  // 19
@@ -301,6 +302,13 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
         you.mutation[MUT_UNBREATHING]                = 1;
+        break;
+    case SP_GROTESK:
+        you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
+        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
+        you.mutation[MUT_COLD_RESISTANCE]            = 1;
+        you.mutation[MUT_TALONS]                     = 2;
+        you.mutation[MUT_SLOW_METABOLISM]            = 1;
         break;
     case SP_TENGU:
         you.mutation[MUT_BEAK]   = 1;

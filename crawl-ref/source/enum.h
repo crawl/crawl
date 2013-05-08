@@ -2778,6 +2778,7 @@ enum mutation_type
     MUT_MANA_SHIELD,
     MUT_MANA_REGENERATION,
     MUT_MANA_LINK,
+    MUT_PETRIFICATION_RESISTANCE,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3121,6 +3122,7 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
+    SP_GROTESK,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
@@ -3128,6 +3130,7 @@ enum species_type
     SP_GREY_ELF,                       // (placeholder)
     SP_GNOME,                          // (placeholder)
     SP_MOUNTAIN_DWARF,                 // (placeholder)
+
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100,

@@ -1496,4 +1496,14 @@
   "jelly missile"
 },
 
+{ MUT_PETRIFICATION_RESISTANCE,            0,  1, false, false, false,
+  "petrification resistance",
+
+  {"You are immune to petrification.", "", ""},
+  {"Your body vibrates.", "", ""},
+  {"You briefly stop moving.", "", ""},
+
+  "petrification resistance"
+},
+
 #endif
