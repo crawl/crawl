@@ -161,6 +161,10 @@ public:
 
   int exp_docked, exp_docked_total; // Ashenzari's wrath
 
+	// uuu new skald stuff
+	int infusion_bonus; // The amount of extra damage infusion deals per hit
+	int song_of_slaying_bonus; // The amount of slaying bonus from the song of slaying status
+
   FixedArray<uint8_t, 6, MAX_SUBTYPES> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
   FixedBitVector<NUM_MONSTERS> unique_creatures;
