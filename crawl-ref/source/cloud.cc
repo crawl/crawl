@@ -1487,8 +1487,9 @@ void run_cloud_spreaders(int dur)
         map_cloud_spreader_marker *mark = dynamic_cast<map_cloud_spreader_marker*>(markers[i]);
 
         mark->speed_increment += dur;
-        int rad = max(1, min(mark->speed_increment / mark->speed, mark->max_rad));
-        int ratio = (mark->speed_increment - (rad * mark->speed)) * 100 / mark->speed;
+        int rad = min(mark->speed_increment / mark->speed, mark->max_rad - 1) + 1;
+        int ratio = (mark->speed_increment - ((rad - 1) * mark->speed))
+                    * 100 / mark->speed;
 
         if (ratio == 0)
         {
@@ -1498,7 +1499,7 @@ void run_cloud_spreaders(int dur)
 
         _spread_cloud(mark->pos, mark->ctype, rad, mark->duration,
                         mark->remaining, ratio, mark->agent_mid, mark->kcat);
-        if ((rad == mark->max_rad && ratio >= 100) || mark->remaining == 0)
+        if ((rad >= mark->max_rad && ratio >= 100) || mark->remaining == 0)
         {
             env.markers.remove(mark);
             break;
