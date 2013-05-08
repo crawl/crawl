@@ -1467,7 +1467,8 @@ static bool _check_ability_possible(const ability_def& abil,
             && you.strength(false) == you.max_strength()
             && you.intel(false) == you.max_intel()
             && you.dex(false) == you.max_dex()
-            && !player_rotted())
+            && !player_rotted()
+            && !you.duration[DUR_RETCHING])
         {
             if (!quiet)
                 mpr("Nothing ails you!");

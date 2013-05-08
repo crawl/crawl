@@ -166,6 +166,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_WATER_HOLD_DROWN;
     case ENCH_FLAYED:
         return MB_FLAYED;
+    case ENCH_RETCHING:
+        return MB_RETCHING;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1465,6 +1467,8 @@ vector<string> monster_info::attributes() const
     }
     if (is(MB_FLAYED))
         v.push_back("covered in terrible wounds");
+    if (is(MB_RETCHING))
+        v.push_back("retching with violent nausea");
     return v;
 }
 

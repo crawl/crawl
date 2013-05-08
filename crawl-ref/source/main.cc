@@ -2869,6 +2869,8 @@ static void _decrement_durations()
         }
     }
 
+    _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
+
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 

@@ -809,7 +809,8 @@ static const char* dur_names[] =
     "sickening",
     "drowning",
     "drowning immunity",
-    "flayed"
+    "flayed",
+    "retching"
 };
 
 void wizard_edit_durations(void)

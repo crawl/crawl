@@ -121,7 +121,7 @@ function sroom_morgue(e)
     local mons = {}
 
     mons[1] = "zombie w:15 / skeleton w:5"
-    mons[2] = "eidolon w:1 / rotting hulk w:1 / vampire w:1 / "
+    mons[2] = "eidolon w:1 / plague shambler w:1 / vampire w:1 / "
               .. "guardian mummy w:1 / shadow w:1"
     mons[3] = "skeletal warrior w:20 ; great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
@@ -151,7 +151,7 @@ function sroom_morgue(e)
                  .. "iron troll corpse / iron troll skeleton / nothing w:60"
     elseif you.branch() == "Tar" then
         mons[5] = "bone dragon w:5 / ghoul w:5 / soul eater"
-        mons[6] = "rotting hulk w:5 / shadow wraith"
+        mons[6] = "plague shambler w:5 / shadow wraith"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse / nothing w:60"
     else

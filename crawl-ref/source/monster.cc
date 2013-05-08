@@ -4631,14 +4631,14 @@ kill_category monster::kill_alignment() const
     return (friendly() ? KC_FRIENDLY : KC_OTHER);
 }
 
-bool monster::sicken(int amount, bool unused)
+bool monster::sicken(int amount, bool unused, bool quiet)
 {
     UNUSED(unused);
 
     if (res_rotting() || (amount /= 2) < 1)
         return false;
 
-    if (!has_ench(ENCH_SICK) && you.can_see(this))
+    if (!has_ench(ENCH_SICK) && you.can_see(this) && !quiet)
     {
         // Yes, could be confused with poisoning.
         mprf("%s looks sick.", name(DESC_THE).c_str());
@@ -5308,7 +5308,8 @@ bool monster::can_drink_potion(potion_type ptype) const
     // These monsters cannot drink.
     if (is_skeletal() || is_insubstantial()
         || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY
-        || type == MONS_GASTRONOK)
+        || type == MONS_GASTRONOK
+        || has_ench(ENCH_RETCHING))
     {
         return false;
     }

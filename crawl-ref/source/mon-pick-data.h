@@ -576,7 +576,7 @@ static const pop_entry pop_crypt[] =
   {  1,  5,   50, SEMI, MONS_SIMULACRUM },
   {  3,  5,    4, SEMI, MONS_PULSATING_LUMP },
   {  1,  7,  136, SEMI, MONS_NECROMANCER },
-  {  1,  7,   66, SEMI, MONS_ROTTING_HULK },
+  {  1,  7,   66, SEMI, MONS_PLAGUE_SHAMBLER },
   {  1,  7,  136, SEMI, MONS_GHOUL },
   {  1,  7,   40, PEAK, MONS_FLAYED_GHOST },
   {  1,  5,  230, FLAT, MONS_WRAITH },

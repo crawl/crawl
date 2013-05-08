@@ -1492,6 +1492,7 @@ enum duration_type
     DUR_WATER_HOLD,
     DUR_WATER_HOLD_IMMUNITY,
     DUR_FLAYED,
+    DUR_RETCHING,
     NUM_DURATIONS
 };
 
@@ -1585,6 +1586,7 @@ enum enchant_type
     ENCH_WATER_HOLD,      // Silence and asphyxiation damage
     ENCH_FLAYED,
     ENCH_HAUNTING,
+    ENCH_RETCHING,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2410,7 +2412,7 @@ enum monster_type                      // menv[].type
     MONS_MACABRE_MASS,
 
     // Undead:
-    MONS_ROTTING_HULK,
+    MONS_PLAGUE_SHAMBLER,
     MONS_NECROPHAGE,
     MONS_GHOUL,
     MONS_FLAMING_CORPSE,

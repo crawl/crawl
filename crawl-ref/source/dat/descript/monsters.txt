@@ -3139,6 +3139,12 @@ the inhabitants of the cities, and that which grew upon the ground. But his
 wife looked back from behind him, and she became a pillar of salt.”
     -KJV Bible, Gen. XIX, 24-6.
 %%%%
+plague shambler
+
+A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
+parody of life, this infected decaying body lurches about, seeking retribution
+on the living.
+%%%%
 plant
 
 Few plants can grow in the unpleasant dungeon environment, but some have
@@ -3366,12 +3372,6 @@ rotting devil:quote
  That swathe the minds of men, the sins
  That wrap their rotting souls about.“
     -John Davidson, ”A Ballad of Heaven". Late 19th cent.
-%%%%
-rotting hulk
-
-A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
-parody of life, this infected decaying body lurches about, seeking retribution
-on the living.
 %%%%
 the royal jelly
 

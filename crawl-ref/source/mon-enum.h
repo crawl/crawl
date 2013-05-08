@@ -110,6 +110,7 @@ enum attack_flavour
     AF_PURE_FIRE,
     AF_DRAIN_SPEED,
     AF_VULN,
+    AF_PLAGUE,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

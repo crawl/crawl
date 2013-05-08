@@ -2111,6 +2111,12 @@ void drink(int slot)
         return;
     }
 
+    if (you.duration[DUR_RETCHING])
+    {
+        mpr("You can't gag anything down in your present state!");
+        return;
+    }
+
     if (slot == -1)
     {
         slot = prompt_invent_item("Drink which item?",
