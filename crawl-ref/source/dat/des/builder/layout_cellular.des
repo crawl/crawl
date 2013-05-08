@@ -31,13 +31,65 @@
     end
     return gcount,track
   end
+
+  -- Renders a room cell in a city
+  function render_room(e,cell,open_small)
+    -- Start with a hollow box
+    e.fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='x' }
+    e.fill_area{x1=cell.x1+1, y1=cell.y1+1, x2=cell.x2-1, y2=cell.y2-1, fill='.' }
+    -- Loop through borders and carve them
+    for n,b in ipairs(cell.borders) do
+      local pos = border_midpos(b)
+      if cell.tile == b.with.tile then
+        -- Internal door. Decide which side it's going to go
+        if b.has_door == nil then
+          if crawl.x_chance_in_y(2,3) then
+            b.has_door,b.inverse.has_door = false
+          else
+            b.has_door = crawl.coinflip()
+            b.inverse.has_door = not b.has_door
+          end
+        end
+        -- Draw door
+        if b.len >= 3 and b.has_door then e.mapgrd[pos.x][pos.y] = '+'
+        -- Or erase the wall
+        elseif b.len >= 3 or open_small then
+          if b.dir%2 == 1 then e.fill_area{x1 = b.x1, y1 = b.y1 + 1, x2 = b.x2, y2 = b.y2 - 1, fill='.' }
+          else e.fill_area{x1 = b.x1 + 1, y1 = b.y1, x2 = b.x2 - 1, y2 = b.y2, fill='.' } end
+        end
+      elseif b.with.tile == "wall" then
+        -- Or erase the wall
+        if b.dir%2 == 1 then e.fill_area{x1 = b.x1, y1 = b.y1 + 1, x2 = b.x2, y2 = b.y2 - 1, fill='.' }
+        else e.fill_area{x1 = b.x1 + 1, y1 = b.y1, x2 = b.x2 - 1, y2 = b.y2, fill='.' } end
+      else
+        -- Door to outside
+        if b.len >= 3 then e.mapgrd[pos.x][pos.y] = '+' end
+      end
+    end
+  end
+
+  function border_midpos(b,offset)
+    if offset == nil then offset = 1 end
+    if b.mid == nil then
+      if b.len == 1 then b.mid = { x = b.x1, y = b.y1 }
+      else b.mid = { x = (b.x1==b.x2) and b.x1 or crawl.random_range(b.x1+offset,b.x2-offset),
+                     y = (b.y1==b.y2) and b.y1 or crawl.random_range(b.y1+offset,b.y2-offset) } end
+      -- Set the inverse border's mid whilst we're at it
+      b.inverse.mid = { x = b.mid.x, y = b.mid.y }
+      if b.dir%2 == 1 then b.inverse.mid.x = b.inverse.x1 else b.inverse.mid.y = b.inverse.y1 end
+    end
+    return b.mid
+  end
+
 }}
 
 # Acts like a cellular automaton, growing wall shapes in an irregular cell grid
 # from starting ceeds according to different sets of rules.
 # TODO: With the current rules and parameters it looks most like an iron maze for
 # Dis, but with some tweaking could do nice stuff in other branches (or maybe just
-# make different versions of a similar algorithm).
+# make different versions of a similar algorithm). The special rendering for Dis vs. Pan
+# is nice but produces some strange artifacts because walls next to each other might
+# not overlap properly. Some other render modes would be good.
 NAME:   layout_cellular_growth
 DEPTH:  Dis:1-6, Pan
 WEIGHT: 20 (Dis), 10 (Pan)
@@ -50,12 +102,14 @@ TAGS: overwritable layout allow_dup unrand
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
+  local doors = you.branch() == "Dis"
+
   local grid_opts = {
     -- Maximum size means we don't have to worry about chance so rigidly
     maximum_size = crawl.random_range(5,8),
     -- TODO: Having a minimum size of 1 looks great but is really slow until the
     -- border counting is optimised, it also requires a higher number of seeds/iters than normal
-    minimum_size = crawl.random_range(2,4),
+    minimum_size = doors and crawl.random_range(4,5) or crawl.random_range(2,4),
     subdivide_initial_chance = 90,
     subdivide_level_multiplier = .9,
   }
@@ -70,7 +124,7 @@ TAGS: overwritable layout allow_dup unrand
                                -- not even the edge
                                cell_weight = function(cell)
                                  if cell.tile ~= nil then return 0 end
-                                 if #(cell.edges) > 0 then return 0 end
+                                 if #(cell.edges)>0 then return 20 end
                                  local gcount,track = count_adjacent(cell,true,true)
                                  if gcount>0 then return 0 end
                                  return 10
@@ -86,15 +140,24 @@ TAGS: overwritable layout allow_dup unrand
                         if cell.tile ~= nil then return 0 end
                         -- Some counting: firstly how many total cells are bordering and diagonal
                         local gcount,track = count_adjacent(cell, true, true)
+                        local acount,atrack = count_adjacent(cell, true, false)
                         -- An edge cell that doesn't border any groups has a *small* chance
-                        if gcount == 0 and #(cell.edges) > 0 then return 2 end
+                        if #(cell.edges) > 0 then
+                          if gcount == 0 then return 2
+                          elseif gcount == acount then
+                            -- High chance of connecting edge cells when they're
+                            -- not adjacent to other mid-cells
+                            for n,b in ipairs(cell.borders) do
+                              if #(b.with.edges) == 0 then return 0 end
+                            end
+                            return 20
+                          end
+                        end
                         -- Otherwise only allowed to border one group
                         if gcount ~= 1 then return 0 end
                         -- And in this case it can't be an edge
-                        -- TODO: Allow edge cells to join to other edge cells
                         if #(cell.edges) > 0 then return 0 end
                         -- Check we have exactly one actually adjacent group
-                        local acount,atrack = count_adjacent(cell, true, false)
                         if acount ~= 1 then return 0 end
                         -- Return the first, since there's only 1
                         for g,c in pairs(atrack) do
@@ -111,12 +174,13 @@ TAGS: overwritable layout allow_dup unrand
                         end
                       end }
 
-  -- TODO: Rounded corners (and other render modes)
-
   -- Very simple rendering; just clear the floor cells
   for i,cell in ipairs(grid) do
     if cell.tile ~= "wall" then
       fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
+      if doors then
+        render_room(_G,cell,true)
+      end
     end
   end
 
@@ -137,17 +201,19 @@ TAGS: overwritable layout allow_dup unrand
   if is_validating() then return; end
 
   -- TODO: Less doors, random door positions, add windows, and for
-  -- non-open version start with more areas then link them up. For
-  -- open version de-square the map border.
+  -- non-open version start with more areas then link them up.
+  -- Make the borders less bad and sometimes some central wall regions.
+  -- Customise a little in different branches. Small chance for
+  -- individual buildings to have different materials.
 
   layout_type "city"
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
-  local open = crawl.coinflip()
+  local open = not crawl.one_chance_in(4)
 
   local min = crawl.random_range(3,5)
-  local max = crawl.random_range(min,8)
+  local max = crawl.random_range(math.max(min,4),10)
   local grid_opts = {
     minimum_size = min,
     maximum_size = max,
@@ -159,93 +225,50 @@ TAGS: overwritable layout allow_dup unrand
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Seed a number of buildings
-  local seeds = open and crawl.random_range(2,8) or 1
+  local total = #grid
+  local seeds = open and crawl.random_range(math.ceil(total/50),math.ceil(total/10)) or 1
   groups = omnigrid.tilepick { grid = grid, max_iterations = seeds, tiles = { "city" },
-                               -- Weight cells so we don't pick any that already border something,
-                               -- not even the edge
+                               -- Weight cells so we don't pick any that already border something
                                cell_weight = function(cell)
                                  if cell.tile ~= nil then return 0 end
-                                 if #(cell.edges) > 0 then return 0 end
                                  local gcount,track = count_adjacent(cell, true, true)
                                  if gcount > 0 then return 0 end
                                  return 10
                                end }
 
-  local method = 2 -- crawl.random2(3)
-
   -- Now place more tiles adjacent to these ones
-  omnigrid.tilepick { grid = grid, groups = groups, tiles = { "city" },
+  omnigrid.tilepick { grid = grid, groups = groups, tiles = { "city", "city", "city", "wall" },
                       max_iterations = 500,
-                      cell_weight = function(cell)
-                        -- Ignore used cells and edge cells
-                        if cell.tile ~= nil or #(cell.edges) > 0 then return 0 end
-                        -- Count neighbouring cities
-                        local gcount,track = count_adjacent(cell, true, true, "city")
+                      cell_weight = function(cell,tile)
+                        -- Ignore used cells
+                        if cell.tile ~= nil then return 0 end
+                        -- Count neighbouring tiles of same type
+                        local gcount,track = count_adjacent(cell, true, true, tile)
+                        if tile == "wall" and gcount == 0 then
+                          -- Allow walls to sit on the edge (and are likely to link up)
+                          if #(cell.edges) == 1 then return 5 else return 0 end
+                        end
                         -- We want exactly one bordering group
                         if gcount ~= 1 then return 0 end
                         -- And it has to actually be adjacent
-                        local acount,atrack = count_adjacent(cell, true, false)
+                        local acount,atrack = count_adjacent(cell, true, false, tile == "wall" and tile or nil)
                         if acount ~= 1 then return 0 end
-                        -- Return the first, since there's only 1
-                        for g,c in pairs(atrack) do
-                          if method == 0 then
-                            -- Don't create blocks at all
-                            return c == 1 and 10 or 0
-                          elseif method == 1 then
-                            -- Prefer cells with less wall borders, to encourage spreading
-                            return math.ceil(100/c)
-                          elseif method == 2 then
-                            -- Allow fully blobby areas
-                            return 10
-                          end
-                        end
+                        return 10
                       end }
-
-  local function midpos(b)
-    return { x = crawl.div_rand_round(b.x2+b.x1,2), y = crawl.div_rand_round(b.y2+b.y1,2) }
+  -- Fill in walls
+  for i,cell in ipairs(grid) do
+    if cell.tile == nil then cell.tile = open and "floor" or "wall" end
   end
-
   -- Render all the cells
   for i,cell in ipairs(grid) do
-    if cell.tile == nil then -- "floor" then
-      if open then
-        fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
-      end
+    if cell.tile == "floor" then
+      fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
     elseif cell.tile == "city" then
-      -- Start with a hollow box
-      fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='x' }
-      fill_area{x1=cell.x1+1, y1=cell.y1+1, x2=cell.x2-1, y2=cell.y2-1, fill='.' }
-      -- Loop through borders and carve them
-      for n,b in ipairs(cell.borders) do
-        local pos = midpos(b)
-        if b.len >= 3 then
-          if cell.group == b.with.group then
-            -- Internal door. Decide which side it's going to go
-            if b.has_door == nil then
-              if crawl.x_chance_in_y(2,3) then
-                b.has_door,b.inverse.has_door = false
-              else
-                b.has_door = crawl.coinflip()
-                b.inverse.has_door = not b.has_door
-              end
-            end
-            -- Draw door
-            if b.has_door then mapgrd[pos.x][pos.y] = '+'
-            -- Or erase the wall
-            elseif b.x1==b.x2 then fill_area{x1 = b.x1, y1 = b.y1 + 1, x2 = b.x2, y2 = b.y2 - 1, fill='.' }
-            else fill_area{x1 = b.x1 + 1, y1 = b.y1, x2 = b.x2 - 1, y2 = b.y2, fill='.' } end
-          else
-            -- Door to outside
-            if open then
-              mapgrd[pos.x][pos.y] = '+'
-            end
-          end
-        end
-      end
+      render_room(_G,cell,false)
     end
   end
 
-  -- This shouldn't be needed if everything is working properly
+  -- This shouldn't be needed once everything is working properly
   zonify.map_fill_zones(_G, 1, 'x')
 
 }}
@@ -278,9 +301,10 @@ TAGS: overwritable layout allow_dup unrand
 
   local bounds = padded_bounds(2,8)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+  local doors = crawl.one_chance_in(3)
 
   -- Seed a number of buildings
-  groups = omnigrid.tilepick { grid = grid, tiles = { "room", "corridor", "corridor" },
+  groups = omnigrid.tilepick { grid = grid, tiles = { "room", "room", "room", "corridor", "corridor", "corridor", "corridor", "wall" },
                                cell_weight = function(cell,tile)
                                  if cell.tile ~= nil then return 0 end
                                  if tile == "room" then
@@ -296,6 +320,13 @@ TAGS: overwritable layout allow_dup unrand
                                    else return 0 end
                                  elseif tile == "corridor" then
                                    return 10
+                                 elseif tile == "wall" then
+                                   local rcount,rtrack = count_adjacent(cell, true, false, "wall")
+                                   local rdcount,rdtrack = count_adjacent(cell, true, true, "wall")
+                                   if rcount == 1 and rdcount == 1 then return 20
+                                   elseif rdcount == 0 then return #(cell.edges)>0 and 10 or 5
+                                   else return 0
+                                   end
                                  end
                                end }
   local function midpos(b)
@@ -306,12 +337,46 @@ TAGS: overwritable layout allow_dup unrand
   -- Render all the cells
   for i,cell in ipairs(grid) do
     if cell.tile == "room" then
-      -- TODO: Some partitioning walls (steal midpos again)
       fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
+      if doors then
+        if cell.has_doors == nil then
+          cell.has_doors = crawl.coinflip()
+          -- Don't let any bordering cells have doors. Really should do this
+          -- with tilepick to not favour certain cells first.
+          for n,b in ipairs(cell.borders) do
+            if b.with.tile == "room" then b.with.has_doors = false end
+          end
+        end
+        if cell.has_doors then
+          for n,b in ipairs(cell.borders) do
+            if b.with.tile == "room" then
+              -- TODO: This algorithm isn't perfect; sometimes produces doors in
+              -- corners of walls. Should use this algorithm for cellular_growth too, it
+              -- won't produce the strange artefacts we get there.
+              local pos = border_midpos(b,0)
+              -- Have to juggle some numbers here to make sure we close all the gaps when walling
+              -- over strange angles
+              if ((b.dir) % 2) == 1 then
+                local off1 = b.y1 == b.with.y1 and b.y1 > cell.y1 and 1 or 0
+                local off2 = b.y2 == b.with.y2 and b.y2 < cell.y2 and 1 or 0
+                fill_area{x1 = b.x1, y1 = b.y1 - off1, x2 = b.x2, y2 = b.y2 + off2, fill='x' }
+              else
+                local off1 = b.x1 == b.with.x1 and b.x1 > cell.x1 and 1 or 0
+                local off2 = b.x2 == b.with.x2 and b.x2 < cell.x2 and 1 or 0
+                fill_area{x1 = b.x1 - off1, y1 = b.y1, x2 = b.x2 + off2, y2 = b.y2, fill='x' }
+              end
+              mapgrd[pos.x][pos.y] = '+'
+            end
+          end
+        end
+      end
     elseif cell.tile == "corridor" then
       -- Pick midpos for cell
       local cmid = midpos(cell)
       -- Connect up corridors
+      -- TODO: Produces some odd dead-ends. Should loop back when a corridor connects to nothing
+      -- or paint a small room. Sometimes there are offshoots as well when not many connections
+      -- and the midpoint is more off-center.
       for n,b in ipairs(cell.borders) do
         if b.len>3 and (b.with.tile=="room" or b.with.tile=="corridor") then
           -- Choose the origin for the corridor
@@ -336,6 +401,9 @@ TAGS: overwritable layout allow_dup unrand
       end
     end
   end
+
+  -- This shouldn't be needed once everything is working properly
+  zonify.map_fill_zones(_G, 1, 'x')
 
 }}
 MAP
