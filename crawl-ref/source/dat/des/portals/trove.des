@@ -739,7 +739,7 @@ TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
-ITEM:    chain mail unrand:lears_chain_mail                                  /\
+ITEM:    chain mail unrand:lears_hauberk                                     /\
          randart plate armour w:50                                           /\
          plate armour unrand:maxwells_patent_armour                          /\
          randart fire dragon armour                                          /\
