@@ -5161,7 +5161,7 @@ MONS:   deep dwarf death knight ; \
         chain mail race:dwarven w:7 | \
         plate armour race:dwarven w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
-MONS:   plague shambler / freezing wraith / phantasmal warrior / \
+MONS:   freezing wraith / phantasmal warrior / \
         flaming corpse / flayed ghost / skeletal warrior
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  - = open_door
