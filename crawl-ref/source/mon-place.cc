@@ -1505,7 +1505,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     const bool summoned = mg.abjuration_duration >= 1
                        && mg.abjuration_duration <= 6;
 
-    if (mg.cls == MONS_DANCING_WEAPON || mg.cls == MONS_SPECTRAL_WEAPON)
+    if (mg.cls == MONS_DANCING_WEAPON)
     {
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());

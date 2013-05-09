@@ -917,9 +917,6 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SENTINEL_MARK,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
-	DUR_INFUSION,
-	DUR_SONG_OF_SLAYING,
-	DUR_SPIRIT_SHIELD
     };
 
     status_info inf;
