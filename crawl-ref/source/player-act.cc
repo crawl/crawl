@@ -594,9 +594,8 @@ void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!other) {
+    if (!other)
         return;
-    }
 
     if (other->is_monster())
     {
@@ -604,9 +603,10 @@ void player::attacking(actor *other)
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
-    if (mons_is_firewood((monster*) other)) {
+
+    if (mons_is_firewood((monster*) other))
         return;
-    }
+
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
     if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))
         go_berserk(false);

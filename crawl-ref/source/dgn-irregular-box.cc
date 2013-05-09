@@ -69,7 +69,7 @@ static void _randomly_force_sum_below(int& a, int& b, int sum)
     if(sum <= 0)
         return;
 
-    while(a + b >= sum)
+    while (a + b >= sum)
     {
         if(random2(2) == 0)
             a = random2(a);
@@ -331,7 +331,7 @@ static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
 
     map[start_x][start_y] = new_glyph;
     stack.push_back(coord_def(start_x, start_y));
-    while(!stack.empty())
+    while (!stack.empty())
     {
         int x = stack.back().x;
         int y = stack.back().y;
@@ -484,7 +484,7 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
     // Overlapping corners are really hard to detect beforehand
     //  and quite rare, so we will just regenerate the whole
     //  room if they happen.
-    while(regenerate_needed)
+    while (regenerate_needed)
     {
         new_glyphs.assign(size_x, vector<char>(size_y, UNSET_GLYPH));
 

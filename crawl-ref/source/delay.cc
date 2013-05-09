@@ -1838,9 +1838,7 @@ bool interrupt_activity(activity_interrupt_type ai,
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
     if (ai == AI_HUNGRY && _auto_eat(delay) && prompt_eat_chunks(true) == 1)
-    {
         return false;
-    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
