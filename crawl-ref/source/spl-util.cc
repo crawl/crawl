@@ -371,6 +371,9 @@ bool del_spell_from_memory(spell_type spell)
 
 int spell_hunger(spell_type which_spell, bool rod)
 {
+    if (player_energy())
+        return 0;
+
     const int level = spell_difficulty(which_spell);
 
     const int basehunger[] = {
@@ -391,9 +394,6 @@ int spell_hunger(spell_type which_spell, bool rod)
     }
     else
         hunger -= you.skill(SK_SPELLCASTING, you.intel());
-
-    // Staff of energy
-    hunger /= (1 + 2 * player_energy());
 
     if (hunger < 0)
         hunger = 0;
