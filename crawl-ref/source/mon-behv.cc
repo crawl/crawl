@@ -60,6 +60,10 @@ static void _guess_invis_foe_pos(monster* mon)
 
 static void _mon_check_foe_invalid(monster* mon)
 {
+	// assume a spectral weapon has a valid target
+	if(mon->type == MONS_SPECTRAL_WEAPON)
+		return;
+
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
         if (actor *foe = mon->get_foe())
@@ -256,6 +260,24 @@ void handle_behaviour(monster* mon)
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
+	// the target, foe set here for a spectral weapon should never change
+	if (mon->type == MONS_SPECTRAL_WEAPON)
+	{
+		mon->target = you.pos();
+		mon->foe = MHITNOT;
+		// Try to move towards any monsters the player is attacking
+		if (mon->props.exists("target_mid"))
+		{
+        		monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
+			// Only try to move towards the monster if the player is still next to it
+			if (target_monster && target_monster->alive() && adjacent(target_monster->pos(), you.pos()))
+			{
+				mon->target = target_monster->pos();
+				mon->foe = target_monster->mindex();
+			}
+		}
+	}
+
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
     if (proxPlayer && !you.visible_to(mon))
@@ -396,21 +418,6 @@ void handle_behaviour(monster* mon)
     // Validate current target again.
     _mon_check_foe_invalid(mon);
 
-	if (mon->type == MONS_SPECTRAL_WEAPON)
-	{
-		mon->target = you.pos();
-		// Try to move towards any monsters the player is attacking
-		if (mon->props.exists("target_mid"))
-		{
-        		monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
-			if (target_monster && target_monster->alive() && adjacent(target_monster->pos(), you.pos()))
-			{
-				mon->target = target_monster->pos();
-			}
-		}
-		// A spectral weapon never attacks on its own
-		mon->foe = MHITNOT;
-	}
     while (changed)
     {
         actor* afoe = mon->get_foe();
