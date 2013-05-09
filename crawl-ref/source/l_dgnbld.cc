@@ -229,17 +229,17 @@ static vector<coord_def> _get_pool_seed_positions(
 {
     const int NO_POOL   = 999997; // must match dgn_add_pools
 
-    if(pool_size < 1)
+    if (pool_size < 1)
         pool_size = 1;
 
     // 1. Find all floor positions
 
     vector<coord_def> floor_positions;
 
-    for(unsigned int x = 0; x < pool_index.size(); x++)
-        for(unsigned int y = 0; y < pool_index[x].size(); y++)
+    for (unsigned int x = 0; x < pool_index.size(); x++)
+        for (unsigned int y = 0; y < pool_index[x].size(); y++)
         {
-            if(pool_index[x][y] == NO_POOL)
+            if (pool_index[x][y] == NO_POOL)
                 floor_positions.push_back(coord_def(x, y));
         }
 
@@ -313,20 +313,20 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
         while (lua_next(ls, -2) != 0)
         {
             // uses 'key' (at index -2) and 'value' (at index -1)
-            if(lua_type(ls, -2) == LUA_TSTRING
-               && lua_type(ls, -1) == LUA_TNUMBER)
+            if (lua_type(ls, -2) == LUA_TSTRING
+                && lua_type(ls, -1) == LUA_TNUMBER)
             {
                 // we use first character of string as glyph
                 char glyph = (lua_tostring(ls, -2))[0];
 
                 int count = lua_tointeger(ls, -1);
                 // sanity-check
-                if(count > 10000)
+                if (count > 10000)
                     count = 10000;
 
-                if(glyph != '\0')
+                if (glyph != '\0')
                 {
-                    for(int i = 0; i < count; i++)
+                    for (int i = 0; i < count; i++)
                         fill_glyphs.push_back(glyph);
                 }
             }
@@ -338,7 +338,7 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
     lua_pop(ls, 1);
 
     // We might have not got anything, if so, use floor
-    if(fill_glyphs.size() == 0)
+    if (fill_glyphs.size() == 0)
         fill_glyphs.push_back('.');
 
     return fill_glyphs;
@@ -360,18 +360,18 @@ static bool _wall_is_empty(map_lines &lines,
         while (true)
         {
             coord_def pos(x + length.x*n,y + length.y*n);
-            if(!lines.in_bounds(coord_def(pos.x + normal.x, pos.y + normal.y))
-               || !strchr(floor, lines(pos.x + normal.x, pos.y + normal.y)))
+            if (!lines.in_bounds(coord_def(pos.x + normal.x, pos.y + normal.y))
+                || !strchr(floor, lines(pos.x + normal.x, pos.y + normal.y)))
             {
                 break;
             }
-            if(!lines.in_bounds(coord_def(pos.x - normal.x, pos.y - normal.y))
-               || !strchr(floor, lines(pos.x - normal.x, pos.y - normal.y)))
+            if (!lines.in_bounds(coord_def(pos.x - normal.x, pos.y - normal.y))
+                || !strchr(floor, lines(pos.x - normal.x, pos.y - normal.y)))
             {
                 break;
             }
 
-            if(!strchr(wall, lines(pos.x, pos.y)))
+            if (!strchr(wall, lines(pos.x, pos.y)))
                 return false;
 
             n++;
@@ -896,13 +896,13 @@ LUAFN(dgn_remove_isolated_glyphs)
         return 0;
 
     // we never change the border
-    if(x1 < 1)
+    if (x1 < 1)
         x1 = 1;
-    if(x2 >= lines.width() - 1)
+    if (x2 >= lines.width() - 1)
         x2 = lines.width() - 2;
-    if(y1 < 1)
+    if (y1 < 1)
         y1 = 1;
-    if(y2 >= lines.height() - 1)
+    if (y2 >= lines.height() - 1)
         y2 = lines.height() - 2;
 
     for (int y = y1; y <= y2; ++y)
@@ -921,7 +921,7 @@ LUAFN(dgn_remove_isolated_glyphs)
                             break;
                         }
                 }
-                if(do_replace)
+                if (do_replace)
                     lines(x, y) = replace;
             }
 
@@ -943,13 +943,13 @@ LUAFN(dgn_widen_paths)
         return 0;
 
     // we never change the border
-    if(x1 < 1)
+    if (x1 < 1)
         x1 = 1;
-    if(x2 >= lines.width() - 1)
+    if (x2 >= lines.width() - 1)
         x2 = lines.width() - 2;
-    if(y1 < 1)
+    if (y1 < 1)
         y1 = 1;
-    if(y2 >= lines.height() - 1)
+    if (y2 >= lines.height() - 1)
         y2 = lines.height() - 2;
 
     float antifraction_each = 1.0 - percent / 100.0f;
@@ -979,7 +979,7 @@ LUAFN(dgn_widen_paths)
                 }
 
                 // store this coordinate if needed
-                if(x_chance_in_y(percent_for_neighbours[neighbour_count], 100))
+                if (x_chance_in_y(percent_for_neighbours[neighbour_count], 100))
                     coord_to_replace.push_back(coord_def(x, y));
             }
 
@@ -1006,13 +1006,13 @@ LUAFN(dgn_connect_adjacent_rooms)
         return 0;
 
     // we never go right up to the border to avoid looking off the map edge
-    if(x1 < 1)
+    if (x1 < 1)
         x1 = 1;
-    if(x2 >= lines.width() - 1)
+    if (x2 >= lines.width() - 1)
         x2 = lines.width() - 2;
-    if(y1 < 1)
+    if (y1 < 1)
         y1 = 1;
-    if(y2 >= lines.height() - 1)
+    if (y2 >= lines.height() - 1)
         y2 = lines.height() - 2;
 
     if (min < 0)
@@ -1027,7 +1027,7 @@ LUAFN(dgn_connect_adjacent_rooms)
     for (random_rectangle_iterator ri(coord_def(x1, y1),
                                       coord_def(x2, y2)); ri; ++ri)
     {
-        if(count <= 0)
+        if (count <= 0)
         {
             // stop when have checked enough spots
             return 0;
@@ -1196,7 +1196,7 @@ LUAFN(dgn_replace_closest)
             {
                 coord_def here(this_x, this_y);
                 int distance = here.distance_from(center);
-                if(distance < best_distance)
+                if (distance < best_distance)
                 {
                     best_distance = distance;
                     best_count = 1;
@@ -1205,7 +1205,7 @@ LUAFN(dgn_replace_closest)
                 else if (distance == best_distance)
                 {
                     best_count++;
-                    if(one_chance_in(best_count))
+                    if (one_chance_in(best_count))
                         best_coord = here;
                 }
             }
@@ -1380,10 +1380,10 @@ LUAFN(dgn_add_pools)
     //       compile time.
 
     vector<vector<int> > pool_index(size_x, vector<int>(size_y, FORBIDDEN));
-    for(int x = 0; x < size_x; x++)
-        for(int y = 0; y < size_y; y++)
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
         {
-            if(strchr(replace, lines(x + x1, y + y1)))
+            if (strchr(replace, lines(x + x1, y + y1)))
                 pool_index[x][y] = NO_POOL;
         }
 
@@ -1394,7 +1394,7 @@ LUAFN(dgn_add_pools)
                                                             seed_seperation);
     vector<coord_def> open_list;
 
-    for(unsigned int pool = 0; pool < pool_seeds.size(); pool++)
+    for (unsigned int pool = 0; pool < pool_seeds.size(); pool++)
     {
         int x = pool_seeds[pool].x;
         int y = pool_seeds[pool].y;
@@ -1412,7 +1412,7 @@ LUAFN(dgn_add_pools)
 
     // Step 3: Spread out pools as far as possible
 
-    while(!open_list.empty())
+    while (!open_list.empty())
     {
         // remove a random position from the open list
         int index_chosen = random2(open_list.size());
@@ -1426,12 +1426,12 @@ LUAFN(dgn_add_pools)
             if (_valid_coord(ls, lines, ai->x, ai->y, false))
             {
                 int neighbour_pool = pool_index[ai->x][ai->y];
-                if(neighbour_pool < NO_POOL)
+                if (neighbour_pool < NO_POOL)
                 {
                     // this is a valid pool, consider it
-                    if(chosen_pool == NO_POOL)
+                    if (chosen_pool == NO_POOL)
                         chosen_pool = neighbour_pool;
-                    else if(chosen_pool == neighbour_pool)
+                    else if (chosen_pool == neighbour_pool)
                         ; // already correct
                     else
                     {
@@ -1448,7 +1448,7 @@ LUAFN(dgn_add_pools)
                 }
             }
 
-        if(chosen_pool != NO_POOL)
+        if (chosen_pool != NO_POOL)
         {
             // add this cell to the appropriate pool
             pool_index[chosen_coord.x][chosen_coord.y] = chosen_pool;
@@ -1472,18 +1472,18 @@ LUAFN(dgn_add_pools)
     // Step 4: Add the pools to the map
 
     vector<char> pool_glyphs(pool_seeds.size(), '\0');
-    for(unsigned int i = 0; i < pool_glyphs.size(); i++)
+    for (unsigned int i = 0; i < pool_glyphs.size(); i++)
         pool_glyphs[i] = fill_glyphs[random2(fill_glyphs.size())];
 
-    for(int x = 0; x < size_x; x++)
-        for(int y = 0; y < size_y; y++)
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
             {
             int index = pool_index[x][y];
-            if(index < (int)(pool_glyphs.size()))
+            if (index < (int)(pool_glyphs.size()))
                 lines(x + x1, y + y1) = pool_glyphs[index];
-            else if(index == NO_POOL || index == BORDER)
+            else if (index == NO_POOL || index == BORDER)
                 lines(x + x1, y + y1) = border;
-            else if(index == FORBIDDEN)
+            else if (index == FORBIDDEN)
                 ; // leave it alone
             else
             {
