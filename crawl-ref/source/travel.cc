@@ -2594,6 +2594,12 @@ static void _start_translevel_travel_prompt()
     if (!i_feel_safe(true, true))
         return;
 
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.
     travel_cache.get_level_info(level_id::current()).update();
