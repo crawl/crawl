@@ -68,15 +68,18 @@
     end
   end
 
-  function border_midpos(b,offset)
-    if offset == nil then offset = 1 end
+  function border_midpos(b,offset1,offset2)
+    if offset1 == nil then offset1 = 1 end
+    if offset2 == nil then offset2 = offset1 end
     if b.mid == nil then
       if b.len == 1 then b.mid = { x = b.x1, y = b.y1 }
-      else b.mid = { x = (b.x1==b.x2) and b.x1 or crawl.random_range(b.x1+offset,b.x2-offset),
-                     y = (b.y1==b.y2) and b.y1 or crawl.random_range(b.y1+offset,b.y2-offset) } end
+      else b.mid = { x = (b.x1==b.x2) and b.x1 or crawl.random_range(b.x1+offset1,b.x2-offset2),
+                     y = (b.y1==b.y2) and b.y1 or crawl.random_range(b.y1+offset1,b.y2-offset2) } end
       -- Set the inverse border's mid whilst we're at it
-      b.inverse.mid = { x = b.mid.x, y = b.mid.y }
-      if b.dir%2 == 1 then b.inverse.mid.x = b.inverse.x1 else b.inverse.mid.y = b.inverse.y1 end
+      if b.inverse ~= nil then
+        b.inverse.mid = { x = b.mid.x, y = b.mid.y }
+        if b.dir%2 == 1 then b.inverse.mid.x = b.inverse.x1 else b.inverse.mid.y = b.inverse.y1 end
+      end
     end
     return b.mid
   end
@@ -302,6 +305,7 @@ TAGS: overwritable layout allow_dup unrand
   local bounds = padded_bounds(2,8)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
   local doors = crawl.one_chance_in(3)
+  local maxcorridor = crawl.random2(math.ceil(you.depth()/9))+1
 
   -- Seed a number of buildings
   groups = omnigrid.tilepick { grid = grid, tiles = { "room", "room", "room", "corridor", "corridor", "corridor", "corridor", "wall" },
@@ -329,10 +333,6 @@ TAGS: overwritable layout allow_dup unrand
                                    end
                                  end
                                end }
-  local function midpos(b)
-    return { x = (b.x1==b.x2) and b.x1 or crawl.random_range(b.x1+1,b.x2-1),
-             y = (b.y1==b.y2) and b.y1 or crawl.random_range(b.y1+1,b.y2-1) }
-  end
 
   -- Render all the cells
   for i,cell in ipairs(grid) do
@@ -372,30 +372,34 @@ TAGS: overwritable layout allow_dup unrand
       end
     elseif cell.tile == "corridor" then
       -- Pick midpos for cell
-      local cmid = midpos(cell)
+      local cmid = border_midpos(cell)
       -- Connect up corridors
       -- TODO: Produces some odd dead-ends. Should loop back when a corridor connects to nothing
       -- or paint a small room. Sometimes there are offshoots as well when not many connections
       -- and the midpoint is more off-center.
       for n,b in ipairs(cell.borders) do
-        if b.len>3 and (b.with.tile=="room" or b.with.tile=="corridor") then
+        if b.len>=3 and (b.with.tile=="room" or b.with.tile=="corridor") then
           -- Choose the origin for the corridor
-          b.pos = b.inverse.pos or midpos(b)
-          -- Might inherit pos from the opposite border
-          local pos = b.pos
-          -- But make sure we use the right x or y coord depending on the border orientation
-          if b.x1==b.x2 then pos.x = b.x1
-          else pos.y = b.y1 end
+          if b.width==nil then
+            b.width = crawl.random2(math.min(maxcorridor,b.len-2))+1
+            b.inverse.width = b.width
+          end
+          local pos = border_midpos(b,1,b.width)
+          local x = 0
+          while x < b.width do
+            -- We'll draw a right-angled line from here to cpos. The first part of the line
+            -- has to go in the direction indicated by d.dir.
+            local bendpos = (b.dir % 2 == 0) and { x = pos.x, y = cmid.y } or { x = cmid.x, y = pos.y }
+            fill_area{x1=pos.x, y1=pos.y, x2=bendpos.x, y2=bendpos.y, fill='.' }
+            fill_area{x1=bendpos.x, y1=bendpos.y, x2=cmid.x, y2=cmid.y, fill='.' }
 
-          -- We'll draw a right-angled line from here to cpos. The first part of the line
-          -- has to go in the direction indicated by d.dir.
-          local bendpos = (b.dir % 2 == 0) and { x = pos.x, y = cmid.y } or { x = cmid.x, y = pos.y }
-          fill_area{x1=pos.x, y1=pos.y, x2=bendpos.x, y2=bendpos.y, fill='.' }
-          fill_area{x1=bendpos.x, y1=bendpos.y, x2=cmid.x, y2=cmid.y, fill='.' }
-
-          -- If connected to a room, create a door there
-          if b.with.tile == "room" then
-            mapgrd[pos.x][pos.y] = "+"
+            -- If connected to a room, create a door there
+            if b.with.tile == "room" then
+              mapgrd[pos.x][pos.y] = "+"
+            end
+            if b.dir % 2 == 1 then pos.y=pos.y+1
+            else pos.x=pos.x+1 end
+            x = x + 1
           end
         end
       end
