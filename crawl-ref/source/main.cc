@@ -3083,6 +3083,10 @@ static void _player_reacts()
     if (you.attribute[ATTR_NOISES])
         noisy_equipment();
 
+	// Singing makes a continous noise
+	if (you.duration[DUR_SONG_OF_SLAYING])
+		noisy(8, you.pos());
+
     if (one_chance_in(10))
     {
         const int teleportitis_level = player_teleport();
