@@ -2845,7 +2845,7 @@ static int _chunks_needed()
     {
         if (you.inv[i].defined()
             && you.inv[i].base_type == OBJ_STAVES
-            && you.inv[i].sub_type == STAFF_CHANNELING)
+            && you.inv[i].sub_type == STAFF_ENERGY)
         {
             channeling = true;
         }

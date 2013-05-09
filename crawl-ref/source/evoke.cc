@@ -785,7 +785,7 @@ bool evoke_item(int slot)
 
     case OBJ_STAVES:
         ASSERT(wielded);
-        if (item.sub_type != STAFF_CHANNELING)
+        if (item.sub_type != STAFF_ENERGY)
         {
             unevokable = true;
             break;

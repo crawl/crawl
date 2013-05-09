@@ -2869,8 +2869,12 @@ void unmarshallItem(reader &th, item_def &item)
             item.flags |= ISFLAG_KNOW_TYPE;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
+    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
+        item.sub_type = STAFF_ENERGY;
+#endif
 
     if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
     {
