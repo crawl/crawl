@@ -233,7 +233,7 @@ TAGS: transparent
 SUBST: m = mb
 KFEAT: s = general shop type:Hardware suffix:Store ; any deck | any wand w:90 | any rod | \
    ring of invisibility | ring of flight | ring of teleportation | \
-   amulet of rage | staff of channeling w:3 | air elemental fan w:3 | \
+   amulet of rage | staff of energy w:3 | air elemental fan w:3 | \
    bottled efreet w:3 | lamp of fire w:3 | box of beasts w:3 | \
    stone of earth elementals w:3 | lantern of shadows w:3 | disc of storms w:3 | \
    crystal ball of energy w:3 | scroll of recharging w:5 | manual of evocations w:2 | \

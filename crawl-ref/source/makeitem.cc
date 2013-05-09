@@ -2900,14 +2900,10 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
         item.sub_type = random2(NUM_STAVES);
 #endif
 
-        // staves of energy/channeling are 25% less common, wizardry/power
+        // staves of energy are 25% less common, wizardry/power
         // are more common
-        if ((item.sub_type == STAFF_ENERGY
-                || item.sub_type == STAFF_CHANNELING)
-            && one_chance_in(4))
-        {
+        if (item.sub_type == STAFF_ENERGY && one_chance_in(4))
             item.sub_type = coinflip() ? STAFF_WIZARDRY : STAFF_POWER;
-        }
     }
     else
         item.sub_type = force_type;
