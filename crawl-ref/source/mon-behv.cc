@@ -75,7 +75,6 @@ static void _mon_check_foe_invalid(monster* mon)
 
         mon->foe = MHITNOT;
     }
-
 }
 
 static bool _mon_tries_regain_los(monster* mon)
@@ -296,6 +295,22 @@ void handle_behaviour(monster* mon)
             //     mon->name(DESC_THE,true).c_str());
         }
     }
+	if (mon->type == MONS_SPECTRAL_WEAPON)
+	{
+		mon->target = you.pos();
+		// Try to move towards any monsters the player is attacking
+		if (mon->props.exists("target_mid"))
+		{
+			monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
+			if (target_monster && target_monster->alive() && adjacent(target_monster->pos(), you.pos()))
+			{
+				mon->target = target_monster->pos();
+			}
+		}
+
+		// A spectral weapon never attacks on its own
+		mon->foe = MHITNOT;
+	}
 
     // Set friendly target, if they don't already have one.
     // Berserking allies ignore your commands!
@@ -304,14 +319,12 @@ void handle_behaviour(monster* mon)
         && !mon->berserk()
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
-        && mon->type != MONS_BATTLESPHERE
-	&& mon->type != MONS_SPECTRAL_WEAPON)
+        && mon->type != MONS_BATTLESPHERE)
     {
         if  (!crawl_state.game_is_zotdef())
         {
             if (you.pet_target != MHITNOT)
                 mon->foe = you.pet_target;
-
         }
         else    // Zotdef only
         {
@@ -358,8 +371,7 @@ void handle_behaviour(monster* mon)
     }
 
     // Friendly summons will come back to the player if they go out of sight.
-	// Spectral weapon should keep its target even though it can't attack it
-    if (!summon_can_attack(mon) && mon->type!=MONS_SPECTRAL_WEAPON)
+    if (!summon_can_attack(mon))
         mon->target = you.pos();
 
     // Monsters do not attack themselves. {dlb}
@@ -396,21 +408,6 @@ void handle_behaviour(monster* mon)
     // Validate current target again.
     _mon_check_foe_invalid(mon);
 
-	if (mon->type == MONS_SPECTRAL_WEAPON)
-	{
-		mon->target = you.pos();
-		// Try to move towards any monsters the player is attacking
-		if (mon->props.exists("target_mid"))
-		{
-			monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
-			if (target_monster && target_monster->alive() && adjacent(target_monster->pos(), you.pos()))
-			{
-				mon->target = target_monster->pos();
-			}
-		}
-		// A spectral weapon never attacks on its own
-		mon->foe = MHITNOT;
-	}
     while (changed)
     {
         actor* afoe = mon->get_foe();
@@ -460,8 +457,6 @@ void handle_behaviour(monster* mon)
             // Fall through to get a target, but don't change to wandering.
 
         case BEH_SEEK:
-		if (mon->type == MONS_SPECTRAL_WEAPON)
-			break;
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {

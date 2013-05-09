@@ -131,9 +131,6 @@ static duration_def duration_data[] =
       BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
     { DUR_SENTINEL_MARK, true,
       MAGENTA, "Mark", "marked", "You are marked for hunting." },
-    { DUR_INFUSION, true, BLUE, "Infus", "infused", "Your attacks are magically infused."},
-    { DUR_SONG_OF_SLAYING, true, BLUE, "Slay", "singing", "Your melee attacks are strengthened by your song."},
-    { DUR_SPIRIT_SHIELD, true, BLUE, "SShield", "shielded", "Your magic is protecting you."},
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -432,8 +429,6 @@ bool fill_status_info(int status, status_info* inf)
         _mark_expiring(inf, dur_expiring(DUR_INVIS));
         break;
 
-
-
     case DUR_POISONING:
         _describe_poison(inf);
         break;
@@ -539,10 +534,6 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "You are silenced.";
         }
         break;
-
-	case DUR_SONG_OF_SLAYING:
-		inf->light_text = make_stringf("Slay (%u)", you.props["song_of_slaying_bonus"].get_int());
-	break;
 
     case STATUS_NO_CTELE:
         if (!allow_control_teleport(true))

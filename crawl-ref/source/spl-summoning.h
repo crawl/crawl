@@ -81,8 +81,6 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 spret_type cast_abjuration(int pow, const coord_def& where, bool fail = false);
 spret_type cast_mass_abjuration(int pow, bool fail = false);
 
-spret_type cast_spectral_weapon(int pow, bool fail);
-
 monster* find_battlesphere(const actor* agent);
 spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail);
 void end_battlesphere(monster* mons, bool killed);
