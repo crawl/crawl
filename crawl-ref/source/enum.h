@@ -57,6 +57,7 @@ enum ability_type
     // Others
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
+	ABIL_STOP_SINGING, // From song of slaying
 
     // Species-specific abilities.
     // Demonspawn-only
