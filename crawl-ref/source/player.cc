@@ -2612,20 +2612,6 @@ int player_armour_shield_spell_penalty()
     return (max(total_penalty, 0) / scale);
 }
 
-static int _player_magical_power(void)
-{
-    if (you.suppressed())
-        return 0;
-
-    int ret = 0;
-
-    ret += 13 * you.wearing(EQ_STAFF, STAFF_POWER);
-    ret +=  9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
-    ret +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
-
-    return ret;
-}
-
 int player_mag_abil(bool is_weighted)
 {
     int ma = 0;
@@ -4734,18 +4720,24 @@ int get_real_mp(bool include_items)
                - (player_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100;
 
+    if (you.suppressed())
+        include_items = false;
+
     // Now applied after scaling so that power items are more useful -- bwr
     if (include_items)
-        enp += _player_magical_power();
+    {
+        enp +=  9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
+        enp +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
+
+        if (you.wearing(EQ_STAFF, STAFF_POWER))
+            enp += 5 + enp * 2 / 5;
+    }
 
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
 
-    if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC)
-        && !you.suppressed())
-    {
+    if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
-    }
 
     enp = max(enp, 0);
 
