@@ -196,11 +196,6 @@ void debug_item_scan(void)
                         || !is_artefact(mitm[i])
                            && mitm[i].special >= NUM_SPECIAL_WEAPONS))
 
-                 || (mitm[i].base_type == OBJ_MISSILES
-                     && (abs(mitm[i].plus) > 30
-                         || !is_artefact(mitm[i])
-                            && mitm[i].special >= NUM_SPECIAL_MISSILES))
-
                  || (mitm[i].base_type == OBJ_ARMOUR
                      && (abs(mitm[i].plus) > 30
                          || !is_artefact(mitm[i])
