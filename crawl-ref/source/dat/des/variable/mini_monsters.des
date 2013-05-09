@@ -504,9 +504,6 @@ KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
 KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
 # Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
 KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
-: if you.absdepth() > 6 then
-TAGS:   extra
-: end
 MAP
        xxxxx
       xxxxxxx
