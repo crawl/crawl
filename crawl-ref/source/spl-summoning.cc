@@ -871,7 +871,7 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 	mons->ac = 3 + skill_with_weapon/2;
 	mons->ev = 3 + skill_with_weapon/2;
 
-	mpr("You create a spectral weapon.");
+	mpr("You draw out your weapon's spirit!");
 
     return SPRET_SUCCESS;
 }
