@@ -4728,15 +4728,15 @@ int get_real_mp(bool include_items)
     // the nice way. -- bwr
     enp = min(enp, 50);
 
-    // Now applied after scaling so that power items are more useful -- bwr
-    if (include_items)
-        enp += _player_magical_power();
-
     // Analogous to ROBUST/FRAIL
     enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (player_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100;
+
+    // Now applied after scaling so that power items are more useful -- bwr
+    if (include_items)
+        enp += _player_magical_power();
 
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
