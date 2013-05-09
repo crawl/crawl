@@ -77,12 +77,9 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line);
         WARN_POP                                        \
     } while (false)
 
-#define VERIFY(p)       ASSERT(p)
-
 #else
 
 #define ASSERT(p)       ((void) 0)
-#define VERIFY(p)       do {if (p) ;} while (false)
 
 #endif
 
