@@ -280,10 +280,10 @@ ENDMAP
 
 # A bit similar to roguey but better architecture.
 NAME:   layout_gridlike
-DEPTH:  D:10-, Lair:2-, Snake, Elf, Pan
-WEIGHT: 20, 50(D)
+DEPTH:  D:10-, Lair, Crypt, Snake, Elf, Pan
+WEIGHT: 20, 50(D), 100(Elf)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 {{
   if is_validating() then return; end
 
@@ -305,13 +305,52 @@ TAGS: overwritable layout allow_dup unrand
   local bounds = padded_bounds(2,8)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
   local doors = crawl.one_chance_in(3)
+  local corners = false
+  local regular_grid = false
   local maxcorridor = crawl.random2(math.ceil(you.depth()/9))+1
+  local random_rooms = false
+  local collapse_rooms = true
+  local corridor_doors = true
+  local big_corridors = false
+
+  if you.branch() == "Crypt" then
+    corners = true
+    regular_grid = true
+    collapse_rooms = false
+    big_corridors = true
+    maxcorridor = crawl.random_range(2,3)
+  elseif you.branch() == "Elf" then
+    corners = true
+    doors = false
+    regular_grid = true
+    maxcorridor = crawl.random_range(1,2)
+  elseif you.branch() == "Snake" then
+    corners = true
+    corridor_doors = crawl.coinflip()
+    random_rooms = crawl.coinflip()
+    maxcorridor = crawl.random_range(1,4)
+  elseif you.branch() == "Lair" then
+    doors = false
+    corridor_doors = false
+    corners = crawl.coinflip()
+    maxcorridor = 4
+    random_rooms = true
+  elseif you.branch() == "Pan" then
+    regular_grid = crawl.coinflip()
+    doors = false
+    corridor_doors = false
+    collapse_rooms = crawl.coinflip()
+    corners = crawl.coinflip()
+    random_rooms = crawl.coinflip()
+    maxcorridor = crawl.random_range(1,4)
+  end
 
   -- Seed a number of buildings
   groups = omnigrid.tilepick { grid = grid, tiles = { "room", "room", "room", "corridor", "corridor", "corridor", "corridor", "wall" },
                                cell_weight = function(cell,tile)
                                  if cell.tile ~= nil then return 0 end
                                  if tile == "room" then
+                                   if random_rooms then return 10 end
                                    local rcount,rtrack = count_adjacent(cell, true, false, "room")
                                    local rdcount,rdtrack = count_adjacent(cell, true, true, "room")
                                    if rcount == 1 and rdcount == 1 then
@@ -334,57 +373,151 @@ TAGS: overwritable layout allow_dup unrand
                                  end
                                end }
 
+  local function render_walls(cell)
+    if cell.has_doors == nil then
+      cell.has_doors = crawl.coinflip()
+      -- Don't let any bordering cells have doors. Really should do this
+      -- with tilepick to not favour certain cells first.
+      if cell.has_doors then
+        for n,b in ipairs(cell.borders) do
+          if b.with.tile == "room" then b.with.has_doors = false end
+        end
+      end
+    end
+    if cell.has_doors then
+      for n,b in ipairs(cell.borders) do
+        if b.with.tile == "room" then
+          -- TODO: This algorithm isn't perfect; sometimes produces doors in
+          -- corners of walls. Should use this algorithm for cellular_growth too, it
+          -- won't produce the strange artefacts we get there.
+          local pos = border_midpos(b,0)
+          -- Have to juggle some numbers here to make sure we close all the gaps when walling
+          -- over strange angles
+          if ((b.dir) % 2) == 1 then
+            local off1 = b.y1 == b.with.y1 and b.y1 > cell.y1 and 1 or 0
+            local off2 = b.y2 == b.with.y2 and b.y2 < cell.y2 and 1 or 0
+            fill_area{x1 = b.x1, y1 = b.y1 - off1, x2 = b.x2, y2 = b.y2 + off2, fill='x' }
+          else
+            local off1 = b.x1 == b.with.x1 and b.x1 > cell.x1 and 1 or 0
+            local off2 = b.x2 == b.with.x2 and b.x2 < cell.x2 and 1 or 0
+            fill_area{x1 = b.x1 - off1, y1 = b.y1, x2 = b.x2 + off2, y2 = b.y2, fill='x' }
+          end
+          mapgrd[pos.x][pos.y] = '+'
+        end
+      end
+    end
+  end
+
+  local function midpos(b,maxcorridor)
+    -- Choose the origin for the corridor
+    if b.width==nil then
+      local max = math.min(maxcorridor,b.len-2)
+      b.width = big_corridors and max or (crawl.random2(max)+1)
+      b.inverse.width = b.width
+    end
+    return border_midpos(b,1,b.width)
+  end
+
+  local function render_corners(cell)
+    local sides = {}
+    local width,height = cell.x2-cell.x1+1,cell.y2-cell.y1+1
+    for n = 0,3,1 do
+      sides[n]={ min = nil,max = nil }
+    end
+    for i,b in ipairs(cell.borders) do
+      local vmin,vmax
+      if b.with.tile == "room" and b.mid == nil and collapse_rooms then
+        midpos(b,b.len)
+      end
+      if b.mid ~= nil or b.with.tile == "corridor" then
+        local pos = b.mid or midpos(b,maxcorridor)
+        if b.width == nil then b.width=1 end
+        if b.dir%2==0 then
+          vmin,vmax = pos.x-cell.x1+1,pos.x+b.width-cell.x1+1
+        else
+          vmin,vmax = pos.y-cell.y1+1,pos.y+b.width-cell.y1+1
+        end
+      elseif b.with.tile == "room" then
+        if b.dir%2==0 then
+          vmin,vmax = b.x1-cell.x1+1,b.x2-cell.x1+1
+        else
+          vmin,vmax = b.y1-cell.y1+1,b.y2-cell.y1+1
+        end
+      end
+      if vmin ~= nil then
+        if sides[b.dir].min == nil or vmin < sides[b.dir].min then
+          sides[b.dir].min = vmin
+        end
+        if sides[b.dir].max == nil or vmax < sides[b.dir].max then
+          sides[b.dir].max = vmax
+        end
+      end
+    end
+    for n = 0,3,1 do
+      if sides[n].min == nil then
+        local len
+        if n%2==0 then len = cell.x2-cell.x1+1 else len = cell.y2-cell.y1+1 end
+        sides[n].min = crawl.div_rand_round(len,2)
+        sides[n].max = sides[n].min
+      end
+    end
+
+    local corners = {
+      { len = width, min1 = sides[0].min-1, min2 = sides[1].min-1 },
+      { len = height, min1 = height-sides[1].max, min2 = sides[2].min-1 },
+      { len = width, min1 = width-sides[2].max, min2 = height-sides[3].max },
+      { len = height, min1 = width-sides[0].max, min2 = sides[3].min-1 },
+    }
+
+    for n = 0,3,1 do
+      -- 0 is the top-left corner
+      local next = (n+1)%4
+      local norm = vector.diagonals[n+1]
+      local topx = (norm.x==-1)
+      local topy = (norm.y==-1)
+      local min1,min2
+      local corner = corners[n+1]
+      local min = math.min(corner.min1,corner.min2)
+      if min > 0 then
+        local function render_triangle(x,y,gx,gy)
+          return ((topx and (x+1) or (min-x)) + (topy and (y+1) or (min-y)) > min) and 2 or 0
+        end
+        local box = {
+          x1 = topx and cell.x1 or (cell.x2-min),
+          y1 = topy and cell.y1 or (cell.y2-min),
+          x2 = topx and (cell.x1 + min) or cell.x2,
+          y2 = topy and (cell.y1 + min) or cell.y2
+        }
+        procedural.render_map_area(_G,box.x1,box.y1,box.x2,box.y2,render_triangle,'x')
+      end
+    end
+  end
+
   -- Render all the cells
   for i,cell in ipairs(grid) do
     if cell.tile == "room" then
       fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
       if doors then
-        if cell.has_doors == nil then
-          cell.has_doors = crawl.coinflip()
-          -- Don't let any bordering cells have doors. Really should do this
-          -- with tilepick to not favour certain cells first.
-          for n,b in ipairs(cell.borders) do
-            if b.with.tile == "room" then b.with.has_doors = false end
-          end
-        end
-        if cell.has_doors then
-          for n,b in ipairs(cell.borders) do
-            if b.with.tile == "room" then
-              -- TODO: This algorithm isn't perfect; sometimes produces doors in
-              -- corners of walls. Should use this algorithm for cellular_growth too, it
-              -- won't produce the strange artefacts we get there.
-              local pos = border_midpos(b,0)
-              -- Have to juggle some numbers here to make sure we close all the gaps when walling
-              -- over strange angles
-              if ((b.dir) % 2) == 1 then
-                local off1 = b.y1 == b.with.y1 and b.y1 > cell.y1 and 1 or 0
-                local off2 = b.y2 == b.with.y2 and b.y2 < cell.y2 and 1 or 0
-                fill_area{x1 = b.x1, y1 = b.y1 - off1, x2 = b.x2, y2 = b.y2 + off2, fill='x' }
-              else
-                local off1 = b.x1 == b.with.x1 and b.x1 > cell.x1 and 1 or 0
-                local off2 = b.x2 == b.with.x2 and b.x2 < cell.x2 and 1 or 0
-                fill_area{x1 = b.x1 - off1, y1 = b.y1, x2 = b.x2 + off2, y2 = b.y2, fill='x' }
-              end
-              mapgrd[pos.x][pos.y] = '+'
-            end
-          end
-        end
+        render_walls(cell)
+      end
+      if corners then
+        render_corners(cell)
       end
     elseif cell.tile == "corridor" then
       -- Pick midpos for cell
-      local cmid = border_midpos(cell)
+      local cmid
+      if regular_grid then cmid = {
+        x = crawl.div_rand_round(cell.x1+cell.x2,2),
+        y = crawl.div_rand_round(cell.y1+cell.y2,2),
+      }
+      else cmid = border_midpos(cell) end
       -- Connect up corridors
       -- TODO: Produces some odd dead-ends. Should loop back when a corridor connects to nothing
       -- or paint a small room. Sometimes there are offshoots as well when not many connections
       -- and the midpoint is more off-center.
       for n,b in ipairs(cell.borders) do
         if b.len>=3 and (b.with.tile=="room" or b.with.tile=="corridor") then
-          -- Choose the origin for the corridor
-          if b.width==nil then
-            b.width = crawl.random2(math.min(maxcorridor,b.len-2))+1
-            b.inverse.width = b.width
-          end
-          local pos = border_midpos(b,1,b.width)
+          local pos = midpos(b,maxcorridor)
           local x = 0
           while x < b.width do
             -- We'll draw a right-angled line from here to cpos. The first part of the line
@@ -394,7 +527,7 @@ TAGS: overwritable layout allow_dup unrand
             fill_area{x1=bendpos.x, y1=bendpos.y, x2=cmid.x, y2=cmid.y, fill='.' }
 
             -- If connected to a room, create a door there
-            if b.with.tile == "room" then
+            if corridor_doors and b.with.tile == "room" then
               mapgrd[pos.x][pos.y] = "+"
             end
             if b.dir % 2 == 1 then pos.y=pos.y+1
