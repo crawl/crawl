@@ -770,7 +770,7 @@ bool evoke_item(int slot)
 
         if (you.confused())
         {
-            mpr("You're too confused.");
+            canned_msg(MSG_TOO_CONFUSED);
             return false;
         }
 
@@ -793,7 +793,7 @@ bool evoke_item(int slot)
 
         if (you.confused())
         {
-            mpr("You're too confused.");
+            canned_msg(MSG_TOO_CONFUSED);
             return false;
         }
 

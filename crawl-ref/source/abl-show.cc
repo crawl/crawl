@@ -1324,7 +1324,7 @@ bool activate_ability()
         talents = your_talents(true);
         if (talents.empty())
         {
-            mpr("You're too confused!");
+            canned_msg(MSG_TOO_CONFUSED);
             crawl_state.zero_turns_taken();
             return false;
         }
