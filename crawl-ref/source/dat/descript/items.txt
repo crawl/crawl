@@ -2565,7 +2565,7 @@ staff of earth:quote
 %%%%
 staff of energy
 
-This staff greatly reduces the hunger cost of the wielder's magical spells.
+This staff allows its wielder to cast magical spells without hungering as a result.
 %%%%
 staff of energy:quote
 
