@@ -2311,6 +2311,9 @@ static void _imb_explosion(bolt *parent, coord_def center)
         beam.seen = true;
     beam.source_name    = parent->source_name;
     beam.source         = center;
+#ifdef DEBUG_DIAGNOSTICS
+    beam.quiet_debug    = parent->quiet_debug;
+#endif
     bool first = true;
     for (adjacent_iterator ai(center); ai; ++ai)
     {
@@ -5414,8 +5417,11 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf(DIAG_BEAM, "explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
-         pos().x, pos().y, glyph, colour, flavour, hit, damage.num, damage.size, r);
+    if (!quiet_debug)
+    {
+        dprf(DIAG_BEAM, "explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
+             pos().x, pos().y, glyph, colour, flavour, hit, damage.num, damage.size, r);
+    }
 #endif
 
     if (!is_tracer)
