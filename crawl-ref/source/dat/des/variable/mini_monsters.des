@@ -480,7 +480,7 @@ xxxx+xxxxx...xxxxx+xxxx
 ENDMAP
 
 NAME:   goddamned_bats
-DEPTH:  D:3-12, Lair:1-3, Orc:1-2
+DEPTH:  D:3-5
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
 KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
