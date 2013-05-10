@@ -4774,12 +4774,6 @@ While made of ordinary old weathered stone, covered with moss and vines, this
 golem still needs to be respected. It is still hard as stone, after all, and
 its weight spells massive damage if it connects a blow.
 %%%%
-warrior statue
-
-This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
-it appears to be capable of moving its arms, keeping your distance seems to be
-the only way to keep your vital organs undamaged.
-%%%%
 witch
 
 An old and unnaturally ugly human, wearing robes stained with what appears to
