@@ -4527,6 +4527,11 @@ Being a statue, it doesn't appear to have a means of salvaging shot arrows or
 fletching new ones, but you guess the statue's creators gave it enough of a
 supply to kill you before someone comes to replenish the quiver.
 %%%%
+captured wizard
+
+With wild eyes, the wizard frantically mouths words and waves his arms, but
+is unable to cast a single spell.
+%%%%
 charred statue
 
 It looks like this statue has been imbued with fire magic, letting it use
