@@ -1681,7 +1681,7 @@ struct spell_desc
 	SPTYP_CHARMS,
 	SPFLAG_BATTLE,
 	1,
-	65,
+	50,
 	-1, -1,
 	0,
 	NULL,
