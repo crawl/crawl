@@ -4529,8 +4529,8 @@ supply to kill you before someone comes to replenish the quiver.
 %%%%
 captured wizard
 
-With wild eyes, the wizard frantically mouths words and waves his arms, but
-is unable to cast a single spell.
+With wild eyes, the wizard frantically mumbles something and waves his arms,
+but is unable to cast a single spell. His tongue has been cut off!
 %%%%
 charred statue
 
