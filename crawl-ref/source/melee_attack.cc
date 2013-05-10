@@ -517,10 +517,11 @@ bool melee_attack::handle_phase_hit()
 			damage_done += you.props["infusion_bonus"].get_int();
 			dec_mp(1);
 		}
-		else // Slight buff to infusion -- always let it add at least 1 dmg
-		{
-			damage_done += 1;
-		}
+		// remove 0 mp damage for now
+//		else // Slight buff to infusion -- always let it add at least 1 dmg
+//		{
+//			damage_done += 1;
+//		}
 	}
 
     bool stop_hit = false;
