@@ -47,16 +47,11 @@ void init_pandemonium(void)
     for (int pc = 0; pc < 10; ++pc)
     {
         env.mons_alloc[pc] = random_choose(
-                                MONS_WHITE_IMP,
-                                MONS_LEMURE,
-                                MONS_UFETUBUS,
-                                MONS_IRON_IMP,
                                 MONS_NEQOXEC,
                                 MONS_ORANGE_DEMON,
                                 MONS_HELLWING,
                                 MONS_SMOKE_DEMON,
                                 MONS_YNOXINUL,
-                                MONS_ABOMINATION_SMALL,
                                 MONS_ABOMINATION_LARGE,
                                 -1);
 
@@ -79,9 +74,6 @@ void init_pandemonium(void)
             env.mons_alloc[pc] = MONS_RED_DEVIL;
 
         if (one_chance_in(30))
-            env.mons_alloc[pc] = MONS_CRIMSON_IMP;
-
-        if (one_chance_in(30))
             env.mons_alloc[pc] = MONS_SIXFIRHY;
 
         if (one_chance_in(20))
@@ -89,7 +81,6 @@ void init_pandemonium(void)
             env.mons_alloc[pc] = random_choose(
                                     MONS_DEMONIC_CRAWLER,
                                     MONS_SUN_DEMON,
-                                    MONS_SHADOW_IMP,
                                     MONS_SHADOW_DEMON,
                                     MONS_LOROCYPROCA,
                                     -1);
