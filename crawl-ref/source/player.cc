@@ -3202,7 +3202,6 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 }
                 break;
 
-            case SP_GROTESK:
             case SP_HILL_ORC:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
@@ -3441,6 +3440,13 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             case SP_GHOUL:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
+                break;
+
+            case SP_GROTESK:
+                if (you.experience_level == 7 || you.experience_level == 13)
+                    perma_mutate(MUT_SELF_PETRIFICATION, 1, "level gain");
+                if (!(you.experience_level % 4))
+                    modify_stat(coinflip() ? STAT_STR : STAT_INT, 1, false, "level gain");
                 break;
 
             case SP_TENGU:
@@ -6786,11 +6792,11 @@ void player::paralyse(actor *who, int str, string source)
     stop_constricting_all();
 }
 
-void player::petrify(actor *who)
+void player::petrify(actor *who, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.res_petrify())
+    if (you.res_petrify() && !force)
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
@@ -6813,6 +6819,11 @@ void player::petrify(actor *who)
         return;
 
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
+
+    if (you.mutation[MUT_SELF_PETRIFICATION] > 0) {
+        you.duration[DUR_PETRIFYING] *=
+            1 + you.mutation[MUT_SELF_PETRIFICATION] + coinflip();
+    }
 
     you.redraw_evasion = true;
     mpr("You are slowing down.", MSGCH_WARN);

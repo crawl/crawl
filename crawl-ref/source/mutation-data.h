@@ -1499,11 +1499,24 @@
 { MUT_PETRIFICATION_RESISTANCE,            0,  1, false, false, false,
   "petrification resistance",
 
-  {"You are immune to petrification.", "", ""},
+  {"You are immune to involuntary petrification.", "", ""},
   {"Your body vibrates.", "", ""},
   {"You briefly stop moving.", "", ""},
 
   "petrification resistance"
 },
+
+{ MUT_SELF_PETRIFICATION,                  0,  3, false, false, false,
+  "petrified",
+
+  {"You can quickly petrify yourself.",
+   "You can petrify yourself.",
+   "You can slowly petrify yourself."},
+  {"Your flesh becomes firm.", "Your flesh hardens.", "Your flesh becomes rocky."},
+  {"Your flesh softens.", "Your flesh softens.", "Your flesh softens."},
+
+  "petrify"
+},
+
 
 #endif
