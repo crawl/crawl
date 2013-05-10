@@ -836,9 +836,18 @@ void game_options::reset_options()
 
     pickup_thrown          = true;
 
+#ifdef DGAMELAUNCH
+    travel_delay           = -1;
+    explore_delay          = -1;
+    rest_delay             = -1;
+    show_travel_trail       = true;
+#else
     travel_delay           = 20;
     explore_delay          = -1;
+    rest_delay             = 0;
     show_travel_trail       = false;
+#endif
+
     travel_stair_cost      = 500;
 
     arena_delay            = 600;
@@ -3154,6 +3163,15 @@ void game_options::read_option_line(const string &str, bool runscript)
             explore_delay = -1;
         if (explore_delay > 2000)
             explore_delay = 2000;
+    }
+    else if (key == "rest_delay")
+    {
+        // Read explore delay in milliseconds.
+        rest_delay = atoi(field.c_str());
+        if (rest_delay < -1)
+            rest_delay = -1;
+        if (rest_delay > 2000)
+            rest_delay = 2000;
     }
     else BOOL_OPTION(show_travel_trail);
     else if (key == "level_map_cursor_step")
