@@ -843,7 +843,6 @@ spret_type cast_spectral_weapon(int pow, bool fail)
     }
 
     fail_check();
-    item_def cp = *wpn;
 
 	// you can only ever have one spectral weapon, kill any existing ones
 	if (you.props.exists("spectral_weapon"))
@@ -860,18 +859,36 @@ spret_type cast_spectral_weapon(int pow, bool fail)
                  MHITYOU,
                  0, GOD_NO_GOD);
 
-    mg.props[TUKIMA_WEAPON] = cp;
-    mg.props[TUKIMA_POWER] = pow;
-
-    monster *mons = create_monster(mg);
+	item_def original_weapon = *wpn;
 	
-	you.props["spectral_weapon"].get_int() = mons->mid;
+	// Reduce the enchantment of low powered spectral weapons
+	int adjustment = -4 + pow/10;
+	if (adjustment>-1)
+		adjustment = -1;
+
+	// create the weapon to give to the spectral weapon
+	item_def fake;
+	fake.base_type = OBJ_WEAPONS;
+	fake.sub_type = original_weapon.sub_type;
+	fake.plus = original_weapon.plus + adjustment;
+	fake.plus2 = original_weapon.plus2 + adjustment;
+	// no brand, sorry!!
+	//fake.special = original_weapon.special;
+	fake.special = SPWPN_NORMAL;
+	fake.colour = original_weapon.colour;
+	fake.quantity = original_weapon.quantity;
+
+   	mg.props[TUKIMA_WEAPON] = fake;
+  	mg.props[TUKIMA_POWER] = pow;
+
+	monster *mons = create_monster(mg);
+	mpr("You draw out your weapon's spirit!");
+
 	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
+	you.props["spectral_weapon"].get_int() = mons->mid;
 	mons->hit_dice = skill_with_weapon;
 	mons->ac = 3 + skill_with_weapon/2;
 	mons->ev = 3 + skill_with_weapon/2;
-
-	mpr("You draw out your weapon's spirit!");
 
     return SPRET_SUCCESS;
 }
