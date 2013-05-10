@@ -976,7 +976,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   42, FLAT, MONS_SIMULACRUM },
   {  1,  5,   11, FLAT, MONS_ANGEL },
   {  1,  5,   14, FLAT, MONS_DAEVA },
-  // New abyssals, made more common for testing.
   {  1,  5,  334, FLAT, MONS_WRETCHED_STAR },
   {  1,  5,  334, FLAT, MONS_TENTACLED_STARSPAWN },
   {  1,  5,  334, FLAT, MONS_ANCIENT_ZYME },
