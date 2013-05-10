@@ -2620,7 +2620,7 @@ static monster_type _band_member(band_type band, int which)
         break;
 
     case BAND_EXECUTIONER:
-        mon_type = coinflip() ? MONS_ABOMINATION_SMALL : MONS_ABOMINATION_LARGE;
+        mon_type = MONS_ABOMINATION_LARGE;
         break;
 
     case BAND_PANDEMONIUM_LORD:
