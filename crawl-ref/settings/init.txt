@@ -223,7 +223,7 @@
 # msg_condense_repeats   = false
 # msg_condense_short     = false
 # skill_focus            = false
-# show_travel_trail       = true
+# show_travel_trail       = false (true for online)
 
 ##### 3-j       Colours (messages and menus) ##########
 #
