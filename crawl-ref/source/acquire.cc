@@ -663,7 +663,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 #if TAG_MAJOR_VERSION == 34
     do
         result = random2(NUM_STAVES);
-    while (result == STAFF_ENCHANTMENT);
+    while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
 #else
     result = random2(NUM_STAVES);
 #endif
