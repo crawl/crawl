@@ -784,7 +784,7 @@ explore_delay = -1
         travel_delay.
 
 rest_delay = 0 (defaults to -1 for online servers)
-        How long restint waits after each move (milliseconds). Depends on
+        How long resting waits after each move (milliseconds). Depends on
         platform. Setting rest_delay = -1 will prevent the display updating
         during resting.
 
