@@ -220,6 +220,8 @@ static const ability_def Ability_List[] =
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, 0, ABFLAG_BREATH},
 
+    { ABIL_SELF_PETRIFY, "Self Petrify", 0, 0, 0, 0, 0, ABFLAG_NONE},
+
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
@@ -2149,6 +2151,11 @@ static bool _do_ability(const ability_def& abil)
             cast_fly(you.experience_level * 4);
         break;
 
+    // Grotesk
+    case ABIL_SELF_PETRIFY:
+        you.petrify(&you, true);
+        break;
+
     // DEMONIC POWERS:
     case ABIL_HELLFIRE:
         if (your_spells(SPELL_HELLFIRE,
@@ -2743,7 +2750,6 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
-
     case ABIL_NON_ABILITY:
         mpr("Sorry, you can't do that.");
         break;
@@ -3125,6 +3131,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
              || you.species == SP_NAGA)
     {
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
+    }
+
+    if (you.species == SP_GROTESK && !form_changed_physiology())
+    {
+        _add_talent(talents, ABIL_SELF_PETRIFY, check_confused);
     }
 
     if (player_genus(GENPC_DRACONIAN))

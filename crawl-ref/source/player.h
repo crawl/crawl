@@ -588,7 +588,7 @@ public:
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int amount, bool allow_hint = true);
     void paralyse(actor *, int str, string source = "");
-    void petrify(actor *);
+    void petrify(actor *, bool force = false);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);

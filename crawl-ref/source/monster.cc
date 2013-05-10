@@ -4278,7 +4278,7 @@ void monster::paralyse(actor *atk, int strength, string cause)
     enchant_monster_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
 
-void monster::petrify(actor *atk)
+void monster::petrify(actor *atk, bool force)
 {
     enchant_monster_with_flavour(this, atk, BEAM_PETRIFY);
 }

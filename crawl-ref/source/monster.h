@@ -415,7 +415,7 @@ public:
     bool sicken(int strength, bool unused = true);
     bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str, string source = "");
-    void petrify(actor *);
+    void petrify(actor *, bool force = false);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
