@@ -135,8 +135,9 @@
 
 ##### 3-g       Travel and Exploration #################
 #
-# travel_delay = 20
+# travel_delay = 20 (or -1 online)
 # explore_delay = -1
+# rest_delay = 0 (or -1 online)
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy   = false
@@ -222,7 +223,7 @@
 # msg_condense_repeats   = false
 # msg_condense_short     = false
 # skill_focus            = false
-# show_travel_trail       = true
+# show_travel_trail       = false (true for online)
 
 ##### 3-j       Colours (messages and menus) ##########
 #

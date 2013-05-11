@@ -1119,7 +1119,7 @@ bool can_learn_spell(bool silent)
     if (you.confused())
     {
         if (!silent)
-            mpr("You are too confused!");
+            canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 

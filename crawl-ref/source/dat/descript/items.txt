@@ -2497,15 +2497,6 @@ staff of air:quote
 
 <staff:quote>
 %%%%
-staff of channeling
-
-This staff allows its wielder to channel ambient magical energy for his or her
-own purposes.
-%%%%
-staff of channeling:quote
-
-<staff:quote>
-%%%%
 staff of cold
 
 This staff increases the power of ice spells cast by its wielder, and protects
@@ -2565,7 +2556,9 @@ staff of earth:quote
 %%%%
 staff of energy
 
-This staff greatly reduces the hunger cost of the wielder's magical spells.
+This staff allows its wielder to control magical energy: casting spells no
+longer causes hunger, and ambient magic can be channeled for the wielder's
+purposes.
 %%%%
 staff of energy:quote
 

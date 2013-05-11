@@ -490,7 +490,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         d = datetime.datetime.now() - self.message_queue_time
         self.message_queue_time = None
-        msg = "{'msgs': [" + ",".join(self.message_queue) + "] }"
+        msg = "{\"msgs\":[" + ",".join(self.message_queue) + "]}"
         self.message_queue = []
 
         try:

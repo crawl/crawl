@@ -379,6 +379,14 @@ void MiscastEffect::do_miscast()
     msg_ch         = MSGCH_PLAIN;
     sound_loudness = 0;
 
+    if (source == ZOT_TRAP_MISCAST)
+    {
+        _zot();
+        if (target->is_player())
+            xom_is_stimulated(150);
+        return;
+    }
+
     switch (sp_type)
     {
     case SPTYP_CONJURATION:    _conjuration(severity);    break;
@@ -735,7 +743,9 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     // simply be ignored.
     if (data.abjuration_duration != 0)
     {
-        if (you.penance[god] > 0)
+        if (what == RANDOM_MOBILE_MONSTER)
+            data.summon_type = SPELL_SHADOW_CREATURES;
+        else if (you.penance[god] > 0)
             data.summon_type = MON_SUMM_WRATH;
         else if (source == ZOT_TRAP_MISCAST)
             data.summon_type = MON_SUMM_ZOT;
@@ -2845,4 +2855,235 @@ void MiscastEffect::_do_poison(int amount)
         poison_player(amount, cause, "residual poison");
     else
         target->poison(act_source, amount);
+}
+
+void MiscastEffect::_zot()
+{
+    bool success = false;
+    int roll;
+    switch (random2(4))
+    {
+    case 0:    // mainly explosions
+        beam.name = "explosion";
+        beam.damage = dice_def(3, 20);
+        beam.ex_size = coinflip() ? 1 : 2;
+        beam.glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        switch (random2(10))
+        {
+        case 0:
+        case 1:
+            all_msg = "There is a sudden explosion of magical energy!";
+            beam.flavour = BEAM_MISSILE;
+            beam.colour  = random_colour();
+            _explosion();
+            break;
+        case 2:
+        case 3:
+            all_msg = "There is a sudden explosion of flames!";
+            beam.flavour = BEAM_FIRE;
+            beam.colour  = RED;
+            _explosion();
+            break;
+        case 4:
+        case 5:
+            all_msg = "There is a sudden explosion of frost!";
+            beam.flavour = BEAM_COLD;
+            beam.colour  = WHITE;
+            _explosion();
+            break;
+        case 6:
+            all_msg = "There is a sudden explosion of flying shrapnel!";
+            beam.flavour = BEAM_FRAG;
+            beam.colour  = CYAN;
+            _explosion();
+            break;
+        case 7:
+            all_msg = "There is a sudden explosion of electrical discharges!";
+            beam.flavour = BEAM_ELECTRICITY;
+            beam.colour  = LIGHTBLUE;
+            _explosion();
+            break;
+        case 8:
+            if (_create_monster(MONS_BALL_LIGHTNING, 3))
+                all_msg = "A ball of electricity appears!";
+            do_msg();
+            break;
+        case 9:
+            if (_create_monster(MONS_TWISTER, 1))
+                all_msg = "A huge vortex of air appears!";
+            do_msg();
+            break;
+        }
+        break;
+    case 1:    // summons
+    reroll_1:
+        switch (random2(9))
+        {
+        case 0:
+            if (_create_monster(MONS_SOUL_EATER, 4, true))
+            {
+                you_msg        = "Something reaches out for you...";
+                mon_msg_seen   = "Something reaches out for @the_monster@...";
+                mon_msg_unseen = "Something reaches out from thin air...";
+            }
+            do_msg();
+            break;
+        case 1:
+            if (_create_monster(MONS_REAPER, 4, true))
+            {
+                you_msg        = "Death has come for you...";
+                mon_msg_seen   = "Death has come for @the_monster@...";
+                mon_msg_unseen = "Death appears from thin air...";
+            }
+            do_msg();
+            break;
+        case 2:
+            if (_create_monster(summon_any_demon(RANDOM_DEMON_GREATER), 0, true))
+                all_msg = "You sense a hostile presence.";
+            do_msg();
+            break;
+        case 3:
+        case 4:
+            for (int i = 1 + random2(2); i >= 0; --i)
+            {
+                if (_create_monster(summon_any_demon(RANDOM_DEMON_COMMON), 0, true))
+                    success = true;
+            }
+            if (success)
+            {
+                you_msg = "Something turns its malign attention towards "
+                          "you...";
+                mon_msg = "You sense a malign presence.";
+                do_msg();
+            }
+            break;
+        case 5:
+            for (int i = 3 + random2(5); i >= 0; --i)
+            {
+                if (_create_monster(summon_any_demon(RANDOM_DEMON_LESSER), 0, true))
+                    success = true;
+            }
+            if (success && neither_end_silenced())
+            {
+                you_msg        = "A chorus of chattering voices calls out to"
+                                 " you!";
+                mon_msg        = "A chorus of chattering voices calls out!";
+                msg_ch         = MSGCH_SOUND;
+                sound_loudness = 3;
+                do_msg();
+            }
+            break;
+        case 6:
+        case 7:
+            for (int i = 2 + random2(3); i >= 0; --i)
+            {
+                if (_create_monster(RANDOM_MOBILE_MONSTER, 4, true))
+                    success = true;
+            }
+            if (success)
+            {
+                all_msg = "Wisps of shadow whirl around...";
+                do_msg();
+            }
+            break;
+        case 8:
+            if (!_malign_gateway())
+                goto reroll_1;
+            break;
+        }
+        break;
+    case 2:
+    case 3:    // other misc stuff
+    reroll_2:
+        // Cases at the end are for players only.
+        switch (random2(target->is_player() ? 14 : 10))
+        {
+        case 0:
+            target->paralyse(act_source, 2 + random2(4), cause);
+            break;
+        case 1:
+            target->petrify(guilty);
+            break;
+        case 2:
+            target->rot(act_source, 0, 3 + random2(3));
+            break;
+        case 3:
+            if (!_send_to_abyss())
+                goto reroll_2;
+            break;
+        case 4:
+            you_msg      = "You feel incredibly sick.";
+            mon_msg_seen = "@The_monster@ looks incredibly sick.";
+            _do_poison(10 + random2avg(19, 2));
+            do_msg();
+            break;
+        case 5:
+            if (!target->is_player())
+                target->polymorph(0);
+            else if (coinflip())
+            {
+                you_msg = "You feel very strange.";
+                delete_mutation(RANDOM_MUTATION, cause, true, false, false, false);
+                do_msg();
+            }
+            else
+            {
+                you_msg = "Your body is distorted in a weirdly horrible way!";
+                give_bad_mutation(cause, false, false);
+                if (coinflip())
+                    give_bad_mutation(cause, false, false);
+                do_msg();
+            }
+            break;
+        case 6:
+        case 7:
+            roll = random2(3); // Give 2 of 3 effects.
+            if (roll != 0)
+                _potion_effect(POT_CONFUSION, 15);
+            if (roll != 1)
+                _potion_effect(POT_SLOWING, 15);
+            if (roll != 2)
+            {
+                you_msg        = "Space warps around you!";
+                mon_msg_seen   = "Space warps around @the_monster@!";
+                mon_msg_unseen = "A piece of empty space twists and writhes.";
+                _ouch(5 + random2avg(9, 2));
+                if (target->alive())
+                {
+                    if (!target->no_tele())
+                    {
+                        if (one_chance_in(3))
+                            target->teleport(true);
+                        else
+                            target->blink(false);
+                    }
+                }
+            }
+            break;
+        case 8:
+        case 9:
+            if (target->is_player())
+                contaminate_player(2 + random2avg(14, 2), false);
+            else
+                target->polymorph(0);
+            break;
+        case 10:
+            if (you.magic_points > 0)
+            {
+                dec_mp(10 + random2(21));
+                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            }
+            break;
+        case 11:
+        case 12:
+            _lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
+            break;
+        case 13:
+            mpr("An unnatural silence engulfs you.");
+            you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
+            invalidate_agrid(true);
+            break;
+        }
+        break;
+    }
 }

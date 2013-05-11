@@ -177,7 +177,7 @@ static int _missile_colour(const item_def &item)
         item_colour = RED;
         break;
     case MI_THROWING_NET:
-        item_colour = DARKGREY;
+        item_colour = MAGENTA;
         break;
     case MI_PIE:
         item_colour = YELLOW;
@@ -2894,20 +2894,19 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
     {
 #if TAG_MAJOR_VERSION == 34
         do
+        {
             item.sub_type = random2(NUM_STAVES);
-        while (item.sub_type == STAFF_ENCHANTMENT);
+        }
+        while (item.sub_type == STAFF_ENCHANTMENT
+               || item.sub_type == STAFF_CHANNELING);
 #else
         item.sub_type = random2(NUM_STAVES);
 #endif
 
-        // staves of energy/channeling are 25% less common, wizardry/power
+        // staves of energy are 25% less common, wizardry/power
         // are more common
-        if ((item.sub_type == STAFF_ENERGY
-                || item.sub_type == STAFF_CHANNELING)
-            && one_chance_in(4))
-        {
+        if (item.sub_type == STAFF_ENERGY && one_chance_in(4))
             item.sub_type = coinflip() ? STAFF_WIZARDRY : STAFF_POWER;
-        }
     }
     else
         item.sub_type = force_type;

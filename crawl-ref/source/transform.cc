@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "delay.h"
@@ -384,6 +385,9 @@ void unmeld_one_equip(equipment_type eq)
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
+    if (player_equip_unrand(UNRAND_LEAR) && eq >= EQ_HELMET && eq <= EQ_BOOTS)
+        eq = EQ_BODY_ARMOUR;
+
     set<equipment_type> r;
     r.insert(eq);
     _remove_equipment(r, meld, mutation);

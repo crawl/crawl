@@ -342,7 +342,8 @@ public:
     //            halo you're not affected by others' halos for this
     //            purpose)
     virtual bool backlit(bool check_haloed = true,
-                         bool self_halo = true) const = 0;
+                         bool self_halo = true,
+                         bool check_corona = true) const = 0;
     virtual bool umbra(bool check_haloed = true,
                          bool self_halo = true) const = 0;
     // Within any actor's halo?

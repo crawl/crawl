@@ -407,7 +407,9 @@ enum stave_type
     STAFF_SUMMONING,
     STAFF_AIR,
     STAFF_EARTH,
+#if TAG_MAJOR_VERSION == 34
     STAFF_CHANNELING,
+#endif
     NUM_STAVES,
 };
 
