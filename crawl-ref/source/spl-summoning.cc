@@ -2567,18 +2567,13 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         {
             testbeam.fire();
 
-            // Can't use i != foo.rend() because of a defect in C++03
-            // (const_reverse_iterator and reverse_iterator can't be compared).
-            // Appears to be fixed in gcc 4.1.2 or later, but some Mac users
-            // only have 4.0.
-            for (vector<coord_def>::const_reverse_iterator i = testbeam.path_taken.rbegin(),
-                    pt_rend = testbeam.path_taken.rend();
-                i != pt_rend; ++i)
+            for (ssize_t i = testbeam.path_taken.size() - 1; i >= 0; i--)
             {
-                if (*i != battlesphere->pos() && monster_at(*i))
+                const coord_def c = testbeam.path_taken[i];
+                if (c != battlesphere->pos() && monster_at(c))
                 {
-                    battlesphere->props["firing_target"] = *i;
-                    battlesphere->foe = actor_at(*i)->mindex();
+                    battlesphere->props["firing_target"] = c;
+                    battlesphere->foe = actor_at(c)->mindex();
                     battlesphere->props["foe"] = battlesphere->foe;
                 }
             }
