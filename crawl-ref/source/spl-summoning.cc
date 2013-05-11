@@ -2567,7 +2567,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         {
             testbeam.fire();
 
-            for (ssize_t i = testbeam.path_taken.size() - 1; i >= 0; i--)
+            for (size_t i = 0; i < testbeam.path_taken.size(); i++)
             {
                 const coord_def c = testbeam.path_taken[i];
                 if (c != battlesphere->pos() && monster_at(c))
@@ -2575,6 +2575,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
                     battlesphere->props["firing_target"] = c;
                     battlesphere->foe = actor_at(c)->mindex();
                     battlesphere->props["foe"] = battlesphere->foe;
+                    break;
                 }
             }
 
