@@ -101,7 +101,7 @@ inhabitants. Hill Orcs instead follow the orc god Beogh.
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
-the book of War Chants.
+the book of Battle.
 %%%%
 Summoner
 
