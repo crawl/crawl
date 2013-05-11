@@ -861,10 +861,9 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 
 	item_def original_weapon = *wpn;
 	
+	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
 	// Reduce the enchantment of low powered spectral weapons
-	int adjustment = -4 + pow/10;
-	if (adjustment>-1)
-		adjustment = -1;
+	int adjustment = max(-5 + 2*skill_with_weapon/3, 9);
 
 	// create the weapon to give to the spectral weapon
 	item_def fake;
@@ -884,7 +883,6 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 	monster *mons = create_monster(mg);
 	mpr("You draw out your weapon's spirit!");
 
-	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
 	you.props["spectral_weapon"].get_int() = mons->mid;
 	mons->hit_dice = skill_with_weapon;
 	mons->ac = 3 + skill_with_weapon/2;
