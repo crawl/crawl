@@ -479,6 +479,54 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
+NAME:   goddamned_bats
+DEPTH:  D:3-5
+# Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
+# and tera is understandable, but come on, even mili is lacking.
+KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
+KMONS:  2 = bat name:microbat n_rpl n_des n_spe n_noc col:magenta tile:mons_microbat
+# Can we spell them this way?  Please?
+KMONS:  3 = bat name:fruity n_adj n_des n_spe n_noc col:lightmagenta tile:mons_fruity_bat
+KMONS:  4 = bat name:giga n_adj n_des n_spe n_noc hd:4 col:brown tile:mons_gigabat
+# Way harder than the rest here.
+KMONS:  5 = vampire bat
+# In RL, they sit put, not moving a finger.  Lazy bastards.
+KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_des n_spe n_zom
+# The only here without a basis in reality.
+KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_des n_spe n_zom
+# There are actual "ghost bats" too, but near-extinct, while ghost-faceds
+# have a number of species and are widespread.
+KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_des n_spe n_zom
+# Just an US WW2 military project, but that's good enough.
+KMONS:  9 = fire bat hd:1
+KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
+# Correction, this one, added because of a tile, is not real as well.
+KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
+# Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
+KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
+MAP
+       xxxxx
+      xxxxxxx
+     xxxx7xxx
+    xxxxx.xxx
+   xxx9..xxx
+  xxx9..0xxx
+  xx.9..xxxxx
+  xxx....xxxx
+  xx88.xx.xxxx
+  xxxxxxxx.xxxx
+ xxxxxxxxx.AAxx
+xxx.4xxxx..x..xx
+xxx12.xxx.xx...xx
+xxxx.xxx.xxxx6..x
+xxxxxBxx.xxxx66.x
+xx33.x...xxxxx.xxx
+xxxxxxx...xxxxx.xx
+ xxxx21xx.xxxxx5xx
+  xxxxxxx.xxxxxxx
+    xxxx@xx
+ENDMAP
+
 NAME:   saegor_snake_ambush
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:3-5
@@ -5289,7 +5337,7 @@ NAME:  minivault_12
 DEPTH: D:8-26
 MAP
 ............
-.GxxxxxxxxG.
+.mxxxxxxxxm.
 .x>9$9$9$<x.
 .x.$9$9$.$x.
 .x$.****$.x.
@@ -5298,7 +5346,7 @@ MAP
 .x.$****.$x.
 .x$9$9$9$.x.
 .x<$9$9$9>x.
-.GxxxxxxxxG.
+.mxxxxxxxxm.
 ............
 ENDMAP
 

@@ -75,11 +75,11 @@ random_rectangle_iterator::random_rectangle_iterator(const coord_def& corner1,
     top_left.x = left;
     top_left.y = top;
 
-    for(int y = top; y <= bottom; y++)
-        for(int x = left; x <= right; x++)
+    for (int y = top; y <= bottom; y++)
+        for (int x = left; x <= right; x++)
             remaining.push_back(coord_def(x, y));
 
-    if(remaining.empty())
+    if (remaining.empty())
         current = 0;
     else
         current = random2(remaining.size());
@@ -97,11 +97,11 @@ random_rectangle_iterator::random_rectangle_iterator(int x_border_dist,
     top_left.x = x_border_dist;
     top_left.y = y_border_dist;
 
-    for(int y = y_border_dist; y <= bottom; y++)
-        for(int x = x_border_dist; x <= right; x++)
+    for (int y = y_border_dist; y <= bottom; y++)
+        for (int x = x_border_dist; x <= right; x++)
             remaining.push_back(coord_def(x, y));
 
-    if(remaining.empty())
+    if (remaining.empty())
         current = 0;
     else
         current = random2(remaining.size());
@@ -114,7 +114,7 @@ random_rectangle_iterator::operator bool() const
 
 coord_def random_rectangle_iterator::operator *() const
 {
-    if(remaining.empty())
+    if (remaining.empty())
         return top_left;
     else
         return remaining[current];
@@ -122,7 +122,7 @@ coord_def random_rectangle_iterator::operator *() const
 
 const coord_def* random_rectangle_iterator::operator->() const
 {
-    if(remaining.empty())
+    if (remaining.empty())
         return &top_left;
     else
         return &(remaining[current]);
@@ -130,11 +130,11 @@ const coord_def* random_rectangle_iterator::operator->() const
 
 void random_rectangle_iterator::operator ++()
 {
-    if(!remaining.empty())
+    if (!remaining.empty())
     {
         remaining[current] = remaining.back();
         remaining.pop_back();
-        if(!remaining.empty())
+        if (!remaining.empty())
             current = random2(remaining.size());
     }
 }

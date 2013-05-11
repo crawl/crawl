@@ -1374,7 +1374,7 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (tiles.need_redraw())
+        if (Options.rest_delay >= 0 && tiles.need_redraw())
             tiles.redraw();
 #endif
 
@@ -1383,6 +1383,10 @@ static command_type _get_running_command()
         {
             mpr("Done waiting.");
         }
+
+        if (Options.rest_delay > 0)
+            delay(Options.rest_delay);
+
         return CMD_MOVE_NOWHERE;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)
@@ -1838,9 +1842,7 @@ bool interrupt_activity(activity_interrupt_type ai,
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
     if (ai == AI_HUNGRY && _auto_eat(delay) && prompt_eat_chunks(true) == 1)
-    {
         return false;
-    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 

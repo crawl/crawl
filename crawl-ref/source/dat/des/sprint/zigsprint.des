@@ -771,7 +771,7 @@ KITEM:    N = wand of draining ident:all charges:5, \
               wand of cold ident:all charges:5, \
               wand of fire ident:all charges:5, \
           wand of disintegration ident:all charges:7
-KITEM:    O = crystal ball of energy ident:all, staff of channeling not_cursed ident:all
+KITEM:    O = crystal ball of energy ident:all, staff of energy not_cursed ident:all
 KITEM:    P = ring of strength not_cursed ident:all plus:6, \
               ring of strength not_cursed ident:all plus:6, \
               ring of intelligence not_cursed ident:all plus:6, \

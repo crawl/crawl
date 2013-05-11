@@ -253,6 +253,7 @@ public:
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
+    int         rest_delay;     // How long to pause between rest moves
 
     bool        show_travel_trail;
 

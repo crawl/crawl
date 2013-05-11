@@ -663,7 +663,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 #if TAG_MAJOR_VERSION == 34
     do
         result = random2(NUM_STAVES);
-    while (result == STAFF_ENCHANTMENT);
+    while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
 #else
     result = random2(NUM_STAVES);
 #endif
@@ -686,19 +686,17 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
         return result;
 
     // Otherwise pick a non-enhancer staff.
-    switch (random2(6))
+    switch (random2(5))
     {
     case 0: case 1: result = STAFF_WIZARDRY;   break;
     case 2: case 3: result = STAFF_ENERGY;     break;
     case 4: result = STAFF_POWER;              break;
-    case 5: result = STAFF_CHANNELING;         break;
     }
-    switch (random2(6))
+    switch (random2(5))
     {
     case 0: case 1: TRY_GIVE(STAFF_WIZARDRY);   break;
     case 2: case 3: TRY_GIVE(STAFF_ENERGY);     break;
     case 4: TRY_GIVE(STAFF_POWER);              break;
-    case 5: TRY_GIVE(STAFF_CHANNELING);         break;
 #undef TRY_GIVE
     }
     return result;

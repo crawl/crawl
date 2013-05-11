@@ -1,0 +1,17 @@
+# Changes for 0.12 include glyph colour changes.
+
+###########################
+# items
+###########################
+
+item_glyph += \{Axes\} \{weapon\} : darkgrey
+item_glyph += artefact.*\{Axes\} \{weapon\} : yellow
+item_glyph += Wrath of Trog : blood
+item_glyph += mithril axe "Arga" : white
+item_glyph += obsidian axe : unholy
+item_glyph += Axe of Woe : blood
+
+item_glyph += helmet : darkgrey
+item_glyph += artefact.*helmet : yellow
+
+item_glyph += throwing net : darkgrey

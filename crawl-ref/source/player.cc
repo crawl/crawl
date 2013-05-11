@@ -1461,7 +1461,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf += you.scan_artefacts(ARTP_FIRE, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
+            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
                 rf++;
         }
     }
@@ -1619,7 +1619,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc += you.scan_artefacts(ARTP_COLD, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
+            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
                 rc++;
         }
     }
@@ -1648,7 +1648,7 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (items && !suppressed())
     {
         // dragonskin cloak: 0.5 to draconic resistances
-        if (calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN)
+        if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN)
             && coinflip())
         {
             return true;
@@ -1710,7 +1710,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             re += you.scan_artefacts(ARTP_ELECTRICITY, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
+            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
                 re++;
         }
     }
@@ -1801,7 +1801,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp += you.scan_artefacts(ARTP_POISON, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
+            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
                 rp++;
         }
     }
@@ -1887,7 +1887,7 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
             rsf++;
 
         // dragonskin cloak: 0.5 to draconic resistances
-        if (items && calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
+        if (items && calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             rsf++;
     }
 
@@ -2014,7 +2014,7 @@ int player_spec_hex()
     if (!you.suppressed())
     {
         // Unrands
-        if (player_equip_unrand_effect(UNRAND_BOTONO))
+        if (player_equip_unrand(UNRAND_BOTONO))
             sh++;
     }
 
@@ -2051,7 +2051,7 @@ int player_spec_poison()
         // Staves
         sp += you.wearing(EQ_STAFF, STAFF_POISON);
 
-        if (player_equip_unrand_effect(UNRAND_OLGREB))
+        if (player_equip_unrand(UNRAND_OLGREB))
             sp++;
     }
 
@@ -2152,7 +2152,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
             // dragonskin cloak: 0.5 to draconic resistances
             // this one is dubious (no pearl draconians)
-            if (calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
+            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
                 pl++;
 
             pl += you.wearing(EQ_STAFF, STAFF_DEATH, calc_unid);
@@ -2610,20 +2610,6 @@ int player_armour_shield_spell_penalty()
                  - 20 * scale;
 
     return (max(total_penalty, 0) / scale);
-}
-
-static int _player_magical_power(void)
-{
-    if (you.suppressed())
-        return 0;
-
-    int ret = 0;
-
-    ret += 13 * you.wearing(EQ_STAFF, STAFF_POWER);
-    ret +=  9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
-    ret +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
-
-    return ret;
 }
 
 int player_mag_abil(bool is_weighted)
@@ -4738,24 +4724,30 @@ int get_real_mp(bool include_items)
     // the nice way. -- bwr
     enp = min(enp, 50);
 
-    // Now applied after scaling so that power items are more useful -- bwr
-    if (include_items)
-        enp += _player_magical_power();
-
     // Analogous to ROBUST/FRAIL
     enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (player_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100;
 
+    if (you.suppressed())
+        include_items = false;
+
+    // Now applied after scaling so that power items are more useful -- bwr
+    if (include_items)
+    {
+        enp +=  9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
+        enp +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
+
+        if (you.wearing(EQ_STAFF, STAFF_POWER))
+            enp += 5 + enp * 2 / 5;
+    }
+
     if (enp > 50)
         enp = 50 + ((enp - 50) / 2);
 
-    if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC)
-        && !you.suppressed())
-    {
+    if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
-    }
 
     enp = max(enp, 0);
 
@@ -7095,10 +7087,12 @@ bool player::visible_to(const actor *looker) const
             || (!mon->has_ench(ENCH_BLIND) && (!invisible() || mon->can_see_invisible()));
 }
 
-bool player::backlit(bool check_haloed, bool self_halo) const
+bool player::backlit(bool check_haloed, bool self_halo, bool check_corona) const
 {
-    if (get_contamination_level() > 1 || duration[DUR_CORONA]
-        || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
+    if (get_contamination_level() > 1
+        || check_corona && duration[DUR_CORONA]
+        || duration[DUR_LIQUID_FLAMES]
+        || duration[DUR_QUAD_DAMAGE])
     {
         return true;
     }

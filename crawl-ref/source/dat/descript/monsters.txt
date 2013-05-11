@@ -1463,6 +1463,12 @@ A member of a short, sturdy mountain-dwelling folk. More robust than their deep
 dwarf cousins, yet less skilled in magical lore, dwarves excel in armed hand to
 hand combat.
 %%%%
+dwarf mountain bat
+
+A species of bat that lives in mountain caves. How it got into the dungeon is a
+mystery — probably something related to the sudden demise of dwarves in those
+lands. But don't worry, an eradication team is on the way.
+%%%%
 earth elemental
 
 A spirit drawn from the elemental plane of earth, which exists in this world by
@@ -1683,6 +1689,14 @@ A giant with blue skin and hair like ice and snow. Its eyes are as bleak as
 winter skies. It marches grimly into battle with a great, frosty axe and
 howling blasts of cold.
 %%%%
+fruity bat
+
+An ugly, silly bat. It sparkles.
+%%%%
+fruity bat:quote
+
+<bat:quote>
+%%%%
 fulminant prism
 
 A slender prism that crackles with barely-contained destructive energy. Any
@@ -1712,6 +1726,14 @@ ghost moth:quote
  I zoom into you
  You don't know I'm there.”
     -Judas Priest, “Electric Eye”
+%%%%
+ghost-faced bat
+
+Does this bat merely possess the visage of a ghost, or is it a ghost itself?
+%%%%
+ghost-faced bat:quote
+
+<bat:quote>
 %%%%
 ghoul
 
@@ -1887,6 +1909,14 @@ giant spore
 A deceptively fast, floating ball filled with gas and spores, prone to burst at
 the slightest disturbance.
 %%%%
+giga bat
+
+A huge, bloated bat.
+%%%%
+giga bat:quote
+
+<bat:quote>
+%%%%
 glowing shapeshifter
 
 A shapeshifter which has lost control over its transformations, and is
@@ -1917,6 +1947,12 @@ gnoll shaman
 
 A haggard old gnoll, wise and wicked. Its strange chants and ululations send
 other gnolls into a wild frenzy.
+%%%%
+gnome
+
+A small, stout humanoid said to be good at finding its way through underground
+passages. Once commonly found in dungeons across the world, gnomes are now on
+the verge of extinction. This one may be the last of its kind.
 %%%%
 goblin
 
@@ -2207,6 +2243,14 @@ ravaged by explosions of spores, damaging everything around, and it is
 ultimately going to die to its own spores.
 
 Be sure to keep your distance!
+%%%%
+ice bat
+
+An undead creature in the shape of a bat, made of ice.
+%%%%
+ice bat:quote
+
+<bat:quote>
 %%%%
 ice beast
 
@@ -2668,6 +2712,14 @@ of a candle.”
     -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
 %%%%
+microbat
+
+A bat that, despite its name, is not any smaller than a megabat.
+%%%%
+microbat:quote
+
+<bat:quote>
+%%%%
 minotaur
 
 A large muscular human with the head of a bull. It makes its home in secluded
@@ -3041,6 +3093,15 @@ phantom:quote
 us ofte foresee.”
     -Spenser, _The Faerie Queene_ II. xii. 47
 %%%%
+phase bat
+
+A strange, glowing bat that seems to flutter through more dimensions than the
+average bat.
+%%%%
+phase bat:quote
+
+<bat:quote>
+%%%%
 phoenix
 
 A bird of myth and legend, said to die in flames and be reborn from the ashes.
@@ -3272,6 +3333,14 @@ mandibles drip with lethal poison.
 rock worm
 
 A large worm which moves through rock as if it were air.
+%%%%
+rotten bat
+
+I guess this bat is well past its sell-by date.
+%%%%
+rotten bat:quote
+
+<bat:quote>
 %%%%
 rotting devil
 
@@ -3559,6 +3628,30 @@ iron, and laughed its laughter of nails rattling.
  And I saw the more the fist pounded the more the mouth laughed. The fist is
 pounding and pounding, and the mouth answering.”
     -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
+%%%%
+skeletal archer
+
+Since when is having flesh a requirement to be a master archer? These skeletal
+fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
+only good for a supply of sinew for bowstrings anyway.
+%%%%
+skeletal archer:quote
+
+“For a glory of all evil spirits rise for victory
+ Pain for pain, blood for blood
+ Pagan warriors moved quickly forward
+ Bows are ready to shoot out their searing
+ Darts...”
+    -Mastiphal, “For a Glory of All Evil spirits”
+%%%%
+skeletal bat
+
+A bat skeleton without the decency to lie unmoving like dead bats are supposed
+to.
+%%%%
+skeletal bat:quote
+
+<bat:quote>
 %%%%
 skeletal warrior
 
@@ -4438,6 +4531,11 @@ Being a statue, it doesn't appear to have a means of salvaging shot arrows or
 fletching new ones, but you guess the statue's creators gave it enough of a
 supply to kill you before someone comes to replenish the quiver.
 %%%%
+captured wizard
+
+With wild eyes, the wizard frantically mumbles something and waves his arms,
+but is unable to cast a single spell. His tongue has been cut off!
+%%%%
 charred statue
 
 It looks like this statue has been imbued with fire magic, letting it use
@@ -4684,12 +4782,6 @@ vine covered stone golem
 While made of ordinary old weathered stone, covered with moss and vines, this
 golem still needs to be respected. It is still hard as stone, after all, and
 its weight spells massive damage if it connects a blow.
-%%%%
-warrior statue
-
-This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
-it appears to be capable of moving its arms, keeping your distance seems to be
-the only way to keep your vital organs undamaged.
 %%%%
 witch
 
