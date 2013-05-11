@@ -322,7 +322,7 @@ spret_type cast_infusion(int pow, bool fail)
 {
 	fail_check();
 	you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
-	you.props["infusion_bonus"] = 3; //+ pow/13; // temporarily removed additional power boost
+	you.props["infusion_bonus"] = 3 + pow/25;
 	mpr("Your attacks are magically infused.");
 
 	return SPRET_SUCCESS;
@@ -331,11 +331,6 @@ spret_type cast_infusion(int pow, bool fail)
 spret_type cast_song_of_slaying(int pow, bool fail)
 {
 	fail_check();
-	// rescasting song of slaying resets the slaying bonus, so extending any previous songs doesn't make sense
-	// supposed to last a long time??
-
-	// i dont know if this is supposed to be literal singing
-	// it seems kind of silly
 
 	if (you.duration[DUR_SONG_OF_SLAYING])
 	{
