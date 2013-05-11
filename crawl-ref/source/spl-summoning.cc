@@ -818,17 +818,12 @@ bool summon_holy_warrior(int pow, bool punish)
     return true;
 }
 
-///// uuuuuuu
-//// not at all what it should be yet!
-//// literally this is just tukima without unwielding, and it shouldn't be
 spret_type cast_spectral_weapon(int pow, bool fail)
 {
     const int dur = min(2 + (random2(pow) / 5), 6);
 	// probably shouldn't duplicate this code!!
 	item_def* wpn = you.weapon();
-    if (!wpn
-        || !is_weapon(*wpn)
-        || is_range_weapon(*wpn))
+    if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn))
     {
         if (wpn)
         {
@@ -862,7 +857,7 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 	item_def original_weapon = *wpn;
 	
 	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
-	// Reduce the enchantment of low powered spectral weapons
+	// Reduce the enchantment of low powered spectral weapons and increase it by the player's weapon skill 
 	int adjustment = max(-5 + 2*skill_with_weapon/3, 9);
 
 	// create the weapon to give to the spectral weapon
