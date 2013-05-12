@@ -1555,6 +1555,15 @@ static bool _check_ability_possible(const ability_def& abil,
         return (you.can_go_berserk(true, false, true)
                 && (quiet || berserk_check_wielded_weapon()));
 
+    case ABIL_SELF_PETRIFY:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            if (!quiet)
+                mpr("You're too exhausted to transform.");
+            return false;
+        }
+        return true;
+
     case ABIL_EVOKE_FOG:
         if (env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
