@@ -2197,6 +2197,9 @@ int player_movement_speed(bool ignore_burden)
     if (you.liquefied_ground())
         mv += 3;
 
+    if (you.species == SP_GROTESK && you.petrifying())
+        mv += 3;
+
     // armour
     if (you.run())
         mv -= 2;
@@ -2273,7 +2276,7 @@ int player_speed(void)
         ps = haste_div(ps);
 
     if (you.form == TRAN_STATUE || you.form == TRAN_TREE
-        || you.duration[DUR_PETRIFYING])
+        || (you.duration[DUR_PETRIFYING] && you.species != SP_GROTESK))
     {
         ps *= 15;
         ps /= 10;

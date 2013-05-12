@@ -1104,10 +1104,20 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 
     if (dam != INSTANT_DEATH)
-        if (you.petrified())
+        if (you.species == SP_GROTESK && (you.petrified() || you.petrifying()))
+        {
+            you.grotesk_damage_reduction =
+                max(you.grotesk_damage_reduction, dam + 1 / 2);
             dam /= 2;
+        }
+        else if (you.petrified())
+        {
+            dam /= 2;
+        }
         else if (you.petrifying())
+        {
             dam = dam * 10 / 15;
+        }
 
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);

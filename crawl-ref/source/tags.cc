@@ -1090,6 +1090,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
+    marshallInt(th, you.grotesk_damage_reduction);
     marshallShort(th, you.manual_skill);
     marshallInt(th, you.manual_index);
     marshallInt(th, you.abyss_speed);
@@ -1888,6 +1889,14 @@ static void tag_read_you(reader &th)
     ASSERT(you.is_undead <= US_SEMI_UNDEAD);
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GROTESK_DR)
+    {
+        you.grotesk_damage_reduction = unmarshallInt(th);
+    } else {
+        you.grotesk_damage_reduction = 0;
+    }
+#endif
     you.manual_skill  = static_cast<skill_type>(unmarshallShort(th));
     you.manual_index  = unmarshallInt(th);
 
