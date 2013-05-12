@@ -1699,8 +1699,11 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
     if (get_item_slot(item) != slot)
         return true;
 
-    if (item.base_type == OBJ_WEAPONS)
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
+        || item.base_type == OBJ_RODS)
+    {
         return true;
+    }
 
     if (item.base_type == OBJ_ARMOUR || !_item_known_uncursed(item))
         return false;
