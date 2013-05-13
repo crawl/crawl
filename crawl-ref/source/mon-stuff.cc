@@ -3747,21 +3747,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
         break;
 
-    case CLOUD_GREY_SMOKE:
-        if (placement)
-            return false;
-
-        // This isn't harmful, but dumb critters might think so.
-        if (mons_intel(mons) > I_ANIMAL || coinflip())
-            return false;
-
-        if (mons->res_fire() > 0)
-            return false;
-
-        if (mons->hit_points >= random2avg(19, 2))
-            return false;
-        break;
-
     case CLOUD_RAIN:
         // Fiery monsters dislike the rain.
         if (mons->is_fiery() && extra_careful)
