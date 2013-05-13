@@ -2757,7 +2757,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
-                           | MF_SPELLCASTER);
+                           | MF_MELEE_MASK | MF_SPELL_MASK);
 
     string name;
 
