@@ -1938,7 +1938,9 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->base_monster = base;
 
     mon->colour       = mons_class_colour(mon->type);
-    mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
+    mon->speed        = (cs == MONS_SPECTRAL_THING
+                            ? mons_class_base_speed(mon->base_monster)
+                            : mons_class_zombie_base_speed(mon->base_monster));
 
     // Turn off all melee ability flags except dual-wielding.
     mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
