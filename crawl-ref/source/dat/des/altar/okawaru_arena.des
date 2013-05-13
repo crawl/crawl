@@ -106,7 +106,7 @@ KFEAT:  M = escape_hatch_down
 KFEAT:  E = runed_door
 KFEAT:  Kk = altar_okawaru
 KFEAT:  - = floor
-COLOUR: t-EMLlv = cyan
+COLOUR: -EMLlv = cyan
 
 {{
 local tlos_door = TriggerableFunction:new{
@@ -158,8 +158,6 @@ lua_marker("L", tloot_grab)
 lua_marker("l", tloot_grab2)
 lua_marker("v", portal_desc { lava_spout=1 })
 lua_marker("R", portal_desc { loot_doors=1 })
-lua_marker("t", portal_desc { veto_fire="veto", veto_disintegrate="veto" })
-set_feature_name("tree", "iron tree")
 
 dgn.persist.oka_arena_cages = false
 }}
