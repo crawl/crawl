@@ -2629,17 +2629,15 @@ DEPTH:   D:12-26
 MONS:    crystal golem, orange crystal statue
 KPROP:   .12 = no_rtele_into
 SUBST:   . = .:80 %$*|
-SHUFFLE: Dd / Ee / Ff / Gg / Hh
-SUBST:   D = +, d = n, eEfFgGhH = b
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
-WDd1...1...1bW
-WEe.........bW
-WFf.........bW
-WGg.........bW
-WHh1...2...1bW
+Wbb1...1...1bW
 Wbb.........bW
+Wbb.........bW
+Wnn.........bW
+WW=1...2...1bW
+Wnn.........bW
 Wbb.........bW
 Wbb.........bW
 Wbb1...1...1bW
