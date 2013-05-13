@@ -2574,7 +2574,7 @@ int mons_base_speed(const monster* mon)
     if (mon->ghost.get())
         return mon->ghost->speed;
 
-    if (mons_enslaved_soul(mon))
+    if (mon->type == MONS_SPECTRAL_THING)
         return mons_class_base_speed(mons_zombie_base(mon));
 
     return (mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
