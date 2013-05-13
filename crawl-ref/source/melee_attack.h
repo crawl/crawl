@@ -46,6 +46,8 @@ public:
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
 
+    bool         whaling;         // additional damage from waling
+
     // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
     int    miscast_level;
@@ -106,6 +108,12 @@ private:
     /* Axe cleaving */
     void cleave_setup();
     int cleave_damage_mod(int dam);
+
+    /* M&F whaling */
+    bool whaling_check();
+    int whaling_damage_mod(int dam);
+    void whaling_increment();
+    string whaling_punctuation();
 
     /* Mutation Effects */
     void do_spines();

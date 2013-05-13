@@ -114,7 +114,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     to_hit          = calc_to_hit();
     can_cleave      = wpn_skill == SK_AXES && attacker != defender
                       && !attacker->confused();
-
+    whaling         = wpn_skill == SK_MACES_FLAILS && attacker != defender
+                      && !attacker->confused();
     attacker_armour_tohit_penalty =
         div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
     attacker_shield_tohit_penalty =
@@ -270,6 +271,9 @@ bool melee_attack::handle_phase_attempted()
             return false;
         }
     }
+
+    whaling_check();
+
     // Set delay now that we know the attack won't be cancelled.
     if (attacker->is_player())
     {
@@ -931,6 +935,8 @@ bool melee_attack::attack()
         else
             handle_phase_dodged();
     }
+
+    whaling_increment();
 
     // Remove sanctuary if - through some attack - it was violated.
     if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
@@ -5097,6 +5103,62 @@ int melee_attack::cleave_damage_mod(int dam)
     return div_rand_round(dam * 3, 4);
 }
 
+// check if this is a sustained attack
+bool melee_attack::whaling_check()
+{
+    if (defender->mid != attacker->whaling_on)
+    {
+        attacker->whaling_bonus = 0;
+        attacker->whaling_on = defender->mid;
+    }
+    else if (attacker->whaling_bonus > 0)
+        return true;
+    return false;
+}
+
+int melee_attack::whaling_damage_mod(int dam)
+{
+    return div_rand_round(dam * (9 + attacker->whaling_bonus), 10);
+}
+
+void melee_attack::whaling_increment()
+{
+    if (whaling && attack_occurred && !cancel_attack
+        && attacker != defender)
+    {
+        // Set the flag so the bonus doesn't get reset afterward
+        attacker->whaling_connected = true;
+        // But the effect only applies with non-zero damage
+        if (damage_done > 0)
+        {
+            // Print a message if the whaling bonus was non-zero
+            if (attacker->whaling_bonus > 0)
+            {
+                mprf("%s %s whaling on %s%s",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "are" : "is",
+                    defender->name(DESC_THE).c_str(),
+                    whaling_punctuation().c_str());
+            }
+            // Increment whaling bonus for next time
+            if (attacker->whaling_bonus < 6)
+                attacker->whaling_bonus++;
+        }
+    }
+}
+
+string melee_attack::whaling_punctuation()
+{
+    if (attacker->whaling_bonus < 2)
+        return ".";
+    else if (attacker->whaling_bonus < 4)
+        return "!";
+    else if (attacker->whaling_bonus < 6)
+        return "!!";
+    else
+        return "!!!";
+}
+
 void melee_attack::chaos_affect_actor(actor *victim)
 {
     melee_attack attk(victim, victim);
@@ -5449,6 +5511,9 @@ int melee_attack::calc_damage()
 
         if (cleaving)
             damage = cleave_damage_mod(damage);
+
+        if (whaling)
+            damage = whaling_damage_mod(damage);
 
         return apply_defender_ac(damage, damage_max);
     }

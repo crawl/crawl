@@ -1378,6 +1378,9 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < (int)you.recall_list.size(); i++)
         _marshall_as_int<mid_t>(th, you.recall_list[i]);
 
+    marshallUByte(th, you.whaling_bonus);
+    marshallInt(th, you.whaling_on);
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2365,6 +2368,16 @@ static void tag_read_you(reader &th)
     }
 #endif
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_WHALE_ATTACK)
+    {
+#endif
+        you.whaling_bonus = unmarshallUByte(th);
+        you.whaling_on = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
+
     if (!dlua.callfn("dgn_load_data", "u", &th))
     {
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
@@ -3164,6 +3177,9 @@ void marshallMonster(writer &th, const monster& m)
     _marshall_constriction(th, &m);
 
     m.props.write(th);
+
+    marshallUByte(th, m.whaling_bonus);
+    marshallInt(th, m.whaling_on);
 }
 
 void marshallMonsterInfo(writer &th, const monster_info& mi)
@@ -3659,6 +3675,16 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.props.clear();
     m.props.read(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_WHALE_ATTACK)
+    {
+#endif
+        m.whaling_bonus = unmarshallUByte(th);
+        m.whaling_on = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     if (m.props.exists("monster_tile_name"))
     {

@@ -2285,6 +2285,10 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
+
+    // Reset the whaling bonus if nothing connected
+    if (mons->whaling_bonus > 0 && !mons->whaling_connected)
+        attack_whaling_reset(mons);
 }
 
 //---------------------------------------------------------------
@@ -2332,6 +2336,8 @@ void handle_monsters(bool with_noise)
         // the queue just after this.
         if (oldspeed == mon->speed_increment)
         {
+            if (mon->whaling_bonus > 0)
+                mon->whaling_connected = false;
             handle_monster_move(mon);
             _post_monster_move(mon);
             fire_final_effects();

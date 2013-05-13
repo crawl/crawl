@@ -425,6 +425,9 @@ public:
 
     string describe_props() const;
 
+    uint8_t whaling_bonus;
+    mid_t whaling_on;
+    bool whaling_connected;
 
 protected:
     void clear_constricted();

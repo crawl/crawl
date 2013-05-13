@@ -454,3 +454,9 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
         targets.pop_front();
     }
 }
+
+void attack_whaling_reset(actor* attacker)
+{
+    attacker->whaling_bonus = 0;
+    attacker->whaling_on = 0;
+}

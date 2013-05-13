@@ -47,5 +47,6 @@ void get_all_cleave_targets(const actor* attacker, const coord_def& def,
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0);
+void attack_whaling_reset(actor* attacker);
 
 #endif

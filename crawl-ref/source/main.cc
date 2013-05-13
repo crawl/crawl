@@ -1362,6 +1362,11 @@ static void _input()
         if (apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
+        // If the turn ended without hitting anything, reset
+        // M&F whaling bonus
+        if (you.whaling_bonus > 0 && !you.whaling_connected)
+            attack_whaling_reset(&you);
+
         update_can_train();
         world_reacts();
     }
@@ -1863,6 +1868,8 @@ static void _do_list_gold()
 void process_command(command_type cmd)
 {
     apply_berserk_penalty = true;
+    you.whaling_connected = false;
+
     switch (cmd)
     {
 #ifdef USE_TILE
