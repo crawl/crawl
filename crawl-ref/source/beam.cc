@@ -5678,7 +5678,9 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
             continue;
 
         // If we were at a wall, only move to visible squares.
-        if (at_wall && !cell_see_cell(you.pos(), loc + Compass[i], LOS_NO_TRANS))
+        coord_def caster_pos = (invalid_monster_index(beam_source) ? you.pos()
+                                                     : menv[beam_source].pos());
+        if (at_wall && !cell_see_cell(caster_pos, loc + Compass[i], LOS_NO_TRANS))
             continue;
 
         int cadd = 5;
