@@ -1153,6 +1153,8 @@ endif
 .cflags: .force-cflags
 ifdef NEED_REBUILD
 	@echo "    * rebuilding crawl: new build flags or prefix"
+	@echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
+	@echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
 	@echo '$(TRACK_CFLAGS)' > .cflags
 endif
 
