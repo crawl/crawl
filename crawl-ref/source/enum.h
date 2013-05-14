@@ -346,6 +346,7 @@ enum beam_type                  // bolt::flavour
     BEAM_LIGHT,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
+    BEAM_GHOSTLY_FLAME,
 
     // Enchantments
     BEAM_SLOW,
@@ -614,6 +615,7 @@ enum cloud_type
     CLOUD_MAGIC_TRAIL,
     CLOUD_TORNADO,
     CLOUD_DUST_TRAIL,
+    CLOUD_GHOSTLY_FLAME,
     NUM_CLOUD_TYPES,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
@@ -2613,6 +2615,7 @@ enum monster_type                      // menv[].type
     MONS_SIMULACRUM,
 
     MONS_ANCIENT_CHAMPION,
+    MONS_REVENANT,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3424,6 +3427,8 @@ enum spell_type
     SPELL_SENTINEL_MARK,
     SPELL_WORD_OF_RECALL,
     SPELL_INJURY_BOND,
+    SPELL_GHOSTLY_FLAMES,
+    SPELL_GHOSTLY_FIREBALL,
     NUM_SPELLS
 };
 

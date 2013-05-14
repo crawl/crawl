@@ -1833,6 +1833,31 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         ensnare(mons);
         break;
 
+    case BEAM_GHOSTLY_FLAME:
+        if (mons->holiness() == MH_UNDEAD)
+            hurted = 0;
+        else
+        {
+            const int res = mons->res_negative_energy();
+            hurted = resist_adjust_damage(mons, pbolt.flavour, res, hurted, true);
+
+            if (hurted < original)
+            {
+                if (doFlavouredEffects)
+                    simple_monster_message(mons, " partially resists.");
+            }
+            if (!hurted)
+            {
+                if (doFlavouredEffects)
+                {
+                    simple_monster_message(mons,
+                                        (original > 0) ? " completely resists."
+                                                       : " appears unharmed.");
+                }
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -2374,6 +2399,9 @@ cloud_type bolt::get_cloud_type()
     if (name == "freezing blast")
         return CLOUD_COLD;
 
+    if (origin_spell == SPELL_GHOSTLY_FLAMES)
+        return CLOUD_GHOSTLY_FLAME;
+
     return CLOUD_NONE;
 }
 
@@ -2381,6 +2409,9 @@ int bolt::get_cloud_pow()
 {
     if (name == "freezing blast")
         return random_range(10, 15);
+
+    if (origin_spell == SPELL_GHOSTLY_FLAMES)
+        return random_range(12, 20);
 
     return 0;
 }
@@ -2759,6 +2790,9 @@ void bolt::affect_place_clouds()
 
     if (name == "trail of fire")
         place_cloud(CLOUD_FIRE, p, random2(ench_power) + ench_power, agent());
+
+    if (origin_spell == SPELL_GHOSTLY_FLAMES)
+        place_cloud(CLOUD_GHOSTLY_FLAME, p, random2(6) + 5, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -3776,6 +3810,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
     case BEAM_HELLFIRE:
         ac_rule = AC_NONE; break;
     case BEAM_ELECTRICITY:
+    case BEAM_GHOSTLY_FLAME:
         ac_rule = AC_HALF; break;
     case BEAM_FRAG:
         ac_rule = AC_TRIPLE; break;
@@ -4206,6 +4241,12 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (name == "spray of energy")
         _dazzle_monster(mon, agent());
+
+    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() == MH_UNDEAD)
+    {
+        if (mon->heal(roll_dice(3, 10)))
+            simple_monster_message(mon, " is bolstered by the flame.");
+    }
 
 }
 
@@ -5338,6 +5379,15 @@ void bolt::refine_for_explosion()
         ex_size = 1;
     }
 
+    if (name == "ghostly fireball")
+    {
+        seeMsg  = "The ghostly flame explodes!";
+        hearMsg = "You hear the shriek of haunting fire!";
+
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        ex_size = 1;
+    }
+
     if (seeMsg == NULL)
     {
         seeMsg  = "The beam explodes into a cloud of software bugs!";
@@ -5699,6 +5749,9 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_PAIN)
         return !mon->res_negative_energy();
 
+    if (flavour == BEAM_GHOSTLY_FLAME)
+        return mon->holiness() != MH_UNDEAD;
+
     // everything else is considered nasty by everyone
     return true;
 }
@@ -5723,6 +5776,9 @@ bool bolt::nice_to(const monster* mon) const
     {
         return true;
     }
+
+    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() == MH_UNDEAD)
+        return true;
 
     return false;
 }
@@ -5915,6 +5971,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_LIGHT:                 return "light";
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";
+    case BEAM_GHOSTLY_FLAME:         return "ghostly flame";
     case BEAM_SLOW:                  return "slow";
     case BEAM_HASTE:                 return "haste";
     case BEAM_MIGHT:                 return "might";

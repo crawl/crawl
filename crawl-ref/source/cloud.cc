@@ -24,8 +24,10 @@
 #include "losglobal.h"
 #include "mapmark.h"
 #include "melee_attack.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-place.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "random.h"
@@ -287,6 +289,47 @@ static void _dissipate_cloud(int cloudidx, int dissipate)
         delete_cloud(cloudidx);
 }
 
+static void _handle_ghostly_flame(const cloud_struct& cloud)
+{
+    if (actor_at(cloud.pos))
+        return;
+
+    int countn = 0;
+    for (distance_iterator di(cloud.pos, false, false, 2); di; ++di)
+    {
+        if (monster_at(*di) && monster_at(*di)->type == MONS_SPECTRAL_THING)
+            countn++;
+    }
+
+    int rate[5] = {650, 175, 45, 20, 0};
+    int chance = rate[(min(4, countn))];
+
+    if (!x_chance_in_y(chance, you.time_taken * 600))
+        return;
+
+    monster_type basetype = random_choose_weighted(4,   MONS_ANACONDA,
+                                                   6,   MONS_HYDRA,
+                                                   8,   MONS_ROCK_WORM,
+                                                   3,   MONS_SNAPPING_TURTLE,
+                                                   2,   MONS_ALLIGATOR_SNAPPING_TURTLE,
+                                                   100, RANDOM_MONSTER,
+                                                   0);
+
+    if (basetype == RANDOM_MONSTER && one_chance_in(4))
+    {
+        do
+            basetype = pick_random_zombie();
+        while (!monster_habitable_grid(basetype, grd(cloud.pos)));
+    }
+
+    monster* agent = monster_by_mid(cloud.source);
+    create_monster(mgen_data(MONS_SPECTRAL_THING,
+                             (cloud.whose == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY),
+                             NULL, 1, SPELL_GHOSTLY_FLAMES, cloud.pos,
+                             (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE,
+                             GOD_NO_GOD, basetype));
+}
+
 void manage_clouds()
 {
     for (int i = 0; i < MAX_CLOUDS; ++i)
@@ -331,6 +374,8 @@ void manage_clouds()
             else
                 dissipate /= 20;
         }
+        else if (cloud.type == CLOUD_GHOSTLY_FLAME)
+            _handle_ghostly_flame(cloud);
 
         _cloud_interacts_with_terrain(cloud);
         expose_items_to_element(_cloud2beam(cloud.type), cloud.pos, 2);
@@ -714,6 +759,8 @@ static int _cloud_base_damage(const actor *act,
     case CLOUD_STEAM:
         return _cloud_damage_calc(_steam_cloud_damage(cloud.decay), 2, 0,
                                   maximum_damage);
+    case CLOUD_GHOSTLY_FLAME:
+        return _cloud_damage_calc(15, 3, 4, maximum_damage);
     default:
         return 0;
     }
@@ -766,6 +813,8 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->res_rotting() > 0;
     case CLOUD_PETRIFY:
         return act->res_petrify();
+    case CLOUD_GHOSTLY_FLAME:
+        return act->holiness() == MH_UNDEAD;
     default:
         return false;
     }
@@ -1003,6 +1052,7 @@ static int _actor_cloud_damage(actor *act,
     case CLOUD_HOLY_FLAMES:
     case CLOUD_COLD:
     case CLOUD_STEAM:
+    case CLOUD_GHOSTLY_FLAME:
         final_damage =
             _cloud_damage_output(act, _cloud2beam(cloud.type), resist,
                                  cloud_base_damage,
@@ -1184,7 +1234,7 @@ static const char *_terse_cloud_names[] =
     "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
     "raging winds",
-    "sparse dust",
+    "sparse dust", "ghostly flame"
 };
 
 static const char *_verbose_cloud_names[] =
@@ -1197,7 +1247,7 @@ static const char *_verbose_cloud_names[] =
     "calcifying dust",
     "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
     "mutagenic fog", "magical condensation", "raging winds",
-    "sparse dust",
+    "sparse dust", "ghostly flame"
 };
 
 string cloud_type_name(cloud_type type, bool terse)
@@ -1401,6 +1451,10 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_PETRIFY:
         which_colour = WHITE;
+        break;
+
+    case CLOUD_GHOSTLY_FLAME:
+        which_colour = ETC_ELECTRICITY;
         break;
 
     default:

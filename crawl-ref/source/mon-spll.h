@@ -1956,4 +1956,15 @@
       }
     },
 
+    {  MST_REVENANT,
+      {
+       SPELL_GHOSTLY_FIREBALL,
+       SPELL_GHOSTLY_FLAMES,
+       SPELL_NO_SPELL,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_NO_SPELL,
+       SPELL_BLINK_AWAY
+      }
+    },
+
 #endif
