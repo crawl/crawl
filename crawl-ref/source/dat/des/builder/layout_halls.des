@@ -78,7 +78,7 @@ NAME:   layout_hall_layers
 DEPTH:  D:2-,Zot,Lair,Elf
 WEIGHT: 5, 10 (Zot), 5 (Lair), 20 (Elf)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand central
 {{
   layout_type "halls"
   if is_validating() then return; end
@@ -218,7 +218,7 @@ NAME:   layout_onion
 DEPTH:  Zot,Snake
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand central
 {{
   layout_type "halls"
   if is_validating() then return; end
@@ -324,7 +324,7 @@ NAME:   layout_onion_interference
 DEPTH:  Zot:1-4,Snake
 WEIGHT: 0
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand central
 {{
 
   -- TODO: This comes out with really stunning layouts 80% of the time
@@ -439,7 +439,7 @@ NAME:   layout_cathedral_of_symmetry
 DEPTH:  Zot,Tar
 WEIGHT: 20, 50(Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand central
 {{
   layout_type "halls"
   if is_validating() then return; end
@@ -499,6 +499,11 @@ TAGS: overwritable layout allow_dup unrand
     yscale = util.random_range_real(.1,.4)/reps + reps/10
     wscale = util.random_range_real(.05, .08)
     polarise = crawl.coinflip()
+  end
+
+  -- If this is being placed to benefit a central vault, do the polar layout.
+  if dgn.map_by_tag("central") then
+    polarise = true
   end
 
   local scale = 80/reps
