@@ -2397,7 +2397,8 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     if (what != NULL) // Terrain explodes.
     {
-        mprf("The %s shatters!", what);
+        if (you.see_cell(target))
+            mprf("The %s shatters!", what);
         if (destroy_wall)
             nuke_wall(target);
     }
@@ -2412,7 +2413,8 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     }
     else // Monster explodes.
     {
-        mprf("%s shatters!", mon->name(DESC_THE).c_str());
+        if (you.see_cell(target))
+            mprf("%s shatters!", mon->name(DESC_THE).c_str());
 
         if ((mons_is_statue(mon->type) || mon->is_skeletal())
              && x_chance_in_y(pow / 5, 50)) // potential insta-kill
