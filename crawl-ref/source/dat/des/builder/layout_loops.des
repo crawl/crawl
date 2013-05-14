@@ -1084,14 +1084,12 @@ NAME:    layout_loops_misc
 DEPTH:   1-, !Dis, !Geh, !Tar
 WEIGHT:  5 (Pan), 10 (Zot), 20
 ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand
+TAGS:    overwritable layout allow_dup unrand layout_type_misc
 {{
   local wall_glyph = getRandomWallMaterial()
 
   local gxm, gym = dgn.max_bounds()
   extend_map{width = gxm, height = gym, fill = wall_glyph}
-
-  layout_type "misc"
 
   local ROOM_RADIUS_MIN = 1
   local ROOM_RADIUS_MAX = 4
@@ -1204,7 +1202,7 @@ DEPTH:   Pan, 1-, !Zot, !Dis, !Geh, !Tar
 WEIGHT:  5 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
-TAGS:    no_rotate no_hmirror no_vmirror
+TAGS:    no_rotate no_hmirror no_vmirror layout_type_misc
 {{
   local CONNECTION_PLUS_OFFSET = 4
   local CONNECTION_VARIATION_BIG = 8
@@ -1220,8 +1218,6 @@ TAGS:    no_rotate no_hmirror no_vmirror
 
   local gxm, gym = dgn.max_bounds()
   extend_map{width = gxm, height = gym, fill = wall_glyph}
-
-  layout_type "misc"
 
   local positions_use = {}
   local positions_dummy = {}
@@ -1459,14 +1455,12 @@ NAME:    layout_loops_corners
 DEPTH:   1-, !Zot, !Dis, !Geh, !Tar
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand
+TAGS:    overwritable layout allow_dup unrand layout_type_misc
 {{
   local wall_glyph = getRandomWallMaterial()
 
   local gxm, gym = dgn.max_bounds()
   extend_map{width = gxm, height = gym, fill = wall_glyph}
-
-  layout_type "misc"
 
   local center_xm = width() / 2 - 17
   local center_xp = width() / 2 + 17

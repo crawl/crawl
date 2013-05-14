@@ -248,7 +248,7 @@ ENDMAP
 ################################################################################
 # Looks really weird and silly in layout_dis, so it's limited to the city layouts.
 NAME:    hangedman_dis_monolith
-TAGS:    transparent layout_city layout_chaotic_city
+TAGS:    transparent layout_city
 DEPTH:   Dis:1-6
 ORIENT:  float
 MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
@@ -284,7 +284,7 @@ ENDMAP
 # Dispater's castle - subvaulted, with two main versions
 ##############################################################################
 NAME:     iron_city_of_dis
-TAGS:     no_rotate
+TAGS:     no_rotate layout_city
 WEIGHT:   30
 ORIENT:   north
 SUBVAULT: A : dis_castle

@@ -201,7 +201,7 @@ ENDMAP
 
 # Sorry, no wand of wishing in this one
 NAME:   evilmike_zot_entry_castle
-TAGS:   no_monster_gen zot_entry
+TAGS:   no_monster_gen zot_entry layout_city
 PLACE:  D:27
 ORIENT: float
 NSUBST: O = 1:O / *:n
@@ -2517,7 +2517,7 @@ ENDMAP
 NAME:       hall_of_Zot
 PLACE:      Zot:5
 ORIENT:     north
-TAGS:       no_dump
+TAGS:       no_dump layout_halls
 LFLAGS:     no_tele_control
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
