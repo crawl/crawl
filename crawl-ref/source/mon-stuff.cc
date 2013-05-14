@@ -3827,6 +3827,17 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
         break;
 
+    case CLOUD_GHOSTLY_FLAME:
+        if (mons->res_negative_energy() > 2)
+            return false;
+
+        if (extra_careful)
+            return true;
+
+        if (mons->hit_points >= random2avg(25, 3))
+            return false;
+        break;
+
     default:
         break;
     }
@@ -4514,6 +4525,11 @@ string summoned_poof_msg(const monster* mons, bool plural)
             no_chaos = true;
         }
         break;
+
+    case SPELL_GHOSTLY_FLAMES:
+        msg = "fades away";
+        break;
+
     }
 
     if (valid_mon)

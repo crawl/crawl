@@ -908,6 +908,25 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_GHOSTLY_FLAMES:
+        beam.name     = "ghostly flame";
+        beam.damage   = dice_def(0, 1);
+        beam.colour   = CYAN;
+        beam.flavour  = BEAM_GHOSTLY_FLAME;
+        beam.hit      = AUTOMATIC_HIT;
+        beam.is_beam  = true;
+        beam.is_big_cloud = true;
+        break;
+
+    case SPELL_GHOSTLY_FIREBALL:
+        beam.colour   = CYAN;
+        beam.name     = "ghostly fireball";
+        beam.damage   = dice_def(3, 7 + power / 15);
+        beam.hit      = 40;
+        beam.flavour  = BEAM_GHOSTLY_FLAME;
+        beam.is_explosion = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1553,6 +1572,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
                     return false; // We found at least one target; that's enough.
         }
         ret = true;
+        break;
+
+    case SPELL_GHOSTLY_FIREBALL:
+        ret = (!foe || foe->holiness() == MH_UNDEAD);
+        break;
 
     // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:

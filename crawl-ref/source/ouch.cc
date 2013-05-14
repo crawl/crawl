@@ -353,6 +353,27 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
+    case BEAM_GHOSTLY_FLAME:
+    {
+        if (you.holiness() == MH_UNDEAD)
+        {
+            if (doEffects)
+            {
+                you.heal(roll_dice(2, 9));
+                mpr("You are bolstered by the flame.");
+            }
+            hurted = 0;
+        }
+        else
+        {
+            hurted = resist_adjust_damage(&you, flavour,
+                                          you.res_negative_energy(),
+                                          hurted, true);
+            if (hurted < original && doEffects)
+                canned_msg(MSG_YOU_PARTIALLY_RESIST);
+        }
+    }
+
     default:
         break;
     }                           // end switch

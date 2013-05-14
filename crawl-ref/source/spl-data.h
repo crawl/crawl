@@ -3024,6 +3024,32 @@ struct spell_desc
 },
 
 {
+    SPELL_GHOSTLY_FLAMES, "Ghostly flames",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GHOSTLY_FIREBALL, "Ghostly fireball",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
