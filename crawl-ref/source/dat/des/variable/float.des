@@ -3464,28 +3464,28 @@ ENDMAP
 NAME:   grunt_deathspiral_large
 TAGS:   patrolling uniq_deathspiral
 DEPTH:  D:16-26
-ORIENT: float
+ORIENT: centre
 SHUFFLE: )]}>
 SUBST:  } = }>
 SUBST:  ] = ]>
 KMONS:  0 = 0 band
 KMONS:  8 = 8 band
 MAP
-   xxxxxxxxxxxxccccc@
-   xxxxxxxxxcccc.....
-   xxxxxxxxcc........
-   xxxxxxccc....ccccccccccccxxxxxxxxxxxx
-   xxxxxcc....ccc..........cccxxxxxxxxxx
-   xxxxcc...ccc..............cccxxxxxxxx
-   xxxcc...cc.....cccccccc.....cccxxxxxx
-   xxxc...cc...cccc......cccc....ccxxxxx
-   xxcc..cc...cc............ccc...ccxxxx
-   xxc..cc...cc.....ccc.......cc...ccxxx
-   xcc..c...cc...cccc%ccccc....cc...cxxx
-   xc..cc..cc..ccc........ccc...cc..ccxx
-   cc..c...c..cc....0.......cc...cc..ccx
-   c...c..cc..c....ccccccc...cc...c...cx
-   c..cc..c..cc..ccc0....ccc..cc..cc..cx
+               ccccc@
+            cccc.....
+           cc........
+         ccc....cccccccccccc
+        cc....ccc..........ccc
+       cc...ccc..............ccc
+      cc...cc.....cccccccc.....ccc
+      c...cc...cccc......cccc....cc
+     cc..cc...cc............ccc...cc
+     c..cc...cc.....ccc.......cc...cc
+    cc..c...cc...cccc%ccccc....cc...c
+    c..cc..cc..ccc........ccc...cc..cc
+   cc..c...c..cc....0.......cc...cc..cc
+   c...c..cc..c....ccccccc...cc...c...c
+   c..cc..c..cc..ccc0....ccc..cc..cc..c
    c..c...c..c..cccc+ccc...cc..cc..c..cc
    c..c...c..c.cc0..8.0cc...c...c..cc..c
    c..c..cc..c.c0*....*0cc..cc..c...c..c
@@ -3496,28 +3496,28 @@ c..c..cc..c...cc........c.c..%c..c..c
 c..c...c..cc..cc0*....*0c.c..cc..c..c
 c..cc..c...c...cc0.8..0cc.c..c...c..c
 cc..c..cc..cc...ccc+cccc..c..c...c..c
-xc..cc..cc..ccc....0ccc..cc..c..cc..c
-xc...c...cc...ccccccc....c..cc..c...c
-xcc..cc...cc.......0....cc..c...c..cc
-xxcc..cc...ccc........ccc..cc..cc..cx
-xxxc...cc....ccccc%cccc...cc...c..ccx
-xxxcc...cc.......ccc.....cc...cc..cxx
-xxxxcc...ccc............cc...cc..ccxx
-xxxxxcc....cccc......cccc...cc...cxxx
-xxxxxxccc.....cccccccc.....cc...ccxxx
-xxxxxxxxccc..............ccc...ccxxxx
-xxxxxxxxxxccc..........ccc....ccxxxxx
-xxxxxxxxxxxxcccccccccccc....cccxxxxxx
-                   ........ccxxxxxxxx
-                   .....ccccxxxxxxxxx
-                   @cccccxxxxxxxxxxxx
+ c..cc..cc..ccc....0ccc..cc..c..cc..c
+ c...c...cc...ccccccc....c..cc..c...c
+ cc..cc...cc.......0....cc..c...c..cc
+  cc..cc...ccc........ccc..cc..cc..c
+   c...cc....ccccc%cccc...cc...c..cc
+   cc...cc.......ccc.....cc...cc..c
+    cc...ccc............cc...cc..cc
+     cc....cccc......cccc...cc...c
+      ccc.....cccccccc.....cc...cc
+        ccc..............ccc...cc
+          ccc..........ccc....cc
+            cccccccccccc....ccc
+                   ........cc
+                   .....cccc
+                   @ccccc
 ENDMAP
 
 NAME: grunt_deathspiral_small
 TAGS: patrolling uniq_deathspiral
 DEPTH: D:16-26, Crypt:1-4, Dis:1-6, Geh:1-6, Tar:1-6, Coc:1-6, \
        Zot:1-4
-ORIENT: float
+ORIENT: centre
 SHUFFLE: )]}>
 SUBST:  } = }>
 SUBST:  ] = ]>
@@ -3554,13 +3554,13 @@ KMONS:  8 = 8 band
 : end
 KMONS:  0 = 0 band
 MAP
-  xxxxxccccc@
-  xxxxcc.....
-  xxxcc.cccccccccccxxxxxx
-  xxcc.cc.........cccxxxx
-  xcc.cc.ccccccccc..ccxxx
-  xc.cc.cc..0....ccc.ccxx
-  cc.c.cc.ccccccc..cc.ccx
+       ccccc@
+      cc.....
+     cc.ccccccccccc
+    cc.cc.........ccc
+   cc.cc.ccccccccc..cc
+   c.cc.cc..0....ccc.cc
+  cc.c.cc.ccccccc..cc.cc
   c.cc.c.cc%0...ccc.cc.cc
   c.c.cc.ccc+ccc..cc.cc.c
   c.c.c.cc.080.ccc.cc.c.c
@@ -3572,13 +3572,13 @@ c.c.c.ccc.*...*.c.c.c.c
 c.c.cc.ccc.080.cc.c.c.c
 c.cc.cc..ccc+ccc.cc.c.c
 cc.cc.ccc...0%cc.c.cc.c
-xcc.cc..ccccccc.cc.c.cc
-xxcc.ccc....0..cc.cc.cx
-xxxcc..ccccccccc.cc.ccx
-xxxxccc.........cc.ccxx
-xxxxxxccccccccccc.ccxxx
-            .....ccxxxx
-            @cccccxxxxx
+ cc.cc..ccccccc.cc.c.cc
+  cc.ccc....0..cc.cc.c
+   cc..ccccccccc.cc.cc
+    ccc.........cc.cc
+      ccccccccccc.cc
+            .....cc
+            @ccccc
 ENDMAP
 
 ###############################################################################
@@ -5161,7 +5161,7 @@ ENDMAP
 #
 # (Arguably doesn't work as well in Zot / entering Zot, but moths of wrath...)
 NAME:   grunt_twist_and_shout
-ORIENT: float
+ORIENT: centre
 DEPTH:  D:16-27, Zot, !Zot:$
 PLACE:  D:27
 {{

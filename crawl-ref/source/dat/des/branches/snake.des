@@ -901,7 +901,7 @@ ENDMAP
 
 NAME:   grunt_snake_rune_spirals
 PLACE:  Snake:$
-ORIENT: float
+ORIENT: centre
 MONS:   naga / nothing, naga warrior / naga, naga mage / naga
 MONS:   greater naga / guardian serpent
 MONS:   greater naga / naga warrior w:5 / naga mage w:5

@@ -62,6 +62,7 @@ static const char *map_section_names[] = {
     "southeast",
     "encompass",
     "float",
+    "centre",
 };
 
 static string_set Map_Flag_Names;
@@ -2851,7 +2852,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         break;
     case MAP_NORTHEAST: case MAP_SOUTHEAST:
     case MAP_NORTHWEST: case MAP_SOUTHWEST:
-    case MAP_FLOAT:
+    case MAP_FLOAT:     case MAP_CENTRE:
         if (map.width() > GXM * 2 / 3 || map.height() > GYM * 2 / 3)
         {
             return make_stringf("Map too large - %dx%d (max %dx%d)",
@@ -2952,6 +2953,9 @@ coord_def map_def::dock_pos(map_section_type norient) const
     case MAP_SOUTHWEST:
         return coord_def(minborder,
                           GYM - minborder - map.height());
+    case MAP_CENTRE:
+        return coord_def((GXM - map.width())  / 2,
+                         (GYM - map.height()) / 2);
     default:
         return coord_def(-1, -1);
     }

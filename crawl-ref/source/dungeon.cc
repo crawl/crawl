@@ -2430,6 +2430,23 @@ static void _prepare_water()
     }
 }
 
+static const map_def *_pick_layout(const map_def *vault)
+{
+    const map_def *layout = NULL;
+    // For centred maps, try to pick a central-type layout first.
+    if (vault->orient == MAP_CENTRE)
+        layout = random_map_for_tag("central", true, true);
+
+    if (!layout)
+    {
+        do
+             layout = random_map_for_tag("layout", true, true);
+        while (layout->has_tag("no_primary_vault"));
+    }
+
+    return layout;
+}
+
 static bool _pan_level()
 {
     const char *pandemon_level_names[] =
@@ -2491,10 +2508,7 @@ static bool _pan_level()
         }
         else
         {
-            const map_def *layout;
-            do
-                layout = random_map_for_tag("layout", true, true);
-            while (layout->has_tag("no_primary_vault"));
+            const map_def *layout = _pick_layout(vault);
 
             _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
 
@@ -4007,7 +4021,7 @@ static void _build_postvault_level(vault_placement &place)
     }
     else
     {
-        const map_def* layout = random_map_for_tag("layout", true, true);
+        const map_def* layout = _pick_layout(&place.map);
         ASSERT(layout);
         _build_secondary_vault(layout, false);
     }
