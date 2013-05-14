@@ -1932,16 +1932,6 @@ void handle_monster_move(monster* mons)
     if (mons->type == MONS_TIAMAT && one_chance_in(3))
         draconian_change_colour(mons);
 
-    if  (mons->type == MONS_ASMODEUS
-         || mons->type == MONS_CHAOS_BUTTERFLY)
-    {
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-                place_cloud(mons->type == MONS_ASMODEUS ? CLOUD_FIRE
-                                                        : CLOUD_RAIN,
-                            *ai, 1 + random2(6), mons);
-    }
-
     _monster_regenerate(mons);
 
     if (mons->cannot_act()
@@ -2299,6 +2289,26 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);
+
+    if  (mons->type == MONS_ASMODEUS
+         || mons->type == MONS_CHAOS_BUTTERFLY)
+    {
+        cloud_type ctype;
+        switch (mons->type)
+        {
+            case MONS_ASMODEUS:         ctype = CLOUD_FIRE;          break;
+            case MONS_CHAOS_BUTTERFLY:  ctype = CLOUD_RAIN;          break;
+            default:                    ctype = CLOUD_NONE;          break;
+        }
+
+        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+            if (!feat_is_solid(grd(*ai))
+                && (env.cgrid(*ai) == EMPTY_CLOUD
+                    || env.cloud[env.cgrid(*ai)].type == ctype))
+            {
+                place_cloud(ctype, *ai, 2 + random2(6), mons);
+            }
+    }
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
