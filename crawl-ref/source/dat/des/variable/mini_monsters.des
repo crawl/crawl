@@ -988,7 +988,7 @@ ENDMAP
 
 NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
-TAGS:    layout_rooms layout_misc layout_roguey layout_basic
+TAGS:    layout_rooms layout_misc layout_rooms layout_basic
 DEPTH:   D:11-16
 MONS:    rat / grey rat w:2, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
@@ -5463,7 +5463,7 @@ ENDMAP
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS: no_monster_gen layout_basic layout_rooms layout_misc layout_caves
-TAGS: layout_spotty layout_roguey layout_delve layout_cocytus layout_pools
+TAGS: layout_delve
 CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
 DEPTH: D:8-, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
        Geh:1-6, Coc:1-6, Dis:1-6, Tar:1-6

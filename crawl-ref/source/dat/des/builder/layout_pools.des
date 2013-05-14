@@ -104,12 +104,10 @@ NAME: layout_pools
 DEPTH: D:9-
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
-
-    layout_type "caves"
 
     -- without a starting floor patch, spotty_map will crash
     mapgrd[gxm/2][gym/2] = '.'
@@ -153,12 +151,10 @@ NAME: layout_honeycomb
 DEPTH: D:12-, Snake:1-4, Tar
 WEIGHT: 10, 80(Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
-
-    layout_type "rooms"
 
     make_circle { x = gxm/2, y = gym/2, radius = 10 }
     mapgrd[gxm/2][gym/2] = '.'
@@ -222,12 +218,10 @@ NAME: layout_gehenna_straight
 DEPTH: Geh
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -277,12 +271,10 @@ NAME: layout_gehenna_big_room
 DEPTH: Geh
 WEIGHT: 25
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -346,12 +338,10 @@ NAME: layout_gehenna_corner
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -408,12 +398,10 @@ NAME: layout_gehenna_U_turn
 DEPTH: Geh
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -471,12 +459,10 @@ NAME: layout_gehenna_T
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -530,12 +516,10 @@ NAME: layout_gehenna_H
 DEPTH: Geh
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP   = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -583,12 +567,10 @@ NAME: layout_gehenna_box
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -639,12 +621,10 @@ NAME: layout_gehenna_parallel
 DEPTH: Geh
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -707,12 +687,10 @@ NAME: layout_gehenna_trident
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X

@@ -119,14 +119,6 @@ function hypervaults.build_layout(e, name, paint, options)
 
   if _VAULTS_DEBUG then print("Hypervaults Layout: " .. name) end
 
-  if name then
-    name = string.lower(name)
-    name = string.gsub(name," ","_")
-    e.layout_type(name)
-  else
-    e.layout_type "hypervaults" -- TODO: Lowercase and underscorise the name?
-  end
-
   local default_options = hypervaults.default_options()
   if options ~= null then hypervaults.merge_options(default_options,options) end
 
@@ -150,8 +142,6 @@ function build_vaults_layout(e, name, paint, options)
   if e.is_validating() then return; end
 
   if _VAULTS_DEBUG then print("Vaults Layout: " .. name) end
-
-  e.layout_type "vaults" -- TODO: Lowercase and underscorise the name parameter?
 
   local defaults = vaults_default_options()
   if options ~= nil then hypervaults.merge_options(defaults,options) end

@@ -13,9 +13,8 @@ NAME:   layout_twisted_forest
 DEPTH:  D:15-25,Lair
 WEIGHT: 2
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_forest
 {{
-  layout_type "forest"
   if is_validating() then return; end
 
   -- TODO:

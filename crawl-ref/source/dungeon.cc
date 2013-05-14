@@ -2430,18 +2430,50 @@ static void _prepare_water()
     }
 }
 
+static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
+{
+    if (!vault->has_tag_prefix("layout_"))
+        return true;
+
+    ASSERT(layout->has_tag_prefix("layout_type_"));
+
+    vector<string> tags = layout->get_tags();
+
+    for (unsigned int i = 0; i < tags.size(); i++)
+    {
+        if (starts_with(tags[i], "layout_type_"))
+        {
+            string type = strip_tag_prefix(tags[i], "layout_type_");
+            if (vault->has_tag("layout_" + type))
+                return true;
+        }
+    }
+
+    return false;
+}
+
 static const map_def *_pick_layout(const map_def *vault)
 {
     const map_def *layout = NULL;
+
+    // This is intended for use with primary vaults, so...
+    ASSERT(vault);
+
     // For centred maps, try to pick a central-type layout first.
     if (vault->orient == MAP_CENTRE)
         layout = random_map_for_tag("central", true, true);
 
+    int tries = 100;
+
     if (!layout)
     {
         do
+        {
              layout = random_map_for_tag("layout", true, true);
-        while (layout->has_tag("no_primary_vault"));
+             tries--;
+        }
+        while (layout->has_tag("no_primary_vault")
+               || (tries > 10 && !_vault_can_use_layout(vault, layout)));
     }
 
     return layout;
@@ -3969,6 +4001,20 @@ _build_vault_impl(const map_def *vault,
 #endif
 
     const bool is_layout = place.map.is_overwritable_layout();
+
+    if (is_layout && place.map.has_tag_prefix("layout_type_"))
+    {
+        vector<string> tag_list = place.map.get_tags();
+        for (unsigned int i = 0; i < tag_list.size(); i++)
+        {
+            if (starts_with(tag_list[i], "layout_type_"))
+            {
+                env.level_layout_types.insert(
+                    strip_tag_prefix(tag_list[i], "layout_type_"));
+            }
+        }
+    }
+
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))
