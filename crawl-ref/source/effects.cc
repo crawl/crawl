@@ -533,7 +533,14 @@ void banished(const string &who)
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        down_stairs(DNGN_ABYSSAL_STAIR);
+        if (level_id::current().depth < brdepth[BRANCH_ABYSS])
+            down_stairs(DNGN_ABYSSAL_STAIR);
+        else
+        {
+            // On Abyss:5 we can't go deeper; cause a shift to a new area
+            mpr("You are banished to a different region of the Abyss.", MSGCH_BANISHMENT);
+            abyss_teleport(true);
+        }
         return;
     }
 
