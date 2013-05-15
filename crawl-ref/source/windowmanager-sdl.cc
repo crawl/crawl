@@ -5,7 +5,11 @@
 
 #include "windowmanager-sdl.h"
 
-#include <SDL/SDL.h>
+#ifdef TARGET_COMPILER_VC
+# include <SDL.h>
+#else
+# include <SDL/SDL.h>
+#endif
 #include <SDL_image.h>
 
 #include "cio.h"

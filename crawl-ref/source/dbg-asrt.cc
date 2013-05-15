@@ -73,7 +73,11 @@
 #undef max
 
 #ifdef USE_TILE_LOCAL
-#include <SDL/SDL_syswm.h>
+#ifdef TARGET_COMPILER_VC
+# include <SDL_syswm.h>
+#else
+# include <SDL/SDL_syswm.h>
+#endif
 #endif
 #endif
 
