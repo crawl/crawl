@@ -497,11 +497,11 @@ spores exploseront, causant des dégâts à vous et vos ennemis.
 %%%%
 Evolution
 
-Transformez les plantes et les champignons adjacents en des espèces plus
-puissantes. Améliorer un champignon requière de la piété, améliorer des plantes
-requière des fruits. Les plantes améliorées gagnent un bonus en efficacité
-d'attaque proportionnel à la compétence d'Invocations de l'utilisateur et, les
-plantes oklob pourraient cracher de l'acide avec un haut niveau d'invocations.
+Transformez les plantes et les champignons en des espèces plus puissantes.
+Améliorer un champignon requière de la piété, améliorer des plantes requière
+des fruits. Les plantes améliorées gagnent un bonus en efficacité d'attaque
+proportionnel à la compétence d'Invocations de l'utilisateur et, les plantes
+oklob pourraient cracher de l'acide avec un haut niveau d'invocations.
 %%%%
 Bend Time
 
