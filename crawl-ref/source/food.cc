@@ -941,7 +941,9 @@ static constexpr int hunger_threshold[HS_ENGORGED + 1] =
 // state change message and don't identify rings or stimulate Xom.
 bool food_change(bool initial)
 {
+#ifndef TARGET_COMPILER_VC
     COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
+#endif
 
     bool state_changed = false;
     bool less_hungry   = false;
