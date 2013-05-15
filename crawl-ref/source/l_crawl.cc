@@ -1113,8 +1113,7 @@ LUAFN(_crawl_redraw_stats)
 LUAFN(_crawl_millis)
 {
     struct timeval tv;
-    struct timezone tz;
-    const int error = gettimeofday(&tv, &tz);
+    const int error = gettimeofday(&tv, nullptr);
     if (error)
     {
         luaL_error(ls, make_stringf("Failed to get time: %s",
