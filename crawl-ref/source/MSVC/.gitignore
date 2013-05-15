@@ -2,8 +2,9 @@ bin
 obj
 build.h
 compflag.h
-*.vcproj.*.user
+*.vcproj.user
 *.ncb
 *.suo
 *.opensdf
 *.sdf
+*.vcxproj.user
