@@ -26,9 +26,7 @@
 #ifndef CCAN_JSON_H
 #define CCAN_JSON_H
 
-#ifndef TARGET_COMPILER_VC
-# include <stdbool.h>
-#endif
+#include <stdbool.h>
 #include <stddef.h>
 
 typedef enum {
