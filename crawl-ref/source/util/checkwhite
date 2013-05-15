@@ -21,7 +21,7 @@ for (@files)
     -f $_ or (print(STDERR "Can't read $_\n"), next);
     next if /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist)$/i;
-    next if /vcproj/;
+    next if /\.(vcproj|vcproj\.user|vcxproj|vcxproj\.filters)$/i;
     next if m[(^|/)\.git(modules|attributes)$];
     next if /\.(lex|tab)\./;
     next if !/\./;
