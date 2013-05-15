@@ -27,7 +27,7 @@
 
 
 #ifndef _lint
-# if defined(__cplusplus) && __cplusplus >= 201103
+# if defined(TARGET_COMPILER_VC) || (defined(__cplusplus) && __cplusplus >= 201103)
 // We'd need to enable C++11 mode for nice messages.
 #  define COMPILE_CHECK(expr) static_assert((expr), #expr)
 # elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112
