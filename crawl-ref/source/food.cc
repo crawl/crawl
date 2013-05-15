@@ -933,18 +933,16 @@ static string _how_hungry()
     return "hungry";
 }
 
+// Must match the order of hunger_state_t enums
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-    { 1000, 1533, 2066, 2600, 7000, 9000, 11000, 40000 };
+    { HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY, HUNGER_HUNGRY,
+      HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL, HUNGER_ENGORGED };
 
 // "initial" is true when setting the player's initial hunger state on game
 // start or load: in that case it's not really a change, so we suppress the
 // state change message and don't identify rings or stimulate Xom.
 bool food_change(bool initial)
 {
-#ifndef TARGET_COMPILER_VC
-    COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
-#endif
-
     bool state_changed = false;
     bool less_hungry   = false;
 
