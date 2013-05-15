@@ -194,7 +194,7 @@ const struct coord_def Compass[9] =
 
 // Functions in main module
 static void _launch_game_loop();
-static void _launch_game();
+static NORETURN void _launch_game();
 
 static void _do_berserk_no_combat_penalty(void);
 static void _input(void);
@@ -399,11 +399,7 @@ static void _launch_game_loop()
              && !crawl_state.seen_hups);
 }
 
-#ifdef TARGET_COMPILER_VC
-static void _launch_game()
-#else
 static NORETURN void _launch_game()
-#endif
 {
     const bool game_start = startup_step();
 
