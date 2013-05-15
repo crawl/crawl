@@ -51,7 +51,7 @@ while (<DIFF>)
 
         $skip = $filename =~ /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i
              || $filename =~ /\.(sln|vim|pbxproj|vsprops|plist)$/i
-             || $filename =~ /\.(vcproj|vcxproj|vcxproj\.filters)$/i
+             || $filename =~ /vcproj/
              || $filename =~ /^\.gitmodules$/
              || $filename =~ /\.(lex|tab)\./
              || $filename !~ /\./;
