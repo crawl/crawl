@@ -5,15 +5,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>11.0.60315.1</_ProjectFileVersion>
-    <_PropertySheetDisplayName>Dynamic Link Library</_PropertySheetDisplayName>
+    <OutDir>$(SolutionDir)\bin\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions>__DYNAMIC__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
-      <OutputFile>$(SolutionDir)\..\$(ProjectName).dll</OutputFile>
-      <ImportLibrary>$(SolutionDir)\bin\8.0\$(Platform)\$(ProjectName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\contrib\bin\8.0\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
