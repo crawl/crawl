@@ -716,7 +716,7 @@ Summon Scorpions spell
 이 주문은 하나 이상의 전갈을 소환한다. (그 중 몇몇은 시전자를 따르지 않을 수도
 있다)
 %%%%
-Summon Small Mammals spell
+Summon Small Mammal spell
 
 이 주문은 시전자를 따르는 작은 동물을 소환한다. 보통 한 마리가 소환되지만, 소환
 마법에 어느 정도 능숙한 시전자는 한 번에 두 마리씩을 소환할 수 있다.
