@@ -8,6 +8,7 @@
 #include "menu.h"
 
 #include <cctype>
+#include <functional>
 
 #include "cio.h"
 #include "colour.h"
