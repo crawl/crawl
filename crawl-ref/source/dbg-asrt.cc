@@ -744,7 +744,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
+NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
 #if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)
     SDL_SysWMinfo SysInfo;
