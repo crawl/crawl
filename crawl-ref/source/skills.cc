@@ -1030,7 +1030,7 @@ void set_skill_level(skill_type skill, double amount)
 
         // When reducing, we don't want to stop right at the limit, unless
         // we're at skill cost level 0.
-        if (reduced and you.skill_cost_level)
+        if (reduced && you.skill_cost_level)
             ++max_xp;
 
         int cost = calc_skill_cost(you.skill_cost_level);
