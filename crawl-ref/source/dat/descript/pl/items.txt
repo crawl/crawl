@@ -1371,8 +1371,8 @@ mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi.
 %%%%
 staff of energy
 
-Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go
-w celu uzupełnienia magicznej energii.
+Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go w
+celu uzupełnienia magicznej energii.
 %%%%
 staff of fire
 
