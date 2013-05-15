@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug Tiles|Win32">
@@ -316,7 +316,12 @@ perl.exe "../util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\itemprop.cc" />
     <ClCompile Include="..\items.cc" />
     <ClCompile Include="..\jobs.cc" />
-    <ClCompile Include="..\json.cc" />
+    <ClCompile Include="..\json.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\kills.cc" />
     <ClCompile Include="..\lang-fake.cc" />
     <ClCompile Include="..\losglobal.cc" />
