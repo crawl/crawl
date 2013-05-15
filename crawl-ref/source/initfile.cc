@@ -970,9 +970,10 @@ void game_options::reset_options()
     if (wiz_mode != WIZ_NO)
         wiz_mode         = WIZ_NEVER;
 #else
-    wiz_mode         = WIZ_NO;
+    wiz_mode             = WIZ_NO;
 #endif
     terp_files.clear();
+    no_save              = false;
 #endif
 
 #ifdef USE_TILE
