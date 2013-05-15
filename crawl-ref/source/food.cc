@@ -938,7 +938,9 @@ static constexpr int hunger_threshold[HS_ENGORGED + 1] =
 
 bool food_change(bool suppress_message)
 {
+#ifndef TARGET_COMPILER_VC
     COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
+#endif
 
     bool state_changed = false;
     bool less_hungry   = false;
