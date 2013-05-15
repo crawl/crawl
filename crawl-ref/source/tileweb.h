@@ -14,7 +14,9 @@
 #include "map_knowledge.h"
 #include <map>
 #include <bitset>
-#include <sys/un.h>
+#ifndef TARGET_COMPILER_VC
+# include <sys/un.h>
+#endif
 
 class Menu;
 
