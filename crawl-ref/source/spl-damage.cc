@@ -974,7 +974,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     if (mons->alive())
         print_wounds(mons);
 
-    hp_gain /= 2;
+    hp_gain = div_rand_round(hp_gain, 2);
 
     if (hp_gain && !mons_was_summoned && !you.duration[DUR_DEATHS_DOOR])
     {
