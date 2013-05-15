@@ -274,10 +274,6 @@ boots of the Assassin
 
 암살자 길드에서 특수제작한, 아주 부드러운 장화이다.
 %%%%
-Lear's chain mail
-
-순금으로 만들어진 사슬갑옷이다.
-%%%%
 skin of Zhor
 
 어떤 희귀한 동물의 가죽이다. 이상한 냄새가 나는 것 같다.

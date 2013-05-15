@@ -280,10 +280,6 @@ boots of the Assassin
 
 Des bottes souples, spécialement dessinées par la Guilde des Assassins.
 %%%%
-Lear's chain mail
-
-Une cotte de mailles faite en or massif.
-%%%%
 skin of Zhor
 
 La peau puante d'un animal étrange.

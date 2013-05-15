@@ -1468,11 +1468,6 @@ Ce bâton augmente la puissance des sorts d'air lancés par son porteur, et
 l'isole électriquement. Si le porteur est compétent en évocation et en magie de
 l'air, ils peuvent choquer ce qu'il frappent avec ce bâton.
 %%%%
-staff of channeling
-
-Ce bâton permet à son porteur de canaliser l'énergie magique ambiante pour ses
-besoins.
-%%%%
 staff of cold
 
 Ce bâton accroit la puissance des sortilèges de glace de son porteur et, le
