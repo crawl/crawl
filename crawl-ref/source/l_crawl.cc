@@ -43,8 +43,10 @@ module "crawl"
 #include "view.h"
 #include "worley.h"
 
+#ifdef UNIX
 #include <sys/time.h>
 #include <time.h>
+#endif
 
 /////////////////////////////////////////////////////////////////////
 // User accessible
@@ -1110,6 +1112,7 @@ LUAFN(_crawl_redraw_stats)
     return 0;
 }
 
+#ifdef UNIX
 LUAFN(_crawl_millis)
 {
     struct timeval tv;
@@ -1124,6 +1127,7 @@ LUAFN(_crawl_millis)
     lua_pushnumber(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
     return 1;
 }
+#endif
 
 static string _crawl_make_name(lua_State *ls)
 {
@@ -1218,7 +1222,9 @@ static const struct luaL_reg crawl_dlib[] =
 { "redraw_view", _crawl_redraw_view },
 { "redraw_stats", _crawl_redraw_stats },
 { "god_speaks", _crawl_god_speaks },
+#ifdef UNIX
 { "millis", _crawl_millis },
+#endif
 { "make_name", crawl_make_name },
 { "set_max_runes", _crawl_set_max_runes },
 { "tutorial_hunger", crawl_tutorial_hunger },
