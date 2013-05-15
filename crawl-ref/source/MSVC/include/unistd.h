@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <io.h>
 #include <getopt.h> /* getopt from: http://www.pwilson.net/sample.html. */
+#include <Windows.h>
 
 #define srandom srand
 #define random rand
@@ -24,5 +25,7 @@
 #define STDIN_FILENO 0
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
+
+#define usleep(n) Sleep(n/1000)
 
 #endif /* unistd.h  */
