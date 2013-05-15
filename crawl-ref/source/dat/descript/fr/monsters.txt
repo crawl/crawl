@@ -745,12 +745,6 @@ Un cadavre faiblement animé par nécromancie. Il est facilement destructible,
 mais aussi capable de fusionner avec d'autres pour former d'autres horreurs
 plus puissantes.
 %%%%
-crazed wizard
-
-Ce gars semble être obsédé par l'Enfer et de faire affaire avec les démons qui
-y vivent. Il n'y qu'un seul moyen d'en finir... Prenez garde ou bien cette fin
-pourrait être la votre.
-%%%%
 crimson imp
 
 Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
@@ -1728,12 +1722,6 @@ mad acolyte of Lugonu
 Un disciple dément de Lugonu. Les années passées dans les abysses on eu raison
 de son faible esprit.
 %%%%
-mad wizard
-
-Délirer sur comment les rats pourraient dominer le monde n'est pas un signe
-d'une bonne santé mentale. Vous feriez mieux de prendre vos distances. D'autant
-que ce sont les écureuils qui vont gagner, c'est moi qui vous le dit!
-%%%%
 manticore
 
 Un croisement hideux, comprenant les caractéristiques d'un humain et d'un lion
@@ -2307,6 +2295,13 @@ Cette bête peut se soigner avec les dégâts électriques, cependant, si elle s
 fait toucher par plus qu'elle ne peut en maîtriser, cela pourrait avoir des
 résultats plutôt violents.
 %%%%
+skeletal archer
+
+Depuis quand il faut avoir de la chair pour pouvoir être un maître archer? Ces
+compagnons squelettiques peuvent vous transformer en un hérisson sanguinolent
+sans encombre. Les êtres pleins de viande comme vous ne sont bons qu'a fournir
+des tendons pour faire de nouvelles cordes à arc.
+%%%%
 skeletal bat
 
 Une chauve-souris squelette sans la décence de rester immobile comme les
@@ -2504,11 +2499,6 @@ blesse toute la créature.
 tentacled monstrosity
 
 Une masse distordante de tentacules, le tout recouvert d'un mucus putride.
-%%%%
-terrified wizard
-
-Ce gars s'est fait prendre par les haïsseurs de la magie, et il va se faire
-sacrifier sur l'autel de Trog.
 %%%%
 titan
 
@@ -2802,25 +2792,6 @@ antique lich
 
 Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
 %%%%
-apple tree
-
-Cet arbre porte des fruits qui pourraient nourrir un tigre affamé. Et ce n'est
-pas faux - vous êtes donc au milieu de la chaîne alimentaire.
-%%%%
-bittermelon vine
-
-Une plante ordinaire, faisant pousser des fruits à peine comestibles. Il sont
-nutritifs, mais absolument pas bon au goût.
-%%%%
-black sheep
-
-À première vue, ce mouton a simplement une pigmentation différente, mais vous
-n'êtes pas aussi facilement dupé par son apparence. Avec la chance que vous
-avez, c'est un mouton qui se cache sous une peau de loup _puis_ sous une autre
-peau de mouton pour mieux vous tromper.
-
-Ou peut-être que c'est juste un mouton après tout.
-%%%%
 charred statue
 
 On dirait que cette statue a été imprégnée de magie de feu, lui permettant de
@@ -2832,11 +2803,6 @@ Cigotuvi's Monster
 
 Cette assemblage terrifiant semble avoir été construit a partir de morceaux de
 corps de toutes les créatures monstrueuses imaginables.
-%%%%
-chilling statue
-
-Cette statue grotesque, taillée dans de la glace bleue, refroidit ses environs.
-C'est comme si elle absorbait la chaleur de son environnement.
 %%%%
 conjurer statue
 
@@ -2899,47 +2865,10 @@ frost-covered statue
 Une statue maladroitement faite d'un mage. Sa magie continue de fuir, vous
 laissant savoir de quel genre de sorts s'attendre: ceux qui sont froids.
 %%%%
-glowing angel
-
-Un agent divin de Zin, c'est une imposante figure ailée avec une aura d'une
-lumière blanche. Le visage de l'ange, cependant, est marquée par un air
-renfrogné, comme si son zèle contre chaque vice réel ou perçu éclipsait sa
-bonté.
-%%%%
-gourd plant
-
-Cette vigne robuste abrite des fruits nutritifs, mais n'ayant presque aucun
-goût.
-%%%%
-grape vine
-
-Sans jardinier pour lui fournir quelque chose pour se caler, et n'étant pas
-assez chanceuse pour que ses pousses tombent près de quelque chose sur lequel
-grimper, cette vigne est pourtant toujours remarquablement difficile à
-franchir.
-%%%%
-grey elf
-
-Autrefois considérés comme des espèces uniques en leur genre, les elfes gris
-sont dorénavant plutôt considérés comme une sous-espèce de haut elfe. Il y a
-peu de façons de les distinguer de leurs cousins haut elfes, en dehors de leur
-charme supposé (qui doit probablement plus tenir du mythe que de la réalité).
-%%%%
-hill dwarf
-
-Les nains des collines sont une sous-ethnie de nains qui, comme leur nom
-l'indique, vivent dans les collines. Autrefois des aventuriers capables, les
-nains des collines n'ont plus aucun intérêt à fouiller les donjons. Celui là a
-été capturé exprès pour l'exposition.
-%%%%
 human monk
 
 Il a l'air d'une piètre représentation d'un moine; rien de plus qu'un souvenir
 à moité formé.
-%%%%
-hungry kobold
-
-Ce kobold semble énervé du fait d'avoir été interrompu durant son repas.
 %%%%
 kamikaze kobold
 
@@ -2958,18 +2887,6 @@ malarious mermaid
 Une jeune femme avec une queue de poisson en guise de jambes. Elle à l'air
 malade mais est toujours capable de charmer son public.
 %%%%
-mountain dwarf
-
-Les nains des montagnes sont des cousins des nains des profondeurs vivant à la
-surface. Après des années de guerre avec les orcs, plus grands mais autrement
-similaires, les nains des montagnes furent conquis et déportés de leurs terres.
-Celui-ci à été importé des côtes étrangères.
-%%%%
-musa plant
-
-Cette plante broussailleuse peut faire pousser des bananes. À moins que ce soit
-des banananes? Ou des bananananes? Enfin bref ces machins jaunes et tordus.
-%%%%
 oklob plant annihilator
 
 Il pourrait sembler inconcevable qu'une simple plante puisse atteindre la
@@ -2979,10 +2896,6 @@ Quelle est cette sorcellerie ?
 oklob sapling priest
 
 Cette jeune plante oklob semble marmonner quelques oraisons... euh, quoi?!?
-%%%%
-orc berserker
-
-Un ogre résistant, fort et surtout particulièrement énervé.
 %%%%
 petrified plant
 
@@ -2998,54 +2911,14 @@ point de tirer une flèche, avec un carquois plein attaché à sa hanche. Ces
 flèches sculptées individuellement semblent presque comme si on pouvait les
 prendre une par une et les utiliser avec un vrai arc.
 %%%%
-sacrificial human
-
-Au vu de cette chose, elle devait être sacrifiée dans quelque rituel
-d'invocation de démon.
-%%%%
 sickly siren
 
 Une jeune femme avec une queue de poisson en guise de jambes. Elle à l'air
 malade mais est toujours capable de charmer son public.
 %%%%
-skeletal archer
-
-Depuis quand il faut avoir de la chair pour pouvoir être un maître archer? Ces
-compagnons squelettiques peuvent vous transformer en un hérisson sanguinolent
-sans encombre. Les êtres pleins de viande comme vous ne sont bons qu'a fournir
-des tendons pour faire de nouvelles cordes à arc.
-%%%%
-spooky statue
-
-Vous sentez une présence fantomatique autour de cette statue, et elle n'est pas
-des plus amicales.
-%%%%
-spriggan necromancer
-
-Faire lever les morts, puis courir derrière eux... ces petits tours commencent
-à devenir ennuyeux.
-%%%%
-spriggan shepherd
-
-Étant incapable de digérer la viande, les spriggans on besoin de beaucoup de
-lait pour tenir un régime sain. Ces gars gardent les animaux des prédateurs et
-des vandales comme vous, brandissant une canne courbée qui à l'air d'être un
-bon outil pour vous apprendre le respect.
-%%%%
 strange machine
 
 Une machine scintillante en argent.
-%%%%
-strawberry plant
-
-Les radiations qui on rendu les cafards et les araignées de la taille d'un
-petit chien, n'ont pas épargné ce modeste framboisier non plus. Heureusement,
-même de cette taille, il semble être inoffensif.
-%%%%
-tengu aerator
-
-This particularly ferocious tengu is well on its way towards mastery of air
-magic.
 %%%%
 water elementalist statue
 
@@ -3067,23 +2940,12 @@ s'occuper des intrus comme vous.
     end
 }}
 %%%%
-vampire warrior
-
-Ce vampire, redoutable au combat, utilise la magie uniquement pour s'améliorer
-lui-même, préférant le combat au corps à corps pour les intrus agaçants.
-%%%%
 vine covered stone golem
 
 Tout en étant fait d'une vielle pierre ordinaire, couvert de mousse et de
 lierre, ce golem à toujours besoin d'être respecté. Il est toujours aussi dur
 que la pierre après tout, et son poids peut causer des dégâts considérables
 s'il est concentré sur un coup.
-%%%%
-warrior statue
-
-Cette statue montre un guerrier bourru, portant une vilaine épée à deux mains.
-D'autant qu'il paraît capable de bouger ses bras, se tenir à distance semble
-être le seul moyen de garder vos organes vitaux en bon état.
 %%%%
 withered plant
 

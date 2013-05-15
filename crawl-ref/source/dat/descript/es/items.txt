@@ -1295,11 +1295,6 @@ portador, y lo aisla de la electricidad. Si el portador del bastón tiene
 capacidad en evocaciones y magia del aire, puede provocar descargas a quienes
 golpee con él.
 %%%%
-staff of channeling
-
-Este bastón permite que su portador canalice la magia ambiental para sus
-propios propósitos.
-%%%%
 staff of cold
 
 Este bastón incrementa el poder de los hechizos de hielo recitados por su
