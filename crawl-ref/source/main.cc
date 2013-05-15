@@ -399,7 +399,11 @@ static void _launch_game_loop()
              && !crawl_state.seen_hups);
 }
 
+#ifdef TARGET_COMPILER_VC
+static void _launch_game()
+#else
 static NORETURN void _launch_game()
+#endif
 {
     const bool game_start = startup_step();
 
