@@ -51,6 +51,17 @@ Asmodeus
 
 Un des Archidémons qui règnent sur l'Enfer, enveloppé de feu.
 %%%%
+Asmodeus:quote
+
+« Pour moi, j’ai d’autres occupations : je fais des mariages ridicules; j’unis
+des barbons avec des mineures, des maîtres avec leurs servantes, des filles mal
+dotées avec de tendres amants qui n’ont point de fortune. C’est moi qui ai
+introduit dans le monde le luxe, la débauche, les jeux de hasard et la chimie.
+Je suis l’inventeur des carrousels, de la danse, de la musique, de la comédie,
+et de toutes les modes nouvelles de France. En un mot, je m’appelle Asmodée,
+surnommé Le Diable Boiteux. »
+    -Alain-René Lesage, _Le Diable Boiteux_. 1707.
+%%%%
 Azrael
 
 Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
@@ -184,7 +195,7 @@ il fut connu pour être bienveillant, juste et passioné sur le fait de garder
 les elfes en dehors de la corruption et du crime. Même si ses proches
 commençaient à se tremper avec la nécromancie et la magie démoniaque.
 
-Au long des siècle de son mandant, la dévotion de Fannar pour la justice l'a
+Au long des siècle de son mandat, la dévotion de Fannar pour la justice l'a
 mené à la paranoïa et au despotisme. Même ses partisans les plus proches
 commencent à chuchoter que son pouvoir magique commence à devenir
 auto-destructif. Fannar essaye cependant d'empêcher les elfes de sombrer dans
@@ -281,6 +292,18 @@ Un empereur incroyablement puissant sur le chemin de la divinisation.
 Kirke
 
 Une belle enchanteresse.
+%%%%
+Lamia
+
+Une puissante reine des nagas, on dit qu'elle serait capable de manger ses
+propres enfants.
+{{
+  if you.race == "Naga" then
+    return "Sa beauté est éblouissante."
+  else
+    return "En dehors de son corps déformé, elle est plutôt jolie."
+  end
+}}
 %%%%
 the Lernaean hydra
 
@@ -1080,7 +1103,7 @@ Un œil gigantesque, encastré dans un globe flottant d'énergie incandescente.
 %%%%
 eye of draining
 
-Une horreur flottante qui se sert dans votre mana.
+Une horreur flottante qui se sert dans votre magie.
 %%%%
 feature mimic
 
@@ -1758,6 +1781,18 @@ adorent chanter et charmer leur public.
 metal gargoyle
 
 Un hideuse statue de métal ayant pris vie.
+%%%%
+metal gargoyle:quote
+
+«Leurs innombrables sculptures de diables et de dragons prenaient un aspect
+lugubre. La clarté inquiète de la flamme les faisait remuer à l’œil. Il y avait
+des guivres qui avaient l’air de rire, des gargouilles qu’on croyait entendre
+japper, des salamandres qui soufflaient dans le feu, des tarasques qui
+éternuaient dans la fumée. Et parmi ces monstres ainsi réveillés de leur
+sommeil de pierre par cette flamme, par ce bruit, il y en avait un qui marchait
+et qu’on voyait de temps en temps passer sur le front ardent du bûcher comme
+une chauve-souris devant une chandelle.»
+    -Victor Hugo, _Notre-Dame de Paris_, Livre 10, ch. IV. 1831
 %%%%
 microbat
 
@@ -2791,6 +2826,17 @@ ses os, et il palpite d'un pouvoir terrible et malsain.
 antique lich
 
 Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
+%%%%
+archer statue
+
+Avec l'apparence d'un magnifique archer elfe, taillé dans le marbre le plus
+fin. II brandit un arc, et semble être animé par la magie, lui permettant
+d'utiliser son arc pour vous cribler de flèches.
+
+Étant une statue, il ne semble pas avoir les moyens de récupérer les flèches
+tirées ou d'en créer d'autres, mais vous devinez que l'auteur de cette statue
+lui a donné un stock suffisant pour vous tuer avant que quelqu'un vienne
+remplir de nouveau le carquois.
 %%%%
 charred statue
 

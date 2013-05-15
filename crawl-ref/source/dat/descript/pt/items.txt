@@ -557,10 +557,6 @@ staff of conjuration
 
 Este cajado aumenta o poder das magias de conjuração lançadas pelo seu usuário.
 %%%%
-staff of energy
-
-Este cajado reduz significativamente o custo em fome das magias do usuário.
-%%%%
 staff of power
 
 Este cajado dá ao usuário uma reserva de poder mágico.

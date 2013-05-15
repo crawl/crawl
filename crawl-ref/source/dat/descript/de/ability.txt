@@ -471,14 +471,6 @@ Reproduction
 Erschaffe riesige Sporen aus den Leichen in deiner Sichtlinie. Die Sporen
 werden explodieren und dir oder deinen Feinden Schaden zufügen.
 %%%%
-Evolution
-
-Verwandle neben dir stehende Pflanzen und Pilze in stärkere Arten. Die
-Verbesserung von Pilzen beötigt Frömmigkeit, Pflanzen zu verbessern benötigt
-Nahrung. Verbesserte Pflanzen erhalten einen Bonus zur
-Trefferwahrscheinlichkeit abhängig von der Anrufungs-Fähigkeit des Benutzers,
-und Oklob-Pflanzen spucken eher Säure je höher die Anrufung war.
-%%%%
 Bend Time
 
 Versuche, jeden um dich herum zu verlangsamen. Erfahrung mit Beten macht es

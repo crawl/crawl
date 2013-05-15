@@ -40,13 +40,6 @@ amulet of resist mutation
 
 Tämä amuletti suojaa käyttäjäänsä muodonmuutoksilta, mutta ei pettämättömästi.
 %%%%
-amulet of the gourmand
-
-Tämä amuletti suojaa käyttäjäänsä raa'an lihan aiheuttamilta sairauksilta ja
-tekee heistä kykeneväisiä syömään sitä myös, kun he eivät ole nälkäisiä. Nämä
-vaikutukset käyttäjän ruoansulatukseen ovat kasaantuvia ja ovat alkuaankin
-pieniä.
-%%%%
 amulet of warding
 
 Tämä amuletti torjuu taikuudella kutsuttujen olentojen hyökkäyksiä, ja tekee

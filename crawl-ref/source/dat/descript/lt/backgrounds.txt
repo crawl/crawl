@@ -101,11 +101,6 @@ Skald
 Dainiai yra kariai, galintys save sustiprinti burtažodžiais iš Karo Giesmių
 knygos.
 %%%%
-Summoner
-
-Iššaukėjai pradeda su Šaukimų knyga ir nuo pat pradžių moka Iššaukti Mažus
-Žinduolius.
-%%%%
 Transmuter
 
 Keitėjai keičia savo formą, kad galėtų kovoti žvėries pavidalu. Jie taip pat

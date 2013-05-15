@@ -42,13 +42,6 @@ amulet of resist mutation
 Este amuleto previene que su portador adquiera mutaciones, aunque no es
 infalible.
 %%%%
-amulet of the gourmand
-
-Este amuleto protege a su portador de caer enfermo al comer carne cruda, y le
-permite digerirla incluso cuando no está hambriento. No obstante, estos efectos
-son inicialmente pequeños, y se incrementarán al llevarlo puesto durante un
-periodo de tiempo prolongado.
-%%%%
 amulet of warding
 
 Este amuleto repele los ataques de criaturas que hayan sido convocadas mediante
@@ -1318,11 +1311,6 @@ staff of earth
 Este bastón aumenta el poder de los conjuros de tierra del portador. Si éste es
 hábil en evocaciones, puede triturar a quien es golpeado, el daño es aún mayor
 si también se es hábil en magia de tierra.
-%%%%
-staff of energy
-
-Este bastón reduce enormemente el costo de hambre de los hechizos lanzados por
-su portador.
 %%%%
 staff of fire
 
