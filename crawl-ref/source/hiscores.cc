@@ -87,6 +87,8 @@ static string _score_file_name()
         ret = Options.shared_dir + "scores";
 
     ret += crawl_state.game_type_qualifier();
+    if (crawl_state.game_is_sprint() && crawl_state.map != "")
+        ret += "-" + crawl_state.map;
 
     return ret;
 }
