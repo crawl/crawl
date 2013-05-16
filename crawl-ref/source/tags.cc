@@ -1069,6 +1069,10 @@ static void tag_construct_char(writer &th)
 
     marshallString(th, species_name(you.species));
     marshallString(th, you.religion ? god_name(you.religion) : "");
+
+    // separate from the tutorial so we don't have to bump TAG_CHR_FORMAT
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef())
+        marshallString(th, crawl_state.map);
 }
 
 static void tag_construct_you(writer &th)
@@ -1851,6 +1855,14 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
             you.god_name = old_gods[you.religion];
         else
             you.god_name = "Marduk";
+    }
+
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef())
+    {
+        if (major > 34 || major == 34 && minor >= 29)
+            crawl_state.map = unmarshallString(th);
+        else
+            crawl_state.map = "";
     }
 }
 
