@@ -461,6 +461,9 @@ static void _update_weapon(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
 
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
+
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
@@ -468,12 +471,18 @@ static void _update_weapon(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
 
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_BOLT] = 1;
+
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_SLING_BULLET] = 1;
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -817,6 +826,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
+        // keep picking up sticks
+        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
+
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 2;
@@ -863,6 +875,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
 
+        // sandblast goes through a lot of stones
+        you.force_autopickup[OBJ_MISSILES][MI_STONE] = 1;
+
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
         you.skills[SK_SPELLCASTING]   = 1;
@@ -893,6 +908,9 @@ static void _give_items_skills(const newgame_def& ng)
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 2);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_NEEDLE] = 1;
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
