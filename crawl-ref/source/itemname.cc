@@ -3328,8 +3328,16 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == FOOD_CHUNK
             && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-                || you.has_spell(SPELL_SIMULACRUM)
                 || !temp && you.form == TRAN_LICH))
+        {
+            return false;
+        }
+
+        if (you.has_spell(SPELL_SIMULACRUM)
+            && (item.sub_type == FOOD_CHUNK
+             || item.sub_type == FOOD_BEEF_JERKY
+             || item.sub_type == FOOD_MEAT_RATION
+             || item.sub_type == FOOD_SAUSAGE))
         {
             return false;
         }
