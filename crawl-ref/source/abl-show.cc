@@ -202,6 +202,7 @@ static const ability_def Ability_List[] =
     { ABIL_SPIT_POISON, "Spit Poison", 0, 0, 40, 0, 0, ABFLAG_BREATH},
 
     { ABIL_BLINK, "Blink", 0, 50, 50, 0, 0, ABFLAG_NONE},
+    { ABIL_WISP_BLINK, "Blink", 2, 0, 0, 0, 0, ABFLAG_CONF_OK},
 
     { ABIL_BREATHE_FIRE, "Breathe Fire", 0, 0, 125, 0, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_FROST, "Breathe Frost", 0, 0, 125, 0, 0, ABFLAG_BREATH},
@@ -1027,6 +1028,10 @@ talent get_talent(ability_type ability, bool check_confused)
                   - you.experience_level / 2;
         break;
 
+    case ABIL_WISP_BLINK:
+        failure = 0;
+        break;
+
         // begin transformation abilities {dlb}
     case ABIL_END_TRANSFORMATION:
         failure = 0;
@@ -1539,6 +1544,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_BLINK:
+    case ABIL_WISP_BLINK:
     case ABIL_EVOKE_BLINK:
         if (you.no_tele(false, false, true))
         {
@@ -2129,6 +2135,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_BLINK:      // randarts
     case ABIL_BLINK:            // mutation
+    case ABIL_WISP_BLINK:       // wisp form
         random_blink(true);
         break;
 
@@ -3185,7 +3192,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
 
-    if (player_mutation_level(MUT_BLINK))
+    if (you.form == TRAN_WISP)
+        _add_talent(talents, ABIL_WISP_BLINK, false);
+    else if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
