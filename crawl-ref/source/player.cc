@@ -2191,7 +2191,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 5; // but allowed minimum is six
     else if (you.form == TRAN_PIG)
         mv = 7;
-    else if (you.form == TRAN_PORCUPINE)
+    else if (you.form == TRAN_PORCUPINE || you.form == TRAN_WISP)
         mv = 8;
     else if (you.form == TRAN_JELLY)
         mv = 11;
