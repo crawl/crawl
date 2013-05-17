@@ -2616,6 +2616,7 @@ enum monster_type                      // menv[].type
 
     MONS_ANCIENT_CHAMPION,
     MONS_REVENANT,
+    MONS_LOST_SOUL,
 
     NUM_MONSTERS,               // used for polymorph
 

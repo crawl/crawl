@@ -23,6 +23,7 @@
 #endif
 #include "fprop.h"
 #include "ghost.h"
+#include "itemprop.h"
 #include "losglobal.h"
 #include "libutil.h"
 #include "misc.h"
@@ -1871,6 +1872,156 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
     act->props.erase("flay_blood");
 }
 
+static bool _lost_soul_affectable(const monster* mons)
+{
+    return ((mons->holiness() == MH_UNDEAD && mons->type != MONS_LOST_SOUL
+             && !mons_is_zombified(mons))
+            ||(mons->holiness() == MH_NATURAL && mons_can_be_zombified(mons)));
+}
+
+static bool _lost_soul_teleport(monster* mons)
+{
+    bool seen = you.can_see(mons);
+
+    vector<coord_def> targets;
+
+    // Assemble candidate list and randomize
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
+            targets.push_back(mi->pos());
+    }
+    random_shuffle(targets.begin(), targets.end());
+
+    for (unsigned int i = 0; i < targets.size(); ++i)
+    {
+        coord_def empty;
+        if (find_habitable_spot_near(targets[i], mons_base_type(mons), 3, false, empty)
+            && mons->move_to_pos(empty))
+        {
+            mons->add_ench(ENCH_SUBMERGED);
+            mons->behaviour = BEH_WANDER;
+            mons->foe = MHITNOT;
+            if (seen)
+            {
+                mprf("%s flickers out of the living world.",
+                        mons->name(DESC_THE, true).c_str());
+            }
+            return true;
+        }
+    }
+
+    // If we can't find anywhere useful to go, flicker away to stop the player
+    // being annoyed chasing after us
+    if (one_chance_in(3))
+    {
+        if (seen)
+        {
+            mprf("%s flickers out of the living world.",
+                        mons->name(DESC_THE, true).c_str());
+        }
+        monster_die(mons, KILL_MISC, -1, true);
+        return true;
+    }
+
+    return false;
+}
+
+bool lost_soul_revive(monster* mons)
+{
+    if (!_lost_soul_affectable(mons))
+        return false;
+
+    for (monster_iterator mi(mons->get_los_no_trans()); mi; ++mi)
+    {
+        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        {
+            targetter_los hitfunc(*mi, LOS_SOLID);
+            flash_view_delay(GREEN, 200, &hitfunc);
+
+            if (you.can_see(*mi))
+            {
+                mprf("%s sacrifices itself to reknit %s!",
+                     mi->name(DESC_THE).c_str(),
+                     mons->name(DESC_THE).c_str());
+            }
+            else if (you.can_see(mons))
+            {
+                mprf("Necromantic energies suffuse and reknit %s!",
+                     mons->name(DESC_THE).c_str());
+            }
+
+            mons->heal(mons->max_hit_points);
+            mons->del_ench(ENCH_CONFUSION, true);
+            mons->timeout_enchantments(10);
+            monster_die(*mi, KILL_MISC, -1, true);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool lost_soul_spectralize(monster* mons)
+{
+    if (!_lost_soul_affectable(mons))
+        return false;
+
+    for (monster_iterator mi(mons); mi; ++mi)
+    {
+        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        {
+            targetter_los hitfunc(*mi, LOS_SOLID);
+            flash_view_delay(GREEN, 200, &hitfunc);
+
+            if (you.can_see(*mi))
+            {
+                mprf("The lost soul assumes the form of %s!",
+                     mons->name(DESC_THE).c_str());
+            }
+
+            define_zombie(*mi, mons->type, MONS_SPECTRAL_THING);
+            mi->flags |= MF_NO_REWARD | MF_SEEN;
+            mi->flags |= mons->flags & (MF_MELEE_MASK | MF_SPELL_MASK);
+            mi->spells = mons->spells;
+            mi->god = GOD_NAMELESS;
+
+            name_zombie(*mi, mons);
+            invalidate_agrid();
+
+            // Duplicate objects, or unequip them if they can't be duplicated.
+            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+            {
+                const int old_index = mons->inv[i];
+
+                if (old_index == NON_ITEM)
+                    continue;
+
+                const int new_index = get_mitm_slot(0);
+                if (new_index == NON_ITEM)
+                {
+                    mi->unequip(mitm[old_index], i, 0, true);
+                    mi->inv[i] = NON_ITEM;
+                    continue;
+                }
+
+                mi->inv[i]      = new_index;
+                mitm[new_index] = mitm[old_index];
+                mitm[new_index].set_holding_monster(mi->mindex());
+                mitm[new_index].flags |= ISFLAG_SUMMONED;
+
+                // Make holy items plain
+                if (get_weapon_brand(mitm[new_index]) == SPWPN_HOLY_WRATH)
+                    set_item_ego_type(mitm[new_index], OBJ_WEAPONS, SPWPN_NORMAL);
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -2853,6 +3004,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())
          && mons->type != MONS_SLIME_CREATURE
+         && mons->type != MONS_LOST_SOUL
          && !_crawlie_is_mergeable(mons))
     {
         return false;
@@ -3591,6 +3743,32 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         break;
     }
+
+    case MONS_LOST_SOUL:
+    if (one_chance_in(3))
+    {
+        bool see_friend = false;
+        bool see_foe = false;
+
+        for (actor_iterator ai(mons->get_los_no_trans()); ai; ++ai)
+        {
+            if (ai->is_monster() && mons_aligned(*ai, mons))
+            {
+                if (_lost_soul_affectable(ai->as_monster()))
+                    see_friend = true;
+            }
+            else
+                see_foe = true;
+
+            if (see_friend)
+                break;
+        }
+
+        if (see_foe && !see_friend)
+            if (_lost_soul_teleport(mons))
+                used = true;
+    }
+    break;
 
     default:
         break;
