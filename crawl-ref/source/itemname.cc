@@ -547,7 +547,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_INTELLIGENCE:      return " {Int+3}";
         case SPARM_PONDEROUSNESS:     return " {ponderous}";
         case SPARM_FLYING:            return " {Fly}";
-        case SPARM_MAGIC_RESISTANCE:  return " {MR}";
+        case SPARM_MAGIC_RESISTANCE:  return " {MR+}";
         case SPARM_PROTECTION:        return " {AC+3}";
         case SPARM_STEALTH:           return " {Stlth+}";
         case SPARM_RESISTANCE:        return " {rC+ rF+}";
