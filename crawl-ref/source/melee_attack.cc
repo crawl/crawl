@@ -881,7 +881,6 @@ bool melee_attack::attack()
             && one_chance_in(20))
         {
             simple_god_message(" blocks your attack.", GOD_ELYVILON);
-            dec_penance(GOD_ELYVILON, 1);
             handle_phase_end();
             return false;
         }
@@ -1354,7 +1353,6 @@ bool melee_attack::player_aux_test_hit()
         && one_chance_in(20))
     {
         simple_god_message(" blocks your attack.", GOD_ELYVILON);
-        dec_penance(GOD_ELYVILON, 1);
         return false;
     }
 
