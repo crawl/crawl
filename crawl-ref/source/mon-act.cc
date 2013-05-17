@@ -1551,8 +1551,11 @@ static bool _handle_throw(monster* mons, bolt & beem)
         return false;
     }
 
-    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
+        && mons->type != MONS_SPECTRAL_THING)
+    {
         return false;
+    }
 
     const bool archer = mons->is_archer();
 
