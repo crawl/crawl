@@ -4858,6 +4858,7 @@ void melee_attack::mons_apply_attack_flavour()
                      def_name(DESC_ITS).c_str());
             }
         }
+        break;
 
     case AF_PLAGUE:
         if (defender->sicken(30 + random2(50), true, true))
