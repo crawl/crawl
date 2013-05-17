@@ -4253,7 +4253,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         react_to_damage(agent, amount, flavour);
 
         if (has_ench(ENCH_MIRROR_DAMAGE))
-            (new mirror_damage_fineff(agent, this, amount))->schedule();
+            (new mirror_damage_fineff(agent, this, amount * 2 / 3))->schedule();
 
         blame_damage(agent, amount);
         behaviour_event(this, ME_HURT);

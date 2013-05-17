@@ -1403,8 +1403,12 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_MIRROR_DAMAGE:
-        if (mon->has_ench(ENCH_MIRROR_DAMAGE))
+        if (mon->has_ench(ENCH_MIRROR_DAMAGE)
+            || (mon->props.exists("mirror_recast_time")
+                && you.elapsed_time < mon->props["mirror_recast_time"].get_int()))
+        {
             ret = true;
+        }
         break;
 
     case SPELL_STONESKIN:
@@ -3238,8 +3242,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                    mons->pronoun(PRONOUN_REFLEXIVE).c_str(),
                                    god_name(mons->god).c_str()).c_str(),
                                MSGCH_MONSTER_SPELL);
-        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, mons,
-                       20 * BASELINE_DELAY));
+        mons->add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, mons, random_range(7, 9) * BASELINE_DELAY));
+        mons->props["mirror_recast_time"].get_int() = you.elapsed_time + 150 + random2(60);
         return;
 
     case SPELL_VAMPIRIC_DRAINING:
