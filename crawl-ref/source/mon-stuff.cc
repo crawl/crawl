@@ -866,13 +866,20 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
 
 static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 {
-    if (mons->hit_points < -25
-        || mons->hit_points < -mons->max_hit_points
-        || mons->max_hit_points <= 0
-        || mons->hit_dice < 1)
-    {
+    if (mons->max_hit_points <= 0 || mons->hit_dice < 1)
         return false;
+
+    // Before the hp check since this should not care about the power of the
+    // finishing blow
+    if (mons->holiness() == MH_UNDEAD && !mons_is_zombified(mons)
+        && soul_aura(mons->pos()))
+    {
+        if (lost_soul_revive(mons))
+            return true;
     }
+
+    if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
+        return false;
 
     // Elyvilon specials.
     if (_ely_protect_ally(mons, killer))
@@ -2538,10 +2545,16 @@ int monster_die(monster* mons, killer_type killer,
     // Likewise silence and umbras
     if (mons->type == MONS_SILENT_SPECTRE
         || mons->type == MONS_PROFANE_SERVITOR
-        || mons->type == MONS_MOTH_OF_SUPPRESSION)
+        || mons->type == MONS_MOTH_OF_SUPPRESSION
+        || mons->type == MONS_LOST_SOUL)
     {
         invalidate_agrid();
     }
+
+    // Done before items are dropped so that we can clone them
+    if (soul_aura(mons->pos()) && mons->holiness() == MH_NATURAL)
+        lost_soul_spectralize(mons);
+
     const coord_def mwhere = mons->pos();
     if (drop_items)
         monster_drop_things(mons, YOU_KILL(killer) || pet_kill);

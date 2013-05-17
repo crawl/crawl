@@ -690,6 +690,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                          "%s leaps out from its hiding place under the floor!",
                          name(DESC_A, true).c_str());
                 }
+                else if (type == MONS_LOST_SOUL)
+                {
+                    mprf(channel, "%s flickers into view.",
+                                  name(DESC_A).c_str());
+                }
                 else if (crawl_state.game_is_arena())
                     mprf("%s surfaces.", name(DESC_A, true).c_str());
             }
