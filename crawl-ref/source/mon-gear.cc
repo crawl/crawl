@@ -352,6 +352,21 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
         break;
 
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        item_race = MAKE_ITEM_DWARVEN;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(5, WPN_MORNINGSTAR, 5, WPN_GREAT_MACE,
+                                               5, WPN_HALBERD,     8, WPN_GLAIVE,
+                                               5, WPN_GREAT_SWORD, 10, WPN_BROAD_AXE,
+                                               15, WPN_BATTLEAXE, 0);
+        if (coinflip())
+        {
+            force_item  = true;
+            item.plus  += 1 + random2(4);
+            item.plus2 += 1 + random2(4);
+        }
+        break;
+
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
         item_race = MAKE_ITEM_DWARVEN;
@@ -363,7 +378,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         // deliberate fall through
     case MONS_DEEP_DWARF_SCION:
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_DEEP_DWARF_BERSERKER:
         item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_WEAPONS;
