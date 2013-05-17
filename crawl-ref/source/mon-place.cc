@@ -2105,9 +2105,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = (one_chance_in(5)? 2: 1) + random2(3);
         break;
     case MONS_DEEP_DWARF_ARTIFICER:
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
         band = BAND_DEEP_DWARF;
         band_size = 3 + random2(4);
+        break;
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        natural_leader = true;
+        band = BAND_DEATH_KNIGHT;
+        band_size = 3 + random2(2);
         break;
     case MONS_GRUM:
         natural_leader = true;
@@ -2830,6 +2834,17 @@ static monster_type _band_member(band_type band, int which)
                                            0);
         else
             return MONS_VAULT_GUARD;
+
+    case BAND_DEATH_KNIGHT:
+        if (which == 1 && coinflip())
+            return (coinflip() ? MONS_GHOUL : MONS_FLAYED_GHOST);
+        else
+            return random_choose_weighted(5, MONS_WRAITH,
+                                          6, MONS_FREEZING_WRAITH,
+                                          3, MONS_PHANTASMAL_WARRIOR,
+                                          2, MONS_FLAMING_CORPSE,
+                                          3, MONS_SKELETAL_WARRIOR,
+                                          0);
 
     default:
         die("unhandled band type %d", band);
