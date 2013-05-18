@@ -4370,6 +4370,7 @@ static void _move_player(coord_def move)
         if (you.made_nervous_by(targ))
         {
             mpr("You're too terrified to move while being watched!");
+            stop_running();
             moving = false;
             you.turn_is_over = false;
             return;
@@ -4507,12 +4508,14 @@ static void _move_player(coord_def move)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE, true).c_str());
+        stop_running();
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE, true).c_str());
+        stop_running();
         return;
     }
 
