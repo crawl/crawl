@@ -1988,17 +1988,23 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
 
             const bolt orig_beem = beem;
-            // Up to four tries to pick a spell.
-            for (int loopy = 0; loopy < 4; ++loopy)
+            // Up to five tries to pick a spell,
+            // with the last try being a self-enchantment.
+            for (int loopy = 0; loopy < 5; ++loopy)
             {
                 beem = orig_beem;
 
                 bool spellOK = false;
 
-                // Setup spell - monsters that are fleeing or pacified
-                // and leaving the level will always try to choose their
-                // emergency spell.
-                if (mons_is_fleeing(mons) || mons->pacified())
+                // Setup spell.
+                // If we're in the last attempt, try the self-enchantment.
+                if (loopy == 4 && coinflip())
+                {
+                    spell_cast = hspell_pass[2];
+                }
+                // Monsters that are fleeing or pacified and leaving the
+                // level will always try to choose their emergency spell.
+                else if (mons_is_fleeing(mons) || mons->pacified())
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
@@ -2160,22 +2166,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     }
                 }
 
-                // If not okay, then maybe we'll cast a defensive spell.
                 if (!spellOK)
-                {
-                    spell_cast = (coinflip() ? hspell_pass[2]
-                                             : SPELL_NO_SPELL);
-
-                    // don't cast a targetted spell at the player if the
-                    // monster is friendly and targetting the player -doy
-                    if (mons->wont_attack() && mons->foe == MHITYOU
-                        && spell_needs_tracer(spell_cast)
-                        && spell_needs_foe(spell_cast)
-                        && spell_harms_target(spell_cast))
-                    {
-                        spell_cast = SPELL_NO_SPELL;
-                    }
-                }
+                    spell_cast = SPELL_NO_SPELL;
 
                 if (spell_cast != SPELL_NO_SPELL)
                     break;
