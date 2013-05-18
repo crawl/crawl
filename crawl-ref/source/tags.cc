@@ -2015,7 +2015,8 @@ static void tag_read_you(reader &th)
         you.ability_letter_table[i] = static_cast<ability_type>(a);
 #if TAG_MAJOR_VERSION == 34
         if (you.ability_letter_table[i] == ABIL_FLY
-            || you.ability_letter_table[i] == ABIL_FLY_II)
+            || you.ability_letter_table[i] == ABIL_WISP_BLINK // was ABIL_FLY_II
+               && th.getMinorVersion() < TAG_MINOR_0_12)
         {
             if (found_fly)
                 you.ability_letter_table[i] = ABIL_NON_ABILITY;
@@ -2549,7 +2550,7 @@ static void tag_read_you_dungeon(reader &th)
 #if TAG_MAJOR_VERSION == 34
     // Deepen the Abyss; this is okay since new abyssal stairs will be
     // generated as the place shifts.
-    if (th.getMinorVersion() < TAG_MINOR_DEEP_ABYSS && th.getMinorVersion() != TAG_MINOR_0_11)
+    if (crawl_state.game_is_normal() && th.getMinorVersion() <= TAG_MINOR_ORIG_MONNUM)
         brdepth[BRANCH_ABYSS] = 5;
 #endif
 

@@ -833,11 +833,6 @@ Frost-covered floor
 
 Sol couvert de givre qui crisse agréablement sous vos pas.
 %%%%
-A cracked metal wall
-
-Ce mur métallique a subi quelques dommages. Hélas, le trou n'est pas assez gros
-pour passer à travers.
-%%%%
 A golden statue
 
 Un statue d'or massif d'un saint.

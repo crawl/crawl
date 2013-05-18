@@ -2773,7 +2773,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
-                           | MF_SPELLCASTER);
+                           | MF_MELEE_MASK | MF_SPELL_MASK);
 
     string name;
 
@@ -3764,21 +3764,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
 
         if (mons->hit_points >= random2avg(37, 4))
-            return false;
-        break;
-
-    case CLOUD_GREY_SMOKE:
-        if (placement)
-            return false;
-
-        // This isn't harmful, but dumb critters might think so.
-        if (mons_intel(mons) > I_ANIMAL || coinflip())
-            return false;
-
-        if (mons->res_fire() > 0)
-            return false;
-
-        if (mons->hit_points >= random2avg(19, 2))
             return false;
         break;
 

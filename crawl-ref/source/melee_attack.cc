@@ -98,7 +98,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
                            int attack_num, int effective_attack_num,
                            bool is_cleaving)
     :  // Call attack's constructor
-    attack::attack(attk, defn),
+    ::attack(attk, defn),
 
     perceived_attack(false), obvious_effect(false), attack_number(attack_num),
     effective_attack_number(effective_attack_num),
@@ -895,7 +895,6 @@ bool melee_attack::attack()
             && one_chance_in(20))
         {
             simple_god_message(" blocks your attack.", GOD_ELYVILON);
-            dec_penance(GOD_ELYVILON, 1);
             handle_phase_end();
             return false;
         }
@@ -1368,7 +1367,6 @@ bool melee_attack::player_aux_test_hit()
         && one_chance_in(20))
     {
         simple_god_message(" blocks your attack.", GOD_ELYVILON);
-        dec_penance(GOD_ELYVILON, 1);
         return false;
     }
 

@@ -98,6 +98,10 @@ tutorial1 door
 Закрытые двери можно открыть, двигаясь в их сторону. Чтобы закрыть открытую
 дверь нажмите <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
 %%%%
+tutorial1 close_door
+
+Чтобы закрыть открытую дверь, нажмите<input>$cmd[CMD_CLOSE_DOOR]</input>.
+%%%%
 tutorial1 water
 
 Учтите, вы можете двигаться по мелководью, но не через глубоководье.
@@ -350,9 +354,47 @@ tutorial3 tutorial_end
 
 Хорошая работа! Чтобы выйти из обучения, просто спуститесь вниз по лестнице.
 %%%%
+tutorial3 exit
+
+:nowrap
+<yellow>Команды для предметов</yellow>
+<w>$cmd[CMD_PICKUP]</w> поднять предмет
+<w>$cmd[CMD_WEAR_ARMOUR]</w> надеть доспех
+<w>$cmd[CMD_READ]</w> прочитать свиток
+<w>$cmd[CMD_WIELD_WEAPON]</w> взять оружие
+<w>$cmd[CMD_QUAFF]</w> выпить зелье
+<w>$cmd[CMD_EVOKE]</w> использовать палочку
+<w>$cmd[CMD_WEAR_JEWELLERY]</w> надеть драгоценность
+<w>$cmd[CMD_REMOVE_JEWELLERY]</w> снять драгоценность
+<w>$cmd[CMD_DROP]</w> выкинуть предмет
+
+<w></w>Использование команд доступно как из меню инвентаря
+(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), так и из экрана описания предмета.
+<localtiles><w></w>И конечно, <white>клик мышкой</white> также действует.
+</localtiles>
+
+<yellow>Другие</yellow>
+<w>$cmd[CMD_DISPLAY_COMMANDS]?</w> доступ к командам помощи
+<w>$cmd[CMD_RESISTS_SCREEN]</w> экран обзора характеристик
+<w>$cmd[CMD_USE_ABILITY]</w> использовать способность
+<w>$cmd[CMD_EXPLORE]</w> автоисследование
+<w>$cmd[CMD_SEARCH_STASHES]</w> поиск предметов/возможностей виденных ранее
+
+<localtiles><w></w>Некоторые из этих команд можно выполнить кликнув по ней в
+<w>панели команд</w>.
+</localtiles>
+
+<cyan>Нажмите <w>любую клавишу</w> чтобы очистить экран...</cyan>
+%%%%
 tutorial4 start
 
 В этом уроке вы узнаете, как учить и применять заклинания.
+%%%%
+tutorial4 ring_power
+
+Надеть это кольцо можно клавишей
+<input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> или <input> кликнуть</> на
+него в панели инвентаря </ localtiles>, и затем увижеть что оно дает.
 %%%%
 tutorial4 displace_allies
 

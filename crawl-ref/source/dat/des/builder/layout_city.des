@@ -50,10 +50,9 @@ NAME:   layout_stronghold
 DEPTH:  D:10-,Dis:1-6,Lair,Pan
 WEIGHT: 5, 20(Dis), 10(Pan)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand
+TAGS:   overwritable layout allow_dup unrand layout_type_city
 {{
   if is_validating() then return; end
-  layout_type "city"
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
@@ -230,6 +229,7 @@ DEPTH: D:10-, Dis:1-6, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror
+TAGS: layout_type_city
 {{
     local stage_count = 3
 
@@ -250,8 +250,6 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = base_wall_type}
-
-    layout_type "city"
 
     make_irregular_box { x1 = 5, y1 = 5, x2 = gxm - 6, y2 = gym - 6,
                          div_x = gxm / 6, div_y = gym / 6,

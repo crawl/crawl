@@ -105,11 +105,6 @@ Skald
 Skaldit ovat lähitaistelijoita, jotka nostavat suorituskykyään Sotahymnien
 kirjan taioilla.
 %%%%
-Summoner
-
-Kutsujat aloittavat Kutsumusten kirjalla ja osaavat aluksi kutsua pieniä
-nisäkkäitä.
-%%%%
 Transmuter
 
 Muodonmuuttajat muuttavat kehoaan petomaisemmaksi taistelua varten. Kepitkin

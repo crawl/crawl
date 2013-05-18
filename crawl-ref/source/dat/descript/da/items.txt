@@ -40,12 +40,6 @@ amulet of resist mutation
 
 Denne amulet beskytter bæreren mod mutationer, men den er ikke ufejlbarlig.
 %%%%
-amulet of the gourmand
-
-Denne amulet beskytter bæreren mod sygdom som følge af at spise frisk, råt kød
-og gør det muligt at fordøje det uden at være sulten. Effekten på bærerens
-fordøjelse er små til at begynde med, men tager til med tiden.
-%%%%
 amulet of warding
 
 Denne amulet afværger angreb fra væsener, der er magisk fremmanet, og gør

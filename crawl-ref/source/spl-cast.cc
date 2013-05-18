@@ -704,8 +704,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
-        mpr("There are no visible monsters within range! (Use <w>Z</w> to "
-            "cast anyway.)");
+        mpr("You can't see any susceptible monsters within range! "
+            "(Use <w>Z</w> to cast anyway.)");
 
         if (Options.darken_beyond_range)
         {
