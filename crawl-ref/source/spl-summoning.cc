@@ -858,7 +858,7 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 	
 	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
 	// Increase the acc of the spectral weapon by the player's weapon skill
-	int adjustment = 2*skill_with_weapon/3;
+	int adjustment = -2 + 2*skill_with_weapon/3;
 
 	// create the weapon to give to the spectral weapon
 	item_def fake;
