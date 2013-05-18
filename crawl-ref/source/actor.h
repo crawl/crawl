@@ -197,7 +197,7 @@ public:
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_polymorph() const = 0;
     virtual bool can_bleed(bool allow_tran = true) const = 0;
-    virtual bool mutate(const string &reason) = 0;
+    virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow) = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 3) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,

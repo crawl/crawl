@@ -3325,8 +3325,8 @@ void bolt::affect_player_enchantment()
 
     case BEAM_MALMUTATE:
         mpr("Strange energies course through your body.");
-        you.mutate(aux_source.empty() ? get_source_name() :
-                   (get_source_name() + "/" + aux_source));
+        you.malmutate(aux_source.empty() ? get_source_name() :
+                      (get_source_name() + "/" + aux_source));
         obvious_effect = true;
         break;
 
@@ -4857,7 +4857,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_MALMUTATE:
-        if (mon->mutate("")) // exact source doesn't matter
+        if (mon->malmutate("")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {

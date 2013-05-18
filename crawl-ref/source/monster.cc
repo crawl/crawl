@@ -4862,7 +4862,7 @@ bool monster::can_bleed(bool /*allow_tran*/) const
     return mons_has_blood(type);
 }
 
-bool monster::mutate(const string &reason)
+bool monster::malmutate(const string &reason)
 {
     if (!can_mutate())
         return false;
