@@ -2117,11 +2117,11 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_STATUE:
-        case TRAN_WISP:
             pl++;
             break;
         case TRAN_FUNGUS:
         case TRAN_TREE:
+        case TRAN_WISP:
         case TRAN_LICH:
             pl += 3;
             break;
