@@ -937,6 +937,7 @@ static bool _handle_scroll(monster* mons)
         || mons_is_confused(mons)
         || mons->submerged()
         || mons->inv[MSLOT_SCROLL] == NON_ITEM
+        || mons->has_ench(ENCH_BLIND)
         || !one_chance_in(3))
     {
         return false;
