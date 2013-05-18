@@ -43,13 +43,6 @@ amulet of resist mutation
 Dieses Amulett schützt den Träger vor Mutationen, allerdings nicht
 unweigerlich.
 %%%%
-amulet of the gourmand
-
-Dieses Amulett schützt den Träger vor Krankheit durch den Konsum von rohem
-Fleisch und ermöglicht es diesem selbst wenn gesättigt zu verdauen. Diese
-Effekte auf die Verdauung des Trägers  häufen sich jedoch erst mit der Zeit an
-und sind Anfangs klein
-%%%%
 amulet of warding
 
 Dieses Amulett wehrt einige Angriffe von Kreaturen, die auf magische Weise

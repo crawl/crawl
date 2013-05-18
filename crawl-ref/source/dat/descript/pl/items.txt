@@ -1345,10 +1345,6 @@ porażeniem elektrycznością. Jeśli użytkownik ma wystarczające umiejętnoś
 zarówno w Magii Powietrza jak i użyciu przedmiotów magicznych, wrogowie
 uderzeni tym kijem zostaną porażeni prądem.
 %%%%
-staff of channeling
-
-Ten kij umożliwia pobieranie magicznej mocy z otoczenia.
-%%%%
 staff of cold
 
 Ten kij zwiększa moc czarów Magii Lodu, a także zapewnia ochronę przed efektami
@@ -1375,8 +1371,8 @@ mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi.
 %%%%
 staff of energy
 
-Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go
-w celu uzupełnienia magicznej energii.
+Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go w
+celu uzupełnienia magicznej energii.
 %%%%
 staff of fire
 

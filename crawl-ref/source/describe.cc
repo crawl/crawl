@@ -336,20 +336,18 @@ static vector<string> _randart_propnames(const item_def& item,
                     work << "+";
                 else if (propanns[i].prop == ARTP_METABOLISM && val < 0)
                     work << "-";
-                else if (propanns[i].prop == ARTP_STEALTH)
+                else if (propanns[i].prop == ARTP_STEALTH
+                         || propanns[i].prop == ARTP_MAGIC)
                 {
-                    if (val > 20)
+                    if (val > 50)
                         work << "++";
-                    else if (val > 0)
+                    else if (val > 20)
                         work << "+";
-                    else if (val < -20)
+                    else if (val < -50)
                         work << "--";
                     else if (val < 0)
                         work << "-";
                 }
-                // Robe of Folly
-                else if (propanns[i].prop == ARTP_MAGIC && val < 0)
-                    work << "-";
                 break;
             }
             propnames.push_back(work.str());

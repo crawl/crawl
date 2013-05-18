@@ -988,7 +988,7 @@ ENDMAP
 
 NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
-TAGS:    layout_rooms layout_misc layout_roguey layout_basic
+TAGS:    layout_rooms layout_misc layout_rooms layout_basic
 DEPTH:   D:11-16
 MONS:    rat / grey rat w:2, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
@@ -2629,17 +2629,15 @@ DEPTH:   D:12-26
 MONS:    crystal golem, orange crystal statue
 KPROP:   .12 = no_rtele_into
 SUBST:   . = .:80 %$*|
-SHUFFLE: Dd / Ee / Ff / Gg / Hh
-SUBST:   D = +, d = n, eEfFgGhH = b
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
-WDd1...1...1bW
-WEe.........bW
-WFf.........bW
-WGg.........bW
-WHh1...2...1bW
+Wbb1...1...1bW
 Wbb.........bW
+Wbb.........bW
+Wnn.........bW
+WW=1...2...1bW
+Wnn.........bW
 Wbb.........bW
 Wbb.........bW
 Wbb1...1...1bW
@@ -3416,7 +3414,6 @@ KMONS:   q = yellow wasp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklno
-MARKER:  G = lua:props_marker { stop_explore = "statue" }
 MAP
 .............
 .............
@@ -3426,9 +3423,9 @@ MAP
 ...vfahajv...
 ...vklanov...
 ...vpqrimv...
-...vv+++vv...
+...vv===vv...
 ..v.......v..
-......G......
+.............
 .............
 ENDMAP
 
@@ -5466,7 +5463,7 @@ ENDMAP
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS: no_monster_gen layout_basic layout_rooms layout_misc layout_caves
-TAGS: layout_spotty layout_roguey layout_delve layout_cocytus layout_pools
+TAGS: layout_delve
 CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
 DEPTH: D:8-, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
        Geh:1-6, Coc:1-6, Dis:1-6, Tar:1-6

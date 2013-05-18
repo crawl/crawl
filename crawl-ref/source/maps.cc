@@ -578,13 +578,13 @@ static bool _apply_vault_grid(map_def &def,
     // Handle maps aligned along cardinals that are smaller than
     // the corresponding map dimension.
     if ((orient == MAP_NORTH || orient == MAP_SOUTH
-         || orient == MAP_ENCOMPASS)
+         || orient == MAP_ENCOMPASS || orient == MAP_CENTRE)
         && size.x < GXM)
     {
         start.x = (GXM - size.x) / 2;
     }
     if ((orient == MAP_EAST || orient == MAP_WEST
-         || orient == MAP_ENCOMPASS)
+         || orient == MAP_ENCOMPASS || orient == MAP_CENTRE)
         && size.y < GYM)
     {
         start.y = (GYM - size.y) / 2;

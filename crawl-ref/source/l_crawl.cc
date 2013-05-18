@@ -43,8 +43,12 @@ module "crawl"
 #include "view.h"
 #include "worley.h"
 
-#include <sys/time.h>
-#include <time.h>
+#ifdef TARGET_OS_WINDOWS
+# include "windows.h"
+#else
+# include <sys/time.h>
+# include <time.h>
+#endif
 
 /////////////////////////////////////////////////////////////////////
 // User accessible
@@ -1112,16 +1116,21 @@ LUAFN(_crawl_redraw_stats)
 
 LUAFN(_crawl_millis)
 {
+#ifdef TARGET_OS_WINDOWS
+    // MSVC has no gettimeofday().
+    FILETIME ft;
+    GetSystemTimeAsFileTime(&ft);
+    uint64_t tt = ft.dwHighDateTime;
+    tt <<= 32;
+    tt |= ft.dwLowDateTime;
+    tt /= 10000;
+    tt -= 11644473600000ULL;
+    lua_pushnumber(ls, tt);
+#else
     struct timeval tv;
-    struct timezone tz;
-    const int error = gettimeofday(&tv, &tz);
-    if (error)
-    {
-        luaL_error(ls, make_stringf("Failed to get time: %s",
-                                    strerror(error)).c_str());
-    }
-
+    gettimeofday(&tv, nullptr);
     lua_pushnumber(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
+#endif
     return 1;
 }
 

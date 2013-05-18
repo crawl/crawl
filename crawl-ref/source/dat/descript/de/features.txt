@@ -831,11 +831,6 @@ Frost-covered floor
 
 Frostbedeckter Boden. Es knirscht genugtuend unter den Füßen.
 %%%%
-A cracked metal wall
-
-Diese Metallwand ist beschädigt, doch das Loch ist nicht groß genug, um
-hindurchzuklettern.
-%%%%
 A golden statue
 
 Eine solide Goldstatue eines Heiligen.

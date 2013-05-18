@@ -45,8 +45,8 @@ infaillible.
 %%%%
 amulet of the gourmand
 
-Cette amulette protège son porteur des malaises causés par l'ingestion de
-viande fraîche et permet de les digérer même s'il n'a pas faim. Mais ces effets
+Cette amulette permet à son porteur de digérer la viande fraîche crue même s'il
+n'a pas faim et en augmente significativement l'apport nutritionnel. Ces effets
 sur la digestion du porteur s'accumulent avec le temps et sont initialement
 faibles.
 %%%%
@@ -1468,11 +1468,6 @@ Ce bâton augmente la puissance des sorts d'air lancés par son porteur, et
 l'isole électriquement. Si le porteur est compétent en évocation et en magie de
 l'air, ils peuvent choquer ce qu'il frappent avec ce bâton.
 %%%%
-staff of channeling
-
-Ce bâton permet à son porteur de canaliser l'énergie magique ambiante pour ses
-besoins.
-%%%%
 staff of cold
 
 Ce bâton accroit la puissance des sortilèges de glace de son porteur et, le
@@ -1500,8 +1495,8 @@ de la Terre.
 %%%%
 staff of energy
 
-Ce bâton réduit grandement la faim générée par les sorts employés par son
-porteur.
+Ce bâton permet à son porteur de contrôler l'énergie magique : jeter des sorts
+ne donne plus faim et il peut canaliser la magie ambiante.
 %%%%
 staff of fire
 

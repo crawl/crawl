@@ -406,6 +406,10 @@ static bool _abyss_check_place_feat(coord_def p,
             && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit"))
         {
             *use_map = false;
+
+            // Link the vault-placed items.
+            fixup_misplaced_items();
+            link_items();
         }
         else
             grd(p) = which_feat;
@@ -967,53 +971,60 @@ static level_id _get_real_level()
     return levels[pick];
 }
 
+/**************************************************************/
+/* Fixed layouts (ie, those that depend only on abyss coords) */
+/**************************************************************/
+const static WastesLayout wastes;
+const static DiamondLayout diamond30(3,0);
+const static DiamondLayout diamond21(2,1);
+const static ColumnLayout column2(2);
+const static ColumnLayout column26(2,6);
+const static ForestLayout forest;
+const static ProceduralLayout* regularLayouts[] =
+{
+    &diamond30, &diamond21, &column2, &column26, &forest,
+};
+const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
+    regularLayouts + 5);
+const static WorleyLayout worleyL(123456, layout_vec);
+const static RoilingChaosLayout chaosA(8675309, 450);
+const static RoilingChaosLayout chaosB(7654321, 400);
+const static RoilingChaosLayout chaosC(24324,   380);
+const static RoilingChaosLayout chaosD(24816,   500);
+const static NewAbyssLayout newAbyssLayout(7629);
+const static ProceduralLayout* mixedLayouts[] =
+{
+    &chaosA, &worleyL, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
+};
+const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
+const static WorleyLayout layout(4321, mixed_vec);
+const static ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
+const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
+const static WorleyLayout baseLayout(314159, base_vec, 5.0);
+const static RiverLayout rivers(1800, baseLayout);
+const static UnderworldLayout underworld;
+const static ClampLayout underworld_clamped(underworld, 40, true);
+// This one is not fixed: [0] is a level pulled from the current game
+static vector<const ProceduralLayout*> complex_vec(3);
+
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord;
 
-    const static WastesLayout wastes;
     if (_in_wastes(pt))
     {
         ProceduralSample sample = wastes(pt, abyssal_state.depth);
         abyss_sample_queue.push(sample);
         return sample;
     }
-    const static DiamondLayout diamond30(3,0);
-    const static DiamondLayout diamond21(2,1);
-    const static ColumnLayout column2(2);
-    const static ColumnLayout column26(2,6);
-    const static ForestLayout forest;
-    const static ProceduralLayout* regularLayouts[] =
-    {
-        &diamond30, &diamond21, &column2, &column26, &forest,
-    };
-    const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
-        regularLayouts + 5);
-    const static WorleyLayout worley(123456, layout_vec);
-    const static RoilingChaosLayout chaosA(8675309, 450);
-    const static RoilingChaosLayout chaosB(7654321, 400);
-    const static RoilingChaosLayout chaosC(24324,   380);
-    const static RoilingChaosLayout chaosD(24816,   500);
-    const static NewAbyssLayout newAbyssLayout(7629);
-    const ProceduralLayout* mixedLayouts[] =
-    {
-        &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
-    };
-    const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
-    const static WorleyLayout layout(4321, mixed_vec);
-    const ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
-    const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
-    const static WorleyLayout baseLayout(314159, base_vec, 5.0);
-    const static RiverLayout rivers(1800, baseLayout);
-    const static UnderworldLayout underworld;
-    const static ClampLayout underworld_clamped(underworld, 40, true);
 
     if (abyssLayout == NULL)
     {
         const level_id lid = _get_real_level();
         levelLayout = new LevelLayout(lid, 5, rivers);
-        const ProceduralLayout* complex_layout[] = { levelLayout, &rivers, &underworld_clamped };
-        const static vector<const ProceduralLayout*> complex_vec(complex_layout, complex_layout + 3);
+        complex_vec[0] = levelLayout;
+        complex_vec[1] = &rivers; // const
+        complex_vec[2] = &underworld_clamped; // const
         abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
     }
 
@@ -1210,7 +1221,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 _abyss_pick_altar(),
                                 abyss_genlevel_mask)
         ||
-        (level_id::current().depth < 5 &&
+        (level_id::current().depth < brdepth[BRANCH_ABYSS] &&
         _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
                                 DNGN_ABYSSAL_STAIR,
                                 abyss_genlevel_mask)));
@@ -1342,13 +1353,8 @@ void destroy_abyss()
     {
         delete abyssLayout;
         abyssLayout = nullptr;
-        /* memory leak!
-           Due to static contructors being called only once, only the first
-           real level referenced will be used, even after a restart_after_game.
-           Restoring the leak so people can play trunk while we talk.
         delete levelLayout;
         levelLayout = nullptr;
-        */
     }
 }
 

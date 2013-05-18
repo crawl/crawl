@@ -2430,6 +2430,55 @@ static void _prepare_water()
     }
 }
 
+static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
+{
+    if (!vault->has_tag_prefix("layout_"))
+        return true;
+
+    ASSERT(layout->has_tag_prefix("layout_type_"));
+
+    vector<string> tags = layout->get_tags();
+
+    for (unsigned int i = 0; i < tags.size(); i++)
+    {
+        if (starts_with(tags[i], "layout_type_"))
+        {
+            string type = strip_tag_prefix(tags[i], "layout_type_");
+            if (vault->has_tag("layout_" + type))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+static const map_def *_pick_layout(const map_def *vault)
+{
+    const map_def *layout = NULL;
+
+    // This is intended for use with primary vaults, so...
+    ASSERT(vault);
+
+    // For centred maps, try to pick a central-type layout first.
+    if (vault->orient == MAP_CENTRE)
+        layout = random_map_for_tag("central", true, true);
+
+    int tries = 100;
+
+    if (!layout)
+    {
+        do
+        {
+             layout = random_map_for_tag("layout", true, true);
+             tries--;
+        }
+        while (layout->has_tag("no_primary_vault")
+               || (tries > 10 && !_vault_can_use_layout(vault, layout)));
+    }
+
+    return layout;
+}
+
 static bool _pan_level()
 {
     const char *pandemon_level_names[] =
@@ -2491,10 +2540,7 @@ static bool _pan_level()
         }
         else
         {
-            const map_def *layout;
-            do
-                layout = random_map_for_tag("layout", true, true);
-            while (layout->has_tag("no_primary_vault"));
+            const map_def *layout = _pick_layout(vault);
 
             _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
 
@@ -2561,28 +2607,25 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     if (you.props.exists("force_map"))
         vault = find_map_by_name(you.props["force_map"].get_string());
-    else if (!crawl_state.game_is_zotdef())
+    else if (lid.branch == root_branch && lid.depth == 1
+        && (crawl_state.game_is_sprint()
+            || crawl_state.game_is_zotdef()
+            || crawl_state.game_is_tutorial()))
     {
-        // Don't want PLACE: Zot:1 vaults in ZotDef.
-        vault = random_map_for_place(lid, minivault);
+        vault = find_map_by_name(crawl_state.map);
+        if (vault == NULL)
+        {
+            end(1, false, "Couldn't find selected map '%s'.",
+                crawl_state.map.c_str());
+        }
     }
 
+    if (!vault)
+        // Pick a normal map
+        vault = random_map_for_place(lid, minivault);
+
     if (!vault && lid.branch == root_branch && lid.depth == 1)
-    {
-        if (crawl_state.game_is_sprint()
-            || crawl_state.game_is_zotdef()
-            || crawl_state.game_is_tutorial())
-        {
-            vault = find_map_by_name(crawl_state.map);
-            if (vault == NULL)
-            {
-                end(1, false, "Couldn't find selected map '%s'.",
-                    crawl_state.map.c_str());
-            }
-        }
-        else
-            vault = random_map_for_tag("entry");
-    }
+        vault = random_map_for_tag("entry");
 
     return vault;
 }
@@ -3955,6 +3998,20 @@ _build_vault_impl(const map_def *vault,
 #endif
 
     const bool is_layout = place.map.is_overwritable_layout();
+
+    if (is_layout && place.map.has_tag_prefix("layout_type_"))
+    {
+        vector<string> tag_list = place.map.get_tags();
+        for (unsigned int i = 0; i < tag_list.size(); i++)
+        {
+            if (starts_with(tag_list[i], "layout_type_"))
+            {
+                env.level_layout_types.insert(
+                    strip_tag_prefix(tag_list[i], "layout_type_"));
+            }
+        }
+    }
+
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))
@@ -4007,7 +4064,7 @@ static void _build_postvault_level(vault_placement &place)
     }
     else
     {
-        const map_def* layout = random_map_for_tag("layout", true, true);
+        const map_def* layout = _pick_layout(&place.map);
         ASSERT(layout);
         _build_secondary_vault(layout, false);
     }

@@ -201,7 +201,7 @@ ENDMAP
 
 # Sorry, no wand of wishing in this one
 NAME:   evilmike_zot_entry_castle
-TAGS:   no_monster_gen zot_entry
+TAGS:   no_monster_gen zot_entry layout_city
 PLACE:  D:27
 ORIENT: float
 NSUBST: O = 1:O / *:n
@@ -926,7 +926,7 @@ ENDMAP
 # 70% chance of having all stairs.
 NAME:   lemuel_acid_trip
 DEPTH:  Zot:1-4
-ORIENT: float
+ORIENT: centre
 MONS:   oklob plant, acid blob, jelly, yellow draconian
 MONS:   any nonbase yellow draconian
 SUBST:  1 = 1:2 .
@@ -959,7 +959,7 @@ ENDMAP
 #
 NAME:   lemuel_firehouse
 DEPTH:  Zot:1-4
-ORIENT: float
+ORIENT: centre
 MONS:   orb of fire
 MONS:   fire elemental
 MONS:   red draconian / weight:2 mottled draconian
@@ -1968,7 +1968,7 @@ ENDMAP
 NAME:    hangedman_zot_vaults_quadrants
 TAGS:    no_monster_gen no_item_gen transparent
 DEPTH:   Zot:1-4
-ORIENT:  float
+ORIENT:  centre
 # Humanoids, guardian beasts, the strongest; first V, then Zot.
 MONS:    ettin / stone giant w:5 / fire giant / frost giant
 MONS:    base draconian w:18 / death cob w:1 / guardian mummy w:1
@@ -2517,7 +2517,7 @@ ENDMAP
 NAME:       hall_of_Zot
 PLACE:      Zot:5
 ORIENT:     north
-TAGS:       no_dump
+TAGS:       no_dump layout_halls
 LFLAGS:     no_tele_control
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta

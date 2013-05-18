@@ -1488,7 +1488,8 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         {
         case TRAN_TREE:
             if (you.religion == GOD_FEDHAS && !player_under_penance())
-                break;
+                rf++;
+            break;
         case TRAN_ICE_BEAST:
             rf--;
             break;
@@ -1557,6 +1558,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         // transformations:
         switch (you.form)
         {
+        case TRAN_TREE:
+            if (you.religion == GOD_FEDHAS && !player_under_penance())
+                rc++;
+            break;
         case TRAN_ICE_BEAST:
             rc += 3;
             break;
@@ -2186,7 +2191,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 5; // but allowed minimum is six
     else if (you.form == TRAN_PIG)
         mv = 7;
-    else if (you.form == TRAN_PORCUPINE)
+    else if (you.form == TRAN_PORCUPINE || you.form == TRAN_WISP)
         mv = 8;
     else if (you.form == TRAN_JELLY)
         mv = 11;

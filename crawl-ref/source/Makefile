@@ -1144,8 +1144,11 @@ ifneq ($(GOALS),$(filter clean test %-windows,$(GOALS)))
 # This should eliminate an annoying need to use 'make clean' every time.
 #
 
-TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' for highlights)
-OLD_CFLAGS = $(shell cat .cflags 2>/dev/null)
+TRACK_CFLAGS = $(strip $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS)))
+        # (stray ' for highlights)
+OLD_CFLAGS = $(strip $(subst ','\'',$(shell cat .cflags 2>/dev/null)))
+        # (stray ' for highlights)
+
 ifneq ($(TRACK_CFLAGS),$(OLD_CFLAGS))
   NEED_REBUILD = y
 endif
@@ -1153,6 +1156,8 @@ endif
 .cflags: .force-cflags
 ifdef NEED_REBUILD
 	@echo "    * rebuilding crawl: new build flags or prefix"
+	@echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
+	@echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
 	@echo '$(TRACK_CFLAGS)' > .cflags
 endif
 

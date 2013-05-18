@@ -1501,12 +1501,6 @@ static int dgn_width(lua_State *ls)
     PLUARET(number, lines.width());
 }
 
-LUAFN(dgn_layout_type)
-{
-    env.level_layout_types.insert(luaL_checkstring(ls, 2));
-    return 0;
-}
-
 LUAFN(dgn_delve)
 {
     LINES(ls, 1, lines);
@@ -1648,7 +1642,6 @@ const struct luaL_reg dgn_build_dlib[] =
     { "add_pools", &dgn_add_pools },
     { "delve", &dgn_delve },
     { "width", dgn_width },
-    { "layout_type", &dgn_layout_type },
     { "farthest_from", &dgn_farthest_from },
 
     { "layout_basic", &dgn_layout_basic },
