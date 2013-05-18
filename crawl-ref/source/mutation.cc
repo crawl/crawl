@@ -1337,7 +1337,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         || which_mutation == RANDOM_XOM_MUTATION)
     {
         // If already heavily mutated, remove a mutation instead.
-        if (x_chance_in_y(how_mutated(false, true), 15))
+        if (x_chance_in_y(how_mutated(false, true), 15)
+            && !temporary)
         {
             // God gifts override mutation loss due to being heavily
             // mutated.
