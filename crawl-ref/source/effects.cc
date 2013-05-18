@@ -2245,7 +2245,7 @@ void handle_time()
             if (one_chance_in(5))
                 mutate(RANDOM_MUTATION, "mutagenic glow");
             else
-                give_bad_mutation("mutagenic glow", true, coinflip());
+                mutate(RANDOM_BAD_MUTATION, "mutagenic glow", true, coinflip());
 
             // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
