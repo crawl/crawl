@@ -4376,7 +4376,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_MUTATE:
         if (one_chance_in(4))
         {
-            defender->mutate(you.can_see(attacker) ?
+            defender->malmutate(you.can_see(attacker) ?
                 apostrophise(attacker->name(DESC_PLAIN)) + " mutagenic touch" :
                 "mutagenic touch");
         }

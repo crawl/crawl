@@ -7265,7 +7265,7 @@ bool player::can_bleed(bool allow_tran) const
     return true;
 }
 
-bool player::mutate(const string &reason)
+bool player::malmutate(const string &reason)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7274,14 +7274,14 @@ bool player::mutate(const string &reason)
 
     if (one_chance_in(5))
     {
-        if (::mutate(RANDOM_MUTATION, reason))
+        if (mutate(RANDOM_MUTATION, reason))
         {
             learned_something_new(HINT_YOU_MUTATED);
             return true;
         }
     }
 
-    return ::mutate(RANDOM_BAD_MUTATION, reason);
+    return mutate(RANDOM_BAD_MUTATION, reason);
 }
 
 bool player::polymorph(int pow)

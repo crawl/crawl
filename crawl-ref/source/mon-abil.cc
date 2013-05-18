@@ -3354,7 +3354,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                     // colour/attack/resistances change
                     case MONS_UGLY_THING:
                     case MONS_VERY_UGLY_THING:
-                        m->mutate("wretched star");
+                        m->malmutate("wretched star");
                         break;
 
                     // tile change, already mutated wrecks

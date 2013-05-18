@@ -2025,7 +2025,7 @@ void MiscastEffect::_transmutation(int severity)
                     mutate(RANDOM_BAD_MUTATION, cause, false, false);
             }
             else
-                target->mutate(cause);
+                target->malmutate(cause);
             _ouch(5 + random2avg(23, 2));
             break;
         }

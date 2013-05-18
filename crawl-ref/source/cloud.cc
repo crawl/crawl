@@ -927,12 +927,10 @@ bool _actor_apply_cloud_side_effects(actor *act,
             if (player)
             {
                 mpr("Strange energies course through your body.");
-                if (one_chance_in(3))
-                    return you.mutate("mutagenic cloud");
-                else
-                    return mutate(RANDOM_BAD_MUTATION, "mutagenic cloud");
+                return mutate(one_chance_in(15) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+                              "mutagenic cloud");
             }
-            else if (mons->mutate("mutagenic cloud"))
+            else if (mons->malmutate("mutagenic cloud"))
             {
                 if (you.religion == GOD_ZIN && cloud.whose == KC_YOU)
                     did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
