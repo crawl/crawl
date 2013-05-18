@@ -2277,10 +2277,15 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE || you.form == TRAN_TREE
-        || you.duration[DUR_PETRIFYING])
+    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
+        ps /= 10;
+    }
+
+    if (you.form == TRAN_TREE)
+    {
+        ps *= 15 - you.experience_level / 5;
         ps /= 10;
     }
 
@@ -6197,7 +6202,7 @@ int player::armour_class() const
             break;
 
         case TRAN_WISP:
-            AC += 1000;
+            AC += 500 + 50 * you.experience_level;
             break;
         case TRAN_FUNGUS:
             AC += 1200;
@@ -6214,7 +6219,7 @@ int player::armour_class() const
             break;
 
         case TRAN_TREE: // extreme bonus, no EV
-            AC += 2500;
+            AC += 2000 + 50 * you.experience_level;
             break;
         }
     }
