@@ -2242,10 +2242,11 @@ void handle_time()
             }
 
             // We want to warp the player, not do good stuff!
-            if (one_chance_in(5))
-                mutate(RANDOM_MUTATION, "mutagenic glow");
-            else
-                mutate(RANDOM_BAD_MUTATION, "mutagenic glow", true, coinflip());
+            mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+                   "mutagenic glow", true,
+                   coinflip(),
+                   false, false, false, false,
+                   you.species == SP_DJINNI);
 
             // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
