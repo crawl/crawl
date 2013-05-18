@@ -930,7 +930,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
                 if (one_chance_in(3))
                     return you.mutate("mutagenic cloud");
                 else
-                    return give_bad_mutation("mutagenic cloud");
+                    return mutate(RANDOM_BAD_MUTATION, "mutagenic cloud");
             }
             else if (mons->mutate("mutagenic cloud"))
             {

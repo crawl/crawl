@@ -7281,7 +7281,7 @@ bool player::mutate(const string &reason)
         }
     }
 
-    return give_bad_mutation(reason);
+    return ::mutate(RANDOM_BAD_MUTATION, reason);
 }
 
 bool player::polymorph(int pow)

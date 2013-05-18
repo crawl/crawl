@@ -2020,9 +2020,9 @@ void MiscastEffect::_transmutation(int severity)
                 // We don't need messages when the mutation fails,
                 // because we give our own (which is justified anyway as
                 // you take damage).
-                give_bad_mutation(cause, false, false);
+                mutate(RANDOM_BAD_MUTATION, cause, false, false);
                 if (coinflip())
-                    give_bad_mutation(cause, false, false);
+                    mutate(RANDOM_BAD_MUTATION, cause, false, false);
             }
             else
                 target->mutate(cause);
