@@ -927,7 +927,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
             if (player)
             {
                 mpr("Strange energies course through your body.");
-                return mutate(one_chance_in(15) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+                return mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
                               "mutagenic cloud");
             }
             else if (mons->malmutate("mutagenic cloud"))
