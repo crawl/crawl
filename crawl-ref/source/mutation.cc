@@ -1538,6 +1538,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     if (!temporary)
         take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+    else
+    {
+        you.temp_mutations[mutat]++;
+        you.attribute[ATTR_TEMP_MUTATIONS]++;
+        you.attribute[ATTR_TEMP_MUT_XP] =
+                min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
+    }
 
 #ifdef USE_TILE_LOCAL
     if (your_talents(false).size() != old_talents)
@@ -2211,42 +2218,8 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 
 bool temp_mutate(mutation_type which_mut, const string &reason)
 {
-    switch (which_mut)
-    {
-    case RANDOM_MUTATION:
-    case RANDOM_GOOD_MUTATION:
-    case RANDOM_BAD_MUTATION:
-        which_mut = _get_random_mutation(which_mut);
-        break;
-    case RANDOM_XOM_MUTATION:
-        which_mut = _get_random_xom_mutation();
-        break;
-    case RANDOM_SLIME_MUTATION:
-        which_mut = _get_random_slime_mutation();
-        break;
-    default:
-        break;
-    }
-
-    if (which_mut == NUM_MUTATIONS)
-        return false;
-
-    int old_level = you.mutation[which_mut];
-
-    if (mutate(which_mut, reason, false, false, false, false, false, false, true))
-    {
-        // Only increment temp mutation tracking if we actually gained a mutation.
-        if (you.mutation[which_mut] > old_level)
-        {
-            you.temp_mutations[which_mut]++;
-            you.attribute[ATTR_TEMP_MUTATIONS]++;
-            you.attribute[ATTR_TEMP_MUT_XP] =
-                    min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
-        }
-        return true;
-    }
-
-    return false;
+    return mutate(which_mut, reason, false, false, false, false, false,
+                  false, true);
 }
 
 int how_mutated(bool all, bool levels)
