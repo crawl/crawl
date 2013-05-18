@@ -981,7 +981,7 @@ static string _how_hungry()
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
     { 1000, 1533, 2066, 2600, 7000, 9000, 11000, 40000 };
 
-bool food_change(bool suppress_message)
+bool food_change(bool initial)
 {
     COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
 
@@ -1001,7 +1001,7 @@ bool food_change(bool suppress_message)
         state_changed = true;
         if (newstate > you.hunger_state)
             less_hungry = true;
-        else
+        else if (!initial)
             maybe_id_ring_hunger();
 
         you.hunger_state = newstate;
@@ -1045,7 +1045,7 @@ bool food_change(bool suppress_message)
             }
         }
 
-        if (!suppress_message)
+        if (!initial)
         {
             string msg = "You ";
             switch (you.hunger_state)

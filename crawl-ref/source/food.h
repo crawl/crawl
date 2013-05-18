@@ -47,7 +47,7 @@ int eat_from_floor(bool skip_chunks = true);
 bool eat_from_inventory();
 int prompt_eat_chunks(bool only_auto = false);
 
-bool food_change(bool suppress_message = false);
+bool food_change(bool initial = false);
 void eat_inventory_item(int which_inventory_slot);
 
 bool prompt_eat_inventory_item(int slot = -1);
