@@ -936,6 +936,9 @@ static string _how_hungry()
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
     { 1000, 1533, 2066, 2600, 7000, 9000, 11000, 40000 };
 
+// "initial" is true when setting the player's initial hunger state on game
+// start or load: in that case it's not really a change, so we suppress the
+// state change message and don't identify rings or stimulate Xom.
 bool food_change(bool initial)
 {
     COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
