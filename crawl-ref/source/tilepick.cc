@@ -1725,7 +1725,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_KILLER_KLOWN:
         return _mon_mod(TILEP_MONS_KILLER_KLOWN, colour);
     case MONS_SLAVE:
-        return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
+        return TILEP_MONS_SLAVE;
     case MONS_DEMONSPAWN:
         return TILEP_MONS_DEMONSPAWN;
     case MONS_DEMIGOD:
@@ -2627,6 +2627,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return TILEP_MONS_YAKTAUR + _bow_offset(mon);
         case MONS_YAKTAUR_CAPTAIN:
             return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
+        case MONS_SLAVE:
+            return TILEP_MONS_SLAVE + (mon.mname == "freed slave" ? 1 : 0);
         case MONS_BUSH:
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
                 return TILEP_MONS_BUSH_BURNING;

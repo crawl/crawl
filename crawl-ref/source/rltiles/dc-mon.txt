@@ -531,7 +531,7 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 slave MONS_SLAVE
-human_slave
+slave_freed
 ## From a Lair ending
 %rim 0
 vault/hell_wizard_50 MONS_HELL_WIZARD
