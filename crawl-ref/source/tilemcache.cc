@@ -244,7 +244,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_RAKSHASA:
     case TILEP_MONS_RAKSHASA_FAKE:
     case TILEP_MONS_VAMPIRE_KNIGHT:
-    case TILEP_MONS_ANGEL:
     case TILEP_MONS_SERAPH:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
@@ -426,6 +425,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CLOUD_MAGE:
     case TILEP_MONS_MASTER_ELEMENTALIST:
     case TILEP_MONS_JESSICA:
+    case TILEP_MONS_ANGEL:
         *ofs_x = 1;
         *ofs_y = -1;
         break;
