@@ -3713,11 +3713,7 @@ enum tag_pref
     TAGPREF_ENEMY,    // display text tags on enemy named monsters
     TAGPREF_MAX,
 };
-#ifdef TARGET_COMPILER_VC
-enum tile_flags : unsigned long long
-#else
 enum tile_flags
-#endif
 {
     //// Foreground flags
 
