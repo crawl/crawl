@@ -190,7 +190,7 @@ static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
             move_verb.c_str(),
             (trap->type == TRAP_ALARM || trap->type == TRAP_PLATE) ? "onto"
                                                                    : "into",
-            feature_description_at(p, "", DESC_BASENAME, false).c_str());
+            feature_description_at(p, false, DESC_BASENAME, false).c_str());
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
