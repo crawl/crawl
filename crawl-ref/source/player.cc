@@ -2928,7 +2928,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 #if TAG_MAJOR_VERSION > 35
         // These are supposed to be purged from the sage lists in
         // _change_skill_level()
-        ASSERT(you.skills[skill] < 27)
+        ASSERT(you.skills[skill] < 27);
 #endif
 
         // FIXME: shouldn't use more XP than needed to max the skill
