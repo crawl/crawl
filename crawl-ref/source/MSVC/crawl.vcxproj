@@ -100,7 +100,7 @@
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver.pl" build.h
+perl.exe "util/gen_ver_msvc.pl" build.h
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
@@ -129,7 +129,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver.pl" build.h
+perl.exe "util/gen_ver_msvc.pl" build.h
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
@@ -160,7 +160,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver.pl" build.h
+perl.exe "util/gen_ver_msvc.pl" build.h
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
@@ -189,7 +189,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
-perl.exe "util/gen_ver.pl" build.h
+perl.exe "util/gen_ver_msvc.pl" build.h
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
