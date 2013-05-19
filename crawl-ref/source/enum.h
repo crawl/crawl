@@ -3713,7 +3713,7 @@ enum tag_pref
     TAGPREF_ENEMY,    // display text tags on enemy named monsters
     TAGPREF_MAX,
 };
-enum tile_flags
+enum tile_flags ENUM_INT64
 {
     //// Foreground flags
 
