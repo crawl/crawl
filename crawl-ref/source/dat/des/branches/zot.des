@@ -1254,42 +1254,9 @@ mmmM``...`^~~^.d.``Mmmm
 ENDMAP
 
 ################################################################################
-# Space-filling minivaults by bmh.
+# Space-filling minivaults by bh.
 
-NAME: bmh_zot_hilbert_curve
-DEPTH: Zot
-TAGS: extra
-MAP
-xxxxxxxxx
-@...x...@
-xxx.x.xxx
-x...x...x
-x.xxxxx.x
-x.x...x.x
-x...x...x
-xxxxxxxxx
-ENDMAP
-
-NAME: bmh_zot_peano_curve
-DEPTH: Zot
-TAGS: extra
-MAP
-xxxxxxxxxxxxxxxxxxx
-x...x...x...x...x.@
-x.x.x.x.x.x.x.x.x.x
-x.x...x...x.x.x...x
-x.xxxxxxxxx.x.xxxxx
-x.x...x...x.x.x...x
-x.x.x.x.x.x.x.x.x.x
-x...x.x.x...x...x.x
-xxxxx.x.xxxxxxxxx.x
-x...x.x.x...x...x.x
-x.x.x.x.x.x.x.x.x.x
-@.x...x...x...x...x
-xxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   bmh_zot_big_hilbert_curve
+NAME:   bh_zot_ikea_curve
 DEPTH:  Zot
 TAGS:   extra
 MAP
@@ -1307,26 +1274,25 @@ x.....x.....x
 xxxxxxxxxxxxx
 ENDMAP
 
-NAME:   bmh_zot_zed_curve
+NAME:   bh_zot_lava_cross
 DEPTH:  Zot
 TAGS:   extra
 MAP
-xxxxxxxxxxxx
-@....xx....x
-xxx.xx.xx.xx
-xx.xx.xx.xxx
-x....xx...xx
-xxxxxxxxxx.x
-xx........xx
-x.xxxxxxxxxx
-xx...xx...xx
-xxx.xx.xx.xx
-xx.xx.xx.xxx
-x....xx....@
-xxxxxxxxxxxx
+     @@
+    x..x
+    x..x
+    x..x
+ xxxxllxxxx
+@...l..l...@
+@...l..l...@
+ xxxxllxxxx
+    x..x
+    x..x
+    x..x
+     @@
 ENDMAP
 
-NAME:   bmh_zot_levy_curve
+NAME:   bh_zot_levy_curve
 DEPTH:  Zot
 TAGS:   extra mini_float
 SUBST:  W = Ww
