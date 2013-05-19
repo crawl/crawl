@@ -40,7 +40,7 @@ static inline T move(T x) { return x; } // good enough for our purposes
 /* Don't define min and max as macros, define them via STL */
 #define NOMINMAX
 #define ENUM_INT64 : unsigned long long
-#elif
+#else
 #define ENUM_INT64
 #endif
 
