@@ -1676,7 +1676,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     *item_index = acquirement_create_item(class_wanted, agent, quiet,
                                           you.pos(), debug);
-    ASSERT(!god_hates_item(mitm[*item_index]));
+    ASSERT(*item_index == NON_ITEM || !god_hates_item(mitm[*item_index]));
 
     return true;
 }
