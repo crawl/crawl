@@ -112,7 +112,7 @@ static void _moveto_maybe_repel_stairs()
     {
         if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
         {
-            string stair_str = feature_description_at(you.pos(), "",
+            string stair_str = feature_description_at(you.pos(), false,
                                                       DESC_THE, false);
             string prep = feat_preposition(new_grid, true, &you);
 
