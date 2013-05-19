@@ -287,11 +287,14 @@ Building on Windows (MSVC)
   (for Desktop) from http://www.microsoft.com/visualstudio/eng/downloads
   (look for Visual Studio Express 2012 for Windows Desktop).
 
+* You'll need a perl environment, there are links to several Windows binaries
+  you can choose from at http://www.perl.org/get.html
+
 * In the Crawl source, run gen-all.cmd which is in source/util/. This step
   must be executed any time you update to a new version of the source (or
   if you have modified tile data or unrandarts).
 
-* Open crawl-trunk.sln in Visual Studio, this is in source/MSVC/.
+* Open crawl-ref.sln in Visual Studio, this is in source/MSVC/.
 
 * You can now select Debug or Release from the drop-down build configurations
   menu on the main toolbar (it should be next to "Local Windows Debugger");
