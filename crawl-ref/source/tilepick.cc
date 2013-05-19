@@ -283,15 +283,18 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRANSIT_PANDEMONIUM;
     case DNGN_EXIT_PANDEMONIUM:
         return TILE_DNGN_EXIT_PANDEMONIUM;
+
+    // branch entry stairs
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_HALL_OF_BLADES:
-    case DNGN_ENTER_TEMPLE:
-    case DNGN_ENTER_ELVEN_HALLS:
     case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
-
+    case DNGN_ENTER_TEMPLE:
+        return TILE_DNGN_ENTER_TEMPLE;
     case DNGN_ENTER_ORCISH_MINES:
         return TILE_DNGN_ENTER_ORCISH_MINES;
+    case DNGN_ENTER_ELVEN_HALLS:
+        return TILE_DNGN_ENTER_ELVEN_HALLS;
     case DNGN_ENTER_LAIR:
         return TILE_DNGN_ENTER_LAIR;
     case DNGN_ENTER_SNAKE_PIT:
@@ -310,30 +313,43 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_CRYPT;
     case DNGN_ENTER_TOMB:
         return TILE_DNGN_ENTER_TOMB;
-
     case DNGN_ENTER_ZOT:
         if (you.opened_zot)
             return TILE_DNGN_ENTER_ZOT_OPEN;
         return TILE_DNGN_ENTER_ZOT_CLOSED;
 
+    // branch exit stairs
     case DNGN_RETURN_FROM_DWARVEN_HALL:
-    case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_SLIME_PITS:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_SNAKE_PIT:
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
-    case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_SHOALS:
-    case DNGN_RETURN_FROM_SPIDER_NEST:
     case DNGN_RETURN_FROM_FOREST:
         return TILE_DNGN_RETURN;
+    case DNGN_RETURN_FROM_TEMPLE:
+        return TILE_DNGN_EXIT_TEMPLE;
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+        return TILE_DNGN_EXIT_ORCISH_MINES;
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+        return TILE_DNGN_EXIT_ELVEN_HALLS;
+    case DNGN_RETURN_FROM_LAIR:
+        return TILE_DNGN_EXIT_LAIR;
+    case DNGN_RETURN_FROM_SNAKE_PIT:
+        return TILE_DNGN_EXIT_SNAKE_PIT;
+    case DNGN_RETURN_FROM_SWAMP:
+        return TILE_DNGN_EXIT_SWAMP;
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+        return TILE_DNGN_EXIT_SPIDER_NEST;
+    case DNGN_RETURN_FROM_SHOALS:
+        return TILE_DNGN_EXIT_SHOALS;
+    case DNGN_RETURN_FROM_SLIME_PITS:
+        return TILE_DNGN_EXIT_SLIME_PITS;
+    case DNGN_RETURN_FROM_VAULTS:
+        return TILE_DNGN_EXIT_VAULTS;
+    case DNGN_RETURN_FROM_CRYPT:
+        return TILE_DNGN_EXIT_CRYPT;
+    case DNGN_RETURN_FROM_TOMB:
+        return TILE_DNGN_EXIT_TOMB;
     case DNGN_RETURN_FROM_ZOT:
         return TILE_DNGN_RETURN_ZOT;
+
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
         return TILE_DNGN_PORTAL;
