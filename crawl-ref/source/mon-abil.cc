@@ -1874,9 +1874,13 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
 
 static bool _lost_soul_affectable(const monster* mons)
 {
-    return ((mons->holiness() == MH_UNDEAD && mons->type != MONS_LOST_SOUL
-             && !mons_is_zombified(mons))
-            ||(mons->holiness() == MH_NATURAL && mons_can_be_zombified(mons)));
+    return (((mons->holiness() == MH_UNDEAD
+              && mons->type != MONS_LOST_SOUL
+              && !mons_is_zombified(mons))
+             ||(mons->holiness() == MH_NATURAL
+                && mons_can_be_zombified(mons)))
+            && !mons->is_summoned()
+            && !mons_class_flag(mons->type, M_NO_EXP_GAIN));
 }
 
 static bool _lost_soul_teleport(monster* mons)
