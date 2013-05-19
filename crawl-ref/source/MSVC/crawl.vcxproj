@@ -100,14 +100,8 @@
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(ProjectDir)
-cd $(SolutionDir)\..\
-perl.exe "util/art-data.pl"
-perl.exe "util/gen-mst.pl"
-perl.exe "util/cmd-name.pl"
-perl.exe "util/gen-luatags.pl"
-perl.exe "util/gen-mi-enum"
-perl.exe "util/gen_ver.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
+perl.exe "../util/gen_ver.pl" build.h
+perl.exe "../util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
     <ClCompile>
@@ -134,14 +128,9 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <PreBuildEvent>
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
-cd $(SolutionDir)\..\
-perl.exe "util/art-data.pl"
-perl.exe "util/gen-mst.pl"
-perl.exe "util/cmd-name.pl"
-perl.exe "util/gen-luatags.pl"
-perl.exe "util/gen-mi-enum"
-perl.exe "util/gen_ver.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
+cd $(ProjectDir)
+perl.exe "../util/gen_ver.pl" build.h
+perl.exe "../util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
     <Midl>
@@ -170,14 +159,9 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <PreBuildEvent>
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
-cd $(SolutionDir)\..\
-perl.exe "util/art-data.pl"
-perl.exe "util/gen-mst.pl"
-perl.exe "util/cmd-name.pl"
-perl.exe "util/gen-luatags.pl"
-perl.exe "util/gen-mi-enum"
-perl.exe "util/gen_ver.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
+cd $(ProjectDir)
+perl.exe "../util/gen_ver.pl" build.h
+perl.exe "../util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
     <ClCompile>
@@ -204,14 +188,9 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <PreBuildEvent>
       <Message>Generating build-specfic headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
-cd $(SolutionDir)\..\
-perl.exe "util/art-data.pl"
-perl.exe "util/gen-mst.pl"
-perl.exe "util/cmd-name.pl"
-perl.exe "util/gen-luatags.pl"
-perl.exe "util/gen-mi-enum"
-perl.exe "util/gen_ver.pl" build.h
-perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
+cd $(ProjectDir)
+perl.exe "../util/gen_ver.pl" build.h
+perl.exe "../util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
     <Midl>
