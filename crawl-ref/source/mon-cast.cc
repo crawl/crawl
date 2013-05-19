@@ -1999,9 +1999,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 // Setup spell.
                 // If we're in the last attempt, try the self-enchantment.
                 if (loopy == 4 && coinflip())
-                {
                     spell_cast = hspell_pass[2];
-                }
                 // Monsters that are fleeing or pacified and leaving the
                 // level will always try to choose their emergency spell.
                 else if (mons_is_fleeing(mons) || mons->pacified())
