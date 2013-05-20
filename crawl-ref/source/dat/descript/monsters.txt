@@ -2943,8 +2943,6 @@ orange crystal statue
 An intricately carved idol of some nameless godling, hewn of translucent orange
 crystal. Its lifeless eyes seem to glitter uncannily with a wicked
 intelligence.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 orange demon
 
@@ -3570,8 +3568,6 @@ silver statue
 
 A beautiful statue of an unknown malignant creature, glistening with a silvery
 hue. Its eyes glow with an otherworldly radiance.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 simulacrum
 
@@ -4500,8 +4496,6 @@ Statue of Wucad Mu
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
 Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
 as you have no chance in mental combat against it.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 air elementalist statue
 
