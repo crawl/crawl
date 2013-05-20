@@ -457,43 +457,43 @@ spret_type cast_summon_elemental(int pow, god_type god,
 
     const int dur = min(2 + (random2(pow) / 5), 6);
 
-    while (true)
+    mpr("Summon from material in which direction?", MSGCH_PROMPT);
+
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    direction(smove, args);
+
+    if (!smove.isValid)
     {
-        mpr("Summon from material in which direction?", MSGCH_PROMPT);
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
 
-        direction_chooser_args args;
-        args.restricts = DIR_DIR;
-        direction(smove, args);
+    targ = you.pos() + smove.delta;
 
-        if (!smove.isValid)
+    if (const monster* m = monster_at(targ))
+    {
+        if (you.can_see(m))
         {
-            canned_msg(MSG_OK);
+            mpr("There's something there already!");
             return SPRET_ABORT;
         }
-
-        targ = you.pos() + smove.delta;
-
-        if (const monster* m = monster_at(targ))
+        else
         {
-            if (you.can_see(m))
-                mpr("There's something there already!");
-            else
-            {
-                fail_check();
-                mpr("Something seems to disrupt your summoning.");
-                return SPRET_SUCCESS; // still losing a turn
-            }
+            fail_check();
+            mpr("Something seems to disrupt your summoning.");
+            return SPRET_SUCCESS; // still losing a turn
         }
-        else if (smove.delta.origin())
-            mpr("You can't summon an elemental from yourself!");
-        else if (!in_bounds(targ))
-        {
-            // XXX: Should this cost a turn?
-            mpr("That material won't yield to your beckoning.");
-            return SPRET_ABORT;
-        }
-
-        break;
+    }
+    else if (smove.delta.origin()) {
+        mpr("You can't summon an elemental from yourself!");
+        return SPRET_ABORT;
+    }
+    else if (!in_bounds(targ))
+    {
+        // XXX: Should this cost a turn?
+        mpr("That material won't yield to your beckoning.");
+        return SPRET_ABORT;
     }
 
     mon = _feature_to_elemental(targ, restricted_type);
