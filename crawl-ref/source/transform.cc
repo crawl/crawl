@@ -1018,7 +1018,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_TREE:
-        if (you.religion == GOD_FEDHAS)
+        if (you.religion == GOD_FEDHAS && !player_under_penance())
             simple_god_message(" makes you hardy against extreme temperatures.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
