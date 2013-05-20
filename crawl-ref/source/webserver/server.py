@@ -213,6 +213,7 @@ if __name__ == "__main__":
         logging.info("Received keyboard interrupt, shutting down.")
         for server in servers: server.stop()
         shutdown()
+        ioloop.add_timeout(time.time() + 2, ioloop.stop)
         if len(sockets) > 0:
             ioloop.start() # We'll wait until all crawl processes have ended.
 
