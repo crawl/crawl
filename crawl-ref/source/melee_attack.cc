@@ -89,6 +89,16 @@
     return; \
 }
 
+static bool _form_uses_xl()
+{
+    // No body parts that translate in any way to something fisticuffs could
+    // matter to, the attack mode is different.  Plus, it's weird to have
+    // users of one particular [non-]weapon be effective for this
+    // unintentional form while others can just run or die.  I believe this
+    // should apply to more forms, too.  [1KB]
+    return you.form == TRAN_WISP;
+}
+
 /*
  **************************************************
  *             BEGIN PUBLIC FUNCTIONS             *
@@ -111,6 +121,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     weapon          = attacker->weapon(attack_number);
     damage_brand    = attacker->damage_brand(attack_number);
     wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
+    if (_form_uses_xl())
+        wpn_skill = SK_FIGHTING; // for stabbing, mostly
     to_hit          = calc_to_hit();
     can_cleave      = wpn_skill == SK_AXES && attacker != defender
                       && !attacker->confused();
@@ -3701,6 +3713,8 @@ int melee_attack::calc_to_hit(bool random)
                                          random);
             }
         }
+        else if (_form_uses_xl())
+            mhit += maybe_random_div(you.experience_level * 100, 100, random);
         else
         {                       // ...you must be unarmed
             // Members of clawed species have presumably been using the claws,
@@ -4045,6 +4059,12 @@ random_var melee_attack::player_weapon_speed()
 
 random_var melee_attack::player_unarmed_speed()
 {
+    if (_form_uses_xl())
+    {
+        return constant(10)
+               - div_rand_round(constant(you.experience_level * 10), 54);
+    }
+
     random_var unarmed_delay =
         rv::max(constant(10),
                 (rv::roll_dice(1, 10) +
@@ -5343,7 +5363,9 @@ int melee_attack::calc_base_unarmed_damage()
             apply_bleeding = true;
         }
 
-        if (you.form == TRAN_BAT || you.form == TRAN_PORCUPINE)
+        if (_form_uses_xl())
+            damage += you.experience_level;
+        else if (you.form == TRAN_BAT || you.form == TRAN_PORCUPINE)
         {
             // Bats really don't do a lot of damage.
             damage += you.skill_rdiv(SK_UNARMED_COMBAT, 1, 5);
