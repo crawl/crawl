@@ -1483,9 +1483,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (!crawl_state.game_is_arena() && you.misled())
         update_mislead_monster(mon);
 
-    if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5))
-        mon->add_ench(ENCH_SUBMERGED);
-
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.
@@ -1544,6 +1541,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->max_hit_points *= mg.number;
         }
     }
+
+    if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5) && !summoned)
+        mon->add_ench(ENCH_SUBMERGED);
 
     if (mons_is_mimic(mg.cls))
         mon->props = mg.props;
