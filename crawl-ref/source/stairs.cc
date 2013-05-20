@@ -315,7 +315,7 @@ void up_stairs(dungeon_feature_type force_stair)
 {
     dungeon_feature_type stair_find = (force_stair ? force_stair
                                        : grd(you.pos()));
-    const level_id  old_level = level_id::current();
+    const level_id old_level = level_id::current();
 
     if (you.form == TRAN_TREE)
     {
@@ -640,7 +640,7 @@ void down_stairs(dungeon_feature_type force_stair)
     const level_id old_level = level_id::current();
     const dungeon_feature_type old_feat = grd(you.pos());
     const dungeon_feature_type stair_find =
-        force_stair? force_stair : old_feat;
+        force_stair ? force_stair : old_feat;
 
     const bool shaft = (!force_stair
                             && get_trap_type(you.pos()) == TRAP_SHAFT
