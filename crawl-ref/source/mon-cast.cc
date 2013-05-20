@@ -1125,6 +1125,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BATTLESPHERE:
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
+    case SPELL_CALL_LOST_SOUL:
         return true;
     default:
         if (check_validity)
@@ -4198,6 +4199,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         return;
     }
+
+    case SPELL_CALL_LOST_SOUL:
+        create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
+                                 mons, 2, spell_cast, mons->pos(),
+                                 mons->foe, 0, god));
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
