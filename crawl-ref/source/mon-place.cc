@@ -2708,7 +2708,10 @@ static monster_type _band_member(band_type band, int which)
     case BAND_SHEEP:
         return MONS_SHEEP;
     case BAND_GHOULS:
-        return coinflip() ? MONS_GHOUL : MONS_NECROPHAGE;
+        return random_choose_weighted(4, MONS_GHOUL,
+                                      3, MONS_NECROPHAGE,
+                                      2, MONS_PLAGUE_SHAMBLER,
+                                      0);
     case BAND_DEEP_TROLLS:
         if (one_chance_in(3))
             return random_choose(MONS_DEEP_TROLL_EARTH_MAGE,
