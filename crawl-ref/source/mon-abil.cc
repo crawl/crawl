@@ -1980,8 +1980,10 @@ bool lost_soul_spectralize(monster* mons)
 
             if (you.can_see(*mi))
             {
-                mprf("The lost soul assumes the form of %s!",
-                     mons->name(DESC_THE).c_str());
+                mprf("The lost soul assumes the form of %s%s!",
+                     mons->name(DESC_THE).c_str(),
+                     (mi->is_summoned() ? " and becomes anchored to this world"
+                                        : ""));
             }
 
             define_zombie(*mi, mons->type, MONS_SPECTRAL_THING);
