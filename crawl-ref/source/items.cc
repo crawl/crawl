@@ -4154,8 +4154,16 @@ void corrode_item(item_def &item, actor *holder)
     }
     else if (holder && you.see_cell(holder->pos()))
     {
-        mprf("The acid corrodes %s %s!",
-             apostrophise(holder->name(DESC_THE)).c_str(),
-             item.name(DESC_PLAIN).c_str());
+        if (holder->type == MONS_DANCING_WEAPON)
+        {
+            mprf("The acid corrodes %s!",
+                 holder->name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("The acid corrodes %s %s!",
+                 apostrophise(holder->name(DESC_THE)).c_str(),
+                 item.name(DESC_PLAIN).c_str());
+        }
     }
 }
