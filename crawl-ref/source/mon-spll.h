@@ -977,17 +977,6 @@
       }
     },
 
-    {  MST_SKELETAL_WARRIOR,
-      {
-       SPELL_ANIMATE_DEAD,
-       SPELL_NO_SPELL,
-       SPELL_ANIMATE_DEAD,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_NORRIS,
       {
        SPELL_BRAIN_FEED,
