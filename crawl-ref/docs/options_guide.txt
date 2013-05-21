@@ -10,7 +10,7 @@ The contents of this text are:
 
 0-  Generalities.
 0-a     Standard and additional option files.
-0-b     Options on the command line
+0-b     Options on the command line.
 0-c     Options and how to set them.
 0-d     List options.
 0-e     Aliases and variables.
@@ -169,8 +169,8 @@ additional option files coming with this release; these allow to set
 many options to old defaults, i.e. those of Crawl 0.3.4 and before.
 See the header of the default init.txt for more details.
 
-0-b     Options on the command line
------------------------------------
+0-b     Options on the command line.
+------------------------------------
 
 A quick way to make small changes to the options, without having to
 switch to a different option file, is to use the command line options
@@ -593,7 +593,7 @@ darken_beyond_range = true
         ASCII and the Tiles version.
 
 3-c     Passive Sightings (detected or remembered entities).
------------------------------------------------------------
+------------------------------------------------------------
 
 detected_monster_colour = lightred
         Monsters found by detect creatures will be coloured this colour.
@@ -630,8 +630,7 @@ depends on OS and terminal):
    highlight:colour -- set background colour of branded monsters to
                        "colour"
 The last can be abbreviated to hi:colour.
-See part Technical (5-) for dos_use_background_intensity under Windows
-and DOS.
+See part DOS and Windows (5-b) for dos_use_background_intensity.
 
 By default, only two of the item brands are active (and set to reverse):
    heap_brand, feature_item_brand
@@ -690,8 +689,8 @@ show_waypoints = true
         Whether to display a number on the level map to indicate
         waypoints (placed with the Ctrl-W command).
 
-3-f     Viewport Display Options
---------------------------------
+3-f     Viewport Display Options.
+---------------------------------
 
 The viewport is the portion of the map that is displayed during normal
 play. The viewport is 33x17 by default, but if you use larger terminal
@@ -923,7 +922,7 @@ runrest_stop_message += <regex>, <regex>, ...
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-l below on Message
+        the channel name and a colon (see section 3-k below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message += god:wrath finds you
@@ -1514,7 +1513,7 @@ msg_condense_repeats = true
         how many times it was repeated. If the same output (including the
         counter) is repeated over several turns, the Show Previous Message
         command (Ctrl-P) will likewise condense them into one. For example:
-            The killer bee misses you. (x5)
+            The killer bee misses you. x5
 
 msg_condense_short = true
         If set, short messages on the same channel don't all start a new
@@ -1638,8 +1637,8 @@ The channel options are
                (won't do anything silly like "mute" if plain == mute,
                though)
    off       = same as plain
-COLOUR can be any of the colours described in section 5-a (colours
-option).
+
+COLOUR can be any of the colours described in section 5-a (colour option).
 
 The only multi-colour channels currently are monster_damage and god. All
 other channels are defaulted to on.
