@@ -3306,7 +3306,7 @@ void bolt::affect_player_enchantment()
 
     bool nasty = true, nice = false;
 
-    bool blame_player = effect_known && YOU_KILL(thrower);
+    const bool blame_player = effect_known && YOU_KILL(thrower);
 
     switch (flavour)
     {
