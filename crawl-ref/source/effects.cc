@@ -1248,8 +1248,6 @@ static void _hell_effects()
         noisy(15, you.pos());
 
     spschool_flag_type which_miscast = SPTYP_RANDOM;
-    bool summon_instead = false;
-    monster_type which_beastie = MONS_NO_MONSTER;
 
     int temp_rand = random2(27);
     if (temp_rand > 17)     // 9 in 27 odds {dlb}
@@ -1271,49 +1269,36 @@ static void _hell_effects()
     }
     else if (temp_rand > 7) // 10 in 27 odds {dlb}
     {
-        // 60:40 miscast:summon split {dlb}
-        summon_instead = x_chance_in_y(2, 5);
+        monster_type which_beastie;
 
+        // 60:40 miscast:summon split {dlb}
         switch (you.where_are_you)
         {
         case BRANCH_DIS:
-            if (summon_instead)
-                which_beastie = summon_any_demon(RANDOM_DEMON_GREATER);
-            else
-                which_miscast = SPTYP_EARTH;
+            which_beastie = RANDOM_DEMON_GREATER;
+            which_miscast = SPTYP_EARTH;
             break;
 
         case BRANCH_GEHENNA:
-            if (summon_instead)
-                which_beastie = MONS_BRIMSTONE_FIEND;
-            else
-                which_miscast = SPTYP_FIRE;
+            which_beastie = MONS_BRIMSTONE_FIEND;
+            which_miscast = SPTYP_FIRE;
             break;
 
         case BRANCH_COCYTUS:
-            if (summon_instead)
-                which_beastie = MONS_ICE_FIEND;
-            else
-                which_miscast = SPTYP_ICE;
+            which_beastie = MONS_ICE_FIEND;
+            which_miscast = SPTYP_ICE;
             break;
 
         case BRANCH_TARTARUS:
-            if (summon_instead)
-                which_beastie = MONS_SHADOW_FIEND;
-            else
-                which_miscast = SPTYP_NECROMANCY;
+            which_beastie = MONS_SHADOW_FIEND;
+            which_miscast = SPTYP_NECROMANCY;
             break;
 
         default:
-            // This is to silence gcc compiler warnings. {dlb}
-            if (summon_instead)
-                which_beastie = MONS_BRIMSTONE_FIEND;
-            else
-                which_miscast = SPTYP_NECROMANCY;
-            break;
+            die("unknown hell branch");
         }
 
-        if (summon_instead)
+        if (x_chance_in_y(2, 5))
         {
             create_monster(
                 mgen_data::hostile_at(which_beastie, "the effects of Hell",
