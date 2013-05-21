@@ -3904,6 +3904,7 @@ void god_pitch(god_type which_god)
          you.form == TRAN_TREE   ? "sway towards" :
          you.form == TRAN_FUNGUS ? "release spores on" :
          you.form == TRAN_PORCUPINE ? "curl into a sanctuary of spikes before" :
+         you.form == TRAN_BOULDER ? "roll up to" :
          you.species == SP_NAGA  ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
          you.species == SP_FELID ? "sit before" :

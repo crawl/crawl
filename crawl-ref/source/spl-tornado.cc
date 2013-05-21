@@ -105,7 +105,7 @@ static void _set_tornado_durations(int powc)
 {
     int dur = 60;
     you.duration[DUR_TORNADO] = dur;
-    if (you.form != TRAN_TREE)
+    if (you.form != TRAN_TREE && you.form != TRAN_BOULDER)
     {
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
@@ -139,7 +139,7 @@ spret_type cast_tornado(int powc, bool fail)
     fail_check();
 
     mprf("A great vortex of raging winds %s.",
-         (you.airborne() || you.form == TRAN_TREE) ?
+         (you.airborne() || you.form == TRAN_TREE || you.form == TRAN_BOULDER) ?
          "appears around you" : "appears and lifts you up");
 
     if (you.fishtail)

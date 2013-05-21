@@ -557,6 +557,8 @@ bool is_player_same_genus(const monster_type mon, bool transform)
         case TRAN_JELLY:
             return mons_genus(mon) == MONS_JELLY;
 #endif
+        case TRAN_BOULDER:
+            return mon == MONS_BOULDER_BEETLE;
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
@@ -827,7 +829,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 #if TAG_MAJOR_VERSION == 34
         || you.form == TRAN_JELLY
 #endif
-        || you.form == TRAN_WISP)
+        || you.form == TRAN_WISP
+        || you.form == TRAN_BOULDER)
     {
         return false;
     }
@@ -837,7 +840,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
         eq = EQ_RINGS;
 
-    // Everybody but porcupines and wisps can wear at least some type of armour.
+    // Everybody but porcupine/wisp/boulder keep at least some slots.
     if (eq == EQ_ALL_ARMOUR)
         return true;
 
@@ -1837,7 +1840,8 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             re++;
 
         // transformations:
-        if (you.form == TRAN_STATUE || you.form == TRAN_WISP)
+        if (you.form == TRAN_STATUE || you.form == TRAN_WISP
+            || you.form == TRAN_BOULDER)
             re += 1;
 
         if (re > 1)
@@ -1859,6 +1863,7 @@ int player_res_torment(bool, bool temp)
            || you.form == TRAN_LICH
            || you.form == TRAN_FUNGUS
            || you.form == TRAN_TREE
+           || you.form == TRAN_BOULDER
            || you.form == TRAN_WISP
            || you.form == TRAN_SHADOW
            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
@@ -1935,6 +1940,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         {
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
+        case TRAN_BOULDER:
         case TRAN_DRAGON:
         case TRAN_FUNGUS:
         case TRAN_TREE:
@@ -2183,6 +2189,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_STATUE:
+        case TRAN_BOULDER:
             pl++;
             break;
         case TRAN_FUNGUS:
@@ -2555,6 +2562,8 @@ int player_evasion(ev_ignore_type evit)
         const int repulsion_ev = _player_para_evasion_bonuses(evit);
         return max(1, paralysed_base_ev + repulsion_ev);
     }
+
+    // XXX: Give TRAN_BOULDER higher ev at higher speed
 
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
@@ -3712,6 +3721,10 @@ int check_stealth()
     case TRAN_BLADE_HANDS:
         if (you.species == SP_FELID && !you.airborne())
             stealth -= 50; // a constant penalty
+        break;
+    case TRAN_BOULDER:
+        // XXX: Stealth to depend on velocity
+        race_mod = 8; // slightly more subtle than a dragon
         break;
     case TRAN_NONE:
     case TRAN_APPENDAGE:
@@ -5429,6 +5442,13 @@ bool flight_allowed(bool quiet)
         return false;
     }
 
+    if (you.form == TRAN_BOULDER)
+    {
+        if (!quiet)
+            mpr("You are far too heavy to take off.");
+        return false;
+    }
+
     if (you.liquefied_ground())
     {
         if (!quiet)
@@ -6049,6 +6069,8 @@ string player::shout_verb() const
         return "creak";
     case TRAN_WISP:
         return "whoosh"; // any wonder why?
+    case TRAN_BOULDER:
+        return "rumble";
 
     default:
         if (species == SP_FELID)
@@ -6536,6 +6558,12 @@ int player::armour_class() const
             // Stoneskin bonus already accounted for.
             break;
 
+        case TRAN_BOULDER:
+            AC += 1500 + 50 * you.experience_level;
+            // XXX: For discussion; should it work like statue form, i.e. Earth bonus
+            // plus Stoneskin stacking?
+            break;
+
         case TRAN_TREE: // extreme bonus, no EV
             AC += 2000 + 50 * experience_level;
             break;
@@ -6591,6 +6619,8 @@ int player::gdr_perc() const
     case TRAN_STATUE:
         return species == SP_GARGOYLE ? 50
                                       : 39; // like plate (AC 10)
+    case TRAN_BOULDER:
+        return 39; // like plate (AC 10)
     case TRAN_TREE:
         return 48;
     default:
@@ -6694,6 +6724,7 @@ bool player::is_unbreathing() const
     case TRAN_STATUE:
     case TRAN_FUNGUS:
     case TRAN_TREE:
+    case TRAN_BOULDER:
     case TRAN_WISP:
         return true;
     default:
@@ -7610,7 +7641,7 @@ bool player::can_bleed(bool allow_tran) const
         if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
             || form == TRAN_SPIDER || form == TRAN_TREE
             || form == TRAN_FUNGUS || form == TRAN_PORCUPINE
-            || form == TRAN_SHADOW)
+            || form == TRAN_SHADOW || form == TRAN_BOULDER)
         {
             return false;
         }
@@ -7672,6 +7703,7 @@ bool player::polymorph(int pow)
             100, TRAN_TREE,
             100, TRAN_PORCUPINE,
             100, TRAN_WISP,
+            100, TRAN_BOULDER,
              20, TRAN_SPIDER,
              20, TRAN_ICE_BEAST,
               5, TRAN_STATUE,

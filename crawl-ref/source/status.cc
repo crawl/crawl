@@ -886,6 +886,11 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "shadow form";
         inf->long_text  = "You are a swirling mass of dark shadows.";
         break;
+    case TRAN_BOULDER:
+        inf->light_text = "Boulder";
+        inf->short_text = "boulder-form";
+        inf->long_text  = "You are a rolling stone.";
+        break;
     case TRAN_NONE:
         break;
     }

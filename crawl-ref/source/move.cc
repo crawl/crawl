@@ -33,14 +33,25 @@ MovementHandler* MovementHandler::handler_for(actor* act)
 {
     MovementHandler* handler = NULL;
 
-    switch (act->type)
+    if (act->is_player()) {
+        switch (act->as_player()->form)
+        {
+            case TRAN_BOULDER:
+                handler = new PlayerBoulderMovement(act);
+                break;
+            default:
+                handler = new DefaultMovement(act);
+                break;
+        }
+    }
+    else switch (act->type)
     {
         case MONS_ORB_OF_DESTRUCTION:
             handler = new OrbMovement(act);
             break;
         case MONS_BOULDER_BEETLE:
             if (mons_is_boulder(act->as_monster()))
-                handler = new BoulderMovement(act);
+                handler = new MonsterBoulderMovement(act);
             break;
         default:
             handler = new DefaultMovement(act);
@@ -79,6 +90,10 @@ void MovementHandler::killed()
         delete this;
     else
         kill_after_move = true;
+}
+
+void MovementHandler::impulse(float ix, float iy)
+{
 }
 
 void MovementHandler::moved_by_other(const coord_def& new_pos)
@@ -262,7 +277,9 @@ void ProjectileMovement::setup()
     caster_mid = subject->props["iood_mid"].get_int();
     pow = subject->props["iood_pow"].get_int();
     x = subject->props["iood_x"].get_float();
+    if (!x) x = subject->pos().x;
     y = subject->props["iood_y"].get_float();
+    if (!y) y = subject->pos().y;
     vx = subject->props["iood_vx"].get_float();
     vy = subject->props["iood_vy"].get_float();
     distance = subject->props["iood_distance"].get_int();
@@ -424,7 +441,7 @@ bool ProjectileMovement::hit_actor(const coord_def& pos, actor *victim)
     item_def *shield = victim->shield();
     if (!shield_reflects(*shield))
     {
-        if (victim->is_player())
+        if (!subject->is_player() && victim->is_player())
             mprf("You block %s.", subject->name(DESC_THE, true).c_str());
         else if (you.see_cell(subject->pos()))
         {
@@ -862,54 +879,6 @@ void OrbMovement::_fuzz_direction(const actor *caster, monster& mon, int pow)
     mon.props["iood_vy"] = vy - vx*tan;
 }
 
-// Static method to begin rolling
-void BoulderMovement::start_rolling(monster *mon, bolt *beam)
-{
-    // Add the required enchantment
-    mon->add_ench(ENCH_ROLLING);
-    // Work out x/y/vx/vy from beam. For now pre-populating the props
-    // hash so the values get picked up in setup.
-    beam->choose_ray();
-    mon->props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
-    mon->props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
-    mon->props["iood_vx"].get_float() = mons_is_fleeing(mon) ?
-        -beam->ray.r.dir.x : beam->ray.r.dir.x;
-    mon->props["iood_vy"].get_float() = mons_is_fleeing(mon) ?
-        -beam->ray.r.dir.y : beam->ray.r.dir.y;
-
-    // Flag the movement handler to change, and take an initial move
-    mon->movement_changed();
-    mon->movement()->move();
-}
-
-bool BoulderMovement::check_pos(const coord_def &pos)
-{
-    // Boulders stop at lava/water to prevent unusual behaviour;
-    // skimming across the water like a pebble could be justifiable, but
-    // it raises too many questions.
-    if (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos)))
-    {
-        if (!catching_up)
-            mprf("%s screeches to a halt.", subject->name(DESC_THE, true).c_str());
-        stop(false);
-        return false;
-    }
-    return ProjectileMovement::check_pos(pos);
-}
-
-void BoulderMovement::stop(bool show_message = true)
-{
-    // Deduct the energy first - the move they made that just stopped
-    // them was a speed 14 move.
-    // XXX: Shouldn't be necessary now
-    subject->lose_energy(EUT_MOVE);
-    if (subject->is_monster())
-        subject->as_monster()->del_ench(ENCH_ROLLING,!show_message);
-
-    // Flag that the movement handler needs to change
-    subject->movement_changed();
-}
-
 bool BoulderMovement::hit_actor(const coord_def& pos, actor *victim)
 {
     if (ProjectileMovement::hit_actor(pos, victim))
@@ -928,9 +897,17 @@ bool BoulderMovement::hit_actor(const coord_def& pos, actor *victim)
 // Strike a victim
 bool BoulderMovement::strike(actor *victim)
 {
-    simple_monster_message(subject->as_monster(), (string(" smashes into ")
-                            + victim->name(DESC_THE) + "!").c_str());
-
+    if (subject->is_monster())
+    {
+        simple_monster_message(subject->as_monster(), (string(" smashes into ")
+                                + victim->name(DESC_THE) + "!").c_str());
+    }
+    else
+    {
+        mprf("%s smash into %s!",
+             subject->name(DESC_THE, true).c_str(),
+             victim->name(DESC_THE, true).c_str());
+    }
     int dam = victim->apply_ac(roll_dice(3, 20));
     if (victim->is_player())
         ouch(dam, subject->mindex(), KILLED_BY_ROLLING);
@@ -963,23 +940,115 @@ bool BoulderMovement::hit_own_kind(const coord_def& pos, monster *victim)
     stop(false);
     victim->movement()->stop(false);
 
+    // TODO: Boulders collide with player, player collides with boulder
     if (!victim->check_clarity(false))
         victim->add_ench(ENCH_CONFUSION);
-    if (subject->is_monster())
-    {
-        monster* mon = subject->as_monster();
-        if (mon && !mon->check_clarity(false))
-            mon->add_ench(ENCH_CONFUSION);
-    }
+    monster* mon = subject->as_monster();
+    if (mon && !mon->check_clarity(false))
+        mon->add_ench(ENCH_CONFUSION);
     return true;
-}
-
-int BoulderMovement::get_hit_power()
-{
-    return div_rand_round(subject->as_monster()->hit_dice,2);
 }
 
 cloud_type BoulderMovement::trail_type()
 {
     return CLOUD_DUST_TRAIL;
+}
+
+int MonsterBoulderMovement::get_hit_power()
+{
+    return div_rand_round(subject->as_monster()->hit_dice,2);
+}
+
+bool MonsterBoulderMovement::check_pos(const coord_def &pos)
+{
+    // Boulders stop at lava/water to prevent unusual behaviour;
+    // skimming across the water like a pebble could be justifiable, but
+    // it raises too many questions.
+    // XXX: Boulders used to collide with walls because this check happened elsewhere
+    if (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos)))
+    {
+        if (!catching_up)
+            mprf("%s screeches to a halt.", subject->name(DESC_THE, true).c_str());
+        stop(false);
+        return false;
+    }
+    return ProjectileMovement::check_pos(pos);
+}
+
+// Beetles stop rolling
+void MonsterBoulderMovement::stop(bool show_message = true)
+{
+    // Deduct the energy first - the move they made that just stopped
+    // them was a speed 14 move.
+    // XXX: Shouldn't be necessary now
+    subject->as_monster()->del_ench(ENCH_ROLLING,!show_message);
+    subject->lose_energy(EUT_MOVE);
+    // Flag that the movement handler needs to change
+    subject->movement_changed();
+}
+
+// Static method to begin rolling
+void MonsterBoulderMovement::start_rolling(monster *mon, bolt *beam)
+{
+    // Add the required enchantment
+    mon->add_ench(ENCH_ROLLING);
+    // Work out x/y/vx/vy from beam. For now pre-populating the props
+    // hash so the values get picked up in setup.
+    beam->choose_ray();
+    mon->props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
+    mon->props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
+    mon->props["iood_vx"].get_float() = mons_is_fleeing(mon) ?
+        -beam->ray.r.dir.x : beam->ray.r.dir.x;
+    mon->props["iood_vy"].get_float() = mons_is_fleeing(mon) ?
+        -beam->ray.r.dir.y : beam->ray.r.dir.y;
+
+    // Flag the movement handler to change, and take an initial move
+    mon->movement_changed();
+    mon->movement()->move();
+}
+
+void PlayerBoulderMovement::impulse(float ix, float iy)
+{
+    vx += ix/5.0f;
+    vy += iy/5.0f;
+
+    if (abs(vx) > 5.0f)
+        vx = 5.0f * sgn(vx);
+    if (abs(vy) > 5.0f)
+        vy = 5.0f * sgn(vy);
+}
+
+void PlayerBoulderMovement::stop(bool show_message = true)
+{
+    // Sudden halt
+    // TODO: Bounce, take damage, etc.
+    vx = 0;
+    vy = 0;
+}
+
+int PlayerBoulderMovement::get_hit_power()
+{
+    return div_rand_round(subject->as_player()->experience_level,2);
+}
+
+// Override normalisation, to prevent it
+void PlayerBoulderMovement::normalise()
+{
+    // XXX: If abs(vx,vy)>1, take multiple steps so as not to jump over things...
+}
+
+void PlayerBoulderMovement::start_rolling()
+{
+    // TODO: Would be nice to give a little impulse based on the direction.
+    // For now it's just a small random velocity.
+
+    // Pre-populating the props hash so the values get picked up in setup.
+    you.props["iood_x"].get_float() = (float)you.pos().x - 0.5f;
+    you.props["iood_y"].get_float() = (float)you.pos().y - 0.5f;
+    you.props["iood_vx"].get_float() = random_real() - 0.5f;
+    you.props["iood_vy"].get_float() = random_real() - 0.5f;
+
+    // Flag the movement handler to change, and take an initial move
+    you.movement_changed();
+    you.movement()->move();
 }

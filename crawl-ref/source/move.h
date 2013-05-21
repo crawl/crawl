@@ -36,6 +36,7 @@ public:
     void catchup(int turns);
     virtual void stop(bool show_message = true);
     void killed();
+    virtual void impulse(float ix, float iy);
 
     // Called when the monster has been moved by another force,
     // e.g. tele, so we can update our information about it
@@ -125,7 +126,7 @@ protected:
     bool has_trail();
     virtual cloud_type trail_type();
 
-    void normalise();
+    virtual void normalise();
     static void _normalise(float &x, float &y);
     static bool _in_front(float vx, float vy, float dx, float dy, float angle);
 };
@@ -165,6 +166,7 @@ protected:
     static void _fuzz_direction(const actor *caster, monster& mon, int pow);
 };
 
+// Base class for boulder projectiles
 class BoulderMovement : public ProjectileMovement
 {
 public:
@@ -172,20 +174,43 @@ public:
         ProjectileMovement(_subject)
         { };
 
+protected:
+    void hit_solid(const coord_def& pos);
+    bool hit_actor(const coord_def& pos, actor *actor);
+    bool hit_own_kind(const coord_def& pos, monster *victim);
+    bool strike(actor *victim);
+
+    cloud_type trail_type();
+};
+
+// For boulder beetle movement
+class MonsterBoulderMovement : public BoulderMovement
+{
 public:
+    MonsterBoulderMovement (actor *_subject) :
+        BoulderMovement(_subject)
+        { };
     void stop(bool show_message);
     static void start_rolling(monster *mon, bolt *beam);
 
 protected:
-    bool check_pos(const coord_def& new_pos);
-
-    void hit_solid(const coord_def& pos);
-    bool hit_actor(const coord_def& pos, actor *actor);
-    bool hit_own_kind(const coord_def& pos, monster *victim);
     int get_hit_power();
-    bool strike(actor *victim);
+    bool check_pos(const coord_def& new_pos);
+};
 
-    cloud_type trail_type();
+class PlayerBoulderMovement : public BoulderMovement
+{
+public:
+    PlayerBoulderMovement (actor *_subject) :
+        BoulderMovement(_subject)
+        { };
+    void stop(bool show_message);
+    void impulse(float ix, float iy);
+    static void start_rolling();
+
+protected:
+    void normalise();
+    int get_hit_power();
 };
 
 #endif

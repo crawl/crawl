@@ -558,6 +558,8 @@ string player::foot_name(bool plural, bool *can_plural) const
         str = "root";
     else if (form == TRAN_WISP)
         str = "strand";
+    else if (form == TRAN_BOULDER)
+        str = "underside", *can_plural = false;
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || form == TRAN_SHADOW
              || !form_changed_physiology())

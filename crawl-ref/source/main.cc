@@ -1902,6 +1902,9 @@ void process_command(command_type cmd)
 
     case CMD_MOVE_NOWHERE:
     case CMD_WAIT:
+        if (you.movement()->do_override())
+            you.movement()->move();
+
         you.turn_is_over = true;
         extract_manticore_spikes("You carefully extract the manticore spikes "
                                  "from your body.");
@@ -3182,7 +3185,14 @@ static void _do_searing_ray()
 // function etc when necessary.
 static void _move_player(int move_x, int move_y)
 {
-    _move_player(coord_def(move_x, move_y));
+    if (you.movement()->do_override())
+    {
+        you.movement()->impulse((float)move_x,(float)move_y);
+        if (!you.movement()->move())
+            you.turn_is_over = true;
+    }
+    else
+        _move_player(coord_def(move_x, move_y));
 }
 
 static void _move_player(coord_def move)

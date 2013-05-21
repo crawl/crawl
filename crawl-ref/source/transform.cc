@@ -62,6 +62,7 @@ static const char* form_names[] =
 #endif
     "fungus",
     "shadow",
+    "boulder",
 };
 
 const char* transform_name(transformation_type form)
@@ -165,7 +166,8 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
 #if TAG_MAJOR_VERSION == 34
         || form == TRAN_JELLY
 #endif
-        || form == TRAN_WISP)
+        || form == TRAN_WISP
+        || form == TRAN_BOULDER)
     {
         return false;
     }
@@ -445,6 +447,7 @@ size_type player::transform_size(transformation_type tform, int psize) const
     case TRAN_PIG:
         return SIZE_SMALL;
     case TRAN_ICE_BEAST:
+    case TRAN_BOULDER:
         return SIZE_LARGE;
     case TRAN_DRAGON:
         return SIZE_GIANT;
@@ -496,6 +499,8 @@ monster_type transform_mons()
         return MONS_INSUBSTANTIAL_WISP;
     case TRAN_SHADOW:
         return MONS_PLAYER_SHADOW;
+    case TRAN_BOULDER:
+        return MONS_BOULDER_BEETLE;
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:
@@ -546,6 +551,7 @@ int form_hp_mod()
     switch (you.form)
     {
     case TRAN_STATUE:
+    case TRAN_BOULDER:
         return 13;
     case TRAN_ICE_BEAST:
         return 12;
@@ -745,6 +751,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_JELLY:
 #endif
     case TRAN_TREE:
+    case TRAN_BOULDER:
     case TRAN_WISP:
         return min(15 + random2(pow) + random2(pow / 2), 100);
     case TRAN_NONE:
@@ -1003,6 +1010,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         msg      += "a swirling mass of dark shadows.";
         break;
 
+    case TRAN_BOULDER:
+        tran_name = "boulder";
+        str       = 4;
+        dex       = -2;
+        msg      += "a rolling boulder.";
+        break;
+
     case TRAN_NONE:
         tran_name = "null";
         msg += "your old self.";
@@ -1165,6 +1179,14 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             mpr("You fade into the shadows.");
         else
             mpr("You feel less conspicuous.");
+        break;
+
+    case TRAN_BOULDER:
+        // ignore hunger_state (but don't reset hunger)
+        you.hunger_state = HS_SATIATED;
+        set_redraw_status(REDRAW_HUNGER);
+        // Update movement handler
+        PlayerBoulderMovement::start_rolling();
         break;
 
     default:
@@ -1367,6 +1389,11 @@ void untransform(bool skip_wielding, bool skip_move)
         mprf(MSGCH_DURATION, "You feel less woody.");
         notify_stat_change(STAT_STR, -10, true,
                      "losing the tree transformation");
+        break;
+    case TRAN_BOULDER:
+        mprf(MSGCH_DURATION, "You cease rolling.");
+        // Restore normal movement
+        you.movement_changed();
         break;
 
     default:

@@ -1807,6 +1807,9 @@ void melee_attack::set_attack_verb()
                 }
             }
             break;
+        // Boulder form can't melee but need to keep compile warnings quiet
+        case TRAN_BOULDER:
+            break;
         } // transformations
         break;
 
@@ -2445,6 +2448,7 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_JELLY:
 #endif
             case TRAN_SHADOW:
+            case TRAN_BOULDER:
             case TRAN_NONE:
                 break;
             }

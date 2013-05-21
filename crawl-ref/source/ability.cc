@@ -2343,7 +2343,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
-        ASSERT(you.form != TRAN_TREE);
+        ASSERT(you.form != TRAN_TREE && you.form != TRAN_BOULDER);
         if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
         {
             bool standing = !you.airborne();

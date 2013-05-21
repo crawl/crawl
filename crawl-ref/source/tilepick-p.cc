@@ -478,6 +478,13 @@ tileidx_t tileidx_player()
 #endif
         case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
         case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
+        case TRAN_BOULDER:
+        {
+            // Random rolling tile
+            ch = TILEP_MONS_BOULDER_BEETLE_ROLLING
+                 + ui_random(tile_player_count(TILEP_MONS_BOULDER_BEETLE_ROLLING));
+            break;
+        }
         case TRAN_DRAGON:
         {
             switch (you.species)

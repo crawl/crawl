@@ -295,6 +295,9 @@ static void _sdump_transform(dump_params &par)
         case TRAN_SHADOW:
             text += "You " + verb + " a swirling mass of dark shadows.";
             break;
+        case TRAN_BOULDER:
+            text += "You " + verb + " gathering no moss.";
+            break;
         case TRAN_NONE:
             break;
         }
