@@ -80,6 +80,7 @@ enum band_type
     BAND_OGRE_MAGE_EXTERN,
 #endif
     BAND_DEATH_KNIGHT,
+    BAND_VAMPIRES,
     NUM_BANDS                   // always last
 };
 

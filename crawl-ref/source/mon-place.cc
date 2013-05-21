@@ -2082,11 +2082,20 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 4 + random2(4);
         break;
     case MONS_JOSEPHINE:
+        band_size = 1 + random2(2);
+        // intentional fall-through
     case MONS_NECROMANCER:
-    case MONS_VAMPIRE_MAGE:
         natural_leader = true;
         band = BAND_NECROMANCER;
-        band_size = 4 + random2(4);
+        band_size += 3 + random2(3);
+        break;
+    case MONS_VAMPIRE_MAGE:
+        if (one_chance_in(3))
+        {
+            natural_leader = true;
+            band = BAND_VAMPIRES;
+            band_size = 2 + random2(2);
+        }
         break;
     case MONS_GNOLL:
         if (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)
@@ -2599,7 +2608,7 @@ static monster_type _band_member(band_type band, int which)
     case BAND_NECROMANCER:
         return random_choose_weighted(6, MONS_ZOMBIE,
                                       6, MONS_SKELETON,
-                                      1, MONS_NECROPHAGE,
+                                      3, MONS_SIMULACRUM,
                                       0);
 
     case BAND_BALRUG:
@@ -2848,6 +2857,10 @@ static monster_type _band_member(band_type band, int which)
                                           2, MONS_FLAMING_CORPSE,
                                           3, MONS_SKELETAL_WARRIOR,
                                           0);
+
+    case BAND_VAMPIRES:
+        mon_type = MONS_VAMPIRE;
+        break;
 
     default:
         die("unhandled band type %d", band);
