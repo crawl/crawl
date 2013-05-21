@@ -3192,6 +3192,9 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     string desc = _base_feature_desc(grid, trap);
     desc += cover_desc;
 
+    if (grid == DNGN_FLOOR && dtype == DESC_A)
+        dtype = DESC_THE;
+
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
 
@@ -3325,6 +3328,10 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(
                    dtype, add_stop, false,
                    "UNAMED PORTAL VAULT ENTRY");
+    case DNGN_FLOOR:
+        if (dtype == DESC_A)
+            dtype = DESC_THE;
+        // fallthrough
     default:
         return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
                    raw_feature_description(where) + covering_description);
