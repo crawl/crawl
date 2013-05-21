@@ -2261,6 +2261,11 @@ void define_monster(monster* mons)
         monnumber = 12;
         break;
 
+    // Randomize starting speed burst clock
+    case MONS_SIXFIRHY:
+    case MONS_JIANGSHI:
+        monnumber = random2(360);
+
     default:
         break;
     }
