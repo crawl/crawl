@@ -102,7 +102,6 @@ include Makefile.obj
 
 
 ifdef USE_ICC
-
 # If you have a Core 2 processor, this _really_ makes things fly:
 #CFOPTIMIZE := -O2 -parallel -xT
 
@@ -111,12 +110,16 @@ ifdef USE_ICC
 #CFOPTIMIZE_L := -ipo
 
 # Some very good optimization flags.
-CFOPTIMIZE := -O2 -parallel
-
+  CFOPTIMIZE := -O2 -parallel
 else
 
-CFOPTIMIZE := -O2
-
+  ifneq (,$(shell $(GXX) --version|grep 'g++.*4\.2\.'))
+    # OS X uses a buggy ancient version of gcc without fixes from even
+    # subsequent point releases of 4.2.
+    CFOPTIMIZE := -O1
+  else
+    CFOPTIMIZE := -O2
+  endif
 endif # USE_ICC
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
