@@ -37,7 +37,6 @@
 #include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
-#include "mon-project.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "terrain.h"
@@ -3688,9 +3687,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
             {
                 if (coinflip())
                 {
-                //  behaviour_event(mons, ME_CORNERED);
                     simple_monster_message(mons, " curls into a ball and rolls away!");
-                    boulder_start(mons, &beem);
+                    BoulderMovement::start_rolling(mons, &beem);
                     used = true;
                 }
             }
@@ -3699,7 +3697,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                      && !adjacent(mons->pos(), beem.target))
             {
                 simple_monster_message(mons, " curls into a ball and starts rolling!");
-                boulder_start(mons, &beem);
+                BoulderMovement::start_rolling(mons, &beem);
                 used = true;
             }
         }

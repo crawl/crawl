@@ -20,11 +20,7 @@
 // These tend to be called from tight loops, and C++ method calls don't
 // get optimized away except for LTO -fwhole-program builds, so merely
 // disabling the function's body is not enough; let's not call them at all.
-#ifdef DEBUG
-# define ASSERT_VALIDITY(x) x assert_validity()
-#else
-# define ASSERT_VALIDITY(x)
-#endif
+#define ASSERT_VALIDITY(x)
 
 CrawlStoreValue::CrawlStoreValue()
     : type(SV_NONE), flags(SFLAG_UNSET)

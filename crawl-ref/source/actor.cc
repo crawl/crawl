@@ -27,6 +27,8 @@ actor::~actor()
 {
     if (constricting)
         delete constricting;
+    // Destruct movement handler nicely
+    movement_changed();
 }
 
 bool actor::will_trigger_shaft() const
@@ -805,4 +807,24 @@ string actor::describe_props() const
         }
     }
     return oss.str();
+}
+
+// Checks for a movement behaviour handler and instances if neded
+MovementHandler* actor::movement()
+{
+    if (!movement_handler)
+    {
+        movement_handler = MovementHandler::handler_for(this);
+    }
+    ASSERT(movement_handler);
+    return movement_handler;
+}
+
+void actor::movement_changed()
+{
+    if (movement_handler)
+    {
+        movement_handler->killed();
+        movement_handler = 0;
+    }
 }

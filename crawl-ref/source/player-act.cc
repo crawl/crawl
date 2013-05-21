@@ -721,7 +721,7 @@ void player::attacking(actor *other, bool ranged)
     if (ranged || mons_is_firewood((monster*) other))
         return;
 
-    const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
+    const int chance = pow((double)3, player_mutation_level(MUT_BERSERK) - 1);
     if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))
         go_berserk(false);
 }

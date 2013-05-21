@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\ability.cc" />
+    <ClCompile Include="..\abl-show.cc" />
     <ClCompile Include="..\abyss.cc" />
     <ClCompile Include="..\acquire.cc" />
     <ClCompile Include="..\act-iter.cc" />
@@ -165,7 +166,6 @@
     <ClCompile Include="..\mon-pathfind.cc" />
     <ClCompile Include="..\mon-pick.cc" />
     <ClCompile Include="..\mon-place.cc" />
-    <ClCompile Include="..\mon-project.cc" />
     <ClCompile Include="..\mon-speak.cc" />
     <ClCompile Include="..\mon-stuff.cc" />
     <ClCompile Include="..\mon-transit.cc" />
@@ -294,6 +294,7 @@
     <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\spl-pick.cc" />
+    <ClCompile Include="..\move.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h" />
@@ -454,6 +455,7 @@
     <ClInclude Include="..\mgen_data.h" />
     <ClInclude Include="..\mgen_enum.h" />
     <ClInclude Include="..\misc.h" />
+    <ClInclude Include="..\mislead.h" />
     <ClInclude Include="..\mon-abil.h" />
     <ClInclude Include="..\mon-act.h" />
     <ClInclude Include="..\mon-behv.h" />
@@ -468,7 +470,6 @@
     <ClInclude Include="..\mon-pathfind.h" />
     <ClInclude Include="..\mon-pick.h" />
     <ClInclude Include="..\mon-place.h" />
-    <ClInclude Include="..\mon-project.h" />
     <ClInclude Include="..\mon-speak.h" />
     <ClInclude Include="..\mon-spll.h" />
     <ClInclude Include="..\mon-stuff.h" />
@@ -616,5 +617,6 @@
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\data-index.h" />
+    <ClInclude Include="..\move.h" />
   </ItemGroup>
 </Project>

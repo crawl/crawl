@@ -34,7 +34,6 @@
 #include "mon-pathfind.h"
 #include "mon-pick.h"
 #include "mon-place.h"
-#include "mon-project.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "mon-act.h"
@@ -5560,7 +5559,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->del_ench(ENCH_IOOD_CHARGED);
         if (orig_noise)
             mons_cast_noise(mons, pbolt, spell_cast, special_ability);
-        cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
+        OrbMovement::cast_iood(mons, 6 * mons->hit_dice, &pbolt);
         return;
     case SPELL_AWAKEN_FOREST:
         duration = 50 + random2(mons->spell_hd(spell_cast) * 20);

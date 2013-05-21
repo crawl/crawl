@@ -3,6 +3,7 @@
 
 #include "itemprop-enum.h"
 #include "random-var.h"
+#include "move.h"
 
 enum ev_ignore_type
 {
@@ -437,10 +438,15 @@ public:
     void clear_constricted();
 
     string describe_props() const;
+    MovementHandler* movement();
+    void movement_changed();
 
 protected:
     void end_constriction(constricting_t::iterator i, bool intentional,
                           bool quiet);
+
+    // Handler for custom movement overrides
+    MovementHandler* movement_handler;
 };
 
 bool actor_slime_wall_immune(const actor *actor);

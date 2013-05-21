@@ -36,7 +36,6 @@
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-place.h"
-#include "mon-project.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -1549,7 +1548,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return vampiric_drain(powc, monster_at(target), fail);
 
     case SPELL_IOOD:
-        return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
+        return OrbMovement::cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
 
     // Clouds and explosions.
     case SPELL_MEPHITIC_CLOUD:

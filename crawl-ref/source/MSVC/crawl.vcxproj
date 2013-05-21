@@ -359,6 +359,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
     <ClCompile Include="..\mon-stealth.cc" />
+    <ClCompile Include="..\move.cc" />
     <ClCompile Include="..\ng-setup.cc" />
     <ClCompile Include="..\ng-wanderer.cc" />
     <ClCompile Include="..\orb.cc" />
@@ -425,7 +426,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\mon-pathfind.cc" />
     <ClCompile Include="..\mon-pick.cc" />
     <ClCompile Include="..\mon-place.cc" />
-    <ClCompile Include="..\mon-project.cc" />
     <ClCompile Include="..\mon-speak.cc" />
     <ClCompile Include="..\mon-stuff.cc" />
     <ClCompile Include="..\mon-transit.cc" />
@@ -721,6 +721,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-mst.h" />
     <ClInclude Include="..\mon-pick-data.h" />
+    <ClInclude Include="..\move.h" />
     <ClInclude Include="..\mutation-data.h" />
     <ClInclude Include="..\newgame_def.h" />
     <ClInclude Include="..\ng-setup.h" />
@@ -770,7 +771,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-pathfind.h" />
     <ClInclude Include="..\mon-pick.h" />
     <ClInclude Include="..\mon-place.h" />
-    <ClInclude Include="..\mon-project.h" />
     <ClInclude Include="..\mon-speak.h" />
     <ClInclude Include="..\mon-spll.h" />
     <ClInclude Include="..\mon-stuff.h" />

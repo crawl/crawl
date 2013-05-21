@@ -5850,6 +5850,7 @@ void player::init()
 
     clear_constricted();
     constricting = 0;
+    movement_handler = 0;
 
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
