@@ -79,6 +79,7 @@ monster::monster()
         foe = MHITNOT;
 
     constricting = 0;
+    movement_handler = 0;
 
     clear_constricted();
 };
@@ -91,6 +92,7 @@ monster::~monster()
 monster::monster(const monster& mon)
 {
     constricting = 0;
+    movement_handler = 0;
     init_with(mon);
 }
 
@@ -138,7 +140,7 @@ void monster::reset()
     clear_constricted();
     // no actual in-game monster should be reset while still constricting
     ASSERT(!constricting);
-
+    movement_changed();
     client_id = 0;
 }
 
@@ -2919,12 +2921,8 @@ void monster::moveto(const coord_def& c, bool clear_net)
     if (clear_net && c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
-    if (is_projectile())
-    {
-        // Assume some means of displacement, normal moves will overwrite this.
-        props["iood_x"].get_float() += c.x - pos().x;
-        props["iood_y"].get_float() += c.y - pos().y;
-    }
+    // TODO: Should go in set_position?
+    movement()->moved_by_other(c);
 
     set_position(c);
 

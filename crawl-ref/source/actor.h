@@ -3,6 +3,7 @@
 
 #include "itemprop-enum.h"
 #include "los_def.h"
+#include "move.h"
 
 enum ev_ignore_type
 {
@@ -425,6 +426,8 @@ public:
 
     string describe_props() const;
 
+    MovementHandler* movement();
+    void movement_changed();
 
 protected:
     void clear_constricted();
@@ -434,6 +437,9 @@ protected:
     // These are here for memory management reasons...
     los_glob los;
     los_glob los_no_trans;
+
+    // Handler for custom movement overrides
+    MovementHandler* movement_handler;
 };
 
 bool actor_slime_wall_immune(const actor *actor);

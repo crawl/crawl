@@ -38,7 +38,6 @@
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
-#include "mon-project.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -1863,10 +1862,12 @@ void handle_monster_move(monster* mons)
     }
 #endif
 
-    if (mons->is_projectile())
-    {
-        if (iood_act(*mons))
+    // Overriding movement; we'll exit the function immediately
+    // afterwards, only lose energy if the actor still exists
+    if (mons->movement()->do_override()) {
+        if (mons->movement()->move())
             return;
+        // XXX: Move into MovementHandler
         mons->lose_energy(EUT_MOVE);
         return;
     }

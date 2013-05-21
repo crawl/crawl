@@ -55,7 +55,6 @@
 #include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
-#include "mon-project.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -2374,9 +2373,9 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (mon->type == MONS_GIANT_SPORE)
         return;
 
-    if (mon->is_projectile())
+    if (mon->movement()->do_override())
     {
-        iood_catchup(mon, turns);
+        mon->movement()->catchup(turns);
         return;
     }
 

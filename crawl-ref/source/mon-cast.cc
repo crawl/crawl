@@ -30,7 +30,6 @@
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
-#include "mon-project.h"
 #include "terrain.h"
 #include "mislead.h"
 #include "mgen_data.h"
@@ -4066,7 +4065,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     case SPELL_IOOD:
-        cast_iood(mons, 6 * mons->hit_dice, &pbolt);
+        OrbMovement::cast_iood(mons, 6 * mons->hit_dice, &pbolt);
         return;
     case SPELL_AWAKEN_FOREST:
         duration = 50 + random2(mons->hit_dice * 20);

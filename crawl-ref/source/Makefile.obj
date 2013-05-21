@@ -146,13 +146,13 @@ mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
 mon-place.o \
-mon-project.o \
 mon-speak.o \
 mon-stealth.o \
 mon-stuff.o \
 mon-transit.o \
 mon-util.o \
 monster.o \
+move.o \
 mutation.o \
 newgame.o \
 ng-init.o \

@@ -37,7 +37,6 @@
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-place.h"
-#include "mon-project.h"
 #include "mon-util.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"
@@ -1754,9 +1753,9 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         if (ztype == ZAP_IOOD)
         {
             if (power_level == 1)
-                cast_iood(&you, power/6, &beam);
+                OrbMovement::cast_iood(&you, power/6, &beam);
             else
-                cast_iood_burst(power/6, beam.target);
+                OrbMovement::cast_iood_burst(power/6, beam.target);
         }
         else
             zapping(ztype, power/6, beam);
@@ -1764,7 +1763,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     else if (ztype == ZAP_IOOD && power_level == 2)
     {
         // cancelled orb bursts just become uncontrolled
-        cast_iood_burst(power/6, coord_def(-1, -1));
+        OrbMovement::cast_iood_burst(power/6, coord_def(-1, -1));
     }
 }
 
