@@ -402,7 +402,7 @@ void you_teleport(void)
             mpr("You feel the power of the Abyss delaying your translocation.");
             teleport_delay += 5 + random2(10);
         }
-        else if (orb_haloed(you.pos()) && coinflip())
+        else if (orb_haloed(you.pos()))
         {
             mpr("You feel the orb delaying this translocation!", MSGCH_ORB);
             teleport_delay += 5 + random2(5);
