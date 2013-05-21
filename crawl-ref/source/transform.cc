@@ -894,7 +894,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_PORCUPINE:
-        tran_name = "spider";
+        tran_name = "porcupine";
         str       = -3;
         msg      += "a spiny porcupine.";
         break;
