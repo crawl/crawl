@@ -14,122 +14,120 @@
 #include "externs.h"
 #include "beam.h"
 #include "cloud.h"
-//#include "spl-cast.h"
 
 // Base class for movement types
 class MovementHandler
 {
+public:
+    MovementHandler(actor *_subject) :
+        subject(_subject),
+        currently_moving(false),
+        catching_up(false),
+        need_another_move(false),
+        kill_after_move(false)
+        {};
+    virtual ~MovementHandler();
 
-    public:
-        MovementHandler(actor *_subject) :
-            subject(_subject),
-            currently_moving(false),
-            catching_up(false),
-            need_another_move(false),
-            kill_after_move(false)
-            {};
-        virtual ~MovementHandler();
+    static MovementHandler* handler_for(actor *act);
 
-        static MovementHandler* handler_for(actor *act);
+    virtual bool do_override();
 
-        virtual bool do_override();
+    bool move();
+    void catchup(int turns);
+    virtual void stop(bool show_message = true);
+    void killed();
 
-        bool move();
-        void catchup(int turns);
-        virtual void stop(bool show_message = true);
-        void killed();
+    // Called when the monster has been moved by another force,
+    // e.g. tele, so we can update our information about it
+    virtual void moved_by_other(const coord_def& new_pos);
 
-        // Called when the monster has been moved by another force,
-        // e.g. tele, so we can update our information about it
-        virtual void moved_by_other(const coord_def& new_pos);
+protected:
+    actor *subject;
+    bool currently_moving;
+    bool catching_up;
+    bool need_another_move;
+    bool kill_after_move;
 
-    protected:
-        actor *subject;
-        bool currently_moving;
-        bool catching_up;
-        bool need_another_move;
-        bool kill_after_move;
+    virtual void post_move(const coord_def& new_pos);
+    virtual void move_again();
+    virtual void setup();
+    virtual void save();
 
-        virtual void post_move(const coord_def& new_pos);
-        virtual void move_again();
-        virtual void setup();
-        virtual void save();
+    virtual coord_def get_move_pos();
+    virtual coord_def get_move_dir();
+    virtual bool check_pos(const coord_def& new_pos);
 
-        virtual coord_def get_move_pos();
-        virtual coord_def get_move_dir();
-        virtual bool check_pos(const coord_def& new_pos);
+    virtual bool on_moving(const coord_def& new_pos);
+    virtual bool on_moved(const coord_def& old_pos);
+    virtual bool on_catchup(int moves);
 
-        virtual bool on_moving(const coord_def& new_pos);
-        virtual bool on_moved(const coord_def& old_pos);
-        virtual bool on_catchup(int moves);
-
-        virtual void hit_solid(const coord_def& pos);
-        virtual bool hit_player(const coord_def& pos);
-        virtual bool hit_monster(const coord_def& pos, monster* victim);
+    virtual void hit_solid(const coord_def& pos);
+    virtual bool hit_player(const coord_def& pos);
+    virtual bool hit_monster(const coord_def& pos, monster* victim);
 };
 
 // Default movement doesn't override; let 'classic'
 // movement happen
 class DefaultMovement : public MovementHandler
 {
-    public:
-        DefaultMovement(actor *_subject) :
-            MovementHandler(_subject)
-            {};
-        bool do_override();
+public:
+    DefaultMovement(actor *_subject) :
+        MovementHandler(_subject)
+        {};
+    bool do_override();
 };
 
 class ProjectileMovement : public MovementHandler
 {
-    public:
-        ProjectileMovement (actor *_subject) :
-            MovementHandler(_subject)
-            { };
-        void setup();
+public:
+    ProjectileMovement (actor *_subject) :
+        MovementHandler(_subject)
+        { };
+    void setup();
 
-    protected:
-        short pow;
-        float x;
-        float y;
-        float vx;
-        float vy;
-        float nx;
-        float ny;
-        int distance; // Distance travelled
-        char kc;
-        mid_t caster_mid;
-        string caster_name;
-        int tpos;
+protected:
+    short pow;
+    float x;
+    float y;
+    float vx;
+    float vy;
+    float nx;
+    float ny;
+    int distance; // Distance travelled
+    char kc;
+    mid_t caster_mid;
+    string caster_name;
+    int tpos;
 
-        void save();
-        void save_all();
+    void save();
+    void save_all();
 
-        coord_def get_move_pos();
-        void aim();
+    coord_def get_move_pos();
+    void aim();
 
-        void post_move(const coord_def& new_pos);
-        bool on_moved(const coord_def& old_pos);
-        void moved_by_other(const coord_def& new_pos);
+    void post_move(const coord_def& new_pos);
+    bool on_moved(const coord_def& old_pos);
+    void moved_by_other(const coord_def& new_pos);
 
-        actor *get_caster();
-        actor *get_target();
-        string get_caster_name();
+    actor *get_caster();
+    actor *get_target();
+    string get_caster_name();
 
-        virtual void hit_solid(const coord_def& pos);
-        virtual bool hit_player(const coord_def& pos);
-        virtual bool hit_monster(const coord_def& pos, monster* victim);
-        virtual bool hit_own_kind(const coord_def& pos, monster* victim);
-        virtual bool hit_actor(const coord_def& pos, actor *victim);
+    virtual void hit_solid(const coord_def& pos);
+    virtual bool hit_player(const coord_def& pos);
+    virtual bool hit_monster(const coord_def& pos, monster* victim);
+    virtual bool hit_own_kind(const coord_def& pos, monster* victim);
+    virtual bool hit_actor(const coord_def& pos, actor *victim);
 
-        bool victim_shielded(actor *victim);
-        int get_hit_power();
+    bool victim_shielded(actor *victim);
+    int get_hit_power();
 
-        bool has_trail();
-        virtual cloud_type trail_type();
+    bool has_trail();
+    virtual cloud_type trail_type();
 
-        void normalise();
-        static void _normalise(float &x, float &y);
-        static bool _in_front(float vx, float vy, float dx, float dy, float angle);
+    void normalise();
+    static void _normalise(float &x, float &y);
+    static bool _in_front(float vx, float vy, float dx, float dy, float angle);
 };
 
 class OrbMovement : public ProjectileMovement
@@ -169,25 +167,25 @@ protected:
 
 class BoulderMovement : public ProjectileMovement
 {
-    public:
-        BoulderMovement (actor *_subject) :
-            ProjectileMovement(_subject)
-            { };
+public:
+    BoulderMovement (actor *_subject) :
+        ProjectileMovement(_subject)
+        { };
 
-    public:
-        void stop(bool show_message);
-        static void start_rolling(monster *mon, bolt *beam);
+public:
+    void stop(bool show_message);
+    static void start_rolling(monster *mon, bolt *beam);
 
-    protected:
-        bool check_pos(const coord_def& new_pos);
+protected:
+    bool check_pos(const coord_def& new_pos);
 
-        void hit_solid(const coord_def& pos);
-        bool hit_actor(const coord_def& pos, actor *actor);
-        bool hit_own_kind(const coord_def& pos, monster *victim);
-        int get_hit_power();
-        bool strike(actor *victim);
+    void hit_solid(const coord_def& pos);
+    bool hit_actor(const coord_def& pos, actor *actor);
+    bool hit_own_kind(const coord_def& pos, monster *victim);
+    int get_hit_power();
+    bool strike(actor *victim);
 
-        cloud_type trail_type();
+    cloud_type trail_type();
 };
 
 #endif
