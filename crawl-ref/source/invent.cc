@@ -820,8 +820,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 if (!glyphs.empty())
                 {
                     // longest string
-                    const string str = "Magical Staves and Rods";
-                    subtitle += string(strwidth(str) - strwidth(subtitle) + 1,
+                    const string str = "Magical Staves ";
+                    subtitle += string(strwidth(str) - strwidth(subtitle),
                                        ' ');
                     subtitle += "(select all with <w>";
                     for (unsigned int k = 0; k < glyphs.size(); ++k)
