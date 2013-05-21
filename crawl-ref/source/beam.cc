@@ -3595,8 +3595,16 @@ void bolt::affect_player()
     if (!YOU_KILL(thrower))
         interrupt_activity(AI_MONSTER_ATTACKS);
 
+    const bool engulfs = is_explosion || is_big_cloud;
+
     if (is_enchantment())
     {
+        if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
+        {
+            if (hit_verb.empty())
+                hit_verb = engulfs ? "engulfs" : "hits";
+            mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+        }
         affect_player_enchantment();
         return;
     }
@@ -3605,8 +3613,6 @@ void bolt::affect_player()
 
     if (misses_player())
         return;
-
-    const bool engulfs = is_explosion || is_big_cloud;
 
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)
@@ -4388,8 +4394,22 @@ void bolt::affect_monster(monster* mon)
     if (handle_statue_disintegration(mon))
         return;
 
+    // Explosions always 'hit'.
+    const bool engulfs = (is_explosion || is_big_cloud);
+
     if (is_enchantment())
     {
+        if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
+        {
+            if (hit_verb.empty())
+                hit_verb = engulfs ? "engulfs" : "hits";
+            if (mons_near(mon))
+                mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
+                     mon->observable() ? mon->name(DESC_THE).c_str()
+                                       : "something");
+            else if (heard && !noise_msg.empty())
+                mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
+        }
         // no to-hit check
         enchantment_affect_monster(mon);
         return;
@@ -4442,9 +4462,6 @@ void bolt::affect_monster(monster* mon)
             set_attack_conducts(conducts, mon, !okay);
         }
     }
-
-    // Explosions always 'hit'.
-    const bool engulfs = (is_explosion || is_big_cloud);
 
     if (engulfs && flavour == BEAM_SPORE
         && mon->holiness() == MH_NATURAL
