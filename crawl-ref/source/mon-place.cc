@@ -1629,6 +1629,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         blame_prefix = "called by ";
     }
+    else if (mg.cls == MONS_KRAKEN_TENTACLE
+             || mg.cls == MONS_STARSPAWN_TENTACLE)
+    {
+        blame_prefix = "attached to ";
+    }
     else
         blame_prefix = "created by ";
 
