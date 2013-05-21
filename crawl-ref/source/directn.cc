@@ -958,10 +958,10 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (!may_target_self && (mode == TARG_ENEMY
-                                     || mode == TARG_HOSTILE
-                                     || mode == TARG_HOSTILE_SUBMERGED
-                                     || mode == TARG_HOSTILE_UNDEAD))
+            if (!may_target_self && restricts != DIR_TARGET_OBJECT
+                && (mode == TARG_ENEMY || mode == TARG_HOSTILE
+                    || mode == TARG_HOSTILE_SUBMERGED
+                    || mode == TARG_HOSTILE_UNDEAD))
             {
                 if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
