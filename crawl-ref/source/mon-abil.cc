@@ -3051,7 +3051,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 if (coinflip())
                 {
                     simple_monster_message(mons, " curls into a ball and rolls away!");
-                    BoulderMovement::start_rolling(mons, &beem);
+                    MonsterBoulderMovement::start_rolling(mons, &beem);
                 }
             }
             // Normal check - don't roll at adjacent targets
@@ -3059,7 +3059,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                      !adjacent(mons->pos(), beem.target))
             {
                 simple_monster_message(mons, " curls into a ball and starts rolling!");
-                BoulderMovement::start_rolling(mons, &beem);
+                MonsterBoulderMovement::start_rolling(mons, &beem);
             }
         }
         break;

@@ -217,6 +217,12 @@ spret_type cast_fly(int power, bool fail)
         return SPRET_ABORT;
     }
 
+    if (you.form == TRAN_BOULDER)
+    {
+        mpr("You are far too heavy to take off.", MSGCH_WARN);
+        return SPRET_ABORT;
+    }
+
     if (you.liquefied_ground())
     {
         mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);

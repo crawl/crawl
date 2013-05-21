@@ -323,6 +323,12 @@ void up_stairs(dungeon_feature_type force_stair)
         return;
     }
 
+    if (you.form == TRAN_BOULDER)
+    {
+        mpr("You can't roll up the stairs!");
+        return;
+    }
+
     // Up and down both work for shops.
     if (stair_find == DNGN_ENTER_SHOP)
     {
@@ -652,6 +658,8 @@ void down_stairs(dungeon_feature_type force_stair)
         canned_msg(MSG_CANNOT_MOVE);
         return;
     }
+
+    // XXX: Boulder Form - roll downstairs
 
     // Up and down both work for shops.
     if (stair_find == DNGN_ENTER_SHOP)

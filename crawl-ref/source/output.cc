@@ -731,6 +731,7 @@ static void _print_stats_wp(int y)
             break;
         case TRAN_FUNGUS:
         case TRAN_TREE:
+        case TRAN_BOULDER:
             col = BROWN;
             break;
         case TRAN_JELLY:

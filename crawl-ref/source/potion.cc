@@ -223,6 +223,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
             break;
         }
 
+        if (you.form == TRAN_BOULDER)
+        {
+            mprf(MSGCH_WARN, "You are far too heavy to take off.");
+            break;
+        }
+
         if (you.liquefied_ground())
         {
             mprf(MSGCH_WARN, "This potion isn't strong enough to pull you from the ground!");

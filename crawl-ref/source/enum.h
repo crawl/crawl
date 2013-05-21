@@ -310,8 +310,9 @@ enum transformation_type
     TRAN_WISP,
     TRAN_JELLY,
     TRAN_FUNGUS,
+    TRAN_BOULDER,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_FUNGUS
+    LAST_FORM = TRAN_BOULDER
 };
 
 enum beam_type                  // bolt::flavour

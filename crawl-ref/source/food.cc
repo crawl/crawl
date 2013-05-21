@@ -140,6 +140,7 @@ bool you_foodless()
     return you.is_undead == US_UNDEAD
         || you.form == TRAN_FUNGUS
         || you.form == TRAN_TREE
+        || you.form == TRAN_BOULDER
         || you.form == TRAN_WISP;
 }
 
@@ -814,6 +815,8 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
                 mpr("Just photosynthesize.");
             else if (you.form == TRAN_FUNGUS)
                 mpr("You decompose your surroundings.");
+            else if (you.form == TRAN_BOULDER)
+                mpr("Just roll with it.");
             else
                 mpr("You can't eat.");
             crawl_state.zero_turns_taken();

@@ -2116,6 +2116,9 @@ void melee_attack::set_attack_verb()
                     attack_verb = "pummel";
             }
             break;
+        // Boulder form can't melee but need to keep compile warnings quiet
+        case TRAN_BOULDER:
+            break;
         } // transformations
         break;
 
@@ -3814,6 +3817,7 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_PIG:
             case TRAN_APPENDAGE:
             case TRAN_JELLY:
+            case TRAN_BOULDER:
             case TRAN_NONE:
                 break;
             }
@@ -5351,6 +5355,7 @@ int melee_attack::calc_base_unarmed_damage()
         case TRAN_PORCUPINE:
         case TRAN_JELLY:
             break;
+        case TRAN_BOULDER:
         case TRAN_NONE:
         case TRAN_APPENDAGE:
             break;

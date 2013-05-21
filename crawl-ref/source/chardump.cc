@@ -308,6 +308,9 @@ static void _sdump_transform(dump_params &par)
         case TRAN_WISP:
             text += "You " + verb + " a barely coherent strand of gas.";
             break;
+        case TRAN_BOULDER:
+            text += "You " + verb + " gathering no moss.";
+            break;
         case TRAN_NONE:
             break;
         }
