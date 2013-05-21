@@ -454,10 +454,10 @@ robe3
 leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
 leather_armour3
-orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
-orcish_leather_armor2
-elven_leather_armor ARM_LEATHER_ARMOUR_ELF
-elven_leather_armor2
+orcish_leather_armour ARM_LEATHER_ARMOUR_ORC
+orcish_leather_armour2
+elven_leather_armour ARM_LEATHER_ARMOUR_ELF
+elven_leather_armour2
 
 ring_mail1 ARM_RING_MAIL
 ring_mail2
