@@ -3306,6 +3306,8 @@ void bolt::affect_player_enchantment()
 
     bool nasty = true, nice = false;
 
+    bool blame_player = effect_known && YOU_KILL(thrower);
+
     switch (flavour)
     {
     case BEAM_HIBERNATION:
@@ -3333,12 +3335,12 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_SLOW:
-        potion_effect(POT_SLOWING, ench_power);
+        potion_effect(POT_SLOWING, ench_power, false, blame_player);
         obvious_effect = true;
         break;
 
     case BEAM_HASTE:
-        potion_effect(POT_SPEED, ench_power, false, effect_known);
+        potion_effect(POT_SPEED, ench_power, false, blame_player);
         contaminate_player(1, effect_known);
         obvious_effect = true;
         nasty = false;
@@ -3346,14 +3348,14 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_HEALING:
-        potion_effect(POT_HEAL_WOUNDS, ench_power);
+        potion_effect(POT_HEAL_WOUNDS, ench_power, false, blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
         break;
 
     case BEAM_MIGHT:
-        potion_effect(POT_MIGHT, ench_power);
+        potion_effect(POT_MIGHT, ench_power, false, blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3361,7 +3363,7 @@ void bolt::affect_player_enchantment()
 
     case BEAM_INVISIBILITY:
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
-        potion_effect(POT_INVISIBILITY, ench_power);
+        potion_effect(POT_INVISIBILITY, ench_power, false, blame_player);
         contaminate_player(1 + random2(2), effect_known);
         obvious_effect = true;
         nasty = false;
@@ -3379,7 +3381,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_CONFUSION:
-        potion_effect(POT_CONFUSION, ench_power);
+        potion_effect(POT_CONFUSION, ench_power, false, blame_player);
         obvious_effect = true;
         break;
 
@@ -3405,7 +3407,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_ENSLAVE:
-        potion_effect(POT_CONFUSION, ench_power);
+        potion_effect(POT_CONFUSION, ench_power, false, blame_player);
         obvious_effect = true;
         break;     // enslavement - confusion?
 
@@ -3504,7 +3506,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_BERSERK:
-        potion_effect(POT_BERSERK_RAGE, ench_power);
+        potion_effect(POT_BERSERK_RAGE, ench_power, false, blame_player);
         obvious_effect = true;
         break;
 
@@ -3658,7 +3660,8 @@ void bolt::affect_player()
         && you.holiness() != MH_UNDEAD
         && !you.is_unbreathing())
     {
-        potion_effect(POT_CONFUSION, 1);
+        potion_effect(POT_CONFUSION, 1, false,
+                      effect_known && YOU_KILL(thrower));
     }
 
     // handling of missiles
