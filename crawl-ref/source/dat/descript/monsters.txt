@@ -2425,6 +2425,12 @@ waves high upon the shores of Japan.”
     -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
      Folk's Treasury_, vol. II. 1909.
 %%%%
+jiangshi
+
+A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
+limbs give it an awkward gait, it moves with surprising speed, leaping upon its
+victims and drinking their life essence with its vicious claws.
+%%%%
 jumping spider
 
 A large venomous spider, which weaves webs between its front legs and leaps at

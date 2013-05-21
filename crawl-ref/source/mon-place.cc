@@ -2093,9 +2093,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         if (one_chance_in(3))
         {
             natural_leader = true;
-            band = BAND_VAMPIRES;
+            band = BAND_JIANGSHI;
             band_size = 2 + random2(2);
         }
+        break;
+    case MONS_JIANGSHI:
+        band = BAND_JIANGSHI;
+        band_size = random2(3);
         break;
     case MONS_GNOLL:
         if (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)
@@ -2858,9 +2862,8 @@ static monster_type _band_member(band_type band, int which)
                                           3, MONS_SKELETAL_WARRIOR,
                                           0);
 
-    case BAND_VAMPIRES:
-        mon_type = MONS_VAMPIRE;
-        break;
+    case BAND_JIANGSHI:
+        return MONS_JIANGSHI;
 
     default:
         die("unhandled band type %d", band);

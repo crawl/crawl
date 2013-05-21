@@ -1939,7 +1939,9 @@ void handle_monster_move(monster* mons)
 
     if (mons->cannot_act()
         || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
-           && ++mons->number / 8 % 3 != 2)  // but are not helpless
+           && ++mons->number / 8 % 3 != 2  // but are not helpless
+        || mons->type == MONS_JIANGSHI // similarly, but more irregular (48 of 90)
+            && (++mons->number / 6 % 3 == 1 || mons->number / 3 % 5 == 1))
     {
         mons->speed_increment -= non_move_energy;
         return;
