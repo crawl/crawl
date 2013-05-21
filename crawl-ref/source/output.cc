@@ -1163,7 +1163,9 @@ void print_stats(void)
         CPRINTF("XL: ");
         textcolor(HUD_VALUE_COLOUR);
         CPRINTF("%2d ", you.experience_level);
-        if (you.experience_level < 27)
+        if (you.experience_level >= 27)
+            CPRINTF("%10s", "");
+        else
         {
             textcolor(Options.status_caption_colour);
             CPRINTF("Next: ");
