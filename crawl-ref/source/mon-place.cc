@@ -2500,7 +2500,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 static monster_type _band_member(band_type band, int which)
 {
     monster_type mon_type = MONS_PROGRAM_BUG;
-    int temp_rand;
 
     if (band == BAND_NO_BAND)
         return MONS_PROGRAM_BUG;
@@ -2772,25 +2771,21 @@ static monster_type _band_member(band_type band, int which)
         break;
 
     case BAND_DRACONIAN:
-        temp_rand = random2((env.absdepth0 < 24) ? 27 : 40);
-        mon_type =
-                ((temp_rand > 38) ? MONS_DRACONIAN_CALLER :     // 1
-                 (temp_rand > 36) ? MONS_DRACONIAN_KNIGHT :     // 2
-                 (temp_rand > 34) ? MONS_DRACONIAN_MONK :       // 2
-                 (temp_rand > 32) ? MONS_DRACONIAN_SHIFTER :    // 2
-                 (temp_rand > 30) ? MONS_DRACONIAN_ANNIHILATOR :// 2
-                 (temp_rand > 28) ? MONS_DRACONIAN_SCORCHER :   // 2
-                 (temp_rand > 26) ? MONS_DRACONIAN_ZEALOT :     // 2
-                 (temp_rand > 23) ? MONS_GREY_DRACONIAN :       // 3
-                 (temp_rand > 20) ? MONS_YELLOW_DRACONIAN :     // 3
-                 (temp_rand > 17) ? MONS_GREEN_DRACONIAN :      // 3
-                 (temp_rand > 14) ? MONS_BLACK_DRACONIAN :      // 3
-                 (temp_rand > 11) ? MONS_WHITE_DRACONIAN :      // 3
-                 (temp_rand >  8) ? MONS_PALE_DRACONIAN :       // 3
-                 (temp_rand >  5) ? MONS_PURPLE_DRACONIAN :     // 3
-                 (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3
-                                    MONS_RED_DRACONIAN);        // 3
-        break;
+        if (env.absdepth0 >= 24 && x_chance_in_y(13, 40))
+        {
+            // Hack: race is rolled elsewhere.
+            return random_choose_weighted(
+                1, MONS_DRACONIAN_CALLER,
+                2, MONS_DRACONIAN_KNIGHT,
+                2, MONS_DRACONIAN_MONK,
+                2, MONS_DRACONIAN_SHIFTER,
+                2, MONS_DRACONIAN_ANNIHILATOR,
+                2, MONS_DRACONIAN_SCORCHER,
+                2, MONS_DRACONIAN_ZEALOT,
+                0);
+        }
+
+        return random_draconian_monster_species();
 
     case BAND_ILSUIW:
         mon_type = random_choose_weighted(30, MONS_MERMAID,
