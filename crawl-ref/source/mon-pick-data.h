@@ -518,7 +518,7 @@ static const pop_entry pop_vaults[] =
   {  0,  8,   89, PEAK, MONS_SPHINX },
   {  2,  6,    8, PEAK, MONS_CRYSTAL_GOLEM },
   {  2,  6,    8, PEAK, MONS_VAPOUR },
-  { -1,  9,  180, PEAK, MONS_FLAYED_GHOST },
+  { -1,  9,   60, PEAK, MONS_FLAYED_GHOST },
   { -1,  9,  258, PEAK, MONS_FREEZING_WRAITH },
   { -3, 10,  480, SEMI, MONS_VAULT_SENTINEL },
   { -3, 10,  480, SEMI, MONS_IRONBRAND_CONVOKER },
