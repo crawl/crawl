@@ -275,7 +275,7 @@ is gently pressed into it. The point is dipped into poison, allowed to dry, and
 redipped until well coated. The exact composition of this poison is unknown,
 and probably varies in different localities; but it would seem that the chief
 ingredient is always the juice of a Strychnos plant. It is known among
-different tribes by many names; such as Curari, Ourari, Urari and Woorali."
+different tribes by many names; such as Curari, Ourari, Urari and Woorali.”
     -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
 %%%%
 bolt
@@ -895,8 +895,8 @@ A spiked flail with longer spikes and a heavier head.
 %%%%
 dire flail:quote
 
-"'Ah! ah! ah!' laughed his two men, 'how the Norman villains will be humbled
-when they see their doughty knight's skull beaten in by our brave countryman.'
+“'Ah! ah! ah!' laughed his two men, 'how the Norman villains will be humbled
+when they see their doughty knight's skull beaten in by our brave countryman.'”
     -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
 %%%%
 disc of storms
@@ -1553,9 +1553,9 @@ A custard pie. It appears anachronistically dangerous.
 %%%%
 pie:quote
 
-  "And from that moment on I could not banish Oedipus's terrible end from my
-  mind: putting his own eyes out with a pin after hearing those fateful words
-  that Tiresias had uttered and being present when his mother hanged herself."
+“And from that moment on I could not banish Oedipus's terrible end from my
+ mind: putting his own eyes out with a pin after hearing those fateful words
+ that Tiresias had uttered and being present when his mother hanged herself.”
     -- Fernando Vidal Olmos, Report on the Blind
     Ernesto Sabato, On Heroes and Tombs,
     Translated by Helen R. Lane
@@ -2793,7 +2793,7 @@ triple sword
 A magical weapon with three great razor-sharp blades. According to legend, a
 master forger created a sword with two blades at the facetious suggestion of a
 knight, who, finding that the resulting blade was quite functional, jovially
-quipped, "Ah, very good, but could you make a *triple* sword?" When the answer
+quipped, “Ah, very good, but could you make a *triple* sword?” When the answer
 turned out to be yes, the knight was too shocked to ask about the possibilities
 of a quadruple sword.
 %%%%
