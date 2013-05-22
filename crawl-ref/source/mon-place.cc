@@ -2310,6 +2310,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_ANCIENT_CHAMPION:
+        if (coinflip())
+            break;
+
         natural_leader = true;
         // Intentional fallthrough
     case MONS_SKELETAL_WARRIOR:
