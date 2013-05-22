@@ -25,10 +25,6 @@
 #include "terrain.h"
 #include "viewchar.h"
 
-MovementHandler::~MovementHandler()
-{
-}
-
 MovementHandler* MovementHandler::handler_for(actor* act)
 {
     MovementHandler* handler = NULL;
@@ -66,38 +62,12 @@ MovementHandler* MovementHandler::handler_for(actor* act)
     return handler;
 }
 
-void MovementHandler::setup()
-{
-}
-
-void MovementHandler::save()
-{
-}
-
-bool MovementHandler::do_override()
-{
-    return true;
-}
-
-// XXX: Only needs to exist on ProjectileMovement
-void MovementHandler::stop(bool show_message)
-{
-}
-
 void MovementHandler::killed()
 {
     if (!currently_moving && !catching_up)
         delete this;
     else
         kill_after_move = true;
-}
-
-void MovementHandler::impulse(float ix, float iy)
-{
-}
-
-void MovementHandler::moved_by_other(const coord_def& new_pos)
-{
 }
 
 bool MovementHandler::move()
@@ -181,11 +151,6 @@ void MovementHandler::catchup(int pturns)
     }
 }
 
-bool MovementHandler::on_catchup(int moves)
-{
-    return true;
-}
-
 bool MovementHandler::check_pos(const coord_def& pos)
 {
     if (!in_bounds(pos))
@@ -238,35 +203,6 @@ bool MovementHandler::on_moving(const coord_def& pos)
     }
 
     return true;
-}
-
-bool MovementHandler::on_moved(const coord_def& old_pos)
-{
-    return true;
-}
-
-void MovementHandler::post_move(const coord_def& pos)
-{
-}
-
-void MovementHandler::hit_solid(const coord_def& pos)
-{
-}
-
-bool MovementHandler::hit_player(const coord_def& pos)
-{
-    return false;
-}
-bool MovementHandler::hit_monster(const coord_def& pos, monster *victim)
-{
-    return false;
-}
-
-bool DefaultMovement::do_override()
-{
-    // DefaultMovement doesn't actually do anything, it's just there so we
-    // don't have to check if the handler exists for every call
-    return false;
 }
 
 // Read properties from the actor props table so they can be manipulated
@@ -349,11 +285,6 @@ coord_def ProjectileMovement::get_move_pos()
     ny = y + vy;
 
     return coord_def(static_cast<int>(round(nx)), static_cast<int>(round(ny)));
-}
-
-void ProjectileMovement::aim()
-{
-    // Don't change direction
 }
 
 void ProjectileMovement::post_move(const coord_def& new_pos)
@@ -557,15 +488,11 @@ void ProjectileMovement::_normalise(float &x, float &y)
     y/=d;
 }
 
-// angle measured in chord length
+// Angle measured in chord length
 bool ProjectileMovement::_in_front(float vx, float vy, float dx, float dy, float angle)
 {
     return ((dx-vx)*(dx-vx) + (dy-vy)*(dy-vy) <= (angle*angle));
 }
-
-//    dprf("iood_act: pos=(%d,%d) rpos=(%f,%f) v=(%f,%f) foe=%d",
-  //       mon.pos().x, mon.pos().y,
-    //     x, y, vx, vy, mon.foe);
 
 // Override setup and save_all methods to handle flawed IOODs cast by player
 void OrbMovement::setup()
