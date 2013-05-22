@@ -709,7 +709,7 @@ Niblungs_. 1891.
 Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
-Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
+Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
 %%%%
 Sonja
@@ -2897,7 +2897,7 @@ formed of carbon and oxygen in the proportion of one part of the former to two
 of the latter chemically combined. It is a colorless gas, having an acid taste
 and smell; is soluble in water; weighs one-half more than air and can be poured
 from one vessel to another, as a liquid may be; 100 parts of water dissolve 106
-parts of this gas, and it is from this source that the roots -of plants derive
+parts of this gas, and it is from this source that the roots of plants derive
 the needed supplies of it.”
     -Henry Stuart, _The Culture of Farm Crops: A Manual of the Science of
     Agriculture, and a Hand-book of Practice for American Farmers_, ch X. 1887.
@@ -3718,7 +3718,7 @@ A hideous mass of body parts, part animated dead flesh, part demon.
 small abomination:quote
 
 “No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
-had shapes, a thousand shapes of horror beyond all memory. There were eyes -
+had shapes, a thousand shapes of horror beyond all memory. There were eyes –
 and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
     -H.P. Lovecraft, _The Unnamable_. 1925.

@@ -89,7 +89,7 @@ animal skin:quote
 %%%%
 apple
 
-Eine köstliche und kräftig rote Frucht - säuerlich auf der Zunge.
+Eine köstliche und kräftig rote Frucht – säuerlich auf der Zunge.
 %%%%
 apple:quote
 
@@ -563,7 +563,7 @@ bottled efreet
 
 Ein mächtiger Flaschengeist, gefangen von irgendeinem Zauberer und gebunden in
 eine Bronzeflasche. Wenn du das Siegel der Flasche brichst, wirst du ihn
-freilassen, und er wird Schaden anrichten - möglicherweise bei dir selbst.
+freilassen, und er wird Schaden anrichten – möglicherweise bei dir selbst.
 %%%%
 bow
 
@@ -999,7 +999,7 @@ Tredie Samling._. 1845.
 %%%%
 falchion
 
-Ein langes einseitiges Schwert mit einer leicht gekrümmten Klinge - das Gewicht
+Ein langes einseitiges Schwert mit einer leicht gekrümmten Klinge – das Gewicht
 ist auf den Punkt konzentriert, um seine Tödlichkeit zu erhöhen.
 %%%%
 falchion:quote

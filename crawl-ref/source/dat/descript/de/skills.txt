@@ -12,7 +12,7 @@ empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
 um besser mit ihnen zu werden.
 
 Kurzschwerter sind besonders im Endspiel für ihren geringen Schaden bekannt,
-doch sie haben auch Vorteile - man kann seine Gegner damit sehr gut erdolchen.
+doch sie haben auch Vorteile – man kann seine Gegner damit sehr gut erdolchen.
 
 Erfahrung mit Kurzschwertern erleichtert das Training mit Langschwertern, und
 umgekehrt.
@@ -169,7 +169,7 @@ Conjurations
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -182,7 +182,7 @@ Hexes
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -196,17 +196,17 @@ Charms
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
-CHARMS - currently editing!!!
+CHARMS – currently editing!!!
 %%%%
 Summonings
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -220,7 +220,7 @@ Necromancy
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -233,7 +233,7 @@ Translocations
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -245,7 +245,7 @@ Transmutations
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -257,12 +257,12 @@ Fire Magic
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
 Feuermagie bietet Zauber, die Feuerschaden über lange Distanzen verursachen
-können - mit vielen effektiven Elementbeschwörungen.
+können – mit vielen effektiven Elementbeschwörungen.
 
 Erfahrung mit Feuermagie erschwert das Lernen von Eismagie, und umgekehrt.
 %%%%
@@ -270,7 +270,7 @@ Ice Magic
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -284,7 +284,7 @@ Air Magic
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -299,7 +299,7 @@ Earth Magic
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
@@ -315,7 +315,7 @@ Poison Magic
 
 In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
-gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
 Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
 
