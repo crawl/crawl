@@ -1082,6 +1082,9 @@ tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM
 shadow_form TRAN_SHADOW
+boulder_form1 TRAN_BOULDER
+boulder_form2
+boulder_form3
 %rim 1
 
 %sdir misc
