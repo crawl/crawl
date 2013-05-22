@@ -150,6 +150,74 @@ xxxxxxxxxxx
    xxxxx
 ENDMAP
 
+NAME: nicolae_spider_entry_tight_spaces
+TAGS: spider_entry no_pool_fixup no_monster_gen no_trap_gen
+KFEAT: O = enter_spider_nest
+NSUBST: A = 2:x / '
+SUBST: X = xxx', ' = .....^^1
+KFEAT: ^ = web
+KMONS: 1 = spider
+MAP
+ xxxxxxxxx
+xxXxXxXxXxx
+xXx'x'x'xXx
+xx'x'xAx'xxx
+x'xXxXxXx'xx
+@..x'xAx.1.w@
+@..'x'x'1O1w@
+@..x'xAx.1.w@
+x'xXxXxXx'xx
+xx'x'xAx'xxx
+xXx'x'x'xXx
+xxXxXxXxXxx
+ xxxxxxxxx
+ENDMAP
+
+NAME: nicolae_spider_entry_non_spiders
+TAGS: spider_entry ruin_lair
+NSUBST: 1 = 21 / 1
+KFEAT: O = enter_spider_nest
+KMONS: 1 = scorpion / goliath beetle / worm / giant centipede / giant mite / \
+           giant cockroach
+KMONS: 2 = demonic crawler / boulder beetle / yellow wasp
+MAP
+...........
+..xx...xx..
+.xxxx.xxxx.
+.xx1x.x1xx.
+..xx1.1xx..
+.....O.....
+..xx1.1xx..
+.xx1x.x1xx.
+.xxxx.xxxx.
+..xx...xx..
+...........
+ENDMAP
+
+NAME: nicolae_spider_entry_orb_guardian
+TAGS: spider_entry no_monster_gen no_pool_fixup no_trap_gen
+KPROP: 'W = no_rtele_into
+NSUBST: a = ..x / .
+SUBST: W = w', X = x., Q = xxx@, ' = ...x, . = .....^
+KFEAT: O = enter_spider_nest
+KFEAT: ^ = web
+KMONS: O = orb spider
+MAP
+   QQQX@@XX
+ xxxxxXX..XX
+xxXXXXxxx..xx
+xX.....a..''x
+xx+wwW''''''xx
+xX..wW''''''xx
+xXO.wW''''''xx
+xX..wW''''''xx
+xx+wwW''''''xx
+xX.....a..''x
+xxXXXXxxx..xx
+ xxxxxXX..XX
+   QQQX@@XX
+ENDMAP
+
 ##############################################################################
 # Regular vaults (some adapted from the old portal vault)
 ##############################################################################
@@ -1051,6 +1119,86 @@ xxx..x..x.0...2.x..x..xxx
      xxxxxxxxxxxxxxx
        xxxxxxxxxxx
           xxxxx
+ENDMAP
+
+NAME: nicolae_spider_circle_web
+TAGS: mini_float transparent extra
+DEPTH: Spider
+MAP
+       ......x
+     ...xxxxxx..
+    ..xx.....xx..
+   .xx......x..xx.
+  .x....xxxxx....x.
+ ..x...x....xx...x..
+ .x...x....x..x...x.
+xxx..x...xxx...x..x..
+.x.xxx..x..xx...x..x.
+.x..x.xxx.x..x..x..x.
+.x..x..x.xxx.x..x..x.
+.x..x..x..x.xxx.x..x.
+.x..x...xx..x..xxx.x.
+..x..x...xxx...x..xxx
+ .x...x..x....x...x.
+ ..x...xx....x...x..
+  .x....xxxxx....x.
+   .xx..x......xx.
+    ..xx.....xx..
+     ..xxxxxx...
+       x......
+ENDMAP
+
+NAME: nicolae_spider_webs_and_nodes
+TAGS: mini_float transparent extra
+DEPTH: Spider
+SUBST: A : .B, B : x .:5, C : .D, D : x .:5
+MAP
+             AAA
+          ..ABBBA
+       .....AxxBA
+    ......xxxBxBA
+ AAA...xxx...AAx..
+ABBBxxx.x......x..
+ABxxA....x.....x..
+ABxBA....x......x..
+ AAx.....xCC...xx..
+ ..x....CDxDxxx.x..
+ ..x....CxxxC....x..
+  ..x.xxxDxDC....x..
+  ..xx...CCx.....xAA
+  ..x......x....ABxBA
+   ..x.....x....AxxBA
+   ..x......x.xxxBBBA
+   ..xAA...xxx...AAA
+    ABxBxxx......
+    ABxxA.....
+    ABBBA..
+     AAA
+ENDMAP
+
+NAME: nicolae_spider_stair_cavern
+DEPTH: Spider:2-5
+SHUFFLE: {[(
+SUBST: X = .x, . = .:100 ^:5
+KFEAT: ^ = web trap
+MAP
+  xxxxxxxxxx
+ xxXXXXXXXXxxx
+xxX.X...X.XXXxx
+xX.X.XXX.X..XXxx
+xXX.XXxXXXXX.XXxx
+xX.XXXxxxxxXX.XXxx
+xX.X.XXXXxxX.X.XXx
+xXX.X...XXxXX.X..@
+xxXXX.{..XxxXXXX.@
+xXX.X...XXxXX.X..@
+xX.X.XXXXxxX.X.XXx
+xX.XXXxxxxxXX.XXxx
+xXX.XXxXXXXX.XXxx
+xX.X.XXX.X..XXxx
+xxX.X...X.XXXxx
+ xxXXXXXXXXxxx
+  xxxxxxxxxx
 ENDMAP
 
 ##############################################################################

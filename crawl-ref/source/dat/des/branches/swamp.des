@@ -157,6 +157,29 @@ MAP
   .....
 ENDMAP
 
+NAME: nicolae_swamp_entry_splash_gauntlet
+TAGS: swamp_entry
+KFEAT: O = enter_swamp
+MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
+   size = 2, walk_dist = 1, spread_rate = 33 }
+NSUBST: A = ttttw / w, B = ttttw / w, C = ttttw / w, D = ttttw / w
+NSUBST: E = T / ., F = T / ., G = T / ., H = T / ., I = T / ., J = T / .
+SUBST: T = tt.
+KMONS: 1 = swamp worm / big fish
+KMONS: 2 = electric eel
+KFEAT: 12 = w
+KFEAT: t = mangrove
+MAP
+    ......tttttttt
+  ...ttttttttttttttttt
+ ..tttw1wAAAw1wCCCw1wtt
+@.T...E.F.G.H.I.J...2tt
+@.T...E.F.G.H.I.J..Owtt
+ ..tttw1wBBBww1DDDw1wtt
+  ...ttttttttttttttttt
+    ......tttttttt
+ENDMAP
+
 ###############################################################################
 # Swamp non-entry and non-ending vaults
 ###############################################################################
@@ -800,6 +823,137 @@ TTwwwwwwTT
 TTTTttTTTT
 TTTT..TTTT
 TTTT@@TTTT
+ENDMAP
+
+NAME: nicolae_swamp_treefoil
+DEPTH: Swamp
+TAGS: transparent mini_float extra
+SUBST: T = t.
+KFEAT: t = tree w:8 / mangrove
+KFEAT: . = . w:30 / W
+MAP
+tt       @     tt
+ ttt....T.T...Tttt
+  TtttT.TT..TtttT
+  ..TttT...tttT.
+   T..ttttttT..
+    T..TTtT..T.
+     @..TtT.T..
+      T.TtT.TT.@
+      ..TtT.TT
+       .TtT.
+        Tt.
+        ttT
+         t
+ENDMAP
+
+NAME: nicolae_swamp_feature_on_the_river_bank
+TAGS: transparent no_pool_fixup
+DEPTH: Swamp
+SUBST: T = t., W = .Ww t:5, Q = tw, f = .GTV U:5 C:5 S:3
+KFEAT: S = any shop / .
+KFEAT: t = mangrove
+MAP
+     tttQ..@..Qttt
+    ttQQQ.....QQQtt
+tttttQQWW.....WWQQttttt
+  ttQQwWW.....WWwQQtt
+  ttQwwWW..f..WWwwQtt
+   ttwwWW.....WWwwtt
+   @TwwwWW...WWwwwT@
+   ..WwwwWWWWWwwwW..
+   T..WwwwwwwwwwW..T
+   tT..WwwwwwwwW..Tt
+   ttT..WWWwWWW..Ttt
+    ttT...WWW...Ttt
+     ttT.......Ttt
+      ttTTTTTTTtt
+ENDMAP
+
+NAME: nicolae_swamp_stair_fork
+DEPTH: Swamp:2-4
+SHUFFLE: {}[]()
+SUBST: W = w., T = t.
+KFEAT: t = mangrove
+MAP
+tttttt
+t...TTtt
+t.{...TTtt
+t.......TTtt
+tT..WWW...Ttt
+tT..WwwW...Ttt
+ tT.WwwwWW..Tt
+ tT..WwwwwW..@
+  tT..WwwwwW.
+  tT..Wwwwww
+   tT..Wwwww
+   ttT..Www
+    ttT..
+     tt@
+ENDMAP
+
+NAME: nicolae_swamp_round_clearing
+DEPTH: Swamp
+TAGS: transparent allow_dup luniq_swclearing extra
+SUBST: T = ttt.., E = .e, e = W.., t = ttttt.
+KFEAT: t = mangrove
+MAP
+    eeeee
+   eEEEEEee
+  eE.....EEe
+ eE........Ee
+eE..........Ee
+eE...TTT.....Ee
+eE...TtTT....Ee
+eE...TTtT....Ee
+eE....TTT...Ee
+ eE........Ee
+ eE........Ee
+ eE.......Ee
+  eE.....Ee
+   eEEEEEe
+    eeeee
+ENDMAP
+
+NAME: nicolae_swamp_rocky_clearing
+TAGS: transparent allow_dup luniq_swclearing extra
+DEPTH: Swamp
+WEIGHT: 3
+SUBST: X = xxxtt.., E = .e, e = W..
+KFEAT: t = mangrove
+MAP
+       eeeee
+  eeeeeEEEEEeeeee
+ eEEEEE....XEEEEEe
+ eE.......XXX....Ee
+eE...XXX...X......Ee
+eE..XxxxX.....XX...Ee
+eE..XxxxX....XxxX..Ee
+eE...XXX......XX...Ee
+ eE..............EEe
+  eEEE...XX..EEEEee
+   eeeEEEEEEEeeee
+      eeeeeee
+ENDMAP
+
+NAME: nicolae_swamp_trees_clearing
+TAGS: transparent allow_dup luniq_swclearing extra
+DEPTH: Swamp
+SUBST: w = Te, T = ttt.., E = .e, e = W..
+KFEAT: t = mangrove
+MAP
+      tttweeee
+    wtttTwEEEEeee
+  eeTtttT.....EEEe
+eeEE.TttT........Ee
+eE....TtT....T...Ee
+eE....TtT...TtT...Ee
+eE.....T....TtT...Ee
+ eE........TttTT.Ee
+  eE........TtttTEe
+  eeEEE.....Ttttww
+    eeeEEEEEwtttt
+       eeeeewttt
 ENDMAP
 
 ###############################################################################
