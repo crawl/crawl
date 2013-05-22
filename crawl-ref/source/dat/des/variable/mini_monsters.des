@@ -4436,7 +4436,7 @@ NAME:   grunt_tough_drop
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-
 KFEAT:  ^ = known teleport trap
-KFEAT:  _ = alarm trap
+KFEAT:  _ = known alarm trap
 KPROP:  8^ = no_rtele_into
 : if you.absdepth() < 9 then
 SUBST: | = %
