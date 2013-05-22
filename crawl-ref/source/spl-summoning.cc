@@ -1805,9 +1805,6 @@ static struct { monster_type mons; const char* name; } mystery_meats[] =
     { MONS_HOG, "" },
     { MONS_SHEEP, "" },
     { MONS_ELEPHANT, "" },
-    { MONS_WARG, "chupacabra" },
-    { MONS_QUOKKA, "wallaby" },
-    { MONS_DEATH_YAK, "mad cow" },
     { MONS_YAK, "cow" },
     { MONS_YAK, "bull" },
 };
