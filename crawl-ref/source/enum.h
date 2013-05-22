@@ -25,6 +25,7 @@ enum lang_t
     LANG_KO,
     LANG_LT,
     LANG_LV,
+    LANG_NL,
     LANG_PL,
     LANG_PT,
     LANG_RU,

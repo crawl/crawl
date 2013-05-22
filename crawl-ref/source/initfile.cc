@@ -2396,6 +2396,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         {
             lang = LANG_LV, lang_name = "lv";
         }
+        else if (field == "nl" || field == "dutch" || field == "nederlands")
+            lang = LANG_NL, lang_name = "nl";
         else if (field == "pl" || field == "polish" || field == "polski")
             lang = LANG_PL, lang_name = "pl";
         else if (field == "pt" || field == "portuguese" || field == "português" || field == "portugues")
