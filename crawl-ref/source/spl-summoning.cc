@@ -1802,7 +1802,7 @@ static struct { monster_type mons; const char* name; } mystery_meats[] =
     { MONS_SHEEP, "" },
     { MONS_ELEPHANT, "" },
     { MONS_YAK, "cow" },
-    { MONS_YAK, "bull" },
+    { MONS_DEATH_YAK, "bull" },
 };
 
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
@@ -1829,8 +1829,10 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         sim_type = flesh->mon_type;
         break;
     case FOOD_BEEF_JERKY:
-        sim_type = MONS_YAK;
-        name = coinflip() ? "cow" : "bull";
+        if (coinflip())
+            sim_type = MONS_YAK, name = "cow";
+        else
+            sim_type = MONS_DEATH_YAK, name = "bull";
         break;
     case FOOD_SAUSAGE:
         sim_type = MONS_HOG;
