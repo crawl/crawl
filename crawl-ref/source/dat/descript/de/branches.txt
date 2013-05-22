@@ -103,6 +103,18 @@ ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und Spinnennestern
 ausgestattet. Ist das Spinnennest vorhanden dann findet man den Eingang
 zwischen der Höhle 3 und Höhle 6.
 %%%%
+Slime Pits
+
+Der amorphe Bereich von Säuren, Gelees und Schlämmen. Jede Spur von
+intelligenten Wesen ist lange aufgelöst worden. Und doch, es gibt Gerüchte von
+großen Schätzen tief unten, verborgen sicher weg in heimlichen Räumen ohne Tür
+oder Fenster für Säure, um darin zu lecken. Es ist weithin bekannt, dass sogar
+die Wände dieses schrecklichen Platzes mit schmerzhafter Säure tropfen, mehr
+kaustisch wachsend, wie Sie hinuntersteigen.
+
+Die Schlamm-Gruben sind sechs Niveaus tief und enthalten die schleimige Rune.
+Der Zugang ist zwischen Höhle:6 und Höhle:8.
+%%%%
 Vaults
 
 Möglicherweise von einem mächtigen Geisteskranken erschaffen sollen die Gewölbe
@@ -139,6 +151,19 @@ die con diesem Ort zurückkehrten ist überaus kurz.
 
 Das Grabmal ist drei Ebenen tief und beinhaltet die Goldene Rune. Sein Eingang
 befindet sich entweder in der Krypta Ebene 2 oder 3.
+%%%%
+Tomb:quote
+
+„In den Tiefen jedes Herzens gibt es eine Grabstätte und einen Kerker, obwohl
+die Lichter, die Musik und der Rummel uns oben veranlassen können, ihre
+Existenz, und die begrabenen oder Gefangenen zu vergessen, die sie verbergen.
+Aber manchmal, und oftenest in der Mitternacht werden jene dunklen Container
+weit geöffnet geschleudert. In einer Stunde wie das, wenn die Meinung ein
+passives Feingefühl, aber keine aktive Kraft hat; wenn die Einbildungskraft ein
+Spiegel ist, Lebhaftigkeit allen Ideen, ohne die Macht des Auswählens oder
+Steuerns von ihnen gebend; dann beten Sie, dass sich Ihr grämt, kann
+schlummern, und die Bruderschaft von Gewissensbissen nicht bricht ihre Kette.“
+    -Nathaniel Hawthorne, „Die Verfolgte Meinung“. 1835.
 %%%%
 Hell
 

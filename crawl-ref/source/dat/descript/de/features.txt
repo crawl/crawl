@@ -37,6 +37,14 @@ A broken pillar
 Die Hersteller dieser Säule sind schon vor langer Zeit gestorben. Niemand, der
 noch lebt, erinnert sich daran, warum sie sie gebaut haben.
 %%%%
+A broken pillar:quote
+
+„Jetzt hatte Absalom in seiner Lebenszeit
+ genommen und sich für sich eine Säule,
+ aufgebäumt, der im Tal des Königs ist: weil er gesagt hat,
+ habe ich keinen Sohn, um meinen Namen in der Erinnerung zu halten...“
+    2 Samuel 18:18
+%%%%
 A burning altar of Makhleb
 
 Ein ewig brennender Altar für Makhleb, den Zerstörer. Merkwürdige, drehende
@@ -131,6 +139,16 @@ Wolke tödlichen Gases umhüllt. Du weißt nicht, welche Art von Gas es ist -
 vielleicht ist es einfach nur Giftgas, vielleicht sind es mutagene Dämpfe oder
 entzündlicher Dunst - oder etwas noch schlimmeres.
 %%%%
+A gas trap:quote
+
+„Gut Ihre Gnade' hatte ich Zimmer für solch einen Gewitter innerhalb meiniger
+alte Därme, 'tis nicht im Grund ich konnte Sie dasselbe und lebend entlassen,
+um sich bei Gott für sich zu bedanken. Er hat wirklich so bescheidene Dienerin
+wodurch zu shew seine Macht gewählt. Nein, 'tis nicht ich yt haben broughte
+hervor dieser reiche o'ermastering Nebel, diese duftende Düsterkeit, so beten
+Sie Sie suche Sie weiter.“
+    -Mark Twain, „1601“, 1880.
+%%%%
 A gate to the Realm of Zot
 
 Dieses Tor führt zum Zot-Reich, der letzten Etappe deiner Suche, denn seine
@@ -150,10 +168,21 @@ A gateway leading out of the Abyss
 Ein Portal, das zurück aus diesem verfluchten Ort führt. Es schimmert und
 verändert ständig seine Form in dieser unbeständigen Landschaft.
 %%%%
+A gateway leading deeper into the Abyss
+
+Ein seltsam ruhiges Tor mitten in der aufgewühlten Landschaft. Es führt weiter
+in die Tiefen des Abgrunds.
+%%%%
 A gateway to a ziggurat
 
 Dieses Portal führt zu einem antiken Zikkurat, einem Ort unsäglicher
 Herausforderungen und unermesslichem Reichtums.
+%%%%
+A gateway to a ziggurat:quote
+
+„Kapitän: Nehmen Sie jeden 'zig' weg!!
+ Kapitän: Für die große Justiz.“
+    - Zero Wing
 %%%%
 A gateway to the ashen valley of Gehenna
 
@@ -164,6 +193,21 @@ A gateway to Hell
 
 Dieses Tor führt in den Vorraum der Hölle. Nur wenige würden freiwillig dorthin
 gehen.
+%%%%
+A gateway to Hell:quote
+
+„Ich bin auf dem Weg in die Stadt des Wehs.
+ bin ich der Weg zu verlassene Leute.
+ bin ich der Weg in den ewigen Kummer.
+
+ Heilige Justiz hat meinen Architekten bewegt.
+ wurde ich hier durch die Gottesomnipotenz,
+ Primordiale Liebe und äußerstes Intellekt erzogen.
+ Nur jene Elemente kann Zeit nicht halten
+ Wurden vor mir gemacht, und außer der Zeit stehe ich.
+ Hemmungslosigkeit die ganze Hoffnung, Sie, die hier hereingehen.“
+    - Dante Alighieri, _The Gotteskomödie _, „Inferno“, Gesang III. ca. 1315.
+     trans. John Ciardi, 1954.
 %%%%
 A gateway to the Iron City of Dis
 
@@ -198,6 +242,24 @@ A granite statue
 Trotz der Härte des verwendeten Steins ist diese Statue schon ziemlich
 verwittert.
 %%%%
+A granite statue:quote
+
+„Ich habe einen Reisenden von einem antiken Land
+ getroffen, Wer gesagt hat: Zwei riesengroße und trunkless Beine des Steins
+ Standplatz in der Wüste. In der Nähe von ihnen auf dem Sand,
+ Halb versenkt, liegt ein shatter'd Gesichtsausdruck, wessen Stirnrunzeln
+ Und runzlige Lippe und Hohnlächeln des kalten Befehls
+ Sagt, dass sein Bildhauer gut jene Leidenschaften
+ lesen, Die noch, stamp'd auf diesen leblosen Dingen,
+ Die Hand überleben, dass mock'd sie und das Herz, das gefressen hat.
+ Und auf dem Sockel erscheinen diese Wörter:
+ ‚Mein Name ist Ozymandias, König von Königen:
+ Blick auf meine Arbeiten, Sie Mächtig, und Verzweiflung!‘
+ Nichts daneben bleibt: um den Zerfall strecken sich
+ dieses riesigen Wrackes, grenzenlos und bloß,
+ Das einsame und die Niveau-Sande weit weg.“
+    - Percy Bysshe Shelley, „Ozymandias“. 1818.
+%%%%
 A hole to the Spider Nest
 
 Dies ist ein natürlicherer Weg nach unten als eine Treppe, aber er wird
@@ -210,6 +272,28 @@ entworfenes, verworrenes Labyrinth führt, dessen Ausgang von einem
 furchteinflößenden Monster bewacht wird. Viele Abenteurer starben bereits in
 diesen verzweigten, sich ständig veränderten Passagen einen grausamen
 Hungertod.
+%%%%
+A labyrinth entrance:quote
+
+„Irrgarten-Läufer, dessen Vision vorn und hinten streng eingezwängt und
+gebrochen wird, erträgt Verwirrung, wohingegen Irrgarten-Zuschauer, die das
+Muster ganz von oben oder in einem Diagramm sehen, durch sein kompliziertes
+Künstlertum geblendet werden. Was Sie sehen, hängt ab, wo Sie, und so zur
+gleichen Zeit stehen, sind Irrgärten einzeln (es gibt eine physische Struktur),
+und doppelt: sie vereinigen gleichzeitig Ordnung und Unordnung, Klarheit und
+Verwirrung, Einheit und Vielfältigkeit, Künstlertum und Verwirrung.“
+    -Zeichen Z. Danielewski, „Haus von Blättern“. 2000.
+
+„Seitdem ich an diesem Tag aus dem Irrgarten,
+ Betäubt mit den hohen und hallenden Durchgängen,
+ Der schnelle Rückstoß, so viele erschienen bin, habe ich fast
+ gefürchtet ich würde mich treffen, an einer glatten Ecke,
+ Selbst oder mein Geist, für alle zurückkehrend, was es unwirklichen
+ gab, Nachdem das Stroh aufgehört hat zu rauschen und der Stier
+ tot auf das Stroh Liegen und ich,
+ Blutbespritzt geblieben bin, wenn tot oder lebendig ich
+ Im Zwielicht-Nichts“
+    -Edwin Muir, „Der Irrgarten“. 1949.
 %%%%
 A mangrove
 
@@ -253,6 +337,20 @@ spuken. Die ganze Substanz dieses Ortes ist unbeständig und skurril, und du
 findest dort die Wesen aus deinen schlimmsten Albträumen. Es ist leicht, hinein
 zu gehen, doch der Rückweg wird nicht durch dieses Tor führen.
 %%%%
+A one-way gate to the infinite horrors of the Abyss:quote
+
+„Und wenn Sie lange in einen Abgrund, die Abgrund-Blicke auch in Sie starren. “
+    -Friedrich Nietzsche, _Beyond Gut und Evil_, Sprichwort 146. 1886.
+
+„so, In unserem Land,“ hat Alice gesagt, noch etwas keuchend, „würden Sie
+allgemein zu sonst wohin kommen - wenn Sie sehr schnell seit langem laufen
+würden, wie wir getan haben.“ „Eine langsame Sorte des Landes!“ hat die Königin
+gesagt. „Jetzt hier sehen Sie, man braucht das ganze Führen von Ihnen können
+tun, um in demselben Platz zu behalten. Wenn Sie sonst wohin kommen wollen,
+müssen Sie mindestens zweimal so schnell wie das führen!“
+    -Lewis Carroll, _Through der Spiegel, und Was Alice Found There _, ch. 2
+    „Der Garten von Lebenden Blumen“. 1871.
+%%%%
 A passage of Golubria
 
 Dieses unstabile Portal ermöglicht die sofortige Reise zu einem anderen, nahe
@@ -281,6 +379,16 @@ A rock wall
 
 Diese Wand besteht aus einfachem Fels.
 %%%%
+A rock wall:quote
+
+„Ich weiß nicht ob Gesetze,
+    Oder ob Gesetze Recht zu haben, falsch zu sein;
+ Alles, was wir wissen, die im Gefängnis lügen, Ist
+    dass die Wand stark ist;
+ Und dass jeder Tag einem Jahr,
+    Ein Jahr ähnlich ist, dessen Tage lang sind.“
+    -Oskar Wilde, „Die Ballade, Gefängnis Zu lesen“. 1898.
+%%%%
 A rock-blocked tunnel
 
 Der Weg, auf dem du hergekommen bist, scheint nicht mehr als Rückweg geeignet
@@ -301,6 +409,11 @@ Eine Tür, überzogen von Runen. Es sieht so aus, als befinde sich dahinter etwa
 besonderes - vielleicht Gefahr, vielleicht Schätze. Du kannst die Runen brechen
 und sie wie jede andere Tür öffnen (zum Beispiel, indem du dagegen läufst oder
 'O' drückst).
+%%%%
+A sealed door
+
+Eine Tür dicht versiegelt durch geheimnisvolle Runen. Es weigert sich, sich für
+jedes durch seine Magie nicht erkannte Wesen zu öffnen.
 %%%%
 A shaft
 
@@ -326,6 +439,12 @@ verschwiegenen, zurückgezogenen Ladenhüter, mit dem man nicht verhandeln kann,
 der nichts zurückerstattet und an nichts interessiert ist, was du ihm anbieten
 könntest. Manche Geschäfte verkaufen antike Gegenstände unbekannter Herkunft,
 und geben wenig Auskunft über die Qualität oder die Art ihrer Güter.
+%%%%
+A slime covered rock wall
+
+Diese Felsen-Wand wird mit dem hellgrünen Schlamm dick angestrichen. Ewwwwww.
+Es ist säurig zur Berührung, scheinend, mehr kaustisch das tiefere zu wachsen,
+Sie reisen.
 %%%%
 A snail-covered altar of Cheibriados
 
@@ -437,6 +556,19 @@ Ein Weg, der in die Grabkammer der Alten führt; ein Platz der Verdammung, voll
 schrecklicher Gestalten, die durch die abscheulichste Nekromantie zum Leben
 erweckt wurden.
 %%%%
+A staircase to the Tomb:quote
+
+„In den Tiefen jedes Herzens gibt es eine Grabstätte und einen Kerker, obwohl
+die Lichter, die Musik und der Rummel uns oben veranlassen können, ihre
+Existenz, und die begrabenen oder Gefangenen zu vergessen, die sie verbergen.
+Aber manchmal, und oftenest in der Mitternacht werden jene dunklen Container
+weit geöffnet geschleudert. In einer Stunde wie das, wenn die Meinung ein
+passives Feingefühl, aber keine aktive Kraft hat; wenn die Einbildungskraft ein
+Spiegel ist, Lebhaftigkeit allen Ideen, ohne die Macht des Auswählens oder
+Steuerns von ihnen gebend; dann beten Sie, dass sich Ihr grämt, kann
+schlummern, und die Bruderschaft von Gewissensbissen nicht bricht ihre Kette.“
+    -Nathaniel Hawthorne, „Die Verfolgte Meinung“. 1835.
+%%%%
 A staircase to the Vaults
 
 Diese Treppen führen hinunter zur Gruft, bekannt als die Heimat riesiger
@@ -488,6 +620,13 @@ meisten Stellen nicht hell genug, um größere Pflanzen wachsen zu lassen. Das
 Licht ist allerdings nicht gleichmäßig, und es gibt auch hier unten Stellen, an
 denen mit Fedhas Segen einige Bäume, so groß wie die an der Erdoberfläche,
 wachsen können.
+%%%%
+A tree:quote
+
+Ich mag Bäume, weil sie resignierter zur Weise scheinen, wie sie leben müssen
+als andere Dinge.
+
+    -Willa Cather, _O Pioneers_. 1913.
 %%%%
 A viscous altar of Jiyva
 
@@ -591,6 +730,11 @@ An iron grate
 Dieses Eisengitter sieht verrostet aus, als ob es recht leicht mit einem
 Zauberspruch oder einem Zauberstab zerstört werden könnte. Es ist aber zu
 stabil, um von Hand zerbrochen zu werden.
+%%%%
+An iron tree
+
+Eine bemerkenswerte Darstellung der Natur im Frühjahr, gemacht völlig aus
+Eisen. Es sieht sehr fein – fast lebendig aus.
 %%%%
 An open door
 
@@ -973,6 +1117,19 @@ A portal to a secret trove of treasure
 
 Ein aufwendig bearbeitetes goldenes Tor, das zu einem riesigen Schatz
 wertvoller Items führt. Der Eintrittspreis ist nicht gering.
+%%%%
+A portal to a secret trove of treasure:quote
+
+„,Halt Dieb! Halt Dieb!‘ Es gibt eine Magie im Ton. Der Großhändler verlässt
+seinen Schalter und den Straßenbahnfahrer sein Wagen; der Metzger wirft unten
+sein Tablett; der Bäcker sein Korb; der Milchmann sein Eimer; der Laufbursche
+seine Pakete; der Schüler seine Marmore; der paviour seine Spitzhacke; das Kind
+sein Federball. Weg führen sie, durcheinander, Durcheinander, heftig: das
+Reißen, brüllend, schreiend, die Passagiere niederschlagend, weil sie die Ecken
+drehen, die Hunde, und erstaunlich das Geflügel wachrüttelnd: und Straßen,
+Quadrate, und Gerichte, hallen mit dem Ton wieder. “
+    -Charles Dickens, _Oliver Drehung; oder, Der Kirchspiel-Junge-Fortschritt
+_, ch. X. 1838.
 %%%%
 A dark tunnel
 
