@@ -4563,9 +4563,8 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (defender->stat_hp() < defender->stat_maxhp())
         {
-            attacker->heal(1 + random2(damage_done), coinflip());
-
-            if (needs_message)
+            if (attacker->heal(1 + random2(damage_done), coinflip())
+                && needs_message)
             {
                 mprf("%s %s strength from %s injuries!",
                      atk_name(DESC_THE).c_str(),
