@@ -3600,6 +3600,44 @@ static void _place_aquatic_monsters()
     }
 }
 
+// For Crypt, adds a bunch of skeletons and zombies that do not respect absdepth
+// (and thus tend to be varied and include several types that would not otherwise
+//  spawn there)
+static void _place_assorted_zombies()
+{
+    int num_zombies = random_range(6, 12, 3);
+    for (int i = 0; i < num_zombies; ++i)
+    {
+        bool skel = coinflip();
+        monster_type z_base;
+        do
+            z_base = pick_random_zombie();
+        while (skel && !mons_skeleton(z_base));
+
+        mgen_data mg;
+        mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
+        mg.base_type = z_base;
+        mg.behaviour              = BEH_SLEEP;
+        mg.map_mask              |= MMT_NO_MONS;
+        mg.preferred_grid_feature = DNGN_FLOOR;
+
+        place_monster(mg);
+    }
+}
+
+static void _place_lost_souls()
+{
+    int nsouls = random2avg(you.depth + 2, 3);
+    for (int i = 0; i < nsouls; ++i)
+    {
+        mgen_data mg;
+        mg.cls = MONS_LOST_SOUL;
+        mg.behaviour              = BEH_HOSTILE;
+        mg.preferred_grid_feature = DNGN_FLOOR;
+        place_monster(mg);
+    }
+}
+
 bool door_vetoed(const coord_def pos)
 {
     return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
@@ -3645,6 +3683,11 @@ static void _builder_monsters()
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
+    else
+    {
+        _place_assorted_zombies();
+        _place_lost_souls();
+    }
 }
 
 static void _builder_items()
