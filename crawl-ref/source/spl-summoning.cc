@@ -1796,11 +1796,7 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
 
 static struct { monster_type mons; const char* name; } mystery_meats[] =
 {
-    { MONS_HOUND, "dog" },
-    { MONS_FELID, "cat" },
     { MONS_RAVEN, "crow" },
-    { MONS_WORM, "" },
-    { MONS_RAT, "" },
     { MONS_YAK, "" },
     { MONS_HOG, "" },
     { MONS_SHEEP, "" },
