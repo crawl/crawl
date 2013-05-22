@@ -815,6 +815,140 @@ ccww..ww44ww..wwcc
     cccc@@cccc
 ENDMAP
 
+NAME: nicolae_crypt_ancient_font
+TAGS: transparent extra
+DEPTH: Crypt
+SHUFFLE: HIJ
+NSUBST: A = @ / ., B = @ / ., C = @ / ., D = @ / .
+SUBST: HI = c, J : Gcc
+MAP
+cccAcHcAccc
+ccc.....ccc
+ccIcc.ccIcc
+D.cJc.cJc.B
+c.cc...cc.c
+H....V....H
+c.cc...cc.c
+D.cJc.cJc.B
+ccIcc.ccIcc
+ccc.....ccc
+cccCcHcCccc
+ENDMAP
+
+NAME: nicolae_crypt_small_crypt
+TAGS: allow_dup extra
+DEPTH: Crypt
+MAP
+ccccc
+cG.Gc
+c...c
+c...c
+cc+cc
+ENDMAP
+
+NAME: nicolae_crypt_fedhas_prevails
+TAGS: transparent
+DEPTH: Crypt
+WEIGHT: 3
+TAGS: no_monster_gen no_item_gen no_trap_gen
+SUBST: D = dw, W = wp
+KMONS: d = col:darkgrey plant name:withered n_adj tile:mons_withered_plant / \
+        nothing w:20
+KMONS: w = col:lightgrey plant name:withered n_adj \
+       tile:mons_withered_plant w:20 / nothing
+KMONS: p = plant
+KFEAT: _ = altar_fedhas
+MAP
+cccccccccc
+cddDwwWppc
+cddDwwWppc
++......_pc
+cddDwwWppc
+cddDwwWppc
+cccccccccc
+ENDMAP
+
+NAME: nicolae_crypt_twisting_catacombs
+TAGS: transparent extra
+DEPTH: Crypt
+SHUFFLE: Aa/Bb/Dd/Ee/Ff/Jj/Hh/Ii, {[(<
+SUBST: ABDE = @, abd = G, efjhi = ., FJHI = c
+MAP
+ccccccccccIIcccccc
+H..h.....iiic..a.A
+H..h........c..a.A
+cccccccc..ccc..ccc
+J....ccc..ccc..ccc
+J....ccc..ccc....c
+cjjccc{....[c....c
+c..ccc......ccc..c
+c.......cc.......c
+c.......cc.......c
+c..ccc......ccc..c
+c....c(....<cccbbc
+c....ccc..ccc....B
+ccc..ccc..ccc....B
+F.f..ccc..cccccccc
+F.f..c......d..ccc
+ccceec......d..ccc
+cccEEccccccccDDccc
+ENDMAP
+
+NAME: nicolae_crypt_niches
+DEPTH: Crypt
+TAGS: allow_dup
+NSUBST: A = + / A
+SUBST: A = c:30 +
+MAP
+ccccAcccc
+cc.c.c.cc
+c.......c
+cc.c.c.cc
+A.......A
+cc.c.c.cc
+c.......c
+cc.c.c.cc
+ccccAcccc
+ENDMAP
+
+NAME: nicolae_crypt_soggy_tomb
+TAGS: no_pool_fixup
+DEPTH: Crypt
+SUBST: w = Ww, . = ...W
+NSUBST: A = + / c
+KMONS: 1 = big fish zombie / giant goldfish zombie
+KMONS: 2 = bog body
+KFEAT: 1 = w
+KFEAT: 2 = W / . w:20
+MAP
+cccccc
+c1w..c
+cw.2.c
+c....c
+c.2.2c
+c....c
+cAAAAc
+ENDMAP
+
+NAME: nicolae_crypt_stairs_room
+TAGS: allow_dup luniq
+DEPTH: Crypt, !Crypt:1, !Crypt:$
+SHUFFLE: AB, CDE, FH/FH/HF
+SUBST: + = +@, BCD = c, A : GGGc.., E : Gc., F : GV..
+NSUBST: H = { / }
+SHUFFLE: {}[]()
+MAP
+ccccccccccc
+ccECDEDCEcc
+cc.......cc
+cF.cc.cc..c
+cH.AB.BA..+
+cF.cc.cc..c
+cc.......cc
+ccECDEDCEcc
+ccccccccccc
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################

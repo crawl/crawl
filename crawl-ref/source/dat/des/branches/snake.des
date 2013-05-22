@@ -651,6 +651,151 @@ x<<xxxxxxxxxxxxxxxxxxcx
 x&&xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME: nicolae_snake_serpentine_hallways
+TAGS: transparent extra
+DEPTH: Snake
+MAP
+        x@@@@xxxxx
+        x........xxx
+       xxx.........xx
+    xxxxxxxx........x
+xxxxxxxxxxxxxxxx....xx
+@..............xx....x
+@...............xx...x
+xxxxxxxxxxx......x...x
+xxxxx.....xxx...xx...x
+xxx.........xx.xx....x
+xx...........x+x....xx
+xx....x+x...........xx
+x....xx.xx.........xxx
+x...xx...xxx.....xxxxx
+x...x......xxxxxxxxxxx
+x...xx...............@
+x....xx..............@
+xx....xxxxxxxxxxxxxxxx
+ x........xxxxxxxx
+ xx.........xxx
+  xxx........x
+    xxxxx@@@@x
+ENDMAP
+
+NAME: nicolae_snake_linked_coils
+TAGS: transparent extra
+DEPTH: Snake
+SUBST: + : +x
+MAP
+    xxxxxxxxxxxxxx
+  xxx.....xxx....xxx
+ xx.........+x.....xx
+xx...xxxxx...xxxx...xx
+@...xxxx.+xx..xxxx...@
+@..xxxxx..xx..xxxxx..@
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+@..xxxxx..xx..xxxxx..@
+@...xxxx...x+.xxxx...@
+xx...xxxx...xxxxx...xx
+ xx.....x+.........xx
+  xxx....xxx.....xxx
+    xxxxxxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_snake_single_loop
+TAGS: transparent extra
+DEPTH: Snake
+MAP
+ xxxxxxx
+xx.....xx
+x.......xx
+@...x...xxx
+@..xxx..xxxx
+xxxxxx..xxxxx
+xx...+..+...xx
+x....+..+....x
+x...xx..xx...x
+x..xxx..xxx..x
+x...x...xx...x
+x.......x....x
+xx.....xx...xx
+ xxxxxxxx@@xx
+ENDMAP
+
+NAME: nicolae_snake_double_loop
+DEPTH: Snake
+TAGS: transparent extra
+SHUFFLE: AB, CD
+SUBST: AC = ., BD = +
+MAP
+ xxxxxxx    xxxxxxx
+xx.....xxxxxx.....xx
+x.......xxxx.......x
+@...x...xxxx...x...x
+@..xxx..xxxx..xxx..x
+xxxxxxBBxxxxCCxxx..x
+xx...A..A..D..D....x
+x....A..A..D..D...xx
+x...xxBBxxxxCCxxxxxx
+x..xxx..xxxx..xxx..@
+x...x...xxxx...x...@
+x.......xxxx.......x
+xx.....xxxxxx.....xx
+ xxxxxxx    xxxxxxx
+ENDMAP
+
+NAME: nicolae_snake_round_shape_thing
+TAGS: transparent extra
+DEPTH: Snake
+SHUFFLE: bc
+SUBST: a : x., b : x@, c : @
+MAP
+       xxbbbxx
+     xxx.....xxx
+    xx.........xx
+    x...........x
+   xx....xxx....xx
+   x....xxxxx....x
+   x...xxxxxxx...x
+   x...xxxxxxx...x
+  xx...xxxxxxx...xx
+ xx.....xxxxx.....xx
+xx.......xxx.......xx
+c....a.........a....c
+c...aaa.......aaa...c
+c....a.........a....c
+xx.......xxx.......xx
+ xx.....xxxxx.....xx
+  xx...xxxxxxx...xx
+   x...xxxxxxx...x
+   x...xxxxxxx...x
+   x....xxxxx....x
+   xx....xxx....xx
+    x...........x
+    xx.........xx
+     xxx.....xxx
+       xxbbbxx
+ENDMAP
+
+NAME: nicolae_snake_biting_tails
+TAGS: transparent extra
+DEPTH: Snake
+SUBST: G : GT
+MAP
+xxxxx     xxxxxxx     xxxxxxx     xxxxxxx
+@...xxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxxx
+xx....xx..........xxx.........xxx.........xx...x
+ xxx.x......xxx....x....xxx....x....xxx..x.....x
+   xx.G....xxxxxx.x...xxxxxxx.x...xxxxxxx.G....x
+   xx.....xxxxxxxx...xxxxxxxxx...xxxxxxxx.....xx
+   x....G.xxxxxxx...x.xxxxxxx...x.xxxxxx....G.xx
+   x.....x..xxx....x....xxx....x....xxx......x.xxx
+   x...xx.........xxx.........xxx..........xx....xx
+   xxxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxx...@
+          xxxxxxx     xxxxxxx     xxxxxxx     xxxxx
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################
