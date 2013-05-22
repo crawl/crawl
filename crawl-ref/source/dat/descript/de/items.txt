@@ -1061,7 +1061,7 @@ Ein riesiges Stück Holz mit spitzen Stacheln an einem Ende.
 %%%%
 giant spiked club:quote
 
-oni-ni-kanabō
+ oni-ni-kanabō
  „oni mit einem Eisenklub mit Spitzen“
     -japanisches Sprichwort, das überwältigende Macht anzeigt
 %%%%
