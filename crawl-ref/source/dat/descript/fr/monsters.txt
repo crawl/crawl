@@ -1419,12 +1419,11 @@ aux simples plaisirs de la chair. Les Halfelins excellent au déplacement
 silencieux.
 
 {{
-    if you.race() != "Halfling"
-        then
-        return "Il ne mérite rien d'autre qu'un bon coup de hache dans la
-tête."
-    else
+    if you.race() == "Halfling" then
         return ""
+    else
+        return "Il ne mérite rien d'autre qu'un bon coup de hache dans la " ..
+               "tête."
     end
 }}
 %%%%
