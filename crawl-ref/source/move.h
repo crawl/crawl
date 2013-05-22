@@ -30,17 +30,17 @@ public:
 
     static MovementHandler* handler_for(actor *act);
 
-    virtual bool do_override();
+    virtual bool do_override(void) { return true; };
 
     bool move();
     void catchup(int turns);
-    virtual void stop(bool show_message = true);
     void killed();
-    virtual void impulse(float ix, float iy);
+    virtual void stop(bool show_message = true) { };
+    virtual void impulse(float ix, float iy) { };
 
     // Called when the monster has been moved by another force,
     // e.g. tele, so we can update our information about it
-    virtual void moved_by_other(const coord_def& new_pos);
+    virtual void moved_by_other(const coord_def& new_pos) { };
 
 protected:
     actor *subject;
@@ -49,25 +49,25 @@ protected:
     bool need_another_move;
     bool kill_after_move;
 
-    virtual void post_move(const coord_def& new_pos);
     virtual void move_again();
-    virtual void setup();
-    virtual void save();
+    virtual void setup() = 0;
+    virtual void save() = 0;
 
     virtual coord_def get_move_pos();
     virtual coord_def get_move_dir();
     virtual bool check_pos(const coord_def& new_pos);
 
     virtual bool on_moving(const coord_def& new_pos);
-    virtual bool on_moved(const coord_def& old_pos);
-    virtual bool on_catchup(int moves);
+    virtual bool on_moved(const coord_def& old_pos) { return true; };
+    virtual void post_move(const coord_def& new_pos) { };
+    virtual bool on_catchup(int moves) { return true; };
 
-    virtual void hit_solid(const coord_def& pos);
-    virtual bool hit_player(const coord_def& pos);
-    virtual bool hit_monster(const coord_def& pos, monster* victim);
+    virtual void hit_solid(const coord_def& pos) { };
+    virtual bool hit_player(const coord_def& pos) { return false; };
+    virtual bool hit_monster(const coord_def& pos, monster* victim) { return false; };
 };
 
-// Default movement doesn't override; let 'classic'
+// Default movement doesn't override; lets 'classic'
 // movement happen
 class DefaultMovement : public MovementHandler
 {
@@ -75,7 +75,11 @@ public:
     DefaultMovement(actor *_subject) :
         MovementHandler(_subject)
         {};
-    bool do_override();
+    bool do_override() { return false; };
+
+protected:
+    void setup() { };
+    void save() { };
 };
 
 class ProjectileMovement : public MovementHandler
@@ -104,7 +108,7 @@ protected:
     void save_all();
 
     coord_def get_move_pos();
-    void aim();
+    virtual void aim() = 0;
 
     void post_move(const coord_def& new_pos);
     bool on_moved(const coord_def& old_pos);
@@ -175,6 +179,7 @@ public:
         { };
 
 protected:
+    void aim() { };
     void hit_solid(const coord_def& pos);
     bool hit_actor(const coord_def& pos, actor *actor);
     bool hit_own_kind(const coord_def& pos, monster *victim);
