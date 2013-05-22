@@ -1071,6 +1071,11 @@ lich_form_octopode TRAN_LICH_OCTOPODE
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
 tree_form TRAN_TREE
+%rim 0
+boulder_form1 TRAN_BOULDER
+boulder_form2
+boulder_form3
+%rim 1
 
 %sdir misc
 unseen_monster MONS_UNKNOWN

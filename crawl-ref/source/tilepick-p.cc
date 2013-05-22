@@ -524,8 +524,8 @@ tileidx_t tileidx_player()
         case TRAN_BOULDER:
         {
             // Random rolling tile
-            ch = TILEP_MONS_BOULDER_BEETLE_ROLLING
-                 + random2(tile_player_count(TILEP_MONS_BOULDER_BEETLE_ROLLING));
+            ch = TILEP_TRAN_BOULDER
+                 + random2(tile_player_count(TILEP_TRAN_BOULDER));
             break;
         }
         case TRAN_DRAGON:
