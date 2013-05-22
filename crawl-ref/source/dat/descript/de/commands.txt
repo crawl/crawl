@@ -80,7 +80,7 @@ Religiösen Status anzeigen.
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-Zeigt was deinem Gott ge- und missfällt, dein Betragen und deinen religiösen
+Zeigt was deinem Gott ge und missfällt, dein Betragen und deinen religiösen
 Stand und göttliche Fähigkeiten.
 %%%%
 CMD_DISPLAY_MUTATIONS

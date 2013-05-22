@@ -210,7 +210,7 @@ Eine Bereich der Verliese die so entsetzlich, so voller Wahnsinn, Raserei und
 Irrsinn sind, das sie vor zufällig Vorbeireisenden sicher verschlossen wurden.
 Nur die wirklich verrücktesten Abenteurer würden ernsthaft versuchen die
 benötigten Schlüssel zu sammeln, das Siegel zu brechen und tiefer vorzudringen
-- nur in der vergeblichen Hoffnung auf ein legendäres Artefakt das noch nie ein
+– nur in der vergeblichen Hoffnung auf ein legendäres Artefakt das noch nie ein
 andere gesehen hat.
 
 Das Reich von Zot ist fünf Ebenen tief und kann nur betreten werden wenn man
@@ -273,7 +273,7 @@ böswilligen Köpfen aus Gründen, die schon lange in der Geschichte verloren
 gingen. Alte Geschichten erzählen, dass das Labyrinth als Gefängnis für einen
 furchterregenden Minotaurus geschaffen wurde. Die neusten Geschichten erzählen,
 dass diese Bestie noch immer dort haust und den einzigen Ausgang des
-Labyrinthes bewacht - und auch von einer großen Sammlung an Schätzen, welche
+Labyrinthes bewacht – und auch von einer großen Sammlung an Schätzen, welche
 von den Körpern törichter Abenteurer genommen wurden, die sich dort verirrten
 und verhungerten. Siehe dich in den sich verändernden und verdrehenden Gängen
 des Labyrinthes vor, oder deine Besitztümer enden im Schatzhort des Minotauren.
@@ -294,7 +294,7 @@ Trove
 
 Irgendwann einmal erschuf ein geschäftstüchtiger Dieb und Zauberer, aus furcht
 bei einem Verbrechen erwischt zu werden, ein System aus Portalen, welche zu den
-geheimen Schatzsammlungen und -kammern der Reichen führten. Zu verängstigt sie
+geheimen Schatzsammlungen und – kammern der Reichen führten. Zu verängstigt sie
 selbst zu plündern, erhob er einen Wucherpreis für jeden, der diese Schätze
 durchwühlen wollte. Der schlaue Architekt entwarf seine Portale so, dass die
 Teilnehmer in die für sie am besten passenden Kammern geleitet wurden.
@@ -339,8 +339,8 @@ dumpfe Grollen der Vulkane scheint nie abzuklingen.
 %%%%
 Wizlab
 
-Vor langer Zeit fanden oder erschufen die mächtigsten Magier - viele von denen
-du vielleicht schon gehört hast - kleinere Reiche, welche vom Rest der Welt
+Vor langer Zeit fanden oder erschufen die mächtigsten Magier – viele von denen
+du vielleicht schon gehört hast – kleinere Reiche, welche vom Rest der Welt
 abgeschnitten waren. Dort isolierten sie sich selbst im Streben nach noch
 größerem magischem Wissen und Macht. Die Magier sind lange fort, aber viele
 ihrer geheimnisvollen Labore, gefüllt mit den Ergebnissen ihrer Experimente,

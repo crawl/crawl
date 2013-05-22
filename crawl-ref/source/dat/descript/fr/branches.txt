@@ -184,7 +184,7 @@ Zot
 Une région du donjon qui est complexe, verrouillée par sécurité et à laquelle
 on fait référence avec les mots "folie", "fureur" et "folie". Seuls les
 aventuriers les plus fous oseront briser le sceau qui protège son entrée et
-plonger dans ses profondeurs - dans le vain espoir de poser les yeux sur le
+plonger dans ses profondeurs – dans le vain espoir de poser les yeux sur le
 légendaire artéfact.
 
 Le Royaume de Zot est profond de cinq niveaux et est uniquement accessible en

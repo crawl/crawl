@@ -122,7 +122,7 @@ Pfeilen, welche nicht leicht zu bekommen sind.
 %%%%
 giant club "Skullcrusher"
 
-Diese entzückende Keule kann jeden Oger überglücklich machen - sei es ein purer
+Diese entzückende Keule kann jeden Oger überglücklich machen – sei es ein purer
 Schläger, Massenmörder oder eine Mischung aus beidem.
 %%%%
 glaive of the Guard

@@ -3,9 +3,9 @@ A Zot trap
 
 Diese Falle birgt eine mächtige Verzauberung, die gefährliche, unvorhersehbare
 magische Effekte bei denen verursacht, die das Pech haben, sie auszulösen. Die
-Effekte sind oft schlimmer als direkter Schaden - du könntest dich im Abgrund
+Effekte sind oft schlimmer als direkter Schaden – du könntest dich im Abgrund
 wiederfinden, kontaminiert mit enormen Mengen wilder Magie, umringt von
-mächtigen, beschworenen Feinden, und so weiter... - es ist etwas, das du auf
+mächtigen, beschworenen Feinden, und so weiter... – es ist etwas, das du auf
 jeden Fall vermeiden solltest.
 %%%%
 A basalt altar of Yredelemnul
@@ -137,7 +137,7 @@ A gas trap
 Glücklicherweise hast du diese Falle bemerkt, denn sie hätte dich mit einer
 Wolke tödlichen Gases umhüllt. Du weißt nicht, welche Art von Gas es ist -
 vielleicht ist es einfach nur Giftgas, vielleicht sind es mutagene Dämpfe oder
-entzündlicher Dunst - oder etwas noch schlimmeres.
+entzündlicher Dunst – oder etwas noch schlimmeres.
 %%%%
 A gas trap:quote
 
@@ -155,7 +155,7 @@ Dieses Tor führt zum Zot-Reich, der letzten Etappe deiner Suche, denn seine
 unterste Ebene birgt die berüchtigte Kugel des Zot. Sowohl die Kugel, als auch
 das Reich haben einen furchterregenden, zweifelhaften Ruf, doch eine einzige
 Information scheint sicher zu sein: Die Monster, die dieses Gebiet bewohnen und
-die Kugel beschützen, sind seltsam und stark - manche von ihnen findet man
+die Kugel beschützen, sind seltsam und stark – manche von ihnen findet man
 nirgendwo außer hier.
 %%%%
 A gateway back into the Dungeon
@@ -182,7 +182,7 @@ A gateway to a ziggurat:quote
 
 „Kapitän: Nehmen Sie jeden 'zig' weg!!
  Kapitän: Für die große Justiz.“
-    - Zero Wing
+    -Zero Wing
 %%%%
 A gateway to the ashen valley of Gehenna
 
@@ -206,7 +206,7 @@ A gateway to Hell:quote
  Nur jene Elemente kann Zeit nicht halten
  Wurden vor mir gemacht, und außer der Zeit stehe ich.
  Hemmungslosigkeit die ganze Hoffnung, Sie, die hier hereingehen.“
-    - Dante Alighieri, _The Gotteskomödie _, „Inferno“, Gesang III. ca. 1315.
+    -Dante Alighieri, _The Gotteskomödie _, „Inferno“, Gesang III. ca. 1315.
      trans. John Ciardi, 1954.
 %%%%
 A gateway to the Iron City of Dis
@@ -258,7 +258,7 @@ A granite statue:quote
  Nichts daneben bleibt: um den Zerfall strecken sich
  dieses riesigen Wrackes, grenzenlos und bloß,
  Das einsame und die Niveau-Sande weit weg.“
-    - Percy Bysshe Shelley, „Ozymandias“. 1818.
+    -Percy Bysshe Shelley, „Ozymandias“. 1818.
 %%%%
 A hole to the Spider Nest
 
@@ -343,7 +343,7 @@ A one-way gate to the infinite horrors of the Abyss:quote
     -Friedrich Nietzsche, _Beyond Gut und Evil_, Sprichwort 146. 1886.
 
 „so, In unserem Land,“ hat Alice gesagt, noch etwas keuchend, „würden Sie
-allgemein zu sonst wohin kommen - wenn Sie sehr schnell seit langem laufen
+allgemein zu sonst wohin kommen – wenn Sie sehr schnell seit langem laufen
 würden, wie wir getan haben.“ „Eine langsame Sorte des Landes!“ hat die Königin
 gesagt. „Jetzt hier sehen Sie, man braucht das ganze Führen von Ihnen können
 tun, um in demselben Platz zu behalten. Wenn Sie sonst wohin kommen wollen,
@@ -406,7 +406,7 @@ Ein Altar für Beogh, unverkennbar grob gehauen von orkischen Kunsthandwerkern.
 A runed door
 
 Eine Tür, überzogen von Runen. Es sieht so aus, als befinde sich dahinter etwas
-besonderes - vielleicht Gefahr, vielleicht Schätze. Du kannst die Runen brechen
+besonderes – vielleicht Gefahr, vielleicht Schätze. Du kannst die Runen brechen
 und sie wie jede andere Tür öffnen (zum Beispiel, indem du dagegen läufst oder
 'O' drückst).
 %%%%
@@ -487,7 +487,7 @@ Diese Treppe führt zurück zu den mächtigen Gruften.
 A staircase leading out of the dungeon
 
 Dieser Ausgang führt zum großen blauen Raum. Himmel, singende Vögel, frische
-Luft - du weißt schon.  Dazu kommen Steuern und alles andere, wovor du
+Luft – du weißt schon.  Dazu kommen Steuern und alles andere, wovor du
 weggelaufen bist.
 
 Wenn du diese Treppen hochsteigst, wird deine Suche nach der Kugel beendet sein
@@ -593,7 +593,7 @@ Dieser Teleporter wird dich in einen anderen Raum bringen.
 %%%%
 A teleportation trap
 
-Diese magische Falle kann jeden, der arglos genug ist und darüber geht - oder
+Diese magische Falle kann jeden, der arglos genug ist und darüber geht – oder
 sogar fliegt -, an einen zufälligen Ort auf der gleichen Ebene teleportieren.
 %%%%
 A translucent rock wall
@@ -757,7 +757,7 @@ Du kannst diese Wand auf keine Weise beeinflussen.
 %%%%
 The endless lava
 
-Ein See aus Feuer und Schwefel, der so weit geht, wie du sehen kannst - und das
+Ein See aus Feuer und Schwefel, der so weit geht, wie du sehen kannst – und das
 ist dank des dicken Rauchs nicht besonders weit.
 
 Im Gegensatz zu kleinen Lavabacken, über die man fliegen oder schweben kann,
@@ -771,7 +771,7 @@ langer Zeit von lange vergessenen Händen dort eingesetzt wurden.
 Some deep water
 
 Dieses Wasser ist genauso tief wie gefährlich. Kein vernünftiger Reisender
-würde versuchen, einen Fuß hineinzusetzen - abgesehen von denen, die fliegen
+würde versuchen, einen Fuß hineinzusetzen – abgesehen von denen, die fliegen
 oder schwimmen können. Sei gewarnt: Viele verwirrte Abenteurer haben ihren Tod
 in den Tiefen gefunden, und das unerwartete Ende eines Levitationszaubers hat
 noch mehr Eindringlinge ertrinken lassen.
@@ -784,12 +784,12 @@ ausstoßend.
 Some shallow water
 
 Dieses trübe, hüfthohe Wasser macht Landratten das Gehen und Kämpfen schwer und
-lästig - das kann gefährlich sein, wird aber nie direkt zum Tod führen.
+lästig – das kann gefährlich sein, wird aber nie direkt zum Tod führen.
 %%%%
 The open sea
 
 Nichts außer endlosem Wind und Wellen, und kein Leuchtturm in Sicht. Du würdest
-sehr schnell hoffnungslos verloren sein - riskiere es lieber nicht.
+sehr schnell hoffnungslos verloren sein – riskiere es lieber nicht.
 %%%%
 An empty arch of stone
 
@@ -929,7 +929,7 @@ noch ziemlich gut aus.
 A wall of transparent white crystal
 
 Dieser Kristall scheint tadellos und unvergänglich zu sein. Es könnte Diamant
-oder etwas ähnliches sein - was auch immer es ist, du bist nicht dazu in der
+oder etwas ähnliches sein – was auch immer es ist, du bist nicht dazu in der
 Lage, diese Wand zu durchbrechen.
 %%%%
 A hot floor
@@ -1098,7 +1098,7 @@ sie auch schon wieder abreisen und nach neuen Kunden suchen.
 A frozen archway
 
 Eine ständige Kälte scheint dieses Portal zu umgeben. Was auch immer auf der
-anderen Seite lebt - es wird voller grimmiger arktischer Wut sein. Du bemerkst,
+anderen Seite lebt – es wird voller grimmiger arktischer Wut sein. Du bemerkst,
 dass der Torbogen schmilzt.
 %%%%
 A sand-covered staircase

@@ -130,7 +130,7 @@ Relâches un large et épais brouillard pour diminuer la vision.
 %%%%
 Evoke Teleport Control
 
-Gain de la capacité de contrôler la prochaine translocation - soit en
+Gain de la capacité de contrôler la prochaine translocation – soit en
 sélectionnant une cible approximative pour une téléportation, soit en
 sélectionnant une direction pour un saut éclair. Faites attention au fait que
 les translocations contrôlées peuvent vous contaminer avec de l'énergie
@@ -147,7 +147,7 @@ Prêchez aux monstres les lois de Zin, ce qui peut amener à différents
 résultats. Il existe quatre livres dont vous pouvez prêcher le contenu :
 
 * Livre des Abominations : Ce livre aborde ce qui existe de plus odieux pour
-Zin - le haos sous toutes ses formes. La récitation de ces versets invoquera le
+Zin – le haos sous toutes ses formes. La récitation de ces versets invoquera le
 plus puissant des chocs de Zin.
 
 * Livre des Ablutions : Les impurs tiennent une place presque aussi élevée aux
@@ -182,7 +182,7 @@ divine.
 %%%%
 Cure All Mutations
 
-Annule toutes vos mutations - mais un seule et unique fois.
+Annule toutes vos mutations – mais un seule et unique fois.
 %%%%
 Divine Shield
 
