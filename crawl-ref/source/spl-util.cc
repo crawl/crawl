@@ -95,34 +95,21 @@ void init_spell_descs(void)
     {
         const spell_desc &data = spelldata[i];
 
-#ifdef DEBUG
-        if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
-            end(1, false, "spell #%d has invalid id %d", i, data.id);
+        ASSERTM(data.id >= SPELL_NO_SPELL && data.id < NUM_SPELLS,
+                "spell #%d has invalid id %d", i, data.id);
 
-        if (data.title == NULL || !*data.title)
-            end(1, false, "spell #%d, id %d has no name", i, data.id);
+        ASSERTM(data.title != NULL && *data.title,
+                "spell #%d, id %d has no name", i, data.id);
 
-        if (data.level < 1 || data.level > 9)
-        {
-            end(1, false, "spell '%s' has invalid level %d",
-                data.title, data.level);
-        }
+        ASSERTM(data.level >= 1 && data.level <= 9,
+                "spell '%s' has invalid level %d", data.title, data.level);
 
-        if (data.min_range > data.max_range)
-        {
-            end(1, false, "spell '%s' has min_range larger than max_range",
-                data.title);
-        }
+        ASSERTM(data.min_range <= data.max_range,
+                "spell '%s' has min_range larger than max_range", data.title);
 
-        if (data.flags & SPFLAG_TARGETTING_MASK)
-        {
-            if (data.min_range <= -1 || data.max_range <= 0)
-            {
-                end(1, false, "targeted/directed spell '%s' has invalid range",
-                    data.title);
-            }
-        }
-#endif
+        ASSERTM(!(data.flags & SPFLAG_TARGETTING_MASK)
+                || (data.min_range >= 0 && data.max_range > 0),
+                "targeted/directed spell '%s' has invalid range", data.title);
 
         spell_list[data.id] = i;
     }
