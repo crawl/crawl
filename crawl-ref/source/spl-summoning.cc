@@ -1840,7 +1840,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     default:
         // usual suspects for mystery meat's identity
         {
-            int which = random2(ARRAYSZ(mystery_meats));
+            const int which = random2(ARRAYSZ(mystery_meats));
             sim_type = mystery_meats[which].mons;
             name = mystery_meats[which].name;
         }
