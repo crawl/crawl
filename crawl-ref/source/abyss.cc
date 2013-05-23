@@ -1239,7 +1239,10 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
     dungeon_feature_type feat = grd(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
-        ASSERT(you.shove());
+    {
+        bool shoved = you.shove();
+        ASSERT(shoved);
+    }
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
