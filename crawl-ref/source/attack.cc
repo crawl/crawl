@@ -1398,6 +1398,9 @@ int attack::calc_base_unarmed_damage()
         case TRAN_APPENDAGE:
             damage = 3;
             break;
+        case TRAN_BOULDER:
+            damage = 0;
+            break;
         }
 
         if (you.has_usable_claws() && wpn_skill == SK_UNARMED_COMBAT)
