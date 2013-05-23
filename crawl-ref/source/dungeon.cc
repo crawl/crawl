@@ -2293,12 +2293,12 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
         _place_traps();
 
-        // Place items.
-        _builder_items();
-
         // Place monsters.
         if (!crawl_state.game_is_zotdef())
             _builder_monsters();
+
+        // Place items.
+        _builder_items();
 
         _fixup_walls();
     }

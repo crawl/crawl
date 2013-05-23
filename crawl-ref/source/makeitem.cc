@@ -3297,8 +3297,11 @@ int items(bool allow_uniques,
         for (int i = 0; i < 500 && !found; ++i)
         {
             itempos = random_in_bounds();
-            found = (grd(itempos) == DNGN_FLOOR
-                     && !map_masked(itempos, mapmask));
+            const monster* mon = monster_at(itempos);
+            found = grd(itempos) == DNGN_FLOOR
+                    && !map_masked(itempos, mapmask)
+                    // oklobs or statues are ok
+                    && (!mon || !mons_is_firewood(mon));
         }
         if (!found)
         {
