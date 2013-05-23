@@ -1104,7 +1104,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // This only has an effect if the transformation happens passively,
     // for example if Xom decides to transform you while you're busy
     // running around or butchering corpses.
-    stop_delay();
+    // If you're turned into a tree, you stop taking stairs.
+    stop_delay(which_trans == TRAN_TREE);
 
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
