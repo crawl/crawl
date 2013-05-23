@@ -61,7 +61,7 @@ protected:
     virtual void post_move(const coord_def& new_pos) { };
     virtual bool on_catchup(int moves) { return true; };
 
-    virtual void hit_solid(const coord_def& pos) { };
+    virtual bool hit_solid(const coord_def& pos) { return false; };
     virtual bool hit_player(const coord_def& pos) { return false; };
     virtual bool hit_monster(const coord_def& pos, monster* victim) { return false; };
 };
@@ -117,7 +117,7 @@ protected:
     actor *get_target();
     string get_caster_name();
 
-    virtual void hit_solid(const coord_def& pos);
+    virtual bool hit_solid(const coord_def& pos);
     virtual bool hit_player(const coord_def& pos);
     virtual bool hit_monster(const coord_def& pos, monster* victim);
     virtual bool hit_own_kind(const coord_def& pos, monster* victim);
@@ -158,7 +158,7 @@ protected:
 
     bool check_pos(const coord_def& new_pos);
 
-    void hit_solid(const coord_def& pos);
+    bool hit_solid(const coord_def& pos);
     bool hit_actor(const coord_def& pos, actor *actor);
     bool hit_own_kind(const coord_def& pos, monster *victim);
     void strike(const coord_def &pos, bool big_boom = false);
@@ -179,10 +179,11 @@ public:
 
 protected:
     void aim() { };
-    void hit_solid(const coord_def& pos);
+    bool hit_solid(const coord_def& pos);
     bool hit_actor(const coord_def& pos, actor *actor);
     bool hit_own_kind(const coord_def& pos, monster *victim);
     bool strike(actor *victim);
+    int strike_max_damage() { return 20; };
 
     cloud_type trail_type();
 };
@@ -194,10 +195,11 @@ public:
     MonsterBoulderMovement (actor *_subject) :
         BoulderMovement(_subject)
         { };
-    void stop(bool show_message);
+    void stop(bool show_message = true);
     static void start_rolling(monster *mon, bolt *beam);
 
 protected:
+    void aim();
     int get_hit_power();
     bool check_pos(const coord_def& new_pos);
 };
@@ -208,13 +210,16 @@ public:
     PlayerBoulderMovement (actor *_subject) :
         BoulderMovement(_subject)
         { };
-    void stop(bool show_message);
+    void stop(bool show_message = true);
     void impulse(float ix, float iy);
     static void start_rolling();
+    double velocity();
 
 protected:
     void normalise();
+    bool hit_solid(const coord_def& pos);
     int get_hit_power();
+    int strike_max_damage();
 };
 
 #endif

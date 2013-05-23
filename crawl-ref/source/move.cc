@@ -174,15 +174,7 @@ bool MovementHandler::on_moving(const coord_def& pos)
     // Check for collision with solid materials
     if (cell_is_solid(pos))
     {
-        bool player_sees = you.see_cell(pos);
-        if (player_sees)
-        {
-            mprf("%s hits %s", subject->name(DESC_THE, true).c_str(),
-                    feature_description_at(pos, false, DESC_A).c_str());
-        }
-
-        hit_solid(pos);
-        return false;
+        return hit_solid(pos);
     }
 
     // Check for collision with actors
@@ -302,13 +294,14 @@ bool ProjectileMovement::on_moved(const coord_def& old_pos)
     return true;
 }
 
-void ProjectileMovement::hit_solid(const coord_def& pos)
+bool ProjectileMovement::hit_solid(const coord_def& pos)
 {
     if (you.see_cell(pos))
     {
         mprf("%s hits %s", subject->name(DESC_THE, true).c_str(),
                 feature_description_at(pos, false, DESC_A).c_str());
     }
+    return false;
 }
 
 bool ProjectileMovement::hit_player(const coord_def& pos)
@@ -599,12 +592,13 @@ void OrbMovement::stop(bool show_message)
     monster_die(subject->as_monster(), KILL_DISMISSED, NON_MONSTER);
 }
 
-void OrbMovement::hit_solid(const coord_def& pos)
+bool OrbMovement::hit_solid(const coord_def& pos)
 {
     // Base class prints a message
     ProjectileMovement::hit_solid(pos);
     // Strike the position (dissipates orb)
     strike(pos);
+    return false;
 }
 
 bool OrbMovement::hit_actor(const coord_def& pos, actor *victim)
@@ -834,7 +828,8 @@ bool BoulderMovement::strike(actor *victim)
              subject->name(DESC_THE, true).c_str(),
              victim->name(DESC_THE, true).c_str());
     }
-    int dam = victim->apply_ac(roll_dice(3, 20));
+    int dam_max = strike_max_damage();
+    int dam = victim->apply_ac(roll_dice(div_rand_round(dam_max,6), dam_max));
     if (victim->is_player())
         ouch(dam, subject->mindex(), KILLED_BY_ROLLING);
     else
@@ -844,12 +839,26 @@ bool BoulderMovement::strike(actor *victim)
     return !(victim->alive());
 }
 
-void BoulderMovement::hit_solid(const coord_def& pos)
+bool BoulderMovement::hit_solid(const coord_def& pos)
 {
     // Base class prints a message
     ProjectileMovement::hit_solid(pos);
-    // Stop rolling
-    stop();
+    // Bounce (deaden the impact if the angle of incidence is too high)
+    if (pos.x == subject->pos().x)
+    {
+        if (abs(vy)<0.5)
+            vy = -vy;
+        else
+            vy = 0;
+    }
+    if (pos.y == subject->pos().y)
+    {
+        if (abs(vx)<0.5)
+            vx = -vx;
+        else
+            vx = 0;
+    }
+    return false;
 }
 
 bool BoulderMovement::hit_own_kind(const coord_def& pos, monster *victim)
@@ -880,6 +889,13 @@ cloud_type BoulderMovement::trail_type()
     return CLOUD_DUST_TRAIL;
 }
 
+void MonsterBoulderMovement::aim()
+{
+    // Slightly adjust vx/vy by a small random amount
+    vx += random_range_real(-0.1,0.1,2);
+    vy += random_range_real(-0.1,0.1,2);
+}
+
 int MonsterBoulderMovement::get_hit_power()
 {
     return div_rand_round(subject->as_monster()->hit_dice,2);
@@ -902,7 +918,7 @@ bool MonsterBoulderMovement::check_pos(const coord_def &pos)
 }
 
 // Beetles stop rolling
-void MonsterBoulderMovement::stop(bool show_message = true)
+void MonsterBoulderMovement::stop(bool show_message)
 {
     // Deduct the energy first - the move they made that just stopped
     // them was a speed 14 move.
@@ -933,10 +949,12 @@ void MonsterBoulderMovement::start_rolling(monster *mon, bolt *beam)
     mon->movement()->move();
 }
 
+// Handle impulse
 void PlayerBoulderMovement::impulse(float ix, float iy)
 {
-    vx += ix/5.0f;
-    vy += iy/5.0f;
+    // Impulse has less effect the faster you're already going
+    vx += (random_range_real(0.9,1.1)*ix)/(2.0f * (abs(vx)<1?1:abs(vx)));
+    vy += (random_range_real(0.9,1.1)*iy)/(2.0f * (abs(vy)<1?1:abs(vy)));
 
     if (abs(vx) > 5.0f)
         vx = 5.0f * sgn(vx);
@@ -944,12 +962,78 @@ void PlayerBoulderMovement::impulse(float ix, float iy)
         vy = 5.0f * sgn(vy);
 }
 
-void PlayerBoulderMovement::stop(bool show_message = true)
+bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
+{
+    if (grd(pos) == DNGN_CLOSED_DOOR || grd(pos) == DNGN_RUNED_DOOR)
+    {
+        // Slam the door open
+        _player_open_door(pos, false, true);
+        // Carry on right through it
+        return true;
+    }
+    // Calculate an amount of damage from the impact
+    float damage_val = 0;
+    // Bounce (deaden the impact if the angle of incidence is too high)
+    if (pos.x != subject->pos().x)
+    {
+        damage_val += abs(vx);
+        if (abs(vx)<0.5)
+            vx = -vx;
+        else
+            vx = 0;
+    }
+    if (pos.y != subject->pos().y)
+    {
+        damage_val += abs(vy);
+        if (abs(vy)<0.5)
+            vy = -vy;
+        else
+            vy = 0;
+    }
+
+    // Don't damage at all for low velocity
+    damage_val = max(0.0, damage_val - 1.0);
+    int dam_max = div_rand_round(ceil(damage_val * 200), 10);
+    int dam = subject->apply_ac(roll_dice(div_rand_round(dam_max,6), dam_max));
+
+    // Hurt the player
+    mprf("%s hit %s%s", subject->name(DESC_THE, true).c_str(),
+         feature_description_at(pos, false, DESC_A).c_str(),
+         damage_val > 0 ? (damage_val > 2 ? "!!" : "!") : ".");
+
+    ouch(dam, NON_MONSTER, KILLED_BY_ROLLING,
+         feature_description_at(pos).c_str(), true, "you");
+    noisy(5, subject->pos());
+
+    // Acknowledge if this brought you to a standstill
+    if (vx == 0 && vy == 0 && subject->alive())
+        stop();
+
+    return false;
+}
+
+void PlayerBoulderMovement::stop(bool show_message)
 {
     // Sudden halt
     // TODO: Bounce, take damage, etc.
     vx = 0;
     vy = 0;
+    if (show_message)
+        mprf("%s start gathering moss.", subject->name(DESC_THE, true).c_str());
+}
+
+// How much damage enemies take
+int PlayerBoulderMovement::strike_max_damage()
+{
+    return div_rand_round(ceil(velocity() * 100),10);
+}
+
+// Absolute current velocity, used for damage calculations.
+// Not needed on base classes since their velocity is always
+// normalised to 1.
+double PlayerBoulderMovement::velocity()
+{
+    return sqrt(vx * vx + vy * vy);
 }
 
 int PlayerBoulderMovement::get_hit_power()
