@@ -1955,9 +1955,19 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_ROLLING:
         if (terse)
-            desc += "squashed by " + death_source_desc();
+        {
+            if (death_source_name == "you")
+                desc += auxkilldata;
+            else
+                desc += "squashed by " + death_source_desc();
+        }
         else
-            desc += "Rolled over by " + death_source_desc();
+        {
+            if (death_source_name == "you")
+                desc += "Rolled into a " + auxkilldata;
+            else
+                desc += "Rolled over by " + death_source_desc();
+        }
         needs_damage = true;
         break;
 

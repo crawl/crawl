@@ -813,9 +813,7 @@ string actor::describe_props() const
 MovementHandler* actor::movement()
 {
     if (!movement_handler)
-    {
         movement_handler = MovementHandler::handler_for(this);
-    }
     ASSERT(movement_handler);
     return movement_handler;
 }

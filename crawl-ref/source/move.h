@@ -37,6 +37,8 @@ public:
     virtual void stop(bool show_message = true) { };
     virtual void impulse(float ix, float iy) { };
 
+    virtual bool be_hit_by(actor* aggressor) { return false; };
+
     // Called when the monster has been moved by another force,
     // e.g. tele, so we can update our information about it
     virtual void moved_by_other(const coord_def& new_pos) { };
@@ -56,14 +58,15 @@ protected:
     virtual coord_def get_move_dir();
     virtual bool check_pos(const coord_def& new_pos);
 
+    bool attempt_move();
     virtual bool on_moving(const coord_def& new_pos);
-    virtual bool on_moved(const coord_def& old_pos) { return true; };
-    virtual void post_move(const coord_def& new_pos) { };
+    virtual void post_move(const coord_def& old_pos) { };
+    virtual void post_move_attempt() { };
     virtual bool on_catchup(int moves) { return true; };
 
-    virtual void hit_solid(const coord_def& pos) { };
-    virtual bool hit_player(const coord_def& pos) { return false; };
-    virtual bool hit_monster(const coord_def& pos, monster* victim) { return false; };
+    virtual bool hit_solid(const coord_def& pos) { return false; };
+    virtual bool hit_player() { return false; };
+    virtual bool hit_monster(monster* victim) { return false; };
 };
 
 // Default movement doesn't override; lets 'classic'
@@ -99,7 +102,6 @@ protected:
     float ny;
     int distance; // Distance travelled
     char kc;
-    mid_t caster_mid;
     string caster_name;
     int tpos;
 
@@ -109,19 +111,17 @@ protected:
     coord_def get_move_pos();
     virtual void aim() = 0;
 
-    void post_move(const coord_def& new_pos);
-    bool on_moved(const coord_def& old_pos);
+    void post_move(const coord_def& old_pos);
+    void post_move_attempt();
     void moved_by_other(const coord_def& new_pos);
 
-    actor *get_caster();
     actor *get_target();
-    string get_caster_name();
 
-    virtual void hit_solid(const coord_def& pos);
-    virtual bool hit_player(const coord_def& pos);
-    virtual bool hit_monster(const coord_def& pos, monster* victim);
-    virtual bool hit_own_kind(const coord_def& pos, monster* victim);
-    virtual bool hit_actor(const coord_def& pos, actor *victim);
+    virtual bool hit_solid(const coord_def& pos);
+    virtual bool hit_player();
+    virtual bool hit_monster(monster* victim);
+    virtual bool hit_own_kind(monster* victim);
+    virtual bool hit_actor(actor *victim);
 
     bool victim_shielded(actor *victim);
     int get_hit_power();
@@ -153,14 +153,19 @@ public:
                                 bool fail = false);
     static void cast_iood_burst(int pow, coord_def target);
 
+    bool be_hit_by(actor* aggressor);
+
 protected:
     bool flawed;
+    mid_t caster_mid;
+    actor *get_caster();
+    string get_caster_name();
 
     bool check_pos(const coord_def& new_pos);
 
-    void hit_solid(const coord_def& pos);
-    bool hit_actor(const coord_def& pos, actor *actor);
-    bool hit_own_kind(const coord_def& pos, monster *victim);
+    bool hit_solid(const coord_def& pos);
+    bool hit_actor(actor *actor);
+    bool hit_own_kind(monster *victim);
     void strike(const coord_def &pos, bool big_boom = false);
 
     bool on_catchup(int moves);
@@ -179,10 +184,11 @@ public:
 
 protected:
     void aim() { };
-    void hit_solid(const coord_def& pos);
-    bool hit_actor(const coord_def& pos, actor *actor);
-    bool hit_own_kind(const coord_def& pos, monster *victim);
+    bool hit_solid(const coord_def& pos);
+    bool hit_actor(actor *actor);
+    bool hit_own_kind(monster *victim);
     bool strike(actor *victim);
+    int strike_max_damage() { return 20; };
 
     cloud_type trail_type();
 };
@@ -194,10 +200,11 @@ public:
     MonsterBoulderMovement (actor *_subject) :
         BoulderMovement(_subject)
         { };
-    void stop(bool show_message);
+    void stop(bool show_message = true);
     static void start_rolling(monster *mon, bolt *beam);
 
 protected:
+    void aim();
     int get_hit_power();
     bool check_pos(const coord_def& new_pos);
 };
@@ -208,13 +215,16 @@ public:
     PlayerBoulderMovement (actor *_subject) :
         BoulderMovement(_subject)
         { };
-    void stop(bool show_message);
+    void stop(bool show_message = true);
     void impulse(float ix, float iy);
     static void start_rolling();
+    double velocity();
 
 protected:
     void normalise();
+    bool hit_solid(const coord_def& pos);
     int get_hit_power();
+    int strike_max_damage();
 };
 
 #endif

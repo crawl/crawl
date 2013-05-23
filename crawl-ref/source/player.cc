@@ -1844,7 +1844,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         // transformations:
         if (you.form == TRAN_STATUE || you.form == TRAN_WISP
             || you.form == TRAN_BOULDER)
+        {
             re += 1;
+        }
 
         if (re > 1)
             re = 1;
@@ -6562,8 +6564,6 @@ int player::armour_class() const
 
         case TRAN_BOULDER:
             AC += 1500 + 50 * you.experience_level;
-            // XXX: For discussion; should it work like statue form, i.e. Earth bonus
-            // plus Stoneskin stacking?
             break;
 
         case TRAN_TREE: // extreme bonus, no EV
@@ -8498,7 +8498,7 @@ string temperature_text(int temp)
 }
 #endif
 
-void player_open_door(coord_def doorpos, bool check_confused, bool force)
+void player_open_door(coord_def doorpos, bool check_confused)
 {
     // Finally, open the closed door!
     set<coord_def> all_door;
@@ -8507,15 +8507,17 @@ void player_open_door(coord_def doorpos, bool check_confused, bool force)
     get_door_description(all_door.size(), &adj, &noun);
 
     const string door_desc_adj  =
-        env.markers.property_at(doorpos, MAT_ANY, "door_description_adjective");
+        env.markers.property_at(doorpos, MAT_ANY,
+                                "door_description_adjective");
     const string door_desc_noun =
-        env.markers.property_at(doorpos, MAT_ANY, "door_description_noun");
+        env.markers.property_at(doorpos, MAT_ANY,
+                                "door_description_noun");
     if (!door_desc_adj.empty())
         adj = door_desc_adj.c_str();
     if (!door_desc_noun.empty())
         noun = door_desc_noun.c_str();
 
-    if (!(check_confused && you.confused() || force))
+    if (!check_confused && you.confused())
     {
         string door_open_prompt =
             env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
@@ -8595,7 +8597,8 @@ void player_open_door(coord_def doorpos, bool check_confused, bool force)
                 mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
             }
             else
-                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!",
+                     adj, noun);
             noisy(15, you.pos());
         }
     }
@@ -8632,7 +8635,8 @@ void player_open_door(coord_def doorpos, bool check_confused, bool force)
     }
 
     vector<coord_def> excludes;
-    for (set<coord_def>::iterator i = all_door.begin(); i != all_door.end(); ++i)
+    for (set<coord_def>::iterator i = all_door.begin();
+         i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
         // Even if some of the door is out of LOS, we want the entire
