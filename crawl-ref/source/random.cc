@@ -359,7 +359,7 @@ double random_real_avg(int rolls)
     for (int i = 0; i < rolls; i++)
         sum += random_real_inc();
 
-    return (sum / (double)rolls);
+    return sum / (double)rolls;
 }
 
 // range [low, high], weighted to middle with multiple rolls
