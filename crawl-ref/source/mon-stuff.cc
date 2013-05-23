@@ -194,7 +194,8 @@ void monster_drop_things(monster* mons,
 
                 // If a monster is swimming, the items are ALREADY
                 // underwater.
-                move_item_to_grid(&item, mons->pos(), mons->swimming());
+                move_item_to_grid(&item, mons->pos(), mons->mindex(),
+                                  mons->swimming());
             }
 
             mons->inv[i] = NON_ITEM;
@@ -449,7 +450,7 @@ int place_monster_corpse(const monster* mons, bool silent,
         return -1;
     }
 
-    move_item_to_grid(&o, mons->pos(), !mons->swimming());
+    move_item_to_grid(&o, mons->pos(), mons->mindex(), !mons->swimming());
 
     if (you.see_cell(mons->pos()))
     {

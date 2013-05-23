@@ -1001,6 +1001,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_DESTROY_DECK:
+            if (you.religion == GOD_NEMELEX_XOBEH)
+            {
+                piety_change = -level;
+                penance = level * (known ? 2 : 1);
+                retval = true;
+            }
+            break;
+
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
@@ -1062,6 +1071,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
+                "Destroy Deck",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

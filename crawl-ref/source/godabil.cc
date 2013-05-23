@@ -1517,7 +1517,7 @@ bool trog_burn_spellbooks()
 
             dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
-            item_was_destroyed(*si);
+            item_was_destroyed(*si, MHITYOU);
             destroy_item(si.link());
             count++;
         }
@@ -1847,7 +1847,7 @@ bool kiku_take_corpse()
         if (item_is_stationary(item))
             continue;
 
-        item_was_destroyed(item);
+        item_was_destroyed(item, MHITYOU);
         destroy_item(i);
         return true;
     }
@@ -2022,7 +2022,7 @@ int fedhas_fungal_bloom()
                     turn_corpse_into_skeleton(*j);
                 else
                 {
-                    item_was_destroyed(*j);
+                    item_was_destroyed(*j, MHITYOU);
                     destroy_item(j->index());
                 }
 
@@ -2766,7 +2766,7 @@ int fedhas_corpse_spores(beh_type attitude, bool interactive)
             turn_corpse_into_skeleton(*positions[i]);
         else
         {
-            item_was_destroyed(*positions[i]);
+            item_was_destroyed(*positions[i], MHITYOU);
             destroy_item(positions[i]->index());
         }
     }
