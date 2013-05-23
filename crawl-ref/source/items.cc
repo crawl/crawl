@@ -605,6 +605,8 @@ void item_was_destroyed(const item_def &item, int cause)
 {
     if (item.props.exists("destroy_xp"))
         gain_exp(item.props["destroy_xp"].get_int());
+    if (item_is_spellbook(item) && cause == MHITYOU)
+        destroy_spellbook(item);
     if (is_deck(item) && cause == MHITYOU)
     {
         did_god_conduct(DID_DESTROY_DECK,
