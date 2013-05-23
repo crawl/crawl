@@ -40,6 +40,10 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
+    const tileidx_t cloud_idx = cell.cloud & TILE_FLAG_MASK;
+    const tileidx_t cloud_base_idx = tileidx_known_base_item(cloud_idx);
+    const tileidx_t cloud_final_idx = cloud_base_idx ? cloud_base_idx : cloud_idx;
+
     if (fg_idx >= TILEP_MCACHE_START)
     {
         mcache_entry *entry = mcache.get(fg_idx);
@@ -54,6 +58,21 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
 
     pack_foreground(x, y, cell);
+
+    // Draw cloud layer(s)
+    if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
+    {
+        // If there's a foreground, sandwich it between two semi-transparent
+        // clouds at different z-indices
+        if (fg_idx)
+        {
+            m_buf_main_trans.add_alpha(cloud_final_idx, x, y, 0, 0, 0, -1, 255);
+            m_buf_main_trans.add_alpha(cloud_final_idx, x, y, 50, 0, 0, -1, 127);
+        }
+        else
+            // Otherwise render it normally with full transparency
+             m_buf_main.add(cloud_final_idx, x, y);
+    }
 }
 
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,

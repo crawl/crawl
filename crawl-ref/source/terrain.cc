@@ -848,6 +848,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 #ifdef USE_TILE
     env.tile_bk_fg(dst) = env.tile_bk_fg(src);
     env.tile_bk_bg(dst) = env.tile_bk_bg(src);
+    env.tile_bk_cloud(dst) = env.tile_bk_cloud(src);
 #endif
     env.tile_flv(dst) = env.tile_flv(src);
 
