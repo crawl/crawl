@@ -299,6 +299,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_NET)
         m_buf_icons.add(TILEI_TRAP_NET, x, y);
 
+    if (fg & TILE_FLAG_WEB)
+        m_buf_icons.add(TILEI_TRAP_WEB, x, y);
+
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
