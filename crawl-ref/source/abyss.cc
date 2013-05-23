@@ -195,6 +195,10 @@ static void _abyss_erase_stairs_from(const vault_placement *vp)
 
 static bool _abyss_place_map(const map_def *mdef)
 {
+    // This is to prevent the player position from being updated by vaults
+    // until after everything is done.
+    unwind_bool gen(Generating_Level, true);
+
     const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)
         _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
@@ -214,6 +218,13 @@ static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
     return false;
 }
 
+static void _abyss_postvault_fixup()
+{
+    fixup_misplaced_items();
+    link_items();
+    env.markers.activate_all();
+}
+
 static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
 {
     // Make sure we're not about to link bad items.
@@ -223,8 +234,7 @@ static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
                                                   "abyss_rune");
 
     // Make sure the rune is linked.
-    fixup_misplaced_items();
-    link_items();
+    _abyss_postvault_fixup();
     return result;
 }
 
@@ -408,8 +418,7 @@ static bool _abyss_check_place_feat(coord_def p,
             *use_map = false;
 
             // Link the vault-placed items.
-            fixup_misplaced_items();
-            link_items();
+            _abyss_postvault_fixup();
         }
         else
             grd(p) = which_feat;
@@ -1055,6 +1064,16 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
     }
 }
 
+static dungeon_feature_type _veto_dangerous_terrain(dungeon_feature_type feat)
+{
+    if (feat == DNGN_DEEP_WATER)
+        return DNGN_SHALLOW_WATER;
+    if (feat == DNGN_LAVA)
+        return DNGN_FLOOR;
+
+    return feat;
+}
+
 static void _update_abyss_terrain(const coord_def &p,
     const map_bitmask &abyss_genlevel_mask, bool morph)
 {
@@ -1103,12 +1122,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
     // Veto dangerous terrain.
     if (you.pos() == rp)
-    {
-        if (feat == DNGN_DEEP_WATER)
-            feat = DNGN_SHALLOW_WATER;
-        if (feat == DNGN_LAVA)
-            feat = DNGN_FLOOR;
-    }
+        feat = _veto_dangerous_terrain(feat);
 
     // If the selected grid is already there, *or* if we're morphing and
     // the selected grid should have been there, do nothing.
@@ -1217,7 +1231,10 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
     dungeon_feature_type feat = grd(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
-        you.shove();
+    {
+        bool shoved = you.shove();
+        ASSERT(shoved);
+    }
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
@@ -1269,8 +1286,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
         _abyss_place_vaults(abyss_genlevel_mask);
 
         // Link the vault-placed items.
-        fixup_misplaced_items();
-        link_items();
+        _abyss_postvault_fixup();
     }
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     setup_environment_effects();
@@ -1411,7 +1427,6 @@ static void _abyss_generate_new_area()
     you.moveto(ABYSS_CENTRE);
     abyss_genlevel_mask.init(true);
     _generate_area(abyss_genlevel_mask);
-    grd(you.pos()) = DNGN_FLOOR;
     if (one_chance_in(5))
     {
         _place_feature_near(you.pos(), LOS_RADIUS,
@@ -1451,6 +1466,8 @@ retry:
     _write_abyssal_features();
     map_bitmask abyss_genlevel_mask(true);
     _abyss_apply_terrain(abyss_genlevel_mask);
+
+    grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         ASSERT(grd(*ri) > DNGN_UNSEEN);
@@ -1535,6 +1552,7 @@ void abyss_teleport(bool new_area)
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
     _abyss_generate_new_area();
     _write_abyssal_features();
+    grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
     forget_map(false);
     clear_excludes();
     more();
