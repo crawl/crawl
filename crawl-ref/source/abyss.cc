@@ -218,6 +218,13 @@ static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
     return false;
 }
 
+static void _abyss_postvault_fixup()
+{
+    fixup_misplaced_items();
+    link_items();
+    env.markers.activate_all();
+}
+
 static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
 {
     // Make sure we're not about to link bad items.
@@ -227,8 +234,7 @@ static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
                                                   "abyss_rune");
 
     // Make sure the rune is linked.
-    fixup_misplaced_items();
-    link_items();
+    _abyss_postvault_fixup();
     return result;
 }
 
@@ -412,8 +418,7 @@ static bool _abyss_check_place_feat(coord_def p,
             *use_map = false;
 
             // Link the vault-placed items.
-            fixup_misplaced_items();
-            link_items();
+            _abyss_postvault_fixup();
         }
         else
             grd(p) = which_feat;
@@ -1294,8 +1299,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
         _abyss_place_vaults(abyss_genlevel_mask);
 
         // Link the vault-placed items.
-        fixup_misplaced_items();
-        link_items();
+        _abyss_postvault_fixup();
     }
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     setup_environment_effects();
