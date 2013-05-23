@@ -28,10 +28,10 @@ run_one()
         $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:20'
     ;;
     8|abyss_rest)
-        $CRAWL -rc test/stress/abyssw.rc
+        $CRAWL -rc test/stress/abyss_short_wait.rc
     ;;
     9|abyss_walk)
-        $CRAWL -rc test/stress/abyssr.rc
+        $CRAWL -rc test/stress/abyss_short_run.rc
     ;;
     test) # Not in "all".
         $CRAWL -test
