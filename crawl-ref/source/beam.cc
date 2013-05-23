@@ -654,35 +654,16 @@ void bolt::initialise_fire()
         use_target_as_pos = true;
     }
 
-    if (range == -1)
-    {
-#ifdef DEBUG
-        if (is_tracer)
-        {
-            mpr("Tracer with range == -1, skipping.", MSGCH_ERROR);
-            return;
-        }
-
-        string item_name = item ? item->name(DESC_PLAIN, false, true) : "none";
-
-        string dbg_source_name = "unknown";
-        if (beam_source == NON_MONSTER && source == you.pos())
-            dbg_source_name = "player";
-        else if (!invalid_monster_index(beam_source))
-            dbg_source_name = menv[beam_source].name(DESC_PLAIN, true);
-
-        mprf(MSGCH_ERROR, "beam '%s' (source '%s', item '%s') has range -1; "
-                          "setting to LOS_RADIUS",
-             name.c_str(), dbg_source_name.c_str(), item_name.c_str());
-#endif
-        range = you.current_vision;
-    }
-
     ASSERT(in_bounds(source));
     ASSERT(flavour > BEAM_NONE);
     ASSERT(flavour < BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->defined());
-    ASSERT(range >= 0);
+    ASSERTM(range >= 0, "beam '%s', source '%s', item '%s'; has range -1",
+            name.c_str(),
+            ((beam_source == NON_MONSTER && source == you.pos()) ? "player"
+             : (!invalid_monster_index(beam_source)
+                ? menv[beam_source].name(DESC_PLAIN, true) : "unknown")).c_str(),
+            (item ? item->name(DESC_PLAIN, false, true) : "none").c_str());
     ASSERT(!aimed_at_feet || source == target);
 
     real_flavour = flavour;
