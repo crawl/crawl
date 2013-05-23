@@ -3793,6 +3793,9 @@ static void _debug_count_tiles()
             t = env.tile_bk_fg[i][j];
             if (found.find(t) == found.end())
                 cnt++, found[t] = true;
+            t = env.tile_bk_cloud[i][j];
+            if (found.find(t) == found.end())
+                cnt++, found[t] = true;
         }
     dprf("Unique tiles found: %d", cnt);
 # endif

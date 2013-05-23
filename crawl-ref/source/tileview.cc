@@ -40,6 +40,7 @@ void tile_new_level(bool first_time, bool init_unseen)
             {
                 env.tile_bk_fg[x][y] = 0;
                 env.tile_bk_bg[x][y] = TILE_DNGN_UNSEEN;
+                env.tile_bk_cloud[x][y] = 0;
             }
     }
 
@@ -752,12 +753,14 @@ void tile_draw_floor()
             // init tiles
             env.tile_bg(ep) = bg;
             env.tile_fg(ep) = 0;
+            env.tile_cloud(ep) = 0;
         }
 }
 
 void tile_clear_map(const coord_def& gc)
 {
     env.tile_bk_fg(gc) = 0;
+    env.tile_bk_cloud(gc) = 0;
     tiles.update_minimap(gc);
 }
 
@@ -765,6 +768,7 @@ void tile_forget_map(const coord_def &gc)
 {
     env.tile_bk_fg(gc) = 0;
     env.tile_bk_bg(gc) = 0;
+    env.tile_bk_cloud(gc) = 0;
     tiles.update_minimap(gc);
 }
 
@@ -928,13 +932,10 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     if (you.see_cell(gc))
     {
         const coord_def ep = grid2show(gc);
-        if (env.tile_fg(ep) != 0)
-            return;
-
-        env.tile_fg(ep) = tileidx_cloud(cl, disturbance);
+        env.tile_cloud(ep) = tileidx_cloud(cl, disturbance);
     }
     else
-        env.tile_bk_fg(gc) = tileidx_cloud(cl, disturbance);
+        env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
 
     if (env.map_knowledge(gc).item())
         _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
@@ -985,8 +986,6 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_invisible_monster(gc);
     else if (cell.monsterinfo())
         _tile_place_monster(gc, *cell.monsterinfo());
-    else if (cell.cloud() != CLOUD_NONE)
-        _tile_place_cloud(gc, *cell.cloudinfo());
     else if (cell.item())
     {
         if (feat_is_stair(cell.feat()))
@@ -996,6 +995,10 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     }
     else
         env.tile_bk_fg(gc) = 0;
+
+    // Always place clouds now they have their own layer
+    if (cell.cloud() != CLOUD_NONE)
+        _tile_place_cloud(gc, *cell.cloudinfo());
 }
 
 void tile_wizmap_terrain(const coord_def &gc)

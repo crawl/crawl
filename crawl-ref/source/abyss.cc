@@ -641,6 +641,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
 #ifdef USE_TILE
     env.tile_bk_fg(p)   = 0;
     env.tile_bk_bg(p)   = 0;
+    env.tile_bk_cloud(p)= 0;
 #endif
     tile_clear_flavour(p);
     tile_init_flavour(p);

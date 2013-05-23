@@ -87,6 +87,8 @@ public:
 
     void add(tileidx_t idx, int x, int y, int z = 0, bool submerged = false,
              bool ghost = false, int ox = 0, int oy = 0, int ymax = -1);
+    void add_alpha(tileidx_t idx, int x, int y, int z,
+                   int ox, int oy, int ymax, int alpha);
 
     void draw() const;
     void clear();
