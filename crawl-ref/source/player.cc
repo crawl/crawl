@@ -6720,8 +6720,11 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 
     // Either this, or the actual rotting message should probably
     // be changed so that they're easier to tell apart. -- bwr
-    mprf(MSGCH_WARN, "You feel your flesh %s away!",
-         (rotting > 0 || immediate) ? "rotting" : "start to rot");
+    if (!quiet)
+    {
+        mprf(MSGCH_WARN, "You feel your flesh %s away!",
+             (rotting > 0 || immediate) ? "rotting" : "start to rot");
+    }
 
     rotting += amount;
 

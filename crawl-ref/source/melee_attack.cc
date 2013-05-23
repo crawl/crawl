@@ -2252,7 +2252,14 @@ void melee_attack::rot_defender(int amount, int immediate)
 {
     if (defender->rot(attacker, amount, immediate, true))
     {
-        if (defender->is_monster() && defender_visible)
+        // XXX: why is this message separate here?
+        if (defender->is_player())
+        {
+            special_damage_message =
+                make_stringf("You feel your flesh %s away!",
+                             immediate > 0 ? "rotting" : "start to rot");
+        }
+        else if (defender->is_monster() && defender_visible)
         {
             special_damage_message =
                 make_stringf(
