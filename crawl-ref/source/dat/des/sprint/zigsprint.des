@@ -713,37 +713,37 @@ KFEAT:  o = altar_beogh
 KFEAT:  p = altar_jiyva
 KFEAT:  q = altar_fedhas
 KFEAT:  r = altar_cheibriados
-KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
+KITEM:    B = plate armour race:none mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
               storm dragon armour mundane not_cursed ident:all plus:5, \
               gold dragon armour mundane not_cursed ident:all plus:5, \
               crystal plate armour mundane not_cursed ident:all plus:5
-KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
-              shield mundane not_cursed ident:all plus:3, \
-              large shield mundane not_cursed ident:all plus:3
-KITEM:    D = broad axe mundane not_cursed ident:all plus:5 plus2:5, \
-              battleaxe mundane not_cursed ident:all plus:5 plus2:5, \
-              executioner's axe mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    C = buckler race:none mundane not_cursed ident:all plus:3, \
+              shield race:none mundane not_cursed ident:all plus:3, \
+              large race:none shield mundane not_cursed ident:all plus:3
+KITEM:    D = broad axe race:none mundane not_cursed ident:all plus:5 plus2:5, \
+              battleaxe race:none mundane not_cursed ident:all plus:5 plus2:5, \
+              executioner's axe race:none mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    E = demon trident mundane not_cursed ident:all plus:5 plus2:5, \
-              bardiche mundane not_cursed ident:all plus:5 plus2:5
+              bardiche race:none mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    F = demon whip mundane not_cursed ident:all plus:5 plus2:5, \
-              great mace mundane not_cursed ident:all plus:5 plus2:5, \
+              great mace race:none mundane not_cursed ident:all plus:5 plus2:5, \
               giant club mundane not_cursed ident:all plus:5 plus2:5, \
               giant spiked club mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    G = dagger mundane not_cursed ident:all plus:5 plus2:5, \
-              sabre mundane not_cursed ident:all plus:5 plus2:5, \
-              quick blade mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    G = dagger race:none mundane not_cursed ident:all plus:5 plus2:5, \
+              sabre race:none mundane not_cursed ident:all plus:5 plus2:5, \
+              quick blade race:none mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    H = demon blade mundane not_cursed ident:all plus:5 plus2:5, \
-              double sword mundane not_cursed ident:all plus:5 plus2:5, \
-              great sword mundane not_cursed ident:all plus:5 plus2:5, \
-              triple sword mundane not_cursed ident:all plus:5 plus2:5
+              double sword race:none mundane not_cursed ident:all plus:5 plus2:5, \
+              great sword race:none mundane not_cursed ident:all plus:5 plus2:5, \
+              triple sword race:none mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    I = lajatang mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    J = crossbow mundane not_cursed ident:all plus:5 plus2:5, \
+KITEM:    J = crossbow race:none mundane not_cursed ident:all plus:5 plus2:5, \
               bolt q:1000 mundane ident:all, \
-              bow mundane not_cursed ident:all plus:5 plus2:5, \
+              bow race:none mundane not_cursed ident:all plus:5 plus2:5, \
           arrow q:1000 mundane ident:all, \
-              longbow mundane not_cursed ident:all plus:5 plus2:5, \
+              longbow race:none mundane not_cursed ident:all plus:5 plus2:5, \
               sling mundane not_cursed ident:all plus:5 plus2:5, \
               sling bullet q:1000 mundane ident:all
 KITEM:    K = potion of curing q:9 ident:all, \
