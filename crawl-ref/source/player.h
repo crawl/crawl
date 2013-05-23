@@ -1011,6 +1011,7 @@ bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
+void player_open_door(coord_def doorpos, bool check_confused);
 
 void dec_disease_player(int delay);
 
