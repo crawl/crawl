@@ -531,11 +531,12 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
 
-void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
+void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc)
 {
     // Player memory.
     tileidx_t mem_fg = env.tile_bk_fg(gc);
     tileidx_t mem_bg = env.tile_bk_bg(gc);
+    tileidx_t mem_cloud = env.tile_bk_cloud(gc);
 
     // Detected info is just stored in map_knowledge and doesn't get
     // written to what the player remembers.  We'll feather that in here.
@@ -559,6 +560,8 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
         *fg = tileidx_item(*cell.item());
     else
         *fg = mem_fg;
+
+    *cloud = mem_cloud;
 }
 
 static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
@@ -4560,6 +4563,8 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
         ch += tile_main_count(ch);
     }
 
+    // XXX: Should be no need for TILE_FLAG_FLYING anymore since clouds are
+    // drawn in a separate layer but I'll leave it for now in case anything changes --mumra
     return (ch | TILE_FLAG_FLYING);
 }
 
@@ -5526,7 +5531,7 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
     return tile;
 }
 
-string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
+string tile_debug_string(tileidx_t fg, tileidx_t bg, tileidx_t cloud, char prefix)
 {
     tileidx_t fg_idx = fg & TILE_FLAG_MASK;
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;

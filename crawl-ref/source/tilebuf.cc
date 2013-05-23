@@ -241,6 +241,13 @@ void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged
         m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha_top, alpha_top);
 }
 
+// Adds a tile with a specified alpha value
+void SubmergedTileBuffer::add_alpha(tileidx_t idx, int x, int y, int z,
+                                    int ox, int oy, int ymax, int alpha)
+{
+    m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha, alpha);
+}
+
 void SubmergedTileBuffer::draw() const
 {
     m_below_water.draw();
