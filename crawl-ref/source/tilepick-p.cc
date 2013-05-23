@@ -15,6 +15,7 @@
 #include "tiledoll.h"
 #include "tilepick.h"
 #include "transform.h"
+#include "traps.h"
 
 static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 {
@@ -553,7 +554,12 @@ tileidx_t tileidx_player()
         ch |= TILE_FLAG_FLYING;
 
     if (you.attribute[ATTR_HELD])
-        ch |= TILE_FLAG_NET;
+    {
+        if (get_trapping_net(you.pos()) == NON_ITEM)
+            ch |= TILE_FLAG_WEB;
+        else
+            ch |= TILE_FLAG_NET;
+    }
 
     if (you.duration[DUR_POISONING])
         ch |= TILE_FLAG_POISON;

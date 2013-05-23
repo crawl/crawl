@@ -20,6 +20,10 @@ cursor CURSOR
 cursor_red CURSOR2
 cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
+%sdir dngn/traps
+%alpha 128
+cobweb_none_0 TRAP_WEB
+%resetcol
 %rim 1
 %sdir misc/icons
 heart HEART
