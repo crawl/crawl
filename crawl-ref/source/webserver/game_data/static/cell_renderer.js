@@ -651,6 +651,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             if (fg.NET)
                 this.draw_icon(icons.TRAP_NET, x, y);
 
+            if (fg.WEB)
+                this.draw_icon(icons.TRAP_WEB, x, y);
+
             if (fg.S_UNDER)
                 this.draw_icon(icons.SOMETHING_UNDER, x, y);
 
