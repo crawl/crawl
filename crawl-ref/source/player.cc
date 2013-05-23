@@ -7677,7 +7677,7 @@ void count_action(caction_type type, int subtype)
     you.action_count[pair][you.experience_level - 1]++;
 }
 
-static void _player_open_door(coord_def doorpos, bool check_confused)
+void _player_open_door(coord_def doorpos, bool check_confused, bool force)
 {
     // Finally, open the closed door!
     set<coord_def> all_door = connected_doors(doorpos);
@@ -7693,7 +7693,7 @@ static void _player_open_door(coord_def doorpos, bool check_confused)
     if (!door_desc_noun.empty())
         noun = door_desc_noun.c_str();
 
-    if (!(check_confused && you.confused()))
+    if (!(check_confused && you.confused() || force))
     {
         string door_open_prompt =
             env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
@@ -7749,7 +7749,7 @@ static void _player_open_door(coord_def doorpos, bool check_confused)
     string door_open_verb = env.markers.property_at(doorpos, MAT_ANY,
                                                     "door_verb_open");
 
-    if (you.berserk())
+    if (you.berserk() || you.form == TRAN_BOULDER)
     {
         // XXX: Better flavour for larger doors?
         if (silenced(you.pos()))

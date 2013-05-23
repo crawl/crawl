@@ -995,6 +995,6 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 void count_action(caction_type type, int subtype = 0);
 
-static void _player_open_door(coord_def doorpos, bool check_confused);
+void _player_open_door(coord_def doorpos, bool check_confused, bool force = false);
 
 #endif
