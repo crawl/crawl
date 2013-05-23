@@ -605,13 +605,16 @@ void item_was_destroyed(const item_def &item, int cause)
 {
     if (item.props.exists("destroy_xp"))
         gain_exp(item.props["destroy_xp"].get_int());
-    if (item_is_spellbook(item) && cause == MHITYOU)
-        destroy_spellbook(item);
-    if (is_deck(item) && cause == MHITYOU)
+    if (cause == MHITYOU)
     {
-        did_god_conduct(DID_DESTROY_DECK,
-                        3 * deck_rarity(item) *
-                        (origin_is_god_gift(item) ? 2 : 1));
+        if (item_is_spellbook(item))
+            destroy_spellbook(item);
+        else if (is_deck(item))
+        {
+            did_god_conduct(DID_DESTROY_DECK,
+                            3 * deck_rarity(item) *
+                            (origin_is_god_gift(item) ? 2 : 1));
+        }
     }
     _handle_gone_item(item);
     xom_check_destroyed_item(item, cause);
@@ -1974,9 +1977,6 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p, int agent,
 
     if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
-        if (item_is_spellbook(item))
-            destroy_spellbook(item);
-
         item_was_destroyed(item, agent);
 
         return true;
