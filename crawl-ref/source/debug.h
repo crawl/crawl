@@ -52,7 +52,8 @@
 
 #ifdef ASSERTS
 
-NORETURN void AssertFailed(const char *expr, const char *file, int line);
+NORETURN void AssertFailed(const char *expr, const char *file, int line,
+                           const char *text = "", ...);
 
 #ifdef __clang__
 # define WARN_PUSH _Pragma("GCC diagnostic push")
@@ -77,9 +78,18 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line);
         WARN_POP                                        \
     } while (false)
 
+#define ASSERTM(p,text,...)                             \
+    do {                                                \
+        WARN_PUSH                                       \
+        IGNORE_ASSERT_WARNINGS                          \
+        if (!(p)) AssertFailed(#p, __FILE__, __LINE__, text, __VA_ARGS__); \
+        WARN_POP                                        \
+    } while (false)
+
 #else
 
 #define ASSERT(p)       ((void) 0)
+#define ASSERTM(p,text,...) ((void) 0)
 
 #endif
 
