@@ -304,6 +304,19 @@ Building on Windows (MSVC)
   slowly). Note: the Release build can still be debugged using the Visual
   Studio debugger.
 
+* Better support for Python (for the webserver project) and Lua (for the dat
+  project) can be installed with these extensions:
+
+  Python Tools for Visual Studio
+  http://pytools.codeplex.com/releases
+
+  Ports of VsLua to Visual Studio 2012
+  http://www.dbfinteractive.com/forum/index.php?topic=5873.0
+  http://pouet.net/topic.php?which=9087
+
+  Try at your own risk, but the first one has been tested and found to be
+  effective.
+
 Building Tiles versions
 -----------------------
 
