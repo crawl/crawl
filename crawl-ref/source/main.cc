@@ -2844,6 +2844,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SENTINEL_MARK, delay,
                           "The sentinel's mark upon you fades away.");
 
+    _decrement_a_duration(DUR_WEAK, delay,
+                          "Your attacks no longer feel as feeble.");
+
     _decrement_a_duration(DUR_SICKENING, delay);
 
     _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);

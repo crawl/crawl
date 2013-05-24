@@ -5200,6 +5200,15 @@ void monster::put_to_sleep(actor *attacker, int strength)
     add_ench(ENCH_SLEEPY);
 }
 
+void monster::weaken(actor *attacker, int pow)
+{
+    if (!has_ench(ENCH_WEAK))
+        simple_monster_message(this, " looks weaker.");
+
+    add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
+                         (pow * 10 + random2(pow * 10 + 30))));
+}
+
 void monster::check_awaken(int)
 {
     // XXX

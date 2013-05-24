@@ -1785,6 +1785,9 @@ int melee_attack::player_apply_final_multipliers(int damage)
     if (you.form == TRAN_STATUE)
         damage = div_rand_round(damage * 3, 2);
 
+    if (you.duration[DUR_WEAK])
+        damage = div_rand_round(damage * 3, 4);
+
     return damage;
 }
 
@@ -5591,6 +5594,9 @@ int melee_attack::calc_damage()
             dprf(DIAG_COMBAT, "%s frenzy damage: %d->%d",
                  attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
         }
+
+        if (as_mon->has_ench(ENCH_WEAK))
+            damage = damage * 2 / 3;
 
         if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
             damage = div_rand_round(damage * 9, 10);

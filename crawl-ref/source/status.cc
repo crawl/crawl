@@ -135,6 +135,8 @@ static duration_def duration_data[] =
       RED, "Flay", "flayed", "You are covered in terrible wounds." },
     { DUR_RETCHING, true,
       RED, "Retch", "retching", "You are retching with violent nausea." },
+    { DUR_WEAK, false,
+      RED, "Weak", "weakened", "Your attacks are enfeebled." },
 };
 
 static int duration_index[NUM_DURATIONS];

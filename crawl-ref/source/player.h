@@ -592,6 +592,7 @@ public:
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
+    void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
     bool drain_exp(actor *, const char *aux = NULL, bool quiet = false,
                    int pow = 3);

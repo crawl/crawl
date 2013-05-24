@@ -4186,6 +4186,7 @@ void display_char_status()
         DUR_WATER_HOLD,
         DUR_FLAYED,
         DUR_RETCHING,
+        DUR_WEAK,
     };
 
     status_info inf;
@@ -7617,6 +7618,16 @@ bool player::made_nervous_by(const coord_def &p)
                 return true;
     }
     return false;
+}
+
+void player::weaken(actor *attacker, int pow)
+{
+    if (!duration[DUR_WEAK])
+        mpr("You feel yourself grow feeble.", MSGCH_WARN);
+    else
+        mpr("You feel as though you will be weak longer.", MSGCH_WARN);
+
+    you.increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
 /*

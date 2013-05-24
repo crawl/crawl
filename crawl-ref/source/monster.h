@@ -436,6 +436,7 @@ public:
 
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
+    void weaken(actor *attacker, int pow);
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "");
 

@@ -220,6 +220,7 @@ public:
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength) = 0;
+    virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool damage_inventory = true,
                                    bool slow_cold_blood = true) = 0;

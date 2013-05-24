@@ -1495,6 +1495,7 @@ enum duration_type
     DUR_WATER_HOLD_IMMUNITY,
     DUR_FLAYED,
     DUR_RETCHING,
+    DUR_WEAK,
     NUM_DURATIONS
 };
 
@@ -1589,6 +1590,7 @@ enum enchant_type
     ENCH_FLAYED,
     ENCH_HAUNTING,
     ENCH_RETCHING,
+    ENCH_WEAK,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
