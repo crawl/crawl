@@ -3949,21 +3949,21 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     if ((thrower == KILL_YOU_MISSILE || thrower == KILL_YOU)
         && !is_harmless(mon))
     {
-        if (friend_info.count == 1 && !friend_info.dont_stop
-            || foe_info.count == 1 && !foe_info.dont_stop)
+        if (!friend_info.dont_stop || !foe_info.dont_stop)
         {
             const bool autohit_first = (hit == AUTOMATIC_HIT);
-            if (stop_attack_prompt(mon, true, target, autohit_first))
+            bool prompted = false;
+
+            if (stop_attack_prompt(mon, true, target, autohit_first, &prompted))
             {
                 beam_cancelled = true;
                 finish_beam();
             }
-            else
+
+            if (prompted)
             {
-                if (friend_info.count == 1)
-                    friend_info.dont_stop = true;
-                else if (foe_info.count == 1)
-                    foe_info.dont_stop = true;
+                friend_info.dont_stop = true;
+                foe_info.dont_stop = true;
             }
         }
     }

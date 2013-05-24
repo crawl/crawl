@@ -2322,8 +2322,12 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first)
+                        coord_def beam_target, bool autohit_first,
+                        bool *prompted)
 {
+    if (prompted)
+        *prompted = false;
+
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
 
@@ -2364,6 +2368,9 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
     snprintf(info, INFO_SIZE, "Really %s%s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());
+
+    if (prompted)
+        *prompted = true;
 
     if (yesno(info, false, 'n'))
         return false;
