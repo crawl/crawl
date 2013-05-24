@@ -8,3 +8,4 @@ compflag.h
 *.opensdf
 *.sdf
 *.vcxproj.user
+*.csproj.user
