@@ -8,6 +8,7 @@
 : require("dlua/layout/procedural_complex.lua")
 : require("dlua/layout/procedural_transform.lua")
 : require("dlua/layout/zonify.lua")
+: require("dlua/layout/theme.lua")
 
 {{
 
@@ -206,6 +207,7 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   procedural.render_map(_G, func, function(v) return (v < 1 and '.' or 'x') end)
   zonify.map_fill_zones(_G, 1, 'x')
 
+  if cave then theme.D.caves(_G) end
 }}
 MAP
 ENDMAP
