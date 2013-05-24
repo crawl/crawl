@@ -34,6 +34,12 @@
       <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Content>
     <Content Include="..\rltiles\*.txt">
+      <Link>rltiles\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Content>
+    <Content Include="..\..\docs\**\*.*">
+      <Link>docs\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Content>
+    <Content Include="..\..\*.*">
       <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Content>
   </ItemGroup>
