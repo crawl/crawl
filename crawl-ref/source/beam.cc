@@ -2106,7 +2106,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     if (who && who->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
-    return (new_pois.degree > old_pois.degree);
+    return (new_pois.duration > old_pois.duration);
 }
 
 // Actually poisons, rots, and/or slows a monster with miasma (with
