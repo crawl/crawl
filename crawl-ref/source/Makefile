@@ -1397,10 +1397,7 @@ doxygen-all:
 #
 ifndef NO_INLINE_DEPGEN
 # See info node: (gcc) Preprocessor Options
-INLINE_DEPGEN_CFLAGS += -MMD
-ifndef PCH
-INLINE_DEPGEN_CFLAGS += -fpch-deps
-endif
+INLINE_DEPGEN_CFLAGS = -MMD
 endif
 
 $(DEPS): %.d: %.cc
@@ -1420,7 +1417,7 @@ endif
 # Plain old compilation
 #
 
-$(OBJECTS:%.o=%.cc): $(CONTRIB_LIBS) | $(CC_DEP)
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
