@@ -2962,7 +2962,7 @@ intelligence.
 orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
-a venom most potent, one that attacks not only the body but the mind as well.
+a potent venom that can render its victims weak and their blows feeble.
 %%%%
 orange demon:quote
 

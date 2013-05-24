@@ -1611,7 +1611,9 @@ reach_type monster_info::reach_range() const
                                              ? base_type : type);
     ASSERT(e);
 
-    reach_type range = e->attack[0].flavour == AF_REACH ? REACH_TWO : REACH_NONE;
+    reach_type range = e->attack[0].flavour == AF_REACH
+                       || e->attack[0].type == AT_REACH_STING
+                          ? REACH_TWO : REACH_NONE;
 
     const item_def *weapon = inv[MSLOT_WEAPON].get();
     if (weapon)
