@@ -1605,9 +1605,9 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
             }
         }
 
-        if (item.base_type == OBJ_CORPSES &&
-            item.sub_type == CORPSE_BODY &&
-            mons_skeleton(item.mon_type))
+        if (item.base_type == OBJ_CORPSES
+            && item.sub_type == CORPSE_BODY
+            && mons_skeleton(item.mon_type))
         {
             turn_corpse_into_skeleton(item);
         }
