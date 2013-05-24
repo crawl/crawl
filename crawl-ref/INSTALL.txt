@@ -125,8 +125,8 @@ apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
 with it you don't have a need for the bundled "contribs".
 
 If you are going to be rebuilding after doing small changes a lot, it is
-recommended that you also install and configure ccache:
-apt-get install ccache
+recommended that you also install and configure ccache and binutils-gold:
+apt-get install ccache binutils-gold
 less /usr/share/doc/ccache/README.Debian
 
 
