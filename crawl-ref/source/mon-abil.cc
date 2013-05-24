@@ -21,6 +21,7 @@
  #include "tiledef-dngn.h"
  #include "tilepick.h"
 #endif
+#include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "itemprop.h"
@@ -2028,6 +2029,43 @@ bool lost_soul_spectralize(monster* mons)
     return false;
 }
 
+static bool _swoop_attack(monster* mons, actor* defender)
+{
+    coord_def target = defender->pos();
+
+    bolt tracer;
+    tracer.source = mons->pos();
+    tracer.target = target;
+    tracer.is_tracer = true;
+    tracer.range = LOS_RADIUS;
+    tracer.fire();
+
+    for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
+    {
+        if (tracer.path_taken[j] == target)
+        {
+            if (tracer.path_taken.size() > j + 1)
+            {
+                if (monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
+                    && !actor_at(tracer.path_taken[j+1]))
+                {
+                    if (you.can_see(mons))
+                    {
+                        mprf("%s swoops through the air toward %s!",
+                             mons->name(DESC_THE).c_str(),
+                             defender->name(DESC_THE).c_str());
+                    }
+                    mons->move_to_pos(tracer.path_taken[j+1]);
+                    fight_melee(mons, defender);
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -3775,6 +3813,30 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 used = true;
     }
     break;
+
+    case MONS_BLUE_DEVIL:
+        if (mons->confused() || !mons->can_see(mons->get_foe()))
+            break;
+
+        if (mons->foe_distance() < 5 && mons->foe_distance() > 1)
+        {
+            if (one_chance_in(4))
+            {
+                if (mons->props.exists("swoop_cooldown")
+                    && (you.elapsed_time < mons->props["swoop_cooldown"].get_int()))
+                {
+                    break;
+                }
+
+                if (_swoop_attack(mons, mons->get_foe()))
+                {
+                    used = true;
+                    mons->props["swoop_cooldown"].get_int() = you.elapsed_time
+                                                              + 40 + random2(51);
+                }
+            }
+        }
+        break;
 
     default:
         break;
