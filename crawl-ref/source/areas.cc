@@ -201,12 +201,10 @@ static void _update_agrid()
 
     if (you.char_direction == GDT_ASCENDING && !you.pos().origin())
     {
-        ASSERT(env.orb_pos == you.pos());
-
         const int r = 5;
-        _agrid_centres.push_back(area_centre(AREA_ORB, env.orb_pos, r));
-        los_glob los(env.orb_pos, LOS_DEFAULT);
-        for (radius_iterator ri(env.orb_pos, r, C_CIRCLE, &los);
+        _agrid_centres.push_back(area_centre(AREA_ORB, you.pos(), r));
+        los_glob los(you.pos(), LOS_DEFAULT);
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE, &los);
              ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_ORB);

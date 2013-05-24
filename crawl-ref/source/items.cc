@@ -1656,6 +1656,37 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         return retval;
     }
+    // The Orb is also handled specially.
+    if (item_is_orb(it))
+    {
+        // Take a note!
+        _check_note_item(it);
+
+        mpr("You pick up the Orb of Zot!", MSGCH_ORB);
+        you.char_direction = GDT_ASCENDING;
+        burden_change();
+
+        env.orb_pos = you.pos(); // can be wrong in wizmode
+        orb_pickup_noise(you.pos(), 30);
+
+        mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
+
+        if (you_worship(GOD_CHEIBRIADOS))
+            simple_god_message(" tells them not to hurry.");
+
+        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
+
+        xom_is_stimulated(200, XM_INTRIGUED);
+        invalidate_agrid(true);
+
+        dungeon_events.fire_position_event(
+            dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());
+
+        dec_mitm_item_quantity(obj, quant_got);
+        you.turn_is_over = true;
+
+        return retval;
+    }
 
     const int unit_mass = item_mass(it);
     if (quant_got > it.quantity || quant_got <= 0)
@@ -1744,27 +1775,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     int freeslot = find_free_slot(it);
     ASSERT(freeslot >= 0 && freeslot < ENDOFPACK);
     ASSERT(!you.inv[freeslot].defined());
-
-    if (it.base_type == OBJ_ORBS
-        && you.char_direction == GDT_DESCENDING)
-    {
-        // Take a note!
-        _check_note_item(it);
-
-        env.orb_pos = you.pos(); // can be wrong in wizmode
-        orb_pickup_noise(you.pos(), 30);
-
-        mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
-
-        if (you_worship(GOD_CHEIBRIADOS))
-            simple_god_message(" tells them not to hurry.");
-
-        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
-
-        you.char_direction = GDT_ASCENDING;
-        xom_is_stimulated(200, XM_INTRIGUED);
-        invalidate_agrid(true);
-    }
 
     coord_def p = it.pos;
     // If moving an item directly from a monster to the player without the
@@ -2128,12 +2138,6 @@ bool drop_item(int item_dropped, int quant_drop)
         if (remove_ring(item_dropped, true))
             start_delay(DELAY_DROP_ITEM, 1, item_dropped, 1);
 
-        return false;
-    }
-
-    if (you.inv[item_dropped].base_type == OBJ_ORBS)
-    {
-        mpr("You don't feel like leaving the orb behind!");
         return false;
     }
 
