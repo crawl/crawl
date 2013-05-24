@@ -4609,7 +4609,7 @@ bool mons_is_recallable(actor* caller, monster* targ)
     }
     // Monster recall requires same attitude and at least normal intelligence
     else if (mons_intel(targ) < I_NORMAL
-             || targ->attitude != caller->as_monster()->attitude)
+             || !mons_aligned(targ, caller->as_monster()))
     {
         return false;
     }
