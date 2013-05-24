@@ -401,11 +401,8 @@ void up_stairs(dungeon_feature_type force_stair)
         you.depth = 0;
         mpr("You have escaped!");
 
-        for (int i = 0; i < ENDOFPACK; i++)
-        {
-            if (you.inv[i].defined() && you.inv[i].base_type == OBJ_ORBS)
-                ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
-        }
+        if (player_has_orb())
+            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
 
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LEAVING);
     }

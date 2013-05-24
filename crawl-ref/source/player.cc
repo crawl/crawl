@@ -2895,7 +2895,9 @@ int burden_change(void)
 {
     const burden_state_type old_burdenstate = you.burden_state;
 
-    you.burden = 0;
+    // XXX: the 600 here is the weight of the Orb.
+    // TODO: make this use a dummy item or similar?
+    you.burden = (you.char_direction == GDT_ASCENDING) ? 600 : 0;
 
     for (int bu = 0; bu < ENDOFPACK; bu++)
     {
