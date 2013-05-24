@@ -1395,7 +1395,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     // Held
     if (you.attribute[ATTR_HELD])
     {
-        mprf("You can't use stairs while %s.", held_status());
+        mprf("You can't do that while %s.", held_status());
         return false;
     }
 
