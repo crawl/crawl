@@ -4985,7 +4985,7 @@ static monsterentry mondata[] = {
     MONS_BLUE_DEVIL, '4', BLUE, "blue devil",
     M_NO_FLAGS,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
-    0, 10, MONS_BLUE_DEVIL, MONS_BLUE_DEVIL, MH_DEMONIC, -5,
+    0, 13, MONS_BLUE_DEVIL, MONS_BLUE_DEVIL, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     14, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,

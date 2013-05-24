@@ -984,8 +984,9 @@ A greater demon, wreathed in snow and lightning.
 %%%%
 blue devil
 
-A peculiar, horned humanoid figure originating from some frigid hell. It is
-repulsed by fire and flames.
+A muscular horned humanoid figure originating from some frigid hell. It swoops
+through the air on powerful wings, taking sadistic joy from harrying those who
+would try to flee its grasp.
 %%%%
 blue devil:quote
 
