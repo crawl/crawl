@@ -1407,7 +1407,9 @@ $(DEPS): %.d: %.cc
 ifdef PCH
 -include AppHdr.h.d
 %.gch: % .cflags $(CONTRIB_LIBS)
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+# This needs -MD, not -MMD, lest we be haunted by the ghosts of stale
+# system headers.
+	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -MD -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
