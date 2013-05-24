@@ -194,6 +194,8 @@ private:
                                      bool needs_bite_msg = false,
                                      int reduction = 1);
     bool _vamp_wants_blood_from_monster(const monster* mon);
+
+    bool can_reach();
 };
 
 #endif

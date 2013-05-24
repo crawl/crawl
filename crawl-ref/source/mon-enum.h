@@ -57,6 +57,7 @@ enum attack_type
     AT_SNAP,
     AT_SPLASH,
     AT_POUNCE,
+    AT_REACH_STING,
     AT_CHERUB,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
@@ -111,6 +112,7 @@ enum attack_flavour
     AF_DRAIN_SPEED,
     AF_VULN,
     AF_PLAGUE,
+    AF_WEAKNESS_POISON
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

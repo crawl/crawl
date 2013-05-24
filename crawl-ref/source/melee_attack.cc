@@ -192,12 +192,19 @@ static bool _conduction_affected(const coord_def &pos)
     return feat_is_water(grd(pos)) && act && act->ground_level();
 }
 
+bool melee_attack::can_reach()
+{
+    return ((attk_type == AT_HIT && weapon && weapon_reach(*weapon))
+            || attk_flavour == AF_REACH
+            || attk_type == AT_REACH_STING);
+}
+
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
-    if (!adjacent(attacker->pos(), defender->pos()) && attk_type != AT_HIT
-        && attk_flavour != AF_REACH || attk_type == AT_SHOOT
-       || attk_type == AT_CONSTRICT && !attacker->can_constrict(defender))
+    if ((!adjacent(attacker->pos(), defender->pos()) && !can_reach())
+        || attk_type == AT_SHOOT
+        || attk_type == AT_CONSTRICT && !attacker->can_constrict(defender))
     {
         --effective_attack_number;
 
@@ -1088,6 +1095,7 @@ void melee_attack::adjust_noise()
         case AT_STING:
         case AT_SPORE:
         case AT_ENGULF:
+        case AT_REACH_STING:
             noise_factor = 75;
             break;
 
@@ -4262,7 +4270,8 @@ string melee_attack::mons_attack_verb()
         "trunk-slap",
         "snap closed at",
         "splash",
-        "pounce on"
+        "pounce on",
+        "sting",
     };
 
     ASSERT(attk_type < (int)ARRAYSZ(attack_types));
@@ -4278,7 +4287,7 @@ string melee_attack::mons_attack_desc()
     int dist = (attacker->pos() - defender->pos()).abs();
     if (dist > 2)
     {
-        ASSERT(attk_flavour == AF_REACH || weapon && weapon_reach(*weapon));
+        ASSERT(can_reach());
         ret = " from afar";
     }
 
@@ -4880,6 +4889,14 @@ void melee_attack::mons_apply_attack_flavour()
                 }
                 defender->as_monster()->add_ench(ENCH_RETCHING);
             }
+        }
+        break;
+
+    case AF_WEAKNESS_POISON:
+        if (defender->poison(attacker, 1))
+        {
+            if (coinflip())
+                defender->weaken(attacker, 12);
         }
         break;
     }
