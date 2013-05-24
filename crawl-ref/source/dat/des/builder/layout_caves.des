@@ -8,6 +8,7 @@
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/hyper.lua")
 : require("dlua/layout/hyper_caves.lua")
+: require("dlua/layout/theme.lua")
 
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
@@ -89,6 +90,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_caves
   end
 
   zonify.map_fill_zones(_G, 1, 'x')
+
+  theme.D.caves(_G)
 }}
 
 # The premise here is we pick a random shape function and apply cavelike edges.
@@ -200,8 +203,11 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
   end
   local fdraw = procedural.add(shape,procedural.border{padding=5},fcave)
   local limit = util.random_range_real(0.65,0.9)
+
   procedural.render_map(_G,fdraw,function(value) return value < limit and '.' or 'x' end)
   zonify.map_fill_zones(_G, 1)
+
+  theme.D.caves(_G)
 }}
 
 # Use polar inverse on a noise function to create corridors that tail off in size.
@@ -236,9 +242,9 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
   fcaves = procedural.add(fcaves,procedural.mul(limit,procedural.border{padding=border,margin=margin}))
 
   procedural.render_map(_G,fcaves,function(value) return value < limit and '.' or 'x' end)
-
   zonify.map_fill_zones(_G, 1)
 
+  theme.D.caves(_G)
 }}
 
 # Intended as a series of interconnected roughly geometrically-shaped rooms
@@ -346,6 +352,7 @@ TAGS: no_hmirror no_vmirror chance_d layout_type_cave_town
     }
   })
   zonify.grid_fill_zones(1,"rock_wall")
+  theme.D.caves(_G)
 }}
 MAP
 ENDMAP
