@@ -994,7 +994,7 @@ LUAFN(dgn_connect_adjacent_rooms)
 {
     LINES(ls, 1, lines);
 
-    TABLE_STR(ls, wall, "x");
+    TABLE_STR(ls, wall, "xcvb");
     TABLE_STR(ls, floor, ".");
     TABLE_CHAR(ls, replace, '.');
     TABLE_INT(ls, max, 1);
