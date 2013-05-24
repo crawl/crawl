@@ -6,6 +6,7 @@
 : require("dlua/layout/procedural.lua")
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/omnigrid.lua")
+: require("dlua/layout/theme.lua")
 
 {{
   -- TODO: Also used in layout_grids, maybe move to a library?
@@ -65,6 +66,8 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 
   local bounds = padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+
+  local room_materials = crawl.one_chance_in(3)
 
   -- Setup all the callbacks for weighting different selections
   -- during grid connect-up
@@ -141,6 +144,10 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
     max_iterations = 100,
     group_weight = wgroup, cell_weight = wcell, border_weight = wbord,
     style_func = function(border,cell,groups,count)
+      -- Maybe pick a random material for the group this cell is part of
+      if room_materials and cell.group.wall_type == nil then
+        cell.group.wall_type = theme.room_material()
+      end
       return "internal"
     end }
 
@@ -159,7 +166,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
     end
     if has_any then
       -- Draw container wall
-      cell.fill = 'x'
+      cell.fill = cell.group.wall_type or 'x'
       fill_area(cell)
       -- Carve out insides
       fill_area{x1 = cell.x1+1, x2 = cell.x2-1, y1 = cell.y1 + 1, y2 = cell.y2 - 1, fill = '.' }
@@ -212,6 +219,10 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 
   -- Fill disconnects
   zonify.map_fill_zones(_G, 1, 'x')
+
+  if not room_materials then
+    theme.level_material(_G)
+  end
 }}
 
 ##############################################################

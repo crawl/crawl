@@ -21,7 +21,7 @@ function theme.D.caves(e, allow_crystal)
 end
 
 -- Maybe convert rock to a random material across the whole level
-function theme.level_material(_G)
+function theme.level_material(e)
   if not you.in_branch("Lair") and not you.in_branch("Zot")
     and not you.in_branch("Dis")
     and you.absdepth() >= 4 and crawl.one_chance_in(20) then

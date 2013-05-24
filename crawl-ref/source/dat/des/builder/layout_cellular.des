@@ -6,6 +6,7 @@
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/omnigrid.lua")
 : require("dlua/layout/layout.lua")
+: require("dlua/layout/theme.lua")
 
 {{
   -- Counts adjacent tiled groups.
@@ -36,7 +37,7 @@
   -- Renders a room cell in a city
   function render_room(e,cell,open_small)
     -- Start with a hollow box
-    e.fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='x' }
+    e.fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill = cell.group.room_type or 'x' }
     e.fill_area{x1=cell.x1+1, y1=cell.y1+1, x2=cell.x2-1, y2=cell.y2-1, fill='.' }
     -- Loop through borders and carve them
     for n,b in ipairs(cell.borders) do
@@ -189,6 +190,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_maze
   -- This shouldn't be needed if everything is working properly
   zonify.map_fill_zones(_G, 1, 'x')
 
+  theme.level_material(_G)
+
 }}
 MAP
 ENDMAP
@@ -211,6 +214,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_city
   extend_map { width = gxm, height = gym, fill = 'x' }
 
   local open = not crawl.one_chance_in(4)
+  local room_materials = open and crawl.one_chance_in(3)
 
   local min = crawl.random_range(3,5)
   local max = crawl.random_range(math.max(min,4),10)
@@ -264,12 +268,17 @@ TAGS: overwritable layout allow_dup unrand layout_type_city
     if cell.tile == "floor" then
       fill_area{x1=cell.x1, y1=cell.y1, x2=cell.x2, y2=cell.y2, fill='.' }
     elseif cell.tile == "city" then
+      if room_materials and cell.group.room_type == nil then
+        cell.group.room_type = theme.room_material()
+      end
       render_room(_G,cell,false)
     end
   end
 
   -- This shouldn't be needed once everything is working properly
   zonify.map_fill_zones(_G, 1, 'x')
+
+  if not room_materials then theme.level_material(_G) end
 
 }}
 MAP
@@ -547,13 +556,6 @@ TAGS: layout_type_rooms
       end }
   }
 
-  local decorators = {
-    room = {
-      fills = {
-      }
-    }
-  }
-
   -- Render all the cells
   for i,cell in ipairs(grid) do
     if cell.tile == "room" then
@@ -605,6 +607,8 @@ TAGS: layout_type_rooms
 
   -- This shouldn't be needed once everything is working properly
   zonify.map_fill_zones(_G, 1, 'x')
+
+  theme.level_material(_G)
 
 }}
 MAP

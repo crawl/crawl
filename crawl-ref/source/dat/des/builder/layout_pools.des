@@ -169,7 +169,11 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
                              min = 100, max = 200, check_empty = false }
     zonify.map_fill_zones(_G, 1, 'x')
 
-    theme.level_material(_G)
+    if connection == '.' and you.in_branch("D") then
+      theme.D.caves(_G)
+    else
+      theme.level_material(_G)
+    end
 }}
 # Enforce minimum floor size - this is important
 validate {{
