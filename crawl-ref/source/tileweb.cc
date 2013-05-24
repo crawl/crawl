@@ -1025,7 +1025,8 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.cloud != current_pc.cloud)
         {
-            json_write_int("cloud", next_pc.cloud);
+            json_write_name("cloud");
+            _write_tileidx(next_pc.cloud);
         }
 
         if (next_pc.is_bloody != current_pc.is_bloody)
