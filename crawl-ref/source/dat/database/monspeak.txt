@@ -3202,8 +3202,6 @@ Lugonu Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "I'd pick a mace for blessing, if I were you."
-
 @The_monster@ says, "Why would you want to visit the Abyss? For a holiday?"
 
 @The_monster@ says, "I never knew blinking was supposed to hurt."
