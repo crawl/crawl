@@ -3838,6 +3838,49 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_RED_DEVIL:
+        if (mons->confused() || !mons->can_see(mons->get_foe()))
+            break;
+
+        if (mons->foe_distance() == 1 && mons->reach_range() == REACH_TWO
+            && x_chance_in_y(3, 5))
+        {
+            coord_def foepos = mons->get_foe()->pos();
+            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
+
+            bool found = false;
+            if (!monster_habitable_grid(mons, grd(hopspot)) ||
+                actor_at(hopspot))
+            {
+                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+                {
+                    if (ai->distance_from(foepos) != 2)
+                        continue;
+                    else
+                    {
+                        if (monster_habitable_grid(mons, grd(*ai))
+                            && !actor_at(*ai))
+                        {
+                            hopspot = *ai;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+                found = true;
+
+            if (found && mons->move_to_pos(hopspot))
+            {
+                simple_monster_message(mons, " hops backward while attacking.");
+                fight_melee(mons, mons->get_foe());
+                mons->speed_increment -= 2; // Add a small extra delay
+                return true; // Energy has already been deducted via melee
+            }
+        }
+        break;
+
     default:
         break;
     }

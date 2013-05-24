@@ -1433,6 +1433,10 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
         return (weapon.base_type == OBJ_RODS);
 
+    // Don't pick up items that would interfere with our special ability
+    if (mons->type == MONS_RED_DEVIL)
+        return (weapon_skill(weapon) == SK_POLEARMS);
+
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
     // and/or descriptions.

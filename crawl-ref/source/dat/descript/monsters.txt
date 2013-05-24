@@ -3335,8 +3335,9 @@ A skeletal form wielding a giant scythe.
 %%%%
 red devil
 
-A muscular demon covered in spikes and horns. Two short wings sprout from its
-shoulders.
+A larger cousin of the common imp, with a fiendish grin and two short wings
+sprouting from its shoulders. They favor barbed tridents, often taunting their
+victims as they prod them from afar then nimbly retreat from pursuit.
 %%%%
 red draconian
 

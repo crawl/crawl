@@ -807,13 +807,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_RED_DEVIL:
-        if (!one_chance_in(3))
-        {
-            item_race = MAKE_ITEM_NO_RACE;
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = (one_chance_in(3) ? WPN_DEMON_TRIDENT
-                                               : WPN_TRIDENT);
-        }
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = (one_chance_in(5) ? WPN_DEMON_TRIDENT
+                                           : WPN_TRIDENT);
         break;
 
     case MONS_OGRE:
