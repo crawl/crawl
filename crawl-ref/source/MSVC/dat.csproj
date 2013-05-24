@@ -33,6 +33,9 @@
     <Content Include="..\dat\**\*.*">
       <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Content>
+    <Content Include="..\rltiles\*.txt">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </Content>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
