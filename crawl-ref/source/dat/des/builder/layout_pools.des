@@ -80,15 +80,6 @@
         e.remove_isolated_glyphs { find = "l", percent = 90, boxy = true }
     end
 
-    -- Duplicate of function in layout.des header
-    function random_wall_material(e)
-        if not you.in_branch("Lair") and not you.in_branch("Zot")
-           and not you.in_branch("Dis")
-           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
-            e.subst('x : ccv')
-        end
-    end
-
 }}
 
 ##############################################################
@@ -178,7 +169,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
                              min = 100, max = 200, check_empty = false }
     zonify.map_fill_zones(_G, 1, 'x')
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 # Enforce minimum floor size - this is important
 validate {{

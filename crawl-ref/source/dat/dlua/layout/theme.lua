@@ -19,3 +19,32 @@ function theme.D.caves(e, allow_crystal)
     e.lfloortile('floor_pebble_green')
   end
 end
+
+-- Maybe convert rock to a random material across the whole level
+function theme.level_material(_G)
+  if not you.in_branch("Lair") and not you.in_branch("Zot")
+    and not you.in_branch("Dis")
+    and you.absdepth() >= 4 and crawl.one_chance_in(20) then
+    e.subst('x : ccv')
+  end
+end
+
+-- Get a random weighted material for rooms in room layouts
+function theme.room_material(wall_type)
+
+    wall_type = wall_type or 'x'
+
+    if you.branch() == "Dis" then
+        return 'x'  -- Will be converted to metal
+    elseif crawl.one_chance_in(250) then
+        return 'b'
+    end
+
+    return crawl.random_element {
+        [wall_type] = 216,
+        ['c'] = 9,
+        ['x'] = 9,
+        ['v'] = 5
+    }
+
+end
