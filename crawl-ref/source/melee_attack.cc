@@ -1110,11 +1110,11 @@ void melee_attack::adjust_noise()
         case AT_NONE:
         case AT_RANDOM:
         case AT_SHOOT:
-            die("Invalid attack flavour for noise_factor");
+            die("Invalid attack type for noise_factor");
             break;
 
         default:
-            die("%d Unhandled attack flavour for noise_factor", attk_type);
+            die("%d Unhandled attack type for noise_factor", attk_type);
             break;
         }
 
