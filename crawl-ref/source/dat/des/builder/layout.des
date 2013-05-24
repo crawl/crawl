@@ -1432,7 +1432,7 @@ ENDMAP
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Pan, !Dis, !Tar
-WEIGHT: 90, 10 (D:1), 20 (Geh), 10 (Zot)
+WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
 {{
