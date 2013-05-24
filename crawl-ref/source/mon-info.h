@@ -92,6 +92,7 @@ enum monster_info_flags
     MB_WATER_HOLD_DROWN,
     MB_FLAYED,
     MB_RETCHING,
+    MB_WEAK,
     NUM_MB_FLAGS
 };
 

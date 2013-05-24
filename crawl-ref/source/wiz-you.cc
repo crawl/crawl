@@ -810,7 +810,8 @@ static const char* dur_names[] =
     "drowning",
     "drowning immunity",
     "flayed",
-    "retching"
+    "retching",
+    "weak"
 };
 
 void wizard_edit_durations(void)

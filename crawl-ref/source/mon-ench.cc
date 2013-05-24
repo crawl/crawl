@@ -821,6 +821,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
     }
 
+    case ENCH_WEAK:
+        if (!quiet)
+            simple_monster_message(this, " is no longer weakened.");
+        break;
+
     default:
         break;
     }
@@ -1138,6 +1143,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_WRETCHED:
     case ENCH_SCREAMED:
+    case ENCH_WEAK:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1920,7 +1926,7 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "flayed", "haunting", "retching",
+    "drowning", "flayed", "haunting", "retching", "weak",
     "buggy",
 };
 
