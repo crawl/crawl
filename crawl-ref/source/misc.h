@@ -115,7 +115,8 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
 bool bad_attack(const monster *mon, string& adj, string& suffix);
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first = false);
+                        coord_def beam_target, bool autohit_first = false,
+                        bool *prompted = nullptr);
 bool stop_attack_prompt(targetter &hitfunc, string verb,
                         bool (*affects)(const actor *victim) = 0);
 
