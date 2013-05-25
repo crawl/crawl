@@ -191,17 +191,12 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             // draw clouds
             if (cell.cloud.value && cell.cloud.value < dngn.FEAT_MAX)
             {
-                if (fg_idx)
-                    this.ctx.globalAlpha = 0.5;
-
                 try
                 {
                     this.draw_main(cell.cloud.value, x, y);
                 }
                 finally
                 {
-                    if (fg_idx)
-                        this.ctx.globalAlpha = 1.0;
                 }
             }
 
@@ -285,18 +280,30 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             if (fg_idx && cell.cloud.value
                 && cell.cloud.value < dngn.FEAT_MAX)
             {
-                this.ctx.globalAlpha = 0.5;
+                this.ctx.save();
+                try {
+                    this.ctx.globalAlpha = .125;
 
-                try
-                {
+                    this.set_nonsubmerged_clip(x, y, 20);
+
                     this.draw_main(cell.cloud.value, x, y);
                 }
-                finally
-                {
+                finally {
+                    this.ctx.restore();
+                }
+
+                this.ctx.save();
+                try {
                     this.ctx.globalAlpha = 1.0;
+
+                    this.set_submerged_clip(x, y, 20);
+
+                    this.draw_main(cell.cloud.value, x, y);
+                }
+                finally {
+                    this.ctx.restore();
                 }
             }
-
 
             this.render_flash(x, y);
 
