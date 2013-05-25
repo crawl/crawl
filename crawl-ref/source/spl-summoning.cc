@@ -1306,8 +1306,11 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 
 static bool _animatable_remains(const item_def& item)
 {
-    return (item.base_type == OBJ_CORPSES
-        && mons_class_can_be_zombified(item.mon_type));
+    return item.base_type == OBJ_CORPSES
+        && mons_class_can_be_zombified(item.mon_type)
+        // the above allows spectrals/etc
+        && (mons_zombifiable(item.mon_type)
+            || mons_skeleton(item.mon_type));
 }
 
 // Try to equip the skeleton/zombie with the objects it died with.  This
@@ -1527,8 +1530,13 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
-
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
+    if (mon == MONS_ZOMBIE && !mons_zombifiable(monnum))
+    {
+        ASSERT(mons_skeleton(monnum));
+        mpr("The flesh is too rotten for a proper zombie, only a skeleton remains.");
+        mon = MONS_SKELETON;
+    }
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.

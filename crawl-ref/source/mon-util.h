@@ -257,6 +257,7 @@ habitat_type mons_secondary_habitat(const monster* mon);
 bool intelligent_ally(const monster* mon);
 
 bool mons_skeleton(monster_type mc);
+bool mons_zombifiable(monster_type mc);
 
 int mons_weight(monster_type mc);
 int mons_class_base_speed(monster_type mc);
