@@ -4285,7 +4285,7 @@ int dgn_place_item(const item_spec &spec,
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
             base_type = _acquirement_item_classes[random2(
-                            you.species == SP_FELID ? NC_KITTEHS :
+                            (you.species == SP_FELID && acquire) ? NC_KITTEHS :
                             NC_LESSER_LIFE_FORMS)];
         }
     }
