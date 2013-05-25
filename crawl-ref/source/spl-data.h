@@ -3076,6 +3076,19 @@ struct spell_desc
 },
 
 {
+    SPELL_BLINK_ALLIES_ENCIRCLE, "Blink Allies Encircling",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_AREA,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

@@ -1132,6 +1132,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
     case SPELL_CALL_LOST_SOUL:
+    case SPELL_BLINK_ALLIES_ENCIRCLE:
         return true;
     default:
         if (check_validity)
@@ -1302,6 +1303,14 @@ static bool _foe_should_res_negative_energy(const actor* foe)
     }
 
     return (foe->holiness() != MH_NATURAL);
+}
+
+static bool _valid_encircle_ally(const monster* caster, const monster* target,
+                                 const coord_def foepos)
+{
+    return (mons_aligned(caster, target) && caster != target
+            && !target->no_tele(true, false, true)
+            && target->pos().distance_from(foepos) > 1);
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
@@ -1588,6 +1597,21 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_GHOSTLY_FIREBALL:
         ret = (!foe || foe->holiness() == MH_UNDEAD);
         break;
+
+    case SPELL_BLINK_ALLIES_ENCIRCLE:
+    {
+        if (!mon->get_foe() || mon->get_foe() && !mon->can_see(mon->get_foe()))
+            return true;
+
+        const coord_def foepos = mon->get_foe()->pos();
+
+        for (monster_iterator mi(mon); mi; ++mi)
+        {
+            if (_valid_encircle_ally(mon, *mi, foepos))
+                return false; // We found at least one valid ally; that's enough.
+        }
+        return true;
+    }
 
     // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -2969,6 +2993,45 @@ static coord_def _mons_fragment_target(monster *mons)
     return target;
 }
 
+static void _blink_allies_encircle(const monster* mon)
+{
+    vector<monster*> allies;
+    const coord_def foepos = mon->get_foe()->pos();
+
+    for (monster_iterator mi(mon); mi; ++mi)
+    {
+        if (_valid_encircle_ally(mon, *mi, foepos))
+        {
+            allies.push_back(*mi);
+        }
+    }
+    random_shuffle(allies.begin(), allies.end());
+
+    int count = 2 + random2(4);
+
+    for (unsigned int i = 0; i < allies.size() && count; ++i)
+    {
+        coord_def empty;
+        if (find_habitable_spot_near(foepos, mons_base_type(allies[i]), 1, false, empty))
+        {
+            if (allies[i]->blink_to(empty))
+            {
+                // XXX: This seems an awkward way to give a message for something
+                // blinking from out of sight into sight. Probably could use a
+                // more general solution.
+                if (!(allies[i]->flags & MF_WAS_IN_VIEW)
+                    && allies[i]->flags & MF_SEEN)
+                {
+                    simple_monster_message(allies[i], " blinks into view!");
+                }
+                allies[i]->behaviour = BEH_SEEK;
+                allies[i]->foe = mon->foe;
+                count--;
+            }
+        }
+    }
+}
+
 static int _max_tentacles(const monster* mon)
 {
     if (mons_base_type(mon) == MONS_KRAKEN)
@@ -4210,6 +4273,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
                                  mons, 2, spell_cast, mons->pos(),
                                  mons->foe, 0, god));
+        return;
+
+    case SPELL_BLINK_ALLIES_ENCIRCLE:
+        _blink_allies_encircle(mons);
         return;
     }
 
