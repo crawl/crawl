@@ -410,6 +410,7 @@ static void _show_morgue(scorefile_entry& se)
 
 void show_hiscore_table()
 {
+    unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
     const int max_line   = get_number_of_lines() - 1;
     const int max_col    = get_number_of_cols() - 1;
 

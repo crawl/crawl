@@ -322,6 +322,7 @@ int main(int argc, char *argv[])
     if (Options.sc_entries != 0 || !SysEnv.scorefile.empty())
     {
         crawl_state.type = Options.game.type;
+        crawl_state.map = crawl_state.sprint_map;
         hiscores_print_all(Options.sc_entries, Options.sc_format);
         return 0;
     }
