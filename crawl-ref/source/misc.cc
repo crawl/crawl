@@ -2569,9 +2569,11 @@ static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
     int num_unknown = 0;
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
-        bool artefact = (player_wearing_slot(i)
-                         && is_artefact(you.inv[you.equip[i]]));
+        if (!player_wearing_slot(i))
+            continue;
 
+        const item_def &it = you.inv[you.equip[i]];
+        bool artefact = is_artefact(it);
         bool art_relevant = artefact && artp != ARTP_NUM_PROPERTIES;
 
         if (i == EQ_AMULET && amulet_type == NUM_JEWELLERY && !art_relevant)
@@ -2580,10 +2582,9 @@ static void _maybe_id_jewel(jewellery_type ring_type = NUM_JEWELLERY,
         if (i != EQ_AMULET && ring_type == NUM_JEWELLERY && !art_relevant)
             continue;
 
-        if (player_wearing_slot(i)
-            && !item_ident(you.inv[you.equip[i]], art_relevant
-                                                  ? ISFLAG_KNOW_PROPERTIES
-                                                  : ISFLAG_KNOW_TYPE))
+        if (!item_ident(it, art_relevant ? ISFLAG_KNOW_PROPERTIES
+                                         : ISFLAG_KNOW_TYPE)
+            && (art_relevant || !item_type_known(it.base_type, it.sub_type)))
         {
             ++num_unknown;
         }
