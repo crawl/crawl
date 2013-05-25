@@ -282,7 +282,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             {
                 this.ctx.save();
                 try {
-                    this.ctx.globalAlpha = .125;
+                    this.ctx.globalAlpha = 0.4;
 
                     this.set_nonsubmerged_clip(x, y, 20);
 
@@ -294,7 +294,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
                 this.ctx.save();
                 try {
-                    this.ctx.globalAlpha = 1.0;
+                    this.ctx.globalAlpha = 0.8;
 
                     this.set_submerged_clip(x, y, 20);
 
