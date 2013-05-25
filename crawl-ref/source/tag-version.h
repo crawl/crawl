@@ -3,6 +3,9 @@
 
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
+// DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING.  This would break
+// the save browser across versions, possibly leasing to overwritten games.
+// It's only there in case there's no way out.
 #define TAG_CHR_FORMAT 0
 
 // Let CDO updaters know if the syntax changes.
