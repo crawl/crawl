@@ -4081,6 +4081,11 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
         spec.type = MONS_PROGRAM_BUG;
         return;
     }
+    if (mod == 1 && mons_class_flag(spec.monbase, M_NO_ZOMBIE))
+    {
+        spec.type = MONS_PROGRAM_BUG;
+        return;
+    }
     if (mod == 2 && mons_class_flag(spec.monbase, M_NO_SKELETON))
     {
         spec.type = MONS_PROGRAM_BUG;

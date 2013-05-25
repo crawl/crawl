@@ -1775,6 +1775,10 @@ static bool _good_zombie(monster_type base, monster_type cs,
     if (cs == MONS_SKELETON && !mons_skeleton(base))
         return false;
 
+    // If zombie, monster must have unrotted meat.
+    if (cs == MONS_ZOMBIE && !mons_zombifiable(base))
+        return false;
+
     return true;
 }
 

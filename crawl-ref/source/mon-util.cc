@@ -1657,6 +1657,11 @@ bool mons_skeleton(monster_type mc)
     return !mons_class_flag(mc, M_NO_SKELETON);
 }
 
+bool mons_zombifiable(monster_type mc)
+{
+    return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
+}
+
 flight_type mons_class_flies(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
