@@ -66,7 +66,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         // applied to the character).
         if (fg_idx)
         {
-            m_buf_main_trans.add_masked(cloud_idx, x, y, 0, 0, 0, -1, 255, 15, 20);
+            m_buf_main_trans.add_masked(cloud_idx, x, y, 0, 0, 0, -1, 255, 255, 20);
             m_buf_main_trans.add_masked(cloud_idx, x, y, 50, 0, 0, -1, 15, 255,20);
         }
         else
