@@ -41,8 +41,6 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     const bool in_water = _in_water(cell);
 
     const tileidx_t cloud_idx = cell.cloud & TILE_FLAG_MASK;
-    const tileidx_t cloud_base_idx = tileidx_known_base_item(cloud_idx);
-    const tileidx_t cloud_final_idx = cloud_base_idx ? cloud_base_idx : cloud_idx;
 
     if (fg_idx >= TILEP_MCACHE_START)
     {
@@ -63,15 +61,17 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
     {
         // If there's a foreground, sandwich it between two semi-transparent
-        // clouds at different z-indices
+        // clouds at different z-indices. This uses the same alpha fading as
+        // a swimming characters but applied to the cloud (instead of as normal
+        // applied to the character).
         if (fg_idx)
         {
-            m_buf_main_trans.add_alpha(cloud_final_idx, x, y, 0, 0, 0, -1, 255);
-            m_buf_main_trans.add_alpha(cloud_final_idx, x, y, 50, 0, 0, -1, 127);
+            m_buf_main_trans.add_masked(cloud_idx, x, y, 0, 0, 0, -1, 255, 15, 20);
+            m_buf_main_trans.add_masked(cloud_idx, x, y, 50, 0, 0, -1, 15, 255,20);
         }
         else
             // Otherwise render it normally with full transparency
-             m_buf_main.add(cloud_final_idx, x, y);
+             m_buf_main.add(cloud_idx, x, y);
     }
 }
 
