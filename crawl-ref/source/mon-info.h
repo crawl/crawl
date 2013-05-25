@@ -93,6 +93,7 @@ enum monster_info_flags
     MB_FLAYED,
     MB_RETCHING,
     MB_WEAK,
+    MB_DIMENSION_ANCHOR,
     NUM_MB_FLAGS
 };
 

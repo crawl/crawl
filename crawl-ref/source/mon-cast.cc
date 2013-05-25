@@ -927,6 +927,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_explosion = true;
         break;
 
+    case SPELL_DIMENSION_ANCHOR:
+        beam.ench_power = power / 2;
+        beam.flavour    = BEAM_DIMENSION_ANCHOR;
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {

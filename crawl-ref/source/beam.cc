@@ -3528,6 +3528,19 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
+    case BEAM_DIMENSION_ANCHOR:
+        mpr("You feel firmly anchored in space.");
+        you.increase_duration(DUR_DIMENSION_ANCHOR, 12 + random2(15), 50);
+        if (you.duration[DUR_TELEPORT])
+        {
+            you.duration[DUR_TELEPORT] = 0;
+            mpr("Your teleport is interrupted.");
+        }
+        you.duration[DUR_PHASE_SHIFT] = 0;
+        you.redraw_evasion = true;
+        obvious_effect = true;
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -5176,6 +5189,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_DIMENSION_ANCHOR:
+        if (!mon->has_ench(ENCH_DIMENSION_ANCHOR)
+            && mon->add_ench(mon_enchant(ENCH_DIMENSION_ANCHOR, 0, agent())))
+        {
+            if (simple_monster_message(mon, " is firmly anchored in space."))
+                obvious_effect = true;
+        }
+        return MON_AFFECTED;
+
     default:
         break;
     }
@@ -6013,6 +6035,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOLT_OF_ZIN:           return "silver light";
     case BEAM_ENSNARE:               return "magic web";
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";
+    case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

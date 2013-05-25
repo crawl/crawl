@@ -2847,6 +2847,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_WEAK, delay,
                           "Your attacks no longer feel as feeble.");
 
+    _decrement_a_duration(DUR_DIMENSION_ANCHOR, delay,
+                          "You are no longer firmly anchored in space.");
+
     _decrement_a_duration(DUR_SICKENING, delay);
 
     _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);

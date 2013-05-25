@@ -4187,6 +4187,7 @@ void display_char_status()
         DUR_FLAYED,
         DUR_RETCHING,
         DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;
@@ -6639,6 +6640,9 @@ int player_res_magic(bool calc_unid, bool temp)
 
 bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
+    if (you.duration[DUR_DIMENSION_ANCHOR])
+        return true;
+
     if (crawl_state.game_is_sprint() && !blinking)
         return true;
 

@@ -170,6 +170,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_RETCHING;
     case ENCH_WEAK:
         return MB_WEAK;
+    case ENCH_DIMENSION_ANCHOR:
+        return MB_DIMENSION_ANCHOR;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1473,6 +1475,8 @@ vector<string> monster_info::attributes() const
         v.push_back("retching with violent nausea");
     if (is(MB_WEAK))
         v.push_back("weak");
+    if (is(MB_DIMENSION_ANCHOR))
+        v.push_back("unable to translocate");
     return v;
 }
 

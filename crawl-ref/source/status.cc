@@ -137,6 +137,8 @@ static duration_def duration_data[] =
       RED, "Retch", "retching", "You are retching with violent nausea." },
     { DUR_WEAK, false,
       RED, "Weak", "weakened", "Your attacks are enfeebled." },
+    { DUR_DIMENSION_ANCHOR, false,
+      RED, "-TELE", "cannot translocate", "You are firmly anchored to this plane." },
 };
 
 static int duration_index[NUM_DURATIONS];
