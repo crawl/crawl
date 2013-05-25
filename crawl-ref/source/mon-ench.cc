@@ -1926,7 +1926,7 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "flayed", "haunting", "retching", "weak",
+    "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "buggy",
 };
 

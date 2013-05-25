@@ -378,7 +378,8 @@ enum beam_type                  // bolt::flavour
     BEAM_SLEEP,
     BEAM_INNER_FLAME,
     BEAM_SENTINEL_MARK,
-    BEAM_LAST_ENCHANTMENT = BEAM_SENTINEL_MARK,
+    BEAM_DIMENSION_ANCHOR,
+    BEAM_LAST_ENCHANTMENT = BEAM_DIMENSION_ANCHOR,
 
     BEAM_MEPHITIC,
     BEAM_GLOOM,
@@ -1496,6 +1497,7 @@ enum duration_type
     DUR_FLAYED,
     DUR_RETCHING,
     DUR_WEAK,
+    DUR_DIMENSION_ANCHOR,
     NUM_DURATIONS
 };
 
@@ -1591,6 +1593,7 @@ enum enchant_type
     ENCH_HAUNTING,
     ENCH_RETCHING,
     ENCH_WEAK,
+    ENCH_DIMENSION_ANCHOR,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3434,6 +3437,7 @@ enum spell_type
     SPELL_GHOSTLY_FLAMES,
     SPELL_GHOSTLY_FIREBALL,
     SPELL_CALL_LOST_SOUL,
+    SPELL_DIMENSION_ANCHOR,
     NUM_SPELLS
 };
 

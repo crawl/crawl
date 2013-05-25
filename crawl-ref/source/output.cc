@@ -921,6 +921,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_FLAYED,
         DUR_RETCHING,
         DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;
@@ -2373,6 +2374,7 @@ static string _status_mut_abilities(int sw)
         DUR_FLAYED,
         DUR_RETCHING,
         DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;

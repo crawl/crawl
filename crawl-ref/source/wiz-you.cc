@@ -811,7 +811,8 @@ static const char* dur_names[] =
     "drowning immunity",
     "flayed",
     "retching",
-    "weak"
+    "weak",
+    "dimension anchor"
 };
 
 void wizard_edit_durations(void)
