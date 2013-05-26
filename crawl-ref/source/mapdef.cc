@@ -3960,6 +3960,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
 
+            if (mons_class_flag(nspec.type, M_CANT_SPAWN))
+            {
+                error = make_stringf("can't place dummy monster: \"%s\"",
+                                     mon_str.c_str());
+                return slot;
+            }
+
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
