@@ -62,13 +62,16 @@
 
 void shadow_lantern_effect()
 {
-    // Currently only mummies and lich form get more shadows.
-    if (x_chance_in_y(player_spec_death() + 1, 8))
+    int n = div_rand_round(you.time_taken, 10);
+    for (int i = 0; i < n; ++i)
     {
-        create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
-                                 you.pos(), MHITYOU));
+        if (x_chance_in_y(you.skill_rdiv(SK_EVOCATIONS, 1, 5) + 1, 14))
+        {
+            create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
+                                    you.pos(), MHITNOT));
 
-        did_god_conduct(DID_NECROMANCY, 1);
+            did_god_conduct(DID_NECROMANCY, 1);
+        }
     }
 }
 
