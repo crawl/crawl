@@ -1200,9 +1200,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Some sanity checks.
     if (mons_is_unique(mg.cls) && you.unique_creatures[mg.cls]
             && !crawl_state.game_is_arena()
-        || mg.cls == MONS_MERGED_SLIME_CREATURE
-        || mons_is_sensed(mg.cls)
-        || mg.cls == MONS_PLAYER)
+        || mons_class_flag(mg.cls, M_CANT_SPAWN))
     {
         die("invalid monster to place: %s (%d)", mons_class_name(mg.cls), mg.cls);
     }

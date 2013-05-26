@@ -157,7 +157,7 @@ static monsterentry mondata[] = {
     // id, glyph, colour, name
     MONS_PROGRAM_BUG, 'B', LIGHTRED, "program bug",
     // monster flags
-    M_NO_EXP_GAIN | M_NO_POLY_TO,
+    M_NO_EXP_GAIN | M_CANT_SPAWN,
     // resistance flags
     MR_NO_FLAGS,
     // mass, xp modifier, genus, species, holiness, magic resistance
@@ -181,7 +181,7 @@ static monsterentry mondata[] = {
 #define AXED_MON(id) \
 { \
     id, 'X', LIGHTRED, "removed "#id, \
-    M_NO_EXP_GAIN | M_NO_POLY_TO | M_UNFINISHED, \
+    M_NO_EXP_GAIN | M_CANT_SPAWN | M_UNFINISHED, \
     MR_NO_FLAGS, \
     0, 10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, -3, \
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK }, \
@@ -1189,7 +1189,7 @@ static monsterentry mondata[] = {
 // lizards ('l')
 { // dummy for giant lizard genus
     MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard",
-    M_COLD_BLOOD | M_NO_POLY_TO,
+    M_COLD_BLOOD | M_CANT_SPAWN,
     MR_NO_FLAGS,
     170, 10, MONS_GIANT_LIZARD, MONS_GIANT_LIZARD, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1262,7 +1262,7 @@ static monsterentry mondata[] = {
 // drakes (also 'l', but dragon-like)
 { // dummy for drake genus
     MONS_DRAKE, 'l', WHITE, "drake",
-    M_WARM_BLOOD | M_FLEES | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_FLEES | M_CANT_SPAWN,
     MR_RES_POISON,
     900, 16, MONS_DRAKE, MONS_DRAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1663,7 +1663,7 @@ static monsterentry mondata[] = {
 // never spawned as a monster.
 {
     MONS_PLAYER, '@', LIGHTGREY, "player",
-    M_SPEAKS | M_NO_POLY_TO,
+    M_SPEAKS | M_CANT_SPAWN,
     MR_NO_FLAGS,
     0, 15, MONS_PLAYER_ILLUSION, MONS_PLAYER_ILLUSION, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2372,7 +2372,7 @@ static monsterentry mondata[] = {
 
 {   // dummy for moth genus
     MONS_MOTH, 'y', WHITE, "moth",
-    M_NO_SKELETON | M_NO_POLY_TO,
+    M_NO_SKELETON | M_CANT_SPAWN,
     MR_NO_FLAGS,
     300, 10, MONS_MOTH, MONS_MOTH, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2676,7 +2676,7 @@ static monsterentry mondata[] = {
 // cyclopes and giants ('C')
 { // dummy for the genus, never spawns
     MONS_GIANT, 'C', LIGHTGREY, "giant",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_SPEAKS | M_CANT_SPAWN,
     MR_NO_FLAGS,
     1700, 7, MONS_GIANT, MONS_GIANT, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2955,7 +2955,7 @@ static monsterentry mondata[] = {
 // elementals (E)
 { // dummy for the genus, never spawns
     MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 13, MONS_ELEMENTAL, MONS_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3327,7 +3327,7 @@ static monsterentry mondata[] = {
 
 {   // not an actual monster, it's here just to allow recoloring
     MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 5, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3679,7 +3679,7 @@ static monsterentry mondata[] = {
 
 {   // dummy for transformed display
     MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree",
-    M_STATIONARY | M_NO_POLY_TO,
+    M_STATIONARY | M_CANT_SPAWN,
     MR_RES_POISON | MR_VUL_FIRE,
     0, 10, MONS_PLANT, MONS_ANIMATED_TREE, MH_PLANT, MAG_IMMUNE,
     { {AT_HIT, AF_CRUSH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3831,7 +3831,7 @@ static monsterentry mondata[] = {
 #if TAG_MAJOR_VERSION == 34
 {
     MONS_ROCK_TROLL, 'T', LIGHTGREY, "rock troll",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_SPEAKS | M_CANT_SPAWN,
     MR_NO_FLAGS,
     1600, 11, MONS_TROLL, MONS_ROCK_TROLL, MH_NATURAL, -4,
     { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20},
@@ -3899,7 +3899,7 @@ static monsterentry mondata[] = {
 // bears ('U')
 { // dummy for the genus, never spawns
     MONS_BEAR, 'U', LIGHTGREY, "bear",
-    M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS | M_CANT_SPAWN,
     MR_NO_FLAGS,
     1100, 10, MONS_BEAR, MONS_BEAR, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
@@ -5308,7 +5308,7 @@ static monsterentry mondata[] = {
 // golems ('8')
 { // dummy for the genus, never spawns
     MONS_GOLEM, '8', LIGHTGREY, "golem",
-    M_SEE_INVIS | M_ARTIFICIAL | M_NO_POLY_TO,
+    M_SEE_INVIS | M_ARTIFICIAL | M_CANT_SPAWN,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 10, MONS_GOLEM, MONS_GOLEM, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 11}, {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK },
@@ -5546,7 +5546,7 @@ static monsterentry mondata[] = {
 // Demon in hell.  Currently only used as genus/species for hell guardians.
 { // dummy, never spawns
     MONS_HELL_LORD, '&', BLACK, "hell lord",
-    M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_NO_POLY_TO,
+    M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_CANT_SPAWN,
     MR_RES_POISON,
     0, 14, MONS_HELL_LORD, MONS_HELL_LORD, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6753,7 +6753,7 @@ static monsterentry mondata[] = {
 // an unspecified monster
 {
     MONS_SENSED, '{', LIGHTRED, "sensed monster",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6765,7 +6765,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SENSED_FRIENDLY, '{', GREEN, "friendly sensed monster",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6777,7 +6777,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SENSED_TRIVIAL, '{', LIGHTGRAY, "trivial sensed monster",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6789,7 +6789,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SENSED_EASY, '{', BROWN, "easy sensed monster",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6801,7 +6801,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SENSED_TOUGH, '{', RED, "tough sensed monster",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6813,7 +6813,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SENSED_NASTY, '{', LIGHTRED, "nasty sensed monster",
-    M_NO_POLY_TO,
+    M_CANT_SPAWN,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
