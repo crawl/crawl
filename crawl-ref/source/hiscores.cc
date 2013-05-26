@@ -1209,6 +1209,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
         if (death && mons->type == MONS_MARA_FAKE)
             death_source_name = "an illusion of Mara";
+        if (death && mons->type == MONS_PAN_FAKE)
+            death_source_name = "a duplicate of Pan";
 
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";

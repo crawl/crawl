@@ -2629,6 +2629,9 @@ enum monster_type                      // menv[].type
     MONS_FAUN,
     MONS_SATYR,
 
+    MONS_PAN,
+    MONS_PAN_FAKE,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3444,6 +3447,7 @@ enum spell_type
     SPELL_CALL_LOST_SOUL,
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
+    SPELL_FAKE_PAN_SUMMON,
     NUM_SPELLS
 };
 

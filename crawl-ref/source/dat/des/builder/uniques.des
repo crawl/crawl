@@ -388,6 +388,10 @@ DEPTH:  Snake:2-
 WEIGHT: 50
 : place_unique(_G, "Lamia band")
 
+NAME:   uniq_pan
+DEPTH:  Forest:2-
+: place_unique(_G, "Pan band")
+
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.
 NAME:    uniq_crazy_yiuf_cottage

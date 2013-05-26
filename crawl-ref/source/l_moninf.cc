@@ -196,7 +196,7 @@ LUAFN(moninf_get_is_unique)
 {
     MONINF(ls, 1, mi);
     // XXX: A bit of a hack to prevent using this to determine which is fake.
-    if (mi->type == MONS_MARA_FAKE)
+    if (mi->type == MONS_MARA_FAKE || mi->type == MONS_PAN_FAKE)
         lua_pushboolean(ls, true);
     else
         lua_pushboolean(ls, mons_is_unique(mi->type));
