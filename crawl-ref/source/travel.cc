@@ -1867,9 +1867,10 @@ void find_travel_pos(const coord_def& youpos,
 
 // Given a branch id, returns the parent branch. If the branch id is not found,
 // returns BRANCH_MAIN_DUNGEON.
+// XXX: is this really necessary any longer?
 static branch_type _find_parent_branch(branch_type br)
 {
-    return branches[br].parent_branch;
+    return parent_branch(br);
 }
 
 extern map<branch_type, set<level_id> > stair_level;
@@ -2222,7 +2223,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                     string msg;
 
                     if (startdepth[br[i]] == -1
-                        && is_random_lair_subbranch((branch_type)i)
+                        && is_random_subbranch((branch_type)i)
                         && you.wizard) // don't leak mimics
                     {
                         msg += "Branch not generated this game. ";

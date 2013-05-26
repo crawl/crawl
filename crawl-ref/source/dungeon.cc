@@ -3362,7 +3362,7 @@ static void _place_branch_entrances(bool use_vaults)
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
 
         if (b->entry_stairs != NUM_FEATURES
-            && player_in_branch(b->parent_branch)
+            && player_in_branch(parent_branch((branch_type)i))
             && (you.depth == startdepth[i] || mimic))
         {
             // Placing a stair.

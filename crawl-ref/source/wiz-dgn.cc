@@ -335,15 +335,15 @@ void wizard_list_branches()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].parent_branch == NUM_BRANCHES)
+        if (parent_branch((branch_type)i) == NUM_BRANCHES)
             continue;
         else if (startdepth[i] != -1)
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
                  i, branches[i].longname, startdepth[i],
-                 branches[branches[i].parent_branch].abbrevname);
+                 branches[parent_branch((branch_type)i)].abbrevname);
         }
-        else if (is_random_lair_subbranch((branch_type)i))
+        else if (is_random_subbranch((branch_type)i))
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
                  "this game", i, branches[i].longname);
