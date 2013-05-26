@@ -3089,6 +3089,19 @@ struct spell_desc
 },
 
 {
+    SPELL_FAKE_PAN_SUMMON, "Pan Duplicate",
+     SPTYP_SUMMONING,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

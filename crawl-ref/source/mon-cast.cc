@@ -64,6 +64,7 @@ static bool _valid_mon_spells[NUM_SPELLS];
 
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
+static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
 
@@ -1059,6 +1060,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_FAKE_MARA_SUMMON:
+    case SPELL_FAKE_PAN_SUMMON:
     case SPELL_SUMMON_ILLUSION:
     case SPELL_SUMMON_RAKSHASA:
     case SPELL_SUMMON_DEMON:
@@ -1133,6 +1135,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_INJURY_BOND:
     case SPELL_CALL_LOST_SOUL:
     case SPELL_BLINK_ALLIES_ENCIRCLE:
+    case SPELL_MASS_CONFUSION:
         return true;
     default:
         if (check_validity)
@@ -2361,6 +2364,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!_should_recall(mons))
                 return false;
         }
+        // Try to mass confuse; if we can't, pretend nothing happened.
+        else if (spell_cast == SPELL_MASS_CONFUSION)
+        {
+            if (_mons_mass_confuse(mons, false) < 0)
+                return false;
+        }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
@@ -2954,6 +2963,62 @@ static int _mons_cause_fear(monster* mons, bool actual)
                 if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                     mons->add_ench(ENCH_FEAR_INSPIRING);
             }
+        }
+    }
+
+    return retval;
+}
+
+static int _mons_mass_confuse(monster* mons, bool actual)
+{
+    int retval = -1;
+
+    const int pow = min(mons->hit_dice * 12, 200);
+
+    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    {
+        if (ai->is_player())
+        {
+            if (mons->pacified() || mons->friendly())
+                continue;
+
+            retval = 0;
+
+            if (you.check_res_magic(pow) > 0)
+            {
+                if (actual)
+                    canned_msg(MSG_YOU_RESIST);
+                continue;
+            }
+        }
+        else
+        {
+            monster* m = ai->as_monster();
+
+            if (m == mons)
+                continue;
+
+            if (mons_immune_magic(m)
+                || mons_is_firewood(m)
+                || mons_atts_aligned(m->attitude, mons->attitude))
+            {
+                continue;
+            }
+
+            retval = 0;
+
+            int res_margin = m->check_res_magic(pow);
+            if (res_margin > 0)
+            {
+                if (actual)
+                    simple_monster_message(m, mons_resist_string(m, res_margin));
+                continue;
+            }
+        }
+        if (actual)
+        {
+            retval = 1;
+            ai->confuse(mons, pow);
         }
     }
 
@@ -4286,6 +4351,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
         _blink_allies_encircle(mons);
+
+    case SPELL_MASS_CONFUSION:
+        _mons_mass_confuse(mons);
+        return;
+
+    case SPELL_FAKE_PAN_SUMMON:
+        sumcount2 = (coinflip() ? 1 : 2);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+            _clone_monster(mons, MONS_PAN_FAKE, spell_cast);
         return;
     }
 
