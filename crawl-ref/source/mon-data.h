@@ -1297,6 +1297,18 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_FOREST_DRAKE, 'l', GREEN, "forest drake",
+    M_WARM_BLOOD | M_FAKE_SPELLS,
+    MR_VUL_FIRE | MR_RES_ACID,
+    1000, 10, MONS_DRAGON, MONS_FOREST_DRAKE, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK },
+    { 8, 3, 5, 0 },
+    3, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT,
+    I_ANIMAL, HT_FOREST, FL_WINGED, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
+},
+
+{
     MONS_LINDWURM, 'l', LIGHTCYAN, "lindwurm",
     M_WARM_BLOOD | M_GLOWS_LIGHT | M_FLEES,
     MR_NO_FLAGS,
@@ -1394,6 +1406,21 @@ static monsterentry mondata[] = {
     I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 10, SWIM_ENERGY(6),
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
+
+// Using 'm' for this is a bit of a stretch; suggestions are welcome.
+{
+    MONS_DRYAD, 'm', GREEN, "dryad",
+    M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS | M_ACTUAL_SPELLS
+        | M_MAINTAIN_RANGE,
+    MR_VUL_FIRE,
+    500, 10, MONS_DRYAD, MONS_DRYAD, MH_NATURAL, -7,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 5, 3, 0 },
+    4, 12, MST_DRYAD, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 
 // rotting monsters ('n')
 {

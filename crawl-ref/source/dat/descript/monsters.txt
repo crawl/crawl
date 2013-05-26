@@ -1466,6 +1466,11 @@ A great reptilian beast with powerful claws on its limbs, covered in thick
 green scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
 %%%%
+dryad
+
+A spirit of nature, bound to the forest in which it resides. It is capable
+of calling upon the trees to defend against incursions.
+%%%%
 dwarf
 
 A member of a short, sturdy mountain-dwelling folk. More robust than their deep
@@ -1686,6 +1691,11 @@ freed slave
 
 A human who has just been released from magical enslavement. It tries to stand
 proudly before you, despite its lingering fear and unkempt appearance.
+%%%%
+forest drake
+
+A small but powerful dragon, quite comfortable weaving through the trees
+that comprise its home.
 %%%%
 freezing wraith
 
