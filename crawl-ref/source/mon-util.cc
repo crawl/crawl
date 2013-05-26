@@ -1498,6 +1498,11 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
 
+    // It's unlikely there's a desc for "Duvessa the elf skeleton", but
+    // we still want to allow it if overridden.
+    if (!mon->props.exists("dbname"))
+        mon->props["dbname"] = mons_class_name(mon->type);
+
     return true;
 }
 
