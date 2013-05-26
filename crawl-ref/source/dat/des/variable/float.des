@@ -2576,7 +2576,7 @@ MONS:    skeletal warrior / plague shambler / eidolon
 KMONS:   4 = Frances / vampire mage / deep dwarf necromancer
 KMONS:   5 = vampire mage / deep dwarf necromancer
 : else
-MONS:    wight / necrophage / shadow
+MONS:    wight / necrophage / shadow w:5
 KMONS:   4 = Josephine / skeletal warrior / necromancer
 KMONS:   5 = skeletal warrior / necromancer
 : end
