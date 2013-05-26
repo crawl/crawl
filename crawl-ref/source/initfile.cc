@@ -69,11 +69,6 @@ const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
 
-// A list of keys used as "key = foo" but meaning "append to a list",
-// where the list was non-empty. Such settings will reset the list and
-// thus have different behaviour in 0.12, so warn about them now.
-set<string> warn_list_append;
-
 template <class L, class E>
 static L& remove_matching(L& lis, const E& entry)
 {
@@ -1499,20 +1494,6 @@ string read_init_file(bool runscript)
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
 
-    if (!warn_list_append.empty())
-    {
-        string warn =
-            "Your configuration uses = to append to a list option. This "
-            "syntax will override the option in a future version. Use += "
-            "instead to append. Affected options are: ";
-        warn += comma_separated_line(warn_list_append.begin(),
-                                     warn_list_append.end());
-
-        // Can't use Options.report_error() as that prevents webtiles from
-        // starting the game.
-        mpr(warn, MSGCH_ERROR);
-    }
-
     return "";
 }
 
@@ -2133,21 +2114,14 @@ static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
     return l.first > r.first;
 }
 
-// Returns true if the semantics of this call are expected to change:
-// that is, if old_semantics is true, add and subtract are both false,
-// and field is non-empty. T must be convertible to from a string.
+// T must be convertible to from a string.
 template <class T>
-static bool _handle_list(bool old_semantics, vector<T> &value_list,
-                         string field, bool append, bool prepend,
-                         bool subtract)
+static void _handle_list(vector<T> &value_list, string field,
+                         bool append, bool prepend, bool subtract)
 {
-    bool needs_warning = false;
     if (!append && !prepend && !subtract)
     {
-        if (!old_semantics || field.empty())
-            value_list.clear();
-        else if (!value_list.empty())
-            needs_warning = true;
+        value_list.clear();
     }
 
     vector<T> new_entries;
@@ -2164,8 +2138,6 @@ static bool _handle_list(bool old_semantics, vector<T> &value_list,
             new_entries.push_back(*part);
     }
     _merge_lists(value_list, new_entries, prepend);
-
-    return needs_warning;
 }
 
 void game_options::read_option_line(const string &str, bool runscript)
@@ -2211,16 +2183,11 @@ void game_options::read_option_line(const string &str, bool runscript)
 #define INT_OPTION(_opt, _min_val, _max_val) \
     INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
 
-#define LIST_OPTION_NAMED(_opt_str, _opt_var, old)                       \
-    if (key == _opt_str) do {                                            \
-        if (_handle_list(old, _opt_var, field, plus_equal,               \
-                         caret_equal, minus_equal))                      \
-        {                                                                \
-            warn_list_append.insert(key);                                \
-        }                                                                \
+#define LIST_OPTION_NAMED(_opt_str, _opt_var)                                \
+    if (key == _opt_str) do {                                                \
+        _handle_list(_opt_var, field, plus_equal, caret_equal, minus_equal); \
     } while (false)
-#define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, false)
-#define OLD_LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, true)
+#define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt)
     string key    = "";
     string subkey = "";
     string field  = "";
@@ -2669,8 +2636,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_game_turns);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
-    else OLD_LIST_OPTION(note_monsters);
-    else OLD_LIST_OPTION(note_messages);
+    else LIST_OPTION(note_monsters);
+    else LIST_OPTION(note_messages);
     else INT_OPTION(note_hp_percent, 0, 100);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
@@ -2800,19 +2767,13 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
-        if (plain && field.empty())
+        if (plain)
         {
             // Only remove negative, not positive, exceptions.
             force_autopickup.erase(remove_if(force_autopickup.begin(),
                                              force_autopickup.end(),
                                              _is_autopickup_ban),
                                    force_autopickup.end());
-        }
-        else if (plain && !count_if(force_autopickup.begin(),
-                                    force_autopickup.end(),
-                                    _is_autopickup_ban))
-        {
-            warn_list_append.insert(key);
         }
 
         vector<pair<text_pattern, bool> > new_entries;
@@ -2834,10 +2795,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "autopickup_exceptions")
     {
-        if (plain && field.empty())
+        if (plain)
             force_autopickup.clear();
-        else if (plain && !force_autopickup.empty())
-            warn_list_append.insert(key);
 
         vector<pair<text_pattern, bool> > new_entries;
         vector<string> args = split_string(",", field);
@@ -2863,7 +2822,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         _merge_lists(force_autopickup, new_entries, caret_equal);
     }
-    else OLD_LIST_OPTION(note_items);
+    else LIST_OPTION(note_items);
 #ifndef _MSC_VER
     // break if-else chain on broken Microsoft compilers with stupid nesting limits
     else
@@ -2871,10 +2830,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 
     if (key == "autoinscribe")
     {
-        if (plain && field.empty())
+        if (plain)
             autoinscriptions.clear();
-        else if (plain && !autoinscriptions.empty())
-            warn_list_append.insert(key);
 
         const size_t first = field.find_first_of(':');
         const size_t last  = field.find_last_of(':');
@@ -3101,10 +3058,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "spell_slot")
     {
-        if (plain && field.empty())
+        if (plain)
             auto_spell_letters.clear();
-        else if (plain && !auto_spell_letters.empty())
-            warn_list_append.insert(key);
 
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
@@ -3126,8 +3081,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifdef WIZARD
     else if (key == "fsim_mode")
         fsim_mode = field;
-    else OLD_LIST_OPTION(fsim_scale);
-    else OLD_LIST_OPTION(fsim_kit);
+    else LIST_OPTION(fsim_scale);
+    else LIST_OPTION(fsim_kit);
     else if (key == "fsim_rounds")
     {
         fsim_rounds = atol(field.c_str());
@@ -3190,10 +3145,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
-        if (plain && field.empty())
+        if (plain)
             force_more_message.clear();
-        else if (plain && !force_more_message.empty())
-            warn_list_append.insert(key);
 
         vector<message_filter> new_entries;
         vector<string> fragments = split_string(",", field);
@@ -3223,7 +3176,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         _merge_lists(force_more_message, new_entries, caret_equal);
     }
-    else OLD_LIST_OPTION(drop_filter);
+    else LIST_OPTION(drop_filter);
     else if (key == "travel_avoid_terrain")
     {
         // TODO: allow resetting (need reset_forbidden_terrain())
@@ -3244,7 +3197,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tc_dangerous = str_to_colour(field, tc_dangerous);
     else if (key == "tc_disconnected")
         tc_disconnected = str_to_colour(field, tc_disconnected);
-    else OLD_LIST_OPTION(auto_exclude);
+    else LIST_OPTION(auto_exclude);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
@@ -3270,7 +3223,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop_prompt |= new_conditions;
     }
-    else OLD_LIST_OPTION(explore_stop_pickup_ignore);
+    else LIST_OPTION(explore_stop_pickup_ignore);
     else if (key == "explore_item_greed")
     {
         explore_item_greed = atoi(field.c_str());
@@ -3303,10 +3256,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "sound")
     {
-        if (plain && field.empty())
+        if (plain)
             sound_mappings.clear();
-        else if (plain && !sound_mappings.empty())
-            warn_list_append.insert(key);
 
         vector<sound_mapping> new_entries;
         vector<string> seg = split_string(",", field);
@@ -3333,10 +3284,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif
     if (key == "menu_colour" || key == "menu_color")
     {
-        if (plain && field.empty())
+        if (plain)
             menu_colour_mappings.clear();
-        else if (plain && !menu_colour_mappings.empty())
-            warn_list_append.insert(key);
 
         vector<colour_mapping> new_entries;
         vector<string> seg = split_string(",", field);
@@ -3377,10 +3326,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "message_colour" || key == "message_color")
     {
         // TODO: support -= here.
-        if (plain && field.empty())
+        if (plain)
             message_colour_mappings.clear();
-        else if (plain && !message_colour_mappings.empty())
-            warn_list_append.insert(key);
 
         add_message_colour_mappings(field, caret_equal, minus_equal);
     }

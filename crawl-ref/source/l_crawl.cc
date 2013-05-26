@@ -927,18 +927,6 @@ static int crawl_tutorial_msg(lua_State *ls)
     return 0;
 }
 
-/*
---- Warn about listopt = value when the semantics are slated to change.
-function l_warn_list_append(key) */
-static int crawl_warn_list_append(lua_State *ls)
-{
-    const char *key = luaL_checkstring(ls, 1);
-    if (!key)
-        return 0;
-    warn_list_append.insert(key);
-    return 0;
-}
-
 LUAWRAP(crawl_dump_char, dump_char(you.your_name, true))
 
 #ifdef WIZARD
@@ -1055,7 +1043,6 @@ static const struct luaL_reg crawl_clib[] =
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
     { "tutorial_msg",   crawl_tutorial_msg },
-    { "warn_list_append", crawl_warn_list_append },
     { "dump_char",      crawl_dump_char },
 #ifdef WIZARD
     { "call_dlua",      crawl_call_dlua },
