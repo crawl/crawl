@@ -69,7 +69,7 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  4-22, Pan, !Dis, !Geh
+DEPTH:  4-22, Pan, !Dis, !Geh, !Forest
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -139,7 +139,7 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   Pan, 4-22, !Dis, !Geh
+DEPTH:   Pan, 4-22, !Dis, !Geh, !Forest
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_cross
@@ -205,7 +205,7 @@ ENDMAP
 # are generally all grouped together.
 #
 NAME: layout_big_octagon
-DEPTH:   Pan, 4-22, !Dis, !Geh
+DEPTH:   Pan, 4-22, !Dis, !Geh, !Forest
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -372,7 +372,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 1-, !Dis, !Tar
+DEPTH: Pan, 1-, !Dis, !Tar, !Forest
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_rooms
@@ -566,7 +566,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 1-, !Dis, !Tar
+DEPTH: Pan, 1-, !Dis, !Tar, !Forest
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_misc
@@ -607,7 +607,7 @@ ENDMAP
 # walls.
 #
 NAME: layout_caves
-DEPTH: 9-22, !Dis, !Geh, Orc, Slime
+DEPTH: 9-22, !Dis, !Geh, Orc, Slime, !Forest
 CHANCE: 100% (Orc), 100% (Slime)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_caves
@@ -674,7 +674,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 ##############################################################
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 2-, !Pan, !Zot, !Dis, !Geh, !Tar
+DEPTH: 2-, !Pan, !Zot, !Dis, !Geh, !Tar, !Forest
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
@@ -1431,7 +1431,7 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: 1-, !Pan, !Dis, !Tar
+DEPTH: 1-, !Pan, !Dis, !Tar, !Forest
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
@@ -1443,7 +1443,7 @@ ENDMAP
 
 # XXX: Disabled until we can annoy the player less with water monsters.
 NAME: layout_bigger_room
-DEPTH: 9-22, !Crypt, !Pan, !Dis
+DEPTH: 9-22, !Crypt, !Pan, !Dis, !Forest
 WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -1454,7 +1454,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Pan, 4-, !Zot, !Geh, !Tar
+DEPTH: Pan, 4-, !Zot, !Geh, !Tar, !Forest
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_city
