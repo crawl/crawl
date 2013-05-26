@@ -29,7 +29,7 @@ static bool _unsuitable_misled_monster(monster_type mons)
             || mons_class_is_stationary(mons)
             || mons_class_is_zombified(mons)
             || mons_is_tentacle(mons)
-            || mons_class_flag(mons, M_NO_POLY_TO)
+            || mons_class_flag(mons, M_NO_POLY_TO | M_CANT_SPAWN)
             || mons_class_flag(mons, M_UNFINISHED)
             || mons_genus(mons) == MONS_DRACONIAN
             || mons == MONS_MANTICORE
