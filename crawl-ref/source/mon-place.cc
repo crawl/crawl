@@ -553,7 +553,7 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
         }
         else if (branches[i].exit_stairs == feat)
         {
-            place = level_id(branches[i].parent_branch, startdepth[i]);
+            place = level_id(parent_branch((branch_type)i), startdepth[i]);
             break;
         }
     }
