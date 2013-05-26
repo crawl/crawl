@@ -54,8 +54,6 @@ function TroveMarker:new(props)
     item.artefact_name = false
   end
 
-  tmarker.toll_item = item
-
   return tmarker
 end
 
@@ -88,7 +86,7 @@ function TroveMarker:debug_portal (marker)
   if #dgn.items_at(_x, _y) ~= 0 then
     new_item = dgn.items_at(_x, _y)[1]
     if crawl.yesno("Switch Trove to " .. new_item.name() .. " instead?", true, "n") then
-      self.toll_item = trove.get_trove_item(nil, 0, new_item)
+      self.props.toll_item = trove.get_trove_item(nil, 0, new_item)
       crawl.mpr("Switched to a new item.")
     else
       crawl.mpr("Ignoring " .. new_item.name())
@@ -96,13 +94,16 @@ function TroveMarker:debug_portal (marker)
   end
 
   if crawl.yesno("Run diagnostic on inventory?", true, "n") then
-    self:check_item(marker, nil, "inventory", true)
-  elseif crawl.yesno("Run diagnostic on floor?", true, "n") then
-    local _x, _y = marker:pos()
-    self:check_item(marker, nil, dgn.point(_x, _y), true)
+    self:search_for_rune(marker, nil, true)
+    self:search_for_item(marker, nil, items.inventory(), true)
   end
 
-  local item = self.toll_item
+  if crawl.yesno("Run diagonstic on floor?", true, "n") then
+    local _x, _y = marker:pos()
+    self:search_for_item(marker, nil, dgn.items_at(_x, _y), true)
+  end
+
+  local item = self.props.toll_item
   if item == nil then
     return "Failed to get item???"
   end
@@ -110,7 +111,7 @@ function TroveMarker:debug_portal (marker)
   if item.quantity == nil then item.quantity = false end
   if item.base_type == nil then item.base_type = false end
   if item.sub_type == nil then item.sub_type = false end
-  if item.ego_type == nil then item.ego_type = false end
+  if item.ego_type == nil or item.ego_type == "" then item.ego_type = false end
   if item.plus1 == nil then item.plus1 = false end
   if item.plus2 == nil then item.plus2 = false end
   if item.artefact_name == nil then item.artefact_name = false end
@@ -184,6 +185,8 @@ end
 
 function TroveMarker:read(marker, th)
   TroveMarker.super.read(self, marker, th)
+  -- self.toll_item never used, but I'm not messing with this marshalling code.
+  -- blackcustard May 26 2013.
   self.toll_item = lmark.unmarshall_table(th)
 
   setmetatable(self, TroveMarker)
@@ -192,11 +195,15 @@ end
 
 function TroveMarker:write(marker, th)
   TroveMarker.super.write(self, marker, th)
+  self.toll_item = self.props.toll_item
   lmark.marshall_table(th, self.toll_item)
 end
 
+-- We need to implement our own version of item_name because
+-- self.props.toll_item is not really an item. It is a table that contains
+-- all the important information about what the toll item should be.
 function TroveMarker:item_name(do_grammar)
-  local item = self.toll_item
+  local item = self.props.toll_item
   local s = ""
   if item.quantity > 1 then
     s = s .. item.quantity
@@ -204,9 +211,12 @@ function TroveMarker:item_name(do_grammar)
 
   if item.sub_type == "rune of Zot" then
     if do_grammar == false then
-      return item.ego_type .. " rune of Zot"
+      -- See trove.des where the name of the rune is stuffed into this variable.
+      -- The format is "xxx rune of Zot". Not just "xxx".
+      -- Where "xxx" is like "slimy".
+      return item.ego_type
     else
-      return crawl.grammar(item.ego_type .. " rune of Zot", "a")
+      return crawl.grammar(item.ego_type, "the")
     end
   end
 
@@ -298,41 +308,33 @@ function TroveMarker:item_name(do_grammar)
   end
 end
 
--- Returns true if the item was found and "used", false
--- if we didn't find anything.
-function TroveMarker:check_item(marker, pname, position, dry_run)
--- Begin by checking for runes.
-  if self.toll_item.base_type == "miscellaneous" and
-     self.toll_item.sub_type == "rune of Zot" then
-    if you.have_rune(self.toll_item.plus1) then
-      if dry_run == nil then
-        return self:accept_item(nil)
-      else
-        crawl.mpr("Accepting " .. self.toll_item.ego_type .. " rune.")
-        return nil
-      end
-    else
-      if dry_run ~= nil then crawl.mpr("No " .. self.toll_item.ego_type .. " rune.") end
-      return false
-    end
-  end
-  local iter_table
-  local acceptable_items = {}
-
-  if position == "inventory" then
-    if dry_run ~= nil then crawl.mpr("Checking inventory.") end
-    iter_table = items.inventory()
-  --else
-  --  if dry_run ~= nil then crawl.mpr("Checking " .. position.x .. "/" .. position.y) end
-  --  iter_table = dgn.items_at(position.x, position.y)
-  end
-
-  if #iter_table == 0 then
-    if dry_run ~= nil then crawl.mpr("No items.") end
+function TroveMarker:search_for_rune(marker, pname, dry_run)
+  if (self.props.toll_item.base_type ~= "miscellaneous"
+      or self.props.toll_item.sub_type ~= "rune of Zot") then
+    return false
+  elseif you.have_rune(self.props.toll_item.plus1) then
+    if dry_run ~= nil then crawl.mpr("Accepting " ..
+                                     self.props.toll_item.ego_type .. ".") end
+    return true
+  else
+    if dry_run ~= nil then crawl.mpr("No " ..
+                                     self.props.toll_item.ego_type .. ".") end
     return false
   end
+end
 
-  local item = self.toll_item
+function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
+  -- Don't early out if our toll is a rune. The debug code can call this
+  -- function on the floor, and a wizmode player may have left the rune we
+  -- want on the portal.
+  if #iter_table == 0 then
+    if dry_run ~= nil then crawl.mpr("No items.") end
+    return {}
+  end
+
+  local acceptable_items = {}
+
+  local item = self.props.toll_item
 
   for it in iter.invent_iterator:new(iter_table) do
     local iplus1, iplus2 = it.pluses()
@@ -340,9 +342,10 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
     -- For misc items we check plus1 and nothing else.
     if it.base_type == "miscellaneous" then
       if iplus1 ~= false and item.plus1 ~= false and iplus1 ~= item.plus1 then
+        -- If this weren't Lua this line could be replaced with "continue".
         this_item = false
       end
-    else
+    else -- Most of the loop's body is in this block.
     if dry_run ~= nil then crawl.mpr("Checking item: " .. it.name()) end
 
     if not it.identified("type properties pluses") then
@@ -415,12 +418,12 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
         this_item = false
       end
     end
-    end
+    end -- End of the else block from above.
     -- Now all we need to do is to make sure that the item
     -- is the one we're looking for
     if this_item and item.sub_type == it.sub_type
        and item.base_type == it.base_type then
-       if dry_run ~= nil then crawl.mpr("Accepting " .. it.name() .. " and added to queue.") end
+      if dry_run ~= nil then crawl.mpr("Accepting " .. it.name() .. " and added to queue.") end
       table.insert(acceptable_items, it)
     elseif this_item then
       if dry_run ~= nil then crawl.mpr("Sub and base types do not match.") end
@@ -428,70 +431,43 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
       if dry_run ~= nil then crawl.mpr("Wanted sub type " .. item.sub_type .. ", got " .. it.sub_type) end
     end
   end
-
-  if #acceptable_items == 0 then
-    if dry_run ~= nil then crawl.mpr("No acceptable items.") end
-    return false
-  end
-
-  --crawl.mpr("Total of " .. #acceptable_items .. " acceptable items.")
-
-  -- If there are no pluses but multiple acceptable items, or there is only one
-  -- acceptable item, take the first in the list.
-  if #acceptable_items == 1
-     or (item.plus1 == false and item.plus2 == false) then
-    local it = acceptable_items[1]
-    if dry_run == nil then
-      return self:accept_item(it)
-    end
-  else
-    -- Otherwise, take the one with the least pluses.
-    local titem = acceptable_items[1]
-    local titem_p1, titem_p2 = titem.pluses()
-    --crawl.mpr("Picking " .. titem.name() .. " to start with.")
-    --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
-
-    if item.plus2 == false then
-      --crawl.mpr("Not looking at second plus.")
-    end
-
-    for _, it in ipairs(acceptable_items) do
-      local this_p1, this_p2 = it.pluses()
-      --crawl.mpr("Looking at " .. it.name())
-      if this_p1 < titem_p1 and (item.plus2 == false or this_p2 < titem_p2) then
-        titem = it
-        titem_p1, titem_p2 = titem.pluses()
-        --crawl.mpr("Picking " .. titem.name() ..
-        --          " instead (lesser pluses instad)")
-        --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
-      elseif this_p1 == item.plus1 and this_p2 == item.plus2 then
-        titem = it
-        titem_p1, titem_p2 = titem.pluses()
-        --crawl.mpr("Picking " .. titem.name() ..
-        --          " instead (matches wanted pluses)")
-        --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
-      end
-    end
-
-    if dry_run == nil then
-      return self:accept_item(titem)
-    end
-  end
+  return acceptable_items
 end
 
-function TroveMarker:accept_item (it)
-  -- We don't take misc items away from people.
-  if it == nil or it.base_type == "miscellaneous" then
-    crawl.mpr("The portal draws power from the presence of the item" .. self:plural() .. " and buzzes to life!")
-  else
-    crawl.mpr("The portal accepts the item" .. self:plural() .. " and buzzes to life!")
-    it.dec_quantity(self.props.toll_item.quantity)
+function TroveMarker:item_with_lowest_pluses(marker, pname, dry_run, items)
+  local titem = items[1]
+  local titem_p1, titem_p2 = titem.pluses()
+  --crawl.mpr("Picking " .. titem.name() .. " to start with.")
+  --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+
+  item = self.props.toll_item
+
+  if item.plus2 == false then
+    --crawl.mpr("Not looking at second plus.")
   end
-  return true
+
+  for _, it in ipairs(items) do
+    local this_p1, this_p2 = it.pluses()
+    --crawl.mpr("Looking at " .. it.name())
+    if this_p1 < titem_p1 and (item.plus2 == false or this_p2 < titem_p2) then
+      titem = it
+      titem_p1, titem_p2 = titem.pluses()
+      --crawl.mpr("Picking " .. titem.name() ..
+      --          " instead (lesser pluses instad)")
+      --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+    elseif this_p1 == item.plus1 and this_p2 == item.plus2 then
+      titem = it
+      titem_p1, titem_p2 = titem.pluses()
+      --crawl.mpr("Picking " .. titem.name() ..
+      --          " instead (matches wanted pluses)")
+      --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+    end
+  end
+  return titem
 end
 
 function TroveMarker:plural ()
-  if self.toll_item.quantity > 1 then
+  if self.props.toll_item.quantity > 1 then
     return "s"
   else
     return ""
@@ -502,35 +478,72 @@ function TroveMarker:check_veto(marker, pname)
   local quantity = false
   local plus = 0
 
-  local _x, _y = marker:pos()
-
-  -- The message is slightly different for items that aren't actually taken by the trove (currently misc items).
+  -- The message is slightly different for items that aren't actually taken by
+  -- the trove (currently the horn of Geryon and the runes).
   if self.props.toll_item.base_type == "miscellaneous" then
-    if crawl.yesno("This trove requires the presence of " .. self:item_name() ..
-                 " to function. Show it the item" ..
-                 self:plural() .. "?", true, "n") then
-    if self:check_item(marker, pname, "inventory") == true then
-      return
-    else
-      crawl.mpr("You don't have " .. self:item_name() ..
-                " with you.")
+    if not crawl.yesno("This trove requires the presence of "
+                       .. self:item_name() .. " to function. Show it the item"
+                       .. self:plural() .. "?", true, "n") then
       return "veto"
     end
-  end
   else
-  if crawl.yesno("This trove needs " .. self:item_name() ..
-                 " to function. Give it the item" ..
-                 self:plural() .. "?", true, "n") then
-    if self:check_item(marker, pname, "inventory") == true then
-      return
-    else
-      crawl.mpr("You don't have the item" .. self:plural() ..
-                " to give! Perhaps you haven't completely identified the item yet?")
+    if not crawl.yesno("This trove needs " .. self:item_name() ..
+                       " to function. Give it the item" ..
+                       self:plural() .. "?", true, "n") then
       return "veto"
     end
   end
+
+  if self.props.toll_item.sub_type == "rune of Zot" then
+    -- Begin by checking for runes.
+    if self:search_for_rune() then
+      crawl.mpr("The portal draws power from the presence of the item"
+                .. self:plural() .. " and buzzes to life!")
+      return
+    else
+      crawl.mpr("You don't have " .. self:item_name() .. " with you.")
+      return "veto"
+    end
   end
-  return "veto"
+
+  -- Then check for items.
+  local acceptable_items = self:search_for_item(marker, pname, items.inventory())
+
+  if #acceptable_items == 0 then
+    crawl.mpr("You don't have the item" .. self:plural() ..
+              " to give! Perhaps you haven't completely identified the item yet?")
+    return "veto"
+  end
+
+  --crawl.mpr("Total of " .. #acceptable_items .. " acceptable items.")
+
+  -- If there are no pluses but multiple acceptable items, or there is only one
+  -- acceptable item, take the first in the list.
+  local titem = nil
+  if #acceptable_items == 1 or
+      (self.props.toll_item.plus1 == false and
+        self.props.toll_item.plus2 == false) then
+    titem = acceptable_items[1]
+  else
+    titem = self:item_with_lowest_pluses(marker, pname, false, acceptable_items)
+  end
+
+  -- Open the portal and maybe consume the item.
+  if self.props.toll_item.base_type == "miscellaneous" then
+    crawl.mpr("The portal draws power from the presence of the item" ..
+              self:plural() .. " and buzzes to life!")
+  else
+    -- We should not try to take equipped items, there are too many weird edge
+    -- cases like distortion.
+    if titem.equipped then
+      crawl.mpr("You must unequip the item" .. self:plural() .. " first!")
+      return "veto"
+    end
+    crawl.mpr("The portal accepts the item" .. self:plural() ..
+              " and buzzes to life!")
+    titem.dec_quantity(self.props.toll_item.quantity)
+  end
+  return
 end
 
 function TroveMarker:note_payed(name)
