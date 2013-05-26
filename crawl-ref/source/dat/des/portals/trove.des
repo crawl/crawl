@@ -46,6 +46,9 @@ function trove.get_trove_item(e, value, base_item)
     item.base_type = base_item.base_type
     item.sub_type = base_item.sub_type
     item.artefact_name = base_item.artefact_name
+    if (base_item.sub_type == "rune of Zot") then
+      item.ego_type = base_item.name()
+    end
     return item
   end
 
@@ -142,8 +145,8 @@ function trove.get_trove_item(e, value, base_item)
        {base="scroll", type="acquirement", quant=2, weight=1},
        {base="scroll", type="identify", quant=12+d(4)+d(4), weight=1},
 
-       {base="miscellaneous", type="rune of Zot", quant=3, name="slimy", weight=1},
-       {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal", weight=1},
+       {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot", weight=1},
+       {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot", weight=1},
        {base="miscellaneous", type="horn of Geryon", weight=1} }
 
   local chosen = util.random_weighted_from('weight', prices)
