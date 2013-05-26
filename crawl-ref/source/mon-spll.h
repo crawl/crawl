@@ -1901,6 +1901,17 @@
       }
     },
 
+    {  MST_DRYAD,
+      {
+       SPELL_NO_SPELL,
+       SPELL_AWAKEN_FOREST,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
