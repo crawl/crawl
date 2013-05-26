@@ -1318,9 +1318,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             mon->god = GOD_TROG;
         }
-        // Deep dwarf death knights belong to Yredelemnul.
-        else if (mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
+        // Profane servitors and deep dwarf death knights belong to Yredelemnul.
+        else if (mg.cls == MONS_PROFANE_SERVITOR
+                 || mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
+        {
             mon->god = GOD_YREDELEMNUL;
+        }
         // Wiglaf belongs to Okawaru.
         else if (mg.cls == MONS_WIGLAF)
             mon->god = GOD_OKAWARU;
@@ -1333,9 +1336,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                 break;
             case MONS_JELLY:
                 mon->god = GOD_JIYVA;
-                break;
-            case MONS_PROFANE_SERVITOR:
-                mon->god = GOD_YREDELEMNUL;
                 break;
             case MONS_MUMMY:
             case MONS_DRACONIAN:
