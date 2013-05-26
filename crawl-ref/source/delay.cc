@@ -1715,6 +1715,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " opens the gate.";
         else if (at.context == SC_TELEPORT_IN)
             text += " appears from thin air!";
+        else if (at.context == SC_LEAP_IN)
+            text += " leaps into view!";
         // The monster surfaced and submerged in the same turn without
         // doing anything else.
         else if (at.context == SC_SURFACES_BRIEFLY)
