@@ -404,6 +404,16 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
+    if (attk_flavour == AF_SHADOWSTAB && defender && !defender->can_see(attacker))
+    {
+        if (you.see_cell(attacker->pos()))
+            mprf("%s strikes at %s from the darkness!",
+                 attacker->name(DESC_THE, true).c_str(),
+                 defender->name(DESC_THE).c_str());
+        to_hit = AUTOMATIC_HIT;
+        needs_message = false;
+    }
+
     attack_occurred = true;
 
     // Check for player practicing dodging
@@ -484,7 +494,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
 {
     return (flavour == AF_CRUSH
             || flavour == AF_DROWN
-            || flavour == AF_PURE_FIRE);
+            || flavour == AF_PURE_FIRE
+            || flavour == AF_SHADOWSTAB);
 }
 
 /* An attack has been determined to have hit something
@@ -4899,6 +4910,10 @@ void melee_attack::mons_apply_attack_flavour()
                 defender->weaken(attacker, 12);
         }
         break;
+
+    case AF_SHADOWSTAB:
+        attacker->as_monster()->del_ench(ENCH_INVIS, true);
+        break;
     }
 }
 
@@ -5619,10 +5634,11 @@ int melee_attack::calc_damage()
             damage = div_rand_round(damage * 9, 10);
 
         // If the defender is asleep, the attacker gets a stab.
-        if (defender && defender->asleep())
+        if (defender && (defender->asleep()
+                         || (attk_flavour == AF_SHADOWSTAB
+                             &&!defender->can_see(attacker))))
         {
             damage = damage * 5 / 2;
-
             dprf(DIAG_COMBAT, "Stab damage vs %s: %d",
                  defender->name(DESC_PLAIN).c_str(),
                  damage);

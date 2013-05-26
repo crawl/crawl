@@ -5266,6 +5266,10 @@ int monster::action_energy(energy_use_type et) const
         if (run())
             move_cost -= 2;
 
+        // Shadows move more quickly when blended with the darkness
+        if (type == MONS_SHADOW && invisible())
+            move_cost -= 3;
+
         // Floundering monsters get the same penalty as the player, except that
         // player get penalty on entering water, while monster get the penalty
         // when leaving it.

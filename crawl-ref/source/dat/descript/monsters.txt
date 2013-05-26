@@ -3452,8 +3452,9 @@ the whole earth is full of his glory.”
 %%%%
 shadow
 
-A wisp of unliving shadow, drifting on the edge of vision. It consumes the
-puissance of living beings.
+A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
+It moves swift and silent from one pool of shade to another, striking unerringly
+from the blind spots of those who cannot see it.
 %%%%
 shadow:quote
 

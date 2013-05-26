@@ -3881,6 +3881,19 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_SHADOW:
+        if (!mons->invisible() && !mons->backlit() && one_chance_in(6))
+        {
+            if (enchant_monster_invisible(mons, "slips into darkness"))
+            {
+                mon_enchant invis = mons->get_ench(ENCH_INVIS);
+                invis.duration = 40 + random2(60);
+                mons->update_ench(invis);
+                used = true;
+            }
+        }
+        break;
+
     default:
         break;
     }
