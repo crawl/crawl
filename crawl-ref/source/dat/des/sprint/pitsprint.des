@@ -18,7 +18,7 @@ function base_monster_setup(e)
            centaur / jelly / water moccasin / ice beast / crimson imp /\
            necrophage / quasit / zombie / sky beast / deep elf soldier /\
            giant frog / mummy / orc warrior band / wight band /\
-           hungry ghost / shadow / big kobold band / giant centipede /\
+           hungry ghost / big kobold band / giant centipede /\
            brain worm / warg / wolf / porcupine / black bear /\
            giant mite / green rat / flying skull / iron imp / lemure /\
            white imp / ufetubus / fire bat / rotting devil")
@@ -32,7 +32,7 @@ function base_monster_setup(e)
            kobold demonologist band / giant slug / deep troll /\
            deep elf fighter band / agate snail / boulder beetle / red wasp /\
            orc high priest band w:5 / pulsating lump / boring beetle /\
-           flayed ghost / freezing wraith / shadow wraith /\
+           flayed ghost / freezing wraith / shadow wraith / shadow /\
            orc sorcerer band w:5 / orc knight band / grizzly bear /\
            redback / phantasmal warrior / spiny frog / orange rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
