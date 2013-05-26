@@ -913,10 +913,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
+    case MONS_FAUN:
+    case MONS_SATYR:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_BOW;
-        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
+        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3)
+            || mon->type == MONS_FAUN
+            || mon->type == MONS_SATYR)
             item.sub_type = WPN_LONGBOW;
         break;
 

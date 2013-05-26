@@ -2512,6 +2512,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_SATYR:
+        natural_leader = true;
+    case MONS_FAUN:
+        band = BAND_FAUNS;
+        band_size = 2 + random2(4);
+        break;
+
     default: ;
     }
 
@@ -2867,6 +2874,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_JIANGSHI:
         return MONS_JIANGSHI;
+
+    case BAND_FAUNS:
+        return MONS_FAUN;
 
     default:
         die("unhandled band type %d", band);

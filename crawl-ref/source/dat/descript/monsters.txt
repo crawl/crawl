@@ -1614,6 +1614,12 @@ eye of draining
 
 A hovering horror that waxes strong on magic.
 %%%%
+faun
+
+A hybrid with the torso of a man atop the forelegs of a goat. They are fabled
+for their ability to play with the minds of those who intrude into their
+domains.
+%%%%
 feature mimic
 
 A vicious beast masquerading as an ordinary dungeon feature.
@@ -3426,6 +3432,11 @@ the haire will fall off: and the part so touched will change the colour of the
 skin to the white morphew.”
     -Gaius Plinius Secundus, _Naturalis Historia_, Book X, ch. LXVII. 79 A.D.
      trans. Philemon Holland, 1601.
+%%%%
+satyr
+
+A more intelligent relative of the faun, often found in their company, and far
+more unforgiving of - and dangerous to - interlopers.
 %%%%
 scorpion
 

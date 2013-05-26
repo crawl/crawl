@@ -373,6 +373,30 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_BIG
 },
 
+{
+    MONS_FAUN, 'c', GREEN, "faun",
+    M_WARM_BLOOD | M_SPEAKS | M_ARCHER | M_SPELLCASTER | M_ACTUAL_SPELLS,
+    MR_NO_FLAGS,
+    550, 10, MONS_FAUN, MONS_FAUN, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 3, 5, 0 },
+    2, 10, MST_FAUN, CE_CLEAN, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
+{
+    MONS_SATYR, 'c', LIGHTGREEN, "satyr",
+    M_WARM_BLOOD | M_SPEAKS | M_ARCHER | M_SPELLCASTER | M_ACTUAL_SPELLS,
+    MR_NO_FLAGS,
+    550, 10, MONS_SATYR, MONS_SATYR, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 15, 3, 5, 0 },
+    2, 15, MST_FAUN, CE_CLEAN, Z_SMALL, S_SHOUT,
+    I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // draconians ('d')
 {   // Base draconian - for use like MONS_HUMAN, MONS_ELF although we
     // now store the draconian subspecies in base_monster for those
