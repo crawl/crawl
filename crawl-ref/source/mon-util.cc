@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "errors.h"
 #include "fight.h"
 #include "food.h"
 #include "fprop.h"
@@ -4522,6 +4523,44 @@ bool mons_foe_is_marked(const monster* mon)
         return (you.duration[DUR_SENTINEL_MARK]);
     else
         return false;
+}
+
+void debug_mondata()
+{
+    string fails;
+
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+    {
+        if (invalid_monster_type(mc))
+            continue;
+        const char* name = mons_class_name(mc);
+        const monsterentry *md = get_monster_data(mc);
+
+        int MR = md->resist_magic;
+        if (MR < 0)
+            MR = md->hpdice[9] * -MR * 4 / 3;
+        if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
+            fails += make_stringf("%s has MR %d > 200\n", name, MR);
+
+        // Tests below apply only to corpses.
+        if (md->species != mc)
+            continue;
+
+        if (md->weight && !md->corpse_thingy)
+            fails += make_stringf("%s has a corpse but no corpse_type\n", name);
+        if (md->weight && !md->zombie_size)
+            fails += make_stringf("%s has a corpse but no zombie_size\n", name);
+    }
+
+    if (!fails.empty())
+    {
+        FILE *f = fopen("mon-data.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("mon-data errors (dumped to mon-data.out)");
+    }
 }
 
 // Used when clearing level data, to ensure any additional reset quirks
