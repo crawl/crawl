@@ -4,9 +4,16 @@
 class actor;
 class monster;
 
+enum blink_type
+{
+    BLINK_TLOC,
+    BLINK_LEAP
+};
+
 void blink_other_close(actor* victim, const coord_def& target);
 bool blink_away(monster* mon);
-bool blink_away(monster* mon, actor* caster, bool from_seen = true);
+bool blink_away(monster* mon, actor* caster, bool from_seen = true,
+                bool jumping = false);
 void blink_range(monster* mon);
 void blink_close(monster* mon);
 

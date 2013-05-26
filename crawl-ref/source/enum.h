@@ -3648,6 +3648,7 @@ enum seen_context_type
     SC_UNCHARM,
     SC_DOOR,            // they opened a door
     SC_GATE,            // ... or a big door
+    SC_LEAP_IN,         // leaps into view
 };
 
 enum los_type
