@@ -1353,11 +1353,10 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
 // Delete save files on game end.
 static void _delete_files()
 {
+    crawl_state.need_save = false;
     you.save->unlink();
     delete you.save;
     you.save = 0;
-    // Attempting to save after this point would crash
-    crawl_state.need_save = false;
 }
 
 void screen_end_game(string text)
