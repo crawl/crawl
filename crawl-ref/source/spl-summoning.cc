@@ -1534,7 +1534,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mon == MONS_ZOMBIE && !mons_zombifiable(monnum))
     {
         ASSERT(mons_skeleton(monnum));
-        mpr("The flesh is too rotten for a proper zombie, only a skeleton remains.");
+        mpr("The flesh is too rotten for a proper zombie; only a skeleton remains.");
         mon = MONS_SKELETON;
     }
 
