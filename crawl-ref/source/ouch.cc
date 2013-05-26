@@ -1348,6 +1348,8 @@ static void _delete_files()
     you.save->unlink();
     delete you.save;
     you.save = 0;
+    // Attempting to save after this point would crash
+    crawl_state.need_save = false;
 }
 
 void screen_end_game(string text)
