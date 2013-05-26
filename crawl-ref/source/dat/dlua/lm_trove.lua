@@ -499,6 +499,7 @@ function TroveMarker:check_veto(marker, pname)
     if self:search_for_rune() then
       crawl.mpr("The portal draws power from the presence of the item"
                 .. self:plural() .. " and buzzes to life!")
+      self:note_payed("rune", false, self.props.toll_item.ego_type)
       return
     else
       crawl.mpr("You don't have " .. self:item_name() .. " with you.")
@@ -532,6 +533,7 @@ function TroveMarker:check_veto(marker, pname)
   if self.props.toll_item.base_type == "miscellaneous" then
     crawl.mpr("The portal draws power from the presence of the item" ..
               self:plural() .. " and buzzes to life!")
+    self:note_payed(titem, false)
   else
     -- We should not try to take equipped items, there are too many weird edge
     -- cases like distortion.
@@ -539,6 +541,10 @@ function TroveMarker:check_veto(marker, pname)
       crawl.mpr("You must unequip the item" .. self:plural() .. " first!")
       return "veto"
     end
+    -- NOTE: Not "self:note_payed(self.props.toll_item, true)". The player
+    -- might have paid a toll with a higher than necessary enchantment, and
+    -- we want to make note of that.
+    self:note_payed(titem, true)
     crawl.mpr("The portal accepts the item" .. self:plural() ..
               " and buzzes to life!")
     titem.dec_quantity(self.props.toll_item.quantity)
@@ -546,7 +552,7 @@ function TroveMarker:check_veto(marker, pname)
   return
 end
 
-function TroveMarker:note_payed(name)
+function TroveMarker:note_payed(toll_item, item_taken, rune_name)
   local toll_desc
   if self.props.toll_desc then
     toll_desc = self.props.toll_desc
@@ -554,8 +560,35 @@ function TroveMarker:note_payed(name)
     toll_desc = "at " .. crawl.article_a(self.props.desc)
   end
 
-  crawl.take_note("You paid a toll of " .. name .. " " ..
-                  toll_desc .. ".")
+  local prefix
+  if item_taken then
+    prefix = "You paid a toll of "
+  else
+    prefix = "You showed "
+  end
+
+  -- Ugly special case. At this point in the code there is no rune item, so we
+  -- can not rely on any of the normal item naming code.
+  if toll_item == "rune" then
+    crawl.take_note(prefix .. rune_name .. " " .. toll_desc)
+    return
+  end
+
+  -- XXX: The name of self.props.toll_item--the item the trove wants--is wrong,
+  -- because the pluses might be wrong. But the name of toll_item--the item the
+  -- player gave us--is also wrong, because the quantity might be wrong! So we
+  -- need to use a little of both.
+
+  local target_plus1 = self.props.toll_item.plus1
+  local target_plus2 = self.props.toll_item.plus2
+  local real_plus1, real_plus2 = toll_item.pluses()
+  self.props.toll_item.plus1 = real_plus1
+  self.props.toll_item.plus2 = real_plus2
+
+  crawl.take_note(prefix .. self:item_name() .. " " .. toll_desc)
+
+  self.props.toll_item.plus1 = target_plus1
+  self.props.toll_item.plus2 = target_plus2
 end
 
 function trove_marker(pars)
