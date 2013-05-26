@@ -256,8 +256,7 @@ message_colour, do care about the order of items; these will be noted as
 take precedence over later ones, so += defers to existing matches (including
 defaults) while ^= overrides them. So, for example, with the sequence of
 options:
-   message_colour =
-   message_colour += cyan:hits
+   message_colour  = cyan:hits
    message_colour ^= red:crimson
    message_colour += yellow:killer
 the message "The crimson imp hits you!" will be displayed in red, while "The
