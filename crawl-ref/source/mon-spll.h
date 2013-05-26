@@ -1672,7 +1672,7 @@
 
     {  MST_EIDOLON,
       {
-       SPELL_PAIN,
+       SPELL_MELEE,
        SPELL_BOLT_OF_DRAINING,
        SPELL_NO_SPELL,
        SPELL_CAUSE_FEAR,
