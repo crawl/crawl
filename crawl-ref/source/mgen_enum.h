@@ -81,6 +81,7 @@ enum band_type
 #endif
     BAND_DEATH_KNIGHT,
     BAND_JIANGSHI,
+    BAND_FAUNS,
     NUM_BANDS                   // always last
 };
 

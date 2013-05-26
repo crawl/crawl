@@ -1559,8 +1559,13 @@ static bool _handle_throw(monster* mons, bolt & beem)
 
     const bool archer = mons->is_archer();
 
+    const bool liquefied = mons->liquefied_ground();
+
     // Highly-specialised archers are more likely to shoot than talk. (?)
-    if (one_chance_in(archer ? 9 : 5))
+    // If we're standing on liquefied ground, try to stand and fire!
+    // (Particularly archers.)
+    if ((liquefied && !archer && one_chance_in(9))
+        || (!liquefied && one_chance_in(archer ? 9 : 5)))
         return false;
 
     // Don't allow offscreen throwing for now.

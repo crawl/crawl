@@ -855,6 +855,8 @@ static const pop_entry pop_forest[] =
   {  1,  9,  200, SEMI, MONS_DEATH_YAK },
   {  1,  5,  999, FLAT, MONS_DRYAD },
   {  1,  5,  500, FLAT, MONS_FOREST_DRAKE },
+  { -3,  5,  999, SEMI, MONS_FAUN },
+  {  1,  9,  999, SEMI, MONS_SATYR },
   {  1,  5,  999, FLAT, MONS_SPRIGGAN },
   {  2,  8,  250, SEMI, MONS_SPRIGGAN_DRUID },
   {  2,  8,  600, SEMI, MONS_SPRIGGAN_RIDER },
