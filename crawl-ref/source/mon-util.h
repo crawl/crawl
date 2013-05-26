@@ -445,4 +445,5 @@ bool mons_foe_is_marked(const monster* mons);
 vector<monster* > get_on_level_followers();
 
 void reset_all_monsters();
+void debug_mondata();
 #endif
