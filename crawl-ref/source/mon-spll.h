@@ -1916,9 +1916,20 @@
       {
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_SATYR,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_LEDAS_LIQUEFACTION,
        SPELL_CAUSE_FEAR,
-       SPELL_MESMERISE,
+       SPELL_NO_SPELL,
        SPELL_BLINK
       }
     },
