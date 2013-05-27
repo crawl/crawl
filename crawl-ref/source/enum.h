@@ -291,7 +291,9 @@ enum attribute_type
                                // will be removed
     ATTR_NEXT_RECALL_TIME,     // aut remaining until next ally will be recalled
     ATTR_NEXT_RECALL_INDEX,    // index+1 into recall_list for next recall
+#if TAG_MAJOR_VERSION == 34
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
+#endif
     NUM_ATTRIBUTES
 };
 
