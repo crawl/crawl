@@ -1190,6 +1190,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_INSUBSTANTIAL_WISP;
     case MONS_SILENT_SPECTRE:
         return TILEP_MONS_SILENT_SPECTRE;
+    case MONS_LOST_SOUL:
+        return TILEP_MONS_LOST_SOUL;
     case MONS_SPIRIT:
         return TILEP_MONS_SPIRIT;
 
@@ -1524,6 +1526,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_LICH;
     case MONS_ANCIENT_LICH:
         return TILEP_MONS_ANCIENT_LICH;
+    case MONS_REVENANT:
+        return TILEP_MONS_REVENANT;
 
     // mummies ('M')
     case MONS_MUMMY:
@@ -1617,6 +1621,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_VAMPIRE_KNIGHT;
     case MONS_VAMPIRE_MAGE:
         return TILEP_MONS_VAMPIRE_MAGE;
+    case MONS_JIANGSHI:
+        return TILEP_MONS_JIANGSHI;
     case MONS_JORY:
         return TILEP_MONS_JORY;
 
@@ -4543,6 +4549,10 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 
             case CLOUD_FOREST_FIRE:
                 ch = TILE_CLOUD_FOREST_FIRE;
+                break;
+
+            case CLOUD_GHOSTLY_FLAME:
+                ch = TILE_CLOUD_GHOSTLY_FLAME_0 + dur;
                 break;
 
             default:

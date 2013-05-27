@@ -145,6 +145,10 @@ cloud_calc_dust3
 
 cloud_forest_fire CLOUD_FOREST_FIRE
 
+cloud_ghostly_flame0 CLOUD_GHOSTLY_FLAME_0
+cloud_ghostly_flame1 CLOUD_GHOSTLY_FLAME_1
+cloud_ghostly_flame2 CLOUD_GHOSTLY_FLAME_2
+
 %sdir mon
 fungi_plants/giant_spore SPORE_OVERLAY
 
