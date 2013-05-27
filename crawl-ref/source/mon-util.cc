@@ -1728,7 +1728,8 @@ int mons_class_res_wind(monster_type mc)
 {
     // Lightning goes well with storms.
     if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
-        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY)
+        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY
+        || mc == MONS_FOREST_DRAKE)
     {
         return 1;
     }
