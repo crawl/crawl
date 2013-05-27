@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Ein magisches Gerät, um Luftelementale zu beschwören. Es ist recht
-unzuverlässig und benötigt mehrere Versuche, um richtig zu funktionieren. Seine
-Benutzung ist mit einem gewissen Risiko verbunden, das kleiner ist, wenn man
-sich mit der richtigen Elementmagie auskennt.
-%%%%
 amulet of clarity
 
 Dieses Amulett bewahrt den Träger vor einigen Formen geistiger Verwirrtheit -
@@ -1204,13 +1197,6 @@ lajatang
 Eine sehr seltene und extrem effektive importierte Waffe aus einem Stab mit
 halbmondförmigen Klingen an beiden Enden.
 %%%%
-lamp of fire
-
-Ein magisches Gerät, um Luftelementale zu beschwören. Es ist recht
-unzuverlässig und benötigt mehrere Versuche, um richtig zu funktionieren. Seine
-Benutzung ist mit einem gewissen Risiko verbunden, das kleiner ist, wenn man
-sich mit der richtigen Elementmagie auskennt.
-%%%%
 lantern of shadows
 
 Ein unheiliger Apparat welcher die Kräfte der Dunkelheit zu deiner Hilfe
@@ -2023,14 +2009,6 @@ stone
 
 Ein kleiner Klotz von dichten, aber sonst unbeachtlichem natürlichem Mineral.
 Es kann mit der Hand geworfen oder mit einer Schleuder gestartet werden.
-%%%%
-stone of earth elementals
-
-Ein magisches Gerät, um Erde elementals aufzufordern. Es ist ziemlich
-unzuverlässig, und verlangt gewöhnlich mehrere Versuche, richtig zu fungieren.
-Das Verwenden davon trägt ein Element der Gefahr, die reduziert wird, wenn man
-in der passenden elementaren Magie besonders erfahren ist, wenn man versucht,
-vielfachen elementals zur gleichen Zeit zu kontrollieren.
 %%%%
 storm dragon armour
 

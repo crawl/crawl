@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Un outil magique destiné à l'invocation d'élémentaires d'air. Il n'est pas très
-fiable, et requiert habituellement plusieurs essais avant de fonctionner
-correctement. L'utiliser suscite un risque qui est réduit selon l'affinité de
-l'usager pour l'élément approprié.
-%%%%
 amulet of clarity
 
 Cette amulette protège le porteur contre certaines formes de confusion mentale,
@@ -586,6 +579,12 @@ falchion
 Une épée longue à un seul coté tranchant, dont la lame légèrement courbée
 concentre le poid au point de frappe, augmentant sa pénétration.
 %%%%
+fan of gales
+
+Un éventail enchanté habité par des esprits de l'air bienveillants. Agiter
+l'éventail déclenche un violent coup de vent autour du porteur et libère les
+esprits pour balayer ses ennemies.
+%%%%
 fire dragon armour
 
 Une armure magique faite d'écailles de dragon cracheur de feu. Elle offre une
@@ -725,10 +724,8 @@ en croissant de lune à chaque extrémité.
 %%%%
 lamp of fire
 
-Un appareil magique servant à invoquer des élémentaires de feu. Il est assez
-peu fiable, et nécessite habituellement plusieurs tentatives pour fonctionner
-correctement. Son utilisation comporte une part de risque, qui est réduite si
-l'on est habile dans la magie élémentaire appropriée.
+Une lampe magique habité par des esprits du feu bienveillants. Ouvrir la porte
+libère les esprits et fait danser les flammes sur les ennemies du porteur.
 %%%%
 lantern of shadows
 
@@ -892,6 +889,12 @@ pearl dragon hide
 La peau d'un dragon perle, couverte d'iridescente écailles nacrés. Dans sa
 forme brute, elle ne fournit pas beaucoup de protection, mais avec des moyens
 magiques, elle peut être utilisé pour faire d'excellentes armures.
+%%%%
+phial of floods
+
+Un récipient enchanté qui déborde d'eau élémentaire. Retirer le bouchon déverse
+un torrent d'eau de la fiole et libère les esprits de l'eau qui résident à
+l'intérieur.
 %%%%
 piece of ambrosia
 
@@ -1543,14 +1546,6 @@ transformée en armure grâce à la magie.
 stone
 
 Une pierre. Elle peut être jetée à la main ou lancée avec une fronde.
-%%%%
-stone of earth elementals
-
-Un instrument magique permettant de convoquer des élémentaires de terre. Il est
-assez peu fiable et demande souvent plusieurs tentatives avant de fonctionner
-correctement. L'employer comporte des risques quand à contrôler plusieurs
-élémentaires à la fois, bien qu'il soit réduit par le niveau de Magie de la
-Terre du porteur.
 %%%%
 storm dragon armour
 

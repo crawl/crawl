@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Um dispositivo mágico para conjurar elementais de ar. É um tanto instável e
-normalmente requer várias tentativas para funcionar corretamente. Ao usá-lo, há
-um certo risco, o qual é reduzido com devida habilidade na magia elemental
-apropriada.
-%%%%
 amulet of clarity
 
 Este amuleto protege seu usuário de algumas formas de confusão mental,

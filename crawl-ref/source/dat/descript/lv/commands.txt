@@ -114,6 +114,22 @@ CMD_DISPLAY_MAP
 
 Ievadīt kartes kodu
 %%%%
+CMD_MAP_GOTO_TARGET
+
+Doties uz kursora atrašanās vietu
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Vienu līmeni zemāk
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Vienu līmeni augstāk
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Doties uz līmeni
+%%%%
 CMD_MAP_FIND_UPSTAIR
 
 Meklēt kāpnes augšup
@@ -122,11 +138,23 @@ CMD_MAP_FIND_DOWNSTAIR
 
 Meklēt kāpnes lejup
 %%%%
+CMD_MAP_FIND_YOU
+
+Atrast meni
+%%%%
 CMD_MAP_FIND_TRAP
 
 Meklēt lamatas
 %%%%
 CMD_MAP_FIND_ALTAR
 
-Meklēt altārus
+Meklēt ziedokļus
+%%%%
+CMD_ZOOM_IN
+
+Pietuvināt
+%%%%
+CMD_ZOOM_OUT
+
+Attālināt
 %%%%
