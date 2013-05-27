@@ -2011,4 +2011,15 @@
       }
     },
 
+    {  MST_TENGU_CONJURER,
+      {
+       SPELL_FORCE_LANCE,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BATTLESPHERE,
+       SPELL_AIRSTRIKE,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    },
+
 #endif

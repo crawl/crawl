@@ -83,6 +83,7 @@ enum band_type
     BAND_JIANGSHI,
     BAND_FAUNS,
     BAND_PAN,
+    BAND_TENGU,
     NUM_BANDS                   // always last
 };
 
