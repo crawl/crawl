@@ -1817,11 +1817,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
 {
     const item_def* flesh = you.weapon();
 
-    if (!flesh || flesh->base_type != OBJ_FOOD
-        || flesh->sub_type != FOOD_CHUNK
-           && flesh->sub_type != FOOD_BEEF_JERKY
-           && flesh->sub_type != FOOD_MEAT_RATION
-           && flesh->sub_type != FOOD_SAUSAGE)
+    if (!flesh || flesh->base_type != OBJ_FOOD || !food_is_meaty(*flesh))
     {
         mpr("You need to wield a piece of raw flesh for this spell to be "
             "effective!");
