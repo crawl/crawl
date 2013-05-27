@@ -3451,7 +3451,8 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         return false;
     }
 
-    if (m2->type == MONS_REVENANT && m1->type == MONS_SPECTRAL_THING)
+    // Special-case spectral things, so they can't get past revenants.
+    if (m1->type == MONS_SPECTRAL_THING && m2->type == MONS_REVENANT)
         return true;
 
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
