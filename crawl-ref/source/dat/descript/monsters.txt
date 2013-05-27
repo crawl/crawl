@@ -2476,6 +2476,10 @@ tengu conjurer
 
 One of many tengu with a talent for the destructive magical arts.
 %%%%
+tengu reaver
+
+An elite, ferocious tengu highly skilled with both steel and spells.
+%%%%
 tengu warrior
 
 A particularly bloodthirsty tengu who has opted to hone their skill in

@@ -504,7 +504,8 @@ KMONS:  1 = spriggan defender
 MONS:   spriggan defender, spriggan berserker / spriggan
 MONS:   spriggan druid / spriggan, spriggan rider / spriggan
 MONS:   spriggan air mage / spriggan, spriggan / nothing w:30
-MONS:   faun / satyr w:5 / tengu warrior / tengu conjurer w:5
+MONS:   faun / satyr w:5 / tengu warrior / tengu conjurer w:5 / \
+        tengu reaver w:2
 COLOUR: .*%OT123456+ = lightgray
 FTILE:  .*%OT123456+ = floor_normal
 MAP
