@@ -846,6 +846,7 @@ static const pop_entry pop_forest[] =
   {  1,  9,  200, SEMI, MONS_DIRE_ELEPHANT },
   {  1,  5,  100, DOWN, MONS_YELLOW_WASP },
   {  1,  5,  200, DOWN, MONS_RED_WASP },
+  {  1,  9,  600, SEMI, MONS_FIREFLY },
   {  1,  5,  100, DOWN, MONS_SPIDER },
   {  1,  5,  50,  DOWN, MONS_REDBACK },
   {  2,  7,  50,  SEMI, MONS_WOLF_SPIDER },
