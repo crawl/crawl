@@ -3451,7 +3451,7 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         return false;
     }
 
-    // Special-case spectral things to push past revenants
+    // Special-case spectral things to push past revenants.
     if (m1->type == MONS_SPECTRAL_THING && m2->type == MONS_REVENANT)
         return true;
 
