@@ -2868,5 +2868,5 @@ bool is_elemental_evoker(const item_def &item)
 
 bool evoker_is_charged(const item_def &item)
 {
-    return (item.plus == 0);
+    return (item.plus2 == 0);
 }
