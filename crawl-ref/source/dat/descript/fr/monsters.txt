@@ -656,8 +656,9 @@ Un grand démon, recouvert de neige et parcouru d'éclairs.
 %%%%
 blue devil
 
-Un humanoïde particulier, sa silhouette cornue viens de l'enfer glacial. Il
-évite le contact du feu.
+Une silhouette humanoïde, musclée et cornue provenant d'un enfer glacé. Elle
+fond à travers les airs grâce à ses puissantes ailes, en prenant un plaisir
+sadique à harasser ceux qui essaient d'échapper à son emprise.
 %%%%
 boggart
 
@@ -1146,8 +1147,10 @@ dans le donjon, voulant partager son destin avec les autres.
 %%%%
 flayed ghost
 
-Une hideuse créature flottante du royaume des morts, l'esprit supplicié d'une
-victime torturée, avec de la peau déchirée qui reste accrochée au corps émacié.
+Une affreuse créature mort-vivante qui flotte dans les airs ; l'esprit angoissé
+d'une victime torturée dont la peau lacérée pend du corps décharné. Il parcours
+le donjon sans répit, en infligeant à ceux qui sont toujours vivant l'angoisse
+qu'il a ressentit pendant sa vie.
 %%%%
 flying skull
 
@@ -1927,9 +1930,9 @@ Cette statue est très fragile; elle se désintégrera d'un coup.
 %%%%
 orange demon
 
-Un démon couleur ambre avec une queue qui n'est pas sans rappeler celle d'un
-scorpion. Elle contient un venin assez efficace, qui n'attaque pas seulement le
-corps mais aussi l'esprit.
+Un démon de couleur ambre avec un queue ressemblant à celle d'un scorpion. Elle
+contient un puissant venin qui peut rendre ses victimes faiblardes et affaiblir
+ses coups.
 %%%%
 orange rat
 
@@ -2027,8 +2030,10 @@ griffes brûlent de la sainte colère.
 %%%%
 phantasmal warrior
 
-Un esprit hideux d'un vert translucide qui fut un guerrier tombé au combat et
-maintenant de retour dans ce plan de par une magie impie.
+Un affreux esprit vert translucide d'un guerrier tué au combat et ramené sur ce
+plan par une magie impie. La lame qu'il tient est éthérée et passe facilement
+au travers des boucliers et des armures, et rend ceux qu'elle frappe plus
+sensible à la magie.
 %%%%
 phantom
 
@@ -2049,6 +2054,12 @@ tourbillon de flammes et qu'il renaît de ses cendres.
 pillar of salt
 
 Un énorme pilier de sel qui est en train de fondre rapidement.
+%%%%
+plague shambler
+
+Un cadavre réanimé qui se déplace d'un pas traînant. Piégé par un tissu de
+sorts maléfiques dans une grotesque parodie de vie, cet infecte corps en
+décomposition cherche en titubant à punir les vivants.
 %%%%
 plant
 
@@ -2160,8 +2171,10 @@ Une créature squelettique armée d'une faux géante.
 %%%%
 red devil
 
-Un démon musclé couvert de pointes et de cornes. Deux ailes courtes sortent de
-ses épaules.
+Un cousin plus grand de l'imp ordinaire, arborant un rictus diabolique et avec
+deux petites ailes aux épaules. Ils préfèrent les tridents acérés, et se
+moquent souvent de leurs victimes alors qu'ils les piquent de loin avant de se
+replier prestement.
 %%%%
 red draconian
 
@@ -2202,12 +2215,6 @@ tandis qu'il se traîne vers sa prochaine victime.
     end
 }}
 %%%%
-rotting hulk
-
-Un cadavre réanimé, traînant des pieds. Piégé par un état de transe maléfique
-dans une parodie grotesque de la vie, ce corps infecté et en état de
-décomposition titube, cherchant à punir les vivants.
-%%%%
 the royal jelly
 
 Une chose gélatineuse particulièrement riche et dorée.
@@ -2238,8 +2245,9 @@ qu'une tête et on dit qu'ils prennent parfois la forme de serpents ardents.
 %%%%
 shadow
 
-Une volute d'ombre sans vie, dérivant sur les bords du champ de vision. Il
-consomme la puissance des êtres vivants.
+Une ombre furtive et sans vie qui se cache dans les ténèbres du donjon. Elle se
+déplace rapidement et en silence d'une flaque d'ombre à l'autre, frappant
+infailliblement depuis l'angle mort de ceux qui ne peuvent la voir.
 %%%%
 shadow demon
 
@@ -2663,8 +2671,9 @@ compagnie des orcs.
 %%%%
 water elemental
 
-Un esprit du plan élémentaire de l'eau, il existe en ce monde sous la forme
-d'une étendue d'eau.
+Un esprit tiré du plan élémentaire de l'eau. Il existe dans ce monde sous la
+forme d'un plan d'eau et peut engloutir d'autres êtres en son sein et les
+priver ainsi de souffle et de voix.
 %%%%
 water moccasin
 

@@ -9,6 +9,11 @@ the Helm card
 Šī kārts palielina Jūsu aizsardzību. Tā parasti ir atrodama pārmaiņu,
 aizsardzības  vai kara kāršu komplektos.
 %%%%
+the Shadow card
+
+Šī kārts ļauj jums saplūst ar ēnām, padarot jūs sliktāk redzamu. Tā parasti ir
+atrodama pārmaiņu, aizsardzības vai kara kāršu komplektos.
+%%%%
 the Mercenary card
 
 Šī kārts izsauc algotņus, kas cīnās Jums līdzās... par samaksu. Tā parasti ir
@@ -18,6 +23,11 @@ Experience card
 
 Šī kārts padara Jūs pieredzējušāku. To parasti var atrast pārmaiņu un brīnumu
 kāršu komplektos.
+%%%%
+the Herd card
+
+Šī kārts izsauc dzīvniekus. Tā parasti ir atrodama būtņošanas vai kara kāršu
+komplektos.
 %%%%
 Foxfire card
 

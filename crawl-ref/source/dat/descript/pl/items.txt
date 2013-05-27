@@ -1,10 +1,4 @@
 %%%%
-air elemental fan
-
-Magiczny przedmiot służący do przywoływania żywiołaków powietrza. Nie jest zbyt
-niezawodny, i zwykle wymaga paru prób zanim poprawnie zadziała. Użycie nie jest
-wskazane jeśli nie posiadasz wysokich umiejętności w Magii Powietrza.
-%%%%
 amulet of clarity
 
 Ten amulet pozwala nosicielowi zachować trzeźwy umysł. Dotyczy do także prób
@@ -653,13 +647,6 @@ Bardzo rzadka i wyjątkowo efektywna zamorska broń, składająca się z dwóch 
 kosy osadzonych na sztorc na obu końcach drzewca. Wymaga ona pewnych
 umiejętności aby jej dobrze użyć, jednak w rękach zręcznego wojownika walka
 stanowi morderczy dla wrogów taniec.
-%%%%
-lamp of fire
-
-Magiczny przedmiot służący do przywoływania żywiołaków ognia. Nie jest zbyt
-niezawodna, i często wymaga wielu prób zanim zadziała poprawnie. Do użycia
-potrzebne jest źródło ognia, takie jak lawa lub otwarty płomień. Kontrola nad
-przywołanymi żywiołakami wymaga sporych umiejętności w dziedzinie Magii Ognia.
 %%%%
 lantern of shadows
 
@@ -1418,16 +1405,6 @@ Miękka skóra smoka parowego, w surowej postaci. Można zrobić z niej zbroję.
 stone
 
 Mały kamyk. Można nim rzucić lub wystrzelić go z procy.
-%%%%
-stone of earth elementals
-
-Magiczny przedmiot do przywoływania żywiołaków ziemi. Jest niezbyt niezawodny,
-zwykle potrzebując paru prób zanim poprawnie zadziała. Potrzebuje jakiegoś
-kawałka skały do działania — zwykła ściana powinna się nadać. Kontrola nad
-żywiołakiem wymaga umiejętności z Magii Ziemi, jednak nawet ci którzy tej
-umiejętności nie posiadają, mogą skorzystać z tego przedmiotu w celu powolnego,
-bolesnego drążenia tuneli. Wymaga to oczywiście możliwości pokonania zeźlonego
-żywiołaka...
 %%%%
 storm dragon armour
 
