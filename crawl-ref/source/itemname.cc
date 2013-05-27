@@ -2174,8 +2174,8 @@ public:
             case FOOD_MEAT_RATION:
                 name = "preserved meat";
                 break;
-            case FOOD_BREAD_RATION:
-                name = "vegetables";
+            case FOOD_PEAR:
+                name = "fruit";
                 break;
             default:
                 name = "other food";
@@ -2417,7 +2417,7 @@ void check_item_knowledge(bool unknown_items)
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD, OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] = {
-            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BREAD_RATION, NUM_FOODS,
+            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_HONEYCOMB,
             NUM_BOOKS, NUM_RODS, 1, MISC_RUNE_OF_ZOT, NUM_MISCELLANY
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));

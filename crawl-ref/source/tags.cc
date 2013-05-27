@@ -2491,6 +2491,14 @@ static void tag_read_you_items(reader &th)
     for (i = 0; i < iclasses; i++)
         for (j = 0; j < count2; j++)
             you.force_autopickup[i][j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP) {
+        const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];
+        you.force_autopickup[OBJ_FOOD][FOOD_MEAT_RATION] = oldstate;
+        you.force_autopickup[OBJ_FOOD][FOOD_PEAR] = oldstate;
+        you.force_autopickup[OBJ_FOOD][FOOD_HONEYCOMB] = oldstate;
+    }
+#endif
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)
