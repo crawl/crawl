@@ -215,8 +215,6 @@ public:
 
   int magic_contamination;
 
-  FixedBitVector<NUM_FIXED_BOOKS> had_book;
-  FixedBitVector<NUM_SPELLS>      seen_spell;
   // Demigod minion trackers
   mid_t minion_mid;
   int minion_timer_short;
