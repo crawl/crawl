@@ -1436,7 +1436,7 @@ static bool _phial_of_floods()
 
 static void _expend_elemental_evoker(item_def &item)
 {
-    item.plus = 10;
+    item.plus2 = 10;
 }
 
 bool evoke_item(int slot)
