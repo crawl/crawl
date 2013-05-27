@@ -2751,7 +2751,6 @@ static monster_type _band_member(band_type band, int which)
         return MONS_BLINK_FROG;
     case BAND_WIGHTS:
         return MONS_WIGHT;
-        break;
     case BAND_SKELETAL_WARRIORS:
         return MONS_SKELETAL_WARRIOR;
 
