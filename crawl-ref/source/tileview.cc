@@ -936,9 +936,6 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     }
     else
         env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
-
-    if (env.map_knowledge(gc).item())
-        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
 }
 
 unsigned int num_tile_rays = 0;
