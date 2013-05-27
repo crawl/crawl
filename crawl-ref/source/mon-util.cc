@@ -211,9 +211,7 @@ void init_mon_name_cache()
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
         {
-            if (mon == MONS_RAKSHASA_FAKE
-                || mon == MONS_MARA_FAKE
-                || mon == MONS_PAN_FAKE
+            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE
                 || mon != MONS_SERPENT_OF_HELL
                    && mons_species(mon) == MONS_SERPENT_OF_HELL)
             {
@@ -3242,7 +3240,6 @@ static gender_type _mons_class_gender(monster_type mc)
     // Mara's fakes aren't unique, but should still be classified as
     // male.
     else if (mc == MONS_MARA_FAKE
-             || mc == MONS_PAN_FAKE
              || mc == MONS_HELLBINDER
              || mc == MONS_CLOUD_MAGE)
     {

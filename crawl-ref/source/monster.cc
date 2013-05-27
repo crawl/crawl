@@ -349,9 +349,7 @@ int monster::body_weight(bool /*base*/) const
 {
     monster_type mc = mons_base_type(this);
 
-    if (mc == MONS_RAKSHASA_FAKE
-        || mc == MONS_MARA_FAKE
-        || mc == MONS_PAN_FAKE)
+    if (mc == MONS_RAKSHASA_FAKE || mc == MONS_MARA_FAKE)
         return 0;
 
     int weight = mons_weight(mc);

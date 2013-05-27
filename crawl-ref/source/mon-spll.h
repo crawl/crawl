@@ -1936,17 +1936,6 @@
 
     {  MST_PAN,
       {
-       SPELL_FAKE_PAN_SUMMON,
-       SPELL_MASS_CONFUSION,
-       SPELL_NO_SPELL,
-       SPELL_FAKE_PAN_SUMMON,
-       SPELL_SLEEP,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_PAN_FAKE,
-      {
        SPELL_NO_SPELL,
        SPELL_MASS_CONFUSION,
        SPELL_NO_SPELL,
