@@ -3410,12 +3410,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_EMPTY_EBONY_CASKET:
             return item_type_known(item);
 #endif
-        case MISC_LAMP_OF_FIRE:
-        case MISC_FAN_OF_GALES:
-        case MISC_STONE_OF_TREMORS:
-        case MISC_PHIAL_OF_FLOODS:
-            return !evoker_is_charged(item);
-
         case MISC_HORN_OF_GERYON:
             return item.plus2;
         default:
