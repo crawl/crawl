@@ -192,6 +192,14 @@ drain all life out of treasure-craving visitors.
 Tartarus is seven levels deep and contains the bone rune. It can be accessed
 via the Vestibule of Hell.
 %%%%
+Tartarus:quote
+
+“There is a drear and lonely tract of hell
+ From all the common gloom removed afar:
+ A flat, sad land it is, where shadows are,
+ Whose lorn estate my verse may never tell.”
+    -Edward Arlington Robinson, “Supremacy”. 1897.
+%%%%
 Zot
 
 A region of the dungeon that is so terrifying, so full of madness, frenzy and

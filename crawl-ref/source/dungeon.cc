@@ -4117,19 +4117,22 @@ static void _build_postvault_level(vault_placement &place)
     }
 }
 
-static const object_class_type _acquirement_item_classes[] =
+static object_class_type _acquirement_object_class()
 {
-    OBJ_JEWELLERY,
-    OBJ_BOOKS,
-    OBJ_MISCELLANY,
-    OBJ_WEAPONS,
-    OBJ_ARMOUR,
-    OBJ_WANDS,
-    OBJ_STAVES,
-};
+    static const object_class_type classes[] =
+    {
+        OBJ_JEWELLERY,
+        OBJ_BOOKS,
+        OBJ_MISCELLANY, // Felids stop here
+        OBJ_WEAPONS,
+        OBJ_ARMOUR,
+        OBJ_WANDS,
+        OBJ_STAVES,
+    };
 
-#define NC_KITTEHS           3
-#define NC_LESSER_LIFE_FORMS ARRAYSZ(_acquirement_item_classes)
+    const int nc = (you.species == SP_FELID) ? 3 : ARRAYSZ(classes);
+    return classes[random2(nc)];
+}
 
 static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
@@ -4287,6 +4290,19 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     return true;
 }
 
+static object_class_type _superb_object_class()
+{
+    return random_choose_weighted(
+            20, OBJ_WEAPONS,
+            10, OBJ_ARMOUR,
+            10, OBJ_JEWELLERY,
+            10, OBJ_BOOKS,
+            9, OBJ_STAVES,
+            1, OBJ_RODS,
+            10, OBJ_MISCELLANY,
+            0);
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level)
@@ -4305,7 +4321,7 @@ int dgn_place_item(const item_spec &spec,
         level = spec.level;
     else
     {
-        bool adjust_type = true;
+        bool adjust_type = false;
         switch (spec.level)
         {
         case ISPEC_DAMAGED:
@@ -4317,13 +4333,14 @@ int dgn_place_item(const item_spec &spec,
             level = 5 + level * 2;
             break;
         case ISPEC_SUPERB:
+            adjust_type = true;
             level = MAKE_GOOD_ITEM;
             break;
         case ISPEC_ACQUIREMENT:
+            adjust_type = true;
             acquire = true;
             break;
         default:
-            adjust_type = false;
             break;
         }
 
@@ -4331,9 +4348,8 @@ int dgn_place_item(const item_spec &spec,
             base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
-            base_type = _acquirement_item_classes[random2(
-                            (you.species == SP_FELID && acquire) ? NC_KITTEHS :
-                            NC_LESSER_LIFE_FORMS)];
+            base_type = acquire ? _acquirement_object_class()
+                                : _superb_object_class();
         }
     }
 
@@ -4885,15 +4901,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
             which_class = OBJ_GOLD;
         else if (vgrid == '|')
         {
-            which_class = random_choose_weighted(
-                            20, OBJ_WEAPONS,
-                            10, OBJ_ARMOUR,
-                            10, OBJ_JEWELLERY,
-                            10, OBJ_BOOKS,
-                             9, OBJ_STAVES,
-                             1, OBJ_RODS,
-                            10, OBJ_MISCELLANY,
-                             0);
+            which_class = _superb_object_class();
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
