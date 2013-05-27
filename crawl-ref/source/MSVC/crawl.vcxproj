@@ -304,6 +304,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\godconduct.cc" />
     <ClCompile Include="..\goditem.cc" />
     <ClCompile Include="..\godmenu.cc" />
+    <ClCompile Include="..\godminion.cc" />
     <ClCompile Include="..\godpassive.cc" />
     <ClCompile Include="..\godprayer.cc" />
     <ClCompile Include="..\godwrath.cc" />
@@ -688,6 +689,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\godconduct.h" />
     <ClInclude Include="..\goditem.h" />
     <ClInclude Include="..\godmenu.h" />
+    <ClInclude Include="..\godminion.h" />
     <ClInclude Include="..\godpassive.h" />
     <ClInclude Include="..\godprayer.h" />
     <ClInclude Include="..\godwrath.h" />
