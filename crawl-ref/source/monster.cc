@@ -2895,6 +2895,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
 
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
+    case MONS_ANCIENT_CHAMPION:
     case MONS_REVENANT:
         adj = "bony";
         break;
