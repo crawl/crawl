@@ -67,6 +67,7 @@ function vaults_default_options()
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },
       { generator = "tagged", tag = "vaults_entry_crypt", weight = (you.where() == dgn.level_name(dgn.br_entrance("Crypt"))) and 25 or 0, max_rooms = 1 },
+      { generator = "tagged", tag = "vaults_entry_forest", weight = (you.where() == dgn.level_name(dgn.br_entrance("Forest"))) and 25 or 0, max_rooms = 1 },
       { generator = "tagged", tag = "vaults_entry_blade", weight = (you.where() == dgn.level_name(dgn.br_entrance("Blade"))) and 25 or 0, max_rooms = 1 },
     },
 
