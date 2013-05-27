@@ -2189,8 +2189,14 @@ public:
             else
                 name = "miscellaneous";
         }
-        else if (item->base_type == OBJ_BOOKS || item->base_type == OBJ_RODS
-                 || item->base_type == OBJ_GOLD)
+        else if (item->base_type == OBJ_BOOKS)
+        {
+            if (item->sub_type == BOOK_MANUAL)
+                name = "manuals";
+            else
+                name = "spellbooks";
+        }
+        else if (item->base_type == OBJ_RODS || item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
             name = pluralise(name);
@@ -2414,11 +2420,13 @@ void check_item_knowledge(bool unknown_items)
         // Misc.
         static const object_class_type misc_list[] = {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
-            OBJ_BOOKS, OBJ_RODS, OBJ_GOLD, OBJ_MISCELLANY, OBJ_MISCELLANY
+            OBJ_BOOKS, OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
+            OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] = {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_HONEYCOMB,
-            NUM_BOOKS, NUM_RODS, 1, MISC_RUNE_OF_ZOT, NUM_MISCELLANY
+            NUM_BOOKS, BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
+            NUM_MISCELLANY
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
         for (unsigned i = 0; i < ARRAYSZ(misc_list); i++)

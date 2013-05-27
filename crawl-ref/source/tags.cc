@@ -2497,6 +2497,9 @@ static void tag_read_you_items(reader &th)
         you.force_autopickup[OBJ_FOOD][FOOD_MEAT_RATION] = oldstate;
         you.force_autopickup[OBJ_FOOD][FOOD_PEAR] = oldstate;
         you.force_autopickup[OBJ_FOOD][FOOD_HONEYCOMB] = oldstate;
+
+        you.force_autopickup[OBJ_BOOKS][BOOK_MANUAL] =
+            you.force_autopickup[OBJ_BOOKS][NUM_BOOKS];
     }
 #endif
 }
