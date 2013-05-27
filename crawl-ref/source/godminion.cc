@@ -266,8 +266,7 @@ int demigod_weight_spell_for_god(god_type god, monster_type mon, spell_type spel
             }
         case GOD_SIF_MUNA:
             // Siffies can still use Conj but it's weighted lower. Otherwise they only use player spells.
-            // TODO: Maybe Vehumet spells should use player_spell check too?
-            return (vehumet_supports_spell(spell) ? 2 : (is_player_spell(spell) ? 10 : 0));
+            return is_player_spell(spell) ? (vehumet_supports_spell(spell)) ? 2 : 10) : 0;
         case GOD_TROG:
             switch (spell) {
                 case SPELL_TROGS_HAND:
