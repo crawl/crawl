@@ -3195,7 +3195,7 @@ void recharge_elemental_evokers(int exp)
     vector<item_def*> evokers;
     for (int item = 0; item < ENDOFPACK; ++item)
     {
-        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus > 0)
+        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus2 > 0)
             evokers.push_back(&you.inv[item]);
     }
 
@@ -3212,8 +3212,8 @@ void recharge_elemental_evokers(int exp)
         {
             exp -= you.attribute[ATTR_EVOKER_XP];
             you.attribute[ATTR_EVOKER_XP] = xp_factor;
-            evoker->plus--;
-            if (evoker->plus == 0)
+            evoker->plus2--;
+            if (evoker->plus2 == 0)
             {
                 mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
                 evokers.pop_back();
