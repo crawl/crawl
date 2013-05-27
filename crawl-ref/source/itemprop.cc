@@ -2067,6 +2067,44 @@ bool is_fizzing_potion(const item_def &item)
     return (item.sub_type == POT_FIZZING);
 }
 
+bool food_is_meaty(int food_type)
+{
+    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
+            "Bad food type %d (NUM_FOODS = %d)",
+            food_type, NUM_FOODS);
+
+    return Food_prop[Food_index[food_type]].carn_mod > 0;
+}
+
+bool food_is_meaty(const item_def &item)
+{
+    ASSERT(item.defined());
+
+    if (item.base_type != OBJ_FOOD)
+        return false;
+
+    return food_is_meaty(item.sub_type);
+}
+
+bool food_is_veggie(int food_type)
+{
+    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
+            "Bad food type %d (NUM_FOODS = %d)",
+            food_type, NUM_FOODS);
+
+    return Food_prop[Food_index[food_type]].herb_mod > 0;
+}
+
+bool food_is_veggie(const item_def &item)
+{
+    ASSERT(item.defined());
+
+    if (item.base_type != OBJ_FOOD)
+        return item.base_type == OBJ_MISSILES && item.sub_type == MI_PIE;
+
+    return food_is_veggie(item.sub_type);
+}
+
 int food_value(const item_def &item)
 {
     ASSERT(item.defined());

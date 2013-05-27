@@ -982,6 +982,7 @@ gnome MONS_GNOME
 wight MONS_WIGHT
 %rim 1
 skeletal_warrior MONS_SKELETAL_WARRIOR
+ancient_champion MONS_ANCIENT_CHAMPION
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
@@ -995,9 +996,6 @@ crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique
 murray MONS_MURRAY
-%sdir mon/vault
-## From a special vault (ancient_champions.des)
-ancient_champion MONS_ANCIENT_CHAMPION
 
 ## Sprint specials
 %sdir mon/sprint

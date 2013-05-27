@@ -1751,7 +1751,7 @@ void MiscastEffect::_necromancy(int severity)
         {
             bool success = false;
 
-            for (int i = random2(3); i >= 0; --i)
+            for (int i = random2(2); i >= 0; --i)
             {
                 if (_create_monster(MONS_SHADOW, 2, true))
                     success = true;

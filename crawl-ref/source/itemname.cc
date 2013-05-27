@@ -2166,10 +2166,21 @@ public:
 
         if (item->base_type == OBJ_FOOD)
         {
-            if (item->sub_type == FOOD_CHUNK)
+            switch (item->sub_type)
+            {
+            case FOOD_CHUNK:
                 name = "chunks";
-            else
-                name = "non-perishables";
+                break;
+            case FOOD_MEAT_RATION:
+                name = "preserved meat";
+                break;
+            case FOOD_PEAR:
+                name = "fruit";
+                break;
+            default:
+                name = "other food";
+                break;
+            }
         }
         else if (item->base_type == OBJ_MISCELLANY)
         {
@@ -2178,8 +2189,14 @@ public:
             else
                 name = "miscellaneous";
         }
-        else if (item->base_type == OBJ_BOOKS || item->base_type == OBJ_RODS
-                 || item->base_type == OBJ_GOLD)
+        else if (item->base_type == OBJ_BOOKS)
+        {
+            if (item->sub_type == BOOK_MANUAL)
+                name = "manuals";
+            else
+                name = "spellbooks";
+        }
+        else if (item->base_type == OBJ_RODS || item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
             name = pluralise(name);
@@ -2401,12 +2418,18 @@ void check_item_knowledge(bool unknown_items)
             }
         }
         // Misc.
-        object_class_type misc_list[] = {OBJ_FOOD, OBJ_FOOD, OBJ_BOOKS,
-                                         OBJ_RODS, OBJ_GOLD, OBJ_MISCELLANY,
-                                         OBJ_MISCELLANY};
-        int misc_ST_list[] = {FOOD_CHUNK, NUM_FOODS, NUM_BOOKS, NUM_RODS,
-                              1, MISC_RUNE_OF_ZOT, NUM_MISCELLANY};
-        for (unsigned i = 0; i < sizeof(misc_list)/sizeof(object_class_type); i++)
+        static const object_class_type misc_list[] = {
+            OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
+            OBJ_BOOKS, OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
+            OBJ_MISCELLANY, OBJ_MISCELLANY
+        };
+        static const int misc_ST_list[] = {
+            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_HONEYCOMB,
+            NUM_BOOKS, BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
+            NUM_MISCELLANY
+        };
+        COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
+        for (unsigned i = 0; i < ARRAYSZ(misc_list); i++)
         {
             item_def* ptmp = new item_def;
             if (ptmp != 0)
@@ -3358,14 +3381,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
         }
 
-        if (you.has_spell(SPELL_SIMULACRUM)
-            && (item.sub_type == FOOD_CHUNK
-             || item.sub_type == FOOD_BEEF_JERKY
-             || item.sub_type == FOOD_MEAT_RATION
-             || item.sub_type == FOOD_SAUSAGE))
-        {
+        if (food_is_meaty(item) && you.has_spell(SPELL_SIMULACRUM))
             return false;
-        }
 
         if (is_fruit(item) && you.religion == GOD_FEDHAS)
             return false;
@@ -3393,12 +3410,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_EMPTY_EBONY_CASKET:
             return item_type_known(item);
 #endif
-        case MISC_LAMP_OF_FIRE:
-        case MISC_FAN_OF_GALES:
-        case MISC_STONE_OF_TREMORS:
-        case MISC_PHIAL_OF_FLOODS:
-            return !evoker_is_charged(item);
-
         case MISC_HORN_OF_GERYON:
             return item.plus2;
         default:
