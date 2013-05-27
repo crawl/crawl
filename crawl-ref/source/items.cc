@@ -2510,8 +2510,8 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_FOOD:
         return (item.sub_type == FOOD_CHUNK) ? item.sub_type
              : food_is_meaty(item)           ? FOOD_MEAT_RATION
-             : food_is_veggie(item)          ? FOOD_BREAD_RATION
-                                             : max_type;
+             : is_fruit(item)                ? FOOD_PEAR
+                                             : FOOD_HONEYCOMB;
     case OBJ_MISCELLANY:
         return (item.sub_type == MISC_RUNE_OF_ZOT) ? item.sub_type : max_type;
     case OBJ_BOOKS:
