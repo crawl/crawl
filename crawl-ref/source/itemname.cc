@@ -2166,10 +2166,21 @@ public:
 
         if (item->base_type == OBJ_FOOD)
         {
-            if (item->sub_type == FOOD_CHUNK)
+            switch (item->sub_type)
+            {
+            case FOOD_CHUNK:
                 name = "chunks";
-            else
-                name = "non-perishables";
+                break;
+            case FOOD_MEAT_RATION:
+                name = "preserved meat";
+                break;
+            case FOOD_BREAD_RATION:
+                name = "vegetables";
+                break;
+            default:
+                name = "other food";
+                break;
+            }
         }
         else if (item->base_type == OBJ_MISCELLANY)
         {
@@ -2401,12 +2412,16 @@ void check_item_knowledge(bool unknown_items)
             }
         }
         // Misc.
-        object_class_type misc_list[] = {OBJ_FOOD, OBJ_FOOD, OBJ_BOOKS,
-                                         OBJ_RODS, OBJ_GOLD, OBJ_MISCELLANY,
-                                         OBJ_MISCELLANY};
-        int misc_ST_list[] = {FOOD_CHUNK, NUM_FOODS, NUM_BOOKS, NUM_RODS,
-                              1, MISC_RUNE_OF_ZOT, NUM_MISCELLANY};
-        for (unsigned i = 0; i < sizeof(misc_list)/sizeof(object_class_type); i++)
+        static const object_class_type misc_list[] = {
+            OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
+            OBJ_BOOKS, OBJ_RODS, OBJ_GOLD, OBJ_MISCELLANY, OBJ_MISCELLANY
+        };
+        static const int misc_ST_list[] = {
+            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BREAD_RATION, NUM_FOODS,
+            NUM_BOOKS, NUM_RODS, 1, MISC_RUNE_OF_ZOT, NUM_MISCELLANY
+        };
+        COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
+        for (unsigned i = 0; i < ARRAYSZ(misc_list); i++)
         {
             item_def* ptmp = new item_def;
             if (ptmp != 0)
