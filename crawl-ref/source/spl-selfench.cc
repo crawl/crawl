@@ -322,7 +322,7 @@ spret_type cast_infusion(int pow, bool fail)
 {
 	fail_check();
 	you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
-	you.props["infusion_bonus"] = 3 + pow/25;
+	you.props["infusion_bonus"] = 2 + pow/25;
 	mpr("Your attacks are magically infused.");
 
 	return SPRET_SUCCESS;
