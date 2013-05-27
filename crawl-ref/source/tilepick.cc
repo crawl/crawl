@@ -4087,6 +4087,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_STONE_OF_TREMORS:
         return TILE_MISC_STONE_OF_EARTH_ELEMENTALS;
 
+    case MISC_PHIAL_OF_FLOODS:
+        return TILE_MISC_PHIAL_OF_FLOODS;
+
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
 
