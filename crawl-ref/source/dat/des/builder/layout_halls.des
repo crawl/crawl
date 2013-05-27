@@ -8,6 +8,7 @@
 : require("dlua/layout/procedural_complex.lua")
 : require("dlua/layout/procedural_transform.lua")
 : require("dlua/layout/zonify.lua")
+: require("dlua/layout/theme.lua")
 
 {{
 
@@ -206,6 +207,8 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   procedural.render_map(_G, func, function(v) return (v < 1 and '.' or 'x') end)
   zonify.map_fill_zones(_G, 1, 'x')
 
+  if cave then theme.D.caves(_G)
+  else theme.level_material(_G) end
 }}
 MAP
 ENDMAP
@@ -242,6 +245,7 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   procedural.render_map(_G, fphase, function(v) return (v > wall_break and '.' or 'x') end)
   zonify.map_fill_zones(_G, 1, 'x')
 
+  theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -313,6 +317,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_catacombs
   end)
 
   zonify.map_fill_zones(_G, 1, 'x')
+  theme.level_material(_G)
 }}
 
 # Layers two onions on top of each other to create an
@@ -517,6 +522,7 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 
   procedural.render_map(_G, fbase, function(v) return (v < breakpoint and '.' or 'x') end)
   zonify.map_fill_zones(_G, 1, 'x')
+  theme.level_material(_G)
 }}
 MAP
 ENDMAP

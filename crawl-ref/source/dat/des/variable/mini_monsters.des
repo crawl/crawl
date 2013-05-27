@@ -1734,8 +1734,8 @@ ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
 ITEM:    staff of summoning w:20 / rod of demonology w:5 / rod of the swarm w:5
 ITEM:    amulet of warding w:5 / amulet of warding randart
-ITEM:    air elemental fan / lamp of fire / \
-         stone of earth elementals / lantern of shadows
+ITEM:    fan of gales / lamp of fire / \
+         stone of tremors / phial of floods / lantern of shadows
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna
@@ -2820,7 +2820,7 @@ NSUBST:  " = 1:g / *:%
 SUBST:   % = %$
 ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
 ITEM:    wand of digging / wand of disintegration
-ITEM:    stone of earth elementals
+ITEM:    stone of tremors
 ITEM:    scroll of teleportation q:2 w:20 / dagger ego:distortion
 MAP
 ...................
@@ -3438,7 +3438,7 @@ SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
 ITEM:    wand of digging / wand of disintegration
-ITEM:    ring of teleportation / stone of earth elementals
+ITEM:    ring of teleportation / stone of tremors
 MAP
 ...........
 .vvnvvvnvv.
@@ -4436,7 +4436,7 @@ NAME:   grunt_tough_drop
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-
 KFEAT:  ^ = known teleport trap
-KFEAT:  _ = alarm trap
+KFEAT:  _ = known alarm trap
 KPROP:  8^ = no_rtele_into
 : if you.absdepth() < 9 then
 SUBST: | = %
@@ -5161,7 +5161,7 @@ MONS:   deep dwarf death knight ; \
         chain mail race:dwarven w:7 | \
         plate armour race:dwarven w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
-MONS:   rotting hulk / freezing wraith / phantasmal warrior / \
+MONS:   freezing wraith / phantasmal warrior / \
         flaming corpse / flayed ghost / skeletal warrior
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  - = open_door

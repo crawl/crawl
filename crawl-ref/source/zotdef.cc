@@ -572,7 +572,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;        // sanity
         if (mentry == get_monster_data(MONS_PROGRAM_BUG))
             continue;        // sanity
-        if (mons_class_flag(mon_type, M_NO_POLY_TO))
+        if (mons_class_flag(mon_type, M_NO_POLY_TO | M_CANT_SPAWN))
             continue;
         if (mons_class_flag(mon_type, M_UNFINISHED))
             continue;

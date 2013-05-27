@@ -447,43 +447,43 @@ spret_type cast_summon_elemental(int pow, god_type god,
 
     const int dur = min(2 + (random2(pow) / 5), 6);
 
-    while (true)
+    mpr("Summon from material in which direction?", MSGCH_PROMPT);
+
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    direction(smove, args);
+
+    if (!smove.isValid)
     {
-        mpr("Summon from material in which direction?", MSGCH_PROMPT);
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
 
-        direction_chooser_args args;
-        args.restricts = DIR_DIR;
-        direction(smove, args);
+    targ = you.pos() + smove.delta;
 
-        if (!smove.isValid)
+    if (const monster* m = monster_at(targ))
+    {
+        if (you.can_see(m))
         {
-            canned_msg(MSG_OK);
+            mpr("There's something there already!");
             return SPRET_ABORT;
         }
-
-        targ = you.pos() + smove.delta;
-
-        if (const monster* m = monster_at(targ))
+        else
         {
-            if (you.can_see(m))
-                mpr("There's something there already!");
-            else
-            {
-                fail_check();
-                mpr("Something seems to disrupt your summoning.");
-                return SPRET_SUCCESS; // still losing a turn
-            }
+            fail_check();
+            mpr("Something seems to disrupt your summoning.");
+            return SPRET_SUCCESS; // still losing a turn
         }
-        else if (smove.delta.origin())
-            mpr("You can't summon an elemental from yourself!");
-        else if (!in_bounds(targ))
-        {
-            // XXX: Should this cost a turn?
-            mpr("That material won't yield to your beckoning.");
-            return SPRET_ABORT;
-        }
-
-        break;
+    }
+    else if (smove.delta.origin()) {
+        mpr("You can't summon an elemental from yourself!");
+        return SPRET_ABORT;
+    }
+    else if (!in_bounds(targ))
+    {
+        // XXX: Should this cost a turn?
+        mpr("That material won't yield to your beckoning.");
+        return SPRET_ABORT;
     }
 
     mon = _feature_to_elemental(targ, restricted_type);
@@ -1374,8 +1374,11 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 
 static bool _animatable_remains(const item_def& item)
 {
-    return (item.base_type == OBJ_CORPSES
-        && mons_class_can_be_zombified(item.mon_type));
+    return item.base_type == OBJ_CORPSES
+        && mons_class_can_be_zombified(item.mon_type)
+        // the above allows spectrals/etc
+        && (mons_zombifiable(item.mon_type)
+            || mons_skeleton(item.mon_type));
 }
 
 // Try to equip the skeleton/zombie with the objects it died with.  This
@@ -1595,8 +1598,13 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
-
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
+    if (mon == MONS_ZOMBIE && !mons_zombifiable(monnum))
+    {
+        ASSERT(mons_skeleton(monnum));
+        mpr("The flesh is too rotten for a proper zombie; only a skeleton remains.");
+        mon = MONS_SKELETON;
+    }
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
@@ -1864,20 +1872,13 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
 
 static struct { monster_type mons; const char* name; } mystery_meats[] =
 {
-    { MONS_HOUND, "dog" },
-    { MONS_FELID, "cat" },
     { MONS_RAVEN, "crow" },
-    { MONS_WORM, "" },
-    { MONS_RAT, "" },
     { MONS_YAK, "" },
     { MONS_HOG, "" },
     { MONS_SHEEP, "" },
     { MONS_ELEPHANT, "" },
-    { MONS_WARG, "chupacabra" },
-    { MONS_QUOKKA, "wallaby" },
-    { MONS_DEATH_YAK, "mad cow" },
     { MONS_YAK, "cow" },
-    { MONS_YAK, "bull" },
+    { MONS_DEATH_YAK, "bull" },
 };
 
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
@@ -1904,8 +1905,10 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         sim_type = flesh->mon_type;
         break;
     case FOOD_BEEF_JERKY:
-        sim_type = MONS_YAK;
-        name = coinflip() ? "cow" : "bull";
+        if (coinflip())
+            sim_type = MONS_YAK, name = "cow";
+        else
+            sim_type = MONS_DEATH_YAK, name = "bull";
         break;
     case FOOD_SAUSAGE:
         sim_type = MONS_HOG;
@@ -1913,7 +1916,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     default:
         // usual suspects for mystery meat's identity
         {
-            int which = random2(ARRAYSZ(mystery_meats));
+            const int which = random2(ARRAYSZ(mystery_meats));
             sim_type = mystery_meats[which].mons;
             name = mystery_meats[which].name;
         }
@@ -2329,14 +2332,14 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
     while (to_summon--)
     {
-        const int chance = random2(25);
-        monster_type mon = ((chance > 22) ? MONS_PHANTOM :            //  8%
-                            (chance > 20) ? MONS_HUNGRY_GHOST :       //  8%
-                            (chance > 18) ? MONS_FLAYED_GHOST :       //  8%
-                            (chance > 16) ? MONS_SHADOW_WRAITH:       //  8%
-                            (chance >  6) ? MONS_WRAITH :             // 40%
-                            (chance >  2) ? MONS_FREEZING_WRAITH      // 16%
-                                          : MONS_PHANTASMAL_WARRIOR); // 12%
+        const monster_type mon =
+            random_choose_weighted(1, MONS_PHANTOM,
+                                   1, MONS_HUNGRY_GHOST,
+                                   1, MONS_SHADOW_WRAITH,
+                                   5, MONS_WRAITH,
+                                   2, MONS_FREEZING_WRAITH,
+                                   2, MONS_PHANTASMAL_WARRIOR,
+                                   0);
 
         if (monster *mons = create_monster(
                 mgen_data(mon,
@@ -2348,6 +2351,11 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
             if (player_angers_monster(mons))
                 friendly = false;
+            else
+            {
+                mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
+                mons->foe = mi;
+            }
         }
     }
 

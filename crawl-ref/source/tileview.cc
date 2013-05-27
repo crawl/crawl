@@ -40,6 +40,7 @@ void tile_new_level(bool first_time, bool init_unseen)
             {
                 env.tile_bk_fg[x][y] = 0;
                 env.tile_bk_bg[x][y] = TILE_DNGN_UNSEEN;
+                env.tile_bk_cloud[x][y] = 0;
             }
     }
 
@@ -752,12 +753,14 @@ void tile_draw_floor()
             // init tiles
             env.tile_bg(ep) = bg;
             env.tile_fg(ep) = 0;
+            env.tile_cloud(ep) = 0;
         }
 }
 
 void tile_clear_map(const coord_def& gc)
 {
     env.tile_bk_fg(gc) = 0;
+    env.tile_bk_cloud(gc) = 0;
     tiles.update_minimap(gc);
 }
 
@@ -765,6 +768,7 @@ void tile_forget_map(const coord_def &gc)
 {
     env.tile_bk_fg(gc) = 0;
     env.tile_bk_bg(gc) = 0;
+    env.tile_bk_cloud(gc) = 0;
     tiles.update_minimap(gc);
 }
 
@@ -825,19 +829,16 @@ static void _tile_place_invisible_monster(const coord_def &gc)
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
-    if (env.map_knowledge(gc).feat() == DNGN_SHALLOW_WATER)
-        return;
-
-    tileidx_t t = TILE_UNSEEN_MONSTER;
-    if (!you.see_cell(gc))
+    if (env.map_knowledge(gc).feat() != DNGN_SHALLOW_WATER)
     {
-        env.tile_bk_fg(gc) = t;
-        return;
+        if (you.see_cell(gc))
+            env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
+        else
+            env.tile_bk_fg(gc) = TILE_UNSEEN_MONSTER;
     }
-    if (you.visible_igrd(gc) != NON_ITEM)
-        t |= TILE_FLAG_S_UNDER;
 
-    env.tile_fg(ep) = t;
+    if (env.map_knowledge(gc).item())
+        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
 }
 
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
@@ -854,7 +855,17 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     {
         // If necessary add item brand.
         if (env.map_knowledge(gc).item())
+        {
             t |= TILE_FLAG_S_UNDER;
+
+            if (item_needs_autopickup(*env.map_knowledge(gc).item()))
+            {
+                if (you.see_cell(gc))
+                    env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+                else
+                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+            }
+        }
     }
     else
     {
@@ -893,10 +904,12 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
-void tile_clear_monster(const coord_def &gc)
+void tile_reset_fg(const coord_def &gc)
 {
-    env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_bk_fg(gc), true);
-    tile_clear_map(gc);
+    // remove autopickup cursor, it will be added back if necessary
+    env.tile_bk_bg(gc) &= ~TILE_FLAG_CURSOR3;
+    tile_draw_map_cell(gc, true);
+    tiles.update_minimap(gc);
 }
 
 void tile_reset_feat(const coord_def &gc)
@@ -919,13 +932,13 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     if (you.see_cell(gc))
     {
         const coord_def ep = grid2show(gc);
-        if (env.tile_fg(ep) != 0)
-            return;
-
-        env.tile_fg(ep) = tileidx_cloud(cl, disturbance);
+        env.tile_cloud(ep) = tileidx_cloud(cl, disturbance);
     }
     else
-        env.tile_bk_fg(gc) = tileidx_cloud(cl, disturbance);
+        env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
+
+    if (env.map_knowledge(gc).item())
+        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
 }
 
 unsigned int num_tile_rays = 0;
@@ -973,8 +986,6 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_invisible_monster(gc);
     else if (cell.monsterinfo())
         _tile_place_monster(gc, *cell.monsterinfo());
-    else if (cell.cloud() != CLOUD_NONE)
-        _tile_place_cloud(gc, *cell.cloudinfo());
     else if (cell.item())
     {
         if (feat_is_stair(cell.feat()))
@@ -984,6 +995,10 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     }
     else
         env.tile_bk_fg(gc) = 0;
+
+    // Always place clouds now they have their own layer
+    if (cell.cloud() != CLOUD_NONE)
+        _tile_place_cloud(gc, *cell.cloudinfo());
 }
 
 void tile_wizmap_terrain(const coord_def &gc)

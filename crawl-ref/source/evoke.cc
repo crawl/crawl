@@ -18,6 +18,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "exercise.h"
@@ -28,36 +29,49 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "melee_attack.h"
 #include "message.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "misc.h"
 #include "player-stats.h"
 #include "godconduct.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
 #include "terrain.h"
+#include "traps.h"
 #include "view.h"
+#include "viewchar.h"
 #include "xom.h"
+
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 
 void shadow_lantern_effect()
 {
-    // Currently only mummies and lich form get more shadows.
-    if (x_chance_in_y(player_spec_death() + 1, 8))
+    int n = div_rand_round(you.time_taken, 10);
+    for (int i = 0; i < n; ++i)
     {
-        create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
-                                 you.pos(), MHITYOU));
+        if (x_chance_in_y(you.skill_rdiv(SK_EVOCATIONS, 1, 5) + 1, 14))
+        {
+            create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
+                                    you.pos(), MHITNOT));
 
-        did_god_conduct(DID_NECROMANCY, 1);
+            did_god_conduct(DID_NECROMANCY, 1);
+        }
     }
 }
 
@@ -681,6 +695,750 @@ static bool _ball_of_energy(void)
     return ret;
 }
 
+static int _num_evoker_elementals()
+{
+    int n = 1;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
+        ++n;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
+        ++n;
+    return n;
+}
+
+static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
+                                          bool jitter_start,
+                                          bolt &beam1, bolt &beam2)
+{
+    const int NUM_TRIES = 10;
+    const int RANGE = 8;
+
+    bolt trace_beam;
+    trace_beam.source = source;
+    trace_beam.target = target;
+    trace_beam.aimed_at_spot = false;
+    trace_beam.is_tracer = true;
+    trace_beam.range = RANGE;
+    trace_beam.fire();
+
+    coord_def aim_dir = (source - target).sgn();
+
+    if (trace_beam.path_taken.back() != source)
+        target = trace_beam.path_taken.back();
+
+    if (jitter_start)
+    {
+        for (int n = 0; n < NUM_TRIES; ++n)
+        {
+            coord_def jitter = target + coord_def(random_range(-2, 2), random_range(-2, 2));
+            if (jitter == target || jitter == source || feat_is_solid(grd(jitter)))
+                continue;
+
+            trace_beam.target = jitter;
+            trace_beam.fire();
+
+            coord_def delta = source - trace_beam.path_taken.back();
+            //Don't try to aim at targets in the opposite direction of main aim
+            if ((abs(aim_dir.x - delta.sgn().x) + abs(aim_dir.y - delta.sgn().y) >= 2)
+                 && !delta.origin())
+                continue;
+
+            target = trace_beam.path_taken.back();
+            break;
+        }
+    }
+
+    vector<coord_def> path = trace_beam.path_taken;
+    unsigned int mid_i = (path.size() / 2);
+    coord_def mid = path[mid_i];
+
+    for (int n = 0; n < NUM_TRIES; ++n)
+    {
+        coord_def jitter = mid + coord_def(random_range(-3, 3), random_range(-3, 3));
+        if (jitter == mid || jitter.distance_from(mid) < 2 || jitter == source
+            || feat_is_solid(grd(jitter))
+            || !cell_see_cell(source, jitter, LOS_NO_TRANS)
+            || !cell_see_cell(target, jitter, LOS_NO_TRANS))
+            continue;
+
+        trace_beam.aimed_at_feet = false;
+        trace_beam.source = jitter;
+        trace_beam.target = target;
+        trace_beam.fire();
+
+        coord_def delta1 = source - jitter;
+        coord_def delta2 = source - trace_beam.path_taken.back();
+
+        //Don't try to aim at targets in the opposite direction of main aim
+        if (abs(aim_dir.x - delta1.sgn().x) + abs(aim_dir.y - delta1.sgn().y) >= 2
+            || abs(aim_dir.x - delta2.sgn().x) + abs(aim_dir.y - delta2.sgn().y) >= 2)
+        {
+            continue;
+        }
+
+        // Don't make l-turns
+        coord_def delta = jitter-target;
+        if (!delta.x || !delta.y)
+            continue;
+
+        bool match = false;
+        for (unsigned int i = 0; i < path.size(); ++i)
+        {
+            if (path[i] == jitter)
+            {
+                match = true;
+                break;
+            }
+        }
+        if (match)
+            continue;
+
+        mid = jitter;
+        break;
+    }
+
+    beam1.source = source;
+    beam1.target = mid;
+    beam1.range = RANGE;
+    beam1.aimed_at_spot = true;
+    beam1.is_tracer = true;
+    beam1.fire();
+    beam1.is_tracer = false;
+
+    beam2.source = mid;
+    beam2.target = target;
+    beam2.range = max(int(RANGE - beam1.path_taken.size()), mid.distance_from(target));
+    beam2.is_tracer = true;
+    beam2.fire();
+    beam2.is_tracer = false;
+
+    vector<coord_def> newpath;
+    newpath.insert(newpath.end(), beam1.path_taken.begin(), beam1.path_taken.end());
+    newpath.insert(newpath.end(), beam2.path_taken.begin(), beam2.path_taken.end());
+
+    return newpath;
+}
+
+static bool _check_path_overlap(const vector<coord_def> &path1,
+                                const vector<coord_def> &path2, int match_len)
+{
+    int max_len = min(path1.size(), path2.size());
+    match_len = min(match_len, max_len-1);
+
+    // Check for overlap with previous path
+    int matchs = 0;
+    for (int i = 0; i < max_len; ++i)
+    {
+        if (path1[i] == path2[i])
+            ++matchs;
+        else
+            matchs = 0;
+
+        if (matchs >= match_len)
+            return true;
+    }
+
+    return false;
+}
+
+static bool _fill_flame_trails(coord_def source, coord_def target,
+                               vector<bolt> &beams, vector<coord_def> &elementals,
+                               int num)
+{
+    const int NUM_TRIES = 10;
+    vector<vector<coord_def> > paths;
+    for (int n = 0; n < num; ++n)
+    {
+        int tries = 0;
+        vector<coord_def> path;
+        bolt beam1, beam2;
+        while (++tries <= NUM_TRIES && path.empty())
+        {
+            path = _get_jitter_path(source, target, !paths.empty(), beam1, beam2);
+            for (unsigned int i = 0; i < paths.size(); ++i)
+            {
+                if (_check_path_overlap(path, paths[i], 3))
+                {
+                    path.clear();
+                    beam1 = bolt();
+                    beam2 = bolt();
+                    break;
+                }
+            }
+        }
+
+        if (!path.empty())
+        {
+            paths.push_back(path);
+            beams.push_back(beam1);
+            beams.push_back(beam2);
+            if (path.size() > 3)
+                elementals.push_back(path.back());
+        }
+    }
+
+    return (!paths.empty());
+}
+
+static bool _lamp_of_fire()
+{
+    bolt base_beam;
+    dist target;
+
+    const int pow = 12 + you.skill(SK_EVOCATIONS, 2);
+    if (spell_direction(target, base_beam, DIR_TARGET, TARG_ANY, 8,
+                        true, true, false, NULL,
+                        "Aim the lamp in which direction?", true, NULL))
+    {
+        mpr("The flames dance!");
+
+        vector<bolt> beams;
+        vector<coord_def> elementals;
+        int num_trails = _num_evoker_elementals();
+
+        _fill_flame_trails(you.pos(), target.target, beams, elementals, num_trails);
+
+        for (unsigned int n = 0; n < beams.size(); ++n)
+        {
+            if (beams[n].source == beams[n].target)
+                continue;
+
+            beams[n].flavour     = BEAM_FIRE;
+            beams[n].colour      = RED;
+            beams[n].beam_source = MHITYOU;
+            beams[n].thrower     = KILL_YOU;
+            beams[n].is_beam     = true;
+            beams[n].name        = "trail of fire";
+            beams[n].hit         = 10 + (pow/8);
+            beams[n].damage      = dice_def(2, 4 + pow/4);
+            beams[n].ench_power  = (pow/8);
+            beams[n].loudness    = 5;
+            beams[n].fire();
+        }
+
+        for (unsigned int n = 0; n < elementals.size(); ++n)
+        {
+            mgen_data mg(MONS_FIRE_ELEMENTAL, BEH_FRIENDLY, &you, 3,
+                         SPELL_NO_SPELL, elementals[n], 0,
+                         MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
+                         MONS_FIRE_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+            mg.hd = 6 + (pow/14);
+            create_monster(mg);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+struct dist_sorter
+{
+    coord_def pos;
+    bool operator()(const monster* a, const monster* b)
+    {
+        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
+    }
+};
+
+static int _gale_push_dist(const monster* mons)
+{
+    int dist = 1 + you.skill_rdiv(SK_EVOCATIONS, 1, 10);
+
+    if (mons->airborne())
+        dist++;
+
+    if (mons->body_size(PSIZE_BODY) < SIZE_MEDIUM)
+        dist++;
+    else if (mons->body_size(PSIZE_BODY) > SIZE_BIG)
+        dist /= 2;
+    else if (mons->body_size(PSIZE_BODY) > SIZE_MEDIUM)
+        dist -= 1;
+
+    int range = mons->pos().distance_from(you.pos());
+    if (range > 5)
+        dist -= 2;
+    else if (range > 2)
+        dist--;
+
+    if (dist < 0)
+        return 0;
+    else
+        return dist;
+}
+
+static bool _fan_of_gales()
+{
+    vector<monster*> mon_list;
+
+    int radius = min(7, 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (mi->res_wind() > 0
+            || !cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
+            || mi->pos().distance_from(you.pos()) > radius)
+        {
+            continue;
+        }
+
+        mon_list.push_back(*mi);
+    }
+
+    dist_sorter sorter = {you.pos()};
+    sort(mon_list.begin(), mon_list.end(), sorter);
+
+    bolt wind_beam;
+    wind_beam.hit = AUTOMATIC_HIT;
+    wind_beam.is_beam = true;
+    wind_beam.affects_nothing = true;
+    wind_beam.source = you.pos();
+    wind_beam.range = LOS_RADIUS;
+    wind_beam.is_tracer = true;
+
+    counted_monster_list affected_monsters;
+
+    for (unsigned int i = 0; i < mon_list.size(); ++i)
+    {
+        wind_beam.target = mon_list[i]->pos();
+        wind_beam.fire();
+
+        int push = _gale_push_dist(mon_list[i]);
+        bool pushed = false;
+
+        for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1 && push; ++j)
+        {
+            if (wind_beam.path_taken[j] == mon_list[i]->pos())
+            {
+                coord_def newpos = wind_beam.path_taken[j+1];
+                if (!actor_at(newpos) && !feat_is_solid(grd(newpos))
+                    && mon_list[i]->can_pass_through(newpos)
+                    && mon_list[i]->is_habitable(newpos))
+                {
+                    mon_list[i]->move_to_pos(newpos);
+                    --push;
+                    pushed = true;
+                }
+                else //Try to find an alternate route to push
+                {
+                    for (distance_iterator di(newpos, false, true, 1 ); di; ++di)
+                    {
+                        if (di->distance_from(you.pos()) == newpos.distance_from(you.pos())
+                            && !actor_at(*di) && !feat_is_solid(grd(*di))
+                            && mon_list[i]->can_pass_through(*di)
+                            && mon_list[i]->is_habitable(*di))
+                        {
+                            mon_list[i]->move_to_pos(*di);
+                            --push;
+                            pushed = true;
+
+                            // Adjust wind path for moved monster
+                            wind_beam.target = *di;
+                            wind_beam.fire();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (pushed)
+        {
+            mon_list[i]->speed_increment -= random2(6) + 4;
+            affected_monsters.add(mon_list[i]);
+        }
+    }
+
+    // Now move clouds
+    vector<int> cloud_list;
+    for (distance_iterator di(you.pos(), true, true, radius + 2); di; ++di)
+    {
+        if (env.cgrid(*di) != EMPTY_CLOUD && cell_see_cell(you.pos(), *di, LOS_SOLID))
+            cloud_list.push_back(env.cgrid(*di));
+    }
+
+    for (int i = cloud_list.size() - 1; i >= 0; --i)
+    {
+        wind_beam.target = env.cloud[cloud_list[i]].pos;
+        wind_beam.fire();
+
+        int dist = env.cloud[cloud_list[i]].pos.distance_from(you.pos());
+        int push = (dist > 5 ? 2 : dist > 2 ? 3 : 4);
+
+        for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1 && push; ++j)
+        {
+            if (env.cgrid(wind_beam.path_taken[j]) == cloud_list[i])
+            {
+                coord_def newpos = wind_beam.path_taken[j+1];
+                if (!feat_is_solid(grd(newpos)) && env.cgrid(newpos) == EMPTY_CLOUD)
+                {
+                    swap_clouds(newpos, wind_beam.path_taken[j]);
+                    --push;
+                }
+                else //Try to find an alternate route to push
+                {
+                    for (distance_iterator di(wind_beam.path_taken[j], false, true, 1); di; ++di)
+                    {
+                        if (di->distance_from(you.pos()) == newpos.distance_from(you.pos())
+                            && !feat_is_solid(grd(*di)) && env.cgrid(*di) == EMPTY_CLOUD)
+                        {
+                            swap_clouds(*di, wind_beam.path_taken[j]);
+                            --push;
+                            wind_beam.target = *di;
+                            wind_beam.fire();
+                            j--;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (you.skill(SK_EVOCATIONS) > 12)
+        mpr("A mighty gale blasts forth from the fan!");
+    else
+        mpr("A fierce wind blows from the fan.");
+
+    noisy(8, you.pos());
+
+    if (!affected_monsters.empty())
+    {
+        const string message =
+            make_stringf("%s %s blown away by the wind.",
+                         affected_monsters.describe().c_str(),
+                         affected_monsters.count() == 1? "is" : "are");
+        if (strwidth(message) < get_number_of_cols() - 2)
+            mpr(message.c_str());
+        else
+            mpr("The monsters around you are blown away!");
+    }
+
+    vector<coord_def> elementals;
+    for (radius_iterator ri(you.pos(), radius, C_ROUND, NULL, true); ri; ++ri)
+    {
+        if (ri->distance_from(you.pos()) >= 3 && !monster_at(*ri)
+            && !feat_is_solid(grd(*ri))
+            && cell_see_cell(you.pos(), *ri, LOS_NO_TRANS))
+        {
+            elementals.push_back(*ri);
+        }
+    }
+    random_shuffle(elementals.begin(), elementals.end());
+
+    int num_elementals = _num_evoker_elementals();
+
+    bool created = false;
+    for (int n = 0; n < min(num_elementals, (int)elementals.size()); ++n)
+    {
+        mgen_data mg (MONS_AIR_ELEMENTAL, BEH_FRIENDLY, &you, 3, SPELL_NO_SPELL,
+                      elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE,
+                      GOD_NO_GOD, MONS_AIR_ELEMENTAL, 0, BLACK,
+                      PROX_CLOSE_TO_PLAYER);
+        mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+        if (create_monster(mg))
+            created = true;
+    }
+    if (created)
+        mpr("The winds coalesce and take form.");
+
+    return true;
+}
+
+static bool _list_contains(coord_def pos, const vector<coord_def>& spaces)
+{
+    for (unsigned int i = 0; i < spaces.size(); ++i)
+    {
+        if (spaces[i] == pos)
+            return true;
+    }
+    return false;
+}
+
+static int _delta_to_dir(coord_def delta)
+{
+    for (int i = 0; i < 8; i++)
+        if (Compass[i] == delta)
+            return i;
+    return -1;
+}
+
+static void _rotate_dir(int& dir, int turn)
+{
+    if (turn < 0)
+        dir = (dir + turn < 0) ? 8 + dir + turn : (dir + turn);
+    else if (turn > 0)
+        dir = (dir + turn > 7) ? dir - 8 + turn : (dir + turn);
+}
+
+static coord_def _adjacent_by_dir(coord_def pos, int dir, int turn)
+{
+    _rotate_dir(dir, turn);
+    return pos + Compass[dir];
+}
+
+static bool _is_rock(dungeon_feature_type feat)
+{
+    return (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
+            || feat == DNGN_SLIMY_WALL);
+}
+
+static void _trace_shockwave(coord_def start, int dir, int facing, int max_len,
+                             vector<coord_def>& path, vector<coord_def>& rocks)
+{
+    coord_def p;
+
+    if (!feat_is_solid(grd(start)))
+        path.push_back(start);
+
+    int j = 2;
+    while ((int)path.size() < max_len && j > -5)
+    {
+        p = _adjacent_by_dir(start, dir, facing * j);
+        if (p == you.pos())
+            break;
+        if (!feat_is_solid(grd(p)) || feat_is_door(grd(p)))
+        {
+            _rotate_dir(dir, facing * j);
+            start += Compass[dir];
+            path.push_back(p);
+            j = 2;
+            continue;
+        }
+        // Can no longer follow shockwave without appropriate wall
+        else if (!_is_rock(grd(p)))
+            break;
+        else
+        {
+            if (!_list_contains(p, rocks))
+                rocks.push_back(p);
+            j--;
+        }
+    }
+}
+
+static void _tremor_at(coord_def start, coord_def delta)
+{
+    int dir = _delta_to_dir(delta);
+
+    vector<coord_def> path[2];
+    vector<coord_def> rocks;
+
+    int shockwave_len = min(4 + you.skill_rdiv(SK_EVOCATIONS, 1, 3), 10);
+
+    for (int i = 0; i < 7; ++i)
+    {
+        int ndir = (dir + i);
+        if (ndir > 7)
+            ndir -= 8;
+
+        if (!feat_is_solid(grd(start+Compass[ndir])))
+        {
+            _trace_shockwave(start+Compass[ndir], ndir, -1, shockwave_len,
+                             path[0], rocks);
+            break;
+        }
+        else if (_is_rock(grd(start+Compass[ndir]))
+                 &&!_list_contains(start+Compass[ndir], rocks))
+        {
+            rocks.push_back(start+Compass[ndir]);
+        }
+    }
+
+    for (int i = 0; i < 7; ++i)
+    {
+        int ndir = (dir - i);
+        if (ndir < 0)
+            ndir += 8;
+
+        if (!feat_is_solid(grd(start+Compass[ndir])))
+        {
+            _trace_shockwave(start+Compass[ndir], ndir, 1, shockwave_len,
+                             path[1], rocks);
+            break;
+        }
+        else if (_is_rock(grd(start+Compass[ndir]))
+                 &&!_list_contains(start+Compass[ndir], rocks))
+        {
+            rocks.push_back(start+Compass[ndir]);
+        }
+    }
+
+    bolt rubble;
+    rubble.name        = "falling rubble";
+    rubble.range       = 1;
+    rubble.hit         = 10 + you.skill_rdiv(SK_EVOCATIONS, 1, 4);
+    rubble.damage      = dice_def(3, 5 + you.skill_rdiv(SK_EVOCATIONS, 2, 3));
+    rubble.beam_source = MHITYOU;
+    rubble.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
+    rubble.colour      = LIGHTGREY;
+    rubble.flavour     = BEAM_MMISSILE;
+    rubble.thrower     = KILL_YOU;
+    rubble.is_beam     = false;
+    rubble.loudness    = 10;
+    rubble.draw_delay  = 0;
+
+    vector<coord_def> affected;
+    for (unsigned int i = 0; i < max(path[0].size(), path[1].size()); ++i)
+    {
+        for (unsigned int j = 0; j < 2; ++j)
+        {
+            if (i < path[j].size())
+            {
+                if (feat_is_closed_door(grd(path[j][i])))
+                {
+                    if (cell_see_cell(you.pos(), path[j][i], LOS_DEFAULT))
+                        mpr("The door collapses!");
+                    nuke_wall(path[j][i]);
+                }
+                if (grd(path[j][i]) == DNGN_FLOOR)
+                {
+                    monster* mon = monster_at(path[j][i]);
+                    if (mon && !mon->airborne() && is_valid_shaft_level()
+                        && x_chance_in_y(75 + you.skill(SK_EVOCATIONS, 2), 1000))
+                    {
+                        mon->do_shaft();
+                    }
+                }
+
+                rubble.source = path[j][i];
+                rubble.target = path[j][i];
+                // Don't hit one space more than once
+                if (_list_contains(path[j][i], affected))
+                {
+                    rubble.affects_nothing = true;
+                    rubble.fire();
+                    rubble.affects_nothing = false;
+                }
+                else
+                {
+                    affected.push_back(path[j][i]);
+                    rubble.fire();
+                }
+            }
+        }
+
+        update_screen();
+        delay(20);
+    }
+
+    int num_elementals = _num_evoker_elementals();
+
+    vector<coord_def> elementals;
+    for (unsigned int i = 0; i < rocks.size(); ++i)
+    {
+        if (cell_see_cell(you.pos(), rocks[i], LOS_NO_TRANS))
+            elementals.push_back(rocks[i]);
+        if (one_chance_in(3))
+            nuke_wall(rocks[i]);
+    }
+    random_shuffle(elementals.begin(), elementals.end());
+
+    bool created = false;
+    for (int n = 0; n < min(num_elementals, (int)elementals.size()); ++n)
+    {
+        nuke_wall(elementals[n]);
+        mgen_data mg(MONS_EARTH_ELEMENTAL, BEH_FRIENDLY, &you, 3, SPELL_NO_SPELL,
+                     elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
+                     MONS_EARTH_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+        mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+        if (create_monster(mg))
+            created = true;
+    }
+    if (created)
+        mpr("The rubble rises up and takes form.");
+}
+
+static bool _stone_of_tremors()
+{
+    bolt beam;
+    dist target;
+
+    if (spell_direction(target, beam, DIR_TARGET, TARG_ANY, 1,
+                        true, true, false, "Prompt?",
+                        "Press the stone against what?", true, NULL))
+    {
+        coord_def targ = beam.target;
+        dungeon_feature_type feat = grd(targ);
+        if (!_is_rock(feat))
+        {
+            mpr("You cannot induce a tremor in that!");
+            return false;
+        }
+        else
+        {
+            mpr("Shockwaves run through the rock!");
+            _tremor_at(you.pos(), targ-you.pos());
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool _phial_of_floods()
+{
+    dist target;
+    bolt beam;
+
+    zappy(ZAP_PRIMAL_WAVE, 25 + you.skill(SK_EVOCATIONS, 8), beam);
+    beam.range = LOS_RADIUS;
+    beam.thrower = KILL_YOU;
+    beam.name = "flood of elemental water";
+    beam.aimed_at_spot = true;
+
+    if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
+                        LOS_RADIUS, true, true, false, NULL,
+                        "Aim the phial where?"))
+    {
+        beam.fire();
+
+        vector<coord_def> elementals;
+        // Flood the endpoint
+        coord_def center = beam.path_taken.back();
+        int num = 5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7);
+        int dur = 40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3);
+        for (distance_iterator di(center, true, false, 2); di && (num > 0); ++di)
+        {
+            if ((grd(*di) == DNGN_FLOOR || grd(*di) == DNGN_SHALLOW_WATER)
+                && cell_see_cell(center, *di, LOS_NO_TRANS))
+            {
+                num--;
+                temp_change_terrain(*di, DNGN_SHALLOW_WATER,
+                                    random_range(dur*2, dur*3) - (di.radius()*20),
+                                    TERRAIN_CHANGE_FLOOD);
+                elementals.push_back(*di);
+            }
+        }
+
+        int num_elementals = _num_evoker_elementals();
+
+        bool created = false;
+        num = min(num_elementals,
+                  min((int)elementals.size(), (int)elementals.size() / 5 + 1));
+        for (int n = 0; n < num; ++n)
+        {
+            mgen_data mg (MONS_WATER_ELEMENTAL, BEH_FRIENDLY, &you, 3,
+                          SPELL_NO_SPELL, elementals[n], 0,
+                          MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
+                          MONS_WATER_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+            mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+            if (create_monster(mg))
+                created = true;
+        }
+        if (created)
+            mpr("The water rises up and takes form.");
+
+        return true;
+    }
+
+    return false;
+}
+
+static void _expend_elemental_evoker(item_def &item)
+{
+    item.plus2 = 10;
+}
+
 bool evoke_item(int slot)
 {
     if (you.form == TRAN_WISP)
@@ -839,34 +1597,51 @@ bool evoke_item(int slot)
                 pract = 2;
             break;
 
-        case MISC_AIR_ELEMENTAL_FAN:
-            if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            else
+        case MISC_FAN_OF_GALES:
+            if (!evoker_is_charged(item))
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4, 3);
-                pract = (one_chance_in(5) ? 1 : 0);
+                mpr("That is presently inert.");
+                return false;
             }
+            _fan_of_gales();
+            _expend_elemental_evoker(item);
             break;
 
         case MISC_LAMP_OF_FIRE:
-            if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            else
+            if (!evoker_is_charged(item))
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4, 3);
-                pract = (one_chance_in(5) ? 1 : 0);
+                mpr("That is presently inert.");
+                return false;
             }
+            if (_lamp_of_fire())
+                _expend_elemental_evoker(item);
+            else
+                return false;
+
             break;
 
-        case MISC_STONE_OF_EARTH_ELEMENTALS:
-            if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            else
+        case MISC_STONE_OF_TREMORS:
+            if (!evoker_is_charged(item))
             {
-                cast_summon_elemental(100, GOD_NO_GOD, MONS_EARTH_ELEMENTAL, 4, 3);
-                pract = (one_chance_in(5) ? 1 : 0);
+                mpr("That is presently inert.");
+                return false;
             }
+            if (_stone_of_tremors())
+                _expend_elemental_evoker(item);
+            else
+                return false;
+            break;
+
+        case MISC_PHIAL_OF_FLOODS:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            if (_phial_of_floods())
+                _expend_elemental_evoker(item);
+            else
+                return false;
             break;
 
         case MISC_HORN_OF_GERYON:

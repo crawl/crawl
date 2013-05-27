@@ -490,6 +490,51 @@ man sie im <w>Befehls-Feld</w> anklickt.
 
                            <cyan>Drücke <w>irgendeine Taste</w> um diesen Anzeige zu löschen...</cyan>
 %%%%
+tutorial4 start
+
+In dieser Lehre sind Sie dabei zu erfahren, wie man erlernt und Zauber wirft.
+%%%%
+tutorial4 spellbook
+
+Sie können sich einen Zauber von getragenem Zauberbuch mit
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder durch
+<input>klicken</input> auf dem memorisation Etikett und Auswählen des
+Zauber-Ziegels einprägen</localtiles> . Am Erfahrungsniveau 1 sind nur Zaubern
+des Niveaus 1 für Sie verfügbar. Das wird sich ändern, wie Sie Erfahrung
+sammeln.
+%%%%
+tutorial4 spellcasting
+
+Sie können Zauber mit <input>$cmd[CMD_CAST_SPELL]</input><localtiles> oder
+durch Anklicken <input></input> auf den Zauber Fliesen </localtiles> gegossen.
+Drücke <input>$cmd[CMD_CAST_SPELL]?</input>, um eine Liste Eurer Zauber
+erhalten.
+
+Sobald Sie von Magie Punkte sind, um Rückzug und Ruhe sie mit <input>
+$cmd[CMD_REST]</input><localtiles> oder durch Anklicken <input></input> der
+Rest Icon in der Kommando-Panel </localtiles>.
+%%%%
+tutorial4 ring_power
+
+Setzen Sie diesen Ring auf ,mit
+<input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> oder durch
+<input>Anklicken</input> es in der Bestandsliste aus </localtiles>, und ruhen
+Sie sich anschließend bis zu Ihrem neuen volles Potenzial auszuschöpfen.
+%%%%
+tutorial4 undead
+
+Anders als die meisten Monster, Untote nicht regenerieren Gesundheit und es ist
+unmöglich zu sagen, wie sie sind verwundet. <localtiles> Sie können übrigens
+auch zaubern, indem Sie  <input>Strg + Linksklick</input> auf das Monster.
+</localtiles>
+%%%%
+tutorial4 spell_success
+
+Um Ihre Kenntnisse von Zauber zu überprüfen, drücken Sie
+<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder
+<input>mouseover</input> über Ihre gespeicherten Zauber </localtiles>.
+Vergleichen Sie Ihre Zauber Erfolgsraten vor und nach schwingt dieses Personal.
+%%%%
 tutorial5 start
 
 In dieser Lektion lernst du alles über Götter und wie man ihre Mächte benutzt.

@@ -2856,3 +2856,17 @@ void seen_item(const item_def &item)
         set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
     }
 }
+
+bool is_elemental_evoker(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && (item.sub_type == MISC_LAMP_OF_FIRE
+                || item.sub_type == MISC_STONE_OF_TREMORS
+                || item.sub_type == MISC_FAN_OF_GALES
+                || item.sub_type == MISC_PHIAL_OF_FLOODS));
+}
+
+bool evoker_is_charged(const item_def &item)
+{
+    return (item.plus2 == 0);
+}

@@ -524,7 +524,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
         break;
 
     case SK_ARMOUR:
-        // Deformed species aren't given armor skill, so there's no need
+        // Deformed species aren't given armour skill, so there's no need
         // to worry about scale mail's not fitting.
         newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL);
         slot++;
@@ -750,7 +750,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
 // dungeon.
 static void _wanderer_cover_equip_holes(int & slot)
 {
-    // We are going to cover any glaring holes (no armor/no weapon) that
+    // We are going to cover any glaring holes (no armour/no weapon) that
     // occurred during equipment generation.
     if (you.equip[EQ_BODY_ARMOUR] == -1)
     {

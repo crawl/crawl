@@ -2572,11 +2572,11 @@ MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
 KMONS:   4 = Boris / lich / unborn deep dwarf
 KMONS:   5 = lich / unborn deep dwarf
 : elseif you.absdepth() > 13 then
-MONS:    skeletal warrior / rotting hulk / eidolon
+MONS:    skeletal warrior / plague shambler / eidolon
 KMONS:   4 = Frances / vampire mage / deep dwarf necromancer
 KMONS:   5 = vampire mage / deep dwarf necromancer
 : else
-MONS:    wight / necrophage / shadow
+MONS:    wight / necrophage / shadow w:5
 KMONS:   4 = Josephine / skeletal warrior / necromancer
 KMONS:   5 = skeletal warrior / necromancer
 : end
@@ -3318,7 +3318,7 @@ KMONS:   P = hellwing / red devil / hell hound
 KMONS:   Q = hell beast / smoke demon / ynoxinul
 KMONS:   R = shadow demon / reaper / cacodemon w:5
 KMONS:   S = eidolon / skeletal warrior / zombie w:5
-KMONS:   T = flayed ghost / guardian mummy / rotting hulk
+KMONS:   T = flayed ghost / guardian mummy / plague shambler
 KMONS:   U = death ooze / bone dragon / profane servitor w:5
 KMONS:   V = elephant / very ugly thing / wolf spider
 KMONS:   W = dire elephant / alligator / emperor scorpion

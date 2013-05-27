@@ -118,6 +118,85 @@ MAP
 .......
 ENDMAP
 
+NAME: nicolae_vaults_blade_pointy_end
+TAGS: vaults_entry_blade allow_dup no_monster_gen
+KFEAT: O = enter_hall_of_blades
+KMONS: 01 = dancing weapon
+FTILE: .O1 = floor_hall
+MAP
+xxxx
+xO.xxx
+x....xxx
+xx.1...xxx
+ x.......xx
+ xx..1.....
+  x........
+  xx...1...
+   x.......
+   xx....1.
+    x......
+ENDMAP
+
+NAME: nicolae_vaults_blade_hurt_lockers
+TAGS: vaults_entry_blade allow_dup no_monster_gen vaults_orient_w
+SHUFFLE: Aa/Bb/Dd, TG
+SUBST: BD = x, bd = 1, A = +, a = ., T : T., G : G.
+KFEAT: O = enter_hall_of_blades
+KMONS: 1 = dancing weapon
+FTILE: O' = floor_hall
+MAP
+xx..+aA''cxx
+x..Gxxx''ccx
+...Txxx'''cx
+....+bB''Ocx
+...Txxx'''cx
+x..Gxxx''ccx
+xx..+dD''cxx
+ENDMAP
+
+NAME: nicolae_vaults_blade_armed_guards
+TAGS: vaults_entry_blade allow_dup no_monster_gen
+KMONS: 1 = vault guard ; battleaxe | broad axe | flail | glaive | great mace | \
+   halberd | hand axe | long sword | morningstar | scimitar | short sword | \
+   spiked flail | trident | war axe . chain mail | plate armour . \
+   large shield | shield w:20 | nothing w:60
+KFEAT: O = enter_hall_of_blades
+MAP
+xxx...xxx
+x...c...x
+x.c.c.c.x
+...1.1...
+.cc.O.cc.
+...1.1...
+x.c.c.c.x
+x...c...x
+xxx...xxx
+ENDMAP
+
+NAME: nicolae_vaults_blade_crossed_weapons
+TAGS: vaults_entry_blade allow_dup no_monster_gen
+NSUBST: O = O / .
+KFEAT: O = enter_hall_of_blades
+KMONS: 1 = dancing weapon ; long sword
+FTILE: .O1 = floor_hall
+MAP
+...............
+.v.v.......v.v.
+..v...vOv...v..
+.v.v..vvv..v.v.
+....v..c..v....
+.....1.c.1.....
+..vv..OCO..vv..
+..OvcccccccvO..
+..vv..OcO..vv..
+.....1.c.1.....
+....v..c..v....
+.v.v..vvv..v.v.
+..v...vOv...v..
+.v.v.......v.v.
+...............
+ENDMAP
+
 ######################################
 # Main layout
 

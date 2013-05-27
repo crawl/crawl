@@ -88,6 +88,7 @@
 #include "misc.h"
 #include "mislead.h"
 #include "mon-act.h"
+#include "mon-abil.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -194,7 +195,7 @@ const struct coord_def Compass[9] =
 
 // Functions in main module
 static void _launch_game_loop();
-static void _launch_game();
+NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty(void);
 static void _input(void);
@@ -322,6 +323,7 @@ int main(int argc, char *argv[])
     if (Options.sc_entries != 0 || !SysEnv.scorefile.empty())
     {
         crawl_state.type = Options.game.type;
+        crawl_state.map = crawl_state.sprint_map;
         hiscores_print_all(Options.sc_entries, Options.sc_format);
         return 0;
     }
@@ -399,7 +401,7 @@ static void _launch_game_loop()
              && !crawl_state.seen_hups);
 }
 
-static NORETURN void _launch_game()
+NORETURN static void _launch_game()
 {
     const bool game_start = startup_step();
 
@@ -1373,17 +1375,75 @@ static void _input()
     crawl_state.clear_god_acting();
 }
 
-static bool _stairs_check_mesmerised()
+static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
+                             bool known_shaft)
 {
+    // Immobile
+    if (you.form == TRAN_TREE)
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+
+    // Mesmerized
     if (you.beheld() && !you.confused())
     {
         const monster* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
              beholder->name(DESC_THE, true).c_str());
-        return true;
+        return false;
     }
 
-    return false;
+    // Held
+    if (you.attribute[ATTR_HELD])
+    {
+        mprf("You can't do that while %s.", held_status());
+        return false;
+    }
+
+    // Up and down both work for shops and portals.
+    if (ftype == DNGN_ENTER_SHOP)
+    {
+        if (you.berserk())
+            canned_msg(MSG_TOO_BERSERK);
+        else
+            shop();
+        // Even though we may have "succeeded", return false so we don't keep
+        // trying to go downstairs.
+        return false;
+    }
+
+    // If it's not bidirectional, check that the player is headed
+    // in the right direction.
+    if (!feat_is_bidirectional_portal(ftype))
+    {
+        if (feat_stair_direction(ftype) != (down ? CMD_GO_DOWNSTAIRS
+                                                 : CMD_GO_UPSTAIRS)
+            // probably shouldn't be passed known_shaft=true
+            // if going up, but just in case...
+            && (!down || !known_shaft))
+        {
+            if (ftype == DNGN_STONE_ARCH)
+                mpr("There is nothing on the other side of the stone arch.");
+            else if (ftype == DNGN_ABANDONED_SHOP)
+                mpr("This shop appears to be closed.");
+            else if (down)
+                mpr("You can't go down here!");
+            else
+                mpr("You can't go up here!");
+            return false;
+        }
+    }
+
+    // Overloaded, can't go up stairs.
+    if (!down && you.burden_state == BS_OVERLOADED
+        && !feat_is_escape_hatch(ftype) && !feat_is_gate(ftype))
+    {
+        mpr("You are carrying too much to climb upwards.");
+        return false;
+    }
+
+    return true;
 }
 
 static bool _marker_vetoes_stair()
@@ -1431,76 +1491,36 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
     return true;
 }
 
-static void _go_downstairs();
-static void _go_upstairs()
+static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
 {
-    ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
-
-    const dungeon_feature_type ygrd = grd(you.pos());
-
-    if (_stairs_check_mesmerised())
-        return;
-
-    if (you.attribute[ATTR_HELD])
-    {
-        mprf("You can't use stairs while %s.", held_status());
-        return;
-    }
-
-    if (ygrd == DNGN_ENTER_SHOP)
-    {
-        if (you.berserk())
-            canned_msg(MSG_TOO_BERSERK);
-        else
-            shop();
-        return;
-    }
-    // Up and down both work for portals.
-    else if (feat_is_bidirectional_portal(ygrd))
-        ;
-    else if (feat_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
-    {
-        if (ygrd == DNGN_STONE_ARCH)
-            mpr("There is nothing on the other side of the stone arch.");
-        else if (ygrd == DNGN_ABANDONED_SHOP)
-            mpr("This shop appears to be closed.");
-        else
-            mpr("You can't go up here!");
-        return;
-    }
-
-    if (!you.attempt_escape()) // false means constricted and don't escape
-        return;
-
+    // Certain portal types always carry warnings.
     if (!_prompt_dangerous_portal(ygrd))
-        return;
+        return false;
 
     // Does the next level have a warning annotation?
+    // Also checks for entering a labyrinth with teleportitis.
     if (!check_annotation_exclusion_warning())
-        return;
+        return false;
 
+    // Toll portals, eg. troves, ziggurats. (Using vetoes like this is hacky.)
     if (_marker_vetoes_stair())
-        return;
+        return false;
 
-    if (you.burden_state == BS_OVERLOADED && !feat_is_escape_hatch(ygrd)
-        && !feat_is_gate(ygrd))
-    {
-        mpr("You are carrying too much to climb upwards.");
-        return;
-    }
-
+    // Exiting Ziggurats early.
     if (ygrd == DNGN_EXIT_PORTAL_VAULT
         && player_in_branch(BRANCH_ZIGGURAT)
         && you.depth < brdepth[BRANCH_ZIGGURAT])
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
-            return;
+            return false;
     }
 
+    // Leaving Pan runes behind.
     if (!_prompt_unique_pan_rune(ygrd))
-        return;
+        return false;
 
-    if (ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
+    // Escaping.
+    if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
         string prompt = make_stringf("Are you sure you want to leave the "
                                      "Dungeon?%s",
@@ -1509,81 +1529,29 @@ static void _go_upstairs()
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             mpr("Alright, then stay!");
-            return;
+            return false;
         }
     }
 
-    you.clear_clinging();
-    you.stop_constricting_all(true);
-    you.stop_being_constricted();
-
-    tag_followers(); // Only those beside us right now can follow.
-    start_delay(DELAY_ASCENDING_STAIRS,
-                1 + (you.burden_state > BS_UNENCUMBERED));
+    return true;
 }
 
-static void _go_downstairs()
+static void _take_stairs(bool down)
 {
     ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
 
     const dungeon_feature_type ygrd = grd(you.pos());
 
-    const bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
-                        && ygrd != DNGN_UNDISCOVERED_TRAP);
+    const bool shaft = (down && get_trap_type(you.pos()) == TRAP_SHAFT
+                             && ygrd != DNGN_UNDISCOVERED_TRAP);
 
-    if (_stairs_check_mesmerised())
+    if (!_can_take_stairs(ygrd, down, shaft))
         return;
-
-    // Up and down both work for shops.
-    if (ygrd == DNGN_ENTER_SHOP)
-    {
-        if (you.berserk())
-            canned_msg(MSG_TOO_BERSERK);
-        else
-            shop();
-        return;
-    }
-    // Up and down both work for portals.
-    else if (feat_is_bidirectional_portal(ygrd))
-        ;
-    else if (feat_stair_direction(ygrd) != CMD_GO_DOWNSTAIRS
-             && !shaft)
-    {
-        if (ygrd == DNGN_STONE_ARCH)
-            mpr("There is nothing on the other side of the stone arch.");
-        else if (ygrd == DNGN_ABANDONED_SHOP)
-            mpr("This shop appears to be closed.");
-        else
-            mpr("You can't go down here!");
-        return;
-    }
-
-    if (you.attribute[ATTR_HELD])
-    {
-        mprf("You can't use stairs while %s.", held_status());
-        return;
-    }
 
     if (!you.attempt_escape()) // false means constricted and don't escape
         return;
 
-    if (!_prompt_dangerous_portal(ygrd))
-        return;
-
-    // Does the next level have a warning annotation?
-    // Also checks for entering a labyrinth with teleportitis.
-    if (!check_annotation_exclusion_warning())
-        return;
-
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && player_in_branch(BRANCH_ZIGGURAT)
-        && you.depth < brdepth[BRANCH_ZIGGURAT])
-    {
-        if (!yesno("Are you sure you want to leave this Ziggurat?"))
-            return;
-    }
-
-    if (!_prompt_unique_pan_rune(ygrd))
+    if (!_prompt_stairs(ygrd, down))
         return;
 
     you.clear_clinging();
@@ -1594,11 +1562,8 @@ static void _go_downstairs()
         start_delay(DELAY_DESCENDING_STAIRS, 0);
     else
     {
-        if (_marker_vetoes_stair())
-            return;
-
         tag_followers(); // Only those beside us right now can follow.
-        start_delay(DELAY_DESCENDING_STAIRS,
+        start_delay(down ? DELAY_DESCENDING_STAIRS : DELAY_ASCENDING_STAIRS,
                     1 + (you.burden_state > BS_UNENCUMBERED));
     }
 }
@@ -1910,9 +1875,12 @@ void process_command(command_type cmd)
 #endif
     case CMD_REST:            _do_rest(); break;
 
-    case CMD_GO_UPSTAIRS:     _go_upstairs();    break;
-    case CMD_GO_DOWNSTAIRS:   _go_downstairs();  break;
-    case CMD_OPEN_DOOR:       _open_door(0, 0);  break;
+    case CMD_GO_UPSTAIRS:
+    case CMD_GO_DOWNSTAIRS:
+        _take_stairs(cmd == CMD_GO_DOWNSTAIRS);
+        break;
+
+    case CMD_OPEN_DOOR:       _open_door(0, 0); break;
     case CMD_CLOSE_DOOR:      _close_door(coord_def(0, 0)); break;
 
     // Repeat commands.
@@ -2892,7 +2860,38 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SENTINEL_MARK, delay,
                           "The sentinel's mark upon you fades away.");
 
+    _decrement_a_duration(DUR_WEAK, delay,
+                          "Your attacks no longer feel as feeble.");
+
+    _decrement_a_duration(DUR_DIMENSION_ANCHOR, delay,
+                          "You are no longer firmly anchored in space.");
+
     _decrement_a_duration(DUR_SICKENING, delay);
+
+    _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);
+    if (you.duration[DUR_WATER_HOLD])
+        handle_player_drowning(delay);
+
+    if (you.duration[DUR_FLAYED])
+    {
+        bool near_ghost = false;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_FLAYED_GHOST && !mi->wont_attack()
+                && you.see_cell(mi->pos()))
+            {
+                near_ghost = true;
+                break;
+            }
+        }
+        if (!near_ghost)
+        {
+            if (_decrement_a_duration(DUR_FLAYED, delay))
+                heal_flayed_effect(&you);
+        }
+    }
+
+    _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
 
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
@@ -4390,6 +4389,7 @@ static void _move_player(coord_def move)
         if (you.made_nervous_by(targ))
         {
             mpr("You're too terrified to move while being watched!");
+            stop_running();
             moving = false;
             you.turn_is_over = false;
             return;
@@ -4440,6 +4440,19 @@ static void _move_player(coord_def move)
             stop_running();
             you.turn_is_over = false;
             return;
+        }
+
+        if (you.duration[DUR_WATER_HOLD])
+        {
+            if (you.can_swim())
+                mpr("You deftly slip free of the water engulfing you.");
+            else //Unless you're a natural swimmer, this takes longer than normal
+            {
+                mpr("With effort, you pull free of the water engulfing you.");
+                you.time_taken = you.time_taken * 3 / 2;
+            }
+            you.duration[DUR_WATER_HOLD] = 1;
+            you.props.erase("water_holder");
         }
 
         if (swap)
@@ -4527,12 +4540,14 @@ static void _move_player(coord_def move)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE, true).c_str());
+        stop_running();
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE, true).c_str());
+        stop_running();
         return;
     }
 

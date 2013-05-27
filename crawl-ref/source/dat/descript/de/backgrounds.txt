@@ -107,6 +107,11 @@ Skald
 Skalde sind Nahkämpfer, die sich selbst mit Zaubersprüchen aus dem Buch der
 Kampfgesänge im Kampf unterstützen.
 %%%%
+Summoner
+
+Boten fangen mit dem Buch von Callings an und sind im Stande sich zu werfen
+Fordern Kleines Säugetier vom Anfang Auf.
+%%%%
 Transmuter
 
 Verwandler ändern ihre Form in die eines Monsters. Sie können außerdem Stäbe in

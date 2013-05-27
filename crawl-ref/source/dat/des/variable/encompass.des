@@ -548,7 +548,7 @@ default-depth:
 NAME: grunt_profane_halls
 TAGS: no_monster_gen
 PLACE: D:27
-DEPTH: D:19-27
+DEPTH: D:21-27
 ORIENT: encompass
 SHUFFLE: {[(<
 : if you.absdepth() == 27 then

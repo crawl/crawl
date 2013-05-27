@@ -512,7 +512,9 @@ static string _shop_print_stock(const vector<int>& stock,
         if (shop_item_unknown(item))
             item_name += " (unknown)";
 
-        cprintf("%s%5d gold", chop_string(item_name, 56).c_str(), gp_value);
+        const int cols = get_number_of_cols();
+
+        cprintf("%s%5d gold", chop_string(item_name, cols-14).c_str(), gp_value);
 
         si.add_item(item, gp_value);
 
@@ -520,7 +522,7 @@ static string _shop_print_stock(const vector<int>& stock,
         tmp = new TextItem();
         tmp->set_highlight_colour(WHITE);
         tmp->set_text(""); // will print bounding box around formatted text
-        tmp->set_bounds(coord_def(1 ,wherey()), coord_def(72, wherey() + 1));
+        tmp->set_bounds(coord_def(1 ,wherey()), coord_def(cols+2, wherey() + 1));
         tmp->add_hotkey(c);
         tmp->set_id(c);
         tmp->set_description_text(item_name);

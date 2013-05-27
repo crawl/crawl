@@ -70,6 +70,7 @@ mapgen.log
 webtiles.log
 debuglog.txt
 dolls.txt
+macro.txt
 
 # Tile copied files
 /source/dat/tiles/dngn.png

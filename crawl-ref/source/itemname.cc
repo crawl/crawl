@@ -938,14 +938,15 @@ static const char* misc_type_name(int type, bool known)
 #if TAG_MAJOR_VERSION == 34
     case MISC_EMPTY_EBONY_CASKET:        return "empty ebony casket";
 #endif
-    case MISC_AIR_ELEMENTAL_FAN:         return "air elemental fan";
+    case MISC_FAN_OF_GALES:              return "fan of gales";
     case MISC_LAMP_OF_FIRE:              return "lamp of fire";
     case MISC_LANTERN_OF_SHADOWS:        return "lantern of shadows";
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
     case MISC_DISC_OF_STORMS:            return "disc of storms";
     case MISC_BOTTLED_EFREET:            return "bottled efreet";
-    case MISC_STONE_OF_EARTH_ELEMENTALS: return "stone of earth elementals";
+    case MISC_STONE_OF_TREMORS:          return "stone of tremors";
     case MISC_QUAD_DAMAGE:               return "quad damage";
+    case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
 
     case MISC_RUNE_OF_ZOT:
     default:
@@ -1613,7 +1614,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
-                if (food_is_rotten(*this) && it_plus != MONS_ROTTING_HULK)
+                if (food_is_rotten(*this) && it_plus != MONS_PLAGUE_SHAMBLER)
                     buff << "rotting ";
 
                 buff << "chunk of "
@@ -1765,6 +1766,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
                 buff << "}";
             }
+            else if (is_elemental_evoker(*this) && !evoker_is_charged(*this)
+                     && !dbname)
+            {
+                buff << " (inert)";
+            }
         }
         break;
 
@@ -1869,7 +1875,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
 
-        if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
+        if (food_is_rotten(*this) && !dbname && it_plus != MONS_PLAGUE_SHAMBLER)
             buff << "rotting ";
 
         uint64_t name_type, name_flags = 0;
@@ -2456,9 +2462,9 @@ void check_item_knowledge(bool unknown_items)
     menu.set_type(MT_KNOW);
     menu_letter ml;
     ml = menu.load_items(items, unknown_items ? unknown_item_mangle
-                                              : known_item_mangle);
+                                              : known_item_mangle, 'a', false);
 
-    ml = menu.load_items(items_missile, known_item_mangle, ml);
+    ml = menu.load_items(items_missile, known_item_mangle, ml, false);
     menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
     menu.load_items_seq(items_other, known_item_mangle, ml);
 
@@ -2512,7 +2518,7 @@ void display_runes()
                                 you.obtainable_runes));
     menu.set_flags(MF_NOSELECT);
     menu.set_type(MT_RUNES);
-    menu.load_items(items, unknown_item_mangle);
+    menu.load_items(items, unknown_item_mangle, 'a', false);
     menu.show();
     menu.getkey();
     redraw_screen();
@@ -3389,9 +3395,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return item_type_known(item);
 #endif
         case MISC_LAMP_OF_FIRE:
-            return !you.skill(SK_FIRE_MAGIC);
-        case MISC_AIR_ELEMENTAL_FAN:
-            return !you.skill(SK_AIR_MAGIC);
+        case MISC_FAN_OF_GALES:
+        case MISC_STONE_OF_TREMORS:
+        case MISC_PHIAL_OF_FLOODS:
+            return !evoker_is_charged(item);
+
         case MISC_HORN_OF_GERYON:
             return item.plus2;
         default:

@@ -353,6 +353,27 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
+    case BEAM_GHOSTLY_FLAME:
+    {
+        if (you.holiness() == MH_UNDEAD)
+        {
+            if (doEffects)
+            {
+                you.heal(roll_dice(2, 9));
+                mpr("You are bolstered by the flame.");
+            }
+            hurted = 0;
+        }
+        else
+        {
+            hurted = resist_adjust_damage(&you, flavour,
+                                          you.res_negative_energy(),
+                                          hurted, true);
+            if (hurted < original && doEffects)
+                canned_msg(MSG_YOU_PARTIALLY_RESIST);
+        }
+    }
+
     default:
         break;
     }                           // end switch
@@ -1041,7 +1062,7 @@ static void _place_player_corpse(bool explode)
     corpse.props["ac"].get_int() = you.armour_class();
     mitm[o] = corpse;
 
-    move_item_to_grid(&o, you.pos(), !you.in_water());
+    move_item_to_grid(&o, you.pos(), MHITYOU, !you.in_water());
 }
 
 
@@ -1368,6 +1389,7 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
 // Delete save files on game end.
 static void _delete_files()
 {
+    crawl_state.need_save = false;
     you.save->unlink();
     delete you.save;
     you.save = 0;

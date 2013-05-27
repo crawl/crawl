@@ -3960,6 +3960,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
 
+            if (mons_class_flag(nspec.type, M_CANT_SPAWN))
+            {
+                error = make_stringf("can't place dummy monster: \"%s\"",
+                                     mon_str.c_str());
+                return slot;
+            }
+
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
@@ -4077,6 +4084,11 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
+    {
+        spec.type = MONS_PROGRAM_BUG;
+        return;
+    }
+    if (mod == 1 && mons_class_flag(spec.monbase, M_NO_ZOMBIE))
     {
         spec.type = MONS_PROGRAM_BUG;
         return;

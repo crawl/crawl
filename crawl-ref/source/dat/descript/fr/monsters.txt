@@ -1419,12 +1419,11 @@ aux simples plaisirs de la chair. Les Halfelins excellent au déplacement
 silencieux.
 
 {{
-    if you.race() != "Halfling"
-        then
-        return "Il ne mérite rien d'autre qu'un bon coup de hache dans la
-tête."
-    else
+    if you.race() == "Halfling" then
         return ""
+    else
+        return "Il ne mérite rien d'autre qu'un bon coup de hache dans la " ..
+               "tête."
     end
 }}
 %%%%
@@ -2004,7 +2003,7 @@ ses semblables.
 orc wizard
 
 Alors que les orcs préfèrent généralement le combat physique, certains d'entre
-eux optiennent la maîtrise des arts occultes - cependant toujours dans un but
+eux optiennent la maîtrise des arts occultes – cependant toujours dans un but
 martial.
 %%%%
 pale draconian
@@ -2087,8 +2086,8 @@ développeurs de Devteam.
 %%%%
 pulsating lump
 
-Un blob répugnant de toute sortes de matières organiques - muscle, tripes,
-nerf, viscère, moelle - empilés aléatoirement en une seule masse contorsionnée.
+Un blob répugnant de toute sortes de matières organiques – muscle, tripes,
+nerf, viscère, moelle – empilés aléatoirement en une seule masse contorsionnée.
 Sa chair altérée est mutagène au contact; mais sans aucune forme d'agencement
 structurel de ses parties, il lui manque la coordination nécessaire pour se
 déplacer rapidement.

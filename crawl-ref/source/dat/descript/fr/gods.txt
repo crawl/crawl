@@ -1,7 +1,7 @@
 %%%%
 No God
 
-"Dieu est mort." - Nietzsche (C'est un bug si vous voyez cela.)
+"Dieu est mort." – Nietzsche (C'est un bug si vous voyez cela.)
 %%%%
 random
 
@@ -221,7 +221,7 @@ Vehumet powers
 
 Adorer Vehumet vous permettra rapidement de convertir chaque mort en énergie
 magique. Alors que vous gagnerez en faveur, vous obtiendrez divers
-améliorations de vos sortilèges destructeurs - tout d'abord, une aide pour
+améliorations de vos sortilèges destructeurs – tout d'abord, une aide pour
 lancer de tel sort ; puis un accroissement de la portée ; et enfin, une
 diminution du coût pour lancer les plus hauts sorts de destruction. Plus tard,
 Vehumet vous offrir de rares grimoires de magie destructive.
@@ -273,7 +273,7 @@ Lugonu powers
 
 Les disciples de Lugonu gagne le pouvoir de repartir des Abysses à volonté, de
 bannir des monstres et, finalement de se rendre directement dans le royaume du
-chaos - au prix d'une parcelle de leur âme. A part cela, ils peuvent infliger
+chaos – au prix d'une parcelle de leur âme. A part cela, ils peuvent infliger
 des dégâts de distorsion aux monstres et, acquérir la capacité de corrompre le
 monde ordonné, leur permettant d'ouvrir un portail par lequel les créatures
 abyssales peuvent passer.

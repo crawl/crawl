@@ -21,8 +21,10 @@
  #include "tiledef-dngn.h"
  #include "tilepick.h"
 #endif
+#include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "itemprop.h"
 #include "losglobal.h"
 #include "libutil.h"
 #include "misc.h"
@@ -55,6 +57,7 @@
 #include "target.h"
 #include "items.h"
 #include "mapmark.h"
+#include "teleport.h"
 
 #include <algorithm>
 #include <queue>
@@ -1701,15 +1704,8 @@ static bool _seal_doors(const monster* warden)
             for (set<coord_def>::const_iterator i = all_door.begin();
                  i != all_door.end(); ++i)
             {
-                map_door_seal_marker *sealmarker =
-                    new map_door_seal_marker(*i, seal_duration, warden->mid,
-                                             DNGN_CLOSED_DOOR);
-                env.markers.add(sealmarker);
-                env.markers.clear_need_activate();
-
-                grd(*i) = DNGN_SEALED_DOOR;
-                set_terrain_changed(*i);
-
+                temp_change_terrain(*i, DNGN_SEALED_DOOR, seal_duration,
+                                    TERRAIN_CHANGE_DOOR_SEAL, warden);
                 had_effect = true;
             }
         }
@@ -1729,6 +1725,342 @@ static bool _seal_doors(const monster* warden)
             mpr("You are pushed out of the doorway!");
 
         return true;
+    }
+
+    return false;
+}
+
+static bool _flay_creature(monster* mon, actor* victim)
+{
+    int dam;
+    bool was_flayed = false;
+
+    if (victim->holiness() != MH_NATURAL)
+        return false;
+
+    if (victim->is_player())
+    {
+        dam = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
+        dam = min(dam, max(0, you.hp - 15 - random2(10)));
+        if (dam < 10)
+            return false;
+
+        if (you.duration[DUR_FLAYED])
+            was_flayed = true;
+
+        you.increase_duration(DUR_FLAYED, 3 + random2(5), 15);
+    }
+    else
+    {
+        monster* mon_victim = victim->as_monster();
+
+        dam = (6 + (mon_victim->hit_points * 18 / mon_victim->max_hit_points))
+                   * mon_victim->max_hit_points / 100;
+        dam = min(dam, max(0, mon_victim->hit_points - 15 - random2(10)));
+        if (dam < 10)
+            return false;
+
+        if (mon_victim->has_ench(ENCH_FLAYED))
+        {
+            was_flayed = true;
+            mon_enchant flayed = mon_victim->get_ench(ENCH_FLAYED);
+            flayed.duration = min(flayed.duration + 30 + random2(50), 150);
+            mon_victim->update_ench(flayed);
+        }
+        else
+        {
+            mon_enchant flayed(ENCH_FLAYED, 1, mon, 30 + random2(50));
+            mon_victim->add_ench(flayed);
+        }
+    }
+
+    if (you.can_see(mon))
+    {
+        bool silent = silenced(mon->pos()) || silenced(you.pos());
+        int msg_type =  (silent ? random2(2) : random2(3) + 1);
+
+        switch (msg_type)
+        {
+            case 0:
+                mprf(MSGCH_MONSTER_SPELL, "%s moans in silent anguish.",
+                    mon->name(DESC_THE).c_str());
+                break;
+            case 1:
+                mprf(MSGCH_MONSTER_SPELL, "%s stares at %s with tortured malice.",
+                    mon->name(DESC_THE).c_str(), victim->name(DESC_THE).c_str());
+                break;
+            case 2:
+                mprf(MSGCH_MONSTER_SPELL, "%s cries, \"Suffer as I suffered!\"",
+                    mon->name(DESC_THE).c_str());
+                break;
+            case 3:
+                mprf(MSGCH_MONSTER_SPELL, "%s cries, \"Feel what I felt!\"",
+                    mon->name(DESC_THE).c_str());
+                break;
+        }
+    }
+
+    if (you.can_see(victim))
+    {
+        if (was_flayed)
+        {
+            mprf("Terrible wounds spread across more of %s body!",
+                 victim->name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("Terrible wounds open up all over %s body!",
+                 victim->name(DESC_ITS).c_str());
+        }
+    }
+
+    victim->hurt(mon, dam, BEAM_NONE, true);
+    victim->props["flay_damage"].get_int() += dam;
+
+    vector<coord_def> old_blood;
+    CrawlVector &new_blood = victim->props["flay_blood"].get_vector();
+
+    // Find current blood splatters
+    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    {
+        if (env.pgrid(*ri) & FPROP_BLOODY)
+            old_blood.push_back(*ri);
+    }
+
+    blood_spray(victim->pos(), victim->type, 20);
+
+    // Compute and store new blood splatters
+    unsigned int i = 0;
+    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    {
+        if (env.pgrid(*ri) & FPROP_BLOODY)
+        {
+            if (i < old_blood.size() && old_blood[i] == *ri)
+                ++i;
+            else
+                new_blood.push_back(*ri);
+        }
+    }
+
+    return true;
+}
+
+void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
+{
+    if (!blood_only)
+    {
+        if (act->is_player())
+            you.duration[DUR_FLAYED] = 0;
+        else
+            act->as_monster()->del_ench(ENCH_FLAYED, true, false);
+
+        if (you.can_see(act) && !quiet)
+        {
+            mprf("The terrible wounds on %s body vanish.",
+                 act->name(DESC_ITS).c_str());
+        }
+
+        act->heal(act->props["flay_damage"].get_int());
+        act->props.erase("flay_damage");
+    }
+
+    CrawlVector &blood = act->props["flay_blood"].get_vector();
+
+    for (int i = 0; i < blood.size(); ++i)
+    {
+        env.pgrid(blood[i].get_coord()) &= ~FPROP_BLOODY;
+    }
+    act->props.erase("flay_blood");
+}
+
+static bool _lost_soul_affectable(const monster* mons)
+{
+    return (((mons->holiness() == MH_UNDEAD
+              && mons->type != MONS_LOST_SOUL
+              && !mons_is_zombified(mons))
+             ||(mons->holiness() == MH_NATURAL
+                && mons_can_be_zombified(mons)))
+            && !mons->is_summoned()
+            && !mons_class_flag(mons->type, M_NO_EXP_GAIN));
+}
+
+static bool _lost_soul_teleport(monster* mons)
+{
+    bool seen = you.can_see(mons);
+
+    vector<coord_def> targets;
+
+    // Assemble candidate list and randomize
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
+            targets.push_back(mi->pos());
+    }
+    random_shuffle(targets.begin(), targets.end());
+
+    for (unsigned int i = 0; i < targets.size(); ++i)
+    {
+        coord_def empty;
+        if (find_habitable_spot_near(targets[i], mons_base_type(mons), 3, false, empty)
+            && mons->move_to_pos(empty))
+        {
+            mons->add_ench(ENCH_SUBMERGED);
+            mons->behaviour = BEH_WANDER;
+            mons->foe = MHITNOT;
+            if (seen)
+            {
+                mprf("%s flickers out of the living world.",
+                        mons->name(DESC_THE, true).c_str());
+            }
+            return true;
+        }
+    }
+
+    // If we can't find anywhere useful to go, flicker away to stop the player
+    // being annoyed chasing after us
+    if (one_chance_in(3))
+    {
+        if (seen)
+        {
+            mprf("%s flickers out of the living world.",
+                        mons->name(DESC_THE, true).c_str());
+        }
+        monster_die(mons, KILL_MISC, -1, true);
+        return true;
+    }
+
+    return false;
+}
+
+bool lost_soul_revive(monster* mons)
+{
+    if (!_lost_soul_affectable(mons))
+        return false;
+
+    for (monster_iterator mi(mons->get_los_no_trans()); mi; ++mi)
+    {
+        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        {
+            targetter_los hitfunc(*mi, LOS_SOLID);
+            flash_view_delay(GREEN, 200, &hitfunc);
+
+            if (you.can_see(*mi))
+            {
+                mprf("%s sacrifices itself to reknit %s!",
+                     mi->name(DESC_THE).c_str(),
+                     mons->name(DESC_THE).c_str());
+            }
+            else if (you.can_see(mons))
+            {
+                mprf("Necromantic energies suffuse and reknit %s!",
+                     mons->name(DESC_THE).c_str());
+            }
+
+            mons->heal(mons->max_hit_points);
+            mons->del_ench(ENCH_CONFUSION, true);
+            mons->timeout_enchantments(10);
+            monster_die(*mi, KILL_MISC, -1, true);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool lost_soul_spectralize(monster* mons)
+{
+    if (!_lost_soul_affectable(mons))
+        return false;
+
+    for (monster_iterator mi(mons); mi; ++mi)
+    {
+        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        {
+            targetter_los hitfunc(*mi, LOS_SOLID);
+            flash_view_delay(GREEN, 200, &hitfunc);
+
+            if (you.can_see(*mi))
+            {
+                mprf("The lost soul assumes the form of %s%s!",
+                     mons->name(DESC_THE).c_str(),
+                     (mi->is_summoned() ? " and becomes anchored to this world"
+                                        : ""));
+            }
+
+            define_zombie(*mi, mons->type, MONS_SPECTRAL_THING);
+            mi->flags |= MF_NO_REWARD | MF_SEEN;
+            mi->flags |= mons->flags & (MF_MELEE_MASK | MF_SPELL_MASK);
+            mi->spells = mons->spells;
+            mi->god = GOD_NAMELESS;
+
+            name_zombie(*mi, mons);
+            invalidate_agrid();
+
+            // Duplicate objects, or unequip them if they can't be duplicated.
+            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+            {
+                const int old_index = mons->inv[i];
+
+                if (old_index == NON_ITEM)
+                    continue;
+
+                const int new_index = get_mitm_slot(0);
+                if (new_index == NON_ITEM)
+                {
+                    mi->unequip(mitm[old_index], i, 0, true);
+                    mi->inv[i] = NON_ITEM;
+                    continue;
+                }
+
+                mi->inv[i]      = new_index;
+                mitm[new_index] = mitm[old_index];
+                mitm[new_index].set_holding_monster(mi->mindex());
+                mitm[new_index].flags |= ISFLAG_SUMMONED;
+
+                // Make holy items plain
+                if (get_weapon_brand(mitm[new_index]) == SPWPN_HOLY_WRATH)
+                    set_item_ego_type(mitm[new_index], OBJ_WEAPONS, SPWPN_NORMAL);
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool _swoop_attack(monster* mons, actor* defender)
+{
+    coord_def target = defender->pos();
+
+    bolt tracer;
+    tracer.source = mons->pos();
+    tracer.target = target;
+    tracer.is_tracer = true;
+    tracer.range = LOS_RADIUS;
+    tracer.fire();
+
+    for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
+    {
+        if (tracer.path_taken[j] == target)
+        {
+            if (tracer.path_taken.size() > j + 1)
+            {
+                if (monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
+                    && !actor_at(tracer.path_taken[j+1]))
+                {
+                    if (you.can_see(mons))
+                    {
+                        mprf("%s swoops through the air toward %s!",
+                             mons->name(DESC_THE).c_str(),
+                             defender->name(DESC_THE).c_str());
+                    }
+                    mons->move_to_pos(tracer.path_taken[j+1]);
+                    fight_melee(mons, defender);
+                    return true;
+                }
+            }
+        }
     }
 
     return false;
@@ -2716,6 +3048,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())
          && mons->type != MONS_SLIME_CREATURE
+         && mons->type != MONS_LOST_SOUL
          && !_crawlie_is_mergeable(mons))
     {
         return false;
@@ -2993,6 +3326,19 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (one_chance_in(7) || mons->caught() && one_chance_in(3))
             used = monster_blink(mons);
         break;
+
+    case MONS_PHANTASMAL_WARRIOR:
+    {
+        actor *foe = mons->get_foe();
+        if (mons->no_tele(true, false))
+            break;
+        if (foe && foe->pos().distance_from(mons->pos()) > 2 && one_chance_in(3))
+        {
+            blink_close(mons);
+            used = true;
+        }
+        break;
+    }
 
     case MONS_SKY_BEAST:
         if (one_chance_in(8))
@@ -3424,6 +3770,127 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             if (_seal_doors(mons))
                 used = true;
+        }
+        break;
+
+    case MONS_FLAYED_GHOST:
+    {
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        actor *foe = mons->get_foe();
+        if (foe && mons->can_see(foe) && one_chance_in(5))
+        {
+            if (_flay_creature(mons, foe))
+                used = true;
+        }
+
+        break;
+    }
+
+    case MONS_LOST_SOUL:
+    if (one_chance_in(3))
+    {
+        bool see_friend = false;
+        bool see_foe = false;
+
+        for (actor_iterator ai(mons->get_los_no_trans()); ai; ++ai)
+        {
+            if (ai->is_monster() && mons_aligned(*ai, mons))
+            {
+                if (_lost_soul_affectable(ai->as_monster()))
+                    see_friend = true;
+            }
+            else
+                see_foe = true;
+
+            if (see_friend)
+                break;
+        }
+
+        if (see_foe && !see_friend)
+            if (_lost_soul_teleport(mons))
+                used = true;
+    }
+    break;
+
+    case MONS_BLUE_DEVIL:
+        if (mons->confused() || !mons->can_see(mons->get_foe()))
+            break;
+
+        if (mons->foe_distance() < 5 && mons->foe_distance() > 1)
+        {
+            if (one_chance_in(4))
+            {
+                if (mons->props.exists("swoop_cooldown")
+                    && (you.elapsed_time < mons->props["swoop_cooldown"].get_int()))
+                {
+                    break;
+                }
+
+                if (_swoop_attack(mons, mons->get_foe()))
+                {
+                    used = true;
+                    mons->props["swoop_cooldown"].get_int() = you.elapsed_time
+                                                              + 40 + random2(51);
+                }
+            }
+        }
+        break;
+
+    case MONS_RED_DEVIL:
+        if (mons->confused() || !mons->can_see(mons->get_foe()))
+            break;
+
+        if (mons->foe_distance() == 1 && mons->reach_range() == REACH_TWO
+            && x_chance_in_y(3, 5))
+        {
+            coord_def foepos = mons->get_foe()->pos();
+            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
+
+            bool found = false;
+            if (!monster_habitable_grid(mons, grd(hopspot)) ||
+                actor_at(hopspot))
+            {
+                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+                {
+                    if (ai->distance_from(foepos) != 2)
+                        continue;
+                    else
+                    {
+                        if (monster_habitable_grid(mons, grd(*ai))
+                            && !actor_at(*ai))
+                        {
+                            hopspot = *ai;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+                found = true;
+
+            if (found && mons->move_to_pos(hopspot))
+            {
+                simple_monster_message(mons, " hops backward while attacking.");
+                fight_melee(mons, mons->get_foe());
+                mons->speed_increment -= 2; // Add a small extra delay
+                return true; // Energy has already been deducted via melee
+            }
+        }
+        break;
+
+    case MONS_SHADOW:
+        if (!mons->invisible() && !mons->backlit() && one_chance_in(6))
+        {
+            if (enchant_monster_invisible(mons, "slips into darkness"))
+            {
+                mon_enchant invis = mons->get_ench(ENCH_INVIS);
+                invis.duration = 40 + random2(60);
+                mons->update_ench(invis);
+                used = true;
+            }
         }
         break;
 

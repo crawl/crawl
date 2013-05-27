@@ -20,6 +20,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "notes.h"
@@ -144,7 +145,18 @@ static void _change_skill_level(skill_type exsk, int n)
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
     if (you.skills[exsk] == 27)
+    {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        for (int i = you.sage_skills.size() - 1; i >= 0; i--)
+        {
+            if (you.sage_skills[i] == exsk)
+            {
+                erase_any(you.sage_skills, i);
+                erase_any(you.sage_xp,     i);
+                erase_any(you.sage_bonus,  i);
+            }
+        }
+    }
     else if (abs(n) == 1 && you.num_turns)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
@@ -1030,7 +1042,7 @@ void set_skill_level(skill_type skill, double amount)
 
         // When reducing, we don't want to stop right at the limit, unless
         // we're at skill cost level 0.
-        if (reduced and you.skill_cost_level)
+        if (reduced && you.skill_cost_level)
             ++max_xp;
 
         int cost = calc_skill_cost(you.skill_cost_level);

@@ -242,7 +242,7 @@ SUBST:  F = 011112223334455679.........
 MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
 MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
 # these are Sludge Elves.
-MONS:   ghoul / necrophage / rotting hulk / vampire
+MONS:   ghoul / necrophage / plague shambler / vampire
 MONS:   wizard / necromancer
 MONS:   big kobold / kobold demonologist
 MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\

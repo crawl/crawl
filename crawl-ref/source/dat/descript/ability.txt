@@ -137,7 +137,7 @@ Release a thick cloud of fog to obscure vision.
 %%%%
 Evoke Teleport Control
 
-Gain the ability to control your next translocation - either by selecting an
+Gain the ability to control your next translocation – either by selecting an
 approximate target for a teleport, or by selecting a direction for a blink. Be
 wary that controlled translocations will cause the subject to become
 contaminated with magical energy, and that controlled teleports will take

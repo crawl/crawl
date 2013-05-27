@@ -390,9 +390,13 @@ bool player_caught_in_net()
 
     if (!you.attribute[ATTR_HELD])
     {
-        you.attribute[ATTR_HELD] = 10;
         mpr("You become entangled in the net!");
         stop_running();
+
+        // Set the attribute after the mpr, otherwise the screen updates
+        // and we get a glimpse of a web because there isn't a trapping net
+        // item yet
+        you.attribute[ATTR_HELD] = 10;
 
         // I guess magical works differently, keeping both you
         // and the net hovering above the floor.
@@ -405,7 +409,6 @@ bool player_caught_in_net()
         }
 
         stop_delay(true); // even stair delays
-        redraw_screen(); // Account for changes in display.
         return true;
     }
     return false;
@@ -741,6 +744,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A net swings high above you.");
             else
             {
+                item_def item = generate_trap_item();
+                copy_item_to_grid(item, triggerer.pos());
+
                 if (random2limit(player_evasion(), 40)
                     + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
                 {
@@ -749,15 +755,16 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 else
                 {
                     mpr("A large net falls onto you!");
-                    if (player_caught_in_net() && player_in_a_dangerous_place())
-                        xom_is_stimulated(50);
+                    if (player_caught_in_net())
+                    {
+                        if (player_in_a_dangerous_place())
+                            xom_is_stimulated(50);
+
+                        // Mark the item as trapping; after this it's
+                        // safe to update the view
+                        _mark_net_trapping(you.pos());
+                    }
                 }
-
-                item_def item = generate_trap_item();
-                copy_item_to_grid(item, triggerer.pos());
-
-                if (you.attribute[ATTR_HELD])
-                    _mark_net_trapping(you.pos());
 
                 trap_destroyed = true;
             }
@@ -1166,7 +1173,7 @@ void disarm_trap(const coord_def& where)
     if (_disarm_is_deadly(trap))
     {
         string prompt = make_stringf("Really try disarming that %s?",
-                                     feature_description_at(where, "",
+                                     feature_description_at(where, false,
                                                             DESC_BASENAME,
                                                             false).c_str());
 

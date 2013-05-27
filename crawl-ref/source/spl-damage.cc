@@ -974,7 +974,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     if (mons->alive())
         print_wounds(mons);
 
-    hp_gain /= 2;
+    hp_gain = div_rand_round(hp_gain, 2);
 
     if (hp_gain && !mons_was_summoned && !you.duration[DUR_DEATHS_DOOR])
     {
@@ -1605,9 +1605,9 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
             }
         }
 
-        if (item.base_type == OBJ_CORPSES &&
-            item.sub_type == CORPSE_BODY &&
-            mons_skeleton(item.mon_type))
+        if (item.base_type == OBJ_CORPSES
+            && item.sub_type == CORPSE_BODY
+            && mons_skeleton(item.mon_type))
         {
             turn_corpse_into_skeleton(item);
         }
@@ -1618,7 +1618,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
                 unwield_item();
                 canned_msg(MSG_EMPTY_HANDED_NOW);
             }
-            item_was_destroyed(item);
+            item_was_destroyed(item, MHITYOU); // XXX: update for non-player
             if (in_inv)
                 destroy_item(item);
             else
@@ -2397,7 +2397,8 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     if (what != NULL) // Terrain explodes.
     {
-        mprf("The %s shatters!", what);
+        if (you.see_cell(target))
+            mprf("The %s shatters!", what);
         if (destroy_wall)
             nuke_wall(target);
     }
@@ -2412,7 +2413,8 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     }
     else // Monster explodes.
     {
-        mprf("%s shatters!", mon->name(DESC_THE).c_str());
+        if (you.see_cell(target))
+            mprf("%s shatters!", mon->name(DESC_THE).c_str());
 
         if ((mons_is_statue(mon->type) || mon->is_skeletal())
              && x_chance_in_y(pow / 5, 50)) // potential insta-kill

@@ -286,12 +286,7 @@ struct map_cell
 public:
     uint32_t flags;   // Flags describing the mappedness of this square.
 private:
-//TODO fix when the MSVC is standard-compliant.
-#ifdef TARGET_COMPILER_VC
-    dungeon_feature_type _feat;
-#else
     dungeon_feature_type _feat:8;
-#endif
     colour_t _feat_colour;
     cloud_info* _cloud;
     item_info* _item;

@@ -1138,7 +1138,7 @@ ring of see invisible:quote
 
 “Voici mon secret. Il est très simple: on ne voit bien qu'avec le coeur.
 L'essentiel est invisible pour les yeux.”
-    - Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
+    -Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
 %%%%
 ring of slaying
 
@@ -1317,7 +1317,7 @@ Ce parchemin plonge le lecteur au sein d'un brouillard épais.
 scroll of holy word
 
 Ce parchemin demande aux puissances des cieux de causer de grands dégâts à
-toute les créatures impie à proximité - y compris vous!
+toute les créatures impie à proximité – y compris vous!
 %%%%
 scroll of identify
 
@@ -1370,7 +1370,7 @@ aléatoire.
 scroll of torment
 
 Ce parchemin appelle les puissances des ténèbres pour infliger une grande
-douleur sur toute les créatures à proximité - y compris vous! Ceci traverse la
+douleur sur toute les créatures à proximité – y compris vous! Ceci traverse la
 moitié de la résistance de toutes les créatures vivantes, bien que ce ne soit
 jamais directement fatale.
 %%%%
@@ -1662,7 +1662,7 @@ en la liquéfiant.
 wand of disintegration
 
 Un instrument magique qui désagrège la structure physique de n'importe quoi,
-mais pas des murs les plus durs - cela inclue les statues rigides, bref tout ce
+mais pas des murs les plus durs – cela inclue les statues rigides, bref tout ce
 qui n'est pas de chair.
 %%%%
 wand of draining

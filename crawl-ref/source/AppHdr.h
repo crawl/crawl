@@ -24,7 +24,7 @@
 namespace std {};
 using namespace std;
 
-#if defined(__cplusplus) && __cplusplus < 201103
+#if !defined(TARGET_COMPILER_VC) && defined(__cplusplus) && __cplusplus < 201103
 # define unique_ptr auto_ptr
 template<typename T>
 static inline T move(T x) { return x; } // good enough for our purposes
@@ -39,6 +39,9 @@ static inline T move(T x) { return x; } // good enough for our purposes
 #pragma warning (disable: 4290 4267)
 /* Don't define min and max as macros, define them via STL */
 #define NOMINMAX
+#define ENUM_INT64 : unsigned long long
+#else
+#define ENUM_INT64
 #endif
 
 #ifdef __sun

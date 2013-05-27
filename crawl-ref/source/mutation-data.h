@@ -5,10 +5,11 @@
 // first  boolean = is mutation mostly bad?
 // second boolean = is mutation physical, i.e. external only?
 // third  boolean = is mutation suppressed when shapechanged?
-// first  strings = what to show in 'A'
-// second strings = message given when gaining the mutation
-// third  strings = message given when losing the mutation
-// fourth string  = wizard-mode name of mutation
+// first  string  = what to show in '%'
+// second strings = what to show in 'A'
+// third  strings = message given when gaining the mutation
+// fourth strings = message given when losing the mutation
+// fifth  string  = wizard-mode name of mutation
 
 #ifndef MUTATION_DATA_H
 #define MUTATION_DATA_H

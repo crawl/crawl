@@ -590,12 +590,13 @@ public:
 
     void make_hungry(int nutrition, bool silent = true);
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount, bool allow_hint = true);
+    bool sicken(int amount, bool allow_hint = true, bool quiet = false);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
+    void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
     bool drain_exp(actor *, const char *aux = NULL, bool quiet = false,
                    int pow = 3);
@@ -661,6 +662,7 @@ public:
     int liquefying_radius2 () const;
     int umbra_radius2 () const;
     int suppression_radius2 () const;
+    int soul_aura_radius2 () const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
@@ -984,6 +986,8 @@ bool land_player();
 void dec_disease_player(int delay);
 
 void dec_color_smoke_trail();
+
+void handle_player_drowning(int delay);
 
 bool player_weapon_wielded();
 

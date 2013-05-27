@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "errors.h"
 #include "fight.h"
 #include "food.h"
 #include "fprop.h"
@@ -1657,6 +1658,11 @@ bool mons_skeleton(monster_type mc)
     return !mons_class_flag(mc, M_NO_SKELETON);
 }
 
+bool mons_zombifiable(monster_type mc)
+{
+    return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
+}
+
 flight_type mons_class_flies(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
@@ -2032,6 +2038,13 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[5] = MST_NECROMANCER_II;
         break;
 
+    case MONS_ANCIENT_CHAMPION:
+        book[0] = MST_ANCIENT_CHAMPION_I;
+        book[1] = MST_ANCIENT_CHAMPION_II;
+        book[2] = MST_ANCIENT_CHAMPION_III;
+        book[3] = MST_ANCIENT_CHAMPION_IV;
+        break;
+
     default:
         retval = false;
         break;
@@ -2247,6 +2260,11 @@ void define_monster(monster* mons)
     case MONS_STARCURSED_MASS:
         monnumber = 12;
         break;
+
+    // Randomize starting speed burst clock
+    case MONS_SIXFIRHY:
+    case MONS_JIANGSHI:
+        monnumber = random2(360);
 
     default:
         break;
@@ -2561,7 +2579,7 @@ int mons_base_speed(const monster* mon)
     if (mon->ghost.get())
         return mon->ghost->speed;
 
-    if (mons_enslaved_soul(mon))
+    if (mon->type == MONS_SPECTRAL_THING)
         return mons_class_base_speed(mons_zombie_base(mon));
 
     return (mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
@@ -2884,7 +2902,7 @@ void mons_pacify(monster* mon, mon_attitude_type att)
     if (mons_is_kirke(mon))
         hogs_to_humans();
     if (mon->type == MONS_VAULT_WARDEN)
-        timeout_door_seals(0, true);
+        timeout_terrain_changes(0, true);
 
     mons_att_changed(mon);
 }
@@ -3432,6 +3450,9 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     {
         return false;
     }
+
+    if (m2->type == MONS_REVENANT && m1->type == MONS_SPECTRAL_THING)
+        return true;
 
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }
@@ -4519,6 +4540,44 @@ bool mons_foe_is_marked(const monster* mon)
         return false;
 }
 
+void debug_mondata()
+{
+    string fails;
+
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+    {
+        if (invalid_monster_type(mc))
+            continue;
+        const char* name = mons_class_name(mc);
+        const monsterentry *md = get_monster_data(mc);
+
+        int MR = md->resist_magic;
+        if (MR < 0)
+            MR = md->hpdice[9] * -MR * 4 / 3;
+        if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
+            fails += make_stringf("%s has MR %d > 200\n", name, MR);
+
+        // Tests below apply only to corpses.
+        if (md->species != mc)
+            continue;
+
+        if (md->weight && !md->corpse_thingy)
+            fails += make_stringf("%s has a corpse but no corpse_type\n", name);
+        if (md->weight && !md->zombie_size)
+            fails += make_stringf("%s has a corpse but no zombie_size\n", name);
+    }
+
+    if (!fails.empty())
+    {
+        FILE *f = fopen("mon-data.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("mon-data errors (dumped to mon-data.out)");
+    }
+}
+
 // Used when clearing level data, to ensure any additional reset quirks
 // are handled properly.
 void reset_all_monsters()
@@ -4550,7 +4609,7 @@ bool mons_is_recallable(actor* caller, monster* targ)
     }
     // Monster recall requires same attitude and at least normal intelligence
     else if (mons_intel(targ) < I_NORMAL
-             || targ->attitude != caller->as_monster()->attitude)
+             || !mons_aligned(targ, caller->as_monster()))
     {
         return false;
     }

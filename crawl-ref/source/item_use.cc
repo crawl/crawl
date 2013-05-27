@@ -2111,6 +2111,12 @@ void drink(int slot)
         return;
     }
 
+    if (you.duration[DUR_RETCHING])
+    {
+        mpr("You can't gag anything down in your present state!");
+        return;
+    }
+
     if (slot == -1)
     {
         slot = prompt_invent_item("Drink which item?",
@@ -2886,6 +2892,12 @@ void read_scroll(int slot)
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot read scrolls while unable to breathe!");
         return;
     }
 

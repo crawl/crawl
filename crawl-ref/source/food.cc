@@ -824,6 +824,16 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     if (!check_hunger)
         return true;
 
+    if (you.duration[DUR_RETCHING])
+    {
+        if (!silent)
+        {
+            mpr("You couldn't keep anything down in your present state!");
+            crawl_state.zero_turns_taken();
+        }
+        return false;
+    }
+
     if (you.hunger_state >= HS_ENGORGED)
     {
         if (!silent)
@@ -933,13 +943,16 @@ static string _how_hungry()
     return "hungry";
 }
 
+// Must match the order of hunger_state_t enums
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-    { 1000, 1533, 2066, 2600, 7000, 9000, 11000, 40000 };
+    { HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY, HUNGER_HUNGRY,
+      HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL, HUNGER_ENGORGED };
 
-bool food_change(bool suppress_message)
+// "initial" is true when setting the player's initial hunger state on game
+// start or load: in that case it's not really a change, so we suppress the
+// state change message and don't identify rings or stimulate Xom.
+bool food_change(bool initial)
 {
-    COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
-
     bool state_changed = false;
     bool less_hungry   = false;
 
@@ -956,7 +969,7 @@ bool food_change(bool suppress_message)
         state_changed = true;
         if (newstate > you.hunger_state)
             less_hungry = true;
-        else
+        else if (!initial)
             maybe_id_ring_hunger();
 
         you.hunger_state = newstate;
@@ -1000,7 +1013,7 @@ bool food_change(bool suppress_message)
             }
         }
 
-        if (!suppress_message)
+        if (!initial)
         {
             string msg = "You ";
             switch (you.hunger_state)

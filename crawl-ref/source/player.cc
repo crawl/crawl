@@ -112,7 +112,7 @@ static void _moveto_maybe_repel_stairs()
     {
         if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
         {
-            string stair_str = feature_description_at(you.pos(), "",
+            string stair_str = feature_description_at(you.pos(), false,
                                                       DESC_THE, false);
             string prep = feat_preposition(new_grid, true, &you);
 
@@ -190,7 +190,7 @@ static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
             move_verb.c_str(),
             (trap->type == TRAP_ALARM || trap->type == TRAP_PLATE) ? "onto"
                                                                    : "into",
-            feature_description_at(p, "", DESC_BASENAME, false).c_str());
+            feature_description_at(p, false, DESC_BASENAME, false).c_str());
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
@@ -2117,11 +2117,11 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_STATUE:
-        case TRAN_WISP:
             pl++;
             break;
         case TRAN_FUNGUS:
         case TRAN_TREE:
+        case TRAN_WISP:
         case TRAN_LICH:
             pl += 3;
             break;
@@ -2277,10 +2277,15 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE || you.form == TRAN_TREE
-        || you.duration[DUR_PETRIFYING])
+    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
+        ps /= 10;
+    }
+
+    if (you.form == TRAN_TREE)
+    {
+        ps *= 15 - you.experience_level / 5;
         ps /= 10;
     }
 
@@ -2925,6 +2930,13 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         int which_sage = random2(you.sage_skills.size());
         skill_type skill = you.sage_skills[which_sage];
 
+#if TAG_MAJOR_VERSION > 34
+        // These are supposed to be purged from the sage lists in
+        // _change_skill_level()
+        ASSERT(you.skills[skill] < 27);
+#endif
+
+        // FIXME: shouldn't use more XP than needed to max the skill
         const int old_avail = you.exp_available;
         // Bonus skill training from Sage.
         you.exp_available =
@@ -2934,7 +2946,11 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         you.exp_available = old_avail;
         exp_gained = div_rand_round(exp_gained, 2);
 
-        if (you.sage_xp[which_sage] <= 0 || you.skills[skill] == 27)
+        if (you.sage_xp[which_sage] <= 0
+#if TAG_MAJOR_VERSION == 34
+            || you.skills[skill] == 27
+#endif
+            )
         {
             mprf("You feel less studious about %s.", skill_name(skill));
             erase_any(you.sage_skills, which_sage);
@@ -2969,6 +2985,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
             _remove_temp_mutations();
     }
+
+    recharge_elemental_evokers(exp_gained);
 }
 
 static void _draconian_scale_colour_message()
@@ -4171,6 +4189,11 @@ void display_char_status()
 	DUR_INFUSION,
 	DUR_SPIRIT_SHIELD,
 	DUR_SONG_OF_SLAYING
+        DUR_WATER_HOLD,
+        DUR_FLAYED,
+        DUR_RETCHING,
+        DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;
@@ -5367,6 +5390,52 @@ bool land_player()
     return true;
 }
 
+static void _end_water_hold()
+{
+    you.duration[DUR_WATER_HOLD] = 0;
+    you.duration[DUR_WATER_HOLD_IMMUNITY] = 1;
+    you.props.erase("water_holder");
+}
+
+void handle_player_drowning(int delay)
+{
+    if (you.duration[DUR_WATER_HOLD] == 1)
+    {
+        if (!you.res_water_drowning())
+            mpr("You gasp with relief as air once again reaches your lungs.");
+        _end_water_hold();
+    }
+    else
+    {
+        monster* mons = monster_by_mid(you.props["water_holder"].get_int());
+        if (!mons || mons && !adjacent(mons->pos(), you.pos()))
+        {
+            if (you.res_water_drowning())
+                mpr("The water engulfing you falls away.");
+            else
+                mpr("You gasp with relief as air once again reaches your lungs.");
+
+            _end_water_hold();
+
+        }
+        else if (you.res_water_drowning())
+        {
+            // Reset so damage doesn't ramp up while able to breathe
+            you.duration[DUR_WATER_HOLD] = 10;
+        }
+        else if (!you.res_water_drowning())
+        {
+            you.duration[DUR_WATER_HOLD] += delay;
+            int dam =
+                div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
+                                * delay,
+                                BASELINE_DELAY * 10);
+            ouch(dam, NON_MONSTER, KILLED_BY_WATER);
+            mpr("Your lungs strain for air!", MSGCH_WARN);
+        }
+    }
+}
+
 int count_worn_ego(int which_ego)
 {
     int result = 0;
@@ -6196,7 +6265,7 @@ int player::armour_class() const
             break;
 
         case TRAN_WISP:
-            AC += 1000;
+            AC += 500 + 50 * you.experience_level;
             break;
         case TRAN_FUNGUS:
             AC += 1200;
@@ -6213,7 +6282,7 @@ int player::armour_class() const
             break;
 
         case TRAN_TREE: // extreme bonus, no EV
-            AC += 2500;
+            AC += 2000 + 50 * you.experience_level;
             break;
         }
     }
@@ -6408,7 +6477,9 @@ int player::res_elec() const
 int player::res_water_drowning() const
 {
     return (is_unbreathing()
-            || (you.species == SP_MERFOLK && !form_changed_physiology()));
+            || (you.species == SP_MERFOLK && !form_changed_physiology())
+            || (you.species == SP_OCTOPODE && !form_changed_physiology())
+            || you.form == TRAN_ICE_BEAST);
 }
 
 int player::res_asphyx() const
@@ -6579,6 +6650,9 @@ int player_res_magic(bool calc_unid, bool temp)
 
 bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
+    if (you.duration[DUR_DIMENSION_ANCHOR])
+        return true;
+
     if (crawl_state.game_is_sprint() && !blinking)
         return true;
 
@@ -6717,8 +6791,11 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 
     // Either this, or the actual rotting message should probably
     // be changed so that they're easier to tell apart. -- bwr
-    mprf(MSGCH_WARN, "You feel your flesh %s away!",
-         (rotting > 0 || immediate) ? "rotting" : "start to rot");
+    if (!quiet)
+    {
+        mprf(MSGCH_WARN, "You feel your flesh %s away!",
+             (rotting > 0 || immediate) ? "rotting" : "start to rot");
+    }
 
     rotting += amount;
 
@@ -6999,7 +7076,7 @@ int player::has_usable_tentacles(bool allow_tran) const
     return has_tentacles(allow_tran);
 }
 
-bool player::sicken(int amount, bool allow_hint)
+bool player::sicken(int amount, bool allow_hint, bool quiet)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7012,7 +7089,8 @@ bool player::sicken(int amount, bool allow_hint)
         return false;
     }
 
-    mpr("You feel ill.");
+    if (!quiet)
+        mpr("You feel ill.");
 
     disease += amount * BASELINE_DELAY;
     if (disease > 210 * BASELINE_DELAY)
@@ -7554,6 +7632,16 @@ bool player::made_nervous_by(const coord_def &p)
                 return true;
     }
     return false;
+}
+
+void player::weaken(actor *attacker, int pow)
+{
+    if (!duration[DUR_WEAK])
+        mpr("You feel yourself grow feeble.", MSGCH_WARN);
+    else
+        mpr("You feel as though you will be weak longer.", MSGCH_WARN);
+
+    you.increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
 /*

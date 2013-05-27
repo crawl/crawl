@@ -323,7 +323,7 @@ void corpse_rot(actor* caster)
                     // Found a corpse.  Skeletonise it if possible.
                     if (!mons_skeleton(si->mon_type))
                     {
-                        item_was_destroyed(*si);
+                        item_was_destroyed(*si, caster->mindex());
                         destroy_item(si->index());
                     }
                     else

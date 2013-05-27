@@ -11,6 +11,11 @@ Blink ability
 
 Teleportiere über eine zufällige, kurze Distanz.
 %%%%
+Breathe Dispelling Energy
+
+Atmen Sie eine Druckwelle der Macht an einem ins Visier genommenen Ungeheuer,
+vielleicht etwas von seinem Entzücken entfernend.
+%%%%
 Breathe Fire
 
 Atme eine Feuerwelle auf ein Monster aus, die möglicherweise eine Spur von
@@ -128,6 +133,15 @@ Evoke Fog
 
 Gebe eine dicke Nebelwolke frei um die Sicht zu verschlechtern.
 %%%%
+Evoke Teleport Control
+
+Gewinnen Sie die Fähigkeit, Ihre folgende Versetzung zu kontrollieren –
+entweder indem Sie ein ungefähres Ziel für ein Teleportieren auswählen, oder
+indem Sie eine Richtung für ein Blinzeln auswählen. Seien Sie vorsichtig, dass
+kontrollierte Versetzungen das Thema veranlassen werden, verseucht mit der
+magischen Energie zu werden, und das kontrolliert teleportiert, wird länger
+nehmen, um auszulösen, als nicht kontrollierte.
+%%%%
 End Transformation
 
 Beende deine Verwandlung mit einer kurzen Verzögerung.
@@ -159,6 +173,11 @@ Kondition schützt dich vor Krankheit, Vergiftung, Versteinerung, Verwirrung und
 Verwesung. Sie erhöht und erhält zeitweise deine Stärke, Intelligenz und
 Geschicklichkeit.
 %%%%
+Imprison
+
+Sperren Sie provisorisch ein Ungeheuer in Wänden von Silber ein. Die Dauer des
+Gefängnisses wird durch die Beschwörungssachkenntnis vergrößert.
+%%%%
 Sanctuary
 
 Für eine kurze Dauer bekommst du Sicherheit in der göttlichen Zuflucht. Solange
@@ -167,7 +186,7 @@ wird der Schutz verschwinden wenn du den göttlichen Frieden stören solltest.
 %%%%
 Cure All Mutations
 
-Befreie dich von allen Mutationen - aber nur einmal.
+Befreie dich von allen Mutationen – aber nur einmal.
 %%%%
 Divine Shield
 
@@ -206,6 +225,11 @@ Animate Remains
 Belebe eine einzige Leiche bzw. ein einziges Skelett als deinen Anhänger
 wieder. Denk daran, dass Zombies und Skelette die Ebene, auf der sie erstellt
 wurden, nicht verlassen können.
+%%%%
+Recall Undead Slaves
+
+Rufen Sie Ihre untoten Anhänger von überall her im Kerker zu Ihren
+unmittelbaren Umgebungen zurück.
 %%%%
 Injury Mirror
 
@@ -444,6 +468,15 @@ Smiting
 Erschlage einen Gegner in deinem Sichtbereich. Es benötig keinen geraden Weg,
 sondern es reicht den Gegner zu sehen.
 %%%%
+Recall Orcish Followers
+
+Rufen Sie Ihre orkischen Anhänger von überall her im Kerker zu Ihren
+unmittelbaren Umgebungen zurück.
+%%%%
+Stop Recall
+
+Hören Sie auf, Ihre Anhänger zurückzurufen.
+%%%%
 Sunlight
 
 Rufe das Sonnenlicht herunter auf einen kleinen Bereich im Verlies. Monster
@@ -470,6 +503,14 @@ Reproduction
 
 Erschaffe riesige Sporen aus den Leichen in deiner Sichtlinie. Die Sporen
 werden explodieren und dir oder deinen Feinden Schaden zufügen.
+%%%%
+Evolution
+
+Verwandeln Sie Pflanzen und Pilze in stärkere Arten. Aufrüstung von Pilzen
+verlangt Gläubigkeit, während die Aufrüstung von Werken Frucht verlangt.
+Beförderte Werke gewinnen einen Bonus, um Genauigkeit anzugreifen, die zur
+Beschwörungssachkenntnis des Benutzers proportional ist, und Pflanzen werden
+mit größerer Wahrscheinlichkeit Säure an höheren Beschwörungen spucken.
 %%%%
 Bend Time
 
@@ -523,6 +564,13 @@ Opfere einen Teil deiner Fähigkeiten um eine Andere zu verbessern.
 End Transfer Knowledge
 
 Brich einen laufenden Fähigkeitenwechsel ab.
+%%%%
+Memorise spell
+
+Gewinnen Sie sofort Kenntnisse einer zerstörenden Periode, die Ihnen durch
+Vehumet angeboten ist. Das Angebot wird nach einer kurzen Zeit ablaufen.
+Überprüfen Sie den Schirm Religion (^), um zu sehen, welche Periode angeboten
+wird.
 %%%%
 Renounce Religion
 
