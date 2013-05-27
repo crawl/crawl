@@ -3600,9 +3600,9 @@ static void _place_aquatic_monsters()
     }
 }
 
-// For Crypt, adds a bunch of skeletons and zombies that do not respect absdepth
-// (and thus tend to be varied and include several types that would not otherwise
-//  spawn there)
+// For Crypt, adds a bunch of skeletons and zombies that do not respect
+// absdepth (and thus tend to be varied and include several types that
+// would not otherwise spawn there).
 static void _place_assorted_zombies()
 {
     int num_zombies = random_range(6, 12, 3);
