@@ -2022,4 +2022,15 @@
       }
     },
 
+    {  MST_TENGU_REAVER,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BOLT_OF_COLD,
+       SPELL_BATTLESPHERE,
+       SPELL_FREEZING_CLOUD,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    },
+
 #endif

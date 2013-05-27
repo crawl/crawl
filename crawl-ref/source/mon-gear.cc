@@ -696,6 +696,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
+    case MONS_TENGU_REAVER:
+        item_race = MAKE_ITEM_NO_RACE;
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
     case MONS_VAULT_WARDEN:
@@ -715,7 +717,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (!melee_only && one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = (type == MONS_TENGU_WARRIOR && coinflip())
+            item.sub_type  = (item_race == MAKE_ITEM_NO_RACE && coinflip())
                              ? WPN_LONGBOW : WPN_CROSSBOW;
             break;
         }
@@ -1788,8 +1790,12 @@ static void _give_shield(monster* mon, int level)
                               coinflip() ? ARM_BUCKLER : ARM_SHIELD,
                               level, MAKE_ITEM_NO_RACE);
         break;
-    case MONS_TENGU_CONJURER:
+    case MONS_TENGU_REAVER:
         if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        // deliberate fall-through
+    case MONS_TENGU_CONJURER:
+        if (mon->type == MONS_TENGU_REAVER || one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                                   level, MAKE_ITEM_NO_RACE);
@@ -1956,9 +1962,12 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_GNOLL_SERGEANT:
+    case MONS_TENGU_REAVER:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_RING_MAIL : ARM_SCALE_MAIL;
+        if (type == MONS_TENGU_REAVER && one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_JOSEPH:
@@ -2163,6 +2172,12 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         }
         else
             return;
+        break;
+
+    case MONS_TENGU_WARRIOR:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_RING_MAIL;
         break;
 
     case MONS_LAMIA:
