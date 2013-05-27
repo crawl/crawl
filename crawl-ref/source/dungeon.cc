@@ -2260,6 +2260,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         } while (depth > 0);
     }
 
+    if (player_in_branch(BRANCH_FOREST))
+        _add_plant_clumps(2);
+
     const unsigned nvaults = env.level_vaults.size();
 
     // Any further vaults must make sure not to disrupt level layout.
