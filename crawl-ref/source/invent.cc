@@ -794,14 +794,15 @@ void InvMenu::sort_menu(vector<InvEntry*> &invitems,
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 MenuEntry *(*procfn)(MenuEntry *me),
-                                menu_letter ckey)
+                                menu_letter ckey, bool sort)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (int i = 0, count = mitems.size(); i < count; ++i)
         inv_class[ mitems[i]->base_type ]++;
 
     vector<InvEntry*> items_in_class;
-    const menu_sort_condition *cond = find_menu_sort_condition();
+    const menu_sort_condition *cond = NULL;
+    if (sort) cond = find_menu_sort_condition();
 
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
@@ -820,8 +821,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 if (!glyphs.empty())
                 {
                     // longest string
-                    const string str = "Magical Staves and Rods";
-                    subtitle += string(strwidth(str) - strwidth(subtitle) + 1,
+                    const string str = "Magical Staves ";
+                    subtitle += string(strwidth(str) - strwidth(subtitle),
                                        ' ');
                     subtitle += "(select all with <w>";
                     for (unsigned int k = 0; k < glyphs.size(); ++k)

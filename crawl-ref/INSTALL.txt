@@ -48,7 +48,8 @@ Crawl Stone Soup is known to run on the following platforms as of version
 
 The only officially supported compilers are gcc (4.1 or newer) and clang
 (3.0 or newer), with strong preference for the former.  On Windows, gcc is
-usually available as MinGW.
+usually available as MinGW; and as of version 0.13, compilation with MSVC
+(Microsoft Visual Studio 2012 both Full or Express editions) is supported.
 
 There's no reason Crawl shouldn't work on other modern systems, especially
 Unixy ones, although some porting may be needed.
@@ -124,8 +125,8 @@ apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
 with it you don't have a need for the bundled "contribs".
 
 If you are going to be rebuilding after doing small changes a lot, it is
-recommended that you also install and configure ccache:
-apt-get install ccache
+recommended that you also install and configure ccache and binutils-gold:
+apt-get install ccache binutils-gold
 less /usr/share/doc/ccache/README.Debian
 
 
@@ -279,6 +280,42 @@ Building on Windows (cygwin)
 
 * Follow the Linux build instructions to build Crawl.
 
+Building on Windows (MSVC)
+--------------------------
+
+* If you do not have Visual Studio 2012 you can get the free Express edition
+  (for Desktop) from http://www.microsoft.com/visualstudio/eng/downloads
+  (look for Visual Studio Express 2012 for Windows Desktop).
+
+* You'll need a perl environment, there are links to several Windows binaries
+  you can choose from at http://www.perl.org/get.html
+
+* In the Crawl source, run gen-all.cmd which is in source/util/. This step
+  must be executed any time you update to a new version of the source (or
+  if you have modified tile data or unrandarts).
+
+* Open crawl-ref.sln in Visual Studio, this is in source/MSVC/.
+
+* You can now select Debug or Release from the drop-down build configurations
+  menu on the main toolbar (it should be next to "Local Windows Debugger");
+  crawl.exe can them be compiled by selecting "Build Solution" in the BUILD
+  menu. You can quickly run it by selecting "Start without Debugging" in the
+  debug menu (or debug with "Start Debugging" but the game will run extremely
+  slowly). Note: the Release build can still be debugged using the Visual
+  Studio debugger.
+
+* Better support for Python (for the webserver project) and Lua (for the dat
+  project) can be installed with these extensions:
+
+  Python Tools for Visual Studio
+  http://pytools.codeplex.com/releases
+
+  Ports of VsLua to Visual Studio 2012
+  http://www.dbfinteractive.com/forum/index.php?topic=5873.0
+  http://pouet.net/topic.php?which=9087
+
+  Try at your own risk, but the first one has been tested and found to be
+  effective.
 
 Building Tiles versions
 -----------------------

@@ -18,7 +18,7 @@ function base_monster_setup(e)
            centaur / jelly / water moccasin / ice beast / crimson imp /\
            necrophage / quasit / zombie / sky beast / deep elf soldier /\
            giant frog / mummy / orc warrior band / wight band /\
-           hungry ghost / shadow / big kobold band / giant centipede /\
+           hungry ghost / big kobold band / giant centipede /\
            brain worm / warg / wolf / porcupine / black bear /\
            giant mite / green rat / flying skull / iron imp / lemure /\
            white imp / ufetubus / fire bat / rotting devil")
@@ -32,14 +32,14 @@ function base_monster_setup(e)
            kobold demonologist band / giant slug / deep troll /\
            deep elf fighter band / agate snail / boulder beetle / red wasp /\
            orc high priest band w:5 / pulsating lump / boring beetle /\
-           flayed ghost / freezing wraith / shadow wraith /\
+           flayed ghost / freezing wraith / shadow wraith / shadow /\
            orc sorcerer band w:5 / orc knight band / grizzly bear /\
            redback / phantasmal warrior / spiny frog / orange rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / war dog band / sheep band /\
            raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / mermaid w:3 / sea snake / snapping turtle /\
-           tarantella / jumping spider / demonic crawler / rotting hulk /\
+           tarantella / jumping spider / demonic crawler / plague shambler /\
            flaming corpse / small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
            red devil / centaur band / deep dwarf artificer")
@@ -2072,7 +2072,7 @@ KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
 KMONS:  C = Frederick, Norris, Louise, Rupert
 KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
-        vampire / vampire mage / vampire knight / ghoul w:5 / rotting hulk /\
+        vampire / vampire mage / vampire knight / ghoul w:5 / plague shambler /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
         freezing wraith w:3 / flaming corpse / flayed ghost
 KMONS:  D = lich

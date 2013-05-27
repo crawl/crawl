@@ -1286,8 +1286,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
 
     if (del_spell_from_memory(spell))
     {
-        item_was_destroyed(*book);
-        destroy_spellbook(*book);
+        item_was_destroyed(*book, MHITYOU);
         dec_inv_item_quantity(book->link, 1);
         you.turn_is_over = true;
         return true;
@@ -2561,10 +2560,7 @@ void destroy_spellbook(const item_def &book)
         maxlevel = max(maxlevel, spell_difficulty(stype));
     }
 
-    god_type god;
-    // The known boolean is being used to double penance when the destroyed
-    // book is a gift of Sif Muna or it contains its name in its title
-    did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5,
-                    origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA
-                    || book.name(DESC_PLAIN).find("Sif Muna") != string::npos);
+    did_god_conduct(DID_DESTROY_SPELLBOOK,
+                    maxlevel + 5 *
+                    (origin_is_god_gift(book) ? 2 : 1));
 }

@@ -2305,12 +2305,12 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
         _place_traps();
 
-        // Place items.
-        _builder_items();
-
         // Place monsters.
         if (!crawl_state.game_is_zotdef())
             _builder_monsters();
+
+        // Place items.
+        _builder_items();
 
         _fixup_walls();
     }
@@ -3600,6 +3600,44 @@ static void _place_aquatic_monsters()
     }
 }
 
+// For Crypt, adds a bunch of skeletons and zombies that do not respect
+// absdepth (and thus tend to be varied and include several types that
+// would not otherwise spawn there).
+static void _place_assorted_zombies()
+{
+    int num_zombies = random_range(6, 12, 3);
+    for (int i = 0; i < num_zombies; ++i)
+    {
+        bool skel = coinflip();
+        monster_type z_base;
+        do
+            z_base = pick_random_zombie();
+        while (skel && !mons_skeleton(z_base));
+
+        mgen_data mg;
+        mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
+        mg.base_type = z_base;
+        mg.behaviour              = BEH_SLEEP;
+        mg.map_mask              |= MMT_NO_MONS;
+        mg.preferred_grid_feature = DNGN_FLOOR;
+
+        place_monster(mg);
+    }
+}
+
+static void _place_lost_souls()
+{
+    int nsouls = random2avg(you.depth + 2, 3);
+    for (int i = 0; i < nsouls; ++i)
+    {
+        mgen_data mg;
+        mg.cls = MONS_LOST_SOUL;
+        mg.behaviour              = BEH_HOSTILE;
+        mg.preferred_grid_feature = DNGN_FLOOR;
+        place_monster(mg);
+    }
+}
+
 bool door_vetoed(const coord_def pos)
 {
     return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
@@ -3645,6 +3683,11 @@ static void _builder_monsters()
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
+    else
+    {
+        _place_assorted_zombies();
+        _place_lost_souls();
+    }
 }
 
 static void _builder_items()
@@ -4285,7 +4328,7 @@ int dgn_place_item(const item_spec &spec,
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
             base_type = _acquirement_item_classes[random2(
-                            you.species == SP_FELID ? NC_KITTEHS :
+                            (you.species == SP_FELID && acquire) ? NC_KITTEHS :
                             NC_LESSER_LIFE_FORMS)];
         }
     }
@@ -5135,7 +5178,6 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
 static dungeon_feature_type _pick_an_altar()
 {
     god_type god;
-    int temp_rand;              // probability determination {dlb}
 
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || player_in_branch(BRANCH_LABYRINTH))
@@ -5153,50 +5195,36 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_DWARVEN_HALL:
-            temp_rand = random2(7);
-
-            god = ((temp_rand == 0) ? GOD_KIKUBAAQUDGHA :
-                   (temp_rand == 1) ? GOD_YREDELEMNUL :
-                   (temp_rand == 2) ? GOD_MAKHLEB :
-                   (temp_rand == 3) ? GOD_TROG :
-                   (temp_rand == 4) ? GOD_CHEIBRIADOS:
-                   (temp_rand == 5) ? GOD_ELYVILON
-                                    : GOD_OKAWARU);
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL,
+                                GOD_MAKHLEB,       GOD_TROG,
+                                GOD_CHEIBRIADOS,   GOD_ELYVILON,
+                                GOD_OKAWARU,       -1);
             break;
 
-        case BRANCH_ORCISH_MINES:    // violent gods
-            temp_rand = random2(10); // 50% chance of Beogh
-
-            god = ((temp_rand == 0) ? GOD_VEHUMET :
-                   (temp_rand == 1) ? GOD_MAKHLEB :
-                   (temp_rand == 2) ? GOD_OKAWARU :
-                   (temp_rand == 3) ? GOD_TROG :
-                   (temp_rand == 4) ? GOD_XOM
-                                    : GOD_BEOGH);
+        case BRANCH_ORCISH_MINES: // violent gods (50% chance of Beogh)
+            if (coinflip())
+                god = GOD_BEOGH;
+            else
+                god = random_choose(GOD_VEHUMET, GOD_MAKHLEB, GOD_OKAWARU,
+                                    GOD_TROG,    GOD_XOM,     -1);
             break;
 
-        case BRANCH_VAULTS: // "lawful" gods
-            temp_rand = random2(7);
-
-            god = ((temp_rand == 0) ? GOD_ELYVILON :
-                   (temp_rand == 1) ? GOD_SIF_MUNA :
-                   (temp_rand == 2) ? GOD_SHINING_ONE :
-                   (temp_rand == 3
-                       || temp_rand == 4) ? GOD_OKAWARU
-                                          : GOD_ZIN);
+        case BRANCH_VAULTS: // lawful gods
+            god = random_choose_weighted(2, GOD_OKAWARU,
+                                         2, GOD_ZIN,
+                                         1, GOD_ELYVILON,
+                                         1, GOD_SIF_MUNA,
+                                         1, GOD_SHINING_ONE,
+                                         0);
             break;
 
         case BRANCH_HALL_OF_BLADES:
             god = GOD_OKAWARU;
             break;
 
-        case BRANCH_ELVEN_HALLS:    // "magic" gods
-            temp_rand = random2(4);
-
-            god = ((temp_rand == 0) ? GOD_VEHUMET :
-                   (temp_rand == 1) ? GOD_SIF_MUNA :
-                   (temp_rand == 2) ? GOD_XOM
-                                    : GOD_MAKHLEB);
+        case BRANCH_ELVEN_HALLS: // magic gods
+            god = random_choose(GOD_VEHUMET, GOD_SIF_MUNA, GOD_XOM,
+                                GOD_MAKHLEB, -1);
             break;
 
         case BRANCH_SLIME_PITS:
@@ -5220,17 +5248,10 @@ static dungeon_feature_type _pick_an_altar()
     else
     {
         // Note: this case includes Pandemonium or the Abyss.
-        temp_rand = random2(9);
-
-        god = ((temp_rand == 0) ? GOD_ZIN :
-               (temp_rand == 1) ? GOD_SHINING_ONE :
-               (temp_rand == 2) ? GOD_KIKUBAAQUDGHA :
-               (temp_rand == 3) ? GOD_XOM :
-               (temp_rand == 4) ? GOD_OKAWARU :
-               (temp_rand == 5) ? GOD_MAKHLEB :
-               (temp_rand == 6) ? GOD_SIF_MUNA :
-               (temp_rand == 7) ? GOD_TROG
-                                : GOD_ELYVILON);
+        god = random_choose(GOD_ZIN,      GOD_SHINING_ONE, GOD_KIKUBAAQUDGHA,
+                            GOD_XOM,      GOD_OKAWARU,     GOD_MAKHLEB,
+                            GOD_SIF_MUNA, GOD_TROG,        GOD_ELYVILON,
+                            -1);
     }
 
     if (is_unavailable_god(god))

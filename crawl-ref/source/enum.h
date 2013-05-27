@@ -25,6 +25,7 @@ enum lang_t
     LANG_KO,
     LANG_LT,
     LANG_LV,
+    LANG_NL,
     LANG_PL,
     LANG_PT,
     LANG_RU,
@@ -291,6 +292,7 @@ enum attribute_type
                                // will be removed
     ATTR_NEXT_RECALL_TIME,     // aut remaining until next ally will be recalled
     ATTR_NEXT_RECALL_INDEX,    // index+1 into recall_list for next recall
+    ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
     NUM_ATTRIBUTES
 };
 
@@ -345,6 +347,7 @@ enum beam_type                  // bolt::flavour
     BEAM_LIGHT,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
+    BEAM_GHOSTLY_FLAME,
 
     // Enchantments
     BEAM_SLOW,
@@ -376,7 +379,8 @@ enum beam_type                  // bolt::flavour
     BEAM_SLEEP,
     BEAM_INNER_FLAME,
     BEAM_SENTINEL_MARK,
-    BEAM_LAST_ENCHANTMENT = BEAM_SENTINEL_MARK,
+    BEAM_DIMENSION_ANCHOR,
+    BEAM_LAST_ENCHANTMENT = BEAM_DIMENSION_ANCHOR,
 
     BEAM_MEPHITIC,
     BEAM_GLOOM,
@@ -614,6 +618,7 @@ enum cloud_type
     CLOUD_MAGIC_TRAIL,
     CLOUD_TORNADO,
     CLOUD_DUST_TRAIL,
+    CLOUD_GHOSTLY_FLAME,
     NUM_CLOUD_TYPES,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
@@ -992,6 +997,7 @@ enum conduct_type
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
+    DID_DESTROY_DECK,                     // Nemelex
 
     NUM_CONDUCTS
 };
@@ -1491,6 +1497,12 @@ enum duration_type
 	DUR_INFUSION,
 	DUR_SONG_OF_SLAYING,
 	DUR_SPIRIT_SHIELD,
+    DUR_WATER_HOLD,
+    DUR_WATER_HOLD_IMMUNITY,
+    DUR_FLAYED,
+    DUR_RETCHING,
+    DUR_WEAK,
+    DUR_DIMENSION_ANCHOR,
     NUM_DURATIONS
 };
 
@@ -1581,7 +1593,13 @@ enum enchant_type
     ENCH_SCREAMED,      // Starcursed scream timer
     ENCH_WORD_OF_RECALL,// Chanting word of recall
     ENCH_INJURY_BOND,
-    // Update enchantment names in monster.cc when adding or removing
+    ENCH_WATER_HOLD,      // Silence and asphyxiation damage
+    ENCH_FLAYED,
+    ENCH_HAUNTING,
+    ENCH_RETCHING,
+    ENCH_WEAK,
+    ENCH_DIMENSION_ANCHOR,
+    // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
 };
@@ -1916,9 +1934,23 @@ enum map_marker_type
     MAT_MALIGN,
     MAT_PHOENIX,
     MAT_POSITION,
+#if TAG_MAJOR_VERSION == 34
     MAT_DOOR_SEAL,
+#endif
+    MAT_TERRAIN_CHANGE,
+    MAT_CLOUD_SPREADER,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
+};
+
+enum terrain_change_type
+{
+    TERRAIN_CHANGE_GENERIC,
+    TERRAIN_CHANGE_FLOOD,
+    TERRAIN_CHANGE_TOMB,
+    TERRAIN_CHANGE_IMPRISON,
+    TERRAIN_CHANGE_DOOR_SEAL,
+    NUM_TERRAIN_CHANGE_TYPES
 };
 
 enum map_feature
@@ -2393,7 +2425,7 @@ enum monster_type                      // menv[].type
     MONS_MACABRE_MASS,
 
     // Undead:
-    MONS_ROTTING_HULK,
+    MONS_PLAGUE_SHAMBLER,
     MONS_NECROPHAGE,
     MONS_GHOUL,
     MONS_FLAMING_CORPSE,
@@ -2592,6 +2624,11 @@ enum monster_type                      // menv[].type
     MONS_ZOMBIE,
     MONS_SKELETON,
     MONS_SIMULACRUM,
+
+    MONS_ANCIENT_CHAMPION,
+    MONS_REVENANT,
+    MONS_LOST_SOUL,
+    MONS_JIANGSHI,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3407,6 +3444,11 @@ enum spell_type
 	SPELL_SONG_OF_SLAYING,
 	SPELL_SPECTRAL_WEAPON,
 	SPELL_SPIRIT_SHIELD,
+    SPELL_GHOSTLY_FLAMES,
+    SPELL_GHOSTLY_FIREBALL,
+    SPELL_CALL_LOST_SOUL,
+    SPELL_DIMENSION_ANCHOR,
+    SPELL_BLINK_ALLIES_ENCIRCLE,
     NUM_SPELLS
 };
 
@@ -3656,6 +3698,7 @@ enum seen_context_type
     SC_UNCHARM,
     SC_DOOR,            // they opened a door
     SC_GATE,            // ... or a big door
+    SC_LEAP_IN,         // leaps into view
 };
 
 enum los_type
@@ -3721,7 +3764,7 @@ enum tag_pref
     TAGPREF_ENEMY,    // display text tags on enemy named monsters
     TAGPREF_MAX,
 };
-enum tile_flags
+enum tile_flags ENUM_INT64
 {
     //// Foreground flags
 
@@ -3742,7 +3785,7 @@ enum tile_flags
 
     TILE_FLAG_NET        = 0x00400000ULL,
     TILE_FLAG_POISON     = 0x00800000ULL,
-    TILE_FLAG_ANIM_WEP   = 0x01000000ULL,
+    TILE_FLAG_WEB        = 0x01000000ULL,
     TILE_FLAG_GLOWING    = 0x02000000ULL,
     TILE_FLAG_STICKY_FLAME = 0x04000000ULL,
     TILE_FLAG_BERSERK    = 0x08000000ULL,
@@ -3755,6 +3798,7 @@ enum tile_flags
     TILE_FLAG_PETRIFYING = 0x80000000000ULL,
     TILE_FLAG_PETRIFIED  = 0x100000000000ULL,
     TILE_FLAG_BLIND      = 0x200000000000ULL,
+    TILE_FLAG_ANIM_WEP   = 0x400000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,

@@ -324,6 +324,7 @@ bool monster::can_drown() const
     {
     case HT_WATER:
     case HT_LAVA:
+    case HT_AMPHIBIOUS:
         return false;
     default:
         break;
@@ -332,7 +333,7 @@ bool monster::can_drown() const
     // Mummies can fall apart in water or be incinerated in lava.
     // Ghouls and vampires can drown in water or lava.  Others just
     // "sink like a rock", to never be seen again.
-    return (!res_water_drowning()
+    return (!is_unbreathing()
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE);
@@ -1334,7 +1335,7 @@ bool monster::drop_item(int eslot, int near)
                  pitem->name(DESC_A).c_str());
         }
 
-        if (!move_item_to_grid(&item_index, pos(), swimming()))
+        if (!move_item_to_grid(&item_index, pos(), mindex(), swimming()))
         {
             // Re-equip item if we somehow failed to drop it.
             if (was_unequipped)
@@ -1431,6 +1432,10 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 {
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
         return (weapon.base_type == OBJ_RODS);
+
+    // Don't pick up items that would interfere with our special ability
+    if (mons->type == MONS_RED_DEVIL)
+        return (weapon_skill(weapon) == SK_POLEARMS);
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -3356,9 +3361,12 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
     int evasion = ev;
 
-    // Phase Shift EV is already included.
-    if (evit & EV_IGNORE_PHASESHIFT && mons_class_flag(type, M_PHASE_SHIFT))
+    // Phase Shift EV is already included (but ignore if dimension anchored)
+    if (mons_class_flag(type, M_PHASE_SHIFT)
+        && ((evit & EV_IGNORE_PHASESHIFT) || has_ench(ENCH_DIMENSION_ANCHOR)))
+    {
         evasion -= 8;
+    }
 
     if (evit & EV_IGNORE_HELPLESS)
         return max(evasion, 0);
@@ -3736,7 +3744,7 @@ int monster::res_asphyx() const
 
 int monster::res_water_drowning() const
 {
-    if (is_unbreathing())
+    if (is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX))
         return 1;
 
     switch (mons_habitat(this))
@@ -4252,7 +4260,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         react_to_damage(agent, amount, flavour);
 
         if (has_ench(ENCH_MIRROR_DAMAGE))
-            (new mirror_damage_fineff(agent, this, amount))->schedule();
+            (new mirror_damage_fineff(agent, this, amount * 2 / 3))->schedule();
 
         blame_damage(agent, amount);
         behaviour_event(this, ME_HURT);
@@ -4630,14 +4638,14 @@ kill_category monster::kill_alignment() const
     return (friendly() ? KC_FRIENDLY : KC_OTHER);
 }
 
-bool monster::sicken(int amount, bool unused)
+bool monster::sicken(int amount, bool unused, bool quiet)
 {
     UNUSED(unused);
 
     if (res_rotting() || (amount /= 2) < 1)
         return false;
 
-    if (!has_ench(ENCH_SICK) && you.can_see(this))
+    if (!has_ench(ENCH_SICK) && you.can_see(this) && !quiet)
     {
         // Yes, could be confused with poisoning.
         mprf("%s looks sick.", name(DESC_THE).c_str());
@@ -4999,7 +5007,7 @@ void monster::check_redraw(const coord_def &old, bool clear_tiles) const
 #ifdef USE_TILE
             if (clear_tiles && !see_old)
             {
-                tile_clear_monster(old);
+                tile_reset_fg(old);
                 if (mons_is_feat_mimic(type))
                     tile_reset_feat(old);
             }
@@ -5199,6 +5207,15 @@ void monster::put_to_sleep(actor *attacker, int strength)
     add_ench(ENCH_SLEEPY);
 }
 
+void monster::weaken(actor *attacker, int pow)
+{
+    if (!has_ench(ENCH_WEAK))
+        simple_monster_message(this, " looks weaker.");
+
+    add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
+                         (pow * 10 + random2(pow * 10 + 30))));
+}
+
 void monster::check_awaken(int)
 {
     // XXX
@@ -5249,6 +5266,10 @@ int monster::action_energy(energy_use_type et) const
         if (run())
             move_cost -= 2;
 
+        // Shadows move more quickly when blended with the darkness
+        if (type == MONS_SHADOW && invisible())
+            move_cost -= 3;
+
         // Floundering monsters get the same penalty as the player, except that
         // player get penalty on entering water, while monster get the penalty
         // when leaving it.
@@ -5278,7 +5299,7 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     // Randomize movement cost slightly, to make it less predictable,
     // and make pillar-dancing not entirely safe.
     // No randomization for allies following you to avoid traffic jam
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() or foe != MHITYOU))
+    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
         energy_loss += random2(3) - 1;
 
     speed_increment -= energy_loss;
@@ -5307,7 +5328,8 @@ bool monster::can_drink_potion(potion_type ptype) const
     // These monsters cannot drink.
     if (is_skeletal() || is_insubstantial()
         || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY
-        || type == MONS_GASTRONOK)
+        || type == MONS_GASTRONOK
+        || has_ench(ENCH_RETCHING))
     {
         return false;
     }
@@ -5627,8 +5649,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 reach_type monster::reach_range() const
 {
     const mon_attack_def attk(mons_attack_spec(this, 0));
-    if (attk.flavour == AF_REACH && attk.damage)
+    if ((attk.flavour == AF_REACH || attk.type == AT_REACH_STING)
+        && attk.damage)
+    {
         return REACH_TWO;
+    }
 
     const item_def *wpn = primary_weapon();
     if (wpn)

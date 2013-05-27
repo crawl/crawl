@@ -181,7 +181,7 @@ void reader::read(void *data, size_t size)
     {
         if (_read_offset+size > _pbuf->size())
             throw short_read_exception();
-        if (data)
+        if (data && size)
             memcpy(data, &(*_pbuf)[_read_offset], size);
 
         _read_offset += size;
@@ -1069,6 +1069,9 @@ static void tag_construct_char(writer &th)
 
     marshallString(th, species_name(you.species));
     marshallString(th, you.religion ? god_name(you.religion) : "");
+
+    // separate from the tutorial so we don't have to bump TAG_CHR_FORMAT
+    marshallString(th, crawl_state.map);
 }
 
 static void tag_construct_you(writer &th)
@@ -1835,6 +1838,8 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     crawl_state.type = (game_type) unmarshallUByte(th);
     if (crawl_state.game_is_tutorial())
         crawl_state.map = unmarshallString(th);
+    else
+        crawl_state.map = "";
 
     if (major > 32 || major == 32 && minor > 26)
     {
@@ -1852,6 +1857,9 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
         else
             you.god_name = "Marduk";
     }
+
+    if (major > 34 || major == 34 && minor >= 29)
+        crawl_state.map = unmarshallString(th);
 }
 
 static void tag_read_you(reader &th)
@@ -3783,6 +3791,9 @@ static void _debug_count_tiles()
             if (found.find(t) == found.end())
                 cnt++, found[t] = true;
             t = env.tile_bk_fg[i][j];
+            if (found.find(t) == found.end())
+                cnt++, found[t] = true;
+            t = env.tile_bk_cloud[i][j];
             if (found.find(t) == found.end())
                 cnt++, found[t] = true;
         }

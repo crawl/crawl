@@ -159,6 +159,19 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_WORD_OF_RECALL;
     case ENCH_INJURY_BOND:
         return MB_INJURY_BOND;
+    case ENCH_WATER_HOLD:
+        if (mons.res_water_drowning())
+            return MB_WATER_HOLD;
+        else
+            return MB_WATER_HOLD_DROWN;
+    case ENCH_FLAYED:
+        return MB_FLAYED;
+    case ENCH_RETCHING:
+        return MB_RETCHING;
+    case ENCH_WEAK:
+        return MB_WEAK;
+    case ENCH_DIMENSION_ANCHOR:
+        return MB_DIMENSION_ANCHOR;
     default:
         return NUM_MB_FLAGS;
     }
@@ -426,6 +439,7 @@ monster_info::monster_info(const monster* m, int milev)
         // these use number for internal information
         if (type == MONS_MANTICORE
             || type == MONS_SIXFIRHY
+            || type == MONS_JIANGSHI
             || type == MONS_SHEDU
             || type == MONS_KRAKEN_TENTACLE
             || type == MONS_KRAKEN_TENTACLE_SEGMENT
@@ -1451,6 +1465,21 @@ vector<string> monster_info::attributes() const
         v.push_back("chanting recall");
     if (is(MB_INJURY_BOND))
         v.push_back("sheltered from injuries");
+    if (is(MB_WATER_HOLD))
+        v.push_back("engulfed in water");
+    if (is(MB_WATER_HOLD_DROWN))
+    {
+        v.push_back("engulfed in water");
+        v.push_back("unable to breathe");
+    }
+    if (is(MB_FLAYED))
+        v.push_back("covered in terrible wounds");
+    if (is(MB_RETCHING))
+        v.push_back("retching with violent nausea");
+    if (is(MB_WEAK))
+        v.push_back("weak");
+    if (is(MB_DIMENSION_ANCHOR))
+        v.push_back("unable to translocate");
     return v;
 }
 
@@ -1589,7 +1618,9 @@ reach_type monster_info::reach_range() const
                                              ? base_type : type);
     ASSERT(e);
 
-    reach_type range = e->attack[0].flavour == AF_REACH ? REACH_TWO : REACH_NONE;
+    reach_type range = e->attack[0].flavour == AF_REACH
+                       || e->attack[0].type == AT_REACH_STING
+                          ? REACH_TWO : REACH_NONE;
 
     const item_def *weapon = inv[MSLOT_WEAPON].get();
     if (weapon)

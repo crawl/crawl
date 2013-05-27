@@ -418,6 +418,16 @@ void handle_behaviour(monster* mon)
     // Validate current target again.
     _mon_check_foe_invalid(mon);
 
+    if (mon->has_ench(ENCH_HAUNTING))
+    {
+        actor* targ = mon->get_ench(ENCH_HAUNTING).agent();
+        if (targ && targ->alive())
+        {
+            mon->foe = targ->mindex();
+            mon->target = targ->pos();
+        }
+    }
+
     while (changed)
     {
         actor* afoe = mon->get_foe();
@@ -495,9 +505,9 @@ void handle_behaviour(monster* mon)
             {
                 // If their foe is marked, the monster always knows exactly
                 // where they are.
-                if (mons_foe_is_marked(mon))
+                if (mons_foe_is_marked(mon) || mon->has_ench(ENCH_HAUNTING))
                 {
-                    mon->target = you.pos();
+                    mon->target = afoe->pos();
                     try_pathfind(mon);
                     break;
                 }
@@ -981,7 +991,8 @@ static void _set_nearest_monster_foe(monster* mon)
     if (mon->good_neutral() || mon->strict_neutral()
             || mon->behaviour == BEH_WITHDRAW
             || mon->type == MONS_BATTLESPHERE
-	|| mon->type == MONS_SPECTRAL_WEAPON)
+	|| mon->type == MONS_SPECTRAL_WEAPON
+            || mon->has_ench(ENCH_HAUNTING))
         return;
 
     const bool friendly = mon->friendly();

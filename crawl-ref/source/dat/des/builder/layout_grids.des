@@ -8,6 +8,7 @@
 : require("dlua/layout/hyper.lua")
 : require("dlua/layout/omnigrid.lua")
 : require("dlua/layout/vector.lua")
+: require("dlua/layout/theme.lua")
 
 {{
 
@@ -272,7 +273,7 @@ TAGS: no_hmirror no_vmirror chance_d layout_type_hyper_grid
       } }
     }
   }
-    hyper.build_layout(_G,build)
+  hyper.build_layout(_G,build)
   zonify.grid_fill_zones(1, "rock_wall")
 }}
 
@@ -356,7 +357,10 @@ TAGS: overwritable layout allow_dup unrand layout_type_open
     end
   end
 
-  zonify.grid_fill_zones(1, "rock_wall")
+  zonify.map_fill_zones(_G, 1, 'x')
+
+  if cavey then theme.D.caves(_G)
+  else theme.level_material(_G) end
 }}
 
 # Builds a complex maze by starting off with a subdivided grid then iteratively linking
@@ -498,6 +502,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_maze
   end
 
   zonify.map_fill_zones(_G, 1, 'x')
+  theme.level_material(_G)
 
 }}
 MAP

@@ -7,3 +7,8 @@
 
 # Locally built contribs
 /install
+
+# MSVC temp files
+*.sdf
+*.opensdf
+*.suo

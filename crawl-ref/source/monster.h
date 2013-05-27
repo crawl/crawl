@@ -110,7 +110,7 @@ public:
     void moveto(const coord_def& c, bool clear_net = true);
     bool move_to_pos(const coord_def &newpos, bool clear_net = true);
     bool blink_to(const coord_def& c, bool quiet = false);
-
+    bool blink_to(const coord_def& c, bool quiet, bool jump);
     kill_category kill_alignment() const;
 
     int  foe_distance() const;
@@ -378,6 +378,7 @@ public:
     int liquefying_radius2 () const;
     int umbra_radius2 () const;
     int suppression_radius2 () const;
+    int soul_aura_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
@@ -412,7 +413,7 @@ public:
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int strength, bool unused = true);
+    bool sicken(int strength, bool unused = true, bool quiet = false);
     bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *);
@@ -435,6 +436,7 @@ public:
 
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
+    void weaken(actor *attacker, int pow);
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "");
 

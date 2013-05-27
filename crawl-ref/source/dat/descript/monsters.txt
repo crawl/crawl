@@ -463,6 +463,14 @@ fantastic arabesque — invisible to their eyes, but dreadful nonetheless — in
 the unfamiliar numeral under whose menace they lived.”
     -Bruno Schulz, “The Brilliant Epoch”. 1937.
 %%%%
+lost soul
+
+The echo of a unmourned soul, flickering in and out of the mortal world. Though
+the memories of its living self are long-faded, it is drawn to the moment of
+death by some lingering instinct. So powerful is its drive for self and purpose
+that it seizes upon the passage of other souls, losing the last vestiges of its
+being in the memories of another's life.
+%%%%
 Louise
 
 A mighty sorceress, clad from head to toe in heavy armour. Once an adventurer
@@ -709,7 +717,7 @@ Niblungs_. 1891.
 Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
-Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
+Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
 %%%%
 Sonja
@@ -976,8 +984,9 @@ A greater demon, wreathed in snow and lightning.
 %%%%
 blue devil
 
-A peculiar, horned humanoid figure originating from some frigid hell. It is
-repulsed by fire and flames.
+A muscular horned humanoid figure originating from some frigid hell. It swoops
+through the air on powerful wings, taking sadistic joy from harrying those who
+would try to flee its grasp.
 %%%%
 blue devil:quote
 
@@ -1657,7 +1666,8 @@ dungeon, seeking to share its fate with others.
 flayed ghost
 
 A hideous floating undead creature, the anguished spirit of a tortured victim,
-with torn skin hanging from an emaciated body.
+with torn skin hanging from an emaciated body. It restlessly stalks the dungeon,
+inflicting the anguish it felt in life upon those still living.
 %%%%
 flying skull
 
@@ -2119,7 +2129,7 @@ accompanied by other unsavoury beings of its ilk.
 hell knight:quote
 
 “Ok, let’s review. It’s up to the fair young maiden to rescue the dragon from
-the fire breathing knights in shining armor.”
+the fire breathing knights in shining armour.”
     -Exiern
 %%%%
 hell hog
@@ -2415,6 +2425,12 @@ have all been soft and boneless just as you see them to-day thrown up by the
 waves high upon the shores of Japan.”
     -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
      Folk's Treasury_, vol. II. 1909.
+%%%%
+jiangshi
+
+A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
+limbs give it an awkward gait, it moves with surprising speed, leaping upon its
+victims and drinking their life essence with its vicious claws.
 %%%%
 jumping spider
 
@@ -2897,7 +2913,7 @@ formed of carbon and oxygen in the proportion of one part of the former to two
 of the latter chemically combined. It is a colorless gas, having an acid taste
 and smell; is soluble in water; weighs one-half more than air and can be poured
 from one vessel to another, as a liquid may be; 100 parts of water dissolve 106
-parts of this gas, and it is from this source that the roots -of plants derive
+parts of this gas, and it is from this source that the roots of plants derive
 the needed supplies of it.”
     -Henry Stuart, _The Culture of Farm Crops: A Manual of the Science of
     Agriculture, and a Hand-book of Practice for American Farmers_, ch X. 1887.
@@ -2943,13 +2959,11 @@ orange crystal statue
 An intricately carved idol of some nameless godling, hewn of translucent orange
 crystal. Its lifeless eyes seem to glitter uncannily with a wicked
 intelligence.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
-a venom most potent, one that attacks not only the body but the mind as well.
+a potent venom that can render its victims weak and their blows feeble.
 %%%%
 orange demon:quote
 
@@ -3079,7 +3093,9 @@ its claws burn with the sear of holy wrath.
 phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle and recalled
-to this plane by unholy magic.
+to this plane by unholy magic. The blade it wields is ethereal, passing easily
+through shields and armour, and rendering those it strikes more susceptible to
+magic.
 %%%%
 phantom
 
@@ -3137,6 +3153,12 @@ LORD out of heaven; And he overthrew those cities, and all the plain, and all
 the inhabitants of the cities, and that which grew upon the ground. But his
 wife looked back from behind him, and she became a pillar of salt.”
     -KJV Bible, Gen. XIX, 24-6.
+%%%%
+plague shambler
+
+A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
+parody of life, this infected decaying body lurches about, seeking retribution
+on the living.
 %%%%
 plant
 
@@ -3313,8 +3335,9 @@ A skeletal form wielding a giant scythe.
 %%%%
 red devil
 
-A muscular demon covered in spikes and horns. Two short wings sprout from its
-shoulders.
+A larger cousin of the common imp, with a fiendish grin and two short wings
+sprouting from its shoulders. They favor barbed tridents, often taunting their
+victims as they prod them from afar then nimbly retreat from pursuit.
 %%%%
 red draconian
 
@@ -3329,6 +3352,11 @@ redback
 
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
+%%%%
+revenant
+
+A skeletal form wreathed in cold blue fire standing astride this life and the
+next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
 rock worm
 
@@ -3365,12 +3393,6 @@ rotting devil:quote
  That swathe the minds of men, the sins
  That wrap their rotting souls about.“
     -John Davidson, ”A Ballad of Heaven". Late 19th cent.
-%%%%
-rotting hulk
-
-A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
-parody of life, this infected decaying body lurches about, seeking retribution
-on the living.
 %%%%
 the royal jelly
 
@@ -3430,8 +3452,9 @@ the whole earth is full of his glory.”
 %%%%
 shadow
 
-A wisp of unliving shadow, drifting on the edge of vision. It consumes the
-puissance of living beings.
+A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
+It moves swiftly and silently from one pool of shade to another, striking unerringly
+from the blind spots of those who cannot see it.
 %%%%
 shadow:quote
 
@@ -3570,8 +3593,6 @@ silver statue
 
 A beautiful statue of an unknown malignant creature, glistening with a silvery
 hue. Its eyes glow with an otherworldly radiance.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 simulacrum
 
@@ -3722,7 +3743,7 @@ A hideous mass of body parts, part animated dead flesh, part demon.
 small abomination:quote
 
 “No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
-had shapes, a thousand shapes of horror beyond all memory. There were eyes -
+had shapes, a thousand shapes of horror beyond all memory. There were eyes –
 and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
     -H.P. Lovecraft, _The Unnamable_. 1925.
@@ -4288,7 +4309,8 @@ orcs.
 water elemental
 
 A spirit drawn from the elemental plane of water. It exists on this world as
-part of a body of water.
+part of a body of water and can engulf other beings in its form, depriving them
+of breath and voice.
 %%%%
 water moccasin
 
@@ -4504,8 +4526,6 @@ Statue of Wucad Mu
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
 Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
 as you have no chance in mental combat against it.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 air elementalist statue
 
@@ -4964,7 +4984,7 @@ You see the unseen, you stare and they stare back. They whisper and laugh, they
 grin and cry, they leer at you with contempt and gaze at you in adoration. They
 are the observers, they are the judge of your worth and will decide your end.
 %%%%
-lost soul
+meat lost soul
 
 A spectre, struggling to leave the mortal world it is incarcerated in. It
 drains life and unlife from all those it comes into contact with.

@@ -606,11 +606,11 @@ void item_colour(item_def &item)
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:
-        case MISC_STONE_OF_EARTH_ELEMENTALS:
+        case MISC_STONE_OF_TREMORS:
             item.colour = BROWN;
             break;
 
-        case MISC_AIR_ELEMENTAL_FAN:
+        case MISC_FAN_OF_GALES:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
         case MISC_DISC_OF_STORMS:
         case MISC_HORN_OF_GERYON:
@@ -2508,7 +2508,7 @@ static monster_type _choose_random_monster_corpse()
     {
         monster_type spc = mons_species(static_cast<monster_type>(
                                         random2(NUM_MONSTERS)));
-        if (mons_class_flag(spc, M_NO_POLY_TO))
+        if (mons_class_flag(spc, M_NO_POLY_TO | M_CANT_SPAWN))
             continue;
         if (mons_weight(spc) > 0)        // drops a corpse
             return spc;
@@ -3312,8 +3312,11 @@ int items(bool allow_uniques,
         for (int i = 0; i < 500 && !found; ++i)
         {
             itempos = random_in_bounds();
-            found = (grd(itempos) == DNGN_FLOOR
-                     && !map_masked(itempos, mapmask));
+            const monster* mon = monster_at(itempos);
+            found = grd(itempos) == DNGN_FLOOR
+                    && !map_masked(itempos, mapmask)
+                    // oklobs or statues are ok
+                    && (!mon || !mons_is_firewood(mon));
         }
         if (!found)
         {

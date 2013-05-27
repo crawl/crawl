@@ -1,7 +1,7 @@
 %rim 0
 %sdir mon/panlord
 
-demon_body_armor DEMON_BODY
+demon_body_armour DEMON_BODY
 demon_body_crouch
 demon_body_fat
 demon_body_fatter

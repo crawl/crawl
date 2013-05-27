@@ -352,6 +352,21 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
         break;
 
+    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+        item_race = MAKE_ITEM_DWARVEN;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(5, WPN_MORNINGSTAR, 5, WPN_GREAT_MACE,
+                                               5, WPN_HALBERD,     8, WPN_GLAIVE,
+                                               5, WPN_GREAT_SWORD, 10, WPN_BROAD_AXE,
+                                               15, WPN_BATTLEAXE, 0);
+        if (coinflip())
+        {
+            force_item  = true;
+            item.plus  += 1 + random2(4);
+            item.plus2 += 1 + random2(4);
+        }
+        break;
+
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
         item_race = MAKE_ITEM_DWARVEN;
@@ -363,7 +378,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         // deliberate fall through
     case MONS_DEEP_DWARF_SCION:
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_DEEP_DWARF_BERSERKER:
         item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_WEAPONS;
@@ -793,13 +807,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_RED_DEVIL:
-        if (!one_chance_in(3))
-        {
-            item_race = MAKE_ITEM_NO_RACE;
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = (one_chance_in(3) ? WPN_DEMON_TRIDENT
-                                               : WPN_TRIDENT);
-        }
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = (one_chance_in(5) ? WPN_DEMON_TRIDENT
+                                           : WPN_TRIDENT);
         break;
 
     case MONS_OGRE:
@@ -1367,6 +1378,29 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_DEMON_BLADE;
+        break;
+
+    case MONS_ANCIENT_CHAMPION:
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_GREAT_MACE,
+                                      WPN_BATTLEAXE,
+                                      WPN_GREAT_SWORD,
+                                      -1);
+
+        if (x_chance_in_y(2, 3))
+        {
+            set_item_ego_type(item, OBJ_WEAPONS,
+                              random_choose_weighted(12, SPWPN_DRAINING,
+                                                      7, SPWPN_VORPAL,
+                                                      4, SPWPN_FREEZING,
+                                                      4, SPWPN_FLAMING,
+                                                      2, SPWPN_PAIN,
+                                                      0));
+        }
+
+        item.plus  += random2(4);
+        item.plus2 += random2(4);
         break;
 
     default:
@@ -1976,6 +2010,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_IRONHEART_PRESERVER:
+    case MONS_ANCIENT_CHAMPION:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR, -1);
         break;

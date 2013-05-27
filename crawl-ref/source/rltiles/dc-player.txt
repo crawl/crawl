@@ -237,12 +237,12 @@ pants_l_white PANTS_LONG_WHITE
 long_red PANTS_LONG_RED
 pants_red PANTS_RED
 
-leg_armor00 METAL_RED
-leg_armor01 METAL_SILVER
-leg_armor03 METAL_GRAY
-leg_armor05 METAL_GREEN
-leg_armor04 LEGCHAIN_GRAY
-leg_armor02 LEGCHAIN_SILVER LAST_NORM
+leg_armour00 METAL_RED
+leg_armour01 METAL_SILVER
+leg_armour03 METAL_GRAY
+leg_armour05 METAL_GREEN
+leg_armour04 LEGCHAIN_GRAY
+leg_armour02 LEGCHAIN_SILVER LAST_NORM
 
 # All items after this point cover up boots.
 skirt_blue SKIRT_BLUE SKIRT_OFS
@@ -360,7 +360,7 @@ vest_red VEST_RED
 vest_red2 VEST_RED2
 bplate_green BPLATE_GREEN
 bplate_metal1 BPLATE_METAL1
-armor_blue_gold
+armour_blue_gold
 ringmail RINGMAIL
 chainmail3 CHAINMAIL
 plate_and_cloth PLATE_AND_CLOTH
@@ -374,7 +374,7 @@ plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
 crystal_plate2
 crystal_plate3
-armor_mummy ARMOR_MUMMY
+armour_mummy ARMOUR_MUMMY
 
 ##cloth_u_sail SAILOR
 dragonsc_green DRAGONSC_GREEN

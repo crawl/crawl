@@ -258,7 +258,7 @@ dgn.delayed_decay(_G, 'J', 'orc skeleton, shield / large shield w:2, '
    .. 'broad axe race:orcish / demon blade, '
    .. 'plate armour race:orcish / crystal plate armour w:2' )
 
- -- Dwarven heavy armor earth elementalist. 3-4 items.
+ -- Dwarven heavy armour earth elementalist. 3-4 items.
 dgn.delayed_decay(_G, 'K', 'dwarf skeleton, plate armour race:dwarven, '
    .. 'randbook disc:earth / any book, staff of earth / any magical staff, '
    .. 'ring of wizardry / any jewellery / nothing w:20' )

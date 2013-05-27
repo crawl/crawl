@@ -213,12 +213,12 @@ static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_ch
         turn_corpse_into_skeleton(item);
     }
 
-    copy_item_to_grid(copy, item_pos(item));
+    copy_item_to_grid(copy, item_pos(item), MHITYOU);
 }
 
 void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 {
-    item_was_destroyed(item);
+    item_was_destroyed(item, MHITYOU);
     if (!mons_skeleton(item.mon_type))
         skeleton = MB_FALSE;
     if (skeleton == MB_TRUE || skeleton == MB_MAYBE && one_chance_in(3))
@@ -986,7 +986,7 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
     if (o != NON_ITEM)
     {
         turn_corpse_into_blood_potions(blood_potions);
-        copy_item_to_grid(blood_potions, you.pos());
+        copy_item_to_grid(blood_potions, you.pos(), MHITYOU);
     }
 }
 
@@ -1770,11 +1770,9 @@ bool player_in_a_dangerous_place(bool *invis)
     return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
 }
 
-static void _drop_tomb(const coord_def& pos, bool premature)
+static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
 {
     int count = 0;
-    bool zin = false;
-
     monster* mon = monster_at(pos);
 
     // Don't wander on duty!
@@ -1785,56 +1783,27 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         // "Normal" tomb (card or monster spell)
-        if ((grd(*ai) == DNGN_ROCK_WALL || grd(*ai) == DNGN_CLEAR_ROCK_WALL)
-            && (env.markers.property_at(*ai, MAT_ANY, "tomb") == "card"
-                || env.markers.property_at(*ai, MAT_ANY, "tomb") == "monster"))
+        if (!zin && revert_terrain_change(*ai, TERRAIN_CHANGE_TOMB))
         {
-            vector<map_marker*> markers = env.markers.get_markers_at(*ai);
-            for (int i = 0, size = markers.size(); i < size; ++i)
-            {
-                map_marker *mark = markers[i];
-                if (mark->property("tomb") == "card"
-                    || mark->property("tomb") == "monster")
-                {
-                    env.markers.remove(mark);
-                }
-            }
-
-            env.markers.clear_need_activate();
-
-            grd(*ai) = DNGN_FLOOR;
-            set_terrain_changed(*ai);
             count++;
             if (you.see_cell(*ai))
                 seen_change = true;
         }
-
         // Zin's Imprison.
-        if (grd(*ai) == DNGN_METAL_WALL
-            && env.markers.property_at(*ai, MAT_ANY, "tomb") == "Zin")
+        else if (zin && revert_terrain_change(*ai, TERRAIN_CHANGE_IMPRISON))
         {
-            zin = true;
-
-            dungeon_feature_type old_feat = DNGN_FLOOR;
             vector<map_marker*> markers = env.markers.get_markers_at(*ai);
             for (int i = 0, size = markers.size(); i < size; ++i)
             {
                 map_marker *mark = markers[i];
-                if (mark->property("tomb") == "Zin")
+                if (mark->property("feature_description")
+                    == "a gleaming silver wall")
                 {
-                    string old_feat_name = mark->property("old_feat");
-                    if (old_feat_name != "")
-                        old_feat = dungeon_feature_by_name(old_feat_name);
                     env.markers.remove(mark);
                 }
             }
 
-            env.markers.clear_need_activate();
-
-            grd(*ai) = old_feat;
             env.grid_colours(*ai) = 0;
-
-            set_terrain_changed(*ai);
             tile_clear_flavour(*ai);
             tile_init_flavour(*ai);
             count++;
@@ -1974,10 +1943,11 @@ void timeout_tombs(int duration)
         // Empty tombs disappear early.
         monster* mon_entombed = monster_at(cmark->pos);
         bool empty_tomb = !(mon_entombed || you.pos() == cmark->pos);
+        bool zin = (cmark->source == -GOD_ZIN);
 
         if (cmark->duration <= 0 || empty_tomb)
         {
-            _drop_tomb(cmark->pos, empty_tomb);
+            _drop_tomb(cmark->pos, empty_tomb, zin);
 
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
@@ -1994,45 +1964,37 @@ void timeout_tombs(int duration)
     }
 }
 
-void timeout_door_seals(int duration, bool force)
+void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)
         return;
 
-    vector<map_marker*> markers = env.markers.get_all(MAT_DOOR_SEAL);
+    int num_seen[NUM_TERRAIN_CHANGE_TYPES] = {0};
 
-    int num_faded_seen = 0;
+    vector<map_marker*> markers = env.markers.get_all(MAT_TERRAIN_CHANGE);
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
-        map_door_seal_marker *seal = dynamic_cast<map_door_seal_marker*>(markers[i]);
+        map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(markers[i]);
 
-        // If there is somehow no longer a sealed door at this location
-        // (for example, a monster opened it, or ate it, you blew it up)
-        // simply remove the marker silently
-        if (grd(seal->pos) != DNGN_SEALED_DOOR)
+        if (marker->duration != INFINITE_DURATION)
+            marker->duration -= duration;
+
+        monster* mon_src = monster_by_mid(marker->mon_num);
+        if (marker->duration <= 0
+            || (marker->mon_num != 0
+                && (!mon_src || !mon_src->alive() || mon_src->pacified())))
         {
-            env.markers.remove(seal);
-            continue;
-        }
-
-        seal->duration -= duration;
-
-        monster* mon_src = monster_by_mid(seal->mon_num);
-        if (seal->duration <= 0 || !mon_src || !mon_src->alive() || mon_src->pacified())
-        {
-            grd(seal->pos) = seal->old_feature;
-            set_terrain_changed(seal->pos);
-            if (you.see_cell(seal->pos))
-                ++num_faded_seen;
-
-            env.markers.remove(seal);
+            if (you.see_cell(marker->pos))
+                num_seen[marker->change_type]++;
+            revert_terrain_change(marker->pos, marker->change_type);
         }
     }
 
-    if (num_faded_seen > 1)
+    if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
         mpr("The seals upon the doors fade away.");
-    else if (num_faded_seen > 0)
+    else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
         mpr("The seal upon the door fades away.");
 }
 
@@ -2247,7 +2209,8 @@ void run_environment_effects()
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
     timeout_phoenix_markers(you.time_taken);
-    timeout_door_seals(you.time_taken);
+    timeout_terrain_changes(you.time_taken);
+    run_cloud_spreaders(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)
@@ -2327,8 +2290,12 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first)
+                        coord_def beam_target, bool autohit_first,
+                        bool *prompted)
 {
+    if (prompted)
+        *prompted = false;
+
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
 
@@ -2369,6 +2336,9 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
     snprintf(info, INFO_SIZE, "Really %s%s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());
+
+    if (prompted)
+        *prompted = true;
 
     if (yesno(info, false, 'n'))
         return false;

@@ -213,13 +213,14 @@ public:
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
-    virtual bool sicken(int amount, bool allow_hint = true) = 0;
+    virtual bool sicken(int amount, bool allow_hint = true, bool quiet = false) = 0;
     virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
     virtual void petrify(actor *attacker) = 0;
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength) = 0;
+    virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool damage_inventory = true,
                                    bool slow_cold_blood = true) = 0;
@@ -360,6 +361,7 @@ public:
     virtual int liquefying_radius2 () const = 0;
     virtual int umbra_radius2 () const = 0;
     virtual int suppression_radius2 () const = 0;
+    virtual int soul_aura_radius2 () const = 0;
 
     virtual bool glows_naturally() const = 0;
 

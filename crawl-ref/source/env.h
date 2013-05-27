@@ -57,12 +57,14 @@ struct crawl_environment
 #ifdef USE_TILE
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
     FixedArray<tileidx_t, GXM, GYM> tile_bk_bg;
+    FixedArray<tileidx_t, GXM, GYM> tile_bk_cloud;
 #endif
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
 #ifdef USE_TILE
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
+    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_cloud;
 #endif
     tile_flavour tile_default;
     vector<string> tile_names;

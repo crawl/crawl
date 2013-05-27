@@ -215,9 +215,9 @@ enum launch_retval
 enum misc_item_type
 {
     MISC_BOTTLED_EFREET,
-    MISC_AIR_ELEMENTAL_FAN,
+    MISC_FAN_OF_GALES,
     MISC_LAMP_OF_FIRE,
-    MISC_STONE_OF_EARTH_ELEMENTALS,
+    MISC_STONE_OF_TREMORS,
     MISC_LANTERN_OF_SHADOWS,
     MISC_HORN_OF_GERYON,
     MISC_BOX_OF_BEASTS,
@@ -243,6 +243,8 @@ enum misc_item_type
     MISC_RUNE_OF_ZOT,
 
     MISC_QUAD_DAMAGE, // Sprint only
+
+    MISC_PHIAL_OF_FLOODS,
 
     NUM_MISCELLANY, // mv: used for random generation
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,

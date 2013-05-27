@@ -52,6 +52,7 @@ protected:
     int m_variation_idx;
     int m_variation_col;
     int m_weight;
+    double m_alpha;
 
     typedef pair<tile_colour, tile_colour> palette_entry;
     typedef vector<palette_entry> palette_list;

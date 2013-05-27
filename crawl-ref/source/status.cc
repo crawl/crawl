@@ -134,6 +134,14 @@ static duration_def duration_data[] =
     { DUR_INFUSION, true, BLUE, "Infus", "infused", "Your attacks are magically infused."},
     { DUR_SONG_OF_SLAYING, true, BLUE, "Slay", "singing", "Your melee attacks are strengthened by your song."},
     { DUR_SPIRIT_SHIELD, true, BLUE, "SShield", "shielded", "Your magic is protecting you."},
+    { DUR_FLAYED, true,
+      RED, "Flay", "flayed", "You are covered in terrible wounds." },
+    { DUR_RETCHING, true,
+      RED, "Retch", "retching", "You are retching with violent nausea." },
+    { DUR_WEAK, false,
+      RED, "Weak", "weakened", "Your attacks are enfeebled." },
+    { DUR_DIMENSION_ANCHOR, false,
+      RED, "-TELE", "cannot translocate", "You are firmly anchored to this plane." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -559,6 +567,25 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "Recall";
             inf->short_text   = "recalling";
             inf->long_text    = "You are recalling your allies.";
+        }
+        break;
+
+    case DUR_WATER_HOLD:
+        inf->light_text   = "Engulf";
+        if (you.res_water_drowning())
+        {
+            inf->short_text   = "engulfed";
+            inf->long_text    = "You are engulfed in water.";
+            if (you.can_swim())
+                inf->light_colour = DARKGREY;
+            else
+                inf->light_colour = YELLOW;
+        }
+        else
+        {
+            inf->short_text   = "engulfed (cannot breathe)";
+            inf->long_text    = "You are engulfed in water and unable to breathe.";
+            inf->light_colour = RED;
         }
         break;
 

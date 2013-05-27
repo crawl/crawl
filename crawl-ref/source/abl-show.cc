@@ -1470,7 +1470,9 @@ static bool _check_ability_possible(const ability_def& abil,
             && you.strength(false) == you.max_strength()
             && you.intel(false) == you.max_intel()
             && you.dex(false) == you.max_dex()
-            && !player_rotted())
+            && !player_rotted()
+            && !you.duration[DUR_RETCHING]
+            && !you.duration[DUR_WEAK])
         {
             if (!quiet)
                 mpr("Nothing ails you!");
@@ -3271,9 +3273,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                     _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
                 }
                 // Now you can only turn flight off if you have an
-                // activatable item.  Potions and miscast effects will
-                // have to time out (this makes the miscast effect actually
-                // a bit annoying). -- bwr
+                // activatable item.  Potions and spells will have to time
+                // out.
                 if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                     _add_talent(talents, ABIL_STOP_FLYING, check_confused);
             }

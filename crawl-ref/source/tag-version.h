@@ -3,6 +3,9 @@
 
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
+// DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING. This would break
+// the save browser across versions, possibly leading to overwritten games.
+// It's only there in case there's no way out.
 #define TAG_CHR_FORMAT 0
 
 // Let CDO updaters know if the syntax changes.
@@ -37,6 +40,7 @@ enum tag_minor_version
     TAG_MINOR_NOME_NO_MORE,        // Remove unused gnome variable.
     TAG_MINOR_NO_SPLINT,           // Remove splint mail
     TAG_MINOR_ORIG_MONNUM,         // orig_monnum is type rather than type+1.
+    TAG_MINOR_SPRINT_SCORES,       // Separate score lists for each sprint map
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

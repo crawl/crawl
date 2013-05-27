@@ -7,6 +7,7 @@
 ###############################################################################
 
 : require("dlua/layout/zonify.lua")
+: require("dlua/layout/theme.lua")
 
 {{
     -- Call func num times around a circle of radius centered at (x, y)
@@ -59,13 +60,6 @@
         end
     end
 
-    function random_wall_material(e)
-        if not you.in_branch("Lair") and not you.in_branch("Zot")
-           and not you.in_branch("Dis")
-           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
-            e.subst('x : ccv')
-        end
-    end
 }}
 
 ##############################################################
@@ -133,7 +127,7 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
         smear_map{iterations=smears, smear='x', onto='.', boxy=smear_boxy}
     end
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -198,7 +192,7 @@ TAGS:    overwritable layout allow_dup unrand layout_type_cross
         spotty_map{boxy = crawl.coinflip()}
     end
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -367,7 +361,7 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
         end
     end
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -448,7 +442,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
         end
     end
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -530,18 +524,8 @@ TAGS:   layout_type_city
                 and not find_in_area {x1 = a1 - 1, y1 = a2 - 1,
                                       x2 = b1 + 1, y2 = b2 + 1,
                                       find = "xcvb+", find_vault = true } then
-                if you.branch() == "Dis" then
-                    wall_type_room = wall_type
-                elseif crawl.one_chance_in(250) then
-                    wall_type_room = "b"
-                else
-                    wall_type_room = crawl.random_element {
-                        [wall_type] = 216,
-                        ['c'] = 9,
-                        ['x'] = 9,
-                        ['v'] = 5
-                    }
-                end
+
+                wall_type_room = theme.room_material(wall_type)
 
                 table.insert(rooms, {a1, a2, b1, b2})
                 make_box { x1=a1, y1=a2, x2=b1, y2=b2, wall=wall_type_room }
@@ -611,7 +595,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_misc
 
     spotty_map { boxy = true, iterations = 100 }
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -656,6 +640,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_caves
     if connected then
       zonify.map_fill_zones(_G, 1, 'x')
     end
+
+    theme.D.caves(_G)
 }}
 # Enforce minimum floor size - otherwise we get very tiny floors sometimes
 validate {{
@@ -681,14 +667,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 
     delve(3, 3, 0, -1, 1)
     subst('X = x')
-    lrocktile('wall_pebble_lightgray')
-    lfloortile('floor_pebble_brown')
 
-    if (crawl.one_chance_in(5)) then
-      subst('x = b')
-      tile('b = wall_emerald')
-      lfloortile('floor_pebble_green')
-    end
+    theme.D.caves(_G,true)
 }}
 
 ##############################################################
@@ -1452,7 +1432,7 @@ ENDMAP
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Pan, !Dis, !Tar
-WEIGHT: 90, 10 (D:1), 20 (Geh), 10 (Zot)
+WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
 {{

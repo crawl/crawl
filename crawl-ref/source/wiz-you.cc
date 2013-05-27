@@ -806,7 +806,13 @@ static const char* dur_names[] =
     "battlesphere",
 #endif
     "sentinel's mark",
-    "sickening"
+    "sickening",
+    "drowning",
+    "drowning immunity",
+    "flayed",
+    "retching",
+    "weak",
+    "dimension anchor"
 };
 
 void wizard_edit_durations(void)

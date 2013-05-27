@@ -920,6 +920,11 @@ static void _get_status_lights(vector<status_light>& out)
 	DUR_INFUSION,
 	DUR_SONG_OF_SLAYING,
 	DUR_SPIRIT_SHIELD
+        DUR_WATER_HOLD,
+        DUR_FLAYED,
+        DUR_RETCHING,
+        DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;
@@ -1166,7 +1171,9 @@ void print_stats(void)
         CPRINTF("XL: ");
         textcolor(HUD_VALUE_COLOUR);
         CPRINTF("%2d ", you.experience_level);
-        if (you.experience_level < 27)
+        if (you.experience_level >= 27)
+            CPRINTF("%10s", "");
+        else
         {
             textcolor(Options.status_caption_colour);
             CPRINTF("Next: ");
@@ -2367,6 +2374,10 @@ static string _status_mut_abilities(int sw)
         STATUS_SUPPRESSED,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
+        DUR_FLAYED,
+        DUR_RETCHING,
+        DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;

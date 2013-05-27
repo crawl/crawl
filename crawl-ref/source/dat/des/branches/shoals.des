@@ -812,6 +812,114 @@ xxr----WWmwW--rx
      xxxxxxxx
 ENDMAP
 
+NAME: nicolae_shoals_seven_spires
+TAGS: transparent water_ok mini_float extra
+DEPTH: Shoals
+MAP
+     .....
+   ....c....
+  ....ccc....
+ ..c...c...c..
+ .ccc.....ccc.
+...c..   ..c...
+.....     .....
+..c..     ..c..
+.ccc.     .ccc.
+..c...   ...c..
+ .............
+ ....c...c....
+  ..ccc.ccc..
+   ..c...c..
+     .....
+ENDMAP
+
+NAME: nicolae_shoals_square_sea_wall
+TAGS: water_ok transparent extra
+DEPTH: Shoals
+MAP
+..............
+.cc..cccc..cc.
+.c..........c.
+...        ...
+...        ...
+.c.        .c.
+.c.        .c.
+.c.        .c.
+.c.        .c.
+...        ...
+...        ...
+.c..........c.
+.cc..cccc..cc.
+..............
+ENDMAP
+
+NAME: nicolae_shoals_circle_sea_wall
+TAGS: water_ok transparent extra
+DEPTH: Shoals
+MAP
+      .....
+    ..cc.cc..
+   .cc.....cc.
+  ....     ....
+ .c..       ..c.
+ .c.         .c.
+.c.           .c.
+.c.           .c.
+...           ...
+.c.           .c.
+.c.           .c.
+ .c.         .c.
+ .c..       ..c.
+  ....     ....
+   .cc.....cc.
+    ..cc.cc..
+      .....
+ENDMAP
+
+NAME: nicolae_shoals_cliffside_cave
+TAGS: water_ok no_pool_fixup transparent extra
+DEPTH: Shoals
+KPROP: ~' = no_tide
+SUBST: X = x., W = w.
+KFEAT: ~ = w
+MAP
+    xxxx
+  xxxxxxxx
+@XxxxxxxxxX@
+.Xxxx~~xxxX.
+.xxx''~~xxx.
+.xxx'''~~xx.
+.Xxxx'''~xX.
+.Xxxxx'~xx.W
+W.xxx'~xxx.w
+w.xx'~xxxX.w
+w.Xx'~xxxX.w
+w..xx'~xx.Ww
+ww.Xxx'~~.ww
+wwW......~ww
+ wwwwwwwwww
+ENDMAP
+
+NAME: nicolae_shoals_stone_sculpture_thing
+TAGS: water_ok transparent extra
+DEPTH: Shoals
+SHUFFLE: abde
+SUBST: ab = @, de = ., C : .c, y : .wc, z : .wc
+MAP
+    CbbC
+   cc..cc
+  ccz..zcc
+ ccyc..cycc
+Cczc....czcC
+a....ww....d
+a....ww....d
+Cczc....czcC
+ ccyc..cycc
+  ccz..zcc
+   cc..cc
+    CeeC
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps

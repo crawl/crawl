@@ -166,6 +166,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
             cell.fg = enums.prepare_fg_flags(cell.fg || 0);
             cell.bg = enums.prepare_bg_flags(cell.bg || 0);
+            cell.cloud = enums.prepare_fg_flags(cell.cloud || 0);
             cell.flv = cell.flv || {};
             cell.flv.f = cell.flv.f || 0;
             cell.flv.s = cell.flv.s || 0;
@@ -186,6 +187,18 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
             var fg_idx = cell.fg.value;
             var is_in_water = in_water(cell);
+
+            // draw clouds
+            if (cell.cloud.value && cell.cloud.value < dngn.FEAT_MAX)
+            {
+                try
+                {
+                    this.draw_main(cell.cloud.value, x, y);
+                }
+                finally
+                {
+                }
+            }
 
             // Canvas doesn't support applying an alpha gradient
             // to an image while drawing; so to achieve the same
@@ -262,6 +275,35 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             }
 
             this.draw_foreground(x, y, map_cell);
+
+            // draw clouds over stuff
+            if (fg_idx && cell.cloud.value
+                && cell.cloud.value < dngn.FEAT_MAX)
+            {
+                this.ctx.save();
+                try {
+                    this.ctx.globalAlpha = 0.4;
+
+                    this.set_nonsubmerged_clip(x, y, 20);
+
+                    this.draw_main(cell.cloud.value, x, y);
+                }
+                finally {
+                    this.ctx.restore();
+                }
+
+                this.ctx.save();
+                try {
+                    this.ctx.globalAlpha = 0.8;
+
+                    this.set_submerged_clip(x, y, 20);
+
+                    this.draw_main(cell.cloud.value, x, y);
+                }
+                finally {
+                    this.ctx.restore();
+                }
+            }
 
             this.render_flash(x, y);
 
@@ -650,6 +692,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
             if (fg.NET)
                 this.draw_icon(icons.TRAP_NET, x, y);
+
+            if (fg.WEB)
+                this.draw_icon(icons.TRAP_WEB, x, y);
 
             if (fg.S_UNDER)
                 this.draw_icon(icons.SOMETHING_UNDER, x, y);

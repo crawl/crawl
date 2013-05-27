@@ -141,7 +141,7 @@ provoquer un état de confusion chez le monstre.
 Conjure Ball Lightning spell
 
 Ce sort permet au conjurateur de créer une boule de foudre. Utiliser ce
-sortilège n'est pas sans risque - la boule de foudre est difficilement
+sortilège n'est pas sans risque – la boule de foudre est difficilement
 contrôlable.
 %%%%
 Conjure Flame spell
@@ -150,7 +150,7 @@ Ce sort crée une colonne de flammes furieuses.
 %%%%
 Control Teleport spell
 
-Ce sort permet au sorcier de contrôler sa prochaine translocation - soit en
+Ce sort permet au sorcier de contrôler sa prochaine translocation – soit en
 choisissant une destination approximative pour une téléportation, soit en
 choisissant une direction pour un blink. Soyez conscient que la téléportation
 contrôlée entrainera une contamination du sorcier par énergie magique, et que
@@ -199,7 +199,7 @@ Death's Door spell
 Ce sort est extrêmement puissant mais comporte un certain risque. Il rend les
 nécromanciens vivants quasiment invulnérables pour une brève laps de temps,
 mais les amènera ensuite dangereusement près de la mort. Si prêt en fait, que
-le corps lui-même croit qu'il est mort - les effets de guérison ne feront rien
+le corps lui-même croit qu'il est mort – les effets de guérison ne feront rien
 du tout.
 
 Le sorcier recevra un unique avertissement peu avant l'expiration du sort. Les
@@ -706,7 +706,7 @@ Summon Elemental spell
 Ce sort convoque un esprit du plan élémentaire pour aider le sorcier. Une large
 quantité de l'élément désiré est nécessaire ; cela est rarement un problème
 pour la terre et l'air mais, peut l'être pour l'eau ou le feu. L'élémentaire
-sera généralement amical au sorcier - spécialement si le sorcier est compétent
+sera généralement amical au sorcier – spécialement si le sorcier est compétent
 dans la magie élémentaire concernée.
 %%%%
 Summon Greater Demon spell
