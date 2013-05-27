@@ -217,6 +217,10 @@ A gateway to the decaying netherworld of Tartarus
 
 This place seems to radiate negative energy.
 %%%%
+A gateway to the decaying netherworld of Tartarus:quote
+
+<Tartarus:quote>
+%%%%
 A gateway to the freezing wastes of Cocytus
 
 From the frost-bitten lands, a cold chill touches your soul.
