@@ -504,7 +504,7 @@ string demigod_random_minion_name(god_type which_god, monster_type chosen_race, 
     string suffix = " low";
     if (level > 9) suffix = " mid";
     if (level > 18) suffix = " high";
-    
+
     string nameKey = god_name(which_god,false) + " minion name";
     mprf("Minion name lookup for %s", nameKey.c_str());
     string nameTemplate = getRandNameString(nameKey,suffix);
@@ -517,7 +517,7 @@ string demigod_random_minion_name(god_type which_god, monster_type chosen_race, 
 
     // TODO: Centralise this post-processing (and other occurrences of it e.g. singing sword speech) into database.cc
     // A lot of getRandFooString calls are immediately followed by this kind of substitution and it might be a
-    // slight optimisation to pass in a hashtable of tokens (otherwise e.g. @Minion_name@ will be getting looked up 
+    // slight optimisation to pass in a hashtable of tokens (otherwise e.g. @Minion_name@ will be getting looked up
     // recursively every time even though we know it isn't in any DB!). This would also ensure the same functionality
     // is available evrywhere in all database files (for instance some support embedded Lua but this one probably
     // doesn't).
