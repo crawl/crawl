@@ -16,6 +16,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dgnevent.h" //XXX
+#include "evoke.h" // wind_blast
 #include "exclude.h" //XXX
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
@@ -3893,6 +3894,24 @@ bool mon_special_ability(monster* mons, bolt & beem)
             }
         }
         break;
+
+    case MONS_FOREST_DRAKE:
+    {
+        if (mons->has_ench(ENCH_BREATH_WEAPON))
+            break;
+
+        actor *foe = mons->get_foe();
+        if (foe && mons->can_see(foe) && one_chance_in(4))
+        {
+            wind_blast(mons, 12 * mons->hit_dice, foe->pos());
+            mon_enchant breath_timeout =
+                mon_enchant(ENCH_BREATH_WEAPON, 1, mons,
+                            (4 + random2(9)) * 10);
+            mons->add_ench(breath_timeout);
+            used = true;
+        }
+        break;
+    }
 
     default:
         break;

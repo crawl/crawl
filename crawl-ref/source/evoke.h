@@ -10,6 +10,8 @@
 void stop_studying_manual(bool finish = false);
 void skill_manual(int slot);
 
+void wind_blast(actor* agent, int pow, coord_def target);
+
 void tome_of_power(int slot);
 
 bool evoke_item(int slot = -1);

@@ -1706,7 +1706,7 @@ proudly before you, despite its lingering fear and unkempt appearance.
 forest drake
 
 A small but powerful dragon, quite comfortable weaving through the trees
-that comprise its home.
+that comprise its home. It can exhale powerful blasts of wind.
 %%%%
 freezing wraith
 
