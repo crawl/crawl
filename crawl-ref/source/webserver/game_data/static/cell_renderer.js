@@ -840,8 +840,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 status_shift += 10;
             }
 
+            // Anim. weap. and summoned might overlap, but that's okay
             if (fg.ANIM_WEP)
                 this.draw_icon(icons.ANIMATED_WEAPON, x, y);
+            if (fg.SUMMONED)
+                this.draw_icon(icons.SUMMONED, x, y);
 
             if (bg.UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MESH, x, y);

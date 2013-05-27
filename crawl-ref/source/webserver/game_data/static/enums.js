@@ -177,6 +177,7 @@ define(function () {
     fg_flags.flags.PETRIFIED    = [0, 0x1000];
     fg_flags.flags.BLIND        = [0, 0x2000];
     fg_flags.flags.ANIM_WEP     = [0, 0x4000];
+    fg_flags.flags.SUMMONED     = [0, 0x8000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
