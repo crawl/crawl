@@ -706,17 +706,24 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_ORC_KNIGHT:
         item_race = MAKE_ITEM_ORCISH;
-        // Occasionally get crossbows.
+        // deliberate fall-through
+
+    case MONS_TENGU_WARRIOR:
+        if (item_race == MAKE_ITEM_RANDOM_RACE)
+            item_race = MAKE_ITEM_NO_RACE;
+        // Occasionally get crossbows, or a longbow for tengu.
         if (!melee_only && one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_CROSSBOW;
+            item.sub_type  = (type == MONS_TENGU_WARRIOR && coinflip())
+                             ? WPN_LONGBOW : WPN_CROSSBOW;
             break;
         }
         // deliberate fall-through
 
     case MONS_URUG:
-        item_race = MAKE_ITEM_ORCISH;
+        if (item_race == MAKE_ITEM_RANDOM_RACE)
+            item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through
 
     case MONS_VAULT_GUARD:
@@ -1769,12 +1776,22 @@ static void _give_shield(monster* mon, int level)
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
+    case MONS_TENGU_WARRIOR:
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        // deliberate fall-through
     case MONS_TENGU:
     case MONS_GNOLL_SERGEANT:
+        if (mon->type != MONS_TENGU_WARRIOR && !one_chance_in(3))
+            break;
+        make_item_for_monster(mon, OBJ_ARMOUR,
+                              coinflip() ? ARM_BUCKLER : ARM_SHIELD,
+                              level, MAKE_ITEM_NO_RACE);
+        break;
+    case MONS_TENGU_CONJURER:
         if (one_chance_in(3))
         {
-            make_item_for_monster(mon, OBJ_ARMOUR,
-                                  coinflip() ? ARM_BUCKLER : ARM_SHIELD,
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;

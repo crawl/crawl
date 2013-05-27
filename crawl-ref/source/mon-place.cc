@@ -2525,6 +2525,16 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 4 + random2(4);
         break;
 
+    case MONS_TENGU_CONJURER:
+    case MONS_TENGU_WARRIOR:
+        natural_leader = true;
+    case MONS_TENGU:
+        if (coinflip())
+            break;
+        band = BAND_TENGU;
+        band_size = 3 + random2(4);
+        break;
+
     default: ;
     }
 
@@ -2887,6 +2897,9 @@ static monster_type _band_member(band_type band, int which)
         // deliberate fall-through
     case BAND_FAUNS:
         return MONS_FAUN;
+
+    case BAND_TENGU:
+        return MONS_TENGU;
 
     default:
         die("unhandled band type %d", band);
