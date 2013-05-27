@@ -820,9 +820,10 @@ bool summon_holy_warrior(int pow, bool punish)
 
 spret_type cast_spectral_weapon(int pow, bool fail)
 {
-    const int dur = min(2 + (random2(pow) / 5), 6);
+    const int dur = min(1 + (random2(pow)/50), 6);
 	// probably shouldn't duplicate this code!!
 	item_def* wpn = you.weapon();
+        item_def cp = *wpn;
     if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn))
     {
         if (wpn)
@@ -854,25 +855,25 @@ spret_type cast_spectral_weapon(int pow, bool fail)
                  MHITYOU,
                  0, GOD_NO_GOD);
 
-	item_def original_weapon = *wpn;
-	
+//	item_def original_weapon = *wpn;
+//	
 	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
-	// Increase the acc of the spectral weapon by the player's weapon skill
-	int adjustment = -2 + 2*skill_with_weapon/3;
+//	// Increase the acc of the spectral weapon by the player's weapon skill
+//	int adjustment = -2 + 2*skill_with_weapon/3;
+//
+//	// create the weapon to give to the spectral weapon
+//	item_def fake;
+//	fake.base_type = OBJ_WEAPONS;
+//	fake.sub_type = original_weapon.sub_type;
+//	fake.plus = original_weapon.plus + adjustment;
+//	fake.plus2 = original_weapon.plus2 - 3;
+//	// no brand, sorry!!
+//	//fake.special = original_weapon.special;
+//	fake.special = SPWPN_NORMAL;
+//	fake.colour = original_weapon.colour;
+//	fake.quantity = original_weapon.quantity;
 
-	// create the weapon to give to the spectral weapon
-	item_def fake;
-	fake.base_type = OBJ_WEAPONS;
-	fake.sub_type = original_weapon.sub_type;
-	fake.plus = original_weapon.plus + adjustment;
-	fake.plus2 = original_weapon.plus2 - 2;
-	// no brand, sorry!!
-	//fake.special = original_weapon.special;
-	fake.special = SPWPN_NORMAL;
-	fake.colour = original_weapon.colour;
-	fake.quantity = original_weapon.quantity;
-
-   	mg.props[TUKIMA_WEAPON] = fake;
+   	mg.props[TUKIMA_WEAPON] = cp;
   	mg.props[TUKIMA_POWER] = pow;
 
 	monster *mons = create_monster(mg);
@@ -880,8 +881,8 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 
 	you.props["spectral_weapon"].get_int() = mons->mid;
 	mons->hit_dice = skill_with_weapon/2;
-	mons->ac = 3 + skill_with_weapon/3;
-	mons->ev = 3 + 2*skill_with_weapon/3;
+	mons->ac = 3 + skill_with_weapon/4;
+	mons->ev = 3 + skill_with_weapon/3;
 
     return SPRET_SUCCESS;
 }
