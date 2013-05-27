@@ -1682,8 +1682,8 @@ dungeon, seeking to share its fate with others.
 flayed ghost
 
 A hideous floating undead creature, the anguished spirit of a tortured victim,
-with torn skin hanging from an emaciated body. It restlessly stalks the dungeon,
-inflicting the anguish it felt in life upon those still living.
+with torn skin hanging from an emaciated body. It restlessly stalks the
+dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
 flying skull
 
@@ -3492,8 +3492,8 @@ the whole earth is full of his glory.”
 shadow
 
 A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
-It moves swiftly and silently from one pool of shade to another, striking unerringly
-from the blind spots of those who cannot see it.
+It moves swiftly and silently from one pool of shade to another, striking
+unerringly from the blind spots of those who cannot see it.
 %%%%
 shadow:quote
 

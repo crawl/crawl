@@ -393,6 +393,8 @@ int monster::body_weight(bool /*base*/) const
         case MONS_CURSE_SKULL:
         case MONS_BONE_DRAGON:
         case MONS_SKELETAL_WARRIOR:
+        case MONS_ANCIENT_CHAMPION:
+        case MONS_REVENANT:
             weight /= 2;
             break;
 
@@ -2893,6 +2895,8 @@ string monster::arm_name(bool plural, bool *can_plural) const
 
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
+    case MONS_ANCIENT_CHAMPION:
+    case MONS_REVENANT:
         adj = "bony";
         break;
 
@@ -4962,6 +4966,8 @@ static bool _mons_is_skeletal(int mc)
     return (mc == MONS_SKELETON
             || mc == MONS_BONE_DRAGON
             || mc == MONS_SKELETAL_WARRIOR
+            || mc == MONS_ANCIENT_CHAMPION
+            || mc == MONS_REVENANT
             || mc == MONS_FLYING_SKULL
             || mc == MONS_CURSE_SKULL
             || mc == MONS_MURRAY);

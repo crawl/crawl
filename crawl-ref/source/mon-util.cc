@@ -4163,6 +4163,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'z': // small zombies, etc.
         if (mc == MONS_WIGHT
             || mc == MONS_SKELETAL_WARRIOR
+            || mc == MONS_ANCIENT_CHAMPION
             || mc == MONS_FLAMING_CORPSE)
         {
             return MON_SHAPE_HUMANOID;

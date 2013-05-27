@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-En magisk anordning, som kan hidkalde luft-elementaler. Den er upålidelig, og
-det kræver som regel flere forsøg at få den til at virke korrekt. Det er
-risikabelt at bruge den, men bliver minde farligt, hvis brugeren er trænet i
-den tilhørende elementarmagi.
-%%%%
 amulet of clarity
 
 Denne amulet beskytter den, der bærer den, mod visse former for mental

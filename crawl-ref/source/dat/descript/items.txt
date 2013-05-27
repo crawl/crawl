@@ -990,9 +990,9 @@ falchion:quote
 %%%%
 fan of gales
 
-An enchanted fan inhabited by benevolent air spirits. Swinging the fan unleashes
-a blast of wind around the bearer and sets the spirits free to sweep away the
-bearer's enemies.
+An enchanted fan inhabited by benevolent air spirits. Swinging the fan
+unleashes a blast of wind around the bearer and sets the spirits free to sweep
+away the bearer's enemies.
 %%%%
 fire dragon armour
 
@@ -2667,8 +2667,8 @@ stone:quote
 stone of tremors
 
 A polished stone inhabited by benevolent earth spirits. Pressing it against a
-rocky surface will send powerful shockwaves through it as the spirits seek solid
-form within the rock, pelting nearby creatures with falling rubble in the
+rocky surface will send powerful shockwaves through it as the spirits seek
+solid form within the rock, pelting nearby creatures with falling rubble in the
 process.
 %%%%
 storm dragon armour
