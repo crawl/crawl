@@ -3024,7 +3024,7 @@ struct spell_desc
 },
 
 {
-    SPELL_GHOSTLY_FLAMES, "Ghostly flames",
+    SPELL_GHOSTLY_FLAMES, "Ghostly Flames",
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
      5,
@@ -3037,7 +3037,7 @@ struct spell_desc
 },
 
 {
-    SPELL_GHOSTLY_FIREBALL, "Ghostly fireball",
+    SPELL_GHOSTLY_FIREBALL, "Ghostly Fireball",
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
      5,
