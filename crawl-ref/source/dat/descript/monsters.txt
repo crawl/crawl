@@ -3453,7 +3453,7 @@ the whole earth is full of his glory.”
 shadow
 
 A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
-It moves swift and silent from one pool of shade to another, striking unerringly
+It moves swiftly and silently from one pool of shade to another, striking unerringly
 from the blind spots of those who cannot see it.
 %%%%
 shadow:quote
