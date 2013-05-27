@@ -117,16 +117,6 @@ unseen Mara summon cast
 
 Something weaves an illusion!
 %%%%
-Pan Duplicate cast
-
-@The_monster@ gestures, and steps out of @reflexive@!
-
-@The_monster@ gestures, and is suddenly beside @reflexive@!
-%%%%
-unseen Pan Duplicate cast
-
-You feel encroached upon!
-%%%%
 Symbol of Torment cast
 
 @The_monster@ calls on the powers of darkness!

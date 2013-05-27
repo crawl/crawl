@@ -1060,7 +1060,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_FAKE_MARA_SUMMON:
-    case SPELL_FAKE_PAN_SUMMON:
     case SPELL_SUMMON_ILLUSION:
     case SPELL_SUMMON_RAKSHASA:
     case SPELL_SUMMON_DEMON:
@@ -4354,13 +4353,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MASS_CONFUSION:
         _mons_mass_confuse(mons);
-        return;
-
-    case SPELL_FAKE_PAN_SUMMON:
-        sumcount2 = (coinflip() ? 1 : 2);
-
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            _clone_monster(mons, MONS_PAN_FAKE, spell_cast);
         return;
     }
 

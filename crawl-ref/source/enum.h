@@ -2630,7 +2630,6 @@ enum monster_type                      // menv[].type
     MONS_SATYR,
 
     MONS_PAN,
-    MONS_PAN_FAKE,
 
     MONS_TENGU_WARRIOR,
     MONS_TENGU_CONJURER,
@@ -3450,7 +3449,6 @@ enum spell_type
     SPELL_CALL_LOST_SOUL,
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
-    SPELL_FAKE_PAN_SUMMON,
     NUM_SPELLS
 };
 

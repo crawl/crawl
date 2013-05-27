@@ -538,8 +538,7 @@ string kill_def::base_name(const kill_monster_desc &md) const
         break;
     }
 
-    if (md.monnum == MONS_RAKSHASA_FAKE || md.monnum == MONS_MARA_FAKE
-        || md.monnum == MONS_PAN_FAKE)
+    if (md.monnum == MONS_RAKSHASA_FAKE || md.monnum == MONS_MARA_FAKE)
         name = "illusory " + name;
 
     return name;
