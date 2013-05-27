@@ -5,6 +5,38 @@
 # - branch end vaults
 ##############################################################################
 
+{{
+function kb_forest_vault_setup(e)
+  e.tags(  "no_pool_fixup")
+  e.mons(  "spriggan")
+  e.mons(  "spriggan rider")
+  e.mons(  "spriggan druid")
+  e.mons(  "spriggan berserker")
+  e.mons(  "spriggan air mage")
+  e.mons(  "spriggan defender")
+  e.mons(  "the Enchantress")
+  e.subst( ". = .:300 / 1:2 / 2:1 / 3:1 / 4:1 / 5:1")
+  e.subst( "T = t / t / P / .")
+  e.kmons( "P = plant / plant / bush / nothing")
+  e.kmons( "R = plant")
+  e.kmons( "Q = bush")
+  e.kmons( "e = bat skeleton")
+  e.kmons( "K = giant firefly")
+  e.kitem( "f = dagger / short sword / sabre / flail / whip / blowgun / bow")
+  e.kitem( "g = robe / cloak / cap / buckler / steam dragon armour w:1")
+  e.kmons( "L = spriggan ; robe . dagger")
+  e.kitem( "h = bread ration q:2")
+  e.kmons( "M = yak")
+  e.kmons( "N = spriggan ; robe . quarterstaff")
+  e.kitem( "i = cheese q:3")
+  e.colour('"MN = green')
+  e.colour("C = white")
+  e.kfeat( "C = stone_wall")
+  e.tile(  "C = wall_marble")
+  e.kfeat( "_ = altar_trog")
+end
+}}
+
 ##############################################################################
 # Forest entry vaults
 ##############################################################################
@@ -92,7 +124,7 @@ ENDMAP
 ##############################################################################
 # Forest minivaults
 ##############################################################################
-NAME: forest_small_clearing_fruit
+NAME: grunt_forest_small_clearing_fruit
 TAGS: transparent extra
 DEPTH: Forest
 SUBST: t = t..
@@ -113,7 +145,7 @@ t.......t
  tt...tt
 ENDMAP
 
-NAME: forest_small_clearing_pond
+NAME: grunt_forest_small_clearing_pond
 TAGS: transparent extra
 DEPTH: Forest
 SUBST: t = t..
@@ -134,7 +166,7 @@ t.......t
  tt...tt
 ENDMAP
 
-NAME: forest_small_clearing_treed
+NAME: grunt_forest_small_clearing_treed
 TAGS: transparent patrolling
 DEPTH: Forest
 SUBST: t = t..
@@ -158,7 +190,7 @@ t.......t
  tt...tt
 ENDMAP
 
-NAME: forest_small_clearing_statue_fruit
+NAME: grunt_forest_small_clearing_statue_fruit
 TAGS: transparent
 DEPTH: Forest
 SUBST: t = t..
@@ -179,7 +211,7 @@ t.......t
  tt...tt
 ENDMAP
 
-NAME: forest_small_clearing_statues
+NAME: grunt_forest_small_clearing_statues
 TAGS: transparent
 DEPTH: Forest
 SUBST: t = t..
@@ -206,7 +238,7 @@ t.......t
  tt...tt
 ENDMAP
 
-NAME: forest_large_clearing_fruit
+NAME: grunt_forest_large_clearing_fruit
 TAGS: transparent extra
 DEPTH: Forest
 SUBST: t = t..
@@ -237,7 +269,7 @@ tt...............tt
       tt...tt
 ENDMAP
 
-NAME: forest_large_clearing_guards
+NAME: grunt_forest_large_clearing_guards
 TAGS: transparent patrolling
 DEPTH: Forest
 SUBST: t = t..
@@ -364,6 +396,101 @@ tt...............tt
       tt...tt
 ENDMAP
 
+# These vaults are derived from spriggan_forest.
+NAME: kb_forest_berserker_hut_1
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+   tttttt
+ttttPP.Tt
+tccccT..@
+tc%4c...T
+tc..+..Tt
+tc.4c...T
+tttT..ttt
+ tTPTTt
+ tTTttt
+ tttt
+ENDMAP
+
+NAME: kb_forest_berserker_hut_2
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+tt@t
+t..tttttttt
+t....xxxxxt
+tT...x..4xt
+tT...+...xt
+ttt.tx..4xt
+  tt.x.4_xt
+   ttxxxxxt
+    ttttttt
+ENDMAP
+
+NAME: kb_forest_spriggan_hut
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+tt@tttt
+t.ttttt
+t.cccct
+t.+.1ct
+tTc1%ct
+ttcccct
+ttttttt
+ENDMAP
+
+NAME:  kb_forest_spriggan_shepherd
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+ttttttt@t
+txxxtt.tttttttt
+txi+"""""""tt.@
+txxx""""""""".tt
+ttt""N"""""""TTt
+ttT""MM"MM"TTTtt
+tt""""M""""Tttt
+tt".MM""NTTtt
+tt""M""""Ttt
+ttt""""TTTt
+  ttttttttt
+ENDMAP
+
+NAME:  kb_forest_druid_statue
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+tt@tt
+t.3.t
+t3G3t
+t.3.t
+ttttt
+ENDMAP
+
+# XXX: this one doesn't work very well outside the corner, or as a primary
+# vault...
+NAME:   kb_forest_skeletal_bat_cave
+DEPTH:  Forest
+ORIENT: southeast
+: kb_forest_vault_setup(_G)
+MAP
+                   tttttt
+                ttttxxxxx
+            t@tttxxxxxxxx
+            tt..xxxxxxxxx
+          tttt....xxxxxxx
+        tttt......}xxxxxx
+       tt.....xxxxxxxxxxx
+ttt  ttt....xxxxxxxxxxxxx
+@.tttt...xxxxxxxxexxxexxx
+tt.......xxxxx..exxxxeexx
+ tttxxxxx......xx.exx..xx
+txxxxxxxxxx....xxx.1.xxxx
+ txxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Forest ends
 ##############################################################################
@@ -426,4 +553,36 @@ tttttttttttLLLLLLLLLLtttLLLLLttttt
 tttttttttttttttLLLLtttLLLttttttttt
 ttttttttttttttttLLLLLLLttttttttttt
 ttttttttttttttttL@LLtttttttttttttt
+ENDMAP
+
+NAME:   kb_forest_enchantress_palace
+ORIENT: northeast
+PLACE:  Forest:$
+: kb_forest_vault_setup(_G)
+MAP
+ttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttTTTTTttTTTTtttttt
+tttttttttTtTTtttttttQTtttTT.T.Ttt.T.TTTtttt
+ttttttttT*....QQPtt..ccccc....cccc.TT.Ttttt
+tttCCCCCCCCCCCCCC....c..1c....c.1c.t.TTtttt
+tttC.6.C6..6C$*|CtT..c.1.+....+..cT.TT.tttt
+tttC7..+....+$*|Ctt..ccccc....cccc.TT.Ttttt
+tttC.6.C6..6C$*|CttQ..................ttttt
+tttCCCCCC++CCCCCCttttccccc....cccc......ttt
+tttCgggC....CfffCttttchxLc....c1.c.....tttt
+tttCggg+..1.+fffCttttch..+....+.5c..1...ttt
+tttCgggC1...CfffCttttccccc....cccc...1.tttt
+tttCCCCCC++CCCCCCttttt...................tt
+tttCR.....1....RCccccccccc....Y.........ttt
+tttC..1........1CcKxKxKxKc......2......tttt
+tttCR1..5..5..1RCc.22.1..c.....22......tttt
+tttCCCCCC++CCCCCCc+ccccccc....2.2.....ttttt
+ttt..................................tttttt
+@...................................ttttttt
+t..TTttttt............Y..........ttt.tttttt
+tttttttttttttttt...............tttttt...ttt
+ttttttttttttttttttt.........tttttttttttt<tt
+ttttttttttttttttttttttt....tttttttttttttttt
+tttttttttttttttttttttt@tt..@ttttttttttttttt
 ENDMAP
