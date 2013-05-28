@@ -863,6 +863,12 @@ spret_type cast_spectral_weapon(int pow, bool fail)
     mg.props[TUKIMA_POWER] = pow;
 
     monster *mons = create_monster(mg);
+    if (!mons)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_SUCCESS;
+    }
+
     mpr("You draw out your weapon's spirit!");
 
     you.props["spectral_weapon"].get_int() = mons->mid;
