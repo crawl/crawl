@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Un utensilio mágico que sirve para convocar elementales de aire. Es poco
-fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
-uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
-magia del aire.
-%%%%
 amulet of clarity
 
 Este amuleto protege a su portador de algunas formas de confusión mental,
@@ -675,13 +668,6 @@ lajatang
 
 Una exótica y muy efectiva arma de importación. Consiste en una garrocha, con
 cuchillas en forma de media luna en ambos extremos.
-%%%%
-lamp of fire
-
-Un utensilio mágico que sirve para convocar elementales de fuego. Es poco
-fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
-uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
-magia del fuego.
 %%%%
 lantern of shadows
 

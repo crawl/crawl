@@ -393,6 +393,8 @@ int monster::body_weight(bool /*base*/) const
         case MONS_CURSE_SKULL:
         case MONS_BONE_DRAGON:
         case MONS_SKELETAL_WARRIOR:
+        case MONS_ANCIENT_CHAMPION:
+        case MONS_REVENANT:
             weight /= 2;
             break;
 
@@ -2893,6 +2895,8 @@ string monster::arm_name(bool plural, bool *can_plural) const
 
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
+    case MONS_ANCIENT_CHAMPION:
+    case MONS_REVENANT:
         adj = "bony";
         break;
 
@@ -4022,7 +4026,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
         return true;
 
     // Might be better to teleport the whole kraken instead...
-    if (mons_is_tentacle(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return true;
 
     if (check_stasis(!permit_id, calc_unid))
@@ -4754,7 +4758,7 @@ int monster::foe_distance() const
 
 bool monster::can_go_berserk() const
 {
-    if (holiness() != MH_NATURAL || mons_is_tentacle(type))
+    if (holiness() != MH_NATURAL || mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
     if (mons_intel(this) == I_PLANT)
@@ -4850,7 +4854,7 @@ bool monster::has_lifeforce() const
 
 bool monster::can_mutate() const
 {
-    if (mons_is_tentacle(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
     // embodiment of Zinniness
@@ -4962,6 +4966,8 @@ static bool _mons_is_skeletal(int mc)
     return (mc == MONS_SKELETON
             || mc == MONS_BONE_DRAGON
             || mc == MONS_SKELETAL_WARRIOR
+            || mc == MONS_ANCIENT_CHAMPION
+            || mc == MONS_REVENANT
             || mc == MONS_FLYING_SKULL
             || mc == MONS_CURSE_SKULL
             || mc == MONS_MURRAY);
@@ -5570,7 +5576,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                            damage * BASELINE_DELAY);
     }
 
-    if (mons_is_tentacle(type) && type != MONS_ELDRITCH_TENTACLE
+    if (mons_is_tentacle_or_tentacle_segment(type)
+            && type != MONS_ELDRITCH_TENTACLE
             && flavour != BEAM_TORMENT_DAMAGE
             && !invalid_monster_index(number)
             && menv[number].is_parent_monster_of(this))
@@ -5979,9 +5986,7 @@ bool monster::is_child_tentacle_segment() const
 
 bool monster::is_child_monster() const
 {
-    return (type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
-            || type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || type == MONS_STARSPAWN_TENTACLE_SEGMENT);
+    return (is_child_tentacle() || is_child_tentacle_segment());
 }
 
 bool monster::is_child_tentacle_of(const monster* mons) const

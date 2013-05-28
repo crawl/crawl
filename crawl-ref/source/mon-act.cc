@@ -3535,7 +3535,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
 
     return (mons_is_stationary(targ)
             || mons_class_flag(mons_base_type(targ), M_NO_EXP_GAIN)
-               && !mons_is_tentacle(targ->type));
+               && !mons_is_tentacle_or_tentacle_segment(targ->type));
 }
 
 static bool _monster_move(monster* mons)

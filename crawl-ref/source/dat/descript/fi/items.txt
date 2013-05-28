@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Maaginen väline ilmaelementaalien kutsumiseen. Se on melko epäluotettava, ja
-useimmiten tarvitsee usean yrityksen toimiakseen kunnolla. Sen käyttämisessä on
-riskinsä, joka tosin vähenee jos käyttäjä on taitava sopivassa
-elementtimagiassa.
-%%%%
 amulet of clarity
 
 Tämä amuletti suojaa käyttäjäänsä joiltakin mielen sekaannuksen muodoilta,

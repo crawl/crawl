@@ -2397,7 +2397,7 @@ int monster_die(monster* mons, killer_type killer,
             mons->hit_points = -1;
         // Hack: with cleanup_dead=false, a tentacle [segment] of a dead
         // [malign] kraken has no valid head reference.
-        if (!mons_is_tentacle(mons->type))
+        if (!mons_is_tentacle_or_tentacle_segment(mons->type))
             mons_speaks(mons);
     }
 
@@ -2439,8 +2439,9 @@ int monster_die(monster* mons, killer_type killer,
                 mpr("The starspawn's tentacles wither and die.");
         }
     }
-    else if (mons_is_tentacle(mons->type) && killer != KILL_MISC
-            || mons->type == MONS_ELDRITCH_TENTACLE)
+    else if (mons_is_tentacle_or_tentacle_segment(mons->type)
+             && killer != KILL_MISC
+                 || mons->type == MONS_ELDRITCH_TENTACLE)
     {
         _destroy_tentacle(mons);
     }
@@ -2764,7 +2765,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         // Other poly-unsuitable things.
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
-        || mons_is_tentacle(new_mclass)
+        || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
@@ -3243,7 +3244,7 @@ bool mon_can_be_slimified(monster* mons)
 
     return (!(mons->flags & MF_GOD_GIFT)
             && !mons->is_insubstantial()
-            && !mons_is_tentacle(mons->type)
+            && !mons_is_tentacle_or_tentacle_segment(mons->type)
             && (holi == MH_UNDEAD
                  || holi == MH_NATURAL && !mons_is_slime(mons))
           );

@@ -292,7 +292,9 @@ enum attribute_type
                                // will be removed
     ATTR_NEXT_RECALL_TIME,     // aut remaining until next ally will be recalled
     ATTR_NEXT_RECALL_INDEX,    // index+1 into recall_list for next recall
+#if TAG_MAJOR_VERSION == 34
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
+#endif
     NUM_ATTRIBUTES
 };
 
@@ -3799,6 +3801,7 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_PETRIFIED  = 0x100000000000ULL,
     TILE_FLAG_BLIND      = 0x200000000000ULL,
     TILE_FLAG_ANIM_WEP   = 0x400000000000ULL,
+    TILE_FLAG_SUMMONED   = 0x800000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,

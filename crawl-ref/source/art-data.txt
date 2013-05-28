@@ -509,7 +509,7 @@ STR:     2
 MAGIC:   30
 
 NAME:     Elemental Staff
-OBJ:      OBJ_WEAPONS/WPN_STAFF
+OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:     +3/+1
 COLOUR:   DARKGREY
 TILE:     urand_elemental
