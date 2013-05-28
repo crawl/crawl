@@ -3458,9 +3458,12 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         return false;
     }
 
-    // Special-case spectral things to push past revenants.
-    if (m1->type == MONS_SPECTRAL_THING && m2->type == MONS_REVENANT)
+    // Special-case (non-enslaved soul) spectral things to push past revenants.
+    if ((m1->type == MONS_SPECTRAL_THING && !mons_enslaved_soul(m1))
+        && m2->type == MONS_REVENANT)
+    {
         return true;
+    }
 
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }
