@@ -587,6 +587,7 @@ swamp_drake MONS_SWAMP_DRAKE
 fire_drake MONS_FIRE_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
+forest_drake MONS_FOREST_DRAKE
 
 ## Dragons ('D')
 %sdir mon/unique
@@ -656,6 +657,8 @@ griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
 tengu MONS_TENGU
+tengu_conjurer MONS_TENGU_CONJURER
+tengu_warrior MONS_TENGU_WARRIOR
 %sdir mon/holy
 shedu MONS_SHEDU
 %sdir mon/unique
@@ -915,6 +918,7 @@ mermaid MONS_MERMAID
 mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN
 siren_water MONS_SIREN_WATER
+dryad MONS_DRYAD
 %rim 1
 
 ## Rotting monsters ('n')
