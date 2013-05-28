@@ -108,7 +108,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // A spectral weapon attacks whenever the player does
         if (you.props.exists("spectral_weapon"))
         {
-            monster *spectral_weapon= monster_by_mid(you.props["spectral_weapon"].get_int());
+            monster *spectral_weapon = monster_by_mid(you.props["spectral_weapon"].get_int());
             if (!spectral_weapon)
                 return true;
             spectral_weapon->props["target_mid"].get_int()  = defender->mid;
