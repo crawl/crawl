@@ -627,7 +627,7 @@ bool mons_class_is_firewood(monster_type mc)
 {
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
-            && !mons_is_tentacle(mc));
+            && !mons_is_tentacle_or_tentacle_segment(mc));
 }
 
 bool mons_is_firewood(const monster* mon)
@@ -1440,7 +1440,7 @@ bool mons_can_be_zombified(const monster* mon)
 bool mons_class_can_use_stairs(monster_type mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
-            && !mons_is_tentacle(mc)
+            && !mons_is_tentacle_or_tentacle_segment(mc)
             && !mons_is_abyssal_only(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST
@@ -4383,27 +4383,39 @@ monster *monster_by_mid(mid_t m)
     return 0;
 }
 
-bool mons_is_tentacle(monster_type mc)
-{
-    return (mc == MONS_KRAKEN_TENTACLE
-            || mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-            || mc == MONS_STARSPAWN_TENTACLE
-            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
-}
-
-bool mons_is_tentacle_segment(monster_type mc)
-{
-    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
-}
-
 bool mons_is_tentacle_head(monster_type mc)
 {
     return (mc == MONS_KRAKEN
             || mc == MONS_TENTACLED_STARSPAWN);
+}
+
+bool mons_is_child_tentacle(monster_type mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE
+            || mc == MONS_STARSPAWN_TENTACLE);
+}
+
+bool mons_is_child_tentacle_segment(monster_type mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
+}
+
+bool mons_is_tentacle(monster_type mc)
+{
+    return (mc == MONS_ELDRITCH_TENTACLE
+            || mons_is_child_tentacle(mc));
+}
+
+bool mons_is_tentacle_segment(monster_type mc)
+{
+    return (mc == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || mons_is_child_tentacle_segment(mc));
+}
+
+bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
+{
+    return (mons_is_tentacle(mc) || mons_is_tentacle_segment(mc));
 }
 
 monster* mons_get_parent_monster(monster* mons)
@@ -4456,13 +4468,6 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
-}
-
-bool mons_is_tentacle_end(monster_type mtype)
-{
-    return (mtype == MONS_KRAKEN_TENTACLE
-            || mtype == MONS_ELDRITCH_TENTACLE
-            || mtype == MONS_STARSPAWN_TENTACLE);
 }
 
 monster_type mons_tentacle_parent_type(const monster* mons)
