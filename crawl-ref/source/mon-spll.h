@@ -2044,4 +2044,15 @@
       }
     },
 
+    {  MST_SOJOBO,
+      {
+       SPELL_CHAIN_LIGHTNING,
+       SPELL_HASTE_OTHER,
+       SPELL_HASTE,
+       SPELL_BLINK_ALLIES_ENCIRCLE,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    }
+
 #endif
