@@ -87,6 +87,11 @@ public:
 
     void add(tileidx_t idx, int x, int y, int z = 0, bool submerged = false,
              bool ghost = false, int ox = 0, int oy = 0, int ymax = -1);
+    void add_alpha(tileidx_t idx, int x, int y, int z,
+                   int ox, int oy, int ymax, int alpha);
+    void add_masked(tileidx_t idx, int x, int y, int z,
+                    int ox, int oy, int ymax,
+                    int alpha_above, int alpha_below, int water_level = 0);
 
     void draw() const;
     void clear();

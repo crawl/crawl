@@ -122,7 +122,7 @@ KMONS:   3 = boring beetle
 ITEM:    stone, wand of digging ident:type
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 sling | w:8 sling bullet | \
-         w:4 sling bullet ego:steel | w:14 stone of earth elementals | \
+         w:4 sling bullet ego:steel | w:14 stone of tremors | \
          w:7 crystal ball of energy | w:4 wand of digging | \
          w:5 randbook disc:earth | w:2 book of the earth | w:2 book of geomancy | \
          w:4 staff of earth | w:4 wand of disintegration | w:1 crystal plate armour
@@ -233,11 +233,11 @@ TAGS: transparent
 SUBST: m = mb
 KFEAT: s = general shop type:Hardware suffix:Store ; any deck | any wand w:90 | any rod | \
    ring of invisibility | ring of flight | ring of teleportation | \
-   amulet of rage | staff of channeling w:3 | air elemental fan w:3 | \
+   amulet of rage | staff of energy w:3 | fan of gales w:3 | \
    bottled efreet w:3 | lamp of fire w:3 | box of beasts w:3 | \
-   stone of earth elementals w:3 | lantern of shadows w:3 | disc of storms w:3 | \
+   stone of tremors w:3 | lantern of shadows w:3 | disc of storms w:3 | \
    crystal ball of energy w:3 | scroll of recharging w:5 | manual of evocations w:2 | \
-   ring of teleport control
+   ring of teleport control | phial of floods w:3
 KMONS: s = kobold ; wand of flame | wand of frost | wand of magic darts
 MAP
 .....

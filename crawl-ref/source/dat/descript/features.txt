@@ -217,6 +217,10 @@ A gateway to the decaying netherworld of Tartarus
 
 This place seems to radiate negative energy.
 %%%%
+A gateway to the decaying netherworld of Tartarus:quote
+
+<Tartarus:quote>
+%%%%
 A gateway to the freezing wastes of Cocytus
 
 From the frost-bitten lands, a cold chill touches your soul.
@@ -336,13 +340,13 @@ A one-way gate to the infinite horrors of the Abyss:quote
     -Friedrich Nietzsche, _Beyond Good and Evil_ , Aphorism 146. 1886.
 
 “Well, in our country,” said Alice, still panting a little, “you’d generally
-get to somewhere else - if you ran very fast for a long time, as we’ve been
+get to somewhere else – if you ran very fast for a long time, as we’ve been
 doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
 all the running you can do, to keep in the same place. If you want to get
 somewhere else, you must run at least twice as fast as that!”
     -Lewis Carroll, _Through the Looking-Glass, and What Alice Found There_,
 ch. 2
-    "The Garden of Live Flowers". 1871.
+    “The Garden of Live Flowers”. 1871.
 %%%%
 A passage of Golubria
 
@@ -554,15 +558,7 @@ the vilest necromancy.
 %%%%
 A staircase to the Tomb:quote
 
-“In the depths of every heart, there is a tomb and a dungeon, though the
-lights, the music, and revelry above may cause us to forget their existence,
-and the buried ones, or prisoners whom they hide. But sometimes, and oftenest
-at midnight, those dark receptacles are flung wide open. In an hour like this,
-when the mind has a passive sensibility, but no active strength; when the
-imagination is a mirror, imparting vividness to all ideas, without the power of
-selecting or controlling them; then pray that your grieves may slumber, and the
-brotherhood of remorse not break their chain.”
-    -Nathaniel Hawthorne, "The Haunted Mind". 1835.
+<Tomb:quote>
 %%%%
 A staircase to the Vaults
 
@@ -1010,12 +1006,6 @@ Frost-covered floor
 
 Frost-covered floor. It crunches satisfyingly underfoot.
 %%%%
-# Pan: Cerebov
-A cracked metal wall
-
-This metal wall has suffered some damage. Alas, the hole is not big enough to
-crawl through.
-%%%%
 # Pan: the holy level
 A golden statue
 
@@ -1025,7 +1015,7 @@ A silver wall
 
 This wall is made of pure silver.
 %%%%
-# Slime:7
+# Slime:$
 A rune carved stone wall
 
 This strangely slime-free stone wall is carved all over with countless mystical
@@ -1036,7 +1026,7 @@ A sarcophagus
 
 An ancient sarcophagus. It appears to be empty.
 %%%%
-# Vaults:8
+# Vaults:$
 A heavily etched metal wall
 
 This metal wall is etched with murals depicting, in great and gruesome detail,

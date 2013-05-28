@@ -40,14 +40,20 @@ function (exports, $, key_conversion, chat, comm) {
         }
     }
 
-    function enqueue_message(msgtext)
+    function enqueue_messages(msgtext)
     {
         if (msgtext.match(/^{/))
         {
             // JSON message
             var msgobj = eval("(" + msgtext + ")");
-            if (!comm.handle_message_immediately(msgobj))
-                message_queue.push(msgobj);
+            var msgs = msgobj.msgs;
+            if (msgs == null)
+                msgs = [ msgobj ];
+            for (var i in msgs)
+            {
+                if (!comm.handle_message_immediately(msgs[i]))
+                    message_queue.push(msgs[i]);
+            }
         }
         else
         {
@@ -898,6 +904,8 @@ function (exports, $, key_conversion, chat, comm) {
             return false; // buggy Blob builder
         if (b.safari)
             return false;
+        if (b.opera) // JavaScript errors in version 12.15
+            return false;
         return true;
     }
 
@@ -983,7 +991,8 @@ function (exports, $, key_conversion, chat, comm) {
             "Blob" in window &&
             "FileReader" in window &&
             "ArrayBuffer" in window &&
-            inflate_works_on_ua())
+            inflate_works_on_ua() &&
+            !$.cookie("no-compression"))
         {
             inflater = new Inflater();
         }
@@ -1034,7 +1043,7 @@ function (exports, $, key_conversion, chat, comm) {
                         if (window.log_message_size)
                             console.log("Message size: " + s.length);
 
-                        enqueue_message(s);
+                        enqueue_messages(s);
                     });
                     return;
                 }
@@ -1044,7 +1053,7 @@ function (exports, $, key_conversion, chat, comm) {
                 if (window.log_message_size)
                     console.log("Message size: " + msg.data.length);
 
-                enqueue_message(msg.data);
+                enqueue_messages(msg.data);
             };
 
             socket.onerror = function ()

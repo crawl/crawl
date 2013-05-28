@@ -6,6 +6,7 @@
 
 #include "AppHdr.h"
 #include "coord.h"
+#include "dactions.h"
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
@@ -91,11 +92,17 @@ bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
+bool delayed_action_fineff::mergeable(const final_effect &fe) const
+{
+    return false;
+}
+
 void mirror_damage_fineff::merge(const final_effect &fe)
 {
     const mirror_damage_fineff *mdfe =
         dynamic_cast<const mirror_damage_fineff *>(&fe);
-    ASSERT(mdfe && mergeable(*mdfe));
+    ASSERT(mdfe);
+    ASSERT(mergeable(*mdfe));
     damage += mdfe->damage;
 }
 
@@ -103,14 +110,16 @@ void trj_spawn_fineff::merge(const final_effect &fe)
 {
     const trj_spawn_fineff *trjfe =
         dynamic_cast<const trj_spawn_fineff *>(&fe);
-    ASSERT(trjfe && mergeable(*trjfe));
+    ASSERT(trjfe);
+    ASSERT(mergeable(*trjfe));
     damage += trjfe->damage;
 }
 
 void blood_fineff::merge(const final_effect &fe)
 {
     const blood_fineff *bfe = dynamic_cast<const blood_fineff *>(&fe);
-    ASSERT(bfe && mergeable(*bfe));
+    ASSERT(bfe);
+    ASSERT(mergeable(*bfe));
     blood += bfe->blood;
 }
 
@@ -118,7 +127,8 @@ void deferred_damage_fineff::merge(const final_effect &fe)
 {
     const deferred_damage_fineff *ddamfe =
         dynamic_cast<const deferred_damage_fineff *>(&fe);
-    ASSERT(ddamfe && mergeable(*ddamfe));
+    ASSERT(ddamfe);
+    ASSERT(mergeable(*ddamfe));
     damage += ddamfe->damage;
 }
 
@@ -279,6 +289,13 @@ void starcursed_merge_fineff::fire()
     actor *defend = defender();
     if (defend && defend->alive())
         starcursed_merge(defender()->as_monster(), true);
+}
+
+void delayed_action_fineff::fire()
+{
+    if (final_msg.length())
+        mpr(final_msg);
+    add_daction(action);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

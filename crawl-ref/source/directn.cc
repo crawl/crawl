@@ -958,10 +958,10 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (!may_target_self && (mode == TARG_ENEMY
-                                     || mode == TARG_HOSTILE
-                                     || mode == TARG_HOSTILE_SUBMERGED
-                                     || mode == TARG_HOSTILE_UNDEAD))
+            if (!may_target_self && restricts != DIR_TARGET_OBJECT
+                && (mode == TARG_ENEMY || mode == TARG_HOSTILE
+                    || mode == TARG_HOSTILE_SUBMERGED
+                    || mode == TARG_HOSTILE_UNDEAD))
             {
                 if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
@@ -2400,7 +2400,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
                                            dp.x, dp.y);
-        if (x != B_MAYBE)
+        if (x != MB_MAYBE)
             return tobool(x);
     }
 #endif
@@ -2443,7 +2443,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster_expl", "dd",
                                            dp.x, dp.y);
-        if (x != B_MAYBE)
+        if (x != MB_MAYBE)
             return tobool(x);
     }
 #endif
@@ -3192,6 +3192,9 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     string desc = _base_feature_desc(grid, trap);
     desc += cover_desc;
 
+    if (grid == DNGN_FLOOR && dtype == DESC_A)
+        dtype = DESC_THE;
+
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
 
@@ -3325,6 +3328,10 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(
                    dtype, add_stop, false,
                    "UNAMED PORTAL VAULT ENTRY");
+    case DNGN_FLOOR:
+        if (dtype == DESC_A)
+            dtype = DESC_THE;
+        // fallthrough
     default:
         return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
                    raw_feature_description(where) + covering_description);
@@ -3556,7 +3563,7 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     text += _mon_enchantments_string(mi);
-    if (text[text.size() -1] == '\n')
+    if (text.size() > 0 && text[text.size() - 1] == '\n')
         text = text.substr(0, text.size() - 1);
     return text;
 }

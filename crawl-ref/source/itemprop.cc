@@ -965,14 +965,15 @@ void set_helmet_random_desc(item_def &item)
 
 short get_gloves_desc(const item_def &item)
 {
-    ASSERT(item.base_type == OBJ_ARMOUR && item.sub_type == ARM_GLOVES);
-
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    ASSERT(item.sub_type == ARM_GLOVES);
     return item.plus2;
 }
 
 void set_gloves_random_desc(item_def &item)
 {
-    ASSERT(item.base_type == OBJ_ARMOUR && item.sub_type == ARM_GLOVES);
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    ASSERT(item.sub_type == ARM_GLOVES);
 
     item.plus2 = coinflip() ? TGLOV_DESC_GLOVES : TGLOV_DESC_GAUNTLETS;
     if (get_armour_ego_type(item) == SPARM_ARCHERY)
@@ -1694,8 +1695,11 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
     if (get_item_slot(item) != slot)
         return true;
 
-    if (item.base_type == OBJ_WEAPONS)
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
+        || item.base_type == OBJ_RODS)
+    {
         return true;
+    }
 
     if (item.base_type == OBJ_ARMOUR || !_item_known_uncursed(item))
         return false;
@@ -2061,6 +2065,44 @@ bool is_fizzing_potion(const item_def &item)
         return false;
 
     return (item.sub_type == POT_FIZZING);
+}
+
+bool food_is_meaty(int food_type)
+{
+    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
+            "Bad food type %d (NUM_FOODS = %d)",
+            food_type, NUM_FOODS);
+
+    return Food_prop[Food_index[food_type]].carn_mod > 0;
+}
+
+bool food_is_meaty(const item_def &item)
+{
+    ASSERT(item.defined());
+
+    if (item.base_type != OBJ_FOOD)
+        return false;
+
+    return food_is_meaty(item.sub_type);
+}
+
+bool food_is_veggie(int food_type)
+{
+    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
+            "Bad food type %d (NUM_FOODS = %d)",
+            food_type, NUM_FOODS);
+
+    return Food_prop[Food_index[food_type]].herb_mod > 0;
+}
+
+bool food_is_veggie(const item_def &item)
+{
+    ASSERT(item.defined());
+
+    if (item.base_type != OBJ_FOOD)
+        return item.base_type == OBJ_MISSILES && item.sub_type == MI_PIE;
+
+    return food_is_veggie(item.sub_type);
 }
 
 int food_value(const item_def &item)
@@ -2851,4 +2893,18 @@ void seen_item(const item_def &item)
         // could go wrong.
         set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
     }
+}
+
+bool is_elemental_evoker(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && (item.sub_type == MISC_LAMP_OF_FIRE
+                || item.sub_type == MISC_STONE_OF_TREMORS
+                || item.sub_type == MISC_FAN_OF_GALES
+                || item.sub_type == MISC_PHIAL_OF_FLOODS));
+}
+
+bool evoker_is_charged(const item_def &item)
+{
+    return (item.plus2 == 0);
 }

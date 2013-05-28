@@ -753,6 +753,7 @@ void flash_view_delay(colour_t colour, int flash_delay, targetter *where)
     }
 
     delay(flash_delay);
+    flash_view(0);
 }
 
 static void _debug_pane_bounds()
@@ -858,6 +859,7 @@ static int player_view_update_at(const coord_def &gc)
     else
         env.tile_bk_fg(gc) = env.tile_fg(ep);
     env.tile_bk_bg(gc) = env.tile_bg(ep);
+    env.tile_bk_cloud(gc) = env.tile_cloud(ep);
 #endif
 
     return ret;
@@ -900,7 +902,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, gc);
+    tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
 #endif
 }
 
@@ -926,6 +928,7 @@ static void _draw_player(screen_cell_t *cell,
 #ifdef USE_TILE
     cell->tile.fg = env.tile_fg(ep) = tileidx_player();
     cell->tile.bg = env.tile_bg(ep);
+    cell->tile.cloud = env.tile_cloud(ep);
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
@@ -944,6 +947,7 @@ static void _draw_los(screen_cell_t *cell,
 #ifdef USE_TILE
     cell->tile.fg = env.tile_fg(ep);
     cell->tile.bg = env.tile_bg(ep);
+    cell->tile.cloud = env.tile_cloud(ep);
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else

@@ -26,10 +26,6 @@ knife of Accuracy
 
 Tas ir gandrīz nekļūdīgi precīzs.
 %%%%
-Lear's chain mail
-
-Ķēžu bruņas, kas izgatavotas no tīra zelta.
-%%%%
 salamander hide armour
 
 Ādas bruņas, kas izgatavotas no salamandru ādas.

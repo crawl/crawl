@@ -69,11 +69,6 @@ const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
 
-// A list of keys used as "key = foo" but meaning "append to a list",
-// where the list was non-empty. Such settings will reset the list and
-// thus have different behaviour in 0.12, so warn about them now.
-set<string> warn_list_append;
-
 template <class L, class E>
 static L& remove_matching(L& lis, const E& entry)
 {
@@ -167,7 +162,7 @@ static const string message_channel_names[] =
     "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
     "friend_spell", "friend_enchant", "monster_damage", "monster_target",
     "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial", "orb"
+    "examine_filter", "diagnostic", "error", "tutorial", "orb", "timed_portal"
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -836,9 +831,18 @@ void game_options::reset_options()
 
     pickup_thrown          = true;
 
+#ifdef DGAMELAUNCH
+    travel_delay           = -1;
+    explore_delay          = -1;
+    rest_delay             = -1;
+    show_travel_trail       = true;
+#else
     travel_delay           = 20;
     explore_delay          = -1;
+    rest_delay             = 0;
     show_travel_trail       = false;
+#endif
+
     travel_stair_cost      = 500;
 
     arena_delay            = 600;
@@ -870,7 +874,7 @@ void game_options::reset_options()
     level_map_title        = true;
 
     assign_item_slot       = SS_FORWARD;
-    show_god_gift          = B_MAYBE;
+    show_god_gift          = MB_MAYBE;
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
@@ -961,9 +965,10 @@ void game_options::reset_options()
     if (wiz_mode != WIZ_NO)
         wiz_mode         = WIZ_NEVER;
 #else
-    wiz_mode         = WIZ_NO;
+    wiz_mode             = WIZ_NO;
 #endif
     terp_files.clear();
+    no_save              = false;
 #endif
 
 #ifdef USE_TILE
@@ -1029,7 +1034,7 @@ void game_options::reset_options()
                                              "command, spell, ability, "
                                              "monster");
 # endif
-    tile_use_small_layout = B_MAYBE;
+    tile_use_small_layout = MB_MAYBE;
 #endif
 
 #ifdef USE_TILE
@@ -1488,20 +1493,6 @@ string read_init_file(bool runscript)
     Options.filename     = init_file_name;
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
-
-    if (!warn_list_append.empty())
-    {
-        string warn =
-            "Your configuration uses = to append to a list option. This "
-            "syntax will override the option in a future version. Use += "
-            "instead to append. Affected options are: ";
-        warn += comma_separated_line(warn_list_append.begin(),
-                                     warn_list_append.end());
-
-        // Can't use Options.report_error() as that prevents webtiles from
-        // starting the game.
-        mpr(warn, MSGCH_ERROR);
-    }
 
     return "";
 }
@@ -2123,21 +2114,14 @@ static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
     return l.first > r.first;
 }
 
-// Returns true if the semantics of this call are expected to change:
-// that is, if old_semantics is true, add and subtract are both false,
-// and field is non-empty. T must be convertible to from a string.
+// T must be convertible to from a string.
 template <class T>
-static bool _handle_list(bool old_semantics, vector<T> &value_list,
-                         string field, bool append, bool prepend,
-                         bool subtract)
+static void _handle_list(vector<T> &value_list, string field,
+                         bool append, bool prepend, bool subtract)
 {
-    bool needs_warning = false;
     if (!append && !prepend && !subtract)
     {
-        if (!old_semantics || field.empty())
-            value_list.clear();
-        else if (!value_list.empty())
-            needs_warning = true;
+        value_list.clear();
     }
 
     vector<T> new_entries;
@@ -2154,8 +2138,6 @@ static bool _handle_list(bool old_semantics, vector<T> &value_list,
             new_entries.push_back(*part);
     }
     _merge_lists(value_list, new_entries, prepend);
-
-    return needs_warning;
 }
 
 void game_options::read_option_line(const string &str, bool runscript)
@@ -2201,16 +2183,11 @@ void game_options::read_option_line(const string &str, bool runscript)
 #define INT_OPTION(_opt, _min_val, _max_val) \
     INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
 
-#define LIST_OPTION_NAMED(_opt_str, _opt_var, old)                       \
-    if (key == _opt_str) do {                                            \
-        if (_handle_list(old, _opt_var, field, plus_equal,               \
-                         caret_equal, minus_equal))                      \
-        {                                                                \
-            warn_list_append.insert(key);                                \
-        }                                                                \
+#define LIST_OPTION_NAMED(_opt_str, _opt_var)                                \
+    if (key == _opt_str) do {                                                \
+        _handle_list(_opt_var, field, plus_equal, caret_equal, minus_equal); \
     } while (false)
-#define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, false)
-#define OLD_LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, true)
+#define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt)
     string key    = "";
     string subkey = "";
     string field  = "";
@@ -2386,6 +2363,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         {
             lang = LANG_LV, lang_name = "lv";
         }
+        else if (field == "nl" || field == "dutch" || field == "nederlands")
+            lang = LANG_NL, lang_name = "nl";
         else if (field == "pl" || field == "polish" || field == "polski")
             lang = LANG_PL, lang_name = "pl";
         else if (field == "pt" || field == "portuguese" || field == "português" || field == "portugues")
@@ -2633,11 +2612,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "show_god_gift")
     {
         if (field == "yes")
-            show_god_gift = B_TRUE;
+            show_god_gift = MB_TRUE;
         else if (field == "unid" || field == "unident" || field == "unidentified")
-            show_god_gift = B_MAYBE;
+            show_god_gift = MB_MAYBE;
         else if (field == "no")
-            show_god_gift = B_FALSE;
+            show_god_gift = MB_FALSE;
         else
             report_error("Unknown show_god_gift value: %s\n", field.c_str());
     }
@@ -2657,8 +2636,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_game_turns);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
-    else OLD_LIST_OPTION(note_monsters);
-    else OLD_LIST_OPTION(note_messages);
+    else LIST_OPTION(note_monsters);
+    else LIST_OPTION(note_messages);
     else INT_OPTION(note_hp_percent, 0, 100);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
@@ -2788,19 +2767,13 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
-        if (plain && field.empty())
+        if (plain)
         {
             // Only remove negative, not positive, exceptions.
             force_autopickup.erase(remove_if(force_autopickup.begin(),
                                              force_autopickup.end(),
                                              _is_autopickup_ban),
                                    force_autopickup.end());
-        }
-        else if (plain && !count_if(force_autopickup.begin(),
-                                    force_autopickup.end(),
-                                    _is_autopickup_ban))
-        {
-            warn_list_append.insert(key);
         }
 
         vector<pair<text_pattern, bool> > new_entries;
@@ -2822,10 +2795,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "autopickup_exceptions")
     {
-        if (plain && field.empty())
+        if (plain)
             force_autopickup.clear();
-        else if (plain && !force_autopickup.empty())
-            warn_list_append.insert(key);
 
         vector<pair<text_pattern, bool> > new_entries;
         vector<string> args = split_string(",", field);
@@ -2851,7 +2822,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         _merge_lists(force_autopickup, new_entries, caret_equal);
     }
-    else OLD_LIST_OPTION(note_items);
+    else LIST_OPTION(note_items);
 #ifndef _MSC_VER
     // break if-else chain on broken Microsoft compilers with stupid nesting limits
     else
@@ -2859,10 +2830,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 
     if (key == "autoinscribe")
     {
-        if (plain && field.empty())
+        if (plain)
             autoinscriptions.clear();
-        else if (plain && !autoinscriptions.empty())
-            warn_list_append.insert(key);
 
         const size_t first = field.find_first_of(':');
         const size_t last  = field.find_last_of(':');
@@ -3089,10 +3058,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "spell_slot")
     {
-        if (plain && field.empty())
+        if (plain)
             auto_spell_letters.clear();
-        else if (plain && !auto_spell_letters.empty())
-            warn_list_append.insert(key);
 
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
@@ -3114,8 +3081,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifdef WIZARD
     else if (key == "fsim_mode")
         fsim_mode = field;
-    else OLD_LIST_OPTION(fsim_scale);
-    else OLD_LIST_OPTION(fsim_kit);
+    else LIST_OPTION(fsim_scale);
+    else LIST_OPTION(fsim_kit);
     else if (key == "fsim_rounds")
     {
         fsim_rounds = atol(field.c_str());
@@ -3155,6 +3122,15 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (explore_delay > 2000)
             explore_delay = 2000;
     }
+    else if (key == "rest_delay")
+    {
+        // Read explore delay in milliseconds.
+        rest_delay = atoi(field.c_str());
+        if (rest_delay < -1)
+            rest_delay = -1;
+        if (rest_delay > 2000)
+            rest_delay = 2000;
+    }
     else BOOL_OPTION(show_travel_trail);
     else if (key == "level_map_cursor_step")
     {
@@ -3169,10 +3145,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
-        if (plain && field.empty())
+        if (plain)
             force_more_message.clear();
-        else if (plain && !force_more_message.empty())
-            warn_list_append.insert(key);
 
         vector<message_filter> new_entries;
         vector<string> fragments = split_string(",", field);
@@ -3202,7 +3176,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         _merge_lists(force_more_message, new_entries, caret_equal);
     }
-    else OLD_LIST_OPTION(drop_filter);
+    else LIST_OPTION(drop_filter);
     else if (key == "travel_avoid_terrain")
     {
         // TODO: allow resetting (need reset_forbidden_terrain())
@@ -3223,7 +3197,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tc_dangerous = str_to_colour(field, tc_dangerous);
     else if (key == "tc_disconnected")
         tc_disconnected = str_to_colour(field, tc_disconnected);
-    else OLD_LIST_OPTION(auto_exclude);
+    else LIST_OPTION(auto_exclude);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
@@ -3249,7 +3223,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop_prompt |= new_conditions;
     }
-    else OLD_LIST_OPTION(explore_stop_pickup_ignore);
+    else LIST_OPTION(explore_stop_pickup_ignore);
     else if (key == "explore_item_greed")
     {
         explore_item_greed = atoi(field.c_str());
@@ -3282,10 +3256,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "sound")
     {
-        if (plain && field.empty())
+        if (plain)
             sound_mappings.clear();
-        else if (plain && !sound_mappings.empty())
-            warn_list_append.insert(key);
 
         vector<sound_mapping> new_entries;
         vector<string> seg = split_string(",", field);
@@ -3312,10 +3284,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif
     if (key == "menu_colour" || key == "menu_color")
     {
-        if (plain && field.empty())
+        if (plain)
             menu_colour_mappings.clear();
-        else if (plain && !menu_colour_mappings.empty())
-            warn_list_append.insert(key);
 
         vector<colour_mapping> new_entries;
         vector<string> seg = split_string(",", field);
@@ -3356,10 +3326,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "message_colour" || key == "message_color")
     {
         // TODO: support -= here.
-        if (plain && field.empty())
+        if (plain)
             message_colour_mappings.clear();
-        else if (plain && !message_colour_mappings.empty())
-            warn_list_append.insert(key);
 
         add_message_colour_mappings(field, caret_equal, minus_equal);
     }
@@ -3567,11 +3535,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_use_small_layout")
     {
         if (field == "true")
-            tile_use_small_layout = B_TRUE;
+            tile_use_small_layout = MB_TRUE;
         else if (field == "false")
-            tile_use_small_layout = B_FALSE;
+            tile_use_small_layout = MB_FALSE;
         else
-            tile_use_small_layout = B_MAYBE;
+            tile_use_small_layout = MB_MAYBE;
     }
 #endif
 #ifdef USE_TILE
@@ -3947,7 +3915,7 @@ static struct es_command
     { ES_INFO,    "info",    false, 0, 0, },
 };
 
-#define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while (0)
+#define FAIL(...) do { fprintf(stderr, __VA_ARGS__); return; } while (0)
 static void _edit_save(int argc, char **argv)
 {
     if (argc <= 1 || !strcmp(argv[1], "help"))
@@ -3971,15 +3939,15 @@ static void _edit_save(int argc, char **argv)
         if (!strcmp(es_commands[nc].name, cmdn))
         {
             if (argc < es_commands[nc].min_args + 2)
-                ERR("Too few arguments for %s.\n", cmdn);
+                FAIL("Too few arguments for %s.\n", cmdn);
             else if (argc > es_commands[nc].max_args + 2)
-                ERR("Too many arguments for %s.\n", cmdn);
+                FAIL("Too many arguments for %s.\n", cmdn);
             cmd = es_commands[nc].cmd;
             rw = es_commands[nc].rw;
             break;
         }
     if (cmd == NUM_ES)
-        ERR("Unknown command: %s.\n", cmdn);
+        FAIL("Unknown command: %s.\n", cmdn);
 
     try
     {
@@ -4000,9 +3968,9 @@ static void _edit_save(int argc, char **argv)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                ERR("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
-                ERR("No such chunk in the save file.\n");
+                FAIL("No such chunk in the save file.\n");
             chunk_reader inc(&save, chunk);
 
             const char *file = (argc == 4) ? argv[3] : "chunk";
@@ -4027,7 +3995,7 @@ static void _edit_save(int argc, char **argv)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                ERR("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"%s\".\n", chunk);
 
             const char *file = (argc == 4) ? argv[3] : "chunk";
             FILE *f;
@@ -4052,9 +4020,9 @@ static void _edit_save(int argc, char **argv)
         {
             const char *chunk = argv[2];
             if (!*chunk || strlen(chunk) > MAX_CHUNK_NAME_LENGTH)
-                ERR("Invalid chunk name \"%s\".\n", chunk);
+                FAIL("Invalid chunk name \"%s\".\n", chunk);
             if (!save.has_chunk(chunk))
-                ERR("No such chunk in the save file.\n");
+                FAIL("No such chunk in the save file.\n");
 
             save.delete_chunk(chunk);
         }
@@ -4069,7 +4037,7 @@ static void _edit_save(int argc, char **argv)
                 chunk_reader in(&save, list[i]);
                 chunk_writer out(&save2, list[i]);
 
-                while (len_t s = in.read(buf, sizeof(buf)))
+                while (plen_t s = in.read(buf, sizeof(buf)))
                     out.write(buf, s);
             }
             save2.commit();
@@ -4080,10 +4048,10 @@ static void _edit_save(int argc, char **argv)
         {
             vector<string> list = save.list_chunks();
             sort(list.begin(), list.end(), numcmpstr);
-            len_t nchunks = list.size();
-            len_t frag = save.get_chunk_fragmentation("");
-            len_t flen = save.get_size();
-            len_t slack = save.get_slack();
+            plen_t nchunks = list.size();
+            plen_t frag = save.get_chunk_fragmentation("");
+            plen_t flen = save.get_size();
+            plen_t slack = save.get_slack();
             printf("Chunks: (size compressed/uncompressed, fragments, name)\n");
             for (size_t i = 0; i < list.size(); i++)
             {
@@ -4093,8 +4061,8 @@ static void _edit_save(int argc, char **argv)
 
                 char buf[16384];
                 chunk_reader in(&save, list[i]);
-                len_t clen = 0;
-                while (len_t s = in.read(buf, sizeof(buf)))
+                plen_t clen = 0;
+                while (plen_t s = in.read(buf, sizeof(buf)))
                     clen += s;
                 printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, list[i].c_str());
             }
@@ -4112,7 +4080,7 @@ static void _edit_save(int argc, char **argv)
         fprintf(stderr, "Error: %s\n", fe.msg.c_str());
     }
 }
-#undef ERR
+#undef FAIL
 
 static bool _check_extra_opt(char* _opt)
 {

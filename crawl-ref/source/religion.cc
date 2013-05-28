@@ -876,6 +876,10 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
         really_dislikes.push_back("you destroy spellbooks");
         break;
 
+    case GOD_NEMELEX_XOBEH:
+        really_dislikes.push_back("you destroy decks");
+        break;
+
     default:
         break;
     }
@@ -1173,9 +1177,9 @@ static void _inc_gift_timeout(int val)
 static monster_type _yred_servants[] =
 {
     MONS_MUMMY, MONS_WIGHT, MONS_FLYING_SKULL, MONS_WRAITH,
-    MONS_ROTTING_HULK, MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR,
-    MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST, MONS_SKELETAL_WARRIOR,
-    MONS_DEATH_COB, MONS_GHOUL, MONS_BONE_DRAGON, MONS_PROFANE_SERVITOR,
+    MONS_FREEZING_WRAITH, MONS_FLAMING_CORPSE, MONS_PHANTASMAL_WARRIOR,
+    MONS_SKELETAL_WARRIOR, MONS_FLAYED_GHOST, MONS_DEATH_COB,
+    MONS_GHOUL, MONS_BONE_DRAGON, MONS_PROFANE_SERVITOR,
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
@@ -1378,7 +1382,7 @@ static bool _give_nemelex_gift(bool forced = false)
                                    true, 1, MAKE_ITEM_RANDOM_RACE,
                                    0, 0, GOD_NEMELEX_XOBEH);
 
-        move_item_to_grid(&thing_created, you.pos(), true);
+        move_item_to_grid(&thing_created, you.pos(), NON_MONSTER, true);
 
         if (thing_created != NON_ITEM)
         {
@@ -2269,7 +2273,8 @@ bool do_god_gift(bool forced)
                     // reason.
                     mark_had_book(gift);
 
-                    move_item_to_grid(&thing_created, you.pos(), true);
+                    move_item_to_grid(&thing_created, you.pos(), NON_MONSTER,
+                                       true);
 
                     if (thing_created != NON_ITEM)
                         success = true;
@@ -4217,7 +4222,7 @@ int piety_rank(int piety)
         die("INT_MAX is no good");
     }
 
-    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
+    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 1 };
     const int numbreakpoints = ARRAYSZ(breakpoints);
 
     for (int i = 0; i < numbreakpoints; ++i)

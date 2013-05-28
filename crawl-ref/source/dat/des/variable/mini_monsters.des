@@ -480,7 +480,7 @@ xxxx+xxxxx...xxxxx+xxxx
 ENDMAP
 
 NAME:   goddamned_bats
-DEPTH:  D:3-12, Lair:1-3, Orc:1-2
+DEPTH:  D:3-5
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
 KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
@@ -504,9 +504,6 @@ KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
 KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
 # Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
 KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
-: if you.absdepth() > 6 then
-TAGS:   extra
-: end
 MAP
        xxxxx
       xxxxxxx
@@ -858,7 +855,7 @@ ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:5 title:Nature \
-        spells:beastly_appendage|summon_small_mammals|sticks_to_snakes|call_canine_familiar|spider_form
+        spells:beastly_appendage|summon_small_mammal|sticks_to_snakes|call_canine_familiar|spider_form
 : else
 ITEM:   randbook numspells:5 title:Nature \
         spells:beastly_appendage|sting|sticks_to_snakes|cure_poison|spider_form
@@ -920,7 +917,7 @@ ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:5 title:Nature \
-        spells:beastly_appendage|summon_small_mammals|sticks_to_snakes|call_canine_familiar|spider_form
+        spells:beastly_appendage|summon_small_mammal|sticks_to_snakes|call_canine_familiar|spider_form
 : else
 ITEM:   randbook numspells:5 title:Nature \
         spells:beastly_appendage|sting|sticks_to_snakes|cure_poison|spider_form
@@ -991,7 +988,7 @@ ENDMAP
 
 NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
-TAGS:    layout_rooms layout_misc layout_roguey layout_basic
+TAGS:    layout_rooms layout_misc layout_rooms layout_basic
 DEPTH:   D:11-16
 MONS:    rat / grey rat w:2, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
@@ -1313,11 +1310,11 @@ KMONS:   7 =  kobold ; dagger . dart
 : else
 KMONS:   7 =  big kobold ; dagger . throwing net q:2
 : end
-KMONS:   1 = kobold name:hungry name_adjective name_nocorpse ; nothing
+KMONS:   1 = kobold ; nothing
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
 : dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
-KMONS:   5 = att:neutral halfling hd:1 name:young name_adjective name_species
+KMONS:   5 = halfling att:neutral
 KFEAT:   6 = net trap
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
@@ -1397,6 +1394,27 @@ cccccccnccc
        @
 ENDMAP
 
+# Inspired by the Jorge Luis Borges' story "The Library of Babel".
+NAME:   bh_babel_library
+DEPTH:  D:14-20
+KFEAT:  ^ : known shaft trap
+KMONS:  1 : wizard
+ITEM:   randbook numspells:5 title:Dhcmrlchtdj / randbook numspells:5 title:Combed_Thunderclap disc:air / randbook numspells:5 title:Plaster_Cramp disc:earth / randbook numspells:5 title:Axaxaxas_mlö / randbook numspells:5 title:Forking_Paths owner:Ts'ui_Pên disc:hexes disc2:charms
+ITEM:   bread ration
+MAP
+    xxx@@xxx
+   xx......xx
+  xx........xx
+ xx.1.....e..xx
+xx............xx
+@......^^......@
+@......^^......@
+xx............xx
+ xx.d......1.xx
+  xx........xx
+   xx......xx
+    xxx@@xxx
+ENDMAP
 #################################################################
 # checkpoints with guards to alert nearby monsters, by Core Xii
 NAME:   corexii_checkpoint_a
@@ -1575,8 +1593,6 @@ DEPTH:   D:9-18, Shoals, Swamp
 TAGS:    no_pool_fixup
 MONS:    tengu
 MONS:    tengu ; war axe / tengu ; long sword / tengu ; scimitar
-MONS:    tengu name:conjurer n_suf n_des spells:airstrike;magic_dart;iskenderun's_mystic_blast \
-         tile:mons_tengu_conjurer col:blue
 : if you.branch() == "Swamp" then
 KFEAT:  t = mangrove
 : end
@@ -1584,7 +1600,7 @@ MAP
  .........
 ..wwwww.1..
 .wwttwww.2.
-.wtt3.tww..
+.wtt2.tww..
 .wwwt.2....
 ..wwwwww2..
  .........
@@ -1718,8 +1734,8 @@ ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
 ITEM:    staff of summoning w:20 / rod of demonology w:5 / rod of the swarm w:5
 ITEM:    amulet of warding w:5 / amulet of warding randart
-ITEM:    air elemental fan / lamp of fire / \
-         stone of earth elementals / lantern of shadows
+ITEM:    fan of gales / lamp of fire / \
+         stone of tremors / phial of floods / lantern of shadows
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna
@@ -2098,6 +2114,29 @@ MAP
 .xx1.xx..xx**xx..xx.1xx.
 ..xxxx....xxxx....xxxx..
 ........................
+ENDMAP
+
+NAME:   bh_circular_ruins
+DEPTH:  D:9-14
+KMONS:  1 = human simulacrum
+KITEM:  1 = book of dreams ident:all
+MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 30, size = 1, \
+                              walk_dist = 1, excl_rad = 1}
+MAP
+  ..
+ .xx.  ...
+.xx....xxx.
+.xO.....Oxx.
+ ....xx...x.
+  ..xx....x.
+  ..x.1.x..
+ .x....xx..
+ .x...xx....
+ .xxO.....Ox.
+  .xxx....xx.
+   ...  .xx.
+         ..
 ENDMAP
 
 ################################################################################
@@ -2562,45 +2601,6 @@ MAP
 G
 ENDMAP
 
-# Caryatid's revenge (1KB)
-NAME:   archer_statue
-DEPTH:  D:8-, Elf
-MONS:   statue tile:mons_statue_archer name:archer name_adjective; \
-        longbow . arrow q:30
-MAP
-    ccc
-ccccc1ccccc
-...........
-...........
- .........
-   .....
-ENDMAP
-
-# IOOD testing grounds
-NAME:   iood_simple
-DEPTH:  D:18-
-MONS:   statue hd:12 spells:orb_of_destruction tile:mons_statue_mage \
-        col:vehumet name:conjurer n_adj
-MAP
-       ...
-    .........
-   ...........
-  .............
- ...............
- ...............
- ...............
-.................
-........1........
-.................
- ...............
- ...............
- ...............
-  .............
-   ...........
-    .........
-       ...
-ENDMAP
-
 # Greed's colour
 NAME:    david_greed
 WEIGHT:  4
@@ -2629,51 +2629,20 @@ DEPTH:   D:12-26
 MONS:    crystal golem, orange crystal statue
 KPROP:   .12 = no_rtele_into
 SUBST:   . = .:80 %$*|
-SHUFFLE: Dd / Ee / Ff / Gg / Hh
-SUBST:   D = +, d = n, eEfFgGhH = b
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
-WDd1...1...1bW
-WEe.........bW
-WFf.........bW
-WGg.........bW
-WHh1...2...1bW
+Wbb1...1...1bW
 Wbb.........bW
+Wbb.........bW
+Wnn.........bW
+WW=1...2...1bW
+Wnn.........bW
 Wbb.........bW
 Wbb.........bW
 Wbb1...1...1bW
 WbbbbbbbbbbbbW
 WWWWWWWWWWWWWW
-ENDMAP
-
-NAME:  minmay_archer_statue_crystal
-DEPTH: D:10-, Elf
-MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
-       longbow ego:frost | longbow ego:flame . arrow q:40
-MAP
-xx@xxx@xx
-xb.bbb.bx
-@.......@
-xb.....bx
-xb..1..bx
-xb.....bx
-@.......@
-xb.bbb.bx
-xx@xxx@xx
-ENDMAP
-
-NAME:  minmay_archer_statue_bushes
-DEPTH: D:8-, Elf
-MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
-       longbow . arrow q:40
-MONS:  bush
-MAP
-.....
-.222.
-.212.
-.222.
-.....
 ENDMAP
 
 NAME:  minmay_more_statues
@@ -2851,7 +2820,7 @@ NSUBST:  " = 1:g / *:%
 SUBST:   % = %$
 ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
 ITEM:    wand of digging / wand of disintegration
-ITEM:    stone of earth elementals
+ITEM:    stone of tremors
 ITEM:    scroll of teleportation q:2 w:20 / dagger ego:distortion
 MAP
 ...................
@@ -3445,7 +3414,6 @@ KMONS:   q = yellow wasp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklno
-MARKER:  G = lua:props_marker { stop_explore = "statue" }
 MAP
 .............
 .............
@@ -3455,9 +3423,9 @@ MAP
 ...vfahajv...
 ...vklanov...
 ...vpqrimv...
-...vv+++vv...
+...vv===vv...
 ..v.......v..
-......G......
+.............
 .............
 ENDMAP
 
@@ -3470,7 +3438,7 @@ SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
 ITEM:    wand of digging / wand of disintegration
-ITEM:    ring of teleportation / stone of earth elementals
+ITEM:    ring of teleportation / stone of tremors
 MAP
 ...........
 .vvnvvvnvv.
@@ -4468,7 +4436,7 @@ NAME:   grunt_tough_drop
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-
 KFEAT:  ^ = known teleport trap
-KFEAT:  _ = alarm trap
+KFEAT:  _ = known alarm trap
 KPROP:  8^ = no_rtele_into
 : if you.absdepth() < 9 then
 SUBST: | = %
@@ -4840,36 +4808,6 @@ ENDMAP
 #          the second time), OOD monsters that can be easily
 #          escaped, and not using overpowered/useless unrandarts.
 ################################################################
-
-# Piercer
-#
-NAME:   minmay_guarded_unrand_piercer
-DEPTH:  D:10-
-WEIGHT: 3
-MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
-        good_item longbow . good_item arrow q:20
-MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
-        longbow unrand:piercer . good_item arrow q:20
-MAP
-       ...
-    .........
-   ...........
-  .............
- ...............
- ...............
- ...............
-.......1.1.......
-.................
-.......1.2.......
- ...............
- ...............
- ...............
-  .............
-   ...........
-    .........
-       ...
-ENDMAP
-
 # Robustness
 #
 NAME:   minmay_guarded_unrand_robustness
@@ -5223,7 +5161,7 @@ MONS:   deep dwarf death knight ; \
         chain mail race:dwarven w:7 | \
         plate armour race:dwarven w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
-MONS:   rotting hulk / freezing wraith / phantasmal warrior / \
+MONS:   freezing wraith / phantasmal warrior / \
         flaming corpse / flayed ghost / skeletal warrior
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  - = open_door
@@ -5274,8 +5212,7 @@ ENDMAP
 # This wizard likes to experiment!
 NAME:    laboratory_2
 TAGS:    uniq_laboratory_2
-MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph;\
-         paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
+MONS:    wizard
 DEPTH:   D:10-26
 MONS:    laboratory rat
 MAP
@@ -5397,7 +5334,7 @@ NAME:  minivault_12
 DEPTH: D:8-26
 MAP
 ............
-.GxxxxxxxxG.
+.mxxxxxxxxm.
 .x>9$9$9$<x.
 .x.$9$9$.$x.
 .x$.****$.x.
@@ -5406,7 +5343,7 @@ MAP
 .x.$****.$x.
 .x$9$9$9$.x.
 .x<$9$9$9>x.
-.GxxxxxxxxG.
+.mxxxxxxxxm.
 ............
 ENDMAP
 
@@ -5526,7 +5463,7 @@ ENDMAP
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS: no_monster_gen layout_basic layout_rooms layout_misc layout_caves
-TAGS: layout_spotty layout_roguey layout_delve layout_cocytus layout_pools
+TAGS: layout_delve
 CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
 DEPTH: D:8-, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
        Geh:1-6, Coc:1-6, Dis:1-6, Tar:1-6

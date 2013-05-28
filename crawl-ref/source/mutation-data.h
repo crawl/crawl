@@ -5,10 +5,11 @@
 // first  boolean = is mutation mostly bad?
 // second boolean = is mutation physical, i.e. external only?
 // third  boolean = is mutation suppressed when shapechanged?
-// first  strings = what to show in 'A'
-// second strings = message given when gaining the mutation
-// third  strings = message given when losing the mutation
-// fourth string  = wizard-mode name of mutation
+// first  string  = what to show in '%'
+// second strings = what to show in 'A'
+// third  strings = message given when gaining the mutation
+// fourth strings = message given when losing the mutation
+// fifth  string  = wizard-mode name of mutation
 
 #ifndef MUTATION_DATA_H
 #define MUTATION_DATA_H
@@ -1099,33 +1100,33 @@
 },
 
 { MUT_MANA_SHIELD,                    0,  1, false, false, false,
-  "mana shield",
+  "magic shield",
 
-  {"When hurt, damage is shared between your health and your mana reserves.", "", ""},
+  {"When hurt, damage is shared between your health and your magic reserves.", "", ""},
   {"You feel your magical essence form a protective shroud around your flesh.", "", ""},
   {"", "", ""},
 
-  "mana shield"
+  "magic shield"
 },
 
 { MUT_MANA_REGENERATION,              0,  1, false, false, false,
-  "mana regeneration",
+  "magic regeneration",
 
-  {"You regenerate mana rapidly.", "", ""},
-  {"You feel your mana shroud grow more resilient.", "", ""},
+  {"You regenerate magic rapidly.", "", ""},
+  {"You feel your magic shroud grow more resilient.", "", ""},
   {"", "", ""},
 
-  "mana regeneration"
+  "magic regeneration"
 },
 
 { MUT_MANA_LINK,                      0,  1, false, false, false,
-  "mana link",
+  "magic link",
 
-  {"When low on mana, you restore mana in place of health.", "", ""},
+  {"When low on magic, you restore magic in place of health.", "", ""},
   {"You feel your life force and your magical essence meld.", "", ""},
   {"", "", ""},
 
-  "mana link"
+  "magic link"
 },
 
 // Jiyva only mutations

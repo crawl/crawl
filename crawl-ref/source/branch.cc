@@ -45,7 +45,8 @@ bool is_random_lair_subbranch(branch_type branch)
 
 bool is_connected_branch(branch_type branch)
 {
-    ASSERT(branch >= 0 && branch < NUM_BRANCHES);
+    ASSERT(branch >= 0);
+    ASSERT(branch < NUM_BRANCHES);
     return !(branches[branch].branch_flags & BFLAG_NO_XLEV_TRAVEL);
 }
 

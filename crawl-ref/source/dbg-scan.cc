@@ -196,13 +196,8 @@ void debug_item_scan(void)
                         || !is_artefact(mitm[i])
                            && mitm[i].special >= NUM_SPECIAL_WEAPONS))
 
-                 || (mitm[i].base_type == OBJ_MISSILES
-                     && (abs(mitm[i].plus) > 25
-                         || !is_artefact(mitm[i])
-                            && mitm[i].special >= NUM_SPECIAL_MISSILES))
-
                  || (mitm[i].base_type == OBJ_ARMOUR
-                     && (abs(mitm[i].plus) > 25
+                     && (abs(mitm[i].plus) > 30
                          || !is_artefact(mitm[i])
                             && mitm[i].special >= NUM_SPECIAL_ARMOURS)))
         {
@@ -586,7 +581,10 @@ void check_map_validity()
         find_trap(*ri); // this has all needed asserts already
 
         if (shop_struct *shop = get_shop(*ri))
-            ASSERT(shop->type >= 0 && shop->type < NUM_SHOPS);
+        {
+            ASSERT(shop->type >= 0);
+            ASSERT(shop->type < NUM_SHOPS);
+        }
 
         // border must be impassable
         if (!in_bounds(*ri))

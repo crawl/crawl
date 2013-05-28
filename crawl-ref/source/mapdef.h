@@ -70,6 +70,9 @@ enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
     // the edges, although in other respects it behaves like a regular vault.
     MAP_FLOAT,
 
+    // Place at the centre of the map, and use a "central" layout.
+    MAP_CENTRE,
+
     MAP_NUM_SECTION_TYPES
 };
 

@@ -586,14 +586,16 @@ public:
 
     void make_hungry(int nutrition, bool silent = true);
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount, bool allow_hint = true);
+    bool sicken(int amount, bool allow_hint = true, bool quiet = false);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
+    void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
-    bool drain_exp(actor *, bool quiet = false, int pow = 3);
+    bool drain_exp(actor *, const char *aux = NULL, bool quiet = false,
+                   int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
@@ -650,13 +652,14 @@ public:
     bool cannot_act() const;
     bool confused() const;
     bool caught() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool check_haloed = true, bool self_halo = true, bool check_corona = true) const;
     bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2 () const;
     int umbra_radius2 () const;
     int suppression_radius2 () const;
+    int soul_aura_radius2 () const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
@@ -906,7 +909,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_can_open_doors();
 
-void level_change(bool skip_attribute_increase = false);
+void level_change(int source = NON_MONSTER, const char *aux = NULL,
+                  bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
@@ -964,7 +968,7 @@ void dec_poison_player();
 void reduce_poison_player(int amount);
 bool miasma_player(string source, string source_aux = "");
 
-bool napalm_player(int amount);
+bool napalm_player(int amount, string source, string source_aux = "");
 void dec_napalm_player(int delay);
 
 bool slow_player(int turns);
@@ -981,6 +985,8 @@ bool is_hovering();
 void dec_disease_player(int delay);
 
 void dec_color_smoke_trail();
+
+void handle_player_drowning(int delay);
 
 bool player_weapon_wielded();
 

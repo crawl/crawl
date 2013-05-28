@@ -87,6 +87,8 @@ static string _score_file_name()
         ret = Options.shared_dir + "scores";
 
     ret += crawl_state.game_type_qualifier();
+    if (crawl_state.game_is_sprint() && crawl_state.map != "")
+        ret += "-" + crawl_state.map;
 
     return ret;
 }
@@ -408,6 +410,7 @@ static void _show_morgue(scorefile_entry& se)
 
 void show_hiscore_table()
 {
+    unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
     const int max_line   = get_number_of_lines() - 1;
     const int max_col    = get_number_of_cols() - 1;
 
@@ -1159,6 +1162,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
             || death_type == KILLED_BY_DISINT
+            || death_type == KILLED_BY_ACID
+            || death_type == KILLED_BY_DRAINING
+            || death_type == KILLED_BY_BURNING
             || death_type == KILLED_BY_SPORE
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
@@ -1266,6 +1272,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     {
         death_source_name = you.props["poisoner"].get_string();
         auxkilldata = you.props["poison_aux"].get_string();
+    }
+
+    if (death_type == KILLED_BY_BURNING)
+    {
+        death_source_name = you.props["napalmer"].get_string();
+        auxkilldata = you.props["napalm_aux"].get_string();
     }
 }
 
@@ -1484,11 +1496,10 @@ void scorefile_entry::init(time_t dt)
         DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION, DUR_SENTINEL_MARK,
         STATUS_AIRBORNE, STATUS_BEHELD, STATUS_BURDEN, STATUS_CONTAMINATION,
         STATUS_BACKLIT, STATUS_UMBRA, STATUS_SUPPRESSED, STATUS_NET,
-        STATUS_HUNGER, STATUS_REGENERATION, STATUS_SICK, DUR_NAUSEA,
-        STATUS_SPEED, DUR_INVIS, DUR_POISONING,
-        STATUS_MISSILES, DUR_SURE_BLADE, DUR_TRANSFORMATION,
-        STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
-        DUR_ANTIMAGIC,
+        STATUS_HUNGER, STATUS_REGENERATION, STATUS_SICK, STATUS_SPEED,
+        DUR_INVIS, DUR_POISONING, STATUS_MISSILES, DUR_SURE_BLADE,
+        DUR_TRANSFORMATION, STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
+        DUR_WEAK, DUR_DIMENSION_ANCHOR, DUR_ANTIMAGIC,
     };
 
     status_info inf;
@@ -2095,7 +2106,21 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_DRAINING:
-        desc += terse? "drained" : "Was drained of all life";
+        if (terse)
+            desc += "drained";
+        else
+        {
+            desc += "Drained of all life";
+            if (!death_source_desc().empty())
+            {
+                desc += " by " + death_source_desc();
+
+                if (!auxkilldata.empty())
+                    needs_beam_cause_line = true;
+            }
+            else if (!auxkilldata.empty())
+                desc += " by " + auxkilldata;
+        }
         break;
 
     case KILLED_BY_STARVATION:
@@ -2108,7 +2133,18 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_BURNING:     // sticky flame
-        desc += terse? "burnt" : "Burnt to a crisp";
+        if (terse)
+            desc += "burnt";
+        else if (!death_source_desc().empty())
+        {
+            desc += "Incinerated by " + death_source_desc();
+
+            if (!auxkilldata.empty())
+                needs_beam_cause_line = true;
+        }
+        else
+            desc += "Burnt to a crisp";
+
         needs_damage = true;
         break;
 
@@ -2150,7 +2186,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_TARGETTING:
-        desc += terse? "shot self" : "Killed themself with bad targetting";
+        if (terse)
+            desc += "shot self";
+        else
+        {
+            desc += "Killed themself with ";
+            if (auxkilldata.empty())
+                desc += "bad targetting";
+            else
+                desc += "a badly aimed " + auxkilldata;
+        }
         needs_damage = true;
         break;
 
@@ -2257,7 +2302,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_ACID:
-        desc += terse? "acid" : "Splashed by acid";
+        if (terse)
+            desc += "acid";
+        else if (!death_source_desc().empty())
+        {
+            desc += "Splashed by "
+                    + apostrophise(death_source_desc())
+                    + " acid";
+        }
+        else
+            desc += "Splashed with acid";
         needs_damage = true;
         break;
 

@@ -40,6 +40,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "makeitem.h"
+#include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -194,7 +195,8 @@ void monster_drop_things(monster* mons,
 
                 // If a monster is swimming, the items are ALREADY
                 // underwater.
-                move_item_to_grid(&item, mons->pos(), mons->swimming());
+                move_item_to_grid(&item, mons->pos(), mons->mindex(),
+                                  mons->swimming());
             }
 
             mons->inv[i] = NON_ITEM;
@@ -264,7 +266,7 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.quantity    = 1;
     corpse.orig_monnum = mtype;
 
-    if (mtype == MONS_ROTTING_HULK)
+    if (mtype == MONS_PLAGUE_SHAMBLER)
         corpse.special = ROTTING_CORPSE;
 
     if (mons)
@@ -449,7 +451,7 @@ int place_monster_corpse(const monster* mons, bool silent,
         return -1;
     }
 
-    move_item_to_grid(&o, mons->pos(), !mons->swimming());
+    move_item_to_grid(&o, mons->pos(), mons->mindex(), !mons->swimming());
 
     if (you.see_cell(mons->pos()))
     {
@@ -864,13 +866,23 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
 
 static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 {
-    if (mons->hit_points < -25
-        || mons->hit_points < -mons->max_hit_points
-        || mons->max_hit_points <= 0
-        || mons->hit_dice < 1)
-    {
+    if (mons->max_hit_points <= 0 || mons->hit_dice < 1)
         return false;
+
+    // Before the hp check since this should not care about the power of the
+    // finishing blow
+    if (mons->holiness() == MH_UNDEAD && !mons_is_zombified(mons)
+        && soul_aura(mons->pos())
+        && killer != KILL_RESET
+        && killer != KILL_DISMISSED
+        && killer != KILL_BANISHED)
+    {
+        if (lost_soul_revive(mons))
+            return true;
     }
+
+    if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
+        return false;
 
     // Elyvilon specials.
     if (_ely_protect_ally(mons, killer))
@@ -1042,7 +1054,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
     beam.beam_source  = origin.mindex();
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = origin.pos();
-    beam.source_name  = origin.base_name(DESC_BASENAME);
+    beam.source_name  = origin.base_name(DESC_BASENAME, true);
     beam.target       = origin.pos();
     beam.noise_msg    = "You hear an explosion!";
 
@@ -1398,6 +1410,24 @@ static int _destroy_tentacles(monster* head)
     return seen;
 }
 
+static void _end_flayed_effect(monster* mons)
+{
+    if (you.duration[DUR_FLAYED] && !mons->wont_attack()
+        && cell_see_cell(mons->pos(), you.pos(), LOS_DEFAULT))
+    {
+        heal_flayed_effect(&you);
+    }
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(mons, *mi)
+            && cell_see_cell(mons->pos(), mi->pos(), LOS_DEFAULT))
+        {
+            heal_flayed_effect(*mi);
+        }
+    }
+}
+
 static string _killer_type_name(killer_type killer)
 {
     switch (killer)
@@ -1539,6 +1569,10 @@ int monster_die(monster* mons, killer_type killer,
 
     // ... and liquefiers.
     mons->del_ench(ENCH_LIQUEFYING);
+
+    // Clean up any blood from the flayed effect
+    if (mons->has_ench(ENCH_FLAYED))
+        heal_flayed_effect(mons, true, true);
 
     crawl_state.inc_mon_acting(mons);
 
@@ -2413,7 +2447,23 @@ int monster_die(monster* mons, killer_type killer,
             phoenix_died(mons);
     }
     else if (mons->type == MONS_VAULT_WARDEN)
-        timeout_door_seals(0, true);
+        timeout_terrain_changes(0, true);
+    else if (mons->type == MONS_FLAYED_GHOST)
+        _end_flayed_effect(mons);
+    else if (mons->type == MONS_PLAGUE_SHAMBLER && !was_banished
+             && !mons->pacified() && (!summoned || duration > 0) && !wizard)
+    {
+        if (you.can_see(mons))
+            mprf("Miasma billows from the fallen %s!", mons->name(DESC_PLAIN).c_str());
+
+        map_cloud_spreader_marker *marker =
+            new map_cloud_spreader_marker(mons->pos(), CLOUD_MIASMA, 10,
+                                          18 + random2(7), 4, 8, mons);
+        // Start the cloud at radius 1, regardless of the speed of the killing blow
+        marker->speed_increment -= you.time_taken;
+        env.markers.add(marker);
+        env.markers.clear_need_activate();
+    }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())
@@ -2500,10 +2550,21 @@ int monster_die(monster* mons, killer_type killer,
     // Likewise silence and umbras
     if (mons->type == MONS_SILENT_SPECTRE
         || mons->type == MONS_PROFANE_SERVITOR
-        || mons->type == MONS_MOTH_OF_SUPPRESSION)
+        || mons->type == MONS_MOTH_OF_SUPPRESSION
+        || mons->type == MONS_LOST_SOUL)
     {
         invalidate_agrid();
     }
+
+    // Done before items are dropped so that we can clone them
+    if (soul_aura(mons->pos()) && mons->holiness() == MH_NATURAL
+        && killer != KILL_RESET
+        && killer != KILL_DISMISSED
+        && killer != KILL_BANISHED)
+    {
+        lost_soul_spectralize(mons);
+    }
+
     const coord_def mwhere = mons->pos();
     if (drop_items)
         monster_drop_things(mons, YOU_KILL(killer) || pet_kill);
@@ -2660,6 +2721,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons->holiness()
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
+        || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
@@ -2759,7 +2821,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
-                           | MF_SPELLCASTER);
+                           | MF_MELEE_MASK | MF_SPELL_MASK);
 
     string name;
 
@@ -3749,21 +3811,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
         break;
 
-    case CLOUD_GREY_SMOKE:
-        if (placement)
-            return false;
-
-        // This isn't harmful, but dumb critters might think so.
-        if (mons_intel(mons) > I_ANIMAL || coinflip())
-            return false;
-
-        if (mons->res_fire() > 0)
-            return false;
-
-        if (mons->hit_points >= random2avg(19, 2))
-            return false;
-        break;
-
     case CLOUD_RAIN:
         // Fiery monsters dislike the rain.
         if (mons->is_fiery() && extra_careful)
@@ -3801,6 +3848,17 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         if (mons_intel(mons) >= I_ANIMAL)
             return true;
+        break;
+
+    case CLOUD_GHOSTLY_FLAME:
+        if (mons->res_negative_energy() > 2)
+            return false;
+
+        if (extra_careful)
+            return true;
+
+        if (mons->hit_points >= random2avg(25, 3))
+            return false;
         break;
 
     default:
@@ -4490,6 +4548,12 @@ string summoned_poof_msg(const monster* mons, bool plural)
             no_chaos = true;
         }
         break;
+
+    case SPELL_GHOSTLY_FLAMES:
+    case SPELL_CALL_LOST_SOUL:
+        msg = "fades away";
+        break;
+
     }
 
     if (valid_mon)

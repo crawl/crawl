@@ -1740,12 +1740,13 @@ static bool _add_connecting_escape_hatches()
     if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         return true;
 
+    // Veto D:1 or Pan if there are disconnected areas.
+    if (player_in_branch(BRANCH_PANDEMONIUM)
+        || (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1))
+        return (dgn_count_disconnected_zones(false) == 1);
+
     if (!player_in_connected_branch())
         return true;
-
-    // Veto D:1 if there are disconnected areas.
-    if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1)
-        return (dgn_count_disconnected_zones(false) == 1);
 
     if (at_branch_bottom())
         return (dgn_count_disconnected_zones(true) == 0);
@@ -2304,12 +2305,12 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
         _place_traps();
 
-        // Place items.
-        _builder_items();
-
         // Place monsters.
         if (!crawl_state.game_is_zotdef())
             _builder_monsters();
+
+        // Place items.
+        _builder_items();
 
         _fixup_walls();
     }
@@ -2429,6 +2430,55 @@ static void _prepare_water()
     }
 }
 
+static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
+{
+    if (!vault->has_tag_prefix("layout_"))
+        return true;
+
+    ASSERT(layout->has_tag_prefix("layout_type_"));
+
+    vector<string> tags = layout->get_tags();
+
+    for (unsigned int i = 0; i < tags.size(); i++)
+    {
+        if (starts_with(tags[i], "layout_type_"))
+        {
+            string type = strip_tag_prefix(tags[i], "layout_type_");
+            if (vault->has_tag("layout_" + type))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+static const map_def *_pick_layout(const map_def *vault)
+{
+    const map_def *layout = NULL;
+
+    // This is intended for use with primary vaults, so...
+    ASSERT(vault);
+
+    // For centred maps, try to pick a central-type layout first.
+    if (vault->orient == MAP_CENTRE)
+        layout = random_map_for_tag("central", true, true);
+
+    int tries = 100;
+
+    if (!layout)
+    {
+        do
+        {
+             layout = random_map_for_tag("layout", true, true);
+             tries--;
+        }
+        while (layout->has_tag("no_primary_vault")
+               || (tries > 10 && !_vault_can_use_layout(vault, layout)));
+    }
+
+    return layout;
+}
+
 static bool _pan_level()
 {
     const char *pandemon_level_names[] =
@@ -2436,6 +2486,16 @@ static bool _pan_level()
     int which_demon = -1;
     PlaceInfo &place_info = you.get_place_info();
     bool all_demons_generated = true;
+
+    if (you.props.exists("force_map"))
+    {
+        const map_def *vault =
+            find_map_by_name(you.props["force_map"].get_string());
+        ASSERT(vault);
+
+        _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+        return (vault->orient != MAP_ENCOMPASS);
+    }
 
     for (int i = 0; i < 4; i++)
     {
@@ -2480,10 +2540,7 @@ static bool _pan_level()
         }
         else
         {
-            const map_def *layout;
-            do
-                layout = random_map_for_tag("layout", true, true);
-            while (layout->has_tag("no_primary_vault"));
+            const map_def *layout = _pick_layout(vault);
 
             _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
 
@@ -2550,28 +2607,25 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     if (you.props.exists("force_map"))
         vault = find_map_by_name(you.props["force_map"].get_string());
-    else if (!crawl_state.game_is_zotdef())
+    else if (lid.branch == root_branch && lid.depth == 1
+        && (crawl_state.game_is_sprint()
+            || crawl_state.game_is_zotdef()
+            || crawl_state.game_is_tutorial()))
     {
-        // Don't want PLACE: Zot:1 vaults in ZotDef.
-        vault = random_map_for_place(lid, minivault);
+        vault = find_map_by_name(crawl_state.map);
+        if (vault == NULL)
+        {
+            end(1, false, "Couldn't find selected map '%s'.",
+                crawl_state.map.c_str());
+        }
     }
 
+    if (!vault)
+        // Pick a normal map
+        vault = random_map_for_place(lid, minivault);
+
     if (!vault && lid.branch == root_branch && lid.depth == 1)
-    {
-        if (crawl_state.game_is_sprint()
-            || crawl_state.game_is_zotdef()
-            || crawl_state.game_is_tutorial())
-        {
-            vault = find_map_by_name(crawl_state.map);
-            if (vault == NULL)
-            {
-                end(1, false, "Couldn't find selected map '%s'.",
-                    crawl_state.map.c_str());
-            }
-        }
-        else
-            vault = random_map_for_tag("entry");
-    }
+        vault = random_map_for_tag("entry");
 
     return vault;
 }
@@ -3546,6 +3600,44 @@ static void _place_aquatic_monsters()
     }
 }
 
+// For Crypt, adds a bunch of skeletons and zombies that do not respect
+// absdepth (and thus tend to be varied and include several types that
+// would not otherwise spawn there).
+static void _place_assorted_zombies()
+{
+    int num_zombies = random_range(6, 12, 3);
+    for (int i = 0; i < num_zombies; ++i)
+    {
+        bool skel = coinflip();
+        monster_type z_base;
+        do
+            z_base = pick_random_zombie();
+        while (skel && !mons_skeleton(z_base));
+
+        mgen_data mg;
+        mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
+        mg.base_type = z_base;
+        mg.behaviour              = BEH_SLEEP;
+        mg.map_mask              |= MMT_NO_MONS;
+        mg.preferred_grid_feature = DNGN_FLOOR;
+
+        place_monster(mg);
+    }
+}
+
+static void _place_lost_souls()
+{
+    int nsouls = random2avg(you.depth + 2, 3);
+    for (int i = 0; i < nsouls; ++i)
+    {
+        mgen_data mg;
+        mg.cls = MONS_LOST_SOUL;
+        mg.behaviour              = BEH_HOSTILE;
+        mg.preferred_grid_feature = DNGN_FLOOR;
+        place_monster(mg);
+    }
+}
+
 bool door_vetoed(const coord_def pos)
 {
     return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
@@ -3591,6 +3683,11 @@ static void _builder_monsters()
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
+    else
+    {
+        _place_assorted_zombies();
+        _place_lost_souls();
+    }
 }
 
 static void _builder_items()
@@ -3944,6 +4041,20 @@ _build_vault_impl(const map_def *vault,
 #endif
 
     const bool is_layout = place.map.is_overwritable_layout();
+
+    if (is_layout && place.map.has_tag_prefix("layout_type_"))
+    {
+        vector<string> tag_list = place.map.get_tags();
+        for (unsigned int i = 0; i < tag_list.size(); i++)
+        {
+            if (starts_with(tag_list[i], "layout_type_"))
+            {
+                env.level_layout_types.insert(
+                    strip_tag_prefix(tag_list[i], "layout_type_"));
+            }
+        }
+    }
+
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout))
@@ -3981,12 +4092,7 @@ _build_vault_impl(const map_def *vault,
 
 static void _build_postvault_level(vault_placement &place)
 {
-    // Does this level require Dis treatment (metal wallification)?
-    // XXX: Change this so the level definition can explicitly state what
-    // kind of wallification it wants.
-    if (place.map.has_tag("dis"))
-        dgn_build_chaotic_city_level(DNGN_METAL_WALL);
-    else if (player_in_branch(BRANCH_SPIDER_NEST))
+    if (player_in_branch(BRANCH_SPIDER_NEST))
     {
         int ngb_min = 2;
         int ngb_max = random_range(3, 8);
@@ -4001,25 +4107,28 @@ static void _build_postvault_level(vault_placement &place)
     }
     else
     {
-        const map_def* layout = random_map_for_tag("layout", true, true);
+        const map_def* layout = _pick_layout(&place.map);
         ASSERT(layout);
         _build_secondary_vault(layout, false);
     }
 }
 
-static const object_class_type _acquirement_item_classes[] =
+static object_class_type _acquirement_object_class()
 {
-    OBJ_JEWELLERY,
-    OBJ_BOOKS,
-    OBJ_MISCELLANY,
-    OBJ_WEAPONS,
-    OBJ_ARMOUR,
-    OBJ_WANDS,
-    OBJ_STAVES,
-};
+    static const object_class_type classes[] =
+    {
+        OBJ_JEWELLERY,
+        OBJ_BOOKS,
+        OBJ_MISCELLANY, // Felids stop here
+        OBJ_WEAPONS,
+        OBJ_ARMOUR,
+        OBJ_WANDS,
+        OBJ_STAVES,
+    };
 
-#define NC_KITTEHS           3
-#define NC_LESSER_LIFE_FORMS ARRAYSZ(_acquirement_item_classes)
+    const int nc = (you.species == SP_FELID) ? 3 : ARRAYSZ(classes);
+    return classes[random2(nc)];
+}
 
 static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
@@ -4177,6 +4286,19 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     return true;
 }
 
+static object_class_type _superb_object_class()
+{
+    return random_choose_weighted(
+            20, OBJ_WEAPONS,
+            10, OBJ_ARMOUR,
+            10, OBJ_JEWELLERY,
+            10, OBJ_BOOKS,
+            9, OBJ_STAVES,
+            1, OBJ_RODS,
+            10, OBJ_MISCELLANY,
+            0);
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level)
@@ -4195,7 +4317,7 @@ int dgn_place_item(const item_spec &spec,
         level = spec.level;
     else
     {
-        bool adjust_type = true;
+        bool adjust_type = false;
         switch (spec.level)
         {
         case ISPEC_DAMAGED:
@@ -4207,13 +4329,14 @@ int dgn_place_item(const item_spec &spec,
             level = 5 + level * 2;
             break;
         case ISPEC_SUPERB:
+            adjust_type = true;
             level = MAKE_GOOD_ITEM;
             break;
         case ISPEC_ACQUIREMENT:
+            adjust_type = true;
             acquire = true;
             break;
         default:
-            adjust_type = false;
             break;
         }
 
@@ -4221,9 +4344,8 @@ int dgn_place_item(const item_spec &spec,
             base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
-            base_type = _acquirement_item_classes[random2(
-                            you.species == SP_FELID ? NC_KITTEHS :
-                            NC_LESSER_LIFE_FORMS)];
+            base_type = acquire ? _acquirement_object_class()
+                                : _superb_object_class();
         }
     }
 
@@ -4775,15 +4897,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
             which_class = OBJ_GOLD;
         else if (vgrid == '|')
         {
-            which_class = random_choose_weighted(
-                            20, OBJ_WEAPONS,
-                            10, OBJ_ARMOUR,
-                            10, OBJ_JEWELLERY,
-                            10, OBJ_BOOKS,
-                             9, OBJ_STAVES,
-                             1, OBJ_RODS,
-                            10, OBJ_MISCELLANY,
-                             0);
+            which_class = _superb_object_class();
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
@@ -5009,7 +5123,8 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
             path.push_back(curr);
 
         const int dist = travel_point_distance[curr.x][curr.y];
-        ASSERT(dist < 0 && dist != -1000);
+        ASSERT(dist < 0);
+        ASSERT(dist != -1000);
         curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
     }
     if (!map_masked(curr, mapmask))
@@ -5071,7 +5186,6 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
 static dungeon_feature_type _pick_an_altar()
 {
     god_type god;
-    int temp_rand;              // probability determination {dlb}
 
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || player_in_branch(BRANCH_LABYRINTH))
@@ -5089,50 +5203,36 @@ static dungeon_feature_type _pick_an_altar()
             break;
 
         case BRANCH_DWARVEN_HALL:
-            temp_rand = random2(7);
-
-            god = ((temp_rand == 0) ? GOD_KIKUBAAQUDGHA :
-                   (temp_rand == 1) ? GOD_YREDELEMNUL :
-                   (temp_rand == 2) ? GOD_MAKHLEB :
-                   (temp_rand == 3) ? GOD_TROG :
-                   (temp_rand == 4) ? GOD_CHEIBRIADOS:
-                   (temp_rand == 5) ? GOD_ELYVILON
-                                    : GOD_OKAWARU);
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL,
+                                GOD_MAKHLEB,       GOD_TROG,
+                                GOD_CHEIBRIADOS,   GOD_ELYVILON,
+                                GOD_OKAWARU,       -1);
             break;
 
-        case BRANCH_ORCISH_MINES:    // violent gods
-            temp_rand = random2(10); // 50% chance of Beogh
-
-            god = ((temp_rand == 0) ? GOD_VEHUMET :
-                   (temp_rand == 1) ? GOD_MAKHLEB :
-                   (temp_rand == 2) ? GOD_OKAWARU :
-                   (temp_rand == 3) ? GOD_TROG :
-                   (temp_rand == 4) ? GOD_XOM
-                                    : GOD_BEOGH);
+        case BRANCH_ORCISH_MINES: // violent gods (50% chance of Beogh)
+            if (coinflip())
+                god = GOD_BEOGH;
+            else
+                god = random_choose(GOD_VEHUMET, GOD_MAKHLEB, GOD_OKAWARU,
+                                    GOD_TROG,    GOD_XOM,     -1);
             break;
 
-        case BRANCH_VAULTS: // "lawful" gods
-            temp_rand = random2(7);
-
-            god = ((temp_rand == 0) ? GOD_ELYVILON :
-                   (temp_rand == 1) ? GOD_SIF_MUNA :
-                   (temp_rand == 2) ? GOD_SHINING_ONE :
-                   (temp_rand == 3
-                       || temp_rand == 4) ? GOD_OKAWARU
-                                          : GOD_ZIN);
+        case BRANCH_VAULTS: // lawful gods
+            god = random_choose_weighted(2, GOD_OKAWARU,
+                                         2, GOD_ZIN,
+                                         1, GOD_ELYVILON,
+                                         1, GOD_SIF_MUNA,
+                                         1, GOD_SHINING_ONE,
+                                         0);
             break;
 
         case BRANCH_HALL_OF_BLADES:
             god = GOD_OKAWARU;
             break;
 
-        case BRANCH_ELVEN_HALLS:    // "magic" gods
-            temp_rand = random2(4);
-
-            god = ((temp_rand == 0) ? GOD_VEHUMET :
-                   (temp_rand == 1) ? GOD_SIF_MUNA :
-                   (temp_rand == 2) ? GOD_XOM
-                                    : GOD_MAKHLEB);
+        case BRANCH_ELVEN_HALLS: // magic gods
+            god = random_choose(GOD_VEHUMET, GOD_SIF_MUNA, GOD_XOM,
+                                GOD_MAKHLEB, -1);
             break;
 
         case BRANCH_SLIME_PITS:
@@ -5156,17 +5256,10 @@ static dungeon_feature_type _pick_an_altar()
     else
     {
         // Note: this case includes Pandemonium or the Abyss.
-        temp_rand = random2(9);
-
-        god = ((temp_rand == 0) ? GOD_ZIN :
-               (temp_rand == 1) ? GOD_SHINING_ONE :
-               (temp_rand == 2) ? GOD_KIKUBAAQUDGHA :
-               (temp_rand == 3) ? GOD_XOM :
-               (temp_rand == 4) ? GOD_OKAWARU :
-               (temp_rand == 5) ? GOD_MAKHLEB :
-               (temp_rand == 6) ? GOD_SIF_MUNA :
-               (temp_rand == 7) ? GOD_TROG
-                                : GOD_ELYVILON);
+        god = random_choose(GOD_ZIN,      GOD_SHINING_ONE, GOD_KIKUBAAQUDGHA,
+                            GOD_XOM,      GOD_OKAWARU,     GOD_MAKHLEB,
+                            GOD_SIF_MUNA, GOD_TROG,        GOD_ELYVILON,
+                            -1);
     }
 
     if (is_unavailable_god(god))

@@ -417,7 +417,10 @@ void mark_had_book(const item_def &book)
     }
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
-        ASSERT(book.plus > 0 && book.plus <= 9); // book's level
+    {
+        ASSERT(book.plus > 0);
+        ASSERT(book.plus <= 9); // book's level
+    }
 
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(book.book_number());
@@ -425,7 +428,8 @@ void mark_had_book(const item_def &book)
 
 void mark_had_book(int booktype)
 {
-    ASSERT(booktype >= 0 && booktype <= MAX_FIXED_BOOK);
+    ASSERT(booktype >= 0);
+    ASSERT(booktype <= MAX_FIXED_BOOK);
 
     you.had_book.set(booktype);
 }
@@ -1123,7 +1127,7 @@ bool can_learn_spell(bool silent)
     if (you.confused())
     {
         if (!silent)
-            mpr("You are too confused!");
+            canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 
@@ -1290,8 +1294,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
 
     if (del_spell_from_memory(spell))
     {
-        item_was_destroyed(*book);
-        destroy_spellbook(*book);
+        item_was_destroyed(*book, MHITYOU);
         dec_inv_item_quantity(book->link, 1);
         you.turn_is_over = true;
         return true;
@@ -1463,7 +1466,8 @@ static bool _compare_spells(spell_type a, spell_type b)
             if (b_type == NULL && (schools_b & mask))
                 b_type = spelltype_long_name(mask);
         }
-        ASSERT(a_type != NULL && b_type != NULL);
+        ASSERT(a_type != NULL);
+        ASSERT(b_type != NULL);
         return (strcmp(a_type, b_type) < 0);
     }
 
@@ -1624,7 +1628,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
         level = random_range(1, max_level);
     }
-    ASSERT(level > 0 && level <= 9);
+    ASSERT(level > 0);
+    ASSERT(level <= 9);
 
     if (num_spells == -1)
     {
@@ -1632,7 +1637,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         num_spells = min(5 + (level - 1)/3, 18 - 2*level);
         num_spells = max(1, num_spells);
     }
-    ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
+    ASSERT(num_spells > 0);
+    ASSERT(num_spells <= SPELLBOOK_SIZE);
 
     book.plus  = level;
     book.plus2 = num_spells;
@@ -1922,7 +1928,8 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
                                  spell_type chosen_spells[])
 {
     ASSERT(num_spells <= (int) spells.size());
-    ASSERT(num_spells <= SPELLBOOK_SIZE && num_spells > 0);
+    ASSERT(num_spells <= SPELLBOOK_SIZE);
+    ASSERT(num_spells > 0);
     ASSERT(max_levels > 0);
 
     int spell_weights[NUM_SPELLS];
@@ -2111,7 +2118,8 @@ bool make_book_theme_randart(item_def &book,
 
     if (num_spells == -1)
         num_spells = SPELLBOOK_SIZE;
-    ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
+    ASSERT(num_spells > 0);
+    ASSERT(num_spells <= SPELLBOOK_SIZE);
 
     if (max_levels == -1)
         max_levels = 255;
@@ -2560,10 +2568,7 @@ void destroy_spellbook(const item_def &book)
         maxlevel = max(maxlevel, spell_difficulty(stype));
     }
 
-    god_type god;
-    // The known boolean is being used to double penance when the destroyed
-    // book is a gift of Sif Muna or it contains its name in its title
-    did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5,
-                    origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA
-                    || book.name(DESC_PLAIN).find("Sif Muna") != string::npos);
+    did_god_conduct(DID_DESTROY_SPELLBOOK,
+                    maxlevel + 5 *
+                    (origin_is_god_gift(book) ? 2 : 1));
 }

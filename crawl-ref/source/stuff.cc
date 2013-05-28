@@ -419,6 +419,9 @@ void canned_msg(canned_message_type which_message)
         mpr("You are too berserk!");
         crawl_state.cancel_cmd_repeat();
         break;
+    case MSG_TOO_CONFUSED:
+        mpr("You're too confused!");
+        break;
     case MSG_PRESENT_FORM:
         mpr("You can't do that in your present form.");
         crawl_state.cancel_cmd_repeat();
@@ -483,10 +486,10 @@ void canned_msg(canned_message_type which_message)
         mpr("You don't know any spells.");
         break;
     case MSG_MANA_INCREASE:
-        mpr("You feel your mana capacity increase.");
+        mpr("You feel your magic capacity increase.");
         break;
     case MSG_MANA_DECREASE:
-        mpr("You feel your mana capacity decrease.");
+        mpr("You feel your magic capacity decrease.");
         break;
     case MSG_DISORIENTED:
         mpr("You feel momentarily disoriented.");
@@ -756,7 +759,8 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
 
 char index_to_letter(int the_index)
 {
-    ASSERT(the_index >= 0 && the_index < ENDOFPACK);
+    ASSERT(the_index >= 0);
+    ASSERT(the_index < ENDOFPACK);
     return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
 }
 
@@ -773,24 +777,24 @@ int letter_to_index(int the_letter)
 
 maybe_bool frombool(bool b)
 {
-    return (b ? B_TRUE : B_FALSE);
+    return (b ? MB_TRUE : MB_FALSE);
 }
 
 bool tobool(maybe_bool mb)
 {
-    ASSERT(mb != B_MAYBE);
-    return (mb == B_TRUE);
+    ASSERT(mb != MB_MAYBE);
+    return (mb == MB_TRUE);
 }
 
 bool tobool(maybe_bool mb, bool def)
 {
     switch (mb)
     {
-    case B_TRUE:
+    case MB_TRUE:
         return true;
-    case B_FALSE:
+    case MB_FALSE:
         return false;
-    case B_MAYBE:
+    case MB_MAYBE:
     default:
         return def;
     }

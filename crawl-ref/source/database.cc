@@ -732,7 +732,7 @@ static string _query_database(TextDB &db, string key, bool canonicalise_key,
     string str((const char *)result.dptr, result.dsize);
 
     // <foo> is an alias to key foo
-    if (str[0] == '<' and str[str.size() - 2] == '>'
+    if (str[0] == '<' && str[str.size() - 2] == '>'
         && str.find('<', 1) == str.npos
         && str.find('\n') == str.size() - 1)
     {

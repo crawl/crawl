@@ -103,7 +103,7 @@ static const spell_type _xom_tension_spells[] =
     SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
     SPELL_POISON_WEAPON, SPELL_LETHAL_INFUSION, SPELL_EXCRUCIATING_WOUNDS,
     SPELL_WARP_BRAND, SPELL_TUKIMAS_DANCE, SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SUMMON_SMALL_MAMMALS, SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM,
+    SPELL_SUMMON_SMALL_MAMMAL, SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM,
     SPELL_BEASTLY_APPENDAGE, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
     SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_HORRIBLE_THINGS, SPELL_CALL_CANINE_FAMILIAR,
@@ -206,7 +206,8 @@ bool xom_is_nice(int tension)
                                    random2(tension)));
 
         const int effective_piety = you.piety + tension_bonus;
-        ASSERT(effective_piety >= 0 && effective_piety <= MAX_PIETY);
+        ASSERT(effective_piety >= 0);
+        ASSERT(effective_piety <= MAX_PIETY);
 
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
@@ -1060,11 +1061,12 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
     return demon;
 }
 
-static bool _player_is_dead()
+static bool _player_is_dead(bool soon = true)
 {
-    return (you.hp <= 0 || you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0
-            || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
-            || you.did_escape_death());
+    return you.hp <= 0
+        || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
+        || you.did_escape_death()
+        || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
 }
 
 static int _xom_do_potion(bool debug = false)
@@ -1090,8 +1092,7 @@ static int _xom_do_potion(bool debug = false)
         {
         case POT_CURING:
             if (you.duration[DUR_POISONING] || you.rotting || you.disease
-                || you.duration[DUR_CONF] || you.duration[DUR_MISLED]
-                || you.duration[DUR_NAUSEA])
+                || you.duration[DUR_CONF] || you.duration[DUR_MISLED])
             {
                 break;
             }
@@ -2815,7 +2816,8 @@ static void _get_hand_type(string &hand, bool &can_plural)
 static int _xom_miscast(const int max_level, const bool nasty,
                         bool debug = false)
 {
-    ASSERT(max_level >= 0 && max_level <= 3);
+    ASSERT(max_level >= 0);
+    ASSERT(max_level <= 3);
 
     const char* speeches[4] = {
         "zero miscast effect",
@@ -3249,6 +3251,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     // Drains stats or experience, or torments the player.
     const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
+    const string aux = "the vengeance of Xom";
 
     if (coinflip())
     {
@@ -3266,7 +3269,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
             return XOM_DID_NOTHING;
 
         god_speaks(GOD_XOM, speech.c_str());
-        lose_stat(stat, loss, true, "the vengeance of Xom");
+        lose_stat(stat, loss, true, aux.c_str());
 
         // Take a note.
         const char* sstr[3] = { "Str", "Int", "Dex" };
@@ -3287,11 +3290,11 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp();
+            drain_exp(true, NON_MONSTER, aux.c_str());
             if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp();
+                drain_exp(true, NON_MONSTER, aux.c_str());
             if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp();
+                drain_exp(true, NON_MONSTER, aux.c_str());
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
@@ -3829,13 +3832,13 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 #endif
 
-#ifdef WIZARD
-    if (_player_is_dead())
+    if (_player_is_dead(false))
     {
         // This should only happen if the player used wizard mode to
         // escape from death via stat loss, or if the player used wizard
         // mode to escape death from deep water or lava.
-        ASSERT(you.wizard && !you.did_escape_death());
+        ASSERT(you.wizard);
+        ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(grd(you.pos())))
         {
             mpr("Player is standing in deadly terrain, skipping Xom act.",
@@ -3848,9 +3851,8 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         }
         return XOM_PLAYER_DEAD;
     }
-#else
-    ASSERT(!_player_is_dead());
-#endif
+    else if (_player_is_dead())
+        return XOM_PLAYER_DEAD;
 
     sever = max(1, sever);
 

@@ -28,6 +28,10 @@ function sprint_mu_zot_mons_gen(data, triggerable, triggerer, marker, ev)
 
     data.awoke = true
 end
+
+function sprint_mu_set_zot_mon_list()
+    dgn.set_random_mon_list("orb guardian w:30 / moth of wrath")
+end
 }}
 
 ##############################################################################
@@ -1142,8 +1146,7 @@ KMONS: O = col:brown generate_awake statue name:earth_elementalist name_adjectiv
 KMONS: d = col:lightgrey generate_awake statue name:air_elementalist name_adjective hp:25 \
  spells:summon_air_elementals;cantrip \
  tile:mons_air_elementalist_statue
-KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
-       name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
+KMONS: e = ancient champion spells:venom_bolt;.;haste;haunt;.;. actual_spells \
        ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
        battleaxe ego:vorpal | battleaxe ego:pain | \
        w:3 executioner's axe ego:vorpal
@@ -1394,7 +1397,7 @@ KMONS: 3 = patrolling quasit
 KMONS: 4 = patrolling shadow
 KMONS: 5 = patrolling greater mummy
 KMONS: 6 = orange crystal statue
-KMONS: 7 = rotting hulk
+KMONS: 7 = plague shambler
 KMONS: & = gloorx vloq
 NSUBST: & = 1:& / 1:.
 KITEM: 1 = bone rune of zot
@@ -1437,7 +1440,7 @@ NAME: sprint_mu_zot1
 TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror no_dup
 KMONS: T = col:magenta statue name:zot n_adj \
         spells:summon_eyeballs;malmutate;haste;shadow_creatures;\
-        summon_small_mammals;summon_eyeballs hd:30 hp:300 \
+        shadow_creatures;summon_eyeballs hd:30 hp:300 \
         tile:mons_zot_statue
 MARKER: T = lua:fog_machine { \
         pow_max = 15, delay_min = 100, delay_max = 150, \
@@ -1458,7 +1461,7 @@ KMONS: 8 = patrolling frost giant
 KMONS: L = patrolling ancient lich
 KMONS: g = patrolling orb guardian
 KMONS: y = patrolling moth of wrath
-KITEM: % = stone of earth elementals
+KITEM: % = stone of tremors
 {{
 lua_marker("A", portal_desc { spawn_spot = 1 })
 
@@ -1472,7 +1475,15 @@ local mons_gen_marker = TriggerableFunction:new {
     }
 mons_gen_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })
-lua_marker("e", mons_gen_marker) }}
+lua_marker("e", mons_gen_marker)
+
+local mon_list_marker = TriggerableFunction:new {
+    func = "sprint_mu_set_zot_mon_list",
+    repeated = false}
+mon_list_marker:add_triggerer(DgnTriggerer:new {
+    type="player_los"})
+lua_marker('q', mon_list_marker)
+}}
 SUBST: A = ^
 NSUBST: a = 1:+ / *:X
 KFEAT: - = zot trap
@@ -1481,6 +1492,7 @@ KMONS: k = killer klown
 KMONS: A = plant col:magenta
 KMONS: B = plant col:lightmagenta
 SUBST: p = AAB
+SUBST: q = AAB
 COLOUR: X = lightmagenta
 KITEM: $ = orb of zot
 KFEAT: # = closed_door
@@ -1498,7 +1510,7 @@ MARKER: ~ = lua:props_marker({ \
         door_description_prefix="magically reinforced ", \
         veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto", door_restrict="veto" \
         })
-KPROP: X#kp+^ag78yL45il%3x21*To$. = no_rtele_into
+KPROP: X#kpq+^ag78yL45il%3x21*To$. = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXX
 X.+^^^AX..+...X...X
@@ -1506,7 +1518,7 @@ X.X^^^^X.XX.i.X.T.X
 XkX^^^^X55XlllX...X
 XpXaaaaXX4XlllX.X.X
 XpX....X..X...X*X.X
-#pX.gg.X.XX3%3X.X.X
+#qX.gg.X.XX3%3X.X.X
 XXX.78.X..XXxXX.X.X
 X.+..y.XX.X...X.XeX
 X.XXXXXX..X212X.X~X

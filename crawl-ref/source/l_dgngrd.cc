@@ -29,23 +29,24 @@ static int dgn_feature_name(lua_State *ls)
             dungeon_feature_name(static_cast<dungeon_feature_type>(feat)));
 }
 
-static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
+static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx,
+                                             bool optional = false)
 {
     dungeon_feature_type feat = (dungeon_feature_type)0;
     if (lua_isnumber(ls, idx))
         feat = (dungeon_feature_type)luaL_checkint(ls, idx);
     else if (lua_isstring(ls, idx))
         feat = dungeon_feature_by_name(luaL_checkstring(ls, idx));
-    else
+    else if (!optional)
         luaL_argerror(ls, idx, "Feature must be a string or a feature index.");
 
     return feat;
 }
 
-dungeon_feature_type check_lua_feature(lua_State *ls, int idx)
+dungeon_feature_type check_lua_feature(lua_State *ls, int idx, bool optional)
 {
-    const dungeon_feature_type f = _get_lua_feature(ls, idx);
-    if (!f)
+    const dungeon_feature_type f = _get_lua_feature(ls, idx, optional);
+    if (!optional && !f)
         luaL_argerror(ls, idx, "Invalid dungeon feature");
     return f;
 }

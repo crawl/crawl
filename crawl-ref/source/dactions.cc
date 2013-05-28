@@ -228,7 +228,8 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local)
 
 static void _apply_daction(daction_type act)
 {
-    ASSERT(act >= 0 && act < NUM_DACTIONS);
+    ASSERT(act >= 0);
+    ASSERT(act < NUM_DACTIONS);
     dprf("applying delayed action: %s", daction_names[act]);
 
     switch (act)

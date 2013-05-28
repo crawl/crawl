@@ -62,8 +62,8 @@ enum kill_method_type
 
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam = 0, bool doEffects = true);
-void splash_with_acid(int acid_strength, bool corrode_items = true,
-                      string hurt_msg = "");
+void splash_with_acid(int acid_strength, int death_source,
+                      bool corrode_items = true, string hurt_msg = "");
 
 class actor;
 int actor_to_death_source(const actor* agent);
@@ -75,8 +75,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux = NULL, bool see_source = true,
           const char *death_source_name = NULL);
 
-void lose_level(void);
-bool drain_exp(bool announce_full = true);
+void lose_level(int death_source, const char* aux);
+bool drain_exp(bool announce_full = true, int death_source = NON_MONSTER,
+               const char *aux = NULL);
 
 bool expose_items_to_element(beam_type flavour, const coord_def& where,
                              int strength = 0);

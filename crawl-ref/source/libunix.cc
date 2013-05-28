@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <term.h>
 #define _LIBUNIX_IMPLEMENTATION
 #include "libunix.h"
 #include "defines.h"
@@ -384,6 +385,18 @@ int unixcurses_get_vi_key(int keyin)
     case KEY_SLEFT:  return 'H';
     case KEY_SRIGHT: return 'L';
     case KEY_BTAB:   return CK_SHIFT_TAB;
+    case KEY_BACKSPACE:
+        // If terminfo's entry for backspace (kbs) is ctrl-h, curses
+        // generates KEY_BACKSPACE for the ctrl-h key.  Work around that by
+        // converting back to CK_BKSP.
+        // Note that this mangling occurs entirely on the machine Crawl runs
+        // on (and even within crawl's process) rather than where the user's
+        // terminal is, so this check is reliable.
+        static const char * const kbs = tigetstr("kbs");
+        static const int bskey = (kbs && kbs != (const char *) -1
+                                      && kbs == string("\010")) ? CK_BKSP
+                                                                : KEY_BACKSPACE;
+        return bskey;
     }
     return keyin;
 }
@@ -825,6 +838,7 @@ void delay(unsigned int time)
 #ifdef USE_TILE_WEB
     tiles.redraw();
     tiles.send_message("{\"msg\":\"delay\",\"t\":%d}", time);
+    tiles.flush_messages();
 #endif
 
     refresh();

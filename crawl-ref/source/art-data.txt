@@ -192,7 +192,7 @@ BRAND:   SPWPN_CHAOS
 NAME:    Glaive of Prune
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
 PLUS:    +4/+12
-COLOUR:  MAGENTA
+COLOUR:  LIGHTMAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 VALUE:   1000
@@ -351,7 +351,7 @@ BOOL:    life, seeinv
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +13/+4
-COLOUR:  MAGENTA
+COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRICISM
@@ -509,7 +509,7 @@ STR:     2
 MAGIC:   30
 
 NAME:     Elemental Staff
-OBJ:      OBJ_WEAPONS/WPN_STAFF
+OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:     +3/+1
 COLOUR:   DARKGREY
 TILE:     urand_elemental
@@ -703,7 +703,7 @@ MAGIC:    50
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     -5
-COLOUR:   MAGENTA
+COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       -4
@@ -735,14 +735,13 @@ STEALTH:  80
 BOOL:     inv
 
 ENUM:    LEAR
-NAME:    Lear's chain mail
+NAME:    Lear's hauberk
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
-PLUS:    -1
+PLUS:    27
 COLOUR:  ETC_GOLD
 TILE:    urand_lear
 TILE_EQ: lears_chain_mail
-DEX:     -3
-BOOL:    cursed, nospell, randapp, unided
+BOOL:    special
 
 NAME:    skin of Zhor
 OBJ:     OBJ_ARMOUR/ARM_ANIMAL_SKIN
@@ -835,7 +834,7 @@ MAGIC:   50
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
 PLUS:    +2
-COLOUR:  MAGENTA
+COLOUR:  LIGHTMAGENTA
 TILE:    urand_alchemist
 TILE_EQ: turban_purple
 FIRE:    1

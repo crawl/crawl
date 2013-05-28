@@ -1388,7 +1388,8 @@ void elyvilon_purification()
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
-    you.duration[DUR_NAUSEA] = 0;
+    you.duration[DUR_RETCHING] = 0;
+    you.duration[DUR_WEAK] = 0;
     restore_stat(STAT_ALL, 0, false);
     unrot_hp(9999);
 }
@@ -1480,8 +1481,12 @@ bool trog_burn_spellbooks()
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
     {
+        // This code has been rearranged a bit from its original form so that
+        // with the new handling of spellbook destruction god conducts, the
+        // message order "The spellbook bursts into flames! Trog is delighted!"
+        // is preserved.
         const unsigned short cloud = env.cgrid(*ri);
-        int count = 0;
+        vector<int> targets;
         int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
         {
@@ -1517,14 +1522,14 @@ bool trog_burn_spellbooks()
             rarity += book_rarity(si->sub_type);
 
             dprf("Burned spellbook rarity: %d", rarity);
-            destroy_spellbook(*si);
-            item_was_destroyed(*si);
-            destroy_item(si.link());
-            count++;
+
+            targets.push_back(si.link());
         }
 
-        if (count)
+        if (targets.size())
         {
+            const int count = targets.size();
+
             if (cloud != EMPTY_CLOUD)
             {
                 // Reinforce the cloud.
@@ -1532,23 +1537,31 @@ bool trog_burn_spellbooks()
                 const int extra_dur = count + random2(rarity / 2);
                 env.cloud[cloud].decay += extra_dur * 5;
                 env.cloud[cloud].set_whose(KC_YOU);
-                continue;
+            }
+            else
+            {
+                mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
+                     count == 1 ? ""  : "s",
+                     count == 1 ? "s" : "");
             }
 
-            const int duration = min(4 + count + random2(rarity/2), 23);
-            place_cloud(CLOUD_FIRE, *ri, duration, &you);
+            for (vector<int>::iterator it = targets.begin();
+                 it != targets.end(); it++)
+            {
+                item_was_destroyed(mitm[*it], MHITYOU);
+                destroy_item(*it);
+            }
 
-            mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
-                 count == 1 ? ""  : "s",
-                 count == 1 ? "s" : "");
+            if (cloud == EMPTY_CLOUD)
+            {
+                const int duration = min(4 + count + random2(rarity/2), 23);
+                place_cloud(CLOUD_FIRE, *ri, duration, &you);
+            }
         }
     }
 
     if (totalpiety)
-    {
-        simple_god_message(" is delighted!", GOD_TROG);
-        gain_piety(totalpiety);
-    }
+        ; // Handled by destroy_item now.
     else if (totalblocked)
     {
         mprf("The spellbook%s fail%s to ignite!",
@@ -1661,51 +1674,6 @@ void yred_animate_remains_or_dead()
     }
 }
 
-void yred_drain_life()
-{
-    mpr("You draw life from your surroundings.");
-
-    flash_view(DARKGREY);
-    more();
-    mesclr();
-
-    const int pow = you.skill_rdiv(SK_INVOCATIONS);
-    const int hurted = 3 + random2(7) + random2(pow);
-    int hp_gain = 0;
-
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
-    {
-        if (mi->res_negative_energy())
-            continue;
-
-        if (mi->wont_attack())
-            continue;
-
-        mprf("You draw life from %s.",
-             mi->name(DESC_THE).c_str());
-
-        behaviour_event(*mi, ME_WHACK, &you, you.pos());
-
-        mi->hurt(&you, hurted);
-
-        if (mi->alive())
-            print_wounds(*mi);
-
-        if (!mi->is_summoned())
-            hp_gain += hurted;
-    }
-
-    hp_gain /= 2;
-
-    hp_gain = min(pow * 2, hp_gain);
-
-    if (hp_gain)
-    {
-        mpr("You feel life flooding into your body.");
-        inc_hp(hp_gain);
-    }
-}
-
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mons_enslaved_body_and_soul(mon));
@@ -1747,7 +1715,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     }
 
     mon->colour = ETC_UNHOLY;
-    mon->speed  = mons_class_base_speed(mon->base_monster);
 
     mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
@@ -1893,7 +1860,7 @@ bool kiku_take_corpse()
         if (item_is_stationary(item))
             continue;
 
-        item_was_destroyed(item);
+        item_was_destroyed(item, MHITYOU);
         destroy_item(i);
         return true;
     }
@@ -2068,7 +2035,7 @@ int fedhas_fungal_bloom()
                     turn_corpse_into_skeleton(*j);
                 else
                 {
-                    item_was_destroyed(*j);
+                    item_was_destroyed(*j, MHITYOU);
                     destroy_item(j->index());
                 }
 
@@ -2812,7 +2779,7 @@ int fedhas_corpse_spores(beh_type attitude, bool interactive)
             turn_corpse_into_skeleton(*positions[i]);
         else
         {
-            item_was_destroyed(*positions[i]);
+            item_was_destroyed(*positions[i], MHITYOU);
             destroy_item(positions[i]->index());
         }
     }

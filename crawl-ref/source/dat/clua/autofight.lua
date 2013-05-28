@@ -151,7 +151,10 @@ local function get_monster_info(dx,dy,no_move)
 end
 
 local function compare_monster_info(m1, m2)
-  flag_order = {"can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat", "orc_priest_wizard"}
+  flag_order = autofight_flag_order
+  if flag_order == nil then
+    flag_order = {"can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat", "orc_priest_wizard"}
+  end
   for i,flag in ipairs(flag_order) do
     if m1[flag] > m2[flag] then
       return true

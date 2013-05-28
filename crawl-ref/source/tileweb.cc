@@ -164,13 +164,10 @@ void TilesFramework::write_message(const char *format, ...)
 
     va_list  argp;
     va_start(argp, format);
-    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) >= (int)sizeof(buf))
-    {
-        if (len == -1)
-            die("Webtiles message format error! (%s)", format);
-        else
-            die("Webtiles message too long! (%d)", len);
-    }
+    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) < 0)
+        die("Webtiles message format error! (%s)", format);
+    else if (len >= (int)sizeof(buf))
+        die("Webtiles message too long! (%d)", len);
     va_end(argp);
 
     m_msg_buf.append(buf);
@@ -228,7 +225,8 @@ void TilesFramework::send_message(const char *format, ...)
 
     va_list  argp;
     va_start(argp, format);
-    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) >= (int)sizeof(buf))
+    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) >= (int)sizeof(buf)
+        || len == -1)
     {
         if (len == -1)
             die("Webtiles message format error! (%s)", format);
@@ -240,6 +238,11 @@ void TilesFramework::send_message(const char *format, ...)
     m_msg_buf.append(buf);
 
     finish_message();
+}
+
+void TilesFramework::flush_messages()
+{
+    send_message("*{\"msg\":\"flush_messages\"}");
 }
 
 void TilesFramework::_await_connection()
@@ -302,7 +305,10 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         c = (int) keycode->number_;
     }
     else if (msgtype == "spectator_joined")
+    {
         _send_everything();
+        flush_messages();
+    }
     else if (msgtype == "menu_scroll")
     {
         JsonWrapper first = json_find_member(obj.node, "first");
@@ -352,7 +358,10 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             FD_SET(m_sock, &fds);
 
             if (block)
+            {
+                tiles.flush_messages();
                 result = select(maxfd + 1, &fds, NULL, NULL, NULL);
+            }
             else
             {
                 timeval timeout;
@@ -443,7 +452,12 @@ void TilesFramework::push_crt_menu(string tag)
 
 bool TilesFramework::is_in_crt_menu()
 {
-    return !m_menu_stack.empty() && m_menu_stack.back().menu == NULL;
+    return is_in_menu(NULL);
+}
+
+bool TilesFramework::is_in_menu(Menu* m)
+{
+    return !m_menu_stack.empty() && m_menu_stack.back().menu == m;
 }
 
 void TilesFramework::pop_menu()
@@ -1007,6 +1021,12 @@ void TilesFramework::_send_cell(const coord_def &gc,
         {
             json_write_name("bg");
             _write_tileidx(next_pc.bg);
+        }
+
+        if (next_pc.cloud != current_pc.cloud)
+        {
+            json_write_name("cloud");
+            _write_tileidx(next_pc.cloud);
         }
 
         if (next_pc.is_bloody != current_pc.is_bloody)

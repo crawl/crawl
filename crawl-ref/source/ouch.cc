@@ -24,6 +24,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
@@ -244,7 +245,10 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             hurted -= (resist * hurted) / 3;
 
         if (doEffects)
-            drain_exp();
+        {
+            drain_exp(true, beam ? beam->beam_source : NON_MONSTER,
+                      !kaux.empty() ? kaux.c_str() : NULL);
+        }
         break;
 
     case BEAM_ICE:
@@ -365,6 +369,27 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
+    case BEAM_GHOSTLY_FLAME:
+    {
+        if (you.holiness() == MH_UNDEAD)
+        {
+            if (doEffects)
+            {
+                you.heal(roll_dice(2, 9));
+                mpr("You are bolstered by the flame.");
+            }
+            hurted = 0;
+        }
+        else
+        {
+            hurted = resist_adjust_damage(&you, flavour,
+                                          you.res_negative_energy(),
+                                          hurted, true);
+            if (hurted < original && doEffects)
+                canned_msg(MSG_YOU_PARTIALLY_RESIST);
+        }
+    }
+
     default:
         break;
     }                           // end switch
@@ -375,7 +400,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     return hurted;
 }
 
-void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message)
+void splash_with_acid(int acid_strength, int death_source, bool corrode_items, string hurt_message)
 {
     int dam = 0;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
@@ -396,6 +421,10 @@ void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message
         }
     }
 
+    // Covers head, hands and feet.
+    if (player_equip_unrand(UNRAND_LEAR))
+        dam = !wearing_cloak;
+
     // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
     // (randomized), Fe 5.  Fur helps only against naked spots.
     const int fur = player_mutation_level(MUT_SHAGGY_FUR);
@@ -414,7 +443,7 @@ void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message
         if (post_res_dam < dam)
             canned_msg(MSG_YOU_RESIST);
 
-        ouch(post_res_dam, NON_MONSTER, KILLED_BY_ACID);
+        ouch(post_res_dam, death_source, KILLED_BY_ACID);
     }
 }
 
@@ -719,13 +748,13 @@ static void _lose_level_abilities()
     }
 }
 
-void lose_level()
+void lose_level(int death_source, const char *aux)
 {
     // Because you.experience is unsigned long, if it's going to be
     // negative, must die straightaway.
     if (you.experience_level == 1)
     {
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
+        ouch(INSTANT_DEATH, death_source, KILLED_BY_DRAINING, aux);
         // Return in case death was canceled via wizard mode
         return;
     }
@@ -735,7 +764,7 @@ void lose_level()
     mprf(MSGCH_WARN,
          "You are now level %d!", you.experience_level);
 
-    ouch(4, NON_MONSTER, KILLED_BY_DRAINING);
+    ouch(4, death_source, KILLED_BY_DRAINING, aux);
     dec_mp(1);
 
     calc_hp();
@@ -759,10 +788,10 @@ void lose_level()
 
     // Kill the player if maxhp <= 0.  We can't just move the ouch() call past
     // dec_max_hp() since it would decrease hp twice, so here's another one.
-    ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
+    ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full)
+bool drain_exp(bool announce_full, int death_source, const char *aux)
 {
     const int protection = player_prot_life();
 
@@ -777,7 +806,7 @@ bool drain_exp(bool announce_full)
     if (you.experience == 0)
     {
         mpr("You are drained of all life!");
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
+        ouch(INSTANT_DEATH, death_source, KILLED_BY_DRAINING, aux);
 
         // Return in case death was escaped via wizard mode.
         return true;
@@ -822,7 +851,7 @@ bool drain_exp(bool announce_full)
 
         dprf("You lose %d experience points.", exp_drained);
 
-        level_change();
+        level_change(death_source, aux);
 
         return true;
     }
@@ -1049,7 +1078,7 @@ static void _place_player_corpse(bool explode)
     corpse.props["ac"].get_int() = you.armour_class();
     mitm[o] = corpse;
 
-    move_item_to_grid(&o, you.pos(), !you.in_water());
+    move_item_to_grid(&o, you.pos(), MHITYOU, !you.in_water());
 }
 
 
@@ -1361,6 +1390,7 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
 // Delete save files on game end.
 static void _delete_files()
 {
+    crawl_state.need_save = false;
     you.save->unlink();
     delete you.save;
     you.save = 0;

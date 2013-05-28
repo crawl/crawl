@@ -822,7 +822,8 @@ static void _print_stats_qv(int y)
     string text;
 
     int q = you.m_quiver->get_fire_item();
-    ASSERT(q >= -1 && q < ENDOFPACK);
+    ASSERT(q >= -1);
+    ASSERT(q < ENDOFPACK);
     if (q != -1 && !fire_warn_if_impossible(true))
     {
         const item_def& quiver = you.inv[q];
@@ -941,7 +942,6 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_MISLED,
         DUR_POISONING,
         STATUS_SICK,
-        DUR_NAUSEA,
         STATUS_ROT,
         STATUS_NET,
         STATUS_CONTAMINATION,
@@ -980,6 +980,11 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SENTINEL_MARK,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
+        DUR_WATER_HOLD,
+        DUR_FLAYED,
+        DUR_RETCHING,
+        DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;
@@ -1227,7 +1232,9 @@ void print_stats(void)
         CPRINTF("XL: ");
         textcolor(HUD_VALUE_COLOUR);
         CPRINTF("%2d ", you.experience_level);
-        if (you.experience_level < 27)
+        if (you.experience_level >= 27)
+            CPRINTF("%10s", "");
+        else
         {
             textcolor(Options.status_caption_colour);
             CPRINTF("Next: ");
@@ -2204,13 +2211,9 @@ static vector<formatted_string> _get_overview_resistances(
     }
     cols.add_formatted(1, buf, false);
 
-    int rctel = player_control_teleport();
-    rctel = allow_control_teleport(true) ? rctel : -1;
     const int rflyi = you.airborne();
     snprintf(buf, sizeof buf,
-             "%sCtrl.Telep.: %s\n"
              "%sFlight     : %s\n",
-             _determine_colour_string(rctel, 1), _itosym1(rctel),
              _determine_colour_string(rflyi, 1), _itosym1(rflyi));
     cols.add_formatted(1, buf, false);
 
@@ -2412,7 +2415,6 @@ static string _status_mut_abilities(int sw)
         DUR_FIRE_SHIELD,
         DUR_POISONING,
         STATUS_SICK,
-        DUR_NAUSEA,
         STATUS_CONTAMINATION,
         STATUS_ROT,
         DUR_CONFUSING_TOUCH,
@@ -2438,6 +2440,10 @@ static string _status_mut_abilities(int sw)
         STATUS_SUPPRESSED,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
+        DUR_FLAYED,
+        DUR_RETCHING,
+        DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
     };
 
     status_info inf;

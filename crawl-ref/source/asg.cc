@@ -16,7 +16,7 @@ uint32_t
 AsgKISS::get_uint32()
 {
     m_lcg = (314527869 * m_lcg + 1234567);
-    m_lfsr = (m_lfsr >> 1) ^ (-(m_lfsr & 1U) & 0xD0000001U);
+    m_lfsr = (m_lfsr >> 1) ^ (-(int32_t)(m_lfsr & 1U) & 0xD0000001U);
 
     if (m_lfsr & 1)
     {

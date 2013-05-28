@@ -454,10 +454,10 @@ robe3
 leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
 leather_armour3
-orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
-orcish_leather_armor2
-elven_leather_armor ARM_LEATHER_ARMOUR_ELF
-elven_leather_armor2
+orcish_leather_armour ARM_LEATHER_ARMOUR_ORC
+orcish_leather_armour2
+elven_leather_armour ARM_LEATHER_ARMOUR_ELF
+elven_leather_armour2
 
 ring_mail1 ARM_RING_MAIL
 ring_mail2
@@ -1074,6 +1074,7 @@ misc_crystal MISC_CRYSTAL_BALL_OF_SEEING UNSEEN_MISC
 misc_fan MISC_AIR_ELEMENTAL_FAN
 misc_lamp MISC_LAMP_OF_FIRE
 misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
+misc_phial MISC_PHIAL_OF_FLOODS
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_EMPTY_EBONY_CASKET

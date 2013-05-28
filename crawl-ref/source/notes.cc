@@ -239,13 +239,13 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Xom revived you";
             break;
         case NOTE_MP_CHANGE:
-            result << "Mana: " << first << "/" << second;
+            result << "Magic: " << first << "/" << second;
             break;
         case NOTE_MAXHP_CHANGE:
             result << "Reached " << first << " max hit points";
             break;
         case NOTE_MAXMP_CHANGE:
-            result << "Reached " << first << " max mana";
+            result << "Reached " << first << " max magic points";
             break;
         case NOTE_XP_LEVEL_CHANGE:
             result << "Reached XP level " << first << ". " << name;
@@ -424,7 +424,8 @@ void Note::check_milestone() const
         // Wizlabs report their milestones on their own.
         if (br != -1 && br != BRANCH_WIZLAB)
         {
-            ASSERT(br >= 0 && br < NUM_BRANCHES);
+            ASSERT(br >= 0);
+            ASSERT(br < NUM_BRANCHES);
             string branch = place_name(packed_place, true, false).c_str();
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);

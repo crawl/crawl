@@ -146,7 +146,7 @@ public:
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
                            MenuEntry *(*procfn)(MenuEntry *me) = NULL,
-                           menu_letter ckey = 'a');
+                           menu_letter ckey = 'a', bool sort = true);
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for

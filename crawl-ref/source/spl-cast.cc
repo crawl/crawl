@@ -537,6 +537,12 @@ static bool _can_cast()
         return false;
     }
 
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot cast spells while unable to breathe!");
+        return false;
+    }
+
     if (you.stat_zero[STAT_INT])
     {
         mpr("You lack the mental capacity to cast spells.");
@@ -705,8 +711,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
-        mpr("There are no visible monsters within range! (Use <w>Z</w> to "
-            "cast anyway.)");
+        mpr("You can't see any susceptible monsters within range! "
+            "(Use <w>Z</w> to cast anyway.)");
 
         if (Options.darken_beyond_range)
         {
@@ -748,6 +754,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
+    const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
@@ -767,7 +774,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     dec_mp(spell_mana(spell));
 
-    if (you.is_undead != US_UNDEAD)
+    if (!staff_energy && you.is_undead != US_UNDEAD)
     {
         const int spellh = spell_hunger(spell);
         if (calc_hunger(spellh) > 0)
@@ -1406,7 +1413,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_liquefaction(powc, fail);
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return cast_refrigeration(powc, false, true, fail);
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_los_attack_spell(spell, powc, &you, true, true, fail);
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(powc, fail);
@@ -1426,8 +1434,8 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_BUTTERFLIES:
         return cast_summon_butterflies(powc, god, fail);
 
-    case SPELL_SUMMON_SMALL_MAMMALS:
-        return cast_summon_small_mammals(powc, god, fail);
+    case SPELL_SUMMON_SMALL_MAMMAL:
+        return cast_summon_small_mammal(powc, god, fail);
 
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
@@ -1529,9 +1537,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_MASS_ABJURATION:
         return cast_mass_abjuration(powc, fail);
-
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return cast_toxic_radiance(powc, false, fail);
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:
