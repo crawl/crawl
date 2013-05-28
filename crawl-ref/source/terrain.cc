@@ -46,6 +46,8 @@
 #include "viewchar.h"
 #include "mapmark.h"
 
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
+
 actor* actor_at(const coord_def& c)
 {
     if (!in_bounds(c))
@@ -1685,8 +1687,8 @@ void nuke_wall(const coord_def& p)
 
     remove_mold(p);
 
-    revert_terrain_to(p, ((grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER
-                                                    : DNGN_FLOOR));
+    _revert_terrain_to(p, ((grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER
+                                                     : DNGN_FLOOR));
     env.level_map_mask(p) |= MMT_NUKED;
 }
 
@@ -1864,7 +1866,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     dungeon_terrain_changed(pos, newfeat, true, false, true);
 }
 
-bool revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
 {
     vector<map_marker*> markers = env.markers.get_markers_at(pos);
 
