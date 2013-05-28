@@ -1180,8 +1180,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
                 "Destroy Deck",
-                "Killed Unique", "Entered New Branch", "Acquired Rune",
-                "Acquired Orb", "Killed God Follower", "Skipped God Follower"
+                "Killed Unique", "Entered New Branch", "Entered New Level",
+                "Acquired Rune",  "Acquired Orb",
+                "Killed God Follower", "Skipped God Follower"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

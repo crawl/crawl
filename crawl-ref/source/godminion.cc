@@ -118,7 +118,6 @@ monster* demigod_build_minion(god_type which_god, int level) {
         MONS_NO_MONSTER,
         0,
         god_colour(which_god),
-        -1,
         PROX_ANYWHERE,
         level_id::current(),
         level,
@@ -266,7 +265,7 @@ int demigod_weight_spell_for_god(god_type god, monster_type mon, spell_type spel
             }
         case GOD_SIF_MUNA:
             // Siffies can still use Conj but it's weighted lower. Otherwise they only use player spells.
-            return is_player_spell(spell) ? (vehumet_supports_spell(spell)) ? 2 : 10) : 0;
+            return is_player_spell(spell) ? (vehumet_supports_spell(spell) ? 2 : 10) : 0;
         case GOD_TROG:
             switch (spell) {
                 case SPELL_TROGS_HAND:

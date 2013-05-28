@@ -221,8 +221,8 @@ public:
   int minion_timer_long;
   int minion_kill_count;
 
-  FixedVector<bool, NUM_FIXED_BOOKS> had_book;
-  FixedVector<bool, NUM_SPELLS>      seen_spell;
+  FixedBitVector<NUM_FIXED_BOOKS> had_book;
+  FixedBitVector<NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
   FixedBitVector<NUM_MISCELLANY>     seen_misc;
