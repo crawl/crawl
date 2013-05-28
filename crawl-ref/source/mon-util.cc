@@ -3464,7 +3464,10 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
 {
     if (grid == DNGN_MALIGN_GATEWAY)
-        return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+    {
+        return (mc == MONS_ELDRITCH_TENTACLE
+                || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+    }
 
     if (_mons_class_habitat(mc) == HT_INCORPOREAL)
         return !feat_is_permarock(grid);
