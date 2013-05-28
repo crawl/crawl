@@ -392,6 +392,10 @@ NAME:   uniq_pan
 DEPTH:  Forest:2-
 : place_unique(_G, "Pan band")
 
+NAME:   uniq_sojobo
+DEPTH:  Forest:2-
+: place_unique(_G, "Sojobo band")
+
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.
 NAME:    uniq_crazy_yiuf_cottage

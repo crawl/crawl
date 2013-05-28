@@ -2538,6 +2538,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3 + random2(4);
         break;
 
+    case MONS_SOJOBO:
+        natural_leader = true;
+        band = BAND_SOJOBO;
+        band_size = 5 + random2(4);
+        break;
+
     default: ;
     }
 
@@ -2902,6 +2908,15 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_TENGU:
         return MONS_TENGU;
+
+    case BAND_SOJOBO:
+        if (which <= 2)
+            return MONS_TENGU_REAVER;
+        else
+            return random_choose_weighted( 8, MONS_TENGU_WARRIOR,
+                                          16, MONS_TENGU_CONJURER,
+                                          24, MONS_TENGU,
+                                           0);
 
     default:
         die("unhandled band type %d", band);

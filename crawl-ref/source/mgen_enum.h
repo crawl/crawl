@@ -84,6 +84,7 @@ enum band_type
     BAND_FAUNS,
     BAND_PAN,
     BAND_TENGU,
+    BAND_SOJOBO,
     NUM_BANDS                   // always last
 };
 

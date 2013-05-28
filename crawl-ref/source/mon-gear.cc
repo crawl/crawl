@@ -1435,6 +1435,16 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.plus2 += random2(4);
         break;
 
+    case MONS_SOJOBO:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = one_chance_in(4) ? WPN_TRIPLE_SWORD
+                                         : WPN_GREAT_SWORD;
+        if (x_chance_in_y(2, 3))
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+        level = MAKE_GOOD_ITEM;
+        break;
+
     default:
         break;
     }
@@ -1988,6 +1998,9 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = coinflip() ? ARM_ROBE : ARM_LEATHER_ARMOUR;
         break;
 
+    case MONS_SOJOBO:
+        level = MAKE_GOOD_ITEM;
+        // deliberate fall-through
     case MONS_GNOLL_SERGEANT:
     case MONS_TENGU_REAVER:
         item_race      = MAKE_ITEM_NO_RACE;
