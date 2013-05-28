@@ -303,16 +303,19 @@ static void _daction_hog_to_human(monster *mon)
 
     // Was it a converted monster or original band member?
     if (mon->props.exists(ORIG_MONSTER_KEY))
+    {
         // Copy it, since the instance in props will get deleted
         // as soon a **mi is assigned to.
         orig = mon->props[ORIG_MONSTER_KEY].get_monster();
+        orig.mid = mon->mid;
+    }
     else
     {
         orig.type     = MONS_HUMAN;
         orig.attitude = mon->attitude;
+        orig.mid = mon->mid;
         define_monster(&orig);
     }
-    orig.mid = mon->mid;
     // Keep at same spot.
     const coord_def pos = mon->pos();
     // Preserve relative HP.
