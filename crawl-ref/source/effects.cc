@@ -3203,30 +3203,16 @@ void recharge_elemental_evokers(int exp)
     int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
                              you.experience_level * 425),
                         you.experience_level*4 + 30)
-                    / (4 + you.skill_rdiv(SK_EVOCATIONS, 2, 7));
+                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 7));
 
-    if (!evokers.empty())
+    for (unsigned int i = 0; i < evokers.size(); ++i)
     {
-        random_shuffle(evokers.begin(), evokers.end());
-        item_def* evoker = evokers.back();
-        while (exp >= you.attribute[ATTR_EVOKER_XP])
+        item_def* evoker = evokers[i];
+        evoker->plus2 -= div_rand_round(exp, xp_factor);
+        if (evoker->plus2 <= 0)
         {
-            exp -= you.attribute[ATTR_EVOKER_XP];
-            you.attribute[ATTR_EVOKER_XP] = xp_factor;
-            evoker->plus2--;
-            if (evoker->plus2 == 0)
-            {
-                mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
-                evokers.pop_back();
-                if (!evokers.empty())
-                    evoker = evokers.back();
-                else
-                {
-                    you.attribute[ATTR_EVOKER_XP] = xp_factor;
-                    return;
-                }
-            }
+            evoker->plus2 = 0;
+            mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
         }
-        you.attribute[ATTR_EVOKER_XP] -= exp;
     }
 }

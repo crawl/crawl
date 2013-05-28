@@ -141,11 +141,6 @@ fire vortex
 
 渦巻く炎の雲だ。
 %%%%
-flayed ghost
-
-A hideous floating undead creature, the anguished spirit of a tortured victim,
-with torn skin hanging おぞましいアンデッドモンスターだ。
-%%%%
 fungus
 
 塊になった灰色の菌類だ。暗く湿った地下迷宮で活発に生育する。
@@ -341,11 +336,6 @@ reaper
 
 巨大な鎌を手にした、骸骨のような姿の存在だ。
 %%%%
-red devil
-
-A muscular demon covered in spikes and horns. Two
-背中には一対の小さな翼が生えている。
-%%%%
 red wasp
 
 巨大な赤いススメバチだ。邪悪なかかりのついた毒針を持つ。 Potent paralytic
@@ -461,11 +451,6 @@ warg
 
 A particularly large and evil-looking wolf, usually
 大抵の場合はオークと一緒にいる。
-%%%%
-water elemental
-
-水の精霊界から召換された精霊だ。
-水域の一部分に宿ることでこの世界に存在している。
 %%%%
 wraith
 

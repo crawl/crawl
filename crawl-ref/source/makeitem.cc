@@ -2888,8 +2888,21 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 }
 
-static void _generate_staff_item(item_def& item, int force_type, int item_level)
+static void _generate_staff_item(item_def& item, bool allow_uniques, int force_type, int item_level)
 {
+    // If we make the unique roll, no further generation necessary.
+    // Copied unrand code from _try_make_weapon_artefact since randart enhancer staves
+    // can't happen.
+    if (allow_uniques
+        && one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20))
+    {
+        // Temporarily fix the base_type to get enhancer staves
+        item.base_type = OBJ_WEAPONS;
+        if (_try_make_item_unrand(item, WPN_STAFF))
+            return;
+        item.base_type = OBJ_STAVES;
+    }
+
     if (force_type == OBJ_RANDOM)
     {
 #if TAG_MAJOR_VERSION == 34
@@ -3248,7 +3261,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_STAVES:
-        _generate_staff_item(item, force_type, item_level);
+        _generate_staff_item(item, allow_uniques, force_type, item_level);
         break;
 
     case OBJ_RODS:

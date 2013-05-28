@@ -2343,7 +2343,7 @@ static tentacle_type _get_tentacle_type(const int mtype)
 
 static tileidx_t _tileidx_tentacle(const monster_info& mon)
 {
-    ASSERT(mons_is_tentacle(mon.type));
+    ASSERT(mons_is_tentacle_or_tentacle_segment(mon.type));
 
     // If the tentacle is submerged, we shouldn't even get here.
     ASSERT(!mon.is(MB_SUBMERGED));
@@ -2359,8 +2359,8 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         h_pos = t_pos + mon.props["inwards"].get_coord();
     }
 
-    // Tentacle end only requires checking of head position.
-    if (mons_is_tentacle_end(mon.type))
+    // Tentacle only requires checking of head position.
+    if (mons_is_tentacle(mon.type))
     {
         if (no_head_connect)
         {
@@ -2795,6 +2795,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_PETRIFIED;
     if (mons.is(MB_BLIND))
         ch |= TILE_FLAG_BLIND;
+    if (mons.is(MB_SUMMONED))
+        ch |= TILE_FLAG_SUMMONED;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;

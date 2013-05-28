@@ -191,12 +191,45 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             // draw clouds
             if (cell.cloud.value && cell.cloud.value < dngn.FEAT_MAX)
             {
-                try
+                // If there will be a front/back cloud pair, draw
+                // the underlying one with correct alpha
+                if (fg_idx)
                 {
-                    this.draw_main(cell.cloud.value, x, y);
+                    this.ctx.save();
+                    try
+                    {
+                        this.ctx.globalAlpha = 0.6;
+                        this.set_nonsubmerged_clip(x, y, 20);
+                        this.draw_main(cell.cloud.value, x, y);
+                    }
+                    finally
+                    {
+                        this.ctx.restore();
+                    }
+
+                    this.ctx.save();
+                    try
+                    {
+                        this.ctx.globalAlpha = 0.2;
+                        this.set_submerged_clip(x, y, 20);
+                        this.draw_main(cell.cloud.value, x, y);
+                    }
+                    finally
+                    {
+                        this.ctx.restore();
+                    }
                 }
-                finally
+                else
                 {
+                    try
+                    {
+                        this.ctx.globalAlpha = 1.0;
+                        this.draw_main(cell.cloud.value, x, y);
+                    }
+                    finally
+                    {
+                        this.ctx.restore();
+                    }
                 }
             }
 
@@ -281,26 +314,26 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 && cell.cloud.value < dngn.FEAT_MAX)
             {
                 this.ctx.save();
-                try {
+                try
+                {
                     this.ctx.globalAlpha = 0.4;
-
                     this.set_nonsubmerged_clip(x, y, 20);
-
                     this.draw_main(cell.cloud.value, x, y);
                 }
-                finally {
+                finally
+                {
                     this.ctx.restore();
                 }
 
                 this.ctx.save();
-                try {
+                try
+                {
                     this.ctx.globalAlpha = 0.8;
-
                     this.set_submerged_clip(x, y, 20);
-
                     this.draw_main(cell.cloud.value, x, y);
                 }
-                finally {
+                finally
+                {
                     this.ctx.restore();
                 }
             }
@@ -807,8 +840,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 status_shift += 10;
             }
 
+            // Anim. weap. and summoned might overlap, but that's okay
             if (fg.ANIM_WEP)
                 this.draw_icon(icons.ANIMATED_WEAPON, x, y);
+            if (fg.SUMMONED)
+                this.draw_icon(icons.SUMMONED, x, y);
 
             if (bg.UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MESH, x, y);

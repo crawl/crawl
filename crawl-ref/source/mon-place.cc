@@ -1627,11 +1627,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         blame_prefix = "called by ";
     }
-    else if (mg.cls == MONS_KRAKEN_TENTACLE
-             || mg.cls == MONS_STARSPAWN_TENTACLE)
-    {
+    else if (mons_is_child_tentacle(mg.cls))
         blame_prefix = "attached to ";
-    }
     else
         blame_prefix = "created by ";
 
@@ -2115,16 +2112,19 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_DEEP_DWARF_SCION:
         band = BAND_DEEP_DWARF;
-        band_size = (one_chance_in(5)? 2: 1) + random2(3);
+        band_size = (one_chance_in(5) ? 2 : 1) + random2(3);
         break;
     case MONS_DEEP_DWARF_ARTIFICER:
         band = BAND_DEEP_DWARF;
         band_size = 3 + random2(4);
         break;
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
-        natural_leader = true;
-        band = BAND_DEATH_KNIGHT;
-        band_size = 3 + random2(2);
+        if (x_chance_in_y(2, 3))
+        {
+            natural_leader = true;
+            band = BAND_DEATH_KNIGHT;
+            band_size = 3 + random2(2);
+        }
         break;
     case MONS_GRUM:
         natural_leader = true;
@@ -2748,7 +2748,6 @@ static monster_type _band_member(band_type band, int which)
         return MONS_BLINK_FROG;
     case BAND_WIGHTS:
         return MONS_WIGHT;
-        break;
     case BAND_SKELETAL_WARRIORS:
         return MONS_SKELETAL_WARRIOR;
 

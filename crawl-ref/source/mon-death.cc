@@ -52,7 +52,8 @@ bool mons_is_pikel(monster* mons)
  *
  * This neutralisation occurs in multiple instances: when Pikel is neutralised,
  * enslaved, when Pikel dies, when Pikel is banished.
-**/
+ * It is handled by a daction (as a fineff) to preserve across levels.
+ **/
 void pikel_band_neutralise()
 {
     int visible_slaves = 0;
@@ -98,7 +99,9 @@ bool mons_is_kirke(monster* mons)
  * Called upon Kirke's death. Hogs either from Kirke's band or
  * subsequently porkalated should be reverted to their original form.
  * This takes place as a daction to preserve behaviour across levels;
- * this function simply checks if any are visible and writes a message.
+ * this function simply checks if any are visible and raises a fineff
+ * containing an appropriate message. The fineff raises the actual
+ * daction.
  */
 void hogs_to_humans()
 {
@@ -147,11 +150,7 @@ void hogs_to_humans()
                         "original forms!";
     }
 
-    // Revert the player now
-    if (you.form == TRAN_PIG)
-        untransform();
-
-    (new delayed_action_fineff(DACT_KIRKE_HOGS,final_msg))->schedule();
+    (new kirke_death_fineff(final_msg))->schedule();
 }
 
 /**
