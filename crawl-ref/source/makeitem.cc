@@ -622,6 +622,10 @@ void item_colour(item_def &item)
             item.colour = YELLOW;
             break;
 
+        case MISC_PHIAL_OF_FLOODS:
+            item.colour = CYAN;
+            break;
+
         case MISC_BOX_OF_BEASTS:
             item.colour = DARKGREY;
             break;
