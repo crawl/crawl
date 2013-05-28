@@ -1648,6 +1648,13 @@ int monster_die(monster* mons, killer_type killer,
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
     }
 
+    // Kills by the spectral weapon are considered as kills by the player instead
+    if (killer == KILL_MON && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON)
+    {
+        killer = KILL_YOU;
+        killer_index = you.mindex();
+    }
+
     // Take notes and mark milestones.
     record_monster_defeat(mons, killer);
 
@@ -1830,8 +1837,8 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Adjust song of slaying bonus
-    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp
-         || killer == KILL_MON && you.duration[DUR_SONG_OF_SLAYING] && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON && !mons->is_summoned() && gives_xp)
+    // Kills by the spectral weapon should be adjusted by this point to be kills by the player --- so kills by the spectral weapon are considered here as well
+    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp)
     {
         int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
