@@ -1831,7 +1831,7 @@ int monster_die(monster* mons, killer_type killer,
 
     // Adjust song of slaying bonus
     if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp
-         || killer == KILL_MON && you.duration[DUR_SONG_OF_SLAYING] && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON && gives_xp)
+         || killer == KILL_MON && you.duration[DUR_SONG_OF_SLAYING] && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON && !mons->is_summoned() && gives_xp)
     {
         int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
