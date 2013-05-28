@@ -1829,21 +1829,21 @@ int monster_die(monster* mons, killer_type killer,
         targ_holy = MH_DEMONIC;
     }
 
-	// Adjust song of slaying bonus
-	if(killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp
-	|| killer == KILL_MON && you.duration[DUR_SONG_OF_SLAYING] && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON && gives_xp)
-	{
-		int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
-		mon_threat_level_type threat = mons_threat_level(mons, true);
-		// Only certain kinds of threats at different sos levels will increase the bonus
-		if (threat == MTHRT_TRIVIAL && sos_bonus<2
-		|| threat == MTHRT_EASY && sos_bonus<4
-		|| threat == MTHRT_TOUGH && sos_bonus<6
-		|| threat == MTHRT_NASTY)
-		{
-			you.props["song_of_slaying_bonus"] = sos_bonus + 1;
-		}
-	}
+    // Adjust song of slaying bonus
+    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp
+         || killer == KILL_MON && you.duration[DUR_SONG_OF_SLAYING] && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON && gives_xp)
+    {
+        int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
+        mon_threat_level_type threat = mons_threat_level(mons, true);
+        // Only certain kinds of threats at different sos levels will increase the bonus
+        if (threat == MTHRT_TRIVIAL && sos_bonus<2
+            || threat == MTHRT_EASY && sos_bonus<4
+            || threat == MTHRT_TOUGH && sos_bonus<6
+            || threat == MTHRT_NASTY)
+        {
+            you.props["song_of_slaying_bonus"] = sos_bonus + 1;
+        }
+    }
 
     switch (killer)
     {
@@ -3454,9 +3454,9 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
     if (crawl_state.game_is_arena())
         return true;
 
-	// spectral weapons should never attack on their own
-	if (mons->type == MONS_SPECTRAL_WEAPON)
-		return false;
+    // Spectral weapons never attack on their own
+    if (mons->type == MONS_SPECTRAL_WEAPON)
+        return false;
 
     if (!mons->friendly() || !mons->is_summoned())
         return true;

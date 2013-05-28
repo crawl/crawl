@@ -60,9 +60,10 @@ static void _guess_invis_foe_pos(monster* mon)
 
 static void _mon_check_foe_invalid(monster* mon)
 {
-	// assume a spectral weapon has a valid target
-	if(mon->type == MONS_SPECTRAL_WEAPON)
-		return;
+    // Assume a spectral weapon has a valid target
+    // Ideally this is not outside special cased like this
+    if(mon->type == MONS_SPECTRAL_WEAPON)
+        return;
 
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
@@ -260,23 +261,23 @@ void handle_behaviour(monster* mon)
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
-	// the target, foe set here for a spectral weapon should never change
-	if (mon->type == MONS_SPECTRAL_WEAPON)
-	{
-		mon->target = you.pos();
-		mon->foe = MHITNOT;
-		// Try to move towards any monsters the player is attacking
-		if (mon->props.exists("target_mid"))
-		{
-        		monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
-			// Only try to move towards the monster if the player is still next to it
-			if (target_monster && target_monster->alive() && adjacent(target_monster->pos(), you.pos()))
-			{
-				mon->target = target_monster->pos();
-				mon->foe = target_monster->mindex();
-			}
-		}
-	}
+    // The target and foe set here for a spectral weapon should never change
+    if (mon->type == MONS_SPECTRAL_WEAPON)
+    {
+        mon->target = you.pos();
+        mon->foe = MHITNOT;
+        // Try to move towards any monsters the player is attacking
+        if (mon->props.exists("target_mid"))
+        {
+            monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
+            // Only try to move towards the monster if the player is still next to it
+            if (target_monster && target_monster->alive() && adjacent(target_monster->pos(), you.pos()))
+            {
+                mon->target = target_monster->pos();
+                mon->foe = target_monster->mindex();
+            }
+        }
+    }
 
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
@@ -327,7 +328,7 @@ void handle_behaviour(monster* mon)
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
         && mon->type != MONS_BATTLESPHERE
-	&& mon->type != MONS_SPECTRAL_WEAPON)
+        && mon->type != MONS_SPECTRAL_WEAPON)
     {
         if  (!crawl_state.game_is_zotdef())
         {
@@ -380,7 +381,7 @@ void handle_behaviour(monster* mon)
     }
 
     // Friendly summons will come back to the player if they go out of sight.
-	// Spectral weapon should keep its target even though it can't attack it
+    // Spectral weapon should keep its target even though it can't attack it
     if (!summon_can_attack(mon) && mon->type!=MONS_SPECTRAL_WEAPON)
         mon->target = you.pos();
 
@@ -991,7 +992,7 @@ static void _set_nearest_monster_foe(monster* mon)
     if (mon->good_neutral() || mon->strict_neutral()
             || mon->behaviour == BEH_WITHDRAW
             || mon->type == MONS_BATTLESPHERE
-	|| mon->type == MONS_SPECTRAL_WEAPON
+            || mon->type == MONS_SPECTRAL_WEAPON
             || mon->has_ench(ENCH_HAUNTING))
         return;
 

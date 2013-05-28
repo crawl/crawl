@@ -1008,7 +1008,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_CHANGES:                return "Changes";
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
     case BOOK_WAR_CHANTS:             return "War Chants";
-	case BOOK_BATTLE:	return "Battle";
+    case BOOK_BATTLE:                 return "Battle";
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";

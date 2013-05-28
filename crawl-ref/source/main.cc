@@ -2841,21 +2841,20 @@ static void _decrement_durations()
                           0,
                           "Your shroud begins to fray at the edges.");
 
-	// uuu make better messages for this
     _decrement_a_duration(DUR_INFUSION, delay,
-                          "Your attacks are no longer magically infused.",
-                          0,
-                          "You are feeling less magically infused.");
+            "Your attacks are no longer magically infused.",
+            0,
+            "You are feeling less magically infused.");
 
     _decrement_a_duration(DUR_SONG_OF_SLAYING, delay,
-                          "Your song has ended.",
-                          0,
-                          "Your song is almost over.");
+            "Your song has ended.",
+            0,
+            "Your song is almost over.");
 
     _decrement_a_duration(DUR_SPIRIT_SHIELD, delay,
-                          "Your magic is no longer protecting you.",
-                          0,
-                          "You are feeling less protected by your magic.");
+            "Your magic is no longer protecting you.",
+            0,
+            "You are feeling less protected by your magic.");
 
     _decrement_a_duration(DUR_SENTINEL_MARK, delay,
                           "The sentinel's mark upon you fades away.");
@@ -3082,9 +3081,9 @@ static void _player_reacts()
     if (you.attribute[ATTR_NOISES])
         noisy_equipment();
 
-	// Singing makes a continous noise
-	if (you.duration[DUR_SONG_OF_SLAYING])
-		noisy(10, you.pos());
+    // Singing makes a continous noise
+    if (you.duration[DUR_SONG_OF_SLAYING])
+        noisy(10, you.pos());
 
     if (one_chance_in(10))
     {
