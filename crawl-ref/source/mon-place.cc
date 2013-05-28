@@ -2115,7 +2115,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_DEEP_DWARF_SCION:
         band = BAND_DEEP_DWARF;
-        band_size = (one_chance_in(5)? 2: 1) + random2(3);
+        band_size = (one_chance_in(5) ? 2 : 1) + random2(3);
         break;
     case MONS_DEEP_DWARF_ARTIFICER:
         band = BAND_DEEP_DWARF;
