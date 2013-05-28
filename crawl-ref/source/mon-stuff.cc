@@ -720,7 +720,9 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
-    if (killer == MHITYOU)
+    // Damage by the spectral weapon is considered to be the player's damage --- so the player does not lose any exp from dealing damage with a spectral weapon summon
+    if (killer == MHITYOU
+        || !invalid_monster_index(killer) && (&menv[killer])->type == MONS_SPECTRAL_WEAPON)
         return 2;
 
     if (_is_pet_kill(KILL_MON, killer))
