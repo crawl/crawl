@@ -124,15 +124,14 @@ end
 
 function rr_message_adder(v)
     local function rr_add_messages(key, value, mode)
-        if mode == 0 and value == "" then
+        if mode == 0 then
             -- Clear list
             for k in pairs (g_rr_ignored) do
                 g_rr_ignored[k] = nil
             end
-            return
-        elseif mode == 0 and table.getn(g_rr_ignored) > 0 then
-            -- listopt = foo  will reset listopt in 0.12, warn.
-            crawl.warn_list_append(key)
+            if value == "" then
+                return
+            end
         end
 
         local segs = crawl.split(value, ',', mode > 1)
@@ -196,16 +195,15 @@ function rr_add_monsters(key, value, mode)
         return
     end
 
-    if mode == 0 and value == "" then
+    if mode == 0 then
         -- Clear list
         for k in pairs (mons_table[1]) do
             mons_table[1][k] = nil
             mons_table[2][k] = nil
         end
-        return
-    elseif mode == 0 and table.getn(mons_table[1]) > 0 then
-        -- listopt = foo  will reset listopt in 0.12, warn.
-        crawl.warn_list_append(key)
+        if value == "" then
+            return
+        end
     end
 
     local segs = crawl.split(value, ',', mode > 1)

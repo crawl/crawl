@@ -125,12 +125,14 @@ public:
     void push_menu(Menu* m);
     void push_crt_menu(string tag);
     bool is_in_crt_menu();
+    bool is_in_menu(Menu* m);
     void pop_menu();
     void close_all_menus();
 
     void write_message(PRINTF(1, ));
     void finish_message();
     void send_message(PRINTF(1, ));
+    void flush_messages();
 
     bool has_receivers() { return !m_dest_addrs.empty(); }
     bool is_controlled_from_web() { return m_controlled_from_web; }

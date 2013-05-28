@@ -45,6 +45,9 @@ Section ""
   # clean after previous versions; crawl-console.exe used to be named crawl.exe
   # but that made sense on Unix but not really on Windows.
   Delete crawl.exe
+  # clean after 0.10 or earlier, let's produce error messages instead of
+  # incorrect behaviour
+  Delete dat\lua\*.lua
 
   WriteUninstaller $INSTDIR\uninst.exe
 

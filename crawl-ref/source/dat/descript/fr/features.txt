@@ -833,11 +833,6 @@ Frost-covered floor
 
 Sol couvert de givre qui crisse agréablement sous vos pas.
 %%%%
-A cracked metal wall
-
-Ce mur métallique a subi quelques dommages. Hélas, le trou n'est pas assez gros
-pour passer à travers.
-%%%%
 A golden statue
 
 Un statue d'or massif d'un saint.
@@ -932,11 +927,6 @@ Cette statue en granite usée représente un éléphant montant la garde.
 A weirdly glowing ball
 
 Cette boule flottante irradie d'une lumière chatoyante.
-%%%%
-A very old granite statue
-
-Il y a une fissure en travers de sa poitrine. Peut être arriverez vous à la
-brisez si vous la frappez.
 %%%%
 A sealed sarcophagus
 

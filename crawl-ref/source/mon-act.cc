@@ -133,6 +133,20 @@ static void _monster_regenerate(monster* mons)
     }
 }
 
+static void _escape_water_hold(monster* mons)
+{
+    if (mons->has_ench(ENCH_WATER_HOLD))
+    {
+        if (mons_habitat(mons) != HT_AMPHIBIOUS
+            && mons_habitat(mons) != HT_WATER)
+        {
+            mons->speed_increment -= 5;
+        }
+        simple_monster_message(mons, " pulls free of the water.");
+        mons->del_ench(ENCH_WATER_HOLD);
+    }
+}
+
 static bool _swap_monsters(monster* mover, monster* moved)
 {
     // Can't swap with a stationary monster.
@@ -213,6 +227,8 @@ static bool _swap_monsters(monster* mover, monster* moved)
         mprf("%s and %s swap places.", mover->name(DESC_THE).c_str(),
              moved->name(DESC_THE).c_str());
     }
+
+    _escape_water_hold(mover);
 
     return true;
 }
@@ -420,7 +436,8 @@ static bool _mons_can_zap_dig(const monster* mons)
 static void _set_mons_move_dir(const monster* mons,
                                coord_def* dir, coord_def* delta)
 {
-    ASSERT(dir && delta);
+    ASSERT(dir);
+    ASSERT(delta);
 
     // Some calculations.
     if ((mons_class_flag(mons->type, M_BURROWS)
@@ -936,6 +953,7 @@ static bool _handle_scroll(monster* mons)
         || mons_is_confused(mons)
         || mons->submerged()
         || mons->inv[MSLOT_SCROLL] == NON_ITEM
+        || mons->has_ench(ENCH_BLIND)
         || !one_chance_in(3))
     {
         return false;
@@ -1256,8 +1274,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         return false;
 
     // XXX: There should be a better way to do this than hardcoding
-    // monster-castable rod spells!  Also, there is currently no monster
-    // version of Olgreb's Toxic Radiance, used by the rod of venom.
+    // monster-castable rod spells!
     switch (mzap)
     {
     case SPELL_BOLT_OF_FIRE:
@@ -1294,6 +1311,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_SWARM:
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
         _rod_fired_pre(mons);
         mons_cast(mons, beem, mzap, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
@@ -1312,6 +1330,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     bolt theBeam = mons_spell_beam(mons, mzap, power, check_validity);
     beem         = _generate_item_beem(beem, theBeam, mons);
+    beem.aux_source =
+        rod.name(DESC_QUALNAME, false, true, false, false);
 
     if (mons->confused())
     {
@@ -1531,8 +1551,11 @@ static bool _handle_throw(monster* mons, bolt & beem)
         return false;
     }
 
-    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
+        && mons->type != MONS_SPECTRAL_THING)
+    {
         return false;
+    }
 
     const bool archer = mons->is_archer();
 
@@ -1912,21 +1935,13 @@ void handle_monster_move(monster* mons)
     if (mons->type == MONS_TIAMAT && one_chance_in(3))
         draconian_change_colour(mons);
 
-    if  (mons->type == MONS_ASMODEUS
-         || mons->type == MONS_CHAOS_BUTTERFLY)
-    {
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-                place_cloud(mons->type == MONS_ASMODEUS ? CLOUD_FIRE
-                                                        : CLOUD_RAIN,
-                            *ai, 1 + random2(6), mons);
-    }
-
     _monster_regenerate(mons);
 
     if (mons->cannot_act()
         || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
-           && ++mons->number / 8 % 3 != 2)  // but are not helpless
+           && ++mons->number / 8 % 3 != 2  // but are not helpless
+        || mons->type == MONS_JIANGSHI // similarly, but more irregular (48 of 90)
+            && (++mons->number / 6 % 3 == 1 || mons->number / 3 % 5 == 1))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2092,6 +2107,8 @@ void handle_monster_move(monster* mons)
             || mons->type == MONS_TEST_SPAWNER
             // Slime creatures can split when offscreen.
             || mons->type == MONS_SLIME_CREATURE
+            // Lost souls can flicker away at any time they're isolated
+            || mons->type == MONS_LOST_SOUL
             // Let monsters who have Dig use it off-screen.
             || mons->has_spell(SPELL_DIG))
         {
@@ -2279,6 +2296,26 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);
+
+    if  (mons->type == MONS_ASMODEUS
+         || mons->type == MONS_CHAOS_BUTTERFLY)
+    {
+        cloud_type ctype;
+        switch (mons->type)
+        {
+            case MONS_ASMODEUS:         ctype = CLOUD_FIRE;          break;
+            case MONS_CHAOS_BUTTERFLY:  ctype = CLOUD_RAIN;          break;
+            default:                    ctype = CLOUD_NONE;          break;
+        }
+
+        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+            if (!feat_is_solid(grd(*ai))
+                && (env.cgrid(*ai) == EMPTY_CLOUD
+                    || env.cloud[env.cgrid(*ai)].type == ctype))
+            {
+                place_cloud(ctype, *ai, 2 + random2(6), mons);
+            }
+    }
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
@@ -2589,7 +2626,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     }
 
     // Butcher the corpse without leaving chunks.
-    butcher_corpse(item, B_MAYBE, false);
+    butcher_corpse(item, MB_MAYBE, false);
 
     return true;
 }
@@ -3337,7 +3374,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     m2->clear_far_constrictions();
 
     const int m2i = m2->mindex();
-    ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
+    ASSERT(m2i >= 0);
+    ASSERT(m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
     _swim_or_move_energy(m2);
 
@@ -3441,6 +3479,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 #else
     _swim_or_move_energy(mons);
 #endif
+
+    _escape_water_hold(mons);
 
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(mons, DNGN_DEEP_WATER))

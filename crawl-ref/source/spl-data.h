@@ -386,7 +386,7 @@ struct spell_desc
      -1, -1,
      0,
      NULL,
-     true,
+     false,
      false
 },
 
@@ -443,7 +443,7 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_SMALL_MAMMALS, "Summon Small Mammals",
+    SPELL_SUMMON_SMALL_MAMMAL, "Summon Small Mammal",
      SPTYP_SUMMONING,
      SPFLAG_BATTLE,
      1,
@@ -3015,6 +3015,71 @@ struct spell_desc
      SPTYP_CHARMS,
      SPFLAG_AREA | SPFLAG_HELPFUL,
      5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GHOSTLY_FLAMES, "Ghostly Flames",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GHOSTLY_FIREBALL, "Ghostly Fireball",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_CALL_LOST_SOUL, "Call Lost Soul",
+     SPTYP_SUMMONING | SPTYP_NECROMANCY,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_MONSTER,
+     5,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_DIMENSION_ANCHOR, "Dimension Anchor",
+     SPTYP_TRANSLOCATION | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_BLINK_ALLIES_ENCIRCLE, "Blink Allies Encircling",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_AREA,
+     6,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,

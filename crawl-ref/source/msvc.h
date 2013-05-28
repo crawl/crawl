@@ -9,16 +9,16 @@
 #if defined(TARGET_COMPILER_VC)
 
 #define __STDC_FORMAT_MACROS
-#include "MSVC/inttypes.h"
+//now included via tweaking include directories
+//#include "MSVC/inttypes.h"
 
 #include <io.h>
 #include <math.h>
 
 #define fileno _fileno
 #define snprintf _snprintf
-#define strcasecmp _strcasecmp
 #define strdup _strdup
-#define strcasecmp _strcasecmp
+#define strcasecmp _stricmp
 #define strncasecmp _strnicmp
 #define strnicmp _strnicmp
 #define ftruncate _chsize
@@ -80,6 +80,11 @@ static inline double pow(int x, int y)
 static inline double log(int x)
 {
     return log((double)x);
+}
+
+static inline double log2(double n)
+{
+    return log(n) / log(2.0);
 }
 
 //this is targetting for struct member name in store.h, nothing else gets affected as of 0.9.0

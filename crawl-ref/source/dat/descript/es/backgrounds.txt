@@ -113,7 +113,7 @@ Libro de Cánticos de Guerra.
 Summoner
 
 Los Convocadores comienzan con el Libro de las Llamadas y son capaces de
-Convocar a Pequeños Mamíferos desde el inicio.
+Convocar a Pequeño Mamífero desde el inicio.
 %%%%
 Transmuter
 

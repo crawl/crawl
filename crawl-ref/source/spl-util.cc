@@ -95,34 +95,21 @@ void init_spell_descs(void)
     {
         const spell_desc &data = spelldata[i];
 
-#ifdef DEBUG
-        if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
-            end(1, false, "spell #%d has invalid id %d", i, data.id);
+        ASSERTM(data.id >= SPELL_NO_SPELL && data.id < NUM_SPELLS,
+                "spell #%d has invalid id %d", i, data.id);
 
-        if (data.title == NULL || !*data.title)
-            end(1, false, "spell #%d, id %d has no name", i, data.id);
+        ASSERTM(data.title != NULL && *data.title,
+                "spell #%d, id %d has no name", i, data.id);
 
-        if (data.level < 1 || data.level > 9)
-        {
-            end(1, false, "spell '%s' has invalid level %d",
-                data.title, data.level);
-        }
+        ASSERTM(data.level >= 1 && data.level <= 9,
+                "spell '%s' has invalid level %d", data.title, data.level);
 
-        if (data.min_range > data.max_range)
-        {
-            end(1, false, "spell '%s' has min_range larger than max_range",
-                data.title);
-        }
+        ASSERTM(data.min_range <= data.max_range,
+                "spell '%s' has min_range larger than max_range", data.title);
 
-        if (data.flags & SPFLAG_TARGETTING_MASK)
-        {
-            if (data.min_range <= -1 || data.max_range <= 0)
-            {
-                end(1, false, "targeted/directed spell '%s' has invalid range",
-                    data.title);
-            }
-        }
-#endif
+        ASSERTM(!(data.flags & SPFLAG_TARGETTING_MASK)
+                || (data.min_range >= 0 && data.max_range > 0),
+                "targeted/directed spell '%s' has invalid range", data.title);
 
         spell_list[data.id] = i;
     }
@@ -331,7 +318,8 @@ bool add_spell_to_memory(spell_type spell)
 
 bool del_spell_from_memory_by_slot(int slot)
 {
-    ASSERT(slot >= 0 && slot < MAX_KNOWN_SPELLS);
+    ASSERT(slot >= 0);
+    ASSERT(slot < MAX_KNOWN_SPELLS);
     int j;
 
     if (you.last_cast_spell == you.spells[slot])
@@ -370,6 +358,9 @@ bool del_spell_from_memory(spell_type spell)
 
 int spell_hunger(spell_type which_spell, bool rod)
 {
+    if (player_energy())
+        return 0;
+
     const int level = spell_difficulty(which_spell);
 
     const int basehunger[] = {
@@ -390,9 +381,6 @@ int spell_hunger(spell_type which_spell, bool rod)
     }
     else
         hunger -= you.skill(SK_SPELLCASTING, you.intel());
-
-    // Staff of energy
-    hunger /= (1 + 2 * player_energy());
 
     if (hunger < 0)
         hunger = 0;
@@ -906,7 +894,8 @@ skill_type spell_type2skill(unsigned int spelltype)
 //jmf: Simplified; moved init code to top function, init_spell_descs().
 static const spell_desc *_seekspell(spell_type spell)
 {
-    ASSERT(spell >= 0 && spell < NUM_SPELLS);
+    ASSERT(spell >= 0);
+    ASSERT(spell < NUM_SPELLS);
     const int index = spell_list[spell];
     ASSERT(index != -1);
 

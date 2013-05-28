@@ -336,20 +336,18 @@ static vector<string> _randart_propnames(const item_def& item,
                     work << "+";
                 else if (propanns[i].prop == ARTP_METABOLISM && val < 0)
                     work << "-";
-                else if (propanns[i].prop == ARTP_STEALTH)
+                else if (propanns[i].prop == ARTP_STEALTH
+                         || propanns[i].prop == ARTP_MAGIC)
                 {
-                    if (val > 20)
+                    if (val > 50)
                         work << "++";
-                    else if (val > 0)
+                    else if (val > 20)
                         work << "+";
-                    else if (val < -20)
+                    else if (val < -50)
                         work << "--";
                     else if (val < 0)
                         work << "-";
                 }
-                // Robe of Folly
-                else if (propanns[i].prop == ARTP_MAGIC && val < 0)
-                    work << "-";
                 break;
             }
             propnames.push_back(work.str());
@@ -416,7 +414,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
         { ARTP_MAGIC, "It affects your resistance to hostile enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},
-        { ARTP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
+        { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
         { ARTP_EYESIGHT, "It enhances your eyesight.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It lets you fly.", false},
@@ -1251,11 +1249,8 @@ void append_armour_stats(string &description, const item_def &item)
     _append_value(description, property(item, PARM_AC), false);
     description += "       ";
 
-    if (get_armour_slot(item) == EQ_BODY_ARMOUR)
-        description += "Base evasion modifier: ";
-    else
-        description += "Evasion modifier: ";
-    _append_value(description, property(item, PARM_EVASION), true);
+    description += "Encumbrance rating: ";
+    _append_value(description, -property(item, PARM_EVASION), false);
 }
 
 void append_missile_info(string &description)
@@ -1966,8 +1961,8 @@ string get_item_description(const item_def &item, bool verbose,
             case CE_CONTAMINATED:
                 if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 {
-                    description << "\n\nMeat like this may occasionally cause "
-                                   "nausea.";
+                    description << "\n\nMeat like this tastes awful and "
+                                   "provides far less nutrition.";
                 }
                 break;
             case CE_POISON_CONTAM:
@@ -2000,7 +1995,7 @@ string get_item_description(const item_def &item, bool verbose,
         if (verbose)
         {
             description <<
-                "\nIt uses its own mana reservoir for casting spells, and "
+                "\nIt uses its own magic reservoir for casting spells, and "
                 "recharges automatically according to the recharging "
                 "rate.";
 
@@ -2068,6 +2063,16 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_MISCELLANY:
         if (is_deck(item))
             description << _describe_deck(item);
+        if (is_elemental_evoker(item))
+        {
+            description << "\nOnce released, the spirits within this device "
+                           "will dissipate, leaving it inert, though new ones "
+                           "may be attracted as its bearer battles through the "
+                           "dungeon and grows in power and wisdom.";
+
+            if (!evoker_is_charged(item))
+                description << "\n\nThe device is presently inert.";
+        }
         break;
 
     case OBJ_POTIONS:
@@ -2560,7 +2565,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
 #endif
 
     int slot = item.link;
-    ASSERT(slot >= 0 && slot < ENDOFPACK);
+    ASSERT(slot >= 0);
+    ASSERT(slot < ENDOFPACK);
 
     switch (action)
     {
@@ -3183,6 +3189,12 @@ static string _monster_stat_description(const monster_info& mi)
                                        resist_descriptions.end(),
                                        "; and ", "; ")
                << ".\n";
+    }
+
+    if (mons_is_statue(mi.type, true))
+    {
+        result << uppercase_first(pronoun) << " is very brittle "
+               << "and susceptible to disintegration.\n";
     }
 
     // Is monster susceptible to anything? (On a new line.)
@@ -4011,7 +4023,7 @@ static int _piety_level(int piety)
            (piety >=  75) ? 4 :
            (piety >=  50) ? 3 :
            (piety >=  30) ? 2 :
-           (piety >    5) ? 1
+           (piety >    0) ? 1
                           : 0;
 }
 

@@ -82,6 +82,7 @@ class CrawlProcessHandlerBase(object):
         self.logger = logging.LoggerAdapter(logger, {})
         self.logger.process = self._process_log_msg
         self.io_loop = io_loop or IOLoop.instance()
+        self.queue_messages = False;
 
         self.process = None
         self.client_path = self.config_path("client_path")
@@ -129,9 +130,13 @@ class CrawlProcessHandlerBase(object):
             self._was_idle = self.is_idle()
             update_all_lobbys(self)
 
-    def write_to_all(self, msg):
+    def flush_messages_to_all(self):
         for receiver in self._receivers:
-            receiver.write_message(msg)
+            receiver.flush_messages()
+
+    def write_to_all(self, msg, send):
+        for receiver in self._receivers:
+            receiver.write_message(msg, send)
 
     def send_to_all(self, msg, **data):
         for receiver in self._receivers:
@@ -584,7 +589,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def _on_process_output(self, line):
         self.check_where()
 
-        self.write_to_all(line)
+        self.write_to_all(line, True)
 
     def _on_socket_message(self, msg):
         # stdout data is only used for compatibility to wrapper
@@ -604,6 +609,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                         self.crawl_version = msgobj["version"]
                         self.logger.info("Crawl version: %s.", self.crawl_version)
                     self.send_client_to_all()
+            elif msgobj["msg"] == "flush_messages":
+                # only queue, once we know the crawl process asks for flushes
+                self.queue_messages = True;
+                self.flush_messages_to_all()
             else:
                 self.logger.warning("Unknown message from the crawl process: %s",
                                     msgobj["msg"])
@@ -617,7 +626,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 # want that to reset idle time.
                 self.note_activity()
 
-            self.write_to_all(msg)
+            self.write_to_all(msg, not self.queue_messages)
 
 
 
@@ -757,7 +766,7 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         elif events & self.io_loop.READ:
             msg = self.process.stdout.readline()
 
-            self.write_to_all(msg)
+            self.write_to_all(msg, True)
 
             self.poll_crawl()
             self.check_where()

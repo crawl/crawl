@@ -49,13 +49,13 @@ Notes:
 #undef  COSTLY_ASSERTS
 #undef  DEBUG_PACKAGE
 
-static len_t htole(len_t x)
+static plen_t htole(plen_t x)
 {
-    if (sizeof(len_t) == 4)
+    if (sizeof(plen_t) == 4)
         return htole32(x);
-    if (sizeof(len_t) == 8)
+    if (sizeof(plen_t) == 8)
         return htole64(x);
-    die("unsupported len_t size");
+    die("unsupported plen_t size");
 }
 
 #ifdef DEBUG_PACKAGE
@@ -72,19 +72,19 @@ struct file_header
     uint32_t magic;
     uint8_t version;
     char padding[3];
-    len_t start;
+    plen_t start;
 };
 
 struct block_header
 {
-    len_t len;
-    len_t next;
+    plen_t len;
+    plen_t next;
 };
 
-typedef map<string, len_t> directory_t;
-typedef pair<len_t, len_t> bm_p;
-typedef map<len_t, bm_p> bm_t;
-typedef map<len_t, len_t> fb_t;
+typedef map<string, plen_t> directory_t;
+typedef pair<plen_t, plen_t> bm_p;
+typedef map<plen_t, bm_p> bm_t;
+typedef map<plen_t, plen_t> fb_t;
 
 package::package(const char* file, bool writeable, bool empty)
   : n_users(0), dirty(false), aborted(false), tmp(false)
@@ -265,7 +265,7 @@ void package::commit()
 #endif
 }
 
-void package::seek(len_t to)
+void package::seek(plen_t to)
 {
     ASSERT(!aborted);
 
@@ -288,7 +288,7 @@ chunk_reader* package::reader(const string name)
     return new chunk_reader(this, ch->second);
 }
 
-len_t package::extend_block(len_t at, len_t size, len_t by)
+plen_t package::extend_block(plen_t at, plen_t size, plen_t by)
 {
     // the header is not counted into the block's size, yet takes space
     size += sizeof(block_header);
@@ -303,7 +303,7 @@ len_t package::extend_block(len_t at, len_t size, len_t by)
     if (bl == free_blocks.end())
         return 0;
 
-    len_t free = bl->second;
+    plen_t free = bl->second;
     dprintf("reusing %u of %u at %u\n", by, free, bl->first);
     if (free <= by)
     {
@@ -319,10 +319,10 @@ len_t package::extend_block(len_t at, len_t size, len_t by)
     return by;
 }
 
-len_t package::alloc_block(len_t &size)
+plen_t package::alloc_block(plen_t &size)
 {
     fb_t::iterator bl, best_big, best_small;
-    len_t bb_size = (len_t)-1, bs_size = 0;
+    plen_t bb_size = (plen_t)-1, bs_size = 0;
     for (bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
     {
         if (bl->second < bb_size && bl->second >= size + sizeof(block_header))
@@ -331,20 +331,20 @@ len_t package::alloc_block(len_t &size)
         else if (bl->second >= 16 && bl->second > bs_size)
             best_small = bl, bs_size = bl->second;
     }
-    if (bb_size != (len_t)-1)
+    if (bb_size != (plen_t)-1)
         bl = best_big;
     else if (bs_size != 0)
         bl = best_small;
     else
     {
-        len_t at = file_len;
+        plen_t at = file_len;
 
         file_len += sizeof(block_header) + size;
         return at;
     }
 
-    len_t at = bl->first;
-    len_t free = bl->second;
+    plen_t at = bl->first;
+    plen_t free = bl->second;
     dprintf("found a block for reuse at %u size %u\n", at, free);
     free_blocks.erase(bl);
     free -= sizeof(block_header);
@@ -356,7 +356,7 @@ len_t package::alloc_block(len_t &size)
     return at;
 }
 
-void package::finish_chunk(const string name, len_t at)
+void package::finish_chunk(const string name, plen_t at)
 {
     free_chunk(name);
     directory[name] = at;
@@ -385,7 +385,7 @@ void package::delete_chunk(const string name)
     directory.erase(name);
 }
 
-len_t package::write_directory()
+plen_t package::write_directory()
 {
     delete_chunk("");
 
@@ -396,8 +396,8 @@ len_t package::write_directory()
         uint8_t name_len = i->first.length();
         dir.write((const char*)&name_len, sizeof(name_len));
         dir.write(&i->first[0], i->first.length());
-        len_t start = htole(i->second);
-        dir.write((const char*)&start, sizeof(len_t));
+        plen_t start = htole(i->second);
+        dir.write((const char*)&start, sizeof(plen_t));
     }
 
     ASSERT(dir.str().size());
@@ -414,7 +414,7 @@ void package::collect_blocks()
 {
     for (ssize_t i = unlinked_blocks.size() - 1; i >= 0; --i)
     {
-        len_t at = unlinked_blocks[i];
+        plen_t at = unlinked_blocks[i];
         // Blocks may be re-added onto the list if they're in use.
         if (i != (ssize_t)unlinked_blocks.size() - 1)
             unlinked_blocks[i] = unlinked_blocks[unlinked_blocks.size() - 1];
@@ -423,7 +423,7 @@ void package::collect_blocks()
     }
 }
 
-void package::free_block_chain(len_t at)
+void package::free_block_chain(plen_t at)
 {
     if (reader_count.count(at))
     {
@@ -444,7 +444,7 @@ void package::free_block_chain(len_t at)
     }
 }
 
-void package::free_block(len_t at, len_t size)
+void package::free_block(plen_t at, plen_t size)
 {
     ASSERT(at >= sizeof(file_header));
     ASSERT(at + size <= file_len);
@@ -486,7 +486,7 @@ void package::free_block(len_t at, len_t size)
 void package::fsck()
 {
     fb_t  save_free_blocks = free_blocks;
-    len_t save_file_len = file_len;
+    plen_t save_file_len = file_len;
 
 #ifdef FSCK_VERBOSE
     printf("Fsck starting.  %u chunks, %u used blocks, %u free ones, file size %u\n",
@@ -517,11 +517,11 @@ void package::fsck()
 
 struct dir_entry0
 {
-    char name[sizeof(len_t)];
-    len_t start;
+    char name[sizeof(plen_t)];
+    plen_t start;
 };
 
-void package::read_directory(len_t start, uint8_t version)
+void package::read_directory(plen_t start, uint8_t version)
 {
     ASSERT(directory.empty());
     directory[""] = start;
@@ -533,7 +533,7 @@ void package::read_directory(len_t start, uint8_t version)
     {
     case 0:
         dir_entry0 ch0;
-        while (len_t res = rd.read(&ch0, sizeof(dir_entry0)))
+        while (plen_t res = rd.read(&ch0, sizeof(dir_entry0)))
         {
             if (res != sizeof(dir_entry0))
                 corrupted("save file corrupted -- truncated directory");
@@ -545,8 +545,8 @@ void package::read_directory(len_t start, uint8_t version)
         break;
     case 1:
         uint8_t name_len;
-        len_t bstart;
-        while (len_t res = rd.read(&name_len, sizeof(name_len)))
+        plen_t bstart;
+        while (plen_t res = rd.read(&name_len, sizeof(name_len)))
         {
             if (res != sizeof(name_len))
                 corrupted("save file corrupted -- truncated directory");
@@ -584,7 +584,7 @@ vector<string> package::list_chunks()
     return list;
 }
 
-void package::trace_chunk(len_t start)
+void package::trace_chunk(plen_t start)
 {
     while (start)
     {
@@ -596,17 +596,17 @@ void package::trace_chunk(len_t start)
         if (res != sizeof(block_header))
             corrupted("save file corrupted -- block past eof");
 
-        len_t len  = htole(bl.len);
-        len_t next = htole(bl.next);
-        len_t end  = start + len + sizeof(block_header);
+        plen_t len  = htole(bl.len);
+        plen_t next = htole(bl.next);
+        plen_t end  = start + len + sizeof(block_header);
         dprintf("{at %u size %u+header}\n", start, len);
 
         fb_t::iterator sp = free_blocks.upper_bound(start);
         if (sp == free_blocks.begin())
             corrupted("save file corrupted -- overlapping blocks");
         --sp;
-        len_t sp_start = sp->first;
-        len_t sp_size  = sp->second;
+        plen_t sp_start = sp->first;
+        plen_t sp_size  = sp->second;
         if (sp_start > start || sp_start + sp_size < end)
             corrupted("save file corrupted -- overlapping blocks");
         free_blocks.erase(sp);
@@ -637,22 +637,22 @@ void package::unlink()
 }
 
 // the amount of free space not at the end of file
-len_t package::get_slack()
+plen_t package::get_slack()
 {
     load_traces();
 
-    len_t slack = 0;
+    plen_t slack = 0;
     for (fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
         slack += bl->second;
     return slack;
 }
 
-len_t package::get_chunk_fragmentation(const string name)
+plen_t package::get_chunk_fragmentation(const string name)
 {
     load_traces();
     ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
-    len_t frags = 0;
-    len_t at = directory[name];
+    plen_t frags = 0;
+    plen_t at = directory[name];
     while (at)
     {
         bm_t::iterator bl = block_map.find(at);
@@ -663,12 +663,12 @@ len_t package::get_chunk_fragmentation(const string name)
     return frags;
 }
 
-len_t package::get_chunk_compressed_length(const string name)
+plen_t package::get_chunk_compressed_length(const string name)
 {
     load_traces();
     ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
-    len_t len = 0;
-    len_t at = directory[name];
+    plen_t len = 0;
+    plen_t at = directory[name];
     while (at)
     {
         bm_t::iterator bl = block_map.find(at);
@@ -744,14 +744,14 @@ chunk_writer::~chunk_writer()
     pkg->finish_chunk(name, first_block);
 }
 
-void chunk_writer::raw_write(const void *data, len_t len)
+void chunk_writer::raw_write(const void *data, plen_t len)
 {
     while (len > 0)
     {
-        len_t space = pkg->extend_block(cur_block, block_len, len);
+        plen_t space = pkg->extend_block(cur_block, block_len, len);
         if (!space)
         {
-            len_t next_block = pkg->alloc_block(space = len);
+            plen_t next_block = pkg->alloc_block(space = len);
             ASSERT(space > 0);
             if (cur_block)
                 finish_block(next_block);
@@ -770,7 +770,7 @@ void chunk_writer::raw_write(const void *data, len_t len)
     }
 }
 
-void chunk_writer::finish_block(len_t next)
+void chunk_writer::finish_block(plen_t next)
 {
     block_header head;
     head.len = htole(block_len);
@@ -783,7 +783,7 @@ void chunk_writer::finish_block(len_t next)
     pkg->block_map[cur_block] = bm_p(block_len, next);
 }
 
-void chunk_writer::write(const void *data, len_t len)
+void chunk_writer::write(const void *data, plen_t len)
 {
     ASSERT(data);
     ASSERT(!pkg->aborted);
@@ -808,7 +808,7 @@ void chunk_writer::write(const void *data, len_t len)
 #endif
 }
 
-void chunk_reader::init(len_t start)
+void chunk_reader::init(plen_t start)
 {
     ASSERT(!pkg->aborted);
     pkg->n_users++;
@@ -828,7 +828,7 @@ void chunk_reader::init(len_t start)
 #endif
 }
 
-chunk_reader::chunk_reader(package *parent, len_t start)
+chunk_reader::chunk_reader(package *parent, plen_t start)
 {
     ASSERT(parent);
     dprintf("chunk_reader[%u]: starting\n", start);
@@ -861,7 +861,7 @@ chunk_reader::~chunk_reader()
     pkg->n_users--;
 }
 
-len_t chunk_reader::raw_read(void *data, len_t len)
+plen_t chunk_reader::raw_read(void *data, plen_t len)
 {
     void *buf = data;
     while (len)
@@ -886,13 +886,13 @@ len_t chunk_reader::raw_read(void *data, len_t len)
         else
             pkg->seek(off);
 
-        len_t s = len;
+        plen_t s = len;
         if (s > block_left)
             s = block_left;
         ssize_t res = ::read(pkg->fd, buf, s);
         if (res < 0)
             sysfail("error reading the save file");
-        if ((len_t)res != s)
+        if ((plen_t)res != s)
             corrupted("save file corrupted -- block past eof");
 
         buf = (char*)buf + s;
@@ -904,7 +904,7 @@ len_t chunk_reader::raw_read(void *data, len_t len)
     return (char*)buf - (char*)data;
 }
 
-len_t chunk_reader::read(void *data, len_t len)
+plen_t chunk_reader::read(void *data, plen_t len)
 {
     ASSERT(data);
     if (pkg->aborted)
@@ -945,7 +945,7 @@ len_t chunk_reader::read(void *data, len_t len)
 void chunk_reader::read_all(vector<char> &data)
 {
 #define SPACE 1024
-    len_t s, at;
+    plen_t s, at;
     do
     {
         at = data.size();

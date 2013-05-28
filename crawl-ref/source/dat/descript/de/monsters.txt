@@ -25,6 +25,25 @@ Verlies herum und sucht Rache an allen möchtegern Plünderern. Er ist ein
 versierter Hexer, jedoch nicht weniger tödlich im Nahkampf als andere seiner
 Art.
 %%%%
+Antaeus
+
+Einmal ein mächtiger und berühmter Koloss, seine Arroganz war sein Aufmachen.
+Jetzt ist er korrupt und, ein mächtiger Dämon wer Herren über die eingefrorene
+Verschwendung von Cocytus verdorben. Sein riesiger Körper scheint, als ob er
+durch Ihre Angriffe leicht geschlagen würde; leider scheint es auch, als ob es
+unversehrt durch alle außer dem stärksten von ihnen bleiben würde.
+%%%%
+Arachne
+
+Einmal der beste menschliche Weber, Arachne wurde verflucht, indem er in ihre
+gegenwärtige Form umgestaltet worden ist: Halbmensch, Halbspinne. Nicht mehr
+Altern, sie hat die Jugend und Schönheit einer menschlichen Frau, zusammen mit
+den Beinen und dem Abdomen einer monströsen riesigen Spinne.
+
+Tausende von Jahren, sie hat Magie und ziemlich viele andere Tricks erfahren.
+Nehmen Sie an, durch das Web und die Magie während ihre Lieblingsauswahl
+berückt zu werden und dann Sie trocken zu trinken.
+%%%%
 Asmodeus
 
 Einer der Erz-Dämonen welcher in den tiefen der Hölle haust, von Feuer
@@ -34,9 +53,71 @@ Azrael
 
 Ein mächtiger, angriffslustiger Efreet. (Gibt es noch eine andere Art?)
 %%%%
+Boris
+
+Ein alter und starker Leiche. Wie der ganze wahre Leiche ist Boris unsterblich,
+und wird sich regenerieren sein ausgetrockneter Skelett-bleibt selbst wenn
+völlig aufgelöst.
+%%%%
+Cerebov
+
+Ein gewaltsamer und zorniger Dämon, Cerebov erscheint als ein riesiger Mensch,
+der in der leuchtenden goldenen Rüstung und dem Ausüben eines riesigen
+gedrehten Schwertes bedeckt ist.
+%%%%
+Chuck
+
+Chuck der Steinriese liebt Felsen, das größere besser! Im Laufe der Jahre hat
+er geschafft, ganz die Sammlung einschließlich einiger seltener, verzauberter
+anzuhäufen.
+%%%%
+Crazy Yiuf
+
+Ein verwelkter alter gnoll mit einem langen Silberbart, einen quarterstaff
+ausübend und einen Umhang tragend. Er sieht wie eine Zahl von der Mythologie
+aus! Warten Sie, wird sein Bart an seinen Ohren mit Haken festgehalten?
+%%%%
 Dispater
 
 Der Herrscher der eisernen Stadt Dis.
+%%%%
+Dissolution
+
+Die Gruben des Schlamms haben gepflegt, eine blühende Zivilisation zu sein, und
+Auflösung war der Hellseher ihres Gottes. Als die Stadt von seinen aktuellen
+Einwohnern, nur überlebte Auflösung eingeholt wurde, weil er sich allein treu
+dem Schlamm-Gott gedreht hat. Auflösung ist eine enorme Masse der
+Acidic-Lohbrühe geworden, noch hat seine Intelligenz behalten. Er wird mit dem
+Hass auf irgendetwas gefüllt, was eine Form halten kann.
+%%%%
+Donald
+
+{{
+    local descript = "Ein Abenteurer gerade wie Sie, versuchend, die Kugel " ..
+                     "zu finden."
+
+    if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
+        descript = descript .. " Unlike you, and d"
+    else
+        descript = descript .. " D"
+    end
+
+        descript = descript .. "espite his hatred of it, he takes to water " ..
+                               "like a fowl."
+        return descript
+}}
+%%%%
+Dowan
+
+Ein schöner, aber eitler Elf mit einer Begabung für die Magie und wenig sonst.
+Seine Sachkenntnisse sind die vollkommene Ergänzung der kämpfenden Heldentat
+seiner Zwillingsschwester Duvessa.
+%%%%
+Duvessa
+
+Ein einfach aussehender Elfen Kämpfer, der in vielen Formen des Kampfs
+technisch hervorragend, aber wegen seiner übertrieben selbstbewusst ist. Sie
+wird durch die magischen Sachkenntnisse ihres Zwillingsbruders, Dowans ergänzt.
 %%%%
 Ereshkigal
 
@@ -59,6 +140,27 @@ Kirke
 
 Eine wunderschöne Zauberin.
 %%%%
+Lom Lobon
+
+Stoisch und unergründlich ist Lom Lobon ein alter für seine Beherrschung der
+Magie berüchtigter Dämon. Verbreitet, um das am meisten gelehrte Wesen in den
+Sälen des Infernos zu sein, wird er zuweilen von sterblichen Zauberern
+herausgefunden, die ihre Seelen als Entgelt für die Geheimnisse des
+geheimnisvollen anbieten. An der schrecklichen Zorn-Gegenwart in den meisten
+Dämonen Mangel habend, verbirgt das einzelne Auge von Lom Lobon stattdessen
+eine kalte, gerechte Entsetzlichkeit.
+%%%%
+Louise
+
+Eine mächtige Zauberin, die vom Kopf zur Zehe in der schweren Rüstung gekleidet
+ist. Einmal ein Abenteurer, der nach der sagenhaften Kugel von Zot sucht, sie
+wurde in den Abgrund geworfen und wurde dort hoffnungslos verloren. Gespielt
+mit durch etwas größere Macht wurde sie auf dem feindlichen Flugzeug seit fast
+einem Jahrzehnt durchstochen. Als sie schließlich aus dem Abgrund erschienen
+ist, war Louise mächtig tatsächlich geworden, aber war auch völlig wahnsinnig
+gegangen. Sie wandert jetzt die Säle des Kerkers, andere Abenteurer suchend, um
+ihr Schicksal zu teilen.
+%%%%
 Purgy
 
 Ein ungewöhnlich dünner Troll.
@@ -72,6 +174,11 @@ Ein uralter und mächtiger Drache.
 blizzard demon
 
 Ein größerer Dämon, umgeben von Schnee und Blitzen.
+%%%%
+Brimstone Fiend
+
+Ein riesiger und mächtiger Dämon hat sich im Höllenfeuer mit großen schuppigen
+Flügeln gewunden. Einer der schrecklichsten Bewohner von einigen der Höllen.
 %%%%
 deep elf knight
 
@@ -106,4 +213,9 @@ deep troll
 
 Ein alters gebeugter Troll mit dunkler Haut, diese in Höhlen lebenden
 Tiefen-Trolle reisen oft in Gruppen.
+%%%%
+Cigotuvi's Monster
+
+This terrifying creation looks to have been constructed from the body parts of
+every monstrous creature imaginable.
 %%%%

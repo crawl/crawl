@@ -535,7 +535,14 @@ void banished(const string &who)
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        down_stairs(DNGN_ABYSSAL_STAIR);
+        if (level_id::current().depth < brdepth[BRANCH_ABYSS])
+            down_stairs(DNGN_ABYSSAL_STAIR);
+        else
+        {
+            // On Abyss:5 we can't go deeper; cause a shift to a new area
+            mpr("You are banished to a different region of the Abyss.", MSGCH_BANISHMENT);
+            abyss_teleport(true);
+        }
         return;
     }
 
@@ -889,7 +896,8 @@ static bool _follows_orders(monster* mon)
             && mon->type != MONS_GIANT_SPORE
             && mon->type != MONS_BATTLESPHERE
             && !mon->berserk()
-            && !mon->is_projectile());
+            && !mon->is_projectile()
+            && !mon->has_ench(ENCH_HAUNTING));
 }
 
 // Sets foe target of friendly monsters.
@@ -944,6 +952,12 @@ static void _set_allies_withdraw(const coord_def &target)
 void yell(bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot shout while unable to breathe!");
+        return;
+    }
 
     bool targ_prev = false;
     int mons_targd = MHITNOT;
@@ -1241,8 +1255,6 @@ static void _hell_effects()
         noisy(15, you.pos());
 
     spschool_flag_type which_miscast = SPTYP_RANDOM;
-    bool summon_instead = false;
-    monster_type which_beastie = MONS_NO_MONSTER;
 
     int temp_rand = random2(27);
     if (temp_rand > 17)     // 9 in 27 odds {dlb}
@@ -1264,49 +1276,36 @@ static void _hell_effects()
     }
     else if (temp_rand > 7) // 10 in 27 odds {dlb}
     {
-        // 60:40 miscast:summon split {dlb}
-        summon_instead = x_chance_in_y(2, 5);
+        monster_type which_beastie;
 
+        // 60:40 miscast:summon split {dlb}
         switch (you.where_are_you)
         {
         case BRANCH_DIS:
-            if (summon_instead)
-                which_beastie = summon_any_demon(RANDOM_DEMON_GREATER);
-            else
-                which_miscast = SPTYP_EARTH;
+            which_beastie = RANDOM_DEMON_GREATER;
+            which_miscast = SPTYP_EARTH;
             break;
 
         case BRANCH_GEHENNA:
-            if (summon_instead)
-                which_beastie = MONS_BRIMSTONE_FIEND;
-            else
-                which_miscast = SPTYP_FIRE;
+            which_beastie = MONS_BRIMSTONE_FIEND;
+            which_miscast = SPTYP_FIRE;
             break;
 
         case BRANCH_COCYTUS:
-            if (summon_instead)
-                which_beastie = MONS_ICE_FIEND;
-            else
-                which_miscast = SPTYP_ICE;
+            which_beastie = MONS_ICE_FIEND;
+            which_miscast = SPTYP_ICE;
             break;
 
         case BRANCH_TARTARUS:
-            if (summon_instead)
-                which_beastie = MONS_SHADOW_FIEND;
-            else
-                which_miscast = SPTYP_NECROMANCY;
+            which_beastie = MONS_SHADOW_FIEND;
+            which_miscast = SPTYP_NECROMANCY;
             break;
 
         default:
-            // This is to silence gcc compiler warnings. {dlb}
-            if (summon_instead)
-                which_beastie = MONS_BRIMSTONE_FIEND;
-            else
-                which_miscast = SPTYP_NECROMANCY;
-            break;
+            die("unknown hell branch");
         }
 
-        if (summon_instead)
+        if (x_chance_in_y(2, 5))
         {
             create_monster(
                 mgen_data::hostile_at(which_beastie, "the effects of Hell",
@@ -2265,7 +2264,8 @@ void handle_time()
     handle_god_time();
 
     if (player_mutation_level(MUT_SCREAM)
-        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100)
+        && !(you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()))
     {
         yell(true);
     }
@@ -3175,7 +3175,7 @@ void slime_wall_damage(actor* act, int delay)
     {
         if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
         {
-            splash_with_acid(strength, false,
+            splash_with_acid(strength, NON_MONSTER, false,
                              (walls > 1) ? "The walls burn you!"
                                          : "The wall burns you!");
         }
@@ -3196,5 +3196,31 @@ void slime_wall_damage(actor* act, int delay)
                   mon->name(DESC_THE).c_str());
         }
         mon->hurt(NULL, dam, BEAM_ACID);
+    }
+}
+
+void recharge_elemental_evokers(int exp)
+{
+    vector<item_def*> evokers;
+    for (int item = 0; item < ENDOFPACK; ++item)
+    {
+        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus2 > 0)
+            evokers.push_back(&you.inv[item]);
+    }
+
+    int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
+                             you.experience_level * 425),
+                        you.experience_level*4 + 30)
+                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 7));
+
+    for (unsigned int i = 0; i < evokers.size(); ++i)
+    {
+        item_def* evoker = evokers[i];
+        evoker->plus2 -= div_rand_round(exp, xp_factor);
+        if (evoker->plus2 <= 0)
+        {
+            evoker->plus2 = 0;
+            mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
+        }
     }
 }

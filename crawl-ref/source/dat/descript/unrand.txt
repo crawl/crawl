@@ -274,9 +274,10 @@ boots of the Assassin
 
 Some soft boots, specially designed by the Assassin's Guild.
 %%%%
-Lear's chain mail
+Lear's hauberk
 
-A chain mail made of pure gold.
+A well-made golden hauberk that covers all of its wearer's body parts. It
+includes a chainmail coif, chausses and maille gauntlets.
 %%%%
 skin of Zhor
 

@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "delay.h"
@@ -22,6 +23,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "mon-abil.h"
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
@@ -60,7 +62,8 @@ static const char* form_names[] =
 const char* transform_name(transformation_type form)
 {
     COMPILE_CHECK(ARRAYSZ(form_names) == LAST_FORM + 1);
-    ASSERT(form >= 0 && form <= LAST_FORM);
+    ASSERT(form >= 0);
+    ASSERT(form <= LAST_FORM);
     return form_names[form];
 }
 
@@ -91,7 +94,7 @@ bool form_can_swim(transformation_type form)
     if (you.species == SP_MERFOLK && !form_changed_physiology(form))
         return true;
 
-    if (you.species == SP_OCTOPODE)
+    if (you.species == SP_OCTOPODE && !form_changed_physiology(form))
         return true;
 
     size_type size = you.transform_size(form, PSIZE_BODY);
@@ -104,7 +107,7 @@ bool form_can_swim(transformation_type form)
 bool form_likes_water(transformation_type form)
 {
     return (form_can_swim(form) || you.species == SP_GREY_DRACONIAN
-            || you.species == SP_OCTOPODE && !form_changed_physiology(form));
+                                   && !form_changed_physiology(form));
 }
 
 bool form_has_mouth(transformation_type form)
@@ -383,6 +386,9 @@ void unmeld_one_equip(equipment_type eq)
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
+    if (player_equip_unrand(UNRAND_LEAR) && eq >= EQ_HELMET && eq <= EQ_BOOTS)
+        eq = EQ_BODY_ARMOUR;
+
     set<equipment_type> r;
     r.insert(eq);
     _remove_equipment(r, meld, mutation);
@@ -901,7 +907,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_PORCUPINE:
-        tran_name = "spider";
+        tran_name = "porcupine";
         str       = -3;
         msg      += "a spiny porcupine.";
         break;
@@ -1014,16 +1020,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_FUNGUS:
-        if (you.religion == GOD_FEDHAS)
-            simple_god_message(" smiles upon you.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
         set_redraw_status(REDRAW_HUNGER);
         break;
 
     case TRAN_TREE:
-        if (you.religion == GOD_FEDHAS)
-            simple_god_message(" smiles upon you.");
+        if (you.religion == GOD_FEDHAS && !player_under_penance())
+            simple_god_message(" makes you hardy against extreme temperatures.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
         set_redraw_status(REDRAW_HUNGER);
@@ -1108,10 +1112,23 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     you.check_clinging(false);
 
+    // If we are no longer living, end an effect that afflicts only the living
+    if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
+    {
+        // Heal a little extra if we gained max hp from this transformation
+        if (form_hp_mod() != 10)
+        {
+            int dam = you.props["flay_damage"].get_int();
+            you.heal((dam * form_hp_mod() / 10) - dam);
+        }
+        heal_flayed_effect(&you);
+    }
+
     // This only has an effect if the transformation happens passively,
     // for example if Xom decides to transform you while you're busy
     // running around or butchering corpses.
-    stop_delay();
+    // If you're turned into a tree, you stop taking stairs.
+    stop_delay(which_trans == TRAN_TREE);
 
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;

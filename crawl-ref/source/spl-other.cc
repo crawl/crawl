@@ -324,6 +324,12 @@ void end_recall()
 // Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
 spret_type cast_phase_shift(int pow, bool fail)
 {
+    if (you.duration[DUR_DIMENSION_ANCHOR])
+    {
+        mpr("You are anchored firmly to the material plane!");
+        return SPRET_ABORT;
+    }
+
     fail_check();
     if (!you.duration[DUR_PHASE_SHIFT])
         mpr("You feel the strange sensation of being on two planes at once.");

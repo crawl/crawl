@@ -80,7 +80,8 @@ DEPTH: Vaults
 WEIGHT: 25
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_ring
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_ring layout_type_vaults
 : build_vaults_ring_layout(_G, 5, 20)
 MAP
 ENDMAP
@@ -97,7 +98,8 @@ DEPTH: Vaults
 WEIGHT: 30
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_box
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_box layout_type_vaults
 {{
   local gxm,gym = dgn.max_bounds()
   local min_size = 6
@@ -118,7 +120,8 @@ DEPTH: Vaults
 WEIGHT: 30
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_cross
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_cross layout_type_vaults
 {{
   local gxm,gym = dgn.max_bounds()
   -- Corridor widths
@@ -151,7 +154,8 @@ DEPTH: Vaults
 WEIGHT: 50
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_grid
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_grid layout_type_vaults
 : build_vaults_layout(_G, "Omnigrid", layout_primitive_omnigrid(), { max_rooms = 20, max_room_tries = 10, max_place_tries = 20 })
 MAP
 ENDMAP
@@ -166,7 +170,8 @@ NAME: layout_vaults_quadrants
 DEPTH: Vaults
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_grid
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_grid layout_type_vaults
 CHANCE: 100%
 {{
   -- TODO: smaller actual rooms with more grid divisions?; jitter rooms when corridors are wide enough
@@ -206,7 +211,8 @@ DEPTH: Vaults
 WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_cross
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_cross layout_type_vaults
 : build_vaults_cross_layout(_G)
 MAP
 ENDMAP
@@ -220,7 +226,8 @@ DEPTH: Vaults
 WEIGHT: 20
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_room
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_room layout_type_vaults
 : build_vaults_big_room_layout(_G, 10, 20)
 MAP
 ENDMAP
@@ -230,7 +237,8 @@ DEPTH: Vaults
 WEIGHT: 20
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_room
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_room layout_type_vaults
 : build_vaults_chaotic_city_layout(_G, 5, 0.5)
 MAP
 ENDMAP
@@ -240,7 +248,8 @@ DEPTH: Vaults
 WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_maze
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_maze layout_type_vaults
 : build_vaults_maze_layout(_G)
 MAP
 ENDMAP
@@ -251,7 +260,8 @@ DEPTH: Vaults
 WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_maze
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_maze layout_type_vaults
 : build_vaults_maze_snakey_layout(_G)
 MAP
 ENDMAP
@@ -261,7 +271,8 @@ DEPTH: Vaults
 WEIGHT: 10
 ORIENT: encompass
 CHANCE: 100%
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_vaults uniq_vaults_maze
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_maze layout_type_vaults
 : build_vaults_maze_bifur_layout(_G)
 MAP
 ENDMAP

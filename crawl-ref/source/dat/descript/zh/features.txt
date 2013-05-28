@@ -732,10 +732,6 @@ Frost-covered floor
 
 这里的地面覆着冰霜。冰被踩碎时发出的声音给你一种莫名的快感。
 %%%%
-A cracked metal wall
-
-这面金属墙已经有点损毁了。很可惜，它上面的洞还是没有大到能让你爬过去的程度。
-%%%%
 A golden statue
 
 一尊黄金制成的圣人雕像。
@@ -820,10 +816,6 @@ An elephant-shaped statue
 A weirdly glowing ball
 
 这个悬浮在半空中的球体向四周辐射出微光。
-%%%%
-A very old granite statue
-
-在它的胸口处有一道裂痕。也许你可以击打那里来打碎它？
 %%%%
 A sealed sarcophagus
 

@@ -58,3 +58,23 @@ function procedural.transform.polar_inverse(source,radius,sx,sy)
   end
 
 end
+
+-- Distorts a function by an amount depending on another function - in this case its
+-- proximity to the map border
+function procedural.transform.damped_distortion(source,options)
+
+    -- Apply distortion
+    local fdsx = procedural.simplex3d { scale = util.random_range_real(0.1,1), unit = false }
+    local fdsy = procedural.simplex3d { scale = util.random_range_real(0.1,1), unit = false }
+    -- Distort more at the edge of the map
+    -- TODO: Could look even better with a less linear easing function
+    local fbox = procedural.box{}
+    local fedge = function(x,y)
+      return math.max(0,1-fbox(x,y))
+    end
+    local fdx = procedural.mul(fdsx,fedge)
+    local fdy = procedural.mul(fdsy,fedge)
+
+    return procedural.distort { source = source, scale = crawl.random_range(4,8), offsetx = fdx, offsety = fdy }
+
+end

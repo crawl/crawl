@@ -86,7 +86,8 @@ static const char *_activity_interrupt_name(activity_interrupt_type ai);
 
 static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
 {
-    ASSERT(prayertype >= 0 && prayertype < NUM_RECITE_TYPES);
+    ASSERT(prayertype >= 0);
+    ASSERT(prayertype < NUM_RECITE_TYPES);
     return zin_recite_to_single_monster(where, (recite_type)prayertype);
 }
 
@@ -1373,7 +1374,7 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (tiles.need_redraw())
+        if (Options.rest_delay >= 0 && tiles.need_redraw())
             tiles.redraw();
 #endif
 
@@ -1382,6 +1383,10 @@ static command_type _get_running_command()
         {
             mpr("Done waiting.");
         }
+
+        if (Options.rest_delay > 0)
+            delay(Options.rest_delay);
+
         return CMD_MOVE_NOWHERE;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)
@@ -1390,6 +1395,15 @@ static command_type _get_running_command()
         delay(Options.travel_delay);
 
     return direction_to_command(you.running.pos.x, you.running.pos.y);
+}
+
+static bool _auto_eat(delay_type type)
+{
+    return Options.auto_eat_chunks
+           && (!you.gourmand()
+               || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
+               || you.hunger_state < HS_SATIATED)
+           && (type == DELAY_REST || type == DELAY_TRAVEL);
 }
 
 static void _handle_run_delays(const delay_queue_item &delay)
@@ -1414,7 +1428,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
         stop_running();
     else
     {
-        if (Options.auto_eat_chunks)
+        if (_auto_eat(delay.type))
         {
             const interrupt_block block_interrupts;
             if (prompt_eat_chunks(true) == 1)
@@ -1558,7 +1572,7 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     const int delay = idelay.type;
     lua_State *ls = clua.state();
     if (!ls || ai == AI_FORCE_INTERRUPT)
-        return B_TRUE;
+        return MB_TRUE;
 
     const char *interrupt_name = _activity_interrupt_name(ai);
     const char *act_name = delay_name(delay);
@@ -1571,23 +1585,23 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
         if (lua_isnil(ls, -1))
         {
             lua_pop(ls, 1);
-            return B_FALSE;
+            return MB_FALSE;
         }
 
         bool stopact = lua_toboolean(ls, -1);
         lua_pop(ls, 1);
         if (stopact)
-            return B_TRUE;
+            return MB_TRUE;
     }
 
     if (delay == DELAY_MACRO && clua.callbooleanfn(true, "c_interrupt_macro",
                                                    "sA", interrupt_name, &at))
     {
-        return B_TRUE;
+        return MB_TRUE;
     }
 
 #endif
-    return B_MAYBE;
+    return MB_MAYBE;
 }
 
 // Returns true if the activity should be interrupted, false otherwise.
@@ -1597,11 +1611,11 @@ static bool _should_stop_activity(const delay_queue_item &item,
 {
     switch (_userdef_interrupt_activity(item, ai, at))
     {
-    case B_TRUE:
+    case MB_TRUE:
         return true;
-    case B_FALSE:
+    case MB_FALSE:
         return false;
-    case B_MAYBE:
+    case MB_MAYBE:
         break;
     }
 
@@ -1701,6 +1715,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " opens the gate.";
         else if (at.context == SC_TELEPORT_IN)
             text += " appears from thin air!";
+        else if (at.context == SC_LEAP_IN)
+            text += " leaps into view!";
         // The monster surfaced and submerged in the same turn without
         // doing anything else.
         else if (at.context == SC_SURFACES_BRIEFLY)
@@ -1827,11 +1843,8 @@ bool interrupt_activity(activity_interrupt_type ai,
     }
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
-    if (delay_is_run(delay) && ai == AI_HUNGRY
-        && Options.auto_eat_chunks && prompt_eat_chunks(true) == 1)
-    {
+    if (ai == AI_HUNGRY && _auto_eat(delay) && prompt_eat_chunks(true) == 1)
         return false;
-    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 

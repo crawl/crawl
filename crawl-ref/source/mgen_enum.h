@@ -79,6 +79,8 @@ enum band_type
 #if TAG_MAJOR_VERSION == 34
     BAND_OGRE_MAGE_EXTERN,
 #endif
+    BAND_DEATH_KNIGHT,
+    BAND_JIANGSHI,
     NUM_BANDS                   // always last
 };
 

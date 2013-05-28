@@ -195,6 +195,10 @@ static void _abyss_erase_stairs_from(const vault_placement *vp)
 
 static bool _abyss_place_map(const map_def *mdef)
 {
+    // This is to prevent the player position from being updated by vaults
+    // until after everything is done.
+    unwind_bool gen(Generating_Level, true);
+
     const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)
         _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
@@ -214,6 +218,13 @@ static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
     return false;
 }
 
+static void _abyss_postvault_fixup()
+{
+    fixup_misplaced_items();
+    link_items();
+    env.markers.activate_all();
+}
+
 static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
 {
     // Make sure we're not about to link bad items.
@@ -223,8 +234,7 @@ static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
                                                   "abyss_rune");
 
     // Make sure the rune is linked.
-    fixup_misplaced_items();
-    link_items();
+    _abyss_postvault_fixup();
     return result;
 }
 
@@ -406,6 +416,9 @@ static bool _abyss_check_place_feat(coord_def p,
             && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit"))
         {
             *use_map = false;
+
+            // Link the vault-placed items.
+            _abyss_postvault_fixup();
         }
         else
             grd(p) = which_feat;
@@ -576,7 +589,7 @@ static void _push_items()
         for (distance_iterator di(item.pos); di; ++di)
             if (!_pushy_feature(grd(*di)))
             {
-                move_item_to_grid(&i, *di, true);
+                move_item_to_grid(&i, *di, NON_MONSTER, true);
                 break;
             }
     }
@@ -628,6 +641,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
 #ifdef USE_TILE
     env.tile_bk_fg(p)   = 0;
     env.tile_bk_bg(p)   = 0;
+    env.tile_bk_cloud(p)= 0;
 #endif
     tile_clear_flavour(p);
     tile_init_flavour(p);
@@ -967,53 +981,60 @@ static level_id _get_real_level()
     return levels[pick];
 }
 
+/**************************************************************/
+/* Fixed layouts (ie, those that depend only on abyss coords) */
+/**************************************************************/
+const static WastesLayout wastes;
+const static DiamondLayout diamond30(3,0);
+const static DiamondLayout diamond21(2,1);
+const static ColumnLayout column2(2);
+const static ColumnLayout column26(2,6);
+const static ForestLayout forest;
+const static ProceduralLayout* regularLayouts[] =
+{
+    &diamond30, &diamond21, &column2, &column26, &forest,
+};
+const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
+    regularLayouts + 5);
+const static WorleyLayout worleyL(123456, layout_vec);
+const static RoilingChaosLayout chaosA(8675309, 450);
+const static RoilingChaosLayout chaosB(7654321, 400);
+const static RoilingChaosLayout chaosC(24324,   380);
+const static RoilingChaosLayout chaosD(24816,   500);
+const static NewAbyssLayout newAbyssLayout(7629);
+const static ProceduralLayout* mixedLayouts[] =
+{
+    &chaosA, &worleyL, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
+};
+const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
+const static WorleyLayout layout(4321, mixed_vec);
+const static ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
+const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
+const static WorleyLayout baseLayout(314159, base_vec, 5.0);
+const static RiverLayout rivers(1800, baseLayout);
+const static UnderworldLayout underworld;
+const static ClampLayout underworld_clamped(underworld, 40, true);
+// This one is not fixed: [0] is a level pulled from the current game
+static vector<const ProceduralLayout*> complex_vec(3);
+
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord;
 
-    const static WastesLayout wastes;
     if (_in_wastes(pt))
     {
         ProceduralSample sample = wastes(pt, abyssal_state.depth);
         abyss_sample_queue.push(sample);
         return sample;
     }
-    const static DiamondLayout diamond30(3,0);
-    const static DiamondLayout diamond21(2,1);
-    const static ColumnLayout column2(2);
-    const static ColumnLayout column26(2,6);
-    const static ForestLayout forest;
-    const static ProceduralLayout* regularLayouts[] =
-    {
-        &diamond30, &diamond21, &column2, &column26, &forest,
-    };
-    const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
-        regularLayouts + 5);
-    const static WorleyLayout worley(123456, layout_vec);
-    const static RoilingChaosLayout chaosA(8675309, 450);
-    const static RoilingChaosLayout chaosB(7654321, 400);
-    const static RoilingChaosLayout chaosC(24324,   380);
-    const static RoilingChaosLayout chaosD(24816,   500);
-    const static NewAbyssLayout newAbyssLayout(7629);
-    const ProceduralLayout* mixedLayouts[] =
-    {
-        &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
-    };
-    const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
-    const static WorleyLayout layout(4321, mixed_vec);
-    const ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
-    const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
-    const static WorleyLayout baseLayout(314159, base_vec, 5.0);
-    const static RiverLayout rivers(1800, baseLayout);
-    const static UnderworldLayout underworld;
-    const static ClampLayout underworld_clamped(underworld, 40, true);
 
     if (abyssLayout == NULL)
     {
         const level_id lid = _get_real_level();
         levelLayout = new LevelLayout(lid, 5, rivers);
-        const ProceduralLayout* complex_layout[] = { levelLayout, &rivers, &underworld_clamped };
-        const static vector<const ProceduralLayout*> complex_vec(complex_layout, complex_layout + 3);
+        complex_vec[0] = levelLayout;
+        complex_vec[1] = &rivers; // const
+        complex_vec[2] = &underworld_clamped; // const
         abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
     }
 
@@ -1055,6 +1076,16 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         default:
             return CLOUD_NONE;
     }
+}
+
+static dungeon_feature_type _veto_dangerous_terrain(dungeon_feature_type feat)
+{
+    if (feat == DNGN_DEEP_WATER)
+        return DNGN_SHALLOW_WATER;
+    if (feat == DNGN_LAVA)
+        return DNGN_FLOOR;
+
+    return feat;
 }
 
 static void _update_abyss_terrain(const coord_def &p,
@@ -1105,12 +1136,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
     // Veto dangerous terrain.
     if (you.pos() == rp)
-    {
-        if (feat == DNGN_DEEP_WATER)
-            feat = DNGN_SHALLOW_WATER;
-        if (feat == DNGN_LAVA)
-            feat = DNGN_FLOOR;
-    }
+        feat = _veto_dangerous_terrain(feat);
 
     // If the selected grid is already there, *or* if we're morphing and
     // the selected grid should have been there, do nothing.
@@ -1132,7 +1158,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
 static int _abyssal_stair_chance()
 {
-    return 3500 - (200 * you.depth / 3);
+    return (you.char_direction == GDT_GAME_START ? 0 : 3500 - (200 * you.depth / 3));
 }
 
 static void _nuke_all_terrain(bool vaults)
@@ -1210,7 +1236,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 _abyss_pick_altar(),
                                 abyss_genlevel_mask)
         ||
-        (level_id::current().depth < 5 &&
+        (level_id::current().depth < brdepth[BRANCH_ABYSS] &&
         _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
                                 DNGN_ABYSSAL_STAIR,
                                 abyss_genlevel_mask)));
@@ -1219,7 +1245,10 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
     dungeon_feature_type feat = grd(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
-        you.shove();
+    {
+        bool shoved = you.shove();
+        ASSERT(shoved);
+    }
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
@@ -1262,7 +1291,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
     _abyss_apply_terrain(abyss_genlevel_mask);
 
-    bool use_vaults = (you.char_direction == GDT_GAME_START ? false : true);
+    bool use_vaults = you.char_direction != GDT_GAME_START;
 
     if (use_vaults)
     {
@@ -1271,8 +1300,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
         _abyss_place_vaults(abyss_genlevel_mask);
 
         // Link the vault-placed items.
-        fixup_misplaced_items();
-        link_items();
+        _abyss_postvault_fixup();
     }
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     setup_environment_effects();
@@ -1342,13 +1370,8 @@ void destroy_abyss()
     {
         delete abyssLayout;
         abyssLayout = nullptr;
-        /* memory leak!
-           Due to static contructors being called only once, only the first
-           real level referenced will be used, even after a restart_after_game.
-           Restoring the leak so people can play trunk while we talk.
         delete levelLayout;
         levelLayout = nullptr;
-        */
     }
 }
 
@@ -1413,7 +1436,6 @@ static void _abyss_generate_new_area()
     you.moveto(ABYSS_CENTRE);
     abyss_genlevel_mask.init(true);
     _generate_area(abyss_genlevel_mask);
-    grd(you.pos()) = DNGN_FLOOR;
     if (one_chance_in(5))
     {
         _place_feature_near(you.pos(), LOS_RADIUS,
@@ -1453,6 +1475,8 @@ retry:
     _write_abyssal_features();
     map_bitmask abyss_genlevel_mask(true);
     _abyss_apply_terrain(abyss_genlevel_mask);
+
+    grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         ASSERT(grd(*ri) > DNGN_UNSEEN);
@@ -1537,6 +1561,7 @@ void abyss_teleport(bool new_area)
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
     _abyss_generate_new_area();
     _write_abyssal_features();
+    grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
     forget_map(false);
     clear_excludes();
     more();

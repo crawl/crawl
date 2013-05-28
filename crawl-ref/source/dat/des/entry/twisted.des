@@ -736,44 +736,6 @@ MAP
 ENDMAP
 
 ###############################################################################
-# A gallery of extinct species
-# Includes 4 formerly playable races which aren't represented as normal monsters.
-# With much stolen from kb_entry_jail
-NAME:    evilmike_entry_obsolete
-TAGS:    entry no_monster_gen
-WEIGHT:  1
-ORIENT:  float
-SHUFFLE: ABC
-KFEAT:   ABC = floor
-KMONS:  A = gnome ; nothing
-KMONS:  B = elf col:darkgrey name:grey n_adj n_spe n_des ; nothing
-KMONS:  C = dwarf name:hill n_adj n_spe n_des ; nothing
-KMONS:  D = dwarf name:mountain n_adj n_spe n_des ; nothing
-FTILE:  .m+T = floor_vault
-TILE:   X = wall_vines
-COLOUR: .= lightgrey
-SUBST:  ':., X=x
-SUBST:  T:T.
-SUBST:  T=TTV
-MAP
-xxxxxxxxxxxxxxx
-xxxxxxxxxAxxxxx
-xxxxXXXXXmXxxxx
-xxxXX.....XXxxx
-xxBm...T...XXxx
-xxXX........Xxx
-xxX...ccc...Xxx
-xxX.T.c{+.T.+'@
-xxX...ccc...Xxx
-xxXX........Xxx
-xxCm...T...XXxx
-xxxXX.....XXxxx
-xxxxXXXXXmXxxxx
-xxxxxxxxxDxxxxx
-xxxxxxxxxxxxxxx
-ENDMAP
-
-###############################################################################
 
 NAME: nicolae_entry_kraken_aquarium_a
 TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake

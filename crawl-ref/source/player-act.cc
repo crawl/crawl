@@ -71,15 +71,6 @@ void player::moveto(const coord_def &c, bool clear_net)
     set_position(c);
 
     clear_far_constrictions();
-
-    if (you.duration[DUR_QUAD_DAMAGE])
-        invalidate_agrid(true);
-
-    if (player_has_orb())
-    {
-        env.orb_pos = c;
-        invalidate_agrid(true);
-    }
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)
@@ -110,6 +101,16 @@ void player::set_position(const coord_def &c)
     if (real_move)
     {
         reset_prev_move();
+
+        if (you.duration[DUR_QUAD_DAMAGE])
+            invalidate_agrid(true);
+
+        if (player_has_orb())
+        {
+            env.orb_pos = c;
+            invalidate_agrid(true);
+        }
+
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
     }
 }
@@ -269,7 +270,8 @@ brand_type player::damage_brand(int)
 // eq must be in [EQ_WEAPON, EQ_RING_EIGHT], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
+    ASSERT(eq >= EQ_WEAPON);
+    ASSERT(eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -593,12 +595,18 @@ void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (other && other->is_monster())
+    if (!other)
+        return;
+
+    if (other->is_monster())
     {
         const monster* mon = other->as_monster();
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
+
+    if (mons_is_firewood((monster*) other))
+        return;
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
     if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))

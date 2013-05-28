@@ -209,7 +209,6 @@ polar_bear MONS_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
-mon/vault/black_sheep MONS_BLACK_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
 catoblepas MONS_CATOBLEPAS
@@ -418,8 +417,6 @@ silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
-spooky_statue MONS_SPOOKY_STATUE
-chilling_statue MONS_CHILLING_STATUE
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
 fire_elementalist_statue MONS_FIRE_ELEMENTALIST_STATUE
@@ -534,7 +531,7 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 slave MONS_SLAVE
-human_slave
+slave_freed
 ## From a Lair ending
 %rim 0
 vault/hell_wizard_50 MONS_HELL_WIZARD
@@ -661,8 +658,6 @@ sphinx MONS_SPHINX
 tengu MONS_TENGU
 %sdir mon/holy
 shedu MONS_SHEDU
-%sdir mon/vault
-tengu_conjurer MONS_TENGU_CONJURER
 %sdir mon/unique
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
@@ -708,8 +703,9 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 %sdir mon/unique
 %rim 0
 boris MONS_BORIS
-%rim 1
 %sdir mon/undead
+revenant MONS_REVENANT
+%rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
 mon/vault/zonguldrok_lich MONS_ZONGULDROK_LICH
@@ -795,6 +791,7 @@ vault/iron_troll_monk_ghost MONS_IRON_TROLL_MONK
 vampire MONS_VAMPIRE
 vampire_knight MONS_VAMPIRE_KNIGHT
 vampire_mage MONS_VAMPIRE_MAGE
+jiangshi MONS_JIANGSHI
 %sdir mon/unique
 jory MONS_JORY
 
@@ -951,6 +948,7 @@ phantom MONS_PHANTOM
 ## used for Detect Creatures
 ghost MONS_PLAYER_GHOST
 silent_spectre MONS_SILENT_SPECTRE
+lost_soul MONS_LOST_SOUL /*'*'*/
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
@@ -984,6 +982,7 @@ gnome MONS_GNOME
 wight MONS_WIGHT
 %rim 1
 skeletal_warrior MONS_SKELETAL_WARRIOR
+ancient_champion MONS_ANCIENT_CHAMPION
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
@@ -997,9 +996,6 @@ crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique
 murray MONS_MURRAY
-%sdir mon/vault
-## From a special vault (ancient_champions.des)
-ancient_champion MONS_ANCIENT_CHAMPION
 
 ## Sprint specials
 %sdir mon/sprint

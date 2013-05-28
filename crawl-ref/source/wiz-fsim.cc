@@ -346,10 +346,13 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
                 bolt beam;
                 // throw_it() will decrease quantity by 1
                 inc_inv_item_quantity(missile, 1);
+                //Don't leave stacks of ammo
+                you.inv[missile].flags |= ISFLAG_SUMMONED;
                 beam.target = mon.pos();
                 beam.animate = false;
                 if (throw_it(beam, missile, false, DEBUG_COOKIE))
                     hits++;
+                you.inv[missile].flags &= ~ISFLAG_SUMMONED;
             }
             else // otherwise, melee combat
             {

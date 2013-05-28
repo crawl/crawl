@@ -7,10 +7,19 @@
 #ifndef FOOD_H
 #define FOOD_H
 
-#define BERSERK_NUTRITION    700
-#define HUNGER_STARVING     1000
-#define HUNGER_DEFAULT      6000
-#define HUNGER_MAXIMUM     12000
+#define BERSERK_NUTRITION     700
+
+#define HUNGER_STARVING      1000
+#define HUNGER_NEAR_STARVING 1533
+#define HUNGER_VERY_HUNGRY   2066
+#define HUNGER_HUNGRY        2600
+#define HUNGER_SATIATED      7000
+#define HUNGER_FULL          9000
+#define HUNGER_VERY_FULL    11000
+#define HUNGER_ENGORGED     40000
+
+#define HUNGER_DEFAULT       6000
+#define HUNGER_MAXIMUM      12000
 
 int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
@@ -46,7 +55,7 @@ int eat_from_floor(bool skip_chunks = true);
 bool eat_from_inventory();
 int prompt_eat_chunks(bool only_auto = false);
 
-bool food_change(bool suppress_message = false);
+bool food_change(bool initial = false);
 void eat_inventory_item(int which_inventory_slot);
 
 bool prompt_eat_inventory_item(int slot = -1);
@@ -63,7 +72,6 @@ bool you_foodless(bool can_eat = false);
 
 void handle_starvation();
 string hunger_cost_string(const int hunger);
-void end_nausea();
 
 maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot = false);
 #endif

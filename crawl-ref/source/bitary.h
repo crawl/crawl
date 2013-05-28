@@ -15,6 +15,7 @@ class bit_vector
 {
 public:
     bit_vector(unsigned long size = 0);
+    bit_vector(const bit_vector& other);
     ~bit_vector();
 
     void reset();

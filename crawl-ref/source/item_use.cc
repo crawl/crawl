@@ -9,6 +9,7 @@
 
 #include "abl-show.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
@@ -621,6 +622,54 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
+    // Lear's hauberk covers also head, hands and legs.
+    if (is_unrandom_artefact(item) && item.special == UNRAND_LEAR)
+    {
+        if (!player_has_feet(!ignore_temporary))
+        {
+            if (verbose)
+                mpr("You have no feet.");
+            return false;
+        }
+
+        if (!ignore_temporary)
+        {
+            for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
+            {
+                // No strange race can wear this.
+                const char* parts[] = { "head", "hands", "feet" };
+                // Auto-disrobing would be nice.
+                if (you.equip[s] != -1)
+                {
+                    if (verbose)
+                        mprf("You'd need your %s free.", parts[s - EQ_HELMET]);
+                    return false;
+                }
+
+                if (!you_tran_can_wear(s, true))
+                {
+                    if (verbose)
+                    {
+                        mprf(you_tran_can_wear(s) ? "The hauberk won't fit your %s."
+                                                  : "You have no %s!",
+                             parts[s - EQ_HELMET]);
+                    }
+                    return false;
+                }
+            }
+        }
+    }
+    else if (slot >= EQ_HELMET && slot <= EQ_BOOTS
+             && !ignore_temporary
+             && player_equip_unrand(UNRAND_LEAR))
+    {
+        // The explanation is iffy for loose headgear, especially crowns:
+        // kings loved hooded hauberks, according to portraits.
+        if (verbose)
+            mpr("You can't wear this over your hauberk.");
+        return false;
+    }
+
     size_type player_size = you.body_size(PSIZE_TORSO, ignore_temporary);
     int bad_size = fit_armour_size(item, player_size);
 
@@ -1230,7 +1279,8 @@ static bool _swap_rings(int ring_slot)
     // putting on the ring at all.  If it becomes possible for just
     // one ring slot to be melded, the subsequent code will need to
     // be revisited, so prevent that, too.
-    ASSERT(!you.melded[EQ_LEFT_RING] && !you.melded[EQ_RIGHT_RING]);
+    ASSERT(!you.melded[EQ_LEFT_RING]);
+    ASSERT(!you.melded[EQ_RIGHT_RING]);
 
     if (lring->cursed() && rring->cursed())
     {
@@ -2061,6 +2111,12 @@ void drink(int slot)
         return;
     }
 
+    if (you.duration[DUR_RETCHING])
+    {
+        mpr("You can't gag anything down in your present state!");
+        return;
+    }
+
     if (slot == -1)
     {
         slot = prompt_invent_item("Drink which item?",
@@ -2335,7 +2391,9 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (cast_refrigeration(60, !already_known, false) != SPRET_SUCCESS)
+        if (cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
+                                  (already_known) ? &you : NULL, true)
+            != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;
@@ -2346,11 +2404,13 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_DRAINING:
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
-        drain_exp();
+        drain_exp(true, NON_MONSTER, "draining affixation");
         break;
 
     case SPWPN_VENOM:
-        if (cast_toxic_radiance(!already_known) != SPRET_SUCCESS)
+        if (cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE, 60,
+                                  (already_known) ? &you : NULL, true)
+            != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;
@@ -2831,7 +2891,13 @@ void read_scroll(int slot)
 
     if (you.confused())
     {
-        mpr("You're too confused.");
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot read scrolls while unable to breathe!");
         return;
     }
 

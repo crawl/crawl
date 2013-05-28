@@ -281,7 +281,6 @@ void wizard_heal(bool super_heal)
     // Clear most status ailments.
     you.rotting = 0;
     you.disease = 0;
-    you.duration[DUR_NAUSEA]    = 0;
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
@@ -794,7 +793,9 @@ static const char* dur_names[] =
     "petrifying",
     "shrouded",
     "tornado cooldown",
+#if TAG_MAJOR_VERSION == 34
     "nausea",
+#endif
     "ambrosia",
 #if TAG_MAJOR_VERSION == 34
     "temporary mutations",
@@ -806,6 +807,12 @@ static const char* dur_names[] =
 #endif
     "sentinel's mark",
     "sickening",
+    "drowning",
+    "drowning immunity",
+    "flayed",
+    "retching",
+    "weak",
+    "dimension anchor",
     "antimagic",
 };
 
@@ -929,7 +936,7 @@ static void debug_uptick_xl(int newxl, bool train)
         train_skills();
     }
     you.experience = exp_needed(newxl);
-    level_change(true);
+    level_change(NON_MONSTER, NULL, true);
 }
 
 static void debug_downtick_xl(int newxl)

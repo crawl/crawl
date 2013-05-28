@@ -133,6 +133,14 @@ static duration_def duration_data[] =
       BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
     { DUR_SENTINEL_MARK, true,
       MAGENTA, "Mark", "marked", "You are marked for hunting." },
+    { DUR_FLAYED, true,
+      RED, "Flay", "flayed", "You are covered in terrible wounds." },
+    { DUR_RETCHING, true,
+      RED, "Retch", "retching", "You are retching with violent nausea." },
+    { DUR_WEAK, false,
+      RED, "Weak", "weakened", "Your attacks are enfeebled." },
+    { DUR_DIMENSION_ANCHOR, false,
+      RED, "-TELE", "cannot translocate", "You are firmly anchored to this plane." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -145,7 +153,8 @@ void init_duration_index()
     for (unsigned i = 0; i < ARRAYSZ(duration_data); ++i)
     {
         duration_type dur = duration_data[i].dur;
-        ASSERT(dur >= 0 && dur < NUM_DURATIONS);
+        ASSERT(dur >= 0);
+        ASSERT(dur < NUM_DURATIONS);
         ASSERT(duration_index[dur] == -1);
         duration_index[dur] = i;
     }
@@ -153,7 +162,8 @@ void init_duration_index()
 
 static const duration_def* _lookup_duration(duration_type dur)
 {
-    ASSERT(dur >= 0 && dur < NUM_DURATIONS);
+    ASSERT(dur >= 0);
+    ASSERT(dur < NUM_DURATIONS);
     if (duration_index[dur] == -1)
         return NULL;
     else
@@ -218,7 +228,6 @@ static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
 static void _describe_rotting(status_info* inf);
 static void _describe_sickness(status_info* inf);
-static void _describe_nausea(status_info* inf);
 static void _describe_speed(status_info* inf);
 static void _describe_sage(status_info* inf);
 static void _describe_poison(status_info* inf);
@@ -348,10 +357,6 @@ bool fill_status_info(int status, status_info* inf)
 
     case STATUS_SICK:
         _describe_sickness(inf);
-        break;
-
-    case DUR_NAUSEA:
-        _describe_nausea(inf);
         break;
 
     case STATUS_SPEED:
@@ -565,6 +570,25 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "Recall";
             inf->short_text   = "recalling";
             inf->long_text    = "You are recalling your allies.";
+        }
+        break;
+
+    case DUR_WATER_HOLD:
+        inf->light_text   = "Engulf";
+        if (you.res_water_drowning())
+        {
+            inf->short_text   = "engulfed";
+            inf->long_text    = "You are engulfed in water.";
+            if (you.can_swim())
+                inf->light_colour = DARKGREY;
+            else
+                inf->light_colour = YELLOW;
+        }
+        else
+        {
+            inf->short_text   = "engulfed (cannot breathe)";
+            inf->long_text    = "You are engulfed in water and unable to breathe.";
+            inf->light_colour = RED;
         }
         break;
 
@@ -823,19 +847,6 @@ static void _describe_sickness(status_info* inf)
         inf->short_text = mod + "diseased";
         inf->long_text  = "You are " + mod + "diseased.";
     }
-}
-
-static void _describe_nausea(status_info* inf)
-{
-    if (!you.duration[DUR_NAUSEA])
-        return;
-
-    inf->light_colour = you.is_undead == US_UNDEAD ? DARKGREY : BROWN;
-    inf->light_text   = "Nausea";
-    inf->short_text   = "nauseated";
-    inf->long_text    = (you.hunger_state <= HS_NEAR_STARVING) ?
-                "You would have trouble eating anything." :
-                "You cannot eat right now.";
 }
 
 static void _describe_burden(status_info* inf)

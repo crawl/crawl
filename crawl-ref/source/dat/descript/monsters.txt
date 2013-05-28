@@ -463,6 +463,14 @@ fantastic arabesque — invisible to their eyes, but dreadful nonetheless — in
 the unfamiliar numeral under whose menace they lived.”
     -Bruno Schulz, “The Brilliant Epoch”. 1937.
 %%%%
+lost soul
+
+The echo of a unmourned soul, flickering in and out of the mortal world. Though
+the memories of its living self are long-faded, it is drawn to the moment of
+death by some lingering instinct. So powerful is its drive for self and purpose
+that it seizes upon the passage of other souls, losing the last vestiges of its
+being in the memories of another's life.
+%%%%
 Louise
 
 A mighty sorceress, clad from head to toe in heavy armour. Once an adventurer
@@ -709,7 +717,7 @@ Niblungs_. 1891.
 Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
-Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
+Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
 %%%%
 Sonja
@@ -976,8 +984,9 @@ A greater demon, wreathed in snow and lightning.
 %%%%
 blue devil
 
-A peculiar, horned humanoid figure originating from some frigid hell. It is
-repulsed by fire and flames.
+A muscular horned humanoid figure originating from some frigid hell. It swoops
+through the air on powerful wings, taking sadistic joy from harrying those who
+would try to flee its grasp.
 %%%%
 blue devil:quote
 
@@ -1190,12 +1199,6 @@ crawling corpse
 
 A corpse weakly animated by necromancy. It is easily destroyed, but capable of
 merging with others to form more potent horrors.
-%%%%
-crazed wizard
-
-This guy seems to be obsessed with Hell and dealing with demons that live
-there. That can't end in any way but one... watch out for now, or that end will
-be yours first.
 %%%%
 crimson imp
 
@@ -1609,7 +1612,7 @@ A huge eyeball, encased in a levitating globe of incandescent energy.
 %%%%
 eye of draining
 
-A hovering horror that waxes strong on mana.
+A hovering horror that waxes strong on magic.
 %%%%
 feature mimic
 
@@ -1668,7 +1671,8 @@ dungeon, seeking to share its fate with others.
 flayed ghost
 
 A hideous floating undead creature, the anguished spirit of a tortured victim,
-with torn skin hanging from an emaciated body.
+with torn skin hanging from an emaciated body. It restlessly stalks the
+dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
 flying skull
 
@@ -2130,7 +2134,7 @@ accompanied by other unsavoury beings of its ilk.
 hell knight:quote
 
 “Ok, let’s review. It’s up to the fair young maiden to rescue the dragon from
-the fire breathing knights in shining armor.”
+the fire breathing knights in shining armour.”
     -Exiern
 %%%%
 hell hog
@@ -2427,6 +2431,12 @@ waves high upon the shores of Japan.”
     -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
      Folk's Treasury_, vol. II. 1909.
 %%%%
+jiangshi
+
+A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
+limbs give it an awkward gait, it moves with surprising speed, leaping upon its
+victims and drinking their life essence with its vicious claws.
+%%%%
 jumping spider
 
 A large venomous spider, which weaves webs between its front legs and leaps at
@@ -2626,12 +2636,6 @@ mad acolyte of Lugonu:quote
 
 “And when you look long into an abyss, the abyss also looks into you.”
     -Friedrich Nietzche, “Beyond Good and Evil”, 1886
-%%%%
-mad wizard
-
-Raving about how enhanced rats are going to take over the world is not a sign
-of sanity. You'd better step back. Plus, it's squirrels who are going to win, I
-tell you!
 %%%%
 manticore
 
@@ -2914,7 +2918,7 @@ formed of carbon and oxygen in the proportion of one part of the former to two
 of the latter chemically combined. It is a colorless gas, having an acid taste
 and smell; is soluble in water; weighs one-half more than air and can be poured
 from one vessel to another, as a liquid may be; 100 parts of water dissolve 106
-parts of this gas, and it is from this source that the roots -of plants derive
+parts of this gas, and it is from this source that the roots of plants derive
 the needed supplies of it.”
     -Henry Stuart, _The Culture of Farm Crops: A Manual of the Science of
     Agriculture, and a Hand-book of Practice for American Farmers_, ch X. 1887.
@@ -2960,13 +2964,11 @@ orange crystal statue
 An intricately carved idol of some nameless godling, hewn of translucent orange
 crystal. Its lifeless eyes seem to glitter uncannily with a wicked
 intelligence.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
-a venom most potent, one that attacks not only the body but the mind as well.
+a potent venom that can render its victims weak and their blows feeble.
 %%%%
 orange demon:quote
 
@@ -3096,7 +3098,9 @@ its claws burn with the sear of holy wrath.
 phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle and recalled
-to this plane by unholy magic.
+to this plane by unholy magic. The blade it wields is ethereal, passing easily
+through shields and armour, and rendering those it strikes more susceptible to
+magic.
 %%%%
 phantom
 
@@ -3154,6 +3158,12 @@ LORD out of heaven; And he overthrew those cities, and all the plain, and all
 the inhabitants of the cities, and that which grew upon the ground. But his
 wife looked back from behind him, and she became a pillar of salt.”
     -KJV Bible, Gen. XIX, 24-6.
+%%%%
+plague shambler
+
+A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
+parody of life, this infected decaying body lurches about, seeking retribution
+on the living.
 %%%%
 plant
 
@@ -3330,8 +3340,9 @@ A skeletal form wielding a giant scythe.
 %%%%
 red devil
 
-A muscular demon covered in spikes and horns. Two short wings sprout from its
-shoulders.
+A larger cousin of the common imp, with a fiendish grin and two short wings
+sprouting from its shoulders. They favor barbed tridents, often taunting their
+victims as they prod them from afar then nimbly retreat from pursuit.
 %%%%
 red draconian
 
@@ -3346,6 +3357,11 @@ redback
 
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
+%%%%
+revenant
+
+A skeletal form wreathed in cold blue fire, standing astride this life and the
+next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
 rock worm
 
@@ -3382,12 +3398,6 @@ rotting devil:quote
  That swathe the minds of men, the sins
  That wrap their rotting souls about.“
     -John Davidson, ”A Ballad of Heaven". Late 19th cent.
-%%%%
-rotting hulk
-
-A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
-parody of life, this infected decaying body lurches about, seeking retribution
-on the living.
 %%%%
 the royal jelly
 
@@ -3447,8 +3457,9 @@ the whole earth is full of his glory.”
 %%%%
 shadow
 
-A wisp of unliving shadow, drifting on the edge of vision. It consumes the
-puissance of living beings.
+A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
+It moves swiftly and silently from one pool of shade to another, striking
+unerringly from the blind spots of those who cannot see it.
 %%%%
 shadow:quote
 
@@ -3587,8 +3598,6 @@ silver statue
 
 A beautiful statue of an unknown malignant creature, glistening with a silvery
 hue. Its eyes glow with an otherworldly radiance.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 simulacrum
 
@@ -3645,6 +3654,21 @@ iron, and laughed its laughter of nails rattling.
  And I saw the more the fist pounded the more the mouth laughed. The fist is
 pounding and pounding, and the mouth answering.”
     -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
+%%%%
+skeletal archer
+
+Since when is having flesh a requirement to be a master archer? These skeletal
+fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
+only good for a supply of sinew for bowstrings anyway.
+%%%%
+skeletal archer:quote
+
+“For a glory of all evil spirits rise for victory
+ Pain for pain, blood for blood
+ Pagan warriors moved quickly forward
+ Bows are ready to shoot out their searing
+ Darts...”
+    -Mastiphal, “For a Glory of All Evil spirits”
 %%%%
 skeletal bat
 
@@ -3724,7 +3748,7 @@ A hideous mass of body parts, part animated dead flesh, part demon.
 small abomination:quote
 
 “No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
-had shapes, a thousand shapes of horror beyond all memory. There were eyes -
+had shapes, a thousand shapes of horror beyond all memory. There were eyes –
 and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
     -H.P. Lovecraft, _The Unnamable_. 1925.
@@ -4046,11 +4070,6 @@ tentacled starspawn
 A lumbering maw shrouded in a mass of sinuous tentacles. Every now and again,
 one slithers out to drag unfortunate prey back into its waiting gullet.
 %%%%
-terrified wizard
-
-This guy has been caught by magic-haters, and is going to be sacrificed on the
-altar of Trog.
-%%%%
 thrashing horror
 
 A seething mass of yellow flesh. It thrashes erratically, staggering foes
@@ -4291,7 +4310,8 @@ orcs.
 water elemental
 
 A spirit drawn from the elemental plane of water. It exists on this world as
-part of a body of water.
+part of a body of water and can engulf other beings in its form, depriving them
+of breath and voice.
 %%%%
 water moccasin
 
@@ -4507,8 +4527,6 @@ Statue of Wucad Mu
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
 Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
 as you have no chance in mental combat against it.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 air elementalist statue
 
@@ -4524,15 +4542,6 @@ antique lich
 
 A lich who has grown expensive over countless years.
 %%%%
-apple tree
-
-This tree bears fruit that can feed a hungry tiger. And that's not an error —
-you will serve as the middle step in the food chain.
-%%%%
-apricot tree
-
-<apple tree>
-%%%%
 archer statue
 
 The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
@@ -4543,24 +4552,10 @@ Being a statue, it doesn't appear to have a means of salvaging shot arrows or
 fletching new ones, but you guess the statue's creators gave it enough of a
 supply to kill you before someone comes to replenish the quiver.
 %%%%
-bittermelon vine
+captured wizard
 
-An ordinary looking plant, growing some barely edible fruits. They provide
-nutrition, but certainly not good taste.
-%%%%
-black sheep
-
-On first glance, this sheep has merely a different pigmentation, but you are
-not so easily swayed by looks. With your luck, there's a sheep in a wolf's hide
-hiding inside, _then_ covered by another layer of sheep skin to better deceive
-you.
-
-Or, maybe, it's just a sheep after all.
-%%%%
-centaur hunter
-
-This particularly battle-adept centaur is an extremely precise shot with its
-longbow.
+With wild eyes, the wizard frantically mumbles something and waves his arms,
+but is unable to cast a single spell. His tongue has been cut off!
 %%%%
 charred statue
 
@@ -4581,16 +4576,6 @@ Cigotuvi's Monster:quote
  and he muttered some inarticulate sounds, while a grin
  wrinkled his cheeks.”
     -Mary Shelley, “Frankenstein”
-%%%%
-citrus tree
-
-<apple tree>
-%%%%
-chilling statue
-
-This grotesque statue, carved from brilliant blue ice, gives a fell chill to
-its surroundings. It's as though it's actively absorbing the heat from its
-environment.
 %%%%
 # In the first umpteen pages of googling, the only use of "Iskenderun" for a
 # living being is the first Turkish Van cat brought to Britain. With
@@ -4614,15 +4599,6 @@ decayed bog body
 An undead figure preserved by the brackish waters of a bog. This one seems to
 have decayed quite a bit, and looks weak.
 %%%%
-deep dwarf earth mage
-
-A deep dwarf particularly well-attuned to the powers of earth.
-%%%%
-deep elf scorcher
-
-A deep elf excelling in fire magic, feared for its power to conjure great
-storms of flame.
-%%%%
 deep troll monk
 
 It seems a flimsy representation of a monk; nothing more than a half-formed
@@ -4643,27 +4619,6 @@ drunken dwarf
 
 This short fellow seems to be working as an ale quality tester, and is enjoying
 the job a little too much.
-%%%%
-demonspawn berserker
-
-This humanoid's demonic heritage clearly fuels it with bloodlust.
-%%%%
-demonspawn scorcher
-
-The air shimmers around this demonic-looking humanoid, as though it radiates
-intense heat. Wisps of smoke trail from its fingertips.
-%%%%
-demonspawn sorcerer
-
-The air crackles around this demonic-looking humanoid; it clearly wields magic
-of some power.
-%%%%
-draconian transmuter
-
-A draconian who has eschewed the study of weaponry, training in the art of
-transmutations. While its scaly fists, well-thewed leg, and mighty tail are
-lethal on their own, its combat prowess can be increased even further by the
-spells it wields.
 %%%%
 earth elementalist statue
 
@@ -4689,58 +4644,14 @@ frost-covered statue
 An ineptly made statue of a mage. Its magic keeps leaking, letting you know
 what kind of spells you can expect: cold-based ones.
 %%%%
-glowing angel
-
-A divine agent of Zin, it is a towering winged figure with an aura of brilliant
-white light. This angel's face, though, is marked by a scowl, as if its zeal
-against any real or perceived vice overshadows its goodness.
-%%%%
-gourd plant
-
-This sturdy vine bears nutritious but nearly tasteless fruits.
-%%%%
-grape vine
-
-Without a gardener to provide it with something to prop itself over, and not
-being lucky enough to have its seed fall near something it can climb, this
-grape vine is still remarkably hard to step over.
-%%%%
 greater air elemental
 
 <air elemental>
-%%%%
-grey elf
-
-Once considered a unique species of its own, grey elves are now more properly
-classified as a sub-species of high elf. Little exists to distinguish them from
-their high elf cousins, aside from their supposed glamour (which is probably
-more myth than fact).
-%%%%
-high elf sorcerer
-
-This apparently adventurous high elf is just as proficient in magic as its deep
-elven brethren.
-%%%%
-hill dwarf
-
-Hill dwarves are a subrace of dwarves who, as their name implies, live on
-hills. Once able adventurers, the hill dwarves no longer have any interest in
-dungeon delving. This one was captured specially for this exhibit.
-%%%%
-halfling berserker
-
-While most halfling adventurers prefer stealth to direct combat, here stands
-one of the exceptions. Size is no diminishment to this stout warrior's
-rage-fuelled strength.
 %%%%
 human monk
 
 It seems a flimsy representation of a monk; nothing more than a half-formed
 memory.
-%%%%
-hungry kobold
-
-This kobold seems to be angry about having his or her meal interrupted.
 %%%%
 iron troll monk
 
@@ -4751,11 +4662,6 @@ kamikaze kobold
 
 This kobold is either mad or a martyr for some obscure kobold faith, being
 enchanted to explode in a blaze of fire. You'd better keep your distance!
-%%%%
-kobold berserker
-
-A particularly blood-thirsty kobold, known for plunging into a battle frenzy at
-the slightest provocation.
 %%%%
 lasher statue
 
@@ -4774,76 +4680,6 @@ malarious mermaid
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
-%%%%
-merfolk berserker
-
-A particularly angry merfolk warrior, toting a sharp and bloody polearm.
-%%%%
-merfolk gelid
-
-An unnaturally pale merfolk, with condensation forming around its hands.
-%%%%
-merfolk gladiator
-
-A particularly fearsome merfolk warrior, hefting a bundle of javelins and a
-sinister-looking polearm.
-%%%%
-minotaur berserker
-
-A particularly adventurous and blood-thirsty minotaur, capable of great feats
-of strength and rage.
-%%%%
-minotaur death knight
-
-A particularly adventurous and sinister minotaur, capable of calling upon the
-divine powers granted to Yredelemnul's followers.
-%%%%
-minotaur fighter
-
-A particularly adventurous and battle-ready minotaur, capable of out-fighting
-even its mighty brethren.
-%%%%
-minotaur gladiator
-
-A particularly adventurous and sharp-eyed minotaur, capable of landing
-astonishingly precise and brutal blows from afar with javelins.
-%%%%
-minotaur monk
-
-A particularly adventurous and agile minotaur, capable of tearing apart the
-unwary with naught but its bare hands.
-%%%%
-mountain dwarf
-
-Mountain dwarves are surface-dwelling relatives of the deep dwarves. After
-years of war with the taller but otherwise quite similar hill orcs, the
-mountain dwarves were conquered and driven from these lands. This one has been
-imported from foreign shores.
-%%%%
-mummy sorcerer
-
-An ancient magician, embalmed and cursed to walk in undeath for all eternity.
-Even in undeath, it retains many of its powers of magic.
-%%%%
-mummy summoner
-
-An ancient mystic, embalmed and cursed to walk in undeath for all eternity.
-Even in undeath, it holds the power to call forth great legions of infernal
-creatures.
-%%%%
-mummy warrior
-
-<guardian mummy>
-%%%%
-musa plant
-
-This bushy plant can grow bananas. Or are they banananas? Or bananananas? Some
-yellow curved thingies, at least.
-%%%%
-ogre berserker
-
-A particularly large, hungry, and blood-thirsty ogre, capable of flying into a
-mighty rage at the slightest hint of food.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -4904,10 +4740,6 @@ A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb
 spider. Or perhaps it's a product of divine experiments, in which case it looks
 like Xom's handiwork...
 %%%%
-orc berserker
-
-A tough, strong, and particularly angry orc.
-%%%%
 petrified plant
 
 Something has turned these ordinary plants into stone. Better not tarry here.
@@ -4925,64 +4757,10 @@ An immaculately sculpted porphyry statue of an archer poised to release an
 arrow, with a full quiver at the hip. The individually sculpted arrows look
 almost as if they could be removed one by one and used in a real bow.
 %%%%
-pyrus tree
-
-<apple tree>
-%%%%
-sacrificial human
-
-From the look of things, she was supposed to be sacrificed in some
-demon-summoning ritual.
-%%%%
 sickly siren
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
-%%%%
-sludge elf earth mage
-
-A sludge elf particularly well-attuned to the powers of earth.
-%%%%
-skeletal archer
-
-Since when is having flesh a requirement to be a master archer? These skeletal
-fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
-only good for a supply of sinew for bowstrings anyway.
-%%%%
-skeletal archer:quote
-
-“For a glory of all evil spirits rise for victory
- Pain for pain, blood for blood
- Pagan warriors moved quickly forward
- Bows are ready to shoot out their searing
- Darts...”
-    -Mastiphal, “For a Glory of All Evil spirits”
-%%%%
-soapberry tree
-
-<apple tree>
-%%%%
-spooky statue
-
-You sense a ghostly presence around this statue, and it's not the slightest bit
-friendly.
-%%%%
-spriggan enchanter
-
-A spriggan particularly skilled in the arts of hexes and charms - and,
-apparently, lethal with a quick blade.
-%%%%
-spriggan necromancer
-
-Raising the dead, and then running behind them... these tricks start getting
-annoying.
-%%%%
-spriggan shepherd
-
-Being unable to digest meat, spriggans here need quite a lot of milk to
-maintain a healthy diet. This guy guards the animals from predators and vandals
-like you, brandishing a crooked cane that looks like a fine tool for teaching
-you some respect.
 %%%%
 strange machine
 
@@ -4995,38 +4773,17 @@ strange machine:quote
  water. It had been working seven and a half million years.”
     -Sweet Their Blood and Sticky, Albert Teichner
 %%%%
-strawberry plant
-
-The same radiation that made cockroaches and spiders the size of small dogs
-didn't spare this humble strawberry plant, either. Fortunately, even with its
-size, it appears to be harmless.
-%%%%
 succubus
 
 A female demon who uses her charms to seduce humanoid males. If you wish to
 take advantage of her, however, you will fail: she seems very angry right now
 and has blood more on her mind than fun.
 %%%%
-tengu aerator
-
-This particularly ferocious tengu is well on its way towards mastery of air
-magic.
-%%%%
-tengu conjurer
-
-One of many tengu with a talent for the destructive magical arts.
-%%%%
 water elementalist statue
 
 A smooth, charming statue of a beautiful mermaid bathing in a fountain,
 sculpted from creamy, faintly pinkish travertine. It glistens softly in the
 light, as if sprinkled in actual water.
-%%%%
-young halfling
-
-This halfling has been caught by kobolds, and was meant to be roasted and eaten
-before you unceremoniously interrupted. Don't you have any manners? Didn't you
-ever learn not to disrupt people's meals?
 %%%%
 young spriggan druid
 
@@ -5041,32 +4798,11 @@ trespassers like you.
     end
 }}
 %%%%
-vampire enchanter
-
-An enchanter who, by accident or design, has been afflicted with the curse of
-the vampire. Regardless, undeath merely fuels their abilities; few are aware of
-its presence until they find themselves on the wrong end of a quick blade.
-%%%%
-vampire noble
-
-<vampire>
-%%%%
-vampire warrior
-
-This vampire, formidable in combat, uses magic only for self-boosts, preferring
-hand to hand combat to deal with pesky interlopers.
-%%%%
 vine covered stone golem
 
 While made of ordinary old weathered stone, covered with moss and vines, this
 golem still needs to be respected. It is still hard as stone, after all, and
 its weight spells massive damage if it connects a blow.
-%%%%
-warrior statue
-
-This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
-it appears to be capable of moving its arms, keeping your distance seems to be
-the only way to keep your vital organs undamaged.
 %%%%
 witch
 
@@ -5095,6 +4831,12 @@ In this land of magic, it'd be foolish to assume that a statue of a wizard is
 always an inert piece of rock. This statue's hands and staff have very little
 dust compared to the base, suggesting it is capable of making magical gestures.
 The trap is too obvious, but dealing with it might not be.
+%%%%
+zin angel
+
+A divine agent of Zin, it is a towering winged figure with an aura of brilliant
+white light. This angel's face, though, is marked by a scowl, as if its zeal
+against any real or perceived vice overshadows its goodness.
 %%%%
 zot statue
 
@@ -5243,7 +4985,7 @@ You see the unseen, you stare and they stare back. They whisper and laugh, they
 grin and cry, they leer at you with contempt and gaze at you in adoration. They
 are the observers, they are the judge of your worth and will decide your end.
 %%%%
-lost soul
+meat lost soul
 
 A spectre, struggling to leave the mortal world it is incarcerated in. It
 drains life and unlife from all those it comes into contact with.

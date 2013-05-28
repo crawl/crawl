@@ -78,20 +78,18 @@ static bool _yred_random_zombified_hostile()
 
 static bool _okawaru_random_servant()
 {
-    monster_type mon_type;
-    const int temp_rand = random2(100);
-
     // warriors
-    mon_type = ((temp_rand < 15) ? MONS_ORC_WARRIOR :      // 15%
-                (temp_rand < 30) ? MONS_ORC_KNIGHT :       // 15%
-                (temp_rand < 40) ? MONS_NAGA_WARRIOR :     // 10%
-                (temp_rand < 50) ? MONS_CENTAUR_WARRIOR :  // 10%
-                (temp_rand < 60) ? MONS_STONE_GIANT :      // 10%
-                (temp_rand < 70) ? MONS_FIRE_GIANT :       // 10%
-                (temp_rand < 80) ? MONS_FROST_GIANT :      // 10%
-                (temp_rand < 90) ? MONS_CYCLOPS :          // 10%
-                (temp_rand < 95) ? MONS_HILL_GIANT         //  5%
-                                 : MONS_TITAN);            //  5%
+    monster_type mon_type = random_choose_weighted(3, MONS_ORC_WARRIOR,
+                                                   3, MONS_ORC_KNIGHT,
+                                                   2, MONS_NAGA_WARRIOR,
+                                                   2, MONS_CENTAUR_WARRIOR,
+                                                   2, MONS_STONE_GIANT,
+                                                   2, MONS_FIRE_GIANT,
+                                                   2, MONS_FROST_GIANT,
+                                                   2, MONS_CYCLOPS,
+                                                   1, MONS_HILL_GIANT,
+                                                   1, MONS_TITAN,
+                                                   0);
 
     mgen_data temp = mgen_data::hostile_at(mon_type, "the fury of Okawaru",
                                            true, 0, 0, you.pos(), 0,
@@ -650,20 +648,12 @@ static bool _beogh_retribution()
 
         for (int i = 0; i < num_to_create; ++i)
         {
-            const int temp_rand = random2(13);
-            const int wpn_type = ((temp_rand ==  0) ? WPN_CLUB :
-                                  (temp_rand ==  1) ? WPN_MACE :
-                                  (temp_rand ==  2) ? WPN_FLAIL :
-                                  (temp_rand ==  3) ? WPN_MORNINGSTAR :
-                                  (temp_rand ==  4) ? WPN_DAGGER :
-                                  (temp_rand ==  5) ? WPN_SHORT_SWORD :
-                                  (temp_rand ==  6) ? WPN_LONG_SWORD :
-                                  (temp_rand ==  7) ? WPN_SCIMITAR :
-                                  (temp_rand ==  8) ? WPN_GREAT_SWORD :
-                                  (temp_rand ==  9) ? WPN_HAND_AXE :
-                                  (temp_rand == 10) ? WPN_BATTLEAXE :
-                                  (temp_rand == 11) ? WPN_SPEAR
-                                                    : WPN_HALBERD);
+            const int wpn_type =
+                random_choose(WPN_CLUB,        WPN_MACE,      WPN_FLAIL,
+                              WPN_MORNINGSTAR, WPN_DAGGER,    WPN_SHORT_SWORD,
+                              WPN_LONG_SWORD,  WPN_SCIMITAR,  WPN_GREAT_SWORD,
+                              WPN_HAND_AXE,    WPN_BATTLEAXE, WPN_SPEAR,
+                              WPN_HALBERD,     -1);
 
             // Now create monster.
             if (monster *mon =

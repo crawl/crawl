@@ -229,8 +229,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
-                "zombie / skeleton / wight w:5 / necrophage /\
-                    shadow w:5 / phantom w:5",
+                "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly / w:1 brown ooze",
                 "giant cockroach / giant mite / giant centipede / w:5 spider /\
@@ -262,7 +261,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "killer bee w:20 / w:5 queen bee",
                 "deep dwarf scion / deep dwarf artificer / deep dwarf",
                 "zombie / skeleton / wight / necrophage /\
-                    shadow w:5 / phantom w:5 / w:1 josephine",
+                    phantom w:5 / w:1 josephine",
                 "w:7 blue devil / iron devil w:5 / orange demon / red devil w:5 / rotting devil /\
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
@@ -307,7 +306,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:5 deep dwarf berserker",
                 "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
                     skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
-                    silent spectre / w:4 josephine",
+                    shadow w:3 / silent spectre / w:4 josephine",
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
                 -- Fire, Air, Earth, Water, Death
@@ -327,7 +326,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "troll / deep troll w:12 / iron troll w:2",
                 "fire drake / swamp drake / steam dragon / swamp dragon /\
                  mottled dragon / komodo dragon",
-                "necrophage / rotting hulk / w:2 ghoul / bog body",
+                "necrophage / plague shambler / w:2 ghoul / bog body",
                 "shapeshifter hd:7",
                 "polar bear / grizzly bear",
                 -- Gimmicks
@@ -378,7 +377,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "fire drake w:5 / swamp drake / swamp dragon /\
                     mottled dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
                     dragon w:5 / ice dragon w:5 / storm dragon w:1",
-                "necrophage / rotting hulk / ghoul / bog body",
+                "necrophage / plague shambler / ghoul / bog body",
                 "shapeshifter",
                 -- Gimmicks
                 "neqoxec", "giant spore hd:3", "deep elf priest always_corpse",
@@ -439,7 +438,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "yak / sheep / death yak / apis / catoblepas",
                 "glowing shapeshifter",
                 "hell knight / w:5 necromancer / w:1 margery",
-                "wraith / wight / phantasmal warrior / rotting hulk / skeletal warrior /\
+                "wraith / wight / phantasmal warrior / plague shambler / skeletal warrior /\
                     vampire / ghoul / mummy / flayed ghost / bone dragon / death cob /\
                     profane servitor",
                 "paladin / vault guard / necromancer / hell knight / wizard /\

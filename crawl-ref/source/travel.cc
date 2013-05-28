@@ -2594,6 +2594,12 @@ static void _start_translevel_travel_prompt()
     if (!i_feel_safe(true, true))
         return;
 
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.
     travel_cache.get_level_info(level_id::current()).update();
@@ -3609,7 +3615,8 @@ void LevelInfo::load(reader& inf, int minorVersion)
     unmarshallExcludes(inf, minorVersion, excludes);
 
     int n_count = unmarshallByte(inf);
-    ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
+    ASSERT(n_count >= 0);
+    ASSERT(n_count <= NUM_DA_COUNTERS);
     for (int i = 0; i < n_count; i++)
         da_counters[i] = unmarshallShort(inf);
 }
@@ -3969,7 +3976,8 @@ void runrest::initialise(int dir, int mode)
     }
     else
     {
-        ASSERT(dir >= 0 && dir <= 7);
+        ASSERT(dir >= 0);
+        ASSERT(dir <= 7);
 
         pos = Compass[dir];
         runmode = mode;

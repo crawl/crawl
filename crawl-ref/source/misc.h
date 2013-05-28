@@ -29,7 +29,7 @@ int get_max_corpse_chunks(monster_type mons_class);
 void turn_corpse_into_skeleton(item_def &item);
 void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
                              bool make_hide = true);
-void butcher_corpse(item_def &item, maybe_bool skeleton = B_MAYBE,
+void butcher_corpse(item_def &item, maybe_bool skeleton = MB_MAYBE,
                     bool chunks = true);
 
 void init_stack_blood_potions(item_def &stack, int age = -1);
@@ -90,7 +90,7 @@ void timeout_tombs(int duration);
 int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
-void timeout_door_seals(int duration, bool force = false);
+void timeout_terrain_changes(int duration, bool force = false);
 
 void setup_environment_effects();
 
@@ -115,7 +115,8 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
 bool bad_attack(const monster *mon, string& adj, string& suffix);
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first = false);
+                        coord_def beam_target, bool autohit_first = false,
+                        bool *prompted = nullptr);
 bool stop_attack_prompt(targetter &hitfunc, string verb,
                         bool (*affects)(const actor *victim) = 0);
 

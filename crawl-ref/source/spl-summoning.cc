@@ -83,35 +83,25 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_summon_small_mammals(int pow, god_type god, bool fail)
+spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
     fail_check();
-    bool success = false;
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    int count = (pow == 25) ? 2 : 1;
+    if (x_chance_in_y(10, pow + 1))
+        mon = coinflip() ? MONS_BAT : MONS_RAT;
+    else
+        mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
 
-    for (int i = 0; i < count; ++i)
+    if (!create_monster(
+            mgen_data(mon, BEH_FRIENDLY, &you,
+                      3, SPELL_SUMMON_SMALL_MAMMAL,
+                      you.pos(), MHITYOU,
+                      0, god)))
     {
-        if (x_chance_in_y(10, pow + 1))
-            mon = coinflip() ? MONS_BAT : MONS_RAT;
-        else
-            mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
-
-        if (create_monster(
-                mgen_data(mon, BEH_FRIENDLY, &you,
-                          3, SPELL_SUMMON_SMALL_MAMMALS,
-                          you.pos(), MHITYOU,
-                          0, god)))
-        {
-            success = true;
-        }
-
-    }
-
-    if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     return SPRET_SUCCESS;
 }
@@ -457,43 +447,43 @@ spret_type cast_summon_elemental(int pow, god_type god,
 
     const int dur = min(2 + (random2(pow) / 5), 6);
 
-    while (true)
+    mpr("Summon from material in which direction?", MSGCH_PROMPT);
+
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    direction(smove, args);
+
+    if (!smove.isValid)
     {
-        mpr("Summon from material in which direction?", MSGCH_PROMPT);
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
 
-        direction_chooser_args args;
-        args.restricts = DIR_DIR;
-        direction(smove, args);
+    targ = you.pos() + smove.delta;
 
-        if (!smove.isValid)
+    if (const monster* m = monster_at(targ))
+    {
+        if (you.can_see(m))
         {
-            canned_msg(MSG_OK);
+            mpr("There's something there already!");
             return SPRET_ABORT;
         }
-
-        targ = you.pos() + smove.delta;
-
-        if (const monster* m = monster_at(targ))
+        else
         {
-            if (you.can_see(m))
-                mpr("There's something there already!");
-            else
-            {
-                fail_check();
-                mpr("Something seems to disrupt your summoning.");
-                return SPRET_SUCCESS; // still losing a turn
-            }
+            fail_check();
+            mpr("Something seems to disrupt your summoning.");
+            return SPRET_SUCCESS; // still losing a turn
         }
-        else if (smove.delta.origin())
-            mpr("You can't summon an elemental from yourself!");
-        else if (!in_bounds(targ))
-        {
-            // XXX: Should this cost a turn?
-            mpr("That material won't yield to your beckoning.");
-            return SPRET_ABORT;
-        }
-
-        break;
+    }
+    else if (smove.delta.origin()) {
+        mpr("You can't summon an elemental from yourself!");
+        return SPRET_ABORT;
+    }
+    else if (!in_bounds(targ))
+    {
+        // XXX: Should this cost a turn?
+        mpr("That material won't yield to your beckoning.");
+        return SPRET_ABORT;
     }
 
     mon = _feature_to_elemental(targ, restricted_type);
@@ -1316,8 +1306,11 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 
 static bool _animatable_remains(const item_def& item)
 {
-    return (item.base_type == OBJ_CORPSES
-        && mons_class_can_be_zombified(item.mon_type));
+    return item.base_type == OBJ_CORPSES
+        && mons_class_can_be_zombified(item.mon_type)
+        // the above allows spectrals/etc
+        && (mons_zombifiable(item.mon_type)
+            || mons_skeleton(item.mon_type));
 }
 
 // Try to equip the skeleton/zombie with the objects it died with.  This
@@ -1537,8 +1530,13 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
-
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
+    if (mon == MONS_ZOMBIE && !mons_zombifiable(monnum))
+    {
+        ASSERT(mons_skeleton(monnum));
+        mpr("The flesh is too rotten for a proper zombie; only a skeleton remains.");
+        mon = MONS_SKELETON;
+    }
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
@@ -1758,7 +1756,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             && mons_skeleton(si->mon_type)
             && mons_class_can_be_zombified(si->mon_type))
         {
-            butcher_corpse(*si, B_TRUE);
+            butcher_corpse(*si, MB_TRUE);
             mpr("Before your eyes, flesh is ripped from the corpse!");
             if (Options.chunks_autopickup)
                 request_autopickup();
@@ -1806,31 +1804,20 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
 
 static struct { monster_type mons; const char* name; } mystery_meats[] =
 {
-    { MONS_HOUND, "dog" },
-    { MONS_FELID, "cat" },
     { MONS_RAVEN, "crow" },
-    { MONS_WORM, "" },
-    { MONS_RAT, "" },
     { MONS_YAK, "" },
     { MONS_HOG, "" },
     { MONS_SHEEP, "" },
     { MONS_ELEPHANT, "" },
-    { MONS_WARG, "chupacabra" },
-    { MONS_QUOKKA, "wallaby" },
-    { MONS_DEATH_YAK, "mad cow" },
     { MONS_YAK, "cow" },
-    { MONS_YAK, "bull" },
+    { MONS_DEATH_YAK, "bull" },
 };
 
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
 {
     const item_def* flesh = you.weapon();
 
-    if (!flesh || flesh->base_type != OBJ_FOOD
-        || flesh->sub_type != FOOD_CHUNK
-           && flesh->sub_type != FOOD_BEEF_JERKY
-           && flesh->sub_type != FOOD_MEAT_RATION
-           && flesh->sub_type != FOOD_SAUSAGE)
+    if (!flesh || flesh->base_type != OBJ_FOOD || !food_is_meaty(*flesh))
     {
         mpr("You need to wield a piece of raw flesh for this spell to be "
             "effective!");
@@ -1846,8 +1833,10 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         sim_type = flesh->mon_type;
         break;
     case FOOD_BEEF_JERKY:
-        sim_type = MONS_YAK;
-        name = coinflip() ? "cow" : "bull";
+        if (coinflip())
+            sim_type = MONS_YAK, name = "cow";
+        else
+            sim_type = MONS_DEATH_YAK, name = "bull";
         break;
     case FOOD_SAUSAGE:
         sim_type = MONS_HOG;
@@ -1855,7 +1844,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     default:
         // usual suspects for mystery meat's identity
         {
-            int which = random2(ARRAYSZ(mystery_meats));
+            const int which = random2(ARRAYSZ(mystery_meats));
             sim_type = mystery_meats[which].mons;
             name = mystery_meats[which].name;
         }
@@ -2271,14 +2260,14 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
     while (to_summon--)
     {
-        const int chance = random2(25);
-        monster_type mon = ((chance > 22) ? MONS_PHANTOM :            //  8%
-                            (chance > 20) ? MONS_HUNGRY_GHOST :       //  8%
-                            (chance > 18) ? MONS_FLAYED_GHOST :       //  8%
-                            (chance > 16) ? MONS_SHADOW_WRAITH:       //  8%
-                            (chance >  6) ? MONS_WRAITH :             // 40%
-                            (chance >  2) ? MONS_FREEZING_WRAITH      // 16%
-                                          : MONS_PHANTASMAL_WARRIOR); // 12%
+        const monster_type mon =
+            random_choose_weighted(1, MONS_PHANTOM,
+                                   1, MONS_HUNGRY_GHOST,
+                                   1, MONS_SHADOW_WRAITH,
+                                   5, MONS_WRAITH,
+                                   2, MONS_FREEZING_WRAITH,
+                                   2, MONS_PHANTASMAL_WARRIOR,
+                                   0);
 
         if (monster *mons = create_monster(
                 mgen_data(mon,
@@ -2290,6 +2279,11 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
             if (player_angers_monster(mons))
                 friendly = false;
+            else
+            {
+                mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
+                mons->foe = mi;
+            }
         }
     }
 
@@ -2550,25 +2544,42 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
 
         // If the player beam is targeted at a creature, aim at this creature.
         // Otherwise, aim at the furthest creature in the player beam path
-        bolt testbeam;
-        zappy(spell_to_zap(spell), powc, testbeam);
+        bolt testbeam = beam;
+
+        if (agent->is_player())
+            testbeam.thrower = KILL_YOU_MISSILE;
+        else
+        {
+            testbeam.thrower = KILL_MON_MISSILE;
+            testbeam.beam_source = agent->mindex();
+        }
+
+        testbeam.is_tracer = true;
+        zap_type ztype = spell_to_zap(spell);
+
+        // Fallback for non-standard spell zaps
+        if (ztype == NUM_ZAPS)
+            ztype = ZAP_MAGIC_DART;
+
+        // This is so that reflection and pathing rules for the parent beam
+        // will be obeyed when figuring out what is being aimed at
+        zappy(ztype, powc, testbeam);
 
         battlesphere->props["firing_target"] = beam.target;
         battlesphere->props.erase("foe");
         if (!actor_at(beam.target))
         {
-            beam.is_tracer = true;
-            beam.fire();
-            beam.is_tracer = false;
+            testbeam.fire();
 
-            for (vector<coord_def>::const_reverse_iterator i = beam.path_taken.rbegin();
-                i != beam.path_taken.rend(); ++i)
+            for (size_t i = 0; i < testbeam.path_taken.size(); i++)
             {
-                if (*i != battlesphere->pos() && monster_at(*i))
+                const coord_def c = testbeam.path_taken[i];
+                if (c != battlesphere->pos() && monster_at(c))
                 {
-                    battlesphere->props["firing_target"] = *i;
-                    battlesphere->foe = actor_at(*i)->mindex();
+                    battlesphere->props["firing_target"] = c;
+                    battlesphere->foe = actor_at(c)->mindex();
                     battlesphere->props["foe"] = battlesphere->foe;
+                    break;
                 }
             }
 
@@ -2841,7 +2852,7 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
     int hd = div_rand_round(pow, 10);
 
     mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
-                                  3, SPELL_SUMMON_SMALL_MAMMALS,
+                                  3, SPELL_FULMINANT_PRISM,
                                   where, MHITYOU, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);

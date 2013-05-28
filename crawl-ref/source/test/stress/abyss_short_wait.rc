@@ -1,10 +1,10 @@
 # Waiting only in the Abyss, no monsters.
 #
-# Usage: ./crawl --no-save --rc test/stress/abyssw.rc
+# Usage: ./crawl --no-save --rc test/stress/abyss_short_wait.rc
 #
 # Wizmode is needed.
 
-name = Abyss_walker
+name = Abyss_waiter
 species = mu
 background = fi
 weapon = mace

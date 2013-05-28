@@ -6,16 +6,16 @@
 : require("dlua/layout/procedural.lua")
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/hyper.lua")
+: require("dlua/layout/theme.lua")
 
-# A twisty turny forest maze
-# Can appear in Crypt, Dis and Tar looking a little different ...
+# A twisty turny forest maze. The idea was to have slight variations in tree
+# types in Dis, Crypt, Tar...
 NAME:   layout_twisted_forest
 DEPTH:  D:15-25,Lair
 WEIGHT: 2
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_forest
 {{
-  layout_type "forest"
   if is_validating() then return; end
 
   -- TODO:
@@ -141,4 +141,5 @@ TAGS: overwritable layout allow_dup unrand
     tile("t = dngn_tree_dead")
   end
 
+  theme.D.caves(_G)
 }}
