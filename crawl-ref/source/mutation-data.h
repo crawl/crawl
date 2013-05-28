@@ -1496,7 +1496,7 @@
   "jelly missile"
 },
 
-{ MUT_PETRIFICATION_RESISTANCE,            0,  1, false, false, false,
+{ MUT_PETRIFICATION_RESISTANCE,            3,  1, false, false, false,
   "petrification resistance",
 
   {"You are immune to involuntary petrification.", "", ""},
