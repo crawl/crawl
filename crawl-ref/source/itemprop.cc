@@ -2078,8 +2078,6 @@ bool food_is_meaty(int food_type)
 
 bool food_is_meaty(const item_def &item)
 {
-    ASSERT(item.defined());
-
     if (item.base_type != OBJ_FOOD)
         return false;
 
@@ -2097,8 +2095,6 @@ bool food_is_veggie(int food_type)
 
 bool food_is_veggie(const item_def &item)
 {
-    ASSERT(item.defined());
-
     if (item.base_type != OBJ_FOOD)
         return item.base_type == OBJ_MISSILES && item.sub_type == MI_PIE;
 
