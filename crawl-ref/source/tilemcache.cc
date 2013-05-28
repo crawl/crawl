@@ -291,6 +291,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
+    case TILEP_MONS_TENGU_REAVER:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
@@ -465,6 +466,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = 4;
         break;
+    case TILEP_MONS_SPRIGGAN_ENCHANTER:
+        *ofs_x = -1;
+        *ofs_y = 1;
+        break;
     // Shift downwards and to the right.
     case TILEP_MONS_ETTIN:
         *ofs_x = 2;
@@ -529,6 +534,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
+    case TILEP_MONS_TENGU_REAVER:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -542,6 +548,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_SPRIGGAN_DEFENDER:
     case TILEP_MONS_SPRIGGAN_BERSERKER:
     case TILEP_MONS_SPRIGGAN_ASSASSIN:
+    case TILEP_MONS_SPRIGGAN_ENCHANTER:
         *ofs_x = 2;
         *ofs_y = 3;
         break;

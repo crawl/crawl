@@ -1493,6 +1493,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TENGU_CONJURER;
     case MONS_TENGU_WARRIOR:
         return TILEP_MONS_TENGU_WARRIOR;
+    case MONS_TENGU_REAVER:
+        return TILEP_MONS_TENGU_REAVER;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -1977,6 +1979,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SPRIGGAN_DEFENDER;
     case MONS_SPRIGGAN_ASSASSIN:
         return TILEP_MONS_SPRIGGAN_ASSASSIN;
+    case MONS_SPRIGGAN_ENCHANTER:
+        return TILEP_MONS_SPRIGGAN_ENCHANTER;
     case MONS_THE_ENCHANTRESS:
         return TILEP_MONS_THE_ENCHANTRESS;
     case MONS_AGNES:
