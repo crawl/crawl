@@ -975,6 +975,7 @@ static bool _fan_of_gales()
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (mi->res_wind() > 0
+            || mons_is_stationary(*mi)
             || !cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
             || mi->pos().distance_from(you.pos()) > radius)
         {
