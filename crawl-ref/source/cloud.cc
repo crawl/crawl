@@ -411,7 +411,8 @@ static void _maybe_leave_water(const cloud_struct& c)
         {
             if (you.pos() == c.pos && you.ground_level())
                 mpr("The rain has left you waist-deep in water!");
-            dungeon_terrain_changed(c.pos, feat);
+            temp_change_terrain(c.pos, feat, random_range(500, 1000),
+                                TERRAIN_CHANGE_FLOOD);
         }
     }
 }
