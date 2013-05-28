@@ -604,7 +604,8 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          || spell == SPELL_POISON_WEAPON
          || spell == SPELL_SURE_BLADE
          // could be useful if it didn't require wielding
-         || spell == SPELL_TUKIMAS_DANCE))
+         || spell == SPELL_TUKIMAS_DANCE
+         || spell == SPELL_SPECTRAL_WEAPON))
     {
         rc = true, undead = false;
     }
