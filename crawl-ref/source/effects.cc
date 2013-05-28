@@ -2184,6 +2184,12 @@ void handle_time()
     if (you.duration[DUR_FINESSE] && x_chance_in_y(4, 10))
         added_contamination++;
 
+    if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI
+        && x_chance_in_y(6, 10))
+    {
+        added_contamination++;
+    }
+
     // The Orb adds .25 points per turn (effectively halving dissipation),
     // but won't cause glow on its own -- otherwise it'd spam the player
     // with messages about contamination oscillating near zero.
