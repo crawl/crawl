@@ -5985,9 +5985,7 @@ bool monster::is_child_tentacle_segment() const
 
 bool monster::is_child_monster() const
 {
-    return (type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
-            || type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || type == MONS_STARSPAWN_TENTACLE_SEGMENT);
+    return (is_child_tentacle() || is_child_tentacle_segment());
 }
 
 bool monster::is_child_tentacle_of(const monster* mons) const
