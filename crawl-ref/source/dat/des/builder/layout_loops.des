@@ -1081,7 +1081,7 @@ end
 #  can be difficult to see in the final map.
 #
 NAME:    layout_loops_misc
-DEPTH:   1-, !Dis, !Geh, !Tar
+DEPTH:   D:1-, Lair, Snake, Elf, Dwarf, Crypt, Zot
 WEIGHT:  5 (Pan), 10 (Zot), 20
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_misc
@@ -1198,7 +1198,7 @@ ENDMAP
 #  another (random) arm of the cross.
 #
 NAME:    layout_loops_cross
-DEPTH:   Pan, 1-, !Zot, !Dis, !Geh, !Tar
+DEPTH:   D:1-, Lair, Snake, Elf, Dwarf, Crypt, Pan
 WEIGHT:  5 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
@@ -1452,7 +1452,7 @@ ENDMAP
 #  generated around the central rooms.
 #
 NAME:    layout_loops_corners
-DEPTH:   1-, !Zot, !Dis, !Geh, !Tar
+DEPTH:   D:1-, Lair, Snake, Elf, Dwarf, Crypt
 WEIGHT:  5
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_misc
