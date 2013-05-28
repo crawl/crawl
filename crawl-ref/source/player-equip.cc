@@ -1568,17 +1568,17 @@ bool unwield_item(bool showMsgs)
 
     unequip_item(EQ_WEAPON, showMsgs);
 
-	// Unwielding a weapon breaks your bond with a spectral weapon!
-	if (you.props.exists("spectral_weapon"))
-	{
-        	monster *spectral_weapon= monster_by_mid(you.props["spectral_weapon"].get_int());
-		if (spectral_weapon)
-		{
-			mpr("Your spectral weapon disappears as you unwield.");
-			monster_die(spectral_weapon, KILL_RESET, NON_MONSTER);
-			you.props.erase("spectral_weapon");
-		}
-	}
+    // Unwielding dismisses an active spectral weapon
+    if (you.props.exists("spectral_weapon"))
+    {
+        monster *spectral_weapon= monster_by_mid(you.props["spectral_weapon"].get_int());
+        if (spectral_weapon)
+        {
+            mpr("Your spectral weapon disappears as you unwield.");
+            monster_die(spectral_weapon, KILL_RESET, NON_MONSTER);
+            you.props.erase("spectral_weapon");
+        }
+    }
 
     you.wield_change     = true;
     you.redraw_quiver    = true;

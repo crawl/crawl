@@ -320,40 +320,47 @@ int cast_selective_amnesia(string *pre_msg)
 
 spret_type cast_infusion(int pow, bool fail)
 {
-	fail_check();
-	you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
-	you.props["infusion_bonus"] = 2 + pow/25;
-	mpr("Your attacks are magically infused.");
+    fail_check();
+    if (you.duration[DUR_INFUSION])
+    {
+        mpr("Your attacks are magically infused.");
+    }
+    else
+    {
+        mpr("Your attacks are magically infused for longer.");
+    }
+    you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
+    you.props["infusion_bonus"] = 2 + pow/25;
 
-	return SPRET_SUCCESS;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_song_of_slaying(int pow, bool fail)
 {
-	fail_check();
+    fail_check();
 
-	if (you.duration[DUR_SONG_OF_SLAYING])
-	{
-		mpr("You start a new song!");
-	}
-	else 
-	{
-		mpr("You start singing a song of slaying.");
-	}
-	you.increase_duration(DUR_SONG_OF_SLAYING, 20+pow/3, 20+pow/3);
+    if (you.duration[DUR_SONG_OF_SLAYING])
+    {
+        mpr("You start a new song!");
+    }
+    else 
+    {
+        mpr("You start singing a song of slaying.");
+    }
+    you.increase_duration(DUR_SONG_OF_SLAYING, 20+pow/3, 20+pow/3);
 
-	noisy(11, you.pos());
+    noisy(10, you.pos());
 
-	you.props["song_of_slaying_bonus"] = 0;
-	return SPRET_SUCCESS;
+    you.props["song_of_slaying_bonus"] = 0;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_spirit_shield(int pow, bool fail)
 {
-	fail_check();
-	you.increase_duration(DUR_SPIRIT_SHIELD, 10 + roll_dice(2, pow), 50);
-	mpr("You are being protected by your magic.");
-	return SPRET_SUCCESS;
+    fail_check();
+    you.increase_duration(DUR_SPIRIT_SHIELD, 10 + roll_dice(2, pow), 50);
+    mpr("You are being protected by your magic.");
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_silence(int pow, bool fail)

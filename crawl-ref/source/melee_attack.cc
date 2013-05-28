@@ -547,19 +547,15 @@ bool melee_attack::handle_phase_hit()
     // messages, etc.
     damage_done = calc_damage();
 
-	if (attacker->is_player() && you.duration[DUR_INFUSION])
-	{
-		if (you.magic_points>0)
-		{
-			damage_done += you.props["infusion_bonus"].get_int();
-			dec_mp(1);
-		}
-		// remove 0 mp damage for now
-//		else // Slight buff to infusion -- always let it add at least 1 dmg
-//		{
-//			damage_done += 1;
-//		}
-	}
+    if (attacker->is_player() && you.duration[DUR_INFUSION])
+    {
+        if (you.magic_points>0)
+        {
+            // infusion_bonus is set when the infusion spell is cast
+            damage_done += you.props["infusion_bonus"].get_int();
+            dec_mp(1);
+        }
+    }
 
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.  We muse

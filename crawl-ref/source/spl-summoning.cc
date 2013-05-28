@@ -820,17 +820,19 @@ bool summon_holy_warrior(int pow, bool punish)
 
 spret_type cast_spectral_weapon(int pow, bool fail)
 {
-    const int dur = min(1 + (random2(pow)/50), 6);
-	// probably shouldn't duplicate this code!!
-	item_def* wpn = you.weapon();
-        item_def cp = *wpn;
+    const int dur = min(1 + (random2(pow)/75), 6);
+    item_def* wpn = you.weapon();
+    item_def cp = *wpn;
+
+    // If the wielded weapon should not be cloned, abort
+    // Unlike tukima you are allowed to clone artefacts
     if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn))
     {
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
-                 wpn->name(DESC_YOUR).c_str(),
-                 wpn->quantity > 1 ? "" : "s");
+                    wpn->name(DESC_YOUR).c_str(),
+                    wpn->quantity > 1 ? "" : "s");
         }
         else
             mprf("Your %s twitch.", you.hand_name(true).c_str());
@@ -840,49 +842,33 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 
     fail_check();
 
-	// you can only ever have one spectral weapon, kill any existing ones
-	if (you.props.exists("spectral_weapon"))
-	{
-        	monster *old_mons = monster_by_mid(you.props["spectral_weapon"].get_int());
-		monster_die(old_mons, KILL_RESET, NON_MONSTER);
-	}
+    // Remove any existing spectral weapons --- only one should be alive at any given time
+    if (you.props.exists("spectral_weapon"))
+    {
+        monster *old_mons = monster_by_mid(you.props["spectral_weapon"].get_int());
+        monster_die(old_mons, KILL_RESET, NON_MONSTER);
+    }
 
     mgen_data mg(MONS_SPECTRAL_WEAPON,
-                 BEH_FRIENDLY,
-                 &you,
-                 dur, SPELL_SPECTRAL_WEAPON,
-                 you.pos(),
-                 MHITYOU,
-                 0, GOD_NO_GOD);
+            BEH_FRIENDLY,
+            &you,
+            dur, SPELL_SPECTRAL_WEAPON,
+            you.pos(),
+            MHITYOU,
+            0, GOD_NO_GOD);
 
-//	item_def original_weapon = *wpn;
-//	
-	int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
-//	// Increase the acc of the spectral weapon by the player's weapon skill
-//	int adjustment = -2 + 2*skill_with_weapon/3;
-//
-//	// create the weapon to give to the spectral weapon
-//	item_def fake;
-//	fake.base_type = OBJ_WEAPONS;
-//	fake.sub_type = original_weapon.sub_type;
-//	fake.plus = original_weapon.plus + adjustment;
-//	fake.plus2 = original_weapon.plus2 - 3;
-//	// no brand, sorry!!
-//	//fake.special = original_weapon.special;
-//	fake.special = SPWPN_NORMAL;
-//	fake.colour = original_weapon.colour;
-//	fake.quantity = original_weapon.quantity;
+    int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
 
-   	mg.props[TUKIMA_WEAPON] = cp;
-  	mg.props[TUKIMA_POWER] = pow;
+    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_POWER] = pow;
 
-	monster *mons = create_monster(mg);
-	mpr("You draw out your weapon's spirit!");
+    monster *mons = create_monster(mg);
+    mpr("You draw out your weapon's spirit!");
 
-	you.props["spectral_weapon"].get_int() = mons->mid;
-	mons->hit_dice = skill_with_weapon/2;
-	mons->ac = 3 + skill_with_weapon/4;
-	mons->ev = 3 + skill_with_weapon/3;
+    you.props["spectral_weapon"].get_int() = mons->mid;
+    mons->hit_dice = skill_with_weapon/2;
+    mons->ac = 3 + skill_with_weapon/4;
+    mons->ev = 3 + skill_with_weapon/3;
 
     return SPRET_SUCCESS;
 }
