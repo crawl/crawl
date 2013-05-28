@@ -2360,7 +2360,7 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     }
 
     // Tentacle only requires checking of head position.
-    if (mons_is_tentacle_or_tentacle_segment(mon.type))
+    if (mons_is_tentacle(mon.type))
     {
         if (no_head_connect)
         {
