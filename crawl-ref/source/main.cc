@@ -3080,6 +3080,17 @@ static void _player_reacts()
 
     if (you.attribute[ATTR_NOISES])
         noisy_equipment();
+    
+    // Handle sound-dependant effects that are silenced
+    if (silenced(you.pos()))
+    {
+        // tHIS IS THE WORST THING TO DO
+        if (you.duration[DUR_SONG_OF_SLAYING])
+        {
+            mpr("The silence abruptly stops your song!");
+            _decrement_a_duration(DUR_SONG_OF_SLAYING, you.duration[DUR_SONG_OF_SLAYING]);
+        }
+    }
 
     // Singing makes a continous noise
     if (you.duration[DUR_SONG_OF_SLAYING])
