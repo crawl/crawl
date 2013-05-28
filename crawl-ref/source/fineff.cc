@@ -18,6 +18,7 @@
 #include "ouch.h"
 #include "religion.h"
 #include "state.h"
+#include "transform.h"
 #include "view.h"
 
 void final_effect::schedule()
@@ -296,6 +297,15 @@ void delayed_action_fineff::fire()
     if (final_msg.length())
         mpr(final_msg);
     add_daction(action);
+}
+
+void kirke_death_fineff::fire()
+{
+    delayed_action_fineff::fire();
+
+    // Revert the player last
+    if (you.form == TRAN_PIG)
+        untransform();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
