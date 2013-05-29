@@ -984,8 +984,10 @@ void wind_blast(actor* agent, int pow, coord_def target)
     for (actor_iterator ai(agent->get_los()); ai; ++ai)
     {
         if (ai->res_wind() > 0
-            || !cell_see_cell(agent->pos(), ai->pos(), LOS_SOLID)
-            || ai->pos().distance_from(agent->pos()) > radius
+            || (ai->is_monster() && mons_is_stationary(ai->as_monster()))
+            || (ai->is_player() && you.form == TRAN_TREE)
+            || !cell_see_cell(you.pos(), ai->pos(), LOS_SOLID)
+            || ai->pos().distance_from(you.pos()) > radius
             || !target.origin()
                && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0)
         {

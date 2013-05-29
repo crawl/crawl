@@ -2120,9 +2120,7 @@ static void _handle_list(vector<T> &value_list, string field,
                          bool append, bool prepend, bool subtract)
 {
     if (!append && !prepend && !subtract)
-    {
         value_list.clear();
-    }
 
     vector<T> new_entries;
     vector<string> parts = split_string(",", field);

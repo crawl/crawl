@@ -632,7 +632,7 @@ bool mons_class_is_firewood(monster_type mc)
 {
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
-            && !mons_is_tentacle(mc));
+            && !mons_is_tentacle_or_tentacle_segment(mc));
 }
 
 bool mons_is_firewood(const monster* mon)
@@ -1445,7 +1445,7 @@ bool mons_can_be_zombified(const monster* mon)
 bool mons_class_can_use_stairs(monster_type mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
-            && !mons_is_tentacle(mc)
+            && !mons_is_tentacle_or_tentacle_segment(mc)
             && !mons_is_abyssal_only(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST
@@ -1502,6 +1502,11 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
 
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
+
+    // It's unlikely there's a desc for "Duvessa the elf skeleton", but
+    // we still want to allow it if overridden.
+    if (!mon->props.exists("dbname"))
+        mon->props["dbname"] = mons_class_name(mon->type);
 
     return true;
 }
@@ -3490,7 +3495,10 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
 {
     if (grid == DNGN_MALIGN_GATEWAY)
-        return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+    {
+        return (mc == MONS_ELDRITCH_TENTACLE
+                || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+    }
 
     if (_mons_class_habitat(mc) == HT_INCORPOREAL)
         return !feat_is_permarock(grid);
@@ -4411,27 +4419,39 @@ monster *monster_by_mid(mid_t m)
     return 0;
 }
 
-bool mons_is_tentacle(monster_type mc)
-{
-    return (mc == MONS_KRAKEN_TENTACLE
-            || mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-            || mc == MONS_STARSPAWN_TENTACLE
-            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
-}
-
-bool mons_is_tentacle_segment(monster_type mc)
-{
-    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
-}
-
 bool mons_is_tentacle_head(monster_type mc)
 {
     return (mc == MONS_KRAKEN
             || mc == MONS_TENTACLED_STARSPAWN);
+}
+
+bool mons_is_child_tentacle(monster_type mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE
+            || mc == MONS_STARSPAWN_TENTACLE);
+}
+
+bool mons_is_child_tentacle_segment(monster_type mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
+}
+
+bool mons_is_tentacle(monster_type mc)
+{
+    return (mc == MONS_ELDRITCH_TENTACLE
+            || mons_is_child_tentacle(mc));
+}
+
+bool mons_is_tentacle_segment(monster_type mc)
+{
+    return (mc == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || mons_is_child_tentacle_segment(mc));
+}
+
+bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
+{
+    return (mons_is_tentacle(mc) || mons_is_tentacle_segment(mc));
 }
 
 monster* mons_get_parent_monster(monster* mons)
@@ -4484,13 +4504,6 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
-}
-
-bool mons_is_tentacle_end(monster_type mtype)
-{
-    return (mtype == MONS_KRAKEN_TENTACLE
-            || mtype == MONS_ELDRITCH_TENTACLE
-            || mtype == MONS_STARSPAWN_TENTACLE);
 }
 
 monster_type mons_tentacle_parent_type(const monster* mons)
