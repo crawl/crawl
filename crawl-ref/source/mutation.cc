@@ -584,7 +584,7 @@ string describe_mutations(bool center_title)
 
         // Cold vulnerability
         col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
-        result += "<" + col + ">You are vulnerable to cold.</" + col + ">\n";
+        result += "<" + col + ">Your flesh is vulnerable to cold.</" + col + ">\n";
 
         // Passive heat
         col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
