@@ -3093,6 +3093,10 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                  && !one_chance_in(5));
     }
 
+    // Pick number of beasts in the box
+    if (item.sub_type == MISC_BOX_OF_BEASTS)
+        item.plus = 6 + random2avg(20,2);
+
     if (is_deck(item))
     {
         item.plus = 4 + random2(10);
