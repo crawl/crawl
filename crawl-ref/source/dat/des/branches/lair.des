@@ -2235,10 +2235,8 @@ MONS:   black bear / grizzly bear, wolf, spriggan
 MONS:   spriggan rider / spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = t.
-# These can't be substituted with floor because it might be disconnected, but if
-# there were some way to substitute space (DNGN_UNKNOWN) instead, that would
-# work.
-SUBST:  E = t
+SUBST:  E = t_
+CLEAR:  _
 SUBST:  2 = 2., 3 = 3., 4 = 4., . = .:190 1
 KITEM:  $ = gold, star_item
 MAP
