@@ -3089,6 +3089,19 @@ struct spell_desc
 },
 
 {
+    SPELL_BLAST, "Blast",
+     0,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE, // rod of blasting
+     3,
+     50,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

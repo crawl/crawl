@@ -49,6 +49,7 @@
 #include "shopping.h" // for item values
 #include "spl-book.h"
 #include "spl-damage.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1288,6 +1289,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         break;
 
     case SPELL_FIREBALL:
+    case SPELL_BLAST:
         if (mons->foe_distance() < 2)
             return false;
         break;
@@ -1327,6 +1329,9 @@ static bool _handle_rod(monster *mons, bolt &beem)
     const int power = max(_generate_rod_power(mons), 1);
 
     dprf("using rod with power %d", power);
+
+    if (mzap == SPELL_BLAST)
+        mzap = blast_spell_type();
 
     bolt theBeam = mons_spell_beam(mons, mzap, power, check_validity);
     beem         = _generate_item_beem(beem, theBeam, mons);

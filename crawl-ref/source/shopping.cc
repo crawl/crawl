@@ -2243,7 +2243,8 @@ unsigned int item_value(item_def item, bool ident)
         if (!item_type_known(item))
             valued = 120;
         else if (item.sub_type == ROD_STRIKING
-                 || item.sub_type == ROD_WARDING)
+                 || item.sub_type == ROD_WARDING
+                 || item.sub_type == ROD_BLASTING)
         {
             valued = 150;
         }

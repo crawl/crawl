@@ -1307,6 +1307,9 @@ static spret_type _do_cast(spell_type spell, int powc,
                            god_type god, int potion,
                            bool check_range, bool fail)
 {
+    if (spell == SPELL_BLAST)
+        spell = blast_spell_type();
+
     // First handle the zaps.
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)

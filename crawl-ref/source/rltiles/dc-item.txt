@@ -1047,6 +1047,7 @@ rod06
 rod07
 rod08
 rod09
+rod09
 
 %rim 0
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
@@ -1058,7 +1059,8 @@ i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
 i-rod_warding ROD_WARDING
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
-i-rod_venom ROD_VENOM ROD_ID_LAST
+i-rod_venom ROD_VENOM
+i-rod_striking ROD_BLASTING ROD_ID_LAST
 %rim 1
 
 #OBJ_ORBS
