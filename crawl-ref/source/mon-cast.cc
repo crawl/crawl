@@ -45,6 +45,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
@@ -1135,6 +1136,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_LOST_SOUL:
     case SPELL_BLINK_ALLIES_ENCIRCLE:
     case SPELL_MASS_CONFUSION:
+    case SPELL_ENGLACIATION:
         return true;
     default:
         if (check_validity)
@@ -2368,6 +2370,21 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             if (_mons_mass_confuse(mons, false) < 0)
                 return false;
+        }
+        // Check if our enemy can be slowed for Metabolic Englaciation.
+        else if (spell_cast == SPELL_ENGLACIATION)
+        {
+            if (!foe
+                || !mons->see_cell_no_trans(mons->target)
+                || foe->res_cold() > 0
+                || (foe->is_monster()
+                    && (mons_is_firewood(foe->as_monster())
+                        || foe->as_monster()->has_ench(ENCH_SLOW)))
+                || (!foe->is_monster()
+                    && you.duration[DUR_SLOW] > 0))
+            {
+                return false;
+            }
         }
 
         if (mons->type == MONS_BALL_LIGHTNING)
@@ -4350,9 +4367,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
         _blink_allies_encircle(mons);
+        return;
 
     case SPELL_MASS_CONFUSION:
         _mons_mass_confuse(mons);
+        return;
+
+    case SPELL_ENGLACIATION:
+        if (you.can_see(mons))
+            simple_monster_message(mons, " radiates an aura of cold.");
+        else if (mons->see_cell_no_trans(you.pos()))
+            mpr("A wave of cold passes over you.");
+        apply_area_visible(englaciate, min(12 * mons->hit_dice, 200), mons);
         return;
     }
 

@@ -438,7 +438,7 @@ spret_type cast_intoxicate(int pow, bool fail)
         mpr("Your head spins!");
     }
 
-    apply_area_visible(_intoxicate_monsters, pow);
+    apply_area_visible(_intoxicate_monsters, pow, &you);
     return SPRET_SUCCESS;
 }
 
