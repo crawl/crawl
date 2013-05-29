@@ -2890,12 +2890,10 @@ void unmarshallItem(reader &th, item_def &item)
             item.flags |= ISFLAG_KNOW_TYPE;
     }
 
-#if TAG_MAJOR_VERSION == 34
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
         item.sub_type = STAFF_ENERGY;
-#endif
 
     if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
     {
@@ -2909,6 +2907,15 @@ void unmarshallItem(reader &th, item_def &item)
     {
         --item.sub_type;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_BOX_OF_BEASTS_CHARGES
+        && item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BOX_OF_BEASTS)
+    {
+        // Give charges to box of beasts. If the player used it
+        // already then, well, they got some freebies.
+        item.plus = 6 + random2avg(20,2);
+    }
+
 #endif
 
     bind_item_tile(item);
