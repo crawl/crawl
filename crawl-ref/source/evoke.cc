@@ -645,12 +645,12 @@ static bool _box_of_beasts(item_def &box)
                                              you.skill(SK_EVOCATIONS),
                                              _box_of_beasts_veto_mon);
 
-        if (create_monster(
-                mgen_data(mon,
-                            BEH_FRIENDLY, &you,
-                            2 + random2(4), 0,
-                            you.pos(),
-                            MHITYOU)))
+        if (!one_chance_in(3)
+            && create_monster(mgen_data(mon,
+                                        BEH_FRIENDLY, &you,
+                                        2 + random2(4), 0,
+                                        you.pos(),
+                                        MHITYOU)))
         {
             success = true;
 
