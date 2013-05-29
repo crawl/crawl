@@ -13,6 +13,7 @@
 #include "database.h"
 #include "dactions.h"
 #include "env.h"
+#include "fineff.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -51,7 +52,8 @@ bool mons_is_pikel(monster* mons)
  *
  * This neutralisation occurs in multiple instances: when Pikel is neutralised,
  * enslaved, when Pikel dies, when Pikel is banished.
-**/
+ * It is handled by a daction (as a fineff) to preserve across levels.
+ **/
 void pikel_band_neutralise()
 {
     int visible_slaves = 0;
@@ -66,12 +68,13 @@ void pikel_band_neutralise()
             visible_slaves++;
         }
     }
+    string final_msg;
     if (visible_slaves == 1)
-        mpr("With Pikel's spell broken, the former slave thanks you for freedom.");
+        final_msg = "With Pikel's spell broken, the former slave thanks you for freedom.";
     else if (visible_slaves > 1)
-        mpr("With Pikel's spell broken, the former slaves thank you for their freedom.");
+        final_msg = "With Pikel's spell broken, the former slaves thank you for their freedom.";
 
-    add_daction(DACT_PIKEL_SLAVES);
+    (new delayed_action_fineff(DACT_PIKEL_SLAVES,final_msg))->schedule();
 }
 
 /**
@@ -91,25 +94,28 @@ bool mons_is_kirke(monster* mons)
 }
 
 /**
- * Convert hogs to neutral humans.
+ * Revert porkalated hogs.
  *
- * Called upon Kirke's death. This does not track members of her band that
- * have been transferred across levels. Non-hogs are ignored. If a monster has
- * an ORIG_MONSTER_KEY prop, it will be returned to its previous state,
- * otherwise it will be converted to a neutral human.
-**/
+ * Called upon Kirke's death. Hogs either from Kirke's band or
+ * subsequently porkalated should be reverted to their original form.
+ * This takes place as a daction to preserve behaviour across levels;
+ * this function simply checks if any are visible and raises a fineff
+ * containing an appropriate message. The fineff raises the actual
+ * daction.
+ */
 void hogs_to_humans()
 {
-    // Simplification: if, in a rare event, another hog which was not created
-    // as a part of Kirke's band happens to be on the level, the player can't
-    // tell them apart anyway.
-    // On the other hand, hogs which left the level are too far away to be
-    // affected by the magic of Kirke's death.
     int any = 0, human = 0;
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type != MONS_HOG)
+        if (!(mi->type == MONS_HOG
+              || mi->type == MONS_HELL_HOG
+              || mi->type == MONS_HOLY_SWINE))
+            continue;
+
+        if (!mi->props.exists("kirke_band")
+            && !mi->props.exists(ORIG_MONSTER_KEY))
             continue;
 
         // Shapeshifters will stop being a hog when they feel like it.
@@ -118,100 +124,33 @@ void hogs_to_humans()
 
         const bool could_see = you.can_see(*mi);
 
-        monster orig;
+        if (could_see) any++;
 
-        if (mi->props.exists(ORIG_MONSTER_KEY))
-            // Copy it, since the instance in props will get deleted
-            // as soon a **mi is assigned to.
-            orig = mi->props[ORIG_MONSTER_KEY].get_monster();
-        else
-        {
-            orig.type     = MONS_HUMAN;
-            orig.attitude = mi->attitude;
-            define_monster(&orig);
-        }
-        orig.mid = mi->mid;
-
-        // Keep at same spot.
-        const coord_def pos = mi->pos();
-        // Preserve relative HP.
-        const float hp
-            = (float) mi->hit_points / (float) mi->max_hit_points;
-        // Preserve some flags.
-        const uint64_t preserve_flags =
-            mi->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
-        // Preserve enchantments.
-        mon_enchant_list enchantments = mi->enchantments;
-
-        // Restore original monster.
-        **mi = orig;
-
-        mi->move_to_pos(pos);
-        mi->enchantments = enchantments;
-        mi->hit_points   = max(1, (int) (mi->max_hit_points * hp));
-        mi->flags        = mi->flags | preserve_flags;
-
-        const bool can_see = you.can_see(*mi);
-
-        // A monster changing factions while in the arena messes up
-        // arena book-keeping.
-        if (!crawl_state.game_is_arena())
-        {
-            // * A monster's attitude shouldn't downgrade from friendly
-            //   or good-neutral because you helped it.  It'd suck to
-            //   lose a permanent ally that way.
-            //
-            // * A monster has to be smart enough to realize that you
-            //   helped it.
-            if (mi->attitude == ATT_HOSTILE
-                && mons_intel(*mi) >= I_NORMAL)
-            {
-                mi->attitude = ATT_GOOD_NEUTRAL;
-                mi->flags   |= MF_WAS_NEUTRAL;
-                mons_att_changed(*mi);
-            }
-        }
-
-        behaviour_event(*mi, ME_EVAL);
-
-        if (could_see && can_see)
-        {
-            any++;
-            if (mi->type == MONS_HUMAN)
-                human++;
-        }
-        else if (could_see && !can_see)
-            mpr("The hog vanishes!");
-        else if (!could_see && can_see)
-            mprf("%s appears from out of thin air!",
-                 mi->name(DESC_A).c_str());
+        if (!mi->props.exists(ORIG_MONSTER_KEY) && could_see)
+            human++;
     }
+
+    string final_msg;
 
     if (any == 1)
     {
         if (any == human)
-            mpr("No longer under Kirke's spell, the hog turns into a human!");
+            final_msg = "No longer under Kirke's spell, the hog turns into a human!";
         else
-            mpr("No longer under Kirke's spell, the hog returns to its "
-                "original form!");
+            final_msg = "No longer under Kirke's spell, the hog returns to its "
+                        "original form!";
     }
     else if (any > 1)
     {
         if (any == human)
-        {
-            mpr("No longer under Kirke's spell, all hogs revert to their "
-                "human forms!");
-        }
+            final_msg = "No longer under Kirke's spell, the hogs revert to their "
+                        "human forms!";
         else
-        {
-            mpr("No longer under Kirke's spell, all hogs revert to their "
-                "original forms!");
-        }
+            final_msg = "No longer under Kirke's spell, the hogs revert to their "
+                        "original forms!";
     }
 
-    // Revert the player as well.
-    if (you.form == TRAN_PIG)
-        untransform();
+    (new kirke_death_fineff(final_msg))->schedule();
 }
 
 /**
@@ -281,9 +220,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
     }
 
-    bool found_duvessa = false;
-    bool found_dowan = false;
-    monster* mons;
+    monster* mons = nullptr;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -297,18 +234,16 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         if (mons_is_duvessa(*mi))
         {
             mons = *mi;
-            found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
             mons = *mi;
-            found_dowan = true;
             break;
         }
     }
 
-    if (!found_duvessa && !found_dowan)
+    if (!mons)
         return;
 
     // Okay, let them climb stairs now.
@@ -353,7 +288,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     else if (mons->can_speak())
         mprf("%s", death_message.c_str());
 
-    if (found_duvessa)
+    if (mons_is_duvessa(mons))
     {
         if (mons_near(mons))
         {
@@ -366,8 +301,9 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
             mons->props["duvessa_berserk"] = bool(true);
         }
     }
-    else if (found_dowan)
+    else
     {
+        ASSERT(mons_is_dowan(mons));
         if (mons->observable())
         {
             mons->add_ench(ENCH_HASTE);
@@ -393,9 +329,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 **/
 void elven_twins_pacify(monster* twin)
 {
-    bool found_duvessa = false;
-    bool found_dowan = false;
-    monster* mons;
+    monster* mons = nullptr;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -409,23 +343,19 @@ void elven_twins_pacify(monster* twin)
         if (mons_is_duvessa(*mi))
         {
             mons = *mi;
-            found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
             mons = *mi;
-            found_dowan = true;
             break;
         }
     }
 
-    if (!found_duvessa && !found_dowan)
+    if (!mons)
         return;
 
-    // This shouldn't happen, but sometimes it does.
-    if (mons->neutral())
-        return;
+    ASSERT(!mons->neutral());
 
     if (you.religion == GOD_ELYVILON)
         gain_piety(random2(mons->max_hit_points / (2 + you.piety / 20)), 2);
@@ -448,9 +378,7 @@ void elven_twins_pacify(monster* twin)
 **/
 void elven_twins_unpacify(monster* twin)
 {
-    bool found_duvessa = false;
-    bool found_dowan = false;
-    monster* mons;
+    monster* mons = nullptr;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -464,18 +392,16 @@ void elven_twins_unpacify(monster* twin)
         if (mons_is_duvessa(*mi))
         {
             mons = *mi;
-            found_duvessa = true;
             break;
         }
         else if (mons_is_dowan(*mi))
         {
             mons = *mi;
-            found_dowan = true;
             break;
         }
     }
 
-    if (!found_duvessa && !found_dowan)
+    if (!mons)
         return;
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
@@ -752,10 +678,10 @@ bool mons_is_shedu(const monster* mons)
 /**
  * Initial resurrection functionality for Shedu.
  *
- * This function is called when a shedu dies. It attempt to find that shedu's
- * pair, wake them if necessary, and then begin the resurrection process by
+ * This function is called when a shedu dies. It attempts to find that shedu's
+ * pair, wakes them if necessary, and then begins the resurrection process by
  * giving them the ENCH_PREPARING_RESURRECT enchantment timer. If a pair does
- * not exist (ie, this is the second shedu to have died), nothing happens.
+ * not exist (i.e., this is the second shedu to have died), nothing happens.
  *
  * @param mons    The shedu who died.
 **/

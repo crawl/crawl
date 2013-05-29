@@ -399,6 +399,10 @@ void crawl_view_geometry::init_geometry()
     gui_init_view_params(*this);
 #endif
 
+#ifdef USE_TILE
+    tiles.resize();
+#endif
+
     init_view();
     return;
 }

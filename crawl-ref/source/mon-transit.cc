@@ -12,8 +12,10 @@
 #include "artefact.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dactions.h"
 #include "dungeon.h"
 #include "env.h"
+#include "godcompanions.h"
 #include "items.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -118,9 +120,26 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
     dprf("Monster in transit to %s: %s", lid.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());
 
+    if (m.is_divine_companion())
+        move_companion_to(&m, lid);
+
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
         cull_lost_mons(mlist, how_many);
+}
+
+void remove_monster_from_transit(const level_id &lid, mid_t mid)
+{
+    m_transit_list &mlist = the_lost_ones[lid];
+
+    for (m_transit_list::iterator i = mlist.begin(); i != mlist.end(); ++i)
+    {
+        if (i->mons.mid == mid)
+        {
+            mlist.erase(i);
+            return;
+        }
+    }
 }
 
 static void _place_lost_ones(void (*placefn)(m_transit_list &ml))
@@ -174,7 +193,11 @@ static void level_place_followers(m_transit_list &m)
     {
         m_transit_list::iterator mon = i++;
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
+        {
+            if (mon->mons.is_divine_companion())
+                move_companion_to(monster_by_mid(mon->mons.mid), level_id::current());
             m.erase(mon);
+        }
     }
 }
 
@@ -214,12 +237,45 @@ void place_transiting_items()
                                   pos, true);
 
         // List of items we couldn't place.
-        if (!copy_item_to_grid(*item, where_to_go, 1, false, true))
+        if (!copy_item_to_grid(*item, where_to_go, MHITNOT, 1, false, true))
             keep.push_back(*item);
     }
 
     // Only unplaceable items are kept in list.
     ilist = keep;
+}
+
+void apply_daction_to_transit(daction_type act)
+{
+    for (monsters_in_transit::iterator i = the_lost_ones.begin();
+            i != the_lost_ones.end(); ++i)
+    {
+        m_transit_list* m = &i->second;
+        for (m_transit_list::iterator j = m->begin(); j != m->end(); ++j)
+        {
+            monster* mon = &j->mons;
+            if (mons_matches_daction(mon, act))
+                apply_daction_to_mons(mon, act, false);
+        }
+    }
+}
+
+int count_daction_in_transit(daction_type act)
+{
+    int count = 0;
+    for (monsters_in_transit::iterator i = the_lost_ones.begin();
+            i != the_lost_ones.end(); ++i)
+    {
+        m_transit_list* m = &i->second;
+        for (m_transit_list::iterator j = m->begin(); j != m->end(); ++j)
+        {
+            monster* mon = &j->mons;
+            if (mons_matches_daction(mon, act))
+                count++;
+        }
+    }
+
+    return count;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -290,8 +346,10 @@ void follower::restore_mons_items(monster& m)
 
 static bool _is_religious_follower(const monster* mon)
 {
-    return ((you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
-            && is_follower(mon));
+    return ((you.religion == GOD_YREDELEMNUL
+             || you.religion == GOD_BEOGH
+             || you.religion == GOD_FEDHAS)
+                 && is_follower(mon));
 }
 
 static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
@@ -331,8 +389,8 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
         if (!fol->friendly())
             return false;
 
-        // Undead will follow Yredelemnul worshippers, and orcs will
-        // follow Beogh worshippers.
+        // Undead will follow Yredelemnul worshippers, orcs will follow
+        // Beogh worshippers, and plants will follow Fedhas worshippers.
         if (!_is_religious_follower(fol))
             return false;
     }

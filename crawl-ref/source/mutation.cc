@@ -105,7 +105,8 @@ void init_mut_index()
     for (unsigned int i = 0; i < ARRAYSZ(mut_data); ++i)
     {
         const mutation_type mut = mut_data[i].mutation;
-        ASSERT(mut >= 0 && mut < NUM_MUTATIONS);
+        ASSERT(mut >= 0);
+        ASSERT(mut < NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
         total_rarity[MT_ALL] += mut_data[i].rarity;
@@ -115,7 +116,8 @@ void init_mut_index()
 
 static const mutation_def* _seek_mutation(mutation_type mut)
 {
-    ASSERT(mut >= 0 && mut < NUM_MUTATIONS);
+    ASSERT(mut >= 0);
+    ASSERT(mut < NUM_MUTATIONS);
     if (mut_index[mut] == -1)
         return NULL;
     else
@@ -372,7 +374,7 @@ string describe_mutations(bool center_title)
         if (you.experience_level > 2)
         {
             ostringstream num;
-            num << you.experience_level/3;
+            num << you.experience_level / 3;
             const string acstr = "Your serpentine skin is tough (AC +"
                                  + num.str() + ").";
 
@@ -967,12 +969,14 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_SHOCK_RESISTANCE:
     case MUT_REGENERATION:
     case MUT_SLOW_METABOLISM:
-    case MUT_TELEPORT_CONTROL:
     case MUT_MAGIC_RESISTANCE:
     case MUT_CLARITY:
     case MUT_MUTATION_RESISTANCE:
     case MUT_ROBUST:
     case MUT_HIGH_MAGIC:
+    case MUT_MANA_SHIELD:
+    case MUT_MANA_REGENERATION:
+    case MUT_MANA_LINK:
         amusement /= 2;  // not funny
         break;
 
@@ -1043,7 +1047,8 @@ static mutation_type _get_random_slime_mutation()
 {
     const mutation_type slime_muts[] = {
         MUT_GELATINOUS_BODY, MUT_EYEBALLS, MUT_TRANSLUCENT_SKIN,
-        MUT_PSEUDOPODS, MUT_FOOD_JELLY, MUT_ACIDIC_BITE
+        MUT_PSEUDOPODS, MUT_ACIDIC_BITE, MUT_TENDRILS,
+        MUT_JELLY_GROWTH, MUT_JELLY_MISSILE
     };
 
     return RANDOM_ELEMENT(slime_muts);
@@ -1074,7 +1079,8 @@ static bool _is_slime_mutation(mutation_type m)
 {
     return (m == MUT_GELATINOUS_BODY || m == MUT_EYEBALLS
             || m == MUT_TRANSLUCENT_SKIN || m == MUT_PSEUDOPODS
-            || m == MUT_FOOD_JELLY || m == MUT_ACIDIC_BITE);
+            || m == MUT_ACIDIC_BITE || m == MUT_TENDRILS
+            || m == MUT_JELLY_GROWTH || m == MUT_JELLY_MISSILE);
 }
 
 static mutation_type _get_random_xom_mutation()
@@ -1316,9 +1322,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them.
-    if (you.species == SP_FELID && mutat == MUT_CLAWS)
+    // increases for them.  And octopodes have no hands.
+    if ((you.species == SP_FELID || you.species == SP_OCTOPODE)
+         && mutat == MUT_CLAWS)
+    {
         return true;
+    }
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
@@ -1385,10 +1394,14 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
-static bool _undead_rot()
+static bool _undead_rot(bool is_beneficial_mutation)
 {
     if (you.is_undead == US_SEMI_UNDEAD)
     {
+        // Let beneficial mutation potions work at satiated or higher
+        // for convenience
+        if (is_beneficial_mutation && you.hunger_state >= HS_SATIATED)
+            return false;
         switch (you.hunger_state)
         {
         case HS_SATIATED:  return !one_chance_in(3);
@@ -1403,7 +1416,7 @@ static bool _undead_rot()
 }
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
-            bool force_mutation, bool god_gift, bool stat_gain_potion,
+            bool force_mutation, bool god_gift, bool beneficial,
             bool demonspawn, bool no_rot, bool temporary)
 {
     if (!god_gift)
@@ -1430,16 +1443,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (!god_gift)
         {
             if ((you.rmut_from_item()
-                 && !one_chance_in(temporary ? 3 : 10) && !stat_gain_potion)
+                 && !one_chance_in(temporary ? 3 : 10) && !beneficial)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
                     && !one_chance_in(temporary ? 2 : 3)))
             {
                 if (failMsg)
-                {
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
-                    maybe_id_resist(BEAM_POLYMORPH);
-                }
+                maybe_id_resist(BEAM_MALMUTATE);
                 return false;
             }
         }
@@ -1447,34 +1458,16 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         // Zin's protection.
         if (you.religion == GOD_ZIN
             && (x_chance_in_y(you.piety, MAX_PIETY)
-                || x_chance_in_y(you.piety, MAX_PIETY + 22))
-            && !stat_gain_potion)
+                || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
             simple_god_message(" protects your body from mutation!");
             return false;
         }
     }
 
-    bool rotting = _undead_rot();
-
-    if (you.is_undead == US_SEMI_UNDEAD)
-    {
-        // The stat gain mutations always come through at Satiated or
-        // higher (mostly for convenience), and, for consistency, also
-        // their negative counterparts.
-        if (which_mutation == MUT_STRONG || which_mutation == MUT_CLEVER
-            || which_mutation == MUT_AGILE || which_mutation == MUT_WEAK
-            || which_mutation == MUT_DOPEY || which_mutation == MUT_CLUMSY)
-        {
-            if (you.hunger_state >= HS_SATIATED)
-                rotting = false;
-        }
-        // Else, chances depend on hunger state.
-    }
-
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (rotting && !demonspawn)
+    if (_undead_rot(beneficial) && !demonspawn)
     {
         if (no_rot)
             return false;
@@ -1686,6 +1679,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         update_vision_range();
         break;
 
+    case MUT_DEMONIC_GUARDIAN:
+        if (you.religion == GOD_OKAWARU)
+        {
+            mpr("Your demonic guardian will not assist you as long as you "
+                "worship Okawaru.", MSGCH_MUTATION);
+        }
+        break;
+
     default:
         break;
     }
@@ -1813,7 +1814,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
         }
 
-        if (_undead_rot())
+        if (_undead_rot(false))
             return false;
     }
 
@@ -2056,7 +2057,7 @@ string mutation_name(mutation_type mut, int level, bool colour)
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
-    { 0,  { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
+    { 0, { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
       { -33, -33, -33 } },
     { 0, { MUT_HORNS, MUT_HORNS, MUT_HORNS },
       { -33, -33, -33 } },
@@ -2080,7 +2081,7 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
-        MUT_RUGGED_BROWN_SCALES },
+           MUT_RUGGED_BROWN_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
       { -33, -33, 0 } },
@@ -2088,7 +2089,7 @@ static const facet_def _demon_facets[] =
         MUT_THIN_METALLIC_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
-        MUT_THIN_SKELETAL_STRUCTURE },
+           MUT_THIN_SKELETAL_STRUCTURE },
       { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { -33, -33, 0 } },
@@ -2100,7 +2101,7 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
       { -33, 0, 0 } },
     { 2, { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
-      { -33, 33, 66 } },
+      { -66, 33, 66 } },
     { 2, { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
       { -33, 0, 0 } },
     { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
@@ -2108,6 +2109,8 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
       { -33, 0, 0 } },
     { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
+      { -33, 0, 0 } },
+    { 2, { MUT_MANA_SHIELD, MUT_MANA_REGENERATION, MUT_MANA_LINK },
       { -33, 0, 0 } },
     // Tier 3 facets
     { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
@@ -2117,7 +2120,7 @@ static const facet_def _demon_facets[] =
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 50, 50, 50 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
-          MUT_STOCHASTIC_TORMENT_RESISTANCE },
+           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 50, 50, 50 } },
     { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
       { 50, 50, 50 } },
@@ -2291,16 +2294,12 @@ _schedule_ds_mutations(vector<mutation_type> muts)
     vector<player::demon_trait> out;
 
     for (int level = 2; level <= 27; ++level)
-    {
-        int ct = coinflip() ? 2 : 1;
-
-        for (int i = 0; i < ct; ++i)
-            slots_left.push_back(level);
-    }
+        slots_left.push_back(level);
 
     while (!muts_left.empty())
     {
-        if (x_chance_in_y(muts_left.size(), slots_left.size()))
+        if (out.empty() // always give a mutation at XL 2
+            || x_chance_in_y(muts_left.size(), slots_left.size()))
         {
             player::demon_trait dt;
 
@@ -2344,7 +2343,19 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     int levels = 0;
     while (how_much-- > 0)
     {
-        if (you.mutation[which_mut] < cap
+    dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutations[which_mut]);
+        if (you.mutation[which_mut] == cap
+            && you.innate_mutations[which_mut] > 0
+            && you.innate_mutations[which_mut] == cap-1)
+        {
+            // [rpb] primarily for demonspawn, if the mutation level is already
+            // at the cap for this facet, the innate mutation level is greater
+            // than zero, and the innate mutation level for the mutation
+            // in question is one less than the cap, we are permafying a
+            // temporary mutation. This fails to produce any output normally.
+            mpr("Your mutations feel more permanent.", MSGCH_MUTATION);
+        }
+        else if (you.mutation[which_mut] < cap
             && !mutate(which_mut, reason, false, true, false, false, true))
         {
             return levels; // a partial success was still possible
@@ -2387,7 +2398,8 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
         {
             you.temp_mutations[which_mut]++;
             you.attribute[ATTR_TEMP_MUTATIONS]++;
-            you.increase_duration(DUR_TEMP_MUTATIONS, 20 + roll_dice(3, 10), 50);
+            you.attribute[ATTR_TEMP_MUT_XP] =
+                    min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
         }
         return true;
     }
@@ -2468,6 +2480,10 @@ static bool _balance_demonic_guardian()
 // _balance_demonic_guardian()
 void check_demonic_guardian()
 {
+    // Don't spawn guardians with Oka, they're a huge pain.
+    if (you.religion == GOD_OKAWARU)
+        return;
+
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
 
     if (!_balance_demonic_guardian() &&
@@ -2543,10 +2559,19 @@ void check_antennae_detect()
             if (remembered_monster != mon->type)
             {
                 monster_type mc = MONS_SENSED;
-                if (you.religion == GOD_ASHENZARI && !player_under_penance())
+
+                if (mon->friendly())
+                    mc = MONS_SENSED_FRIENDLY;
+                else if (you.religion == GOD_ASHENZARI
+                         && !player_under_penance())
+                {
                     mc = ash_monster_tier(mon);
+                }
                 env.map_knowledge(*ri).set_detected_monster(mc);
 
+                // Don't bother warning the player (or interrupting
+                // autoexplore) about monsters known to be easy or
+                // friendly, or those recently warned about
                 if (mc == MONS_SENSED_TRIVIAL || mc == MONS_SENSED_EASY
                     || mc == MONS_SENSED_FRIENDLY
                     || testbits(mon->flags, MF_SENSED))

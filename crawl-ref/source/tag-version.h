@@ -3,6 +3,9 @@
 
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
+// DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING. This would break
+// the save browser across versions, possibly leading to overwritten games.
+// It's only there in case there's no way out.
 #define TAG_CHR_FORMAT 0
 
 // Let CDO updaters know if the syntax changes.
@@ -20,6 +23,25 @@ enum tag_minor_version
     TAG_MINOR_TEMP_MUTATIONS,      // Enable transient mutations
     TAG_MINOR_AUTOINSCRIPTIONS,    // Artefact inscriptions are added on the fly
     TAG_MINOR_UNCANCELLABLES,      // Restart uncancellable questions upon save load
+    TAG_MINOR_DEEP_ABYSS,          // Multi-level abyss
+    TAG_MINOR_COORD_SERIALIZER,    // Serialize coord_def as int
+    TAG_MINOR_REMOVE_ABYSS_SEED,   // Remove the abyss seed.
+    TAG_MINOR_REIFY_SUBVAULTS,     // Save subvaults with level for attribution
+    TAG_MINOR_VEHUMET_SPELL_GIFT,  // Vehumet gift spells instead of books
+    TAG_MINOR_0_11 = 17,           // 0.11 final saves
+    TAG_MINOR_0_12,                // (no change)
+    TAG_MINOR_BATTLESPHERE_MID,    // Monster battlesphere (mid of creator)
+    TAG_MINOR_MALMUTATE,           // Convert Polymorph to Malmutate on old monsters
+    TAG_MINOR_VEHUMET_MULTI_GIFTS, // Vehumet can offer multiple spells at once
+    TAG_MINOR_ADD_ABYSS_SEED,      // Reinstate abyss seed. Mistakes were made.
+    TAG_MINOR_COMPANION_LIST,      // Added companion list
+    TAG_MINOR_INCREMENTAL_RECALL,  // Made recall incremental
+    TAG_MINOR_GOD_GIFT,            // Remove {god gift} from inscriptions.
+    TAG_MINOR_NOME_NO_MORE,        // Remove unused gnome variable.
+    TAG_MINOR_NO_SPLINT,           // Remove splint mail
+    TAG_MINOR_ORIG_MONNUM,         // orig_monnum is type rather than type+1.
+    TAG_MINOR_SPRINT_SCORES,       // Separate score lists for each sprint map
+    TAG_MINOR_FOOD_AUTOPICKUP,     // Separate meat, fruit, others in \ menu.
     TAG_MINOR_LORC_TEMPERATURE,    // Save lava orc temperature
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

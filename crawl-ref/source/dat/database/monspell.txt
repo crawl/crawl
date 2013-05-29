@@ -161,14 +161,6 @@ Suddenly, a bright light shines from nowhere!
 
 An intense light blinds you for a moment.
 %%%%
-Summon Holies cast
-
-@The_monster@ calls forth @possessive@ holy kin!
-%%%%
-unseen Summon Holies cast
-
-Holy kin are called forth!
-%%%%
 Holy Flames cast
 
 @The_monster@ calls forth blessed flames!
@@ -180,6 +172,14 @@ Blessed flames are called forth!
 Silver Blast cast
 
 @The_monster@ shoots forth a bolt of silver!
+%%%%
+Word of Recall cast
+
+@The_monster@ begins to recite a word of recall!
+%%%%
+Call Lost Soul cast
+
+@The_monster@ beckons forth a restless soul!
 %%%%
 #####################################################
 # Individual innate spells (breathing and spitting).
@@ -236,6 +236,14 @@ You hear a spitting sound.
 Petrifying Cloud cast
 
 @The_monster@ breathes a plume of calcifying dust @at@ @target@.
+%%%%
+Chaos Breath cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Frenzy cast
+
+@The_monster@ convulses with anger.
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -371,6 +379,11 @@ basilisk cast targeted
 wretched star cast
 
 @The_monster@ glows turbulently.
+%%%%
+thrashing horror cast
+
+@The_monster@ churns violently!
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -378,6 +391,10 @@ wretched star cast
 angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
+%%%%
+chaos butterfly cast
+
+@The_monster@ flaps its wings furiously.
 %%%%
 dragon cast targeted
 
@@ -390,6 +407,10 @@ dragon cast
 unseen dragon cast
 
 You hear a roar.
+%%%%
+drake cast targeted
+
+@dragon cast targeted@
 %%%%
 curse skull cast
 
@@ -463,9 +484,17 @@ You hear some strange, mumbled words.
 # Generic priest, wizard and demonic casting messages.
 ######################################################
 %%%%
+Haste Other priest cast
+
+@The_monster@ calls upon @possessive_God@ to speed up @target@.
+%%%%
 Heal Other priest cast
 
 @The_monster@ calls upon @possessive_God@ to heal @target@.
+%%%%
+Might Other priest cast
+
+@The_monster@ calls upon @possessive_God@ to strengthen @target@.
 %%%%
 priest cast targeted
 

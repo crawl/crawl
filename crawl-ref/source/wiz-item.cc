@@ -96,12 +96,10 @@ void wizard_create_spec_object()
     char           specs[80];
     ucs_t          keyin;
     monster_type   mon;
-
-    object_class_type class_wanted   = OBJ_UNASSIGNED;
-
+    object_class_type class_wanted;
     int            thing_created;
 
-    while (class_wanted == OBJ_UNASSIGNED || class_wanted == NUM_OBJECT_CLASSES)
+    do
     {
         mpr(") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls",
             MSGCH_PROMPT);
@@ -123,7 +121,8 @@ void wizard_create_spec_object()
             canned_msg(MSG_OK);
             return;
         }
-    }
+    } while (class_wanted == NUM_OBJECT_CLASSES);
+
     msgwin_reply(make_stringf("%c", keyin));
 
     // Allocate an item to play with.
@@ -186,7 +185,7 @@ void wizard_create_spec_object()
             dummy.number = prompt_for_int("How many heads? ", false);
 
         if (fill_out_corpse(&dummy, dummy.type,
-                            mitm[thing_created], true) == -1)
+                            mitm[thing_created], true) == MONS_NO_MONSTER)
         {
             mpr("Failed to create corpse.");
             mitm[thing_created].clear();
@@ -1328,7 +1327,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_ELECTRICITY
          1, //ARTP_POISON
          1, //ARTP_NEGATIVE_ENERGY
-         1, //ARTP_MAGIC
+         0, //ARTP_MAGIC
          1, //ARTP_EYESIGHT
          1, //ARTP_INVISIBLE
          1, //ARTP_FLY

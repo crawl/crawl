@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief UNIX specific crash handling functions.
+ * @brief UNIX-style crash handling functions (also used on Windows).
 **/
 
 #include "AppHdr.h"
@@ -182,9 +182,8 @@ static void _crash_signal_handler(int sig_num)
 
 void init_crash_handler()
 {
-    mutex_init(crash_mutex);
-
 #if defined(USE_UNIX_SIGNALS)
+    mutex_init(crash_mutex);
 
     for (int i = 1; i <= 64; i++)
     {
@@ -268,7 +267,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 {
     void* frames[50];
 
-#if defined (TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX)
     backtrace_t backtrace;
     backtrace_symbols_t backtrace_symbols;
     backtrace = nasty_cast<backtrace_t, void*>(dlsym(RTLD_DEFAULT, "backtrace"));
@@ -303,7 +302,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     string bt = "";
     for (int i = 0; i < num_frames; i++)
     {
-#if defined (TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX)
         char *addr = ::strstr(symbols[i], "0x");
         char *mangled = ::strchr(addr, ' ') + 1;
         char *offset = ::strchr(addr, '+');
@@ -363,7 +362,9 @@ void disable_other_crashes()
     // If one thread calls end() without going through a crash (a handled
     // fatal error), no one else should be allowed to crash.  We're already
     // going down so blocking the other thread is ok.
+#ifdef USE_UNIX_SIGNALS
     mutex_lock(crash_mutex);
+#endif
 }
 
 #ifdef DGAMELAUNCH

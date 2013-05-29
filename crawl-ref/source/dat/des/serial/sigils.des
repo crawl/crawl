@@ -1,0 +1,402 @@
+# Sigils serial vault, by HangedMan.
+# Alien, pervasive curves of thick stone tendrils curling onto a given level;
+# great worms of stone left as simple mysteries for the Dungeon.
+#
+# Any additional vaults should stick to the style established.
+
+{{
+function init_sigils(e)
+  e.tags('transparent extra decor serial_sigils')
+-- Crazy colors be crazy
+--  e.colour('c = lightred')
+--  e.colour('. = magenta')
+  e.tile('c = wall_stone_dark')
+  e.ftile('. = floor_volcanic')
+  e.ftile('c = floor_pebble_darkgray w:99 / floor_rough_red w:1')
+end
+}}
+
+default-depth: D:16-, Elf, Crypt
+
+NAME:   serial_sigils
+TAGS:   luniq_serial decor
+CHANCE: 0.5% (D:16-18, Elf:1, Crypt), 1%
+{{
+  local c = 4 + crawl.random2(3)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_sigils", count=c}
+  end)
+}}
+
+# four weight 5 and allow_dup, five weight 4, five weight 3.
+
+# Weight 5, allow_dup and small enough for abyss vaults.
+# Simple shapes.
+
+NAME:    serial_sigils_hangedman_gut
+TAGS:    allow_dup abyss
+WEIGHT:  5
+SHUFFLE: AB / AB / BA, ab / ab / ba
+SUBST:   a : Ac.., A : c.., b : Bc..., B : c..., C : cc.
+: init_sigils(_G)
+MAP
+.C.
+.c...
+..c.a.
+..c...
+...cc......
+.b...cc...B.
+ ......cc...
+      ...c..
+      .A.c...
+       ...c.A.
+        ..c...
+        ...cc......
+        .B...cc...b.
+         ......cc...
+              ...c..
+              .a.c..
+               ...c.
+                 .C.
+ENDMAP
+
+NAME:    serial_sigils_hangedman_quiver
+TAGS:    allow_dup abyss
+WEIGHT:  5
+SUBST:   C : cc., D : cc., E : cc.
+: init_sigils(_G)
+MAP
+           ......C.
+           Dc....c.
+           ..cc.c..
+         .......c.
+         cc....c..
+  ......c..cc..c.
+  Dc....c....cc
+  ..cc.c.......
+.......c.cc..
+Cc....c....cE
+..cc..c......
+ ...cc
+   ...
+ENDMAP
+
+NAME:    serial_sigils_hangedman_snap
+TAGS:    allow_dup abyss
+WEIGHT:  5
+SUBST:   C : cc., D : cc., E : cc., F : cc.
+: init_sigils(_G)
+MAP
+  ...
+  Cc...
+.D..cc..
+.c....cE
+..c.....
+ .c...c.
+ ..c..c.
+  .F..c..
+     ..c.
+      .c.
+      .c..
+      ..c.
+       .c.
+       .c....
+         ccc....
+         ...ccc....F.
+           ....ccc.c..
+              ......c.
+               .....c..
+               Ec....c.
+               ..cc..D.
+                ...cC
+                  ...
+ENDMAP
+
+NAME:    serial_sigils_hangedman_shear
+TAGS:    allow_dup abyss
+WEIGHT:  5
+SHUFFLE: CD
+SUBST:   a : c..., b : c..., C : cc., D : c:8 .:1, E : cc., F : cc.
+: init_sigils(_G)
+MAP
+            .F.
+  ...      ..c.
+  Dc...    .c...E.
+.C..cc... ..c...c..
+.c....cc...c.....c.
+..c.....cc.c..b..c..
+ .c..a.........a..c.
+ ..c..b..c.cc.....c..
+  .c.....c...cc....c.
+  ..c...c.. ...cc..D.
+   .E...c.    ...cC
+      .c..      ...
+      .F.
+ENDMAP
+
+# Weight 4.
+# More complex shapes.
+
+NAME:    serial_sigils_hangedman_gnaw
+WEIGHT:  4
+SHUFFLE: AB / AB / BA, ab / ab / ba
+SUBST:   a : Ac., A : cc., bB = ., C : cc.
+: init_sigils(_G)
+MAP
+...
+Cc...
+..cc....C.
+ ...c...c..A
+ ab.c....c.BA
+  a..c...c...
+    .c....cc...
+    ........cc.
+    .cc........
+    ...cc....c.
+      ...c...c..a
+      AB.c....c.ba
+       A..c...c...
+         .C....cc..
+              ...cC
+                ...
+ENDMAP
+
+NAME:    serial_sigils_hangedman_writhe
+WEIGHT:  4
+SUBST:   C : cc., D : cc., E : cc., F : cc.
+: init_sigils(_G)
+MAP
+                 ...
+               ...cC
+        .F.   ..cc..
+        .c..  cc..
+     .....c..c....
+     Ec...c..c..c.
+     ..cc....c..c..
+      .....cc....c.
+ .D.  ...cc...  .D.
+ .c....cc.....
+ ..c..c....cc..
+  .c..c..c...cE
+  ....c..c.....
+ ...cc  ..c.
+..cc..   .F.
+Cc...
+...
+ENDMAP
+
+NAME:    serial_sigils_hangedman_confine
+WEIGHT:  4
+SUBST:   C : cc., D : cc., E : cc., F : cc.
+: init_sigils(_G)
+MAP
+  ...
+  Cc.......
+.D..cc..cc...
+.c....c...cc..
+..c.c.c.....cE
+ .c....c......
+   cc..c...cc.......
+   ..cc...c..cc..cc...
+    ......c....c...cc..
+    Fc.....c.c.c.....cF
+    ..cc...c....c......
+     ...cc..cc..c...cc..
+       .......cc...c..cc
+             ......c....c.
+             Ec.....c.c.c..
+             ..cc...c....c.
+              ...cc..cc..D.
+                .......cC
+                      ...
+ENDMAP
+
+NAME:    serial_sigils_hangedman_scratch
+WEIGHT:  4
+SHUFFLE: AB
+SUBST:   a : cc., b = c, C : cc., D : cc., E : cc.
+: init_sigils(_G)
+MAP
+        .D.     ...
+     ....c..    Ec...
+     bc...c.    ..cc..
+   .a..cc.c.........c.
+.C..c......cc....c..c..
+.c...c..cc...cc..c...c.
+..c..c....cc......c..C.
+ .c.........c.cc..a.
+ ..cc..    .c...cb
+  ...cE    ..c....
+    ...     .D.
+ENDMAP
+
+NAME:    serial_sigils_hangedman_stare
+WEIGHT:  4
+SUBST:   A : c.., C : cc., D : cc., E : cc., F : cc.
+: init_sigils(_G)
+MAP
+  .C.
+ ..c.
+ .c..
+..c.....
+.c....cD
+.c..cc..
+..cc.....E.
+......A..c.
+Fc...A..c..
+..cc....c.....
+ ...c..c....cE
+   .c..c..cc..
+   ..c..cc.....D.
+    ........A..c.
+      .c...A..c..
+      ..cc....c.....
+       ...c..c....cC
+         .c..c..cc..
+         ..c..cc...
+          .F.....
+ENDMAP
+
+
+# Weight 3.
+# Very distinct, usually large shapes.
+
+NAME:    serial_sigils_hangedman_etch
+WEIGHT:  3
+SUBST:   C : cc., D : cc., E : ccc., F : ccc.
+: init_sigils(_G)
+MAP
+           .D.
+          ..c.
+   .C.    .c..
+   .c..  ..c.
+   ..c.  .c..  ...
+    .c....c.....cD
+    ..c..c....cc..
+     .c..c..cc...
+     ..c..cc...
+  .....c.....
+  Ec....cc...
+  ..cc....cc...
+   ...cc....cc..
+     ...cc....cC
+     .....c.....
+   ...cc..c..
+ ...cc..c..c.
+..cc....c..c..
+Fc.....c....c.
+...  ..c.  .c..
+     .c..  ..c.
+    ..c.    .E.
+    .c..
+    .F.
+ENDMAP
+
+NAME:    serial_sigils_hangedman_carve
+WEIGHT:  3
+SHUFFLE: AB / AB / BA, ab / ab / ba
+SUBST:   a : c.., b : c., A : c., B : c.., C : cc., D : cc., E : cc.
+: init_sigils(_G)
+MAP
+    ....
+    ccc....
+  .c...ccc...
+  .c......ccC
+ ..c...aa....
+ .c...a.......
+ .c.b.a.....A.
+..c.b.......A...
+.c...bb......AA..C.
+.c......ccc......c.
+.D...ccc...c.....c..
+  Ecc......c......c.
+  ....BB...c....a.c.
+     ...B.c.....a.c..
+       .B.c.b.aa...c.
+       ...c.b......c.
+        .c...bb....c.
+        .c......ccc
+        .D...ccc...
+          Ecc....
+          ....
+ENDMAP
+
+
+NAME:    serial_sigils_hangedman_clutch
+WEIGHT:  3
+SHUFFLE: DE
+SUBST:   a : c.., b : c.., C : cc., D : cc., E = c, F : cc.
+: init_sigils(_G)
+MAP
+    .........
+  ...ccc.ccc....
+  Dcc...c...ccc...
+.E......c......ccC
+.c...a.c.c.b......C.
+..c.a..c.c..b.....c.
+ .c...c...c.......c..
+ ..c..c...c........c.
+  .c.......c.......c.
+  ..c.    .c....b..c..
+   .F.      cc...b..c.
+            ..cc....c.
+             ...cc..c.
+             .....cc..
+             ...cc..c.
+             .cc....c.
+           ......a..c.
+           Fc...a..c..
+           ..cc....c.
+            ...cc..E.
+              ...cD
+                ...
+ENDMAP
+
+NAME:    serial_sigils_hangedman_leer
+WEIGHT:  3
+SUBST:   a : c..., b : c..., C : cc., D : cc., E : cc., F : cc., G : cc.
+: init_sigils(_G)
+MAP
+       ....      ....
+     ...cc...  ...cc...
+   ...cc..cc....cc..cc...
+  ..cc......c..c......cc..
+  Gc........c..c........cF
+.F.......ccc....ccc.......G.
+.c.....cc....aa....cc.....c.
+..c...c..cc..bb..cc..c...c..
+ .c...c.c..c....c..c.c...c.
+ ..c...c.c.c....c.c.c...c..
+  .c...c....c..c....c...c.
+  ..c...cc..E..E..cc...c..
+   .C. ...cD    Dc... .C..
+         ...    ...
+ENDMAP
+
+NAME:    serial_sigils_hangedman_scar
+WEIGHT:  3
+SUBST:   C : cc., D : cc., E : cc.
+: init_sigils(_G)
+MAP
+         .E.  .D.
+         .c.. .c..
+      .....c. ..c....
+     ..cc..c....c..cC
+     cc..c..c....cc..
+   .c....c..c..cc..c.
+  ..c.c.c....cc..c.c.
+  .c....c..cc..c.c...
+  .c..cc.cc..c.c...
+....cc..c....c...
+Ec......c.
+..cc...c..
+ ...cc.c..
+   ...c.cc
+......c...
+Dc...c.cc.
+..cc.c....
+ ...c.cc.
+  ..c....
+  .c.cc.
+  .C....
+ENDMAP

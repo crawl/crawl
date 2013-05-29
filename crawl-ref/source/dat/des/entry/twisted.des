@@ -44,6 +44,14 @@ NSUBST: z = 1:+ / *:x
 : else
 SUBST:  Zz=., V=x
 : end
+MARKER: { = lua:props_marker { entry_stairs=1 }
+veto {{
+  local slave = dgn.find_marker_positions_by_prop( "entry_stairs", 1 )
+  if slave == nil then return false end
+  if slave[1] == nil then return false end
+  crawl.mpr("(".. slave[1].x .. "," .. slave[1].y .. ")")
+  return not dgn.has_exit_from(slave[1])
+}}
 MAP
             xxxxxx@xxxxxx
        xxxxxx'''''''''''xxxxxx
@@ -494,9 +502,8 @@ ENDMAP
 #######################################################################
 # Four elements.
 # Pretty hazardous, but the Earth side is always safe to leave through.
-# Players can safely watch at the clouds. Autoexplore will not run into
-# the chambers, players have to search for the secret door. Likewise,
-# all exits are secret except for the safe one.
+# Players can safely watch at the clouds. All exits are runed except for
+# the safe one.
 # This vault is great. I've seen players marvel at it. If need be, we
 # may delegate it to another branch, where less caution measures are
 # demanded. But I'd like to keep it on D:1 (dp).
@@ -671,7 +678,7 @@ MONS:    w:20 nothing / jackal / rat
 MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
          w:5 jackal / w:5 rat
 ORIENT:  float
-FTILE:   1234+ABCDEabcdem = floor_dirt
+FTILE:   1234ABCDEabcdem = floor_dirt
 SHUFFLE: abcde / fghij
 SUBST:   f=A, g=B, h=C, i=D, j=E
 SUBST:   abcde = mx
@@ -726,44 +733,6 @@ MAP
       .bx"bxb.
       ..b'bb..
        ......
-ENDMAP
-
-###############################################################################
-# A gallery of extinct species
-# Includes 4 formerly playable races which aren't represented as normal monsters.
-# With much stolen from kb_entry_jail
-NAME:    evilmike_entry_obsolete
-TAGS:    entry no_monster_gen
-WEIGHT:  1
-ORIENT:  float
-SHUFFLE: ABC
-KFEAT:   ABC = floor
-KMONS:  A = gnome ; nothing
-KMONS:  B = elf col:darkgrey name:grey n_adj n_spe n_des ; nothing
-KMONS:  C = dwarf name:hill n_adj n_spe n_des ; nothing
-KMONS:  D = dwarf name:mountain n_adj n_spe n_des ; nothing
-FTILE:  .m+T = floor_vault
-TILE:   X = wall_vines
-COLOUR: .= lightgrey
-SUBST:  ':., X=x
-SUBST:  T:T.
-SUBST:  T=TTV
-MAP
-xxxxxxxxxxxxxxx
-xxxxxxxxxAxxxxx
-xxxxXXXXXmXxxxx
-xxxXX.....XXxxx
-xxBm...T...XXxx
-xxXX........Xxx
-xxX...ccc...Xxx
-xxX.T.c{+.T.+'@
-xxX...ccc...Xxx
-xxXX........Xxx
-xxCm...T...XXxx
-xxxXX.....XXxxx
-xxxxXXXXXmXxxxx
-xxxxxxxxxDxxxxx
-xxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################
@@ -824,47 +793,6 @@ MAP
 .n'''''n.xxxxx
 .nnnnnnn.
 .........
-ENDMAP
-
-###############################################################################
-# Three runes > orb of zot > upstairs
-NAME:   nicolae_entry_your_instructions
-TAGS:   entry no_monster_gen no_trap_gen no_item_gen
-WEIGHT: 1
-ORIENT: float
-SHUFFLE: [(
-SHUFFLE: ABCDEFHIJKLMNOPQR
-KITEM:  A = gossamer rune of zot mimic
-KITEM:  B = decaying rune of zot mimic
-KITEM:  C = serpentine rune of zot mimic
-KITEM:  D = barnacled rune of zot mimic
-KITEM:  E = slimy rune of zot mimic
-KITEM:  F = silver rune of zot mimic
-KITEM:  H = abyssal rune of zot mimic
-KITEM:  I = demonic rune of zot mimic
-KITEM:  J = glowing rune of zot mimic
-KITEM:  K = magical rune of zot mimic
-KITEM:  L = fiery rune of zot mimic
-KITEM:  M = dark rune of zot mimic
-KITEM:  N = iron rune of zot mimic
-KITEM:  O = icy rune of zot mimic
-KITEM:  P = obsidian rune of zot mimic
-KITEM:  Q = bone rune of zot mimic
-KITEM:  R = golden rune of zot mimic
-KITEM:  Z = Orb of Zot mimic
-KFEAT:  < = escape_hatch_up mimic
-KPROP:  ->ABCDEFHIJKLMNOPQRZ = no_rtele_into
-SUBST:  - = .
-MAP
-xxxxxxxxxxxxxxxxxx
-x................x
-x...cccccccccc...xxxxxxxxx
-x...c---C----n...........@
-x.{.c>-Z<B---n.[.........@
-x...c---A----n...........@
-x...cccccccccc...xxxxxxxxx
-x................x
-xxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################

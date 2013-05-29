@@ -1294,7 +1294,8 @@ INCLUDE_FILE_PATTERNS  =
 # undefined via #undef or recursively expanded use the := operator
 # instead of the = operator.
 
-PREDEFINED             = USE_SQLITE_DBM USE_TILE USE_TILE_LOCAL USE_TILE_WEB
+PREDEFINED             = USE_SQLITE_DBM USE_TILE USE_TILE_LOCAL USE_TILE_WEB \
+                         "PRINTF(x, dfmt)=const char *format dfmt, ..."
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then
 # this tag can be used to specify a list of macro names that should be expanded.

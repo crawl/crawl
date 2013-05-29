@@ -83,7 +83,13 @@ lua_marker('q', props_marker { exit=1 })
 KPROP:  1q = no_rtele_into
 KMASK:  , = no_item_gen
 SUBST:  zq : x
-NSUBST: 1 = 8 / 111998
+: if you.absdepth() <= 10 then
+NSUBST: 1 = 000009
+: elseif you.absdepth() <= 20 then
+NSUBST: 1 = 000099 / 000999
+: else
+NSUBST: 1 = 8 / 000998
+: end
 MAP
 .............
 .xx'x'x'x'xx.

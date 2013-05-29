@@ -73,8 +73,8 @@ function holiness_list(a)
                        "natural", "nonliving",
                        "undead", "demonic", "plant" }
     kills.rawwrite("  Monster Nature")
-    group_kills( a, holies, holysort,
-        function ( key, kill )
+    group_kills(a, holies, holysort,
+        function (key, kill)
             return (kills.holiness(kill) == key and not kills.isunique(kill))
                 or
                    (key == "unique" and kills.isunique(kill))

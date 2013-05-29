@@ -73,7 +73,7 @@ static const char *skills[NUM_SKILLS][6] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
     {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},
-    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Blademaster",    "Eviscerator"},
+    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician"},
     {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster"},
     {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac"},
     {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},
@@ -86,7 +86,9 @@ static const char *skills[NUM_SKILLS][6] =
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable"},
     {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible"},
     {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja"},
+#if TAG_MAJOR_VERSION == 34
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
+#endif
     {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
@@ -146,6 +148,8 @@ int get_skill_progress(skill_type sk, int level, int points, int scale)
 
     const int needed = skill_exp_needed(level + 1, sk);
     const int prev_needed = skill_exp_needed(level, sk);
+    if (needed == 0) // invalid race, legitimate at startup
+        return 0;
     // A scale as small as 92 would overflow with 31 bits if skill_rdiv()
     // is involved: needed can be 91985, skill_rdiv() multiplies by 256.
     const int64_t amt_done = points - prev_needed;
@@ -243,7 +247,8 @@ static string _stk_weight()
     }
 }
 
-static skill_title_key_t _skill_title_keys[] = {
+static skill_title_key_t _skill_title_keys[] =
+{
     stk("Adj", _stk_adj_cap),
     stk("Genus", _stk_genus_cap),
     stk("genus", _stk_genus_nocap),
@@ -254,6 +259,10 @@ static skill_title_key_t _skill_title_keys[] = {
 
 static string _replace_skill_keys(const string &text)
 {
+    // The container array is unused, we rely on side effects of constructors
+    // of individual items.  Yay.
+    UNUSED(_skill_title_keys);
+
     string::size_type at = 0, last = 0;
     ostringstream res;
     while ((at = text.find('@', last)) != string::npos)
@@ -290,7 +299,7 @@ unsigned get_skill_rank(unsigned skill_lev)
 }
 
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           int species, int str, int dex, int god)
+                           int species, int str, int dex, int god, int piety)
 {
     // paranoia
     if (is_invalid_skill(best_skill))
@@ -333,7 +342,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_INVOCATIONS:
             if (god != GOD_NO_GOD)
-                result = god_title((god_type)god, (species_type)species);
+                result = god_title((god_type)god, (species_type)species, piety);
             break;
 
         case SK_BOWS:
@@ -373,9 +382,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 }
 
 string skill_title(skill_type best_skill, uint8_t skill_lev,
-                   int species, int str, int dex, int god)
+                   int species, int str, int dex, int god, int piety)
 {
-    return skill_title_by_rank(best_skill, get_skill_rank(skill_lev), species, str, dex, god);
+    return skill_title_by_rank(best_skill, get_skill_rank(skill_lev),
+                               species, str, dex, god, piety);
 }
 
 string player_title()
@@ -475,6 +485,10 @@ void calc_mp()
 
 bool is_useless_skill(skill_type skill)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (skill == SK_STABBING)
+        return true;
+#endif
     return species_apt(skill) == -99;
 }
 
@@ -635,6 +649,24 @@ static skill_type _get_opposite(skill_type sk)
     case SK_EARTH_MAGIC : return SK_AIR_MAGIC;   break;
     default: return SK_NONE;
     }
+}
+
+static int _skill_elemental_preference(skill_type sk, int scale)
+{
+    const skill_type sk2 = _get_opposite(sk);
+    if (sk2 == SK_NONE)
+        return 0;
+    return (you.skill(sk, scale) - you.skill(sk2, scale));
+}
+
+int elemental_preference(spell_type spell, int scale)
+{
+    skill_set skill_list;
+    spell_skills(spell, skill_list);
+    int preference = 0;
+    for (skill_set_iter it = skill_list.begin(); it != skill_list.end(); ++it)
+        preference += _skill_elemental_preference(*it, scale);
+    return preference;
 }
 
 /*

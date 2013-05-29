@@ -77,12 +77,14 @@ static void _surge_power(spell_type spell)
 
     if (enhanced)               // one way or the other {dlb}
     {
-        mprf("You feel a%s %s",
-             (enhanced < -2)  ? "n extraordinarily" :
-             (enhanced == -2) ? "n extremely" :
-             (enhanced == 2)  ? " strong" :
-             (enhanced > 2)   ? " huge"
-                              : "",
+        const string modifier = (enhanced  < -2) ? "extraordinarily" :
+                                (enhanced == -2) ? "extremely" :
+                                (enhanced ==  2) ? "strong" :
+                                (enhanced  >  2) ? "huge"
+                                                 : "";
+        mprf("You feel %s %s",
+             !modifier.length() ? "a"
+                                : article_a(modifier).c_str(),
              (enhanced < 0) ? "numb sensation."
                             : "surge of power!");
     }
@@ -281,7 +283,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     int wiz_factor = 87;
 
     if (you.religion == GOD_VEHUMET
-        && !player_under_penance() && you.piety >= piety_breakpoint(1)
+        && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && vehumet_supports_spell(spell))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
@@ -532,9 +534,17 @@ void inspect_spells()
 
 static bool _can_cast()
 {
-    if (player_in_bat_form() || you.form == TRAN_PIG)
+    if (you.form == TRAN_BAT || you.form == TRAN_PIG || you.form == TRAN_JELLY
+        || you.form == TRAN_PORCUPINE || you.form == TRAN_WISP
+        || you.form == TRAN_FUNGUS)
     {
         canned_msg(MSG_PRESENT_FORM);
+        return false;
+    }
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot cast spells while unable to breathe!");
         return false;
     }
 
@@ -705,8 +715,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
-        mpr("There are no visible monsters within range! (Use <w>Z</w> to "
-            "cast anyway.)");
+        mpr("You can't see any susceptible monsters within range! "
+            "(Use <w>Z</w> to cast anyway.)");
 
         if (Options.darken_beyond_range)
         {
@@ -718,7 +728,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (!you.is_undead
+    if (!you.is_undead && !you_foodless()
         && (you.hunger_state == HS_STARVING
             || you.hunger <= spell_hunger(spell)))
     {
@@ -748,6 +758,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
+    const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
@@ -767,7 +778,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     dec_mp(spell_mana(spell));
 
-    if (you.is_undead != US_UNDEAD)
+    if (!staff_energy && you.is_undead != US_UNDEAD)
     {
         const int spellh = calc_hunger(spell_hunger(spell));
         if (spellh > 0)
@@ -883,7 +894,7 @@ bool is_prevented_teleport(spell_type spell)
     return (spell == SPELL_BLINK
              || spell == SPELL_CONTROLLED_BLINK
              || spell == SPELL_TELEPORT_SELF)
-            && you.no_tele(false, false, spell == SPELL_TELEPORT_SELF);
+            && you.no_tele(false, false, spell != SPELL_TELEPORT_SELF);
 }
 
 bool spell_is_uncastable(spell_type spell, string &msg)
@@ -1028,29 +1039,14 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     switch (spell)
     {
     case SPELL_ICE_STORM:
-        return new targetter_beam(&you, range, ZAP_ICE_STORM, pow, true, 2,
-                                  (pow > 76) ? 3 : 2);
+        return new targetter_beam(&you, range, ZAP_ICE_STORM, pow, 2, (pow > 76) ? 3 : 2);
     case SPELL_FIREBALL:
-        return new targetter_beam(&you, range, ZAP_FIREBALL, pow, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_FIREBALL, pow, 1, 1);
     case SPELL_HELLFIRE:
-        return new targetter_beam(&you, range, ZAP_HELLFIRE, pow, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_HELLFIRE, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, pow, true,
+        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, pow,
                                   pow >= 100 ? 1 : 0, 1);
-    case SPELL_SHOCK:
-    case SPELL_LIGHTNING_BOLT:
-        return new targetter_beam(&you, range, spell_to_zap(spell), pow, false,
-                                  0, 0);
-    case SPELL_FLAME_TONGUE:
-    case SPELL_THROW_FLAME:
-        return new targetter_beam(&you, range, spell_to_zap(spell), pow, true,
-                                  0, 0);
-    case SPELL_BOLT_OF_FIRE:
-        return new targetter_beam(&you, range, ZAP_FIRE, pow, false, 0, 0);
-    case SPELL_THROW_FROST:
-        return new targetter_beam(&you, range, ZAP_FROST, pow, true, 0, 0);
-    case SPELL_BOLT_OF_COLD:
-        return new targetter_beam(&you, range, ZAP_COLD, pow, false, 0, 0);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return new targetter_imb(&you, pow, range);
     case SPELL_FIRE_STORM:
@@ -1064,8 +1060,43 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
             (you.props.exists("thunderbolt_last")
              && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns) ?
                 you.props["thunderbolt_aim"].get_coord() : coord_def());
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
         return new targetter_fragment(&you, pow, range);
+    case SPELL_FULMINANT_PRISM:
+        return new targetter_smite(&you, range, 0, 2);
+    case SPELL_DAZZLING_SPRAY:
+        return new targetter_spray(&you, 6, ZAP_DAZZLING_SPRAY);
+    case SPELL_MAGIC_DART:
+    case SPELL_FORCE_LANCE:
+    case SPELL_SHOCK:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_FLAME_TONGUE:
+    case SPELL_THROW_FLAME:
+    case SPELL_BOLT_OF_FIRE:
+    case SPELL_THROW_FROST:
+    case SPELL_THROW_ICICLE:
+    case SPELL_BOLT_OF_COLD:
+    case SPELL_STING:
+    case SPELL_VENOM_BOLT:
+    case SPELL_POISON_ARROW:
+    case SPELL_BOLT_OF_MAGMA:
+    case SPELL_IRON_SHOT:
+    case SPELL_STONE_ARROW:
+    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+    case SPELL_CORONA:
+    case SPELL_SLOW:
+    case SPELL_CONFUSE:
+    case SPELL_ENSLAVEMENT:
+    case SPELL_INNER_FLAME:
+    case SPELL_PAIN:
+    case SPELL_AGONY:
+    case SPELL_BOLT_OF_DRAINING:
+    case SPELL_HASTE:
+    case SPELL_PETRIFY:
+    case SPELL_POLYMORPH:
+    case SPELL_DIG:
+    case SPELL_DISPEL_UNDEAD:
+        return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 0);
     default:
         return 0;
     }
@@ -1159,7 +1190,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
         {
-            if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_POLYMORPH_OTHER)
+            if (spell == SPELL_TELEPORT_OTHER)
                 mpr("Sorry, this spell works on others only.");
             else
                 canned_msg(MSG_UNTHINKING_ACT);
@@ -1201,9 +1232,23 @@ spret_type your_spells(spell_type spell, int powc,
                                "death!", GOD_KIKUBAAQUDGHA);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, -god, SPTYP_NECROMANCY,
+            MiscastEffect(&you, -GOD_KIKUBAAQUDGHA, SPTYP_NECROMANCY,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
+        }
+        else if (vehumet_supports_spell(spell)
+                 && you.religion != GOD_VEHUMET
+                 && you.penance[GOD_VEHUMET]
+                 && one_chance_in(20))
+        {
+            // And you thought you'd Fire Storm your way out of penance...
+            simple_god_message(" does not allow the disloyal to dabble in "
+                               "destruction!", GOD_VEHUMET);
+
+            // The spell still goes through, but you get a miscast anyway.
+            MiscastEffect(&you, -GOD_VEHUMET, SPTYP_CONJURATION,
+                          (you.experience_level / 2) + (spell_difficulty(spell) * 2),
+                          random2avg(88, 3), "the malice of Vehumet");
         }
 
         const int spfail_chance = spell_fail(spell);
@@ -1217,9 +1262,15 @@ spret_type your_spells(spell_type spell, int powc,
     if (crawl_state.prev_cmd == CMD_CAST_SPELL && god == GOD_NO_GOD)
         _maybe_cancel_repeat(spell);
 
+    // Have to set aim first, in case the spellcast kills its first target
+    if (you.props.exists("battlesphere") && allow_fail)
+        aim_battlesphere(&you, spell, powc, beam);
+
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
     {
     case SPRET_SUCCESS:
+        if (you.props.exists("battlesphere") && allow_fail)
+            trigger_battlesphere(&you, beam);
         _spellcasting_side_effects(spell, powc, god);
         return SPRET_SUCCESS;
 
@@ -1337,6 +1388,10 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_EVAPORATE:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
+
+    case SPELL_CIGOTUVIS_DEGENERATION:
+        mpr("Sorry, this spell has degenerated away!");
+        return SPRET_ABORT;
 #endif
 
     case SPELL_POISONOUS_CLOUD:
@@ -1355,9 +1410,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_HELLFIRE_BURST:
         return cast_hellfire_burst(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
 
-    case SPELL_FIREBALL:
-        return fireball(powc, beam, fail);
-
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);
 
@@ -1371,7 +1423,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_AIRSTRIKE:
         return cast_airstrike(powc, spd, fail);
 
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
         return cast_fragmentation(powc, &you, spd.target, fail);
 
     case SPELL_PORTAL_PROJECTILE:
@@ -1394,7 +1446,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_liquefaction(powc, fail);
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return cast_refrigeration(powc, false, true, fail);
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_los_attack_spell(spell, powc, &you, true, true, fail);
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(powc, fail);
@@ -1405,14 +1458,17 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_THUNDERBOLT:
         return cast_thunderbolt(&you, powc, target, fail);
 
+    case SPELL_DAZZLING_SPRAY:
+        return cast_dazzling_spray(&you, powc, target, fail);
+
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
     // produced will count as god gifts.
     case SPELL_SUMMON_BUTTERFLIES:
         return cast_summon_butterflies(powc, god, fail);
 
-    case SPELL_SUMMON_SMALL_MAMMALS:
-        return cast_summon_small_mammals(powc, god, fail);
+    case SPELL_SUMMON_SMALL_MAMMAL:
+        return cast_summon_small_mammal(powc, god, fail);
 
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
@@ -1461,7 +1517,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_summon_greater_demon(powc, god, fail);
 
     case SPELL_SHADOW_CREATURES:
-        return cast_shadow_creatures(god, fail);
+        return cast_shadow_creatures(false, god, fail);
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return cast_summon_horrible_things(powc, god, fail);
@@ -1487,6 +1543,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_DEATH_CHANNEL:
         return cast_death_channel(powc, god, fail);
 
+    case SPELL_BATTLESPHERE:
+        return cast_battlesphere(&you, powc, god, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);
@@ -1511,9 +1570,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_MASS_ABJURATION:
         return cast_mass_abjuration(powc, fail);
-
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return cast_toxic_radiance(powc, false, fail);
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:
@@ -1673,6 +1729,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SHROUD_OF_GOLUBRIA:
         return cast_shroud_of_golubria(powc, fail);
 
+    case SPELL_FULMINANT_PRISM:
+        return cast_fulminating_prism(powc, beam.target, fail);
+
     default:
         return SPRET_NONE;
     }
@@ -1812,8 +1871,8 @@ string spell_noise_string(spell_type spell)
         break;
 
     // Medium explosions
-    case SPELL_FRAGMENTATION:   //LRD most often do small and medium explosions
-        effect_noise = 20;      //and sometimes big ones with green crystal
+    case SPELL_LRD:         //LRD most often do small and medium explosions
+        effect_noise = 20;  //and sometimes big ones with green crystal
         break;
 
     // Big explosions
@@ -1859,7 +1918,7 @@ static int _power_to_barcount(int power)
     if (power == -1)
         return -1;
 
-    const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
+    const int breakpoints[] = { 10, 15, 25, 35, 50, 75, 100, 150, 200 };
     return (breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 

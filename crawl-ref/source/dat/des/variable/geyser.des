@@ -1,0 +1,102 @@
+##############################################################################
+# A geyser that erupts a few times after the player sees it.
+# Places primarily in the water branches, but has a small chance to place
+# elsewhere.
+#
+# Originally by ldierk; cleaned up by Grunt.
+#
+# This is in its own file on account of the large amount of Lua black magic.
+{{
+function callback.ldierk_geyser(data, triggerable, triggerer, marker, ev)
+  if triggerer.type == "player_los" and not data.seen then
+    data.seen = true
+  end
+
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown"
+     or not data.seen then
+    return
+  end
+
+  if data.times_called > 7 then
+    return
+  end
+
+  data.times_called = data.times_called+1
+
+  if data.action == "add" then
+    local slaves = dgn.find_marker_positions_by_prop("fountain",1)
+
+    local slave = slaves[crawl.random2(#slaves) + 1]
+
+    local x = slave.x
+    local y = slave.y
+
+    local ftype = "fountain_blue"
+    if (crawl.one_chance_in(10)) then
+      ftype = "fountain_sparkling"
+    end
+    dgn.grid(x, y, ftype)
+    if (you.see_cell(x, y)) then
+      if (ftype == "fountain_blue") then
+        crawl.mpr("A fountain of clear blue water erupts!")
+      else
+        crawl.mpr("A fountain of sparkling water erupts!")
+      end
+    else
+      if not you.silenced() and crawl.one_chance_in(4) then
+        crawl.mpr("You hear a distant splash.")
+      end
+    end
+    dgn.apply_area_cloud(x, y, 15, 25, 2, 2, "steam", "other", 10)
+    data.x = x
+    data.y = y
+    data.action = "remove"
+  else
+    dgn.grid(data.x, data.y, "shallow_water")
+    if (you.see_cell(data.x, data.y)) then
+      crawl.mpr("The fountain becomes smaller until it vanishes.")
+    else
+      if not you.silenced() and crawl.one_chance_in(4) then
+        crawl.mpr("You hear a distant splash.")
+      end
+    end
+    data.action = "add"
+  end
+end
+}}
+
+NAME:   ldierk_geyser
+DEPTH:  D:4-, Lair, Swamp, Shoals
+WEIGHT: 1 (D), 5 (Lair), 10
+TAGS:   extra allow_dup
+SUBST:  - = .#
+SUBST:  ; = ..#
+KFEAT:  #J = shallow_water
+{{
+local fountain_marker = TriggerableFunction:new {
+  func="callback.ldierk_geyser",
+  repeated=true,
+  data={action="add", times_called=0, x=0, y=0, seen=false}
+  }
+
+fountain_marker:add_triggerer(DgnTriggerer:new {
+  type="turn",
+  delay_min=300,
+  delay_max=1000 })
+
+fountain_marker:add_triggerer(DgnTriggerer:new {
+  type="player_los"
+})
+
+lua_marker("J", fountain_marker)
+lua_marker("#", props_marker{fountain=1})
+lua_marker("J", props_marker{fountain=1})
+}}
+
+MAP
+ ;-;
+;-#-;
+-#J#-
+;-#-;
+ ;-;
+ENDMAP

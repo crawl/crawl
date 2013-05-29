@@ -11,7 +11,7 @@ Blink ability
 
 Vous translocalise à une courte distance dans une direction aléatoire.
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 Crache un souffle d'énergie sur un monstre ciblé, qui pourra supprimer certains
 de ces enchantements.
@@ -120,6 +120,23 @@ Turn Visible
 
 Redevenir visible à nouveau.
 %%%%
+Stop Flying
+
+Arrêter de voler
+%%%%
+Evoke Fog
+
+Relâches un large et épais brouillard pour diminuer la vision.
+%%%%
+Evoke Teleport Control
+
+Gain de la capacité de contrôler la prochaine translocation – soit en
+sélectionnant une cible approximative pour une téléportation, soit en
+sélectionnant une direction pour un saut éclair. Faites attention au fait que
+les translocations contrôlées peuvent vous contaminer avec de l'énergie
+magique, et que les téléportations contrôlées vous prendront plus de temps à
+incanter que les non-contrôlées.
+%%%%
 End Transformation
 
 Revenir à votre forme normale, avec un léger retard.
@@ -130,7 +147,7 @@ Prêchez aux monstres les lois de Zin, ce qui peut amener à différents
 résultats. Il existe quatre livres dont vous pouvez prêcher le contenu :
 
 * Livre des Abominations : Ce livre aborde ce qui existe de plus odieux pour
-Zin - le haos sous toutes ses formes. La récitation de ces versets invoquera le
+Zin – le haos sous toutes ses formes. La récitation de ces versets invoquera le
 plus puissant des chocs de Zin.
 
 * Livre des Ablutions : Les impurs tiennent une place presque aussi élevée aux
@@ -153,9 +170,8 @@ et temporairement augmente et soutien votre Force, Dextérité et Intelligence.
 %%%%
 Imprison
 
-Emprisonne temporairement un monstre, entouré d'espaces vides, dans des murs
-d'argent. La durée de la prison est accrue avec la compétence Invocations mais,
-les ennemis puissants seront capables d'en sortir par la force plus facilement.
+Emprisonne temporairement un monstre dans des murs d'argent. La durée de la
+prison est accrue avec la compétence Invocations.
 %%%%
 Sanctuary
 
@@ -166,7 +182,7 @@ divine.
 %%%%
 Cure All Mutations
 
-Annule toutes vos mutations - mais un seule et unique fois.
+Annule toutes vos mutations – mais un seule et unique fois.
 %%%%
 Divine Shield
 
@@ -208,7 +224,7 @@ squelettes ne peuvent quitter l'étage dans lequel ils ont été créés.
 Recall Undead Slaves
 
 Rappelle autour de vous vos serviteurs morts-vivants, où qu'ils soient
-actuellement dans le niveau.
+actuellement dans le donjon.
 %%%%
 Injury Mirror
 
@@ -446,7 +462,11 @@ directe libre, juste que l'ennemi soit visible.
 Recall Orcish Followers
 
 Rappelle autour de vous vos serviteurs orcs, où qu'ils soient actuellement dans
-le niveau.
+le donjon.
+%%%%
+Stop Recall
+
+Arrêter de rappeler vos adeptes.
 %%%%
 Sunlight
 
@@ -477,11 +497,11 @@ spores exploseront, causant des dégâts à vous et vos ennemis.
 %%%%
 Evolution
 
-Transformez les plantes et les champignons adjacents en des espèces plus
-puissantes. Améliorer un champignon requière de la piété, améliorer des plantes
-requière des fruits. Les plantes améliorées gagnent un bonus en efficacité
-d'attaque proportionnel à la compétence d'Invocations de l'utilisateur et, les
-plantes oklob pourraient cracher de l'acide avec un haut niveau d'invocations.
+Transformez les plantes et les champignons en des espèces plus puissantes.
+Améliorer un champignon requière de la piété, améliorer des plantes requière
+des fruits. Les plantes améliorées gagnent un bonus en efficacité d'attaque
+proportionnel à la compétence d'Invocations de l'utilisateur et, les plantes
+oklob pourraient cracher de l'acide avec un haut niveau d'invocations.
 %%%%
 Bend Time
 
@@ -505,11 +525,6 @@ Extirpe votre personne du flux temporel. Les choses autour de vous continueront
 leurs tâches, les monstres erreront, les objets périssables se décomposeront,
 les plantes pousseront. Après un moment, vous reviendrez dans le flux temporel,
 tel que vous l'aviez quitté.
-%%%%
-Renounce Religion
-
-Renoncer à votre religion. Votre personnage quittera le service de son dieu (et
-généralement le met en colère).
 %%%%
 Request Jelly
 
@@ -541,6 +556,17 @@ Sacrifie une partie d'une de vos compétences pour en améliorer une autre.
 End Transfer Knowledge
 
 Abandon d'un transfert de compétence en cours.
+%%%%
+Memorise spell
+
+Vous apprenez directement un sort destructeur offert par Vehumet. L'offre
+expirera après un court moment. Consulter l'écran de Religion (^) pour voir
+quel sort a été offert.
+%%%%
+Renounce Religion
+
+Renoncer à votre religion. Votre personnage quittera le service de son dieu (et
+généralement le met en colère).
 %%%%
 Make dart trap
 

@@ -20,15 +20,19 @@ public:
         TAB_OFS_MAX
     };
 
-    void set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab);
+    int push_tab_region(GridRegion *reg, tileidx_t tile_tab);
+    int push_tab_button(command_type cmd, tileidx_t tile_tab);
     GridRegion *get_tab_region(int idx);
     tileidx_t get_tab_tile(int idx);
     void activate_tab(int idx);
+    void deactivate_tab();
     int active_tab() const;
     int num_tabs() const;
     void enable_tab(int idx);
     void disable_tab(int idx);
     int find_tab(string tab_name) const;
+
+    void set_small_layout(bool use_small_layout, const coord_def &windowsz);
 
     virtual void update();
     virtual void clear();
@@ -53,14 +57,16 @@ protected:
     void set_icon_pos(int idx);
     void reset_icons(int from_idx);
 
-
     int m_active;
     int m_mouse_tab;
+    bool m_use_small_layout;
+    bool m_is_deactivated;
     TileBuffer m_buf_gui;
 
     struct TabInfo
     {
         GridRegion *reg;
+        command_type cmd;
         tileidx_t tile_tab;
         int ofs_y;
         int min_y;
@@ -69,6 +75,9 @@ protected:
         bool enabled;
     };
     vector<TabInfo> m_tabs;
+
+private:
+    int _push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab);
 };
 
 #endif

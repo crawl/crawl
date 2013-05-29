@@ -38,7 +38,7 @@ class targetter_beam : public targetter
 {
 public:
     targetter_beam(const actor *act, int range, zap_type zap, int pow,
-                   bool stop, int min_expl_rad, int max_expl_rad);
+                   int min_expl_rad, int max_expl_rad);
     bolt beam;
     virtual bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
@@ -169,6 +169,22 @@ public:
     FixedVector<int, LOS_RADIUS + 1> arc_length;
 private:
     coord_def prev;
+    int range2;
+};
+
+class targetter_spray : public targetter
+{
+public:
+    targetter_spray(const actor* act, int range, zap_type zap);
+
+    bool valid_aim(coord_def a);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+    bolt base_beam;
+    vector<bolt> beams;
+private:
+    vector<vector<coord_def> > paths_taken;
+    int _range;
     int range2;
 };
 

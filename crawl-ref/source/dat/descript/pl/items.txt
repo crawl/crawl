@@ -1,10 +1,4 @@
 %%%%
-air elemental fan
-
-Magiczny przedmiot służący do przywoływania żywiołaków powietrza. Nie jest zbyt
-niezawodny, i zwykle wymaga paru prób zanim poprawnie zadziała. Użycie nie jest
-wskazane jeśli nie posiadasz wysokich umiejętności w Magii Powietrza.
-%%%%
 amulet of clarity
 
 Ten amulet pozwala nosicielowi zachować trzeźwy umysł. Dotyczy do także prób
@@ -244,10 +238,6 @@ book of minor magic
 
 Księga czarów.
 %%%%
-book of morphology
-
-Księga czarów.
-%%%%
 book of necromancy
 
 Zakurzony tom zabronionej magii.
@@ -333,6 +323,14 @@ Siekiera o wielkim ostrzu.
 buckler
 
 Mała tarcza.
+%%%%
+buckler:quote
+
+„Stateczność jego tarcz i puklerz mocny,
+ Za którym stojąc, na żaden strach nocny,
+ Na żadną trwogę, ani dbaj na strzały,
+ Którymi sieje przygoda w dzień biały.”
+    -pieśń kościelna
 %%%%
 cap
 
@@ -606,6 +604,18 @@ Ten róg należy do Geryona, strażnika Przedsionka Piekła. Legendy mówią że
 śmiertelnik który zapragnie dostać się do piekieł żywy, musiałby zadąć w ten
 róg.
 %%%%
+horn of Geryon:quote
+
+„Natenczas Wojski chwycił na taśmie przypięty
+ Swój róg bawoli, długi, cętkowany, kręty
+ Jak wąż boa, oburącz do ust go przycisnął,
+ Wzdął policzki jak banię, w oczach krwią zabłysnął,
+ Zasunął wpół powieki, wciągnął w głąb pół brzucha
+ I do płuc wysłał z niego cały zapas ducha
+ I zagrał: róg jak wicher wirowatym dechem,
+ Niesie w puszczę muzykę i podwaja echem.”
+    -Adam Mickiewicz, „Pan Tadeusz”
+%%%%
 ice dragon armour
 
 Zbroja zrobiona ze skóry zionącego mrozem smoka. Zapewnia ona wspaniałą ochronę
@@ -637,13 +647,6 @@ Bardzo rzadka i wyjątkowo efektywna zamorska broń, składająca się z dwóch 
 kosy osadzonych na sztorc na obu końcach drzewca. Wymaga ona pewnych
 umiejętności aby jej dobrze użyć, jednak w rękach zręcznego wojownika walka
 stanowi morderczy dla wrogów taniec.
-%%%%
-lamp of fire
-
-Magiczny przedmiot służący do przywoływania żywiołaków ognia. Nie jest zbyt
-niezawodna, i często wymaga wielu prób zanim zadziała poprawnie. Do użycia
-potrzebne jest źródło ognia, takie jak lawa lub otwarty płomień. Kontrola nad
-przywołanymi żywiołakami wymaga sporych umiejętności w dziedzinie Magii Ognia.
 %%%%
 lantern of shadows
 
@@ -857,22 +860,6 @@ potion of experience
 
 Prawdziwie cudowny napitek, który trwale zwiększa umiejętności pijącego.
 %%%%
-potion of flight
-
-Eliksir który daje zdolność lotu.
-%%%%
-potion of gain dexterity
-
-Eliksir który powoduje korzystną mutację.
-%%%%
-potion of gain intelligence
-
-Eliksir który powoduje korzystną mutację.
-%%%%
-potion of gain strength
-
-Eliksir który powoduje korzystną mutację.
-%%%%
 potion of heal wounds
 
 Eliksir który w sporym stopniu leczy rany, nie potrafi jednak uleczyć innych
@@ -882,6 +869,10 @@ stopniu usunąć skutki trwałej zgnilizny.
 potion of invisibility
 
 Eliksir który daje tymczasową niewidzialność.
+%%%%
+potion of flight
+
+Eliksir który daje zdolność lotu.
 %%%%
 potion of magic
 
@@ -971,12 +962,6 @@ Ten pierścień daje swemu nosicielowi moc ognia. Wzmacnia to wszelkie czary
 Magii Ognia jak i zapewnia odporność na ogień, jednakże czary Magii Lodu są
 osłabione, a nosiciel jest bardziej wrażliwy na zimno.
 %%%%
-ring of flight
-
-Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
-Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania.
-To może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
-%%%%
 ring of hunger
 
 Ten pierścień pomaga zrzucić nadwagę, wielce zwiększając zużycie pokarmu.
@@ -999,6 +984,12 @@ tego efektu — trzeba go aktywować, do czego potrzebna jest umiejętność
 posługiwania się magicznymi przedmiotami. Bycie niewidzialnym znacznie wzmaga
 zużycie metabolizm, a także powoduje magiczne skażenie. Zbyt częste użycie tego
 pierścienia nie jest więc wskazane.
+%%%%
+ring of flight
+
+Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
+Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania. To
+może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
 %%%%
 ring of life protection
 
@@ -1039,6 +1030,12 @@ ring of see invisible
 
 Ten pierścień pozwala swemu nosicielowi ujrzeć niewidzialne istoty.
 %%%%
+ring of see invisible:quote
+
+„A oto mój sekret. Jest bardzo prosty: dobrze widzi się tylko sercem.
+Najważniejsze jest niewidoczne dla oczu.”
+    -Antoine de Saint-Exupéry, „Mały Książę”, 1943
+%%%%
 ring of slaying
 
 Ten pierścień zwiększa (lub zmniejsza) celność i zadawane obrażenia w walce
@@ -1057,14 +1054,6 @@ Ten pierścień chroni przed tymczasową utratą siły, inteligencji i zręczno�
 ring of sustenance
 
 Ten pierścień znacznie spowalnia zużycie pokarmu przez swego właściciela.
-%%%%
-ring of teleport control
-
-Ten pierścień pozwala na wpływ na miejsce docelowe teleportacji, niestety z
-pewnym rozrzutem. Próba teleportu w miejsce już zajęte skutkuje zupełnie losową
-teleportacją. Pierścień ten pozwala także na zablokowanie teleportacji.
-Kontrolowanie teleportacji skutkuje magicznym skażeniem, tak więc nadużywanie
-nie jest wskazane.
 %%%%
 ring of teleportation
 
@@ -1097,7 +1086,7 @@ skutki są dość brutalne.
 %%%%
 rod of striking
 
-Ten pręt pozwala uderzać wrógów surową magią, niestety niezbyt efektywnie.
+Ten pręt pozwala uderzać wrogów surową magią, niestety niezbyt efektywnie.
 %%%%
 rod of the swarm
 
@@ -1179,23 +1168,23 @@ ze skóry niektórych stworzeń — zwykle trolli i smoków.
 %%%%
 scroll of enchant weapon i
 
-Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w czwili
+Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w chwili
 odczytania zwoju. Zwiększa on celność. Broń która już jest wysokiej jakości
 może nie poddać się działaniu tego zwoju — szansa porażki jest coraz większa.
 Bezwzględny limit to +9.
 %%%%
 scroll of enchant weapon ii
 
-Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w czwili
+Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w cewili
 odczytania zwoju. Zwiększa on zadawane obrażenia. Broń która już jest wysokiej
 jakości może nie poddać się działaniu tego zwoju — szansa porażki jest coraz
 większa. Bezwzględny limit to +9.
 %%%%
 scroll of enchant weapon iii
 
-Ten zwój pozwala na znaczne poprawienie jakości broni trzymanej w dłoni w
-czwili odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia.
-Broń która już jest wysokiej jakości może nie poddać się działaniu tego zwoju —
+Ten zwój pozwala na znaczne poprawienie jakości broni trzymanej w dłoni w zwili
+odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia. Broń
+która już jest wysokiej jakości może nie poddać się działaniu tego zwoju —
 szansa porażki jest coraz większa. Bezwzględny limit to +9.
 %%%%
 scroll of fear
@@ -1225,8 +1214,7 @@ próbie odczytania.
 %%%%
 scroll of magic mapping
 
-Ten zwój tworzy mapę poziomu lochów wokół czytającego. Jego moc nie jest
-wystarczająca aby ujawnić wnętrze pomieszczeń ukrytych za sekrentymi drzwiami.
+Ten zwój tworzy mapę poziomu lochów wokół czytającego.
 %%%%
 scroll of noise
 
@@ -1243,7 +1231,7 @@ zastosowania.
 %%%%
 scroll of recharging
 
-Ten zwój służy do ładowania mocy różdzek. Użyty na magicznym pręcie, zwiększa
+Ten zwój służy do ładowania mocy różdżek. Użyty na magicznym pręcie, zwiększa
 zarówno pojemność jego baterii (max. do +17), jak i jakość pręta (max. do +9)
 która poprawia zarówno szybkość regeneracji baterii jak i przydatność pręta w
 walce wręcz.
@@ -1252,12 +1240,6 @@ scroll of remove curse
 
 Odczytanie tego zwoju usuwa wszystkie przekleństwa rzucone na przedmioty
 przylegające do twego ciała.
-%%%%
-scroll of unholy creation
-
-Ten zwój czerpie z mocy Otchłani i tworzy paskudną bestię. Bestia ta jest
-przyjaźnie nastawiona do czytającego, chyba że Fedhas lub jeden z dobrych bogów
-ma coś do powiedzenia.
 %%%%
 scroll of teleportation
 
@@ -1304,13 +1286,13 @@ shield
 
 Kawał metalu, z uchwytem i paskami umożliwiającymi przyczepienie do ramienia.
 Pozwala blokować ciosy, jednak utrudnia ruchy co spowalnia szybkość ataków oraz
-przeskadza w rzucaniu czarów.
+przeszkadza w rzucaniu czarów.
 %%%%
 short sword
 
 Miecz z krótkim ostrzem, przydatny do kłucia i cięcia, zwłaszcza w zwarciu.
 %%%%
-skeleton
+decaying skeleton
 
 Kupa kości w trakcie rozkładu.
 %%%%
@@ -1343,22 +1325,12 @@ spiked flail
 
 Broń podobna do cepa, z kolczastą kulą zamiast bijaka.
 %%%%
-splint mail
-
-Zbroja z prostokątnych metalowych płytek, połączonych metalowymi kółkami. Daje
-to bardzo dobrą ochronę przed ciosami — co prawda znacznie gorszą niż pełna
-zbroja płytowa, jednak umożliwia ona dużo większą swobodę ruchów.
-%%%%
 staff of air
 
 Ten kij zwiększa moc czarów Magii Powietrza, a także zapewnia ochronę przed
 porażeniem elektrycznością. Jeśli użytkownik ma wystarczające umiejętności
 zarówno w Magii Powietrza jak i użyciu przedmiotów magicznych, wrogowie
 uderzeni tym kijem zostaną porażeni prądem.
-%%%%
-staff of channeling
-
-Ten kij umożliwia pobieranie magicznej mocy z otoczenia.
 %%%%
 staff of cold
 
@@ -1386,7 +1358,8 @@ mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi.
 %%%%
 staff of energy
 
-Ten kij redukuje głód będący skutkiem rzucania czarów.
+Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go w
+celu uzupełnienia magicznej energii.
 %%%%
 staff of fire
 
@@ -1398,7 +1371,7 @@ użytkownik posiada umiejętności w Magii Ognia.
 staff of poison
 
 Ten kij zwiększa moc czarów Magii Trucizn, a także zapewnia ochronę przed
-truciznami i jadami. Jeśli użytkownik posiada umiejętności zarówno w uzyciu
+truciznami i jadami. Jeśli użytkownik posiada umiejętności zarówno w użyciu
 przedmiotów magicznych jak i w Magii Trucizn, wrogowie uderzeni tym kijem
 zostaną zatruci — nawet ci którzy zwykle są na trucizny odporni. Oczywiście nie
 działa to na duchy, umarlaków, i tym podobnych.
@@ -1433,16 +1406,6 @@ stone
 
 Mały kamyk. Można nim rzucić lub wystrzelić go z procy.
 %%%%
-stone of earth elementals
-
-Magiczny przedmiot do przywoływania żywiołaków ziemi. Jest niezbyt niezawodny,
-zwykle potrzebując paru prób zanim poprawnie zadziała. Potrzebuje jakiegoś
-kawałka skały do działania — zwykła ściana powinna się nadać. Kontrola nad
-żywiołakiem wymaga umiejętności z Magii Ziemi, jednak nawet ci którzy tej
-umiejętności nie posiadają, moga skorzystać z tego przedmiotu w celu powolnego,
-bolesnego drążenia tuneli. Wymaga to oczywiście możliwości pokonania zeźlonego
-żywiołaka...
-%%%%
 storm dragon armour
 
 Zbroja ze skóry smoka zionącego piorunami. Jest cięższa niż większość smoczych
@@ -1450,7 +1413,7 @@ skór, ale zapewnia też świetną obronę, a także odporność na porażenie p
 %%%%
 storm dragon hide
 
-Surowa skóra smoka zionacego piorunami, pokryta wyjątkowo twardymi niebieskimi
+Surowa skóra smoka zionącego piorunami, pokryta wyjątkowo twardymi niebieskimi
 łuskami. W tej postaci nie zapewnia wiele oprócz odporności na porażenie
 prądem, ale można z niej zrobić świetną zbroję.
 %%%%
@@ -1460,7 +1423,7 @@ Mały ale smakowity czerwony owoc.
 %%%%
 sultana
 
-Pojedyńcza rodzynka. Bardzo duża jak na rodzynkę, ale wciąż arbuz to to nie
+Pojedyncza rodzynka. Bardzo duża jak na rodzynkę, ale wciąż arbuz to to nie
 jest...
 %%%%
 swamp dragon armour
@@ -1510,7 +1473,7 @@ Magiczny miecz z trzema wielkimi ostrymi ostrzami.
 %%%%
 trishula
 
-Błogosławiony trójząb uformowany w świetym ogniu, z trzema zębami
+Błogosławiony trójząb uformowany w świętym ogniu, z trzema zębami
 symbolizującymi połączoną potęgę trójcy dobrych bogów. Jest to ulubiona broń
 sług Świetlistego.
 %%%%
@@ -1601,12 +1564,11 @@ Magiczny przedmiot który potrafi uczynić stworzenie na które został skierowa
 niezdolnym do ruchu. W szczególności, nagła utrata zdolności machania
 skrzydłami może się skończyć kąpielą w lawie.
 %%%%
-wand of polymorph other
+wand of polymorph
 
-Magiczny przemiot który potrafi przemienić stworzenie w coś innego. Jest
+Magiczny przedmiot który potrafi przemienić stworzenie w coś innego. Jest
 szczególnie efektywne wobec istot które naturalnie zmieniają formę: nie są one
-w stanie odeprzeć tego efektu. Nie da się tej różdżki skierować na siebie
-samego.
+w stanie odeprzeć tego efektu.
 %%%%
 wand of random effects
 

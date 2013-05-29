@@ -10,10 +10,11 @@
 # home of a local deep dwarf to ensure random teleporters can escape. If
 # all else fails there is an escape hatch in the mall's washroom.
 
+default-depth:  D:18-26
+
 NAME:   grated_community_mu
 TAGS:   no_rotate no_monster_gen no_item_gen
 ORIENT: north
-DEPTH:  D:18-26
 MONS:   patrolling vault guard, patrolling war dog, patrolling centaur warrior
 MONS:   generate_awake slave, deep dwarf artificer
   : if you.absdepth() < 23 then
@@ -85,7 +86,6 @@ TILE:     Z = wall_vines
 TILE:     - = wall_brick_darkgray
 SUBST:    - = c
 SUBST:    Z = c
-
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZc
@@ -127,7 +127,7 @@ ENDMAP
 ####  Room subvaults for the homes in grated_community_mu
 ####  vampire, some slaves, bloody lounge, bricked up window, guard dogs
 NAME: grated_community_mu_vampire_home
-TAGS: grated_community_mu_home grated_community_mu_home1
+TAGS: grated_community_mu_home grated_community_mu_home1 unrand
 KMONS:   1 = generate_awake slave
 KMONS:   2 = generate_awake spectral hound
 KMONS:   3 = generate_awake spectral war dog
@@ -158,7 +158,7 @@ ENDMAP
 
 ####  giant, some hides, hearth, deep washroom, closet, lounge feature
 NAME: grated_community_mu_giant_home
-TAGS: grated_community_mu_home grated_community_mu_home2
+TAGS: grated_community_mu_home grated_community_mu_home2 unrand
 MONS: patrolling ettin / patrolling stone giant / patrolling fire giant /\
       patrolling titan / patrolling cyclops
 MONS: patrolling frost giant
@@ -204,7 +204,7 @@ ENDMAP
 
 ####  spellcaster, living room, workshop, closet
 NAME: grated_community_mu_spellcaster_home
-TAGS: grated_community_mu_home grated_community_mu_home3
+TAGS: grated_community_mu_home grated_community_mu_home3 unrand
 FTILE:   c*1.8+&P!?n = floor_crystal_squares
 SHUFFLE: 8P
 MARKER:  + = lua:restrict_door()
@@ -268,7 +268,7 @@ ENDMAP
 
 ####  orc, possible family, messy living room w/features, hearth, closet
 NAME: grated_community_mu_orcish_home
-TAGS: grated_community_mu_home grated_community_mu_home4
+TAGS: grated_community_mu_home grated_community_mu_home4 unrand
 MONS: orc warlord, orc high priest, orc, warg
 FTILE:   1238c$+1#_W+~n%&$. = floor_pebble_yellow
 SHUFFLE: $W
@@ -303,7 +303,7 @@ ENDMAP
 
 ####  troll, cookfire, remains
 NAME: grated_community_mu_troll_home
-TAGS: grated_community_mu_home grated_community_mu_home5
+TAGS: grated_community_mu_home grated_community_mu_home5 unrand
 MONS: patrolling iron troll / patrolling deep troll
 FTILE:   1.c~+#$%& = floor_dirt
 : dgn.delayed_decay(_G, '%', 'w:20 any skeleton / w:5 any chunk, any / nothing')
@@ -330,7 +330,7 @@ ENDMAP
 
 ####  taur, entrace w/feature, shooting range, closets
 NAME: grated_community_mu_taur_home
-TAGS: grated_community_mu_home grated_community_mu_home6
+TAGS: grated_community_mu_home grated_community_mu_home6 unrand
 FTILE:  123.c'+%$W8n~ = floor_grass_dirt_mix
 : if crawl.coinflip() then
 MONS:   patrolling centaur warrior, plant
@@ -363,5 +363,22 @@ c%+.1.c
 ccc.8.c
 c$+...c
 cccnc~c
+      =
+ENDMAP
+
+NAME: grated_community_mu_unbuilt_plot
+TAGS: grated_community_mu_home unrand
+FTILE:  . = floor_grass_dirt_mix
+COLOUR: . = green
+SHUFFLE: %$
+KFEAT:  = = floor
+MAP
+.......
+.......
+.......
+.......
+.......
+.......
+.......
       =
 ENDMAP

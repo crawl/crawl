@@ -155,5 +155,15 @@ misc/error ERROR
 %compose tab_label_navigation
 %finish
 
+%start
+%compose tab_unselected
+%finish TAB_BLANK
+%start
+%compose tab_mouseover
+%finish
+%start
+%compose tab_selected
+%finish
+
 prompt_yes PROMPT_YES
 prompt_no PROMPT_NO

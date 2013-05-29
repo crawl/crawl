@@ -8,7 +8,6 @@ enum armour_type
     ARM_RING_MAIL,
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
-    ARM_SPLINT_MAIL,
     ARM_PLATE_ARMOUR,
 
     ARM_CLOAK,
@@ -104,13 +103,18 @@ enum brand_type // item_def.special
 
     MAX_PAN_LORD_BRANDS = SPWPN_EVASION,
 
-    SPWPN_CONFUSE,
+#if TAG_MAJOR_VERSION == 34
+    SPWPN_CONFUSE, // XXX not a real weapon brand, only for Confusing Touch
+#endif
     SPWPN_PENETRATION,
     SPWPN_REAPING,
 
     NUM_REAL_SPECIAL_WEAPONS,
 
     SPWPN_ACID,    // acid bite only for the moment
+#if TAG_MAJOR_VERSION != 34
+    SPWPN_CONFUSE, // Confusing Touch only for the moment
+#endif
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
@@ -124,7 +128,6 @@ enum corpse_type
 enum hands_reqd_type
 {
     HANDS_ONE,
-    HANDS_HALF,
     HANDS_TWO,
 };
 
@@ -212,14 +215,16 @@ enum launch_retval
 enum misc_item_type
 {
     MISC_BOTTLED_EFREET,
-    MISC_AIR_ELEMENTAL_FAN,
+    MISC_FAN_OF_GALES,
     MISC_LAMP_OF_FIRE,
-    MISC_STONE_OF_EARTH_ELEMENTALS,
+    MISC_STONE_OF_TREMORS,
     MISC_LANTERN_OF_SHADOWS,
     MISC_HORN_OF_GERYON,
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
+#if TAG_MAJOR_VERSION == 34
     MISC_EMPTY_EBONY_CASKET,
+#endif
     MISC_DISC_OF_STORMS,
 
     // pure decks
@@ -239,6 +244,8 @@ enum misc_item_type
 
     MISC_QUAD_DAMAGE, // Sprint only
 
+    MISC_PHIAL_OF_FLOODS,
+
     NUM_MISCELLANY, // mv: used for random generation
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
     MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
@@ -251,12 +258,12 @@ enum missile_type
     MI_ARROW,
     MI_BOLT,
     MI_JAVELIN,
-    MI_MAX_RACIAL = MI_JAVELIN,
 
     MI_STONE,
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
+    MI_PIE,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
@@ -299,7 +306,7 @@ enum scroll_type
     SCR_FEAR,
     SCR_NOISE,
     SCR_REMOVE_CURSE,
-    SCR_UNHOLY_CREATION,
+    SCR_SUMMONING,
     SCR_ENCHANT_WEAPON_I,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
@@ -348,7 +355,8 @@ enum special_armour_type
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,
     SPARM_ARCHERY,
-    NUM_SPECIAL_ARMOURS
+    NUM_REAL_SPECIAL_ARMOURS,
+    NUM_SPECIAL_ARMOURS,
 };
 
 enum special_missile_type // to separate from weapons in general {dlb}
@@ -370,9 +378,13 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_SLOW,                        // makes slow
     SPMSL_SLEEP,                       // sleep
     SPMSL_CONFUSION,                   // confusing
+#if TAG_MAJOR_VERSION == 34
     SPMSL_SICKNESS,                    // sickness/disease
+#endif
     SPMSL_RAGE,                        // berserk rage
-    NUM_SPECIAL_MISSILES               // 20
+    NUM_REAL_SPECIAL_MISSILES,
+    SPMSL_BLINDING,                    // blinding
+    NUM_SPECIAL_MISSILES,
 };
 
 enum special_ring_type // jewellery mitm[].special values
@@ -397,7 +409,9 @@ enum stave_type
     STAFF_SUMMONING,
     STAFF_AIR,
     STAFF_EARTH,
+#if TAG_MAJOR_VERSION == 34
     STAFF_CHANNELING,
+#endif
     NUM_STAVES,
 };
 
@@ -424,7 +438,9 @@ enum weapon_type
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
+#if TAG_MAJOR_VERSION == 34
     WPN_SPIKED_FLAIL,
+#endif
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,
@@ -562,7 +578,7 @@ enum wand_type
     WAND_FIREBALL,
     WAND_TELEPORTATION,
     WAND_LIGHTNING,
-    WAND_POLYMORPH_OTHER,
+    WAND_POLYMORPH,
     WAND_ENSLAVEMENT,
     WAND_DRAINING,
     WAND_RANDOM_EFFECTS,

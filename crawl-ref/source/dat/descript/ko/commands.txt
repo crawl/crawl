@@ -339,3 +339,19 @@ CMD_MAP_FIND_STASH verbose
 
 바닥과 벽을 제외한 모든 것을 캐릭터와 가까운 순서대로 표시한다.
 %%%%
+CMD_ZOOM_IN
+
+줌 인
+%%%%
+CMD_ZOOM_IN verbose
+
+던전 구역 줌 인
+%%%%
+CMD_ZOOM_OUT
+
+줌 아웃
+%%%%
+CMD_ZOOM_OUT verbose
+
+던전 구역 줌 아웃
+%%%%

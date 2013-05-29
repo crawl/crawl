@@ -1,0 +1,16 @@
+%%%%
+Abyssal Knight
+
+A Mélység Lovagja Lugonut követi, aki a Mélységből küldi a Labirintusba hogy
+káoszt és romlást terjesszen.
+%%%%
+Air Elementalist
+
+A Légelmentalista a Sokk varázslatot tanulta meg. Később a Levegő könyve
+biztosít alkalmazkodóképességet a túléléshez.
+%%%%
+Arcane Marksman
+
+A Misztikus Íjász távfegyverekkel szerelkezik fel, és mágiát használ hogy
+ellenfeleit sebezhetőbbé tegye.
+%%%%

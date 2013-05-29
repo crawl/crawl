@@ -1,0 +1,314 @@
+%%%%
+the Portal card
+
+Diese Karte teleportiert dich zu einer zufälligen Stelle, in höheren
+Macht-Leveln erlangt man Kontrolle darüber. Man findet sie normalerweise in
+diesen Kartendecks: Flucht und Krieg, oder in Nemelex Xobeh's Deck der
+Bestrafung.
+%%%%
+the Warp card
+
+Diese Karte transportiert dich über eine geringe Strecke, entweder zufällig
+oder, mit steigendem und höherem Macht-Level, mit Kontrolle darüber. Man findet
+sie normalerweise in diesen Kartendecks: Flucht und Krieg,
+%%%%
+Swap card
+
+Diese Karte tauscht deine Position mit der der nächsten Kreatur aus. Man findet
+sie normalerweise in diesen Kartendecks: Flucht und Krieg.
+%%%%
+Velocity card
+
+Mit dieser Karte kannst du dich schneller bewegen oder schneller handeln. Man
+findet sie normalerweise in diesen Kartendecks: Fluch und Krieg.
+%%%%
+the Tomb card
+
+Diese Karte schließt den Spieler in schützenden, soliden Fels ein. In niedrigen
+Macht-Leveln könnte dies unvollkommen sein. Nutze sie mit Vorsicht! Man findet
+sie normalerweise in diesen Kartendecks: Verteidigung, Flucht und Krieg, oder
+in Nemelex Xobeh's Deck der Bestrafung.
+%%%%
+the Banshee card
+
+Das wehklagen der Banshee flößt nahen Kreaturen Furcht ein. Man findet sie
+normalerweise in diesen Kartendecks: Verteidigung, Flucht und Krieg.
+%%%%
+Damnation card
+
+Diese Karte verbannt eine oder mehrere nahe stehende Kreaturen in den Abgrund,
+eventuell auch dich. Man findet sie normalerweise in diesen Kartendecks:
+Verteidigung, Flucht und Krieg, oder in Nemelex Xobeh's Deck der Bestrafung.
+%%%%
+Solitude card
+
+Diese Karte teleportiert zufällig Kreaturen die neben dir stehen. Man findet
+sie normalerweise in diesen Kartendecks: Verteidigung, Flucht und Krieg.
+%%%%
+Warpwright card
+
+Diese Karte kann Teleporter-Fallen erzeugen. Man findet sie normalerweise in
+diesen Kartendecks: Verteidigung, Flucht und Krieg.
+%%%%
+Flight card
+
+Diese Karte hilft beim davonlaufen indem sie dich umwandelt, beschleunigt oder
+andere Wege für die Flucht erzeugt. Man findet sie normalerweise in diesen
+Kartendecks: Verteidigung, Flucht und Krieg,
+%%%%
+the Elixir card
+
+Diese Karte heilt dich und stellt in diesem Prozess deine magische Energie
+wieder her... oder saugt sie ab. Man findet sie normalerweise in diesen
+Kartendecks: Veränderung, Verteidigung und Krieg.
+%%%%
+Battlelust card
+
+Diese Karte macht dich viel stärker im  physikalischem Kampf. Man findet sie
+normalerweise in diesen Kartendecks: Veränderungen, Verteidigung und Krieg.
+%%%%
+Metamorphosis card
+
+Diese Karte verwandelt dich vorübergehend. Man findet sie normalerweise in
+diesen Kartendecks: Veränderung, Verteidigung und Krieg.
+%%%%
+the Helm card
+
+Diese Karte erhöht deine Verteidigung. Man findet sie normalerweise in diesen
+Kartendecks: Veränderung, Verteidigung und Krieg.
+%%%%
+the Blade card
+
+Diese Karte verzaubert, oder belebt sogar zeitweise deine Waffe. Man findet sie
+normalerweise in diesen Kartendecks: Veränderung, Verteidigung und Krieg.
+%%%%
+the Shadow card
+
+Diese Karte lässt dich im Schatten verschwinden, so das du schlechter zu finden
+bist. Man findet sie normalerweise in diesen Kartendecks: Veränderung,
+Verteidigung und Krieg.
+%%%%
+the Mercenary card
+
+Diese Karte beschwört Söldner, welche an deiner Seite kämpfen ... für einen
+Preis. Man findet sie normalerweise in diesen Kartendecks: Veränderung,
+Verteidigung und Krieg.
+%%%%
+the Potion card
+
+Diese Karte hat die gleiche positive oder negative Wirkung, als wenn man einen
+zufälligen magischen Trank trinken würde. Man findet sie normalerweise in
+diesen Kartendecks: Veränderung und Wunder.
+%%%%
+Focus card
+
+Diese Karte verstärkt deine stärksten Eigenschaften auf kosten deiner
+Schwächsten. Man findet sie normalerweise in diesen Kartendecks: Veränderung
+und Wunder.
+%%%%
+Shuffle card
+
+Diese Karte vertauscht deine drei Attribute. Benutze sie mit Vorsicht! Man
+findet sie normalerweise in diesen Kartendecks: Veränderung und Wunder.
+%%%%
+Experience card
+
+Diese Karte macht dich geübter. Man findet sie normalerweise in diesen
+Kartendecks: Veränderung und der Wunder.
+%%%%
+Wild Magic card
+
+Diese Karte erzeugt ungezähmte Magie, so wie beim Zaubern einen Fehlschlag hat,
+auf dich. Man findet sie normalerweise in diesen Kartendecks: Veränderung und
+Wunder.
+%%%%
+the Helix card
+
+Diese Karte verändert deine Mutation. Höhere Macht-Level lassen die
+Veränderungen nützlicher ausfallen. Man findet sie normalerweise in diesen
+Kartendecks: Veränderung und Wunder.
+%%%%
+the Sage card
+
+Diese Karte wandelt etwas von deiner erhaltenen Erfahrung um und trainiert
+damit eine Spezielle Fähigkeit... schneller als normalerweise. Man findet sie
+normalerweise in diesen Kartendecks: Veränderung und Wunder.
+%%%%
+the Alchemist card
+
+Diese Karte verwandelt einen Teil deines Goldes in Lebens – und Magische
+Energie. Man findet sie normalerweise in diesen Kartendecks: Veränderung und
+Wunder.
+%%%%
+Water card
+
+Diese Karte verwandelt den Boden um dich in Wasser. Man findet sie
+normalerweise in diesen Kartendecks: Veränderung und Verliese.
+%%%%
+Vitrification card
+
+Diese Karte macht Wände durchsichtig. Man findet sie normalerweise in diesen
+Kartendecks: Veränderung und Verliese.
+%%%%
+Dowsing card
+
+Mit dieser Karte kannst du Geheime Türen, Fallen, Kreaturen oder Kombinationen
+daraus entdecken. Man findet sie normalerweise in diesen Kartendecks:
+Veränderung und Verliese.
+%%%%
+the Trowel card
+
+Diese Karte kann einen Altar, eine Statue, einen Golem oder sogar ein Portal
+erschaffen, funktioniert allerdings nur am besten im Hauptverlies und seinen
+Abzweigungen. Man findet sie normalerweise in diesen Kartendecks: Veränderung
+und Verliese.
+%%%%
+the Minefield card
+
+Diese Karte macht deine unmittelbare Umgebung gefährlicher. Man findet sie
+normalerweise in diesen Kartendecks: Veränderung und Verliese, oder in Nemelex
+Xobeh's Deck der Bestrafung.
+%%%%
+the Crusade card
+
+Diese Karte versucht, Kreaturen in deiner Nähe, zu deinen Gunsten zu
+verwandeln. Man findet sie normalerweise in diesen Kartendecks: Beschwörung und
+Krieg.
+%%%%
+the Herd card
+
+Diese Karte beschwört Tiere. Man findet sie normalerweise in diesen
+Kartendecks: Beschwörung und Krieg.
+%%%%
+the Pentagram card
+
+Diese Karte beschwört einen Dämon zu deiner Unterstützung. Man findet sie
+normalerweise in diesen Kartendecks: Beschwörung und Krieg.
+%%%%
+the Dance card
+
+Diese Karte beschwört eine tanzende Waffe. Man findet sie normalerweise in
+diesen Kartendecks: Beschwörung und Krieg.
+%%%%
+Foxfire card
+
+Diese Karte beschwört fliegende Kreaturen.Man findet sie normalerweise in
+diesen Kartendecks: Beschwörung und Krieg.
+%%%%
+the Bones card
+
+Diese Karte beschwört eine skelettierte Kreatur. Man findet sie normalerweise
+in diesen Kartendecks: Beschwörung und Krieg.
+%%%%
+Repulsiveness card
+
+Diese Karte beschwört ein hässliches oder sehr hässliches Ding. Man findet sie
+normalerweise in diesen Kartendecks: Beschwörung und Krieg.
+%%%%
+Vitriol card
+
+Diese Karte entfesselt einen zersetzenden oder degenerierenden
+Angriffs-Zauberspruch. Man findet sie normalerweise in diesen Kartendecks:
+Zerstörung und Krieg.
+%%%%
+Flame card
+
+Diese Karte entfesselt einen feurigen Angriffs-Zauberspruch. Man findet sie
+normalerweise in diesen Kartendecks: Zerstörung und Krieg.
+%%%%
+Frost card
+
+Diese Karte entfesselt einen frostigen Angriffs-Zauberspruch. Man findet sie
+normalerweise in diesen Kartendecks: Zerstörung und Krieg.
+%%%%
+Venom card
+
+Diese Karte entfesselt einen giftigen Angriffs-Zauberspruch, der dich auch
+treffen kann. Man findet sie normalerweise in diesen Kartendecks: Zerstörung
+und Krieg.
+%%%%
+the Spark card
+
+Diese Karte entfesselt einen elektrischen Angriffs-Zauber. Man findet sie
+normalerweise in diesen Kartendecks: Zerstörung und Krieg.
+%%%%
+the Hammer card
+
+Diese Karte entfesselt einen physische Angriffs-Zauberspruch. Man findet sie
+normalerweise in diesen Kartendecks: Zerstörung und Krieg.
+%%%%
+Pain card
+
+Diese Karte entfesselt einen Nekromantie Angriffs-Zauberspruch, welcher auch
+dich treffen kann. Man findet sie normalerweise in diesen Kartendecks:
+Zerstörung und Krieg.
+%%%%
+Torment card
+
+Diese karte ruft die Mächte der Dunkelheit um nahe stehenden Kreaturen
+qualvolle Verletzungen zuzufügen. Man findet sie normalerweise in diesen
+Kartendecks: Zerstörung und Krieg.
+%%%%
+the Orb card
+
+Diese Karte entfesselt eine zerstörerische Kugel aus purer Magie, manchmal
+sogar Mehrere. Man findet sie normalerweise in diesen Kartendecks: Zerstörung
+und Krieg.
+%%%%
+Wrath card
+
+Diese Karte zieht den Zorn eines Gottes auf dich. Man findet sie nur in Nemelex
+Xobeh's Deck der Bestrafung.
+%%%%
+the Wraith card
+
+Diese Karte wird dich aussaugen. Man findet normalerweise nur in Nemelex
+Xobeh's Deck der Bestrafung.
+%%%%
+the Curse card
+
+Diese Karte belegt deine Besitztümer mit Flüchen. Man findet sie nur in Nemelex
+Xobeh's Deck der Bestrafung.
+%%%%
+Xom card
+
+Diese Karte zieht die Aufmerksamkeit von Xom auf dich. Man findet sie nur in
+Nemelex Xobeh's Deck der Bestrafung.
+%%%%
+Famine card
+
+Diese Karte lässt dich verhungern. Man findet sie normalerweise nur in Nemelex
+Xobeh's Deck der Bestrafung.
+%%%%
+the Swine card
+
+Diese Karte macht dich rosa und wild auf Trüffel. Man findet normalerweise nur
+in Nemelex Xobeh's Deck der Bestrafung.
+%%%%
+the Bargain card
+
+Diese Karte gewährt dir einen kurzzeitigen Preisnachlass in Läden. Sie ist
+normalerweise in keinem Kartendeck.
+%%%%
+the Genie card
+
+Der Kartengeist gewährt dir etwas Nützliches oder bestraft dich für den
+Versuch. Er ist normalerweise in keinem Kartendeck.
+%%%%
+the Feast card
+
+Diese Karte füttert dich. Sie ist normalerweise in keinem Kartendeck.
+%%%%
+the Stairs card
+
+Diese Karte lässt Treppen zu dir, oder von dir weggleiten. (Wenn du diese Karte
+bekommst ist es ein Fehler.)
+%%%%
+a buggy card
+
+Fehlerhaft (Wenn du das jemals sehen solltest, es ist ein Fehler.)
+%%%%
+a very buggy card
+
+Fehlerhaft (Wenn du das jemals sehen solltest, es ist ein Fehler.)
+%%%%

@@ -1,10 +1,7 @@
 #ifndef TILEDEF_DEFINES_H
 #define TILEDEF_DEFINES_H
 
-#include <cassert>
 #include <vector>
-#include <stdint.h>
-using namespace std;
 
 typedef uint64_t tileidx_t;
 
@@ -23,14 +20,14 @@ public:
         ey(_ey)
     {
         // verify all params are larger than zero and fit in storage
-        assert(width == _width);
-        assert(height == _height);
-        assert(offset_x == _offset_x);
-        assert(offset_y == _offset_y);
-        assert(sx == _sx);
-        assert(sy == _sy);
-        assert(ex == _ex);
-        assert(ey == _ey);
+        ASSERT(width == _width);
+        ASSERT(height == _height);
+        ASSERT(offset_x == _offset_x);
+        ASSERT(offset_y == _offset_y);
+        ASSERT(sx == _sx);
+        ASSERT(sy == _sy);
+        ASSERT(ex == _ex);
+        ASSERT(ey == _ey);
     }
 
     // size of the original tile

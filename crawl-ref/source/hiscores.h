@@ -80,6 +80,7 @@ private:
     branch_type branch;             // dungeon branch
     string      map;                // the vault (if any) the player is in
     string      mapdesc;            // DESC: of the vault the player is in.
+    string      killer_map;         // the vault (if any) that placed the killer
     int         final_hp;           // actual current HPs (probably <= 0)
     int         final_max_hp;       // net HPs after rot
     int         final_max_max_hp;   // gross HPs before rot
@@ -89,6 +90,9 @@ private:
     int         str;                // final str (useful for nickname)
     int         intel;              // final int
     int         dex;                // final dex (useful for nickname)
+    int         ac;                 // AC
+    int         ev;                 // EV
+    int         sh;                 // SH
     god_type    god;                // god
     int         piety;              // piety
     int         penance;            // penance
@@ -97,6 +101,7 @@ private:
     time_t      death_time;         // end time of character
     time_t      real_time;          // real playing time in seconds
     int         num_turns;          // number of turns taken
+    int         num_aut;            // quantity of aut taken
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
     int         kills;              // number of monsters killed

@@ -17,8 +17,6 @@
 
 #include <queue>
 
-extern int unixcurses_get_vi_key(int keyin);
-
 static keycode_type _numpad2vi(keycode_type key)
 {
 #if defined(UNIX) && !defined(USE_TILE_LOCAL)
@@ -303,6 +301,8 @@ int line_reader::read_line(bool clear_previous)
         tiles.redraw();
         tiles.json_open_object();
         tiles.json_write_string("msg", "get_line");
+        if (!tag.empty())
+            tiles.json_write_string("tag", tag);
         tiles.json_close_object();
         tiles.finish_message();
     }

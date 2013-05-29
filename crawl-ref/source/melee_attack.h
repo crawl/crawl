@@ -76,6 +76,7 @@ private:
     bool handle_phase_hit();
     bool handle_phase_damaged();
     bool handle_phase_killed();
+    bool handle_phase_aux();
     bool handle_phase_end();
 
     /* Combat Calculations */
@@ -85,7 +86,7 @@ private:
     int calc_damage();
     int calc_stat_to_hit_base();
     int calc_stat_to_dam_base();
-    int apply_defender_ac(int damage, int damage_max = 0);
+    int apply_defender_ac(int damage, int damage_max = 0, bool half_ac = false);
     int fire_res_apply_cerebov_downgrade(int res);
 
     /* Attack effects */
@@ -111,6 +112,7 @@ private:
     void do_passive_freeze();
     void do_passive_heat();
     void emit_foul_stench();
+    void tendril_disarm();
     /* Race Effects */
     void do_minotaur_retaliation();
 
@@ -193,6 +195,8 @@ private:
                                      bool needs_bite_msg = false,
                                      int reduction = 1);
     bool _vamp_wants_blood_from_monster(const monster* mon);
+
+    bool can_reach();
 };
 
 #endif

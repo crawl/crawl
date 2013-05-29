@@ -39,7 +39,6 @@
 #include "clua.h"
 #include "coord.h"
 #include "coordit.h"
-#include "debug.h"
 #include "delay.h"
 #include "dactions.h"
 #include "dgn-overview.h"
@@ -50,6 +49,7 @@
 #include "errors.h"
 #include "fineff.h"
 #include "ghost.h"
+#include "godcompanions.h"
 #include "godpassive.h"
 #include "initfile.h"
 #include "items.h"
@@ -75,6 +75,7 @@
 #include "random.h"
 #include "show.h"
 #include "shopping.h"
+#include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -400,6 +401,9 @@ static vector<string> _get_base_dirs()
 #ifdef TARGET_OS_MACOSX
         SysEnv.crawl_base + "../Resources/",
 #endif
+#ifdef __ANDROID__
+        "/sdcard/Android/data/org.develz.crawl/files/",
+#endif
     };
 
     const string prefixes[] = {
@@ -453,6 +457,9 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     for (unsigned b = 0, size = bases.size(); b < size; ++b)
     {
         string name = bases[b] + basename;
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
+#endif
         if (thing_exists(name))
             return name;
     }
@@ -555,7 +562,7 @@ string savedir_versioned_path(const string &shortpath)
 {
 #ifdef DGL_VERSIONED_CACHE_DIR
     const string versioned_dir =
-        _get_base_savedir_path("cache." + Version::Long());
+        _get_base_savedir_path(string("cache.") + Version::Long);
 #else
     const string versioned_dir = _get_base_savedir_path();
 #endif
@@ -603,7 +610,7 @@ static void _fill_player_doll(player_save_info &p, package *save)
     if (!success) // Use default doll instead.
     {
         job_type job = get_job_by_name(p.class_name.c_str());
-        if (job == -1)
+        if (job == JOB_UNKNOWN)
             job = JOB_FIGHTER;
 
         tilep_job_default(job, &equip_doll);
@@ -1070,6 +1077,8 @@ static void _grab_followers()
         monster* mons = &menv[i];
         if (!mons->alive())
             continue;
+        if (mons->type == MONS_BATTLESPHERE)
+            end_battlesphere(mons, false);
         mons->flags &= ~MF_TAKING_STAIRS;
     }
 }
@@ -1082,7 +1091,7 @@ static void _do_lost_monsters()
     if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
             if (mons_is_unique(mi->type) && !(mi->flags & MF_TAKING_STAIRS))
-                you.unique_creatures[mi->type] = false;
+                you.unique_creatures.set(mi->type, false);
 }
 
 // Should be called after _grab_followers(), so that items carried by
@@ -1208,6 +1217,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         // The player is now between levels.
         you.position.reset();
+
+        update_companions();
     }
 
     clear_travel_trail();
@@ -1254,6 +1265,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (!crawl_state.game_is_tutorial()
             && !crawl_state.game_is_zotdef()
+            && !player_in_branch(BRANCH_ABYSS)
             && (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 2)
             && one_chance_in(3))
         {
@@ -1459,7 +1471,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
-                string stair_str = feature_description_at(you.pos(), "",
+                string stair_str = feature_description_at(you.pos(), false,
                                                           DESC_THE, false);
                 string verb = stair_climb_verb(feat);
 
@@ -1789,7 +1801,7 @@ static bool _restore_game(const string& filename)
              you.prev_save_version.c_str());
     }
 
-    if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1
+    if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
         if (!yesno("This game comes from a previous release of Crawl.  If you "
@@ -1911,7 +1923,10 @@ void delete_level(const level_id &level)
     if (you.save)
         you.save->delete_chunk(level.describe());
     if (level.branch == BRANCH_ABYSS)
+    {
         save_abyss_uniques();
+        destroy_abyss();
+    }
     _do_lost_monsters();
     _do_lost_items();
 }
@@ -2011,6 +2026,10 @@ static bool _read_char_chunk(package *save)
         if (major == TAG_MAJOR_VERSION && minor == TAG_MINOR_VERSION)
             inf.fail_if_not_eof("chr");
 
+#if TAG_MAJOR_VERSION == 34
+        if (major == 33 && minor == TAG_MINOR_0_11)
+            return true;
+#endif
         return (major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION);
     }
     catch (short_read_exception &E)
@@ -2030,11 +2049,15 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
         return false;
     }
 
-    if (major != TAG_MAJOR_VERSION)
+    if (major != TAG_MAJOR_VERSION
+#if TAG_MAJOR_VERSION == 34
+        && (major != 33 || minor != 17)
+#endif
+       )
     {
-        if (Version::ReleaseType())
+        if (Version::ReleaseType)
         {
-            *reason = (CRAWL " " + Version::Short() + " is not compatible with "
+            *reason = (CRAWL " " + string(Version::Short) + " is not compatible with "
                        "save files from older versions. You can continue your "
                        "game with the appropriate older version, or you can "
                        "delete it and start a new game.");

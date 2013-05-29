@@ -83,16 +83,6 @@ Vorų Lizdas yra penkių lygių gylio ir turi voratinklių runą. Požemyje gali
 rasti tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų arba Vorų Lizdo
 atšakas. Jei yra Vorų Lizdas, įėjimą į jį rasite tarp Irštva:3 ir Irštva:6.
 %%%%
-Slime Pits
-
-Beformė rūgščių, drebučių ir gleivių karalystė. Bet kokie protingų būtybių
-požymiai jau seniausiai ištirpę. Vis dėlto dar sklando gandai apie didžiulius
-turtus giliai apačioje, saugiai paslėptus slaptose patalpose be durų ar langų,
-kad neprasiskverbtų rūgštys.
-
-Gleivių Olos yra šešių lygių gylio ir turi gleivių runą. Įėjimas į jas yra tarp
-Irštva:6 ir Irštva:8.
-%%%%
 Vaults
 
 Sakoma, kad Skliautai, galbūt pastatyti kokio nors galingo pamišėlio, yra

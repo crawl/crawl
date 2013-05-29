@@ -12,6 +12,7 @@
 #include <string.h>
 #include <limits.h>
 
+#include "libutil.h"
 #include "syscalls.h"
 #include "unicode.h"
 
@@ -136,6 +137,9 @@ wstring utf8_to_16(const char *s)
 }
 #endif
 
+#ifndef TARGET_OS_WINDOWS
+static
+#endif
 string utf16_to_8(const utf16_t *s)
 {
     string d;
@@ -168,6 +172,9 @@ string utf16_to_8(const utf16_t *s)
 
 string utf8_to_mb(const char *s)
 {
+#ifdef __ANDROID__
+    return s;
+#else
     string d;
     ucs_t c;
     int l;
@@ -189,10 +196,34 @@ string utf8_to_mb(const char *s)
             d.push_back('?'); // TODO: try to transliterate
     }
     return d;
+#endif
+}
+
+static string utf8_validate(const char *s)
+{
+    string d;
+    ucs_t c;
+    int l;
+
+    while ((l = utf8towc(&c, s)))
+    {
+        s += l;
+
+        char buf[4];
+        int r = wctoutf8(buf, c);
+        for (int i = 0; i < r; i++)
+            d.push_back(buf[i]);
+    }
+    return d;
 }
 
 string mb_to_utf8(const char *s)
 {
+#ifdef __ANDROID__
+    // Paranoia; all consumers already use the same code so this won't do
+    // anything new.
+    return utf8_validate(s);
+#else
     string d;
     wchar_t c;
     int l;
@@ -216,24 +247,7 @@ string mb_to_utf8(const char *s)
             d.push_back(buf[i]);
     }
     return d;
-}
-
-static string utf8_validate(const char *s)
-{
-    string d;
-    ucs_t c;
-    int l;
-
-    while ((l = utf8towc(&c, s)))
-    {
-        s += l;
-
-        char buf[4];
-        int r = wctoutf8(buf, c);
-        for (int i = 0; i < r; i++)
-            d.push_back(buf[i]);
-    }
-    return d;
+#endif
 }
 
 static bool _check_trail(FILE *f, const char* bytes, int len)

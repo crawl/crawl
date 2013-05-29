@@ -39,6 +39,7 @@ bool feat_is_wall(dungeon_feature_type feat);
 bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
 bool feat_has_solid_floor(dungeon_feature_type feat);
+bool feat_has_dry_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_statue_or_idol(dungeon_feature_type feat);
@@ -51,6 +52,7 @@ bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too = false);
 command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 bool feat_is_tree(dungeon_feature_type feat);
+bool feat_is_metal(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);
 bool feat_is_travelable_stair(dungeon_feature_type feat);
@@ -125,5 +127,10 @@ void nuke_wall(const coord_def& p);
 bool cell_is_clingable(const coord_def pos);
 bool cell_can_cling_to(const coord_def& from, const coord_def to);
 bool is_boring_terrain(dungeon_feature_type feat);
+
+void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
+                         terrain_change_type type = TERRAIN_CHANGE_GENERIC,
+                         const monster* mon = NULL);
+bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 
 #endif

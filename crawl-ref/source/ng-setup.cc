@@ -3,9 +3,11 @@
 #include "ng-setup.h"
 
 #include "abl-show.h"
+#include "decks.h"
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
+#include "godcompanions.h"
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -20,12 +22,14 @@
 #include "ng-wanderer.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "tilepick.h"
 #include "tutorial.h"
 
 #define MIN_START_STAT       3
@@ -163,8 +167,8 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 2; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
-    case JOB_HEALER:            s =  5; i =  5; d =  2; hp = 13; mp = 2; break;
-    case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 13; mp = 2; break;
+    case JOB_HEALER:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
+    case JOB_PRIEST:            s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
 
@@ -339,10 +343,6 @@ void give_basic_mutations(species_type speci)
         break;
     }
 
-    // Zot def games come with teleport control
-    if (crawl_state.game_is_zotdef())
-        you.mutation[MUT_TELEPORT_CONTROL] = 1;
-
     // Some mutations out-sourced because they're
     // relevant during character choice.
     you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
@@ -407,6 +407,13 @@ void newgame_make_item(int slot, equipment_type eqslot,
     item.plus2     = plus2;
     item.special   = 0;
 
+    if (is_deck(item))
+    {
+        item.plus = 6 + random2(6); // # of cards
+        item.special = DECK_RARITY_COMMON;
+        init_deck(item);
+    }
+
     // If the character is restricted in wearing armour of equipment
     // slot eqslot, hand out replacement instead.
     if (item.base_type == OBJ_ARMOUR && replacement != -1
@@ -458,6 +465,9 @@ static void _update_weapon(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
 
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
+
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
@@ -465,12 +475,18 @@ static void _update_weapon(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
 
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_BOLT] = 1;
+
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_SLING_BULLET] = 1;
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -507,7 +523,9 @@ static void _give_items_skills(const newgame_def& ng)
             newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
                               ARM_ROBE);
         }
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
+        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR,
+                          you.body_size() >= SIZE_MEDIUM ? ARM_SHIELD
+                                                         : ARM_BUCKLER);
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
@@ -609,8 +627,8 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 100;
         you.gift_timeout = max(5, random2(40) + random2(40));
 
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
-                           2, 2);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        set_item_ego_type(you.inv[0], OBJ_WEAPONS, SPWPN_CHAOS);
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
@@ -646,7 +664,7 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
-        if (!crawl_state.game_is_zotdef())
+        if (!crawl_state.game_is_zotdef() && !crawl_state.game_is_sprint())
             you.char_direction = GDT_GAME_START;
         you.piety = 38;
 
@@ -685,12 +703,13 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_SKALD:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1, 1);
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
+        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_BERSERK_RAGE);
 
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
@@ -781,7 +800,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
-        you.skills[SK_STABBING]     = 1;
         break;
 
     case JOB_SUMMONER:
@@ -811,6 +829,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 12);
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
+
+        // keep picking up sticks
+        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
 
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
@@ -858,6 +879,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
 
+        // sandblast goes through a lot of stones
+        you.force_autopickup[OBJ_MISSILES][MI_STONE] = 1;
+
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
         you.skills[SK_SPELLCASTING]   = 1;
@@ -889,14 +913,16 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 2);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
 
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_NEEDLE] = 1;
+
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 2;
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_DODGING]      = 1;
-        you.skills[SK_STEALTH]      = 3;
-        you.skills[SK_STABBING]     = 2;
+        you.skills[SK_STEALTH]      = 4;
         you.skills[SK_THROWING]     = 2;
         break;
 
@@ -1129,7 +1155,7 @@ static void _give_basic_spells(job_type which_job)
         which_spell = SPELL_STING;
         break;
     case JOB_SUMMONER:
-        which_spell = SPELL_SUMMON_SMALL_MAMMALS;
+        which_spell = SPELL_SUMMON_SMALL_MAMMAL;
         break;
     case JOB_NECROMANCER:
         which_spell = SPELL_PAIN;
@@ -1389,8 +1415,12 @@ static void _setup_generic(const newgame_def& ng)
     // Generate the second name of Jiyva
     fix_up_jiyva_name();
 
+    // Enable sacrificing for all Nemelex gift types
     for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
-        you.nemelex_sacrificing = true;
+        you.nemelex_sacrificing.set(i);
+
+    // Get rid of god companions left from previous games
+    init_companions();
 
     // Create the save file.
     if (Options.no_save)

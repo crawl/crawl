@@ -274,9 +274,10 @@ boots of the Assassin
 
 Some soft boots, specially designed by the Assassin's Guild.
 %%%%
-Lear's chain mail
+Lear's hauberk
 
-A chain mail made of pure gold.
+A well-made golden hauberk that covers all of its wearer's body parts. It
+includes a chainmail coif, chausses and maille gauntlets.
 %%%%
 skin of Zhor
 
@@ -297,7 +298,8 @@ A bronze shield.
 %%%%
 robe of Folly
 
-A dull grey robe.
+A dull grey robe. It is enchanted to provide its wearer with immeasurable power
+and wisdom.
 %%%%
 Maxwell's patent armour
 
@@ -451,4 +453,25 @@ ring of the Octopus King
  Her squiggly suitor,
  Tried hard to woo her,
  But she couldn't wear all his rings."
+%%%%
+Axe of Woe
+
+As you hold this axe your mind does not feel fully your own. Your body begins
+to exhibit strength far beyond its capabilities, and your movements become
+guided by Makhleb.
+%%%%
+milk chocolate
+
+This item is a debugging aid, granting a vast array of mostly beneficial
+artefact properties.
+
+If you see this in a real game, it's a bug.
+%%%%
+dark chocolate
+
+This item is a debugging aid, granting a vast array of mostly harmful artefact
+properties. It's distinct from its milky counterpart as some props conflict
+with each other.
+
+If you see this in a real game, it's a bug.
 %%%%

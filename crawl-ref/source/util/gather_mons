@@ -67,12 +67,32 @@ for (grep /\.des$/, `git ls-files`)
         s|"\s*,\s*"|/|sg;
         vault_mon() for split m{/|,}; #/
     }
+
+    for (/local \w+ =\s*"([^"]+)"$/smg)
+    {
+        s/\\\n\s+//g;
+        vault_mon();
+    }
 }
 
 $mons{"freed slave"} = 1;
 
 # Unlike genus-only monsters, these are not even up to name translations.
 delete $mons{$_} for ("base draconian", "greater demon");
+
+if ($db)
+{
+    # No description needed, but they still should present translated
+    # names for purposes of glyph redefinition.
+    delete $mons{$_} for (split /\n/, <<END);
+small zombie
+large zombie
+small skeleton
+large skeleton
+small simulacrum
+large simulacrum
+END
+}
 
 unless ($db)
 {

@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-En magisk anordning, som kan hidkalde luft-elementaler. Den er upålidelig, og
-det kræver som regel flere forsøg at få den til at virke korrekt. Det er
-risikabelt at bruge den, men bliver minde farligt, hvis brugeren er trænet i
-den tilhørende elementarmagi.
-%%%%
 amulet of clarity
 
 Denne amulet beskytter den, der bærer den, mod visse former for mental
@@ -39,12 +32,6 @@ forårsager, men den er ikke ufejlbarlig.
 amulet of resist mutation
 
 Denne amulet beskytter bæreren mod mutationer, men den er ikke ufejlbarlig.
-%%%%
-amulet of the gourmand
-
-Denne amulet beskytter bæreren mod sygdom som følge af at spise frisk, råt kød
-og gør det muligt at fordøje det uden at være sulten. Effekten på bærerens
-fordøjelse er små til at begynde med, men tager til med tiden.
 %%%%
 amulet of warding
 
@@ -327,13 +314,6 @@ En bog, som indeholder et udvalg af simple, men nyttige magiske besværgelser.
 Mange prominente troldmænd har påbegyndt deres okkulte studier med denne bog,
 siden den udkom første gang for tre århundreder siden. Den er sidenhen udkommet
 i 88 oplag, og er i dag en af verdens mest velkendte grimoirer.
-%%%%
-book of morphology
-
-En bog, som er dedikeret til transmutationer af form. Teksten ændrer og flytter
-sig konstant, så det er stort set umuligt at bruge indholdsfortegnelsen eller
-et bogmærke. Men det lykkes nu alligevel for de fleste troldmænd at finde det,
-de leder efter.
 %%%%
 book of necromancy
 

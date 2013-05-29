@@ -143,6 +143,12 @@ const uint64_t M_WEB_SENSE         = (uint64_t)1<<43;
 // tries to maintain LOS/2 range from its target
 const uint64_t M_MAINTAIN_RANGE    = (uint64_t)1<<44;
 
+// flesh is not usable for making zombies
+const uint64_t M_NO_ZOMBIE         = (uint64_t)1<<45;
+
+// cannot be placed by any means, even on the arena/etc
+const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing
@@ -182,7 +188,7 @@ const uint64_t MF_FLEEING_FROM_SANCTUARY = BIT(18); // Is running away from play
 const uint64_t MF_EXPLODE_KILL       = BIT(19); // Is being killed with disintegration
 
     // These are based on the flags in monster class, but can be set for
-    // monsters that are not normally fighters.
+    // monsters that are not normally fighters (in vaults).
 const uint64_t MF_FIGHTER            = BIT(20); // Monster is skilled fighter.
 const uint64_t MF_TWO_WEAPONS        = BIT(21); // Monster wields two weapons.
 const uint64_t MF_ARCHER             = BIT(22); // Monster gets various archery boosts.
@@ -205,6 +211,7 @@ const uint64_t MF_NAME_DESCRIPTOR    = BIT(27); // mname should be treated with 
 const uint64_t MF_NAME_DEFINITE      = BIT(28); // give this monster the definite "the"
                                      // article, instead of the indefinite "a"
                                      // article.
+//////////////////////////////////// = BIT(29);
 const uint64_t MF_DEMONIC_GUARDIAN   = BIT(30); // is a demonic_guardian
 const uint64_t MF_NAME_SPECIES       = BIT(31); // mname should be used for corpses as well,
 const uint64_t MF_NAME_ZOMBIE        = BIT(32); // mname replaces zombies/skeletons, use
@@ -213,4 +220,5 @@ const uint64_t MF_SENSED             = BIT(33); // Player has been warned
                                      // about this monster being nearby.
 const uint64_t MF_NAME_NOCORPSE      = BIT(34); // mname should not be used for corpses
 const uint64_t MF_SEEN_RANGED        = BIT(35); // known to have a ranged attack
+
 #endif

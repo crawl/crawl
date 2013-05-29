@@ -139,7 +139,6 @@ LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
 LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
 LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
 LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
-LUARET1(you_nauseous, boolean, you.duration[DUR_NAUSEA])
 LUARET1(you_on_fire, boolean, you.duration[DUR_LIQUID_FLAMES])
 LUARET1(you_petrifying, boolean, you.duration[DUR_PETRIFYING])
 LUARET1(you_silencing, boolean, you.duration[DUR_SILENCE])
@@ -149,6 +148,7 @@ LUARET1(you_extra_resistant, boolean, you.duration[DUR_RESISTANCE])
 LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
 LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
 LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
+LUARET1(you_phase_shifted, boolean, you.duration[DUR_PHASE_SHIFT])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
@@ -414,6 +414,7 @@ static const struct luaL_reg you_clib[] =
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
     { "shrouded",     you_shrouded },
+    { "phase_shifted", you_phase_shifted },
     { "swift",        you_swift },
     { "caught",       you_caught },
     { "asleep",       you_asleep },
@@ -424,7 +425,6 @@ static const struct luaL_reg you_clib[] =
     { "poisoned",     you_poisoned },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
-    { "nauseous",     you_nauseous },
     { "on_fire",      you_on_fire },
     { "petrifying",   you_petrifying },
     { "silencing",    you_silencing },
@@ -517,11 +517,8 @@ LUAFN(you_teleport_to)
     bool move_monsters = false;
     if (lua_gettop(ls) == 3)
         move_monsters = lua_toboolean(ls, 3);
-    bool override_stasis = false;
-    if (lua_gettop(ls) == 4)
-        override_stasis = lua_toboolean(ls, 4);
 
-    lua_pushboolean(ls, you_teleport_to(place, move_monsters, override_stasis));
+    lua_pushboolean(ls, you_teleport_to(place, move_monsters));
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 

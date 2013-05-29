@@ -1206,8 +1206,6 @@ _magic_name_
 
 the Magi
 
-the Archmagi
-
 the Warrior-Mage
 
 the Hierophant

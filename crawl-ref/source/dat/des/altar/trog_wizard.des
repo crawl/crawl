@@ -59,8 +59,7 @@ KFEAT:  1 = .
 # A terrified wizard whose spells have been taken away
 # (he refused to convert)
 MARKER: 1 = lua:portal_desc {slave_name="trog_wizard"}
-MARKER: 1 = lua:MonPropsMarker:new {description="With wild eyes, the wizard frantically mouths words and waves his arms, but is unable to cast a single spell"}
-KMONS:  1 = wizard name:terrified name_adjective name_nocorpse spells:. ; nothing
+KMONS:  1 = wizard perm_ench:mute spells:. dbname:captured_wizard ; nothing
 KPROP:  1 = no_rtele_into
 KFEAT:  # = iron_grate
 MAP

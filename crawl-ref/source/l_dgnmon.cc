@@ -130,9 +130,17 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 luaL_argerror(ls, list_pos, err.c_str());
                 return 0;
             }
-            if (mon.type == -1)
+#if TAG_MAJOR_VERSION == 34
+            if ((int)mon.type == -1)
                 mon.type = MONS_PROGRAM_BUG;
-            name = mons_type_name(static_cast<monster_type>(mon.type), DESC_PLAIN);
+#endif
+            if (mon.type == MONS_NO_MONSTER)
+                name = "nothing";
+            else
+            {
+                name = mons_type_name(static_cast<monster_type>(mon.type),
+                                      DESC_PLAIN);
+            }
         }
 
         mons.push_back(mon);
@@ -174,7 +182,7 @@ static int dgn_mons_from_mid(lua_State *ls)
 
     monster* mons = monster_by_mid(mid);
 
-    if (mons->type != -1)
+    if (mons->type != MONS_NO_MONSTER)
         push_monster(ls, mons);
     else
         lua_pushnil(ls);
@@ -203,7 +211,7 @@ static int dgn_create_monster(lua_State *ls)
     for (int i = 0, size = mlist.size(); i < size; ++i)
     {
         mons_spec mspec = mlist.get_monster(i);
-        if (monster *mon = dgn_place_monster(mspec, -1, c, false, false, false))
+        if (monster *mon = dgn_place_monster(mspec, c, false, false, false))
         {
             push_monster(ls, mon);
             return 1;

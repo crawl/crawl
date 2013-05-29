@@ -18,19 +18,24 @@ function ossuary_portal(e)
 
   local messager =
     timed_msg {
-      visible = true,
-      -- $F{xxx} will be substituted with the 'entity' property of the timed
-      -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns_short,
-          "Nearby sand pours into $F{the}.",
-          "Nearby sand pours into $F{the}, lightly covering it.",
-          "Nearby sand pours into $F{the}, greatly covering it.",
-          "Nearby sand pours into $F{the}, almost completely blocking access.")
+      initmsg = { "You hear the hiss of flowing sand.",
+                  "There is an entrance to an ossuary on this level. "
+                  .. "Hurry and find it before the portal is buried!" },
+      finalmsg = "The hiss of flowing sand is almost imperceptible now.",
+
+      verb = 'hiss',
+      -- This is always preceeded by an article, so...
+      noisemaker = 'avalanche of sand',
+      ranges = {
+        { 5000, 'rapid ' },  { 4000, '' },
+        { 2500, 'slow ' }, { 1500, 'irregular ' },
+        { 0, 'erratic ' }
+      }
     }
 
   e.lua_marker('O',
       timed_marker {
-        disappear = "The staircase has disappeared completely beneath the sand.",
+        disappear = "The hiss of flowing sand is gone.",
         desc = "sand-covered staircase",
         entity = 'staircase',
         dst = "Ossuary",
@@ -40,9 +45,14 @@ function ossuary_portal(e)
         floor = "expired_portal",
         feat_tile = "dngn_portal_ossuary_gone",
         msg = messager })
+  e.tags("uniq_ossuary no_monster_gen chance_ossuary")
+  e.chance("5%")
   e.kfeat("O = enter_portal_vault")
   e.colour("O = brown")
+  e.colour("' = yellow")
+  e.ftile("' = floor_sandstone")
   e.tile("O = dngn_portal_ossuary")
+  e.tile("c = wall_tomb")
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -58,12 +68,7 @@ end
 default-depth: D:4-8
 
 NAME:   enter_ossuary_1
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
 SUBST:  . = . ':7
-COLOUR: ' = yellow
-FTILE:  ' = floor_sandstone
-SUBST:  ' = .
 : ossuary_portal(_G)
 MAP
 .....
@@ -74,20 +79,12 @@ MAP
 ENDMAP
 
 NAME:    enter_ossuary_2
-TAGS:    uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
-SHUFFLE: CD / c+
-COLOUR:  ' = yellow
-COLOUR:  C = yellow
-COLOUR:  D = yellow
-SUBST:   D = +
+SHUFFLE: C+
 SUBST:   C = c
-FTILE:   ' = floor_sandstone
-SUBST:   ' = .
 : ossuary_portal(_G)
 MAP
 .......
-.ccDcc.
+.cc+cc.
 .c'''c.
 .C'O'C.
 .c'''c.
@@ -96,12 +93,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_3
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
-SUBST:  . = Y .
-COLOUR: Y = yellow
-FTILE:  Y = floor_sandstone
-SUBST:  Y = .
+SUBST:  . = ' .
 MONS:   rat zombie / jackal zombie / worm zombie
 MONS:   kobold zombie / goblin zombie / hobgoblin zombie
 MONS:   orc zombie / gnoll zombie / human zombie
@@ -114,31 +106,23 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_4
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
-COLOUR: 1 = yellow, ' = yellow, x = white
+COLOUR: 1 = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
-FTILE:  1 = floor_sandstone, ' = floor_sandstone, x = floor_sandstone, O = floor_sandstone
-RTILE:  x = wall_tomb
+FTILE:  1 = floor_sandstone, x = floor_sandstone, O = floor_sandstone
 : ossuary_portal(_G)
 MAP
 .........
-.xxxxxxx.
-.x''O''x.
-.x'''''x.
-.x'x'x'x.
-.x1x'x1x.
-.xxx'xxx.
+.ccccccc.
+.c''O''c.
+.c'''''c.
+.c'c'c'c.
+.c1c'c1c.
+.ccc'ccc.
 ....'....
 ENDMAP
 
 NAME:   enter_ossuary_5
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary
-CHANCE: 5%
 COLOUR: c = white, + = white, ' = yellow
-RTILE:  c = wall_tomb
-FTILE:  ' = floor_sandstone
-SUBST:  c : cx
 : ossuary_portal(_G)
 MAP
    ...
@@ -153,12 +137,8 @@ MAP
 ENDMAP
 
 NAME:   gup_ossuary_entry_pyramid
-TAGS:   uniq_ossuary no_monster_gen chance_ossuary mini_float
-CHANCE: 5%
+TAGS:   mini_float
 KMONS:  O = mummy
-COLOUR: ' = yellow
-TILE:   c = dngn_stone_wall_yellow
-FTILE:  ' = floor_sandstone
 NSUBST: ' = 3:~ / *:'
 : ossuary_portal(_G)
 MAP
@@ -652,9 +632,9 @@ ITEM:    potion of curing / potion of heal wounds / potion of speed / \
          scroll of blinking w:5 / scroll of holy word / \
          scroll of curse armour w:5 / scroll of curse weapon w:5
 # There are three setups than can occur:
-# 10% - part of the loot in the closets, secret doors, bit more loot
-# 45% - doors are secret, traps are nasty, monsters asleep
-# 45% - doors are obvious, traps are softer, monsters are awake
+# 10% - part of the loot in the closets, runed doors, bit more loot
+# 45% - doors are runed, traps are nasty, monsters asleep
+# 45% - doors are plain, traps are softer, monsters are awake
 # TODO: rebalance after secret door removal.
 : if crawl.one_chance_in(10) then
 SUBST:   3 = d
@@ -916,14 +896,14 @@ ENDMAP
 #
 # At the end of the corridor is a second treasure room, this one also
 # containing more flying skeleton alarm traps, plus guardian mummies inside
-# 3x3 rooms with secret doors.
+# 3x3 rooms with runed doors.
 #
 # The intent is that someone with a relatively high stealth skill (at least
 # for early) will be able to sneak past all of the flying skulls and grab the
 # loot, and escape out before waking anyone up. Whereas someone with 0 stealth
 # skill will wake up the mummies immediately.
 #
-# XXX: Should be looked at when noise/stealth is redone.
+# XXX: Should be looked at with messy runed door use, stealth changes.
 #
 NAME:    ossuary_due_cavern
 WEIGHT:  10

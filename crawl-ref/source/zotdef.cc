@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Zot Def specific functions
+ * @brief Zot Defence specific functions
 **/
 
 #include "AppHdr.h"
@@ -43,7 +43,7 @@
 
 static monster_type _pick_unique(int level);
 
-static int _fuzz_mons_level(int level)
+static int _fuzz_mons_depth(int level)
 {
     if (level > 1 && one_chance_in(7))
     {
@@ -138,16 +138,9 @@ static int _mon_strength(monster_type mon_type)
     // Fix for skeletons and zombies
     switch (mon_type)
     {
-        case MONS_SKELETON_SMALL:
-        case MONS_ZOMBIE_SMALL:
+        case MONS_SKELETON:
+        case MONS_ZOMBIE:
             strength += 3;
-            break;
-        case MONS_SKELETON_LARGE:
-        case MONS_ZOMBIE_LARGE:
-            strength += 4;
-            break;
-        case MONS_PANDEMONIUM_LORD: // base init has 4HD (!)
-            strength = 30;
             break;
         default:
             break;
@@ -258,7 +251,7 @@ static void _cold_wave(int power)
     wave_name("COLD WAVE");
     monster_type coldmons[] = {MONS_ICE_BEAST, MONS_AZURE_JELLY,
         MONS_FREEZING_WRAITH, MONS_WHITE_IMP, MONS_ICE_DEVIL, MONS_ICE_FIEND,
-        MONS_WHITE_DRACONIAN, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE,
+        MONS_WHITE_DRACONIAN, MONS_SIMULACRUM, MONS_SIMULACRUM,
         MONS_FROST_GIANT, MONS_POLAR_BEAR, MONS_BLUE_DEVIL, END};
     monster_type boss[] = {MONS_ANTAEUS, MONS_ICE_FIEND, MONS_AZURE_JELLY,
                            MONS_WHITE_DRACONIAN, END};
@@ -325,7 +318,7 @@ static void _ugly_wave(int power)
 static void _golem_wave(int power)
 {
     wave_name("GOLEM WAVE");
-    monster_type golems[] = {MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
+    monster_type golems[] = {MONS_CLAY_GOLEM, MONS_STONE_GOLEM,
             MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM, END};
     monster_type boss[] = {MONS_ELECTRIC_GOLEM, END};
     _zotdef_fill_from_list(golems, 6, power * 2 / 3); // reduced size
@@ -414,7 +407,7 @@ static void _giant_wave(int power)
     monster_type giants[] = {MONS_ETTIN, MONS_CYCLOPS, MONS_TWO_HEADED_OGRE,
             MONS_OGRE, MONS_TROLL, MONS_MINOTAUR, MONS_HILL_GIANT,
             MONS_STONE_GIANT, MONS_FIRE_GIANT, MONS_FROST_GIANT, MONS_OGRE_MAGE,
-            MONS_ROCK_TROLL, MONS_IRON_TROLL, MONS_DEEP_TROLL, MONS_TITAN, END};
+            MONS_IRON_TROLL, MONS_DEEP_TROLL, MONS_TITAN, END};
     monster_type boss[] = {MONS_EROLCHA, MONS_POLYPHEMUS, MONS_ANTAEUS,
             MONS_SNORG, MONS_PURGY, MONS_STONE_GIANT, MONS_FIRE_GIANT,
             MONS_FROST_GIANT, MONS_TITAN, END};
@@ -559,19 +552,19 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
     monster_type mon_type;
     for (int i = 0; i <= 10000; ++i)
     {
-        int count = 0;
         int rarity;
 
-        do
+        if (place.branch == NUM_BRANCHES)
         {
-            mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
-            count++;
-            rarity = (place.branch == NUM_BRANCHES) ? 30 : mons_rarity(mon_type, place);
+            mon_type = static_cast<monster_type>(random2(NUM_MONSTERS - 1) + 1);
+            rarity = 30;
         }
-        while (rarity == 0 && count < 2000);
-
-        if (rarity == 0)
-            return MONS_PROGRAM_BUG;
+        else
+        {
+            mon_type = pick_monster_no_rarity(place.branch);
+            rarity = mons_rarity(mon_type, place.branch);
+            ASSERT(rarity > 0);
+        }
 
         // Calculate strength
         const monsterentry *mentry = get_monster_data(mon_type);
@@ -579,7 +572,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;        // sanity
         if (mentry == get_monster_data(MONS_PROGRAM_BUG))
             continue;        // sanity
-        if (mons_class_flag(mon_type, M_NO_POLY_TO))
+        if (mons_class_flag(mon_type, M_NO_POLY_TO | M_CANT_SPAWN))
             continue;
         if (mons_class_flag(mon_type, M_UNFINISHED))
             continue;
@@ -595,7 +588,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         // get default level
         int lev_mons = (place.branch == NUM_BRANCHES)
                        ? ((strength * 3) / 2)
-                       : mons_level(mon_type, place)
+                       : mons_depth(mon_type, place.branch)
                          + absdungeon_depth(place.branch, 0);
 
         // if >50, bail out - these are special flags
@@ -656,7 +649,7 @@ static void _zotdef_set_random_branch_wave(int power)
     for (int i = 0; i < NSLOTS; i++)
     {
         level_id l(_zotdef_random_branch(), -1);
-        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
+        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_depth(power));
     }
     level_id l(_zotdef_random_branch(), -1);
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
@@ -671,7 +664,7 @@ static void _zotdef_set_branch_wave(branch_type b, int power)
          (b == NUM_BRANCHES) ? "RANDOM" : branches[b].shortname);
     wave_name(buf);
     for (int i = 0; i < NSLOTS; i++)
-        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
+        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_depth(power));
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
                                     power + ZOTDEF_BOSS_EXTRA_POWER);
 }
@@ -791,6 +784,11 @@ monster* zotdef_spawn(bool boss)
     mgen_data mg(mt, BEH_SEEK, NULL, 0, 0, coord_def(), MHITYOU);
     mg.proximity = PROX_NEAR_STAIRS;
     mg.flags |= MG_PERMIT_BANDS;
+
+    // Hack: emulate old mg.power
+    mg.place = level_id(BRANCH_MAIN_DUNGEON, you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3) + 1);
+    // but only for item generation/etc., not for actual monster selection.
+    ASSERT(mt != RANDOM_MONSTER);
 
     monster *mon  = mons_place(mg);
 

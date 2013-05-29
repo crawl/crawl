@@ -104,14 +104,6 @@ bool do_slow_monster(monster* mon, const actor* agent, int dur)
     if (mon->check_stasis(false))
         return true;
 
-    // Try to remove haste, if monster is hasted.
-    if (mon->del_ench(ENCH_HASTE, true))
-    {
-        if (simple_monster_message(mon, " is no longer moving quickly."))
-            return true;
-    }
-
-    // Not hasted, slow it.
     if (!mon->has_ench(ENCH_SLOW)
         && !mons_is_stationary(mon)
         && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))

@@ -131,6 +131,11 @@ Aukšto lygio Skydų įgūdžiai padeda blokuoti artimas arba tolimas (magiškas
 ne) atakas naudojant laikomą (arba magišką) skydą. Kai kurios atakos, tokios
 kaip pareinantys žaibai, negali būti blokuojamos.
 %%%%
+Traps
+
+Veikėjas su ištreniruotais Spąstų įgūdžiais atidžiau stebės aplinką ir greičiau
+pastebės spąstus, o  taip pat ir bus labiau įgudęs juos išjungti.
+%%%%
 Unarmed Combat
 
 Įgūdžiai Beginklėje kovoje padidina taiklumą, žalą ir greitį artimoje kovoje,

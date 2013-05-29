@@ -14,6 +14,7 @@
 #include "stuff.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
+#include "tiledef-main.h"
 #include "tilepick.h"
 #include "viewgeom.h"
 
@@ -59,6 +60,10 @@ int SpellRegion::handle_mouse(MouseEvent &event)
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
+        // close tab again if using small layout
+        if (tiles.is_using_small_layout())
+            tiles.deactivate_tab();
+
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (!cast_a_spell(false, spell))
@@ -149,6 +154,9 @@ int SpellRegion::get_max_slots()
 
 void SpellRegion::pack_buffers()
 {
+    if (m_items.size()==0)
+        return;
+
     const int max_spells = get_max_slots();
 
     // Pack base separately, as it comes from a different texture...
@@ -184,6 +192,10 @@ void SpellRegion::pack_buffers()
 
             if (item.flag & TILEI_FLAG_CURSOR)
                 m_buf.add_icons_tile(TILEI_CURSOR, x, y);
+
+            // Vehumet gift
+            if (item.flag & TILEI_FLAG_EQUIP)
+                m_buf.add_main_tile(TILE_ITEM_SLOT_VEHUMET, x, y);
 
             if (item.quantity != -1)
                 draw_number(x, y, item.quantity);

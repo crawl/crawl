@@ -55,9 +55,9 @@
 #include "tags.h"
 #include "terrain.h"
 #include "travel.h"
-#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "viewmap.h"
 
 static species_type _get_hints_species(unsigned int type);
 static job_type     _get_hints_job(unsigned int type);
@@ -321,6 +321,22 @@ static void _replace_static_tags(string &text)
             item += "<";
 
         text.replace(p, q - p + 1, item);
+    }
+
+    // Brand user-input -related (tutorial) items with <w>[(text here)]</w>.
+    while ((p = text.find("<input>")) != string::npos)
+    {
+        size_t q = text.find("</input>", p + 7);
+        if (q == string::npos)
+        {
+            text += "<lightred>ERROR: unterminated <input></lightred>";
+            break;
+        }
+
+        string input = text.substr(p + 7, q - p - 7);
+        input = "<w>[" + input;
+        input += "]</w>";
+        text.replace(p, q - p + 8, input);
     }
 }
 
@@ -712,7 +728,6 @@ void hints_gained_new_skill(skill_type skill)
     case SK_FIGHTING:
     case SK_ARMOUR:
     case SK_STEALTH:
-    case SK_STABBING:
     case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
@@ -1127,7 +1142,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_TARGET_NO_FOE:
     case HINT_YOU_POISON:
     case HINT_YOU_SICK:
-    case HINT_CONTAMINATED_CHUNK:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_FLYING:
@@ -1380,7 +1394,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 if (found != string::npos)
                     glyph.replace(found, 1, "percent");
                 text << glyph;
-                text << " </console> is a corpse.";
+                text << "</console> is a corpse.";
 #ifdef USE_TILE
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
                 tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
@@ -1568,9 +1582,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "are some kind of escape hatch. You can use them to "
                 "quickly leave a level with <w>%</w> and <w>%</w>, "
-                "respectively "
+                "respectively"
 #ifdef USE_TILE
-                "(or by using your <w>left mouse button</w> in combination "
+                " (or by using your <w>left mouse button</w> in combination "
                 "with the <w>Shift key</w>)"
 #endif
                 ", but will usually be unable to return right away.";
@@ -1840,6 +1854,14 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_NEW_LEVEL:
         if (you.skills[SK_SPELLCASTING])
         {
+            if (!crawl_state.game_is_hints())
+            {
+                text << "Gaining an experience level allows you to learn more "
+                        "difficult spells. However, you don't have any level "
+                        "two spells in your current spellbook, so you'll just "
+                        "have to keep exploring!";
+                break;
+            }
             text << "Gaining an experience level allows you to learn more "
                     "difficult spells. Time to memorise your second spell "
                     "with <w>%</w>"
@@ -1880,10 +1902,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "One of your skills just passed a whole integer point. The "
                 "skills you use are automatically trained whenever you gain "
                 "experience (by killing monsters). By default, experience goes "
-                "towards skill you actively use, although you may choose "
-                "otherwise. You can train your skills or pick up new ones by "
-                "performing the corresponding actions. To view or manage your "
-                "skill set, type <w>%</w>.";
+                "towards skills you actively use, although you may choose "
+                "otherwise. To view or manage your skill set, type <w>%</w>.";
 
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
@@ -1933,14 +1953,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_DISPLAY_CHARACTER_STATUS);
         cmd.push_back(CMD_DISPLAY_COMMANDS);
         break;
-
-    case HINT_CONTAMINATED_CHUNK:
-        text << "Chunks that are described as <brown>contaminated</brown> will "
-                "occasionally make you nauseated when eaten. However, since food is "
-                "scarce in the dungeon, you'll often have to risk it.\n"
-                "While nauseated, you can't stomach anything, and your attributes "
-                "may occasionally decrease. Just go around, hunt for better food.";
-            break;
 
     case HINT_YOU_SICK:
         if (crawl_state.game_is_hints())
@@ -2102,9 +2114,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         text << "One or more of the chunks or corpses you carry has started "
                 "to rot. Few species can digest these, so you might just as "
-                "well <w>%</w>rop them now."
+                "well <w>%</w>rop them now. "
                 "When selecting items from a menu, there's a shortcut "
-                "(<w>&</w>) to select all items in your inventory at once "
+                "(<w>,</w>) to select all items in your inventory at once "
                 "that are useless to you.";
         cmd.push_back(CMD_DROP);
         break;
@@ -3569,7 +3581,7 @@ void hints_describe_item(const item_def &item)
                 if (item.sub_type == FOOD_CHUNK)
                 {
                     ostr << "Note that most species refuse to eat raw meat "
-                            "unless really hungry. ";
+                            "unless hungry. ";
 
                     if (food_is_rotten(item))
                     {
@@ -3766,7 +3778,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << ", or offered as a sacrifice to "
                      << god_name(you.religion)
-                     << " <w>%</w>raying over them.";
+                     << " by <w>%</w>raying over them";
                 cmd.push_back(CMD_PRAY);
             }
             ostr << ". ";
@@ -4342,8 +4354,8 @@ bool hints_monster_interesting(const monster* mons)
     if (_mons_is_highlighted(mons))
         return true;
 
-    // The monster is (seriously) out of depth.
-    return (mons_level(mons->type) >= you.depth + 8);
+    // Dangerous.
+    return (mons_threat_level(mons) == MTHRT_NASTY);
 }
 
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
@@ -4385,19 +4397,14 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
         // Don't call friendly monsters dangerous.
         if (!mons_att_wont_attack(mi.attitude))
         {
-            // 8 is the default value for the note-taking of OOD monsters.
-            // Since I'm too lazy to come up with any measurement of my own
-            // I'll simply reuse that one.
-            const int level_diff = mons_level(mi.type)
-                                 - (you.depth + 8);
-
-            if (level_diff >= 0)
+            if (mi.threat == MTHRT_NASTY)
             {
-                ostr << "This kind of monster is usually only encountered "
-                     << (level_diff > 5 ? "much " : "")
-                     << "deeper in the dungeon, so it's probably "
-                     << (level_diff > 5 ? "extremely" : "very")
-                     << " dangerous!\n\n";
+                ostr << "This monster appears to be really dangerous!\n";
+                dangerous = true;
+            }
+            else if (mi.threat == MTHRT_TOUGH)
+            {
+                ostr << "This monster appears to be quite dangerous.\n";
                 dangerous = true;
             }
         }
@@ -4449,19 +4456,16 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     else if (Options.stab_brand != CHATTR_NORMAL
              && mi.is(MB_STABBABLE))
     {
-        ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_SUBJECTIVE)
-             << " has not noticed you - yet. Note that you do not have to "
-                "engage every monster you meet. Sometimes, discretion is the "
-                "better part of valour.";
+        ostr << "Apparently it has not noticed you - yet. Note that you do "
+                "not have to engage every monster you meet. Sometimes, "
+                "discretion is the better part of valour.";
     }
     else if (Options.may_stab_brand != CHATTR_NORMAL
              && mi.is(MB_DISTRACTED))
     {
-        ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_SUBJECTIVE)
-             << " has been distracted by something. You could use this "
-                "opportunity to sneak up on this monster - or to sneak away.";
+        ostr << "Apparently it has been distracted by something. You could "
+                "use this opportunity to sneak up on this monster - or to "
+                "sneak away.";
     }
 
     if (!dangerous && !has_stat_desc)

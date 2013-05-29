@@ -1,20 +1,17 @@
-#!/usr/bin/env perl -w
-
+#!/usr/bin/env perl
+use warnings;
 use strict;
 
 use File::Basename;
 
-if (@ARGV != 1) {
-    die "usage: $0 tile.png\n";
-}
+die "usage: $0 tile.png\n" unless @ARGV == 1;
 
 my $TILE  = shift;
 
-unless (-f $TILE) {
-    die "Couldn't find $TILE: $!\n";
-}
+die "Couldn't find $TILE: $!\n" unless -f $TILE;
 
-my %orient = (
+my %orient =
+(
      90 => "w",
     180 => "n",
     270 => "e",
@@ -22,9 +19,10 @@ my %orient = (
 
 my ($name,$path) = fileparse($TILE, ".png");
 
-for my $deg (90, 180, 270) {
-	print `convert -rotate $deg $TILE $path/${name}_$orient{$deg}.png\n`
-		or die "$!\n";
+for my $deg (90, 180, 270)
+{
+    print `convert -rotate $deg $TILE $path/${name}_$orient{$deg}.png\n`
+        or die "$!\n";
 }
 
 rename $TILE, "$path/${name}_s.png";

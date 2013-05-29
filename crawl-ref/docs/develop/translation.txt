@@ -1,0 +1,111 @@
+Guide to translating and improving Crawl's text
+===============================================
+
+First, you need to create an account on Transifex: https://www.transifex.net.
+Then go to the DCSS project: https://www.transifex.net/projects/p/dcss/, select
+your language, and click "Join the team". If your language isn't present, you
+can request its addition by clicking the "Request language" button. Both of
+those actions will require a maintainer or a coordinator to approve it, so it
+may take some time.
+
+Text Improvement
+================
+
+If you want to submit changes to the English text, you need to join the English
+team. "English (Australian)" is for the source strings, they are not editable.
+Once submitted text has been reviewed and approved, the source text will be
+updated, so English will have entries with identical text to the source strings.
+This is useful to differentiate text which has already been improved. It is
+possible to change it again and improve it further.
+
+Review
+======
+
+Each translating team has one or more coordinators. Their task is to review
+translators' contribution and approve them by checking the "reviewed" checkbox
+in the translating interface. Only reviewed text is included in the game, so
+it's important that coordinators check the reviewed checkbox when they approve a
+contribution.
+
+Formatting
+==========
+
+Line breaks are automatically removed when the text is imported, except for
+lines starting with empty spaces and empty lines. There's also an exception for
+lines starting with {{ or }} (to include lua code). Quotes use smart quote
+unicode characters (U+8220 and U+8221).
+
+Quotes
+======
+
+Don't translate quotes; instead, submit quotes in their original language. It's
+allowed to submit translated text, especially for things like biblical
+references, but don't forget to include information about the translator.
+Quotes have keys ending with ':quote'. Not all entries have a quote associated
+with it. To submit a new quote from the transifex interface, edit the
+descripton and add a line with :quote at the end. Then, below it, you can add
+a quote. On the next synchronization, it will be moved to its own key.
+
+Aliases
+=======
+
+If you want to use the same text for several keys, you can use <key_name> to
+avoid duplicating the string. This should be done in the source files because
+key with links are not pushed to transifex.
+
+Translating online
+==================
+
+Transifex has a web based interface to submit translations. Simply click on a
+language, then on a resource and click "Translate Now". The web interface
+evolves quickly, so just read the online documentation if you need help.
+
+Translating offline
+===================
+
+If you're more comfortable with your text editor than with a web interface, it's
+possible to edit text locally and then push it to transifex using their command
+line client. When working offline, it's not possible to set translations to the
+reviewed state, and you won't have access to comments, suggestions, history and
+glossary features.
+First, you need to get the source of the game; instructions on how to get it
+can be found in README.txt. You also need to install the transifex client
+(http://support.transifex.com/customer/portal/topics/440187-transifex-client/articles).
+Since it's easier to overwrite other people's contributions when working
+offline, it might be safer to lock the resource from the web interface before
+you do anything else.
+Edit the txt files you want to change, then run the txc python program in utils
+to push your work to transifex. The simplest way to do that is to select
+your language and the resources you've edited (either with command line
+options or interactively), then press i to generate ini files, w to write them
+and finally u to push them to transifex.
+
+Developers
+==========
+
+The transifex-crawl interface is a python script named txc in utils. When
+started without argument, it runs in interactive mode, showing a menu of
+available commands and the current state of working files. The 3 main commands
+are: t to rewrap txt files, m to merge ini files and i to update the ini files.
+
+When you do any of those commands, the files are not immediately modified. You
+can review the changes first by looking at a diff or even editing the changes.
+When you're done, press w to write the files. For convenience, there's also
+access to a few basic git commands and transifex pull/push.
+
+At any moment you can change the languages and resources. All commands only
+apply to what is currently selected. When there are pending changes of
+different types, you can also "select changes" which allows you to review
+independantly new entries, changed ones, quotes and deleted entries.
+
+Here is the process to do a full sync (hotkey commands are uppercased):
+start with only the english language (txc -s).
+Pull from transifex
+Merge ini
+review changes, edit if necessary and commit
+update Ini and pUsh the source.
+If you previously pulled some english contributions (fake translations), you
+will be prompted to reset them. It is recommended to do so.
+Now, select all languages (or just all translation by restarting txc with -t)
+Pull, Merge, review and edit, Write, git Add, git Commit.
+update Ini then pUsh

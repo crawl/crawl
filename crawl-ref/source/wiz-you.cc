@@ -7,8 +7,9 @@
 
 #include "wiz-you.h"
 
+#include "abyss.h"
+
 #include "cio.h"
-#include "debug.h"
 #include "dbg-util.h"
 #include "food.h"
 #include "godprayer.h"
@@ -280,7 +281,6 @@ void wizard_heal(bool super_heal)
     // Clear most status ailments.
     you.rotting = 0;
     you.disease = 0;
-    you.duration[DUR_NAUSEA]    = 0;
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
@@ -452,6 +452,7 @@ void wizard_set_skill_level(skill_type skill)
     if (amount == 27)
     {
         you.train[skill] = 0;
+        you.train_alt[skill] = 0;
         reset_training();
         check_selected_skills();
     }
@@ -675,6 +676,18 @@ bool wizard_add_mutation()
 }
 #endif
 
+void wizard_set_abyss()
+{
+    char buf[80];
+    mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
+    if (!cancelable_get_line_autohist(buf, sizeof buf))
+        abyss_teleport(true);
+
+    uint32_t x = 0, y = 0, z = 0;
+    sscanf(buf, "%d %d %d", &x, &y, &z);
+    set_abyss_state(coord_def(x,y), z);
+}
+
 void wizard_set_stats()
 {
     char buf[80];
@@ -780,10 +793,26 @@ static const char* dur_names[] =
     "petrifying",
     "shrouded",
     "tornado cooldown",
+#if TAG_MAJOR_VERSION == 34
     "nausea",
+#endif
     "ambrosia",
+#if TAG_MAJOR_VERSION == 34
     "temporary mutations",
+#endif
     "disjunction",
+    "vehumet gift",
+#if TAG_MAJOR_VERSION == 34
+    "battlesphere",
+#endif
+    "sentinel's mark",
+    "sickening",
+    "drowning",
+    "drowning immunity",
+    "flayed",
+    "retching",
+    "weak",
+    "dimension anchor"
 };
 
 void wizard_edit_durations(void)
@@ -851,7 +880,6 @@ void wizard_edit_durations(void)
     {
         vector<int>    matches;
         vector<string> match_names;
-        max_len = 0;
 
         for (int i = 0; i < NUM_DURATIONS; ++i)
         {
@@ -907,7 +935,7 @@ static void debug_uptick_xl(int newxl, bool train)
         train_skills();
     }
     you.experience = exp_needed(newxl);
-    level_change(true);
+    level_change(NON_MONSTER, NULL, true);
 }
 
 static void debug_downtick_xl(int newxl)

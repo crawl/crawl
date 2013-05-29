@@ -13,6 +13,7 @@
 #include "delay.h"
 #include "env.h"
 #include "food.h"
+#include "godcompanions.h"
 #include "godconduct.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -21,8 +22,10 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "place.h"
 #include "player.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -165,85 +168,166 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
 spret_type cast_recall(bool fail)
 {
     fail_check();
-    recall(0);
+    start_recall(0);
     return SPRET_SUCCESS;
 }
+
+struct recall_sorter
+{
+    bool operator()(const pair<mid_t,int> &a, const pair<mid_t,int> &b)
+    {
+        return a.second > b.second;
+    }
+};
 
 // Type recalled:
 // 0 = anything
 // 1 = undead only (Yred religion ability)
 // 2 = orcs only (Beogh religion ability)
-bool recall(int type_recalled)
+void start_recall(int type)
 {
-    int loopy          = 0;      // general purpose looping variable {dlb}
-    bool success       = false;  // more accurately: "apparent success" {dlb}
-    int start_count    = 0;
-    int step_value     = 1;
-    int end_count      = (MAX_MONSTERS - 1);
+    // Assemble the recall list.
+    vector<pair<mid_t, int> > rlist;
 
-    monster* mons = NULL;
-
-    // someone really had to make life difficult {dlb}:
-    // sometimes goes through monster list backwards
-    if (coinflip())
+    you.recall_list.clear();
+    for (monster_iterator mi; mi; ++mi)
     {
-        start_count = (MAX_MONSTERS - 1);
-        end_count   = 0;
-        step_value  = -1;
+        if (!mons_is_recallable(&you, *mi))
+            continue;
+
+        if (type == 1) // undead
+        {
+            if (mi->holiness() != MH_UNDEAD)
+                continue;
+        }
+        else if (type == 2) // Beogh
+        {
+            if (!is_orcish_follower(*mi))
+                continue;
+        }
+
+        pair<mid_t, int> m = make_pair(mi->mid, mi->hit_dice);
+        rlist.push_back(m);
     }
 
-    for (loopy = start_count; loopy != end_count + step_value;
-         loopy += step_value)
+    if (type > 0 && branch_allows_followers(you.where_are_you))
+        populate_offlevel_recall_list(rlist);
+
+    if (rlist.size() > 0)
     {
-        mons = &menv[loopy];
+        // Sort the recall list roughly by HD, randomizing a little
+        for (unsigned int i = 0; i < rlist.size(); ++i)
+            rlist[i].second += random2(10);
+        sort(rlist.begin(), rlist.end(), recall_sorter());
 
-        if (mons->type == MONS_NO_MONSTER)
-            continue;
+        you.recall_list.clear();
+        for (unsigned int i = 0; i < rlist.size(); ++i)
+            you.recall_list.push_back(rlist[i].first);
 
-        if (!mons->friendly())
-            continue;
+        you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
+        you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
+        mpr("You begin recalling your allies.");
+    }
+    else
+        mpr("Nothing appears to have answered your call.");
+}
 
-        if (mons_class_is_stationary(mons->type)
-            || mons_is_conjured(mons->type))
+// Remind a recalled ally (or one skipped due to proximity) not to run
+// away or wander off.
+void recall_orders(monster *mons)
+{
+    // FIXME: is this okay for berserk monsters? We still want them to
+    // stick around...
+
+    // Don't patrol
+    mons->patrol_point = coord_def(0, 0);
+
+    // Don't wander
+    mons->behaviour = BEH_SEEK;
+
+    // Don't persue distant enemies
+    const actor *foe = mons->get_foe();
+    if (foe && !you.can_see(foe))
+        mons->foe = MHITYOU;
+}
+
+// Attempt to recall a single monster by mid, which might be either on or off
+// our current level. Returns whether this monster was successfully recalled.
+static bool _try_recall(mid_t mid)
+{
+    monster* mons = monster_by_mid(mid);
+    // Either it's dead or off-level.
+    if (!mons)
+        return recall_offlevel_ally(mid);
+    else if (mons->alive())
+    {
+        // Don't recall monsters that are already close to the player
+        if (mons->pos().distance_from(you.pos()) < 3
+            && mons->see_cell_no_trans(you.pos()))
         {
-            continue;
-        }
-
-        if (!monster_habitable_grid(mons, DNGN_FLOOR))
-            continue;
-
-        if (type_recalled == 1) // undead
-        {
-            if (mons->holiness() != MH_UNDEAD)
-                continue;
-        }
-        else if (type_recalled == 2) // Beogh
-        {
-            if (!is_orcish_follower(mons))
-                continue;
-        }
-
-        coord_def empty;
-        if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
-            && mons->move_to_pos(empty))
-        {
-            // only informed if monsters recalled are visible {dlb}:
-            if (simple_monster_message(mons, " is recalled."))
-                success = true;
+            recall_orders(mons);
+            return false;
         }
         else
-            break;              // no more room to place monsters {dlb}
+        {
+            coord_def empty;
+            if (find_habitable_spot_near(you.pos(), mons_base_type(mons), 3, false, empty)
+                && mons->move_to_pos(empty))
+            {
+                recall_orders(mons);
+                simple_monster_message(mons, " is recalled.");
+                return true;
+            }
+        }
     }
 
-    if (!success)
-        mpr("Nothing appears to have answered your call.");
+    return false;
+}
 
-    return success;
+// Attempt to recall a number of allies proportional to how much time
+// has passed. Once the list has been fully processed, terminate the
+// status.
+void do_recall(int time)
+{
+    while (time > you.attribute[ATTR_NEXT_RECALL_TIME])
+    {
+        // Try to recall an ally.
+        mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
+        you.attribute[ATTR_NEXT_RECALL_INDEX]++;
+        if (_try_recall(mid))
+        {
+            time -= you.attribute[ATTR_NEXT_RECALL_TIME];
+            you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
+        }
+        if ((unsigned int)you.attribute[ATTR_NEXT_RECALL_INDEX] >
+             you.recall_list.size())
+        {
+            end_recall();
+            mpr("You finish recalling your allies.");
+            return;
+        }
+    }
+
+    you.attribute[ATTR_NEXT_RECALL_TIME] -= time;
+    return;
+}
+
+void end_recall()
+{
+    you.attribute[ATTR_NEXT_RECALL_INDEX] = 0;
+    you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
+    you.recall_list.clear();
 }
 
 // Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
 spret_type cast_phase_shift(int pow, bool fail)
 {
+    if (you.duration[DUR_DIMENSION_ANCHOR])
+    {
+        mpr("You are anchored firmly to the material plane!");
+        return SPRET_ABORT;
+    }
+
     fail_check();
     if (!you.duration[DUR_PHASE_SHIFT])
         mpr("You feel the strange sensation of being on two planes at once.");
@@ -257,7 +341,6 @@ spret_type cast_phase_shift(int pow, bool fail)
 
 static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
-    // Irony: you can passwall through a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
     // are used for impassable walls...
     switch (feat)

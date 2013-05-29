@@ -109,8 +109,8 @@ Kampfgesänge im Kampf unterstützen.
 %%%%
 Summoner
 
-Beschwörer starten mit dem Buch des Rufens und sind am Anfang dazu in der Lage,
-kleine Säugetiere zu beschwören.
+Boten fangen mit dem Buch von Callings an und sind im Stande sich zu werfen
+Fordern Kleines Säugetier vom Anfang Auf.
 %%%%
 Transmuter
 

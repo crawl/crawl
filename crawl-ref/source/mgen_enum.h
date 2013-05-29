@@ -26,6 +26,9 @@ enum band_type
     BAND_YAKTAURS,
     BAND_INSUBSTANTIAL_WISPS,
     BAND_OGRE_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    BAND_OGRE_MAGE_EXTERN,
+#endif
     BAND_DEATH_YAKS,
     BAND_NECROMANCER,
     BAND_BALRUG,
@@ -70,20 +73,15 @@ enum band_type
     BAND_SPIDER,
     BAND_JUMPING_SPIDER,
     BAND_TARANTELLA,
+    BAND_LAMIA,
+    BAND_POLYPHEMUS,
+    BAND_VAULT_WARDEN,
+#if TAG_MAJOR_VERSION == 34
+    BAND_OGRE_MAGE_EXTERN,
+#endif
+    BAND_DEATH_KNIGHT,
+    BAND_JIANGSHI,
     NUM_BANDS                   // always last
-};
-
-enum demon_class_type
-{
-    DEMON_LESSER,                      //    0: Class V
-    DEMON_COMMON,                      //    1: Class II-IV
-    DEMON_GREATER,                     //    2: Class I
-    DEMON_RANDOM,                      //    any of the above
-};
-
-enum holy_being_class_type
-{
-    HOLY_BEING_WARRIOR,                //    0: daeva or angel
 };
 
 enum dragon_class_type

@@ -110,7 +110,7 @@ public:
     void moveto(const coord_def& c, bool clear_net = true);
     bool move_to_pos(const coord_def &newpos, bool clear_net = true);
     bool blink_to(const coord_def& c, bool quiet = false);
-
+    bool blink_to(const coord_def& c, bool quiet, bool jump);
     kill_category kill_alignment() const;
 
     int  foe_distance() const;
@@ -185,6 +185,11 @@ public:
     bool find_home_near_place(const coord_def &c);
     bool find_home_near_player();
     bool find_home_anywhere();
+
+    // The map that placed this monster.
+    bool has_originating_map() const;
+    string originating_map() const;
+    void set_originating_map(const string &);
 
     void set_ghost(const ghost_demon &ghost);
     void ghost_init(bool need_pos = true);
@@ -297,12 +302,13 @@ public:
     void go_berserk(bool intentional, bool potion = false);
     void go_frenzy();
     bool berserk() const;
-    bool frenzied() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const string &reason);
+    bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
                            bool damage_inventory = true,
@@ -332,9 +338,9 @@ public:
     int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
-    int res_negative_energy() const;
+    int res_negative_energy(bool intrinsic_only = false) const;
     int res_torment() const;
-    int res_acid() const;
+    int res_acid(bool calc_unid = true) const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
     int res_constrict() const;
@@ -365,13 +371,14 @@ public:
     bool confused_by_you() const;
     bool caught() const;
     bool asleep() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool check_haloed = true, bool self_halo = true, bool check_corona = true) const;
     bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2 () const;
     int umbra_radius2 () const;
     int suppression_radius2 () const;
+    int soul_aura_radius2 () const;
     int heat_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
@@ -393,6 +400,7 @@ public:
     bool has_evil_spell() const;
     bool has_unclean_spell() const;
     bool has_chaotic_spell() const;
+    bool has_corpse_violating_spell() const;
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);
@@ -406,14 +414,15 @@ public:
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int strength, bool unused = true);
+    bool sicken(int strength, bool unused = true, bool quiet = false);
     bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    bool drain_exp(actor *, bool quiet = false, int pow = 3);
+    bool drain_exp(actor *, const char* aux = NULL, bool quiet = false,
+                   int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
@@ -428,12 +437,13 @@ public:
 
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
+    void weaken(actor *attacker, int pow);
     void check_awaken(int disturbance);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "");
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
-    int stealth () const;
+    int stealth() const;
 
     int     shield_bonus() const;
     int     shield_block_penalty() const;
@@ -480,6 +490,9 @@ public:
     bool is_child_monster() const;
     bool is_parent_monster_of(const monster* mons) const;
     bool is_child_tentacle_segment() const;
+
+    bool is_divine_companion() const;
+    bool is_projectile() const;
 
 private:
     void init_with(const monster& mons);

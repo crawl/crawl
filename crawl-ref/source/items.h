@@ -37,7 +37,7 @@ void inc_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
 void inc_mitm_item_quantity(int obj, int amount);
 
 bool move_item_to_grid(int *const obj, const coord_def& p,
-                        bool silent = false);
+                       int agent = NON_MONSTER, bool silent = false);
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
 int  move_item_to_player(int obj, int quant_got, bool quiet = false,
@@ -79,7 +79,8 @@ void item_list_on_square(vector<const item_def*>& items,
                          int obj, bool force_squelch = false);
 
 bool copy_item_to_grid(const item_def &item, const coord_def& p,
-                       int quant_drop = -1,    // item.quantity by default
+                       int agent = NON_MONSTER, // who did this?
+                       int quant_drop = -1,     // item.quantity by default
                        bool mark_dropped = false,
                        bool silent = false);
 coord_def item_pos(const item_def &item);
@@ -140,6 +141,7 @@ equipment_type item_equip_slot(const item_def &item);
 
 void item_was_lost(const item_def &item);
 void item_was_destroyed(const item_def &item, int cause = -1);
+void corrode_item(item_def &item, actor *holder);
 
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted,

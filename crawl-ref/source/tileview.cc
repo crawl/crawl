@@ -40,6 +40,7 @@ void tile_new_level(bool first_time, bool init_unseen)
             {
                 env.tile_bk_fg[x][y] = 0;
                 env.tile_bk_bg[x][y] = TILE_DNGN_UNSEEN;
+                env.tile_bk_cloud[x][y] = 0;
             }
     }
 
@@ -123,7 +124,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_VESTIBULE_OF_HELL:
         flv.wall  = TILE_WALL_HELL;
-        flv.floor = TILE_FLOOR_INFERNAL;
+        flv.floor = TILE_FLOOR_CAGE;
         return;
 
     case BRANCH_DIS:
@@ -277,6 +278,9 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+#if TAG_MAJOR_VERSION == 34
+    case BRANCH_UNUSED:
+#endif
     case NUM_BRANCHES:
         break;
     }
@@ -311,9 +315,7 @@ static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
     if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
     {
-        t.push_back(TILE_WALL_BRICK_DARK_4);
-        t.push_back(TILE_WALL_BRICK_DARK_5);
-        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
+        t.push_back(TILE_WALL_CATACOMBS);
         return;
     }
     if (depth <= 6)
@@ -341,7 +343,8 @@ static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 
 static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
 {
-    ASSERT(idx >= 0 && idx < TILE_DNGN_MAX);
+    ASSERT(idx >= 0);
+    ASSERT(idx < TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
     if (count == 1)
         return idx;
@@ -750,12 +753,14 @@ void tile_draw_floor()
             // init tiles
             env.tile_bg(ep) = bg;
             env.tile_fg(ep) = 0;
+            env.tile_cloud(ep) = 0;
         }
 }
 
 void tile_clear_map(const coord_def& gc)
 {
     env.tile_bk_fg(gc) = 0;
+    env.tile_bk_cloud(gc) = 0;
     tiles.update_minimap(gc);
 }
 
@@ -763,6 +768,7 @@ void tile_forget_map(const coord_def &gc)
 {
     env.tile_bk_fg(gc) = 0;
     env.tile_bk_bg(gc) = 0;
+    env.tile_bk_cloud(gc) = 0;
     tiles.update_minimap(gc);
 }
 
@@ -823,19 +829,16 @@ static void _tile_place_invisible_monster(const coord_def &gc)
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
-    if (env.map_knowledge(gc).feat() == DNGN_SHALLOW_WATER)
-        return;
-
-    tileidx_t t = TILE_UNSEEN_MONSTER;
-    if (!you.see_cell(gc))
+    if (env.map_knowledge(gc).feat() != DNGN_SHALLOW_WATER)
     {
-        env.tile_bk_fg(gc) = t;
-        return;
+        if (you.see_cell(gc))
+            env.tile_fg(ep) = TILE_UNSEEN_MONSTER;
+        else
+            env.tile_bk_fg(gc) = TILE_UNSEEN_MONSTER;
     }
-    if (you.visible_igrd(gc) != NON_ITEM)
-        t |= TILE_FLAG_S_UNDER;
 
-    env.tile_fg(ep) = t;
+    if (env.map_knowledge(gc).item())
+        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
 }
 
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
@@ -852,7 +855,17 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     {
         // If necessary add item brand.
         if (env.map_knowledge(gc).item())
+        {
             t |= TILE_FLAG_S_UNDER;
+
+            if (item_needs_autopickup(*env.map_knowledge(gc).item()))
+            {
+                if (you.see_cell(gc))
+                    env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
+                else
+                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
+            }
+        }
     }
     else
     {
@@ -891,10 +904,12 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
-void tile_clear_monster(const coord_def &gc)
+void tile_reset_fg(const coord_def &gc)
 {
-    env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_bk_fg(gc), true);
-    tile_clear_map(gc);
+    // remove autopickup cursor, it will be added back if necessary
+    env.tile_bk_bg(gc) &= ~TILE_FLAG_CURSOR3;
+    tile_draw_map_cell(gc, true);
+    tiles.update_minimap(gc);
 }
 
 void tile_reset_feat(const coord_def &gc)
@@ -917,13 +932,10 @@ static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
     if (you.see_cell(gc))
     {
         const coord_def ep = grid2show(gc);
-        if (env.tile_fg(ep) != 0)
-            return;
-
-        env.tile_fg(ep) = tileidx_cloud(cl, disturbance);
+        env.tile_cloud(ep) = tileidx_cloud(cl, disturbance);
     }
     else
-        env.tile_bk_fg(gc) = tileidx_cloud(cl, disturbance);
+        env.tile_bk_cloud(gc) = tileidx_cloud(cl, disturbance);
 }
 
 unsigned int num_tile_rays = 0;
@@ -971,8 +983,6 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_invisible_monster(gc);
     else if (cell.monsterinfo())
         _tile_place_monster(gc, *cell.monsterinfo());
-    else if (cell.cloud() != CLOUD_NONE)
-        _tile_place_cloud(gc, *cell.cloudinfo());
     else if (cell.item())
     {
         if (feat_is_stair(cell.feat()))
@@ -982,6 +992,10 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     }
     else
         env.tile_bk_fg(gc) = 0;
+
+    // Always place clouds now they have their own layer
+    if (cell.cloud() != CLOUD_NONE)
+        _tile_place_cloud(gc, *cell.cloudinfo());
 }
 
 void tile_wizmap_terrain(const coord_def &gc)
@@ -1026,7 +1040,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 static bool _suppress_blood(const map_cell& mc)
 {
     const dungeon_feature_type feat = mc.feat();
-    if (feat == DNGN_TREE || feat == DNGN_MANGROVE)
+    if (feat_is_tree(feat))
         return true;
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
@@ -1086,11 +1100,11 @@ static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
             return 1;
     case 8:
         ASSERT(!runed);
-        // But is BASE_TILE for others.
+        // The closed door is at BASE_TILE for sets without runed doors
         offset = 0;
         break;
     case 9:
-        // It's located at BASE_TILE+1 for tile sets with runed doors
+        // But is at BASE_TILE+1 for sets with them.
         offset = 1;
         break;
     default:
@@ -1185,7 +1199,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
     else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR
-              || orig == TILE_DNGN_RUNED_DOOR) && !mimic)
+              || orig == TILE_DNGN_RUNED_DOOR
+              || orig == TILE_DNGN_SEALED_DOOR)
+             && !mimic)
     {
         tileidx_t override = flv.feat;
         /*
@@ -1315,7 +1331,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         cell.quad_glow = true;
 
     if (mc.flags & MAP_DISJUNCT)
-        cell.disjunct = true;
+        cell.disjunct = get_disjunct_phase(gc);
 
     if (Options.show_travel_trail)
     {

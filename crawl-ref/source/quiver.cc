@@ -182,10 +182,12 @@ void choose_item_for_quiver()
         mpr("You can't grasp things well enough to throw them.");
         return;
     }
+
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
                                   MT_INVLIST,
                                   OSEL_THROWABLE, true, true, true, '-',
-                                  you.equip[EQ_WEAPON], NULL, OPER_QUIVER);
+                                  you.equip[EQ_WEAPON], NULL, OPER_QUIVER,
+                                  false);
 
     if (prompt_failed(slot))
         return;
@@ -486,7 +488,8 @@ void player_quiver::load(reader& inf)
 
     unmarshallItem(inf, m_last_weapon);
     m_last_used_type = (ammo_t)unmarshallInt(inf);
-    ASSERT(m_last_used_type >= AMMO_THROW && m_last_used_type < NUM_AMMO);
+    ASSERT(m_last_used_type >= AMMO_THROW);
+    ASSERT(m_last_used_type < NUM_AMMO);
 
     const unsigned int count = unmarshallInt(inf);
     ASSERT(count <= ARRAYSZ(m_last_used_of_type));
@@ -558,6 +561,8 @@ static bool _item_matches(const item_def &item, fire_type types,
             return true;
         if ((types & FIRE_NET) && item.sub_type == MI_THROWING_NET)
             return true;
+        if ((types & FIRE_PIE) && item.sub_type == MI_PIE)
+            return true;
 
         if (types & FIRE_LAUNCHER)
         {
@@ -598,8 +603,8 @@ static int _get_pack_slot(const item_def& item)
     // First try to find the exact same item.
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        const item_def& inv_item = you.inv[i];
-        if (inv_item.quantity && _items_similar(item, you.inv[i], false)
+        const item_def &inv_item = you.inv[i];
+        if (inv_item.quantity && _items_similar(item, inv_item, false)
             && !_wielded_slot_no_quiver(i))
         {
             return i;
@@ -609,10 +614,14 @@ static int _get_pack_slot(const item_def& item)
     // If that fails, try to find an item sufficiently similar.
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        const item_def& inv_item = you.inv[i];
-        if (inv_item.quantity && _items_similar(item, you.inv[i], true)
+        const item_def &inv_item = you.inv[i];
+        if (inv_item.quantity && _items_similar(item, inv_item, true)
             && !_wielded_slot_no_quiver(i))
         {
+            // =f prevents item from being in fire order.
+            if (strstr(inv_item.inscription.c_str(), "=f"))
+                return -1;
+
             return i;
         }
     }
@@ -647,9 +656,5 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
 
 static bool _items_similar(const item_def& a, const item_def& b, bool force)
 {
-    if (!force)
-        return (items_similar(a, b) && a.slot == b.slot);
-
-    // This is a reasonable implementation for now.
-    return items_stack(a, b, force);
+    return (items_similar(a, b) && (force || a.slot == b.slot));
 }

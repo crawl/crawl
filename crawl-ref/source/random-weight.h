@@ -29,7 +29,7 @@ T* random_choose_weighted(vector<pair<T, int> >& choices)
  * are skipped. Returns the index of the chosen entry, or -1 if nothing found.
  */
 template <typename T, int SIZE>
-T random_choose_weighted(FixedVector<T, SIZE>& choices)
+int random_choose_weighted(FixedVector<T, SIZE>& choices)
 {
     int total = 0;
     for (int i = 0; i < SIZE; ++i)

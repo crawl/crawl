@@ -166,6 +166,9 @@ static void _update_feat_at(const coord_def &gp)
     if (you.get_fearmonger(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
+    if (you.made_nervous_by(gp))
+        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+
     if (feat >= DNGN_STONE_STAIRS_DOWN_I
         && feat <= DNGN_ESCAPE_HATCH_UP
         && is_exclude_root(gp))
@@ -401,8 +404,7 @@ static void _update_monster(monster* mons)
             you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
         }
 
-        bool show_location = (mons->friendly()
-                              || (mons->constricted_by == MID_PLAYER));
+        bool show_location = (mons->constricted_by == MID_PLAYER);
 
         // maybe show unstealthy invis monsters
         if (show_location
@@ -451,7 +453,7 @@ static void _update_monster(monster* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    if (you.see_cell(gp))
+    if (you.see_cell(gp)) // XXX this prevents detecting invisible monsters
         env.map_knowledge(gp).clear_data();
     else if (!env.map_knowledge(gp).known())
         return;

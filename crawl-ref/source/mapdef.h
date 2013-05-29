@@ -70,6 +70,9 @@ enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
     // the edges, although in other respects it behaves like a regular vault.
     MAP_FLOAT,
 
+    // Place at the centre of the map, and use a "central" layout.
+    MAP_CENTRE,
+
     MAP_NUM_SECTION_TYPES
 };
 
@@ -302,6 +305,7 @@ public:
     map_string_list strlist;
 };
 
+typedef pair<coord_def, coord_def> map_corner_t;
 class map_def;
 class rectangle_iterator;
 struct keyed_mapspec;
@@ -423,8 +427,8 @@ public:
                           const coord_def &br, Matrix<bool> &flags);
 
     // Merge vault onto the tl/br subregion, where mask is true.
-    void merge_subvault(const coord_def &tl, const coord_def &br,
-                        const Matrix<bool> &mask, const map_def &vault);
+    map_corner_t merge_subvault(const coord_def &tl, const coord_def &br,
+                                const Matrix<bool> &mask, const map_def &vault);
 private:
     void init_from(const map_lines &map);
     template <typename V> void clear_vector(V &vect);
@@ -625,14 +629,13 @@ private:
 class mons_spec
 {
  public:
-    int type;
+    monster_type type;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
     int number;               // Head count for hydras, etc.
     int quantity;             // Number of monsters (usually 1).
-    int genweight, mlevel;
-    bool fix_mons;
+    int genweight;
     bool generate_awake;
     bool patrolling;
     bool band;
@@ -659,14 +662,12 @@ class mons_spec
 
     CrawlHashTable props;
 
-    mons_spec(int t = RANDOM_MONSTER,
+    mons_spec(monster_type t = RANDOM_MONSTER,
               monster_type base = MONS_NO_MONSTER,
-              int num = 0,
-              int gw = 10, int ml = 0,
-              bool _fixmons = false, bool awaken = false, bool patrol = false)
+              int num = 0)
         : type(t), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
-          quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
-          generate_awake(awaken), patrolling(false), band(false),
+          quantity(1), genweight(10),
+          generate_awake(false), patrolling(false), band(false),
           colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
           abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
@@ -727,7 +728,6 @@ private:
     void parse_mons_spells(mons_spec &slot, vector<string> &spells);
     mon_enchant parse_ench(string &ench_str, bool perm);
     mons_spec pick_monster(mons_spec_slot &slot);
-    int fix_demon(int id) const;
 
 private:
     vector< mons_spec_slot > mons;
@@ -1051,6 +1051,21 @@ public:
     }
 };
 
+// Position of a subvault inside its parent.
+struct subvault_place
+{
+    coord_def tl, br;
+    unique_ptr<map_def> subvault;
+
+    subvault_place();
+    subvault_place(const coord_def &_tl, const coord_def &_br,
+                   const map_def &_subvault);
+    subvault_place(const subvault_place &place);
+    subvault_place &operator = (const subvault_place &place);
+
+    void set_subvault(const map_def &);
+};
+
 /////////////////////////////////////////////////////////////////////////////
 // map_def: map definitions for maps loaded from .des files.
 //
@@ -1120,6 +1135,7 @@ public:
     dungeon_feature_type border_fill_type;
 
     ::map<dungeon_feature_type, string> feat_renames;
+    vector<subvault_place> subvault_places;
 
 private:
     // This map has been loaded from an index, and not fully realised.
@@ -1137,6 +1153,7 @@ private:
 public:
     map_def();
 
+    string name_at(const coord_def &pos) const;
     string desc_or_name() const;
 
     string describe() const;
@@ -1280,6 +1297,8 @@ private:
 };
 
 const int CHANCE_ROLL = 10000;
+
+void clear_subvault_stack(void);
 
 void map_register_flag(const string &flag);
 

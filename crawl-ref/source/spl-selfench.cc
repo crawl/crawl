@@ -179,9 +179,16 @@ spret_type cast_revivification(int pow, bool fail)
 
 spret_type cast_swiftness(int power, bool fail)
 {
-    if (you.in_water())
+    if (you.form == TRAN_TREE)
     {
-        mpr("The water foams!");
+        canned_msg(MSG_CANNOT_MOVE);
+        return SPRET_ABORT;
+    }
+
+    if (you.in_water() || you.liquefied_ground())
+    {
+        mprf("The %s foams!", you.in_water() ? "water"
+                                             : "liquid ground");
         return SPRET_ABORT;
     }
 
@@ -204,6 +211,12 @@ spret_type cast_swiftness(int power, bool fail)
 
 spret_type cast_fly(int power, bool fail)
 {
+    if (you.form == TRAN_TREE)
+    {
+        mpr("Your roots keep you in place.", MSGCH_WARN);
+        return SPRET_ABORT;
+    }
+
     if (you.liquefied_ground())
     {
         mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
@@ -232,7 +245,14 @@ spret_type cast_teleport_control(int power, bool fail)
     else
         mpr("You feel your control is inadequate.");
 
+    if (you.duration[DUR_TELEPORT] && !player_control_teleport())
+    {
+        mpr("You feel your translocation being delayed.");
+        you.increase_duration(DUR_TELEPORT, 1 + random2(3));
+    }
+
     you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50);
+
     return SPRET_SUCCESS;
 }
 

@@ -143,6 +143,12 @@ cloud_calc_dust1
 cloud_calc_dust2
 cloud_calc_dust3
 
+cloud_forest_fire CLOUD_FOREST_FIRE
+
+cloud_ghostly_flame0 CLOUD_GHOSTLY_FLAME_0
+cloud_ghostly_flame1 CLOUD_GHOSTLY_FLAME_1
+cloud_ghostly_flame2 CLOUD_GHOSTLY_FLAME_2
+
 %sdir mon
 fungi_plants/giant_spore SPORE_OVERLAY
 
@@ -169,6 +175,7 @@ unseen_monster UNSEEN_CORPSE
 slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
+slot_vehumet ITEM_SLOT_VEHUMET
 
 error ERROR
 %rim 1

@@ -12,6 +12,12 @@ endif
 
 CFLAGS := -O2 -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
+ifdef ANDROID
+  CXXFLAGS :=
+  LDFLAGS :=
+  LIBS :=
+endif
+
 ifdef TILES
   ifndef CONTRIB_SDL
     SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
@@ -94,7 +100,12 @@ endif
 %.png: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) -i $<
 
+ifdef TILES
+# Keep coordinates fresh
+tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN) %.png
+else
 tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
+endif
 	$(QUIET_GEN)$(TILEGEN) -c $<
 
 # CFLAGS difference check
@@ -103,7 +114,7 @@ TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for hig
 .cflags: .force-cflags
 	@FLAGS='$(TRACK_CFLAGS)'; \
     if test x"$$FLAGS" != x"`cat .cflags 2>/dev/null`" ; then \
-        echo "    * rebuilding crawl: new build flags or prefix"; \
+        echo "    * rebuilding tilegen: new build flags or prefix"; \
         echo "$$FLAGS" > .cflags; \
     fi
 
@@ -122,12 +133,12 @@ DEPS := $(OBJECTS:%.o=%.d) $(INPUTS:%=%.d)
 
 clean:
 	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) \
-		$(DEPS) $(JAVASCRIPT) .cflags tiledef-unrand.cc
+		$(DEPS) $(JAVASCRIPT) .cflags
 
 distclean: clean
 
 %.o: %.cc .cflags
-	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
+	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -MMD -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
 	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)

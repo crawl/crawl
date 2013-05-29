@@ -228,7 +228,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     switch (mon_tile)
     {
     // No shift necessary.
-    case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_CRIMSON_IMP:
@@ -242,11 +241,9 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_JOSEPH:
     case TILEP_MONS_TERENCE:
     case TILEP_MONS_WIGLAF:
-    case TILEP_MONS_FREDERICK:
     case TILEP_MONS_RAKSHASA:
     case TILEP_MONS_RAKSHASA_FAKE:
     case TILEP_MONS_VAMPIRE_KNIGHT:
-    case TILEP_MONS_ANGEL:
     case TILEP_MONS_SERAPH:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
@@ -291,7 +288,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_MERFOLK_IMPALER_WATER:
     case TILEP_MONS_TENGU:
-    case TILEP_MONS_TENGU_CONJURER:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
@@ -300,6 +296,11 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 0;
         break;
     // Shift to the right.
+    case TILEP_MONS_VAULT_GUARD:
+    case TILEP_MONS_VAULT_WARDEN:
+    case TILEP_MONS_VAULT_SENTINEL:
+    case TILEP_MONS_IRONBRAND_CONVOKER:
+    case TILEP_MONS_IRONHEART_PRESERVER:
     case TILEP_MONS_DEMONSPAWN:
     case TILEP_MONS_DONALD:
         *ofs_x = 1;
@@ -332,6 +333,15 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 0;
         *ofs_y = -1;
         break;
+    case TILEP_MONS_FREDERICK:
+        *ofs_x = 0;
+        *ofs_y = -2;
+        break;
+    case TILEP_MONS_RED_DEVIL:
+    case TILEP_MONS_LAMIA:
+        *ofs_x = 0;
+        *ofs_y = -3;
+        break;
     // Shift downwards.
     case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_NAGA:
@@ -358,6 +368,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_SOLDIER:
     case TILEP_MONS_DEEP_DWARF_NECROMANCER:
     case TILEP_MONS_UNBORN_DEEP_DWARF:
+    case TILEP_MONS_JORGRUN:
     case TILEP_MONS_MERMAID:
     case TILEP_MONS_MERMAID_WATER:
     case TILEP_MONS_SIREN:
@@ -365,6 +376,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_SUCCUBUS:
+    case TILEP_MONS_HALFLING:
         *ofs_x = 0;
         *ofs_y = 2;
         break;
@@ -379,6 +391,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -2;
         break;
     case TILEP_MONS_CENTAUR_MELEE:
+    case TILEP_MONS_DEMIGOD:
         *ofs_x = -1;
         *ofs_y = -3;
         break;
@@ -403,7 +416,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -4;
         break;
     case TILEP_MONS_ARACHNE_STAVELESS:
-        *ofs_x = -2;
+        *ofs_x = -1;
         *ofs_y = -5;
         break;
     // Shift upwards and to the right.
@@ -412,12 +425,21 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CLOUD_MAGE:
     case TILEP_MONS_MASTER_ELEMENTALIST:
     case TILEP_MONS_JESSICA:
+    case TILEP_MONS_ANGEL:
         *ofs_x = 1;
         *ofs_y = -1;
         break;
     case TILEP_MONS_AGNES:
         *ofs_x = 0;
         *ofs_y = 1;
+        break;
+    case TILEP_MONS_TRAINING_DUMMY:
+        *ofs_x = 3;
+        *ofs_y = -1;
+        break;
+    case TILEP_MONS_MARGERY:
+        *ofs_x = 1;
+        *ofs_y = -3;
         break;
     case TILEP_MONS_LOUISE:
         *ofs_x = 1;
@@ -428,10 +450,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_HELL_WIZARD + 2:
         *ofs_x = 2;
         *ofs_y = -2;
-        break;
-    case TILEP_MONS_RED_DEVIL:
-        *ofs_x = 0;
-        *ofs_y = -3;
         break;
     case TILEP_MONS_HUMAN:
     case TILEP_MONS_ELF:
@@ -453,17 +471,9 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 2;
         *ofs_y = 3;
         break;
-    case TILEP_MONS_TRAINING_DUMMY:
-        *ofs_x = 3;
-        *ofs_y = 2;
-        break;
     case TILEP_MONS_ZOMBIE_LARGE:
         *ofs_x = 4;
         *ofs_y = 1;
-        break;
-    case TILEP_MONS_HALFLING:
-        *ofs_x = 4;
-        *ofs_y = 2;
         break;
     case TILEP_MONS_ZOMBIE_SMALL:
         *ofs_x = 4;
@@ -482,8 +492,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
 }
 
 // Returns the amount of pixels necessary to shift a worn shield, like
-// it's done with weapon.  Tiles that have a shield hard-drawn should not
-// be listed here.
+// it's done with weapon.  No monster should have a shield hard-drawn
+// on the tile.
 bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
                                        int *ofs_x, int *ofs_y)
 {
@@ -517,6 +527,35 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 0;
         break;
 
+    case TILEP_MONS_DONALD:
+        *ofs_x = -1;
+        *ofs_y = -1;
+        break;
+
+    case TILEP_MONS_SPRIGGAN:
+    case TILEP_MONS_SPRIGGAN_DEFENDER:
+    case TILEP_MONS_SPRIGGAN_BERSERKER:
+    case TILEP_MONS_SPRIGGAN_ASSASSIN:
+        *ofs_x = 2;
+        *ofs_y = 3;
+        break;
+
+    case TILEP_MONS_SPRIGGAN_DRUID:
+        *ofs_x = 2;
+        *ofs_y = -4;
+        break;
+
+    case TILEP_MONS_SPRIGGAN_AIR_MAGE:
+        *ofs_x = 2;
+        *ofs_y = -9;
+        break;
+
+    case TILEP_MONS_THE_ENCHANTRESS:
+        *ofs_x = 6;
+        *ofs_y = 3;
+        break;
+
+    case TILEP_MONS_SPRIGGAN_RIDER: // shield covered, out of picture
     default:
         // This monster cannot be displayed with a shield.
         return false;
@@ -636,12 +675,10 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 
     if (ac > 25)
         m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_PLATE_BLACK;
-    else if (ac > 20)
-        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SPLINT;
-    else if (ac > 15)
-        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SCALEMAIL;
-    else if (ac > 10)
+    else if (ac > 18)
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_CHAINMAIL;
+    else if (ac > 12)
+        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SCALEMAIL;
     else if (ac > 5)
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_LEATHER_HEAVY;
     else

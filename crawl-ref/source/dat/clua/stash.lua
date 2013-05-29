@@ -41,6 +41,10 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{stick} "
   end
 
+  if it.god_gift then
+    annot = annot .. "{god gift} "
+  end
+
   if food.isfruit(it) then
     annot = annot .. "{fruit} "
   end

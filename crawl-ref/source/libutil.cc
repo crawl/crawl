@@ -498,6 +498,7 @@ string pluralise(const string &name, const char *qualifiers[],
              || ends_with(name, "swine") || ends_with(name, "efreet")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu")
+             || ends_with(name, "jiangshi")
              || name == "gold")
     {
         return name;
@@ -1084,6 +1085,19 @@ string unwrap_desc(string desc)
         return "";
 
     trim_string_right(desc);
+
+    // Lines beginning with a colon are tags with a full entry scope
+    // Only nowrap is supported for now
+    while (desc[0] == ':')
+    {
+        int pos = desc.find("\n");
+        string tag = desc.substr(1, pos - 1);
+        desc.erase(0, pos + 1);
+        if (tag == "nowrap")
+            return desc;
+        else if (desc == "")
+            return "";
+    }
 
     // An empty line separates paragraphs.
     desc = replace_all(desc, "\n\n", "\\n\\n");

@@ -42,11 +42,13 @@ skill_type str_to_skill(const string &skill);
 string skill_title(
     skill_type best_skill, uint8_t skill_lev,
     // these used for ghosts and hiscores:
-    int species = -1, int str = -1, int dex = -1, int god = -1);
+    int species = -1, int str = -1, int dex = -1, int god = -1,
+    int piety = you.piety);
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
     // these used for ghosts and hiscores:
-    int species = -1, int str = -1, int dex = -1, int god = -1);
+    int species = -1, int str = -1, int dex = -1, int god = -1,
+    int piety = you.piety);
 unsigned get_skill_rank(unsigned skill_lev);
 
 string player_title();
@@ -70,6 +72,8 @@ float crosstrain_bonus(skill_type sk);
 bool crosstrain_other(skill_type sk, bool show_zero);
 bool is_antitrained(skill_type sk);
 bool antitrain_other(skill_type sk, bool show_zero);
+
+int elemental_preference(spell_type spell, int scale = 1);
 
 void skill_menu(int flag = 0, int exp = 0);
 void dump_skills(string &text);
@@ -95,7 +99,7 @@ static const skill_type skill_display_order[] =
 
     SK_COLUMN_BREAK, SK_TITLE,
 
-    SK_STABBING, SK_TRAPS,
+    SK_TRAPS,
 
     SK_BLANK_LINE,
 

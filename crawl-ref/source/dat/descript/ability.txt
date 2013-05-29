@@ -11,7 +11,7 @@ Blink ability
 
 Randomly translocate a short distance.
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 Breathe a blast of power at a targeted monster, possibly removing some of its
 enchantments.
@@ -131,6 +131,14 @@ Evoke Fog
 
 Release a thick cloud of fog to obscure vision.
 %%%%
+Evoke Teleport Control
+
+Gain the ability to control your next translocation – either by selecting an
+approximate target for a teleport, or by selecting a direction for a blink. Be
+wary that controlled translocations will cause the subject to become
+contaminated with magical energy, and that controlled teleports will take
+longer to trigger than uncontrolled ones.
+%%%%
 End Transformation
 
 Revert to your normal form, with a short delay.
@@ -165,9 +173,8 @@ Dexterity.
 %%%%
 Imprison
 
-Temporarily imprison a monster surrounded by empty space in walls of silver.
-The duration of the prison is increased by Invocations skill, but strong
-enemies will be able to break free more easily.
+Temporarily imprison a monster in walls of silver. The duration of the prison
+is increased by Invocations skill.
 %%%%
 Sanctuary
 
@@ -219,7 +226,7 @@ skeletons cannot leave the level they were created on.
 %%%%
 Recall Undead Slaves
 
-Recall your undead followers from anywhere on the level to your immediate
+Recall your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
 Injury Mirror
@@ -407,9 +414,8 @@ in the Abyss.
 %%%%
 Enter the Abyss
 
-Transfer yourself to Lugonu's realm instantly... at the cost of permanently
-reducing your maximum health and magic. The effort of even using the ability
-will leave your health and magic depleted.
+Transfer yourself to Lugonu's realm instantly. The effort of even using the
+ability will leave your health and magic depleted.
 %%%%
 # Nemelex Xobeh
 Draw One
@@ -448,8 +454,12 @@ just seeing the enemy is enough.
 %%%%
 Recall Orcish Followers
 
-Recall your orcish followers from anywhere on the level to your immediate
+Recall your orcish followers from anywhere in the dungeon to your immediate
 surroundings.
+%%%%
+Stop Recall
+
+Stop recalling your followers.
 %%%%
 # Fedhas
 Sunlight
@@ -464,7 +474,7 @@ Growth
 Use fruit to grow a ring of plants around yourself. If a complete ring cannot
 be formed (because you do not have enough fruit), plants will grow on squares
 adjacent to you that are close to monsters. The plants you create gain bonus HP
-proportional to your invocations skill.
+proportional to your Invocations skill.
 %%%%
 Rain
 
@@ -479,10 +489,10 @@ explode, causing damage to you or your enemies.
 %%%%
 Evolution
 
-Turn plants and fungi adjacent to you into stronger species. Upgrading fungi
-requires piety, upgrading plants requires fruit. Plants upgraded gain a bonus
-to attack accuracy proportional to the user's invocations skill, and oklob
-plants are more likely to spit acid at higher invocations.
+Turn plants and fungi into stronger species. Upgrading fungi requires piety,
+while upgrading plants requires fruit. Upgraded plants gain a bonus to attack
+accuracy proportional to the user's Invocations skill, and oklob plants are
+more likely to spit acid at higher Invocations.
 %%%%
 # Cheibriados
 Bend Time
@@ -506,11 +516,6 @@ Remove yourself from the flow of time. Things around you will happen at their
 usual busy pace, monsters will wander, perishable items will decay, plants will
 grow. After some time has passed, you will return in the same state as the very
 second you departed.
-%%%%
-Renounce Religion
-
-Renounce your faith. This will make your character leave your god (and usually
-anger said god).
 %%%%
 # Jiyva
 Request Jelly
@@ -543,6 +548,18 @@ Sacrifice part of one of your skills to improve another.
 End Transfer Knowledge
 
 Abort an ongoing skill transfer.
+%%%%
+# Vehumet
+Memorise spell
+
+Immediately gain knowledge of a destructive spell offered to you by Vehumet.
+The offer will expire after a short while. Check the Religion screen (^) to see
+which spell is offered.
+%%%%
+Renounce Religion
+
+Renounce your faith. This will make your character leave your god (and usually
+anger said god).
 %%%%
 # Zotdef
 Make dart trap

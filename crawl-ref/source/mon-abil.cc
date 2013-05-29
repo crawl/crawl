@@ -15,8 +15,16 @@
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
+#include "dgnevent.h" //XXX
+#include "exclude.h" //XXX
+#ifdef USE_TILE
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
+#endif
+#include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "itemprop.h"
 #include "losglobal.h"
 #include "libutil.h"
 #include "misc.h"
@@ -36,6 +44,7 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -46,6 +55,9 @@
 #include "viewchar.h"
 #include "ouch.h"
 #include "target.h"
+#include "items.h"
+#include "mapmark.h"
+#include "teleport.h"
 
 #include <algorithm>
 #include <queue>
@@ -432,7 +444,7 @@ static void _lose_turn(monster* mons, bool has_gone)
 // abomination.
 static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 {
-    int orighd = merge_to->hit_dice;
+    const int orighd = merge_to->hit_dice;
     int addhd = crawlie->hit_dice;
 
     // Need twice as many HD past 15.
@@ -447,14 +459,14 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
     if (newhd < 6)
     {
-        // Not big enough for an abomination yet
+        // Not big enough for an abomination yet.
         new_type = MONS_MACABRE_MASS;
         mhp = merge_to->max_hit_points + crawlie->max_hit_points;
         hp = merge_to->hit_points += crawlie->hit_points;
     }
     else
     {
-        // Need 11 HD and 3 corpses for a large abomination
+        // Need 11 HD and 3 corpses for a large abomination.
         if (newhd < 11
             || (crawlie->type == MONS_CRAWLING_CORPSE
                 && merge_to->type == MONS_CRAWLING_CORPSE))
@@ -473,18 +485,20 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
         if (merge_to->type == MONS_ABOMINATION_SMALL)
         {
-            // Adding to an existing abomination
-            int hp_gain = hit_points(addhd, 2, 5);
+            // Adding to an existing abomination.
+            const int hp_gain = hit_points(addhd, 2, 5);
             mhp = merge_to->max_hit_points + hp_gain;
             hp = merge_to->hit_points + hp_gain;
         }
         else
-            // Making a new abomination
+        {
+            // Making a new abomination.
             hp = mhp = hit_points(newhd, 2, 5);
+        }
     }
 
-    monster_type old_type = merge_to->type;
-    string old_name = merge_to->name(DESC_A);
+    const monster_type old_type = merge_to->type;
+    const string old_name = merge_to->name(DESC_A);
 
     // Change the monster's type if we need to.
     if (new_type != old_type)
@@ -508,20 +522,24 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     // Messaging.
     if (you.can_see(merge_to))
     {
-        bool changed = new_type != old_type;
+        const bool changed = new_type != old_type;
         if (you.can_see(crawlie))
         {
             if (crawlie->type == old_type)
+            {
                 mprf("Two %s merge%s%s.",
                      pluralise(crawlie->name(DESC_PLAIN)).c_str(),
                      changed ? " to form " : "",
                      changed ? merge_to->name(DESC_A).c_str() : "");
+            }
             else
+            {
                 mprf("%s merges with %s%s%s.",
                      crawlie->name(DESC_A).c_str(),
                      old_name.c_str(),
                      changed ? " to form " : "",
                      changed ? merge_to->name(DESC_A).c_str() : "");
+            }
         }
         else if (changed)
         {
@@ -535,14 +553,13 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     else if (you.can_see(crawlie))
         mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
 
-    // Now kill the other monster
+    // Now kill the other monster.
     monster_die(crawlie, KILL_DISMISSED, NON_MONSTER, true);
 
     return true;
 }
 
-
-// Actually merge two slime creature, pooling their hp, etc.
+// Actually merge two slime creatures, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
 static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
@@ -813,7 +830,7 @@ static bool _slime_split_merge(monster* thing)
 }
 
 // Splits and polymorphs merged slime creatures.
-bool slime_creature_mutate(monster* slime)
+bool slime_creature_polymorph(monster* slime)
 {
     ASSERT(slime->type == MONS_SLIME_CREATURE);
 
@@ -823,7 +840,7 @@ bool slime_creature_mutate(monster* slime)
         while (slime->number > 1 && count <= 10)
         {
             if (monster *splinter = _slime_split(slime, true))
-                slime_creature_mutate(splinter);
+                slime_creature_polymorph(splinter);
             else
                 break;
             count++;
@@ -833,7 +850,7 @@ bool slime_creature_mutate(monster* slime)
     return monster_polymorph(slime, RANDOM_MONSTER);
 }
 
-bool _starcursed_split(monster* mon)
+static bool _starcursed_split(monster* mon)
 {
     if (!mon
         || mon->number <= 1
@@ -863,7 +880,7 @@ bool _starcursed_split(monster* mon)
     return false;
 }
 
-void _starcursed_scream(monster* mon, actor* target)
+static void _starcursed_scream(monster* mon, actor* target)
 {
     if (!target || !target->alive())
         return;
@@ -936,7 +953,7 @@ void _starcursed_scream(monster* mon, actor* target)
             chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
 }
 
-bool _will_starcursed_scream(monster* mon)
+static bool _will_starcursed_scream(monster* mon)
 {
     vector<monster*> chorus;
 
@@ -996,7 +1013,7 @@ static bool _siren_movement_effect(const monster* mons)
                 coord_def swapdest;
                 if (mon->wont_attack()
                     && !mons_is_stationary(mon)
-                    && !mons_is_projectile(mon->type)
+                    && !mon->is_projectile()
                     && !mon->cannot_act()
                     && !mon->asleep()
                     && swap_check(mon, swapdest, true))
@@ -1066,8 +1083,8 @@ static bool _silver_statue_effects(monster* mons)
 
         create_monster(
             mgen_data(
-                summon_any_demon((coinflip() ? DEMON_COMMON
-                                             : DEMON_LESSER)),
+                summon_any_demon((coinflip() ? RANDOM_DEMON_COMMON
+                                             : RANDOM_DEMON_LESSER)),
                 SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
                 foe->pos(), mons->foe));
         return true;
@@ -1404,6 +1421,649 @@ static bool _queen_incite_worker(const monster* queen)
 
 }
 
+static void _set_door(set<coord_def> door, dungeon_feature_type feat)
+{
+    for (set<coord_def>::const_iterator i = door.begin();
+         i != door.end(); ++i)
+    {
+        grd(*i) = feat;
+        set_terrain_changed(*i);
+    }
+}
+
+// Find an adjacent space to displace a stack of items or a creature
+// (If act is null, we are just moving items and not an actor)
+bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
+                    bool ignore_tension, const vector<coord_def>* excluded)
+{
+    if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
+        return false;
+
+    int max_tension = -1;
+    coord_def best_spot(-1, -1);
+    bool can_push = false;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        dungeon_feature_type feat = grd(*ai);
+        if (feat_has_solid_floor(feat))
+        {
+            // Extra checks if we're moving a monster instead of an item
+            if (act)
+            {
+                if (actor_at(*ai)
+                    || !act->can_pass_through(*ai)
+                    || !act->is_habitable(*ai))
+                {
+                    continue;
+                }
+
+                bool spot_vetoed = false;
+                if (excluded)
+                {
+                    for (unsigned int i = 0; i < excluded->size(); ++i)
+                        if (excluded->at(i) == *ai)
+                        {
+                            spot_vetoed = true;
+                            break;
+                        }
+                }
+                if (spot_vetoed)
+                    continue;
+
+                // If we don't care about tension, first valid spot is acceptable
+                if (ignore_tension)
+                {
+                    newpos = *ai;
+                    return true;
+                }
+                else // Calculate tension with monster at new location
+                {
+                    set<coord_def> all_door;
+                    find_connected_identical(pos, grd(pos), all_door);
+                    dungeon_feature_type old_feat = grd(pos);
+
+                    act->move_to_pos(*ai);
+                    _set_door(all_door, DNGN_CLOSED_DOOR);
+                    int new_tension = get_tension(GOD_NO_GOD);
+                    _set_door(all_door, old_feat);
+                    act->move_to_pos(pos);
+
+                    if (new_tension > max_tension)
+                    {
+                        max_tension = new_tension;
+                        best_spot = *ai;
+                        can_push = true;
+                    }
+                }
+            }
+            else //If we're not moving a creature, the first open spot is enough
+            {
+                newpos = *ai;
+                return true;
+            }
+        }
+    }
+
+    if (can_push)
+        newpos = best_spot;
+    return can_push;
+}
+
+bool has_push_space(const coord_def& pos, actor* act,
+                    const vector<coord_def>* excluded)
+{
+    coord_def dummy(-1, -1);
+    return get_push_space(pos, dummy, act, true, excluded);
+}
+
+static bool _can_force_door_shut(const coord_def& door)
+{
+    if (grd(door) != DNGN_OPEN_DOOR)
+        return false;
+
+    set<coord_def> all_door;
+    vector<coord_def> veto_spots;
+    find_connected_identical(door, grd(door), all_door);
+    copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
+
+    for (set<coord_def>::const_iterator i = all_door.begin();
+         i != all_door.end(); ++i)
+    {
+        // Only attempt to push players and non-hostile monsters out of
+        // doorways
+        actor* act = actor_at(*i);
+        if (act)
+        {
+            if (act->is_player()
+                || act->is_monster()
+                    && act->as_monster()->attitude != ATT_HOSTILE)
+            {
+                coord_def newpos;
+                if (!get_push_space(*i, newpos, act, true, &veto_spots))
+                    return false;
+                else
+                    veto_spots.push_back(newpos);
+            }
+            else
+                return false;
+        }
+        // If there are items in the way, see if there's room to push them
+        // out of the way
+        else if (igrd(*i) != NON_ITEM)
+        {
+            if (!has_push_space(*i, 0))
+                return false;
+        }
+    }
+
+    // Didn't find any items we couldn't displace
+    return true;
+}
+
+static bool _should_force_door_shut(const coord_def& door)
+{
+    if (grd(door) != DNGN_OPEN_DOOR)
+        return false;
+
+    dungeon_feature_type old_feat = grd(door);
+    int cur_tension = get_tension(GOD_NO_GOD);
+
+    set<coord_def> all_door;
+    vector<coord_def> veto_spots;
+    find_connected_identical(door, grd(door), all_door);
+    copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
+
+    bool player_in_door = false;
+    for (set<coord_def>::const_iterator i = all_door.begin();
+        i != all_door.end(); ++i)
+    {
+        if (you.pos() == *i)
+        {
+            player_in_door = true;
+            break;
+        }
+    }
+
+    int new_tension;
+    if (player_in_door)
+    {
+        coord_def newpos;
+        coord_def oldpos = you.pos();
+        get_push_space(oldpos, newpos, &you, false, &veto_spots);
+        you.move_to_pos(newpos);
+        _set_door(all_door, DNGN_CLOSED_DOOR);
+        new_tension = get_tension(GOD_NO_GOD);
+        _set_door(all_door, old_feat);
+        you.move_to_pos(oldpos);
+    }
+    else
+    {
+        _set_door(all_door, DNGN_CLOSED_DOOR);
+        new_tension = get_tension(GOD_NO_GOD);
+        _set_door(all_door, old_feat);
+    }
+
+    // If closing the door would reduce player tension by too much, probably
+    // it is scarier for the player to leave it open and thus it should be left
+    // open
+
+    // Currently won't allow tension to be lowered by more than 33%
+    return (((cur_tension - new_tension) * 3) <= cur_tension);
+}
+
+static bool _seal_doors(const monster* warden)
+{
+    ASSERT(warden);
+    ASSERT(warden->type == MONS_VAULT_WARDEN);
+
+    int num_closed = 0;
+    int seal_duration = 80 + random2(80);
+    bool player_pushed = false;
+    bool had_effect = false;
+
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND);
+                 ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_OPEN_DOOR)
+        {
+            if (!_can_force_door_shut(*ri))
+                continue;
+
+            // If it's scarier to leave this door open, do so
+            if (!_should_force_door_shut(*ri))
+                continue;
+
+            set<coord_def> all_door;
+            vector<coord_def> veto_spots;
+            find_connected_identical(*ri, grd(*ri), all_door);
+            copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                 i != all_door.end(); ++i)
+            {
+                // If there are things in the way, push them aside
+                actor* act = actor_at(*i);
+                if (igrd(*i) != NON_ITEM || act)
+                {
+                    coord_def newpos;
+                    get_push_space(*i, newpos, act, false, &veto_spots);
+                    move_items(*i, newpos);
+                    if (act)
+                    {
+                        actor_at(*i)->move_to_pos(newpos);
+                        if (act->is_player())
+                            player_pushed = true;
+                        veto_spots.push_back(newpos);
+                    }
+                }
+            }
+
+            // Close the door
+            bool seen = false;
+            vector<coord_def> excludes;
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                 i != all_door.end(); ++i)
+            {
+                const coord_def& dc = *i;
+                grd(dc) = DNGN_CLOSED_DOOR;
+                set_terrain_changed(dc);
+                dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
+                if (is_excluded(dc))
+                    excludes.push_back(dc);
+
+                if (you.see_cell(dc))
+                    seen = true;
+
+                had_effect = true;
+            }
+
+            if (seen)
+            {
+                for (set<coord_def>::const_iterator i = all_door.begin();
+                     i != all_door.end(); ++i)
+                {
+                    if (env.map_knowledge(*i).seen())
+                    {
+                        env.map_knowledge(*i).set_feature(DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+                        env.tile_bk_bg(*i) = TILE_DNGN_CLOSED_DOOR;
+#endif
+                    }
+                }
+
+                update_exclusion_los(excludes);
+                ++num_closed;
+            }
+        }
+
+        // Try to seal the door
+        if (grd(*ri) == DNGN_CLOSED_DOOR)
+        {
+            set<coord_def> all_door;
+            find_connected_identical(*ri, grd(*ri), all_door);
+            for (set<coord_def>::const_iterator i = all_door.begin();
+                 i != all_door.end(); ++i)
+            {
+                temp_change_terrain(*i, DNGN_SEALED_DOOR, seal_duration,
+                                    TERRAIN_CHANGE_DOOR_SEAL, warden);
+                had_effect = true;
+            }
+        }
+    }
+
+    if (had_effect)
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s activates a sealing rune.",
+                (warden->visible_to(&you) ? warden->name(DESC_THE, true).c_str()
+                                          : "Someone"));
+        if (num_closed > 1)
+            mpr("The doors slam shut!");
+        else if (num_closed == 1)
+            mpr("A door slams shut!");
+
+        if (player_pushed)
+            mpr("You are pushed out of the doorway!");
+
+        return true;
+    }
+
+    return false;
+}
+
+static bool _flay_creature(monster* mon, actor* victim)
+{
+    int dam;
+    bool was_flayed = false;
+
+    if (victim->holiness() != MH_NATURAL)
+        return false;
+
+    if (victim->is_player())
+    {
+        dam = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
+        dam = min(dam, max(0, you.hp - 15 - random2(10)));
+        if (dam < 10)
+            return false;
+
+        if (you.duration[DUR_FLAYED])
+            was_flayed = true;
+
+        you.increase_duration(DUR_FLAYED, 3 + random2(5), 15);
+    }
+    else
+    {
+        monster* mon_victim = victim->as_monster();
+
+        dam = (6 + (mon_victim->hit_points * 18 / mon_victim->max_hit_points))
+                   * mon_victim->max_hit_points / 100;
+        dam = min(dam, max(0, mon_victim->hit_points - 15 - random2(10)));
+        if (dam < 10)
+            return false;
+
+        if (mon_victim->has_ench(ENCH_FLAYED))
+        {
+            was_flayed = true;
+            mon_enchant flayed = mon_victim->get_ench(ENCH_FLAYED);
+            flayed.duration = min(flayed.duration + 30 + random2(50), 150);
+            mon_victim->update_ench(flayed);
+        }
+        else
+        {
+            mon_enchant flayed(ENCH_FLAYED, 1, mon, 30 + random2(50));
+            mon_victim->add_ench(flayed);
+        }
+    }
+
+    if (you.can_see(mon))
+    {
+        bool silent = silenced(mon->pos()) || silenced(you.pos());
+        int msg_type =  (silent ? random2(2) : random2(3) + 1);
+
+        switch (msg_type)
+        {
+            case 0:
+                mprf(MSGCH_MONSTER_SPELL, "%s moans in silent anguish.",
+                    mon->name(DESC_THE).c_str());
+                break;
+            case 1:
+                mprf(MSGCH_MONSTER_SPELL, "%s stares at %s with tortured malice.",
+                    mon->name(DESC_THE).c_str(), victim->name(DESC_THE).c_str());
+                break;
+            case 2:
+                mprf(MSGCH_MONSTER_SPELL, "%s cries, \"Suffer as I suffered!\"",
+                    mon->name(DESC_THE).c_str());
+                break;
+            case 3:
+                mprf(MSGCH_MONSTER_SPELL, "%s cries, \"Feel what I felt!\"",
+                    mon->name(DESC_THE).c_str());
+                break;
+        }
+    }
+
+    if (you.can_see(victim))
+    {
+        if (was_flayed)
+        {
+            mprf("Terrible wounds spread across more of %s body!",
+                 victim->name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("Terrible wounds open up all over %s body!",
+                 victim->name(DESC_ITS).c_str());
+        }
+    }
+
+    victim->hurt(mon, dam, BEAM_NONE, true);
+    victim->props["flay_damage"].get_int() += dam;
+
+    vector<coord_def> old_blood;
+    CrawlVector &new_blood = victim->props["flay_blood"].get_vector();
+
+    // Find current blood splatters
+    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    {
+        if (env.pgrid(*ri) & FPROP_BLOODY)
+            old_blood.push_back(*ri);
+    }
+
+    blood_spray(victim->pos(), victim->type, 20);
+
+    // Compute and store new blood splatters
+    unsigned int i = 0;
+    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    {
+        if (env.pgrid(*ri) & FPROP_BLOODY)
+        {
+            if (i < old_blood.size() && old_blood[i] == *ri)
+                ++i;
+            else
+                new_blood.push_back(*ri);
+        }
+    }
+
+    return true;
+}
+
+void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
+{
+    if (!blood_only)
+    {
+        if (act->is_player())
+            you.duration[DUR_FLAYED] = 0;
+        else
+            act->as_monster()->del_ench(ENCH_FLAYED, true, false);
+
+        if (you.can_see(act) && !quiet)
+        {
+            mprf("The terrible wounds on %s body vanish.",
+                 act->name(DESC_ITS).c_str());
+        }
+
+        act->heal(act->props["flay_damage"].get_int());
+        act->props.erase("flay_damage");
+    }
+
+    CrawlVector &blood = act->props["flay_blood"].get_vector();
+
+    for (int i = 0; i < blood.size(); ++i)
+        env.pgrid(blood[i].get_coord()) &= ~FPROP_BLOODY;
+    act->props.erase("flay_blood");
+}
+
+static bool _lost_soul_affectable(const monster* mons)
+{
+    return (((mons->holiness() == MH_UNDEAD
+              && mons->type != MONS_LOST_SOUL
+              && !mons_is_zombified(mons))
+             ||(mons->holiness() == MH_NATURAL
+                && mons_can_be_zombified(mons)))
+            && !mons->is_summoned()
+            && !mons_class_flag(mons->type, M_NO_EXP_GAIN));
+}
+
+static bool _lost_soul_teleport(monster* mons)
+{
+    bool seen = you.can_see(mons);
+
+    vector<coord_def> targets;
+
+    // Assemble candidate list and randomize
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
+            targets.push_back(mi->pos());
+    }
+    random_shuffle(targets.begin(), targets.end());
+
+    for (unsigned int i = 0; i < targets.size(); ++i)
+    {
+        coord_def empty;
+        if (find_habitable_spot_near(targets[i], mons_base_type(mons), 3, false, empty)
+            && mons->move_to_pos(empty))
+        {
+            mons->add_ench(ENCH_SUBMERGED);
+            mons->behaviour = BEH_WANDER;
+            mons->foe = MHITNOT;
+            if (seen)
+            {
+                mprf("%s flickers out of the living world.",
+                        mons->name(DESC_THE, true).c_str());
+            }
+            return true;
+        }
+    }
+
+    // If we can't find anywhere useful to go, flicker away to stop the player
+    // being annoyed chasing after us
+    if (one_chance_in(3))
+    {
+        if (seen)
+        {
+            mprf("%s flickers out of the living world.",
+                        mons->name(DESC_THE, true).c_str());
+        }
+        monster_die(mons, KILL_MISC, -1, true);
+        return true;
+    }
+
+    return false;
+}
+
+bool lost_soul_revive(monster* mons)
+{
+    if (!_lost_soul_affectable(mons))
+        return false;
+
+    for (monster_iterator mi(mons->get_los_no_trans()); mi; ++mi)
+    {
+        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        {
+            targetter_los hitfunc(*mi, LOS_SOLID);
+            flash_view_delay(GREEN, 200, &hitfunc);
+
+            if (you.can_see(*mi))
+            {
+                mprf("%s sacrifices itself to reknit %s!",
+                     mi->name(DESC_THE).c_str(),
+                     mons->name(DESC_THE).c_str());
+            }
+            else if (you.can_see(mons))
+            {
+                mprf("Necromantic energies suffuse and reknit %s!",
+                     mons->name(DESC_THE).c_str());
+            }
+
+            mons->heal(mons->max_hit_points);
+            mons->del_ench(ENCH_CONFUSION, true);
+            mons->timeout_enchantments(10);
+            monster_die(*mi, KILL_MISC, -1, true);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool lost_soul_spectralize(monster* mons)
+{
+    if (!_lost_soul_affectable(mons))
+        return false;
+
+    for (monster_iterator mi(mons); mi; ++mi)
+    {
+        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        {
+            targetter_los hitfunc(*mi, LOS_SOLID);
+            flash_view_delay(GREEN, 200, &hitfunc);
+
+            if (you.can_see(*mi))
+            {
+                mprf("The lost soul assumes the form of %s%s!",
+                     mons->name(DESC_THE).c_str(),
+                     (mi->is_summoned() ? " and becomes anchored to this world"
+                                        : ""));
+            }
+
+            define_zombie(*mi, mons->type, MONS_SPECTRAL_THING);
+            mi->flags |= MF_NO_REWARD | MF_SEEN;
+            mi->flags |= mons->flags & (MF_MELEE_MASK | MF_SPELL_MASK);
+            mi->spells = mons->spells;
+            mi->god = GOD_NAMELESS;
+
+            name_zombie(*mi, mons);
+            invalidate_agrid();
+
+            // Duplicate objects, or unequip them if they can't be duplicated.
+            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+            {
+                const int old_index = mons->inv[i];
+
+                if (old_index == NON_ITEM)
+                    continue;
+
+                const int new_index = get_mitm_slot(0);
+                if (new_index == NON_ITEM)
+                {
+                    mi->unequip(mitm[old_index], i, 0, true);
+                    mi->inv[i] = NON_ITEM;
+                    continue;
+                }
+
+                mi->inv[i]      = new_index;
+                mitm[new_index] = mitm[old_index];
+                mitm[new_index].set_holding_monster(mi->mindex());
+                mitm[new_index].flags |= ISFLAG_SUMMONED;
+
+                // Make holy items plain
+                if (get_weapon_brand(mitm[new_index]) == SPWPN_HOLY_WRATH)
+                    set_item_ego_type(mitm[new_index], OBJ_WEAPONS, SPWPN_NORMAL);
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool _swoop_attack(monster* mons, actor* defender)
+{
+    coord_def target = defender->pos();
+
+    bolt tracer;
+    tracer.source = mons->pos();
+    tracer.target = target;
+    tracer.is_tracer = true;
+    tracer.range = LOS_RADIUS;
+    tracer.fire();
+
+    for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
+    {
+        if (tracer.path_taken[j] == target)
+        {
+            if (tracer.path_taken.size() > j + 1)
+            {
+                if (monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
+                    && !actor_at(tracer.path_taken[j+1]))
+                {
+                    if (you.can_see(mons))
+                    {
+                        mprf("%s swoops through the air toward %s!",
+                             mons->name(DESC_THE).c_str(),
+                             defender->name(DESC_THE).c_str());
+                    }
+                    mons->move_to_pos(tracer.path_taken[j+1]);
+                    fight_melee(mons, defender);
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -1440,7 +2100,7 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, last->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, -1, PROX_CLOSE_TO_PLAYER)))
+                      main->colour, PROX_CLOSE_TO_PLAYER)))
         {
             connect->props["inwards"].get_int()  = -1;
             connect->props["outwards"].get_int() = -1;
@@ -1485,7 +2145,7 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, -1, PROX_CLOSE_TO_PLAYER)))
+                      main->colour, PROX_CLOSE_TO_PLAYER)))
         {
             connect->max_hit_points = menv[tentacle].max_hit_points;
             connect->hit_points = menv[tentacle].hit_points;
@@ -2331,8 +2991,11 @@ void move_child_tentacles(monster* mons)
 
         if (pull_constrictee)
         {
-            mprf("The tentacle pulls %s backwards!",
-                 constrictee->name(DESC_THE).c_str());
+            if (you.can_see(tentacle))
+            {
+                mprf("The tentacle pulls %s backwards!",
+                     constrictee->name(DESC_THE).c_str());
+            }
 
             if (constrictee->as_player())
                 move_player_to_grid(old_pos, false, true);
@@ -2383,6 +3046,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())
          && mons->type != MONS_SLIME_CREATURE
+         && mons->type != MONS_LOST_SOUL
          && !_crawlie_is_mergeable(mons))
     {
         return false;
@@ -2399,8 +3063,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
         // A (very) ugly thing's proximity to you if you're glowing, or
-        // to others of its kind, can mutate it into a different (very)
-        // ugly thing.
+        // to others of its kind, or to other monsters glowing with
+        // radiation, can mutate it into a different (very) ugly thing.
         used = ugly_thing_mutate(mons, true);
         break;
 
@@ -2661,6 +3325,19 @@ bool mon_special_ability(monster* mons, bolt & beem)
             used = monster_blink(mons);
         break;
 
+    case MONS_PHANTASMAL_WARRIOR:
+    {
+        actor *foe = mons->get_foe();
+        if (mons->no_tele(true, false))
+            break;
+        if (foe && foe->pos().distance_from(mons->pos()) > 2 && one_chance_in(3))
+        {
+            blink_close(mons);
+            used = true;
+        }
+        break;
+    }
+
     case MONS_SKY_BEAST:
         if (one_chance_in(8))
         {
@@ -2801,6 +3478,24 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_COLD_BREATH;
     // Intentional fallthrough
 
+    case MONS_APOCALYPSE_CRAB:
+        if (spell == SPELL_NO_SPELL)
+            spell = SPELL_CHAOS_BREATH;
+    // Intentional fallthrough
+
+    case MONS_CHAOS_BUTTERFLY:
+        if (spell == SPELL_NO_SPELL)
+        {
+            if (!mons->props.exists("twister_time")
+                || you.elapsed_time - (int)mons->props["twister_time"] > 200)
+            {
+                spell = SPELL_SUMMON_TWISTER;
+            }
+            else
+                break;
+        }
+    // Intentional fallthrough
+
     // Dragon breath weapons:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
@@ -2817,14 +3512,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (!you.visible_to(mons))
             break;
 
-        if ((mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN)
-            && mons->has_ench(ENCH_BREATH_WEAPON))
+        if ((mons_genus(mons->type) == MONS_DRAGON
+            || mons_genus(mons->type) == MONS_DRACONIAN)
+                && mons->has_ench(ENCH_BREATH_WEAPON))
         {
             break;
         }
 
-        if (mons->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
-            || one_chance_in(10))
+        if (mons->type == MONS_HELL_HOUND || mons->type == MONS_CHAOS_BUTTERFLY
+                ? one_chance_in(10)
+                : x_chance_in_y(4, 13))
         {
             setup_mons_cast(mons, beem, spell);
 
@@ -2834,11 +3531,23 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
             }
 
+            if (mons->type == MONS_APOCALYPSE_CRAB)
+            {
+                beem.is_big_cloud = true;
+                beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
+            }
+
             // Fire tracer.
-            fire_tracer(mons, beem);
+            bool spellOK = true;
+
+            if (spell_needs_tracer(spell))
+            {
+                fire_tracer(mons, beem);
+                spellOK = mons_should_fire(beem);
+            }
 
             // Good idea?
-            if (mons_should_fire(beem))
+            if (spellOK)
             {
                 make_mons_stop_fleeing(mons);
                 _mons_cast_abil(mons, beem, spell);
@@ -3023,6 +3732,166 @@ bool mon_special_ability(monster* mons, bolt & beem)
             _starcursed_scream(mons, actor_at(beem.target));
         break;
 
+
+    case MONS_VAULT_SENTINEL:
+        if (mons->has_ench(ENCH_CONFUSION) || mons->friendly())
+            break;
+
+        if (!silenced(mons->pos()) && !mons->has_ench(ENCH_BREATH_WEAPON)
+                && one_chance_in(4))
+        {
+            if (you.can_see(mons))
+            {
+                simple_monster_message(mons, " blows on a signal horn!");
+                noisy(25, mons->pos());
+            }
+            else
+                noisy(25, mons->pos(), "You hear a note blown loudly on a horn!");
+
+            // This is probably coopting the enchant for something beyond its
+            // intended purpose, but the message does match....
+            mon_enchant breath_timeout =
+                mon_enchant(ENCH_BREATH_WEAPON, 1, mons, (4 +  random2(9)) * 10);
+            mons->add_ench(breath_timeout);
+            used = true;
+        }
+        break;
+
+    case MONS_VAULT_WARDEN:
+        if (mons->has_ench(ENCH_CONFUSION) || mons->attitude != ATT_HOSTILE)
+            break;
+
+        if (!mons->can_see(&you))
+            break;
+
+        if (one_chance_in(4))
+        {
+            if (_seal_doors(mons))
+                used = true;
+        }
+        break;
+
+    case MONS_FLAYED_GHOST:
+    {
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
+        actor *foe = mons->get_foe();
+        if (foe && mons->can_see(foe) && one_chance_in(5))
+        {
+            if (_flay_creature(mons, foe))
+                used = true;
+        }
+
+        break;
+    }
+
+    case MONS_LOST_SOUL:
+    if (one_chance_in(3))
+    {
+        bool see_friend = false;
+        bool see_foe = false;
+
+        for (actor_iterator ai(mons->get_los_no_trans()); ai; ++ai)
+        {
+            if (ai->is_monster() && mons_aligned(*ai, mons))
+            {
+                if (_lost_soul_affectable(ai->as_monster()))
+                    see_friend = true;
+            }
+            else
+                see_foe = true;
+
+            if (see_friend)
+                break;
+        }
+
+        if (see_foe && !see_friend)
+            if (_lost_soul_teleport(mons))
+                used = true;
+    }
+    break;
+
+    case MONS_BLUE_DEVIL:
+        if (mons->confused() || !mons->can_see(mons->get_foe()))
+            break;
+
+        if (mons->foe_distance() < 5 && mons->foe_distance() > 1)
+        {
+            if (one_chance_in(4))
+            {
+                if (mons->props.exists("swoop_cooldown")
+                    && (you.elapsed_time < mons->props["swoop_cooldown"].get_int()))
+                {
+                    break;
+                }
+
+                if (_swoop_attack(mons, mons->get_foe()))
+                {
+                    used = true;
+                    mons->props["swoop_cooldown"].get_int() = you.elapsed_time
+                                                              + 40 + random2(51);
+                }
+            }
+        }
+        break;
+
+    case MONS_RED_DEVIL:
+        if (mons->confused() || !mons->can_see(mons->get_foe()))
+            break;
+
+        if (mons->foe_distance() == 1 && mons->reach_range() == REACH_TWO
+            && x_chance_in_y(3, 5))
+        {
+            coord_def foepos = mons->get_foe()->pos();
+            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
+
+            bool found = false;
+            if (!monster_habitable_grid(mons, grd(hopspot)) ||
+                actor_at(hopspot))
+            {
+                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+                {
+                    if (ai->distance_from(foepos) != 2)
+                        continue;
+                    else
+                    {
+                        if (monster_habitable_grid(mons, grd(*ai))
+                            && !actor_at(*ai))
+                        {
+                            hopspot = *ai;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+                found = true;
+
+            if (found && mons->move_to_pos(hopspot))
+            {
+                simple_monster_message(mons, " hops backward while attacking.");
+                fight_melee(mons, mons->get_foe());
+                mons->speed_increment -= 2; // Add a small extra delay
+                return true; // Energy has already been deducted via melee
+            }
+        }
+        break;
+
+    case MONS_SHADOW:
+        if (!mons->invisible() && !mons->backlit() && one_chance_in(6))
+        {
+            if (enchant_monster_invisible(mons, "slips into darkness"))
+            {
+                mon_enchant invis = mons->get_ench(ENCH_INVIS);
+                invis.duration = 40 + random2(60);
+                mons->update_ench(invis);
+                used = true;
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -3032,8 +3901,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     // XXX: Unless monster dragons get abilities that are not a breath
     // weapon...
-    if (used && (mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN))
-        setup_breath_timeout(mons);
+    if (used)
+    {
+        if (mons_genus(mons->type) == MONS_DRAGON
+            || mons_genus(mons->type) == MONS_DRACONIAN)
+        {
+            setup_breath_timeout(mons);
+        }
+        else if (mons->type == MONS_CHAOS_BUTTERFLY)
+            mons->props["twister_time"].get_int() = you.elapsed_time;
+    }
 
     return used;
 }
@@ -3087,6 +3964,9 @@ void mon_nearby_ability(monster* mons)
 
     switch (mons->type)
     {
+    case MONS_PANDEMONIUM_LORD:
+        if (!mons->ghost->cycle_colours)
+            break;
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
         // Choose random colour.
@@ -3106,7 +3986,7 @@ void mon_nearby_ability(monster* mons)
 
             if (foe->is_player() && !can_see)
             {
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
                 interrupt_activity(AI_MONSTER_ATTACKS, mons);
             }
 
@@ -3139,7 +4019,7 @@ void mon_nearby_ability(monster* mons)
                      foe->name(DESC_THE).c_str());
 
             if (foe->is_player() && !can_see)
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
 
             // Subtly different from old paralysis behaviour, but
             // it'll do.
@@ -3154,7 +4034,7 @@ void mon_nearby_ability(monster* mons)
             if (you.can_see(mons))
                 simple_monster_message(mons, " stares at you.");
             else
-                mpr("You feel you are being watched by something.");
+                canned_msg(MSG_BEING_WATCHED);
 
             interrupt_activity(AI_MONSTER_ATTACKS, mons);
 
@@ -3170,11 +4050,6 @@ void mon_nearby_ability(monster* mons)
             mons->add_ench(ENCH_SUBMERGED);
         break;
 
-    case MONS_PANDEMONIUM_LORD:
-        if (mons->ghost->cycle_colours)
-            mons->colour = random_colour();
-        break;
-
     default:
         break;
     }
@@ -3182,7 +4057,7 @@ void mon_nearby_ability(monster* mons)
 
 // When giant spores move maybe place a ballistomycete on the they move
 // off of.
-void ballisto_on_move(monster* mons, const coord_def & position)
+void ballisto_on_move(monster* mons, const coord_def& position)
 {
     if (mons->type == MONS_GIANT_SPORE && !crawl_state.game_is_zotdef()
         && !mons->is_summoned())
@@ -3198,18 +4073,30 @@ void ballisto_on_move(monster* mons, const coord_def & position)
             if (one_chance_in(4))
             {
                 beh_type attitude = actual_same_attitude(*mons);
-                if (monster *rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                  attitude,
-                                                  NULL,
-                                                  0,
-                                                  0,
-                                                  position,
-                                                  MHITNOT,
-                                                  MG_FORCE_PLACE)))
+                if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                                        attitude,
+                                                        NULL,
+                                                        0,
+                                                        0,
+                                                        position,
+                                                        MHITNOT,
+                                                        MG_FORCE_PLACE)))
                 {
+                    if (mons_is_god_gift(mons, GOD_FEDHAS))
+                    {
+                        plant->flags |= MF_NO_REWARD;
+
+                        if (attitude == BEH_FRIENDLY)
+                        {
+                            plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                            mons_make_god_gift(plant, GOD_FEDHAS);
+                        }
+                    }
+
                     // Don't leave mold on squares we place ballistos on
                     remove_mold(position);
-                    if  (you.can_see(rc))
+                    if (you.can_see(plant))
                         mprf("A ballistomycete grows in the wake of the spore.");
                 }
 
@@ -3224,7 +4111,7 @@ void ballisto_on_move(monster* mons, const coord_def & position)
 static bool _ballisto_at(const coord_def & target)
 {
     monster* mons = monster_at(target);
-    return (mons && mons ->type == MONS_BALLISTOMYCETE
+    return (mons && mons->type == MONS_BALLISTOMYCETE
             && mons->alive());
 }
 
@@ -3241,7 +4128,7 @@ static bool _mold_connected(const coord_def & target)
 
 // If 'monster' is a ballistomycete or spore, activate some number of
 // ballistomycetes on the level.
-void activate_ballistomycetes(monster* mons, const coord_def & origin,
+void activate_ballistomycetes(monster* mons, const coord_def& origin,
                               bool player_kill)
 {
     if (!mons || mons->is_summoned()
@@ -3364,7 +4251,7 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
             }
         }
 
-        const position_node * thread = &(*candidates[index]);
+        const position_node* thread = &(*candidates[index]);
         while (thread)
         {
             if (!one_chance_in(3))
@@ -3383,23 +4270,31 @@ void ancient_zyme_sicken(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && you.res_rotting() <= 0
+        && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.disease)
         {
-            mpr("You feel yourself grow ill in the presence of the ancient zyme.", MSGCH_WARN);
-            you.sicken(50 + random2(50));
-        }
-        else if (x_chance_in_y(you.time_taken, 60))
-            you.sicken(35 + random2(50));
+            if (!you.duration[DUR_SICKENING])
+            {
+                mprf(MSGCH_WARN, "You feel yourself growing ill in the presence of %s.",
+                    mons->name(DESC_THE).c_str());
+            }
 
-        if (x_chance_in_y(you.time_taken, 100))
+            you.duration[DUR_SICKENING] += (2 + random2(4)) * BASELINE_DELAY;
+            if (you.duration[DUR_SICKENING] > 100)
+            {
+                you.sicken(40 + random2(30));
+                you.duration[DUR_SICKENING] = 0;
+            }
+        }
+        else
         {
-            mpr("The zyme's presence inflicts a toll on your body.");
-            you.drain_stat((coinflip() ? STAT_STR : STAT_DEX), 1, mons);
+            if (x_chance_in_y(you.time_taken, 60))
+                you.sicken(15 + random2(30));
         }
-
     }
+
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
     {
         monster *m = monster_at(*ri);
@@ -3450,8 +4345,8 @@ void starcursed_merge(monster* mon, bool forced)
         monster* mergee = monster_at(target);
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
-            if (forced && you.can_see(mon))
-                mpr("The starcursed mass shudders and is absorbed by its neighbour.");
+            if (forced)
+                simple_monster_message(mon, " shudders and is absorbed by its neighbour.");
             if (_do_merge_masses(mon, mergee))
                 return;
         }
@@ -3494,7 +4389,7 @@ void starcursed_merge(monster* mon, bool forced)
 
             if (moved)
             {
-                mpr("The starcursed mass shudders and withdraws towards its neighbour.");
+                simple_monster_message(mon, " shudders and withdraws towards its neighbour.");
                 mon->speed_increment -= 10;
             }
         }

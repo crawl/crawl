@@ -19,6 +19,7 @@
 #include <time.h>
 #include <math.h>
 
+#include "abyss.h"
 #include "cio.h"
 #include "colour.h"
 #include "crash.h"
@@ -48,9 +49,9 @@
 
 #ifdef __ANDROID__
 #include <android/log.h>
-double log2( double n )
+double log2(double n)
 {
-    return log(n)/log(2); // :(
+    return log(n) / log(2); // :(
 }
 #endif
 
@@ -126,6 +127,7 @@ static void _clear_globals_on_exit()
     clear_zap_info_on_exit();
     clear_colours_on_exit();
     dgn_clear_vault_placements(env.level_vaults);
+    destroy_abyss();
 }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
@@ -419,6 +421,9 @@ void canned_msg(canned_message_type which_message)
         mpr("You are too berserk!");
         crawl_state.cancel_cmd_repeat();
         break;
+    case MSG_TOO_CONFUSED:
+        mpr("You're too confused!");
+        break;
     case MSG_PRESENT_FORM:
         mpr("You can't do that in your present form.");
         crawl_state.cancel_cmd_repeat();
@@ -483,10 +488,10 @@ void canned_msg(canned_message_type which_message)
         mpr("You don't know any spells.");
         break;
     case MSG_MANA_INCREASE:
-        mpr("You feel your mana capacity increase.");
+        mpr("You feel your magic capacity increase.");
         break;
     case MSG_MANA_DECREASE:
-        mpr("You feel your mana capacity decrease.");
+        mpr("You feel your magic capacity decrease.");
         break;
     case MSG_DISORIENTED:
         mpr("You feel momentarily disoriented.");
@@ -508,6 +513,12 @@ void canned_msg(canned_message_type which_message)
         break;
     case MSG_EVOCATION_SUPPRESSED:
         mpr("You may not evoke while suppressed!");
+        break;
+    case MSG_BEING_WATCHED:
+        mpr("You feel you are being watched by something.");
+        break;
+    case MSG_CANNOT_MOVE:
+        mpr("You cannot move.");
         break;
     }
 }
@@ -557,7 +568,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
 #ifdef TOUCH_UI
     Popup *pop = new Popup(prompt);
     MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(prompt, MEL_TITLE ));
+    pop->push_entry(new MenuEntry(prompt, MEL_TITLE));
     pop->push_entry(status);
     MenuEntry *me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y', false);
     me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
@@ -750,7 +761,8 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
 
 char index_to_letter(int the_index)
 {
-    ASSERT(the_index >= 0 && the_index < ENDOFPACK);
+    ASSERT(the_index >= 0);
+    ASSERT(the_index < ENDOFPACK);
     return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
 }
 
@@ -767,24 +779,24 @@ int letter_to_index(int the_letter)
 
 maybe_bool frombool(bool b)
 {
-    return (b ? B_TRUE : B_FALSE);
+    return (b ? MB_TRUE : MB_FALSE);
 }
 
 bool tobool(maybe_bool mb)
 {
-    ASSERT(mb != B_MAYBE);
-    return (mb == B_TRUE);
+    ASSERT(mb != MB_MAYBE);
+    return (mb == MB_TRUE);
 }
 
 bool tobool(maybe_bool mb, bool def)
 {
     switch (mb)
     {
-    case B_TRUE:
+    case MB_TRUE:
         return true;
-    case B_FALSE:
+    case MB_FALSE:
         return false;
-    case B_MAYBE:
+    case MB_MAYBE:
     default:
         return def;
     }

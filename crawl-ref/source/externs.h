@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Fixed size 2D vector class that asserts if you do something bad.
+ * @brief Definitions for common structs.
 **/
 
 #ifndef EXTERNS_H
@@ -118,7 +118,7 @@ struct coord_def
         set(0, 0);
     }
 
-    int distance_from(const coord_def &b) const;
+    int distance_from(const coord_def &b) const PURE;
 
     bool operator == (const coord_def &other) const
     {
@@ -281,6 +281,24 @@ static inline monster_type operator++(monster_type &x)
     return x;
 }
 
+static inline monster_type operator--(monster_type &x)
+{
+    x = static_cast<monster_type>(x - 1);
+    return x;
+}
+
+static inline spell_type operator++(spell_type &x)
+{
+    x = static_cast<spell_type>(x + 1);
+    return x;
+}
+
+static inline spell_type operator--(spell_type &x)
+{
+    x = static_cast<spell_type>(x - 1);
+    return x;
+}
+
 struct cloud_struct
 {
     coord_def     pos;
@@ -373,10 +391,6 @@ public:
         : branch(br), depth(dep)
     {
     }
-    level_id(const level_id &ot)
-        : branch(ot.branch), depth(ot.depth)
-    {
-    }
 
     static level_id parse_level_id(const string &s) throw (string);
     static level_id from_packed_place(const unsigned short place);
@@ -397,14 +411,7 @@ public:
 
     bool is_valid() const
     {
-        return (branch != NUM_BRANCHES && depth != -1);
-    }
-
-    const level_id &operator = (const level_id &id)
-    {
-        branch     = id.branch;
-        depth      = id.depth;
-        return *this;
+        return (branch < NUM_BRANCHES && depth > 0);
     }
 
     bool operator == (const level_id &id) const
@@ -593,12 +600,14 @@ public:
     int mp;
     int hp;
     coord_def pos;
+    int travel_speed;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 
 public:
     runrest();
     void initialise(int rdir, int mode);
+    void init_travel_speed();
 
     // returns runmode
     operator int () const;

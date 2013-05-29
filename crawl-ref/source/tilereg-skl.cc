@@ -233,6 +233,8 @@ void SkillRegion::update()
 
         if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
             continue;
+        if (is_useless_skill(skill))
+            continue;
         InventoryTile desc;
         if (you.skills[skill] >= 27)
             desc.tile = tileidx_skill(skill, -1);

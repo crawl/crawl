@@ -1,0 +1,960 @@
+################################################################################
+# vaults_rooms_hard.des: Subvaults for the Vaults.
+#
+# Content: These are the subvaults that place a large number of monsters and
+#          out of depth monsters.
+################################################################################
+#
+# All of the subvaults in here should use the tag vaults_hard
+#
+# You can additionally use the following tags:
+#
+# vaults_orient_n vaults_orient_s vaults_orient_e vaults_orient_w
+# no_windows preserve_wall
+#
+# vaults_orient_x: controls the entry points to the subvault.
+# A subvault using vaults_orient_n will always be entered from the north side,
+# as it appears in the .des. Multiple orient tags may be used.
+#
+# no_windows: prevents the layout from creating windows into the subvault.
+#
+# preserve_wall: prevents the layout from changing rock into the same wall type
+# as the rest of the floor.
+#
+################################################################################
+
+
+#
+#  st_box_setup
+#
+#  This is the header for st's "greater box" vaults.
+
+{{
+function st_box_setup(e)
+  e.tags("no_item_gen")
+  e.subst("% = %%%**|$")
+  e.kmons("7 = patrolling vault guard")
+  e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
+               golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
+               iron dragon w:2 / swamp dragon / dragon / ice dragon /\
+               catoblepas / moth of wrath w:1 / ghost moth w:1 /\
+               eye of draining / giant eyeball / eye of devastation /\
+               giant orange brain / greater naga / guardian serpent /\
+               vampire knight / vampire mage / deep elf sorcerer /\
+               deep elf death mage / deep elf demonologist /\
+               deep elf annihilator / deep elf high priest / orc warlord /\
+               base draconian w:15 / sphinx / shapeshifter /\
+               glowing shapeshifter")
+  e.subst("0 = 0:9 Z:1")
+  e.subst("9 = 9:3 Z:1")
+end
+}}
+
+####
+
+NAME:     vaults_room_glass_cross
+TAGS:     vaults_hard
+NSUBST:   y = 1:+ / *:x
+SUBST:    w : ....x, m : mmmx, * = *%
+KITEM:    8 = $
+NSUBST:   9 = 1:9 / *:000009
+NSUBST:   8 = 1:9 / *=09
+MAP
+ww......ww
+ww......ww
+..9xmmx9..
+..xy.8yx..
+..m.*%.m..
+..m.%*.m..
+..xy8.yx..
+..9xmmx9..
+ww......ww
+ww......ww
+ENDMAP
+
+NAME:     vaults_room_hangedman_quadrants
+TAGS:     vaults_hard no_monster_gen
+SUBST:    $ = $%., * = *|, = : -., - : +:4 $:1
+MAP
+xx.x.xx
+x9$x$9x
+.$*-*$.
+xx=x=xx
+.$*-*$.
+x9$x$9x
+xx.x.xx
+ENDMAP
+
+NAME:     vaults_room_guarded_vault
+TAGS:     vaults_hard vaults_orient_e
+MONS:     vault guard
+SUBST:    0 = 00.
+MAP
+%....*x11
+..00..x..
+......n..
+0.99.0+..
+......n..
+..00..x..
+*....%x11
+ENDMAP
+
+NAME:    st_diamondy
+TAGS:    vaults_hard
+SUBST:   1 = 0..
+MAP
+xxxxx..x..xxxxx
+xxxx..1x1..xxxx
+xxx...xxx...xxx
+xx...xx%xx...xx
+x...0.....0...x
+...x.......x...
+.1xx.......xx1.
+xxx*..9.9..*xxx
+.1xx.......xx1.
+...x.......x...
+x...0.....0...x
+xx...xx%xx...xx
+xxx...xxx...xxx
+xxxx..1x1..xxxx
+xxxxx..x..xxxxx
+ENDMAP
+
+NAME:    st_cells
+TAGS:    vaults_hard allow_dup
+MAP
+...x....x...
+...x....x...
+xxx+xxxx+xxx
+$0.x%09*x.0$
+$0.x*90%x.0$
+xxx+xxxx+xxx
+...x....x...
+...x....x...
+ENDMAP
+
+NAME:    st_smaller_cells
+TAGS:    vaults_hard
+MAP
+..x.0x..x0.x..
+..x0.x..x.0x..
+xx+xx+xx+xx+xx
+..x$%x9*x$$x..
+..x$$x*9x%$x..
+xx+xx+xx+xx+xx
+..x0.x..x.0x..
+..x.0x..x0.x..
+ENDMAP
+
+NAME:    st_lines
+TAGS:    vaults_hard
+SHUFFLE: 90
+SUBST:   1 = 00.
+MAP
+%............9
+0............*
+xxxxxx++xxxxxx
+.....+11+.....
+.....+11+.....
+xxxxxx++xxxxxx
+9............%
+*............0
+ENDMAP
+
+NAME:    st_spiral_rooms
+TAGS:    vaults_hard
+MAP
+....x.........
+.0..+.........
+..0.xxxxxxxxxx
+.0..x$*9%+....
+....+%9*$x..0.
+xxxxxxxxxx.0..
+.........+..0.
+.........x....
+ENDMAP
+
+NAME:    st_cross
+TAGS:    vaults_hard
+KMONS:   8 = 8
+KITEM:   8 = |, *
+SUBST:   8 = 98, 0 = 09
+MAP
+xxxxx.xxxxx
+xxxx.0.xxxx
+xxxxx.xxxxx
+xxx.....xxx
+x.x.x+x.x.x
+.0..+8+..0.
+x.x.x+x.x.x
+xxx.....xxx
+xxxxx.xxxxx
+xxxx.0.xxxx
+xxxxx.xxxxx
+ENDMAP
+
+NAME:    st_check
+TAGS:    vaults_hard
+WEIGHT:  5
+KMONS:   8 = 8
+KITEM:   8 = |
+KMONS:   9 = 9
+KITEM:   9 = *
+MAP
+.................
+.xxxxxxxxxxxxxxx.
+.x98990+9+9+0+0+.
+.xxxxxxxxxxxxxxx.
+.................
+ENDMAP
+
+NAME:    st_octagons_1
+TAGS:    vaults_hard
+NSUBST:  ^ = 2:* / *:%
+MAP
+......|x.....x^..^x..
+.9...9*x.....x.90.x..
+......xx.....xx..xx..
+.....xx.......x++x...
+....+x..xx+xx........
+.9.xx..xx...xx.....xx
+*%xx...x^.9.^x....xx^
+xxx....xx...xx...xx..
+........xx+xx....+.0.
+.................+.9.
+x+xx......xx+xx..xx..
+...xx....xx...xx..xx^
+...0xx..xx.....xx..xx
+..9.^x..x0..9..0x....
+....^x..x^.....^x....
+ENDMAP
+
+NAME:    st_octagons_2
+TAGS:    vaults_hard
+NSUBST:  ^ = 3:* / *:%$
+MAP
+....^x..x^......^x^..
+.9..^x..x...90...x.0.
+....xx..xx......xx.0.
+...xx...%xxx..xxxx...
+x++x....|x.x++x..xx..
+x.....9.%x........x++
+xx..9...xx...........
+.xx....xx............
+..x+xx+x.............
+.................xx+x
+......xx+xx.....xx...
+x++x.xx...xx...xx....
+x..xxx.....xx+xx^.0..
+.00.xx..9..x...x^.9..
+....xx^...^x.0.x.....
+ENDMAP
+
+NAME:    st_squares
+TAGS:    vaults_hard
+MAP
+..............
+....0....0....
+..xxxx++xxxx..
+..x........x..
+..x...00...x..
+..x..xxxx..x..
+..x..x*%x..x..
+..x..x*%x..x..
+..x..x++x..x..
+..x........x..
+..x0..99..0x..
+..xxxxxxxxxx..
+..............
+..............
+ENDMAP
+
+NAME:    st_lattice
+TAGS:    vaults_hard
+MAP
+.x.x.x.x.
+.x0x.x0x.
+x.x.x.x.x
+x%x9x*x.x
+.x*x9x%x.
+.x.x.x.x.
+x0x.x.x0x
+x.x.x.x.x
+ENDMAP
+
+NAME:    st_more_cells
+TAGS:    vaults_hard
+MAP
+...x...x...
+.0.+.9.+.9.
+...x*.*x...
+x+xxx+xxx+x
+...x*.%x...
+.9.+.9.+.0.
+...x...x...
+ENDMAP
+
+NAME:    st_hourglassy
+TAGS:    vaults_hard
+TAGS:    vaults_orient_n vaults_orient_s
+MAP
+xxxxxxx...xxxxxxx
+xxxxxx.....xxxxxx
+xxxx.........xxxx
+xx0...........0xx
+x|9....9.9....9|x
+xx0...........0xx
+xxxx.........xxxx
+xxxxxx.....xxxxxx
+xxxxxxx...xxxxxxx
+ENDMAP
+
+NAME:    st_eye
+TAGS:    vaults_hard
+TAGS:    vaults_orient_n vaults_orient_s
+NSUBST:  9 = 1:8 / *:9
+MAP
+xxxxxxxxx..xxxxxxxxx
+xx%**xxxx..xxxx%*%xx
+x.9...xx....xx...9.x
+x...0.xx....xx.0...x
+x....xx0....0xx....x
+x.0.xx..x..x..xx.0.x
+x.........9........x
+x........9.........x
+x.0.xx..x..x..xx.0.x
+x....xx0....0xx....x
+x...0.xx....xx.0...x
+x.9...xx....xx...9.x
+xx|*%xxxx..xxxx%**xx
+xxxxxxxxx..xxxxxxxxx
+ENDMAP
+
+NAME:    st_star
+TAGS:    vaults_hard
+TAGS:    vaults_orient_n vaults_orient_s
+NSUBST:  0 = 2=998 / 6:0 / *:.
+MAP
+xxxxxxxxxxxx..xxxxxxxxxxxx
+x%*xxxxxxx......xxxxxxx%*x
+x*9..xxx...0..0...xxx..9%x
+xx.......0..xx..0.......xx
+xxxx..0....xxxx....0..xxxx
+xxxx..0....xxxx....0..xxxx
+xx.......0..xx..0.......xx
+x%9..xxx...0..0...xxx..9*x
+x*%xxxxxxx......xxxxxxx*%x
+xxxxxxxxxxxx..xxxxxxxxxxxx
+ENDMAP
+
+NAME:    st_quartered_hall
+TAGS:    vaults_hard
+NSUBST:  0 = 4=998 / 8:0 / *:.
+MAP
+xxxxxxx..xxxxxxx
+x*00*x....x*00*x
+xx..xx....xx..xx
+xxx+x.0..0.x+xxx
+xxx...x..x...xxx
+x..0x......x0..x
+.......09.......
+.......90.......
+x..0x......x0..x
+xxx...x..x...xxx
+xxx+x.0..0.x+xxx
+xx..xx....xx..xx
+x*00|x....x*00*x
+xxxxxxx..xxxxxxx
+ENDMAP
+
+NAME:    hangedman_vaults_hard_town_square
+TAGS:    vaults_hard
+KFEAT:   d = any shop
+SHUFFLE: abc, de, d*, AB
+SUBST:   a : x., b : x.., c = ., e = %%$, * = %:3 *:7
+SUBST:   A : x.., B : xx., C : xGT
+SUBST:   1 = 9:3 0:7, 2 = 9:7 0:3
+MAP
+xxxxxx...xxxxxx
+xe.2xx.C.xx1.ex
+x.A..x...x..A.x
+x1.d.xx.xx.d.2x
+xx...........xx
+xxxx.B.c.B.xxxx
+...x..aba..x...
+.C...cbGbc...C.
+...x..aba..x...
+xxxx.B.c.B.xxxx
+xx...........xx
+x2.e.xx.xx...1x
+x.A..x...x..A%x
+xd.1xx.C.xx2%%x
+xxxxxx...xxxxxx
+ENDMAP
+
+NAME: grunt_vaults_funneled_arena
+TAGS: vaults_hard
+NSUBST: 9 = 1:8 / *:9
+SUBST: 0 = 90000000
+KMONS: 0 = 0 band
+SUBST: $ = |***$$$$
+MAP
+  x.....xxxxx...xxxxx.....x
+ xx......xxxxx.xxxxx......xx
+xx.......+...x.x...+.......xx
+.........xx..x.x..xx.........
+....0...xxx.......xxx....0...
+.......xxxxx..0..xxxxx.......
+......xxxxxx.....xxxxxx......
+.....xxxxxxxx...xxxxxxxx.....
+x...xxxxxxxxx...xxxxxxxxx...x
+xx+xxxxxxxxxxx.xxxxxxxxxxx+xx
+xx.xxxxxxxxxxx.xxxxxxxxxxx.xx
+xx...xxxxxxxxx+xxxxxxxxx...xx
+xx.....xxxxxx$$$xxxxxx.....xx
+.xxx.....xxx$9$9$xxx.....xxx.
+.....0.....+$$G$$+....0......
+.xxx.....xxx$9$9$xxx.....xxx.
+xx.....xxxxxx$$$xxxxxx.....xx
+xx...xxxxxxxxx+xxxxxxxxx...xx
+xx.xxxxxxxxxxx.xxxxxxxxxxx.xx
+xx+xxxxxxxxxxx.xxxxxxxxxxx+xx
+x...xxxxxxxxx...xxxxxxxxx...x
+.....xxxxxxxx...xxxxxxxx.....
+......xxxxxx.....xxxxxx......
+.......xxxxx..0..xxxxx.......
+........xxx.......xxx........
+....0....xx..x.x..xx....0....
+xx.......+...x.x...+.......xx
+ xx......xxxxx.xxxxx......xx
+  x.....xxxxx...xxxxx.....x
+ENDMAP
+
+####
+# st's greater box vaults!
+
+# 32 monsters, 38 %
+NAME:     st_greater_box_1
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 5:9 / 3:0 / *:.
+NSUBST:   " = 8:9 / *:.
+NSUBST:   - = 8:9 / *:.
+NSUBST:   8 = 2:8 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v''''''''''''''''''''''''''''v
+v''''''''''''''''''''''''''''v
+v''''''''''''''''''''''''''''v
+v''''''''''''''''''''''''''''v
+vvvv++vvvv''''''''''vv++vvvvvv
+v""""""""v''''''''''v----v-8-v
+v""""""""v''''''''''v----v---v
+v""""""""vvvvv++vvvvv----v---v
+v""""""""v%%%v77v---v----v---v
+v""""""""v%%%v77v------------v
+v""""""""v%%%v77v------------v
+v""""""""v"""v++v------------v
+v"""""""""""8v..v------------v
+v""""""""""""v..v------------v
+v""""""""v"""v..v------------v
+v""""""""v%%%v..v-----8------v
+v""""""""v%%%v..v$%%%%%%%%%%$v
+v"""8""""v%%%v..v$%%%%%%%%%%$v
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
+ENDMAP
+
+# 32 monsters, 36 %
+NAME:     st_greater_box_2
+TAGS:     vaults_hard vaults_orient_s
+SHUFFLE:  ab
+SUBST:    a = +
+SUBST:    b = v
+SUBST:    c : v.
+SUBST:    d : v.
+NSUBST:   ' = 8:9 / *:.
+NSUBST:   " = 8:9 / *:.
+NSUBST:   - = 8:9 / *:.
+NSUBST:   8 = 2:8 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v%%%---v"""""""8""""""v---%%%v
+v%%%---+""""""""""""""+---%%%v
+v%%%8--v""""""""""""""v--8%%%v
+v------vvvvvvvaavvvvvvv------v
+v------v''''''''''''''v------v
+vvbbvvvb'c''''dd''''c'vvvvbbvv
+v""""v'''c''''dd''''c'''v""""v
+v""""v'ccc''''''''''ccc'v""""v
+v""""a'''''dd''8'dd'''''a"""8v
+v8"""a'''''dd'8''dd'''''a""""v
+v""""v'ccc''''''''''ccc'v""""v
+v""""v'''c''''dd''''c'''v""""v
+vv++vvvv'c''''dd''''c'bvvv++vv
+v------v''''''''''''''v------v
+v------vvvvvvv++vvvvvvv------v
+v%%%8--v..7........7..v--8%%%v
+v%%%---v..7........7..v---%%%v
+v%%%---v..7........7..v---%%%v
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
+ENDMAP
+
+# 36 monsters, 42 %
+NAME:     st_greater_box_3
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 12:9 / *:.
+NSUBST:   " = 10:9 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vv''''vv''''vv77vv..9..9..vv"v
+v''''vv''''vv....vv......vv""v
+v...vv''''vv......vv....vv"""v
+v...v....vv........vv++vv""""v
+v...+....+7...vv...7+..+"""""v
+v...+....+7...vv...7+..+"""""v
+v...v....vv........vv++vv""""v
+v...vv''''vv......vv""""vv"""v
+v''''vv''''vv....vv""""""vv""v
+vv''''vv''''vv77vv""""""""vv+v
+vvv''''vv''''v++v""""""""""+8v
+v%vv''''vv''vv..vv""""""""vv+v
+v%%vv''''vvvv....vv""""""vv$$v
+v%%%vv''''vv......vv""""vv$%%v
+v%%%%vv'''v0......0vv++vv%%%%v
+v%%$%$vv++vv......vv$%%$vv%%%v
+v%%%$+v....vv....vv$%%%%$vv%%v
+v%%$vv.....8vv..vv$%%%%%%$vv%v
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
+ENDMAP
+
+# 31 monsters, 28 %, 8 |
+NAME:     st_greater_box_4
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 5:9 / 3:0 / *:.
+NSUBST:   " = 8:9 / *:.
+NSUBST:   - = 8:9 / 2:8 / *:.
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v%$%$v------------------v%$%$v
+v$%$%v------------------v$%$%v
+v%|%$+------------------+%|%$v
+v$%|%+------------------+$%|%v
+v%$%$v------------------v%$%$v
+v$%$%v------------------v$%$%v
+vvvvvvvvvvvvvv++vvvvvvvvvvvvvv
+v......."""""""""""""".......v
+v......."""""""""""""".......v
+v+vvvv+vvvvvvvvvvvvvvvv+vvvv+v
+v''''v""""""v%||%v""""""v''''v
+v''''v""""""+%||%+""""""v''''v
+vvvv+vvvvvvvvvvvvvvvvvvvv+vvvv
+v.......''''''''''''''.......v
+v.......''''''''''''''.......v
+v++vvvvvvvvvvvvvvvvvvvvvvvv++v
+v........77........77........v
+v........7..........7........v
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
+ENDMAP
+
+# 26 monsters, 36 %
+NAME:     st_greater_box_5
+TAGS:     vaults_hard vaults_orient_s
+NSUBST:   ' = 15:9 / 3:8 / *:.
+SHUFFLE:  abc
+SUBST:    a = +
+SUBST:    b = v
+SUBST:    c = v
+: st_box_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v%$%$v''''''''''''''''''v%$%$v
+v$%$%+''''''''''''''''''+$%$%v
+v%$%$v''''''''''''''''''v%$%$v
+vvvvvv''''''''''''''''''vvvvvv
+v%%%%v''''''''''''''''''v%%%%v
+v%%%%+''''''''''''''''''+%%%%v
+v%%%%v''''''''''''''''''v%%%%v
+vvvvvv''''''''98''''''''vvvvvv
+v$$$$v''''''''''''''''''v$$$$v
+v$$$$+''''''''''''''''''+$$$$v
+v$$$$v''''''''''''''''''v$$$$v
+vvvvvv''''''''''''''''''vvvvvv
+v....v''''''''''''''''''v....v
+v....+''''''''''''''''''+....v
+v....v''''''''''''''''''v....v
+vavvvvvvvcvvvvbbvvvvcvvvvvvvav
+v.........77......77.........v
+v.........7........7.........v
+vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
+ENDMAP
+
+####
+
+NAME: ontoclasm_vaults_water_temple
+WEIGHT: 3
+TAGS: vaults_hard no_pool_fixup
+KMASK: wW = no_monster_gen
+NSUBST: 0 = 1:9 / *:0
+KMONS: 0 = 0 band
+SUBST: G : GU, % = %%%%*.
+MAP
+     ........
+     ........
+      wx++xw
+   xxxxxWWxxxxx
+   xwwwxWWxwwwx
+.. xw0.x++x.0wx ..
+..wxw%W....W%wxw..
+..xxxx.G..G.xxxx..
+..+WW+..WW..+WW+..
+..+WW+..WW..+WW+..
+..xxxx.G..G.xxxx..
+..wxw%WWwwWW%wxw..
+.. xw0.wwww.0wx ..
+   xwwwxxxxwwwx
+ENDMAP
+
+NAME: ontoclasm_vaults_fire_temple
+WEIGHT: 3
+TAGS: vaults_hard
+KMASK: l = no_monster_gen
+NSUBST: 0 = 1:9 / *:0
+KMONS: 0 = 0 band
+SUBST: G : GY, % = %%%%*.
+MAP
+     ........
+     ........
+      lx++xl
+   xxxxx..xxxxx
+   xlllx..xlllx
+.. xl0.x++x.0lx ..
+..lxl%......%lxl..
+..xxxx.llll.xxxx..
+..+..+.lGGl.+..+..
+..+..+......+..+..
+..xxxx.lGGl.xxxx..
+..lxl%.llll.%lxl..
+.. xl0.llll.0lx ..
+   xlllxxxxlllx
+ENDMAP
+
+NAME: ontoclasm_vaults_shout
+TAGS: vaults_hard
+KMONS: 0 = 0 band
+MAP
+..xxxxxxx
+..x.9...xx
+..x%.9...x
+..xxxxx..x
+.....+..0x
+.....+..0x
+..xxxxx..x
+..x%.9...x
+..x.9...xx
+..xxxxxxx
+ENDMAP
+
+NAME: ontoclasm_vaults_gallery
+TAGS: vaults_hard
+NSUBST: 9 = 1:0 / 1=8 / *:9
+MAP
+G...........G
+..x.......x..
+..xx..%..xx..
+..x.GGGGG.x..
+..xx..9..xx..
+..x*9.9.9*x..
+..xxxxxxxxx..
+ENDMAP
+
+NAME: ontoclasm_vaults_echo
+WEIGHT: 3
+TAGS: vaults_hard no_rotate vaults_orient_s
+NSUBST: % = 2=% / 1=* / *=.
+SUBST: G : GGGTUY
+MAP
+x%..x.x..%x
+..8..|..8..
+....x.x....
+x.xxxxxxx.x
+%....x....%
+.9.x...x.9.
+...x...x...
+x.%x...x%.x
+xxxxx.xxxxx
+...G...G...
+...........
+ENDMAP
+
+NAME:   dpeg_vaults_monster_doublerow
+TAGS:   vaults_hard
+WEIGHT: 1
+SUBST:  0 : 0000000z, z : z., 0 = 0009..
+KMONS:  z = human skeleton
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xx00xx00xx00xx00xx00xx00xx
+xx..xx..xx..xx..xx..xx..xx
+x........................x
+x.xx..xx..xx..xx..xx..xx.x
+..xx00xx00xx00xx00xx00xx..
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   dpeg_vaults_hating_casters
+TAGS:   vaults_hard
+MONS:   eye of draining
+SUBST:  % = %%%$* , * = **|
+NSUBST: . = 6:0 / *:.
+SUBST:  0 = 00009, 8 = 889
+SUBST:  _ : x. , + : +==
+NSUBST: = = 1:+ / *=+x
+KPROP:  1 = no_rtele_into
+MAP
+    @@@
+xxxx+++xxxx
+x%%.....%%x
+x%..000..%x
+x_..mmm.._x
+x_..m1m.._x
+x_..mmm.._x
+x...***...x
+x8.......8x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   dpeg_vaults_pockets_of_resistance
+TAGS:   vaults_hard
+SUBST:  0 = 0000099998
+MAP
+  xxx......
+ xxxxx....xxx
+xx000xx..xxxxx
+xx000xx..x000xx
+xx000....x000xx
+.xx.......000xx
+...........xxx.
+...............
+...xx000xx.....
+.  xx000xx  ...
+   xx000xx    .
+    xxxxx
+     xxx
+ENDMAP
+
+NAME:   dpeg_vaults_waves
+TAGS:   vaults_hard
+SUBST:  = = +x
+SUBST:  ^ : .x , - : .xx
+SUBST:  * = **% , | = ||*
+SUBST:  8 = 89
+MAP
+xxxxxx
+x8..|x
+x-..^xxxxxxxxxxxxxx
+x8...+*.9...x%.....
+x-...=..9...+..000@
+x8...+*.9...x%.....
+x-..^xxxxxxxxxxxxxx
+x8..|x
+xxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_display_case
+TAGS: vaults_hard vaults_orient_w no_monster_gen
+MAP
+.........
+.........
+..xxxxxx+
+..m*x.0..
+..m*+090.
+..m*x.0..
+..xxxxxx+
+.........
+.........
+ENDMAP
+
+NAME: nicolae_vaults_minivaults
+TAGS: vaults_hard
+NSUBST: P = 1:P / *:9
+SHUFFLE: abc, def, ghi, jkl
+KITEM: P = superb_item
+SUBST: adgj : x
+SUBST: bcefhikl : .
+MAP
+................
+.xxxxxx..xxxxxx.
+.xP.cbx..xefePx.
+.x.abax..x.ddex.
+.xcbc.x..xfddfx.
+.xba...00..f.ex.
+.xxxx.0..0.xxxx.
+.....0.<<.0.....
+.....0.<<.0.....
+.xxxx.0..0.xxxx.
+.x.gi..00..jllx.
+.xhghix..xjkkjx.
+.xihggx..xlkj.x.
+.xPih.x..xlj.Px.
+.xxxxxx..xxxxxx.
+................
+ENDMAP
+
+NAME: nicolae_vaults_murderbox
+TAGS: vaults_hard
+SUBST: m : mx
+MAP
+xx.....xx
+xmm.0.mmx
+.mxx+xxm.
+..x...x..
+.0+.8.+0.
+..x...x..
+.mxx+xxm.
+xmm.0.mmx
+xx.....xx
+ENDMAP
+
+NAME: nicolae_vaults_quadrants
+TAGS: vaults_hard
+SUBST: m : +++xxm, n : +x, % = %%%%%$$$$**|, 8 = 89
+MAP
+     .......
+   ...xm+mx...
+  ..xxx...xxx..
+ ..xx...9...xx..
+ .xxxx.....xxxx.
+..x.xxx...xxx.x..
+.xx..xxn+nxx..xx.
+.m....x%%%x....m.
+.+.9..x%8%x..9.+.
+.m....x%%%x....m.
+.xx..xxxxxxx..xx.
+..x.xxx...xxx.x..
+ .xxxx.....xxxx.
+ ..xx...9...xx..
+  ..xxx...xxx..
+   ...xm+mx...
+     .......
+ENDMAP
+
+NAME: nicolae_vaults_statue_guard
+TAGS: vaults_hard vaults_orient_e
+MONS: silver statue / ice statue / orange crystal statue
+KPROP: % = no_rtele_into
+SUBST: % = %%%*
+MAP
+xxxx......xx
+x%%x....x..x
+x%%1....m.(.
+x%%x....x..x
+xxxx......xx
+ENDMAP
+
+NAME:     vaults_mumra_bighexcomb
+TAGS:     vaults_hard
+SUBST:    0 = 0.
+NSUBST:   0 = 1:9 / *:0
+MAP
+      ...
+     .000.
+ ...xx...xx...
+.000.xx+xx.000.
+x...x+...+x...x
+xxxxx..(..xxxxx
+x...x+...+x...x
+.000.xx+xx.000.
+ ...xx...xx...
+     .000.
+      ...
+ENDMAP
+
+NAME: nicolae_vaults_branching_niches
+TAGS: vaults_hard vaults_orient_s no_monster_gen no_item_gen
+SUBST: + : +.
+KMONS: m = 0 band w:12 / 9 w:3 / 8 w:1 / nothing w:6
+KITEM: m = nothing / % / $ / * w:5 / | w:1
+MAP
+xmxxxmxxxmxxxmx
+x+xxx+xxx+xxx+x
+x.....xxx.....x
+x+x.x+xxx+x.x+x
+xmx.xmxxxmx.xmx
+xxx.xxxxxxx.xxx
+xxx.........xxx
+xxx.xxx.xxx.xxx
+xmx.xmx.xmx.xmx
+x+x.x+x.x+x.x+x
+x.....x.x.....x
+x+xxx+x.x+xxx+x
+xmxxxmx.xmxxxmx
+xxxxxxx.xxxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_c_with_doors
+TAGS: vaults_hard vaults_orient_e no_monster_gen no_item_gen
+NSUBST: A = 1:+ / *:x
+SUBST: $ = $$%, B = 0., 0 = 900
+KMONS: 0 = 0 band
+MAP
+xxxxxxxxxxx
+xB.B...B..x
+x.$$xAxAxAx
+xB$$xBxBxBx
+x.xxx+x+x+x
+x.AB+......
+xBxxx.(..(.
+x.AB+.(..(.
+xBxxx.(..(.
+x.AB+......
+x.xxx+x+x+x
+xB$$xBxBxBx
+x.$$xAxAxAx
+xB.B...B..x
+xxxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_meeting
+TAGS: vaults_hard vaults_orient_s patrolling no_monster_gen
+KMONS: S = vault sentinel
+KMONS: G = vault guard
+KMONS: W = vault warden
+KMONS: P = ironheart preserver
+KMONS: C = ironbrand convoker
+SUBST: | = ||*
+MAP
+   xxxxxxx
+ xxx%*|*%xxx
+xxG+..S..+Gxx
+x..xnnnnnx..x
+x.P...C...P.x
+x...........x
+x..W.....W..x
+xx...GGG...xx
+ xxxx+++xxxx
+   xx...xx
+    x...x
+ENDMAP
+
+NAME: nicolae_vaults_quartermaster
+TAGS: vaults_hard
+NSUBST: 0 = 1:9 / *:0
+KFEAT: % = alarm trap / . w:30
+KITEM: % = any
+KMONS: 0 = 0 band
+MAP
+xxxxx.xxxxx
+x...+0+...x
+x.x.xxx.x.x
+x..0%x%0..x
+x+x%xxx%x+x
+.0xxxxxxx0.
+x+x%xxx%x+x
+x..0%x%0..x
+x.x.xxx.x.x
+x...+0+...x
+xxxxx.xxxxx
+ENDMAP

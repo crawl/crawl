@@ -4,6 +4,7 @@ zombie_small MONS_ZOMBIE_SMALL
 zombie_large MONS_ZOMBIE_LARGE
 zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
 zombie_quadruped_large MONS_ZOMBIE_QUADRUPED_LARGE
+zombie_ogre MONS_ZOMBIE_OGRE
 zombie_toad MONS_ZOMBIE_TOAD
 zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE
@@ -32,9 +33,8 @@ zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE
 %rim 0
-turtle MONS_ZOMBIE_TURTLE
-spiked_turtle MONS_ZOMBIE_SPIKED_TURTLE
-crab MONS_ZOMBIE_CRAB
+zombie_turtle MONS_ZOMBIE_TURTLE
+zombie_crab MONS_ZOMBIE_CRAB
 %rim 1
 
 %sdir mon/undead/skeletons
@@ -43,13 +43,17 @@ skeleton_humanoid_small MONS_SKELETON_SMALL
 skeleton_humanoid_large MONS_SKELETON_LARGE
 skeleton_quadruped_small MONS_SKELETON_QUADRUPED_SMALL
 skeleton_quadruped_large MONS_SKELETON_QUADRUPED_LARGE
+skeleton_quadruped_winged MONS_SKELETON_QUADRUPED_WINGED
 skeleton_toad MONS_SKELETON_TOAD
+skeleton_lizard MONS_SKELETON_LIZARD
+skeleton_turtle MONS_SKELETON_TURTLE
 skeleton_bat MONS_SKELETON_BAT
 skeleton_fish MONS_SKELETON_FISH
 skeleton_centaur MONS_SKELETON_CENTAUR
 skeleton_naga MONS_SKELETON_NAGA
 skeleton_snake MONS_SKELETON_SNAKE
 skeleton_dragon MONS_SKELETON_DRAGON
+skeleton_drake MONS_SKELETON_DRAKE
 skeleton_hydra1 MONS_SKELETON_HYDRA
 skeleton_hydra2
 skeleton_hydra3

@@ -19,7 +19,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "cluautil.h"
-#include "debug.h"
 #include "decks.h"
 #include "describe.h"
 #include "directn.h"
@@ -63,6 +62,7 @@ static const char *map_section_names[] = {
     "southeast",
     "encompass",
     "float",
+    "centre",
 };
 
 static string_set Map_Flag_Names;
@@ -94,6 +94,14 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
     return (weight == TAG_UNFOUND? defweight : weight);
+}
+
+void clear_subvault_stack(void)
+{
+    env.new_subvault_names.clear();
+    env.new_subvault_tags.clear();
+    env.new_used_subvault_names.clear();
+    env.new_used_subvault_tags.clear();
 }
 
 void map_register_flag(const string &flag)
@@ -165,6 +173,42 @@ int store_tilename_get_index(const string tilename)
     env.tile_names.push_back(tilename);
     return (i+1);
 }
+
+///////////////////////////////////////////////
+// subvault_place
+//
+
+subvault_place::subvault_place()
+    : tl(), br(), subvault()
+{
+}
+
+subvault_place::subvault_place(const coord_def &_tl,
+                               const coord_def &_br,
+                               const map_def &_subvault)
+    : tl(_tl), br(_br), subvault(new map_def(_subvault))
+{
+}
+
+subvault_place::subvault_place(const subvault_place &place)
+    : tl(place.tl), br(place.br),
+      subvault(place.subvault.get() ? new map_def(*place.subvault) : NULL)
+{
+}
+
+subvault_place &subvault_place::operator = (const subvault_place &place)
+{
+    tl = place.tl;
+    br = place.br;
+    subvault.reset(place.subvault.get() ? new map_def(*place.subvault) : NULL);
+    return *this;
+}
+
+void subvault_place::set_subvault(const map_def &_subvault)
+{
+    subvault.reset(new map_def(_subvault));
+}
+
 
 ///////////////////////////////////////////////
 // level_range
@@ -407,7 +451,8 @@ void map_lines::read_maplines(reader &inf)
 {
     clear();
     const int h = unmarshallShort(inf);
-    ASSERT(h >= 0 && h <= GYM);
+    ASSERT(h >= 0);
+    ASSERT(h <= GYM);
 
     for (int i = 0; i < h; ++i)
         add_line(unmarshallString(inf));
@@ -1148,8 +1193,10 @@ void map_lines::fill_mask_matrix(const string &glyphs,
         }
 }
 
-void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
-                               const Matrix<bool> &mask, const map_def &vmap)
+map_corner_t map_lines::merge_subvault(const coord_def &mtl,
+                                       const coord_def &mbr,
+                                       const Matrix<bool> &mask,
+                                       const map_def &vmap)
 {
     const map_lines &vlines = vmap.map;
 
@@ -1347,6 +1394,8 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
             // Set keyspec index for this subvault.
             (*overlay)(x, y).keyspec_idx = idx;
         }
+
+    return map_corner_t(vtl, vbr);
 }
 
 void map_lines::overlay_tiles(tile_spec &spec)
@@ -2177,6 +2226,7 @@ void map_def::reinit()
     map.clear();
     mons.clear();
     feat_renames.clear();
+    subvault_places.clear();
 }
 
 bool map_def::map_already_used() const
@@ -2184,10 +2234,14 @@ bool map_def::map_already_used() const
     return (you.uniq_map_names.find(name) != you.uniq_map_names.end()
             || (env.level_uniq_maps.find(name) !=
                 env.level_uniq_maps.end())
+            || (env.new_used_subvault_names.find(name) !=
+                env.new_used_subvault_names.end())
             || has_any_tag(you.uniq_map_tags.begin(),
                            you.uniq_map_tags.end())
             || has_any_tag(env.level_uniq_map_tags.begin(),
-                           env.level_uniq_map_tags.end()));
+                           env.level_uniq_map_tags.end())
+            || has_any_tag(env.new_used_subvault_tags.begin(),
+                           env.new_used_subvault_tags.end()));
 }
 
 bool map_def::valid_item_array_glyph(int gly)
@@ -2225,6 +2279,24 @@ bool map_def::in_map(const coord_def &c) const
 int map_def::glyph_at(const coord_def &c) const
 {
     return map(c);
+}
+
+string map_def::name_at(const coord_def &c) const
+{
+    vector<string> names;
+    names.push_back(this->name);
+    for (int i = 0, nsubvaults = this->subvault_places.size();
+         i < nsubvaults; ++i)
+    {
+        const subvault_place &subvault = subvault_places[i];
+        if (c.x >= subvault.tl.x && c.x <= subvault.br.x &&
+            c.y >= subvault.tl.y && c.y <= subvault.br.y &&
+            subvault.subvault->in_map(c - subvault.tl))
+        {
+            names.push_back(subvault.subvault->name_at(c - subvault.tl));
+        }
+    }
+    return comma_separated_line(names.begin(), names.end(), ", ", ", ");
 }
 
 string map_def::desc_or_name() const
@@ -2780,7 +2852,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         break;
     case MAP_NORTHEAST: case MAP_SOUTHEAST:
     case MAP_NORTHWEST: case MAP_SOUTHWEST:
-    case MAP_FLOAT:
+    case MAP_FLOAT:     case MAP_CENTRE:
         if (map.width() > GXM * 2 / 3 || map.height() > GYM * 2 / 3)
         {
             return make_stringf("Map too large - %dx%d (max %dx%d)",
@@ -2881,6 +2953,9 @@ coord_def map_def::dock_pos(map_section_type norient) const
     case MAP_SOUTHWEST:
         return coord_def(minborder,
                           GYM - minborder - map.height());
+    case MAP_CENTRE:
+        return coord_def((GXM - map.width())  / 2,
+                         (GYM - map.height()) / 2);
     default:
         return coord_def(-1, -1);
     }
@@ -2991,6 +3066,19 @@ void map_def::hmirror()
     case MAP_SOUTHWEST: orient = MAP_SOUTHEAST; break;
     default: break;
     }
+
+    for (int i = 0, nsubvaults = this->subvault_places.size();
+         i < nsubvaults; ++i)
+    {
+        subvault_place &sv = subvault_places[i];
+
+        coord_def old_tl = sv.tl;
+        coord_def old_br = sv.br;
+        sv.tl.x = map.width() - 1 - old_br.x;
+        sv.br.x = map.width() - 1 - old_tl.x;
+
+        sv.subvault->map.hmirror();
+    }
 }
 
 void map_def::vmirror()
@@ -3011,6 +3099,19 @@ void map_def::vmirror()
     case MAP_SOUTHEAST: orient = MAP_NORTHEAST; break;
     case MAP_SOUTHWEST: orient = MAP_NORTHWEST; break;
     default: break;
+    }
+
+    for (int i = 0, nsubvaults = this->subvault_places.size();
+         i < nsubvaults; ++i)
+    {
+        subvault_place &sv = subvault_places[i];
+
+        coord_def old_tl = sv.tl;
+        coord_def old_br = sv.br;
+        sv.tl.y = map.height() - 1 - old_br.y;
+        sv.br.y = map.height() - 1 - old_tl.y;
+
+        sv.subvault->map.vmirror();
     }
 }
 
@@ -3046,6 +3147,29 @@ void map_def::rotate(bool clock)
                 orient = clockrotate_orients[i][!refindex];
                 break;
             }
+
+        for (int i = 0, nsubvaults = this->subvault_places.size();
+             i < nsubvaults; ++i)
+        {
+            subvault_place &sv = subvault_places[i];
+
+            coord_def p1, p2;
+            if (clock) //Clockwise
+            {
+                p1 = coord_def(map.width() - 1 - sv.tl.y, sv.tl.x);
+                p2 = coord_def(map.width() - 1 - sv.br.y, sv.br.x);
+            }
+            else
+            {
+                p1 = coord_def(sv.tl.y, map.height() - 1 - sv.tl.x);
+                p2 = coord_def(sv.br.y, map.height() - 1 - sv.br.x);
+            }
+
+            sv.tl = coord_def(min(p1.x, p2.x), min(p1.y, p2.y));
+            sv.br = coord_def(max(p1.x, p2.x), max(p1.y, p2.y));
+
+            sv.subvault->map.rotate(clock);
+        }
     }
 }
 
@@ -3145,6 +3269,37 @@ string map_def::subvault_from_tagstring(const string &sub)
     return "";
 }
 
+static void _register_subvault(const string name, const string spaced_tags)
+{
+    if (spaced_tags.find(" allow_dup ") == string::npos
+        || spaced_tags.find(" luniq ") != string::npos)
+    {
+        env.new_used_subvault_names.insert(name);
+    }
+
+    vector<string> tags = split_string(" ", spaced_tags);
+    for (int t = 0, ntags = tags.size(); t < ntags; t++)
+    {
+        const string &tag = tags[t];
+        if (tag.find("uniq_") == 0 || tag.find("luniq_") == 0)
+            env.new_used_subvault_tags.insert(tag);
+    }
+}
+
+static void _reset_subvault_stack(const int reg_stack)
+{
+    env.new_subvault_names.resize(reg_stack);
+    env.new_subvault_tags.resize(reg_stack);
+
+    env.new_used_subvault_names.clear();
+    env.new_used_subvault_tags.clear();
+    for (int i = 0; i < reg_stack; i++)
+    {
+        _register_subvault(env.new_subvault_names[i],
+                           env.new_subvault_tags[i]);
+    }
+}
+
 string map_def::apply_subvault(string_spec &spec)
 {
     // Find bounding box for key glyphs
@@ -3163,6 +3318,7 @@ string map_def::apply_subvault(string_spec &spec)
     // Remember the subvault registration pointer, so we can clear it.
     const int reg_stack = env.new_subvault_names.size();
     ASSERT(reg_stack == (int)env.new_subvault_tags.size());
+    ASSERT(reg_stack >= (int)env.new_used_subvault_names.size());
 
     const int max_tries = 100;
     int ntries = 0;
@@ -3173,8 +3329,7 @@ string map_def::apply_subvault(string_spec &spec)
         // Each iteration, restore tags and names.  This is because this vault
         // may successfully load a subvault (registering its tag and name), but
         // then itself fail.
-        env.new_subvault_names.resize(reg_stack);
-        env.new_subvault_tags.resize(reg_stack);
+        _reset_subvault_stack(reg_stack);
 
         const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
@@ -3194,17 +3349,23 @@ string map_def::apply_subvault(string_spec &spec)
         ASSERT(vault.map.width() <= vwidth);
         ASSERT(vault.map.height() <= vheight);
 
-        map.merge_subvault(tl, br, flags, vault);
+        const map_corner_t subvault_corners =
+            map.merge_subvault(tl, br, flags, vault);
+
         copy_hooks_from(vault, "post_place");
         env.new_subvault_names.push_back(vault.name);
         env.new_subvault_tags.push_back(vault.tags);
+        _register_subvault(vault.name, vault.tags);
+        subvault_places.push_back(
+            subvault_place(subvault_corners.first,
+                           subvault_corners.second,
+                           vault));
 
         return "";
     }
 
     // Failure, drop subvault registrations.
-    env.new_subvault_names.resize(reg_stack);
-    env.new_subvault_tags.resize(reg_stack);
+    _reset_subvault_stack(reg_stack);
 
     return (make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                          tag.c_str(), tl.x, tl.y, br.x, br.y));
@@ -3294,16 +3455,6 @@ mons_list::mons_list() : mons()
 {
 }
 
-int mons_list::fix_demon(int demon) const
-{
-    if (demon >= -1)
-        return demon;
-
-    demon = -100 - demon;
-
-    return summon_any_demon(static_cast<demon_class_type>(demon));
-}
-
 mons_spec mons_list::pick_monster(mons_spec_slot &slot)
 {
     int totweight = 0;
@@ -3314,16 +3465,14 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
     {
         const int weight = i->genweight;
         if (x_chance_in_y(weight, totweight += weight))
-        {
             pick = *i;
-
-            if (pick.type < 0 && pick.fix_mons)
-                pick.type = i->type = fix_demon(pick.type);
-        }
     }
 
-    if (pick.type < 0)
-        pick = fix_demon(pick.type);
+#if TAG_MAJOR_VERSION == 34
+    // Force rebuild of the des cache to drop this check.
+    if ((int)pick.type < -1)
+        pick = (monster_type)(-100 - (int)pick.type);
+#endif
 
     if (slot.fix_slot)
     {
@@ -3529,7 +3678,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.extra_monster_flags |= MF_ACTUAL_SPELLS;
         }
 
-        mspec.fix_mons       = strip_tag(mon_str, "fix_mons");
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
         mspec.band           = strip_tag(mon_str, "band");
@@ -3586,10 +3734,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
         }
-
-        mspec.mlevel = strip_number_tag(mon_str, "lev:");
-        if (mspec.mlevel == TAG_UNFOUND)
-            mspec.mlevel = 0;
 
         mspec.hd = min(100, strip_number_tag(mon_str, "hd:"));
         if (mspec.hd == TAG_UNFOUND)
@@ -3786,9 +3930,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         trim_string(mon_str);
 
         if (mon_str == "8")
-            mspec.mlevel = -8;
+            mspec.type = RANDOM_SUPER_OOD;
         else if (mon_str == "9")
-            mspec.mlevel = -9;
+            mspec.type = RANDOM_MODERATE_OOD;
         else if (mspec.place.is_valid())
         {
             // For monster specs such as place:Orc:4 zombie, we may
@@ -3812,6 +3956,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             if (nspec.type == MONS_PROGRAM_BUG)
             {
                 error = make_stringf("unknown monster: \"%s\"",
+                                     mon_str.c_str());
+                return slot;
+            }
+
+            if (mons_class_flag(nspec.type, M_CANT_SPAWN))
+            {
+                error = make_stringf("can't place dummy monster: \"%s\"",
                                      mon_str.c_str());
                 return slot;
             }
@@ -3899,13 +4050,10 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     };
 
     // This order must match zombie_types, indexed from one.
-    static const monster_type zombie_montypes[][2] =
-    {     // small               // large
-        { MONS_PROGRAM_BUG,      MONS_PROGRAM_BUG },
-        { MONS_ZOMBIE_SMALL,     MONS_ZOMBIE_LARGE },
-        { MONS_SKELETON_SMALL,   MONS_SKELETON_LARGE },
-        { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE },
-        { MONS_SPECTRAL_THING,   MONS_SPECTRAL_THING },
+    static const monster_type zombie_montypes[] =
+    {
+        MONS_PROGRAM_BUG, MONS_ZOMBIE, MONS_SKELETON, MONS_SIMULACRUM,
+        MONS_SPECTRAL_THING,
     };
 
     int mod = ends_with(s, zombie_types);
@@ -3940,13 +4088,18 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
         spec.type = MONS_PROGRAM_BUG;
         return;
     }
+    if (mod == 1 && mons_class_flag(spec.monbase, M_NO_ZOMBIE))
+    {
+        spec.type = MONS_PROGRAM_BUG;
+        return;
+    }
     if (mod == 2 && mons_class_flag(spec.monbase, M_NO_SKELETON))
     {
         spec.type = MONS_PROGRAM_BUG;
         return;
     }
 
-    spec.type = zombie_montypes[mod][zombie_size - 1];
+    spec.type = zombie_montypes[mod];
 }
 
 mons_spec mons_list::get_hydra_spec(const string &name) const
@@ -4094,7 +4247,7 @@ mons_spec mons_list::mons_by_name(string name) const
     name = replace_all(name, "random", "any");
 
     if (name == "nothing")
-        return -1;
+        return MONS_NO_MONSTER;
 
     // Special casery:
     if (name == "pandemonium lord")
@@ -4104,34 +4257,23 @@ mons_spec mons_list::mons_by_name(string name) const
         return RANDOM_MONSTER;
 
     if (name == "any demon")
-        return (-100 - DEMON_RANDOM);
+        return RANDOM_DEMON;
 
     if (name == "any lesser demon" || name == "lesser demon")
-        return (-100 - DEMON_LESSER);
+        return RANDOM_DEMON_LESSER;
 
     if (name == "any common demon" || name == "common demon")
-        return (-100 - DEMON_COMMON);
+        return RANDOM_DEMON_COMMON;
 
     if (name == "any greater demon" || name == "greater demon")
-        return (-100 - DEMON_GREATER);
+        return RANDOM_DEMON_GREATER;
 
-    if (name == "small zombie")
-        return MONS_ZOMBIE_SMALL;
-    if (name == "large zombie")
-        return MONS_ZOMBIE_LARGE;
-
-    if (name == "small skeleton")
-        return MONS_SKELETON_SMALL;
-    if (name == "large skeleton")
-        return MONS_SKELETON_LARGE;
-
-    if (name == "spectral thing")
-        return MONS_SPECTRAL_THING;
-
-    if (name == "small simulacrum")
-        return MONS_SIMULACRUM_SMALL;
-    if (name == "large simulacrum")
-        return MONS_SIMULACRUM_LARGE;
+    if (name == "small zombie" || name == "large zombie"
+        || name == "small skeleton" || name == "large skeleton"
+        || name == "small simulacrum" || name == "large simulacrum")
+    {
+        return MONS_PROGRAM_BUG;
+    }
 
     if (name == "small abomination")
         return MONS_ABOMINATION_SMALL;
@@ -4375,7 +4517,8 @@ void item_list::set_from_slot(const item_list &list, int slot_index)
 // NOTE: Be sure to update the reference in syntax.txt if this gets moved!
 static int _str_to_ego(item_spec &spec, string ego_str)
 {
-    const char* armour_egos[] = {
+    const char* armour_egos[] =
+    {
         "running",
         "fire_resistance",
         "cold_resistance",
@@ -4399,9 +4542,10 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "archery",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_SPECIAL_ARMOURS);
+    COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
 
-    const char* weapon_brands[] = {
+    const char* weapon_brands[] =
+    {
         "flaming",
         "freezing",
         "holy_wrath",
@@ -4423,14 +4567,17 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "returning",
         "chaos",
         "evasion",
+#if TAG_MAJOR_VERSION == 34
         "confuse",
+#endif
         "penetration",
         "reaping",
         NULL
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);
 
-    const char* missile_brands[] = {
+    const char* missile_brands[] =
+    {
         "flame",
         "ice",
         "poisoned",
@@ -4446,11 +4593,13 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "slow",
         "sleep",
         "confusion",
+#if TAG_MAJOR_VERSION == 34
         "sickness",
+#endif
         "wrath",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_SPECIAL_MISSILES);
+    COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);
 
     const char** name_lists[3] = {armour_egos, weapon_brands, missile_brands};
 

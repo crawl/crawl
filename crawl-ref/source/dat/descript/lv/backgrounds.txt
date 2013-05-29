@@ -15,6 +15,11 @@ Chaos Knight
 Haosa bruņinieki ir neparedzamā Ksorna spēlmantiņas, kas atkarīgas no dieva
 nepārtraukti mainīgās omas.
 %%%%
+Death Knight
+
+Nāves bruņinieki ir tuvcīņas karotāji, kuri Jredelemnula Tumšā vārdā pavēl
+mirušajiem.
+%%%%
 Enchanter
 
 Apburēji izmanto burvestības, lai sevi pastiprinātu kaujās vai padarītu
@@ -53,6 +58,11 @@ Priest
 
 Svētnieki ir Zina sekotāji, nesot dieva vārdu pazemes iemītniekiem. Klinšu orki
 tā vietā seko orku dievam Beoham.
+%%%%
+Summoner
+
+Būtņotāji sāk ar Izsaukšanas grāmatu un no paša sākuma var atburt Mazu
+zīdītāju.
 %%%%
 Wanderer
 

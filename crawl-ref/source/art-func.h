@@ -138,7 +138,8 @@ static void _curses_miscast(actor* victim, int power, int fail)
 static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
-    _curses_miscast(&you, random2(9), random2(70));
+    if (!unmeld)
+        _curses_miscast(&you, random2(9), random2(70));
 }
 
 static void _CURSES_world_reacts(item_def *item)
@@ -252,7 +253,7 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     *pract    = 1;
     *did_work = true;
 
-    int power = 10 + you.skill(SK_EVOCATIONS, 8);
+    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 3);
 
     your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false);
 
@@ -472,7 +473,8 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
-        make_hungry(4500, false, false);
+        if (!unmeld)
+            make_hungry(4500, false, false);
     }
     else if (you.species == SP_VAMPIRE)
         _equip_mpr(show_msgs, "You feel a bloodthirsty glee!");
@@ -587,7 +589,7 @@ static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
     if (one_chance_in(10))
-        cast_summon_demon(50+random2(100), attacker->deity());
+        cast_summon_demon(50+random2(100));
 
     if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
@@ -718,9 +720,7 @@ static void _BRILLIANCE_unequip(item_def *item, bool *show_msgs)
 ///////////////////////////////////////////////////
 static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (unmeld)
-        return;
-    mpr("Time to introduce the shillelagh law.");
+    _equip_mpr(show_msgs, "Time to introduce the shillelagh law.");
 }
 
 
@@ -781,4 +781,32 @@ static void _PLUTONIUM_SWORD_melee_effect(item_def* weapon, actor* attacker,
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
     }
+}
+
+///////////////////////////////////////////////////
+
+static void _WOE_melee_effect(item_def* weapon, actor* attacker,
+                              actor* defender, bool mondied, int dam)
+{
+    const char *verb = "bugger", *adv = "";
+    switch (random2(8))
+    {
+    case 0: verb = "cleave", adv = " in twain"; break;
+    case 1: verb = "pulverise", adv = " into thin bloody mist"; break;
+    case 2: verb = "hew", adv = " savagely"; break;
+    case 3: verb = "fatally mangle", adv = ""; break;
+    case 4: verb = "dissect", adv = " like a pig carcass"; break;
+    case 5: verb = "chop", adv = " into pieces"; break;
+    case 6: verb = "butcher", adv = " messily"; break;
+    case 7: verb = "slaughter", adv = " joyfully"; break;
+    }
+    if (you.see_cell(attacker->pos()) || you.see_cell(defender->pos()))
+    {
+        mprf("%s %s%s %s%s.", attacker->name(DESC_THE).c_str(), verb,
+            attacker->is_player() ? "" : "s", defender->name(DESC_THE).c_str(),
+            adv);
+    }
+
+    if (!mondied)
+        defender->hurt(attacker, defender->stat_hp());
 }

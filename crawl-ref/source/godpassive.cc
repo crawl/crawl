@@ -3,6 +3,7 @@
 
 #include "godpassive.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "coord.h"
@@ -161,8 +162,7 @@ static bool _two_handed()
         return false;
 
     hands_reqd_type wep_type = hands_reqd(*wpn, you.body_size());
-    return wep_type == HANDS_TWO || wep_type == HANDS_HALF
-                                    && you.has_usable_offhand();
+    return wep_type == HANDS_TWO;
 }
 
 void ash_check_bondage(bool msg)
@@ -178,7 +178,7 @@ void ash_check_bondage(bool msg)
         if (i == EQ_WEAPON)
             s = ET_WEAPON;
         else if (i == EQ_SHIELD)
-            s= ET_SHIELD;
+            s = ET_SHIELD;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
         // Octopodes don't count these slots:
@@ -206,7 +206,14 @@ void ash_check_bondage(bool msg)
                         cursed[ET_SHIELD] = 3;
                     }
                     else
+                    {
                         cursed[s]++;
+                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item)
+                            && item.special == UNRAND_LEAR)
+                        {
+                            cursed[s] += 3;
+                        }
+                    }
                 }
             }
         }
@@ -380,6 +387,7 @@ static bool _jewel_auto_id(const item_def& item)
                 && player_mutation_level(MUT_HERBIVOROUS) < 3);
     case RING_INVISIBILITY:
     case RING_TELEPORTATION:
+    case RING_TELEPORT_CONTROL:
     case RING_MAGICAL_POWER:
     case RING_FLIGHT:
     case RING_ICE:
@@ -407,8 +415,11 @@ bool god_id_item(item_def& item, bool silent)
 
         ided = ISFLAG_KNOW_CURSE;
 
-        if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
+        if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
+            && item_needs_autopickup(item))
+        {
             item.props["needs_autopickup"] = true;
+        }
 
         if (is_weapon(item) || item.base_type == OBJ_ARMOUR)
             ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
@@ -603,9 +614,6 @@ int ash_detect_portals(bool all)
 
 monster_type ash_monster_tier(const monster *mon)
 {
-    if (mon->friendly())
-        return MONS_SENSED_FRIENDLY;
-
     return monster_type(MONS_SENSED_TRIVIAL + monster_info(mon).threat);
 }
 
@@ -661,12 +669,12 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 
     // Bonus for bounded armour depends on body armour type.
     case (ET_ARMOUR):
-        if (evp < 2)
+        if (evp < 6)
         {
             boost[SK_STEALTH] = bondage;
             boost[SK_DODGING] = bondage;
         }
-        else if (evp < 4)
+        else if (evp < 12)
         {
             boost[SK_DODGING] = bondage;
             boost[SK_ARMOUR] = bondage;

@@ -206,7 +206,7 @@ void wizard_create_spec_monster_name()
     }
 
     mons_spec mspec = mlist.get_monster(0);
-    if (mspec.type == -1)
+    if (mspec.type == MONS_NO_MONSTER)
     {
         mpr("Such a monster couldn't be found.", MSGCH_DIAGNOSTICS);
         return;
@@ -259,9 +259,9 @@ void wizard_create_spec_monster_name()
     // Wizmode users should be able to conjure up uniques even if they
     // were already created. Yay, you can meet 3 Sigmunds at once! :p
     if (mons_is_unique(type) && you.unique_creatures[type])
-        you.unique_creatures[type] = false;
+        you.unique_creatures.set(type, false);
 
-    if (!dgn_place_monster(mspec, -1, place, true, false))
+    if (!dgn_place_monster(mspec, place, true, false))
     {
         mpr("Unable to place monster.", MSGCH_DIAGNOSTICS);
         return;
@@ -584,7 +584,7 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d SP=%d "
+         "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.hit_dice,
          mons.experience,
@@ -592,6 +592,7 @@ void debug_stethoscope(int mon)
          mons.ac, mons.armour_class(),
          mons.ev,
          mons.res_magic(),
+         exper_value(&mons),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
@@ -625,7 +626,8 @@ void debug_stethoscope(int mon)
           mons_is_retreating(&mons)      ? "retreat" :
           mons_is_cornered(&mons)        ? "cornered" :
           mons_is_panicking(&mons)       ? "panic" :
-          mons_is_lurking(&mons)         ? "lurk"
+          mons_is_lurking(&mons)         ? "lurk" :
+          mons.behaviour == BEH_WITHDRAW ? "withdraw"
                                          : "unknown"),
          mons.behaviour,
          ((mons.foe == MHITYOU)                    ? "you" :
@@ -653,6 +655,9 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
 
+    mprf(MSGCH_DIAGNOSTICS, "props: %s",
+         mons.describe_props().c_str());
+
     ostringstream spl;
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
@@ -677,6 +682,30 @@ void debug_stethoscope(int mon)
     }
     if (found_spell)
         mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
+
+    ostringstream inv;
+    bool found_item = false;
+    for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+    {
+        if (mons.inv[k] != NON_ITEM)
+        {
+            if (found_item)
+                inv << ", ";
+
+            found_item = true;
+
+            inv << k << ": ";
+
+            if (mons.inv[k] >= MAX_ITEMS)
+                inv << " buggy item";
+            else
+                inv << item_base_name(mitm[mons.inv[k]]);
+
+            inv << " (" << static_cast<int>(mons.inv[k]) << ")";
+        }
+    }
+    if (found_item)
+        mprf(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
 
     if (mons_is_ghost_demon(mons.type))
     {

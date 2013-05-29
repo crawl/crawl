@@ -138,7 +138,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     }
 
     you.wield_change = true;
-    you.one_time_ability_used[god] = true;
+    you.one_time_ability_used.set(god);
     calc_mp(); // in case the old brand was antimagic
     string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
@@ -238,52 +238,48 @@ static bool _altar_prayer()
         && !player_under_penance()
         && you.piety > 160)
     {
-        simple_god_message(
-            " will bloody your weapon with pain or grant you the Necronomicon.");
-
-        bool kiku_did_bless_weapon = false;
-
-        item_def *wpn = you.weapon();
-
-        // Does the player want a pain branding?
-        if (wpn && get_weapon_brand(*wpn) != SPWPN_PAIN)
+        if (you.species != SP_FELID)
         {
-            kiku_did_bless_weapon =
-                _bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED);
-            did_something = kiku_did_bless_weapon;
-        }
-        else
-            mpr("You have no weapon to bloody with pain.");
+            simple_god_message(
+                " will bloody your weapon with pain or grant you the Necronomicon.");
 
-        // If not, ask if the player wants a Necronomicon.
-        if (!kiku_did_bless_weapon)
-        {
+            item_def *wpn = you.weapon();
+
+            // Does the player want a pain branding?
+            if (wpn && get_weapon_brand(*wpn) != SPWPN_PAIN)
+            {
+                if (_bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
+                    return true;
+            }
+            else
+                mpr("You have no weapon to bloody with pain.");
+
+            // If not, ask if the player wants a Necronomicon.
             if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
                 return false;
+        }
 
-            int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
-                                      MAKE_ITEM_RANDOM_RACE,
-                                      0, 0, you.religion);
+        int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
+                                  MAKE_ITEM_RANDOM_RACE,
+                                  0, 0, you.religion);
 
-            if (thing_created == NON_ITEM)
-                return false;
+        if (thing_created == NON_ITEM)
+            return false;
 
-            move_item_to_grid(&thing_created, you.pos());
+        move_item_to_grid(&thing_created, you.pos());
 
-            if (thing_created != NON_ITEM)
-            {
-                simple_god_message(" grants you a gift!");
-                more();
+        if (thing_created != NON_ITEM)
+        {
+            simple_god_message(" grants you a gift!");
+            more();
 
-                you.one_time_ability_used[you.religion] = true;
-                did_something = true;
-                take_note(Note(NOTE_GOD_GIFT, you.religion));
-                mitm[thing_created].inscription = "god gift";
-            }
+            you.one_time_ability_used.set(you.religion);
+            did_something = true;
+            take_note(Note(NOTE_GOD_GIFT, you.religion));
         }
 
         // Return early so we don't offer our Necronomicon to Kiku.
-        return did_something;
+        return true;
     }
 
     return did_something;
@@ -291,7 +287,7 @@ static bool _altar_prayer()
 
 void pray()
 {
-    if (silenced(you.pos()))
+    if (you.cannot_speak())
     {
         mpr("You are unable to make a sound!");
         return;
@@ -310,7 +306,7 @@ void pray()
         {
             if (you.species == SP_DEMIGOD)
             {
-                mpr("Sorry, a being of your status cannot worship here.");
+                mpr("A being of your status worships no god.");
                 return;
             }
 
@@ -503,7 +499,8 @@ static int _leading_sacrifice_group()
 
 static void _give_sac_group_feedback(int which)
 {
-    ASSERT(which >= 0 && which < 5);
+    ASSERT(which >= 0);
+    ASSERT(which < 5);
     const char* names[] = {
         "Escape", "Destruction", "Dungeons", "Summoning", "Wonder"
     };
@@ -529,7 +526,7 @@ static void _ashenzari_sac_scroll(const item_def& item)
     }
 
     mitm[it].quantity = 1;
-    if (!move_item_to_grid(&it, you.pos(), true))
+    if (!move_item_to_grid(&it, you.pos(), MHITYOU, true))
         destroy_item(it, true); // can't happen
 }
 
@@ -556,7 +553,7 @@ static piety_gain_t _sac_corpse(const item_def& item)
     if (you.religion == GOD_OKAWARU)
     {
         monster dummy;
-        dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum - 1
+        dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum
                                                      : item.plus);
         if (item.props.exists(MONSTER_NUMBER))
             dummy.number   = item.props[MONSTER_NUMBER].get_short();
@@ -651,7 +648,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
 
     case GOD_BEOGH:
     {
-        const int item_orig = item.orig_monnum - 1;
+        const int item_orig = item.orig_monnum;
 
         int chance = 4;
 
@@ -731,10 +728,12 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     return relative_piety_gain;
 }
 
-piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
+piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
 {
+    if (quantity <= 0)
+        quantity = item.quantity;
     piety_gain_t relative_gain = PIETY_NONE;
-    for (int j = 0; j < item.quantity; ++j)
+    for (int j = 0; j < quantity; ++j)
     {
         const piety_gain_t gain = _sacrifice_one_item_noncount(item, js, !j);
 
@@ -855,7 +854,7 @@ static bool _offer_items()
 
         piety_gain_t relative_gain = sacrifice_item_stack(item);
         print_sacrifice_message(you.religion, mitm[i], relative_gain);
-        item_was_destroyed(mitm[i]);
+        item_was_destroyed(mitm[i], MHITYOU);
         destroy_item(i);
         i = next;
         num_sacced++;

@@ -101,7 +101,6 @@ contar.
 
 Este portal solamente se puede usar una vez, y se cobra una enorme factura para
 entrar.
-
 %%%%
 A gateway to the ashen valley of Gehenna
 
@@ -228,11 +227,6 @@ Está decorado con imágenes de muerte y destrucción.
 A dead tree
 
 Este árbol está tan muerto como todo lo demás aquí.
-%%%%
-A cracked metal wall
-
-Este muro de metal ha sufrido algo de daño. Desafortunadamente el agujero no es
-tan grande como para pasar a través.
 %%%%
 A golden statue
 

@@ -195,9 +195,12 @@ public:
     virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
+    virtual bool can_polymorph() const = 0;
     virtual bool can_bleed(bool allow_tran = true) const = 0;
     virtual bool mutate(const string &reason) = 0;
-    virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 3) = 0;
+    virtual bool polymorph(int pow) = 0;
+    virtual bool drain_exp(actor *agent, const char *aux = NULL,
+                           bool quiet = false, int pow = 3) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,
                      bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
@@ -210,19 +213,21 @@ public:
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
-    virtual bool sicken(int amount, bool allow_hint = true) = 0;
+    virtual bool sicken(int amount, bool allow_hint = true, bool quiet = false) = 0;
     virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
     virtual void petrify(actor *attacker) = 0;
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength) = 0;
+    virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool damage_inventory = true,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
-    virtual bool can_hibernate(bool holi_only = false) const;
-    virtual bool can_sleep() const;
+    virtual bool can_hibernate(bool holi_only = false,
+                               bool intrinsic_only = false) const;
+    virtual bool can_sleep(bool holi_only = false) const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
@@ -269,7 +274,7 @@ public:
     virtual bool is_artificial() const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
-    virtual int res_acid() const = 0;
+    virtual int res_acid(bool calc_unid = true) const = 0;
     virtual int res_fire() const = 0;
     virtual int res_holy_fire() const;
     virtual int res_steam() const = 0;
@@ -281,7 +286,7 @@ public:
     virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;
-    virtual int res_negative_energy() const = 0;
+    virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual int res_torment() const = 0;
     virtual int res_wind() const = 0;
     virtual int res_petrify(bool temp = true) const = 0;
@@ -338,7 +343,8 @@ public:
     //            halo you're not affected by others' halos for this
     //            purpose)
     virtual bool backlit(bool check_haloed = true,
-                         bool self_halo = true) const = 0;
+                         bool self_halo = true,
+                         bool check_corona = true) const = 0;
     virtual bool umbra(bool check_haloed = true,
                          bool self_halo = true) const = 0;
     // Within any actor's halo?
@@ -357,6 +363,7 @@ public:
     virtual int liquefying_radius2 () const = 0;
     virtual int umbra_radius2 () const = 0;
     virtual int suppression_radius2 () const = 0;
+    virtual int soul_aura_radius2 () const = 0;
     virtual int heat_radius2 () const = 0;
 
     virtual bool glows_naturally() const = 0;
@@ -420,6 +427,8 @@ public:
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage() const = 0;
+
+    string describe_props() const;
 
 
 protected:

@@ -278,12 +278,8 @@ void DungeonRegion::draw_minibars()
         // them by grid.
         coord_def player_on_screen;
         to_screen_coords(you.pos(), &player_on_screen);
-
-        static const float tile_width  = wx / mx;
-        static const float tile_height = wy / my;
-
-        player_on_screen.x = player_on_screen.x / static_cast<int>(tile_width);
-        player_on_screen.y = player_on_screen.y / static_cast<int>(tile_height);
+        player_on_screen.x = (player_on_screen.x-sx)/dx;
+        player_on_screen.y = (player_on_screen.y-sy)/dy;
 
         if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
         {
@@ -620,7 +616,7 @@ static bool _cast_spell_on_target(actor* target)
 
     if (spell_mana(spell) > you.magic_points)
     {
-        mpr("You don't have enough mana to cast that spell.");
+        mpr("You don't have enough magic to cast that spell.");
         return true;
     }
 
@@ -710,12 +706,57 @@ static bool _handle_zap_player(MouseEvent &event)
     return false;
 }
 
+void DungeonRegion::zoom(bool in)
+{
+    int sign = in ? 1 : -1;
+    int amt  = 4;
+    const int max_zoom = 64; // this needs to be a proportion, not a fixed amount!
+    const bool minimap_zoom = (sx>dx); // i.e. there's a border bigger than a tile (was dx<min_zoom+amt)
+
+    // if we try to zoom out too far, go to minimap instead
+    if (!in && minimap_zoom)
+        if (tiles.zoom_to_minimap())
+            return;
+
+    // if we zoomed in from min zoom, and the map's still up, switch off minimap instead
+    if (in && minimap_zoom)
+        if (tiles.zoom_from_minimap())
+            return;
+
+    // if we zoom out too much, stop
+    if (!in && minimap_zoom) //(dx + sign*amt < min_zoom)
+        return;
+    // if we zoom in too close, stop
+    if (dx + sign*amt > max_zoom)
+        return;
+
+    dx = dx + sign*amt;
+    dy = dy + sign*amt;
+
+    int old_wx = wx; int old_wy = wy;
+    recalculate();
+
+    place((old_wx-wx)/2+sx, (old_wy-wy)/2+sy, 0);
+
+    crawl_view.viewsz.x = mx;
+    crawl_view.viewsz.y = my;
+}
+
 int DungeonRegion::handle_mouse(MouseEvent &event)
 {
     tiles.clear_text_tags(TAG_CELL_DESC);
 
     if (!inside(event.px, event.py))
         return 0;
+
+#ifdef TOUCH_UI
+    if (event.event == MouseEvent::PRESS
+        && (event.mod & MOD_CTRL)
+        && (event.button == MouseEvent::SCROLL_UP || event.button == MouseEvent::SCROLL_DOWN))
+    {
+        zoom(event.button == MouseEvent::SCROLL_UP);
+    }
+#endif
 
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         && event.event == MouseEvent::PRESS
@@ -1003,7 +1044,7 @@ bool DungeonRegion::update_tip_text(string &tip)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
-            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), ' ');
+            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), env.tile_cloud(ep), ' ');
         }
         else
         {
@@ -1013,14 +1054,14 @@ bool DungeonRegion::update_tip_text(string &tip)
             tip += "\n";
         }
 
-        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), 'B');
+        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), env.tile_bk_bg(gc), 'B');
 
         if (!m_vbuf.empty())
         {
             const screen_cell_t *vbuf = m_vbuf;
             const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
             const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
-            tip += tile_debug_string(cell.tile.fg, cell.tile.bg, 'V');
+            tip += tile_debug_string(cell.tile.fg, cell.tile.bg, cell.tile.cloud, 'V');
         }
 
         tip += make_stringf("\nFLV: floor: %d (%s) (%d)\n     wall:  %d (%s) (%d)\n     feat:  %d (%s) (%d)\n",

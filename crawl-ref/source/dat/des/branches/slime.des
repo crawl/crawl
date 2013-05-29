@@ -225,6 +225,78 @@ xxx...xx.
 xx..
 ENDMAP
 
+NAME: nicolae_slime_entry_slimehenge
+TAGS: slime_entry transparent
+SHUFFLE: ABCD
+SUBST: A = x, BCD = .
+KFEAT: O = enter_slime_pits
+KFEAT: x = slimy_wall
+KMONS: 1 = ooze / jelly / nothing
+MAP
+  .......
+ ...DAD...
+..A.CBC.A..
+...B.1.B...
+.DC.1.1.CD.
+.AB1.O.1BA.
+.DC.1.1.CD.
+...B.1.B...
+..A.CBC.A..
+ ...DAD...
+  .......
+ENDMAP
+
+NAME: nicolae_slime_entry_wandering_lumps
+TAGS: slime_entry
+SUBST: P = p.., L = l.
+KFEAT: O = enter_slime_pits
+KMONS: p = plant
+KMONS: l = pulsating lump
+KMONS: O = pulsating lump / nothing w:20
+MAP
+    ...
+   .....
+  xxpppxx
+ .xPPPPPx.
+..pPl..Pp..
+..pP.O.Pp..
+..pP..LPp..
+ .xPPPPPx.
+  xxpppxx
+   .....
+    ...
+ENDMAP
+
+NAME: nicolae_slime_entry_corroded_items
+TAGS: slime_entry
+KFEAT: O = enter_slime_pits
+NSUBST: ' = 6:i / *:.
+SUBST: i = wa, s = ssx
+KITEM: w = damaged long sword ego:none ident:pluses / damaged mace ego:none ident:pluses / \
+   damaged flail ego:none ident:pluses / damaged spear ego:none ident:pluses / \
+   damaged trident ego:none ident:pluses / damaged dagger ego:none ident:pluses / \
+   damaged short sword ego:none ident:pluses / damaged lajatang ego:none ident:pluses / \
+   damaged hand axe ego:none ident:pluses / damaged war axe ego:none ident:pluses
+KITEM: a = damaged helmet ego:none ident:pluses / damaged pair of gloves ego:none ident:pluses / \
+   damaged pair of boots ego:none ident:pluses / damaged leather armour ego:none ident:pluses / \
+   damaged ring mail ego:none ident:pluses / damaged chain mail ego:none ident:pluses / \
+   damaged plate armour ego:none ident:pluses / damaged cloak ego:none ident:pluses / \
+   damaged shield ego:none ident:pluses
+KFEAT: s = slimy_wall
+MAP
+   xxxxxx
+ @.xssssxx
+ ......ssxx
+xx..'''.ssx
+xs.'''''.sx
+xs.''O''.sx
+xs.'''''.sx
+xss.'''.ssx
+xxss...ssxx
+ xxsssssxx
+  xxxxxxx
+ENDMAP
+
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
@@ -312,6 +384,106 @@ d..fwwwfww.b
 .ff.wwwwf.f
  .....f..ff
     aaaa..fw
+ENDMAP
+
+NAME: nicolae_slime_jelly_donut
+DEPTH: Slime, !Slime:$
+ORIENT: float
+SHUFFLE: abcdefgh
+SUBST: a = @, b : @., c : @.., d : @..., efgh = .
+KMONS: j = jelly
+MAP
+      aaaaa
+    hh.....bb
+   h.........b
+  h...........b
+ h....x.x.x....b
+ h...x.x.x.x...b
+g...x.x.x.x.x...c
+g....x.jjj.x....c
+g...x.xjjjx.x...c
+g....x.jjj.x....c
+g...x.x.x.x.x...c
+ f...x.x.x.x...d
+ f....x.x.x....d
+  f...........d
+   f.........d
+    ff.....dd
+      eeeee
+ENDMAP
+
+# Some spiny worms wandered down from Lair.
+NAME: nicolae_slime_spiny_worm_infestation
+DEPTH: Slime, !Slime:$
+SUBST: 2 = 1., X = x., Y = xx.
+KMONS: 1 = spiny worm
+MAP
+  ..@@@@@..
+ .....X.....
+.....X.X.....
+...2XY.YX2...
+...XYx1xYX...
+..XYxxxxxYX..
+.X..1xxx1..X.
+..XYxxxxxYX..
+...XYx1xYX...
+...2XY.YX2...
+ ....X.X....
+  ....X.....
+   .......
+ENDMAP
+
+NAME: nicolae_slime_barrier
+TAGS: transparent extra
+DEPTH: Slime, !Slime:$
+SHUFFLE: abcde
+SUBST: a = @, bcde = .
+MAP
+  aaaaa
+ .........
+ c..x.....b
+c..........b
+c..xxx..x..b
+c..........b
+ c..x.......b
+ .......x....e
+  ....x.x.x...e
+   .....x......eee
+    d.......x.....d
+     d.............d
+     d..x..xxx..x..d
+     d.............d
+      d.....x.......d
+       eee......x.....
+          e...x.x.x....
+           e....x.......
+            b.......x..c
+             b..........c
+             b..x..xxx..c
+             b..........c
+              b.....x..c
+               .........
+                  aaaaa
+ENDMAP
+
+NAME: nicolae_slime_welcoming_committee
+TAGS: no_monster_gen no_item_gen no_trap_gen
+DEPTH: Slime:2-5
+SUBST: X = x., { = {[(
+KMONS: 1 : jelly w:20 / pulsating lump w:20 / ooze / slime creature / giant amoeba / \
+   brown ooze / acid blob w:5 / death ooze w:5 / azure jelly w:5
+MAP
+      xxx
+   xxxxxxxx
+ xxxxXXX..1@
+xxxXX.....1.@
+xxX.......1..@
+xxX.{.....1...@
+xxX.......1..@
+xxxXX.....1.@
+ xxxxXXX..1@
+   xxxxxxxx
+      xxx
 ENDMAP
 
 ################################################################################

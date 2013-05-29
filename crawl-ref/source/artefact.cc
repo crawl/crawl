@@ -291,7 +291,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
         name = replace_all(name, "@god_name@", god_name(which_god, false));
     }
 
-    // copied from monster speech handling (mon-util.cc):
+    // copied from apostrophise() (libutil.cc):
     // The proper possessive for a word ending in an "s" is to
     // put an apostrophe after the "s": "Chris" -> "Chris'",
     // not "Chris" -> "Chris's".  Stupid English language...
@@ -362,13 +362,15 @@ void autoid_unrand(item_def &item)
 
 unique_item_status_type get_unique_item_status(int art)
 {
-    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    ASSERT(art > UNRAND_START);
+    ASSERT(art < UNRAND_LAST);
     return you.unique_items[art - UNRAND_START];
 }
 
 static void _set_unique_item_status(int art, unique_item_status_type status)
 {
-    ASSERT(art > UNRAND_START && art < UNRAND_LAST);
+    ASSERT(art > UNRAND_START);
+    ASSERT(art < UNRAND_LAST);
     you.unique_items[art - UNRAND_START] = status;
 }
 
@@ -444,6 +446,8 @@ void artefact_desc_properties(const item_def &item,
     // ISFLAG_KNOW_PLUSES set.  For a randart with a base type of, for
     // example, a ring of strength, wearing it sets
     // ISFLAG_KNOW_PLUSES, which reveals the ring's strength plus.
+
+    // XXX has to match player-equip.cc:_equip_jewelry_effect(), sort-of (SamB)
     switch (item.sub_type)
     {
     case RING_INVISIBILITY:
@@ -1163,7 +1167,7 @@ static bool _init_artefact_book(item_def &book)
     // randart, so reset them on each iteration of the loop.
     int  plus  = book.plus;
     int  plus2 = book.plus2;
-    bool book_good;
+    bool book_good = false;
     for (int i = 0; i < 4; i++)
     {
         book.plus  = plus;
@@ -2047,6 +2051,12 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
+    else if (unrand_index == UNRAND_WOE && you.species != SP_FELID
+             && !you.could_wield(item, true, true))
+    {
+        // always wieldable, always 2-handed
+        item.sub_type = WPN_BROAD_AXE;
+    }
 
     if (!(unrand->flags & UNRAND_FLAG_RANDAPP)
         && !(unrand->flags & UNRAND_FLAG_UNIDED)

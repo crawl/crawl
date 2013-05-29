@@ -8,14 +8,43 @@ class rectangle_iterator : public iterator<forward_iterator_tag, coord_def>
 public:
     rectangle_iterator(const coord_def& corner1, const coord_def& corner2);
     explicit rectangle_iterator(int x_border_dist, int y_border_dist = -1);
-    operator bool() const;
-    coord_def operator *() const;
-    const coord_def* operator->() const;
+    operator bool() const PURE;
+    coord_def operator *() const PURE;
+    const coord_def* operator->() const PURE;
 
     void operator ++ ();
     void operator ++ (int);
 private:
     coord_def current, topleft, bottomright;
+};
+
+/**
+ * @class random_rectangle_iterator
+ * Iterator over coordinates in a rectangular region in a
+ * random order.  This interator does not favour any given
+ * direction, but is slower than rectangle_iterator.
+ *
+ * When this iterator has returned all elements, it will just
+ * return the top left corner forever.
+ */
+class random_rectangle_iterator : public iterator<forward_iterator_tag,
+                                                  coord_def>
+{
+public:
+    random_rectangle_iterator(const coord_def& corner1,
+                              const coord_def& corner2);
+    explicit random_rectangle_iterator(int x_border_dist,
+                                       int y_border_dist = -1);
+    operator bool() const PURE;
+    coord_def operator *() const PURE;
+    const coord_def* operator->() const PURE;
+
+    void operator ++ ();
+    void operator ++ (int);
+private:
+    coord_def top_left;
+    vector<coord_def> remaining;
+    int current;
 };
 
 class circle_iterator
@@ -26,16 +55,16 @@ class circle_iterator
 public:
     circle_iterator(const circle_def &circle_);
 
-    operator bool() const;
-    coord_def operator*() const;
+    operator bool() const PURE;
+    coord_def operator *() const PURE;
 
-    void operator++();
-    void operator++(int);
+    void operator ++ ();
+    void operator ++ (int);
 };
 
-/*
- * radius_iterator: Iterator over coordinates in a more-or-less
- *                  circular region.
+/**
+ * @class radius_iterator
+ * Iterator over coordinates in a more-or-less circular region.
  *
  * The region can be any circle_def; furthermore, the cells can
  * be restricted to lie within some LOS field (need not be
@@ -59,9 +88,9 @@ public:
     radius_iterator(const los_base* los,
                     bool exclude_center = false);
 
-    operator bool() const;
-    coord_def operator *() const;
-    const coord_def* operator->() const;
+    operator bool() const PURE;
+    coord_def operator *() const PURE;
+    const coord_def *operator->() const PURE;
 
     void operator ++ ();
     void operator ++ (int);
@@ -93,9 +122,11 @@ public:
     radius_iterator(pos, 1, C_POINTY, NULL, _exclude_center) {}
 };
 
-/* distance_iterator: Iterates over coordinates in integer ranges.  Unlike other
- *                  iterators, it tries hard to not favorize any particular
- *                  direction (unless fair = false, when it saves some CPU).
+/* @class distance_iterator
+ * Iterates over coordinates in integer ranges.
+ *
+ * Unlike other iterators, it tries hard to not favorize any
+ * particular direction (unless fair = false, when it saves some CPU).
  */
 class distance_iterator : public iterator<forward_iterator_tag, coord_def>
 {
@@ -104,11 +135,11 @@ public:
                     bool _fair = true,
                     bool exclude_center = true,
                     int _max_radius = GDM);
-    operator bool() const;
-    coord_def operator *() const;
-    const coord_def* operator->() const;
+    operator bool() const PURE;
+    coord_def operator *() const PURE;
+    const coord_def *operator->() const PURE;
 
-    const distance_iterator& operator ++();
+    const distance_iterator &operator ++();
     void operator ++(int);
     int radius() const;
 private:

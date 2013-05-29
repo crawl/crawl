@@ -10,7 +10,7 @@ The contents of this text are:
 
 0-  Generalities.
 0-a     Standard and additional option files.
-0-b     Options on the command line
+0-b     Options on the command line.
 0-c     Options and how to set them.
 0-d     List options.
 0-e     Aliases and variables.
@@ -42,7 +42,7 @@ The contents of this text are:
                 symmetric_scroll, scroll_margin_x, scroll_margin_y,
                 scroll_margin
 3-g     Travel and Exploration.
-                travel_delay, explore_delay, travel_avoid_terrain,
+                travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
                 explore_wall_bias, explore_improved, auto_sacrifice,
                 travel_key_stop, tc_reachable, tc_dangerous, tc_disconnected,
@@ -57,7 +57,7 @@ The contents of this text are:
                 easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
-                autofight_throw
+                autofight_throw, autofight_throw_nomove
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -68,7 +68,8 @@ The contents of this text are:
                 messages_at_top, skill_focus,
                 mlist_allow_alternate_layout, mlist_targetting,
                 menu_colour, message_colour, force_more_message,
-                msg_condense_repeats, msg_condense_short, show_travel_trail
+                msg_condense_repeats, msg_condense_short, show_travel_trail,
+                monster_list_colour
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
@@ -118,9 +119,9 @@ The contents of this text are:
                 note_chat_messages
 5-  Miscellaneous.
 5-a     All OS.
-                mouse_input, wiz_mode, char_set, classic_item_colours,
-                colour, cset, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species
+                mouse_input, wiz_mode, char_set, colour, cset, feature,
+                mon_glyph, item_glyph, use_fake_player_cursor,
+                show_player_species
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -168,8 +169,8 @@ additional option files coming with this release; these allow to set
 many options to old defaults, i.e. those of Crawl 0.3.4 and before.
 See the header of the default init.txt for more details.
 
-0-b     Options on the command line
------------------------------------
+0-b     Options on the command line.
+------------------------------------
 
 A quick way to make small changes to the options, without having to
 switch to a different option file, is to use the command line options
@@ -239,25 +240,14 @@ It is possible to reset, add items to, or remove items from such an option.
       drop_filter ^= rotting
    Remove values from the list (exact match only):
       drop_filter -= enchant
-   Reset (empty) the list:
+   Reset the list:
+      drop_filter = bad_item, dangerous_item
+   Empty the list:
       drop_filter =
 
-The meaning of the "listopt = value" syntax is in flux. Currently it is a
-synonym for "+=", adding items to the list. In future versions of Crawl, it
-will first reset the list before adding values. If you use "=" in a way that is
-expected to change meaning (appending to an option that already has at least
-one value), you will receive a warning at startup; in this case you can change
-your syntax to obtain either the current or the future behaviour:
-   Old syntax:
-      drop_filter = useless
-   Change to (for old meaning):
-      drop_filter += useless
-   Change to (for future meaning):
-      drop_filter =
-      drop_filter += useless
-
-A few list options already have the future behaviour for "opt = value"; these
-options are flagged as "Overriding list options" in their descriptions.
+The "listopt = value" syntax first clears the list, then adds values.  In
+previous versions of Crawl it was a synonym for +=, and only bare
+"listopt =" cleared the list.
 
 For many options, such as drop_filter, there is effectively no difference
 between appending and prepending. However, other options, such as
@@ -266,8 +256,7 @@ message_colour, do care about the order of items; these will be noted as
 take precedence over later ones, so += defers to existing matches (including
 defaults) while ^= overrides them. So, for example, with the sequence of
 options:
-   message_colour =
-   message_colour += cyan:hits
+   message_colour  = cyan:hits
    message_colour ^= red:crimson
    message_colour += yellow:killer
 the message "The crimson imp hits you!" will be displayed in red, while "The
@@ -401,7 +390,8 @@ autopickup = $?!+"/%
         " or =  Jewellery
         !       Potions
         + or :  Books
-        \ or |  Staves
+        |       Staves
+        \       Rods
         0       Orbs
         }       Misc. items
         X       Corpses
@@ -591,7 +581,7 @@ darken_beyond_range = true
         ASCII and the Tiles version.
 
 3-c     Passive Sightings (detected or remembered entities).
------------------------------------------------------------
+------------------------------------------------------------
 
 detected_monster_colour = lightred
         Monsters found by detect creatures will be coloured this colour.
@@ -628,8 +618,7 @@ depends on OS and terminal):
    highlight:colour -- set background colour of branded monsters to
                        "colour"
 The last can be abbreviated to hi:colour.
-See part Technical (5-) for dos_use_background_intensity under Windows
-and DOS.
+See part DOS and Windows (5-b) for dos_use_background_intensity.
 
 By default, only two of the item brands are active (and set to reverse):
    heap_brand, feature_item_brand
@@ -688,8 +677,8 @@ show_waypoints = true
         Whether to display a number on the level map to indicate
         waypoints (placed with the Ctrl-W command).
 
-3-f     Viewport Display Options
---------------------------------
+3-f     Viewport Display Options.
+---------------------------------
 
 The viewport is the portion of the map that is displayed during normal
 play. The viewport is 33x17 by default, but if you use larger terminal
@@ -767,7 +756,7 @@ scroll_margin = 2
 3-g     Travel and Exploration.
 -------------------------------
 
-travel_delay = 20
+travel_delay = 20 (defaults to -1 for online servers)
         How long travel waits after each move (milliseconds), and also
         how long auto-explore waits after each move unless explore_delay
         is set. Depends on platform. Setting to -1 will jump to end of
@@ -780,6 +769,11 @@ explore_delay = -1
         autoexplore, but not the invidivual moves of other forms of travel.
         Setting to -1 means the auto-explore delay will be the same as
         travel_delay.
+
+rest_delay = 0 (defaults to -1 for online servers)
+        How long resting waits after each move (milliseconds). Depends on
+        platform. Setting rest_delay = -1 will prevent the display updating
+        during resting.
 
 travel_avoid_terrain = (shallow water | deep water)
         Prevent travel from routing through shallow water. By default,
@@ -799,7 +793,7 @@ explore_greedy = true
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
 explore_stop += greedy_sacrificeable
-        (Overriding list option)
+        (List option)
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
         explore.
@@ -844,7 +838,7 @@ explore_stop += greedy_sacrificeable
             nothing eligible for autopickup.
 
         greedy_sacrificeable: Visit and stop at stacks containing items which
-            can be sacrificied to your god.
+            can be sacrificed to your god.
 
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
@@ -879,10 +873,14 @@ auto_sacrifice = false
        If set to true, eligible items will be automatically sacrificed during
        auto-explore.
        When set to "before_explore", if you are standing on items which can be
-       sacricied when you start auto-explore, they will be automatically
-       sacrificied.
-       It can also be set to "prompt", in which case you will have a
-       confirmation prompt before the items are sacrificed.
+       sacrificed when you start auto-explore, they will be automatically
+       sacrificed.
+       When set to "prompt", you will have a confirmation prompt before the
+       items are sacrificed.
+       When set to "prompt_ignore", items will not be automatically sacrificed,
+       but you will be reminded and asked whether to ignore them if you attempt
+       to continue exploring without sacrificing.
+
        This option has no effect when explore_stop doesn't include
        greedy_sacrificeable.
 
@@ -912,7 +910,7 @@ runrest_stop_message += <regex>, <regex>, ...
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-l below on Message
+        the channel name and a colon (see section 3-k below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message += god:wrath finds you
@@ -941,7 +939,7 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
         means shift-running and resting only. Only one runrest_ignore_poison
         line is considered. Note that for this work, you should also tell
         Crawl to ignore the "You feel sick" messages. For example,
-             runrest_ignore_message = You feel.*sick
+             runrest_ignore_message ^= You feel.*sick
              runrest_ignore_poison = 4:100
 
 runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
@@ -1041,6 +1039,7 @@ prefer_safe_chunks = true
         The (e)at command will prompt for all chunks on the floor and in your
         inventory, sorted by age. If this option is set to true, clean chunks
         will be offered before contaminated ones even if the latter are older.
+        Rotten chunks will be offered after clean or contaminated ones.
         Poisonous, mutagenic, rot-inducing, and chunks forbidden by
         your religion will always be offered last.
 
@@ -1274,18 +1273,18 @@ mp_warning = 0
         percentage of their maximum (use 0 to turn off these messages).
 
 hp_colour = 50:yellow, 25:red
-        (Overriding list option)
+        (List option)
         hp_colour colours your Health appropriately in the status
         display. In the default setting, your health will appear in
         red if at less than 25%, yellow if at less than 50%, and in
         the default colour otherwise.
 
 mp_colour = 50:yellow, 25:red
-        (Overriding list option)
+        (List option)
         mp_colour does to Magic what hp_colour does to Health.
 
 stat_colour = 1:lightred, 3:red
-        (Overriding list option)
+        (List option)
         stat_colour colours your stats if they drop below a given value,
         in the order of their definition. This check takes place before
         the ones for e.g. Might or degeneration.
@@ -1396,7 +1395,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         several statements in a list, and also several menu_colour
         lines. When using several menu_colour lines, the colour of the
         _first_ matching regex is applied. For a list of colours, check
-        the colour option in 6-a.
+        the colour option in 5-a.
 
         The match specifies which listings are affected by the
         colouring. If you specify 'any', or completely skip the <match>:
@@ -1502,13 +1501,13 @@ msg_condense_repeats = true
         how many times it was repeated. If the same output (including the
         counter) is repeated over several turns, the Show Previous Message
         command (Ctrl-P) will likewise condense them into one. For example:
-            The killer bee misses you. (x5)
+            The killer bee misses you. x5
 
 msg_condense_short = true
         If set, short messages on the same channel don't all start a new
         line.
 
-show_travel_trail = true
+show_travel_trail = false
         When set to true, the path taken during autoexplore or travel
         will be highlighted. If a travel trail is currently being displayed,
         the Clear Map command (Ctrl-C) clears the trail instead of the map
@@ -1520,6 +1519,31 @@ skill_focus = true
         and disabled. Setting the option to "toggle" adds a toggle to the skill
         screen to change the behaviour in-game.
 
+monster_list_colour += <key>:<colour>, <key>:<colour>
+monster_list_colour -= <key>
+        (List option)
+        Change the colours used to display monster names in the monster list.
+        Valid keys, and their default colours, are:
+
+           Monster attitudes:
+             friendly       - green
+             neutral        - brown ("indifferent")
+             good_neutral   - brown ("peaceful")
+             strict_neutral - brown ("fellow slime")
+
+           Threat levels for hostile monsters:
+             trivial        - darkgrey
+             easy           - lightgrey
+             tough          - yellow
+             nasty          - lightred
+
+         Removing a key with -= currently has the same effect as setting its
+         colour to lightgrey.
+
+         Note that, for TSO worshippers, monsters whom it is forbidden to
+         attack will appear in the "evil colour" (magenta by default)
+         regardless of this option.
+
 3-j     Missiles.
 -----------------
 
@@ -1530,7 +1554,7 @@ fire_items_start = a
 fire_order  = launcher, return
 fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
 fire_order += inscribed
-        (Overriding ordered list option)
+        (Ordered list option)
         Controls the order of items autoselected for firing. Items
         should be separated by commas and items that appear first get
         higher priority.
@@ -1601,8 +1625,8 @@ The channel options are
                (won't do anything silly like "mute" if plain == mute,
                though)
    off       = same as plain
-COLOUR can be any of the colours described in section 5-a (colours
-option).
+
+COLOUR can be any of the colours described in section 5-a (colour option).
 
 The only multi-colour channels currently are monster_damage and god. All
 other channels are defaulted to on.
@@ -1634,6 +1658,12 @@ autoinscribe += <regex>:<inscription>
 autoinscribe_cursed = true
         Automatically inscribes items with "was cursed" when using a scroll of
         remove curse.
+
+show_god_gift = unident|yes|no
+        Appends {god gift} to items that originated as one. If set to
+        "unident", items will lose this tag once their properties are
+        fully known. Regardless of this setting, you can see the item's
+        origin in its description.
 
 3-m     Macro related Options.
 ------------------------------
@@ -1836,7 +1866,7 @@ tile_show_demon_tier = true
         builds.
 
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
-        (Overriding ordered list option)
+        (Ordered list option)
         This option allows you to control the order in which elements are
         placed on the right of the screen, below the stat area. On small
         resolution, there won't be enough room for everything, so only the
@@ -1914,8 +1944,8 @@ dump_message_count = 20
 
 dump_order  = header,hiscore,stats,misc,notes,inventory,
 dump_order += skills,spells,overview,mutations,messages,screenshot,
-dump_order += monlist,kills
-        (Overriding ordered list option)
+dump_order += monlist,kills,action_counts
+        (Ordered list option)
         Controls the order of sections in the dump.
 
         Two optional dump sections are "turns_by_place" and
@@ -1929,10 +1959,6 @@ dump_order += monlist,kills
         in the game. This will only be included in the final dump
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode).
-
-        Also, "action_counts" will count various actions you have done (such
-        as casting a spell or using a weapon type), in total and per every
-        three experience levels.
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their

@@ -35,7 +35,7 @@ attack::attack(actor *attk, actor *defn)
     damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
     final_attack_delay(0), apply_bleeding(false), noise_factor(0),
     ev_margin(0), weapon(NULL),
-    damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
+    damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
     shield(NULL), art_props(0), unrand_entry(NULL), attacker_to_hit_penalty(0),
     attack_verb("bug"), verb_degree(), no_damage_message(),
     special_damage_message(), aux_attack(), aux_verb(),

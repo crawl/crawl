@@ -85,6 +85,9 @@ Some examples of search strings:
 <w>D:[2-4]</w>       finds everything on Dungeon levels 2-4. Regexes are allowed!
               Note that D:[3-10] will not work as intended, since [x-y] is a
               regex character range.
+<w>\+3</w>           finds all items with a +3 enchantment
+<w>rC\+\+</w>        finds all items with an rC++ resistance. Note with these that
+              the + symbol had to be escaped as \+ due to Regex syntax.
 <w>Lair.*axe</w> and <w>axe && Lair</w> both show all axes in the Lair.
 
 Some shortcuts:
@@ -162,8 +165,8 @@ level-map
 <w><<</w> or <w>></w> : Cycle through up or down stairs.
 <w>^</w>      : Cycle through traps.
 <w>Tab</w>    : Cycle through shops and portals.
-<w>*</w>      : Cycle forward through stashes (by default, all items).
-<w>/</w>      : Cycle backward through stashes (by default, all items).
+<w>I</w>      : Cycle forward through all items.
+<w>O</w>      : Cycle backward through all items.
 <w>_</w>      : Cycle through altars.
 
 <h>Other</h>
@@ -237,8 +240,8 @@ By pressing its letter, you can cycle if and how a skill is trained:
 + selected
 <w>* focused</w>       Skill will train faster than others.
 
-Pressing Ctrl+letter selects one skill and deselects all the others.
-It's a useful shortcut when you want to train only one skill.
+Pressing a capital letter selects that skill and deselects all the others.
+This shortcut is useful when you want to train only one skill.
 
 Training can be done in two modes, which are toggled with the <w>/</w> key.
 * automatic:    Skills are trained based on your use of them.
@@ -266,7 +269,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 <w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
 
                                <h>Training restrictions</h>
-Fighting, Throwing, Dodging, Stealth, Stabbing, Traps, Unarmed Combat,
+Fighting, Throwing, Dodging, Stealth, Traps, Unarmed Combat,
 and Spellcasting can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
 * Armour requires wearing an armour with an evasion penalty.

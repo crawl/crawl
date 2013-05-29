@@ -207,11 +207,10 @@ much the better; if not, well, there'll be other playthings...
 Vehumet powers
 
 Worshippers of Vehumet will quickly be able to recover their magical energy
-upon killing beings. As they gain favour, they will also gain various
-enhancements to their destructive spells — firstly, assistance in casting such
-spells; then increased range for conjurations; and finally a lowered cost for
-casting higher level destructive spells. Eventually, Vehumet will gift
-followers rare books of destructive magic.
+upon killing beings. As they gain favour, they will also gain enhancements to
+their destructive spells — first assistance in casting such spells and then
+increased range for conjurations. Vehumet will offer followers the knowledge of
+increasingly powerful destructive spells as they gain piety.
 %%%%
 Okawaru powers
 
@@ -256,17 +255,20 @@ when called upon; highly pious followers can be sure of such aid.
 %%%%
 Lugonu powers
 
-Followers of Lugonu gain powers to depart the Abyss at will, to banish monsters
-there, and eventually to gate themselves into this realm of chaos — at the cost
-of a part of their soul. Apart from that, they can cause distortional damage to
-monsters, and gain an ability to corrupt the ordered world, enabling them to
-open a gate for creatures of the Abyss to pass through.
+Followers of Lugonu gain powers to depart the Abyss at will, to bend space
+around themselves, and to banish monsters to the Abyss. Later they will be able
+to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
+through, and to gate themselves directly into this realm of chaos. Lugonu will
+eventually offer to corrupt a follower's weapon, imbuing it with the distorting
+energies of the Abyss. Lugonu expects followers to spread unceasing chaos in
+the overworld, and as such does not grant piety to worshippers while they
+remain in the Abyss itself.
 %%%%
 Beogh powers
 
 Beogh encourages followers to make use of orcish gear found in the dungeon.
 Followers can smite their foes, and will even gain orcish followers of their
-own, who may be blessed by Beogh in battle and can be recalled within a level
+own, who may be blessed by Beogh in battle and can be recalled to your vicinity
 as needed. Eventually, they'll gain the power to walk on water. Beogh will
 sometimes directly intervene to save a follower's life.
 %%%%

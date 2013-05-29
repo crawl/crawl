@@ -1,0 +1,45 @@
+%%%%
+book of fixed level
+
+Kitabın sihirli büyüsü.
+%%%%
+book of fixed theme
+
+Kitabın sihirli büyüsü.
+%%%%
+grape
+
+Küçük meyve.
+%%%%
+helmet
+
+Metal başlık parçası.
+%%%%
+lemon
+
+Sarı meyve.
+%%%%
+orange
+
+Lezzetli bir  sulu turuncu meyve.
+%%%%
+pair of boots
+
+Bir çift bot.
+%%%%
+pair of gloves
+
+Bir çift eldiven.
+%%%%
+pear
+
+Lezzetli bir sulu meyve.
+%%%%
+strawberry
+
+Küçük ama lezzetli bir kırmızı meyve.
+%%%%
+wand of cold
+
+Muhteşem soğuk vidalar atan sihirli bir cihaz.
+%%%%

@@ -177,13 +177,15 @@ class circ_vec
 
     static void inc(int* index)
     {
-        ASSERT(*index >= 0 && *index < SIZE);
+        ASSERT(*index >= 0);
+        ASSERT(*index < SIZE);
         *index = _mod(*index + 1, SIZE);
     }
 
     static void dec(int* index)
     {
-        ASSERT(*index >= 0 && *index < SIZE);
+        ASSERT(*index >= 0);
+        ASSERT(*index < SIZE);
         *index = _mod(*index - 1, SIZE);
     }
 
@@ -505,7 +507,7 @@ public:
 
         for (size_t i = 0; i < newlines.size(); ++i)
         {
-            temp_line -= make_space(1);
+            make_space(1);
             formatted_string line;
             if (use_first_col())
                 line.add_glyph(_prefix_glyph(first_col));
@@ -527,6 +529,9 @@ public:
         next_line = temp_line;
     }
 
+    /**
+     * Consider any formerly-temporary messages permanent.
+     */
     void reset_temp()
     {
         temp_line = next_line;
@@ -626,10 +631,18 @@ class message_store
     int unsent; // number of messages not yet sent to the webtiles client
     bool prev_unsent;
     int client_rollback;
+#ifdef USE_TILE_WEB
+    bool send_ignore_one;
+#endif
 
 public:
     message_store() : last_of_turn(false), temp(0),
-                      unsent(0), prev_unsent(false), client_rollback(0) {}
+                      unsent(0), prev_unsent(false),
+                      client_rollback(0)
+#ifdef USE_TILE_WEB
+                      , send_ignore_one(false)
+#endif
+    {}
 
     void add(const message_item& msg)
     {
@@ -658,7 +671,15 @@ public:
             temp++;
         else
             reset_temp();
+#ifdef USE_TILE_WEB
+        // ignore this message until it's actually displayed in case we run out
+        // of space and have to display --more-- instead
+        send_ignore_one = true;
+#endif
         msgwin.add_item(msg.with_repeats(), p, _temporary);
+#ifdef USE_TILE_WEB
+        send_ignore_one = false;
+#endif
     }
 
     void roll_back()
@@ -682,16 +703,16 @@ public:
         // writing out to the message window might
         // in turn result in a recursive flush_prev.
         prev_msg = message_item();
+        if (prev_unsent)
+        {
+            unsent++;
+            prev_unsent = false;
+        }
         store_msg(msg);
         if (last_of_turn)
         {
             msgwin.new_cmdturn(true);
             last_of_turn = false;
-        }
-        if (prev_unsent)
-        {
-            unsent++;
-            prev_unsent = false;
         }
     }
 
@@ -721,7 +742,7 @@ public:
     void send(int old_msgs = 0)
     {
         unsent += old_msgs;
-        if (unsent == 0) return;
+        if (unsent == 0 || (send_ignore_one && unsent == 1)) return;
 
         if (client_rollback > 0)
         {
@@ -731,7 +752,7 @@ public:
         if (old_msgs > 0)
             tiles.json_write_int("old_msgs", old_msgs);
         tiles.json_open_array("messages");
-        for (int i = -unsent; i < 0; ++i)
+        for (int i = -unsent; i < (send_ignore_one ? -1 : 0); ++i)
         {
             message_item& msg = msgs[i];
             tiles.json_open_object();
@@ -753,7 +774,7 @@ public:
             tiles.json_close_object();
         }
         tiles.json_close_array();
-        unsent = 0;
+        unsent = send_ignore_one ? 1 : 0;
         prev_unsent = false;
     }
 #endif
@@ -1168,7 +1189,7 @@ void mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap
 
 #ifdef DEBUG_FATAL
     if (channel == MSGCH_ERROR)
-        die("%s", text.c_str());
+        die_noline("%s", text.c_str());
 #endif
 
     if (!crawl_state.io_inited)
@@ -1526,7 +1547,7 @@ void clear_message_store()
     buffer.clear();
 }
 
-string get_last_messages(int mcount)
+string get_last_messages(int mcount, bool full)
 {
     flush_prev_message();
 
@@ -1540,11 +1561,9 @@ string get_last_messages(int mcount)
         const message_item msg = msgs[i];
         if (!msg)
             break;
-        if (is_channel_dumpworthy(msg.channel))
-        {
+        if (full || is_channel_dumpworthy(msg.channel))
             text = msg.pure_text() + "\n" + text;
-            mcount--;
-        }
+        mcount--;
     }
 
     // An extra line of clearance.

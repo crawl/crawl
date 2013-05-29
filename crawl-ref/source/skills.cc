@@ -20,6 +20,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "notes.h"
@@ -144,7 +145,18 @@ static void _change_skill_level(skill_type exsk, int n)
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
     if (you.skills[exsk] == 27)
+    {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        for (int i = you.sage_skills.size() - 1; i >= 0; i--)
+        {
+            if (you.sage_skills[i] == exsk)
+            {
+                erase_any(you.sage_skills, i);
+                erase_any(you.sage_xp,     i);
+                erase_any(you.sage_bonus,  i);
+            }
+        }
+    }
     else if (abs(n) == 1 && you.num_turns)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
@@ -374,7 +386,7 @@ static void _check_start_train()
 
         if (!you.can_train[*it] && you.train[*it])
             skills.insert(*it);
-        you.can_train[*it] = true;
+        you.can_train.set(*it);
     }
 
     reset_training();
@@ -414,7 +426,7 @@ static void _check_stop_train()
 
         if (skill_trained(*it) && you.training[*it])
             skills.insert(*it);
-        you.can_train[*it] = false;
+        you.can_train.set(*it, false);
     }
 
     if (!skills.empty())
@@ -446,7 +458,6 @@ bool training_restricted(skill_type sk)
     case SK_ARMOUR:
     case SK_DODGING:
     case SK_STEALTH:
-    case SK_STABBING:
     case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
@@ -465,7 +476,7 @@ void init_can_train()
     // Clear everything out, in case this isn't the first game.
     you.start_train.clear();
     you.stop_train.clear();
-    you.can_train.init(false);
+    you.can_train.reset();
 
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -474,7 +485,7 @@ void init_can_train()
         if (is_useless_skill(sk))
             continue;
 
-        you.can_train[sk] = true;
+        you.can_train.set(sk);
         if (training_restricted(sk))
             you.stop_train.insert(sk);
     }
@@ -614,8 +625,11 @@ bool check_selected_skills()
         return true;
     }
 
-    if (could_train)
+    if (could_train && !you.received_noskill_warning)
+    {
+        you.received_noskill_warning = true;
         mpr("You cannot train any new skill.");
+    }
 
     return false;
     // It's possible to have no selectable skills, if they are all untrainable
@@ -721,7 +735,10 @@ static bool _level_up_check(skill_type sk, bool simu)
     {
         you.training[sk] = 0;
         if (!simu)
+        {
             you.train[sk] = 0;
+            you.train_alt[sk] = 0;
+        }
         return true;
     }
 
@@ -1025,7 +1042,7 @@ void set_skill_level(skill_type skill, double amount)
 
         // When reducing, we don't want to stop right at the limit, unless
         // we're at skill cost level 0.
-        if (reduced and you.skill_cost_level)
+        if (reduced && you.skill_cost_level)
             ++max_xp;
 
         int cost = calc_skill_cost(you.skill_cost_level);

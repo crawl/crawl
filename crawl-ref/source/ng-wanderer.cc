@@ -307,10 +307,8 @@ static void _give_wanderer_book(skill_type skill, int & slot)
             book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
-            book_type = BOOK_CONJURATIONS;
-            break;
         case 2:
-            book_type = BOOK_YOUNG_POISONERS;
+            book_type = BOOK_CONJURATIONS;
             break;
         }
         break;
@@ -348,40 +346,15 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_FIRE_MAGIC:
-        switch (random2(3))
-        {
-        case 0:
-        case 1:
-            book_type = BOOK_FLAMES;
-            break;
-        case 2:
-            book_type = BOOK_MINOR_MAGIC;
-            break;
-        }
+        book_type = BOOK_FLAMES;
         break;
 
     case SK_ICE_MAGIC:
-        switch (random2(2))
-        {
-        case 0:
-            book_type = BOOK_FROST;
-            break;
-        case 1:
-            book_type = BOOK_CONJURATIONS;
-            break;
-        }
+        book_type = BOOK_FROST;
         break;
 
     case SK_AIR_MAGIC:
-        switch (random2(2))
-        {
-        case 0:
-            book_type = BOOK_AIR;
-            break;
-        case 1:
-            book_type = BOOK_CONJURATIONS;
-            break;
-        }
+        book_type = BOOK_AIR;
         break;
 
     case SK_EARTH_MAGIC:
@@ -551,7 +524,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
         break;
 
     case SK_ARMOUR:
-        // Deformed species aren't given armor skill, so there's no need
+        // Deformed species aren't given armour skill, so there's no need
         // to worry about scale mail's not fitting.
         newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL);
         slot++;
@@ -583,7 +556,6 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_DODGING:
     case SK_STEALTH:
     case SK_TRAPS:
-    case SK_STABBING:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     {
@@ -620,7 +592,7 @@ static void _give_wanderer_spell(skill_type skill)
         break;
 
     case SK_SUMMONINGS:
-        spell = SPELL_SUMMON_SMALL_MAMMALS;
+        spell = SPELL_SUMMON_SMALL_MAMMAL;
         break;
 
     case SK_NECROMANCY:
@@ -766,7 +738,6 @@ static void _wanderer_decent_equipment(skill_type & skill,
         break;
 
     case SK_TRAPS:
-    case SK_STABBING:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
@@ -779,7 +750,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
 // dungeon.
 static void _wanderer_cover_equip_holes(int & slot)
 {
-    // We are going to cover any glaring holes (no armor/no weapon) that
+    // We are going to cover any glaring holes (no armour/no weapon) that
     // occurred during equipment generation.
     if (you.equip[EQ_BODY_ARMOUR] == -1)
     {
@@ -790,16 +761,16 @@ static void _wanderer_cover_equip_holes(int & slot)
     if (you.equip[EQ_WEAPON] == -1)
     {
         weapon_type weapon = WPN_CLUB;
-        if (you.dex() > you.strength() || you.skills[SK_STABBING])
+        if (you.dex() > you.strength())
             weapon = WPN_DAGGER;
 
         newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, weapon);
         slot++;
     }
 
-    // Give a dagger if you have stabbing skill.  Maybe this is
+    // Give a dagger if you have stealth skill.  Maybe this is
     // unnecessary?
-    if (you.skills[SK_STABBING])
+    if (you.skills[SK_STEALTH] > 1)
     {
         bool has_dagger = false;
 
@@ -871,7 +842,7 @@ void create_wanderer(void)
 
     // Regardless of roles, players get a couple levels in these skills.
     const skill_type util_skills[] =
-        { SK_THROWING, SK_STABBING, SK_TRAPS, SK_STEALTH,
+        { SK_THROWING, SK_TRAPS, SK_STEALTH,
           SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
     int util_size = ARRAYSZ(util_skills);

@@ -66,6 +66,9 @@ int mons_tracking_range(const monster* mon)
     if (you.penance[GOD_ASHENZARI])
         range *= 5;
 
+    if (mons_foe_is_marked(mon))
+        range *= 5;
+
     return range;
 }
 
@@ -408,8 +411,11 @@ bool monster_pathfind::traversable(const coord_def& p)
     //      opc_immob elsewhere in pathfinding.
     //      All of this should eventually be replaced by
     //      giving the monster a proper pathfinding LOS.
-    if (opc_immob(p) == OPC_OPAQUE)
+    if (opc_immob(p) == OPC_OPAQUE
+        && grd(p) != DNGN_CLOSED_DOOR && grd(p) != DNGN_SEALED_DOOR)
+    {
         return false;
+    }
 
     if (mons)
         return mons_traversable(p);

@@ -96,7 +96,9 @@ Slime Pits
 La royaume amorphe des acides, gelées et slimes. Toute trace d'intelligence a
 été depuis longtemps dissoute. Cependant, il y a des rumeurs de trésors
 formidables, cachés en toute sécurité dans des chambres secrètes sans porte ni
-fenêtre, évitant ainsi la corrosion de l'acide.
+fenêtre, évitant ainsi la corrosion de l'acide. Il est bien connu qu'un
+dangereux acide suinte des murs de cet horrible endroit, et qu'il est de plus
+en plus caustique à mesure que vous descendez.
 
 La Fosse des Gelées est profonde de six niveaux  et contient la rune visqueuse.
 Son entrée est entre Repaire:6 et Repaire:8.
@@ -182,7 +184,7 @@ Zot
 Une région du donjon qui est complexe, verrouillée par sécurité et à laquelle
 on fait référence avec les mots "folie", "fureur" et "folie". Seuls les
 aventuriers les plus fous oseront briser le sceau qui protège son entrée et
-plonger dans ses profondeurs - dans le vain espoir de poser les yeux sur le
+plonger dans ses profondeurs – dans le vain espoir de poser les yeux sur le
 légendaire artéfact.
 
 Le Royaume de Zot est profond de cinq niveaux et est uniquement accessible en

@@ -1,5 +1,5 @@
 Dungeon Crawl Stone Soup
-Copyright 1997-2012 Linley Henzell, the dev team, and the contributors
+Copyright 1997-2013 Linley Henzell, the dev team, and the contributors
 (please refer to CREDITS.txt for details).
 
 This program is free software; you can redistribute it and/or modify
@@ -11,13 +11,13 @@ Certain pieces come with different licenses, all compatible with the GPL.
 These include:
 * 3-clause BSD: MSVC/stdint.h
 * 2-clause BSD: all contributions by Steve Noonan and Jesse Luehrs
-* Public Domain|CC0: most of tiles
+* Public Domain|CC0: most of tiles, perlin.cc, perlin.h
 * MIT: json.cc/json.h, some .js files in webserver/static/scripts/contrib/
        worley.{cc,h}
 * zlib: webserver/static/scripts/contrib/inflate.js
 
 While a majority of the tiles are in the Public Domain, there is no accurate
-list.  To err on the side of caution, please refer to Chris Hamons'
+list. To err on the side of caution, please refer to Chris Hamons'
 collection at http://code.google.com/p/crawl-tiles/
 
 *&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*

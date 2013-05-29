@@ -30,6 +30,10 @@ tornado TORNADO
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
 orb_of_destruction IOOD
+battlesphere BATTLESPHERE
+dazzling_spray DAZZLING_SPRAY
+force_lance FORCE_LANCE
+fulminant_prism FULMINANT_PRISM
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -98,7 +102,6 @@ animate_dead ANIMATE_DEAD
 animate_skeleton ANIMATE_SKELETON
 bolt_of_draining BOLT_OF_DRAINING
 borgnjors_revivification BORGNJORS_REVIVIFICATION
-cigotuvis_degeneration CIGOTUVIS_DEGENERATION
 control_undead CONTROL_UNDEAD
 corpse_rot CORPSE_ROT
 death_channel DEATH_CHANNEL
@@ -147,7 +150,7 @@ summon_hydra SUMMON_HYDRA
 summon_ice_beast SUMMON_ICE_BEAST
 summon_scorpions SUMMON_SCORPIONS
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
-summon_small_mammals SUMMON_SMALL_MAMMALS
+summon_small_mammal SUMMON_SMALL_MAMMAL
 summon_ugly_thing SUMMON_UGLY_THING
 
 %sdir gui/spells/translocation
@@ -155,6 +158,7 @@ apportation APPORTATION
 blink BLINK
 controlled_blink CONTROLLED_BLINK
 controlled_teleport CONTROLLED_TELEPORT
+disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
 phase_shift PHASE_SHIFT
@@ -165,7 +169,7 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
-polymorph_other POLYMORPH_OTHER
+polymorph POLYMORPH
 homunculus HOMUNCULUS
 beastly_appendage BEASTLY_APPENDAGE
 

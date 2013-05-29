@@ -15,7 +15,6 @@
 #include "externs.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
-#include "l_defs.h"
 #include "libutil.h"
 #include "los.h"
 #include "macro.h"
@@ -34,6 +33,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
@@ -47,7 +47,7 @@ extern void world_reacts();
 
 namespace arena
 {
-    void write_error(const string &error);
+    static void write_error(const string &error);
 
     // A faction is just a big list of monsters. Monsters will be dropped
     // around the appropriate marker.
@@ -83,59 +83,58 @@ namespace arena
         }
     };
 
-    string teams;
+    static string teams;
 
-    int total_trials = 0;
+    static int total_trials = 0;
 
-    bool contest_canceled = false;
+    static bool contest_canceled = false;
 
-    bool is_respawning = false;
+    static bool is_respawning = false;
 
-    int trials_done = 0;
-    int team_a_wins = 0;
-    int ties        = 0;
+    static int trials_done = 0;
+    static int team_a_wins = 0;
+    static int ties        = 0;
 
-    int turns       = 0;
+    static int turns       = 0;
 
-    bool allow_summons       = true;
-    bool allow_animate       = true;
-    bool allow_chain_summons = true;
-    bool allow_zero_xp       = false;
-    bool allow_immobile      = true;
-    bool allow_bands         = true;
-    bool name_monsters       = false;
-    bool random_uniques      = false;
-    bool real_summons        = false;
-    bool move_summons        = false;
-    bool respawn             = false;
-    bool move_respawns       = false;
+    static bool allow_summons       = true;
+    static bool allow_animate       = true;
+    static bool allow_chain_summons = true;
+    static bool allow_zero_xp       = false;
+    static bool allow_immobile      = true;
+    static bool allow_bands         = true;
+    static bool name_monsters       = false;
+    static bool random_uniques      = false;
+    static bool real_summons        = false;
+    static bool move_summons        = false;
+    static bool respawn             = false;
+    static bool move_respawns       = false;
 
-    bool miscasts            = false;
+    static bool miscasts            = false;
 
-    int  summon_throttle     = INT_MAX;
+    static int  summon_throttle     = INT_MAX;
 
-    vector<monster_type> uniques_list;
-    vector<int> a_spawners;
-    vector<int> b_spawners;
-    int8_t           to_respawn[MAX_MONSTERS];
+    static vector<monster_type> uniques_list;
+    static vector<int> a_spawners;
+    static vector<int> b_spawners;
+    static int8_t           to_respawn[MAX_MONSTERS];
 
-    int item_drop_times[MAX_ITEMS];
+    static int item_drop_times[MAX_ITEMS];
 
-    bool banned_glyphs[128];
+    static bool banned_glyphs[128];
 
-    string arena_type = "";
-    faction faction_a(true);
-    faction faction_b(false);
-    coord_def place_a, place_b;
+    static string arena_type = "";
+    static faction faction_a(true);
+    static faction faction_b(false);
+    static coord_def place_a, place_b;
 
-    bool cycle_random     = false;
-    monster_type cycle_random_pos = NUM_MONSTERS;
+    static bool cycle_random     = false;
+    static uint32_t cycle_random_pos = 0;
 
-    FILE *file = NULL;
-    int message_pos = 0;
-    level_id place(BRANCH_MAIN_DUNGEON, 20);
+    static FILE *file = NULL;
+    static level_id place(BRANCH_MAIN_DUNGEON, 20);
 
-    void adjust_spells(monster* mons, bool no_summons, bool no_animate)
+    static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
         monster_spells &spells(mons->spells);
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -148,7 +147,7 @@ namespace arena
         }
     }
 
-    void adjust_monsters()
+    static void adjust_monsters()
     {
         for (monster_iterator mon; mon; ++mon)
         {
@@ -158,7 +157,7 @@ namespace arena
         }
     }
 
-    void list_eq(const monster *mon)
+    static void list_eq(const monster *mon)
     {
         if (!Options.arena_list_eq || file == NULL)
             return;
@@ -198,7 +197,7 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const monster* mon = dgn_place_monster(spec, -1,
+                const monster* mon = dgn_place_monster(spec,
                                                        loc, false, true, false);
                 if (!mon)
                 {
@@ -213,7 +212,7 @@ namespace arena
         }
     }
 
-    void center_print(unsigned sz, string text, int number = -1)
+    static void center_print(unsigned sz, string text, int number = -1)
     {
         if (number >= 0)
             text = make_stringf("(%d) %s", number, text.c_str());
@@ -225,7 +224,7 @@ namespace arena
         cprintf("%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str());
     }
 
-    void setup_level()
+    static void setup_level()
     {
         turns = 0;
 
@@ -285,7 +284,7 @@ namespace arena
         env.markers.activate_all();
     }
 
-    string find_monster_spec()
+    static string find_monster_spec()
     {
         if (!teams.empty())
             return teams;
@@ -293,7 +292,7 @@ namespace arena
             return "random v random";
     }
 
-    void parse_faction(faction &fact, string spec)
+    static void parse_faction(faction &fact, string spec)
         throw (string)
     {
         fact.clear();
@@ -308,7 +307,7 @@ namespace arena
         }
     }
 
-    void parse_monster_spec()
+    static void parse_monster_spec()
         throw (string)
     {
         string spec = find_monster_spec();
@@ -403,7 +402,7 @@ namespace arena
         }
     }
 
-    void setup_monsters()
+    static void setup_monsters()
         throw (string)
     {
         faction_a.reset();
@@ -412,7 +411,7 @@ namespace arena
         for (int i = 0; i < MAX_MONSTERS; i++)
             to_respawn[i] = -1;
 
-        unwind_var< FixedVector<bool, NUM_MONSTERS> >
+        unwind_var< FixedBitVector<NUM_MONSTERS> >
             uniq(you.unique_creatures);
 
         place_a = dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I);
@@ -435,13 +434,13 @@ namespace arena
         adjust_monsters();
     }
 
-    void show_fight_banner(bool after_fight = false)
+    static void show_fight_banner(bool after_fight = false)
     {
         int line = 1;
 
         cgotoxy(1, line++, GOTO_STAT);
         textcolor(WHITE);
-        center_print(crawl_view.hudsz.x, "Crawl " + Version::Long());
+        center_print(crawl_view.hudsz.x, string("Crawl ") + Version::Long);
         line++;
 
         cgotoxy(1, line++, GOTO_STAT);
@@ -474,7 +473,7 @@ namespace arena
         }
     }
 
-    void setup_others()
+    static void setup_others()
     {
         you.species = SP_HUMAN;
         you.char_class = JOB_FIGHTER;
@@ -498,13 +497,13 @@ namespace arena
         show_fight_banner();
     }
 
-    void expand_mlist(int exp)
+    static void expand_mlist(int exp)
     {
         crawl_view.mlistp.y  -= exp;
         crawl_view.mlistsz.y += exp;
     }
 
-    void setup_fight()
+    static void setup_fight()
         throw (string)
     {
         //no_messages mx;
@@ -517,15 +516,7 @@ namespace arena
         setup_others();
     }
 
-    // Temporarily reset crawl_state.type to force a --more-- to happen.
-    void more()
-    {
-        unwind_var<game_type> type(crawl_state.type, GAME_TYPE_NORMAL);
-
-        ::more();
-    }
-
-    void count_foes()
+    static void count_foes()
     {
         int orig_a = faction_a.active_members;
         int orig_b = faction_b.active_members;
@@ -547,6 +538,8 @@ namespace arena
 
         for (monster_iterator mons; mons; ++mons)
         {
+            if (mons_is_tentacle_or_tentacle_segment(mons->type))
+                continue;
             if (mons->attitude == ATT_FRIENDLY)
                 faction_a.active_members++;
             else if (mons->attitude == ATT_HOSTILE)
@@ -574,7 +567,7 @@ namespace arena
     }
 
     // Returns true as long as at least one member of each faction is alive.
-    bool fight_is_on()
+    static bool fight_is_on()
     {
         if (faction_a.active_members > 0 && faction_b.active_members > 0)
         {
@@ -595,32 +588,7 @@ namespace arena
         return (faction_a.active_members > 0 && faction_b.active_members > 0);
     }
 
-    void report_foes()
-    {
-        for (monster_iterator mons; mons; ++mons)
-        {
-            if (mons->type == MONS_SIGMUND)
-            {
-                coord_def where;
-                if (mons->get_foe())
-                    where = mons->get_foe()->pos();
-                mprf("%s (%d,%d) foe: %s (%d,%d)",
-                     mons->name(DESC_PLAIN).c_str(),
-                     mons->pos().x, mons->pos().y,
-                     mons->get_foe()? mons->get_foe()->name(DESC_PLAIN).c_str()
-                     : "(none)",
-                     where.x, where.y);
-            }
-        }
-    }
-
-    void fixup_foes()
-    {
-        for (monster_iterator mons; mons; ++mons)
-            behaviour_event(*mons, ME_DISTURB, 0, mons->pos());
-    }
-
-    void dump_messages()
+    static void dump_messages()
     {
         if (!Options.arena_dump_msgs || file == NULL)
             return;
@@ -676,7 +644,7 @@ namespace arena
     // Try to prevent random luck from letting one spawner fill up the
     // arena with so many monsters that the other spawner can never get
     // back on even footing.
-    void balance_spawners()
+    static void balance_spawners()
     {
         if (a_spawners.empty() || b_spawners.empty())
             return;
@@ -703,7 +671,7 @@ namespace arena
         }
     }
 
-    void do_miscasts()
+    static void do_miscasts()
     {
         if (!miscasts)
             return;
@@ -718,7 +686,7 @@ namespace arena
         }
     }
 
-    void handle_keypress(int ch)
+    static void handle_keypress(int ch)
     {
         if (key_is_escape(ch) || toalower(ch) == 'q')
         {
@@ -754,7 +722,7 @@ namespace arena
         process_command(cmd);
     }
 
-    void do_respawn(faction &fac)
+    static void do_respawn(faction &fac)
     {
         is_respawning = true;
         for (unsigned int _i = fac.respawn_list.size(); _i > 0; _i--)
@@ -768,7 +736,7 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            monster *mon = dgn_place_monster(spec, -1, pos, false, true);
+            monster *mon = dgn_place_monster(spec, pos, false, true);
 
             if (!mon && fac.active_members == 0 && monster_at(pos))
             {
@@ -797,7 +765,7 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                mon = dgn_place_monster(spec, -1, pos, false, true);
+                mon = dgn_place_monster(spec, pos, false, true);
             }
 
             if (mon)
@@ -820,7 +788,7 @@ namespace arena
         is_respawning = false;
     }
 
-    void do_fight()
+    static void do_fight()
     {
         viewwindow();
         mesclr(true);
@@ -937,7 +905,7 @@ namespace arena
         dump_messages();
     }
 
-    void global_setup(const string& arena_teams)
+    static void global_setup(const string& arena_teams)
     {
         // [ds] Turning off view_lock crashes arena.
         Options.view_lock_x = Options.view_lock_y = true;
@@ -979,7 +947,7 @@ namespace arena
         }
     }
 
-    void global_shutdown()
+    static void global_shutdown()
     {
         if (file != NULL)
             fclose(file);
@@ -987,7 +955,7 @@ namespace arena
         file = NULL;
     }
 
-    void write_results()
+    static void write_results()
     {
         if (file != NULL)
         {
@@ -1001,7 +969,7 @@ namespace arena
         }
     }
 
-    void write_error(const string &error)
+    static void write_error(const string &error)
     {
         if (file != NULL)
         {
@@ -1011,7 +979,7 @@ namespace arena
         file = NULL;
     }
 
-    void simulate()
+    static void simulate()
     {
         init_level_connectivity();
         do
@@ -1049,15 +1017,14 @@ namespace arena
 
 // Various arena callbacks
 
-monster_type arena_pick_random_monster(const level_id &place, int power,
-                                       int &lev_mons)
+monster_type arena_pick_random_monster(const level_id &place)
 {
     if (arena::random_uniques)
     {
         const vector<monster_type> &uniques = arena::uniques_list;
 
         const monster_type type = uniques[random2(uniques.size())];
-        you.unique_creatures[type] = false;
+        you.unique_creatures.set(type, false);
 
         return type;
     }
@@ -1067,27 +1034,24 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
     for (int tries = 0; tries <= NUM_MONSTERS; tries++)
     {
-        ++arena::cycle_random_pos;
-        if (arena::cycle_random_pos >= NUM_MONSTERS)
-            arena::cycle_random_pos = MONS_0;
+        monster_type mons = pick_monster_by_hash(place.branch,
+            ++arena::cycle_random_pos);
 
-        if (mons_rarity(arena::cycle_random_pos, place) == 0)
+        if (arena_veto_random_monster(mons))
             continue;
 
-        if (arena_veto_random_monster(arena::cycle_random_pos))
-            continue;
-
-        return arena::cycle_random_pos;
+        return mons;
     }
 
     game_ended_with_error(
         make_stringf("No random monsters for place '%s'",
                      arena::place.describe().c_str()));
-    return NUM_MONSTERS;
 }
 
 bool arena_veto_random_monster(monster_type type)
 {
+    if (mons_is_tentacle_or_tentacle_segment(type))
+        return true;
     if (!arena::allow_immobile && mons_class_is_stationary(type))
         return true;
     if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
@@ -1127,7 +1091,9 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
 // is placed via splitting.
 void arena_placed_monster(monster* mons)
 {
-    if (mons->attitude == ATT_FRIENDLY)
+    if (mons_is_tentacle_or_tentacle_segment(mons->type))
+        ; // we don't count tentacles or tentacle segments, even free-standing
+    else if (mons->attitude == ATT_FRIENDLY)
     {
         arena::faction_a.active_members++;
         arena::faction_b.won = false;
@@ -1136,12 +1102,6 @@ void arena_placed_monster(monster* mons)
     {
         arena::faction_b.active_members++;
         arena::faction_a.won = false;
-    }
-    else
-    {
-        mprf(MSGCH_ERROR, "Placed neutral (%d) monster %s",
-             static_cast<int>(mons->attitude),
-             mons->name(DESC_PLAIN, true).c_str());
     }
 
     if (!arena::allow_summons || !arena::allow_animate)
@@ -1231,7 +1191,9 @@ void arena_split_monster(monster* split_from, monster* split_to)
 void arena_monster_died(monster* mons, killer_type killer,
                         int killer_index, bool silent, int corpse)
 {
-    if (mons->attitude == ATT_FRIENDLY)
+    if (mons_is_tentacle_or_tentacle_segment(mons->type))
+        ; // part of a monster, or a spell
+    else if (mons->attitude == ATT_FRIENDLY)
         arena::faction_a.active_members--;
     else if (mons->attitude == ATT_HOSTILE)
         arena::faction_b.active_members--;

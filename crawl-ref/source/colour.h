@@ -93,12 +93,13 @@ void add_element_colour(element_colour_calc *colour);
 void clear_colours_on_exit();
 colour_t random_colour();
 colour_t random_uncommon_colour();
-bool is_low_colour(colour_t colour);
-bool is_high_colour(colour_t colour);
-colour_t make_low_colour(colour_t colour);
-colour_t make_high_colour(colour_t colour);
+bool is_low_colour(colour_t colour) IMMUTABLE;
+bool is_high_colour(colour_t colour) IMMUTABLE;
+colour_t make_low_colour(colour_t colour) IMMUTABLE;
+colour_t make_high_colour(colour_t colour) IMMUTABLE;
 int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
+int get_disjunct_phase(const coord_def& loc);
 bool get_tornado_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 int dam_colour(const monster_info&);

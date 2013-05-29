@@ -69,10 +69,12 @@ define(function() {
         9: 9,
 
         // Numpad / Arrow keys
+        45: -250,
         35: -1001,
         40: -253,//-1002,
         34: -1003,
         37: -252,//-1004,
+        12: -247,
         39: -251,//-1006,
         36: -1007,
         38: -254,//-1008,
@@ -104,10 +106,12 @@ define(function() {
 
     var shift_key_conversion = {
         // Numpad / Arrow keys
+        45: CK_SHIFT_INSERT,
         35: CK_SHIFT_END,
         40: CK_SHIFT_DOWN,
         34: CK_SHIFT_PGDN,
         37: CK_SHIFT_LEFT,
+        12: CK_SHIFT_CLEAR,
         39: CK_SHIFT_RIGHT,
         36: CK_SHIFT_HOME,
         38: CK_SHIFT_UP,
@@ -126,10 +130,12 @@ define(function() {
 
     var ctrl_key_conversion = {
         // Numpad / Arrow keys
+        45: CK_CTRL_INSERT,
         35: CK_CTRL_END,
         40: CK_CTRL_DOWN,
         34: CK_CTRL_PGDN,
         37: CK_CTRL_LEFT,
+        12: CK_CTRL_CLEAR,
         39: CK_CTRL_RIGHT,
         36: CK_CTRL_HOME,
         38: CK_CTRL_UP,

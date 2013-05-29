@@ -104,7 +104,7 @@ static void _initialize()
     env.map_knowledge.init(map_cell());
     env.pgrid.init(0);
 
-    you.unique_creatures.init(false);
+    you.unique_creatures.reset();
     you.unique_items.init(UNIQ_NOT_EXISTS);
 
     // Set up the Lua interpreter for the dungeon builder.
@@ -204,6 +204,8 @@ static void _post_init(bool newc)
     crawl_state.last_type = crawl_state.type;
     crawl_state.last_game_won = false;
 
+    destroy_abyss();
+
     calc_hp();
     calc_mp();
     if (you.form != TRAN_LICH)
@@ -282,6 +284,7 @@ static void _post_init(bool newc)
     ash_check_bondage(false);
 
     trackers_init_new_level(false);
+    tile_new_level(newc);
 
     if (newc) // start a new game
     {
@@ -297,8 +300,6 @@ static void _post_init(bool newc)
         if (crawl_state.game_is_zotdef())
             fully_map_level();
     }
-
-    tile_new_level(newc);
 
     // This just puts the view up for the first turn.
     viewwindow();
@@ -600,9 +601,16 @@ again:
     }
 
     tmp = new NoSelectTextItem();
+
     string text = "Use the up/down keys to select the type of game or load a "
-                  "character.\n"
-                  "You can type your name; if you leave it blank you will be "
+                  "character.";
+#ifdef USE_TILE_LOCAL
+    if (tiles.is_using_small_layout())
+        text += " ";
+    else
+#endif
+        text += "\n";
+    text +=       "You can type your name; if you leave it blank you will be "
                   "asked later.\n"
                   "Press Enter to start";
     // TODO: this should include a description of that character.

@@ -22,6 +22,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -48,6 +49,7 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mislead.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
@@ -63,6 +65,7 @@
 #include "player-stats.h"
 #include "player.h"
 #include "religion.h"
+#include "shopping.h"
 #include "shout.h"
 #include "skills.h"
 #include "skills2.h"
@@ -74,6 +77,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -212,11 +216,7 @@ int torment_player(actor *attacker, int taux)
     }
 
     // Kiku protects you from torment to a degree.
-    const bool kiku_shielding_player =
-        (you.religion == GOD_KIKUBAAQUDGHA
-        && !player_under_penance()
-        && you.piety > 80
-        && !you.gift_timeout); // no protection during pain branding weapon
+    const bool kiku_shielding_player = player_kiku_res_torment();
 
     if (kiku_shielding_player)
     {
@@ -523,16 +523,26 @@ static string _who_banished(const string &who)
 void banished(const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
-    if (crawl_state.game_is_zotdef())
+    push_features_to_abyss();
+    if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
-    mark_milestone("abyss.enter",
-                   "is cast into the Abyss!" + _who_banished(who));
+    if (!player_in_branch(BRANCH_ABYSS))
+    {
+        mark_milestone("abyss.enter",
+                       "is cast into the Abyss!" + _who_banished(who));
+    }
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        // Can't happen outside wizmode.
-        mpr("You feel trapped.");
+        if (level_id::current().depth < brdepth[BRANCH_ABYSS])
+            down_stairs(DNGN_ABYSSAL_STAIR);
+        else
+        {
+            // On Abyss:5 we can't go deeper; cause a shift to a new area
+            mpr("You are banished to a different region of the Abyss.", MSGCH_BANISHMENT);
+            abyss_teleport(true);
+        }
         return;
     }
 
@@ -540,12 +550,14 @@ void banished(const string &who)
     take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
 
     stop_delay(true);
-    push_features_to_abyss();
     down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 
     // Xom just might decide to interfere.
-    if (you.religion == GOD_XOM && who != "Xom" && who != "wizard command")
+    if (you.religion == GOD_XOM && who != "Xom" && who != "wizard command"
+        && who != "a distortion unwield")
+    {
         xom_maybe_reverts_banishment(false, false);
+    }
 }
 
 bool forget_spell(void)
@@ -742,7 +754,6 @@ void random_uselessness(int scroll_slot)
         break;
 
     case 5:
-        temp_rand = random2(3);
         if (player_mutation_level(MUT_BEAK) || one_chance_in(3))
             mpr("Your brain hurts!");
         else if (you.species == SP_MUMMY || coinflip())
@@ -778,7 +789,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
 
         item_def &wand = you.inv[ item_slot ];
 
-        if (!item_is_rechargeable(wand, known, true))
+        if (!item_is_rechargeable(wand, known))
         {
             mpr("Choose an item to recharge, or Esc to abort.");
             if (Options.auto_list)
@@ -883,8 +894,10 @@ static bool _follows_orders(monster* mon)
 {
     return (mon->friendly()
             && mon->type != MONS_GIANT_SPORE
+            && mon->type != MONS_BATTLESPHERE
             && !mon->berserk()
-            && !mons_is_projectile(mon->type));
+            && !mon->is_projectile()
+            && !mon->has_ench(ENCH_HAUNTING));
 }
 
 // Sets foe target of friendly monsters.
@@ -909,12 +922,42 @@ static void _set_allies_patrol_point(bool clear = false)
         mi->patrol_point = (clear ? coord_def(0, 0) : mi->pos());
         if (!clear)
             mi->behaviour = BEH_WANDER;
+        else
+            mi->behaviour = BEH_SEEK;
+    }
+}
+
+static void _set_allies_withdraw(const coord_def &target)
+{
+    coord_def delta = target - you.pos();
+    float mult = float(LOS_RADIUS * 2) / (float)max(abs(delta.x), abs(delta.y));
+    coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        mi->behaviour = BEH_WITHDRAW;
+        mi->target = target;
+        mi->patrol_point = rally_point;
+        mi->foe = MHITNOT;
+
+        mi->props.erase("last_pos");
+        mi->props.erase("idle_point");
+        mi->props.erase("idle_deadline");
+        mi->props.erase("blocked_deadline");
     }
 }
 
 void yell(bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot shout while unable to breathe!");
+        return;
+    }
 
     bool targ_prev = false;
     int mons_targd = MHITNOT;
@@ -940,14 +983,16 @@ void yell(bool force)
     else if (shout_verb == "scream")
         noise_level = 16;
 
-    if (silenced(you.pos()) || you.cannot_speak())
+    if (you.cannot_speak() || !form_has_mouth())
         noise_level = 0;
 
     if (noise_level == 0)
     {
         if (force)
         {
-            if (shout_verb == "__NONE" || you.paralysed())
+            if (!form_has_mouth())
+                mpr("You have no mouth, and you must scream!");
+            else if (shout_verb == "__NONE" || you.paralysed())
             {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
@@ -961,6 +1006,8 @@ void yell(bool force)
                      shout_verb.c_str());
             }
         }
+        else if (!form_has_mouth())
+            mpr("You have no mouth!");
         else
             mpr("You are unable to make a sound!");
 
@@ -991,7 +1038,7 @@ void yell(bool force)
         }
 
         mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
-        mpr("                   s - Stop attacking.");
+        mpr("                   r - Retreat!             s - Stop attacking.");
         mpr("                   w - Wait here.           f - Follow me.");
     }
     mprf(" Anything else - Stay silent%s.",
@@ -1106,6 +1153,37 @@ void yell(bool force)
         }
         break;
 
+    case 'r':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        {
+            direction_chooser_args args;
+            args.restricts = DIR_TARGET;
+            args.mode = TARG_ANY;
+            args.needs_path = false;
+            args.top_prompt = "Retreat in which direction?";
+            direction(targ, args);
+        }
+
+        if (targ.isCancel)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        if (targ.isValid)
+        {
+            mpr("Fall back!");
+            mons_targd = MHITNOT;
+        }
+
+        _set_allies_withdraw(targ.target);
+        break;
+
     default:
         canned_msg(MSG_OK);
         return;
@@ -1177,8 +1255,6 @@ static void _hell_effects()
         noisy(15, you.pos());
 
     spschool_flag_type which_miscast = SPTYP_RANDOM;
-    bool summon_instead = false;
-    monster_type which_beastie = MONS_NO_MONSTER;
 
     int temp_rand = random2(27);
     if (temp_rand > 17)     // 9 in 27 odds {dlb}
@@ -1200,49 +1276,36 @@ static void _hell_effects()
     }
     else if (temp_rand > 7) // 10 in 27 odds {dlb}
     {
-        // 60:40 miscast:summon split {dlb}
-        summon_instead = x_chance_in_y(2, 5);
+        monster_type which_beastie;
 
+        // 60:40 miscast:summon split {dlb}
         switch (you.where_are_you)
         {
         case BRANCH_DIS:
-            if (summon_instead)
-                which_beastie = summon_any_demon(DEMON_GREATER);
-            else
-                which_miscast = SPTYP_EARTH;
+            which_beastie = RANDOM_DEMON_GREATER;
+            which_miscast = SPTYP_EARTH;
             break;
 
         case BRANCH_GEHENNA:
-            if (summon_instead)
-                which_beastie = MONS_BRIMSTONE_FIEND;
-            else
-                which_miscast = SPTYP_FIRE;
+            which_beastie = MONS_BRIMSTONE_FIEND;
+            which_miscast = SPTYP_FIRE;
             break;
 
         case BRANCH_COCYTUS:
-            if (summon_instead)
-                which_beastie = MONS_ICE_FIEND;
-            else
-                which_miscast = SPTYP_ICE;
+            which_beastie = MONS_ICE_FIEND;
+            which_miscast = SPTYP_ICE;
             break;
 
         case BRANCH_TARTARUS:
-            if (summon_instead)
-                which_beastie = MONS_SHADOW_FIEND;
-            else
-                which_miscast = SPTYP_NECROMANCY;
+            which_beastie = MONS_SHADOW_FIEND;
+            which_miscast = SPTYP_NECROMANCY;
             break;
 
         default:
-            // This is to silence gcc compiler warnings. {dlb}
-            if (summon_instead)
-                which_beastie = MONS_BRIMSTONE_FIEND;
-            else
-                which_miscast = SPTYP_NECROMANCY;
-            break;
+            die("unknown hell branch");
         }
 
-        if (summon_instead)
+        if (x_chance_in_y(2, 5))
         {
             create_monster(
                 mgen_data::hostile_at(which_beastie, "the effects of Hell",
@@ -2024,6 +2087,10 @@ void handle_time()
         && !crawl_state.game_is_zotdef())
     {
         spawn_random_monsters();
+        if (player_in_branch(BRANCH_ABYSS))
+          for (int i = 1; i < you.depth; ++i)
+                if (x_chance_in_y(i, 5))
+                    spawn_random_monsters();
     }
 
     // Labyrinth and Abyss maprot.
@@ -2188,7 +2255,8 @@ void handle_time()
     handle_god_time();
 
     if (player_mutation_level(MUT_SCREAM)
-        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100)
+        && !(you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()))
     {
         yell(true);
     }
@@ -2314,7 +2382,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (mon->type == MONS_GIANT_SPORE)
         return;
 
-    if (mon->type == MONS_ORB_OF_DESTRUCTION)
+    if (mon->is_projectile())
     {
         iood_catchup(mon, turns);
         return;
@@ -2976,40 +3044,6 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
     return false;
 }
 
-// Randomly decide whether or not to spawn a mushroom over the given
-// corpse.  Assumption: this is called before the rotting away logic in
-// update_corpses.  Some conditions in this function may set the corpse
-// timer to 0, assuming that the corpse will be turned into a
-// skeleton/destroyed on this update.
-static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
-{
-    if (crawl_state.disables[DIS_SPAWNS])
-        return;
-
-    // We won't spawn a mushroom within 10 turns of the corpse's being created
-    // or rotting away.
-    int low_threshold  = 5;
-    int high_threshold = FRESHEST_CORPSE - 15;
-
-    if (corpse.special < low_threshold || corpse.special > high_threshold)
-        return;
-
-    int spawn_time = (rot_time > corpse.special ? corpse.special : rot_time);
-
-    if (spawn_time > high_threshold)
-        spawn_time = high_threshold;
-
-    int step_size = 10;
-
-    int current_trials = spawn_time / step_size;
-    int trial_prob     = mushroom_prob(corpse);
-    int success_count  = binomial_generator(current_trials, trial_prob);
-
-    int seen_spawns;
-    spawn_corpse_mushrooms(corpse, success_count, seen_spawns);
-    mushroom_spawn_message(seen_spawns, you.see_cell(corpse.pos) ? 1 : 0);
-}
-
 //---------------------------------------------------------------
 //
 // update_corpses
@@ -3033,12 +3067,11 @@ static void _update_corpses(int elapsedTime)
 
         if (it.base_type == OBJ_POTIONS)
         {
+            if (is_shop_item(it))
+                continue;
             maybe_coagulate_blood_potions_floor(c);
             continue;
         }
-
-        if (it.sub_type == CORPSE_BODY)
-            _maybe_spawn_mushroom(it, rot_time);
 
         if (rot_time >= it.special && !is_being_butchered(it))
         {
@@ -3133,7 +3166,7 @@ void slime_wall_damage(actor* act, int delay)
     {
         if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
         {
-            splash_with_acid(strength, false,
+            splash_with_acid(strength, NON_MONSTER, false,
                              (walls > 1) ? "The walls burn you!"
                                          : "The wall burns you!");
         }
@@ -3154,5 +3187,31 @@ void slime_wall_damage(actor* act, int delay)
                   mon->name(DESC_THE).c_str());
         }
         mon->hurt(NULL, dam, BEAM_ACID);
+    }
+}
+
+void recharge_elemental_evokers(int exp)
+{
+    vector<item_def*> evokers;
+    for (int item = 0; item < ENDOFPACK; ++item)
+    {
+        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus2 > 0)
+            evokers.push_back(&you.inv[item]);
+    }
+
+    int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
+                             you.experience_level * 425),
+                        you.experience_level*4 + 30)
+                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 7));
+
+    for (unsigned int i = 0; i < evokers.size(); ++i)
+    {
+        item_def* evoker = evokers[i];
+        evoker->plus2 -= div_rand_round(exp, xp_factor);
+        if (evoker->plus2 <= 0)
+        {
+            evoker->plus2 = 0;
+            mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
+        }
     }
 }

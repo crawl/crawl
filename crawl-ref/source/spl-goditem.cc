@@ -23,9 +23,11 @@
 #include "itemprop.h"
 #include "items.h"
 #include "map_knowledge.h"
+#include "mapdef.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -36,6 +38,8 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tiledef-dngn.h"
+#include "tilepick.h"
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
@@ -138,7 +142,7 @@ int is_pacifiable(const monster* mon)
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
-        || mons_is_tentacle(mon->type)) // body part
+        || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
     {
         return -1;
     }
@@ -325,9 +329,11 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
+        {
             pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
-        if (!pgain) // Always give a 50% chance of gaining a little piety.
-            pgain = coinflip();
+            if (!pgain) // Always give a 50% chance of gaining a little piety.
+                pgain = coinflip();
+        }
 
         // The feedback no longer tells you if you gained any piety this time,
         // it tells you merely the general rate.
@@ -396,7 +402,7 @@ void antimagic()
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
         DUR_SLAYING, DUR_STEALTH,
         DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
-        DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION
+        DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION, DUR_SENTINEL_MARK
     };
 
     bool need_msg = false;
@@ -477,10 +483,14 @@ int detect_items(int pow)
         map_radius = 8 + random2(8) + pow;
     else
     {
-        ASSERT(you.religion == GOD_ASHENZARI);
-        map_radius = min(you.piety / 20, LOS_RADIUS);
-        if (map_radius <= 0)
-            return 0;
+        if (you.religion == GOD_ASHENZARI)
+        {
+            map_radius = min(you.piety / 20, LOS_RADIUS);
+            if (map_radius <= 0)
+                return 0;
+        }
+        else // MUT_JELLY_GROWTH
+            map_radius = 6;
     }
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
@@ -797,39 +807,50 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         bool success = true;
         bool none_vis = true;
 
+        vector<coord_def> veto_spots(8);
+        for (adjacent_iterator ai(where); ai; ++ai)
+            veto_spots.push_back(*ai);
+
+        // Check that any adjacent creatures can be pushed out of the way.
         for (adjacent_iterator ai(where); ai; ++ai)
         {
             // The tile is occupied.
-            if (actor *fatass = actor_at(*ai))
+            if (actor *act = actor_at(*ai))
             {
-                success = false;
-                if (you.can_see(fatass))
-                    none_vis = false;
-                break;
+                // Can't push ourselves.
+                coord_def newpos;
+                if (act->is_player()
+                    || !get_push_space(*ai, newpos, act, true, &veto_spots))
+                {
+                    success = false;
+                    if (you.can_see(act))
+                        none_vis = false;
+                    break;
+                }
+                else
+                    veto_spots.push_back(newpos);
             }
 
             // Make sure we have a legitimate tile.
             proceed = false;
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
-                    proceed = true;
-
-            if (!proceed && feat_is_reachable_past(grd(*ai)))
             {
-                success = false;
-                none_vis = false;
-                break;
+                if (feat_is_solid(grd(*ai)) && !feat_is_opaque(grd(*ai)))
+                {
+                    success = false;
+                    none_vis = false;
+                    break;
+                }
             }
         }
 
         if (!success)
         {
             mprf(none_vis ? "You briefly glimpse something next to %s."
-                          : "You need more space to imprison %s.",
-                 targname.c_str());
+                        : "You need more space to imprison %s.",
+                targname.c_str());
             return false;
         }
-
     }
 
     for (adjacent_iterator ai(where); ai; ++ai)
@@ -839,20 +860,36 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             continue;
 
         // The tile is occupied.
-        if (actor_at(*ai))
-            continue;
+        if (zin)
+        {
+            if (actor* act = actor_at(*ai))
+            {
+                coord_def newpos;
+                get_push_space(*ai, newpos, act, true);
+                act->move_to_pos(newpos);
+            }
+        }
 
         // Make sure we have a legitimate tile.
         proceed = false;
-        for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
-                proceed = true;
+        if (!zin && !monster_at(*ai))
+        {
+            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
+                    proceed = true;
+        }
+        else if (zin && !feat_is_solid(grd(*ai)))
+            proceed = true;
 
         if (proceed)
         {
-            // All items are moved inside.
+            // All items are moved aside.
             if (igrd(*ai) != NON_ITEM)
-                move_items(*ai, where);
+            {
+                coord_def newpos;
+                get_push_space(*ai, newpos, NULL, true);
+                move_items(*ai, newpos);
+            }
 
             // All clouds are destroyed.
             if (env.cgrid(*ai) != EMPTY_CLOUD)
@@ -860,31 +897,43 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // All traps are destroyed.
             if (trap_def *ptrap = find_trap(*ai))
+            {
                 ptrap->destroy();
+                grd(*ai) = DNGN_FLOOR;
+            }
 
             // Actually place the wall.
-
             if (zin)
             {
-                // Make the walls silver.
-                grd(*ai) = DNGN_METAL_WALL;
-                env.grid_colours(*ai) = LIGHTGREY;
-
                 map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
                 marker->set_property("feature_description", "a gleaming silver wall");
-                marker->set_property("tomb", "Zin");
                 env.markers.add(marker);
+
+                temp_change_terrain(*ai, DNGN_METAL_WALL, INFINITE_DURATION,
+                                    TERRAIN_CHANGE_IMPRISON);
+
+                // Make the walls silver.
+                env.grid_colours(*ai) = WHITE;
+                env.tile_flv(*ai).feat_idx =
+                        store_tilename_get_index("dngn_mirror_wall");
+                env.tile_flv(*ai).feat = TILE_DNGN_MIRROR_WALL;
+                if (env.map_knowledge(*ai).seen())
+                {
+                    env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
+                    env.map_knowledge(*ai).clear_item();
+#ifdef USE_TILE
+                    env.tile_bk_bg(*ai) = TILE_DNGN_MIRROR_WALL;
+                    env.tile_bk_fg(*ai) = 0;
+#endif
+                }
             }
             // Tomb card
             else
             {
-                grd(*ai) = DNGN_ROCK_WALL;
-                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
-                marker->set_property("tomb", "card");
-                env.markers.add(marker);
+                temp_change_terrain(*ai, DNGN_ROCK_WALL, INFINITE_DURATION,
+                                    TERRAIN_CHANGE_TOMB);
             }
 
-            set_terrain_changed(*ai);
             number_built++;
         }
     }

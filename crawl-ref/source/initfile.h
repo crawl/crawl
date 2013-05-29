@@ -31,11 +31,9 @@ newgame_def read_startup_prefs();
 void read_options(const string &s, bool runscript = false,
                   bool clear_aliases = false);
 
-void parse_option_line(const string &line, bool runscript = false);
-
-void apply_ascii_display(bool ascii);
-
 void get_system_environment(void);
+
+class depth_ranges;
 
 struct system_environment
 {
@@ -63,6 +61,7 @@ public:
     vector<string> cmd_args;
 
     int map_gen_iters;
+    unique_ptr<depth_ranges> map_gen_range;
 
     vector<string> extra_opts_first;
     vector<string> extra_opts_last;
@@ -72,7 +71,6 @@ public:
 };
 
 extern system_environment SysEnv;
-extern set<string> warn_list_append;
 
 bool parse_args(int argc, char **argv, bool rc_only);
 

@@ -118,11 +118,6 @@ Ten czar uwalnia ogromne elektryczne wyładowanie które przepływa od celu do
 celu. Jeśli jednak cele nie są wystarczająco blisko siebie, piorun ten zamiast
 tego pójdzie w ziemię.
 %%%%
-Cigotuvi's Degeneration spell
-
-Ten czar, jeśli nie zostanie odparty, zmienia ofiarę w bezkształtną bryłę mięsa
-— która jednak wciąż jest żywa i wrogo nastawiona.
-%%%%
 Condensation Shield spell
 
 Ten czar tworzy lodowy dysk z wilgoci zawartej w powietrzu, który unosi się
@@ -151,12 +146,6 @@ Conjure Flame spell
 Ten czar tworzy kolumnę ognia w dowolnej wolnej przestrzeni. Stanowi ona
 tymczasową zaporę przeciw wrogom którzy boją się poparzeń — i zadaje spore
 obrażenia tym którzy w nią wejdą.
-%%%%
-Control Teleport spell
-
-Ten czar pozwala przez krótki okres kontrolować czary przemieszczeń.
-
-Uwaga: kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
 %%%%
 Control Undead spell
 
@@ -531,7 +520,7 @@ Poisonous Cloud spell
 
 Ten czar tworzy wielki obłok trujących gazów.
 %%%%
-Polymorph Other spell
+Polymorph spell
 
 Ten czar, jeśli nie zostanie odparty, zmienia jakąś istotę w jakieś inne,
 przypadkowe, stworzenie. Działa na wszelkie formy życia łącznie z demonami i
@@ -727,7 +716,7 @@ Summon Scorpions spell
 Ten czar przyzywa jednego lub kilka skorpionów. Niektóre z nich mogą być wrogo
 nastawione.
 %%%%
-Summon Small Mammals spell
+Summon Small Mammal spell
 
 Ten czar przyzywa jedno lub parę małych stworzeń.
 %%%%

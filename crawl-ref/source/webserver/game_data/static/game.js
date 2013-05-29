@@ -51,12 +51,14 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
 
         // Determine height of messages area
         old_html = $("#messages").html();
+        old_scroll_top = $("#messages_container").scrollTop();
         s = "";
         for (var i = 0; i < msg_height+1; i++)
             s = s + "<br>";
         $("#messages").html(s);
         var msg_height_px = $("#messages").outerHeight();
         $("#messages").html(old_html);
+        $("#messages_container").scrollTop(old_scroll_top);
 
         var remaining_width = window_width - stat_width_px;
         var remaining_height = window_height - msg_height_px;
@@ -90,6 +92,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     function toggle_full_window_dungeon_view(full)
     {
         // Toggles the dungeon view for X map mode
+        if (layout_parameters == null) return;
         if (full)
         {
             dungeon_renderer.fit_to(layout_parameters.window_width - 5,
@@ -97,6 +100,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
                                     show_diameter);
             $("#right_column").hide();
             messages.hide();
+            minimap.stop_minimap_farview();
         }
         else
         {
@@ -147,7 +151,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     function set_input_mode(mode)
     {
         if (mode == input_mode) return;
-        log("input mode: " + mode + "/" + enums.reverse_lookup(enums.mouse_mode, mode));
         input_mode = mode;
         if (mode == enums.mouse_mode.COMMAND)
             messages.new_command();

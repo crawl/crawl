@@ -17,6 +17,7 @@
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "map_knowledge.h"
 #include "feature.h"
 #include "fprop.h"
@@ -43,6 +44,9 @@
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
+#include "mapmark.h"
+
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
 
 actor* actor_at(const coord_def& c)
 {
@@ -200,6 +204,7 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
@@ -264,6 +269,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
@@ -307,19 +313,25 @@ bool cell_is_solid(const coord_def &c)
 
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
-    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER &&
-            feat != DNGN_LAVA);
+    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER
+            && feat != DNGN_LAVA);
+}
+
+bool feat_has_dry_floor(dungeon_feature_type feat)
+{
+    return (feat_has_solid_floor(feat) && feat != DNGN_SHALLOW_WATER);
 }
 
 bool feat_is_door(dungeon_feature_type feat)
 {
     return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
-            || feat == DNGN_OPEN_DOOR);
+            || feat == DNGN_OPEN_DOOR || feat == DNGN_SEALED_DOOR);
 }
 
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR);
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
+            || feat == DNGN_SEALED_DOOR);
 }
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
@@ -416,6 +428,11 @@ bool feat_is_branchlike(dungeon_feature_type feat)
 bool feat_is_tree(dungeon_feature_type feat)
 {
     return (feat == DNGN_TREE || feat == DNGN_MANGROVE);
+}
+
+bool feat_is_metal(dungeon_feature_type feat)
+{
+    return (feat == DNGN_METAL_WALL || feat == DNGN_GRATE);
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
@@ -688,11 +705,10 @@ bool is_critical_feature(dungeon_feature_type feat)
 
 bool is_valid_border_feat(dungeon_feature_type feat)
 {
-    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
-            || (feat == DNGN_TREE
-               || feat == DNGN_MANGROVE
-               || feat == DNGN_OPEN_SEA
-               || feat == DNGN_LAVA_SEA));
+    return (feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
+            || (feat_is_tree(feat)
+                || feat == DNGN_OPEN_SEA
+                || feat == DNGN_LAVA_SEA);
 }
 
 // This is for randomly generated mimics.
@@ -835,6 +851,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 #ifdef USE_TILE
     env.tile_bk_fg(dst) = env.tile_bk_fg(src);
     env.tile_bk_bg(dst) = env.tile_bk_bg(src);
+    env.tile_bk_cloud(dst) = env.tile_bk_cloud(src);
 #endif
     env.tile_flv(dst) = env.tile_flv(src);
 
@@ -962,6 +979,10 @@ void dungeon_terrain_changed(const coord_def &pos,
 
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
+        // Reset feature tile
+        env.tile_flv(pos).feat = 0;
+        env.tile_flv(pos).feat_idx = 0;
+
         if (is_notable_terrain(nfeat) && you.see_cell(pos))
             seen_notable_thing(nfeat, pos);
 
@@ -1368,7 +1389,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     {
         if (allow_shift)
         {
-            escape = empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty)
+            escape = find_habitable_spot_near(you.pos(), MONS_HUMAN, 1, false, empty)
                      || you.check_clinging(false);
             clinging = you.is_wall_clinging();
         }
@@ -1538,18 +1559,12 @@ string stair_climb_verb(dungeon_feature_type feat)
 
 static const char *dngn_feature_names[] =
 {
-"unseen", "closed_door", "runed_door",
-#if TAG_MAJOR_VERSION == 34
-"non-secret_door",
-#endif
+"unseen", "closed_door", "runed_door", "sealed_door",
 "mangrove", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "tree", "open_sea", "endless_lava", "orcish_idol",
 "granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "",
-#if TAG_MAJOR_VERSION != 34
-"",
-#endif
 
 // DNGN_MINMOVE
 "lava", "deep_water",
@@ -1564,9 +1579,12 @@ static const char *dngn_feature_names[] =
 "stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up",
 
 "enter_dis", "enter_gehenna", "enter_cocytus",
-"enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
-"enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"exit_dungeon", "exit_through_abyss",
+"enter_tartarus", "enter_abyss", "exit_abyss",
+#if TAG_MAJOR_VERSION > 34
+"abyssal_stair",
+#endif
+"stone_arch", "enter_pandemonium", "exit_pandemonium",
+"transit_pandemonium", "exit_dungeon", "exit_through_abyss",
 "exit_hell", "enter_hell", "enter_labyrinth",
 "teleporter", "enter_portal_vault", "exit_portal_vault",
 "expired_portal",
@@ -1600,6 +1618,11 @@ static const char *dngn_feature_names[] =
 
 "explore_horizon",
 "unknown_altar", "unknown_portal",
+
+#if TAG_MAJOR_VERSION == 34
+"abyssal_stair",
+"badly_sealed_door",
+#endif
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)
@@ -1664,8 +1687,9 @@ void nuke_wall(const coord_def& p)
 
     remove_mold(p);
 
-    grd(p) = (grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
-    set_terrain_changed(p);
+    _revert_terrain_to(p, ((grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER
+                                                     : DNGN_FLOOR));
+    env.level_map_mask(p) |= MMT_NUKED;
 }
 
 /*
@@ -1793,4 +1817,114 @@ bool is_boring_terrain(dungeon_feature_type feat)
         return true;
 
     return false;
+}
+
+void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
+                         terrain_change_type type, const monster* mon)
+{
+    dungeon_feature_type old_feat = grd(pos);
+    vector<map_marker*> markers = env.markers.get_markers_at(pos);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            map_terrain_change_marker* marker =
+                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+            // If change type matches, just modify old one; no need to add new one
+            if (marker->change_type == type)
+            {
+                if (marker->new_feature == newfeat)
+                {
+                    if (marker->duration < dur)
+                    {
+                        marker->duration = dur;
+                        if (mon)
+                            marker->mon_num = mon->mid;
+                    }
+                }
+                else
+                {
+                    marker->new_feature = newfeat;
+                    marker->duration = dur;
+                    if (mon)
+                        marker->mon_num = mon->mid;
+                }
+                return;
+            }
+            else
+                old_feat = marker->old_feature;
+        }
+    }
+
+    map_terrain_change_marker *marker =
+        new map_terrain_change_marker(pos, old_feat, newfeat, dur, type);
+    if (mon)
+        marker->mon_num = mon->mid;
+    env.markers.add(marker);
+    env.markers.clear_need_activate();
+    dungeon_terrain_changed(pos, newfeat, true, false, true);
+}
+
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
+{
+    vector<map_marker*> markers = env.markers.get_markers_at(pos);
+
+    bool found_marker = false;
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            found_marker = true;
+            map_terrain_change_marker* marker =
+                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+            newfeat = marker->old_feature;
+            if (marker->new_feature == grd(pos))
+                env.markers.remove(marker);
+        }
+    }
+
+    grd(pos) = newfeat;
+    set_terrain_changed(pos);
+
+    if (found_marker)
+    {
+        tile_clear_flavour(pos);
+        tile_init_flavour(pos);
+    }
+
+    return true;
+}
+
+bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
+{
+    vector<map_marker*> markers = env.markers.get_markers_at(pos);
+    dungeon_feature_type newfeat = DNGN_UNSEEN;
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            map_terrain_change_marker* marker =
+                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+            if (marker->change_type == ctype)
+            {
+                if (!newfeat)
+                    newfeat = marker->old_feature;
+                env.markers.remove(marker);
+            }
+            else
+                newfeat = marker->new_feature;
+        }
+    }
+
+    if (newfeat != DNGN_UNSEEN)
+    {
+        dungeon_terrain_changed(pos, newfeat, true, false, true);
+        return true;
+    }
+    else
+        return false;
 }

@@ -86,6 +86,14 @@ enum monster_info_flags
     MB_STONESKIN,
     MB_WRETCHED,
     MB_SCREAMED,
+    MB_WORD_OF_RECALL,
+    MB_INJURY_BOND,
+    MB_WATER_HOLD,
+    MB_WATER_HOLD_DROWN,
+    MB_FLAYED,
+    MB_RETCHING,
+    MB_WEAK,
+    MB_DIMENSION_ANCHOR,
     NUM_MB_FLAGS
 };
 
@@ -263,6 +271,10 @@ protected:
     string _core_name() const;
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
 };
+
+// Colour should be between -1 and 15 inclusive!
+bool set_monster_list_colour(string key, int colour);
+void clear_monster_list_colours();
 
 void get_monster_info(vector<monster_info>& mons);
 
