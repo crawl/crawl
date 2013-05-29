@@ -818,6 +818,7 @@ orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 ## Centaurs ('c')
 %sdir mon/unique
 nessos MONS_NESSOS
+pan MONS_PAN
 %sdir mon
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
@@ -827,6 +828,8 @@ yaktaur MONS_YAKTAUR
 yaktaur-melee MONS_YAKTAUR_MELEE
 yaktaur_captain MONS_YAKTAUR_CAPTAIN
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
+faun MONS_FAUN
+satyr MONS_SATYR
 
 ## Elves ('e')
 %sdir mon/unique

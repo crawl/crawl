@@ -182,6 +182,8 @@ apis CORPSE_APIS
 ## Centaurs ('c')
 centaur CORPSE_CENTAUR
 yaktaur CORPSE_YAKTAUR
+faun CORPSE_FAUN
+satyr CORPSE_SATYR
 
 ## Elves ('e')
 elf CORPSE_ELF
