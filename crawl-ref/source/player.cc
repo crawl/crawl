@@ -46,9 +46,11 @@
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-iter.h"
 #include "mutation.h"
@@ -215,6 +217,9 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
         mpr(msg.c_str());
     else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
         mpr("You cannot swim in your current form.");
+    else if (you.species == SP_LAVA_ORC && feat_is_lava(env.grid(p))
+             && is_feat_dangerous(env.grid(p)))
+        mpr("You cannot enter lava in your current form.");
     else
         canned_msg(MSG_UNTHINKING_ACT);
 
@@ -319,6 +324,34 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (you.ground_level())
     {
+        if (player_likes_lava(false))
+        {
+            if (feat_is_lava(new_grid) && !feat_is_lava(old_feat))
+            {
+                if (!stepped)
+                    noisy(4, you.pos(), "Gloop!");
+
+                mprf("You %s lava.",
+                     (stepped) ? "slowly immerse yourself in the" : "fall into the");
+
+                // Extra time if you stepped in.
+                if (stepped)
+                    you.time_taken *= 2;
+
+                // This gets called here because otherwise you wouldn't heat
+                // until your second turn in lava.
+                if (temperature() < TEMP_FIRE)
+                    mpr("The lava instantly superheats you.");
+                you.temperature = TEMP_MAX;
+            }
+
+            else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
+            {
+                mpr("You slowly pull yourself out of the lava.");
+                you.time_taken *= 2;
+            }
+        }
+
         if (you.species == SP_MERFOLK)
         {
             if (feat_is_water(new_grid) // We're entering water
@@ -437,7 +470,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
         return false;
     }
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
-             || grid == DNGN_LAVA)
+             || grid == DNGN_LAVA && !player_likes_lava(permanently))
     {
         return true;
     }
@@ -465,6 +498,12 @@ bool player_likes_water(bool permanently)
     return (!permanently && beogh_water_walk()
             || (species_likes_water(you.species) || !permanently)
                 && form_likes_water());
+}
+
+bool player_likes_lava(bool permanently)
+{
+    return (species_likes_lava(you.species)
+            || (!permanently && form_likes_lava()));
 }
 
 bool player_can_open_doors()
@@ -1483,6 +1522,16 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     if (you.species == SP_MUMMY)
         rf--;
 
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (temperature_effect(LORC_FIRE_RES_I))
+            rf++;
+        if (temperature_effect(LORC_FIRE_RES_II))
+            rf++;
+        if (temperature_effect(LORC_FIRE_RES_III))
+            rf++;
+    }
+
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
@@ -1604,6 +1653,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             else if (you.hunger_state < HS_SATIATED)
                 rc++;
         }
+
+        if (you.species == SP_LAVA_ORC)
+            if (temperature_effect(LORC_COLD_VULN))
+                rc--;
     }
 
     // All effects negated by magical suppression should go in here.
@@ -1963,6 +2016,9 @@ int player_spec_fire()
         sf += you.wearing(EQ_RINGS, RING_FIRE);
     }
 
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_FIRE_BOOST))
+        sf++;
+
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
 
@@ -1982,6 +2038,9 @@ int player_spec_cold()
         // rings of ice:
         sc += you.wearing(EQ_RINGS, RING_ICE);
     }
+
+    if (you.species == SP_LAVA_ORC && (temperature_effect(LORC_LAVA_BOOST) || temperature_effect(LORC_FIRE_BOOST)))
+        sc--;
 
     return sc;
 }
@@ -2243,6 +2302,12 @@ int player_movement_speed(bool ignore_burden)
     {
         mv -= 2;
     }
+
+    // Lava orc heat-based speed. -2 when cold; 0 when normal; +2 when hot.
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_SLOW_MOVE))
+        mv += 2;
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_FAST_MOVE))
+        mv -= 2;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
@@ -5631,6 +5696,10 @@ void player::init()
     dead = false;
     lives = 0;
     deaths = 0;
+
+    temperature = 1; // 1 is min; 15 is max.
+    temperature_last = 1;
+
     xray_vision = false;
 
     init_skills();
@@ -6249,8 +6318,12 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
-    if (duration[DUR_STONESKIN])
-        AC += 200 + skill(SK_EARTH_MAGIC, 20);       // max 7
+    if (duration[DUR_STONESKIN]) {
+        int boost = 200 + skill(SK_EARTH_MAGIC, 20); // max 7
+        if (you.species == SP_LAVA_ORC)
+            boost = std::max(boost, 200 + 100 * you.experience_level / 5); // max 7
+        AC += boost;
+    }
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();

@@ -1248,9 +1248,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_ARMOUR,          1),
     APT(SP_DJINNI,          SK_DODGING,        -1),
     APT(SP_DJINNI,          SK_STEALTH,        -1),
-#if TAG_MAJOR_VERSION == 34
-    APT(SP_DJINNI,          SK_STABBING,       -1),
-#endif
     APT(SP_DJINNI,          SK_SHIELDS,         0),
     APT(SP_DJINNI,          SK_TRAPS,          -1),
     APT(SP_DJINNI,          SK_UNARMED_COMBAT, -1),
@@ -1269,6 +1266,43 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_POISON_MAGIC,   -1),
     APT(SP_DJINNI,          SK_INVOCATIONS,     1),
     APT(SP_DJINNI,          SK_EVOCATIONS,      2),
+
+    // SP_LAVA_ORC
+    APT(SP_LAVA_ORC,        SK_FIGHTING,        2),
+    APT(SP_LAVA_ORC,        SK_SHORT_BLADES,    0),
+    APT(SP_LAVA_ORC,        SK_LONG_BLADES,     1),
+    APT(SP_LAVA_ORC,        SK_AXES,            2),
+    APT(SP_LAVA_ORC,        SK_MACES_FLAILS,    1),
+    APT(SP_LAVA_ORC,        SK_POLEARMS,        1),
+    APT(SP_LAVA_ORC,        SK_STAVES,         -1),
+    APT(SP_LAVA_ORC,        SK_SLINGS,         -2),
+    APT(SP_LAVA_ORC,        SK_BOWS,           -2),
+    APT(SP_LAVA_ORC,        SK_CROSSBOWS,      -2),
+    APT(SP_LAVA_ORC,        SK_THROWING,       -1),
+    APT(SP_LAVA_ORC,        SK_ARMOUR,          1),
+    APT(SP_LAVA_ORC,        SK_DODGING,        -2),
+    APT(SP_LAVA_ORC,        SK_STEALTH,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_LAVA_ORC,        SK_STABBING,        2),
+#endif
+    APT(SP_LAVA_ORC,        SK_SHIELDS,         1),
+    APT(SP_LAVA_ORC,        SK_TRAPS,           0),
+    APT(SP_LAVA_ORC,        SK_UNARMED_COMBAT,  1),
+    APT(SP_LAVA_ORC,        SK_SPELLCASTING,   -3),
+    APT(SP_LAVA_ORC,        SK_CONJURATIONS,    0),
+    APT(SP_LAVA_ORC,        SK_HEXES,           0),
+    APT(SP_LAVA_ORC,        SK_CHARMS,         -1),
+    APT(SP_LAVA_ORC,        SK_SUMMONINGS,      0),
+    APT(SP_LAVA_ORC,        SK_NECROMANCY,      0),
+    APT(SP_LAVA_ORC,        SK_TRANSLOCATIONS, -2),
+    APT(SP_LAVA_ORC,        SK_TRANSMUTATIONS,  3),
+    APT(SP_LAVA_ORC,        SK_FIRE_MAGIC,      2),
+    APT(SP_LAVA_ORC,        SK_ICE_MAGIC,      -4),
+    APT(SP_LAVA_ORC,        SK_AIR_MAGIC,      -3),
+    APT(SP_LAVA_ORC,        SK_EARTH_MAGIC,     1),
+    APT(SP_LAVA_ORC,        SK_POISON_MAGIC,   -1),
+    APT(SP_LAVA_ORC,        SK_INVOCATIONS,     3),
+    APT(SP_LAVA_ORC,        SK_EVOCATIONS,      1),
 };
 
 #endif

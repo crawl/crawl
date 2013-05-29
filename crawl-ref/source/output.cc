@@ -329,7 +329,7 @@ class colour_bar
                 && you.num_turns >= m_request_redraw_after);
     }
 
-    void draw(int ox, int oy, int val, int max_val)
+    void draw(int ox, int oy, int val, int max_val, bool temp = false)
     {
         ASSERT(val <= max_val);
         if (max_val <= 0)
@@ -338,6 +338,7 @@ class colour_bar
             return;
         }
 
+        const colour_t temp_colour = temperature_colour(temperature());
         const int width = crawl_view.hudsz.x - (ox - 1);
         const int disp  = width * val / max_val;
         const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
@@ -353,14 +354,14 @@ class colour_bar
             textcolor(BLACK + m_empty * 16);
 
             if (cx < disp)
-                textcolor(BLACK + m_default * 16);
+                textcolor(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
             else if (old_disp > disp && cx < old_disp)
                 textcolor(BLACK + m_change_neg * 16);
             putwch(' ');
 #else
             if (cx < disp && cx < old_disp)
             {
-                textcolor(m_default);
+                textcolor((temp) ? temp_colour : m_default);
                 putwch('=');
             }
             else if (cx < disp)
@@ -455,6 +456,7 @@ static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
 
 colour_bar Contam_Bar(DARKGREY, DARKGREY, DARKGREY, DARKGREY);
+colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
 
 // ----------------------------------------------------------------------
 // Status display
@@ -514,6 +516,16 @@ static int _count_digits(int val)
     else if (val > 9)
         return 2;
     return 1;
+}
+
+static void _print_stats_temperature(int x, int y)
+{
+
+    cgotoxy(x, y, GOTO_STAT);
+    textcolor(HUD_CAPTION_COLOUR);
+    cprintf("Temperature: ");
+
+    Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
 }
 
 static void _print_stats_mp(int x, int y)
@@ -1193,6 +1205,11 @@ static void _redraw_title(const string &your_name, const string &job_name)
 
 void print_stats(void)
 {
+    int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
+    int temp_pos = 5;
+    int ac_pos = temp_pos + temp;
+    int ev_pos = temp_pos + temp + 1;
+
     cursor_control coff(false);
     textcolor(LIGHTGREY);
 
@@ -1204,6 +1221,8 @@ void print_stats(void)
         you.redraw_hit_points = true;
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
+    if (Temp_Bar.wants_redraw() && you.species == SP_LAVA_ORC)
+        you.redraw_temperature = true;
 
 #ifdef USE_TILE_LOCAL
     bool has_changed = _need_stats_printed();
@@ -1217,17 +1236,18 @@ void print_stats(void)
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
     _print_stats_contam(1, 4);
-    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, 5); }
-    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, 6); }
+    if (you.redraw_temperature)  { you.redraw_temperature = false;  _print_stats_temperature (1, temp_pos); }
+    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, ac_pos); }
+    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, ev_pos); }
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
-            _print_stat(static_cast<stat_type>(i), 19, 5 + i);
+            _print_stat(static_cast<stat_type>(i), 19, 5 + i + temp);
     you.redraw_stats.init(false);
 
     if (you.redraw_experience)
     {
-        CGOTOXY(1,8, GOTO_STAT);
+        CGOTOXY(1, 8 + temp, GOTO_STAT);
         textcolor(Options.status_caption_colour);
         CPRINTF("XL: ");
         textcolor(HUD_VALUE_COLOUR);
@@ -1252,7 +1272,7 @@ void print_stats(void)
         you.redraw_experience = false;
     }
 
-    int yhack = crawl_state.game_is_zotdef();
+    int yhack = crawl_state.game_is_zotdef() + temp;
 
     // If Options.show_gold_turns, line 9 is Gold and Turns
 #ifdef USE_TILE_LOCAL
@@ -1328,7 +1348,10 @@ static string _level_description_string_hud()
 
 void print_stats_level()
 {
-    CGOTOXY(19, 8, GOTO_STAT);
+    int ypos = 8;
+    if (you.species == SP_LAVA_ORC)
+        ypos++;
+    cgotoxy(19, ypos, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
     CPRINTF("Place: ");
 
@@ -1347,23 +1370,33 @@ void draw_border(void)
 
     textcolor(Options.status_caption_colour);
 
+    int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
+//    int hp_pos = 3;
+    int mp_pos = 4;
+    int ac_pos = 5 + temp;
+    int ev_pos = 6 + temp;
+    int sh_pos = 7 + temp;
+    int str_pos = ac_pos;
+    int int_pos = ev_pos;
+    int dex_pos = sh_pos;
+
     //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
-    CGOTOXY(1, 4, GOTO_STAT);
+    CGOTOXY(1, mp_pos, GOTO_STAT);
     if (you.species == SP_DJINNI)
         CPRINTF("Contam:");
     else
         CPRINTF("Magic:");
-    CGOTOXY(1, 5, GOTO_STAT); CPRINTF("AC:");
-    CGOTOXY(1, 6, GOTO_STAT); CPRINTF("EV:");
-    CGOTOXY(1, 7, GOTO_STAT); CPRINTF("SH:");
+    CGOTOXY(1, ac_pos, GOTO_STAT); CPRINTF("AC:");
+    CGOTOXY(1, ev_pos, GOTO_STAT); CPRINTF("EV:");
+    CGOTOXY(1, sh_pos, GOTO_STAT); CPRINTF("SH:");
 
-    CGOTOXY(19, 5, GOTO_STAT); CPRINTF("Str:");
-    CGOTOXY(19, 6, GOTO_STAT); CPRINTF("Int:");
-    CGOTOXY(19, 7, GOTO_STAT); CPRINTF("Dex:");
+    CGOTOXY(19, str_pos, GOTO_STAT); CPRINTF("Str:");
+    CGOTOXY(19, int_pos, GOTO_STAT); CPRINTF("Int:");
+    CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
 
     if (Options.show_gold_turns)
     {
-        int yhack = crawl_state.game_is_zotdef();
+        int yhack = crawl_state.game_is_zotdef() + temp;
         CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
         CGOTOXY(19, 9 + yhack, GOTO_STAT);
         CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
@@ -2088,6 +2121,15 @@ static vector<formatted_string> _get_overview_stats()
     }
     else
         lives[0] = 0;
+
+    char temperature[20];
+    if (you.species == SP_LAVA_ORC)
+    {
+        snprintf(temperature, sizeof(temperature), "Temperature: %f",
+                 you.temperature);
+    }
+    else
+        temperature[0] = 0;
 
     snprintf(buf, sizeof buf,
              "XL: %d%s\n"

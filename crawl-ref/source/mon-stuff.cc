@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include <math.h>
 #include "mon-stuff.h"
 
 #include "areas.h"
@@ -51,6 +52,8 @@
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "notes.h"
+#include "ouch.h"
+#include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
@@ -2374,7 +2377,7 @@ int monster_die(monster* mons, killer_type killer,
             mons->hit_points = -1;
         // Hack: with cleanup_dead=false, a tentacle [segment] of a dead
         // [malign] kraken has no valid head reference.
-        if (!mons_is_tentacle(mons->type))
+        if (!mons_is_tentacle_or_tentacle_segment(mons->type))
             mons_speaks(mons);
     }
 
@@ -2416,8 +2419,9 @@ int monster_die(monster* mons, killer_type killer,
                 mpr("The starspawn's tentacles wither and die.");
         }
     }
-    else if (mons_is_tentacle(mons->type) && killer != KILL_MISC
-            || mons->type == MONS_ELDRITCH_TENTACLE)
+    else if (mons_is_tentacle_or_tentacle_segment(mons->type)
+             && killer != KILL_MISC
+                 || mons->type == MONS_ELDRITCH_TENTACLE)
     {
         _destroy_tentacle(mons);
     }
@@ -2741,7 +2745,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         // Other poly-unsuitable things.
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
-        || mons_is_tentacle(new_mclass)
+        || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
@@ -3220,7 +3224,7 @@ bool mon_can_be_slimified(monster* mons)
 
     return (!(mons->flags & MF_GOD_GIFT)
             && !mons->is_insubstantial()
-            && !mons_is_tentacle(mons->type)
+            && !mons_is_tentacle_or_tentacle_segment(mons->type)
             && (holi == MH_UNDEAD
                  || holi == MH_NATURAL && !mons_is_slime(mons))
           );
@@ -4782,4 +4786,268 @@ int count_allies()
             count++;
 
     return count;
+}
+
+// Lava orcs!
+int temperature()
+{
+    return (int) you.temperature;
+}
+
+int temperature_last()
+{
+    return (int) you.temperature_last;
+}
+
+void temperature_check()
+{
+    // Whether to ignore caps on incrementing temperature
+    bool ignore_cap = you.duration[DUR_BERSERK];
+
+    // These numbers seem to work pretty well, but they're definitely experimental:
+    int tension = get_tension(GOD_NO_GOD); // Raw tension
+
+    // It would generally be better to handle this at the tension level and have temperature much more closely tied to tension.
+
+    // For testing, but super handy for that!
+    // mprf("Tension value: %d", tension);
+
+    // Increment temp to full if you're in lava.
+    if (feat_is_lava(env.grid(you.pos())) && you.ground_level())
+    {
+        // If you're already very hot, no message,
+        // but otherwise it lets you know you're being
+        // brought up to max temp.
+        if (temperature() <= TEMP_FIRE)
+            mpr("The lava instantly superheats you.");
+        you.temperature = TEMP_MAX;
+        ignore_cap = true;
+        // Otherwise, your temperature naturally decays.
+    }
+    else
+        temperature_decay();
+
+    // Follow this up with 1 additional decrement each turn until
+    // you're not hot enough to boil water.
+    if (feat_is_water(env.grid(you.pos())) && you.ground_level()
+        && temperature_effect(LORC_PASSIVE_HEAT))
+    {
+        temperature_decrement(1);
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            const coord_def p(*ai);
+            if (in_bounds(p)
+                && env.cgrid(p) == EMPTY_CLOUD
+                && one_chance_in(5))
+            {
+                place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
+            }
+        }
+    }
+
+    // Next, add temperature from tension. Can override temperature loss from water!
+    temperature_increment(tension);
+
+    // Cap net temperature change to 1 per turn if no exceptions.
+    float tempchange = you.temperature - you.temperature_last;
+    if (!ignore_cap && tempchange > 1)
+        you.temperature = you.temperature_last + 1;
+    else if (tempchange < -1)
+        you.temperature = you.temperature_last - 1;
+
+    // Handle any effects that change with temperature.
+    temperature_changed(tempchange);
+
+    // Save your new temp as your new 'old' temperature.
+    you.temperature_last = you.temperature;
+}
+
+void temperature_increment(float degree)
+{
+    // No warming up while you're exhausted!
+    if (you.duration[DUR_EXHAUSTED])
+        return;
+
+    you.temperature += sqrt(degree);
+    if (temperature() >= TEMP_MAX)
+        you.temperature = TEMP_MAX;
+}
+
+void temperature_decrement(float degree)
+{
+    // No cooling off while you're angry!
+    if (you.duration[DUR_BERSERK])
+        return;
+
+    you.temperature -= degree;
+    if (temperature() <= TEMP_MIN)
+        you.temperature = TEMP_MIN;
+}
+
+void temperature_changed(float change)
+{
+    // Arbitrary - how big does a swing in a turn have to be?
+    float pos_threshold = .25;
+    float neg_threshold = -1 * pos_threshold;
+
+    // For INCREMENTS:
+
+    // Warmed up enough to lose slow movement.
+    if (change > pos_threshold && temperature_tier(TEMP_COOL))
+        mpr("Your movements quicken.", MSGCH_DURATION);
+
+    // Check these no-nos every turn.
+    if (you.temperature >= TEMP_WARM)
+    {
+        // Handles condensation shield, ozo's armour, icemail.
+        expose_player_to_element(BEAM_FIRE, 0);
+
+        // Handled separately because normally heat doesn't affect this.
+        if (you.form == TRAN_ICE_BEAST || you.form == TRAN_STATUE)
+            untransform(true, false);
+
+        // Stoneskin melts.
+        you.set_duration(DUR_STONESKIN, 0);
+    }
+
+    // Just reached the temp that kills off stoneskin.
+    if (change > pos_threshold && temperature_tier(TEMP_WARM))
+    {
+        mpr("Your stony skin melts.", MSGCH_DURATION);
+        you.redraw_armour_class = true;
+    }
+
+    // Passive heat stuff.
+    if (change > pos_threshold && temperature_tier(TEMP_FIRE))
+        mpr("You're getting fired up.", MSGCH_DURATION);
+
+    // Heat aura stuff.
+    if (change > pos_threshold && temperature_tier(TEMP_MAX))
+    {
+        mpr("You blaze with the fury of an erupting volcano!", MSGCH_DURATION);
+        invalidate_agrid(true);
+    }
+
+    // For DECREMENTS (reverse order):
+    if (change < neg_threshold && temperature_tier(TEMP_MAX))
+    {
+        mpr("The intensity of your heat diminishes.", MSGCH_DURATION);
+    }
+
+    if (change < neg_threshold && temperature_tier(TEMP_FIRE))
+        mpr("You're cooling off.", MSGCH_DURATION);
+
+    // Cooled down enough for stoneskin to kick in again.
+    if (change < neg_threshold && temperature_tier(TEMP_WARM))
+    {
+            you.set_duration(DUR_STONESKIN, 500);
+            mpr("Your skin cools and hardens.", MSGCH_DURATION);
+            you.redraw_armour_class = true;
+    }
+
+    // Cooled down enough for slow movement.
+    if (change < neg_threshold && temperature_tier(TEMP_COOL))
+        mpr("Your movements slow.", MSGCH_DURATION);
+
+    // If we're in this function, temperature changed, anyways.
+    you.redraw_temperature = true;
+
+    #ifdef USE_TILE
+        init_player_doll();
+    #endif
+
+    // Just do this every turn to be safe. Can be fixed later if there
+    // any performance issues.
+    invalidate_agrid(true);
+}
+
+void temperature_decay()
+{
+    temperature_decrement(you.temperature / 10);
+}
+
+// Just a helper function to save space. Returns true if a
+// threshold was crossed.
+bool temperature_tier (int which)
+{
+    if (temperature() > which && temperature_last() <= which)
+        return true;
+    else if (temperature() < which && temperature_last() >= which)
+        return true;
+    else
+        return false;
+}
+
+bool temperature_effect(int which)
+{
+    switch (which)
+    {
+        case LORC_FIRE_RES_I:
+            return (true); // 1-15
+        case LORC_SLOW_MOVE:
+            return (temperature() < TEMP_COOL); // 1-4
+        case LORC_STONESKIN:
+            return (temperature() < TEMP_WARM); // 1-8
+//      case nothing, right now:
+//            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
+        case LORC_LAVA_BOOST:
+            return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9-10
+        case LORC_FIRE_RES_II:
+            return (temperature() >= TEMP_WARM); // 9-15
+        case LORC_FIRE_RES_III:
+        case LORC_FIRE_BOOST:
+        case LORC_COLD_VULN:
+            return (temperature() >= TEMP_HOT); // 11-15
+        case LORC_FAST_MOVE:
+        case LORC_PASSIVE_HEAT:
+            return (temperature() >= TEMP_FIRE); // 13-15
+        case LORC_HEAT_AURA:
+        case LORC_NO_SCROLLS:
+            return (temperature() >= TEMP_MAX); // 15
+
+        default:
+            return false;
+    }
+}
+
+int temperature_colour(int temp)
+{
+    return (temp > TEMP_FIRE) ? LIGHTRED  :
+           (temp > TEMP_HOT)  ? RED       :
+           (temp > TEMP_WARM) ? YELLOW    :
+           (temp > TEMP_ROOM) ? WHITE     :
+           (temp > TEMP_COOL) ? LIGHTCYAN :
+           (temp > TEMP_COLD) ? LIGHTBLUE : BLUE;
+}
+
+std::string temperature_string(int temp)
+{
+    return (temp > TEMP_FIRE) ? "lightred"  :
+           (temp > TEMP_HOT)  ? "red"       :
+           (temp > TEMP_WARM) ? "yellow"    :
+           (temp > TEMP_ROOM) ? "white"     :
+           (temp > TEMP_COOL) ? "lightcyan" :
+           (temp > TEMP_COLD) ? "lightblue" : "blue";
+}
+
+std::string temperature_text(int temp)
+{
+    switch (temp)
+    {
+        case TEMP_MIN:
+            return "rF+";
+        case TEMP_COOL:
+            return "Normal movement speed";
+        case TEMP_WARM:
+            return "rF++; lava magic boost; Stoneskin melts";
+        case TEMP_HOT:
+            return "rF+++; rC-; fire magic boost";
+        case TEMP_FIRE:
+            return "Fast movement speed; burn attackers";
+        case TEMP_MAX:
+            return "Burn surroundings; cannot read books or scrolls";
+        default:
+            return "";
+    }
 }

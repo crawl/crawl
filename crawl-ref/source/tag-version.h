@@ -42,6 +42,7 @@ enum tag_minor_version
     TAG_MINOR_ORIG_MONNUM,         // orig_monnum is type rather than type+1.
     TAG_MINOR_SPRINT_SCORES,       // Separate score lists for each sprint map
     TAG_MINOR_FOOD_AUTOPICKUP,     // Separate meat, fruit, others in \ menu.
+    TAG_MINOR_LORC_TEMPERATURE,    // Save lava orc temperature
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

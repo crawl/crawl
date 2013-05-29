@@ -3010,9 +3010,7 @@ static void _blink_allies_encircle(const monster* mon)
     for (monster_iterator mi(mon); mi; ++mi)
     {
         if (_valid_encircle_ally(mon, *mi, foepos))
-        {
             allies.push_back(*mi);
-        }
     }
     random_shuffle(allies.begin(), allies.end());
 

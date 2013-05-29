@@ -1454,6 +1454,12 @@ bool go_berserk(bool intentional, bool potion)
 
     you.redraw_quiver = true; // Account for no firing.
 
+    if (you.species == SP_LAVA_ORC)
+    {
+        mpr("You burn with rage!");
+        // This will get sqrt'd later, so.
+        you.temperature = TEMP_MAX;
+    }
     return true;
 }
 
@@ -1461,7 +1467,7 @@ bool go_berserk(bool intentional, bool potion)
 // assumed that this is the case.
 static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 {
-    if (mons_is_stationary(mon) && !mons_is_tentacle_end(mon->type))
+    if (mons_is_stationary(mon) && !mons_is_tentacle(mon->type))
     {
         int dist = grid_distance(you.pos(), mon->pos());
         if (want_move)
@@ -2418,7 +2424,8 @@ bool is_orckind(const actor *act)
             return true;
         }
         if (mons_is_ghost_demon(mon->type)
-            && mon->ghost->species == SP_HILL_ORC)
+            && (mon->ghost->species == SP_HILL_ORC
+             || mon->ghost->species == SP_LAVA_ORC))
         {
             return true;
         }

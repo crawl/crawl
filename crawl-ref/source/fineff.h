@@ -159,13 +159,23 @@ public:
     }
 
     bool mergeable(const final_effect &a) const;
-    void fire();
+    virtual void fire();
 
 protected:
     daction_type action;
     string final_msg;
 };
 
+class kirke_death_fineff : public delayed_action_fineff
+{
+public:
+    kirke_death_fineff(string _final_msg)
+            : delayed_action_fineff(DACT_KIRKE_HOGS, _final_msg)
+    {
+    }
+
+    void fire();
+};
 void fire_final_effects();
 
 #endif
