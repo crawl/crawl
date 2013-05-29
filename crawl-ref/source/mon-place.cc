@@ -1453,10 +1453,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mons_class_flag(mg.cls, M_CONFUSED))
         mon->add_ench(ENCH_CONFUSION);
 
-    if (mg.cls == MONS_SHAPESHIFTER)
+    if (montype == MONS_SHAPESHIFTER)
         mon->add_ench(ENCH_SHAPESHIFTER);
 
-    if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
+    if (montype == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
     if (mg.cls == MONS_SPIRIT)
