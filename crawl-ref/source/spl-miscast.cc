@@ -673,7 +673,8 @@ bool MiscastEffect::avoid_lethal(int dam)
     if (recursion_depth == MAX_RECURSE)
     {
         // Any possible miscast would kill you, now that's interesting.
-        mpr("Xom watches you with interest.");
+        if (you.religion == GOD_XOM)
+            simple_god_message(" watches you with interest.");
         return true;
     }
 
