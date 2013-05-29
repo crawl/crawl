@@ -28,7 +28,7 @@ static bool _unsuitable_misled_monster(monster_type mons)
             || mons_is_ghost_demon(mons)
             || mons_class_is_stationary(mons)
             || mons_class_is_zombified(mons)
-            || mons_is_tentacle(mons)
+            || mons_is_tentacle_or_tentacle_segment(mons)
             || mons_class_flag(mons, M_NO_POLY_TO | M_CANT_SPAWN)
             || mons_class_flag(mons, M_UNFINISHED)
             || mons_genus(mons) == MONS_DRACONIAN
@@ -62,7 +62,7 @@ bool update_mislead_monster(monster* mons)
         || mons->props.exists("monster_tile")
         || mons->props.exists("mislead_as")
         || mons_is_projectile(mons->type) // Only orbs, not boulders
-        || mons_is_tentacle_segment(mons->type)
+        || mons_is_tentacle_or_tentacle_segment(mons->type)
         || mons->type == MONS_MARA_FAKE)
     {
         return false;

@@ -2244,6 +2244,11 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
         mpr("An evil force gathers, but it quickly dissipates.");
         return SPRET_SUCCESS; // still losing a turn
     }
+    else if (m->wont_attack())
+    {
+        mpr("You cannot haunt those who bear you no hostility.");
+        return SPRET_ABORT;
+    }
 
     int mi = m->mindex();
     ASSERT(!invalid_monster_index(mi));

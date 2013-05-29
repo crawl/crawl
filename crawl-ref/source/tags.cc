@@ -2492,7 +2492,8 @@ static void tag_read_you_items(reader &th)
         for (j = 0; j < count2; j++)
             you.force_autopickup[i][j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP) {
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP)
+    {
         const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];
         you.force_autopickup[OBJ_FOOD][FOOD_MEAT_RATION] = oldstate;
         you.force_autopickup[OBJ_FOOD][FOOD_PEAR] = oldstate;
