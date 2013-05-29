@@ -292,6 +292,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
     case TILEP_MONS_TENGU_REAVER:
+    case TILEP_MONS_SOJOBO:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
@@ -535,6 +536,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
     case TILEP_MONS_TENGU_REAVER:
+    case TILEP_MONS_SOJOBO:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
