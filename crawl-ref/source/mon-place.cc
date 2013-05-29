@@ -1453,10 +1453,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mons_class_flag(mg.cls, M_CONFUSED))
         mon->add_ench(ENCH_CONFUSION);
 
-    if (mg.cls == MONS_SHAPESHIFTER)
+    if (montype == MONS_SHAPESHIFTER)
         mon->add_ench(ENCH_SHAPESHIFTER);
 
-    if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
+    if (montype == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
     if (mg.cls == MONS_SPIRIT)
@@ -1785,6 +1785,8 @@ static bool _unfitting_zombie(monster_type mt)
 {
     // Zombifiability in general.
     if (mons_species(mt) != mt)
+        return true;
+    if (mons_class_flag(mt, M_NO_GEN_DERIVED))
         return true;
     if (!mons_zombie_size(mt) || mons_is_unique(mt))
         return true;

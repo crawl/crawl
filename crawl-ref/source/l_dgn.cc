@@ -340,6 +340,11 @@ static int dgn_shuffle(lua_State *ls)
     return dgn_map_add_transform(ls, &map_lines::add_shuffle);
 }
 
+static int dgn_clear(lua_State *ls)
+{
+    return dgn_map_add_transform(ls, &map_lines::add_clear);
+}
+
 static int dgn_subst(lua_State *ls)
 {
     return dgn_map_add_transform(ls, &map_lines::add_subst);
@@ -1854,6 +1859,7 @@ const struct luaL_reg dgn_dlib[] =
 { "depth_weight", dgn_depth_weight },
 { "orient", dgn_orient },
 { "shuffle", dgn_shuffle },
+{ "clear", dgn_clear },
 { "subst", dgn_subst },
 { "nsubst", dgn_nsubst },
 { "colour", dgn_colour },

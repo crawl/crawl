@@ -4607,7 +4607,7 @@ void debug_mondata()
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
 
         // Tests below apply only to corpses.
-        if (md->species != mc)
+        if (md->species != mc || md->bitfields & M_CANT_SPAWN)
             continue;
 
         if (md->weight && !md->corpse_thingy)
