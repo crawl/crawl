@@ -1141,7 +1141,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
-            if (src == &you && mon->type != MONS_BATTLESPHERE)
+            if (src == &you && mon->type != MONS_BATTLESPHERE && mon->type != MONS_SPECTRAL_WEAPON)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
@@ -1325,7 +1325,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player() && mon->type != MONS_BATTLESPHERE)
+        if (src->is_player() && mon->type != MONS_BATTLESPHERE && mon->type != MONS_SPECTRAL_WEAPON)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;

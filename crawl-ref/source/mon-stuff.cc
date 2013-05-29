@@ -1817,6 +1817,12 @@ int monster_die(monster* mons, killer_type killer,
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
         end_battlesphere(mons, true);
     }
+    else if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        simple_monster_message(mons, " fades away.",
+                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
