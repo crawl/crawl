@@ -1284,9 +1284,9 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case SPELL_POISON_ARROW:
     case SPELL_THROW_FLAME:
     case SPELL_THROW_FROST:
+    case SPELL_STRIKING:
         break;
 
-    case SPELL_STRIKING:
     case SPELL_FIREBALL:
         if (mons->foe_distance() < 2)
             return false;
