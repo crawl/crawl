@@ -121,6 +121,8 @@ public:
   bool dead; // ... but pending revival
   int lives;
   int deaths;
+  float temperature; // For lava orcs.
+  float temperature_last;
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
@@ -340,6 +342,7 @@ public:
   bool redraw_title;
   bool redraw_hit_points;
   bool redraw_magic_points;
+  bool redraw_temperature;
   FixedVector<bool, NUM_STATS> redraw_stats;
   bool redraw_experience;
   bool redraw_armour_class;
@@ -656,10 +659,11 @@ public:
     bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
-    int liquefying_radius2 () const;
-    int umbra_radius2 () const;
-    int suppression_radius2 () const;
-    int soul_aura_radius2 () const;
+    int liquefying_radius2() const;
+    int umbra_radius2() const;
+    int suppression_radius2() const;
+    int soul_aura_radius2() const;
+    int heat_radius2() const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
@@ -850,6 +854,7 @@ int player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
+bool player_likes_lava(bool permanently = false);
 
 int player_mutation_level(mutation_type mut, bool temp = true);
 

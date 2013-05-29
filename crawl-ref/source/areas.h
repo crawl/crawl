@@ -14,6 +14,7 @@ enum area_centre_type
     AREA_QUAD,
     AREA_DISJUNCTION,
     AREA_SOUL_AURA,
+    AREA_HOT,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -50,5 +51,8 @@ bool umbraed(const coord_def& p);
 bool suppressed(const coord_def& p);
 
 bool soul_aura(const coord_def& p);
+
+// ...or is the area hot?
+bool heated(const coord_def& p);
 
 #endif

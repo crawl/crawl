@@ -1192,6 +1192,13 @@ enum dungeon_char_type
     DCHAR_FIRED_MISSILE,
     DCHAR_EXPLOSION,
 
+    DCHAR_FRAME_HORIZ,
+    DCHAR_FRAME_VERT,
+    DCHAR_FRAME_TL,
+    DCHAR_FRAME_TR,
+    DCHAR_FRAME_BL,
+    DCHAR_FRAME_BR,
+
     NUM_DCHAR_TYPES
 };
 
@@ -2237,6 +2244,7 @@ enum monster_type                      // menv[].type
     MONS_ORC_KNIGHT,
     MONS_ORC_SORCERER,
     MONS_ORC_WARLORD,
+    MONS_LAVA_ORC,
     MONS_DWARF,
     MONS_DEEP_DWARF,
     MONS_DEEP_DWARF_SCION,
@@ -3163,6 +3171,7 @@ enum species_type
     SP_FELID,
     SP_OCTOPODE,
     SP_DJINNI,
+    SP_LAVA_ORC,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)

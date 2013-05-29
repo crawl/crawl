@@ -617,6 +617,9 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         rc = true, undead = false;
     }
 
+    if (you.species == SP_LAVA_ORC && spell == SPELL_STONESKIN)
+        rc = true, undead = false;
+
     return rc;
 }
 
@@ -1136,6 +1139,13 @@ bool can_learn_spell(bool silent)
         if (!silent)
             canned_msg(MSG_TOO_BERSERK);
         return false;
+    }
+
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        if (!silent)
+            mpr("You'd burn any book you tried to read!");
+        return (false);
     }
 
     return true;

@@ -4026,7 +4026,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
         return true;
 
     // Might be better to teleport the whole kraken instead...
-    if (mons_is_tentacle(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return true;
 
     if (check_stasis(!permit_id, calc_unid))
@@ -4758,7 +4758,7 @@ int monster::foe_distance() const
 
 bool monster::can_go_berserk() const
 {
-    if (holiness() != MH_NATURAL || mons_is_tentacle(type))
+    if (holiness() != MH_NATURAL || mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
     if (mons_intel(this) == I_PLANT)
@@ -4854,7 +4854,7 @@ bool monster::has_lifeforce() const
 
 bool monster::can_mutate() const
 {
-    if (mons_is_tentacle(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
     // embodiment of Zinniness
@@ -5576,7 +5576,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                            damage * BASELINE_DELAY);
     }
 
-    if (mons_is_tentacle(type) && type != MONS_ELDRITCH_TENTACLE
+    if (mons_is_tentacle_or_tentacle_segment(type)
+            && type != MONS_ELDRITCH_TENTACLE
             && flavour != BEAM_TORMENT_DAMAGE
             && !invalid_monster_index(number)
             && menv[number].is_parent_monster_of(this))
@@ -5985,9 +5986,7 @@ bool monster::is_child_tentacle_segment() const
 
 bool monster::is_child_monster() const
 {
-    return (type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
-            || type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || type == MONS_STARSPAWN_TENTACLE_SEGMENT);
+    return (is_child_tentacle() || is_child_tentacle_segment());
 }
 
 bool monster::is_child_tentacle_of(const monster* mons) const

@@ -1627,11 +1627,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         blame_prefix = "called by ";
     }
-    else if (mg.cls == MONS_KRAKEN_TENTACLE
-             || mg.cls == MONS_STARSPAWN_TENTACLE)
-    {
+    else if (mons_is_child_tentacle(mg.cls))
         blame_prefix = "attached to ";
-    }
     else
         blame_prefix = "created by ";
 
@@ -2935,13 +2932,11 @@ static monster_type _pick_zot_exit_defender()
     }
 
     return random_choose_weighted(
-        91, RANDOM_DEMON_COMMON,
-        80, RANDOM_DEMON,
-        26, MONS_HELL_HOUND,
-        24, MONS_ABOMINATION_LARGE,
-        21, MONS_ABOMINATION_SMALL,
-        20, MONS_RED_DEVIL,
-        14, MONS_HELL_SENTINEL,
+        30, RANDOM_DEMON_COMMON,
+        30, RANDOM_DEMON,
+        20, pick_monster_no_rarity(BRANCH_PANDEMONIUM),
+        15, MONS_ORB_GUARDIAN,
+        5, RANDOM_DEMON_GREATER,
         0);
 }
 

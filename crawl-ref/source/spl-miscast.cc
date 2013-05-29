@@ -672,11 +672,9 @@ bool MiscastEffect::avoid_lethal(int dam)
 
     if (recursion_depth == MAX_RECURSE)
     {
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
-        mpr("Couldn't avoid lethal miscast: too much recursion.",
-            MSGCH_ERROR);
-#endif
-        return false;
+        // Any possible miscast would kill you, now that's interesting.
+        mpr("Xom watches you with interest.");
+        return true;
     }
 
     if (did_msg)

@@ -509,7 +509,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else if (!mons_is_tentacle(type))
+        else if (!mons_is_tentacle_or_tentacle_segment(type))
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      pronoun(PRONOUN_POSSESSIVE, true).c_str());

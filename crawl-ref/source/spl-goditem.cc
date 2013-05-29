@@ -142,7 +142,7 @@ int is_pacifiable(const monster* mon)
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
-        || mons_is_tentacle(mon->type)) // body part
+        || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
     {
         return -1;
     }

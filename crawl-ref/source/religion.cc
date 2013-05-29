@@ -3503,6 +3503,11 @@ void god_pitch(god_type which_god)
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
         }
+        else if (which_god == GOD_BEOGH && you.species == SP_LAVA_ORC)
+        {
+            simple_god_message(" booms: Go away, foul mockery of the chosen race!",
+                               which_god);
+        }
         else if (!_transformed_player_can_join_god(which_god))
         {
             simple_god_message(" says: How dare you come"
