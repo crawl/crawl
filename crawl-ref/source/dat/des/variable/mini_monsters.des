@@ -1302,7 +1302,7 @@ ENDMAP
 # kobolds around a campfire
 NAME:    lexackson_kobold_supper
 DEPTH:   D:1-6
-TAGS:    unique_kobold_supper_lexackson no_monster_gen
+TAGS:    no_monster_gen
 KPROP:   56' = no_rtele_into
 MONS:    kobold, plant, bush
 : if you.absdepth() < 4 then
