@@ -999,6 +999,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_YAKTAUR;
     case MONS_YAKTAUR_CAPTAIN:
         return TILEP_MONS_YAKTAUR_CAPTAIN;
+    case MONS_FAUN:
+        return TILEP_MONS_FAUN;
+    case MONS_SATYR:
+        return TILEP_MONS_SATYR;
 
     // draconians ('d'):
     case MONS_DRACONIAN:
@@ -1927,6 +1931,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // centaur ('c')
     case MONS_NESSOS:
         return TILEP_MONS_NESSOS;
+    case MONS_PAN:
+        return TILEP_MONS_PAN;
 
     // draconian ('d')
     case MONS_TIAMAT:
@@ -3570,6 +3576,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
         return TILE_CORPSE_YAKTAUR;
+    case MONS_FAUN:
+        return TILE_CORPSE_FAUN;
+    case MONS_SATYR:
+        return TILE_CORPSE_SATYR;
 
     // draconians ('d')
     case MONS_DRACONIAN:
