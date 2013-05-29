@@ -530,8 +530,8 @@ ale.
 %%%%
 A staircase to the Enchanted Forest
 
-An entrance to the spriggan forest. Snap a twig and you're dead. Actually, they
-won't wait until you do that.
+On the other end of these stairs lies the wooded home of spriggans, tengu,
+fauns, and all manner of terrifying hexes.
 %%%%
 A staircase to the Shoals
 
