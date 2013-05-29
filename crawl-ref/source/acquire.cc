@@ -1618,20 +1618,20 @@ bool acquirement(object_class_type class_wanted, int agent,
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {
         OBJ_WEAPONS,    "Weapon",
-        OBJ_ARMOUR,     "Armour       ",
+        OBJ_ARMOUR,     "Armour",
         OBJ_JEWELLERY,  "Jewellery",
         OBJ_BOOKS,      "Book",
         OBJ_STAVES,     "Staff",
-        OBJ_WANDS,      "Wand  ",
+        OBJ_WANDS,      "Wand",
         OBJ_MISCELLANY, "Miscellaneous",
         OBJ_FOOD,       0, // amended below
         OBJ_GOLD,       "Gold",
         OBJ_MISSILES,   "Ammunition",
     };
     ASSERT(acq_classes[7].type == OBJ_FOOD);
-    acq_classes[7].name = you.religion == GOD_FEDHAS ? "Fruit    ":
-                          you.species == SP_VAMPIRE  ? "Blood    ":
-                                                       "Food     ";
+    acq_classes[7].name = you.religion == GOD_FEDHAS ? "Fruit":
+                          you.species == SP_VAMPIRE  ? "Blood":
+                                                       "Food";
 
     int thing_created = NON_ITEM;
 
@@ -1648,10 +1648,13 @@ bool acquirement(object_class_type class_wanted, int agent,
         string line;
         for (unsigned int i = 0; i < ARRAYSZ(acq_classes); i++)
         {
+            int len = max(strlen(acq_classes[i].name),
+                          strlen(acq_classes[(i + ARRAYSZ(acq_classes) / 2)
+                                             % ARRAYSZ(acq_classes)].name));
             if (bad_class[acq_classes[i].type])
-                line += make_stringf("     %*s", (int)strlen(acq_classes[i].name), "");
+                line += make_stringf("     %-*s", len, "");
             else
-                line += make_stringf(" [%c] %s", i + 'a', acq_classes[i].name);
+                line += make_stringf(" [%c] %-*s", i + 'a', len, acq_classes[i].name);
 
             if (i == ARRAYSZ(acq_classes) / 2 - 1 || i == ARRAYSZ(acq_classes) - 1)
             {
