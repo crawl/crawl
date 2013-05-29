@@ -1786,6 +1786,8 @@ static bool _unfitting_zombie(monster_type mt)
     // Zombifiability in general.
     if (mons_species(mt) != mt)
         return true;
+    if (mons_class_flag(mt, M_NO_GEN_DERIVED))
+        return true;
     if (!mons_zombie_size(mt) || mons_is_unique(mt))
         return true;
     if (mons_class_holiness(mt) != MH_NATURAL)
