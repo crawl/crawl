@@ -1681,7 +1681,7 @@ void scorefile_entry::fixup_char_name()
     if (race_class_name.empty())
     {
         race_class_name = make_stringf("%s%s",
-                                       is_valid_species(race) ?
+                                       race < NUM_SPECIES ?
                                            get_species_abbrev(race) : "??",
                                        _job_abbrev(job));
     }

@@ -360,7 +360,7 @@ monster_type player_species_to_mons_species(species_type species)
 
 bool is_valid_species(species_type species)
 {
-    return (species >= 0 && species < NUM_SPECIES);
+    return (species >= 0 && species <= LAST_VALID_SPECIES);
 }
 
 int species_exp_modifier(species_type species)
