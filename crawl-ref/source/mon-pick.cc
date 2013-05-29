@@ -14,25 +14,6 @@
 #include "mon-util.h"
 #include "place.h"
 
-enum distrib_type
-{
-    FLAT, // full chance throughout the range
-    SEMI, // 50% chance at range ends, 100% in the middle
-    PEAK, // 0% chance just outside range ends, 100% in the middle, range
-          // ends typically get ~20% or more
-    UP,   // linearly from near-zero to 100%, increasing with depth
-    DOWN, // linearly from 100% at the start to near-zero
-};
-
-typedef struct
-{
-    int minr;
-    int maxr;
-    int rarity; // 0..1000
-    distrib_type distrib;
-    monster_type mons;
-} pop_entry;
-
 #include "mon-pick-data.h"
 
 int branch_ood_cap(branch_type branch)
@@ -148,20 +129,25 @@ static int _rarity_at(const pop_entry *pop, int depth)
 
 monster_type pick_monster(level_id place, mon_pick_vetoer veto)
 {
+    ASSERT(place.is_valid());
+    return pick_monster_from(population[place.branch].pop, place.depth, veto);
+}
+
+monster_type pick_monster_from(const pop_entry *fpop, int depth, mon_pick_vetoer veto)
+{
     struct { monster_type mons; int rarity; } valid[NUM_MONSTERS];
     int nvalid = 0;
     int totalrar = 0;
 
-    ASSERT(place.is_valid());
-    for (const pop_entry *pop = population[place.branch].pop; pop->mons; pop++)
+    for (const pop_entry *pop = fpop; pop->mons; pop++)
     {
-        if (place.depth < pop->minr || place.depth > pop->maxr)
+        if (depth < pop->minr || depth > pop->maxr)
             continue;
 
         if (veto && (*veto)(pop->mons))
             continue;
 
-        int rar = _rarity_at(pop, place.depth);
+        int rar = _rarity_at(pop, depth);
         ASSERT(rar > 0);
 
         valid[nvalid].mons = pop->mons;
