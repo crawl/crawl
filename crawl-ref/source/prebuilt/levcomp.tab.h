@@ -1,8 +1,10 @@
-/* A Bison parser, made by GNU Bison 2.5.  */
 
-/* Bison interface for Yacc-like parsers in C
+/* A Bison parser, made by GNU Bison 2.4.1.  */
+
+/* Skeleton interface for Bison's Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,105 +41,107 @@
    enum yytokentype {
      DEFAULT_DEPTH = 258,
      SHUFFLE = 259,
-     SUBST = 260,
-     TAGS = 261,
-     KFEAT = 262,
-     KITEM = 263,
-     KMONS = 264,
-     KMASK = 265,
-     KPROP = 266,
-     NAME = 267,
-     DEPTH = 268,
-     ORIENT = 269,
-     PLACE = 270,
-     CHANCE = 271,
-     WEIGHT = 272,
-     MONS = 273,
-     ITEM = 274,
-     MARKER = 275,
-     COLOUR = 276,
-     PRELUDE = 277,
-     MAIN = 278,
-     VALIDATE = 279,
-     VETO = 280,
-     EPILOGUE = 281,
-     NSUBST = 282,
-     WELCOME = 283,
-     LFLAGS = 284,
-     BFLAGS = 285,
-     LFLOORCOL = 286,
-     LROCKCOL = 287,
-     LFLOORTILE = 288,
-     LROCKTILE = 289,
-     FTILE = 290,
-     RTILE = 291,
-     TILE = 292,
-     SUBVAULT = 293,
-     FHEIGHT = 294,
-     DESC = 295,
-     COMMA = 296,
-     COLON = 297,
-     PERC = 298,
-     DASH = 299,
-     CHARACTER = 300,
-     NUMBER = 301,
-     STRING = 302,
-     MAP_LINE = 303,
-     MONSTER_NAME = 304,
-     ITEM_INFO = 305,
-     LUA_LINE = 306
+     CLEAR = 260,
+     SUBST = 261,
+     TAGS = 262,
+     KFEAT = 263,
+     KITEM = 264,
+     KMONS = 265,
+     KMASK = 266,
+     KPROP = 267,
+     NAME = 268,
+     DEPTH = 269,
+     ORIENT = 270,
+     PLACE = 271,
+     CHANCE = 272,
+     WEIGHT = 273,
+     MONS = 274,
+     ITEM = 275,
+     MARKER = 276,
+     COLOUR = 277,
+     PRELUDE = 278,
+     MAIN = 279,
+     VALIDATE = 280,
+     VETO = 281,
+     EPILOGUE = 282,
+     NSUBST = 283,
+     WELCOME = 284,
+     LFLAGS = 285,
+     BFLAGS = 286,
+     LFLOORCOL = 287,
+     LROCKCOL = 288,
+     LFLOORTILE = 289,
+     LROCKTILE = 290,
+     FTILE = 291,
+     RTILE = 292,
+     TILE = 293,
+     SUBVAULT = 294,
+     FHEIGHT = 295,
+     DESC = 296,
+     COMMA = 297,
+     COLON = 298,
+     PERC = 299,
+     DASH = 300,
+     CHARACTER = 301,
+     NUMBER = 302,
+     STRING = 303,
+     MAP_LINE = 304,
+     MONSTER_NAME = 305,
+     ITEM_INFO = 306,
+     LUA_LINE = 307
    };
 #endif
 /* Tokens.  */
 #define DEFAULT_DEPTH 258
 #define SHUFFLE 259
-#define SUBST 260
-#define TAGS 261
-#define KFEAT 262
-#define KITEM 263
-#define KMONS 264
-#define KMASK 265
-#define KPROP 266
-#define NAME 267
-#define DEPTH 268
-#define ORIENT 269
-#define PLACE 270
-#define CHANCE 271
-#define WEIGHT 272
-#define MONS 273
-#define ITEM 274
-#define MARKER 275
-#define COLOUR 276
-#define PRELUDE 277
-#define MAIN 278
-#define VALIDATE 279
-#define VETO 280
-#define EPILOGUE 281
-#define NSUBST 282
-#define WELCOME 283
-#define LFLAGS 284
-#define BFLAGS 285
-#define LFLOORCOL 286
-#define LROCKCOL 287
-#define LFLOORTILE 288
-#define LROCKTILE 289
-#define FTILE 290
-#define RTILE 291
-#define TILE 292
-#define SUBVAULT 293
-#define FHEIGHT 294
-#define DESC 295
-#define COMMA 296
-#define COLON 297
-#define PERC 298
-#define DASH 299
-#define CHARACTER 300
-#define NUMBER 301
-#define STRING 302
-#define MAP_LINE 303
-#define MONSTER_NAME 304
-#define ITEM_INFO 305
-#define LUA_LINE 306
+#define CLEAR 260
+#define SUBST 261
+#define TAGS 262
+#define KFEAT 263
+#define KITEM 264
+#define KMONS 265
+#define KMASK 266
+#define KPROP 267
+#define NAME 268
+#define DEPTH 269
+#define ORIENT 270
+#define PLACE 271
+#define CHANCE 272
+#define WEIGHT 273
+#define MONS 274
+#define ITEM 275
+#define MARKER 276
+#define COLOUR 277
+#define PRELUDE 278
+#define MAIN 279
+#define VALIDATE 280
+#define VETO 281
+#define EPILOGUE 282
+#define NSUBST 283
+#define WELCOME 284
+#define LFLAGS 285
+#define BFLAGS 286
+#define LFLOORCOL 287
+#define LROCKCOL 288
+#define LFLOORTILE 289
+#define LROCKTILE 290
+#define FTILE 291
+#define RTILE 292
+#define TILE 293
+#define SUBVAULT 294
+#define FHEIGHT 295
+#define DESC 296
+#define COMMA 297
+#define COLON 298
+#define PERC 299
+#define DASH 300
+#define CHARACTER 301
+#define NUMBER 302
+#define STRING 303
+#define MAP_LINE 304
+#define MONSTER_NAME 305
+#define ITEM_INFO 306
+#define LUA_LINE 307
 
 
 
@@ -146,7 +150,7 @@
 typedef union YYSTYPE
 {
 
-/* Line 2068 of yacc.c  */
+/* Line 1676 of yacc.c  */
 #line 34 "levcomp.ypp"
 
     int i;
@@ -156,8 +160,8 @@ typedef union YYSTYPE
 
 
 
-/* Line 2068 of yacc.c  */
-#line 161 "levcomp.tab.h"
+/* Line 1676 of yacc.c  */
+#line 165 "levcomp.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

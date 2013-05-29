@@ -1471,6 +1471,11 @@ static void _make_spectral_thing(monster* mons, bool quiet)
     if (mons->holiness() == MH_NATURAL && mons_can_be_zombified(mons))
     {
         const monster_type spectre_type = mons_species(mons->type);
+        enchant_type shapeshift = ENCH_NONE;
+        if (mons->has_ench(ENCH_SHAPESHIFTER))
+            shapeshift = ENCH_SHAPESHIFTER;
+        else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+            shapeshift = ENCH_GLOWING_SHAPESHIFTER;
 
         // Headless hydras cannot be made spectral hydras, sorry.
         if (spectre_type == MONS_HYDRA && mons->number == 0)
@@ -1502,6 +1507,8 @@ static void _make_spectral_thing(monster* mons, bool quiet)
             name_zombie(spectre, mons);
 
             spectre->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+            if (shapeshift)
+                spectre->add_ench(shapeshift);
         }
     }
 }
@@ -2696,6 +2703,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 
     // 'morph targets are _always_ "base" classes, not derived ones.
     new_mclass = mons_species(new_mclass);
+    monster_type old_mclass = mons_base_type(mons);
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
@@ -2718,19 +2726,21 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Various inappropriate polymorph targets.
-    if (mons_class_holiness(new_mclass) != mons->holiness()
+    if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
-        || new_mclass == mons_species(mons->type)  // must be different
+        || new_mclass == mons_species(old_mclass)  // must be different
         || new_mclass == MONS_PROGRAM_BUG
 
-        // These require manual setting of mons.base_monster to indicate
-        // what they are a skeleton/zombie/simulacrum/spectral thing of,
-        // which we currently aren't smart enough to handle.
+        // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
+        || mons_is_zombified(mons) && !mons_zombie_size(new_mclass)
+        // Currently unused (no zombie shapeshifters, no polymorph).
+        || mons->type == MONS_SKELETON && !mons_skeleton(new_mclass)
+        || mons->type == MONS_ZOMBIE && !mons_zombifiable(new_mclass)
 
         // These require manual setting of the ghost demon struct to
         // indicate their characteristics, which we currently aren't
@@ -2914,8 +2924,13 @@ void change_monster_type(monster* mons, monster_type targetc)
                && !degenerated && !slimified);
 
     // deal with mons_sec
-    mons->type         = targetc;
-    mons->base_monster = MONS_NO_MONSTER;
+    if (mons_is_zombified(mons))
+        mons->base_monster = targetc;
+    else
+    {
+        mons->type         = targetc;
+        mons->base_monster = MONS_NO_MONSTER;
+    }
     mons->number       = 0;
 
     // Note: define_monster() will clear out all enchantments! - bwr
