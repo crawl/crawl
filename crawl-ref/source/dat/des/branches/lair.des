@@ -451,141 +451,79 @@ ENDMAP
 ##############################################################################
 # Pointless little "vaults" by Lemuel
 #
-NAME:   strawberry_fields_big_rounded
-ORIENT: float
-WEIGHT: 1
-DEPTH:  Lair
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  BG = .
-SUBST:  .= d:6 .:150 1:10 2:4
-# "strawberry plant"
-MONS:   plant, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
-        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
-MAP
-       .......
-     ...........
-   ...............
- ..................
- ..................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
- ...................
- ...................
-   ...............
-     ...........
-       .......
-ENDMAP
 
-NAME:   strawberry_fields_round
-ORIENT: float
-WEIGHT: 4
-TAGS:   allow_dup
+# Three seperate decorative bubbles mixed into one vault.
+NAME:   lemuel_strawberry_fields
+TAGS:   allow_dup extra transparent
 DEPTH:  Lair
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  BG = .
-SUBST:  .= d .:50 1:8 2:4
-# "strawberry plant"
+ORIENT: float
+WEIGHT: 9
 MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
+KFEAT:  ^~ = .
+: local size = crawl.random2(9)
+: if size > 7 then
+SUBST:  '`"- = ^:20 ~:15 ., . = d:6 .:150 1:10 2:4
+: elseif size > 3 then
+SUBST:  "` = ^:20 ~:15 ., . = d .:50 1:8 2:4
+: else
+SUBST:  '" = ^:20 ~:15 ., . = d .:50 1:8 2:4
+: end
+CLEAR:  `'"-
+COLOUR: ^ = green
+FTILE:  ^ = floor_grass
+COLOUR: ~ = brown
+FTILE:  ~ = floor_dirt
 MAP
-   ....
- ........
-..........
-..........
-..........
-..........
- ........
-   ....
-ENDMAP
-
-NAME:   strawberry_fields_patches_spacepadded
-ORIENT: float
-WEIGHT: 4
-DEPTH:  Lair
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  BG = .
-SUBST:  .= d .:50 1:8 2:4
-# "strawberry plant"
-MONS:   plant, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
-        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
-MAP
-   ..
- ......
-........
-........      ..
- ......     ......
-   ..      ........
-           ........
-     ..     ......
-   ......     ..
-  ........
-  ........
-   ......
-     ..
+       -------
+     -----------
+   -``------------
+ -``````-----------
+ ```````"'''-------
+-`````"""'''''-``----
+--```"""'''''""````--
+----`"''''''"""`````-
+-----'''''''"""`````-
+-----'""'''''""````--
+----``""""''''-``----
+ --`````"""'--------
+ --````````---------
+   -``````--------
+     -``--------
+       -------
 ENDMAP
 
 ##############################################################################
-# Plantages
+# Plantage
 #
-NAME:   fruit_tree_single
-ORIENT: float
-TAGS:   allow_dup
-DEPTH:  Lair, Snake
-MONS:   plant, fungus
-SUBST:  ' = . a 2:1
-SUBST:  . = .:90 a:10 2:1
-KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
-KFEAT:  a = .
-WEIGHT: 8
-MAP
- .....
-.......
-..'''..
-..'1'..
-..'''..
-.......
- .....
-ENDMAP
 
-NAME:   fruit_tree_lots
-ORIENT: float
+# Two seperate small decorative vaults mixed into one:
+NAME:   lemuel_fruit_tree
+TAGS:   extra transparent
 DEPTH:  Lair, Snake
+ORIENT: float
 MONS:   plant, fungus
-SUBST:  ' = . 1
-SUBST:  . = .:90 a:10 2:1
-SUBST:  _ = .:90 a:4
 KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
-KFEAT:  a = .
-WEIGHT: 2
+: if crawl.x_chance_in_y(1, 5) then
+SUBST:  '"~ = . 1
+SUBST:  `-. = .:90 a:10 2:1
+SUBST:  _ = .:90 a:4
+: else
+CLEAR:  '-_
+SUBST:  `" = . a 2:1
+SUBST:  ~. = .:90 a:10 2:1
+: end
 MAP
    ________
-  _........_
- _.....'...._
-_..'........._
-_......'..'.._
-_...'........_
-_......'....._
- _..'....'.._
-  _........_
+  _--------_
+ _---..~..--_
+_--'.......--_
+_---..`"`.~--_
+_---..`0`..--_
+_---..`"`..--_
+ _--~....~.-_
+  _--.....-_
    ________
 ENDMAP
 
@@ -1005,46 +943,33 @@ ENDMAP
 ##############################################################################
 # Stranded yaks
 #
-NAME:   Lemuel_yak_island_a
-WEIGHT: 5
-DEPTH:  Lair
-TAGS:   no_pool_fixup uniq_yak_island
-MONS:   yak / w:5 sheep / w:3 death yak
-SUBST:  ; : .wW
-SUBST:  . : . W:2
-MAP
-..............
-...;;wwww;;...
-..;wwwwwwww;..
-.;wwww..wwww;.
-.;www.1.1www;.
-.www.1>1.1www.
-.;www.1.1www;.
-.;wwww..wwww;.
-..;wwwwwwww;..
-...;;wwww;;...
-..............
-ENDMAP
 
-NAME:   Lemuel_yak_island_b
+# consolidated vault for _a and _b of
+NAME:   Lemuel_yak_island
+TAGS:   no_pool_fixup
+DEPTH:  Lair, Swamp, Shoals
 WEIGHT: 5
-DEPTH:  Swamp, Shoals
-TAGS:   no_pool_fixup uniq_yak_island
 MONS:   yak / w:5 sheep / w:3 death yak
+: if you.branch() == "Lair" then
+SUBST:  ' = ., ; : .wW
+: else
 SUBST:  ; = wW
+: end
+CLEAR:  '
 SUBST:  . : . W:2
 MAP
-   ;;wwww;;
-  ;wwwwwwww;
- ;wwww..wwww;
- ;www.1.1www;
- www.1>1.1www
- ;www.1.1www;
- ;wwww..wwww;
-  ;wwwwwwww;
-   ;;wwww;;
+''''''''''''''
+''';;wwww;;'''
+'';wwwwwwww;''
+';wwww..wwww;'
+';www.1.1www;'
+'www.1>1%1www'
+';www.1.1www;'
+';wwww..wwww;'
+'';wwwwwwww;''
+''';;wwww;;'''
+''''''''''''''
 ENDMAP
-
 
 ##############################################################################
 # Oklob tunnel
@@ -1096,151 +1021,73 @@ ENDMAP
 
 ##############################################################################
 # Oklob-based vaults.
-#
-NAME:   minmay_lair_oklob_chamber_tiny
-TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
+# Multiple vaults differing in size were combined into one.
+
+NAME:   minmay_lair_oklob_chamber
+TAGS:   luniq_oklob no_monster_gen
 DEPTH:  Lair
 ORIENT: north
-WEIGHT: 4
-MONS:   plant, oklob plant
-NSUBST: ? = 1:2 / *:?
+KMONS:  1234 = plant
+KMONS:  P = oklob plant
+: local size = crawl.random2(10)
+: if size > 8 then
+SUBST:  '`" = ., yza = x, XYZ = ?
+NSUBST: ? = 1:% / 4:P / * = ?
+: elseif size > 6 then
+SUBST:  '` = ., XY = ?, yzZ4 = x
+NSUBST: ? = 1:% / 3:P / * = ?
+: elseif size > 3 then
+SUBST:  ' = ., X = ?, 3yY = x
+NSUBST: ? = 1:% / 2:P / * = ?
+: else
+SUBST:  X2 = x
+NSUBST: ? = 1:% / 1:P / * = ?
+: end
+CLEAR:  '`"34yzaYZ
 SUBST:  ? = ....x11$$%%*|
 MAP
-xxxx
-x??x
-x??x
-x11x
-....
- ..
+aaaaaaa
+zZZZZZa
+yYYYYZa
+xXXXYZa
+x??XYZa
+x??XYZa
+x11234a
+....'`"
+ .@'`"
 ENDMAP
 
-NAME:   minmay_lair_oklob_chamber_small
-TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
+NAME:   minmay_lair_oklob_bushes
+TAGS:   luniq_oklob
 DEPTH:  Lair
-ORIENT: north
-WEIGHT: 3
-MONS:   plant, oklob plant
-NSUBST: ? = 2:2 / *:?
-SUBST:  ? = ....x11$$%%*|
-MAP
-xxxxx
-x???x
-x???x
-x???x
-x111x
-.....
- ...
-ENDMAP
-
-NAME:   minmay_lair_oklob_chamber_medium
-TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
-DEPTH:  Lair
-ORIENT: north
-WEIGHT: 2
-MONS:   plant, oklob plant
-NSUBST: ? = 3:2 / *:?
-SUBST:  ? = ....x11$$%%*|
-MAP
-xxxxxx
-x????x
-x????x
-x????x
-x????x
-x1111x
-......
- ....
-ENDMAP
-
-NAME:   minmay_lair_oklob_chamber_large
-TAGS:   luniq_oklob uniq_oklobchamber no_monster_gen
-DEPTH:  Lair
-ORIENT: north
-WEIGHT: 1
-MONS:   plant, oklob plant
-NSUBST: ? = 4:2 / *:?
-SUBST:  ? = ....x11$$%%*|
-MAP
-xxxxxxx
-x?????x
-x?????x
-x?????x
-x?????x
-x?????x
-x11111x
-.......
- .....
-ENDMAP
-
-NAME:   minmay_lair_oklob_bushes_tiny
-TAGS:   luniq_oklob uniq_oklobbushes
-DEPTH:  Lair
-WEIGHT: 4
 MONS:   oklob plant, bush
+: local size = crawl.random2(10)
+: if size > 8 then
+SUBST:  `'" = .
+: elseif size > 6 then
+SUBST:  `' = .
+: elseif size > 3 then
+SUBST:  ` = .
+: end
+CLEAR:  `'"
 MAP
- ...
-.222.
-.212.
-.222.
- ...
-ENDMAP
-
-NAME:   minmay_lair_oklob_bushes_small
-TAGS:   luniq_oklob uniq_oklobbushes
-DEPTH:  Lair
-WEIGHT: 3
-MONS:   oklob plant, bush
-MAP
-  ...
- .....
-..222..
-..212..
-..222..
- .....
-  ...
-ENDMAP
-
-NAME:   minmay_lair_oklob_bushes_medium
-TAGS:   luniq_oklob uniq_oklobbushes
-DEPTH:  Lair
-WEIGHT: 2
-MONS:   oklob plant, bush
-MAP
-    ...
-  .......
- .........
- .........
-....222....
-....212....
-....222....
- .........
- .........
-  .......
-    ...
-ENDMAP
-
-NAME:   minmay_lair_oklob_bushes_large
-TAGS:   luniq_oklob uniq_oklobbushes
-DEPTH:  Lair
-WEIGHT: 1
-MONS:   oklob plant, bush
-MAP
-       ...
-    .........
-   ...........
-  .............
- ...............
- ...............
- ...............
-.......222.......
-.......212.......
-.......222.......
- ...............
- ...............
- ...............
-  .............
-   ...........
-    .........
-       ...
+       """
+    """""""""
+   """""""""""
+  """""'''"""""
+ """"'''''''""""
+ """'''```'''"""
+ """''`...`''"""
+"""''`.222.`''"""
+"""''`%212.`''"""
+"""''`.222.`''"""
+ """''`...`''"""
+ """'''```'''"""
+ """"'''''''""""
+  """""'''"""""
+   """""""""""
+    """""""""
+       """
 ENDMAP
 
 ##############################################################################
