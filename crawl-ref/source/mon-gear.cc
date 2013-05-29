@@ -1532,13 +1532,30 @@ static void _give_ammo(monster* mon, int level,
             }
             else if (mon->type == MONS_SPRIGGAN_ASSASSIN)
             {
-                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                  random_choose_weighted(4, SPMSL_PARALYSIS,
-                                                         3, SPMSL_SLEEP,
-                                                         2, SPMSL_CONFUSION,
-                                                         0));
-
-                mitm[thing_created].quantity = random_range(4, 10);
+                if (got_curare_roll(level))
+                {
+                    set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                      SPMSL_CURARE);
+                    mitm[thing_created].quantity = random_range(2, 8);
+                }
+                else
+                {
+                    if (one_chance_in(3))
+                    {
+                        set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                          random_choose_weighted(
+                                              4, SPMSL_SLEEP,
+                                              3, SPMSL_CONFUSION,
+                                              2, SPMSL_PARALYSIS,
+                                              0));
+                    }
+                    else
+                    {
+                        set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                          SPMSL_POISONED);
+                    }
+                    mitm[thing_created].quantity = random_range(4, 10);
+                }
             }
             else
             {
