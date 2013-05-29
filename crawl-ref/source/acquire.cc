@@ -1617,16 +1617,16 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {
-        OBJ_WEAPONS,    "Weapon",
-        OBJ_ARMOUR,     "Armour",
-        OBJ_JEWELLERY,  "Jewellery",
-        OBJ_BOOKS,      "Book",
-        OBJ_STAVES,     "Staff",
-        OBJ_WANDS,      "Wand",
-        OBJ_MISCELLANY, "Miscellaneous",
-        OBJ_FOOD,       0, // amended below
-        OBJ_GOLD,       "Gold",
-        OBJ_MISSILES,   "Ammunition",
+        { OBJ_WEAPONS,    "Weapon" },
+        { OBJ_ARMOUR,     "Armour" },
+        { OBJ_JEWELLERY,  "Jewellery" },
+        { OBJ_BOOKS,      "Book" },
+        { OBJ_STAVES,     "Staff" },
+        { OBJ_WANDS,      "Wand" },
+        { OBJ_MISCELLANY, "Miscellaneous" },
+        { OBJ_FOOD,       0 }, // amended below
+        { OBJ_GOLD,       "Gold" },
+        { OBJ_MISSILES,   "Ammunition" },
     };
     ASSERT(acq_classes[7].type == OBJ_FOOD);
     acq_classes[7].name = you.religion == GOD_FEDHAS ? "Fruit":
