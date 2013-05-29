@@ -410,6 +410,11 @@ void newgame_make_item(int slot, equipment_type eqslot,
         init_deck(item);
     }
 
+    if (item.base_type == OBJ_RODS)
+    {
+        init_rod_mp(item,4);
+    }
+
     // If the character is restricted in wearing armour of equipment
     // slot eqslot, hand out replacement instead.
     if (item.base_type == OBJ_ARMOUR && replacement != -1
@@ -947,21 +952,16 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Short sword, wands, and armour or robe.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        // Equipment. All kinds of gadgets, and armour or robe.
+        newgame_make_item(0, EQ_WEAPON, OBJ_RODS, ROD_BLASTING);
 
-        if (you.has_claws())
-            _newgame_clear_item(0);
-
-        newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
-                           -1, 1, 15, 0);
-        newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_ENSLAVEMENT,
-                           -1, 1, 15, 0);
+        newgame_make_item(1, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_ESCAPE);
+        newgame_make_item(2, EQ_NONE, OBJ_MISCELLANY, MISC_BOX_OF_BEASTS);
         newgame_make_item(3, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS,
                            -1, 1, 15, 0);
 
         newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                           ARM_LEATHER_ARMOUR, ARM_ROBE);
+                          ARM_LEATHER_ARMOUR, ARM_ROBE);
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
