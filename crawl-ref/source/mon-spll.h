@@ -1901,50 +1901,6 @@
       }
     },
 
-    {  MST_DRYAD,
-      {
-       SPELL_NO_SPELL,
-       SPELL_AWAKEN_FOREST,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
-      }
-    },
-
-    {  MST_FAUN,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_CAUSE_FEAR,
-       SPELL_NO_SPELL,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_SATYR,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_LEDAS_LIQUEFACTION,
-       SPELL_CAUSE_FEAR,
-       SPELL_NO_SPELL,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_PAN,
-      {
-       SPELL_NO_SPELL,
-       SPELL_MASS_CONFUSION,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_SLEEP,
-       SPELL_BLINK
-      }
-    },
-
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
@@ -2011,24 +1967,145 @@
       }
     },
 
-    {  MST_TENGU_CONJURER,
+    {  MST_DRYAD,
       {
-       SPELL_FORCE_LANCE,
-       SPELL_ISKENDERUNS_MYSTIC_BLAST,
-       SPELL_BATTLESPHERE,
-       SPELL_AIRSTRIKE,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST
+      }
+    },
+
+    {  MST_FAUN_I,
+      {
+       SPELL_CORONA,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_SLOW,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_FAUN_II,
+      {
+       SPELL_CORONA,
+       SPELL_CONFUSE,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_CONFUSE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_FAUN_III,
+      {
+       SPELL_CORONA,
+       SPELL_HIBERNATION,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_CAUSE_FEAR,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_SATYR,
+      {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
+       SPELL_LEDAS_LIQUEFACTION,
+       SPELL_CAUSE_FEAR,
        SPELL_NO_SPELL,
        SPELL_BLINK
       }
     },
 
-    {  MST_TENGU_REAVER,
+    {  MST_PAN,
       {
+       SPELL_NO_SPELL,
+       SPELL_MASS_CONFUSION,
+       SPELL_NO_SPELL,
+       SPELL_ENGLACIATION,
+       SPELL_SLEEP,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_I,
+      {
+       SPELL_FORCE_LANCE,
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
-       SPELL_BOLT_OF_COLD,
+       SPELL_BATTLESPHERE,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_II,
+      {
+       SPELL_THROW_FLAME,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_BATTLESPHERE,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_III,
+      {
+       SPELL_SHOCK,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_IV,
+      {
+       SPELL_MEPHITIC_CLOUD,
+       SPELL_VENOM_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_VENOM_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_REAVER_I,
+      {
+       SPELL_LIGHTNING_BOLT,
+       SPELL_NO_SPELL,
        SPELL_BATTLESPHERE,
        SPELL_FREEZING_CLOUD,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_REAVER_II,
+      {
+       SPELL_BOLT_OF_MAGMA,
        SPELL_NO_SPELL,
+       SPELL_BATTLESPHERE,
+       SPELL_FIREBALL,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_REAVER_III,
+      {
+       SPELL_VENOM_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_BATTLESPHERE,
+       SPELL_POISONOUS_CLOUD,
+       SPELL_BATTLESPHERE,
        SPELL_BLINK
       }
     },

@@ -2051,6 +2051,25 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[3] = MST_ANCIENT_CHAMPION_IV;
         break;
 
+    case MONS_FAUN:
+        book[0] = MST_FAUN_I;
+        book[1] = MST_FAUN_II;
+        book[2] = MST_FAUN_III;
+        break;
+
+    case MONS_TENGU_CONJURER:
+        book[0] = MST_TENGU_CONJURER_I;
+        book[1] = MST_TENGU_CONJURER_II;
+        book[2] = MST_TENGU_CONJURER_III;
+        book[3] = MST_TENGU_CONJURER_IV;
+        break;
+
+    case MONS_TENGU_REAVER:
+        book[0] = MST_TENGU_REAVER_I;
+        book[1] = MST_TENGU_REAVER_II;
+        book[2] = MST_TENGU_REAVER_III;
+        break;
+
     default:
         retval = false;
         break;
