@@ -34,6 +34,7 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "mon-iter.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -602,55 +603,73 @@ void skill_manual(int slot)
     you.turn_is_over = true;
 }
 
+static const pop_entry pop_beasts[] =
+{ // Box of Beasts
+  {  1,  3,  100, DOWN, MONS_BUTTERFLY },
+  {  1,  5,  100, DOWN, MONS_RAT   },
+  {  1,  5,  100, DOWN, MONS_BAT   },
+  {  2,  5,  100, PEAK, MONS_JACKAL },
+  {  2,  5,  100, PEAK, MONS_ADDER },
+  {  2,  6,  100, PEAK, MONS_HOUND },
+  {  3,  8,  100, PEAK, MONS_WATER_MOCCASIN },
+  {  5, 10,  100, PEAK, MONS_ICE_BEAST },
+  {  5, 12,  100, PEAK, MONS_WAR_DOG },
+  {  8, 15,  100, PEAK, MONS_CROCODILE },
+  {  9, 17,  100, PEAK, MONS_MANTICORE },
+  { 10, 18,  100, PEAK, MONS_HELL_HOUND },
+  { 13, 23,  100, PEAK, MONS_YAK },
+  { 15, 25,  100, PEAK, MONS_HYDRA },
+  { 18, 27,  100, UP,   MONS_ANACONDA },
+  { 22, 27,   50, UP,   MONS_HELL_BEAST },
+  { 22, 27,   50, UP,   MONS_SPHINX },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static bool _box_of_beasts_veto_mon(monster_type mon)
+{
+    // If you worship a good god, don't summon an unholy beast (in
+    // this case, the hell hound).
+    return player_will_anger_monster(mon);
+}
+
 static bool _box_of_beasts(item_def &box)
 {
     bool success = false;
 
     mpr("You open the lid...");
 
-    if (x_chance_in_y(60 + you.skill(SK_EVOCATIONS), 100))
+    if (box.plus)
     {
-        const monster_type beasts[] = {
-            MONS_BAT,       MONS_HOUND,     MONS_JACKAL,
-            MONS_RAT,       MONS_ICE_BEAST, MONS_ADDER,
-            MONS_YAK,       MONS_BUTTERFLY, MONS_WATER_MOCCASIN,
-            MONS_CROCODILE, MONS_HELL_HOUND
-        };
-
-        monster_type mon = MONS_NO_MONSTER;
-
-        // If you worship a good god, don't summon an unholy beast (in
-        // this case, the hell hound).
-        do
-            mon = RANDOM_ELEMENT(beasts);
-        while (player_will_anger_monster(mon));
-
-        const bool friendly = !x_chance_in_y(100,
-                                   you.skill(SK_EVOCATIONS, 100) + 500);
+        // Invoke mon-pick with our custom list
+        monster_type mon = pick_monster_from(pop_beasts,
+                                             you.skill(SK_EVOCATIONS),
+                                             _box_of_beasts_veto_mon);
 
         if (create_monster(
                 mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                          2 + random2(4), 0,
-                          you.pos(),
-                          MHITYOU)))
+                            BEH_FRIENDLY, &you,
+                            2 + random2(4), 0,
+                            you.pos(),
+                            MHITYOU)))
         {
             success = true;
 
             mpr("...and something leaps out!");
             xom_is_stimulated(10);
+            // Decrease charges
+            box.plus--;
+        }
+        else
+        {
+            // Failed to create monster for some reason
+            mpr("...but nothing happens.");
         }
     }
     else
     {
-        if (!one_chance_in(6))
-            mpr("...but nothing happens.");
-        else
-        {
-            mpr("...but the box appears empty, and falls apart.");
-            ASSERT(in_inventory(box));
-            dec_inv_item_quantity(box.link, 1);
-        }
+        mpr("...but the box appears empty, and falls apart.");
+        ASSERT(in_inventory(box));
+        dec_inv_item_quantity(box.link, 1);
     }
 
     return success;
