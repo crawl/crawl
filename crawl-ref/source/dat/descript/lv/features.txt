@@ -1,0 +1,61 @@
+%%%%
+A closed door
+
+Koka durvis. Lai atvērtu, vienkārši uzejiet tām virsū vai nospiediet 'o'.
+%%%%
+A dry fountain
+
+Izkaltusi strūklaka, kas piedzīvojusi labākas dienas.
+%%%%
+A gateway to Hell
+
+Šie vārti ved uz elles priekštelpu. Tikai retais tur dotos labprātīgi.
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+Šķiet, ka šī vieta izstarotu negatīvo enerģiju.
+%%%%
+A crystal clear mirror
+
+Vizuļojošs spogulis, kas atstaro visu, kas tam apkārt.
+%%%%
+A glistening fountain
+
+Vienīgais, kas tam trūkst, ir ūdens.
+%%%%
+A black marble wall
+
+Marmors mirdz un vizuļo. Tas neapšaubāmi ir skaists!
+%%%%
+A rose-covered archway
+
+Šīs rozes izskatās skaistas!
+%%%%
+A crumbling stone wall
+
+Tas izskatās sens,
+%%%%
+A carved rock wall
+
+Tas ir rotāts ar nāves un iznīcības attēliem.
+%%%%
+A dead tree
+
+Šis koks ir tikpat miris, cik viss pārējais te.
+%%%%
+A golden statue
+
+Gluda no zelta izgatavota svētā statuja.
+%%%%
+A silver wall
+
+Šī siena ir izgatavota no tīra sudraba.
+%%%%
+A sarcophagus
+
+Sens sarkofāgs. Tas izskatās tukšs.
+%%%%
+A sealed sarcophagus
+
+Šis senais sarkofāgs ir cieši noslēgts.
+%%%%

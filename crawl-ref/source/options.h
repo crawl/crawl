@@ -5,13 +5,13 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
-// Intended to be somewhat generic
-enum option_value {
-    OPT_AUTO = -1,
-    OPT_NO,
-    OPT_YES,
-    OPT_PROMPT,
-    OPT_BEFORE_EXPLORE
+enum autosac_type
+{
+    AS_NO,
+    AS_YES,
+    AS_PROMPT,
+    AS_BEFORE_EXPLORE,
+    AS_PROMPT_IGNORE,
 };
 
 struct message_filter
@@ -160,7 +160,7 @@ public:
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
 
-    uint32_t    autopickups;     // items to autopickup
+    FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
     bool        clean_map;       // remove unseen clouds/monsters
@@ -253,6 +253,7 @@ public:
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
+    int         rest_delay;     // How long to pause between rest moves
 
     bool        show_travel_trail;
 
@@ -262,8 +263,6 @@ public:
     bool        arena_list_eq;
 
     vector<message_filter> force_more_message;
-
-    int         stash_tracking; // How stashes are tracked
 
     int         tc_reachable;   // Colour for squares that are reachable
     int         tc_excluded;    // Colour for excluded squares.
@@ -315,7 +314,7 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    option_value auto_sacrifice;
+    autosac_type auto_sacrifice;
 
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;
@@ -346,12 +345,13 @@ public:
     bool        easy_exit_menu;     // Menus are easier to get out of
 
     int         assign_item_slot;   // How free slots are assigned
+    maybe_bool  show_god_gift;      // Show {god gift} in item names
 
     bool        restart_after_game; // If true, Crawl will not close on game-end
 
     vector<text_pattern> drop_filter;
 
-    FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;
+    FixedVector<FixedBitVector<NUM_AINTERRUPTS>, NUM_DELAYS> activity_interrupts;
 #ifdef DEBUG_DIAGNOSTICS
     FixedBitVector<NUM_DIAGNOSTICS> quiet_debug_messages;
 #endif
@@ -438,6 +438,7 @@ public:
     int         tile_map_pixels;
     int         tile_cell_pixels;
     bool        tile_filter_scaling;
+    maybe_bool  tile_use_small_layout;
 #endif
 
 #ifdef USE_TILE
@@ -495,8 +496,7 @@ private:
     message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
-    void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints);
-    void set_activity_interrupt(FixedVector<bool, NUM_AINTERRUPTS> &eints,
+    void set_activity_interrupt(FixedBitVector<NUM_AINTERRUPTS> &eints,
                                 const string &interrupt);
     void set_activity_interrupt(const string &activity_name,
                                 const string &interrupt_names,

@@ -198,6 +198,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_ABYSS:
         case DNGN_EXIT_THROUGH_ABYSS:
         case DNGN_EXIT_ABYSS:
+        case DNGN_ABYSSAL_STAIR:
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_TRANSIT_PANDEMONIUM:
@@ -242,6 +243,8 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
+        // Not a > glyph, but it goes deeper into the abyss.
+        case DNGN_ABYSSAL_STAIR:
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
@@ -894,8 +897,7 @@ bool show_map(level_pos &lpos,
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
-                                                    KMC_LEVELMAP,
-                                                    false, false);
+                                                    KMC_LEVELMAP);
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #endif
             if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)

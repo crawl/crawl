@@ -71,15 +71,6 @@ void player::moveto(const coord_def &c, bool clear_net)
     set_position(c);
 
     clear_far_constrictions();
-
-    if (you.duration[DUR_QUAD_DAMAGE])
-        invalidate_agrid(true);
-
-    if (player_has_orb())
-    {
-        env.orb_pos = c;
-        invalidate_agrid(true);
-    }
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)
@@ -110,6 +101,16 @@ void player::set_position(const coord_def &c)
     if (real_move)
     {
         reset_prev_move();
+
+        if (you.duration[DUR_QUAD_DAMAGE])
+            invalidate_agrid(true);
+
+        if (player_has_orb())
+        {
+            env.orb_pos = c;
+            invalidate_agrid(true);
+        }
+
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
     }
 }
@@ -253,19 +254,24 @@ brand_type player::damage_brand(int)
                 ret = SPWPN_VAMPIRICISM;
             break;
 
+        case TRAN_JELLY:
+            ret = SPWPN_ACID;
+            break;
+
         default:
             break;
         }
     }
 
-    return (static_cast<brand_type>(ret));
+    return ret;
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
 // eq must be in [EQ_WEAPON, EQ_RING_EIGHT], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
+    ASSERT(eq >= EQ_WEAPON);
+    ASSERT(eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -395,12 +401,18 @@ string player::hand_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_BAT || form == TRAN_DRAGON)
         str = "foreclaw";
-    else if (form == TRAN_PIG || form == TRAN_SPIDER)
+    else if (form == TRAN_PIG || form == TRAN_SPIDER || form == TRAN_PORCUPINE)
         str = "front leg";
     else if (form == TRAN_ICE_BEAST)
         str = "paw";
     else if (form == TRAN_BLADE_HANDS)
         str = "scythe-like blade";
+    else if (form == TRAN_TREE)
+        str = "branch";
+    else if (form == TRAN_WISP)
+        str = "misty tendril";
+    else if (form == TRAN_JELLY)
+        str = "bump"; // not even pseudopods...
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || !form_changed_physiology())
     {
@@ -432,6 +444,12 @@ string player::foot_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_SPIDER)
         str = "hind leg";
+    else if (form == TRAN_TREE)
+        str = "root";
+    else if (form == TRAN_WISP)
+        str = "strand";
+    else if (form == TRAN_JELLY)
+        str = "underside", *can_plural = false;
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || !form_changed_physiology())
     {
@@ -535,7 +553,11 @@ string player::unarmed_attack_name() const
         break;
     case TRAN_BAT:
     case TRAN_PIG:
+    case TRAN_PORCUPINE:
         text = "Teeth";
+        break;
+    case TRAN_TREE:
+        text = "Branches";
         break;
     case TRAN_NONE:
     case TRAN_APPENDAGE:
@@ -573,12 +595,18 @@ void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (other && other->is_monster())
+    if (!other)
+        return;
+
+    if (other->is_monster())
     {
         const monster* mon = other->as_monster();
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
+
+    if (mons_is_firewood((monster*) other))
+        return;
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
     if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))

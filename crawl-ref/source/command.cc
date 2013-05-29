@@ -21,7 +21,6 @@
 #include "cio.h"
 #include "colour.h"
 #include "database.h"
-#include "debug.h"
 #include "decks.h"
 #include "describe.h"
 #include "directn.h"
@@ -104,11 +103,7 @@ static const char *features[] = {
 
 static string _get_version_information(void)
 {
-    string result  = "This is <w>" CRAWL " " + Version::Long() + "</w>";
-
-    result += "\n";
-
-    return result;
+    return string("This is <w>" CRAWL " ") + Version::Long + "</w>\n";
 }
 
 static string _get_version_features(void)
@@ -157,7 +152,7 @@ static string _get_version_changes(void)
         if (help.find("Stone Soup ") == 0)
         {
             // Stop if this is for an older major version; otherwise, highlight
-            if (help.find("Stone Soup "+Version::Major()) == string::npos)
+            if (help.find(string("Stone Soup ")+Version::Major) == string::npos)
                 break;
             else
                 goto highlight;
@@ -1639,14 +1634,9 @@ static void _find_description(bool *again, string *error_inout)
                 continue;
 
             monster_type base_type = MONS_NO_MONSTER;
+            // HACK: Set an arbitrary humanoid monster as base type.
             if (mons_class_is_zombified(m_type))
-            {
-                // HACK: Set an arbitrary humanoid monster as base type.
-                if (zombie_class_size(m_type) == Z_BIG)
-                    base_type = MONS_HILL_GIANT;
-                else
-                    base_type = MONS_GOBLIN;
-            }
+                base_type = MONS_GOBLIN;
             monster_info fake_mon(m_type, base_type);
             fake_mon.props["fake"] = true;
 
@@ -2237,6 +2227,12 @@ static void _add_formatted_keyhelp(column_composer &cols)
 #ifdef USE_TILE_LOCAL
     _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
 #else
+#ifdef USE_TILE_WEB
+    if (tiles.is_controlled_from_web())
+        cols.add_formatted(0, "<w>F12</w> : read messages (online play only)",
+                           false);
+    else
+#endif
     _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);
 #endif
 
@@ -2295,6 +2291,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");
+    _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
+    cols.add_formatted(1, "         slowest ally\n",
+                           false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -2581,6 +2580,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>@</w>      : set Str Int Dex\n"
                        "<w>#</w>      : load character from a dump file\n"
                        "<w>Z</w>      : gain lots of Zot Points\n"
+                       "<w>&</w>      : list all divine followers\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
                        "<w>L</w>      : place a vault by name\n"
@@ -2655,6 +2655,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>O</w>      : measure exploration time\n"
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
                        "<w>Ctrl-X</w> : Xom effect stats\n"
+#ifdef DEBUG_DIAGNOSTICS
+                       "<w>Ctrl-Q</w> : make some debug messages quiet\n"
+#endif
                        "\n"
                        "<yellow>Other wizard commands</yellow>\n"
                        "(not prefixed with <w>&</w>!)\n"

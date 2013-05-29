@@ -11,6 +11,8 @@ module "colour"
 
 #include "AppHdr.h"
 
+#include "l_libs.h"
+
 #include "cluautil.h"
 #include "colour.h"
 #include "dlua.h"

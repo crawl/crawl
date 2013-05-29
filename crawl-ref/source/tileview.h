@@ -45,7 +45,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
 // Tile view related
 void tile_draw_floor();
-void tile_clear_monster(const coord_def &gc);
+void tile_reset_fg(const coord_def &gc);
 void tile_reset_feat(const coord_def &gc);
 void tile_place_ray(const coord_def &gc, aff_type in_range);
 void tile_draw_rays(bool reset_count);

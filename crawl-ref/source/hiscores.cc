@@ -8,16 +8,6 @@
  *   Do this at your leisure.  Change hiscores_format_single() as much
  * as you like.
  *
- *
- * ----------- IF YOU MODIFY THE INTERNAL SCOREFILE FORMAT ------------
- *              .. as defined by the struct 'scorefile_entry' ..
- *   You MUST change hs_copy(),  hs_parse_numeric(),  hs_parse_string(),
- *       and hs_write().  It's also a really good idea to change the
- *       version numbers assigned in ouch() so that Crawl can tell the
- *       difference between your new entry and previous versions.
- *
- *
- *
  */
 
 #include "AppHdr.h"
@@ -97,6 +87,8 @@ static string _score_file_name()
         ret = Options.shared_dir + "scores";
 
     ret += crawl_state.game_type_qualifier();
+    if (crawl_state.game_is_sprint() && crawl_state.map != "")
+        ret += "-" + crawl_state.map;
 
     return ret;
 }
@@ -418,6 +410,7 @@ static void _show_morgue(scorefile_entry& se)
 
 void show_hiscore_table()
 {
+    unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
     const int max_line   = get_number_of_lines() - 1;
     const int max_col    = get_number_of_cols() - 1;
 
@@ -638,6 +631,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
+    "mirror_damage",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -717,6 +711,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     branch            = se.branch;
     map               = se.map;
     mapdesc           = se.mapdesc;
+    killer_map        = se.killer_map;
     final_hp          = se.final_hp;
     final_max_hp      = se.final_max_hp;
     final_max_max_hp  = se.final_max_max_hp;
@@ -726,6 +721,9 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     str               = se.str;
     intel             = se.intel;
     dex               = se.dex;
+    ac                = se.ac;
+    ev                = se.ev;
+    sh                = se.sh;
     god               = se.god;
     piety             = se.piety;
     penance           = se.penance;
@@ -734,6 +732,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     death_time        = se.death_time;
     real_time         = se.real_time;
     num_turns         = se.num_turns;
+    num_aut           = se.num_aut;
     num_diff_runes    = se.num_diff_runes;
     num_runes         = se.num_runes;
     kills             = se.kills;
@@ -817,6 +816,7 @@ enum old_job_type
     OLD_JOB_PALADIN      = -3,
     OLD_JOB_REAVER       = -4,
     OLD_JOB_STALKER      = -5,
+    OLD_JOB_JESTER       = -6,
     NUM_OLD_JOBS
 };
 
@@ -837,6 +837,8 @@ static const char* _job_name(int job)
         return "Reaver";
     case OLD_JOB_STALKER:
         return "Stalker";
+    case OLD_JOB_JESTER:
+        return "Jester";
     default:
         return "unknown";
     }
@@ -859,6 +861,8 @@ static const char* _job_abbrev(int job)
         return "Re";
     case OLD_JOB_STALKER:
         return "St";
+    case OLD_JOB_JESTER:
+        return "Jr";
     default:
         return "??";
     }
@@ -907,6 +911,7 @@ void scorefile_entry::init_with_fields()
 
     map        = fields->str_field("map");
     mapdesc    = fields->str_field("mapdesc");
+    killer_map = fields->str_field("killermap");
 
     final_hp         = fields->int_field("hp");
     final_max_hp     = fields->int_field("mhp");
@@ -920,6 +925,10 @@ void scorefile_entry::init_with_fields()
     intel = fields->int_field("int");
     dex   = fields->int_field("dex");
 
+    ac    = fields->int_field("ac");
+    ev    = fields->int_field("ev");
+    sh    = fields->int_field("sh");
+
     god      = str_to_god(fields->str_field("god"));
     piety    = fields->int_field("piety");
     penance  = fields->int_field("pen");
@@ -929,6 +938,7 @@ void scorefile_entry::init_with_fields()
     death_time = _parse_time(fields->str_field("end"));
     real_time  = fields->int_field("dur");
     num_turns  = fields->int_field("turn");
+    num_aut    = fields->int_field("aut");
 
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
@@ -961,7 +971,7 @@ void scorefile_entry::set_base_xlog_fields() const
     }
     else if (crawl_state.game_is_zotdef())
         score_version += "-zotdef.1";
-    fields->add_field("v", "%s", Version::Short().c_str());
+    fields->add_field("v", "%s", Version::Short);
     fields->add_field("lv", "%s", score_version.c_str());
     if (tiles)
         fields->add_field("tiles", "%d", tiles);
@@ -992,13 +1002,12 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("str", "%d", str);
     fields->add_field("int", "%d", intel);
     fields->add_field("dex", "%d", dex);
+    fields->add_field("ac", "%d", ac);
+    fields->add_field("ev", "%d", ev);
+    fields->add_field("sh", "%d", sh);
 
-    // Don't write No God to save some space.
-    if (god != -1)
-    {
-        fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
-                          god_name(god).c_str());
-    }
+    fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
+                      god_name(god).c_str());
 
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);
@@ -1006,6 +1015,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
     fields->add_field("dur",   "%d", (int)real_time);
     fields->add_field("turn",  "%d", num_turns);
+    fields->add_field("aut",   "%d", num_aut);
 
     if (num_diff_runes)
         fields->add_field("urune", "%d", num_diff_runes);
@@ -1070,6 +1080,9 @@ void scorefile_entry::set_score_fields() const
             fields->add_field("mapdesc", "%s", mapdesc.c_str());
     }
 
+    if (!killer_map.empty())
+        fields->add_field("killermap", "%s", killer_map.c_str());
+
 #ifdef DGL_EXTENDED_LOGFILES
     const string short_msg = short_kill_message();
     fields->add_field("tmsg", "%s", short_msg.c_str());
@@ -1120,6 +1133,11 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     death_type   = dtype;
     damage       = dam;
 
+    const monster *source_monster =
+        !invalid_monster_index(death_source) ? &menv[death_source] : NULL;
+    if (source_monster)
+        killer_map = source_monster->originating_map();
+
     // Save this here. We don't want to completely remove the status, as that
     // would look odd in the "screenshot", but having DUR_MISLED as a non-zero
     // value at his point in time will generate such odities as "killed by a
@@ -1134,7 +1152,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         auxkilldata = aux;
 
     if (!invalid_monster_index(death_source)
-        && !env.mons[death_source].alive())
+        && !env.mons[death_source].alive()
+        && auxkilldata != "exploding inner flame")
     {
         death_source = NON_MONSTER;
     }
@@ -1143,13 +1162,16 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
             || death_type == KILLED_BY_DISINT
+            || death_type == KILLED_BY_ACID
+            || death_type == KILLED_BY_DRAINING
+            || death_type == KILLED_BY_BURNING
             || death_type == KILLED_BY_SPORE
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_ROLLING)
         && !invalid_monster_index(death_source)
-        && menv[death_source].type != -1)
+        && menv[death_source].type != MONS_NO_MONSTER)
     {
         const monster* mons = &menv[death_source];
 
@@ -1251,6 +1273,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         death_source_name = you.props["poisoner"].get_string();
         auxkilldata = you.props["poison_aux"].get_string();
     }
+
+    if (death_type == KILLED_BY_BURNING)
+    {
+        death_source_name = you.props["napalmer"].get_string();
+        auxkilldata = you.props["napalm_aux"].get_string();
+    }
 }
 
 void scorefile_entry::reset()
@@ -1283,6 +1311,9 @@ void scorefile_entry::reset()
     str                  = -1;
     intel                = -1;
     dex                  = -1;
+    ac                   = -1;
+    ev                   = -1;
+    sh                   = -1;
     damage               = -1;
     source_damage        = -1;
     turn_damage          = -1;
@@ -1294,6 +1325,7 @@ void scorefile_entry::reset()
     death_time           = 0;
     real_time            = -1;
     num_turns            = -1;
+    num_aut              = -1;
     num_diff_runes       = 0;
     num_runes            = 0;
     kills                = 0;
@@ -1349,7 +1381,7 @@ void scorefile_entry::init(time_t dt)
     // 4.1      - added real_time and num_turn fields
     // 4.2      - stats and god info
 
-    version = Version::Short();
+    version = Version::Short;
 #ifdef USE_TILE_LOCAL
     tiles   = 1;
 #elif defined (USE_TILE_WEB)
@@ -1383,28 +1415,42 @@ void scorefile_entry::init(time_t dt)
      */
 
     // do points first.
-    uint64_t pt = min(you.gold, 1000000); // sprint games could overflow a 32 bit value
-    pt += _award_modified_experience();
+    points = 0;
+    bool base_score = true;
 
-    num_runes      = runes_in_pack();
-    num_diff_runes = num_runes;
+    dlua.pushglobal("dgn.persist.calc_score");
+    lua_pushboolean(dlua, death_type == KILLED_BY_WINNING);
+    if (dlua.callfn(NULL, 1, 2))
+        dlua.fnreturns(">db", &points, &base_score);
 
-    // There's no point in rewarding lugging artefacts.  Thus, no points
-    // for the value of the inventory. -- 1KB
-    if (death_type == KILLED_BY_WINNING)
+    // If calc_score didn't exist, or returned true as its second value,
+    // use the default formula.
+    if (base_score)
     {
-        pt += 250000; // the Orb
-        pt += num_runes * 2000 + 4000;
-        pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
-            / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
-    }
-    pt += num_runes * 10000;
-    pt += num_runes * (num_runes + 2) * 1000;
+        // sprint games could overflow a 32 bit value
+        uint64_t pt = points + min(you.gold, 1000000);
+        pt += _award_modified_experience();
 
-    // Players will have a hard time getting 1/10 of this (see XP cap):
-    if (pt > 99999999)
-        pt = 99999999;
-    points = pt;
+        num_runes      = runes_in_pack();
+        num_diff_runes = num_runes;
+
+        // There's no point in rewarding lugging artefacts.  Thus, no points
+        // for the value of the inventory. -- 1KB
+        if (death_type == KILLED_BY_WINNING)
+        {
+            pt += 250000; // the Orb
+            pt += num_runes * 2000 + 4000;
+            pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
+                / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
+        }
+        pt += num_runes * 10000;
+        pt += num_runes * (num_runes + 2) * 1000;
+
+        // Players will have a hard time getting 1/10 of this (see XP cap):
+        if (pt > 99999999)
+            pt = 99999999;
+        points = pt;
+    }
 
     race = you.species;
     job  = you.char_class;
@@ -1436,15 +1482,24 @@ void scorefile_entry::init(time_t dt)
 
     // Note active status effects.
     const int statuses[] = {
-        DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
-        STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR, STATUS_BURDEN,
-        STATUS_MISSILES, DUR_JELLY_PRAYER,
-        STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONESKIN, DUR_TELEPORT,
-        DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE, DUR_INVIS, DUR_CONF,
-        DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK, STATUS_AIRBORNE,
-        DUR_POISONING, STATUS_NET, STATUS_SPEED, DUR_AFRAID, DUR_MIRROR_DAMAGE,
-        DUR_SCRYING, STATUS_FIREBALL, DUR_SHROUD_OF_GOLUBRIA,
-        STATUS_CONSTRICTED, STATUS_AUGMENTED, STATUS_SILENCE, DUR_DISJUNCTION,
+        DUR_AGILITY, DUR_BERSERK, DUR_BRILLIANCE, DUR_CONF,
+        DUR_CONFUSING_TOUCH, DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL,
+        DUR_DIVINE_STAMINA, DUR_DIVINE_VIGOUR, DUR_EXHAUSTED,
+        DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_LIQUID_FLAMES,
+        DUR_LOWERED_MR, DUR_MAGIC_SHIELD, DUR_MIGHT, DUR_MISLED,
+        DUR_PARALYSIS, DUR_PETRIFIED, DUR_PETRIFYING, DUR_RESISTANCE,
+        DUR_SLAYING, DUR_SLIMIFY, DUR_SLEEP, DUR_STONESKIN, DUR_SWIFTNESS,
+        DUR_TELEPATHY, DUR_TELEPORT, DUR_DEATHS_DOOR, DUR_PHASE_SHIFT,
+        DUR_QUAD_DAMAGE, DUR_SILENCE, DUR_STEALTH, DUR_AFRAID,
+        DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO, DUR_LIQUEFYING,
+        DUR_HEROISM, DUR_FINESSE, DUR_LIFESAVING, DUR_DARKNESS,
+        DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION, DUR_SENTINEL_MARK,
+        STATUS_AIRBORNE, STATUS_BEHELD, STATUS_BURDEN, STATUS_CONTAMINATION,
+        STATUS_BACKLIT, STATUS_UMBRA, STATUS_SUPPRESSED, STATUS_NET,
+        STATUS_HUNGER, STATUS_REGENERATION, STATUS_SICK, STATUS_SPEED,
+        DUR_INVIS, DUR_POISONING, STATUS_MISSILES, DUR_SURE_BLADE,
+        DUR_TRANSFORMATION, STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
+        DUR_WEAK, DUR_DIMENSION_ANCHOR
     };
 
     status_info inf;
@@ -1473,6 +1528,10 @@ void scorefile_entry::init(time_t dt)
     intel = you.stat(STAT_INT, false);
     dex   = you.stat(STAT_DEX, false);
 
+    ac    = you.armour_class();
+    ev    = player_evasion();
+    sh    = player_shield_class();
+
     god = you.religion;
     if (you.religion != GOD_NO_GOD)
     {
@@ -1487,7 +1546,7 @@ void scorefile_entry::init(time_t dt)
 
     if (const vault_placement *vp = dgn_vault_at(you.pos()))
     {
-        map     = vp->map.name;
+        map     = vp->map_name_at(you.pos());
         mapdesc = vp->map.description;
     }
 
@@ -1498,6 +1557,7 @@ void scorefile_entry::init(time_t dt)
     real_time = you.real_time;
 
     num_turns = you.num_turns;
+    num_aut = you.elapsed_time;
 
     gold       = you.gold;
     gold_found = you.attribute[ATTR_GOLD_FOUND];
@@ -1686,7 +1746,8 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
                   points, name.c_str(),
                   skill_title(best_skill, best_skill_lvl,
-                               race, str, dex, god).c_str(), lvl);
+                               race, str, dex, god, piety).c_str(),
+                  lvl);
         desc = buf;
     }
     else
@@ -1732,7 +1793,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
-        if (race != SP_DEMIGOD && god != -1)
+        if (race != SP_DEMIGOD && god != GOD_NO_GOD)
         {
             if (god == GOD_XOM)
             {
@@ -1742,7 +1803,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                 desc += scratch;
                 desc += _hiscore_newline_string();
             }
-            else if (god != GOD_NO_GOD)
+            else
             {
                 // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
@@ -2045,7 +2106,21 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_DRAINING:
-        desc += terse? "drained" : "Was drained of all life";
+        if (terse)
+            desc += "drained";
+        else
+        {
+            desc += "Drained of all life";
+            if (!death_source_desc().empty())
+            {
+                desc += " by " + death_source_desc();
+
+                if (!auxkilldata.empty())
+                    needs_beam_cause_line = true;
+            }
+            else if (!auxkilldata.empty())
+                desc += " by " + auxkilldata;
+        }
         break;
 
     case KILLED_BY_STARVATION:
@@ -2058,7 +2133,18 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_BURNING:     // sticky flame
-        desc += terse? "burnt" : "Burnt to a crisp";
+        if (terse)
+            desc += "burnt";
+        else if (!death_source_desc().empty())
+        {
+            desc += "Incinerated by " + death_source_desc();
+
+            if (!auxkilldata.empty())
+                needs_beam_cause_line = true;
+        }
+        else
+            desc += "Burnt to a crisp";
+
         needs_damage = true;
         break;
 
@@ -2087,7 +2173,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "xom";
         else
             desc += auxkilldata.empty() ? "Killed for Xom's enjoyment"
-                                        : auxkilldata;
+                                        : "Killed by " + auxkilldata;
         needs_damage = true;
         break;
 
@@ -2100,7 +2186,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_TARGETTING:
-        desc += terse? "shot self" : "Killed themself with bad targetting";
+        if (terse)
+            desc += "shot self";
+        else
+        {
+            desc += "Killed themself with ";
+            if (auxkilldata.empty())
+                desc += "bad targetting";
+            else
+                desc += "a badly aimed " + auxkilldata;
+        }
         needs_damage = true;
         break;
 
@@ -2207,7 +2302,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_ACID:
-        desc += terse? "acid" : "Splashed by acid";
+        if (terse)
+            desc += "acid";
+        else if (!death_source_desc().empty())
+        {
+            desc += "Splashed by "
+                    + apostrophise(death_source_desc())
+                    + " acid";
+        }
+        else
+            desc += "Splashed with acid";
         needs_damage = true;
         break;
 
@@ -2236,6 +2340,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             needs_beam_cause_line = true;
         }
 
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_MIRROR_DAMAGE:
+        desc += terse ? "mirror damage" : "Killed by mirror damage";
         needs_damage = true;
         break;
 
@@ -2588,8 +2697,8 @@ void mark_milestone(const string &type, const string &milestone,
             && lasttype == type
             && lastmilestone == milestone)
 #ifndef SCORE_WIZARD_CHARACTERS
-        // Don't mark milestones in wizmode
-        || you.wizard
+        // Don't mark normal milestones in wizmode
+        || you.wizard && type != "crash"
 #endif
         )
     {

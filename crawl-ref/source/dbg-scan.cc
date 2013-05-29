@@ -71,8 +71,7 @@ void debug_item_scan(void)
     int   i;
     char  name[256];
 
-    FixedVector<bool, MAX_ITEMS> visited;
-    visited.init(false);
+    FixedBitVector<MAX_ITEMS> visited;
 
     // First we're going to check all the stacks on the level:
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -124,7 +123,7 @@ void debug_item_scan(void)
                      "Potential INFINITE STACK at (%d, %d)", ri->x, ri->y);
                 break;
             }
-            visited[obj] = true;
+            visited.set(obj);
         }
     }
 
@@ -197,13 +196,8 @@ void debug_item_scan(void)
                         || !is_artefact(mitm[i])
                            && mitm[i].special >= NUM_SPECIAL_WEAPONS))
 
-                 || (mitm[i].base_type == OBJ_MISSILES
-                     && (abs(mitm[i].plus) > 25
-                         || !is_artefact(mitm[i])
-                            && mitm[i].special >= NUM_SPECIAL_MISSILES))
-
                  || (mitm[i].base_type == OBJ_ARMOUR
-                     && (abs(mitm[i].plus) > 25
+                     && (abs(mitm[i].plus) > 30
                          || !is_artefact(mitm[i])
                             && mitm[i].special >= NUM_SPECIAL_ARMOURS)))
         {
@@ -372,7 +366,7 @@ void debug_mons_scan()
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
                          pos.x, pos.y, full.c_str(), j);
                 }
-                else if (m2->type != -1)
+                else if (m2->type != MONS_NO_MONSTER)
                 {
                     mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s,"
                                      "midx = %d",
@@ -452,7 +446,19 @@ void debug_mons_scan()
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
 
-        ASSERT(monster_by_mid(m->mid) == m);
+        monster* m1 = monster_by_mid(m->mid);
+        if (m1 != m)
+        {
+            if (m1 && m1->mid == m->mid)
+            {
+                mprf(MSGCH_ERROR,
+                     "Error: monster %s(%d) has same mid as %s(%d) (%d)",
+                     m->name(DESC_PLAIN, true).c_str(), m->mindex(),
+                     m1->name(DESC_PLAIN, true).c_str(), m1->mindex(), m->mid);
+            }
+            else
+                ASSERT(monster_by_mid(m->mid) == m);
+        }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
     for (map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
@@ -549,8 +555,6 @@ void debug_mons_scan()
 }
 #endif
 
-// These are nearly completely redundant, and should be useless, except for
-// some recent Abyss breakage.
 void check_map_validity()
 {
 #ifdef ASSERTS
@@ -568,8 +572,8 @@ void check_map_validity()
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
-        ASSERT(feat > DNGN_UNSEEN);
-        ASSERT(feat < NUM_FEATURES);
+        if (feat <= DNGN_UNSEEN || feat >= NUM_FEATURES)
+            die("invalid feature %d at (%d,%d)", feat, ri->x, ri->y);
         const char *name = dungeon_feature_name(feat);
         ASSERT(name);
         ASSERT(*name); // placeholders get empty names
@@ -577,7 +581,10 @@ void check_map_validity()
         find_trap(*ri); // this has all needed asserts already
 
         if (shop_struct *shop = get_shop(*ri))
-            ASSERT(shop->type >= 0 && shop->type < NUM_SHOPS);
+        {
+            ASSERT(shop->type >= 0);
+            ASSERT(shop->type < NUM_SHOPS);
+        }
 
         // border must be impassable
         if (!in_bounds(*ri))

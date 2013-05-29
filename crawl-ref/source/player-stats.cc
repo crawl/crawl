@@ -159,7 +159,7 @@ void jiyva_stat_action()
     int current_capacity = carrying_capacity(BS_UNENCUMBERED);
     int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 207)/208;
     int evp = you.unadjusted_body_armour_penalty();
-    target_stat[0] = max(max(9, 2 + 3 * evp), 2 + carrying_strength);
+    target_stat[0] = max(max(9, evp), 2 + carrying_strength);
     target_stat[1] = 9;
     target_stat[2] = 9;
     int remaining = stat_total - 18 - target_stat[0];
@@ -186,12 +186,12 @@ void jiyva_stat_action()
         }
         // If you are in really heavy armour, then you already are getting a
         // lot of Str and more won't help much, so weight magic more.
-        other_weights = max(other_weights - (evp >= 5 ? 4 : 1) * magic_weights/2, 0);
+        other_weights = max(other_weights - (evp >= 15 ? 4 : 1) * magic_weights/2, 0);
         magic_weights = div_rand_round(remaining * magic_weights, magic_weights + other_weights);
         other_weights = remaining - magic_weights;
         target_stat[1] += magic_weights;
         // Choose Str or Dex based on how heavy your armour is.
-        target_stat[(evp >= 5) ? 0 : 2] += other_weights;
+        target_stat[(evp >= 15) ? 0 : 2] += other_weights;
     }
     // Add a little fuzz to the target.
     for (int x = 0; x < 3; ++x)
@@ -635,7 +635,8 @@ static void _normalize_stat(stat_type stat)
 
 static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
 {
-    ASSERT(stat >= 0 && stat < NUM_STATS);
+    ASSERT(stat >= 0);
+    ASSERT(stat < NUM_STATS);
 
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {

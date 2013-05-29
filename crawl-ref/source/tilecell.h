@@ -21,6 +21,7 @@ struct packed_cell
     tileidx_t fg;
     tileidx_t bg;
     tile_flavour flv;
+    tileidx_t cloud;
 
     bool is_bloody;
     bool is_silenced;
@@ -36,13 +37,13 @@ struct packed_cell
     bool old_blood;
     uint8_t travel_trail;
     bool quad_glow;
-    bool disjunct;
+    uint8_t disjunct;
     uint8_t heat_aura;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
 
-    packed_cell() : num_dngn_overlay(0), fg(0), bg(0), is_bloody(false),
+    packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0), is_bloody(false),
                     is_silenced(false), is_suppressed(false), halo(HALO_NONE),
                     is_moldy(false), glowing_mold(false), is_sanctuary(false),
                     is_liquefied(false), mangrove_water(false), orb_glow(0),
@@ -51,6 +52,7 @@ struct packed_cell
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
+                                        cloud(c->cloud),
                                         is_bloody(c->is_bloody),
                                         is_silenced(c->is_silenced),
                                         is_suppressed(c->is_suppressed),

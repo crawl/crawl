@@ -105,6 +105,12 @@ public:
     GotoRegion get_cursor_region() const;
     int get_number_of_lines();
     int get_number_of_cols();
+    bool is_using_small_layout();
+    void zoom_dungeon(bool in);
+    bool zoom_to_minimap();
+    bool zoom_from_minimap();
+
+    void deactivate_tab();
 
     void update_minimap(const coord_def &gc);
     void clear_minimap();
@@ -163,32 +169,14 @@ protected:
     bool m_fullscreen;
     bool m_need_redraw;
 
-    enum TabID
-    {
-#ifdef TOUCH_UI
-        TAB_COMMAND,
-        TAB_ITEM,
-        TAB_NAVIGATION,
-        TAB_COMMAND2,
-        TAB_MONSTER,
-        TAB_SPELL,
-        TAB_ABILITY,
-        TAB_SKILL,
-        TAB_MEMORISE,
-        TAB_MAX,
-#else
-        TAB_ITEM,
-        TAB_SPELL,
-        TAB_MEMORISE,
-        TAB_ABILITY,
-        TAB_MONSTER,
-        TAB_SKILL,
-        TAB_COMMAND,
-        TAB_COMMAND2,
-        TAB_NAVIGATION,
-        TAB_MAX,
-#endif
-    };
+    int TAB_ABILITY;
+    int TAB_COMMAND;
+    int TAB_COMMAND2;
+    int TAB_ITEM;
+    int TAB_MONSTER;
+    int TAB_NAVIGATION;
+    int TAB_SKILL;
+    int TAB_SPELL;
 
     enum LayerID
     {

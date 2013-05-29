@@ -5,10 +5,11 @@
 // first  boolean = is mutation mostly bad?
 // second boolean = is mutation physical, i.e. external only?
 // third  boolean = is mutation suppressed when shapechanged?
-// first  strings = what to show in 'A'
-// second strings = message given when gaining the mutation
-// third  strings = message given when losing the mutation
-// fourth string  = wizard-mode name of mutation
+// first  string  = what to show in '%'
+// second strings = what to show in 'A'
+// third  strings = message given when gaining the mutation
+// fourth strings = message given when losing the mutation
+// fifth  string  = wizard-mode name of mutation
 
 #ifndef MUTATION_DATA_H
 #define MUTATION_DATA_H
@@ -267,7 +268,8 @@
   "clumsy"
 },
 
-{ MUT_TELEPORT_CONTROL,               2,  1, false, false, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_TELEPORT_CONTROL,               0,  1, false, false, false,
   "teleport control",
 
   {"You can control translocations.", "", ""},
@@ -276,6 +278,7 @@
 
   "teleport control"
 },
+#endif
 
 { MUT_TELEPORT,                       3,  3,  true, false, false,
   "teleportitis",
@@ -1067,9 +1070,9 @@
 { MUT_POWERED_BY_PAIN,                0,  3, false, false, false,
   "powered by pain",
 
-  {"You sometimes regain a little magical energy from taking damage.",
-   "You sometimes regain magical energy from taking damage.",
-   "You sometimes regain a lot of magical energy from taking damage."},
+  {"You sometimes gain a little power by taking damage.",
+   "You sometimes gain power by taking damage.",
+   "You are powered by pain."},
 
   {"You feel energised by your suffering.",
    "You feel even more energised by your suffering.",
@@ -1094,6 +1097,36 @@
   {"", "", ""},
 
   "augmentation"
+},
+
+{ MUT_MANA_SHIELD,                    0,  1, false, false, false,
+  "magic shield",
+
+  {"When hurt, damage is shared between your health and your magic reserves.", "", ""},
+  {"You feel your magical essence form a protective shroud around your flesh.", "", ""},
+  {"", "", ""},
+
+  "magic shield"
+},
+
+{ MUT_MANA_REGENERATION,              0,  1, false, false, false,
+  "magic regeneration",
+
+  {"You regenerate magic rapidly.", "", ""},
+  {"You feel your magic shroud grow more resilient.", "", ""},
+  {"", "", ""},
+
+  "magic regeneration"
+},
+
+{ MUT_MANA_LINK,                      0,  1, false, false, false,
+  "magic link",
+
+  {"When low on magic, you restore magic in place of health.", "", ""},
+  {"You feel your life force and your magical essence meld.", "", ""},
+  {"", "", ""},
+
+  "magic link"
 },
 
 // Jiyva only mutations
@@ -1169,6 +1202,7 @@
   "pseudopods"
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_FOOD_JELLY,                     0,  1, false,  true, false,
   "spawn jellies when eating",
 
@@ -1178,6 +1212,7 @@
 
   "jelly spawner"
 },
+#endif
 
 { MUT_ACIDIC_BITE,                    0,  1, false,  true,  true,
   "acidic bite",
@@ -1430,6 +1465,36 @@
   {"", "", ""},
 
   "foul stench"
+},
+
+{ MUT_TENDRILS,                       0,  1, false,  true, true,
+  "tendrils",
+
+  {"Thin tendrils of slime have grown from your body.", "", ""},
+  {"Thin, slimy tendrils emerge from your body.", "", ""},
+  {"Your tendrils retract into your body.", "", ""},
+
+  "tendrils"
+},
+
+{ MUT_JELLY_GROWTH,                       0,  1, false,  true, true,
+  "a jelly is attached to you",
+
+  {"You have a small jelly attached to you that senses nearby items.", "", ""},
+  {"Your body partially splits into a small jelly.", "", ""},
+  {"The jelly growth is reabsorbed into your body.", "", ""},
+
+  "jelly growth"
+},
+
+{ MUT_JELLY_MISSILE,                       0,  1, false,  true, true,
+  "absorbing missiles",
+
+  {"You have a small jelly attached to you that may absorb incoming projectiles.", "", ""},
+  {"Your body partially splits into a small jelly.", "", ""},
+  {"The jelly growth is reabsorbed into your body.", "", ""},
+
+  "jelly missile"
 },
 
 #endif

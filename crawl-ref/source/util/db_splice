@@ -1,0 +1,26 @@
+#!/usr/bin/perl -w
+
+die "Two args plz (dat/descript/foo.{key,val}), m'kay?\n" if $#ARGV != 1;
+
+undef $/;
+
+open IN, "<", $ARGV[0] or die "Can't open $ARGV[0]\n";
+$_ = <IN>;
+close IN;
+my @keys = split /%%%%\n/s;
+
+open IN, "<", $ARGV[1] or die "Can't open $ARGV[1]\n";
+$_ = <IN>;
+close IN;
+my @vals = split /%%%%\n/s;
+
+die "$#keys keys but $#vals vals\n" if $#keys != $#vals;
+
+open OUT, ">spliced.txt" or die "Can't write to spliced.txt\n";
+for (0..$#keys)
+{
+    print OUT ($vals[$_] ? "$keys[$_]\n$vals[$_]%%%%\n" : "$keys[$_]%%%%\n");
+}
+close OUT;
+
+print "Output written as ./spliced.txt, please review it before installing.\n";

@@ -33,29 +33,14 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-static void _transform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
-                                  bool in_water)
-{
-    if (you.melded[EQ_WEAPON])
-        return;
-
-    const int item = you.equip[EQ_WEAPON];
-    if (item == -1)
-        return;
-
-    const int wep = tilep_equ_weapon(you.inv[item]);
-    if (!wep)
-        return;
-
-    buf.add(wep, x, y, 0, in_water, false, -1, 0);
-}
-
 void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 {
     pack_background(x, y, cell);
 
     const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
+
+    const tileidx_t cloud_idx = cell.cloud & TILE_FLAG_MASK;
 
     if (fg_idx >= TILEP_MCACHE_START)
     {
@@ -68,18 +53,26 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     else if (fg_idx == TILEP_PLAYER)
         pack_player(x, y, in_water);
     else if (fg_idx >= TILE_MAIN_MAX)
-    {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
-        if (fg_idx >= TILEP_TRAN_LICH_EQUIP_FIRST
-                && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST
-            || fg_idx >= TILEP_TRAN_STATUE_EQUIP_FIRST
-                && fg_idx <= TILEP_TRAN_STATUE_EQUIP_LAST)
-        {
-            _transform_add_weapon(m_buf_doll, x, y, in_water);
-        }
-    }
 
     pack_foreground(x, y, cell);
+
+    // Draw cloud layer(s)
+    if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
+    {
+        // If there's a foreground, sandwich it between two semi-transparent
+        // clouds at different z-indices. This uses the same alpha fading as
+        // a swimming characters but applied to the cloud (instead of as normal
+        // applied to the character).
+        if (fg_idx)
+        {
+            m_buf_main_trans.add_masked(cloud_idx, x, y, 0, 0, 0, -1, 255, 255, 20);
+            m_buf_main_trans.add_masked(cloud_idx, x, y, 50, 0, 0, -1, 15, 255,20);
+        }
+        else
+            // Otherwise render it normally with full transparency
+             m_buf_main.add(cloud_idx, x, y);
+    }
 }
 
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
@@ -236,18 +229,26 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_NW, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_NW)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NW, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_NW)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NW, x, y);
             if (bg & TILE_FLAG_KRAKEN_NE)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_NE, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_NE)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NE, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_NE)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SE)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SE, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_SE)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SE, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_SE)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SE, x, y);
             if (bg & TILE_FLAG_KRAKEN_SW)
                 m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
             else if (bg & TILE_FLAG_ELDRITCH_SW)
                 m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SW, x, y);
+            else if (bg & TILE_FLAG_STARSPAWN_SW)
+                m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SW, x, y);
         }
 
         if (cell.halo == HALO_MONSTER)
@@ -266,14 +267,14 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             if (cell.halo == HALO_RANGE)
                 m_buf_feat.add(TILE_HALO_RANGE, x, y);
             if (cell.halo == HALO_UMBRA)
-                m_buf_feat.add(TILE_UMBRA, x, y);
+                m_buf_feat.add(TILE_UMBRA + random2(4), x, y);
 
             if (cell.orb_glow)
                 m_buf_feat.add(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
             if (cell.quad_glow)
                 m_buf_feat.add(TILE_QUAD_GLOW, x, y);
             if (cell.disjunct)
-                m_buf_feat.add(TILE_DISJUNCT, x, y);
+                m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.
@@ -318,6 +319,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (fg & TILE_FLAG_NET)
         m_buf_icons.add(TILEI_TRAP_NET, x, y);
+
+    if (fg & TILE_FLAG_WEB)
+        m_buf_icons.add(TILEI_TRAP_WEB, x, y);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
@@ -410,9 +414,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_GLOWING, x, y, -status_shift, 0);
         status_shift += 7;
     }
+    if (fg & TILE_FLAG_HASTED)
+    {
+        m_buf_icons.add(TILEI_HASTED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
     if (fg & TILE_FLAG_SLOWED)
     {
         m_buf_icons.add(TILEI_SLOWED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_MIGHT)
+    {
+        m_buf_icons.add(TILEI_MIGHT, x, y, -status_shift, 0);
         status_shift += 6;
     }
     if (fg & TILE_FLAG_PAIN_MIRROR)
@@ -420,9 +434,28 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_PAIN_MIRROR, x, y, -status_shift, 0);
         status_shift += 7;
     }
+    if (fg & TILE_FLAG_PETRIFYING)
+    {
+        m_buf_icons.add(TILEI_PETRIFYING, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_PETRIFIED)
+    {
+        m_buf_icons.add(TILEI_PETRIFIED, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_BLIND)
+    {
+        m_buf_icons.add(TILEI_BLIND, x, y, -status_shift, 0);
+        status_shift += 10;
+    }
 
+    // Summoned and anim. weap. icons will overlap if you have a
+    // summoned dancing weapon, but that's rare and still looks okay.
     if (fg & TILE_FLAG_ANIM_WEP)
         m_buf_icons.add(TILEI_ANIMATED_WEAPON, x, y);
+    if (fg & TILE_FLAG_SUMMONED)
+        m_buf_icons.add(TILEI_SUMMONED, x, y);
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
         m_buf_icons.add(TILEI_MESH, x, y);

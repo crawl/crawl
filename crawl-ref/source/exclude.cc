@@ -437,10 +437,6 @@ void deferred_exclude_update()
 
 void clear_excludes()
 {
-    // Sanity checks
-    if (!is_map_persistent())
-        return;
-
 #ifdef USE_TILE
     // Tiles needs to update the minimap for each exclusion that is removed,
     // but the exclusions need to be removed first.  Therefore, make a copy

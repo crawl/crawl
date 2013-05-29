@@ -65,7 +65,7 @@ ENDMAP
 #
 NAME:   david_lair_shrubbed
 TAGS:   lair_entry
-MONS:   plant, fire drake
+MONS:   plant, komodo dragon
 SUBST:  ' = 1.
 ORIENT: float
 KFEAT:  O = enter_lair
@@ -200,19 +200,17 @@ ENDMAP
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen
 ORIENT: float
-KMONS:  1 = lava worm / lava snake / lava fish
-KFEAT:  1 = l
-KMONS:  2 = fire drake
+KMONS:  1 = fire drake
 SUBST:  L = l.
 KFEAT:  O = enter_lair
 MAP
 .........
-...1Lll..
+...lLll..
 ..lllllL.
-..ll2Ll1.
+..ll1Lll.
 .LlLOLll.
 .ll.Llll.
-.l.1lll..
+.l.llll..
 ..lllL...
 .........
 ENDMAP
@@ -465,7 +463,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d:6 .:150 1:10 2:4
 # "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
+MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -500,7 +498,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
+MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -526,7 +524,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
+MONS:   plant, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -615,7 +613,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d 1 .:50
-MONS:   plant name:gourd name_adjective
+MONS:   plant
 ITEM:   choko q:1 / choko q:2 / choko q:3 w:2
 MAP
 .....
@@ -637,7 +635,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:soapberry_tree name_replace name_descriptor
+MONS:   plant
 : if crawl.coinflip() then
 ITEM:   lychee q:1 / lychee q:2 / lychee q:3 w:2
 : else
@@ -663,7 +661,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:citrus_tree name_replace name_descriptor
+MONS:   plant
 : if crawl.coinflip() then
 ITEM:   orange q:1 / orange q:2 / orange q:3 w:2
 : else
@@ -689,7 +687,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:apple_tree name_replace name_descriptor
+MONS:   plant
 ITEM:   apple q:1 / apple q:2 / apple q:3 w:2
 MAP
 .'''.
@@ -711,7 +709,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:apricot_tree name_replace name_descriptor
+MONS:   plant
 ITEM:   apricot q:1 / apricot q:2 / apricot q:3 w:2
 MAP
 .'''.
@@ -733,7 +731,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
-MONS:   plant name:pyrus_tree name_replace name_descriptor
+MONS:   plant
 ITEM:   pear q:1 / pear q:2 / pear q:3 w:2
 MAP
 .'''.
@@ -754,7 +752,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d 1 .:34
-MONS:   plant name:bittermelon_vine name_replace name_descriptor
+MONS:   plant
 ITEM:   snozzcumber q:1 / snozzcumber q:2 / snozzcumber q:3 w:2
 MAP
 .....
@@ -775,7 +773,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d 1 .:34
-MONS: plant name:grape_vine name_replace name_descriptor
+MONS: plant
 : if crawl.coinflip() then
 ITEM:   grape q:1 w:3 / grape q:2 w:5 / grape q:3 / \
         grape q:4 w:7 / grape q:5 w:5 / grape q:6 w:2
@@ -803,7 +801,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 NSUBST: ' = 1:d / *:.
 NSUBST: . = 1:1 / *=.....1
-MONS:   plant name:musa name_adjective
+MONS:   plant
 ITEM:   banana q:6 w:2 / banana q:7 w:4 / banana q:10 / banana q:12 / \
         banana q:14 w:4 / banana q:16 w:2
 MAP
@@ -824,7 +822,7 @@ COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
 NSUBST: . = 2:1 / *=ddd..1
-MONS:   plant name:strawberry name_adjective
+MONS:   plant
 ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
         strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
@@ -2041,7 +2039,7 @@ MONS:   red devil / rotting devil w:20 / hellwing w:50
 MONS:   orange demon
 MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
-MONS:   wizard col:red hd:13 name:crazed n_adj n_noc tile:mons_hell_wizard
+MONS:   wizard
 KITEM:  / = acquire any
 MAP
    ...TTTT....  .............................
@@ -2198,7 +2196,6 @@ SUBST:  . = .:80 W:20 1:4 3:1 4:10
 KFEAT:  W = W
 KMONS:  W = giant leech / nothing w:1200
 SUBST:  % = %%*|
-: lair_small_ending(_G)
 MAP
           ..............
        ....................
@@ -2292,7 +2289,7 @@ MONS:   death yak / w:5 yak, death yak w:5 / yak
 MONS:   sheep / yak / death yak
 NSUBST: 3 = 1:1 / *:2
 # These are still living plants for all intents and purposes...
-MONS:   plant name:petrified n_adj col:lightgrey tile:mons_withered_plant / nothing
+MONS:   plant perm_ench:petrified dbname:petrified_plant col:lightgrey tile:mons_withered_plant / nothing
 SUBST:  - = .
 MAP
 xxxxxxcccxxxxxxxxxxxxxxxx
@@ -2370,4 +2367,123 @@ xxxxxxxxxtt.-WwW..ttttxxxx
 xxxxxxxxxttttWW-.tttxxxxxx
 xxxxxxxxxxtttttttttxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Reminders of progress.
+#
+NAME:    hangedman_lair_in_review
+TAGS:    no_monster_gen no_item_gen
+ORIENT:  float
+PLACE:   Lair:8
+MONS:    basilisk, fire drake, komodo dragon, hydra
+MONS:    manticore, hippogriff, griffon
+KMONS:   8 = catoblepas
+KMONS:   9 = water moccasin
+KMONS:   0 = blink frog
+KMONS:   A = spiny frog
+KMONS:   B = black mamba
+KMONS:   C = elephant slug
+KMONS:   D = agate snail
+KMONS:   E = patrolling boring beetle
+KMONS:   F = boulder beetle
+KMONS:   G = sheep
+KMONS:   H = yak
+KMONS:   I = elephant
+KMONS:   J = death yak
+KMONS:   K = crocodile
+KMONS:   L = war dog
+KMONS:   M = giant slug
+KMONS:   N = wyvern
+KMONS:   P = plant w:12 / fungus w:8 / nothing
+KITEM:   ~ = any good_item
+SHUFFLE: 1'2"3`4^ / 5e6f7g8h / 9i0jAkBl / GGHHIIJJ
+SHUFFLE: 5e6f7g8h / 5e6f7g8h / C-D-E-F-
+SHUFFLE: KLMN, %*~| / %*~| / |~*%
+NSUBST:  a = 2:. / 1 = x:9 .:1 / *:x, b = 2:. / 1 = x:9 .:1 / *:x
+NSUBST:  c = 2:. / 1 = x:9 .:1 / *:x, d = 2:. / 1 = x:9 .:1 / *:x
+SUBST:   X = xx., '"`^efghikl- = ., j = 0, O = 4448BFJ, $ = $$%.
+: lair_small_ending(_G)
+MAP
+               xxx  xxx   xxx  xxx
+             xxxxxxxxxxxxxxxxxxxxxxx
+            xxxxxxxxxx.P.xxxxxxxxxxxx
+           @..xxxxXXP.....XxB84xXPXxxx
+          ....XxxXX.......Xxlh^xX.Xxxx
+         @....XxXX.........d.X$x..Xxx
+        ......XxXP.........ddddd..Xxx
+       .......xxX....ccccc........Xxxx
+      .......Kxx.....c.X$x........PXxx
+     ...x...L.xxP....x`gkxX.......Xxxx
+  xxxxx...xxxxxxxx...x37AxX..x....Xxx
+ xxX....x..Xx962x...xxxxxxxx...xxxxxx
+xxxX.......Xxjf"x....PxxXX.%.x..Pxxx
+xxXP........x$X.b.....xxXP*.....xxxx
+xxxX........bbbbb....Xxx.~.....xxx
+ xxX..aaaaa.........PXxx|O...Pxxx
+ xxX.Xx$X.a.........XXxx..0.7xxxx
+xxxX.Xx'eixX.......XXxxxP..Axxx
+xxxXPXx150xX.....PXXxxxxXP3xxx
+ xxxxxxxxxxxx.P.xxxxxxxxxxxxxx
+  xxxxxxxxxxxxxxxxxxxxxxxxxx
+    xx   xxxx  x xxxx   xx
+ENDMAP
+
+##############################################################################
+# The beastmaster's lair.
+# Inspired by discussions of deep troll professionals and the prospect of a
+# "beastmaster"; here he lives, with packs of beasts and one powerful
+# personal pet.
+#
+# On his own the boss shouldn't be *extremely* threatening - it's his pet
+# and the inner welcoming party that add enough danger that this ending
+# stands on its own.
+#
+NAME:    grunt_lair_end_beastmaster
+TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
+PLACE:   Lair:$
+ORIENT:  northeast
+MONS:    deep troll shaman, dire elephant / hydra / lindwurm
+MONS:    catoblepas, death yak band
+MONS:    elephant, wolf, black bear / grizzly bear
+KMONS:   P = plant / fungus w:2 / bush w:1 / nothing w:13
+SHUFFLE: 567
+SUBST:   C = cx..
+SUBST:   P = P:19 t:1
+NSUBST:  % = 2:| / 3:* / *:%
+NSUBST:  5 = 2:5 / 3 = 5. / *:.
+NSUBST:  6 = 3:6 / 4 = 6. / *:.
+NSUBST:  7 = 1:7 / 2 = 7. / *:.
+{{
+  dgn.delayed_decay(_G, 'd', "human skeleton / orc skeleton / elf skeleton"
+                             .. " / dwarf skeleton / ogre skeleton w:1"
+                             .. " / naga skeleton w:1 / minotaur skeleton w:1"
+                             .. " / merfolk skeleton w:1")
+}}
+MAP
+                xxxxxx
+          xxxxxxx5P.Pxx
+         xxP..5.5..P..xxxxxx
+        xxP5d5.5.5P.P..xxP.xxx
+       xx.5.5.5ccccccc....P..x
+       x...5.ccc.d...ccc.P..xx
+      xx.P.ccc..d......d...Px
+     xx..ccc...G..C..3..d..xx
+    xx..ccc.G....CcC..4..c.x
+    x.P.ccc..d..CcCcC...cc.x
+    x..ccc%.G..G.CcC...ccP.x
+   xx..ccc%%.2.dG.C..d.c...x
+   x...cccc%%.1.....G.ccP..x
+   x.P.ccccc%%.Gd.G...c..P.x
+  xx....ccccc%%.....ccc...xx
+ xx.d..Pccccccc%cccccP.6..x
+xx.P..7..cccccccc.P.6.6.Pxx
+..7..7.7P..ccP..P6.6d6.Pxx
+.P.7..7..d....P...6.6.xxx
+d.P.7P..P.xxxx.P..P6.xx
+.P.7..7..xx  xxx.P..xx
+..P.P..xxx     xxxxxx
+.P.P..xx
+..P.dxx
+@....x
 ENDMAP

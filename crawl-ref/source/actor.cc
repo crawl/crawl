@@ -5,6 +5,7 @@
 #include "artefact.h"
 #include "attack.h"
 #include "coord.h"
+#include "describe.h"
 #include "env.h"
 #include "fprop.h"
 #include "itemprop.h"
@@ -157,25 +158,25 @@ void actor::set_position(const coord_def &c)
     areas_actor_moved(this, oldpos);
 }
 
-bool actor::can_hibernate(bool holi_only) const
+bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
 {
-    // Undead, nonliving, and plants don't sleep.
-    const mon_holy_type holi = holiness();
-    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+    // Undead, nonliving, and plants don't sleep. If the monster is
+    // berserk or already asleep, it doesn't sleep either.
+    if (!can_sleep(holi_only))
         return false;
 
     if (!holi_only)
     {
-        // The monster is berserk or already asleep.
-        if (!can_sleep())
-            return false;
-
         // The monster is cold-resistant and can't be hibernated.
-        if (res_cold() > 0)
+        if (intrinsic_only && is_monster()
+                ? get_mons_resist(this->as_monster(), MR_RES_COLD) > 0
+                : res_cold() > 0)
+        {
             return false;
+        }
 
         // The monster has slept recently.
-        if (is_monster()
+        if (is_monster() && !intrinsic_only
             && static_cast<const monster* >(this)->has_ench(ENCH_SLEEP_WARY))
         {
             return false;
@@ -185,12 +186,16 @@ bool actor::can_hibernate(bool holi_only) const
     return true;
 }
 
-bool actor::can_sleep() const
+bool actor::can_sleep(bool holi_only) const
 {
     const mon_holy_type holi = holiness();
     if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
         return false;
-    return !(berserk() || asleep());
+
+    if (!holi_only)
+        return !(berserk() || asleep());
+
+    return true;
 }
 
 void actor::shield_block_succeeded(actor *foe)
@@ -370,6 +375,9 @@ bool actor::evokable_invis(bool calc_unid) const
 // Return an int so we know whether an item is the sole source.
 int actor::evokable_flight(bool calc_unid) const
 {
+    if (is_player() && you.form == TRAN_TREE)
+        return 0;
+
     if (suppressed())
         return 0;
 
@@ -380,11 +388,18 @@ int actor::evokable_flight(bool calc_unid) const
 
 int actor::spirit_shield(bool calc_unid, bool items) const
 {
-    if (suppressed() || !items)
-        return 0;
+    int ss = 0;
 
-    return wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD, calc_unid)
-           + wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid);
+    if (items && !suppressed())
+    {
+        ss += wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD, calc_unid);
+        ss += wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid);
+    }
+
+    if (is_player())
+        ss += player_mutation_level(MUT_MANA_SHIELD);
+
+    return ss;
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
@@ -428,11 +443,11 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    // res_acid is immunity only for monsters; players need Jiyva
-    return (act->is_player() ?
-              you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
-            : act->res_acid());
+    return
+       act->is_player() && you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
+       || act->res_acid() == 3;
 }
+
 /**
  * Accessor method to the clinging member.
  *
@@ -745,4 +760,63 @@ void actor::handle_constriction()
             monster_die(defender->as_monster(), this);
         }
     }
+}
+
+string actor::describe_props() const
+{
+    ostringstream oss;
+
+    if (props.size() == 0)
+        return "";
+
+    for (CrawlHashTable::const_iterator i = props.begin(); i != props.end(); ++i)
+    {
+        if (i != props.begin())
+            oss <<  ", ";
+        oss << string(i->first) << ": ";
+
+        CrawlStoreValue val = i->second;
+
+        switch (val.get_type())
+        {
+            case SV_BOOL:
+                oss << val.get_bool();
+                break;
+            case SV_BYTE:
+                oss << val.get_byte();
+                break;
+            case SV_SHORT:
+                oss << val.get_short();
+                break;
+            case SV_INT:
+                oss << val.get_int();
+                break;
+            case SV_FLOAT:
+                oss << val.get_float();
+                break;
+            case SV_STR:
+                oss << val.get_string();
+                break;
+            case SV_COORD:
+            {
+                coord_def coord = val.get_coord();
+                oss << "(" << coord.x << ", " << coord.y << ")";
+                break;
+            }
+            case SV_MONST:
+            {
+                monster mon = val.get_monster();
+                oss << mon.name(DESC_PLAIN) << "(" << mon.mid << ")";
+                break;
+            }
+            case SV_INT64:
+                oss << val.get_int64();
+                break;
+
+            default:
+                oss << "???";
+                break;
+        }
+    }
+    return oss.str();
 }

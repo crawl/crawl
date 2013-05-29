@@ -162,7 +162,7 @@ static bool _is_species_valid_choice(species_type species)
         return false;
 
     if (species == SP_LAVA_ORC
-        && Version::ReleaseType() != VER_ALPHA)
+        && Version::ReleaseType != VER_ALPHA)
     {
         return false;
     }
@@ -179,6 +179,11 @@ static bool _is_job_valid_choice(job_type job)
 {
     if (job < 0 || job > NUM_JOBS)
         return false;
+
+#if TAG_MAJOR_VERSION == 34
+    if (job == JOB_STALKER || job == JOB_JESTER)
+        return false;
+#endif
 
     return true;
 }
@@ -1298,7 +1303,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 return;
             case M_HELP:
                  // access to the help files
-                list_commands('1');
+                list_commands('2');
                 return _prompt_job(ng, ng_choice, defaults);
             case M_APTITUDES:
                 list_commands('%', false, _highlight_pattern(ng));

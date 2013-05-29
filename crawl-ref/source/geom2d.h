@@ -13,13 +13,13 @@ struct vector
         : x(_x), y(_y) {}
 
     const vector& operator+=(const vector &v);
-    vector operator+(const vector &v) const;
-    vector operator-() const;
+    vector operator+(const vector &v) const PURE;
+    vector operator-() const PURE;
     const vector& operator-=(const vector &v);
-    vector operator-(const vector &v) const;
+    vector operator-(const vector &v) const PURE;
 };
 
-vector operator*(double t, const vector &v);
+vector operator*(double t, const vector &v) PURE;
 
 struct form
 {
@@ -76,7 +76,7 @@ struct lineseq
     lineseq(double a, double b, double o, double d)
         : f(a,b), offset(o), dist(d) {}
 
-    double index(const vector &v) const;
+    double index(const vector &v) const PURE;
 };
 
 struct grid

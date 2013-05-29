@@ -390,9 +390,13 @@ bool player_caught_in_net()
 
     if (!you.attribute[ATTR_HELD])
     {
-        you.attribute[ATTR_HELD] = 10;
         mpr("You become entangled in the net!");
         stop_running();
+
+        // Set the attribute after the mpr, otherwise the screen updates
+        // and we get a glimpse of a web because there isn't a trapping net
+        // item yet
+        you.attribute[ATTR_HELD] = 10;
 
         // I guess magical works differently, keeping both you
         // and the net hovering above the floor.
@@ -405,7 +409,6 @@ bool player_caught_in_net()
         }
 
         stop_delay(true); // even stair delays
-        redraw_screen(); // Account for changes in display.
         return true;
     }
     return false;
@@ -637,7 +640,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             string msg;
             if (you_trigger)
-                msg = "An alarm trap emits a blaring wail!";
+                msg = "The alarm trap emits a blaring wail!";
             else
             {
                 string dir = _direction_string(pos, !in_sight);
@@ -650,10 +653,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-            noisy(30, pos, msg.c_str(), source, false);
+            noisy(40, pos, msg.c_str(), source, false);
             if (crawl_state.game_is_zotdef())
                 more();
         }
+
+        if (you_trigger)
+            you.sentinel_mark(true);
         break;
 
     case TRAP_BLADE:
@@ -738,6 +744,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A net swings high above you.");
             else
             {
+                item_def item = generate_trap_item();
+                copy_item_to_grid(item, triggerer.pos());
+
                 if (random2limit(player_evasion(), 40)
                     + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
                 {
@@ -746,15 +755,16 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 else
                 {
                     mpr("A large net falls onto you!");
-                    if (player_caught_in_net() && player_in_a_dangerous_place())
-                        xom_is_stimulated(50);
+                    if (player_caught_in_net())
+                    {
+                        if (player_in_a_dangerous_place())
+                            xom_is_stimulated(50);
+
+                        // Mark the item as trapping; after this it's
+                        // safe to update the view
+                        _mark_net_trapping(you.pos());
+                    }
                 }
-
-                item_def item = generate_trap_item();
-                copy_item_to_grid(item, triggerer.pos());
-
-                if (you.attribute[ATTR_HELD])
-                    _mark_net_trapping(you.pos());
 
                 trap_destroyed = true;
             }
@@ -792,6 +802,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 triggered = true;
 
                 if (in_sight)
+                {
                     if (m->visible_to(&you))
                     {
                         mprf("A large net falls down onto %s!",
@@ -799,6 +810,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     }
                     else
                         mpr("A large net falls down!");
+                }
 
                 // FIXME: Fake a beam for monster_caught_in_net().
                 bolt beam;
@@ -1105,8 +1117,10 @@ trap_def* find_trap(const coord_def& pos)
 
     unsigned short t = env.tgrid(pos);
 
-    ASSERT(t != NON_ENTITY && t < MAX_TRAPS);
-    ASSERT(env.trap[t].pos == pos && env.trap[t].type != TRAP_UNASSIGNED);
+    ASSERT(t != NON_ENTITY);
+    ASSERT(t < MAX_TRAPS);
+    ASSERT(env.trap[t].pos == pos);
+    ASSERT(env.trap[t].type != TRAP_UNASSIGNED);
 
     return (&env.trap[t]);
 }
@@ -1161,7 +1175,7 @@ void disarm_trap(const coord_def& where)
     if (_disarm_is_deadly(trap))
     {
         string prompt = make_stringf("Really try disarming that %s?",
-                                     feature_description_at(where, "",
+                                     feature_description_at(where, false,
                                                             DESC_BASENAME,
                                                             false).c_str());
 
@@ -1526,7 +1540,9 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                  act.name(DESC_THE).c_str());
         }
     }
-    else if (!force_hit && pro_block >= con_block)
+    else if (!force_hit
+             && pro_block >= con_block
+             && you.see_cell(act.pos()))
     {
         string owner;
         if (act.is_player())
@@ -1843,7 +1859,7 @@ static trap_type _random_trap_default(int level_number)
         type = TRAP_SHAFT;
     if (one_chance_in(20) && !crawl_state.game_is_sprint())
         type = TRAP_TELEPORT;
-    if (one_chance_in(40))
+    if (one_chance_in(40) && level_number > 3)
         type = TRAP_ALARM;
 
     return type;
@@ -1879,7 +1895,7 @@ void place_webs(int num, bool is_second_phase)
                 return;
             if (env.trap[slot].type == TRAP_UNASSIGNED)
                 break;
-        };
+        }
         trap_def& ts(env.trap[slot]);
 
         int tries;

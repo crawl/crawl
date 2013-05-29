@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #endif
 
+#include "files.h"
 #include "random.h"
 #include "syscalls.h"
 #include "unicode.h"

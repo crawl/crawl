@@ -1,4 +1,5 @@
 # Vehumet wants you to burn the damn trees down.
+# Currently disabled for being too problematic to access.
 
 {{
 function callback.dk_vehumet_trees_move(data, triggerable, triggerer, marker, ev)
@@ -31,6 +32,7 @@ end
 NAME:    dk_vehumet_trees
 DEPTH:   2-10
 TAGS:    temple_overflow_vehumet mini_float
+WEIGHT:  0
 KFEAT:   _ = altar_vehumet
 SUBST:   x : G:1 t:1 x:8
 {{

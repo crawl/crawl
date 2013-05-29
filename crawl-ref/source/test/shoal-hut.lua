@@ -4,7 +4,7 @@
 
 local iterations = 50
 
-local isdoor = dgn.feature_set_fn("closed_door", "open_door", "secret_door")
+local isdoor = dgn.feature_set_fn("closed_door", "open_door", "runed_door")
 local floor = dgn.fnum("floor")
 
 local function find_vault_doors(vault)
@@ -27,13 +27,16 @@ local function shoal_hut_doors()
   test.map_assert(#maps > 0, "No maps used on Shoals:$?")
   local doors = { }
   for _, vault in ipairs(maps) do
-    -- Sweep the vault looking for (secret) doors.
+    -- Sweep the vault looking for doors.
     local vault_doors = find_vault_doors(vault)
     if #vault_doors > 0 then
       table.insert(doors, vault_doors)
     end
   end
-  test.map_assert(#doors > 0, "No hut doors found on Shoals:$")
+  -- FIXME: some huts have no doors; shouldn't we still check connectivity?
+  if #doors <= 0 then
+    crawl.message("No hut doors found...")
+  end
   return doors
 end
 

@@ -29,8 +29,8 @@ public:
     rect_def(const coord_def &min_, const coord_def &max_)
         : min(min_), max(max_) {}
 
-    bool contains(const coord_def& p) const;
-    rect_def intersect(const rect_def& other) const;
+    bool contains(const coord_def& p) const PURE;
+    rect_def intersect(const rect_def& other) const PURE;
     rectangle_iterator iter() const;
 };
 
@@ -71,9 +71,9 @@ public:
     // Circle around given origin of specified shape and size.
     circle_def(const coord_def &origin_, int param, circle_type ctype = C_SQUARE);
 
-    bool contains(const coord_def &p) const;
-    const rect_def& get_bbox() const;
-    const coord_def& get_center() const;
+    bool contains(const coord_def &p) const PURE;
+    const rect_def& get_bbox() const PURE;
+    const coord_def& get_center() const PURE;
 
     circle_iterator iter() const;
 

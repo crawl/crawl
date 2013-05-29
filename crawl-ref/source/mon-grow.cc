@@ -39,8 +39,6 @@ static const monster_level_up mon_grow[] =
 
     monster_level_up(MONS_UGLY_THING, MONS_VERY_UGLY_THING),
 
-    monster_level_up(MONS_ANT_LARVA, MONS_WORKER_ANT),
-
     monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
     monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
 
@@ -219,7 +217,7 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
         return false;
 
     // Only monsters that you can gain XP from can level-up.
-    if (mons_class_flag(type, M_NO_EXP_GAIN))
+    if (mons_class_flag(type, M_NO_EXP_GAIN) || is_summoned())
         return false;
 
     // Avoid wrap-around.

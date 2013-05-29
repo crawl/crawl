@@ -15,7 +15,7 @@ static const char * Job_Abbrev_List[ NUM_JOBS ] =
       "St",
 #endif
       "Mo", "Wr", "Wn", "Ar", "AM",
-      "DK", "AK" };
+      "DK", "AK", "Jr" };
 
 static const char * Job_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest",
@@ -29,14 +29,15 @@ static const char * Job_Name_List[ NUM_JOBS ] =
       "Stalker",
 #endif
       "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman",
-      "Death Knight", "Abyssal Knight" };
+      "Death Knight", "Abyssal Knight", "Jester" };
 
 const char *get_job_abbrev(int which_job)
 {
     if (which_job == JOB_UNKNOWN)
         return "Un";
     COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS);
-    ASSERT(which_job >= 0 && which_job < NUM_JOBS);
+    ASSERT(which_job >= 0);
+    ASSERT(which_job < NUM_JOBS);
 
     return Job_Abbrev_List[which_job];
 }
@@ -63,7 +64,8 @@ const char *get_job_name(int which_job)
     if (which_job == JOB_UNKNOWN)
         return "Unemployed";
     COMPILE_CHECK(ARRAYSZ(Job_Name_List) == NUM_JOBS);
-    ASSERT(which_job >= 0 && which_job < NUM_JOBS);
+    ASSERT(which_job >= 0);
+    ASSERT(which_job < NUM_JOBS);
 
     return Job_Name_List[which_job];
 }

@@ -1,37 +1,280 @@
-Stone Soup 0.12 (up to 0.12-a0-221-gc8484b0)
+Stone Soup 0.13 (up to 0.13-a0-557-gcd82a8c)
 --------------------------------------------
 
 Branches, environment
 ---------------------
-* A new Sprint map by evilmike: "Thunderdome".
+* Several new layouts.
+* All portal vaults entrances that time out are now announced.
+
+Character
+---------
+* The nausea status from eating contaminated chunks has been removed;
+  contaminated chunks now give less nutrition for characters that can't
+  handle them.
+* Stabbing skill is no more; stabs now depend upon the average of the
+  character's stealth and weapon skill.
+* Chaos knights start with a +0 chaos weapon instead of a +2 normal weapon.
+* New tier 2 demonspawn mutation- "magic shield", giving spirit shield
+  at level one, improved magic regeneration at level two, and regenerating
+  mana in place of health as a function of current magic level at level
+  three.
+
+Monsters
+--------
+* Monster actions are now taken in order of speed, rather than any given
+  monster taking all of its actions at once.
+* A large number of vault-specific monsters have been removed.
+
+Items
+-----
+* The dependence of armour penalties on strength has been adjusted; there
+  are no longer magic strength numbers for lowest possible penalties.
+* Potions of gain <ability> have been replaced by potions of beneficial
+  mutation, which grant the player a single beneficial mutation.
+* Needles of sickness have been removed.
+* Splint mail has been removed; chain mail is now 8 AC to compensate.
+
+Stone Soup 0.12 (20130501)
+--------------------------
+
+0.12 highlights
+---------------
+* Axes have a cleaving attack, hitting up to 7 enemies around you.
+* The Vaults branch is five levels deep, with a distinct layout and several new
+  types of guards.
+* Abyss has multiple levels of increasing difficulty, more varied terrain, and
+  many new thematic monsters.
+* Conjurers get a new starting book of offensive non-elemental spells.
+* Beogh and Yredelemnul let you recall allies across dungeon levels.
+* Major changes to Vehumet.
+* Friendly summons no longer attack out of sight.
+* Secret doors are no more.
+
+Branches, environment
+---------------------
+* Vaults is now five levels long, and has an entirely new layout.
+* The Hall of Blades layout has been adjusted, and now contains two weapons
+  with "interesting brands" instead of just one.
+* The Abyss is revamped yet again. It now contains five (still infinite)
+  levels of increasing difficulty. Each level is composed of regions with
+  different layouts, most of which are more static than before. The rune
+  appears only at the third level and below, more frequently at deeper levels.
+* The Abyssal rune always appears in a vault, never lying around on the floor.
+* Having the Abyssal rune greatly increases the generation of Abyss exits.
+* Many Ziggurat floors have more fine-tuned monster-sets, and a few monster
+  sets have been replaced entirely.
+* Three new Sprint maps: "Thunderdome" by evilmike, "The Pits" and "Arena of
+  Blood" both by st.
+* The Abyss no longer exists in Sprint.
+* New layouts for Cocytus, Gehenna, Snake, and the main Dungeon.
 * More layouts allowed in Zot.
-* Abyss morphing can push the player.
+* New Lair branch ending vaults, and many other new vaults.
+* More decorative vaults are now placed.
+* "Special rooms" (kobold/orc rooms, beehives, morgues, jelly pits) have been
+  adjusted, now appear at more appropriate depths and layouts, and no longer
+  place doors.
+* A new "special room" - the mythical zoo, with standard high fantasy beasts.
+* New "runed door" feature: won't be opened by auto-explore or by monsters.
+  Becomes a regular door when opened.
+* Alarm traps only trigger once, but make monsters swarm towards you for some
+  time.
 
 Character
 ---------
 * Stalker is removed.
+* Berserkers may choose their starting weapon.
+* Gladiator no longer starts with a buckler, gets more Dodging to compensate.
+* Traps are spotted (or not) deterministically based on skill level and a
+  few other factors: spending more time does not help.
+* Levitation and controlled flight are no more - all flight is controlled.
+* Flying no longer increases carrying capacity.
+* Tengu receive their movement speed bonus when flying, regardless of burden.
+* Black draconians gain permanent flight (like Tengu but without the speed
+  boost) at XL 14.
+* Removed the hidden special cost of Spellcasting, Stealth, Evocations and
+  Invocations. Aptitudes adjusted.
+* Experience aptitude uses the same scale as skill aptitudes. This scale is
+  coarser than the old one, so most races now require slightly more or less
+  experience to gain levels than before.
+* Deep Elves are better at Earth magic than Air.
+* Hill Orcs are better at Axes, worse at gaining levels.
+* Tengu are better at gaining levels.
+* Levels 1 and 2 of the teleportitis mutation teleport you only a limited
+  distance.
+* The augmentation and powered by pain Demonspawn mutations have been improved.
 
 Monsters
 --------
-* New monster spells: Shatter, LRD.
+* Removed: ant larvae, bumblebees, blessed toes, rock trolls, wood golems.
+* New monster: moth of suppression. Generates an aura that prevents evocation
+  and suppresses the magical effects of wielded/worn equipment.
+* New abyssal monsters:
+    - Wretched star: bestows temporary mutations.
+    - Tentacled starspawn: has constricting tentacles and a nasty attack.
+    - Ancient zyme: causes sickness when near the player.
+    - Lurking horror: stalks like a wandering mushroom, then explodes for
+      torment.
+    - Starcursed mass: proliferates when ignored, re-merges when damaged.
+      Has a smite-targeted psychic scream that becomes more powerful as
+      more masses become visible.
+    - Apocalypse crab: breathes clouds of chaos.
+    - Thrashing horror: moves like a bat, tramples, and frenzies.
+    - Spatial maelstrom: incorporeal vortex that turns walls into spatial
+      vortices.
+* New deep troll specialist monsters, appearing in late-D deep troll packs:
+    - Deep troll shamans: cast Might Other and Haste Other on their
+      accompanying deep troll packs.
+    - Deep troll earth mages: cast Dig and LRD to allow the rest of the deep
+      troll pack to pursue their opponent.
+* New vaults monsters:
+    - Vault sentinels, with a signal horn that generates a lot of noise and
+      the Sentinel's Mark spell which alerts all creatures on the level to
+      the player's location.
+    - Vault wardens, with the ability to close and seal doors near the player
+      for a time or until they are killed.
+    - Ironbrand convokers, with the ability to recall other monsters on the
+      level to their location. Also cast Might Other.
+    - Ironheart preservers, with the ability to take some damage in place of
+      an enemy the player is currently attacking.
+* New uniques:
+    - Jorgrun, a deep dwarven earth elementalist.
+    - Lamia, queen of the nagas.
+* Friendly summoned monsters do not attack things unless the player has line
+  of sight to both the summon and the victim. Glass does not count as line of
+  sight for this purpose.
+* Summoned monsters do not cast spells that create permanent allies.
+* Only a select few monsters flee at low HP.
+* Ereshkigal has more HP, and can now cast Silence and Major Healing.
+* Changed monsters: Frances, Joseph, Polyphemus, bone dragons, soul eaters,
+  vampires, vampire knights.
+* Rotting corpses no longer spawn toadstools for non-Fedhasites.
+* Monsters can now use wands of digging, and cast Dig in more circumstances.
+* Allies summoned with the Mercenary card can pick up and use equipment.
 
 Spells
 ------
-* Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+* Removed: Fulsome Distillation, Evaporate, Cigotuvi's Degeneration, See
+  Invisible and Insulation.
+* New spells:
+    - Force Lance (level 2 Conjuration). Fires a short-range single-target
+      projectile that can knock monsters backwards.
+    - Dazzling Spray (level 3 Conjuration/Hexes). Fires a spread of energy
+      bolts that can blind creatures.
+    - Iskenderun's Battlesphere (level 4 Conjuration/Charms). Creates an
+      autonomous globe that shoots at enemies in sync with your conjurations.
+    - Fulminant Prism (level 5 Conjuration/Hexes). Creates a time bomb at a
+      smite-targetted location.
+    - Disjunction (level 8 Translocation). Has a duration, during which it
+      blinks away nearby monsters. Causes contamination.
+* Conjurers have a new book with non-elemental spells (including the new
+  conjurations).
+* Spell memorisation failure is no more. As long as the failure chance is
+  not 100%, the spell can be memorized. There is a warning prompt if the
+  chance of a miscast is high.
+* Some spellbooks have been reorganized.
+* Condensation Shield's SH bonus no longer cares about Shields skill or
+  intelligence.
+* The blinking component of the Dispersal spell is irresistible.
+* Venom Bolt and Bolt of Magma do more damage; Teleport Other works more often.
+* Recall is now gradual instead of instant: one ally is recalled every 3-6
+  aut.
 
 Items
 -----
-* All troll-genus monsters can drop troll hides.
-* Monsters don't drop animal skins.
-* Potion of water is removed.
+* Axes have a cleaving attack: they hit up to seven targets with a single
+  swing (all directions except directly opposite the direction of attack,
+  but not if a wall is in the way). These secondary attacks do only 75%
+  damage and do not hit allies. Base damage for the larger axes is reduced
+  to compensate.
+* One-handed maces and flails have been improved: flails and eveningstars get
+  a one point damage increase, and morningstars get a +3/-1 damage/accuracy
+  boost to replace spiked flails.
+* The wand of polymorph other is now the wand of polymorph; use of it against
+  the player will turn them into a random form (including several new forms -
+  tree form, wisp form, porcupine form and fungus form).
+* Scroll of unholy creation is replaced with scroll of summoning, which
+  summons a few level-appropriate monsters.
+* Removed items: spiked flail, potion of water, staff of enchantment, plain
+  (non-magic, non-quarter-) staves
+* Potion of decay rots HP immediately rather than giving the "Rot" status.
+* Potions and rings of levitation are now "of flight"; boots of levitation
+  are now "of flying"; and the +Lev artefact property is now +Fly.
+* Amulet of controlled flight is removed; Amulet of the Air now grants
+  passive Repel Missiles and inaccuracy instead.
+* Amulet of inaccuracy correctly affects ranged weapons.
+* Amulet of clarity prevents mesmerisation.
+* Some rods were changed to have a more focused spell set.
+* The "Contam" artefact property no longer causes contamination over time,
+  but only when the item is unequipped.
+* The "*Rage" artefact property triggers much less often (except for Wrath of
+  Trog).
+* Improved fixedarts: Spear of the Botono, Robe of Night, Cloak of the Thief,
+  Robe of Folly, plutonium sword.
+* The hand-and-a-half weapon category is gone; such weapons are now
+  one-handed for normal-size races.
+
+Gods
+----
+* Followers of worshippers of Beogh and Yredelemnul can now be recalled across
+  levels.
+* Followers of Beoghites now share experience when the player scores kills.
+* Yredelemnul gives a small amount of piety for desecrating holy remains.
+* Vehumet is overhauled: Now grants damaging spells one-at-a-time (available
+  from the (M)emorization screen), partially based on your elemental skills.
+  No longer supports summoning, accepts ally kills, or reduces spell MP cost.
+* Zin's Imprisonment placement is much more forgiving, pushing adjacent
+  monsters out of the way if possible.
+* Lugonu's Enter the Abyss no longer reduces maximum HP or MP.
+* Lugonu no longer gives piety for anything in the Abyss.
+* Mobile Fedhas-granted allies follow you across levels en masse.
+* New Xom effects: loud noises, blink monsters, enchant monster (petrify,
+  slow, paralysis, enslavement; haste, might, invisibility), summon shadow
+  creatures.
+* Xom does not reduce stats as drastically, unless bored.
+* Xom will not animate or swap weapons in the Abyss, and will not hostilely
+  animate your weapon at all anymore.
 
 Interface
 ---------
-* New options: auto_sacrifice, dump_on_save.
-* Removed the hidden special cost of Spellcasting, Stealth, Evocations and
-  Invocations. Aptitudes adjusted.
-* Some colour changes in the skill menu.
+* Many updated tiles.
+* A new Android port with touch-screen support.
+* New options: auto_sacrifice, dump_on_save, item_glyph, monster_list_colour,
+  tile_cell_pixels, tile_filter_scaling.
+* Removed options: sacrifice_before_explore (now part of auto_sacrifice),
+  annotate_item_class, annotate_item_dropped, autoinscribe_artefacts,
+  show_no_ctele, menu_colour_prefix_class, menu_colour_shops, list_rotten.
+* Player action counts and generated vaults are now included in dumps by
+  default.
+* List options can be prepended to with ^=.
+* The "evil_eating" and "evil_item" menu-colouring prefixes are renamed to
+  "forbidden".
+* Explosion and cloud spells will try to target a spot adjacent to an
+  out-of-range monster before falling back to the player's position,
+  but will ignore plants.
+* It is possible to restrict a ctrl-f stash search to the current level by
+  prefixing it with "@".
 * Swap the cycle ammunition commands. '(' = backward, ')' = forward.
+* Webtiles supports real-time animations, toggleable via F10.
+* Webtiles displays miniature health and MP bars on the player.
+* Allies can now be ordered to retreat in a specific direction.
+
+Technical
+---------
+* Numerous crash fixes.
+* Crashes during level transition no longer result in broken saves.
+
+Stone Soup 0.11.2 (20130125)
+----------------------------
+* Crash fixes.
+* Jellies no longer take damage from acid.
+* The Royal Jelly spawns behave correctly on the arena, and after pacification.
+* Handle forcibly closing the game a bit better (save corruption, crashes,
+  possible cheating).
+* No more false annotations in the Abyss.
+* Octopodes can't grow claws on their non-existant hands anymore.
+* Tile games did not always draw overlays properly.
+* Invocation based titles were wrong on the high scores list.
+* A number of other misc fixes.
 
 Stone Soup 0.11.1 (20121116)
 ----------------------------

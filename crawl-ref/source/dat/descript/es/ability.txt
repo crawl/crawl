@@ -11,7 +11,7 @@ Blink ability
 
 Translocación aleatoria a corta distancia.
 %%%%
-Breathe Energy
+Breathe Dispelling Energy
 
 Exhalas una descarga de energía al monstruo que apuntes, posiblemente
 eliminando alguno de sus encantamientos.
@@ -68,7 +68,9 @@ Escupes ácido al monstruo que apuntes.
 %%%%
 Fly
 
-Empiezas a volar.
+Empiezas a volar. Durante el vuelo puedes sobrevolar agua y obstáculos
+similares. Se advierte, sin embargo, que el vuelo puede expirar en momentos
+inoportunos y causar que te precipites a tu muerte.
 %%%%
 Hellfire
 
@@ -119,6 +121,14 @@ Turn Visible
 
 Te vuelves visible de nuevo.
 %%%%
+Stop Flying
+
+Paras de volar.
+%%%%
+Evoke Fog
+
+Expulsa una densa nube de humo para dificultar la visión.
+%%%%
 End Transformation
 
 Recuperas tu forma normal, tras un leve retardo.
@@ -150,12 +160,6 @@ Zin te aporta una resistencia divina y sustento. La resistencia divina te
 protege de la enfermedad, de envenenamientos, petrificación, confusión y
 descomposición, además de incrementar y mantener temporalmente tu Fuerza,
 Inteligencia y Destreza.
-%%%%
-Imprison
-
-Temporalmente se aprisiona en muros de plata a un monstruo que no tenga nada
-alrededor. La duración de la prisión aumenta mediante Invocaciones, pero los
-enemigos más poderosos serán capaces de escapar más fácilmente.
 %%%%
 Sanctuary
 
@@ -205,11 +209,6 @@ Reanimas a un cadáver o esqueleto y lo conviertes en tu seguidor. Date cuenta
 de que los zombies y los esqueletos no pueden dejar el nivel donde fueron
 creados.
 %%%%
-Recall Undead Slaves
-
-Recuperas a tus seguidores no-muertos desde cualquier lugar del nivel hasta tus
-inmediaciones.
-%%%%
 Injury Mirror
 
 Daña a los monstruos que te ataquen, reflejando hacia ellos el daño que ellos
@@ -220,7 +219,6 @@ Animate Dead ability
 Reanimas a todos los cadáveres o esqueletos y los conviertes en tus seguidores.
 Date cuenta de que los zombies y los esqueletos no pueden dejar el nivel donde
 fueron creados.
-
 %%%%
 Drain Life
 
@@ -438,11 +436,6 @@ Smiting
 Golpea a un enemigo dentro de tu campo de visión. Esto no requiere un camino
 directo, simplemente viendo al enemigo es suficiente.
 %%%%
-Recall Orcish Followers
-
-Recuperas a tus seguidores orcos desde cualquier lugar del nivel hasta tus
-inmediaciones.
-%%%%
 Sunlight
 
 Iluminas con luz solar un área pequeña. Los monstruos iluminados por la luz
@@ -470,11 +463,11 @@ explotarán, causando daño a ti o a tus enemigos.
 %%%%
 Evolution
 
-Conviertes plantas y hongos adyacentes a ti en especies más fuertes. Aumentar
-de nivel a los hongos requiere piedad mientras que las plantas requieren fruta.
-Las plantas evolucionadas ganan un bonus de ataque proporcional al nivel de
-Invocaciones del usuario, y las plantas oklob son más propensas a escupir ácido
-a mayores niveles de Invocaciones.
+Conviertes plantas y hongos en especies más fuertes. Aumentar de nivel a los
+hongos requiere piedad mientras que las plantas requieren fruta. Las plantas
+evolucionadas ganan un bonus de ataque proporcional al nivel de Invocaciones
+del usuario, y las plantas oklob son más propensas a escupir ácido a mayores
+niveles de Invocaciones.
 %%%%
 Bend Time
 
@@ -497,11 +490,6 @@ Te excluyes del flujo del tiempo. Las cosas a tu alrededor sucederán a su
 típico ritmo, los monstruos merodearán, los objetos perecederos se
 descompondrán, las plantas crecerán. Tras algo de tiempo, volverás con el mismo
 estado que tenías en el mismo segundo en que partiste.
-%%%%
-Renounce Religion
-
-Renuncias a tu fe. Esto hará a tu personaje abandonar a su dios (y normalmente
-enfadar a dicho dios).
 %%%%
 Request Jelly
 
@@ -534,6 +522,11 @@ Sacrifica una parte de una de tus capacidades para mejorar otra.
 End Transfer Knowledge
 
 Cancelas una transferencia de capacidades.
+%%%%
+Renounce Religion
+
+Renuncias a tu fe. Esto hará a tu personaje abandonar a su dios (y normalmente
+enfadar a dicho dios).
 %%%%
 Make dart trap
 

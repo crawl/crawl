@@ -112,7 +112,7 @@ performances en combat grâce aux sorts de leur livre de Chants de Guerre.
 Summoner
 
 Les Invocateurs commencent avec le livre des Appels et sont capables de
-Convoquer des Petits Mammifères dès le début.
+Convoquer un Petit Mammifère dès le début.
 %%%%
 Transmuter
 

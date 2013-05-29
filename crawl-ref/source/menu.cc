@@ -8,6 +8,7 @@
 #include "menu.h"
 
 #include <cctype>
+#include <functional>
 
 #include "cio.h"
 #include "colour.h"
@@ -598,8 +599,8 @@ bool Menu::process_key(int keyin)
         {
             if (num > 999)
                 num = -1;
-            num = (num == -1)? keyin - '0' :
-                               num * 10 + keyin - '0';
+            num = (num == -1) ? keyin - '0' :
+                                num * 10 + keyin - '0';
         }
 
         select_items(keyin, num);
@@ -724,7 +725,7 @@ string Menu::get_select_count_string(int count) const
         if (count)
         {
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
-                    (count > 1? "s" : ""));
+                    (count > 1 ? "s" : ""));
         }
         return string(buf);
     }
@@ -803,7 +804,7 @@ void Menu::select_items(int key, int qty)
 
         // We have to use some hackery to handle items that share
         // the same hotkey (as for pickup when there's a stack of
-        // >52 items).  If there are duplicate hotkeys, the items
+        // >52 items). If there are duplicate hotkeys, the items
         // are usually separated by at least a page, so we should
         // only select the item on the current page. This is why we
         // use two loops, and check to see if we've matched an item
@@ -837,13 +838,11 @@ void Menu::select_items(int key, int qty)
                 if (check_preselected && items[i]->preselected)
                 {
                     select_index(i, qty);
-                    selected = true;
                     break;
                 }
                 else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
-                    selected = true;
                     break;
                 }
             }
@@ -1120,7 +1119,8 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
-        ASSERT(idx >= TILE_MAIN_MAX && idx < TILEP_PLAYER_MAX);
+        ASSERT(idx >= TILE_MAIN_MAX);
+        ASSERT(idx < TILEP_PLAYER_MAX);
 
         int ymax = TILE_Y;
 
@@ -1181,7 +1181,7 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
 
 void Menu::select_index(int index, int qty)
 {
-    int si = index == -1? first_entry : index;
+    int si = index == -1 ? first_entry : index;
 
     if (index == -1)
     {
@@ -1277,7 +1277,7 @@ int Menu::item_colour(int, const MenuEntry *entry) const
     if (highlighter)
         icol = highlighter->entry_colour(entry);
 
-    return (icol == -1? entry->colour : icol);
+    return (icol == -1 ? entry->colour : icol);
 }
 
 void Menu::draw_title()
@@ -1605,6 +1605,26 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
 
     tiles.json_close_object();
 }
+
+void Menu::webtiles_update_section_boundaries()
+{
+    if (first_entry < webtiles_section_start()
+        || webtiles_section_end() <= first_entry)
+    {
+        _webtiles_section_start = first_entry;
+        while (_webtiles_section_start > 0
+               && items[_webtiles_section_start]->level != MEL_TITLE)
+        {
+            _webtiles_section_start--;
+        }
+        _webtiles_section_end = first_entry + 1;
+        while (_webtiles_section_end < (int) items.size()
+               && items[_webtiles_section_end]->level != MEL_TITLE)
+        {
+            _webtiles_section_end++;
+        }
+    }
+}
 #endif // USE_TILE_WEB
 
 /////////////////////////////////////////////////////////////////
@@ -1676,7 +1696,8 @@ void column_composer::add_formatted(int ncol,
                                     bool (*tfilt)(const string &),
                                     int  margin)
 {
-    ASSERT(ncol >= 0 && ncol < (int) columns.size());
+    ASSERT(ncol >= 0);
+    ASSERT(ncol < (int) columns.size());
 
     column &col = columns[ncol];
     vector<string> segs = split_string("\n", s, false, true);
@@ -1702,7 +1723,7 @@ void column_composer::add_formatted(int ncol,
 
     compose_formatted_column(newlines,
                               col.lines,
-                              margin == -1? col.margin : margin);
+                              margin == -1 ? col.margin : margin);
 
     col.lines += newlines.size();
 
@@ -1861,23 +1882,12 @@ bool formatted_scroller::jump_to(int i)
         first_entry = i - 1;
 
 #ifdef USE_TILE_WEB
-    if (first_entry < webtiles_section_start()
-        || webtiles_section_end() <= first_entry)
+    webtiles_update_section_boundaries();
+    if (tiles.is_in_menu(this))
     {
-        _webtiles_section_start = first_entry;
-        while (_webtiles_section_start > 0
-               && items[_webtiles_section_start]->level != MEL_TITLE)
-        {
-            _webtiles_section_start--;
-        }
-        _webtiles_section_end = first_entry + 1;
-        while (_webtiles_section_end < (int) items.size()
-               && items[_webtiles_section_end]->level != MEL_TITLE)
-        {
-            _webtiles_section_end++;
-        }
+        webtiles_write_menu(true);
+        tiles.finish_message();
     }
-    webtiles_write_menu(true);
 #endif
 
     return true;
@@ -1962,12 +1972,8 @@ vector<MenuEntry *> formatted_scroller::show(bool reuse_selections)
 {
 #ifdef USE_TILE_WEB
     _webtiles_section_start = 0;
-    _webtiles_section_end = 1;
-    while (_webtiles_section_end < (int) items.size()
-           && items[_webtiles_section_end]->level != MEL_TITLE)
-    {
-        _webtiles_section_end++;
-    }
+    _webtiles_section_end = 0;
+    webtiles_update_section_boundaries();
 #endif
     return Menu::show(reuse_selections);
 }
@@ -3051,7 +3057,8 @@ void SaveMenuItem::_pack_doll()
         if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
-        ASSERT(idx >= TILE_MAIN_MAX && idx < TILEP_PLAYER_MAX);
+        ASSERT(idx >= TILE_MAIN_MAX);
+        ASSERT(idx < TILEP_PLAYER_MAX);
 
         int ymax = TILE_Y;
 
@@ -3702,8 +3709,14 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
 }
 
 MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
-    m_items_shown(0)
+                              m_items_shown(0)
 {
+#ifdef USE_TILE_LOCAL
+    m_arrow_up = new TextTileItem();
+    m_arrow_down = new TextTileItem();
+    m_arrow_up->add_tile(tile_def(TILE_MI_ARROW0, TEX_DEFAULT));
+    m_arrow_down->add_tile(tile_def(TILE_MI_ARROW4, TEX_DEFAULT));
+#endif
 }
 
 MenuScroller::~MenuScroller()
@@ -3904,6 +3917,16 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             else
                 return MenuObject::INPUT_DESELECTED;
         }
+#ifdef USE_TILE_LOCAL
+        else
+        {
+            // handle clicking on the scrollbar (top half of region => scroll up)
+            if (static_cast<int>(me.py)-m_min_coord.y > (m_max_coord.y-m_min_coord.y)/2)
+                return process_input(CK_DOWN);
+            else
+                return process_input(CK_UP);
+        }
+#endif
     }
     if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
@@ -3927,6 +3950,12 @@ void MenuScroller::render()
     vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
         (*it)->render();
+
+#ifdef USE_TILE_LOCAL
+    // draw scrollbar
+    m_arrow_up->render();
+    m_arrow_down->render();
+#endif
 }
 
 MenuItem* MenuScroller::get_active_item()
@@ -4137,6 +4166,15 @@ void MenuScroller::_place_items()
         space_used += item_height;
         ++m_items_shown;
     }
+
+#ifdef USE_TILE_LOCAL
+    // arrows
+    m_arrow_down->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_max_coord.y-32),coord_def(m_max_coord.x,m_max_coord.y));
+    m_arrow_down->set_visible(m_topmost_visible + m_items_shown < (int)m_entries.size());
+
+    m_arrow_up->set_bounds_no_multiply(coord_def(m_max_coord.x-32,m_min_coord.y),coord_def(m_max_coord.x,m_min_coord.y+32));
+    m_arrow_up->set_visible(m_topmost_visible>0);
+#endif
 }
 
 MenuItem* MenuScroller::_find_item_by_direction(int start_index,

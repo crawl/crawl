@@ -173,8 +173,8 @@ static inline int get_resist(resists_t all, mon_resist_flags res)
 
 dungeon_feature_type habitat2grid(habitat_type ht);
 
-monsterentry *get_monster_data(monster_type mc) PURE;
-resists_t get_mons_class_resists(monster_type mc) PURE;
+monsterentry *get_monster_data(monster_type mc) IMMUTABLE;
+resists_t get_mons_class_resists(monster_type mc) IMMUTABLE;
 resists_t get_mons_resists(const monster* mon);
 int get_mons_resist(const monster* mon, mon_resist_flags res);
 
@@ -257,6 +257,7 @@ habitat_type mons_secondary_habitat(const monster* mon);
 bool intelligent_ally(const monster* mon);
 
 bool mons_skeleton(monster_type mc);
+bool mons_zombifiable(monster_type mc);
 
 int mons_weight(monster_type mc);
 int mons_class_base_speed(monster_type mc);
@@ -267,7 +268,6 @@ bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster* mon);
 bool mons_class_can_display_wounds(monster_type mc);
 bool mons_can_display_wounds(const monster* mon);
-zombie_size_type zombie_class_size(monster_type cs);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster* mon);
 bool mons_class_is_zombified(monster_type mc);
@@ -298,7 +298,7 @@ void define_monster(monster* mons);
 
 void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 
-bool mons_should_fire(struct bolt &beam);
+bool mons_should_fire(bolt &beam);
 
 bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
@@ -364,6 +364,7 @@ bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 bool mons_has_flesh(const monster* mon);
+bool mons_is_abyssal_only(monster_type mc);
 
 bool herd_monster(const monster* mon);
 
@@ -423,21 +424,27 @@ int get_dist_to_nearest_monster();
 bool monster_nearby();
 actor *actor_by_mid(mid_t m);
 monster *monster_by_mid(mid_t m);
-
+bool mons_is_tentacle_head(monster_type mc);
+bool mons_is_child_tentacle(monster_type mc);
+bool mons_is_child_tentacle_segment(monster_type mc);
 bool mons_is_tentacle(monster_type mc);
 bool mons_is_tentacle_segment(monster_type mc);
-bool mons_is_tentacle_head(monster_type mc);
+bool mons_is_tentacle_or_tentacle_segment(monster_type mc);
+bool mons_is_recallable(actor* caller, monster* targ);
 monster* mons_get_parent_monster(monster* mons);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
 void check_clinging();
-bool mons_is_tentacle_end(monster_type mtype);
 monster_type mons_tentacle_parent_type(const monster* mons);
 monster_type mons_tentacle_child_type(const monster* mons);
 bool mons_tentacle_adjacent(const monster* parent, const monster* child);
 mon_threat_level_type mons_threat_level(const monster *mon,
                                         bool real = false);
 
+bool mons_foe_is_marked(const monster* mons);
+vector<monster* > get_on_level_followers();
+
 void reset_all_monsters();
+void debug_mondata();
 #endif

@@ -39,18 +39,19 @@ karmaikkal feldarabolják és felfalják.
 %%%%
 Halfling
 
-Kicsi de kemény, kiváló parittyával. Enyhén ellenállóak mutációkkal szemben.
+Kicsi de kemény, a félszerzet kiválóan bánik a parittyával. Enyhén ellenállóak
+mutációkkal szemben.
 %%%%
 High Elf
 
-Büszke tündék, akik épp oly jól használnak varázslatokat mint ahogy a kardot
+Büszke tündék, akik épp oly jól használják a varázslatokat mint ahogy a kardot
 forgatják.
 %%%%
 Hill Orc
 
-Az orkok a közelharc mesterei, és gyakran belekóstolnak a támadó mágiába is.
-Közutálatnak örvendve az orkok büszkék és sok közülük felsőbbrendűnek érzi
-magát.
+Az orkok a közelharc mesterei, gyakran belekóstolnak a támadó mágiába is.
+Közutálatnak örvendve az orkok büszkék,  és elteltek a felsőbbrendűség
+érzésével.
 %%%%
 Human
 
@@ -68,7 +69,7 @@ felfalni bármilyen húst.
 %%%%
 Merfolk
 
-Félig ember, félig hal, a merfolk otthon érzi magát vízben és szárazon is.
+Félig ember, félig hal, a hablény otthon érzi magát vízben és szárazon is.
 %%%%
 Minotaur
 
@@ -81,7 +82,7 @@ Bebalzsamozott és bepólyált élőholt, akit egy ősi átok kényszerít a moz
 Naga
 
 Hibrid: deréktól felfelé ember, vastag, pikkelyes, kígyóéhoz hasonlatos
-alsótesttel.
+alsótesttel. Lassan mozognak de természettől fogva ellenállóak.
 %%%%
 Octopode
 

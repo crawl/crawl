@@ -56,6 +56,20 @@ body {
     color: #729fcf; /* lightblue */
 }
 
+.degenerated_defense {
+    color: #a40000; /* red */
+}
+.boosted_defense {
+    color: #729fcf; /* lightblue */
+}
+
+.boosted_hp {
+    color: #729fcf; /* lightblue */
+}
+.boosted_mp {
+    color: #729fcf; /* lightblue */
+}
+
 
 .bar span {
     display: inline-block;
@@ -99,11 +113,11 @@ body {
     line-height: 1.4em;
     width: 100%;
 }
-.prefix_glyph.turn_marker {
-    color: #babdb6; /* lightgray */
-}
 .prefix_glyph.command_marker {
     color: #555753; /* darkgray */
+}
+.prefix_glyph.turn_marker {
+    color: #babdb6; /* lightgray */
 }
 .game_message {
     white-space: pre-wrap;

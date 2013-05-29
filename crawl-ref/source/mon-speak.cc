@@ -18,7 +18,6 @@
 #include "branch.h"
 #include "cluautil.h"
 #include "database.h"
-#include "debug.h"
 #include "dlua.h"
 #include "ghost.h"
 #include "libutil.h"

@@ -1,6 +1,5 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20110403 for Dungeon Crawl Stone Soup 0.8.0.)
 
 Getting DCSS to run
 -------------------
@@ -39,20 +38,21 @@ The rest of the file deals with compiling from the source.
 Building Dungeon Crawl Stone Soup
 ---------------------------------
 
-Crawl Stone Soup is known to compile successfully on the following platforms
-as of version 0.8:
+Crawl Stone Soup is known to run on the following platforms as of version
+0.12:
 
-- Any Unix with a recent gcc (and g++), GNU make and libncursesw, including
-  Linux and Mac OS X.  "Recent" is defined as gcc 4.1 or newer.
-- Microsoft Windows NT/2000/XP.
+- Any Unix with GNU or BSD userland.
+- Mac OS X.
+- Android.
+- Microsoft Windows 2000/XP/Vista/7/8
 
-The only officially supported compiler is gcc (available on almost all
-Unixes, and as MinGW for Windows).
+The only officially supported compilers are gcc (4.1 or newer) and clang
+(3.0 or newer), with strong preference for the former.  On Windows, gcc is
+usually available as MinGW; and as of version 0.13, compilation with MSVC
+(Microsoft Visual Studio 2012 both Full or Express editions) is supported.
 
-On other platforms, your mileage may wary, but you should be able to build
-Crawl on pretty much any operating system with a modern C++ compiler (full
-support for the standard C++ library, in particular <string>, the collection
-classes and <algorithm> is necessary) and the curses library.
+There's no reason Crawl shouldn't work on other modern systems, especially
+Unixy ones, although some porting may be needed.
 
 Windows 9X and ME are no longer supported but you may probably build for
 them with relatively minor changes.
@@ -116,8 +116,8 @@ source directory, where you can run it as "./crawl".
 
 Prerequisites (Debian):
 
-On Debian-based systems (Ubuntu, Mepis, Xandros, ...), you can get all
-dependencies by typing the following as root/sudo:
+On Debian-based systems (Ubuntu, Mint, ...), you can get all dependencies by
+typing the following as root/sudo:
 apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
   libsqlite3-dev libz-dev pkg-config libsdl-image1.2-dev libsdl1.2-dev      \
   libfreetype6-dev libpng-dev ttf-dejavu-core
@@ -125,8 +125,8 @@ apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
 with it you don't have a need for the bundled "contribs".
 
 If you are going to be rebuilding after doing small changes a lot, it is
-recommended that you also install and configure ccache:
-apt-get install ccache
+recommended that you also install and configure ccache and binutils-gold:
+apt-get install ccache binutils-gold
 less /usr/share/doc/ccache/README.Debian
 
 
@@ -204,7 +204,14 @@ Building:
 Building on Mac OS X
 --------------------
 
-Mac builds use the Unix build process described above, but require you
+Before building on Mac OS X, you need a working copy of Xcode and the
+associated command line tools. For recent versions of OS X, Xcode can be
+installed through the AppStore as a free download; the associated command
+line tools can then be installed by opening Xcode, opening the Preferences
+dialog, and clicking Install on the Command Line Tools line in the Download
+tab.
+
+Mac builds then use the Unix build process described above, but require you
 to add 'APPLE_GCC=y' to the 'make' command-line. In addition, to build the
 graphical version of Crawl, you must add 'NO_PKGCONFIG=y' and
 'CONTRIB_SDL=y'.
@@ -228,13 +235,10 @@ run on 9x).
 
 * To build Crawl on Windows, first download and install msysgit. msysgit is
   a full MinGW setup that even includes Git (which happens to be the source
-  code management system used by the Crawl team). To get msysgit, be sure to
-  download the 'msysGit-netinstall' from here:
+  code management system used by the Crawl team). To get msysgit, download
+  'msysGit-netinstall' from here:
 
-    http://code.google.com/p/msysgit/downloads/list
-
-  NOTE: Do NOT get any of the versions that do not have 'netinstall' in the
-        filename. The 'netinstall' is the only one used by the Crawl team.
+    http://code.google.com/p/msysgit/downloads/list?q=net+installer
 
   NOTE: msysgit should be installed to a path that does not contain spaces,
         such as the default location 'c:\msysgit'.
@@ -276,6 +280,42 @@ Building on Windows (cygwin)
 
 * Follow the Linux build instructions to build Crawl.
 
+Building on Windows (MSVC)
+--------------------------
+
+* If you do not have Visual Studio 2012 you can get the free Express edition
+  (for Desktop) from http://www.microsoft.com/visualstudio/eng/downloads
+  (look for Visual Studio Express 2012 for Windows Desktop).
+
+* You'll need a perl environment, there are links to several Windows binaries
+  you can choose from at http://www.perl.org/get.html
+
+* In the Crawl source, run gen-all.cmd which is in source/util/. This step
+  must be executed any time you update to a new version of the source (or
+  if you have modified tile data or unrandarts).
+
+* Open crawl-ref.sln in Visual Studio, this is in source/MSVC/.
+
+* You can now select Debug or Release from the drop-down build configurations
+  menu on the main toolbar (it should be next to "Local Windows Debugger");
+  crawl.exe can them be compiled by selecting "Build Solution" in the BUILD
+  menu. You can quickly run it by selecting "Start without Debugging" in the
+  debug menu (or debug with "Start Debugging" but the game will run extremely
+  slowly). Note: the Release build can still be debugged using the Visual
+  Studio debugger.
+
+* Better support for Python (for the webserver project) and Lua (for the dat
+  project) can be installed with these extensions:
+
+  Python Tools for Visual Studio
+  http://pytools.codeplex.com/releases
+
+  Ports of VsLua to Visual Studio 2012
+  http://www.dbfinteractive.com/forum/index.php?topic=5873.0
+  http://pouet.net/topic.php?which=9087
+
+  Try at your own risk, but the first one has been tested and found to be
+  effective.
 
 Building Tiles versions
 -----------------------

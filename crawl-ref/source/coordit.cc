@@ -58,11 +58,92 @@ void rectangle_iterator::operator ++()
         current.x++;
 }
 
-
 void rectangle_iterator::operator++(int dummy)
 {
     ++(*this);
 }
+
+
+random_rectangle_iterator::random_rectangle_iterator(const coord_def& corner1,
+                                                     const coord_def& corner2)
+{
+    int left   = min(corner1.x, corner2.x);
+    int right  = max(corner1.x, corner2.x);
+    int top    = min(corner1.y, corner2.y);
+    int bottom = max(corner1.y, corner2.y);
+
+    top_left.x = left;
+    top_left.y = top;
+
+    for (int y = top; y <= bottom; y++)
+        for (int x = left; x <= right; x++)
+            remaining.push_back(coord_def(x, y));
+
+    if (remaining.empty())
+        current = 0;
+    else
+        current = random2(remaining.size());
+}
+
+random_rectangle_iterator::random_rectangle_iterator(int x_border_dist,
+                                                     int y_border_dist)
+{
+    if (y_border_dist < 0)
+        y_border_dist = x_border_dist;
+
+    int right  = GXM - x_border_dist - 1;
+    int bottom = GYM - y_border_dist - 1;
+
+    top_left.x = x_border_dist;
+    top_left.y = y_border_dist;
+
+    for (int y = y_border_dist; y <= bottom; y++)
+        for (int x = x_border_dist; x <= right; x++)
+            remaining.push_back(coord_def(x, y));
+
+    if (remaining.empty())
+        current = 0;
+    else
+        current = random2(remaining.size());
+}
+
+random_rectangle_iterator::operator bool() const
+{
+    return !remaining.empty();
+}
+
+coord_def random_rectangle_iterator::operator *() const
+{
+    if (remaining.empty())
+        return top_left;
+    else
+        return remaining[current];
+}
+
+const coord_def* random_rectangle_iterator::operator->() const
+{
+    if (remaining.empty())
+        return &top_left;
+    else
+        return &(remaining[current]);
+}
+
+void random_rectangle_iterator::operator ++()
+{
+    if (!remaining.empty())
+    {
+        remaining[current] = remaining.back();
+        remaining.pop_back();
+        if (!remaining.empty())
+            current = random2(remaining.size());
+    }
+}
+
+void random_rectangle_iterator::operator++(int dummy)
+{
+    ++(*this);
+}
+
 
 /*
  *  circle iterator

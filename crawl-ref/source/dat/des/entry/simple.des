@@ -1,6 +1,6 @@
 ##############################################################################
 # Simple maps for D:1 entry vaults.
-# See entry.des for where your new entry vault belongs.
+# See entry_guide.txt for where your new entry vault belongs.
 #
 # Please do not rearrange the vaults. The order is chosen so that readers are
 # introduced to new features one by one.
@@ -1139,6 +1139,7 @@ SUBST:  T = t:66 .:33 >:1
 COLOUR: . = brown
 COLOUR: t = w:2 darkgrey / w:1 brown
 TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
 MAP
 xxxxxxxx@xxxxxxxx
 xttttttT.TTtttxxx
@@ -1743,6 +1744,8 @@ MAP
 ............
 ENDMAP
 
+##############################################################################
+
 NAME:   lightli_molten_gateway
 TAGS:   entry no_monster_gen
 ORIENT: float
@@ -1764,4 +1767,167 @@ xxllllllllllllxx
 xxxllllllllllxxx
 xxxxxllllllxxxxx
 xxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   mrwooster_entry_arrow
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxx.xxxxxx
+xxxxx...xxxxx
+xxxx.....xxxx
+xxx.......xxx
+xx.........xx
++.....{.....+
+xxxxx...xxxxx
+    xx.xx
+     x.x
+     x.x
+     x.x
+     x+x
+ENDMAP
+
+NAME:   mrwooster_entry_statue
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxG{Gxxxxx
+xx.........xx
+xx.........xx
+xx.........xx
+.............
+ENDMAP
+
+NAME:   mrwooster_entry_statue_2
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxG{Gxxxxx
+xx.........xx
+xG.........Gx
+x[.........(x
+xG.........Gx
+xx.........xx
+.............
+ENDMAP
+
+NAME:   mrwooster_entry_statue_3
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxG{Gxxxxx
+xx.........xx
+xG.........Gx
+x[.........(x
+xG.........Gx
+xx.........xx
+xx.........xx
+xxxxxx+xxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME: lightli_entry_statue_moat
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP
+xxxx..xxxx
+xx......xx
+x.xGwwGx.x
+x.xwwwwx.x
+x.xGwwGx.x
+x.xwwwwx.x
+x.xGwwGx.x
+xx......xx
+xxx.{[.xxx
+xxxxxxxxxx
+ENDMAP
+
+NAME: lightli_entry_chessboard
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP
+.c.c.c.c
+c.c.c.c.
+.c.c.c.c
+c.c{c.c.
+.c.c<c.c
+c.c.c.c.
+.c.c.c.c
+c.c.c.c.
+ENDMAP
+
+NAME: lightli_iron_boxes
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP
+..vv..vv..
+..vv..vv..
+vv..vv..vv
+vv..vv..vv
+..vv(.vv..
+..vv.[vv..
+vv..vv..vv
+vv..vv..vv
+..vv..vv..
+..vv..vv..
+ENDMAP
+
+NAME: lightli_entry_maybe_door_vault
+ORIENT: float
+TAGS: entry
+MARKER: + = lua: props_marker { connected_exclude="true" }
+MAP
+   @@
+ ++++++
+ +....+
+@+.{..+@
+@+..[.+@
+ +....+
+ ++++++
+   @@
+ENDMAP
+
+##############################################################
+NAME:    grunt_entry_crossed_arrows
+ORIENT:  float
+TAGS:    entry no_monster_gen transparent
+SHUFFLE: {([<
+MAP
+....G....
+.xx...xx.
+..xx.xx..
+ ..x+x..
+ ..x+x..
+..xx{xx..
+.++(T[++.
+..xx<xx..
+ ..x+x..
+ ..x+x..
+..xx.xx..
+.xx...xx.
+....G....
+ENDMAP
+
+# Come back for the item later if you want it.
+NAME:    grunt_entry_lava_bath
+ORIENT:  float
+TAGS:    entry no_monster_gen
+SHUFFLE: {([<
+MAP
+    .@...xxxxx
+   ....G.ccccx
+  .......lllcx
+ ...[...llllcx
+@.G..G{.lll%cx
+ ...(...llllcx
+  .......lllcx
+   ....G.ccccx
+    .@...xxxxx
 ENDMAP

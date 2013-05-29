@@ -430,7 +430,7 @@ move_again:
             return true;
         }
 
-        if (mons && mons->submerged())
+        if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
         {
             // Try to swap with the submerged creature.
             if (mons->is_habitable(mon.pos()))
@@ -516,6 +516,16 @@ move_again:
         }
     }
 
+    // Boulders stop at lava/water to prevent unusual behaviour;
+    // skimming across the water like a pebble could be justifiable, but
+    // it raises too many questions.
+    if (!iood && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
+    {
+        mprf("%s screeches to a halt.", mon.name(DESC_THE, true).c_str());
+        _iood_stop(mon,false);
+        return true;
+    }
+
     if (!mon.move_to_pos(pos))
     {
         _iood_stop(mon);
@@ -571,6 +581,13 @@ static bool _iood_catchup_move(monster& mon)
         _iood_stop(mon, true);
         return true;
     }
+    // Boulder doesn't travel over water/lava.
+    if (mons_is_boulder(&mon)
+        && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
+    {
+        _iood_stop(mon, false);
+        return true;
+    }
 
     if (!mon.move_to_pos(pos))
     {
@@ -588,23 +605,26 @@ static bool _iood_catchup_move(monster& mon)
 void iood_catchup(monster* mons, int pturns)
 {
     monster& mon = *mons;
-    ASSERT(mons_is_projectile(mon.type));
+    ASSERT(mon.is_projectile());
 
     const int moves = pturns * mon.speed / BASELINE_DELAY;
 
-    if (moves > 50)
+    // Handle some cases for IOOD only
+    if (mons_is_projectile(mons))
     {
-        _iood_stop(mon, false);
-        return;
-    }
+        if (moves > 50)
+        {
+            _iood_stop(mon, false);
+            return;
+        }
 
-    if (mon.props["iood_kc"].get_byte() == KC_YOU)
-    {
-        // Left player's vision.
-        _iood_stop(mon, false);
-        return;
+        if (mon.props["iood_kc"].get_byte() == KC_YOU)
+        {
+            // Left player's vision.
+            _iood_stop(mon, false);
+            return;
+        }
     }
-
 
     for (int i = 0; i < moves; ++i)
         if (_iood_catchup_move(mon))

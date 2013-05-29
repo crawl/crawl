@@ -26,7 +26,6 @@ public:
 #endif
     virtual key_mod get_mod_state() const;
     virtual void set_mod_state(key_mod mod);
-    virtual int byte_order();
 
     // System time functions
     virtual void set_timer(unsigned int interval,

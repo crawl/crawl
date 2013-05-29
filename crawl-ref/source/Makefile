@@ -101,28 +101,6 @@ include Makefile.obj
 #
 
 
-ifdef USE_ICC
-
-# If you have a Core 2 processor, this _really_ makes things fly:
-#CFOPTIMIZE := -O2 -parallel -xT
-
-# Optionally enable the 'ipo' feature, to facilitate inlining
-# across object file bounds.
-#CFOPTIMIZE_L := -ipo
-
-# Some very good optimization flags.
-CFOPTIMIZE := -O2 -parallel
-
-else
-
-CFOPTIMIZE := -O2
-
-endif # USE_ICC
-
-ifdef LTO
-CFOPTIMIZE += -flto=jobserver -fwhole-program
-endif
-
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 CFWARN := -Wall -Wformat-security
 CFWARN_L := -Wundef
@@ -157,8 +135,6 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
-TX-MKINI = util/tx-mkini.pl
-TX-MKTXT = util/tx-mktxt.pl
 
 export AR
 export RANLIB
@@ -245,9 +221,6 @@ ifeq ($(uname_S),Darwin)
 		BUILD_LIBPNG = YesPlease
 	endif
 	COPY_FONTS = yes
-endif
-ifdef USE_LUAJIT
-	BUILD_LUA := YesPlease
 endif
 ifdef USE_ICC
 	NO_RDYNAMIC := YesPlease
@@ -539,6 +512,35 @@ CFOPTIMIZE += -march=native
 endif
 endif
 
+ifdef USE_ICC
+# If you have a Core 2 processor, this _really_ makes things fly:
+#CFOPTIMIZE := -O2 -parallel -xT
+
+# Optionally enable the 'ipo' feature, to facilitate inlining
+# across object file bounds.
+#CFOPTIMIZE_L := -ipo
+
+# Some very good optimization flags.
+  CFOPTIMIZE := -O2 -parallel
+else
+
+  ifneq (,$(shell $(GXX) --version|grep 'g++.*4\.2\.'))
+    # OS X uses a buggy ancient version of gcc without fixes from even
+    # subsequent point releases of 4.2.
+    CFOPTIMIZE := -O1
+  else
+    CFOPTIMIZE := -O2
+  endif
+endif
+
+ifdef LTO
+CFOPTIMIZE += -flto=jobserver -fwhole-program
+  # FIXME: this check is fragile, and should be done via a full compile test.
+  ifeq ($(shell $(GXX) -x c++ /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
+    CFOPTIMIZE += -fno-fat-lto-objects
+  endif
+endif
+
 # Okay, we have to assume we're on something else that
 # uses standard UNIX-like methods for finding libs.
 #
@@ -568,18 +570,26 @@ ifndef BUILD_LUA
   endif
 endif
 ifndef BUILD_LUA
-  ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
-    ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
-      BUILD_LUA = yes
+  ifneq ($(USE_LUAJIT),)
+    ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
+      LUA_PACKAGE = luajit
     else
-      ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
-        LUA_PACKAGE = lua
-      else
-        BUILD_LUA = yes
-      endif
+      BUILD_LUA = yes
     endif
   else
-    LUA_PACKAGE = lua5.1
+    ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
+      ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
+        BUILD_LUA = yes
+      else
+        ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+          LUA_PACKAGE = lua
+        else
+          BUILD_LUA = yes
+        endif
+      endif
+    else
+      LUA_PACKAGE = lua5.1
+    endif
   endif
 endif
 ifndef BUILD_LUA
@@ -681,7 +691,8 @@ INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 endif # TILES
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
-CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN   += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
@@ -1080,8 +1091,8 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 greet:
 	@if [ ! -e $(GAME) ]; then\
-		printf "  * If you experience any problems building Crawl, please take a second look\\n"\
-		"  * at INSTALL.txt: the solution to your problem just might be in there!\\n";\
+		printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
+		                  "at INSTALL.txt: the solution to your problem just might be in there!";\
 	fi
 
 docs: $(GENERATED_DOCS)
@@ -1136,8 +1147,11 @@ ifneq ($(GOALS),$(filter clean test %-windows,$(GOALS)))
 # This should eliminate an annoying need to use 'make clean' every time.
 #
 
-TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' for highlights)
-OLD_CFLAGS = $(shell cat .cflags 2>/dev/null)
+TRACK_CFLAGS = $(strip $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS)))
+        # (stray ' for highlights)
+OLD_CFLAGS = $(strip $(subst ','\'',$(shell cat .cflags 2>/dev/null)))
+        # (stray ' for highlights)
+
 ifneq ($(TRACK_CFLAGS),$(OLD_CFLAGS))
   NEED_REBUILD = y
 endif
@@ -1145,6 +1159,8 @@ endif
 .cflags: .force-cflags
 ifdef NEED_REBUILD
 	@echo "    * rebuilding crawl: new build flags or prefix"
+	@echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
+	@echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
 	@echo '$(TRACK_CFLAGS)' > .cflags
 endif
 
@@ -1178,7 +1194,7 @@ endif
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
-compflag.h: $(OBJECTS:.o=.cc) util/gen-cflg.pl
+compflag.h: $(OBJECTS:.o=.cc) util/gen-cflg.pl .cflags
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
 
 build.h: $(OBJECTS:.o=.cc) util/gen_ver.pl
@@ -1277,7 +1293,7 @@ endif
 	mkdir -p $(datadir_fp)/docs/license
 	mkdir -p $(datadir_fp)/settings
 	$(COPY_R) dat/des/* $(datadir_fp)/dat/des/
-	$(COPY)   dat/dlua/*.lua $(datadir_fp)/dat/dlua/
+	$(COPY_R) dat/dlua/* $(datadir_fp)/dat/dlua/
 	echo "-- Autogenerated list of maps to load and compile:" \
 	    >$(datadir_fp)/dat/dlua/loadmaps.lua
 	find dat -name '*.des'|sed s:dat/::| \
@@ -1339,11 +1355,12 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles clean-webserver clean-android tx-clean
+clean: clean-rltiles clean-webserver clean-android
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty
+	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
+            rltiles/tiledef-unrand.cc
 	$(RM) -r build-win
 	$(RM) -r build
 
@@ -1390,7 +1407,9 @@ $(DEPS): %.d: %.cc
 ifdef PCH
 -include AppHdr.h.d
 %.gch: % .cflags $(CONTRIB_LIBS)
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+# This needs -MD, not -MMD, lest we be haunted by the ghosts of stale
+# system headers.
+	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -MD -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
@@ -1447,8 +1466,8 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 #############################################################################
 # Build unrandart data
 art-data.h: art-data.txt util/art-data.pl art-func.h
-	$(QUIET_GEN)util/art-data.pl
-art-enum.h: art-data.h
+	util/art-data.pl
+art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 
 mon-mst.h: mon-spll.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
@@ -1471,149 +1490,15 @@ l_moninf.o: mi-enum.h
 macro.o: cmd-name.h
 
 #############################################################################
-# Translation files
-#
-# Only support a single dir for now
-TX = tx
-TX-CONFIG = .tx/config
-TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --execute
-TX-DIR = dat/descript
-
-# List of languages
-TX-LANG = $(filter-out en, $(notdir $(wildcard $(TX-DIR)/??)))
-
-# Text source files under git versioning
-TX-TSOURCES = $(wildcard $(TX-DIR)/*.txt)
-TX-TTRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.txt))
-TX-TXT = $(TX-TSOURCES) $(TX-TTRANS)
-
-# Files generated from the source. To be pushed to transifex
-TX-SOURCES = $(TX-TSOURCES:.txt=.ini)
-TX-TRANS = $(TX-TTRANS:.txt=.ini)
-TX-INI = $(TX-SOURCES) $(TX-TRANS)
-
-# What file to used to generate the quote files to push to transifex
-# We add placeholder entries in it to allow users to submit new quotes
-TX-QUOTES = $(TX-DIR)/quotes.ini
-TX-QUOTES-ALL = $(TX-DIR)/quotes-all.ini
-TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-DIR)/$(name).ini)
-
-# Files pulled from transifex. It is different than TX-TRANS, because it can
-# contain new files for which we have no .txt yet
-TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
-TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
-TX-NEW-TEXT = $(filter-out $(TX-NEW-QUOTES), $(wildcard $(TX-DIR)/en/*.ini))
-TX-NEW = $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
-
-TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
-
-.PHONY: tx-clean tx-txt tx-init tx-setup tx-check tx-pull tx-push tx-sync
-
-tx-clean:
-	@echo "Removing transifex temporary files"
-	@$(RM) $(TX-INI) $(TX-QUOTES-ALL) $(TX-NEW)
-
-$(TX-QUOTES-ALL): $(TX-QUOTES) $(TX-HAVE-QUOTES)
-	util/tx-quotes.pl $(TX-QUOTES) $(TX-QUOTES-ALL) $(TX-HAVE-QUOTES)
-
-# XXX for database file, we'll need a conditional to remove the -u option.
-%.ini: %.txt
-	$(TX-MKINI) -u $*.txt
-
-tx-txt:
-	-if [ "$(TX-NEW-TRANS)" != "" ]; then\
-		$(TX-MKTXT) -w $(TX-NEW-TRANS);\
-	fi
-	-if [ "$(TX-NEW-TEXT)" != "" ]; then\
-		$(TX-MKTXT) -mw -d $(TX-DIR) $(TX-NEW-TEXT);\
-	fi
-	-if [ "$(TX-NEW-QUOTES)" != "" ]; then\
-		$(TX-MKTXT) -amw -d $(TX-DIR) $(TX-NEW-QUOTES);\
-	fi
-
-tx-init:
-	$(RM) $(TX-CONFIG)
-	if [ -d .tx ]; then\
-		rmdir --ignore-fail-on-non-empty .tx;\
-	fi
-	$(MAKE) tx-setup
-
-tx-setup: $(TX-SOURCES) $(TX-QUOTES-ALL)
-	if [ ! -e $(TX-CONFIG) ]; then\
-		$(TX) init;\
-	fi
-	for FILE in $(TX-SOURCES); do\
-		DIR=$$(dirname $$FILE);\
-		RES=$$(basename $$FILE .ini);\
-		grep -q dcss.$$RES .tx/config;\
-		if [ $$? -ne 0 ]; then\
-			if [ $$RES = quotes ]; then\
-				SRC=$$DIR/quotes-all.ini;\
-			else\
-				SRC=$$DIR/$$RES.ini;\
-			fi;\
-			$(TX-SET) -r dcss.$$RES --source-file $$SRC "$$DIR/<lang>/$$RES.ini";\
-		fi;\
-	done
-
-tx-check: $(TX-INI)
-	@if $(TX-MKTXT) -mtw $(TX-SOURCES) && $(TX-MKTXT) -tw $(TX-TRANS); then\
-		exit 0;\
-	fi;\
-	echo "Changes detected when converting to transifex format.";\
-	git diff --quiet HEAD -- $(TX-TXT) || echo "Warning: some of the text files have uncommited changes!";\
-	read -p "Attempt automatic fix? (Y/n) " RESP;\
-	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
-		exit 1;\
-	fi;\
-	$(TX-MKTXT) -mw $(TX-SOURCES);\
-	$(TX-MKTXT) -w $(TX-TRANS);\
-
-tx-commit:
-	@if git diff HEAD --quiet $(TX-TXT); then\
-		exit 0;\
-	fi;\
-	git diff HEAD $(TX-TXT);\
-	read -p "Commit? (Y/n) " RESP;\
-	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
-		exit 1;\
-	fi;\
-	if [ -z "$(TX-COMMIT-MSG)" ]; then\
-		MSG="Transifex.";\
-	else\
-		MSG="$(TX-COMMIT-MSG)";\
-	fi;\
-	git add $(TX-TXT);\
-	git commit -e -s -m "$$MSG" --author=$(TX-COMMIT-AUTHOR)
-
-tx-pull:
-	@echo "Cleaning up downloaded translations.";\
-	$(RM) $(TX-NEW)
-	tx pull -a
-
-tx-push: $(TX-INI) $(TX-QUOTES-ALL)
-	$(TX-MKINI) -umd $(TX-DIR)/en $(TX-TSOURCES)
-	tx push -s
-	tx push -t --skip
-
-tx-sync:
-	$(MAKE) tx-check
-	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex format fix."
-	$(MAKE) tx-pull
-	$(MAKE) tx-txt
-	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex sync."
-	$(MAKE) tx-push
-
-#############################################################################
 # RLTiles
 #
 
-.PHONY: build-rltiles
+#.PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 ifdef ANDROID
-	# force submake to run properly
-	env -i - bash -l -c "$(MAKE) -C $(RLTILES) all TILES=1 V=1"
-    # prove that tiles were generated properly
+        # force submake to run properly
+	+$(MAKE) -C $(RLTILES) all ANDROID=1 TILES=1 V=1
+        # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
@@ -1697,7 +1582,9 @@ package-windows:
 ifneq (x$(SRC_VERSION),x$(shell cat build-win/version.txt 2>/dev/null))
 	+$(MAKE) build-windows
 endif
-	makensis -NOCD -DVERSION=$(SRC_VERSION) util/crawl.nsi
+	if $(GXX) -dumpmachine|grep -q x86_64; \
+	  then WINARCH=win64; else WINARCH=win32; fi; \
+	makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$$WINARCH" util/crawl.nsi
 
 build-windows:
 ifneq ($(GAME),crawl.exe)

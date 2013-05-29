@@ -53,7 +53,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 void prompt_inscribe_item();
 
 void warn_shield_penalties();
-void warn_armour_penalties();
 
 bool stasis_blocks_effect(bool calc_unid, bool identify,
                           const char *msg, int noise = 0,

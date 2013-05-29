@@ -44,7 +44,7 @@
 #ifdef WIZARD
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
-    if (player_in_connected_branch())
+    if (player_in_connected_branch() || player_in_branch(BRANCH_ABYSS))
     {
         int depth = you.depth;
         if (down)
@@ -64,6 +64,8 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
             // Special cases
             if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
                 return DNGN_EXIT_HELL;
+            else if (player_in_branch(BRANCH_ABYSS))
+                return DNGN_EXIT_ABYSS;
             else if (player_in_branch(BRANCH_MAIN_DUNGEON))
                 return DNGN_STONE_STAIRS_UP_I;
 
@@ -102,9 +104,6 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         }
         else
             return DNGN_ESCAPE_HATCH_UP;
-
-    case BRANCH_ABYSS:
-        return DNGN_EXIT_ABYSS;
 
     case BRANCH_PANDEMONIUM:
         if (down)
@@ -180,6 +179,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.depth         = pos.id.depth;
 
+    leaving_level_now(stair_taken);
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
     tile_new_level(newlevel);
     if (!crawl_state.test)
@@ -553,8 +553,23 @@ bool debug_make_shop(const coord_def& pos)
     return true;
 }
 
+static void _free_all_vaults()
+{
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        env.level_map_ids(*ri) = INVALID_MAP_INDEX;
+    for (vault_placement_refv::const_iterator vp = env.level_vaults.begin();
+         vp != env.level_vaults.end(); ++vp)
+    {
+        (*vp)->seen = false;
+    }
+    dgn_erase_unused_vault_placements();
+}
+
 static void debug_load_map_by_name(string name, bool primary)
 {
+    if (primary)
+        _free_all_vaults();
+
     const bool place_on_us = !primary && strip_tag(name, "*", true);
 
     level_clear_vault_memory();
@@ -630,6 +645,11 @@ static void debug_load_map_by_name(string name, bool primary)
         you.props["force_map"] = toplace->name;
         wizard_recreate_level();
         you.props.erase("force_map");
+
+        // We just saved with you.props["force_map"] set; save again in
+        // case we crash (lest we have the property forever).
+        if (!crawl_state.test)
+            save_game_state();
     }
     else
     {
@@ -727,7 +747,7 @@ static void _debug_destroy_doors()
 // a) Destroys all traps on the level.
 // b) Kills all monsters on the level.
 // c) Suppresses monster generation.
-// d) Converts all closed doors and secret doors to floor.
+// d) Converts all closed doors to floor.
 // e) Forgets map.
 // f) Counts number of turns needed to explore the level.
 void debug_test_explore()
@@ -796,21 +816,14 @@ void wizard_list_levels()
 void wizard_recreate_level()
 {
     // Need to allow reuse of vaults, otherwise we'd run out of them fast.
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-        env.level_map_ids(*ri) = INVALID_MAP_INDEX;
-    for (vault_placement_refv::const_iterator vp = env.level_vaults.begin();
-         vp != env.level_vaults.end(); ++vp)
-    {
-        (*vp)->seen = false;
-    }
-    dgn_erase_unused_vault_placements();
+    _free_all_vaults();
 
     for (monster_iterator mi; mi; ++mi)
     {
         if (mons_is_unique(mi->type))
         {
             remove_unique_annotation(*mi);
-            you.unique_creatures[mi->type] = false;
+            you.unique_creatures.set(mi->type, false);
             mi->flags |= MF_TAKING_STAIRS; // no Abyss transit
         }
     }
@@ -821,6 +834,7 @@ void wizard_recreate_level()
     if (lev.depth == 1 && lev != BRANCH_MAIN_DUNGEON)
         stair_taken = branches[lev.branch].entry_stairs;
 
+    leaving_level_now(stair_taken);
     you.get_place_info().levels_seen--;
     delete_level(lev);
     const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);

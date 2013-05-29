@@ -45,7 +45,8 @@ bool is_random_lair_subbranch(branch_type branch)
 
 bool is_connected_branch(branch_type branch)
 {
-    ASSERT(branch >= 0 && branch < NUM_BRANCHES);
+    ASSERT(branch >= 0);
+    ASSERT(branch < NUM_BRANCHES);
     return !(branches[branch].branch_flags & BFLAG_NO_XLEV_TRAVEL);
 }
 
@@ -68,11 +69,6 @@ int current_level_ambient_noise()
     return branches[you.where_are_you].ambient_noise;
 }
 
-bool branch_has_monsters(branch_type branch)
-{
-    return branches[branch].mons_rarity_function != mons_null_rare;
-}
-
 branch_type get_branch_at(const coord_def& pos)
 {
     return level_id::current().get_next_level_id(pos).branch;
@@ -80,5 +76,9 @@ branch_type get_branch_at(const coord_def& pos)
 
 bool branch_is_unfinished(branch_type branch)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (branch == BRANCH_UNUSED)
+        return true;
+#endif
     return branch == BRANCH_FOREST || branch == BRANCH_DWARVEN_HALL;
 }

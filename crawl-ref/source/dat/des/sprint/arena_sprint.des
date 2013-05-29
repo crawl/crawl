@@ -38,9 +38,6 @@
 -- only get about 60 turns to kill the last enemy, and it might spawn in a far
 -- away spot. This is intentional.
 --
--- XXX: It would be good if arena points override real points, multiplied by
---      runecount if you win.
---
 -- XXX: TRJ doesn't work.
 --
 -- XXX: Zin is overpowered.
@@ -150,14 +147,15 @@ function arena_sprint_end_round(data)
     end
 
     style_gain = style_gain * data.style_mult
-    data.style_points = data.style_points + style_gain
-    if data.style_points > 1 then
-        crawl.mpr("You now have " .. data.style_points .. " arena points " ..
+    local style_points = dgn.persist.arena_style_points + style_gain
+    dgn.persist.arena_style_points = style_points
+    if style_points > 1 then
+        crawl.mpr("You now have " .. style_points .. " arena points " ..
                   "(gained " .. style_gain .. ").", "intrinsic_gain")
     else
         crawl.mpr("You now have 1 arena point.", "intrinsic_gain")
     end
-    crawl.take_note("Arena points: " .. data.style_points ..
+    crawl.take_note("Arena points: " .. style_points ..
                     " (+" .. style_gain .. ") [x" .. data.style_mult .. "]",
                     "intrinsic_gain")
 
@@ -231,10 +229,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
-                "small zombie / small skeleton / wight w:5 / necrophage / large zombie w:5 /\
-                    large skeleton w:5 / shadow w:5 / phantom w:5",
-                "worker ant / soldier ant w:2 / queen ant w:1 / ant larva w:1 /\
-                    killer bee w:2",
+                "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
+                "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly / w:1 brown ooze",
                 "giant cockroach / giant mite / giant centipede / w:5 spider /\
                     w:5 goliath beetle / worm / w:5 brain worm",
@@ -264,8 +260,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "jelly / w:5 ooze / w:3 brown ooze / giant eyeball / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
                 "deep dwarf scion / deep dwarf artificer / deep dwarf",
-                "small zombie / small skeleton / wight / necrophage / large zombie w:5 /\
-                    large skeleton w:5 / shadow w:5 / phantom w:5 / w:1 josephine",
+                "zombie / skeleton / wight / necrophage /\
+                    phantom w:5 / w:1 josephine",
                 "w:7 blue devil / iron devil w:5 / orange demon / red devil w:5 / rotting devil /\
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
@@ -276,8 +272,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:30 sky beast / insubstantial wisp",
                 "w:5 earth elemental / clay golem / w:5 stone golem / w:5 boulder beetle /\
                     w:15 iron devil / w:15 iron imp / w:5 rock worm",
-                "w:20 ice beast / small simulacrum / large simulacrum /\
-                    w:5 water elemental",
+                "w:20 ice beast / w:20 simulacrum / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
                 "kobold / big kobold / w:3 kobold demonologist / w:2 sonja",
@@ -309,9 +304,9 @@ function arena_sprint_get_monster_set(round, boss)
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
                 "deep dwarf scion / deep dwarf artificer / w:3 deep dwarf death knight /\
                     w:5 deep dwarf berserker",
-                "w:3 skeletal warrior / wight / necrophage / large zombie w:5 /\
-                    large skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
-                    silent spectre / w:4 josephine",
+                "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
+                    skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
+                    shadow w:3 / silent spectre / w:4 josephine",
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
                 -- Fire, Air, Earth, Water, Death
@@ -328,10 +323,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "ugly thing",
                 "spiny worm w:5 / giant leech / worm / brain worm w:5",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
-                "troll / deep troll w:2 / rock troll / iron troll w:2",
+                "troll / deep troll w:12 / iron troll w:2",
                 "fire drake / swamp drake / steam dragon / swamp dragon /\
                  mottled dragon / komodo dragon",
-                "necrophage / rotting hulk / w:2 ghoul / bog body",
+                "necrophage / plague shambler / w:2 ghoul / bog body",
                 "shapeshifter hd:7",
                 "polar bear / grizzly bear",
                 -- Gimmicks
@@ -378,11 +373,11 @@ function arena_sprint_get_monster_set(round, boss)
                 "ugly thing w:30 / w:15 very ugly thing / w:1 kirke",
                 "vampire mosquito / red wasp w:5 / yellow wasp / giant firefly",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
-                "troll / deep troll / rock troll / iron troll",
+                "troll / deep troll / iron troll",
                 "fire drake w:5 / swamp drake / swamp dragon /\
                     mottled dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
                     dragon w:5 / ice dragon w:5 / storm dragon w:1",
-                "necrophage / rotting hulk / ghoul / bog body",
+                "necrophage / plague shambler / ghoul / bog body",
                 "shapeshifter",
                 -- Gimmicks
                 "neqoxec", "giant spore hd:3", "deep elf priest always_corpse",
@@ -443,7 +438,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "yak / sheep / death yak / apis / catoblepas",
                 "glowing shapeshifter",
                 "hell knight / w:5 necromancer / w:1 margery",
-                "wraith / wight / phantasmal warrior / rotting hulk / skeletal warrior /\
+                "wraith / wight / phantasmal warrior / plague shambler / skeletal warrior /\
                     vampire / ghoul / mummy / flayed ghost / bone dragon / death cob /\
                     profane servitor",
                 "paladin / vault guard / necromancer / hell knight / wizard /\
@@ -798,8 +793,8 @@ function arena_sprint_init_boss_table()
     bs[12] = {"efreet / efreet / orange demon / orange demon /\
               sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"small skeleton / small skeleton / large skeleton /\
-              large skeleton / soul eater / soul eater / lorocyproca /\
+    bs[13] = {"skeleton / skeleton / skeleton /\
+              skeleton / soul eater / soul eater / lorocyproca /\
               executioner / executioner / executioner", "gloorx vloq",
               "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
@@ -944,6 +939,18 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
     end
 end
 
+-- Should return two values: the score, and false to indicate that we
+-- don't want to add the default score.
+function arena_sprint_score (won)
+    local points = dgn.persist.arena_style_points
+    local runes = you.num_runes()
+
+    if won and runes > 0 then
+        points = points * runes
+    end
+    return points, false
+end
+
 }}
 
 NAME:       arena_sprint
@@ -966,7 +973,6 @@ LROCKTILE:  wall_hall
             between_rounds = true,  -- Are we waiting for the next round?
             finished = false,       -- You somehow beat round 42
             monster_set = {},
-            style_points = 0,
             style_mult = 1,
             spawn_dir = ""          -- Which spawn points to use?
         },
@@ -987,6 +993,11 @@ LROCKTILE:  wall_hall
     })
 
     dgn.persist.arena_sprint_boss_set = arena_sprint_init_boss_table()
+
+    -- Storing this in dgn.persist rather than arena_marker.data so that
+    -- arena_sprint_score can access it.
+    dgn.persist.arena_style_points = 0
+    dgn.persist.calc_score = global_function("arena_sprint_score");
 
     lua_marker("{", arena_marker)
     lua_marker("{", portal_desc { centre_point = 1 })

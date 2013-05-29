@@ -131,7 +131,7 @@ void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax,
 }
 
 void TileBuffer::add(tileidx_t idx, int x, int y, int ox, int oy,
-                     bool centre, int ymax)
+                     bool centre, int ymax, float tile_x, float tile_y)
 {
     float pos_sx = x;
     float pos_sy = y;
@@ -140,7 +140,7 @@ void TileBuffer::add(tileidx_t idx, int x, int y, int ox, int oy,
     bool drawn = tex->get_coords(idx, ox, oy,
                                  pos_sx, pos_sy, pos_ex, pos_ey,
                                  tex_sx, tex_sy, tex_ex, tex_ey,
-                                 centre, -1, ymax, TILE_X, TILE_Y);
+                                 centre, -1, ymax, tile_x, tile_y);
 
     if (!drawn)
         return;
@@ -239,6 +239,24 @@ void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged
     }
     else
         m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha_top, alpha_top);
+}
+
+// Adds a tile masked by the water later
+void SubmergedTileBuffer::add_masked(tileidx_t idx, int x, int y, int z,
+                                    int ox, int oy, int ymax,
+                                    int alpha_above, int alpha_below,
+                                    int water_level)
+{
+    if (!water_level) water_level = m_water_level;
+    m_below_water.add(idx, x, y, z, ox, oy, water_level, ymax, alpha_above, alpha_below);
+    m_above_water.add(idx, x, y, z, ox, oy, -1, water_level, alpha_above, alpha_above);
+}
+
+// Adds a tile with a specified alpha value
+void SubmergedTileBuffer::add_alpha(tileidx_t idx, int x, int y, int z,
+                                    int ox, int oy, int ymax, int alpha)
+{
+    m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha, alpha);
 }
 
 void SubmergedTileBuffer::draw() const

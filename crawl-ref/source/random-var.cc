@@ -59,7 +59,8 @@ void random_var::init()
 
 int random_var::roll2val(int r) const
 {
-    ASSERT(0 <= r && r < total);
+    ASSERT(0 <= r);
+    ASSERT(r < total);
     int v = start;
     int w = weight(v);
     while (r >= w)
@@ -151,6 +152,18 @@ random_var operator/(const random_var& x, int d)
 
     for (int v = x.min(); v <= x.max(); ++v)
         weights[v / d - start] += x.weight(v);
+
+    return random_var(start, end, weights);
+}
+
+random_var operator*(const random_var& x, int d)
+{
+    const int start = x.min() * d;
+    const int end = x.max() * d + 1;
+    vector<int> weights(end - start, 0);
+
+    for (int v = x.min(); v <= x.max(); ++v)
+        weights[v * d - start] = x.weight(v);
 
     return random_var(start, end, weights);
 }

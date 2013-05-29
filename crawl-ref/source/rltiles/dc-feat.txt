@@ -87,6 +87,13 @@ gate_runed_right DNGN_GATE_RUNED_RIGHT
 vgate_runed_up DNGN_VGATE_RUNED_UP
 vgate_runed_middle DNGN_VGATE_RUNED_MIDDLE
 vgate_runed_down DNGN_VGATE_RUNED_DOWN
+sealed_door DNGN_SEALED_DOOR
+gate_sealed_left DNGN_GATE_SEALED_LEFT
+gate_sealed_middle DNGN_GATE_SEALED_MIDDLE
+gate_sealed_right DNGN_GATE_SEALED_RIGHT
+vgate_sealed_up DNGN_VGATE_SEALED_UP
+vgate_sealed_middle DNGN_VGATE_SEALED_MIDDLE
+vgate_sealed_down DNGN_VGATE_SEALED_DOWN
 
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or
@@ -107,16 +114,13 @@ orcish_idol DNGN_ORCISH_IDOL
 %weight 5
 statue_dwarf DNGN_GRANITE_STATUE
 statue_archer
-%weight 2
-statue_sword
-%weight 1
-statue_sigmund
-%weight 5
+statue_tengu
 statue_centaur
 %syn DNGN_STATUE_CENTAUR
-%weight 3
-statue_angel
-%syn DNGN_STATUE_ANGEL
+statue_snail
+statue_cat
+%syn DNGN_STATUE_CAT
+statue_princess
 %weight 8
 statue_mermaid
 %syn DNGN_STATUE_MERMAID
@@ -124,23 +128,29 @@ statue_naga
 %syn DNGN_STATUE_NAGA
 statue_dragon
 %syn DNGN_STATUE_DRAGON
-statue_demonic_bust
-%weight 5
-statue_snail
-statue_cat
-%syn DNGN_STATUE_CAT
+statue_hydra
 %weight 3
+statue_angel
+%syn DNGN_STATUE_ANGEL
 statue_elephant
 %syn DNGN_STATUE_ELEPHANT
 statue_wraith
 statue_imp
 %syn DNGN_STATUE_IMP
 statue_orb
+statue_cerebov
+statue_demonic_bust
+statue_twins
+statue_orb_guardian
+statue_sword
 %weight 1
+statue_sigmund
 statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
 statue_ancient_evil
 %syn DNGN_STATUE_ANCIENT_EVIL
+statue_triangle
+
 # damaged statues
 crumbled_column_1 DNGN_CRUMBLED_COLUMN
 crumbled_column_2
@@ -416,16 +426,30 @@ enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
 return_zot DNGN_RETURN_ZOT
+enter_temple DNGN_ENTER_TEMPLE
+exit_temple DNGN_EXIT_TEMPLE
 enter_orc DNGN_ENTER_ORCISH_MINES
+exit_orc DNGN_EXIT_ORCISH_MINES
+enter_elf DNGN_ENTER_ELVEN_HALLS
+exit_elf DNGN_EXIT_ELVEN_HALLS
 enter_lair DNGN_ENTER_LAIR
+exit_lair DNGN_EXIT_LAIR
 enter_snake DNGN_ENTER_SNAKE_PIT
+exit_snake DNGN_EXIT_SNAKE_PIT
 enter_swamp DNGN_ENTER_SWAMP
+exit_swamp DNGN_EXIT_SWAMP
 enter_spider DNGN_ENTER_SPIDER_NEST
+exit_spider DNGN_EXIT_SPIDER_NEST
 enter_shoals DNGN_ENTER_SHOALS
+exit_shoals DNGN_EXIT_SHOALS
 enter_slime DNGN_ENTER_SLIME_PITS
+exit_slime DNGN_EXIT_SLIME_PITS
 enter_vaults DNGN_ENTER_VAULTS
+exit_vaults DNGN_EXIT_VAULTS
 enter_crypt DNGN_ENTER_CRYPT
+exit_crypt DNGN_EXIT_CRYPT
 enter_tomb DNGN_ENTER_TOMB
+exit_tomb DNGN_EXIT_TOMB
 enter_hell1 DNGN_ENTER_HELL
 enter_hell2
 enter_hell3
@@ -450,6 +474,7 @@ enter_abyss2
 enter_abyss3
 exit_abyss DNGN_EXIT_ABYSS
 exit_abyss_flickering
+abyssal_stair DNGN_ABYSSAL_STAIR
 
 enter_pandemonium DNGN_ENTER_PANDEMONIUM
 portal DNGN_PORTAL
@@ -459,6 +484,9 @@ starry_portal DNGN_STARRY_PORTAL
 %rim 1
 transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 %rim 0
+exit_pandemonium DNGN_EXIT_PANDEMONIUM
+exit_pandemonium_flickering
+
 
 # portal vault entrances
 volcano_portal DNGN_PORTAL_VOLCANO
@@ -682,11 +710,17 @@ wall_old_blood09
 %sdir misc
 halo HALO
 effect/halo_range HALO_RANGE
-effect/umbra UMBRA
+effect/umbra0 UMBRA
+effect/umbra1
+effect/umbra2
+effect/umbra3
 effect/orb_glow0 ORB_GLOW
 effect/orb_glow1
 effect/quad_glow QUAD_GLOW
-effect/disjunct DISJUNCT
+effect/disjunct0 DISJUNCT
+effect/disjunct1
+effect/disjunct2
+effect/disjunct3
 effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
@@ -717,3 +751,8 @@ eldritch_corner_NW ELDRITCH_OVERLAY_NW
 eldritch_corner_NE ELDRITCH_OVERLAY_NE
 eldritch_corner_SE ELDRITCH_OVERLAY_SE
 eldritch_corner_SW ELDRITCH_OVERLAY_SW
+%sdir mon/tentacles/starspawn_corners
+starspawn_corner_NW STARSPAWN_OVERLAY_NW
+starspawn_corner_NE STARSPAWN_OVERLAY_NE
+starspawn_corner_SE STARSPAWN_OVERLAY_SE
+starspawn_corner_SW STARSPAWN_OVERLAY_SW

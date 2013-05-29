@@ -134,11 +134,11 @@ bool TilesFramework::initialise()
     sockaddr_un addr;
     addr.sun_family = AF_UNIX;
     strcpy(addr.sun_path, m_sock_name.c_str());
-    if (bind(m_sock, (sockaddr*) &addr, sizeof (sockaddr_un)))
+    if (bind(m_sock, (sockaddr*) &addr, sizeof(sockaddr_un)))
         die("Can't bind the webtiles socket!");
 
     int bufsize = 64 * 1024;
-    if (setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof (bufsize)))
+    if (setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof(bufsize)))
         die("Can't set buffer size!");
     m_max_msg_size = bufsize;
 
@@ -146,6 +146,10 @@ bool TilesFramework::initialise()
         _await_connection();
 
     _send_version();
+
+    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
+    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
+    m_cursor[CURSOR_MAP] = NO_CURSOR;
 
     // Initially, switch to CRT.
     cgotoxy(1, 1, GOTO_CRT);
@@ -160,13 +164,10 @@ void TilesFramework::write_message(const char *format, ...)
 
     va_list  argp;
     va_start(argp, format);
-    if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= (int)sizeof(buf))
-    {
-        if (len == -1)
-            die("Webtiles message format error! (%s)", format);
-        else
-            die("Webtiles message too long! (%d)", len);
-    }
+    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) < 0)
+        die("Webtiles message format error! (%s)", format);
+    else if (len >= (int)sizeof(buf))
+        die("Webtiles message too long! (%d)", len);
     va_end(argp);
 
     m_msg_buf.append(buf);
@@ -190,7 +191,7 @@ void TilesFramework::finish_message()
         {
             int retries = 10;
             while (sendto(m_sock, fragment_start, fragment_size, 0,
-                          (sockaddr*) &m_dest_addrs[i], sizeof (sockaddr_un)) == -1)
+                          (sockaddr*) &m_dest_addrs[i], sizeof(sockaddr_un)) == -1)
             {
                 if (--retries <= 0)
                     die("Socket write error: %s", strerror(errno));
@@ -224,7 +225,8 @@ void TilesFramework::send_message(const char *format, ...)
 
     va_list  argp;
     va_start(argp, format);
-    if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= (int)sizeof(buf))
+    if ((len = vsnprintf(buf, sizeof(buf), format, argp)) >= (int)sizeof(buf)
+        || len == -1)
     {
         if (len == -1)
             die("Webtiles message format error! (%s)", format);
@@ -236,6 +238,11 @@ void TilesFramework::send_message(const char *format, ...)
     m_msg_buf.append(buf);
 
     finish_message();
+}
+
+void TilesFramework::flush_messages()
+{
+    send_message("*{\"msg\":\"flush_messages\"}");
 }
 
 void TilesFramework::_await_connection()
@@ -250,9 +257,9 @@ wint_t TilesFramework::_receive_control_message()
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
 
-    srcaddr_len = sizeof (srcaddr);
+    srcaddr_len = sizeof(srcaddr);
 
-    int len = recvfrom(m_sock, buf, sizeof (buf),
+    int len = recvfrom(m_sock, buf, sizeof(buf),
                        0,
                        (sockaddr *) &srcaddr, &srcaddr_len);
 
@@ -298,7 +305,10 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         c = (int) keycode->number_;
     }
     else if (msgtype == "spectator_joined")
+    {
         _send_everything();
+        flush_messages();
+    }
     else if (msgtype == "menu_scroll")
     {
         JsonWrapper first = json_find_member(obj.node, "first");
@@ -348,7 +358,10 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             FD_SET(m_sock, &fds);
 
             if (block)
+            {
+                tiles.flush_messages();
                 result = select(maxfd + 1, &fds, NULL, NULL, NULL);
+            }
             else
             {
                 timeval timeout;
@@ -406,10 +419,10 @@ void TilesFramework::_send_version()
 {
 #ifdef WEB_DIR_PATH
     // The star signals a message to the server
-    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long().c_str());
+    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long);
 #endif
 
-    string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + string(Version::Long);
     send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
 }
 
@@ -439,7 +452,12 @@ void TilesFramework::push_crt_menu(string tag)
 
 bool TilesFramework::is_in_crt_menu()
 {
-    return !m_menu_stack.empty() && m_menu_stack.back().menu == NULL;
+    return is_in_menu(NULL);
+}
+
+bool TilesFramework::is_in_menu(Menu* m)
+{
+    return !m_menu_stack.empty() && m_menu_stack.back().menu == m;
 }
 
 void TilesFramework::pop_menu()
@@ -521,7 +539,19 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (!fill_status_info(status, &inf))
+        if (status == DUR_CONDENSATION_SHIELD || status == DUR_DIVINE_SHIELD)
+        {
+            if (!you.duration[status])
+                continue;
+            inf.short_text = "shielded";
+        }
+        else if (status == DUR_ICEMAIL_DEPLETED)
+        {
+            if (you.duration[status] <= ICEMAIL_TIME / ICEMAIL_MAX)
+                continue;
+            inf.short_text = "icemail depleted";
+        }
+        else if (!fill_status_info(status, &inf))
             continue;
 
         if (!inf.light_text.empty() || !inf.short_text.empty())
@@ -749,13 +779,11 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
 
             const string current_prefix = item_prefix(current);
             const string prefix = item_prefix(next);
-            if (force_full || current_prefix != prefix)
-            {
-                const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
-                const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
-                if (current_prefcol != prefcol)
-                    json_write_int("col", prefcol);
-            }
+
+            const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
+            const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
+            if (current_prefcol != prefcol)
+                json_write_int("col", prefcol);
         }
 
         tileidx_t tile = tileidx_item(next);
@@ -995,6 +1023,12 @@ void TilesFramework::_send_cell(const coord_def &gc,
             _write_tileidx(next_pc.bg);
         }
 
+        if (next_pc.cloud != current_pc.cloud)
+        {
+            json_write_name("cloud");
+            _write_tileidx(next_pc.cloud);
+        }
+
         if (next_pc.is_bloody != current_pc.is_bloody)
             json_write_bool("bloody", next_pc.is_bloody);
 
@@ -1089,7 +1123,6 @@ void TilesFramework::_send_cell(const coord_def &gc,
             {
                 json_write_comma();
                 write_message("\"doll\":[[%u,%d]]", (unsigned int) fg_idx, TILE_Y);
-                // TODO: _transform_add_weapon
             }
         }
 
@@ -1120,6 +1153,20 @@ void TilesFramework::_send_cell(const coord_def &gc,
     json_close_object(true);
 }
 
+void TilesFramework::_send_cursor(cursor_type type)
+{
+    if (m_cursor[type] == NO_CURSOR)
+        send_message("{\"msg\":\"cursor\",\"id\":%d}", type);
+    else
+    {
+        if (m_origin.equals(-1, -1))
+            m_origin = m_cursor[type];
+        send_message("{\"msg\":\"cursor\",\"id\":%d,\"loc\":{\"x\":%d,\"y\":%d}}",
+                     type, m_cursor[type].x - m_origin.x,
+                     m_cursor[type].y - m_origin.y);
+    }
+}
+
 void TilesFramework::_send_map(bool force_full)
 {
     map<uint32_t, coord_def> new_monster_locs;
@@ -1134,7 +1181,7 @@ void TilesFramework::_send_map(bool force_full)
     if (force_full)
         json_write_bool("clear", true);
 
-    if (m_current_gc != m_next_gc)
+    if (force_full || m_current_gc != m_next_gc)
     {
         if (m_origin.equals(-1, -1))
             m_origin = m_next_gc;
@@ -1209,6 +1256,9 @@ void TilesFramework::_send_map(bool force_full)
     json_close_object(true);
 
     finish_message();
+
+    if (force_full)
+        _send_cursor(CURSOR_MAP);
 
     m_current_map_knowledge = env.map_knowledge;
     m_current_view = m_next_view;
@@ -1365,6 +1415,9 @@ void TilesFramework::_send_everything()
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
     _send_map(true);
+
+    _send_cursor(CURSOR_MOUSE);
+    _send_cursor(CURSOR_TUTORIAL);
 
      // Player
     _send_player(true);
@@ -1529,16 +1582,11 @@ void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
         if (type == CURSOR_MOUSE)
             m_last_clicked_grid = coord_def();
 
-        if (result == NO_CURSOR)
-        {
-            send_message("{\"msg\":\"cursor\",\"id\":%d}", type);
+        // if map is going to be updated, send the cursor after that
+        if (type == CURSOR_MAP && m_need_full_map)
             return;
-        }
-        else
-        {
-            send_message("{\"msg\":\"cursor\",\"id\":%d,\"loc\":{\"x\":%d,\"y\":%d}}",
-                         type, result.x - m_origin.x, result.y - m_origin.y);
-        }
+
+        _send_cursor(type);
     }
 }
 
@@ -1691,7 +1739,7 @@ void TilesFramework::write_message_escaped(const string& s)
         else if (c == '\\')
             m_msg_buf.append("\\\\");
         else if (c == '\n')
-            m_msg_buf.append("\\\n");
+            m_msg_buf.append("\\n");
         else
             m_msg_buf.append(1, c);
     }

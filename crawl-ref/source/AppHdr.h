@@ -24,7 +24,7 @@
 namespace std {};
 using namespace std;
 
-#if defined(__cplusplus) && __cplusplus < 201103
+#if !defined(TARGET_COMPILER_VC) && defined(__cplusplus) && __cplusplus < 201103
 # define unique_ptr auto_ptr
 template<typename T>
 static inline T move(T x) { return x; } // good enough for our purposes
@@ -39,6 +39,19 @@ static inline T move(T x) { return x; } // good enough for our purposes
 #pragma warning (disable: 4290 4267)
 /* Don't define min and max as macros, define them via STL */
 #define NOMINMAX
+#define ENUM_INT64 : unsigned long long
+#else
+#define ENUM_INT64
+#endif
+
+#ifdef __sun
+// Solaris libc has ambiguous overloads for float, double, long float, so
+// we need to upgrade ints explicitely:
+#include <math.h>
+static inline double sqrt(int x) { return sqrt((double)x); }
+static inline double atan2(int x, int y) { return atan2((double)x, (double)y); }
+static inline double pow(int x, int y) { return std::pow((double)x, y); }
+static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #endif
 
 // The maximum memory that the user-script Lua interpreter can
@@ -169,7 +182,9 @@ static inline T move(T x) { return x; } // good enough for our purposes
 # define _WIN32_WINNT 0x501
 #endif
 
+// See the GCC __attribute__ documentation for what these mean.
 // Note: clang does masquerade as GNUC.
+
 #if defined(__GNUC__)
 # define NORETURN __attribute__ ((noreturn))
 #elif defined(_MSC_VER)
@@ -180,9 +195,12 @@ static inline T move(T x) { return x; } // good enough for our purposes
 
 #if defined(__GNUC__)
 # define PURE __attribute__ ((pure))
+# define IMMUTABLE __attribute__ ((const))
 #else
 # define PURE
+# define IMMUTABLE
 #endif
+
 
 // =========================================================================
 //  Defines for dgamelaunch-specific things.
@@ -359,7 +377,7 @@ static inline T move(T x) { return x; } // good enough for our purposes
 // If you are installing Crawl for multiple users, define SAVE_DIR
 // to the directory where saves, bones, and score file will go...
 // end it with a '/'. Only one system user should be able to access
-// these -- usually this means you should place them in ~/crawl/
+// these -- usually this means you should place them in ~/.crawl/
 // unless it's a DGL build.
 
 #if !defined(DB_NDBM) && !defined(DB_DBH) && !defined(USE_SQLITE_DBM)
@@ -402,6 +420,7 @@ static inline void UNUSED(const volatile T &)
 # include "msvc.h"
 #endif
 
+#include "debug.h"
 #include "externs.h"
 
 #ifdef TARGET_COMPILER_VC

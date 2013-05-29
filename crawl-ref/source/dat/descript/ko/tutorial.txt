@@ -17,22 +17,14 @@ tutorial1 go_on
 %%%%
 tutorial1 diagonal
 
-<w>[숫자 패드]</w>, 또는 <w>[hjkl 이동방식]</w>을 이용해서 대각선 방향으로
-이동할 수도 있습니다. (제대로 안되면 Numlock 기능이 제대로 켜져있는지
-확인해보세요.)
+:nowrap
+<w>[숫자 패드]</w>, 또는 <w>[hjkl 이동방식]</w>을 이용해서 대각선 방향으로 이동할 수도 있습니다. (제대로 안되면 Numlock 기능이 제대로 켜져있는지 확인해보세요.)
 
-<w></w>  숫자 패드 :    <w>7 8 9</w>          hjkl 식 :
-<w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
-<w></w>                 \|/                         \|/
-
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
-<w></w>                 /|\                         /|\
-
-<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<w></w>  숫자 패드 :    <w>7 8 9</w>          hjkl 식 : <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w></w>                  \|/                      \|/
+<w></w>                 <w>4</w>-<w>.</w>-<w>6</w>                    <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+<w></w>                  /|\                      /|\
+<w></w>                 <w>1 2 3</w>                    <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>물론, <w>[마우스]</w>를 이용할 수도 있습니다.</localtiles>
 %%%%
@@ -48,15 +40,6 @@ tutorial1 downstairs
 내려가는 계단 위에서 <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w> 키를 누르면 한 층 밑으로
 이동할 수 있습니다. <localtiles>혹은 캐릭터를 <w>[시프트+마우스 클릭]</w> 하여
 내려갈 수도 있습니다</localtiles>.
-%%%%
-tutorial1 levelmap
-
-여기는 어디지? 캐릭터가 지금 어디에 있는지 모르겠다면, <tiles>화면 오른쪽에
-있는 <w>미니맵</w>을 보면 됩니다.</tiles><localtiles> <w>[오른쪽
-마우스버튼]</w>을 클릭한 채로 미니맵에서 보고 싶은 곳에 커서를 가져가 대보면
-그곳의 지형을 볼 수 있으며, <w>[왼쪽 마우스버튼]</w>을 클릭하면 지금 보고 있는
-곳, 혹은 미니맵을 클릭했을 경우 해당 지역으로 빠르게 이동할 수
-있습니다.</localtiles>
 %%%%
 tutorial1 autoexplore
 
@@ -105,13 +88,9 @@ tutorial1 door
 닫힌 문이 있는 방향으로 이동하면 문을 열 수 있습니다. 문을 다시 닫으려면,
 <w>[$cmd[CMD_CLOSE_DOOR]]</w> 키를 누르세요.
 %%%%
-tutorial1 secret_door_glass
+tutorial1 close_door
 
-어딘가에 숨겨진 문이 있는 것 같습니다. <w>[$cmd[CMD_REST]]</w> 키를 이용해서
-비밀 문을 찾아보세요. 여러 번 시도해야 할 수도 있습니다. 혹시 이런 과정이
-너무나도 귀찮다면, 휴식도 취할 겸 <w>[5]</w> 키를 눌러보세요. 100턴간 휴식을
-취하면서 주변에 비밀문이 있나 살펴보는 키입니다. <w>[5]</w> 키의 자세한
-사용법은 다음 시간에 배울 수 있습니다.
+열려 있는 문을 닫으려면, <input>$cmd[CMD_CLOSE_DOOR]</input>을 누르시면 됩니다.
 %%%%
 tutorial1 water
 
@@ -119,79 +98,11 @@ tutorial1 water
 플레이하고 있는 하이 엘프 종족을 비롯한 종족 대부분은 깊은 물을 지나다닐 수
 없습니다.
 %%%%
-tutorial1 secret_door_wall
-
-막다른 길! 아니 잠깐, 왠지 이런 곳에는 비밀문이 있을 것 같은데..?
-<w>[$cmd[CMD_REST]]</w> 키, 혹은 <w>[5]</w> 키를 이용하여 비밀문을 찾아봅시다.
-%%%%
 tutorial1 upstairs
 
 올라가는 계단 위에서 <w>[$cmd[CMD_GO_UPSTAIRS]]</w> 키를 누르면 한 층 위로
 이동할 수 있습니다. <localtiles>혹은 캐릭터를 <w>[시프트+클릭]</w> 하여 올라갈
 수도 있습니다</localtiles>.
-%%%%
-tutorial1 exit
-
-<yellow>이동 명령어</yellow>
-
- 숫자 패드 :      <w>7 8 9</w>           hjkl 식 :   <w>$cmd[CMD_MOVE_UP_LEFT]
-$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-
-                  \|/                         \|/
-
-                 <w>4</w>-<w>.</w>-<w>6</w>
-<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-
-                  /|\                         /|\
-
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
-$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-
-  <w>Shift + direction</w> moves you several squares into this direction.
-
-  <localtiles>You also can move by <w>clicking</w> somewhere in sight or on the
-<w>minimap</w>.</localtiles>
-
-
-<w>시프트 + 방향키</w> 해당 방향으로 여러 칸 움직입니다.
-
-<localtiles>시야 내의 아무 곳, 혹은 <w>미니맵</w>에 커서를 위치시킨 후  <w>왼쪽
-마우스버튼</w>을 클릭하여 이동할 수도 있습니다.</localtiles>
-
-
-<yellow>계단</yellow>
-
-<w>$cmd[CMD_GO_UPSTAIRS]</w> 이전 층계로 돌아갑니다.
-
-<w>$cmd[CMD_GO_DOWNSTAIRS]</w> 다음 층계로 이동합니다.
-
-<w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w> 현재 캐릭터와 가장 가까운 올라가는 /
-내려가는 계단으로 이동합니다.
-
-
-<yellow>문</yellow>
-
-문이 있는 곳으로 이동하면 자동으로 문을 열 수 있습니다.
-
-<w>$cmd[CMD_CLOSE_DOOR]</w> 열린 문을 닫습니다.
-
-<w>$cmd[CMD_REST]</w> 비밀문이 있는지 찾아봅니다.
-
-
-<yellow>자동이동</yellow>
-
-<localtiles><w>미니맵</w>에서 가고 싶은 곳을 클릭합니다.
-
- </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다.
-<w>엔터</w> 키를 눌러 이동할 수 있습니다.
-
-</webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다. <w>엔터</w>
-키를 눌러 이동할 수 있습니다.
-
- </console><w>$cmd[CMD_EXPLORE]</w> 자동이동 기능을 사용합니다.
-
-
-                                 <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
 %%%%
 tutorial2 start
 
@@ -319,58 +230,319 @@ tutorial2 tutorial_end
 %%%%
 tutorial2 exit
 
+:nowrap
 <yellow>무기<console> <cyan>)</cyan></console></yellow>
-
   <w>$cmd[CMD_PICKUP]</w>  땅에 있는 물건을 줍습니다.
-  <w>$cmd[CMD_WIELD_WEAPON]</w> 손에 무기를 듭니다. <localtiles>  소지품 창에서
-해당 무기에<w>왼쪽 마우스버튼</w>을 클릭해서 들 수도 있습니다. </localtiles>
+  <w>$cmd[CMD_WIELD_WEAPON]</w> 손에 무기를 듭니다.
+<localtiles>  소지품 창에서 해당 무기에<w>왼쪽 마우스버튼</w>을 클릭해서 들 수도 있습니다.</localtiles>
 
 
 <yellow>괴물</yellow>
-
 <localtiles>  <w>마우스 커서</w>  괴물의 간략한 상태를 봅니다.
-  <w>오른쪽 마우스버튼</w>  괴물의 자세한 설명을 봅니다.</localtiles> <console>
-<w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한 상태를 봅니다.
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을
-봅니다.</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한
-상태를 봅니다.
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을
-봅니다.</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  전에 조준했던 적에게 다시
-탄환을 발사합니다.
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> 다른 적 조준 <localtiles>
- 발사하고 싶은 탄환에 <w>왼쪽 마우스버튼</w> 을 클릭해서 적을 조준하고,
-<w>엔터</w> 키로 발사할 수 있습니다.</localtiles>
+  <w>오른쪽 마우스버튼</w>  괴물의 자세한 설명을 봅니다.</localtiles>
+<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한 상태를 봅니다.
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을 봅니다.</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  괴물의 간략한 상태를 봅니다.
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> 괴물의 자세한 설명을 봅니다.</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> 전에 조준했던 적에게 다시 탄환을 발사합니다.
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> 다른 적 조준
+<localtiles>  발사하고 싶은 탄환에 <w>왼쪽 마우스버튼</w> 을 클릭해서 적을 조준하고, <w>엔터</w> 키로 발사할 수 있습니다.</localtiles>
 
 
 <yellow>휴식</yellow>
-
   <w>$cmd[CMD_MOVE_NOWHERE]</w>  1턴동안 휴식하면서 주변을 살핍니다.
   <w>$cmd[CMD_REST]</w>  100턴동안 휴식하면서 주변을 살핍니다.
 
 
 <yellow>시체<console> <brown>%</brown></console></yellow>
-
   <w>$cmd[CMD_BUTCHER]</w>  시체에서 먹을만한 고기조각을 썰어냅니다.
   <w>$cmd[CMD_EAT]</w>  썰어낸 고기조각 또는 다른 음식을 먹습니다
+
+
+                                 <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
+%%%%
+tutorial3 start
+
+이번 시간에는 아이템들과 그것들을 사용하는 법에 대해 배워보도록 하겠습니다.
+%%%%
+tutorial3 armour
+
+이 신발을 <w>[$cmd[CMD_PICKUP]]</w>키로 주운 뒤
+<w>[$cmd[CMD_WEAR_ARMOUR]]</w>키로 입어보십시오. <localtiles> 아니면 간단하게
+인벤토리 패널에 있는 신발을 <w>[mouseclick]</w>하십시오.</localtiles>
+%%%%
+tutorial3 autopickup
+
+<tiles>초록색으로 표시된 아이템</tiles>들은 그 위로 걸어갈 경우 자동적으로
+주워집니다.
+%%%%
+tutorial3 scroll
+
+대부분의 아이템들은 그것들을 찾았을 당시에는 무엇인지 판명이 나지 않은
+상태입니다. 그것들이 무엇인지 아는 방법중 하나는 그것을 이용해 보는 것입니다.
+이 스크롤을 <w>[$cmd[CMD_READ]]</w><localtiles>키를 누르거나 인벤토리 패널의
+스크롤을 <w>[mouseclick]</w> 하여 읽어 보십시오.</localtiles>.
+%%%%
+tutorial3 scroll_noautopickup
+
+자동으로 줍는 기능은 근처에 몬스터가 있을 경우 작동하지 않습니다. 당신은
+<w>[$cmd[CMD_PICKUP]]</w><localtiles>키를 누르거나 당신의 캐릭터를
+<w>[clicking]</w> 하거나 </localtiles> 몬스터와 싸워 무찌른 뒤에 주울 수
+있습니다.
+%%%%
+tutorial3 battle
+
+만약 당신이 성공적으로 적을 독에 중독시켰다면, 독의 효과를 극대화 하기 위해
+후퇴하십시오. 만약 필요하다면 회복을 위해서 후퇴하는 것도 좋은 선택입니다.
+%%%%
+tutorial3 downstairs
+
+잘 싸우셨습니다! 만약 필요하다면, <w>[$cmd[CMD_REST]]</w>키로 쉬거나,
+<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles>키나 <w>[Shift-Click]</w>하여
+당신의 캐릭터를 아래로 움직이십시오</localtiles>.
+%%%%
+tutorial3 command_help
+
+명령어가 너무 많아서 혼란스럽다면, 명령어 도움말
+<w>[$cmd[CMD_DISPLAY_COMMANDS]]</w>를 통해 필요한 명령어를 찾을 수 있습니다.
+<localtiles>자주 쓰이는 명령어들은 화면 오른쪽의 <w>명령어 패널</w>을
+클릭해서도 사용할 수 있습니다.</localtiles>
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>를 써서 예전 메시지들을 보는 것 또한
+가능합니다.
+%%%%
+tutorial3 potion
+
+<w>[$cmd[CMD_QUAFF]]</w> 명령<localtiles>이나
+<w>[mouseclick]</w></localtiles>을 통해 이 포션들 중 하나를 마실 수 있습니다.
+%%%%
+tutorial3 wand_fire
+
+<w>[$cmd[CMD_EVOKE]]</w><localtiles> 키를 누르거나 인벤토리 패널을
+<w>[mouseclick]</w> 함으로써 마법봉을 사용할 수 있습니다.</localtiles>.
+%%%%
+tutorial3 wand_digging
+
+굴착의 마법봉은 몇몇 종류의 벽을 뚫을 수 있습니다.
+<w>[$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]]</w> <localtiles>나
+<w>[mouseover]</w>/<w>[right click]</w> </localtiles>으로 벽의 종류를 확인하여
+보십시오.
+%%%%
+tutorial3 amulet
+
+장신구는 <w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles>나 인벤토리 페널의 장신구
+아이템을 <w>[mouseclick]</w> 함으로써 착용할 수 있습니다</localtiles>. 어떤
+종류의 장신구는 껴봐야 어떤 것인지 판별할 수 있습니다. 아니면 다른 방법을 통해
+판별해야 합니다.
+%%%%
+tutorial3 drop
+
+이 부적은 쓸모가 없습니다. 이것을 버리고 싶다면
+<w>[$cmd[CMD_DROP]]</w><localtiles> 하거나 인벤토리 패널의 부적을
+<w>[Shift-leftclicking]</w> 하여 버리십시오</localtiles>.
+%%%%
+tutorial3 gold
+
+금화는 가게에서 사용될 수 있습니다. 금화는 무게가 없으며 버릴 수 없습니다.
+%%%%
+tutorial3 shop
+
+가게는 여러가지 아이탬을 제공합니다. 하지만 그들은 아이탬을 사지는 않습니다.
+%%%%
+tutorial3 enter_shop
+
+가게에 들어가려면 <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles>를 누르거나 당신의
+캐릭터를 <w>[Shift-leftclick]</w>하십시오</localtiles>. 아이탬을 사려면 그
+아이탬의 단축키를 눌러 선택한 후 <w>[Enter]</w>를 누르고 <w>[y]es</w>를 눌러
+확정하십시오. <w>[!]</w>키를 누르면 아이탬 설명 모드로 바꿀 수 있습니다.
+%%%%
+tutorial3 autoexplore_reminder
+
+기억해 두십시오. <w>[$cmd[CMD_EXPLORE]]</w> 키 또는 <w>명령어 패널</w>에 있는
+자동 탐색 버튼을 [clicking]함으로써, 당신은 언제든지 아직 가 보지 않은 던전
+내의 장소를 자동으로 탐색할 수 있습니다.
+%%%%
+tutorial3 go_shopping
+
+이제, 본격적으로 아이템을 구입할 수 있을 정도의 충분한 돈이 모였습니다!
+상점으로 되돌아가는 가장 빠른 방법은 Type <w>[$cmd[CMD_SEARCH_STASHES]]</w>
+키를 누른 후, "<w>shop</w>"을 입력하여 상점의 위치를 검색하는 것입니다. 또한,
+명령어 패널에 있는 '찾기'버튼을 <w>[click]</w>하는 것으로도 가능합니다. 물론
+미니맵에, 상점이 있었던 지역을 클릭하는 것으로도 이동이 가능합니다.
+%%%%
+tutorial3 optional_battle
+
+주의하세요! 이 길로 들어서면, <lightred>힘든 전투</lightred>가 기다리고 있을
+것입니다.  지금까지 배운 전투 방법을 총동원하여 싸워 보거나, 혹은 섬의 다른
+출구로 빠져 나가는 등의 선택사항이 있을 것입니다. 어느 쪽을 택하던 간에,
+상점에서 아이템을 갖추어 다음을 준비해 두는 것이 좋겠죠.
+%%%%
+tutorial3 tutorial_end
+
+끝까지 수고 많으셨습니다! 튜토리얼을 종료하시려면, 이 계단으로 내려가세요.
+%%%%
+tutorial3 exit
+
+:nowrap
+<yellow>아이템 명령어</yellow>
+  <w>$cmd[CMD_PICKUP]</w> 아이템 줍기
+  <w>$cmd[CMD_WEAR_ARMOUR]</w> 방어구 착용
+  <w>$cmd[CMD_READ]</w> 두루마리 읽기
+  <w>$cmd[CMD_WIELD_WEAPON]</w> 무기 장비
+  <w>$cmd[CMD_QUAFF]</w> 포션 마시기
+  <w>$cmd[CMD_EVOKE]</w> 마법봉 발동
+  <w>$cmd[CMD_WEAR_JEWELLERY]</w> 장신구 착용
+  <w>$cmd[CMD_REMOVE_JEWELLERY]</w> 장신구 해제
+  <w>$cmd[CMD_DROP]</w> 아이템 내려놓기
+
+  <w></w>아이템 사용에 관한 명령어는 소지품 메뉴에서도 마찬가지로 사용 가능합니다. (<w>$cmd[CMD_DISPLAY_INVENTORY]</w> 키), 또한 아이템 설명 화면에서도 역시 가능합니다.
+ <localtiles><w></w>물론 <white>마우스 클릭</white>으로도 가능하죠.
+</localtiles>
+
+ <yellow>또다른</yellow>
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> 명령어 도움말 열람
+  <w>$cmd[CMD_RESISTS_SCREEN]</w> 캐릭터 요약 정보 표시
+  <w>$cmd[CMD_USE_ABILITY]</w> 특수능력 사용
+  <w>$cmd[CMD_EXPLORE]</w> 자동 탐색
+  <w>$cmd[CMD_SEARCH_STASHES]</w>  이전에 탐색했던 아이템/지형지물 검색
+
+
+  <localtiles><w></w>이와 같은 명령어 중 일부는, <w>명령어 패널<w>의 아이콘을 클릭하는 것으로도 실행이 가능합니다.
+</localtiles>
+
+                                 <cyan><w>아무 키</w>나 누르면, 이 화면을 닫습니다.</cyan>
+%%%%
+tutorial4 start
+
+이번 시간에는 주문을 배우고, 시전하는 법에 대해 배워보도록 하겠습니다.
+%%%%
+tutorial4 spellbook
+
+소지하고 있는 마법서로부터 주문을 익히는 방법은,
+<input>$cmd[CMD_MEMORISE_SPELL]</input>키를 누르거나, 우측 소지품창의 마법서
+아이콘을 <input>마우스 왼쪽 클릭</input>한 후, 원하는 주문을 선택하면 됩니다.
+캐릭터의 레벨이 1일때는, 오직 1레벨의 주문만 익힐 수 있습니다. 레벨이
+올라갈수록, 더 높은 레벨의 주문을 익히는 것이 가능해지죠.
+%%%%
+tutorial4 spellcasting
+
+<input>$cmd[CMD_CAST_SPELL]</input>키를 누르거나, 혹은 화면 우측의 마법
+아이콘을 <input>마우스 왼쪽 클릭</input>하는 것으로 주문을 외우는 것이
+가능합니다. <input>$cmd[CMD_CAST_SPELL]?</input> 키를 누르면, 당신이 현재까지
+배운 주문들의 목록을 확인할 수 있죠.
+
+모든 주문은 그 주문의 레벨만큼의 마나를 소모하며, 마나가 바닥나면 당연히 주문을
+사용할 수 없게 됩니다. 이럴 때는 일단 후퇴해서 적으로부터 벗어난 후,
+<input>$cmd[CMD_REST]</input>키를 눌러 휴식을 취하세요. 마나는 생명력과 같이,
+시간이 지나면 자동으로 회복됩니다. <localtiles>혹은 오른쪽에서 휴식 아이콘을
+찾아 <input>마우승 왼쪽 클릭</input>하는 것으로 휴식을 취하는 것이
+가능하죠.</localtiles>
+%%%%
+tutorial4 ring_power
+
+<input>$cmd[CMD_WEAR_JEWELLERY]</input>키를 누르<localtiles>거나, 혹은 우측의
+반지 아이콘을<input>마우스 왼쪽 클릭</input>하</localtiles>셔서 반지를
+착용해보세요. 그리고 당신의 완벽한 잠재력을 채우기 위해, 휴식을 취해 보도록
+합시다.
+%%%%
+tutorial4 undead
+
+대부분의 몬스터들과는 다르게, 언데드들은 자연적으로 그들이 입은 상처를
+치유하지는 못하지만, 언데드들이 얼마나 큰 피해를 입고 있는지, 얼마나 더 피해를
+줘야 처치할 수 있는지는 분간할 수 없습니다. 추가적으로, 몬스터에 마우스 커서를
+위치한 후, <input>Ctrl+마우스 왼쪽 클릭</input>하셔도 그 몬스터를 타겟으로
+주문을 외우는 것이 가능하죠.
+%%%%
+tutorial4 spell_success
+
+당신이 익힌 주문들의 세부사항을 확인하고 싶으시다면,
+<input>$cmd[CMD_DISPLAY_SPELLS]</input>키를 누르시거나, 혹은 우측 마법 아이콘에
+<input>마우스 커서를 올리는 것</input>으로, 해당 주문의 대략적인 소개와 만복도
+소모, 마법의 효율, 실패 확률 등을 알 수 있습니다. 이 '마법사의 지팡이'는 주문
+실패 확률을 감소시켜주는 기능을 가지고 있습니다. 지팡이를 착용해보시고, 실패
+확률이 낮아진 것을 확인해보세요.
+%%%%
+tutorial4 mephitic_cloud
+
+악취 구름은 3단계의 주문입니다. 그래서 당신은 아직 그 주문을 메모라이즈 할 수
+없습니다.  레벨업을 위해 이 경험치 물약을 마시면, 메모라이즈 할 수 있을 겁니다!
+레벨 3이 되면, 당신의 스탯중 하나를 올릴수 있습니다. - 지능을 선택하는면 당신의
+주문영창에 더 도움이 됩니다.
+%%%%
+tutorial4 aiming_clouds
+
+악취 구름은 영창하였을때 한 구역을 유독한 가스로 뒤덮습니다. 그리고 당신이
+지정한 곳에 영향을 미치는 것을 볼 수 있을것입니다.  당신의 마법을 좀 더
+효율적으로 사용하기 위하여 하나의 구름에 여러적이 걸려들게 해 보십시오.
+%%%%
+tutorial4 spell_hunger
+
+주문영창은 당신을 엄청 배고프게 만듭니다.  어려운 주문을 쓸때 주문 영창으로
+인한 배고픔은 더 커지고,  주문영창 기술을 연마하거나 높은 지능으로 줄일 수
+있습니다.
+%%%%
+tutorial4 forget_spell
+
+캐릭터의 레벨이 오르거나, 혹은 '주문 시전술' 스킬이 오를때마다, 사용 가능한
+마법의 총 레벨(슬롯)도 하나씩 증가합니다. 당신은 <w>배운 주문을 잊어버리는
+것</w>으로 다른 주문을 외울 마법 슬롯을 확보할 수 있습니다. 주문을 잊는 방법 중
+가장 보편적인 방법은 '망각의 마법 두루마리'를 읽는 것입니다. 간단히 두루마리를
+읽은 후 (<input>$cmd[CMD_READ]</input>키<localtiles> 혹은 해당 두루마리
+아이콘을 <input>마우스 왼쪽 클릭</input></localtiles>), 잊고자 하는 주문을
+선택하면 해당 주문이 지워지고, 그 주문만큼의 마법 슬롯이 되돌아오죠.
+%%%%
+tutorial4 memorise2
+
+새로운 주문을 익히는 방법을 아직도 모르지는
+않으시겠죠?<input>$cmd[CMD_MEMORISE_SPELL]</input>키나 마법서 아이콘을 클릭한
+후, 새로 얻은 마법서에 들어 있는 주문을 익혀봅시다. 그리고 당신의 해골 군단을
+일으켜 보도록 합시다!
+%%%%
+tutorial4 displace_allies
+
+당신의 소환물과 자리를 바꿀 수 있다는 것을 확인하셨나요? 우호적인 몬스터와
+자리를 바꾸는 것은 적과의 근접전을 피하거나, 혹은 적에게서 도망가는 좋은 방법이
+될 것입니다.
+%%%%
+tutorial4 order_allies
+
+당신이 소환한 해골 군단을 지위하여 적들을 처치해봅시다! 필요에 따라, 당신은
+<input>$cmd[CMD_SHOUT]</input>키를 눌러 당신의 동료들에게 명령을 내릴 수
+있습니다. 이 관문을 열기 전에, <input>$cmd[CMD_MOVE_NOWHERE]</input>키를 눌러
+대기한 후, 당신의 동료들이 다시 당신에게 오기를 기다리는 것이 좋을 것입니다.
+%%%%
+tutorial4 resting_reminder
+
+새로운 구역에 들어가기 전에는, 항상 체력(HP)과 마나(MP)를 완전히 회복한 후
+이동하도록 합시다. 필요에 따라, 휴식(<input>$cmd[CMD_REST]</input>키)를 눌러
+휴식을 취할 필요가 있겠죠. 언데드들은 숨을 쉬지 않습니다. 즉, 당신의 해골
+군단들은 당신의 악취 구름에 영향을 받지 않는다는 이야기죠.
+%%%%
+tutorial4 tutorial_end
+
+축하합니다, 당신은 진정한 마법사군요! 튜토리얼을 끝내시려면, 이 계단을
+내려가세요.
+%%%%
+tutorial4 exit
+
+:nowrap
+<yellow>주문 관련 명령어</yellow>
+  <w>$cmd[CMD_MEMORISE_SPELL]</w>  새 주문 외우기
+  <w>$cmd[CMD_DISPLAY_SPELLS]</w>  주문 정보 확인하기
+  <w>$cmd[CMD_CAST_SPELL]</w>  주문 외우기
+<localtiles>     <w>주문 외우기 화면</w>에서도, 새로운 주문들을 익히는 것이 가능합니다.
+     <w>leftclick</w>으로 주문을 외울 수 있으며, 그리고 마우스를 위로 올리거나 <w>rightclick</w>으로 주문의 위력이나 실패율 등을 확인하는것이 가능합니다.
+</localtiles>
+
+  <w>$cmd[CMD_READ]</w>  마법서를 읽고, 마법서에 담긴 주문을 확인하거나 주문을 잊습니다.
+  <w>$cmd[CMD_REST]</w>  100턴동안 휴식하면서 주변을 살핍니다.
+  <w>$cmd[CMD_SHOUT]</w>  동료에게 명령을 내립니다.
+  <w>$cmd[CMD_REMOVE_ARMOUR]</w>  방어구를 해제합니다.
+
+
                                  <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
 %%%%
 tutorial5 start
 
 이번 시간에는 어떻게 신을 믿고 권능을 사용하는지에 대해 알아보겠습니다.
-%%%%
-tutorial5 secret_door
-
-저 유리벽 어딘가에 제단으로 들어가는 문이 있습니다! 유리벽 근처에서
-<w>$cmd[CMD_REST]</w> 키<localtiles> 또는 명령어 모음에서<w>왼쪽
-마우스버튼</w>으로 해당 기능</localtiles>을(를) 이용해서 비밀문을 찾아보세요.
-%%%%
-tutorial5 dungeon_overview
-
-'트로그' 는 게임 내의 많은 신들 가운데 하나입니다. 실제 게임에서는
-<w>$cmd[CMD_DISPLAY_OVERMAP]</w> 키<localtiles> 또는 명령어 모음에서 <w>던전
-구조 보기</w> 버튼</localtiles>을(를) 이용해서 모든 제단과 다른 관심갈만한
-요소들의 위치를 알 수 있습니다.
 %%%%
 tutorial5 altar
 
@@ -415,13 +587,6 @@ tutorial5 berserk
 <w>명령어 모음</w></localtiles>을(를) 이용하여 트로그의 광폭화 권능을 사용할 수
 있습니다. 앞에 있는 적은 지금 상태로는 이기기 어려우므로, 권능을 사용해보세요.
 %%%%
-tutorial5 exhaustion
-
-광폭화는 강력하지만, 그 후유증도 심합니다. 광폭화의 후유증으로 속도가 느려지는
-'감속' 상태, 잠시 동안 광폭화를 다시 사용할 수 없는 '탈진' 상태가 걸렸습니다.
-<w>$cmd[CMD_REST]</w> 키<localtiles> (혹은 <w>명령어
-모음</w>)</localtiles>을(를) 이용해서 후유증에서 벗어나는 것이 좋습니다.
-%%%%
 tutorial5 hunger
 
 캐릭터가 '매우 배고픔' 혹은 그보다 더 배고픈 상태가 되면 광폭화 권능을 사용할
@@ -443,31 +608,23 @@ tutorial5 tutorial_end
 %%%%
 tutorial5 exit
 
+:nowrap
 <yellow>신앙 관련 명령어</yellow>
-
   $cmd[CMD_PRAY]  제단에서 사용하여 신을 믿거나, 시체를 바칠 때 사용합니다.
-
   $cmd[CMD_USE_ABILITY]  권능을 사용할 때 사용합니다.
-
   $cmd[CMD_DISPLAY_RELIGION]  현재 신앙도 등을 볼 때 사용합니다.
-
-<localtiles>캐릭터에 <w>오른쪽 마우스버튼</w>을 클릭해서 볼 수도
-있습니다.</localtiles>
+<localtiles>  캐릭터에 <w>오른쪽 마우스버튼</w>을 클릭해서 볼 수도 있습니다.
+</localtiles>
 
 
 <yellow>휴식</yellow>
-
   <w>$cmd[CMD_MOVE_NOWHERE]</w>  1턴동안 휴식하면서 주변을 살핍니다.
   <w>$cmd[CMD_REST]</w>  100턴동안 휴식하면서 주변을 살핍니다.
 
 
-
 <yellow>기타 명령어</yellow>
-
   $cmd[CMD_DISPLAY_OVERMAP]  던전의 전체적인 구성을 표시합니다.
-
-  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  게임 내의 모든 요소에 대한 설명을 볼 수
-있습니다.
+  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  게임 내의 모든 요소에 대한 설명을 볼 수 있습니다.
 
 
                                  <cyan><w>아무 버튼</w>이나 누르세요...</cyan>

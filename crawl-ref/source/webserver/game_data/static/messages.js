@@ -1,5 +1,5 @@
-define(["jquery", "comm", "./util", "./settings"],
-function ($, comm, util, settings) {
+define(["jquery", "comm", "client", "./util", "./settings"],
+function ($, comm, client, util, settings) {
     var messages = [];
     var more = false;
     var old_scroll_top;
@@ -22,7 +22,6 @@ function ($, comm, util, settings) {
         var last_msg_elem = $("#messages .game_message").last();
         var prefix_glyph = last_msg_elem.find(".prefix_glyph");
         prefix_glyph.html(html);
-        prefix_glyph.removeClass(prefix_glyph_classes);
         prefix_glyph.addClass(classes);
     }
 
@@ -102,10 +101,18 @@ function ($, comm, util, settings) {
                 add_message(msg.messages[i]);
             }
         }
+        var cursor = $("#text_cursor");
+        if (cursor.length > 0)
+            cursor.appendTo($("#messages .game_message").last());
     }
 
     function get_line(msg)
     {
+        if (client.is_watching != null && client.is_watching())
+            return;
+
+        $("#text_cursor").remove();
+
         var prompt = $("#messages .game_message").last();
         var input = $("<input class='text' type='text'>");
         prompt.append(input);
@@ -134,6 +141,17 @@ function ($, comm, util, settings) {
                 return false;
             }
         });
+        input.keypress(function (ev) {
+            if (msg.tag == "stash_search")
+            {
+                if (String.fromCharCode(ev.which) == "?")
+                {
+                    ev.preventDefault();
+                    comm.send_message("key", { keycode: ev.which });
+                    return false;
+                }
+            }
+        });
     }
 
     function abort_get_line()
@@ -143,8 +161,26 @@ function ($, comm, util, settings) {
         input.remove();
     }
 
+    function text_cursor(data)
+    {
+        if (data.enabled)
+        {
+            if ($("#text_cursor").length > 0)
+                return;
+            if ($("#messages .game_message input").length > 0)
+                return;
+            var cursor = $("<span id='text_cursor'>_</span>");
+            $("#messages .game_message").last().append(cursor);
+        }
+        else
+        {
+            $("#text_cursor").remove();
+        }
+    }
+
     comm.register_handlers({
         "msgs": handle_messages,
+        "text_cursor": text_cursor,
         "get_line": get_line,
         "abort_get_line": abort_get_line
     });

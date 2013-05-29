@@ -5,7 +5,11 @@
 
 #include "windowmanager-sdl.h"
 
-#include <SDL/SDL.h>
+#ifdef TARGET_COMPILER_VC
+# include <SDL.h>
+#else
+# include <SDL/SDL.h>
+#endif
 #include <SDL_image.h>
 
 #include "cio.h"
@@ -163,7 +167,8 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_POWER:
     case SDLK_EURO:
     case SDLK_UNDO:
-        ASSERT(keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_UNDO);
+        ASSERT(keysym.sym >= SDLK_F1);
+        ASSERT(keysym.sym <= SDLK_UNDO);
         return -(keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
 
         // Hack.  libw32c overloads clear with '5' too.
@@ -202,6 +207,14 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_TAB:
         if (numpad_offset) // keep tab a tab
             return (CK_TAB_TILE + numpad_offset);
+#ifdef TOUCH_UI
+        break;
+    // used for zoom in/out
+    case SDLK_KP_PLUS:
+        return CK_NUMPAD_PLUS;
+    case SDLK_KP_MINUS:
+        return CK_NUMPAD_MINUS;
+#endif
     default:
         break;
     }
@@ -554,17 +567,22 @@ int SDLWrapper::wait_event(wm_event *event)
     if (!SDL_WaitEvent(&sdlevent))
         return 0;
 
+#ifdef __ANDROID__
+    while (sdlevent.type > SDL_VIDEOEXPOSE) // last credible event type in SDL_events.h
+        if (!SDL_WaitEvent(&sdlevent)) return 0;
+#endif
+
     // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type)
     {
     case SDL_ACTIVEEVENT:
         SDL_SetModState(KMOD_NONE);
-        event->type = WM_ACTIVEEVENT;
+        event->type = WME_ACTIVEEVENT;
         event->active.gain = sdlevent.active.gain;
         event->active.state = sdlevent.active.state;
         break;
     case SDL_KEYDOWN:
-        event->type = WM_KEYDOWN;
+        event->type = WME_KEYDOWN;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
@@ -581,7 +599,7 @@ int SDLWrapper::wait_event(wm_event *event)
  */
         break;
     case SDL_KEYUP:
-        event->type = WM_KEYUP;
+        event->type = WME_KEYUP;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
@@ -590,33 +608,33 @@ int SDLWrapper::wait_event(wm_event *event)
 
         break;
     case SDL_MOUSEMOTION:
-        event->type = WM_MOUSEMOTION;
+        event->type = WME_MOUSEMOTION;
         _translate_event(sdlevent.motion, event->mouse_event);
         break;
     case SDL_MOUSEBUTTONUP:
-        event->type = WM_MOUSEBUTTONUP;
+        event->type = WME_MOUSEBUTTONUP;
         _translate_event(sdlevent.button, event->mouse_event);
         break;
     case SDL_MOUSEBUTTONDOWN:
-        event->type = WM_MOUSEBUTTONDOWN;
+        event->type = WME_MOUSEBUTTONDOWN;
         _translate_event(sdlevent.button, event->mouse_event);
         break;
     case SDL_VIDEORESIZE:
-        event->type = WM_RESIZE;
+        event->type = WME_RESIZE;
         event->resize.w = sdlevent.resize.w;
         event->resize.h = sdlevent.resize.h;
         break;
     case SDL_VIDEOEXPOSE:
-        event->type = WM_EXPOSE;
+        event->type = WME_EXPOSE;
         break;
     case SDL_QUIT:
-        event->type = WM_QUIT;
+        event->type = WME_QUIT;
         break;
 
     // I leave these as the same, because the original tilesdl does, too
     case SDL_USEREVENT:
     default:
-        event->type = WM_CUSTOMEVENT;
+        event->type = WME_CUSTOMEVENT;
         event->custom.code = sdlevent.user.code;
         event->custom.data1 = sdlevent.user.data1;
         event->custom.data2 = sdlevent.user.data2;
@@ -654,43 +672,43 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     Uint32 eventmask;
     switch (type)
     {
-    case WM_ACTIVEEVENT:
+    case WME_ACTIVEEVENT:
         eventmask = SDL_EVENTMASK(SDL_ACTIVEEVENT);
         break;
 
-    case WM_KEYDOWN:
+    case WME_KEYDOWN:
         eventmask = SDL_EVENTMASK(SDL_KEYDOWN);
         break;
 
-    case WM_KEYUP:
+    case WME_KEYUP:
         eventmask = SDL_EVENTMASK(SDL_KEYUP);
         break;
 
-    case WM_MOUSEMOTION:
+    case WME_MOUSEMOTION:
         eventmask = SDL_EVENTMASK(SDL_MOUSEMOTION);
         break;
 
-    case WM_MOUSEBUTTONUP:
+    case WME_MOUSEBUTTONUP:
         eventmask = SDL_EVENTMASK(SDL_MOUSEBUTTONUP);
         break;
 
-    case WM_MOUSEBUTTONDOWN:
+    case WME_MOUSEBUTTONDOWN:
         eventmask = SDL_EVENTMASK(SDL_MOUSEBUTTONDOWN);
         break;
 
-    case WM_QUIT:
+    case WME_QUIT:
         eventmask = SDL_EVENTMASK(SDL_QUIT);
         break;
 
-    case WM_CUSTOMEVENT:
+    case WME_CUSTOMEVENT:
         eventmask = SDL_EVENTMASK(SDL_USEREVENT);
         break;
 
-    case WM_RESIZE:
+    case WME_RESIZE:
         eventmask = SDL_EVENTMASK(SDL_VIDEORESIZE);
         break;
 
-    case WM_EXPOSE:
+    case WME_EXPOSE:
         eventmask = SDL_EVENTMASK(SDL_VIDEOEXPOSE);
         break;
 
@@ -860,8 +878,6 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
         }
 
         SDL_UnlockSurface(img);
-
-        bpp = 4;
     }
     else
     {
@@ -884,13 +900,6 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     SDL_FreeSurface(img);
 
     return success;
-}
-
-int SDLWrapper::byte_order()
-{
-    if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-        return WM_BIG_ENDIAN;
-    return WM_LIL_ENDIAN;
 }
 
 SDL_Surface *SDLWrapper::load_image(const char *file) const

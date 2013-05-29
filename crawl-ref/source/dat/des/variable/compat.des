@@ -1,7 +1,25 @@
-# Please remove on a TAG_MAJOR_VERSION bump.
+# Please remove the following on a TAG_MAJOR_VERSION bump.
 
 {{
 function callback.grunt_victim_ignite(data, triggerable, triggerer, marker, ev)
   -- the victims don't spawn before; do nothing
 end
+
+function callback.ldierk_statue_collapse(data, triggerable, triggerer, marker, ev)
+  -- wall_hit events removed; do nothing
+end
+
+function callback.wall_jericho_stepped(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.wall_jericho_tick(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.fedhas_growing_garden_grow(data, triggerable,
+                                             triggerer, marker, ev)
+  -- do nothing
+end
+
 }}

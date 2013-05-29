@@ -15,7 +15,6 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
-cellular.o \
 chardump.o \
 cio.o \
 cloud.o \
@@ -40,9 +39,11 @@ describe.o \
 dgl-message.o \
 dgn-delve.o \
 dgn-height.o \
+dgn-irregular-box.o \
 dgn-labyrinth.o \
 dgn-layouts.o \
 dgn-overview.o \
+dgn-proclayouts.o \
 dgn-shoals.o \
 dgn-swamp.o \
 dgnevent.o \
@@ -65,6 +66,7 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godcompanions.o \
 godconduct.o \
 goditem.o \
 godmenu.o \
@@ -164,6 +166,7 @@ ouch.o \
 output.o \
 package.o \
 pattern.o \
+perlin.o \
 place-info.o \
 place.o \
 player-act.o \
@@ -232,6 +235,7 @@ wiz-fsim.o \
 wiz-item.o \
 wiz-mon.o \
 wiz-you.o \
+worley.o \
 xom.o \
 zotdef.o \
 tilepick.o \

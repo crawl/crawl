@@ -48,10 +48,11 @@ pair of gauntlets
 pair of gloves
 rod of destruction
 rune of Zot
-skeleton
 tome of Destruction
 Young Poisoner's Handbook
 END
+
+$items{"decaying skeleton"} = 1 if $db;
 
 delete $items{$_} for (split /\n/, <<END);
 boots

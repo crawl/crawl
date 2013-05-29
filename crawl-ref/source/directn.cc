@@ -25,7 +25,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dbg-util.h"
-#include "debug.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "fprop.h"
@@ -64,6 +63,7 @@
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "viewmap.h"
 #include "wiz-mon.h"
 #include "spl-goditem.h"
 
@@ -958,9 +958,10 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (!may_target_self && (mode == TARG_ENEMY
-                                     || mode == TARG_HOSTILE
-                                     || mode == TARG_HOSTILE_SUBMERGED))
+            if (!may_target_self && restricts != DIR_TARGET_OBJECT
+                && (mode == TARG_ENEMY || mode == TARG_HOSTILE
+                    || mode == TARG_HOSTILE_SUBMERGED
+                    || mode == TARG_HOSTILE_UNDEAD))
             {
                 if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
@@ -2137,6 +2138,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
             inf.title = desc;
         }
+
         bool temp = false;
         get_monster_db_desc(mi, inf, temp);
     }
@@ -2398,7 +2400,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
                                            dp.x, dp.y);
-        if (x != B_MAYBE)
+        if (x != MB_MAYBE)
             return tobool(x);
     }
 #endif
@@ -2441,7 +2443,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster_expl", "dd",
                                            dp.x, dp.y);
-        if (x != B_MAYBE)
+        if (x != MB_MAYBE)
             return tobool(x);
     }
 #endif
@@ -2468,7 +2470,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
             if (hitfunc->is_affected(*ri) >= AFF_YES)
             {
                 const monster* mon = monster_at(*ri);
-                if (mon != NULL)
+                if (mon && _mons_is_valid_target(mon, mode, range))
                     return _want_target_monster(mon, mode);
             }
         }
@@ -2748,7 +2750,7 @@ static bool _find_square(coord_def &mfp, int direction,
         if (!crawl_view.in_viewport_g(targ))
             continue;
 
-        if (!in_bounds(targ))
+        if (!in_bounds(targ) && (!hitfunc || !hitfunc->can_affect_walls()))
             continue;
 
         if ((onlyVis || onlyHidden) && onlyVis != you.see_cell(targ))
@@ -2789,7 +2791,7 @@ static void _describe_oos_feature(const coord_def& where)
     if (!env.map_knowledge(where).seen())
         return;
 
-    string desc = feature_description_at(where);
+    string desc = feature_description(env.map_knowledge(where).feat());
 
     if (!desc.empty())
         mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
@@ -2961,6 +2963,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "closed door";
     case DNGN_RUNED_DOOR:
         return "runed door";
+    case DNGN_SEALED_DOOR:
+        return "sealed door";
     case DNGN_METAL_WALL:
         return "metal wall";
     case DNGN_GREEN_CRYSTAL_WALL:
@@ -3014,7 +3018,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_EXIT_HELL:
         return "gateway back into the Dungeon";
     case DNGN_TELEPORTER:
-        return "teleporter";
+        return "short-range portal";
     case DNGN_TRAP_MECHANICAL:
         return "mechanical trap";
     case DNGN_TRAP_MAGICAL:
@@ -3041,6 +3045,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "one-way gate to the infinite horrors of the Abyss";
     case DNGN_EXIT_ABYSS:
         return "gateway leading out of the Abyss";
+    case DNGN_ABYSSAL_STAIR:
+        return "gateway leading deeper into the Abyss";
     case DNGN_EXIT_THROUGH_ABYSS:
         return "exit through the horrors of the Abyss";
     case DNGN_STONE_ARCH:
@@ -3186,6 +3192,9 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     string desc = _base_feature_desc(grid, trap);
     desc += cover_desc;
 
+    if (grid == DNGN_FLOOR && dtype == DESC_A)
+        dtype = DESC_THE;
+
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
 
@@ -3279,6 +3288,8 @@ string feature_description_at(const coord_def& where, bool covering,
                 desc += "open ";
             else if (grid == DNGN_RUNED_DOOR)
                 desc += "runed ";
+            else if (grid == DNGN_SEALED_DOOR)
+                desc += "sealed ";
             else
                 desc += "closed ";
         }
@@ -3317,6 +3328,10 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(
                    dtype, add_stop, false,
                    "UNAMED PORTAL VAULT ENTRY");
+    case DNGN_FLOOR:
+        if (dtype == DESC_A)
+            dtype = DESC_THE;
+        // fallthrough
     default:
         return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
                    raw_feature_description(where) + covering_description);
@@ -3548,7 +3563,7 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     text += _mon_enchantments_string(mi);
-    if (text[text.size() -1] == '\n')
+    if (text.size() > 0 && text[text.size() - 1] == '\n')
         text = text.substr(0, text.size() - 1);
     return text;
 }
@@ -3839,7 +3854,7 @@ static void _debug_describe_feature_at(const coord_def &where)
         const vault_placement &vp(*env.level_vaults[map_index]);
         const coord_def br = vp.pos + vp.size - 1;
         vault = make_stringf(" [Vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
-                             vp.map.name.c_str(),
+                             vp.map_name_at(where).c_str(),
                              vp.pos.x, vp.pos.y,
                              br.x, br.y,
                              vp.size.x, vp.size.y);

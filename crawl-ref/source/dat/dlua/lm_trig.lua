@@ -587,10 +587,6 @@ end
 -- * entered_level: Called when player enters the level, after all level
 --      setup code has completed.
 --
--- * wall_hit: Wait for the wall to be "hit", either with a weapon (Ctrl+Dir),
---      with a MMISSILE spell (magic dart, crystal spear), or with a ranged
---      missile (stones, etc).
---
 -- * door_opened, door_closed: Called whenever doors are opened and closed by
 --      the player, or whenever they are opened by monsters (monsters do not
 --      close doors).
@@ -776,10 +772,6 @@ function DgnTriggerer:player_los(triggerable, marker, ev)
   triggerable:do_trigger(self, marker, ev)
 end
 
-function DgnTriggerer:wall_hit(triggerable, marker, ev)
-  triggerable:do_trigger(self, marker, ev)
-end
-
 function DgnTriggerer:door_opened(triggerable, marker, ev)
   triggerable:do_trigger(self, marker, ev)
 end
@@ -812,10 +804,16 @@ function DgnTriggerer:turn(triggerable, marker, ev)
 
   self.sub_type = "countdown"
 
-  while self.countdown <= 0 do
+  local countdown_limit = self.countdown_limit or 200
+  while self.countdown <= 0 and countdown_limit > 0 do
+    countdown_limit = countdown_limit - 1
     triggerable:do_trigger(self, marker, ev)
     self.countdown = self.countdown +
         crawl.random_range(self.delay_min, self.delay_max, 1)
+  end
+
+  if self.countdown < 0 then
+    self:reset_countdown()
   end
 end
 

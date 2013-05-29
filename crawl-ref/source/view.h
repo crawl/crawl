@@ -21,8 +21,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 void reautomap_level();
 void fully_map_level();
 
-bool is_feature(ucs_t feature, const coord_def& where);
-
 string screenshot();
 
 int viewmap_flash_colour();

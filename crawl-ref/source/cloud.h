@@ -33,8 +33,6 @@ void manage_clouds(void);
 
 bool is_opaque_cloud(int cloud_idx);
 
-cloud_type beam2cloud(beam_type flavour);
-
 int resist_fraction(int resist, int bonus_res = 0);
 int max_cloud_damage(cloud_type cl_type, int power = -1);
 int actor_apply_cloud(actor *act);
@@ -49,4 +47,6 @@ bool is_harmless_cloud(cloud_type type);
 bool in_what_cloud(cloud_type type);
 
 void remove_tornado_clouds(mid_t whose);
+
+void run_cloud_spreaders(int dur);
 #endif

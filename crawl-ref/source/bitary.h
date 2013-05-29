@@ -9,13 +9,13 @@
 #ifndef BITARY_H
 #define BITARY_H
 
-#include "debug.h"
 #include "defines.h"
 
 class bit_vector
 {
 public:
     bit_vector(unsigned long size = 0);
+    bit_vector(const bit_vector& other);
     ~bit_vector();
 
     void reset();
@@ -93,6 +93,13 @@ public:
         for (unsigned int i = 0; i < ARRAYSZ(data); i++)
             data[i] &= x.data[i];
         return *this;
+    }
+
+    void init(bool value)
+    {
+        long fill = value ? ~(long)0 : 0;
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
+            data[i] = fill;
     }
 };
 

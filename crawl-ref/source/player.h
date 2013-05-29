@@ -79,7 +79,7 @@ public:
   int zigs_completed, zig_max;
 
   FixedVector<int8_t, NUM_EQUIP> equip;
-  FixedVector<bool, NUM_EQUIP> melded;
+  FixedBitVector<NUM_EQUIP> melded;
   unsigned short unrand_reacts;
 
   FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup;
@@ -95,7 +95,10 @@ public:
   int burden;
   burden_state_type burden_state;
   FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
+  set<spell_type> old_vehumet_gifts;
+
   uint8_t spell_no;
+  set<spell_type> vehumet_gifts;
   game_direction_type char_direction;
   bool opened_zot;
   bool royal_jelly_dead;
@@ -125,7 +128,7 @@ public:
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
   FixedVector<int8_t, NUM_SKILLS>  train_alt; //<! config of the other mode.
   FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
-  FixedVector<bool, NUM_SKILLS> can_train; //!<Is training this skill allowed
+  FixedBitVector<NUM_SKILLS> can_train; //!<Is training this skill allowed
   FixedVector<unsigned int, NUM_SKILLS> skill_points;
   FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
                                                     //<!gained by crosstraining
@@ -162,7 +165,7 @@ public:
 
   FixedArray<uint8_t, 6, MAX_SUBTYPES> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
-  FixedVector<bool, NUM_MONSTERS> unique_creatures;
+  FixedBitVector<NUM_MONSTERS> unique_creatures;
 
   // NOTE: The kills member is a pointer to a KillMaster object,
   // rather than the object itself, so that we can get away with
@@ -190,11 +193,11 @@ public:
   FixedVector<uint8_t, NUM_GODS>  worshipped;
   FixedVector<short,   NUM_GODS>  num_current_gifts;
   FixedVector<short,   NUM_GODS>  num_total_gifts;
-  FixedVector<bool,    NUM_GODS>  one_time_ability_used;
+  FixedBitVector<   NUM_GODS>  one_time_ability_used;
   FixedVector<uint8_t, NUM_GODS>  piety_max;
 
   // Nemelex sacrifice toggles
-  FixedVector<bool, NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
+  FixedBitVector<NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
@@ -208,11 +211,10 @@ public:
 
   vector<demon_trait> demonic_traits;
 
-  int earth_attunement; // nomes only
   int magic_contamination;
 
-  FixedVector<bool, NUM_FIXED_BOOKS> had_book;
-  FixedVector<bool, NUM_SPELLS>      seen_spell;
+  FixedBitVector<NUM_FIXED_BOOKS> had_book;
+  FixedBitVector<NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
   FixedBitVector<NUM_MISCELLANY>     seen_misc;
@@ -281,7 +283,7 @@ public:
   map<pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
   // Which branches have been noted to have been left during this game.
-  FixedVector<bool, NUM_BRANCHES> branches_left;
+  FixedBitVector<NUM_BRANCHES> branches_left;
 
   // For now, only control the speed of abyss morphing.
   int abyss_speed;
@@ -289,6 +291,9 @@ public:
   // Prompts or actions the player must answer before continuing.
   // A stack -- back() is the first to go.
   vector<pair<uncancellable_type, int> > uncancel;
+
+  // A list of allies awaiting an active recall
+  vector<mid_t> recall_list;
 
 
   // -------------------
@@ -304,7 +309,10 @@ public:
   level_id travel_z;
 
   runrest running;                    // Nonzero if running/traveling.
+  bool travel_ally_pace;
+
   bool received_weapon_warning;
+  bool received_noskill_warning;
 
   delay_queue_type delay_queue;       // pending actions
 
@@ -407,10 +415,10 @@ public:
 
     void reset_prev_move();
 
-    int stat(stat_type stat, bool nonneg=true) const;
-    int strength(bool nonneg=true) const;
-    int intel(bool nonneg=true) const;
-    int dex(bool nonneg=true) const;
+    int stat(stat_type stat, bool nonneg = true) const;
+    int strength(bool nonneg = true) const;
+    int intel(bool nonneg = true) const;
+    int dex(bool nonneg = true) const;
     int max_stat(stat_type stat) const;
     int max_strength() const;
     int max_intel() const;
@@ -426,7 +434,7 @@ public:
     bool invisible() const;
     bool misled() const;
     bool can_see_invisible() const;
-    bool can_see_invisible(bool unid) const;
+    bool can_see_invisible(bool unid, bool items = true) const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
     bool nightvision() const;
@@ -467,6 +475,8 @@ public:
     void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
+
+    bool made_nervous_by(const coord_def &pos);
 
     kill_category kill_alignment() const;
 
@@ -560,8 +570,10 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool mutate(const string &reason);
+    bool polymorph(int pow);
     void backlight();
     void banish(actor *agent, const string &who = "");
     void blink(bool allow_partial_control = true);
@@ -577,15 +589,18 @@ public:
 
     void make_hungry(int nutrition, bool silent = true);
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount, bool allow_hint = true);
+    bool sicken(int amount, bool allow_hint = true, bool quiet = false);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
+    void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
-    bool drain_exp(actor *, bool quiet = false, int pow = 3);
+    bool drain_exp(actor *, const char *aux = NULL, bool quiet = false,
+                   int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
+    void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
@@ -605,7 +620,7 @@ public:
     bool is_unbreathing() const;
     bool is_insubstantial() const;
     bool is_cloud_immune(cloud_type) const;
-    int res_acid() const;
+    int res_acid(bool calc_unid = true) const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
@@ -616,11 +631,11 @@ public:
     int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
-    int res_negative_energy() const;
+    int res_negative_energy(bool intrinsic_only = false) const;
     int res_torment() const;
     int res_wind() const;
     int res_petrify(bool temp = true) const;
-    int res_constrict() const { return 0; };
+    int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const;
@@ -639,14 +654,15 @@ public:
     bool cannot_act() const;
     bool confused() const;
     bool caught() const;
-    bool backlit(bool check_haloed = true, bool self_halo = true) const;
+    bool backlit(bool check_haloed = true, bool self_halo = true, bool check_corona = true) const;
     bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
-    int liquefying_radius2 () const;
-    int umbra_radius2 () const;
-    int suppression_radius2 () const;
-    int heat_radius2 () const;
+    int liquefying_radius2() const;
+    int umbra_radius2() const;
+    int suppression_radius2() const;
+    int soul_aura_radius2() const;
+    int heat_radius2() const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
@@ -833,6 +849,7 @@ int player_res_acid(bool calc_unid = true, bool items = true);
 int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true, bool temp = true);
+int player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
@@ -854,8 +871,7 @@ int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
 int player_res_magic(bool calc_unid = true, bool temp = true);
 
-bool player_control_teleport(bool calc_unid = true, bool temp = true,
-                             bool items = true);
+bool player_control_teleport(bool temp = true);
 
 int player_shield_class(void);
 
@@ -895,10 +911,10 @@ void forget_map(bool rot = false);
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
-bool player_in_bat_form();
 bool player_can_open_doors();
 
-void level_change(bool skip_attribute_increase = false);
+void level_change(int source = NON_MONSTER, const char *aux = NULL,
+                  bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
@@ -955,7 +971,7 @@ void dec_poison_player();
 void reduce_poison_player(int amount);
 bool miasma_player(string source, string source_aux = "");
 
-bool napalm_player(int amount);
+bool napalm_player(int amount, string source, string source_aux = "");
 void dec_napalm_player(int delay);
 
 bool slow_player(int turns);
@@ -971,6 +987,8 @@ bool land_player();
 void dec_disease_player(int delay);
 
 void dec_color_smoke_trail();
+
+void handle_player_drowning(int delay);
 
 bool player_weapon_wielded();
 

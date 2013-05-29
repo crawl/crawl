@@ -1,6 +1,21 @@
 #include <sys/types.h>
 #include <sys/param.h>
 
+#ifdef __ANDROID__
+  #include <sys/endian.h>
+#endif
+
+#ifdef __sun
+# include <sys/isa_defs.h>
+# define LITTLE_ENDIAN 1234
+# define BIG_ENDIAN    4321
+# ifdef _LITTLE_ENDIAN
+#  define BYTE_ORDER LITTLE_ENDIAN
+# else
+#  define BYTE_ORDER BIG_ENDIAN
+# endif
+#endif
+
 #ifndef htole32
  #if BYTE_ORDER == LITTLE_ENDIAN
   #define htole32(x) (x)

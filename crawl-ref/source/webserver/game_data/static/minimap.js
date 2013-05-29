@@ -10,8 +10,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         "blue",        // MF_MAP_WALL
         "brown",       // MF_DOOR
         "green",       // MF_ITEM
-        "lightred",    // MF_MONS_FRIENDLY
-        "lightred",    // MF_MONS_PEACEFUL
+        "#EE9090",     // MF_MONS_FRIENDLY
+        "#EE9090",     // MF_MONS_PEACEFUL
         "red",         // MF_MONS_NEUTRAL
         "red",         // MF_MONS_HOSTILE
         "darkgreen",   // MF_MONS_NO_EXP
@@ -96,6 +96,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     {
         if (!enabled) return;
 
+        stop_minimap_farview();
+
         var minimap = $("#minimap")[0];
         var bounds = map_knowledge.bounds();
         var mm_w = bounds.right - bounds.left;
@@ -173,7 +175,6 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     }
 
     var farview_old_vc;
-    var farview_old_map_cursor;
     function minimap_farview(ev)
     {
         if (ev.which == 3 || farview_old_vc)
@@ -185,27 +186,21 @@ function ($, map_knowledge, dungeon_renderer, view_data,
                     x: dungeon_renderer.view_center.x,
                     y: dungeon_renderer.view_center.y
                 }
-                farview_old_map_cursor = view_data.cursor_locs[enums.CURSOR_MAP];
             }
             var x = Math.round((ev.pageX - display_x - offset.left)
                                / cell_w + cell_x - 0.5);
             var y = Math.round((ev.pageY - display_y - offset.top)
                                / cell_h + cell_y - 0.5);
             vgrdc(x, y);
-            view_data.place_cursor(enums.CURSOR_MAP, {x: x, y: y});
         }
     }
 
-    function stop_minimap_farview(ev)
+    function stop_minimap_farview()
     {
         if (farview_old_vc !== undefined)
         {
             vgrdc(farview_old_vc.x, farview_old_vc.y);
             farview_old_vc = undefined;
-            if (farview_old_map_cursor)
-                view_data.place_cursor(enums.CURSOR_MAP, farview_old_map_cursor);
-            else
-                view_data.remove_cursor(enums.CURSOR_MAP);
         }
     }
 
@@ -226,5 +221,6 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         center: center,
         update: update,
         do_view_center_update: do_view_center_update,
+        stop_minimap_farview: stop_minimap_farview,
     }
 });

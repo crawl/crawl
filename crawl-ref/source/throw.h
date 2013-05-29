@@ -10,8 +10,6 @@
 #include "externs.h"
 #include "enum.h"
 
-struct bolt;
-
 enum fire_type
 {
     FIRE_NONE      = 0x0000,
@@ -26,7 +24,8 @@ enum fire_type
     FIRE_ROCK      = 0x0100,
     FIRE_NET       = 0x0200,
     FIRE_RETURNING = 0x0400,
-    FIRE_INSCRIBED = 0x0800,   // Only used for _get_fire_order
+    FIRE_PIE       = 0x0800,
+    FIRE_INSCRIBED = 0x1000,   // Only used for _get_fire_order
 };
 
 struct bolt;
@@ -46,6 +45,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where);
 int launcher_final_speed(const item_def &launcher,
                          const item_def *shield, bool scaled = true);
 
-void setup_monster_throw_beam(monster* mons, struct bolt &beam);
-bool mons_throw(monster* mons, struct bolt &beam, int msl);
+void setup_monster_throw_beam(monster* mons, bolt &beam);
+bool mons_throw(monster* mons, bolt &beam, int msl);
 #endif

@@ -97,7 +97,7 @@ ENDMAP
 #
 NAME:    statuecave_lemuel
 ORIENT:  northeast
-DEPTH:   D:7-27, Lair, Crypt
+DEPTH:   D:7-18, Lair, Crypt:1-4
 MONS:    ice statue / orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
@@ -352,7 +352,7 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  D:18-, Crypt
-MONS:   flying skull / nothing w:30, small skeleton / large skeleton / nothing
+MONS:   flying skull / nothing w:30, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
 SUBST:  G : GGccV.
 MAP
@@ -662,7 +662,7 @@ MARKER: z = lua:fog_machine { \
                 size = 2, size_buildup_amnt = 1, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" \
             }
-MONS:   wood golem, clay golem, toenail golem, stone golem, iron golem, crystal golem
+MONS:   clay golem, toenail golem, stone golem, iron golem, crystal golem
 KFEAT:  o = granite_statue
 KFEAT:  m = .
 KFEAT:  z = .
@@ -676,23 +676,23 @@ MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
  cc......+.....cc......+....$cc
- ccmcccccc..5..cczcccccc.6.6$cc
- cc.....cc*5E5.cc.....cc..F.$cc
- ccccccmcc|.5..cccccczcc.6.6$cc
+ ccmcccccc..4..cczcccccc.5.5$cc
+ cc.....cc*4E4.cc.....cc..F.$cc
+ ccccccmcc|.4..cccccczcc.5.5$cc
  cc.....cc*$$..+......cc|||||cc
  cc.ccccccccccccccccccccccccccc
  cc+ccccccccccccccccccccccccccc
  cc.....cllllllcc%$$..cwwwwwwcc
- cc.4.4.clcccclcc$.3..cwccccwcc
- cc..D..+.cllllcc$3C3.+.cwwwwcc
- cc%4.4.ccclccccc..3..cccwccccc
+ cc.3.3.clcccclcc$.2..cwccccwcc
+ cc..D..+.cllllcc$2C2.+.cwwwwcc
+ cc%3.3.ccclccccc..2..cccwccccc
  cc$$$%%ccclllll+.....cccwwwwcc
  cccccccccccccccccccccccccccwcc
  ccccccccccccccccccccccccccc+cc
 .cc......+...$$ccWWWWWW+.....cc
-.cc.cccccc..1.$ccWcccccc.2.2.cc
-.cc.....cc.1A1.ccWWWWWWc..B..cc
-occcccc.cc..1..cccccccWc.2.2$cc
+.cc.cccccc..1.$ccWcccccc.1.1.cc
+.cc.....cc..A..ccWWWWWWc..B..cc
+occcccc.cc..1..cccccccWc.1.1$cc
 @+......cc.....+WWWWWWWc...$%cc
 occcccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
@@ -733,8 +733,8 @@ DEPTH:  D:16-
 MONS:   crystal golem, orange crystal statue
 ITEM:   any magical staff / any rod w:2 / any book / any jewellery w:15 / \
         any scroll w:20 / potion of magic / potion of brilliance / \
-        air elemental fan w:1 / lamp of fire w:1 / \
-        stone of earth elementals w:1 / gold w:30
+        fan of gales w:1 / lamp of fire w:1 / \
+        stone of tremors w:1 / phial of floods w:1 / gold w:30
 KFEAT:  _ = altar_sif_muna
 MAP
             bbbbb
@@ -807,7 +807,6 @@ NAME:   minmay_twisted_water
 ORIENT: north
 DEPTH:  D:9-20
 SUBST:  W = wW
-# Only the dragon can fly; depth is consistent with dragon1_lemuel.
 MONS:   ice statue, patrolling ice dragon, patrolling frost giant, ice beast
 KMONS:  w = w:490 nothing / ice beast
 KFEAT:  w = w
@@ -924,50 +923,6 @@ xxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-# A variety of statues, with loot. (1KB)
-#
-NAME:    statue_cache
-ORIENT:  north
-TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf
-SHUFFLE: 12, 34, 56, 89
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:flame . bolt q:30
-MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:frost . bolt q:30
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
-      ego:freezing good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:flaming good_item
-MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
-      ego:freezing good_item
-MONS: silver statue
-KMONS: 8 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:lehudib's_crystal_spear;iskenderun's_mystic_blast;slow;stone_arrow
-KMONS: 9 = statue name:wizard name_adjective tile:mons_statue_mage \
-           spells:freezing_cloud;mephitic_cloud;throw_icicle;confuse
-MAP
-  cccccccccccccc
-  cccccccc7ccccc
-  cccccc.....ccc
-  cccc..ccccc.cc
-  ccc.ccccc5c.cc
-  ccc.cccccc.ccc
-  cc8.9cc3c.c6cc
-  c$$$$$cc.ccccc
-  c|*|*|c.c4cccc
-ccccccccc.ccccccccc
-........1.2........
-...................
-...................
- .................
-   .............
-      ...@...
-ENDMAP
-
 ################################################################################
 # Wizard Prison
 #
@@ -1000,7 +955,7 @@ MONS:   draconian shifter / draconian annihilator / lich  / \
         deep elf annihilator / deep elf demonologist
 NSUBST: 4 = 6:5 / *:4
 MONS:   ancient lich
-MONS:   human name:sacrificial n_adj n_noc att:neutral
+MONS:   human att:neutral
 NSUBST: 4 = 1:7 / *:4
 ITEM:   acquire any
 SUBST:  - = .
@@ -1066,7 +1021,7 @@ NSUBST: 3 = 1:3 / 1:9
 : elseif you.absdepth() < 24 then
 NSUBST: 4 = 2:4 / 1:5
 : end
-MONS:   human name:sacrificial n_adj n_spe att:neutral
+MONS:   human att:neutral
 KMONS:  7 = patrolling hell knight
 ITEM:   acquire any
 SUBST:  '" = ., b = v
@@ -1255,16 +1210,14 @@ MARKER: ! = lua:fog_machine { \
                 size_buildup_time = 10, cloud_type = "flame" \
             }
 KFEAT:  _ = altar_vehumet
-: if you.absdepth() < 22 then
-# Given a special name so they stand out in tiles mode
-MONS:   statue hd:9 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
+## Made to be always the same hd for consistency. - HangedMan
+MONS:   statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
         name:conjurer n_adj
+: if you.absdepth() < 22 then
 MONS:   w:6 deep elf conjurer / w:2 wizard / w:1 spriggan air mage / w:1 deep elf annihilator
 MONS:   w:3 deep elf annihilator / w:1 deep elf conjurer
 KMONS:  5 = nikola, deep elf annihilator
 : else
-MONS:   statue hd:13 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
-        name:conjurer n_adj
 MONS:   w:4 deep elf conjurer / w:2 wizard / w:2 spriggan air mage / w:2 deep elf annihilator
 MONS:   w:2 deep elf annihilator / w:1 draconian annihilator
 KMONS:  5 = frederick, boris, draconian annihilator
@@ -1324,19 +1277,17 @@ SUBST:  b = c
 #
 KFEAT:  _ = altar_kikubaaqudgha
 : if you.absdepth() < 19 then
-MONS:   small zombie / large zombie / small skeleton / large skeleton / \
-        w:5 small simulacrum / w:5 large simulacrum
+MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   w:2 necromancer / w:1 deep dwarf necromancer, deep elf death mage, \
         w:5 deep elf death mage / nothing
 MONS:   w:4 soul eater / w:1 reaper, reaper, reaper / nothing
 : elseif you.absdepth() < 24 then
-MONS:   w:5 small zombie / large zombie / w:5 small skeleton / large skeleton / \
-        w:2 small simulacrum / w:3 large simulacrum
+MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   necromancer / w:5 deep dwarf necromancer / w:5 deep elf death mage, lich, \
         lich / deep elf death mage / nothing
 MONS:   soul eater / w:5 reaper, reaper, shadow fiend / w:5 reaper
 : else
-MONS:   large zombie / large skeleton / w:5 large simulacrum
+MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   necromancer / deep elf death mage, \
         w:15 lich / w:5 ancient lich / deep elf death mage, lich / ancient lich
 MONS:   reaper / soul eater, reaper, shadow fiend
@@ -1423,4 +1374,142 @@ xxxxx"x........x+xxxxx........x"xxxxx
 .......xx=xx..mx.....xm..xx=xx.......
 ........xx'x...xm+++mx...x'xx........
 ..................@..................
+ENDMAP
+
+###############################################################################
+# Tagged "extra" because I find it too small to take the full vault slot.
+#
+NAME: lightli_too_deep
+DEPTH: D:17-27
+TAGS: no_monster_gen extra
+ORIENT: northeast
+MONS: balrug
+MONS: sun demon
+KFEAT: H = enter_hell
+SUBST: y = x..
+SUBST: ; = %A.....l
+KITEM: % = dwarf skeleton
+: dgn.delayed_decay(_G, '%', 'dwarf skeleton')
+KITEM: A = any weapon race:dwarven w:20 /  chain mail race:dwarven w:60 / \
+           plate armour race:dwarven w:19 / \
+           crystal plate armour race:dwarven w:1
+MAP
+xxxxxxxxxxxxxxx
+xxxxcccccccxxxx
+xxxxcA;H;Acxxxx
+xxxxc;;1;;cxxxx
+xxxxc;2|2;cxxxx
+xxxxc;;;;;cxxxx
+xxxxccc.cccxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxy%yxxxxxxx
+xxxxxy.yxxxxxxx
+xxxxxy.yxxxxxxx
+xxxxy...yxxxxxx
+xxxy.%...yxxxxx
+ENDMAP
+
+###############################################################################
+NAME:    grunt_house_of_mirrors
+TAGS:    no_rtele_into
+DEPTH:   D:15-
+ORIENT:  north
+SHUFFLE: AB / BA / BB, CD / DC / DD, EF / FE / FF
+SHUFFLE: GH / HG / HH, IJ / JI / JJ, KL / LK / LL
+SHUFFLE: MN / NM / NN, OP / PO / PP, QR / RQ / RR
+SUBST:   ACEGIKMOQ = b
+SUBST:   BDFHJLNPR = .
+{{
+  -- This is a list of monsters in D that have attacks that can bounce
+  -- off of green crystal walls (fire, cold, lightning), weighted by
+  -- their normal dungeon weight functions!
+  local function peak(depth, low, high, chance)
+    if depth < low or depth > high then return 0 end
+    local len = high - low + 2
+    return math.floor(chance * (len - math.abs(low + high - 2 * depth)) / len)
+  end
+  local function semi(depth, low, high, chance)
+    if depth < low or depth > high then return 0 end
+    local len = high - low
+    if len == 0 then len = 2 else len = len * 2 end
+    return math.floor(chance * (len - math.abs(low + high - 2 * depth)) / len)
+  end
+  local function flat(depth, low, high, chance)
+    if depth < low or depth > high then return 0 end
+    return chance
+  end
+
+  local function add_mons(mons, newmons, chance)
+      if chance <= 0 then return mons end
+      if mons == nil then return newmons .. " w:" .. chance end
+      return mons .. " / " .. newmons .. " w:" .. chance
+  end
+
+  local function monslist(depth)
+    local mons = nil
+    mons = add_mons(mons, "mottled dragon", semi(depth, 11, 21, 334))
+    mons = add_mons(mons, "efreet", peak(depth, 13, 19, 52))
+    mons = add_mons(mons, "wizard", peak(depth, 14, 22, 89))
+    mons = add_mons(mons, "dragon", peak(depth, 14, 24, 192))
+    mons = add_mons(mons, "ice dragon", semi(depth, 17, 25, 136))
+    mons = add_mons(mons, "necromancer band", peak(depth, 18, 24, 52))
+    mons = add_mons(mons, "orc sorcerer", peak(depth, 21, 27, 25))
+    mons = add_mons(mons, "frost giant", peak(depth, 22, 30, 136))
+    mons = add_mons(mons, "fire giant", peak(depth, 22, 30, 136))
+    mons = add_mons(mons, "lich", peak(depth, 22, 30, 66))
+    mons = add_mons(mons, "hell knight band", peak(depth, 23, 29, 25))
+    mons = add_mons(mons, "storm dragon", peak(depth, 23, 31, 89))
+    mons = add_mons(mons, "deep elf conjurer", flat(depth, 26, 28, 6))
+    mons = add_mons(mons, "golden dragon", peak(depth, 29, 33, 8))
+    mons = add_mons(mons, "titan", peak(depth, 28, 34, 25))
+    mons = add_mons(mons, "deep elf annihilator", peak(depth, 30, 31, 4))
+    if mons == nil then return "nothing" end
+    return mons
+  end
+
+  local ninedepth = you.absdepth() + 5
+  if ninedepth > 31 then ninedepth = 31 end
+
+  kmons("0 = " .. monslist(you.absdepth()))
+  kmons("9 = " .. monslist(ninedepth))
+  kmons("8 = " .. monslist(31)) -- this cap's always hit at D:14-
+}}
+KFEAT: 123456 = .
+validate {{
+  return has_exit_from_glyph('1')
+         and has_exit_from_glyph('2')
+         and has_exit_from_glyph('3')
+         and has_exit_from_glyph('4')
+         and has_exit_from_glyph('5')
+         and has_exit_from_glyph('6')
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xbbbbbbbbbbbbbbbbbbbbbbbx
+xb%*%bbb*|*bbb*|*bbb%*%bx
+xb.9.bbb.8.bbb.8.bbb.9.bx
+xbb1bbbbb.bbbbb.bbbbb3bbx
+xbbb.b.bQb.b2b.bRb.b.bbbx
+xbbbb.9.bbb.9.bbb.9.bbbbx
+xbBbbb.b.bQb.bRb.b.bbbGbx
+xbBBbbbbb.bbbbb.bbbbbGGbx
+xbBBBbbb.0.bbb.0.bbbGGGbx
+xbBBbbbbb.bbbbb.bbbbbGGbx
+xbBbBb.bCbDb.bEbFb.bGbGbx
+xbbbb.0.bbb.0.bbb.0.bbbbx
+xbBbAb.bDbCb5bFbEb.bHbGbx
+xb..bbbbb.bbbbb.bbbbb..bx
+xb.04bbb.0.bbb.0.bbb60.bx
+xb..bbbbb.bbbbb.bbbbb..bx
+xbIbJb.bKbLb.bMbNb.bObPbx
+xbbbb.0.bbb.0.bbb.0.bbbbx
+xbJbIb.bLbKb.bNbMb.bPbObx
+xbIIbbbbb.bbbbb.bbbbbPPbx
+xbIIIbbb...bbb...bbbPPPbx
+xbIIIbbb...bbb...bbbPPPbx
+xbbbbbbb...bbb...bbbbbbbx
+xxxxxxxx.@.xxx.@.xxxxxxxx
 ENDMAP

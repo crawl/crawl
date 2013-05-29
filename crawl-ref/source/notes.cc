@@ -72,26 +72,22 @@ static int _dungeon_branch_depth(uint8_t branch)
 
 static bool _is_noteworthy_dlevel(unsigned short place)
 {
-    const uint8_t branch = (place >> 8) & 0xFF;
-    const int lev = (place & 0xFF);
+    branch_type branch = place_branch(place);
+    int lev = place_depth(place);
 
-    // The Abyss is noted a different way (since we care mostly about the cause).
+    // Entering the Abyss is noted a different way, since we care mostly about
+    // the cause.
     if (branch == BRANCH_ABYSS)
-        return false;
+        return lev == _dungeon_branch_depth(branch);
 
     // Other portal levels are always interesting.
     if (!is_connected_branch(static_cast<branch_type>(branch)))
         return true;
 
-    if (lev == _dungeon_branch_depth(branch)
-        || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
-        || branch == BRANCH_MAIN_DUNGEON && lev == 14
-        || branch != BRANCH_MAIN_DUNGEON && lev == 1)
-    {
-        return true;
-    }
-
-    return false;
+    return (lev == _dungeon_branch_depth(branch)
+            || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
+            || branch == BRANCH_MAIN_DUNGEON && lev == 14
+            || branch != BRANCH_MAIN_DUNGEON && lev == 1);
 }
 
 // Is a note worth taking?
@@ -124,7 +120,8 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_PARALYSIS
         || note.type == NOTE_NAMED_ALLY
         || note.type == NOTE_ALLY_DEATH
-        || note.type == NOTE_FEAT_MIMIC)
+        || note.type == NOTE_FEAT_MIMIC
+        || note.type == NOTE_OFFERED_SPELL)
     {
         return true;
     }
@@ -242,13 +239,13 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Xom revived you";
             break;
         case NOTE_MP_CHANGE:
-            result << "Mana: " << first << "/" << second;
+            result << "Magic: " << first << "/" << second;
             break;
         case NOTE_MAXHP_CHANGE:
             result << "Reached " << first << " max hit points";
             break;
         case NOTE_MAXMP_CHANGE:
-            result << "Reached " << first << " max mana";
+            result << "Reached " << first << " max magic points";
             break;
         case NOTE_XP_LEVEL_CHANGE:
             result << "Reached XP level " << first << ". " << name;
@@ -324,7 +321,8 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_GOD_POWER:
             result << "Acquired "
-                   << god_name(static_cast<god_type>(first)) << "'s "
+                   << apostrophise(god_name(static_cast<god_type>(first)))
+                   << " "
                    << _number_to_ordinal(_real_god_power(first, second)+1)
                    << " power";
             break;
@@ -376,6 +374,11 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_ALLY_DEATH:
             result << "Your ally " << name << " died";
             break;
+        case NOTE_OFFERED_SPELL:
+            result << "Offered knowledge of "
+                   << spell_title(static_cast<spell_type>(first))
+                   << " by Vehumet.";
+            break;
         default:
             result << "Buggy note description: unknown note type";
             break;
@@ -421,7 +424,8 @@ void Note::check_milestone() const
         // Wizlabs report their milestones on their own.
         if (br != -1 && br != BRANCH_WIZLAB)
         {
-            ASSERT(br >= 0 && br < NUM_BRANCHES);
+            ASSERT(br >= 0);
+            ASSERT(br < NUM_BRANCHES);
             string branch = place_name(packed_place, true, false).c_str();
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);

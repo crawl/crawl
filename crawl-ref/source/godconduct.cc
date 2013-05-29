@@ -55,7 +55,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
     bool retval = false;
 
-    if (you.religion != GOD_NO_GOD && you.religion != GOD_XOM)
+    if (you.religion != GOD_NO_GOD && you.religion != GOD_XOM
+        && (you.religion != GOD_LUGONU || !player_in_branch(BRANCH_ABYSS)))
     {
         int piety_change = 0;
         int piety_denom = 1;
@@ -120,10 +121,20 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_DESECRATE_HOLY_REMAINS:
+            if (you.religion == GOD_YREDELEMNUL)
+            {
+                simple_god_message(" appreciates your desecration of holy "
+                                   "remains.");
+                retval = true;
+                piety_change = 1;
+                break;
+            }
+            // deliberate fall through
+
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
-        case DID_DESECRATE_HOLY_REMAINS:
             switch (you.religion)
             {
             case GOD_ZIN:
@@ -137,7 +148,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     break;
                 }
 
-                if (thing_done == DID_ATTACK_HOLY && victim
+                if (thing_done == DID_ATTACK_HOLY
+                    && victim
                     && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
@@ -398,6 +410,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_KIKUBAAQUDGHA:
@@ -529,6 +542,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA:
             case GOD_TROG:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -616,7 +630,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA:
-            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -635,7 +648,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_LIVING_KILLED_BY_SERVANT:
             switch (you.religion)
             {
-            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_BEOGH:
@@ -655,7 +667,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
             {
-            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -675,7 +686,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
-            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -965,6 +975,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 penance = level * (known ? 2 : 1);
                 retval = true;
             }
+            else if (you.religion == GOD_TROG)
+            {
+                simple_god_message(" is delighted!");
+                piety_change = 2; // consistent with Burn Spellbooks
+                retval = true;
+            }
             break;
 
         case DID_EXPLORATION:
@@ -991,6 +1007,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_DESTROY_DECK:
+            if (you.religion == GOD_NEMELEX_XOBEH)
+            {
+                piety_change = -level;
+                penance = level * (known ? 2 : 1);
+                retval = true;
+            }
+            break;
+
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
@@ -999,10 +1024,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         if (you.religion == GOD_OKAWARU
             // currently no constructs and plants
             && (thing_done == DID_KILL_LIVING
-             || thing_done == DID_KILL_UNDEAD
-             || thing_done == DID_KILL_DEMON
-             || thing_done == DID_KILL_HOLY)
-            && ! god_hates_attacking_friend(you.religion, victim))
+                || thing_done == DID_KILL_UNDEAD
+                || thing_done == DID_KILL_DEMON
+                || thing_done == DID_KILL_HOLY)
+            && !god_hates_attacking_friend(you.religion, victim))
         {
             piety_change = get_fuzzied_monster_difficulty(victim);
             dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
@@ -1052,6 +1077,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
+                "Destroy Deck",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
@@ -1080,15 +1106,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 // since a Beogh worshipper zapping an orc with lightning might cause it to
 // become a follower on the first hit, and the second hit would be
 // against a friendly orc.
-static FixedVector<bool, MAX_MONSTERS> _first_attack_conduct;
-static FixedVector<bool, MAX_MONSTERS> _first_attack_was_unchivalric;
-static FixedVector<bool, MAX_MONSTERS> _first_attack_was_friendly;
+static FixedBitVector<MAX_MONSTERS> _first_attack_conduct;
+static FixedBitVector<MAX_MONSTERS> _first_attack_was_unchivalric;
+static FixedBitVector<MAX_MONSTERS> _first_attack_was_friendly;
 
 void god_conduct_turn_start()
 {
-    _first_attack_conduct.init(true);
-    _first_attack_was_unchivalric.init(false);
-    _first_attack_was_friendly.init(false);
+    _first_attack_conduct.reset();
+    _first_attack_was_unchivalric.reset();
+    _first_attack_was_friendly.reset();
 }
 
 void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
@@ -1098,28 +1124,28 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
 
     if (mon->friendly())
     {
-        if (_first_attack_conduct[midx]
+        if (!_first_attack_conduct[midx]
             || _first_attack_was_friendly[midx])
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
-            _first_attack_was_friendly[midx] = true;
+            _first_attack_was_friendly.set(midx);
         }
     }
     else if (mon->neutral())
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
     if (is_unchivalric_attack(&you, mon)
-        && (_first_attack_conduct[midx]
+        && (!_first_attack_conduct[midx]
             || _first_attack_was_unchivalric[midx]))
     {
         conduct[1].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
-        _first_attack_was_unchivalric[midx] = true;
+        _first_attack_was_unchivalric.set(midx);
     }
 
     if (mon->is_holy())
         conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 
-    _first_attack_conduct[midx] = false;
+    _first_attack_conduct.set(midx);
 }
 
 void enable_attack_conducts(god_conduct_trigger conduct[3])

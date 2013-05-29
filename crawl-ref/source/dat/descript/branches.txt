@@ -97,7 +97,8 @@ Slime Pits
 The amorphous realm of acids, jellies and slimes. Any trace of intelligent
 beings has long been dissolved. Still, there are rumours of great treasures
 deep down, hidden safely away in secret chambers without door or window for
-acid to leak in.
+acid to leak in. It is well known that even the walls of this horrible place
+are dripping with painful acid, growing more caustic as you descend.
 
 The Slime Pits are six levels deep and contain the slimy rune. The entry is
 between Lair:6 and Lair:8.
@@ -108,8 +109,9 @@ Possibly constructed by some powerful madman, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
-The Vaults are eight levels deep and contain the silver rune. The entrance can
-be found between levels 14 and 19 of the main dungeon.
+The Vaults are five levels deep and contain the silver rune, as well as the
+entrances to two more branches. The entrance can be found between levels 15 and
+20 of the main dungeon.
 %%%%
 Hall of Blades
 
@@ -133,11 +135,23 @@ Tomb
 
 The Tomb of the Ancients is a place of damnation, of horrors animated by the
 vilest necromancy. Honest creatures of the surface turn pale at the mere
-mention of its name, The list of those who have returned from this place of
+mention of its name. The list of those who have returned from this place of
 pure death is exceedingly short.
 
 The Tomb is three levels deep and contains the golden rune. Its entry is either
 on Crypt:2 or Crypt:3.
+%%%%
+Tomb:quote
+
+“In the depths of every heart, there is a tomb and a dungeon, though the
+lights, the music, and revelry above may cause us to forget their existence,
+and the buried ones, or prisoners whom they hide. But sometimes, and oftenest
+at midnight, those dark receptacles are flung wide open. In an hour like this,
+when the mind has a passive sensibility, but no active strength; when the
+imagination is a mirror, imparting vividness to all ideas, without the power of
+selecting or controlling them; then pray that your grieves may slumber, and the
+brotherhood of remorse not break their chain.”
+    -Nathaniel Hawthorne, “The Haunted Mind”. 1835.
 %%%%
 Hell
 
@@ -178,6 +192,14 @@ drain all life out of treasure-craving visitors.
 Tartarus is seven levels deep and contains the bone rune. It can be accessed
 via the Vestibule of Hell.
 %%%%
+Tartarus:quote
+
+“There is a drear and lonely tract of hell
+ From all the common gloom removed afar:
+ A flat, sad land it is, where shadows are,
+ Whose lorn estate my verse may never tell.”
+    -Edward Arlington Robinson, “Supremacy”. 1897.
+%%%%
 Zot
 
 A region of the dungeon that is so terrifying, so full of madness, frenzy and
@@ -202,8 +224,9 @@ in sending would-be champions like you to these proving grounds of madness.
 Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
 schemes around this place and its denizens.
 
-The abyssal rune can be found there. The Abyss can be purposefully reached
-through portals in the deeper levels of the main dungeon.
+The Abyss consists of five infinite levels. The abyssal rune can be found from
+the third level onwards, and is more common at greater depths. The Abyss can be
+purposefully reached through portals in the deeper levels of the main dungeon.
 %%%%
 Pandemonium
 

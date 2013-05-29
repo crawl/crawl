@@ -1,0 +1,335 @@
+###############################################################################
+# layout_city.des: City-like layouts; streets, houses, rooms ...
+###############################################################################
+
+: require("dlua/util.lua")
+: require("dlua/layout/procedural.lua")
+: require("dlua/layout/zonify.lua")
+: require("dlua/layout/omnigrid.lua")
+: require("dlua/layout/theme.lua")
+
+{{
+  -- TODO: Also used in layout_grids, maybe move to a library?
+  function padded_bounds(minpad,maxpad,bounds)
+    local x1,y1,x2,y2
+    if bounds ~= nil then
+      x1,y1,x2,y2 = bounds.x1,bounds.y1,bounds.x2,bounds.y2
+    else
+      local gxm,gym = dgn.max_bounds()
+      x1,y1,x2,y2 = 1,1,gxm-2,gym-2
+    end
+    return { x1 = x1 + crawl.random_range(minpad,maxpad),
+             y1 = y1 + crawl.random_range(minpad,maxpad),
+             x2 = x2 - crawl.random_range(minpad,maxpad),
+             y2 = y2 - crawl.random_range(minpad,maxpad) }
+  end
+
+  function area_within(bounds, minx, miny, padx, pady)
+    if padx == nil then padx = 0 end
+    if pady == nil then pady = 0 end
+    -- Decide size first
+    local sx = crawl.random_range(minx,bounds.x2-bounds.x1+1-2*padx)
+    local sy = crawl.random_range(miny,bounds.y2-bounds.y1+1-2*pady)
+    -- Now position
+    local px = crawl.random_range(bounds.x1+padx, bounds.x2-padx-sx+1)
+    local py = crawl.random_range(bounds.y1+pady, bounds.y2-pady-sy+1)
+    -- Create bounds
+    return { x1 = px, y1 = py, x2 = px+sx-1, y2 = py+sy-1 }
+  end
+
+}}
+
+# Use grid techniques to build up clusters of odd-shaped dwellings that
+# look a little like fortified cities.
+# TODO: - Fix the problem causing buildings to butt up against each
+# other, they shouldn't do this at all.
+# - Use a better method of adding doors, this one adds to many.
+# - Fill in more space around the edges
+# - Differentiate in D a little
+# - Add decor in rooms if enough space - pillars, statues, whatever.
+NAME:   layout_stronghold
+DEPTH:  D:10-,Dis:1-6,Lair,Pan
+WEIGHT: 5, 20(Dis), 10(Pan)
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_city
+{{
+  if is_validating() then return; end
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = 'x' }
+
+  local grid_opts = {
+    guaranteed_divides = 8,
+    subdivide_initial_chance = 100,
+    subdivide_level_multiplier = util.random_range_real(.95,.97),
+    minimum_size = crawl.random_range(3,6),
+  }
+
+  local bounds = padded_bounds(2,10)
+  local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
+
+  local room_materials = crawl.one_chance_in(3)
+
+  -- Setup all the callbacks for weighting different selections
+  -- during grid connect-up
+
+  local function hasedge(group)
+    if group.has_edge == nil then
+      -- Don't allow edge cells to be considered
+      for i,cell in ipairs(group) do
+        local got = { false,false,false,false }
+        for i,b in ipairs(cell.borders) do got[b.dir+1]=true end
+        group.has_edge = util.contains(got,false)
+      end
+    end
+    return group.has_edge
+  end
+
+  local wgroup = function(group)
+    if hasedge(group) then return 0
+    elseif group.would_link then return 0 end
+    return 10 * (#group)
+  end
+  local function countborders(cell)
+    local groups = {}
+    local numgroups = 0
+    for i,b in ipairs(cell.borders) do
+      if #(b.with.group)>1 and groups[b.with.group] == nil then
+        numgroups = numgroups + 1
+        groups[b.with.group] = true
+      end
+    end
+    return groups,numgroups
+  end
+
+  local wcell = function(cell)
+    if cell.borders_left == 0 then return 0 end
+    -- Is this a bigger group already?
+    if #(cell.group)>1 then return 10 end
+    local groups,numgroups = countborders(cell)
+    if numgroups > 1 then
+      -- Once it borders more than 1 big group this cell
+      -- would effectively link the two together so,
+      -- stop considering it
+      cell.group.would_link = true
+      return 0
+    elseif numgroups == 1 then
+      -- If we border exactly one group then that group
+      -- is the only one to consider
+      for g,v in pairs(groups) do cell.link_to = g end
+    end
+    -- Otherwise no groups, therefore this cell is eligible to
+    -- form a new one
+    return 10
+  end
+  local wbord = function(b)
+    if b.style ~= nil or b.len<3 or hasedge(b.with.group) then return 0
+    elseif b.with.group == b.of.group then return 5 -- Internal linkup
+    elseif #(b.of.group)>1 then
+      if b.with.group.would_link then return 0 end
+      local groups,numgroups = countborders(b.of)
+      if numgroups > 1 then
+        b.with.group.would_link = true
+        return 0
+      end
+      return 10
+    elseif b.of.link_to == nil then return 10 -- Any border
+    elseif b.of.link_to == b.with.group then return 10 -- Correct
+    else return 0 end -- Wrong group
+  end
+
+  -- Connect up the cells
+  local groups = omnigrid.connect {
+    grid = grid, min_border_length = 3,
+    -- min_groups = crawl.random_range(math.floor(#grid/8),math.floor(#grid/4)),
+    max_iterations = 100,
+    group_weight = wgroup, cell_weight = wcell, border_weight = wbord,
+    style_func = function(border,cell,groups,count)
+      -- Maybe pick a random material for the group this cell is part of
+      if room_materials and cell.group.wall_type == nil then
+        cell.group.wall_type = theme.room_material()
+      end
+      return "internal"
+    end }
+
+  local function rendercell(cell)
+    -- Examine all the borders and adjust bounds if this room needs to butt up
+    -- against some of the cell edges to connect to adjacent cells
+    local has_any = false
+    for i,b in ipairs(cell.borders) do
+      if b.style == "internal" then
+        has_any = true
+        if b.dir==0 then bounds.y1 = b.y1
+        elseif b.dir==1 then bounds.x1 = b.x1
+        elseif b.dir==2 then bounds.y2 = b.y2
+        elseif b.dir==3 then bounds.x2 = b.x2 end
+      end
+    end
+    if has_any then
+      -- Draw container wall
+      cell.fill = cell.group.wall_type or 'x'
+      fill_area(cell)
+      -- Carve out insides
+      fill_area{x1 = cell.x1+1, x2 = cell.x2-1, y1 = cell.y1 + 1, y2 = cell.y2 - 1, fill = '.' }
+      -- Now loop through the borders again and open up those walls
+      for i,b in ipairs(cell.borders) do
+        if b.style == "internal" then
+          -- Chance to draw a partitioning wall (on one border only)
+          if b.is_wall == nil then
+            if crawl.one_chance_in(4) then
+              b.is_wall = crawl.coinflip()
+              b.inverse.is_wall = not b.is_wall
+            else
+              b.is_wall,b.inverse.is_wall = false,false
+            end
+          end
+          if not b.is_wall then
+            local fill = { x1 = b.x1, y1 = b.y1, x2 = b.x2, y2 = b.y2, fill = '.' }
+            if b.dir % 2 == 0 then
+              fill.x1,fill.x2 = fill.x1+1,fill.x2-1
+            else
+              fill.y1,fill.y2 = fill.y1+1,fill.y2-1
+            end
+            fill_area(fill)
+          end
+        end
+      end
+    else
+      -- Fill space
+      -- TODO: We don't need to fill all space around map edges, will create a
+      -- more interesting border if we don't ...
+      cell.fill = '.'
+      fill_area(cell)
+      -- Chance to add some rock to the space
+      if crawl.x_chance_in_y(4,5) then
+        local room = area_within(cell, 1, 1, 1, 1)
+        room.fill = 'x'
+        fill_area(room)
+      end
+    end
+  end
+
+  for i,area in ipairs(grid) do
+    rendercell(area)
+  end
+
+  -- Create doors
+  connect_adjacent_rooms { replace = "+", min = 100, max = 400, check_empty = true }
+  -- Create a small number of extra doors (allowing more than one door on some wall)
+  connect_adjacent_rooms { replace = "+", min = 0, max = 10 }
+
+  -- Fill disconnects
+  zonify.map_fill_zones(_G, 1, 'x')
+
+  if not room_materials then
+    theme.level_material(_G)
+  end
+}}
+
+##############################################################
+# layout_irregular_city
+#
+# A map with many boxes, about half of which are rectangular
+#  and most of which are hollow.
+#
+# If you think this layout makes a lot of place attempts, look
+#  at layout_chaotic_city in dgn_layouts.cc.  It can make as
+#  many as 5000, although 4000 is more likely.
+#
+NAME: layout_irregular_city
+DEPTH: D:10-, Dis:1-6, Pan
+WEIGHT: 10
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror
+TAGS: layout_type_city
+{{
+    local stage_count = 3
+
+    local min_size      = { 15,   6,    4 }
+    local max_size      = { 40,  18,   10 }
+    local max_doors     = {  8,   4,    2 }
+    local percent_solid = {  0,  10,   40 }
+    local in_distance   = {  6,   5,    3 }
+
+    local base_wall_type = crawl.random_element
+    {   ['x'] = 7,
+        ['c'] = 2,
+        ['v'] = 1   }
+    if you.in_branch("Dis") then
+        base_wall_type = 'x'
+    end
+    local base_wall_frequency = crawl.random_range(0, 900)
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = base_wall_type}
+
+    make_irregular_box { x1 = 5, y1 = 5, x2 = gxm - 6, y2 = gym - 6,
+                         div_x = gxm / 6, div_y = gym / 6,
+                         in_x = 8, in_y = 8;
+                         door_count = 0, wall = base_wall_type }
+    local min_x = 8
+    local max_x = gxm - 9
+    local min_y = 8
+    local max_y = gym - 9
+
+    local stage_end = {}
+    if crawl.coinflip() then
+        stage_end[1] = crawl.random_range(10, 25)
+    else
+        stage_end[1] = 0
+    end
+    if crawl.x_chance_in_y(2, 3) then
+        stage_end[2] = stage_end[1] + crawl.random_range(50, 200)
+    else
+        stage_end[2] = stage_end[1]
+    end
+    stage_end[3] = stage_end[2] + crawl.random_range(500, 1000)
+
+    local current_stage = 1
+    for i = 1, stage_end[stage_count] do
+        while i > stage_end[current_stage] do
+            current_stage = current_stage + 1
+        end
+
+        local size_x = crawl.random_range(min_size[current_stage],
+                                          max_size[current_stage])
+        local size_y = crawl.random_range(min_size[current_stage],
+                                          max_size[current_stage])
+        local x = crawl.random_range(min_x, max_x - size_x)
+        local y = crawl.random_range(min_y, max_y - size_y)
+
+        local blocked = find_in_area {x1 = x - 1, x2 = x + size_x + 1,
+                                      y1 = y - 1, y2 = y + size_y + 1,
+                                      find = "xcvb+", find_vault = true }
+        if not blocked then
+            local door_count = crawl.random_range(1, max_doors[current_stage])
+            local floor = '.'
+            local wall = crawl.random_element
+            {   [base_wall_type] = base_wall_frequency,
+                ['x']            = 50,
+                ['c']            = 30,
+                ['v']            = 20,
+                ['b']            = 1   }
+
+            if you.in_branch("Dis") then
+                wall = 'x'
+            end
+
+            if crawl.x_chance_in_y(percent_solid[current_stage], 100) then
+                door_count = 0
+                floor = wall
+            end
+
+            local div_x = size_x / crawl.random_range(4, 8)
+            local div_y = size_y / crawl.random_range(4, 8)
+            make_irregular_box { x1 = x, x2 = x + size_x,
+                                 y1 = y, y2 = y + size_y,
+                                 div_x = div_x, div_y = div_y,
+                                 in_x = in_distance[current_stage],
+                                 in_y = in_distance[current_stage],
+                                 door_count = door_count,
+                                 wall = wall, floor = floor }
+        end
+    end
+}}
+MAP
+ENDMAP

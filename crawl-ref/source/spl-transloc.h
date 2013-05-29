@@ -19,14 +19,14 @@ void you_teleport_now(bool allow_control,
                       bool wizard_tele = false,
                       int range = GDM);
 bool you_teleport_to(const coord_def where,
-                     bool move_monsters = false,
-                     bool override_stasis = false);
+                     bool move_monsters = false);
 
 spret_type cast_portal_projectile(int pow, bool fail);
 
 struct bolt;
 spret_type cast_apportation(int pow, bolt& beam, bool fail);
 spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel,
+                                      bool end_ctele,
                                       bool fail = false);
 spret_type cast_golubrias_passage(const coord_def& where, bool fail);
 

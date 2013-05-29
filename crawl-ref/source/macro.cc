@@ -473,7 +473,8 @@ void macro_buf_add(int key, bool reverse, bool expanded)
  */
 void macro_buf_add_cmd(command_type cmd, bool reverse)
 {
-    ASSERT(cmd > CMD_NO_CMD && cmd < CMD_MIN_SYNTHETIC);
+    ASSERT(cmd > CMD_NO_CMD);
+    ASSERT(cmd < CMD_MIN_SYNTHETIC);
 
     // There should be plenty of room between the synthetic keys
     // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
@@ -679,7 +680,7 @@ void macro_save()
                "\n"
                "# Key Mappings:\n",
             OUTS(CRAWL), // ok, localizing the game name is not likely
-            OUTS(Version::Long())); // nor the version string
+            OUTS(Version::Long)); // nor the version string
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
         char buf[30] = "K:";

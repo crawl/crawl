@@ -57,12 +57,14 @@ struct crawl_environment
 #ifdef USE_TILE
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
     FixedArray<tileidx_t, GXM, GYM> tile_bk_bg;
+    FixedArray<tileidx_t, GXM, GYM> tile_bk_cloud;
 #endif
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
 #ifdef USE_TILE
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
+    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_cloud;
 #endif
     tile_flavour tile_default;
     vector<string> tile_names;
@@ -124,6 +126,11 @@ struct crawl_environment
     // A stack that accumulates subvaults being placed. A failure may pop a
     // part of the stack before retrying.
     vector<string> new_subvault_names, new_subvault_tags;
+    // A set of the unique subvaults being placed. These are considered used
+    // for the purposes of placing additional subvaults.
+    string_set new_used_subvault_names;
+    // A set of uniq_ or luniq_ map tags being placed.
+    string_set new_used_subvault_tags;
 
     // Vault currently being placed, for crash dump purposes.
     string placing_vault;

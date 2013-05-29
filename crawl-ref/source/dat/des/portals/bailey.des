@@ -12,20 +12,24 @@
 ##############################################################################
 
 {{
-function bailey_portal(e, ptype)
+function bailey_portal(e, ptype, trowel)
   local timeout_turns_long = crawl.random_range(2700, 3300)
   local timeout_turns_short = timeout_turns_long/10;
 
   local messager =
     timed_msg {
-      visible = true,
-      -- $F{xxx} will be substituted with the 'entity' property of the timed
-      -- marker, or with the desc property (if entity is not set).
-      messages = time_messages(timeout_turns_short,
-                               "$F{The} is being lowered.",
-                               "$F{The} is being lowered.",
-                               "$F{The} is being lowered.",
-                               "$F{The} is close to the ground.")
+      initmsg = { "You hear the roar of battle.",
+                  "There is an entrance to a bailey on this level. "
+                  .. "Hurry and find it before the portal closes forever!" },
+      finalmsg = "$F{The} is probably going to close soon.",
+
+      verb = 'creaking',
+      noisemaker = 'oriflamme',
+        ranges = {
+          { 5000, 'faint ' },  { 4000, '' },
+          { 2500, 'steady ' }, { 1500, 'rapid ' },
+          { 0, 'frantic ' }
+      }
     }
 
   dgn.persist.bailey_type = "bailey_" .. ptype
@@ -43,18 +47,23 @@ function bailey_portal(e, ptype)
         floor = "stone_arch",
         feat_tile = "dngn_portal_bailey_gone",
         msg = messager })
+  if not trowel then
+    e.tags("uniq_bailey chance_bailey")
+    e.chance("5%")
+  end
+
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightred")
   e.tile("O = dngn_portal_bailey")
   e.tile("c = wall_stone_brick")
 end
 
-function bailey_portal_axe(e)
-  bailey_portal(e, 'axe')
+function bailey_portal_axe(e, trowel)
+  bailey_portal(e, 'axe', trowel)
 end
 
 function bailey_portal_polearm(e)
-  bailey_portal(e, 'polearm')
+  bailey_portal(e, 'polearm', trowel)
 end
 
 -- colours
@@ -100,7 +109,7 @@ function orc_with_polearm(e)
           halberd    | halberd race:orcish .\
           scale mail race:orcish  | scale mail |\
           ring mail race:orcish   | ring mail |\
-          splint mail race:orcish | splint mail")
+          chain mail race:orcish  | chain mail")
 end
 
 function orc_warrior_with_polearm(e)
@@ -112,7 +121,7 @@ function orc_warrior_with_polearm(e)
           bardiche w:1 | bardiche w:1 race:orcish .\
           scale mail race:orcish    | scale mail |\
           ring mail race:orcish     | ring mail |\
-          splint mail race:orcish   | splint mail |\
+          chain mail race:orcish    | chain mail |\
           plate armour race:orcish  | plate armour |\
           crystal plate armour w:1")
 end
@@ -124,7 +133,7 @@ function orc_knight_with_polearm(e)
           glaive       | glaive race:orcish |\
           bardiche w:1 | bardiche w:1 race:orcish .\
           ring mail race:orcish     | ring mail |\
-          splint mail race:orcish   | splint mail |\
+          chain mail race:orcish    | chain mail |\
           chain mail race:orcish    | chain mail |\
           plate armour race:orcish  | plate armour |\
           crystal plate armour w:1")
@@ -136,30 +145,15 @@ function orc_warlord_with_polearm(e)
           halberd      | halberd race:orcish |\
           glaive       | glaive race:orcish |\
           bardiche w:1 | bardiche w:1 race:orcish . \
-          splint mail race:orcish   | splint mail |\
-          chain mail race:orcish    | chain mail |\
-          plate armour race:orcish  | plate armour |\
+          chain mail race:orcish w:20 | chain mail w:20 |\
+          plate armour race:orcish    | plate armour |\
           crystal plate armour w:1")
 end
 
 }}
 
-
 # Basic bailey entries ##########################################
 default-depth: D:7-16, Orc
-
-NAME:   bailey_entry_dummy
-TAGS:   bailey_entry transparent chance_bailey
-CHANCE: 5%
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-:   bailey_portal_polearm(_G)
-: end
-MAP
-O
-ENDMAP
 
 NAME:   bailey_entry_trowel
 TAGS:   transparent trowel_portal unrand can_overwrite
@@ -167,17 +161,16 @@ DEPTH:  *, !Bailey
 veto {{ return you.is_level_on_stack("Bailey") }}
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-:   bailey_portal_axe(_G)
+:   bailey_portal_axe(_G, true)
 : elseif rnd == 1 then
-:   bailey_portal_polearm(_G)
+:   bailey_portal_polearm(_G, true)
 : end
 MAP
 O
 ENDMAP
 
-NAME:   enter_bailey_1
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
+NAME: enter_bailey_1
+TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -190,8 +183,6 @@ O
 ENDMAP
 
 NAME: enter_bailey_2
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 ITEM: hand axe
@@ -209,8 +200,6 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_3
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe
@@ -219,6 +208,7 @@ MONS: goblin ; hand axe
 MONS: goblin ; spear
 :   bailey_portal_polearm(_G)
 : end
+KMASK: wW = no_monster_gen
 MAP
 .........
 .wwwwwww.
@@ -232,8 +222,6 @@ MAP
 ENDMAP
 
 NAME:   enter_bailey_4
-TAGS:   uniq_bailey chance_bailey
-CHANCE: 5%
 WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -248,6 +236,7 @@ MONS:   goblin ; spear / hobgoblin ; spear /\
 :   bailey_portal_polearm(_G)
 : end
 SUBST: 1 = 122
+KMASK: wW = no_monster_gen
 MAP
 ...........
 .wwwwwwwww.
@@ -261,8 +250,6 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_5
-TAGS: uniq_bailey chance_bailey
-CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe ego:returning
@@ -271,6 +258,7 @@ MONS: goblin ; hand axe ego:returning
 MONS: goblin ; spear
 :   bailey_portal_polearm(_G)
 : end
+KMASK: wW = no_monster_gen
 MAP
 .......
 .wwwww.
@@ -285,8 +273,7 @@ NAME:   enter_bailey_6
 WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
-TAGS:   uniq_bailey no_rotate chance_bailey
-CHANCE: 5%
+KMASK:  d = no_item_gen
 KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -314,8 +301,6 @@ ENDMAP
 
 # They were just having a party.
 NAME:   enter_bailey_7
-TAGS:   uniq_bailey no_rotate chance_bailey
-CHANCE: 5%
 WEIGHT: 3
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -327,7 +312,7 @@ MONS:   gnoll ; spear / goblin ; spear
 : end
 SUBST:  . = ...;!
 COLOUR: ; = red
-KITEM:  ! = potion of confusion w:2
+KITEM:  ! = potion of confusion w:2 ident:type
 KFEAT:  ! = floor
 SUBST:  ; = .
 MAP
@@ -341,10 +326,9 @@ x@x  xxxxxxx
 ENDMAP
 
 NAME:   enter_bailey_8
-TAGS:   uniq_bailey no_rotate chance_bailey
-CHANCE: 5%
 WEIGHT: 3
 COLOUR: n = red
+KMASK:  d = no_item_gen
 KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -418,6 +402,7 @@ ITEM:   any good_item w:10 / nothing w:5
 # Starting room flavour. You cannot actually get the axes.
 SUBST:  Y = ccn
 SUBST:  X : ccn
+KMASK:  Z = no_item_gen
 KITEM:  Z = unobtainable good_item broad axe w:5 / unobtainable broad axe /\
             unobtainable war axe / unobtainable good_item war axe w:5 /\
             unobtainable good_item executioner's axe w:1
@@ -489,8 +474,7 @@ NSUBST: e = 1:e / *:d
 ITEM:   potion of curing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of speed w:2 / potion of berserk rage w:3
 ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
-        potion of gain intelligence q:2 / potion of gain strength q:2 /\
-        potion of gain dexterity q:2
+        potion of beneficial mutation q:2 w:30
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
@@ -655,17 +639,15 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # Loot consists of 8 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
-# The secret door does not work well, it will always be open. I also believe
-# that loot is a bit much, but other baileys suffer from that as well... added
-# the warlord in an attempt to make it more even. --dpeg
+# I believe that loot is a bit much, but other baileys suffer from that as
+# well... added the warlord in an attempt to make it more even.  --dpeg
 ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
         potion of magic w:5 / potion of speed w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
         scroll of enchant weapon i w:2 / scroll of enchant weapon ii w:2 / \
         scroll of enchant weapon iii w:1 / scroll of enchant armour w:5
-ITEM:   potion of gain strength / potion of gain intelligence / \
-        potion of gain dexterity / potion of cure mutation    / \
+ITEM:   potion of beneficial mutation w:30 / potion of cure mutation / \
         potion of experience / scroll of acquirement
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
@@ -740,7 +722,7 @@ ENDMAP
 NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup
+TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
 NSUBST: D = 1:+ / *:c
 NSUBST: E = 1:+ / *:c
 : orc_with_polearm(_G)
@@ -793,7 +775,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_2
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup
+TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
 MONS:   orc warrior ; crossbow . bolt w:5 / orc ; crossbow . bolt
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
@@ -807,10 +789,10 @@ SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche race:orcish / good_item executioner's axe race:orcish
-ITEM:   potion of experience q:2 / scroll of acquirement q:2 /\
-        scroll of enchant armour q:4 / scroll of enchant weapon III q:3 /\
+ITEM:   potion of experience / scroll of acquirement /\
+        scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
         legendary deck of wonders
-SUBST:  d = de|
+NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -949,11 +931,11 @@ TAGS:   bailey_polearm no_item_gen no_monster_gen
 KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
             potion of speed w:3 / potion of berserk rage w:2 /\
             potion of invisibility w:3 / potion of experience w:1 /\
-            potion of gain strength w:1 / potion of resistance w:1
+            potion of beneficial mutation w:1 / potion of resistance w:1
 KITEM:  ? = scroll of enchant weapon I / scroll of enchant weapon II /\
             scroll of enchant weapon III w:5 / scroll of vorpalise weapon w:1 /\
             scroll of enchant armour / scroll of acquirement w:1 /\
-            scroll of unholy creation w:2
+            scroll of summoning w:2
 SUBST:  2 = 2   3:1
 SUBST:  3 = 2   3
 SUBST:  4 = 2:5 3   4:5

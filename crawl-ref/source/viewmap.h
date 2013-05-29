@@ -2,6 +2,7 @@
 #define VIEWMAP_H
 
 struct level_pos;
+bool is_feature(ucs_t feature, const coord_def& where);
 bool show_map(level_pos &spec_place,
               bool travel_mode, bool allow_esc, bool allow_offlevel);
 

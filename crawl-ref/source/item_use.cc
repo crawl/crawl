@@ -9,11 +9,11 @@
 
 #include "abl-show.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
-#include "debug.h"
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
@@ -124,6 +124,18 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
+    if (weapon->base_type == OBJ_ARMOUR)
+    {
+        SAY(mpr("You can't wield armour."));
+        return false;
+    }
+
+    if (weapon->base_type == OBJ_JEWELLERY)
+    {
+        SAY(mpr("You can't wield jewellery."));
+        return false;
+    }
+
     // Only ogres and trolls can wield giant clubs (>= 30 aum)
     // and large rocks (60 aum).
     if (you.body_size() < SIZE_LARGE
@@ -180,6 +192,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && !crawl_state.game_is_zotdef()
         && !you.is_undead
+        && !you_foodless()
         && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
@@ -456,33 +469,13 @@ void warn_shield_penalties()
     if (!you.shield())
         return;
 
-    // Warnings are limited to launchers and staves at the moment.
+    // Warnings are limited to launchers at the moment.
     const item_def *weapon = you.weapon();
     if (!weapon)
         return;
 
     if (is_range_weapon(*weapon))
         _warn_launcher_shield_slowdown(*weapon);
-    else if (weapon_skill(*weapon) == SK_STAVES
-             && weapon->base_type == OBJ_WEAPONS
-             && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
-    {
-        mprf(MSGCH_WARN, "Your %s severely limits your weapon's effectiveness.",
-             shield_base_name(you.shield()));
-    }
-}
-
-void warn_armour_penalties()
-{
-    const int penalty = 3 * you.unadjusted_body_armour_penalty() - you.strength();
-
-    if (penalty > 0)
-    {
-        mprf(MSGCH_WARN, "Your low strength makes using this armour %smore difficult.",
-             (penalty < 3) ? "a little " :
-             (penalty < 5) ? "" :
-                             "a lot ");
-    }
 }
 
 bool item_is_worn(int inv_slot)
@@ -626,6 +619,54 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
         else if (verbose)
             mpr("You can't wear that!");
+        return false;
+    }
+
+    // Lear's hauberk covers also head, hands and legs.
+    if (is_unrandom_artefact(item) && item.special == UNRAND_LEAR)
+    {
+        if (!player_has_feet(!ignore_temporary))
+        {
+            if (verbose)
+                mpr("You have no feet.");
+            return false;
+        }
+
+        if (!ignore_temporary)
+        {
+            for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
+            {
+                // No strange race can wear this.
+                const char* parts[] = { "head", "hands", "feet" };
+                // Auto-disrobing would be nice.
+                if (you.equip[s] != -1)
+                {
+                    if (verbose)
+                        mprf("You'd need your %s free.", parts[s - EQ_HELMET]);
+                    return false;
+                }
+
+                if (!you_tran_can_wear(s, true))
+                {
+                    if (verbose)
+                    {
+                        mprf(you_tran_can_wear(s) ? "The hauberk won't fit your %s."
+                                                  : "You have no %s!",
+                             parts[s - EQ_HELMET]);
+                    }
+                    return false;
+                }
+            }
+        }
+    }
+    else if (slot >= EQ_HELMET && slot <= EQ_BOOTS
+             && !ignore_temporary
+             && player_equip_unrand(UNRAND_LEAR))
+    {
+        // The explanation is iffy for loose headgear, especially crowns:
+        // kings loved hooded hauberks, according to portraits.
+        if (verbose)
+            mpr("You can't wear this over your hauberk.");
         return false;
     }
 
@@ -1238,7 +1279,8 @@ static bool _swap_rings(int ring_slot)
     // putting on the ring at all.  If it becomes possible for just
     // one ring slot to be melded, the subsequent code will need to
     // be revisited, so prevent that, too.
-    ASSERT(!you.melded[EQ_LEFT_RING] && !you.melded[EQ_RIGHT_RING]);
+    ASSERT(!you.melded[EQ_LEFT_RING]);
+    ASSERT(!you.melded[EQ_RIGHT_RING]);
 
     if (lring->cursed() && rring->cursed())
     {
@@ -1723,18 +1765,17 @@ static targetter *_wand_targetter(const item_def *wand)
     switch (wand->sub_type)
     {
     case WAND_FIREBALL:
-        return new targetter_beam(&you, range, ZAP_FIREBALL, power, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_FIREBALL, power, 1, 1);
     case WAND_LIGHTNING:
-        return new targetter_beam(&you, range, ZAP_LIGHTNING, power, false, 0,
-                                  0);
+        return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
     case WAND_FLAME:
-        return new targetter_beam(&you, range, ZAP_FLAME, power, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_THROW_FLAME, power, 0, 0);
     case WAND_FIRE:
-        return new targetter_beam(&you, range, ZAP_FIRE, power, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_BOLT_OF_FIRE, power, 0, 0);
     case WAND_FROST:
-        return new targetter_beam(&you, range, ZAP_FROST, power, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_THROW_FROST, power, 0, 0);
     case WAND_COLD:
-        return new targetter_beam(&you, range, ZAP_COLD, power, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, power, 0, 0);
     default:
         return 0;
     }
@@ -1742,7 +1783,7 @@ static targetter *_wand_targetter(const item_def *wand)
 
 void zap_wand(int slot)
 {
-    if (you.species == SP_FELID || !form_can_wield())
+    if (you.species == SP_FELID || !form_can_use_wand())
     {
         mpr("You have no means to grasp a wand firmly enough.");
         return;
@@ -2033,9 +2074,12 @@ static void _vampire_corpse_help()
 
 void drink(int slot)
 {
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
     {
-        mpr("You can't drink.");
+        if (you.form == TRAN_TREE)
+            mpr("It'd take too long for a potion to reach your roots.");
+        else
+            mpr("You can't drink.");
         return;
     }
 
@@ -2064,6 +2108,12 @@ void drink(int slot)
     {
         canned_msg(MSG_PRESENT_FORM);
         _vampire_corpse_help();
+        return;
+    }
+
+    if (you.duration[DUR_RETCHING])
+    {
+        mpr("You can't gag anything down in your present state!");
         return;
     }
 
@@ -2118,6 +2168,7 @@ void drink(int slot)
     // potions on monsters.
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
+    potion_type pot_type = (potion_type)potion.sub_type;
 
     // Identify item and type.
     if (potion_effect(static_cast<potion_type>(potion.sub_type),
@@ -2154,7 +2205,7 @@ void drink(int slot)
         lessen_hunger(40, true);
 
     // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
-    if (potion.sub_type == POT_EXPERIENCE)
+    if (pot_type == POT_EXPERIENCE)
         level_change();
 }
 
@@ -2216,9 +2267,7 @@ static bool _drink_fountain()
                                    20,  POT_RESISTANCE,
                                    20,  POT_STRONG_POISON,
                                    20,  POT_BERSERK_RAGE,
-                                   4,   POT_GAIN_STRENGTH,
-                                   4,   POT_GAIN_INTELLIGENCE,
-                                   4,   POT_GAIN_DEXTERITY,
+                                   12,  POT_BENEFICIAL_MUTATION,
                                    0);
     }
 
@@ -2342,7 +2391,9 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (cast_refrigeration(60, !already_known, false) != SPRET_SUCCESS)
+        if (cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
+                                  (already_known) ? &you : NULL, true)
+            != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;
@@ -2353,11 +2404,13 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_DRAINING:
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
-        drain_exp();
+        drain_exp(true, NON_MONSTER, "draining affixation");
         break;
 
     case SPWPN_VENOM:
-        if (cast_toxic_radiance(!already_known) != SPRET_SUCCESS)
+        if (cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE, 60,
+                                  (already_known) ? &you : NULL, true)
+            != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;
@@ -2711,16 +2764,16 @@ static bool _scroll_modify_item(item_def scroll)
 {
     ASSERT(scroll.base_type == OBJ_SCROLLS);
 
-    // Get the slot of the scroll just read.
-    int item_slot = scroll.link;
+    int item_slot;
 
+retry:
     do
     {
         // Get the slot of the item the scroll is to be used on.
         // Ban the scroll's own slot from the prompt to avoid the stupid situation
         // where you use identify on itself.
         item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
-                                       MT_INVLIST, OSEL_ANY, true, true, false, 0,
+                                       MT_INVLIST, OSEL_SCROLL_TARGET, true, true, false, 0,
                                        scroll.link, NULL, OPER_ANY, true);
 
         if (item_slot == PROMPT_NOTHING)
@@ -2737,6 +2790,17 @@ static bool _scroll_modify_item(item_def scroll)
 
     item_def &item = you.inv[item_slot];
 
+    if (item_is_melded(you.inv[item_slot]))
+    {
+        mpr("This item is melded into your body!");
+        if (Options.auto_list)
+            more();
+        goto retry;
+    }
+
+    bool show_msg = true;
+    const char* id_prop = nullptr;
+
     switch (scroll.sub_type)
     {
     case SCR_IDENTIFY:
@@ -2746,26 +2810,15 @@ static bool _scroll_modify_item(item_def scroll)
             return true;
         }
         else
-        {
-            you.type_id_props["SCR_ID"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-        }
+            id_prop = "SCR_ID";
         break;
+
     case SCR_RECHARGING:
-        if (item_is_rechargeable(item, false, true))
-        {
-            if (recharge_wand(item_slot, false))
-                return true;
-            you.type_id_props["SCR_RC"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-            return false;
-        }
-        else
-        {
-            you.type_id_props["SCR_RC"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-        }
+        if (item_is_rechargeable(item) && recharge_wand(item_slot, false))
+            return true;
+        id_prop = "SCR_RC";
         break;
+
     case SCR_ENCHANT_ARMOUR:
         if (is_enchantable_armour(item, true))
         {
@@ -2773,23 +2826,23 @@ static bool _scroll_modify_item(item_def scroll)
             // (If so, already prints the "Nothing happens" message.)
             if (_handle_enchant_armour(item_slot) > 0)
                 return true;
-            you.type_id_props["SCR_EA"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-            return false;
+            show_msg = false;
         }
-        else
-        {
-            you.type_id_props["SCR_EA"] = item.name(DESC_PLAIN, false,
-                                                    false, false);
-        }
+
+        id_prop = "SCR_EA";
         break;
+
     default:
         mprf("Buggy scroll %d can't modify item!", scroll.sub_type);
         break;
     }
 
+    if (id_prop)
+        you.type_id_props[id_prop] = item.name(DESC_PLAIN, false, false, false);
+
     // Oops, wrong item...
-    canned_msg(MSG_NOTHING_HAPPENS);
+    if (show_msg)
+        canned_msg(MSG_NOTHING_HAPPENS);
     return false;
 }
 
@@ -2844,7 +2897,13 @@ void read_scroll(int slot)
 
     if (you.confused())
     {
-        mpr("You're too confused.");
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot read scrolls while unable to breathe!");
         return;
     }
 
@@ -2884,6 +2943,12 @@ void read_scroll(int slot)
     {
         _handle_read_book(item_slot);
         return;
+    }
+
+    if (you.form == TRAN_WISP)
+    {
+        crawl_state.zero_turns_taken();
+        return mpr("You have no means to unroll scrolls.");
     }
 
     if (silenced(you.pos()))
@@ -3008,9 +3073,7 @@ void read_scroll(int slot)
     string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
-    if (you.confused()
-        || (which_scroll != SCR_IMMOLATION
-            && !_is_cancellable_scroll(which_scroll)))
+    if (which_scroll != SCR_IMMOLATION && !_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg.c_str());
         // Actual removal of scroll done afterwards. -- bwr
@@ -3078,23 +3141,9 @@ void read_scroll(int slot)
         noisy(25, you.pos(), "You hear a loud clanging noise!");
         break;
 
-    case SCR_UNHOLY_CREATION:
-    {
-        if (monster *mons = create_monster(
-                            mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                                      &you, 0, 0, you.pos(), MHITYOU,
-                                      MG_FORCE_BEH)))
-        {
-            mpr("A horrible Thing appears!");
-            player_angers_monster(mons);
-        }
-        else
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-        }
+    case SCR_SUMMONING:
+        cast_shadow_creatures(true);
         break;
-    }
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");

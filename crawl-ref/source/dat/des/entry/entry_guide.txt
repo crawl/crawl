@@ -27,7 +27,7 @@
 # --------------------------
 # We love new entry vaults, and it is easy to make new ones. Coding abilities
 # are not required. If you are completely new to making maps, have a look at
-# entry_simple.des. After that, glimpse through (ignore the other files)
+# simple.des. After that, glimpse through (ignore the other files)
 # docs/develop/levels/introduction.txt
 # which will allow you to make your own maps already! Once you are familiar
 # with this, you may look at more complicated vaults and read the more

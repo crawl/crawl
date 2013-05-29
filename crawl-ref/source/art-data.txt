@@ -192,7 +192,7 @@ BRAND:   SPWPN_CHAOS
 NAME:    Glaive of Prune
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
 PLUS:    +4/+12
-COLOUR:  MAGENTA
+COLOUR:  LIGHTMAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 VALUE:   1000
@@ -206,7 +206,7 @@ COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   1000
-BOOL:    tilerim, special
+BOOL:    special
 
 NAME:    Staff of Olgreb
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -255,7 +255,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_sceptre_of_torment
 TILE_EQ: mace_ruby
 VALUE:   1200
-BOOL:    tilerim, special, evil
+BOOL:    special, evil
 
 NAME:    Sword of Zonguldrok
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
@@ -266,7 +266,7 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 VALUE:   1250
 CURSED:  3
-BOOL:    tilerim, special, evil, corpse_violating
+BOOL:    special, evil, corpse_violating
 
 NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
@@ -288,7 +288,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
-BOOL:    tilerim, special, evil, nogen
+BOOL:    special, evil, nogen
 
 NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -298,7 +298,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
-BOOL:    tilerim, special, evil, nogen
+BOOL:    special, evil, nogen
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
@@ -351,7 +351,7 @@ BOOL:    life, seeinv
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +13/+4
-COLOUR:  MAGENTA
+COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRICISM
@@ -509,7 +509,7 @@ STR:     2
 MAGIC:   30
 
 NAME:     Elemental Staff
-OBJ:      OBJ_WEAPONS/WPN_STAFF
+OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:     +3/+1
 COLOUR:   DARKGREY
 TILE:     urand_elemental
@@ -560,7 +560,7 @@ TILE_EQ: wyrmbane
 BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
-BOOL:    poison, berserk, tilerim
+BOOL:    poison, berserk
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -645,7 +645,7 @@ OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +8
 COLOUR:  BROWN
 TILE:    urand_ignorance
-TILE_EQ: large_shield_of_ignorance
+TILE_EQ: lshield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
@@ -677,7 +677,7 @@ OBJ:     OBJ_ARMOUR/ARM_SHIELD
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
-TILE_EQ: bullseye
+TILE_EQ: shield_bullseye
 EV:      -5
 
 NAME:    crown of Dyrovepreva
@@ -703,7 +703,7 @@ MAGIC:    50
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     -5
-COLOUR:   MAGENTA
+COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       -4
@@ -735,14 +735,13 @@ STEALTH:  80
 BOOL:     inv
 
 ENUM:    LEAR
-NAME:    Lear's chain mail
+NAME:    Lear's hauberk
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
-PLUS:    -1
+PLUS:    27
 COLOUR:  ETC_GOLD
 TILE:    urand_lear
 TILE_EQ: lears_chain_mail
-DEX:     -3
-BOOL:    cursed, nospell, randapp, unided
+BOOL:    special
 
 NAME:    skin of Zhor
 OBJ:     OBJ_ARMOUR/ARM_ANIMAL_SKIN
@@ -783,13 +782,14 @@ MAGIC:   40
 
 NAME:    robe of Folly
 OBJ:     OBJ_ARMOUR/ARM_ROBE
-PLUS:    -1
+PLUS:    3
 COLOUR:  LIGHTGREY
 TILE:    urand_folly
 TILE_EQ: robe_red2
-INT:     -5
-CURSED:  1
-BOOL:    nospell, randapp, unided
+BRAND:   SPARM_ARCHMAGI
+INT:     5
+CURSED:  3
+MAGIC:   -100
 
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
@@ -834,7 +834,7 @@ MAGIC:   50
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
 PLUS:    +2
-COLOUR:  MAGENTA
+COLOUR:  LIGHTMAGENTA
 TILE:    urand_alchemist
 TILE_EQ: turban_purple
 FIRE:    1
@@ -877,7 +877,7 @@ OBJ:      OBJ_ARMOUR/ARM_SHIELD
 PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
-TILE_EQ:  gong
+TILE_EQ:  shield_gong
 BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
 BOOL:     elec, life
@@ -980,7 +980,7 @@ COLOUR:   ETC_UNHOLY
 TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
-CURSED:    1
+CURSED:   1
 STR:      +3
 BOOL:     evil, seeinv, fly, special
 
@@ -1056,6 +1056,17 @@ STR:      1
 INT:      1
 DEX:      1
 BOOL:     unided
+
+# Meatsprint only. The type is adjusted to the biggest two-handed axe the
+# player's species can wield (exec or broad).
+# Auto-hits, auto-kills.
+ENUM:     WOE
+NAME:     Axe of Woe
+OBJ:      OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
+COLOUR:   ETC_BLOOD
+TILE:     urand_axe_of_woe
+TILE_EQ:  axe_of_woe
+BOOL:     nogen
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are

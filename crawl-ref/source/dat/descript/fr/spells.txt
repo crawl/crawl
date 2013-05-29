@@ -119,10 +119,6 @@ Ce sort libère une massive décharge électrique qui passe d'une cible à l'aut
 jusqu'à ce qu'elle touche le sol. Elle peut se remettre à la terre de façon
 inoffensive s'il n'y a pas de cibles suffisamment  proche au sorcier.
 %%%%
-Cigotuvi's Degeneration spell
-
-Ce sort transforme une créature en une masse pulsante de chair.
-%%%%
 Condensation Shield spell
 
 Ce sort force l'air à se condenser en un disque de vapeur à proximité du
@@ -145,7 +141,7 @@ provoquer un état de confusion chez le monstre.
 Conjure Ball Lightning spell
 
 Ce sort permet au conjurateur de créer une boule de foudre. Utiliser ce
-sortilège n'est pas sans risque - la boule de foudre est difficilement
+sortilège n'est pas sans risque – la boule de foudre est difficilement
 contrôlable.
 %%%%
 Conjure Flame spell
@@ -154,9 +150,12 @@ Ce sort crée une colonne de flammes furieuses.
 %%%%
 Control Teleport spell
 
-Ce sort permet au sorcier de contrôler les translocation. Soyez conscient que
-la téléportation contrôlée entrainera une contamination du sorcier par énergie
-magique.
+Ce sort permet au sorcier de contrôler sa prochaine translocation – soit en
+choisissant une destination approximative pour une téléportation, soit en
+choisissant une direction pour un blink. Soyez conscient que la téléportation
+contrôlée entrainera une contamination du sorcier par énergie magique, et que
+les téléportations contrôlées mettent plus de temps à se déclencher que les
+non-contrôlées.
 %%%%
 Control Undead spell
 
@@ -200,7 +199,7 @@ Death's Door spell
 Ce sort est extrêmement puissant mais comporte un certain risque. Il rend les
 nécromanciens vivants quasiment invulnérables pour une brève laps de temps,
 mais les amènera ensuite dangereusement près de la mort. Si prêt en fait, que
-le corps lui-même croit qu'il est mort - les effets de guérison ne feront rien
+le corps lui-même croit qu'il est mort – les effets de guérison ne feront rien
 du tout.
 
 Le sorcier recevra un unique avertissement peu avant l'expiration du sort. Les
@@ -537,7 +536,7 @@ Poisonous Cloud spell
 
 Ce sort conjure un gros nuage de gaz mortel.
 %%%%
-Polymorph Other spell
+Polymorph spell
 
 Ce sort altère aléatoirement la forme d'une autre créature. Cela est
 spécialement efficace contre les créatures changeuses de forme.
@@ -707,7 +706,7 @@ Summon Elemental spell
 Ce sort convoque un esprit du plan élémentaire pour aider le sorcier. Une large
 quantité de l'élément désiré est nécessaire ; cela est rarement un problème
 pour la terre et l'air mais, peut l'être pour l'eau ou le feu. L'élémentaire
-sera généralement amical au sorcier - spécialement si le sorcier est compétent
+sera généralement amical au sorcier – spécialement si le sorcier est compétent
 dans la magie élémentaire concernée.
 %%%%
 Summon Greater Demon spell
@@ -736,7 +735,7 @@ Summon Scorpions spell
 Ce sort convoque un ou plusieurs scorpions (dont certains pourraient ne pas
 être liés au service du sorcier).
 %%%%
-Summon Small Mammals spell
+Summon Small Mammal spell
 
 Ce sort convoque une ou deux petites créatures pour aider le sorcier.
 %%%%
@@ -770,6 +769,10 @@ Ce sort projette un petit missile de flammes.
 Throw Frost spell
 
 Ce sort projette un petit missile de froid.
+%%%%
+Thunderbolt spell
+
+Ce sort crée un arc électrique.
 %%%%
 Tornado spell
 

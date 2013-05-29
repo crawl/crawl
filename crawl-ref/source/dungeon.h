@@ -10,6 +10,7 @@
 #include "env.h"
 #include "externs.h"
 #include "mapdef.h"
+#include "mon-pick.h"
 
 #include <vector>
 #include <set>
@@ -46,6 +47,7 @@ enum map_mask_type
     MMT_MIMIC      = 0x100,   // Feature mimics
     MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
     MMT_WAS_DOOR_MIMIC = 0x400, // There was a door mimic there.
+    MMT_NUKED      = 0x800,   // This feature was dug, deconstructed or nuked.
 };
 
 class dgn_region;
@@ -128,22 +130,19 @@ public:
     map_def map;
     vector<coord_def> exits;
 
-    int level_number;
-
     // The PC has seen at least one square of this vault.
     bool seen;
 
 public:
-    vault_placement()
-        : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
-          exits(), level_number(0), seen(false)
-    {
-    }
-
+    vault_placement();
     void reset();
     void apply_grid();
     void draw_at(const coord_def &c);
     void connect(bool spotty = false) const;
+    string map_name_at(const coord_def &c) const;
+    dungeon_feature_type feature_at(const coord_def &c);
+    bool is_exit(const coord_def &c);
+    bool is_space(const coord_def &c);
 };
 
 class vault_place_iterator
@@ -196,20 +195,17 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 // Generate 3 stone stairs in both directions.
 void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
-// Set floor/wall colour based on the mons_alloc array. Used for
-// Abyss and Pan.
-void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
-bool dgn_place_map(const map_def *map,
-                   bool check_collision,
-                   bool make_no_exits,
-                   const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_place_map(const map_def *map,
+                                     bool check_collision,
+                                     bool make_no_exits,
+                                     const coord_def &pos = INVALID_COORD);
 
-const map_def *dgn_safe_place_map(const map_def *map,
-                                  bool check_collision,
-                                  bool make_no_exits,
-                                  const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_safe_place_map(const map_def *map,
+                                          bool check_collision,
+                                          bool make_no_exits,
+                                          const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
 void run_map_epilogues();
@@ -227,8 +223,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
 
 class mons_spec;
-monster *dgn_place_monster(mons_spec &mspec,
-                           int monster_level, const coord_def& where,
+monster *dgn_place_monster(mons_spec &mspec, coord_def where,
                            bool force_pos = false, bool generate_awake = false,
                            bool patrolling = false);
 int dgn_place_item(const item_spec &spec,
@@ -237,8 +232,7 @@ int dgn_place_item(const item_spec &spec,
 
 class item_list;
 void dgn_place_multiple_items(item_list &list,
-                              const coord_def& where,
-                              int level);
+                              const coord_def& where);
 
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);
@@ -247,7 +241,8 @@ void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 
-void dgn_register_place(const vault_placement &place, bool register_vault);
+const vault_placement *dgn_register_place(const vault_placement &place,
+                                          bool register_vault);
 
 void dgn_seen_vault_at(coord_def p);
 
@@ -267,10 +262,6 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
-bool dgn_ensure_vault_placed(bool vault_success,
-                             bool disable_further_vaults);
-
-
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
@@ -284,7 +275,14 @@ string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 
-bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
+// Resets travel_point_distance!
+vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
+                                             const coord_def &to,
+                                             uint32_t mapmask);
+
+bool join_the_dots(const coord_def &from, const coord_def &to,
+                   unsigned mmask,
+                   bool (*overwriteable)(dungeon_feature_type) = NULL);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);

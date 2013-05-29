@@ -27,4 +27,6 @@ void debug_dump_mon(const monster* mon, bool recurse);
 
 string debug_mon_str(const monster* mon);
 
+void wizard_toggle_dprf();
+
 #endif

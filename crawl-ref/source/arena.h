@@ -16,8 +16,7 @@ struct coord_def;
 
 NORETURN void run_arena(const string& teams);
 
-monster_type arena_pick_random_monster(const level_id &place, int power,
-                                       int &lev_mons);
+monster_type arena_pick_random_monster(const level_id &place);
 
 bool arena_veto_random_monster(monster_type type);
 

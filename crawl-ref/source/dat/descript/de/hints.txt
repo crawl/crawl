@@ -1,0 +1,217 @@
+%%%%
+welcome
+
+<white>Willkommen bei Dungeon Crawl!</white>
+
+Deine Aufgabe ist es einen <w>{{ return you.race() }} {{ return you.class()
+}}</w> sicher durch die Tiefen der Höhlen zu leiten und dabei den sagenhaften
+Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei deinen ersten
+Versuchen sollte entdecken das Hauptziel sein. Versuche so tief wie möglich zu
+erforschen, aber nehm dich in Acht : der Tod schleicht um jede Ecke!
+
+Für jetzt merke die die folgenden Tasten und Funktionen:
+ <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> - zeigt die Gegenstände und die
+Befehle
+ <white>$cmd[CMD_SAVE_GAME]</white> - speichert das Spiel um später
+fortzufahren (aber bedenke das der Tod permanent ist)
+ <white>$cmd[CMD_LOOK_AROUND]</white> - untersucht etwas in deiner Nähe
+
+Der Hinweismodus wird dir helfen Crawl zu spielen ohne irgendwelche Handbücher
+zu lesen. Falls du es noch nicht versucht hast möchtest du vielleicht die
+Einführung ausprobieren. Und wenn es dich dann noch interessiert bekommst du
+noch mehr Informationen in den folgenden doks / Verzeichnissen (die man auch
+alle im Spiel selbst lesen kann):
+ <lightblue>quickstart.txt</lightblue> - eine Kurzeinführung in Crawl.
+ <lightblue>crawl_manual.txt</lightblue> - Beinhaltet alle Details über  Arten,
+Magie, Fähigkeiten, usw.
+ <lightblue>options_guide.txt</lightblue> - Crawl's Interface ist sehr gut an
+eigene Bedürfnisse anpassbar.  Dieses Dokument erklärt alle Optionen.
+
+Viel Spass beim Crawlen!
+%%%%
+death
+
+Mein Beileid! Der frühzeitige Tod deines Charakters ist bedauerlich, aber ein
+übliches Ereignis in Crawl. Doch lass dich beruhigen, mit Fleiß und einiger
+Spielerfahrung wird dein Charakter länger überdauern.
+
+Eventuell kann der folgende Ratschlag deine Spielweise verbessern:
+%%%%
+death conjurer melee
+
+Angriffszauber sollten als Zauberer deine Hauptwaffe sein. Wirke deine
+Zaubersprüche so oft es geht. Denke daran zu rasten wenn deine Magie niedrig
+ist.
+%%%%
+death berserker unberserked
+
+Vergiss nicht die Berserkerwut zu nutzen wenn du gegen besonders schwierige
+Gegner kämpfst. Das ist zwar riskant, macht dich aber schneller und kräftiger.
+{{
+  if you.hunger() < 3
+    then return "Berserkerwut ist nicht möglich wenn du sehr hungrig oder krank
+bist, " ..
+                "deswegen solltest du jederzeit Satt sein, nur für den Fall "
+..
+                "das du in Raserei verfallen musst." end
+}}
+%%%%
+death ranger melee
+
+Dein Bogen mit Pfeilen ist unheimlich stark gegen entfernte Monster. Denke dran
+alle Pfeile die in den Höhlen liegen mitzunehmen.
+%%%%
+death random 0
+
+Erwäge immer die Nutzung von Geschossen, Stäben und Zaubersprüchen bevor du
+dich einem Monster im Nahkampf stellst.
+%%%%
+death random 1
+
+Lerne wann du vor Dingen davonlaufen musst die du nicht bewältigen kannst - das
+ist sehr wichtig! Es ist oft sehr weise einen teilweise gefährlichen Level zu
+überspringen. Doch übertreibe es dabei nicht, denn die Monster werden immer
+Mächtiger je tiefer du vordringst.
+%%%%
+death random 2
+
+Raste zwischen den Begegnungen, wenn möglich am besten in einem schon
+erforschtem und von Monstern bereinigtem Bereich. In Crawl sind suchen und
+rasten ein und dasselbe. Um eine Runde zu suchen drücke <w>s</w>, <w>.</w>,
+<w>Entf</w> oder <w>Tastenfeld-5</w>. Beim Druck auf  <w>5</w> oder
+<w>Shift-und-Tastenfeld-5</w> <tiles>, oder <w>klick in den Statistik
+bereich</w></tiles> lässt dich einen längeren Zeitraum rasten (nach 100 Runden
+oder wenn du vollständig geheilt bist ist die Rast zu Ende).
+%%%%
+death random 3
+
+Denke daran von dir gefundene Schriftrollen, Tränke und Stäbe zu benutzen. Du
+wirst sehr häufig nicht alles mit der Schriftrolle identifizieren können. Lerne
+zu improvisieren : finde es durch ausprobieren heraus.
+%%%%
+death random 4
+
+Vergiss nicht frühzeitig deine Notfallausrüstung zu benutzen falls spezielle
+Begegnungen zu übermächtig werden. Eine Teleport-Schriftrolle oder ein Trank
+der Eile können dir wirklich den Hintern retten.
+%%%%
+death random 5
+
+Bekämpfe nie mehr als ein Monster wenn du es verhindern kannst. Ziehe dich
+immer in einen Gang zurück damit sie gezwungen sind dich einzeln zu bekämpfen.
+%%%%
+finished
+
+Glückwunsch! Du hast bis zum Ende des Hilfe-Modus überlebt - sicherlich willst
+du die anderen auch versuchen. Bitte beachte das der Kommando Hilfe-Schirm
+(<w>$cmd[CMD_DISPLAY_COMMANDS]?</w>) von nun an ganz anders aussehen wird. Hier
+noch ein letzter Spieltipp:
+%%%%
+finished explored
+
+Herumwandern und die Level erforschen wird einfacher man Auto-Erforschen
+(<w>$cmd[CMD_EXPLORE]</w>) benutzt. Crawl bewegt und hebt automatisch
+interessante Gegenstände für dich auf.<tiles>
+
+Auto-Erforschen lässt sich auch mit einem <w>links-klick</w> bei gehaltener
+<w>Strg</w>-Taste starten.</tiles>
+%%%%
+finished travel
+
+Es gibt einen praktischen Weg wie man zwischen weit entfernten Höhlen Level
+reisen kann: Drücke <w>$cmd[CMD_INTERLEVEL_TRAVEL]</w> oder <w>G</w> und gib
+das gewünschte Ziel ein. Wird die Reise unterbrochen wird ein Druck auf
+<w>$cmd[CMD_INTERLEVEL_TRAVEL] Eingabe</w> or <w>G Eingabe</w> diese wieder
+aufnehmen.
+%%%%
+finished stashes
+
+Du kannst unter allen Gegenstände in den Höhlen mit dem Befehl
+<w>$cmd[CMD_SEARCH_STASHES]</w> suchen. Zum
+Beispiel,<w>$cmd[CMD_SEARCH_STASHES] "Messer"</w> listet alle Messer auf. Dann
+kannst du zu einem der Punkte reisen. Es ist genauso möglich Worte wie
+<w>"Shop"</w> oder <w>"Altar"</w> einzugeben.
+%%%%
+finished random 0
+
+Das Spiel legt automatisch ein Logbuch für deine Charaktere an. Benutze
+<w>$cmd[CMD_DISPLAY_COMMANDS]:</w> um es zu lesen. Mit dem
+<w>$cmd[CMD_MAKE_NOTE]</w> Befehl kannst du selbst Notizen hinzufügen. Sobald
+dein Charakter umkommt werden zwei Archiv Dateien im Ordner <w>morgue/</w>
+angelegt. Die Eine mit der Endung .txt enthält eine Kopie deines Logbuches.
+Währen des Spiels kannst du mit <w>$cmd[CMD_CHARACTER_DUMP]</w> ein Dump-File
+bzw. eine Momentaufnahme erzeugen.
+%%%%
+finished random 1
+
+Crawl hat eine eingebaute Makrofunktion: drücke <w>~m</w> zum definieren des
+Makros. Zuerst bestimme die Taste zum Auslösen (sagen wir, <w>F1</w>) und dann
+die Befehlssequenz, zum Beispiel <w>za+</w>. Der Letzte erzeugt mit der
+<w>F1</w> Taste das immer der Zauberspruch im Platz a auf das nächste Monster
+geschleudert wird. Für mehr Informationen über Makros gebe
+<w>$cmd[CMD_DISPLAY_COMMANDS]~</w> ein.
+%%%%
+finished random 2
+
+Das Interface kann prima auf eigene Bedürfnisse angepasst werden. Alle Optionen
+werden in der Datei <w>options_guide.txt</w> erklärt, diese findet man in dem
+<w>docs</w> Ordner. Die Optionen selber werden in den <w>init.txt</w> oder
+<w>.crawlrc</w> festgelegt. Crawl wird sich schon beklagen wenn es eine dieser
+Dateien nicht finden kann.
+%%%%
+finished random 3
+
+Um Rat und Hilfe fragst du am besten andere Crawl-Spieler auf dem
+<w>##crawl</w> IRC (Internet Relay Chat) Kanal auf freenode
+(<w>irc.freenode.net<w>).
+%%%%
+dissection reminder
+
+Wenn du sie nicht verspeisen möchtest, dann überlege dir die Leichen mit einem
+Gebet als Opfer an {{ return you.god() }} anzubieten. Genauso kannst du
+jederzeit die Leichen, welche du auf dem Bodenabschnitt deines Inventarfeldes
+siehst, kleinhacken indem du mit der <w>linken Maustaste</w> drauf klickst.
+Immer wenn du einen Leichnam im Hilfe-Modus siehst kannst du diese Information
+erneut lesen.
+%%%%
+HINT_CONVERT Xom
+
+Du bist gerade zur Anbetung von <w>Xom</w> konvertiert. Du kannst Xom bei Laune
+halten indem du absolut nichts tust damit dieser Gott sich an dir langweilt.
+
+Wenn du Xom bei Laune hältst dann behandelt er dich wie ein Spielzeug, er wird
+dir zufällig helfen oder schaden, ganz zu seinem Vergnügen; andererseits wird
+er dich wie ein missbilligtes Spielzeug behandeln.
+%%%%
+HINT_CONVERT
+
+Du bist gerade zur Anbetung von <w>{{ return you.god() }}</w> konvertiert.
+Deine Frömmigkeit (Göttliche Gefälligkeit) wird mit der Zeit schrittweise
+abnehmen, und sobald sie verlischt wird dich {{ return you.god() }} verbannen
+und bestrafen. Allerdings kannst du das verhindern und sogar genug Frömmigkeit
+erhalten um Macht und göttliche Gaben zu erlangen indem du Dinge tust die {{
+return you.god() }} gefallen. Aber keine Panik: du beginnst mit einem
+angemessenen Betrag an Frömmigkeit, somit ist jegliche Gefahr der Verbannung
+erstmal weit entfernt.
+
+Die Vorlieben und Abneigungen deines Gottes sowie deinen aktuellen Stand und
+göttlichen Fähigkeiten mit drücken von <w>^</w><tiles> überprüfen (alternativ
+drücke <w>Shift</w> zusammen mit <w>rechts-klick</w> auf deine Figur)</tiles>.
+%%%%
+HINT_SEEN_FIRST_OBJECT
+
+<console>$1 </console> ist ein Gegenstand. Wenn du dort hin gehst und <w>g</w>
+oder <w>,</w> drückst wirst du es aufsammeln.<console>Normalerweise werden
+Gegenstände mit Symbolen wie <w>%?!"=()[</w> angezeigt. </console><tiles>Du
+kannst Gegenstände auch aufsammeln indem du die <w>linke Maustaste</w> drückst
+wenn du auf dem Feld über ihm stehst. </tiles> Außerdem werden einige Dinge
+normalerweise automatisch aufgesammelt.<tiles>(Auf dem Feld werden diese dann
+grün umrandet.)</tiles>
+
+Sobald es in deinem Inventar ist kannst du es wieder fallen lassen indem du
+<tiles> die <w>linke Maustaste</w> mit gehaltener <w>Shift Taste</w> klickst.
+Immer wenn du einen <w>Rechtsklick</w> auf einen Gegenstand
+mit</tiles><console><w>d</w>. Jederzeit wenn du ein Objekt in deinem
+<w>i</w>nventar</console> ansiehst, kannst du alles über seine Eigenschaften
+und die Beschreibung dazu lesen.
+%%%%

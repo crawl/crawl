@@ -448,6 +448,8 @@ static string _no_selectables_message(int item_selector)
     {
     case OSEL_ANY:
         return "You aren't carrying anything.";
+    case OSEL_SCROLL_TARGET:
+        return "You aren't carrying anything you could use a scroll on.";
     case OSEL_WIELD:
     case OBJ_WEAPONS:
         return "You aren't carrying any weapons.";
@@ -634,10 +636,10 @@ bool InvMenu::allow_easy_exit() const
     return (type == MT_KNOW || Menu::allow_easy_exit());
 }
 
-template <string (*proc)(const InvEntry *a)>
+template <const string &(InvEntry::*method)() const>
 static int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
-    return proc(a).compare(proc(b));
+    return (a->*method)().compare((b->*method)());
 }
 
 template <typename T, T (*proc)(const InvEntry *a)>
@@ -646,19 +648,32 @@ static int compare_item(const InvEntry *a, const InvEntry *b)
     return (int(proc(a)) - int(proc(b)));
 }
 
+template <typename T, T (InvEntry::*method)() const>
+static int compare_item(const InvEntry *a, const InvEntry *b)
+{
+    return (int((a->*method)()) - int((b->*method)()));
+}
+
+template <typename T, T (InvEntry::*method)() const>
+static int compare_item_rev(const InvEntry *a, const InvEntry *b)
+{
+    return (int((b->*method)()) - int((a->*method)()));
+}
+
+template <item_sort_fn cmp>
+static int compare_reverse(const InvEntry *a, const InvEntry *b)
+{
+    return -cmp(a, b);
+}
+
 // C++ needs anonymous subs already!
-string sort_item_basename(const InvEntry *a)
-{
-    return a->get_basename();
-}
-string sort_item_qualname(const InvEntry *a)
-{
-    return a->get_qualname();
-}
-string sort_item_fullname(const InvEntry *a)
-{
-    return a->get_fullname();
-}
+// Some prototypes to prevent warnings; we can't make these static because
+// they're used as template parameters.
+int sort_item_qty(const InvEntry *a);
+int sort_item_slot(const InvEntry *a);
+bool sort_item_identified(const InvEntry *a);
+bool sort_item_charged(const InvEntry *a);
+
 int sort_item_qty(const InvEntry *a)
 {
     return a->quantity;
@@ -666,36 +681,6 @@ int sort_item_qty(const InvEntry *a)
 int sort_item_slot(const InvEntry *a)
 {
     return a->item->link;
-}
-
-int sort_item_freshness(const InvEntry *a)
-{
-    return a->item_freshness();
-}
-
-bool sort_item_curse(const InvEntry *a)
-{
-    return a->is_item_cursed();
-}
-
-bool sort_item_glowing(const InvEntry *a)
-{
-    return !a->is_item_glowing();
-}
-
-bool sort_item_ego(const InvEntry *a)
-{
-    return !a->is_item_ego();
-}
-
-bool sort_item_art(const InvEntry *a)
-{
-    return !a->is_item_art();
-}
-
-bool sort_item_equipped(const InvEntry *a)
-{
-    return !a->is_item_equipped();
 }
 
 bool sort_item_identified(const InvEntry *a)
@@ -747,19 +732,19 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
         item_sort_fn cmp;
     } cmp_map[]  =
       {
-          { "basename",  compare_item_str<sort_item_basename> },
-          { "qualname",  compare_item_str<sort_item_qualname> },
-          { "fullname",  compare_item_str<sort_item_fullname> },
-          { "curse",     compare_item<bool, sort_item_curse> },
-          { "glowing",   compare_item<bool, sort_item_glowing> },
-          { "ego",       compare_item<bool, sort_item_ego> },
-          { "art",       compare_item<bool, sort_item_art> },
-          { "equipped",  compare_item<bool, sort_item_equipped> },
+          { "basename",  compare_item_str<&InvEntry::get_basename> },
+          { "qualname",  compare_item_str<&InvEntry::get_qualname> },
+          { "fullname",  compare_item_str<&InvEntry::get_fullname> },
+          { "curse",     compare_item<bool, &InvEntry::is_item_cursed> },
+          { "glowing",   compare_item_rev<bool, &InvEntry::is_item_glowing> },
+          { "ego",       compare_item_rev<bool, &InvEntry::is_item_ego> },
+          { "art",       compare_item_rev<bool, &InvEntry::is_item_art> },
+          { "equipped",  compare_item_rev<bool, &InvEntry::is_item_equipped> },
           { "identified",compare_item<bool, sort_item_identified> },
           { "charged",   compare_item<bool, sort_item_charged>},
           { "qty",       compare_item<int, sort_item_qty> },
           { "slot",      compare_item<int, sort_item_slot> },
-          { "freshness", compare_item<int, sort_item_freshness> }
+          { "freshness", compare_item<int, &InvEntry::item_freshness> }
       };
 
     list.clear();
@@ -785,7 +770,7 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
     if (list.empty())
     {
         list.push_back(
-            item_comparator(compare_item_str<sort_item_fullname>));
+            item_comparator(compare_item_str<&InvEntry::get_fullname>));
     }
 }
 
@@ -809,14 +794,15 @@ void InvMenu::sort_menu(vector<InvEntry*> &invitems,
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 MenuEntry *(*procfn)(MenuEntry *me),
-                                menu_letter ckey)
+                                menu_letter ckey, bool sort)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (int i = 0, count = mitems.size(); i < count; ++i)
         inv_class[ mitems[i]->base_type ]++;
 
     vector<InvEntry*> items_in_class;
-    const menu_sort_condition *cond = find_menu_sort_condition();
+    const menu_sort_condition *cond = NULL;
+    if (sort) cond = find_menu_sort_condition();
 
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
@@ -835,8 +821,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 if (!glyphs.empty())
                 {
                     // longest string
-                    const string str = "Magical Staves and Rods";
-                    subtitle += string(strwidth(str) - strwidth(subtitle) + 1,
+                    const string str = "Magical Staves ";
+                    subtitle += string(strwidth(str) - strwidth(subtitle),
                                        ' ');
                     subtitle += "(select all with <w>";
                     for (unsigned int k = 0; k < glyphs.size(); ++k)
@@ -1141,6 +1127,19 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     switch (selector)
     {
+    // Combined filter for valid unided scroll targets
+    // TODO: If the player already ided one of the scrolls then we
+    // could filter the list further. That results in the final scroll
+    // being effectively auto-ided as soon as you hit the menu.
+    case OSEL_SCROLL_TARGET:
+        return !item_is_melded(i)
+            // Any unidentified
+            && (!fully_identified(i) || (is_deck(i) && !top_card_is_known(i))
+                // Rechargeable
+                || item_is_rechargeable(i, true)
+                // Armour
+                || is_enchantable_armour(i, true, true));
+
     case OBJ_ARMOUR:
         return (itype == OBJ_ARMOUR && you_tran_can_wear(i));
 
@@ -1188,7 +1187,9 @@ static bool _item_class_selected(const item_def &i, int selector)
         return is_enchantable_armour(i, true, true);
 
     case OBJ_FOOD:
-        return (itype == OBJ_FOOD && !is_inedible(i));
+        return (itype == OBJ_FOOD
+                || (itype == OBJ_MISSILES && i.sub_type == MI_PIE))
+               && !is_inedible(i);
 
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
@@ -1616,10 +1617,11 @@ bool check_old_item_warning(const item_def& item,
 
         if (jewellery_is_amulet(item))
         {
-            if (you.equip[EQ_AMULET] == -1)
+            int equip = you.equip[EQ_AMULET];
+            if (equip == -1 || item.link == equip)
                 return true;
 
-            old_item = you.inv[you.equip[EQ_AMULET]];
+            old_item = you.inv[equip];
             if (!needs_handle_warning(old_item, OPER_TAKEOFF))
                 return true;
 
@@ -1709,7 +1711,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         }
 
         if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
-            && !you.is_undead && !crawl_state.game_is_zotdef())
+            && !you.is_undead && !crawl_state.game_is_zotdef()
+            && !you_foodless())
         {
             return true;
         }
@@ -1772,17 +1775,20 @@ bool check_warning_inscriptions(const item_def& item,
                 return true;
 
             // Don't ask if item already worn.
-            int equip = -1;
             if (jewellery_is_amulet(item))
-                equip = you.equip[EQ_AMULET];
+            {
+                int equip = you.equip[EQ_AMULET];
+                if (equip != -1 && item.link == equip)
+                    return check_old_item_warning(item, oper);
+            }
             else
             {
                 for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
                 {
                     if (slots == EQ_AMULET)
-                    continue;
+                        continue;
 
-                    equip = you.equip[slots];
+                    int equip = you.equip[slots];
                     if (equip != -1 && item.link == equip)
                         return check_old_item_warning(item, oper);
                 }
@@ -2110,7 +2116,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 
     case OBJ_STAVES:
         if (!known && !item_type_known(item)
-            || item.sub_type == STAFF_CHANNELING
+            || item.sub_type == STAFF_ENERGY
                && item_type_known(item))
         {
             if (!wielded)
@@ -2138,7 +2144,9 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         }
 
         if (item.sub_type != MISC_LANTERN_OF_SHADOWS
+#if TAG_MAJOR_VERSION == 34
             && item.sub_type != MISC_EMPTY_EBONY_CASKET
+#endif
             && item.sub_type != MISC_RUNE_OF_ZOT)
         {
             return true;

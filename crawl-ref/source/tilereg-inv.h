@@ -21,6 +21,10 @@ protected:
     virtual void pack_buffers();
     virtual void draw_tag();
     virtual void activate();
+
+private:
+    bool _is_next_button(int idx);
+    bool _is_prev_button(int idx);
 };
 
 #endif

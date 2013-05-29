@@ -109,7 +109,7 @@ void disjunction()
             int decay = max(1, (dist - 1) * (dist + 1));
             int chance = pow(0.8, 1.0 / decay) * 1000;
             if (!x_chance_in_y(chance, 1000))
-                blink_away(mons, &you);
+                blink_away(mons, &you, false);
         }
     }
 }
@@ -161,7 +161,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
         // abort still wastes the turn
         if (high_level_controlled_blink && coinflip())
-            return (cast_semi_controlled_blink(pow, false) ? 1 : 0);
+            return (cast_semi_controlled_blink(pow, false, false) ? 1 : 0);
         random_blink(false);
     }
     else if (!allow_control_teleport(true) && !wizard_blink)
@@ -171,13 +171,13 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         mpr("A powerful magic interferes with your control of the blink.");
         // FIXME: cancel shouldn't waste a turn here -- need to rework Abyss handling
         if (high_level_controlled_blink)
-            return (cast_semi_controlled_blink(pow, false/*true*/) ? 1 : -1);
+            return (cast_semi_controlled_blink(pow, false/*true*/, false) ? 1 : -1);
         random_blink(false);
     }
     else
     {
         // query for location {dlb}:
-        while (!crawl_state.seen_hups)
+        while (1)
         {
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
@@ -185,6 +185,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             args.may_target_monster = false;
             args.top_prompt = "Blink to where?";
             direction(beam, args);
+
+            if (crawl_state.seen_hups)
+            {
+                mpr("Cancelling blink due to HUP.");
+                return -1;
+            }
 
             if (!beam.isValid || beam.target == you.pos())
             {
@@ -327,8 +333,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
     {
         mpr("You may select the general direction of your translocation.");
         // FIXME: handle aborts here, don't waste the turn
-        cast_semi_controlled_blink(100, false);
-        maybe_id_ring_TC();
+        cast_semi_controlled_blink(100, false, true);
     }
     else if (you.attempt_escape(2))
     {
@@ -345,14 +350,16 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 // here.
 bool allow_control_teleport(bool quiet)
 {
-    bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
-                    || orb_haloed(you.pos()));
+    const bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
+                          || orb_haloed(you.pos()) || you.beheld());
 
     // Tell the player why if they have teleport control.
     if (!quiet && !retval && player_control_teleport())
     {
         if (orb_haloed(you.pos()))
             mpr("The orb prevents control of your teleportation!", MSGCH_ORB);
+        else if (you.beheld())
+            mpr("It is impossible to concentrate on your destination whilst mesmerised.");
         else
             mpr("A powerful magic prevents control of your teleportation.");
     }
@@ -384,12 +391,18 @@ void you_teleport(void)
 
         int teleport_delay = 3 + random2(3);
 
+        // Doesn't care whether the cTele will actually work or not.
+        if (player_control_teleport())
+        {
+            mpr("You feel your translocation being delayed.");
+            teleport_delay += 1 + random2(3);
+        }
         if (player_in_branch(BRANCH_ABYSS) && !one_chance_in(5))
         {
-            mpr("You have a feeling this translocation may take a while to kick in...");
+            mpr("You feel the power of the Abyss delaying your translocation.");
             teleport_delay += 5 + random2(10);
         }
-        else if (orb_haloed(you.pos()) && coinflip())
+        else if (orb_haloed(you.pos()))
         {
             mpr("You feel the orb delaying this translocation!", MSGCH_ORB);
             teleport_delay += 5 + random2(5);
@@ -417,8 +430,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
     return is_feat_dangerous(grd(cell), true) && !wizard_tele;
 }
 
-static void _handle_teleport_update(bool large_change, bool check_ring_TC,
-                                    const coord_def old_pos)
+static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 {
     if (large_change)
     {
@@ -438,10 +450,6 @@ static void _handle_teleport_update(bool large_change, bool check_ring_TC,
 
         handle_interrupted_swap(true);
     }
-
-    // Might identify unknown ring of teleport control.
-    if (check_ring_TC)
-        maybe_id_ring_TC();
 
 #ifdef USE_TILE
     if (you.species == SP_MERFOLK)
@@ -500,12 +508,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     coord_def pos(1, 0);
     const coord_def old_pos = you.pos();
     bool      large_change  = false;
-    bool      check_ring_TC = false;
 
     if (is_controlled)
     {
-        check_ring_TC = true;
-
         // Only have the messages and the more prompt for non-wizard.
         if (!wizard_tele)
         {
@@ -546,7 +551,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 }
                 if (!wizard_tele)
                     contaminate_player(1, true);
-                maybe_id_ring_TC();
                 return false;
             }
 
@@ -628,6 +632,12 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 if (!wizard_tele)
                     contaminate_player(1, true);
             }
+            // End teleport control.
+            if (you.duration[DUR_CONTROL_TELEPORT])
+            {
+                mpr("You feel uncertain.", MSGCH_DURATION);
+                you.duration[DUR_CONTROL_TELEPORT] = 0;
+            }
         }
     }
 
@@ -686,11 +696,11 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         move_player_to_grid(newpos, false, true);
     }
 
-    _handle_teleport_update(large_change, check_ring_TC, old_pos);
+    _handle_teleport_update(large_change, old_pos);
     return (!is_controlled);
 }
 
-bool you_teleport_to(const coord_def where_to, bool move_monsters, bool override_stasis)
+bool you_teleport_to(const coord_def where_to, bool move_monsters)
 {
     // Attempts to teleport the player from their current location to 'where'.
     // Follows this line of reasoning:
@@ -703,13 +713,6 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters, bool override
     //      then teleport the player there.
     //   4. If not, give up and return false.
 
-    if (you.no_tele(true, true) && !override_stasis)
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return false;
-    }
-
-    bool check_ring_TC = false;
     const coord_def old_pos = you.pos();
     coord_def where = where_to;
     coord_def old_where = where_to;
@@ -761,7 +764,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters, bool override
 
     move_player_to_grid(where, false, true);
 
-    _handle_teleport_update(large_change, check_ring_TC, old_pos);
+    _handle_teleport_update(large_change, old_pos);
     return true;
 }
 
@@ -867,12 +870,9 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     if (max_units <= 0)
     {
         if (item_is_orb(item))
-        {
             orb_pickup_noise(where, 30);
-            mpr("The mass is resisting your pull.");
-        }
-        else
-            mpr("The mass is resisting your pull.");
+
+        mpr("The mass is resisting your pull.");
 
         return SPRET_SUCCESS;
     }
@@ -884,8 +884,8 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     {
         fake_noisy(30, where);
 
-        // There's also a 1-in-6 flat chance of apport failing.
-        if (one_chance_in(6))
+        // There's also a 1-in-3 flat chance of apport failing.
+        if (one_chance_in(3))
         {
             orb_pickup_noise(where, 30,
                 "The orb shrieks and becomes a dead weight against your magic!",
@@ -964,7 +964,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     if (max_units < item.quantity)
     {
-        if (!copy_item_to_grid(item, new_spot, max_units))
+        if (!copy_item_to_grid(item, new_spot, MHITYOU, max_units))
         {
             // Always >1 item.
             mpr("They abruptly stop in place!");
@@ -1035,7 +1035,7 @@ static bool _quadrant_blink(coord_def dir, int pow)
     return true;
 }
 
-spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
+spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool end_ctele, bool fail)
 {
     dist bmove;
     direction_chooser_args args;
@@ -1046,6 +1046,12 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     {
         mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
         direction(bmove, args);
+
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling blink due to HUP.");
+            return SPRET_ABORT;
+        }
 
         if (bmove.isValid && !bmove.delta.origin())
             break;
@@ -1065,6 +1071,12 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     {
         // Controlled blink causes glowing.
         contaminate_player(1, true);
+        // End teleport control if this was a random blink upgraded by cTele.
+        if (end_ctele && you.duration[DUR_CONTROL_TELEPORT])
+        {
+            mpr("You feel uncertain.", MSGCH_DURATION);
+            you.duration[DUR_CONTROL_TELEPORT] = 0;
+        }
     }
 
     return SPRET_SUCCESS;

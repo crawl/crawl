@@ -88,7 +88,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         you.rotting = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
-        you.duration[DUR_NAUSEA] = 0;
         break;
 
     case POT_HEAL_WOUNDS:
@@ -109,8 +108,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         }
         break;
 
-      case POT_BLOOD:
-      case POT_BLOOD_COAGULATED:
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
         if (you.species == SP_VAMPIRE)
         {
             // No healing anymore! (jpeg)
@@ -200,6 +199,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
     }
 
+#if TAG_MAJOR_VERSION == 34
     case POT_GAIN_STRENGTH:
         if (mutate(MUT_STRONG, "potion of gain strength", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
@@ -214,8 +214,15 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         if (mutate(MUT_CLEVER, "potion of gain intelligence", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
         break;
+#endif
 
     case POT_FLIGHT:
+        if (you.form == TRAN_TREE)
+        {
+            mprf(MSGCH_WARN, "Your roots keep you in place.");
+            break;
+        }
+
         if (you.liquefied_ground())
         {
             mprf(MSGCH_WARN, "This potion isn't strong enough to pull you from the ground!");
@@ -232,6 +239,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         {
             mprf("You feel %s nauseous.",
                  (pot_eff == POT_POISON) ? "slightly" : "quite");
+            maybe_id_resist(BEAM_POISON);
         }
         else
         {
@@ -417,6 +425,16 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         learned_something_new(HINT_YOU_MUTATED);
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
         break;
+
+    case POT_BENEFICIAL_MUTATION:
+        mpr("You feel fantastic!");
+        mutate(RANDOM_GOOD_MUTATION, "potion of beneficial mutation",
+               true, false, false, true);
+
+        learned_something_new(HINT_YOU_MUTATED);
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
+        break;
+
 
     case POT_RESISTANCE:
         mpr("You feel protected.", MSGCH_DURATION);

@@ -138,7 +138,7 @@ SHUFFLE: 123456
 MONS:    dragon / golden dragon / ice dragon / iron dragon / shadow dragon /\
          storm dragon
 MONS:    freezing wraith / shadow wraith / wight / wraith
-MONS:    deep troll / iron troll / rock troll / troll
+MONS:    deep troll / iron troll / troll
 MONS:    cyclops / ettin / fire giant / frost giant / hill giant /\
          stone giant / titan
 MONS:    necromancer / shapeshifter / vault guard / wizard
@@ -294,6 +294,74 @@ MAP
 .'%%...'.....'.
 .''''''''+++''.
 .........@@@...
+ENDMAP
+
+############################################################
+# A fortification!
+#
+NAME: grunt_vaults_entry_fortified
+TAGS: vaults_entry no_pool_fixup patrolling
+ORIENT: north
+MONS: human hd:10 ; crossbow . bolt q:10 . short sword | dagger . \
+                    leather armour w:5 | ring mail | scale mail / \
+      orc knight ; crossbow . bolt q:10 . short sword | dagger . \
+                   leather armour w:5 | ring mail | scale mail / \
+      deep elf knight ; crossbow . bolt q:10 . short sword | dagger . \
+                        leather armour w:5 | ring mail | scale mail / \
+      centaur warrior / yaktaur
+MONS: vault guard
+MONS: wizard / orc sorcerer / ogre mage
+MONS: necromancer band / orc high priest band
+NSUBST: T = 1:U / *:T
+KFEAT: K = iron_grate
+KFEAT: O = enter_vaults
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxvvvvvxxxxxxx
+xxxxxxxvT2Tvxxxxxxx
+xxxxxxxv2O2vxxxxxxx
+xxxxxxxvT.Tvxxxxxxx
+xvvvvvvvv+vvvvvvvvx
+xv*...3.....4...*vx
+xv.1....2.2....1.vx
+xv...............vx
+xvK+KvvvK+KvvvK+Kvx
+xv...vxv.2.vxv...vx
+xv...vxv...vxv...vx
+xv...vxv1.1vxv...vx
+xvK12vvv+++vvv21Kvx
+.wwwwwwW...Wwwwwww.
+.WwwwwwW...WwwwwwW.
+ .WwwwWW...WwwwwW.
+  .WWWW.....WWWW.
+   ......@......
+ENDMAP
+
+############################################################
+
+NAME: lightli_vaults_fourway_checkpoint
+TAGS: vaults_entry transparent
+ORIENT: float
+MONS: vault guard
+KFEAT: O = enter_vaults
+MAP
+.................
+...vv.......vv...
+..vvvv.....vvvv..
+.vvvvvv...vvvvvv.
+.vvvvvvv+vvvvvvv.
+..vvvv.....vvvv..
+...vv.v0.0v.vv...
+....v.0.1.0.v....
+....+..1O1..+....
+....v.0.1.0.v....
+...vv.v0.0v.vv...
+..vvvv.....vvvv..
+.vvvvvvv+vvvvvvv.
+.vvvvvv...vvvvvv.
+..vvvv.....vvvv..
+...vv.......vv...
+.................
 ENDMAP
 
 ###############################################################################
@@ -1564,6 +1632,38 @@ xO**xxxO****9x...x..x.....x
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 19 *, 12 monsters
+NAME:   vaults_end_grunt_pinched
+TAGS:   vaults_end_quadrant
+NSUBST: O = 1:0 / *:*
+SUBST:  9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x......*Ox................
+x......*xx...9............x
+x...9...xx...x............x
+x......xx....xx....9......x
+x.....xx9.....x...........x
+x...xxxxx.....xx..........x
+x9xxxx.xxx.....xx......9..x
+x.......xx..9.9xxxx.......x
+x...9....9....xx.9xxx.....x
+x.9.x........xx....xxxx...x
+x...xxxx....xx........x.9.x
+x.....xxx.9xx.....9.......x
+x.....*Oxxxx..............x
+x..9..**xxx9..............x
+x......xxxxx...9.xx..9.xx9x
+x.....xx.*Oxx....xxxxxxxx.x
+x....xx..**.x.....xxxx....x
+x...xx......xx....xx......x
+x**xx....9...x.9..x....9..x
+xOxx*........9...xx*......x
+xxxO*............xO*......x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ###############################################################################
 # Vaults:8 prize quadrants

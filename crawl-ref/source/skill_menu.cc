@@ -1443,6 +1443,9 @@ void skill_menu(int flag, int exp)
         return;
     }
 
+    // notify the player again
+    you.received_noskill_warning = false;
+
     you.exp_available += exp;
 
 #ifdef USE_TILE_WEB

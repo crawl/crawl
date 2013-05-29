@@ -21,7 +21,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
-#include "debug.h"
 #include "godabil.h"
 #include "stuff.h"
 #include "env.h"
@@ -96,34 +95,21 @@ void init_spell_descs(void)
     {
         const spell_desc &data = spelldata[i];
 
-#ifdef DEBUG
-        if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
-            end(1, false, "spell #%d has invalid id %d", i, data.id);
+        ASSERTM(data.id >= SPELL_NO_SPELL && data.id < NUM_SPELLS,
+                "spell #%d has invalid id %d", i, data.id);
 
-        if (data.title == NULL || !*data.title)
-            end(1, false, "spell #%d, id %d has no name", i, data.id);
+        ASSERTM(data.title != NULL && *data.title,
+                "spell #%d, id %d has no name", i, data.id);
 
-        if (data.level < 1 || data.level > 9)
-        {
-            end(1, false, "spell '%s' has invalid level %d",
-                data.title, data.level);
-        }
+        ASSERTM(data.level >= 1 && data.level <= 9,
+                "spell '%s' has invalid level %d", data.title, data.level);
 
-        if (data.min_range > data.max_range)
-        {
-            end(1, false, "spell '%s' has min_range larger than max_range",
-                data.title);
-        }
+        ASSERTM(data.min_range <= data.max_range,
+                "spell '%s' has min_range larger than max_range", data.title);
 
-        if (data.flags & SPFLAG_TARGETTING_MASK)
-        {
-            if (data.min_range <= -1 || data.max_range <= 0)
-            {
-                end(1, false, "targeted/directed spell '%s' has invalid range",
-                    data.title);
-            }
-        }
-#endif
+        ASSERTM(!(data.flags & SPFLAG_TARGETTING_MASK)
+                || (data.min_range >= 0 && data.max_range > 0),
+                "targeted/directed spell '%s' has invalid range", data.title);
 
         spell_list[data.id] = i;
     }
@@ -332,7 +318,8 @@ bool add_spell_to_memory(spell_type spell)
 
 bool del_spell_from_memory_by_slot(int slot)
 {
-    ASSERT(slot >= 0 && slot < MAX_KNOWN_SPELLS);
+    ASSERT(slot >= 0);
+    ASSERT(slot < MAX_KNOWN_SPELLS);
     int j;
 
     if (you.last_cast_spell == you.spells[slot])
@@ -371,6 +358,9 @@ bool del_spell_from_memory(spell_type spell)
 
 int spell_hunger(spell_type which_spell, bool rod)
 {
+    if (player_energy())
+        return 0;
+
     const int level = spell_difficulty(which_spell);
 
     const int basehunger[] = {
@@ -391,9 +381,6 @@ int spell_hunger(spell_type which_spell, bool rod)
     }
     else
         hunger -= you.skill(SK_SPELLCASTING, you.intel());
-
-    // Staff of energy
-    hunger /= (1 + 2 * player_energy());
 
     if (hunger < 0)
         hunger = 0;
@@ -452,15 +439,6 @@ bool spell_harms_area(spell_type spell)
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    if (vehumet_supports_spell(which_spell)
-        && you.religion == GOD_VEHUMET
-        && !player_under_penance()
-        && you.piety >= piety_breakpoint(3)
-        && _seekspell(which_spell)->level >= 5)
-    {
-        return (_seekspell(which_spell)->level - 1);
-    }
-
     return (_seekspell(which_spell)->level);
 }
 
@@ -916,7 +894,8 @@ skill_type spell_type2skill(unsigned int spelltype)
 //jmf: Simplified; moved init code to top function, init_spell_descs().
 static const spell_desc *_seekspell(spell_type spell)
 {
-    ASSERT(spell >= 0 && spell < NUM_SPELLS);
+    ASSERT(spell >= 0);
+    ASSERT(spell < NUM_SPELLS);
     const int index = spell_list[spell];
     ASSERT(index != -1);
 
@@ -980,7 +959,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && !player_under_penance()
-        && you.piety >= piety_breakpoint(2))
+        && you.piety >= piety_breakpoint(3))
     {
         maxrange++;
         minrange++;
@@ -1021,9 +1000,7 @@ int spell_noise(spell_type spell)
     unsigned int disciplines = desc->disciplines;
     int level = desc->level + desc->noise_mod;
 
-    if (disciplines == SPTYP_NONE)
-        return 0;
-    else if (disciplines & SPTYP_CONJURATION)
+    if (disciplines & SPTYP_CONJURATION)
         return level;
     else if (disciplines && !(disciplines & (SPTYP_POISON | SPTYP_AIR)))
         return div_round_up(level * 3, 4);
@@ -1035,45 +1012,45 @@ spell_type zap_type_to_spell(zap_type zap)
 {
     switch (zap)
     {
-    case ZAP_FLAME:
+    case ZAP_THROW_FLAME:
         return SPELL_THROW_FLAME;
-    case ZAP_FROST:
+    case ZAP_THROW_FROST:
         return SPELL_THROW_FROST;
-    case ZAP_SLOWING:
+    case ZAP_SLOW:
         return SPELL_SLOW;
-    case ZAP_HASTING:
+    case ZAP_HASTE:
         return SPELL_HASTE;
-    case ZAP_MAGIC_DARTS:
+    case ZAP_MAGIC_DART:
         return SPELL_MAGIC_DART;
     case ZAP_HEAL_WOUNDS:
         return SPELL_MAJOR_HEALING;
-    case ZAP_PARALYSIS:
+    case ZAP_PARALYSE:
         return SPELL_PARALYSE;
-    case ZAP_FIRE:
+    case ZAP_BOLT_OF_FIRE:
         return SPELL_BOLT_OF_FIRE;
-    case ZAP_COLD:
+    case ZAP_BOLT_OF_COLD:
         return SPELL_BOLT_OF_COLD;
     case ZAP_PRIMAL_WAVE:
         return SPELL_PRIMAL_WAVE;
-    case ZAP_CONFUSION:
+    case ZAP_CONFUSE:
         return SPELL_CONFUSE;
     case ZAP_INVISIBILITY:
         return SPELL_INVISIBILITY;
-    case ZAP_DIGGING:
+    case ZAP_DIG:
         return SPELL_DIG;
     case ZAP_FIREBALL:
         return SPELL_FIREBALL;
-    case ZAP_TELEPORTATION:
+    case ZAP_TELEPORT_OTHER:
         return SPELL_TELEPORT_OTHER;
-    case ZAP_LIGHTNING:
+    case ZAP_LIGHTNING_BOLT:
         return SPELL_LIGHTNING_BOLT;
-    case ZAP_POLYMORPH_OTHER:
-        return SPELL_POLYMORPH_OTHER;
-    case ZAP_NEGATIVE_ENERGY:
+    case ZAP_POLYMORPH:
+        return SPELL_POLYMORPH;
+    case ZAP_BOLT_OF_DRAINING:
         return SPELL_BOLT_OF_DRAINING;
     case ZAP_ENSLAVEMENT:
         return SPELL_ENSLAVEMENT;
-    case ZAP_DISINTEGRATION:
+    case ZAP_DISINTEGRATE:
         return SPELL_DISINTEGRATE;
     default:
         die("zap_type_to_spell() only handles wand zaps for now");
@@ -1159,11 +1136,15 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_SWIFTNESS:
+        if (transient && you.form == TRAN_TREE)
+            return true;
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)
             return true;
         break;
     case SPELL_FLY:
+        if (transient && you.form == TRAN_TREE)
+            return true;
         if (you.racial_permanent_flight())
             return true;
         if (transient && you.flight_mode())
@@ -1254,7 +1235,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_DIG:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
-    case SPELL_FRAGMENTATION:
+    case SPELL_LRD:
+    case SPELL_FULMINANT_PRISM:
 
     // Shock and Lightning Bolt are no longer here, as the code below can
     // account for possible bounces.
@@ -1277,8 +1259,7 @@ bool spell_no_hostile_in_range(spell_type spell)
             for (map<coord_def, aff_type>::iterator it = tgt.seen.begin();
                  it != tgt.seen.end(); it++)
             {
-                if (it->second == AFF_NO
-                    || it->second == AFF_TRACER)
+                if (it->second == AFF_NO || it->second == AFF_TRACER)
                     continue;
 
                 // Checks here are from get_dist_to_nearest_monster().
@@ -1315,7 +1296,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     }
     else if (spell == SPELL_MEPHITIC_CLOUD)
     {
-        beam.flavour = BEAM_POTION_MEPHITIC;
+        beam.flavour = BEAM_MEPHITIC;
         beam.ex_size = 1;
         beam.damage = dice_def(1, 1); // so that foe_info is populated
         beam.hit = 20;

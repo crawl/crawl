@@ -13,15 +13,15 @@ If you consider figuring out such things yourself to be fun, stop
 reading now. Otherwise, just go ahead.
 
  -5  abysmal aptitude
- -4  terrible aptitude (learning half as fast as Humans)
+ -4  terrible aptitude (learning half as fast as at 0 aptitude)
  -3  very poor aptitude
  -2  poor aptitude
  -1  slightly disfavoured aptitude
-  0  standard aptitude (Humans)
+  0  standard aptitude
  +1  slightly favoured aptitude
  +2  strong aptitude
  +3  very strong aptitude
- +4  outstanding aptitude (learning twice as fast as Humans)
+ +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
  +5  exceptional aptitude
 
 Please note that many things affect how quickly a character will
@@ -44,12 +44,12 @@ General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
 Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
 Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
 Sth - Stealth                LBl - Long Blades           Hex - Hexes
-Stb - Stabbing               M&F - Maces & Flails        Cha - Charms
-Shd - Shields                Axs - Axes                  Sum - Summonings
-Trp - Traps                  Pla - Polearms              Nec - Necromancy
-                             Stv - Staves                Trl - Translocations
-Inv - Invocations            UC  - Unarmed Combat        Trm - Transmutations
-Evo - Evocations
+Shd - Shields                M&F - Maces & Flails        Cha - Charms
+Trp - Traps                  Axs - Axes                  Sum - Summonings
+                             Pla - Polearms              Nec - Necromancy
+Inv - Invocations            Stv - Staves                Trl - Translocations
+Evo - Evocations             UC  - Unarmed Combat        Trm - Transmutations
+
                              Thr - Throwing              Fir - Fire Magic
 HP  - hit points             Slg - Slings                Ice - Ice Magic
 MP  - magic points           Bws - Bows                  Air - Air Magic
@@ -57,7 +57,7 @@ Exp - experience             Crb - Crossbows             Ear - Earth Magic
                                                          Poi - Poison Magic
 
 
-                 Arm Ddg Sth Stb Shd Trp   Inv Evo        HP  MP  Exp
+                 Arm Ddg Sth Shd Trp   Inv Evo            HP  MP  Exp
 ----------------------------------------------------------------------
 
 

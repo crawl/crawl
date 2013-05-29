@@ -24,7 +24,8 @@ protected:
         FILE *fp,
         const char *format,
         const vector<string> &lc_enum,
-        const vector<string> &uc_max_enum);
+        const vector<string> &uc_max_enum,
+        bool is_js = false);
 
     string m_name;
 
@@ -51,6 +52,7 @@ protected:
     int m_variation_idx;
     int m_variation_col;
     int m_weight;
+    double m_alpha;
 
     typedef pair<tile_colour, tile_colour> palette_entry;
     typedef vector<palette_entry> palette_list;

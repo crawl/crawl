@@ -3,7 +3,6 @@
 #include "feature.h"
 
 #include "colour.h"
-#include "debug.h"
 #include "options.h"
 #include "show.h"
 
@@ -144,6 +143,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.colour  = LIGHTBLUE;
             f.minimap = MF_DOOR;
             f.map_colour = LIGHTBLUE;
+            break;
+
+        case DNGN_SEALED_DOOR:
+            f.dchar   = DCHAR_DOOR_CLOSED;
+            f.colour  = LIGHTGREEN;
+            f.minimap = MF_DOOR;
+            f.map_colour = LIGHTGREEN;
             break;
 
         case DNGN_METAL_WALL:
@@ -395,6 +401,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.colour     = ETC_RANDOM;
             f.dchar      = DCHAR_ARCH;
             f.map_colour = ETC_RANDOM;
+            f.minimap    = MF_STAIR_BRANCH;
+            break;
+
+        case DNGN_ABYSSAL_STAIR:
+            f.colour     = LIGHTCYAN;
+            f.dchar      = DCHAR_STAIRS_DOWN;
+            f.map_colour = LIGHTCYAN;
             f.minimap    = MF_STAIR_BRANCH;
             break;
 

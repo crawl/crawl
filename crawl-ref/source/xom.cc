@@ -103,7 +103,7 @@ static const spell_type _xom_tension_spells[] =
     SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
     SPELL_POISON_WEAPON, SPELL_LETHAL_INFUSION, SPELL_EXCRUCIATING_WOUNDS,
     SPELL_WARP_BRAND, SPELL_TUKIMAS_DANCE, SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SUMMON_SMALL_MAMMALS, SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM,
+    SPELL_SUMMON_SMALL_MAMMAL, SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM,
     SPELL_BEASTLY_APPENDAGE, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
     SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_HORRIBLE_THINGS, SPELL_CALL_CANINE_FAMILIAR,
@@ -206,7 +206,8 @@ bool xom_is_nice(int tension)
                                    random2(tension)));
 
         const int effective_piety = you.piety + tension_bonus;
-        ASSERT(effective_piety >= 0 && effective_piety <= MAX_PIETY);
+        ASSERT(effective_piety >= 0);
+        ASSERT(effective_piety <= MAX_PIETY);
 
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
@@ -755,7 +756,6 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
              mitm[thing_created].name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, gift_buf), true);
 
-    mitm[thing_created].inscription = "god gift";
     canned_msg(MSG_SOMETHING_APPEARS);
     move_item_to_grid(&thing_created, you.pos());
 
@@ -1037,35 +1037,36 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
     mprf(MSGCH_DIAGNOSTICS, "_xom_random_demon(); sever = %d, roll: %d",
          sever, roll);
 #endif
-    const demon_class_type dct =
-        (roll >= 850) ? DEMON_GREATER :
-        (roll >= 340) ? DEMON_COMMON
-                      : DEMON_LESSER;
+    monster_type dct =
+        (roll >= 850) ? RANDOM_DEMON_GREATER :
+        (roll >= 340) ? RANDOM_DEMON_COMMON
+                      : RANDOM_DEMON_LESSER;
 
     monster_type demon = MONS_PROGRAM_BUG;
 
     // Sometimes, send a holy warrior instead.
-    if (dct == DEMON_GREATER && coinflip())
-        demon = summon_any_holy_being(HOLY_BEING_WARRIOR);
+    if (dct == RANDOM_DEMON_GREATER && coinflip())
+        demon = random_choose(MONS_DAEVA, MONS_ANGEL, -1);
     else
     {
-        const demon_class_type dct2 =
-            (!use_greater_demons && dct == DEMON_GREATER) ? DEMON_COMMON : dct;
+        if (dct == RANDOM_DEMON_GREATER && !use_greater_demons)
+            dct = RANDOM_DEMON_COMMON;
 
-        if (dct2 == DEMON_COMMON && one_chance_in(10))
+        if (dct == RANDOM_DEMON_COMMON && one_chance_in(10))
             demon = MONS_CHAOS_SPAWN;
         else
-            demon = summon_any_demon(dct2);
+            demon = summon_any_demon(dct);
     }
 
     return demon;
 }
 
-static bool _player_is_dead()
+static bool _player_is_dead(bool soon = true)
 {
-    return (you.hp <= 0 || you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0
-            || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
-            || you.did_escape_death());
+    return you.hp <= 0
+        || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
+        || you.did_escape_death()
+        || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
 }
 
 static int _xom_do_potion(bool debug = false)
@@ -1091,8 +1092,7 @@ static int _xom_do_potion(bool debug = false)
         {
         case POT_CURING:
             if (you.duration[DUR_POISONING] || you.rotting || you.disease
-                || you.duration[DUR_CONF] || you.duration[DUR_MISLED]
-                || you.duration[DUR_NAUSEA])
+                || you.duration[DUR_CONF] || you.duration[DUR_MISLED])
             {
                 break;
             }
@@ -1287,7 +1287,7 @@ static int _xom_send_allies(int sever, bool debug = false)
                     || (!is_demonic[i] && hostiletype == 2))
                 {
                     summons[i]->attitude = ATT_HOSTILE;
-                    // XXX need to reset summon quota here?
+                    // XXX: Need to reset summon quota here?
                     behaviour_event(summons[i], ME_ALERT, &you);
                 }
             }
@@ -2453,15 +2453,6 @@ static item_def* _tran_get_eq(equipment_type eq)
     return NULL;
 }
 
-// Which types of dungeon features are in view?
-static void _get_in_view(FixedVector<bool, NUM_FEATURES>& in_view)
-{
-    in_view.init(false);
-
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
-        in_view[grd(*ri)] = true;
-}
-
 static void _xom_zero_miscast()
 {
     vector<string> messages;
@@ -2484,8 +2475,9 @@ static void _xom_zero_miscast()
     ///////////////////////////////////
     // Dungeon feature dependent stuff.
 
-    FixedVector<bool, NUM_FEATURES> in_view;
-    _get_in_view(in_view);
+    FixedBitVector<NUM_FEATURES> in_view;
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+        in_view.set(grd(*ri));
 
     if (in_view[DNGN_LAVA])
         messages.push_back("The lava spits out sparks!");
@@ -2824,7 +2816,8 @@ static void _get_hand_type(string &hand, bool &can_plural)
 static int _xom_miscast(const int max_level, const bool nasty,
                         bool debug = false)
 {
-    ASSERT(max_level >= 0 && max_level <= 3);
+    ASSERT(max_level >= 0);
+    ASSERT(max_level <= 3);
 
     const char* speeches[4] = {
         "zero miscast effect",
@@ -2857,22 +2850,24 @@ static int _xom_miscast(const int max_level, const bool nasty,
         }
     }
 
-    // Take a note.
-    string desc = "miscast effect";
-#ifdef NOTE_DEBUG_XOM
-    static char level_buf[20];
-    snprintf(level_buf, sizeof(level_buf), " level %d%s",
-             level, (nasty ? " (nasty)" : ""));
-    desc += level_buf;
-#endif
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
-
     if (level == 0 && one_chance_in(3))
     {
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "silly message"), true);
         god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
         _xom_zero_miscast();
         return XOM_BAD_MISCAST_PSEUDO;
     }
+
+    // Take a note.
+    const char* levels[4] = { "harmless", "mild", "medium", "severe" };
+    int school = 1 << random2(SPTYP_LAST_EXPONENT);
+    string desc = make_stringf("%s %s miscast", levels[level],
+                               spelltype_short_name(school));
+#ifdef NOTE_DEBUG_XOM
+    if (nasty)
+        desc += " (Xom was nasty)";
+#endif
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
 
     string hand_str;
     bool   can_plural;
@@ -2885,8 +2880,8 @@ static int _xom_miscast(const int max_level, const bool nasty,
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, level, cause_str, NH_DEFAULT,
-                  lethality_margin, hand_str, can_plural);
+    MiscastEffect(&you, -GOD_XOM, (spschool_flag_type)school, level, cause_str,
+                  NH_DEFAULT, lethality_margin, hand_str, can_plural);
 
     // Not worth distinguishing unless debugging.
     return XOM_BAD_MISCAST_MAJOR;
@@ -3256,6 +3251,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     // Drains stats or experience, or torments the player.
     const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
+    const string aux = "the vengeance of Xom";
 
     if (coinflip())
     {
@@ -3273,7 +3269,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
             return XOM_DID_NOTHING;
 
         god_speaks(GOD_XOM, speech.c_str());
-        lose_stat(stat, loss, true, "the vengeance of Xom");
+        lose_stat(stat, loss, true, aux.c_str());
 
         // Take a note.
         const char* sstr[3] = { "Str", "Int", "Dex" };
@@ -3294,11 +3290,11 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp();
+            drain_exp(true, NON_MONSTER, aux.c_str());
             if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp();
+                drain_exp(true, NON_MONSTER, aux.c_str());
             if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp();
+                drain_exp(true, NON_MONSTER, aux.c_str());
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
@@ -3327,17 +3323,6 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     return XOM_DID_NOTHING;
 }
 
-static bool _has_min_animated_weapon_level()
-{
-    if (you.penance[GOD_XOM])
-        return true;
-
-    if (_xom_is_bored())
-        return (you.experience_level >= 4);
-
-    return (you.experience_level >= 7);
-}
-
 static int _xom_summon_hostiles(int sever, bool debug = false)
 {
     bool rc = false;
@@ -3345,31 +3330,30 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
     int result = XOM_DID_NOTHING;
 
-    // Nasty, but fun.
-    if (player_weapon_wielded() && _has_min_animated_weapon_level()
-        && one_chance_in(4) && !player_in_branch(BRANCH_ABYSS))
+    if (debug)
+        return XOM_BAD_SUMMON_HOSTILES;
+
+    int num_summoned = 0;
+    const bool shadow_creatures = one_chance_in(3);
+
+    if (shadow_creatures)
     {
-        if (debug)
-            return XOM_BAD_ANIMATE_WPN;
-
-        const item_def& weapon = *you.weapon();
-        const string wep_name = weapon.name(DESC_PLAIN);
-        rc = cast_tukimas_dance(100, GOD_XOM, true);
-
-        if (rc)
+        // Small number of shadow creatures.
+        int count = 2 + random2(4);
+        for (int i = 0; i < count; ++i)
         {
-            static char wpn_buf[80];
-            snprintf(wpn_buf, sizeof(wpn_buf),
-                     "animates weapon (%s)", wep_name.c_str());
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, wpn_buf), true);
-            result = XOM_BAD_ANIMATE_WPN;
+            if (create_monster(
+                    mgen_data::hostile_at(
+                        RANDOM_MOBILE_MONSTER, "Xom",
+                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        GOD_XOM)))
+            {
+                num_summoned++;
+            }
         }
     }
     else
     {
-        if (debug)
-            return XOM_BAD_SUMMON_DEMONS;
-
         // The number of demons is dependent on severity, though heavily
         // randomised.
         int numdemons = sever;
@@ -3385,7 +3369,6 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
                 numdemons = maxdemons;
         }
 
-        int num_summoned = 0;
         for (int i = 0; i < numdemons; ++i)
         {
             if (create_monster(
@@ -3397,18 +3380,19 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
                 num_summoned++;
             }
         }
+    }
 
-        if (num_summoned > 0)
-        {
-            static char summ_buf[80];
-            snprintf(summ_buf, sizeof(summ_buf),
-                     "summons %d hostile demon%s",
-                     num_summoned, num_summoned > 1 ? "s" : "");
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
+    if (num_summoned > 0)
+    {
+        static char summ_buf[80];
+        snprintf(summ_buf, sizeof(summ_buf),
+                 "summons %d hostile %s%s",
+                 num_summoned, shadow_creatures ? "shadow creature" : "demon",
+                 num_summoned > 1 ? "s" : "");
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 
-            rc = true;
-            result = XOM_BAD_SUMMON_DEMONS;
-        }
+        rc = true;
+        result = XOM_BAD_SUMMON_HOSTILES;
     }
 
     if (rc)
@@ -3848,13 +3832,13 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 #endif
 
-#ifdef WIZARD
-    if (_player_is_dead())
+    if (_player_is_dead(false))
     {
         // This should only happen if the player used wizard mode to
         // escape from death via stat loss, or if the player used wizard
         // mode to escape death from deep water or lava.
-        ASSERT(you.wizard && !you.did_escape_death());
+        ASSERT(you.wizard);
+        ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(grd(you.pos())))
         {
             mpr("Player is standing in deadly terrain, skipping Xom act.",
@@ -3867,9 +3851,8 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         }
         return XOM_PLAYER_DEAD;
     }
-#else
-    ASSERT(!_player_is_dead());
-#endif
+    else if (_player_is_dead())
+        return XOM_PLAYER_DEAD;
 
     sever = max(1, sever);
 
@@ -4235,7 +4218,7 @@ static const string _xom_effect_to_name(int effect)
         "miscast (minor)", "miscast (major)", "miscast (nasty)",
         "stat loss", "teleportation", "swap weapons", "chaos upgrade",
         "mutation", "polymorph", "repel stairs", "confusion", "draining",
-        "torment", "animate weapon", "summon demons", "banishment (pseudo)",
+        "torment", "summon demons", "banishment (pseudo)",
         "banishment"
     };
 

@@ -1,5 +1,7 @@
 #include "AppHdr.h"
 
+#include "dgn-swamp.h"
+
 #include "coordit.h"
 #include "dungeon.h"
 #include "dgn-height.h"

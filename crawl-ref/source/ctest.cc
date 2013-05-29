@@ -15,6 +15,8 @@
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 
+#include "ctest.h"
+
 #include "clua.h"
 #include "cluautil.h"
 #include "dlua.h"
@@ -24,6 +26,7 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-pick.h"
+#include "mon-util.h"
 #include "ng-init.h"
 #include "state.h"
 #include "stuff.h"
@@ -91,6 +94,7 @@ static void _init_test_bindings()
     luaL_openlib(dlua, "crawl", crawl_test_lib, 0);
     dlua.execfile("dlua/test.lua", true, true);
     initialise_branch_depths();
+    initialise_item_descriptions();
 }
 
 static bool _is_test_selected(const string &testname)
@@ -166,6 +170,7 @@ bool run_tests(bool exit_on_complete)
     _run_test("makeitem", makeitem_tests);
     _run_test("zotdef_wave", debug_waves);
     _run_test("mon-pick", debug_monpick);
+    _run_test("mon-data", debug_mondata);
 
     // Get a list of Lua files in test. Order of execution of
     // tests should be irrelevant.

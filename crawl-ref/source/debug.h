@@ -27,7 +27,7 @@
 
 
 #ifndef _lint
-# if defined(__cplusplus) && __cplusplus >= 201103
+# if defined(TARGET_COMPILER_VC) || (defined(__cplusplus) && __cplusplus >= 201103)
 // We'd need to enable C++11 mode for nice messages.
 #  define COMPILE_CHECK(expr) static_assert((expr), #expr)
 # elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112
@@ -52,24 +52,44 @@
 
 #ifdef ASSERTS
 
-NORETURN void AssertFailed(const char *expr, const char *file, int line);
+NORETURN void AssertFailed(const char *expr, const char *file, int line,
+                           const char *text = "", ...);
+
+#ifdef __clang__
+# define WARN_PUSH _Pragma("GCC diagnostic push")
+# define WARN_POP  _Pragma("GCC diagnostic pop")
+# define IGNORE_ASSERT_WARNINGS _Pragma("GCC diagnostic ignored \"-Wtautological-constant-out-of-range-compare\"")
+#elif __GNUC__ * 100 + __GNUC_MINOR__ >= 406
+# define WARN_PUSH _Pragma("GCC diagnostic push")
+# define WARN_POP  _Pragma("GCC diagnostic pop")
+# define IGNORE_ASSERT_WARNINGS _Pragma("GCC diagnostic ignored \"-Wtype-limits\"")
+#else
+// gcc-4.2 has a worse variant, but I don't care enough
+# define WARN_PUSH
+# define WARN_POP
+# define IGNORE_ASSERT_WARNINGS
+#endif
 
 #define ASSERT(p)                                       \
     do {                                                \
+        WARN_PUSH                                       \
+        IGNORE_ASSERT_WARNINGS                          \
         if (!(p)) AssertFailed(#p, __FILE__, __LINE__); \
+        WARN_POP                                        \
     } while (false)
 
-#define VERIFY(p)       ASSERT(p)
+#define ASSERTM(p,text,...)                             \
+    do {                                                \
+        WARN_PUSH                                       \
+        IGNORE_ASSERT_WARNINGS                          \
+        if (!(p)) AssertFailed(#p, __FILE__, __LINE__, text, __VA_ARGS__); \
+        WARN_POP                                        \
+    } while (false)
 
 #else
 
-#define ASSERT_SAVE(p)  ((void) 0)
 #define ASSERT(p)       ((void) 0)
-#define VERIFY(p)       do {if (p) ;} while (false)
-
-static inline void __DUMMY_TRACE__(...)
-{
-}
+#define ASSERTM(p,text,...) ((void) 0)
 
 #endif
 

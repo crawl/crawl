@@ -15,6 +15,7 @@
 #include "fprop.h"
 #include "item_use.h"
 #include "los.h"
+#include "losglobal.h"
 #include "monster.h"
 #include "mon-stuff.h"
 #include "player.h"
@@ -54,11 +55,15 @@ bool player::blink_to(const coord_def& dest, bool quiet)
 
 bool monster::blink_to(const coord_def& dest, bool quiet)
 {
+    return blink_to(dest, quiet, false);
+}
+
+bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
+{
     if (dest == pos())
         return false;
 
     bool was_constricted = false;
-    const bool jump = type == MONS_JUMPING_SPIDER;
     const string verb = (jump ? "leap" : "blink");
 
     if (is_constricted())
@@ -85,15 +90,15 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
     }
 
     if (!(flags & MF_WAS_IN_VIEW))
-        seen_context = SC_TELEPORT_IN;
+        seen_context = jump ? SC_LEAP_IN : SC_TELEPORT_IN;
 
     const coord_def oldplace = pos();
     if (!move_to_pos(dest, true))
         return false;
 
-    // Leave a purple cloud.
-    if (!jump)
-        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), this);
+    // Leave a cloud.
+    place_cloud(jump ? CLOUD_DUST_TRAIL : CLOUD_TLOC_ENERGY,
+                oldplace, 1 + random2(3), this);
 
     check_redraw(oldplace);
     apply_location_effects(oldplace);
@@ -113,7 +118,8 @@ typedef pair<coord_def, int> coord_weight;
 // beceause of a memory problem described below. (isn't this fixed now? -rob)
 static coord_def random_space_weighted(actor* moved, actor* target,
                                        bool close, bool keep_los = true,
-                                       bool allow_sanct = true)
+                                       bool allow_sanct = true,
+                                       bool path_solid = false)
 {
     vector<coord_weight> dests;
     const coord_def tpos = target->pos();
@@ -122,7 +128,8 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     {
         if (!moved->is_habitable(*ri) || actor_at(*ri)
             || keep_los && !target->see_cell_no_trans(*ri)
-            || !allow_sanct && is_sanctuary(*ri))
+            || !allow_sanct && is_sanctuary(*ri)
+            || path_solid && !cell_see_cell(moved->pos(), *ri, LOS_SOLID))
         {
             continue;
         }
@@ -156,14 +163,15 @@ void blink_other_close(actor* victim, const coord_def &target)
 }
 
 // Blink a monster away from the caster.
-bool blink_away(monster* mon, actor* caster)
+bool blink_away(monster* mon, actor* caster, bool from_seen, bool jumping)
 {
-    if (!mon->can_see(caster))
+    if (from_seen && !mon->can_see(caster))
         return false;
-    coord_def dest = random_space_weighted(mon, caster, false, false);
+    coord_def dest = random_space_weighted(mon, caster, false, false, true,
+                                           jumping);
     if (dest.origin())
         return false;
-    bool success = mon->blink_to(dest);
+    bool success = mon->blink_to(dest, false, jumping);
     ASSERT(success || mon->is_constricted());
     return success;
 }
@@ -174,7 +182,7 @@ bool blink_away(monster* mon)
     actor* foe = mon->get_foe();
     if (!foe)
         return false;
-    return blink_away(mon, foe);
+    return blink_away(mon, foe, true, mon->type == MONS_JUMPING_SPIDER);
 }
 
 // Blink the monster within range but at distance to its foe.
@@ -199,10 +207,12 @@ void blink_close(monster* mon)
     actor* foe = mon->get_foe();
     if (!foe || !mon->can_see(foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, true);
+    const bool jumping = mon->type == MONS_JUMPING_SPIDER;
+    coord_def dest = random_space_weighted(mon, foe, true, true, true,
+                                           jumping);
     if (dest.origin())
         return;
-    bool success = mon->blink_to(dest);
+    bool success = mon->blink_to(dest, false, jumping);
     ASSERT(success || mon->is_constricted());
 #ifndef DEBUG
     UNUSED(success);

@@ -5,11 +5,10 @@
 
 #include "AppHdr.h"
 
-#include "debug.h"
-
 #include <errno.h>
 #include <signal.h>
 
+#include "abyss.h"
 #include "clua.h"
 #include "coord.h"
 #include "coordit.h"
@@ -74,7 +73,11 @@
 #undef max
 
 #ifdef USE_TILE_LOCAL
-#include <SDL/SDL_syswm.h>
+#ifdef TARGET_COMPILER_VC
+# include <SDL_syswm.h>
+#else
+# include <SDL/SDL_syswm.h>
+#endif
 #endif
 #endif
 
@@ -83,15 +86,13 @@ static string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)
 {
-    string comp_info = compilation_info();
-    if (!comp_info.empty())
-    {
-        fprintf(file, "Compilation info:\n");
-        fprintf(file, "<<<<<<<<<<<\n");
-        fprintf(file, "%s", comp_info.c_str());
-        fprintf(file, ">>>>>>>>>>>\n\n");
-    }
+    fprintf(file, "Compilation info:\n");
+    fprintf(file, "<<<<<<<<<<<\n");
+    fprintf(file, "%s", compilation_info);
+    fprintf(file, ">>>>>>>>>>>\n\n");
 }
+
+extern abyss_state abyssal_state;
 
 static void _dump_level_info(FILE* file)
 {
@@ -103,6 +104,18 @@ static void _dump_level_info(FILE* file)
     string place = level_id::current().describe();
 
     fprintf(file, "Level id: %s\n", place.c_str());
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        fprintf(file, "Abyssal state:\n"
+                      "    major_coord = (%d,%d)\n"
+                      "    seed = 0x%" PRIx32 "\n"
+                      "    depth = %" PRId64 "\n"
+                      "    phase = %g\n"
+                      "    nuke_all = %d\n",
+                abyssal_state.major_coord.x, abyssal_state.major_coord.y,
+                abyssal_state.seed, abyssal_state.depth, abyssal_state.phase,
+                abyssal_state.nuke_all);
+    }
 
     debug_dump_levgen();
 }
@@ -143,7 +156,7 @@ static void _dump_player(FILE *file)
             you.strength(false), you.max_strength(),
             you.intel(false), you.max_intel(),
             you.dex(false), you.max_dex());
-    fprintf(file, "Position: %s, god:%s (%d), turn_is_over: %d, "
+    fprintf(file, "Position: %s, god: %s (%d), turn_is_over: %d, "
                   "banished: %d\n",
             debug_coord_str(you.pos()).c_str(),
             god_name(you.religion).c_str(), (int) you.religion,
@@ -519,7 +532,7 @@ static void _debug_dump_lua_persist(FILE* file)
 
 static void _dump_ver_stuff(FILE* file)
 {
-    fprintf(file, "Version: %s %s\n", CRAWL, Version::Long().c_str());
+    fprintf(file, "Version: %s %s\n", CRAWL, Version::Long);
 #if defined(UNIX)
     fprintf(file, "Platform: unix");
 #   if defined(TARGET_OS_MACOSX)
@@ -664,7 +677,7 @@ void do_crash_dump()
     {
         fprintf(file, "\nMessages:\n");
         fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
-        string messages = get_last_messages(NUM_STORED_MESSAGES);
+        string messages = get_last_messages(NUM_STORED_MESSAGES, true);
         fprintf(file, "%s", messages.c_str());
         fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
     }
@@ -731,7 +744,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
+NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
 #if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)
     SDL_SysWMinfo SysInfo;
@@ -770,9 +783,11 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 // AssertFailed
 //
 //---------------------------------------------------------------
-NORETURN void AssertFailed(const char *expr, const char *file, int line)
+NORETURN void AssertFailed(const char *expr, const char *file, int line,
+                           const char *text, ...)
 {
     char mesg[512];
+    va_list args;
 
     const char *fileName = file + strlen(file); // strip off path
 
@@ -784,7 +799,24 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line)
 
     _assert_msg = mesg;
 
-    _BreakStrToDebugger(mesg, true);
+    // Compose additional information that was passed
+    if (strlen(text))
+    {
+        // Write the args into the format specified by text
+        char detail[512];
+        va_start(args, text);
+        vsnprintf(detail, sizeof(detail), text, args);
+        va_end(args);
+        // Build the final result
+        char final_mesg[1024];
+        snprintf(final_mesg, sizeof(final_mesg), "%s (%s)", mesg, detail);
+        _assert_msg = final_mesg;
+        _BreakStrToDebugger(final_mesg, true);
+    }
+    else {
+        _assert_msg = mesg;
+        _BreakStrToDebugger(mesg, true);
+    }
 }
 #endif
 

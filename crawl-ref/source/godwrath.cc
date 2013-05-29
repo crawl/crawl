@@ -61,18 +61,13 @@ static bool _yred_random_zombified_hostile()
     const bool skel = one_chance_in(4);
 
     monster_type z_base;
-    monster_type z_type;
 
     do
         z_base = pick_random_zombie();
     while (skel && !mons_skeleton(z_base));
 
-    if (mons_zombie_size(z_base) == Z_BIG)
-        z_type = skel ? MONS_SKELETON_LARGE : MONS_ZOMBIE_LARGE;
-    else
-        z_type = skel ? MONS_SKELETON_SMALL : MONS_ZOMBIE_SMALL;
-
-    mgen_data temp = mgen_data::hostile_at(z_type, "the anger of Yredelemnul",
+    mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
+                                           "the anger of Yredelemnul",
                                            true, 0, 0, you.pos(), 0,
                                            GOD_YREDELEMNUL, z_base);
 
@@ -83,20 +78,18 @@ static bool _yred_random_zombified_hostile()
 
 static bool _okawaru_random_servant()
 {
-    monster_type mon_type;
-    const int temp_rand = random2(100);
-
     // warriors
-    mon_type = ((temp_rand < 15) ? MONS_ORC_WARRIOR :      // 15%
-                (temp_rand < 30) ? MONS_ORC_KNIGHT :       // 15%
-                (temp_rand < 40) ? MONS_NAGA_WARRIOR :     // 10%
-                (temp_rand < 50) ? MONS_CENTAUR_WARRIOR :  // 10%
-                (temp_rand < 60) ? MONS_STONE_GIANT :      // 10%
-                (temp_rand < 70) ? MONS_FIRE_GIANT :       // 10%
-                (temp_rand < 80) ? MONS_FROST_GIANT :      // 10%
-                (temp_rand < 90) ? MONS_CYCLOPS :          // 10%
-                (temp_rand < 95) ? MONS_HILL_GIANT         //  5%
-                                 : MONS_TITAN);            //  5%
+    monster_type mon_type = random_choose_weighted(3, MONS_ORC_WARRIOR,
+                                                   3, MONS_ORC_KNIGHT,
+                                                   2, MONS_NAGA_WARRIOR,
+                                                   2, MONS_CENTAUR_WARRIOR,
+                                                   2, MONS_STONE_GIANT,
+                                                   2, MONS_FIRE_GIANT,
+                                                   2, MONS_FROST_GIANT,
+                                                   2, MONS_CYCLOPS,
+                                                   1, MONS_HILL_GIANT,
+                                                   1, MONS_TITAN,
+                                                   0);
 
     mgen_data temp = mgen_data::hostile_at(mon_type, "the fury of Okawaru",
                                            true, 0, 0, you.pos(), 0,
@@ -125,7 +118,7 @@ static bool _tso_retribution()
 
         for (; how_many > 0; --how_many)
         {
-            if (summon_holy_warrior(100, god, 0, true, true, true))
+            if (summon_holy_warrior(100, true))
                 success = true;
         }
 
@@ -655,20 +648,12 @@ static bool _beogh_retribution()
 
         for (int i = 0; i < num_to_create; ++i)
         {
-            const int temp_rand = random2(13);
-            const int wpn_type = ((temp_rand ==  0) ? WPN_CLUB :
-                                  (temp_rand ==  1) ? WPN_MACE :
-                                  (temp_rand ==  2) ? WPN_FLAIL :
-                                  (temp_rand ==  3) ? WPN_MORNINGSTAR :
-                                  (temp_rand ==  4) ? WPN_DAGGER :
-                                  (temp_rand ==  5) ? WPN_SHORT_SWORD :
-                                  (temp_rand ==  6) ? WPN_LONG_SWORD :
-                                  (temp_rand ==  7) ? WPN_SCIMITAR :
-                                  (temp_rand ==  8) ? WPN_GREAT_SWORD :
-                                  (temp_rand ==  9) ? WPN_HAND_AXE :
-                                  (temp_rand == 10) ? WPN_BATTLEAXE :
-                                  (temp_rand == 11) ? WPN_SPEAR
-                                                    : WPN_HALBERD);
+            const int wpn_type =
+                random_choose(WPN_CLUB,        WPN_MACE,      WPN_FLAIL,
+                              WPN_MORNINGSTAR, WPN_DAGGER,    WPN_SHORT_SWORD,
+                              WPN_LONG_SWORD,  WPN_SCIMITAR,  WPN_GREAT_SWORD,
+                              WPN_HAND_AXE,    WPN_BATTLEAXE, WPN_SPEAR,
+                              WPN_HALBERD,     -1);
 
             // Now create monster.
             if (monster *mon =
@@ -863,54 +848,60 @@ static bool _lugonu_retribution()
         // No return.
     }
 
-    if (random2(you.experience_level) > 7 && !one_chance_in(5))
+    bool success = false;
+    bool major = (you.experience_level > (4 + random2(12)) && !one_chance_in(5));
+    int how_many = (major ? random2(you.experience_level / 9 + 1)
+                          : 1 + you.experience_level /7);
+
+    for (; how_many > 0; --how_many)
     {
         mgen_data temp =
-            mgen_data::hostile_at(random_choose(MONS_GREEN_DEATH,
-                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, -1),
-                                  "the touch of Lugonu",
-                                  true, 0, 0, you.pos(), 0, god);
+            mgen_data::hostile_at(
+                random_choose_weighted(
+                    15 - (you.experience_level/2),  MONS_ABOMINATION_SMALL,
+                    (you.experience_level/2),       MONS_ABOMINATION_LARGE,
+                    6,                              MONS_THRASHING_HORROR,
+                    3,                              MONS_ANCIENT_ZYME,
+                    0),
+                "the touch of Lugonu",
+                true, 0, 0, you.pos(), 0, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        bool success = create_monster(temp, false);
-        simple_god_message(success ? " sends a demon after you!"
-                                   : "'s demon is unavoidably detained.", god);
+        if (create_monster(temp, false))
+            success = true;
     }
-    else
+
+    if (major)
     {
-        bool success = false;
-        int how_many = 1 + (you.experience_level / 7);
+        mgen_data temp =
+        mgen_data::hostile_at(random_choose(
+                                MONS_TENTACLED_STARSPAWN,
+                                MONS_WRETCHED_STAR,
+                                MONS_STARCURSED_MASS,
+                                -1),
+                                "the touch of Lugonu",
+                                true, 0, 0, you.pos(), 0, god);
 
-        for (; how_many > 0; --how_many)
-        {
-            mgen_data temp =
-                mgen_data::hostile_at(random_choose(MONS_HELLWING, MONS_NEQOXEC,
-                                      MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
-                                      MONS_YNOXINUL, -1),
-                                      "the touch of Lugonu",
-                                      true, 0, 0, you.pos(), 0, god);
+        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-            if (create_monster(temp, false))
-                success = true;
-        }
-
-        simple_god_message(success ? " sends minions to punish you."
-                                   : "'s minions fail to arrive.", god);
+        if (create_monster(temp, false))
+            success = true;
     }
+
+    simple_god_message(success ? " sends minions to punish you."
+                                : "'s minions fail to arrive.", god);
 
     return false;
 }
 
 static bool _vehumet_retribution()
 {
-    // conjuration/summoning theme
+    // conjuration theme
     const god_type god = GOD_VEHUMET;
 
     simple_god_message("'s vengeance finds you.", god);
-    MiscastEffect(&you, -god, coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
+    MiscastEffect(&you, -god, SPTYP_CONJURATION,
                    8 + you.experience_level, random2avg(98, 3),
                    "the wrath of Vehumet");
     return true;
@@ -1228,7 +1219,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         mprf(MSGCH_DIAGNOSTICS, "No retribution defined for %s.",
              god_name(god).c_str());
 #endif
-        do_more    = false;
         return false;
     }
 

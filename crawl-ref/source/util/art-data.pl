@@ -566,6 +566,8 @@ sub art_to_str
 
 sub write_data
 {
+    print "    Generating $ART_DATA\n";
+
     unless (open(HEADER, ">", $ART_DATA))
     {
         die "Couldn't open '$ART_DATA' for writing: $!\n";
@@ -613,12 +615,14 @@ FOOTER
     close(HEADER);
 }
 
-sub guard_constant($) {
+sub guard_constant($)
+{
     (my $name = shift) =~ tr/a-zA-Z0-9/_/c;
     $name
 }
 
-sub unrand_enum_constants() {
+sub unrand_enum_constants()
+{
     my $result = '';
     my $i;
     my $longest_enum = 0;
@@ -654,6 +658,8 @@ sub unrand_enum_constants() {
 
 sub write_enums
 {
+    print "    Generating $ART_ENUM\n";
+
     my $unrand_enum = unrand_enum_constants();
 
     open my $artenum, '>', $ART_ENUM or die "Can't write $ART_ENUM: $!\n";
@@ -690,7 +696,7 @@ ARTENUM
 sub write_tiles
 {
     my $tilefile = "dc-unrand.txt";
-    print "    GEN $tilefile\n";
+    print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
     unless (open(TILES, ">$tilefile"))
@@ -883,7 +889,7 @@ HEADER_END
     # Create tiledef-unrand.cc for the function unrandart_to_tile().
     # Should we also create tiledef-unrand.h this way?
     $tilefile = "tiledef-unrand.cc";
-    print "    GEN $tilefile\n";
+    print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
     unless (open(TILES, ">$tilefile"))
@@ -1059,7 +1065,8 @@ sub read_data
 chdir("..")     if (-e "../art-data.txt");
 chdir("source") if (-e "source/art-data.txt");
 
-for my $wanted (qw/art-data.txt art-func.h artefact.h/) {
+for my $wanted (qw/art-data.txt art-func.h artefact.h/)
+{
     die "Can't read $wanted" unless -r $wanted;
 }
 

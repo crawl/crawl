@@ -126,7 +126,7 @@ spéciales, qui ne sont pas toujours à disposition.
 %%%%
 giant club "Skullcrusher"
 
-Cette belle massue pourrait rendre n'importe quel ogre ultra-joyeux - que ce
+Cette belle massue pourrait rendre n'importe quel ogre ultra-joyeux – que ce
 soit pour une bagarre, un génocide ou, un peu des deux.
 %%%%
 glaive of the Guard
@@ -279,10 +279,6 @@ Une cape vibrante.
 boots of the Assassin
 
 Des bottes souples, spécialement dessinées par la Guilde des Assassins.
-%%%%
-Lear's chain mail
-
-Une cotte de mailles faite en or massif.
 %%%%
 skin of Zhor
 

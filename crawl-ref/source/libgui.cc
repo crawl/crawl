@@ -195,7 +195,7 @@ void update_screen()
 bool kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
-    int count = wm->get_event_count(WM_KEYDOWN);
+    int count = wm->get_event_count(WME_KEYDOWN);
     return (count > 0);
 }
 

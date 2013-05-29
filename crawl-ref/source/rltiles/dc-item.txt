@@ -23,6 +23,7 @@
 club WPN_CLUB
 mace1 WPN_MACE
 mace2
+mace3
 %rim 0
 orcish_mace1 WPN_MACE_ORC
 orcish_mace2
@@ -33,6 +34,7 @@ mace_large1 WPN_GREAT_MACE
 mace_large2
 flail1 WPN_FLAIL
 flail2
+flail3
 %rim 0
 orcish_flail1 WPN_FLAIL_ORC
 orcish_flail2
@@ -41,8 +43,10 @@ dwarven_flail2
 %rim 1
 spiked_flail1 WPN_SPIKED_FLAIL
 spiked_flail2
-great_flail1 WPN_GREAT_FLAIL
-great_flail2
+spiked_flail3
+dire_flail1 WPN_DIRE_FLAIL
+dire_flail2
+dire_flail3
 %rim 0
 morningstar1 WPN_MORNINGSTAR
 morningstar2
@@ -92,6 +96,7 @@ elven_dagger2
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
+short_sword3
 %rim 0
 dwarven_short_sword1 WPN_SHORT_SWORD_DWARF
 dwarven_short_sword2
@@ -104,6 +109,7 @@ elven_short_sword2
 long_sword1 WPN_LONG_SWORD
 %rim 0
 long_sword2
+long_sword3
 orcish_long_sword1 WPN_LONG_SWORD_ORC
 orcish_long_sword2
 elven_long_sword1 WPN_LONG_SWORD_ELF
@@ -120,6 +126,7 @@ orcish_great_sword2
 %rim 0
 falchion1 WPN_FALCHION
 falchion2
+falchion3
 orcish_falchion1 WPN_FALCHION_ORC
 orcish_falchion2
 dwarven_falchion1 WPN_FALCHION_DWARF
@@ -129,6 +136,7 @@ elven_falchion2
 %rim 1
 scimitar1 WPN_SCIMITAR
 scimitar2
+scimitar3
 
 %rim 0
 sabre1 WPN_SABRE
@@ -155,6 +163,7 @@ blessed_blade WPN_BLESSED_BLADE
 ##Axe
 hand_axe1 WPN_HAND_AXE
 hand_axe2
+hand_axe3
 %rim 0
 dwarven_hand_axe1 WPN_HAND_AXE_DWARF
 dwarven_hand_axe2
@@ -196,6 +205,7 @@ spear1 WPN_SPEAR
 %rim 1
 spear2
 %rim 0
+spear3
 orcish_spear1 WPN_SPEAR_ORC
 orcish_spear2
 elven_spear1 WPN_SPEAR_ELF
@@ -233,6 +243,7 @@ staff WPN_STAFF
 %rim 1
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
+quarterstaff3
 %rim 0
 lajatang1 WPN_LAJATANG
 lajatang2
@@ -424,6 +435,16 @@ rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
 
+pie MI_PIE
+effect/pie0 MI_PIE0
+effect/pie1 MI_PIE1
+effect/pie2 MI_PIE2
+effect/pie3 MI_PIE3
+effect/pie4 MI_PIE4
+effect/pie5 MI_PIE5
+effect/pie6 MI_PIE6
+effect/pie7 MI_PIE7
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE
@@ -433,13 +454,14 @@ robe3
 leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
 leather_armour3
-orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
-orcish_leather_armor2
-elven_leather_armor ARM_LEATHER_ARMOUR_ELF
-elven_leather_armor2
+orcish_leather_armour ARM_LEATHER_ARMOUR_ORC
+orcish_leather_armour2
+elven_leather_armour ARM_LEATHER_ARMOUR_ELF
+elven_leather_armour2
 
 ring_mail1 ARM_RING_MAIL
 ring_mail2
+ring_mail3
 orcish_ringmail ARM_RING_MAIL_ORC
 orcish_ringmail2
 elven_ringmail ARM_RING_MAIL_ELF
@@ -448,20 +470,20 @@ dwarven_ringmail ARM_RING_MAIL_DWA
 
 scale_mail1 ARM_SCALE_MAIL
 scale_mail2
+scale_mail3
 elven_scalemail ARM_SCALE_MAIL_ELF
 elven_scalemail2
 
 chain_mail1 ARM_CHAIN_MAIL
 chain_mail2
-chain_mail3 ARM_CHAIN_MAIL_ELF
+chain_mail3
+elven_chain_mail ARM_CHAIN_MAIL_ELF
 orcish_chain_mail ARM_CHAIN_MAIL_ORC
 orcish_chain_mail2
 
-splint_mail1 ARM_SPLINT_MAIL
-splint_mail2
-
 plate1 ARM_PLATE_ARMOUR
 plate2
+plate3
 orcish_plate ARM_PLATE_ARMOUR_ORC
 orcish_plate2
 
@@ -522,6 +544,8 @@ orcish_buckler1 ARM_BUCKLER_ORCISH
 orcish_buckler2
 %rim 1
 
+buckler_spriggan ARM_BUCKLER_SPRIGGAN
+
 shield1_elven ARM_SHIELD
 shield2_kite
 shield3_round
@@ -533,10 +557,16 @@ large_shield3
 shield_dd SHIELD_DEEP_DWARF
 shield_dd_scion SHIELD_DEEP_DWARF_SCION
 lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+%rim 0
+shield_donald SHIELD_DONALD
+lshield_louise LSHIELD_LOUISE
+%rim 1
 
 %sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
+cap_jester THELM_CAP_JESTER
+
 wizard_hat1 THELM_WIZARD_HAT
 wizard_hat2
 
@@ -591,6 +621,7 @@ i-archery BRAND_ARM_ARCHERY BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand
+%rim 0
 gem_iron WAND_OFFSET UNSEEN_WAND
 gem_brass
 gem_bone
@@ -603,6 +634,7 @@ gem_ivory
 gem_glass
 gem_lead
 gem_plastic
+%rim 1
 
 %sdir item/wand
 i-flame WAND_FLAME WAND_ID_FIRST
@@ -620,7 +652,7 @@ i-digging WAND_DIGGING
 i-fireball WAND_FIREBALL
 i-teleportation WAND_TELEPORTATION
 i-lightning WAND_LIGHTNING
-i-polymorph_other WAND_POLYMORPH_OTHER
+i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
 i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS
@@ -650,6 +682,7 @@ beef_jerky FOOD_BEEF_JERKY
 cheese FOOD_CHEESE
 sausage FOOD_SAUSAGE
 piece_of_ambrosia FOOD_AMBROSIA
+%rim 0
 bone_humanoid1 FOOD_BONE_HUMANOID
 bone_humanoid2
 bone_humanoid3
@@ -658,6 +691,7 @@ bone1 FOOD_BONE
 bone2
 bone3
 bone4
+%rim 1
 chunk FOOD_CHUNK
 chunk_rotten FOOD_CHUNK_ROTTEN
 %back chunk
@@ -905,9 +939,9 @@ i-confusion POT_CONFUSION
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
+i-decay POT_DECAY
 # please remove when TAG_MAJOR_VERSION is bumped
 i-fizzing POT_REMOVE_ME
-i-decay POT_DECAY
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
 i-restore-abilities POT_RESTORE_ABILITIES
@@ -918,7 +952,8 @@ i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
-i-fizzing POT_FIZZING POT_ID_LAST
+i-fizzing POT_FIZZING
+i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
 %back none
 %rim 1
 
@@ -1039,11 +1074,13 @@ misc_crystal MISC_CRYSTAL_BALL_OF_SEEING UNSEEN_MISC
 misc_fan MISC_AIR_ELEMENTAL_FAN
 misc_lamp MISC_LAMP_OF_FIRE
 misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
+misc_phial MISC_PHIAL_OF_FLOODS
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_EMPTY_EBONY_CASKET
 misc_box MISC_BOX_OF_BEASTS
 misc_disc MISC_DISC_OF_STORMS
+%rim 0
 misc_deck MISC_DECK
 %start
 %compose misc_deck
@@ -1155,7 +1192,6 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_defense
 %finish
-%rim 0
 misc_quad MISC_QUAD_DAMAGE
 %rim 1
 %sdir item/misc/runes

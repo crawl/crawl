@@ -28,7 +28,7 @@ end
 function TimedMessaging:channel()
   if not self.sound_channel then
     self.sound_channel =
-      crawl.msgch_num(self.visible and 'default' or 'sound')
+      crawl.msgch_num(self.visible and 'default' or 'timed_portal')
   end
   return self.sound_channel
 end

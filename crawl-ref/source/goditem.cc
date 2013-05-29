@@ -20,6 +20,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -107,9 +108,6 @@ bool is_unholy_item(const item_def& item)
     case OBJ_WEAPONS:
         retval = is_demonic(item);
         break;
-    case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_UNHOLY_CREATION);
-        break;
     case OBJ_BOOKS:
     case OBJ_RODS:
         retval = _is_bookrod_type(item, is_unholy_spell);
@@ -174,9 +172,6 @@ bool is_corpse_violating_item(const item_def& item)
         retval = (item_brand == SPWPN_REAPING);
         break;
     }
-    case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_UNHOLY_CREATION);
-        break;
     case OBJ_BOOKS:
     case OBJ_RODS:
         retval = _is_bookrod_type(item, is_corpse_violating_spell);
@@ -269,13 +264,11 @@ bool is_chaotic_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        retval = (item.sub_type == WAND_POLYMORPH_OTHER);
+        retval = (item.sub_type == WAND_POLYMORPH);
         break;
     case OBJ_POTIONS:
-        retval = (item.sub_type == POT_MUTATION);
-        break;
-    case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_UNHOLY_CREATION);
+        retval = (item.sub_type == POT_MUTATION
+                  || item.sub_type == POT_BENEFICIAL_MUTATION);
         break;
     case OBJ_BOOKS:
     case OBJ_RODS:
@@ -496,6 +489,11 @@ conduct_type god_hates_item_handling(const item_def &item)
     case GOD_TROG:
         if (item_is_spellbook(item))
             return DID_SPELL_MEMORISE;
+        if (item.sub_type == BOOK_MANUAL && item_type_known(item)
+            && is_harmful_skill((skill_type)item.plus))
+        {
+            return DID_SPELL_PRACTISE;
+        }
         // Only Trog cares about spellsbooks vs rods.
         if (item.base_type == OBJ_RODS)
             return DID_NOTHING;
@@ -540,7 +538,8 @@ conduct_type god_hates_item_handling(const item_def &item)
 
 bool god_hates_item(const item_def &item)
 {
-    return good_god_hates_item_handling(item) || god_hates_item_handling(item);
+    return (good_god_hates_item_handling(item) != DID_NOTHING)
+            || (god_hates_item_handling(item) != DID_NOTHING);
 }
 
 bool god_dislikes_spell_type(spell_type spell, god_type god)

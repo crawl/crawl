@@ -184,7 +184,8 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       bool sacrifice);
 static bool _is_travelsafe_square(const coord_def& c,
                                   bool ignore_hostile = false,
-                                  bool ignore_danger = false);
+                                  bool ignore_danger = false,
+                                  bool try_fallback = false);
 
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
@@ -226,7 +227,7 @@ bool is_unknown_stair(const coord_def &p)
 
 // Returns true if the character can cross this dungeon feature, and
 // the player hasn't requested that travel avoid the feature.
-bool feat_is_traversable_now(dungeon_feature_type grid)
+bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
 {
     if (!ignore_player_traversability)
     {
@@ -246,23 +247,27 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
         }
 
         // You can't open doors in bat form.
-        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
-            return player_can_open_doors();
+        if ((grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
+            && !try_fallback)
+        {
+            return player_can_open_doors() || you.form == TRAN_JELLY;
+        }
     }
 
-    return feat_is_traversable(grid);
+    return feat_is_traversable(grid, try_fallback);
 }
 
 // Returns true if a generic character can cross this dungeon feature.
 // Ignores swimming, flying, and travel_avoid_terrain.
-bool feat_is_traversable(dungeon_feature_type feat)
+bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
 {
     if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
         return false;
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
     else if (feat >= DNGN_MINWALK || feat == DNGN_RUNED_DOOR
-             || feat == DNGN_CLOSED_DOOR)
+             || feat == DNGN_CLOSED_DOOR
+             || (feat == DNGN_SEALED_DOOR && try_fallback))
     {
         return true;
     }
@@ -393,7 +398,7 @@ bool is_stair_exclusion(const coord_def &p)
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
 static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
-                                  bool ignore_danger)
+                                  bool ignore_danger, bool try_fallback)
 {
     if (!in_bounds(c))
         return false;
@@ -409,6 +414,11 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         return false;
 
     const dungeon_feature_type grid = env.map_knowledge(c).feat();
+
+    // Only try pathing through temporary obstructions we remember, not
+    // those we can actually see (since the latter are clearly still blockers)
+    try_fallback = (try_fallback
+                    && (!you.see_cell(c) || grid == DNGN_RUNED_DOOR));
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
@@ -438,7 +448,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         return false;
     }
 
-    if (!_is_safe_cloud(c))
+    if (!_is_safe_cloud(c) && !try_fallback)
         return false;
 
     if (is_trap(c))
@@ -451,10 +461,10 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
-    if (levelmap_cell.feat() == DNGN_RUNED_DOOR)
+    if (levelmap_cell.feat() == DNGN_RUNED_DOOR && !try_fallback)
         return false;
 
-    return feat_is_traversable_now(grid);
+    return feat_is_traversable_now(grid, try_fallback);
 }
 
 // Returns true if the location at (x,y) is monster-free and contains
@@ -595,9 +605,25 @@ bool is_resting()
     return you.running.is_rest();
 }
 
+static int _slowest_ally_speed()
+{
+    vector<monster* > followers = get_on_level_followers();
+    int min_speed = INT_MAX;
+    for (vector<monster* >::iterator fol = followers.begin();
+         fol != followers.end(); ++fol)
+    {
+        int speed = (*fol)->speed * BASELINE_DELAY
+                    / (*fol)->action_energy(EUT_MOVE);
+        if (speed < min_speed)
+            min_speed = speed;
+    }
+    return min_speed;
+}
+
 static void _start_running()
 {
     _userdef_run_startrunning_hook();
+    you.running.init_travel_speed();
 
     if (you.running < 0)
         start_delay(DELAY_TRAVEL, 1);
@@ -676,11 +702,30 @@ static void _set_target_square(const coord_def &target)
 
 static void _explore_find_target_square()
 {
+    bool fallback = false;
+    bool runed_door_pause = false;
+
     travel_pathfind tp;
     tp.set_floodseed(you.pos(), true);
 
     coord_def whereto =
         tp.pathfind(static_cast<run_mode_type>(you.running.runmode));
+
+    // If we didn't find an explore target the first time, try fallback mode
+    if (!whereto.x && !whereto.y)
+    {
+        fallback = true;
+        travel_pathfind fallback_tp;
+        fallback_tp.set_floodseed(you.pos(), true);
+        whereto = fallback_tp.pathfind(static_cast<run_mode_type>(you.running.runmode), true);
+
+        if (whereto.distance_from(you.pos()) == 1
+            && grd(whereto) == DNGN_RUNED_DOOR)
+        {
+            runed_door_pause = true;
+            whereto.reset();
+        }
+    }
 
     if (whereto.x || whereto.y)
     {
@@ -736,8 +781,8 @@ static void _explore_find_target_square()
                 target += delta;
                 feature = grd(target);
             }
-            while (_is_travelsafe_square(target)
-                   && feat_is_traversable_now(feature)
+            while (_is_travelsafe_square(target, fallback)
+                   && feat_is_traversable_now(feature, fallback)
                    && _feature_traverse_cost(feature) == 1);
 
             target -= delta;
@@ -764,25 +809,30 @@ static void _explore_find_target_square()
     }
     else
     {
-        // No place to go? Report to the player.
-        const int estatus = _find_explore_status(tp);
-
-        if (!estatus)
-        {
-            mpr("Done exploring.");
-            learned_something_new(HINT_DONE_EXPLORE);
-        }
+        if (runed_door_pause)
+            mpr("Partly explored, obstructed by runed door.");
         else
         {
-            vector<string> inacc;
-            if (estatus & EST_GREED_UNFULFILLED)
-                inacc.push_back("items");
-            if (estatus & EST_PARTLY_EXPLORED)
-                inacc.push_back("places");
+            // No place to go? Report to the player.
+            const int estatus = _find_explore_status(tp);
 
-            mprf("Partly explored, can't reach some %s.",
-                 comma_separated_line(inacc.begin(),
-                                      inacc.end()).c_str());
+            if (!estatus)
+            {
+                mpr("Done exploring.");
+                learned_something_new(HINT_DONE_EXPLORE);
+            }
+            else
+            {
+                vector<string> inacc;
+                if (estatus & EST_GREED_UNFULFILLED)
+                    inacc.push_back("items");
+                if (estatus & EST_PARTLY_EXPLORED)
+                    inacc.push_back("places");
+
+                mprf("Partly explored, can't reach some %s.",
+                    comma_separated_line(inacc.begin(),
+                                        inacc.end()).c_str());
+            }
         }
         stop_running();
     }
@@ -924,6 +974,8 @@ command_type travel()
         // and we need to figure out where to travel to next.
         if (!_find_transtravel_square(level_target.p) || !you.running.pos.x)
             stop_running();
+        else
+            you.running.init_travel_speed();
     }
 
     if (you.running < 0)
@@ -965,7 +1017,7 @@ command_type travel()
                 {
                     if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
                          || sacrificeable && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE))
-                        && (Options.auto_sacrifice != OPT_YES || !sacrificeable
+                        && (Options.auto_sacrifice != AS_YES || !sacrificeable
                             || stack || !_can_sacrifice(newpos)))
                     {
                         explore_stopped_pos = newpos;
@@ -1218,7 +1270,7 @@ const coord_def travel_pathfind::unexplored_square() const
 
 // The travel algorithm is based on the NetHack travel code written by Warwick
 // Allison - used with his permission.
-coord_def travel_pathfind::pathfind(run_mode_type rmode)
+coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 {
     unwind_bool saved_ipt(ignore_player_traversability);
 
@@ -1226,6 +1278,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
         rmode = RMODE_TRAVEL;
 
     runmode = rmode;
+
+    try_fallback = fallback_explore;
 
     if (runmode == RMODE_CONNECTIVITY)
         ignore_player_traversability = true;
@@ -1275,7 +1329,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
-        && !_is_travelsafe_square(start, false, ignore_danger)
+        && !_is_travelsafe_square(start, false, ignore_danger, true)
         && !is_trap(start))          // player likes pain
     {
         return coord_def();
@@ -1599,7 +1653,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         return true;
     }
-    else if (!_is_travelsafe_square(dc, ignore_hostile, ignore_danger))
+    else if (!_is_travelsafe_square(dc, ignore_hostile, ignore_danger, try_fallback))
     {
         // This point is not okay to travel on, but if this is a
         // trap, we'll want to put it on the feature vector anyway.
@@ -1741,8 +1795,15 @@ void find_travel_pos(const coord_def& youpos,
     run_mode_type rmode = (move_x && move_y) ? RMODE_TRAVEL
                                              : RMODE_NOT_RUNNING;
 
-    const coord_def dest = tp.pathfind(rmode);
+    const coord_def dest = tp.pathfind(rmode, true);
     coord_def new_dest = dest;
+
+    if (grd(dest) == DNGN_RUNED_DOOR)
+    {
+        move_x = 0;
+        move_y = 0;
+        return;
+    }
 
     // Check whether this step puts us adjacent to any grid we haven't ever
     // seen or any non-wall grid we cannot currently see.
@@ -2533,6 +2594,12 @@ static void _start_translevel_travel_prompt()
     if (!i_feel_safe(true, true))
         return;
 
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.
     travel_cache.get_level_info(level_id::current()).update();
@@ -2933,7 +3000,7 @@ void start_explore(bool grab_items)
         const LevelStashes *lev = StashTrack.find_current_level();
         if (lev && lev->sacrificeable(you.pos()))
         {
-            if (Options.auto_sacrifice == OPT_PROMPT)
+            if (Options.auto_sacrifice == AS_PROMPT)
             {
                 mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
                 for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
@@ -2942,13 +3009,30 @@ void start_explore(bool grab_items)
 
             }
 
-            if ((Options.auto_sacrifice == OPT_YES
-                 || Options.auto_sacrifice == OPT_BEFORE_EXPLORE
-                 || Options.auto_sacrifice == OPT_PROMPT
+            if ((Options.auto_sacrifice == AS_YES
+                 || Options.auto_sacrifice == AS_BEFORE_EXPLORE
+                 || Options.auto_sacrifice == AS_PROMPT
                     && yesno("Do you want to sacrifice the items here? ", true, 'n'))
                 && _can_sacrifice(you.pos()))
             {
                 pray();
+            }
+            else if (Options.auto_sacrifice == AS_PROMPT_IGNORE)
+            {
+                // Make Escape => 'n' and stop run.
+                explicit_keymap map;
+                map[ESCAPE] = 'n';
+                map[CONTROL('G')] = 'n';
+                if (yesno("There are sacrificable items here, ignore them?",
+                          true, 'y', true, false, false, &map))
+                {
+                    mark_items_non_visit_at(you.pos());
+                }
+                else
+                {
+                    you.running = 0; // Abort explore.
+                    return;
+                }
             }
             else
                 mark_items_non_visit_at(you.pos());
@@ -3531,7 +3615,8 @@ void LevelInfo::load(reader& inf, int minorVersion)
     unmarshallExcludes(inf, minorVersion, excludes);
 
     int n_count = unmarshallByte(inf);
-    ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
+    ASSERT(n_count >= 0);
+    ASSERT(n_count <= NUM_DA_COUNTERS);
     for (int i = 0; i < n_count; i++)
         da_counters[i] = unmarshallShort(inf);
 }
@@ -3882,6 +3967,7 @@ void runrest::initialise(int dir, int mode)
     // Note HP and MP for reference.
     hp = you.hp;
     mp = you.magic_points;
+    init_travel_speed();
 
     if (dir == RDIR_REST)
     {
@@ -3890,7 +3976,8 @@ void runrest::initialise(int dir, int mode)
     }
     else
     {
-        ASSERT(dir >= 0 && dir <= 7);
+        ASSERT(dir >= 0);
+        ASSERT(dir <= 7);
 
         pos = Compass[dir];
         runmode = mode;
@@ -3909,6 +3996,14 @@ void runrest::initialise(int dir, int mode)
         start_delay(DELAY_REST, 1);
     else
         start_delay(DELAY_RUN, 1);
+}
+
+void runrest::init_travel_speed()
+{
+    if (you.travel_ally_pace)
+        travel_speed = _slowest_ally_speed();
+    else
+        travel_speed = 0;
 }
 
 runrest::operator int () const
@@ -4063,7 +4158,7 @@ void runrest::clear()
 {
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
-    mp = hp = 0;
+    mp = hp = travel_speed = 0;
 
     _reset_zigzag_info();
 }
@@ -4223,7 +4318,7 @@ void explore_discoveries::add_item(const item_def &i)
 
     string itemname = get_menu_colour_prefix_tags(i, DESC_A);
     monster* mon = monster_at(i.pos);
-    if (mon && mon->type == MONS_BUSH)
+    if (mon && mons_species(mon->type) == MONS_BUSH)
         itemname += " (under bush)";
     else if (mon && mon->type == MONS_PLANT)
         itemname += " (under plant)";

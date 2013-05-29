@@ -133,7 +133,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.damage      = dice_def(1, 0);
     beem.hit         = 20;
     beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour     = BEAM_POTION_MEPHITIC;
+    beem.flavour     = BEAM_MEPHITIC;
     beem.ench_power  = pow;
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU;
@@ -181,6 +181,36 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
         mpr("You can't place clouds on a wall.");
         return SPRET_ABORT;
     }
+
+    //XXX: there should be a better way to specify beam cloud types
+    switch(cty)
+    {
+        case CLOUD_POISON:
+            beam.flavour = BEAM_POISON;
+            beam.name = "blast of poison";
+            break;
+        case CLOUD_HOLY_FLAMES:
+            beam.flavour = BEAM_HOLY;
+            beam.origin_spell = SPELL_HOLY_BREATH;
+            break;
+        case CLOUD_COLD:
+            beam.flavour = BEAM_COLD;
+            beam.name = "freezing blast";
+            break;
+        default:
+            mpr("That kind of cloud doesn't exist!");
+            return SPRET_ABORT;
+    }
+
+    beam.thrower           = KILL_YOU;
+    beam.hit               = AUTOMATIC_HIT;
+    beam.damage            = INSTANT_DEATH; // just a convenient non-zero
+    beam.is_big_cloud      = true;
+    beam.is_tracer         = true;
+    beam.use_target_as_pos = true;
+    beam.affect_endpoint();
+    if (beam.beam_cancelled)
+        return SPRET_ABORT;
 
     fail_check();
 
@@ -263,6 +293,18 @@ void manage_fire_shield(int delay)
 
 spret_type cast_corpse_rot(bool fail)
 {
+    if (!you.res_rotting())
+    {
+        for (stack_iterator si(you.pos()); si; ++si)
+        {
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            {
+                if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
+                    return SPRET_ABORT;
+                break;
+            }
+        }
+    }
     fail_check();
     corpse_rot(&you);
     return SPRET_SUCCESS;
@@ -281,7 +323,7 @@ void corpse_rot(actor* caster)
                     // Found a corpse.  Skeletonise it if possible.
                     if (!mons_skeleton(si->mon_type))
                     {
-                        item_was_destroyed(*si);
+                        item_was_destroyed(*si, caster->mindex());
                         destroy_item(si->index());
                     }
                     else
