@@ -1531,9 +1531,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
-    if (mon == MONS_ZOMBIE && !mons_zombifiable(monnum))
+    if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
-        ASSERT(mons_skeleton(monnum));
+        ASSERT(mons_skeleton(zombie_type));
         mpr("The flesh is too rotten for a proper zombie; only a skeleton remains.");
         mon = MONS_SKELETON;
     }
