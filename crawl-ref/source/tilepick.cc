@@ -2065,6 +2065,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // hybrid ('H')
     case MONS_ARACHNE:
         return TILEP_MONS_ARACHNE;
+    case MONS_SOJOBO:
+        return TILEP_MONS_SOJOBO;
 
     // jelly ('J')
     case MONS_DISSOLUTION:
