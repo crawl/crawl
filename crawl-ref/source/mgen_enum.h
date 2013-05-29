@@ -85,6 +85,8 @@ enum band_type
     BAND_PAN,
     BAND_TENGU,
     BAND_SOJOBO,
+    BAND_SPRIGGANS,
+    BAND_SPRIGGAN_ELITES,
     NUM_BANDS                   // always last
 };
 
