@@ -167,38 +167,6 @@ static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char 
         lines(x1, y) = border, lines(x2, y) = border;
 }
 
-// Specifically only deals with horizontal lines.
-static vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side)
-{
-    vector<coord_def> line;
-
-    int start_x, start_y, stop_x, stop_y, x, y;
-
-    switch (side)
-    {
-    case 0: start_x = x1; start_y = y1; stop_x = x2; stop_y = y1; break;
-    case 1: start_x = x2; start_y = y1; stop_x = x2; stop_y = y2; break;
-    case 2: start_x = x1; start_y = y2; stop_x = x2; stop_y = y2; break;
-    case 3: start_x = x1; start_y = y1; stop_x = x1; stop_y = y2; break;
-    default: die("invalid _box_side");
-    }
-
-    x = start_x; y = start_y;
-
-    if (start_x == stop_x)
-    {
-        for (y = start_y+1; y < stop_y; y++)
-            line.push_back(coord_def(x, y));
-    }
-    else
-    {
-        for (x = start_x+1; x < stop_x; x++)
-            line.push_back(coord_def(x, y));
-    }
-
-    return line;
-}
-
 // Does what count_passable_neighbors does, but in C++ form.
 static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
                                      int y, const char *passable = traversable_glyphs)
@@ -214,12 +182,6 @@ static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
     }
 
     return count;
-}
-
-static int _count_passable_neighbors(lua_State *ls, map_lines &lines, coord_def point,
-                                     const char *passable = traversable_glyphs)
-{
-    return _count_passable_neighbors(ls, lines, point.x, point.y, passable);
 }
 
 static vector<coord_def> _get_pool_seed_positions(
@@ -754,10 +716,11 @@ LUAFN(dgn_make_box)
 
     TABLE_CHAR(ls, floor, '.');
     TABLE_CHAR(ls, wall, 'x');
-    TABLE_INT(ls, width, 1);
+    TABLE_INT(ls, thickness, 1);
 
     _fill_area(ls, lines, x1, y1, x2, y2, wall);
-    _fill_area(ls, lines, x1+width, y1+width, x2-width, y2-width, floor);
+    _fill_area(ls, lines, x1+thickness, y1+thickness,
+                          x2-thickness, y2-thickness, floor);
 
     return 0;
 }
@@ -771,42 +734,100 @@ LUAFN(dgn_make_box_doors)
         return 0;
 
     TABLE_INT(ls, number, 1);
+    TABLE_INT(ls, thickness, 1);
+    TABLE_CHAR(ls, door, '+');
+    TABLE_CHAR(ls, inner_door, '.');
+    TABLE_CHAR(ls, between_doors, '.');
+    TABLE_BOOL(ls, veto_gates, false);
+    TABLE_STR(ls, passable, traversable_glyphs);
 
-    int sides[4] = {0, 0, 0, 0};
+    // size doesn't include corners
+    int size_x = x2 - x1 + 1 - thickness * 2;
+    int size_y = y2 - y1 + 1 - thickness * 2;
+    int position_count = size_x * 2 + size_y * 2;
 
-    int door_count;
+    int max_sanity = number * 100;
+    int sanity = 0;
 
-    for (door_count = 0; door_count < number; door_count++)
+    int door_count = 0;
+    while (door_count < number)
     {
-        int current_side = random2(4);
-        if (sides[current_side] >= 2)
-            current_side = random2(4);
-
-        vector<coord_def> points = _box_side(x1, y1, x2, y2, current_side);
-
-        int total_points = int(points.size());
-
-        int index = random2avg(total_points, 2 + random2(number));
-
-        int tries = 50;
-
-        while (_count_passable_neighbors(ls, lines, points[index]) <= 3)
+        int position = random2(position_count);
+        int side;
+        int x, y;
+        if(position < size_x)
         {
-            tries--;
-            index = random2(total_points);
+            side = 0;
+            x = x1 + thickness + position;
+            y = y1;
+        }
+        else if(position < size_x * 2)
+        {
+            side = 1;
+            x = x1 + thickness + (position - size_x);
+            y = y2;
+        }
+        else if(position < size_x * 2 + size_y)
+        {
+            side = 2;
+            x = x1;
+            y = y1 + thickness + (position - size_x * 2);
+        }
+        else
+        {
+            side = 3;
+            x = x2;
+            y = y1 + thickness + (position - size_x * 2 - size_y);
+        }
 
-            if (tries == 0)
+        // We veto a position if:
+        //  -> The cell outside the box is not passible
+        //  -> The cell (however far) inside the box is not passible
+        //  -> There is a door to the left or right and we are vetoing gates
+        bool good = true;
+        if(side < 2)
+        {
+            if(!strchr(passable, lines(x, y - (side == 0 ? 1 : thickness))))
+                good = false;
+            if(!strchr(passable, lines(x, y + (side == 1 ? 1 : thickness))))
+                good = false;
+            if(veto_gates && (lines(x-1, y) == door || lines(x+1, y) == door))
+                good = false;
+        }
+        else
+        {
+            if(!strchr(passable, lines(x - (side == 2 ? 1 : thickness), y)))
+                good = false;
+            if(!strchr(passable, lines(x + (side == 3 ? 1 : thickness), y)))
+                good = false;
+            if(veto_gates && (lines(x, y-1) == door || lines(x, y+1) == door))
+                good = false;
+        }
+
+        if(good)
+        {
+            door_count++;
+            lines(x, y) = door;
+            for(int i = 1; i < thickness; i++)
+            {
+                switch(side)
+                {
+                case 0: y++;  break;
+                case 1: y--;  break;
+                case 2: x++;  break;
+                case 3: x--;  break;
+                }
+                lines(x, y) = between_doors;
+            }
+            if(thickness > 1)
+                lines(x, y) = inner_door;
+        }
+        else
+        {
+            sanity++;
+            if(sanity >= max_sanity)
                 break;
         }
-
-        if (tries == 0)
-        {
-            door_count--;
-            continue;
-        }
-
-        sides[current_side]++;
-        lines(points[index]) = '+';
     }
 
     lua_pushnumber(ls, door_count);
