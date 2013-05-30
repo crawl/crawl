@@ -3707,6 +3707,7 @@ enum disable_type
     DIS_DEATH,
     DIS_DELAY,
     DIS_CONFIRMATIONS,
+    DIS_AFFLICTIONS,
     NUM_DISABLEMENTS
 };
 

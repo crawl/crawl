@@ -335,6 +335,7 @@ static const char* disablements[] =
     "death",
     "delay",
     "confirmations",
+    "afflictions",
 };
 
 LUAFN(debug_disable)
