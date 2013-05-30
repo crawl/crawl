@@ -233,7 +233,7 @@ function ($, comm, enums, map_knowledge, messages) {
         // Adjust max HP correctly for Djinni
         var max_max_hp = player.real_hp_max;
         if (player.species == "Djinni")
-            max_max_hp += palyer.real_mp_max;
+            max_max_hp += player.real_mp_max;
 
         if (max_max_hp != player.hp_max)
             $("#stats_real_hp_max").text("(" + max_max_hp + ")");
