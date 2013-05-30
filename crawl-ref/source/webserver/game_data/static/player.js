@@ -166,6 +166,24 @@ function ($, comm, enums, map_knowledge, messages) {
         $("#stats_titleline").text(player.name + " the " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
 
+        // Setup species
+        // TODO: Move to an initialisation task
+        if (!$("#stats").attr("player-species") == player.species)
+        {
+            $("#stats").attr("player-species", player.species)
+            switch (player.species)
+            {
+                case "Djinni":
+                    $("#stats_hp_line > .stats_caption").text("Essence:");
+                    $("#stats_mp_line > .stats_caption").text("Contam:");
+                    break;
+                default:
+                    $("#stats_hp_line > .stats_caption").text("HP:");
+                    $("#stats_mp_line > .stats_caption").text("MP:");
+                    break;
+            }
+        }
+
         var species_god = player.species;
         if (player.god != "")
             species_god += " of " + player.god;
