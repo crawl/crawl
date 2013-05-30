@@ -167,19 +167,19 @@ function ($, comm, enums, map_knowledge, messages) {
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
 
         // Setup species
-        // TODO: Move to an initialisation task
-        if (!$("#stats").attr("data-species") == player.species)
+        // TODO: Move to a proper initialisation task
+        if ($("#stats").attr("data-species") != player.species)
         {
             $("#stats").attr("data-species", player.species)
             switch (player.species)
             {
                 case "Djinni":
-                    $("#stats_hp_line > .stats_caption").text("Essence:");
-                    $("#stats_mp_line > .stats_caption").text("Contam:");
+                    $("#stats_hpline > .stats_caption").text("Essence:");
+                    $("#stats_mpline > .stats_caption").text("Contam:");
                     break;
                 default:
-                    $("#stats_hp_line > .stats_caption").text("HP:");
-                    $("#stats_mp_line > .stats_caption").text("MP:");
+                    $("#stats_hpline > .stats_caption").text("HP:");
+                    $("#stats_mpline > .stats_caption").text("MP:");
                     break;
             }
         }
