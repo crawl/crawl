@@ -1585,19 +1585,18 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                 int remove = random2(num_stairs);
                 if (preserve_vault_stairs)
                 {
-                    int start = remove;
-                    do
+                    int tries;
+                    for (tries = num_stairs; tries > 0; tries--)
                     {
                         if (!map_masked(stair_list[remove], MMT_VAULT))
                             break;
                         remove = (remove + 1) % num_stairs;
                     }
-                    while (start != remove);
 
                     // If we looped through all possibilities, then it
                     // means that there are more than 3 stairs in vaults and
                     // we can't preserve vault stairs.
-                    if (start == remove)
+                    if (!tries)
                         break;
                 }
                 _set_grd(stair_list[remove], replace);
