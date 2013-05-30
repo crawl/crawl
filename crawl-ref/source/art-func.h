@@ -435,8 +435,14 @@ static void _wucad_miscast(actor* victim, int power,int fail)
 static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
-    if (you.magic_points == you.max_magic_points
-        && (you.species != SP_DJINNI || you.hp == you.hp_max))
+    if (you.species == SP_DJINNI)
+    {
+        mpr("The staff is unable to affect your essence.");
+        *unevokable = true;
+        return true;
+    }
+
+    if (you.magic_points == you.max_magic_points)
     {
         mpr("Your reserves of magic are full.");
         *unevokable = true;
