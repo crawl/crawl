@@ -2,6 +2,7 @@
  * @file
  * @brief Procedurally generated dungeon layouts.
  **/
+#include "AppHdr.h"
 
 #include <cmath>
 

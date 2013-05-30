@@ -142,7 +142,7 @@ int is_pacifiable(const monster* mon)
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
-        || mons_is_tentacle(mon->type)) // body part
+        || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
     {
         return -1;
     }
@@ -402,7 +402,8 @@ void antimagic()
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
         DUR_SLAYING, DUR_STEALTH,
         DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
-        DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION, DUR_SENTINEL_MARK
+        DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION, DUR_SENTINEL_MARK,
+        DUR_ANTIMAGIC /*!*/,
     };
 
     bool need_msg = false;
@@ -897,23 +898,22 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // All traps are destroyed.
             if (trap_def *ptrap = find_trap(*ai))
+            {
                 ptrap->destroy();
+                grd(*ai) = DNGN_FLOOR;
+            }
 
             // Actually place the wall.
             if (zin)
             {
                 map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
                 marker->set_property("feature_description", "a gleaming silver wall");
-                marker->set_property("tomb", "Zin");
-
-                // Preserve the old feature, unless it's bare floor (or trap)
-                if (grd(*ai) != DNGN_FLOOR & !feat_is_trap(grd(*ai), true))
-                    marker->set_property("old_feat", dungeon_feature_name(grd(*ai)));
-
                 env.markers.add(marker);
 
+                temp_change_terrain(*ai, DNGN_METAL_WALL, INFINITE_DURATION,
+                                    TERRAIN_CHANGE_IMPRISON);
+
                 // Make the walls silver.
-                grd(*ai) = DNGN_METAL_WALL;
                 env.grid_colours(*ai) = WHITE;
                 env.tile_flv(*ai).feat_idx =
                         store_tilename_get_index("dngn_mirror_wall");
@@ -931,13 +931,10 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             // Tomb card
             else
             {
-                grd(*ai) = DNGN_ROCK_WALL;
-                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
-                marker->set_property("tomb", "card");
-                env.markers.add(marker);
+                temp_change_terrain(*ai, DNGN_ROCK_WALL, INFINITE_DURATION,
+                                    TERRAIN_CHANGE_TOMB);
             }
 
-            set_terrain_changed(*ai);
             number_built++;
         }
     }

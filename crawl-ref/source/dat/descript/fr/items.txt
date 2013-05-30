@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Un outil magique destiné à l'invocation d'élémentaires d'air. Il n'est pas très
-fiable, et requiert habituellement plusieurs essais avant de fonctionner
-correctement. L'utiliser suscite un risque qui est réduit selon l'affinité de
-l'usager pour l'élément approprié.
-%%%%
 amulet of clarity
 
 Cette amulette protège le porteur contre certaines formes de confusion mentale,
@@ -45,8 +38,8 @@ infaillible.
 %%%%
 amulet of the gourmand
 
-Cette amulette protège son porteur des malaises causés par l'ingestion de
-viande fraîche et permet de les digérer même s'il n'a pas faim. Mais ces effets
+Cette amulette permet à son porteur de digérer la viande fraîche crue même s'il
+n'a pas faim et en augmente significativement l'apport nutritionnel. Ces effets
 sur la digestion du porteur s'accumulent avec le temps et sont initialement
 faibles.
 %%%%
@@ -586,6 +579,12 @@ falchion
 Une épée longue à un seul coté tranchant, dont la lame légèrement courbée
 concentre le poid au point de frappe, augmentant sa pénétration.
 %%%%
+fan of gales
+
+Un éventail enchanté habité par des esprits de l'air bienveillants. Agiter
+l'éventail déclenche un violent coup de vent autour du porteur et libère les
+esprits pour balayer ses ennemies.
+%%%%
 fire dragon armour
 
 Une armure magique faite d'écailles de dragon cracheur de feu. Elle offre une
@@ -725,10 +724,8 @@ en croissant de lune à chaque extrémité.
 %%%%
 lamp of fire
 
-Un appareil magique servant à invoquer des élémentaires de feu. Il est assez
-peu fiable, et nécessite habituellement plusieurs tentatives pour fonctionner
-correctement. Son utilisation comporte une part de risque, qui est réduite si
-l'on est habile dans la magie élémentaire appropriée.
+Une lampe magique habité par des esprits du feu bienveillants. Ouvrir la porte
+libère les esprits et fait danser les flammes sur les ennemies du porteur.
 %%%%
 lantern of shadows
 
@@ -892,6 +889,12 @@ pearl dragon hide
 La peau d'un dragon perle, couverte d'iridescente écailles nacrés. Dans sa
 forme brute, elle ne fournit pas beaucoup de protection, mais avec des moyens
 magiques, elle peut être utilisé pour faire d'excellentes armures.
+%%%%
+phial of floods
+
+Un récipient enchanté qui déborde d'eau élémentaire. Retirer le bouchon déverse
+un torrent d'eau de la fiole et libère les esprits de l'eau qui résident à
+l'intérieur.
 %%%%
 piece of ambrosia
 
@@ -1138,7 +1141,7 @@ ring of see invisible:quote
 
 “Voici mon secret. Il est très simple: on ne voit bien qu'avec le coeur.
 L'essentiel est invisible pour les yeux.”
-    - Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
+    -Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
 %%%%
 ring of slaying
 
@@ -1317,7 +1320,7 @@ Ce parchemin plonge le lecteur au sein d'un brouillard épais.
 scroll of holy word
 
 Ce parchemin demande aux puissances des cieux de causer de grands dégâts à
-toute les créatures impie à proximité - y compris vous!
+toute les créatures impie à proximité – y compris vous!
 %%%%
 scroll of identify
 
@@ -1370,7 +1373,7 @@ aléatoire.
 scroll of torment
 
 Ce parchemin appelle les puissances des ténèbres pour infliger une grande
-douleur sur toute les créatures à proximité - y compris vous! Ceci traverse la
+douleur sur toute les créatures à proximité – y compris vous! Ceci traverse la
 moitié de la résistance de toutes les créatures vivantes, bien que ce ne soit
 jamais directement fatale.
 %%%%
@@ -1468,11 +1471,6 @@ Ce bâton augmente la puissance des sorts d'air lancés par son porteur, et
 l'isole électriquement. Si le porteur est compétent en évocation et en magie de
 l'air, ils peuvent choquer ce qu'il frappent avec ce bâton.
 %%%%
-staff of channeling
-
-Ce bâton permet à son porteur de canaliser l'énergie magique ambiante pour ses
-besoins.
-%%%%
 staff of cold
 
 Ce bâton accroit la puissance des sortilèges de glace de son porteur et, le
@@ -1500,8 +1498,8 @@ de la Terre.
 %%%%
 staff of energy
 
-Ce bâton réduit grandement la faim générée par les sorts employés par son
-porteur.
+Ce bâton permet à son porteur de contrôler l'énergie magique : jeter des sorts
+ne donne plus faim et il peut canaliser la magie ambiante.
 %%%%
 staff of fire
 
@@ -1548,14 +1546,6 @@ transformée en armure grâce à la magie.
 stone
 
 Une pierre. Elle peut être jetée à la main ou lancée avec une fronde.
-%%%%
-stone of earth elementals
-
-Un instrument magique permettant de convoquer des élémentaires de terre. Il est
-assez peu fiable et demande souvent plusieurs tentatives avant de fonctionner
-correctement. L'employer comporte des risques quand à contrôler plusieurs
-élémentaires à la fois, bien qu'il soit réduit par le niveau de Magie de la
-Terre du porteur.
 %%%%
 storm dragon armour
 
@@ -1667,7 +1657,7 @@ en la liquéfiant.
 wand of disintegration
 
 Un instrument magique qui désagrège la structure physique de n'importe quoi,
-mais pas des murs les plus durs - cela inclue les statues rigides, bref tout ce
+mais pas des murs les plus durs – cela inclue les statues rigides, bref tout ce
 qui n'est pas de chair.
 %%%%
 wand of draining

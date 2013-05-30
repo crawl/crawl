@@ -68,7 +68,7 @@ static void _heal_from_food(int hp_amt, bool unrot = false,
  *  BEGIN PUBLIC FUNCTIONS
  */
 void make_hungry(int hunger_amount, bool suppress_msg,
-                 bool allow_reducing)
+                 bool magic)
 {
     if (crawl_state.disables[DIS_HUNGER])
         return;
@@ -80,10 +80,21 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         return;
     }
 
+    // Lich/tree form djinn don't get exempted from food costs: infinite
+    // healing from channeling would be just too good.
+    if (you.species == SP_DJINNI)
+    {
+        if (!magic)
+            return;
+
+        contaminate_player(div_rand_round(hunger_amount, 250), true);
+        return;
+    }
+
     if (you_foodless())
         return;
 
-    if (allow_reducing)
+    if (magic)
         hunger_amount = calc_hunger(hunger_amount);
 
     if (hunger_amount == 0 && !suppress_msg)
@@ -135,9 +146,10 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-bool you_foodless()
+bool you_foodless(bool can_eat)
 {
     return you.is_undead == US_UNDEAD
+        || you.species == SP_DJINNI && !can_eat
         || you.form == TRAN_FUNGUS
         || you.form == TRAN_TREE
         || you.form == TRAN_WISP;
@@ -806,7 +818,7 @@ bool prompt_eat_inventory_item(int slot)
 
 static bool _eat_check(bool check_hunger = true, bool silent = false)
 {
-    if (you_foodless())
+    if (you_foodless(true))
     {
         if (!silent)
         {
@@ -823,6 +835,16 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
 
     if (!check_hunger)
         return true;
+
+    if (you.duration[DUR_RETCHING])
+    {
+        if (!silent)
+        {
+            mpr("You couldn't keep anything down in your present state!");
+            crawl_state.zero_turns_taken();
+        }
+        return false;
+    }
 
     if (you.hunger_state >= HS_ENGORGED)
     {
@@ -933,13 +955,16 @@ static string _how_hungry()
     return "hungry";
 }
 
+// Must match the order of hunger_state_t enums
 static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-    { 1000, 1533, 2066, 2600, 7000, 9000, 11000, 40000 };
+    { HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY, HUNGER_HUNGRY,
+      HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL, HUNGER_ENGORGED };
 
-bool food_change(bool suppress_message)
+// "initial" is true when setting the player's initial hunger state on game
+// start or load: in that case it's not really a change, so we suppress the
+// state change message and don't identify rings or stimulate Xom.
+bool food_change(bool initial)
 {
-    COMPILE_CHECK(HUNGER_STARVING == hunger_threshold[HS_STARVING]);
-
     bool state_changed = false;
     bool less_hungry   = false;
 
@@ -956,7 +981,7 @@ bool food_change(bool suppress_message)
         state_changed = true;
         if (newstate > you.hunger_state)
             less_hungry = true;
-        else
+        else if (!initial)
             maybe_id_ring_hunger();
 
         you.hunger_state = newstate;
@@ -1000,7 +1025,7 @@ bool food_change(bool suppress_message)
             }
         }
 
-        if (!suppress_message)
+        if (!initial)
         {
             string msg = "You ";
             switch (you.hunger_state)
@@ -1981,15 +2006,10 @@ void finished_eating_message(int food_type)
 
     if (herbivorous)
     {
-        switch (food_type)
+        if (food_is_meaty(food_type))
         {
-        case FOOD_MEAT_RATION:
-        case FOOD_BEEF_JERKY:
-        case FOOD_SAUSAGE:
             mpr("Blech - you need greens!");
             return;
-        default:
-            break;
         }
     }
     else
@@ -2014,26 +2034,10 @@ void finished_eating_message(int food_type)
 
     if (carnivorous)
     {
-        switch (food_type)
+        if (food_is_veggie(food_type))
         {
-        case FOOD_BREAD_RATION:
-        case FOOD_BANANA:
-        case FOOD_ORANGE:
-        case FOOD_LEMON:
-        case FOOD_PEAR:
-        case FOOD_APPLE:
-        case FOOD_APRICOT:
-        case FOOD_CHOKO:
-        case FOOD_SNOZZCUMBER:
-        case FOOD_RAMBUTAN:
-        case FOOD_LYCHEE:
-        case FOOD_STRAWBERRY:
-        case FOOD_GRAPE:
-        case FOOD_SULTANA:
             mpr("Blech - you need meat!");
             return;
-        default:
-            break;
         }
     }
     else
@@ -2292,49 +2296,6 @@ bool causes_rot(const item_def &food)
     return (mons_corpse_effect(food.mon_type) == CE_ROT);
 }
 
-// Returns 1 for herbivores, -1 for carnivores and 0 for either.
-static int _player_likes_food_type(int type)
-{
-    switch (static_cast<food_type>(type))
-    {
-    case FOOD_BREAD_RATION:
-    case FOOD_PEAR:
-    case FOOD_APPLE:
-    case FOOD_CHOKO:
-    case FOOD_SNOZZCUMBER:
-    case FOOD_APRICOT:
-    case FOOD_ORANGE:
-    case FOOD_BANANA:
-    case FOOD_STRAWBERRY:
-    case FOOD_RAMBUTAN:
-    case FOOD_LEMON:
-    case FOOD_GRAPE:
-    case FOOD_SULTANA:
-    case FOOD_LYCHEE:
-        return 1;
-
-    case FOOD_CHUNK:
-    case FOOD_MEAT_RATION:
-    case FOOD_SAUSAGE:
-    case FOOD_BEEF_JERKY:
-        return -1;
-
-    case FOOD_HONEYCOMB:
-    case FOOD_ROYAL_JELLY:
-    case FOOD_AMBROSIA:
-    case FOOD_CHEESE:
-    case FOOD_PIZZA:
-        return 0;
-
-    case NUM_FOODS:
-        mpr("Bad food type", MSGCH_ERROR);
-        return 0;
-    }
-
-    mprf(MSGCH_ERROR, "Couldn't handle food type: %d", type);
-    return 0;
-}
-
 // Returns true if an item of basetype FOOD or CORPSES cannot currently
 // be eaten (respecting species and mutations set).
 bool is_inedible(const item_def &item)
@@ -2343,7 +2304,7 @@ bool is_inedible(const item_def &item)
         return !can_ingest(item, true, false);
 
     // Mummies, liches, trees and wisps don't eat.
-    if (you_foodless())
+    if (you_foodless(true))
         return true;
 
     if (food_is_rotten(item)
@@ -2380,7 +2341,7 @@ bool is_inedible(const item_def &item)
 bool is_preferred_food(const item_def &food)
 {
     // Mummies/etc don't eat.
-    if (you_foodless())
+    if (you_foodless(true))
         return false;
 
     // Vampires don't really have a preferred food type, but they really
@@ -2389,7 +2350,7 @@ bool is_preferred_food(const item_def &food)
         return is_blood_potion(food);
 
     if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
-        && item_type_known(food))
+        && item_type_known(food) && you.species != SP_DJINNI)
     {
         return !player_mutation_level(MUT_CARNIVOROUS);
     }
@@ -2413,10 +2374,10 @@ bool is_preferred_food(const item_def &food)
         return food_is_rotten(food);
 
     if (player_mutation_level(MUT_CARNIVOROUS) == 3)
-        return (_player_likes_food_type(food.sub_type) < 0);
+        return food_is_meaty(food.sub_type);
 
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
-        return (_player_likes_food_type(food.sub_type) > 0);
+        return food_is_veggie(food.sub_type);
 
     // No food preference.
     return false;
@@ -2533,8 +2494,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             return false;
         }
 
-        const int vorous = _player_likes_food_type(kindof_thing);
-        if (vorous > 0) // Herbivorous food.
+        if (food_is_veggie(kindof_thing))
         {
             if (ur_carnivorous)
             {
@@ -2545,7 +2505,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             else
                 return true;
         }
-        else if (vorous < 0) // Carnivorous food.
+        else if (food_is_meaty(kindof_thing))
         {
             if (ur_herbivorous)
             {
@@ -2810,7 +2770,7 @@ void handle_starvation()
 
 string hunger_cost_string(const int hunger)
 {
-    if (you_foodless())
+    if (you_foodless(true))
         return "N/A";
 
 #ifdef WIZARD
@@ -2845,7 +2805,7 @@ static int _chunks_needed()
     {
         if (you.inv[i].defined()
             && you.inv[i].base_type == OBJ_STAVES
-            && you.inv[i].sub_type == STAFF_CHANNELING)
+            && you.inv[i].sub_type == STAFF_ENERGY)
         {
             channeling = true;
         }

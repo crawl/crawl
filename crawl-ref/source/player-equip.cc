@@ -514,11 +514,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             if (mp > 0)
                 you.magic_points += mp;
 
-            if ((you.max_magic_points + 13) *
-                (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
-            {
+            if (get_real_mp(true) >= 50)
                 mpr("You feel your magic capacity is already quite full.");
-            }
             else
                 canned_msg(MSG_MANA_INCREASE);
 
@@ -596,7 +593,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_ORC_SLAYING:
-                    mpr((you.species == SP_HILL_ORC)
+                    mpr(player_genus(GENPC_ORCISH)
                             ? "You feel a sudden desire to commit suicide."
                             : "You feel a sudden desire to kill orcs!");
                     break;

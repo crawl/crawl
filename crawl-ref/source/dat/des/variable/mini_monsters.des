@@ -479,6 +479,54 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
+NAME:   goddamned_bats
+DEPTH:  D:3-5
+# Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
+# and tera is understandable, but come on, even mili is lacking.
+KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
+KMONS:  2 = bat name:microbat n_rpl n_des n_spe n_noc col:magenta tile:mons_microbat
+# Can we spell them this way?  Please?
+KMONS:  3 = bat name:fruity n_adj n_des n_spe n_noc col:lightmagenta tile:mons_fruity_bat
+KMONS:  4 = bat name:giga n_adj n_des n_spe n_noc hd:4 col:brown tile:mons_gigabat
+# Way harder than the rest here.
+KMONS:  5 = vampire bat
+# In RL, they sit put, not moving a finger.  Lazy bastards.
+KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_des n_spe n_zom
+# The only here without a basis in reality.
+KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_des n_spe n_zom
+# There are actual "ghost bats" too, but near-extinct, while ghost-faceds
+# have a number of species and are widespread.
+KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_des n_spe n_zom
+# Just an US WW2 military project, but that's good enough.
+KMONS:  9 = fire bat hd:1
+KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
+# Correction, this one, added because of a tile, is not real as well.
+KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
+# Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
+KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
+MAP
+       xxxxx
+      xxxxxxx
+     xxxx7xxx
+    xxxxx.xxx
+   xxx9..xxx
+  xxx9..0xxx
+  xx.9..xxxxx
+  xxx....xxxx
+  xx88.xx.xxxx
+  xxxxxxxx.xxxx
+ xxxxxxxxx.AAxx
+xxx.4xxxx..x..xx
+xxx12.xxx.xx...xx
+xxxx.xxx.xxxx6..x
+xxxxxBxx.xxxx66.x
+xx33.x...xxxxx.xxx
+xxxxxxx...xxxxx.xx
+ xxxx21xx.xxxxx5xx
+  xxxxxxx.xxxxxxx
+    xxxx@xx
+ENDMAP
+
 NAME:   saegor_snake_ambush
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:3-5
@@ -940,7 +988,7 @@ ENDMAP
 
 NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
-TAGS:    layout_rooms layout_misc layout_roguey layout_basic
+TAGS:    layout_rooms layout_misc layout_rooms layout_basic
 DEPTH:   D:11-16
 MONS:    rat / grey rat w:2, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
@@ -1254,7 +1302,7 @@ ENDMAP
 # kobolds around a campfire
 NAME:    lexackson_kobold_supper
 DEPTH:   D:1-6
-TAGS:    unique_kobold_supper_lexackson no_monster_gen
+TAGS:    no_monster_gen
 KPROP:   56' = no_rtele_into
 MONS:    kobold, plant, bush
 : if you.absdepth() < 4 then
@@ -1686,8 +1734,8 @@ ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
 ITEM:    staff of summoning w:20 / rod of demonology w:5 / rod of the swarm w:5
 ITEM:    amulet of warding w:5 / amulet of warding randart
-ITEM:    air elemental fan / lamp of fire / \
-         stone of earth elementals / lantern of shadows
+ITEM:    fan of gales / lamp of fire / \
+         stone of tremors / phial of floods / lantern of shadows
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
 KFEAT:   _ = altar_sif_muna
@@ -2581,17 +2629,15 @@ DEPTH:   D:12-26
 MONS:    crystal golem, orange crystal statue
 KPROP:   .12 = no_rtele_into
 SUBST:   . = .:80 %$*|
-SHUFFLE: Dd / Ee / Ff / Gg / Hh
-SUBST:   D = +, d = n, eEfFgGhH = b
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
-WDd1...1...1bW
-WEe.........bW
-WFf.........bW
-WGg.........bW
-WHh1...2...1bW
+Wbb1...1...1bW
 Wbb.........bW
+Wbb.........bW
+Wnn.........bW
+WW=1...2...1bW
+Wnn.........bW
 Wbb.........bW
 Wbb.........bW
 Wbb1...1...1bW
@@ -2774,7 +2820,7 @@ NSUBST:  " = 1:g / *:%
 SUBST:   % = %$
 ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
 ITEM:    wand of digging / wand of disintegration
-ITEM:    stone of earth elementals
+ITEM:    stone of tremors
 ITEM:    scroll of teleportation q:2 w:20 / dagger ego:distortion
 MAP
 ...................
@@ -3368,7 +3414,6 @@ KMONS:   q = yellow wasp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklno
-MARKER:  G = lua:props_marker { stop_explore = "statue" }
 MAP
 .............
 .............
@@ -3378,9 +3423,9 @@ MAP
 ...vfahajv...
 ...vklanov...
 ...vpqrimv...
-...vv+++vv...
+...vv===vv...
 ..v.......v..
-......G......
+.............
 .............
 ENDMAP
 
@@ -3393,7 +3438,7 @@ SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
 ITEM:    wand of digging / wand of disintegration
-ITEM:    ring of teleportation / stone of earth elementals
+ITEM:    ring of teleportation / stone of tremors
 MAP
 ...........
 .vvnvvvnvv.
@@ -4391,7 +4436,7 @@ NAME:   grunt_tough_drop
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-
 KFEAT:  ^ = known teleport trap
-KFEAT:  _ = alarm trap
+KFEAT:  _ = known alarm trap
 KPROP:  8^ = no_rtele_into
 : if you.absdepth() < 9 then
 SUBST: | = %
@@ -5116,7 +5161,7 @@ MONS:   deep dwarf death knight ; \
         chain mail race:dwarven w:7 | \
         plate armour race:dwarven w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
-MONS:   rotting hulk / freezing wraith / phantasmal warrior / \
+MONS:   freezing wraith / phantasmal warrior / \
         flaming corpse / flayed ghost / skeletal warrior
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  - = open_door
@@ -5289,7 +5334,7 @@ NAME:  minivault_12
 DEPTH: D:8-26
 MAP
 ............
-.GxxxxxxxxG.
+.mxxxxxxxxm.
 .x>9$9$9$<x.
 .x.$9$9$.$x.
 .x$.****$.x.
@@ -5298,7 +5343,7 @@ MAP
 .x.$****.$x.
 .x$9$9$9$.x.
 .x<$9$9$9>x.
-.GxxxxxxxxG.
+.mxxxxxxxxm.
 ............
 ENDMAP
 
@@ -5418,7 +5463,7 @@ ENDMAP
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS: no_monster_gen layout_basic layout_rooms layout_misc layout_caves
-TAGS: layout_spotty layout_roguey layout_delve layout_cocytus layout_pools
+TAGS: layout_delve
 CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
 DEPTH: D:8-, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
        Geh:1-6, Coc:1-6, Dis:1-6, Tar:1-6

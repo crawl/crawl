@@ -44,6 +44,9 @@
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
+#include "mapmark.h"
+
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
 
 actor* actor_at(const coord_def& c)
 {
@@ -848,6 +851,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 #ifdef USE_TILE
     env.tile_bk_fg(dst) = env.tile_bk_fg(src);
     env.tile_bk_bg(dst) = env.tile_bk_bg(src);
+    env.tile_bk_cloud(dst) = env.tile_bk_cloud(src);
 #endif
     env.tile_flv(dst) = env.tile_flv(src);
 
@@ -975,6 +979,10 @@ void dungeon_terrain_changed(const coord_def &pos,
 
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
+        // Reset feature tile
+        env.tile_flv(pos).feat = 0;
+        env.tile_flv(pos).feat_idx = 0;
+
         if (is_notable_terrain(nfeat) && you.see_cell(pos))
             seen_notable_thing(nfeat, pos);
 
@@ -1679,9 +1687,9 @@ void nuke_wall(const coord_def& p)
 
     remove_mold(p);
 
-    grd(p) = (grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    _revert_terrain_to(p, ((grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER
+                                                     : DNGN_FLOOR));
     env.level_map_mask(p) |= MMT_NUKED;
-    set_terrain_changed(p);
 }
 
 /*
@@ -1809,4 +1817,114 @@ bool is_boring_terrain(dungeon_feature_type feat)
         return true;
 
     return false;
+}
+
+void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
+                         terrain_change_type type, const monster* mon)
+{
+    dungeon_feature_type old_feat = grd(pos);
+    vector<map_marker*> markers = env.markers.get_markers_at(pos);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            map_terrain_change_marker* marker =
+                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+            // If change type matches, just modify old one; no need to add new one
+            if (marker->change_type == type)
+            {
+                if (marker->new_feature == newfeat)
+                {
+                    if (marker->duration < dur)
+                    {
+                        marker->duration = dur;
+                        if (mon)
+                            marker->mon_num = mon->mid;
+                    }
+                }
+                else
+                {
+                    marker->new_feature = newfeat;
+                    marker->duration = dur;
+                    if (mon)
+                        marker->mon_num = mon->mid;
+                }
+                return;
+            }
+            else
+                old_feat = marker->old_feature;
+        }
+    }
+
+    map_terrain_change_marker *marker =
+        new map_terrain_change_marker(pos, old_feat, newfeat, dur, type);
+    if (mon)
+        marker->mon_num = mon->mid;
+    env.markers.add(marker);
+    env.markers.clear_need_activate();
+    dungeon_terrain_changed(pos, newfeat, true, false, true);
+}
+
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
+{
+    vector<map_marker*> markers = env.markers.get_markers_at(pos);
+
+    bool found_marker = false;
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            found_marker = true;
+            map_terrain_change_marker* marker =
+                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+            newfeat = marker->old_feature;
+            if (marker->new_feature == grd(pos))
+                env.markers.remove(marker);
+        }
+    }
+
+    grd(pos) = newfeat;
+    set_terrain_changed(pos);
+
+    if (found_marker)
+    {
+        tile_clear_flavour(pos);
+        tile_init_flavour(pos);
+    }
+
+    return true;
+}
+
+bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
+{
+    vector<map_marker*> markers = env.markers.get_markers_at(pos);
+    dungeon_feature_type newfeat = DNGN_UNSEEN;
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        if (markers[i]->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            map_terrain_change_marker* marker =
+                    dynamic_cast<map_terrain_change_marker*>(markers[i]);
+
+            if (marker->change_type == ctype)
+            {
+                if (!newfeat)
+                    newfeat = marker->old_feature;
+                env.markers.remove(marker);
+            }
+            else
+                newfeat = marker->new_feature;
+        }
+    }
+
+    if (newfeat != DNGN_UNSEEN)
+    {
+        dungeon_terrain_changed(pos, newfeat, true, false, true);
+        return true;
+    }
+    else
+        return false;
 }

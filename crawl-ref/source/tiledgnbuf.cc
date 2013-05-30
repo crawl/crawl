@@ -40,6 +40,8 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
+    const tileidx_t cloud_idx = cell.cloud & TILE_FLAG_MASK;
+
     if (fg_idx >= TILEP_MCACHE_START)
     {
         mcache_entry *entry = mcache.get(fg_idx);
@@ -54,6 +56,23 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
 
     pack_foreground(x, y, cell);
+
+    // Draw cloud layer(s)
+    if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
+    {
+        // If there's a foreground, sandwich it between two semi-transparent
+        // clouds at different z-indices. This uses the same alpha fading as
+        // a swimming characters but applied to the cloud (instead of as normal
+        // applied to the character).
+        if (fg_idx)
+        {
+            m_buf_main_trans.add_masked(cloud_idx, x, y, 0, 0, 0, -1, 255, 255, 20);
+            m_buf_main_trans.add_masked(cloud_idx, x, y, 50, 0, 0, -1, 15, 255,20);
+        }
+        else
+            // Otherwise render it normally with full transparency
+             m_buf_main.add(cloud_idx, x, y);
+    }
 }
 
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
@@ -239,6 +258,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
+            if (cell.heat_aura)
+                m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.is_suppressed)
@@ -298,6 +319,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (fg & TILE_FLAG_NET)
         m_buf_icons.add(TILEI_TRAP_NET, x, y);
+
+    if (fg & TILE_FLAG_WEB)
+        m_buf_icons.add(TILEI_TRAP_WEB, x, y);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
@@ -426,8 +450,12 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         status_shift += 10;
     }
 
+    // Summoned and anim. weap. icons will overlap if you have a
+    // summoned dancing weapon, but that's rare and still looks okay.
     if (fg & TILE_FLAG_ANIM_WEP)
         m_buf_icons.add(TILEI_ANIMATED_WEAPON, x, y);
+    if (fg & TILE_FLAG_SUMMONED)
+        m_buf_icons.add(TILEI_SUMMONED, x, y);
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
         m_buf_icons.add(TILEI_MESH, x, y);

@@ -370,6 +370,9 @@ KFEAT:   C = stone_wall
 TILE:    C = wall_marble
 KFEAT:   _ = altar_trog
 : _G.set_random_mon_list("place:Forest:3")
+veto {{
+  return crawl.game_started() and dgn.br_exists("Forest")
+}}
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -548,7 +551,7 @@ default-depth:
 NAME: grunt_profane_halls
 TAGS: no_monster_gen
 PLACE: D:27
-DEPTH: D:19-27
+DEPTH: D:21-27
 ORIENT: encompass
 SHUFFLE: {[(<
 : if you.absdepth() == 27 then

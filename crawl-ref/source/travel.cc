@@ -243,7 +243,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
             || grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_NATURAL)
         {
-            return you.permanent_flight();
+            return you.permanent_flight() || you.species == SP_DJINNI;
         }
 
         // You can't open doors in bat form.
@@ -1867,9 +1867,10 @@ void find_travel_pos(const coord_def& youpos,
 
 // Given a branch id, returns the parent branch. If the branch id is not found,
 // returns BRANCH_MAIN_DUNGEON.
+// XXX: is this really necessary any longer?
 static branch_type _find_parent_branch(branch_type br)
 {
-    return branches[br].parent_branch;
+    return parent_branch(br);
 }
 
 extern map<branch_type, set<level_id> > stair_level;
@@ -2222,7 +2223,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                     string msg;
 
                     if (startdepth[br[i]] == -1
-                        && is_random_lair_subbranch((branch_type)i)
+                        && is_random_subbranch((branch_type)i)
                         && you.wizard) // don't leak mimics
                     {
                         msg += "Branch not generated this game. ";
@@ -2593,6 +2594,12 @@ static void _start_translevel_travel_prompt()
 {
     if (!i_feel_safe(true, true))
         return;
+
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
 
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.

@@ -24,6 +24,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
@@ -130,6 +131,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       you.res_water_drowning(), hurted, true);
         if (!hurted && doEffects)
             mpr("You shrug off the wave.");
+        else if (hurted > original && doEffects)
+        {
+            mpr("The water douses you terribly!");
+            xom_is_stimulated(200);
+        }
         break;
 
     case BEAM_STEAM:
@@ -154,6 +160,17 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             mpr("The fire burns you terribly!");
             xom_is_stimulated(200);
         }
+        break;
+
+    case BEAM_HELLFIRE:
+        if (you.species == SP_DJINNI)
+        {
+            hurted = 0;
+            if (doEffects)
+                mpr("You resist completely.");
+        }
+        // Inconsistency: no penalty for rF-, unlike monsters.  That's
+        // probably good, and monsters should be changed.
         break;
 
     case BEAM_COLD:
@@ -352,6 +369,27 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
+    case BEAM_GHOSTLY_FLAME:
+    {
+        if (you.holiness() == MH_UNDEAD)
+        {
+            if (doEffects)
+            {
+                you.heal(roll_dice(2, 9));
+                mpr("You are bolstered by the flame.");
+            }
+            hurted = 0;
+        }
+        else
+        {
+            hurted = resist_adjust_damage(&you, flavour,
+                                          you.res_negative_energy(),
+                                          hurted, true);
+            if (hurted < original && doEffects)
+                canned_msg(MSG_YOU_PARTIALLY_RESIST);
+        }
+    }
+
     default:
         break;
     }                           // end switch
@@ -382,6 +420,10 @@ void splash_with_acid(int acid_strength, int death_source, bool corrode_items, s
                 corrode_item(*item, &you);
         }
     }
+
+    // Covers head, hands and feet.
+    if (player_equip_unrand(UNRAND_LEAR))
+        dam = !wearing_cloak;
 
     // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
     // (randomized), Fe 5.  Fur helps only against naked spots.
@@ -1036,7 +1078,7 @@ static void _place_player_corpse(bool explode)
     corpse.props["ac"].get_int() = you.armour_class();
     mitm[o] = corpse;
 
-    move_item_to_grid(&o, you.pos(), !you.in_water());
+    move_item_to_grid(&o, you.pos(), MHITYOU, !you.in_water());
 }
 
 
@@ -1358,6 +1400,7 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
 // Delete save files on game end.
 static void _delete_files()
 {
+    crawl_state.need_save = false;
     you.save->unlink();
     delete you.save;
     you.save = 0;

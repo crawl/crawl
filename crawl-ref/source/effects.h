@@ -73,6 +73,7 @@ bool vitrify_area(int radius);
 void update_level(int elapsedTime);
 void handle_time();
 void recharge_rods(int aut, bool floor_only);
+void recharge_elemental_evokers(int exp);
 
 void slime_wall_damage(actor* act, int delay);
 

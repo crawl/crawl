@@ -7,6 +7,7 @@
 ###############################################################################
 
 : require("dlua/layout/zonify.lua")
+: require("dlua/layout/theme.lua")
 
 {{
     -- Call func num times around a circle of radius centered at (x, y)
@@ -59,13 +60,6 @@
         end
     end
 
-    function random_wall_material(e)
-        if not you.in_branch("Lair") and not you.in_branch("Zot")
-           and not you.in_branch("Dis")
-           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
-            e.subst('x : ccv')
-        end
-    end
 }}
 
 ##############################################################
@@ -75,15 +69,13 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  4-22, Pan, !Dis, !Geh
+DEPTH:  D:4-22, Lair:1-7, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout no_primary_vault allow_dup unrand
+TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
-
-    layout_type "open"
 
     local width = (10 - crawl.random2(7))
 
@@ -135,7 +127,11 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand
         smear_map{iterations=smears, smear='x', onto='.', boxy=smear_boxy}
     end
 
-    random_wall_material(_G)
+    if spotty then
+      theme.D.caves(_G)
+    else
+      theme.level_material(_G)
+    end
 }}
 MAP
 ENDMAP
@@ -147,16 +143,13 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   Pan, 4-22, !Dis, !Geh
+DEPTH:   D:4-22, Lair:1-7, Pan
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand
-
+TAGS:    overwritable layout allow_dup unrand layout_type_cross
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'L'}
-
-    layout_type "cross"
 
     local floor = '.'
     local wall = 'x'
@@ -202,7 +195,7 @@ TAGS:    overwritable layout allow_dup unrand
         spotty_map{boxy = crawl.coinflip()}
     end
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -215,17 +208,15 @@ ENDMAP
 # are generally all grouped together.
 #
 NAME: layout_big_octagon
-DEPTH:   Pan, 4-22, !Dis, !Geh
+DEPTH:   D:4-22, Lair:1-7, Pan
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
-TAGS:    overwritable layout no_primary_vault allow_dup unrand
+TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
 {{
     -- Step 1: Big octagon.
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "open"
 
     local oblique = 10 + crawl.random2(20)
     octa_room{
@@ -373,7 +364,7 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand
         end
     end
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -384,10 +375,10 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 1-, !Dis, !Tar
+DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot, Pan
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
     function random_room_point(room)
         return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
@@ -404,8 +395,6 @@ TAGS: overwritable layout allow_dup unrand
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "rooms"
 
     local num_rooms = 30 + crawl.random2(90)
     local exclusive = not crawl.one_chance_in(10)
@@ -456,7 +445,7 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -466,11 +455,15 @@ ENDMAP
 #
 # This replaces dungeon.cc:_city_level().
 #
+# Only available on upper Lair depths otherwise the high
+# ruination makes it basically indistinguishable from a big
+# open room
 NAME:   layout_city
-DEPTH:  Dis:1-6, D:15-, Snake, Elf
+DEPTH:  D:15-, Lair:1-2, Snake, Dwarf, Crypt:1-4, Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
+TAGS:   layout_type_city
 {{
     function treasure_area (x1, y1, x2, y2)
         x2 = x2 + 1
@@ -501,8 +494,6 @@ TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
     local gxm, gym = dgn.max_bounds()
 
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "city"
 
     local wall_type_room
     local wall_type
@@ -539,18 +530,8 @@ TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
                 and not find_in_area {x1 = a1 - 1, y1 = a2 - 1,
                                       x2 = b1 + 1, y2 = b2 + 1,
                                       find = "xcvb+", find_vault = true } then
-                if you.branch() == "Dis" then
-                    wall_type_room = wall_type
-                elseif crawl.one_chance_in(250) then
-                    wall_type_room = "b"
-                else
-                    wall_type_room = crawl.random_element {
-                        [wall_type] = 216,
-                        ['c'] = 9,
-                        ['x'] = 9,
-                        ['v'] = 5
-                    }
-                end
+
+                wall_type_room = theme.room_material(wall_type)
 
                 table.insert(rooms, {a1, a2, b1, b2})
                 make_box { x1=a1, y1=a2, x2=b1, y2=b2, wall=wall_type_room }
@@ -591,10 +572,10 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 1-, !Dis, !Tar
+DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_misc
 {{
     function random_coord(max_x, max_y)
         return crawl.random2(max_x - 20) + 10,
@@ -605,8 +586,6 @@ TAGS: overwritable layout allow_dup unrand
     local corridors = crawl.random_range(15, 25)
 
     extend_map { width = gxm, height = gym, fill = 'x' }
-
-    layout_type "misc"
 
     local x, y = random_coord(gxm, gym)
     local new_x, new_y
@@ -622,7 +601,7 @@ TAGS: overwritable layout allow_dup unrand
 
     spotty_map { boxy = true, iterations = 100 }
 
-    random_wall_material(_G)
+    theme.level_material(_G)
 }}
 MAP
 ENDMAP
@@ -634,16 +613,15 @@ ENDMAP
 # walls.
 #
 NAME: layout_caves
-DEPTH: 9-22, !Dis, !Geh, Orc, Slime
+DEPTH: D:9-22, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
+WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
 
     extend_map { width = gxm, height = gym, fill = 'x' }
-
-    layout_type "caves"
 
     spotty_stairs(mapgrd)
 
@@ -669,6 +647,8 @@ TAGS: overwritable layout allow_dup unrand
     if connected then
       zonify.map_fill_zones(_G, 1, 'x')
     end
+
+    theme.D.caves(_G)
 }}
 # Enforce minimum floor size - otherwise we get very tiny floors sometimes
 validate {{
@@ -684,10 +664,8 @@ NAME: layout_twisted_cavern
 DEPTH: D:5-27
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_delve
 {{
-    layout_type "delve"
-
     if is_validating() then return; end
 
     local gxm, gym = dgn.max_bounds()
@@ -696,23 +674,17 @@ TAGS: overwritable layout allow_dup unrand
 
     delve(3, 3, 0, -1, 1)
     subst('X = x')
-    lrocktile('wall_pebble_lightgray')
-    lfloortile('floor_pebble_brown')
 
-    if (crawl.one_chance_in(5)) then
-      subst('x = b')
-      tile('b = wall_emerald')
-      lfloortile('floor_pebble_green')
-    end
+    theme.D.caves(_G,true)
 }}
 
 ##############################################################
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 2-, !Pan, !Zot, !Dis, !Geh, !Tar
+DEPTH: D:2-, Lair, Snake, Elf
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout no_primary_vault allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 {{
     function make_inner_room(room, feat, treasure)
         local inner_room = {
@@ -878,8 +850,6 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
-    layout_type "rooms"
-
     local rows = crawl.random_element({[5] = 10, [4] = 5, [3] = 1})
     local cols = crawl.random_element({[5] = 10, [4] = 5, [3] = 1})
     local xspace = 13 + 2*(5-cols)
@@ -1016,10 +986,8 @@ NAME: layout_delve
 DEPTH: Spider
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_delve
 {{
-    layout_type "delve"
-
     if is_validating() then return; end
 
     local gxm, gym = dgn.max_bounds()
@@ -1069,10 +1037,8 @@ NAME: layout_cocytus
 DEPTH: Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand chance_cocytus
+TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
 {{
-    layout_type "delve"
-
     if is_validating() then return; end
 
     local gxm, gym = dgn.max_bounds()
@@ -1193,7 +1159,7 @@ NAME: layout_dis
 DEPTH: Dis:1-6
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
     local subdivide_threshold = 12
 
@@ -1262,8 +1228,6 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
-    layout_type "rooms"
-
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
@@ -1301,10 +1265,8 @@ NAME: layout_overlapping_boxes
 DEPTH: Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
-    layout_type "rooms"
-
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill="x"}
@@ -1355,7 +1317,7 @@ NAME: layout_jigsaw
 DEPTH: Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
     local ROOMS_ACROSS = 4
     local ROOM_SIZE = 11
@@ -1372,8 +1334,6 @@ TAGS: overwritable layout allow_dup unrand
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "rooms"
 
     assert(MAP_SIZE < gxm, "Map size is too large")
     assert(MAP_SIZE < gym, "Map size is too large")
@@ -1478,10 +1438,10 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: 1-, !Pan, !Dis, !Tar
-WEIGHT: 90, 10 (D:1), 20 (Geh), 10 (Zot)
+DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot
+WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_basic
 {{
     if not is_validating() then layout_basic() end
 }}
@@ -1490,10 +1450,10 @@ ENDMAP
 
 # XXX: Disabled until we can annoy the player less with water monsters.
 NAME: layout_bigger_room
-DEPTH: 9-22, !Crypt, !Pan, !Dis
+DEPTH: D:9-22, Lair:1-7
 WEIGHT: 0
 ORIENT: encompass
-TAGS: overwritable layout no_primary_vault allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_open
 {{
     if not is_validating() then layout_bigger_room() end
 }}
@@ -1501,10 +1461,10 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Pan, 4-, !Zot, !Geh, !Tar
+DEPTH: D:4-, Lair:1-3, Snake, Dwarf, Crypt:1-4, Dis, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_city
 {{
     if not is_validating() then
       layout_chaotic_city((you.branch() == "Dis") and "metal_wall" or nil)
@@ -1517,7 +1477,7 @@ NAME: layout_shoals
 DEPTH: Shoals
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_shoals
 {{
     if not is_validating() then layout_shoals() end
 }}
@@ -1528,7 +1488,7 @@ NAME: layout_swamp
 DEPTH: Swamp
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_swamp
 {{
     if is_validating() then return; end
 

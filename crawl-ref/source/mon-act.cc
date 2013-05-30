@@ -64,6 +64,7 @@
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
+static void _heated_area(monster* mons);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
@@ -130,6 +131,20 @@ static void _monster_regenerate(monster* mons)
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(1);
+    }
+}
+
+static void _escape_water_hold(monster* mons)
+{
+    if (mons->has_ench(ENCH_WATER_HOLD))
+    {
+        if (mons_habitat(mons) != HT_AMPHIBIOUS
+            && mons_habitat(mons) != HT_WATER)
+        {
+            mons->speed_increment -= 5;
+        }
+        simple_monster_message(mons, " pulls free of the water.");
+        mons->del_ench(ENCH_WATER_HOLD);
     }
 }
 
@@ -213,6 +228,8 @@ static bool _swap_monsters(monster* mover, monster* moved)
         mprf("%s and %s swap places.", mover->name(DESC_THE).c_str(),
              moved->name(DESC_THE).c_str());
     }
+
+    _escape_water_hold(mover);
 
     return true;
 }
@@ -937,6 +954,7 @@ static bool _handle_scroll(monster* mons)
         || mons_is_confused(mons)
         || mons->submerged()
         || mons->inv[MSLOT_SCROLL] == NON_ITEM
+        || mons->has_ench(ENCH_BLIND)
         || !one_chance_in(3))
     {
         return false;
@@ -1534,14 +1552,30 @@ static bool _handle_throw(monster* mons, bolt & beem)
         return false;
     }
 
-    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
+        && mons->type != MONS_SPECTRAL_THING)
+    {
         return false;
+    }
 
     const bool archer = mons->is_archer();
 
+    const bool liquefied = mons->liquefied_ground();
+
     // Highly-specialised archers are more likely to shoot than talk. (?)
-    if (one_chance_in(archer ? 9 : 5))
+    // If we're standing on liquefied ground, try to stand and fire!
+    // (Particularly archers.)
+    if ((liquefied && !archer && one_chance_in(9))
+        || (!liquefied && one_chance_in(archer ? 9 : 5)))
         return false;
+
+    // Stabbers going in for the kill don't use ranged attacks.
+    if (mons_class_flag(mons->type, M_STABBER)
+        && mons->get_foe() != NULL
+        && mons->get_foe()->incapacitated())
+    {
+        return false;
+    }
 
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !mons_near(mons))
@@ -1757,10 +1791,14 @@ static void _pre_monster_move(monster* mons)
 
     // Handle clouds on nonmoving monsters.
     if (mons->speed == 0)
+    {
         _mons_in_cloud(mons);
 
-    // Update constriction durations
-    mons->accum_has_constricted();
+        // Update constriction durations
+        mons->accum_has_constricted();
+
+        _heated_area(mons);
+    }
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -1905,6 +1943,7 @@ void handle_monster_move(monster* mons)
     const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num);
 
     _mons_in_cloud(mons);
+    _heated_area(mons);
     if (!mons->alive())
         return;
 
@@ -1915,21 +1954,13 @@ void handle_monster_move(monster* mons)
     if (mons->type == MONS_TIAMAT && one_chance_in(3))
         draconian_change_colour(mons);
 
-    if  (mons->type == MONS_ASMODEUS
-         || mons->type == MONS_CHAOS_BUTTERFLY)
-    {
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-                place_cloud(mons->type == MONS_ASMODEUS ? CLOUD_FIRE
-                                                        : CLOUD_RAIN,
-                            *ai, 1 + random2(6), mons);
-    }
-
     _monster_regenerate(mons);
 
     if (mons->cannot_act()
         || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
-           && ++mons->number / 8 % 3 != 2)  // but are not helpless
+           && ++mons->number / 8 % 3 != 2  // but are not helpless
+        || mons->type == MONS_JIANGSHI // similarly, but more irregular (48 of 90)
+            && (++mons->number / 6 % 3 == 1 || mons->number / 3 % 5 == 1))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2095,6 +2126,8 @@ void handle_monster_move(monster* mons)
             || mons->type == MONS_TEST_SPAWNER
             // Slime creatures can split when offscreen.
             || mons->type == MONS_SLIME_CREATURE
+            // Lost souls can flicker away at any time they're isolated
+            || mons->type == MONS_LOST_SOUL
             // Let monsters who have Dig use it off-screen.
             || mons->has_spell(SPELL_DIG))
         {
@@ -2282,6 +2315,26 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);
+
+    if  (mons->type == MONS_ASMODEUS
+         || mons->type == MONS_CHAOS_BUTTERFLY)
+    {
+        cloud_type ctype;
+        switch (mons->type)
+        {
+            case MONS_ASMODEUS:         ctype = CLOUD_FIRE;          break;
+            case MONS_CHAOS_BUTTERFLY:  ctype = CLOUD_RAIN;          break;
+            default:                    ctype = CLOUD_NONE;          break;
+        }
+
+        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+            if (!feat_is_solid(grd(*ai))
+                && (env.cgrid(*ai) == EMPTY_CLOUD
+                    || env.cloud[env.cgrid(*ai)].type == ctype))
+            {
+                place_cloud(ctype, *ai, 2 + random2(6), mons);
+            }
+    }
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
@@ -3446,6 +3499,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     _swim_or_move_energy(mons);
 #endif
 
+    _escape_water_hold(mons);
+
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(mons, DNGN_DEEP_WATER))
     {
@@ -3499,7 +3554,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
 
     return (mons_is_stationary(targ)
             || mons_class_flag(mons_base_type(targ), M_NO_EXP_GAIN)
-               && !mons_is_tentacle(targ->type));
+               && !mons_is_tentacle_or_tentacle_segment(targ->type));
 }
 
 static bool _monster_move(monster* mons)
@@ -3885,6 +3940,56 @@ static void _mons_in_cloud(monster* mons)
         return;
 
     actor_apply_cloud(mons);
+}
+
+static void _heated_area(monster* mons)
+{
+    if (!heated(mons->pos()))
+        return;
+
+    if (mons->is_fiery())
+        return;
+
+    // HACK: Currently this prevents even auras not caused by lava orcs...
+    if (you.religion == GOD_BEOGH && mons->friendly() && mons->god == GOD_BEOGH)
+        return;
+
+    const int base_damage = random2(11);
+
+    // Timescale, like with clouds:
+    const int speed = mons->speed > 0? mons->speed : 10;
+    const int timescaled = (std::max(0, base_damage) * 10 / speed);
+
+    // rF protects:
+    const int resist = mons->res_fire();
+    const int adjusted_damage = resist_adjust_damage(mons,
+                                BEAM_FIRE, resist,
+                                timescaled, true);
+    // So does AC:
+    const int final_damage = std::max(0, adjusted_damage
+                                      - random2(mons->armour_class()));
+
+    if (final_damage > 0)
+    {
+        if (mons->observable())
+            mprf("%s is %s by your radiant heat.",
+                 mons->name(DESC_THE).c_str(),
+                 (final_damage) > 10 ? "blasted" : "burned");
+
+        behaviour_event(mons, ME_DISTURB, 0, mons->pos());
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from heat.",
+             mons->name(DESC_THE).c_str(),
+             mons->conj_verb("take").c_str(),
+             final_damage);
+#endif
+
+        mons->hurt(&you, final_damage, BEAM_MISSILE);
+
+        if (mons->alive() && mons->observable())
+            print_wounds(mons);
+    }
 }
 
 static spell_type _map_wand_to_mspell(wand_type kind)

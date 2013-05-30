@@ -498,6 +498,7 @@ string pluralise(const string &name, const char *qualifiers[],
              || ends_with(name, "swine") || ends_with(name, "efreet")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu")
+             || ends_with(name, "jiangshi")
              || name == "gold")
     {
         return name;
@@ -513,6 +514,11 @@ string pluralise(const string &name, const char *qualifiers[],
         // simulacrum -> simulacra (correct Latin pluralisation)
         // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
+    }
+    else if (ends_with(name, "djinni"))
+    {
+        // djinni -> djinn.
+        return name.substr(0, name.length() - 1);
     }
     else if (name == "foot")
         return "feet";

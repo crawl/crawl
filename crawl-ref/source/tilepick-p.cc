@@ -9,12 +9,14 @@
 #include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "mon-stuff.h"
 #include "player.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
 #include "tiledoll.h"
 #include "tilepick.h"
 #include "transform.h"
+#include "traps.h"
 
 static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 {
@@ -47,8 +49,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
-        case MISC_AIR_ELEMENTAL_FAN:          return TILEP_HAND1_FAN;
-        case MISC_STONE_OF_EARTH_ELEMENTALS:  return TILEP_HAND1_STONE;
+        case MISC_FAN_OF_GALES:               return TILEP_HAND1_FAN;
+        case MISC_STONE_OF_TREMORS:           return TILEP_HAND1_STONE;
         case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
@@ -553,7 +555,12 @@ tileidx_t tileidx_player()
         ch |= TILE_FLAG_FLYING;
 
     if (you.attribute[ATTR_HELD])
-        ch |= TILE_FLAG_NET;
+    {
+        if (get_trapping_net(you.pos()) == NON_ITEM)
+            ch |= TILE_FLAG_WEB;
+        else
+            ch |= TILE_FLAG_NET;
+    }
 
     if (you.duration[DUR_POISONING])
         ch |= TILE_FLAG_POISON;
@@ -617,6 +624,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_HALFLING;
     case SP_HILL_ORC:
         return TILEP_BASE_ORC;
+    case SP_LAVA_ORC:
+        return TILEP_BASE_LAVA_ORC;
     case SP_KOBOLD:
         return TILEP_BASE_KOBOLD;
     case SP_MUMMY:
@@ -665,6 +674,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FELID;
     case SP_OCTOPODE:
         return TILEP_BASE_OCTOPODE;
+    case SP_DJINNI:
+        return TILEP_BASE_DJINNI;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -713,6 +724,34 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             beard = TILEP_BEARD_FULL_RED;
             break;
         case SP_HILL_ORC:
+            hair = 0;
+            break;
+        case SP_LAVA_ORC:
+            // This should respect the player's choice of base tile, if possible.
+            switch (temperature_colour(you.temperature))
+            {
+                case LIGHTRED:
+                    result = TILEP_BASE_LAVA_ORC_HEAT + 5;
+                    break;
+                case RED:
+                    result = TILEP_BASE_LAVA_ORC_HEAT + 4;
+                    break;
+                case YELLOW:
+                    result = TILEP_BASE_LAVA_ORC_HEAT + 3;
+                    break;
+                case WHITE:
+                    result = TILEP_BASE_LAVA_ORC_HEAT + 2;
+                    break;
+                case LIGHTCYAN:
+                    result = TILEP_BASE_LAVA_ORC_HEAT + 1;
+                    break;
+                case LIGHTBLUE:
+                    result = TILEP_BASE_LAVA_ORC_HEAT;
+                    break;
+                default:
+                    result = TILEP_BASE_LAVA_ORC;
+                    break;
+            }
             hair = 0;
             break;
         case SP_KOBOLD:
@@ -1031,6 +1070,12 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
     }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_MERFOLK_WATER))
+    {
+        flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_DJINNI))
     {
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;

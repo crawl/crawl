@@ -683,6 +683,30 @@ void debug_stethoscope(int mon)
     if (found_spell)
         mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
 
+    ostringstream inv;
+    bool found_item = false;
+    for (int k = 0; k < NUM_MONSTER_SLOTS; ++k)
+    {
+        if (mons.inv[k] != NON_ITEM)
+        {
+            if (found_item)
+                inv << ", ";
+
+            found_item = true;
+
+            inv << k << ": ";
+
+            if (mons.inv[k] >= MAX_ITEMS)
+                inv << " buggy item";
+            else
+                inv << item_base_name(mitm[mons.inv[k]]);
+
+            inv << " (" << static_cast<int>(mons.inv[k]) << ")";
+        }
+    }
+    if (found_item)
+        mprf(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
+
     if (mons_is_ghost_demon(mons.type))
     {
         ASSERT(mons.ghost.get());

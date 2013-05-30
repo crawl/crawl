@@ -663,7 +663,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 #if TAG_MAJOR_VERSION == 34
     do
         result = random2(NUM_STAVES);
-    while (result == STAFF_ENCHANTMENT);
+    while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
 #else
     result = random2(NUM_STAVES);
 #endif
@@ -686,19 +686,17 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
         return result;
 
     // Otherwise pick a non-enhancer staff.
-    switch (random2(6))
+    switch (random2(5))
     {
     case 0: case 1: result = STAFF_WIZARDRY;   break;
     case 2: case 3: result = STAFF_ENERGY;     break;
     case 4: result = STAFF_POWER;              break;
-    case 5: result = STAFF_CHANNELING;         break;
     }
-    switch (random2(6))
+    switch (random2(5))
     {
     case 0: case 1: TRY_GIVE(STAFF_WIZARDRY);   break;
     case 2: case 3: TRY_GIVE(STAFF_ENERGY);     break;
     case 4: TRY_GIVE(STAFF_POWER);              break;
-    case 5: TRY_GIVE(STAFF_CHANNELING);         break;
 #undef TRY_GIVE
     }
     return result;
@@ -715,21 +713,14 @@ static int _acquirement_misc_subtype()
         result = MISC_BOTTLED_EFREET;
     if (one_chance_in(4) && !you.seen_misc[MISC_DISC_OF_STORMS])
         result = MISC_DISC_OF_STORMS;
-    if (x_chance_in_y(you.skills[SK_FIRE_MAGIC], 27)
-        && !you.seen_misc[MISC_LAMP_OF_FIRE])
-    {
+    if (one_chance_in(4) && !you.seen_misc[MISC_LAMP_OF_FIRE])
         result = MISC_LAMP_OF_FIRE;
-    }
-    if (x_chance_in_y(you.skills[SK_AIR_MAGIC], 27)
-        && !you.seen_misc[MISC_AIR_ELEMENTAL_FAN])
-    {
-        result = MISC_AIR_ELEMENTAL_FAN;
-    }
-    if (one_chance_in(4)
-        && !you.seen_misc[MISC_STONE_OF_EARTH_ELEMENTALS])
-    {
-        result = MISC_STONE_OF_EARTH_ELEMENTALS;
-    }
+    if (one_chance_in(4) && !you.seen_misc[MISC_FAN_OF_GALES])
+        result = MISC_FAN_OF_GALES;
+    if (one_chance_in(4) && !you.seen_misc[MISC_STONE_OF_TREMORS])
+        result = MISC_STONE_OF_TREMORS;
+    if (one_chance_in(4) && !you.seen_misc[MISC_PHIAL_OF_FLOODS])
+        result = MISC_PHIAL_OF_FLOODS;
     if (one_chance_in(4) && !you.seen_misc[MISC_LANTERN_OF_SHADOWS])
         result = MISC_LANTERN_OF_SHADOWS;
     if (x_chance_in_y(you.skills[SK_EVOCATIONS], 27)
@@ -1381,183 +1372,205 @@ int acquirement_create_item(object_class_type class_wanted,
             thing_created = NON_ITEM;
             continue;
         }
+
+        ASSERT(doodad.is_valid());
+
+        if (class_wanted == OBJ_WANDS)
+            doodad.plus = max(static_cast<int>(doodad.plus), 3 + random2(3));
+        else if (class_wanted == OBJ_GOLD)
+        {
+            // New gold acquirement formula from dpeg.
+            // Min=220, Max=5520, Mean=1218, Std=911
+            doodad.quantity = 10 * (20
+                                    + roll_dice(1, 20)
+                                    + (roll_dice(1, 8)
+                                       * roll_dice(1, 8)
+                                       * roll_dice(1, 8)));
+        }
+        else if (class_wanted == OBJ_MISSILES && !divine)
+            doodad.quantity *= 5;
+        else if (quant > 1)
+            doodad.quantity = quant;
+
+        if (is_blood_potion(doodad))
+            init_stack_blood_potions(doodad);
+
+        // Remove curse flag from item, unless worshipping Ashenzari.
+        if (you.religion == GOD_ASHENZARI)
+            do_curse_item(doodad, true);
+        else
+            do_uncurse_item(doodad, false);
+
+        if (doodad.base_type == OBJ_BOOKS)
+        {
+            if (!_do_book_acquirement(doodad, agent))
+            {
+                destroy_item(doodad, true);
+                return _failed_acquirement(quiet);
+            }
+            // Don't mark books as seen if only generated for the
+            // acquirement statistics.
+            if (!debug)
+                mark_had_book(doodad);
+        }
+        else if (doodad.base_type == OBJ_JEWELLERY)
+        {
+            switch (doodad.sub_type)
+            {
+            case RING_PROTECTION:
+            case RING_STRENGTH:
+            case RING_INTELLIGENCE:
+            case RING_DEXTERITY:
+            case RING_EVASION:
+                // Make sure plus is >= 1.
+                doodad.plus = max(abs((int) doodad.plus), 1);
+                break;
+
+            case RING_SLAYING:
+                // Two plusses to handle here, and accuracy can be +0.
+                doodad.plus = abs(doodad.plus);
+                doodad.plus2 = max(abs((int) doodad.plus2), 2);
+                break;
+
+            case RING_HUNGER:
+            case AMU_INACCURACY:
+                // These are the only truly bad pieces of jewellery.
+                if (!one_chance_in(9))
+                    make_item_randart(doodad);
+                break;
+
+            default:
+                break;
+            }
+        }
+        else if (doodad.base_type == OBJ_WEAPONS
+                 && !is_unrandom_artefact(doodad))
+        {
+            // HACK: Make unwieldable weapons wieldable.
+            // Note: messing with fixed artefacts is probably very bad.
+            switch (you.species)
+            {
+            case SP_DEMONSPAWN:
+            case SP_MUMMY:
+            case SP_GHOUL:
+            case SP_VAMPIRE:
+            {
+                int brand = get_weapon_brand(doodad);
+                if (brand == SPWPN_HOLY_WRATH)
+                {
+                    if (is_random_artefact(doodad))
+                    {
+                        int tries = 10;
+                        // Keep resetting seed until it's good.
+                        for (; brand == SPWPN_HOLY_WRATH && --tries > 0;
+                             brand = get_weapon_brand(doodad))
+                        {
+                            make_item_randart(doodad);
+                        }
+
+                        if (tries == 0)
+                            set_item_ego_type(doodad, OBJ_WEAPONS, SPWPN_VORPAL);
+                    }
+                    else
+                        set_item_ego_type(doodad, OBJ_WEAPONS, SPWPN_VORPAL);
+                }
+                break;
+            }
+
+            case SP_HALFLING:
+            case SP_KOBOLD:
+            case SP_SPRIGGAN:
+                switch (doodad.sub_type)
+                {
+                case WPN_LONGBOW:
+                    doodad.sub_type = WPN_BOW;
+                    break;
+
+                case WPN_GREAT_SWORD:
+                case WPN_TRIPLE_SWORD:
+                    doodad.sub_type = (coinflip() ? WPN_FALCHION
+                                                  : WPN_LONG_SWORD);
+                    break;
+
+                case WPN_GREAT_MACE:
+                case WPN_DIRE_FLAIL:
+                    doodad.sub_type = (coinflip() ? WPN_MACE : WPN_FLAIL);
+                    break;
+
+                case WPN_BATTLEAXE:
+                case WPN_EXECUTIONERS_AXE:
+                    doodad.sub_type = (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
+                    break;
+
+                case WPN_HALBERD:
+                case WPN_GLAIVE:
+                case WPN_SCYTHE:
+                case WPN_BARDICHE:
+                    doodad.sub_type = (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
+                    break;
+                }
+                break;
+
+            default:
+                break;
+            }
+
+            // These can never get egos, and mundane versions are quite common, so
+            // guarantee artifact status.  Rarity is a bit low to compensate.
+            if (is_giant_club_type(doodad.sub_type))
+            {
+                if (!one_chance_in(25))
+                    make_item_randart(doodad, true);
+            }
+
+            int plusmod = random2(4);
+            if (agent == GOD_TROG)
+            {
+                // More damage, less accuracy.
+                doodad.plus  -= plusmod;
+                doodad.plus2 += plusmod;
+                if (!is_artefact(doodad))
+                    doodad.plus = max(static_cast<int>(doodad.plus), 0);
+            }
+            else if (agent == GOD_OKAWARU)
+            {
+                // More accuracy, less damage.
+                doodad.plus  += plusmod;
+                doodad.plus2 -= plusmod;
+                if (!is_artefact(doodad))
+                    doodad.plus2 = max(static_cast<int>(doodad.plus2), 0);
+            }
+        }
+        else if (is_deck(doodad))
+        {
+            doodad.special = !one_chance_in(3) ? DECK_RARITY_LEGENDARY :
+                             !one_chance_in(5) ? DECK_RARITY_RARE :
+                                                 DECK_RARITY_COMMON;
+        }
+
+        // Last check: don't acquire items your god hates.
+        // Temporarily mark the type as ID'd for the purpose of checking if
+        // it is a hated brand (this addresses, e.g., Elyvilon followers
+        // immediately identifying evil weapons).
+        // Note that Xom will happily give useless items!
+        int oldflags = doodad.flags;
+        doodad.flags |= ISFLAG_KNOW_TYPE;
+        if ((is_useless_item(doodad, false) && agent != GOD_XOM)
+            || god_hates_item(doodad))
+        {
+            destroy_item(thing_created);
+            thing_created = NON_ITEM;
+            continue;
+        }
+        doodad.flags = oldflags;
         break;
     }
 
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
-    // Easier to read this way.
-    item_def& thing(mitm[thing_created]);
-    ASSERT(thing.is_valid());
-
-    if (class_wanted == OBJ_WANDS)
-        thing.plus = max(static_cast<int>(thing.plus), 3 + random2(3));
-    else if (class_wanted == OBJ_GOLD)
-    {
-        // New gold acquirement formula from dpeg.
-        // Min=220, Max=5520, Mean=1218, Std=911
-        thing.quantity = 10 * (20
-                                + roll_dice(1, 20)
-                                + (roll_dice(1, 8)
-                                   * roll_dice(1, 8)
-                                   * roll_dice(1, 8)));
-    }
-    else if (class_wanted == OBJ_MISSILES && !divine)
-        thing.quantity *= 5;
-    else if (quant > 1)
-        thing.quantity = quant;
-
-    if (is_blood_potion(thing))
-        init_stack_blood_potions(thing);
-
-    // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you.religion == GOD_ASHENZARI)
-        do_curse_item(thing, true);
-    else
-        do_uncurse_item(thing, false);
-
-    if (thing.base_type == OBJ_BOOKS)
-    {
-        if (!_do_book_acquirement(thing, agent))
-        {
-            destroy_item(thing, true);
-            return _failed_acquirement(quiet);
-        }
-        // Don't mark books as seen if only generated for the
-        // acquirement statistics.
-        if (!debug)
-            mark_had_book(thing);
-    }
-    else if (thing.base_type == OBJ_JEWELLERY)
-    {
-        switch (thing.sub_type)
-        {
-        case RING_PROTECTION:
-        case RING_STRENGTH:
-        case RING_INTELLIGENCE:
-        case RING_DEXTERITY:
-        case RING_EVASION:
-            // Make sure plus is >= 1.
-            thing.plus = max(abs((int) thing.plus), 1);
-            break;
-
-        case RING_SLAYING:
-            // Two plusses to handle here, and accuracy can be +0.
-            thing.plus = abs(thing.plus);
-            thing.plus2 = max(abs((int) thing.plus2), 2);
-            break;
-
-        case RING_HUNGER:
-        case AMU_INACCURACY:
-            // These are the only truly bad pieces of jewellery.
-            if (!one_chance_in(9))
-                make_item_randart(thing);
-            break;
-
-        default:
-            break;
-        }
-    }
-    else if (thing.base_type == OBJ_WEAPONS
-             && !is_unrandom_artefact(thing))
-    {
-        // HACK: Make unwieldable weapons wieldable.
-        // Note: messing with fixed artefacts is probably very bad.
-        switch (you.species)
-        {
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-        {
-            int brand = get_weapon_brand(thing);
-            if (brand == SPWPN_HOLY_WRATH)
-            {
-                if (is_random_artefact(thing))
-                {
-                    // Keep resetting seed until it's good.
-                    for (; brand == SPWPN_HOLY_WRATH;
-                         brand = get_weapon_brand(thing))
-                    {
-                        make_item_randart(thing);
-                    }
-                }
-                else
-                    set_item_ego_type(thing, OBJ_WEAPONS, SPWPN_VORPAL);
-            }
-            break;
-        }
-
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-            switch (thing.sub_type)
-            {
-            case WPN_LONGBOW:
-                thing.sub_type = WPN_BOW;
-                break;
-
-            case WPN_GREAT_SWORD:
-            case WPN_TRIPLE_SWORD:
-                thing.sub_type = (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
-                break;
-
-            case WPN_GREAT_MACE:
-            case WPN_DIRE_FLAIL:
-                thing.sub_type = (coinflip() ? WPN_MACE : WPN_FLAIL);
-                break;
-
-            case WPN_BATTLEAXE:
-            case WPN_EXECUTIONERS_AXE:
-                thing.sub_type = (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
-                break;
-
-            case WPN_HALBERD:
-            case WPN_GLAIVE:
-            case WPN_SCYTHE:
-            case WPN_BARDICHE:
-                thing.sub_type = (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
-                break;
-            }
-            break;
-
-        default:
-            break;
-        }
-
-        // These can never get egos, and mundane versions are quite common, so
-        // guarantee artifact status.  Rarity is a bit low to compensate.
-        if (is_giant_club_type(thing.sub_type))
-        {
-            if (!one_chance_in(25))
-                make_item_randart(thing, true);
-        }
-
-        int plusmod = random2(4);
-        if (agent == GOD_TROG)
-        {
-            // More damage, less accuracy.
-            thing.plus  -= plusmod;
-            thing.plus2 += plusmod;
-            if (!is_artefact(thing))
-                thing.plus = max(static_cast<int>(thing.plus), 0);
-        }
-        else if (agent == GOD_OKAWARU)
-        {
-            // More accuracy, less damage.
-            thing.plus  += plusmod;
-            thing.plus2 -= plusmod;
-            if (!is_artefact(thing))
-                thing.plus2 = max(static_cast<int>(thing.plus2), 0);
-        }
-    }
-    else if (is_deck(thing))
-    {
-        thing.special = !one_chance_in(3) ? DECK_RARITY_LEGENDARY :
-                        !one_chance_in(5) ? DECK_RARITY_RARE :
-                                            DECK_RARITY_COMMON;
-    }
+    ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
+    ASSERT(!god_hates_item(mitm[thing_created]));
 
     // Moving this above the move since it might not exist after falling.
     if (thing_created != NON_ITEM && !quiet)
@@ -1565,8 +1578,9 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // If a god wants to give you something but the floor doesn't want it,
     // it counts as a failed acquirement - no piety, etc cost.
-    if (feat_destroys_item(grd(pos), thing) && (agent > GOD_NO_GOD) &&
-        (agent < NUM_GODS))
+    if (feat_destroys_item(grd(pos), mitm[thing_created])
+        && (agent > GOD_NO_GOD)
+        && (agent < NUM_GODS))
     {
         if (agent == GOD_XOM)
             simple_god_message(" snickers.", GOD_XOM);
@@ -1589,6 +1603,36 @@ bool acquirement(object_class_type class_wanted, int agent,
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    FixedBitVector<NUM_OBJECT_CLASSES> bad_class;
+    if (you.species == SP_FELID)
+    {
+        bad_class.set(OBJ_WEAPONS);
+        bad_class.set(OBJ_MISSILES);
+        bad_class.set(OBJ_ARMOUR);
+        bad_class.set(OBJ_WANDS);
+        bad_class.set(OBJ_STAVES);
+        bad_class.set(OBJ_RODS);
+    }
+    bad_class.set(OBJ_FOOD, you_foodless());
+
+    static struct { object_class_type type; const char* name; } acq_classes[] =
+    {
+        { OBJ_WEAPONS,    "Weapon" },
+        { OBJ_ARMOUR,     "Armour" },
+        { OBJ_JEWELLERY,  "Jewellery" },
+        { OBJ_BOOKS,      "Book" },
+        { OBJ_STAVES,     "Staff" },
+        { OBJ_WANDS,      "Wand" },
+        { OBJ_MISCELLANY, "Miscellaneous" },
+        { OBJ_FOOD,       0 }, // amended below
+        { OBJ_GOLD,       "Gold" },
+        { OBJ_MISSILES,   "Ammunition" },
+    };
+    ASSERT(acq_classes[7].type == OBJ_FOOD);
+    acq_classes[7].name = you.religion == GOD_FEDHAS ? "Fruit":
+                          you.species == SP_VAMPIRE  ? "Blood":
+                                                       "Food";
+
     int thing_created = NON_ITEM;
 
     if (item_index == NULL)
@@ -1600,30 +1644,34 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mprf("%-29s[c] Jewellery [d] Book%s",
-            you.species == SP_FELID ? "" : "[a] Weapon [b] Armour",
-            you.species == SP_FELID ? "" : " [e] Staff");
-        mprf("%-11s[g] Miscellaneous %-9s     [i] Gold %s",
-            you.species == SP_FELID ? "" : "[f] Wand",
-            you.species == SP_MUMMY ? "" : you.religion == GOD_FEDHAS ? "[h] Fruit" : "[h] Food ",
-            you.species == SP_FELID ? "" : "[j] Ammunition");
+
+        string line;
+        for (unsigned int i = 0; i < ARRAYSZ(acq_classes); i++)
+        {
+            int len = max(strlen(acq_classes[i].name),
+                          strlen(acq_classes[(i + ARRAYSZ(acq_classes) / 2)
+                                             % ARRAYSZ(acq_classes)].name));
+            if (bad_class[acq_classes[i].type])
+                line += make_stringf("     %-*s", len, "");
+            else
+                line += make_stringf(" [%c] %-*s", i + 'a', len, acq_classes[i].name);
+
+            if (i == ARRAYSZ(acq_classes) / 2 - 1 || i == ARRAYSZ(acq_classes) - 1)
+            {
+                line.erase(0, 1);
+                mpr(line.c_str());
+                line.clear();
+            }
+        }
         mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
 
         const int keyin = toalower(get_ch());
-        switch (keyin)
+        if (keyin >= 'a' && keyin < 'a' + (int)ARRAYSZ(acq_classes))
+            class_wanted = acq_classes[keyin - 'a'].type;
+        else if (keyin == '\\')
+            check_item_knowledge(), redraw_screen();
+        else
         {
-        case 'a':    class_wanted = OBJ_WEAPONS;    break;
-        case 'b':    class_wanted = OBJ_ARMOUR;     break;
-        case 'c':    class_wanted = OBJ_JEWELLERY;  break;
-        case 'd':    class_wanted = OBJ_BOOKS;      break;
-        case 'e':    class_wanted = OBJ_STAVES;     break;
-        case 'f':    class_wanted = OBJ_WANDS;      break;
-        case 'g':    class_wanted = OBJ_MISCELLANY; break;
-        case 'h':    class_wanted = OBJ_FOOD;       break;
-        case 'i':    class_wanted = OBJ_GOLD;       break;
-        case 'j':    class_wanted = OBJ_MISSILES;   break;
-        case '\\':   check_item_knowledge(); redraw_screen(); break;
-        default:
             // Lets wizards escape out of accidently choosing acquirement.
             if (agent == AQ_WIZMODE)
             {
@@ -1639,20 +1687,15 @@ bool acquirement(object_class_type class_wanted, int agent,
                 you.turn_is_over = false;
                 return false;
             }
-            break;
         }
 
-        if (you.species == SP_FELID
-            && (class_wanted == OBJ_WEAPONS || class_wanted == OBJ_ARMOUR
-                || class_wanted == OBJ_STAVES  || class_wanted == OBJ_WANDS)
-            || you.species == SP_MUMMY && class_wanted == OBJ_FOOD)
-        {
+        if (class_wanted >= NUM_OBJECT_CLASSES || bad_class[class_wanted])
             class_wanted = OBJ_RANDOM;
-        }
     }
 
     *item_index = acquirement_create_item(class_wanted, agent, quiet,
                                           you.pos(), debug);
+    ASSERT(*item_index == NON_ITEM || !god_hates_item(mitm[*item_index]));
 
     return true;
 }

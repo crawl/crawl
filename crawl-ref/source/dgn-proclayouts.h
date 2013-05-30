@@ -6,7 +6,6 @@
 #ifndef PROC_LAYOUTS_H
 #define PROC_LAYOUTS_H
 
-#include "AppHdr.h"
 #include "fixedvector.h"
 
 #include "dungeon.h"

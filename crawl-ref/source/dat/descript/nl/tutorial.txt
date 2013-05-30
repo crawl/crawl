@@ -1,0 +1,24 @@
+%%%%
+tutorial1 go_on
+
+Je doet het geweldig! Verken nu een beetje totdat je het blauwe vierkant hebt
+bereikt.
+%%%%
+tutorial1 door
+
+Je kan een gesloten deur openen door erin te lopen.
+%%%%
+tutorial2 start
+
+In deze les leer je over monsters en vechten. Maar eerst hebben we een wapen
+nodig! Pak deze die hier ligt.
+%%%%
+tutorial3 tutorial_end
+
+Goed gedaan! Om deze uitleg te sluiten ga je de trap af.
+%%%%
+tutorial4 tutorial_end
+
+Super, je bent een echte tovenaar nu! Om deze uitleg te sluiten ga je de trap
+af.
+%%%%

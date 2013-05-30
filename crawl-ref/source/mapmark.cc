@@ -35,7 +35,11 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_malign_gateway_marker::read,
     &map_phoenix_marker::read,
     &map_position_marker::read,
+#if TAG_MAJOR_VERSION == 34
     &map_door_seal_marker::read,
+#endif
+    &map_terrain_change_marker::read,
+    &map_cloud_spreader_marker::read
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
@@ -716,6 +720,7 @@ string map_phoenix_marker::debug_describe() const
     return make_stringf("Phoenix marker (%d, %d)", duration, mon_num);
 }
 
+#if TAG_MAJOR_VERSION == 34
 ////////////////////////////////////////////////////////////////////////////
 // map_door_seal_marker
 
@@ -759,6 +764,133 @@ map_marker *map_door_seal_marker::clone() const
 string map_door_seal_marker::debug_describe() const
 {
     return make_stringf("Door seal marker (%d, %d)", duration, mon_num);
+}
+#endif
+
+////////////////////////////////////////////////////////////////////////////
+// map_terrain_change_marker
+
+map_terrain_change_marker::map_terrain_change_marker (const coord_def& p,
+                    dungeon_feature_type oldfeat, dungeon_feature_type newfeat,
+                    int dur, terrain_change_type ctype, int mnum)
+    : map_marker(MAT_TERRAIN_CHANGE, p), duration(dur), mon_num(mnum),
+        old_feature(oldfeat), new_feature(newfeat), change_type(ctype)
+{
+}
+
+void map_terrain_change_marker::write(writer &out) const
+{
+    map_marker::write(out);
+    marshallShort(out, duration);
+    marshallUByte(out, old_feature);
+    marshallUByte(out, new_feature);
+    marshallUByte(out, change_type);
+    marshallShort(out, mon_num);
+}
+
+void map_terrain_change_marker::read(reader &in)
+{
+    map_marker::read(in);
+
+    duration = unmarshallShort(in);
+    old_feature = static_cast<dungeon_feature_type>(unmarshallUByte(in));
+    new_feature = static_cast<dungeon_feature_type>(unmarshallUByte(in));
+    change_type = static_cast<terrain_change_type>(unmarshallUByte(in));
+    mon_num = unmarshallShort(in);
+}
+
+map_marker *map_terrain_change_marker::read(reader &in, map_marker_type)
+{
+    map_terrain_change_marker *mc = new map_terrain_change_marker();
+    mc->read(in);
+    return mc;
+}
+
+map_marker *map_terrain_change_marker::clone() const
+{
+    map_terrain_change_marker *mark =
+        new map_terrain_change_marker(pos, old_feature, new_feature, duration,
+                                      change_type, mon_num);
+    return mark;
+}
+
+string map_terrain_change_marker::debug_describe() const
+{
+    return make_stringf("Terrain change marker (%d->%d, %d)",
+                        old_feature, new_feature, duration);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// map_cloud_spreader_marker
+
+map_cloud_spreader_marker::map_cloud_spreader_marker(const coord_def &p,
+                              cloud_type cloud, int spd, int amt,
+                              int max_radius, int dur, actor* agent)
+: map_marker(MAT_CLOUD_SPREADER, p), ctype(cloud), speed(spd),
+  remaining(amt), max_rad(max_radius), duration(dur), speed_increment(0)
+{
+    if (agent)
+    {
+        agent_mid = agent->mid;
+        if (agent->is_monster())
+            kcat = (agent->as_monster()->friendly() ? KC_FRIENDLY : KC_OTHER);
+        else
+            kcat = KC_YOU;
+    }
+    else
+    {
+        agent_mid = NON_ENTITY;
+        kcat = KC_OTHER;
+    }
+}
+
+void map_cloud_spreader_marker::write(writer &out) const
+{
+    map_marker::write(out);
+    marshallByte(out, ctype);
+    marshallShort(out, speed);
+    marshallShort(out, duration);
+    marshallByte(out, max_rad);
+    marshallShort(out, remaining);
+    marshallShort(out, speed_increment);
+    marshallInt(out, agent_mid);
+    marshallByte(out, kcat);
+}
+
+void map_cloud_spreader_marker::read(reader &in)
+{
+    map_marker::read(in);
+
+    ctype = static_cast<cloud_type>(unmarshallByte(in));
+    speed = unmarshallShort(in);
+    duration = unmarshallShort(in);
+    max_rad = unmarshallByte(in);
+    remaining = unmarshallShort(in);
+    speed_increment = unmarshallShort(in);
+    agent_mid = static_cast<mid_t>(unmarshallInt(in));
+    kcat = static_cast<kill_category>(unmarshallByte(in));
+}
+
+map_marker *map_cloud_spreader_marker::read(reader &in, map_marker_type)
+{
+    map_cloud_spreader_marker *mc = new map_cloud_spreader_marker();
+    mc->read(in);
+    return mc;
+}
+
+map_marker *map_cloud_spreader_marker::clone() const
+{
+    map_cloud_spreader_marker *mark =
+            new map_cloud_spreader_marker(pos, ctype, speed, remaining, max_rad,
+                                          duration);
+    mark->agent_mid = agent_mid;
+    mark->kcat = kcat;
+    return mark;
+}
+
+string map_cloud_spreader_marker::debug_describe() const
+{
+    return make_stringf("Cloud spreader marker (%d)", ctype);
 }
 
 ////////////////////////////////////////////////////////////////////////////

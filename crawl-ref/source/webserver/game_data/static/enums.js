@@ -163,7 +163,7 @@ define(function () {
 
     fg_flags.flags.NET          = 0x00400000;
     fg_flags.flags.POISON       = 0x00800000;
-    fg_flags.flags.ANIM_WEP     = 0x01000000;
+    fg_flags.flags.WEB          = 0x01000000;
     fg_flags.flags.GLOWING      = 0x02000000;
     fg_flags.flags.STICKY_FLAME = 0x04000000;
     fg_flags.flags.BERSERK      = 0x08000000;
@@ -176,6 +176,8 @@ define(function () {
     fg_flags.flags.PETRIFYING   = [0, 0x800];
     fg_flags.flags.PETRIFIED    = [0, 0x1000];
     fg_flags.flags.BLIND        = [0, 0x2000];
+    fg_flags.flags.ANIM_WEP     = [0, 0x4000];
+    fg_flags.flags.SUMMONED     = [0, 0x8000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({

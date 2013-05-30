@@ -57,6 +57,7 @@ enum attack_type
     AT_SNAP,
     AT_SPLASH,
     AT_POUNCE,
+    AT_REACH_STING,
     AT_CHERUB,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
@@ -106,6 +107,13 @@ enum attack_flavour
     AF_ANTIMAGIC,
     AF_PAIN,
     AF_ENSNARE,
+    AF_DROWN,
+    AF_PURE_FIRE,
+    AF_DRAIN_SPEED,
+    AF_VULN,
+    AF_PLAGUE,
+    AF_WEAKNESS_POISON,
+    AF_SHADOWSTAB,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -144,6 +152,7 @@ enum habitat_type
     HT_LAVA,             // Lava critters
     HT_ROCK,             // Rock critters
     HT_INCORPOREAL,      // Incorporeal things
+    HT_FOREST,           // Forest critters
 
     NUM_HABITATS
 };

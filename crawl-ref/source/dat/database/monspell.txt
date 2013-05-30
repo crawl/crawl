@@ -177,6 +177,10 @@ Word of Recall cast
 
 @The_monster@ begins to recite a word of recall!
 %%%%
+Call Lost Soul cast
+
+@The_monster@ beckons forth a restless soul!
+%%%%
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
@@ -329,6 +333,12 @@ Ensnare Arachne cast
 unseen Ensnare Arachne cast
 
 A whitish beam shoots out from seemingly nowhere.
+%%%%
+Pan cast
+
+@The_monster@ weaves a haunting melody.
+
+@The_monster@ plays an eerie tune.
 %%%%
 ########################################################################
 # Individual monsters

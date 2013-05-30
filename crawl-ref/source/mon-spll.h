@@ -190,7 +190,7 @@
        SPELL_BOLT_OF_DRAINING,
        SPELL_SUMMON_UNDEAD,
        SPELL_INVISIBILITY,
-       SPELL_ANIMATE_DEAD,
+       SPELL_VAMPIRIC_DRAINING,
        SPELL_ANIMATE_DEAD,
        SPELL_INVISIBILITY
       }
@@ -696,7 +696,7 @@
        SPELL_BOLT_OF_DRAINING,
        SPELL_BOLT_OF_DRAINING,
        SPELL_VAMPIRIC_DRAINING,
-       SPELL_TWISTED_RESURRECTION,
+       SPELL_CALL_LOST_SOUL,
        SPELL_TWISTED_RESURRECTION,
        SPELL_VAMPIRIC_DRAINING
       }
@@ -977,17 +977,6 @@
       }
     },
 
-    {  MST_SKELETAL_WARRIOR,
-      {
-       SPELL_ANIMATE_DEAD,
-       SPELL_NO_SPELL,
-       SPELL_ANIMATE_DEAD,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_NORRIS,
       {
        SPELL_BRAIN_FEED,
@@ -1034,12 +1023,12 @@
 
     {  MST_DRAC_SHIFTER,
       {
-       SPELL_BANISHMENT,
+       SPELL_DIMENSION_ANCHOR,
        SPELL_BLINK_OTHER,
-       SPELL_BLINK,
+       SPELL_BLINK_RANGE,
+       SPELL_BLINK_ALLIES_ENCIRCLE,
        SPELL_NO_SPELL,
-       SPELL_BLINK_OTHER,
-       SPELL_CONTROLLED_BLINK
+       SPELL_BLINK_AWAY
       }
     },
 
@@ -1683,8 +1672,8 @@
 
     {  MST_EIDOLON,
       {
-       SPELL_PAIN,
-       SPELL_CAUSE_FEAR,
+       SPELL_MELEE,
+       SPELL_BOLT_OF_DRAINING,
        SPELL_NO_SPELL,
        SPELL_CAUSE_FEAR,
        SPELL_NO_SPELL,
@@ -1920,6 +1909,226 @@
        SPELL_SHADOW_CREATURES,
        SPELL_SHADOW_CREATURES,
        SPELL_SHADOW_CREATURES
+      }
+    },
+
+    {  MST_ANCIENT_CHAMPION_I,
+      {
+       SPELL_IRON_SHOT,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_PAIN,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ANCIENT_CHAMPION_II,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_THROW_FROST,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ANCIENT_CHAMPION_III,
+      {
+       SPELL_VENOM_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_HASTE,
+       SPELL_HAUNT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ANCIENT_CHAMPION_IV,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_SLOW,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_REVENANT,
+      {
+       SPELL_GHOSTLY_FIREBALL,
+       SPELL_GHOSTLY_FLAMES,
+       SPELL_NO_SPELL,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_NO_SPELL,
+       SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_DRYAD,
+      {
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST,
+       SPELL_AWAKEN_FOREST
+      }
+    },
+
+    {  MST_FAUN_I,
+      {
+       SPELL_CORONA,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_SLOW,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_FAUN_II,
+      {
+       SPELL_CORONA,
+       SPELL_CONFUSE,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_CONFUSE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_FAUN_III,
+      {
+       SPELL_CORONA,
+       SPELL_HIBERNATION,
+       SPELL_NO_SPELL,
+       SPELL_CAUSE_FEAR,
+       SPELL_CAUSE_FEAR,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_SATYR,
+      {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
+       SPELL_LEDAS_LIQUEFACTION,
+       SPELL_CAUSE_FEAR,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_PAN,
+      {
+       SPELL_NO_SPELL,
+       SPELL_MASS_CONFUSION,
+       SPELL_NO_SPELL,
+       SPELL_ENGLACIATION,
+       SPELL_SLEEP,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_I,
+      {
+       SPELL_FORCE_LANCE,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BATTLESPHERE,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_II,
+      {
+       SPELL_THROW_FLAME,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_BATTLESPHERE,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_III,
+      {
+       SPELL_SHOCK,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_CONJURER_IV,
+      {
+       SPELL_MEPHITIC_CLOUD,
+       SPELL_VENOM_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_VENOM_BOLT,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_REAVER_I,
+      {
+       SPELL_LIGHTNING_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_BATTLESPHERE,
+       SPELL_FREEZING_CLOUD,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_REAVER_II,
+      {
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_NO_SPELL,
+       SPELL_BATTLESPHERE,
+       SPELL_FIREBALL,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_TENGU_REAVER_III,
+      {
+       SPELL_VENOM_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_BATTLESPHERE,
+       SPELL_POISONOUS_CLOUD,
+       SPELL_BATTLESPHERE,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_SPRIGGAN_ENCHANTER,
+      {
+       SPELL_CONFUSE,
+       SPELL_HIBERNATION,
+       SPELL_INVISIBILITY,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
+    {  MST_SOJOBO,
+      {
+       SPELL_CHAIN_LIGHTNING,
+       SPELL_HASTE_OTHER,
+       SPELL_HASTE,
+       SPELL_BLINK_ALLIES_ENCIRCLE,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
       }
     }
 

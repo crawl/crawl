@@ -181,7 +181,7 @@ void reader::read(void *data, size_t size)
     {
         if (_read_offset+size > _pbuf->size())
             throw short_read_exception();
-        if (data)
+        if (data && size)
             memcpy(data, &(*_pbuf)[_read_offset], size);
 
         _read_offset += size;
@@ -1069,6 +1069,9 @@ static void tag_construct_char(writer &th)
 
     marshallString(th, species_name(you.species));
     marshallString(th, you.religion ? god_name(you.religion) : "");
+
+    // separate from the tutorial so we don't have to bump TAG_CHR_FORMAT
+    marshallString(th, crawl_state.map);
 }
 
 static void tag_construct_you(writer &th)
@@ -1312,6 +1315,9 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, you.deaths);
     marshallByte(th, you.lives);
+
+    marshallFloat(th, you.temperature);
+    marshallFloat(th, you.temperature_last);
 
     marshallInt(th, you.dactions.size());
     for (unsigned int k = 0; k < you.dactions.size(); k++)
@@ -1836,6 +1842,8 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     crawl_state.type = (game_type) unmarshallUByte(th);
     if (crawl_state.game_is_tutorial())
         crawl_state.map = unmarshallString(th);
+    else
+        crawl_state.map = "";
 
     if (major > 32 || major == 32 && minor > 26)
     {
@@ -1853,6 +1861,9 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
         else
             you.god_name = "Marduk";
     }
+
+    if (major > 34 || major == 34 && minor >= 29)
+        crawl_state.map = unmarshallString(th);
 }
 
 static void tag_read_you(reader &th)
@@ -2024,7 +2035,8 @@ static void tag_read_you(reader &th)
         you.ability_letter_table[i] = static_cast<ability_type>(a);
 #if TAG_MAJOR_VERSION == 34
         if (you.ability_letter_table[i] == ABIL_FLY
-            || you.ability_letter_table[i] == ABIL_FLY_II)
+            || you.ability_letter_table[i] == ABIL_WISP_BLINK // was ABIL_FLY_II
+               && th.getMinorVersion() < TAG_MINOR_0_12)
         {
             if (found_fly)
                 you.ability_letter_table[i] = ABIL_NON_ABILITY;
@@ -2230,6 +2242,22 @@ static void tag_read_you(reader &th)
 
     you.deaths = unmarshallByte(th);
     you.lives = unmarshallByte(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE)
+    {
+#endif
+        you.temperature = unmarshallFloat(th);
+        you.temperature_last = unmarshallFloat(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+    {
+        you.temperature = 0.0;
+        you.temperature_last = 0.0;
+    }
+#endif
+
     you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);
@@ -2491,6 +2519,18 @@ static void tag_read_you_items(reader &th)
     for (i = 0; i < iclasses; i++)
         for (j = 0; j < count2; j++)
             you.force_autopickup[i][j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP)
+    {
+        const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];
+        you.force_autopickup[OBJ_FOOD][FOOD_MEAT_RATION] = oldstate;
+        you.force_autopickup[OBJ_FOOD][FOOD_PEAR] = oldstate;
+        you.force_autopickup[OBJ_FOOD][FOOD_HONEYCOMB] = oldstate;
+
+        you.force_autopickup[OBJ_BOOKS][BOOK_MANUAL] =
+            you.force_autopickup[OBJ_BOOKS][NUM_BOOKS];
+    }
+#endif
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)
@@ -2558,7 +2598,7 @@ static void tag_read_you_dungeon(reader &th)
 #if TAG_MAJOR_VERSION == 34
     // Deepen the Abyss; this is okay since new abyssal stairs will be
     // generated as the place shifts.
-    if (th.getMinorVersion() < TAG_MINOR_DEEP_ABYSS && th.getMinorVersion() != TAG_MINOR_0_11)
+    if (crawl_state.game_is_normal() && th.getMinorVersion() <= TAG_MINOR_ORIG_MONNUM)
         brdepth[BRANCH_ABYSS] = 5;
 #endif
 
@@ -2878,8 +2918,12 @@ void unmarshallItem(reader &th, item_def &item)
             item.flags |= ISFLAG_KNOW_TYPE;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
+    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
+        item.sub_type = STAFF_ENERGY;
+#endif
 
     if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
     {
@@ -3787,6 +3831,9 @@ static void _debug_count_tiles()
             if (found.find(t) == found.end())
                 cnt++, found[t] = true;
             t = env.tile_bk_fg[i][j];
+            if (found.find(t) == found.end())
+                cnt++, found[t] = true;
+            t = env.tile_bk_cloud[i][j];
             if (found.find(t) == found.end())
                 cnt++, found[t] = true;
         }

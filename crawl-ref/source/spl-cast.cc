@@ -505,6 +505,11 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.archmagi())
         enhanced++;
 
+
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
+        && typeflags & SPTYP_FIRE && typeflags & SPTYP_EARTH)
+        enhanced++;
+
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
         enhanced = 3;
@@ -534,6 +539,12 @@ static bool _can_cast()
         || you.form == TRAN_FUNGUS)
     {
         canned_msg(MSG_PRESENT_FORM);
+        return false;
+    }
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot cast spells while unable to breathe!");
         return false;
     }
 
@@ -693,7 +704,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (spell_mana(spell) > you.magic_points)
+    if (spell_mana(spell) > (you.species != SP_DJINNI ? you.magic_points
+        : (you.hp - 1) / DJ_MP_RATE))
     {
         mpr("You don't have enough magic to cast that spell.");
         crawl_state.zero_turns_taken();
@@ -704,8 +716,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
-        mpr("There are no visible monsters within range! (Use <w>Z</w> to "
-            "cast anyway.)");
+        mpr("You can't see any susceptible monsters within range! "
+            "(Use <w>Z</w> to cast anyway.)");
 
         if (Options.darken_beyond_range)
         {
@@ -747,6 +759,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
+    const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
@@ -766,12 +779,12 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     dec_mp(spell_mana(spell));
 
-    if (you.is_undead != US_UNDEAD)
+    if (!staff_energy && you.is_undead != US_UNDEAD)
     {
-        const int spellh = calc_hunger(spell_hunger(spell));
-        if (spellh > 0)
+        const int spellh = spell_hunger(spell);
+        if (calc_hunger(spellh) > 0)
         {
-            make_hungry(spellh, true);
+            make_hungry(spellh, true, true);
             learned_something_new(HINT_SPELL_HUNGER);
         }
     }
@@ -849,6 +862,34 @@ static bool _vampire_cannot_cast(spell_type spell)
     }
 }
 
+static bool _too_hot_to_cast(spell_type spell)
+{
+    if (you.species != SP_LAVA_ORC)
+        return (false);
+
+    // Lava orcs can never benefit from casting stoneskin.
+    if (spell == SPELL_STONESKIN)
+        return (true);
+
+    // Lava orcs have no restrictions if their skin is
+    // non-molten.
+    if (temperature_effect(LORC_STONESKIN))
+        return (false);
+
+    // If it is, though, they lose out on these spells:
+    switch (spell)
+    {
+    case SPELL_STATUE_FORM: // Stony self is too melty
+    // Too hot for these ice spells:
+    case SPELL_ICE_FORM:
+    case SPELL_OZOCUBUS_ARMOUR:
+    case SPELL_CONDENSATION_SHIELD:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 bool is_prevented_teleport(spell_type spell)
 {
     return (spell == SPELL_BLINK
@@ -872,6 +913,17 @@ bool spell_is_uncastable(spell_type spell, string &msg)
     {
         msg = "Your current blood level is not sufficient to cast that spell.";
         return true;
+    }
+
+    if (_too_hot_to_cast(spell))
+    {
+        if (spell == SPELL_STONESKIN && temperature_effect(LORC_STONESKIN))
+            msg = "Your skin is already made of stone.";
+        else if (spell == SPELL_STONESKIN && !temperature_effect(LORC_STONESKIN))
+            msg = "Your skin is already made of molten stone.";
+        else
+            msg = "Your temperature is too high to benefit from that spell.";
+        return (true);
     }
 
     return false;
@@ -1158,8 +1210,15 @@ spret_type your_spells(spell_type spell, int powc,
                                       : GOD_NO_GOD;
 
     int fail = 0;
+    bool antimagic = false; // lost time but no other penalty
 
-    if (allow_fail)
+    if (allow_fail && you.duration[DUR_ANTIMAGIC]
+        && x_chance_in_y(DUR_ANTIMAGIC / 3, you.hp_max))
+    {
+        mpr("You fail to access your magic.");
+        fail = antimagic = true;
+    }
+    else if (allow_fail)
     {
         int spfl = random2avg(100, 3);
 
@@ -1225,6 +1284,9 @@ spret_type your_spells(spell_type spell, int powc,
 
     case SPRET_FAIL:
     {
+        if (antimagic)
+            return SPRET_FAIL;
+
         mprf("You miscast %s.", spell_title(spell));
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);

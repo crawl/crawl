@@ -538,7 +538,7 @@ namespace arena
 
         for (monster_iterator mons; mons; ++mons)
         {
-            if (mons_is_tentacle(mons->type))
+            if (mons_is_tentacle_or_tentacle_segment(mons->type))
                 continue;
             if (mons->attitude == ATT_FRIENDLY)
                 faction_a.active_members++;
@@ -1050,7 +1050,7 @@ monster_type arena_pick_random_monster(const level_id &place)
 
 bool arena_veto_random_monster(monster_type type)
 {
-    if (mons_is_tentacle(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return true;
     if (!arena::allow_immobile && mons_class_is_stationary(type))
         return true;
@@ -1091,8 +1091,8 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
 // is placed via splitting.
 void arena_placed_monster(monster* mons)
 {
-    if (mons_is_tentacle(mons->type))
-        ; // we don't count tentacles, even free-standing
+    if (mons_is_tentacle_or_tentacle_segment(mons->type))
+        ; // we don't count tentacles or tentacle segments, even free-standing
     else if (mons->attitude == ATT_FRIENDLY)
     {
         arena::faction_a.active_members++;
@@ -1191,7 +1191,7 @@ void arena_split_monster(monster* split_from, monster* split_to)
 void arena_monster_died(monster* mons, killer_type killer,
                         int killer_index, bool silent, int corpse)
 {
-    if (mons_is_tentacle(mons->type))
+    if (mons_is_tentacle_or_tentacle_segment(mons->type))
         ; // part of a monster, or a spell
     else if (mons->attitude == ATT_FRIENDLY)
         arena::faction_a.active_members--;

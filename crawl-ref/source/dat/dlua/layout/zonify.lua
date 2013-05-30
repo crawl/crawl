@@ -106,7 +106,7 @@ function zonify.map_map(e)
   -- TODO: Are there mapgrid function to check solidity after SUBST etc.?
   --       There is dgn.inspect_map but it requires a vault_placement rather than a map...
   -- local floor = ".W+({[)}]<>_"
-  local wall = "wlxcvtg"
+  local wall = "wlxcvbtg"
 
   -- TODO: Can we check size of current map after extend_map?
   local gxm,gym = dgn.max_bounds()

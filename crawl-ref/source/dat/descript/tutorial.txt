@@ -48,15 +48,15 @@ tutorial1 levelmap
 # Messy, repeating the same things for <console> and <webtiles>
 What's this? To find out where you are, <tiles>have a look at the
 <w>minimap</w> to the right of the screen.</tiles><localtiles> You can have a
-closer look at a part of the map with a <input>right mouseclick</input> and
-also can travel there with a <input>leftclick</input>.</localtiles><webtiles>
-You can enter the overmap view with
+closer look at a part of the map with a <input>right mouse click</input> and
+also can travel there with a <input>left click</input>.</localtiles><webtiles>
+You can enter the overmap view with <input>$cmd[CMD_DISPLAY_MAP]</input> and
+then move the cursor around to look around the level. You also can travel
+wherever your cursor is pointing by pressing <input>.</input> or
+<input>Enter</input>. Press <input>Escape</input> to return to the normal game
+mode.</webtiles><console>enter the overmap view with
 <input>$cmd[CMD_DISPLAY_MAP]</input> and then move the cursor around to look
 around the level. You also can travel wherever your cursor is pointing by
-pressing <input>.</input> or <input>Enter</input>. Press <input>Escape</input>
-to return to the normal game mode.</webtiles><console>enter the overmap view
-with <input>$cmd[CMD_DISPLAY_MAP]</input> and then move the cursor around to
-look around the level. You also can travel wherever your cursor is pointing by
 pressing <input>.</input> or <input>Enter</input>. Press <input>Escape</input>
 to return to the normal game mode.</console>
 %%%%
@@ -658,8 +658,8 @@ tutorial5 dungeon_overview
 Up ahead is an altar to Trog the Wrathful! Trog is just one of many gods. In a
 real game, you check <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> or
 <input>click the dungeon overmap button</input> in the command
-panel</localtiles> for a list of all altars and other interesting features found
-so far.
+panel</localtiles> for a list of all altars and other interesting features
+found so far.
 %%%%
 tutorial5 altar
 

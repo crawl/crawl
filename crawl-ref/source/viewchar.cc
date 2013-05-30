@@ -27,7 +27,9 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         ':', '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
     //                                     ÷
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
+        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
+    //  ═       ║       ╔       ╗       ╚       ╝
+        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d,
     },
     // CSET_ASCII
     {
@@ -36,7 +38,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '{', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '|', '}', '%', '$', '"', '0', '7', '^',   // book .. teleporter
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
+        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
+        '-', '|', '+', '+', '+', '+',
     },
 
     // CSET_IBM - this is ANSI 437
@@ -49,7 +52,9 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     //  ∞       \                              ♣       Ω
         0x221e, '\\', '}', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'                          // fi_stick .. explosion
+        '/', '=', '?', 'X', '[', '`', '#',                         // fi_stick .. explosion
+    //  ═       ║       ╔       ╗       ╚       ╝
+        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d,
     },
 
     // CSET_DEC
@@ -62,7 +67,9 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '\\', '}', '%', '$', '"', '#', '7', '^',  // book .. teleporter
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
+        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
+    //  ─       │       ┌       ┐       └       ┘
+        0x2500, 0x2502, 0x250c, 0x2510, 0x2514, 0x2518,
     },
 
     // CSET_OLD_UNICODE
@@ -83,7 +90,9 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         0x221E, '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
     //                                     ÷
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
+        '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
+    //  ═       ║       ╔       ╗       ╚       ╝
+        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d,
     },
 };
 
@@ -102,7 +111,9 @@ dungeon_char_type dchar_by_name(const string &name)
         "space", "fired_flask", "fired_bolt", "fired_chunk", "fired_book",
         "fired_weapon", "fired_zap", "fired_burst", "fired_stick",
         "fired_trinket", "fired_scroll", "fired_debug", "fired_armour",
-        "fired_missile", "explosion",
+        "fired_missile", "explosion", "frame_horiz", "frame_vert",
+        "frame_top_left", "frame_top_right", "frame_bottom_left",
+        "frame_bottom_right",
     };
     COMPILE_CHECK(ARRAYSZ(dchar_names) == NUM_DCHAR_TYPES);
 

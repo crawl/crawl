@@ -87,9 +87,6 @@ function hyper.build_layout(e, options)
   end
 
   if hyper.debug then print("Hyper Layout: " .. name) end
-  name = string.lower(name)
-  name = string.gsub(name," ","_")
-  e.layout_type(name)
 
   local default_options = hyper.default_options()
   if options ~= nil then options = hyper.merge_options(default_options,options) end

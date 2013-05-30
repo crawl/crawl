@@ -35,6 +35,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -67,6 +68,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
+#include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
 
@@ -604,6 +606,17 @@ void item_was_destroyed(const item_def &item, int cause)
 {
     if (item.props.exists("destroy_xp"))
         gain_exp(item.props["destroy_xp"].get_int());
+    if (cause == MHITYOU)
+    {
+        if (item_is_spellbook(item))
+            destroy_spellbook(item);
+        else if (is_deck(item))
+        {
+            did_god_conduct(DID_DESTROY_DECK,
+                            3 * deck_rarity(item) *
+                            (origin_is_god_gift(item) ? 2 : 1));
+        }
+    }
     _handle_gone_item(item);
     xom_check_destroyed_item(item, cause);
 }
@@ -1556,6 +1569,16 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
+static void _fish(item_def &item, short quant = 0)
+{
+    if (you.species != SP_DJINNI || !feat_is_watery(grd(you.pos())))
+        return;
+
+    unwind_var<short> partial(item.quantity, quant ? quant : item.quantity);
+    mprf("You fish the %s out of the water.", item.name(DESC_PLAIN).c_str());
+    you.time_taken += 5;
+}
+
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player(int obj, int quant_got, bool quiet,
@@ -1585,6 +1608,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     // Gold has no mass, so we handle it first.
     if (it.base_type == OBJ_GOLD)
     {
+        _fish(it);
         _got_gold(it, quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
 
@@ -1602,6 +1626,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         if (!quiet)
         {
+            _fish(it);
             mprf("You pick up the %s rune and feel its power.",
                  rune_type_name(it.plus));
             int nrunes = runes_in_pack();
@@ -1682,6 +1707,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
+                if (!quiet)
+                    _fish(it, quant_got);
 
                 _check_note_item(it);
 
@@ -1725,14 +1752,12 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     if (!quiet && partial_pickup)
         mpr("You can only carry some of what is here.");
+    if (!quiet)
+        _fish(it, quant_got);
 
     int freeslot = find_free_slot(it);
-    if (freeslot < 0 || freeslot >= ENDOFPACK
-        || you.inv[freeslot].defined())
-    {
-        // Something is terribly wrong.
-        return -1;
-    }
+    ASSERT(freeslot >= 0 && freeslot < ENDOFPACK);
+    ASSERT(!you.inv[freeslot].defined());
 
     if (it.base_type == OBJ_ORBS
         && you.char_direction == GDT_DESCENDING)
@@ -1851,7 +1876,8 @@ void mark_items_non_visit_at(const coord_def &pos)
 //
 // Returns false on error or level full - cases where you
 // keep the item.
-bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
+bool move_item_to_grid(int *const obj, const coord_def& p, int agent,
+                       bool silent)
 {
     ASSERT(in_bounds(p));
 
@@ -1864,7 +1890,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 
     if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
     {
-        item_was_destroyed(item, NON_MONSTER);
+        item_was_destroyed(item, agent);
         destroy_item(ob);
         ob = NON_ITEM;
 
@@ -1905,7 +1931,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         while (item.quantity > 1)
         {
             // If we can't copy the items out, we lose the surplus.
-            if (copy_item_to_grid(item, p, 1, false, true))
+            if (copy_item_to_grid(item, p, agent, 1, false, true))
                 --item.quantity;
             else
                 item.quantity = 1;
@@ -1954,7 +1980,7 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
 
 
 // Returns false if no items could be dropped.
-bool copy_item_to_grid(const item_def &item, const coord_def& p,
+bool copy_item_to_grid(const item_def &item, const coord_def& p, int agent,
                         int quant_drop, bool mark_dropped, bool silent)
 {
     ASSERT(in_bounds(p));
@@ -1964,10 +1990,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
 
     if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
-        if (item_is_spellbook(item))
-            destroy_spellbook(item);
-
-        item_was_destroyed(item, NON_MONSTER);
+        item_was_destroyed(item, agent);
 
         return true;
     }
@@ -2024,7 +2047,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
         origin_set_unknown(new_item);
     }
 
-    move_item_to_grid(&new_item_idx, p, true);
+    move_item_to_grid(&new_item_idx, p, agent, true);
     if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
@@ -2170,7 +2193,7 @@ bool drop_item(int item_dropped, int quant_drop)
     const dungeon_feature_type my_grid = grd(you.pos());
 
     if (!copy_item_to_grid(you.inv[item_dropped],
-                            you.pos(), quant_drop, true, true))
+                            you.pos(), MHITYOU, quant_drop, true, true))
     {
         mpr("Too many items on this level, not dropping the item.");
         return false;
@@ -2498,10 +2521,14 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
     case OBJ_FOOD:
-        return (item.sub_type == FOOD_CHUNK) ? item.sub_type : max_type;
+        return (item.sub_type == FOOD_CHUNK) ? item.sub_type
+             : food_is_meaty(item)           ? FOOD_MEAT_RATION
+             : is_fruit(item)                ? FOOD_PEAR
+                                             : FOOD_HONEYCOMB;
     case OBJ_MISCELLANY:
         return (item.sub_type == MISC_RUNE_OF_ZOT) ? item.sub_type : max_type;
     case OBJ_BOOKS:
+        return (item.sub_type == BOOK_MANUAL) ? item.sub_type : max_type;
     case OBJ_RODS:
     case OBJ_GOLD:
         return max_type;
@@ -3647,8 +3674,8 @@ bool get_item_by_name(item_def *item, char* specs,
         break;
 
     case OBJ_MISCELLANY:
-        if (!item_is_rune(*item) && !is_deck(*item))
-            item->plus = 50;
+        if (!item_is_rune(*item) && !is_deck(*item) && !is_elemental_evoker(*item))
+            item->plus2 = 50;
         break;
 
     case OBJ_POTIONS:
@@ -4138,8 +4165,16 @@ void corrode_item(item_def &item, actor *holder)
     }
     else if (holder && you.see_cell(holder->pos()))
     {
-        mprf("The acid corrodes %s %s!",
-             apostrophise(holder->name(DESC_THE)).c_str(),
-             item.name(DESC_PLAIN).c_str());
+        if (holder->type == MONS_DANCING_WEAPON)
+        {
+            mprf("The acid corrodes %s!",
+                 holder->name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("The acid corrodes %s %s!",
+                 apostrophise(holder->name(DESC_THE)).c_str(),
+                 item.name(DESC_PLAIN).c_str());
+        }
     }
 }

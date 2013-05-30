@@ -9,8 +9,7 @@
 #
 
 : require("dlua/layout/zonify.lua")
-
-
+: require("dlua/layout/theme.lua")
 
 ##############################################################
 #
@@ -81,15 +80,6 @@
         e.remove_isolated_glyphs { find = "l", percent = 90, boxy = true }
     end
 
-    -- Duplicate of function in layout.des header
-    function random_wall_material(e)
-        if not you.in_branch("Lair") and not you.in_branch("Zot")
-           and not you.in_branch("Dis")
-           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
-            e.subst('x : ccv')
-        end
-    end
-
 }}
 
 ##############################################################
@@ -104,12 +94,10 @@ NAME: layout_pools
 DEPTH: D:9-
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
-
-    layout_type "caves"
 
     -- without a starting floor patch, spotty_map will crash
     mapgrd[gxm/2][gym/2] = '.'
@@ -137,7 +125,7 @@ TAGS: overwritable layout allow_dup unrand
     widen_paths { find = "l", percent = 30 }
     remove_isolated_glyphs { find = "l", percent = 75, boxy = true }
 
-    random_wall_material(_G)
+    theme.D.caves(_G)
 }}
 MAP
 ENDMAP
@@ -153,12 +141,10 @@ NAME: layout_honeycomb
 DEPTH: D:12-, Snake:1-4, Tar
 WEIGHT: 10, 80(Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
-
-    layout_type "rooms"
 
     make_circle { x = gxm/2, y = gym/2, radius = 10 }
     mapgrd[gxm/2][gym/2] = '.'
@@ -183,7 +169,11 @@ TAGS: overwritable layout allow_dup unrand
                              min = 100, max = 200, check_empty = false }
     zonify.map_fill_zones(_G, 1, 'x')
 
-    random_wall_material(_G)
+    if connection == '.' and you.in_branch("D") then
+      theme.D.caves(_G)
+    else
+      theme.level_material(_G)
+    end
 }}
 # Enforce minimum floor size - this is important
 validate {{
@@ -222,12 +212,10 @@ NAME: layout_gehenna_straight
 DEPTH: Geh
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -277,12 +265,10 @@ NAME: layout_gehenna_big_room
 DEPTH: Geh
 WEIGHT: 25
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -346,12 +332,10 @@ NAME: layout_gehenna_corner
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -408,12 +392,10 @@ NAME: layout_gehenna_U_turn
 DEPTH: Geh
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -471,12 +453,10 @@ NAME: layout_gehenna_T
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
@@ -530,12 +510,10 @@ NAME: layout_gehenna_H
 DEPTH: Geh
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP   = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -583,12 +561,10 @@ NAME: layout_gehenna_box
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -639,12 +615,10 @@ NAME: layout_gehenna_parallel
 DEPTH: Geh
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
@@ -707,12 +681,10 @@ NAME: layout_gehenna_trident
 DEPTH: Geh
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate
+TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
-
-    layout_type "caves"
 
     local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X

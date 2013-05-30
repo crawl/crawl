@@ -62,6 +62,7 @@ static const char *map_section_names[] = {
     "southeast",
     "encompass",
     "float",
+    "centre",
 };
 
 static string_set Map_Flag_Names;
@@ -721,6 +722,16 @@ string map_lines::check_shuffle(string &s)
     return "";
 }
 
+string map_lines::check_clear(string &s)
+{
+    s = clean_shuffle(s);
+
+    if (!s.length())
+        return "no glyphs specified for clearing";
+
+    return "";
+}
+
 string map_lines::parse_glyph_replacements(string s, glyph_replacements_t &gly)
 {
     s = replace_all_of(s, "\t", " ");
@@ -995,6 +1006,17 @@ string map_lines::add_shuffle(const string &raws)
 
     if (err.empty())
         resolve_shuffle(s);
+
+    return err;
+}
+
+string map_lines::add_clear(const string &raws)
+{
+    string s = raws;
+    const string err = check_clear(s);
+
+    if (err.empty())
+        clear(s);
 
     return err;
 }
@@ -1502,6 +1524,22 @@ void map_lines::resolve_shuffle(const string &shufflage)
             string::size_type pos = toshuffle.find(c);
             if (pos != string::npos)
                 s[j] = shuffled[pos];
+        }
+    }
+}
+
+void map_lines::clear(const string &clearchars)
+{
+    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
+    {
+        string &s = lines[i];
+
+        for (int j = 0, len = s.length(); j < len; ++j)
+        {
+            const char c = s[j];
+            string::size_type pos = clearchars.find(c);
+            if (pos != string::npos)
+                s[j] = ' ';
         }
     }
 }
@@ -2851,7 +2889,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         break;
     case MAP_NORTHEAST: case MAP_SOUTHEAST:
     case MAP_NORTHWEST: case MAP_SOUTHWEST:
-    case MAP_FLOAT:
+    case MAP_FLOAT:     case MAP_CENTRE:
         if (map.width() > GXM * 2 / 3 || map.height() > GYM * 2 / 3)
         {
             return make_stringf("Map too large - %dx%d (max %dx%d)",
@@ -2952,6 +2990,9 @@ coord_def map_def::dock_pos(map_section_type norient) const
     case MAP_SOUTHWEST:
         return coord_def(minborder,
                           GYM - minborder - map.height());
+    case MAP_CENTRE:
+        return coord_def((GXM - map.width())  / 2,
+                         (GYM - map.height()) / 2);
     default:
         return coord_def(-1, -1);
     }
@@ -3956,6 +3997,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
 
+            if (mons_class_flag(nspec.type, M_CANT_SPAWN))
+            {
+                error = make_stringf("can't place dummy monster: \"%s\"",
+                                     mon_str.c_str());
+                return slot;
+            }
+
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
@@ -4073,6 +4121,11 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
+    {
+        spec.type = MONS_PROGRAM_BUG;
+        return;
+    }
+    if (mod == 1 && mons_class_flag(spec.monbase, M_NO_ZOMBIE))
     {
         spec.type = MONS_PROGRAM_BUG;
         return;

@@ -1,10 +1,10 @@
-# A timed through the Abyss.
+# A short timed walk through the Abyss.
 #
-# Usage: ./crawl --no-save --rc test/stress/abyss.rc
+# Usage: ./crawl --no-save --rc test/stress/abyss_short_run.rc
 #
 # Wizmode is needed.
 
-name = Abyss_walker
+name = Abyss_runner
 species = mu
 background = be
 # CK is slowed down by constant tension checks.

@@ -463,11 +463,11 @@ explotarán, causando daño a ti o a tus enemigos.
 %%%%
 Evolution
 
-Conviertes plantas y hongos adyacentes a ti en especies más fuertes. Aumentar
-de nivel a los hongos requiere piedad mientras que las plantas requieren fruta.
-Las plantas evolucionadas ganan un bonus de ataque proporcional al nivel de
-Invocaciones del usuario, y las plantas oklob son más propensas a escupir ácido
-a mayores niveles de Invocaciones.
+Conviertes plantas y hongos en especies más fuertes. Aumentar de nivel a los
+hongos requiere piedad mientras que las plantas requieren fruta. Las plantas
+evolucionadas ganan un bonus de ataque proporcional al nivel de Invocaciones
+del usuario, y las plantas oklob son más propensas a escupir ácido a mayores
+niveles de Invocaciones.
 %%%%
 Bend Time
 

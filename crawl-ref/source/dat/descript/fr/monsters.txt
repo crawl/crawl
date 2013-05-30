@@ -51,6 +51,17 @@ Asmodeus
 
 Un des Archidémons qui règnent sur l'Enfer, enveloppé de feu.
 %%%%
+Asmodeus:quote
+
+« Pour moi, j’ai d’autres occupations : je fais des mariages ridicules; j’unis
+des barbons avec des mineures, des maîtres avec leurs servantes, des filles mal
+dotées avec de tendres amants qui n’ont point de fortune. C’est moi qui ai
+introduit dans le monde le luxe, la débauche, les jeux de hasard et la chimie.
+Je suis l’inventeur des carrousels, de la danse, de la musique, de la comédie,
+et de toutes les modes nouvelles de France. En un mot, je m’appelle Asmodée,
+surnommé Le Diable Boiteux. »
+    -Alain-René Lesage, _Le Diable Boiteux_. 1707.
+%%%%
 Azrael
 
 Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
@@ -184,7 +195,7 @@ il fut connu pour être bienveillant, juste et passioné sur le fait de garder
 les elfes en dehors de la corruption et du crime. Même si ses proches
 commençaient à se tremper avec la nécromancie et la magie démoniaque.
 
-Au long des siècle de son mandant, la dévotion de Fannar pour la justice l'a
+Au long des siècle de son mandat, la dévotion de Fannar pour la justice l'a
 mené à la paranoïa et au despotisme. Même ses partisans les plus proches
 commencent à chuchoter que son pouvoir magique commence à devenir
 auto-destructif. Fannar essaye cependant d'empêcher les elfes de sombrer dans
@@ -281,6 +292,18 @@ Un empereur incroyablement puissant sur le chemin de la divinisation.
 Kirke
 
 Une belle enchanteresse.
+%%%%
+Lamia
+
+Une puissante reine des nagas, on dit qu'elle serait capable de manger ses
+propres enfants.
+{{
+  if you.race == "Naga" then
+    return "Sa beauté est éblouissante."
+  else
+    return "En dehors de son corps déformé, elle est plutôt jolie."
+  end
+}}
 %%%%
 the Lernaean hydra
 
@@ -633,8 +656,9 @@ Un grand démon, recouvert de neige et parcouru d'éclairs.
 %%%%
 blue devil
 
-Un humanoïde particulier, sa silhouette cornue viens de l'enfer glacial. Il
-évite le contact du feu.
+Une silhouette humanoïde, musclée et cornue provenant d'un enfer glacé. Elle
+fond à travers les airs grâce à ses puissantes ailes, en prenant un plaisir
+sadique à harasser ceux qui essaient d'échapper à son emprise.
 %%%%
 boggart
 
@@ -744,12 +768,6 @@ crawling corpse
 Un cadavre faiblement animé par nécromancie. Il est facilement destructible,
 mais aussi capable de fusionner avec d'autres pour former d'autres horreurs
 plus puissantes.
-%%%%
-crazed wizard
-
-Ce gars semble être obsédé par l'Enfer et de faire affaire avec les démons qui
-y vivent. Il n'y qu'un seul moyen d'en finir... Prenez garde ou bien cette fin
-pourrait être la votre.
 %%%%
 crimson imp
 
@@ -1086,7 +1104,7 @@ Un œil gigantesque, encastré dans un globe flottant d'énergie incandescente.
 %%%%
 eye of draining
 
-Une horreur flottante qui se sert dans votre mana.
+Une horreur flottante qui se sert dans votre magie.
 %%%%
 feature mimic
 
@@ -1129,8 +1147,10 @@ dans le donjon, voulant partager son destin avec les autres.
 %%%%
 flayed ghost
 
-Une hideuse créature flottante du royaume des morts, l'esprit supplicié d'une
-victime torturée, avec de la peau déchirée qui reste accrochée au corps émacié.
+Une affreuse créature mort-vivante qui flotte dans les airs ; l'esprit angoissé
+d'une victime torturée dont la peau lacérée pend du corps décharné. Il parcours
+le donjon sans répit, en infligeant à ceux qui sont toujours vivant l'angoisse
+qu'il a ressentit pendant sa vie.
 %%%%
 flying skull
 
@@ -1402,12 +1422,11 @@ aux simples plaisirs de la chair. Les Halfelins excellent au déplacement
 silencieux.
 
 {{
-    if you.race() != "Halfling"
-        then
-        return "Il ne mérite rien d'autre qu'un bon coup de hache dans la
-tête."
-    else
+    if you.race() == "Halfling" then
         return ""
+    else
+        return "Il ne mérite rien d'autre qu'un bon coup de hache dans la " ..
+               "tête."
     end
 }}
 %%%%
@@ -1728,12 +1747,6 @@ mad acolyte of Lugonu
 Un disciple dément de Lugonu. Les années passées dans les abysses on eu raison
 de son faible esprit.
 %%%%
-mad wizard
-
-Délirer sur comment les rats pourraient dominer le monde n'est pas un signe
-d'une bonne santé mentale. Vous feriez mieux de prendre vos distances. D'autant
-que ce sont les écureuils qui vont gagner, c'est moi qui vous le dit!
-%%%%
 manticore
 
 Un croisement hideux, comprenant les caractéristiques d'un humain et d'un lion
@@ -1770,6 +1783,18 @@ adorent chanter et charmer leur public.
 metal gargoyle
 
 Un hideuse statue de métal ayant pris vie.
+%%%%
+metal gargoyle:quote
+
+«Leurs innombrables sculptures de diables et de dragons prenaient un aspect
+lugubre. La clarté inquiète de la flamme les faisait remuer à l’œil. Il y avait
+des guivres qui avaient l’air de rire, des gargouilles qu’on croyait entendre
+japper, des salamandres qui soufflaient dans le feu, des tarasques qui
+éternuaient dans la fumée. Et parmi ces monstres ainsi réveillés de leur
+sommeil de pierre par cette flamme, par ce bruit, il y en avait un qui marchait
+et qu’on voyait de temps en temps passer sur le front ardent du bûcher comme
+une chauve-souris devant une chandelle.»
+    -Victor Hugo, _Notre-Dame de Paris_, Livre 10, ch. IV. 1831
 %%%%
 microbat
 
@@ -1905,9 +1930,9 @@ Cette statue est très fragile; elle se désintégrera d'un coup.
 %%%%
 orange demon
 
-Un démon couleur ambre avec une queue qui n'est pas sans rappeler celle d'un
-scorpion. Elle contient un venin assez efficace, qui n'attaque pas seulement le
-corps mais aussi l'esprit.
+Un démon de couleur ambre avec un queue ressemblant à celle d'un scorpion. Elle
+contient un puissant venin qui peut rendre ses victimes faiblardes et affaiblir
+ses coups.
 %%%%
 orange rat
 
@@ -1981,7 +2006,7 @@ ses semblables.
 orc wizard
 
 Alors que les orcs préfèrent généralement le combat physique, certains d'entre
-eux optiennent la maîtrise des arts occultes - cependant toujours dans un but
+eux optiennent la maîtrise des arts occultes – cependant toujours dans un but
 martial.
 %%%%
 pale draconian
@@ -2005,8 +2030,10 @@ griffes brûlent de la sainte colère.
 %%%%
 phantasmal warrior
 
-Un esprit hideux d'un vert translucide qui fut un guerrier tombé au combat et
-maintenant de retour dans ce plan de par une magie impie.
+Un affreux esprit vert translucide d'un guerrier tué au combat et ramené sur ce
+plan par une magie impie. La lame qu'il tient est éthérée et passe facilement
+au travers des boucliers et des armures, et rend ceux qu'elle frappe plus
+sensible à la magie.
 %%%%
 phantom
 
@@ -2027,6 +2054,12 @@ tourbillon de flammes et qu'il renaît de ses cendres.
 pillar of salt
 
 Un énorme pilier de sel qui est en train de fondre rapidement.
+%%%%
+plague shambler
+
+Un cadavre réanimé qui se déplace d'un pas traînant. Piégé par un tissu de
+sorts maléfiques dans une grotesque parodie de vie, cet infecte corps en
+décomposition cherche en titubant à punir les vivants.
 %%%%
 plant
 
@@ -2064,8 +2097,8 @@ développeurs de Devteam.
 %%%%
 pulsating lump
 
-Un blob répugnant de toute sortes de matières organiques - muscle, tripes,
-nerf, viscère, moelle - empilés aléatoirement en une seule masse contorsionnée.
+Un blob répugnant de toute sortes de matières organiques – muscle, tripes,
+nerf, viscère, moelle – empilés aléatoirement en une seule masse contorsionnée.
 Sa chair altérée est mutagène au contact; mais sans aucune forme d'agencement
 structurel de ses parties, il lui manque la coordination nécessaire pour se
 déplacer rapidement.
@@ -2138,8 +2171,10 @@ Une créature squelettique armée d'une faux géante.
 %%%%
 red devil
 
-Un démon musclé couvert de pointes et de cornes. Deux ailes courtes sortent de
-ses épaules.
+Un cousin plus grand de l'imp ordinaire, arborant un rictus diabolique et avec
+deux petites ailes aux épaules. Ils préfèrent les tridents acérés, et se
+moquent souvent de leurs victimes alors qu'ils les piquent de loin avant de se
+replier prestement.
 %%%%
 red draconian
 
@@ -2180,12 +2215,6 @@ tandis qu'il se traîne vers sa prochaine victime.
     end
 }}
 %%%%
-rotting hulk
-
-Un cadavre réanimé, traînant des pieds. Piégé par un état de transe maléfique
-dans une parodie grotesque de la vie, ce corps infecté et en état de
-décomposition titube, cherchant à punir les vivants.
-%%%%
 the royal jelly
 
 Une chose gélatineuse particulièrement riche et dorée.
@@ -2216,8 +2245,9 @@ qu'une tête et on dit qu'ils prennent parfois la forme de serpents ardents.
 %%%%
 shadow
 
-Une volute d'ombre sans vie, dérivant sur les bords du champ de vision. Il
-consomme la puissance des êtres vivants.
+Une ombre furtive et sans vie qui se cache dans les ténèbres du donjon. Elle se
+déplace rapidement et en silence d'une flaque d'ombre à l'autre, frappant
+infailliblement depuis l'angle mort de ceux qui ne peuvent la voir.
 %%%%
 shadow demon
 
@@ -2306,6 +2336,13 @@ vitesse fulgurante. Elle à l'air de lancer des étincelles autour d'elle.
 Cette bête peut se soigner avec les dégâts électriques, cependant, si elle se
 fait toucher par plus qu'elle ne peut en maîtriser, cela pourrait avoir des
 résultats plutôt violents.
+%%%%
+skeletal archer
+
+Depuis quand il faut avoir de la chair pour pouvoir être un maître archer? Ces
+compagnons squelettiques peuvent vous transformer en un hérisson sanguinolent
+sans encombre. Les êtres pleins de viande comme vous ne sont bons qu'a fournir
+des tendons pour faire de nouvelles cordes à arc.
 %%%%
 skeletal bat
 
@@ -2505,11 +2542,6 @@ tentacled monstrosity
 
 Une masse distordante de tentacules, le tout recouvert d'un mucus putride.
 %%%%
-terrified wizard
-
-Ce gars s'est fait prendre par les haïsseurs de la magie, et il va se faire
-sacrifier sur l'autel de Trog.
-%%%%
 titan
 
 Cet énorme humanoïde, portant des éclairs à la main, est inhabituellement grand
@@ -2639,8 +2671,9 @@ compagnie des orcs.
 %%%%
 water elemental
 
-Un esprit du plan élémentaire de l'eau, il existe en ce monde sous la forme
-d'une étendue d'eau.
+Un esprit tiré du plan élémentaire de l'eau. Il existe dans ce monde sous la
+forme d'un plan d'eau et peut engloutir d'autres êtres en son sein et les
+priver ainsi de souffle et de voix.
 %%%%
 water moccasin
 
@@ -2802,24 +2835,16 @@ antique lich
 
 Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
 %%%%
-apple tree
+archer statue
 
-Cet arbre porte des fruits qui pourraient nourrir un tigre affamé. Et ce n'est
-pas faux - vous êtes donc au milieu de la chaîne alimentaire.
-%%%%
-bittermelon vine
+Avec l'apparence d'un magnifique archer elfe, taillé dans le marbre le plus
+fin. II brandit un arc, et semble être animé par la magie, lui permettant
+d'utiliser son arc pour vous cribler de flèches.
 
-Une plante ordinaire, faisant pousser des fruits à peine comestibles. Il sont
-nutritifs, mais absolument pas bon au goût.
-%%%%
-black sheep
-
-À première vue, ce mouton a simplement une pigmentation différente, mais vous
-n'êtes pas aussi facilement dupé par son apparence. Avec la chance que vous
-avez, c'est un mouton qui se cache sous une peau de loup _puis_ sous une autre
-peau de mouton pour mieux vous tromper.
-
-Ou peut-être que c'est juste un mouton après tout.
+Étant une statue, il ne semble pas avoir les moyens de récupérer les flèches
+tirées ou d'en créer d'autres, mais vous devinez que l'auteur de cette statue
+lui a donné un stock suffisant pour vous tuer avant que quelqu'un vienne
+remplir de nouveau le carquois.
 %%%%
 charred statue
 
@@ -2832,11 +2857,6 @@ Cigotuvi's Monster
 
 Cette assemblage terrifiant semble avoir été construit a partir de morceaux de
 corps de toutes les créatures monstrueuses imaginables.
-%%%%
-chilling statue
-
-Cette statue grotesque, taillée dans de la glace bleue, refroidit ses environs.
-C'est comme si elle absorbait la chaleur de son environnement.
 %%%%
 conjurer statue
 
@@ -2899,47 +2919,10 @@ frost-covered statue
 Une statue maladroitement faite d'un mage. Sa magie continue de fuir, vous
 laissant savoir de quel genre de sorts s'attendre: ceux qui sont froids.
 %%%%
-glowing angel
-
-Un agent divin de Zin, c'est une imposante figure ailée avec une aura d'une
-lumière blanche. Le visage de l'ange, cependant, est marquée par un air
-renfrogné, comme si son zèle contre chaque vice réel ou perçu éclipsait sa
-bonté.
-%%%%
-gourd plant
-
-Cette vigne robuste abrite des fruits nutritifs, mais n'ayant presque aucun
-goût.
-%%%%
-grape vine
-
-Sans jardinier pour lui fournir quelque chose pour se caler, et n'étant pas
-assez chanceuse pour que ses pousses tombent près de quelque chose sur lequel
-grimper, cette vigne est pourtant toujours remarquablement difficile à
-franchir.
-%%%%
-grey elf
-
-Autrefois considérés comme des espèces uniques en leur genre, les elfes gris
-sont dorénavant plutôt considérés comme une sous-espèce de haut elfe. Il y a
-peu de façons de les distinguer de leurs cousins haut elfes, en dehors de leur
-charme supposé (qui doit probablement plus tenir du mythe que de la réalité).
-%%%%
-hill dwarf
-
-Les nains des collines sont une sous-ethnie de nains qui, comme leur nom
-l'indique, vivent dans les collines. Autrefois des aventuriers capables, les
-nains des collines n'ont plus aucun intérêt à fouiller les donjons. Celui là a
-été capturé exprès pour l'exposition.
-%%%%
 human monk
 
 Il a l'air d'une piètre représentation d'un moine; rien de plus qu'un souvenir
 à moité formé.
-%%%%
-hungry kobold
-
-Ce kobold semble énervé du fait d'avoir été interrompu durant son repas.
 %%%%
 kamikaze kobold
 
@@ -2958,18 +2941,6 @@ malarious mermaid
 Une jeune femme avec une queue de poisson en guise de jambes. Elle à l'air
 malade mais est toujours capable de charmer son public.
 %%%%
-mountain dwarf
-
-Les nains des montagnes sont des cousins des nains des profondeurs vivant à la
-surface. Après des années de guerre avec les orcs, plus grands mais autrement
-similaires, les nains des montagnes furent conquis et déportés de leurs terres.
-Celui-ci à été importé des côtes étrangères.
-%%%%
-musa plant
-
-Cette plante broussailleuse peut faire pousser des bananes. À moins que ce soit
-des banananes? Ou des bananananes? Enfin bref ces machins jaunes et tordus.
-%%%%
 oklob plant annihilator
 
 Il pourrait sembler inconcevable qu'une simple plante puisse atteindre la
@@ -2979,10 +2950,6 @@ Quelle est cette sorcellerie ?
 oklob sapling priest
 
 Cette jeune plante oklob semble marmonner quelques oraisons... euh, quoi?!?
-%%%%
-orc berserker
-
-Un ogre résistant, fort et surtout particulièrement énervé.
 %%%%
 petrified plant
 
@@ -2998,54 +2965,14 @@ point de tirer une flèche, avec un carquois plein attaché à sa hanche. Ces
 flèches sculptées individuellement semblent presque comme si on pouvait les
 prendre une par une et les utiliser avec un vrai arc.
 %%%%
-sacrificial human
-
-Au vu de cette chose, elle devait être sacrifiée dans quelque rituel
-d'invocation de démon.
-%%%%
 sickly siren
 
 Une jeune femme avec une queue de poisson en guise de jambes. Elle à l'air
 malade mais est toujours capable de charmer son public.
 %%%%
-skeletal archer
-
-Depuis quand il faut avoir de la chair pour pouvoir être un maître archer? Ces
-compagnons squelettiques peuvent vous transformer en un hérisson sanguinolent
-sans encombre. Les êtres pleins de viande comme vous ne sont bons qu'a fournir
-des tendons pour faire de nouvelles cordes à arc.
-%%%%
-spooky statue
-
-Vous sentez une présence fantomatique autour de cette statue, et elle n'est pas
-des plus amicales.
-%%%%
-spriggan necromancer
-
-Faire lever les morts, puis courir derrière eux... ces petits tours commencent
-à devenir ennuyeux.
-%%%%
-spriggan shepherd
-
-Étant incapable de digérer la viande, les spriggans on besoin de beaucoup de
-lait pour tenir un régime sain. Ces gars gardent les animaux des prédateurs et
-des vandales comme vous, brandissant une canne courbée qui à l'air d'être un
-bon outil pour vous apprendre le respect.
-%%%%
 strange machine
 
 Une machine scintillante en argent.
-%%%%
-strawberry plant
-
-Les radiations qui on rendu les cafards et les araignées de la taille d'un
-petit chien, n'ont pas épargné ce modeste framboisier non plus. Heureusement,
-même de cette taille, il semble être inoffensif.
-%%%%
-tengu aerator
-
-This particularly ferocious tengu is well on its way towards mastery of air
-magic.
 %%%%
 water elementalist statue
 
@@ -3067,23 +2994,12 @@ s'occuper des intrus comme vous.
     end
 }}
 %%%%
-vampire warrior
-
-Ce vampire, redoutable au combat, utilise la magie uniquement pour s'améliorer
-lui-même, préférant le combat au corps à corps pour les intrus agaçants.
-%%%%
 vine covered stone golem
 
 Tout en étant fait d'une vielle pierre ordinaire, couvert de mousse et de
 lierre, ce golem à toujours besoin d'être respecté. Il est toujours aussi dur
 que la pierre après tout, et son poids peut causer des dégâts considérables
 s'il est concentré sur un coup.
-%%%%
-warrior statue
-
-Cette statue montre un guerrier bourru, portant une vilaine épée à deux mains.
-D'autant qu'il paraît capable de bouger ses bras, se tenir à distance semble
-être le seul moyen de garder vos organes vitaux en bon état.
 %%%%
 withered plant
 

@@ -101,24 +101,6 @@ include Makefile.obj
 #
 
 
-ifdef USE_ICC
-
-# If you have a Core 2 processor, this _really_ makes things fly:
-#CFOPTIMIZE := -O2 -parallel -xT
-
-# Optionally enable the 'ipo' feature, to facilitate inlining
-# across object file bounds.
-#CFOPTIMIZE_L := -ipo
-
-# Some very good optimization flags.
-CFOPTIMIZE := -O2 -parallel
-
-else
-
-CFOPTIMIZE := -O2
-
-endif # USE_ICC
-
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 CFWARN := -Wall -Wformat-security
 CFWARN_L := -Wundef
@@ -528,6 +510,27 @@ ifdef AUTO_OPT
 ifndef NO_AUTO_OPT
 CFOPTIMIZE += -march=native
 endif
+endif
+
+ifdef USE_ICC
+# If you have a Core 2 processor, this _really_ makes things fly:
+#CFOPTIMIZE := -O2 -parallel -xT
+
+# Optionally enable the 'ipo' feature, to facilitate inlining
+# across object file bounds.
+#CFOPTIMIZE_L := -ipo
+
+# Some very good optimization flags.
+  CFOPTIMIZE := -O2 -parallel
+else
+
+  ifneq (,$(shell $(GXX) --version|grep 'g++.*4\.2\.'))
+    # OS X uses a buggy ancient version of gcc without fixes from even
+    # subsequent point releases of 4.2.
+    CFOPTIMIZE := -O1
+  else
+    CFOPTIMIZE := -O2
+  endif
 endif
 
 ifdef LTO
@@ -1144,8 +1147,11 @@ ifneq ($(GOALS),$(filter clean test %-windows,$(GOALS)))
 # This should eliminate an annoying need to use 'make clean' every time.
 #
 
-TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' for highlights)
-OLD_CFLAGS = $(shell cat .cflags 2>/dev/null)
+TRACK_CFLAGS = $(strip $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS)))
+        # (stray ' for highlights)
+OLD_CFLAGS = $(strip $(subst ','\'',$(shell cat .cflags 2>/dev/null)))
+        # (stray ' for highlights)
+
 ifneq ($(TRACK_CFLAGS),$(OLD_CFLAGS))
   NEED_REBUILD = y
 endif
@@ -1153,6 +1159,8 @@ endif
 .cflags: .force-cflags
 ifdef NEED_REBUILD
 	@echo "    * rebuilding crawl: new build flags or prefix"
+	@echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
+	@echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
 	@echo '$(TRACK_CFLAGS)' > .cflags
 endif
 
@@ -1399,7 +1407,9 @@ $(DEPS): %.d: %.cc
 ifdef PCH
 -include AppHdr.h.d
 %.gch: % .cflags $(CONTRIB_LIBS)
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+# This needs -MD, not -MMD, lest we be haunted by the ghosts of stale
+# system headers.
+	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -MD -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
