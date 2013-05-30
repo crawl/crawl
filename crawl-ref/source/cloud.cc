@@ -795,8 +795,10 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->is_fiery()
-                || (player && you.duration[DUR_FIRE_SHIELD])
-                || (player && you.mutation[MUT_IGNITE_BLOOD]);
+                || player &&
+                   (you.duration[DUR_FIRE_SHIELD]
+                    || you.mutation[MUT_IGNITE_BLOOD]
+                    || you.species == SP_DJINNI);
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_fire() > 0;
     case CLOUD_COLD:
@@ -976,12 +978,10 @@ bool _actor_apply_cloud_side_effects(actor *act,
             if (player)
             {
                 mpr("Strange energies course through your body.");
-                if (one_chance_in(3))
-                    return you.mutate("mutagenic cloud");
-                else
-                    return give_bad_mutation("mutagenic cloud");
+                return mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+                              "mutagenic cloud");
             }
-            else if (mons->mutate("mutagenic cloud"))
+            else if (mons->malmutate("mutagenic cloud"))
             {
                 if (you.religion == GOD_ZIN && cloud.whose == KC_YOU)
                     did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));

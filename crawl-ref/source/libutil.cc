@@ -515,6 +515,11 @@ string pluralise(const string &name, const char *qualifiers[],
         // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
     }
+    else if (ends_with(name, "djinni"))
+    {
+        // djinni -> djinn.
+        return name.substr(0, name.length() - 1);
+    }
     else if (name == "foot")
         return "feet";
     else if (name == "ophan" || name == "cherub" || name == "seraph")

@@ -131,6 +131,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       you.res_water_drowning(), hurted, true);
         if (!hurted && doEffects)
             mpr("You shrug off the wave.");
+        else if (hurted > original && doEffects)
+        {
+            mpr("The water douses you terribly!");
+            xom_is_stimulated(200);
+        }
         break;
 
     case BEAM_STEAM:
@@ -155,6 +160,17 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             mpr("The fire burns you terribly!");
             xom_is_stimulated(200);
         }
+        break;
+
+    case BEAM_HELLFIRE:
+        if (you.species == SP_DJINNI)
+        {
+            hurted = 0;
+            if (doEffects)
+                mpr("You resist completely.");
+        }
+        // Inconsistency: no penalty for rF-, unlike monsters.  That's
+        // probably good, and monsters should be changed.
         break;
 
     case BEAM_COLD:

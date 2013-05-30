@@ -721,6 +721,9 @@ effect/disjunct0 DISJUNCT
 effect/disjunct1
 effect/disjunct2
 effect/disjunct3
+effect/heataura0 HEAT_AURA
+effect/heataura1
+effect/heataura2
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

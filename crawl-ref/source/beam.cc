@@ -3055,14 +3055,19 @@ bool bolt::harmless_to_player() const
     case BEAM_ELECTRICITY:
         return player_res_electricity(false);
 
-    case BEAM_FIRE:
+    case BEAM_PETRIFY:
+        return (you.res_petrify() || you.petrified());
+
     case BEAM_COLD:
     case BEAM_ACID:
         // Fire and ice can destroy inventory items, acid damage equipment.
         return false;
 
-    case BEAM_PETRIFY:
-        return (you.res_petrify() || you.petrified());
+    case BEAM_FIRE:
+    case BEAM_HELLFIRE:
+    case BEAM_HOLY_FLAME:
+    case BEAM_NAPALM:
+        return you.species == SP_DJINNI;
 
     default:
         return false;
@@ -3342,8 +3347,8 @@ void bolt::affect_player_enchantment()
 
     case BEAM_MALMUTATE:
         mpr("Strange energies course through your body.");
-        you.mutate(aux_source.empty() ? get_source_name() :
-                   (get_source_name() + "/" + aux_source));
+        you.malmutate(aux_source.empty() ? get_source_name() :
+                      (get_source_name() + "/" + aux_source));
         obvious_effect = true;
         break;
 
@@ -4924,7 +4929,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_MALMUTATE:
-        if (mon->mutate("")) // exact source doesn't matter
+        if (mon->malmutate("")) // exact source doesn't matter
             obvious_effect = true;
         if (YOU_KILL(thrower))
         {

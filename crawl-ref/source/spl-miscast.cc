@@ -1519,9 +1519,9 @@ void MiscastEffect::_divination_you(int severity)
             break;
         case 1:
             mpr("You lose your focus.");
-            if (you.magic_points > 0)
+            if (you.magic_points > 0 || you.species == SP_DJINNI)
             {
-                dec_mp(3 + random2(10));
+                drain_mp(3 + random2(10));
                 mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
             }
             break;
@@ -1535,9 +1535,9 @@ void MiscastEffect::_divination_you(int severity)
         {
         case 0:
             mpr("You lose concentration completely!");
-            if (you.magic_points > 0)
+            if (you.magic_points > 0 || you.species == SP_DJINNI)
             {
-                dec_mp(5 + random2(20));
+                drain_mp(5 + random2(20));
                 mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
             }
             break;
@@ -2030,12 +2030,12 @@ void MiscastEffect::_transmutation(int severity)
                 // We don't need messages when the mutation fails,
                 // because we give our own (which is justified anyway as
                 // you take damage).
-                give_bad_mutation(cause, false, false);
+                mutate(RANDOM_BAD_MUTATION, cause, false, false);
                 if (coinflip())
-                    give_bad_mutation(cause, false, false);
+                    mutate(RANDOM_BAD_MUTATION, cause, false, false);
             }
             else
-                target->mutate(cause);
+                target->malmutate(cause);
             _ouch(5 + random2avg(23, 2));
             break;
         }
@@ -3024,9 +3024,9 @@ void MiscastEffect::_zot()
             else
             {
                 you_msg = "Your body is distorted in a weirdly horrible way!";
-                give_bad_mutation(cause, false, false);
+                mutate(RANDOM_BAD_MUTATION, cause, false, false);
                 if (coinflip())
-                    give_bad_mutation(cause, false, false);
+                    mutate(RANDOM_BAD_MUTATION, cause, false, false);
                 do_msg();
             }
             break;
