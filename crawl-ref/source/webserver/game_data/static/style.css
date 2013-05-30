@@ -102,14 +102,26 @@ body {
     background-color: #204a87; /* blue */
 }
 
-#stats[data-species=Djinni] #stats_hp_bar_full {
+#stats[data-species="Djinni"] #stats_hp_bar_full {
     background-color: #ba2cde;
 }
-#stats[data-species=Djinni] #stats_hp_bar_decrease {
+#stats[data-species="Djinni"] #stats_hp_bar_decrease {
     background-color: #2d0bba;
 }
-#stats[data-species=Djinni] #stats_hp_bar_increase {
+#stats[data-species="Djinni"] #stats_hp_bar_increase {
     background-color: #6c19e4;
+}
+
+/* Temperature bar, hidden normally */
+#stats_templine {
+    display:none;
+    visibility:hidden;
+}
+
+/* Visible for Lava Orcs */
+#stats[data-species="Lava Orc"] #stats_templine {
+    display:block;
+    visibility:visible;
 }
 
 #message_pane {
