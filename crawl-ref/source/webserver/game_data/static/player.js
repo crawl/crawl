@@ -166,22 +166,32 @@ function ($, comm, enums, map_knowledge, messages) {
         $("#stats_titleline").text(player.name + " the " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
 
+        var do_temperature = false;
+        var do_contam = false;
+
         // Setup species
         // TODO: Move to a proper initialisation task
         if ($("#stats").attr("data-species") != player.species)
         {
-            $("#stats").attr("data-species", player.species)
-            switch (player.species)
+            $("#stats").attr("data-species", player.species);
+            var hp_cap = "HP";
+            var mp_cap = "MP";
+            if (player.species == "Djinni")
             {
-                case "Djinni":
-                    $("#stats_hpline > .stats_caption").text("Essence:");
-                    $("#stats_mpline > .stats_caption").text("Contam:");
-                    break;
-                default:
-                    $("#stats_hpline > .stats_caption").text("HP:");
-                    $("#stats_mpline > .stats_caption").text("MP:");
-                    break;
+                hp_cap = "Essence";
+                mp_cap = "Contam";
             }
+            $("#stats_hpline > .stats_caption").text(hp_cap+":");
+            $("#stats_mpline > .stats_caption").text(mp_cap+":");
+        }
+        switch (player.species)
+        {
+            case "Djinni":
+                do_contam = true;
+                break;
+            case "Lava Orc":
+                do_temperature = true;
+                break;
         }
 
         var species_god = player.species;
@@ -224,8 +234,15 @@ function ($, comm, enums, map_knowledge, messages) {
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
             $("#stats_real_hp_max").text("");
+
         update_bar("hp");
-        update_bar("mp");
+        // if (do_contam)
+            // update_bar_contam("mp");
+        // else
+            update_bar("mp");
+        // if (do_temperature)
+            // update_bar_temp("temp");
+
         $("#stats_hp").toggleClass("boosted_hp", !!player.has_status(hp_boosters));
         $("#stats_mp").toggleClass("boosted_mp", !!player.has_status(mp_boosters));
 
