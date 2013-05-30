@@ -52,13 +52,13 @@ function ($, comm, enums, map_knowledge, messages) {
         // Calculate level for the colour
         var contam_level = 0;
 
-        if (you.contam > 25)
+        if (player.contam > 25)
             contam_level = 4;
-        else if (you.contam > 15)
+        else if (player.contam > 15)
             contam_level = 3;
-        else if (you.contam > 5)
+        else if (player.contam > 5)
             contam_level = 2;
-        else if (you.contam > 0)
+        else if (player.contam > 0)
             contam_level = 1;
 
         $("#stats_mpline").attr("data-contam", contam_level);
