@@ -3158,7 +3158,9 @@ enum species_type
     SP_HUMAN,
     SP_HIGH_ELF,
     SP_DEEP_ELF,
+#if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
+#endif
     SP_HALFLING,
     SP_HILL_ORC,
     SP_KOBOLD,
@@ -3199,6 +3201,9 @@ enum species_type
     SP_GREY_ELF,                       // (placeholder)
     SP_GNOME,                          // (placeholder)
     SP_MOUNTAIN_DWARF,                 // (placeholder)
+#if TAG_MAJOR_VERSION > 34
+    SP_SLUDGE_ELF,                     // (placeholder)
+#endif
 
     NUM_SPECIES,                       // always after the last species
 
