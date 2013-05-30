@@ -61,7 +61,7 @@ function ($, comm, enums, map_knowledge, messages) {
         else if (player.contam > 0)
             contam_level = 1;
 
-        $("#stats_mpline").attr("data-contam", contam_level);
+        $("#stats_contamline").attr("data-contam", contam_level);
     }
 
     function update_bar_heat()
