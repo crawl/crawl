@@ -2425,7 +2425,7 @@ bool is_orckind(const actor *act)
         }
         if (mons_is_ghost_demon(mon->type)
             && (mon->ghost->species == SP_HILL_ORC
-             || mon->ghost->species == SP_LAVA_ORC))
+                || mon->ghost->species == SP_LAVA_ORC))
         {
             return true;
         }

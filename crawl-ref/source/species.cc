@@ -21,7 +21,7 @@ static species_type species_order[] = {
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_SLUDGE_ELF,
     SP_DEEP_DWARF,     SP_HILL_ORC,
-    SP_LAVA_ORC, SP_MERFOLK,
+    SP_LAVA_ORC,       SP_MERFOLK,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
