@@ -996,6 +996,8 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     // Always place clouds now they have their own layer
     if (cell.cloud() != CLOUD_NONE)
         _tile_place_cloud(gc, *cell.cloudinfo());
+    else
+        env.tile_bk_cloud(gc) = 0;
 }
 
 void tile_wizmap_terrain(const coord_def &gc)
