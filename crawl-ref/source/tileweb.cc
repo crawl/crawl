@@ -643,7 +643,7 @@ void TilesFramework::_send_player(bool force_full)
         _update_int(force_full, c.contam, you.magic_contamination, "contam");
 
     if (you.species == SP_LAVA_ORC)
-        _update_int(force_full, c.heat, you.temperature, "heat");
+        _update_int(force_full, c.heat, temperature(), "heat");
 
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
     _update_int(force_full, c.evasion, player_evasion(), "ev");
