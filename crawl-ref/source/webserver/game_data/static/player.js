@@ -168,9 +168,9 @@ function ($, comm, enums, map_knowledge, messages) {
 
         // Setup species
         // TODO: Move to an initialisation task
-        if (!$("#stats").attr("player-species") == player.species)
+        if (!$("#stats").attr("data-species") == player.species)
         {
-            $("#stats").attr("player-species", player.species)
+            $("#stats").attr("data-species", player.species)
             switch (player.species)
             {
                 case "Djinni":
