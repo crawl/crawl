@@ -20,7 +20,10 @@ function theme.D.caves(e)
     { weight = 10, wall = 'wall_pebble_brown', floor = 'floor_pebble_darkbrown' },
     { weight = 10, wall = 'wall_pebble_lightgray', floor = 'floor_pebble_darkbrown' },
     { weight = 10, wall = 'wall_pebble_white', floor = 'floor_pebble_darkbrown' },
-    -- { weight = 1000, wall = 'wall_pebble_darkbrown', floor = 'floor_pebble_darkgray' },
+    { weight = 10, wall = 'wall_pebble_darkbrown', floor = 'floor_pebble_darkgray' },
+    { weight = 10, wall = 'wall_pebble_midbrown', floor = 'floor_pebble_darkgray' },
+    { weight = 10, wall = 'wall_pebble_darkbrown', floor = 'floor_pebble_darkbrown' },
+    { weight = 10, wall = 'wall_pebble_midbrown', floor = 'floor_pebble_darkbrown' },
   }
 
   local chosen = util.random_weighted_from("weight", variants)
