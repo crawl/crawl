@@ -219,7 +219,9 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
         mpr("You cannot swim in your current form.");
     else if (you.species == SP_LAVA_ORC && feat_is_lava(env.grid(p))
              && is_feat_dangerous(env.grid(p)))
+    {
         mpr("You cannot enter lava in your current form.");
+    }
     else
         canned_msg(MSG_UNTHINKING_ACT);
 
@@ -1513,8 +1515,11 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf += you.scan_artefacts(ARTP_FIRE, calc_unid);
 
             // dragonskin cloak: 0.5 to draconic resistances
-            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN)
+                && coinflip())
+            {
                 rf++;
+            }
         }
     }
 
@@ -2038,8 +2043,12 @@ int player_spec_cold()
         sc += you.wearing(EQ_RINGS, RING_ICE);
     }
 
-    if (you.species == SP_LAVA_ORC && (temperature_effect(LORC_LAVA_BOOST) || temperature_effect(LORC_FIRE_BOOST)))
+    if (you.species == SP_LAVA_ORC
+        && (temperature_effect(LORC_LAVA_BOOST)
+            || temperature_effect(LORC_FIRE_BOOST)))
+    {
         sc--;
+    }
 
     return sc;
 }
