@@ -1412,7 +1412,12 @@ bool elyvilon_divine_vigour()
         calc_hp();
         inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
         calc_mp();
-        inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)/old_mp_max - you.magic_points);
+        if (old_mp_max > 0)
+        {
+            inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
+                     / old_mp_max
+                   - you.magic_points);
+        }
 
         success = true;
     }
