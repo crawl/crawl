@@ -47,7 +47,7 @@ function ($, comm, enums, map_knowledge, messages) {
     function update_bar_contam()
     {
         player.contam_max = 16;
-        update_bar("mp", "contam");
+        update_bar("contam");
 
         // Calculate level for the colour
         var contam_level = 0;
@@ -62,6 +62,12 @@ function ($, comm, enums, map_knowledge, messages) {
             contam_level = 1;
 
         $("#stats_mpline").attr("data-contam", contam_level);
+    }
+
+    function update_bar_heat()
+    {
+        player.heat_max = 15; // Value of TEMP_MAX
+        update_bar("heat");
     }
 
     function repeat_string(s, n)
@@ -197,14 +203,11 @@ function ($, comm, enums, map_knowledge, messages) {
         {
             $("#stats").attr("data-species", player.species);
             var hp_cap = "HP";
-            var mp_cap = "MP";
             if (player.species == "Djinni")
             {
                 hp_cap = "Essence";
-                mp_cap = "Contam";
             }
             $("#stats_hpline > .stats_caption").text(hp_cap+":");
-            $("#stats_mpline > .stats_caption").text(mp_cap+":");
         }
         switch (player.species)
         {
@@ -255,7 +258,7 @@ function ($, comm, enums, map_knowledge, messages) {
         // Adjust max HP correctly for Djinni
         var max_max_hp = player.real_hp_max;
         if (player.species == "Djinni")
-            max_max_hp += player.real_mp_max;
+            max_max_hp += player.mp_max;
 
         if (max_max_hp != player.hp_max)
             $("#stats_real_hp_max").text("(" + max_max_hp + ")");
@@ -267,8 +270,8 @@ function ($, comm, enums, map_knowledge, messages) {
             update_bar_contam();
         else
             update_bar("mp");
-        // if (do_temperature)
-            // update_bar_temp("temp");
+        if (do_temperature)
+            update_bar_heat();
 
         $("#stats_hp").toggleClass("boosted_hp", !!player.has_status(hp_boosters));
         $("#stats_mp").toggleClass("boosted_mp", !!player.has_status(mp_boosters));
