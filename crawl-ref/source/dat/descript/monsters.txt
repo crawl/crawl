@@ -613,6 +613,11 @@ Norris:quote
 negative.”
     -Georges Poulet
 %%%%
+Pan
+
+The lord of all satyrs. With his flute, he produces music said to cloud the
+mind beyond all hope of return.
+%%%%
 Pikel
 
 While kobolds are normally slaves, Pikel's rough life, selfish ambition and
@@ -724,6 +729,10 @@ Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
 daring leaps! But watch out for her knives!
+%%%%
+Sojobo
+
+King of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 %%%%
 Terence
 
@@ -1471,6 +1480,11 @@ A great reptilian beast with powerful claws on its limbs, covered in thick
 green scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
 %%%%
+dryad
+
+A spirit of nature, bound to the forest in which it resides. It is capable
+of calling upon the trees to defend against incursions.
+%%%%
 dwarf
 
 A member of a short, sturdy mountain-dwelling folk. More robust than their deep
@@ -1614,6 +1628,12 @@ eye of draining
 
 A hovering horror that waxes strong on magic.
 %%%%
+faun
+
+A hybrid with the torso of a man atop the forelegs of a goat. They are fabled
+for their ability to play with the minds of those who intrude into their
+domains.
+%%%%
 feature mimic
 
 A vicious beast masquerading as an ordinary dungeon feature.
@@ -1691,6 +1711,11 @@ freed slave
 
 A human who has just been released from magical enslavement. It tries to stand
 proudly before you, despite its lingering fear and unkempt appearance.
+%%%%
+forest drake
+
+A small but powerful dragon, quite comfortable weaving through the trees
+that comprise its home. It can exhale powerful blasts of wind.
 %%%%
 freezing wraith
 
@@ -2455,6 +2480,19 @@ tengu:quote
  He bit an Angleworm in halves
  And ate the fellow, raw”
     -Emily Dickinson, “A Bird came down the Walk”. ca. 1865.
+%%%%
+tengu conjurer
+
+One of many tengu with a talent for the destructive magical arts.
+%%%%
+tengu reaver
+
+An elite, ferocious tengu highly skilled with both steel and spells.
+%%%%
+tengu warrior
+
+A particularly bloodthirsty tengu who has opted to hone their skill in
+fighting and weaponry instead of spellcasting.
 %%%%
 killer bee
 
@@ -3453,6 +3491,11 @@ skin to the white morphew.”
     -Gaius Plinius Secundus, _Naturalis Historia_, Book X, ch. LXVII. 79 A.D.
      trans. Philemon Holland, 1601.
 %%%%
+satyr
+
+A more intelligent relative of the faun, often found in their company, and far
+more unforgiving of - and dangerous to - interlopers.
+%%%%
 scorpion
 
 A loathsome arachnid, armed to the teeth. Its body is covered in a thick
@@ -3946,6 +3989,11 @@ spriggan druid
 A spriggan whose connection with the birds and the beasts is exceptionally
 strong. Revelling in nature, these protectors of forests are the doom of anyone
 who so much as snaps a twig.
+%%%%
+spriggan enchanter
+
+A spriggan particularly skilled in the arts of hexes and charms - and,
+apparently, lethal with a quick blade.
 %%%%
 spriggan rider
 

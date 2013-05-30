@@ -553,7 +553,7 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
         }
         else if (branches[i].exit_stairs == feat)
         {
-            place = level_id(branches[i].parent_branch, startdepth[i]);
+            place = level_id(parent_branch((branch_type)i), startdepth[i]);
             break;
         }
     }
@@ -2514,6 +2514,51 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_SATYR:
+        natural_leader = true;
+    case MONS_FAUN:
+        band = BAND_FAUNS;
+        band_size = 2 + random2(4);
+        break;
+
+    case MONS_PAN:
+        natural_leader = true;
+        band = BAND_PAN;
+        band_size = 4 + random2(4);
+        break;
+
+    case MONS_TENGU_CONJURER:
+    case MONS_TENGU_WARRIOR:
+        natural_leader = true;
+    case MONS_TENGU:
+        if (coinflip())
+            break;
+        band = BAND_TENGU;
+        band_size = 3 + random2(4);
+        break;
+
+    case MONS_SOJOBO:
+        natural_leader = true;
+        band = BAND_SOJOBO;
+        band_size = 5 + random2(4);
+        break;
+
+    case MONS_SPRIGGAN_AIR_MAGE:
+    case MONS_SPRIGGAN_BERSERKER:
+    case MONS_SPRIGGAN_DRUID:
+    case MONS_SPRIGGAN_RIDER:
+        natural_leader = true;
+    case MONS_SPRIGGAN:
+        band = BAND_SPRIGGANS;
+        band_size = 2 + random2(3);
+        break;
+
+    case MONS_SPRIGGAN_DEFENDER:
+        natural_leader = true;
+        band = BAND_SPRIGGAN_ELITES;
+        band_size = 3 + random2(4);
+        break;
+
     default: ;
     }
 
@@ -2868,6 +2913,36 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_JIANGSHI:
         return MONS_JIANGSHI;
+
+    case BAND_PAN:
+        if (which <= 2 || coinflip())
+            return MONS_SATYR;
+        // deliberate fall-through
+    case BAND_FAUNS:
+        return MONS_FAUN;
+
+    case BAND_TENGU:
+        return MONS_TENGU;
+
+    case BAND_SOJOBO:
+        if (which <= 2)
+            return MONS_TENGU_REAVER;
+        else
+            return random_choose_weighted( 8, MONS_TENGU_WARRIOR,
+                                          16, MONS_TENGU_CONJURER,
+                                          24, MONS_TENGU,
+                                           0);
+
+    case BAND_SPRIGGAN_ELITES:
+        if (which <= 2 || one_chance_in(5))
+            return random_choose(MONS_SPRIGGAN_AIR_MAGE,
+                                 MONS_SPRIGGAN_BERSERKER,
+                                 MONS_SPRIGGAN_DRUID,
+                                 MONS_SPRIGGAN_RIDER,
+                                 -1);
+        // deliberate fall-through
+    case BAND_SPRIGGANS:
+        return MONS_SPRIGGAN;
 
     default:
         die("unhandled band type %d", band);
