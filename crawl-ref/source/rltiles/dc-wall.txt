@@ -508,6 +508,12 @@ pebble_red3
 %repeat WALL_PEBBLE WALL_PEBBLE_WHITE
 %resetcol
 
+# Additional variants for D cave layouts
+%hue 0 30
+%lum 0 -20
+%repeat WALL_PEBBLE WALL_PEBBLE_DARKBROWN
+%resetcol
+
 shoals_wall1 WALL_SHOALS
 shoals_wall2
 shoals_wall3
