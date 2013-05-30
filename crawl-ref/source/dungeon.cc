@@ -340,7 +340,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     }
     catch (dgn_veto_exception& e)
     {
-        dprf("VETO: %s: %s", level_id::current().describe().c_str(), e.what());
+        dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
         mapgen_report_map_veto();
 #endif
