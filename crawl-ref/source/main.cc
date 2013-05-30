@@ -2503,8 +2503,11 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
-    if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
-        you.redraw_armour_class = true;
+    // Lava orcs don't have stoneskin decay like normal.
+    if (you.species != SP_LAVA_ORC
+        || (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)))
+        if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
+            you.redraw_armour_class = true;
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
@@ -2644,6 +2647,9 @@ static void _decrement_durations()
 
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
             mpr("You are exhausted.", MSGCH_WARN);
+
+        if (you.species == SP_LAVA_ORC)
+            mpr("You feel less hot-headed.");
 
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
@@ -2852,6 +2858,9 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SICKENING, delay);
 
+    _decrement_a_duration(DUR_ANTIMAGIC, delay,
+                          "You regain control over your magic.");
+
     _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
@@ -3056,6 +3065,9 @@ static void _player_reacts()
 
     if (you.attribute[ATTR_SHADOWS])
         shadow_lantern_effect();
+
+    if (you.species == SP_LAVA_ORC)
+        temperature_check();
 
     if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();

@@ -307,7 +307,7 @@ public:
     bool can_safely_mutate() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
-    bool mutate(const string &reason);
+    bool malmutate(const string &reason);
     bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
@@ -379,6 +379,7 @@ public:
     int umbra_radius2 () const;
     int suppression_radius2 () const;
     int soul_aura_radius2 () const;
+    int heat_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;

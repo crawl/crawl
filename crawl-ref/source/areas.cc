@@ -44,6 +44,7 @@ enum areaprop_flag
     APROP_QUAD          = (1 << 9),
     APROP_DISJUNCTION   = (1 << 10),
     APROP_SOUL_AURA     = (1 << 11),
+    APROP_HOT           = (1 << 12),
 };
 
 struct area_centre
@@ -86,7 +87,8 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
          || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
-         || act->suppression_radius2() > -1) || act->soul_aura_radius2() > -1)
+         || act->suppression_radius2() > -1 || act->heat_radius2() > -1)
+         || act->soul_aura_radius2() > -1)
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -170,6 +172,7 @@ static void _update_agrid()
             no_areas = false;
         }
 
+
         if ((r = ai->soul_aura_radius2()) >= 0)
         {
             _agrid_centres.push_back(area_centre(AREA_SOUL_AURA, ai->pos(), r));
@@ -182,6 +185,17 @@ static void _update_agrid()
             no_areas = false;
         }
 
+        if ((r = ai->heat_radius2()) >= 0)
+        {
+            _agrid_centres.push_back(area_centre(AREA_HOT, ai->pos(), r));
+
+            for (radius_iterator ri(ai->pos(),r, C_CIRCLE, ai->get_los());
+                ri; ++ri)
+            {
+                _set_agrid_flag(*ri, APROP_HOT);
+            }
+            no_areas = false;
+        }
     }
 
     if (you.char_direction == GDT_ASCENDING && !you.pos().origin())
@@ -244,6 +258,8 @@ static area_centre_type _get_first_area(const coord_def& f)
         return AREA_SANCTUARY;
     if (a & APROP_SILENCE)
         return AREA_SILENCE;
+    if (a & APROP_HOT)
+        return AREA_HOT;
     if (a & APROP_HALO)
         return AREA_HALO;
     if (a & APROP_UMBRA)
@@ -822,4 +838,41 @@ int monster::soul_aura_radius2() const
 int player::soul_aura_radius2() const
 {
     return -1;
+}
+
+/////////////
+// Heat aura (lava orcs).
+
+// Player radius
+int player::heat_radius2() const
+{
+    if (you.species != SP_LAVA_ORC)
+        return (-1);
+
+    if (!temperature_effect(LORC_HEAT_AURA))
+        return (-1);
+
+    return (2); // Surrounds you to radius of 1.
+}
+
+// Stub for monster radius
+int monster::heat_radius2() const
+{
+    return -1;
+}
+
+bool heated(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return (false);
+
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_HOT);
+}
+
+bool actor::heated() const
+{
+    return ::heated(pos());
 }

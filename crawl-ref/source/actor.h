@@ -197,7 +197,7 @@ public:
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_polymorph() const = 0;
     virtual bool can_bleed(bool allow_tran = true) const = 0;
-    virtual bool mutate(const string &reason) = 0;
+    virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow) = 0;
     virtual bool drain_exp(actor *agent, const char *aux = NULL,
                            bool quiet = false, int pow = 3) = 0;
@@ -353,6 +353,8 @@ public:
     virtual bool umbraed() const;
     // Magically suppressed?
     virtual bool suppressed() const;
+    // Being heated by a heat aura?
+    virtual bool heated() const;
     // Squared halo radius.
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
@@ -362,6 +364,7 @@ public:
     virtual int umbra_radius2 () const = 0;
     virtual int suppression_radius2 () const = 0;
     virtual int soul_aura_radius2 () const = 0;
+    virtual int heat_radius2 () const = 0;
 
     virtual bool glows_naturally() const = 0;
 

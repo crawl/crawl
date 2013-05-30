@@ -1192,6 +1192,13 @@ enum dungeon_char_type
     DCHAR_FIRED_MISSILE,
     DCHAR_EXPLOSION,
 
+    DCHAR_FRAME_HORIZ,
+    DCHAR_FRAME_VERT,
+    DCHAR_FRAME_TL,
+    DCHAR_FRAME_TR,
+    DCHAR_FRAME_BL,
+    DCHAR_FRAME_BR,
+
     NUM_DCHAR_TYPES
 };
 
@@ -1500,6 +1507,7 @@ enum duration_type
     DUR_RETCHING,
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
+    DUR_ANTIMAGIC,
     NUM_DURATIONS
 };
 
@@ -2626,6 +2634,9 @@ enum monster_type                      // menv[].type
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
 
+    MONS_DJINNI,
+    MONS_LAVA_ORC,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3159,7 +3170,9 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
-      LAST_VALID_SPECIES = SP_OCTOPODE,
+    SP_DJINNI,
+    SP_LAVA_ORC,
+      LAST_VALID_SPECIES = SP_LAVA_ORC,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)

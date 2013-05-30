@@ -357,6 +357,13 @@ static bool _efreet_flask(int slot)
 
 static bool _check_crystal_ball()
 {
+    if (you.species == SP_DJINNI)
+    {
+        mpr("These balls have not yet been approved for use by djinn. "
+            "(OOC: they're supposed to work, but need a redesign.)");
+        return false;
+    }
+
     if (you.intel() <= 1)
     {
         mpr("You lack the intelligence to focus on the shapes in the ball.");
@@ -1562,7 +1569,8 @@ bool evoke_item(int slot)
             canned_msg(MSG_TOO_HUNGRY);
             return false;
         }
-        else if (you.magic_points >= you.max_magic_points)
+        else if (you.magic_points >= you.max_magic_points
+                 && (you.species != SP_DJINNI || you.hp == you.hp_max))
         {
             mpr("Your reserves of magic are already full.");
             return false;
