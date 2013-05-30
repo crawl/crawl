@@ -603,7 +603,11 @@ static void _print_stats_contam(int x, int y)
     }
     else
     {
+#ifdef USE_TILE_LOCAL
+        Contam_Bar.m_default = LIGHTGREY;
+#else
         Contam_Bar.m_default = DARKGREY;
+#endif
         Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = DARKGREY;
     }
 
