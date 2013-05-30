@@ -1735,6 +1735,64 @@ Octopodes
   knowledge of poisons as well. They are also able to use their tentacles to
   constrict enemies - potentially several at a time!
 
+Djinn
+  Being the same kind of creatures as angels or demons, these spirits have
+  been created from smokeless fire by some deranged god. Unlike regular
+  living beings, they draw their sustenance from magic rather than eating or
+  drinking, although for some reason they can do so -- probably due to being
+  not too intelligently designed by a creator with no knowledge of
+  evolution.
+
+  Magic is literally their life, to the point of health and magical powers
+  being one force, called "essence". A djinni can also withstand more
+  magical contamination than most, and slowly recover from its effects.
+
+  Being spirits of fire, they obviously suffer no harm from any kind of it
+  (but their equipment still may), yet are greatly harmed by cold and water.
+  Fortunately, levitation allows crossing bodies of liquid, although without
+  external means to power their flight it takes quite a deal of effort.
+
+  The djinn make great fire mages (duh), are competent with air magic,
+  enchantments, magic items and weapons with long reach that don't require
+  high dexterity; are terrible with ice, earth, necromancy and poison.
+
+Lava Orcs
+  These strange humanoids are made of living stone, with unique heat-based
+  metabolism. Ordinarily slow and hardy, when anything puts some stress on
+  them they literally fire up, turning into fast-moving lava. Outwardly,
+  their shape resembles orcs the most, thus the name.
+
+  They are unique in their ability to swim in lava: even the Djinn, while
+  immune to fire, can't swim through a treacle of molten rock. In order to
+  be able to use regular equipment, Lava Orcs have invented special
+  fire-proof backpacks; vulnerable items like scrolls or books are not
+  accessible when their owner is too hot.
+
+  Many things can fire up the metabolism: facing multiple and/or dangerous
+  enemies, being badly hurt, suffering fire damage, berserking, and
+  obviously direct submersion in lava. As the heat grows, Lava Orcs first
+  gain normal speed, then get more accustomed to fire, lose the hardness
+  of their skin, gain extra power of fire-based magic, become vulnerable to
+  cold, speed up even more, cause fire damage to creatures in increasing
+  vicinity by merely being close.
+
+  Lava Orcs make good melee fighters, preferring axes. They're pretty bad
+  spellcasters, except for transmutations, fire and earth magic.
+
+Grotesks
+  A cross between stone gargoyles and living beings, Grotesks are hideous
+  humanoids with an affinity to rock. They are able to assume fully stony
+  form at will, although not without ill consequences. When doing so, they
+  gain immense hardness, although after some time they briefly become fully
+  immobile and helpless, and suffer some medium-term debilitations.
+
+  Grotesks' partially living form is less susceptible to effects of
+  necromancy and cold than most beings, their metabolism is slow and they
+  blend into the dungeon pretty well. Their fangs and talons make them
+  dangerous unarmed fighters, although they're not competent with weapons
+  other than maces. They can be exceptional earth-based conjurers, although
+  they're bad with any other magic schools other than ice.
+
 Elves
 ========================================
 
@@ -1766,16 +1824,6 @@ Deep Elves
   other Elves and losing all colouration. They are poor at hand-to-hand combat,
   but excellent at fighting from a distance. They advance in levels as fast as
   High Elves.
-
-Sludge Elves
-  This is a somewhat degenerate species of Elves. They are mirror images of
-  High Elves in some respects: they have no special proficiency with bows or
-  swords (long or short), nor do they have any aptitude in the traditional areas
-  of High Elven magic (charms and conjurations). On the other hand, they are
-  superlative transmuters, and are comfortable dabbling in necromantic, poison
-  and elemental magic. As fighters, they are often more dangerous unarmed than
-  armed. They advance in levels slightly slower than Humans, but faster than all
-  other Elves.
 
 The Undead
 ========================================
