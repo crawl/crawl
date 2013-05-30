@@ -30,7 +30,7 @@ BRANCHFN(has_uniques, boolean, br.has_uniques)
 BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
              ? ""
-             : branches[br.parent_branch].abbrevname)
+             : branches[parent_branch(br.id)].abbrevname)
 
 LUAFN(dgn_br_depth)
 {
@@ -57,7 +57,7 @@ LUAFN(dgn_br_exists)
             luaL_argerror(ls, 1, "No such branch");
     }
 
-    if (branches[brn].parent_branch == NUM_BRANCHES || startdepth[brn] != -1)
+    if (parent_branch(brn) == NUM_BRANCHES || startdepth[brn] != -1)
         exists = true;
 
     PLUARET(boolean, exists);
@@ -83,7 +83,7 @@ LUAFN(dgn_br_entrance)
             luaL_argerror(ls, 1, "No such branch");
     }
 
-    _push_level_id(ls, level_id(branches[brn].parent_branch,
+    _push_level_id(ls, level_id(parent_branch(brn),
                                 startdepth[brn]));
     return 1;
 }

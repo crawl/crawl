@@ -2260,6 +2260,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         } while (depth > 0);
     }
 
+    if (player_in_branch(BRANCH_FOREST))
+        _add_plant_clumps(2);
+
     const unsigned nvaults = env.level_vaults.size();
 
     // Any further vaults must make sure not to disrupt level layout.
@@ -3362,7 +3365,7 @@ static void _place_branch_entrances(bool use_vaults)
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
 
         if (b->entry_stairs != NUM_FEATURES
-            && player_in_branch(b->parent_branch)
+            && player_in_branch(parent_branch((branch_type)i))
             && (you.depth == startdepth[i] || mimic))
         {
             // Placing a stair.
@@ -4074,7 +4077,8 @@ _build_vault_impl(const map_def *vault,
     if (!make_no_exits)
     {
         const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
-                            || player_in_branch(BRANCH_SLIME_PITS);
+                            || player_in_branch(BRANCH_SLIME_PITS)
+                            || player_in_branch(BRANCH_FOREST);
         place.connect(spotty);
     }
 
@@ -5528,7 +5532,8 @@ static bool _spotty_seed_ok(const coord_def& p)
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 {
     return (feat_is_water(feat) || feat_is_lava(feat) || feat_is_wall(feat)
-            || feat == DNGN_FLOOR);
+            || feat == DNGN_FLOOR
+            || (player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE));
 }
 
 // Connect vault exit "from" to dungeon floor by growing a spotty chamber.
