@@ -3427,6 +3427,12 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
         }
 
+        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+            || you.has_spell(SPELL_SIMULACRUM))
+        {
+            return false;
+        }
+
         return true;
 
     case OBJ_MISCELLANY:
