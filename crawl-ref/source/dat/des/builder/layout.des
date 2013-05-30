@@ -675,7 +675,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
     delve(3, 3, 0, -1, 1)
     subst('X = x')
 
-    theme.D.caves(_G,true)
+    theme.D.caves_classic(_G)
 }}
 
 ##############################################################
