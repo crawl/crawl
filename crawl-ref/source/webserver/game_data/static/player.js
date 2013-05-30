@@ -202,10 +202,18 @@ function ($, comm, enums, map_knowledge, messages) {
         if ($("#stats").attr("data-species") != player.species)
         {
             $("#stats").attr("data-species", player.species);
-            var hp_cap = "HP";
-            if (player.species == "Djinni")
+            var hp_cap;
+            if (player.real_hp_max != player.hp_max)
             {
-                hp_cap = "Essence";
+                hp_cap = "HP";
+                if (player.species == "Djinni")
+                    hp_cap = "EP";
+            }
+            else
+            {
+                hp_cap = "Health";
+                if (player.species == "Djinni")
+                    hp_cap = "Essence";
             }
             $("#stats_hpline > .stats_caption").text(hp_cap+":");
         }
