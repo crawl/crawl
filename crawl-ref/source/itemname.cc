@@ -3187,7 +3187,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
 
         if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
-            return (true);
+            return true;
 
         switch (item.sub_type)
         {
