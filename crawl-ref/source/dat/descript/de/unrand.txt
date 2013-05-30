@@ -122,7 +122,7 @@ Pfeilen, welche nicht leicht zu bekommen sind.
 %%%%
 giant club "Skullcrusher"
 
-Diese entzückende Keule kann jeden Oger überglücklich machen - sei es ein purer
+Diese entzückende Keule kann jeden Oger überglücklich machen – sei es ein purer
 Schläger, Massenmörder oder eine Mischung aus beidem.
 %%%%
 glaive of the Guard
@@ -259,10 +259,6 @@ Ein vibrierender Umhang.
 boots of the Assassin
 
 Ein Paar weiche Stiefel, die speziell von der Assassinengilde entworfen wurden.
-%%%%
-Lear's chain mail
-
-Ein Kettenhemd, hergestellt aus purem Gold.
 %%%%
 skin of Zhor
 

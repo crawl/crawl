@@ -21,13 +21,15 @@ public:
         : nretries(_nretries)
     {
     }
+
     operator bool () const
     {
         return nretries > 0;
     }
-    void check(int errcode)
+
+    void check(int err)
     {
-        if (errcode == SQLITE_BUSY)
+        if (err == SQLITE_BUSY)
         {
             --nretries;
             // Give the annoying process locking the db a little time

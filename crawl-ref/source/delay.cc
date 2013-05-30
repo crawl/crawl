@@ -930,7 +930,7 @@ void handle_delay()
             mprf(MSGCH_MULTITURN_ACTION, "\"%s\"",
                  _get_zin_recite_speech(delay.trits, delay.len,
                                         delay.parm1, delay.duration).c_str());
-            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
+            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1, &you))
                 viewwindow();
 
             // Recite trains more than once per use, because it has a
@@ -1374,7 +1374,7 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (tiles.need_redraw())
+        if (Options.rest_delay >= 0 && tiles.need_redraw())
             tiles.redraw();
 #endif
 
@@ -1383,6 +1383,10 @@ static command_type _get_running_command()
         {
             mpr("Done waiting.");
         }
+
+        if (Options.rest_delay > 0)
+            delay(Options.rest_delay);
+
         return CMD_MOVE_NOWHERE;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)
@@ -1711,6 +1715,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " opens the gate.";
         else if (at.context == SC_TELEPORT_IN)
             text += " appears from thin air!";
+        else if (at.context == SC_LEAP_IN)
+            text += " leaps into view!";
         // The monster surfaced and submerged in the same turn without
         // doing anything else.
         else if (at.context == SC_SURFACES_BRIEFLY)
@@ -1838,9 +1844,7 @@ bool interrupt_activity(activity_interrupt_type ai,
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
     if (ai == AI_HUNGRY && _auto_eat(delay) && prompt_eat_chunks(true) == 1)
-    {
         return false;
-    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 

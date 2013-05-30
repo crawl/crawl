@@ -176,7 +176,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // date so that we don't cause excess energy loss in monsters
         if (!melee_attk.attack())
             effective_attack_number = melee_attk.effective_attack_number;
-        else if (did_hit and not *did_hit)
+        else if (did_hit && !(*did_hit))
             *did_hit = melee_attk.did_hit;
     }
 
@@ -275,6 +275,7 @@ static inline int get_resistible_fraction(beam_type flavour)
         return 55;
 
     case BEAM_POISON_ARROW:
+    case BEAM_GHOSTLY_FLAME:
         return 70;
 
     default:

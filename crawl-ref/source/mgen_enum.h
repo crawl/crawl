@@ -79,6 +79,14 @@ enum band_type
 #if TAG_MAJOR_VERSION == 34
     BAND_OGRE_MAGE_EXTERN,
 #endif
+    BAND_DEATH_KNIGHT,
+    BAND_JIANGSHI,
+    BAND_FAUNS,
+    BAND_PAN,
+    BAND_TENGU,
+    BAND_SOJOBO,
+    BAND_SPRIGGANS,
+    BAND_SPRIGGAN_ELITES,
     NUM_BANDS                   // always last
 };
 

@@ -9,6 +9,7 @@
 
 #include "abl-show.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
@@ -621,6 +622,54 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
+    // Lear's hauberk covers also head, hands and legs.
+    if (is_unrandom_artefact(item) && item.special == UNRAND_LEAR)
+    {
+        if (!player_has_feet(!ignore_temporary))
+        {
+            if (verbose)
+                mpr("You have no feet.");
+            return false;
+        }
+
+        if (!ignore_temporary)
+        {
+            for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
+            {
+                // No strange race can wear this.
+                const char* parts[] = { "head", "hands", "feet" };
+                // Auto-disrobing would be nice.
+                if (you.equip[s] != -1)
+                {
+                    if (verbose)
+                        mprf("You'd need your %s free.", parts[s - EQ_HELMET]);
+                    return false;
+                }
+
+                if (!you_tran_can_wear(s, true))
+                {
+                    if (verbose)
+                    {
+                        mprf(you_tran_can_wear(s) ? "The hauberk won't fit your %s."
+                                                  : "You have no %s!",
+                             parts[s - EQ_HELMET]);
+                    }
+                    return false;
+                }
+            }
+        }
+    }
+    else if (slot >= EQ_HELMET && slot <= EQ_BOOTS
+             && !ignore_temporary
+             && player_equip_unrand(UNRAND_LEAR))
+    {
+        // The explanation is iffy for loose headgear, especially crowns:
+        // kings loved hooded hauberks, according to portraits.
+        if (verbose)
+            mpr("You can't wear this over your hauberk.");
+        return false;
+    }
+
     size_type player_size = you.body_size(PSIZE_TORSO, ignore_temporary);
     int bad_size = fit_armour_size(item, player_size);
 
@@ -669,10 +718,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.species == SP_NAGA)
+        if (you.species == SP_NAGA || you.species == SP_DJINNI)
         {
             if (verbose)
-                mpr("You can't wear that!");
+                mpr("You have no legs!");
             return false;
         }
 
@@ -2025,7 +2074,7 @@ static void _vampire_corpse_help()
 
 void drink(int slot)
 {
-    if (you_foodless())
+    if (you_foodless(true))
     {
         if (you.form == TRAN_TREE)
             mpr("It'd take too long for a potion to reach your roots.");
@@ -2059,6 +2108,12 @@ void drink(int slot)
     {
         canned_msg(MSG_PRESENT_FORM);
         _vampire_corpse_help();
+        return;
+    }
+
+    if (you.duration[DUR_RETCHING])
+    {
+        mpr("You can't gag anything down in your present state!");
         return;
     }
 
@@ -2337,7 +2392,7 @@ static bool _vorpalise_weapon(bool already_known)
     case SPWPN_FROST:
     case SPWPN_FREEZING:
         if (cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
-                                  (already_known) ? &you : NULL, false)
+                                  (already_known) ? &you : NULL, true)
             != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
@@ -2354,7 +2409,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_VENOM:
         if (cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE, 60,
-                                  (already_known) ? &you : NULL, false)
+                                  (already_known) ? &you : NULL, true)
             != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
@@ -2430,7 +2485,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_ANTIMAGIC:
         mprf("%s repels your magic.", itname.c_str());
-        dec_mp(you.magic_points);
+        drain_mp(you.species == SP_DJINNI ? 100 : you.magic_points);
         success = false;
         break;
 
@@ -2651,6 +2706,12 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        mpr("You'd burn any book you tried to read!");
+        return;
+    }
+
     item_def& book(you.inv[item_slot]);
 
     if (book.sub_type == BOOK_DESTRUCTION)
@@ -2836,13 +2897,25 @@ void read_scroll(int slot)
 
     if (you.confused())
     {
-        mpr("You're too confused.");
+        canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot read scrolls while unable to breathe!");
         return;
     }
 
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
+        return;
+    }
+
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        mpr("You'd burn any scroll you tried to read!");
         return;
     }
 

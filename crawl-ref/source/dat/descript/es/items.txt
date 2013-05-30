@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Un utensilio mágico que sirve para convocar elementales de aire. Es poco
-fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
-uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
-magia del aire.
-%%%%
 amulet of clarity
 
 Este amuleto protege a su portador de algunas formas de confusión mental,
@@ -41,13 +34,6 @@ amulet of resist mutation
 
 Este amuleto previene que su portador adquiera mutaciones, aunque no es
 infalible.
-%%%%
-amulet of the gourmand
-
-Este amuleto protege a su portador de caer enfermo al comer carne cruda, y le
-permite digerirla incluso cuando no está hambriento. No obstante, estos efectos
-son inicialmente pequeños, y se incrementarán al llevarlo puesto durante un
-periodo de tiempo prolongado.
 %%%%
 amulet of warding
 
@@ -683,13 +669,6 @@ lajatang
 Una exótica y muy efectiva arma de importación. Consiste en una garrocha, con
 cuchillas en forma de media luna en ambos extremos.
 %%%%
-lamp of fire
-
-Un utensilio mágico que sirve para convocar elementales de fuego. Es poco
-fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
-uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
-magia del fuego.
-%%%%
 lantern of shadows
 
 Un utensilio profano que sirve para solicitar los servicios de los poderes de
@@ -1295,11 +1274,6 @@ portador, y lo aisla de la electricidad. Si el portador del bastón tiene
 capacidad en evocaciones y magia del aire, puede provocar descargas a quienes
 golpee con él.
 %%%%
-staff of channeling
-
-Este bastón permite que su portador canalice la magia ambiental para sus
-propios propósitos.
-%%%%
 staff of cold
 
 Este bastón incrementa el poder de los hechizos de hielo recitados por su
@@ -1323,11 +1297,6 @@ staff of earth
 Este bastón aumenta el poder de los conjuros de tierra del portador. Si éste es
 hábil en evocaciones, puede triturar a quien es golpeado, el daño es aún mayor
 si también se es hábil en magia de tierra.
-%%%%
-staff of energy
-
-Este bastón reduce enormemente el costo de hambre de los hechizos lanzados por
-su portador.
 %%%%
 staff of fire
 

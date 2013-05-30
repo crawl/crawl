@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "delay.h"
@@ -22,6 +23,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "mon-abil.h"
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
@@ -92,7 +94,7 @@ bool form_can_swim(transformation_type form)
     if (you.species == SP_MERFOLK && !form_changed_physiology(form))
         return true;
 
-    if (you.species == SP_OCTOPODE)
+    if (you.species == SP_OCTOPODE && !form_changed_physiology(form))
         return true;
 
     size_type size = you.transform_size(form, PSIZE_BODY);
@@ -105,7 +107,7 @@ bool form_can_swim(transformation_type form)
 bool form_likes_water(transformation_type form)
 {
     return (form_can_swim(form) || you.species == SP_GREY_DRACONIAN
-            || you.species == SP_OCTOPODE && !form_changed_physiology(form));
+                                   && !form_changed_physiology(form));
 }
 
 bool form_has_mouth(transformation_type form)
@@ -114,6 +116,13 @@ bool form_has_mouth(transformation_type form)
         && form != TRAN_WISP
         && form != TRAN_JELLY
         && form != TRAN_FUNGUS;
+}
+
+bool form_likes_lava(transformation_type form)
+{
+    // Lava orcs can only swim in non-phys-change forms.
+    return (you.species == SP_LAVA_ORC
+            && !form_changed_physiology(form));
 }
 
 bool form_can_butcher_barehanded(transformation_type form)
@@ -384,6 +393,9 @@ void unmeld_one_equip(equipment_type eq)
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
+    if (player_equip_unrand(UNRAND_LEAR) && eq >= EQ_HELMET && eq <= EQ_BOOTS)
+        eq = EQ_BODY_ARMOUR;
+
     set<equipment_type> r;
     r.insert(eq);
     _remove_equipment(r, meld, mutation);
@@ -555,6 +567,10 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     if (form_can_fly(which_trans) || _flying_in_new_form(which_trans))
         return false;
 
+    // ... or hover our butts up if need arises.
+    if (you.species == SP_DJINNI)
+        return false;
+
     // We can only cling for safety if we're already doing so.
     if (which_trans == TRAN_SPIDER && you.is_wall_clinging())
         return false;
@@ -634,6 +650,9 @@ static bool _transformation_is_safe(transformation_type which_trans,
         if (cloud != EMPTY_CLOUD && is_damaging_cloud(env.cloud[cloud].type, false))
             return false;
     }
+
+    if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
+        return false; // melting is fatal...
 
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
@@ -776,6 +795,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return _abort_or_fizzle(just_check);
     }
 
+    if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
+        && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
+    {
+        if (!force)
+            mpr("Your temperature is too high to benefit from that spell.");
+        return _abort_or_fizzle(just_check);
+    }
+
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     int str = 0, dex = 0;
@@ -895,7 +922,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_PORCUPINE:
-        tran_name = "spider";
+        tran_name = "porcupine";
         str       = -3;
         msg      += "a spiny porcupine.";
         break;
@@ -1008,16 +1035,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_FUNGUS:
-        if (you.religion == GOD_FEDHAS)
-            simple_god_message(" smiles upon you.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
         set_redraw_status(REDRAW_HUNGER);
         break;
 
     case TRAN_TREE:
-        if (you.religion == GOD_FEDHAS)
-            simple_god_message(" smiles upon you.");
+        if (you.religion == GOD_FEDHAS && !player_under_penance())
+            simple_god_message(" makes you hardy against extreme temperatures.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
         set_redraw_status(REDRAW_HUNGER);
@@ -1102,10 +1127,23 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     you.check_clinging(false);
 
+    // If we are no longer living, end an effect that afflicts only the living
+    if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
+    {
+        // Heal a little extra if we gained max hp from this transformation
+        if (form_hp_mod() != 10)
+        {
+            int dam = you.props["flay_damage"].get_int();
+            you.heal((dam * form_hp_mod() / 10) - dam);
+        }
+        heal_flayed_effect(&you);
+    }
+
     // This only has an effect if the transformation happens passively,
     // for example if Xom decides to transform you while you're busy
     // running around or butchering corpses.
-    stop_delay();
+    // If you're turned into a tree, you stop taking stairs.
+    stop_delay(which_trans == TRAN_TREE);
 
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
@@ -1170,7 +1208,11 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_STATUE:
-        mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
+        // This only handles lava orcs going statue -> stoneskin.
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN))
+            mpr("You revert to a slightly less stony form.", MSGCH_DURATION);
+        else if (you.species != SP_LAVA_ORC)
+            mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, 2, true,
                      "losing the statue transformation");
         notify_stat_change(STAT_STR, -2, true,
@@ -1183,7 +1225,10 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_ICE_BEAST:
-        mpr("You warm up again.", MSGCH_DURATION);
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+            mpr("Your icy form melts away into molten rock.", MSGCH_DURATION);
+        else
+            mpr("You warm up again.", MSGCH_DURATION);
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
@@ -1301,6 +1346,11 @@ void untransform(bool skip_wielding, bool skip_move)
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
              armour->name(DESC_YOUR).c_str());
     }
+
+    // Lava orcs become stony again if at the right temperature.
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+        && you.duration[DUR_STONESKIN] < 500)
+        you.duration[DUR_STONESKIN] = 500;
 
     if (hp_downscale != 10 && you.hp != you.hp_max)
     {

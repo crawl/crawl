@@ -101,7 +101,6 @@ void player::set_position(const coord_def &c)
     if (real_move)
     {
         reset_prev_move();
-        dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
 
         if (you.duration[DUR_QUAD_DAMAGE])
             invalidate_agrid(true);
@@ -111,6 +110,8 @@ void player::set_position(const coord_def &c)
             env.orb_pos = c;
             invalidate_agrid(true);
         }
+
+        dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
     }
 }
 
@@ -155,7 +156,7 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (!can_pass_through_feat(actual_grid))
         return false;
 
-    if (airborne())
+    if (airborne() || species == SP_DJINNI)
         return true;
 
     if (actual_grid == DNGN_LAVA
@@ -594,12 +595,18 @@ void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (other && other->is_monster())
+    if (!other)
+        return;
+
+    if (other->is_monster())
     {
         const monster* mon = other->as_monster();
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
+
+    if (mons_is_firewood((monster*) other))
+        return;
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
     if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))

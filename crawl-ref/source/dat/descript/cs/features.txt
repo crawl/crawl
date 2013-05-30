@@ -72,11 +72,6 @@ A dead tree
 
 Tento strom je mrtvý jako všechno ostatní tady.
 %%%%
-A cracked metal wall
-
-Tato kovová stěna utrpěla nějaké škody. Bohužel, díra není dost velká na to,
-abyste prolez.
-%%%%
 A golden statue
 
 Socha věštce z ryzího zlata.

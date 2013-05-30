@@ -1,0 +1,589 @@
+##############################################################################
+# forest.des: Maps for the Forest.
+# - entry vaults
+# - minivaults
+# - branch end vaults
+##############################################################################
+
+{{
+function kb_forest_vault_setup(e)
+  e.tags(  "no_pool_fixup")
+  e.mons(  "spriggan")
+  e.mons(  "spriggan rider")
+  e.mons(  "spriggan druid")
+  e.mons(  "spriggan berserker")
+  e.mons(  "spriggan air mage")
+  e.mons(  "spriggan defender")
+  e.mons(  "the Enchantress")
+  e.subst( ". = .:300 / 1:2 / 2:1 / 3:1 / 4:1 / 5:1")
+  e.subst( "T = t / t / P / .")
+  e.kmons( "P = plant / plant / bush / nothing")
+  e.kmons( "R = plant")
+  e.kmons( "Q = bush")
+  e.kmons( "e = bat skeleton")
+  e.kmons( "K = giant firefly")
+  e.kitem( "f = dagger / short sword / sabre / flail / whip / blowgun / bow")
+  e.kitem( "g = robe / cloak / cap / buckler / steam dragon armour w:1")
+  e.kmons( "L = spriggan ; robe . dagger")
+  e.kitem( "h = bread ration q:2")
+  e.kmons( "M = yak")
+  e.kmons( "N = spriggan ; robe . quarterstaff")
+  e.kitem( "i = cheese q:3")
+  e.colour('"MN = green')
+  e.colour("C = white")
+  e.kfeat( "C = stone_wall")
+  e.tile(  "C = wall_marble")
+  e.kfeat( "_ = altar_trog")
+end
+}}
+
+##############################################################################
+# Forest entry vaults
+##############################################################################
+
+##############################################################################
+NAME:   dummy_forest_entry
+WEIGHT: 50
+TAGS:   forest_entry
+KFEAT:  O = enter_forest
+MAP
+O
+ENDMAP
+
+##############################################################################
+# A really basic entry.
+NAME:   grunt_forest_entry_basic
+TAGS:   forest_entry vaults_entry_forest
+KFEAT:  O = enter_forest
+MONS:   plant / nothing
+MAP
+.........
+..t...t..
+.t11.11t.
+..1t.t1..
+....O....
+..1t.t1..
+.t11.11t.
+..t...t..
+.........
+ENDMAP
+
+##############################################################################
+# A small clearing.
+NAME:   grunt_forest_entry_clearing
+TAGS:   forest_entry vaults_entry_forest
+KFEAT:  O = enter_forest
+MONS:   spriggan / tengu
+MONS:   centaur warrior / tengu warrior / faun
+MONS:   wolf, black bear, grizzly bear
+SUBST:  t = t.
+KMONS:  P = plant / bush
+NSUBST: Q = 3:1 / 1:2
+NSUBST: R = 4:3 / 1:4 / 1:5 / *:.
+MAP
+.tt...tt.
+t..Q.Q..t
+t.t.Q.t.t
+.Q.P.P.Q.
+..Q.O.Q..
+.Q.P.P.Q.
+t.t.Q.t.t
+t..Q.Q..t
+.tt...tt.
+ENDMAP
+
+##############################################################################
+# A secluded grove.
+NAME:   forest_entry_grove
+TAGS:   forest_entry vaults_entry_forest vaults_orient_s
+KFEAT:  O = enter_forest
+MONS:   spriggan / tengu
+MONS:   centaur warrior / tengu warrior / faun
+MONS:   wolf, black bear, grizzly bear
+KMONS:  P = plant / bush
+NSUBST: Q = 3:1 / 1:2
+NSUBST: R = 4:3 / 1:4 / 1:5 / *:.
+MAP
+   xxxxxxxxx
+  xxxttttxxxx
+ xxxttttttttxx
+xxtttt...tttxxx
+xttt..Q.Q..ttxx
+xttt.Q.R.Q.tttx
+xtt.........ttx
+xtt.R..O..R.ttx
+xtt..R.R.R..ttx
+xttt..R.R..tttx
+xttt.......tttx
+xxtttt...ttttxx
+ xxxtt..ttxxxx
+  xxxtt..ttxx
+   xxtt..ttx
+ENDMAP
+
+##############################################################################
+# Forest minivaults
+##############################################################################
+NAME: grunt_forest_small_clearing_fruit
+TAGS: transparent extra
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+FTILE: . = floor_grass / floor_dirt
+KMONS: O = plant / bush
+KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
+           / w:1 apple / w:1 pear / w:1 orange / w:90 nothing
+MAP
+ tt...tt
+t.......t
+t.......t
+.........
+.........
+.........
+t.......t
+t.......t
+ tt...tt
+ENDMAP
+
+NAME: grunt_forest_small_clearing_pond
+TAGS: transparent extra
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+FTILE: . = floor_grass / floor_dirt
+SUBST: w = wwW
+SUBST: W = WW.
+KMONS: O = plant / bush
+MAP
+ tt...tt
+t.......t
+t..WWW..t
+..WwwwW..
+..WwwwW..
+..WwwwW..
+t..WWW..t
+t.......t
+ tt...tt
+ENDMAP
+
+NAME: grunt_forest_small_clearing_treed
+TAGS: transparent patrolling
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+FTILE: . = floor_grass / floor_dirt
+KMONS: O = plant / bush
+: if crawl.coinflip() then
+MONS: tengu
+: else
+MONS: spriggan
+: end
+MAP
+ tt...tt
+t.......t
+t.1...1.t
+...ttt...
+...t*t...
+...ttt...
+t.1...1.t
+t.......t
+ tt...tt
+ENDMAP
+
+NAME: grunt_forest_small_clearing_statue_fruit
+TAGS: transparent
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+FTILE: . = floor_grass / floor_dirt
+KMONS: O = plant / bush
+KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
+           / w:1 apple / w:1 pear / w:1 orange / w:90 nothing
+MAP
+ tt...tt
+t.......t
+t.......t
+.........
+....G....
+.........
+t.......t
+t.......t
+ tt...tt
+ENDMAP
+
+NAME: grunt_forest_small_clearing_statues
+TAGS: transparent
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+FTILE: . = floor_grass / floor_dirt
+KMONS: O = plant / bush
+: if crawl.one_chance_in(3) then
+MONS: tengu, tengu warrior / tengu conjurer
+: elseif crawl.coinflip() then
+MONS: faun, faun
+: else
+MONS: centaur, centaur warrior
+: end
+NSUBST: 7 = 3:1, 1:2
+MAP
+ tt...tt
+t.......t
+t.G.7.G.t
+.........
+..7.*.7..
+.........
+t.G.7.G.t
+t.......t
+ tt...tt
+ENDMAP
+
+NAME: grunt_forest_large_clearing_fruit
+TAGS: transparent extra
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+FTILE: . = floor_grass / floor_dirt
+KMONS: O = plant / bush
+KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
+           / w:1 apple / w:1 pear / w:1 orange / w:90 nothing
+MAP
+      tt...tt
+    ttt.....ttt
+  ttt.........ttt
+  t.............t
+ tt.............tt
+ t...............t
+tt...............tt
+t.................t
+...................
+...................
+...................
+t.................t
+tt...............tt
+ t...............t
+ tt.............tt
+  t.............t
+  ttt.........ttt
+    ttt.....ttt
+      tt...tt
+ENDMAP
+
+NAME: grunt_forest_large_clearing_guards
+TAGS: transparent patrolling
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+KMONS: O = plant / bush
+: if crawl.coinflip() then
+MONS: spriggan, centaur, centaur warrior
+: else
+MONS: tengu, tengu, tengu warrior / tengu conjurer
+: end
+NSUBST: P = 4:1, 3:2, 1:3
+MAP
+      tt...tt
+    ttt.....ttt
+  ttt.........ttt
+  t.............t
+ tt.............tt
+ t...............t
+tt...............tt
+t.......P.P.......t
+.......P%.%P.......
+.........G.........
+.......P*.%P.......
+t.......P.P.......t
+tt...............tt
+ t...............t
+ tt.............tt
+  t.............t
+  ttt.........ttt
+    ttt.....ttt
+      tt...tt
+ENDMAP
+
+NAME:  grunt_forest_large_clearing_statues
+TAGS:  transparent
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+KMONS: O = plant / bush
+KMONS: * = faun / tengu warrior
+KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
+           / w:1 apple / w:1 pear / w:1 orange / w:90 nothing
+MAP
+      tt...tt
+    ttt.....ttt
+  ttt.........ttt
+  t.............t
+ tt.............tt
+ t.......G.......t
+tt....G.....G....tt
+t.................t
+...................
+.....G...*...G.....
+...................
+t.................t
+tt....G.....G....tt
+ t.......G.......t
+ tt.............tt
+  t.............t
+  ttt.........ttt
+    ttt.....ttt
+      tt...tt
+ENDMAP
+
+NAME:  grunt_forest_large_clearing_slash
+TAGS:  transparent extra
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+SUBST: w = wwW
+SUBST: W = WW.
+KMONS: O = plant / bush
+KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
+           / w:1 apple / w:1 pear / w:1 orange / w:90 nothing
+MAP
+      tt...tt
+    ttt.....ttt
+  ttt.........ttt
+  tww...........t
+ ttwww..........tt
+ t..www..........t
+tt...www.........tt
+t.....www.........t
+.......wwW.........
+........WWW........
+.........Www.......
+t.........www.....t
+tt.........www...tt
+ t..........www..t
+ tt..........wwwtt
+  t...........wwt
+  ttt.........ttt
+    ttt.....ttt
+      tt...tt
+ENDMAP
+
+NAME:  grunt_forest_large_clearing_hut
+TAGS:  transparent
+DEPTH: Forest
+SUBST: t = t..
+SUBST: . = O.........
+KMONS: O = plant / bush
+COLOUR: -*c = lightgrey
+FTILE:  -* = floor_normal
+MAP
+      tt...tt
+    ttt.....ttt
+  ttt.........ttt
+  t.............t
+ tt.............tt
+ t...............t
+tt...............tt
+t......ccccc......t
+.......c--*c.......
+.......+-9*c.......
+.......c--*c.......
+t......ccccc......t
+tt...............tt
+ t...............t
+ tt.............tt
+  t.............t
+  ttt.........ttt
+    ttt.....ttt
+      tt...tt
+ENDMAP
+
+# These vaults are derived from spriggan_forest.
+NAME: kb_forest_berserker_hut_1
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+   tttttt
+ttttPP.Tt
+tccccT..@
+tc%4c...T
+tc..+..Tt
+tc.4c...T
+tttT..ttt
+ tTPTTt
+ tTTttt
+ tttt
+ENDMAP
+
+NAME: kb_forest_berserker_hut_2
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+tt@t
+t..tttttttt
+t....xxxxxt
+tT...x..4xt
+tT...+...xt
+ttt.tx..4xt
+  tt.x.4_xt
+   ttxxxxxt
+    ttttttt
+ENDMAP
+
+NAME: kb_forest_spriggan_hut
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+tt@tttt
+t.ttttt
+t.cccct
+t.+.1ct
+tTc1%ct
+ttcccct
+ttttttt
+ENDMAP
+
+NAME:  kb_forest_spriggan_shepherd
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+ttttttt@t
+txxxtt.tttttttt
+txi+"""""""tt.@
+txxx""""""""".tt
+ttt""N"""""""TTt
+ttT""MM"MM"TTTtt
+tt""""M""""Tttt
+tt".MM""NTTtt
+tt""M""""Ttt
+ttt""""TTTt
+  ttttttttt
+ENDMAP
+
+NAME:  kb_forest_druid_statue
+DEPTH: Forest
+: kb_forest_vault_setup(_G)
+MAP
+tt@tt
+t.3.t
+t3G3t
+t.3.t
+ttttt
+ENDMAP
+
+# XXX: this one doesn't work very well outside the corner, or as a primary
+# vault...
+NAME:   kb_forest_skeletal_bat_cave
+DEPTH:  Forest
+ORIENT: southeast
+: kb_forest_vault_setup(_G)
+MAP
+                   tttttt
+                ttttxxxxx
+            t@tttxxxxxxxx
+            tt..xxxxxxxxx
+          tttt....xxxxxxx
+        tttt......}xxxxxx
+       tt.....xxxxxxxxxxx
+ttt  ttt....xxxxxxxxxxxxx
+@.tttt...xxxxxxxxexxxexxx
+tt.......xxxxx..exxxxeexx
+ tttxxxxx......xx.exx..xx
+txxxxxxxxxx....xxx.1.xxxx
+ txxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Forest ends
+##############################################################################
+NAME:   grunt_forest_end_chambers
+ORIENT: north
+PLACE:  Forest:$
+KITEM:  O = superb_item
+KITEM:  1 = superb_item
+KMONS:  O = the Enchantress
+KMONS:  1 = spriggan defender
+MONS:   spriggan defender, spriggan berserker / spriggan
+MONS:   spriggan druid / spriggan, spriggan rider / spriggan
+MONS:   spriggan air mage / spriggan, spriggan / nothing w:30
+MONS:   faun / satyr w:5 / tengu warrior / tengu conjurer w:5 / \
+        tengu reaver w:2
+COLOUR: .*%OT123456+ = lightgray
+FTILE:  .*%OT123456+ = floor_normal
+MAP
+tttttttttttttttttttttttttttttttttt
+tttttttttttttccccccccttttttttttttt
+tttttttttttccc||||||cccttttttttttt
+ttttttttttcc..........cctttttttttt
+tttttttttcc....4444....ccttttttttt
+tttttttttc..............cttttttttt
+ttttttttcc..6.5....5.6..cctttttttt
+ttttttttc%.6..........6.%ctttttttt
+ttttttttc*.6..........6.*ctttttttt
+ttttttttc*.6....O1....6.*ctttttttt
+ttttttttc*.6....11....6.*ctttttttt
+ttttttttc*.6..........6.*ctttttttt
+ttttttttc%.6..5....5..6.%ctttttttt
+ttttttttcc..6........6..cctttttttt
+tttttttttc..............cttttttttt
+tttttttttcc....4224....ccttttttttt
+ttttcccccccc..........cccccccctttt
+tttcc......ccc......ccc......ccttt
+ttcc.4.4.4..cccc++cccc..4.4.4.cctt
+tcc..........c.6..6.c..........cct
+tc%..........c+.66.+c..........%ct
+tc%......1....cccccc....1......%ct
+tc%....T.2....cccccc....2.T....%ct
+tc%...........cccccc...........%ct
+tc%.6........c+.66.+c........6.%ct
+tcc.6........c.6..6.c........6.cct
+ttc..66.....cccc++cccc.....66..ctt
+ttccc..66..cccc....cccc..66..ccctt
+ttttccc..cccc........cccc..cccLttt
+tLttLLcccccc...6446...ccccccLtLtLt
+ttLLLLtLLLcc..........cctLLLtttLLt
+ttLLLLLLLLc..6......6..cLLtLLtttLt
+tLLtLLL7LLc..6..TT..6..cLLLLtLLLLt
+ttLLLLLLLLc..6..TT..6..cLLLLLLLLLt
+tttLtLLLLLc..6......6..cLLtLLLtLLt
+ttLLLLLtLLcc..........ccLLL7LLLLLt
+ttLL7LLLLLLc...6666...cLLLLLtLL7Lt
+tLLLLLLLLLLcc........ccLLtLLLLLLtt
+ttLLtLL7LLLLccc....cccLL7LLLtLtttt
+tttttLLLLLLLLLc++++cLLLLLLtttttttt
+tttttttLLLLLLLLLLLLLLLLttLLLtttttt
+tttttttttttLLLLLLLLLLtttLLLLLttttt
+tttttttttttttttLLLLtttLLLttttttttt
+ttttttttttttttttLLLLLLLttttttttttt
+ttttttttttttttttL@LLtttttttttttttt
+ENDMAP
+
+NAME:   kb_forest_enchantress_palace
+ORIENT: northeast
+PLACE:  Forest:$
+: kb_forest_vault_setup(_G)
+MAP
+ttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttTTTTTttTTTTtttttt
+tttttttttTtTTtttttttQTtttTT.T.Ttt.T.TTTtttt
+ttttttttT*....QQPtt..ccccc....cccc.TT.Ttttt
+tttCCCCCCCCCCCCCC....c..1c....c.1c.t.TTtttt
+tttC.6.C6..6C$*|CtT..c.1.+....+..cT.TT.tttt
+tttC7..+....+$*|Ctt..ccccc....cccc.TT.Ttttt
+tttC.6.C6..6C$*|CttQ..................ttttt
+tttCCCCCC++CCCCCCttttccccc....cccc......ttt
+tttCgggC....CfffCttttchxLc....c1.c.....tttt
+tttCggg+..1.+fffCttttch..+....+.5c..1...ttt
+tttCgggC1...CfffCttttccccc....cccc...1.tttt
+tttCCCCCC++CCCCCCttttt...................tt
+tttCR.....1....RCccccccccc....Y.........ttt
+tttC..1........1CcKxKxKxKc......2......tttt
+tttCR1..5..5..1RCc.22.1..c.....22......tttt
+tttCCCCCC++CCCCCCc+ccccccc....2.2.....ttttt
+ttt..................................tttttt
+@...................................ttttttt
+t..TTttttt............Y..........ttt.tttttt
+tttttttttttttttt...............tttttt...ttt
+ttttttttttttttttttt.........tttttttttttt<tt
+ttttttttttttttttttttttt....tttttttttttttttt
+tttttttttttttttttttttt@tt..@ttttttttttttttt
+ENDMAP

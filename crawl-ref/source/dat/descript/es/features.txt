@@ -228,11 +228,6 @@ A dead tree
 
 Este árbol está tan muerto como todo lo demás aquí.
 %%%%
-A cracked metal wall
-
-Este muro de metal ha sufrido algo de daño. Desafortunadamente el agujero no es
-tan grande como para pasar a través.
-%%%%
 A golden statue
 
 Una estatua de oro macizo de un santo.

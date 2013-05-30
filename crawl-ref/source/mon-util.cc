@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "errors.h"
 #include "fight.h"
 #include "food.h"
 #include "fprop.h"
@@ -116,6 +117,9 @@ static habitat_type _grid2habitat(dungeon_feature_type grid)
     {
     case DNGN_LAVA:
         return HT_LAVA;
+    case DNGN_TREE:
+    case DNGN_MANGROVE:
+        return HT_FOREST;
     case DNGN_FLOOR:
     default:
         return HT_LAND;
@@ -132,6 +136,8 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return DNGN_LAVA;
     case HT_ROCK:
         return DNGN_ROCK_WALL;
+    case HT_FOREST:
+        return DNGN_TREE;
     case HT_LAND:
     case HT_AMPHIBIOUS:
     default:
@@ -626,7 +632,7 @@ bool mons_class_is_firewood(monster_type mc)
 {
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
-            && !mons_is_tentacle(mc));
+            && !mons_is_tentacle_or_tentacle_segment(mc));
 }
 
 bool mons_is_firewood(const monster* mon)
@@ -1439,7 +1445,7 @@ bool mons_can_be_zombified(const monster* mon)
 bool mons_class_can_use_stairs(monster_type mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
-            && !mons_is_tentacle(mc)
+            && !mons_is_tentacle_or_tentacle_segment(mc)
             && !mons_is_abyssal_only(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST
@@ -1496,6 +1502,11 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
 
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
+
+    // It's unlikely there's a desc for "Duvessa the elf skeleton", but
+    // we still want to allow it if overridden.
+    if (!mon->props.exists("dbname"))
+        mon->props["dbname"] = mons_class_name(mon->type);
 
     return true;
 }
@@ -1657,6 +1668,11 @@ bool mons_skeleton(monster_type mc)
     return !mons_class_flag(mc, M_NO_SKELETON);
 }
 
+bool mons_zombifiable(monster_type mc)
+{
+    return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
+}
+
 flight_type mons_class_flies(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
@@ -1715,7 +1731,8 @@ int mons_class_res_wind(monster_type mc)
 {
     // Lightning goes well with storms.
     if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
-        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY)
+        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY
+        || mc == MONS_FOREST_DRAKE)
     {
         return 1;
     }
@@ -2032,6 +2049,32 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[5] = MST_NECROMANCER_II;
         break;
 
+    case MONS_ANCIENT_CHAMPION:
+        book[0] = MST_ANCIENT_CHAMPION_I;
+        book[1] = MST_ANCIENT_CHAMPION_II;
+        book[2] = MST_ANCIENT_CHAMPION_III;
+        book[3] = MST_ANCIENT_CHAMPION_IV;
+        break;
+
+    case MONS_FAUN:
+        book[0] = MST_FAUN_I;
+        book[1] = MST_FAUN_II;
+        book[2] = MST_FAUN_III;
+        break;
+
+    case MONS_TENGU_CONJURER:
+        book[0] = MST_TENGU_CONJURER_I;
+        book[1] = MST_TENGU_CONJURER_II;
+        book[2] = MST_TENGU_CONJURER_III;
+        book[3] = MST_TENGU_CONJURER_IV;
+        break;
+
+    case MONS_TENGU_REAVER:
+        book[0] = MST_TENGU_REAVER_I;
+        book[1] = MST_TENGU_REAVER_II;
+        book[2] = MST_TENGU_REAVER_III;
+        break;
+
     default:
         retval = false;
         break;
@@ -2247,6 +2290,11 @@ void define_monster(monster* mons)
     case MONS_STARCURSED_MASS:
         monnumber = 12;
         break;
+
+    // Randomize starting speed burst clock
+    case MONS_SIXFIRHY:
+    case MONS_JIANGSHI:
+        monnumber = random2(360);
 
     default:
         break;
@@ -2561,7 +2609,7 @@ int mons_base_speed(const monster* mon)
     if (mon->ghost.get())
         return mon->ghost->speed;
 
-    if (mons_enslaved_soul(mon))
+    if (mon->type == MONS_SPECTRAL_THING)
         return mons_class_base_speed(mons_zombie_base(mon));
 
     return (mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
@@ -2624,7 +2672,7 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
     habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
-    else if (ht == HT_ROCK)
+    else if (ht == HT_ROCK || ht == HT_FOREST)
         ht = HT_LAND;
     else if (ht == HT_INCORPOREAL)
         ht = HT_ROCK;
@@ -2641,6 +2689,7 @@ bool mons_wall_shielded(const monster* mon)
     switch (_mons_class_habitat(mons_base_type(mon)))
     {
         case HT_ROCK:
+        case HT_FOREST:
             return true;
         default:
             return false;
@@ -2884,7 +2933,7 @@ void mons_pacify(monster* mon, mon_attitude_type att)
     if (mons_is_kirke(mon))
         hogs_to_humans();
     if (mon->type == MONS_VAULT_WARDEN)
-        timeout_door_seals(0, true);
+        timeout_terrain_changes(0, true);
 
     mons_att_changed(mon);
 }
@@ -3433,13 +3482,23 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         return false;
     }
 
+    // Special-case (non-enslaved soul) spectral things to push past revenants.
+    if ((m1->type == MONS_SPECTRAL_THING && !mons_enslaved_soul(m1))
+        && m2->type == MONS_REVENANT)
+    {
+        return true;
+    }
+
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
 {
     if (grid == DNGN_MALIGN_GATEWAY)
-        return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+    {
+        return (mc == MONS_ELDRITCH_TENTACLE
+                || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+    }
 
     if (_mons_class_habitat(mc) == HT_INCORPOREAL)
         return !feat_is_permarock(grid);
@@ -3449,6 +3508,11 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
         // Permanent walls can't be passed through.
         return (!feat_is_solid(grid)
                 || feat_is_rock(grid) && !feat_is_permarock(grid));
+    }
+
+    if (_mons_class_habitat(mc) == HT_FOREST)
+    {
+        return (!feat_is_solid(grid) || feat_is_tree(grid));
     }
 
     return !feat_is_solid(grid);
@@ -4129,6 +4193,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'z': // small zombies, etc.
         if (mc == MONS_WIGHT
             || mc == MONS_SKELETAL_WARRIOR
+            || mc == MONS_ANCIENT_CHAMPION
             || mc == MONS_FLAMING_CORPSE)
         {
             return MON_SHAPE_HUMANOID;
@@ -4354,27 +4419,39 @@ monster *monster_by_mid(mid_t m)
     return 0;
 }
 
-bool mons_is_tentacle(monster_type mc)
-{
-    return (mc == MONS_KRAKEN_TENTACLE
-            || mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-            || mc == MONS_STARSPAWN_TENTACLE
-            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
-}
-
-bool mons_is_tentacle_segment(monster_type mc)
-{
-    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
-}
-
 bool mons_is_tentacle_head(monster_type mc)
 {
     return (mc == MONS_KRAKEN
             || mc == MONS_TENTACLED_STARSPAWN);
+}
+
+bool mons_is_child_tentacle(monster_type mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE
+            || mc == MONS_STARSPAWN_TENTACLE);
+}
+
+bool mons_is_child_tentacle_segment(monster_type mc)
+{
+    return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
+}
+
+bool mons_is_tentacle(monster_type mc)
+{
+    return (mc == MONS_ELDRITCH_TENTACLE
+            || mons_is_child_tentacle(mc));
+}
+
+bool mons_is_tentacle_segment(monster_type mc)
+{
+    return (mc == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || mons_is_child_tentacle_segment(mc));
+}
+
+bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
+{
+    return (mons_is_tentacle(mc) || mons_is_tentacle_segment(mc));
 }
 
 monster* mons_get_parent_monster(monster* mons)
@@ -4427,13 +4504,6 @@ const char* mons_class_name(monster_type mc)
         return "INVALID";
 
     return get_monster_data(mc)->name;
-}
-
-bool mons_is_tentacle_end(monster_type mtype)
-{
-    return (mtype == MONS_KRAKEN_TENTACLE
-            || mtype == MONS_ELDRITCH_TENTACLE
-            || mtype == MONS_STARSPAWN_TENTACLE);
 }
 
 monster_type mons_tentacle_parent_type(const monster* mons)
@@ -4519,6 +4589,44 @@ bool mons_foe_is_marked(const monster* mon)
         return false;
 }
 
+void debug_mondata()
+{
+    string fails;
+
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+    {
+        if (invalid_monster_type(mc))
+            continue;
+        const char* name = mons_class_name(mc);
+        const monsterentry *md = get_monster_data(mc);
+
+        int MR = md->resist_magic;
+        if (MR < 0)
+            MR = md->hpdice[9] * -MR * 4 / 3;
+        if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
+            fails += make_stringf("%s has MR %d > 200\n", name, MR);
+
+        // Tests below apply only to corpses.
+        if (md->species != mc || md->bitfields & M_CANT_SPAWN)
+            continue;
+
+        if (md->weight && !md->corpse_thingy)
+            fails += make_stringf("%s has a corpse but no corpse_type\n", name);
+        if (md->weight && !md->zombie_size)
+            fails += make_stringf("%s has a corpse but no zombie_size\n", name);
+    }
+
+    if (!fails.empty())
+    {
+        FILE *f = fopen("mon-data.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("mon-data errors (dumped to mon-data.out)");
+    }
+}
+
 // Used when clearing level data, to ensure any additional reset quirks
 // are handled properly.
 void reset_all_monsters()
@@ -4550,7 +4658,7 @@ bool mons_is_recallable(actor* caller, monster* targ)
     }
     // Monster recall requires same attitude and at least normal intelligence
     else if (mons_intel(targ) < I_NORMAL
-             || targ->attitude != caller->as_monster()->attitude)
+             || !mons_aligned(targ, caller->as_monster()))
     {
         return false;
     }

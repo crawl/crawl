@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "branch.h"
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
@@ -958,10 +959,10 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (!may_target_self && (mode == TARG_ENEMY
-                                     || mode == TARG_HOSTILE
-                                     || mode == TARG_HOSTILE_SUBMERGED
-                                     || mode == TARG_HOSTILE_UNDEAD))
+            if (!may_target_self && restricts != DIR_TARGET_OBJECT
+                && (mode == TARG_ENEMY || mode == TARG_HOSTILE
+                    || mode == TARG_HOSTILE_SUBMERGED
+                    || mode == TARG_HOSTILE_UNDEAD))
             {
                 if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
@@ -2982,7 +2983,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_MANGROVE:
         return "mangrove";
     case DNGN_ORCISH_IDOL:
-        if (you.species == SP_HILL_ORC)
+        if (player_genus(GENPC_ORCISH))
             return "idol of Beogh";
         else
             return "orcish idol";
@@ -3105,7 +3106,6 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_FOREST:
         return "staircase back to the Dungeon";
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_SNAKE_PIT:
@@ -3116,10 +3116,13 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "crawl-hole back to the Lair";
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_FOREST:
         return "staircase back to the Vaults";
     case DNGN_RETURN_FROM_ELVEN_HALLS:
         return "staircase back to the Mines";
     case DNGN_RETURN_FROM_TOMB:
+        if (parent_branch(BRANCH_TOMB) == BRANCH_FOREST)
+            return "staircase back to the Forest";
         return "staircase back to the Crypt";
     case DNGN_RETURN_FROM_ZOT:
         return "gate leading back out of this place";
@@ -3191,6 +3194,9 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
 {
     string desc = _base_feature_desc(grid, trap);
     desc += cover_desc;
+
+    if (grid == DNGN_FLOOR && dtype == DESC_A)
+        dtype = DESC_THE;
 
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
@@ -3325,6 +3331,10 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(
                    dtype, add_stop, false,
                    "UNAMED PORTAL VAULT ENTRY");
+    case DNGN_FLOOR:
+        if (dtype == DESC_A)
+            dtype = DESC_THE;
+        // fallthrough
     default:
         return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
                    raw_feature_description(where) + covering_description);
@@ -3556,7 +3566,7 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     text += _mon_enchantments_string(mi);
-    if (text[text.size() -1] == '\n')
+    if (text.size() > 0 && text[text.size() - 1] == '\n')
         text = text.substr(0, text.size() - 1);
     return text;
 }

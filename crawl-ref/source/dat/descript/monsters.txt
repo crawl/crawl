@@ -463,6 +463,14 @@ fantastic arabesque — invisible to their eyes, but dreadful nonetheless — in
 the unfamiliar numeral under whose menace they lived.”
     -Bruno Schulz, “The Brilliant Epoch”. 1937.
 %%%%
+lost soul
+
+The echo of a unmourned soul, flickering in and out of the mortal world. Though
+the memories of its living self are long-faded, it is drawn to the moment of
+death by some lingering instinct. So powerful is its drive for self and purpose
+that it seizes upon the passage of other souls, losing the last vestiges of its
+being in the memories of another's life.
+%%%%
 Louise
 
 A mighty sorceress, clad from head to toe in heavy armour. Once an adventurer
@@ -605,6 +613,11 @@ Norris:quote
 negative.”
     -Georges Poulet
 %%%%
+Pan
+
+The lord of all satyrs. With his flute, he produces music said to cloud the
+mind beyond all hope of return.
+%%%%
 Pikel
 
 While kobolds are normally slaves, Pikel's rough life, selfish ambition and
@@ -709,13 +722,17 @@ Niblungs_. 1891.
 Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
-Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
+Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
 %%%%
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
 daring leaps! But watch out for her knives!
+%%%%
+Sojobo
+
+King of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 %%%%
 Terence
 
@@ -976,8 +993,9 @@ A greater demon, wreathed in snow and lightning.
 %%%%
 blue devil
 
-A peculiar, horned humanoid figure originating from some frigid hell. It is
-repulsed by fire and flames.
+A muscular horned humanoid figure originating from some frigid hell. It swoops
+through the air on powerful wings, taking sadistic joy from harrying those who
+would try to flee its grasp.
 %%%%
 blue devil:quote
 
@@ -1405,6 +1423,11 @@ dire elephant
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
+djinni
+
+A blue-skinned fellow without legs who hovers here, with not the slightest
+hint of having an urge to fulfill your wishes.
+%%%%
 draconian
 
 A bipedal reptilian creature slightly larger than a human. Draconians have
@@ -1457,11 +1480,22 @@ A great reptilian beast with powerful claws on its limbs, covered in thick
 green scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
 %%%%
+dryad
+
+A spirit of nature, bound to the forest in which it resides. It is capable
+of calling upon the trees to defend against incursions.
+%%%%
 dwarf
 
 A member of a short, sturdy mountain-dwelling folk. More robust than their deep
 dwarf cousins, yet less skilled in magical lore, dwarves excel in armed hand to
 hand combat.
+%%%%
+dwarf mountain bat
+
+A species of bat that lives in mountain caves. How it got into the dungeon is a
+mystery — probably something related to the sudden demise of dwarves in those
+lands. But don't worry, an eradication team is on the way.
 %%%%
 earth elemental
 
@@ -1594,6 +1628,12 @@ eye of draining
 
 A hovering horror that waxes strong on magic.
 %%%%
+faun
+
+A hybrid with the torso of a man atop the forelegs of a goat. They are fabled
+for their ability to play with the minds of those who intrude into their
+domains.
+%%%%
 feature mimic
 
 A vicious beast masquerading as an ordinary dungeon feature.
@@ -1651,7 +1691,8 @@ dungeon, seeking to share its fate with others.
 flayed ghost
 
 A hideous floating undead creature, the anguished spirit of a tortured victim,
-with torn skin hanging from an emaciated body.
+with torn skin hanging from an emaciated body. It restlessly stalks the
+dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
 flying skull
 
@@ -1671,6 +1712,11 @@ freed slave
 A human who has just been released from magical enslavement. It tries to stand
 proudly before you, despite its lingering fear and unkempt appearance.
 %%%%
+forest drake
+
+A small but powerful dragon, quite comfortable weaving through the trees
+that comprise its home. It can exhale powerful blasts of wind.
+%%%%
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely the
@@ -1682,6 +1728,14 @@ frost giant
 A giant with blue skin and hair like ice and snow. Its eyes are as bleak as
 winter skies. It marches grimly into battle with a great, frosty axe and
 howling blasts of cold.
+%%%%
+fruity bat
+
+An ugly, silly bat. It sparkles.
+%%%%
+fruity bat:quote
+
+<bat:quote>
 %%%%
 fulminant prism
 
@@ -1712,6 +1766,14 @@ ghost moth:quote
  I zoom into you
  You don't know I'm there.”
     -Judas Priest, “Electric Eye”
+%%%%
+ghost-faced bat
+
+Does this bat merely possess the visage of a ghost, or is it a ghost itself?
+%%%%
+ghost-faced bat:quote
+
+<bat:quote>
 %%%%
 ghoul
 
@@ -1887,6 +1949,14 @@ giant spore
 A deceptively fast, floating ball filled with gas and spores, prone to burst at
 the slightest disturbance.
 %%%%
+giga bat
+
+A huge, bloated bat.
+%%%%
+giga bat:quote
+
+<bat:quote>
+%%%%
 glowing shapeshifter
 
 A shapeshifter which has lost control over its transformations, and is
@@ -1917,6 +1987,12 @@ gnoll shaman
 
 A haggard old gnoll, wise and wicked. Its strange chants and ululations send
 other gnolls into a wild frenzy.
+%%%%
+gnome
+
+A small, stout humanoid said to be good at finding its way through underground
+passages. Once commonly found in dungeons across the world, gnomes are now on
+the verge of extinction. This one may be the last of its kind.
 %%%%
 goblin
 
@@ -2083,7 +2159,7 @@ accompanied by other unsavoury beings of its ilk.
 hell knight:quote
 
 “Ok, let’s review. It’s up to the fair young maiden to rescue the dragon from
-the fire breathing knights in shining armor.”
+the fire breathing knights in shining armour.”
     -Exiern
 %%%%
 hell hog
@@ -2207,6 +2283,14 @@ ravaged by explosions of spores, damaging everything around, and it is
 ultimately going to die to its own spores.
 
 Be sure to keep your distance!
+%%%%
+ice bat
+
+An undead creature in the shape of a bat, made of ice.
+%%%%
+ice bat:quote
+
+<bat:quote>
 %%%%
 ice beast
 
@@ -2372,6 +2456,12 @@ waves high upon the shores of Japan.”
     -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
      Folk's Treasury_, vol. II. 1909.
 %%%%
+jiangshi
+
+A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
+limbs give it an awkward gait, it moves with surprising speed, leaping upon its
+victims and drinking their life essence with its vicious claws.
+%%%%
 jumping spider
 
 A large venomous spider, which weaves webs between its front legs and leaps at
@@ -2390,6 +2480,19 @@ tengu:quote
  He bit an Angleworm in halves
  And ate the fellow, raw”
     -Emily Dickinson, “A Bird came down the Walk”. ca. 1865.
+%%%%
+tengu conjurer
+
+One of many tengu with a talent for the destructive magical arts.
+%%%%
+tengu reaver
+
+An elite, ferocious tengu highly skilled with both steel and spells.
+%%%%
+tengu warrior
+
+A particularly bloodthirsty tengu who has opted to hone their skill in
+fighting and weaponry instead of spellcasting.
 %%%%
 killer bee
 
@@ -2471,6 +2574,37 @@ piece of lava. This fish is also noteworthy for having envenomed spines in the
 fin on its back.”
     -Jordan, Kellogg and Heath, _Animal Studies: A Text-book of Elementary
      Zoology_. 1903.
+%%%%
+lava orc
+
+A tall, muscular humanoid strongly in tune with the elemental forces of fire
+and earth. These distant relatives of cave orcs are possessed of passionate
+hearts, and their inner temperature is closely linked to their emotions.
+%%%%
+lava orc berserker
+
+This massive axe-wielding orc looks like a statue commemorating the carnage
+about to ensue. It is coated head to toe in war paint - or maybe blood?
+%%%%
+lava orc warrior
+
+A particularly brutish lava orc that commands fear by its strength.
+%%%%
+lava orc elementalist
+
+A svelte specimen with skin of rough grey granite sparkling with quartz
+inclusions. It gazes hatefully at you through the smoke coiling from its
+nostrils.
+%%%%
+lava orc warlord
+
+A truly mighty leader among the lava orcs, commanding great armies and even
+greater wealth.
+%%%%
+lava orc transmuter
+
+A lava orc who uses magic to augment its martial prowess. Its obsidian skin is
+dotted with snowflake patterns that shift as you watch.
 %%%%
 lava snake
 
@@ -2668,6 +2802,14 @@ of a candle.”
     -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
 %%%%
+microbat
+
+A bat that, despite its name, is not any smaller than a megabat.
+%%%%
+microbat:quote
+
+<bat:quote>
+%%%%
 minotaur
 
 A large muscular human with the head of a bull. It makes its home in secluded
@@ -2845,7 +2987,7 @@ formed of carbon and oxygen in the proportion of one part of the former to two
 of the latter chemically combined. It is a colorless gas, having an acid taste
 and smell; is soluble in water; weighs one-half more than air and can be poured
 from one vessel to another, as a liquid may be; 100 parts of water dissolve 106
-parts of this gas, and it is from this source that the roots -of plants derive
+parts of this gas, and it is from this source that the roots of plants derive
 the needed supplies of it.”
     -Henry Stuart, _The Culture of Farm Crops: A Manual of the Science of
     Agriculture, and a Hand-book of Practice for American Farmers_, ch X. 1887.
@@ -2891,13 +3033,11 @@ orange crystal statue
 An intricately carved idol of some nameless godling, hewn of translucent orange
 crystal. Its lifeless eyes seem to glitter uncannily with a wicked
 intelligence.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
-a venom most potent, one that attacks not only the body but the mind as well.
+a potent venom that can render its victims weak and their blows feeble.
 %%%%
 orange demon:quote
 
@@ -3027,7 +3167,9 @@ its claws burn with the sear of holy wrath.
 phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle and recalled
-to this plane by unholy magic.
+to this plane by unholy magic. The blade it wields is ethereal, passing easily
+through shields and armour, and rendering those it strikes more susceptible to
+magic.
 %%%%
 phantom
 
@@ -3040,6 +3182,15 @@ phantom:quote
 “Who wondrous things concerning our welfare, And straunge phantomes doth lett
 us ofte foresee.”
     -Spenser, _The Faerie Queene_ II. xii. 47
+%%%%
+phase bat
+
+A strange, glowing bat that seems to flutter through more dimensions than the
+average bat.
+%%%%
+phase bat:quote
+
+<bat:quote>
 %%%%
 phoenix
 
@@ -3076,6 +3227,12 @@ LORD out of heaven; And he overthrew those cities, and all the plain, and all
 the inhabitants of the cities, and that which grew upon the ground. But his
 wife looked back from behind him, and she became a pillar of salt.”
     -KJV Bible, Gen. XIX, 24-6.
+%%%%
+plague shambler
+
+A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
+parody of life, this infected decaying body lurches about, seeking retribution
+on the living.
 %%%%
 plant
 
@@ -3252,8 +3409,9 @@ A skeletal form wielding a giant scythe.
 %%%%
 red devil
 
-A muscular demon covered in spikes and horns. Two short wings sprout from its
-shoulders.
+A larger cousin of the common imp, with a fiendish grin and two short wings
+sprouting from its shoulders. They favor barbed tridents, often taunting their
+victims as they prod them from afar then nimbly retreat from pursuit.
 %%%%
 red draconian
 
@@ -3269,9 +3427,22 @@ redback
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
 %%%%
+revenant
+
+A skeletal form wreathed in cold blue fire, standing astride this life and the
+next. Echoes of the lingering dead flicker within its ghostly flames.
+%%%%
 rock worm
 
 A large worm which moves through rock as if it were air.
+%%%%
+rotten bat
+
+I guess this bat is well past its sell-by date.
+%%%%
+rotten bat:quote
+
+<bat:quote>
 %%%%
 rotting devil
 
@@ -3297,12 +3468,6 @@ rotting devil:quote
  That wrap their rotting souls about.“
     -John Davidson, ”A Ballad of Heaven". Late 19th cent.
 %%%%
-rotting hulk
-
-A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
-parody of life, this infected decaying body lurches about, seeking retribution
-on the living.
-%%%%
 the royal jelly
 
 A particularly rich and golden gelatinous thing.
@@ -3325,6 +3490,11 @@ the haire will fall off: and the part so touched will change the colour of the
 skin to the white morphew.”
     -Gaius Plinius Secundus, _Naturalis Historia_, Book X, ch. LXVII. 79 A.D.
      trans. Philemon Holland, 1601.
+%%%%
+satyr
+
+A more intelligent relative of the faun, often found in their company, and far
+more unforgiving of - and dangerous to - interlopers.
 %%%%
 scorpion
 
@@ -3361,8 +3531,9 @@ the whole earth is full of his glory.”
 %%%%
 shadow
 
-A wisp of unliving shadow, drifting on the edge of vision. It consumes the
-puissance of living beings.
+A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
+It moves swiftly and silently from one pool of shade to another, striking
+unerringly from the blind spots of those who cannot see it.
 %%%%
 shadow:quote
 
@@ -3501,8 +3672,6 @@ silver statue
 
 A beautiful statue of an unknown malignant creature, glistening with a silvery
 hue. Its eyes glow with an otherworldly radiance.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 simulacrum
 
@@ -3559,6 +3728,30 @@ iron, and laughed its laughter of nails rattling.
  And I saw the more the fist pounded the more the mouth laughed. The fist is
 pounding and pounding, and the mouth answering.”
     -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
+%%%%
+skeletal archer
+
+Since when is having flesh a requirement to be a master archer? These skeletal
+fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
+only good for a supply of sinew for bowstrings anyway.
+%%%%
+skeletal archer:quote
+
+“For a glory of all evil spirits rise for victory
+ Pain for pain, blood for blood
+ Pagan warriors moved quickly forward
+ Bows are ready to shoot out their searing
+ Darts...”
+    -Mastiphal, “For a Glory of All Evil spirits”
+%%%%
+skeletal bat
+
+A bat skeleton without the decency to lie unmoving like dead bats are supposed
+to.
+%%%%
+skeletal bat:quote
+
+<bat:quote>
 %%%%
 skeletal warrior
 
@@ -3629,7 +3822,7 @@ A hideous mass of body parts, part animated dead flesh, part demon.
 small abomination:quote
 
 “No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
-had shapes, a thousand shapes of horror beyond all memory. There were eyes -
+had shapes, a thousand shapes of horror beyond all memory. There were eyes –
 and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
     -H.P. Lovecraft, _The Unnamable_. 1925.
@@ -3796,6 +3989,11 @@ spriggan druid
 A spriggan whose connection with the birds and the beasts is exceptionally
 strong. Revelling in nature, these protectors of forests are the doom of anyone
 who so much as snaps a twig.
+%%%%
+spriggan enchanter
+
+A spriggan particularly skilled in the arts of hexes and charms - and,
+apparently, lethal with a quick blade.
 %%%%
 spriggan rider
 
@@ -4191,7 +4389,8 @@ orcs.
 water elemental
 
 A spirit drawn from the elemental plane of water. It exists on this world as
-part of a body of water.
+part of a body of water and can engulf other beings in its form, depriving them
+of breath and voice.
 %%%%
 water moccasin
 
@@ -4407,8 +4606,6 @@ Statue of Wucad Mu
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
 Wucad Mu, who mastered the matters of the mind. Beware of the statue's powers,
 as you have no chance in mental combat against it.
-
-This statue is very brittle; it will disintegrate at once.
 %%%%
 air elementalist statue
 
@@ -4433,6 +4630,11 @@ riddle you with arrows.
 Being a statue, it doesn't appear to have a means of salvaging shot arrows or
 fletching new ones, but you guess the statue's creators gave it enough of a
 supply to kill you before someone comes to replenish the quiver.
+%%%%
+captured wizard
+
+With wild eyes, the wizard frantically mumbles something and waves his arms,
+but is unable to cast a single spell. His tongue has been cut off!
 %%%%
 charred statue
 
@@ -4681,12 +4883,6 @@ While made of ordinary old weathered stone, covered with moss and vines, this
 golem still needs to be respected. It is still hard as stone, after all, and
 its weight spells massive damage if it connects a blow.
 %%%%
-warrior statue
-
-This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
-it appears to be capable of moving its arms, keeping your distance seems to be
-the only way to keep your vital organs undamaged.
-%%%%
 witch
 
 An old and unnaturally ugly human, wearing robes stained with what appears to
@@ -4868,7 +5064,7 @@ You see the unseen, you stare and they stare back. They whisper and laugh, they
 grin and cry, they leer at you with contempt and gaze at you in adoration. They
 are the observers, they are the judge of your worth and will decide your end.
 %%%%
-lost soul
+meat lost soul
 
 A spectre, struggling to leave the mortal world it is incarcerated in. It
 drains life and unlife from all those it comes into contact with.

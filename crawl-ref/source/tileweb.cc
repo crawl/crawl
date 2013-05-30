@@ -1023,6 +1023,12 @@ void TilesFramework::_send_cell(const coord_def &gc,
             _write_tileidx(next_pc.bg);
         }
 
+        if (next_pc.cloud != current_pc.cloud)
+        {
+            json_write_name("cloud");
+            _write_tileidx(next_pc.cloud);
+        }
+
         if (next_pc.is_bloody != current_pc.is_bloody)
             json_write_bool("bloody", next_pc.is_bloody);
 
@@ -1067,6 +1073,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.travel_trail != current_pc.travel_trail)
             json_write_int("travel_trail", next_pc.travel_trail);
+
+        if (next_pc.heat_aura != current_pc.heat_aura)
+            write_message("heat_aura:%u,", next_pc.heat_aura);
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor

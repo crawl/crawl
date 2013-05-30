@@ -1651,7 +1651,6 @@ WEIGHT: 2
 FTILE:  ' = floor_volcanic
 COLOUR: ' = red
 FTILE:  ; = floor_pebble
-COLOUR: ; = darkgrey
 FTILE:  " = floor_pebble_brown
 COLOUR: " = brown
 MAP
@@ -1684,7 +1683,6 @@ WEIGHT: 2
 FTILE:  ' = floor_pebble_cyan
 COLOUR: ' = green
 FTILE:  ; = floor_pebble_brown
-COLOUR: ; = darkgrey
 FTILE:  " = floor_pebble_darkgray
 COLOUR: " = cyan
 MAP
@@ -1717,7 +1715,6 @@ WEIGHT: 4
 KFEAT:  ~ = known blade trap
 FTILE:  GT = floor_pebble_darkgray
 FTILE:  ;" = floor_pebble_brown
-COLOUR: ; = darkgrey
 COLOUR: "~ = brown
 MAP
 xxx.".xxx

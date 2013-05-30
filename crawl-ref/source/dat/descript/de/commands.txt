@@ -80,7 +80,7 @@ Religiösen Status anzeigen.
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-Zeigt was deinem Gott ge- und missfällt, dein Betragen und deinen religiösen
+Zeigt was deinem Gott ge und missfällt, dein Betragen und deinen religiösen
 Stand und göttliche Fähigkeiten.
 %%%%
 CMD_DISPLAY_MUTATIONS
@@ -340,4 +340,20 @@ Versteck finden
 CMD_MAP_FIND_STASH verbose
 
 Durchlaufe alle Verstecke auf der aktuellen Ebene
+%%%%
+CMD_ZOOM_IN
+
+Heranzoomen
+%%%%
+CMD_ZOOM_IN verbose
+
+In das Kerker Gebiet heranzoomen
+%%%%
+CMD_ZOOM_OUT
+
+Herauszoomen
+%%%%
+CMD_ZOOM_OUT verbose
+
+Aus dem Kerker Gebiet herauszoomen
 %%%%

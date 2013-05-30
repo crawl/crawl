@@ -8,6 +8,7 @@
 #include "menu.h"
 
 #include <cctype>
+#include <functional>
 
 #include "cio.h"
 #include "colour.h"
@@ -598,8 +599,8 @@ bool Menu::process_key(int keyin)
         {
             if (num > 999)
                 num = -1;
-            num = (num == -1)? keyin - '0' :
-                               num * 10 + keyin - '0';
+            num = (num == -1) ? keyin - '0' :
+                                num * 10 + keyin - '0';
         }
 
         select_items(keyin, num);
@@ -724,7 +725,7 @@ string Menu::get_select_count_string(int count) const
         if (count)
         {
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
-                    (count > 1? "s" : ""));
+                    (count > 1 ? "s" : ""));
         }
         return string(buf);
     }
@@ -803,7 +804,7 @@ void Menu::select_items(int key, int qty)
 
         // We have to use some hackery to handle items that share
         // the same hotkey (as for pickup when there's a stack of
-        // >52 items).  If there are duplicate hotkeys, the items
+        // >52 items). If there are duplicate hotkeys, the items
         // are usually separated by at least a page, so we should
         // only select the item on the current page. This is why we
         // use two loops, and check to see if we've matched an item
@@ -1180,7 +1181,7 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
 
 void Menu::select_index(int index, int qty)
 {
-    int si = index == -1? first_entry : index;
+    int si = index == -1 ? first_entry : index;
 
     if (index == -1)
     {
@@ -1276,7 +1277,7 @@ int Menu::item_colour(int, const MenuEntry *entry) const
     if (highlighter)
         icol = highlighter->entry_colour(entry);
 
-    return (icol == -1? entry->colour : icol);
+    return (icol == -1 ? entry->colour : icol);
 }
 
 void Menu::draw_title()
@@ -1722,7 +1723,7 @@ void column_composer::add_formatted(int ncol,
 
     compose_formatted_column(newlines,
                               col.lines,
-                              margin == -1? col.margin : margin);
+                              margin == -1 ? col.margin : margin);
 
     col.lines += newlines.size();
 

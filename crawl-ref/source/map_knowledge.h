@@ -50,6 +50,7 @@ struct cloud_info
 #define MAP_SUPPRESSED     0X2000000
 #define MAP_QUAD_HALOED    0X4000000
 #define MAP_DISJUNCT       0X8000000
+#define MAP_HOT           0x10000000
 
 /*
  * A map_cell stores what the player knows about a cell.
@@ -286,12 +287,7 @@ struct map_cell
 public:
     uint32_t flags;   // Flags describing the mappedness of this square.
 private:
-//TODO fix when the MSVC is standard-compliant.
-#ifdef TARGET_COMPILER_VC
-    dungeon_feature_type _feat;
-#else
     dungeon_feature_type _feat:8;
-#endif
     colour_t _feat_colour;
     cloud_info* _cloud;
     item_info* _item;

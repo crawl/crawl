@@ -8,6 +8,7 @@
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/hyper.lua")
 : require("dlua/layout/hyper_caves.lua")
+: require("dlua/layout/theme.lua")
 
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
@@ -15,9 +16,8 @@ NAME:   layout_layer_cave
 DEPTH:  D:10-26,Lair,Snake
 WEIGHT: 15, 20(Lair)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caves
 {{
-  layout_type "caves"
   if is_validating() then return; end
 
   local gxm,gym = dgn.max_bounds()
@@ -90,6 +90,8 @@ TAGS: overwritable layout allow_dup unrand
   end
 
   zonify.map_fill_zones(_G, 1, 'x')
+
+  theme.D.caves(_G)
 }}
 
 # The premise here is we pick a random shape function and apply cavelike edges.
@@ -103,9 +105,8 @@ NAME:   layout_cave_shapes
 DEPTH:  D:15-25,Lair,Snake
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caverns
 {{
-  layout_type "caverns"
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
   local width = crawl.random_range(10,20)
@@ -202,8 +203,11 @@ TAGS: overwritable layout allow_dup unrand
   end
   local fdraw = procedural.add(shape,procedural.border{padding=5},fcave)
   local limit = util.random_range_real(0.65,0.9)
+
   procedural.render_map(_G,fdraw,function(value) return value < limit and '.' or 'x' end)
   zonify.map_fill_zones(_G, 1)
+
+  theme.D.caves(_G)
 }}
 
 # Use polar inverse on a noise function to create corridors that tail off in size.
@@ -214,7 +218,7 @@ NAME:   layout_waterfall
 DEPTH:  D:10-25,Tar
 WEIGHT: 5, 50(Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caverns
 {{
 
   -- TODO: For now this looks pretty good; but tweaking the reps and also the worley
@@ -227,7 +231,6 @@ TAGS: overwritable layout allow_dup unrand
   -- a separate slime path connector would be good and allow some other layout types
   -- there too.
 
-  layout_type "caverns"
   if is_validating() then return end
 
   local gxm,gym = dgn.max_bounds()
@@ -239,9 +242,9 @@ TAGS: overwritable layout allow_dup unrand
   fcaves = procedural.add(fcaves,procedural.mul(limit,procedural.border{padding=border,margin=margin}))
 
   procedural.render_map(_G,fcaves,function(value) return value < limit and '.' or 'x' end)
-
   zonify.map_fill_zones(_G, 1)
 
+  theme.D.caves(_G)
 }}
 
 # Intended as a series of interconnected roughly geometrically-shaped rooms
@@ -250,9 +253,8 @@ NAME:   layout_cave_pods
 DEPTH:  Snake,Lair,Spider
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caves
 {{
-  layout_type "caves"
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
 
@@ -280,9 +282,8 @@ NAME:   layout_chambers
 DEPTH:  Snake,Lair,Spider
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_chambers
 {{
-  layout_type "chambers"
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
 
@@ -307,8 +308,9 @@ ENDMAP
 NAME: layout_cave_town
 WEIGHT: 8
 ORIENT: encompass
-DEPTH: D:2-26, Snake, Lair
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no_vmirror chance_d
+DEPTH: D:15-26, Snake, Lair:1-3
+TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS: no_hmirror no_vmirror chance_d layout_type_cave_town
 {{
   if is_validating() then return; end
 
@@ -350,6 +352,7 @@ TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup no_hmirror no
     }
   })
   zonify.grid_fill_zones(1,"rock_wall")
+  theme.D.caves(_G)
 }}
 MAP
 ENDMAP
@@ -358,9 +361,8 @@ NAME:   layout_gehenna_lava_paths
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_paths
 {{
-  layout_type "paths"
   if is_validating() then return end
 
   local gxm,gym = dgn.max_bounds()
@@ -406,9 +408,8 @@ NAME:   layout_gehenna_lava_caves
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout allow_dup unrand layout_type_caverns
 {{
-  layout_type "caverns"
   if is_validating() then return end
 
   local gxm,gym = dgn.max_bounds()
@@ -449,9 +450,8 @@ NAME:   layout_ice_bergs
 DEPTH:  Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand chance_cocytus
+TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_caverns
 {{
-  layout_type "caverns"
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
 

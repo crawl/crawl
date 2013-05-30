@@ -112,7 +112,7 @@ battaglia con incantesimi dal Libro dei Canti in Guerra.
 Summoner
 
 Gli attrattori cominciano con il Libro delle Chiamate e sono in grado
-inizialmente di attrarre piccoli mammiferi.
+inizialmente di attrarre piccolo mammifero.
 %%%%
 Transmuter
 

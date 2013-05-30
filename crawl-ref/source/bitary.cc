@@ -15,6 +15,14 @@ bit_vector::bit_vector(unsigned long s)
     reset();
 }
 
+bit_vector::bit_vector(const bit_vector& other) : size(other.size)
+{
+    nwords = static_cast<int>((size + LONGSIZE - 1) / LONGSIZE);
+    data = new unsigned long[nwords];
+    for (int w = 0; w < nwords; ++w)
+        data[w] = other.data[w];
+}
+
 bit_vector::~bit_vector()
 {
     delete[] data;

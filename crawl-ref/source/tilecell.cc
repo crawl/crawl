@@ -14,6 +14,7 @@ void packed_cell::clear()
     num_dngn_overlay = 0;
     fg = 0;
     bg = 0;
+    cloud = 0;
 
     flv.floor_idx = 0;
     flv.wall_idx = 0;
@@ -38,12 +39,14 @@ void packed_cell::clear()
     travel_trail     = 0;
     quad_glow        = 0;
     disjunct         = 0;
+    heat_aura        = 0;
 }
 
 bool packed_cell::operator ==(const packed_cell &other) const
 {
     if (fg != other.fg) return false;
     if (bg != other.bg) return false;
+    if (cloud != other.cloud) return false;
 
     if (is_bloody != other.is_bloody) return false;
     if (is_silenced != other.is_silenced) return false;
@@ -60,6 +63,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (travel_trail != other.travel_trail) return false;
     if (quad_glow != other.quad_glow) return false;
     if (disjunct != other.disjunct) return false;
+    if (heat_aura != other.heat_aura) return false;
 
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)

@@ -21,7 +21,7 @@ bool is_door_tile(tileidx_t tile);
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_out_of_bounds(int branch);
-void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
+void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc);
 
 tileidx_t tileidx_monster(const monster_info& mon);
 tileidx_t tileidx_draco_base(const monster_info& mon);
@@ -62,7 +62,7 @@ static inline void bind_item_tile(item_def &item) {}
 
 // For a given fg/bg set of tile indices and a 1 character prefix,
 // return index, flag, and tile name as a printable string.
-string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
+string tile_debug_string(tileidx_t fg, tileidx_t bg, tileidx_t cloud, char prefix);
 
 void tile_init_props(monster* mon);
 

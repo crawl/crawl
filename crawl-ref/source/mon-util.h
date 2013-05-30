@@ -257,6 +257,7 @@ habitat_type mons_secondary_habitat(const monster* mon);
 bool intelligent_ally(const monster* mon);
 
 bool mons_skeleton(monster_type mc);
+bool mons_zombifiable(monster_type mc);
 
 int mons_weight(monster_type mc);
 int mons_class_base_speed(monster_type mc);
@@ -423,17 +424,18 @@ int get_dist_to_nearest_monster();
 bool monster_nearby();
 actor *actor_by_mid(mid_t m);
 monster *monster_by_mid(mid_t m);
-
+bool mons_is_tentacle_head(monster_type mc);
+bool mons_is_child_tentacle(monster_type mc);
+bool mons_is_child_tentacle_segment(monster_type mc);
 bool mons_is_tentacle(monster_type mc);
 bool mons_is_tentacle_segment(monster_type mc);
-bool mons_is_tentacle_head(monster_type mc);
+bool mons_is_tentacle_or_tentacle_segment(monster_type mc);
 bool mons_is_recallable(actor* caller, monster* targ);
 monster* mons_get_parent_monster(monster* mons);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
 void check_clinging();
-bool mons_is_tentacle_end(monster_type mtype);
 monster_type mons_tentacle_parent_type(const monster* mons);
 monster_type mons_tentacle_child_type(const monster* mons);
 bool mons_tentacle_adjacent(const monster* parent, const monster* child);
@@ -444,4 +446,5 @@ bool mons_foe_is_marked(const monster* mons);
 vector<monster* > get_on_level_followers();
 
 void reset_all_monsters();
+void debug_mondata();
 #endif

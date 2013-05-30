@@ -73,6 +73,7 @@ static void _species_stat_init(species_type which_species)
     case SP_MINOTAUR:           sb = 10; ib =  3; db =  3;      break;  // 16
     case SP_GROTESK:            sb =  9; ib =  6; db =  3;      break;  // 18
     case SP_HILL_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
+    case SP_LAVA_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
     case SP_CENTAUR:            sb =  8; ib =  5; db =  2;      break;  // 15
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
 
@@ -247,6 +248,9 @@ void give_basic_mutations(species_type speci)
     // for the fast/slow metabolism when we get around to it.
     switch (speci)
     {
+    case SP_LAVA_ORC:
+        you.mutation[MUT_CONSERVE_SCROLLS] = 1;
+    // Intentional fallthrough.
     case SP_HILL_ORC:
         you.mutation[MUT_SAPROVOROUS] = 1;
         break;
@@ -472,6 +476,9 @@ static void _update_weapon(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
 
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
+
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
@@ -479,12 +486,18 @@ static void _update_weapon(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
 
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_BOLT] = 1;
+
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_SLING_BULLET] = 1;
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -828,6 +841,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
+        // keep picking up sticks
+        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
+
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 2;
@@ -874,6 +890,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
 
+        // sandblast goes through a lot of stones
+        you.force_autopickup[OBJ_MISSILES][MI_STONE] = 1;
+
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
         you.skills[SK_SPELLCASTING]   = 1;
@@ -904,6 +923,9 @@ static void _give_items_skills(const newgame_def& ng)
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 2);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_NEEDLE] = 1;
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
@@ -1047,7 +1069,7 @@ static void _give_starting_food()
     else
     {
         item.base_type = OBJ_FOOD;
-        if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
+        if (player_genus(GENPC_ORCISH) || you.species == SP_KOBOLD
             || you.species == SP_OGRE || you.species == SP_TROLL
             || you.species == SP_FELID)
         {
@@ -1119,7 +1141,7 @@ static void _racialise_starting_equipment()
                     set_equip_race(you.inv[i], ISFLAG_ELVEN);
                 else if (you.species == SP_DEEP_DWARF)
                     set_equip_race(you.inv[i], ISFLAG_DWARVEN);
-                else if (you.species == SP_HILL_ORC)
+                else if (player_genus(GENPC_ORCISH))
                     set_equip_race(you.inv[i], ISFLAG_ORCISH);
             }
         }

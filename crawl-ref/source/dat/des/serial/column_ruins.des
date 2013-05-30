@@ -91,14 +91,6 @@ default-depth:
 #  on all layouts.  Specifically, it only appears on the
 #  mostly-open ones.
 #
-# These are the layouts it is supposed to generate with.  For
-#  whatever reason, this does not work.  I have replaced it with
-#  the layout tags from gnoll_camp.des (plus layout_city), and
-#  this appears to work.  I don't know why.
-#
-#TAGS:   layout_forbidden_donut layout_cross layout_big_octagon
-#TAGS:   layout_city layout_spotty layout_bigger_room layout_chaotic_city
-#
 
 NAME:   serial_column_ruins
 TAGS:   allow_dup extra luniq_serial

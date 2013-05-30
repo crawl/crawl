@@ -73,7 +73,11 @@
 #undef max
 
 #ifdef USE_TILE_LOCAL
-#include <SDL/SDL_syswm.h>
+#ifdef TARGET_COMPILER_VC
+# include <SDL_syswm.h>
+#else
+# include <SDL/SDL_syswm.h>
+#endif
 #endif
 #endif
 
@@ -740,7 +744,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
+NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
 #if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)
     SDL_SysWMinfo SysInfo;
@@ -779,9 +783,11 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 // AssertFailed
 //
 //---------------------------------------------------------------
-NORETURN void AssertFailed(const char *expr, const char *file, int line)
+NORETURN void AssertFailed(const char *expr, const char *file, int line,
+                           const char *text, ...)
 {
     char mesg[512];
+    va_list args;
 
     const char *fileName = file + strlen(file); // strip off path
 
@@ -793,7 +799,24 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line)
 
     _assert_msg = mesg;
 
-    _BreakStrToDebugger(mesg, true);
+    // Compose additional information that was passed
+    if (strlen(text))
+    {
+        // Write the args into the format specified by text
+        char detail[512];
+        va_start(args, text);
+        vsnprintf(detail, sizeof(detail), text, args);
+        va_end(args);
+        // Build the final result
+        char final_mesg[1024];
+        snprintf(final_mesg, sizeof(final_mesg), "%s (%s)", mesg, detail);
+        _assert_msg = final_mesg;
+        _BreakStrToDebugger(final_mesg, true);
+    }
+    else {
+        _assert_msg = mesg;
+        _BreakStrToDebugger(mesg, true);
+    }
 }
 #endif
 

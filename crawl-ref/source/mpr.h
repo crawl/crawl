@@ -43,6 +43,7 @@ enum msg_channel_type
     MSGCH_ERROR,            // error messages
     MSGCH_TUTORIAL,         // messages for tutorial
     MSGCH_ORB,              // messages for the orb
+    MSGCH_TIMED_PORTAL,     // timed portal entry "tick tick tick" sounds
 
     NUM_MESSAGE_CHANNELS    // always last
 };

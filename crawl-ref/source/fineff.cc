@@ -6,6 +6,7 @@
 
 #include "AppHdr.h"
 #include "coord.h"
+#include "dactions.h"
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
@@ -17,6 +18,7 @@
 #include "ouch.h"
 #include "religion.h"
 #include "state.h"
+#include "transform.h"
 #include "view.h"
 
 void final_effect::schedule()
@@ -89,6 +91,11 @@ bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
 {
     const starcursed_merge_fineff *o = dynamic_cast<const starcursed_merge_fineff *>(&fe);
     return o && def == o->def;
+}
+
+bool delayed_action_fineff::mergeable(const final_effect &fe) const
+{
+    return false;
 }
 
 void mirror_damage_fineff::merge(const final_effect &fe)
@@ -283,6 +290,22 @@ void starcursed_merge_fineff::fire()
     actor *defend = defender();
     if (defend && defend->alive())
         starcursed_merge(defender()->as_monster(), true);
+}
+
+void delayed_action_fineff::fire()
+{
+    if (final_msg.length())
+        mpr(final_msg);
+    add_daction(action);
+}
+
+void kirke_death_fineff::fire()
+{
+    delayed_action_fineff::fire();
+
+    // Revert the player last
+    if (you.form == TRAN_PIG)
+        untransform();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

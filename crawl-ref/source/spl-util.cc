@@ -95,34 +95,21 @@ void init_spell_descs(void)
     {
         const spell_desc &data = spelldata[i];
 
-#ifdef DEBUG
-        if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
-            end(1, false, "spell #%d has invalid id %d", i, data.id);
+        ASSERTM(data.id >= SPELL_NO_SPELL && data.id < NUM_SPELLS,
+                "spell #%d has invalid id %d", i, data.id);
 
-        if (data.title == NULL || !*data.title)
-            end(1, false, "spell #%d, id %d has no name", i, data.id);
+        ASSERTM(data.title != NULL && *data.title,
+                "spell #%d, id %d has no name", i, data.id);
 
-        if (data.level < 1 || data.level > 9)
-        {
-            end(1, false, "spell '%s' has invalid level %d",
-                data.title, data.level);
-        }
+        ASSERTM(data.level >= 1 && data.level <= 9,
+                "spell '%s' has invalid level %d", data.title, data.level);
 
-        if (data.min_range > data.max_range)
-        {
-            end(1, false, "spell '%s' has min_range larger than max_range",
-                data.title);
-        }
+        ASSERTM(data.min_range <= data.max_range,
+                "spell '%s' has min_range larger than max_range", data.title);
 
-        if (data.flags & SPFLAG_TARGETTING_MASK)
-        {
-            if (data.min_range <= -1 || data.max_range <= 0)
-            {
-                end(1, false, "targeted/directed spell '%s' has invalid range",
-                    data.title);
-            }
-        }
-#endif
+        ASSERTM(!(data.flags & SPFLAG_TARGETTING_MASK)
+                || (data.min_range >= 0 && data.max_range > 0),
+                "targeted/directed spell '%s' has invalid range", data.title);
 
         spell_list[data.id] = i;
     }
@@ -371,6 +358,9 @@ bool del_spell_from_memory(spell_type spell)
 
 int spell_hunger(spell_type which_spell, bool rod)
 {
+    if (player_energy())
+        return 0;
+
     const int level = spell_difficulty(which_spell);
 
     const int basehunger[] = {
@@ -391,9 +381,6 @@ int spell_hunger(spell_type which_spell, bool rod)
     }
     else
         hunger -= you.skill(SK_SPELLCASTING, you.intel());
-
-    // Staff of energy
-    hunger /= (1 + 2 * player_energy());
 
     if (hunger < 0)
         hunger = 0;
@@ -545,8 +532,8 @@ int apply_area_visible(cell_func cf, int power, actor *agent)
 {
     int rv = 0;
 
-    for (radius_iterator ri(you.pos(), you.current_vision); ri; ++ri)
-        if (you.see_cell_no_trans(*ri))
+    for (radius_iterator ri(agent->pos(), you.current_vision); ri; ++ri)
+        if (agent->see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
 
     return rv;
@@ -1118,10 +1105,26 @@ bool spell_is_useless(spell_type spell, bool transient)
     if (transient)
     {
         if (you.duration[DUR_CONF] > 0
-            || spell_mana(spell) > you.magic_points
+            || spell_mana(spell) > (you.species != SP_DJINNI ? you.magic_points
+                                    : (you.hp - 1) / DJ_MP_RATE)
             || spell_no_hostile_in_range(spell))
         {
             return true;
+        }
+
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+        {
+            switch (spell)
+            {
+            case SPELL_STATUE_FORM: // Stony self is too melty
+            // Too hot for these ice spells:
+            case SPELL_ICE_FORM:
+            case SPELL_OZOCUBUS_ARMOUR:
+            case SPELL_CONDENSATION_SHIELD:
+                return true;
+            default:
+                break;
+            }
         }
     }
 
@@ -1176,6 +1179,12 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         }
         break;
+
+    case SPELL_STONESKIN:
+        if (you.species == SP_LAVA_ORC)
+            return (true);
+        break;
+
     default:
         break; // quash unhandled constants warnings
     }

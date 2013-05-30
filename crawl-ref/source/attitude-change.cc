@@ -75,7 +75,7 @@ void good_god_follower_attitude_change(monster* mons)
 
 void beogh_follower_convert(monster* mons, bool orc_hit)
 {
-    if (you.species != SP_HILL_ORC || crawl_state.game_is_arena())
+    if (!player_genus(GENPC_ORCISH) || crawl_state.game_is_arena())
         return;
 
     // For followers of Beogh, decide whether orcs will join you.

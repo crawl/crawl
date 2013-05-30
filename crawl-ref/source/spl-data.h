@@ -3024,6 +3024,71 @@ struct spell_desc
 },
 
 {
+    SPELL_GHOSTLY_FLAMES, "Ghostly Flames",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GHOSTLY_FIREBALL, "Ghostly Fireball",
+     SPTYP_CONJURATION | SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_CALL_LOST_SOUL, "Call Lost Soul",
+     SPTYP_SUMMONING | SPTYP_NECROMANCY,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_MONSTER,
+     5,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_DIMENSION_ANCHOR, "Dimension Anchor",
+     SPTYP_TRANSLOCATION | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_BLINK_ALLIES_ENCIRCLE, "Blink Allies Encircling",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_AREA,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

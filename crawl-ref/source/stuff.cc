@@ -313,6 +313,8 @@ void redraw_screen(void)
     you.redraw_title        = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
+    if (you.species == SP_LAVA_ORC)
+        you.redraw_temperature = true;
     you.redraw_stats.init(true);
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
@@ -418,6 +420,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_TOO_BERSERK:
         mpr("You are too berserk!");
         crawl_state.cancel_cmd_repeat();
+        break;
+    case MSG_TOO_CONFUSED:
+        mpr("You're too confused!");
         break;
     case MSG_PRESENT_FORM:
         mpr("You can't do that in your present form.");

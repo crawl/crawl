@@ -392,6 +392,16 @@ void handle_behaviour(monster* mon)
     // Validate current target again.
     _mon_check_foe_invalid(mon);
 
+    if (mon->has_ench(ENCH_HAUNTING))
+    {
+        actor* targ = mon->get_ench(ENCH_HAUNTING).agent();
+        if (targ && targ->alive())
+        {
+            mon->foe = targ->mindex();
+            mon->target = targ->pos();
+        }
+    }
+
     while (changed)
     {
         actor* afoe = mon->get_foe();
@@ -469,9 +479,9 @@ void handle_behaviour(monster* mon)
             {
                 // If their foe is marked, the monster always knows exactly
                 // where they are.
-                if (mons_foe_is_marked(mon))
+                if (mons_foe_is_marked(mon) || mon->has_ench(ENCH_HAUNTING))
                 {
-                    mon->target = you.pos();
+                    mon->target = afoe->pos();
                     try_pathfind(mon);
                     break;
                 }
@@ -599,7 +609,12 @@ void handle_behaviour(monster* mon)
             {
                 // The foe is the player.
 
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                if ((mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                     || (mons_class_flag(mon->type, M_STABBER)
+                         && (mons_has_ranged_attack(mon)
+                             || mons_has_ranged_spell(mon, false, true))
+                         && you.can_see(mon)
+                         && !you.incapacitated()))
                     && !mon->berserk())
                 {
                     if (mon->attitude != ATT_FRIENDLY)
@@ -642,9 +657,15 @@ void handle_behaviour(monster* mon)
             else
             {
                 // We have a foe but it's not the player.
-                mon->target = menv[mon->foe].pos();
+                monster* target = &menv[mon->foe];
+                mon->target = target->pos();
 
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                if ((mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                     || (mons_class_flag(mon->type, M_STABBER)
+                         && (mons_has_ranged_attack(mon)
+                             || mons_has_ranged_spell(mon, false, true))
+                         && target->can_see(mon)
+                         && !target->incapacitated() ))
                     && !mon->berserk())
                 {
                     _set_firing_pos(mon, mon->target);
@@ -954,7 +975,8 @@ static void _set_nearest_monster_foe(monster* mon)
     // These don't look for foes.
     if (mon->good_neutral() || mon->strict_neutral()
             || mon->behaviour == BEH_WITHDRAW
-            || mon->type == MONS_BATTLESPHERE)
+            || mon->type == MONS_BATTLESPHERE
+            || mon->has_ench(ENCH_HAUNTING))
         return;
 
     const bool friendly = mon->friendly();

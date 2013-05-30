@@ -146,6 +146,36 @@ public:
     void fire();
 };
 
+// A fineff that triggers a daction; otherwise the daction
+// occurs immediately (and then later) -- this might actually
+// be too soon in some cases.
+class delayed_action_fineff : public final_effect
+{
+public:
+    delayed_action_fineff(daction_type _action, string _final_msg)
+            : final_effect(0, 0, coord_def()),
+              action(_action),final_msg(_final_msg)
+    {
+    }
+
+    bool mergeable(const final_effect &a) const;
+    virtual void fire();
+
+protected:
+    daction_type action;
+    string final_msg;
+};
+
+class kirke_death_fineff : public delayed_action_fineff
+{
+public:
+    kirke_death_fineff(string _final_msg)
+            : delayed_action_fineff(DACT_KIRKE_HOGS, _final_msg)
+    {
+    }
+
+    void fire();
+};
 void fire_final_effects();
 
 #endif

@@ -375,6 +375,9 @@ static bool _may_overwrite_feature(const coord_def p,
     if (grid == DNGN_DEEP_WATER)
         return water_ok;
 
+    if (grid == DNGN_TREE && player_in_branch(BRANCH_FOREST))
+        return true;
+
     // Handle all other non-LOS blocking grids here.
     if (!feat_is_opaque(grid)
         && grid != DNGN_FLOOR
@@ -578,13 +581,13 @@ static bool _apply_vault_grid(map_def &def,
     // Handle maps aligned along cardinals that are smaller than
     // the corresponding map dimension.
     if ((orient == MAP_NORTH || orient == MAP_SOUTH
-         || orient == MAP_ENCOMPASS)
+         || orient == MAP_ENCOMPASS || orient == MAP_CENTRE)
         && size.x < GXM)
     {
         start.x = (GXM - size.x) / 2;
     }
     if ((orient == MAP_EAST || orient == MAP_WEST
-         || orient == MAP_ENCOMPASS)
+         || orient == MAP_ENCOMPASS || orient == MAP_CENTRE)
         && size.y < GYM)
     {
         start.y = (GYM - size.y) / 2;

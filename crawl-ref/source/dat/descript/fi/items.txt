@@ -1,11 +1,4 @@
 %%%%
-air elemental fan
-
-Maaginen väline ilmaelementaalien kutsumiseen. Se on melko epäluotettava, ja
-useimmiten tarvitsee usean yrityksen toimiakseen kunnolla. Sen käyttämisessä on
-riskinsä, joka tosin vähenee jos käyttäjä on taitava sopivassa
-elementtimagiassa.
-%%%%
 amulet of clarity
 
 Tämä amuletti suojaa käyttäjäänsä joiltakin mielen sekaannuksen muodoilta,
@@ -39,13 +32,6 @@ syöpymiseltä, mutta ei pettämättömästi.
 amulet of resist mutation
 
 Tämä amuletti suojaa käyttäjäänsä muodonmuutoksilta, mutta ei pettämättömästi.
-%%%%
-amulet of the gourmand
-
-Tämä amuletti suojaa käyttäjäänsä raa'an lihan aiheuttamilta sairauksilta ja
-tekee heistä kykeneväisiä syömään sitä myös, kun he eivät ole nälkäisiä. Nämä
-vaikutukset käyttäjän ruoansulatukseen ovat kasaantuvia ja ovat alkuaankin
-pieniä.
 %%%%
 amulet of warding
 
