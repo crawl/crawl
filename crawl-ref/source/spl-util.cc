@@ -1182,7 +1182,7 @@ bool spell_is_useless(spell_type spell, bool transient)
 
     case SPELL_STONESKIN:
         if (you.species == SP_LAVA_ORC)
-            return (true);
+            return true;
         break;
 
     default:
