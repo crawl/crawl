@@ -1346,7 +1346,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FOREST_DRAKE, 'l', GREEN, "forest drake",
+    MONS_FOREST_DRAKE, 'l', LIGHTGREEN, "forest drake",
     M_WARM_BLOOD | M_FAKE_SPELLS,
     MR_VUL_FIRE,
     1000, 10, MONS_DRAGON, MONS_FOREST_DRAKE, MH_NATURAL, -3,
