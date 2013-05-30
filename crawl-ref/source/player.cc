@@ -3304,6 +3304,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_HILL_ORC:
+            case SP_LAVA_ORC:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
