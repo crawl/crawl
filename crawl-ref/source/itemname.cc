@@ -3409,8 +3409,15 @@ bool is_useless_item(const item_def &item, bool temp)
         return true;
 
     case OBJ_CORPSES:
-        if (item.sub_type != CORPSE_SKELETON)
+        if (item.sub_type != CORPSE_SKELETON && !you_foodless())
             return false;
+
+        if (item.sub_type == CORPSE_BODY && you.species == SP_DJINNI
+            && mons_corpse_effect(item.mon_type) == CE_MUTAGEN
+            && !is_inedible(item))
+        {
+            return false;
+        }
 
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
