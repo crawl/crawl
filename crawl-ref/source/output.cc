@@ -491,7 +491,9 @@ void update_turn_count()
         return;
     }
 
-    CGOTOXY(19+6, 9 + crawl_state.game_is_zotdef(), GOTO_STAT);
+    const int yhack = crawl_state.game_is_zotdef()
+                    + (you.species == SP_LAVA_ORC);
+    CGOTOXY(19+6, 9 + yhack, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
@@ -1263,7 +1265,7 @@ void print_stats(void)
         }
         if (crawl_state.game_is_zotdef())
         {
-            CGOTOXY(1, 9, GOTO_STAT);
+            CGOTOXY(1, 9 + temp, GOTO_STAT);
             textcolor(Options.status_caption_colour);
             CPRINTF("ZP: ");
             textcolor(HUD_VALUE_COLOUR);
