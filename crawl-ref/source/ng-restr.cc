@@ -115,6 +115,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (speci)
         {
         case SP_DEMIGOD:
+        case SP_GROTESK:
             return CC_BANNED;
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:

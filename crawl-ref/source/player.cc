@@ -6554,7 +6554,7 @@ bool player::is_chaotic() const
 
 bool player::is_artificial() const
 {
-    return (form == TRAN_STATUE || petrified());
+    return (species == SP_GROTESK || form == TRAN_STATUE || petrified());
 }
 
 bool player::is_unbreathing() const
