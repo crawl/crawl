@@ -636,9 +636,14 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.hp, you.hp, "hp");
     _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
     _update_int(force_full, c.real_hp_max, get_real_hp(true, true), "real_hp_max");
-
     _update_int(force_full, c.mp, you.magic_points, "mp");
     _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+
+    if (you.species == SP_DJINNI)
+        _update_int(force_full, c.contam, you.magic_contamination, "contam");
+
+    if (you.species == SP_LAVA_ORC)
+        _update_int(force_full, c.heat, you.temperature, "heat");
 
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
     _update_int(force_full, c.evasion, player_evasion(), "ev");
