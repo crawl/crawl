@@ -1648,33 +1648,54 @@ NAME:    grunt_crypt_end_deaths_head
 TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror
 PLACE:   Crypt:$
 ORIENT:  encompass
-MONS:    skeletal warrior, flying skull band
-SHUFFLE: Dd / Ee / Ff / Hh / Ii / Jj / Kk / Ll / 34 / 56 / 78 / 90
-KMONS:   D = vampire knight
-KMONS:   d = vampire mage w:2 / vampire
-KMONS:   E = ghoul
-KMONS:   e = plague shambler / necrophage w:5
-KMONS:   F = necromancer
-KMONS:   f = zombie / skeleton / hell knight w:2
-KMONS:   H = lich
-KMONS:   I = ancient lich
-KMONS:   hi = phantasmal warrior / freezing wraith / shadow wraith / wraith
-KMONS:   J = deep dwarf death knight
-KMONS:   j = death cob / skeletal warrior / flayed ghost / flaming corpse
-KMONS:   K = ancient champion ; plate armour good_item . \
-             great sword good_item | great mace good_item | battleaxe good_item
-KMONS:   k = skeletal warrior
-KMONS:   L = deep elf death mage
-KMONS:   l = large abomination w:2 / small abomination
-KMONS:   3 = curse skull
-KMONS:   5 = unborn deep dwarf
-KMONS:   6 = deep dwarf necromancer w:2 / deep dwarf scion w:5 / deep dwarf
-KMONS:   7 = profane servitor
-KMONS:   9 = bone dragon
-KMONS:   480 = nothing
-KMONS:   M = greater mummy
+MONS:    skeletal warrior / jiangshi, flying skull band
+SHUFFLE: 34 / 78 / 90 / Hh, Dd / Ee / Ff / Ii / Jj / Kk / Ll / 56
+
+# Initial waves; these should be weaker.
+KMONS:   3 = ghoul
+KMONS:   4 = plague shambler / necrophage
+KMONS:   7 = necromancer
+KMONS:   8 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
+             hell knight w:5
+KMONS:   9 = deep dwarf death knight
+KMONS:   0 = death cob / skeletal warrior / flaming corpse
+KMONS:   H = ancient champion
+KMONS:   h = skeletal warrior
+
+# Room guardian waves; these should be tougher, but not boss tier.
+KMONS:   D = lich
+KMONS:   E = revenant
+KMONS:   de = freezing wraith / shadow wraith / wraith
+KMONS:   F = deep elf death mage
+KMONS:   f = lost soul w:12 / small abomination / large abomination w:2
+KMONS:   I = unborn deep dwarf
+KMONS:   i = deep dwarf necromancer w:2 / deep dwarf scion w:5 / deep dwarf
+KMONS:   J = profane servitor
+KMONS:   K = bone dragon
+KMONS:   jk = nothing
+KMONS:   Ll = jiangshi
+KMONS:   5 = flayed ghost
+KMONS:   6 = flayed ghost / shadow w:20
+
+# Boss tier monsters.
+: if crawl.one_chance_in(4) then
+KMONS:   M = Khufu, greater mummy
 KMONS:   N = mummy priest
 KMONS:   O = guardian mummy
+: elseif crawl.one_chance_in(3) then
+KMONS:   M = Jory, vampire knight
+KMONS:   N = vampire mage
+KMONS:   O = vampire / jiangshi
+: elseif crawl.coinflip() then
+KMONS:   M = ancient lich
+KMONS:   N = flayed ghost
+KMONS:   O = phantasmal warrior
+: else
+KMONS:   M = curse skull
+KMONS:   N = ancient champion
+KMONS:   O = skeletal warrior
+: end
+
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
 SHUFFLE: {[(<
 MAP
