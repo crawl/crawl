@@ -255,13 +255,8 @@ function ($, comm, enums, map_knowledge, messages) {
         else
             $(".stats_zot_defense").hide();
 
-        // Adjust max HP correctly for Djinni
-        var max_max_hp = player.real_hp_max;
-        if (player.species == "Djinni")
-            max_max_hp += player.mp_max;
-
-        if (max_max_hp != player.hp_max)
-            $("#stats_real_hp_max").text("(" + max_max_hp + ")");
+        if (player.real_hp_max != player.hp_max)
+            $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
             $("#stats_real_hp_max").text("");
 
