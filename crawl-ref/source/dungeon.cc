@@ -1415,29 +1415,38 @@ void fixup_misplaced_items()
     }
 }
 
+// count_root is present to allow the root branch to keep placing three
+// stairs (ZotDef, entry vaults placing multiple stairs).
+static bool _at_top_of_branch(bool count_root)
+{
+    return (your_branch().exit_stairs != NUM_FEATURES
+            && you.depth == 1
+            && (count_root || you.where_are_you != root_branch)
+            && player_in_connected_branch());
+}
+
 static void _fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
-    if (your_branch().exit_stairs != NUM_FEATURES
-        && you.depth == 1
-        && player_in_connected_branch())
+    if (_at_top_of_branch(true))
     {
         dungeon_feature_type exit = your_branch().exit_stairs;
         if (you.where_are_you == root_branch) // ZotDef
             exit = DNGN_EXIT_DUNGEON;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
-                && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
+            if (grd(*ri) == DNGN_STONE_STAIRS_UP_I
+                && !feature_mimic_at(*ri))
             {
-                if (grd(*ri) == DNGN_STONE_STAIRS_UP_I
-                    && !feature_mimic_at(*ri))
-                {
-                    env.markers.add(new map_feature_marker(*ri, grd(*ri)));
-                }
-
+                env.markers.add(new map_feature_marker(*ri, grd(*ri)));
                 _set_grd(*ri, exit);
+            }
+            else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
+                     && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
+            {
+                _set_grd(*ri, you.where_are_you == root_branch ? exit
+                                                               : DNGN_FLOOR);
             }
         }
     }
@@ -1507,7 +1516,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             num_stairs = num_up_stairs;
             replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_UP_I;
-            needed_stairs = 3;
+            needed_stairs = _at_top_of_branch(false) ? 1 : 3;
         }
         else
         {
@@ -6260,8 +6269,10 @@ static bool _fixup_interlevel_connectivity()
         }
     }
 
+    const int up_region_max = _at_top_of_branch(false) ? 1 : 3;
+
     // Ensure all up stairs were found.
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < up_region_max; i++)
         if (up_region[i] == -1)
             return false;
 
@@ -6272,7 +6283,7 @@ static bool _fixup_interlevel_connectivity()
     // Which up stairs have a down stair? (These are potentially connected.)
     if (!at_branch_bottom())
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < up_region_max; i++)
             for (int j = 0; j < 3; j++)
             {
                 if (down_region[j] == up_region[i])
@@ -6296,7 +6307,7 @@ static bool _fixup_interlevel_connectivity()
     {
         if (!prev_con.connected[i])
             continue;
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (!has_down[j] && !at_branch_bottom())
                 continue;
@@ -6328,7 +6339,7 @@ static bool _fixup_interlevel_connectivity()
             continue;
 
         // Try first to assign to any connected regions.
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (assign_cur[j] != -1 || !region_connected[up_region[j]])
                 continue;
@@ -6361,7 +6372,7 @@ static bool _fixup_interlevel_connectivity()
         if (!prev_con.connected[i] || assign_prev[i] != -1)
             continue;
 
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (has_down[j] || assign_cur[j] != -1)
                 continue;
@@ -6380,7 +6391,7 @@ static bool _fixup_interlevel_connectivity()
     {
         if (assign_prev[i] != -1)
             continue;
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (assign_cur[j] != -1)
                 continue;
@@ -6398,20 +6409,23 @@ static bool _fixup_interlevel_connectivity()
     // At the branch bottom, all up stairs must be connected.
     if (at_branch_bottom())
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < up_region_max; i++)
             if (!region_connected[up_region[i]])
                 return false;
     }
 
     // Sanity check that we're not duplicating stairs.
-    bool stairs_unique = (assign_cur[0] != assign_cur[1]
-                          && assign_cur[1] != assign_cur[2]);
-    ASSERT(stairs_unique);
-    if (!stairs_unique)
-        return false;
+    if (up_region_max > 1)
+    {
+        bool stairs_unique = (assign_cur[0] != assign_cur[1]
+                              && assign_cur[1] != assign_cur[2]);
+        ASSERT(stairs_unique);
+        if (!stairs_unique)
+            return false;
+    }
 
     // Reassign up stair numbers as needed.
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < up_region_max; i++)
     {
         _set_grd(up_gc[i],
             (dungeon_feature_type)(DNGN_STONE_STAIRS_UP_I + assign_cur[i]));
