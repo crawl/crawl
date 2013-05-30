@@ -1417,11 +1417,10 @@ void fixup_misplaced_items()
 
 // count_root is present to allow the root branch to keep placing three
 // stairs (ZotDef, entry vaults placing multiple stairs).
-static bool _at_top_of_branch(bool count_root)
+static bool _at_top_of_branch()
 {
     return (your_branch().exit_stairs != NUM_FEATURES
             && you.depth == 1
-            && (count_root || you.where_are_you != root_branch)
             && player_in_connected_branch());
 }
 
@@ -1429,7 +1428,7 @@ static void _fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
-    if (_at_top_of_branch(true))
+    if (_at_top_of_branch())
     {
         dungeon_feature_type exit = your_branch().exit_stairs;
         if (you.where_are_you == root_branch) // ZotDef
@@ -1442,8 +1441,10 @@ static void _fixup_branch_stairs()
                 env.markers.add(new map_feature_marker(*ri, grd(*ri)));
                 _set_grd(*ri, exit);
             }
+            else if (grd(*ri) == DNGN_ESCAPE_HATCH_UP)
+                _set_grd(*ri, DNGN_FLOOR);
             else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
-                     && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
+                     && grd(*ri) <= DNGN_STONE_STAIRS_UP_III)
             {
                 _set_grd(*ri, you.where_are_you == root_branch ? exit
                                                                : DNGN_FLOOR);
@@ -1516,7 +1517,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             num_stairs = num_up_stairs;
             replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_UP_I;
-            needed_stairs = _at_top_of_branch(false) ? 1 : 3;
+            needed_stairs = _at_top_of_branch() ? 1 : 3;
         }
         else
         {
@@ -1534,6 +1535,9 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         // the player through vaults that use all three down stone stairs.
         if (player_in_branch(BRANCH_HALL_OF_ZOT))
             replace = DNGN_GRANITE_STATUE;
+
+        dprf("Before culling: %d/%d %s stairs", num_stairs, needed_stairs,
+             i ? "down" : "up");
 
         if (num_stairs > needed_stairs)
         {
@@ -1569,6 +1573,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                                            env.level_map_mask);
                     if (where.x)
                     {
+                        dprf("Too many stairs -- removing one of a connected pair.");
                         grd(stair_list[s2]) = replace;
                         num_stairs--;
                         stair_list[s2] = stair_list[num_stairs];
@@ -1597,15 +1602,25 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                     // means that there are more than 3 stairs in vaults and
                     // we can't preserve vault stairs.
                     if (!tries)
+                    {
+                        dprf("Too many stairs inside vaults!");
                         break;
+                    }
                 }
+                dprf("Too many stairs -- removing one blindly.");
                 _set_grd(stair_list[remove], replace);
 
                 stair_list[remove] = stair_list[--num_stairs];
             }
         }
 
-        if (num_stairs > needed_stairs && preserve_vault_stairs)
+        // FIXME: stairs that generate inside random vaults are still
+        // protected, resulting in superfluoes ones.
+        dprf("After culling: %d/%d %s stairs", num_stairs, needed_stairs,
+             i ? "down" : "up");
+
+        if (num_stairs > needed_stairs && preserve_vault_stairs
+            && (i || you.depth != 1 || you.where_are_you != root_branch))
         {
             success = false;
             continue;
@@ -6268,7 +6283,7 @@ static bool _fixup_interlevel_connectivity()
         }
     }
 
-    const int up_region_max = _at_top_of_branch(false) ? 1 : 3;
+    const int up_region_max = _at_top_of_branch() ? 1 : 3;
 
     // Ensure all up stairs were found.
     for (int i = 0; i < up_region_max; i++)
