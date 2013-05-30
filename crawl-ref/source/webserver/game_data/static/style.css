@@ -102,6 +102,19 @@ body {
     background-color: #204a87; /* blue */
 }
 
+#stats_heat_bar {
+    background-color: #555753; /* darkgray */
+}
+#stats_heat_bar_full {
+    background-color: #a40000; /* red */
+}
+#stats_heat_bar_decrease {
+    background-color: #729fcf; /* lightblue */
+}
+#stats_heat_bar_increase {
+    background-color: #ee4f45; /* lightred */
+}
+
 #stats[data-species="Djinni"] #stats_hp_bar_full {
     background-color: #ba2cde;
 }
@@ -113,36 +126,55 @@ body {
 }
 
 /* Djinni contam bar */
-#stats[data-species="Djinni"] #stats_mp_bar_full {
-    background-color: #555753;
+#stats_contamline {
+    display:none;
+    visibility:hidden;
 }
 
-#stats[data-species="Djinni"] #stats_mp_bar_decrease,
-#stats[data-species="Djinni"] #stats_mp_bar_increase {
+#stats[data-species="Djinni"] #stats_contamline {
+    display:block;
+    visibility:visible;
+}
+/* Hide MP bar */
+#stats[data-species="Djinni"] #stats_mpline {
+    display:none;
+    visibility:hidden;
+}
+
+#stats_contam_bar {
+    background-color: #555753; /* darkgray */
+}
+
+#stats_contam_bar_full {
     background-color: #343434;
 }
 
-#stats[data-species="Djinni"] #stats_mpline[data-contam="2"] #stats_mp_bar_full {
+#stats_contam_bar_decrease,
+#stats_contam_bar_increase {
+    background-color: #232323;
+}
+
+#stats_contamline[data-contam="2"] #stats_contam_bar_full {
     background-color: yellow;
 }
 
-#stats[data-species="Djinni"] #stats_mpline[data-contam="2"] #stats_mp_bar_decrease,
-#stats[data-species="Djinni"] #stats_mpline[data-contam="2"] #stats_mp_bar_increase {
+#stats_contamline[data-contam="2"] #stats_contam_bar_decrease,
+#stats_contamline[data-contam="2"] #stats_contam_bar_increase {
     background-color: saddlebrown;
 }
 
-#stats[data-species="Djinni"] #stats_mpline[data-contam="3"] #stats_mp_bar_full {
+#stats_contamline[data-contam="3"] #stats_contam_bar_full {
     background-color: red;
 }
 
-#stats[data-species="Djinni"] #stats_mpline[data-contam="3"] #stats_mp_bar_decrease,
-#stats[data-species="Djinni"] #stats_mpline[data-contam="3"] #stats_mp_bar_increase {
+#stats_contamline[data-contam="3"] #stats_contam_bar_decrease,
+#stats_contamline[data-contam="3"] #stats_contam_bar_increase {
     background-color: darkred;
 }
 
-#stats[data-species="Djinni"] #stats_mpline[data-contam="4"] #stats_mp_bar_full,
-#stats[data-species="Djinni"] #stats_mpline[data-contam="4"] #stats_mp_bar_decrease,
-#stats[data-species="Djinni"] #stats_mpline[data-contam="4"] #stats_mp_bar_increase {
+#stats_contamline[data-contam="4"] #stats_contam_bar_full,
+#stats_contamline[data-contam="4"] #stats_contam_bar_decrease,
+#stats_contamline[data-contam="4"] #stats_contam_bar_increase {
     background-color: darkred;
 }
 
