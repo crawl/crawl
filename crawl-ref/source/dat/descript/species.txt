@@ -42,6 +42,10 @@ Ghoul
 An undead, damned to rot eternally. They are always looking for rotten food to
 eat, hacking away with their claws.
 %%%%
+Grotesk
+
+Made of living stone, Grotesks have a preternatural affinity for the earth.
+%%%%
 Halfling
 
 Small but hardy, Halflings excel with slings. They have an increased resistance
