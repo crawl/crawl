@@ -1654,9 +1654,8 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
                 rc++;
         }
 
-        if (you.species == SP_LAVA_ORC)
-            if (temperature_effect(LORC_COLD_VULN))
-                rc--;
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_COLD_VULN))
+            rc--;
     }
 
     // All effects negated by magical suppression should go in here.
