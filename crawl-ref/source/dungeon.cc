@@ -1430,24 +1430,21 @@ static void _fixup_branch_stairs()
     // dungeon or wherever:
     if (_at_top_of_branch())
     {
+        int count = 0;
         dungeon_feature_type exit = your_branch().exit_stairs;
         if (you.where_are_you == root_branch) // ZotDef
             exit = DNGN_EXIT_DUNGEON;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) == DNGN_STONE_STAIRS_UP_I
-                && !feature_mimic_at(*ri))
-            {
-                env.markers.add(new map_feature_marker(*ri, grd(*ri)));
-                _set_grd(*ri, exit);
-            }
-            else if (grd(*ri) == DNGN_ESCAPE_HATCH_UP)
+            if (grd(*ri) == DNGN_ESCAPE_HATCH_UP)
                 _set_grd(*ri, DNGN_FLOOR);
             else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
                      && grd(*ri) <= DNGN_STONE_STAIRS_UP_III)
             {
-                _set_grd(*ri, you.where_are_you == root_branch ? exit
-                                                               : DNGN_FLOOR);
+                ++count;
+                ASSERT(count == 1 || you.where_are_you == root_branch);
+                env.markers.add(new map_feature_marker(*ri, grd(*ri)));
+                _set_grd(*ri, exit);
             }
         }
     }
