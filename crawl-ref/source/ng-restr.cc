@@ -644,6 +644,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     case WPN_MACE:
         if (ng.species == SP_TROLL
             || ng.species == SP_OGRE
+            || ng.species == SP_GARGOYLE
             || ng.species == SP_DJINNI)
         {
             return CC_UNRESTRICTED;
@@ -833,6 +834,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_HILL_ORC:
         case SP_LAVA_ORC:
         case SP_TROLL:
+        case SP_GARGOYLE:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
