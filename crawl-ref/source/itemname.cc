@@ -3069,6 +3069,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
+            // If you're fire-immune, immolation is not dangerous (to
+            // you, anyway).
+            return player_res_fire(false, temp) <= 3;
         case SCR_NOISE:
             return true;
         case SCR_TORMENT:
