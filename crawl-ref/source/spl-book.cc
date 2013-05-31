@@ -1429,6 +1429,11 @@ int rod_spell(int rod)
     // All checks passed, we can cast the spell.
     if (you.confused())
         random_uselessness();
+    // Rod of Blast is somewhat unreliable (but still uses
+    // rod mana and food when it fails)
+    else if (irod.sub_type == ROD_BLASTING && one_chance_in(4))
+        // TODO: Thematic effects / harmless clouds
+        mpr("The rod sputters and fails to fire.");
     else if (your_spells(spell, power, false, false)
                 == SPRET_ABORT)
     {

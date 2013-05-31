@@ -2064,7 +2064,7 @@ This rod contains spells designed to repel one's enemies.
 %%%%
 rod of blasts
 
-This rod produces blasts of an unpredictable nature.
+This rod produces blasts of an unpredictable nature. It is not very reliable.
 %%%%
 royal jelly
 
