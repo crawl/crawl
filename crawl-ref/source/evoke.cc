@@ -645,8 +645,7 @@ static const pop_entry pop_beasts[] =
 
 static bool _box_of_beasts_veto_mon(monster_type mon)
 {
-    // If you worship a good god, don't summon an unholy beast (in
-    // this case, the hell hound).
+    // Don't summon any beast that would anger your god.
     return player_will_anger_monster(mon);
 }
 
