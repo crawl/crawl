@@ -462,6 +462,10 @@ A staircase back to the Dungeon
 
 These stairs lead back up to the familiarity of the dungeon.
 %%%%
+A staircase back to the Forest
+
+These stairs lead back to the relative safety of the Forest.
+%%%%
 A staircase back to the Lair
 
 These stairs lead back up to the Lair of Beasts.
