@@ -3093,9 +3093,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     if (you.species == SP_GARGOYLE && !form_changed_physiology())
-    {
         _add_talent(talents, ABIL_SELF_PETRIFY, check_confused);
-    }
 
     if (player_genus(GENPC_DRACONIAN))
     {

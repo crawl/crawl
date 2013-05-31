@@ -6338,7 +6338,8 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
-    if (duration[DUR_STONESKIN]) {
+    if (duration[DUR_STONESKIN])
+    {
         int boost = 200 + skill(SK_EARTH_MAGIC, 20); // max 7
         if (you.species == SP_LAVA_ORC)
             boost = std::max(boost, 200 + 100 * you.experience_level / 5); // max 7
@@ -7059,7 +7060,8 @@ void player::petrify(actor *who, bool force)
 
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
-    if (you.mutation[MUT_SELF_PETRIFICATION] > 0) {
+    if (you.mutation[MUT_SELF_PETRIFICATION] > 0)
+    {
         you.duration[DUR_PETRIFYING] *=
             1 + you.mutation[MUT_SELF_PETRIFICATION] + coinflip();
     }
