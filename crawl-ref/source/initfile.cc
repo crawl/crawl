@@ -381,9 +381,9 @@ static species_type _str_to_species(const string &str)
     if (!is_valid_species(ret)
         || (species_genus(ret) == GENPC_DRACONIAN
             && ret != SP_BASE_DRACONIAN))
-{
+    {
         ret = SP_UNKNOWN;
-}
+    }
 
 #if TAG_MAJOR_VERSION == 34
     if (ret == SP_SLUDGE_ELF)
