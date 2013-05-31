@@ -1458,7 +1458,7 @@ static monsterentry mondata[] = {
 
 // Using 'm' for this is a bit of a stretch; suggestions are welcome.
 {
-    MONS_DRYAD, 'm', GREEN, "dryad",
+    MONS_DRYAD, 'm', BROWN, "dryad",
     M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS | M_ACTUAL_SPELLS
         | M_MAINTAIN_RANGE,
     MR_VUL_FIRE,
