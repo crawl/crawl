@@ -74,13 +74,6 @@ bool mutate(mutation_type which_mutation, const string &reason,
             bool no_rot = false,
             bool temporary = false);
 
-static inline bool give_bad_mutation(const string &reason, bool failMsg = true,
-                                     bool force_mutation = false)
-{
-    return mutate(RANDOM_BAD_MUTATION, reason, failMsg, force_mutation,
-                  false, false, false);
-}
-
 void display_mutations();
 mutation_activity_type mutation_activity_level(mutation_type mut);
 string describe_mutations(bool center_title);

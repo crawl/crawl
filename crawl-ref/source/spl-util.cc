@@ -532,8 +532,8 @@ int apply_area_visible(cell_func cf, int power, actor *agent)
 {
     int rv = 0;
 
-    for (radius_iterator ri(you.pos(), you.current_vision); ri; ++ri)
-        if (you.see_cell_no_trans(*ri))
+    for (radius_iterator ri(agent->pos(), you.current_vision); ri; ++ri)
+        if (agent->see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
 
     return rv;
@@ -1105,10 +1105,26 @@ bool spell_is_useless(spell_type spell, bool transient)
     if (transient)
     {
         if (you.duration[DUR_CONF] > 0
-            || spell_mana(spell) > you.magic_points
+            || spell_mana(spell) > (you.species != SP_DJINNI ? you.magic_points
+                                    : (you.hp - 1) / DJ_MP_RATE)
             || spell_no_hostile_in_range(spell))
         {
             return true;
+        }
+
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+        {
+            switch (spell)
+            {
+            case SPELL_STATUE_FORM: // Stony self is too melty
+            // Too hot for these ice spells:
+            case SPELL_ICE_FORM:
+            case SPELL_OZOCUBUS_ARMOUR:
+            case SPELL_CONDENSATION_SHIELD:
+                return true;
+            default:
+                break;
+            }
         }
     }
 
@@ -1163,6 +1179,12 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         }
         break;
+
+    case SPELL_STONESKIN:
+        if (you.species == SP_LAVA_ORC)
+            return true;
+        break;
+
     default:
         break; // quash unhandled constants warnings
     }

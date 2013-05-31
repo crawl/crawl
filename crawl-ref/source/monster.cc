@@ -4294,7 +4294,7 @@ void monster::paralyse(actor *atk, int strength, string cause)
     enchant_monster_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
 
-void monster::petrify(actor *atk)
+void monster::petrify(actor *atk, bool force)
 {
     enchant_monster_with_flavour(this, atk, BEAM_PETRIFY);
 }
@@ -4881,7 +4881,7 @@ bool monster::can_bleed(bool /*allow_tran*/) const
     return mons_has_blood(type);
 }
 
-bool monster::mutate(const string &reason)
+bool monster::malmutate(const string &reason)
 {
     if (!can_mutate())
         return false;

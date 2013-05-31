@@ -156,7 +156,7 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (!can_pass_through_feat(actual_grid))
         return false;
 
-    if (airborne())
+    if (airborne() || species == SP_DJINNI)
         return true;
 
     if (actual_grid == DNGN_LAVA
@@ -673,6 +673,13 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
             mpr("You cannot raise a blood rage in your lifeless body.");
 
         // or else you won't notice -- no message here
+        return false;
+    }
+
+    if (you.species == SP_GARGOYLE && you.petrifying())
+    {
+        if (verbose)
+            mpr("You cannot rage while you turn to stone.");
         return false;
     }
 

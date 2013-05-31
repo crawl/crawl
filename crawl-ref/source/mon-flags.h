@@ -149,6 +149,12 @@ const uint64_t M_NO_ZOMBIE         = (uint64_t)1<<45;
 // cannot be placed by any means, even on the arena/etc
 const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
 
+// derived undead can't be randomly generated
+const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
+
+// tries to maintain range unless target is incapacitated
+const uint64_t M_STABBER           = (uint64_t)1<<48;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing

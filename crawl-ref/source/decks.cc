@@ -1711,7 +1711,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     switch (card)
     {
     case CARD_VITRIOL:
-        ztype = (one_chance_in(3) ? ZAP_CIGOTUVIS_DEGENERATION : ZAP_BREATHE_ACID);
+        ztype = ZAP_BREATHE_ACID;
         break;
 
     case CARD_FLAME:

@@ -722,6 +722,16 @@ string map_lines::check_shuffle(string &s)
     return "";
 }
 
+string map_lines::check_clear(string &s)
+{
+    s = clean_shuffle(s);
+
+    if (!s.length())
+        return "no glyphs specified for clearing";
+
+    return "";
+}
+
 string map_lines::parse_glyph_replacements(string s, glyph_replacements_t &gly)
 {
     s = replace_all_of(s, "\t", " ");
@@ -996,6 +1006,17 @@ string map_lines::add_shuffle(const string &raws)
 
     if (err.empty())
         resolve_shuffle(s);
+
+    return err;
+}
+
+string map_lines::add_clear(const string &raws)
+{
+    string s = raws;
+    const string err = check_clear(s);
+
+    if (err.empty())
+        clear(s);
 
     return err;
 }
@@ -1503,6 +1524,22 @@ void map_lines::resolve_shuffle(const string &shufflage)
             string::size_type pos = toshuffle.find(c);
             if (pos != string::npos)
                 s[j] = shuffled[pos];
+        }
+    }
+}
+
+void map_lines::clear(const string &clearchars)
+{
+    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
+    {
+        string &s = lines[i];
+
+        for (int j = 0, len = s.length(); j < len; ++j)
+        {
+            const char c = s[j];
+            string::size_type pos = clearchars.find(c);
+            if (pos != string::npos)
+                s[j] = ' ';
         }
     }
 }

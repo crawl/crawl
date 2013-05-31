@@ -131,7 +131,6 @@ bool is_boring_terrain(dungeon_feature_type feat);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type = TERRAIN_CHANGE_GENERIC,
                          const monster* mon = NULL);
-bool revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 
 #endif

@@ -25,6 +25,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -45,7 +46,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
-#include "hints.h"
+#include "viewchar.h"
 #include "xom.h"
 
 static int _body_covered();
@@ -529,6 +530,77 @@ string describe_mutations(bool center_title)
         have_any = true;
         break;
 
+    case SP_DJINNI:
+        result += "You are immune to all types of fire, even holy and hellish.\n";
+        result += "You are especially vulnerable to cold.\n";
+        result += "You need no food.\n";
+        result += "You have no legs.\n";
+        have_any = true;
+        break;
+
+    case SP_LAVA_ORC:
+    {
+        have_any = true;
+        std::string col = "darkgrey";
+
+        col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
+        result += "<" + col + ">You have stony skin.</" + col + ">\n";
+
+        if (temperature_effect(LORC_FAST_MOVE))
+        {
+            // Fast move
+            col = "lightred";
+            result += "<" + col + ">You cover ground quickly.</" + col + ">\n";
+        }
+        else
+        {
+            // Slow or normal move
+            col = (temperature_effect(LORC_SLOW_MOVE)) ? "lightgrey" : "darkgrey";
+            result += "<" + col + ">You cover ground slowly.</" + col + ">\n";
+        }
+
+        // Fire res
+        col = (temperature_effect(LORC_FIRE_RES_III)) ? "lightred" :
+              (temperature_effect(LORC_FIRE_RES_II))  ? "white"    :
+              (temperature_effect(LORC_FIRE_RES_I))   ? "lightgrey"    : "bugged";
+
+        result += "<" + col + ">";
+        result += (temperature_effect(LORC_FIRE_RES_III)) ? "Your flesh is almost immune to the effects of heat." :
+                  (temperature_effect(LORC_FIRE_RES_II))  ? "Your flesh is very heat resistant." :
+                  (temperature_effect(LORC_FIRE_RES_I))   ? "Your flesh is heat resistant." : "bugged";
+        result += "</" + col + ">\n";
+
+        // Lava/fire boost
+        if (temperature_effect(LORC_LAVA_BOOST))
+        {
+            col = "white";
+            result += "<" + col + ">Your lava-based spells are more powerful.<" + col + ">\n";
+        }
+        else if (temperature_effect(LORC_FIRE_BOOST))
+        {
+            col = "lightred";
+            result += "<" + col + ">Your fire spells are more powerful.<" + col + ">\n";
+        }
+
+        // Cold vulnerability
+        col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
+        result += "<" + col + ">Your flesh is vulnerable to cold.</" + col + ">\n";
+
+        // Passive heat
+        col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
+
+        // Heat aura
+        col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">You bathe your surroundings in blazing heat.</" + col + ">\n";
+
+        // No scrolls
+        col = (temperature_effect(LORC_NO_SCROLLS)) ? "red" : "darkgrey";
+        result += "<" + col + ">You are too hot to use scrolls or read books.</" + col + ">\n";
+
+        break;
+    }
+
     default:
         break;
     }
@@ -639,12 +711,22 @@ string describe_mutations(bool center_title)
 }
 
 static const string _vampire_Ascreen_footer = (
+#ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-    " or <w>Right-click</w>"
+#else
+    "<w>Right-click</w>"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
+
+static const std::string _lava_orc_Ascreen_footer = (
+#ifndef USE_TILE_LOCAL
+    "Press '<w>!</w>'"
+#else
+    "<w>Right-click</w>"
+#endif
+    " to toggle between mutations and properties depending on your\n"
+    "temperature.\n");
 
 static void _display_vampire_attributes()
 {
@@ -743,6 +825,86 @@ static void _display_vampire_attributes()
     }
 }
 
+static void _display_temperature()
+{
+    ASSERT(you.species == SP_LAVA_ORC);
+
+    clrscr();
+    cgotoxy(1,1);
+
+    std::string result;
+
+    std::string title = "Temperature Effects";
+
+    // center title
+    int offset = 39 - strwidth(title) / 2;
+    if (offset < 0) offset = 0;
+
+    result += std::string(offset, ' ');
+
+    result += "<white>";
+    result += title;
+    result += "</white>\n\n";
+
+    const int lines = TEMP_MAX + 1; // 15 lines plus one for off-by-one.
+    std::string column[lines];
+
+    for (int t = 1; t <= TEMP_MAX; t++)  // lines
+    {
+        std::string text;
+        std::ostringstream ostr;
+
+        std::string colourname = temperature_string(t);
+#define F(x) stringize_glyph(dchar_glyph(DCHAR_FRAME_##x))
+        if (t == TEMP_MAX)
+            text = "  " + F(TL) + F(HORIZ) + "MAX" + F(HORIZ) + F(HORIZ) + F(TR);
+        else if (t == TEMP_MIN)
+            text = "  " + F(BL) + F(HORIZ) + F(HORIZ) + "MIN" + F(HORIZ) + F(BR);
+        else if (temperature() < t)
+            text = "  " + F(VERT) + "      " + F(VERT);
+        else if (temperature() == t)
+            text = "  " + F(VERT) + "~~~~~~" + F(VERT);
+        else
+            text = "  " + F(VERT) + "######" + F(VERT);
+        text += "    ";
+#undef F
+
+        ostr << '<' << colourname << '>' << text
+             << "</" << colourname << '>';
+
+        colourname = (temperature() >= t) ? "lightred" : "darkgrey";
+        text = temperature_text(t);
+        ostr << '<' << colourname << '>' << text
+             << "</" << colourname << '>';
+
+       column[t] = ostr.str();
+    }
+
+    for (int y = TEMP_MAX; y >= TEMP_MIN; y--)  // lines
+    {
+        result += column[y];
+        result += "\n";
+    }
+
+    result += "\n";
+
+    result += "You get hot in tense situations, when berserking, or when you enter lava. You \ncool down when your rage ends or when you enter water.";
+    result += "\n";
+    result += "\n";
+
+    result += _lava_orc_Ascreen_footer;
+
+    formatted_scroller temp_menu;
+    temp_menu.add_text(result);
+
+    temp_menu.show();
+    if (temp_menu.getkey() == '!'
+        || temp_menu.getkey() == CK_MOUSE_CMD)
+    {
+        display_mutations();
+    }
+}
+
 void display_mutations()
 {
     string mutation_s = describe_mutations(true);
@@ -766,6 +928,14 @@ void display_mutations()
         extra += _vampire_Ascreen_footer;
     }
 
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (!extra.empty())
+            extra += "\n";
+
+        extra += _lava_orc_Ascreen_footer;
+    }
+
     if (!extra.empty())
     {
         mutation_s += "\n\n\n\n";
@@ -785,6 +955,13 @@ void display_mutations()
     {
         _display_vampire_attributes();
     }
+    if (you.species == SP_LAVA_ORC
+        && (mutation_menu.getkey() == '!'
+            || mutation_menu.getkey() == CK_MOUSE_CMD))
+    {
+        _display_temperature();
+    }
+
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
@@ -1168,6 +1345,14 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
+    // Heat doesn't hurt fire, djinn don't care about hunger.
+    if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
+        || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM
+        || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
+    {
+        return true;
+    }
+
     equipment_type eq_type = EQ_NONE;
 
     // Mutations of the same slot conflict
@@ -1250,6 +1435,12 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool beneficial,
             bool demonspawn, bool no_rot, bool temporary)
 {
+    if (which_mutation == RANDOM_BAD_MUTATION
+        && crawl_state.disables[DIS_AFFLICTIONS])
+    {
+        return true; // no fallbacks
+    }
+
     if (!god_gift)
     {
         const god_type god =
@@ -1327,7 +1518,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         || which_mutation == RANDOM_XOM_MUTATION)
     {
         // If already heavily mutated, remove a mutation instead.
-        if (x_chance_in_y(how_mutated(false, true), 15))
+        if (x_chance_in_y(how_mutated(false, true), 15)
+            && !temporary)
         {
             // God gifts override mutation loss due to being heavily
             // mutated.
@@ -1527,6 +1719,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     if (!temporary)
         take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+    else
+    {
+        you.temp_mutations[mutat]++;
+        you.attribute[ATTR_TEMP_MUTATIONS]++;
+        you.attribute[ATTR_TEMP_MUT_XP] =
+                min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
+    }
 
 #ifdef USE_TILE_LOCAL
     if (your_talents(false).size() != old_talents)
@@ -2200,42 +2399,8 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 
 bool temp_mutate(mutation_type which_mut, const string &reason)
 {
-    switch (which_mut)
-    {
-    case RANDOM_MUTATION:
-    case RANDOM_GOOD_MUTATION:
-    case RANDOM_BAD_MUTATION:
-        which_mut = _get_random_mutation(which_mut);
-        break;
-    case RANDOM_XOM_MUTATION:
-        which_mut = _get_random_xom_mutation();
-        break;
-    case RANDOM_SLIME_MUTATION:
-        which_mut = _get_random_slime_mutation();
-        break;
-    default:
-        break;
-    }
-
-    if (which_mut == NUM_MUTATIONS)
-        return false;
-
-    int old_level = you.mutation[which_mut];
-
-    if (mutate(which_mut, reason, false, false, false, false, false, false, true))
-    {
-        // Only increment temp mutation tracking if we actually gained a mutation.
-        if (you.mutation[which_mut] > old_level)
-        {
-            you.temp_mutations[which_mut]++;
-            you.attribute[ATTR_TEMP_MUTATIONS]++;
-            you.attribute[ATTR_TEMP_MUT_XP] =
-                    min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
-        }
-        return true;
-    }
-
-    return false;
+    return mutate(which_mut, reason, false, false, false, false, false,
+                  false, true);
 }
 
 int how_mutated(bool all, bool levels)

@@ -929,7 +929,7 @@ iflags_t get_species_race(species_type sp)
 {
     return you.species == SP_DEEP_DWARF ? ISFLAG_DWARVEN :
            player_genus(GENPC_ELVEN)    ? ISFLAG_ELVEN :
-           you.species == SP_HILL_ORC   ? ISFLAG_ORCISH
+           player_genus(GENPC_ORCISH)   ? ISFLAG_ORCISH
                                         : 0;
 }
 
@@ -2078,8 +2078,6 @@ bool food_is_meaty(int food_type)
 
 bool food_is_meaty(const item_def &item)
 {
-    ASSERT(item.defined());
-
     if (item.base_type != OBJ_FOOD)
         return false;
 
@@ -2097,8 +2095,6 @@ bool food_is_veggie(int food_type)
 
 bool food_is_veggie(const item_def &item)
 {
-    ASSERT(item.defined());
-
     if (item.base_type != OBJ_FOOD)
         return item.base_type == OBJ_MISSILES && item.sub_type == MI_PIE;
 

@@ -269,6 +269,7 @@ MONS:               { CBEGIN(MNAME); return MONS; }
 ITEM:               { CBEGIN(ITEM_LIST); return ITEM; }
 MARKER:             { CBEGIN(ARGUMENT); return MARKER; }
 SHUFFLE:            { CBEGIN(ITEM_LIST); return SHUFFLE; }
+CLEAR:              { CBEGIN(ARGUMENT); return CLEAR; }
 
 KFEAT:              { CBEGIN(ARGUMENT); return KFEAT; }
 KITEM:              { CBEGIN(ARGUMENT); return KITEM; }

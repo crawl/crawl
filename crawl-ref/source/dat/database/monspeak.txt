@@ -5286,6 +5286,35 @@ whispers
 
 ## END Norris ##
 %%%%
+############ PAN ### Lord of the satyrs
+Pan
+
+@_Pan_common_@
+
+w:5
+@_Pan_rare_@
+%%%%
+_Pan_common_
+VISUAL:@The_monster@ leers at @foe@.
+
+VISUAL:@The_monster@ twirls @possessive@ pipes idly.
+
+VISUAL:@The_monster@ raises @possessive@ pipes, ready for another tune.
+
+VISUAL:@The_monster@ ties some reeds together.
+
+VISUAL:@The_monster@ licks @possessive@ lips.
+%%%%
+_Pan_rare_
+
+@The_monster@ sighs @at_foe@, "Seen any nymphs lately?"
+
+@The_monster@ stares at @possessive@ pipes for a moment, mumbling, "No, that's
+not how it goes..."
+
+@The_monster@ says @to_foe@, "Put on a good show for me!"
+### END Pan
+%%%%
 ############ Pikel ######## A big kobold slaver!
 Pikel
 
@@ -5777,6 +5806,35 @@ howls
 
 laughing cries
 ## END Sigmund ##
+%%%%
+############ SOJOBO ### tengu king
+Sojobo
+
+@_Sojobo_common_@
+
+w:5
+@_Sojobo_rare_@
+%%%%
+_Sojobo_common_
+
+VISUAL:@The_monster@ strikes a fencing pose.
+
+@The_monster@ barks orders to his subordinates.
+
+VISUAL:@The_monster@ grins devilishly.
+
+The air crackles briefly around @the_monster@.
+
+VISUAL:A brief shower of sparks shoots from @the_monster@'s claws.
+%%%%
+_Sojobo_rare_
+
+@The_monster@ says @to_foe@, "This battle is not even a challenge!"
+
+@The_monster@ barks @at_foe@, "Your form is terrible!"
+
+@The_monster@ sneers @at_foe@, "There are one thousand and one flaws in your strategy!"
+## END Sojobo
 %%%%
 ############ SONJA ### female kobold assassin
 Sonja

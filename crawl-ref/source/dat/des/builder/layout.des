@@ -69,7 +69,7 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  4-22, Pan, !Dis, !Geh
+DEPTH:  D:4-22, Lair:1-7, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -127,7 +127,11 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
         smear_map{iterations=smears, smear='x', onto='.', boxy=smear_boxy}
     end
 
-    theme.level_material(_G)
+    if spotty then
+      theme.D.caves(_G)
+    else
+      theme.level_material(_G)
+    end
 }}
 MAP
 ENDMAP
@@ -139,11 +143,10 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   Pan, 4-22, !Dis, !Geh
+DEPTH:   D:4-22, Lair:1-7, Pan
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_cross
-
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'L'}
@@ -205,7 +208,7 @@ ENDMAP
 # are generally all grouped together.
 #
 NAME: layout_big_octagon
-DEPTH:   Pan, 4-22, !Dis, !Geh
+DEPTH:   D:4-22, Lair:1-7, Pan
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -372,7 +375,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 1-, !Dis, !Tar
+DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot, Pan
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_rooms
@@ -452,8 +455,11 @@ ENDMAP
 #
 # This replaces dungeon.cc:_city_level().
 #
+# Only available on upper Lair depths otherwise the high
+# ruination makes it basically indistinguishable from a big
+# open room
 NAME:   layout_city
-DEPTH:  Dis:1-6, D:15-, Snake, Elf
+DEPTH:  D:15-, Lair:1-2, Snake, Dwarf, Crypt:1-4, Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
@@ -566,7 +572,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 1-, !Dis, !Tar
+DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_misc
@@ -607,8 +613,9 @@ ENDMAP
 # walls.
 #
 NAME: layout_caves
-DEPTH: 9-22, !Dis, !Geh, Orc, Slime
+DEPTH: D:9-22, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_caves
 {{
@@ -668,13 +675,13 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
     delve(3, 3, 0, -1, 1)
     subst('X = x')
 
-    theme.D.caves(_G,true)
+    theme.D.caves_classic(_G)
 }}
 
 ##############################################################
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 2-, !Pan, !Zot, !Dis, !Geh, !Tar
+DEPTH: D:2-, Lair, Snake, Elf
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
@@ -1431,7 +1438,7 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: 1-, !Pan, !Dis, !Tar
+DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
@@ -1443,7 +1450,7 @@ ENDMAP
 
 # XXX: Disabled until we can annoy the player less with water monsters.
 NAME: layout_bigger_room
-DEPTH: 9-22, !Crypt, !Pan, !Dis
+DEPTH: D:9-22, Lair:1-7
 WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -1454,7 +1461,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Pan, 4-, !Zot, !Geh, !Tar
+DEPTH: D:4-, Lair:1-3, Snake, Dwarf, Crypt:1-4, Dis, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_city

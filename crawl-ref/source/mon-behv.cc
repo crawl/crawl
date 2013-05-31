@@ -609,7 +609,12 @@ void handle_behaviour(monster* mon)
             {
                 // The foe is the player.
 
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                if ((mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                     || (mons_class_flag(mon->type, M_STABBER)
+                         && (mons_has_ranged_attack(mon)
+                             || mons_has_ranged_spell(mon, false, true))
+                         && you.can_see(mon)
+                         && !you.incapacitated()))
                     && !mon->berserk())
                 {
                     if (mon->attitude != ATT_FRIENDLY)
@@ -652,9 +657,15 @@ void handle_behaviour(monster* mon)
             else
             {
                 // We have a foe but it's not the player.
-                mon->target = menv[mon->foe].pos();
+                monster* target = &menv[mon->foe];
+                mon->target = target->pos();
 
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                if ((mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+                     || (mons_class_flag(mon->type, M_STABBER)
+                         && (mons_has_ranged_attack(mon)
+                             || mons_has_ranged_spell(mon, false, true))
+                         && target->can_see(mon)
+                         && !target->incapacitated() ))
                     && !mon->berserk())
                 {
                     _set_firing_pos(mon, mon->target);

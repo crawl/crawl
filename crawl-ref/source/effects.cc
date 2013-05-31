@@ -2183,6 +2183,12 @@ void handle_time()
     if (you.duration[DUR_FINESSE] && x_chance_in_y(4, 10))
         added_contamination++;
 
+    if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI
+        && x_chance_in_y(6, 10))
+    {
+        added_contamination++;
+    }
+
     // The Orb adds .25 points per turn (effectively halving dissipation),
     // but won't cause glow on its own -- otherwise it'd spam the player
     // with messages about contamination oscillating near zero.
@@ -2201,9 +2207,11 @@ void handle_time()
     if (coinflip())
     {
         // [ds] Move magic contamination effects closer to b26 again.
-        const bool glow_effect =
-            (get_contamination_level() > 1
-             && x_chance_in_y(you.magic_contamination, 12));
+        const bool glow_effect = you.species == SP_DJINNI ?
+            get_contamination_level() > 2
+                && x_chance_in_y(you.magic_contamination, 24):
+            get_contamination_level() > 1
+                && x_chance_in_y(you.magic_contamination, 12);
 
         if (glow_effect && is_sanctuary(you.pos()))
         {
@@ -2239,10 +2247,11 @@ void handle_time()
             }
 
             // We want to warp the player, not do good stuff!
-            if (one_chance_in(5))
-                mutate(RANDOM_MUTATION, "mutagenic glow");
-            else
-                give_bad_mutation("mutagenic glow", true, coinflip());
+            mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+                   "mutagenic glow", true,
+                   coinflip(),
+                   false, false, false, false,
+                   you.species == SP_DJINNI);
 
             // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
