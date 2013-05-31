@@ -995,6 +995,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
             || (ai->is_player() && you.form == TRAN_TREE)
             || !cell_see_cell(you.pos(), ai->pos(), LOS_SOLID)
             || ai->pos().distance_from(you.pos()) > radius
+            || ai->pos() == agent->pos() // so it's never aimed_at_feet
             || !target.origin()
                && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0)
         {
