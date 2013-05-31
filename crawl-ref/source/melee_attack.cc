@@ -549,7 +549,7 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player() && you.duration[DUR_INFUSION])
     {
-        if (you.magic_points>0)
+        if (you.magic_points>0 || you.species == SP_DJINNI && (you.hp - 1)/DJ_MP_RATE>0)
         {
             // infusion_bonus is set when the infusion spell is cast
             damage_done += you.props["infusion_bonus"].get_int();

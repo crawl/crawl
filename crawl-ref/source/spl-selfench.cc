@@ -321,7 +321,7 @@ int cast_selective_amnesia(string *pre_msg)
 spret_type cast_infusion(int pow, bool fail)
 {
     fail_check();
-    if (you.duration[DUR_INFUSION])
+    if (!you.duration[DUR_INFUSION])
     {
         mpr("Your attacks are magically infused.");
     }
