@@ -110,7 +110,7 @@ public:
   durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
-  int grotesk_damage_reduction;
+  int gargoyle_damage_reduction;
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver

@@ -676,7 +676,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    if (you.species == SP_GROTESK && you.petrifying())
+    if (you.species == SP_GARGOYLE && you.petrifying())
     {
         if (verbose)
             mpr("You cannot rage while you turn to stone.");

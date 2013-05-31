@@ -73,7 +73,7 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
-    // Grotesks
+    // Gargoyles
     ABIL_SELF_PETRIFY,
 
     ABIL_MAX_INTRINSIC = ABIL_RECHARGING,
@@ -3192,8 +3192,8 @@ enum species_type
     SP_OCTOPODE,
     SP_DJINNI,
     SP_LAVA_ORC,
-    SP_GROTESK,
-      LAST_VALID_SPECIES = SP_GROTESK,
+    SP_GARGOYLE,
+      LAST_VALID_SPECIES = SP_GARGOYLE,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
