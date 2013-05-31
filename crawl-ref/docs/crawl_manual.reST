@@ -1748,9 +1748,9 @@ Djinn
 
   Being spirits of fire, they obviously suffer no harm from any kind of fire,
   but the same cannot be said of their equipment. Accordingly, cold and water
-  water cause them great harm. Fortunately, levitation allows them to cross
-  bodies of liquid, although without external means to power their flight it
-  takes them much effort to do so.
+  cause them great harm. Fortunately, levitation allows them to cross bodies of
+  liquid, although without external means to power their flight it takes them
+  much effort to do so.
 
   Djinn make great fire mages (duh). They are competent with air magic,
   enchantments, magic items and weapons with long reaches that don't require
