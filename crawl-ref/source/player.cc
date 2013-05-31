@@ -3705,9 +3705,19 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
         const int note_maxmp = get_real_mp(false);
 
         char buf[200];
-        sprintf(buf, "HP: %d/%d MP: %d/%d",
-                min(you.hp, note_maxhp), note_maxhp,
-                min(you.magic_points, note_maxmp), note_maxmp);
+        if (you.species != SP_DJINNI)
+        {
+            sprintf(buf, "HP: %d/%d MP: %d/%d",
+                    min(you.hp, note_maxhp), note_maxhp,
+                    min(you.magic_points, note_maxmp), note_maxmp);
+        }
+        else
+        {
+            // Djinn don't HP/MP
+            sprintf(buf, "EP: %d/%d",
+                    min(you.hp, note_maxhp + note_maxmp),
+                    note_maxhp + note_maxmp);
+        }
         take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
         xom_is_stimulated(12);
