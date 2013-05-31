@@ -1646,6 +1646,17 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                 success = false;
         }
 
+        // If we only need one stone stair, make sure it's _I.
+        if (i == 0 && needed_stairs == 1)
+        {
+            ASSERT(num_stairs == 1 || you.where_are_you == root_branch);
+            if (num_stairs == 1)
+            {
+                grd(stair_list[0]) = DNGN_STONE_STAIRS_UP_I;
+                continue;
+            }
+        }
+
         // Ensure uniqueness of three stairs.
         for (int s = 0; s < 4; s++)
         {
