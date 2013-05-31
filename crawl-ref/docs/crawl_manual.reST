@@ -53,8 +53,8 @@ akrasiac.org (located in North America)
   :ssh: ``joshua@crawl.akrasiac.org (ssh key or password joshua)``
 
 s-z.org (located in North America)
-  :http: ``http://crawl.s-z.org``
-  :tiles: ``http://crawl.s-z.org``
+  :http: ``http://dobrazupa.org``
+  :tiles: ``https://crawl.s-z.org``
   :ssh: ``crawl@crawl.s-z.org (ssh key or password crawlingtotheusa)``
 
 develz.org (located in Europe)
@@ -1736,62 +1736,61 @@ Octopodes
   constrict enemies - potentially several at a time!
 
 Djinn
-  Being the same kind of creatures as angels or demons, these spirits have
-  been created from smokeless fire by some deranged god. Unlike regular
-  living beings, they draw their sustenance from magic rather than eating or
-  drinking, although for some reason they can do so -- probably due to being
-  not too intelligently designed by a creator with no knowledge of
-  evolution.
+  Of the same stock as angels or demons, these spirits have been created from
+  smokeless fire by some deranged god. Unlike regular living beings, they draw
+  their sustenance from magic rather than eating or drinking, although for some
+  reason they can still do the latter - probably due to being unintelligently
+  designed by a creator with no knowledge of evolution.
 
-  Magic is literally their life, to the point of health and magical powers
-  being one force, called "essence". A djinni can also withstand more
+  Magic is literally their life, to the point of their health and magical
+  powers' being one force, called "essence". The Djinn can also withstand more
   magical contamination than most, and slowly recover from its effects.
 
-  Being spirits of fire, they obviously suffer no harm from any kind of it
-  (but their equipment still may), yet are greatly harmed by cold and water.
-  Fortunately, levitation allows crossing bodies of liquid, although without
-  external means to power their flight it takes quite a deal of effort.
+  Being spirits of fire, they obviously suffer no harm from any kind of fire,
+  but the same cannot be said of their equipment. Accordingly, cold and water
+  water cause them great harm. Fortunately, levitation allows them to cross
+  bodies of liquid, although without external means to power their flight it
+  takes them much effort to do so.
 
-  The djinn make great fire mages (duh), are competent with air magic,
-  enchantments, magic items and weapons with long reach that don't require
-  high dexterity; are terrible with ice, earth, necromancy and poison.
+  Djinn make great fire mages (duh). They are competent with air magic,
+  enchantments, magic items and weapons with long reaches that don't require
+  high dexterity. They are terrible with ice, earth, necromancy and poison.
 
 Lava Orcs
-  These strange humanoids are made of living stone, with unique heat-based
-  metabolism. Ordinarily slow and hardy, when anything puts some stress on
-  them they literally fire up, turning into fast-moving lava. Outwardly,
-  their shape resembles orcs the most, thus the name.
+  These strange humanoids are made of living stone, with a unique heat-based
+  metabolism. Ordinarily slow and hardy, when anything puts some stress on them,
+  they literally fire up, turning into fast-moving lava. Outwardly, their shape
+  mostly resembles that of Orcs, thus the name.
 
-  They are unique in their ability to swim in lava: even the Djinn, while
-  immune to fire, can't swim through a treacle of molten rock. In order to
-  be able to use regular equipment, Lava Orcs have invented special
-  fire-proof backpacks; vulnerable items like scrolls or books are not
-  accessible when their owner is too hot.
+  They are unique in their ability to swim in lava: even the Djinn, while immune
+  to fire, can't swim through a treacle of molten rock. In order to be able to
+  use regular equipment, Lava Orcs have invented special fire-proof backpacks;
+  vulnerable items like scrolls or books are not accessible when their owner is
+  too hot.
 
-  Many things can fire up the metabolism: facing multiple and/or dangerous
-  enemies, being badly hurt, suffering fire damage, berserking, and
-  obviously direct submersion in lava. As the heat grows, Lava Orcs first
-  gain normal speed, then get more accustomed to fire, lose the hardness
-  of their skin, gain extra power of fire-based magic, become vulnerable to
-  cold, speed up even more, cause fire damage to creatures in increasing
-  vicinity by merely being close.
+  Many things can fire up their metabolism: facing multiple and/or dangerous
+  enemies, being badly hurt, suffering fire damage, berserking, and obviously
+  being submerged in lava. As their heat grows, Lava Orcs gain normal speed,
+  become more accustomed to fire, have their stony skin soften, gain extra power
+  when casting fire magic, become vulnerable to cold, speed up even more, and
+  finally cause fire damage to all creatures in their presence.
 
   Lava Orcs make good melee fighters, preferring axes. They're pretty bad
   spellcasters, except for transmutations, fire and earth magic.
 
-Grotesks
-  A cross between stone gargoyles and living beings, Grotesks are hideous
-  humanoids with an affinity to rock. They are able to assume fully stony
-  form at will, although not without ill consequences. When doing so, they
-  gain immense hardness, although after some time they briefly become fully
-  immobile and helpless, and suffer some medium-term debilitations.
+Gargoyles
+  A cross between ordinary stone gargoyles and living beings, Gargoyles are
+  hideous humanoids with an affinity to rock. They are able to assume full stone
+  form at will, which grants them great hardness for a time. When this hardness
+  wears off, however, it briefly makes them helplessly immobile, and then leaves
+  them mobile but debilitated for awhile.
 
-  Grotesks' partially living form is less susceptible to effects of
-  necromancy and cold than most beings, their metabolism is slow and they
-  blend into the dungeon pretty well. Their fangs and talons make them
-  dangerous unarmed fighters, although they're not competent with weapons
-  other than maces. They can be exceptional earth-based conjurers, although
-  they're bad with any other magic schools other than ice.
+  Gargoyles' partially living form makes them less susceptible to effects of
+  necromancy and cold than most beings. Their metabolisms are slow, and they
+  blend into the dungeon pretty well. Their fangs and talons make them dangerous
+  unarmed fighters, although they're incompetent with weapons other than maces.
+  They can be exceptional earth-based conjurers, although they're bad with all
+  other magic schools besides ice.
 
 Elves
 ========================================
