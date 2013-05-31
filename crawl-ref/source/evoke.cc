@@ -663,7 +663,7 @@ static bool _box_of_beasts(item_def &box)
     }
 
     bool success = false;
-    int num = random_choose_weighted(50,1,10,2,2,3);
+    int num = random_choose_weighted(50,1,7,2,2,3,0);
 
     for (int n=0; n<num; n++)
     {
