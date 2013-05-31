@@ -21,40 +21,54 @@
 #include "terrain.h"
 #include "viewmap.h"
 
-static int _englaciate_monsters(coord_def where, int pow, int, actor *actor)
+int englaciate(coord_def where, int pow, int, actor *agent)
 {
-    monster* mons = monster_at(where);
+    actor *victim = actor_at(where);
 
-    if (!mons)
+    if (!victim || victim == agent)
         return 0;
 
-    if (mons->res_cold() > 0 || mons_is_stationary(mons))
+    monster* mons = victim->as_monster();
+
+    if (victim->res_cold() > 0
+        || (mons && mons_is_stationary(mons))
+        || (!mons && you.form == TRAN_TREE))
     {
-        if (!mons_is_firewood(mons))
+        if (!mons)
+            canned_msg(MSG_YOU_UNAFFECTED);
+        else if (mons && !mons_is_firewood(mons))
             simple_monster_message(mons, " is unaffected.");
         return 0;
     }
 
-    int duration = (roll_dice(3, pow) / 6 - random2(mons->get_experience_level()))
+    int duration = (roll_dice(3, pow) / 6
+                    - random2(victim->get_experience_level()))
                     * BASELINE_DELAY;
 
     if (duration <= 0)
     {
-        simple_monster_message(mons, " resists.");
+        if (!mons)
+            canned_msg(MSG_YOU_RESIST);
+        else
+            simple_monster_message(mons, " resists.");
         return 0;
     }
 
-    if (mons_class_flag(mons->type, M_COLD_BLOOD))
+    if ((!mons && player_genus(GENPC_DRACONIAN)) // res_cold() checked above
+        || (mons && mons_class_flag(mons->type, M_COLD_BLOOD)))
         duration *= 2;
 
-    return do_slow_monster(mons, actor, duration);
+    if (!mons)
+        return slow_player(duration);
+
+    return do_slow_monster(mons, agent, duration);
 }
 
 spret_type cast_englaciation(int pow, bool fail)
 {
     fail_check();
     mpr("You radiate an aura of cold.");
-    apply_area_visible(_englaciate_monsters, pow, &you);
+    apply_area_visible(englaciate, pow, &you);
     return SPRET_SUCCESS;
 }
 

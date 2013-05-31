@@ -635,10 +635,31 @@ void TilesFramework::_send_player(bool force_full)
 
     _update_int(force_full, c.hp, you.hp, "hp");
     _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
-    _update_int(force_full, c.real_hp_max, get_real_hp(true, true), "real_hp_max");
+    int max_max_hp = get_real_hp(true, true);
+    if (you.species == SP_DJINNI)
+        max_max_hp += get_real_mp(true); // compare _print_stats_hp
+    _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
 
-    _update_int(force_full, c.mp, you.magic_points, "mp");
-    _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+    if (you.species != SP_DJINNI)
+    {
+        _update_int(force_full, c.mp, you.magic_points, "mp");
+        _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+    }
+
+    if (you.species == SP_DJINNI)
+    {
+        // Don't send more information than can be seen from the console HUD.
+        // Compare _print_stats_contam and get_contamination_level
+        int contam = you.magic_contamination;
+        if (contam >= 26)
+            contam = 26;
+        else if (contam >= 16)
+            contam = 16;
+        _update_int(force_full, c.contam, contam, "contam");
+    }
+
+    if (you.species == SP_LAVA_ORC)
+        _update_int(force_full, c.heat, temperature(), "heat");
 
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
     _update_int(force_full, c.evasion, player_evasion(), "ev");
@@ -1073,6 +1094,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.travel_trail != current_pc.travel_trail)
             json_write_int("travel_trail", next_pc.travel_trail);
+
+        if (next_pc.heat_aura != current_pc.heat_aura)
+            json_write_int("heat_aura", next_pc.heat_aura);
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor

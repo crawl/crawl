@@ -505,9 +505,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     {
         if (feat == DNGN_ESCAPE_HATCH_UP)
             feat = DNGN_EXIT_PORTAL_VAULT; // silly Labyrinths
-        else if (branches[you.where_are_you].parent_branch < NUM_BRANCHES)
+        else if (parent_branch(you.where_are_you) < NUM_BRANCHES)
         {
-            level_id lev = level_id(branches[you.where_are_you].parent_branch,
+            level_id lev = level_id(parent_branch(you.where_are_you),
                                     startdepth[you.where_are_you]);
             if (lev.depth == -1)
             {
@@ -834,7 +834,7 @@ void down_stairs(dungeon_feature_type force_stair)
     // Did we enter a new branch.
     const bool entered_branch(
         you.where_are_you != old_level.branch
-        && branches[you.where_are_you].parent_branch == old_level.branch);
+        && parent_branch(you.where_are_you) == old_level.branch);
 
     if (stair_find == DNGN_EXIT_ABYSS
         || stair_find == DNGN_EXIT_PANDEMONIUM

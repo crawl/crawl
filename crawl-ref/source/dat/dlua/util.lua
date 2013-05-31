@@ -283,6 +283,21 @@ function util.random_weighted_keys(weightfn, list)
   return chosen
 end
 
+-- Uses a predefined weight function allowing list items
+-- to be weighted according to branch
+function util.random_branch_weighted(list)
+  local branch = you.branch()
+  local weightfn = function(item)
+    -- Check for "branch" element to limit this item to a given branch
+    if item.branch ~= nil and item.branch ~= branch then return 0 end;
+    -- Check for an entry with the name of the branch and use that if exists
+    if item[branch] ~= nil then return item[branch] end
+    -- Otherwise default 'weight' element
+    return item.weight == nil and 10 or item.weight
+  end
+  return util.random_weighted_from(weightfn,list)
+end
+
 function util.random_range_real(lower,upper)
   return lower + crawl.random_real() * (upper-lower)
 end

@@ -53,8 +53,8 @@ akrasiac.org (located in North America)
   :ssh: ``joshua@crawl.akrasiac.org (ssh key or password joshua)``
 
 s-z.org (located in North America)
-  :http: ``http://crawl.s-z.org``
-  :tiles: ``http://crawl.s-z.org``
+  :http: ``http://dobrazupa.org``
+  :tiles: ``https://crawl.s-z.org``
   :ssh: ``crawl@crawl.s-z.org (ssh key or password crawlingtotheusa)``
 
 develz.org (located in Europe)
@@ -1735,6 +1735,63 @@ Octopodes
   knowledge of poisons as well. They are also able to use their tentacles to
   constrict enemies - potentially several at a time!
 
+Djinn
+  Of the same stock as angels or demons, these spirits have been created from
+  smokeless fire by some deranged god. Unlike regular living beings, they draw
+  their sustenance from magic rather than eating or drinking, although for some
+  reason they can still do the latter - probably due to being unintelligently
+  designed by a creator with no knowledge of evolution.
+
+  Magic is literally their life, to the point of their health and magical
+  powers' being one force, called "essence". The Djinn can also withstand more
+  magical contamination than most, and slowly recover from its effects.
+
+  Being spirits of fire, they obviously suffer no harm from any kind of fire,
+  but the same cannot be said of their equipment. Accordingly, cold and water
+  water cause them great harm. Fortunately, levitation allows them to cross
+  bodies of liquid, although without external means to power their flight it
+  takes them much effort to do so.
+
+  Djinn make great fire mages (duh). They are competent with air magic,
+  enchantments, magic items and weapons with long reaches that don't require
+  high dexterity. They are terrible with ice, earth, necromancy and poison.
+
+Lava Orcs
+  These strange humanoids are made of living stone, with a unique heat-based
+  metabolism. Ordinarily slow and hardy, when anything puts some stress on them,
+  they literally fire up, turning into fast-moving lava. Outwardly, their shape
+  mostly resembles that of Orcs, thus the name.
+
+  They are unique in their ability to swim in lava: even the Djinn, while immune
+  to fire, can't swim through a treacle of molten rock. In order to be able to
+  use regular equipment, Lava Orcs have invented special fire-proof backpacks;
+  vulnerable items like scrolls or books are not accessible when their owner is
+  too hot.
+
+  Many things can fire up their metabolism: facing multiple and/or dangerous
+  enemies, being badly hurt, suffering fire damage, berserking, and obviously
+  being submerged in lava. As their heat grows, Lava Orcs gain normal speed,
+  become more accustomed to fire, have their stony skin soften, gain extra power
+  when casting fire magic, become vulnerable to cold, speed up even more, and
+  finally cause fire damage to all creatures in their presence.
+
+  Lava Orcs make good melee fighters, preferring axes. They're pretty bad
+  spellcasters, except for transmutations, fire and earth magic.
+
+Gargoyles
+  A cross between ordinary stone gargoyles and living beings, Gargoyles are
+  hideous humanoids with an affinity to rock. They are able to assume full stone
+  form at will, which grants them great hardness for a time. When this hardness
+  wears off, however, it briefly makes them helplessly immobile, and then leaves
+  them mobile but debilitated for awhile.
+
+  Gargoyles' partially living form makes them less susceptible to effects of
+  necromancy and cold than most beings. Their metabolisms are slow, and they
+  blend into the dungeon pretty well. Their fangs and talons make them dangerous
+  unarmed fighters, although they're incompetent with weapons other than maces.
+  They can be exceptional earth-based conjurers, although they're bad with all
+  other magic schools besides ice.
+
 Elves
 ========================================
 
@@ -1766,16 +1823,6 @@ Deep Elves
   other Elves and losing all colouration. They are poor at hand-to-hand combat,
   but excellent at fighting from a distance. They advance in levels as fast as
   High Elves.
-
-Sludge Elves
-  This is a somewhat degenerate species of Elves. They are mirror images of
-  High Elves in some respects: they have no special proficiency with bows or
-  swords (long or short), nor do they have any aptitude in the traditional areas
-  of High Elven magic (charms and conjurations). On the other hand, they are
-  superlative transmuters, and are comfortable dabbling in necromantic, poison
-  and elemental magic. As fighters, they are often more dangerous unarmed than
-  armed. They advance in levels slightly slower than Humans, but faster than all
-  other Elves.
 
 The Undead
 ========================================
