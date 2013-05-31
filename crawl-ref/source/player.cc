@@ -6515,8 +6515,11 @@ bool player::heal(int amount, bool max_too)
 
 mon_holy_type player::holiness() const
 {
-    if (form == TRAN_STATUE || form == TRAN_WISP || petrified())
+    if (species == SP_GARGOYLE || form == TRAN_STATUE || form == TRAN_WISP
+        || petrified())
+    {
         return MH_NONLIVING;
+    }
 
     if (is_undead)
         return MH_UNDEAD;

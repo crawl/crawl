@@ -4173,11 +4173,8 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'u': // mutated type, not enough info to determine shape
         return MON_SHAPE_MISC;
     case 't': // crocodiles/turtles
-        if (mc == MONS_SNAPPING_TURTLE
-            || mc == MONS_ALLIGATOR_SNAPPING_TURTLE)
-        {
+        if (mons_genus(mc) == MONS_SNAPPING_TURTLE)
             return MON_SHAPE_QUADRUPED_TAILLESS;
-        }
         else
             return MON_SHAPE_QUADRUPED;
     case 'v': // vortices
@@ -4217,7 +4214,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'G': // floating eyeballs and orbs
         return MON_SHAPE_ORB;
     case 'H': // minotaurs, manticores, hippogriffs and griffins
-        if (mc == MONS_MINOTAUR || mc == MONS_TENGU)
+        if (mc == MONS_MINOTAUR || mons_genus(mc) == MONS_TENGU)
             return MON_SHAPE_HUMANOID;
         else if (mc == MONS_MANTICORE)
             return MON_SHAPE_QUADRUPED;
