@@ -378,6 +378,14 @@ static species_type _str_to_species(const string &str)
     if (ret == SP_UNKNOWN)
         ret = str_to_species(str);
 
+    if (!is_valid_species(ret))
+        ret = SP_UNKNOWN;
+
+#if TAG_MAJOR_VERSION == 34
+    if (ret == SP_SLUDGE_ELF)
+        ret = SP_UNKNOWN;
+#endif
+
     if (ret == SP_UNKNOWN)
         fprintf(stderr, "Unknown species choice: %s\n", str.c_str());
 
