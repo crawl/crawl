@@ -2289,7 +2289,7 @@ int player_movement_speed(bool ignore_burden)
     if (you.liquefied_ground())
         mv += 3;
 
-    if (you.species == SP_GROTESK && you.petrifying())
+    if (you.species == SP_GARGOYLE && you.petrifying())
         mv += 3;
 
     // armour
@@ -2374,7 +2374,7 @@ int player_speed(void)
         ps = haste_div(ps);
 
     if (you.form == TRAN_STATUE
-            || (you.duration[DUR_PETRIFYING] && you.species != SP_GROTESK))
+            || (you.duration[DUR_PETRIFYING] && you.species != SP_GARGOYLE))
     {
         ps *= 15;
         ps /= 10;
@@ -3552,7 +3552,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
-            case SP_GROTESK:
+            case SP_GARGOYLE:
                 if (you.experience_level == 7 || you.experience_level == 13)
                     perma_mutate(MUT_SELF_PETRIFICATION, 1, "level gain");
                 if (!(you.experience_level % 4))
@@ -6563,7 +6563,7 @@ bool player::is_chaotic() const
 
 bool player::is_artificial() const
 {
-    return (species == SP_GROTESK || form == TRAN_STATUE || petrified());
+    return (species == SP_GARGOYLE || form == TRAN_STATUE || petrified());
 }
 
 bool player::is_unbreathing() const

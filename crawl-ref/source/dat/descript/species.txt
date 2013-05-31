@@ -42,9 +42,9 @@ Ghoul
 An undead, damned to rot eternally. They are always looking for rotten food to
 eat, hacking away with their claws.
 %%%%
-Grotesk
+Gargoyle
 
-Made of living stone, Grotesks have a preternatural affinity for the earth.
+Made of living stone, Gargoyles have a preternatural affinity for the earth.
 %%%%
 Halfling
 
