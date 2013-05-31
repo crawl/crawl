@@ -267,7 +267,7 @@ bool actor::res_corr(bool calc_unid, bool items) const
     if (suppressed())
         items = false;
 
-    return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION)
+    return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
                      || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION,
                                     calc_unid));
 }

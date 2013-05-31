@@ -914,19 +914,6 @@ xx44..........3.xx
 ENDMAP
 
 ##############################################################################
-# Do you explore carefully enough?
-#
-NAME:  explore_dammit
-DEPTH: Lair
-MONS:  plant / fungus w:3 / bush w:1
-MAP
-xxx
-x|xx
-xx1x
- .xx
-ENDMAP
-
-##############################################################################
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
@@ -1014,9 +1001,9 @@ xxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Hidden items, with an oklob, naturally
+# Items with an oklob
 #
-NAME:   minmay_lair_hidden_items
+NAME:   minmay_lair_oklob_items
 DEPTH:  Lair
 ORIENT: float
 MONS:   plant / fungus w:3 / bush w:5
@@ -1028,8 +1015,8 @@ SUBST:  % = ....%%%%**
 MAP
 XXXXXXXXX
 Xxxxxxxxx.
-Xx%%%1.x1@
-Xx%%%xx1x.
+Xx%%%1.x.@
+Xx%%%xx.x.
 Xx|%%xxxx
 XxxxxxXXX
 XXXXXXX
