@@ -71,7 +71,7 @@ static void _species_stat_init(species_type which_species)
     case SP_OGRE:               sb = 10; ib =  5; db =  3;      break;  // 18
 
     case SP_MINOTAUR:           sb = 10; ib =  3; db =  3;      break;  // 16
-    case SP_GARGOYLE:            sb =  9; ib =  6; db =  3;      break;  // 18
+    case SP_GARGOYLE:           sb =  9; ib =  6; db =  3;      break;  // 18
     case SP_HILL_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
     case SP_LAVA_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
     case SP_CENTAUR:            sb =  8; ib =  5; db =  2;      break;  // 15
