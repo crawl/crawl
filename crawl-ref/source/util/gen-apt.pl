@@ -132,18 +132,16 @@ sub aptitude_table
 
             my $pos = index($headers, " $abbr");
             die "Could not find $abbr in $headers?\n" if $pos == -1;
-            $pos++;
+            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP';
             if ($pos > length($line))
             {
                 $line .= " " x ($pos - length($line));
             }
 
-            my $cwidth = length($abbr);
-            $cwidth = 3 if $abbr eq "UC"; #$cwidth < 3;
-            my $fmt = "%+*d";
-            $fmt = "%*d" if $skill == 0;
+            my $fmt = "%+3d";
+            $fmt = "%3d" if $skill == 0;
             $fmt = " NA" if $skill == -99;
-            $line .= sprintf($fmt, $cwidth, $skill);
+            $line .= sprintf($fmt, $skill);
         }
         $text .= "$line\n";
     }
@@ -272,4 +270,7 @@ sub load_mods
     {
         die "Can't find table: $_ in $modfile\n" unless $SPECIES_SKILLS{Spriggan}{$_};
     }
+
+    $SPECIES_SKILLS{Djinni}{'Hit Points'} = -99;
+    $SPECIES_SKILLS{Djinni}{'Magic Points'} = -99;
 }

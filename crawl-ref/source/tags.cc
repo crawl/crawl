@@ -1093,6 +1093,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
+    marshallInt(th, you.gargoyle_damage_reduction);
     marshallShort(th, you.manual_skill);
     marshallInt(th, you.manual_index);
     marshallInt(th, you.abyss_speed);
@@ -1314,6 +1315,9 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, you.deaths);
     marshallByte(th, you.lives);
+
+    marshallFloat(th, you.temperature);
+    marshallFloat(th, you.temperature_last);
 
     marshallInt(th, you.dactions.size());
     for (unsigned int k = 0; k < you.dactions.size(); k++)
@@ -1896,6 +1900,12 @@ static void tag_read_you(reader &th)
     ASSERT(you.is_undead <= US_SEMI_UNDEAD);
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GARGOYLE_DR)
+        you.gargoyle_damage_reduction = unmarshallInt(th);
+    else
+        you.gargoyle_damage_reduction = 0;
+#endif
     you.manual_skill  = static_cast<skill_type>(unmarshallShort(th));
     you.manual_index  = unmarshallInt(th);
 
@@ -2230,6 +2240,22 @@ static void tag_read_you(reader &th)
 
     you.deaths = unmarshallByte(th);
     you.lives = unmarshallByte(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE)
+    {
+#endif
+        you.temperature = unmarshallFloat(th);
+        you.temperature_last = unmarshallFloat(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+    {
+        you.temperature = 0.0;
+        you.temperature_last = 0.0;
+    }
+#endif
+
     you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);

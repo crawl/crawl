@@ -73,6 +73,8 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
+    // Gargoyles
+    ABIL_SELF_PETRIFY,
 
     ABIL_MAX_INTRINSIC = ABIL_RECHARGING,
 
@@ -365,7 +367,6 @@ enum beam_type                  // bolt::flavour
     BEAM_MALMUTATE,
     BEAM_ENSLAVE,
     BEAM_BANISH,
-    BEAM_DEGENERATE,
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
@@ -1192,6 +1193,13 @@ enum dungeon_char_type
     DCHAR_FIRED_MISSILE,
     DCHAR_EXPLOSION,
 
+    DCHAR_FRAME_HORIZ,
+    DCHAR_FRAME_VERT,
+    DCHAR_FRAME_TL,
+    DCHAR_FRAME_TR,
+    DCHAR_FRAME_BL,
+    DCHAR_FRAME_BR,
+
     NUM_DCHAR_TYPES
 };
 
@@ -1500,6 +1508,7 @@ enum duration_type
     DUR_RETCHING,
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
+    DUR_ANTIMAGIC,
     NUM_DURATIONS
 };
 
@@ -2626,6 +2635,24 @@ enum monster_type                      // menv[].type
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
 
+    MONS_DJINNI,
+    MONS_LAVA_ORC,
+
+    MONS_DRYAD,
+    MONS_FOREST_DRAKE,
+    MONS_FAUN,
+    MONS_SATYR,
+
+    MONS_PAN,
+
+    MONS_TENGU_WARRIOR,
+    MONS_TENGU_CONJURER,
+    MONS_TENGU_REAVER,
+
+    MONS_SPRIGGAN_ENCHANTER,
+
+    MONS_SOJOBO,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -2816,6 +2843,8 @@ enum mutation_type
     MUT_MANA_SHIELD,
     MUT_MANA_REGENERATION,
     MUT_MANA_LINK,
+    MUT_PETRIFICATION_RESISTANCE,
+    MUT_SELF_PETRIFICATION,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3129,7 +3158,9 @@ enum species_type
     SP_HUMAN,
     SP_HIGH_ELF,
     SP_DEEP_ELF,
+#if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
+#endif
     SP_HALFLING,
     SP_HILL_ORC,
     SP_KOBOLD,
@@ -3159,7 +3190,10 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
-      LAST_VALID_SPECIES = SP_OCTOPODE,
+    SP_DJINNI,
+    SP_LAVA_ORC,
+    SP_GARGOYLE,
+      LAST_VALID_SPECIES = SP_GARGOYLE,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
@@ -3167,6 +3201,10 @@ enum species_type
     SP_GREY_ELF,                       // (placeholder)
     SP_GNOME,                          // (placeholder)
     SP_MOUNTAIN_DWARF,                 // (placeholder)
+#if TAG_MAJOR_VERSION > 34
+    SP_SLUDGE_ELF,                     // (placeholder)
+#endif
+
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100,
@@ -3560,7 +3598,6 @@ enum zap_type
     ZAP_STICKY_FLAME_RANGE,
     ZAP_DISPEL_UNDEAD,
     ZAP_BANISHMENT,
-    ZAP_CIGOTUVIS_DEGENERATION,
     ZAP_STING,
     ZAP_HELLFIRE,
     ZAP_IRON_SHOT,
@@ -3674,6 +3711,7 @@ enum disable_type
     DIS_DEATH,
     DIS_DELAY,
     DIS_CONFIRMATIONS,
+    DIS_AFFLICTIONS,
     NUM_DISABLEMENTS
 };
 

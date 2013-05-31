@@ -462,6 +462,10 @@ A staircase back to the Dungeon
 
 These stairs lead back up to the familiarity of the dungeon.
 %%%%
+A staircase back to the Forest
+
+These stairs lead back to the relative safety of the Forest.
+%%%%
 A staircase back to the Lair
 
 These stairs lead back up to the Lair of Beasts.
@@ -530,8 +534,8 @@ ale.
 %%%%
 A staircase to the Enchanted Forest
 
-An entrance to the spriggan forest. Snap a twig and you're dead. Actually, they
-won't wait until you do that.
+On the other end of these stairs lies the wooded home of spriggans, tengu,
+fauns, and all manner of terrifying hexes.
 %%%%
 A staircase to the Shoals
 

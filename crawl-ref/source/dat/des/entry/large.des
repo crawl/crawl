@@ -13,6 +13,7 @@ TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
+SUBST:   [( = .
 SUBST:   c : cx
 TILE:    c = wall_stone_brick
 FTILE:   . = floor_cobble_blood
@@ -43,9 +44,8 @@ ENDMAP
 NAME:    elethiomel_entry_Infinity_Welcomes_Careful_Drivers
 TAGS:    entry no_rotate
 ORIENT:  northwest
-SHUFFLE: [{
 SUBST:   ' : . x ':40, '=x.
-SUBST:   c : cxxx, [ = [T
+SUBST:   c : cxxx
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx....xxxxxxxxxxxxxxx....xx..xxx.''xxxxxx
@@ -53,7 +53,7 @@ xxxxx''........xx...''.........''...'..xx...xx
 xxx'....ccccc...xxx.....ccccc......'......x..@
 x....cccc...cccc.....cccc...cccc.......''..xxx
 x..ccc.........ccc+ccc.........ccc....''..xxxx
-x'.c......{......+.+......[......+.........xxx
+x'.c......{......+.+......T......+.........xxx
 x'.ccc.........ccc+ccc.........ccc...''...xxxx
 x....cccc...cccc.....cccc...cccc......'..'.xxx
 x.......ccccc......'....ccccc......'.....xxxxx
@@ -68,7 +68,7 @@ ENDMAP
 NAME:    dpeg_entry_central
 TAGS:    entry
 ORIENT:  float
-SHUFFLE: {[(], @ABC
+SHUFFLE: @ABC
 SUBST:   A=@x, B=@x, C=@x
 MAP
           xxxxxx@xxxxxx
@@ -83,7 +83,7 @@ xx..xxxxx......xxx......xxxxx..x
 xx.xxxxx......xxxxx......xxxxx.xx
 x..xxxx......xxxxxxx......xxxx..x
 x.xxxx......xxxxxxxxx......xxxx.x
-A.......(..xxxxxxxxxxx..[.......C
+A..........xxxxxxxxxxx..........C
 x.xxxx......xxxxxxxxx......xxxx.x
 x..xxxx......xxxxxxx......xxxx..x
 xx.xxxxx......xxxxx......xxxxx.xx
@@ -109,7 +109,7 @@ SUBST:   c : cx
 TILE:    c = wall_stone_brick
 TILE:    x = wall_vines
 KFEAT:   ' = floor
-FTILE:   '+]def{[T = floor_cobble_blood
+FTILE:   '+]def{T = floor_cobble_blood
 SUBST:   X = T
 MAP
   .........................
@@ -123,7 +123,7 @@ MAP
 ...wwwc+ccc'xxxxx'c+c+cwww...
 ...wwwww+'''x'''x'''cwwww....
 ...wwwwwc'xxx'{'+'T'+WwW..X..
-...wwwwwc'xxx'['+'T'+wWw..X..
+...wwwwwc'xxx'''+'T'+wWw..X..
 ...wwwww+'''x'''x'''cwwww....
 ...wwwc+ccc'xxxxx'ccc+cwww...
 ...www+'''+'''''''+'''+www...
@@ -143,6 +143,7 @@ TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
 MONS:    fungus
 SHUFFLE: {[(, UVW, XYZ
+SUBST:   [( = T
 SUBST:   '=.x, U=+, V=x, W=x, X=+, Y=x, Z=x, b:xxxbcv
 RTILE:   x = wall_vines
 SUBST:   = : + x
@@ -185,6 +186,7 @@ WEIGHT:  2
 MONS:    rat, goblin, bat, kobold
 ITEM:    sausage / beef jerky, nothing, nothing
 SHUFFLE: {[(, 234, ef~
+SUBST:   [( = .
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@x
 xxxxxxxxxxxxxxxxxxxxxxx+x
@@ -232,7 +234,7 @@ x.....ll.cc.....2.3.cc.ll....x
 x.....l..cccccccc.cccc..l....x
 x.....l..cccccccc+cccc..l....x
 x.....ll..cc......cc...ll....x
-x.....l...ccd{[(..cc.4..l....x
+x.....l...ccd{....cc.4..l....x
 x.....l...cc......cc....l....x
 x.....ll..cccccccccc...ll....x
 x.....lll.cccccccccc.llll....x
@@ -293,6 +295,7 @@ TAGS:    entry
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
+SUBST:   [( = .
 SUBST:   ' : . x ':40
 SUBST:   '=x.
 MAP
@@ -379,7 +382,7 @@ xx...xx....x=x...x.x=x....xx...xx
 x....=....xx.....=...xx....=....x
 x...xx...xx...xx.xx...xx...xx...x
 x...x....x...xx...xx...x....x...x
-x...=....=...xx[{(xx...=....=...x
+x...=....=...xx.{.xx...=....=...x
 x...x....x...xx...xx...x....x...x
 x...xx...xx...xx=xx...xx...xx...x
 x....=....xx.........xx....=....x
@@ -411,7 +414,7 @@ xx...xx....xxx.....xxx....xx...xx
 .....x....xx.........xx....x....x
 @...xx...xx...xx.xx...xx...xx...x
 ....x........xx...xx...x....x...x
-xxxxxxxxxxxxxxx[{(xx...x........x
+xxxxxxxxxxxxxxx.{.xx...x........x
 x............xx...xx...xxxxxx...x
 x...xxxxxxx...xxxxx...xx...xx...x
 x....x....xx.........xx....x....x
@@ -447,7 +450,7 @@ xx....i....xxx.....xxx....xx...xx
 x....xxxxjjx.........xx....x....x
 x...xx........xxxxx...xx...xx...x
 x...x....xlllxx...xx...x....x...x
-x...X....x...k.[{(.m...xffffx...x
+x...X....x...k..{..m...xffffx...x
 x...x....x...xx...xx...x....e...x
 x...xx...xx...xxnxx...xx...xxxxxx
 x....c....xx...x.....xx....x.....
@@ -468,6 +471,8 @@ NAME:    entry_zaba_pyramid
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: ([{>
+SUBST:   ([ = d
+ITEM:    skeleton
 SUBST:   ?:???!,  ?=?., ?=!, !:cx, ===cc+
 MAP
 .................@.................
@@ -517,7 +522,7 @@ x'''''''''''''''x
 x'''''''''''''''x
 xxxxmmmmmmmmmxxxx
 """""""""""""""""
-@""""{""[""(""""@
+@"""""""{"""""""@
 """""""""""""""""
 xxxxmmmmmmmmmxxxx
 x'''''''''''''''x
@@ -538,6 +543,7 @@ WEIGHT:  5
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
+SUBST:   ([ = .
 SUBST:   y = w:39 W:1, Y = A:5 w:1, W = W:19 .:1, A = W
 TILE:    x = wall_vines
 MAP
@@ -586,13 +592,13 @@ MAP
   xxxxxxxx.xxxxxxxxxxxx
  xxxxxxxxx.1111xxxxxxxxx
 xxxxxxxxx1.....1xxxxxxxxx
-xxxxxxxx1....[..1xxxxxxxx
+xxxxxxxx1.......1xxxxxxxx
 xxxxxxx1...WWW...1xxxxxxx
 xxxxxx1...WWWWW...1xxxxxx
 @........WWW{WWW........@
 xxxxxx1...WWWWW...1xxxxxx
 xxxxxxx1...WWW...1xxxxxxx
-xxxxxxxx1..(....1xxxxxxxx
+xxxxxxxx1.......1xxxxxxxx
 xxxxxxxxx1.....1xxxxxxxxx
  xxxxxxxxx1111.xxxxxxxxx
   xxxxxxxxxxxx.xxxxxxxx
@@ -610,7 +616,7 @@ SUBST:  c : cccccvvb
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.[.(.{.xxxxxxxxxx
+xxxxxxxxxx...{...xxxxxxxxxx
 xxxxxxx.............xxxxxxx
 xxxxx...c..c...c..c...xxxxx
 xxxx...................xxxx
@@ -665,7 +671,7 @@ MAP
   x.xxxxxxxx.xxxxxxxx.x
   x.xx...xxx.xxx...xx.x
   x.x.xxx.xx.xx.xxx.x.x
-  x.x.x<xx.x.x.xx[x.x.x
+  x.x.x)xx.x.x.xx]x.x.x
   x.x.xx.x.F.E.x.xx.x.x
   x.xx..xx.x.x.xx..xx.x
   xx.xxxx.xx.xx.xxxx.xx
@@ -681,6 +687,7 @@ WEIGHT:  3
 SUBST:   z = W., I = IG, r : cccvt., E = wW, ' : @x', ' = @x
 MONS:    rat w:20 / ball python / giant newt / bat / nothing w:25
 SHUFFLE: {[(
+SUBST:   ([ = G
 MAP
 xxx'WWWxxxxxxx''xxxxxxxxxxxxxxxxxxx
 xxwwwwWWxxxxxx..xxxxxxxxxxxxxxxtxxx
@@ -710,6 +717,7 @@ TAGS:    entry no_rotate no_monster_gen
 ORIENT:  northwest
 SUBST:   T : TTTV, p = tt., G = GGGG., z = ...T
 SHUFFLE: {[
+SUBST:   [ = T
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xccccccccccccccccccctttttxxxx
@@ -736,6 +744,7 @@ WEIGHT:  3
 SUBST:   T : TTTV, p = tt., G = GGG.
 NSUBST:  z = + / c, Z = + / c, X = + / c, > = > / .
 SHUFFLE: {[(
+SUBST:   ([ = .
 MAP
             xxxxx@@@@xxxxxx
            xxtttp....pppp.xxx
@@ -770,6 +779,7 @@ SUBST:   p = 11., G = G..
 NSUBST:  { = { / ., [ = [ / .
 NSUBST:  + = 1:c / *=+
 SHUFFLE: {[
+SUBST:   [ = .
 MONS:    plant / bush
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -864,7 +874,7 @@ MAP
 11.111.111.1.111.111.11
 1.11111.111.111.11111.1
 1.111111.11.11.111111.1
-'.1111111..{..1111111.'
+'.1111111.....1111111.'
 1.111111111.111111111.1
 1.111111111.111111111.1
 11.1111111.1.1111111.11
@@ -886,7 +896,7 @@ xxxxx.x.x.xxx.x.x.xxxxx
 xxxx.xx.xx.x.xx.xx.xxxx
 xxx.xxx.xxx.xxx.xxx.xxx
 xx.xxxx.xx.x.xx.xxxx.xx
-+......{..xxx..<......+
++......{..xxx.........+
 x..xxxx.xxxxxxx.xxxx..x
 x.x.xxx.xxxxxxx.xxx.x.x
 x.xx.x.xxxxxxxxx.x.xx.x
@@ -894,7 +904,7 @@ x.xxx.xxxxxxxxxxx.xxx.x
 x.xx.x.xxxxxxxxx.x.xx.x
 x.x.xxx.xxxxxxx.xxx.x.x
 x..xxxx.xxxxxxx.xxxx..x
-+......(..xxx..[......+
++.........xxx.........+
 xx.xxxx.xx.x.xx.xxxx.xx
 xxx.xxx.xxx.xxx.xxx.xxx
 xxxx.xx.xx.x.xx.xx.xxxx
@@ -918,7 +928,7 @@ KPROP:  F1 = no_rtele_into
 MAP
          xxxxxxx
          x..{..x
-         x(...[x
+         x.....x
          x.....x
 xxxxxxxxxxxx+xxxxxxxxxxxx
 xWWWWWWWWWWW.WWWWWWWWWWWx

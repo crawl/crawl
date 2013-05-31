@@ -999,6 +999,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_YAKTAUR;
     case MONS_YAKTAUR_CAPTAIN:
         return TILEP_MONS_YAKTAUR_CAPTAIN;
+    case MONS_FAUN:
+        return TILEP_MONS_FAUN;
+    case MONS_SATYR:
+        return TILEP_MONS_SATYR;
 
     // draconians ('d'):
     case MONS_DRACONIAN:
@@ -1117,6 +1121,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_LINDWURM;
     case MONS_DEATH_DRAKE:
         return TILEP_MONS_DEATH_DRAKE;
+    case MONS_FOREST_DRAKE:
+        return TILEP_MONS_FOREST_DRAKE;
 
     // merfolk ('m')
     case MONS_MERFOLK:
@@ -1149,6 +1155,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_SIREN_WATER;
         else
             return TILEP_MONS_SIREN;
+    case MONS_DRYAD:
+        return TILEP_MONS_DRYAD;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
@@ -1485,6 +1493,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SHEDU;
     case MONS_TENGU:
         return TILEP_MONS_TENGU;
+    case MONS_TENGU_CONJURER:
+        return TILEP_MONS_TENGU_CONJURER;
+    case MONS_TENGU_WARRIOR:
+        return TILEP_MONS_TENGU_WARRIOR;
+    case MONS_TENGU_REAVER:
+        return TILEP_MONS_TENGU_REAVER;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -1917,6 +1931,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // centaur ('c')
     case MONS_NESSOS:
         return TILEP_MONS_NESSOS;
+    case MONS_PAN:
+        return TILEP_MONS_PAN;
 
     // draconian ('d')
     case MONS_TIAMAT:
@@ -1969,6 +1985,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SPRIGGAN_DEFENDER;
     case MONS_SPRIGGAN_ASSASSIN:
         return TILEP_MONS_SPRIGGAN_ASSASSIN;
+    case MONS_SPRIGGAN_ENCHANTER:
+        return TILEP_MONS_SPRIGGAN_ENCHANTER;
     case MONS_THE_ENCHANTRESS:
         return TILEP_MONS_THE_ENCHANTRESS;
     case MONS_AGNES:
@@ -2053,6 +2071,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // hybrid ('H')
     case MONS_ARACHNE:
         return TILEP_MONS_ARACHNE;
+    case MONS_SOJOBO:
+        return TILEP_MONS_SOJOBO;
 
     // jelly ('J')
     case MONS_DISSOLUTION:
@@ -3556,6 +3576,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
         return TILE_CORPSE_YAKTAUR;
+    case MONS_FAUN:
+        return TILE_CORPSE_FAUN;
+    case MONS_SATYR:
+        return TILE_CORPSE_SATYR;
 
     // draconians ('d')
     case MONS_DRACONIAN:
@@ -3678,6 +3702,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_LINDWURM;
     case MONS_DEATH_DRAKE:
         return TILE_CORPSE_DEATH_DRAKE;
+    case MONS_FOREST_DRAKE:
+        return TILE_CORPSE_FOREST_DRAKE;
 
     // merfolk ('m')
     case MONS_MERFOLK:
@@ -3686,6 +3712,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_MERMAID;
     case MONS_SIREN:
         return TILE_CORPSE_SIREN;
+    case MONS_DRYAD:
+        return TILE_CORPSE_DRYAD;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:

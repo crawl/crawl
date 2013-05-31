@@ -475,7 +475,8 @@ spret_type cast_summon_elemental(int pow, god_type god,
             return SPRET_SUCCESS; // still losing a turn
         }
     }
-    else if (smove.delta.origin()) {
+    else if (smove.delta.origin())
+    {
         mpr("You can't summon an elemental from yourself!");
         return SPRET_ABORT;
     }

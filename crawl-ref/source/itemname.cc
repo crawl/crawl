@@ -31,6 +31,7 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
+#include "mon-stuff.h"
 #include "notes.h"
 #include "player.h"
 #include "religion.h"
@@ -3186,6 +3187,9 @@ bool is_useless_item(const item_def &item, bool temp)
         if (is_bad_item(item, temp))
             return true;
 
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+            return true;
+
         switch (item.sub_type)
         {
         case SCR_RANDOM_USELESSNESS:
@@ -3258,7 +3262,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_PORRIDGE:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return !can_ingest(item, true, false);
+            return !can_ingest(item, true, false) || you.species == SP_DJINNI;
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
@@ -3303,11 +3307,14 @@ bool is_useless_item(const item_def &item, bool temp)
                                                  // contaminated
                     || player_mutation_level(MUT_GOURMAND) > 0
                     || player_mutation_level(MUT_HERBIVOROUS) == 3
-                    || you.is_undead
-                        && you.species != SP_GHOUL);
+                    || you.is_undead && you.species != SP_GHOUL
+                    || you.species == SP_DJINNI);
 
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD && !you.religion);
+
+        case AMU_GUARDIAN_SPIRIT:
+            return you.species == SP_DJINNI;
 
         case RING_LIFE_PROTECTION:
             return (player_prot_life(false, temp, false) == 3);
@@ -3372,7 +3379,19 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_FOOD:
         if (item.sub_type == NUM_FOODS)
             break;
-        if (!is_inedible(item))
+
+        if (you.species == SP_DJINNI)
+        {
+            // Only comestibles with effects beyond nutrition have an use.
+            if (item.sub_type == FOOD_AMBROSIA
+                || item.sub_type == FOOD_ROYAL_JELLY
+                || item.sub_type == FOOD_CHUNK
+                   && mons_corpse_effect(item.mon_type) == CE_MUTAGEN)
+            {
+                return false;
+            }
+        }
+        else if (!is_inedible(item))
             return false;
 
         if (item.sub_type == FOOD_CHUNK
@@ -3391,13 +3410,26 @@ bool is_useless_item(const item_def &item, bool temp)
         return true;
 
     case OBJ_CORPSES:
-        if (item.sub_type != CORPSE_SKELETON)
+        if (item.sub_type != CORPSE_SKELETON && !you_foodless())
             return false;
+
+        if (item.sub_type == CORPSE_BODY && you.species == SP_DJINNI
+            && mons_corpse_effect(item.mon_type) == CE_MUTAGEN
+            && !is_inedible(item))
+        {
+            return false;
+        }
 
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.religion == GOD_YREDELEMNUL && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))
+        {
+            return false;
+        }
+
+        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+            || you.has_spell(SPELL_SIMULACRUM))
         {
             return false;
         }
@@ -3418,6 +3450,8 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+            return true;
         if (item.sub_type != BOOK_MANUAL || !item_type_known(item))
             return false;
         if (you.skills[item.plus] >= 27)

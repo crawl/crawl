@@ -930,7 +930,7 @@ void handle_delay()
             mprf(MSGCH_MULTITURN_ACTION, "\"%s\"",
                  _get_zin_recite_speech(delay.trits, delay.len,
                                         delay.parm1, delay.duration).c_str());
-            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
+            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1, &you))
                 viewwindow();
 
             // Recite trains more than once per use, because it has a

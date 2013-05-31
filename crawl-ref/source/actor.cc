@@ -51,7 +51,7 @@ bool actor::airborne() const
  */
 bool actor::ground_level() const
 {
-    return (!airborne() && !is_wall_clinging());
+    return !airborne() && !is_wall_clinging() && mons_species() != MONS_DJINNI;
 }
 
 bool actor::stand_on_solid_ground() const

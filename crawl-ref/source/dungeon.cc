@@ -340,7 +340,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     }
     catch (dgn_veto_exception& e)
     {
-        dprf("VETO: %s: %s", level_id::current().describe().c_str(), e.what());
+        dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
         mapgen_report_map_veto();
 #endif
@@ -1415,28 +1415,35 @@ void fixup_misplaced_items()
     }
 }
 
+// count_root is present to allow the root branch to keep placing three
+// stairs (ZotDef, entry vaults placing multiple stairs).
+static bool _at_top_of_branch()
+{
+    return (your_branch().exit_stairs != NUM_FEATURES
+            && you.depth == 1
+            && player_in_connected_branch());
+}
+
 static void _fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
-    if (your_branch().exit_stairs != NUM_FEATURES
-        && you.depth == 1
-        && player_in_connected_branch())
+    if (_at_top_of_branch())
     {
+        int count = 0;
         dungeon_feature_type exit = your_branch().exit_stairs;
         if (you.where_are_you == root_branch) // ZotDef
             exit = DNGN_EXIT_DUNGEON;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
-                && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
+            if (grd(*ri) == DNGN_ESCAPE_HATCH_UP)
+                _set_grd(*ri, DNGN_FLOOR);
+            else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
+                     && grd(*ri) <= DNGN_STONE_STAIRS_UP_III)
             {
-                if (grd(*ri) == DNGN_STONE_STAIRS_UP_I
-                    && !feature_mimic_at(*ri))
-                {
-                    env.markers.add(new map_feature_marker(*ri, grd(*ri)));
-                }
-
+                ++count;
+                ASSERT(count == 1 || you.where_are_you == root_branch);
+                env.markers.add(new map_feature_marker(*ri, grd(*ri)));
                 _set_grd(*ri, exit);
             }
         }
@@ -1507,7 +1514,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             num_stairs = num_up_stairs;
             replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_UP_I;
-            needed_stairs = 3;
+            needed_stairs = _at_top_of_branch() ? 1 : 3;
         }
         else
         {
@@ -1525,6 +1532,9 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         // the player through vaults that use all three down stone stairs.
         if (player_in_branch(BRANCH_HALL_OF_ZOT))
             replace = DNGN_GRANITE_STATUE;
+
+        dprf("Before culling: %d/%d %s stairs", num_stairs, needed_stairs,
+             i ? "down" : "up");
 
         if (num_stairs > needed_stairs)
         {
@@ -1560,6 +1570,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                                            env.level_map_mask);
                     if (where.x)
                     {
+                        dprf("Too many stairs -- removing one of a connected pair.");
                         grd(stair_list[s2]) = replace;
                         num_stairs--;
                         stair_list[s2] = stair_list[num_stairs];
@@ -1576,28 +1587,37 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                 int remove = random2(num_stairs);
                 if (preserve_vault_stairs)
                 {
-                    int start = remove;
-                    do
+                    int tries;
+                    for (tries = num_stairs; tries > 0; tries--)
                     {
                         if (!map_masked(stair_list[remove], MMT_VAULT))
                             break;
                         remove = (remove + 1) % num_stairs;
                     }
-                    while (start != remove);
 
                     // If we looped through all possibilities, then it
                     // means that there are more than 3 stairs in vaults and
                     // we can't preserve vault stairs.
-                    if (start == remove)
+                    if (!tries)
+                    {
+                        dprf("Too many stairs inside vaults!");
                         break;
+                    }
                 }
+                dprf("Too many stairs -- removing one blindly.");
                 _set_grd(stair_list[remove], replace);
 
                 stair_list[remove] = stair_list[--num_stairs];
             }
         }
 
-        if (num_stairs > needed_stairs && preserve_vault_stairs)
+        // FIXME: stairs that generate inside random vaults are still
+        // protected, resulting in superfluoes ones.
+        dprf("After culling: %d/%d %s stairs", num_stairs, needed_stairs,
+             i ? "down" : "up");
+
+        if (num_stairs > needed_stairs && preserve_vault_stairs
+            && (i || you.depth != 1 || you.where_are_you != root_branch))
         {
             success = false;
             continue;
@@ -2259,6 +2279,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
             depth -= 3;
         } while (depth > 0);
     }
+
+    if (player_in_branch(BRANCH_FOREST))
+        _add_plant_clumps(2);
 
     const unsigned nvaults = env.level_vaults.size();
 
@@ -3362,7 +3385,7 @@ static void _place_branch_entrances(bool use_vaults)
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
 
         if (b->entry_stairs != NUM_FEATURES
-            && player_in_branch(b->parent_branch)
+            && player_in_branch(parent_branch((branch_type)i))
             && (you.depth == startdepth[i] || mimic))
         {
             // Placing a stair.
@@ -4074,7 +4097,8 @@ _build_vault_impl(const map_def *vault,
     if (!make_no_exits)
     {
         const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
-                            || player_in_branch(BRANCH_SLIME_PITS);
+                            || player_in_branch(BRANCH_SLIME_PITS)
+                            || player_in_branch(BRANCH_FOREST);
         place.connect(spotty);
     }
 
@@ -5528,7 +5552,8 @@ static bool _spotty_seed_ok(const coord_def& p)
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 {
     return (feat_is_water(feat) || feat_is_lava(feat) || feat_is_wall(feat)
-            || feat == DNGN_FLOOR);
+            || feat == DNGN_FLOOR
+            || (player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE));
 }
 
 // Connect vault exit "from" to dungeon floor by growing a spotty chamber.
@@ -6255,8 +6280,10 @@ static bool _fixup_interlevel_connectivity()
         }
     }
 
+    const int up_region_max = _at_top_of_branch() ? 1 : 3;
+
     // Ensure all up stairs were found.
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < up_region_max; i++)
         if (up_region[i] == -1)
             return false;
 
@@ -6267,7 +6294,7 @@ static bool _fixup_interlevel_connectivity()
     // Which up stairs have a down stair? (These are potentially connected.)
     if (!at_branch_bottom())
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < up_region_max; i++)
             for (int j = 0; j < 3; j++)
             {
                 if (down_region[j] == up_region[i])
@@ -6291,7 +6318,7 @@ static bool _fixup_interlevel_connectivity()
     {
         if (!prev_con.connected[i])
             continue;
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (!has_down[j] && !at_branch_bottom())
                 continue;
@@ -6323,7 +6350,7 @@ static bool _fixup_interlevel_connectivity()
             continue;
 
         // Try first to assign to any connected regions.
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (assign_cur[j] != -1 || !region_connected[up_region[j]])
                 continue;
@@ -6356,7 +6383,7 @@ static bool _fixup_interlevel_connectivity()
         if (!prev_con.connected[i] || assign_prev[i] != -1)
             continue;
 
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (has_down[j] || assign_cur[j] != -1)
                 continue;
@@ -6375,7 +6402,7 @@ static bool _fixup_interlevel_connectivity()
     {
         if (assign_prev[i] != -1)
             continue;
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < up_region_max; j++)
         {
             if (assign_cur[j] != -1)
                 continue;
@@ -6393,20 +6420,23 @@ static bool _fixup_interlevel_connectivity()
     // At the branch bottom, all up stairs must be connected.
     if (at_branch_bottom())
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < up_region_max; i++)
             if (!region_connected[up_region[i]])
                 return false;
     }
 
     // Sanity check that we're not duplicating stairs.
-    bool stairs_unique = (assign_cur[0] != assign_cur[1]
-                          && assign_cur[1] != assign_cur[2]);
-    ASSERT(stairs_unique);
-    if (!stairs_unique)
-        return false;
+    if (up_region_max > 1)
+    {
+        bool stairs_unique = (assign_cur[0] != assign_cur[1]
+                              && assign_cur[1] != assign_cur[2]);
+        ASSERT(stairs_unique);
+        if (!stairs_unique)
+            return false;
+    }
 
     // Reassign up stair numbers as needed.
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < up_region_max; i++)
     {
         _set_grd(up_gc[i],
             (dungeon_feature_type)(DNGN_STONE_STAIRS_UP_I + assign_cur[i]));
