@@ -1345,9 +1345,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Heat doesn't hurt fire.
-    if (you.species == SP_DJINNI && mutat == MUT_HEAT_RESISTANCE)
+    // Heat doesn't hurt fire, djinn don't care about hunger.
+    if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
+        || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM
+        || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
+    {
         return true;
+    }
 
     equipment_type eq_type = EQ_NONE;
 
