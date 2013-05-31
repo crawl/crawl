@@ -1221,6 +1221,16 @@ NSUBST:   ? = 3:w / *:l
           also for / and numbers), it is safer to spell out the N:
           preceding the replacement symbols.
 
+CLEAR:    Clear is a special kind of SUBST that only swaps glyphs to ' ',
+          i.e. a blank space. This makes the resulting areas not part of
+          the map, so they won't overwrite the underlying level. The
+          syntax is simply:
+
+          CLEAR: xyz
+
+          This will erase the glyphs x, y and z from the map by turning
+          them into spaces.
+
 KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           The KFEAT: directive allows you to specify a placeholder symbol
           that is replaced with another symbol, named feature, trap, or

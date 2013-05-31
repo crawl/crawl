@@ -474,22 +474,6 @@ struct zap_info
 },
 
 {
-    ZAP_CIGOTUVIS_DEGENERATION,
-    "",
-    100,
-    NULL,
-    NULL,
-    BLACK,
-    true,
-    BEAM_DEGENERATE,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0 // XXX: How loud should this be?
-},
-
-{
     ZAP_STING,
     "sting",
     25,

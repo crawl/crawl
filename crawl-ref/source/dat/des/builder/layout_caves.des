@@ -308,7 +308,7 @@ ENDMAP
 NAME: layout_cave_town
 WEIGHT: 8
 ORIENT: encompass
-DEPTH: D:2-26, Snake, Lair
+DEPTH: D:15-26, Snake, Lair:1-3
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
 TAGS: no_hmirror no_vmirror chance_d layout_type_cave_town
 {{

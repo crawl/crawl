@@ -117,6 +117,9 @@ static habitat_type _grid2habitat(dungeon_feature_type grid)
     {
     case DNGN_LAVA:
         return HT_LAVA;
+    case DNGN_TREE:
+    case DNGN_MANGROVE:
+        return HT_FOREST;
     case DNGN_FLOOR:
     default:
         return HT_LAND;
@@ -133,6 +136,8 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return DNGN_LAVA;
     case HT_ROCK:
         return DNGN_ROCK_WALL;
+    case HT_FOREST:
+        return DNGN_TREE;
     case HT_LAND:
     case HT_AMPHIBIOUS:
     default:
@@ -1499,6 +1504,11 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
 
+    // It's unlikely there's a desc for "Duvessa the elf skeleton", but
+    // we still want to allow it if overridden.
+    if (!mon->props.exists("dbname"))
+        mon->props["dbname"] = mons_class_name(mon->type);
+
     return true;
 }
 
@@ -1722,7 +1732,8 @@ int mons_class_res_wind(monster_type mc)
 {
     // Lightning goes well with storms.
     if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
-        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY)
+        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY
+        || mc == MONS_FOREST_DRAKE)
     {
         return 1;
     }
@@ -2044,6 +2055,25 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[1] = MST_ANCIENT_CHAMPION_II;
         book[2] = MST_ANCIENT_CHAMPION_III;
         book[3] = MST_ANCIENT_CHAMPION_IV;
+        break;
+
+    case MONS_FAUN:
+        book[0] = MST_FAUN_I;
+        book[1] = MST_FAUN_II;
+        book[2] = MST_FAUN_III;
+        break;
+
+    case MONS_TENGU_CONJURER:
+        book[0] = MST_TENGU_CONJURER_I;
+        book[1] = MST_TENGU_CONJURER_II;
+        book[2] = MST_TENGU_CONJURER_III;
+        book[3] = MST_TENGU_CONJURER_IV;
+        break;
+
+    case MONS_TENGU_REAVER:
+        book[0] = MST_TENGU_REAVER_I;
+        book[1] = MST_TENGU_REAVER_II;
+        book[2] = MST_TENGU_REAVER_III;
         break;
 
     default:
@@ -2643,7 +2673,7 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
     habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
-    else if (ht == HT_ROCK)
+    else if (ht == HT_ROCK || ht == HT_FOREST)
         ht = HT_LAND;
     else if (ht == HT_INCORPOREAL)
         ht = HT_ROCK;
@@ -2660,6 +2690,7 @@ bool mons_wall_shielded(const monster* mon)
     switch (_mons_class_habitat(mons_base_type(mon)))
     {
         case HT_ROCK:
+        case HT_FOREST:
             return true;
         default:
             return false;
@@ -3479,6 +3510,9 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
         return (!feat_is_solid(grid)
                 || feat_is_rock(grid) && !feat_is_permarock(grid));
     }
+
+    if (_mons_class_habitat(mc) == HT_FOREST)
+        return (!feat_is_solid(grid) || feat_is_tree(grid));
 
     return !feat_is_solid(grid);
 }
@@ -4572,7 +4606,7 @@ void debug_mondata()
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
 
         // Tests below apply only to corpses.
-        if (md->species != mc)
+        if (md->species != mc || md->bitfields & M_CANT_SPAWN)
             continue;
 
         if (md->weight && !md->corpse_thingy)

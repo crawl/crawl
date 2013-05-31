@@ -70,6 +70,12 @@ static const monster_level_up mon_grow[] =
     // -> berserker an altar.
 
     monster_level_up(MONS_DEEP_DWARF, MONS_DEEP_DWARF_SCION),
+
+    monster_level_up(MONS_FAUN, MONS_SATYR),
+    monster_level_up(MONS_TENGU, MONS_TENGU_CONJURER, 500),
+    monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),
+    monster_level_up(MONS_TENGU_CONJURER, MONS_TENGU_REAVER),
+    monster_level_up(MONS_TENGU_WARRIOR, MONS_TENGU_REAVER),
 };
 
 mons_experience_levels::mons_experience_levels()

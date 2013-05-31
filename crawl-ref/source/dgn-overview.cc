@@ -332,22 +332,32 @@ static string _get_unseen_branches()
 
     /* see if we need to hide lair branches that don't exist */
     int seen_lair_branches = 0;
+    int seen_vaults_branches = 0;
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
 
-        if (!is_random_lair_subbranch(branch))
+        if (!is_random_subbranch(branch))
             continue;
 
         if (stair_level.find(branch) != stair_level.end())
-            seen_lair_branches++;
+        {
+            if (parent_branch((branch_type)i) == BRANCH_LAIR)
+                seen_lair_branches++;
+            else if (parent_branch((branch_type)i) == BRANCH_VAULTS)
+                seen_vaults_branches++;
+        }
     }
 
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
 
-        if (seen_lair_branches >= 2 && is_random_lair_subbranch(branch))
+        if (is_random_subbranch(branch)
+            && ((parent_branch((branch_type)i) == BRANCH_LAIR
+                 && seen_lair_branches >= 2)
+                || (parent_branch((branch_type)i) == BRANCH_VAULTS)
+                    && seen_vaults_branches >= 1))
             continue;
 
         if (i == BRANCH_VESTIBULE_OF_HELL || !is_connected_branch(branch))
@@ -358,8 +368,8 @@ static string _get_unseen_branches()
 
         if (stair_level.find(branch) == stair_level.end())
         {
-            const branch_type parent_branch = branches[i].parent_branch;
-            level_id lid(parent_branch, 0);
+            const branch_type parent = parent_branch((branch_type)i);
+            level_id lid(parent, 0);
             lid = find_deepest_explored(lid);
             if (lid.depth >= branches[branch].mindepth)
             {
@@ -368,7 +378,7 @@ static string _get_unseen_branches()
                     snprintf(buffer, sizeof buffer,
                         "<darkgrey>%6s: %s:%d-%d</darkgrey>",
                             branches[branch].abbrevname,
-                            branches[parent_branch].abbrevname,
+                            branches[parent].abbrevname,
                             branches[branch].mindepth,
                             branches[branch].maxdepth);
                 }
@@ -377,7 +387,7 @@ static string _get_unseen_branches()
                     snprintf(buffer, sizeof buffer,
                         "<darkgrey>%6s: %s:%d</darkgrey>",
                             branches[branch].abbrevname,
-                            branches[parent_branch].abbrevname,
+                            branches[parent].abbrevname,
                             branches[branch].mindepth);
                 }
 

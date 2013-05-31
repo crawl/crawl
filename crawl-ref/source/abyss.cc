@@ -989,10 +989,9 @@ const static DiamondLayout diamond30(3,0);
 const static DiamondLayout diamond21(2,1);
 const static ColumnLayout column2(2);
 const static ColumnLayout column26(2,6);
-const static ForestLayout forest;
 const static ProceduralLayout* regularLayouts[] =
 {
-    &diamond30, &diamond21, &column2, &column26, &forest,
+    &diamond30, &diamond21, &column2, &column26,
 };
 const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
     regularLayouts + 5);
@@ -1012,10 +1011,8 @@ const static ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
 const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
 const static WorleyLayout baseLayout(314159, base_vec, 5.0);
 const static RiverLayout rivers(1800, baseLayout);
-const static UnderworldLayout underworld;
-const static ClampLayout underworld_clamped(underworld, 40, true);
 // This one is not fixed: [0] is a level pulled from the current game
-static vector<const ProceduralLayout*> complex_vec(3);
+static vector<const ProceduralLayout*> complex_vec(2);
 
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
@@ -1034,7 +1031,6 @@ static ProceduralSample _abyss_grid(const coord_def &p)
         levelLayout = new LevelLayout(lid, 5, rivers);
         complex_vec[0] = levelLayout;
         complex_vec[1] = &rivers; // const
-        complex_vec[2] = &underworld_clamped; // const
         abyssLayout = new WorleyLayout(23571113, complex_vec, 6.1);
     }
 

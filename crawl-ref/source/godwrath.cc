@@ -644,7 +644,7 @@ static bool _beogh_retribution()
 
         // Need a species check, in case this retribution is a result of
         // drawing the Wrath card.
-        const bool am_orc = (you.species == SP_HILL_ORC);
+        const bool am_orc = player_genus(GENPC_ORCISH);
 
         for (int i = 0; i < num_to_create; ++i)
         {
@@ -806,9 +806,9 @@ static bool _sif_muna_retribution()
         break;
 
     case 8:
-        if (you.magic_points > 0)
+        if (you.magic_points > 0 || you.species == SP_DJINNI)
         {
-            dec_mp(100);  // This should zero it.
+            drain_mp(100);  // This should zero it.
             mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
         }
         break;
@@ -1297,7 +1297,7 @@ static bool _beogh_idol_revenge()
     // Beogh watches his charges closely, but for others doesn't always
     // notice.
     if (you.religion == GOD_BEOGH
-        || (you.species == SP_HILL_ORC && coinflip())
+        || (player_genus(GENPC_ORCISH) && coinflip())
         || one_chance_in(3))
     {
         const char *revenge;

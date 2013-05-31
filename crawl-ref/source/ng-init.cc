@@ -68,6 +68,7 @@ void initialise_branch_depths()
     {
         random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
         random_choose(BRANCH_SNAKE_PIT, BRANCH_SPIDER_NEST, -1),
+        random_choose(BRANCH_CRYPT, BRANCH_FOREST, -1),
     };
 
     for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)

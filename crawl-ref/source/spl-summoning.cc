@@ -475,7 +475,8 @@ spret_type cast_summon_elemental(int pow, god_type god,
             return SPRET_SUCCESS; // still losing a turn
         }
     }
-    else if (smove.delta.origin()) {
+    else if (smove.delta.origin())
+    {
         mpr("You can't summon an elemental from yourself!");
         return SPRET_ABORT;
     }
@@ -1592,9 +1593,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE : MONS_SKELETON;
     const monster_type monnum = static_cast<monster_type>(item.orig_monnum);
-    if (mon == MONS_ZOMBIE && !mons_zombifiable(monnum))
+    if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
-        ASSERT(mons_skeleton(monnum));
+        ASSERT(mons_skeleton(zombie_type));
         mpr("The flesh is too rotten for a proper zombie; only a skeleton remains.");
         mon = MONS_SKELETON;
     }
@@ -2304,6 +2305,11 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
         fail_check();
         mpr("An evil force gathers, but it quickly dissipates.");
         return SPRET_SUCCESS; // still losing a turn
+    }
+    else if (m->wont_attack())
+    {
+        mpr("You cannot haunt those who bear you no hostility.");
+        return SPRET_ABORT;
     }
 
     int mi = m->mindex();

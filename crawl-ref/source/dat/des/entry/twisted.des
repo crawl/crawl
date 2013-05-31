@@ -341,19 +341,18 @@ SHUFFLE: [{(
 NSUBST:  A= 2= + / 2= +x / *= x
 NSUBST:  B= 2= + / 2= +x / *= x
 NSUBST:  C= 2= + / *= +x
-SUBST:  @ = @+
-MONS:    toadstool
+SUBST:   @ = @+
 MAP
 xxx@xxx@xxx@xxx
-x.111.B0B.111.x
-xCx1xAxxxAx1xCx
-@.x.A11111A.x.@
-x1x.x1[1(1x.x1x
-x1xBx11>11xBx1x
-x1x.x11{11x.x1x
-@.x.A11111A.x.@
-xCx1xAxxxAx1xCx
-x.111.B0B.111.x
+x.....B0B.....x
+xCx.xAxxxAx.xCx
+@.x.A.....A.x.@
+x.x.x.[.(.x.x.x
+x.xBx..>..xBx.x
+x.x.x..{..x.x.x
+@.x.A.....A.x.@
+xCx.xAxxxAx.xCx
+x.....B0B.....x
 xxx@xxx@xxx@xxx
 ENDMAP
 

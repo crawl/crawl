@@ -71,7 +71,9 @@ static void _species_stat_init(species_type which_species)
     case SP_OGRE:               sb = 10; ib =  5; db =  3;      break;  // 18
 
     case SP_MINOTAUR:           sb = 10; ib =  3; db =  3;      break;  // 16
+    case SP_GARGOYLE:           sb =  9; ib =  6; db =  3;      break;  // 18
     case SP_HILL_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
+    case SP_LAVA_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
     case SP_CENTAUR:            sb =  8; ib =  5; db =  2;      break;  // 15
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
 
@@ -246,6 +248,9 @@ void give_basic_mutations(species_type speci)
     // for the fast/slow metabolism when we get around to it.
     switch (speci)
     {
+    case SP_LAVA_ORC:
+        you.mutation[MUT_CONSERVE_SCROLLS] = 1;
+    // Intentional fallthrough.
     case SP_HILL_ORC:
         you.mutation[MUT_SAPROVOROUS] = 1;
         break;
@@ -301,6 +306,16 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
         you.mutation[MUT_UNBREATHING]                = 1;
+        break;
+    case SP_GARGOYLE:
+        you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
+        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
+        you.mutation[MUT_COLD_RESISTANCE]            = 1;
+        you.mutation[MUT_CLAWS]                      = 2;
+        you.mutation[MUT_FANGS]                      = 1;
+        you.mutation[MUT_TALONS]                     = 2;
+        you.mutation[MUT_SLOW_METABOLISM]            = 1;
+        you.mutation[MUT_SELF_PETRIFICATION]         = 1;
         break;
     case SP_TENGU:
         you.mutation[MUT_BEAK]   = 1;
@@ -980,6 +995,9 @@ static void _give_items_skills(const newgame_def& ng)
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
 
+    if (you.species == SP_GARGOYLE)
+        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_RESTORE_ABILITIES, -1, 2);
+
     // Zotdef: everyone gets a bonus two potions of curing, plus two
     // free levels in Traps & Doors so they can replace old traps with
     // better ones.
@@ -1054,7 +1072,7 @@ static void _give_starting_food()
     else
     {
         item.base_type = OBJ_FOOD;
-        if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
+        if (player_genus(GENPC_ORCISH) || you.species == SP_KOBOLD
             || you.species == SP_OGRE || you.species == SP_TROLL
             || you.species == SP_FELID)
         {
@@ -1126,7 +1144,7 @@ static void _racialise_starting_equipment()
                     set_equip_race(you.inv[i], ISFLAG_ELVEN);
                 else if (you.species == SP_DEEP_DWARF)
                     set_equip_race(you.inv[i], ISFLAG_DWARVEN);
-                else if (you.species == SP_HILL_ORC)
+                else if (player_genus(GENPC_ORCISH))
                     set_equip_race(you.inv[i], ISFLAG_ORCISH);
             }
         }

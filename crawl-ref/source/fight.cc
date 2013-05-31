@@ -323,7 +323,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     if (res > 0)
     {
-        if (mons && res >= 3)
+        if ((mons && res >= 3) || res > 3)
             resistible = 0;
         else
         {

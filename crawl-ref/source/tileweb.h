@@ -49,6 +49,8 @@ struct player_info
 
     int hp, hp_max, real_hp_max;
     int mp, mp_max;
+    int contam;
+    int heat;
 
     int armour_class;
     int evasion;

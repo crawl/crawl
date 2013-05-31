@@ -22,4 +22,8 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
   -- do nothing
 end
 
+function callback.monster_doors_stepped(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
 }}

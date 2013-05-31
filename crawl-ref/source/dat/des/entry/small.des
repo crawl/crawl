@@ -16,7 +16,7 @@ COLOUR: - = darkgrey
 COLOUR: t = lightgreen
 FTILE:  `1t = floor_grass
 FTILE:  ' = floor_dirt
-FTILE:  -{V[ = floor_vault
+FTILE:  -{V = floor_vault
 TILE:   c = wall_stone_brick
 MONS: bush
 SUBST: `'-: .
@@ -28,7 +28,7 @@ MAP
 ..1``t``'``t``1..
 ..1`````'`````1..
 ..ccmccc+cccmcc..
-..c[--c---c---c..
+..c---c---c---c..
 ..c{--+---+---m..
 ..ccccccc-c---m..
 ..c-----c-c---c..
@@ -45,7 +45,7 @@ TAGS:   entry no_monster_gen
 ORIENT: float
 MAP
 xxxxxxxxxx
-xx({[xxxxx
+xx.{.xxxxx
 xxx...xxxx
 x>xx...xxx
 xw.x...xxx
@@ -66,20 +66,19 @@ ENDMAP
 NAME:    evilmike_entry_come_back
 WEIGHT:  2
 TAGS:    entry
-SHUFFLE: {[<
 ORIENT:  float
 NSUBST:  % = 1:1 / 1:0 / 1:> / *=%...
 MONS:    gnoll / ogre / giant frog / centaur
 MAP
 xxxxxxxxxx
-x[......{x
+x.......{x
 x.xxxxxx.x
 x.x%%%%x.x
 ..x%%%%x.x
 ..m%%%%x.x
 ..m%%%%x.x
 ..mmmxxx.x
-........(x
+.........x
  .....xxxx
 ENDMAP
 
@@ -3096,7 +3095,7 @@ ORIENT: float
 TAGS:   entry no_monster_gen
 MAP
 xxxxxxxxxx
-xG..{<..Gx
+xG..{...Gx
 xl......lx
 xl......lx
 xl......lx
@@ -3129,7 +3128,7 @@ W.clllll..lllllc.W
 W.clllll..lllllc.W
 W.c............c.W
 W.cvvvvv++vvvvvc.W
-WGc.....{<.....cGW
+WGc.....{......cGW
 W.cccccccccccccc.W
 W..G..........G..W
 WWWWWWWWWWWWWWWWWW
@@ -3160,16 +3159,14 @@ ENDMAP
 NAME:   lightli_entry_boilingwater
 ORIENT: float
 TAGS:   entry no_monster_gen
-SUBST:  ( = (<
-SUBST:  [ = [<
 MAP
   @@@@@@
 WWWllllWWW
 WGWWllWWGW
 WWGWWWWGWW
 lWWb++bWWl
-llWm{(mWll
-llWm[<mWll
+llWm..mWll
+llWm{.mWll
 lWWbmmbWWl
 WWGWWWWGWW
 WGWWllWWGW
