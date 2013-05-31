@@ -646,23 +646,32 @@ string manual_skill_names(bool short_text)
 
 static const pop_entry pop_beasts[] =
 { // Box of Beasts
-  {  1,  3,  100, DOWN, MONS_BUTTERFLY },
+  {  1,  3,  10,  DOWN, MONS_BUTTERFLY },
   {  1,  5,  100, DOWN, MONS_RAT   },
   {  1,  5,  100, DOWN, MONS_BAT   },
-  {  2,  5,  100, PEAK, MONS_JACKAL },
-  {  2,  5,  100, PEAK, MONS_ADDER },
-  {  2,  6,  100, PEAK, MONS_HOUND },
-  {  3,  8,  100, PEAK, MONS_WATER_MOCCASIN },
-  {  5, 10,  100, PEAK, MONS_ICE_BEAST },
-  {  5, 12,  100, PEAK, MONS_WAR_DOG },
-  {  8, 15,  100, PEAK, MONS_CROCODILE },
-  {  9, 17,  100, PEAK, MONS_MANTICORE },
-  { 10, 18,  100, PEAK, MONS_HELL_HOUND },
-  { 13, 23,  100, PEAK, MONS_YAK },
-  { 15, 25,  100, PEAK, MONS_HYDRA },
-  { 18, 27,  100, UP,   MONS_ANACONDA },
+  {  2,  8,  100, PEAK, MONS_JACKAL },
+  {  2, 10,  100, PEAK, MONS_ADDER },
+  {  4, 13,  100, PEAK, MONS_HOUND },
+  {  4, 13,  100, PEAK, MONS_RAVEN },
+  {  5, 15,  100, PEAK, MONS_WATER_MOCCASIN },
+  {  5, 15,  100, PEAK, MONS_SKY_BEAST },
+  {  8, 18,  100, PEAK, MONS_WAR_DOG },
+  {  8, 18,  100, PEAK, MONS_CROCODILE },
+  {  8, 18,  100, PEAK, MONS_HOG },
+  { 10, 20,  100, PEAK, MONS_ICE_BEAST },
+  { 10, 20,  100, PEAK, MONS_HELL_HOUND },
+  { 10, 20,  100, PEAK, MONS_YAK },
+  { 12, 22,  100, PEAK, MONS_MANTICORE },
+  { 12, 22,  100, PEAK, MONS_ALLIGATOR },
+  { 15, 25,   75, PEAK, MONS_HOLY_SWINE },
+  { 15, 25,   75, PEAK, MONS_HELL_HOG },
+  { 18, 27,   50, PEAK, MONS_CATOBLEPAS },
+  { 18, 27,  100, PEAK, MONS_DEATH_YAK },
+  { 18, 27,  100, PEAK, MONS_ANACONDA },
   { 22, 27,   50, UP,   MONS_HELL_BEAST },
-  { 22, 27,   50, UP,   MONS_SPHINX },
+  { 22, 27,   50, UP,   MONS_PEARL_DRAGON },
+  { 24, 27,   25, UP,   MONS_HELLEPHANT },
+  { 24, 27,   25, UP,   MONS_APIS },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -675,11 +684,20 @@ static bool _box_of_beasts_veto_mon(monster_type mon)
 
 static bool _box_of_beasts(item_def &box)
 {
-    bool success = false;
-
     mpr("You open the lid...");
 
-    if (box.plus)
+    if (!box.plus)
+    {
+        mpr("...but the box appears empty, and falls apart.");
+        ASSERT(in_inventory(box));
+        dec_inv_item_quantity(box.link, 1);
+        return false;
+    }
+
+    bool success = false;
+    int num = random_choose_weighted(50,1,10,2,2,3);
+
+    for (int n=0; n<num; n++)
     {
         // Invoke mon-pick with our custom list
         monster_type mon = pick_monster_from(pop_beasts,
@@ -694,24 +712,18 @@ static bool _box_of_beasts(item_def &box)
                                         MHITYOU)))
         {
             success = true;
-
-            mpr("...and something leaps out!");
-            xom_is_stimulated(10);
-            // Decrease charges
-            box.plus--;
         }
-        else
-        {
-            // Failed to create monster for some reason
-            mpr("...but nothing happens.");
-        }
+    }
+    if (success)
+    {
+        mpr("...and something leaps out!");
+        xom_is_stimulated(10);
+        // Decrease charges
+        box.plus--;
     }
     else
-    {
-        mpr("...but the box appears empty, and falls apart.");
-        ASSERT(in_inventory(box));
-        dec_inv_item_quantity(box.link, 1);
-    }
+        // Failed to create monster for some reason
+        mpr("...but nothing happens.");
 
     return success;
 }
