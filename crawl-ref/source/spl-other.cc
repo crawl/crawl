@@ -525,17 +525,3 @@ spret_type cast_darkness(int pow, bool fail)
 
     return SPRET_SUCCESS;
 }
-
-spell_type blast_spell_type()
-{
-    return random_choose_weighted(
-        10, SPELL_MAGIC_DART,
-        10, SPELL_THROW_FLAME,
-        10, SPELL_THROW_FROST,
-        10, SPELL_SHOCK,
-        10, SPELL_STING,
-        10, SPELL_FORCE_LANCE,
-        10, SPELL_SANDBLAST,
-         2, SPELL_ISKENDERUNS_MYSTIC_BLAST,
-         0);
-}

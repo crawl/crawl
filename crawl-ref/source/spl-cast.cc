@@ -1363,9 +1363,6 @@ static spret_type _do_cast(spell_type spell, int powc,
                            god_type god, int potion,
                            bool check_range, bool fail)
 {
-    if (spell == SPELL_BLAST)
-        spell = blast_spell_type();
-
     // First handle the zaps.
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
@@ -1427,6 +1424,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);
+
+    case SPELL_BLAST:
+        return cast_random_blast(powc, beam, fail);
 
     // LOS spells
 

@@ -21,6 +21,4 @@ spret_type cast_condensation_shield(int pow, bool fail);
 spret_type cast_stoneskin(int pow, bool fail = false);
 spret_type cast_darkness(int pow, bool fail);
 
-spell_type blast_spell_type();
-
 #endif
