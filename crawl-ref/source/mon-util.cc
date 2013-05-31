@@ -3511,9 +3511,7 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
     }
 
     if (_mons_class_habitat(mc) == HT_FOREST)
-    {
         return (!feat_is_solid(grid) || feat_is_tree(grid));
-    }
 
     return !feat_is_solid(grid);
 }
