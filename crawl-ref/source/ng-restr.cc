@@ -642,8 +642,12 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
         // Maces and hand axes usually share the same restrictions.
     case WPN_MACE:
-        if (ng.species == SP_TROLL || ng.species == SP_OGRE)
+        if (ng.species == SP_TROLL
+            || ng.species == SP_OGRE
+            || ng.species == SP_DJINNI)
+        {
             return CC_UNRESTRICTED;
+        }
         if (ng.species == SP_VAMPIRE)
             return CC_RESTRICTED;
         // else fall-through
@@ -687,6 +691,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MUMMY:
         case SP_OCTOPODE:
         case SP_BASE_DRACONIAN:
+        case SP_DJINNI:
             return CC_UNRESTRICTED;
 
         case SP_SPRIGGAN:
@@ -723,6 +728,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_VAMPIRE:
         case SP_OCTOPODE:
         case SP_BASE_DRACONIAN:
+        case SP_DJINNI:
             return CC_UNRESTRICTED;
 
         default:
@@ -769,6 +775,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_OCTOPODE:
         case SP_SLUDGE_ELF:
         case SP_BASE_DRACONIAN:
+        case SP_DJINNI:
             return CC_UNRESTRICTED;
 
         default:
@@ -806,6 +813,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_HILL_ORC:
         case SP_LAVA_ORC:
         case SP_SLUDGE_ELF:
+        case SP_DJINNI:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
@@ -846,6 +854,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         switch (ng.species)
         {
         case SP_DEEP_DWARF:
+        case SP_DJINNI:
             return CC_RESTRICTED;
         case SP_SPRIGGAN:
         case SP_FELID:
@@ -858,6 +867,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         switch (ng.species)
         {
         case SP_DEEP_DWARF:
+        case SP_DJINNI:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
