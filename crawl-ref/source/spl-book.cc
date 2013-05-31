@@ -613,7 +613,8 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     if (you.species == SP_DJINNI
         && (spell == SPELL_ICE_FORM
          || spell == SPELL_OZOCUBUS_ARMOUR
-         || spell == SPELL_DEATHS_DOOR))
+         || spell == SPELL_DEATHS_DOOR
+         || spell == SPELL_SPIRIT_SHIELD))
     {
         rc = true, undead = false;
     }
