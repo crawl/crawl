@@ -23,6 +23,10 @@ Demonspawn
 Demonspawn are half human, half demon. They acquire strong demonic mutations as
 they grow.
 %%%%
+Djinni
+
+The Djinn are spirits of fire, for whom magic is the very essence of life.
+%%%%
 Draconian
 
 Draconians are versatile hybrids. They mature when reaching level 7 and develop
@@ -37,6 +41,10 @@ Ghoul
 
 An undead, damned to rot eternally. They are always looking for rotten food to
 eat, hacking away with their claws.
+%%%%
+Gargoyle
+
+Made of living stone, Gargoyles have a preternatural affinity for the earth.
 %%%%
 Halfling
 
@@ -65,6 +73,10 @@ Kobold
 
 Small, mischievous and a little fragile, but multi-talented. They can and will
 eat any meat.
+%%%%
+Lava Orc
+
+These masters of earth and fire magic come from deep below the Dungeon. Their abilities change with their temperature.
 %%%%
 Merfolk
 

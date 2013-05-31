@@ -45,6 +45,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
@@ -64,6 +65,7 @@ static bool _valid_mon_spells[NUM_SPELLS];
 
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
+static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
 
@@ -1133,6 +1135,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_INJURY_BOND:
     case SPELL_CALL_LOST_SOUL:
     case SPELL_BLINK_ALLIES_ENCIRCLE:
+    case SPELL_MASS_CONFUSION:
+    case SPELL_ENGLACIATION:
         return true;
     default:
         if (check_validity)
@@ -2361,6 +2365,27 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!_should_recall(mons))
                 return false;
         }
+        // Try to mass confuse; if we can't, pretend nothing happened.
+        else if (spell_cast == SPELL_MASS_CONFUSION)
+        {
+            if (_mons_mass_confuse(mons, false) < 0)
+                return false;
+        }
+        // Check if our enemy can be slowed for Metabolic Englaciation.
+        else if (spell_cast == SPELL_ENGLACIATION)
+        {
+            if (!foe
+                || !mons->see_cell_no_trans(mons->target)
+                || foe->res_cold() > 0
+                || (foe->is_monster()
+                    && (mons_is_firewood(foe->as_monster())
+                        || foe->as_monster()->has_ench(ENCH_SLOW)))
+                || (!foe->is_monster()
+                    && you.duration[DUR_SLOW] > 0))
+            {
+                return false;
+            }
+        }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
@@ -2960,6 +2985,62 @@ static int _mons_cause_fear(monster* mons, bool actual)
     return retval;
 }
 
+static int _mons_mass_confuse(monster* mons, bool actual)
+{
+    int retval = -1;
+
+    const int pow = min(mons->hit_dice * 12, 200);
+
+    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    {
+        if (ai->is_player())
+        {
+            if (mons->pacified() || mons->friendly())
+                continue;
+
+            retval = 0;
+
+            if (you.check_res_magic(pow) > 0)
+            {
+                if (actual)
+                    canned_msg(MSG_YOU_RESIST);
+                continue;
+            }
+        }
+        else
+        {
+            monster* m = ai->as_monster();
+
+            if (m == mons)
+                continue;
+
+            if (mons_immune_magic(m)
+                || mons_is_firewood(m)
+                || mons_atts_aligned(m->attitude, mons->attitude))
+            {
+                continue;
+            }
+
+            retval = 0;
+
+            int res_margin = m->check_res_magic(pow);
+            if (res_margin > 0)
+            {
+                if (actual)
+                    simple_monster_message(m, mons_resist_string(m, res_margin));
+                continue;
+            }
+        }
+        if (actual)
+        {
+            retval = 1;
+            ai->confuse(mons, pow);
+        }
+    }
+
+    return retval;
+}
+
 static coord_def _mons_fragment_target(monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
@@ -3010,9 +3091,7 @@ static void _blink_allies_encircle(const monster* mon)
     for (monster_iterator mi(mon); mi; ++mi)
     {
         if (_valid_encircle_ally(mon, *mi, foepos))
-        {
             allies.push_back(*mi);
-        }
     }
     random_shuffle(allies.begin(), allies.end());
 
@@ -4286,6 +4365,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
         _blink_allies_encircle(mons);
+        return;
+
+    case SPELL_MASS_CONFUSION:
+        _mons_mass_confuse(mons);
+        return;
+
+    case SPELL_ENGLACIATION:
+        if (you.can_see(mons))
+            simple_monster_message(mons, " radiates an aura of cold.");
+        else if (mons->see_cell_no_trans(you.pos()))
+            mpr("A wave of cold passes over you.");
+        apply_area_visible(englaciate, min(12 * mons->hit_dice, 200), mons);
         return;
     }
 

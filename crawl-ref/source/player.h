@@ -110,6 +110,7 @@ public:
   durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
+  int gargoyle_damage_reduction;
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
@@ -121,6 +122,8 @@ public:
   bool dead; // ... but pending revival
   int lives;
   int deaths;
+  float temperature; // For lava orcs.
+  float temperature_last;
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
@@ -340,6 +343,7 @@ public:
   bool redraw_title;
   bool redraw_hit_points;
   bool redraw_magic_points;
+  bool redraw_temperature;
   FixedVector<bool, NUM_STATS> redraw_stats;
   bool redraw_experience;
   bool redraw_armour_class;
@@ -569,7 +573,7 @@ public:
     bool can_safely_mutate() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
-    bool mutate(const string &reason);
+    bool malmutate(const string &reason);
     bool polymorph(int pow);
     void backlight();
     void banish(actor *agent, const string &who = "");
@@ -588,7 +592,7 @@ public:
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int amount, bool allow_hint = true, bool quiet = false);
     void paralyse(actor *, int str, string source = "");
-    void petrify(actor *);
+    void petrify(actor *, bool force = false);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
@@ -619,6 +623,7 @@ public:
     bool is_cloud_immune(cloud_type) const;
     int res_acid(bool calc_unid = true) const;
     int res_fire() const;
+    int res_holy_fire() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
@@ -655,10 +660,11 @@ public:
     bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
-    int liquefying_radius2 () const;
-    int umbra_radius2 () const;
-    int suppression_radius2 () const;
-    int soul_aura_radius2 () const;
+    int liquefying_radius2() const;
+    int umbra_radius2() const;
+    int suppression_radius2() const;
+    int soul_aura_radius2() const;
+    int heat_radius2() const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
@@ -849,6 +855,7 @@ int player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
+bool player_likes_lava(bool permanently = false);
 
 int player_mutation_level(mutation_type mut, bool temp = true);
 
@@ -931,6 +938,7 @@ bool enough_zp(int minimum, bool suppress_msg);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
 void dec_mp(int mp_loss);
+void drain_mp(int mp_loss);
 
 void inc_mp(int mp_gain);
 void inc_hp(int hp_gain);
@@ -978,6 +986,7 @@ void dec_haste_player(int delay);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player();
+bool is_hovering();
 
 void dec_disease_player(int delay);
 

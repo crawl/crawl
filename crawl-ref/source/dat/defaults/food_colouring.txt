@@ -5,6 +5,9 @@
 
 inv := menu_colour
 
+# Djinn can eat, but most foodstuff is useless.
+inv += $inedible:.*useless_item.*carrion.*
+
 inv += $forbidden:.*forbidden.*
 
 inv += $preferred:.*preferred.*

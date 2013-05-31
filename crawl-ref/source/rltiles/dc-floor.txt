@@ -172,6 +172,13 @@ pebble_brown8
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_WHITE
 %resetcol
 
+# Additional variants for D cave layouts
+%lum 28 -7
+%lum 29 -7
+%lum 30 -7
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_DARKBROWN
+%resetcol
+
 mesh0 FLOOR_HALL
 mesh1
 mesh2

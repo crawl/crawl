@@ -815,7 +815,8 @@ static const char* dur_names[] =
     "flayed",
     "retching",
     "weak",
-    "dimension anchor"
+    "dimension anchor",
+    "antimagic",
 };
 
 void wizard_edit_durations(void)

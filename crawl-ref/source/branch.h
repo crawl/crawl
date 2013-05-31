@@ -52,7 +52,7 @@ const Branch& your_branch();
 
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
-bool is_random_lair_subbranch(branch_type branch);
+bool is_random_subbranch(branch_type branch);
 bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
 level_id current_level_parent();
@@ -63,4 +63,6 @@ int current_level_ambient_noise();
 
 branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
+
+branch_type parent_branch(branch_type branch);
 #endif

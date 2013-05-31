@@ -30,6 +30,8 @@ static duration_def duration_data[] =
 {
     { DUR_AGILITY, false,
       0, "", "agile", "You are agile." },
+    { DUR_ANTIMAGIC, true,
+      RED, "-Mag", "antimagic", "You have trouble accessing your magic." },
     { DUR_BARGAIN, true,
       BLUE, "Brgn", "charismatic", "You get a bargain in shops." },
     { DUR_BERSERK, true,
@@ -504,6 +506,16 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_HOVER:
+        if (is_hovering())
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "Hover";
+            inf->short_text   = "hovering above liquid";
+            inf->long_text    = "You are exerting yourself to hover high above the liquid.";
+        }
+        break;
+
     case STATUS_STR_ZERO:
         _describe_stat_zero(inf, STAT_STR);
         break;
@@ -653,7 +665,8 @@ static void _describe_glow(status_info* inf)
         inf->light_colour = DARKGREY;
         if (cont > 1)
             inf->light_colour = _bad_ench_colour(cont, 2, 3);
-        inf->light_text = "Contam";
+        if (cont > 1 || you.species != SP_DJINNI)
+            inf->light_text = "Contam";
     }
 
     if (cont > 0)

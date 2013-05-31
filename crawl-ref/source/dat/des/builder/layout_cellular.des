@@ -354,7 +354,6 @@ TAGS: layout_type_rooms
     corners = crawl.coinflip()
     random_rooms = crawl.coinflip()
     maxcorridor = crawl.random_range(1,4)
-    fills = true
     mid_doors = crawl.coinflip()
   end
 

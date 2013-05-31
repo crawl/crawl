@@ -41,7 +41,7 @@ static NORETURN void yyerror(const char *e)
 /* Two harmless shift/reduce conflicts */
 %expect 2
 
-%token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK KPROP
+%token <i>      DEFAULT_DEPTH SHUFFLE CLEAR SUBST TAGS KFEAT KITEM KMONS KMASK KPROP
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO EPILOGUE NSUBST WELCOME LFLAGS BFLAGS
 %token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE
@@ -162,6 +162,7 @@ metaline        : place
                 | rtile
                 | tile
                 | shuffle
+                | clear
                 | tags
                 | lflags
                 | bflags
@@ -305,6 +306,15 @@ shuffle_spec    : ITEM_INFO
                         make_stringf("shuffle(\"%s\")",
                             quote_lua_string($1).c_str()));
                 }
+
+clear           : CLEAR STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("clear(\"%s\")",
+                            quote_lua_string($2).c_str()));
+                }
+                ;
 
 tags            : TAGS tagstrings {}
                 ;

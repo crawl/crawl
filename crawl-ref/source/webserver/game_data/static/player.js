@@ -17,19 +17,21 @@ function ($, comm, enums, map_knowledge, messages) {
         "sh": "shielded",
     }
 
-    function update_bar(name)
+    function update_bar(name, propname)
     {
-        var value = player[name], max = player[name + "_max"];
+        if (!propname) propname = name;
+
+        var value = player[propname], max = player[propname + "_max"];
         var old_value;
-        if ("old_" + name in player)
-            old_value = player["old_" + name];
+        if ("old_" + propname in player)
+            old_value = player["old_" + propname];
         else
             old_value = value;
         if (value < 0)
             value = 0;
         if (old_value > max)
             old_value = max;
-        player["old_" + name] = value;
+        player["old_" + propname] = value;
         var increase = old_value < value;
         var full_bar = Math.round(10000 * (increase ? old_value : value) / max);
         var change_bar = Math.round(10000 * Math.abs(old_value - value) / max);
@@ -40,6 +42,32 @@ function ($, comm, enums, map_knowledge, messages) {
             .css("width", (change_bar / 100) + "%");
         $("#stats_" + name + "_bar_" + (increase ? "decrease" : "increase"))
             .css("width", 0);
+    }
+
+    function update_bar_contam()
+    {
+        player.contam_max = 16;
+        update_bar("contam");
+
+        // Calculate level for the colour
+        var contam_level = 0;
+
+        if (player.contam > 25)
+            contam_level = 4;
+        else if (player.contam > 15)
+            contam_level = 3;
+        else if (player.contam > 5)
+            contam_level = 2;
+        else if (player.contam > 0)
+            contam_level = 1;
+
+        $("#stats_contamline").attr("data-contam", contam_level);
+    }
+
+    function update_bar_heat()
+    {
+        player.heat_max = 15; // Value of TEMP_MAX
+        update_bar("heat");
     }
 
     function repeat_string(s, n)
@@ -166,6 +194,39 @@ function ($, comm, enums, map_knowledge, messages) {
         $("#stats_titleline").text(player.name + " the " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
 
+        var do_temperature = false;
+        var do_contam = false;
+
+        // Setup species
+        // TODO: Move to a proper initialisation task
+        if ($("#stats").attr("data-species") != player.species)
+        {
+            $("#stats").attr("data-species", player.species);
+            var hp_cap;
+            if (player.real_hp_max != player.hp_max)
+            {
+                hp_cap = "HP";
+                if (player.species == "Djinni")
+                    hp_cap = "EP";
+            }
+            else
+            {
+                hp_cap = "Health";
+                if (player.species == "Djinni")
+                    hp_cap = "Essence";
+            }
+            $("#stats_hpline > .stats_caption").text(hp_cap+":");
+        }
+        switch (player.species)
+        {
+            case "Djinni":
+                do_contam = true;
+                break;
+            case "Lava Orc":
+                do_temperature = true;
+                break;
+        }
+
         var species_god = player.species;
         if (player.god != "")
             species_god += " of " + player.god;
@@ -206,8 +267,15 @@ function ($, comm, enums, map_knowledge, messages) {
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
             $("#stats_real_hp_max").text("");
+
         update_bar("hp");
-        update_bar("mp");
+        if (do_contam)
+            update_bar_contam();
+        else
+            update_bar("mp");
+        if (do_temperature)
+            update_bar_heat();
+
         $("#stats_hp").toggleClass("boosted_hp", !!player.has_status(hp_boosters));
         $("#stats_mp").toggleClass("boosted_mp", !!player.has_status(mp_boosters));
 
@@ -297,7 +365,9 @@ function ($, comm, enums, map_knowledge, messages) {
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},
                 wizard: 0,
-                depth: 0, place: ""
+                depth: 0, place: "",
+                contam: 0,
+                heat: 0
             });
             delete player["old_hp"];
             delete player["old_mp"];

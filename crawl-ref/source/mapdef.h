@@ -341,6 +341,7 @@ public:
     string add_nsubst(const string &st);
     string add_subst(const string &st);
     string add_shuffle(const string &s);
+    string add_clear(const string &s);
     string add_colour(const string &col);
     string add_fproperty(const string &sub);
     string add_fheight(const string &arg);
@@ -442,6 +443,7 @@ private:
                           int par = 0);
 
     void resolve_shuffle(const string &shuffle);
+    void clear(const string &clear);
     void subst(string &s, subst_spec &spec);
     void subst(subst_spec &);
     void nsubst(nsubst_spec &);
@@ -462,6 +464,7 @@ private:
     string check_shuffle(string &s);
     string check_block_shuffle(const string &s);
     string clean_shuffle(string s);
+    string check_clear(string &s);
     string parse_nsubst_spec(const string &s, subst_spec &spec);
     int apply_nsubst(vector<coord_def> &pos, int start, int nsub,
                      subst_spec &spec);

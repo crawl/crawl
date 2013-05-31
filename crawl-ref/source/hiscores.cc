@@ -1499,7 +1499,7 @@ void scorefile_entry::init(time_t dt)
         STATUS_HUNGER, STATUS_REGENERATION, STATUS_SICK, STATUS_SPEED,
         DUR_INVIS, DUR_POISONING, STATUS_MISSILES, DUR_SURE_BLADE,
         DUR_TRANSFORMATION, STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
-        DUR_WEAK, DUR_DIMENSION_ANCHOR
+        DUR_WEAK, DUR_DIMENSION_ANCHOR, DUR_ANTIMAGIC,
     };
 
     status_info inf;
@@ -1698,7 +1698,7 @@ void scorefile_entry::fixup_char_name()
     if (race_class_name.empty())
     {
         race_class_name = make_stringf("%s%s",
-                                       is_valid_species(race) ?
+                                       race < NUM_SPECIES ?
                                            get_species_abbrev(race) : "??",
                                        _job_abbrev(job));
     }

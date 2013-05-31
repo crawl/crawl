@@ -46,12 +46,15 @@ setlocal iskeyword+=-
 syn keyword desSubstDec SUBST: contained
 syn keyword desNsubstDec NSUBST: contained
 syn keyword desShuffleDec SHUFFLE: contained
+syn keyword desClearDec CLEAR: contained
 
 syn region desSubst start=/^SUBST:\s*/ end=/$/ contains=desSubstDec,desSubstArg,desSubstSep,@desMapElements keepend
 
 syn region desNsubst start=/^NSUBST:\s*/ end=/$/ contains=desNsubstDec,desSubstArg,desSubstSep,@desMapElements keepend
 
 syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMapFrag keepend
+
+syn region desClear start=/^CLEAR:\s*/ end=/$/ contains=desClearDec,desSubstArg keepend
 
 syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT: ITEM: KFEAT: KMONS: KITEM: COLOUR: KMASK: KPROP: MARKER: LFLAGS: BFLAGS: LROCKCOL: LFLOORCOL: LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT:
 syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float
@@ -109,6 +112,7 @@ hi link desDeclarator Statement
 hi link desSubstDec   Statement
 hi link desNsubstDec  Statement
 hi link desShuffleDec Statement
+hi link desClearDec   Statement
 hi link desMapBookend Statement
 hi link desLuaBlock   Statement
 hi link desOtherLuaBlock Statement

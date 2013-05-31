@@ -26,8 +26,7 @@ bool butchery(int which_corpse = -1, bool bottle_blood = false);
 
 bool eat_food(int slot = -1);
 
-void make_hungry(int hunger_amount, bool suppress_msg,
-                 bool allow_reducing = false);
+void make_hungry(int hunger_amount, bool suppress_msg, bool magic = false);
 
 void lessen_hunger(int statiated_amount, bool suppress_msg);
 
@@ -69,7 +68,7 @@ void finished_eating_message(int food_type);
 
 int you_max_hunger();
 int you_min_hunger();
-bool you_foodless();
+bool you_foodless(bool can_eat = false);
 
 void handle_starvation();
 string hunger_cost_string(const int hunger);

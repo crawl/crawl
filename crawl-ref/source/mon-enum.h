@@ -152,6 +152,7 @@ enum habitat_type
     HT_LAVA,             // Lava critters
     HT_ROCK,             // Rock critters
     HT_INCORPOREAL,      // Incorporeal things
+    HT_FOREST,           // Forest critters
 
     NUM_HABITATS
 };

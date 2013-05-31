@@ -221,6 +221,8 @@ static const ability_def Ability_List[] =
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, 0, ABFLAG_BREATH},
 
+    { ABIL_SELF_PETRIFY, "Self Petrify", 0, 0, 0, 0, 0, ABFLAG_NONE},
+
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
@@ -641,137 +643,75 @@ static int _zp_cost(const ability_def& abil)
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
-    ostringstream ret;
+    string ret;
+    int ep = 0;
     if (abil.mp_cost)
-    {
-        ret << abil.mp_cost;
-        if (abil.flags & ABFLAG_PERMANENT_MP)
-            ret << " Permanent";
-        ret << " MP";
-    }
+        if (you.species == SP_DJINNI)
+        {
+            ep += abil.mp_cost * DJ_MP_RATE;
+            ASSERT(!(abil.flags & ABFLAG_PERMANENT_MP));
+        }
+        else
+        {
+            ret += make_stringf(", %d %sMP", abil.mp_cost,
+                abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
+        }
 
-    if (abil.hp_cost)
+    if (abil.hp_cost || ep)
     {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << abil.hp_cost.cost(you.hp_max);
-        if (abil.flags & ABFLAG_PERMANENT_HP)
-            ret << " Permanent";
-        ret << " HP";
+        ret += make_stringf(", %d %s%s", ep + (int)abil.hp_cost,
+            abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
+            you.species == SP_DJINNI ? "EP" : "HP");
     }
 
     if (abil.zp_cost)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
+        ret += make_stringf(", %d ZP", (int)_zp_cost(abil));
 
-        ret << _zp_cost(abil);
-        ret << " ZP";
-    }
-
-    if (abil.food_cost && !you_foodless()
+    if (abil.food_cost && !you_foodless(true)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Food";   // randomised and exact amount hidden from player
+        if (you.species == SP_DJINNI)
+            ret += ", Glow";
+        else
+            ret += ", Food"; // randomised and exact amount hidden from player
     }
 
-    if (abil.piety_cost)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Piety";  // randomised and exact amount hidden from player
-    }
+    if (abil.piety_cost || abil.flags & ABFLAG_PIETY)
+        ret += ", Piety"; // randomised and exact amount hidden from player
 
     if (abil.flags & ABFLAG_BREATH)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Breath";
-    }
+        ret += ", Breath";
 
     if (abil.flags & ABFLAG_DELAY)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Delay";
-    }
+        ret += ", Delay";
 
     if (abil.flags & ABFLAG_PAIN)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Pain";
-    }
-
-    if (abil.flags & ABFLAG_PIETY)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Piety";
-    }
+        ret += ", Pain";
 
     if (abil.flags & ABFLAG_EXHAUSTION)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Exhaustion";
-    }
+        ret += ", Exhaustion";
 
     if (abil.flags & ABFLAG_INSTANT)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Instant"; // not really a cost, more of a bonus - bwr
-    }
+        ret += ", Instant"; // not really a cost, more of a bonus - bwr
 
     if (abil.flags & ABFLAG_FRUIT)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Fruit";
-    }
+        ret += ", Fruit";
 
     if (abil.flags & ABFLAG_VARIABLE_FRUIT)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Fruit or Piety";
-    }
+        ret += ", Fruit or Piety";
 
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Level drain";
-    }
+        ret += ", Level drain";
 
     if (abil.flags & ABFLAG_STAT_DRAIN)
-    {
-        if (!ret.str().empty())
-            ret << ", ";
-
-        ret << "Stat drain";
-    }
+        ret += ", Stat drain";
 
     // If we haven't output anything so far, then the effect has no cost
-    if (ret.str().empty())
-        ret << "None";
+    if (ret.empty())
+        return "None";
 
-    return ret.str();
+    ret.erase(0, 2);
+    return ret;
 }
 
 static string _get_piety_amount_str(int value)
@@ -817,11 +757,14 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.zp_cost;
     }
 
-    if (abil.food_cost && !you_foodless()
+    if (abil.food_cost && !you_foodless(true)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         have_cost = true;
-        ret << "\nHunger : ";
+        if (you.species == SP_DJINNI)
+            ret << "\nGlow : ";
+        else
+            ret << "\nHunger : ";
         ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
 
@@ -1564,6 +1507,15 @@ static bool _check_ability_possible(const ability_def& abil,
         return (you.can_go_berserk(true, false, true)
                 && (quiet || berserk_check_wielded_weapon()));
 
+    case ABIL_SELF_PETRIFY:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            if (!quiet)
+                mpr("You're too exhausted to transform.");
+            return false;
+        }
+        return true;
+
     case ABIL_EVOKE_FOG:
         if (env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
@@ -2160,6 +2112,11 @@ static bool _do_ability(const ability_def& abil)
         }
         else
             cast_fly(you.experience_level * 4);
+        break;
+
+    // Gargoyle
+    case ABIL_SELF_PETRIFY:
+        you.petrify(&you, true);
         break;
 
     // DEMONIC POWERS:
@@ -2761,7 +2718,6 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
-
     case ABIL_NON_ABILITY:
         mpr("Sorry, you can't do that.");
         break;
@@ -3144,6 +3100,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     {
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
     }
+
+    if (you.species == SP_GARGOYLE && !form_changed_physiology())
+        _add_talent(talents, ABIL_SELF_PETRIFY, check_confused);
 
     if (player_genus(GENPC_DRACONIAN))
     {

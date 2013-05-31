@@ -234,6 +234,7 @@ const int ANTITRAIN_PENALTY = 2;
 #define berserk_div(x) div_rand_round((x) * 2, 3)
 
 #define MAX_MONSTER_HP 10000
+#define DJ_MP_RATE 2
 
 // some shortcuts:
 #define menv   env.mons
