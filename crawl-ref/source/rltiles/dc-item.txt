@@ -1047,7 +1047,7 @@ rod06
 rod07
 rod08
 rod09
-rod09
+rod10
 
 %rim 0
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
