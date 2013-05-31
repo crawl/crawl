@@ -664,7 +664,7 @@ static bool _box_of_beasts(item_def &box)
     bool success = false;
     int num = random_choose_weighted(50,1,7,2,2,3,0);
 
-    for (int n=0; n<num; n++)
+    for (int n = 0; n < num; n++)
     {
         // Invoke mon-pick with our custom list
         monster_type mon = pick_monster_from(pop_beasts,
