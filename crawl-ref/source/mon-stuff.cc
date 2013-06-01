@@ -4221,6 +4221,9 @@ void seen_monster(monster* mons)
     {
         did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
     }
+
+    if (mons_allows_beogh(mons->type))
+        env.level_state |= LSTATE_BEOGH;
 }
 
 //---------------------------------------------------------------

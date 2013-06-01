@@ -428,6 +428,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN},
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh", 0, 0, 0, 0, 0, ABFLAG_NONE},
 };
 
 const ability_def& get_ability_def(ability_type abil)
@@ -1160,6 +1161,7 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_RENOUNCE_RELIGION:
+    case ABIL_CONVERT_TO_BEOGH:
         invoc = true;
         failure = 0;
         break;
@@ -1593,6 +1595,7 @@ bool activate_talent(const talent& tal)
     switch (tal.which)
     {
         case ABIL_RENOUNCE_RELIGION:
+        case ABIL_CONVERT_TO_BEOGH:
         case ABIL_STOP_FLYING:
         case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_END_TRANSFORMATION:
@@ -2715,6 +2718,15 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
+    case ABIL_CONVERT_TO_BEOGH:
+        god_pitch(GOD_BEOGH);
+        if (you.religion == GOD_BEOGH)
+        {
+            spare_beogh_convert();
+            break;
+        }
+        return false;
+
     case ABIL_NON_ABILITY:
         mpr("Sorry, you can't do that.");
         break;
@@ -3174,6 +3186,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && (include_unusable || !silenced(you.pos())))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
+    if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
+        _add_talent(talents, ABIL_CONVERT_TO_BEOGH, check_confused);
+
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
     //     Make better ones come first.
     if ((you.form == TRAN_DRAGON
@@ -3395,6 +3410,9 @@ static int _find_ability_slot(const ability_def &abil)
         first_slot = 7;
     if (abil.flags & ABFLAG_ZOTDEF)
         first_slot = 5 + 26; // capital F, for *some* memory compat.
+
+    if (abil.ability == ABIL_CONVERT_TO_BEOGH)
+        first_slot = 'Y' - 'A' + 26;
 
     for (int slot = first_slot; slot < 52; ++slot)
     {

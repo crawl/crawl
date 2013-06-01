@@ -3093,6 +3093,8 @@ void excommunication(god_type new_god)
             remove_all_companions(GOD_BEOGH);
         }
 
+        env.level_state |= LSTATE_BEOGH;
+
         _set_penance(old_god, 50);
         break;
 
@@ -3471,7 +3473,11 @@ static void _god_welcome_identify_gear()
 
 void god_pitch(god_type which_god)
 {
-    mprf("You %s the altar of %s.",
+    if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
+        mpr("You bow before the missionary of Beogh.");
+    else
+    {
+        mprf("You %s the altar of %s.",
          you.form == TRAN_WISP   ? "swirl around" :
          you.form == TRAN_BAT    ? "perch on" :
          you.flight_mode()       ? "hover solemnly before" :
@@ -3489,6 +3495,7 @@ void god_pitch(god_type which_god)
          you.species == SP_FELID ? "sit before"
                                  : "kneel at",
          god_name(which_god).c_str());
+    }
     more();
 
     // Note: using worship we could make some gods not allow followers to
