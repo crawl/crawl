@@ -1149,7 +1149,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         if (you.species == SP_GARGOYLE && (you.petrified() || you.petrifying()))
         {
             you.gargoyle_damage_reduction =
-                max(you.gargoyle_damage_reduction, dam + 1 / 2);
+                max(you.gargoyle_damage_reduction, (dam + 1) / 2);
             dam /= 2;
         }
         else if (you.petrified())
