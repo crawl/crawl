@@ -96,7 +96,7 @@ start out with the Pain spell.
 Priest
 
 Priests are followers of Zin, spreading the god's word to the Dungeon's
-inhabitants. Hill Orcs instead follow the orc god Beogh.
+inhabitants.
 %%%%
 Skald
 
