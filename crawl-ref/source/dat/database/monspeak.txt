@@ -6941,7 +6941,7 @@ beogh_converted_orc_reaction_speech_follower
 ####
 orc_priest_apostate
 
-The priest shouts, "Unloyal scoundrel, leave my sight!"
+The priest shouts, "Disloyal scoundrel, leave my sight!"
 
 The priest snarls, "I'll spare you only if you run away! Begone!"
 
