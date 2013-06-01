@@ -1022,7 +1022,7 @@ spell_type zap_type_to_spell(zap_type zap)
         return SPELL_HASTE;
     case ZAP_MAGIC_DART:
         return SPELL_MAGIC_DART;
-    case ZAP_HEAL_WOUNDS:
+    case ZAP_MAJOR_HEALING:
         return SPELL_MAJOR_HEALING;
     case ZAP_PARALYSE:
         return SPELL_PARALYSE;
