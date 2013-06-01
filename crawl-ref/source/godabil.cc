@@ -3338,7 +3338,7 @@ bool can_convert_to_beogh()
         const monster *mon = monster_at(*ri);
         if (!mon || !you.can_see(mon))
             continue;
-        if (mons_allows_beogh(mon->type) && !silenced(*ri))
+        if (mons_allows_beogh(mon) && !silenced(*ri))
             return true;
     }
 
@@ -3372,7 +3372,7 @@ void spare_beogh_convert()
 
         // Anyone who has seen the priest perform the ceremony will spare you
         // as well.
-        if (mons_allows_beogh(mon->type))
+        if (mons_allows_beogh(mon))
         {
             for (radius_iterator pi(you.pos(), LOS_RADIUS); pi; ++pi)
             {
