@@ -6943,7 +6943,7 @@ orc_priest_preaching
 
 @The_monster@ shouts, "Join the only true god or die!"
 
-@The_monster@ shouts, "Beogh is our master, accept the truth or die!"
+@The_monster@ shouts, "Beogh is our master! Accept the truth or die!"
 
 @The_monster@ shouts, "Surrender to Beogh and we'll let you live!"
 %%%%
