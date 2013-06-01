@@ -743,13 +743,13 @@ bool mons_is_sensed(monster_type mc)
            || mc == MONS_SENSED_NASTY;
 }
 
-bool mons_allows_beogh(monster_type mc)
+bool mons_allows_beogh(const monster* mon)
 {
     if (you.species != SP_HILL_ORC || you.religion == GOD_BEOGH)
         return false; // no one else gives a damn
-    return mc == MONS_ORC_PRIEST
-        || mc == MONS_ORC_HIGH_PRIEST
-        || mc == MONS_SAINT_ROKA;
+
+    return mons_species(mon->type) == MONS_ORC
+           && mon->is_priest() && mon->god == GOD_BEOGH;
 }
 
 bool mons_behaviour_perceptible(const monster* mon)

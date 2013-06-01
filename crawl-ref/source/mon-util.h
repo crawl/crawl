@@ -377,7 +377,7 @@ bool mons_is_boulder(const monster* mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
-bool mons_allows_beogh(monster_type mc);
+bool mons_allows_beogh(const monster* mon);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
