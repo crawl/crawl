@@ -1312,6 +1312,13 @@ int player_regen()
             rr += 10; // Bonus regeneration for full vampires.
     }
 
+    // Compared to other races, a starting djinni would have regen of 4 (hp)
+    // plus 17 (mp).  So let's compensate them early; they can stand getting
+    // shafted on the total regen rates later on.
+    if (you.species == SP_DJINNI)
+        if (you.hp_max < 100)
+            rr += (100 - you.hp_max) / 6;
+
     // Slow heal mutation.  Each level reduces your natural healing by
     // one third.
     if (player_mutation_level(MUT_SLOW_HEALING) > 0)
