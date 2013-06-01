@@ -4,6 +4,7 @@
 
 #include "areas.h"
 #include "env.h"
+#include "godabil.h"
 #include "libutil.h"
 #include "misc.h"
 #include "mutation.h"
@@ -560,6 +561,14 @@ bool fill_status_info(int status, status_info* inf)
         {
             inf->light_colour = RED;
             inf->light_text = "-cTele";
+        }
+        break;
+
+    case STATUS_BEOGH:
+        if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
+        {
+            inf->light_colour = WHITE;
+            inf->light_text = "Beogh";
         }
         break;
 

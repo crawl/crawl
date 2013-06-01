@@ -1003,6 +1003,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
+        STATUS_BEOGH,
     };
 
     status_info inf;

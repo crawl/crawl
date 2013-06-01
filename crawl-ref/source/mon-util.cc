@@ -743,6 +743,15 @@ bool mons_is_sensed(monster_type mc)
            || mc == MONS_SENSED_NASTY;
 }
 
+bool mons_allows_beogh(monster_type mc)
+{
+    if (you.species != SP_HILL_ORC || you.religion == GOD_BEOGH)
+        return false; // no one else gives a damn
+    return mc == MONS_ORC_PRIEST
+        || mc == MONS_ORC_HIGH_PRIEST
+        || mc == MONS_SAINT_ROKA;
+}
+
 bool mons_behaviour_perceptible(const monster* mon)
 {
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
@@ -2882,7 +2891,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
         behaviour_event(mons, ME_EVAL, &you);
 }
 
-void mons_pacify(monster* mon, mon_attitude_type att)
+void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
 {
     // If the _real_ (non-charmed) attitude is already that or better,
     // don't degrade it.  This can happen, for example, with a high-power
@@ -2895,7 +2904,7 @@ void mons_pacify(monster* mon, mon_attitude_type att)
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
 
-    if (!testbits(mon->flags, MF_GOT_HALF_XP)
+    if (!testbits(mon->flags, MF_GOT_HALF_XP) && !no_xp
         && !mon->is_summoned()
         && !testbits(mon->flags, MF_NO_REWARD))
     {

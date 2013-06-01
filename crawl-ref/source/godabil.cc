@@ -3327,3 +3327,85 @@ bool ashenzari_end_transfer(bool finished, bool force)
     you.transfer_total_skill_points = 0;
     return true;
 }
+
+bool can_convert_to_beogh()
+{
+    if (silenced(you.pos()))
+        return false;
+
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    {
+        const monster *mon = monster_at(*ri);
+        if (!mon || !you.can_see(mon))
+            continue;
+        if (mons_allows_beogh(mon->type) && !silenced(*ri))
+            return true;
+    }
+
+    return false;
+}
+
+void spare_beogh_convert()
+{
+    if (you.one_time_ability_used[GOD_BEOGH])
+    {
+        // You still get to convert, but orcs will remain hostile.
+        mprf(MSGCH_TALK, "The priest shouts: 'You foul flip-flopper, "
+             "I'll spare you only if you run away! Begone!'.");
+        return;
+    }
+
+    set<mid_t> witnesses;
+
+    you.religion = GOD_NO_GOD;
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    {
+        const monster *mon = monster_at(*ri);
+        // An invis player converting is ok, for simplicity.
+        if (!mon || !cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
+            continue;
+        if (mon->wont_attack())
+            continue;
+        if (mons_genus(mon->type) != MONS_ORC)
+            continue;
+        witnesses.insert(mon->mid);
+
+        // Anyone who has seen the priest perform the ceremony will spare you
+        // as well.
+        if (mons_allows_beogh(mon->type))
+        {
+            for (radius_iterator pi(you.pos(), LOS_RADIUS); pi; ++pi)
+            {
+                const monster *orc = monster_at(*pi);
+                if (!orc || !cell_see_cell(*ri, *pi, LOS_DEFAULT))
+                    continue;
+                if (orc->wont_attack())
+                    continue;
+                witnesses.insert(orc->mid);
+            }
+        }
+    }
+
+    int witc = 0;
+    for (set<mid_t>::const_iterator wit = witnesses.begin();
+         wit != witnesses.end(); ++wit)
+    {
+        monster *orc = monster_by_mid(*wit);
+        if (!orc && !orc->alive())
+            continue;
+
+        ++witc;
+        mons_pacify(orc, ATT_GOOD_NEUTRAL, true);
+    }
+
+    you.religion = GOD_BEOGH;
+    you.one_time_ability_used.set(GOD_BEOGH);
+
+    if (witc == 1)
+        mpr("The priest welcomes you and lets you live.");
+    else
+    {
+        mprf("With a roar of approval, the orcs welcome you as one of their own, "
+             "and spare your life.");
+    }
+}

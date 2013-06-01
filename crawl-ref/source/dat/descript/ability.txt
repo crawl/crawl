@@ -561,6 +561,15 @@ Renounce Religion
 Renounce your faith. This will make your character leave your god (and usually
 anger said god).
 %%%%
+Convert to Beogh
+
+Plead your fealty to Beogh, the god of cave orcs. Per their faith's demands,
+all non-believers must die, yet any fresh worshipper must be spared and
+accepted into the fold. Beware, for orcs who haven't seen you convert may
+still be hostile until you've built a reputation on your own!
+
+All other gods hate Beogh, and don't take desertion lightly.
+%%%%
 # Zotdef
 Make dart trap
 

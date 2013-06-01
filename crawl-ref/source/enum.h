@@ -185,6 +185,7 @@ enum ability_type
 
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
+    ABIL_CONVERT_TO_BEOGH,
 
     // Zot Defence abilities
     ABIL_MAKE_FUNGUS = 230,
@@ -1135,6 +1136,7 @@ enum level_state_type
     LSTATE_GLOW_MOLD      = (1 << 1), // Any glowing mold exists.
 
     LSTATE_DELETED        = (1 << 2), // The level won't be saved.
+    LSTATE_BEOGH          = (1 << 3), // Possibly an orcish priest around.
 };
 
 // NOTE: The order of these is very important to their usage!
