@@ -3350,8 +3350,7 @@ void spare_beogh_convert()
     if (you.one_time_ability_used[GOD_BEOGH])
     {
         // You still get to convert, but orcs will remain hostile.
-        mprf(MSGCH_TALK, "The priest shouts: 'You foul flip-flopper, "
-             "I'll spare you only if you run away! Begone!'.");
+        mprf(MSGCH_TALK, "%s", getSpeakString("orc_priest_apostate").c_str());
         return;
     }
 
