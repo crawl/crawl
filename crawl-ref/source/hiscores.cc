@@ -817,6 +817,7 @@ enum old_job_type
     OLD_JOB_REAVER       = -4,
     OLD_JOB_STALKER      = -5,
     OLD_JOB_JESTER       = -6,
+    OLD_JOB_PRIEST       = -7,
     NUM_OLD_JOBS
 };
 
@@ -839,6 +840,8 @@ static const char* _job_name(int job)
         return "Stalker";
     case OLD_JOB_JESTER:
         return "Jester";
+    case OLD_JOB_PRIEST:
+        return "Priest";
     default:
         return "unknown";
     }
@@ -863,6 +866,8 @@ static const char* _job_abbrev(int job)
         return "St";
     case OLD_JOB_JESTER:
         return "Jr";
+    case OLD_JOB_PRIEST:
+        return "Pr";
     default:
         return "??";
     }
