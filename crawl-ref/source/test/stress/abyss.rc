@@ -27,6 +27,8 @@ function ready()
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('confirmations')" .. eol ..
                    "debug.disable('death')" .. eol ..
+                   "debug.disable('hunger')" .. eol ..
+                   "debug.disable('afflictions')" .. eol ..
                    --# don't let them stop us gearing up
                    "debug.disable('mon_act')" .. eol .. esc)
     crawl.sendkeys("&Y" .. esc)
