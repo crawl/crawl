@@ -1491,14 +1491,6 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
         mon->mname = "Enchantress";
         mon->flags |= MF_NAME_ADJECTIVE;
     }
-    // Also for the Serpent of Hell: treat Serpent of Hell as an
-    // adjective to avoid mentions of "the Serpent of Hell the dragon
-    // zombie".
-    else if (mons_species(mc) == MONS_SERPENT_OF_HELL)
-    {
-        mon->mname = "Serpent of Hell";
-        mon->flags |= MF_NAME_ADJECTIVE;
-    }
 
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
