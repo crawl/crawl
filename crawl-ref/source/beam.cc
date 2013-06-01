@@ -2486,7 +2486,10 @@ void bolt::affect_endpoint()
 
     if (!is_explosion && !noise_generated && loudness)
     {
-        noisy(loudness, pos(), beam_source);
+        // Digging can target squares on the map boundary, though it
+        // won't remove them of course.
+        const coord_def noise_position = clamp_in_bounds(pos());
+        noisy(loudness, noise_position, beam_source);
         noise_generated = true;
     }
 
@@ -5419,7 +5422,11 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         loudness = 10 + 5 * r;
 
-        bool heard_expl = noisy(loudness, pos(), beam_source);
+        // Lee's Rapid Deconstruction can target the tiles on the map
+        // boundary.
+        const coord_def noise_position = clamp_in_bounds(pos());
+        bool heard_expl = noisy(loudness, noise_position, beam_source);
+
         heard = heard || heard_expl;
 
         if (heard_expl && !noise_msg.empty() && !you.see_cell(pos()))
