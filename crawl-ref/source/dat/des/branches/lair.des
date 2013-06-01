@@ -1083,7 +1083,7 @@ ORIENT: float
 MONS:   plant / fungus w:3 / bush w:5
 KMONS:  | = oklob plant
 KITEM:  | = |
-SUBST:  X = xx.
+SUBST:  X = x
 SUBST:  % = ....%%%%**
 MAP
 XXXXXXXXX
