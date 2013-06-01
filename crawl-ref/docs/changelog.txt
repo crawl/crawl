@@ -34,6 +34,30 @@ Items
 * Needles of sickness have been removed.
 * Splint mail has been removed; chain mail is now 8 AC to compensate.
 
+Stone Soup 0.12.2 (20130601)
+----------------------------
+* Fixed multiple issues on big-endian systems.
+* Lowered optimization level on OS X, to work around toolchain bugs.
+* If you have two unknown rings, auto-id on just one will work.
+* The Abyss shouldn't spawn lava/deep water under your feet anymore.
+* Allowed wielding vamp weapons while in a non-eating form.
+* Fixed blind monsters being able to use scrolls.
+* Randomly generated items don't spawn under plants.
+* No more unconnected small closets in the Lair.
+* Jellies won't munch on Ziggurat loot.
+* Sage effect ends once it's no longer relevant.
+* Updated default explore stops.
+* Make autoexplore silently ignore sacrificables again.
+* Webtiles speed-ups.
+* Documentation fixes.
+* Misc crash fixes.
+
+Stone Soup 0.12.1 (20130505)
+----------------------------
+* Fix a Dazzling Spray + Battlesphere crash on Windows.
+* Add a missing cloak of the Thief ability tile.
+* Add a mention of cursed blunt butchery in 0.12 to this changelog.
+
 Stone Soup 0.12 (20130501)
 --------------------------
 
@@ -262,6 +286,16 @@ Technical
 ---------
 * Numerous crash fixes.
 * Crashes during level transition no longer result in broken saves.
+
+Stone Soup 0.11.3 (20130505)
+----------------------------
+* Don't show "constrict 1" for nagas who don't have it yet.
+* Properly show racial AC bonuses.
+* Fix all monsters ceasing to act after you were banished.
+* Fix massive piety/hp gains with Jiyva for partial ammo stacks.
+* Don't crash with Xom if a stat is drained to 0.
+* Other minor fixes.
+* Fix build failures with gcc-4.8 and LTO crashes.
 
 Stone Soup 0.11.2 (20130125)
 ----------------------------
