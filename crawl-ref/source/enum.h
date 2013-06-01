@@ -1845,7 +1845,9 @@ enum job_type
 {
     JOB_FIGHTER,
     JOB_WIZARD,
+#if TAG_MAJOR_VERSION == 34
     JOB_PRIEST,
+#endif
     JOB_GLADIATOR,
     JOB_NECROMANCER,
     JOB_ASSASSIN,
