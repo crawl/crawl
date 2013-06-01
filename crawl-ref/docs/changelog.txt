@@ -252,6 +252,16 @@ Technical
 * Numerous crash fixes.
 * Crashes during level transition no longer result in broken saves.
 
+Stone Soup 0.11.3 (20130505)
+----------------------------
+* Don't show "constrict 1" for nagas who don't have it yet.
+* Properly show racial AC bonuses.
+* Fix all monsters ceasing to act after you were banished.
+* Fix massive piety/hp gains with Jiyva for partial ammo stacks.
+* Don't crash with Xom if a stat is drained to 0.
+* Other minor fixes.
+* Fix build failures with gcc-4.8 and LTO crashes.
+
 Stone Soup 0.11.2 (20130125)
 ----------------------------
 * Crash fixes.
