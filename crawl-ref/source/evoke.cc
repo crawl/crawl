@@ -645,8 +645,7 @@ static const pop_entry pop_beasts[] =
 
 static bool _box_of_beasts_veto_mon(monster_type mon)
 {
-    // If you worship a good god, don't summon an unholy beast (in
-    // this case, the hell hound).
+    // Don't summon any beast that would anger your god.
     return player_will_anger_monster(mon);
 }
 
@@ -665,7 +664,7 @@ static bool _box_of_beasts(item_def &box)
     bool success = false;
     int num = random_choose_weighted(50,1,7,2,2,3,0);
 
-    for (int n=0; n<num; n++)
+    for (int n = 0; n < num; n++)
     {
         // Invoke mon-pick with our custom list
         monster_type mon = pick_monster_from(pop_beasts,
