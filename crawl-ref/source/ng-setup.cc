@@ -613,18 +613,10 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_PRIEST:
-        if (you.species == SP_HILL_ORC)
-            you.religion = GOD_BEOGH;
-        else
-            you.religion = GOD_ZIN;
-
+        you.religion = GOD_ZIN;
         you.piety = 45;
 
-        if (you.religion == GOD_BEOGH)
-            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
-        else
-            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
-
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
         you.skills[SK_FIGHTING]    = 2;
