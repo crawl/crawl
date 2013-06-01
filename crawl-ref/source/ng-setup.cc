@@ -968,13 +968,12 @@ static void _give_items_skills(const newgame_def& ng)
         // Equipment. All kinds of gadgets, and armour or robe.
         newgame_make_item(0, EQ_WEAPON, OBJ_RODS, ROD_BLASTING);
 
-        newgame_make_item(1, EQ_NONE, OBJ_MISCELLANY, MISC_DECK_OF_DEFENCE);
-        newgame_make_item(2, EQ_NONE, OBJ_MISCELLANY, MISC_BOX_OF_BEASTS,
+        newgame_make_item(1, EQ_NONE, OBJ_MISCELLANY, MISC_BOX_OF_BEASTS,
                           -1, 1, 6 + random2avg(16,2));
-        newgame_make_item(3, EQ_NONE, OBJ_WANDS, WAND_CONFUSION,
+        newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_CONFUSION,
                           -1, 1, 15, 0);
 
-        newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+        newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                           ARM_LEATHER_ARMOUR, ARM_ROBE);
 
         // Skills
