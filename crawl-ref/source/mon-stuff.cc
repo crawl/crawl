@@ -4295,6 +4295,7 @@ int dismiss_monsters(string pattern)
     // is found in the regex (except for fixed arts and unrand arts).
     const bool keep_item = strip_tag(pattern, "keepitem");
     const bool harmful = pattern == "harmful";
+    const bool mobile  = pattern == "mobile";
 
     // Dismiss by regex.
     text_pattern tpat(pattern);
@@ -4302,7 +4303,8 @@ int dismiss_monsters(string pattern)
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->alive()
-            && (harmful ? !mons_is_firewood(*mi) && !mi->wont_attack()
+            && (mobile ? !mons_class_is_stationary(mi->type) :
+                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack()
                 : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {
             if (!keep_item)
