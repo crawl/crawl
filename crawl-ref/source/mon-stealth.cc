@@ -30,6 +30,9 @@ static int _clamp_stealth(int stealth)
 //
 int monster::stealth() const
 {
+    if (berserk())
+        return -3;
+
     int base_stealth = -(min((int) body_size(), 6) - 3);
 
     int actual_stealth = base_stealth;
