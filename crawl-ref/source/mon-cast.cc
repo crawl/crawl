@@ -1470,7 +1470,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
-        if (foe->is_monster()
+        if (!foe)
+            ret = true;
+        else if (foe->is_monster()
             && foe->as_monster()->has_ench(ENCH_DIMENSION_ANCHOR))
             ret = true;
         else if (foe->is_player() && you.duration[DUR_DIMENSION_ANCHOR])
