@@ -882,13 +882,9 @@ auto_sacrifice = false
        auto-explore.
        When set to "before_explore", if you are standing on items which can be
        sacrificed when you start auto-explore, they will be automatically
-       sacrificied.
-       When set to "prompt", you will have a confirmation prompt before the
-       items are sacrificed.
-       When set to "prompt_ignore", items will not be automatically sacrificed,
-       but you will be reminded and asked whether to ignore them if you attempt
-       to continue exploring without sacrificing.
-
+       sacrificed.
+       It can also be set to "prompt", in which case you will have a
+       confirmation prompt before the items are sacrificed.
        This option has no effect when explore_stop doesn't include
        greedy_sacrificeable.
 
