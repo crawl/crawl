@@ -2285,7 +2285,13 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         do
         {
             _ruin_level(rectangle_iterator(1), MMT_VAULT,
-                        20 - depth, depth / 2 + 5);
+                        20 - depth,
+#if 0
+            // Disabled, until it no longer ruins autoexplore.
+                        depth / 2 + 5);
+#else
+                        0);
+#endif
             _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
             depth -= 3;
         } while (depth > 0);
