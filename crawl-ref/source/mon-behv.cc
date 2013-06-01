@@ -1359,7 +1359,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     if (you.visible_to(mon) && mons_allows_beogh(mon))
     {
-        bool first = !you.attribute[ATTR_SEEN_BEOGH];
+        const bool first = !you.attribute[ATTR_SEEN_BEOGH];
         if (first || one_chance_in(10))
         {
             mons_speaks_msg(mon, getSpeakString("orc_priest_preaching"),
