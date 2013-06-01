@@ -11,6 +11,7 @@ Stone Soup 0.12.2 (20130601)
 * Jellies won't munch on Ziggurat loot.
 * Sage effect ends once it's no longer relevant.
 * Updated default explore stops.
+* Make autoexplore silently ignore sacrificables again.
 * Webtiles speed-ups.
 * Documentation fixes.
 * Misc crash fixes.
