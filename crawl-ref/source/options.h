@@ -11,7 +11,8 @@ enum option_value {
     OPT_NO,
     OPT_YES,
     OPT_PROMPT,
-    OPT_BEFORE_EXPLORE
+    OPT_BEFORE_EXPLORE,
+    OPT_PROMPT_IGNORE
 };
 
 struct message_filter

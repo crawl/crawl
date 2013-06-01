@@ -2993,7 +2993,7 @@ void start_explore(bool grab_items)
             {
                 pray();
             }
-            else if (Options.auto_sacrifice == OPT_NO)
+            else if (Options.auto_sacrifice == OPT_PROMPT_IGNORE)
             {
                 // Make Escape => 'n' and stop run.
                 explicit_keymap map;
