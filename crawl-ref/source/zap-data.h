@@ -106,7 +106,7 @@ struct zap_info
 },
 
 {
-    ZAP_HEAL_WOUNDS,
+    ZAP_MAJOR_HEALING,
     "",
     100,
     new dicedef_calculator<1, 7, 1, 3>,
