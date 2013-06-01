@@ -3379,6 +3379,8 @@ void spare_beogh_convert()
                 const monster *orc = monster_at(*pi);
                 if (!orc || !cell_see_cell(*ri, *pi, LOS_DEFAULT))
                     continue;
+                if (mons_genus(orc->type) != MONS_ORC)
+                    continue;
                 if (orc->wont_attack())
                     continue;
                 witnesses.insert(orc->mid);
