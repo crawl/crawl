@@ -14,7 +14,7 @@ Character
 * Stabbing skill is no more; stabs now depend upon the average of the
   character's stealth and weapon skill.
 * Chaos knights start with a +0 chaos weapon instead of a +2 normal weapon.
-* New tier 2 demonspawn mutation- "magic shield", giving spirit shield
+* New tier 2 demonspawn mutation - "magic shield", giving spirit shield
   at level one, improved magic regeneration at level two, and regenerating
   mana in place of health as a function of current magic level at level
   three.
