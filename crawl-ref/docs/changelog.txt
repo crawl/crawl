@@ -1,3 +1,20 @@
+Stone Soup 0.12.2 (20130601)
+----------------------------
+* Fixed multiple issues on big-endian systems.
+* Lowered optimization level on OS X, to work around toolchain bugs.
+* If you have two unknown rings, auto-id on just one will work.
+* The Abyss shouldn't spawn lava/deep water under your feet anymore.
+* Allowed wielding vamp weapons while in a non-eating form.
+* Fixed blind monsters being able to use scrolls.
+* Randomly generated items don't spawn under plants.
+* No more unconnected small closets in the Lair.
+* Jellies won't munch on Ziggurat loot.
+* Sage effect ends once it's no longer relevant.
+* Updated default explore stops.
+* Webtiles speed-ups.
+* Documentation fixes.
+* Misc crash fixes.
+
 Stone Soup 0.12.1 (20130505)
 ----------------------------
 * Fix a Dazzling Spray + Battlesphere crash on Windows.
