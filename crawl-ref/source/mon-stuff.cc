@@ -5066,7 +5066,7 @@ std::string temperature_text(int temp)
         case TEMP_FIRE:
             return "Fast movement speed; burn attackers";
         case TEMP_MAX:
-            return "Burn surroundings; cannot read books or scrolls";
+            return "Burn surroundings; cannot read scrolls";
         default:
             return "";
     }
