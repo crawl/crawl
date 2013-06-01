@@ -734,7 +734,7 @@ void wizard_dismiss_all_monsters(bool force_all)
     char buf[1024] = "";
     if (!force_all)
     {
-        mpr("What monsters to dismiss (ENTER for all, \"harmful\" or a regex)? ",
+        mpr("What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\" or a regex)? ",
             MSGCH_PROMPT);
         bool validline = !cancelable_get_line_autohist(buf, sizeof buf);
 
