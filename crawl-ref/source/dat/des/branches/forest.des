@@ -5,38 +5,6 @@
 # - branch end vaults
 ##############################################################################
 
-{{
-function kb_forest_vault_setup(e)
-  e.tags(  "no_pool_fixup")
-  e.mons(  "spriggan")
-  e.mons(  "spriggan rider")
-  e.mons(  "spriggan druid")
-  e.mons(  "spriggan berserker")
-  e.mons(  "spriggan air mage")
-  e.mons(  "spriggan defender")
-  e.mons(  "the Enchantress")
-  e.subst( ". = .:300 / 1:2 / 2:1 / 3:1 / 4:1 / 5:1")
-  e.subst( "T = t / t / P / .")
-  e.kmons( "P = plant / plant / bush / nothing")
-  e.kmons( "R = plant")
-  e.kmons( "Q = bush")
-  e.kmons( "e = bat skeleton")
-  e.kmons( "K = giant firefly")
-  e.kitem( "f = dagger / short sword / sabre / flail / whip / blowgun / bow")
-  e.kitem( "g = robe / cloak / cap / buckler / steam dragon armour w:1")
-  e.kmons( "L = spriggan ; robe . dagger")
-  e.kitem( "h = bread ration q:2")
-  e.kmons( "M = yak")
-  e.kmons( "N = spriggan ; robe . quarterstaff")
-  e.kitem( "i = cheese q:3")
-  e.colour('"MN = green')
-  e.colour("C = white")
-  e.kfeat( "C = stone_wall")
-  e.tile(  "C = wall_marble")
-  e.kfeat( "_ = altar_trog")
-end
-}}
-
 ##############################################################################
 # Forest entry vaults
 ##############################################################################
@@ -399,14 +367,16 @@ ENDMAP
 # These vaults are derived from spriggan_forest.
 NAME: kb_forest_berserker_hut_1
 DEPTH: Forest
-: kb_forest_vault_setup(_G)
+MONS:  spriggan berserker
+KMONS: P = plant / plant / bush / nothing
+SUBST: T = t / t / P / .
 MAP
    tttttt
 ttttPP.Tt
 tccccT..@
-tc%4c...T
+tc%1c...T
 tc..+..Tt
-tc.4c...T
+tc.1c...T
 tttT..ttt
  tTPTTt
  tTTttt
@@ -415,22 +385,26 @@ ENDMAP
 
 NAME: kb_forest_berserker_hut_2
 DEPTH: Forest
-: kb_forest_vault_setup(_G)
+MONS:  spriggan berserker
+KMONS: P = plant / plant / bush / nothing
+SUBST: T = t / t / P / .
+KFEAT: _ = altar_trog
 MAP
 tt@t
 t..tttttttt
 t....xxxxxt
-tT...x..4xt
+tT...x..1xt
 tT...+...xt
-ttt.tx..4xt
-  tt.x.4_xt
+ttt.tx..1xt
+  tt.x.1_xt
    ttxxxxxt
     ttttttt
 ENDMAP
 
 NAME: kb_forest_spriggan_hut
 DEPTH: Forest
-: kb_forest_vault_setup(_G)
+MONS:  spriggan
+SUBST: T = t / .
 MAP
 tt@tttt
 t.ttttt
@@ -443,29 +417,33 @@ ENDMAP
 
 NAME:  kb_forest_spriggan_shepherd
 DEPTH: Forest
-: kb_forest_vault_setup(_G)
+SUBST: T = t / t / P / .
+COLOUR: "MN = green
+KMONS: P = plant
+MONS:  yak, spriggan ; robe . quarterstaff
+ITEM:  cheese q:3
 MAP
 ttttttt@t
 txxxtt.tttttttt
-txi+"""""""tt.@
+txd+"""""""tt.@
 txxx""""""""".tt
-ttt""N"""""""TTt
-ttT""MM"MM"TTTtt
-tt""""M""""Tttt
-tt".MM""NTTtt
-tt""M""""Ttt
+ttt""2"""""""TTt
+ttT""11"11"TTTtt
+tt""""1""""Tttt
+tt".11""2TTtt
+tt""1""""Ttt
 ttt""""TTTt
   ttttttttt
 ENDMAP
 
 NAME:  kb_forest_druid_statue
 DEPTH: Forest
-: kb_forest_vault_setup(_G)
+MONS:  spriggan druid
 MAP
 tt@tt
-t.3.t
-t3G3t
-t.3.t
+t.1.t
+t1G1t
+t.1.t
 ttttt
 ENDMAP
 
@@ -474,7 +452,9 @@ ENDMAP
 NAME:   kb_forest_skeletal_bat_cave
 DEPTH:  Forest
 ORIENT: southeast
-: kb_forest_vault_setup(_G)
+# a vanilla spriggan looks iffy here after st_ unnecromancized it... axe?
+MONS:   spriggan
+MONS:   bat skeleton
 MAP
                    tttttt
                 ttttxxxxx
@@ -484,9 +464,9 @@ MAP
         tttt......}xxxxxx
        tt.....xxxxxxxxxxx
 ttt  ttt....xxxxxxxxxxxxx
-@.tttt...xxxxxxxxexxxexxx
-tt.......xxxxx..exxxxeexx
- tttxxxxx......xx.exx..xx
+@.tttt...xxxxxxxx2xxx2xxx
+tt.......xxxxx..2xxxx22xx
+ tttxxxxx......xx.2xx..xx
 txxxxxxxxxx....xxx.1.xxxx
  txxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -559,7 +539,26 @@ ENDMAP
 NAME:   kb_forest_enchantress_palace
 ORIENT: northeast
 PLACE:  Forest:$
-: kb_forest_vault_setup(_G)
+MONS:   spriggan
+MONS:   spriggan rider
+MONS:   spriggan druid
+MONS:   spriggan berserker
+MONS:   spriggan air mage
+MONS:   spriggan defender
+MONS:   the Enchantress
+SUBST:  . = .:100 / 1:2 / 2:1 / 3:1 / 4:1 / 5:1
+SUBST:  T = t / t / P / .
+KMONS:  P = plant / plant / bush / nothing
+KMONS:  R = plant
+KMONS:  Q = bush
+KMONS:  K = giant firefly
+KITEM:  f = dagger / short sword / sabre / flail / whip / blowgun / bow
+KITEM:  g = robe / cloak / cap / buckler / steam dragon armour w:1
+KMONS:  L = spriggan ; robe . dagger
+KITEM:  h = bread ration q:2
+COLOUR: C = white
+KFEAT:  C = stone_wall
+TILE:   C = wall_marble
 MAP
 ttttttttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttttttttt
