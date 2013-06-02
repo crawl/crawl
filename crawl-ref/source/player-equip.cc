@@ -512,7 +512,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             int mp = item.special - you.elapsed_time / POWER_DECAY;
 
             if (mp > 0)
-                you.magic_points += mp;
+                if (you.species == SP_DJINNI)
+                    you.hp += mp;
+                else
+                    you.magic_points += mp;
 
             if (get_real_mp(true) >= 50)
                 mpr("You feel your magic capacity is already quite full.");
@@ -856,8 +859,17 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     else if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
     {
         int mp = you.magic_points;
-        calc_mp();
-        mp -= you.magic_points;
+        if (you.species == SP_DJINNI)
+        {
+            mp = you.hp;
+            calc_hp();
+            mp -= you.hp;
+        }
+        else
+        {
+            calc_mp();
+            mp -= you.magic_points;
+        }
 
         // Store the MP in case you'll re-wield quickly.
         item.special = mp + you.elapsed_time / POWER_DECAY;
