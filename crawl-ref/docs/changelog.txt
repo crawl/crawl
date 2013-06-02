@@ -1,13 +1,34 @@
-Stone Soup 0.13 (up to 0.13-a0-557-gcd82a8c)
---------------------------------------------
+Stone Soup 0.13 (up to 0.13-a0-1380-g03ef21a)
+---------------------------------------------
+
+0.13 highlights
+---------------
+* Three new races: Lava Orcs, Djinni, and Gargoyles.
+* A new branch: the Enchanted Forest.
 
 Branches, environment
 ---------------------
+* A new branch: the Enchanted Forest, alternating with Crypt; five levels
+  long, and contains the entrance to Tomb where it exists.
+* Branches now have exactly one exit stair (except the Dungeon, which can,
+  but is not guaranteed, to have more).
 * Several new layouts.
+* Vaults can now be placed at the centre of some layouts prepared to accept
+  them there.
 * All portal vaults entrances that time out are now announced.
 
 Character
 ---------
+* New races:
+    - Lava Orcs heat up and cool down in response to their surroundings, with
+      their abilities changing as a result;
+    - Djinni draw both health and magic from a shared Essence pool, and have
+      complete immunity to all forms of fire;
+    - Gargoyles are immune to involuntary petrification, but can petrify
+      themselves to significantly reduce damage before becoming completely
+      immobile.
+* Sludge elves are no more.
+* Priests are no more.
 * The nausea status from eating contaminated chunks has been removed;
   contaminated chunks now give less nutrition for characters that can't
   handle them.
@@ -18,21 +39,134 @@ Character
   at level one, improved magic regeneration at level two, and regenerating
   mana in place of health as a function of current magic level at level
   three.
+* Deaths to acid, self-targetting, draining, and sticky flame now credit
+  the appropriate monster/spell.
 
 Monsters
 --------
+* New/reworked Crypt monsters:
+    - Wraiths, shadow wraiths, and eidolons drain speed instead of XP.
+    - Eidolons deal more melee damage and can cast bolt of draining.
+    - Phantasmal warriors can temporarily reduce their target's magic
+      resistance and can blink closer to their foes.
+    - Flayed ghosts gain a smite-targetted flaying attack, dealing
+      temporary damage that scales with XP and goes away when the flayed
+      ghost is killed and/or enough time passes.
+    - Ancient champions, formerly a vault-specific monster, are now
+      full randomly-generated monsters, coming with a band of skeletal
+      warriors 50% of the time.
+    - Vampire mages cast vampiric draining more often, and have slightly
+      higher HD and HP; they also come with a band of vampires.
+    - Rotting hulks are now plague shamblers, capable of inflicting a
+      "retching" status effect that prevents food consumption; they
+      generate a cloud of miasma on death.
+    - Spectral things move at their full base monster speed.
+    - Deep dwarf death knights gain slightly better attack power and
+      starting equipment, and now come with a band of undead.
+    - Flying skulls get a slight HP boost and a larger attack power boost.
+    - Ghouls inflict rot half as often.
+    - New monster: revenants, possessing a ghostly fireball attack and
+      capable of creating clouds of ghostly flame, which do not harm
+      undead and occasionally summon spectral things.
+    - New monster: lost souls, who sacrifice themselves to heal nearby
+      undead creatures or assume the shape of a nearby killed living
+      creature; they can be summoned by deep elf death mages.
+    - Necromancers don't come with necrophages, but do some with simulacra.
+    - New monster: jiangshi, who move in short burts (like sixfirhies) and
+      possess a vampiric melee attack.
+* New Forest monsters:
+    - Dryads, who kite the player with Awaken Forest (but move at delay 12,
+      so are not unreasonably difficult to catch).
+    - Forest drakes, who move through trees and can breathe powerful blasts
+      of wind.
+    - Fauns and satyrs, who hex the player before attacking with longbows.
+    - Tengu conjurers, warriors, and reavers, who use conjurations, powerful
+      weapons, or both respectively against the player.
+    - Spriggan assassins and enchanters, who attempt to disable the player
+      with blowguns and hexes respectively before moving in for the kill.
+* New uniques:
+    - Pan, lord of the satyrs.
+    - Sojobo, king of the tengu.
+* Adjustments to some tier 4 demons:
+    - Orange demons' sting has a 50% chance of inflicting a Weakness status,
+      which reduces the player's attack damage.
+    - Blue devils have a swooping attack, where they can immediately move
+      adjacent to the player and attack from up to four tiles away.
+    - Red devils can now hop backwards from adjacent foes to make use of their
+      now-guaranteed polearms' reaching attacks.
+* Adjustments to the elementals:
+    - Water elementals have an asphyxiation attack which lasts as long as
+      their target is next to them, and have slightly increased AC and HP.
+    - Fire elementals (and fire vortices) deal pure fire damage.
+* Draconian shifters have an updated spell set:
+    - Banishment is dropped.
+    - A new monster spell: Dimension Anchor, which temporarily prevents
+      teleportation, blinking, and Phase Shift.
+    - A new monster spell: Blink Allies Encircling, which blinks nearby
+      allies around the target.
+    - Controlled Blink is replaced with Blink Away as an emergency spell.
+* Shadows can now turn invisible, allowing them to move faster and
+  land a guaranteed stab attack on enemies.
+* The lantern of shadows' rate of shadow spawning scales with evocations,
+  and the resulting shadows now wander instead of following the player.
+* Zombies no longer appear excessively out of depth in the early dungeon.
+* Orb run monster spawns no longer include weak monsters, and now include
+  Orb Guardians.
 * Monster actions are now taken in order of speed, rather than any given
   monster taking all of its actions at once.
 * A large number of vault-specific monsters have been removed.
+* Imps and other weak monsters no longer appear in Pan.
+* Nergalle appears earlier in the dungeon.
+
+Spells
+------
+* Summon Small Mammals now only ever summons one mammal, and is renamed to
+  Summon Small Mammal as a consequence.
+* 100% of teleports on the orb run are delays (up from 50%).
+* Haunt adjustments:
+    - Summons now fixate on their target.
+    - Flayed ghosts are no longer summoned.
+    - Friendlies are no longer targettable.
 
 Items
 -----
+* The elemental evocation items have been reworked:
+    - All no longer depend on elemental magic skill or nearby terrain, can
+      summon multiple elementals, and have an XP-based recharge timer.
+    - The lamp of fire fires up to three trails of flame in a given direction.
+    - The fan of air elementals is now the fan of gales, and blows back
+      nearby enemies.
+    - The stone of earth elementals is now the stone of tremors; when used
+      on a wall, it creates a shockwave along the wall, damaging adjacent
+      walls and creatures (sometimes shafting the latter).
+    - A new elemental evoker item - the phial of floods; it generates a wave
+      of water which temporarily leaves a pool of water behind, and summons
+      water elementals.
 * The dependence of armour penalties on strength has been adjusted; there
   are no longer magic strength numbers for lowest possible penalties.
 * Potions of gain <ability> have been replaced by potions of beneficial
   mutation, which grant the player a single beneficial mutation.
-* Needles of sickness have been removed.
+* Lear's chain mail is now Lear's hauberk - a +27 chain mail that covers
+  all armour slots other than shields and cloaks.
+* The staves of channeling and energy are now one staff - the staff of power,
+  which eliminates spell hunger and channels scaling with your maximum magic
+  power.
 * Splint mail has been removed; chain mail is now 8 AC to compensate.
+* Needles of sickness have been removed.
+
+Gods
+----
+* Yredelemnul no longer gifts rotting hulks / plague shamblers.
+* Hill orcs encountering an orc priest for the first time are offered the
+  chance to convert to Beogh on the spot.
+
+Interface
+---------
+* For online play, explore_delay and travel_delay are instananeous by default.
+
+Technical
+---------
+* A port to OpenSolaris (Dyson/Illumos).
 
 Stone Soup 0.12.2 (20130601)
 ----------------------------
