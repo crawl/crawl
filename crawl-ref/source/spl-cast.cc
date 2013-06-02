@@ -778,7 +778,16 @@ bool cast_a_spell(bool check_range, spell_type spell)
     else
         practise(EX_DID_MISCAST, spell);
 
-    dec_mp(spell_mana(spell));
+    // Nasty special cases.  Mana should be taken first, but that would make
+    // cancelling spells tricky, baring some refactoring.
+    if (you.species == SP_DJINNI && cast_result == SPRET_SUCCESS
+        && (spell == SPELL_BORGNJORS_REVIVIFICATION
+         || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
+    {
+        // These spells have replenished essence to full.
+    }
+    else
+        dec_mp(spell_mana(spell));
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
     {
