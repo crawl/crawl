@@ -1717,7 +1717,7 @@ struct spell_desc
     SPTYP_CHARMS | SPTYP_CONJURATION,
     SPFLAG_BATTLE,
     3,
-    200,
+    100,
     -1, -1,
     0,
     NULL,
