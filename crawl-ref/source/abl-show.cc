@@ -221,7 +221,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, 0, ABFLAG_BREATH},
 
-    { ABIL_SELF_PETRIFY, "Self Petrify", 0, 0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_SELF_PETRIFY, "Self-Petrification", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
