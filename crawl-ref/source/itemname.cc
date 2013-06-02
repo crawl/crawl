@@ -2924,6 +2924,9 @@ bool is_emergency_item(const item_def &item)
         case SCR_FEAR:
         case SCR_FOG:
             return true;
+        case SCR_IMMOLATION:
+            if (you.species == SP_DJINNI)
+                return true;
         default:
             return false;
         }
