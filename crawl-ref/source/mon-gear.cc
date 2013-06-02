@@ -922,17 +922,27 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_BOW;
+        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
+            item.sub_type = WPN_LONGBOW;
+        break;
+
     case MONS_FAUN:
     case MONS_SATYR:
     case MONS_PAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_BOW;
-        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3)
-            || mon->type == MONS_FAUN
-            || mon->type == MONS_SATYR
-            || mon->type == MONS_PAN)
-            item.sub_type = WPN_LONGBOW;
+        if (!melee_only)
+        {
+            item.sub_type  = WPN_LONGBOW;
+            if ((mon->type == MONS_FAUN && !one_chance_in(3))
+                || (mon->type == MONS_SATYR && one_chance_in(3)))
+                item.sub_type = WPN_SLING;
+        }
+        else
+            item.sub_type = coinflip() ? WPN_CLUB : WPN_QUARTERSTAFF;
         if (mon->type == MONS_PAN)
             level = MAKE_GOOD_ITEM;
         break;
@@ -1513,8 +1523,14 @@ static void _give_ammo(monster* mon, int level,
         const object_class_type xitc = OBJ_MISSILES;
         int xitt = fires_ammo_type(*launcher);
 
-        if (xitt == MI_STONE && (one_chance_in(15) || mon->type == MONS_JOSEPH))
-            xitt = MI_SLING_BULLET;
+        if (xitt == MI_STONE
+            && (mon->type == MONS_JOSEPH
+                || mon->type == MONS_SATYR
+                || (mon->type == MONS_FAUN && one_chance_in(3))
+                || one_chance_in(15)))
+        {
+                xitt = MI_SLING_BULLET;
+        }
 
         const int thing_created = items(0, xitc, xitt, true, level, item_race);
 
