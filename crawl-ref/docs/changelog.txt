@@ -5,6 +5,8 @@ Stone Soup 0.13 (up to 0.13-a0-1380-g03ef21a)
 ---------------
 * Three new races: Lava Orcs, Djinni, and Gargoyles.
 * A new branch: the Enchanted Forest.
+* A thorough rework of the monster set in Crypt.
+* Improvements to many evokable items.
 
 Branches, environment
 ---------------------
