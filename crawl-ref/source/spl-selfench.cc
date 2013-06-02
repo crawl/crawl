@@ -330,7 +330,7 @@ spret_type cast_infusion(int pow, bool fail)
         mpr("Your attacks are magically infused for longer.");
     }
     you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
-    you.props["infusion_bonus"] = 2 + pow/25;
+    you.props["infusion_power"] = pow;
 
     return SPRET_SUCCESS;
 }
@@ -358,7 +358,7 @@ spret_type cast_song_of_slaying(int pow, bool fail)
 spret_type cast_spirit_shield(int pow, bool fail)
 {
     fail_check();
-    you.increase_duration(DUR_SPIRIT_SHIELD, 10 + roll_dice(2, pow), 50);
+    you.increase_duration(DUR_SPIRIT_SHIELD, 10 + roll_dice(2, pow), 100);
     mpr("You are being protected by your magic.");
     return SPRET_SUCCESS;
 }

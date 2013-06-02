@@ -551,8 +551,8 @@ bool melee_attack::handle_phase_hit()
     {
         if (you.magic_points>0 || you.species == SP_DJINNI && (you.hp - 1)/DJ_MP_RATE>0)
         {
-            // infusion_bonus is set when the infusion spell is cast
-            damage_done += you.props["infusion_bonus"].get_int();
+            // infusion_power is set when the infusion spell is cast
+            damage_done += 2 + div_rand_round(you.props["infusion_power"].get_int(), 25);
             dec_mp(1);
         }
     }
