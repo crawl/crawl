@@ -2389,7 +2389,8 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
+    if (you.form == TRAN_STATUE
+            || (you.duration[DUR_PETRIFYING] && you.species != SP_GARGOYLE))
     {
         ps *= 15;
         ps /= 10;
