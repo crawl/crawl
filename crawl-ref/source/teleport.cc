@@ -245,13 +245,8 @@ bool random_near_space(const coord_def& origin, coord_def& target,
                                               DNGN_MAX_NONREACH);
     }
 
-    dungeon_feature_type limit;
-    if (!is_feat_dangerous(DNGN_LAVA, true))
-        limit = DNGN_LAVA;
-    else if (!is_feat_dangerous(DNGN_DEEP_WATER, true))
-        limit = DNGN_DEEP_WATER;
-    else
-        limit = DNGN_SHALLOW_WATER;
+    const bool lava_dangerous = is_feat_dangerous(DNGN_LAVA, true);
+    const bool water_dangerous = is_feat_dangerous(DNGN_DEEP_WATER, true);
 
     for (int tries = 0; tries < 150; tries++)
     {
@@ -269,7 +264,10 @@ bool random_near_space(const coord_def& origin, coord_def& target,
 
         if (!in_bounds(target)
             || restrict_los && !you.see_cell(target)
-            || grd(target) < limit
+            || grd(target) < DNGN_MINMOVE   // Target always invalid
+            || (grd(target) < DNGN_MINWALK  // Target maybe invalid
+                && (grd(target) == DNGN_LAVA && lava_dangerous
+                    || grd(target) == DNGN_DEEP_WATER && water_dangerous))
             || actor_at(target)
             || !allow_adjacent && distance2(origin, target) <= 2
             || forbid_sanctuary && is_sanctuary(target))
