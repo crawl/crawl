@@ -821,7 +821,7 @@ bool summon_holy_warrior(int pow, bool punish)
 
 spret_type cast_spectral_weapon(int pow, bool fail)
 {
-    const int dur = min(1 + (random2(pow)/75), 6);
+    const int dur = min(1 + div_rand_round(pow, 33), 4);
     item_def* wpn = you.weapon();
     item_def cp = *wpn;
 
