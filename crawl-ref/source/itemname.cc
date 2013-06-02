@@ -3343,6 +3343,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_res_poison(false, temp, false) > 0
                     && (temp || you.species != SP_VAMPIRE));
 
+        case RING_PROTECTION_FROM_FIRE:
+            return you.species == SP_DJINNI;
+
 #if TAG_MAJOR_VERSION == 34
         case AMU_CONTROLLED_FLIGHT:
             return (player_genus(GENPC_DRACONIAN)
