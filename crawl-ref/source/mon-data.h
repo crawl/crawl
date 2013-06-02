@@ -1353,7 +1353,7 @@ static monsterentry mondata[] = {
     { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     3, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT,
-    I_ANIMAL, HT_FOREST, FL_WINGED, 12, DEFAULT_ENERGY,
+    I_ANIMAL, HT_LAND, FL_WINGED, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
@@ -1456,19 +1456,6 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-// Using 'm' for this is a bit of a stretch; suggestions are welcome.
-{
-    MONS_DRYAD, 'm', BROWN, "dryad",
-    M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS | M_ACTUAL_SPELLS
-        | M_MAINTAIN_RANGE,
-    MR_VUL_FIRE,
-    500, 10, MONS_DRYAD, MONS_DRYAD, MH_NATURAL, -7,
-    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 5, 3, 0 },
-    4, 12, MST_DRYAD, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
-    I_NORMAL, HT_LAND, FL_NONE, 10, MOVE_ENERGY(12),
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
-},
 
 
 // rotting monsters ('n')
@@ -3829,18 +3816,6 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
-{   // dummy for transformed display
-    MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree",
-    M_STATIONARY | M_CANT_SPAWN,
-    MR_RES_POISON | MR_VUL_FIRE,
-    0, 10, MONS_PLANT, MONS_ANIMATED_TREE, MH_PLANT, MAG_IMMUNE,
-    { {AT_HIT, AF_CRUSH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 3, 5, 0 },
-    25, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_HUGE
-},
-
 // rakshasas and efreet ('R')
 {
     MONS_EFREET, 'R', RED, "efreet",
@@ -5468,6 +5443,31 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 
+// trees and related creatures ('7')
+{   // dummy for transformed display
+    MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree",
+    M_STATIONARY | M_CANT_SPAWN,
+    MR_RES_POISON | MR_VUL_FIRE,
+    0, 10, MONS_PLANT, MONS_ANIMATED_TREE, MH_PLANT, MAG_IMMUNE,
+    { {AT_HIT, AF_CRUSH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 20, 3, 5, 0 },
+    25, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_HUGE
+},
+
+{
+    MONS_DRYAD, '7', BROWN, "dryad",
+    M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS | M_ACTUAL_SPELLS
+        | M_MAINTAIN_RANGE,
+    MR_VUL_FIRE,
+    500, 10, MONS_DRYAD, MONS_DRYAD, MH_NATURAL, -7,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 5, 3, 0 },
+    4, 12, MST_DRYAD, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_FOREST, FL_NONE, 10, MOVE_ENERGY(12),
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
 
 // non-living creatures
 // golems ('8')
