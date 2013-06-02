@@ -1312,6 +1312,15 @@ int player_regen()
             rr += 10; // Bonus regeneration for full vampires.
     }
 
+    // Healing boost based on petrification status.
+    if (you.species == SP_GARGOYLE)
+    {
+        if (you.duration[DUR_PETRIFYING])
+            rr += 30;
+        if (you.duration[DUR_PETRIFIED])
+            rr += 60;
+    }
+
     // Compared to other races, a starting djinni would have regen of 4 (hp)
     // plus 17 (mp).  So let's compensate them early; they can stand getting
     // shafted on the total regen rates later on.
@@ -2380,8 +2389,7 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE
-            || (you.duration[DUR_PETRIFYING] && you.species != SP_GARGOYLE))
+    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
         ps /= 10;
