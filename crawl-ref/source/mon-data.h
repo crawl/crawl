@@ -3816,17 +3816,31 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
-// rakshasas and efreet ('R')
+// genies and rakshasas ('R')
 {
     MONS_EFREET, 'R', RED, "efreet",
     M_SPELLCASTER | M_SPEAKS | M_GLOWS_LIGHT,
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
+    // Technically, efreet are a race of djinn, but sharing the genus
+    // would confuse people who don't know the mythology.
     0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     10, 5, MST_EFREET, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LARGE
+},
+
+{
+    MONS_DJINNI, 'R', LIGHTBLUE, "djinni",
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    MR_RES_HELLFIRE | MR_VUL_COLD,
+    0, 10, MONS_DJINNI, MONS_DJINNI, MH_NATURAL /* FIXME */, -3,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 3, 5, 0 },
+    2, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 {
@@ -5719,19 +5733,6 @@ static monsterentry mondata[] = {
     1, 2, MST_GHOST, CE_NOCORPSE, Z_NOZOMBIE, S_DEMON_TAUNT,
     I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
-},
-
-// djinn ('&')
-{
-    MONS_DJINNI, '&', LIGHTBLUE, "djinni",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
-    MR_RES_HELLFIRE | MR_VUL_COLD,
-    0, 10, MONS_DJINNI, MONS_DJINNI, MH_NATURAL /* FIXME */, -3,
-    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
-    2, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
-    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 // explodey things / orb of fire ('*')
