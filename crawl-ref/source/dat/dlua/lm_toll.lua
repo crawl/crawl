@@ -85,7 +85,9 @@ function TollStair:check_veto(marker, pname)
   if gold < needed then
     crawl.mpr("This portal charges " .. needed .. " gold for entry; " ..
               "you have only " .. gold .. " gold.")
-    self:check_shopping_list(marker)
+    if not you.in_branch("Pan") then
+      self:check_shopping_list(marker)
+    end
     return "veto"
   end
 
@@ -93,7 +95,9 @@ function TollStair:check_veto(marker, pname)
     -- Ok, ask if the player wants to spend the $$$.
     if not crawl.yesno("This portal charges " .. needed ..
                        " gold for entry. Pay?", true, "n") then
-      self:check_shopping_list(marker)
+      if not you.in_branch("Pan") then
+        self:check_shopping_list(marker)
+      end
       return "veto"
     end
   elseif pname == "veto_level_change" then
