@@ -401,16 +401,6 @@ caster's vicinity, slowing all those who are not resistant to cold. It bypasses
 magic resistance, although tougher monsters will not be slowed for as long as
 others.
 %%%%
-Ozocubu's Armour spell
-
-This spell envelops the caster's body in a protective layer
-この強度は術者の氷の魔術の技能に依存している。 skill with ice magic. The caster
-and the caster's equipment will not suffer cold from this layer, yet can be
-affected by other sources of cold normally. The spell will not function for
-casters already wearing heavy armour (any body armour with an evasion penalty
-of 2 or more). The effects of this spell are boosted if the caster is in ice
-form.
-%%%%
 Paralyse spell
 
 この呪文は対象を動くことができないようにする。

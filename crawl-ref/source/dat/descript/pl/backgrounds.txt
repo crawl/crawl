@@ -62,11 +62,6 @@ Necromancer
 Nekromanci są czarodziejami specjalizującymi się w czarnej magii. Zaczynają
 znając czar „Ból”.
 %%%%
-Priest
-
-Kapłani Zina głoszą prawa swego boga mieszkańcom świata. Kapłani orków zamiast
-tego wyznają boga swej rasy, Beogha.
-%%%%
 Skald
 
 Skaldowie są wojownikami którzy dodają sobie sił magicznymi przyśpiewkami z

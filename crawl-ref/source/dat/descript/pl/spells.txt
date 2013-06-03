@@ -458,17 +458,6 @@ rzucającego, jednak według pogłosek jest to skutek błędu kopisty, i czarown
 którzy żyli setki lat temu znali pełną wersję. Być może, dzięki nekromancji,
 niektórzy z nich jeszcze nie-żyją do dziś dnia.
 %%%%
-Ozocubu's Armour spell
-
-Ten czar pokrywa ciało rzucającego ochronną warstwą lodu, której moc zależy od
-umiejętności ze szkoły Magii Lodu. Rzucający i jego wyposażenie nie czują zimna
-tej warstwy, jednakże każda dodatkowa utrata ciepła powoduje normalne efekty.
-Ten czar koliduje z noszeniem sztywnej zbroi (czyli takiej dającej co najmniej
--2 do uników).
-
-Efekty tego czaru są silniejsze jeśli rzucający jest zamieniony w lodową
-bestię.
-%%%%
 Ozocubu's Refrigeration spell
 
 Ten czar wysysa ciepło z całej okolicy, zadając obrażenia od zimna wszystkim w

@@ -1425,8 +1425,8 @@ hide, powerful legs, and a memory to die for.
 %%%%
 djinni
 
-A blue-skinned fellow without legs who hovers here, with not the slightest
-hint of having an urge to fulfill your wishes.
+A blue-skinned fellow without legs who hovers here, with not the slightest hint
+of having an urge to fulfill your wishes.
 %%%%
 draconian
 
@@ -1482,8 +1482,8 @@ from its toothy maw.
 %%%%
 dryad
 
-A spirit of nature, bound to the forest in which it resides. It is capable
-of calling upon the trees to defend against incursions.
+A spirit of nature, bound to the forest in which it resides. It is capable of
+calling upon the trees to defend against incursions.
 %%%%
 dwarf
 
@@ -1714,8 +1714,8 @@ proudly before you, despite its lingering fear and unkempt appearance.
 %%%%
 forest drake
 
-A small but powerful dragon, quite comfortable weaving through the trees
-that comprise its home. It can exhale powerful blasts of wind.
+A small but powerful dragon, quite comfortable weaving through the trees that
+comprise its home. It can exhale powerful blasts of wind.
 %%%%
 freezing wraith
 
@@ -2491,8 +2491,8 @@ An elite, ferocious tengu highly skilled with both steel and spells.
 %%%%
 tengu warrior
 
-A particularly bloodthirsty tengu who has opted to hone their skill in
-fighting and weaponry instead of spellcasting.
+A particularly bloodthirsty tengu who has opted to hone their skill in fighting
+and weaponry instead of spellcasting.
 %%%%
 killer bee
 

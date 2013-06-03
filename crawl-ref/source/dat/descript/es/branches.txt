@@ -107,14 +107,8 @@ Hace mucho tiempo todas las dagas, hachas y armas de asta se reunían durante la
 noche y bailaban el vals, soñando con campos de batalla sin hombres ni bestias.
 Ese tiempo ya pasó pero las armas todavía están ahí.
 
-La Sala de los Filos es un solo nivel y puede encontrarse entre Cámaras:4 y
-Cámaras:6.
-%%%%
-Crypt
-
-Escuchas quejidos y alaridos de almas torturadas, sufriendo actos innombrables.
-
-La Cripta tiene cinco niveles y puede hallarse entre Cámaras:2 y Cámaras:4.
+La Sala de los Filos es un solo nivel y puede encontrarse entre Cámaras:3 y
+Cámaras:4.
 %%%%
 Tomb
 
@@ -173,10 +167,6 @@ anterioridad.
 
 El Reino de Zot tiene cinco niveles y uno solo puede entrar cuando se tienen al
 menos tres runas.
-%%%%
-Forest
-
-¡Los árboles atacan!
 %%%%
 Abyss
 

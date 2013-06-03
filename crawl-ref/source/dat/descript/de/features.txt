@@ -527,11 +527,6 @@ A staircase to the Dwarven Hall
 
 Ein Eingang zur gut gemachten Halle der Zwerge. Du glaubst, Ale zu riechen.
 %%%%
-A staircase to the Enchanted Forest
-
-Ein Eingang zum Wald der Spriggans. Nimm dir einen Ast und du bist tot... wobei
-sie nicht einmal darauf warten werden.
-%%%%
 A staircase to the Shoals
 
 Hier sind die Sandbänke: exotische Untergrundstrände, salzige Gischt und
@@ -555,19 +550,6 @@ A staircase to the Tomb
 Ein Weg, der in die Grabkammer der Alten führt; ein Platz der Verdammung, voll
 schrecklicher Gestalten, die durch die abscheulichste Nekromantie zum Leben
 erweckt wurden.
-%%%%
-A staircase to the Tomb:quote
-
-„In den Tiefen jedes Herzens gibt es eine Grabstätte und einen Kerker, obwohl
-die Lichter, die Musik und der Rummel uns oben veranlassen können, ihre
-Existenz, und die begrabenen oder Gefangenen zu vergessen, die sie verbergen.
-Aber manchmal, und oftenest in der Mitternacht werden jene dunklen Container
-weit geöffnet geschleudert. In einer Stunde wie das, wenn die Meinung ein
-passives Feingefühl, aber keine aktive Kraft hat; wenn die Einbildungskraft ein
-Spiegel ist, Lebhaftigkeit allen Ideen, ohne die Macht des Auswählens oder
-Steuerns von ihnen gebend; dann beten Sie, dass sich Ihr grämt, kann
-schlummern, und die Bruderschaft von Gewissensbissen nicht bricht ihre Kette.“
-    -Nathaniel Hawthorne, „Die Verfolgte Meinung“. 1835.
 %%%%
 A staircase to the Vaults
 

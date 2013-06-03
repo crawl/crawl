@@ -97,11 +97,6 @@ Necromancer
 Nekromanten sind Zauberer, die sich auf Todesmagie spezialisieren. Sie beginnen
 mit dem Schmerzfluch.
 %%%%
-Priest
-
-Priester sind Anhänger von Zin und verbreiten sein Wort unter den Bewohnern des
-Verlieses. Bergork-Priester sind stattdessen Anhänger des Orkgottes Beogh.
-%%%%
 Skald
 
 Skalde sind Nahkämpfer, die sich selbst mit Zaubersprüchen aus dem Buch der

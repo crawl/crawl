@@ -99,11 +99,6 @@ Necromancer
 Les Nécromanciens sont des sorciers spécialisés dans la magie des morts. Ils
 connaissent le sort Douleur.
 %%%%
-Priest
-
-Les Prêtres sont les adeptes de Zin, et portent la parole de leur  dieu aux
-habitants du Donjon. Les Orcs des Collines servent le dieu orc Beogh.
-%%%%
 Skald
 
 Les Scaldes sont des combattants au corps-à-corps qui peuvent accroitre leurs

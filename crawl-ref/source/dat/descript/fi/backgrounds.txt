@@ -95,11 +95,6 @@ Necromancer
 
 Nekromantikot ovat kuolotaikuuden spesialisteja. He aloittavat Kipu-loitsulla.
 %%%%
-Priest
-
-Papit ovat Zinin kannattajia, levittäen jumalansa sanaa Luolaston asukeille.
-Kukkulaörkit seuraavat örkkijumala Beoghia.
-%%%%
 Skald
 
 Skaldit ovat lähitaistelijoita, jotka nostavat suorituskykyään Sotahymnien

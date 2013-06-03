@@ -360,11 +360,6 @@ A staircase to the Dwarven Hall
 
 这是矮人之厅的入口。你隐约能闻到酒的味道。
 %%%%
-A staircase to the Enchanted Forest
-
-这是树精森林的入口。只要你敢折一根树枝，这里的居民就会一拥而上将你围攻至死。
-不过，其实即使你连树枝都没折，他们也会杀了你的。
-%%%%
 A staircase to the Shoals
 
 这里是奇妙的地下海滩：这里有海浪，也有会使尽浑身解数对付你的海洋怪物。
