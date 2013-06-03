@@ -1312,6 +1312,7 @@ static void tag_construct_you(writer &th)
 #endif
     marshallUByte(th, you.transit_stair);
     marshallByte(th, you.entering_level);
+    marshallBoolean(th, you.travel_ally_pace);
 
     marshallByte(th, you.deaths);
     marshallByte(th, you.lives);
@@ -2237,6 +2238,14 @@ static void tag_read_you(reader &th)
 #endif
     you.transit_stair  = unmarshallFeatureType(th);
     you.entering_level = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_TRAVEL_ALLy_PACE)
+    {
+#endif
+        you.travel_ally_pace = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     you.deaths = unmarshallByte(th);
     you.lives = unmarshallByte(th);

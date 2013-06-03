@@ -44,6 +44,7 @@ enum tag_minor_version
     TAG_MINOR_FOOD_AUTOPICKUP,     // Separate meat, fruit, others in \ menu.
     TAG_MINOR_LORC_TEMPERATURE,    // Save lava orc temperature
     TAG_MINOR_GARGOYLE_DR,         // Gargoyle damage reduction
+    TAG_MINOR_TRAVEL_ALLy_PACE,    // Pace travel to slowest ally setting
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
