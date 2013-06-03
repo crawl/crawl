@@ -1512,7 +1512,10 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
         && you.depth < brdepth[BRANCH_ZIGGURAT])
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
+        {
+            canned_msg(MSG_OK);
             return false;
+        }
     }
 
     // Leaving Pan runes behind.
