@@ -130,7 +130,18 @@ class CrawlProcessHandlerBase(object):
             self._was_idle = self.is_idle()
             update_all_lobbys(self)
 
+    def flush_messages_to_joining_spectators(self):
+        for receiver in self._receivers:
+            if receiver.joining:
+                receiver.flush_messages()
+                receiver.joining = False;
+            else:
+                receiver.clear_messages()
+
     def flush_messages_to_all(self):
+        # would like to not send messages here if receiver.joining is true but
+        # it would break on older versions of crawl binary that never send
+        # flush_messages with joining_only
         for receiver in self._receivers:
             receiver.flush_messages()
 
@@ -612,7 +623,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             elif msgobj["msg"] == "flush_messages":
                 # only queue, once we know the crawl process asks for flushes
                 self.queue_messages = True;
-                self.flush_messages_to_all()
+                if "joining_only" in msgobj:
+                    self.flush_messages_to_joining_spectators()
+                else:
+                    self.flush_messages_to_all()
             else:
                 self.logger.warning("Unknown message from the crawl process: %s",
                                     msgobj["msg"])

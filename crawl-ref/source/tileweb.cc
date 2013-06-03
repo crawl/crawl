@@ -240,9 +240,12 @@ void TilesFramework::send_message(const char *format, ...)
     finish_message();
 }
 
-void TilesFramework::flush_messages()
+void TilesFramework::flush_messages(bool joining_only)
 {
-    send_message("*{\"msg\":\"flush_messages\"}");
+    if (joining_only)
+        send_message("*{\"msg\":\"flush_messages\",\"joining_only\":true}");
+    else
+        send_message("*{\"msg\":\"flush_messages\"}");
 }
 
 void TilesFramework::_await_connection()
@@ -306,8 +309,9 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     }
     else if (msgtype == "spectator_joined")
     {
-        _send_everything();
         flush_messages();
+        _send_everything();
+        flush_messages(true);
     }
     else if (msgtype == "menu_scroll")
     {
