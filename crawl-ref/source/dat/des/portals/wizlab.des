@@ -791,7 +791,7 @@ ENDMAP
 NAME:       wizlab_eringya
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-MONS:       centaur col:green, centaur warrior col:lightgreen
+MONS:       centaur, centaur warrior
 MONS:       oklob plant
 MONS:       stone golem name:vine_covered name_adjective col:lightgreen \
             tile:mons_vine_golem
