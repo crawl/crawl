@@ -3093,10 +3093,18 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_ANIMATE_SKELETON:
         return (!attack_only);
 
+    // XXX: can this list not be hard-coded to prevent problems in the future?
+    case SPELL_CORONA:
     case SPELL_CONFUSE:
     case SPELL_SLOW:
     case SPELL_PARALYSE:
     case SPELL_SLEEP:
+    case SPELL_HIBERNATION:
+    case SPELL_CAUSE_FEAR:
+    case SPELL_LEDAS_LIQUEFACTION:
+    case SPELL_MESMERISE:
+    case SPELL_MASS_CONFUSION:
+    case SPELL_ENGLACIATION:
     case SPELL_TELEPORT_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
     case SPELL_BLINK_AWAY:
@@ -3224,6 +3232,9 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_CHUCK:
     case MONS_MERFOLK_JAVELINEER:
     case MONS_URUG:
+    case MONS_FAUN:
+    case MONS_SATYR:
+    case MONS_PAN:
         return true;
     default:
         return false;
