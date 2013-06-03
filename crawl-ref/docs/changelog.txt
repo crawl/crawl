@@ -150,9 +150,9 @@ Items
   mutation, which grant the player a single beneficial mutation.
 * Lear's chain mail is now Lear's hauberk - a +27 chain mail that covers
   all armour slots other than shields and cloaks.
-* The staves of channeling and energy are now one staff - the staff of power,
-  which eliminates spell hunger and channels scaling with your maximum magic
-  power.
+* The staves of energy eliminates 100% of spell hunger again, and includes
+  the now-gone staff of channeling as well.
+* The staff of power scales with your maximum magic power.
 * Splint mail has been removed; chain mail is now 8 AC to compensate.
 * Needles of sickness have been removed.
 
