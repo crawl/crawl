@@ -569,7 +569,7 @@ class ResourceFile():
                 # self[key + ":quote"] = raw_entries[(self.lang(), 'quotes')][key]
             if key not in entries: continue
             self[key] = entries[key]
-        if self.lang() != 'en':
+        if self.lang() != 'en' or self.ext == 'ini':
             self.update_removed_keys()
 
     def write_file(self):
