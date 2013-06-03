@@ -934,15 +934,25 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_PAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        if (!melee_only)
+        if (!melee_only
+            && (mon->type == MONS_FAUN && !one_chance_in(3)
+                || mon->type == MONS_SATYR && !one_chance_in(6))
+                || mon->type == MONS_PAN)
         {
-            item.sub_type  = WPN_LONGBOW;
+            item.sub_type = WPN_LONGBOW;
             if ((mon->type == MONS_FAUN && !one_chance_in(3))
-                || (mon->type == MONS_SATYR && one_chance_in(3)))
+                || (mon->type == MONS_SATYR && one_chance_in(6)))
+            {
                 item.sub_type = WPN_SLING;
+            }
         }
         else
-            item.sub_type = coinflip() ? WPN_CLUB : WPN_QUARTERSTAFF;
+        {
+            item.sub_type = random_choose(WPN_SPEAR,
+                                          WPN_CLUB,
+                                          WPN_QUARTERSTAFF,
+                                          -1);
+        }
         if (mon->type == MONS_PAN)
             level = MAKE_GOOD_ITEM;
         break;
@@ -1724,6 +1734,21 @@ static void _give_ammo(monster* mon, int level,
             if (mon->type == MONS_HAROLD)
                 qty += random2(4);
 
+            break;
+
+        case MONS_FAUN:  // we only get this far if they have no launcher
+        case MONS_SATYR:
+            if (coinflip())
+            {
+                weap_class = OBJ_WEAPONS;
+                weap_type  = WPN_SPEAR;
+            }
+            else
+            {
+                weap_class = OBJ_MISSILES;
+                weap_type  = MI_JAVELIN;
+            }
+            qty = random_range(4, 8);
             break;
 
         default:
