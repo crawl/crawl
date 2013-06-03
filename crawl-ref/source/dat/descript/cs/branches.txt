@@ -43,6 +43,14 @@ použití proti bytostem, jako jsi ty.
 
 Pouze jedna úroveň.
 %%%%
+Lair
+
+Většina dobrodruhů shledává Doupě šelem vzrušující změnou prostředí. Na tom, že
+je lepší nechat se nabrat na rohy, podrápat a rozdupat kopyty nežli se nechat
+rozsekat, zapálit nebo probodat opravdu něco bude.
+
+Doupě má osm podlaží a lze v něm nalézt vstup do dalších tří částí žaláře.
+%%%%
 Swamp
 
 Bažinatá pustina, plná slizu, bláta, much a velkých slintajících masožravých
@@ -72,14 +80,37 @@ Hadí jáma je pět úrovní hluboká a obsahuje hadí runu. Žalář má pouze 
 jámy, bažiny, mělčiny a pavoučí hnízda. Pokud je hdí jáma přítomena, nachází se
 vchod mezi doupětem: 3 a doupětem: 6.
 %%%%
-Crypt
+Spider Nest
 
-Obrovské úložiště pro staré mrtvoly. Vzduch je chladný a páchnoucí, stěny
-chladné a vlhké. Kosti jsou rozházené všude kolem a celým místem zaznívá
-pronikavý křik z mučených duší a neklidných mrtvých.
+Na povrchu se pavouka zbavíte švihem boty. Tady dole je to však jiné. Pokud již
+teď netrpíte arachnofobií, tak tohle místo plné rozpadajících se jeskyní plných
+pavučin, jedovatých členovců a další řady plazivců vám ji zaručeně způsobí.
 
-Krypta má pět úrovní a nachází se mezi sklepením:. 2 a sklepením: 4. Obsahuje
-vchod do hrobky.
+Pavoučí hnízdo má sedm podlaží a nalézá se zde pavučinová runa. Z Hadí jámy,
+Močálu, Mělčin a Pavoučího hnízda se v žaláři nachází vstupy pouze do dvou z
+nich. Pokud se v žaláři vstup do Pavoučího hnízda nachází, bude někde mezi
+Doupětem:3 a Doupětem:6.
+%%%%
+Slime Pits
+
+Beztvará říše kyseliny, rosolu a slizu. Jakýkoliv pozůstatek inteligentních
+bytostí už se dávno rozpustil. Přesto však existují zkazky o velkém bohatství
+nadcházejícím se hluboko dole, skryto v tajných místnostech bez dveří či oken,
+kterými by mohla dovnitř proniknout kyselina. Je dobře známo, že i stěny na
+tomto hrozném místě jsou pokryté nebezpečnou kyselinou, která je silnější, čím
+hlouběji se nacházíte.
+
+Slizká jáma má pět pater a nachází se zde slizká runa. Vstup lze nalézt mezi
+Doupětem:6 a Doupětem:8.
+%%%%
+Vaults
+
+Pravděpodobně dílo nějakého mocného šílence, Sklepení jsou prý místem mnoha
+velkých pokladů. Soudě dle krve rozstříknuté v hojném množství kolem vstupu zde
+lze narazit také na určité množství násilí.
+
+Sklepení mají pět pater a nachází se zde stříbrná runa a také vstupy do dalších
+dvou částí. Vstup lze najít mezi 15. a 20. patrem hlavní části žaláře.
 %%%%
 Tomb
 
@@ -89,6 +120,30 @@ kteří se vrátili z tohoto místa čisté smrti je mimořádně krátký.
 
 Hrobka má tři úrovně a obsahuje zlatou runu.  Její vstup je buď v  kryptě: 2
 nebo kryptě: 3.
+%%%%
+Tomb:quote
+
+V hloubi každého srdce jest hrobka i žalář, a byť světla, hudba a povyk shůry
+občas může dát zapomenout na jejich bytí, a na ty, jež jsou zakopáni nebo
+uvězněni. Občas však, o půlnoci víc, tyto temná místa brány své otevřou. V
+takovouto hodinu, kdy mysl v nečinnosti jest, bez síly činu; když
+obrazotvornost jest zrcadlem, myšlenkám všem život vdechuje, bez moci výběru či
+kontroly; tehdy modli se nechť tvé smutky spí hlubokým spánkem a ať bratrstvo
+výčitek nezlomí jejich řetězy.
+    -Nathaniel Hawthorne, "Strašlivá mysl". 1835
+%%%%
+Hell
+
+Vstupní síň do pekel je strážena Geryonem. Hrdinové, jež prokáží své schopnosti
+a zatroubí na Geryonův roh, mohou pokračovat průzkumem čtyř různých oblastí
+pekla: Disu, Geheny, Kokýtu a Tartaru.
+%%%%
+Dis
+
+Železné město Dis. Kdo obstojí ve zkoušce železem?
+
+Dis má sedm podlaží a nalézá se zde želená runa. Lze se do něj dostat přes
+Předsíň pekel.
 %%%%
 Gehenna
 
@@ -104,6 +159,84 @@ Ponurá a mrazem spálená pustina.
 Kokýtos je sedm úrovní hluboká a obsahuje ledovou runu. Je přístupná přes
 předsálí pekla.
 %%%%
+Tartarus
+
+Podsvětí plné úpadku a hniloby. Místní nemrtví, démoni a ďáblové z dobrodruhů,
+kteří se ženou za poklady, postupně vysávají všechen život.
+
+Tartaros má sedm podlaží a nalézá se zde kostěná runa. Lze se do něj dostat
+přes Předsíň pekel.
+%%%%
+Tartarus:quote
+
+V pekle jest chmurný a osamělý světa kus
+od všeho ostatního šera na hony vzdálený:
+Prostý, smutný je to kraj, kde se stíny nacházejí,
+Smutek jeho verš můj nikdy nepoví.
+    -Edward Arlington Robinson, “Svrchovanost”. 1897.
+%%%%
+Zot
+
+Část žaláře tak hrozivá, plna šílenství, zuřivosti a bláznovství, že byla
+bezpečně uzamčena před vstupem náhodných vetřelců. Jen ti nepomatenější
+dobrodruzi by se opovážili shromáždit požadované klíče, porušit pečeť a
+vstoupit hlouběji - a to vše jen kvůli marnivé naději, že získají bájný
+artefakt, který nikdo nikdy neviděl.
+
+Zotova říše má pět pater a lze vejít pouze když má vstupující u sebe alespoň
+tři runy.
+%%%%
+Abyss
+
+Bezedná hlubina je opravdu bizarní místo, které se neustále mění a křiví. Je
+plné řady růných monster, povětšinou démonické povahy, jejichž společným zájmem
+je pochutnat si na vetřelcích. Zároveň je to také odpadní skládka pro mnohé
+kouzelníky, kteří si libují v posílání rádoby šampiónů jako jsi ty na toto
+šílené místo, kde mají dokázat, že za něco stojí.  Podle všeho i chaos má
+nějakou strukturu, a Lugonu údajně kuje pikle prostřednictvím zdejších obyvatel
+i místa samotného.
+
+Hlubina má pět nekonečných pater. Počínaje třetím podlažím zde lze nalézt
+hlubinnou runu, a její výskyt je pravděpodobnější čím hlouběji se vydáte. Do
+Bezedné hlubiny se lze záměrně dostat pomocí portálů, nacházejících se v
+nižších patrech žaláře.
+%%%%
+Pandemonium
+
+Pandemonium je nekonečná říše bolesti a utrpení. Ačkoliv zde lze nalézt mnoho
+pokladů, všechny jsou střeženy démony a ještě krutějšími pány démonů. Mnohý z
+hrdinů který si spletl sebedůvěru s megalomanstvím, byl sprovozen ze světa pod
+přívalem muk a pekelného ohně.
+
+Pandemonium nemá konce. Portály lze v hojném počtu nalézt v hlubších patrech
+žaláře, ale dostat se zpět už však nemusí být stejně jednoduché.
+
+V Pandemoniu se nachází ne méně než pět run:
+• ohnivá runa v příjemně vyhřáté říši Cerebově
+• zářná runa v zamořeném panství Mnolega
+• magická runa, střežena tajemnými silami Lom Lobona a jeho pohůnků
+• temná runa v stínovém příbytku Gloorxe Vloqa
+• démonické runy, které vlastní méně slavní pánové démonů
+%%%%
+Ziggurat
+
+Zigurat je zvláštní věž, sestávající ze sedmadvaceti pater neustále se
+zvětšujících bitevních arén, a každá z nich obsahuje více bohatství a nebezpečí
+než ta předchozí. Ať už tuto ohavnost vytvořil kdokoliv, za vstup si žádá
+vysokou cenu. Pozor však, protože zigurat není pro zbabělce - může se stát
+hrobem i pro ty nejstatečnější a nejschopnější. A ačkoliv se portál do bezpečí
+nachází na každém patře, po opuštění se již znovu nelze vrátit.
+%%%%
+Labyrinth
+
+Labyrint je obrovské, složité bludiště, navržené nějakou záludnou, zlovolnou
+duší, z důvodů, které jsou již dávno ztraceny v čase. Staré příběhy říkají, že
+labyrint byl postaven coby vězení pro hrozivého minotaura. Novější historky
+tvrdí, že tam stále je a stráží jediný východ ven - a také kupu pokladů, které
+vzal bláznivým dobrodruhům, kteří se v bludišti ztratili a zemřeli tam hlady.
+Dávejte si v oněch měnících a klikatících se chodbách pozor, nebo i vaše věci
+skončí na minotaurově hromadě.
+%%%%
 Bazaar
 
 Zatímco někteří obchodníci si zřídili obchod přímo v žaláři, jiní cestují v
@@ -114,6 +247,19 @@ výhodněji.
 Buďte varováni, že jejich kočovný životní styl naučil tyto prodejce, aby si
 přivlastnili všechny položky, které jim může dobrodruh zanechat a pak rychle
 odejdou, zřejmě prodávat jinam.
+%%%%
+Trove
+
+Kdysi dávno podnikavý zloděj-mág, sužovaný strachem z toho, že bude dopaden při
+loupení, vytvořil systém portálů vedoucích do tajných pokladnic a místností
+plných bohatství. Byl ale příliš bojácný než aby je vykradl sám, a tak namísto
+toho za nehoráznou cenu nabízel vstup komukoliv, kdo je chtěl vydrancovat. Byl
+to chytrý vynálezce a portály navrhl tak, aby vstupující nasměroval tam, kde se
+nacházely poklady, které nejvíce vyhovovaly jejich potřebám.
+
+Je pravděpodobné, že předměty v pokladnici budou užitečné, avšak varování: onen
+kouzelní je již dávno mrtev, a i za života nikdy nenabízel záruku vrácení
+peněz.
 %%%%
 Sewer
 

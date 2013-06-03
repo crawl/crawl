@@ -130,17 +130,8 @@ Irgendwann einmal, in den Nachtstunden, wollten alle Dolche, Äxte und
 Stangenwaffen zusammen Walzer tanzen und von Schlachtfeldern frei von Mann und
 Bestie. Diese Zeit ist vorüber, nur die Waffen sind noch dort.
 
-Die Halle der Klingen hat eine einzige Ebene und kann zwischen Gewölbe 4 und
-Gewölbe 6 gefunden werden.
-%%%%
-Crypt
-
-Eine riesige Lagerstätte für die Antiken Toten. Die Luft ist frostig und
-stinkt, die Wände kalt und feucht. Überall sind großzügig Knochen verstreut und
-die Totenklage der gequälten Seelen der lauten Toten schallt von überall her.
-
-Die Krypta ist fünf Ebenen tief und kann zwischen de Ebenen des Gewölbes 2 und
-4 gefunden werden. Sie beinhaltet den Eingang zu den Grabstätten.
+Die Halle der Klingen hat eine einzige Ebene und kann zwischen Gewölbe 3 und
+Gewölbe 4 gefunden werden.
 %%%%
 Tomb
 
@@ -215,10 +206,6 @@ andere gesehen hat.
 
 Das Reich von Zot ist fünf Ebenen tief und kann nur betreten werden wenn man
 mindestens drei Runen bei sich trägt.
-%%%%
-Forest
-
-Diese Bäume greifen an!
 %%%%
 Abyss
 

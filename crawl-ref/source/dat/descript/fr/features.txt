@@ -412,8 +412,8 @@ Un entrée au magnifique hall des nains. Vous sentez une odeur de bière.
 %%%%
 A staircase to the Enchanted Forest
 
-Une entrée vers la forêt des sprigganes. Marchez sur une brindille et vous êtes
-mort. En fait, ils ne vont pas attendre que vous le fassiez.
+De l'autre coté de ces escaliers se trouve les bois qui abritent les spriggans,
+tengu, faunes et toutes sortes de malédictions effrayantes.
 %%%%
 A staircase to the Shoals
 

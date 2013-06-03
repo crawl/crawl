@@ -121,15 +121,17 @@ homme ni bête. Ce temps est révolu mais, ces armes sont toujours en sommeil
 ici.
 
 Le Hall des Lames est un unique niveau et peut être trouvé entre Chambres
-Fortes:4 et Chambres Fortes:6.
+Fortes:3 et Chambres Fortes:4.
 %%%%
 Crypt
 
-Vous entendez des gémissements et les cris des âmes torturées, souffrant de
-maux inexprimables.
+Un gigantesque dépôt pour les anciens morts. L'air est glacé et fétide, les
+murs froids et humides. Des os sont éparpillés partout et l'endroit résonne des
+lamentations des âmes torturées des morts sans repos.
 
-La Crypte est profonde de cinq niveaux et peut être trouvée entre Caveau:2 et
-Caveau:4.
+La Crypte est profonde de cinq niveaux. Le donjon contient soit la Crypte, soit
+la Forêt ; si la Crypte est présente, elle peut être trouvée entre Chambres
+Fortes:2 et Chambres Fortes:3 et elle contient l'entrée de la Tombe.
 %%%%
 Tomb
 
@@ -192,7 +194,14 @@ transportant au moins trois runes.
 %%%%
 Forest
 
-Les arbres sont en train d'attaquer !
+Parmi ces bois sombres et sinistres se trouve le repaire des spriggans, faunes,
+tengu et d'autres créatures capables de faire plier la volonté des intrus. Les
+puissantes illusions et la magie d’entrave sont la norme plutôt que
+l'exception.
+
+La Forêt Enchantée fait cinq niveau de profondeur. Le donjon contient soit la
+Crypte, soit la Forêt ; si la Forêt est présente, elle peut être trouvée entre
+Chambres Fortes:2 et Chambres Fortes:3 et elle contient l'entrée de la Tombe.
 %%%%
 Abyss
 

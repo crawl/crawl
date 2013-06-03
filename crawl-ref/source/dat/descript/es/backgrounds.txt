@@ -99,12 +99,6 @@ Necromancer
 Los Nigromantes son magos especializados en la práctica de la magia de la
 muerte. Empiezan con el hechizo del Dolor.
 %%%%
-Priest
-
-Los Sacerdotes son seguidores de Zin, divulgando la palabra del dios a los
-habitantes del Calabozo. Los Orcos de las colinas siguen al dios orco Beogh, no
-obstante.
-%%%%
 Skald
 
 Los Escaldos son guerreros que pueden potenciarse en batalla con hechizos de su
