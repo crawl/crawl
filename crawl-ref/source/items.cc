@@ -4140,7 +4140,7 @@ void corrode_item(item_def &item, actor *holder)
     // for values [0,4] which closely matches the original, ugly switch.
     // {dlb}
     if (chance < 0 || chance > 4
-        || !x_chance_in_y(2 + (4 << chance) + chance * 8, 100))
+        || x_chance_in_y(2 + (4 << chance) + chance * 8, 100))
     {
         return;
     }
