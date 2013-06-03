@@ -1657,7 +1657,7 @@ void melee_attack::player_warn_miss()
 
 int melee_attack::player_stat_modify_damage(int damage)
 {
-    int dammod = 78;
+    int dammod = 39;
     const int dam_stat_val = calc_stat_to_dam_base();
 
     if (dam_stat_val > 11)
@@ -1666,7 +1666,7 @@ int melee_attack::player_stat_modify_damage(int damage)
         dammod -= (random2(9 - dam_stat_val) * 3);
 
     damage *= dammod;
-    damage /= 78;
+    damage /= 39;
 
     return damage;
 }
