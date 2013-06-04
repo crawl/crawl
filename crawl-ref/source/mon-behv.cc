@@ -1327,6 +1327,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     // Do any resultant foe or state changes.
     handle_behaviour(mon);
+
+    // That might have made the monster leave the level.
+    if (!mon->alive())
+        return;
+
     ASSERT(in_bounds(mon->target) || mon->target.origin());
 
     // If it woke up and you're its new foe, it might shout.
