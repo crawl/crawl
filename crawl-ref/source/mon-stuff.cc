@@ -4757,10 +4757,6 @@ void debuff_monster(monster* mon)
             // ...except for natural invisibility.
             if (mons_class_flag(mon->type, M_INVIS))
                 continue;
-
-            // For non-natural invisibility, turn autopickup back on manually,
-            // since dispelling invisibility quietly won't do so.
-            autotoggle_autopickup(false);
         }
         if (lost_enchantments[i] == ENCH_CONFUSION)
         {
