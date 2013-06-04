@@ -2124,6 +2124,10 @@ static void tag_read_you(reader &th)
         you.duration[j] = unmarshallInt(th);
     for (j = NUM_DURATIONS; j < count; ++j)
         unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+        you.duration[DUR_STONESKIN] = 0;
+#endif
 
     // how many attributes?
     count = unmarshallUByte(th);

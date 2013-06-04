@@ -6309,6 +6309,46 @@ int player_icemail_armour_class()
                    * ICEMAIL_MAX / ICEMAIL_TIME));
 }
 
+bool player_stoneskin()
+{
+    // Lava orcs ignore DUR_STONESKIN
+    if (you.species == SP_LAVA_ORC)
+    {
+        // Most transformations conflict with stone skin.
+        if (form_changed_physiology() && you.form != TRAN_STATUE)
+            return false;
+
+        return temperature_effect(LORC_STONESKIN);
+    }
+    else
+        return you.duration[DUR_STONESKIN];
+}
+
+static int _stoneskin_bonus()
+{
+    if (!player_stoneskin())
+        return 0;
+
+    // Max +7.4 base
+    int boost = 200;
+    if (you.species == SP_LAVA_ORC)
+        boost += 20 * you.experience_level;
+    else
+        boost += you.skill(SK_EARTH_MAGIC, 20);
+
+    // Max additional +7.75 from statue form
+    if (you.form == TRAN_STATUE)
+    {
+        boost += 100;
+        if (you.species == SP_LAVA_ORC)
+            boost += 25 * you.experience_level;
+        else
+            boost += you.skill(SK_EARTH_MAGIC, 25);
+    }
+
+    return boost;
+}
+
 int player::armour_class() const
 {
     int AC = 0;
@@ -6354,13 +6394,7 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
-    if (duration[DUR_STONESKIN])
-    {
-        int boost = 200 + skill(SK_EARTH_MAGIC, 20); // max 7
-        if (you.species == SP_LAVA_ORC)
-            boost = std::max(boost, 200 + 100 * you.experience_level / 5); // max 7
-        AC += boost;
-    }
+    AC += _stoneskin_bonus();
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
@@ -6436,9 +6470,7 @@ int player::armour_class() const
 
         case TRAN_STATUE: // main ability is armour (high bonus)
             AC += 1700 + skill(SK_EARTH_MAGIC, 50);// max 30
-
-            if (duration[DUR_STONESKIN])
-                AC += 100 + skill(SK_EARTH_MAGIC, 25);   // max +7
+            // Stoneskin bonus already accounted for.
             break;
 
         case TRAN_TREE: // extreme bonus, no EV

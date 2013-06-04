@@ -1072,7 +1072,7 @@ static bool _spell_is_empowered(spell_type spell)
     case SPELL_STONESKIN:
         if (you.duration[DUR_TRANSFORMATION] > 0
             && you.form == TRAN_STATUE
-            && you.duration[DUR_STONESKIN] < 1)
+            && !player_stoneskin())
         {
             return true;
         }

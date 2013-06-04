@@ -2521,16 +2521,8 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
-    // Lava orcs don't have stoneskin decay like normal.
-    if (you.species != SP_LAVA_ORC
-        || (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)))
-    {
-        if (_decrement_a_duration(DUR_STONESKIN, delay,
-                                  "Your skin feels tender."))
-        {
-            you.redraw_armour_class = true;
-        }
-    }
+    if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
+        you.redraw_armour_class = true;
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {

@@ -974,13 +974,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
         you.fishtail = false;
 
     // Most transformations conflict with stone skin.
-    if (which_trans != TRAN_NONE
-        && which_trans != TRAN_APPENDAGE
-        && which_trans != TRAN_BLADE_HANDS
-        && which_trans != TRAN_STATUE)
-    {
+    if (form_changed_physiology(which_trans) && which_trans != TRAN_STATUE)
         you.duration[DUR_STONESKIN] = 0;
-    }
 
     // Give the transformation message.
     mpr(msg);
@@ -1015,6 +1010,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_STATUE:
         if (you.duration[DUR_STONESKIN])
             mpr("Your new body merges with your stone armour.");
+        else if (you.species == SP_LAVA_ORC)
+            mpr("Your new body is particularly stony.");
         break;
 
     case TRAN_ICE_BEAST:
@@ -1345,13 +1342,6 @@ void untransform(bool skip_wielding, bool skip_move)
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
              armour->name(DESC_YOUR).c_str());
-    }
-
-    // Lava orcs become stony again if at the right temperature.
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
-        && you.duration[DUR_STONESKIN] < 500)
-    {
-        you.duration[DUR_STONESKIN] = 500;
     }
 
     if (hp_downscale != 10 && you.hp != you.hp_max)
