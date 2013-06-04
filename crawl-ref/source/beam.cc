@@ -1693,15 +1693,17 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         // Those naturally chaotic/unclean get hit fully, those who merely
         // dabble in things Zin hates get partial resistance.
         if (mons->is_chaotic() || !mons->is_unclean(false))
-            dam = 3;
+            dam = 60;
         else if (mons->is_unclean(true))
-            dam = 2;
+            dam = 40;
         // a bit of damage to those you can recite against
         else if (mons->is_unholy() || mons->is_evil())
-            dam = 1;
-        // if monster mutations get added, here's the place for partial damage
+            dam = 20;
+        else if (mons->has_ench(ENCH_WRETCHED))
+            dam = 3 * mons->get_ench(ENCH_WRETCHED).degree;
+        // if non-abstract monster mutations get added, let's handle them too
 
-        hurted = hurted * dam / 3;
+        hurted = hurted * dam / 60;
         if (doFlavouredEffects)
         {
             simple_monster_message(mons,
