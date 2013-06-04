@@ -164,14 +164,14 @@ int store_tilename_get_index(const string tilename)
     unsigned int i;
     for (i = 0; i < env.tile_names.size(); ++i)
         if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
-            return (i+1);
+            return i+1;
 
 #ifdef DEBUG_TILE_NAMES
     mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
 #endif
     // If not found, add tile name to vector.
     env.tile_names.push_back(tilename);
-    return (i+1);
+    return i+1;
 }
 
 ///////////////////////////////////////////////

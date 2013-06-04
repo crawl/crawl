@@ -29,7 +29,7 @@ const tile_colour &tile_colour::operator=(const tile_colour &rhs)
     b = rhs.b;
     a = rhs.a;
 
-    return (*this);
+    return *this;
 }
 
 unsigned char &tile_colour::operator[](int idx)
@@ -79,13 +79,13 @@ int tile_colour::get_hue() const
 int tile_colour::get_max_rgb() const
 {
     int max_rgb = max(max(r, g), b);
-    return (max_rgb);
+    return max_rgb;
 }
 
 int tile_colour::get_min_rgb() const
 {
     int min_rgb = min(min(r, g), b);
-    return (min_rgb);
+    return min_rgb;
 }
 
 void tile_colour::set_hue(int h)
@@ -176,7 +176,7 @@ float tile_colour::get_sat() const
     else
         sat = (max_rgb - min_rgb) / (float)(min_rgb + max_rgb);
 
-    return (sat);
+    return sat;
 }
 
 void tile_colour::set_from_hsl(int hue, float sat, float lum)

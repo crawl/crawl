@@ -193,7 +193,7 @@ static int str_to_colour(string colour)
     for (int i = 0; i < 16; ++i)
     {
         if (colour == colour_list[i])
-            return (i);
+            return i;
     }
 
     // Check for alternate spellings.
@@ -1267,7 +1267,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             "    int num_pairs = sizeof(%s_name_pairs) / sizeof(%s_name_pairs[0]);\n"
             "    bool result = binary_search<const char *, tileidx_t>(\n"
             "       lc.c_str(), &%s_name_pairs[0], num_pairs, &strcmp, idx);\n"
-            "    return (result);\n"
+            "    return result;\n"
             "}\n\n",
             lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str());
 

@@ -2073,7 +2073,7 @@ static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
         if (x_chance_in_y(this_weight, total_weight))
             spell = *it;
     }
-    return (spell);
+    return spell;
 }
 
 static set<spell_type> _vehumet_get_spell_gifts()
