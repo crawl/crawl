@@ -1707,7 +1707,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         if (doFlavouredEffects)
         {
             simple_monster_message(mons,
-                                   hurted == 0 ? " appears unharmed."
+                                   hurted == 0 ? " appears unharmed." :
+                                   dam > 30    ? " is terribly seared!"
                                                : " is seared!");
         }
         break;
