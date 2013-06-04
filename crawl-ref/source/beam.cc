@@ -1720,7 +1720,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         int dam = 0;
         // Those naturally chaotic/unclean get hit fully, those who merely
         // dabble in things Zin hates get partial resistance.
-        if (mons->is_chaotic() || !mons->is_unclean(false))
+        if (mons->is_chaotic() || mons->is_unclean(false))
             dam = 3;
         else if (mons->is_unclean(true))
             dam = 2;
