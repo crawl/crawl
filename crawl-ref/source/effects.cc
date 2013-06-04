@@ -1382,7 +1382,7 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
 // also have to be floor flanked by walls.
 //
 //   czd
-//   a.b   -> if (a, b == walls) then (c, d == walls) or return (false)
+//   a.b   -> if (a, b == walls) then (c, d == walls) or return false
 //   #X#
 //    .
 //

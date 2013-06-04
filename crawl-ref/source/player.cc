@@ -819,7 +819,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         || you.form == TRAN_PORCUPINE
         || you.form == TRAN_WISP)
     {
-        return (false);
+        return false;
     }
 
     if (eq == EQ_STAFF)

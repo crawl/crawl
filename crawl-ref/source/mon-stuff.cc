@@ -5000,7 +5000,7 @@ bool temperature_effect(int which)
     switch (which)
     {
         case LORC_FIRE_RES_I:
-            return (true); // 1-15
+            return true; // 1-15
         case LORC_SLOW_MOVE:
             return (temperature() < TEMP_COOL); // 1-4
         case LORC_STONESKIN:

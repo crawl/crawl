@@ -847,12 +847,12 @@ int player::soul_aura_radius2() const
 int player::heat_radius2() const
 {
     if (you.species != SP_LAVA_ORC)
-        return (-1);
+        return -1;
 
     if (!temperature_effect(LORC_HEAT_AURA))
-        return (-1);
+        return -1;
 
-    return (2); // Surrounds you to radius of 1.
+    return 2; // Surrounds you to radius of 1.
 }
 
 // Stub for monster radius
@@ -864,7 +864,7 @@ int monster::heat_radius2() const
 bool heated(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
 
     if (!_agrid_valid)
         _update_agrid();
