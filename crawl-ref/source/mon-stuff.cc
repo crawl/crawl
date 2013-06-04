@@ -4924,9 +4924,6 @@ void temperature_changed(float change)
         // Handled separately because normally heat doesn't affect this.
         if (you.form == TRAN_ICE_BEAST || you.form == TRAN_STATUE)
             untransform(true, false);
-
-        // Stoneskin melts.
-        you.set_duration(DUR_STONESKIN, 0);
     }
 
     // Just reached the temp that kills off stoneskin.
@@ -4957,7 +4954,6 @@ void temperature_changed(float change)
     // Cooled down enough for stoneskin to kick in again.
     if (change < neg_threshold && temperature_tier(TEMP_WARM))
     {
-            you.set_duration(DUR_STONESKIN, 500);
             mpr("Your skin cools and hardens.", MSGCH_DURATION);
             you.redraw_armour_class = true;
     }

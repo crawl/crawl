@@ -725,7 +725,7 @@ static void _print_stats_ac(int x, int y)
 {
     // AC:
     CGOTOXY(x+4, y, GOTO_STAT);
-    if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
+    if (you.duration[DUR_ICY_ARMOUR] || player_stoneskin())
         textcolor(LIGHTBLUE);
     else if (you.duration[DUR_ICEMAIL_DEPLETED] > ICEMAIL_TIME / ICEMAIL_MAX)
         textcolor(RED);
@@ -1973,7 +1973,7 @@ static vector<formatted_string> _get_overview_stats()
                                 || you.berserk();
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
     const bool boosted_ac  = you.duration[DUR_ICY_ARMOUR]
-                                || you.duration[DUR_STONESKIN];
+                                || player_stoneskin();
     const bool boosted_ev  = you.duration[DUR_PHASE_SHIFT]
                                 || you.duration[DUR_AGILITY];
     const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
