@@ -5687,6 +5687,10 @@ void monster::steal_item_from_player()
         }
         return;
     }
+    // Theft isn't very peaceful. More importantly, you would risk losing the
+    // item forever when the monster flees the level.
+    if (pacified())
+        return;
 
     mon_inv_type mslot = NUM_MONSTER_SLOTS;
     int steal_what  = -1;
