@@ -823,7 +823,6 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 {
     const int dur = min(1 + div_rand_round(pow, 33), 4);
     item_def* wpn = you.weapon();
-    item_def cp = *wpn;
 
     // If the wielded weapon should not be cloned, abort
     // Unlike tukima you are allowed to clone artefacts
@@ -842,6 +841,8 @@ spret_type cast_spectral_weapon(int pow, bool fail)
     }
 
     fail_check();
+
+    item_def cp = *wpn;
 
     // Remove any existing spectral weapons --- only one should be alive at any given time
     if (you.props.exists("spectral_weapon"))
