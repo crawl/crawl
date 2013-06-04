@@ -318,19 +318,19 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         // For mutation damage, we want to count innate mutations for
         // the demonspawn, but not for other species.
         int mutated = how_mutated(you.species == SP_DEMONSPAWN, true);
-        int multiplier = min(mutated * 5, 100);
+        int multiplier = min(mutated * 3, 60);
         if (you.is_chaotic() || player_is_shapechanged())
-            multiplier = 100; // full damage
+            multiplier = 60; // full damage
         else if (you.is_undead || is_chaotic_god(you.religion))
-            multiplier = max(multiplier, 33);
+            multiplier = max(multiplier, 20);
 
-        hurted = hurted * multiplier / 100;
+        hurted = hurted * multiplier / 60;
 
         if (doEffects)
         {
             if (hurted <= 0)
                 canned_msg(MSG_YOU_RESIST);
-            else if (multiplier > 50)
+            else if (multiplier > 30)
                 mpr("The blast sears you terribly!");
             else
                 mpr("The blast sears you!");
@@ -1149,7 +1149,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         if (you.species == SP_GARGOYLE && (you.petrified() || you.petrifying()))
         {
             you.gargoyle_damage_reduction =
-                max(you.gargoyle_damage_reduction, dam + 1 / 2);
+                max(you.gargoyle_damage_reduction, (dam + 1) / 2);
             dam /= 2;
         }
         else if (you.petrified())

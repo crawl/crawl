@@ -58,14 +58,14 @@ struct tile_variation
     static int cmp(tile_variation left, tile_variation right)
     {
         if (left.idx < right.idx)
-            return (-1);
+            return -1;
         if (left.idx > right.idx)
-            return (1);
+            return 1;
         if (left.col < right.col)
-            return (-1);
+            return -1;
         if (left.col > right.col)
-            return (1);
-        return (0);
+            return 1;
+        return 0;
     }
 };
 

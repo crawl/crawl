@@ -478,8 +478,8 @@ Ce sort enveloppe le corps du sorcier d'une couche protectrice de glace. Sa
 résistance dépend de sa compétence en Magie de la Glace. Le sorcier et son
 équipement ne souffriront pas du froid dû à cette protection, cependant, ils
 pourront être affectés par d'autres sources de froid. Le sort ne fonctionne pas
-sur les sorciers portant des armures lourdes (tout armure corporelle ayant une
-pénalité en évasion de 2 ou plus). Les effets de ce sort sont augmenté si le
+sur les sorciers portant des armures lourdes (tout armure corporelle ayant un
+taux d'encombrement de 6 ou plus). Les effets de ce sort sont augmenté si le
 sorcier est en Forme de Glace.
 %%%%
 Ozocubu's Refrigeration spell

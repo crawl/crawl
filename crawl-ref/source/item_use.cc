@@ -2706,12 +2706,6 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
-    {
-        mpr("You'd burn any book you tried to read!");
-        return;
-    }
-
     item_def& book(you.inv[item_slot]);
 
     if (book.sub_type == BOOK_DESTRUCTION)
@@ -2913,12 +2907,6 @@ void read_scroll(int slot)
         return;
     }
 
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
-    {
-        mpr("You'd burn any scroll you tried to read!");
-        return;
-    }
-
     int item_slot = (slot != -1) ? slot
                                  : prompt_invent_item("Read which item?",
                                                        MT_INVLIST,
@@ -2956,6 +2944,13 @@ void read_scroll(int slot)
         mpr("Magic scrolls do not work when you're silenced!");
         crawl_state.zero_turns_taken();
         return;
+    }
+
+    // Prevent hot lava orcs reading scrolls
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        crawl_state.zero_turns_taken();
+        return mpr("You'd burn any scroll you tried to read!");
     }
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);

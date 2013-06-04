@@ -538,12 +538,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
-            {
-                mprf("%s appears from thin air!",
-                     name(DESC_A, true).c_str());
-                autotoggle_autopickup(false);
-            }
+                mprf("%s appears from thin air!", name(DESC_A, true).c_str());
 
+            autotoggle_autopickup(false);
             handle_seen_interrupt(this);
         }
         break;
@@ -1650,7 +1647,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!(flags & MF_TAKING_STAIRS)
             && !(paralysed() || petrified() || petrifying() || asleep())
             && (type == MONS_SHAPESHIFTER
-                || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000)))
+                || x_chance_in_y(1000 / (15 * max(1, hit_dice) / 5), 1000)))
         {
             monster_polymorph(this, RANDOM_MONSTER);
         }

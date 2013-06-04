@@ -2898,7 +2898,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
     // Copied unrand code from _try_make_weapon_artefact since randart enhancer staves
     // can't happen.
     if (allow_uniques
-        && one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20))
+        && one_chance_in(item_level == MAKE_GOOD_ITEM ? 27 : 100))
     {
         // Temporarily fix the base_type to get enhancer staves
         item.base_type = OBJ_WEAPONS;

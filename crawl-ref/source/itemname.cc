@@ -2925,6 +2925,9 @@ bool is_emergency_item(const item_def &item)
         case SCR_FEAR:
         case SCR_FOG:
             return true;
+        case SCR_IMMOLATION:
+            if (you.species == SP_DJINNI)
+                return true;
         default:
             return false;
         }
@@ -3070,6 +3073,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
+            // If you're fire-immune, immolation is not dangerous (to
+            // you, anyway).
+            return player_res_fire(false, temp) <= 3;
         case SCR_NOISE:
             return true;
         case SCR_TORMENT:
@@ -3314,7 +3320,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.species == SP_DEMIGOD && !you.religion);
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.species == SP_DJINNI;
+            return (you.species == SP_DJINNI
+                    || you.spirit_shield(false, false));
 
         case RING_LIFE_PROTECTION:
             return (player_prot_life(false, temp, false) == 3);
@@ -3336,6 +3343,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_POISON_RESISTANCE:
             return (player_res_poison(false, temp, false) > 0
                     && (temp || you.species != SP_VAMPIRE));
+
+        case RING_PROTECTION_FROM_FIRE:
+            return you.species == SP_DJINNI;
 
 #if TAG_MAJOR_VERSION == 34
         case AMU_CONTROLLED_FLIGHT:
@@ -3450,8 +3460,6 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
-        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
-            return true;
         if (item.sub_type != BOOK_MANUAL || !item_type_known(item))
             return false;
         if (you.skills[item.plus] >= 27)

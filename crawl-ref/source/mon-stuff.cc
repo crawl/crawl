@@ -4221,6 +4221,9 @@ void seen_monster(monster* mons)
     {
         did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
     }
+
+    if (mons_allows_beogh(mons))
+        env.level_state |= LSTATE_BEOGH;
 }
 
 //---------------------------------------------------------------
@@ -4294,6 +4297,8 @@ int dismiss_monsters(string pattern)
     // Make all of the monsters' original equipment disappear unless "keepitem"
     // is found in the regex (except for fixed arts and unrand arts).
     const bool keep_item = strip_tag(pattern, "keepitem");
+    const bool harmful = pattern == "harmful";
+    const bool mobile  = pattern == "mobile";
 
     // Dismiss by regex.
     text_pattern tpat(pattern);
@@ -4301,7 +4306,9 @@ int dismiss_monsters(string pattern)
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->alive()
-            && (tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
+            && (mobile ? !mons_class_is_stationary(mi->type) :
+                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack()
+                : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {
             if (!keep_item)
                 _vanish_orig_eq(*mi);
@@ -4750,10 +4757,6 @@ void debuff_monster(monster* mon)
             // ...except for natural invisibility.
             if (mons_class_flag(mon->type, M_INVIS))
                 continue;
-
-            // For non-natural invisibility, turn autopickup back on manually,
-            // since dispelling invisibility quietly won't do so.
-            autotoggle_autopickup(false);
         }
         if (lost_enchantments[i] == ENCH_CONFUSION)
         {
@@ -4997,7 +5000,7 @@ bool temperature_effect(int which)
     switch (which)
     {
         case LORC_FIRE_RES_I:
-            return (true); // 1-15
+            return true; // 1-15
         case LORC_SLOW_MOVE:
             return (temperature() < TEMP_COOL); // 1-4
         case LORC_STONESKIN:
@@ -5059,7 +5062,7 @@ std::string temperature_text(int temp)
         case TEMP_FIRE:
             return "Fast movement speed; burn attackers";
         case TEMP_MAX:
-            return "Burn surroundings; cannot read books or scrolls";
+            return "Burn surroundings; cannot read scrolls";
         default:
             return "";
     }

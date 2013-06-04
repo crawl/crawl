@@ -819,7 +819,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         || you.form == TRAN_PORCUPINE
         || you.form == TRAN_WISP)
     {
-        return (false);
+        return false;
     }
 
     if (eq == EQ_STAFF)
@@ -1312,6 +1312,22 @@ int player_regen()
             rr += 10; // Bonus regeneration for full vampires.
     }
 
+    // Healing boost based on petrification status.
+    if (you.species == SP_GARGOYLE)
+    {
+        if (you.duration[DUR_PETRIFYING])
+            rr += 30;
+        if (you.duration[DUR_PETRIFIED])
+            rr += 60;
+    }
+
+    // Compared to other races, a starting djinni would have regen of 4 (hp)
+    // plus 17 (mp).  So let's compensate them early; they can stand getting
+    // shafted on the total regen rates later on.
+    if (you.species == SP_DJINNI)
+        if (you.hp_max < 100)
+            rr += (100 - you.hp_max) / 6;
+
     // Slow heal mutation.  Each level reduces your natural healing by
     // one third.
     if (player_mutation_level(MUT_SLOW_HEALING) > 0)
@@ -1699,6 +1715,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         }
     }
 
+    // species:
+    if (you.species == SP_DJINNI)
+        rc--;
+
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
@@ -1708,10 +1728,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc = -3;
     else if (rc > 3)
         rc = 3;
-
-    // species:
-    if (you.species == SP_DJINNI)
-        rc = (rc - 1) >> 1; // >> has sane rather than C++ish rounding
 
     return rc;
 }
@@ -6515,8 +6531,11 @@ bool player::heal(int amount, bool max_too)
 
 mon_holy_type player::holiness() const
 {
-    if (form == TRAN_STATUE || form == TRAN_WISP || petrified())
+    if (species == SP_GARGOYLE || form == TRAN_STATUE || form == TRAN_WISP
+        || petrified())
+    {
         return MH_NONLIVING;
+    }
 
     if (is_undead)
         return MH_UNDEAD;

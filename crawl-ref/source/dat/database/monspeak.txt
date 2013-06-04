@@ -6936,6 +6936,34 @@ beogh_converted_orc_reaction_speech_follower
 
 @beogh_converted_orc_reaction_speech@
 %%%%
+#######################################################
+# Or if they weren't converted because you did this already.
+####
+orc_priest_apostate
+
+The priest shouts, "Disloyal scoundrel, leave my sight!"
+
+The priest snarls, "I'll spare you only if you run away! Begone!"
+
+The priest curses, "Your faithless show of piety disgusts me!"
+
+The priest sneers, "Beogh may forgive you, but I don't!"
+
+The priest shouts, "You had your chance, apostate scum!"
+%%%%
+#######################################################
+#
+####
+orc_priest_preaching
+
+@The_monster@ shouts, "Join the one true god or die!"
+
+@The_monster@ shouts, "Beogh is our master! Accept the truth or die!"
+
+@The_monster@ shouts, "Surrender to Beogh and we'll let you live!"
+
+@The_monster@ threatens, "By the altar or by the axe, you will meet Beogh!"
+%%%%
 #################################
 # Cherubs.
 #################################

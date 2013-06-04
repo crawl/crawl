@@ -146,7 +146,7 @@ const uint64_t M_MAINTAIN_RANGE    = (uint64_t)1<<44;
 // flesh is not usable for making zombies
 const uint64_t M_NO_ZOMBIE         = (uint64_t)1<<45;
 
-// cannot be placed by any means, even on the arena/etc
+// cannot be placed by any means, even in the arena, etc.
 const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
 
 // derived undead can't be randomly generated

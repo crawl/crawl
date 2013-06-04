@@ -8,6 +8,7 @@
 
 #include "externs.h"
 
+#include "abl-show.h"
 #include "areas.h"
 #include "coord.h"
 #include "coordit.h"
@@ -17,6 +18,7 @@
 #include "fprop.h"
 #include "exclude.h"
 #include "losglobal.h"
+#include "macro.h"
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-iter.h"
@@ -1325,6 +1327,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     // Do any resultant foe or state changes.
     handle_behaviour(mon);
+
+    // That might have made the monster leave the level.
+    if (!mon->alive())
+        return;
+
     ASSERT(in_bounds(mon->target) || mon->target.origin());
 
     // If it woke up and you're its new foe, it might shout.
@@ -1354,6 +1361,23 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
+
+    if (you.visible_to(mon) && mons_allows_beogh(mon))
+    {
+        const bool first = !you.attribute[ATTR_SEEN_BEOGH];
+        if (first || one_chance_in(10))
+        {
+            mons_speaks_msg(mon, getSpeakString("orc_priest_preaching"),
+                            MSGCH_TALK);
+            if (first)
+            {
+                mprf("(press <white>%s %C</white> to convert to Beogh)",
+                     command_to_string(CMD_USE_ABILITY).c_str(),
+                     get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey);
+                you.attribute[ATTR_SEEN_BEOGH] = 1;
+            }
+        }
+    }
 
     ASSERT(!crawl_state.game_is_arena()
            || mon->foe != MHITYOU && mon->target != you.pos());

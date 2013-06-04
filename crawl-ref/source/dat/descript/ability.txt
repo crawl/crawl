@@ -83,6 +83,10 @@ Release Delayed Fireball
 Instantly release a previously memorised (delayed) fireball without additional
 cost in terms of magic or hunger.
 %%%%
+Self-Petrification
+
+Petrify yourself, gaining damage reduction and fast healing.
+%%%%
 Self-Restoration
 
 At the permanent loss of one magic point restore your Strength, Dexterity and
@@ -560,6 +564,15 @@ Renounce Religion
 
 Renounce your faith. This will make your character leave your god (and usually
 anger said god).
+%%%%
+Convert to Beogh
+
+Swear your fealty to Beogh, the god of cave orcs. This god demands that all
+non-believers must die, but new believers must be spared and accepted into the
+fold. Beware, for orcs who haven't seen you convert may still be hostile until
+you've built your reputation!
+
+All other gods hate Beogh, and don't take desertion lightly.
 %%%%
 # Zotdef
 Make dart trap

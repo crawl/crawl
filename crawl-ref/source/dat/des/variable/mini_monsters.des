@@ -2237,7 +2237,6 @@ SUBST:  ? = %%.
 : dgn.delayed_decay(_G, '%', 'any corpse')
 MONS:   necrophage
 SUBST:  ' = 111.
-COLOUR: w = green
 : if you.branch() == "Swamp" or you.depth() > 4 then
 TAGS:   extra
 : end

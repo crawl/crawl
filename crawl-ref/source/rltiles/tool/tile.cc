@@ -305,13 +305,13 @@ bool tile::compose(const tile &img)
     if (!valid())
     {
         fprintf(stderr, "Error: can't compose onto an unloaded image.\n");
-        return (false);
+        return false;
     }
 
     if (!img.valid())
     {
         fprintf(stderr, "Error: can't compose from an unloaded image.\n");
-        return (false);
+        return false;
     }
 
     if (m_width != img.m_width || m_height != img.m_height)
@@ -319,7 +319,7 @@ bool tile::compose(const tile &img)
         fprintf(stderr, "Error: can't compose with mismatched dimensions. "
                         "(%d, %d) onto (%d, %d)\n",
                 img.m_width, img.m_height, m_width, m_height);
-        return (false);
+        return false;
     }
 
     for (int i = 0; i < m_width * m_height; i += 1)
@@ -334,7 +334,7 @@ bool tile::compose(const tile &img)
     }
 #endif
 
-    return (true);
+    return true;
 }
 
 bool tile::texture(const tile &img)
@@ -342,13 +342,13 @@ bool tile::texture(const tile &img)
     if (!valid())
     {
         fprintf(stderr, "Error: can't texture onto an unloaded image.\n");
-        return (false);
+        return false;
     }
 
     if (!img.valid())
     {
         fprintf(stderr, "Error: can't texture from an unloaded image.\n");
-        return (false);
+        return false;
     }
 
     if (m_width != img.m_width || m_height != img.m_height)
@@ -356,7 +356,7 @@ bool tile::texture(const tile &img)
         fprintf(stderr, "Error: can't texture with mismatched dimensions. "
                         "(%d, %d) onto (%d, %d)\n",
                 img.m_width, img.m_height, m_width, m_height);
-        return (false);
+        return false;
     }
 
     for (int i = 0; i < m_width * m_height; i += 1)
@@ -369,7 +369,7 @@ bool tile::texture(const tile &img)
         // alpha is unchanged
     }
 
-    return (true);
+    return true;
 }
 
 bool tile::load(const string &new_filename)
@@ -382,7 +382,7 @@ bool tile::load(const string &new_filename)
 #ifdef USE_TILE
     SDL_Surface *img = IMG_Load(new_filename.c_str());
     if (!img)
-        return (false);
+        return false;
 
     m_width  = img->w;
     m_height = img->h;
@@ -451,7 +451,7 @@ bool tile::load(const string &new_filename)
                     assert(!"Invalid bpp");
                     SDL_UnlockSurface(img);
                     SDL_FreeSurface(img);
-                    return (false);
+                    return false;
                 }
 
                 SDL_GetRGBA(pixel, img->format, &m_pixels[dest].r,
@@ -480,7 +480,7 @@ bool tile::load(const string &new_filename)
     m_pixels = new tile_colour[1];
 #endif
 
-    return (true);
+    return true;
 }
 
 void tile::fill(const tile_colour &col)
@@ -581,8 +581,8 @@ void tile::add_variation(int colour, int idx)
 bool tile::get_variation(int colour, int &idx)
 {
     if (m_variations[colour] == -1)
-        return (false);
+        return false;
 
     idx = m_variations[colour];
-    return (true);
+    return true;
 }

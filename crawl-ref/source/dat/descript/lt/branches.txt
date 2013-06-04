@@ -92,21 +92,6 @@ ir tam tikras kiekis smurto.
 Skliautai yra aštuonių lygių gylio ir turi sidabrinę runą. Įėjimą į juos rasite
 tarp 14-o ir 19-o pagrindinio požemio lygių.
 %%%%
-Hall of Blades
-
-Pasakojama, kad senais laikais visi durklai, kirviai ir ilgakočiai ginklai
-rinkdavosi naktį ir šokdavo valsą, svajodami apie mūšio laukus be žmonių ir
-pabaisų. Tie laikai jau baigėsi, bet ginklai vis dar čia.
-
-Ašmenų Salė yra vieno lygio, ją rasite tarp Skliautai:4 ir Skliautai:6.
-%%%%
-Crypt
-
-Jūs girdite nukankintų sielų, kenčiančių nuo neišpasakytų kankynių, klyksmus ir
-vaitojimus.
-
-Kripta yra penkių lygių gylio, ją rasite tarp Skliautai:2 ir Skliautai:4.
-%%%%
 Tomb
 
 Protėvių Mauzoliejus, prakeikimų ir šlykščiausios mirties magijos pabudintų
@@ -163,10 +148,6 @@ artefaktą, kurio dar niekas niekada nėra matęs.
 
 Zot Karalystė yra penkių lygių gylio. Į ją galima patekti tik turint bent tris
 runas.
-%%%%
-Forest
-
-Medžiai puola!
 %%%%
 Abyss
 

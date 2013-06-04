@@ -1094,6 +1094,23 @@ MAP
      ..............
 ENDMAP
 
+NAME: bh_walls_and_bars
+TAGS: decor
+DEPTH: D
+KFEAT: b = iron_grate
+NSUBST: B = 1:b / *:.
+MAP
+   cxcxcxcxc
+   x.B.x.B.x
+   c.cBcBc.c
+ xcx.x.B.x.xcx
+@....cxcxc....@
+@....xcxcx....@
+ cxc.c.B.c.cxc
+   x.xBxBx.x
+   c.B.c.B.c
+   xcxcxcxcx
+ENDMAP
 
 NAME:  roderic_Roman_lattice
 TAGS:  transparent extra decor

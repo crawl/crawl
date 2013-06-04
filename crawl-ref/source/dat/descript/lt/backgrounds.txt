@@ -91,11 +91,6 @@ Necromancer
 Nekromantai yra burtininkai specializuojantys mirties magijos taikyme. Jie
 pradeda su Skausmo burtažodžiu.
 %%%%
-Priest
-
-Dvasininkai yra Zin pasekėjai, skleidžiantys dievo žodį Požemio gyventojams.
-Kalvų Orkai garbina orkų dievą Beogh.
-%%%%
 Skald
 
 Dainiai yra kariai, galintys save sustiprinti burtažodžiais iš Karo Giesmių

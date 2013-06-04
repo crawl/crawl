@@ -115,6 +115,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.process = None
         self.game_id = None
         self.received_pong = None
+        self.joining = False
 
         self.ioloop = tornado.ioloop.IOLoop.instance()
 
@@ -130,7 +131,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
         self.message_queue = []
-        self.message_queue_time = None;
+        self.message_queue_time = None
 
         self.subprotocol = None
 
@@ -335,6 +336,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Stopped watching %s.", self.watched_game.username)
             self.watched_game.remove_watcher(self)
             self.watched_game = None
+            self.joining = False
             self.send_message("go_lobby")
 
     def shutdown(self):
@@ -411,6 +413,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Started watching %s (P%s).", process.username,
                              process.id)
             self.watched_game = process
+            self.joining = True
             process.add_watcher(self)
             self.send_message("watching_started")
         else:
@@ -485,6 +488,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # JSON
             self.process.handle_input(message)
 
+    def clear_messages(self):
+        self.message_queue_time = None
+        self.message_queue = []
+
     def flush_messages(self):
         if len(self.message_queue) == 0:
             return
@@ -517,7 +524,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.message_queue_time = datetime.datetime.now()
         self.message_queue.append(utf8(msg))
         if send:
-            self.flush_messages();
+            self.flush_messages()
 
     def send_message(self, msg, **data):
         """Sends a JSON message to the client."""
@@ -541,6 +548,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if self.watched_game:
             self.watched_game.remove_watcher(self)
+            self.joining = False
 
         if self.timeout:
             self.ioloop.remove_timeout(self.timeout)

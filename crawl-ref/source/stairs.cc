@@ -1063,6 +1063,9 @@ static void _update_level_state()
 
     if (_any_glowing_mold())
         env.level_state += LSTATE_GLOW_MOLD;
+    for (monster_iterator mon_it; mon_it; ++mon_it)
+        if (mons_allows_beogh(*mon_it))
+            env.level_state += LSTATE_BEOGH;
 
     env.orb_pos = orb_position();
     if (player_has_orb())

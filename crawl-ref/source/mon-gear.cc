@@ -922,17 +922,55 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_BOW;
+        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
+            item.sub_type = WPN_LONGBOW;
+        break;
+
     case MONS_FAUN:
     case MONS_SATYR:
     case MONS_PAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_BOW;
-        if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3)
-            || mon->type == MONS_FAUN
-            || mon->type == MONS_SATYR
-            || mon->type == MONS_PAN)
-            item.sub_type = WPN_LONGBOW;
+        // Fauns:  2/7 chance each of bow, sling, some type of throwing weapon;
+        //         1/7 chance of longbow.
+        // Satyrs: 1/2 chance of longbow;
+        //         1/6 chance each of bow, sling, some type of throwing weapon.
+        // Pan:    guaranteed longbow.
+        if (!melee_only
+            && (mon->type == MONS_FAUN && x_chance_in_y(5, 7)
+                || mon->type == MONS_SATYR && !one_chance_in(6))
+                || mon->type == MONS_PAN)
+        {
+            switch (mon->type)
+            {
+                case MONS_FAUN:
+                    item.sub_type = random_choose_weighted(1, WPN_LONGBOW,
+                                                           2, WPN_BOW,
+                                                           2, WPN_SLING,
+                                                           0);
+                    break;
+                case MONS_SATYR:
+                    item.sub_type = random_choose_weighted(3, WPN_LONGBOW,
+                                                           1, WPN_BOW,
+                                                           1, WPN_SLING,
+                                                           0);
+                    break;
+                case MONS_PAN:
+                default:
+                    item.sub_type = WPN_LONGBOW;
+                    break;
+            }
+        }
+        else
+        {
+            item.sub_type = random_choose(WPN_SPEAR,
+                                          WPN_CLUB,
+                                          WPN_QUARTERSTAFF,
+                                          -1);
+        }
         if (mon->type == MONS_PAN)
             level = MAKE_GOOD_ITEM;
         break;
@@ -1513,8 +1551,14 @@ static void _give_ammo(monster* mon, int level,
         const object_class_type xitc = OBJ_MISSILES;
         int xitt = fires_ammo_type(*launcher);
 
-        if (xitt == MI_STONE && (one_chance_in(15) || mon->type == MONS_JOSEPH))
-            xitt = MI_SLING_BULLET;
+        if (xitt == MI_STONE
+            && (mon->type == MONS_JOSEPH
+                || mon->type == MONS_SATYR
+                || (mon->type == MONS_FAUN && one_chance_in(3))
+                || one_chance_in(15)))
+        {
+                xitt = MI_SLING_BULLET;
+        }
 
         const int thing_created = items(0, xitc, xitt, true, level, item_race);
 
@@ -1708,6 +1752,21 @@ static void _give_ammo(monster* mon, int level,
             if (mon->type == MONS_HAROLD)
                 qty += random2(4);
 
+            break;
+
+        case MONS_FAUN:  // we only get this far if they have no launcher
+        case MONS_SATYR:
+            if (coinflip())
+            {
+                weap_class = OBJ_WEAPONS;
+                weap_type  = WPN_SPEAR;
+            }
+            else
+            {
+                weap_class = OBJ_MISSILES;
+                weap_type  = MI_JAVELIN;
+            }
+            qty = random_range(4, 8);
             break;
 
         default:

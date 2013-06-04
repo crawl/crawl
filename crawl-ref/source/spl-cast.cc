@@ -778,7 +778,16 @@ bool cast_a_spell(bool check_range, spell_type spell)
     else
         practise(EX_DID_MISCAST, spell);
 
-    dec_mp(spell_mana(spell));
+    // Nasty special cases.  Mana should be taken first, but that would make
+    // cancelling spells tricky, baring some refactoring.
+    if (you.species == SP_DJINNI && cast_result == SPRET_SUCCESS
+        && (spell == SPELL_BORGNJORS_REVIVIFICATION
+         || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
+    {
+        // These spells have replenished essence to full.
+    }
+    else
+        dec_mp(spell_mana(spell));
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
     {
@@ -866,16 +875,16 @@ static bool _vampire_cannot_cast(spell_type spell)
 static bool _too_hot_to_cast(spell_type spell)
 {
     if (you.species != SP_LAVA_ORC)
-        return (false);
+        return false;
 
     // Lava orcs can never benefit from casting stoneskin.
     if (spell == SPELL_STONESKIN)
-        return (true);
+        return true;
 
     // Lava orcs have no restrictions if their skin is
     // non-molten.
     if (temperature_effect(LORC_STONESKIN))
-        return (false);
+        return false;
 
     // If it is, though, they lose out on these spells:
     switch (spell)
@@ -885,9 +894,9 @@ static bool _too_hot_to_cast(spell_type spell)
     case SPELL_ICE_FORM:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_CONDENSATION_SHIELD:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -924,7 +933,7 @@ bool spell_is_uncastable(spell_type spell, string &msg)
             msg = "Your skin is already made of molten stone.";
         else
             msg = "Your temperature is too high to benefit from that spell.";
-        return (true);
+        return true;
     }
 
     return false;

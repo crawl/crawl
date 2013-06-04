@@ -296,7 +296,8 @@ monster_type random_draconian_monster_species();
 bool init_abomination(monster* mon, int hd);
 void define_monster(monster* mons);
 
-void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
+void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
+                 bool no_xp = false);
 
 bool mons_should_fire(bolt &beam);
 
@@ -376,6 +377,7 @@ bool mons_is_boulder(const monster* mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
+bool mons_allows_beogh(const monster* mon);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);

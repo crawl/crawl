@@ -185,6 +185,7 @@ enum ability_type
 
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
+    ABIL_CONVERT_TO_BEOGH,
 
     // Zot Defence abilities
     ABIL_MAKE_FUNGUS = 230,
@@ -296,6 +297,7 @@ enum attribute_type
 #if TAG_MAJOR_VERSION == 34
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
+    ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
     NUM_ATTRIBUTES
 };
 
@@ -1135,6 +1137,7 @@ enum level_state_type
     LSTATE_GLOW_MOLD      = (1 << 1), // Any glowing mold exists.
 
     LSTATE_DELETED        = (1 << 2), // The level won't be saved.
+    LSTATE_BEOGH          = (1 << 3), // Possibly an orcish priest around.
 };
 
 // NOTE: The order of these is very important to their usage!
@@ -1842,7 +1845,9 @@ enum job_type
 {
     JOB_FIGHTER,
     JOB_WIZARD,
+#if TAG_MAJOR_VERSION == 34
     JOB_PRIEST,
+#endif
     JOB_GLADIATOR,
     JOB_NECROMANCER,
     JOB_ASSASSIN,
@@ -3576,7 +3581,7 @@ enum zap_type
     ZAP_SLOW,
     ZAP_HASTE,
     ZAP_MAGIC_DART,
-    ZAP_HEAL_WOUNDS,
+    ZAP_MAJOR_HEALING,
     ZAP_PARALYSE,
     ZAP_BOLT_OF_FIRE,
     ZAP_BOLT_OF_COLD,

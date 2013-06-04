@@ -443,24 +443,24 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
     case TILEP_MONS_MARGERY:
+    case TILEP_MONS_FAUN:
         *ofs_x = 1;
         *ofs_y = -3;
         break;
     case TILEP_MONS_LOUISE:
+    case TILEP_MONS_SATYR:
+    case TILEP_MONS_PAN:
         *ofs_x = 1;
         *ofs_y = -4;
         break;
     case TILEP_MONS_HELL_WIZARD:
     case TILEP_MONS_HELL_WIZARD + 1:
     case TILEP_MONS_HELL_WIZARD + 2:
-    case TILEP_MONS_PAN:
         *ofs_x = 2;
         *ofs_y = -2;
         break;
     case TILEP_MONS_HUMAN:
     case TILEP_MONS_ELF:
-    case TILEP_MONS_FAUN:
-    case TILEP_MONS_SATYR:
         *ofs_x = 2;
         *ofs_y = -3;
         break;

@@ -853,25 +853,20 @@ xwwwww..................................wwwww...
 ................................................
 ENDMAP
 
-NAME:   due_tower_of_silence
+NAME:   due_tower_of_gloom
 ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
 DEPTH:  D:19-27
-MONS:   silent spectre / phantom / shadow / sky beast / shadow wraith
+MONS:   flayed ghost w:5 / phantasmal warrior w:5 / phantom / shadow / shadow wraith
 MONS:   ghost moth, Jory, vampire knight
 MONS:   raven
-NSUBST: A = 3:v / *:=, B = 3:v / *:=
-NSUBST: C = 2:v / *:=, D = 2:v / *:=
-# Make sure monsters don't wander too much.
-KFEAT:  + = runed_door
+NSUBST: A = 3:v / *:+, B = 3:v / *:+
+NSUBST: C = 2:v / *:+, D = 2:v / *:+
 # Colouring
 COLOUR: G = cyan
 COLOUR: I5M% = white
 # Making things other things.
 SUBST:  I = G
-SUBST:  " = +
-SUBST:  T = ......^
-KFEAT:  ^ = alarm trap / blade trap w:1 / spear trap / bolt trap
 # Markers:
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
@@ -895,29 +890,29 @@ xx......v...................v.......xxxxxxxxxxxxxxxxx
 xx......v..G......V......G..v.......xxxxxxxxxxxxxxxxx
 xx......v...................v.......xxxxxxxxxxxxxxxxx
 xxxxxxxxvvvvvv.........vvvvvvxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxvvvvvvvvvvvvv"""vvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxx
+xxxxvvvvvvvvvvvvv===vvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxx
 xxxvv.....vvvvvv.....vvvvvv.....vvxxxxxxxxxxxxxxxxxxx
 xxxv.......+vvv...Y...vvv+.......vxxxxxxxxxxxxxxxxxxx
-xxxvvvV1.vvvTvvv.....vvvTvvv.1Vvvvxxxxxxxxxxxxxxxxxxx
-xxxv.......vvTvv+++++vvTvv.......vxxxxxxxxxxxxxxxxxxx
-xxxvv.....vvvTvv.1.1.vvTvvv.....vvxxxxxxxxxxxxxxxxxxx
-xxvvvvv+vvvvvTv...G...vTvvvvv+vvvvvxxxxxxxxxxxxxxxxxx
-xxvTB1+T+1vvvTvv.1.1.vvTvvv1+T+1ATvxxxxxxxxxxxxxxxxxx
-xxvTvvvTvvvvvvTvv+++vvTvvvvvvTvvvTvxxxxxxxxxxxxxxxxxx
-xxvTB1+T+1Cvvvv+vTTTv+vvvvD1+T+1ATvxxxxxxxxxxxxxxxxxx
-xxvTvvvTvvv..VvvTTTTTvvV..vvvTvvvTvxxxxxxxxxxxxxxxxxx
-xxvTB1+T+1C.4.vvvvvvvvv.4.D1+T+1ATvxxxxxxxxxxxxxxxxxx
-xxvTvvvTvvv..|vv*|||*vv|..vvvTvvvTvxxxxxxxxxxxxxxxxxx
-xxvTB1+T+1Cvvvvvv.*.vvvvvvD1+T+1ATvxxxxxxxxxxxxxxxxxx
-xxvTvvvvvvvvv.V.vv+vv.V.vvvvvvvvvTvxxxxxxxxxxxxxxxxxx
-xxvTTTTTTTTT+.1.v4.4v.1.+TTTTTTTTTvxxxxxxxxxxxxxxxxxx
+xxxvvvV1.vvv.vvv.....vvv.vvv.1Vvvvxxxxxxxxxxxxxxxxxxx
+xxxv.......vv.vv+++++vv.vv.......vxxxxxxxxxxxxxxxxxxx
+xxxvv.....vvv.vv.1.1.vv.vvv.....vvxxxxxxxxxxxxxxxxxxx
+xxvvvvv+vvvvv.v...G...v.vvvvv+vvvvvxxxxxxxxxxxxxxxxxx
+xxv.B1+.+1vvv.vv.1.1.vv.vvv1+.+1A.vxxxxxxxxxxxxxxxxxx
+xxv.vvv.vvvvvv.vv+++vv.vvvvvv.vvv.vxxxxxxxxxxxxxxxxxx
+xxv.B1+.+1Cvvvv+v...v+vvvvD1+.+1A.vxxxxxxxxxxxxxxxxxx
+xxv.vvv.vvv..Vvv.....vvV..vvv.vvv.vxxxxxxxxxxxxxxxxxx
+xxv.B1+.+1C.4.vvvvvvvvv.4.D1+.+1A.vxxxxxxxxxxxxxxxxxx
+xxv.vvv.vvv..|vv*|||*vv|..vvv.vvv.vxxxxxxxxxxxxxxxxxx
+xxv.B1+.+1Cvvvvvv.*.vvvvvvD1+.+1A.vxxxxxxxxxxxxxxxxxx
+xxv.vvvvvvvvv.V.vv+vv.V.vvvvvvvvv.vxxxxxxxxxxxxxxxxxx
+xxv.........+.1.v4.4v.1.+.........vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvv...v.3.v...vvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvv+vv...vv+vvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
-xxvvMMMMMMMvvvTvv.Y.vvTv...v...vvvvxxxxxxxxxxxxxxxxxx
-xxv555%%%MMMvvTvv...vvT+.2.".2.+TTvxxxxxxxxxxxxxxxxxx
-xxv555%I%MMM+TTvv"""vvvv...v...vvTvxxxxxxxxxxxxxxxxxx
-xxv555%%%MMMvvvvTTTTTvvvvvvvvvvvvTvxxxxxxxxxxxxxxxxxx
-xxvvMMMMMMMv+T+T.111.T+TTTTTTTTT+Tvxxxxxxxxxxxxxxxxxx
+xxvvMMMMMMMvvv.vv.Y.vv.v...v...vvvvxxxxxxxxxxxxxxxxxx
+xxv555%%%MMMvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
+xxv555%I%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
+xxv555%%%MMMvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
+xxvvMMMMMMMv+.+..111..+.........+.vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvvvvv..V..vvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

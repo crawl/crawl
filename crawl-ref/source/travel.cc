@@ -239,6 +239,10 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (grid == DNGN_DEEP_WATER && player_likes_water(true))
             return true;
 
+        // Likewise for lava
+        if (grid == DNGN_LAVA && player_likes_lava(true))
+            return true;
+
         // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
             || grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_NATURAL)

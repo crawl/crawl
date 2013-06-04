@@ -743,6 +743,15 @@ bool mons_is_sensed(monster_type mc)
            || mc == MONS_SENSED_NASTY;
 }
 
+bool mons_allows_beogh(const monster* mon)
+{
+    if (you.species != SP_HILL_ORC || you.religion == GOD_BEOGH)
+        return false; // no one else gives a damn
+
+    return mons_genus(mon->type) == MONS_ORC
+           && mon->is_priest() && mon->god == GOD_BEOGH;
+}
+
 bool mons_behaviour_perceptible(const monster* mon)
 {
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
@@ -1489,14 +1498,6 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
     else if (mc == MONS_THE_ENCHANTRESS)
     {
         mon->mname = "Enchantress";
-        mon->flags |= MF_NAME_ADJECTIVE;
-    }
-    // Also for the Serpent of Hell: treat Serpent of Hell as an
-    // adjective to avoid mentions of "the Serpent of Hell the dragon
-    // zombie".
-    else if (mons_species(mc) == MONS_SERPENT_OF_HELL)
-    {
-        mon->mname = "Serpent of Hell";
         mon->flags |= MF_NAME_ADJECTIVE;
     }
 
@@ -2890,7 +2891,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
         behaviour_event(mons, ME_EVAL, &you);
 }
 
-void mons_pacify(monster* mon, mon_attitude_type att)
+void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
 {
     // If the _real_ (non-charmed) attitude is already that or better,
     // don't degrade it.  This can happen, for example, with a high-power
@@ -2903,7 +2904,7 @@ void mons_pacify(monster* mon, mon_attitude_type att)
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
 
-    if (!testbits(mon->flags, MF_GOT_HALF_XP)
+    if (!testbits(mon->flags, MF_GOT_HALF_XP) && !no_xp
         && !mon->is_summoned()
         && !testbits(mon->flags, MF_NO_REWARD))
     {
@@ -3092,10 +3093,18 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_ANIMATE_SKELETON:
         return (!attack_only);
 
+    // XXX: can this list not be hard-coded to prevent problems in the future?
+    case SPELL_CORONA:
     case SPELL_CONFUSE:
     case SPELL_SLOW:
     case SPELL_PARALYSE:
     case SPELL_SLEEP:
+    case SPELL_HIBERNATION:
+    case SPELL_CAUSE_FEAR:
+    case SPELL_LEDAS_LIQUEFACTION:
+    case SPELL_MESMERISE:
+    case SPELL_MASS_CONFUSION:
+    case SPELL_ENGLACIATION:
     case SPELL_TELEPORT_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
     case SPELL_BLINK_AWAY:
@@ -3223,6 +3232,9 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_CHUCK:
     case MONS_MERFOLK_JAVELINEER:
     case MONS_URUG:
+    case MONS_FAUN:
+    case MONS_SATYR:
+    case MONS_PAN:
         return true;
     default:
         return false;
@@ -4173,11 +4185,8 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'u': // mutated type, not enough info to determine shape
         return MON_SHAPE_MISC;
     case 't': // crocodiles/turtles
-        if (mc == MONS_SNAPPING_TURTLE
-            || mc == MONS_ALLIGATOR_SNAPPING_TURTLE)
-        {
+        if (mons_genus(mc) == MONS_SNAPPING_TURTLE)
             return MON_SHAPE_QUADRUPED_TAILLESS;
-        }
         else
             return MON_SHAPE_QUADRUPED;
     case 'v': // vortices
@@ -4217,7 +4226,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'G': // floating eyeballs and orbs
         return MON_SHAPE_ORB;
     case 'H': // minotaurs, manticores, hippogriffs and griffins
-        if (mc == MONS_MINOTAUR || mc == MONS_TENGU)
+        if (mc == MONS_MINOTAUR || mons_genus(mc) == MONS_TENGU)
             return MON_SHAPE_HUMANOID;
         else if (mc == MONS_MANTICORE)
             return MON_SHAPE_QUADRUPED;
