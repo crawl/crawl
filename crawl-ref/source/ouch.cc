@@ -318,13 +318,13 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         // For mutation damage, we want to count innate mutations for
         // the demonspawn, but not for other species.
         int mutated = how_mutated(you.species == SP_DEMONSPAWN, true);
-        int multiplier = min(mutated * 5, 100);
+        int multiplier = min(mutated * 3, 60);
         if (you.is_chaotic() || player_is_shapechanged())
-            multiplier = 100; // full damage
+            multiplier = 60; // full damage
         else if (you.is_undead || is_chaotic_god(you.religion))
-            multiplier = max(multiplier, 33);
+            multiplier = max(multiplier, 20);
 
-        hurted = hurted * multiplier / 100;
+        hurted = hurted * multiplier / 60;
 
         if (doEffects)
         {
