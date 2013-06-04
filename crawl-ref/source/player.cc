@@ -1715,6 +1715,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         }
     }
 
+    // species:
+    if (you.species == SP_DJINNI)
+        rc--;
+
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
@@ -1724,10 +1728,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc = -3;
     else if (rc > 3)
         rc = 3;
-
-    // species:
-    if (you.species == SP_DJINNI)
-        rc = (rc - 1) >> 1; // >> has sane rather than C++ish rounding
 
     return rc;
 }
