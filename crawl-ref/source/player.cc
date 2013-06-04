@@ -6139,7 +6139,7 @@ int calc_hunger(int food_cost)
         if (you.hunger_state <= HS_NEAR_STARVING)
             return 0;
 
-        return (food_cost/2);
+        return food_cost/2;
     }
     return food_cost;
 }

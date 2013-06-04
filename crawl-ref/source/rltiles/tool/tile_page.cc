@@ -98,7 +98,7 @@ int tile_page::find(const string &enumname) const
         for (int c = 0; c < m_tiles[i]->enumcount(); ++c)
         {
             if (m_tiles[i]->enumname(c) == enumname)
-                return (i);
+                return i;
         }
     }
 
