@@ -95,8 +95,10 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
     if crawl.coinflip() then
         local width2 = 1 + crawl.random2(5)
 
-        fill_area{x1=10, y1=gym/2-width2, x2=gxm-10, y2=gym/2+width2, fill=floor}
-        fill_area{x1=gxm/2-width2, y1=10, x2=gxm/2+width2, y2=gym-10, fill=floor}
+        fill_area{x1=10,           y1=gym/2-width2,
+                  x2=gxm-10,       y2=gym/2+width2, fill=floor}
+        fill_area{x1=gxm/2-width2, y1=10,
+                  x2=gxm/2+width2, y2=gym-10,       fill=floor}
 
         -- sometimes add a small octagon room
         if crawl.coinflip() then
@@ -110,7 +112,8 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
                 ["w"] = 5,
                 ["l"] = 1,
             })
-            octa_room{x1=25, y1=25, x2=gxm-25, y2=gym-25, oblique=obl, replace='x', inside=fill}
+            octa_room{x1=25, y1=25, x2=gxm-25, y2=gym-25,
+                      oblique=obl, replace='x', inside=fill}
 
             -- decrease spotty chance
             spotty = crawl.one_chance_in(5)
@@ -469,12 +472,27 @@ TAGS:   layout_type_city
         x2 = x2 + 1
         y2 = y2 + 1
 
-        if x2 <= x2 or y2 <= y2 then
+        if x2 <= x1 or y2 <= y1 then
             return false
         end
 
-        if (x2 - x1) * (y2 - y1) >= 40 then
+        local area = (x2 - x1) * (y2 - y1)
+        if area >= 40 then
             return false
+        end
+
+        -- for bigger rooms, use less valuable loot
+        local loot = { }
+        if area <= 4 then
+            loot['|'] = 1
+        elseif area <= 10 then
+            loot['|'] = 10 - area
+            loot['*'] = area - 4
+        elseif area < 25 then
+            loot['*'] = 25 - area
+            loot['%'] = area - 10
+        else
+            loot['%'] = 1
         end
 
         local tl = dgn.point(x1, y1)
@@ -482,8 +500,9 @@ TAGS:   layout_type_city
 
         for point in iter.rect_iterator(tl, br) do
             if is_valid_coord {x = point.x, y = point.y } then
-                if is_passable_coord { x=point.x, y=point.y } or crawl.coinflip() then
-                    mapgrd[point.x][point.y] = "|"
+                if is_passable_coord { x=point.x, y=point.y }
+                   or crawl.coinflip() then
+                    mapgrd[point.x][point.y] = crawl.random_element (loot)
                 end
             end
         end
@@ -495,16 +514,8 @@ TAGS:   layout_type_city
 
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    local wall_type_room
     local wall_type
     local rooms = {}
-
-    local xs = 0
-    local ys = 0
-    local ax1 = 0
-    local bx2 = 0
-    local ay1 = 0
-    local by2 = 0
     local i, j
 
     if you.branch() == "Dis" then
@@ -519,29 +530,56 @@ TAGS:   layout_type_city
 
     for i = 0, 5 do
         for j = 0, 4 do
-            xs = 8 + (i * 13)
-            ys = 8 + (j * 14)
-            a1 = xs + crawl.random2avg(5, 2);
-            a2 = ys + crawl.random2avg(5, 2);
-            b1 = xs + 11 - crawl.random2avg(5, 2);
-            b2 = ys + 11 - crawl.random2avg(5, 2);
+            local xs = 8 + (i * 13)
+            local ys = 8 + (j * 14)
+            local a1 = xs + crawl.random2avg(5, 2);
+            local a2 = ys + crawl.random2avg(5, 2);
+            local b1 = xs + 11 - crawl.random2avg(5, 2);
+            local b2 = ys + 11 - crawl.random2avg(5, 2);
 
-            if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2}
+            if crawl.x_chance_in_y(6, 7)
+                and is_valid_coord {x=a1, y=a2}
+                and is_valid_coord{x=b1, y=b2}
                 and not find_in_area {x1 = a1 - 1, y1 = a2 - 1,
                                       x2 = b1 + 1, y2 = b2 + 1,
                                       find = "xcvb+", find_vault = true } then
 
-                wall_type_room = theme.room_material(wall_type)
+                local wall_type_room = theme.room_material(wall_type)
 
-                table.insert(rooms, {a1, a2, b1, b2})
-                make_box { x1=a1, y1=a2, x2=b1, y2=b2, wall=wall_type_room }
+                local size_x = b1 - a1
+                local size_y = b2 - a2
+                local thickness = 1
+                if size_x > 6 and size_y > 6 and crawl.one_chance_in(8) then
+                    thickness = 3
+                elseif size_x > 4 and size_y > 4
+                       and crawl.one_chance_in(24) then
+                    thickness = 2
+                end
 
-                if b1 - a1 > 5 and b2 - a2 > 5 and crawl.one_chance_in(8) then
-                    table.insert(rooms, {a1+2, a2+2, b1-2, b2-2})
-                    make_box { x1=a1+2, y1=a2+2, x2=b1-2, y2=b2-2, wall=wall_type_room }
+                table.insert(rooms, {a1, a2, b1, b2, thickness})
+                make_box { x1=a1, y1=a2, x2=b1, y2=b2,
+                           wall=wall_type_room, thickness=thickness }
 
-                    if crawl.one_chance_in(3) then
-                        treasure_area(a1+3, a2+3, b1-3, b2-3)
+                if size_x > 3 + thickness * 2 and size_y > 3 + thickness * 2
+                   and crawl.one_chance_in(8) then
+                    local A1 = a1 + thickness + 1
+                    local A2 = a2 + thickness + 1
+                    local B1 = b1 - thickness - 1
+                    local B2 = b2 - thickness - 1
+                    local door_number = 1 + crawl.random2(2)*crawl.random2(2)
+
+                    local wall_type_inner = wall_type_room
+                    if crawl.one_chance_in(5) then
+                        wall_type_inner = theme.room_material(wall_type)
+                    end
+
+                    make_box { x1=A1, y1=A2, x2=B1, y2=B2,
+                               wall=wall_type_room }
+                    make_box_doors { x1=A1, y1=A2, x2=B1, y2=B2,
+                                     number=door_number }
+
+                    if crawl.x_chance_in_y(thickness, 3) then
+                        treasure_area(A1+1, A2+1, B1-1, B2-1)
                     end
                 end
             end
@@ -558,11 +596,21 @@ TAGS:   layout_type_city
             doors = 2
         end
 
-        make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4], number=doors}
+        local thickness = room[5]
+        local inner_door = '.'
+        if thickness == 2 and crawl.one_chance_in(8) then
+            inner_door = '+'
+        elseif thickness == 3 and crawl.x_chance_in_y(2, 3) then
+            inner_door = '+'
+        end
+
+        make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4],
+                        number=doors, thickness=room[5],
+                        inner_door=inner_door, veto_gates=true}
     end
 
     -- Prevent treasure rooms being overwritten by vaults
-    kmask('| = vault')
+    kmask('|*% = vault')
 }}
 MAP
 ENDMAP
@@ -932,7 +980,9 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
                and (you.in_branch("D") or you.in_branch("Lair"))
                and crawl.x_chance_in_y(you.absdepth() - 9, 450)
             then
-                local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
+                local feat = crawl.random_element { ['v'] = 2,
+                                                    ['c'] = 3,
+                                                    ['x'] = 3 }
                 make_inner_room(room, feat, crawl.coinflip())
             end
         end
@@ -1207,7 +1257,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
                fill(x1, y1, x3, y2, 1)
                fill(x3, y1, x2, y2, 1)
                if not alt then
-                   replace_random { x1=x3, y1=y1+1, x2=x3, y2=y2-1, find='x', replace='+' }
+                   replace_random { x1=x3, y1=y1+1, x2=x3, y2=y2-1,
+                                    find='x', replace='+' }
                end
            end
         else
@@ -1222,7 +1273,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
                fill(x1, y1, x2, y3, 0)
                fill(x1, y3, x2, y2, 0)
                if not alt then
-                   replace_random { x1=x1+1, y1=y3, x2=x2-1, y2=y3, find='x', replace='+' }
+                   replace_random { x1=x1+1, y1=y3, x2=x2-1, y2=y3,
+                                    find='x', replace='+' }
                end
             end
         end
