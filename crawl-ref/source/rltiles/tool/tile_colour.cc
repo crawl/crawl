@@ -64,7 +64,7 @@ int tile_colour::get_hue() const
     int min_rgb = get_min_rgb();
 
     if (max_rgb == min_rgb)
-        return (0);
+        return 0;
 
     int diff = max_rgb - min_rgb;
 
@@ -254,19 +254,19 @@ bool write_png(const char *filename, tile_colour *pixels,
     if (!fp)
     {
         fprintf(stderr, "Error: Can't open file '%s' for write.\n", filename);
-        return (false);
+        return false;
     }
 
     png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
                                                   NULL, NULL, NULL);
     if (!png_ptr)
-        return (false);
+        return false;
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr)
     {
         png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
-        return (false);
+        return false;
     }
 
     png_init_io(png_ptr, fp);
@@ -294,6 +294,6 @@ bool write_png(const char *filename, tile_colour *pixels,
     free(row_pointers);
     fclose(fp);
 
-    return (true);
+    return true;
 }
 #endif

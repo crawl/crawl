@@ -67,7 +67,7 @@ bool tile_list_processor::load_image(tile &img, const char *filename,
                 if (img.load(temp))
                 {
                     m_depends.push_back(temp);
-                    return (true);
+                    return true;
                 }
             }
         }
@@ -79,11 +79,11 @@ bool tile_list_processor::load_image(tile &img, const char *filename,
         if (img.load(temp))
         {
             m_depends.push_back(temp);
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 bool tile_list_processor::process_list(const char *list_file)
@@ -94,7 +94,7 @@ bool tile_list_processor::process_list(const char *list_file)
     if (!input.is_open())
     {
         fprintf(stderr, "Error: couldn't open '%s' for read.\n", list_file);
-        return (false);
+        return false;
     }
 
     const size_t bufsize = 1024;
@@ -185,7 +185,7 @@ static const string colour_list[16] =
 static int str_to_colour(string colour)
 {
     if (colour.empty())
-        return (0);
+        return 0;
 
     for (unsigned int c = 0; c < colour.size(); c++)
         colour[c] = tolower(colour[c]);
@@ -198,11 +198,11 @@ static int str_to_colour(string colour)
 
     // Check for alternate spellings.
     if (colour == "lightgray")
-        return (7);
+        return 7;
     else if (colour == "darkgray")
-        return (8);
+        return 8;
 
-    return (0);
+    return 0;
 }
 
 void tile_list_processor::recolour(tile &img)
@@ -256,15 +256,15 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
     arg = strtok(read_line, delim);
     if (!arg)
-        return (true);
+        return true;
 
     eat_whitespace(arg);
 
     if (!*arg)
-        return (true);
+        return true;
 
     if (arg[0] == '#')
-        return (true);
+        return true;
 
     vector<char *> m_args;
     m_args.push_back(arg);
@@ -312,7 +312,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             if (strcmp(m_args[1], "none") == 0)
             {
                 CHECK_NO_ARG(2);
-                return (true);
+                return true;
             }
 
             for (unsigned int i = 1; i < m_args.size(); i++)
@@ -322,7 +322,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
                                     "'%s'.\n", list_file, line, m_args[i]);
-                    return (false);
+                    return false;
                 }
                 m_back.push_back(img);
             }
@@ -334,7 +334,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): not composing yet.\n",
                         list_file, line);
-                return (false);
+                return false;
             }
 
             if (m_compose.valid())
@@ -344,7 +344,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
                                     "'%s'.\n", list_file, line, m_args[1]);
-                    return (false);
+                    return false;
                 }
 
                 if (m_rim)
@@ -357,7 +357,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     fprintf(stderr, "Error (%s:%d): failed composing '%s'"
                                     " onto compose image.\n",
                             list_file, line, m_args[1]);
-                    return (false);
+                    return false;
                 }
             }
             else
@@ -366,7 +366,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
                                     "'%s'.\n", list_file, line, m_args[1]);
-                    return (false);
+                    return false;
                 }
 
                 recolour(m_compose);
@@ -385,7 +385,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): no category to end.\n",
                         list_file, line);
-                return (false);
+                return false;
             }
 
             m_parts_ctg.clear();
@@ -396,7 +396,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): not composing yet.\n",
                         list_file, line);
-                return (false);
+                return false;
             }
 
             if (m_corpsify)
@@ -417,7 +417,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     fprintf(stderr, "Error (%s:%d): failed composing '%s'"
                                     " onto back image '%s'.\n",
                             list_file, line, arg, back->filename().c_str());
-                    return (false);
+                    return false;
                 }
                 add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
             }
@@ -438,7 +438,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 CHECK_NO_ARG(2);
                 m_texture = 0;
-                return (true);
+                return true;
             }
 
             CHECK_NO_ARG(2);
@@ -447,7 +447,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error(%s:%d): couldn't load image "
                                 "'%s'.\n", list_file, line, m_args[1]);
-                return (false);
+                return false;
             }
             m_texture = img;
         }
@@ -458,7 +458,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): include failed.\n",
                         list_file, line);
-                return (false);
+                return false;
             }
         }
         else if (strcmp(arg, "name") == 0)
@@ -470,7 +470,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 fprintf(stderr,
                         "Error (%s:%d): name already specified as '%s'\n",
                         list_file, line, m_name.c_str());
-                return (false);
+                return false;
             }
 
             m_name = m_args[1];
@@ -496,7 +496,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     fprintf(stderr,
                             "Error (%s:%d): category '%s' already used.\n",
                             list_file, line, m_args[1]);
-                    return (false);
+                    return false;
                 }
             }
 
@@ -533,7 +533,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): weight must be >= 1.\n",
                         list_file, line);
-                return (false);
+                return false;
             }
 
             m_weight = tmp;
@@ -551,7 +551,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): already composing.\n",
                         list_file, line);
-                return (false);
+                return false;
             }
             m_composing = true;
             m_compose.unload();
@@ -586,7 +586,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                         fprintf(stderr, "Error (%s:%d): "
                                 "Must be R G B (A) = R G B (A).\n",
                                 list_file, line);
-                        return (false);
+                        return false;
                     }
 
                     int val = atoi(m_args[i]);
@@ -604,7 +604,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     fprintf(stderr,
                             "Error (%s:%d): Too many '=' characters.\n",
                             list_file, line);
-                    return (false);
+                    return false;
                 }
                 else
                 {
@@ -658,7 +658,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): invalid tile name '%s'\n",
                         list_file, line, m_args[1]);
-                return (false);
+                return false;
             }
 
             int colour = str_to_colour(m_args[2]);
@@ -666,7 +666,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): invalid colour '%s'\n",
                         list_file, line, m_args[2]);
-                return (false);
+                return false;
             }
 
             m_variation_idx = idx;
@@ -681,7 +681,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): invalid tile name '%s'\n",
                         list_file, line, m_args[1]);
-                return (false);
+                return false;
             }
 
             int cnt = m_page.m_counts[idx];
@@ -718,7 +718,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         {
             fprintf(stderr, "Error (%s:%d): unknown command '%%%s'\n",
                     list_file, line, arg);
-            return (false);
+            return false;
         }
     }
     else
@@ -727,7 +727,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         {
             fprintf(stderr, "Error (%s:%d): can't load while composing.\n",
                     list_file, line);
-            return (false);
+            return false;
         }
 
         tile img;
@@ -739,7 +739,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): couldn't load image "
                                 "'%s'.\n", list_file, line, arg);
-                return (false);
+                return false;
             }
 
             if (m_corpsify)
@@ -756,7 +756,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 fprintf(stderr, "Error (%s:%d): failed composing '%s'"
                                 " onto back image '%s'.\n",
                         list_file, line, arg, back->filename().c_str());
-                return (false);
+                return false;
             }
         }
         else
@@ -765,7 +765,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             {
                 fprintf(stderr, "Error (%s:%d): couldn't load image "
                                 "'%s'.\n", list_file, line, arg);
-                return (false);
+                return false;
             }
 
             if (m_corpsify)
@@ -790,7 +790,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
     }
 
-    return (true);
+    return true;
 }
 
 void tile_list_processor::add_image(tile &img, const char *enumname)
@@ -873,13 +873,13 @@ bool tile_list_processor::write_data(bool image, bool code)
     if (m_name == "")
     {
         fprintf(stderr, "%s", "Error: can't write data with no %%name specified.\n");
-        return (false);
+        return false;
     }
 
     if (!m_page.m_tiles.empty() && !m_abstract.empty())
     {
         fprintf(stderr, "%s", "Error: can't specify tiles when using %%abstract.\n");
-        return (false);
+        return false;
     }
 
     string lcname = m_name;
@@ -900,7 +900,7 @@ bool tile_list_processor::write_data(bool image, bool code)
     // Write image page.
     {
         if (!m_page.place_images())
-            return (false);
+            return false;
 
         if (image)
         {
@@ -909,7 +909,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             if (m_abstract.empty())
             {
                 if (!m_page.write_image(filename))
-                    return (false);
+                    return false;
             }
             else
             {
@@ -921,7 +921,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                 {
                     fprintf(stderr, "Error: couldn't open '%s' for write.\n",
                             filename);
-                    return (false);
+                    return false;
                 }
                 fclose(fp);
             }
@@ -942,7 +942,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (!fp)
         {
             fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
-            return (false);
+            return false;
         }
 
         if (!m_categories.empty())
@@ -1101,7 +1101,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (!fp)
         {
             fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
-            return (false);
+            return false;
         }
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
@@ -1323,7 +1323,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (m_abstract.size() == 1)
         {
             fprintf(stderr, "Error: <2 abstracts currently unsupported.\n");
-            return (false);
+            return false;
         }
 
         char filename[1024];
@@ -1333,7 +1333,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (!fp)
         {
             fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
-            return (false);
+            return false;
         }
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
@@ -1388,11 +1388,11 @@ bool tile_list_processor::write_data(bool image, bool code)
         {
             fprintf(fp,
                 "    if (tile_%s_index(str, idx))\n"
-                "        return (true);\n",
+                "        return true;\n",
                 lc_enum[i].c_str());
         }
         fprintf(fp, "%s",
-            "    return (false);\n"
+            "    return false;\n"
             "}\n\n");
 
         fprintf(fp, "bool tile_%s_equal(tileidx_t idx, tileidx_t cmp)\n{\n",
@@ -1418,7 +1418,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (!fp)
         {
             fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
-            return (false);
+            return false;
         }
 
         fprintf(fp, "<html><table>\n");
@@ -1499,7 +1499,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (!fp)
         {
             fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
-            return (false);
+            return false;
         }
 
         if (!m_page.m_tiles.empty())
@@ -1528,7 +1528,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (!fp)
         {
             fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
-            return (false);
+            return false;
         }
 
         if (m_abstract.size() == 0)
@@ -1729,5 +1729,5 @@ bool tile_list_processor::write_data(bool image, bool code)
         fclose(fp);
     }
 
-    return (true);
+    return true;
 }

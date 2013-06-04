@@ -88,7 +88,7 @@ bool tile_page::place_images()
         ycur += tileh;
     }
 
-    return (true);
+    return true;
 }
 
 int tile_page::find(const string &enumname) const
@@ -102,27 +102,27 @@ int tile_page::find(const string &enumname) const
         }
     }
 
-    return (-1);
+    return -1;
 }
 
 bool tile_page::add_synonym(int idx, const string &syn)
 {
     if (idx < 0 || idx >= (int)m_tiles.size())
-        return (false);
+        return false;
 
     m_tiles[idx]->add_enumname(syn);
-    return (true);
+    return true;
 }
 
 bool tile_page::add_synonym(const string &enumname, const string &syn)
 {
     int idx = find(enumname);
     if (idx == -1)
-        return (false);
+        return false;
 
     m_tiles[idx]->add_enumname(syn);
 
-    return (true);
+    return true;
 }
 
 bool tile_page::write_image(const char *filename)
@@ -131,7 +131,7 @@ bool tile_page::write_image(const char *filename)
     if (m_width * m_height <= 0)
     {
         fprintf(stderr, "Error: failed to write image.  No images placed?\n");
-        return (false);
+        return false;
     }
 
     tile_colour *pixels = new tile_colour[m_width * m_height];

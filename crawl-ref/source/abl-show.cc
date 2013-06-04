@@ -1284,7 +1284,7 @@ bool activate_ability()
     if (selected == -1)
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
 #else
     int selected = -1;
