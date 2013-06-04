@@ -4184,6 +4184,14 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         return 0;
     }
 
+    // XXX: Tentative sharing of spectral weapon damage with player
+    // This also makes too many messages
+    if (type == MONS_SPECTRAL_WEAPON && agent->is_monster())
+    {
+        mpr("Your spectral weapon shares its damage with you!");
+        you.hurt(agent, amount/2, flavour, cleanup_dead);
+    }
+
     if (alive())
     {
         if (amount != INSTANT_DEATH && agent && agent->is_monster()
