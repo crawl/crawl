@@ -5457,7 +5457,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_DRYAD, '7', BROWN, "dryad",
+    MONS_DRYAD, '7', YELLOW, "dryad",
     M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS | M_ACTUAL_SPELLS
         | M_MAINTAIN_RANGE,
     MR_VUL_FIRE,
