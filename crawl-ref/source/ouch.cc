@@ -330,7 +330,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         {
             if (hurted <= 0)
                 canned_msg(MSG_YOU_RESIST);
-            else if (multiplier > 50)
+            else if (multiplier > 30)
                 mpr("The blast sears you terribly!");
             else
                 mpr("The blast sears you!");
