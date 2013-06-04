@@ -1471,12 +1471,17 @@ bool trog_burn_spellbooks()
 
     god_acting gdact;
 
-    for (stack_iterator si(you.pos()); si; ++si)
+    // XXX: maybe this should be allowed with less than immunity.
+    if (you.res_fire(false) <= 3)
     {
-        if (item_is_spellbook(*si))
+        for (stack_iterator si(you.pos()); si; ++si)
         {
-            mpr("Burning your own feet might not be such a smart idea!");
-            return false;
+            if (item_is_spellbook(*si))
+            {
+                mprf("Burning your own %s might not be such a smart idea!",
+                        you.foot_name(true).c_str());
+                return false;
+            }
         }
     }
 
@@ -1484,7 +1489,7 @@ bool trog_burn_spellbooks()
     int totalblocked = 0;
     vector<coord_def> mimics;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, false); ri; ++ri)
     {
         // This code has been rearranged a bit from its original form so that
         // with the new handling of spellbook destruction god conducts, the
