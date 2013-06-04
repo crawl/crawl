@@ -1472,7 +1472,7 @@ bool trog_burn_spellbooks()
     god_acting gdact;
 
     // XXX: maybe this should be allowed with less than immunity.
-    if (you.res_fire(false) <= 3)
+    if (player_res_fire(false) <= 3)
     {
         for (stack_iterator si(you.pos()); si; ++si)
         {
