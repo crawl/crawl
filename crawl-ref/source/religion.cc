@@ -495,9 +495,8 @@ bool is_unavailable_god(god_type god)
     if (god == GOD_FEDHAS && crawl_state.game_is_zotdef())
         return true;
 
-    // No Ashenzari, too -- nothing to explore, can't use his abilities,
-    // piety for runes won't give you reskilling on time.  We could give some
-    // piety for every wave, but there's little point.
+    // No Ashenzari, too -- nothing to explore, can't use his abilities.
+    // We could give some piety for every wave, but there's little point.
     if (god == GOD_ASHENZARI && crawl_state.game_is_zotdef())
         return true;
 
@@ -622,10 +621,6 @@ string get_god_likes(god_type which_god, bool verbose)
         snprintf(info, INFO_SIZE, "you sacrifice items%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
         likes.push_back(info);
-        break;
-
-    case GOD_ASHENZARI:
-        likes.push_back("you obtain runes of Zot");
         break;
 
     default:

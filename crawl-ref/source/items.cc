@@ -1668,14 +1668,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         dec_mitm_item_quantity(obj, quant_got);
         you.turn_is_over = true;
 
-        if (you.religion == GOD_ASHENZARI)
-        {
-            simple_god_message(" appreciates your discovery of this rune.");
-            // Important!  This should _not_ be scaled by bondage level, as
-            // otherwise people would curse just before picking up.
-            gain_piety(10, 1);
-        }
-
         return retval;
     }
 
