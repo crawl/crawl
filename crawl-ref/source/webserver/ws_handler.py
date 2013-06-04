@@ -131,7 +131,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
         self.message_queue = []
-        self.message_queue_time = None;
+        self.message_queue_time = None
 
         self.subprotocol = None
 
@@ -524,7 +524,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.message_queue_time = datetime.datetime.now()
         self.message_queue.append(utf8(msg))
         if send:
-            self.flush_messages();
+            self.flush_messages()
 
     def send_message(self, msg, **data):
         """Sends a JSON message to the client."""

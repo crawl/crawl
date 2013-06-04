@@ -82,7 +82,7 @@ class CrawlProcessHandlerBase(object):
         self.logger = logging.LoggerAdapter(logger, {})
         self.logger.process = self._process_log_msg
         self.io_loop = io_loop or IOLoop.instance()
-        self.queue_messages = False;
+        self.queue_messages = False
 
         self.process = None
         self.client_path = self.config_path("client_path")
@@ -134,7 +134,7 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             if receiver.joining:
                 receiver.flush_messages()
-                receiver.joining = False;
+                receiver.joining = False
             else:
                 receiver.clear_messages()
 
@@ -622,7 +622,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.send_client_to_all()
             elif msgobj["msg"] == "flush_messages":
                 # only queue, once we know the crawl process asks for flushes
-                self.queue_messages = True;
+                self.queue_messages = True
                 if "joining_only" in msgobj:
                     self.flush_messages_to_joining_spectators()
                 else:
