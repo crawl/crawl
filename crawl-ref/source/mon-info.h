@@ -96,6 +96,7 @@ enum monster_info_flags
     MB_DIMENSION_ANCHOR,
     MB_CONTROL_WINDS,
     MB_WIND_AIDED,
+    MB_GONGED,
     NUM_MB_FLAGS
 };
 

@@ -2408,6 +2408,11 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
+    // Revert any monsters affected by gong, it should literally never
+    // last long enough to take some stairs and come back anyway.
+    if (mon->has_ench(ENCH_GONGED))
+        mon->del_ench(ENCH_GONGED);
+
     // Don't move non-land or stationary monsters around.
     if (mons_primary_habitat(mon) != HT_LAND
         || mons_is_zombified(mon)

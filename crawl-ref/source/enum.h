@@ -1510,6 +1510,7 @@ enum duration_type
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
     DUR_SPIRIT_HOWL,
+    DUR_GONG,
     NUM_DURATIONS
 };
 
@@ -1611,6 +1612,7 @@ enum enchant_type
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
     ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,     // Ranged accuracy enhanced by nearby Control Winds
+    ENCH_GONGED,        // Affected by Gong of Golubria
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

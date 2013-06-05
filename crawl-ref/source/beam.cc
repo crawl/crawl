@@ -482,6 +482,9 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
 bool bolt::can_affect_actor(const actor *act) const
 {
+    if (act->is_monster() && act->as_monster()->has_ench(ENCH_GONGED))
+        return false;
+
     map<mid_t, int>::const_iterator cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {

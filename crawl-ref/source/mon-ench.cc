@@ -282,6 +282,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_ROLLING:
+    case ENCH_GONGED:
         calc_speed();
         break;
 
@@ -820,6 +821,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_CONTROL_WINDS:
         if (!quiet && you.can_see(this))
             mprf("The winds cease moving at %s will.", name(DESC_ITS).c_str());
+
+    case ENCH_GONGED:
+        calc_speed();
+        break;
 
     default:
         break;
@@ -1933,6 +1938,7 @@ static const char *enchant_names[] =
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided",
+    "gonged",
     "buggy",
 };
 

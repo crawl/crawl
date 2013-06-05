@@ -1637,6 +1637,56 @@ static bool _phial_of_floods()
     return false;
 }
 
+static bool _gong_of_golubria()
+{
+    if (silenced(you.pos()))
+    {
+        mpr("You cannot use this item while silenced.");
+        return false;
+    }
+    if (you.duration[DUR_GONG])
+    {
+        mpr("Only one gong can be in use at any given time.");
+        return false;
+    }
+    // TODO: Prevent use if stasisified already?
+    // TODO: Check for eligible monsters, don't use the gong if none
+    // TODO: Add stasis effect for duration, or stasis aura?
+
+    mpr("GONN--");
+
+    // Something like 1..4 turns of effect
+    const int turns = 20 + div_rand_round(you.skill(SK_EVOCATIONS,10),9);
+    you.duration[DUR_GONG] = turns;
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        // Ignore silenced and stasised monsters
+        // TODO: Messages? Also MR?
+        if (silenced(mi->pos()) || mi->stasis())
+            continue;
+        mi->add_ench(ENCH_GONGED);
+    }
+
+    return true;
+}
+
+void gong_of_golubria_done()
+{
+    // Monsters come back to life
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_GONGED))
+            mi->del_ench(ENCH_GONGED);
+    }
+
+    // Make a lot of noise; currently this is one of the loudest
+    // things in the game.
+    // TODO: Should originate at original position of gong usage
+    mpr("--NNNNG!");
+    noisy(50, you.pos());
+}
+
 static void _expend_elemental_evoker(item_def &item)
 {
     item.plus2 = 10;
@@ -1844,6 +1894,18 @@ bool evoke_item(int slot)
                 return false;
             }
             if (_phial_of_floods())
+                _expend_elemental_evoker(item);
+            else
+                return false;
+            break;
+
+        case MISC_GONG_OF_GOLUBRIA:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            if (_gong_of_golubria())
                 _expend_elemental_evoker(item);
             else
                 return false;

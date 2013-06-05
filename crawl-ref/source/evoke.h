@@ -22,5 +22,6 @@ bool evoke_item(int slot = -1);
 
 void shadow_lantern_effect();
 bool disc_of_storms(bool drac_breath = false);
+void gong_of_golubria_done();
 
 #endif

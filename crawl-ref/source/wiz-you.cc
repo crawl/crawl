@@ -815,6 +815,7 @@ static const char* dur_names[] =
     "dimension anchor",
     "antimagic",
     "spirit howl",
+    "gonging",
 };
 
 void wizard_edit_durations(void)

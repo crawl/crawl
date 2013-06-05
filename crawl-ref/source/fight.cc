@@ -69,6 +69,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     else if (attacker->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
+
+        if (defender->as_monster()->has_ench(ENCH_GONGED))
+        {
+            mprf("%s is frozen in time and space and consequently cannot be harmed.",
+                 defender->name(DESC_THE).c_str());
+            you.turn_is_over = false;
+            return false;
+        }
+
         // Can't damage orbs this way.
         if (mons_is_projectile(defender->type) && !you.confused())
         {
@@ -106,6 +115,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             *did_hit = attk.did_hit;
 
         return true;
+    }
+    else
+    {
+        if (defender->as_monster()->has_ench(ENCH_GONGED))
+            return false;
     }
 
     // If execution gets here, attacker != Player, so we can safely continue

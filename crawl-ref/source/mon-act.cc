@@ -1833,7 +1833,7 @@ static void _pre_monster_move(monster* mons)
         _monster_add_energy(mons);
 
     // Handle clouds on nonmoving monsters.
-    if (mons->speed == 0)
+    if (mons->speed == 0 && !mons->has_ench(ENCH_GONGED))
     {
         _mons_in_cloud(mons);
 
@@ -1906,6 +1906,12 @@ void handle_monster_move(monster* mons)
 
     if (!mons->has_action_energy())
         return;
+
+    if (mons->has_ench(ENCH_GONGED))
+    {
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
 
     move_solo_tentacle(mons);
 
