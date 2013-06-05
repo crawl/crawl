@@ -1515,7 +1515,7 @@ enum duration_type
     NUM_DURATIONS
 };
 
-// This list must match the enchant_names array in monster.cc
+// This list must match the enchant_names array in mon-ench.cc
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:
 //     berserk -> haste, might; fatigue -> slow
