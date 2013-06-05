@@ -738,7 +738,8 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
     {
         for (int n = 0; n < NUM_TRIES; ++n)
         {
-            coord_def jitter = target + coord_def(random_range(-2, 2), random_range(-2, 2));
+            coord_def jitter = clamp_in_bounds(target + coord_def(random_range(-2, 2),
+                                                                  random_range(-2, 2)));
             if (jitter == target || jitter == source || feat_is_solid(grd(jitter)))
                 continue;
 
@@ -762,12 +763,15 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
 
     for (int n = 0; n < NUM_TRIES; ++n)
     {
-        coord_def jitter = mid + coord_def(random_range(-3, 3), random_range(-3, 3));
+        coord_def jitter = clamp_in_bounds(mid + coord_def(random_range(-3, 3),
+                                                           random_range(-3, 3)));
         if (jitter == mid || jitter.distance_from(mid) < 2 || jitter == source
             || feat_is_solid(grd(jitter))
             || !cell_see_cell(source, jitter, LOS_NO_TRANS)
             || !cell_see_cell(target, jitter, LOS_NO_TRANS))
+        {
             continue;
+        }
 
         trace_beam.aimed_at_feet = false;
         trace_beam.source = jitter;
