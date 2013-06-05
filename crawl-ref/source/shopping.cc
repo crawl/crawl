@@ -2171,6 +2171,13 @@ unsigned int item_value(item_def item, bool ident)
             valued += 400;
             break;
 
+        case MISC_FAN_OF_GALES:
+        case MISC_STONE_OF_TREMORS:
+        case MISC_PHIAL_OF_FLOODS:
+        case MISC_LAMP_OF_FIRE:
+            valued += 1000;
+            break;
+
 #if TAG_MAJOR_VERSION == 34
         case MISC_EMPTY_EBONY_CASKET:
             valued += 20;
