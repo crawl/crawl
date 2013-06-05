@@ -2420,6 +2420,8 @@ static string _shop_type_name(shop_type type)
             return "Distillery";
         case SHOP_GENERAL:
             return "General Store";
+        case SHOP_MISCELLANY:
+            return "Gadget";
         default:
             return "Bug";
     }

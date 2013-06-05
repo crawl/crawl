@@ -5550,6 +5550,9 @@ static object_class_type _item_in_shop(shop_type shop_type)
     case SHOP_SCROLL:
         return OBJ_SCROLLS;
 
+    case SHOP_MISCELLANY:
+        return OBJ_MISCELLANY;
+
     default:
         die("unknown shop type");
     }
