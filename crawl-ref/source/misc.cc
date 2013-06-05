@@ -1716,7 +1716,8 @@ static const char *shop_types[] = {
     "food",
     "distillery",
     "scroll",
-    "general"
+    "general",
+    "gadget"
 };
 
 int str_to_shoptype(const string &s)
