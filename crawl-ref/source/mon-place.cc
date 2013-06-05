@@ -2559,6 +2559,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3 + random2(4);
         break;
 
+    case MONS_THE_ENCHANTRESS:
+        natural_leader = true;
+        band = BAND_ENCHANTRESS;
+        band_size = 6 + random2avg(5, 2);
+        break;
+
     default: ;
     }
 
@@ -2933,13 +2939,26 @@ static monster_type _band_member(band_type band, int which)
                                           24, MONS_TENGU,
                                            0);
 
+    case BAND_ENCHANTRESS:
+        if (which <= 3)
+            return MONS_SPRIGGAN_DEFENDER;
+        if (coinflip())
+        {
+            return random_choose(MONS_SPRIGGAN_AIR_MAGE,
+                                 MONS_SPRIGGAN_BERSERKER,
+                                 MONS_SPRIGGAN_RIDER,
+                                 -1);
+        }
+        return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
         if (which <= 2 || one_chance_in(5))
+        {
             return random_choose(MONS_SPRIGGAN_AIR_MAGE,
                                  MONS_SPRIGGAN_BERSERKER,
                                  MONS_SPRIGGAN_DRUID,
                                  MONS_SPRIGGAN_RIDER,
                                  -1);
+        }
         // deliberate fall-through
     case BAND_SPRIGGANS:
         return MONS_SPRIGGAN;
