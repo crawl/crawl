@@ -1387,6 +1387,14 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type == OBJ_GOLD || item_is_rune(item1))
         return true;
 
+    if (is_artefact(item1) != is_artefact(item2))
+        return false;
+    else if (is_artefact(item1)
+             && get_artefact_name(item1) != get_artefact_name(item2))
+    {
+        return false;
+    }
+
     // These classes also require pluses and special.
     if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
         || item1.base_type == OBJ_MISSILES
