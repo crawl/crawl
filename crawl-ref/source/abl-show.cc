@@ -3476,7 +3476,7 @@ vector<ability_type> get_god_abilities(bool include_unusable)
         else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
             abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
         else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES
-                 || abil == ABIL_STOP_RECALL)
+                 || abil == ABIL_STOP_RECALL && you.religion == GOD_YREDELEMNUL)
         {
             abilities.push_back(ABIL_YRED_INJURY_MIRROR);
         }
