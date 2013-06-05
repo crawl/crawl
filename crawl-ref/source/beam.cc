@@ -2246,14 +2246,16 @@ static coord_def _random_point_hittable_from(const coord_def &c,
 }
 
 static void _create_feat_splash(coord_def center,
-                                dungeon_feature_type overwriteable,
-                                dungeon_feature_type newfeat,
                                 int radius,
                                 int nattempts)
 {
-    // Always affect center.
-    temp_change_terrain(center, DNGN_SHALLOW_WATER, 100 + random2(100),
-                        TERRAIN_CHANGE_FLOOD);
+    // Always affect center, if compatible
+    if ((grd(center) == DNGN_FLOOR || grd(center) == DNGN_SHALLOW_WATER))
+    {
+        temp_change_terrain(center, DNGN_SHALLOW_WATER, 100 + random2(100),
+                            TERRAIN_CHANGE_FLOOD);
+    }
+
     for (int i = 0; i < nattempts; ++i)
     {
         const coord_def newp(_random_point_hittable_from(center, radius));
@@ -2502,11 +2504,7 @@ void bolt::affect_endpoint()
         }
         else
             noisy(25, pos(), "You hear a splash.");
-        _create_feat_splash(pos(),
-                            DNGN_FLOOR,
-                            DNGN_SHALLOW_WATER,
-                            2,
-                            random_range(3, 12, 2));
+        _create_feat_splash(pos(), 2, random_range(3, 12, 2));
     }
 
     // FIXME: why don't these just have is_explosion set?
