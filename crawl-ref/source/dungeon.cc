@@ -1430,7 +1430,10 @@ static void _fixup_branch_stairs()
     // dungeon or wherever:
     if (_at_top_of_branch())
     {
-        int count = 0;
+        // Just in case we somehow get here with more than one stair placed.
+        // Prefer stairs that are placed in vaults for picking an exit at
+        // random.
+        vector<coord_def> vault_stairs, normal_stairs;
         dungeon_feature_type exit = your_branch().exit_stairs;
         if (you.where_are_you == root_branch) // ZotDef
             exit = DNGN_EXIT_DUNGEON;
@@ -1441,10 +1444,39 @@ static void _fixup_branch_stairs()
             else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
                      && grd(*ri) <= DNGN_STONE_STAIRS_UP_III)
             {
-                ++count;
-                ASSERT(count == 1 || you.where_are_you == root_branch);
-                env.markers.add(new map_feature_marker(*ri, grd(*ri)));
-                _set_grd(*ri, exit);
+                if (you.where_are_you == root_branch)
+                {
+                    env.markers.add(new map_feature_marker(*ri, grd(*ri)));
+                    _set_grd(*ri, exit);
+                }
+                else
+                {
+                    if (map_masked(*ri, MMT_VAULT))
+                        vault_stairs.push_back(*ri);
+                    else
+                        normal_stairs.push_back(*ri);
+                }
+            }
+        }
+        if (you.where_are_you != root_branch)
+        {
+            vector<coord_def> stairs;
+            if (!vault_stairs.empty())
+                stairs = vault_stairs;
+            else
+                stairs = normal_stairs;
+
+            if (!stairs.empty())
+            {
+                random_shuffle(stairs.begin(), stairs.end());
+                coord_def coord = *(stairs.begin());
+                env.markers.add(new map_feature_marker(coord, grd(coord)));
+                _set_grd(coord, exit);
+                for (vector<coord_def>::iterator it = (stairs.begin())++;
+                     it != stairs.end(); it++)
+                {
+                    _set_grd(*it, DNGN_FLOOR);
+                }
             }
         }
     }
