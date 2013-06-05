@@ -1472,7 +1472,7 @@ static void _fixup_branch_stairs()
                 coord_def coord = *(stairs.begin());
                 env.markers.add(new map_feature_marker(coord, grd(coord)));
                 _set_grd(coord, exit);
-                for (vector<coord_def>::iterator it = (stairs.begin())++;
+                for (vector<coord_def>::iterator it = stairs.begin() + 1;
                      it != stairs.end(); it++)
                 {
                     _set_grd(*it, DNGN_FLOOR);
