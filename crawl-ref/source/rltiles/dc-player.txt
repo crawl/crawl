@@ -27,6 +27,7 @@ halfling_m HALFLING
 halfling_f
 orc_f ORC
 orc_m
+%rim 0
 lorc_m0 LAVA_ORC
 lorc_f0
 lorc_m1 LAVA_ORC_HEAT
@@ -41,6 +42,7 @@ lorc_f3
 lorc_f4
 lorc_f5
 lorc_f6
+%rim 1
 kobold_m KOBOLD
 kobold_f
 kobold2_m
