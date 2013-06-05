@@ -2897,7 +2897,8 @@ bool is_elemental_evoker(const item_def &item)
             && (item.sub_type == MISC_LAMP_OF_FIRE
                 || item.sub_type == MISC_STONE_OF_TREMORS
                 || item.sub_type == MISC_FAN_OF_GALES
-                || item.sub_type == MISC_PHIAL_OF_FLOODS));
+                || item.sub_type == MISC_PHIAL_OF_FLOODS
+                || item.sub_type == MISC_GONG_OF_GOLUBRIA));
 }
 
 bool evoker_is_charged(const item_def &item)

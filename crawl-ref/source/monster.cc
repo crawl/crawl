@@ -4179,7 +4179,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
     if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
-        || type == MONS_DIAMOND_OBELISK)
+        || type == MONS_DIAMOND_OBELISK || has_ench(ENCH_GONGED))
     {
         return 0;
     }
@@ -4706,6 +4706,8 @@ void monster::calc_speed()
         speed = haste_mul(speed);
     if (has_ench(ENCH_SLOW))
         speed = haste_div(speed);
+    if (has_ench(ENCH_GONGED))
+        speed = 0;
 }
 
 // Check speed and speed_increment sanity.

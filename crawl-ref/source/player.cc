@@ -4323,6 +4323,7 @@ void display_char_status()
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
+        DUR_GONG,
     };
 
     status_info inf;

@@ -281,6 +281,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_ROLLING:
+    case ENCH_GONGED:
         calc_speed();
         break;
 
@@ -821,6 +822,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_WEAK:
         if (!quiet)
             simple_monster_message(this, " is no longer weakened.");
+        break;
+
+    case ENCH_GONGED:
+        calc_speed();
         break;
 
     default:
@@ -1924,6 +1929,7 @@ static const char *enchant_names[] =
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
+    "gonged",
     "buggy",
 };
 

@@ -1512,6 +1512,7 @@ enum duration_type
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
+    DUR_GONG,
     NUM_DURATIONS
 };
 
@@ -1608,6 +1609,7 @@ enum enchant_type
     ENCH_RETCHING,
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
+    ENCH_GONGED,        // Affected by Gong of Golubria
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

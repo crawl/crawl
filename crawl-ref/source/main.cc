@@ -2884,6 +2884,12 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_ANTIMAGIC, delay,
                           "You regain control over your magic.");
 
+    if (_decrement_a_duration(DUR_GONG, delay,
+                              "You feel time begin to move again."))
+    {
+        gong_of_golubria_done();
+    }
+
     _decrement_a_duration(DUR_WATER_HOLD_IMMUNITY, delay);
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
