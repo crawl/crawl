@@ -2854,6 +2854,9 @@ void melee_attack::chaos_affects_attacker()
         // Non-weapon using forms are uncool here: you'd need to run away
         // instead of continuing the fight.
         transformation_type form = coinflip() ? TRAN_TREE : TRAN_APPENDAGE;
+        // Waiting it off is boring.
+        if (form == TRAN_TREE && !there_are_monsters_nearby(true, false, false))
+            form = TRAN_APPENDAGE;
         if (one_chance_in(5))
             form = coinflip() ? TRAN_STATUE : TRAN_LICH;
         if (transform(0, form))
