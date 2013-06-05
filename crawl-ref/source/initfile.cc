@@ -3931,11 +3931,12 @@ static void _edit_save(int argc, char **argv)
     if (argc <= 1 || !strcmp(argv[1], "help"))
     {
         printf("Usage: crawl --edit-save <name> <command>, where <command> may be:\n"
-               "  ls                        list the chunks\n"
-               "  get <chunk> [<file>]      write a chunk from <file> (default \"chunk\", \"-\" for stdout)\n"
-               "  put <chunk> [<file>]      extract a chunk to <file> (default \"chunk\", \"-\" for stdin)\n"
-               "  rm <chunk>                delete a chunk\n"
-               "  repack                    defrag and reclaim unused space\n"
+               "  ls                          list the chunks\n"
+               "  get <chunk> [<chunkfile>]   extract a chunk into <chunkfile>\n"
+               "  put <chunk> [<chunkfile>]   import a chunk from <chunkfile>\n"
+               "     <chunkfile> defaults to \"chunk\"; use \"-\" for stdout/stdin\n"
+               "  rm <chunk>                  delete a chunk\n"
+               "  repack                      defrag and reclaim unused space\n"
              );
         return;
     }
@@ -4442,9 +4443,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_EDIT_SAVE:
             // Always parse.
-            if (!next_is_param)
-                return false;
-
             _edit_save(argc - current - 1, argv + current + 1);
             end(0);
 
