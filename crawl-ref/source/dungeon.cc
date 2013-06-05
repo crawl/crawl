@@ -2026,119 +2026,186 @@ struct coord_feat
     }
 };
 
+static bool _forbidden_plant(const coord_def &p)
+{
+    // ....  Prevent this arrangement by never placing a plant in a way that
+    // #P##  locally disconnects two adjacent cells.  We scan clockwise around
+    // ##.#  p looking for maximal contiguous sequences of traversable cells.
+    // #?##  If we find more than one (and they don't join up cyclically),
+    //       reject the configuration so the plant doesn't disconnect floor.
+    //
+    // ...   We do reject many non-problematic cases, such as this one; dpeg
+    // #P#   suggests doing a connectivity check in ruination after placing
+    // ...   plants, and removing cut-point plants then.
+
+    // First traversable index, last consecutive traversable index, and
+    // the next traversable index after last+1.
+    int first = -1, last = -1, next = -1;
+    int passable = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        coord_def q = p + Compass[i];
+
+        if (feat_is_traversable(grd(q), true))
+        {
+            ++passable;
+            if (first < 0)
+                first = i;
+            else if (last >= 0 && next < 0)
+            {
+                // Found a maybe-disconnected traversable cell.  This is only
+                // acceptible if it might connect up at the end.
+                if (first == 0)
+                    next = i;
+                else
+                    return true;
+            }
+        }
+        else
+        {
+            if (first >= 0 && last < 0)
+                last = i - 1;
+            else if (next >= 0)
+                return true;
+        }
+    }
+
+    // ?#.  Forbid this arrangement when the ? squares are walls.
+    // #P#  If multiple plants conspire to do something similar, that's
+    // ##?  fine: we just want to avoid the most common occurrences.
+    //      This would be an info leak (that at least one ? is not a wall)
+    //      were it not for the previous check.
+
+    return passable <= 1;
+}
+
 template <typename Iterator>
-static void _ruin_level(Iterator ri,
+static void _ruin_level(Iterator iter,
                         unsigned vault_mask = MMT_VAULT,
                         int ruination = 10,
-                        int plant_density = 5)
+                        int plant_density = 5,
+                        int iterations = 1)
 {
     typedef vector<coord_feat> coord_feats;
     coord_feats to_replace;
 
-    for (; ri; ++ri)
+    for (int i = 0; i < iterations; ++i)
     {
-        // don't alter map boundary
-        if (!in_bounds(*ri))
-            continue;
-
-        // only try to replace wall and door tiles
-        if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
-            continue;
-
-        // don't mess with permarock
-        if (grd(*ri) == DNGN_PERMAROCK_WALL)
-            continue;
-
-        // or vaults
-        if (map_masked(*ri, vault_mask))
-            continue;
-
-        // Pick a random adjacent non-wall, non-door, non-statue
-        // feature, and count the number of such features.
-        coord_feat replacement(*ri, DNGN_UNSEEN);
-        int floor_count = 0;
-        for (adjacent_iterator ai(*ri); ai; ++ai)
+        for (Iterator ri = iter; ri; ++ri)
         {
-            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai))
-                && !feat_is_statue_or_idol(grd(*ai))
-                // Shouldn't happen, but just in case.
-                && grd(*ai) != DNGN_MALIGN_GATEWAY)
+            // don't alter map boundary
+            if (!in_bounds(*ri))
+                continue;
+
+            // only try to replace wall and door tiles
+            if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
+                continue;
+
+            // don't mess with permarock
+            if (grd(*ri) == DNGN_PERMAROCK_WALL)
+                continue;
+
+            // or vaults
+            if (map_masked(*ri, vault_mask))
+                continue;
+
+            // Pick a random adjacent non-wall, non-door, non-statue
+            // feature, and count the number of such features.
+            coord_feat replacement(*ri, DNGN_UNSEEN);
+            int floor_count = 0;
+            for (adjacent_iterator ai(*ri); ai; ++ai)
             {
-                if (one_chance_in(++floor_count))
-                    replacement.set_from(*ai);
+                if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai))
+                    && !feat_is_statue_or_idol(grd(*ai))
+                    // Shouldn't happen, but just in case.
+                    && grd(*ai) != DNGN_MALIGN_GATEWAY)
+                {
+                    if (one_chance_in(++floor_count))
+                        replacement.set_from(*ai);
+                }
             }
+
+            // chance of removing the tile is dependent on the number of adjacent
+            // floor(ish) tiles
+            if (x_chance_in_y(floor_count, ruination))
+                to_replace.push_back(replacement);
         }
 
-        // chance of removing the tile is dependent on the number of adjacent
-        // floor(ish) tiles
-        if (x_chance_in_y(floor_count, ruination))
-            to_replace.push_back(replacement);
+        for (coord_feats::const_iterator it = to_replace.begin();
+            it != to_replace.end();
+            ++it)
+        {
+            const coord_def &p(it->pos);
+            dungeon_feature_type replacement = it->feat;
+            ASSERT(replacement != DNGN_UNSEEN);
+
+            // Don't replace doors with impassable features.
+            if (feat_is_door(grd(p)))
+            {
+                if (feat_is_water(replacement))
+                    replacement = DNGN_SHALLOW_WATER;
+                else
+                    replacement = DNGN_FLOOR;
+            }
+            else if (feat_has_solid_floor(replacement)
+                    && replacement != DNGN_SHALLOW_WATER)
+            {
+                // Exclude traps, shops, stairs, portals, altars, fountains.
+                // The first four, especially, are a big deal.
+                replacement = DNGN_FLOOR;
+            }
+
+            // only remove some doors, to preserve tactical options
+            if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
+            {
+                // Copy the mask and properties too, so that we don't make an
+                // isolated transparent or rtele_into square.
+                env.level_map_mask(p) |= it->mask;
+                env.pgrid(p) |= it->prop;
+                _set_grd(p, replacement);
+            }
+
+            // but remove doors if we've removed all adjacent walls
+            for (adjacent_iterator wai(p); wai; ++wai)
+            {
+                if (feat_is_door(grd(*wai)))
+                {
+                    bool remove = true;
+                    for (adjacent_iterator dai(*wai); dai; ++dai)
+                    {
+                        if (feat_is_wall(grd(*dai)))
+                            remove = false;
+                    }
+                    // It's always safe to replace a door with floor.
+                    if (remove)
+                    {
+                        env.level_map_mask(p) |= it->mask;
+                        env.pgrid(p) |= it->prop;
+                        _set_grd(*wai, DNGN_FLOOR);
+                    }
+                }
+            }
+        }
     }
+
 
     for (coord_feats::const_iterator it = to_replace.begin();
          it != to_replace.end();
          ++it)
     {
         const coord_def &p(it->pos);
-        dungeon_feature_type replacement = it->feat;
-        ASSERT(replacement != DNGN_UNSEEN);
-
-        // Don't replace doors with impassable features.
-        if (feat_is_door(grd(p)))
-        {
-            if (feat_is_water(replacement))
-                replacement = DNGN_SHALLOW_WATER;
-            else
-                replacement = DNGN_FLOOR;
-        }
-        else if (feat_has_solid_floor(replacement)
-                 && replacement != DNGN_SHALLOW_WATER)
-        {
-            // Exclude traps, shops, stairs, portals, altars, fountains.
-            // The first four, especially, are a big deal.
-            replacement = DNGN_FLOOR;
-        }
-
-        // only remove some doors, to preserve tactical options
-        if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
-        {
-            // Copy the mask and properties too, so that we don't make an
-            // isolated transparent or rtele_into square.
-            env.level_map_mask(p) |= it->mask;
-            env.pgrid(p) |= it->prop;
-            _set_grd(p, replacement);
-        }
-
-        // but remove doors if we've removed all adjacent walls
-        for (adjacent_iterator wai(p); wai; ++wai)
-        {
-            if (feat_is_door(grd(*wai)))
-            {
-                bool remove = true;
-                for (adjacent_iterator dai(*wai); dai; ++dai)
-                {
-                    if (feat_is_wall(grd(*dai)))
-                        remove = false;
-                }
-                // It's always safe to replace a door with floor.
-                if (remove)
-                {
-                    env.level_map_mask(p) |= it->mask;
-                    env.pgrid(p) |= it->prop;
-                    _set_grd(*wai, DNGN_FLOOR);
-                }
-            }
-        }
 
         // replace some ruined walls with plants/fungi/bushes
         if (plant_density && one_chance_in(plant_density)
-            && feat_has_solid_floor(replacement))
+            && feat_has_solid_floor(grd(p))
+            && !_forbidden_plant(p))
         {
             mgen_data mg;
             mg.cls = one_chance_in(20) ? MONS_BUSH  :
                      coinflip()        ? MONS_PLANT :
                      MONS_FUNGUS;
             mg.pos = p;
+            mg.flags = MG_FORCE_PLACE;
             mons_place(mgen_data(mg));
         }
     }
@@ -2281,20 +2348,14 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
     if (player_in_branch(BRANCH_LAIR))
     {
-        int depth = you.depth + 1;
-        do
-        {
+            int depth = you.depth + 1;
             _ruin_level(rectangle_iterator(1), MMT_VAULT,
-                        20 - depth,
-#if 0
-            // Disabled, until it no longer ruins autoexplore.
-                        depth / 2 + 5);
-#else
-                        0);
-#endif
-            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
-            depth -= 3;
-        } while (depth > 0);
+                        20 - depth, depth / 2 + 4, 1 + (depth / 3));
+            do
+            {
+                _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
+                depth -= 3;
+            } while (depth > 0);
     }
 
     if (player_in_branch(BRANCH_FOREST))
@@ -5694,6 +5755,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         mgen_data mg;
+        mg.flags = MG_FORCE_PLACE;
         if (mgrd(*ri) != NON_MONSTER && !map_masked(*ri, MMT_VAULT))
         {
             // clump plants around things that already exist
@@ -5745,6 +5807,8 @@ static void _add_plant_clumps(int frequency /* = 10 */,
              ++it)
         {
             if (*it == *ri)
+                continue;
+            if (_forbidden_plant(*it))
                 continue;
             mg.pos = *it;
             mons_place(mgen_data(mg));
