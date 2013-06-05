@@ -2086,11 +2086,12 @@ static void _ruin_level(Iterator iter,
                         int plant_density = 5,
                         int iterations = 1)
 {
-    typedef vector<coord_feat> coord_feats;
-    coord_feats to_replace;
+    vector<coord_def> replaced;
 
     for (int i = 0; i < iterations; ++i)
     {
+        typedef vector<coord_feat> coord_feats;
+        coord_feats to_replace;
         for (Iterator ri = iter; ri; ++ri)
         {
             // don't alter map boundary
@@ -2136,6 +2137,7 @@ static void _ruin_level(Iterator iter,
             ++it)
         {
             const coord_def &p(it->pos);
+            replaced.push_back(p);
             dungeon_feature_type replacement = it->feat;
             ASSERT(replacement != DNGN_UNSEEN);
 
@@ -2189,11 +2191,11 @@ static void _ruin_level(Iterator iter,
     }
 
 
-    for (coord_feats::const_iterator it = to_replace.begin();
-         it != to_replace.end();
+    for (vector<coord_def>::const_iterator it = replaced.begin();
+         it != replaced.end();
          ++it)
     {
-        const coord_def &p(it->pos);
+        const coord_def &p(*it);
 
         // replace some ruined walls with plants/fungi/bushes
         if (plant_density && one_chance_in(plant_density)
