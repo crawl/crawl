@@ -3475,8 +3475,11 @@ vector<ability_type> get_god_abilities(bool include_unusable)
             abilities.push_back(ABIL_ELYVILON_LIFESAVING);
         else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
             abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
-        else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+        else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES
+                 || abil == ABIL_STOP_RECALL)
+        {
             abilities.push_back(ABIL_YRED_INJURY_MIRROR);
+        }
     }
 
     if (you.religion == GOD_ZIN && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)
