@@ -21,6 +21,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-chimera.h"
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -200,7 +201,9 @@ static bool _is_public_key(string key)
      || key == "dbname"
      || key == "monster_tile"
      || key == "tile_num"
-     || key == "tile_idx")
+     || key == "tile_idx"
+     || key == "chimera_part_2"
+     || key == "chimera_part_3")
     {
         return true;
     }
@@ -796,6 +799,7 @@ string monster_info::_core_name() const
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
 #endif
     case MONS_SPECTRAL_THING:   case MONS_PILLAR_OF_SALT:
+    case MONS_CHIMERA:
         nametype = base_type;
         break;
 
@@ -965,6 +969,9 @@ string monster_info::common_name(description_level_type desc) const
         break;
     case MONS_PILLAR_OF_SALT:
         ss << (nocore ? "" : " ") << "shaped pillar of salt";
+        break;
+    case MONS_CHIMERA:
+        ss << chimera_part_names() << " chimera";
         break;
     default:
         break;

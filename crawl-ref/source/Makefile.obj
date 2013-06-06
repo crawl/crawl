@@ -135,6 +135,7 @@ mon-abil.o \
 mon-act.o \
 mon-behv.o \
 mon-cast.o \
+mon-chimera.o \
 mon-clone.o \
 mon-death.o \
 mon-ench.o \
