@@ -579,8 +579,9 @@ bow:quote
 %%%%
 box of beasts
 
-A magical box containing many wild beasts. One may allow them to escape by
-opening the box's lid.
+A box filled with the macabre products of a depraved wizard's magical
+experimentations. Opening it may set loose a chimera, a terrible gestalt
+composed from the parts of other beasts, to aid you.
 %%%%
 bread ration
 
