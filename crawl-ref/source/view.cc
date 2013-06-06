@@ -1042,10 +1042,6 @@ void viewwindow(bool show_updates, bool tiles_only)
         cell++;
     }
 
-    // Leaving it this way because short flashes can occur in long ones,
-    // and this simply works without requiring a stack.
-    you.flash_colour = BLACK;
-    you.flash_where = 0;
     you.last_view_update = you.num_turns;
 #ifndef USE_TILE_LOCAL
 #ifdef USE_TILE_WEB
@@ -1063,6 +1059,11 @@ void viewwindow(bool show_updates, bool tiles_only)
     tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
     tiles.update_tabs();
 #endif
+
+    // Leaving it this way because short flashes can occur in long ones,
+    // and this simply works without requiring a stack.
+    you.flash_colour = BLACK;
+    you.flash_where = 0;
 
     // Reset env.show if we munged it.
     if (_show_terrain)
