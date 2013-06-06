@@ -392,7 +392,8 @@ int unixcurses_get_vi_key(int keyin)
         // Note that this mangling occurs entirely on the machine Crawl runs
         // on (and even within crawl's process) rather than where the user's
         // terminal is, so this check is reliable.
-        static const char * const kbs = tigetstr("kbs");
+        static char kbskey[] = "kbs"; // tigetstr wants a non-const pointer :(
+        static const char * const kbs = tigetstr(kbskey);
         static const int bskey = (kbs && kbs != (const char *) -1
                                       && kbs == string("\010")) ? CK_BKSP
                                                                 : KEY_BACKSPACE;
