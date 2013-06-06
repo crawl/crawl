@@ -39,6 +39,7 @@ int mons_tracking_range(const monster* mon)
         range = 2;
         break;
     case I_INSECT:
+    case I_REPTILE:
         range = 4;
         break;
     case I_ANIMAL:

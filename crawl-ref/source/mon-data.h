@@ -90,12 +90,13 @@
    - various things monsters can do upon seeing you
 
    intel explanation:
-   - How smart it is: I_PLANT < I_INSECT < I_ANIMAL < I_NORMAL < I_HIGH.
+   - How smart it is:
+   I_PLANT < I_INSECT < I_REPTILE < I_ANIMAL < I_NORMAL < I_HIGH.
    So far, differences here have little effects except for monster's chance
    of seeing you if stealthy and rudimentary trap handling; really stupid
    monsters will walk through clouds.
-   I_REPTILE is an alias for I_INSECT to reduce confusion a bit: these are
-   lower vertebrates (fish, amphibians, non-draconic reptiles).
+   I_REPTILE is are lower vertebrates (fish, amphibians, non-draconic reptiles),
+   smarter reptiles could be I_ANIMAL.
 
    speed
    - Increases the store of energy that the monster uses for doing things.
