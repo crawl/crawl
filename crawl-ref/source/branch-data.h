@@ -124,7 +124,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Crypt", "the Crypt", "Crypt",
       NULL,
       true, LIGHTGREY, BROWN,
-      'C', true, -20 },
+      'C', true, -3 },
 
     { BRANCH_TOMB, BRANCH_CRYPT, 2, 3, 3, 21,
       BFLAG_ISLANDED, LFLAG_NO_TELE_CONTROL,
