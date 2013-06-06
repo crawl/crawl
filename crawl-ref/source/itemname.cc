@@ -268,8 +268,6 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             equipped = true;
             buff << " (quivered)";
         }
-        else if (item_is_active_manual(*this))
-            buff << " (studied)";
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
@@ -3560,11 +3558,6 @@ string item_prefix(const item_def &item, bool temp)
     case OBJ_RODS:
     case OBJ_MISSILES:
         if (item_is_equipped(item, true))
-            prefixes.push_back("equipped");
-        break;
-
-    case OBJ_BOOKS:
-        if (item_is_active_manual(item))
             prefixes.push_back("equipped");
         break;
 

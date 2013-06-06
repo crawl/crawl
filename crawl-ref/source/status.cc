@@ -4,6 +4,7 @@
 
 #include "areas.h"
 #include "env.h"
+#include "evoke.h"
 #include "godabil.h"
 #include "libutil.h"
 #include "misc.h"
@@ -457,13 +458,15 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_MANUAL:
-        if (!is_invalid_skill(you.manual_skill))
+    {
+        string skills = manual_skill_names();
+        if (!skills.empty())
         {
-            string sk = skill_name(you.manual_skill);
-            inf->short_text = "studying " + sk;
-            inf->long_text = "You are " + inf->short_text + ".";
+            inf->short_text = "studying " + manual_skill_names(true);
+            inf->long_text = "You are studying " + skills + ".";
         }
         break;
+    }
 
     case DUR_SURE_BLADE:
     {

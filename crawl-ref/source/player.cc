@@ -5752,9 +5752,6 @@ void player::init()
     sage_xp.clear();
     sage_bonus.clear();
 
-    manual_skill = SK_NONE;
-    manual_index = -1;
-
     skill_cost_level = 1;
     exp_available = 0;
     zot_points = 0;

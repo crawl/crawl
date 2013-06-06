@@ -1094,8 +1094,6 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
     marshallInt(th, you.gargoyle_damage_reduction);
-    marshallShort(th, you.manual_skill);
-    marshallInt(th, you.manual_index);
     marshallInt(th, you.abyss_speed);
 
     marshallInt(th, you.disease);
@@ -1906,9 +1904,13 @@ static void tag_read_you(reader &th)
         you.gargoyle_damage_reduction = unmarshallInt(th);
     else
         you.gargoyle_damage_reduction = 0;
+
+    if (th.getMinorVersion() < TAG_MINOR_AUTOMATIC_MANUALS)
+    {
+        unmarshallShort(th);
+        unmarshallInt(th);
+    }
 #endif
-    you.manual_skill  = static_cast<skill_type>(unmarshallShort(th));
-    you.manual_index  = unmarshallInt(th);
 
     you.abyss_speed = unmarshallInt(th);
 

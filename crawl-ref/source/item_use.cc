@@ -2707,6 +2707,7 @@ static void _handle_read_book(int item_slot)
     }
 
     item_def& book(you.inv[item_slot]);
+    ASSERT(book.sub_type != BOOK_MANUAL);
 
     if (book.sub_type == BOOK_DESTRUCTION)
     {
@@ -2714,11 +2715,6 @@ static void _handle_read_book(int item_slot)
             mpr("This book does not work if you cannot read it aloud!");
         else
             tome_of_power(item_slot);
-        return;
-    }
-    else if (book.sub_type == BOOK_MANUAL)
-    {
-        skill_manual(item_slot);
         return;
     }
 
@@ -2919,7 +2915,8 @@ void read_scroll(int slot)
 
     item_def& scroll = you.inv[item_slot];
 
-    if (scroll.base_type != OBJ_BOOKS && scroll.base_type != OBJ_SCROLLS)
+    if ((scroll.base_type != OBJ_BOOKS || scroll.sub_type == BOOK_MANUAL)
+        && scroll.base_type != OBJ_SCROLLS)
     {
         mpr("You can't read that!");
         crawl_state.zero_turns_taken();
@@ -3645,6 +3642,8 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_BOOKS:
+            if (item.sub_type == BOOK_MANUAL)
+                return;
             if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING))
             {
                 if (check_warning_inscriptions(item, OPER_READ))

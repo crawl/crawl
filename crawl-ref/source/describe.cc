@@ -1867,9 +1867,6 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_BOOKS:
-        if (item_is_active_manual(item))
-            description << "\nYou are currently studying this manual.";
-
         if (!player_can_memorise_from_spellbook(item))
         {
             description << "\nThis book is beyond your current level of "

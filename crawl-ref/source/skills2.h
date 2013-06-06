@@ -26,7 +26,7 @@ struct skill_state
     unsigned int total_experience;
     bool auto_training;
     int exp_available;
-    int manual_charges;
+    vector<int> manual_charges;
 
     void save();
     void restore_levels();

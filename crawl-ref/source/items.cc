@@ -2173,9 +2173,6 @@ bool drop_item(int item_dropped, int quant_drop)
         }
     }
 
-    if (you.manual_index == item_dropped)
-        stop_studying_manual();
-
     // [ds] easy_unequip does not apply to weapons.
     //
     // Unwield needs to be done before copy in order to clear things
@@ -3032,12 +3029,6 @@ bool item_is_melded(const item_def& item)
 {
     equipment_type eq = item_equip_slot(item);
     return (eq != EQ_NONE && you.melded[eq]);
-}
-
-bool item_is_active_manual(const item_def &item)
-{
-    return (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL
-            && in_inventory(item) && item.link == you.manual_index);
 }
 
 ////////////////////////////////////////////////////////////////////////
