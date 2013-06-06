@@ -137,7 +137,7 @@ enum mon_intel_type             // Must be in increasing intelligence order
 {
     I_PLANT = 0,
     I_INSECT,
-    I_REPTILE = I_INSECT, // just for documentation
+    I_REPTILE,
     I_ANIMAL,
     I_NORMAL,
     I_HIGH,

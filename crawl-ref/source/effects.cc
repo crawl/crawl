@@ -2427,6 +2427,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         x = 500;
         break;
     case I_ANIMAL:
+    case I_REPTILE:
     case I_INSECT:
         x = 250;
         break;

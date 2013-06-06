@@ -598,6 +598,7 @@ void handle_behaviour(monster* mon)
                 break;
             case I_ANIMAL:
             case I_INSECT:
+            case I_REPTILE:
                 mon->foe_memory = random_range(250, 550);
                 break;
             case I_PLANT:
@@ -1116,7 +1117,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             // If the monster can't reach its target and can't attack it
             // either, retreat.
             try_pathfind(mon);
-            if (mons_intel(mon) > I_INSECT && !mons_can_attack(mon)
+            if (mons_intel(mon) > I_REPTILE && !mons_can_attack(mon)
                 && target_is_unreachable(mon))
             {
                 mon->behaviour = BEH_RETREAT;
