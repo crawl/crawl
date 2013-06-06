@@ -4208,6 +4208,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+// Chimera - composed of three other animals
+{
+    MONS_CHIMERA, 'X', RED, "chimera",
+    M_NO_POLY_TO,
+    MR_NO_FLAGS,
+    0, 11, MONS_CHIMERA, MONS_CHIMERA, MH_NATURAL, -3,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 8, 3, 5, 0 },
+    8, 5, MST_NO_SPELLS, CE_NOCORPSE, Z_BIG, S_ROAR,
+    I_ANIMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // large abominations ('X')
 {
     // See comment under MONS_ABOMINATION_SMALL regarding holiness.

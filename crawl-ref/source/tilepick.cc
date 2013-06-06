@@ -2678,6 +2678,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         int type = mon.type;
 
+        if (type == MONS_CHIMERA)
+            type = mon.base_type;
+
         switch (type)
         {
         case MONS_CENTAUR:
