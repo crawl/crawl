@@ -2097,8 +2097,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
     case MONS_JIANGSHI:
-        band = BAND_JIANGSHI;
-        band_size = random2(3);
+        if (coinflip())
+        {
+            band = BAND_JIANGSHI;
+            band_size = random2(2) + 1;
+        }
         break;
     case MONS_GNOLL:
         if (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)

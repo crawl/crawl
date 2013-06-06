@@ -1315,6 +1315,9 @@ static int _num_mons_wanted()
     if (!branch_has_monsters(you.where_are_you))
         return 0;
 
+    if (player_in_branch(BRANCH_CRYPT))
+        return roll_dice(3, 8);
+
     int mon_wanted = roll_dice(3, 10);
 
     if (player_in_hell())

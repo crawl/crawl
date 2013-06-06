@@ -563,9 +563,9 @@ static const pop_entry pop_blade[] =
 
 static const pop_entry pop_crypt[] =
 { // Crypt
-  {  2,  7,  150, SEMI, MONS_EIDOLON },
+  {  2,  7,  145, SEMI, MONS_EIDOLON },
   {  1,  6,  170, DOWN, MONS_WRAITH },
-  {  1,  3,   60, SEMI, MONS_FREEZING_WRAITH },
+  {  1,  3,   65, SEMI, MONS_FREEZING_WRAITH },
   {  1,  5,  135, SEMI, MONS_PHANTASMAL_WARRIOR },
   {  3,  6,   95, SEMI, MONS_SHADOW_WRAITH },
   {  1,  5,   75, FLAT, MONS_SKELETAL_WARRIOR },
@@ -576,7 +576,7 @@ static const pop_entry pop_crypt[] =
   {  1,  4,   85, DOWN, MONS_VAMPIRE },
   {  1,  6,  125, PEAK, MONS_VAMPIRE_MAGE },
   {  1,  6,  105, UP,   MONS_VAMPIRE_KNIGHT },
-  {  1,  5,   85, SEMI, MONS_JIANGSHI },
+  {  1,  5,   75, SEMI, MONS_JIANGSHI },
   { -2,  4,   75, SEMI, MONS_NECROMANCER },
   {  1,  5,   30, FLAT, MONS_SILENT_SPECTRE },
   {  3,  6,  130, SEMI, MONS_FLAYED_GHOST },
