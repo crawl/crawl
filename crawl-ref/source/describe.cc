@@ -3067,6 +3067,32 @@ static string _describe_draconian(const monster_info& mi)
     return description;
 }
 
+static string _describe_chimera(const monster_info& mi)
+{
+    string description = "It has the body of ";
+
+    description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
+
+    if (mi.props.exists("chimera_part_2"))
+    {
+        monster_type part2 =
+            static_cast<monster_type>(mi.props["chimera_part_2"].get_int());
+        description += ", the head of ";
+        description += apply_description(DESC_A, get_monster_data(part2)->name);
+    }
+
+    if (mi.props.exists("chimera_part_3"))
+    {
+        monster_type part3 =
+            static_cast<monster_type>(mi.props["chimera_part_3"].get_int());
+        description += ", and the head of ";
+        description += apply_description(DESC_A, get_monster_data(part3)->name);
+    }
+
+    description += ".";
+    return description;
+}
+
 static const char* _get_resist_name(mon_resist_flags res_type)
 {
     switch (res_type)
@@ -3419,6 +3445,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PANDEMONIUM_LORD:
         inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
+        break;
+
+    case MONS_CHIMERA:
+        inf.body << "\n" << _describe_chimera(mi) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:

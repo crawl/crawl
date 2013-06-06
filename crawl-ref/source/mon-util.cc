@@ -1593,6 +1593,36 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (zombified && mc != MONS_KRAKEN_TENTACLE)
         mc = mons_zombie_base(mon);
 
+    // Chimera get attacks 0, 1 and 2 from their base components. Attack 3 is
+    // the secondary attack of the main base type.
+    if (mc == MONS_CHIMERA)
+    {
+        switch (attk_number)
+        {
+        case 0:
+            mc = mon->base_monster;
+            break;
+        case 1:
+            if (mon->props.exists("chimera_part_2"))
+            {
+                mc = static_cast<monster_type>(mon->props["chimera_part_2"].get_int());
+                attk_number = 0;
+            }
+            break;
+        case 2:
+            if (mon->props.exists("chimera_part_3"))
+            {
+                mc = static_cast<monster_type>(mon->props["chimera_part_3"].get_int());
+                attk_number = 0;
+            }
+            break;
+        case 3:
+            mc = mon->base_monster;
+            attk_number = 1;
+            break;
+        }
+    }
+
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
 
