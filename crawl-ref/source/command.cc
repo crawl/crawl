@@ -284,12 +284,6 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     else // just to make sure
         you.redraw_quiver = true;
 
-    // Update the current studied manual index.
-    if (you.manual_index == to_slot)
-        you.manual_index = from_slot;
-    else if (you.manual_index == from_slot)
-        you.manual_index = to_slot;
-
     // Remove the moved items from last_drop if they're there.
     you.last_pickup.erase(to_slot);
     you.last_pickup.erase(from_slot);

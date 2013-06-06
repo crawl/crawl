@@ -155,9 +155,6 @@ public:
   vector<int> sage_xp;            // how much more XP to redirect
   vector<int> sage_bonus;         // how much bonus XP to give in these skills
 
-  skill_type manual_skill;
-  int manual_index;
-
   int  skill_cost_level;
   int  exp_available;
   int  zot_points; // ZotDef currency

@@ -480,7 +480,7 @@ static string _no_selectables_message(int item_selector)
         return "You aren't carrying any potions.";
     case OBJ_SCROLLS:
     case OBJ_BOOKS:
-        return "You aren't carrying any books or scrolls.";
+        return "You aren't carrying any spellbooks or scrolls.";
     case OBJ_WANDS:
         return "You aren't carrying any wands.";
     case OBJ_JEWELLERY:
@@ -1175,7 +1175,8 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
 
     case OBJ_SCROLLS:
-        return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
+        return (itype == OBJ_SCROLLS
+                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL));
 
     case OSEL_RECHARGE:
         return item_is_rechargeable(i, true);

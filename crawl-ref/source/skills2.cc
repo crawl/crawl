@@ -18,6 +18,7 @@
 
 #include "artefact.h"
 #include "describe.h"
+#include "evoke.h"
 #include "externs.h"
 #include "godabil.h"
 #include "libutil.h"
@@ -876,8 +877,7 @@ void skill_state::save()
     auto_training      = you.auto_training;
     exp_available      = you.exp_available;
     total_experience   = you.total_experience;
-    if (!is_invalid_skill(you.manual_skill))
-        manual_charges  = you.inv[you.manual_index].plus2;
+    get_all_manual_charges(manual_charges);
     for (int i = 0; i < NUM_SKILLS; i++)
     {
         real_skills[i] = you.skill((skill_type)i, 10, true);
@@ -894,8 +894,7 @@ void skill_state::restore_levels()
     you.skill_order                 = skill_order;
     you.exp_available               = exp_available;
     you.total_experience            = total_experience;
-    if (!is_invalid_skill(you.manual_skill))
-        you.inv[you.manual_index].plus2 = manual_charges;
+    set_all_manual_charges(manual_charges);
 }
 
 void skill_state::restore_training()
