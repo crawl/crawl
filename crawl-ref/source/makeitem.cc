@@ -612,6 +612,7 @@ void item_colour(item_def &item)
             break;
 
         case MISC_LAMP_OF_FIRE:
+        case MISC_GONG_OF_GOLUBRIA:
             item.colour = YELLOW;
             break;
 
