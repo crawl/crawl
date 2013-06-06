@@ -1815,7 +1815,14 @@ static bool _flay_creature(monster* mon, actor* victim)
         }
     }
 
-    victim->hurt(mon, dam, BEAM_NONE, true);
+    if (victim->is_player())
+    {
+        // Bypassing ::hurt so that flay damage can ignore guardian spirit
+        ouch(dam, mon->mindex(), KILLED_BY_MONSTER, "flay_damage",
+             mon->visible_to(&you));
+    }
+    else
+        victim->hurt(mon, dam, BEAM_NONE, true);
     victim->props["flay_damage"].get_int() += dam;
 
     vector<coord_def> old_blood;
