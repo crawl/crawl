@@ -636,7 +636,7 @@ string manual_skill_names(bool short_text)
     if (short_text && skills.size() > 1)
     {
         char buf[40];
-        sprintf(buf, "%lu skills", skills.size());
+        sprintf(buf, "%lu skills", (unsigned long) skills.size());
         return string(buf);
     }
     else
