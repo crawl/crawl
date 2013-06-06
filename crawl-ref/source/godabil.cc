@@ -952,7 +952,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
     case RECITE_UNHOLY:
         if (check < 5)
         {
-            if (mons_intel(mon) > I_PLANT && coinflip())
+            if (mons_intel(mon) > I_INSECT && coinflip())
                 effect = ZIN_DAZE;
             else
                 effect = ZIN_CONFUSE;
