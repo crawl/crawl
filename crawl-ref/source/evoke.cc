@@ -35,6 +35,7 @@
 #include "mapmark.h"
 #include "melee_attack.h"
 #include "message.h"
+#include "mon-chimera.h"
 #include "mon-iter.h"
 #include "mon-pick.h"
 #include "mon-place.h"
@@ -694,25 +695,34 @@ static bool _box_of_beasts(item_def &box)
     }
 
     bool success = false;
-    int num = random_choose_weighted(50,1,10,2,2,3);
+    // Invoke mon-pick with our custom list
+    monster_type mon = pick_monster_from(pop_beasts,
+                                            you.skill(SK_EVOCATIONS),
+                                            _box_of_beasts_veto_mon);
 
-    for (int n = 0; n < num; n++)
+    monster_type mon2 = pick_monster_from(pop_beasts,
+                                            you.skill(SK_EVOCATIONS),
+                                            _box_of_beasts_veto_mon);
+    monster_type mon3 = pick_monster_from(pop_beasts,
+                                            you.skill(SK_EVOCATIONS),
+                                            _box_of_beasts_veto_mon);
+
+    if (!one_chance_in(3))
     {
-        // Invoke mon-pick with our custom list
-        monster_type mon = pick_monster_from(pop_beasts,
-                                             you.skill(SK_EVOCATIONS),
-                                             _box_of_beasts_veto_mon);
-
-        if (!one_chance_in(3)
-            && create_monster(mgen_data(mon,
-                                        BEH_FRIENDLY, &you,
-                                        2 + random2(4), 0,
-                                        you.pos(),
-                                        MHITYOU)))
+        mgen_data mg = mgen_data(MONS_CHIMERA,
+                      BEH_FRIENDLY, &you,
+                      3 + random2(4), 0,
+                      you.pos(),
+                      MHITYOU);
+        mg.base_type = mon;
+        monster* mons = create_monster(mg);
+        if (mons)
         {
+            make_chimera(mons, mon, mon2, mon3);
             success = true;
         }
     }
+
     if (success)
     {
         mpr("...and something leaps out!");
