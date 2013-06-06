@@ -3459,7 +3459,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << " is incapable of using stairs.\n";
     }
 
-    if (mi.intel() == I_PLANT)
+    if (mi.intel() <= I_INSECT)
         inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " is mindless.\n";
 
     if (mi.is(MB_CHAOTIC))
