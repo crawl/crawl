@@ -244,7 +244,7 @@ ENDMAP
 # The New Box Level (dp)
 #
 NAME:    box_level_dp
-DEPTH:   D:20-26
+DEPTH:   D:21-26
 ORIENT:  encompass
 TAGS:    no_pool_fixup no_rotate
 NSUBST:  A = 1:+ / *:b
@@ -252,13 +252,15 @@ NSUBST:  B = 1:+ / *:b
 NSUBST:  C = 1:+ / *:b
 NSUBST:  D = 1:+ / *:b
 NSUBST:  E = 1:+ / *:x
+NSUBST:  N = 1:= / *:n
 KFEAT:   ^ = teleport trap / Zot trap
 SUBST:   ':''l. , '=l.
 SUBST:   ":""W. , "=Ww..
 ITEM:    ring of teleportation
 ITEM:    royal jelly / honeycomb w:20 / nothing w:30
 ITEM:    scroll of teleportation
-KFEAT:   T = teleport trap
+ITEM:    amulet of stasis
+KFEAT:   T = known teleport trap
 KMONS:   w = electric eel / jellyfish / nothing w:120
 KFEAT:   w = w
 KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 /\
@@ -276,6 +278,7 @@ KMONS:   & = yaktaur captain / nothing
 KMONS:   ! = naga / nothing
 KMONS:   & = naga warrior / greater naga
 : end
+NSUBST:  * = 1:g / *:*
 SUBST:   * = * % % $ $ f
 SUBST:   ; = 9 0
 SUBST:   !=%$, &=*%
@@ -298,13 +301,13 @@ x.wwwwwwww"........w........xxxxxxx....xxx........"www"...ww"...xxxxxx
 x..wwwwwww"......"ww......""......xxxxxx....."...........ww"....xxxxxx
 xx..""ww".......www....."wwwwwwwwww........."www"......wwwww"....xxxxx
 xxx.........."wwww"..""wwwwwwwwwwwwwwwwww".www"...wwwwwwwwwwww.....xxx
-xxxxx....""wwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwww.....xx....xx
-xxx..""wwwwwwwwwwwwwwww"......G.G......"wwwwxxww".........xxxxx.....xx
+xxxxx....""wwwwwwwwWWwwwwww.......wwwwwwwwwwwwwwwwwwwwwww.....xx....xx
+xxx..""wwwwwwwwwwwwWWww"......G.G......"wwwwxxww".........xxxxx.....xx
 x."wwwwwwwwwwwwwxxx__xxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....x
 xwwwwwwww".."wwwxww.."w........................................>xx...x
 xxwwww""....."xwxw"...ww........................................xx...x
 xxww".........xxxw..............................................xx..xx
-xww............xx"w...ccccccccccccccccccncccccccccccccccccc.....xx..xx
+xww............xx"w...ccccccccccccccccccNcccccccccccccccccc.....xx..xx
 xw"...xxx.......x..w..c^..*...*...*...*...*...*...*...*...c.....x...xx
 xw....x!x..xxx..x..w..c...................................c.....x...xx
 xxx...x+x..x!x..x.....c*..;...;...;...;...;...;...;...;..*c.....xx..xx
@@ -317,7 +320,7 @@ x.........xxxx..x.....c.......bTA|...|ATbTB|...|BTb.......c.....xx.xxx
 x.......1.......x.....c.......bTb|...8bTbTb8...|bTb.......c.....x...xx
 xxx....121....xxx.....c*..;...bTbbbAbbnTbTnbbBbbbTb...;..*c.....x...xx
 x!x...cc+cc...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xx..xx
-x&+1..c!2!c...xxx.....n........bbbbbbbbbTbbbbbbbbb........n.....x..xxx
+x&+1..c!2!c...xxx.....N........bbbbbbbbbTbbbbbbbbb........N.....x..xxx
 x!x...c&&&c...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....x..xxx
 xxx...ccccc...xxx.....c*..;...bTbbbDbbnTbTnbbCbbbTb...;..*c.....x.xxxx
 x...............x.....c.......bTb|...8bTbTb|...8bTb.......c.....x.xxxx
@@ -326,11 +329,11 @@ xx..x+x.1+!!x...x.....c.......bTb8...|bTbTb8...|bTb.......c.....xx...x
 x...x!x..xxxx...x.....c*..;...bTbbbDbbbTbTbbbCbbbTb...;..*c.....xxx.xx
 x...xxx.........x.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xxx.xx
 x.........xxxxxxx.....c.......bbbbbbbbbb.bbbbbbbbbb.......c.....xxx..x
-xxxx......x***99+.....c...................................c.....xxxx.x
+xxxx......+*9*9*+.....c...................................c.....xxxx.x
 xxxx..xx..xxxxxxx.....c*..;...;...;...;...;...;...;...;..*c.....x....x
 x.....xx........x.....c...................................c.....x.xx.x
 x.xx.....xxx....x.....c...*...*...*...*...*...*...*...*..^c.....x.xx+x
-x.xx....1+!x..xxx.....ccccccccccccccccccncccccccccccccccccc.....xxx..x
+x.xx....1+!x..xxx.....ccccccccccccccccccNcccccccccccccccccc.....xxx..x
 x....xx..xxx..xxx...............................................xx..xx
 x....xx.......xxx.........................................z..z..x....x
 xx............xxx<.............................................zxa...x
