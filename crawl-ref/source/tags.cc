@@ -1901,7 +1901,9 @@ static void tag_read_you(reader &th)
     you.berserk_penalty   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_GARGOYLE_DR)
+#endif
         you.gargoyle_damage_reduction = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
     else
         you.gargoyle_damage_reduction = 0;
 
