@@ -980,6 +980,9 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 other_weights += weight;
         }
 
+        if (you.religion == GOD_TROG)
+            magic_weights = 0;
+
         // If someone has 25% or more magic skills, never give manuals.
         // Otherwise, count magic skills double to bias against manuals
         // for magic users.
@@ -1107,7 +1110,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
         // Are we too skilled to get any manuals?
         if (total_weights == 0)
-            return _do_book_acquirement(book, agent);
+            return false;
 
         book.sub_type = BOOK_MANUAL;
         book.plus     = choose_random_weighted(weights, weights + NUM_SKILLS);
