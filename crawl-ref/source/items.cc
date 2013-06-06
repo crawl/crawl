@@ -3674,6 +3674,8 @@ bool get_item_by_name(item_def *item, char* specs,
         break;
 
     case OBJ_MISCELLANY:
+        if (item->sub_type == MISC_BOX_OF_BEASTS)
+            item->plus = 50;
         if (!item_is_rune(*item) && !is_deck(*item) && !is_elemental_evoker(*item))
             item->plus2 = 50;
         break;
