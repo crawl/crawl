@@ -341,9 +341,6 @@ void item_colour(item_def &item)
             break;
         }
 
-        if (item.special / NDSC_WAND_PRI == 9) // "blackened foo wand"
-            item.colour = DARKGREY;
-
         break;
 
     case OBJ_POTIONS:
@@ -352,15 +349,13 @@ void item_colour(item_def &item)
         switch (item.plus % NDSC_POT_PRI)
         {
         case 0:         //"clear potion"
+        case 2:         //"black potion"
         default:
             item.colour = LIGHTGREY;
             break;
         case 1:         //"blue potion"
         case 7:         //"inky potion"
             item.colour = BLUE;
-            break;
-        case 2:         //"black potion"
-            item.colour = DARKGREY;
             break;
         case 3:         //"silvery potion"
         case 13:        //"white potion"
@@ -555,9 +550,6 @@ void item_colour(item_def &item)
             }
         }
 
-        // blackened - same for both rings and amulets
-        if (item.special / NDSC_JEWEL_PRI == 5)
-            item.colour = DARKGREY;
         break;
 
     case OBJ_SCROLLS:
@@ -575,7 +567,7 @@ void item_colour(item_def &item)
             item.colour = random_colour();
             break;
         case 2:
-            item.colour = (one_chance_in(3) ? BROWN : DARKGREY);
+            item.colour = BROWN;
             break;
         case 3:
             item.colour = CYAN;
