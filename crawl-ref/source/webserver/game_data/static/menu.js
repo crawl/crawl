@@ -78,11 +78,8 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
         }
 
         // Normal menu
-        if (menu.title && menu.title.text)
-        {
-            menu_div.prepend("<div id='menu_title'>");
-            update_title();
-        }
+        menu_div.prepend("<div id='menu_title'>");
+        update_title();
 
         var content_div= $("<div id='menu_contents'>");
         content_div.css({
@@ -398,8 +395,14 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
 
     function update_title()
     {
-        set_item_contents(menu.title, $("#menu_title"));
-        if (menu.suffix)
+        $("#menu_title").html(util.formatted_string_to_html(menu.title.text));
+
+        if (menu.title.suffix)
+        {
+            $("#menu_title").append(" <span id='menu_suffix'>"
+                + util.formatted_string_to_html(menu.title.suffix) + "</span>");
+        }
+        else if (menu.suffix) // support old versions
         {
             $("#menu_title").append(" <span id='menu_suffix'>"
                                     + menu.suffix
