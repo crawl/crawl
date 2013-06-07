@@ -2902,6 +2902,10 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
     if (mon->attitude >= att)
         return;
 
+    // Must be done before attitude change, so that proper targets are affected
+    if (mon->type == MONS_FLAYED_GHOST)
+        end_flayed_effect(mon);
+
     // Make the monster permanently neutral.
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
