@@ -5705,12 +5705,15 @@ feature_spec keyed_mapspec::parse_trap(string s, int weight)
  * This function converts an incoming shop specification string from a vault
  * into a shop_spec.
  *
- * @param s      The string to be parsed.
- * @param weight The weight of this string.
- * @returns      A feature_spec with the contained, parsed shop_spec stored via
- *               unique_ptr as feature_spec->shop.
+ * @param s        The string to be parsed.
+ * @param weight   The weight of this string.
+ * @param mimic    What kind of mimic (if any) to set for this shop.
+ * @param no_mimic Whether to prohibit mimics altogether for this shop.
+ * @returns        A feature_spec with the contained, parsed shop_spec stored
+ *                 via unique_ptr as feature_spec->shop.
 **/
-feature_spec keyed_mapspec::parse_shop(string s, int weight)
+feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
+                                       bool no_mimic)
 {
     string orig(s);
 
@@ -5756,7 +5759,7 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight)
         }
     }
 
-    feature_spec fspec(-1, weight);
+    feature_spec fspec(-1, weight, mimic, no_mimic);
     fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name,
                                    shop_type_name, shop_suffix_name, greed,
                                    num_items, use_all));
@@ -5796,7 +5799,7 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
     if (s.find("shop") != string::npos && s != "abandoned_shop"
         || s.find("store") != string::npos)
     {
-        list.push_back(parse_shop(s, weight));
+        list.push_back(parse_shop(s, weight, mimic, no_mimic));
         return list;
     }
 
