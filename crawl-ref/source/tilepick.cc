@@ -37,6 +37,7 @@
 // FIXME: this is too ugly to live, pollutes the executable's debug symbols,
 // and stinks of elderberries.  Need a better non-C++11 way to do static
 // asserts in GCC 4.8.
+void tile_compile_checks(); // shut up -Wmissing-declarations
 void tile_compile_checks()
 {
 #endif
