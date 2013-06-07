@@ -627,7 +627,7 @@ void item_colour(item_def &item)
             break;
 
         case MISC_BOX_OF_BEASTS:
-            item.colour = DARKGREY;
+            item.colour = BLUE;
             break;
 
         case MISC_RUNE_OF_ZOT:
