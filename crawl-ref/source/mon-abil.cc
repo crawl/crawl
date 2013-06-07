@@ -1879,6 +1879,24 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
     act->props.erase("flay_blood");
 }
 
+void end_flayed_effect(monster* ghost)
+{
+    if (you.duration[DUR_FLAYED] && !ghost->wont_attack()
+        && cell_see_cell(ghost->pos(), you.pos(), LOS_DEFAULT))
+    {
+        heal_flayed_effect(&you);
+    }
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(ghost, *mi)
+            && cell_see_cell(ghost->pos(), mi->pos(), LOS_DEFAULT))
+        {
+            heal_flayed_effect(*mi);
+        }
+    }
+}
+
 static bool _lost_soul_affectable(const monster* mons)
 {
     return (((mons->holiness() == MH_UNDEAD

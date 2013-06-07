@@ -35,6 +35,7 @@ bool get_push_space(const coord_def& pos, coord_def& newpos,
                     const vector<coord_def>* excluded = NULL);
 
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
+void end_flayed_effect(monster* ghost);
 
 bool lost_soul_revive(monster* mons);
 bool lost_soul_spectralize(monster* mons);
