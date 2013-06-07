@@ -2940,11 +2940,16 @@ void ShoppingListMenu::draw_title()
         const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
         cgotoxy(1, 1);
-        textcolor(title->colour);
-        cprintf("%d %s%s, total cost %d gp",
-                title->quantity, title->text.c_str(),
-                title->quantity > 1? "s" : "",
-                total_cost);
+        formatted_string fs = formatted_string(title->colour);
+        fs.cprintf("%d %s%s, total cost %d gp",
+                   title->quantity, title->text.c_str(),
+                   title->quantity > 1? "s" : "",
+                   total_cost);
+        fs.display();
+
+#ifdef USE_TILE_WEB
+        webtiles_set_title(fs);
+#endif
 
         const char *verb = menu_action == ACT_EXECUTE ? "travel" :
                            menu_action == ACT_EXAMINE ? "examine" :

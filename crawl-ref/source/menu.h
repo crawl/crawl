@@ -431,6 +431,9 @@ protected:
     virtual void draw_stock_item(int index, const MenuEntry *me) const;
 
 #ifdef USE_TILE_WEB
+    void webtiles_set_title(const formatted_string title);
+    void webtiles_set_suffix(const formatted_string title);
+
     void webtiles_update_item(int index) const;
     void webtiles_update_title() const;
     void webtiles_update_scroll_pos() const;
@@ -442,6 +445,10 @@ protected:
 
     int _webtiles_section_start;
     int _webtiles_section_end;
+
+    bool _webtiles_title_changed;
+    formatted_string _webtiles_title;
+    formatted_string _webtiles_suffix;
 
     inline int webtiles_section_start() const
     {
