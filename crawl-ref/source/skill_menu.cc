@@ -689,6 +689,13 @@ void SkillMenu::init(int flag)
         m_skill_backup.save();
         you.auto_training = false;
         reset_training();
+
+        for (int i = 0; i < NUM_SKILLS; ++i)
+        {
+            const skill_type sk = skill_type(i);
+            if (!is_useless_skill(sk))
+                you.can_train.set(sk);
+        }
     }
 
 #ifdef USE_TILE_LOCAL
