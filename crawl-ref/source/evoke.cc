@@ -643,6 +643,19 @@ static const pop_entry pop_beasts[] =
   { 24, 27,   25, UP,   MONS_APIS },
   { 0,0,0,FLAT,MONS_0 }
 };
+static const pop_entry pop_spiders[] =
+{ // Sack of Spiders
+  {  0,  10,   10, DOWN, MONS_GIANT_MITE },
+  {  0,  15,   50, DOWN, MONS_SPIDER },
+  {  5,  20,  100, PEAK, MONS_TRAPDOOR_SPIDER },
+  {  8,  27,  100, PEAK, MONS_REDBACK },
+  { 12,  27,  100, PEAK, MONS_JUMPING_SPIDER },
+  { 15,  27,  100, PEAK, MONS_ORB_SPIDER },
+  { 18,  27,  100, PEAK, MONS_TARANTELLA },
+  { 20,  27,  100, PEAK, MONS_WOLF_SPIDER },
+  { 25,  27,    5,   UP, MONS_GHOST_MOTH },
+  { 0,0,0,FLAT,MONS_0 }
+};
 
 static bool _box_of_beasts_veto_mon(monster_type mon)
 {
@@ -697,6 +710,68 @@ static bool _box_of_beasts(item_def &box)
         xom_is_stimulated(10);
         // Decrease charges
         box.plus--;
+    }
+    else
+        // Failed to create monster for some reason
+        mpr("...but nothing happens.");
+
+    return success;
+}
+
+static bool _sack_of_spiders(item_def &sack)
+{
+    mpr("You tease open the bag...");
+
+    if (!sack.plus)
+    {
+        mpr("...but the bag is empty, and unravels at your touch.");
+        ASSERT(in_inventory(sack));
+        dec_inv_item_quantity(sack.link, 1);
+        return false;
+    }
+
+    bool success = false;
+
+    if (!one_chance_in(5))
+    {
+        int count = 2 + random2(5)
+                    + random2(div_rand_round(you.skill(SK_EVOCATIONS,10),30));
+        for (int n = 0; n < count; n++)
+        {
+            // Invoke mon-pick with our custom list
+            monster_type mon = pick_monster_from(pop_spiders,
+                                            you.skill(SK_EVOCATIONS),
+                                            _box_of_beasts_veto_mon);
+            mgen_data mg = mgen_data(mon,
+                                      BEH_FRIENDLY, &you,
+                                      3 + random2(4), 0,
+                                      you.pos(),
+                                      MHITYOU);
+            if (create_monster(mg))
+                success = true;
+        }
+    }
+
+    if (success)
+    {
+        // Also generate webs
+        int rad = LOS_RADIUS / 2 + 1;
+        for (radius_iterator ri(you.pos(), rad, false, true, true); ri; ++ri)
+        {
+            if (grd(*ri) == DNGN_FLOOR &&
+                x_chance_in_y(div_rand_round(rad - you.pos().range(*ri),
+                                             (28 - you.skill(SK_EVOCATIONS))),
+                              rad)
+                && place_specific_trap(*ri, TRAP_WEB))
+            {
+                // Reveal the trap
+                grd(*ri) = DNGN_TRAP_WEB;
+            }
+        }
+        mpr("...and things crawl out!");
+        xom_is_stimulated(10);
+        // Decrease charges
+        sack.plus--;
     }
     else
         // Failed to create monster for some reason
@@ -1810,6 +1885,11 @@ bool evoke_item(int slot)
 
         case MISC_BOX_OF_BEASTS:
             if (_box_of_beasts(item))
+                pract = 1;
+            break;
+
+        case MISC_SACK_OF_SPIDERS:
+            if (_sack_of_spiders(item))
                 pract = 1;
             break;
 

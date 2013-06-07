@@ -2095,6 +2095,13 @@ sabre:quote
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
 %%%%
+sack of spiders
+
+A woven silk bag. Something appears to be moving inside...
+
+Opening this bag will release a number of spiders friendly to your cause.
+You might need to dust off the cobwebs after, however.
+%%%%
 sacred scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
