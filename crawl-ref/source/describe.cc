@@ -2463,7 +2463,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         break;
     case OBJ_SCROLLS:
     case OBJ_BOOKS: // only unknown ones
-        actions.push_back(CMD_READ);
+        if (item.sub_type != BOOK_MANUAL)
+            actions.push_back(CMD_READ);
         break;
     case OBJ_JEWELLERY:
         if (item_is_equipped(item))

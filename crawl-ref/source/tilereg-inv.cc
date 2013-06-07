@@ -506,6 +506,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                         _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                     break;
                 }
+                if (item.sub_type == BOOK_MANUAL)
+                    break;
                 // else fall-through
             case OBJ_SCROLLS:
                 tmp += "Read (%)";
