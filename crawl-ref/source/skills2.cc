@@ -867,6 +867,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 
 void skill_state::save()
 {
+    can_train          = you.can_train;
     skills             = you.skills;
     train              = you.train;
     training           = you.training;
@@ -903,6 +904,7 @@ void skill_state::restore_training()
         if (you.skills[i] < 27)
             you.train[i] = train[i];
 
+    you.can_train                   = can_train;
     you.auto_training               = auto_training;
     reset_training();
 }
