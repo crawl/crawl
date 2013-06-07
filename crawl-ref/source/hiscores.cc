@@ -1202,7 +1202,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
                 auxkilldata = mitm[mons->inv[MSLOT_WEAPON]].name(DESC_A);
         }
 
-        const bool death = you.hp <= 0;
+        const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
 
         const description_level_type desc =
             death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_A;
