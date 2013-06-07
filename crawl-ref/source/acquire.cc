@@ -707,6 +707,8 @@ static int _acquirement_misc_subtype()
     // Note: items listed early are less likely due to chances of being
     // overwritten.
     int result = random_range(MISC_FIRST_DECK, MISC_LAST_DECK);
+    if (result == MISC_DECK_OF_SUMMONING && coinflip())
+        result = MISC_SACK_OF_SPIDERS;
     if (result == MISC_DECK_OF_PUNISHMENT)
         result = MISC_BOX_OF_BEASTS;
     if (one_chance_in(4))
