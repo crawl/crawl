@@ -569,7 +569,7 @@ string describe_mutations(bool center_title)
         result += "Your body does not fit into most forms of armour.\n";
 
         msg = "Your cold-blooded metabolism reacts poorly to cold.";
-        if (you.res_cold() <= 0)
+        if (player_res_cold(false) <= 0)
             result += msg + "\n";
         else
             result += "<darkgrey>" + msg + "</darkgrey>\n";
