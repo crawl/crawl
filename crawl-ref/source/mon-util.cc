@@ -4129,6 +4129,8 @@ mon_body_shape get_mon_shape(const monster_type mc)
         else
             return MON_SHAPE_BAT;
     case 'c': // centaurs
+        if (mc == MONS_FAUN || mc == MONS_SATYR || mc == MONS_PAN)
+            return MON_SHAPE_HUMANOID_TAILED;
         return MON_SHAPE_CENTAUR;
     case 'd': // draconions and drakes
         if (mons_genus(mc) == MONS_DRACONIAN)
@@ -4319,6 +4321,10 @@ mon_body_shape get_mon_shape(const monster_type mc)
             return MON_SHAPE_HUMANOID;
     }
 
+    case '7': // trees and tree-like creatures
+        if (mc == MONS_DRYAD)
+            return MON_SHAPE_HUMANOID;
+        return MON_SHAPE_MISC;
     case '9': // gargoyles
         return MON_SHAPE_HUMANOID_WINGED_TAILED;
     case '*': // orbs
