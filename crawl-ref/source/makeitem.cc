@@ -623,6 +623,10 @@ void item_colour(item_def &item)
             item.colour = BLUE;
             break;
 
+        case MISC_SACK_OF_SPIDERS:
+            item.colour = WHITE;
+            break;
+
         case MISC_RUNE_OF_ZOT:
             switch (item.plus)
             {
@@ -3096,6 +3100,10 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     // Pick number of beasts in the box
     if (item.sub_type == MISC_BOX_OF_BEASTS)
         item.plus = 6 + random2avg(16,2);
+
+    // Spider sack charges
+    if (item.sub_type == MISC_SACK_OF_SPIDERS)
+        item.plus = 5 + random2avg(11,2);
 
     if (is_deck(item))
     {
