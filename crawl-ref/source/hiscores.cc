@@ -2472,6 +2472,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                     desc += _hiscore_newline_string();
                     needs_damage = true;
                 }
+                else if (death_type == KILLED_BY_DRAINING
+                         || death_type == KILLED_BY_BURNING)
+                {
+                    desc += make_stringf(" (%s)", auxkilldata.c_str());
+                }
             }
             else if (needs_called_by_monster_line)
             {
