@@ -891,7 +891,7 @@ private:
 private:
     void parse_features(const string &);
     feature_spec_list parse_feature(const string &s);
-    feature_spec parse_shop(string s, int weight);
+    feature_spec parse_shop(string s, int weight, int mimic, bool no_mimic);
     feature_spec parse_trap(string s, int weight);
 };
 
