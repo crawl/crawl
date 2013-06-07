@@ -2465,7 +2465,10 @@ int monster_die(monster* mons, killer_type killer,
              && !mons->pacified() && (!summoned || duration > 0) && !wizard)
     {
         if (you.can_see(mons))
-            mprf("Miasma billows from the fallen %s!", mons->name(DESC_PLAIN).c_str());
+        {
+            mprf(MSGCH_WARN, "Miasma billows from the fallen %s!",
+                 mons->name(DESC_PLAIN).c_str());
+        }
 
         map_cloud_spreader_marker *marker =
             new map_cloud_spreader_marker(mons->pos(), CLOUD_MIASMA, 10,
