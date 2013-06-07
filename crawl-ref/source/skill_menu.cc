@@ -693,8 +693,11 @@ void SkillMenu::init(int flag)
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             const skill_type sk = skill_type(i);
-            if (!is_useless_skill(sk))
+            if (!is_useless_skill(sk) && !you.can_train[sk])
+            {
                 you.can_train.set(sk);
+                you.train[sk] = false;
+            }
         }
     }
 
