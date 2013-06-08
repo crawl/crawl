@@ -86,10 +86,25 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         WARN_POP                                        \
     } while (false)
 
+#define ASSERT_RANGE(x, xmin, xmax)                                           \
+    do {                                                                      \
+        WARN_PUSH                                                             \
+        IGNORE_ASSERT_WARNINGS                                                \
+        if ((x) < (xmin) || (x) >= (xmax))                                    \
+        {                                                                     \
+            die("ASSERT failed: " #x " of %" PRIdMAX " out of range " \
+                #xmin " (%" PRIdMAX ") .. " \
+                #xmax " (%" PRIdMAX ")",                                      \
+                (intmax_t)(x), (intmax_t)(xmin), (intmax_t)(xmax));           \
+        }                                                                     \
+        WARN_POP                                                              \
+    } while (false)
+
 #else
 
-#define ASSERT(p)       ((void) 0)
-#define ASSERTM(p,text,...) ((void) 0)
+#define ASSERT(p)              ((void) 0)
+#define ASSERTM(p, text,...)   ((void) 0)
+#define ASSERT_RANGE(x, a, b)  ((void) 0)
 
 #endif
 
