@@ -1374,7 +1374,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                             MSGCH_TALK);
             if (first)
             {
-                mprf("(press <white>%s %C</white> to convert to Beogh)",
+                ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                             'A', 'z' + 1);
+                mprf("(press <white>%s %c</white> to convert to Beogh)",
                      command_to_string(CMD_USE_ABILITY).c_str(),
                      get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey);
                 you.attribute[ATTR_SEEN_BEOGH] = 1;
