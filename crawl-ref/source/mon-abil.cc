@@ -3900,7 +3900,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_FOREST_DRAKE:
+    case MONS_WIND_DRAKE:
     {
         if (mons->has_ench(ENCH_BREATH_WEAPON))
             break;

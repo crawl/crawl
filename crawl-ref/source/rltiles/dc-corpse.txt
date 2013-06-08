@@ -251,7 +251,7 @@ swamp_drake CORPSE_SWAMP_DRAKE
 fire_drake CORPSE_FIRE_DRAKE
 lindwurm CORPSE_LINDWURM
 death_drake CORPSE_DEATH_DRAKE
-forest_drake CORPSE_FOREST_DRAKE
+wind_drake CORPSE_WIND_DRAKE
 
 ## Dragons ('D')
 wyvern CORPSE_WYVERN

@@ -2130,6 +2130,17 @@
        SPELL_NO_SPELL,
        SPELL_BLINK
       }
+    },
+
+    {  MST_WIND_DRAKE,
+      {
+       SPELL_AIRSTRIKE,
+       SPELL_MELEE,
+       SPELL_NO_SPELL,
+       SPELL_AIRSTRIKE,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
     }
 
 #endif

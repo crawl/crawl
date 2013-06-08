@@ -2644,7 +2644,7 @@ enum monster_type                      // menv[].type
     MONS_LAVA_ORC,
 
     MONS_DRYAD,
-    MONS_FOREST_DRAKE,
+    MONS_WIND_DRAKE,
     MONS_FAUN,
     MONS_SATYR,
 
