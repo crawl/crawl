@@ -2897,8 +2897,6 @@ static int _mons_cause_fear(monster* mons, bool actual)
             simple_monster_message(mons, " radiates an aura of fear!");
         else
             mpr("An aura of fear fills the air!");
-
-        flash_view_delay(DARKGREY, 300);
     }
 
     int retval = -1;
@@ -2983,6 +2981,9 @@ static int _mons_cause_fear(monster* mons, bool actual)
             }
         }
     }
+
+    if (actual && retval == 1)
+        flash_view_delay(DARKGREY, 300);
 
     return retval;
 }
