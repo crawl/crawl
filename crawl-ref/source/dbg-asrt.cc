@@ -813,7 +813,8 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         _assert_msg = final_mesg;
         _BreakStrToDebugger(final_mesg, true);
     }
-    else {
+    else
+    {
         _assert_msg = mesg;
         _BreakStrToDebugger(mesg, true);
     }
