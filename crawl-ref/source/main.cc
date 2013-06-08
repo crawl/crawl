@@ -2897,6 +2897,8 @@ static void _decrement_durations()
             if (_decrement_a_duration(DUR_FLAYED, delay))
                 heal_flayed_effect(&you);
         }
+        else if (you.duration[DUR_FLAYED] < 80)
+            you.duration[DUR_FLAYED] += div_rand_round(50, delay);
     }
 
     _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
