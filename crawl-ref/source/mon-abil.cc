@@ -1742,14 +1742,14 @@ static bool _flay_creature(monster* mon, actor* victim)
     if (victim->is_player())
     {
         dam = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
-        dam = min(dam, max(0, you.hp - 15 - random2(10)));
+        dam = min(dam, max(0, you.hp - 25 - random2(15)));
         if (dam < 10)
             return false;
 
         if (you.duration[DUR_FLAYED])
             was_flayed = true;
 
-        you.increase_duration(DUR_FLAYED, 3 + random2(5), 15);
+        you.duration[DUR_FLAYED] = max(you.duration[DUR_FLAYED], 55 + random2(66));
     }
     else
     {
@@ -1757,7 +1757,7 @@ static bool _flay_creature(monster* mon, actor* victim)
 
         dam = (6 + (mon_victim->hit_points * 18 / mon_victim->max_hit_points))
                    * mon_victim->max_hit_points / 100;
-        dam = min(dam, max(0, mon_victim->hit_points - 15 - random2(10)));
+        dam = min(dam, max(0, mon_victim->hit_points - 25 - random2(15)));
         if (dam < 10)
             return false;
 
