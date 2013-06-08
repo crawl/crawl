@@ -178,8 +178,7 @@ static int cellnum_est(int world, int ngb_min, int ngb_max)
 {
     static int denom[12] = {0, 0, 8, 7, 6, 5, 5, 4, 4, 4, 3, 3};
     ASSERT(world > 0);
-    ASSERT(ngb_min + ngb_max >= 2);
-    ASSERT(ngb_min + ngb_max < 12);
+    ASSERT_RANGE(ngb_min + ngb_max, 2, 12);
 
     return world / denom[ngb_min + ngb_max];
 }

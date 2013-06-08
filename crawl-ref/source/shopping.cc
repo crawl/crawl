@@ -2595,8 +2595,7 @@ bool ShoppingList::is_on_list(string desc, const level_pos* _pos) const
 
 void ShoppingList::del_thing_at_index(int idx)
 {
-    ASSERT(idx >= 0);
-    ASSERT(idx < list->size());
+    ASSERT_RANGE(idx, 0, list->size());
     list->erase(idx);
     refresh();
 }

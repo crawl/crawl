@@ -582,8 +582,7 @@ void check_map_validity()
 
         if (shop_struct *shop = get_shop(*ri))
         {
-            ASSERT(shop->type >= 0);
-            ASSERT(shop->type < NUM_SHOPS);
+            ASSERT_RANGE(shop->type, 0, NUM_SHOPS);
         }
 
         // border must be impassable

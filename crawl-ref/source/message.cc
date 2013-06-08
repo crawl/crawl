@@ -177,15 +177,13 @@ class circ_vec
 
     static void inc(int* index)
     {
-        ASSERT(*index >= 0);
-        ASSERT(*index < SIZE);
+        ASSERT_RANGE(*index, 0, SIZE);
         *index = _mod(*index + 1, SIZE);
     }
 
     static void dec(int* index)
     {
-        ASSERT(*index >= 0);
-        ASSERT(*index < SIZE);
+        ASSERT_RANGE(*index, 0, SIZE);
         *index = _mod(*index - 1, SIZE);
     }
 

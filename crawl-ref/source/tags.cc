@@ -787,8 +787,7 @@ string unmarshallString(reader &th, int maxSize)
         return "";
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
-    ASSERT(slen >= 0);
-    ASSERT(slen < maxSize);
+    ASSERT_RANGE(slen, 0, maxSize);
     const string res(buffer, slen);
     delete [] buffer;
     return res;
@@ -1953,8 +1952,7 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; ++i)
     {
         you.equip[i] = unmarshallByte(th);
-        ASSERT(you.equip[i] >= -1);
-        ASSERT(you.equip[i] < ENDOFPACK);
+        ASSERT_RANGE(you.equip[i], -1, ENDOFPACK);
     }
     for (i = count; i < NUM_EQUIP; ++i)
         you.equip[i] = -1;
@@ -2018,8 +2016,7 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; i++)
     {
         int s = unmarshallByte(th);
-        ASSERT(s >= -1);
-        ASSERT(s < MAX_KNOWN_SPELLS);
+        ASSERT_RANGE(s, -1, MAX_KNOWN_SPELLS);
         you.spell_letter_table[i] = s;
     }
 
@@ -2189,8 +2186,7 @@ static void tag_read_you(reader &th)
         ASSERT(dt.level_gained > 1);
         ASSERT(dt.level_gained <= 27);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
-        ASSERT(dt.mutation >= 0);
-        ASSERT(dt.mutation < NUM_MUTATIONS);
+        ASSERT_RANGE(dt.mutation, 0, NUM_MUTATIONS);
         you.demonic_traits.push_back(dt);
     }
 
@@ -2276,8 +2272,7 @@ static void tag_read_you(reader &th)
     you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);
-    ASSERT(n_dact >= 0);
-    ASSERT(n_dact < 100000); // arbitrary, sanity check
+    ASSERT_RANGE(n_dact, 0, 100000); // arbitrary, sanity check
     you.dactions.resize(n_dact, NUM_DACTIONS);
     for (i = 0; i < n_dact; i++)
     {
@@ -2393,8 +2388,7 @@ static void tag_read_you(reader &th)
     {
 #endif
     count = unmarshallUnsigned(th);
-    ASSERT(count >= 0);
-    ASSERT(count < 16); // sanity check
+    ASSERT_RANGE(count, 0, 16); // sanity check
     you.uncancel.resize(count);
     for (i = 0; i < count; i++)
     {

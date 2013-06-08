@@ -47,8 +47,7 @@ bool is_random_subbranch(branch_type branch)
 
 bool is_connected_branch(branch_type branch)
 {
-    ASSERT(branch >= 0);
-    ASSERT(branch < NUM_BRANCHES);
+    ASSERT_RANGE(branch, 0, NUM_BRANCHES);
     return !(branches[branch].branch_flags & BFLAG_NO_XLEV_TRAVEL);
 }
 

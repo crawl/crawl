@@ -343,8 +343,7 @@ static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 
 static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
 {
-    ASSERT(idx >= 0);
-    ASSERT(idx < TILE_DNGN_MAX);
+    ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
     if (count == 1)
         return idx;

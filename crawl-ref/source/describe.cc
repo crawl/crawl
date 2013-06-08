@@ -2562,8 +2562,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
 #endif
 
     int slot = item.link;
-    ASSERT(slot >= 0);
-    ASSERT(slot < ENDOFPACK);
+    ASSERT_RANGE(slot, 0, ENDOFPACK);
 
     switch (action)
     {

@@ -262,8 +262,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
 {
     // Re-check whether we're in a valid place, it leads to obscure errors
     // otherwise.
-    ASSERT(you.where_are_you >= 0);
-    ASSERT(you.where_are_you < NUM_BRANCHES);
+    ASSERT_RANGE(you.where_are_you, 0, NUM_BRANCHES);
     ASSERT(you.depth > 0);
     ASSERT(you.depth <= brdepth[you.where_are_you]);
 

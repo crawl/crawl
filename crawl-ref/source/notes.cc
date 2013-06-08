@@ -424,8 +424,7 @@ void Note::check_milestone() const
         // Wizlabs report their milestones on their own.
         if (br != -1 && br != BRANCH_WIZLAB)
         {
-            ASSERT(br >= 0);
-            ASSERT(br < NUM_BRANCHES);
+            ASSERT_RANGE(br, 0, NUM_BRANCHES);
             string branch = place_name(packed_place, true, false).c_str();
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);

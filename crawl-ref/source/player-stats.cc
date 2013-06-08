@@ -635,8 +635,7 @@ static void _normalize_stat(stat_type stat)
 
 static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
 {
-    ASSERT(stat >= 0);
-    ASSERT(stat < NUM_STATS);
+    ASSERT_RANGE(stat, 0, NUM_STATS);
 
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
