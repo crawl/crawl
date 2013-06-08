@@ -17,7 +17,7 @@ function lair_wad_woods_monsters(e)
         else
             e.mons("tengu / tengu conjurer w:4 / tengu warrior w:4")
         end
-        e.mons("forest drake")
+        e.mons("wind drake")
     else
         e.mons("gnoll")
         e.mons("porcupine")
