@@ -10,7 +10,9 @@
     <script>
       require({
           baseUrl: '/static/scripts',
-          priority: ['jquery'],
+          shim: {
+            'client': ['jquery']
+          },
           paths: {
               'jquery': '/static/scripts/contrib/jquery'
           }
