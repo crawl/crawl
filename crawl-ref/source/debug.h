@@ -53,7 +53,7 @@
 #ifdef ASSERTS
 
 NORETURN void AssertFailed(const char *expr, const char *file, int line,
-                           const char *text = "", ...);
+                           const char *text = nullptr, ...);
 
 #ifdef __clang__
 # define WARN_PUSH _Pragma("GCC diagnostic push")
