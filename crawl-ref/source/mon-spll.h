@@ -1928,7 +1928,7 @@
        SPELL_BOLT_OF_DRAINING,
        SPELL_NO_SPELL,
        SPELL_HASTE,
-       SPELL_THROW_FROST,
+       SPELL_STONE_ARROW,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
@@ -1938,7 +1938,7 @@
       {
        SPELL_VENOM_BOLT,
        SPELL_NO_SPELL,
-       SPELL_HASTE,
+       SPELL_ANIMATE_DEAD,
        SPELL_HAUNT,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
