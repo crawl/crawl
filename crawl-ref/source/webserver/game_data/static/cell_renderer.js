@@ -12,8 +12,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
     }
 
     var fg_term_colours, bg_term_colours;
+    var healthy, hp_spend, magic, magic_spend;
 
-    function determine_term_colours()
+    function determine_colours()
     {
         fg_term_colours = [];
         bg_term_colours = [];
@@ -26,6 +27,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             bg_term_colours.push(elem.css("background-color"));
             elem.detach();
         }
+
+        healthy = $("#stats_hp_bar_full").css("background-color");
+        hp_spend = $("#stats_hp_bar_decrease").css("background-color");
+        magic = $("#stats_mp_bar_full").css("background-color");
+        magic_spend = "black";
     }
 
     function in_water(cell)
@@ -366,14 +372,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
         // adapted from DungeonRegion::draw_minibars in tilereg_dgn.cc
         draw_minibars: function(x, y)
         {
-            var healthy = "#00FF00";
-            //  damaged = "#FFFF00";
-            //  wounded = "#960000";
-            var hp_spend= "#FF0000";
-
-            var magic = "#0000FF";
-            var magic_spend = "#000000";
-
             // don't draw if hp and mp is full
             if (player.hp == player.hp_max
                 && player.mp == player.mp_max)
@@ -381,7 +379,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 return;
             }
 
-            var hp_bar_offset = 2;
+            var bar_height = Math.floor(this.cell_height/16);
+            var hp_bar_offset = bar_height;
 
             // TODO: use different colors if heavily wounded, like in the tiles version
             if (player.mp_max > 0) {
@@ -389,14 +388,14 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 if (mp_percent < 0) mp_percent = 0;
 
                 this.ctx.fillStyle = magic_spend;
-                this.ctx.fillRect(x, y + this.cell_height - 2,
-                                  this.cell_width, 2);
+                this.ctx.fillRect(x, y + this.cell_height - bar_height,
+                                  this.cell_width, bar_height);
 
                 this.ctx.fillStyle = magic;
-                this.ctx.fillRect(x, y + this.cell_height - 2,
-                                  this.cell_width * mp_percent, 2);
+                this.ctx.fillRect(x, y + this.cell_height - bar_height,
+                                  this.cell_width * mp_percent, bar_height);
 
-                hp_bar_offset += 2;
+                hp_bar_offset += bar_height;
             }
 
             var hp_percent = player.hp / player.hp_max;
@@ -404,11 +403,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
             this.ctx.fillStyle = hp_spend;
             this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
-                              this.cell_width, 2);
+                              this.cell_width, bar_height);
 
             this.ctx.fillStyle = healthy;
             this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
-                              this.cell_width * hp_percent, 2);
+                              this.cell_width * hp_percent, bar_height);
         },
 
         render_cell: function()
@@ -986,7 +985,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
     $(document).off("game_init.cell_renderer")
         .on("game_init.cell_renderer", function () {
-            determine_term_colours();
+            determine_colours();
         });
 
     return {
