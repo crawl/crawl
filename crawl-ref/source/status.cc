@@ -155,8 +155,7 @@ void init_duration_index()
     for (unsigned i = 0; i < ARRAYSZ(duration_data); ++i)
     {
         duration_type dur = duration_data[i].dur;
-        ASSERT(dur >= 0);
-        ASSERT(dur < NUM_DURATIONS);
+        ASSERT_RANGE(dur, 0, NUM_DURATIONS);
         ASSERT(duration_index[dur] == -1);
         duration_index[dur] = i;
     }
@@ -164,8 +163,7 @@ void init_duration_index()
 
 static const duration_def* _lookup_duration(duration_type dur)
 {
-    ASSERT(dur >= 0);
-    ASSERT(dur < NUM_DURATIONS);
+    ASSERT_RANGE(dur, 0, NUM_DURATIONS);
     if (duration_index[dur] == -1)
         return NULL;
     else

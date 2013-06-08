@@ -288,8 +288,7 @@ bool MiscastEffect::neither_end_silenced()
 
 void MiscastEffect::do_miscast()
 {
-    ASSERT(recursion_depth >= 0);
-    ASSERT(recursion_depth < MAX_RECURSE);
+    ASSERT_RANGE(recursion_depth, 0, MAX_RECURSE);
 
     if (recursion_depth == 0)
         did_msg = false;

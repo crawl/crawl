@@ -499,8 +499,7 @@ static int _leading_sacrifice_group()
 
 static void _give_sac_group_feedback(int which)
 {
-    ASSERT(which >= 0);
-    ASSERT(which < 5);
+    ASSERT_RANGE(which, 0, 5);
     const char* names[] = {
         "Escape", "Destruction", "Dungeons", "Summoning", "Wonder"
     };

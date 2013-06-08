@@ -34,8 +34,7 @@ CrawlStoreValue::CrawlStoreValue()
 
 CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
 {
-    ASSERT(other.type >= SV_NONE);
-    ASSERT(other.type < NUM_STORE_VAL_TYPES);
+    ASSERT_RANGE(other.type, SV_NONE, NUM_STORE_VAL_TYPES);
 
     val.ptr = NULL;
 
@@ -143,8 +142,7 @@ CrawlStoreValue::CrawlStoreValue(const store_flags _flags,
                                  const store_val_type _type)
     : type(_type), flags(_flags)
 {
-    ASSERT(type >= SV_NONE);
-    ASSERT(type < NUM_STORE_VAL_TYPES);
+    ASSERT_RANGE(type, SV_NONE, NUM_STORE_VAL_TYPES);
     ASSERT(!(flags & SFLAG_UNSET));
 
     flags   |= SFLAG_UNSET;
@@ -394,8 +392,7 @@ void CrawlStoreValue::unset(bool force)
 
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
 {
-    ASSERT(other.type >= SV_NONE);
-    ASSERT(other.type < NUM_STORE_VAL_TYPES);
+    ASSERT_RANGE(other.type, SV_NONE, NUM_STORE_VAL_TYPES);
     ASSERT(other.type != SV_NONE || type == SV_NONE);
 
     // NOTE: We don't bother checking SFLAG_CONST_VAL, since the
@@ -1566,8 +1563,7 @@ CrawlVector::CrawlVector(store_val_type _type, store_flags flags,
                          vec_size _max_size)
     : type(_type), default_flags(flags), max_size(_max_size)
 {
-    ASSERT(type >= SV_NONE);
-    ASSERT(type < NUM_STORE_VAL_TYPES);
+    ASSERT_RANGE(type, SV_NONE, NUM_STORE_VAL_TYPES);
     ASSERT(!(default_flags & SFLAG_UNSET));
     ASSERT(max_size > 0);
 }

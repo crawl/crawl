@@ -840,8 +840,7 @@ static void _print_stats_qv(int y)
     string text;
 
     int q = you.m_quiver->get_fire_item();
-    ASSERT(q >= -1);
-    ASSERT(q < ENDOFPACK);
+    ASSERT_RANGE(q, -1, ENDOFPACK);
     if (q != -1 && !fire_warn_if_impossible(true))
     {
         const item_def& quiver = you.inv[q];

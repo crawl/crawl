@@ -270,8 +270,7 @@ brand_type player::damage_brand(int)
 // eq must be in [EQ_WEAPON, EQ_RING_EIGHT], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT(eq >= EQ_WEAPON);
-    ASSERT(eq < NUM_EQUIP);
+    ASSERT_RANGE(eq, EQ_WEAPON, NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])

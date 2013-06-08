@@ -36,8 +36,7 @@ const char *get_job_abbrev(int which_job)
     if (which_job == JOB_UNKNOWN)
         return "Un";
     COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS);
-    ASSERT(which_job >= 0);
-    ASSERT(which_job < NUM_JOBS);
+    ASSERT_RANGE(which_job, 0, NUM_JOBS);
 
     return Job_Abbrev_List[which_job];
 }
@@ -64,8 +63,7 @@ const char *get_job_name(int which_job)
     if (which_job == JOB_UNKNOWN)
         return "Unemployed";
     COMPILE_CHECK(ARRAYSZ(Job_Name_List) == NUM_JOBS);
-    ASSERT(which_job >= 0);
-    ASSERT(which_job < NUM_JOBS);
+    ASSERT_RANGE(which_job, 0, NUM_JOBS);
 
     return Job_Name_List[which_job];
 }

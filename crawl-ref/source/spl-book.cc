@@ -78,8 +78,7 @@ spell_type which_spell_in_book(const item_def &book, int spl)
 
 spell_type which_spell_in_book(int sbook_type, int spl)
 {
-    ASSERT(sbook_type >= 0);
-    ASSERT(sbook_type < (int)ARRAYSZ(spellbook_template_array));
+    ASSERT_RANGE(sbook_type, 0, (int)ARRAYSZ(spellbook_template_array));
     return spellbook_template_array[sbook_type][spl];
 }
 

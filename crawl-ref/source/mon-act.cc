@@ -3393,8 +3393,7 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     m2->clear_far_constrictions();
 
     const int m2i = m2->mindex();
-    ASSERT(m2i >= 0);
-    ASSERT(m2i < MAX_MONSTERS);
+    ASSERT_RANGE(m2i, 0, MAX_MONSTERS);
     mgrd(c) = m2i;
     _swim_or_move_energy(m2);
 
