@@ -1712,11 +1712,6 @@ freed slave
 A human who has just been released from magical enslavement. It tries to stand
 proudly before you, despite its lingering fear and unkempt appearance.
 %%%%
-forest drake
-
-A small but powerful dragon, quite comfortable weaving through the trees that
-comprise its home. It can exhale powerful blasts of wind.
-%%%%
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely the
@@ -4390,6 +4385,12 @@ wight:quote
 “Unhappie wight, borne to desastrous end,
  That doth his life in so long tendance spend!”
     -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
+%%%%
+wind drake
+
+A small but powerful dragon, particularly adept amongst its kin at
+manipulating the currents of air that surround it. It can exhale powerful
+blasts of wind.
 %%%%
 wizard
 

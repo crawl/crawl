@@ -390,6 +390,9 @@ thrashing horror cast
 
 @The_monster@ churns violently!
 %%%%
+Airstrike wind drake cast
+
+@The_monster@ flaps its wings at @target@.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

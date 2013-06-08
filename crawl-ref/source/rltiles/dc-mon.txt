@@ -587,7 +587,7 @@ swamp_drake MONS_SWAMP_DRAKE
 fire_drake MONS_FIRE_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
-forest_drake MONS_FOREST_DRAKE
+wind_drake MONS_WIND_DRAKE
 
 ## Dragons ('D')
 %sdir mon/unique
