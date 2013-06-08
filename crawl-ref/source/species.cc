@@ -235,6 +235,9 @@ int species_has_claws(species_type species, bool mut_level)
     if (species == SP_GHOUL)
         return 1;
 
+    if (species == SP_GARGOYLE)
+        return 1;
+
     // Felid claws don't count as a claws mutation.  The claws mutation
     // does only hands, not paws.
     if (species == SP_FELID && !mut_level)
