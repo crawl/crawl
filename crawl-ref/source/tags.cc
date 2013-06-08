@@ -1092,7 +1092,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
-    marshallInt(th, you.gargoyle_damage_reduction);
     marshallInt(th, you.abyss_speed);
 
     marshallInt(th, you.disease);
@@ -1249,6 +1248,8 @@ static void tag_construct_you(writer &th)
 #if TAG_MAJOR_VERSION == 34
     if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
         you.mutation[MUT_TELEPORT_CONTROL] = 0;
+    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
+	you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
 #endif
 
     marshallByte(th, you.demonic_traits.size());
@@ -1897,12 +1898,9 @@ static void tag_read_you(reader &th)
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_GARGOYLE_DR)
-#endif
-        you.gargoyle_damage_reduction = unmarshallInt(th);
-#if TAG_MAJOR_VERSION == 34
-    else
-        you.gargoyle_damage_reduction = 0;
+    if (th.getMinorVersion() >= TAG_MINOR_GARGOYLE_DR
+      && th.getMinorVersion() < TAG_MINOR_RM_GARGOYLE_DR)
+        unmarshallInt(th); // Slough an integer.
 
     if (th.getMinorVersion() < TAG_MINOR_AUTOMATIC_MANUALS)
     {

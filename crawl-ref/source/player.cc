@@ -3568,13 +3568,6 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
-            case SP_GARGOYLE:
-                if (you.experience_level == 7 || you.experience_level == 13)
-                    perma_mutate(MUT_SELF_PETRIFICATION, 1, "level gain");
-                if (!(you.experience_level % 4))
-                    modify_stat(coinflip() ? STAT_STR : STAT_INT, 1, false, "level gain");
-                break;
-
             case SP_TENGU:
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
@@ -6402,7 +6395,7 @@ int player::armour_class() const
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
     AC += _stoneskin_bonus();
-
+  
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
 
@@ -7117,12 +7110,6 @@ void player::petrify(actor *who, bool force)
         return;
 
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
-
-    if (you.mutation[MUT_SELF_PETRIFICATION] > 0)
-    {
-        you.duration[DUR_PETRIFYING] *=
-            1 + you.mutation[MUT_SELF_PETRIFICATION] + coinflip();
-    }
 
     you.redraw_evasion = true;
     mpr("You are slowing down.", MSGCH_WARN);

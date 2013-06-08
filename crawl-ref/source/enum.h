@@ -73,9 +73,6 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
-    // Gargoyles
-    ABIL_SELF_PETRIFY,
-
     ABIL_MAX_INTRINSIC = ABIL_RECHARGING,
 
     // Evoking items.
@@ -2849,7 +2846,7 @@ enum mutation_type
     MUT_MANA_REGENERATION,
     MUT_MANA_LINK,
     MUT_PETRIFICATION_RESISTANCE,
-    MUT_SELF_PETRIFICATION,
+    MUT_TRAMPLE_RESISTANCE,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
