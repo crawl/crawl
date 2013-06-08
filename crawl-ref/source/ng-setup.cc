@@ -309,12 +309,12 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_GARGOYLE:
         you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
+        you.mutation[MUT_TRAMPLE_RESISTANCE]         = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_FANGS]                      = 1;
         you.mutation[MUT_TALONS]                     = 2;
         you.mutation[MUT_SLOW_METABOLISM]            = 1;
-        you.mutation[MUT_SELF_PETRIFICATION]         = 1;
         break;
     case SP_TENGU:
         you.mutation[MUT_BEAK]   = 1;

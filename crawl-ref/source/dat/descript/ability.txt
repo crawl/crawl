@@ -83,10 +83,6 @@ Release Delayed Fireball
 Instantly release a previously memorised (delayed) fireball without additional
 cost in terms of magic or hunger.
 %%%%
-Self-Petrification
-
-Petrify yourself, gaining damage reduction and fast healing.
-%%%%
 Self-Restoration
 
 At the permanent loss of one magic point restore your Strength, Dexterity and

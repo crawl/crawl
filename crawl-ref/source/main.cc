@@ -2245,21 +2245,6 @@ static void _decrement_petrification(int delay)
 {
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
-        if (you.species == SP_GARGOYLE)
-        {
-            int possible_loss = 4;
-            if (player_sust_abil())
-                possible_loss -= 1;
-
-            for (int i = 0; i < possible_loss; ++i)
-            {
-                if (x_chance_in_y(you.gargoyle_damage_reduction, you.hp_max))
-                    lose_stat(STAT_RANDOM, 1, true, "massive damage");
-            }
-            int dur = (200 * you.gargoyle_damage_reduction / you.hp_max) / 10;
-            you.increase_duration(DUR_EXHAUSTED, dur);
-            you.gargoyle_damage_reduction = 0;
-        }
         you.redraw_evasion = true;
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
              you.form == TRAN_LICH ? "bone" :
