@@ -1473,6 +1473,8 @@ static void _fixup_branch_stairs()
                 coord_def coord = *(stairs.begin());
                 env.markers.add(new map_feature_marker(coord, grd(coord)));
                 _set_grd(coord, exit);
+                env.level_map_mask(coord) &= ~(MMT_MIMIC);
+
                 for (vector<coord_def>::iterator it = stairs.begin() + 1;
                      it != stairs.end(); it++)
                 {
