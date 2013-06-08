@@ -416,9 +416,7 @@ void mark_had_book(const item_def &book)
     }
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
-    {
         ASSERT_RANGE(book.plus, 1, 10); // book's level
-    }
 
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(book.book_number());
