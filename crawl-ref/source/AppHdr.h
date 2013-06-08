@@ -28,6 +28,7 @@ using namespace std;
 # define unique_ptr auto_ptr
 template<typename T>
 static inline T move(T x) { return x; } // good enough for our purposes
+# include <cstddef>
 # define nullptr NULL
 #endif
 
