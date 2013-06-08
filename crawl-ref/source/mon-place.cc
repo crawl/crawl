@@ -2537,7 +2537,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         if (coinflip())
             break;
         band = BAND_TENGU;
-        band_size = 3 + random2(4);
+        band_size = 2 + random2(3);
         break;
 
     case MONS_SOJOBO:
@@ -2954,7 +2954,9 @@ static monster_type _band_member(band_type band, int which)
         }
         return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
-        if (which <= 2 || one_chance_in(5))
+    case BAND_SPRIGGANS:
+        if ((band == BAND_SPRIGGAN_ELITES && which <= 2)
+            || one_chance_in(5))
         {
             return random_choose(MONS_SPRIGGAN_AIR_MAGE,
                                  MONS_SPRIGGAN_BERSERKER,
@@ -2962,8 +2964,6 @@ static monster_type _band_member(band_type band, int which)
                                  MONS_SPRIGGAN_RIDER,
                                  -1);
         }
-        // deliberate fall-through
-    case BAND_SPRIGGANS:
         return MONS_SPRIGGAN;
 
     default:
