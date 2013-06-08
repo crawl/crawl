@@ -2877,8 +2877,7 @@ void melee_attack::do_miscast()
         return;
 
     ASSERT(miscast_target != NULL);
-    ASSERT(miscast_level >= 0);
-    ASSERT(miscast_level <= 3);
+    ASSERT_RANGE(miscast_level, 0, 4);
     ASSERT(count_bits(miscast_type) == 1);
 
     if (!miscast_target->alive())

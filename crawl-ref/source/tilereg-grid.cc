@@ -140,8 +140,7 @@ void GridRegion::add_quad_char(char c, int x, int y,
                                int ofs_x, int ofs_y, bool outline)
 {
     int num = c - '0';
-    ASSERT(num >= 0);
-    ASSERT(num <= 9);
+    ASSERT_RANGE(num, 0, 9 + 1);
     tileidx_t idx = (outline ? TILEI_NUM0_OUTLINE : TILEI_NUM0) + num;
 
     m_buf.add_icons_tile(idx, x, y, ofs_x, ofs_y);

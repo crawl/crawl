@@ -7788,8 +7788,7 @@ void player::goto_place(const level_id &lid)
 {
     where_are_you = static_cast<branch_type>(lid.branch);
     depth = lid.depth;
-    ASSERT(depth >= 1);
-    ASSERT(depth <= brdepth[you.where_are_you]);
+    ASSERT_RANGE(depth, 1, brdepth[you.where_are_you] + 1);
 }
 
 bool player::attempt_escape(int attempts)

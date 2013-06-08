@@ -346,8 +346,7 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
 {
     if (res > MR_LAST_MULTI)
     {
-        ASSERT(lev >= 0);
-        ASSERT(lev <= 1);
+        ASSERT_RANGE(lev, 0, 2);
         if (lev)
             all |= res;
         else
@@ -355,8 +354,7 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
         return;
     }
 
-    ASSERT(lev >= -3);
-    ASSERT(lev <= 4);
+    ASSERT_RANGE(lev, -3, 5);
     all = all & ~(res * 7) | res * (lev & 7);
 }
 
@@ -4340,8 +4338,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
 
 string get_mon_shape_str(const mon_body_shape shape)
 {
-    ASSERT(shape >= MON_SHAPE_HUMANOID);
-    ASSERT(shape <= MON_SHAPE_MISC);
+    ASSERT_RANGE(shape, MON_SHAPE_HUMANOID, MON_SHAPE_MISC + 1);
 
     static const char *shape_names[] =
     {

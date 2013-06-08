@@ -263,8 +263,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
     // Re-check whether we're in a valid place, it leads to obscure errors
     // otherwise.
     ASSERT_RANGE(you.where_are_you, 0, NUM_BRANCHES);
-    ASSERT(you.depth > 0);
-    ASSERT(you.depth <= brdepth[you.where_are_you]);
+    ASSERT_RANGE(you.depth, 0 + 1, brdepth[you.where_are_you] + 1);
 
     const set<string> uniq_tags  = you.uniq_map_tags;
     const set<string> uniq_names = you.uniq_map_names;
@@ -3210,8 +3209,7 @@ static void _place_traps()
     const int num_traps = num_traps_for_place();
     int level_number = env.absdepth0;
 
-    ASSERT(num_traps >= 0);
-    ASSERT(num_traps <= MAX_TRAPS);
+    ASSERT_RANGE(num_traps, 0, MAX_TRAPS + 1);
 
     for (int i = 0; i < num_traps; i++)
     {

@@ -865,8 +865,7 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     if (!source.defined() || !dest.defined())
         return;
 
-    ASSERT(quant > 0);
-    ASSERT(quant <= source.quantity);
+    ASSERT_RANGE(quant, 1, source.quantity + 1);
     ASSERT(is_blood_potion(source));
     ASSERT(is_blood_potion(dest));
 

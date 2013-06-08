@@ -219,16 +219,14 @@ void init_player_doll()
 
 static int _get_random_doll_part(int p)
 {
-    ASSERT(p >= 0);
-    ASSERT(p <= TILEP_PART_MAX);
+    ASSERT_RANGE(p, 0, TILEP_PART_MAX + 1);
     return (tile_player_part_start[p]
             + random2(tile_player_part_count[p]));
 }
 
 static void _fill_doll_part(dolls_data &doll, int p)
 {
-    ASSERT(p >= 0);
-    ASSERT(p <= TILEP_PART_MAX);
+    ASSERT_RANGE(p, 0, TILEP_PART_MAX + 1);
     doll.parts[p] = _get_random_doll_part(p);
 }
 

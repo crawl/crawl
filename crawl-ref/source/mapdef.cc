@@ -451,8 +451,7 @@ void map_lines::read_maplines(reader &inf)
 {
     clear();
     const int h = unmarshallShort(inf);
-    ASSERT(h >= 0);
-    ASSERT(h <= GYM);
+    ASSERT_RANGE(h, 0, GYM + 1);
 
     for (int i = 0; i < h; ++i)
         add_line(unmarshallString(inf));
