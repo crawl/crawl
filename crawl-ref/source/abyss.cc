@@ -1248,10 +1248,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ASSERT(shoved);
     }
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-    {
-        ASSERT(grd(*ri) > DNGN_UNSEEN);
-        ASSERT(grd(*ri) < NUM_FEATURES);
-    }
+        ASSERT_RANGE(grd(*ri), DNGN_UNSEEN + 1, NUM_FEATURES);
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
