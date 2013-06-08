@@ -539,8 +539,8 @@ Highlighted skills are focused on and will train faster than the others. You can
 highlight as many skills as you like.
 
 Occasionally you may find a manual of a skill which allows you to make quick
-progress in this area. For a while after you read it, experience used to
-practise the given skill will have twice the usual effect.
+progress in this area. When you are carrying it experience used to practise the
+given skill will have twice the usual effect for a while.
 
 ****************************************
 F. Monsters
@@ -926,7 +926,7 @@ assigned to what keys.
 Some powerful spellbooks require a certain amount of magical skill to read their
 contents.
 
-Occasionally you will find manuals of some skill. Reading these will cause your
+Occasionally you will find manuals of some skill. Carrying these will cause your
 experience to have twice the effect as usual when used for training that skill.
 
 { Miscellaneous
