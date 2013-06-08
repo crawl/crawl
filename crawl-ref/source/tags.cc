@@ -1871,11 +1871,9 @@ static void tag_read_you(reader &th)
 
     ASSERT(is_valid_species(you.species));
     ASSERT(you.char_class < NUM_JOBS);
-    ASSERT(you.experience_level > 0);
-    ASSERT(you.experience_level <= 27);
+    ASSERT_RANGE(you.experience_level, 1, 28);
     ASSERT(you.religion < NUM_GODS);
-    ASSERT(crawl_state.type > GAME_TYPE_UNSPECIFIED);
-    ASSERT(crawl_state.type < NUM_GAME_TYPE);
+    ASSERT_RANGE(crawl_state.type, GAME_TYPE_UNSPECIFIED + 1, NUM_GAME_TYPE);
     you.last_mid          = unmarshallInt(th);
     you.piety             = unmarshallUByte(th);
     ASSERT(you.piety <= MAX_PIETY);
@@ -1924,12 +1922,10 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 #endif
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
-    ASSERT(you.form >= TRAN_NONE);
-    ASSERT(you.form <= LAST_FORM);
+    ASSERT_RANGE(you.form, TRAN_NONE, LAST_FORM + 1);
 
     count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    ASSERT(count <= 32767);
+    ASSERT_RANGE(count, 0, 32768);
     you.sage_skills.resize(count, SK_NONE);
     you.sage_xp.resize(count, 0);
     you.sage_bonus.resize(count, 0);
@@ -2158,8 +2154,7 @@ static void tag_read_you(reader &th)
 
     // how many mutations/demon powers?
     count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    ASSERT(count <= NUM_MUTATIONS);
+    ASSERT_RANGE(count, 0, NUM_MUTATIONS + 1);
     for (j = 0; j < count; ++j)
     {
         you.mutation[j]         = unmarshallUByte(th);
@@ -2183,8 +2178,7 @@ static void tag_read_you(reader &th)
     {
         player::demon_trait dt;
         dt.level_gained = unmarshallByte(th);
-        ASSERT(dt.level_gained > 1);
-        ASSERT(dt.level_gained <= 27);
+        ASSERT_RANGE(dt.level_gained, 1, 28);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
         ASSERT_RANGE(dt.mutation, 0, NUM_MUTATIONS);
         you.demonic_traits.push_back(dt);
@@ -2600,8 +2594,7 @@ static void tag_read_you_dungeon(reader &th)
     for (int j = 0; j < count; ++j)
     {
         brdepth[j]    = unmarshallInt(th);
-        ASSERT(brdepth[j] >= -1);
-        ASSERT(brdepth[j] <= MAX_BRANCH_DEPTH);
+        ASSERT_RANGE(brdepth[j], -1, MAX_BRANCH_DEPTH + 1);
         startdepth[j] = unmarshallInt(th);
     }
 #if TAG_MAJOR_VERSION == 34
@@ -3496,8 +3489,7 @@ static void tag_read_level(reader &th)
 
     // how many clouds?
     const int num_clouds = unmarshallShort(th);
-    ASSERT(num_clouds >= 0);
-    ASSERT(num_clouds <= MAX_CLOUDS);
+    ASSERT_RANGE(num_clouds, 0, MAX_CLOUDS + 1);
     for (int i = 0; i < num_clouds; i++)
     {
         env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
@@ -3532,8 +3524,7 @@ static void tag_read_level(reader &th)
 
     // how many shops?
     const int num_shops = unmarshallShort(th);
-    ASSERT(num_shops >= 0);
-    ASSERT(num_shops <= MAX_SHOPS);
+    ASSERT_RANGE(num_shops, 0, MAX_SHOPS + 1);
     for (int i = 0; i < num_shops; i++)
     {
         env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
@@ -3594,8 +3585,7 @@ static void tag_read_level_items(reader &th)
 {
     // how many traps?
     const int trap_count = unmarshallShort(th);
-    ASSERT(trap_count >= 0);
-    ASSERT(trap_count <= MAX_TRAPS);
+    ASSERT_RANGE(trap_count, 0, MAX_TRAPS + 1);
     for (int i = 0; i < trap_count; ++i)
     {
         env.trap[i].type =
@@ -3622,8 +3612,7 @@ static void tag_read_level_items(reader &th)
 
     // how many items?
     const int item_count = unmarshallShort(th);
-    ASSERT(item_count >= 0);
-    ASSERT(item_count <= MAX_ITEMS);
+    ASSERT_RANGE(item_count, 0, MAX_ITEMS + 1);
     for (int i = 0; i < item_count; ++i)
         unmarshallItem(th, mitm[i]);
     for (int i = item_count; i < MAX_ITEMS; ++i)
@@ -3782,8 +3771,7 @@ static void tag_read_level_monsters(reader &th)
 
     // how many monsters?
     count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    ASSERT(count <= MAX_MONSTERS);
+    ASSERT_RANGE(count, 0, MAX_MONSTERS + 1);
 
     for (i = 0; i < count; i++)
     {

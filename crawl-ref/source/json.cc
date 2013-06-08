@@ -345,8 +345,7 @@ static void to_surrogate_pair(uchar_t unicode, uint16_t *uc, uint16_t *lc)
 {
     uchar_t n;
 
-    ASSERT(unicode >= 0x10000);
-    ASSERT(unicode <= 0x10FFFF);
+    ASSERT_RANGE(unicode, 0x10000, 0x10FFFF + 1);
 
     n = unicode - 0x10000;
     *uc = ((n >> 10) & 0x3FF) | 0xD800;

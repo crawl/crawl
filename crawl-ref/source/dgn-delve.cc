@@ -236,12 +236,10 @@ static int _make_seed(map_lines *map, store_type& store)
 
 void delve(map_lines *map, int ngb_min, int ngb_max, int connchance, int cellnum, int top)
 {
-    ASSERT(ngb_min >= 1);
-    ASSERT(ngb_min <= 3);
+    ASSERT_RANGE(ngb_min, 1, 4);
     ASSERT(ngb_min <= ngb_max);
     ASSERT(ngb_max <= 8);
-    ASSERT(connchance >= 0);
-    ASSERT(connchance <= 100);
+    ASSERT_RANGE(connchance, 0, 101);
 
     store_type store;
     int world = _make_seed(map, store);

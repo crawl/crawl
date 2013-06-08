@@ -206,8 +206,7 @@ bool xom_is_nice(int tension)
                                    random2(tension)));
 
         const int effective_piety = you.piety + tension_bonus;
-        ASSERT(effective_piety >= 0);
-        ASSERT(effective_piety <= MAX_PIETY);
+        ASSERT_RANGE(effective_piety, 0, MAX_PIETY + 1);
 
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
@@ -2816,17 +2815,18 @@ static void _get_hand_type(string &hand, bool &can_plural)
 static int _xom_miscast(const int max_level, const bool nasty,
                         bool debug = false)
 {
-    ASSERT(max_level >= 0);
-    ASSERT(max_level <= 3);
+    ASSERT_RANGE(max_level, 0, 4);
 
-    const char* speeches[4] = {
+    const char* speeches[4] =
+    {
         "zero miscast effect",
         "minor miscast effect",
         "medium miscast effect",
         "major miscast effect"
     };
 
-    const char* causes[4] = {
+    const char* causes[4] =
+    {
         "the mischief of Xom",
         "the capriciousness of Xom",
         "the capriciousness of Xom",

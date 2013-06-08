@@ -549,8 +549,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
     if (lev > 27 && you.wizard)
         lev = 27;
 
-    ASSERT(lev >= 0);
-    ASSERT(lev <= 27);
+    ASSERT_RANGE(lev, 0, 27 + 1);
 
     return exp[lev] * species_apt_factor(sk, sp);
 }

@@ -23,8 +23,7 @@ class ProceduralSample
                          const uint32_t _cp, map_mask_type _m = MMT_NONE)
             : c(_c), ft(_ft), cp(_cp), m(_m)
         {
-            ASSERT(ft > DNGN_UNSEEN);
-            ASSERT(ft < NUM_FEATURES);
+            ASSERT_RANGE(ft, DNGN_UNSEEN + 1, NUM_FEATURES);
         }
         coord_def coord() const { return c; }
         dungeon_feature_type feat() const { return ft; }

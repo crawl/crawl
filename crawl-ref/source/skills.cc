@@ -70,8 +70,7 @@ int calc_skill_cost(int skill_cost_level)
                          240, 248, 250, 250, 250,  // 21-25
                          250, 250 };
 
-    ASSERT(skill_cost_level >= 1);
-    ASSERT(skill_cost_level <= 27);
+    ASSERT_RANGE(skill_cost_level, 1, 27 + 1);
     return cost[skill_cost_level - 1];
 }
 

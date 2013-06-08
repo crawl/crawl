@@ -654,8 +654,7 @@ void bolt::initialise_fire()
     }
 
     ASSERT(in_bounds(source));
-    ASSERT(flavour > BEAM_NONE);
-    ASSERT(flavour < BEAM_FIRST_PSEUDO);
+    ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->defined());
     ASSERTM(range >= 0, "beam '%s', source '%s', item '%s'; has range -1",
             name.c_str(),

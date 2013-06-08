@@ -2595,8 +2595,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
     if (maxlen != -1 && len > maxlen)
         len = maxlen;
 
-    ASSERT(len > 0);
-    ASSERT(len <= ITEMNAME_SIZE);
+    ASSERT_RANGE(len, 1, ITEMNAME_SIZE + 1);
 
     int j = numb[3] % 17;
     const int k = numb[4] % 17;
