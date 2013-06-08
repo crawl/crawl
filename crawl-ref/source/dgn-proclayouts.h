@@ -22,7 +22,10 @@ class ProceduralSample
         ProceduralSample(const coord_def _c,
             const dungeon_feature_type _ft,
             const uint32_t _cp, map_mask_type _m = MMT_NONE) :
-            c(_c), ft(_ft), cp(_cp), m(_m) {}
+            c(_c), ft(_ft), cp(_cp), m(_m) {
+                ASSERT(ft > DNGN_UNSEEN);
+                ASSERT(ft < NUM_FEATURES);
+            }
         coord_def coord() const { return c; }
         dungeon_feature_type feat() const { return ft; }
         uint32_t changepoint() const { return cp; }
