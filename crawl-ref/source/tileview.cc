@@ -187,7 +187,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_FOREST:
         flv.wall  = TILE_WALL_LAIR;
-        flv.floor = TILE_FLOOR_WOODGROUND;
+        flv.floor = TILE_FLOOR_GRASS;
         return;
 
     case BRANCH_ABYSS:
