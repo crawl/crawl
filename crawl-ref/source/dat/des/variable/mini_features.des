@@ -3054,8 +3054,7 @@ NAME:  kilobyte_tornado_obelisk
 TAGS:  no_monster_gen
 DEPTH: D:15-27, Elf
 ITEM:  acquire any
-MONS:  statue generate_awake n_rpl n_des name:diamond_obelisk hp:10000 \
-       col:white tile:mons_diamond_obelisk perm_ench:tornado
+MONS:  diamond obelisk
 KPROP: .d1 = no_tele_into
 MAP
       ccc

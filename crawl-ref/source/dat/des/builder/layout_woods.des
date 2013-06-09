@@ -54,7 +54,6 @@ TAGS: overwritable layout allow_dup unrand layout_type_forest
     plant_mons = "w:2 col:darkgrey plant name:withered name_adjective               \
                   tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
                   name_adjective tile:mons_withered_plant"
-    kmons("1 = " .. plant_mons)
     colour("t = w:5 lightgrey / w:5 darkgrey / brown")
     set_feature_name("tree", "dead tree")
     lakes = false
