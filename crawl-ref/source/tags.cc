@@ -1249,7 +1249,7 @@ static void tag_construct_you(writer &th)
     if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
         you.mutation[MUT_TELEPORT_CONTROL] = 0;
     if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
-	you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
+        you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
 #endif
 
     marshallByte(th, you.demonic_traits.size());
