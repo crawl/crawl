@@ -283,7 +283,7 @@ void DungeonRegion::draw_minibars()
 
         if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
         {
-            static const VColour magic(0, 0, 255, 255);      // blue
+            static const VColour magic(0, 114, 159, 207);      // lightblue
             static const VColour magic_spent(0, 0, 0, 255);  // black
 
             const float magic_divider = (float) you.magic_points
