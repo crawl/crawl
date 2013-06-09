@@ -795,11 +795,11 @@ MONS:     (list of monsters)
               MONS: orc ; sabre | quick blade . chain mail | plate armour
 
           will generate an orc wielding either a sabre or a quick blade
-          and wearing either chain mail or plate armour.  Randarts are
-          never generated, and ego items are only generated if the ego
-          is explicitly stated.  Note that any items that the monster was
-          originally generated with will be removed and destroyed.  This
-          can be used to force a monster to have no items whatsoever:
+          and wearing either chain mail or plate armour.  Randarts and
+          ego items are only generated if they are explicitly requested.
+          Note that any items that the monster was originally generated
+          with will be removed and destroyed.  This can be used to force
+          a monster to have no items whatsoever:
               MONS: orc; nothing
 
           Items given to an orc, dwarf or elf will be made orcish, dwarven
