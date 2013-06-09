@@ -5237,10 +5237,10 @@ bool melee_attack::do_knockback(bool trample)
 {
     do
     {
-	if (defender->is_player() && you.mutation[MUT_TRAMPLE_RESISTANCE])
+        if (defender->is_player() && you.mutation[MUT_TRAMPLE_RESISTANCE])
         {
           if (x_chance_in_y(9, 10)) {
-	    return false;
+            return false;
           }
         }
         monster* def_monster = defender->as_monster();

@@ -6395,7 +6395,7 @@ int player::armour_class() const
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
     AC += _stoneskin_bonus();
-  
+
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
 
