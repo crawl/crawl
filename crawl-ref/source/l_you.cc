@@ -540,8 +540,7 @@ static int _you_uniques(lua_State *ls)
     if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
     {
         unique_found =
-            you.unique_creatures[get_monster_by_name(lua_tostring(ls, 1),
-                                                     true)];
+            you.unique_creatures[get_monster_by_name(lua_tostring(ls, 1))];
     }
 
     lua_pushboolean(ls, unique_found);

@@ -932,7 +932,7 @@ static vector<string> _get_branch_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    int mon_num = get_monster_by_name(key.c_str(), true);
+    int mon_num = get_monster_by_name(key.c_str());
     return (mon_num == MONS_PROGRAM_BUG);
 }
 
@@ -1014,7 +1014,7 @@ static void _recap_mon_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
-        monster_type type = get_monster_by_name(keys[i], true);
+        monster_type type = get_monster_by_name(keys[i]);
         keys[i] = mons_type_name(type, DESC_PLAIN);
     }
 }
@@ -1218,7 +1218,7 @@ static int _do_description(string key, string type, const string &suffix,
     }
     else
     {
-        monster_type mon_num = get_monster_by_name(key, true);
+        monster_type mon_num = get_monster_by_name(key);
         // Don't attempt to get more information on ghost demon
         // monsters, as the ghost struct has not been initialised, which
         // will cause a crash.  Similarly for zombified monsters, since
@@ -1616,7 +1616,7 @@ static void _find_description(bool *again, string *error_inout)
         {
             // Create and store fake monsters, so the menu code will
             // have something valid to refer to.
-            monster_type m_type = get_monster_by_name(str, true);
+            monster_type m_type = get_monster_by_name(str);
 
             // Not worth the effort handling the item; also, it would
             // puzzle the players.  Thus, only unique matches work.
