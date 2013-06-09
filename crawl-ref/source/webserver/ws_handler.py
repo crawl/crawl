@@ -202,6 +202,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
         else:
             if config.dgl_mode:
+                if hasattr(config, "autologin") and config.autologin:
+                    self.login(config.autologin[0], config.autologin[1])
                 self.send_lobby()
             else:
                 self.start_crawl(None)
