@@ -4213,7 +4213,7 @@ mons_spec mons_list::drac_monspec(string name) const
 {
     mons_spec spec;
 
-    spec.type = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name);
 
     // Check if it's a simple drac name, we're done.
     if (spec.type != MONS_PROGRAM_BUG)
@@ -4243,7 +4243,7 @@ mons_spec mons_list::drac_monspec(string name) const
         return spec;
 
     // Check for recognition again to match any (nonbase) <colour> draconian.
-    const monster_type colour = get_monster_by_name(name, true);
+    const monster_type colour = get_monster_by_name(name);
     if (colour != MONS_PROGRAM_BUG)
     {
         spec.monbase = colour;
@@ -4260,7 +4260,7 @@ mons_spec mons_list::drac_monspec(string name) const
         return MONS_PROGRAM_BUG;
 
     name = trimmed_string(name.substr(wordend + 1));
-    spec.type = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name);
 
     // We should have a non-base draconian here.
     if (spec.type == MONS_PROGRAM_BUG
@@ -4357,7 +4357,7 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name.find("draconian") != string::npos)
         return drac_monspec(name);
 
-    return get_monster_by_name(name, true);
+    return get_monster_by_name(name);
 }
 
 //////////////////////////////////////////////////////////////////////

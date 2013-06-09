@@ -226,11 +226,11 @@ void init_mon_name_cache()
     }
 }
 
-monster_type get_monster_by_name(string name, bool exact)
+monster_type get_monster_by_name(string name, bool substring)
 {
     lowercase(name);
 
-    if (exact)
+    if (!substring)
     {
         mon_name_map::iterator i = Mon_Name_Cache.find(name);
 
