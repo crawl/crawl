@@ -257,13 +257,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def start_crawl(self, game_id):
         if config.dgl_mode:
             if self.username == None:
-                self.send_message("go_lobby")
+                self.go_lobby()
                 return
 
         if self.process:
+            self.go_lobby()
             return
 
-        if config.dgl_mode and game_id not in config.games: return
+        if config.dgl_mode and game_id not in config.games:
+            self.go_lobby()
+            return
 
         self.game_id = game_id
 
@@ -288,9 +291,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         except Exception:
             self.logger.warning("Exception starting process!", exc_info=True)
             self.process = None
-            self.send_message("go_lobby")
+            self.go_lobby()
         else:
-            if self.process is None: return # Can happen if the process creation fails
+            if self.process is None: # Can happen if the process creation fails
+                self.go_lobby()
+                return
 
             self.send_message("game_started")
 
@@ -338,7 +343,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.watched_game.remove_watcher(self)
             self.watched_game = None
             self.joining = False
-            self.send_message("go_lobby")
 
     def shutdown(self):
         if not self.client_closed:
@@ -406,6 +410,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = True
 
     def watch(self, username):
+        if self.is_running():
+            self.process.stop()
+        elif self.watched_game:
+            self.stop_watching()
+
         from process_handler import processes
         procs = [process for process in processes.values()
                  if process.username.lower() == username.lower()]
@@ -418,14 +427,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             process.add_watcher(self)
             self.send_message("watching_started")
         else:
-            self.send_message("go_lobby")
+            self.go_lobby()
 
     def post_chat_message(self, text):
-        if self.username is None:
-            self.send_message("chat",
-                              content = 'You need to log in to send messages!')
-            return
-
         receiver = None
         if self.process:
             receiver = self.process
@@ -433,6 +437,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             receiver = self.watched_game
 
         if receiver:
+            if self.username is None:
+                self.send_message("chat", content
+                                  = 'You need to log in to send messages!')
+                return
+
             receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
@@ -450,6 +459,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process.stop()
         elif self.watched_game:
             self.stop_watching()
+            self.send_message("go_lobby")
+        else:
+            self.send_message("go_lobby")
 
     def get_rc(self, game_id):
         if game_id not in config.games: return

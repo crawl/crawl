@@ -169,7 +169,7 @@ class CrawlProcessHandlerBase(object):
 
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
-                watcher.stop_watching()
+                watcher.go_lobby()
 
         if self.end_callback:
             self.end_callback()
