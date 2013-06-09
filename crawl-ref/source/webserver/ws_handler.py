@@ -131,7 +131,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
         self.message_queue = []
-        self.message_queue_time = None
 
         self.subprotocol = None
 
@@ -489,14 +488,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process.handle_input(message)
 
     def clear_messages(self):
-        self.message_queue_time = None
         self.message_queue = []
 
     def flush_messages(self):
         if len(self.message_queue) == 0:
             return
-        d = datetime.datetime.now() - self.message_queue_time
-        self.message_queue_time = None
         msg = "{\"msgs\":[" + ",".join(self.message_queue) + "]}"
         self.message_queue = []
 
@@ -520,8 +516,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def write_message(self, msg, send=True):
         if self.client_closed: return
-        if self.message_queue_time == None:
-            self.message_queue_time = datetime.datetime.now()
         self.message_queue.append(utf8(msg))
         if send:
             self.flush_messages()
