@@ -456,31 +456,31 @@ This list taken from dat/dlua/lm_trig.lua, listing the different "type"
 parameters that an instance of DgnTriggerer may accept, and the required
 parameters for each.
 
-   * monster_dies: Waits for a monster to die.  Needs the parameter
+   * monster_dies: Waits for a monster to die. Needs the parameter
          "target", who's value is the name of the monster who's death
-         we're wating for.  Doesn't matter where the triggerable/marker
+         we're wating for. Doesn't matter where the triggerable/marker
          is placed.
-   * feat_change: Waits for a cell's feature to change.  Accepts the
+   * feat_change: Waits for a cell's feature to change. Accepts the
          optional parameter "target", which if set delays the trigger
          until the feature the cell turns into contains the target as a
-         substring.  The triggerable/marker must be placed on top of the
+         substring. The triggerable/marker must be placed on top of the
          cell who's feature you wish to monitor.
    * item_moved: Wait for an item to move from one cell to another.
         Needs the parameter "target", who's value is the name of the
         item that is being tracked, or which can be "auto", in which
-        case it will pick the item placed by the vault.  The
+        case it will pick the item placed by the vault. The
         triggerable/marker must be placed on top of the cell containing
         the item.
-   * item_pickup: Wait for an item to be picked up.  Needs the parameter
+   * item_pickup: Wait for an item to be picked up. Needs the parameter
         "target", who's value is the name of the item that is being tracked,
         or which can be "auto", in which case it will pick the item placed
-        by the vault.  The triggerable/marker must be placed on top of the
-        cell containing the item.  Automatically takes care of the item
+        by the vault. The triggerable/marker must be placed on top of the
+        cell containing the item. Automatically takes care of the item
         moving from one square to another without being picked up.
-   * player_move: Wait for the player to move to a cell.  The
+   * player_move: Wait for the player to move to a cell. The
         triggerable/marker must be placed on top of cell in question.
    * player_los: Wait for the player to come into LOS of a cell, which
-        must contain a notable feature..  The triggerable/marker must be
+        must contain a notable feature. The triggerable/marker must be
         placed on top of cell in question.
    * turn: Called once for each player turn that passes. Optionally accepts a
         "delay_min", "delay_max" or "delay" parameters, in which case a
