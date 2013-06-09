@@ -464,7 +464,8 @@ void unlink_item(int dest)
     }
     else
     {
-        ASSERT(in_bounds(mitm[dest].pos) || is_shop_item(mitm[dest]));
+        if (!is_shop_item(mitm[dest]))
+            ASSERT_IN_BOUNDS(mitm[dest].pos);
 
         // Linked item on map:
         //
@@ -1878,7 +1879,7 @@ void mark_items_non_visit_at(const coord_def &pos)
 bool move_item_to_grid(int *const obj, const coord_def& p, int agent,
                        bool silent)
 {
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(p);
 
     int& ob(*obj);
     // Must be a valid reference to a valid object.
@@ -1982,7 +1983,7 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
 bool copy_item_to_grid(const item_def &item, const coord_def& p, int agent,
                         int quant_drop, bool mark_dropped, bool silent)
 {
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(p);
 
     if (quant_drop == 0)
         return false;
@@ -3737,8 +3738,8 @@ coord_def orb_position()
 
 void move_items(const coord_def r, const coord_def p)
 {
-    ASSERT(in_bounds(r));
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(r);
+    ASSERT_IN_BOUNDS(p);
 
     int it = igrd(r);
     while (it != NON_ITEM)

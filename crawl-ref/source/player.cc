@@ -435,7 +435,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 {
     ASSERT(!crawl_state.game_is_arena());
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(p);
 
     if (!stepped)
     {

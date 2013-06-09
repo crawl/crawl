@@ -98,7 +98,8 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
 {
-    ASSERT(in_bounds(orig) && in_bounds(dest));
+    ASSERT_IN_BOUNDS(orig);
+    ASSERT_IN_BOUNDS(dest);
     ASSERT(orig != dest);
     ASSERT(!is_notable_terrain(grd(dest)));
 

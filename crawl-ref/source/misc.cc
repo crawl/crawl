@@ -1138,7 +1138,7 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
                       int damage, bool spatter, bool smell_alert,
                       const coord_def& from, const bool old_blood)
 {
-    ASSERT(in_bounds(where));
+    ASSERT_IN_BOUNDS(where);
 
     if (montype == MONS_PLAYER && !you.can_bleed())
         return;
