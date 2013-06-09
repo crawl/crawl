@@ -13,6 +13,7 @@ import random
 import zlib
 
 import config
+import checkoutput
 from userdb import *
 from util import *
 
@@ -441,16 +442,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         call.append("-print-webtiles-options")
 
         try:
-            out = subprocess.check_output(call)
-        except subprocess.CalledProcessError as e:
-            self.logger.warning(str(e))
-            out = None
-        return out
+            def do_send(data):
+                self.write_message('{"msg":"options","options":'
+                                   + data + '}')
 
-    def send_json_options(self, game_id):
-        options = self.get_json_options(game_id);
-        if options != None:
-            self.write_message('{"msg":"options","options":' + options  + '}');
+            checkoutput.check_output(call, do_send, self.ioloop)
+        except subprocess.CalledProcessError:
+            self.logger.warning("Error while getting JSON options!",
+                                exc_info=True)
 
     def watch(self, username):
         if self.is_running():
@@ -470,7 +469,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started")
-            self.send_json_options(process.game_params["id"]);
+            self.send_json_options(process.game_params["id"])
         else:
             if self.watched_game:
                 self.stop_watching()
