@@ -345,7 +345,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 const string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
                 if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
                     return false;
+                }
             }
 
             if (!unwield_item(show_weff_messages))
@@ -1751,6 +1754,7 @@ static bool _dont_use_invis()
              && !yesno("Invisibility will do you no good right now; "
                        "use anyway?", false, 'n'))
     {
+        canned_msg(MSG_OK);
         return true;
     }
 

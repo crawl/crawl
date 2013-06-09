@@ -235,6 +235,7 @@ bool melee_attack::handle_phase_attempted()
                     you.received_weapon_warning = true;
                 else
                 {
+                    canned_msg(MSG_OK);
                     cancel_attack = true;
                     return false;
                 }

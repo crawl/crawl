@@ -853,7 +853,10 @@ static void _handle_wizard_command(void)
 #endif
 
         if (!yesno("Do you really want to enter wizard mode?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
 
@@ -1495,7 +1498,10 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
 {
     // Certain portal types always carry warnings.
     if (!_prompt_dangerous_portal(ygrd))
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     // Does the next level have a warning annotation?
     // Also checks for entering a labyrinth with teleportitis.
@@ -1520,7 +1526,10 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
 
     // Leaving Pan runes behind.
     if (!_prompt_unique_pan_rune(ygrd))
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
@@ -2107,6 +2116,8 @@ void process_command(command_type cmd)
     case CMD_SAVE_GAME:
         if (yesno("Save game and exit?", true, 'n'))
             save_game(true);
+        else
+            canned_msg(MSG_OK);
         break;
 
     case CMD_SAVE_GAME_NOW:

@@ -462,7 +462,8 @@ void wizard_toggle_dprf()
         if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')
         {
-            return mpr("M'kay.");
+            canned_msg(MSG_OK);
+            return;
         }
 
         if (keyin < '0' || keyin >= '0' + NUM_DIAGNOSTICS)

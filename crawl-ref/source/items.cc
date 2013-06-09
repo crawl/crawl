@@ -904,6 +904,8 @@ void pickup_menu(int item_link)
         prompt = "Select pick up quantity by entering a number, then select the item";
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
                                             MT_PICKUP, _pickup_menu_title);
+    if (selected.empty())
+        canned_msg(MSG_OK);
     redraw_screen();
 
     string pickup_warning;
@@ -1204,6 +1206,7 @@ bool pickup_single_item(int link, int qty)
         && !yesno("Are you sure you want to pick up this pile of gold now?",
                   true, 'n'))
     {
+        canned_msg(MSG_OK);
         return false;
     }
     if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)

@@ -266,6 +266,8 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
             || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
                       false, 'n')))
     {
+        if (Options.confirm_butcher != CONFIRM_NEVER)
+            canned_msg(MSG_OK);
         return false;
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
@@ -280,7 +282,10 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
         if (Options.confirm_butcher != CONFIRM_NEVER)
         {
             if (!yesno(msg.c_str(), true, 'n'))
+            {
+                canned_msg(MSG_OK);
                 return false;
+            }
         }
     }
 

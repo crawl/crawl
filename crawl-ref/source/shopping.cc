@@ -2800,7 +2800,16 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                                          describe_thing(thing, DESC_A).c_str());
 
             if (_shop_yesno(prompt.c_str(), 'y'))
+            {
                 to_del.push_back(listed);
+                if (!_in_shop_now)
+                {
+                    mprf("Shopping-list: removing %s",
+                         describe_thing(thing, DESC_A).c_str());
+                }
+            }
+            else if (!_in_shop_now)
+                canned_msg(MSG_OK);
         }
         else
         {
@@ -3108,7 +3117,10 @@ void ShoppingList::display()
 
             del_thing_at_index(index);
             if (list->empty())
+            {
+                mpr("Your shopping list is now empty.");
                 break;
+            }
 
             shopmenu.clear();
             fill_out_menu(shopmenu);

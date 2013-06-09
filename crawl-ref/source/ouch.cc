@@ -1311,6 +1311,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             if (crawl_state.test || !yesno("Die?", false, 'n'))
             {
+                mpr("Thought so.");
                 take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();
