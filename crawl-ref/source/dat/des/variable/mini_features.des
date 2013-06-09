@@ -1730,6 +1730,7 @@ NAME: wad_floor_pattern_trapped
 TAGS: transparent mini_float extra decor
 WEIGHT: 4
 KFEAT:  ~ = known blade trap
+KPROP:  ~ = no_tele_into
 FTILE:  GT = floor_pebble_darkgray
 FTILE:  ;" = floor_pebble_brown
 COLOUR: "~ = brown
