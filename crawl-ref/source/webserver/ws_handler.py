@@ -13,6 +13,7 @@ import random
 import zlib
 
 import config
+import checkoutput
 from userdb import *
 from util import *
 
@@ -416,30 +417,28 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                      self.username, config.games[game_id])
         return os.path.join(path, self.username + ".rc")
 
-    def get_json_options(self, game_id):
+    def send_json_options(self, game_id):
         if game_id not in config.games: return None
 
         game = config.games[game_id]
-        call = [game["crawl_binary"]];
+        call = [game["crawl_binary"]]
         if self.username:
-            call += ["-rc",     self.rcfile_path(game_id)]
+            call += ["-rc", self.rcfile_path(game_id)]
         else:
-            call += ["-rc",     "/dev/null"]
+            call += ["-rc", "/dev/null"]
         if "options" in game:
             call += game["options"]
         call.append("-print-webtiles-options")
 
         try:
-            out = subprocess.check_output(call)
-        except subprocess.CalledProcessError as e:
-            self.logger.warning(str(e))
-            out = None
-        return out
+            def do_send(data):
+                self.write_message('{"msg":"options","options":'
+                                   + data + '}')
 
-    def send_json_options(self, game_id):
-        options = self.get_json_options(game_id);
-        if options != None:
-            self.write_message('{"msg":"options","options":' + options  + '}');
+            checkoutput.check_output(call, do_send, self.ioloop)
+        except subprocess.CalledProcessError:
+            self.logger.warning("Error while getting JSON options!",
+                                exc_info=True)
 
     def watch(self, username):
         if self.is_running():
@@ -458,7 +457,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.joining = True
             process.add_watcher(self)
             self.send_message("watching_started")
-            self.send_json_options(process.game_params["id"]);
+            self.send_json_options(process.game_params["id"])
         else:
             self.go_lobby()
 
