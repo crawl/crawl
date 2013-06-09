@@ -802,6 +802,12 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
          it != affected_monsters.end(); it++)
     {
         monster* m = (monster *)(*it);
+
+        // Watch out for invalidation. Example: Ozocubu's refrigeration on
+        // a bunch of giant spores that blow each other up.
+        if (!m->alive())
+            continue;
+
         this_damage = (*damage_monster)(agent, m, pow, hurted, actual,
                                         added_effects);
         total_damage += this_damage;
