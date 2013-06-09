@@ -100,11 +100,20 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         WARN_POP                                                              \
     } while (false)
 
+#define ASSERT_IN_BOUNDS(where)                                               \
+    ASSERTM(in_bounds(where), "%s = (%d,%d)", #where, (where).x, (where).y)
+
+#define ASSERT_IN_BOUNDS_OR_ORIGIN(where)                   \
+    ASSERTM(in_bounds(where) || (where).origin(),           \
+            "%s = (%d,%d)", #where, (where).x, (where).y)
+
 #else
 
-#define ASSERT(p)              ((void) 0)
-#define ASSERTM(p, text,...)   ((void) 0)
-#define ASSERT_RANGE(x, a, b)  ((void) 0)
+#define ASSERT(p)                         ((void) 0)
+#define ASSERTM(p, text,...)              ((void) 0)
+#define ASSERT_RANGE(x, a, b)             ((void) 0)
+#define ASSERT_IN_BOUNDS(where)           ((void) 0)
+#define ASSERT_IN_BOUNDS_OR_ORIGIN(where) ((void) 0)
 
 #endif
 

@@ -386,7 +386,7 @@ void manage_clouds()
 
 static void _maybe_leave_water(const cloud_struct& c)
 {
-    ASSERT(in_bounds(c.pos));
+    ASSERT_IN_BOUNDS(c.pos);
 
     // Rain clouds can occasionally leave shallow water or deepen it:
     // If we're near lava, chance of leaving water is lower;

@@ -1024,7 +1024,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         return;
 
     ASSERT(!crawl_state.game_is_arena() || src != &you);
-    ASSERT(in_bounds(src_pos) || src_pos.origin());
+    ASSERT_IN_BOUNDS_OR_ORIGIN(src_pos);
     if (mons_is_projectile(mon->type))
         return; // projectiles have no AI
 
@@ -1335,7 +1335,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (!mon->alive())
         return;
 
-    ASSERT(in_bounds(mon->target) || mon->target.origin());
+    ASSERT_IN_BOUNDS_OR_ORIGIN(mon->target);
 
     // If it woke up and you're its new foe, it might shout.
     if (was_sleeping && !mon->asleep() && allow_shout

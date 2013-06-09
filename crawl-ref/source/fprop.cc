@@ -18,7 +18,7 @@ bool is_sanctuary(const coord_def& p)
     const bool sanct = (testbits(env.pgrid(p), FPROP_SANCTUARY_1)
                         || testbits(env.pgrid(p), FPROP_SANCTUARY_2));
     if (sanct)
-        ASSERT(in_bounds(env.sanctuary_pos));
+        ASSERT_IN_BOUNDS(env.sanctuary_pos);
     return sanct;
 }
 

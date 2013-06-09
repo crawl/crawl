@@ -183,7 +183,7 @@ namespace arena
 
     void faction::place_at(const coord_def &pos)
     {
-        ASSERT(in_bounds(pos));
+        ASSERT_IN_BOUNDS(pos);
         for (int i = 0, size = members.size(); i < size; ++i)
         {
             mons_spec spec = members.get_monster(i);

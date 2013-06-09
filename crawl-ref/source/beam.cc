@@ -638,7 +638,7 @@ void bolt::initialise_fire()
 
     if (chose_ray)
     {
-        ASSERT(in_bounds(ray.pos()));
+        ASSERT_IN_BOUNDS(ray.pos());
 
         if (source == coord_def())
             source = ray.pos();
@@ -653,7 +653,7 @@ void bolt::initialise_fire()
         use_target_as_pos = true;
     }
 
-    ASSERT(in_bounds(source));
+    ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->defined());
     ASSERTM(range >= 0, "beam '%s', source '%s', item '%s'; has range -1",

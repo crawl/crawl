@@ -1986,7 +1986,7 @@ void handle_monster_move(monster* mons)
         return;
 
     ASSERT(!crawl_state.game_is_arena() || mons->foe != MHITYOU);
-    ASSERT(in_bounds(mons->target) || mons->target.origin());
+    ASSERT_IN_BOUNDS_OR_ORIGIN(mons->target);
 
     // Submerging monsters will hide from clouds.
     if (avoid_cloud
@@ -2288,7 +2288,7 @@ void handle_monster_move(monster* mons)
     if (mons->alive())
     {
         handle_behaviour(mons);
-        ASSERT(in_bounds(mons->target) || mons->target.origin());
+        ASSERT_IN_BOUNDS_OR_ORIGIN(mons->target);
     }
 
     if (mons_is_tentacle_head(mons_base_type(mons)))

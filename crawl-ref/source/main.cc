@@ -2922,7 +2922,7 @@ static void _check_shafts()
         if (trap.type != TRAP_SHAFT)
             continue;
 
-        ASSERT(in_bounds(trap.pos));
+        ASSERT_IN_BOUNDS(trap.pos);
 
         handle_items_on_shaft(trap.pos, true);
     }

@@ -1090,7 +1090,8 @@ static void _announce_swap(coord_def pos1, coord_def pos2)
 bool swap_features(const coord_def &pos1, const coord_def &pos2,
                    bool swap_everything, bool announce)
 {
-    ASSERT(in_bounds(pos1) && in_bounds(pos2));
+    ASSERT_IN_BOUNDS(pos1);
+    ASSERT_IN_BOUNDS(pos2);
     ASSERT(pos1 != pos2);
 
     if (is_sanctuary(pos1) || is_sanctuary(pos2))
@@ -1288,7 +1289,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
 bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
                         bool announce)
 {
-    ASSERT(in_bounds(src));
+    ASSERT_IN_BOUNDS(src);
 
     const dungeon_feature_type orig_feat = grd(src);
     const actor* orig_actor = actor_at(src);

@@ -343,7 +343,7 @@ vector<coord_def> monster_pathfind::backtrack()
     {
         dir = prev[pos.x][pos.y];
         pos = pos + Compass[dir];
-        ASSERT(in_bounds(pos));
+        ASSERT_IN_BOUNDS(pos);
 #ifdef DEBUG_PATHFIND
         mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
                                               pos.x, pos.y);
