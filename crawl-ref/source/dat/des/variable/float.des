@@ -1882,7 +1882,8 @@ KMONS:  7 = fire vortex
 #
 : if you.in_branch("elf") then
 KMONS:  Z = col:flash deep elf sorcerer \
-        name:deep_elf_elementalist n_rpl n_des tile:mons_deep_elf_elementalist \
+        name:deep_elf_elementalist n_rpl n_des n_noc \
+        tile:mons_deep_elf_elementalist \
         spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance race:elven | \
@@ -1890,8 +1891,8 @@ KMONS:  Z = col:flash deep elf sorcerer \
         robe ego:resistance race:elven . dagger ego:freezing race:elven | \
         dagger ego:flaming race:elven | dagger ego:electrocution race:elven
 : else
-KMONS:  Z = col:flash wizard hd:15 name_descriptor tile:mons_master_elementalist \
-        name:master_elementalist name_replace \
+KMONS:  Z = col:flash wizard hd:15 tile:mons_master_elementalist \
+        name:master_elementalist n_rpl n_des n_noc \
         spells:iron_shot;summon_air_elementals;sticky_flame_range;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance | robe ego:cold_resistance | \
