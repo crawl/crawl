@@ -564,7 +564,8 @@ void item_colour(item_def &item)
         case 0:
         case 1:
         default:
-            item.colour = random_colour();
+            do item.colour = random_colour();
+                while (item.colour == DARKGREY);
             break;
         case 2:
             item.colour = BROWN;
