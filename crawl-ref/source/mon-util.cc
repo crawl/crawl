@@ -240,6 +240,8 @@ monster_type get_monster_by_name(string name, bool substring)
         return MONS_PROGRAM_BUG;
     }
 
+    int best = 0x7fffffff;
+
     monster_type mon = MONS_PROGRAM_BUG;
     for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
     {
@@ -252,10 +254,13 @@ monster_type get_monster_by_name(string name, bool substring)
         if (match == string::npos)
             continue;
 
-        mon = monster_type(mtype);
+        int qual = 0x7ffffffe;
         // We prefer prefixes over partial matches.
         if (match == 0)
-            break;
+            qual = candidate.length();;
+
+        if (qual < best)
+            best = qual, mon = monster_type(mtype);
     }
     return mon;
 }
