@@ -10,8 +10,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
         "str": "vitalised|mighty|berserk",
         "int": "vitalised|brilliant",
         "dex": "vitalised|agile",
-        "hp": "divinely vigorous|berserk",
-        "mp": "divinely vigorous",
     };
 
     var defense_boosters = {
@@ -315,9 +313,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
             update_bar("mp");
         if (do_temperature)
             update_bar_heat();
-
-        $("#stats_hp").toggleClass("boosted_hp", !!player.has_status(hp_boosters));
-        $("#stats_mp").toggleClass("boosted_mp", !!player.has_status(mp_boosters));
 
         update_defense("ac");
         update_defense("ev");

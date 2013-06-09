@@ -80,14 +80,6 @@ body {
     color: #729fcf; /* lightblue */
 }
 
-.boosted_hp {
-    color: #729fcf; /* lightblue */
-}
-.boosted_mp {
-    color: #729fcf; /* lightblue */
-}
-
-
 .bar span {
     display: inline-block;
     height: 100%;
