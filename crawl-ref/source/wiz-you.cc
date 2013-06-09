@@ -979,6 +979,7 @@ void wizard_set_xl()
     }
 
     set_xl(newxl, yesno("Train skills?", true, 'n'));
+    mprf("Experience level set to %d.", newxl);
 }
 
 void set_xl(const int newxl, const bool train)
@@ -1067,9 +1068,17 @@ void wizard_transform()
     }
 
     if (!transform(200, form) && you.form != form)
+    {
         if (yesno("Transformation failed, force it?", true, 'n'))
+        {
             if (!transform(200, form, true))
                 mpr("The force is weak with this one.");
+        }
+        else
+        {
+            canned_msg(MSG_OK);
+        }
+    }
 }
 
 static void _wizard_modify_character(string inputdata)

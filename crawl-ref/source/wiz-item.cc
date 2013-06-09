@@ -168,6 +168,7 @@ void wizard_create_spec_object()
             if (!yesno("That monster doesn't leave corpses; make one "
                        "anyway?", true, 'y'))
             {
+                canned_msg(MSG_OK);
                 return;
             }
         }
@@ -384,10 +385,16 @@ static void _tweak_randart(item_def &item)
     else if (isadigit(keyin) && keyin != '0')
         choice = keyin - '1' + 26;
     else
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     if (choice >= choice_to_prop.size())
+    {
+        canned_msg(MSG_HUH);
         return;
+    }
 
     unsigned int prop = choice_to_prop[choice];
     ASSERT(prop < ARRAYSZ(_prop_type));

@@ -884,6 +884,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                 // Don't stop explore.
                 return;
             }
+            canned_msg(MSG_OK);
         }
         explore_stopped_pos = you.pos();
         stop_delay();
@@ -2921,6 +2922,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
                         level_target,
                         dest_stair->destination.id))
                 {
+                    canned_msg(MSG_OK);
                     return false;
                 }
             }

@@ -1363,6 +1363,12 @@ int rod_spell(int rod)
         }
     }
 
+    if (key_is_escape(keyin) || keyin == ' ' || keyin == '\r' || keyin == '\n')
+    {
+        canned_msg(MSG_OK);
+        return -1;
+    }
+
     if (!isaalpha(keyin))
     {
         canned_msg(MSG_HUH);
