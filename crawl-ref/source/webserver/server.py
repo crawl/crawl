@@ -166,6 +166,24 @@ def check_config():
             success = False
     return success
 
+def set_default_options(game):
+    call = [game["crawl_binary"]]
+    call += ["-rc", "/dev/null"]
+    if "options" in game:
+        call += game["options"]
+    call.append("-print-webtiles-options")
+
+    try:
+        f_null = open(os.devnull, 'w')
+        game["default_options"] = subprocess.check_output(call, stderr=f_null)
+        f_null.close()
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 1:
+            logging.info("Options not supported for " + game["name"])
+        else:
+            logging.warning("Error getting default options for " + game["name"]
+                            + ": " + str(e))
+        game["default_options"] = None
 
 if __name__ == "__main__":
     if chroot:
@@ -193,6 +211,8 @@ if __name__ == "__main__":
 
     if dgl_mode:
         ensure_user_db_exists()
+        for (game_id, game_data) in games.iteritems():
+            set_default_options(game_data)
 
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.set_blocking_log_threshold(0.5)
