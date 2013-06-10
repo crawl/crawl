@@ -2,9 +2,9 @@
 Jude Brown, James Bulgin, Robert Burnham, Chris Campbell, Matthew Cline,
 Florian Diebold, Michael Gagno, Brendan Hickey, Pete Hurst, Eino Keskitalo,
 Vsevolod Kozlov, Janne Lahdenperä, Pekka Lampila, Raphaël Langella, Nat Lanza,
-Jesse Luehrs, Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan, Aaron
-Pixton, David Ploog, Stefan O'Rear, Charles Otto, Chris West, Samuel Wilson)
-would like to thank:
+Jesse Luehrs, Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan,
+Stefan O'Rear, Charles Otto, Aaron Pixton, David Ploog, Chris West, Samuel
+Wilson) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
