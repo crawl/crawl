@@ -3340,10 +3340,8 @@ bool can_convert_to_beogh()
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        const monster *mon = monster_at(*ri);
-        if (!mon || !you.can_see(mon))
-            continue;
-        if (mons_allows_beogh(mon) && !silenced(*ri))
+        const monster * const mon = monster_at(*ri);
+        if (mons_allows_beogh_now(mon))
             return true;
     }
 
