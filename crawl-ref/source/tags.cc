@@ -3699,6 +3699,10 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
+#if TAG_MAJOR_VERSION == 34
+    if (m.type == MONS_LABORATORY_RAT)
+        unmarshallGhost(th), m.type = MONS_RAT;
+#endif
 
     _unmarshall_constriction(th, &m);
 
