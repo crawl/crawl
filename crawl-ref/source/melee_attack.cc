@@ -944,7 +944,9 @@ bool melee_attack::attack()
     }
 
     adjust_noise();
-    handle_noise(defender->pos());
+    // don't crash on banishment
+    if (defender->pos().x != 0 || defender->pos().y != 0)
+        handle_noise(defender->pos());
 
     // Allow monster attacks to draw the ire of the defender.  Player
     // attacks are handled elsewhere.
