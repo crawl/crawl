@@ -3125,7 +3125,7 @@ static void _player_reacts()
 
     // Singing makes a continous noise
     if (you.duration[DUR_SONG_OF_SLAYING])
-        noisy(15,you.pos());
+        noisy(12,you.pos());
 
     if (one_chance_in(10))
     {
