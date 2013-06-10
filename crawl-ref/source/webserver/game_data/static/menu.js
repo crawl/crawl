@@ -402,12 +402,6 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
             $("#menu_title").append(" <span id='menu_suffix'>"
                 + util.formatted_string_to_html(menu.title.suffix) + "</span>");
         }
-        else if (menu.suffix) // support old versions
-        {
-            $("#menu_title").append(" <span id='menu_suffix'>"
-                                    + menu.suffix
-                                    + "</span>");
-        }
     }
 
     function pattern_select()
