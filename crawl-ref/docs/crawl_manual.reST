@@ -1153,7 +1153,7 @@ pressing '?/G'.
 Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your background from
-Healer, Priest, Berserker, Chaos Knight, Abyssal Knight or Death Knight.
+Healer, Berserker, Chaos Knight, Abyssal Knight or Death Knight.
 
 ****************************************
 K. Mutations
@@ -1504,8 +1504,8 @@ Hill Orcs
   passable users of most types of magic and are particularly skilled with Fire.
 
   Many Orcs feel superior to all other species and beings, and they have formed
-  a religion around that idea. Only Hill Orcs can worship Beogh, the Orc god,
-  and Hill Orc Priests start in Beogh's service.
+  a religion around that idea. Only Hill Orcs can worship Beogh, the Orc god.
+  They can join Beogh whenever an orc priest is in sight.
 
 Merfolk
   The Merfolk are a hybrid species of half-human, half-fish that typically live
@@ -1780,10 +1780,8 @@ Lava Orcs
 
 Gargoyles
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
-  hideous humanoids with an affinity to rock. They are able to assume full stone
-  form at will, which grants them great hardness for a time. When this hardness
-  wears off, however, it briefly makes them helplessly immobile, and then leaves
-  them mobile but debilitated for awhile.
+  hideous humanoids with an affinity to rock. They are immune to petrification,
+  and their stony weight protects them from being trampled.
 
   Gargoyles' partially living form makes them less susceptible to effects of
   necromancy and cold than most beings. Their metabolisms are slow, and they
@@ -1964,13 +1962,6 @@ Berserkers
   get the power to go berserk (as well as a number of other powers, should they
   prove worthy), but who forbids the use of spell magic. They enter the dungeon
   with a weapon of their choice, and dressed in animal skins.
-
-Priests
-  Priests serve Zin, the ancient and revered God of Law, and are tasked with
-  bringing Zin's teachings to the creatures of the Dungeon. Hill Orcs follow the
-  Orc god Beogh instead, who will eventually allow them to convert an army of
-  Orcs to their cause. Priests enter the dungeon with a traditional weapon and a
-  priestly robe.
 
 Healers
   The Healer is a priest of Elyvilon. Healers begin with minor healing powers,
