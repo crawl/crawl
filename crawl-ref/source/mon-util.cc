@@ -9,6 +9,7 @@
 
 #include "mon-util.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
 #include "colour.h"
@@ -753,6 +754,13 @@ bool mons_allows_beogh(const monster* mon)
 
     return mons_genus(mon->type) == MONS_ORC
            && mon->is_priest() && mon->god == GOD_BEOGH;
+}
+
+bool mons_allows_beogh_now(const monster* mon)
+{
+    // Do the expensive LOS check last.
+    return mon && mons_allows_beogh(mon) && !silenced(mon->pos())
+               && you.visible_to(mon) && you.can_see(mon);
 }
 
 bool mons_behaviour_perceptible(const monster* mon)

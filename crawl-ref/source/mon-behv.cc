@@ -1362,10 +1362,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mon->behaviour = BEH_LURK;
     }
 
+    // mons_speaks_msg already handles the LOS check.
     if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
-    if (you.visible_to(mon) && mons_allows_beogh(mon))
+    if (mons_allows_beogh_now(mon))
     {
         const bool first = !you.attribute[ATTR_SEEN_BEOGH];
         if (first || one_chance_in(10))
