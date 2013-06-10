@@ -4335,19 +4335,6 @@ mons_spec mons_list::mons_by_name(string name) const
             return spec;
         }
     }
-    if (name.find(" laboratory rat") != string::npos)
-    {
-        const string::size_type wordend = name.find(' ');
-        const string first_word = name.substr(0, wordend);
-
-        const int colour = colour_for_labrat_adjective(first_word);
-        if (colour != BLACK)
-        {
-            mons_spec spec = mons_by_name(name.substr(wordend+1));
-            spec.colour = colour;
-            return spec;
-        }
-    }
 
     mons_spec spec;
     get_zombie_type(name, spec);

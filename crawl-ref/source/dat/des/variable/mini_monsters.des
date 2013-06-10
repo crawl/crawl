@@ -5204,25 +5204,6 @@ c||*c3322c
 cccccccccc
 ENDMAP
 
-# This wizard likes to experiment!
-NAME:    laboratory_2
-TAGS:    uniq_laboratory_2
-MONS:    wizard
-DEPTH:   D:10-26
-MONS:    laboratory rat
-MAP
-ccccccc+cc
-c........c
-c........c
-c..1.....c
-c........c
-cc+ccccccc
-c***c2222c
-c|**+2222c
-c||*c2222c
-cccccccccc
-ENDMAP
-
 # Lava pond
 NAME: minivault_8
 DEPTH: D:9-18, Elf:1-2

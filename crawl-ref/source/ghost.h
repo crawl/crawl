@@ -10,12 +10,6 @@
 #include "itemprop-enum.h"
 #include "mon-enum.h"
 
-#ifdef USE_TILE
-int tile_offset_for_labrat_colour(colour_t l_colour);
-#endif
-string adjective_for_labrat_colour(colour_t l_colour);
-colour_t colour_for_labrat_adjective(string adjective);
-
 class ghost_demon
 {
 public:
@@ -50,7 +44,6 @@ public:
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          colour_t force_colour = BLACK);
     void init_dancing_weapon(const item_def& weapon, int power);
-    void init_labrat (colour_t force_colour = BLACK);
     void ugly_thing_to_very_ugly_thing();
 
 public:

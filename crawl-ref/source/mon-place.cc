@@ -1672,13 +1672,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->set_ghost(ghost);
         mon->uglything_init();
     }
+#if TAG_MAJOR_VERSION == 34
     else if (mon->type == MONS_LABORATORY_RAT)
-    {
-        ghost_demon ghost;
-        ghost.init_labrat(mg.colour);
-        mon->set_ghost(ghost);
-        mon->ghost_demon_init();
-    }
+        mon->type = MONS_RAT;
+#endif
     else if (mon->type == MONS_DANCING_WEAPON)
     {
         ghost_demon ghost;

@@ -97,18 +97,6 @@ orange_rat MONS_ORANGE_RAT
 %rim 0
 porcupine MONS_PORCUPINE
 %rim 1
-## Laboratory rats
-%sdir mon/rat
-labrat_plain MONS_LABORATORY_RAT
-labrat_airborne
-labrat_armoured
-labrat_beastly
-labrat_fiery
-labrat_gaseous
-labrat_leeching
-labrat_mutated
-labrat_shifting
-labrat_venomous
 %sdir mon/animals
 
 ## Spiders and insects ('s')
