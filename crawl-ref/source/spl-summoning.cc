@@ -821,7 +821,7 @@ bool summon_holy_warrior(int pow, bool punish)
 
 spret_type cast_spectral_weapon(int pow, bool fail)
 {
-    const int dur = min(1 + div_rand_round(pow, 33), 4);
+    const int dur = min(1 + random2(1 + random2(div_rand_round(pow, 50))), 2);
     item_def* wpn = you.weapon();
 
     // If the wielded weapon should not be cloned, abort
@@ -875,8 +875,8 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 
     you.props["spectral_weapon"].get_int() = mons->mid;
     mons->hit_dice = skill_with_weapon/2;
-    mons->ac = 3 + skill_with_weapon/4;
-    mons->ev = 3 + skill_with_weapon/3;
+    mons->ac = div_rand_round(pow,20);
+    mons->ev = div_rand_round(pow,20);
 
     return SPRET_SUCCESS;
 }
