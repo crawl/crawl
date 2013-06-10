@@ -874,7 +874,8 @@ spret_type cast_spectral_weapon(int pow, bool fail)
     mpr("You draw out your weapon's spirit!");
 
     you.props["spectral_weapon"].get_int() = mons->mid;
-    mons->hit_dice = skill_with_weapon/2;
+    mons->hit_dice = skill_with_weapon;
+    mons->hit_points = div_rand_round(pow,7);
     mons->ac = div_rand_round(pow,20);
     mons->ev = div_rand_round(pow,20);
 
