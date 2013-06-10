@@ -465,8 +465,10 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 (feat == DNGN_FLOOR)     ? env.tile_flv(gc).floor :
                 (feat == DNGN_ROCK_WALL) ? env.tile_flv(gc).wall
                                          : TILE_DNGN_STONE_WALL;
+#ifdef USE_TILE
             if (feat == DNGN_STONE_WALL)
                 apply_variations(env.tile_flv(gc), &idx, gc);
+#endif
             tileidx_t base = tile_dngn_basetile(idx);
             tileidx_t spec = base - idx;
             unsigned colour = real_colour(env.map_knowledge(gc).feat_colour(),
