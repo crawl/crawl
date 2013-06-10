@@ -145,7 +145,7 @@ static int _etc_rock(int, const coord_def& loc)
 static int _etc_elven_brick(int, const coord_def& loc)
 {
     if ((loc.x + loc.y) % 2)
-        return LIGHTGREY;
+        return WHITE;
     else
     {
         if ((loc.x / 2 + loc.y / 2) % 2)
