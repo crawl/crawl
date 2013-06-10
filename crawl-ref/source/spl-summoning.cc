@@ -875,7 +875,9 @@ spret_type cast_spectral_weapon(int pow, bool fail)
 
     you.props["spectral_weapon"].get_int() = mons->mid;
     mons->hit_dice = skill_with_weapon;
-    mons->hit_points = div_rand_round(pow,7);
+    int hp = div_rand_round(pow,7);
+    mons->hit_points = hp;
+    mons->max_hit_points = hp;
     mons->ac = div_rand_round(pow,20);
     mons->ev = div_rand_round(pow,20);
 
