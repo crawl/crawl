@@ -3037,7 +3037,12 @@ bool is_bad_item(const item_def &item, bool temp)
             return true;
         case RING_HUNGER:
             // Even Vampires can use this ring.
-            return (!you.is_undead || you.is_undead == US_HUNGRY_DEAD);
+            if (you.species == SP_DJINNI || you.species == SP_MUMMY
+                || you.species == SP_VAMPIRE)
+            {
+                return false;
+            }
+            return !temp || !you_foodless();
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
@@ -3324,9 +3329,11 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_HUNGER:
         case RING_SUSTENANCE:
-            return (you.species == SP_MUMMY
-                    || temp && you.species == SP_VAMPIRE
-                       && you.hunger_state == HS_STARVING);
+            return you.species == SP_MUMMY
+                   || you.species == SP_DJINNI
+                   || temp && you_foodless()
+                   || temp && you.species == SP_VAMPIRE
+                       && you.hunger_state == HS_STARVING;
 
         case RING_REGENERATION:
             return ((player_mutation_level(MUT_SLOW_HEALING) == 3)
