@@ -1491,12 +1491,6 @@ A member of a short, sturdy mountain-dwelling folk. More robust than their deep
 dwarf cousins, yet less skilled in magical lore, dwarves excel in armed hand to
 hand combat.
 %%%%
-dwarf mountain bat
-
-A species of bat that lives in mountain caves. How it got into the dungeon is a
-mystery — probably something related to the sudden demise of dwarves in those
-lands. But don't worry, an eradication team is on the way.
-%%%%
 earth elemental
 
 A spirit drawn from the elemental plane of earth, which exists in this world by
@@ -1723,14 +1717,6 @@ frost giant
 A giant with blue skin and hair like ice and snow. Its eyes are as bleak as
 winter skies. It marches grimly into battle with a great, frosty axe and
 howling blasts of cold.
-%%%%
-fruity bat
-
-An ugly, silly bat. It sparkles.
-%%%%
-fruity bat:quote
-
-<bat:quote>
 %%%%
 fulminant prism
 
