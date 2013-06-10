@@ -30,6 +30,7 @@
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
 #include "tilemcache.h"
+#include "tileview.h"
 #include "traps.h"
 #include "viewgeom.h"
 
@@ -454,6 +455,23 @@ tileidx_t tileidx_feature(const coord_def &gc)
             }
             if (slimy)
                 return TILE_FLOOR_SLIME_ACIDIC;
+        }
+        // deliberate fall-through
+    case DNGN_ROCK_WALL:
+    case DNGN_STONE_WALL:
+        if (env.map_knowledge(gc).feat_colour() >= ETC_FIRST)
+        {
+            tileidx_t idx =
+                (feat == DNGN_FLOOR)     ? env.tile_flv(gc).floor :
+                (feat == DNGN_ROCK_WALL) ? env.tile_flv(gc).wall
+                                         : TILE_DNGN_STONE_WALL;
+            if (feat == DNGN_STONE_WALL)
+                apply_variations(env.tile_flv(gc), &idx, gc);
+            tileidx_t base = tile_dngn_basetile(idx);
+            tileidx_t spec = base - idx;
+            unsigned colour = real_colour(env.map_knowledge(gc).feat_colour(),
+                                          gc);
+            return tile_dngn_coloured(base, colour) + spec; // XXX
         }
         return _tileidx_feature_base(feat);
 
