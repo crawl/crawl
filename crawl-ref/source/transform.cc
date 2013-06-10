@@ -575,7 +575,7 @@ bool feat_dangerous_for_form(transformation_type which_trans,
         return false;
 
     if (feat == DNGN_LAVA)
-        return true;
+        return !form_likes_lava(which_trans);
 
     if (feat == DNGN_DEEP_WATER)
         return (!form_likes_water(which_trans) && !beogh_water_walk());
