@@ -2388,14 +2388,14 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
     if (player_in_branch(BRANCH_LAIR))
     {
-            int depth = you.depth + 1;
-            _ruin_level(rectangle_iterator(1), MMT_VAULT,
-                        20 - depth, depth / 2 + 4, 1 + (depth / 3));
-            do
-            {
-                _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
-                depth -= 3;
-            } while (depth > 0);
+        int depth = you.depth + 1;
+        _ruin_level(rectangle_iterator(1), MMT_VAULT,
+                    20 - depth, depth / 2 + 4, 1 + (depth / 3));
+        do
+        {
+            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
+            depth -= 3;
+        } while (depth > 0);
     }
 
     if (player_in_branch(BRANCH_FOREST))
