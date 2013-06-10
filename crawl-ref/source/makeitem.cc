@@ -337,7 +337,7 @@ void item_colour(item_def &item)
             item.colour = WHITE;
             break;
         case 11:        //"fluorescent wand"
-            item.colour = random_colour();
+            item.colour = LIGHTGREEN;
             break;
         }
 
@@ -445,7 +445,7 @@ void item_colour(item_def &item)
         //randarts are bright, normal jewellery is dark
         else if (is_random_artefact(item))
         {
-            item.colour = make_high_colour(random_colour());
+            item.colour = random_range(LIGHTBLUE, WHITE);
             break;
         }
 
