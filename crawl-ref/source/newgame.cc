@@ -323,6 +323,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
                 if (is_good_combination(ng->species, job, false)
                     && one_chance_in(++good_choices))
                 {
+                    ASSERT(_is_job_valid_choice(job));
                     ng->job = job;
                 }
             }
