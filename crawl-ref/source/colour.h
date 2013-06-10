@@ -9,6 +9,7 @@ struct monster_info;
 enum element_type
 {
     ETC_FIRE = 32,      // fiery colours (must be first and > highest colour)
+    ETC_FIRST = ETC_FIRE,
     ETC_ICE,            // icy colours
     ETC_EARTH,          // earthy colours
     ETC_ELECTRICITY,    // electrical side of air
