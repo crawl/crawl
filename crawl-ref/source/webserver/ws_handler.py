@@ -460,6 +460,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         elif self.watched_game:
             self.stop_watching()
             self.send_message("go_lobby")
+            self.send_lobby()
         else:
             self.send_message("go_lobby")
 
