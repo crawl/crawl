@@ -470,7 +470,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 apply_variations(env.tile_flv(gc), &idx, gc);
 #endif
             tileidx_t base = tile_dngn_basetile(idx);
-            tileidx_t spec = base - idx;
+            tileidx_t spec = idx - base;
             unsigned colour = real_colour(env.map_knowledge(gc).feat_colour(),
                                           gc);
             return tile_dngn_coloured(base, colour) + spec; // XXX
