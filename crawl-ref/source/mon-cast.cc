@@ -1431,6 +1431,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         break;
 
+    case SPELL_TROGS_HAND:
+        if (mon->has_ench(ENCH_RAISED_MR) || mon->has_ench(ENCH_REGENERATION))
+            ret = true;
+        break;
+
     case SPELL_STONESKIN:
         if (mon->has_ench(ENCH_STONESKIN))
             ret = true;
