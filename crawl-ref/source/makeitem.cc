@@ -115,7 +115,7 @@ static int _weapon_colour(const item_def &item)
             break;
         default:
             // huh?
-            item_colour = MAGENTA;
+            item_colour = LIGHTGREEN;
             break;
         }
     }
@@ -143,7 +143,7 @@ static int _weapon_colour(const item_def &item)
             break;
         default:
             // huh?
-            item_colour = random_colour();
+            item_colour = LIGHTGREEN;
             break;
         }
     }
@@ -718,7 +718,7 @@ void item_colour(item_def &item)
             break;
 
         default:
-            item.colour = random_colour();
+            item.colour = LIGHTGREEN;
             break;
         }
         break;
