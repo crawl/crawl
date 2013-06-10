@@ -190,6 +190,10 @@ NAME:   uniq_jorgrun
 DEPTH:  D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Jorgrun")
 
+NAME:   uniq_jory
+DEPTH:  D:20-27, Swamp:5, Snake:5, Shoals:5, Spider:5, Vaults:2-, Crypt, Forest, Blade, Tomb
+: place_unique(_G, "Jory")
+
 NAME:   uniq_joseph
 DEPTH:  D:7-12, Orc, Lair:1
 : place_unique(_G, "Joseph")
