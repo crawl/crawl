@@ -2074,59 +2074,6 @@ struct coord_feat
     }
 };
 
-static bool _forbidden_plant(const coord_def &p)
-{
-    // ....  Prevent this arrangement by never placing a plant in a way that
-    // #P##  locally disconnects two adjacent cells.  We scan clockwise around
-    // ##.#  p looking for maximal contiguous sequences of traversable cells.
-    // #?##  If we find more than one (and they don't join up cyclically),
-    //       reject the configuration so the plant doesn't disconnect floor.
-    //
-    // ...   We do reject many non-problematic cases, such as this one; dpeg
-    // #P#   suggests doing a connectivity check in ruination after placing
-    // ...   plants, and removing cut-point plants then.
-
-    // First traversable index, last consecutive traversable index, and
-    // the next traversable index after last+1.
-    int first = -1, last = -1, next = -1;
-    int passable = 0;
-    for (int i = 0; i < 8; i++)
-    {
-        coord_def q = p + Compass[i];
-
-        if (feat_is_traversable(grd(q), true))
-        {
-            ++passable;
-            if (first < 0)
-                first = i;
-            else if (last >= 0 && next < 0)
-            {
-                // Found a maybe-disconnected traversable cell.  This is only
-                // acceptible if it might connect up at the end.
-                if (first == 0)
-                    next = i;
-                else
-                    return true;
-            }
-        }
-        else
-        {
-            if (first >= 0 && last < 0)
-                last = i - 1;
-            else if (next >= 0)
-                return true;
-        }
-    }
-
-    // ?#.  Forbid this arrangement when the ? squares are walls.
-    // #P#  If multiple plants conspire to do something similar, that's
-    // ##?  fine: we just want to avoid the most common occurrences.
-    //      This would be an info leak (that at least one ? is not a wall)
-    //      were it not for the previous check.
-
-    return passable <= 1;
-}
-
 template <typename Iterator>
 static void _ruin_level(Iterator iter,
                         unsigned vault_mask = MMT_VAULT,
@@ -2248,7 +2195,7 @@ static void _ruin_level(Iterator iter,
         // replace some ruined walls with plants/fungi/bushes
         if (plant_density && one_chance_in(plant_density)
             && feat_has_solid_floor(grd(p))
-            && !_forbidden_plant(p))
+            && !plant_forbidden_at(p))
         {
             mgen_data mg;
             mg.cls = one_chance_in(20) ? MONS_BUSH  :
@@ -5875,7 +5822,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
         {
             if (*it == *ri)
                 continue;
-            if (_forbidden_plant(*it))
+            if (plant_forbidden_at(*it))
                 continue;
             mg.pos = *it;
             mons_place(mgen_data(mg));
