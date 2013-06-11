@@ -208,8 +208,6 @@ mon_attitude_type monster::temp_attitude() const
 {
     if (has_ench(ENCH_CHARM))
         return ATT_FRIENDLY;
-    else if (has_ench(ENCH_TEMP_PACIF))
-        return ATT_GOOD_NEUTRAL;
     else
         return attitude;
 }
@@ -3277,14 +3275,13 @@ bool monster::friendly() const
 
 bool monster::neutral() const
 {
-    return (attitude == ATT_NEUTRAL || has_ench(ENCH_TEMP_PACIF)
-            || attitude == ATT_GOOD_NEUTRAL
+    return (attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL
             || attitude == ATT_STRICT_NEUTRAL);
 }
 
 bool monster::good_neutral() const
 {
-    return (attitude == ATT_GOOD_NEUTRAL || has_ench(ENCH_TEMP_PACIF));
+    return attitude == ATT_GOOD_NEUTRAL;
 }
 
 bool monster::strict_neutral() const
