@@ -2629,18 +2629,12 @@ static void _collect_foe_positions(monster* mons,
     }
 }
 
-static bool _valid_demonic_connection(monster* mons)
-{
-    return (mons->mons_species() == MONS_ELDRITCH_TENTACLE_SEGMENT);
-}
-
 // Return value is a retract position for the tentacle or -1, -1 if no
 // retract position exists.
 //
 // move_kraken_tentacle should check retract pos, it could potentially
 // give the kraken head's position as a retract pos.
 static int _collect_connection_data(monster* start_monster,
-               bool (*valid_segment_type)(monster*),
                map<coord_def, set<int> > & connection_data,
                coord_def & retract_pos)
 {
@@ -2662,7 +2656,7 @@ static int _collect_connection_data(monster* start_monster,
         int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
 
         if (next_idx != -1 && menv[next_idx].alive()
-            && valid_segment_type(&menv[next_idx]))
+            && menv[next_idx].is_child_tentacle_of(start_monster))
         {
             current_mon = &menv[next_idx];
             if (int(current_mon->number) != start_monster->mindex())
@@ -2686,12 +2680,15 @@ static int _collect_connection_data(monster* start_monster,
     return current_count;
 }
 
-
-
-void move_demon_tentacle(monster* tentacle)
+void move_solo_tentacle(monster* tentacle)
 {
-    if (!tentacle || tentacle->type != MONS_ELDRITCH_TENTACLE)
+    if (!tentacle || (tentacle->type != MONS_ELDRITCH_TENTACLE
+                      && tentacle->type != MONS_SNAPLASHER_VINE))
+    {
         return;
+    }
+
+    monster_type segment_type = mons_tentacle_child_type(tentacle);
 
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
@@ -2722,13 +2719,12 @@ void move_demon_tentacle(monster* tentacle)
     map<coord_def, set<int> > connection_data;
 
     int visited_count = _collect_connection_data(tentacle,
-                                                 _valid_demonic_connection,
                                                  connection_data,
                                                  retract_pos);
 
-    //bool retract_found = retract_pos.x == -1 && retract_pos.y == -1;
+    bool retract_found = retract_pos.x != -1 && retract_pos.y != -1;
 
-    _purge_connectors(tentacle->mindex(), MONS_ELDRITCH_TENTACLE_SEGMENT);
+    _purge_connectors(tentacle->mindex(), segment_type);
 
     if (severed)
     {
@@ -2749,7 +2745,7 @@ void move_demon_tentacle(monster* tentacle)
     coord_def new_pos = tentacle->pos();
     coord_def old_pos = tentacle->pos();
 
-    int demonic_max_dist=  5;
+    int demonic_max_dist = (tentacle->type == MONS_ELDRITCH_TENTACLE ? 5 : 8);
     tentacle_attack_constraints attack_constraints;
     attack_constraints.base_monster = tentacle;
     attack_constraints.max_string_distance = demonic_max_dist;
@@ -2763,7 +2759,45 @@ void move_demon_tentacle(monster* tentacle)
                                         new_pos, foe_positions, visited_count);
     }
 
+    //If this tentacle is constricting a creature, attempt to pull it back
+    //towards the head.
+    bool pull_constrictee = false;
+    bool shift_constrictee = false;
+    coord_def shift_pos;
+    actor* constrictee = NULL;
+    if (tentacle->is_constricting())
+    {
+        actor::constricting_t::const_iterator it = tentacle->constricting->begin();
+        constrictee = actor_by_mid(it->first);
 
+        if (retract_found)
+        {
+            if (constrictee->is_habitable(old_pos))
+            {
+                pull_constrictee = true;
+                shift_pos = old_pos;
+            }
+        }
+        else if (tentacle->type == MONS_SNAPLASHER_VINE)
+        {
+            for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
+            {
+                if (adjacent(*ai, constrictee->pos()) && constrictee->is_habitable(*ai))
+                {
+                    for (adjacent_iterator ai2(*ai); ai2; ++ai2)
+                    {
+                        if (feat_is_tree(grd(*ai2)))
+                        {
+                            pull_constrictee = true;
+                            shift_constrictee = true;
+                            shift_pos = *ai;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     if (!attack_foe || !path_found)
     {
@@ -2806,6 +2840,8 @@ void move_demon_tentacle(monster* tentacle)
             }
         }
     }
+    else if (pull_constrictee && !shift_constrictee)
+        new_pos = retract_pos;
 
     if (new_pos != old_pos)
     {
@@ -2831,6 +2867,24 @@ void move_demon_tentacle(monster* tentacle)
     // the search fails (sometimes), Don't know why. -cao
     tentacle->set_position(new_pos);
     mgrd(tentacle->pos()) = tentacle->mindex();
+
+    if (pull_constrictee)
+    {
+        if (you.can_see(tentacle))
+        {
+            mprf("The vine drags %s backwards!",
+                    constrictee->name(DESC_THE).c_str());
+        }
+
+        if (constrictee->as_player())
+            move_player_to_grid(shift_pos, false, true);
+        else
+            constrictee->move_to_pos(shift_pos);
+
+        // Interrupt stair travel and passwall.
+        if (constrictee->is_player())
+            stop_delay(true);
+    }
     tentacle->clear_far_constrictions();
 
     tentacle_connect_constraints connect_costs;
@@ -2840,7 +2894,7 @@ void move_demon_tentacle(monster* tentacle)
     bool connected = _try_tentacle_connect(new_pos, base_position,
                                            tentacle_idx, tentacle_idx,
                                            connect_costs,
-                                           MONS_ELDRITCH_TENTACLE_SEGMENT);
+                                           segment_type);
 
     if (!connected)
     {

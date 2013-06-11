@@ -2382,6 +2382,9 @@ static tentacle_type _get_tentacle_type(const int mtype)
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
             return TYPE_STARSPAWN;
+        case MONS_SNAPLASHER_VINE:
+        case MONS_SNAPLASHER_VINE_SEGMENT:
+            return TYPE_STARSPAWN;
 
         default:
             ASSERT("Invalid tentacle type!");
@@ -2753,6 +2756,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
+        case MONS_SNAPLASHER_VINE:
+        case MONS_SNAPLASHER_VINE_SEGMENT:
         {
             tileidx_t tile = _tileidx_tentacle(mon);
             _handle_tentacle_overlay(mon.pos, tile, _get_tentacle_type(mon.type));
@@ -2764,7 +2769,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
 
                 if (mon.type == MONS_STARSPAWN_TENTACLE
-                    || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT)
+                    || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT
+                    || mon.type == MONS_SNAPLASHER_VINE
+                    || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
                 {
                     tile += TILEP_MONS_STARSPAWN_TENTACLE_N;
                     tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;

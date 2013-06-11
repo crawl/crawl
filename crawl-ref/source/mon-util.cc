@@ -4532,13 +4532,15 @@ bool mons_is_tentacle_head(monster_type mc)
 bool mons_is_child_tentacle(monster_type mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE
-            || mc == MONS_STARSPAWN_TENTACLE);
+            || mc == MONS_STARSPAWN_TENTACLE
+            || mc == MONS_SNAPLASHER_VINE);
 }
 
 bool mons_is_child_tentacle_segment(monster_type mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT
+            || mc == MONS_SNAPLASHER_VINE_SEGMENT);
 }
 
 bool mons_is_tentacle(monster_type mc)
@@ -4624,6 +4626,8 @@ monster_type mons_tentacle_parent_type(const monster* mons)
             return MONS_STARSPAWN_TENTACLE;
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
             return MONS_ELDRITCH_TENTACLE;
+        case MONS_SNAPLASHER_VINE_SEGMENT:
+            return MONS_SNAPLASHER_VINE;
         default:
             return MONS_PROGRAM_BUG;
     }
@@ -4643,6 +4647,8 @@ monster_type mons_tentacle_child_type(const monster* mons)
             return MONS_STARSPAWN_TENTACLE_SEGMENT;
         case MONS_ELDRITCH_TENTACLE:
             return MONS_ELDRITCH_TENTACLE_SEGMENT;
+        case MONS_SNAPLASHER_VINE:
+            return MONS_SNAPLASHER_VINE_SEGMENT;
         default:
             return MONS_PROGRAM_BUG;
     }

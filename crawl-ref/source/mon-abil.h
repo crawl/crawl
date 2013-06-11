@@ -23,7 +23,7 @@ void activate_ballistomycetes(monster* mons, const coord_def& origin,
 
 bool valid_kraken_connection(const monster* mons);
 void move_child_tentacles(monster * kraken);
-void move_demon_tentacle(monster * tentacle);
+void move_solo_tentacle(monster * tentacle);
 
 void ancient_zyme_sicken(monster* mons);
 void starcursed_merge(monster* mon, bool forced);
