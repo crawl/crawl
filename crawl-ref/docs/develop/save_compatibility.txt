@@ -161,3 +161,68 @@ All Lua markers will need to be checked for minor-version checks when updating
 the major version.
 
 due
+
+
+Scheduling compatibility code for removal
+-----------------------------------------
+In order to increase long-term maintainability, it is customary to wrap
+save compatibility code in #if blocks that check for the current value
+of TAG_MAJOR_VERSION:
+
+    #if TAG_MAJOR_VERSION == 34
+        if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
+            you.mutation[MUT_TELEPORT_CONTROL] = 0;
+        if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
+            you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
+    #endif
+
+Then when the major version is incremented and old saves are no longer
+supported, the compatibility code will not be compiled, and can be
+easily identified and removed for readability.
+
+For code that should run only for newer saves, the control structure
+itself, as well as any alternative code to handle older saves, should be
+protected by such #ifs; but the new code should be outside them.
+
+    #if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE)
+        {
+    #endif
+            you.temperature = unmarshallFloat(th);  // new save: keep this
+            you.temperature_last = unmarshallFloat(th);
+    #if TAG_MAJOR_VERSION == 34
+        }
+        else
+        {
+            you.temperature = 0.0;
+            you.temperature_last = 0.0;
+        }
+    #endif
+
+Then when the major version is incremented, the code will preprocess to:
+
+            you.temperature = unmarshallFloat(th);
+            you.temperature_last = unmarshallFloat(th);
+
+and the new behaviour will happen unconditionally.
+
+Other targets for #if TAG_MAJOR_VERSION checks include enumerators that
+are no longer used; and new enumerators that were added to the end of
+their enum for compatibility reasons but make more sense somewhere else
+in the list.  In the latter case one would use a pair of #ifs, one for
+the current version and one for future versions:
+
+        DNGN_ENTER_ABYSS,
+        DNGN_EXIT_ABYSS,
+    #if TAG_MAJOR_VERSION > 34   // new location
+        DNGN_ABYSSAL_STAIR,
+    #endif
+        DNGN_STONE_ARCH,
+. . .
+        DNGN_UNKNOWN_PORTAL,
+    #if TAG_MAJOR_VERSION == 34  // old location
+        DNGN_ABYSSAL_STAIR,
+        DNGN_BADLY_SEALED_DOOR,
+    #endif
+
+neil
