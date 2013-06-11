@@ -812,6 +812,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer weakened.");
         break;
 
+    case ENCH_AWAKEN_VINES:
+        unawaken_vines(this, quiet);
+        break;
+
     default:
         break;
     }
@@ -1129,6 +1133,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WRETCHED:
     case ENCH_SCREAMED:
     case ENCH_WEAK:
+    case ENCH_AWAKEN_VINES:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1916,6 +1921,7 @@ static const char *enchant_names[] =
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
+    "awaken vines",
     "buggy",
 };
 
