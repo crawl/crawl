@@ -1755,6 +1755,18 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
+    if (mons->type == MONS_SNAPLASHER_VINE
+        && mons->props.exists("vine_awakener"))
+    {
+        monster* awakener = monster_by_mid(mons->props["vine_awakener"].get_int());
+        if (awakener && !awakener->can_see(mons))
+        {
+            simple_monster_message(mons, " falls limply to the ground.");
+            monster_die(mons, KILL_RESET, NON_MONSTER);
+            return;
+        }
+    }
+
     reset_battlesphere(mons);
 
     // This seems to need to go here to actually get monsters to slow down.

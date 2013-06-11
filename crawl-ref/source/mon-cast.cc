@@ -1137,6 +1137,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLINK_ALLIES_ENCIRCLE:
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
+    case SPELL_AWAKEN_VINES:
         return true;
     default:
         if (check_validity)
@@ -1633,7 +1634,26 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         return true;
     }
 
-    // No need to spam cantrips if we're just travelling around
+    case SPELL_AWAKEN_VINES:
+    if (!mon->get_foe() || (mon->has_ench(ENCH_AWAKEN_VINES)
+                            && mon->props["vines_awakened"].get_int() >= 3))
+    {
+        return true;
+    }
+    else // To account for multiple dryads in range of each other
+    {
+        int count = 0;
+        for (monster_iterator mi(mon); mi; ++mi)
+        {
+            if (mi->type == MONS_SNAPLASHER_VINE)
+                ++count;
+        }
+        if (count > 2)
+            return true;
+    }
+    break;
+
+     // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         if (mon->friendly() && mon->foe == MHITYOU)
             ret = true;
@@ -1867,6 +1887,107 @@ void mons_word_of_recall(monster* mons)
         // Can only recall a couple things at once
         if (num_recalled == recall_target)
             break;
+    }
+}
+
+static bool _valid_vine_spot(coord_def p)
+{
+    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, grd(p)))
+        return false;
+
+    int num_trees;
+    bool valid_trees = false;
+    for (adjacent_iterator ai(p); ai; ++ai)
+    {
+        if (feat_is_tree(grd(*ai)))
+        {
+            // Make sure this spot is not on a diagonal to its only adjacent
+            // tree (so that the vines can pull back against the tree properly)
+            if (num_trees || !((*ai-p).sgn().x != 0 && (*ai-p).sgn().y != 0))
+            {
+                valid_trees = true;
+                break;
+            }
+            else
+                ++num_trees;
+        }
+    }
+
+    if (!valid_trees)
+        return false;
+
+    // Now the connectivity check
+    return (!plant_forbidden_at(p, true));
+}
+
+static bool _awaken_vines(monster* mon, bool test_only = false)
+{
+    vector<coord_def> spots;
+    for (radius_iterator ri(mon->get_los_no_trans()); ri; ++ri)
+    {
+        if (_valid_vine_spot(*ri))
+            spots.push_back(*ri);
+    }
+
+    random_shuffle(spots.begin(), spots.end());
+
+    actor* foe = mon->get_foe();
+
+    int num_vines = 1 + random2(3);
+    if (mon->props.exists("vines_awakened"))
+        num_vines = min(num_vines, 3 - mon->props["vines_awakened"].get_int());
+    bool seen = false;
+
+    for (unsigned int i = 0; i < spots.size(); ++i)
+    {
+        // Don't place vines where they can't see our target
+        if (!cell_see_cell(spots[i], foe->pos(), LOS_NO_TRANS))
+            continue;
+
+        // Don't place a vine too near to another existing one
+        bool too_close = false;
+        for (distance_iterator di(spots[i], false, true, 3); di; ++di)
+        {
+            monster* m = monster_at(*di);
+            if (m && m->type == MONS_SNAPLASHER_VINE)
+            {
+                too_close = true;
+                break;
+            }
+        }
+        if (too_close)
+            continue;
+
+        // We've found at least one valid spot, so the spell should be castable
+        if (test_only)
+            return true;
+
+        // Actually place the vine and update properties
+        if (monster* vine = create_monster(
+            mgen_data(MONS_SNAPLASHER_VINE, SAME_ATTITUDE(mon), mon,
+                        0, SPELL_AWAKEN_VINES, spots[i], mon->foe,
+                        MG_FORCE_PLACE, mon->god, MONS_NO_MONSTER)))
+        {
+            vine->props["vine_awakener"].get_int() = mon->mid;
+            mon->props["vines_awakened"].get_int()++;
+            mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, NULL, 200));
+            --num_vines;
+            if (you.can_see(vine))
+                seen = true;
+        }
+
+        // We've finished placing all our vines
+        if (num_vines == 0)
+            break;
+    }
+
+    if (test_only)
+        return false;
+    else
+    {
+        if (seen)
+            mpr("Vines fly forth from the trees!");
+        return true;
     }
 }
 
@@ -2331,6 +2452,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return false;
 
             if (!monster_simulacrum(mons, false))
+                return false;
+        }
+        // Ditto for vines
+        else if (spell_cast == SPELL_AWAKEN_VINES)
+        {
+            if (!_awaken_vines(mons, true))
                 return false;
         }
         // Try to cause fear: if nothing is scared, pretend we didn't cast it.
@@ -4385,6 +4512,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else if (mons->see_cell_no_trans(you.pos()))
             mpr("A wave of cold passes over you.");
         apply_area_visible(englaciate, min(12 * mons->hit_dice, 200), mons);
+        return;
+
+    case SPELL_AWAKEN_VINES:
+        _awaken_vines(mons);
         return;
     }
 

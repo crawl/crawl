@@ -2409,8 +2409,19 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons_is_tentacle_or_tentacle_segment(mons->type)
              && killer != KILL_MISC
-                 || mons->type == MONS_ELDRITCH_TENTACLE)
+                 || mons->type == MONS_ELDRITCH_TENTACLE
+                 || mons->type == MONS_SNAPLASHER_VINE)
     {
+        if (mons->type == MONS_SNAPLASHER_VINE)
+        {
+            if (mons->props.exists("vine_awakener"))
+            {
+                monster* awakener =
+                        monster_by_mid(mons->props["vine_awakener"].get_int());
+                if (awakener)
+                    awakener->props["vines_awakened"].get_int()--;
+            }
+        }
         _destroy_tentacle(mons);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
@@ -2618,6 +2629,28 @@ int monster_die(monster* mons, killer_type killer,
     return corpse;
 }
 
+void unawaken_vines(const monster* mons, bool quiet)
+{
+    int vines_seen = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SNAPLASHER_VINE
+            && mi->props.exists("vine_awakener")
+            && monster_by_mid(mi->props["vine_awakener"].get_int()) == mons)
+        {
+            if (you.can_see(*mi))
+                ++vines_seen;
+            monster_die(*mi, KILL_RESET, NON_MONSTER);
+        }
+    }
+
+    if (!quiet && vines_seen)
+    {
+        mprf("The vine%s fall%s limply to the ground.",
+              (vines_seen > 1 ? "s" : ""), (vines_seen == 1 ? "s" : ""));
+    }
+}
+
 // Clean up after a dead monster.
 void monster_cleanup(monster* mons)
 {
@@ -2628,6 +2661,9 @@ void monster_cleanup(monster* mons)
         forest_message(mons->pos(), "The forest abruptly stops moving.");
         env.forest_awoken_until = 0;
     }
+
+    if (mons->has_ench(ENCH_AWAKEN_VINES))
+        unawaken_vines(mons, false);
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is

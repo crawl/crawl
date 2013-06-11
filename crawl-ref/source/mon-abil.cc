@@ -2782,7 +2782,9 @@ void move_solo_tentacle(monster* tentacle)
         {
             for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
             {
-                if (adjacent(*ai, constrictee->pos()) && constrictee->is_habitable(*ai))
+                if (adjacent(*ai, constrictee->pos())
+                    && constrictee->is_habitable(*ai)
+                    && !actor_at(*ai))
                 {
                     for (adjacent_iterator ai2(*ai); ai2; ++ai2)
                     {

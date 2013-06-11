@@ -3819,7 +3819,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SNAPLASHER_VINE, 'w', YELLOW, "snaplasher vine",
+    MONS_SNAPLASHER_VINE, 'w', LIGHTGREEN, "snaplasher vine",
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
     MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_SNAPLASHER_VINE, MH_PLANT, -3,
@@ -3831,7 +3831,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SNAPLASHER_VINE_SEGMENT, '*', YELLOW, "snaplasher vine segment",
+    MONS_SNAPLASHER_VINE_SEGMENT, '*', LIGHTGREEN, "snaplasher vine segment",
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
     MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_SNAPLASHER_VINE, MH_PLANT, -3,
