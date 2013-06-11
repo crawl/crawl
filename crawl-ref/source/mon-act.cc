@@ -1864,7 +1864,7 @@ void handle_monster_move(monster* mons)
     if (!mons->has_action_energy())
         return;
 
-    move_demon_tentacle(mons);
+    move_solo_tentacle(mons);
 
     if (!mons->alive())
         return;

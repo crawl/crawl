@@ -3797,6 +3797,18 @@ smoke demon:quote
  Why does it trouble me?”
     -D.H. Lawrence, “Sorrow”. 1916.
 %%%%
+snaplasher vine
+
+A swift and sinuous vine brought alive by a dryad's magic. It can quickly
+bind and entangle even a troll, dragging them back to the forest from which
+it surges.
+%%%%
+snaplasher vine segment
+
+Part of a swift and sinuous vine brought alive by a dryad's magic. It can
+quickly bind and entangle even a troll, dragging them back to the forest from
+which it surges.
+%%%%
 snapping turtle
 
 A belligerent testudine with an armoured carapace. Its neck is surprisingly
