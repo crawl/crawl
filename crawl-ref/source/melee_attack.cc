@@ -3427,7 +3427,8 @@ bool melee_attack::chop_hydra_head(int dam,
 {
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
-    if (attacker->is_monster() && !one_chance_in(4))
+    // XXX: Tentatively making an exception for spectral weapons
+    if (attacker->is_monster() && attacker->type!= MONS_SPECTRAL_WEAPON && !one_chance_in(4))
         return false;
 
     // Only cutting implements.
