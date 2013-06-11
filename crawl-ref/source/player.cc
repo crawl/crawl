@@ -435,7 +435,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 {
     ASSERT(!crawl_state.game_is_arena());
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(p);
 
     if (!stepped)
     {
@@ -3568,13 +3568,6 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
-            case SP_GARGOYLE:
-                if (you.experience_level == 7 || you.experience_level == 13)
-                    perma_mutate(MUT_SELF_PETRIFICATION, 1, "level gain");
-                if (!(you.experience_level % 4))
-                    modify_stat(coinflip() ? STAT_STR : STAT_INT, 1, false, "level gain");
-                break;
-
             case SP_TENGU:
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
@@ -3705,9 +3698,19 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
         const int note_maxmp = get_real_mp(false);
 
         char buf[200];
-        sprintf(buf, "HP: %d/%d MP: %d/%d",
-                min(you.hp, note_maxhp), note_maxhp,
-                min(you.magic_points, note_maxmp), note_maxmp);
+        if (you.species != SP_DJINNI)
+        {
+            sprintf(buf, "HP: %d/%d MP: %d/%d",
+                    min(you.hp, note_maxhp), note_maxhp,
+                    min(you.magic_points, note_maxmp), note_maxmp);
+        }
+        else
+        {
+            // Djinn don't HP/MP
+            sprintf(buf, "EP: %d/%d",
+                    min(you.hp, note_maxhp + note_maxmp),
+                    note_maxhp + note_maxmp);
+        }
         take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
         xom_is_stimulated(12);
@@ -5753,9 +5756,6 @@ void player::init()
     sage_xp.clear();
     sage_bonus.clear();
 
-    manual_skill = SK_NONE;
-    manual_index = -1;
-
     skill_cost_level = 1;
     exp_available = 0;
     zot_points = 0;
@@ -6140,7 +6140,7 @@ int calc_hunger(int food_cost)
         if (you.hunger_state <= HS_NEAR_STARVING)
             return 0;
 
-        return (food_cost/2);
+        return food_cost/2;
     }
     return food_cost;
 }
@@ -6310,6 +6310,46 @@ int player_icemail_armour_class()
                    * ICEMAIL_MAX / ICEMAIL_TIME));
 }
 
+bool player_stoneskin()
+{
+    // Lava orcs ignore DUR_STONESKIN
+    if (you.species == SP_LAVA_ORC)
+    {
+        // Most transformations conflict with stone skin.
+        if (form_changed_physiology() && you.form != TRAN_STATUE)
+            return false;
+
+        return temperature_effect(LORC_STONESKIN);
+    }
+    else
+        return you.duration[DUR_STONESKIN];
+}
+
+static int _stoneskin_bonus()
+{
+    if (!player_stoneskin())
+        return 0;
+
+    // Max +7.4 base
+    int boost = 200;
+    if (you.species == SP_LAVA_ORC)
+        boost += 20 * you.experience_level;
+    else
+        boost += you.skill(SK_EARTH_MAGIC, 20);
+
+    // Max additional +7.75 from statue form
+    if (you.form == TRAN_STATUE)
+    {
+        boost += 100;
+        if (you.species == SP_LAVA_ORC)
+            boost += 25 * you.experience_level;
+        else
+            boost += you.skill(SK_EARTH_MAGIC, 25);
+    }
+
+    return boost;
+}
+
 int player::armour_class() const
 {
     int AC = 0;
@@ -6355,13 +6395,7 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
-    if (duration[DUR_STONESKIN])
-    {
-        int boost = 200 + skill(SK_EARTH_MAGIC, 20); // max 7
-        if (you.species == SP_LAVA_ORC)
-            boost = std::max(boost, 200 + 100 * you.experience_level / 5); // max 7
-        AC += boost;
-    }
+    AC += _stoneskin_bonus();
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
@@ -6437,9 +6471,7 @@ int player::armour_class() const
 
         case TRAN_STATUE: // main ability is armour (high bonus)
             AC += 1700 + skill(SK_EARTH_MAGIC, 50);// max 30
-
-            if (duration[DUR_STONESKIN])
-                AC += 100 + skill(SK_EARTH_MAGIC, 25);   // max +7
+            // Stoneskin bonus already accounted for.
             break;
 
         case TRAN_TREE: // extreme bonus, no EV
@@ -7079,12 +7111,6 @@ void player::petrify(actor *who, bool force)
         return;
 
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
-
-    if (you.mutation[MUT_SELF_PETRIFICATION] > 0)
-    {
-        you.duration[DUR_PETRIFYING] *=
-            1 + you.mutation[MUT_SELF_PETRIFICATION] + coinflip();
-    }
 
     you.redraw_evasion = true;
     mpr("You are slowing down.", MSGCH_WARN);
@@ -7750,8 +7776,7 @@ void player::goto_place(const level_id &lid)
 {
     where_are_you = static_cast<branch_type>(lid.branch);
     depth = lid.depth;
-    ASSERT(depth >= 1);
-    ASSERT(depth <= brdepth[you.where_are_you]);
+    ASSERT_RANGE(depth, 1, brdepth[you.where_are_you] + 1);
 }
 
 bool player::attempt_escape(int attempts)

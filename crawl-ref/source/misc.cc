@@ -865,8 +865,7 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     if (!source.defined() || !dest.defined())
         return;
 
-    ASSERT(quant > 0);
-    ASSERT(quant <= source.quantity);
+    ASSERT_RANGE(quant, 1, source.quantity + 1);
     ASSERT(is_blood_potion(source));
     ASSERT(is_blood_potion(dest));
 
@@ -1139,7 +1138,7 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
                       int damage, bool spatter, bool smell_alert,
                       const coord_def& from, const bool old_blood)
 {
-    ASSERT(in_bounds(where));
+    ASSERT_IN_BOUNDS(where);
 
     if (montype == MONS_PLAYER && !you.can_bleed())
         return;

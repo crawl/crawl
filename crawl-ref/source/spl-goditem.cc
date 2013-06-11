@@ -141,7 +141,7 @@ int is_pacifiable(const monster* mon)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_PLANT // no self-awareness
+    if (mons_intel(mon) <= I_INSECT // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
     {
         return -1;
@@ -222,7 +222,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
 static vector<string> _desc_mindless(const monster_info& mi)
 {
     vector<string> descs;
-    if (mi.intel() <= I_PLANT)
+    if (mi.intel() <= I_INSECT)
         descs.push_back("mindless");
     return descs;
 }

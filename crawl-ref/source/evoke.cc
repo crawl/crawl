@@ -551,66 +551,98 @@ void tome_of_power(int slot)
     }
 }
 
-void stop_studying_manual(bool finish)
+// return a slot that has manual for given skill, or -1 if none exists
+// in case of multiple manuals the one with the fewest charges is returned
+int manual_slot_for_skill(skill_type skill)
 {
-    const skill_type sk = you.manual_skill;
-    if (finish)
-    {
-        mprf("You have finished your manual of %s and toss it away.",
-             skill_name(sk));
-        dec_inv_item_quantity(you.manual_index, 1);
-    }
-    else
-        mprf("You stop studying %s.", skill_name(sk));
+    int slot = -1;
+    int charges = -1;
 
-    you.manual_skill = SK_NONE;
-    you.manual_index = -1;
-    if (training_restricted(sk))
-        you.stop_train.insert(sk);
+    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
+    for (;iter!=you.inv.end(); ++iter)
+    {
+        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+            continue;
+
+        if (static_cast<skill_type>(iter->plus) != skill || iter->plus2 == 0)
+            continue;
+
+        if (slot != -1 && iter->plus2 > charges)
+            continue;
+
+        slot = iter - you.inv.begin();
+        charges = iter->plus2;
+    }
+
+    return slot;
 }
 
-void skill_manual(int slot)
+bool skill_has_manual(skill_type skill)
+{
+    return manual_slot_for_skill(skill) != -1;
+};
+
+void finish_manual(int slot)
 {
     item_def& manual(you.inv[slot]);
-    const bool known = item_type_known(manual);
-    if (!known)
-        set_ident_flags(manual, ISFLAG_KNOW_TYPE);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
-    if (is_useless_skill(skill) || you.skills[skill] >= 27)
+    mprf("You have finished your manual of %s and toss it away.",
+         skill_name(skill));
+    dec_inv_item_quantity(slot, 1);
+}
+
+void get_all_manual_charges(vector<int> &charges)
+{
+    charges.clear();
+
+    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
+    for (;iter!=you.inv.end(); ++iter)
     {
-        if (!known)
-            mprf("This is a manual of %s.", skill_name(skill));
-        mpr("You have no use for it.");
-        return;
+        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+            continue;
+
+        charges.push_back(iter->plus2);
+    }
+}
+
+void set_all_manual_charges(const vector<int> &charges)
+{
+    vector<int>::const_iterator charge_iter = charges.begin();
+    FixedVector<item_def,ENDOFPACK>::pointer iter = you.inv.begin();
+    for (;iter!=you.inv.end(); ++iter)
+    {
+        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+            continue;
+
+        ASSERT(charge_iter != charges.end());
+        iter->plus2 = *charge_iter;
+        charge_iter++;
+    }
+    ASSERT(charge_iter == charges.end());
+}
+
+string manual_skill_names(bool short_text)
+{
+    skill_set skills;
+
+    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
+    for (;iter!=you.inv.end(); ++iter)
+    {
+        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+            continue;
+
+        skills.insert(static_cast<skill_type>(iter->plus));
     }
 
-    if (skill == you.manual_skill)
+    if (short_text && skills.size() > 1)
     {
-        stop_studying_manual();
-        you.turn_is_over = true;
-        return;
+        char buf[40];
+        sprintf(buf, "%lu skills", (unsigned long) skills.size());
+        return string(buf);
     }
-
-    if (!known)
-    {
-        string prompt = make_stringf("This is a manual of %s. Do you want "
-                                     "to study it?", skill_name(skill));
-        if (!yesno(prompt.c_str(), true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-    }
-
-    if (!is_invalid_skill(you.manual_skill))
-        stop_studying_manual();
-
-    mprf("You start studying %s.", skill_name(skill));
-    you.manual_skill = skill;
-    you.manual_index = slot;
-    you.start_train.insert(skill);
-    you.turn_is_over = true;
+    else
+        return skill_names(skills);
 }
 
 static const pop_entry pop_beasts[] =
@@ -853,7 +885,8 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
     {
         for (int n = 0; n < NUM_TRIES; ++n)
         {
-            coord_def jitter = target + coord_def(random_range(-2, 2), random_range(-2, 2));
+            coord_def jitter = clamp_in_bounds(target + coord_def(random_range(-2, 2),
+                                                                  random_range(-2, 2)));
             if (jitter == target || jitter == source || feat_is_solid(grd(jitter)))
                 continue;
 
@@ -877,12 +910,15 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
 
     for (int n = 0; n < NUM_TRIES; ++n)
     {
-        coord_def jitter = mid + coord_def(random_range(-3, 3), random_range(-3, 3));
+        coord_def jitter = clamp_in_bounds(mid + coord_def(random_range(-3, 3),
+                                                           random_range(-3, 3)));
         if (jitter == mid || jitter.distance_from(mid) < 2 || jitter == source
             || feat_is_solid(grd(jitter))
             || !cell_see_cell(source, jitter, LOS_NO_TRANS)
             || !cell_see_cell(target, jitter, LOS_NO_TRANS))
+        {
             continue;
+        }
 
         trace_beam.aimed_at_feet = false;
         trace_beam.source = jitter;

@@ -105,8 +105,7 @@ void init_mut_index()
     for (unsigned int i = 0; i < ARRAYSZ(mut_data); ++i)
     {
         const mutation_type mut = mut_data[i].mutation;
-        ASSERT(mut >= 0);
-        ASSERT(mut < NUM_MUTATIONS);
+        ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
         total_rarity[MT_ALL] += mut_data[i].rarity;
@@ -116,8 +115,7 @@ void init_mut_index()
 
 static const mutation_def* _seek_mutation(mutation_type mut)
 {
-    ASSERT(mut >= 0);
-    ASSERT(mut < NUM_MUTATIONS);
+    ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
     if (mut_index[mut] == -1)
         return NULL;
     else
@@ -643,7 +641,7 @@ string describe_mutations(bool center_title)
         result += "Your body does not fit into most forms of armour.\n";
 
         msg = "Your cold-blooded metabolism reacts poorly to cold.";
-        if (you.res_cold() <= 0)
+        if (player_res_cold(false) <= 0)
             result += msg + "\n";
         else
             result += "<darkgrey>" + msg + "</darkgrey>\n";

@@ -904,7 +904,7 @@ static bool _band_wander_target(monster * mon)
 
     mon->target = positions[random2(positions.size())];
 
-    ASSERT(in_bounds(mon->target));
+    ASSERT_IN_BOUNDS(mon->target);
     return false;
 }
 

@@ -30,6 +30,7 @@
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
 #include "tilemcache.h"
+#include "tileview.h"
 #include "traps.h"
 #include "viewgeom.h"
 
@@ -37,6 +38,7 @@
 // FIXME: this is too ugly to live, pollutes the executable's debug symbols,
 // and stinks of elderberries.  Need a better non-C++11 way to do static
 // asserts in GCC 4.8.
+void tile_compile_checks(); // shut up -Wmissing-declarations
 void tile_compile_checks()
 {
 #endif
@@ -455,7 +457,34 @@ tileidx_t tileidx_feature(const coord_def &gc)
             if (slimy)
                 return TILE_FLOOR_SLIME_ACIDIC;
         }
+        // deliberate fall-through
+    case DNGN_ROCK_WALL:
+    case DNGN_STONE_WALL:
+    {
+        unsigned colour = env.map_knowledge(gc).feat_colour();
+        if (colour == 0)
+        {
+            colour = (feat == DNGN_FLOOR)     ? env.floor_colour :
+                     (feat == DNGN_ROCK_WALL) ? env.rock_colour
+                                              : 0; // meh
+        }
+        if (colour >= ETC_FIRST)
+        {
+            tileidx_t idx =
+                (feat == DNGN_FLOOR)     ? env.tile_flv(gc).floor :
+                (feat == DNGN_ROCK_WALL) ? env.tile_flv(gc).wall
+                                         : TILE_DNGN_STONE_WALL;
+#ifdef USE_TILE
+            if (feat == DNGN_STONE_WALL)
+                apply_variations(env.tile_flv(gc), &idx, gc);
+#endif
+            tileidx_t base = tile_dngn_basetile(idx);
+            tileidx_t spec = idx - base;
+            unsigned rc = real_colour(colour, gc);
+            return tile_dngn_coloured(base, rc) + spec; // XXX
+        }
         return _tileidx_feature_base(feat);
+    }
 
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
@@ -1122,8 +1151,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_LINDWURM;
     case MONS_DEATH_DRAKE:
         return TILEP_MONS_DEATH_DRAKE;
-    case MONS_FOREST_DRAKE:
-        return TILEP_MONS_FOREST_DRAKE;
+    case MONS_WIND_DRAKE:
+        return TILEP_MONS_WIND_DRAKE;
 
     // merfolk ('m')
     case MONS_MERFOLK:
@@ -1219,8 +1248,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILEP_MONS_PORCUPINE;
-    case MONS_LABORATORY_RAT:
-        return _mon_clamp(TILEP_MONS_LABORATORY_RAT, tile_offset_for_labrat_colour(colour));
 
     // spiders and insects ('s')
     case MONS_GIANT_MITE:
@@ -3706,8 +3733,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_LINDWURM;
     case MONS_DEATH_DRAKE:
         return TILE_CORPSE_DEATH_DRAKE;
-    case MONS_FOREST_DRAKE:
-        return TILE_CORPSE_FOREST_DRAKE;
+    case MONS_WIND_DRAKE:
+        return TILE_CORPSE_WIND_DRAKE;
 
     // merfolk ('m')
     case MONS_MERFOLK:
@@ -3761,15 +3788,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILE_CORPSE_PORCUPINE;
-    case MONS_LABORATORY_RAT:
-    {
-        int colour_offset = tile_offset_for_labrat_colour(item.colour);
-
-        if (colour_offset == -1)
-            colour_offset = 0;
-
-        return (TILE_CORPSE_LABORATORY_RAT + colour_offset);
-    }
 
     // spiders and insects ('s')
     case MONS_GIANT_MITE:

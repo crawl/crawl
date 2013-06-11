@@ -466,6 +466,8 @@ bool noisy(int original_loudness, const coord_def& where,
            const char *msg, int who,
            bool mermaid, bool message_if_unseen, bool fake_noise)
 {
+    ASSERT_IN_BOUNDS(where);
+
     if (original_loudness <= 0)
         return false;
 

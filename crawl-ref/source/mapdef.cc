@@ -164,14 +164,14 @@ int store_tilename_get_index(const string tilename)
     unsigned int i;
     for (i = 0; i < env.tile_names.size(); ++i)
         if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
-            return (i+1);
+            return i+1;
 
 #ifdef DEBUG_TILE_NAMES
     mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
 #endif
     // If not found, add tile name to vector.
     env.tile_names.push_back(tilename);
-    return (i+1);
+    return i+1;
 }
 
 ///////////////////////////////////////////////
@@ -451,8 +451,7 @@ void map_lines::read_maplines(reader &inf)
 {
     clear();
     const int h = unmarshallShort(inf);
-    ASSERT(h >= 0);
-    ASSERT(h <= GYM);
+    ASSERT_RANGE(h, 0, GYM + 1);
 
     for (int i = 0; i < h; ++i)
         add_line(unmarshallString(inf));
@@ -4214,7 +4213,7 @@ mons_spec mons_list::drac_monspec(string name) const
 {
     mons_spec spec;
 
-    spec.type = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name);
 
     // Check if it's a simple drac name, we're done.
     if (spec.type != MONS_PROGRAM_BUG)
@@ -4244,7 +4243,7 @@ mons_spec mons_list::drac_monspec(string name) const
         return spec;
 
     // Check for recognition again to match any (nonbase) <colour> draconian.
-    const monster_type colour = get_monster_by_name(name, true);
+    const monster_type colour = get_monster_by_name(name);
     if (colour != MONS_PROGRAM_BUG)
     {
         spec.monbase = colour;
@@ -4261,7 +4260,7 @@ mons_spec mons_list::drac_monspec(string name) const
         return MONS_PROGRAM_BUG;
 
     name = trimmed_string(name.substr(wordend + 1));
-    spec.type = get_monster_by_name(name, true);
+    spec.type = get_monster_by_name(name);
 
     // We should have a non-base draconian here.
     if (spec.type == MONS_PROGRAM_BUG
@@ -4336,19 +4335,6 @@ mons_spec mons_list::mons_by_name(string name) const
             return spec;
         }
     }
-    if (name.find(" laboratory rat") != string::npos)
-    {
-        const string::size_type wordend = name.find(' ');
-        const string first_word = name.substr(0, wordend);
-
-        const int colour = colour_for_labrat_adjective(first_word);
-        if (colour != BLACK)
-        {
-            mons_spec spec = mons_by_name(name.substr(wordend+1));
-            spec.colour = colour;
-            return spec;
-        }
-    }
 
     mons_spec spec;
     get_zombie_type(name, spec);
@@ -4358,7 +4344,7 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name.find("draconian") != string::npos)
         return drac_monspec(name);
 
-    return get_monster_by_name(name, true);
+    return get_monster_by_name(name);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -5705,12 +5691,15 @@ feature_spec keyed_mapspec::parse_trap(string s, int weight)
  * This function converts an incoming shop specification string from a vault
  * into a shop_spec.
  *
- * @param s      The string to be parsed.
- * @param weight The weight of this string.
- * @returns      A feature_spec with the contained, parsed shop_spec stored via
- *               unique_ptr as feature_spec->shop.
+ * @param s        The string to be parsed.
+ * @param weight   The weight of this string.
+ * @param mimic    What kind of mimic (if any) to set for this shop.
+ * @param no_mimic Whether to prohibit mimics altogether for this shop.
+ * @returns        A feature_spec with the contained, parsed shop_spec stored
+ *                 via unique_ptr as feature_spec->shop.
 **/
-feature_spec keyed_mapspec::parse_shop(string s, int weight)
+feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
+                                       bool no_mimic)
 {
     string orig(s);
 
@@ -5756,7 +5745,7 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight)
         }
     }
 
-    feature_spec fspec(-1, weight);
+    feature_spec fspec(-1, weight, mimic, no_mimic);
     fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name,
                                    shop_type_name, shop_suffix_name, greed,
                                    num_items, use_all));
@@ -5796,7 +5785,7 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
     if (s.find("shop") != string::npos && s != "abandoned_shop"
         || s.find("store") != string::npos)
     {
-        list.push_back(parse_shop(s, weight));
+        list.push_back(parse_shop(s, weight, mimic, no_mimic));
         return list;
     }
 

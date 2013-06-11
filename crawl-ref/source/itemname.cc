@@ -268,8 +268,6 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             equipped = true;
             buff << " (quivered)";
         }
-        else if (item_is_active_manual(*this))
-            buff << " (studied)";
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
@@ -2600,8 +2598,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
     if (maxlen != -1 && len > maxlen)
         len = maxlen;
 
-    ASSERT(len > 0);
-    ASSERT(len <= ITEMNAME_SIZE);
+    ASSERT_RANGE(len, 1, ITEMNAME_SIZE + 1);
 
     int j = numb[3] % 17;
     const int k = numb[4] % 17;
@@ -3043,7 +3040,12 @@ bool is_bad_item(const item_def &item, bool temp)
             return true;
         case RING_HUNGER:
             // Even Vampires can use this ring.
-            return (!you.is_undead || you.is_undead == US_HUNGRY_DEAD);
+            if (you.species == SP_DJINNI || you.species == SP_MUMMY
+                || you.species == SP_VAMPIRE)
+            {
+                return false;
+            }
+            return !temp || !you_foodless();
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
@@ -3330,9 +3332,11 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_HUNGER:
         case RING_SUSTENANCE:
-            return (you.species == SP_MUMMY
-                    || temp && you.species == SP_VAMPIRE
-                       && you.hunger_state == HS_STARVING);
+            return you.species == SP_MUMMY
+                   || you.species == SP_DJINNI
+                   || temp && you_foodless()
+                   || temp && you.species == SP_VAMPIRE
+                       && you.hunger_state == HS_STARVING;
 
         case RING_REGENERATION:
             return ((player_mutation_level(MUT_SLOW_HEALING) == 3)
@@ -3563,11 +3567,6 @@ string item_prefix(const item_def &item, bool temp)
     case OBJ_RODS:
     case OBJ_MISSILES:
         if (item_is_equipped(item, true))
-            prefixes.push_back("equipped");
-        break;
-
-    case OBJ_BOOKS:
-        if (item_is_active_manual(item))
             prefixes.push_back("equipped");
         break;
 

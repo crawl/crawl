@@ -598,6 +598,7 @@ void handle_behaviour(monster* mon)
                 break;
             case I_ANIMAL:
             case I_INSECT:
+            case I_REPTILE:
                 mon->foe_memory = random_range(250, 550);
                 break;
             case I_PLANT:
@@ -616,7 +617,8 @@ void handle_behaviour(monster* mon)
                          && (mons_has_ranged_attack(mon)
                              || mons_has_ranged_spell(mon, false, true))
                          && you.can_see(mon)
-                         && !you.incapacitated()))
+                         && !you.incapacitated()
+                         && !adjacent(mon->pos(), you.pos())))
                     && !mon->berserk())
                 {
                     if (mon->attitude != ATT_FRIENDLY)
@@ -667,7 +669,8 @@ void handle_behaviour(monster* mon)
                          && (mons_has_ranged_attack(mon)
                              || mons_has_ranged_spell(mon, false, true))
                          && target->can_see(mon)
-                         && !target->incapacitated() ))
+                         && !target->incapacitated()
+                         && !adjacent(mon->pos(), target->pos())))
                     && !mon->berserk())
                 {
                     _set_firing_pos(mon, mon->target);
@@ -1021,7 +1024,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         return;
 
     ASSERT(!crawl_state.game_is_arena() || src != &you);
-    ASSERT(in_bounds(src_pos) || src_pos.origin());
+    ASSERT_IN_BOUNDS_OR_ORIGIN(src_pos);
     if (mons_is_projectile(mon->type))
         return; // projectiles have no AI
 
@@ -1088,7 +1091,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // or else fleeing anyway.  Hitting someone over
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
-            || ((wontAttack != sourceWontAttack || isSmart)
+            || ((wontAttack != sourceWontAttack || (mons_intel(mon) > I_PLANT))
                 && (!mons_is_fleeing(mon) && !mons_class_flag(mon->type, M_FLEEING))
                 && !mons_is_panicking(mon)))
         {
@@ -1116,7 +1119,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             // If the monster can't reach its target and can't attack it
             // either, retreat.
             try_pathfind(mon);
-            if (mons_intel(mon) > I_INSECT && !mons_can_attack(mon)
+            if (mons_intel(mon) > I_REPTILE && !mons_can_attack(mon)
                 && target_is_unreachable(mon))
             {
                 mon->behaviour = BEH_RETREAT;
@@ -1332,7 +1335,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (!mon->alive())
         return;
 
-    ASSERT(in_bounds(mon->target) || mon->target.origin());
+    ASSERT_IN_BOUNDS_OR_ORIGIN(mon->target);
 
     // If it woke up and you're its new foe, it might shout.
     if (was_sleeping && !mon->asleep() && allow_shout
@@ -1359,10 +1362,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mon->behaviour = BEH_LURK;
     }
 
+    // mons_speaks_msg already handles the LOS check.
     if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
-    if (you.visible_to(mon) && mons_allows_beogh(mon))
+    if (mons_allows_beogh_now(mon))
     {
         const bool first = !you.attribute[ATTR_SEEN_BEOGH];
         if (first || one_chance_in(10))
@@ -1371,7 +1375,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                             MSGCH_TALK);
             if (first)
             {
-                mprf("(press <white>%s %C</white> to convert to Beogh)",
+                ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                             'A', 'z' + 1);
+                mprf("(press <white>%s %c</white> to convert to Beogh)",
                      command_to_string(CMD_USE_ABILITY).c_str(),
                      get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey);
                 you.attribute[ATTR_SEEN_BEOGH] = 1;

@@ -45,6 +45,8 @@ enum tag_minor_version
     TAG_MINOR_LORC_TEMPERATURE,    // Save lava orc temperature
     TAG_MINOR_GARGOYLE_DR,         // Gargoyle damage reduction
     TAG_MINOR_TRAVEL_ALLY_PACE,    // Pace travel to slowest ally setting
+    TAG_MINOR_AUTOMATIC_MANUALS,   // Manuals are now always studied
+    TAG_MINOR_RM_GARGOYLE_DR,      // Gargoyle DR is redundant.
     TAG_MINOR_BOX_OF_BEASTS_CHARGES, // Box of Beasts counts its charges.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

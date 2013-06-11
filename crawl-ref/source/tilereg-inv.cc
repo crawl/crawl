@@ -506,6 +506,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                         _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                     break;
                 }
+                if (item.sub_type == BOOK_MANUAL)
+                    break;
                 // else fall-through
             case OBJ_SCROLLS:
                 tmp += "Read (%)";
@@ -767,9 +769,6 @@ void InventoryRegion::update()
                     break;
                 }
             }
-
-            if (item_is_active_manual(you.inv[i]))
-                desc.flag |= TILEI_FLAG_EQUIP;
 
             inv_shown[i] = true;
             m_items.push_back(desc);

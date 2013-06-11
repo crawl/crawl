@@ -362,15 +362,13 @@ void autoid_unrand(item_def &item)
 
 unique_item_status_type get_unique_item_status(int art)
 {
-    ASSERT(art > UNRAND_START);
-    ASSERT(art < UNRAND_LAST);
+    ASSERT_RANGE(art, UNRAND_START + 1, UNRAND_LAST);
     return you.unique_items[art - UNRAND_START];
 }
 
 static void _set_unique_item_status(int art, unique_item_status_type status)
 {
-    ASSERT(art > UNRAND_START);
-    ASSERT(art < UNRAND_LAST);
+    ASSERT_RANGE(art, UNRAND_START + 1, UNRAND_LAST);
     you.unique_items[art - UNRAND_START] = status;
 }
 
@@ -2007,8 +2005,7 @@ static void _make_octoring(item_def &item)
 
 bool make_item_unrandart(item_def &item, int unrand_index)
 {
-    ASSERT(unrand_index > UNRAND_START);
-    ASSERT(unrand_index < (UNRAND_START + NO_UNRANDARTS));
+    ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NO_UNRANDARTS));
 
     item.special = unrand_index;
 

@@ -90,12 +90,13 @@
    - various things monsters can do upon seeing you
 
    intel explanation:
-   - How smart it is: I_PLANT < I_INSECT < I_ANIMAL < I_NORMAL < I_HIGH.
+   - How smart it is:
+   I_PLANT < I_INSECT < I_REPTILE < I_ANIMAL < I_NORMAL < I_HIGH.
    So far, differences here have little effects except for monster's chance
    of seeing you if stealthy and rudimentary trap handling; really stupid
    monsters will walk through clouds.
-   I_REPTILE is an alias for I_INSECT to reduce confusion a bit: these are
-   lower vertebrates (fish, amphibians, non-draconic reptiles).
+   I_REPTILE is are lower vertebrates (fish, amphibians, non-draconic reptiles),
+   smarter reptiles could be I_ANIMAL.
 
    speed
    - Increases the store of energy that the monster uses for doing things.
@@ -198,6 +199,7 @@ static monsterentry mondata[] = {
     AXED_MON(MONS_ARACHNOID)
     AXED_MON(MONS_WOOD_GOLEM)
     AXED_MON(MONS_ANT_LARVA)
+    AXED_MON(MONS_LABORATORY_RAT)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -1346,13 +1348,13 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FOREST_DRAKE, 'l', LIGHTGREEN, "forest drake",
-    M_WARM_BLOOD | M_FAKE_SPELLS,
-    MR_VUL_FIRE,
-    1000, 10, MONS_DRAKE, MONS_FOREST_DRAKE, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
-    3, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT,
+    MONS_WIND_DRAKE, 'l', WHITE, "wind drake",
+    M_SPELLCASTER | M_WARM_BLOOD | M_FAKE_SPELLS | M_FLEES | M_DEFLECT_MISSILES,
+    MR_NO_FLAGS,
+    1000, 10, MONS_DRAKE, MONS_WIND_DRAKE, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 8, 5, 5, 0 },
+    3, 12, MST_WIND_DRAKE, CE_CONTAMINATED, Z_BIG, S_SILENT,
     I_ANIMAL, HT_LAND, FL_WINGED, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
@@ -1907,18 +1909,6 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_LABORATORY_RAT, 'r', BLACK, "laboratory rat",
-    M_WARM_BLOOD | M_NO_GEN_DERIVED | M_SPELLCASTER | M_FAKE_SPELLS,
-    MR_NO_FLAGS,
-    300, 10, MONS_RAT, MONS_LABORATORY_RAT, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
-    5, 5, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_ROAR,
-    I_ANIMAL, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
-},
-
-{
     MONS_PORCUPINE, 'r', BLUE, "porcupine",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
@@ -2417,7 +2407,7 @@ static monsterentry mondata[] = {
     { {AT_STING, AF_PARALYSE, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 3, 5, 0 },
     5, 14, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
-    I_PLANT, HT_LAND, FL_WINGED, 15, DEFAULT_ENERGY,
+    I_INSECT, HT_LAND, FL_WINGED, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
@@ -2429,7 +2419,7 @@ static monsterentry mondata[] = {
     { {AT_BITE, AF_VAMPIRIC, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 3, 5, 0 },
     2, 15, MST_NO_SPELLS, CE_ROT, Z_SMALL, S_BUZZ,
-    I_PLANT, HT_LAND, FL_WINGED, 19, DEFAULT_ENERGY,
+    I_INSECT, HT_LAND, FL_WINGED, 19, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
 
@@ -2441,7 +2431,7 @@ static monsterentry mondata[] = {
     { {AT_STING, AF_PARALYSE, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     7, 14, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ,
-    I_PLANT, HT_LAND, FL_WINGED, 15, DEFAULT_ENERGY,
+    I_INSECT, HT_LAND, FL_WINGED, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
@@ -5485,8 +5475,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DRYAD, '7', YELLOW, "dryad",
-    M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS | M_ACTUAL_SPELLS
-        | M_MAINTAIN_RANGE,
+    M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS | M_ACTUAL_SPELLS,
     MR_VUL_FIRE,
     500, 10, MONS_DRYAD, MONS_DRYAD, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6733,7 +6722,7 @@ static monsterentry mondata[] = {
     M_UNIQUE | M_FIGHTER | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     550, 15, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -5,
-    { {AT_HIT, AF_PLAIN, 24}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 13, 0, 0, 118 },
     0, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,

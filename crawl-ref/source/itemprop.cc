@@ -30,6 +30,7 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "quiver.h"
 #include "random.h"
@@ -1768,6 +1769,13 @@ static bool _slot_blocked(const item_def &item)
 bool item_skills(const item_def &item, set<skill_type> &skills)
 {
     const bool equipped = item_is_equipped(item);
+
+    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+    {
+        const skill_type skill = static_cast<skill_type>(item.plus);
+        if (training_restricted(skill))
+            skills.insert(skill);
+    }
 
     // Evokables that don't need to be equipped.
     if (item_is_evokable(item, false, false, false, false, true))

@@ -473,8 +473,7 @@ void macro_buf_add(int key, bool reverse, bool expanded)
  */
 void macro_buf_add_cmd(command_type cmd, bool reverse)
 {
-    ASSERT(cmd > CMD_NO_CMD);
-    ASSERT(cmd < CMD_MIN_SYNTHETIC);
+    ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
 
     // There should be plenty of room between the synthetic keys
     // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for

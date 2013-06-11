@@ -39,6 +39,7 @@ int mons_tracking_range(const monster* mon)
         range = 2;
         break;
     case I_INSECT:
+    case I_REPTILE:
         range = 4;
         break;
     case I_ANIMAL:
@@ -342,7 +343,7 @@ vector<coord_def> monster_pathfind::backtrack()
     {
         dir = prev[pos.x][pos.y];
         pos = pos + Compass[dir];
-        ASSERT(in_bounds(pos));
+        ASSERT_IN_BOUNDS(pos);
 #ifdef DEBUG_PATHFIND
         mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
                                               pos.x, pos.y);

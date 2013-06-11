@@ -56,7 +56,8 @@ def handle_new_socket(path, event):
         process.logger.info("Found a %s game.", game_info["id"])
 
         # Notify lobbys
-        update_all_lobbys(process)
+        if config.dgl_mode:
+            update_all_lobbys(process)
     elif event == DirectoryWatcher.DELETE:
         if abspath not in processes: return
         process = processes[abspath]
@@ -128,7 +129,8 @@ class CrawlProcessHandlerBase(object):
     def check_idle(self):
         if self.is_idle() != self._was_idle:
             self._was_idle = self.is_idle()
-            update_all_lobbys(self)
+            if config.dgl_mode:
+                update_all_lobbys(self)
 
     def flush_messages_to_joining_spectators(self):
         for receiver in self._receivers:
@@ -167,7 +169,7 @@ class CrawlProcessHandlerBase(object):
 
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
-                watcher.stop_watching()
+                watcher.go_lobby()
 
         if self.end_callback:
             self.end_callback()
@@ -190,7 +192,8 @@ class CrawlProcessHandlerBase(object):
                          count = self.watcher_count(),
                          names = s)
 
-        update_all_lobbys(self)
+        if config.dgl_mode:
+            update_all_lobbys(self)
 
     def add_watcher(self, watcher):
         self.last_watcher_join = time.time()
@@ -466,7 +469,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         processes[os.path.abspath(self.socketpath)] = self
 
-        self.logger.info("Starting %s.", game["id"])
+        if config.dgl_mode:
+            self.logger.info("Starting %s.", game["id"])
+        else:
+            self.logger.info("Starting game.")
 
         try:
             self.process = TerminalRecorder(call, self.ttyrec_filename,

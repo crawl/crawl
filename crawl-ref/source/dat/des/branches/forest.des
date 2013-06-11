@@ -472,6 +472,20 @@ txxxxxxxxxx....xxx.1.xxxx
  txxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# Place the Enchantress on Forest:$ if the ending doesn't.
+# XXX: this is only here because of how unique placement vaults are
+# handled normally; this placement behaves considerably differently.
+NAME:   uniq_enchantress
+DEPTH:  Forest:$
+CHANCE: 100%
+MONS:   the Enchantress band
+veto {{
+  return you.uniques("the Enchantress")
+}}
+MAP
+1
+ENDMAP
+
 ##############################################################################
 # Forest ends
 ##############################################################################
@@ -487,8 +501,9 @@ MONS:   spriggan druid / spriggan, spriggan rider / spriggan
 MONS:   spriggan air mage / spriggan, spriggan / nothing w:30
 MONS:   faun / satyr w:5 / tengu warrior / tengu conjurer w:5 / \
         tengu reaver w:2
-COLOUR: .*%OT123456+ = lightgray
-FTILE:  .*%OT123456+ = floor_normal
+TILE:   c = wall_marble
+COLOUR: .|*%OT123456+ = lightgray
+FTILE:  .|*%OT123456+ = floor_normal
 MAP
 tttttttttttttttttttttttttttttttttt
 tttttttttttttccccccccttttttttttttt
@@ -586,4 +601,85 @@ tttttttttttttttt...............tttttt...ttt
 ttttttttttttttttttt.........tttttttttttt<tt
 ttttttttttttttttttttttt....tttttttttttttttt
 tttttttttttttttttttttt@tt..@ttttttttttttttt
+ENDMAP
+
+NAME:   grunt_forest_end_winery
+PLACE:  Forest:$
+ORIENT: northeast
+MONS:   Pan band, satyr, faun, plant, faun
+KFEAT:  T = tree / floor
+SUBST:  X = xt
+CLEAR:  x
+KFEAT:  : = floor
+ITEM:   grape q:1 / grape q:2 / nothing w:180
+ITEM:   any potion / grape q:1 / nothing w:30
+TILE:   c = wall_vines
+FTILE:  e123+|%*$- = floor_vines
+veto {{
+  return you.uniques("Pan")
+}}
+MAP
+tttttttttttttttttttttttttttttttttttttttttttt
+Xttttttttttttttttttttttttttttttttttttttttttt
+XttTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTtt
+XttT.5...................................Ttt
+XttT..4d4d4.cccccccccccccccccccccccccccc.Ttt
+XttT..4d4d4.ce-e-e-e-e-e-e-eceeeeee+|||c.Ttt
+XttT..4d4d4.c-e-e-e-c-e-e-e-c------c|||c.Ttt
+XttT..4d4d4.ce-e2e-ece-e2e-ec------cc+cc.Ttt
+XttT..4d4d4.cc+ccccccc+cccccc------c%**c.Ttt
+XttT..4d4d45c-----3---3-----+----1-c%**c.Ttt
+XttT..4d4d4.c-------2-------+------c%**c.Ttt
+XtT...4d4d4.c--wwwwwwwwwww--+------c%**c.Ttt
+XtT...4d4d4.c--wwwwwwwwwww--c------c$$$c.Ttt
+XtT...4d4d4.c-----3---3-----c------c$$$c.Ttt
+XtT...4d4d4.c---------------ceeeeee+$$$c.Ttt
+XTT...4d4d4.cc++cccccccccccccccccccccccc.Ttt
+T.......5......5............5............Ttt
+@TT...44444444..444444444444..4444444444.Ttt
+TtT...dddddddd..dddddddddddd..dddddddddd.Ttt
+XtT...444444445.444444444444.54444444444.Ttt
+XtT...dddddddd..dddddddddddd..dddddddddd.Ttt
+XttT..44444444.54444444444445.4444444444.Ttt
+XttT..dddddddd..dddddddddddd..dddddddddd.Ttt
+XttT..44444444..444444444444..4444444444.Ttt
+XttT.....................................Ttt
+XttT.....................................Ttt
+XttTTTTTT...........TTTT...........TTTTTTTtt
+XttttttttTTTTT.TTTTTTTTTTTTTT.TTTTTTTTTTTTtt
+XXtttttttttttT.TttttttttttttT.Tttttttttttttt
+XXXXXXXXXXXXT@TXXXXXXXXXXXXXXT@TXXXXXXXXXXXt
+ENDMAP
+
+NAME:   grunt_forest_end_shrine
+PLACE:  Forest:$
+ORIENT: float
+MONS:   Sojobo band, tengu reaver, tengu warrior band / tengu conjurer band
+KFEAT:  _ = altar_vehumet
+KFEAT:  - = floor
+SUBST:  T = tx
+CLEAR:  x
+FTILE:  1|*$-+ = floor_dirt
+TILE:   c = wall_church
+veto {{
+  return you.uniques("Sojobo")
+}}
+MAP
+  TTTTTTTTTTTTT
+ TTtttttttttttTT
+TTtt.........ttTT
+Ttt3.........3ttT
+Tt..ccccccccc..tTTTTTTTT
+Tt..c||c$$$$c..ttttttttt
+Tt..c|-c****c.2t..3....t
+Tt..cc+c----+....G.G.G..
+Tt2.c----1_-+..2.......@
+Tt..cc+c----+....G.G.G..
+Tt..c|-c****c.2t..3....t
+Tt..c||c$$$$c..ttttttttt
+Tt..ccccccccc..tTTTTTTTT
+Ttt3.........3ttT
+TTtt.........ttTT
+ TTtttttttttttTT
+  TTTTTTTTTTTTT
 ENDMAP

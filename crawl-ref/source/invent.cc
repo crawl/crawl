@@ -480,7 +480,7 @@ static string _no_selectables_message(int item_selector)
         return "You aren't carrying any potions.";
     case OBJ_SCROLLS:
     case OBJ_BOOKS:
-        return "You aren't carrying any books or scrolls.";
+        return "You aren't carrying any spellbooks or scrolls.";
     case OBJ_WANDS:
         return "You aren't carrying any wands.";
     case OBJ_JEWELLERY:
@@ -1175,7 +1175,8 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_WEAPONS && can_cut_meat(i));
 
     case OBJ_SCROLLS:
-        return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
+        return (itype == OBJ_SCROLLS
+                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL));
 
     case OSEL_RECHARGE:
         return item_is_rechargeable(i, true);
@@ -1403,7 +1404,7 @@ vector<SelItem> prompt_invent_items(
 
     if (auto_list)
     {
-        need_prompt = need_getch = false;
+        need_getch = false;
         keyin       = '?';
     }
 
@@ -1456,11 +1457,13 @@ vector<SelItem> prompt_invent_items(
             if ((selmode & MF_SINGLESELECT) || key_is_escape(ch))
             {
                 keyin       = ch;
+                need_prompt = false;
                 need_getch  = false;
             }
             else
             {
                 keyin       = 0;
+                need_prompt = true;
                 need_getch  = true;
             }
 
@@ -1479,7 +1482,6 @@ vector<SelItem> prompt_invent_items(
 
             need_redraw = !(keyin == '?' || keyin == '*'
                             || keyin == ',' || keyin == '+');
-            need_prompt = need_redraw;
         }
         else if (isadigit(keyin))
         {
@@ -1863,7 +1865,7 @@ int prompt_invent_item(const char *prompt,
 
     if (auto_list)
     {
-        need_prompt = need_getch = false;
+        need_getch = false;
 
         if (any_items_to_select(type_expect))
             keyin = '?';
@@ -1921,13 +1923,12 @@ int prompt_invent_item(const char *prompt,
                 keyin = '?';
             }
 
+            need_prompt = false;
             need_getch  = false;
 
             // Don't redraw if we're just going to display another listing
             need_redraw = (keyin != '?' && keyin != '*')
                           && !(count && auto_list && isadigit(keyin));
-
-            need_prompt = need_redraw;
 
             if (!items.empty())
             {

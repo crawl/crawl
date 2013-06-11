@@ -687,8 +687,7 @@ targetter_thunderbolt::targetter_thunderbolt(const actor *act, int r,
     origin = act->pos();
     prev = _prev;
     aim = prev.origin() ? origin : prev;
-    ASSERT(r > 1);
-    ASSERT(r <= you.current_vision);
+    ASSERT_RANGE(r, 1 + 1, you.current_vision + 1);
     range2 = sqr(r) + 1;
 }
 

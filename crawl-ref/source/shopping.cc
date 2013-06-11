@@ -2610,8 +2610,7 @@ bool ShoppingList::is_on_list(string desc, const level_pos* _pos) const
 
 void ShoppingList::del_thing_at_index(int idx)
 {
-    ASSERT(idx >= 0);
-    ASSERT(idx < list->size());
+    ASSERT_RANGE(idx, 0, list->size());
     list->erase(idx);
     refresh();
 }
@@ -2816,7 +2815,16 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                                          describe_thing(thing, DESC_A).c_str());
 
             if (_shop_yesno(prompt.c_str(), 'y'))
+            {
                 to_del.push_back(listed);
+                if (!_in_shop_now)
+                {
+                    mprf("Shopping-list: removing %s",
+                         describe_thing(thing, DESC_A).c_str());
+                }
+            }
+            else if (!_in_shop_now)
+                canned_msg(MSG_OK);
         }
         else
         {
@@ -2955,11 +2963,16 @@ void ShoppingListMenu::draw_title()
         const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
         cgotoxy(1, 1);
-        textcolor(title->colour);
-        cprintf("%d %s%s, total cost %d gp",
-                title->quantity, title->text.c_str(),
-                title->quantity > 1? "s" : "",
-                total_cost);
+        formatted_string fs = formatted_string(title->colour);
+        fs.cprintf("%d %s%s, total cost %d gp",
+                   title->quantity, title->text.c_str(),
+                   title->quantity > 1? "s" : "",
+                   total_cost);
+        fs.display();
+
+#ifdef USE_TILE_WEB
+        webtiles_set_title(fs);
+#endif
 
         const char *verb = menu_action == ACT_EXECUTE ? "travel" :
                            menu_action == ACT_EXAMINE ? "examine" :
@@ -3119,7 +3132,10 @@ void ShoppingList::display()
 
             del_thing_at_index(index);
             if (list->empty())
+            {
+                mpr("Your shopping list is now empty.");
                 break;
+            }
 
             shopmenu.clear();
             fill_out_menu(shopmenu);

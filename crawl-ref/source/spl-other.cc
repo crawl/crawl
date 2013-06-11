@@ -488,6 +488,14 @@ spret_type cast_stoneskin(int pow, bool fail)
         return SPRET_ABORT;
     }
 
+    if (you.species == SP_LAVA_ORC)
+    {
+        // We can't get here from normal casting, and probably don't want
+        // a message from the Helm card.
+        // mprf("Your skin is naturally stony.");
+        return SPRET_ABORT;
+    }
+
     fail_check();
 
     if (you.duration[DUR_STONESKIN])

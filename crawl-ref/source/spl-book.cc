@@ -78,8 +78,7 @@ spell_type which_spell_in_book(const item_def &book, int spl)
 
 spell_type which_spell_in_book(int sbook_type, int spl)
 {
-    ASSERT(sbook_type >= 0);
-    ASSERT(sbook_type < (int)ARRAYSZ(spellbook_template_array));
+    ASSERT_RANGE(sbook_type, 0, (int)ARRAYSZ(spellbook_template_array));
     return spellbook_template_array[sbook_type][spl];
 }
 
@@ -417,10 +416,7 @@ void mark_had_book(const item_def &book)
     }
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
-    {
-        ASSERT(book.plus > 0);
-        ASSERT(book.plus <= 9); // book's level
-    }
+        ASSERT_RANGE(book.plus, 1, 10); // book's level
 
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(book.book_number());
@@ -428,8 +424,7 @@ void mark_had_book(const item_def &book)
 
 void mark_had_book(int booktype)
 {
-    ASSERT(booktype >= 0);
-    ASSERT(booktype <= MAX_FIXED_BOOK);
+    ASSERT_RANGE(booktype, 0, MAX_FIXED_BOOK + 1);
 
     you.had_book.set(booktype);
 }
@@ -1368,6 +1363,12 @@ int rod_spell(int rod)
         }
     }
 
+    if (key_is_escape(keyin) || keyin == ' ' || keyin == '\r' || keyin == '\n')
+    {
+        canned_msg(MSG_OK);
+        return -1;
+    }
+
     if (!isaalpha(keyin))
     {
         canned_msg(MSG_HUH);
@@ -1631,8 +1632,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
         level = random_range(1, max_level);
     }
-    ASSERT(level > 0);
-    ASSERT(level <= 9);
+    ASSERT_RANGE(level, 0 + 1, 9 + 1);
 
     if (num_spells == -1)
     {
@@ -1640,8 +1640,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         num_spells = min(5 + (level - 1)/3, 18 - 2*level);
         num_spells = max(1, num_spells);
     }
-    ASSERT(num_spells > 0);
-    ASSERT(num_spells <= SPELLBOOK_SIZE);
+    ASSERT_RANGE(num_spells, 0 + 1, SPELLBOOK_SIZE + 1);
 
     book.plus  = level;
     book.plus2 = num_spells;
@@ -2121,8 +2120,7 @@ bool make_book_theme_randart(item_def &book,
 
     if (num_spells == -1)
         num_spells = SPELLBOOK_SIZE;
-    ASSERT(num_spells > 0);
-    ASSERT(num_spells <= SPELLBOOK_SIZE);
+    ASSERT_RANGE(num_spells, 0 + 1, SPELLBOOK_SIZE + 1);
 
     if (max_levels == -1)
         max_levels = 255;

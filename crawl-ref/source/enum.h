@@ -73,9 +73,6 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
-    // Gargoyles
-    ABIL_SELF_PETRIFY,
-
     ABIL_MAX_INTRINSIC = ABIL_RECHARGING,
 
     // Evoking items.
@@ -2053,7 +2050,9 @@ enum monster_type                      // menv[].type
     MONS_GREY_RAT,
     MONS_GREEN_RAT,
     MONS_ORANGE_RAT,
+#if TAG_MAJOR_VERSION == 34
     MONS_LABORATORY_RAT,
+#endif
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
     MONS_PORCUPINE,
     MONS_JACKAL,
@@ -2646,7 +2645,7 @@ enum monster_type                      // menv[].type
     MONS_LAVA_ORC,
 
     MONS_DRYAD,
-    MONS_FOREST_DRAKE,
+    MONS_WIND_DRAKE,
     MONS_FAUN,
     MONS_SATYR,
 
@@ -2853,7 +2852,7 @@ enum mutation_type
     MUT_MANA_REGENERATION,
     MUT_MANA_LINK,
     MUT_PETRIFICATION_RESISTANCE,
-    MUT_SELF_PETRIFICATION,
+    MUT_TRAMPLE_RESISTANCE,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

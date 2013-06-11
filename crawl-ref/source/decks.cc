@@ -401,8 +401,7 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
                                         deck_rarity_type rarity)
 {
     // Random rarity should have been replaced by one of the others by now.
-    ASSERT(rarity >= DECK_RARITY_COMMON);
-    ASSERT(rarity <= DECK_RARITY_LEGENDARY);
+    ASSERT_RANGE(rarity, DECK_RARITY_COMMON, DECK_RARITY_LEGENDARY + 1);
 
     // FIXME: We should use one of the various choose_random_weighted
     // functions here, probably with an iterator, instead of
@@ -1485,7 +1484,7 @@ static void _warp_card(int power, deck_rarity_type rarity)
     const int control_level = _get_power_level(power, rarity);
     if (control_level >= 2)
         blink(1000, false);
-    else if (control_level == 1)
+    else if (control_level == 1 && allow_control_teleport(true))
         cast_semi_controlled_blink(power / 4, false, false);
     else
         random_blink(false);
@@ -3156,8 +3155,7 @@ void init_deck(item_def &item)
 
     ASSERT(is_deck(item));
     ASSERT(!props.exists("cards"));
-    ASSERT(item.plus > 0);
-    ASSERT(item.plus <= 127);
+    ASSERT_RANGE(item.plus, 1, 128);
     ASSERT(item.special >= DECK_RARITY_COMMON
            && item.special <= DECK_RARITY_LEGENDARY);
 

@@ -900,8 +900,7 @@ static int _spell_weight(spell_type spell)
 // weights of all unknown spells in the book.
 static int _book_weight(book_type book)
 {
-    ASSERT(book >= 0);
-    ASSERT(book <= MAX_FIXED_BOOK);
+    ASSERT_RANGE(book, 0, MAX_FIXED_BOOK + 1);
 
     int total_weight = 0;
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -983,6 +982,9 @@ static bool _do_book_acquirement(item_def &book, int agent)
             else
                 other_weights += weight;
         }
+
+        if (you.religion == GOD_TROG)
+            magic_weights = 0;
 
         // If someone has 25% or more magic skills, never give manuals.
         // Otherwise, count magic skills double to bias against manuals
@@ -1111,7 +1113,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
         // Are we too skilled to get any manuals?
         if (total_weights == 0)
-            return _do_book_acquirement(book, agent);
+            return false;
 
         book.sub_type = BOOK_MANUAL;
         book.plus     = choose_random_weighted(weights, weights + NUM_SKILLS);

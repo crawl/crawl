@@ -323,8 +323,9 @@ WEIGHT:   (number with 10 being default)
 PLACE:    Used to specify certain special levels. Existing special levels
           include most branch ends.
           The branches need to use the official abbreviations also used e.g. in
-          the overmap (Ctrl-O): D, Temple, Orc, Elf, Lair, Swamp, Shoal, Slime,
-          Snake, Hive, Vault, Blade, Crypt, Tomb, Hell, Dis, Geh, Coc, Tar, Zot.
+          the overmap (Ctrl-O): D, Temple, Orc, Elf, Lair, Swamp, Shoals,
+          Spider, Snake, Slime, Vaults, Blade, Crypt, Forest, Tomb, Hell, Dis,
+          Geh, Coc, Tar, Zot.
 
           PLACE can also be used to specify arbitrary places, like D:3, which
           will force the map (or one of the maps with PLACE: D:3) to be picked
@@ -377,7 +378,7 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": In Dis, the Vaults and the Crypt a vault's
              rock walls will be changed to be the same as the wall type of
-             the rest of the level.  If you don't want that to happen then
+             the rest of the level. If you don't want that to happen then
              use this tag.
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
@@ -407,22 +408,22 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "no_hmirror": Like no_rotate, but for horizontal mirroring.
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
           * "overwritable": Lets the dungeon builder overwrite this vault with
-             other ones.  Don't use this casually.
+             other ones. Don't use this casually.
           * "can_overwrite": Tells the dungeon builder that this vault can be
              placed on top of other vaults, even those without the "overwritable"
-             tag.  Don't use this casually.
-          * "layout": Makes the vault eligible for use as a level layout.  Do
+             tag. Don't use this casually.
+          * "layout": Makes the vault eligible for use as a level layout. Do
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
              compatible with, for vaults that don't fit in with all layouts;
              the absence of this type of tags means it can go with any
-             layout.  Multiple layout_foo tags can be used if it can be used
-             with multiple layouts.  Current values for "foo" are: rooms,
+             layout. Multiple layout_foo tags can be used if it can be used
+             with multiple layouts. Current values for "foo" are: rooms,
              city, open, caves, cross, abyss, basic, delve, misc, shoals,
              swamp, labyrinth (though currently random vaults aren't placed
              in the last three).
           * "no_species_xx": Disables the vault for a given player species
-             (two-letter abbreviation).  Note that the current design rules
+             (two-letter abbreviation). Note that the current design rules
              strictly disallow varying the map generation based on the
              character -- this tag is only for acquirement-like effects,
              sprint, or tutorial.
@@ -435,14 +436,14 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              entries to portal vaults, like bazaars and labyrinths. Other
              portal vaults may be eligible for Trowel, too.
           * "no_dump": Don't dump out this vault's name in the list of
-             vaults generated during the game.  Use this if the vault
-             is predictable (like the Vault:8 and Slime:6 vaults) or
+             vaults generated during the game. Use this if the vault
+             is predictable (like the Vaults:5 and Slime:6 vaults) or
              are for weird internal uses (like the shoalhut vaults).
-          * "unrand": Don't pick this vault randomly by DEPTH.  Can still be
+          * "unrand": Don't pick this vault randomly by DEPTH. Can still be
              picked by tag or PLACE.
           * "transparent": Marks the vault as potentially passable for the
-             purposes of level connectivity.  By default, vaults are considered
-             non-passable regardless of their contents.  With this tag, the
+             purposes of level connectivity. By default, vaults are considered
+             non-passable regardless of their contents. With this tag, the
              actual terrain of the vault affects its passability as seen by the
              dungeon builder.
 
@@ -534,7 +535,7 @@ ITEM:     (list of items, separated by comma)
             treated as a god gift. Examples: "acquire any", "acquire armour",
             "acquire:sif_muna book", "acquire:trog weapon".
           * "level:N" sets the object's item level (can't be used with
-            "good_item").  If set to -2 then the object's item level will
+            "good_item"). If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the
             vault's level number).
           * "damaged" sets the item plusses to -1..-4.
@@ -555,7 +556,7 @@ ITEM:     (list of items, separated by comma)
             "carrion".
           * "race:race_name", where "race_name" is "elven", "dwarven" or
             "orcish"; it can also be "none" or "no_race" to prevent the item
-            from being randomly being made racial.  Has no effect if the item
+            from being randomly being made racial. Has no effect if the item
             can't take that kind of racial setting.
             NOTE: Can result in a non-racial item if used with "any" and the
             chosen item isn't compatible with the desired race. If race is not
@@ -563,22 +564,22 @@ ITEM:     (list of items, separated by comma)
             barding.
           * "ego:ego_name", where "ego_name" is something like  "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
-            item from getting an ego.  The item must be fully specified, so
+            item from getting an ego. The item must be fully specified, so
             trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
-            will result in an error.  Trying to give an ego to something which
-            can't accept an ego will also result in an error.  The full lists
+            will result in an error. Trying to give an ego to something which
+            can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
           * "unrand:item_name" will make a given unrandom by a given name,
-            like "long sword unrand:singing_sword".  Omit any apostrophes
-            in the name (e.g, unrand:vampires_tooth).  If the name has
+            like "long sword unrand:singing_sword". Omit any apostrophes
+            in the name (e.g, unrand:vampires_tooth). If the name has
             something between double quotes then use that string (e.g,
             unrand:bloodbane). If the unique already exists, the base item
             will be given instead.
-          * "randart" will force a randart.  Most of the above modifiers
+          * "randart" will force a randart. Most of the above modifiers
             will be ignored, except for "ego" (for weapons only).
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
              to be +0.
-          * "ident:" will make the item pre-identified.  You need to specify
+          * "ident:" will make the item pre-identified. You need to specify
             a "|"-separated list of what is to be known:
             * "curse"
             * "type"
@@ -586,7 +587,7 @@ ITEM:     (list of items, separated by comma)
             * "properties"
             * "all"
           * "unobtainable" hints that the item is supposed to never fall into
-            the player's hands.  It doesn't actually keep it from doing so,
+            the player's hands. It doesn't actually keep it from doing so,
             just tells that to acquirement and (TODO) troves.
           * "mimic:N" gives the item one chance in N of being turned into a
             mimic. The ":N" can also be omitted for a guaranteed mimic.
@@ -603,7 +604,7 @@ ITEM:     (list of items, separated by comma)
           WARNING: While checks are done to make sure that an armour ego
           isn't given to a weapon, a weapon ego to a missile, and so on, and
           also to make sure that egos are only given to armours, weapons and
-          missiles, no other checking is done.  Thus it is possible to create
+          missiles, no other checking is done. Thus it is possible to create
           a demonic weapon of holy wrath or a helmet of running.
 
           Corpses
@@ -768,11 +769,11 @@ MONS:     (list of monsters)
           Using place: with MONS implies that you want a random monster.
           You can also request zombies from random monsters suitable
           for some other depth as:
-              MONS: place:Elf:7 zombie
+              MONS: place:Elf:3 zombie
           or
               MONS: place:Zot:5 simulacrum
           or
-              MONS: place:Vault:8 spectre
+              MONS: place:Vaults:5 spectre
 
           The available modifiers are "zombie", "skeleton",
           "simulacrum" and "spectre".
@@ -790,15 +791,15 @@ MONS:     (list of monsters)
           A monster can be given specific items by following the monster
           name with a semi-colon and then with an item list as described
           in ITEM:, but with slashes replaced with pipes and commas replaced
-          with periods.  For example:
-              MONS: orc ; sabre | quick blade . chain mail | scale mail
+          with periods. For example:
+              MONS: orc ; sabre | quick blade . chain mail | plate armour
 
-          will generate an orc wielding either a katana or a quick blade
-          and wearing either a chain mail or a scale mail.  Randarts are
-          never generated, and ego items are only generated if the ego
-          is explicitly stated.  Note that any items that the monster was
-          originally generated with will be removed and destroyed.  This
-          can be used to force a monster to have no items whatsoever:
+          will generate an orc wielding either a sabre or a quick blade
+          and wearing either chain mail or plate armour. Randarts and
+          ego items are only generated if they are explicitly requested.
+          Note that any items that the monster was originally generated
+          with will be removed and destroyed. This can be used to force
+          a monster to have no items whatsoever:
               MONS: orc; nothing
 
           Items given to an orc, dwarf or elf will be made orcish, dwarven
@@ -806,13 +807,13 @@ MONS:     (list of monsters)
 
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters dervied from that monster
-          spec to choose the same alternative.  If a monster is given
+          spec to choose the same alternative. If a monster is given
           a random launcher, there is no way to force the ammo type to
           match the launcher type.
 
           You can specify that a monster will always generate a corpse by
           using the tag "always_corpse", and that it will never generate
-          a corpse by using "never_corpse".  This should only be used in
+          a corpse by using "never_corpse". This should only be used in
           vaults where it is absolutely necessary, tutorial maps, etc.
 
           Overriding Monster Names:
@@ -832,8 +833,8 @@ MONS:     (list of monsters)
           "Durwent the Kobold"s).
 
           There are three different modifiers that by used on a name:
-          name_adjective, name_suffix and name_replace.  name_adjective
-          makes the name act as an adjective.  For example:
+          name_adjective, name_suffix and name_replace. name_adjective
+          makes the name act as an adjective. For example:
               MONS: kobold name:ugly name_adjective
 
           Will cause "An ugly kobold", "The ugly kobold hits you",
@@ -849,7 +850,7 @@ MONS:     (list of monsters)
           name, as if the monster was a unique:
               MONS: kobold name:Durwent name_replace
 
-          Will result in "Durwent" rather than "Durwent the Kobold".  The
+          Will result in "Durwent" rather than "Durwent the Kobold". The
           corpse will still be a "kobold corpse of Durwent".
 
           In combination with name_replace or name_species, there are two
@@ -883,7 +884,7 @@ MONS:     (list of monsters)
           (including skeletons, simulacra and spectrals).
 
           Finally, name_nocorpse will cause the name to be completely ignored
-          for corpses.  For example:
+          for corpses. For example:
               MONS: wizard name:sad name_adjective name_nocorpse
           will result in "a sad wizard" that leaves "a wizard corpse".
 
@@ -995,10 +996,10 @@ MONS:     (list of monsters)
 
           Setting enchantments:
           ---------------------
-          You may give a monster any number of enchantments.  It may
-          start hasted, blind, have permanent DMsl, etc.  The syntax is
+          You may give a monster any number of enchantments. It may
+          start hasted, blind, have permanent DMsl, etc. The syntax is
           "ench:<name>:<degree>:<duration>" or "perm_ench:<name>:<degree>".
-          The <degree> and <duration> fields may be omitted.  Note that
+          The <degree> and <duration> fields may be omitted. Note that
           the enchantment will start the moment the monster is created and
           thus most likely time out before the player has a chance to
           notice the monster -- non-permanent ones make sense mostly only
@@ -1100,12 +1101,12 @@ COLOUR:   . = green / blue:5 / red / none
 
 FTILE:    . = floor_grass:20 / floor_dirt / none
           Similar to COLOUR, FTILE allows you to attach explicit floor
-          tiles to any glyph.  In non-tiles builds, this does nothing.
+          tiles to any glyph. In non-tiles builds, this does nothing.
           If the tile specified has variations, those will be used
-          automatically.  Only tiles from the dungeon image can be used.
+          automatically. Only tiles from the dungeon image can be used.
 
           This will not (necessarily) replace the feature tile itself,
-          only the floor.  If you set the FTILE on a fountain glyph,
+          only the floor. If you set the FTILE on a fountain glyph,
           then the fountain will still appear normally, but the floor
           underneath it will be the tile that was specified.
 
@@ -1119,7 +1120,7 @@ FTILE:    . = floor_grass:20 / floor_dirt / none
           of this tile, then it will be used.
 
 RTILE:    x = wall_hive:15 / wall_lair / none
-          Identical to FTILE, but for rock walls.  Not useful for anything
+          Identical to FTILE, but for rock walls. Not useful for anything
           but the rock wall feature.
 
 TILE:     x = wall_flesh
@@ -1302,7 +1303,7 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
                         content of the shop. You will still need to specify the
                         type in the definition, i.e., "antique armour shop".
             suffix:     If provided, this is used instead of "Emporium",
-                        "Shop", etc, in the shop name.  For example,
+                        "Shop", etc, in the shop name. For example,
                         suffix:Bazaar results in "X's x Bazaar".
             count:      If specified, this restricts the number of items placed
                         in the shop to this number. For example, "any shop
@@ -1380,13 +1381,13 @@ KMASK:    Z = no_monster_gen
             KMASK: W = no_monster_gen
 
           will prevent monsters from randomly being generated on shallow water
-          squares.  Note that if shuffling and substitutions cause W to end up
+          squares. Note that if shuffling and substitutions cause W to end up
           as water 10% of the time and floor 90% of the time, then those floor
           squares will still have no_monster_gen set, but that's still a higher
           degree of control than you get with TAGS.
 
           If TAGS has been used to set a mask for the entire vault, you can use
-          KMASK to remove that mask from particular symbols.  For instance:
+          KMASK to remove that mask from particular symbols. For instance:
 
             TAGS:  no_monster_gen
             KMASK: W = !no_monster_gen
@@ -1407,7 +1408,7 @@ KPROP:    x = bloody
 
           Unlike KFEAT etc., KPROP is applied to the cells of the map that
           currently have that glyph, applying only the shuffles and
-          substitutions before the KPROP declaration.  That is:
+          substitutions before the KPROP declaration. That is:
             KFEAT: ' = rock_wall
             KPROP: ' = bloody
             SUBST: ' = '.
@@ -1426,7 +1427,7 @@ KPROP:    x = bloody
           * "bloody": Causes features to appear as though splattered with
              blood. This should be used very, very sparingly!
           * "no_cloud_gen": Prevents clouds from being generated over this
-             feature (usually lava).  Does not stop fog generators or clouds
+             feature (usually lava). Does not stop fog generators or clouds
              entering from nearby squares.
           * "no_rtele_into": Prevents random teleport from chosing to use this
              square. Use this to prevent nasty situations like the player
@@ -1478,7 +1479,7 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
           MARKER: D=feat:enter_dis, G=feat:enter_gehenna
 
           When the horn is sounded, the stone arch at D becomes the portal to
-          Dis, the arch at G becomes the portal to Gehenna.  This behaviour
+          Dis, the arch at G becomes the portal to Gehenna. This behaviour
           applies only to the Vestibule of Hell.
 
           Lua markers are used for more complex triggers, such as for bazaar
@@ -1495,13 +1496,13 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
                        size_buildup_time = 1000 }
 
           Feature names used in markers must be names matching the names in
-          the source code.  There's a full list of feature names in section I
+          the source code. There's a full list of feature names in section I
           (Feature names) at the end of this document.
 
           An important note about markers is that they are also considered map
-          transforms along with SUBST, NSUBST and SHUFFLE.  You usually want
+          transforms along with SUBST, NSUBST and SHUFFLE. You usually want
           to place a MARKER line after all SUBST, NSUBST and SHUFFLE lines so
-          that the final position of the marker key is used.  For instance, if
+          that the final position of the marker key is used. For instance, if
           you want to attach a marker to the rune in a map which randomises
           the position of the rune, this is a mistake:
 
@@ -1523,11 +1524,11 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
           weighted sets of tags can be used on the right hand side.
 
           The use of an equal sign to pick a different subvault per-glyph,
-          e.g. "X = some_vault_tag" is not supported at this time.  Use
+          e.g. "X = some_vault_tag" is not supported at this time. Use
           a ':' instead to fix the choice of vault tag among all glyphs.
 
           When a subvault is applied, the first step is finding the smallest
-          bounding box around the glyphs.  For example, in the following vault
+          bounding box around the glyphs. For example, in the following vault
           definition, the smallest bounding box around the X glyph is a 4x3
           rectangle:
 
@@ -1539,14 +1540,14 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
 
           After the bounding box is calculated, a valid subvault that matches
           the given tags and is no larger than the bounding box will be found.
-          If no subvault can be found, the vault will throw an error.  If a
+          If no subvault can be found, the vault will throw an error. If a
           subvault is found that is smaller than the provided bounding box,
           then it will be randomly placed and possibly rotated within the
           bounding box.
 
           There is not much optimization to best fit a subvault into the
-          glyphs provided by the parent vault.  So, take some care when using
-          non-rectangular subvaults.  The only special case is if you provide
+          glyphs provided by the parent vault. So, take some care when using
+          non-rectangular subvaults. The only special case is if you provide
           a subvault that is the exact same shape as what the parent vault
           requests.
 
@@ -1557,9 +1558,9 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
 
           Additional glyphs that are not replaced by the subvault will be left
           untouched so that the parent vault can replace them with whatever
-          feature it desires.  These untouched glyphs can occur either because
+          feature it desires. These untouched glyphs can occur either because
           the subvault was smaller than the bounding box or because the
-          subvault left the glyph blank (' ').  Because of this, a SUBVAULT
+          subvault left the glyph blank (' '). Because of this, a SUBVAULT
           command should usually be followed by a SUBST command to clean up
           these remaining glyphs.
 
@@ -1570,7 +1571,7 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
           During map verification, the SUBVAULT command does not do anything.
           Therefore, the compilation step for Lua vaults will not catch errors
           where no maps exist for a given tag or where all maps that do exist
-          are too big to fit into the provided space in the parent map.  (The
+          are too big to fit into the provided space in the parent map. (The
           reasoning for not verifying the subvault command is so that you can
           specify maps by tag that may be defined later in the file or even in
           another file that hasn't been loaded yet.) So, test your subvaults!
@@ -1578,7 +1579,7 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
           As the size of the subvault may vary depending on the parent vault,
           there are some helpful Lua functions (in the dgn library) that can
           be used to get more information about what the parent vault is
-          requesting.  Here's a quick reference:
+          requesting. Here's a quick reference:
 
           is_subvault()
 
@@ -1600,10 +1601,10 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
 
               This is a convenience function that replaces the current
               subvault map with one that is the exact size of the bounding
-              box.  For any valid square that the parent map will replace with
-              the subvault, it will place a '.' in the map.  For any invalid
+              box. For any valid square that the parent map will replace with
+              the subvault, it will place a '.' in the map. For any invalid
               square that will not be replaced by the subvault, it will place
-              a ' ' in the map.  If not a subvault, it does nothing.
+              a ' ' in the map. If not a subvault, it does nothing.
 
               The advantage of this is that a vault author can then use nsubst
               on the '.' feature to ensure that a fixed number of objects will
@@ -1623,7 +1624,7 @@ KMONS: * = orc ; sabre | quick blade . chain mail | scale mail / \
            goblin ; dagger
 
 If you're using continuation lines for comma-separated lists of monsters or
-items, split your line after the comma, not before.  For example:
+items, split your line after the comma, not before. For example:
 
 Wrong:
         ITEM: potion of healing \
@@ -1651,7 +1652,7 @@ Assigning multiple glyphs at once
 ---------------------------------
 
 Declarations that modify glyphs allow multiple glyphs to be assigned
-simultaneously as a convenience.  For example, the following declaration will
+simultaneously as a convenience. For example, the following declaration will
 assign floor_orc as the tile to be used for all up stair cases and floor:
 
     FTILE: .[{( = floor_orc
@@ -1664,13 +1665,13 @@ This case is identical to the longer syntax:
     FTILE: ( = floor_orc
 
 Using : instead of = while assigning glyphs will assign the same value to all
-glyphs.  In the following example, the glyphs A, B, and C will either all
+glyphs. In the following example, the glyphs A, B, and C will either all
 contain gold or all contain nothing:
 
     KITEM: ABC : gold / nothing
 
 Note: The number of items assigned in an NSUBST expression applies to the
-entire group of glyphs being assigned.  For example:
+entire group of glyphs being assigned. For example:
 
     # Among all A, B, and C glyphs, make one a floor and the rest walls.
     NSUBST: ABC = 1:. / *:x

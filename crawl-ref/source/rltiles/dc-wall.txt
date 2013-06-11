@@ -268,6 +268,78 @@ relief3
 %repeat WALL_HALL WALL_HALL_DARKGRAY
 %resetcol
 
+%variation WALL_HALL blue
+%hue 26 240
+%hue 27 240
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%hue 31 240
+%hue 32 240
+%hue 33 240
+relief_brown0 WALL_HALL_BLUE
+relief_brown1
+relief_brown2
+relief_brown3
+%resetcol
+
+%variation WALL_HALL green
+%hue 240 140
+%repeat WALL_HALL_BLUE WALL_HALL_GREEN
+%resetcol
+
+%variation WALL_HALL cyan
+%hue 240 180
+%repeat WALL_HALL_BLUE WALL_HALL_CYAN
+%resetcol
+
+%variation WALL_HALL red
+%hue 240 0
+%repeat WALL_HALL_BLUE WALL_HALL_RED
+%resetcol
+
+%variation WALL_HALL magenta
+%hue 240 270
+%repeat WALL_HALL_BLUE WALL_HALL_MAGENTA
+%resetcol
+
+%variation WALL_HALL brown
+%hue 240 30
+%repeat WALL_HALL_BLUE WALL_HALL_BROWN
+%resetcol
+
+%variation WALL_HALL yellow
+%hue 240 60
+%repeat WALL_HALL_BLUE WALL_HALL_YELLOW
+%resetcol
+
+%variation WALL_HALL lightblue
+%hue 240 210
+%lum 240 5
+%repeat WALL_HALL_BLUE WALL_HALL_LIGHTBLUE
+%resetcol
+
+%variation WALL_HALL lightgreen
+%hue 240 110
+%repeat WALL_HALL_BLUE WALL_HALL_LIGHTGREEN
+%resetcol
+
+%variation WALL_HALL lightcyan
+%hue 240 180
+%repeat WALL_HALL_BLUE WALL_HALL_LIGHTCYAN
+%resetcol
+
+%variation WALL_HALL lightred
+%hue 240 0
+%lum 240 5
+%repeat WALL_HALL_BLUE WALL_HALL_LIGHTRED
+%resetcol
+
+%variation WALL_HALL lightmagenta
+%hue 240 290
+%repeat WALL_HALL_BLUE WALL_HALL_LIGHTMAGENTA
+%resetcol
+
 beehives0 WALL_WAX
 beehives1
 beehives2

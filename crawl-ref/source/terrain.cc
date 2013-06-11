@@ -1090,7 +1090,8 @@ static void _announce_swap(coord_def pos1, coord_def pos2)
 bool swap_features(const coord_def &pos1, const coord_def &pos2,
                    bool swap_everything, bool announce)
 {
-    ASSERT(in_bounds(pos1) && in_bounds(pos2));
+    ASSERT_IN_BOUNDS(pos1);
+    ASSERT_IN_BOUNDS(pos2);
     ASSERT(pos1 != pos2);
 
     if (is_sanctuary(pos1) || is_sanctuary(pos2))
@@ -1288,7 +1289,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
 bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
                         bool announce)
 {
-    ASSERT(in_bounds(src));
+    ASSERT_IN_BOUNDS(src);
 
     const dungeon_feature_type orig_feat = grd(src);
     const actor* orig_actor = actor_at(src);
@@ -1879,9 +1880,19 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
             map_terrain_change_marker* marker =
                     dynamic_cast<map_terrain_change_marker*>(markers[i]);
 
-            newfeat = marker->old_feature;
-            if (marker->new_feature == grd(pos))
+            // Don't revert sealed doors to normal doors if we're trying to
+            // remove the door altogether
+            if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+                && newfeat == DNGN_FLOOR)
+            {
                 env.markers.remove(marker);
+            }
+            else
+            {
+                newfeat = marker->old_feature;
+                if (marker->new_feature == grd(pos))
+                    env.markers.remove(marker);
+            }
         }
     }
 

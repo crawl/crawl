@@ -85,8 +85,7 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
     ASSERT(_school <= SPTYP_LAST_SCHOOL || _school == SPTYP_RANDOM);
-    ASSERT(level >= 0);
-    ASSERT(level <= 3);
+    ASSERT_RANGE(level, 0, 3 + 1);
 
     init();
     do_miscast();
@@ -255,8 +254,7 @@ string MiscastEffect::get_default_cause(bool attribute_to_user) const
 {
     // This is only for true miscasts, which means both a spell and that
     // the source of the miscast is the same as the target of the miscast.
-    ASSERT(source >= 0);
-    ASSERT(source <= NON_MONSTER);
+    ASSERT_RANGE(source, 0, NON_MONSTER + 1);
     ASSERT(spell != SPELL_NO_SPELL);
     ASSERT(school == SPTYP_NONE);
 
@@ -288,8 +286,7 @@ bool MiscastEffect::neither_end_silenced()
 
 void MiscastEffect::do_miscast()
 {
-    ASSERT(recursion_depth >= 0);
-    ASSERT(recursion_depth < MAX_RECURSE);
+    ASSERT_RANGE(recursion_depth, 0, MAX_RECURSE);
 
     if (recursion_depth == 0)
         did_msg = false;

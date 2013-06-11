@@ -221,8 +221,6 @@ static const ability_def Ability_List[] =
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, 0, ABFLAG_BREATH},
 
-    { ABIL_SELF_PETRIFY, "Self-Petrification", 0, 0, 0, 0, 0, ABFLAG_NONE},
-
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
@@ -1506,15 +1504,6 @@ static bool _check_ability_possible(const ability_def& abil,
         return (you.can_go_berserk(true, false, true)
                 && (quiet || berserk_check_wielded_weapon()));
 
-    case ABIL_SELF_PETRIFY:
-        if (you.duration[DUR_EXHAUSTED])
-        {
-            if (!quiet)
-                mpr("You're too exhausted to transform.");
-            return false;
-        }
-        return true;
-
     case ABIL_EVOKE_FOG:
         if (env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
@@ -1553,6 +1542,7 @@ bool activate_talent(const talent& tal)
         if (you.strength() <= 5
             && !yesno("Turning into a bat will reduce your strength to zero. Continue?", false, 'n'))
         {
+            canned_msg(MSG_OK);
             crawl_state.zero_turns_taken();
             return false;
         }
@@ -1570,6 +1560,7 @@ bool activate_talent(const talent& tal)
         if (you.form == TRAN_BAT && you.dex() <= 5
             && !yesno("Turning back will reduce your dexterity to zero. Continue?", false, 'n'))
         {
+            canned_msg(MSG_OK);
             crawl_state.zero_turns_taken();
             return false;
         }
@@ -2111,11 +2102,6 @@ static bool _do_ability(const ability_def& abil)
         }
         else
             cast_fly(you.experience_level * 4);
-        break;
-
-    // Gargoyle
-    case ABIL_SELF_PETRIFY:
-        you.petrify(&you, true);
         break;
 
     // DEMONIC POWERS:
@@ -3110,9 +3096,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
     }
 
-    if (you.species == SP_GARGOYLE && !form_changed_physiology())
-        _add_talent(talents, ABIL_SELF_PETRIFY, check_confused);
-
     if (player_genus(GENPC_DRACONIAN))
     {
         ability_type ability = ABIL_NON_ABILITY;
@@ -3475,8 +3458,11 @@ vector<ability_type> get_god_abilities(bool include_unusable)
             abilities.push_back(ABIL_ELYVILON_LIFESAVING);
         else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
             abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
-        else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+        else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES
+                 || abil == ABIL_STOP_RECALL && you.religion == GOD_YREDELEMNUL)
+        {
             abilities.push_back(ABIL_YRED_INJURY_MIRROR);
+        }
     }
 
     if (you.religion == GOD_ZIN && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)

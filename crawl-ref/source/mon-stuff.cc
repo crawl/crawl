@@ -1413,24 +1413,6 @@ static int _destroy_tentacles(monster* head)
     return seen;
 }
 
-static void _end_flayed_effect(monster* mons)
-{
-    if (you.duration[DUR_FLAYED] && !mons->wont_attack()
-        && cell_see_cell(mons->pos(), you.pos(), LOS_DEFAULT))
-    {
-        heal_flayed_effect(&you);
-    }
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(mons, *mi)
-            && cell_see_cell(mons->pos(), mi->pos(), LOS_DEFAULT))
-        {
-            heal_flayed_effect(*mi);
-        }
-    }
-}
-
 static string _killer_type_name(killer_type killer)
 {
     switch (killer)
@@ -2460,12 +2442,15 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_VAULT_WARDEN)
         timeout_terrain_changes(0, true);
     else if (mons->type == MONS_FLAYED_GHOST)
-        _end_flayed_effect(mons);
+        end_flayed_effect(mons);
     else if (mons->type == MONS_PLAGUE_SHAMBLER && !was_banished
              && !mons->pacified() && (!summoned || duration > 0) && !wizard)
     {
         if (you.can_see(mons))
-            mprf("Miasma billows from the fallen %s!", mons->name(DESC_PLAIN).c_str());
+        {
+            mprf(MSGCH_WARN, "Miasma billows from the fallen %s!",
+                 mons->name(DESC_PLAIN).c_str());
+        }
 
         map_cloud_spreader_marker *marker =
             new map_cloud_spreader_marker(mons->pos(), CLOUD_MIASMA, 10,
@@ -4924,9 +4909,6 @@ void temperature_changed(float change)
         // Handled separately because normally heat doesn't affect this.
         if (you.form == TRAN_ICE_BEAST || you.form == TRAN_STATUE)
             untransform(true, false);
-
-        // Stoneskin melts.
-        you.set_duration(DUR_STONESKIN, 0);
     }
 
     // Just reached the temp that kills off stoneskin.
@@ -4957,7 +4939,6 @@ void temperature_changed(float change)
     // Cooled down enough for stoneskin to kick in again.
     if (change < neg_threshold && temperature_tier(TEMP_WARM))
     {
-            you.set_duration(DUR_STONESKIN, 500);
             mpr("Your skin cools and hardens.", MSGCH_DURATION);
             you.redraw_armour_class = true;
     }

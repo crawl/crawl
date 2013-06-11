@@ -787,8 +787,7 @@ string unmarshallString(reader &th, int maxSize)
         return "";
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
-    ASSERT(slen >= 0);
-    ASSERT(slen < maxSize);
+    ASSERT_RANGE(slen, 0, maxSize);
     const string res(buffer, slen);
     delete [] buffer;
     return res;
@@ -1093,9 +1092,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
-    marshallInt(th, you.gargoyle_damage_reduction);
-    marshallShort(th, you.manual_skill);
-    marshallInt(th, you.manual_index);
     marshallInt(th, you.abyss_speed);
 
     marshallInt(th, you.disease);
@@ -1252,6 +1248,8 @@ static void tag_construct_you(writer &th)
 #if TAG_MAJOR_VERSION == 34
     if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
         you.mutation[MUT_TELEPORT_CONTROL] = 0;
+    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
+        you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
 #endif
 
     marshallByte(th, you.demonic_traits.size());
@@ -1874,11 +1872,9 @@ static void tag_read_you(reader &th)
 
     ASSERT(is_valid_species(you.species));
     ASSERT(you.char_class < NUM_JOBS);
-    ASSERT(you.experience_level > 0);
-    ASSERT(you.experience_level <= 27);
+    ASSERT_RANGE(you.experience_level, 1, 28);
     ASSERT(you.religion < NUM_GODS);
-    ASSERT(crawl_state.type > GAME_TYPE_UNSPECIFIED);
-    ASSERT(crawl_state.type < NUM_GAME_TYPE);
+    ASSERT_RANGE(crawl_state.type, GAME_TYPE_UNSPECIFIED + 1, NUM_GAME_TYPE);
     you.last_mid          = unmarshallInt(th);
     you.piety             = unmarshallUByte(th);
     ASSERT(you.piety <= MAX_PIETY);
@@ -1902,13 +1898,16 @@ static void tag_read_you(reader &th)
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_GARGOYLE_DR)
-        you.gargoyle_damage_reduction = unmarshallInt(th);
-    else
-        you.gargoyle_damage_reduction = 0;
+    if (th.getMinorVersion() >= TAG_MINOR_GARGOYLE_DR
+      && th.getMinorVersion() < TAG_MINOR_RM_GARGOYLE_DR)
+        unmarshallInt(th); // Slough an integer.
+
+    if (th.getMinorVersion() < TAG_MINOR_AUTOMATIC_MANUALS)
+    {
+        unmarshallShort(th);
+        unmarshallInt(th);
+    }
 #endif
-    you.manual_skill  = static_cast<skill_type>(unmarshallShort(th));
-    you.manual_index  = unmarshallInt(th);
 
     you.abyss_speed = unmarshallInt(th);
 
@@ -1921,12 +1920,10 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 #endif
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
-    ASSERT(you.form >= TRAN_NONE);
-    ASSERT(you.form <= LAST_FORM);
+    ASSERT_RANGE(you.form, TRAN_NONE, LAST_FORM + 1);
 
     count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    ASSERT(count <= 32767);
+    ASSERT_RANGE(count, 0, 32768);
     you.sage_skills.resize(count, SK_NONE);
     you.sage_xp.resize(count, 0);
     you.sage_bonus.resize(count, 0);
@@ -1949,8 +1946,7 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; ++i)
     {
         you.equip[i] = unmarshallByte(th);
-        ASSERT(you.equip[i] >= -1);
-        ASSERT(you.equip[i] < ENDOFPACK);
+        ASSERT_RANGE(you.equip[i], -1, ENDOFPACK);
     }
     for (i = count; i < NUM_EQUIP; ++i)
         you.equip[i] = -1;
@@ -2014,8 +2010,7 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; i++)
     {
         int s = unmarshallByte(th);
-        ASSERT(s >= -1);
-        ASSERT(s < MAX_KNOWN_SPELLS);
+        ASSERT_RANGE(s, -1, MAX_KNOWN_SPELLS);
         you.spell_letter_table[i] = s;
     }
 
@@ -2124,6 +2119,10 @@ static void tag_read_you(reader &th)
         you.duration[j] = unmarshallInt(th);
     for (j = NUM_DURATIONS; j < count; ++j)
         unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+        you.duration[DUR_STONESKIN] = 0;
+#endif
 
     // how many attributes?
     count = unmarshallUByte(th);
@@ -2153,8 +2152,7 @@ static void tag_read_you(reader &th)
 
     // how many mutations/demon powers?
     count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    ASSERT(count <= NUM_MUTATIONS);
+    ASSERT_RANGE(count, 0, NUM_MUTATIONS + 1);
     for (j = 0; j < count; ++j)
     {
         you.mutation[j]         = unmarshallUByte(th);
@@ -2178,11 +2176,9 @@ static void tag_read_you(reader &th)
     {
         player::demon_trait dt;
         dt.level_gained = unmarshallByte(th);
-        ASSERT(dt.level_gained > 1);
-        ASSERT(dt.level_gained <= 27);
+        ASSERT_RANGE(dt.level_gained, 1, 28);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
-        ASSERT(dt.mutation >= 0);
-        ASSERT(dt.mutation < NUM_MUTATIONS);
+        ASSERT_RANGE(dt.mutation, 0, NUM_MUTATIONS);
         you.demonic_traits.push_back(dt);
     }
 
@@ -2268,8 +2264,7 @@ static void tag_read_you(reader &th)
     you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);
-    ASSERT(n_dact >= 0);
-    ASSERT(n_dact < 100000); // arbitrary, sanity check
+    ASSERT_RANGE(n_dact, 0, 100000); // arbitrary, sanity check
     you.dactions.resize(n_dact, NUM_DACTIONS);
     for (i = 0; i < n_dact; i++)
     {
@@ -2385,8 +2380,7 @@ static void tag_read_you(reader &th)
     {
 #endif
     count = unmarshallUnsigned(th);
-    ASSERT(count >= 0);
-    ASSERT(count < 16); // sanity check
+    ASSERT_RANGE(count, 0, 16); // sanity check
     you.uncancel.resize(count);
     for (i = 0; i < count; i++)
     {
@@ -2598,8 +2592,7 @@ static void tag_read_you_dungeon(reader &th)
     for (int j = 0; j < count; ++j)
     {
         brdepth[j]    = unmarshallInt(th);
-        ASSERT(brdepth[j] >= -1);
-        ASSERT(brdepth[j] <= MAX_BRANCH_DEPTH);
+        ASSERT_RANGE(brdepth[j], -1, MAX_BRANCH_DEPTH + 1);
         startdepth[j] = unmarshallInt(th);
     }
 #if TAG_MAJOR_VERSION == 34
@@ -2738,7 +2731,7 @@ static void tag_construct_level(writer &th)
         marshallByte(th, env.cloud[i].type);
         if (env.cloud[i].type == CLOUD_NONE)
             continue;
-        ASSERT(in_bounds(env.cloud[i].pos));
+        ASSERT_IN_BOUNDS(env.cloud[i].pos);
         marshallByte(th, env.cloud[i].pos.x);
         marshallByte(th, env.cloud[i].pos.y);
         marshallShort(th, env.cloud[i].decay);
@@ -3501,8 +3494,7 @@ static void tag_read_level(reader &th)
 
     // how many clouds?
     const int num_clouds = unmarshallShort(th);
-    ASSERT(num_clouds >= 0);
-    ASSERT(num_clouds <= MAX_CLOUDS);
+    ASSERT_RANGE(num_clouds, 0, MAX_CLOUDS + 1);
     for (int i = 0; i < num_clouds; i++)
     {
         env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
@@ -3527,7 +3519,7 @@ static void tag_read_level(reader &th)
             continue;
         }
 #else
-        ASSERT(in_bounds(env.cloud[i].pos));
+        ASSERT_IN_BOUNDS(env.cloud[i].pos);
 #endif
         env.cgrid(env.cloud[i].pos) = i;
         env.cloud_no++;
@@ -3537,8 +3529,7 @@ static void tag_read_level(reader &th)
 
     // how many shops?
     const int num_shops = unmarshallShort(th);
-    ASSERT(num_shops >= 0);
-    ASSERT(num_shops <= MAX_SHOPS);
+    ASSERT_RANGE(num_shops, 0, MAX_SHOPS + 1);
     for (int i = 0; i < num_shops; i++)
     {
         env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
@@ -3599,8 +3590,7 @@ static void tag_read_level_items(reader &th)
 {
     // how many traps?
     const int trap_count = unmarshallShort(th);
-    ASSERT(trap_count >= 0);
-    ASSERT(trap_count <= MAX_TRAPS);
+    ASSERT_RANGE(trap_count, 0, MAX_TRAPS + 1);
     for (int i = 0; i < trap_count; ++i)
     {
         env.trap[i].type =
@@ -3627,8 +3617,7 @@ static void tag_read_level_items(reader &th)
 
     // how many items?
     const int item_count = unmarshallShort(th);
-    ASSERT(item_count >= 0);
-    ASSERT(item_count <= MAX_ITEMS);
+    ASSERT_RANGE(item_count, 0, MAX_ITEMS + 1);
     for (int i = 0; i < item_count; ++i)
         unmarshallItem(th, mitm[i]);
     for (int i = item_count; i < MAX_ITEMS; ++i)
@@ -3717,6 +3706,10 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
+#if TAG_MAJOR_VERSION == 34
+    if (m.type == MONS_LABORATORY_RAT)
+        unmarshallGhost(th), m.type = MONS_RAT;
+#endif
 
     _unmarshall_constriction(th, &m);
 
@@ -3787,8 +3780,7 @@ static void tag_read_level_monsters(reader &th)
 
     // how many monsters?
     count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    ASSERT(count <= MAX_MONSTERS);
+    ASSERT_RANGE(count, 0, MAX_MONSTERS + 1);
 
     for (i = 0; i < count; i++)
     {

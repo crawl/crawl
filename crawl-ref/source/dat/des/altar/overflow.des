@@ -1556,23 +1556,6 @@ MAP
       @
 ENDMAP
 
-NAME:   xom_gifts_altar
-TAGS:   temple_overflow_xom uniq_altar_xom decor no_monster_gen
-CHANCE: 3
-KFEAT:  _ = altar_xom
-KPROP:  _ = bloody
-KPROP:  , = no_tele_into
-KITEM:  , = any mimic
-: interest_check(_G)
-MAP
- XXXXXXX
-XX,,,,,XX
-X,,ooo,,X
-X,,o_o,,X
-XX,o.o,XX
- XXX@XXX
-ENDMAP
-
 NAME:   led_xom_imps
 DEPTH:  D:3-5
 TAGS:   temple_overflow_xom uniq_altar_xom

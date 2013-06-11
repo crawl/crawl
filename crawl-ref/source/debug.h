@@ -53,7 +53,7 @@
 #ifdef ASSERTS
 
 NORETURN void AssertFailed(const char *expr, const char *file, int line,
-                           const char *text = "", ...);
+                           const char *text = nullptr, ...);
 
 #ifdef __clang__
 # define WARN_PUSH _Pragma("GCC diagnostic push")
@@ -86,10 +86,34 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         WARN_POP                                        \
     } while (false)
 
+#define ASSERT_RANGE(x, xmin, xmax)                                           \
+    do {                                                                      \
+        WARN_PUSH                                                             \
+        IGNORE_ASSERT_WARNINGS                                                \
+        if ((x) < (xmin) || (x) >= (xmax))                                    \
+        {                                                                     \
+            die("ASSERT failed: " #x " of %" PRIdMAX " out of range " \
+                #xmin " (%" PRIdMAX ") .. " \
+                #xmax " (%" PRIdMAX ")",                                      \
+                (intmax_t)(x), (intmax_t)(xmin), (intmax_t)(xmax));           \
+        }                                                                     \
+        WARN_POP                                                              \
+    } while (false)
+
+#define ASSERT_IN_BOUNDS(where)                                               \
+    ASSERTM(in_bounds(where), "%s = (%d,%d)", #where, (where).x, (where).y)
+
+#define ASSERT_IN_BOUNDS_OR_ORIGIN(where)                   \
+    ASSERTM(in_bounds(where) || (where).origin(),           \
+            "%s = (%d,%d)", #where, (where).x, (where).y)
+
 #else
 
-#define ASSERT(p)       ((void) 0)
-#define ASSERTM(p,text,...) ((void) 0)
+#define ASSERT(p)                         ((void) 0)
+#define ASSERTM(p, text,...)              ((void) 0)
+#define ASSERT_RANGE(x, a, b)             ((void) 0)
+#define ASSERT_IN_BOUNDS(where)           ((void) 0)
+#define ASSERT_IN_BOUNDS_OR_ORIGIN(where) ((void) 0)
 
 #endif
 

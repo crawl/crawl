@@ -24,7 +24,7 @@ I.    Conditionalising levels
 =============================
 
 Crawl translates level (.des) files into Lua code chunks and runs these chunks
-to produce the final level that is generated.  While you don't need to use Lua
+to produce the final level that is generated. While you don't need to use Lua
 for most levels, using Lua allows you to conditionalise or randomise levels
 with greater control.
 
@@ -343,7 +343,7 @@ the vault is a branch entry).
 
 If you want the place name displayed while in the vault to be different
 than the destination name, then you can give one_way_stair() a "dstname"
-parameter.  If you want the place origin for items in a character
+parameter. If you want the place origin for items in a character
 dump to be different than the default you can give one_way_stair a
 "dstorigin" parameter (i.e., dstname = "garden", dstorigin = "in the gardens").
 If you want the place name abbreviation used when displaying notes to be
@@ -353,10 +353,10 @@ You can dynamically change the origin string using the lua function
 dgn.set_level_type_origin(), and dynamically change the place name
 abbreviation with dgn.set_set_level_name_abbrev().
 
-Known portal vault entries will be displayed on the overmap.  By default
+Known portal vault entries will be displayed on the overmap. By default
 the name shown on the overmap will be the "dstname" parameter, or if
-that isn't present the "dst" paremeter.  It can be set to something else
-with the "overmap" parameter.  A note can be made to accompany the
+that isn't present the "dst" paremeter. It can be set to something else
+with the "overmap" parameter. A note can be made to accompany the
 portal's position on the overmap with the "overmap_note" parameter.
 
 Bones files for characters killed in the portal vault will normally
@@ -783,13 +783,13 @@ There are several properties a Lua marker can have which will affect the
 dungeon cell which they are on:
 
 * connected_exclude: Consider the cell to be separate from neighboring
-      cells with identical or similar features.  Currently only useful
+      cells with identical or similar features. Currently only useful
       for preventing adjacent doors from grouping together into a gate,
-      forcing them to open and close as separate doors.  See the Evil
+      forcing them to open and close as separate doors. See the Evil
       Zoo (minivault_9) in dat/mini.des for an example.
 
 * door_description_prefix: A string to prepend to the description of
-      any door the marker is on.  For a more powerful version, you can
+      any door the marker is on. For a more powerful version, you can
       use set_feature_name() instead.
 
 * door_description_suffix: A string to append to the description of
@@ -864,13 +864,13 @@ the marker is placed upon. The options currently available are:
 
 * shout_func: If this property is set to a function, that function will be
       called if the monster shouts, and the string returned by the function
-      will be used as the text of the message.  can return "__NONE" to
+      will be used as the text of the message. Can return "__NONE" to
       make the monster not shout, or "__NEXT" to proceed as if there was no
       speech_func property.
 
 * speech_func: If this property is set to a function, that function will be
       called if the monster speaks, and the string returned by the function
-      will be used as the text of the message.  can return "__NONE" to
+      will be used as the text of the message. Can return "__NONE" to
       make the monster not talk, or "__NEXT" to proceed as if there was no
       speech_func property.
 
@@ -929,7 +929,7 @@ set_random_mon_list
 
 
 Additionally, the dgn module provides a global "mapgrd" variable that
-can access the current map glyphs.  The top left symbol in the map
+can access the current map glyphs. The top left symbol in the map
 can be assigned like this:
 
  mapgrd[0][0] = 'x'

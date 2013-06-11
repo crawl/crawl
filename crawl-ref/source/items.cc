@@ -464,7 +464,8 @@ void unlink_item(int dest)
     }
     else
     {
-        ASSERT(in_bounds(mitm[dest].pos) || is_shop_item(mitm[dest]));
+        if (!is_shop_item(mitm[dest]))
+            ASSERT_IN_BOUNDS(mitm[dest].pos);
 
         // Linked item on map:
         //
@@ -903,6 +904,8 @@ void pickup_menu(int item_link)
         prompt = "Select pick up quantity by entering a number, then select the item";
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
                                             MT_PICKUP, _pickup_menu_title);
+    if (selected.empty())
+        canned_msg(MSG_OK);
     redraw_screen();
 
     string pickup_warning;
@@ -1203,6 +1206,7 @@ bool pickup_single_item(int link, int qty)
         && !yesno("Are you sure you want to pick up this pile of gold now?",
                   true, 'n'))
     {
+        canned_msg(MSG_OK);
         return false;
     }
     if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)
@@ -1387,6 +1391,14 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type == OBJ_GOLD || item_is_rune(item1))
         return true;
 
+    if (is_artefact(item1) != is_artefact(item2))
+        return false;
+    else if (is_artefact(item1)
+             && get_artefact_name(item1) != get_artefact_name(item2))
+    {
+        return false;
+    }
+
     // These classes also require pluses and special.
     if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
         || item1.base_type == OBJ_MISSILES
@@ -1440,8 +1452,7 @@ void merge_item_stacks(item_def &source, item_def &dest, int quant)
     if (quant == -1)
         quant = source.quantity;
 
-    ASSERT(quant > 0);
-    ASSERT(quant <= source.quantity);
+    ASSERT_RANGE(quant, 0 + 1, source.quantity + 1);
 
     if (is_blood_potion(source) && is_blood_potion(dest))
        merge_blood_potion_stacks(source, dest, quant);
@@ -1660,14 +1671,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         dec_mitm_item_quantity(obj, quant_got);
         you.turn_is_over = true;
 
-        if (you.religion == GOD_ASHENZARI)
-        {
-            simple_god_message(" appreciates your discovery of this rune.");
-            // Important!  This should _not_ be scaled by bondage level, as
-            // otherwise people would curse just before picking up.
-            gain_piety(10, 1);
-        }
-
         return retval;
     }
 
@@ -1879,7 +1882,7 @@ void mark_items_non_visit_at(const coord_def &pos)
 bool move_item_to_grid(int *const obj, const coord_def& p, int agent,
                        bool silent)
 {
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(p);
 
     int& ob(*obj);
     // Must be a valid reference to a valid object.
@@ -1983,7 +1986,7 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
 bool copy_item_to_grid(const item_def &item, const coord_def& p, int agent,
                         int quant_drop, bool mark_dropped, bool silent)
 {
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(p);
 
     if (quant_drop == 0)
         return false;
@@ -2172,9 +2175,6 @@ bool drop_item(int item_dropped, int quant_drop)
             return false;
         }
     }
-
-    if (you.manual_index == item_dropped)
-        stop_studying_manual();
 
     // [ds] easy_unequip does not apply to weapons.
     //
@@ -3034,12 +3034,6 @@ bool item_is_melded(const item_def& item)
     return (eq != EQ_NONE && you.melded[eq]);
 }
 
-bool item_is_active_manual(const item_def &item)
-{
-    return (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL
-            && in_inventory(item) && item.link == you.manual_index);
-}
-
 ////////////////////////////////////////////////////////////////////////
 // item_def functions.
 
@@ -3752,8 +3746,8 @@ coord_def orb_position()
 
 void move_items(const coord_def r, const coord_def p)
 {
-    ASSERT(in_bounds(r));
-    ASSERT(in_bounds(p));
+    ASSERT_IN_BOUNDS(r);
+    ASSERT_IN_BOUNDS(p);
 
     int it = igrd(r);
     while (it != NON_ITEM)

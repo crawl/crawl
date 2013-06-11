@@ -698,7 +698,7 @@ bool mons_speaks(monster* mons)
     {
         if (mons_base_char(mons->type) == 'w')
         {
-            if (intel > I_INSECT)
+            if (intel > I_REPTILE)
                 prefixes.insert(prefixes.begin(), "smart");
             else if (intel < I_INSECT)
                 prefixes.insert(prefixes.begin(), "stupid");
@@ -713,7 +713,7 @@ bool mons_speaks(monster* mons)
     }
     else if (shape >= MON_SHAPE_INSECT && shape <= MON_SHAPE_SNAIL)
     {
-        if (intel > I_INSECT)
+        if (intel > I_REPTILE)
             prefixes.insert(prefixes.begin(), "smart");
         else if (intel < I_INSECT)
             prefixes.insert(prefixes.begin(), "stupid");

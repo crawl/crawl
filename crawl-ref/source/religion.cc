@@ -495,9 +495,8 @@ bool is_unavailable_god(god_type god)
     if (god == GOD_FEDHAS && crawl_state.game_is_zotdef())
         return true;
 
-    // No Ashenzari, too -- nothing to explore, can't use his abilities,
-    // piety for runes won't give you reskilling on time.  We could give some
-    // piety for every wave, but there's little point.
+    // No Ashenzari, too -- nothing to explore, can't use his abilities.
+    // We could give some piety for every wave, but there's little point.
     if (god == GOD_ASHENZARI && crawl_state.game_is_zotdef())
         return true;
 
@@ -622,10 +621,6 @@ string get_god_likes(god_type which_god, bool verbose)
         snprintf(info, INFO_SIZE, "you sacrifice items%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
         likes.push_back(info);
-        break;
-
-    case GOD_ASHENZARI:
-        likes.push_back("you obtain runes of Zot");
         break;
 
     default:
@@ -2078,7 +2073,7 @@ static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
         if (x_chance_in_y(this_weight, total_weight))
             spell = *it;
     }
-    return (spell);
+    return spell;
 }
 
 static set<spell_type> _vehumet_get_spell_gifts()
@@ -3492,8 +3487,10 @@ void god_pitch(god_type which_god)
          you.form == TRAN_JELLY  ? "quiver devoutly before" :
          you.species == SP_NAGA  ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
-         you.species == SP_FELID ? "sit before"
-                                 : "kneel at",
+         you.species == SP_FELID ? "sit before" :
+         // duplicated because of forms
+         you.species == SP_DJINNI ? "hover solemnly before" :
+                                   "kneel at",
          god_name(which_god).c_str());
     }
     more();

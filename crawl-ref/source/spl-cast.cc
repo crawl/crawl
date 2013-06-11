@@ -755,6 +755,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             "Casting this spell will put you into penance. Really cast?",
             true, 'n'))
         {
+            canned_msg(MSG_OK);
             crawl_state.zero_turns_taken();
             return false;
         }

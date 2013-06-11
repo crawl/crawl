@@ -1742,14 +1742,14 @@ static bool _flay_creature(monster* mon, actor* victim)
     if (victim->is_player())
     {
         dam = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
-        dam = min(dam, max(0, you.hp - 15 - random2(10)));
+        dam = min(dam, max(0, you.hp - 25 - random2(15)));
         if (dam < 10)
             return false;
 
         if (you.duration[DUR_FLAYED])
             was_flayed = true;
 
-        you.increase_duration(DUR_FLAYED, 3 + random2(5), 15);
+        you.duration[DUR_FLAYED] = max(you.duration[DUR_FLAYED], 55 + random2(66));
     }
     else
     {
@@ -1757,7 +1757,7 @@ static bool _flay_creature(monster* mon, actor* victim)
 
         dam = (6 + (mon_victim->hit_points * 18 / mon_victim->max_hit_points))
                    * mon_victim->max_hit_points / 100;
-        dam = min(dam, max(0, mon_victim->hit_points - 15 - random2(10)));
+        dam = min(dam, max(0, mon_victim->hit_points - 25 - random2(15)));
         if (dam < 10)
             return false;
 
@@ -1815,7 +1815,14 @@ static bool _flay_creature(monster* mon, actor* victim)
         }
     }
 
-    victim->hurt(mon, dam, BEAM_NONE, true);
+    if (victim->is_player())
+    {
+        // Bypassing ::hurt so that flay damage can ignore guardian spirit
+        ouch(dam, mon->mindex(), KILLED_BY_MONSTER, "flay_damage",
+             mon->visible_to(&you));
+    }
+    else
+        victim->hurt(mon, dam, BEAM_NONE, true);
     victim->props["flay_damage"].get_int() += dam;
 
     vector<coord_def> old_blood;
@@ -1870,6 +1877,24 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
     for (int i = 0; i < blood.size(); ++i)
         env.pgrid(blood[i].get_coord()) &= ~FPROP_BLOODY;
     act->props.erase("flay_blood");
+}
+
+void end_flayed_effect(monster* ghost)
+{
+    if (you.duration[DUR_FLAYED] && !ghost->wont_attack()
+        && cell_see_cell(ghost->pos(), you.pos(), LOS_DEFAULT))
+    {
+        heal_flayed_effect(&you);
+    }
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(ghost, *mi)
+            && cell_see_cell(ghost->pos(), mi->pos(), LOS_DEFAULT))
+        {
+            heal_flayed_effect(*mi);
+        }
+    }
 }
 
 static bool _lost_soul_affectable(const monster* mons)
@@ -3893,7 +3918,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_FOREST_DRAKE:
+    case MONS_WIND_DRAKE:
     {
         if (mons->has_ench(ENCH_BREATH_WEAPON))
             break;

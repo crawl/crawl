@@ -3536,7 +3536,7 @@ static string _get_monster_desc(const monster_info& mi)
     if (mi.is(MB_SUPPRESSED))
         text += pronoun + " is surrounded by an aura of magical suppression.\n";
 
-    if (mi.intel() <= I_PLANT)
+    if (mi.intel() <= I_INSECT)
         text += pronoun + " is mindless.\n";
 
     if (mi.is(MB_CHAOTIC))

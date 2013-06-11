@@ -853,7 +853,10 @@ static void _handle_wizard_command(void)
 #endif
 
         if (!yesno("Do you really want to enter wizard mode?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
             return;
+        }
 
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
 
@@ -1495,7 +1498,10 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
 {
     // Certain portal types always carry warnings.
     if (!_prompt_dangerous_portal(ygrd))
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     // Does the next level have a warning annotation?
     // Also checks for entering a labyrinth with teleportitis.
@@ -1520,7 +1526,10 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
 
     // Leaving Pan runes behind.
     if (!_prompt_unique_pan_rune(ygrd))
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
@@ -2107,6 +2116,8 @@ void process_command(command_type cmd)
     case CMD_SAVE_GAME:
         if (yesno("Save game and exit?", true, 'n'))
             save_game(true);
+        else
+            canned_msg(MSG_OK);
         break;
 
     case CMD_SAVE_GAME_NOW:
@@ -2245,21 +2256,6 @@ static void _decrement_petrification(int delay)
 {
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
-        if (you.species == SP_GARGOYLE)
-        {
-            int possible_loss = 4;
-            if (player_sust_abil())
-                possible_loss -= 1;
-
-            for (int i = 0; i < possible_loss; ++i)
-            {
-                if (x_chance_in_y(you.gargoyle_damage_reduction, you.hp_max))
-                    lose_stat(STAT_RANDOM, 1, true, "massive damage");
-            }
-            int dur = (200 * you.gargoyle_damage_reduction / you.hp_max) / 10;
-            you.increase_duration(DUR_EXHAUSTED, dur);
-            you.gargoyle_damage_reduction = 0;
-        }
         you.redraw_evasion = true;
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
              you.form == TRAN_LICH ? "bone" :
@@ -2521,16 +2517,8 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
-    // Lava orcs don't have stoneskin decay like normal.
-    if (you.species != SP_LAVA_ORC
-        || (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)))
-    {
-        if (_decrement_a_duration(DUR_STONESKIN, delay,
-                                  "Your skin feels tender."))
-        {
-            you.redraw_armour_class = true;
-        }
-    }
+    if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
+        you.redraw_armour_class = true;
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
@@ -2911,6 +2899,8 @@ static void _decrement_durations()
             if (_decrement_a_duration(DUR_FLAYED, delay))
                 heal_flayed_effect(&you);
         }
+        else if (you.duration[DUR_FLAYED] < 80)
+            you.duration[DUR_FLAYED] += div_rand_round(50, delay);
     }
 
     _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
@@ -2949,7 +2939,7 @@ static void _check_shafts()
         if (trap.type != TRAP_SHAFT)
             continue;
 
-        ASSERT(in_bounds(trap.pos));
+        ASSERT_IN_BOUNDS(trap.pos);
 
         handle_items_on_shaft(trap.pos, true);
     }
@@ -2996,8 +2986,7 @@ static void _regenerate_hp_and_mp(int delay)
         tmp -= 100;
     }
 
-    ASSERT(tmp >= 0);
-    ASSERT(tmp < 100);
+    ASSERT_RANGE(tmp, 0, 100);
     you.hit_points_regeneration = tmp;
 
     // XXX: Don't let DD use guardian spirit for free HP, since their
@@ -3024,8 +3013,7 @@ static void _regenerate_hp_and_mp(int delay)
         tmp -= 100;
     }
 
-    ASSERT(tmp >= 0);
-    ASSERT(tmp < 100);
+    ASSERT_RANGE(tmp, 0, 100);
     you.magic_points_regeneration = tmp;
 }
 

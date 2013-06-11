@@ -460,20 +460,20 @@ void StashMenu::draw_title()
     if (title)
     {
         cgotoxy(1, 1);
-        textcolor(title->colour);
-        cprintf("%s", title->text.c_str());
+        formatted_string fs = formatted_string(title->colour);
+        fs.cprintf("%s", title->text.c_str());
         if (title->quantity)
         {
-            cprintf(", %d item%s", title->quantity,
-                                   title->quantity == 1? "" : "s");
+            fs.cprintf(", %d item%s", title->quantity,
+                                      title->quantity == 1? "" : "s");
         }
-        cprintf(")");
+        fs.cprintf(")");
 
         if (action_cycle == Menu::CYCLE_TOGGLE)
         {
-            cprintf("  [a-z: %s  ?/!: %s]",
-                    menu_action == ACT_EXAMINE ? "examine" : "shopping",
-                    menu_action == ACT_EXAMINE ? "shopping" : "examine");
+            fs.cprintf("  [a-z: %s  ?/!: %s]",
+                       menu_action == ACT_EXAMINE ? "examine" : "shopping",
+                       menu_action == ACT_EXAMINE ? "shopping" : "examine");
         }
 
         if (can_travel)
@@ -488,8 +488,13 @@ void StashMenu::draw_title()
                 flags |= MF_ALWAYS_SHOW_MORE;
             }
             else
-                cprintf("  [ENTER: travel]");
+                fs.cprintf("  [ENTER: travel]");
         }
+        fs.display();
+
+#ifdef USE_TILE_WEB
+        webtiles_set_title(fs);
+#endif
     }
 }
 
@@ -1865,11 +1870,16 @@ void StashSearchMenu::draw_title()
     if (title)
     {
         cgotoxy(1, 1);
-        textcolor(title->colour);
-        cprintf("%d %s%s, %s %s",
+        formatted_string fs = formatted_string(title->colour);
+        fs.cprintf("%d %s%s, %s %s",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1? "es" : "",
                 stack_style, sort_style);
+        fs.display();
+
+#ifdef USE_TILE_WEB
+        webtiles_set_title(fs);
+#endif
 
         draw_title_suffix(formatted_string::parse_string(make_stringf(
                  "<lightgrey> [<w>a-z</w>: %s"

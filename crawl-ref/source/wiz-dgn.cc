@@ -589,7 +589,10 @@ static void debug_load_map_by_name(string name, bool primary)
             prompt += matches[0];
             prompt += "', use that?";
             if (!yesno(prompt.c_str(), true, 'y'))
+            {
+                canned_msg(MSG_OK);
                 return;
+            }
 
             toplace = find_map_by_name(matches[0]);
         }

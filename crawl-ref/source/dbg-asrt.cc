@@ -800,7 +800,7 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
     _assert_msg = mesg;
 
     // Compose additional information that was passed
-    if (strlen(text))
+    if (text)
     {
         // Write the args into the format specified by text
         char detail[512];
@@ -813,7 +813,8 @@ NORETURN void AssertFailed(const char *expr, const char *file, int line,
         _assert_msg = final_mesg;
         _BreakStrToDebugger(final_mesg, true);
     }
-    else {
+    else
+    {
         _assert_msg = mesg;
         _BreakStrToDebugger(mesg, true);
     }

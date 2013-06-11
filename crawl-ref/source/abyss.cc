@@ -178,7 +178,7 @@ static int _abyssal_rune_roll()
     return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
 }
 
-static void _abyss_erase_stairs_from(const vault_placement *vp)
+static void _abyss_fixup_vault(const vault_placement *vp)
 {
     for (vault_place_iterator vi(*vp); vi; ++vi)
     {
@@ -190,6 +190,8 @@ static void _abyss_erase_stairs_from(const vault_placement *vp)
         {
             grd(p) = DNGN_FLOOR;
         }
+
+        tile_init_flavour(p);
     }
 }
 
@@ -201,7 +203,7 @@ static bool _abyss_place_map(const map_def *mdef)
 
     const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)
-        _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
+        _abyss_fixup_vault(env.level_vaults[env.level_vaults.size() - 1]);
 
     return did_place;
 }
@@ -1245,6 +1247,8 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         bool shoved = you.shove();
         ASSERT(shoved);
     }
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        ASSERT_RANGE(grd(*ri), DNGN_UNSEEN + 1, NUM_FEATURES);
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)

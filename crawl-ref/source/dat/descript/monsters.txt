@@ -1496,12 +1496,6 @@ A member of a short, sturdy mountain-dwelling folk. More robust than their deep
 dwarf cousins, yet less skilled in magical lore, dwarves excel in armed hand to
 hand combat.
 %%%%
-dwarf mountain bat
-
-A species of bat that lives in mountain caves. How it got into the dungeon is a
-mystery — probably something related to the sudden demise of dwarves in those
-lands. But don't worry, an eradication team is on the way.
-%%%%
 earth elemental
 
 A spirit drawn from the elemental plane of earth, which exists in this world by
@@ -1717,11 +1711,6 @@ freed slave
 A human who has just been released from magical enslavement. It tries to stand
 proudly before you, despite its lingering fear and unkempt appearance.
 %%%%
-forest drake
-
-A small but powerful dragon, quite comfortable weaving through the trees that
-comprise its home. It can exhale powerful blasts of wind.
-%%%%
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely the
@@ -1733,14 +1722,6 @@ frost giant
 A giant with blue skin and hair like ice and snow. Its eyes are as bleak as
 winter skies. It marches grimly into battle with a great, frosty axe and
 howling blasts of cold.
-%%%%
-fruity bat
-
-An ugly, silly bat. It sparkles.
-%%%%
-fruity bat:quote
-
-<bat:quote>
 %%%%
 fulminant prism
 
@@ -2554,11 +2535,6 @@ floating island, spurting water from his dreadful nostrils and making ring
 waves around him, which can reach many miles. Could one doubt that this is the
 Leviathan of Job?”
     -Jacob Wallenberg, “Min son på galejan”, 1781.
-%%%%
-laboratory rat
-
-A rat that has been subjected to a wizard's terrible experiments. Who knows
-what it is capable of?
 %%%%
 large abomination
 
@@ -4395,6 +4371,12 @@ wight:quote
 “Unhappie wight, borne to desastrous end,
  That doth his life in so long tendance spend!”
     -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
+%%%%
+wind drake
+
+A small but powerful dragon, particularly adept amongst its kin at
+manipulating the currents of air that surround it. It can exhale powerful
+blasts of wind.
 %%%%
 wizard
 

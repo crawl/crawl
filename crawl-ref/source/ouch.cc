@@ -1146,17 +1146,12 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 
     if (dam != INSTANT_DEATH)
-        if (you.species == SP_GARGOYLE && (you.petrified() || you.petrifying()))
-        {
-            you.gargoyle_damage_reduction =
-                max(you.gargoyle_damage_reduction, (dam + 1) / 2);
-            dam /= 2;
-        }
-        else if (you.petrified())
+    {
+        if (you.petrified())
             dam /= 2;
         else if (you.petrifying())
             dam = dam * 10 / 15;
-
+    }
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
@@ -1175,7 +1170,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
     {
-        if (you.spirit_shield() && death_type != KILLED_BY_POISON)
+        if (you.spirit_shield() && death_type != KILLED_BY_POISON
+            && !(aux && strstr(aux, "flay_damage")))
         {
             // round off fairly (important for taking 1 damage at a time)
             int mp = div_rand_round(dam * you.magic_points,
@@ -1315,6 +1311,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             if (crawl_state.test || !yesno("Die?", false, 'n'))
             {
+                mpr("Thought so.");
                 take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();

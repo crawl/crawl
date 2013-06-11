@@ -884,6 +884,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                 // Don't stop explore.
                 return;
             }
+            canned_msg(MSG_OK);
         }
         explore_stopped_pos = you.pos();
         stop_delay();
@@ -2921,6 +2922,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
                         level_target,
                         dest_stair->destination.id))
                 {
+                    canned_msg(MSG_OK);
                     return false;
                 }
             }
@@ -3620,8 +3622,7 @@ void LevelInfo::load(reader& inf, int minorVersion)
     unmarshallExcludes(inf, minorVersion, excludes);
 
     int n_count = unmarshallByte(inf);
-    ASSERT(n_count >= 0);
-    ASSERT(n_count <= NUM_DA_COUNTERS);
+    ASSERT_RANGE(n_count, 0, NUM_DA_COUNTERS + 1);
     for (int i = 0; i < n_count; i++)
         da_counters[i] = unmarshallShort(inf);
 }
@@ -3981,8 +3982,7 @@ void runrest::initialise(int dir, int mode)
     }
     else
     {
-        ASSERT(dir >= 0);
-        ASSERT(dir <= 7);
+        ASSERT_RANGE(dir, 0, 8);
 
         pos = Compass[dir];
         runmode = mode;

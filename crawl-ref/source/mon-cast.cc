@@ -1431,6 +1431,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         break;
 
+    case SPELL_TROGS_HAND:
+        if (mon->has_ench(ENCH_RAISED_MR) || mon->has_ench(ENCH_REGENERATION))
+            ret = true;
+        break;
+
     case SPELL_STONESKIN:
         if (mon->has_ench(ENCH_STONESKIN))
             ret = true;
@@ -2897,8 +2902,6 @@ static int _mons_cause_fear(monster* mons, bool actual)
             simple_monster_message(mons, " radiates an aura of fear!");
         else
             mpr("An aura of fear fills the air!");
-
-        flash_view_delay(DARKGREY, 300);
     }
 
     int retval = -1;
@@ -2983,6 +2986,9 @@ static int _mons_cause_fear(monster* mons, bool actual)
             }
         }
     }
+
+    if (actual && retval == 1)
+        flash_view_delay(DARKGREY, 300);
 
     return retval;
 }

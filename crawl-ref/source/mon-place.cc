@@ -1672,13 +1672,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->set_ghost(ghost);
         mon->uglything_init();
     }
+#if TAG_MAJOR_VERSION == 34
     else if (mon->type == MONS_LABORATORY_RAT)
-    {
-        ghost_demon ghost;
-        ghost.init_labrat(mg.colour);
-        mon->set_ghost(ghost);
-        mon->ghost_demon_init();
-    }
+        mon->type = MONS_RAT;
+#endif
     else if (mon->type == MONS_DANCING_WEAPON)
     {
         ghost_demon ghost;
@@ -2097,8 +2094,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
     case MONS_JIANGSHI:
-        band = BAND_JIANGSHI;
-        band_size = random2(3);
+        if (coinflip())
+        {
+            band = BAND_JIANGSHI;
+            band_size = random2(2) + 1;
+        }
         break;
     case MONS_GNOLL:
         if (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)
@@ -2534,7 +2534,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         if (coinflip())
             break;
         band = BAND_TENGU;
-        band_size = 3 + random2(4);
+        band_size = 2 + random2(3);
         break;
 
     case MONS_SOJOBO:
@@ -2557,6 +2557,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         natural_leader = true;
         band = BAND_SPRIGGAN_ELITES;
         band_size = 3 + random2(4);
+        break;
+
+    case MONS_THE_ENCHANTRESS:
+        natural_leader = true;
+        band = BAND_ENCHANTRESS;
+        band_size = 6 + random2avg(5, 2);
         break;
 
     default: ;
@@ -2933,15 +2939,28 @@ static monster_type _band_member(band_type band, int which)
                                           24, MONS_TENGU,
                                            0);
 
+    case BAND_ENCHANTRESS:
+        if (which <= 3)
+            return MONS_SPRIGGAN_DEFENDER;
+        if (coinflip())
+        {
+            return random_choose(MONS_SPRIGGAN_AIR_MAGE,
+                                 MONS_SPRIGGAN_BERSERKER,
+                                 MONS_SPRIGGAN_RIDER,
+                                 -1);
+        }
+        return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
-        if (which <= 2 || one_chance_in(5))
+    case BAND_SPRIGGANS:
+        if ((band == BAND_SPRIGGAN_ELITES && which <= 2)
+            || one_chance_in(5))
+        {
             return random_choose(MONS_SPRIGGAN_AIR_MAGE,
                                  MONS_SPRIGGAN_BERSERKER,
                                  MONS_SPRIGGAN_DRUID,
                                  MONS_SPRIGGAN_RIDER,
                                  -1);
-        // deliberate fall-through
-    case BAND_SPRIGGANS:
+        }
         return MONS_SPRIGGAN;
 
     default:
@@ -3523,6 +3542,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
         mon = random_choose_weighted(
             5, MONS_SWAMP_DRAKE,
             5, MONS_KOMODO_DRAGON,
+            5, MONS_WIND_DRAKE,
             6, MONS_FIRE_DRAKE,
             6, MONS_DEATH_DRAKE,
             3, MONS_DRAGON,

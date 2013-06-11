@@ -68,17 +68,6 @@ grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
 porcupine CORPSE_PORCUPINE
-%sdir mon/rat
-labrat_plain CORPSE_LABORATORY_RAT
-labrat_airborne
-labrat_armoured
-labrat_beastly
-labrat_fiery
-labrat_gaseous
-labrat_leeching
-labrat_mutated
-labrat_shifting
-labrat_venomous
 %sdir mon/animals
 
 ## Spiders and insects ('s')
@@ -251,7 +240,7 @@ swamp_drake CORPSE_SWAMP_DRAKE
 fire_drake CORPSE_FIRE_DRAKE
 lindwurm CORPSE_LINDWURM
 death_drake CORPSE_DEATH_DRAKE
-forest_drake CORPSE_FOREST_DRAKE
+wind_drake CORPSE_WIND_DRAKE
 
 ## Dragons ('D')
 wyvern CORPSE_WYVERN

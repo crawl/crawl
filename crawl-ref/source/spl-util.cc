@@ -318,8 +318,7 @@ bool add_spell_to_memory(spell_type spell)
 
 bool del_spell_from_memory_by_slot(int slot)
 {
-    ASSERT(slot >= 0);
-    ASSERT(slot < MAX_KNOWN_SPELLS);
+    ASSERT_RANGE(slot, 0, MAX_KNOWN_SPELLS);
     int j;
 
     if (you.last_cast_spell == you.spells[slot])
@@ -894,8 +893,7 @@ skill_type spell_type2skill(unsigned int spelltype)
 //jmf: Simplified; moved init code to top function, init_spell_descs().
 static const spell_desc *_seekspell(spell_type spell)
 {
-    ASSERT(spell >= 0);
-    ASSERT(spell < NUM_SPELLS);
+    ASSERT_RANGE(spell, 0, NUM_SPELLS);
     const int index = spell_list[spell];
     ASSERT(index != -1);
 
@@ -1072,7 +1070,7 @@ static bool _spell_is_empowered(spell_type spell)
     case SPELL_STONESKIN:
         if (you.duration[DUR_TRANSFORMATION] > 0
             && you.form == TRAN_STATUE
-            && you.duration[DUR_STONESKIN] < 1)
+            && !player_stoneskin())
         {
             return true;
         }

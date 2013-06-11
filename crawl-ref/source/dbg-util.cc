@@ -34,7 +34,7 @@ monster_type debug_prompt_for_monster(void)
         if (specs[0] == '\0')
             return MONS_NO_MONSTER;
 
-        return get_monster_by_name(specs);
+        return get_monster_by_name(specs, true);
     }
     return MONS_NO_MONSTER;
 }
@@ -462,7 +462,8 @@ void wizard_toggle_dprf()
         if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')
         {
-            return mpr("M'kay.");
+            canned_msg(MSG_OK);
+            return;
         }
 
         if (keyin < '0' || keyin >= '0' + NUM_DIAGNOSTICS)

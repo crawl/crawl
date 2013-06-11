@@ -18,6 +18,7 @@
 
 #include "artefact.h"
 #include "describe.h"
+#include "evoke.h"
 #include "externs.h"
 #include "godabil.h"
 #include "libutil.h"
@@ -548,8 +549,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
     if (lev > 27 && you.wizard)
         lev = 27;
 
-    ASSERT(lev >= 0);
-    ASSERT(lev <= 27);
+    ASSERT_RANGE(lev, 0, 27 + 1);
 
     return exp[lev] * species_apt_factor(sk, sp);
 }
@@ -866,6 +866,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 
 void skill_state::save()
 {
+    can_train          = you.can_train;
     skills             = you.skills;
     train              = you.train;
     training           = you.training;
@@ -876,8 +877,7 @@ void skill_state::save()
     auto_training      = you.auto_training;
     exp_available      = you.exp_available;
     total_experience   = you.total_experience;
-    if (!is_invalid_skill(you.manual_skill))
-        manual_charges  = you.inv[you.manual_index].plus2;
+    get_all_manual_charges(manual_charges);
     for (int i = 0; i < NUM_SKILLS; i++)
     {
         real_skills[i] = you.skill((skill_type)i, 10, true);
@@ -894,8 +894,7 @@ void skill_state::restore_levels()
     you.skill_order                 = skill_order;
     you.exp_available               = exp_available;
     you.total_experience            = total_experience;
-    if (!is_invalid_skill(you.manual_skill))
-        you.inv[you.manual_index].plus2 = manual_charges;
+    set_all_manual_charges(manual_charges);
 }
 
 void skill_state::restore_training()
@@ -904,6 +903,7 @@ void skill_state::restore_training()
         if (you.skills[i] < 27)
             you.train[i] = train[i];
 
+    you.can_train                   = can_train;
     you.auto_training               = auto_training;
     reset_training();
 }

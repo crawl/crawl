@@ -483,10 +483,8 @@ NAME:   goddamned_bats
 DEPTH:  D:3-5
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc tile:mons_megabat
+KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc hd:2 tile:mons_megabat
 KMONS:  2 = bat name:microbat n_rpl n_des n_spe n_noc col:magenta tile:mons_microbat
-# Can we spell them this way?  Please?
-KMONS:  3 = bat name:fruity n_adj n_des n_spe n_noc col:lightmagenta tile:mons_fruity_bat
 KMONS:  4 = bat name:giga n_adj n_des n_spe n_noc hd:4 col:brown tile:mons_gigabat
 # Way harder than the rest here.
 KMONS:  5 = vampire bat
@@ -501,9 +499,7 @@ KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_des n_spe n_zom
 KMONS:  9 = fire bat hd:1
 KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
 # Correction, this one, added because of a tile, is not real as well.
-KMONS:  A = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
-# Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
-KMONS:  B = bat name:dwarf_mountain n_adj n_des n_spe n_noc
+KMONS:  3 = bat name:phase n_adj n_des n_spe col:lightgreen spells:blink tile:mons_phase_bat
 MAP
        xxxxx
       xxxxxxx
@@ -515,14 +511,14 @@ MAP
   xxx....xxxx
   xx88.xx.xxxx
   xxxxxxxx.xxxx
- xxxxxxxxx.AAxx
+ xxxxxxxxx.33xx
 xxx.4xxxx..x..xx
 xxx12.xxx.xx...xx
 xxxx.xxx.xxxx6..x
-xxxxxBxx.xxxx66.x
-xx33.x...xxxxx.xxx
+xxxxx.xx.xxxx66.x
+xx11.x...xxxxx.xxx
 xxxxxxx...xxxxx.xx
- xxxx21xx.xxxxx5xx
+ xxxx22xx.xxxxx5xx
   xxxxxxx.xxxxxxx
     xxxx@xx
 ENDMAP
@@ -5205,25 +5201,6 @@ cc+ccccccc
 c***c3232c
 c|**+2223c
 c||*c3322c
-cccccccccc
-ENDMAP
-
-# This wizard likes to experiment!
-NAME:    laboratory_2
-TAGS:    uniq_laboratory_2
-MONS:    wizard
-DEPTH:   D:10-26
-MONS:    laboratory rat
-MAP
-ccccccc+cc
-c........c
-c........c
-c..1.....c
-c........c
-cc+ccccccc
-c***c2222c
-c|**+2222c
-c||*c2222c
 cccccccccc
 ENDMAP
 

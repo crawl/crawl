@@ -2231,16 +2231,16 @@ ENDMAP
 
 ###################################
 
-# Sadly, this vault works well only in text. If we could get changing tiles,
-# it would be great, but for now, these are static.
-#
 NAME:   pan_disco_hall
 TAGS:   pan no_rotate
 ORIENT: float
-SUBST:  - = 0:1 / .:10
 COLOUR: D = random
-COLOUR: .x = disco
-COLOUR: 0123456789 = disco
+COLOUR: .x-0123456789 = disco
+# WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases for coloured variants of the
+# tiles thereof.
+RTILE:  x = wall_zot_blue
+FTILE:  D.-0123456789 = floor_pebble
+SUBST:  - = 0:1 / .:10
 KFEAT:  D = granite_statue
 : set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
@@ -2250,11 +2250,6 @@ MONS:   col:random name:demonic name_adjective plant tile:mons_demonic_plant
 MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
 MONS:   red devil ; demon blade good_item ego:distortion
-RTILE:  x = wall_zot_blue / wall_zot_green / wall_zot_cyan / wall_zot_red /\
-            wall_zot_magenta / wall_zot_yellow
-# alas, floor tiles are not distinguished from walls enough, commenting out:
-# FTILE: . = floor_moss / floor_dirt / floor_orc / floor_rough_red /\
-#            floor_snake / floor_swamp
 KFEAT:  _ = floor
 FTILE:  _ = floor_hall
 MAP

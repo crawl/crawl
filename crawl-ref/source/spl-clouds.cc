@@ -300,7 +300,10 @@ spret_type cast_corpse_rot(bool fail)
             if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
             {
                 if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
                     return SPRET_ABORT;
+                }
                 break;
             }
         }

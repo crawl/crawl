@@ -132,6 +132,7 @@ spret_type cast_tornado(int powc, bool fail)
         && !yesno("There are friendlies around, are you sure you want to hurt them?",
                   true, 'n'))
     {
+        canned_msg(MSG_OK);
         return SPRET_ABORT;
     }
 

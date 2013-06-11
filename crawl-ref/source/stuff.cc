@@ -761,8 +761,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
 
 char index_to_letter(int the_index)
 {
-    ASSERT(the_index >= 0);
-    ASSERT(the_index < ENDOFPACK);
+    ASSERT_RANGE(the_index, 0, ENDOFPACK);
     return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
 }
 

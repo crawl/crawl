@@ -56,8 +56,7 @@ void calc_hp_artefact()
 // Fill an empty equipment slot.
 void equip_item(equipment_type slot, int item_slot, bool msg)
 {
-    ASSERT(slot > EQ_NONE);
-    ASSERT(slot < NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
     ASSERT(you.equip[slot] == -1);
     ASSERT(!you.melded[slot]);
 
@@ -75,8 +74,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 // Clear an equipment slot (possibly melded).
 bool unequip_item(equipment_type slot, bool msg)
 {
-    ASSERT(slot > EQ_NONE);
-    ASSERT(slot < NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
     const int item_slot = you.equip[slot];
@@ -101,8 +99,7 @@ bool unequip_item(equipment_type slot, bool msg)
 // Meld a slot (if equipped).
 bool meld_slot(equipment_type slot, bool msg)
 {
-    ASSERT(slot > EQ_NONE);
-    ASSERT(slot < NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
     if (you.equip[slot] != -1 && !you.melded[slot])
@@ -116,8 +113,7 @@ bool meld_slot(equipment_type slot, bool msg)
 
 bool unmeld_slot(equipment_type slot, bool msg)
 {
-    ASSERT(slot > EQ_NONE);
-    ASSERT(slot < NUM_EQUIP);
+    ASSERT_RANGE(slot, EQ_NONE + 1, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
 
     if (you.equip[slot] != -1 && you.melded[slot])

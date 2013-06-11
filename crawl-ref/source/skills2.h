@@ -14,6 +14,7 @@ const int MAX_SKILL_ORDER = 100;
 
 struct skill_state
 {
+    FixedBitVector<NUM_SKILLS>            can_train;
     FixedVector<uint8_t, NUM_SKILLS>      skills;
     FixedVector<int, NUM_SKILLS>          real_skills;    // Those two are
     FixedVector<int, NUM_SKILLS>          changed_skills; // scaled by 10.
@@ -26,7 +27,7 @@ struct skill_state
     unsigned int total_experience;
     bool auto_training;
     int exp_available;
-    int manual_charges;
+    vector<int> manual_charges;
 
     void save();
     void restore_levels();

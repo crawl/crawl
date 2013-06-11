@@ -9,6 +9,7 @@
 
 #include "mon-util.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
 #include "colour.h"
@@ -226,11 +227,11 @@ void init_mon_name_cache()
     }
 }
 
-monster_type get_monster_by_name(string name, bool exact)
+monster_type get_monster_by_name(string name, bool substring)
 {
     lowercase(name);
 
-    if (exact)
+    if (!substring)
     {
         mon_name_map::iterator i = Mon_Name_Cache.find(name);
 
@@ -239,6 +240,8 @@ monster_type get_monster_by_name(string name, bool exact)
 
         return MONS_PROGRAM_BUG;
     }
+
+    int best = 0x7fffffff;
 
     monster_type mon = MONS_PROGRAM_BUG;
     for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
@@ -252,10 +255,13 @@ monster_type get_monster_by_name(string name, bool exact)
         if (match == string::npos)
             continue;
 
-        mon = monster_type(mtype);
+        int qual = 0x7ffffffe;
         // We prefer prefixes over partial matches.
         if (match == 0)
-            break;
+            qual = candidate.length();;
+
+        if (qual < best)
+            best = qual, mon = monster_type(mtype);
     }
     return mon;
 }
@@ -346,8 +352,7 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
 {
     if (res > MR_LAST_MULTI)
     {
-        ASSERT(lev >= 0);
-        ASSERT(lev <= 1);
+        ASSERT_RANGE(lev, 0, 2);
         if (lev)
             all |= res;
         else
@@ -355,8 +360,7 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
         return;
     }
 
-    ASSERT(lev >= -3);
-    ASSERT(lev <= 4);
+    ASSERT_RANGE(lev, -3, 5);
     all = all & ~(res * 7) | res * (lev & 7);
 }
 
@@ -752,6 +756,13 @@ bool mons_allows_beogh(const monster* mon)
            && mon->is_priest() && mon->god == GOD_BEOGH;
 }
 
+bool mons_allows_beogh_now(const monster* mon)
+{
+    // Do the expensive LOS check last.
+    return mon && mons_allows_beogh(mon) && !silenced(mon->pos())
+               && you.visible_to(mon) && you.can_see(mon);
+}
+
 bool mons_behaviour_perceptible(const monster* mon)
 {
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
@@ -808,7 +819,11 @@ bool mons_is_native_in_branch(const monster* mons,
         return (mons_genus(mons->type) == MONS_SPIDER);
 
     case BRANCH_FOREST:
-        return (mons_genus(mons->type) == MONS_SPRIGGAN);
+        return (mons_genus(mons->type) == MONS_SPRIGGAN
+                || mons_genus(mons->type) == MONS_TENGU
+                || mons_genus(mons->type) == MONS_FAUN
+                || mons_genus(mons->type) == MONS_SATYR
+                || mons_genus(mons->type) == MONS_DRYAD);
 
     case BRANCH_HALL_OF_BLADES:
         return (mons->type == MONS_DANCING_WEAPON);
@@ -1303,13 +1318,12 @@ shout_type mons_shouts(monster_type mc, bool demon_shout)
 
 bool mons_is_ghost_demon(monster_type mc)
 {
-    return (mc == MONS_UGLY_THING
+    return mc == MONS_UGLY_THING
             || mc == MONS_VERY_UGLY_THING
             || mc == MONS_PLAYER_GHOST
             || mc == MONS_PLAYER_ILLUSION
             || mc == MONS_DANCING_WEAPON
-            || mc == MONS_PANDEMONIUM_LORD
-            || mc == MONS_LABORATORY_RAT);
+            || mc == MONS_PANDEMONIUM_LORD;
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -1763,7 +1777,7 @@ int mons_class_res_wind(monster_type mc)
     // Lightning goes well with storms.
     if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
         || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY
-        || mc == MONS_FOREST_DRAKE)
+        || mc == MONS_WIND_DRAKE)
     {
         return 1;
     }
@@ -2411,14 +2425,6 @@ void define_monster(monster* mons)
         break;
     }
 
-    case MONS_LABORATORY_RAT:
-    {
-        ghost_demon ghost;
-        ghost.init_labrat();
-        mons->set_ghost(ghost);
-        mons->ghost_demon_init();
-    }
-
     // Load with dummy values so certain monster properties can be queried
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
@@ -2929,6 +2935,10 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
     // to good_neutral when you kill Pikel.
     if (mon->attitude >= att)
         return;
+
+    // Must be done before attitude change, so that proper targets are affected
+    if (mon->type == MONS_FLAYED_GHOST)
+        end_flayed_effect(mon);
 
     // Make the monster permanently neutral.
     mon->attitude = att;
@@ -4159,6 +4169,8 @@ mon_body_shape get_mon_shape(const monster_type mc)
         else
             return MON_SHAPE_BAT;
     case 'c': // centaurs
+        if (mc == MONS_FAUN || mc == MONS_SATYR || mc == MONS_PAN)
+            return MON_SHAPE_HUMANOID_TAILED;
         return MON_SHAPE_CENTAUR;
     case 'd': // draconions and drakes
         if (mons_genus(mc) == MONS_DRACONIAN)
@@ -4349,6 +4361,10 @@ mon_body_shape get_mon_shape(const monster_type mc)
             return MON_SHAPE_HUMANOID;
     }
 
+    case '7': // trees and tree-like creatures
+        if (mc == MONS_DRYAD)
+            return MON_SHAPE_HUMANOID;
+        return MON_SHAPE_MISC;
     case '9': // gargoyles
         return MON_SHAPE_HUMANOID_WINGED_TAILED;
     case '*': // orbs
@@ -4360,8 +4376,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
 
 string get_mon_shape_str(const mon_body_shape shape)
 {
-    ASSERT(shape >= MON_SHAPE_HUMANOID);
-    ASSERT(shape <= MON_SHAPE_MISC);
+    ASSERT_RANGE(shape, MON_SHAPE_HUMANOID, MON_SHAPE_MISC + 1);
 
     static const char *shape_names[] =
     {

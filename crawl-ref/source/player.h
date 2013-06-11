@@ -110,7 +110,6 @@ public:
   durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
-  int gargoyle_damage_reduction;
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
@@ -154,9 +153,6 @@ public:
   vector<skill_type> sage_skills; // skills with active Sage
   vector<int> sage_xp;            // how much more XP to redirect
   vector<int> sage_bonus;         // how much bonus XP to give in these skills
-
-  skill_type manual_skill;
-  int manual_index;
 
   int  skill_cost_level;
   int  exp_available;
@@ -837,6 +833,8 @@ int player_hunger_rate(bool temp = true);
 int calc_hunger(int food_cost);
 
 int player_icemail_armour_class();
+
+bool player_stoneskin();
 
 int player_mag_abil(bool is_weighted);
 

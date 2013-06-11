@@ -1730,6 +1730,7 @@ NAME: wad_floor_pattern_trapped
 TAGS: transparent mini_float extra decor
 WEIGHT: 4
 KFEAT:  ~ = known blade trap
+KPROP:  ~ = no_tele_into
 FTILE:  GT = floor_pebble_darkgray
 FTILE:  ;" = floor_pebble_brown
 COLOUR: "~ = brown
@@ -3053,8 +3054,7 @@ NAME:  kilobyte_tornado_obelisk
 TAGS:  no_monster_gen
 DEPTH: D:15-27, Elf
 ITEM:  acquire any
-MONS:  statue generate_awake n_rpl n_des name:diamond_obelisk hp:10000 \
-       col:white tile:mons_diamond_obelisk perm_ench:tornado
+MONS:  diamond obelisk
 KPROP: .d1 = no_tele_into
 MAP
       ccc

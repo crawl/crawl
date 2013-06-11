@@ -1,11 +1,10 @@
 ﻿The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Samuel Bronson,
-Jude Brown, James Bulgin, Robert Burnham, Chris Campbell, Matthew Cline, Paul
-Du Bois, Florian Diebold, Michael Gagno, Brendan Hickey, Pete Hurst, Eino
-Keskitalo, Vsevolod Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza,
+Jude Brown, James Bulgin, Robert Burnham, Chris Campbell, Matthew Cline,
+Florian Diebold, Michael Gagno, Brendan Hickey, Pete Hurst, Eino Keskitalo,
+Vsevolod Kozlov, Janne Lahdenperä, Pekka Lampila, Raphaël Langella, Nat Lanza,
 Jesse Luehrs, Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan,
-Haran Pilpel, Aaron Pixton, David Ploog, Johanna Ploog, Stefan O'Rear,
-Charles Otto, David Lawrence Ramsey, Robert Vollmert, Enne Walker, Chris
-West, Samuel Wilson) would like to thank:
+Stefan O'Rear, Charles Otto, Aaron Pixton, David Ploog, Chris West, Samuel
+Wilson) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -18,6 +17,9 @@ West, Samuel Wilson) would like to thank:
 
 * Darshan Shaligram and Erik Piper, for starting the Stone Soup project, and
   rekindling interest in Crawl development.
+
+* Other retired members of the development team: Paul Du Bois, Haran Pilpel,
+  Johanna Ploog, David Lawrence Ramsey, Robert Vollmert, and Enne Walker.
 
 * Marc H. Thoben, for setting up and maintaining our current Mantis tracker,
   Wiki, development blog and Windows trunk builds, as well as providing public
@@ -101,7 +103,6 @@ Vambola Kotkas
 Ryan Kusnery
 Jukka Kuusisto
 Lantier
-Pekka Lampila
 Maciej Lapinski
 Jordan Lewis
 Sami Liedes

@@ -191,7 +191,7 @@ void wizard_create_spec_monster_name()
         string newerr;
         // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
-        monster_type partial = get_monster_by_name(specs);
+        monster_type partial = get_monster_by_name(specs, true);
         if (strlen(specs) >= 3 && partial != MONS_NO_MONSTER)
         {
             mlist.clear();
