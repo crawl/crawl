@@ -2431,6 +2431,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
     if (mons->inaccuracy())
         beam.hit -= 5;
 
+    if (mons->has_ench(ENCH_WIND_AIDED))
+        beam.hit = beam.hit * 125 / 100;
+
     if (speed_brand)
         beam.damage.size = div_rand_round(beam.damage.size * 9, 10);
 
