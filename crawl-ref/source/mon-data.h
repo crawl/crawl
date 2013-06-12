@@ -4236,7 +4236,7 @@ static monsterentry mondata[] = {
 {
     MONS_SPECTRAL_WEAPON, '(', GREEN, "spectral weapon",
     M_GLOWS_LIGHT | M_INSUBSTANTIAL | M_NO_REGEN,
-    MR_RES_POISON | mrd(MR_RES_FIRE,2) | mrd(MR_RES_COLD,2) |  MR_RES_ELEC,
+    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD |  MR_RES_ELEC,
     0, 11, MONS_WRAITH, MONS_SPECTRAL_WEAPON, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 3, 0, 0},
