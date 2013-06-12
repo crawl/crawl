@@ -272,11 +272,13 @@ void handle_behaviour(monster* mon)
         {
             monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
 
-            // Only try to move towards the monster if the player is still next to it and the spectral weapon is not adjacent to the monster or can otherwise reach it
-            // XXX: quite messy, needs to be simplified
+            // Only try to move towards the target if the player can still reach
+            // but the spectral weapon cannot.
             if (target_monster && target_monster->alive()
-                && (adjacent(target_monster->pos(), you.pos()) || weapon_reach(*you.weapon()) == REACH_TWO && (grid_distance(mon->pos(), you.pos())) <=2)
-                && !(adjacent(target_monster->pos(), mon->pos()) || mon->reach_range() == REACH_TWO && (grid_distance(mon->pos(), target_monster->pos()) <=2)))
+                && (grid_distance(you.pos(),target_monster->pos())
+                    <= ((you.reach_range() == REACH_TWO) ? 2 : 1))
+                && !(grid_distance(mon->pos(),target_monster->pos())
+                     <= ((mon->reach_range() == REACH_TWO) ? 2 : 1)))
             {
                 mon->target = target_monster->pos();
                 mon->foe = target_monster->mindex();

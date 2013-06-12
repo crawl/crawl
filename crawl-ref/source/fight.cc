@@ -116,9 +116,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             spectral_weapon->props["target_mid"].get_int()  = defender->mid;
 
             // A spectral weapon can hit if it's adjacent to what the player is attacking or if it has reaching and is within two squares of the target
-            if (adjacent(spectral_weapon->pos(), defender->pos())
-                || spectral_weapon->reach_range()==REACH_TWO && grid_distance(spectral_weapon->pos(),defender->pos())<=2)
+            if (grid_distance(spectral_weapon->pos(),defender->pos())
+                <= ((spectral_weapon->reach_range() == REACH_TWO) ? 2 : 1))
+            {
                 melee_attack(spectral_weapon, defender).attack();
+            }
         }
 
         return true;
