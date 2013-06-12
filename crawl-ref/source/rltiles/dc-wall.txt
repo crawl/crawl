@@ -1149,6 +1149,33 @@ stone2_brown3
 %repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_YELLOW
 %resetcol
 
+%variation DNGN_STONE_WALL lightblue
+%hue 240 210
+%lum 240 5
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTBLUE
+%resetcol
+
+%variation DNGN_STONE_WALL lightgreen
+%hue 240 110
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTGREEN
+%resetcol
+
+%variation DNGN_STONE_WALL lightcyan
+%hue 240 180
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTCYAN
+%resetcol
+
+%variation DNGN_STONE_WALL lightred
+%hue 240 0
+%lum 240 5
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTRED
+%resetcol
+
+%variation DNGN_STONE_WALL lightmagenta
+%hue 240 290
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTMAGENTA
+%resetcol
+
 %variation DNGN_STONE_WALL white
 %lum 0 30
 %repeat DNGN_STONE_WALL DNGN_STONE_WALL_WHITE
