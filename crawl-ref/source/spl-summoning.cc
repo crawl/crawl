@@ -2879,23 +2879,28 @@ monster* find_spectral_weapon(const actor* agent)
         return NULL;
 }
 
-spret_type cast_spectral_weapon(int pow, bool fail)
+spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 {
+    ASSERT(agent);
+
     const int dur = min(2 + random2(1 + div_rand_round(pow, 25)), 4);
-    item_def* wpn = you.weapon();
+    item_def* wpn = agent->weapon();
 
     // If the wielded weapon should not be cloned, abort
     // Unlike tukima you are allowed to clone artefacts
     if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn))
     {
-        if (wpn)
+        if (agent->is_player())
         {
-            mprf("%s vibrate%s crazily for a second.",
-                    wpn->name(DESC_YOUR).c_str(),
-                    wpn->quantity > 1 ? "" : "s");
+            if (wpn)
+            {
+                mprf("%s vibrate%s crazily for a second.",
+                        wpn->name(DESC_YOUR).c_str(),
+                        wpn->quantity > 1 ? "" : "s");
+            }
+            else
+                mprf("Your %s twitch.", you.hand_name(true).c_str());
         }
-        else
-            mprf("Your %s twitch.", you.hand_name(true).c_str());
 
         return SPRET_ABORT;
     }
@@ -2905,19 +2910,22 @@ spret_type cast_spectral_weapon(int pow, bool fail)
     item_def cp = *wpn;
 
     // Remove any existing spectral weapons --- only one should be alive at any given time
-    monster *old_mons = find_spectral_weapon(&you);
+    monster *old_mons = find_spectral_weapon(agent);
     if (old_mons)
         end_spectral_weapon(old_mons, false);
 
     mgen_data mg(MONS_SPECTRAL_WEAPON,
-            BEH_FRIENDLY,
-            &you,
+            agent->is_player() ? BEH_FRIENDLY
+                               : SAME_ATTITUDE(agent->as_monster()),
+            agent,
             dur, SPELL_SPECTRAL_WEAPON,
-            you.pos(),
-            MHITYOU,
-            0, GOD_NO_GOD);
+            agent->pos(),
+            agent->mindex(),
+            0, god);
 
-    int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
+    int skill_with_weapon;
+    if (agent->is_player())
+        skill_with_weapon = agent->skill(weapon_skill(*wpn), 1, false);
 
     mg.props[TUKIMA_WEAPON] = cp;
     mg.props[TUKIMA_POWER] = pow;
@@ -2925,13 +2933,34 @@ spret_type cast_spectral_weapon(int pow, bool fail)
     monster *mons = create_monster(mg);
     if (!mons)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        //if (agent->is_player())
+            canned_msg(MSG_NOTHING_HAPPENS);
+
         return SPRET_SUCCESS;
     }
 
-    mpr("You draw out your weapon's spirit!");
+    if (agent->is_player())
+    {
+        mpr("You draw out your weapon's spirit!");
+    }
+    else
+    {
+                if (you.can_see(agent) && you.can_see(mons))
+                {
+                    string buf = " draws out ";
+                    buf += agent->pronoun(PRONOUN_POSSESSIVE);
+                    buf += " weapon's spirit!";
+                    simple_monster_message(agent->as_monster(), buf.c_str());
+                }
+                else if (you.can_see(mons))
+                    simple_monster_message(mons, " appears!");
 
-    you.props["spectral_weapon"].get_int() = mons->mid;
+                mons->props["band_leader"].get_int() = agent->mid;
+    }
+
+    mons->props["sw_mid"].get_int() = agent->mid;
+    agent->props["spectral_weapon"].get_int() = mons->mid;
+
     mons->hit_dice = skill_with_weapon;
     int hp = 10 + div_rand_round(pow,3);
     mons->hit_points = hp;
@@ -2948,18 +2977,23 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (!mons)
         return;
 
-    you.props.erase("spectral_weapon");
+    actor *owner = actor_by_mid(mons->props["sw_mid"].get_int());
 
-    if (!quiet)
+    if (owner)
     {
-        if (!you.can_see(mons))
+        owner->props.erase("spectral_weapon");
+
+        if (!quiet && owner->is_player())
         {
-            mpr("You feel your bond with your spectral weapon wane.");
-        }
-        else
-        {
-            simple_monster_message(mons, " fades away.",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            if (!you.can_see(mons))
+            {
+                mpr("You feel your bond with your spectral weapon wane.");
+            }
+            else
+            {
+                simple_monster_message(mons, " fades away.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            }
         }
     }
 
