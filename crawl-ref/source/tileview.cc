@@ -1205,6 +1205,12 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
+    else if (orig == TILE_DNGN_STONE_WALL)
+    {
+        *bg = _pick_random_dngn_tile(tile_dngn_coloured(orig,
+                                                        env.grid_colours(gc)),
+                                     flv.special);
+    }
     else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR
               || orig == TILE_DNGN_RUNED_DOOR
               || orig == TILE_DNGN_SEALED_DOOR)
