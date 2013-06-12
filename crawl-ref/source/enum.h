@@ -1608,6 +1608,7 @@ enum enchant_type
     ENCH_DIMENSION_ANCHOR,
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
     ENCH_CONTROL_WINDS,
+    ENCH_WIND_AIDED,     // Ranged accuracy enhanced by nearby Control Winds
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

@@ -1139,6 +1139,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SCREAMED:
     case ENCH_WEAK:
     case ENCH_AWAKEN_VINES:
+    case ENCH_WIND_AIDED:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1931,7 +1932,7 @@ static const char *enchant_names[] =
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
-    "awaken vines", "control_winds",
+    "awaken vines", "control_winds", "wind_aided",
     "buggy",
 };
 
