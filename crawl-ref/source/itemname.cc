@@ -1022,7 +1022,8 @@ static const char* _book_type_name(int booktype)
     case BOOK_UNLIFE:                 return "Unlife";
     case BOOK_CONTROL:                return "Control";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_MUTATIONS:              return "Morphology";
+    // enum replaced with BOOK_BATTLE
+    // case BOOK_MUTATIONS:              return "Morphology";
 #endif
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
