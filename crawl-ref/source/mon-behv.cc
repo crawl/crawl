@@ -16,6 +16,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "itemprop.h"
 #include "losglobal.h"
 #include "mon-act.h"
 #include "mon-death.h"
@@ -272,8 +273,9 @@ void handle_behaviour(monster* mon)
             monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
 
             // Only try to move towards the monster if the player is still next to it and the spectral weapon is not adjacent to the monster or can otherwise reach it
+            // XXX: quite messy, needs to be simplified
             if (target_monster && target_monster->alive()
-                && adjacent(target_monster->pos(), you.pos())
+                && (adjacent(target_monster->pos(), you.pos()) || weapon_reach(*you.weapon()) == REACH_TWO && (grid_distance(mon->pos(), you.pos())) <=2)
                 && !(adjacent(target_monster->pos(), mon->pos()) || mon->reach_range() == REACH_TWO && (grid_distance(mon->pos(), target_monster->pos()) <=2)))
             {
                 mon->target = target_monster->pos();
