@@ -173,6 +173,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_WEAK;
     case ENCH_DIMENSION_ANCHOR:
         return MB_DIMENSION_ANCHOR;
+    case ENCH_CONTROL_WINDS:
+        return MB_CONTROL_WINDS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1505,6 +1507,8 @@ vector<string> monster_info::attributes() const
         v.push_back("weak");
     if (is(MB_DIMENSION_ANCHOR))
         v.push_back("unable to translocate");
+    if (is(MB_CONTROL_WINDS))
+        v.push_back("controlling the winds");
     return v;
 }
 

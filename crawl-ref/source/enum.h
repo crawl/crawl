@@ -1607,6 +1607,7 @@ enum enchant_type
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
+    ENCH_CONTROL_WINDS,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3493,6 +3494,7 @@ enum spell_type
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
     SPELL_AWAKEN_VINES,
+    SPELL_CONTROL_WINDS,
     NUM_SPELLS
 };
 

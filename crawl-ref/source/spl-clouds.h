@@ -22,4 +22,6 @@ spret_type cast_corpse_rot(bool fail);
 void corpse_rot(actor* caster);
 
 int holy_flames(monster* caster, actor* defender);
+
+void apply_control_winds(const monster* mon);
 #endif

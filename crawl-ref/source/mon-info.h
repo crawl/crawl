@@ -94,6 +94,7 @@ enum monster_info_flags
     MB_RETCHING,
     MB_WEAK,
     MB_DIMENSION_ANCHOR,
+    MB_CONTROL_WINDS,
     NUM_MB_FLAGS
 };
 
