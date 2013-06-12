@@ -5111,7 +5111,7 @@ ENDMAP
 # The end of a dwarven mineshaft; perhaps they just found the axe again?
 NAME:   grunt_guarded_unrand_arga
 TAGS:   no_monster_gen no_item_gen patrolling
-DEPTH:  D:14-
+DEPTH:  D:17-
 WEIGHT: 3
 # KMONS is used here to get the fallback to work properly.
 KMONS:  W = Wiglaf ; war axe unrand:arga . \
