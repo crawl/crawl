@@ -22,6 +22,8 @@ bool mons_can_move_towards_target(const monster* mon);
 void handle_monsters(bool with_noise = false);
 void handle_monster_move(monster* mon);
 
+bool handle_monster_reaching(monster* mon);
+
 #define ENERGY_SUBMERGE(entry) (max(entry->energy_usage.swim / 2, 1))
 
 #endif
