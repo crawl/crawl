@@ -1138,6 +1138,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
     case SPELL_AWAKEN_VINES:
+    case SPELL_CONTROL_WINDS:
         return true;
     default:
         if (check_validity)
@@ -1652,6 +1653,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             return true;
     }
     break;
+
+    case SPELL_CONTROL_WINDS:
+        return (mon->has_ench(ENCH_CONTROL_WINDS));
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -4516,6 +4520,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_AWAKEN_VINES:
         _awaken_vines(mons);
+        return;
+
+    case SPELL_CONTROL_WINDS:
+        if (you.can_see(mons))
+            mprf("The winds start to flow at %s will.", mons->name(DESC_ITS).c_str());
+        mons->add_ench(mon_enchant(ENCH_CONTROL_WINDS, 1, mons, 200 + random2(150)));
         return;
     }
 

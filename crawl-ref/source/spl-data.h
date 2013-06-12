@@ -3099,6 +3099,19 @@ struct spell_desc
 },
 
 {
+    SPELL_CONTROL_WINDS, "Control Winds",
+     SPTYP_CHARMS | SPTYP_AIR,
+     SPFLAG_AREA | SPFLAG_MONSTER,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

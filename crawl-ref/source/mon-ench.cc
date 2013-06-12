@@ -28,6 +28,7 @@
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "religion.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -815,6 +816,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_AWAKEN_VINES:
         unawaken_vines(this, quiet);
         break;
+
+    case ENCH_CONTROL_WINDS:
+        if (!quiet && you.can_see(this))
+            mprf("The winds cease moving at %s will.", name(DESC_ITS).c_str());
 
     default:
         break;
@@ -1785,6 +1790,11 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_HAUNTING);
         break;
 
+    case ENCH_CONTROL_WINDS:
+        apply_control_winds(this);
+        decay_enchantment(me);
+        break;
+
     default:
         break;
     }
@@ -1921,7 +1931,7 @@ static const char *enchant_names[] =
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
-    "awaken vines",
+    "awaken vines", "control_winds",
     "buggy",
 };
 
