@@ -2925,9 +2925,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
             agent->mindex(),
             0, god);
 
-    int skill_with_weapon;
-    if (agent->is_player())
-        skill_with_weapon = agent->skill(weapon_skill(*wpn), 1, false);
+    int skill_with_weapon = agent->skill(weapon_skill(*wpn), 1, false);
 
     mg.props[TUKIMA_WEAPON] = cp;
     mg.props[TUKIMA_POWER] = pow;
