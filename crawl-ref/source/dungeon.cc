@@ -1809,7 +1809,7 @@ static bool _add_connecting_escape_hatches()
     // Veto D:1 or Pan if there are disconnected areas.
     if (player_in_branch(BRANCH_PANDEMONIUM)
         || (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1))
-        return (dgn_count_disconnected_zones(false) == 1);
+        return (dgn_count_disconnected_zones(false) <= 1);
 
     if (!player_in_connected_branch())
         return true;
