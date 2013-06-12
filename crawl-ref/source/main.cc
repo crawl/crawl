@@ -3112,7 +3112,7 @@ static void _player_reacts()
 
     if (you.attribute[ATTR_NOISES])
         noisy_equipment();
-    
+
     // Handle sound-dependant effects that are silenced
     if (silenced(you.pos()))
     {

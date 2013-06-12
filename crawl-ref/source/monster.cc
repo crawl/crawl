@@ -4183,10 +4183,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     {
         return 0;
     }
-    
+
     // XXX: tentative damage sharing with the spectral weapon monster
     // The damage shared should not be directly lethal to the player
-    // XXX: It might be possible that the damage might be lethal if the player is at low health and is vulnerable? 
+    // XXX: It might be possible that the damage might be lethal if the player is at low health and is vulnerable?
     // This makes a lot of messages, especially when the spectral weapon is hit by a monster with multiple attacks and is frozen, burned, etc.
     if (type == MONS_SPECTRAL_WEAPON && agent && agent->is_monster())
     {
