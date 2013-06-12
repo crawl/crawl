@@ -171,6 +171,7 @@ public:
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
+    virtual reach_type reach_range() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
