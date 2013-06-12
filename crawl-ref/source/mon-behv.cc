@@ -271,12 +271,13 @@ void handle_behaviour(monster* mon)
         if (mon->props.exists("target_mid"))
         {
             monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
+            actor *owner = actor_by_mid(mon->props["sw_mid"].get_int());
 
             // Only try to move towards the target if the player can still reach
             // but the spectral weapon cannot.
             if (target_monster && target_monster->alive()
-                && (grid_distance(you.pos(),target_monster->pos())
-                    <= ((you.reach_range() == REACH_TWO) ? 2 : 1))
+                && (grid_distance(owner->pos(),target_monster->pos())
+                    <= ((owner->reach_range() == REACH_TWO) ? 2 : 1))
                 && !(grid_distance(mon->pos(),target_monster->pos())
                      <= ((mon->reach_range() == REACH_TWO) ? 2 : 1)))
             {
