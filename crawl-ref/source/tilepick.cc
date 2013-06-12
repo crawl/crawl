@@ -2384,7 +2384,7 @@ static tentacle_type _get_tentacle_type(const int mtype)
             return TYPE_STARSPAWN;
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
-            return TYPE_STARSPAWN;
+            return TYPE_KRAKEN;
 
         default:
             ASSERT("Invalid tentacle type!");
@@ -2415,7 +2415,9 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     {
         if (no_head_connect)
         {
-            if (_mons_is_kraken_tentacle(mon.type))
+            if (_mons_is_kraken_tentacle(mon.type)
+                || mon.type == MONS_SNAPLASHER_VINE
+                || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
                 return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
             return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
         }
@@ -2762,16 +2764,18 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             tileidx_t tile = _tileidx_tentacle(mon);
             _handle_tentacle_overlay(mon.pos, tile, _get_tentacle_type(mon.type));
 
-            if (!_mons_is_kraken_tentacle(mon.type) && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
+            if ((!_mons_is_kraken_tentacle(mon.type)
+                 && mon.type != MONS_SNAPLASHER_VINE
+                 && mon.type != MONS_SNAPLASHER_VINE_SEGMENT)
+                && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
                 && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
             {
+
                 tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
 
                 if (mon.type == MONS_STARSPAWN_TENTACLE
-                    || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT
-                    || mon.type == MONS_SNAPLASHER_VINE
-                    || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
+                    || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT)
                 {
                     tile += TILEP_MONS_STARSPAWN_TENTACLE_N;
                     tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;
