@@ -191,18 +191,24 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_ABYSS:
-        flv.floor = TILE_FLOOR_NERVES;
+        flv.floor = tile_dngn_coloured(TILE_FLOOR_NERVES, env.floor_colour);
         switch (random2(6))
         {
         default:
-        case 0: flv.wall = TILE_WALL_ABYSS; break;
+        case 0:
+            flv.wall = tile_dngn_coloured(TILE_WALL_ABYSS, env.rock_colour);
+            break;
         case 1:
         case 2:
-        case 3: flv.wall = TILE_WALL_PEBBLE
-                + random2(15) * (TILE_WALL_PEBBLE_BLUE - TILE_WALL_PEBBLE_RED);
-                break;
-        case 4: flv.wall = TILE_WALL_HALL; break;
-        case 5: flv.wall = TILE_WALL_UNDEAD; break;
+        case 3:
+            flv.wall = tile_dngn_coloured(TILE_WALL_PEBBLE, env.rock_colour);
+            break;
+        case 4:
+            flv.wall = tile_dngn_coloured(TILE_WALL_HALL, env.rock_colour);
+            break;
+        case 5:
+            flv.wall = tile_dngn_coloured(TILE_WALL_UNDEAD, env.rock_colour);
+            break;
         }
         return;
 
