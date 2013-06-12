@@ -1498,10 +1498,10 @@
       {
        SPELL_AIRSTRIKE,
        SPELL_LIGHTNING_BOLT,
-       SPELL_SWIFTNESS,
+       SPELL_CONTROL_WINDS,
        SPELL_SHOCK,
        SPELL_NO_SPELL,
-       SPELL_HASTE
+       SPELL_NO_SPELL
       }
     },
 
