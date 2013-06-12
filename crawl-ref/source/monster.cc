@@ -4194,12 +4194,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (shared_damage>0)
         {
             actor *owner = actor_by_mid(props["sw_mid"].get_int());
-            if (owner->is_player())
+            if (owner->is_player() && agent->is_monster())
             {
                 mpr("Your spectral weapon shares its damage with you!");
                 you.hurt(agent, shared_damage, flavour, cleanup_dead);
             }
-            else
+            else if (owner && owner->alive())
             {
                 if (you.can_see(owner))
                 {

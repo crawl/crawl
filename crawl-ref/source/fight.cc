@@ -107,22 +107,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             *did_hit = attk.did_hit;
 
         // A spectral weapon attacks whenever the player does
-        if (you.props.exists("spectral_weapon"))
-        {
-            monster *spectral_weapon = find_spectral_weapon(&you);
-            // Don't try to attack with a nonexistant spectral weapon or if the defender is the spectral weapon itself
-            if (!spectral_weapon || defender == spectral_weapon || !spectral_weapon->alive())
-                return true;
-
-            spectral_weapon->props["target_mid"].get_int()  = defender->mid;
-
-            // A spectral weapon can hit if it's adjacent to what the player is attacking or if it has reaching and is within two squares of the target
-            if (grid_distance(spectral_weapon->pos(),defender->pos())
-                <= ((spectral_weapon->reach_range() == REACH_TWO) ? 2 : 1))
-            {
-                melee_attack(spectral_weapon, defender).attack();
-            }
-        }
+        if (!simu && you.props.exists("spectral_weapon"))
+            trigger_spectral_weapon(&you, defender);
 
         return true;
     }
@@ -199,6 +185,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         else if (did_hit && !(*did_hit))
             *did_hit = melee_attk.did_hit;
     }
+
+    // A spectral weapon attacks whenever the player does
+    if (!simu && attacker->props.exists("spectral_weapon"))
+        trigger_spectral_weapon(attacker, defender);
 
     return true;
 }

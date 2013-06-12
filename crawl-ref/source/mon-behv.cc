@@ -27,6 +27,7 @@
 #include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -265,13 +266,24 @@ void handle_behaviour(monster* mon)
     // The target and foe set here for a spectral weapon should never change
     if (mon->type == MONS_SPECTRAL_WEAPON)
     {
-        mon->target = you.pos();
+        // Do nothing if we're still being placed
+        if (!mon->props.exists("sw_mid"))
+            return;
+
+        actor *owner = actor_by_mid(mon->props["sw_mid"].get_int());
+
+        if (!owner || !owner->alive())
+        {
+            end_spectral_weapon(mon, false);
+            return;
+        }
+
+        mon->target = owner->pos();
         mon->foe = MHITNOT;
         // Try to move towards any monsters the player is attacking
         if (mon->props.exists("target_mid"))
         {
             monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
-            actor *owner = actor_by_mid(mon->props["sw_mid"].get_int());
 
             // Only try to move towards the target if the player can still reach
             // but the spectral weapon cannot.

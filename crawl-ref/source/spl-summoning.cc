@@ -27,6 +27,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "mapmark.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -2980,23 +2981,46 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     actor *owner = actor_by_mid(mons->props["sw_mid"].get_int());
 
     if (owner)
-    {
         owner->props.erase("spectral_weapon");
 
-        if (!quiet && owner->is_player())
+    if (!quiet)
+    {
+        if (you.can_see(mons))
         {
-            if (!you.can_see(mons))
-            {
-                mpr("You feel your bond with your spectral weapon wane.");
-            }
-            else
-            {
-                simple_monster_message(mons, " fades away.",
-                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-            }
+            simple_monster_message(mons, " fades away.",
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
         }
+        else if (owner && owner->is_player())
+            mpr("You feel your bond with your spectral weapon wane.");
     }
 
     if (!killed)
         monster_die(mons, KILL_RESET, NON_MONSTER);
 }
+
+bool trigger_spectral_weapon(actor* agent, actor* target)
+{
+        monster *spectral_weapon = find_spectral_weapon(agent);
+
+        // Don't try to attack with a nonexistant spectral weapon
+        if (!spectral_weapon || !spectral_weapon->alive())
+        {
+            agent->props.erase("spectral_weapon");
+            return false;
+        }
+
+        // Likewise if the target is the spectral weapon itself
+        if (target->as_monster() == spectral_weapon)
+            return false;
+
+        spectral_weapon->props["target_mid"].get_int()  = target->mid;
+
+        // A spectral weapon attacks if it can reach the target
+        if (grid_distance(spectral_weapon->pos(),target->pos())
+            <= ((spectral_weapon->reach_range() == REACH_TWO) ? 2 : 1))
+        {
+            melee_attack(spectral_weapon, target).attack();
+        }
+
+        return true;
+    }
