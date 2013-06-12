@@ -1820,7 +1820,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 
     if (feat == DNGN_ROCK_WALL)
     {
-        tileidx_t idx = tile_dngn_coloured(TILE_WALL_UNDEAD,
+        tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
                                            cenv.floor_colour);
         env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
