@@ -2652,6 +2652,14 @@ static string _status_mut_abilities(int sw)
         mutations.push_back(_dragon_abil("breathe steam"));
         break;
 
+    case SP_FORMICID:
+        mutations.push_back("permanent stasis");
+        mutations.push_back("dig shafts and tunnels");
+        mutations.push_back("four strong arms");
+        mutations.push_back("poison weakness");
+        mutations.push_back("retractable antennae");
+        break;
+
     default:
         break;
     }                           //end switch - innate abilities
@@ -2819,6 +2827,9 @@ static string _status_mut_abilities(int sw)
             case MUT_GELATINOUS_BODY:
                 AC_change += (level == 3) ? 2 : 1;
                 EV_change += level - 1;
+                break;
+            case MUT_CHITIN_SKIN:
+                AC_change += level * 3;
                 break;
             default:
                 die("mutation without a short desc: %d", i);

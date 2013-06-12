@@ -731,7 +731,8 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_HELMET:
         // No caps or hats with Horns 3 or Antennae 3.
         if (player_mutation_level(MUT_HORNS, false) == 3
-            || player_mutation_level(MUT_ANTENNAE, false) == 3)
+            || (player_mutation_level(MUT_ANTENNAE, false) == 3
+                && you.species != SP_FORMICID))
         {
             return false;
         }
@@ -740,7 +741,8 @@ bool you_can_wear(int eq, bool special_armour)
             return true;
         if (player_mutation_level(MUT_HORNS, false)
             || player_mutation_level(MUT_BEAK, false)
-            || player_mutation_level(MUT_ANTENNAE, false))
+            || (player_mutation_level(MUT_ANTENNAE, false)
+                && you.species != SP_FORMICID))
         {
             return false;
         }
@@ -840,8 +842,12 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return false;
 
-        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) == 3)
+        if (eq == EQ_HELMET 
+            && player_mutation_level(MUT_ANTENNAE) == 3
+            && you.species != SP_FORMICID)
+        {
             return false;
+        }
 
         if (eq == EQ_BOOTS
             && (you.fishtail
@@ -1908,6 +1914,10 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     // Only thirsty vampires are naturally poison resistant.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         rp++;
+    
+    // Formicids are vulnerable, but can make up for it with 2 rPois sources.
+    if (you.species == SP_FORMICID)
+        rp--;
 
     if (temp)
     {
@@ -1937,7 +1947,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     // Give vulnerability for Spider Form, and only let one level of rP to make
     // up for it (never be poison resistant in Spider Form).
-    rp = (rp > 0 ? 1 : 0);
+    rp = (rp > 0 ? 1 : rp);
 
     if (temp)
     {
@@ -3610,6 +3620,22 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
+            case SP_FORMICID:
+                if ((you.experience_level == 8)
+                    || (you.experience_level == 16))
+                {
+                    perma_mutate(MUT_ANTENNAE, 1, "level up");
+                    #ifdef USE_TILE
+                        init_player_doll();
+                    #endif
+                }
+
+                if (!(you.experience_level % 4))
+                {
+                    modify_stat(STAT_STR, 1, false, "level gain");
+                }
+                break;
+
             default:
                 break;
             }
@@ -4373,6 +4399,14 @@ bool player::gourmand(bool calc_unid, bool items) const
         return true;
 
     return actor::gourmand(calc_unid, items);
+}
+
+bool player::stasis(bool calc_unid, bool items) const
+{
+    if (species == SP_FORMICID)
+        return true;
+
+    return actor::stasis(calc_unid, items);
 }
 
 unsigned int exp_needed(int lev, int exp_apt)
@@ -5738,6 +5772,8 @@ void player::init()
 
     temperature = 1; // 1 is min; 15 is max.
     temperature_last = 1;
+    
+    duration[DUR_ANTENNAE_EXTEND] = ANTENNAE_EXTEND_TIME;
 
     xray_vision = false;
 
@@ -6504,6 +6540,8 @@ int player::armour_class() const
           ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0; // +2, +3, +4
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
+    AC += player_mutation_level(MUT_CHITIN_SKIN)
+          ? player_mutation_level(MUT_CHITIN_SKIN) * 300 : 0;                  // +3, +6
 
     return (AC / 100);
 }
@@ -6814,6 +6852,7 @@ int player_res_magic(bool calc_unid, bool temp)
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
+    case SP_FORMICID:
         rm = you.experience_level * 4;
         break;
     case SP_NAGA:
@@ -7233,7 +7272,7 @@ bool player::has_usable_offhand() const
         return false;
 
     const item_def* wp = slot_item(EQ_WEAPON);
-    return (!wp || hands_reqd(*wp, body_size()) != HANDS_TWO);
+    return (!wp || hands_reqd(*wp) != HANDS_TWO);
 }
 
 bool player::has_usable_tentacle() const
@@ -7256,7 +7295,7 @@ int player::usable_tentacles() const
     const item_def* wp = slot_item(EQ_WEAPON);
     if (wp)
     {
-        hands_reqd_type hands_req = hands_reqd(*wp, body_size());
+        hands_reqd_type hands_req = hands_reqd(*wp);
         free_tentacles -= 2 * hands_req + 2;
     }
 
@@ -7291,6 +7330,34 @@ int player::has_tentacles(bool allow_tran) const
 int player::has_usable_tentacles(bool allow_tran) const
 {
     return has_tentacles(allow_tran);
+}
+
+int player::has_antennae(bool allow_tran) const
+{
+    if (allow_tran)
+    {
+        // Most forms suppress antennae.
+        if (!form_keeps_mutations())
+            return 0;
+    }
+
+    if (you.species == SP_FORMICID)
+    {
+        if (player_wearing_slot(EQ_HELMET))
+            return 0;
+        
+        return (you.duration[DUR_ANTENNAE_EXTEND] 
+                * player_mutation_level(MUT_ANTENNAE, allow_tran))
+               / ANTENNAE_EXTEND_TIME;
+    }
+
+    return player_mutation_level(MUT_ANTENNAE, allow_tran);
+}
+
+bool player::has_usable_antennae(bool allow_tran) const
+{
+    // Assumes that armour cannot be placed over normal antennae.
+    return has_antennae(allow_tran);
 }
 
 bool player::sicken(int amount, bool allow_hint, bool quiet)
@@ -7344,7 +7411,7 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     }
 
     // antennae give sInvis at 3
-    if (player_mutation_level(MUT_ANTENNAE) == 3)
+    if (has_antennae(true) == 3)
         return true;
 
     if (player_mutation_level(MUT_EYEBALLS) == 3)
@@ -7584,7 +7651,9 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return (species == SP_OGRE || species == SP_TROLL);
+    return (species == SP_OGRE 
+            || species == SP_TROLL
+            || species == SP_FORMICID);
 }
 
 bool player::can_smell() const
@@ -7680,6 +7749,8 @@ vector<PlaceInfo> player::get_all_place_info(bool visited_only,
     return list;
 }
 
+// Used for falling into traps and other bad effects, but is a slightly
+// different effect from the player invokable ability.
 bool player::do_shaft()
 {
     dungeon_feature_type force_stair = DNGN_UNSEEN;
@@ -7717,6 +7788,42 @@ bool player::do_shaft()
     down_stairs(force_stair);
 
     return true;
+}
+
+bool player::can_do_shaft_ability() const
+{
+    switch (grd(pos()))
+    {
+    case DNGN_FLOOR:
+    case DNGN_OPEN_DOOR:
+        return is_valid_shaft_level();
+
+    default:
+        return false;
+    }
+}
+
+// Like do_shaft, but forced by the player.
+// It has a slightly different set of rules.
+bool player::do_shaft_ability()
+{
+    if (can_do_shaft_ability())
+    {
+        mpr("A shaft appears beneath you!");
+        down_stairs(DNGN_TRAP_NATURAL);
+        mpr("The earth vibrates loudly upon landing!");
+        fake_noisy(30, pos());
+        // Make it more likely for OOD to spawn
+        env.turns_on_level *= 4 + experience_level / 9;
+        env.turns_on_level /= 3;
+        return true;
+    }
+    else
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        redraw_screen();
+        return false;
+    }
 }
 
 bool player::did_escape_death() const

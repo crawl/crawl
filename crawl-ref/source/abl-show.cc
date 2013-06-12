@@ -55,6 +55,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
@@ -72,6 +73,7 @@
 #include "stuff.h"
 #include "target.h"
 #include "tilepick.h"
+#include "traps.h"
 #include "areas.h"
 #include "transform.h"
 #include "hints.h"
@@ -229,6 +231,9 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
       1, 0, 0, 0, 0, ABFLAG_PERMANENT_MP},
+    
+    { ABIL_DIG, "Dig", 0, 0, 75, 0, 0, ABFLAG_NONE},
+    { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_NONE},
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -903,6 +908,8 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_GRENADES:
     case ABIL_MAKE_SAGE:
     case ABIL_REMOVE_CURSE:
+    case ABIL_DIG:
+    case ABIL_SHAFT_SELF:
         failure = 0;
         break;
 
@@ -1494,7 +1501,12 @@ static bool _check_ability_possible(const ability_def& abil,
         if (you.no_tele(false, false, true))
         {
             if (!quiet)
-                mpr("You cannot teleport right now.");
+            {
+                if (you.species == SP_FORMICID)
+                    mpr("You cannot teleport.");
+                else
+                    mpr("You cannot teleport right now.");
+            }
             return false;
         }
         return true;
@@ -1888,6 +1900,42 @@ static bool _do_ability(const ability_def& abil)
         if (recharge_wand() <= 0)
             return false; // fail message is already given
         break;
+    
+    case ABIL_DIG:
+    {
+        power = 0;
+        beam.range = LOS_RADIUS;
+
+        if (!spell_direction(abild, beam, DIR_NONE, TARG_ANY, 0,
+                             true, true, false, NULL,
+                             "Aiming: Dig",
+                             true))
+        {
+            return false;
+        }
+        else
+        {
+            zapping(ZAP_DIG, power, beam);
+        }
+        break;
+    }
+
+    case ABIL_SHAFT_SELF:
+    {                    
+        if (you.can_do_shaft_ability())
+        {
+            if (yesno("Are you sure you want to shaft yourself?"))
+                start_delay(DELAY_SHAFT_SELF, 1);
+            else
+                return false;
+        }
+        else
+        {
+            mpr("You can't shaft here.");
+            return false;
+        }
+        break;
+    }
 
     case ABIL_DELAYED_FIREBALL:
     {
@@ -2309,6 +2357,11 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_OKAWARU_FINESSE:
+        if (you.species == SP_FORMICID)
+        {
+            mpr("You cannot use finnese because of your stasis.");
+            return false;
+        }
         if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
                                  20, "%s makes your neck tingle."))
         {
@@ -3080,6 +3133,12 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
+    
+    if (you.species == SP_FORMICID)
+    {
+        _add_talent(talents, ABIL_DIG, check_confused);
+        _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
+    }
 
     // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
     // Transformed nagas, or non-nagas, can only get Spit Poison.

@@ -287,6 +287,20 @@ item_def *player::weapon(int /* which_attack */) const
     return slot_item(EQ_WEAPON, false);
 }
 
+// Give hands required to wield weapon.
+hands_reqd_type player::hands_reqd(const item_def &item) const
+{
+    if (species == SP_FORMICID)
+    {
+        if (weapon_size(item) >= SIZE_BIG)
+            return HANDS_TWO;
+        else
+            return HANDS_ONE;
+    }
+    else
+        return actor::hands_reqd(item);
+}
+
 bool player::can_wield(const item_def& item, bool ignore_curse,
                        bool ignore_brand, bool ignore_shield,
                        bool ignore_transform) const
@@ -299,7 +313,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 
     // Unassigned means unarmed combat.
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
-                            || hands_reqd(item, body_size()) == HANDS_TWO;
+                            || hands_reqd(item) == HANDS_TWO;
 
     if (two_handed && !ignore_shield && player_wearing_slot(EQ_SHIELD))
         return false;
@@ -312,6 +326,9 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 {
     if (species == SP_FELID)
         return false;
+    if (species == SP_FORMICID)
+        return true;
+    
     if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
             && (item_mass(item) >= 500
                 || item.base_type == OBJ_WEAPONS
@@ -690,9 +707,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
     {
         if (verbose)
         {
-            const item_def *amulet = you.slot_item(EQ_AMULET, false);
-            mprf("You cannot go berserk with %s on.",
-                 amulet? amulet->name(DESC_YOUR).c_str() : "your amulet");
+            mprf("You cannot go berserk while under stasis");
         }
         return false;
     }

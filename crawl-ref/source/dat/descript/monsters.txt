@@ -1485,6 +1485,18 @@ dryad
 A spirit of nature, bound to the forest in which it resides. It is capable of
 calling upon the trees to defend against incursions.
 %%%%
+formicid
+
+A sentient ant that walks upright and is competant at digging.
+%%%%
+formicid drone
+
+An ant-like soldier trained in combat and ready to defend its home.
+%%%%
+formicid venom mage
+
+A practitioner of its greatest fear. It knows how to create and cleanse poison.
+%%%%
 dwarf
 
 A member of a short, sturdy mountain-dwelling folk. More robust than their deep

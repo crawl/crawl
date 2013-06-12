@@ -1778,6 +1778,27 @@ Lava Orcs
   Lava Orcs make good melee fighters, preferring axes. They're pretty bad
   spellcasters, except for transmutations, fire and earth magic.
 
+Formicids
+ The Formicids are an species of humanoid ants. Just like their tiny insect
+ ancestors, the Formicids are well adept at earth work, both on the physical
+ and magical sides. Their abilities have been used to tunnel immense underground
+ communities and structures, many of which are tens of thousands of years old.
+
+ Perhaps unfortunately, their strong ties to to earth have left them completely
+ impervious to being teleported or hasted; Formicids are tied to the Earth with
+ a complete sense of stasis. While this is a seemingly bad property for a
+ dungeon adventurer, stasis has the beneficial effect of preventing many types
+ of nasty hexes and maledictions.
+
+ With the ability to lift ten times their own weight, the Formicids have
+ strength rivaling that of ogres. This, along with the fact that they have four
+ arms, allows Formicid warriors to carry both a shield and a two-handed weapon
+ at the same time.
+
+ Formicids make good earth and venom mages, but are quite capable at both melee
+ and ranged combat too, albeit a bit flimsy. They are naturally bad at air magic
+ and conjurations.
+
 Gargoyles
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
   hideous humanoids with an affinity to rock. They are immune to petrification,

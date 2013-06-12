@@ -2141,6 +2141,28 @@
        SPELL_MELEE,
        SPELL_NO_SPELL
       }
+    },
+
+    {  MST_FORMICID,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_DIG,
+       SPELL_SHAFT_SELF,
+      }
+    },
+
+    {  MST_FORMICID_VENOM_MAGE,
+      {
+       SPELL_OLGREBS_TOXIC_RADIANCE,
+       SPELL_OLGREBS_TOXIC_RADIANCE,
+       SPELL_NO_SPELL,
+       SPELL_MASS_CURE_POISON,
+       SPELL_DIG,
+       SPELL_SHAFT_SELF,
+      }
     }
 
 #endif

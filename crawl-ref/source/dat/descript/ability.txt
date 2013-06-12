@@ -92,6 +92,15 @@ Device Recharging
 
 At the permanent loss of one magic point recharge a wand or rod.
 %%%%
+Dig
+
+Tunnels through rock walls.
+%%%%
+Shaft Self
+
+Sends you to a random position one to three floors down,
+as if you fell through a shaft trap.
+%%%%
 Evoke Teleportation
 
 Teleport yourself to a random location on the level.

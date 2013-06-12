@@ -1644,7 +1644,8 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
 
             if (wp.first == WPN_THROWN)
             {
-                if (species_size(ng->species, PSIZE_TORSO) == SIZE_LARGE)
+                if (species_size(ng->species, PSIZE_TORSO) == SIZE_LARGE
+                    || ng->species == SP_FORMICID)
                     wp.first = WPN_ROCKS;
                 else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
                     wp.first = WPN_DARTS;

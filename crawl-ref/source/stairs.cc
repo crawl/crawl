@@ -668,8 +668,8 @@ void down_stairs(dungeon_feature_type force_stair)
     }
 
     // Only check the current position for a legal stair traverse.
-    // If it's a known shaft that we're taking, then we're already good.
-    if (!known_shaft && !_check_stairs(stair_find, true))
+    // If it's a shaft that we're taking, then we're already good.
+    if (!shaft && !_check_stairs(stair_find, true))
         return;
 
     if (_stair_moves_pre(stair_find))

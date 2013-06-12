@@ -76,6 +76,8 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),
     monster_level_up(MONS_TENGU_CONJURER, MONS_TENGU_REAVER),
     monster_level_up(MONS_TENGU_WARRIOR, MONS_TENGU_REAVER),
+    
+    monster_level_up(MONS_FORMICID, MONS_FORMICID_DRONE),
 };
 
 mons_experience_levels::mons_experience_levels()

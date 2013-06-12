@@ -202,6 +202,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_FAST:
         case MUT_SLOW:
         case MUT_IRIDESCENT_SCALES:
+        case MUT_CHITIN_SKIN:
             return MUTACT_INACTIVE;
         case MUT_LARGE_BONE_PLATES:
         case MUT_ROUGH_BLACK_SCALES:
@@ -599,28 +600,38 @@ string describe_mutations(bool center_title)
         break;
     }
 
+    case SP_FORMICID:
+        result += "Your are under a permanent stasis effect.\n";
+        result += "You can dig through walls and to a lower floor.\n";
+        result += "Your four strong arms can wield any weapon.\n";
+        result += "You are susceptible to poison.\n";
+        result += "The antennae on your head can retract.\n";
+        have_any = true;
+        break;
+
     default:
         break;
     }
 
-    switch (you.body_size(PSIZE_TORSO, true))
+    if (you.species != SP_FELID)
     {
-    case SIZE_LITTLE:
-        if (you.species == SP_FELID)
+        switch (you.body_size(PSIZE_TORSO, true))
+        {
+        case SIZE_LITTLE:
+            result += "You are tiny and cannot use many weapons and most armour.\n";
+            have_any = true;
             break;
-        result += "You are tiny and cannot use many weapons and most armour.\n";
-        have_any = true;
-        break;
-    case SIZE_SMALL:
-        result += "You are small and have problems with some larger weapons.\n";
-        have_any = true;
-        break;
-    case SIZE_LARGE:
-        result += "You are too large for most types of armour.\n";
-        have_any = true;
-        break;
-    default:
-        break;
+        case SIZE_SMALL:
+            result += "You are small and have problems with some larger weapons.\n";
+            have_any = true;
+            break;
+        case SIZE_LARGE:
+            result += "You are too large for most types of armour.\n";
+            have_any = true;
+            break;
+        default:
+            break;
+        }
     }
 
     if (player_genus(GENPC_DRACONIAN))
@@ -1343,6 +1354,20 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
+    if (you.species == SP_FORMICID)
+    {
+        // Formicids have stasis and so prevent mutations that would do nothing.
+        // Formicids are weak to poison so prevent poison resistance mutation.
+        if (mutat == MUT_BERSERK
+            || mutat == MUT_BLINK
+            || mutat == MUT_TELEPORT
+            || mutat == MUT_TELEPORT_CONTROL
+            || mutat == MUT_POISON_RESISTANCE)
+        {
+            return true;
+        }
+    }
+
     // Heat doesn't hurt fire, djinn don't care about hunger.
     if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
         || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM
@@ -1678,6 +1703,11 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case MUT_ANTENNAE:
         // Horns & Antennae 3 removes all headgear.  Same algorithm as with
         // glove removal.
+
+        // Formicids can keep wearing helmets.
+        if (mutat == MUT_ANTENNAE && you.species == SP_FORMICID)
+            break;
+
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
             remove_one_equip(EQ_HELMET, false, true);
         // Intentional fall-through
@@ -1689,11 +1719,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         {
             remove_one_equip(EQ_HELMET, false, true);
         }
-        break;
-
-    case MUT_ACUTE_VISION:
-        // We might have to turn autopickup back on again.
-        autotoggle_autopickup(false);
         break;
 
     case MUT_NIGHTSTALKER:
@@ -1710,6 +1735,15 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     default:
         break;
+    }
+
+    // We might have to turn autopickup back on again.
+    // Check it after removing helmets because they could be suppressed
+    // for Formicids.
+    if (mutat == MUT_ACUTE_VISION
+        || (mutat == MUT_ANTENNAE && you.has_antennae() >= 3))
+    {
+        autotoggle_autopickup(false);
     }
 
     // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
@@ -2522,7 +2556,7 @@ void check_demonic_guardian()
 
 void check_antennae_detect()
 {
-    int radius = player_mutation_level(MUT_ANTENNAE) * 2;
+    int radius = you.has_antennae(true) * 2;
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
         radius = max(radius, you.piety / 20);
     if (radius <= 0)

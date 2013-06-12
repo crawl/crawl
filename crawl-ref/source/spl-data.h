@@ -3089,6 +3089,32 @@ struct spell_desc
 },
 
 {
+    SPELL_SHAFT_SELF, "Shaft Self",
+     SPTYP_EARTH,
+     SPFLAG_ESCAPE,
+     1,
+     0,
+     -1, -1,
+     100,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_MASS_CURE_POISON, "Mass Cure Poison",
+     SPTYP_POISON,
+     SPFLAG_AREA,
+     1,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
