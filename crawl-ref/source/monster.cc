@@ -4188,7 +4188,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     // The damage shared should not be directly lethal to the player
     // XXX: It might be possible that the damage might be lethal if the player is at low health and is vulnerable? 
     // This makes a lot of messages, especially when the spectral weapon is hit by a monster with multiple attacks and is frozen, burned, etc.
-    if (type == MONS_SPECTRAL_WEAPON && agent->is_monster())
+    if (type == MONS_SPECTRAL_WEAPON && agent && agent->is_monster())
     {
         int shared_damage = min(2*amount/3, you.hp-1);
         if (shared_damage>0)
