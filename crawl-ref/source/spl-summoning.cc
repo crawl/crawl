@@ -31,6 +31,7 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
@@ -3016,10 +3017,16 @@ bool trigger_spectral_weapon(actor* agent, actor* target)
         spectral_weapon->props["target_mid"].get_int()  = target->mid;
 
         // A spectral weapon attacks if it can reach the target
-        if (grid_distance(spectral_weapon->pos(),target->pos())
-            <= ((spectral_weapon->reach_range() == REACH_TWO) ? 2 : 1))
-        {
+        if (adjacent(spectral_weapon->pos(), target->pos()))
             melee_attack(spectral_weapon, target).attack();
+        else if (spectral_weapon->reach_range() == REACH_TWO
+                 && grid_distance(spectral_weapon->pos(), target->pos()) <= 2)
+        {
+            // XXX: aim spectral weapon at the target and use reaching code
+            spectral_weapon->foe = (target->is_player()) ? MHITYOU
+                                                         : target->as_monster()->mindex();
+            spectral_weapon->target = target->pos();
+            handle_monster_reaching(spectral_weapon);
         }
 
         return true;
