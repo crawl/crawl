@@ -30,6 +30,7 @@
 #include "random-var.h"
 #include "shopping.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -108,7 +109,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // A spectral weapon attacks whenever the player does
         if (you.props.exists("spectral_weapon"))
         {
-            monster *spectral_weapon = monster_by_mid(you.props["spectral_weapon"].get_int());
+            monster *spectral_weapon = find_spectral_weapon(&you);
             // Don't try to attack with a nonexistant spectral weapon or if the defender is the spectral weapon itself
             if (!spectral_weapon || defender == spectral_weapon || !spectral_weapon->alive())
                 return true;

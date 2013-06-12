@@ -819,71 +819,6 @@ bool summon_holy_warrior(int pow, bool punish)
     return true;
 }
 
-spret_type cast_spectral_weapon(int pow, bool fail)
-{
-    const int dur = min(2 + random2(1 + div_rand_round(pow, 25)), 4);
-    item_def* wpn = you.weapon();
-
-    // If the wielded weapon should not be cloned, abort
-    // Unlike tukima you are allowed to clone artefacts
-    if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn))
-    {
-        if (wpn)
-        {
-            mprf("%s vibrate%s crazily for a second.",
-                    wpn->name(DESC_YOUR).c_str(),
-                    wpn->quantity > 1 ? "" : "s");
-        }
-        else
-            mprf("Your %s twitch.", you.hand_name(true).c_str());
-
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-
-    item_def cp = *wpn;
-
-    // Remove any existing spectral weapons --- only one should be alive at any given time
-    if (you.props.exists("spectral_weapon"))
-    {
-        monster *old_mons = monster_by_mid(you.props["spectral_weapon"].get_int());
-        monster_die(old_mons, KILL_RESET, NON_MONSTER);
-    }
-
-    mgen_data mg(MONS_SPECTRAL_WEAPON,
-            BEH_FRIENDLY,
-            &you,
-            dur, SPELL_SPECTRAL_WEAPON,
-            you.pos(),
-            MHITYOU,
-            0, GOD_NO_GOD);
-
-    int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
-
-    mg.props[TUKIMA_WEAPON] = cp;
-    mg.props[TUKIMA_POWER] = pow;
-
-    monster *mons = create_monster(mg);
-    if (!mons)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_SUCCESS;
-    }
-
-    mpr("You draw out your weapon's spirit!");
-
-    you.props["spectral_weapon"].get_int() = mons->mid;
-    mons->hit_dice = skill_with_weapon;
-    int hp = 10 + div_rand_round(pow,3);
-    mons->hit_points = hp;
-    mons->max_hit_points = hp;
-    mons->ac = 2 + div_rand_round(pow,12);
-    mons->ev = 2 + div_rand_round(pow,12);
-
-    return SPRET_SUCCESS;
-}
-
 // This function seems to have very little regard for encapsulation.
 spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
                               bool fail)
@@ -2934,4 +2869,100 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
+}
+
+monster* find_spectral_weapon(const actor* agent)
+{
+    if (agent->props.exists("spectral_weapon"))
+        return monster_by_mid(agent->props["spectral_weapon"].get_int());
+    else
+        return NULL;
+}
+
+spret_type cast_spectral_weapon(int pow, bool fail)
+{
+    const int dur = min(2 + random2(1 + div_rand_round(pow, 25)), 4);
+    item_def* wpn = you.weapon();
+
+    // If the wielded weapon should not be cloned, abort
+    // Unlike tukima you are allowed to clone artefacts
+    if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn))
+    {
+        if (wpn)
+        {
+            mprf("%s vibrate%s crazily for a second.",
+                    wpn->name(DESC_YOUR).c_str(),
+                    wpn->quantity > 1 ? "" : "s");
+        }
+        else
+            mprf("Your %s twitch.", you.hand_name(true).c_str());
+
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    item_def cp = *wpn;
+
+    // Remove any existing spectral weapons --- only one should be alive at any given time
+    monster *old_mons = find_spectral_weapon(&you);
+    if (old_mons)
+        end_spectral_weapon(old_mons, false);
+
+    mgen_data mg(MONS_SPECTRAL_WEAPON,
+            BEH_FRIENDLY,
+            &you,
+            dur, SPELL_SPECTRAL_WEAPON,
+            you.pos(),
+            MHITYOU,
+            0, GOD_NO_GOD);
+
+    int skill_with_weapon = you.skill(weapon_skill(*you.weapon()), 1, false);
+
+    mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_POWER] = pow;
+
+    monster *mons = create_monster(mg);
+    if (!mons)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_SUCCESS;
+    }
+
+    mpr("You draw out your weapon's spirit!");
+
+    you.props["spectral_weapon"].get_int() = mons->mid;
+    mons->hit_dice = skill_with_weapon;
+    int hp = 10 + div_rand_round(pow,3);
+    mons->hit_points = hp;
+    mons->max_hit_points = hp;
+    mons->ac = 2 + div_rand_round(pow,12);
+    mons->ev = 2 + div_rand_round(pow,12);
+
+    return SPRET_SUCCESS;
+}
+
+void end_spectral_weapon(monster* mons, bool killed, bool quiet)
+{
+    // Should only happen if you dismiss it in wizard mode, I think
+    if (!mons)
+        return;
+
+    you.props.erase("spectral_weapon");
+
+    if (!quiet)
+    {
+        if (!you.can_see(mons))
+        {
+            mpr("You feel your bond with your spectral weapon wane.");
+        }
+        else
+        {
+            simple_monster_message(mons, " fades away.",
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        }
+    }
+
+    if (!killed)
+        monster_die(mons, KILL_RESET, NON_MONSTER);
 }
