@@ -615,6 +615,15 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     if (you.species == SP_LAVA_ORC && spell == SPELL_STONESKIN)
         rc = true, undead = false;
 
+    if (you.species == SP_FORMICID
+        && (spell == SPELL_BLINK
+         || spell == SPELL_CONTROL_TELEPORT
+         || spell == SPELL_CONTROLLED_BLINK
+         || spell == SPELL_SWIFTNESS))
+    {
+        rc = true, undead = false;
+    }
+
     return rc;
 }
 

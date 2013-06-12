@@ -69,6 +69,10 @@ octopode3
 octopode4
 octopode5
 djinni DJINNI
+formicid0 FORMICID
+formicid1
+formicid2
+formicid3
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

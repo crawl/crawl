@@ -19,9 +19,9 @@
 static species_type species_order[] = {
     // comparatively human-like looks
     SP_HUMAN,          SP_HIGH_ELF,
-    SP_DEEP_ELF,
-    SP_DEEP_DWARF,     SP_HILL_ORC,
-    SP_LAVA_ORC,       SP_MERFOLK,
+    SP_DEEP_ELF,       SP_DEEP_DWARF,
+    SP_HILL_ORC,       SP_LAVA_ORC,
+    SP_MERFOLK,        SP_FORMICID,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -64,7 +64,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
-      "Fe", "Op", "Dj", "LO", "Gr",
+      "Fe", "Op", "Dj", "LO", "Gr", "Fo",
       // placeholders
       "El", "HD", "OM", "GE", "Gn", "MD",
 #if TAG_MAJOR_VERSION > 34
@@ -199,6 +199,7 @@ string species_name(species_type speci, bool genus, bool adj)
         case SP_MINOTAUR:   res = "Minotaur";                          break;
         case SP_TENGU:      res = "Tengu";                             break;
         case SP_GARGOYLE:   res = "Gargoyle";                          break;
+        case SP_FORMICID:   res = "Formicid";                          break;
 
         case SP_HILL_ORC:
             res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
@@ -385,6 +386,8 @@ monster_type player_species_to_mons_species(species_type species)
         return MONS_OCTOPODE;
     case SP_DJINNI:
         return MONS_DJINNI;
+    case SP_FORMICID:
+        return MONS_FORMICID;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
@@ -413,6 +416,7 @@ int species_exp_modifier(species_type species)
     case SP_HUMAN:
     case SP_HALFLING:
     case SP_KOBOLD:
+    case SP_FORMICID:
         return 1;
     case SP_HILL_ORC:
     case SP_OGRE:
@@ -466,6 +470,7 @@ int species_hp_modifier(species_type species)
     case SP_DEEP_ELF:
     case SP_TENGU:
     case SP_KOBOLD:
+    case SP_FORMICID:
         return -2;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
@@ -511,6 +516,7 @@ int species_mp_modifier(species_type species)
         return -2;
     case SP_CENTAUR:
     case SP_GHOUL:
+    case SP_FORMICID:
         return -1;
     default:
         return 0;

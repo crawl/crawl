@@ -1517,5 +1517,23 @@
   "trample resistance"
 },
 
+{ MUT_CHITIN_SKIN,                     0,  2, false,  true,  true,
+  "chitin skin",
+
+  {"Your skin is composed of chitin. (AC +3)",
+   "Your body is surrounded by an exoskeleton. (AC +6)",
+   ""},
+
+  {"Your skin hardens.",
+   "Your skin hardens into an exoskeleton.",
+   ""},
+
+  {"Your skin softens.",
+   "Your skin softens.",
+   ""},
+
+  "chitin skin"
+}
+
 
 #endif

@@ -153,7 +153,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     if (arm == ARM_HELMET
         && (!you_can_wear(EQ_HELMET)
             || you.mutation[MUT_HORNS]
-            || you.mutation[MUT_ANTENNAE]))
+            || (you.mutation[MUT_ANTENNAE] && you.species != SP_FORMICID)))
     {
         // Check for Horns 3 & Antennae 3 - Don't give a cap if those mutation
         // levels have been reached.
@@ -528,7 +528,7 @@ static int _acquirement_weapon_subtype(bool divine)
         if (!acqweight)
             continue;
 
-        const bool two_handed = hands_reqd(item_considered, you.body_size()) == HANDS_TWO;
+        const bool two_handed = you.hands_reqd(item_considered) == HANDS_TWO;
 
         // For non-Trog/Okawaru acquirements, give a boost to high-end items.
         if (!divine && !is_range_weapon(item_considered))
@@ -607,8 +607,11 @@ static missile_type _acquirement_missile_subtype()
             if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
                 missile_weights.push_back(make_pair(MI_NEEDLE, 100));
 
-            if (you.body_size() >= SIZE_MEDIUM)
+            if (you.can_throw_large_rocks()
+                || you.body_size() >= SIZE_MEDIUM)
+            {
                 missile_weights.push_back(make_pair(MI_JAVELIN, 100));
+            }
 
             if (you.can_throw_large_rocks())
                 missile_weights.push_back(make_pair(MI_LARGE_ROCK, 100));

@@ -73,7 +73,10 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
-    ABIL_MAX_INTRINSIC = ABIL_RECHARGING,
+    // Formicids
+    ABIL_DIG,
+    ABIL_SHAFT_SELF,
+    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -1064,6 +1067,8 @@ enum delay_type
 
     DELAY_INTERRUPTIBLE,                // simple interruptible delay
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
+    
+    DELAY_SHAFT_SELF, // Formicid ability
 
     NUM_DELAYS
 };
@@ -1509,6 +1514,7 @@ enum duration_type
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
+    DUR_ANTENNAE_EXTEND,
     NUM_DURATIONS
 };
 
@@ -2659,6 +2665,10 @@ enum monster_type                      // menv[].type
 
     MONS_SOJOBO,
 
+    MONS_FORMICID,
+    MONS_FORMICID_DRONE,
+    MONS_FORMICID_VENOM_MAGE,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -2851,6 +2861,7 @@ enum mutation_type
     MUT_MANA_LINK,
     MUT_PETRIFICATION_RESISTANCE,
     MUT_TRAMPLE_RESISTANCE,
+    MUT_CHITIN_SKIN,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3199,7 +3210,8 @@ enum species_type
     SP_DJINNI,
     SP_LAVA_ORC,
     SP_GARGOYLE,
-      LAST_VALID_SPECIES = SP_GARGOYLE,
+    SP_FORMICID,
+    LAST_VALID_SPECIES = SP_FORMICID,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
@@ -3486,6 +3498,8 @@ enum spell_type
     SPELL_CALL_LOST_SOUL,
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
+    SPELL_SHAFT_SELF,
+    SPELL_MASS_CURE_POISON,
     NUM_SPELLS
 };
 

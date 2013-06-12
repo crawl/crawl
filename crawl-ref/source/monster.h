@@ -239,6 +239,8 @@ public:
     item_def *launcher();
     item_def *missiles();
     item_def *shield();
+    
+    hands_reqd_type hands_reqd(const item_def &item) const;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,
@@ -348,6 +350,8 @@ public:
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const;
     bool res_corr(bool calc_unid = true, bool items = true) const;
+    
+    bool stasis(bool calc_unid = true, bool items = true) const;
 
     flight_type flight_mode() const;
     bool can_cling_to_walls() const;

@@ -536,6 +536,21 @@ item_def *monster::weapon(int which_attack) const
     return (weap == NON_ITEM ? NULL : &mitm[weap]);
 }
 
+// Give hands required to wield weapon.
+hands_reqd_type monster::hands_reqd(const item_def &item) const
+{
+    if (mons_class_flag(type, M_FOUR_HANDS))
+    {
+        if (weapon_size(item) >= SIZE_BIG)
+            return HANDS_TWO;
+        else
+            return HANDS_ONE;
+    }
+    else
+        return actor::hands_reqd(item);
+}
+
+
 bool monster::can_wield(const item_def& item, bool ignore_curse,
                          bool ignore_brand, bool ignore_shield,
                          bool ignore_transform) const
@@ -568,7 +583,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     item_def* weap2       = NULL;
     if (mons_wields_two_weapons(this))
     {
-        if (!weap1 || hands_reqd(*weap1, body_size()) != HANDS_TWO)
+        if (!weap1 || hands_reqd(*weap1) != HANDS_TWO)
             avail_slots = 2;
 
         const int offhand = _mons_offhand_weapon_index(this);
@@ -582,7 +597,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
     // Barehanded needs two hands.
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
-                            || hands_reqd(item, body_size()) == HANDS_TWO;
+                            || hands_reqd(item) == HANDS_TWO;
 
     item_def* _shield = NULL;
     if (inv[MSLOT_SHIELD] != NON_ITEM)
@@ -1228,7 +1243,7 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
     // (Monsters will always favour damage over protection.)
     if ((slot == MSLOT_WEAPON || slot == MSLOT_ALT_WEAPON)
         && inv[MSLOT_SHIELD] != NON_ITEM
-        && hands_reqd(item, body_size()) == HANDS_TWO)
+        && hands_reqd(item) == HANDS_TWO)
     {
         if (!drop_item(MSLOT_SHIELD, near))
             return false;
@@ -1240,9 +1255,9 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
     {
         const item_def* wpn = mslot_item(MSLOT_WEAPON);
         const item_def* alt = mslot_item(MSLOT_ALT_WEAPON);
-        if (wpn && hands_reqd(*wpn, body_size()) == HANDS_TWO)
+        if (wpn && hands_reqd(*wpn) == HANDS_TWO)
             return false;
-        if (alt && hands_reqd(*alt, body_size()) == HANDS_TWO)
+        if (alt && hands_reqd(*alt) == HANDS_TWO)
             return false;
     }
 
@@ -1747,7 +1762,7 @@ bool monster::wants_weapon(const item_def &weap) const
     // Monsters capable of dual-wielding will always prefer two weapons
     // to a single two-handed one, however strong.
     if (mons_wields_two_weapons(this)
-        && hands_reqd(weap, body_size()) == HANDS_TWO)
+        && hands_reqd(weap) == HANDS_TWO)
     {
         return false;
     }
@@ -1774,7 +1789,7 @@ bool monster::wants_armour(const item_def &item) const
     if (is_shield(item)
         && (mons_wields_two_weapons(this)
             || mslot_item(MSLOT_WEAPON)
-               && hands_reqd(*mslot_item(MSLOT_WEAPON), body_size())
+               && hands_reqd(*mslot_item(MSLOT_WEAPON))
                       == HANDS_TWO))
     {
         return false;
@@ -5960,8 +5975,19 @@ bool monster::check_clarity(bool silent) const
     return true;
 }
 
+bool monster::stasis(bool calc_unid, bool items) const
+{
+    if (mons_class_flag(type, M_PERMA_STASIS))
+        return true;
+    
+    return actor::stasis(calc_unid, items);
+}
+
 bool monster::check_stasis(bool silent, bool calc_unid) const
 {
+    if (mons_class_flag(type, M_PERMA_STASIS))
+        return true;
+
     if (!stasis())
         return false;
 

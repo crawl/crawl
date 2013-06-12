@@ -487,7 +487,7 @@ static int _launcher_shield_slowdown(const item_def &launcher,
                                      const item_def *shield)
 {
     int speed_adjust = 100;
-    if (!shield || hands_reqd(launcher, you.body_size()) == HANDS_ONE)
+    if (!shield || you.hands_reqd(launcher) == HANDS_ONE)
         return speed_adjust;
 
     const int shield_type = shield->sub_type;
@@ -1855,7 +1855,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             // Dwarves/orcs with dwarven/orcish weapons.
             if (get_equip_race(item) == ISFLAG_DWARVEN
-                   && you.species == SP_DEEP_DWARF
+                   && (you.species == SP_DEEP_DWARF)
                 || get_equip_race(item) == ISFLAG_ORCISH
                    && you.species == SP_HILL_ORC)
             {
