@@ -196,10 +196,10 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         {
         default:
         case 0:
-            flv.wall = tile_dngn_coloured(TILE_WALL_ABYSS, env.rock_colour);
-            break;
         case 1:
         case 2:
+            flv.wall = tile_dngn_coloured(TILE_WALL_ABYSS, env.rock_colour);
+            break;
         case 3:
             flv.wall = tile_dngn_coloured(TILE_WALL_PEBBLE, env.rock_colour);
             break;
