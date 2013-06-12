@@ -46,6 +46,7 @@
 #include "shopping.h"
 #include "spl-damage.h"
 #include "spl-util.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -1083,6 +1084,10 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
         }
     }
+
+    monster *spectral_weapon = find_spectral_weapon(this);
+    if (spectral_weapon)
+        end_spectral_weapon(spectral_weapon, false);
 }
 
 void monster::unequip_armour(item_def &item, int near)
@@ -1430,7 +1435,7 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
     return (eslot == -1 ? false : pickup(launch, eslot, near));
 }
 
-static bool _is_signature_weapon(monster* mons, const item_def &weapon)
+static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
         return (weapon.base_type == OBJ_RODS);
@@ -4075,6 +4080,7 @@ int monster::skill(skill_type sk, int scale, bool real) const
         return 0;
 
     int hd = scale * hit_dice;
+    int ret;
     switch (sk)
     {
     case SK_EVOCATIONS:
@@ -4090,6 +4096,23 @@ int monster::skill(skill_type sk, int scale, bool real) const
     case SK_AIR_MAGIC:
     case SK_SUMMONINGS:
         return (is_actual_spellcaster() ? hd : hd / 3);
+
+    // Weapon skills for spectral weapon
+    case SK_SHORT_BLADES:
+    case SK_LONG_BLADES:
+    case SK_AXES:
+    case SK_MACES_FLAILS:
+    case SK_POLEARMS:
+    case SK_STAVES:
+        ret = is_fighter() ? hd : hd / 2;
+        if (weapon()
+            && sk == weapon_skill(*weapon())
+            && _is_signature_weapon(this, *weapon()))
+        {
+            // generally slightly skilled if it's a signature weapon
+            ret = ret * 5 / 4;
+        }
+        return ret;
 
     default:
         return 0;
