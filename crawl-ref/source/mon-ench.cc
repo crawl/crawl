@@ -621,6 +621,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (type == MONS_BATTLESPHERE)
             return end_battlesphere(this, false);
     case ENCH_ABJ:
+        if (type == MONS_SPECTRAL_WEAPON)
+            return end_spectral_weapon(this, false);
         // Set duration to -1 so that monster_die() and any of its
         // callees can tell that the monster ran out of time or was
         // abjured.

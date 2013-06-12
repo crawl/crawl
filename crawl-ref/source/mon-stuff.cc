@@ -1829,8 +1829,7 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_SPECTRAL_WEAPON)
     {
-        simple_monster_message(mons, " fades away.",
-                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        end_spectral_weapon(mons, true, killer == KILL_RESET);
         silent = true;
     }
 
