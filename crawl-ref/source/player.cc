@@ -3610,6 +3610,15 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
+            case SP_GARGOYLE:
+                if (!(you.experience_level % 4))
+                {
+                    modify_stat((coinflip() ? STAT_STR
+                                            : STAT_INT), 1, false,
+                                "level gain");
+                }
+                break;
+
             default:
                 break;
             }
