@@ -6878,6 +6878,14 @@ bool player::nightvision() const
             || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2)));
 }
 
+reach_type player::reach_range() const
+{
+    const item_def *wpn = weapon();
+    if (wpn)
+        return weapon_reach(*wpn);
+    return REACH_NONE;
+}
+
 monster_type player::mons_species(bool zombie_base) const
 {
     return player_species_to_mons_species(you.species);

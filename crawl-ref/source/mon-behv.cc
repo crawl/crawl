@@ -27,6 +27,7 @@
 #include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -265,21 +266,35 @@ void handle_behaviour(monster* mon)
     // The target and foe set here for a spectral weapon should never change
     if (mon->type == MONS_SPECTRAL_WEAPON)
     {
-        mon->target = you.pos();
+        // Do nothing if we're still being placed
+        if (!mon->props.exists("sw_mid"))
+            return;
+
+        actor *owner = actor_by_mid(mon->props["sw_mid"].get_int());
+
+        if (!owner || !owner->alive())
+        {
+            end_spectral_weapon(mon, false);
+            return;
+        }
+
+        mon->target = owner->pos();
         mon->foe = MHITNOT;
-        // Try to move towards any monsters the player is attacking
+        // Try to move towards any monsters the owner is attacking
         if (mon->props.exists("target_mid"))
         {
-            monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
+            actor *atarget = actor_by_mid(mon->props["target_mid"].get_int());
 
-            // Only try to move towards the monster if the player is still next to it and the spectral weapon is not adjacent to the monster or can otherwise reach it
-            // XXX: quite messy, needs to be simplified
-            if (target_monster && target_monster->alive()
-                && (adjacent(target_monster->pos(), you.pos()) || weapon_reach(*you.weapon()) == REACH_TWO && (grid_distance(mon->pos(), you.pos())) <=2)
-                && !(adjacent(target_monster->pos(), mon->pos()) || mon->reach_range() == REACH_TWO && (grid_distance(mon->pos(), target_monster->pos()) <=2)))
+            // Only go after the target if the owner can still reach
+            // FIXME: intervening features are currently ignored
+            //        because there's no good way to check if an actor
+            //        can make a reaching attack without actually doing so.
+            if (atarget && atarget->alive()
+                && (grid_distance(owner->pos(), atarget->pos())
+                    <= ((owner->reach_range() == REACH_TWO) ? 2 : 1)))
             {
-                mon->target = target_monster->pos();
-                mon->foe = target_monster->mindex();
+                mon->target = atarget->pos();
+                mon->foe = atarget->mindex();
             }
         }
     }

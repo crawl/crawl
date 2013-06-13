@@ -24,6 +24,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -1569,15 +1570,11 @@ bool unwield_item(bool showMsgs)
     unequip_item(EQ_WEAPON, showMsgs);
 
     // Unwielding dismisses an active spectral weapon
-    if (you.props.exists("spectral_weapon"))
+    monster *spectral_weapon = find_spectral_weapon(&you);
+    if (spectral_weapon)
     {
-        monster *spectral_weapon= monster_by_mid(you.props["spectral_weapon"].get_int());
-        if (spectral_weapon)
-        {
-            mpr("Your spectral weapon disappears as you unwield.");
-            monster_die(spectral_weapon, KILL_RESET, NON_MONSTER);
-            you.props.erase("spectral_weapon");
-        }
+        mpr("Your spectral weapon disappears as you unwield.");
+        end_spectral_weapon(spectral_weapon, false, true);
     }
 
     you.wield_change     = true;

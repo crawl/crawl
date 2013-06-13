@@ -1556,7 +1556,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_death_channel(powc, god, fail);
 
     case SPELL_SPECTRAL_WEAPON:
-        return cast_spectral_weapon(powc, fail);
+        return cast_spectral_weapon(&you, powc, god, fail);
 
     case SPELL_BATTLESPHERE:
         return cast_battlesphere(&you, powc, god, fail);

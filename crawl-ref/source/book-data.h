@@ -174,6 +174,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#if TAG_MAJOR_VERSION > 34
 { // Book of Battle
     SPELL_INFUSION,
     SPELL_SHROUD_OF_GOLUBRIA,
@@ -182,6 +183,7 @@
     SPELL_REGENERATION,
     SPELL_SPIRIT_SHIELD
 },
+#endif
 {   // Book of Clouds
     SPELL_MEPHITIC_CLOUD,
     SPELL_CONJURE_FLAME,
@@ -294,16 +296,25 @@
 },
 
 #if TAG_MAJOR_VERSION == 34
-{   // Book of Morphology
-    SPELL_STICKS_TO_SNAKES,
-    SPELL_PETRIFY,
-    SPELL_POLYMORPH,
-    SPELL_IGNITE_POISON,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+{ // Book of Battle
+    SPELL_INFUSION,
+    SPELL_SHROUD_OF_GOLUBRIA,
+    SPELL_SONG_OF_SLAYING,
+    SPELL_SPECTRAL_WEAPON,
+    SPELL_REGENERATION,
+    SPELL_SPIRIT_SHIELD
 },
+// enum replaced with BOOK_BATTLE
+//{   // Book of Morphology
+//    SPELL_STICKS_TO_SNAKES,
+//    SPELL_PETRIFY,
+//    SPELL_POLYMORPH,
+//    SPELL_IGNITE_POISON,
+//    SPELL_NO_SPELL,
+//    SPELL_NO_SPELL,
+//    SPELL_NO_SPELL,
+//    SPELL_NO_SPELL,
+//},
 #endif
 
 {   // Book of Geomancy
