@@ -876,7 +876,7 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
     return rc;
 }
 
-bool handle_monster_reaching(monster* mons)
+static bool _handle_reaching(monster* mons)
 {
     bool       ret = false;
     const reach_type range = mons->reach_range();
@@ -2171,7 +2171,7 @@ void handle_monster_move(monster* mons)
                 return;
             }
 
-            if (handle_monster_reaching(mons))
+            if (_handle_reaching(mons))
             {
                 DEBUG_ENERGY_USE("_handle_reaching()");
                 return;
