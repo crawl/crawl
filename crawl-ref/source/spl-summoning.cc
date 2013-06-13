@@ -2997,7 +2997,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
         monster_die(mons, KILL_RESET, NON_MONSTER);
 }
 
-bool trigger_spectral_weapon(actor* agent, actor* target)
+bool trigger_spectral_weapon(actor* agent, const actor* target)
 {
         monster *spectral_weapon = find_spectral_weapon(agent);
 
@@ -3012,20 +3012,46 @@ bool trigger_spectral_weapon(actor* agent, actor* target)
         if (target->as_monster() == spectral_weapon)
             return false;
 
-        spectral_weapon->props["target_mid"].get_int()  = target->mid;
-
-        // A spectral weapon attacks if it can reach the target
-        if (adjacent(spectral_weapon->pos(), target->pos()))
-            melee_attack(spectral_weapon, target).attack();
-        else if (spectral_weapon->reach_range() == REACH_TWO
-                 && grid_distance(spectral_weapon->pos(), target->pos()) <= 2)
-        {
-            // XXX: aim spectral weapon at the target and use reaching code
-            spectral_weapon->foe = (target->is_player()) ? MHITYOU
-                                                         : target->as_monster()->mindex();
-            spectral_weapon->target = target->pos();
-            handle_monster_reaching(spectral_weapon);
-        }
+        spectral_weapon->props["target_mid"].get_int() = target->mid;
+        spectral_weapon->props["ready"] = true;
 
         return true;
     }
+
+/* Checks if the spectral weapon is targetting the given position.
+ *
+ * Checks that the defender is our actual target.
+ */
+bool check_target_spectral_weapon (const actor* mons, const actor *defender)
+{
+    if (mons->props.exists("target_mid"))
+    {
+        mid_t target_mid = mons->props["target_mid"].get_int();
+        return (target_mid == defender->mid);
+    }
+    return false;
+}
+/* Confirms the spectral weapon can and will attack the given defender.
+ *
+ * Checks the target, and that we haven't attacked yet.
+ * Then consumes our ready state, preventing further attacks.
+ */
+bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
+{
+    if (check_target_spectral_weapon(mons, defender)
+        && mons->props.exists("ready"))
+    {
+        // Consume our ready state and attack
+        mons->props.erase("ready");
+        return true;
+    }
+
+    // Expend the weapon's energy, as it can't attack
+    int energy = mons->action_energy(EUT_ATTACK);
+    dprf(DIAG_COMBAT, "Spectral Weapon fake attack %d", delay);
+    ASSERT(energy > 0);
+
+    mons->speed_increment -= energy;
+
+    return false;
+}

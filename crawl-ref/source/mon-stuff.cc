@@ -3489,9 +3489,18 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
     if (crawl_state.game_is_arena())
         return true;
 
-    // Spectral weapons never attack on their own
+    // Spectral weapons only attack their target
     if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        // FIXME: find a way to use check_target_spectral_weapon
+        //        without potential info leaks about visibility.
+        if (mons->props.exists("target_mid"))
+        {
+            actor *target = actor_by_mid(mons->props["target_mid"].get_int());
+            return (target && target->pos() == p);
+        }
         return false;
+    }
 
     if (!mons->friendly() || !mons->is_summoned())
         return true;

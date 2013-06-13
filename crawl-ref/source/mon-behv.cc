@@ -280,21 +280,21 @@ void handle_behaviour(monster* mon)
 
         mon->target = owner->pos();
         mon->foe = MHITNOT;
-        // Try to move towards any monsters the player is attacking
+        // Try to move towards any monsters the owner is attacking
         if (mon->props.exists("target_mid"))
         {
-            monster *target_monster = monster_by_mid(mon->props["target_mid"].get_int());
+            actor *atarget = actor_by_mid(mon->props["target_mid"].get_int());
 
-            // Only try to move towards the target if the player can still reach
-            // but the spectral weapon cannot.
-            if (target_monster && target_monster->alive()
-                && (grid_distance(owner->pos(),target_monster->pos())
-                    <= ((owner->reach_range() == REACH_TWO) ? 2 : 1))
-                && !(grid_distance(mon->pos(),target_monster->pos())
-                     <= ((mon->reach_range() == REACH_TWO) ? 2 : 1)))
+            // Only go after the target if the owner can still reach
+            // FIXME: intervening features are currently ignored
+            //        because there's no good way to check if an actor
+            //        can make a reaching attack without actually doing so.
+            if (atarget && atarget->alive()
+                && (grid_distance(owner->pos(), atarget->pos())
+                    <= ((owner->reach_range() == REACH_TWO) ? 2 : 1)))
             {
-                mon->target = target_monster->pos();
-                mon->foe = target_monster->mindex();
+                mon->target = atarget->pos();
+                mon->foe = atarget->mindex();
             }
         }
     }
