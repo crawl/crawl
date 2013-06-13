@@ -1950,7 +1950,7 @@ bool evoke_item(int slot)
             unevokable = true;
             break;
         }
-        if (did_work)
+        if (did_work && !unevokable)
             count_action(CACT_EVOKE, EVOC_MISC);
         break;
 
