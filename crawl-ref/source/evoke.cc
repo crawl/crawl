@@ -462,52 +462,66 @@ static bool _shard_of_destruction(item_def &item)
 
     mpr("You find yourself reciting the magical words!");
 
-    if (x_chance_in_y(7, 50))
+    // Check charges
+    if (item.plus <= 0)
     {
-        mpr("A cloud of weird smoke pours from the shard!");
-        big_cloud(random_smoke_type(), &you, you.pos(), 20, 10 + random2(8));
-        xom_is_stimulated(12);
-    }
-    else if (x_chance_in_y(2, 43))
-    {
-        mpr("A cloud of choking fumes pours from the shard!");
-        big_cloud(CLOUD_POISON, &you, you.pos(), 20, 7 + random2(5));
-        xom_is_stimulated(50);
-    }
-    else if (x_chance_in_y(2, 41))
-    {
-        mpr("A cloud of freezing gas pours from the shard!");
-        big_cloud(CLOUD_COLD, &you, you.pos(), 20, 8 + random2(5));
-        xom_is_stimulated(50);
-    }
-    else if (x_chance_in_y(3, 39))
-    {
-        if (one_chance_in(5))
-        {
-            mprf("The shard cracks and shatters in your %s with a final outpouring of destructive magic!",
-                 you.hand_name(true).c_str());
-            ASSERT(in_inventory(item));
-            dec_inv_item_quantity(item.link, 1);
-        }
-
+        // Empty
+        mprf("The shard cracks and shatters in your %s with a final outpouring of destructive magic!",
+                you.hand_name(true).c_str());
+        ASSERT(in_inventory(item));
+        dec_inv_item_quantity(item.link, 1);
+        // XXX:
         immolation(15, IMMOLATION_SHARD, you.pos(), false, &you);
-
         xom_is_stimulated(200);
     }
-    else if (one_chance_in(36))
+    // Failure roll
+    else if (x_chance_in_y(30-you.skill(SK_EVOCATIONS),100))
     {
-        if (create_monster(
-                mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
-                    "a shard of destruction",
-                    true, 6, 0, you.pos())))
+        // Approximating the old %s of failure types
+        int method = random_choose_weighted(14,1,
+                                            10,2,
+                                             8,3,
+                                             3,4,
+                                             0);
+
+        switch (method)
         {
-            mpr("A horrible Thing appears!");
-            mpr("It doesn't look too friendly.");
+        case 1: // Smoke
+            mpr("A cloud of weird smoke pours from the shard!");
+            big_cloud(random_smoke_type(), &you, you.pos(), 20, 10 + random2(8));
+            xom_is_stimulated(12);
+            break;
+        case 2: // Slightly more harmful cloud
+            mpr("A cloud of choking fumes pours from the shard!");
+            big_cloud(coinflip() ? CLOUD_POISON : CLOUD_MEPHITIC, &you, you.pos(), 20, 7 + random2(5));
+            // XXX: Old version had freezing and not meph. Maybe at high Evo values could have
+            // more dangerous clouds.
+            xom_is_stimulated(50);
+            break;
+        case 3: // XXX: Immolation
+            immolation(15, IMMOLATION_SHARD, you.pos(), false, &you);
+            xom_is_stimulated(200);
+            break;
+        case 4: // Harmful summon?
+            if (create_monster(
+                    mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
+                        "a shard of destruction",
+                        true, 6, 0, you.pos())))
+            {
+                mpr("A horrible Thing appears!");
+                mpr("It doesn't look too friendly.");
+            }
+            xom_is_stimulated(200);
+            break;
         }
-        xom_is_stimulated(200);
     }
+    // Successful cast
     else
     {
+        // Decrement charges
+        item.plus--;
+
+        // Cast a spell
         viewwindow();
 
         const int temp_rand =
@@ -533,8 +547,10 @@ static bool _shard_of_destruction(item_def &item)
                               : SPELL_MAGIC_DART);
 
         your_spells(spell_casted, powc, false);
+
+        return true;
     }
-    return true;
+    return false;
 }
 
 // return a slot that has manual for given skill, or -1 if none exists
