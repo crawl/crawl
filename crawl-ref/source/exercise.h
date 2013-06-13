@@ -36,7 +36,6 @@ enum exer_type
     EX_SNEAK_INVIS,
     EX_DID_EVOKE_ITEM,
     EX_DID_ZAP_WAND,
-    EX_WILL_READ_TOME,
     EX_WAIT,
 };
 

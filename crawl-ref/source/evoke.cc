@@ -452,48 +452,31 @@ bool disc_of_storms(bool drac_breath)
     return rc;
 }
 
-void tome_of_power(int slot)
+static bool _shard_of_destruction(item_def &item)
 {
-    if (you.form == TRAN_WISP)
-    {
-        crawl_state.zero_turns_taken();
-        return mpr("You can't handle books in this form.");
-    }
-
     const int powc = 5 + you.skill(SK_EVOCATIONS)
                        + roll_dice(5, you.skill(SK_EVOCATIONS));
 
-    msg::stream << "The book opens to a page covered in "
-                << weird_writing() << '.' << endl;
-
-    you.turn_is_over = true;
-
-    if (player_mutation_level(MUT_BLURRY_VISION) > 0
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
-    {
-        mpr("The page is too blurry for you to read.");
-        return;
-    }
+    msg::stream << "Images of " << weird_writing()
+                << " begin flooding into your mind." << endl;
 
     mpr("You find yourself reciting the magical words!");
-    practise(EX_WILL_READ_TOME);
-    count_action(CACT_EVOKE, EVOC_MISC);
 
     if (x_chance_in_y(7, 50))
     {
-        mpr("A cloud of weird smoke pours from the book's pages!");
+        mpr("A cloud of weird smoke pours from the shard!");
         big_cloud(random_smoke_type(), &you, you.pos(), 20, 10 + random2(8));
         xom_is_stimulated(12);
     }
     else if (x_chance_in_y(2, 43))
     {
-        mpr("A cloud of choking fumes pours from the book's pages!");
+        mpr("A cloud of choking fumes pours from the shard!");
         big_cloud(CLOUD_POISON, &you, you.pos(), 20, 7 + random2(5));
         xom_is_stimulated(50);
     }
     else if (x_chance_in_y(2, 41))
     {
-        mpr("A cloud of freezing gas pours from the book's pages!");
+        mpr("A cloud of freezing gas pours from the shard!");
         big_cloud(CLOUD_COLD, &you, you.pos(), 20, 8 + random2(5));
         xom_is_stimulated(50);
     }
@@ -501,11 +484,13 @@ void tome_of_power(int slot)
     {
         if (one_chance_in(5))
         {
-            mpr("The book disappears in a mighty explosion!");
-            dec_inv_item_quantity(slot, 1);
+            mprf("The shard cracks and shatters in your %s with a final outpouring of destructive magic!",
+                 you.hand_name(true).c_str());
+            ASSERT(in_inventory(item));
+            dec_inv_item_quantity(item.link, 1);
         }
 
-        immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
+        immolation(15, IMMOLATION_SHARD, you.pos(), false, &you);
 
         xom_is_stimulated(200);
     }
@@ -513,7 +498,7 @@ void tome_of_power(int slot)
     {
         if (create_monster(
                 mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
-                    "a tome of Destruction",
+                    "a shard of destruction",
                     true, 6, 0, you.pos())))
         {
             mpr("A horrible Thing appears!");
@@ -549,6 +534,7 @@ void tome_of_power(int slot)
 
         your_spells(spell_casted, powc, false);
     }
+    return true;
 }
 
 // return a slot that has manual for given skill, or -1 if none exists
@@ -1926,6 +1912,16 @@ bool evoke_item(int slot)
 
         case MISC_SACK_OF_SPIDERS:
             if (_sack_of_spiders(item))
+                pract = 1;
+            break;
+
+        case MISC_SHARD_OF_DESTRUCTION:
+            if (silenced(you.pos()))
+            {
+                mpr("This item does not work when silenced!");
+                unevokable = true;
+            }
+            else if (_shard_of_destruction(item))
                 pract = 1;
             break;
 

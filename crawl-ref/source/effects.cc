@@ -364,8 +364,8 @@ void immolation(int pow, int caster, coord_def where, bool known,
         aux = "a fiery explosion";
         break;
 
-    case IMMOLATION_TOME:
-        aux = "an exploding Tome of Destruction";
+    case IMMOLATION_SHARD:
+        aux = "an exploding Shard of Destruction";
         break;
 
     default:;

@@ -628,6 +628,10 @@ void item_colour(item_def &item)
             item.colour = WHITE;
             break;
 
+        case MISC_SHARD_OF_DESTRUCTION:
+            item.colour = MAGENTA;
+            break;
+
         case MISC_RUNE_OF_ZOT:
             switch (item.plus)
             {
@@ -2833,11 +2837,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         }
         while (book_rarity(item.sub_type) == 100);
 
-        // Tome of destruction: rare!
-        if (item_level > 10 && x_chance_in_y(21 + item_level, 7000))
-            item.sub_type = BOOK_DESTRUCTION;
-
-        // Skill manuals - also rare.
+        // Skill manuals - rare!
         if (item_level > 6 && x_chance_in_y(21 + item_level, 4000))
             item.sub_type = BOOK_MANUAL;
     }
@@ -2861,9 +2861,8 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         item.plus2 = random_range(2000, 3000);
     }
 
-    // Manuals and books of destruction are rare enough without replacing
-    // them with randart books.
-    if (item.sub_type == BOOK_MANUAL || item.sub_type == BOOK_DESTRUCTION)
+    // Manuals are rare enough without replacing them with randart books.
+    if (item.sub_type == BOOK_MANUAL)
         return;
 
     // Only randomly generate randart books for OBJ_RANDOM, since randart
@@ -3105,6 +3104,10 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     // Spider sack charges
     if (item.sub_type == MISC_SACK_OF_SPIDERS)
         item.plus = 5 + random2avg(11,2);
+
+    // Shard of destruction charges
+    if (item.sub_type == MISC_SHARD_OF_DESTRUCTION)
+        item.plus = random_range(5,15,2);
 
     if (is_deck(item))
     {

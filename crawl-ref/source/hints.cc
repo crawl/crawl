@@ -3668,9 +3668,7 @@ void hints_describe_item(const item_def &item)
             }
             else // It's a spellbook!
             {
-                if (you.religion == GOD_TROG
-                    && (item.sub_type != BOOK_DESTRUCTION
-                        || !item_ident(item, ISFLAG_KNOW_TYPE)))
+                if (you.religion == GOD_TROG)
                 {
                     if (!item_ident(item, ISFLAG_KNOW_TYPE))
                     {
@@ -3702,11 +3700,6 @@ void hints_describe_item(const item_def &item)
 #endif
                             ".";
                     cmd.push_back(CMD_READ);
-                }
-                else if (item.sub_type == BOOK_DESTRUCTION)
-                {
-                    ostr << "This magical item can cause great destruction "
-                            "- to you, or your surroundings. Use with care!";
                 }
                 else
                 {

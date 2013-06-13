@@ -717,6 +717,8 @@ static int _acquirement_misc_subtype()
         result = MISC_GONG_OF_GOLUBRIA;
     if (one_chance_in(4) && !you.seen_misc[MISC_DISC_OF_STORMS])
         result = MISC_DISC_OF_STORMS;
+    if (one_chance_in(4) && !you.seen_misc[MISC_SHARD_OF_DESTRUCTION])
+        result = MISC_SHARD_OF_DESTRUCTION;
     if (one_chance_in(4) && !you.seen_misc[MISC_LAMP_OF_FIRE])
         result = MISC_LAMP_OF_FIRE;
     if (one_chance_in(4) && !you.seen_misc[MISC_FAN_OF_GALES])
@@ -1069,10 +1071,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
     case BOOK_MANUAL:
     {
-        // The Tome of Destruction is rare enough we won't change this.
-        if (book.sub_type == BOOK_DESTRUCTION)
-            return true;
-
         int weights[NUM_SKILLS];
         int total_weights = 0;
 

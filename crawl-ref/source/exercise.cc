@@ -470,7 +470,6 @@ void practise(exer_type ex, int param1)
         exercise(SK_EVOCATIONS, param1);
         break;
     case EX_DID_ZAP_WAND:
-    case EX_WILL_READ_TOME:
         exercise(SK_EVOCATIONS, 1);
         break;
 

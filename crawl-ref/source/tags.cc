@@ -2944,6 +2944,14 @@ void unmarshallItem(reader &th, item_def &item)
         item.plus = 6 + random2avg(20,2);
     }
 
+    // Convert Tome of Destruction to Shard
+    if (th.getMinorVersion() < TAG_MINOR_TOME_OVERHAUL
+        && item.base_type == OBJ_BOOKS && item.sub_type == BOOK_DESTRUCTION)
+    {
+        item.base_type = OBJ_MISCELLANY;
+        item.sub_type = MISC_SHARD_OF_DESTRUCTION;
+        item.plus = random_range(5,15,2);
+    }
 #endif
 
     bind_item_tile(item);

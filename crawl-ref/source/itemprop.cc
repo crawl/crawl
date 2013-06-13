@@ -731,12 +731,6 @@ static iflags_t _full_ident_mask(const item_def& item)
         flagset = 0;
         break;
     case OBJ_BOOKS:
-        if (item.sub_type == BOOK_DESTRUCTION)
-        {
-            flagset = 0;
-            break;
-        }
-        // Intentional fall-through.
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
         flagset = ISFLAG_KNOW_TYPE;
@@ -1989,8 +1983,7 @@ bool item_is_horn_of_geryon(const item_def &item)
 
 bool item_is_spellbook(const item_def &item)
 {
-    return (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
-            && item.sub_type != BOOK_DESTRUCTION);
+    return (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL);
 }
 
 //

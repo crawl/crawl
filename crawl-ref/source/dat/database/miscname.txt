@@ -106,7 +106,7 @@ yellow
 # "dust glows XXX", "eyes glow XXX", "hands glow XXX", "<actor> glows XXX".
 # If a language needs these keys split, please say so.
 #
-# Also used by Tome of Destruction below.
+# Also used by Shard of Destruction below.
 glowing_colour_name
 
 @_glowing_adj_@ @_colour_name_@
@@ -157,7 +157,7 @@ text
 
 writing
 %%%%
-# Tome of Destruction: "The book opens to a page covered in XXX."
+# Shard of Destruction: "Your mind starts filling with XXX."
 writing_name
 
 @_colour_name_@ @_writing_noun_@

@@ -247,6 +247,7 @@ enum misc_item_type
     MISC_PHIAL_OF_FLOODS,
     MISC_GONG_OF_GOLUBRIA,
     MISC_SACK_OF_SPIDERS,
+    MISC_SHARD_OF_DESTRUCTION, // Was Tome of Destruction
 
     NUM_MISCELLANY, // mv: used for random generation
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
