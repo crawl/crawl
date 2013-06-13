@@ -2183,6 +2183,10 @@ unsigned int item_value(item_def item, bool ident)
             valued += 500;
             break;
 
+        case MISC_SHARD_OF_DESTRUCTION:
+            valued += 800;
+            break;
+
 #if TAG_MAJOR_VERSION == 34
         case MISC_EMPTY_EBONY_CASKET:
             valued += 20;
@@ -2717,10 +2721,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     const bool do_prompt =
         (item.base_type == OBJ_JEWELLERY && !jewellery_is_amulet(item)
          && ring_has_stackable_effect(item))
-     // Manuals and tomes of destruction are consumable.
-     || (item.base_type == OBJ_BOOKS
-         && (item.sub_type == BOOK_MANUAL
-             || item.sub_type == BOOK_DESTRUCTION));
+     // Manuals are consumable.
+     || (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL);
 
     bool add_item = false;
 

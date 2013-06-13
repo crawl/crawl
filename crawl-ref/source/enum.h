@@ -465,8 +465,10 @@ enum book_type
     BOOK_RANDART_THEME,
 
     BOOK_MANUAL,
+    NUM_BOOKS,
+#if TAG_MAJOR_VERSION == 34
     BOOK_DESTRUCTION,
-    NUM_BOOKS
+#endif
 };
 
 #define NUM_NORMAL_BOOKS     (MAX_NORMAL_BOOK + 1)
@@ -1781,7 +1783,7 @@ enum immolation_source_type
     IMMOLATION_GENERIC = -1,
     IMMOLATION_SCROLL  = -2,
     IMMOLATION_AFFIX   = -3, // effect when fixing fire brand
-    IMMOLATION_TOME    = -4, // exploding Tome of Destruction
+    IMMOLATION_SHARD   = -4, // exploding Shard of Destruction
 };
 
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status

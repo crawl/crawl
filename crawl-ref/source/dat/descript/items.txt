@@ -2428,6 +2428,11 @@ ripe and waiting field and did the work. He thought himself a little mad. Hell,
 it was an ordinary-enough wheat field, really, wasn't it?”
     -Ray Bradbury, _The Scythe_. 1943.
 %%%%
+shard of destruction
+
+An extremely powerful but unpredictable shard of crystallised wild magic.
+Warning: Using it may be hazardous to you or your surroundings!
+%%%%
 shield
 
 A piece of wood and metal, to be strapped on one arm for defence. It is
@@ -2786,15 +2791,6 @@ throwing net:quote
 “The look of a scared thing
  Sitting in a net!”
     -Edna St. Vincent Millay, “When the Year Grows Old”. 1917.
-%%%%
-tome of destruction
-
-An extremely powerful but unpredictable book of wild magic. Warning: Reading
-may be hazardous to you or your surroundings!
-%%%%
-tome of destruction:quote
-
-<book:quote>
 %%%%
 trident
 

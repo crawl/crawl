@@ -63,6 +63,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_EMPTY_EBONY_CASKET:
 #endif
         case MISC_BOX_OF_BEASTS:              return TILEP_HAND1_BOX;
+        case MISC_SHARD_OF_DESTRUCTION:       return TILEP_HAND2_BOOK_MAGENTA;
 
         case MISC_DECK_OF_ESCAPE:
         case MISC_DECK_OF_DESTRUCTION:

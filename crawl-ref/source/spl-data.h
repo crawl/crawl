@@ -520,7 +520,7 @@ struct spell_desc
 {
     SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET, // rod/tome of destruction
+     SPFLAG_DIR_OR_TARGET, // rod/shard of destruction
      3,
      1000,
      7, 7,

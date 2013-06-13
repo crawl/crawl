@@ -948,6 +948,7 @@ static const char* misc_type_name(int type, bool known)
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_GONG_OF_GOLUBRIA:          return "gong of Golubria";
+    case MISC_SHARD_OF_DESTRUCTION:      return "shard of destruction";
 
     case MISC_RUNE_OF_ZOT:
     default:
@@ -1189,8 +1190,6 @@ string sub_type_string(const item_def &item, bool known)
             return "Necronomicon";
         else if (sub_type == BOOK_GRAND_GRIMOIRE)
             return "Grand Grimoire";
-        else if (sub_type == BOOK_DESTRUCTION)
-            return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
 
@@ -1981,9 +1980,6 @@ bool item_type_known(const item_def& item)
     {
         return true;
     }
-
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_DESTRUCTION)
-        return true;
 
     if (!item_type_has_ids(item.base_type))
         return false;
@@ -3074,10 +3070,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         default:
             return false;
         }
-
-    case OBJ_BOOKS:
-        // The Tome of Destruction is certainly risky.
-        return (item.sub_type == BOOK_DESTRUCTION);
 
     default:
         return false;

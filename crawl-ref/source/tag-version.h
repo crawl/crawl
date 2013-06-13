@@ -50,6 +50,7 @@ enum tag_minor_version
     TAG_MINOR_STAT_ZERO,           // Stat zero doesn't cause death.
     TAG_MINOR_BOX_OF_BEASTS_CHARGES, // Box of Beasts counts its charges.
     TAG_MINOR_WAR_DOG_REMOVAL,     // War dogs become wolves, then disappear
+    TAG_MINOR_TOME_OVERHAUL,       // Tome of destruction replacement
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

@@ -2713,15 +2713,6 @@ static void _handle_read_book(int item_slot)
     item_def& book(you.inv[item_slot]);
     ASSERT(book.sub_type != BOOK_MANUAL);
 
-    if (book.sub_type == BOOK_DESTRUCTION)
-    {
-        if (silenced(you.pos()))
-            mpr("This book does not work if you cannot read it aloud!");
-        else
-            tome_of_power(item_slot);
-        return;
-    }
-
     while (true)
     {
         // Spellbook
