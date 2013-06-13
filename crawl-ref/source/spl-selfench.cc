@@ -343,7 +343,7 @@ spret_type cast_song_of_slaying(int pow, bool fail)
     {
         mpr("You start a new song!");
     }
-    else 
+    else
     {
         mpr("You start singing a song of slaying.");
     }

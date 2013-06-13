@@ -724,8 +724,16 @@ static bool _is_pet_kill(killer_type killer, int i)
 int exp_rate(int killer)
 {
     // Damage by the spectral weapon is considered to be the player's damage --- so the player does not lose any exp from dealing damage with a spectral weapon summon
-    if (killer == MHITYOU
-        || !invalid_monster_index(killer) && (&menv[killer])->type == MONS_SPECTRAL_WEAPON)
+    if (!invalid_monster_index(killer)
+        && (&menv[killer])->type == MONS_SPECTRAL_WEAPON
+        && (&menv[killer])->props.exists("sw_mid")
+        && actor_by_mid((&menv[killer])->props["sw_mid"].get_int())->is_player())
+    {
+        mpr("Exp by SW attributed to player");
+        return 2;
+    }
+
+    if (killer == MHITYOU)
         return 2;
 
     if (_is_pet_kill(KILL_MON, killer))
@@ -1661,8 +1669,12 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player instead
-    if (killer == KILL_MON && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON)
+    if (killer == KILL_MON
+        && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON
+        && (&menv[killer_index])->props.exists("sw_mid")
+        && actor_by_mid((&menv[killer_index])->props["sw_mid"].get_int())->is_player())
     {
+        mpr("Kill by SW attributed to player");
         killer = KILL_YOU;
         killer_index = you.mindex();
     }
@@ -1829,8 +1841,7 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_SPECTRAL_WEAPON)
     {
-        simple_monster_message(mons, " fades away.",
-                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        end_spectral_weapon(mons, true, killer == KILL_RESET);
         silent = true;
     }
 
@@ -3490,9 +3501,18 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
     if (crawl_state.game_is_arena())
         return true;
 
-    // Spectral weapons never attack on their own
+    // Spectral weapons only attack their target
     if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        // FIXME: find a way to use check_target_spectral_weapon
+        //        without potential info leaks about visibility.
+        if (mons->props.exists("target_mid"))
+        {
+            actor *target = actor_by_mid(mons->props["target_mid"].get_int());
+            return (target && target->pos() == p);
+        }
         return false;
+    }
 
     if (!mons->friendly() || !mons->is_summoned())
         return true;
