@@ -2018,6 +2018,8 @@ int monster_die(monster* mons, killer_type killer,
 
             if (you.duration[DUR_DEATH_CHANNEL] && gives_xp)
                 _make_spectral_thing(mons, !death_message);
+            else if (gives_xp)
+                recharge_soul_evoker(mons, !death_message);
             break;
         }
 
@@ -2253,6 +2255,8 @@ int monster_die(monster* mons, killer_type killer,
 
                 if (you.duration[DUR_DEATH_CHANNEL] && gives_xp && was_visible)
                     _make_spectral_thing(mons, !death_message);
+                else if (gives_xp && was_visible)
+                    recharge_soul_evoker(mons, !death_message);
             }
             break;
 

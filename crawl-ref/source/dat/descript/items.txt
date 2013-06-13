@@ -1189,6 +1189,12 @@ hand axe:quote
  She gave her father forty-one.”
     -A popular skipping-rope rhyme, after 1893.
 %%%%
+hand of haunting
+
+An ancient severed hand, somehow preserved by necromantic magic and able
+to ensnare the souls of fallen foes. Once clenched into a fist it is ready
+to unleash their anger on foes of your choosing.
+%%%%
 helmet
 
 A piece of metal headgear.

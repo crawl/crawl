@@ -624,6 +624,10 @@ void item_colour(item_def &item)
             item.colour = BLUE;
             break;
 
+        case MISC_HAND_OF_HAUNTING:
+            item.colour = LIGHTBLUE;
+            break;
+
         case MISC_SACK_OF_SPIDERS:
             item.colour = WHITE;
             break;

@@ -1689,6 +1689,27 @@ void gong_of_golubria_done()
     noisy(50, you.pos());
 }
 
+static bool _hand_of_haunting()
+{
+    dist target;
+    bolt beam;
+
+    zappy(ZAP_HAUNTING,25 + you.skill(SK_EVOCATIONS, 8), beam);
+    beam.range = LOS_RADIUS;
+    beam.thrower = KILL_YOU;
+    beam.name = "torrent of ghosts";
+    beam.aimed_at_spot = true;
+
+    if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
+                        LOS_RADIUS, true, true, false, NULL,
+                        "Haunt where?"))
+    {
+        cast_haunt(beam.ench_power, beam.target, GOD_NO_GOD, false);
+    }
+
+    return true;
+}
+
 static void _expend_elemental_evoker(item_def &item)
 {
     item.plus2 = 10;
@@ -1912,6 +1933,20 @@ bool evoke_item(int slot)
             else
                 return false;
             break;
+
+        case MISC_HAND_OF_HAUNTING:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            if (_hand_of_haunting())
+            {
+                pract = 1;
+                _expend_elemental_evoker(item);
+            }
+            else
+                return false;
 
         case MISC_HORN_OF_GERYON:
             if (_evoke_horn_of_geryon(item))

@@ -706,6 +706,7 @@ static int _acquirement_misc_subtype()
 {
     // Note: items listed early are less likely due to chances of being
     // overwritten.
+    // TODO: Simplify
     int result = random_range(MISC_FIRST_DECK, MISC_LAST_DECK);
     if (result == MISC_DECK_OF_SUMMONING && coinflip())
         result = MISC_SACK_OF_SPIDERS;
@@ -719,6 +720,8 @@ static int _acquirement_misc_subtype()
         result = MISC_DISC_OF_STORMS;
     if (one_chance_in(4) && !you.seen_misc[MISC_SHARD_OF_DESTRUCTION])
         result = MISC_SHARD_OF_DESTRUCTION;
+    if (one_chance_in(4) && !you.seen_misc[MISC_HAND_OF_HAUNTING])
+        result = MISC_HAND_OF_HAUNTING;
     if (one_chance_in(4) && !you.seen_misc[MISC_LAMP_OF_FIRE])
         result = MISC_LAMP_OF_FIRE;
     if (one_chance_in(4) && !you.seen_misc[MISC_FAN_OF_GALES])

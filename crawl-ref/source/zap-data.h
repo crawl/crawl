@@ -1080,3 +1080,20 @@ struct zap_info
     false,
     3
 },
+{
+    ZAP_HAUNTING,
+    "torrent of ghosts",
+    250,
+    new dicedef_calculator<2, 4, 1, 10>,
+    new tohit_calculator<8, 1, 10>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    true,
+    false,
+    false,
+    3
+},
+
+#endif
