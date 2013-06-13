@@ -26,6 +26,7 @@ ignore += You found a web trap!
 stop += found.*trap
 stop += You have blundered into a Zot trap
 stop += You fall through a shaft
+stop += A sentinel's mark forms upon you\.
 
 # Ailments
 #

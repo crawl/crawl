@@ -3369,7 +3369,7 @@ void spare_beogh_convert()
         // An invis player converting is ok, for simplicity.
         if (!mon || !cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
             continue;
-        if (mon->wont_attack())
+        if (mon->attitude != ATT_HOSTILE)
             continue;
         if (mons_genus(mon->type) != MONS_ORC)
             continue;
@@ -3386,7 +3386,7 @@ void spare_beogh_convert()
                     continue;
                 if (mons_genus(orc->type) != MONS_ORC)
                     continue;
-                if (orc->wont_attack())
+                if (mon->attitude != ATT_HOSTILE)
                     continue;
                 witnesses.insert(orc->mid);
             }
@@ -3402,6 +3402,7 @@ void spare_beogh_convert()
             continue;
 
         ++witc;
+        orc->del_ench(ENCH_CHARM);
         mons_pacify(orc, ATT_GOOD_NEUTRAL, true);
     }
 

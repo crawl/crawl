@@ -1820,13 +1820,15 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 
     if (feat == DNGN_ROCK_WALL)
     {
-        env.tile_flv(c).wall = TILE_WALL_UNDEAD
-            + random2(tile_dngn_count(TILE_WALL_UNDEAD));
+        tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
+                                           cenv.floor_colour);
+        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
     else if (feat == DNGN_FLOOR)
     {
-        env.tile_flv(c).floor = TILE_FLOOR_NERVES
-            + random2(tile_dngn_count(TILE_FLOOR_NERVES));
+        tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
+                                           cenv.floor_colour);
+        env.tile_flv(c).floor = idx + random2(tile_dngn_count(idx));
     }
 }
 

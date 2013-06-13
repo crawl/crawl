@@ -17,7 +17,7 @@ open at any time, though you can temporarily exchange the inventory view
 with another type of tiled panel by clicking on the tab icons.
 
 You can customize the priority of the control panels by modifying the
-tile_layout_priority option in tiles_options.txt in the settings directory.
+tile_layout_priority option in init.txt in the settings directory.
 
 
 Movement
@@ -127,7 +127,7 @@ it has been known to be slow on the i810 and there is little to be done in
 that case but to run the console version instead or switch to a different
 machine.
 
-You can try tweaking a number of options in tiles_options.txt in the settings
+You can try tweaking a number of options in init.txt in the settings
 directory to see whether performance improves:
 
 travel_delay = -1

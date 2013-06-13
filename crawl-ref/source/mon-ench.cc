@@ -478,17 +478,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
-    case ENCH_TEMP_PACIF:
-        if (!quiet)
-        {
-            simple_monster_message(this, (" seems to come to "
-                + pronoun(PRONOUN_POSSESSIVE) + " senses.").c_str());
-        }
-        // Yeah, this _is_ offensive to Zin, but hey, he deserves it (1KB).
-
-        behaviour_event(this, ME_EVAL);
-        break;
-
     case ENCH_PETRIFIED:
         if (!quiet)
             simple_monster_message(this, " is no longer petrified.");
@@ -927,7 +916,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_SLEEPY: case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
-        case ENCH_TEMP_PACIF: case ENCH_SILENCE: case ENCH_LOWERED_MR:
+        case ENCH_SILENCE: case ENCH_LOWERED_MR:
         case ENCH_SOUL_RIPE: case ENCH_BLEED: case ENCH_ANTIMAGIC:
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
@@ -1114,7 +1103,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
-    case ENCH_TEMP_PACIF:
     case ENCH_PETRIFYING:
     case ENCH_PETRIFIED:
     case ENCH_SICK:
@@ -1913,7 +1901,11 @@ static const char *enchant_names[] =
     "confusion", "invis", "poison", "rot", "summon", "abj", "corona",
     "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
     "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
-    "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
+    "sleepy", "held", "battle_frenzy",
+#if TAG_MAJOR_VERSION == 34
+    "temp_pacif",
+#endif
+    "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production",
 #if TAG_MAJOR_VERSION == 34
