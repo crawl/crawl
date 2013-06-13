@@ -118,6 +118,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // with processing the number of attacks a monster has without worrying
     // about unpredictable or weird results from players.
 
+    // If this is a spectral weapon check if it can attack
+    if (attacker->as_monster()->type == MONS_SPECTRAL_WEAPON
+        && !confirm_attack_spectral_weapon(attacker->as_monster(), defender))
+    {
+        // Pretend an attack happened,
+        // so the weapon doesn't advance unecessarily.
+        return true;
+    }
+
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
         attacker->as_monster()->number : 4;
     coord_def pos    = defender->pos();
