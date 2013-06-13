@@ -146,7 +146,7 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   D:4-22, Lair:1-7, Pan
+DEPTH:   D:4-22, Lair:1-7
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_cross
