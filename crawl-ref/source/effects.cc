@@ -3210,7 +3210,8 @@ void recharge_elemental_evokers(int exp)
     vector<item_def*> evokers;
     for (int item = 0; item < ENDOFPACK; ++item)
     {
-        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus2 > 0)
+        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus2 > 0
+            && you.inv[item].sub_type != MISC_HAND_OF_HAUNTING)
             evokers.push_back(&you.inv[item]);
     }
 
@@ -3227,6 +3228,37 @@ void recharge_elemental_evokers(int exp)
         {
             evoker->plus2 = 0;
             mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
+        }
+    }
+}
+
+void recharge_soul_evoker(monster* mons, bool quiet)
+{
+    int target = -1;
+    int factor = you.skills[SK_EVOCATIONS] + you.skills[SK_NECROMANCY];
+    // Currently, carrying more means they'll recharge faster, since each
+    // has a separate chance to get the soul.
+    // XXX: Slightly weighted towards the last one in the inventory
+    for (int item = 0; item < ENDOFPACK; ++item)
+    {
+        if (you.inv[item].sub_type == MISC_HAND_OF_HAUNTING
+            && you.inv[item].plus2 > 0 && x_chance_in_y(factor, 100))
+        {
+            target = item;
+        }
+    }
+    if (target >= 0)
+    {
+        // Absorb a soul
+        you.inv[target].plus2--;
+        if (you.inv[target].plus2 > 0)
+        {
+            mprf("Your %s twitches.", you.inv[target].name(DESC_QUALNAME).c_str());
+        }
+        else
+        {
+            // Hand is now active
+            mprf("Your %s curls into a fist, and is now full.", you.inv[target].name(DESC_QUALNAME).c_str());
         }
     }
 }

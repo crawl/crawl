@@ -2176,6 +2176,7 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_STONE_OF_TREMORS:
         case MISC_PHIAL_OF_FLOODS:
         case MISC_LAMP_OF_FIRE:
+        case MISC_HAND_OF_HAUNTING:
             valued += 1000;
             break;
 

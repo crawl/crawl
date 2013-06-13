@@ -74,6 +74,7 @@ void update_level(int elapsedTime);
 void handle_time();
 void recharge_rods(int aut, bool floor_only);
 void recharge_elemental_evokers(int exp);
+void recharge_soul_evoker(monster* mons, bool quiet = false);
 
 void slime_wall_damage(actor* act, int delay);
 

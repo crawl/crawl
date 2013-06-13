@@ -3651,6 +3651,7 @@ enum zap_type
     ZAP_DAZZLING_SPRAY,
     ZAP_FORCE_LANCE,
     ZAP_BLAST,
+    ZAP_HAUNTING,
 
     NUM_ZAPS
 };
