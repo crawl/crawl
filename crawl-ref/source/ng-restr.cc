@@ -748,6 +748,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_SLUDGE_ELF:
         case SP_BASE_DRACONIAN:
         case SP_DJINNI:
+        case SP_GARGOYLE:
             return CC_UNRESTRICTED;
 
         default:
