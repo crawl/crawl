@@ -31,7 +31,6 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
-#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
