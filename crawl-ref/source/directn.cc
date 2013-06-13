@@ -714,7 +714,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             string desc = "";
 #ifndef USE_TILE_LOCAL
-            cglyph_t g = get_cell_glyph(c);
+            cglyph_t g = get_cell_glyph(c, true);
             const string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
