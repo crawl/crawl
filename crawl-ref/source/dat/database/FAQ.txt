@@ -447,7 +447,7 @@ Is there a way to modify the size of the tiles screen, the font, etc.?
 %%%%
 A:tiles options
 
-A: Yes. Play around with the options in settings/tiles_options.txt until you are satisfied. See docs/options_guide.txt for some explanations.
+A: Yes. Play around with the options in settings/init.txt until you are satisfied. See docs/options_guide.txt and docs/tiles_help.txt for some explanations.
 
 It is currently not possible to modify any options from within the game itself.
 %%%%
