@@ -161,12 +161,6 @@ static bool _is_species_valid_choice(species_type species)
     if (species >= SP_ELF) // These are all invalid.
         return false;
 
-    if (species == SP_LAVA_ORC
-        && Version::ReleaseType != VER_ALPHA)
-    {
-        return false;
-    }
-
     // Non-base draconians cannot be selected either.
     if (species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN)
         return false;
