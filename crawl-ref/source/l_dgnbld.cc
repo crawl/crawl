@@ -857,6 +857,213 @@ LUAFN(dgn_make_irregular_box)
     return 0;
 }
 
+LUAFN(dgn_make_round_box)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    TABLE_CHAR(ls, floor, '.');
+    TABLE_CHAR(ls, wall, 'x');
+    TABLE_CHAR(ls, door, '+');
+    TABLE_INT(ls, door_count, 1);
+    TABLE_STR(ls, passable, traversable_glyphs);
+    TABLE_BOOL(ls, veto_gates, false);
+    TABLE_BOOL(ls, veto_if_no_doors, false);
+
+    const int OUTSIDE = 0;
+    const int WALL    = 1;
+    const int FLOOR   = 2;
+    const int DOOR    = 3;
+
+    int size_x = x2 - x1 + 1;
+    int size_y = y2 - y1 + 1;
+
+    //
+    //  The basic idea here is we draw a filled circle, hollow
+    //    out the middle, and then place doors on straight walls
+    //    until we have enough.
+    //
+    //  We do not know for sure whether we want to actually draw
+    //    anything until the end, so we will draw out tower onto
+    //    our own seperate array (actually a vector of vectors
+    //    so we can set the size at runtime).  Then, if
+    //    everything goes well, we will copy it to the world with
+    //    the appropriate glyphs.
+    //
+    //  Note that each of these steps has to be completed before
+    //    we can do the next one, so all the loops over the same
+    //    area are required.
+    //
+
+    //  1. Fill with OUTSIDE glyphs.
+    vector<vector<int> > new_glyphs(size_x, vector<int>(size_y, OUTSIDE));
+
+    //  2. Draw wall glyphs for filled circle.
+    //    -> This is a formula for an ellipse in case we get a
+    //       non-circular room to make
+    //    -> we add an extra 0.5 to the radius so that we don't
+    //       get wall isolated cells on the outside
+    float radius_x = (size_x - 1.0f) * 0.5f;
+    float radius_y = (size_y - 1.0f) * 0.5f;
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
+        {
+            float fraction_x = (x - radius_x) / (radius_x + 0.5f);
+            float fraction_y = (y - radius_y) / (radius_y + 0.5f);
+            if (fraction_x * fraction_x + fraction_y * fraction_y <= 1.0f)
+                new_glyphs[x][y] = WALL;
+        }
+
+    //  3. Replace all wall glypyhs that don't touch outside the
+    //     circle with floor glyphs.
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
+        {
+            // we can't use adjacent_iterator it doesn't
+            //  report neighbours with negative coordinates
+            if (new_glyphs[x][y] == WALL
+                && x > 0 && x < size_x - 1
+                && y > 0 && y < size_y - 1
+                && new_glyphs[x - 1][y - 1] != OUTSIDE
+                && new_glyphs[x    ][y - 1] != OUTSIDE
+                && new_glyphs[x + 1][y - 1] != OUTSIDE
+                && new_glyphs[x - 1][y    ] != OUTSIDE
+                && new_glyphs[x + 1][y    ] != OUTSIDE
+                && new_glyphs[x - 1][y + 1] != OUTSIDE
+                && new_glyphs[x    ][y + 1] != OUTSIDE
+                && new_glyphs[x + 1][y + 1] != OUTSIDE)
+            {
+                new_glyphs[x][y] = FLOOR;
+            }
+        }
+
+    //  4. Find all potential door positions.
+    vector<coord_def> door_positions;
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
+            if (new_glyphs[x][y] == WALL)
+            {
+                // check for wall in each direction
+                bool xm = (x - 1 >= 0      && new_glyphs[x - 1][y] == WALL);
+                bool xp = (x + 1 <  size_x && new_glyphs[x + 1][y] == WALL);
+                bool ym = (y - 1 >= 0      && new_glyphs[x][y - 1] == WALL);
+                bool yp = (y + 1 <  size_y && new_glyphs[x][y + 1] == WALL);
+
+                int real_x = x1 + x;
+                int real_y = y1 + y;
+
+                // We are on an X-aligned wall
+                if (xm && xp && !ym && !yp)
+                {
+                    //
+                    //  Check for passable glyphs in real map
+                    //    and outside the tower.  The check
+                    //    order is:
+                    //    -> in real map
+                    //    -> passable
+                    //    -> outside temporary array
+                    //       or array has OUTSIDE glyph
+                    //
+                    //  If we can find one on at least one side,
+                    //    we can put a door here.
+                    //    -> we will only get two on rooms only
+                    //       1 cell wide including walls
+                    //
+
+                    if (real_y - 1 >= 0
+                        && strchr(passable, lines(real_x, real_y - 1))
+                        && (y - 1 < 0
+                            || new_glyphs[x][y - 1] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                    else if (real_y + 1 < lines.height()
+                             && strchr(passable, lines(real_x, real_y + 1))
+                             && (y + 1 >= size_y
+                                 || new_glyphs[x][y + 1] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                }
+
+                // We are on an Y-aligned wall
+                if (!xm && !xp && ym && yp)
+                {
+                    // Same checks as above, but the other axis
+                    if (real_x - 1 >= 0
+                        && strchr(passable, lines(real_x - 1, real_y))
+                        && (x - 1 < 0
+                            || new_glyphs[x - 1][y] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                    else if (real_x + 1 < lines.width()
+                             && strchr(passable, lines(real_x + 1, real_y))
+                             && (x + 1 >= size_x
+                                 || new_glyphs[x + 1][y] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                }
+            }
+
+    //  5. Add doors
+    int doors_placed = 0;
+    while (doors_placed < door_count && !door_positions.empty())
+    {
+        int index = random2(door_positions.size());
+        coord_def pos = door_positions[index];
+        door_positions[index] = door_positions[door_positions.size() - 1];
+        door_positions.pop_back();
+
+        bool good_spot = true;
+        if (veto_gates)
+        {
+            if (pos.x - 1 >= 0     && new_glyphs[pos.x - 1][pos.y] == DOOR)
+                good_spot = false;
+            if (pos.x + 1 < size_x && new_glyphs[pos.x + 1][pos.y] == DOOR)
+                good_spot = false;
+            if (pos.y - 1 >= 0     && new_glyphs[pos.x][pos.y - 1] == DOOR)
+                good_spot = false;
+            if (pos.y + 1 < size_y && new_glyphs[pos.x][pos.y + 1] == DOOR)
+                good_spot = false;
+        }
+
+        if (good_spot)
+        {
+            new_glyphs[pos.x][pos.y] = DOOR;
+            doors_placed++;
+        }
+    }
+
+    //  6. Add tower to map (if not vetoed)
+    if(doors_placed > 0 || !veto_if_no_doors)
+    {
+        for (int x = 0; x < size_x; x++)
+            for (int y = 0; y < size_y; y++)
+            {
+                switch(new_glyphs[x][y])
+                {
+                // leave existing glyphs on OUTSIDE
+                case WALL:  lines(x1 + x, y1 + y) = wall;  break;
+                case FLOOR: lines(x1 + x, y1 + y) = floor; break;
+                case DOOR:  lines(x1 + x, y1 + y) = door; break;
+                }
+            }
+
+        lua_pushboolean(ls, true);
+    }
+    else
+    {
+        lua_pushboolean(ls, false);
+    }
+
+    return 1;
+}
+
 // Return a metatable for a point on the map_lines grid.
 LUAFN(dgn_mapgrd_table)
 {
@@ -1649,6 +1856,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "make_box", &dgn_make_box },
     { "make_box_doors", &dgn_make_box_doors },
     { "make_irregular_box", &dgn_make_irregular_box },
+    { "make_round_box", &dgn_make_round_box },
     { "mapgrd_table", dgn_mapgrd_table },
     { "octa_room", &dgn_octa_room },
     { "remove_isolated_glyphs", &dgn_remove_isolated_glyphs },
