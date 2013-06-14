@@ -276,10 +276,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
                 "kobold / big kobold / w:3 kobold demonologist / w:2 sonja",
-                "jackal w:1 / hound w:5 / war dog w:20 / hell hound w:7 / w:3 grum",
+                "jackal w:1 / hound w:5 / wolf w:20 / hell hound w:7 / w:3 grum",
                 "ogre w:35 / two-headed ogre / ogre mage w:5 / w:2 erolcha",
                 "giant frog w:20 / blink frog w:6 / spiny frog w:6 / prince ribbit w:2",
-                "gnoll / gnoll shaman / gnoll sergeant / hound / war dog",
+                "gnoll / gnoll shaman / gnoll sergeant / hound / wolf",
                 -- Gimmicks
                 "brain worm", "giant spore hd:3", "orc priest", "vampire bat",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame"

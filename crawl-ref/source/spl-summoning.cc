@@ -334,15 +334,12 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
         switch (chance % 7)
         {
         case 0:
-            if (one_chance_in(you.species == SP_HILL_ORC ? 3 : 6))
-                mon = MONS_WARG;
-            else
-                mon = MONS_WOLF;
+            mon = MONS_WARG;
             break;
 
         case 1:
         case 2:
-            mon = MONS_WAR_DOG;
+            mon = MONS_WOLF;
             break;
 
         case 3:

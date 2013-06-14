@@ -2149,7 +2149,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_GRUM:
         natural_leader = true;
-        band = BAND_WAR_DOGS;
+        band = BAND_WOLVES;
         band_size = 2 + random2(3);
         break;
     case MONS_CENTAUR_WARRIOR:
@@ -2258,8 +2258,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3 + random2(4);
         break;
 
-    case MONS_WAR_DOG:
-        band = BAND_WAR_DOGS;
+    case MONS_WOLF:
+        band = BAND_WOLVES;
         band_size = 2 + random2(4);
         break;
 
@@ -2787,8 +2787,8 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_NAGAS:
         return MONS_NAGA;
-    case BAND_WAR_DOGS:
-        return MONS_WAR_DOG;
+    case BAND_WOLVES:
+        return MONS_WOLF;
     case BAND_GREEN_RATS:
         return MONS_GREEN_RAT;
     case BAND_ORANGE_RATS:

@@ -238,7 +238,7 @@ NAME:   erik_lair_island
 TAGS:   lair_entry
 ORIENT: float
 MONS:   troll
-MONS:   w:30 hound / jackal / w:20 war dog
+MONS:   w:30 hound / jackal / w:20 wolf
 SUBST:  ? = w.
 KFEAT:  O = enter_lair
 MAP
@@ -2006,7 +2006,7 @@ PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling
 ORIENT: southeast
 MONS:   plant
-MONS:   jackal, hound, warg, wolf, war dog, hell hound
+MONS:   jackal, hound, warg, wolf, hell hound
 SUBST:  X = xx.
 SUBST:  P = 1111.
 KITEM:  $ = gold, acquire any
@@ -2014,12 +2014,12 @@ KITEM:  $ = gold, acquire any
 MAP
 @   @  @  XXXXXxxxxXXxxxxxxxxxxxxxxx
  ...P..Pxxxxxxxx.3xxxxxxxxxxxxxxxxxx
- .P...Pxxxxxx.......xxxxxxx$x7xxxxxx
-@P...1xxxxxx3...xx....xxxxxx6.6..xxx
- ...Px..xxxxx..xxx....xxxxx7.5.4.xxx
- .Pxxx.2.xxx...5xxx..6.4xx.......xxx
-@Pxxx.22.xx....xxx.6...xx......xxxxx
- xxxx.22.xxx....xxx66..4xx....xxxxxx
+ .P...Pxxxxxx.......xxxxxxx$x6xxxxxx
+@P...1xxxxxx3...xx....xxxxxx5.5..xxx
+ ...Px..xxxxx..xxx....xxxxx6.5.4.xxx
+ .Pxxx.2.xxx...5xxx..5.4xx.......xxx
+@Pxxx.22.xx....xxx.5...xx......xxxxx
+ xxxx.22.xxx....xxx55..4xx....xxxxxx
  xxxxx..x3xx.....x.....xx5x..xxxxxxx
 Xxxxxxx..xx3x...xx....xxxxx..xxxxxxx
 Xxxxxx3...xx...xxxx.22x2xxx...xxxxxx
@@ -2241,7 +2241,7 @@ KMONS:   H = yak
 KMONS:   I = elephant
 KMONS:   J = death yak
 KMONS:   K = crocodile
-KMONS:   L = war dog
+KMONS:   L = wolf
 KMONS:   M = giant slug
 KMONS:   N = wyvern
 KMONS:   P = plant w:12 / fungus w:8 / nothing

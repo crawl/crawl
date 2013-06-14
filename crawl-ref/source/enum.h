@@ -2059,7 +2059,9 @@ enum monster_type                      // menv[].type
     MONS_PORCUPINE,
     MONS_JACKAL,
     MONS_HOUND,
+#if TAG_MAJOR_VERSION == 34
     MONS_WAR_DOG,
+#endif
     MONS_WOLF,
     MONS_WARG,
     MONS_HELL_HOUND,

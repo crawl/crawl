@@ -1348,7 +1348,7 @@ DEPTH:  D:7-21
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
-MONS:   hound / wolf / hog
+MONS:   hound / wolf w:5 / hog
 SUBST:  1 = 1:30 2 3 4 .
 MAP
 cccccccccc

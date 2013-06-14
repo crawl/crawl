@@ -2596,7 +2596,7 @@ static void _summon_animals(int power)
     // Maybe we should just generate a Lair monster instead (and
     // guarantee that it is mobile)?
     const monster_type animals[] = {
-        MONS_ORANGE_RAT, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
+        MONS_ORANGE_RAT, MONS_SHEEP, MONS_YAK,
         MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
         MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
         MONS_AGATE_SNAIL, MONS_BORING_BEETLE, MONS_BASILISK,
