@@ -3066,7 +3066,7 @@ static string _describe_draconian(const monster_info& mi)
 
 static string _describe_chimera(const monster_info& mi)
 {
-    string description = "It has the body of ";
+    string description = "It has the head of ";
 
     description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
 
@@ -3086,7 +3086,9 @@ static string _describe_chimera(const monster_info& mi)
         description += apply_description(DESC_A, get_monster_data(part3)->name);
     }
 
-    description += ".";
+    description += ". It has the body of ";
+    description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
+
     return description;
 }
 
