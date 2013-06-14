@@ -34,6 +34,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-chimera.h"
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
@@ -2895,7 +2896,8 @@ bool mons_is_immotile(const monster* mons)
 
 bool mons_is_batty(const monster* m)
 {
-    return mons_class_flag(m->type, M_BATTY);
+    return mons_class_flag(m->type, M_BATTY)
+        || m->type == MONS_CHIMERA && chimera_is_batty(m);
 }
 
 bool mons_looks_stabbable(const monster* m)

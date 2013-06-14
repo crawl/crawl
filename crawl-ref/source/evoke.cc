@@ -716,7 +716,7 @@ static bool _box_of_beasts(item_def &box)
                                          _box_of_beasts_veto_mon);
 
     // Second monster might be only half as good
-    int pick_level_2 = random_range(div_rand_round(pick_level,2), pick_level);
+    int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)), pick_level);
     monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
                                           _box_of_beasts_veto_mon);
 
