@@ -661,22 +661,24 @@ static const pop_entry pop_beasts[] =
   {  8, 18,  100, PEAK, MONS_CROCODILE },
   {  8, 18,  100, PEAK, MONS_HOG },
   { 10, 20,  100, PEAK, MONS_ICE_BEAST },
-  { 10, 20,  100, PEAK, MONS_HELL_HOUND },
   { 10, 20,  100, PEAK, MONS_YAK },
-  { 12, 22,  100, PEAK, MONS_MANTICORE },
+  { 10, 20,  100, PEAK, MONS_POLAR_BEAR },
+  { 10, 20,  100, PEAK, MONS_WYVERN },
   { 12, 22,  100, PEAK, MONS_ALLIGATOR },
-  { 15, 25,  100, PEAK, MONS_RAVEN },
-  { 15, 25,   75, PEAK, MONS_HOLY_SWINE },
-  { 15, 25,   75, PEAK, MONS_HELL_HOG },
+  { 12, 22,  100, PEAK, MONS_GRIZZLY_BEAR },
+  { 12, 22,  100, PEAK, MONS_WOLF },
+  { 15, 25,  100, PEAK, MONS_ELEPHANT },
+  { 15, 25,  100, PEAK, MONS_GRIFFON },
+  { 15, 25,  100, PEAK, MONS_BLACK_BEAR },
   { 18, 27,   50, PEAK, MONS_CATOBLEPAS },
   { 18, 27,  100, PEAK, MONS_DEATH_YAK },
   { 18, 27,  100, PEAK, MONS_ANACONDA },
-  { 22, 27,   50, UP,   MONS_HELL_BEAST },
-  { 22, 27,   50, UP,   MONS_PEARL_DRAGON },
-  { 24, 27,   25, UP,   MONS_HELLEPHANT },
-  { 24, 27,   25, UP,   MONS_APIS },
+  { 18, 27,   50, PEAK, MONS_RAVEN },
+  { 22, 27,   50, UP,   MONS_DIRE_ELEPHANT },
+  { 24, 27,   25, UP,   MONS_DRAGON },
   { 0,0,0,FLAT,MONS_0 }
 };
+
 static const pop_entry pop_spiders[] =
 { // Sack of Spiders
   {  0,  10,   10, DOWN, MONS_GIANT_MITE },
