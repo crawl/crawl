@@ -53,29 +53,44 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
 
     if (mons_is_batty(&dummy))
         mon->props["chimera_batty"].get_int() = partnum;
+    else if (mons_flies(&dummy))
+        mon->props["chimera_wings"].get_int() = partnum;
 }
 
-monster_type get_chimera_part(monster* mon, int partnum)
+monster_type get_chimera_part(const monster* mon, int partnum)
 {
     ASSERT_RANGE(partnum,1,4);
     if (partnum == 1) return mon->base_monster;
-    if (partnum == 2) return static_cast<monster_type>(mon->props["chimera_part_2"].get_int());
-    if (partnum == 3) return static_cast<monster_type>(mon->props["chimera_part_3"].get_int());
-    return MONS_NO_MONSTER;
+    if (partnum == 2 && mon->props.exists("chimera_part_2"))
+        return static_cast<monster_type>(mon->props["chimera_part_2"].get_int());
+    if (partnum == 3 && mon->props.exists("chimera_part_3"))
+        return static_cast<monster_type>(mon->props["chimera_part_3"].get_int());
+    return MONS_PROGRAM_BUG;
 }
 
 monster_type get_chimera_part(const monster_info* mi, int partnum)
 {
     ASSERT_RANGE(partnum,1,4);
     if (partnum == 1) return mi->base_type;
-    if (partnum == 2) return static_cast<monster_type>(mi->props["chimera_part_2"].get_int());
-    if (partnum == 3) return static_cast<monster_type>(mi->props["chimera_part_3"].get_int());
-    return MONS_NO_MONSTER;
+    if (partnum == 2 && mi->props.exists("chimera_part_2"))
+        return static_cast<monster_type>(mi->props["chimera_part_2"].get_int());
+    if (partnum == 3 && mi->props.exists("chimera_part_3"))
+        return static_cast<monster_type>(mi->props["chimera_part_3"].get_int());
+    return MONS_PROGRAM_BUG;
 }
 
 bool chimera_is_batty(const monster* mon)
 {
     return mon->props.exists("chimera_batty");
+}
+
+monster_type get_chimera_wings(const monster* mon)
+{
+    if (chimera_is_batty(mon))
+        return get_chimera_part(mon, mon->props["chimera_batty"].get_int());
+    if (mon->props.exists("chimera_wings"))
+        return get_chimera_part(mon, mon->props["chimera_wings"].get_int());
+    return MONS_NO_MONSTER;
 }
 
 string monster_info::chimera_part_names() const
