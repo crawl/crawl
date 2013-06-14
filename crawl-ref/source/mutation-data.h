@@ -11,9 +11,6 @@
 // fourth strings = message given when losing the mutation
 // fifth  string  = wizard-mode name of mutation
 
-#ifndef MUTATION_DATA_H
-#define MUTATION_DATA_H
-
 { MUT_TOUGH_SKIN,                     0,  3, false,  true,  true,
   "tough skin",
 
@@ -1516,6 +1513,3 @@
 
   "trample resistance"
 },
-
-
-#endif

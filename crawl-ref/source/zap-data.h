@@ -3,9 +3,6 @@
  * @brief Zap definitions. See zap_info struct in beam.cc.
 **/
 
-#ifndef ZAP_DATA_H
-#define ZAP_DATA_H
-
 /*
 struct zap_info
 {
@@ -1083,4 +1080,3 @@ struct zap_info
     false,
     3
 },
-#endif
