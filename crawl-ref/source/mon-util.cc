@@ -4788,3 +4788,8 @@ vector<monster* > get_on_level_followers()
 
     return mon_list;
 }
+
+bool mons_stores_tracking_data(const monster* mons)
+{
+    return (mons->type == MONS_THORN_HUNTER);
+}

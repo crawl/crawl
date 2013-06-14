@@ -4984,6 +4984,8 @@ int monster::spiny_degree() const
             return 3;
         case MONS_HELL_SENTINEL:
             return 5;
+        case MONS_BRIAR_PATCH:
+            return 4;
         default:
             return 0;
     }

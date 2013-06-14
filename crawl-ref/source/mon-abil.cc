@@ -3996,6 +3996,46 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
     }
 
+    case MONS_THORN_HUNTER:
+    {
+        // If we would try to move into a briar (that we might have just created
+        // defensively), let's see if we can shoot our foe through it instead
+        if (actor_at(mons->pos() + mons->props["mmov"].get_coord())
+            && actor_at(mons->pos() + mons->props["mmov"].get_coord())->type == MONS_BRIAR_PATCH
+            && !one_chance_in(3))
+        {
+            setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
+
+            fire_tracer(mons, beem);
+            if (mons_should_fire(beem))
+            {
+                make_mons_stop_fleeing(mons);
+                _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
+                used = true;
+            }
+        }
+        // Otherwise, if our foe is approaching us, we might want to raise a
+        // defensive wall of brambles (use the number of brambles in the area
+        // as some indication if we've already done this, and shouldn't repeat)
+        else if (mons->props["foe_approaching"].get_bool() == true
+                 && coinflip())
+        {
+            int briar_count = 0;
+            c = circle_def(mons->pos(), 4, C_ROUND);
+            for (monster_iterator mi(&c); mi; ++mi)
+            {
+                if (mi->type == MONS_BRIAR_PATCH)
+                    briar_count++;
+            }
+            if (briar_count < 4) // Probably no solid wall here
+            {
+                _mons_cast_abil(mons, beem, SPELL_WALL_OF_BRAMBLES);
+                used = true;
+            }
+        }
+    }
+    break;
+
     default:
         break;
     }

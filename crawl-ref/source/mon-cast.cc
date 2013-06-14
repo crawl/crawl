@@ -6,6 +6,8 @@
 #include "AppHdr.h"
 #include "mon-cast.h"
 
+#include <math.h>
+
 #include "act-iter.h"
 #include "beam.h"
 #include "cloud.h"
@@ -935,6 +937,14 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_THORN_VOLLEY:
+        beam.colour   = BROWN;
+        beam.name     = "volley of thorns";
+        beam.damage   = dice_def(3, 5 + (power / 11));
+        beam.hit      = 20 + power / 13;
+        beam.flavour  = BEAM_MMISSILE;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1139,6 +1149,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_ENGLACIATION:
     case SPELL_AWAKEN_VINES:
     case SPELL_CONTROL_WINDS:
+    case SPELL_WALL_OF_BRAMBLES:
         return true;
     default:
         if (check_validity)
@@ -1993,6 +2004,132 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
             mpr("Vines fly forth from the trees!");
         return true;
     }
+}
+
+static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
+{
+    double ang0 = atan2(p1.x - origin.x, p1.y - origin.y);
+    double ang  = atan2(p2.x - origin.x, p2.y - origin.y);
+    return min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
+}
+
+// Does there already appear to be a bramble wall in this direction?
+// We approximate this by seeing if there are at least two briar patches in
+// a ray between us and our target, which turns out to be a pretty decent
+// metric in practice.
+static bool _already_bramble_wall(const monster* mons, coord_def targ)
+{
+    bolt tracer;
+    tracer.source = mons->pos();
+    tracer.target = targ;
+    tracer.range = 12;
+    tracer.is_tracer = true;
+    tracer.is_beam = true;
+    tracer.fire();
+
+    int briar_count = 0;
+    bool targ_reached = false;
+    for (unsigned int i = 0; i < tracer.path_taken.size(); ++i)
+    {
+        coord_def p = tracer.path_taken[i];
+
+        if (!targ_reached && p == targ)
+            targ_reached = true;
+        else if (!targ_reached)
+            continue;
+
+        if (monster_at(p) && monster_at(p)->type == MONS_BRIAR_PATCH)
+            ++briar_count;
+    }
+
+    return (briar_count > 1);
+}
+
+static bool _wall_of_brambles(monster* mons)
+{
+    mgen_data briar_mg = mgen_data(MONS_BRIAR_PATCH, SAME_ATTITUDE(mons),
+                                   mons, 0, 0, coord_def(-1, -1), MHITNOT,
+                                   MG_FORCE_PLACE);
+
+    // We want to raise a defensive wall if we think our foe is moving to attack
+    // us, and otherwise raise a wall further away to block off their escape.
+    // (Each wall type uses different parameters)
+    bool defensive = mons->props["foe_approaching"].get_bool();
+
+    coord_def aim_pos = you.pos();
+    coord_def targ_pos = mons->pos();
+
+    // A defensive wall cannot provide any cover if our target is already
+    // adjacent, so don't bother creating one.
+    if (defensive && mons->pos().distance_from(aim_pos) == 1)
+        return false;
+
+    // Don't raise a non-defensive wall if it looks like there's an existing one
+    // in the same direction already (this looks rather silly to see walls
+    // springing up in the distance behind already-closed paths, and probably
+    // is more likely to aid the player than the monster)
+    if (!defensive)
+    {
+        if (_already_bramble_wall(mons, aim_pos))
+            return false;
+    }
+
+    // Select a random radius for the circle used draw an arc from (affects
+    // both shape and distance of the resulting wall)
+    int rad = (defensive ? random_range(3, 5)
+                         : min(11, mons->pos().distance_from(you.pos()) + 6));
+
+    // Adjust the center of the circle used to draw the arc of the wall if
+    // we're raising one defensively, based on both its radius and foe distance.
+    // (The idea is the ensure that our foe will end up on the other side of it
+    // without always raising the wall in exactly the same shape and position)
+    if (defensive)
+    {
+        coord_def adjust = (targ_pos - aim_pos).sgn();
+
+        targ_pos += adjust;
+        if (rad == 5)
+            targ_pos += adjust;
+        if (mons->pos().distance_from(aim_pos) == 2)
+            targ_pos += adjust;
+    }
+
+    // XXX: There is almost certainly a better way to calculate the points
+    //      along the desired arcs, though this code produces the proper look.
+    vector<coord_def> points;
+    for (distance_iterator di(targ_pos, false, false, rad); di; ++di)
+    {
+        if (di.radius() == rad || di.radius() == rad - 1)
+        {
+            if (!actor_at(*di) && !feat_is_solid(grd(*di)))
+            {
+                if (defensive && _angle_between(targ_pos, aim_pos, *di) <= PI/4.0
+                    || (!defensive
+                        && _angle_between(targ_pos, aim_pos, *di) <= PI/(4.2 + rad/6.0)))
+                {
+                    points.push_back(*di);
+                }
+            }
+        }
+    }
+
+    bool seen = false;
+    for (unsigned int i = 0; i < points.size(); ++i)
+    {
+        briar_mg.pos = points[i];
+        monster* briar = create_monster(briar_mg, false);
+        if (briar)
+        {
+            briar->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, NULL, 80 + random2(100)));
+            if (you.can_see(briar))
+                seen = true;
+        }
+    }
+
+    if (seen)
+        mpr("Thorny briars emerge from the ground!");
+
+    return true;
 }
 
 //---------------------------------------------------------------
@@ -4526,6 +4663,17 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (you.can_see(mons))
             mprf("The winds start to flow at %s will.", mons->name(DESC_ITS).c_str());
         mons->add_ench(mon_enchant(ENCH_CONTROL_WINDS, 1, mons, 200 + random2(150)));
+        return;
+
+    case SPELL_WALL_OF_BRAMBLES:
+        // If we can't cast this for some reason (can be expensive to determine
+        // at every call to _ms_waste_of_time), refund the energy for it so that
+        // the caster can do something else
+        if (!_wall_of_brambles(mons))
+        {
+            mons->speed_increment +=
+                get_monster_data(mons->type)->energy_usage.spell;
+        }
         return;
     }
 
