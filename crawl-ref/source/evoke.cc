@@ -713,16 +713,19 @@ static bool _box_of_beasts(item_def &box)
 
     bool success = false;
     // Invoke mon-pick with our custom list
-    monster_type mon = pick_monster_from(pop_beasts,
-                                            you.skill(SK_EVOCATIONS),
-                                            _box_of_beasts_veto_mon);
+    int pick_level = you.skill(SK_EVOCATIONS);
+    monster_type mon = pick_monster_from(pop_beasts, pick_level,
+                                         _box_of_beasts_veto_mon);
 
-    monster_type mon2 = pick_monster_from(pop_beasts,
-                                            you.skill(SK_EVOCATIONS),
-                                            _box_of_beasts_veto_mon);
-    monster_type mon3 = pick_monster_from(pop_beasts,
-                                            you.skill(SK_EVOCATIONS),
-                                            _box_of_beasts_veto_mon);
+    // Second monster might be only half as good
+    int pick_level_2 = random_range(div_rand_round(pick_level,2), pick_level);
+    monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
+                                          _box_of_beasts_veto_mon);
+
+    // Third monster picked from anywhere up to max level
+    int pick_level_3 = random_range(1, pick_level);
+    monster_type mon3 = pick_monster_from(pop_beasts, pick_level_3,
+                                          _box_of_beasts_veto_mon);
 
     if (!one_chance_in(3))
     {
