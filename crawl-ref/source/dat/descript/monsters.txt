@@ -3929,6 +3929,14 @@ spirit:quote
  Thy fluttering heart with hope and terror moved.”
     -Robert Louis Stevenson, “Et Tu In Arcadia Vixisti”, _Underwoods _. 1887.
 %%%%
+spirit wolf
+
+A pale wolf-like apparition rimmed in ethereal light. It is a cunning pack
+hunter, running freely with its kin between the realms of waking and dream. The
+sound of its howl is a dire portent, for it heralds the start of a wild
+hunt - one cry answered by another and another until voices beyond count seem to
+fill the air from all directions.
+%%%%
 spriggan
 
 A small humanoid, resembling a human or elf except for the size. They move at a

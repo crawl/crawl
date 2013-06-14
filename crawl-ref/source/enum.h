@@ -1508,6 +1508,7 @@ enum duration_type
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
+    DUR_SPIRIT_HOWL,
     NUM_DURATIONS
 };
 
@@ -2669,6 +2670,7 @@ enum monster_type                      // menv[].type
     MONS_SNAPLASHER_VINE_SEGMENT,
     MONS_THORN_HUNTER,
     MONS_BRIAR_PATCH,
+    MONS_SPIRIT_WOLF,
 
     NUM_MONSTERS,               // used for polymorph
 

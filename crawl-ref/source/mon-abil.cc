@@ -4036,6 +4036,20 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
     break;
 
+    case MONS_SPIRIT_WOLF:
+    {
+        if (!you.duration[DUR_SPIRIT_HOWL] && !mons->is_summoned()
+            && (one_chance_in(45)
+                || (mons->hit_points < mons->max_hit_points / 3 && one_chance_in(9))))
+        {
+            simple_monster_message(mons, " howls for its pack!", MSGCH_MONSTER_SPELL);
+            you.duration[DUR_SPIRIT_HOWL] = 600 + random2(350);
+            spawn_spirit_pack(&you);
+            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 50 + random2(100);
+            break;
+        }
+    }
+
     default:
         break;
     }
@@ -4552,4 +4566,45 @@ void starcursed_merge(monster* mon, bool forced)
             }
         }
     }
+}
+
+int spawn_spirit_pack(const actor* target)
+{
+    for (int t = 0; t < 100; ++t)
+    {
+        coord_def area = clamp_in_bounds(target->pos() + coord_def(random_range(-15, 15),
+                                                                   random_range(-15, 15)));
+        if (cell_see_cell(target->pos(), area, LOS_DEFAULT))
+            continue;
+
+        coord_def base_spot;
+        int tries = 0;
+        while (tries < 10 && base_spot.origin()
+               && !cell_see_cell(target->pos(), base_spot, LOS_DEFAULT))
+        {
+            find_habitable_spot_near(area, MONS_SPIRIT_WOLF, 6, false, base_spot);
+            ++tries;
+        }
+        if (base_spot.origin())
+            continue;
+
+        int wolves = 1 + random2(3);
+        int created = 0;
+        for (int i = 0; i < wolves; ++i)
+        {
+            if (monster *mons = create_monster(
+                                  mgen_data(MONS_SPIRIT_WOLF,BEH_HOSTILE, NULL,
+                                            5, SPELL_NO_SPELL, area,
+                                            target->mindex(), MG_FORCE_BEH)))
+            {
+                mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target, INFINITE_DURATION));
+                mons->foe = target->mindex();
+                ++created;
+            }
+        }
+
+        return created;
+    }
+
+    return 0;
 }

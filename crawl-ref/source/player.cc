@@ -4334,6 +4334,7 @@ void display_char_status()
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
+        DUR_SPIRIT_HOWL,
     };
 
     status_info inf;
