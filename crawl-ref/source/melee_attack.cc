@@ -5091,6 +5091,10 @@ void melee_attack::tendril_disarm()
 
 void melee_attack::do_spines()
 {
+    // Monsters only get struck on their first attack per round
+    if (attacker->is_monster() && effective_attack_number > 0)
+        return;
+
     if (defender->is_player())
     {
         const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
@@ -5098,16 +5102,10 @@ void melee_attack::do_spines()
         const int mut = (you.form == TRAN_PORCUPINE) ? 3
                         : player_mutation_level(MUT_SPINY);
 
-        if (mut && attacker->alive() && one_chance_in(evp / 3 + 1))
+        if (mut && attacker->alive() && one_chance_in(evp / 3 + 1)
+            && x_chance_in_y(2, 13 - (mut * 2)))
         {
-            if (test_hit(random2(3 + 4 * mut), attacker->melee_evasion(defender), true) < 0)
-            {
-                simple_monster_message(attacker->as_monster(),
-                                       " dodges your spines.");
-                return;
-            }
-
-            int dmg = roll_dice(mut, 6);
+            int dmg = roll_dice(2 + div_rand_round(mut - 1, 2), 5);
             int hurt = attacker->apply_ac(dmg) - evp / 3;
 
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
@@ -5124,25 +5122,16 @@ void melee_attack::do_spines()
             attacker->hurt(&you, hurt);
         }
     }
-    else if (defender->as_monster()->is_spiny())
+    else if (defender->as_monster()->spiny_degree() > 0)
     {
-        const int level = 1 + div_rand_round(defender->get_experience_level(), 4);
+        const int degree = defender->as_monster()->spiny_degree();
 
-        if (test_hit(random2(10 + 4 * level), attacker->melee_evasion(defender),
-            !attacker->is_player()) < 0)
+        if (attacker->alive() && (x_chance_in_y(2, 5)
+            || random2(div_rand_round(attacker->armour_class(), 2)) < degree))
         {
-            if (you.can_see(defender))
-            {
-                mprf("%s %s %s spines.", attacker->name(DESC_THE).c_str(),
-                     attacker->conj_verb("dodge").c_str(),
-                     defender->name(DESC_ITS).c_str());
-                return;
-            }
-        }
-        else if (attacker->alive())
-        {
-            int dmg = roll_dice(level, 4);
-            int hurt = attacker->apply_ac(dmg);
+            int dmg = (attacker->is_monster() ? roll_dice(degree, 3)
+                                              : roll_dice(degree, 4));
+            int hurt = attacker->apply_ac(dmg, AC_HALF);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
             if (hurt <= 0)

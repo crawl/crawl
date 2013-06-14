@@ -4976,15 +4976,17 @@ bool monster::is_skeletal() const
     return _mons_is_skeletal(type);
 }
 
-static bool _mons_is_spiny(int mc)
+int monster::spiny_degree() const
 {
-    return (mc == MONS_PORCUPINE
-            || mc == MONS_HELL_SENTINEL);
-}
-
-bool monster::is_spiny() const
-{
-    return _mons_is_spiny(type);
+    switch(type)
+    {
+        case MONS_PORCUPINE:
+            return 3;
+        case MONS_HELL_SENTINEL:
+            return 5;
+        default:
+            return 0;
+    }
 }
 
 bool monster::has_action_energy() const
