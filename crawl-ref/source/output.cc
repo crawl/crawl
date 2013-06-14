@@ -1003,6 +1003,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
         STATUS_BEOGH,
+        DUR_SPIRIT_HOWL,
     };
 
     status_info inf;
@@ -2480,6 +2481,7 @@ static string _status_mut_abilities(int sw)
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
+        DUR_SPIRIT_HOWL,
     };
 
     status_info inf;

@@ -40,4 +40,6 @@ void end_flayed_effect(monster* ghost);
 bool lost_soul_revive(monster* mons);
 bool lost_soul_spectralize(monster* mons);
 
+int spawn_spirit_pack(const actor* target);
+
 #endif

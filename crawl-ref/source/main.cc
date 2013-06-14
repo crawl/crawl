@@ -2882,6 +2882,34 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
 
+    if (you.duration[DUR_SPIRIT_HOWL])
+    {
+        if (you.props.exists("next_spirit_pack")
+            && you.elapsed_time >= you.props["next_spirit_pack"].get_int()
+            && you.duration[DUR_SPIRIT_HOWL] > 150)
+        {
+            int num = spawn_spirit_pack(&you);
+            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 50
+                                                      + random2(80)
+                                                      + (num * num) * 8;
+
+            // If we somehow couldn't spawn any, wait longer than normal
+            // (probably the player is in some place where spawning more isn't
+            // possibly, so let's waste lest time trying)
+            if (num == 0)
+                you.props["next_spirit_pack"].get_int() += 100;
+        }
+        if (_decrement_a_duration(DUR_SPIRIT_HOWL, delay))
+        {
+            mpr("The howling abruptly ceases.", MSGCH_DURATION);
+            for (monster_iterator mi; mi; ++mi)
+            {
+                if (mi->type == MONS_SPIRIT_WOLF && mi->has_ench(ENCH_HAUNTING))
+                    mi->del_ench(ENCH_ABJ);
+            }
+        }
+    }
+
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
