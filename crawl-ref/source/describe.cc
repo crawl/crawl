@@ -3071,21 +3071,13 @@ static string _describe_chimera(const monster_info& mi)
 
     description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
 
-    if (mi.props.exists("chimera_part_2"))
-    {
-        monster_type part2 =
-            static_cast<monster_type>(mi.props["chimera_part_2"].get_int());
-        description += ", the head of ";
-        description += apply_description(DESC_A, get_monster_data(part2)->name);
-    }
+    monster_type part2 = get_chimera_part(&mi,2);
+    description += ", the head of ";
+    description += apply_description(DESC_A, get_monster_data(part2)->name);
 
-    if (mi.props.exists("chimera_part_3"))
-    {
-        monster_type part3 =
-            static_cast<monster_type>(mi.props["chimera_part_3"].get_int());
-        description += ", and the head of ";
-        description += apply_description(DESC_A, get_monster_data(part3)->name);
-    }
+    monster_type part3 = get_chimera_part(&mi,3);
+    description += ", and the head of ";
+    description += apply_description(DESC_A, get_monster_data(part3)->name);
 
     description += ". It has the body of ";
     description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
@@ -3096,7 +3088,12 @@ static string _describe_chimera(const monster_info& mi)
         description += " and the wings of ";
         description += apply_description(DESC_A, get_monster_data(batty_part)->name);
     }
-
+    else if (mi.props.exists("chimera_wings"))
+    {
+        monster_type wing_part = get_chimera_part(&mi, mi.props["chimera_wings"].get_int());
+        description += " and the wings of ";
+        description += apply_description(DESC_A, get_monster_data(wing_part)->name);
+    }
     description += ".";
     return description;
 }
