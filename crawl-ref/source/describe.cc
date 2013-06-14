@@ -43,6 +43,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-chimera.h"
 #include "mon-stuff.h"
 #include "output.h"
 #include "player.h"
@@ -3089,6 +3090,14 @@ static string _describe_chimera(const monster_info& mi)
     description += ". It has the body of ";
     description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
 
+    if (mi.props.exists("chimera_batty"))
+    {
+        monster_type batty_part = get_chimera_part(&mi, mi.props["chimera_batty"].get_int());
+        description += " and the wings of ";
+        description += apply_description(DESC_A, get_monster_data(batty_part)->name);
+    }
+
+    description += ".";
     return description;
 }
 
