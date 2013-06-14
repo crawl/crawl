@@ -1,6 +1,3 @@
-#ifndef MONDATA_H
-#define MONDATA_H
-
 #define AT_NO_ATK       {AT_NONE, AF_PLAIN, 0}
 
 #include "enum.h"
@@ -7042,6 +7039,5 @@ static monsterentry mondata[] = {
     - row 8: intel, habitat, flight class, speed, energy_usage
     - row 9: gmon_use class, gmon_eat class, body size
 */
-#endif
 
 };
