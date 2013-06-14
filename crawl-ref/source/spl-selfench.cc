@@ -77,11 +77,15 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
-    // Allowed for Lava Orcs of sufficiently low temperature, despite
-    // their having a stoneskin-like effect.
-    if (you.duration[DUR_STONESKIN] || you.duration[DUR_FIRE_SHIELD])
+    if (player_stoneskin() || you.form == TRAN_STATUE)
     {
-        mpr("The spell conflicts with another spell still in effect.");
+        mpr("The film of ice won't work on stone.");
+        return SPRET_ABORT;
+    }
+
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        mpr("Your ring of flames would instantly melt the ice.");
         return SPRET_ABORT;
     }
 
