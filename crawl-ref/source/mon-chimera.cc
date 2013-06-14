@@ -34,6 +34,8 @@ void make_chimera(monster* mon, monster_type part1, monster_type part2, monster_
     mon->base_monster = part1;
     mon->props["chimera_part_2"] = part2;
     mon->props["chimera_part_3"] = part3;
+
+    apply_chimera_part(mon,part1,1);
     apply_chimera_part(mon,part2,2);
     apply_chimera_part(mon,part3,3);
 }
@@ -48,6 +50,32 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
     monster dummy;
     dummy.type = part;
     define_monster(&dummy);
+
+    if (mons_is_batty(&dummy))
+        mon->props["chimera_batty"].get_int() = partnum;
+}
+
+monster_type get_chimera_part(monster* mon, int partnum)
+{
+    ASSERT_RANGE(partnum,1,4);
+    if (partnum == 1) return mon->base_monster;
+    if (partnum == 2) return static_cast<monster_type>(mon->props["chimera_part_2"].get_int());
+    if (partnum == 3) return static_cast<monster_type>(mon->props["chimera_part_3"].get_int());
+    return MONS_NO_MONSTER;
+}
+
+monster_type get_chimera_part(const monster_info* mi, int partnum)
+{
+    ASSERT_RANGE(partnum,1,4);
+    if (partnum == 1) return mi->base_type;
+    if (partnum == 2) return static_cast<monster_type>(mi->props["chimera_part_2"].get_int());
+    if (partnum == 3) return static_cast<monster_type>(mi->props["chimera_part_3"].get_int());
+    return MONS_NO_MONSTER;
+}
+
+bool chimera_is_batty(const monster* mon)
+{
+    return mon->props.exists("chimera_batty");
 }
 
 string monster_info::chimera_part_names() const

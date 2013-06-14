@@ -203,7 +203,8 @@ static bool _is_public_key(string key)
      || key == "tile_num"
      || key == "tile_idx"
      || key == "chimera_part_2"
-     || key == "chimera_part_3")
+     || key == "chimera_part_3"
+     || key == "chimera_batty")
     {
         return true;
     }
