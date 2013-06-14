@@ -526,6 +526,21 @@ TAGS:   layout_type_city
         wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
     end
 
+    local percent_thickness_2 =   crawl.random_range(0, 8)
+                                * crawl.random_range(0, 8)
+    local percent_thickness_3 =   crawl.random_range(0, 7)
+                                * crawl.random_range(0, 7)
+    local percent_inner_box = crawl.random_range(0, 25)
+    local percent_inner_new_wall = crawl.random_range(0, 100)
+    local percent_inner_split = crawl.random_range(0, 25)
+    if you.branch() == "Dis" then
+        percent_thickness_2 = 0
+        percent_thickness_3 = 0
+        percent_inner_box = percent_inner_box * 1.5
+        percent_inner_new_wall = 0
+        percent_inner_split = percent_inner_split * 2
+    end
+
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
     for i = 0, 5 do
@@ -549,10 +564,11 @@ TAGS:   layout_type_city
                 local size_x = b1 - a1
                 local size_y = b2 - a2
                 local thickness = 1
-                if size_x > 6 and size_y > 6 and crawl.one_chance_in(8) then
+                if size_x > 6 and size_y > 6
+                   and crawl.x_chance_in_y(percent_thickness_3, 100) then
                     thickness = 3
                 elseif size_x > 4 and size_y > 4
-                       and crawl.one_chance_in(24) then
+                       and crawl.x_chance_in_y(percent_thickness_2, 100) then
                     thickness = 2
                 end
 
@@ -560,27 +576,51 @@ TAGS:   layout_type_city
                 make_box { x1=a1, y1=a2, x2=b1, y2=b2,
                            wall=wall_type_room, thickness=thickness }
 
-                if size_x > 3 + thickness * 2 and size_y > 3 + thickness * 2
-                   and crawl.one_chance_in(8) then
-                    local A1 = a1 + thickness + 1
-                    local A2 = a2 + thickness + 1
-                    local B1 = b1 - thickness - 1
-                    local B2 = b2 - thickness - 1
-                    local door_number = 1 + crawl.random2(2)*crawl.random2(2)
+                local size_x_inner = size_x - thickness * 2
+                local size_y_inner = size_y - thickness * 2
+                if size_x_inner > 3 and size_y_inner > 3 then
 
-                    local wall_type_inner = wall_type_room
-                    if crawl.one_chance_in(5) then
-                        wall_type_inner = theme.room_material(wall_type)
+                    if crawl.x_chance_in_y(percent_inner_box, 100) then
+                        local A1 = a1 + thickness + 1
+                        local A2 = a2 + thickness + 1
+                        local B1 = b1 - thickness - 1
+                        local B2 = b2 - thickness - 1
+                        local door_number = 1 +
+                                            crawl.random2(2) * crawl.random2(2)
+
+                        local wall_type_inner = wall_type_room
+                        if crawl.x_chance_in_y(percent_inner_new_wall, 100) then
+                            wall_type_inner = theme.room_material(wall_type)
+                        end
+
+                        make_box { x1=A1, y1=A2, x2=B1, y2=B2,
+                                   wall=wall_type_inner }
+                        make_box_doors { x1=A1, y1=A2, x2=B1, y2=B2,
+                                         number=door_number }
+
+                        if crawl.x_chance_in_y(thickness*4,
+                                               percent_inner_box) then
+                            treasure_area(A1+1, A2+1, B1-1, B2-1)
+                        end
+
+                    elseif crawl.x_chance_in_y(percent_inner_split, 100) then
+                        local door_x = a1 + thickness + 1
+                                       + crawl.random2(size_x_inner - 2)
+                        local door_y = a2 + thickness + 1
+                                       + crawl.random2(size_y_inner - 2)
+
+                        if crawl.coinflip() then
+                            for x = a1 + thickness, b1 - thickness do
+                                mapgrd[x][door_y] = wall_type_room
+                            end
+                        else
+                            for y = a2 + thickness, b2 - thickness do
+                                mapgrd[door_x][y] = wall_type_room
+                            end
+                        end
+                        mapgrd[door_x][door_y] = '+'
                     end
 
-                    make_box { x1=A1, y1=A2, x2=B1, y2=B2,
-                               wall=wall_type_room }
-                    make_box_doors { x1=A1, y1=A2, x2=B1, y2=B2,
-                                     number=door_number }
-
-                    if crawl.x_chance_in_y(thickness, 3) then
-                        treasure_area(A1+1, A2+1, B1-1, B2-1)
-                    end
                 end
             end
         end
@@ -597,16 +637,27 @@ TAGS:   layout_type_city
         end
 
         local thickness = room[5]
-        local inner_door = '.'
-        if thickness == 2 and crawl.one_chance_in(8) then
-            inner_door = '+'
-        elseif thickness == 3 and crawl.x_chance_in_y(2, 3) then
-            inner_door = '+'
+        local outer_door = '+'
+        local inner_door = '+'
+        if thickness == 2 then
+            outer_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
+            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 3 }
+        elseif thickness == 3 then
+            outer_door = crawl.random_element { ['+'] = 2, ['.'] = 1 }
+            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
+        end
+
+        if outer_door == '.' and crawl.coinflip() then
+            doors = doors + 1
+        end
+        if inner_door == '.' and crawl.coinflip() then
+            doors = doors + 1
         end
 
         make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4],
-                        number=doors, thickness=room[5],
-                        inner_door=inner_door, veto_gates=true}
+                        number=doors, thickness=thickness,
+                        door=outer_door, inner_door=inner_door,
+                        veto_gates=true }
     end
 
     -- Prevent treasure rooms being overwritten by vaults
