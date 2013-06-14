@@ -61,7 +61,7 @@ string monster_info::chimera_part_names() const
     ASSERT(chimtype3 > MONS_PROGRAM_BUG && chimtype3 < NUM_MONSTERS);
 
     ostringstream s;
-    s << "-" << get_monster_data(chimtype2)->name
-      << "-" << get_monster_data(chimtype3)->name;
+    s << ", " << get_monster_data(chimtype2)->name
+      << ", " << get_monster_data(chimtype3)->name;
     return s.str();
 }
