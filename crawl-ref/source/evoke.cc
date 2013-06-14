@@ -729,7 +729,7 @@ static bool _box_of_beasts(item_def &box)
     {
         mgen_data mg = mgen_data(MONS_CHIMERA,
                       BEH_FRIENDLY, &you,
-                      3 + random2(4), 0,
+                      3 + random2(3), 0,
                       you.pos(),
                       MHITYOU);
         mg.base_type = mon;
