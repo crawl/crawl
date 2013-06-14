@@ -577,8 +577,12 @@ bool you_cannot_memorise(spell_type spell, bool &form)
         rc = true, form = false;
     }
 
-    if (you.species == SP_LAVA_ORC && spell == SPELL_STONESKIN)
+    if (you.species == SP_LAVA_ORC
+        && (spell == SPELL_STONESKIN
+         || spell == SPELL_OZOCUBUS_ARMOUR))
+    {
         rc = true, form = false;
+    }
 
     if (you.form == TRAN_WISP)
     {
