@@ -3112,6 +3112,32 @@ struct spell_desc
 },
 
 {
+    SPELL_THORN_VOLLEY, "Volley of Thorns",
+     SPTYP_CONJURATION | SPTYP_EARTH,
+     SPFLAG_DIR_OR_TARGET,
+     4,
+     100,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_WALL_OF_BRAMBLES, "Wall of Brambles",
+     SPTYP_CONJURATION | SPTYP_EARTH,
+     SPFLAG_AREA | SPFLAG_MONSTER,
+     5,
+     100,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

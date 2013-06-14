@@ -2141,6 +2141,17 @@
        SPELL_MELEE,
        SPELL_NO_SPELL
       }
-    }
+    },
+
+    {  MST_THORN_HUNTER,
+      {
+       SPELL_THORN_VOLLEY,
+       SPELL_THORN_VOLLEY,
+       SPELL_NO_SPELL,
+       SPELL_WALL_OF_BRAMBLES,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 
 #endif

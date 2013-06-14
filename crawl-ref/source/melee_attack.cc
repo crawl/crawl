@@ -5124,6 +5124,14 @@ void melee_attack::do_spines()
     }
     else if (defender->as_monster()->spiny_degree() > 0)
     {
+        // Thorn hunters can attack their own brambles without injury
+        if (defender->as_monster()->type == MONS_BRIAR_PATCH
+            && attacker->is_monster()
+            && attacker->as_monster()->type == MONS_THORN_HUNTER)
+        {
+            return;
+        }
+
         const int degree = defender->as_monster()->spiny_degree();
 
         if (attacker->alive() && (x_chance_in_y(2, 5)
@@ -5138,9 +5146,11 @@ void melee_attack::do_spines()
                 return;
             if (you.can_see(defender) || attacker->is_player())
             {
-                mprf("%s %s struck by %s spines.", attacker->name(DESC_THE).c_str(),
+                mprf("%s %s struck by %s %s.", attacker->name(DESC_THE).c_str(),
                      attacker->conj_verb("are").c_str(),
-                     defender->name(DESC_ITS).c_str());
+                     defender->name(DESC_ITS).c_str(),
+                     defender->as_monster()->type == MONS_BRIAR_PATCH ? "thorns"
+                                                                      : "spines");
             }
             if (attacker->is_player())
                 ouch(hurt, defender->mindex(), KILLED_BY_SPINES);

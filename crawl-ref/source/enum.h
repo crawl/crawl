@@ -2665,6 +2665,8 @@ enum monster_type                      // menv[].type
 
     MONS_SNAPLASHER_VINE,
     MONS_SNAPLASHER_VINE_SEGMENT,
+    MONS_THORN_HUNTER,
+    MONS_BRIAR_PATCH,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3496,6 +3498,8 @@ enum spell_type
     SPELL_BLINK_ALLIES_ENCIRCLE,
     SPELL_AWAKEN_VINES,
     SPELL_CONTROL_WINDS,
+    SPELL_THORN_VOLLEY,
+    SPELL_WALL_OF_BRAMBLES,
     NUM_SPELLS
 };
 

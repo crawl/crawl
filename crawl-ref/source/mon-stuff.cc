@@ -1799,6 +1799,11 @@ int monster_die(monster* mons, killer_type killer,
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
         end_battlesphere(mons, true);
     }
+    else if (mons->type == MONS_BRIAR_PATCH)
+    {
+        if (timeout && !silent)
+            simple_monster_message(mons, " crumbles away.");
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)

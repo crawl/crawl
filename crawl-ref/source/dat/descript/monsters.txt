@@ -1067,6 +1067,12 @@ brain worm
 A slimy mauve worm with a greatly distended head, this creature feeds on the
 intellects of sentient beings.
 %%%%
+briar patch
+
+A tangled cluster of thorny briars, sharp enough to pierce thick hide and
+armour. Though the gaps in the copse are plentiful enough to fire missiles
+through, walking into it looks like a painful prospect.
+%%%%
 Brimstone Fiend
 
 A huge and powerful demon wreathed in hellfire, with great scaly wings. One of
@@ -4140,6 +4146,20 @@ they shouted reached to starry heaven; and they met together with a great
 battle-cry.”
     -Hesiod, _Theogony_, 8th cent. B.C.
      trans. H.G. Evelyn-White, 1914.
+%%%%
+thorn hunter
+
+A predatory plant, possessed of motility and a rudimentary intelligence. It
+stalks its prey swiftly, creating sudden profusions of spiny brambles with which
+to ensnare them and then skewering the trapped creatures with accurate volleys
+of its own razor-sharp thorns.
+%%%%
+thorn lotus
+
+A large and vivid bloom drifting placidly upon the surface of the water. Beware,
+for its beauty is deceptive; cradled within its petals lies a stigma bristling
+with needle-like thorns, fully capable of impaling predators and unwitting
+adventurers alike before they can draw close enough to threaten it.
 %%%%
 toenail golem
 
