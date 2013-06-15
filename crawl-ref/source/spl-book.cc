@@ -2570,7 +2570,10 @@ void destroy_spellbook(const item_def &book)
         maxlevel = max(maxlevel, spell_difficulty(stype));
     }
 
-    did_god_conduct(DID_DESTROY_SPELLBOOK,
-                    maxlevel + 5 *
-                    (origin_is_god_gift(book) ? 2 : 1));
+    god_type god;
+    // The known boolean is being used to double penance when the destroyed
+    // book is a gift of Sif Muna or it contains its name in its title
+    did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5,
+                    origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA
+                    || book.name(DESC_PLAIN).find("Sif Muna") != string::npos);
 }
