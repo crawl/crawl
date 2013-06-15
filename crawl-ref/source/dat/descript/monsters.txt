@@ -4394,6 +4394,14 @@ water moccasin
 A largish venomous brown snake. It usually lives near water, and is an able
 swimmer.
 %%%%
+water nymph
+
+A strikingly beautiful and capricious nature spirit, deeply bonded with the
+waters in which she lives. Wherever they flow, so may she, and ponds and
+rivers surge and leap at her whim. Beware, for many unwitting adventurers have
+found themselves drawn beneath her waters by a simple touch, only for it to
+become their final resting place.
+%%%%
 white draconian
 
 A scale-covered humanoid with a reptilian tail and small wings.

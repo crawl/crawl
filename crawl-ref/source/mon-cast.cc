@@ -1009,6 +1009,7 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_HAUNT
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE
+        || spell_cast == SPELL_WATERSTRIKE
         || spell_cast == SPELL_MISLEAD
         || spell_cast == SPELL_HOLY_FLAMES
         || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
@@ -1048,6 +1049,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_MISLEAD:
         case SPELL_SMITING:
         case SPELL_AIRSTRIKE:
+        case SPELL_WATERSTRIKE:
         case SPELL_HOLY_FLAMES:
             return true;
         default:
@@ -1667,6 +1669,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_CONTROL_WINDS:
         return (mon->has_ench(ENCH_CONTROL_WINDS));
+
+    case SPELL_WATERSTRIKE:
+        return (!feat_is_water(grd(foe->pos())));
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:

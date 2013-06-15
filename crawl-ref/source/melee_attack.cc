@@ -38,6 +38,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
@@ -496,7 +497,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
     return (flavour == AF_CRUSH
             || flavour == AF_DROWN
             || flavour == AF_PURE_FIRE
-            || flavour == AF_SHADOWSTAB);
+            || flavour == AF_SHADOWSTAB
+            || flavour == AF_WATERPORT);
 }
 
 /* An attack has been determined to have hit something
@@ -4949,6 +4951,11 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_SHADOWSTAB:
         attacker->as_monster()->del_ench(ENCH_INVIS, true);
+        break;
+
+    case AF_WATERPORT:
+        if (!defender->no_tele())
+            waterport_touch(attacker->as_monster(), defender);
         break;
     }
 }

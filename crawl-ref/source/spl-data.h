@@ -3138,6 +3138,19 @@ struct spell_desc
 },
 
 {
+    SPELL_WATERSTRIKE, "Waterstrike",
+     SPTYP_ICE,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE | SPFLAG_MONSTER,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

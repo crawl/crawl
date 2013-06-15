@@ -41,5 +41,6 @@ bool lost_soul_revive(monster* mons);
 bool lost_soul_spectralize(monster* mons);
 
 int spawn_spirit_pack(const actor* target);
+void waterport_touch(monster* nymph, actor* target);
 
 #endif

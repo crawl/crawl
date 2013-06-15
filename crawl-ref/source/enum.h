@@ -2672,6 +2672,7 @@ enum monster_type                      // menv[].type
     MONS_BRIAR_PATCH,
     MONS_SPIRIT_WOLF,
     MONS_ANCIENT_BEAR,
+    MONS_WATER_NYMPH,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3505,6 +3506,7 @@ enum spell_type
     SPELL_CONTROL_WINDS,
     SPELL_THORN_VOLLEY,
     SPELL_WALL_OF_BRAMBLES,
+    SPELL_WATERSTRIKE,
     NUM_SPELLS
 };
 
