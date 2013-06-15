@@ -492,7 +492,7 @@ struct zap_info
     200,
     new calcdice_calculator<3, 8, 3, 5>,
     new tohit_calculator<20, 1, 10>,
-    RED,
+    LIGHTRED,
     false,
     BEAM_HELLFIRE,
     DCHAR_FIRED_ZAP,
