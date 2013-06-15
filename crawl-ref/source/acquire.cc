@@ -1615,7 +1615,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_STAVES);
         bad_class.set(OBJ_RODS);
     }
-    bad_class.set(OBJ_FOOD, you_foodless());
+    bad_class.set(OBJ_FOOD, you_foodless() && you.religion != GOD_FEDHAS);
 
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {
