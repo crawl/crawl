@@ -865,6 +865,15 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
         canned_msg(MSG_MANA_DECREASE);
     }
+
+    // Unwielding dismisses an active spectral weapon
+    monster *spectral_weapon = find_spectral_weapon(&you);
+    if (spectral_weapon)
+    {
+        mprf("Your spectral weapon disappears as %s.", meld ? "your weapon melds" : "you unwield");
+        end_spectral_weapon(spectral_weapon, false, true);
+    }
+
 }
 
 static void _equip_armour_effect(item_def& arm, bool unmeld)
@@ -1568,14 +1577,6 @@ bool unwield_item(bool showMsgs)
         return false;
 
     unequip_item(EQ_WEAPON, showMsgs);
-
-    // Unwielding dismisses an active spectral weapon
-    monster *spectral_weapon = find_spectral_weapon(&you);
-    if (spectral_weapon)
-    {
-        mpr("Your spectral weapon disappears as you unwield.");
-        end_spectral_weapon(spectral_weapon, false, true);
-    }
 
     you.wield_change     = true;
     you.redraw_quiver    = true;
