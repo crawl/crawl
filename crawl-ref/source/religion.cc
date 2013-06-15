@@ -871,10 +871,6 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
         really_dislikes.push_back("you destroy spellbooks");
         break;
 
-    case GOD_NEMELEX_XOBEH:
-        really_dislikes.push_back("you destroy decks");
-        break;
-
     default:
         break;
     }
