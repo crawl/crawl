@@ -4046,9 +4046,32 @@ bool mon_special_ability(monster* mons, bolt & beem)
             you.duration[DUR_SPIRIT_HOWL] = 600 + random2(350);
             spawn_spirit_pack(&you);
             you.props["next_spirit_pack"].get_int() = you.elapsed_time + 50 + random2(100);
-            break;
         }
     }
+    break;
+
+    case MONS_WATER_NYMPH:
+    {
+        if (one_chance_in(5))
+        {
+            actor *foe = mons->get_foe();
+            if (foe && !feat_is_water(grd(foe->pos())))
+            {
+                coord_def spot;
+                find_habitable_spot_near(foe->pos(), MONS_BIG_FISH, 3, false, spot);
+                if (!spot.origin() && foe->pos().distance_from(spot)
+                                      < foe->pos().distance_from(mons->pos()))
+                {
+                    if (mons->move_to_pos(spot))
+                    {
+                        simple_monster_message(mons, " flows with the water.");
+                        used = true;
+                    }
+                }
+            }
+        }
+    }
+    break;
 
     default:
         break;
