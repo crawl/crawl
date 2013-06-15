@@ -542,7 +542,6 @@ vvvv.2....2..............................................2....2.vvvv
 ENDMAP
 
 NAME:    dis_wall_4
-WEIGHT:  999999
 : dis_divider(_G, true)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
