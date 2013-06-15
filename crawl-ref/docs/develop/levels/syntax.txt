@@ -460,20 +460,6 @@ LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
                               they've been (like in the Abyss)
           * no_magic_map    - which prevents magic mapping from working.
 
-BFLAGS:   Persistent, changeable per-*branch* flags which affect game
-          behaviour; should only be used for vaults which go on the first
-          level of a particular branch. These flags can later be altered
-          using Lua markers; see the Tomb vaults in vaults.lua for an
-          example.
-
-          Valid flags are:
-          * no_tele_control - prevents the player from using teleport control
-          * not_mappable    - prevents the player from remembering where
-                              they've been (like in the Abyss)
-          * no_magic_map    - which prevents magic mapping from working.
-          * islanded        - allows isolated zones with no stairs.
-          * has_orb         - the Orb of Zot is on the floor in this branch.
-
 LFLOORCOL: blue
           LFLOORCOL: allows you to set the floor colour for the level the
           vault appears in. Should only be used for bazaars and other
