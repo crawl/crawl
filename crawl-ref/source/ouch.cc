@@ -1078,7 +1078,7 @@ static void _place_player_corpse(bool explode)
     corpse.props["ac"].get_int() = you.armour_class();
     mitm[o] = corpse;
 
-    move_item_to_grid(&o, you.pos(), MHITYOU, !you.in_water());
+    move_item_to_grid(&o, you.pos(), !you.in_water());
 }
 
 

@@ -1624,7 +1624,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
                 unwield_item();
                 canned_msg(MSG_EMPTY_HANDED_NOW);
             }
-            item_was_destroyed(item, MHITYOU); // XXX: update for non-player
+            item_was_destroyed(item);
             if (in_inv)
                 destroy_item(item);
             else

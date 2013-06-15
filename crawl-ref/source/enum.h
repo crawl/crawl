@@ -997,7 +997,6 @@ enum conduct_type
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
-    DID_DESTROY_DECK,                     // Nemelex
 
     NUM_CONDUCTS
 };

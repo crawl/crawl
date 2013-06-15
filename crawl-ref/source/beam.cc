@@ -2574,10 +2574,10 @@ void bolt::drop_object()
             }
         }
 
-        copy_item_to_grid(*item, pos(), agent()->mindex(), 1);
+        copy_item_to_grid(*item, pos(), 1);
     }
     else
-        item_was_destroyed(*item, agent()->mindex());
+        item_was_destroyed(*item, NON_MONSTER);
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary

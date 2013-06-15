@@ -964,7 +964,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     if (max_units < item.quantity)
     {
-        if (!copy_item_to_grid(item, new_spot, MHITYOU, max_units))
+        if (!copy_item_to_grid(item, new_spot, max_units))
         {
             // Always >1 item.
             mpr("They abruptly stop in place!");
