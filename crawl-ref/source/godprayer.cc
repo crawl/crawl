@@ -537,7 +537,7 @@ static void _ashenzari_sac_scroll(const item_def& item)
     }
 
     mitm[it].quantity = 1;
-    if (!move_item_to_grid(&it, you.pos(), MHITYOU, true))
+    if (!move_item_to_grid(&it, you.pos(), true))
         destroy_item(it, true); // can't happen
 }
 
@@ -865,7 +865,7 @@ static bool _offer_items()
 
         piety_gain_t relative_gain = sacrifice_item_stack(item);
         print_sacrifice_message(you.religion, mitm[i], relative_gain);
-        item_was_destroyed(mitm[i], MHITYOU);
+        item_was_destroyed(mitm[i]);
         destroy_item(i);
         i = next;
         num_sacced++;

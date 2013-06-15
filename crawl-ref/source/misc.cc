@@ -213,12 +213,12 @@ static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_ch
         turn_corpse_into_skeleton(item);
     }
 
-    copy_item_to_grid(copy, item_pos(item), MHITYOU);
+    copy_item_to_grid(copy, item_pos(item));
 }
 
 void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 {
-    item_was_destroyed(item, MHITYOU);
+    item_was_destroyed(item);
     if (!mons_skeleton(item.mon_type))
         skeleton = MB_FALSE;
     if (skeleton == MB_TRUE || skeleton == MB_MAYBE && one_chance_in(3))
@@ -985,7 +985,7 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
     if (o != NON_ITEM)
     {
         turn_corpse_into_blood_potions(blood_potions);
-        copy_item_to_grid(blood_potions, you.pos(), MHITYOU);
+        copy_item_to_grid(blood_potions, you.pos());
     }
 }
 
