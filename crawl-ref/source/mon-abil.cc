@@ -4608,3 +4608,77 @@ int spawn_spirit_pack(const actor* target)
 
     return 0;
 }
+
+void waterport_touch(monster* nymph, actor* target)
+{
+    // Don't constantly teleport the target if it's already standing in water
+    if (feat_is_water(grd(target->pos())))
+        return;
+
+    coord_def base;
+
+    // If we don't have a 'home', let's at least try to find some water somewhere
+    if (nymph->patrol_point.origin())
+    {
+        // Check within LoS first, but then keep going until we find some water
+        for (distance_iterator di(nymph->pos()); di; ++di)
+        {
+            if (feat_is_water(grd(*di)))
+            {
+                base = *di;
+                break;
+            }
+        }
+
+        // If somehow we haven't found any (none on the level?) just bail
+        if (base.origin())
+            return;
+    }
+    else
+        base = nymph->patrol_point;
+
+    int least_land = 1000;
+    coord_def best_spot;
+    for (int tries = 0; tries < 10; ++tries)
+    {
+        coord_def spot;
+        // MONS_BIG_FISH is just a placeholder for 'find water' here
+        find_habitable_spot_near(base, MONS_BIG_FISH, 6, false, spot);
+
+        if (!target->is_habitable_feat(grd(spot)))
+            continue;
+
+        if (!spot.origin())
+        {
+            int land_count = -1;
+            for (distance_iterator di(spot, false, false, 3); di; ++di)
+                if (feat_has_dry_floor(grd(*di)))
+                    ++land_count;
+            if (land_count < least_land)
+            {
+                least_land = land_count;
+                best_spot = spot;
+            }
+        }
+
+        // Not going to be able to do better than this, so save the effort
+        if (least_land == 0)
+            break;
+    }
+
+    if (!best_spot.origin())
+    {
+        for (adjacent_iterator ai(best_spot); ai; ++ai)
+        {
+            if (feat_is_water(grd(*ai)) && !actor_at(*ai))
+            {
+                nymph->move_to_pos(*ai);
+                target->move_to_pos(best_spot);
+                mprf("%s draws %s back to her home.",
+                        nymph->name(DESC_THE).c_str(),
+                        target->name(DESC_THE).c_str());
+                return;
+            }
+        }
+    }
+}

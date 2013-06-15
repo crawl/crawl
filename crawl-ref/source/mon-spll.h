@@ -2154,4 +2154,15 @@
       }
     },
 
+    {  MST_WATER_NYMPH,
+      {
+       SPELL_WATERSTRIKE,
+       SPELL_WATERSTRIKE,
+       SPELL_NO_SPELL,
+       SPELL_WATERSTRIKE,
+       SPELL_WATERSTRIKE,
+       SPELL_NO_SPELL
+      }
+    },
+
 #endif
