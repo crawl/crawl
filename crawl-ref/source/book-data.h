@@ -501,7 +501,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Rod of destruction (fire)
+{   // Rod of fiery destruction
     SPELL_THROW_FLAME,
     SPELL_FIREBALL,
     SPELL_BOLT_OF_FIRE,
@@ -512,7 +512,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Rod of destruction (ice)
+{   // Rod of frigid destruction
     SPELL_THROW_FROST,
     SPELL_THROW_ICICLE,
     SPELL_FREEZING_CLOUD,
