@@ -1140,6 +1140,9 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_BERSERK ])
         ret += 5;
 
+    if (prop[ ARTP_JUMP ])
+        ret += 5;
+
     if (prop[ ARTP_INVISIBLE ])
         ret += 20;
 

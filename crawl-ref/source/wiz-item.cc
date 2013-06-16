@@ -262,6 +262,7 @@ static const char* _prop_name[] = {
     "SInv",
     "Inv",
     "Fly",
+    "Jump",
     "Blnk",
     "Bers",
     "Nois",
@@ -305,6 +306,7 @@ static int8_t _prop_type[] = {
     ARTP_VAL_BOOL, //EYESIGHT
     ARTP_VAL_BOOL, //INVISIBLE
     ARTP_VAL_BOOL, //FLIGHT
+    ARTP_VAL_BOOL, //JUMPING
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
     ARTP_VAL_POS,  //NOISES
