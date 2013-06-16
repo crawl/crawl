@@ -227,6 +227,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "+Inv",   ARTP_INVISIBLE,             2 },
         { "+Fly",   ARTP_FLY,                   2 },
         { "+Fog",   ARTP_FOG,                   2 },
+        { "+Jump",  ARTP_JUMP,                   2 },
 
         // Resists, also really important
         { "rElec",  ARTP_ELECTRICITY,           2 },
@@ -422,6 +423,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_EYESIGHT, "It enhances your eyesight.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It lets you fly.", false},
+        { ARTP_JUMP, "It lets you perform a jump-attack.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISES, "It makes noises.", false},
