@@ -1184,6 +1184,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "intelligence",
             "ponderous",
             "flight",
+            "jumping",
             "magic reistance",
             "protection",
             "stealth",

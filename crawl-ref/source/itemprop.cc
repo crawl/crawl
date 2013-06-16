@@ -2566,7 +2566,8 @@ bool gives_ability(const item_def &item)
             return false;
         const special_armour_type ego = get_armour_ego_type(item);
 
-        if (ego == SPARM_DARKNESS || ego == SPARM_FLYING)
+        if (ego == SPARM_DARKNESS || ego == SPARM_FLYING
+            || ego == SPARM_JUMPING)
             return true;
         break;
     }

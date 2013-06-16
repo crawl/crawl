@@ -1327,6 +1327,10 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It can be activated to allow its wearer to "
                 "fly indefinitely.";
             break;
+        case SPARM_JUMPING:
+            description += "It can be activated to allow its wearer to "
+                "perform a jumping attack.";
+            break;
         case SPARM_MAGIC_RESISTANCE:
             description += "It increases its wearer's resistance "
                 "to enchantments.";

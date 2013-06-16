@@ -4594,6 +4594,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "intelligence",
         "ponderousness",
         "flying",
+        "jumping",
         "magic_resistance",
         "protection",
         "stealth",
