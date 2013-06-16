@@ -417,6 +417,24 @@
   "breathe flames"
 },
 
+{ MUT_JUMP,                 4,  3, false, false, false,
+  "jump",
+
+  {"You can jump attack at a short distance.",
+   "You can jump attack at a medium distance.",
+   "You can jump attack at a long distance."},
+
+  {"You feel sure on your feet.",
+   "You feel sure on your feet.",
+   "You feel sure on your feet."},
+
+  {"You feel less sure on your feet.",
+   "You feel less sure on your feet.",
+   "You feel less sure on your feet."},
+
+  "jump"
+},
+
 { MUT_BLINK,                          3,  3, false, false, false,
   "blink",
 

@@ -335,7 +335,14 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         && !items_give_ability(item.link, ARTP_JUMP))
     {
         if (msg)
-            mpr("You feel more sure on your feet.");
+        {
+            // Give message even if evoke jump isn't the active jump source
+            if (player_evoke_jump_range() >
+                player_mutation_level(MUT_JUMP) + 2)
+                mpr("You feel more sure on your feet.");
+            else
+                mpr("Your feet feel light for a moment.");
+        }
         artefact_wpn_learn_prop(item, ARTP_JUMP);
     }
 
@@ -1117,7 +1124,8 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_JUMPING:
-        if (!you.evokable_jump())
+        if (!you.evokable_jump()
+            && player_mutation_level(MUT_JUMP) < player_evoke_jump_range())
             mpr("You feel less sure on your feet.");
         break;
     case SPARM_MAGIC_RESISTANCE:
