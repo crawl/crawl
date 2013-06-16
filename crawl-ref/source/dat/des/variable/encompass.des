@@ -7,7 +7,7 @@
 # Setups for the below.
 {{
     function grunt_profane_halls_setup(e)
-        if you.absdepth() >= 24 then
+        if you.absdepth() == 27 then
             e.kmons('1 = base draconian / nothing w:20')
             e.kmons('2 = nonbase draconian / base draconian w:20')
             e.kmons('3 = draconian zealot')
@@ -568,7 +568,7 @@ SUBVAULT: f : grunt_profane_temple
 SUBVAULT: g : grunt_profane_temple
 NSUBST: D = 1:K / 1:L / 1:M / 1:N
 : grunt_profane_halls_setup(_G)
-: if you.absdepth() >= 24 then
+: if you.absdepth() == 27 then
 KMONS: K = storm dragon
 KMONS: L = shadow dragon
 KMONS: M = quicksilver dragon
