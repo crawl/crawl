@@ -1224,7 +1224,7 @@ spret_type your_spells(spell_type spell, int powc,
     bool antimagic = false; // lost time but no other penalty
 
     if (allow_fail && you.duration[DUR_ANTIMAGIC]
-        && x_chance_in_y(DUR_ANTIMAGIC / 3, you.hp_max))
+        && x_chance_in_y(you.duration[DUR_ANTIMAGIC] / 3, you.hp_max))
     {
         mpr("You fail to access your magic.");
         fail = antimagic = true;
