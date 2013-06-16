@@ -350,179 +350,102 @@ ENDMAP
 
 
 ##############################################################################
-# Ereshkigal (Tartarus) by Mu
+# Ereshkigal (Tartarus) by Mu.
 ##############################################################################
-
 NAME:     tar_mu
 ORIENT:   encompass
-SUBVAULT: Z : eresh_room
-# Ereshkigal is placed in the subvault.
-MONS:     random, shadow fiend, reaper, soul eater, shadow demon
+MONS:     patrolling Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
 MONS:     shadow dragon, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
-# Randomising the doors to get into the pyramid.
-# There may be ones that lead nowhere.
-SHUFFLE:  FfGgHh
-SUBST:    F = =
-SUBST:    f : fff=c, f = =c
-SUBST:    G : Gcc,   G = =cc
-SUBST:    g : gcccc, g = =cc
-SUBST:    H = c
-SUBST:    h = c
 # position of the loot chamber varies
 SHUFFLE:  AB
 SUBST:    A = %
 SUBST:    B = x
-NSUBST:   " = 1:= / *:x
 KFEAT:    % = .
 KMONS:    % = soul eater w:20 / shadow wraith w:15 / reaper w:5 / nothing w:20
 KITEM:    % = | / $
 SUBST:    4 = 3333444455566778
-# TODO: this vault needs to be reworked, for now we simply disable secrets
-SUBST:    = = +
+KFEAT:    = = floor
+# There are 21 L's
+NSUBST:   L = 5:M / 5:N / 5:P / 5:V / 1:L
+SUBST:    M = 7.
+KFEAT:    N = floor
+KITEM:    N = superb_item
+KMONS:    N = patrolling shadow fiend / patrolling soul eater
+KFEAT:    P = floor
+KITEM:    P = star_item
+KMONS:    P = patrolling reaper / nothing
+SUBST:    V = V / .
+KFEAT:    L = teleport trap
+NSUBST:   = = 5:Q / 5:R / *:.
+KMONS:    Q = generate_awake unseen horror
+KFEAT:    R = blade trap / nothing
+KMONS:    s = eidolon
+KMONS:    t = phantasmal warrior
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxx..............................................................xxxx
-xxxx..............................................................xxxx
+xxxx.4..............................4........................(..{.xxxx
 xxxx..cccccccccccccccccccccccccccccc..............................xxxx
-xxxx..cccccccccccccccccccccccccccccc..............................xxxx
-xxxx..cc..c...........4...........cc..............................xxxx
-xxxx..cc..F.......................cc..............................xxxx
-xxxx..cc..ccGcccccccccccccccccccGFcc..............................xxxx
-xxxx..cc..H.................f..c..cc..............ccccccc.........xxxx
-xxxx..cc..f.........5.......h..H..cc............ccccccccccc.......xxxx
-xxxx..cc..chgccccHccccccccGgc..c..cc...........ccccc$$$ccccc......xxxx
-xxxx..cc..c..F.G............c..c..cc..........cccc$$$$$$$cccc.....xxxx
-xxxx..cc..f..c.ccgcccccccccHc..c..cc..........ccc$$$$$$$$$ccc.....xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc.........ccc$$$$$$$$$$$ccc....xxxx
-xxxx..cc..c..c.hZZZZZZZZZZf.c..c..cc.........ccc.2.$$$$$.2.ccc....xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........ccc....xxxxx....ccc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx
-xxxx..cc..c..h.cZZZZZZZZZZc.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx
-xxxx..cc.4c..c.cZZZZZZZZZZc.c5.c..cc........cc=cxxxxxxxxxxxc=cc...xxxx
-xxxx..cc..c.5c.cZZZZZZZZZZc.c..cD2cc........cc.c...........c.cc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx
-xxxx..cc..c..G.cZZZZZZZZZZc.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c.cx.444.xc.c.cc...xxxx
-xxxx..cc..c..cFccHccccGcFcc.H..f..cc........cc.c.cxxxxxxxc.c.cc...xxxx
-xxxx..cc..c..G............c.c..c..cc........cc.c.cccxxxccc.c.cc...xxxx
-xxxx..cc..c..cccccccccccHccfcgcc..cc........cc.c...cxxxc...c.cc...xxxx
-xxxx..cc..F..c......5..........c..cc........cc.c.cccxxxccc.c.cc...xxxx
-xxxx..cc..c..g.................c..cc........cc.c.cx|2.2|xc.c.cc...xxxx
-xxxx..cccHcfcccHcccccccccccccfcc==cc........cc.c.cx|$$$|xc.c.cc...xxxx
-xxxx..cc............4..........c..cc........cc.c.ccccxcccc.c.cc...xxxx
-xxxx..cc.......................c..cc........cc.c....cxc....c.cc...xxxx
-xxxx..cccccccccccccccccccccccccc++cc........cc.c.ccccxcccc.c.cc...xxxx
-xxxx..cccccccccccccccccccccccccc++cc........cc.c.cxx|||xxc.c.cc...xxxx
-xxxx........................................cc.c.cxx|||xxc.c.cc...xxxx
-xxxx.........................xx....xx.......cc=c.ccccccccc.c=cc...xxxx
-xxxx.........................xx....xx........c.c.....c.....c.c....xxxx
-xxxx...........................................c...........c......xxxx
-xxxx..............................................................xxxx
-xxxx..............4..........xx....xx.............................xxxx
-xxxx...4..4..................xx....xx.............................xxxx
-xxxx....44...................................xx.................xxxxxx
-xxxx..........4..............................xxx...............xxxxxxx
-xxxx.........................xx....xx.......xxxxxx"xxxxxxxxx"xxxxxxxxx
-xxxx.........................xx....xx.......xxxxxx.xxx.2.xxx.xxxxxxxxx
-xxxx........44..............................xxxxxx.xxx2.2xxx.xxxAAAAxx
-xxxx.......................................xxxxxxx.xxxxxxxxx.xxxAAAAxx
-xxxx......4...................x....x.......xxxxxxx..xxxxxxx..xxxAAAAxx
-xxxx.......................................xxxxxxxx.........xxxxAAAAxx
-xxxx......................................xxxxxxxxxx.......xxxxxxxxxxx
-xxxx..........................x....x......xxxxxxxxxxx.....xxAAAAAAAAxx
-xxxx.....................................xxBBBBBBBxxxx...xxxAAAAAAAAxx
-xxxx.....................................xxBBBBBBBxxxxx.xxxxAAAAAAAAxx
-xxxx..........................x....x....xxxBBBBBBBxxxxx=xxxxxxxxxxxxxx
-xxxx....................................xxxxxxxxxxxx..............$$xx
-xxxx...................................xxxBBBBxBBBBx.4...4.......$$$xx
-xxxx..........................x....x...xxxBBBBxBBBBx...4..4.....$$$$xx
-xxxx.................................{xxxxBBBBxBBBBx.2..4..4...$$$$$xx
-xxxx................................[xxxxxBBBBxBBBBx..........$$$$$$xx
-xxxx...............................(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx..c============================+..............................xxxx
+xxxx..c=c=c=cccccccc=c=cccc=c=cccccc............................[.xxxx
+xxxx..c=c=c=c======c=c=cL===c=c====c..............................xxxx
+xxxx..c=c=c=c=cccc=c=c=cccc=c=c=cc=c..............................xxxx
+xxxx..c=c=c=c=ccLc=c=c====c=c=c=Lc=c.............3ccccccc3........xxxx
+xxxx..c=c=c=c=cc=c=c=c=cccc=c=cccc=c...........7ccccccccccc7......xxxx
+xxxx..c=c=c=c=cc===c=c=cL===c======c..........3ccccc$$$ccccc3.....xxxx
+xxxx..c=c=c===cccccc=c=cccc=cccccccc.........7cccc$$$$$$$cccc7....xxxx
+xxxx..c=c=ccccccc====c===Lc========c.........7ccc$$$$$$$$$ccc7....xxxx
+xxxx..c=c=======c=cc=c=ccccccccc=c=c.........ccc$$$$$$$$$$$ccc....xxxx
+xxxx..c=ccccccc=c====c=======c=c=c=c.........ccc.2.$$$$$.2.ccc....xxxx
+xxxx..c=======c=cccc=ccccccc=c=c=c=c........ccc....xxxxx....ccc...xxxx
+xxxx..ccccccc=c======c=======c=c=c=c........ccc..xxxxxxxxx..ccc...xxxx
+xxxx..c=====c=c=cccc=c=ccccc=c=c=c=c........cc..xxxxxxxxxxx..cc...xxxx
+xxxx..c=ccc=c=c===Lc=c=cL==c=c=c=c=c........cc+cxxxxxxxxxxxc+cc...xxxx
+xxxx..c=cLc=c=c=cccc=c=ccc=c=c=c=c=c........cc.c...........c.cc...xxxx
+xxxx..c=c=c=c=c===Lc=c=====c=c=c=c=c........cc.c.xxxxxxxxx.c.cc...xxxx
+xxxx..c=c=c=c=cccccc=ccccccc=c=c=c=c........cc.c+xxxxxxxxc+c.cc...xxxx
+xxxx..c=c=c=c=c================c=c=c........cc.c.xx.444.xc.c.cc...xxxx
+xxxx..c=c=c=c=c=c=cccccccc=c=c=c=c=c........cc.c.cx.444.xc.c.cc...xxxx
+xxxx..c=c=c=c=c=c=c======c=c=c=c=c=c........cc.c.cxxxxxxxc.c.cc...xxxx
+xxxx..c=c=c=c=c=c=c=cccc=c=c=c=c=c=c........cc.c.cccxxxccc.c.cc...xxxx
+xxxx..c=c=c=c=cLcLc===Lc=c=c=c=c=c=c........cc.c...cxxxc...c.cc...xxxx
+xxxx..c=c=c=c=cccccccccc=c=c=c=c=c=c........cc.c.cccxxxccc.c.cc...xxxx
+xxxx..c=c=c=c============c=c=c=c=c=c........cc.c.cx|2.2|xc.c.cc...xxxx
+xxxx..c=c=c=cccccccccccccccc=c=c=c=c........cc.c.cx|$$$|xc.c.cc...xxxx
+xxxx..c=c====================c=cLc=c........cc.c.ccccxcccc.c.cc...xxxx
+xxxx..c=c=c=cccccccccccccccccc=ccc=c........cc.c....cxc....c.cc...xxxx
+xxxx..c=c=c=cc==================Lc=c........cc.c.ccccxcccc.c.cc...xxxx
+xxxx..c=c=c=cc=ccccccccccccccccccc=c........cc.c.cxx|||xxc.c.cc...xxxx
+xxxx..c=c=c=cc=c===================c........cc.c.cxx|||xxc.c.cc...xxxx
+xxxx..c=c=c=cc=c=c=ccccccccccccccccc........cc+c.ccccccccc.c+cc...xxxx
+xxxx..c=c=c=cc=c=c=c==============cc.........c.c.....c.....c.c....xxxx
+xxxx..c=c=c=cc=c=c=c=cccccccccc=c=cc...........c...........c......xxxx
+xxxx..c=c=c=cc===c=c=cL=======c=c=cc..............................xxxx
+xxxx..c=c=c=cccccc=c=cccccccc=c=c=cc..............4.4.4.4.........xxxx
+xxxx..c=c=c=c======c========c=c=c=cc...............4...4..........xxxx
+xxxx..c=c=c=ccccccccccccccc=c=c=c=cc..........x.................xxxxxx
+xxxx..c=cLc===============c=c=c=c=cc.........xxx...............xxxxxxx
+xxxx..c=ccccccccccccccccccc=c=c=c=cc........xxxxxx+xxxxxxxxx+xxxxxxxxx
+xxxx..c=====================c=c=c=cc........xxxxxx.x|$...$|x.xxxxxxxxx
+xxxx..ccccccccccccccccccccccc=c=c=cc........xxxxxx.xxx2.2xxx.xxxAAAAxx
+xxxx..cc..........+=========c=c=c=cc.......xxxxxxx.xxxxxxxxx.xxxAAAAxx
+xxxx..cc..........ccccccccc=c=c=c=cc.......xxxxxxx..xxxxxxx..xxxAAAAxx
+xxxx..cc..........cLcL======c=c=c=cc.......xxxxxxxx.........xxxxAAAAxx
+xxxx..cc..........c=ccccccc=c=c=c=cc......xxxxxxxxxx.......xxxxxxxxxxx
+xxxx..cc.s...2..s.c=c=====c=c=c=c=cc......xxxxxxxxxxx.....xxAAAAAAAAxx
+xxxx..cc.7..1...7.c=c=cLcLc=c=c=c=cc.....xxBBBBBBBxxxx...xxxAAAAAAAAxx
+xxxx..cc..........c=c=ccccc=c=c=c=cc.....xxBBBBBBBxxxxx.xxxxAAAAAAAAxx
+xxxx..cc..........c=c=======c=c=c=cc....xxxBBBBBBBxxxxx+xxxxxxxxxxxxxx
+xxxx..cc.5.t..t.5.c=ccccccc=c=c=c=cc....xxxxxxxxxxxx..............$$xx
+xxxx..cc.$$$O$$$$.c=============cLcc....xxBBBBxBBBBx.4...4.......$$$xx
+xxxx..cccccccccccccccccccccccccccccc....xxBBBBxBBBBx...4..4.....$$$$xx
+xxxx.4..............................4..xxxBBBBxBBBBx.2..4..4...$$$$$xx
+xxxx..................................xxxxBBBBxBBBBx..........$$$$$$xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:    eresh_room_1
-TAGS:    eresh_room no_rotate
-WEIGHT:  30
-MONS:    patrolling Ereshkigal, shadow fiend
-: tar_setup(_G)
-MAP
-..........
-...c==c...
-...c..c...
-...c..c...
-.ccc..ccc.
-.cO.12..c.
-.ccc..ccc.
-...c||c...
-...c||c...
-...cccc...
-..........
-ENDMAP
-
-NAME:    eresh_room_2
-TAGS:    eresh_room no_rotate
-WEIGHT:  10
-MONS:    patrolling Ereshkigal, shadow fiend
-SHUFFLE: |O
-: tar_setup(_G)
-MAP
-..........
-.G......G.
-..........
-c........c
-cc......cc
-|+..21..+O
-cc......cc
-c........c
-..........
-.G......G.
-..........
-ENDMAP
-
-NAME:    eresh_room_3
-TAGS:    eresh_room no_rotate
-WEIGHT:  10
-MONS:    patrolling Ereshkigal, shadow fiend
-: tar_setup(_G)
-MAP
-..........
-..........
-..cc++cc..
-.cc....cc.
-.c......c.
-.cG....Gc.
-.c..12..c.
-.c+cccc+c.
-.cc|O||cc.
-..cccccc..
-..........
-ENDMAP
-
-NAME:    eresh_room_4
-TAGS:    eresh_room no_rotate
-WEIGHT:  5
-MONS:    patrolling Ereshkigal, shadow fiend
-SHUFFLE: 12 / AB
-SUBST:   A=., B=.
-: tar_setup(_G)
-MAP
-..........
-.G......G.
-....A.....
-...nnnn...
-...n||n...
-..1nO|+2..
-...n||n...
-...nnnn...
-.....B....
-.G......G.
-..........
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
