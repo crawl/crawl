@@ -1106,10 +1106,9 @@ static const char* rod_type_name(int type)
     case ROD_VENOM:           return "venom";
     case ROD_INACCURACY:      return "inaccuracy";
 
-    case ROD_DESTRUCTION_I:
-    case ROD_DESTRUCTION_II:
-    case ROD_DESTRUCTION_III:
-                              return "destruction";
+    case ROD_FIERY_DESTRUCTION:  return "fiery destruction";
+    case ROD_FRIGID_DESTRUCTION: return "frigid destruction";
+    case ROD_DESTRUCTION:        return "destruction";
 
     default: return "bugginess";
     }
@@ -1920,32 +1919,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     // One plural to rule them all.
     if (need_plural && quantity > 1 && !basename && !qualname)
         buff.str(pluralise(buff.str()));
-
-    // Disambiguation.
-    if (!terse && !basename && !dbname && know_type
-        && !is_artefact(*this))
-    {
-        switch (base_type)
-        {
-        case OBJ_RODS:
-            switch (item_typ)
-            {
-            case ROD_DESTRUCTION_I:
-                buff << " [fire]";
-                break;
-            case ROD_DESTRUCTION_II:
-                buff << " [ice]";
-                break;
-            case ROD_DESTRUCTION_III:
-                buff << " [lightning,fireball,iron]";
-                break;
-            }
-            break;
-
-        default:
-            break;
-        }
-    }
 
     // Rod charges.
     if (base_type == OBJ_RODS && know_type && know_pluses

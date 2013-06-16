@@ -2039,7 +2039,15 @@ this unsuspecting world.
 %%%%
 rod of destruction
 
-This rod contains spells of mayhem and destruction.
+This rod contains a varied set of spells of mayhem and destruction.
+%%%%
+rod of fiery destruction
+
+This rod contains spells that launch destructive fire against your enemies.
+%%%%
+rod of frigid destruction
+
+This rod contains spells that destroy your enemies with projected cold.
 %%%%
 rod of inaccuracy
 
