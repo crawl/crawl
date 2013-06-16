@@ -562,6 +562,8 @@ public:
     bool can_go_berserk() const;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false) const;
+    bool can_jump() const;
+    bool can_jump(bool quiet) const;
     void go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool has_lifeforce() const;
@@ -791,7 +793,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                              const coord_def& old_pos=coord_def());
 
 bool check_moveto(const coord_def& p, const string &move_verb = "step",
-                  const string &msg = "");
+                  const string &msg = "", bool interactive = true);
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool is_map_persistent(void);
@@ -814,6 +816,7 @@ bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
 bool player_under_penance(void);
+int player_evoke_jump_range();
 
 int burden_change(void);
 

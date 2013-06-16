@@ -29,6 +29,10 @@ enum unchivalric_attack_type
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit = NULL,
                  bool simu = false);
 
+bool fight_jump(actor *attacker, actor *defender, bool jump_blocked,
+                coord_def landing_pos, set<coord_def> landing_sites,
+                bool *did_hit = NULL);
+
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
@@ -47,5 +51,5 @@ void get_all_cleave_targets(const actor* attacker, const coord_def& def,
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0);
-
+bool dont_harm(const actor* attacker, const actor* defender);
 #endif

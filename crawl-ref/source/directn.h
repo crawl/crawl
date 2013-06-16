@@ -66,6 +66,7 @@ public:
     bool isEndpoint;    // Does the player want the attack to stop at target?
     bool isCancel;      // user cancelled (usually <ESC> key)
     bool choseRay;      // user wants a specific beam
+
     coord_def target;   // target x,y or logical extension of beam to map edge
     coord_def delta;    // delta x and y if direction - always -1,0,1
     ray_def ray;        // ray chosen if necessary
@@ -116,7 +117,7 @@ private:
     bool do_main_loop();
 
     // Return the location where targetting should start.
-    coord_def find_default_target() const;
+    void set_default_target();
 
     void handle_mlist_cycle_command(command_type key_command);
     void handle_wizard_command(command_type key_command, bool* loop_done);
@@ -162,6 +163,7 @@ private:
     actor* targeted_actor() const;
     monster* targeted_monster() const;
 
+    bool find_default_monster_target(coord_def& result) const;
     // Functions which print things to the user.
     // Each one is commented with a sample output.
 
@@ -247,6 +249,8 @@ private:
     bool show_beam;             // Does the user want the beam displayed?
     bool have_beam;             // Is the currently stored beam valid?
     coord_def objfind_pos, monsfind_pos; // Cycling memory
+    bool valid_jump;            // If jumping, do we currently have a monster
+                                // target with a valid landing position?
 
     // What we need to redraw.
     bool need_beam_redraw;
@@ -256,7 +260,6 @@ private:
 
     bool show_items_once;       // Should we show items this time?
     bool target_unshifted;      // Do unshifted direction keys fire?
-
     // Default behaviour, saved across instances.
     static targetting_behaviour stock_behaviour;
 

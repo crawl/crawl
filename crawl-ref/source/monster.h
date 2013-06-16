@@ -299,6 +299,7 @@ public:
 
     void attacking(actor *other);
     bool can_go_berserk() const;
+    bool can_jump() const;
     void go_berserk(bool intentional, bool potion = false);
     void go_frenzy();
     bool berserk() const;

@@ -2350,7 +2350,6 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_SPIRIT_SHIELD:
         return (type == ARM_CAP || slot == EQ_SHIELD || !strict);
-
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
