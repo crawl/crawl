@@ -2911,18 +2911,17 @@ void change_monster_type(monster* mons, monster_type targetc)
                && (!mons->can_use_spells() || mons->is_actual_spellcaster())
                && !degenerated && !slimified);
 
-    // deal with mons_sec
+    mons->number       = 0;
+
+    // Note: define_monster() will clear out all enchantments! - bwr
     if (mons_is_zombified(mons))
-        mons->base_monster = targetc;
+        define_zombie(mons, targetc, mons->type);
     else
     {
         mons->type         = targetc;
         mons->base_monster = MONS_NO_MONSTER;
+        define_monster(mons);
     }
-    mons->number       = 0;
-
-    // Note: define_monster() will clear out all enchantments! - bwr
-    define_monster(mons);
 
     mons->mname = name;
     mons->props["original_name"] = name;
