@@ -380,7 +380,7 @@ SUBST:    V = V / .
 KFEAT:    L = teleport trap
 NSUBST:   = = 5:Q / 5:R / *:.
 KMONS:    Q = generate_awake unseen horror
-KFEAT:    R = blade trap / nothing
+KFEAT:    R = blade trap / floor
 KMONS:    s = eidolon
 KMONS:    t = phantasmal warrior
 : tar_setup(_G)
