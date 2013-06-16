@@ -5337,6 +5337,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SPIT_ACID;
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
+    case ABIL_JUMP:
+        return TILEG_ABILITY_JUMP;
 
     // Others
     case ABIL_DELAYED_FIREBALL:

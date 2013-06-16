@@ -225,6 +225,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_JUMP, "Jump Attack", 0, 0, 125, 0, 0, ABFLAG_EXHAUSTION},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
 
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
@@ -932,6 +933,12 @@ talent get_talent(ability_type ability, bool check_confused)
         if (you.form == TRAN_DRAGON)
             failure -= 20;
         break;
+    // copied from spit poison
+    case ABIL_JUMP:
+        failure = ((you.species == SP_FELID) ? 20 : 40)
+            - 10 * player_mutation_level(MUT_JUMP)
+            - you.experience_level;
+        break;
     case ABIL_FLY:
         failure = 45 - (3 * you.experience_level);
         break;
@@ -1592,7 +1599,7 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    if ((tal.which == ABIL_EVOKE_JUMP)
+    if ((tal.which == ABIL_EVOKE_JUMP || tal.which == ABIL_JUMP)
         && !you.can_jump())
     {
         crawl_state.zero_turns_taken();
@@ -1900,6 +1907,14 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
 
+        break;
+    }
+    case ABIL_JUMP:
+    {
+        if(!_jump_player(player_mutation_level(MUT_JUMP) + 2))
+            return false;
+        you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
+                              + random2(30 - you.experience_level));
         break;
     }
     case ABIL_RECHARGING:
@@ -3114,6 +3129,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
+    if (player_mutation_level(MUT_JUMP) && !you.evokable_jump())
+        _add_talent(talents, ABIL_JUMP, check_confused);
 
     // Spit Poison. Nagas can upgrade to Breathe Poison.
     if (you.species == SP_NAGA)

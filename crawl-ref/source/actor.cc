@@ -390,7 +390,9 @@ int actor::evokable_flight(bool calc_unid) const
 // Return an int so we know whether an item is the sole source.
 int actor::evokable_jump(bool calc_unid) const
 {
-    if (suppressed())
+    if (suppressed()
+        || (is_player() && player_mutation_level(MUT_JUMP) >=
+            player_evoke_jump_range() - 2))
         return 0;
     return wearing_ego(EQ_ALL_ARMOUR, SPARM_JUMPING, calc_unid)
         + scan_artefacts(ARTP_JUMP, calc_unid);

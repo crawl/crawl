@@ -74,6 +74,14 @@ Start flying. During flight you can safely cross water and similar obstacles.
 Be warned, though, that flight may time out at inopportune moments and cause
 you to fall to your death.
 %%%%
+Jump Attack
+
+Jump attack at limited distance, covering ground with great speed.  You may
+target an enemy to perform a jumping attack with increased damage and landing in
+some position next to your target.  You cannot jump over flying enemies nor
+giant enemies not submerged in deep water or lava.  Standing or swimming in
+water, lava, or liquified ground will also prevent you from using this ability.
+%%%%
 Hellfire ability
 
 Blast your enemies with hellfire. This ball of unholy flames explodes on
