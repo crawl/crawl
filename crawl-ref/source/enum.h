@@ -3095,6 +3095,7 @@ enum artefact_prop_type
 #if TAG_MAJOR_VERSION != 34
     ARTP_FOG,
 #endif
+    ARTP_JUMP,
     ARTP_BLINK,
     ARTP_BERSERK,
     ARTP_NOISES,

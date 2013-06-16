@@ -265,6 +265,7 @@ static const char* _prop_name[] = {
 #if TAG_MAJOR_VERSION > 34
     "+Fog",
 #endif
+    "+Jump",
     "+Blnk",
     "+Rage",
     "Noisy",
@@ -314,6 +315,7 @@ static int8_t _prop_type[] = {
 #if TAG_MAJOR_VERSION > 34
     ARTP_VAL_BOOL, //FOG
 #endif
+    ARTP_VAL_BOOL, //JUMPING
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
     ARTP_VAL_POS,  //NOISES
