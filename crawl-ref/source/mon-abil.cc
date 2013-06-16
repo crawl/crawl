@@ -4073,6 +4073,47 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
     break;
 
+    case MONS_TREANT:
+    {
+        if (one_chance_in(4)
+            || one_chance_in(2) && mons->hit_points * 2 < mons->max_hit_points)
+        {
+            int count = min(2 + random2(3), (int)mons->number);
+            bool created = false;
+            for (int i = 0; i < count; ++i)
+            {
+                monster_type bee_t = random_choose_weighted(13, MONS_KILLER_BEE,
+                                                             2, MONS_QUEEN_BEE,
+                                                             3, MONS_YELLOW_WASP,
+                                                             1, MONS_RED_WASP,
+                                                             0);
+
+                mgen_data bee_data(bee_t, SAME_ATTITUDE(mons),
+                                   mons, 0, SPELL_NO_SPELL, mons->pos(),
+                                   mons->foe);
+                bee_data.extra_flags |= MF_WAS_IN_VIEW;
+                monster* bee = create_monster(bee_data);
+
+                if (bee)
+                {
+                    bee->flags |= MF_NO_REWARD | MF_HARD_RESET;
+                    bee->props["band_leader"].get_int() = mons->mid;
+                    created = true;
+                    mons->number--;
+                }
+            }
+
+            if (created && you.can_see(mons))
+            {
+                mprf("Angry insects surge out from beneath %s foliage!",
+                    mons->name(DESC_ITS).c_str());
+            }
+            // Intentionally takes no energy; the insects are flying free
+            // on their own time.
+        }
+    }
+    break;
+
     default:
         break;
     }

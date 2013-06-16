@@ -1767,6 +1767,13 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
+    // Possibly replenish bees (1 per 10 turns, on average)
+    if (mons->type == MONS_TREANT && mons->number < 5
+        && x_chance_in_y(you.time_taken, 100))
+    {
+        mons->number++;
+    }
+
     if (mons_stores_tracking_data(mons))
     {
         actor* foe = mons->get_foe();

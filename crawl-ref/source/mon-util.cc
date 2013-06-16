@@ -2391,6 +2391,11 @@ void define_monster(monster* mons)
     case MONS_SIXFIRHY:
     case MONS_JIANGSHI:
         monnumber = random2(360);
+        break;
+
+    case MONS_TREANT:
+        monnumber = 6 + random2(7);
+        break;
 
     default:
         break;

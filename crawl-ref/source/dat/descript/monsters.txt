@@ -4230,6 +4230,15 @@ trapdoor spider
 A fast-moving arachnid that both surprises its prey and evades its enemies by
 concealing itself in crannies in the dungeon floor.
 %%%%
+treant
+
+At first glance, you might mistake this being for an ordinary tree, but its
+branches sway and creak purposefully, and within the knots and grooves of its
+ruddy bark can be seen the wizened features of an aged forest protector.
+Though it moves with slow deliberateness, its enormous gnarled limbs can match
+the strength of giants and its bark withstand the bite of battleaxes. A curious
+buzzing sound seems to follow it as it moves....
+%%%%
 troll
 
 The common troll is a huge and physically powerful humanoid creature. Short on
