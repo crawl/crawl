@@ -390,7 +390,9 @@ int actor::evokable_flight(bool calc_unid) const
 // Return an int so we know whether an item is the sole source.
 int actor::evokable_jump(bool calc_unid) const
 {
-    return false;
+    if (suppressed())
+        return 0;
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_JUMPING, calc_unid);
 }
 
 int actor::spirit_shield(bool calc_unid, bool items) const

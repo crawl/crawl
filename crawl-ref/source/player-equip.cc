@@ -944,6 +944,11 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             mpr("You feel rather light.");
             break;
 
+        case SPARM_JUMPING:
+            if (you.evokable_jump())
+                mpr("You feel more sure on your feet.");
+            break;
+
         case SPARM_MAGIC_RESISTANCE:
             mpr("You feel resistant to hostile enchantments.");
             break;
@@ -1104,6 +1109,10 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         }
         break;
 
+    case SPARM_JUMPING:
+        if (!you.evokable_jump())
+            mpr("You feel less sure on your feet.");
+        break;
     case SPARM_MAGIC_RESISTANCE:
         mpr("You feel less resistant to hostile enchantments.");
         break;
