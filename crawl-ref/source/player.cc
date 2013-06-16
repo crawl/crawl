@@ -3647,7 +3647,10 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 }
 
                 if (you.experience_level == 6 || you.experience_level == 12)
+                {
                     perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
+                    perma_mutate(MUT_JUMP, 1, "growing up");
+                }
                 _felid_extra_life();
                 break;
 

@@ -81,6 +81,8 @@ target an enemy to perform a jumping attack with increased damage and landing in
 some position next to your target.  You cannot jump over flying enemies nor
 giant enemies not submerged in deep water or lava.  Standing or swimming in
 water, lava, or liquified ground will also prevent you from using this ability.
+Felids have an innate ability to jump attack that increases in range at
+experience levels 6 and 12.
 %%%%
 Hellfire ability
 
