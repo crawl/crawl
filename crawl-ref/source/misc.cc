@@ -2226,18 +2226,34 @@ int speed_to_duration(int speed)
     return div_rand_round(100, speed);
 }
 
-bool bad_attack(const monster *mon, string& adj, string& suffix)
+bool bad_attack(const monster *mon, string& adj, string& suffix,
+                bool jump_check_landing, coord_def attack_pos)
 {
     ASSERT(!crawl_state.game_is_arena());
+    bool jump_landing_warning = false;
+    coord_def attack_position;
+
     if (!you.can_see(mon))
         return false;
+
+    if (!jump_check_landing)
+        attack_pos = you.pos();
 
     adj.clear();
     suffix.clear();
 
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
-        suffix = ", despite your sanctuary";
-
+    if (is_sanctuary(attack_pos) || is_sanctuary(mon->pos()))
+    {
+        if (jump_check_landing)
+        {
+            suffix = ", when you might land in your sanctuary";
+            jump_landing_warning = true;
+        }
+        else
+        {
+            suffix = ", despite your sanctuary";
+        }
+    }
     if (mon->friendly())
     {
         if (you_worship(GOD_OKAWARU))
@@ -2270,12 +2286,14 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
         return true;
     }
 
-    return !adj.empty() || !suffix.empty();
+    return (jump_check_landing && jump_landing_warning)
+        || (!adj.empty() || !suffix.empty());
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first,
-                        bool *prompted)
+                        bool *prompted, bool jump_check_landing,
+                        coord_def attack_pos)
 {
     if (prompted)
         *prompted = false;
@@ -2287,7 +2305,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         return false;
 
     string adj, suffix;
-    if (!bad_attack(mon, adj, suffix))
+    if (!bad_attack(mon, adj, suffix, jump_check_landing, attack_pos))
         return false;
 
     // Listed in the form: "your rat", "Blork the orc".

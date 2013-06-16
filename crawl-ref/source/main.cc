@@ -3310,7 +3310,6 @@ static void _player_reacts()
     }
 
     _regenerate_hp_and_mp(capped_time);
-
     recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.

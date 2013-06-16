@@ -128,7 +128,8 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
-static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
+static bool _check_moveto_cloud(const coord_def& p, const string &move_verb,
+                                bool interactive = true)
 {
     const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD && !you.confused())
@@ -152,10 +153,164 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
                     return true;
             }
 
-            string prompt = make_stringf("Really %s into that cloud of %s?",
+            if (interactive)
+            {
+                string prompt = make_stringf("Really %s into that cloud of %s?",
+                                             move_verb.c_str(),
+                                             cloud_name_at_index(cloud).c_str());
+                learned_something_new(HINT_CLOUD_WARNING);
+
+                if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                canned_msg(MSG_OK);
+                return false;
+                }
+            } else
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+    static bool _check_moveto_trap(const coord_def& p, const string &move_verb,
+                                   bool interactive = true)
+{
+    // If there's no trap, let's go.
+    trap_def* trap = find_trap(p);
+    if (!trap || env.grid(p) == DNGN_UNDISCOVERED_TRAP)
+        return true;
+
+    if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
+    {
+        if (interactive)
+        {
+            string prompt = make_stringf("Do you really want to %s into the Zot trap",
+                                  move_verb.c_str());
+            if (!yes_or_no("%s", prompt.c_str()))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        } else
+        {
+            return false;
+        }
+    }
+    else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
+    {
+        if (interactive)
+        {
+            string prompt = make_stringf(
+                                         "Really %s %s that %s?",
                                          move_verb.c_str(),
-                                         cloud_name_at_index(cloud).c_str());
-            learned_something_new(HINT_CLOUD_WARNING);
+                                         (trap->type == TRAP_ALARM
+                                          || trap->type == TRAP_PLATE) ? "onto"
+                                         : "into",
+                                         feature_description_at(p, false,
+                                                                DESC_BASENAME,
+                                                                false).c_str());
+            if (!yesno(prompt.c_str(), true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        } else
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
+                                    bool cling = true, bool interactive = true)
+{
+    if (you.can_swim() && feat_is_water(env.grid(p))
+        || you.airborne() || cling && you.can_cling_to(p)
+        || !is_feat_dangerous(env.grid(p)))
+    {
+        return true;
+    }
+
+    if (interactive)
+    {
+        if (msg != "")
+            mpr(msg.c_str());
+        else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
+            mpr("You cannot swim in your current form.");
+        else if (you.species == SP_LAVA_ORC && feat_is_lava(env.grid(p))
+                 && is_feat_dangerous(env.grid(p)))
+        {
+            mpr("You cannot enter lava in your current form.");
+        }
+        else
+            canned_msg(MSG_UNTHINKING_ACT);
+    }
+    return false;
+}
+
+static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
+                                  const string &msg, bool interactive = true)
+{
+    if (you.is_wall_clinging()
+        && (move_verb == "blink" || move_verb == "passwall"))
+    {
+        return _check_moveto_dangerous(p, msg, false, interactive);
+    }
+
+    if (!need_expiration_warning() && need_expiration_warning(p)
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
+    {
+        if (!_check_moveto_dangerous(p, msg))
+            return false;
+
+        if (interactive)
+        {
+            string prompt;
+
+            if (msg != "")
+                prompt = msg + " ";
+
+            prompt += "Are you sure you want to " + move_verb;
+
+            if (you.ground_level())
+                prompt += " into ";
+            else
+                prompt += " over ";
+
+            prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
+
+            prompt += need_expiration_warning(DUR_FLIGHT, p)
+                ? " while you are losing your buoyancy?"
+                : " while your transformation is expiring?";
+
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
+    }
+
+    return _check_moveto_dangerous(p, msg, true, interactive);
+}
+
+static bool _check_moveto_exclusion(const coord_def& p, const string &move_verb,
+                                    bool interactive = true)
+{
+    string prompt;
+
+    if (is_excluded(p)
+        && !is_stair_exclusion(p)
+        && !is_excluded(you.pos())
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
+    {
+        if (interactive)
+        {
+            prompt = make_stringf("Really %s into a travel-excluded area?",
+                                  move_verb.c_str());
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {
@@ -167,137 +322,13 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
     return true;
 }
 
-static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
-{
-    // If there's no trap, let's go.
-    trap_def* trap = find_trap(p);
-    if (!trap || env.grid(p) == DNGN_UNDISCOVERED_TRAP)
-        return true;
-
-    if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        string prompt = make_stringf(
-            "Do you really want to %s into the Zot trap",
-            move_verb.c_str());
-
-        if (!yes_or_no("%s", prompt.c_str()))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        string prompt = make_stringf(
-            "Really %s %s that %s?",
-            move_verb.c_str(),
-            (trap->type == TRAP_ALARM || trap->type == TRAP_PLATE) ? "onto"
-                                                                   : "into",
-            feature_description_at(p, false, DESC_BASENAME, false).c_str());
-
-        if (!yesno(prompt.c_str(), true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    return true;
-}
-
-static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
-                                    bool cling = true)
-{
-    if (you.can_swim() && feat_is_water(env.grid(p))
-        || you.airborne() || cling && you.can_cling_to(p)
-        || !is_feat_dangerous(env.grid(p)))
-    {
-        return true;
-    }
-
-    if (msg != "")
-        mpr(msg.c_str());
-    else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
-        mpr("You cannot swim in your current form.");
-    else if (you.species == SP_LAVA_ORC && feat_is_lava(env.grid(p))
-             && is_feat_dangerous(env.grid(p)))
-    {
-        mpr("You cannot enter lava in your current form.");
-    }
-    else
-        canned_msg(MSG_UNTHINKING_ACT);
-
-    return false;
-}
-
-static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
-                                  const string &msg)
-{
-    if (you.is_wall_clinging()
-        && (move_verb == "blink" || move_verb == "passwall"))
-    {
-        return _check_moveto_dangerous(p, msg, false);
-    }
-
-    if (!need_expiration_warning() && need_expiration_warning(p)
-        && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        if (!_check_moveto_dangerous(p, msg))
-            return false;
-
-        string prompt;
-
-        if (msg != "")
-            prompt = msg + " ";
-
-        prompt += "Are you sure you want to " + move_verb;
-
-        if (you.ground_level())
-            prompt += " into ";
-        else
-            prompt += " over ";
-
-        prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
-
-        prompt += need_expiration_warning(DUR_FLIGHT, p)
-                      ? " while you are losing your buoyancy?"
-                      : " while your transformation is expiring?";
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-
-    return _check_moveto_dangerous(p, msg);
-}
-
-static bool _check_moveto_exclusion(const coord_def& p, const string &move_verb)
-{
-    if (is_excluded(p)
-        && !is_stair_exclusion(p)
-        && !is_excluded(you.pos())
-        && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        string prompt = make_stringf("Really %s into a travel-excluded area?",
-                                     move_verb.c_str());
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    return true;
-}
-
 bool check_moveto(const coord_def& p, const string &move_verb,
-                  const string &msg)
+                  const string &msg, bool interactive)
 {
-    return (_check_moveto_terrain(p, move_verb, msg)
-            && _check_moveto_cloud(p, move_verb)
-            && _check_moveto_trap(p, move_verb)
-            && _check_moveto_exclusion(p, move_verb));
+    return (_check_moveto_terrain(p, move_verb, msg, interactive)
+            && _check_moveto_cloud(p, move_verb, interactive)
+            && _check_moveto_trap(p, move_verb, interactive)
+            && _check_moveto_exclusion(p, move_verb, interactive));
 }
 
 static void _splash()
@@ -522,6 +553,12 @@ bool player_genus(genus_type which_genus, species_type species)
         species = you.species;
 
     return (species_genus(species) == which_genus);
+}
+
+int player_evoke_jump_range()
+{
+    return 3 + (you.skill(SK_EVOCATIONS, 1) >= 5)
+        + (you.skill(SK_EVOCATIONS, 1) >= 10);
 }
 
 // If transform is true, compare with current transformation instead
@@ -3611,7 +3648,6 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 
                 if (you.experience_level == 6 || you.experience_level == 12)
                     perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
-
                 _felid_extra_life();
                 break;
 
@@ -4708,6 +4744,7 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items)
     return true;
 }
 
+
 bool enough_zp(int minimum, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -4870,6 +4907,7 @@ void set_mp(int new_amount)
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_magic_points = true;
 }
+
 
 // If trans is true, being berserk and/or transformed is taken into account
 // here. Else, the base hp is calculated. If rotted is true, calculate the

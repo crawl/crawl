@@ -387,6 +387,12 @@ int actor::evokable_flight(bool calc_unid) const
            + scan_artefacts(ARTP_FLY, calc_unid);
 }
 
+// Return an int so we know whether an item is the sole source.
+int actor::evokable_jump(bool calc_unid) const
+{
+    return false;
+}
+
 int actor::spirit_shield(bool calc_unid, bool items) const
 {
     int ss = 0;

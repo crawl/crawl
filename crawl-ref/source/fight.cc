@@ -22,6 +22,7 @@
 #include "itemprop.h"
 #include "melee_attack.h"
 #include "mgen_data.h"
+#include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-place.h"
@@ -204,6 +205,86 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     if (!simu && attacker->props.exists("spectral_weapon"))
         trigger_spectral_weapon(attacker, defender);
 
+    return true;
+}
+
+// Handles jump attack between attacker and defender.
+bool fight_jump(actor *attacker, actor *defender, bool jump_blocked,
+                coord_def landing_pos, set<coord_def> landing_sites,
+                bool *did_hit)
+{
+    bool sanctuary_warning = false;
+    set<coord_def>::const_iterator site;
+
+    ASSERT(!crawl_state.game_is_arena());
+
+    // Can't damage orbs this way.
+    if (mons_is_projectile(defender->type) && !you.confused())
+    {
+        you.turn_is_over = false;
+        return false;
+    }
+    melee_attack first_attk(attacker, defender, -1, -1, false, true,
+                            jump_blocked, landing_pos);
+
+    // Check if the player is fighting with something unsuitable,
+    // or someone unsuitable.
+    if (you.can_see(defender)
+        && !wielded_weapon_check(first_attk.weapon))
+    {
+        you.turn_is_over = false;
+        return false;
+    }
+    // Do player warnings for electrocution and sanctuary based on possible
+    // landing sites.
+    if (attacker->is_player() && defender->is_monster()
+        && attacker->damage_brand(-1) == SPWPN_ELECTROCUTION)
+    {
+        for (site = landing_sites.begin(); site != landing_sites.end(); site++)
+        {
+            bool ground_level = !you.airborne() && !you.can_cling_to(*site)
+                && you.species != SP_DJINNI;
+            if (!you.received_weapon_warning
+                && adjacent(*site, defender->pos())
+                && (feat_is_water(grd(defender->pos())) && defender->ground_level())
+                && (feat_is_water(grd(*site)) && ground_level)
+                && !attacker->res_elec())
+
+            {
+                string prompt = "Really attack with ";
+                if (attacker->weapon(-1))
+                    prompt += attacker->weapon(-1)->name(DESC_YOUR);
+                else
+                    prompt += "your electric unarmed attack";
+                prompt += " when you might land in water? ";
+                if (yesno(prompt.c_str(), true, 'n'))
+                {
+                    you.received_weapon_warning = true;
+                }
+                else
+                {
+                    canned_msg(MSG_OK);
+                    you.turn_is_over = false;
+                    return false;
+                }
+            }
+            else if (!sanctuary_warning)
+            {
+                if (stop_attack_prompt(defender->as_monster(), false,
+                                       *site, false, nullptr, true, *site))
+                    return false;
+                else
+                    sanctuary_warning = true;
+            }
+        }
+    }
+    if (!first_attk.attack() && first_attk.cancel_attack)
+    {
+        you.turn_is_over = false;
+        return false;
+    }
+    if (did_hit)
+        *did_hit = first_attk.did_hit;
     return true;
 }
 
@@ -409,7 +490,9 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     return true;
 }
 
-static bool _cleave_dont_harm(const actor* attacker, const actor* defender)
+// Used by cleave and jump attack to determine if multi-hit targets will be
+// attacked.
+static bool _dont_harm(const actor* attacker, const actor* defender)
 {
     return (mons_aligned(attacker, defender)
             || attacker == &you && defender->wont_attack()
@@ -435,7 +518,7 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
             break;
 
         actor * target = actor_at(atk + atk_vector);
-        if (target && !_cleave_dont_harm(attacker, target))
+        if (target && !_dont_harm(attacker, target))
             targets.push_back(target);
     }
 }
@@ -461,7 +544,7 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
     {
         actor* def = targets.front();
         if (attacker->alive() && def && def->alive()
-            && !_cleave_dont_harm(attacker, def))
+            && !_dont_harm(attacker, def))
         {
             melee_attack attck(attacker, def, attack_number,
                                ++effective_attack_number, true);
