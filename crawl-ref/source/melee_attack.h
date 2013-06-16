@@ -45,6 +45,9 @@ public:
     bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
+    bool jumping_attack;
+    bool jump_blocked;
+    coord_def attack_position;
 
     // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
@@ -57,7 +60,9 @@ public:
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1,
-                 bool is_cleaving = false);
+                 bool is_cleaving = false, bool is_jump_attack = false,
+                 bool is_jump_blocked = false,
+                 coord_def attack_pos = coord_def(0, 0));
 
     // Applies attack damage and other effects.
     bool attack();
@@ -105,6 +110,8 @@ private:
     /* Axe cleaving */
     void cleave_setup();
     int cleave_damage_mod(int dam);
+    int jump_damage_mod(int dam);
+    int jump_additional_damage_mod(int dam);
 
     /* Mutation Effects */
     void do_spines();

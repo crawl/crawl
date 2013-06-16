@@ -5384,6 +5384,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
     case ABIL_EVOKE_FLIGHT:
         return TILEG_ABILITY_EVOKE_FLIGHT;
+    case ABIL_EVOKE_JUMP:
+        return TILEG_ABILITY_EVOKE_JUMP;
     case ABIL_EVOKE_FOG:
         return TILEG_ABILITY_EVOKE_FOG;
 

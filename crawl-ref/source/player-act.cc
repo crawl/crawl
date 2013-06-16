@@ -161,7 +161,7 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (airborne() || species == SP_DJINNI)
         return true;
 
-    if (actual_grid == DNGN_LAVA
+    if (actual_grid == DNGN_LAVA && species != SP_LAVA_ORC
         || actual_grid == DNGN_DEEP_WATER && !can_swim())
     {
         return false;
@@ -715,6 +715,48 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
     return true;
 }
 
+bool player::can_jump(bool quiet) const
+{
+    if (duration[DUR_EXHAUSTED])
+    {
+        if (!quiet)
+            mpr("You're too exhausted to jump.");
+        // or else they won't notice -- no message here
+        return false;
+    }
+
+    if (you.in_water())
+    {
+        if (!quiet)
+            mpr("You can't jump while in water.");
+        return false;
+    }
+    if (feat_is_lava(grd(you.pos())))
+    {
+        if (!quiet)
+            mpr("You can't jump while standing in lava.");
+        return false;
+    }
+    if (you.liquefied_ground())
+    {
+        if (!quiet)
+            mpr("You can't jump while stuck in this mess.");
+        return false;
+    }
+    if (you.is_constricted())
+    {
+        if (!quiet)
+            mpr("You can't jump while being constricted.");
+        return false;
+    }
+
+    return true;
+}
+
+bool player::can_jump() const
+{
+    return can_jump(false);
+}
 bool player::berserk() const
 {
     return duration[DUR_BERSERK];

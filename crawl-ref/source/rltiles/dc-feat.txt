@@ -758,6 +758,7 @@ effect/disjunct0 DISJUNCT
 effect/disjunct1
 effect/disjunct2
 effect/disjunct3
+landing LANDING
 effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2

@@ -172,6 +172,7 @@ public:
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
     virtual reach_type reach_range() const = 0;
+    virtual bool can_jump() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
@@ -318,6 +319,7 @@ public:
 
     // Return an int so we know whether an item is the sole source.
     virtual int evokable_flight(bool calc_unid = true) const;
+    virtual int evokable_jump(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
     virtual flight_type flight_mode() const = 0;

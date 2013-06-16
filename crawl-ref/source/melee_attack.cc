@@ -107,7 +107,8 @@ static bool _form_uses_xl()
 */
 melee_attack::melee_attack(actor *attk, actor *defn,
                            int attack_num, int effective_attack_num,
-                           bool is_cleaving)
+                           bool is_cleaving, bool is_jump_attack,
+                           bool is_jump_blocked, coord_def attack_pos)
     :  // Call attack's constructor
     ::attack(attk, defn),
 
@@ -115,6 +116,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     effective_attack_number(effective_attack_num),
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
     stab_attempt(false), stab_bonus(0), cleaving(is_cleaving),
+    jumping_attack(is_jump_attack), jump_blocked(is_jump_blocked),
     miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL),
     simu(false)
 {
@@ -125,8 +127,13 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     if (_form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
     to_hit          = calc_to_hit();
-    can_cleave      = wpn_skill == SK_AXES && attacker != defender
-                      && !attacker->confused();
+    can_cleave = !jumping_attack && wpn_skill == SK_AXES && attacker != defender
+        && !attacker->confused();
+
+    if (jumping_attack)
+        attack_position = attack_pos;
+    else
+        attack_position = attacker->pos();
 
     attacker_armour_tohit_penalty =
         div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
@@ -175,7 +182,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     }
 
     attacker_visible   = attacker->observable();
-    attacker_invisible = (!attacker_visible && you.see_cell(attacker->pos()));
+    attacker_invisible = (!attacker_visible && you.see_cell(attack_position));
     defender_visible   = defender && defender->observable();
     defender_invisible = (!defender_visible && defender
                           && you.see_cell(defender->pos()));
@@ -203,7 +210,7 @@ bool melee_attack::can_reach()
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
-    if ((!adjacent(attacker->pos(), defender->pos()) && !can_reach())
+    if ((!adjacent(attack_position, defender->pos()) && !jumping_attack && !can_reach())
         || attk_type == AT_SHOOT
         || attk_type == AT_CONSTRICT && !attacker->can_constrict(defender))
     {
@@ -219,9 +226,10 @@ bool melee_attack::handle_phase_attempted()
             || (weapon && is_unrandom_artefact(*weapon)
                 && weapon->special == UNRAND_DEVASTATOR))
         {
-            if (damage_brand == SPWPN_ELECTROCUTION
-                && adjacent(attacker->pos(), defender->pos())
-                && _conduction_affected(attacker->pos())
+            // This check is handled in fight_jump() for jump attacks
+            if (!jumping_attack && damage_brand == SPWPN_ELECTROCUTION
+                && adjacent(attack_position, defender->pos())
+                && _conduction_affected(attack_position)
                 && !attacker->res_elec()
                 && !you.received_weapon_warning)
             {
@@ -270,8 +278,10 @@ bool melee_attack::handle_phase_attempted()
                 return false;
             }
         }
-        else if (stop_attack_prompt(defender->as_monster(), false,
-                                    attacker->pos()))
+        // Jump attack did this check in jump_fight()
+        else if (!jumping_attack
+                 && stop_attack_prompt(defender->as_monster(), false,
+                                       attack_position))
         {
             cancel_attack = true;
             return false;
@@ -291,9 +301,20 @@ bool melee_attack::handle_phase_attempted()
             return false;
         }
     }
-    // Set delay now that we know the attack won't be cancelled.
+
     if (attacker->is_player())
     {
+        if (jumping_attack)
+        {
+            mprf("You jump-attack %s!", defender->name(DESC_THE).c_str());
+            if (jump_blocked)
+            {
+                mpr("You rebound off of something unseen!");
+                return false;
+            }
+        }
+        move_player_to_grid(attack_position, false, true);
+        // Set delay now that we know the attack won't be cancelled.
         you.time_taken = calc_attack_delay();
         if (weapon)
         {
@@ -315,6 +336,19 @@ bool melee_attack::handle_phase_attempted()
     }
     else
     {
+        if (jumping_attack)
+        {
+            mprf("%s jump-attacks %s!", attacker->name(DESC_THE).c_str(),
+                 defender->name(DESC_THE).c_str());
+            if (jump_blocked)
+            {
+                mprf("%s rebounds off of something %s can't see!",
+                     attacker->name(DESC_THE).c_str(),
+                     attacker->pronoun(PRONOUN_SUBJECTIVE).c_str());
+                return false;
+            }
+        }
+
         // Only the first attack costs any energy.
         if (!effective_attack_number)
         {
@@ -417,7 +451,7 @@ bool melee_attack::handle_phase_attempted()
 
     if (attk_flavour == AF_SHADOWSTAB && defender && !defender->can_see(attacker))
     {
-        if (you.see_cell(attacker->pos()))
+        if (you.see_cell(attack_position))
             mprf("%s strikes at %s from the darkness!",
                  attacker->name(DESC_THE, true).c_str(),
                  defender->name(DESC_THE).c_str());
@@ -485,7 +519,7 @@ bool melee_attack::handle_phase_dodged()
         }
     }
 
-    if (attacker != defender && adjacent(defender->pos(), attacker->pos()))
+    if (attacker != defender && adjacent(defender->pos(), attack_position))
     {
         if (attacker->alive()
             && (defender->is_player() ?
@@ -868,9 +902,10 @@ bool melee_attack::handle_phase_aux()
     if (attacker->is_player())
     {
         // returns whether an aux attack successfully took place
+        // additional attacks from cleave don't get aux
         if (!defender->as_monster()->friendly()
-            && adjacent(defender->pos(), attacker->pos())
-            && !cleaving) // additional attacks from cleave don't get aux
+            && adjacent(defender->pos(), attack_position)
+            && !cleaving)
         {
             player_aux_unarmed();
         }
@@ -916,6 +951,7 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
+
     if (!cleaving && !handle_phase_attempted())
         return false;
 
@@ -977,7 +1013,7 @@ bool melee_attack::attack()
         handle_phase_blocked();
     else
     {
-        if (attacker != defender && adjacent(defender->pos(), attacker->pos()))
+        if (attacker != defender && adjacent(defender->pos(), attack_position))
         {
             // Check for defender Spines
             do_spines();
@@ -1015,7 +1051,7 @@ bool melee_attack::attack()
     // Remove sanctuary if - through some attack - it was violated.
     if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
         && attacker != defender && !attacker->confused()
-        && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
+        && (is_sanctuary(attack_position) || is_sanctuary(defender->pos()))
         && (attacker->is_player() || attacker->as_monster()->friendly()))
     {
         remove_sanctuary(true);
@@ -1843,7 +1879,8 @@ int melee_attack::player_apply_final_multipliers(int damage)
     //cleave damage modifier
     if (cleaving)
         damage = cleave_damage_mod(damage);
-
+    else if (jumping_attack)
+        damage = jump_damage_mod(damage);
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
     if (you.form == TRAN_STATUE)
@@ -2837,11 +2874,11 @@ void melee_attack::chaos_affects_attacker()
 
     coord_def dest(-1, -1);
     // Prefer to send it under the defender.
-    if (defender->alive() && defender->pos() != attacker->pos())
+    if (defender->alive() && defender->pos() != attack_position)
         dest = defender->pos();
 
     // Move stairs out from under the attacker.
-    if (one_chance_in(100) && move_stairs(attacker->pos(), dest))
+    if (one_chance_in(100) && move_stairs(attack_position, dest))
     {
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
@@ -2853,7 +2890,7 @@ void melee_attack::chaos_affects_attacker()
     // Dump attacker or items under attacker to another level.
     if (is_valid_shaft_level()
         && (attacker->will_trigger_shaft()
-            || igrd(attacker->pos()) != NON_ITEM)
+            || igrd(attack_position) != NON_ITEM)
         && one_chance_in(1000))
     {
         (void) attacker->do_shaft();
@@ -2868,7 +2905,7 @@ void melee_attack::chaos_affects_attacker()
     if (weapon && one_chance_in(1000))
     {
         mprf("Smoke pours forth from %s!", wep_name(DESC_YOUR).c_str());
-        big_cloud(random_smoke_type(), &you, attacker->pos(), 20,
+        big_cloud(random_smoke_type(), &you, attack_position, 20,
                   4 + random2(8));
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
@@ -2878,7 +2915,7 @@ void melee_attack::chaos_affects_attacker()
     }
 
     // Make a loud noise.
-    if (weapon && player_can_hear(attacker->pos())
+    if (weapon && player_can_hear(attack_position)
         && one_chance_in(200))
     {
         string msg = "";
@@ -2903,7 +2940,7 @@ void melee_attack::chaos_affects_attacker()
         if (!msg.empty())
         {
             mpr(msg.c_str(), MSGCH_SOUND);
-            noisy(15, attacker->pos(), attacker->mindex());
+            noisy(15, attack_position, attacker->mindex());
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
             take_note(Note(NOTE_MESSAGE, 0, 0,
                            "CHAOS affects attacker: noise"), true);
@@ -4101,6 +4138,9 @@ void melee_attack::player_stab_check()
         break;
     }
 
+    if (stab_bonus && jumping_attack)
+        stab_bonus = min(6, stab_bonus + 2);
+
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
     {
@@ -4355,7 +4395,7 @@ string melee_attack::mons_attack_desc()
         return "";
 
     string ret;
-    int dist = (attacker->pos() - defender->pos()).abs();
+    int dist = (attack_position - defender->pos()).abs();
     if (dist > 2)
     {
         ASSERT(can_reach());
@@ -5307,7 +5347,7 @@ bool melee_attack::do_knockback(bool trample)
             break;
 
         coord_def old_pos = defender->pos();
-        coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
+        coord_def new_pos = defender->pos() + defender->pos() - attack_position;
 
         // need a valid tile
         if (grd(new_pos) < DNGN_SHALLOW_WATER
@@ -5383,6 +5423,12 @@ void melee_attack::cleave_setup()
 int melee_attack::cleave_damage_mod(int dam)
 {
     return div_rand_round(dam * 3, 4);
+}
+
+//  jump attack modifier: 120% of base damage
+int melee_attack::jump_damage_mod(int dam)
+{
+    return div_rand_round(dam * 6, 5);
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)
@@ -5823,7 +5869,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     ASSERT(you.species == SP_VAMPIRE);
 
     if (!_vamp_wants_blood_from_monster(mon) ||
-        (!adjacent(defender->pos(), attacker->pos()) && needs_bite_msg))
+        (!adjacent(defender->pos(), attack_position) && needs_bite_msg))
     {
         return false;
     }

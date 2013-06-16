@@ -11,6 +11,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "player.h"
 #include "spl-damage.h"
 #include "terrain.h"
 
@@ -50,6 +51,11 @@ bool targetter::anyone_there(coord_def loc)
     if (agent && agent->is_player())
         return env.map_knowledge(loc).monsterinfo();
     return actor_at(loc);
+}
+
+bool targetter::has_additional_sites(coord_def loc, bool allow_harmful)
+{
+    return false;
 }
 
 targetter_beam::targetter_beam(const actor *act, int range, zap_type zap,
@@ -874,4 +880,231 @@ aff_type targetter_spray::is_affected(coord_def loc)
     }
 
     return affected;
+}
+
+targetter_jump::targetter_jump(const actor* act, int range)
+{
+    ASSERT(act);
+    agent = act;
+    origin = act->pos();
+    range2 = dist_range(range);
+    jump_is_blocked = false;
+}
+
+bool targetter_jump::valid_aim(coord_def a)
+{
+    actor *act;
+    bool is_valid = true;
+    coord_def c, jump_pos;
+    ray_def ray;
+
+    act = actor_at(a);
+    if ((origin - a).abs() > range2)
+    {
+        is_valid = notify_fail("Out of range.");
+    }
+    // If there's an actor we can see, check that we have at least one valid
+    // landing site for a jump attack based on what the agent can see.
+    else if (act && agent->can_see(act))
+    {
+        if(!has_additional_sites(a, true))
+        {
+            if (no_landing_reason == BLOCKED_FLYING)
+                is_valid = notify_fail("A flying creature is in the way.");
+            else if (no_landing_reason == BLOCKED_GIANT)
+                is_valid = notify_fail("A giant creature is in the way.");
+            else if (no_landing_reason == BLOCKED_MOVE)
+                is_valid = notify_fail("There is no safe place to move near the"
+                                       " monster.");
+            else if (no_landing_reason == BLOCKED_PATH)
+                is_valid = notify_fail("A dungeon feature is in the way.");
+        }
+        return is_valid;
+    }
+    else if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        if (agent->see_cell(a))
+            is_valid =  notify_fail("There's something in the way.");
+        else
+            is_valid = notify_fail("You cannot see that place.");
+    }
+    else if (feat_is_solid(grd(a)))
+    {
+        is_valid = notify_fail("There's something in the way.");
+    }
+    if (!find_ray(agent->pos(), a, ray, opc_no_trans))
+    {
+        is_valid = notify_fail("A dungeon feature is in the way");
+        return is_valid;
+    }
+    return is_valid;
+}
+
+bool targetter_jump::valid_landing(coord_def a, bool check_invis)
+{
+    actor *act;
+    ray_def ray;
+
+    if (grd(a) == DNGN_OPEN_SEA || grd(a) == DNGN_LAVA_SEA
+        || !agent->is_habitable(a) || (origin - a).abs() > range2 - 1)
+    {
+        blocked_landing_reason = BLOCKED_MOVE;
+        return false;
+    }
+    if (agent->is_player())
+    {
+        monster* beholder = you.get_beholder(a);
+        if (beholder)
+        {
+            return false;
+            blocked_landing_reason = BLOCKED_MOVE;
+        }
+
+        monster* fearmonger = you.get_fearmonger(a);
+        if (fearmonger)
+        {
+            blocked_landing_reason = BLOCKED_MOVE;
+            return false;
+        }
+    }
+    if (!find_ray(agent->pos(), a, ray, opc_no_trans))
+    {
+        blocked_landing_reason = BLOCKED_PATH;
+        return false;
+    }
+    // Check if a landing site is invalid due to a visible monster obstructing
+    // the path.
+    ray.advance();
+    while(map_bounds(ray.pos()))
+    {
+        act = actor_at(ray.pos());
+        if (ray.pos() == a)
+        {
+            if (act && (!check_invis || agent->can_see(act)))
+            {
+                blocked_landing_reason = BLOCKED_OCCUPIED;
+                return false;
+            }
+            break;
+        }
+        const dungeon_feature_type grid = grd(ray.pos());
+        if (act && (!check_invis || agent->can_see(act)))
+        {
+
+            // Can't jump over airborn enemies nor gient enemies not in deep
+            // water or lava.
+            if (act->airborne())
+            {
+                blocked_landing_reason = BLOCKED_FLYING;
+                return false;
+            }
+            else if(act->body_size() == SIZE_GIANT
+                    && grid != DNGN_DEEP_WATER && grid != DNGN_LAVA)
+            {
+                blocked_landing_reason = BLOCKED_GIANT;
+                return false;
+            }
+        }
+        ray.advance();
+    }
+    return true;
+}
+
+aff_type targetter_jump::is_affected(coord_def loc)
+{
+    aff_type aff = AFF_NO;
+
+    if (loc == aim)
+        aff = AFF_YES;
+    else if (additional_sites.count(loc))
+        aff = AFF_LANDING;
+    return aff;
+}
+
+// Handle setting the aim for jump, which is the landing position of the jump.
+// If something unsee either occupies the aim positiion or blocks the jump path,
+// indicate that with jump_is_blocked.
+bool targetter_jump::set_aim(coord_def a)
+{
+    actor *act;
+    ray_def ray;
+    set<coord_def>::const_iterator site;
+
+    if (a == origin)
+        return false;
+    if (!targetter::set_aim(a))
+        return false;
+
+    jump_is_blocked = false;
+    act = actor_at(aim);
+    // Can't set aim if we can't see anything at the location.
+    if (!env.map_knowledge(aim).invisible_monster()
+        && (!act || !agent->can_see(act)))
+        return false;
+    // Find our set of landing sites, choose one at random, and see if it's
+    // actually blocked.
+    set_additional_sites(aim);
+    if (additional_sites.size())
+    {
+        int site_ind = random2(additional_sites.size());
+        for (site = additional_sites.begin(); site_ind > 0; site++)
+            site_ind--;
+        landing_site = *site;
+        if (!valid_landing(landing_site, false))
+            jump_is_blocked = true;
+        return true;
+    }
+    return false;
+}
+
+void targetter_jump::set_additional_sites(coord_def a)
+{
+     get_additional_sites(a);
+     additional_sites = temp_sites;
+}
+
+void targetter_jump::get_additional_sites(coord_def a)
+{
+    bool agent_adjacent = a.distance_from(agent->pos()) == 1;
+    temp_sites.clear();
+
+    no_landing_reason = BLOCKED_NONE;
+    for (adjacent_iterator ai(a, false); ai; ++ai)
+    {
+        // See if site is valid, record a putative reason for why no sites were
+        // found.  A flying or giant monster blocking the landing site gets
+        // priority as an reason, since it's very jump-specific.
+        if (!agent_adjacent || agent->pos().distance_from(*ai) > 1)
+        {
+            if (valid_landing(*ai))
+            {
+                temp_sites.insert(*ai);
+                no_landing_reason = BLOCKED_NONE;
+            }
+            else if (no_landing_reason != BLOCKED_FLYING
+                     && no_landing_reason != BLOCKED_GIANT)
+            {
+                no_landing_reason = blocked_landing_reason;
+            }
+        }
+    }
+}
+
+// See if we can find at least one valid landing position for the
+// given monster.  Possibly we also care to exclude sites harmful to
+// the player.
+bool targetter_jump::has_additional_sites(coord_def a, bool allow_harmful)
+{
+    set<coord_def>::const_iterator site;
+    get_additional_sites(a);
+    // Find a valid jump_attack position in the adjacent squares, chosing the
+    // valid position closest to the player.
+    for (site = temp_sites.begin();
+         site != temp_sites.end(); site++)
+    {
+        if (allow_harmful || (agent->is_player()
+                              && check_moveto(*site, "jump", "", false)))
+            return true;
+    }
+    return false;
 }

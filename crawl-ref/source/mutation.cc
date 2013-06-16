@@ -1683,7 +1683,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case MUT_HIGH_MAGIC:
         calc_mp();
         break;
-
     case MUT_PASSIVE_MAPPING:
         add_daction(DACT_REAUTOMAP);
         break;

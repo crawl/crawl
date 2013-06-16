@@ -54,7 +54,6 @@ enum ability_type
     ABIL_BREATHE_MEPHITIC,
     ABIL_SPIT_ACID,
     ABIL_BLINK,
-
     // Others
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
@@ -83,6 +82,7 @@ enum ability_type
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
     ABIL_EVOKE_TURN_VISIBLE,
+    ABIL_EVOKE_JUMP,
     ABIL_EVOKE_FLIGHT,
 #if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_STOP_LEVITATING,
@@ -3637,6 +3637,7 @@ enum targetting_type
     DIR_TARGET,        // smite targetting
     DIR_DIR,           // needs a clear line to target
     DIR_TARGET_OBJECT, // targets items
+    DIR_JUMP,          // a jump target
 };
 
 enum torment_source_type
@@ -4033,6 +4034,10 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_STARSPAWN_SW = 0x10000000000ULL,
 
     //// General
+
+    // Should go up with RAY/RAY_OOR, but they need to be exclusive for those
+    // flags and there's no room.
+    TILE_FLAG_LANDING     = 0x20000000000ULL,
 
     // Mask for the tile index itself.
     TILE_FLAG_MASK       = 0x0000FFFFULL,

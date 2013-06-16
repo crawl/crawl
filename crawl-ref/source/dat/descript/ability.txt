@@ -130,6 +130,15 @@ Evoke Flight ability
 
 <Fly ability>
 %%%%
+Evoke Jump Attack ability
+
+Jump attack at limited distance, covering ground with great speed.  You may
+target an enemy to perform a jumping attack with increased damage and landing in
+some position next to your target.  You cannot jump over flying enemies nor
+giant enemies not submerged in deep water or lava.  Standing or swimming in
+water, lava, or liquified ground will also prevent you from using this ability.
+At evocations skill levels 5 and 10, the range of your jump attack increases.
+%%%%
 Stop Flying ability
 
 Stop flying.
