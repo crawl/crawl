@@ -3890,6 +3890,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
+{
+    MONS_THORN_LOTUS, 'P', MAGENTA, "thorn lotus",
+    M_SPELLCASTER | M_FAKE_SPELLS | M_CONFUSED,
+    MR_RES_POISON,
+    0, 4, MONS_PLANT, MONS_THORN_LOTUS, MH_PLANT, MAG_IMMUNE,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK},
+    { 12, 3, 4, 0 },
+    4, 9, MST_THORN_LOTUS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_WATER, FL_NONE, 8, MOVE_ENERGY(16),
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
+},
+
 // genies and rakshasas ('R')
 {
     MONS_EFREET, 'R', RED, "efreet",
