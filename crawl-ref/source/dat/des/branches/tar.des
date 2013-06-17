@@ -437,7 +437,7 @@ ENDMAP
 NAME:     tar_mu_maze
 # only to shut up the validator
 ORIENT:   encompass
-TAGS:     tar_mu_maze no_rotate no_hmirror no_vmirror
+TAGS:     tar_mu_maze no_rotate no_hmirror no_vmirror unrand
 {{
   function dig_maze(x, y)
     local delta = { {x =  2, y =  0},
@@ -668,7 +668,16 @@ ORIENT: encompass
 MONS:   shadow imp, soul eater
 {{
   extend_map{width = 70, height = 70}
-  fill_area{fill = '.', border = 'x'}
+  fill_area{fill = 'X', border = 'x'}
+  fill_area{x1 = 2, y1 = 2, x2 = 67, y2 = 67, fill = '_', border = '-'}
+  fill_area{x1 = 4, y1 = 4, x2 = 65, y2 = 65, fill = '.'}
+  subst('X = xx.')
+  subst('- = x.')
+  subst('_ = x..')
+  -- The remove_isolated_glyphs doesn't seem to consistently get rid of
+  -- pockets in the border, so...
+  kprop('X-_ = no_rtele_into')
+  remove_isolated_glyphs { find = '.', replace = 'x', percent = 100 }
   nsubst('. = 10:1 / 10:2 / *:.')
   tar_setup(_G)
   hook("post_place", function()
@@ -681,8 +690,7 @@ MONS:   shadow imp, soul eater
     end
     dgn.place_maps{tag="tar_grunt_big_loot",    count=1, die_on_error = true}
     dgn.place_maps{tag="tar_grunt_small_loot",  count=3}
-    dgn.place_maps{tag="tar_grunt_small_decoy", count=3}
-    dgn.place_maps{tag="tar_grunt_decor",       count=6}
+    dgn.place_maps{tag="tar_grunt_decor",       count=15}
   end)
 }}
 
@@ -762,33 +770,49 @@ MAP
 ........@@........
 ENDMAP
 
-NAME: tar_grunt_small_loot
-TAGS: tar_grunt_small_loot allow_dup unrand
-MONS: shadow demon w:20 / reaper w:15 / shadow wraith w:10 / soul eater w:5
+NAME:   tar_grunt_small_loot
+TAGS:   tar_grunt_small_loot allow_dup unrand
+MONS:   shadow demon w:20 / reaper w:15 / shadow wraith w:10 / soul eater w:5
+NSUBST: x = 1:m / *:x
 MAP
-xxxxxxx
-x..$..x
-x.$|$.x
+cccxccc
+c..$..c
+c.$|$.c
 x$|1|$x
-x.$|$.x
-x..$..x
-xxxxxxx
+c.$|$.c
+c..$..c
+cccxccc
 ENDMAP
 
-NAME: tar_grunt_small_decoy
-TAGS: tar_grunt_small_decoy allow_dup unrand
+NAME:   tar_grunt_small_decor_pillar
+TAGS:   tar_grunt_decor transparent allow_dup unrand
+WEIGHT: 60
+{{
+  local size = crawl.random2(6) + 1
+  local glyphs = { {'A', 2},
+                   {'B', 3},
+                   {'C', 4},
+                   {'D', 5},
+                   {'E', 6} }
+  for i = 1, #glyphs do
+    if size >= glyphs[i][2] then
+      subst(glyphs[i][1] .. ' = x')
+    else
+      clear(glyphs[i][1])
+    end
+  end
+}}
 MAP
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
+xABCDE
+AABCDE
+BBBCDE
+CCCCDE
+DDDDDE
+EEEEEE
 ENDMAP
 
 NAME: tar_grunt_decor_1
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
 ...
@@ -797,7 +821,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_3
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
  .....
@@ -807,7 +831,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_4
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
 ......
@@ -819,7 +843,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_6
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
  ......
@@ -832,7 +856,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_8
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
   ......
@@ -844,4 +868,58 @@ MAP
 ..........
  ..G..G..
   ......
+ENDMAP
+
+NAME: tar_grunt_decor_cross_ortho
+TAGS: tar_grunt_decor transparent allow_dup unrand
+MAP
+  ....
+  .xx.
+...xx...
+.xxxxxx.
+.xxxxxx.
+...xx...
+  .xx.
+  ....
+ENDMAP
+
+NAME: tar_grunt_decor_cross_diag
+TAGS: tar_grunt_decor transparent allow_dup unrand
+MAP
+...  ...
+.xx..xx.
+.xxxxxx.
+ .xxxx.
+ .xxxx.
+.xxxxxx.
+.xx..xx.
+...  ...
+ENDMAP
+
+NAME: tar_grunt_decor_circle_5
+TAGS: tar_grunt_decor transparent allow_dup unrand
+SUBST: G : GV
+MAP
+  ...
+ .xxx.
+.x...x.
+.x.G.x.
+.x...x.
+ .xxx.
+  ...
+ENDMAP
+
+NAME: tar_grunt_decor_octagon_7
+TAGS: tar_grunt_decor transparent allow_dup unrand
+SUBST: G : GV
+MAP
+   ...
+  .xxx.
+ .x...x.
+.x.....x.
+.x..G..x.
+.x.....x.
+ .x...x.
+  .xxx.
+   ...
 ENDMAP
