@@ -92,13 +92,14 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     bool update_screen = !fs;
 
     const int spell_levels = player_spell_levels();
-
+    const bool is_rod = (book.base_type == OBJ_RODS);
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
     out.cprintf("%s", book.name(DESC_THE).c_str());
 
-    out.cprintf("\n\n Spells                             Type                      Level\n");
+    out.cprintf("\n\n Spells                           %s                        Level\n",
+                (is_rod ? "Fail" : "Type"));
 
     for (j = 0; j < SPELLBOOK_SIZE; j++)
     {
@@ -151,7 +152,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
 
         string schools;
         if (action == RBOOK_USE_ROD)
-            schools = "Evocations";
+            schools = failure_rate_to_string(rod_fail(stype, book.link));
         else
         {
             bool first = true;
@@ -1414,11 +1415,20 @@ int rod_spell(int rod)
     // All checks passed, we can cast the spell.
     if (you.confused())
         random_uselessness();
-    else if (your_spells(spell, power, false, false)
-                == SPRET_ABORT)
+    else
     {
-        crawl_state.zero_turns_taken();
-        return -1;
+        spret_type result = your_spells(spell, power, false, false, rod);
+        if (result == SPRET_ABORT)
+        {
+            crawl_state.zero_turns_taken();
+            return -1;
+        }
+        if (result == SPRET_FAIL)
+        {
+            // TODO: Randomize string, and have actual (mild) miscast effects
+            mprf("%s sputters and fails to fire.", irod.name(DESC_YOUR).c_str());
+            return 1;
+        }
     }
 
     make_hungry(food, true, true);

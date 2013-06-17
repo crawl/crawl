@@ -1673,7 +1673,11 @@ void append_spells(string &desc, const item_def &item)
     if (!item.has_spells())
         return;
 
-    desc += "\n\nSpells                             Type                      Level\n";
+    const bool is_rod = (item.base_type == OBJ_RODS);
+
+    desc += "\n\nSpells                           ";
+    desc += (is_rod ? "Fail" : "Type");
+    desc += "                        Level\n";
 
     for (int j = 0; j < SPELLBOOK_SIZE; ++j)
     {
@@ -1686,8 +1690,8 @@ void append_spells(string &desc, const item_def &item)
         desc += chop_string(name, 35);
 
         string schools;
-        if (item.base_type == OBJ_RODS)
-            schools = "Evocations";
+        if (is_rod)
+            schools = failure_rate_to_string(rod_fail(stype, item.link));
         else
             schools = spell_schools_string(stype);
 
