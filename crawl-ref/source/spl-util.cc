@@ -1199,12 +1199,6 @@ bool spell_is_useless(spell_type spell, bool transient)
 // This function takes a spell, and determines what color it should be
 // highlighted with. You shouldn't have to touch this unless you want
 // to add new highlighting options.
-//
-// as you can see, the functions it uses to determine highlights are:
-//       god_hates_spell(spell, god)
-//       god_likes_spell(spell, god)
-//       _spell_is_empowered(spell)
-//       spell_is_useless(spell, transient)
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool rod_spell)
 {
