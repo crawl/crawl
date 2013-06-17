@@ -510,76 +510,44 @@ bool you_cannot_memorise(spell_type spell, bool &form)
 {
     bool rc = false;
 
-    switch (you.is_undead)
+    if (you.is_undead)
     {
-    case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
+        case SPELL_BORGNJORS_REVIVIFICATION:
+        case SPELL_DEATHS_DOOR:
+        case SPELL_NECROMUTATION:
+            // Prohibited to all undead.
+            rc = true;
+            break;
+
+        case SPELL_CURE_POISON:
+        case SPELL_STONESKIN:
         case SPELL_BEASTLY_APPENDAGE:
         case SPELL_BLADE_HANDS:
-        case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_CURE_POISON:
-        case SPELL_DEATHS_DOOR:
         case SPELL_DRAGON_FORM:
         case SPELL_ICE_FORM:
-        case SPELL_NECROMUTATION:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
-        case SPELL_STONESKIN:
-            rc = true;
+            // Allowed for vampires (depending on hunger).
+            rc = (you.is_undead != US_SEMI_UNDEAD);
             break;
-        default:
-            break;
-        }
-        break;
 
-    case US_SEMI_UNDEAD: // Vampires
-        switch (spell)
-        {
-        case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_DEATHS_DOOR:
-        case SPELL_NECROMUTATION:
-            // In addition, the above US_HUNGRY_DEAD spells are not castable
-            // when satiated or worse.
-            rc = true;
-            break;
-        default:
-            break;
-        }
-        break;
-
-    case US_UNDEAD: // Mummies
-        switch (spell)
-        {
-        case SPELL_BEASTLY_APPENDAGE:
-        case SPELL_BLADE_HANDS:
-        case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_CURE_POISON:
-        case SPELL_DEATHS_DOOR:
-        case SPELL_DRAGON_FORM:
-        case SPELL_ICE_FORM:
         case SPELL_INTOXICATE:
-        case SPELL_NECROMUTATION:
         case SPELL_REGENERATION:
-        case SPELL_SPIDER_FORM:
-        case SPELL_STATUE_FORM:
-        case SPELL_STONESKIN:
-            rc = true;
+            // Only prohibited for liches and mummies.
+            rc = (you.is_undead == US_UNDEAD);
             break;
+
         default:
             break;
         }
-        break;
 
-    case US_ALIVE:
-        break;
+        // If our undeath is only temporary, mark that fact. This
+        // assumes that the already undead cannot enter lich form.
+        if (rc && you.form == TRAN_LICH)
+            form = true;
     }
-    // If rc has been set to true before now, that was because we
-    // are (possibly temporarily) undead; if the undeath is because of
-    // a form, mark that fact.  This assumes that the already undead
-    // cannot enter lich form.
-    if (rc == true && you.form == TRAN_LICH)
-        form = true;
 
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true, form = false;
