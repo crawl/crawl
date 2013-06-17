@@ -1418,7 +1418,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_FRENZIED))
         v.push_back("consumed by blood-lust");
     if (is(MB_ROUSED))
-        v.push_back("roused with righteous anger");
+        v.push_back("inspired to greatness");
     if (is(MB_HASTED))
         v.push_back("moving very quickly");
     if (is(MB_STRONG))

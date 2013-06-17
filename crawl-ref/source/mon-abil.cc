@@ -1133,10 +1133,58 @@ static bool _orange_statue_effects(monster* mons)
     return false;
 }
 
-static void _orc_battle_cry(monster* chief)
+enum battlecry_type
+{
+    BATTLECRY_ORC,
+    BATTLECRY_CHERUB_HYMN,
+    BATTLECRY_SATYR_PIPES,
+    NUM_BATTLECRIES
+};
+
+static bool _is_battlecry_compatible(monster* mons, battlecry_type type)
+{
+    switch(type)
+    {
+        case BATTLECRY_ORC:
+            return (mons_genus(mons->type) == MONS_ORC);
+        case BATTLECRY_CHERUB_HYMN:
+            return (mons->holiness() == MH_HOLY);
+        case BATTLECRY_SATYR_PIPES:
+            return (mons->holiness() == MH_NATURAL);
+        default:
+            return false;
+    }
+}
+
+static int _battle_cry(monster* chief, battlecry_type type)
 {
     const actor *foe = chief->get_foe();
     int affected = 0;
+
+    enchant_type battlecry = (type == BATTLECRY_ORC ? ENCH_BATTLE_FRENZY
+                                                    : ENCH_ROUSED);
+
+    const string messages[NUM_BATTLECRIES][4] =
+    {
+        {
+            "%s roars a battle-cry!",
+            "%s goes into a battle-frenzy!",
+            "%s %s go into a battle-frenzy!",
+            "orcs"
+        },
+        {
+            "%s sings a powerful hymn!",
+            "%s is roused by the hymn!",
+            "%s %s are roused to righteous anger!",
+            "holy creatures"
+        },
+        {
+            "%s plays a rousing melody on his pipes!",
+            "%s is stirred to greatness!",
+            "%s %s are stirred to greatness!",
+            "satyr's allies"
+        },
+    };
 
     if (foe
         && (!foe->is_player() || !chief->friendly())
@@ -1150,7 +1198,7 @@ static void _orc_battle_cry(monster* chief)
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
-                && mons_genus(mi->type) == MONS_ORC
+                && _is_battlecry_compatible(*mi, type)
                 && mons_aligned(chief, *mi)
                 && mi->hit_dice < chief->hit_dice
                 && !mi->berserk()
@@ -1158,7 +1206,7 @@ static void _orc_battle_cry(monster* chief)
                 && !mi->cannot_move()
                 && !mi->confused())
             {
-                mon_enchant ench = mi->get_ench(ENCH_BATTLE_FRENZY);
+                mon_enchant ench = mi->get_ench(battlecry);
                 if (ench.ench == ENCH_NONE || ench.degree < level)
                 {
                     const int dur =
@@ -1171,10 +1219,7 @@ static void _orc_battle_cry(monster* chief)
                         mi->update_ench(ench);
                     }
                     else
-                    {
-                        mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, level,
-                                                 chief, dur));
-                    }
+                        mi->add_ench(mon_enchant(battlecry, level, chief, dur));
 
                     affected++;
                     if (you.can_see(*mi))
@@ -1190,7 +1235,7 @@ static void _orc_battle_cry(monster* chief)
         {
             if (you.can_see(chief) && player_can_hear(chief->pos()))
             {
-                mprf(MSGCH_SOUND, "%s roars a battle-cry!",
+                mprf(MSGCH_SOUND, messages[type][0].c_str(),
                      chief->name(DESC_THE).c_str());
             }
 
@@ -1208,115 +1253,34 @@ static void _orc_battle_cry(monster* chief)
                 if (seen_affected.size() == 1)
                 {
                     who = seen_affected[0]->name(DESC_THE);
-                    mprf(channel, "%s goes into a battle-frenzy!", who.c_str());
+                    mprf(channel, messages[type][1].c_str(), who.c_str());
                 }
                 else
                 {
-                    monster_type type = seen_affected[0]->type;
+                    bool generic = false;
+                    monster_type mon_type = seen_affected[0]->type;
                     for (unsigned int i = 0; i < seen_affected.size(); i++)
                     {
-                        if (seen_affected[i]->type != type)
+                        if (seen_affected[i]->type != mon_type)
                         {
-                            // just mention plain orcs
-                            type = MONS_ORC;
+                            // not homogeneous - use the generic term instead
+                            generic = true;
                             break;
                         }
                     }
-                    who = get_monster_data(type)->name;
+                    who = get_monster_data(mon_type)->name;
 
-                    mprf(channel, "%s %s go into a battle-frenzy!",
+
+                    mprf(channel, messages[type][2].c_str(),
                          chief->friendly() ? "Your" : "The",
-                         pluralise(who).c_str());
+                         (!generic ? pluralise(who).c_str()
+                                   : messages[type][3].c_str()));
                 }
             }
         }
     }
-}
 
-static void _cherub_hymn(monster* chief)
-{
-    const actor *foe = chief->get_foe();
-    int affected = 0;
-
-    if (foe
-        && (!foe->is_player() || !chief->friendly())
-        && !silenced(chief->pos())
-        && chief->can_see(foe)
-        && coinflip())
-    {
-        const int level = chief->hit_dice > 12? 2 : 1;
-        vector<monster* > seen_affected;
-        for (monster_iterator mi(chief); mi; ++mi)
-        {
-            if (*mi != chief
-                && mi->holiness() == MH_HOLY
-                && mons_aligned(chief, *mi)
-                && mi->hit_dice < chief->hit_dice
-                && !mi->berserk()
-                && !mi->has_ench(ENCH_MIGHT)
-                && !mi->cannot_move()
-                && !mi->confused())
-            {
-                mon_enchant ench = mi->get_ench(ENCH_ROUSED);
-                if (ench.ench == ENCH_NONE || ench.degree < level)
-                {
-                    const int dur =
-                        random_range(12, 20) * speed_to_duration(mi->speed);
-
-                    if (ench.ench != ENCH_NONE)
-                    {
-                        ench.degree   = level;
-                        ench.duration = max(ench.duration, dur);
-                        mi->update_ench(ench);
-                    }
-                    else
-                    {
-                        mi->add_ench(mon_enchant(ENCH_ROUSED, level,
-                                                 chief, dur));
-                    }
-
-                    affected++;
-                    if (you.can_see(*mi))
-                        seen_affected.push_back(*mi);
-
-                    if (mi->asleep())
-                        behaviour_event(*mi, ME_DISTURB, 0, chief->pos());
-                }
-            }
-        }
-
-        if (affected)
-        {
-            if (you.can_see(chief) && player_can_hear(chief->pos()))
-            {
-                mprf(MSGCH_SOUND, "%s sings a powerful hymn!",
-                     chief->name(DESC_THE).c_str());
-            }
-
-            // The yell happens whether you happen to see it or not.
-            noisy(LOS_RADIUS, chief->pos(), chief->mindex());
-
-            // Disabling detailed frenzy announcement because it's so spammy.
-            const msg_channel_type channel =
-                        chief->friendly() ? MSGCH_MONSTER_ENCHANT
-                                          : MSGCH_FRIEND_ENCHANT;
-
-            if (!seen_affected.empty())
-            {
-                string who;
-                if (seen_affected.size() == 1)
-                {
-                    who = seen_affected[0]->name(DESC_THE);
-                    mprf(channel, "%s is roused by the hymn!", who.c_str());
-                }
-                else
-                {
-                    mprf(channel, "%s holy creatures are roused to righteous anger!",
-                         chief->friendly() ? "Your" : "The");
-                }
-            }
-        }
-    }
+    return affected;
 }
 
 static bool _make_monster_angry(const monster* mon, monster* targ)
@@ -3175,12 +3139,20 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (is_sanctuary(mons->pos()))
             break;
 
-        _orc_battle_cry(mons);
+        _battle_cry(mons, BATTLECRY_ORC);
         // Doesn't cost a turn.
         break;
 
     case MONS_CHERUB:
-        _cherub_hymn(mons);
+        _battle_cry(mons, BATTLECRY_CHERUB_HYMN);
+        break;
+
+    case MONS_SATYR:
+        if (one_chance_in(4))
+        {
+            if (_battle_cry(mons, BATTLECRY_SATYR_PIPES))
+                used = true;
+        }
         break;
 
     case MONS_ORANGE_STATUE:
