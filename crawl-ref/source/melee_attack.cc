@@ -5155,7 +5155,7 @@ void melee_attack::do_spines()
                      defender->name(DESC_ITS).c_str());
             }
             if (attacker->is_player())
-                ouch(hurt, defender->mindex(), KILLED_BY_MONSTER);
+                ouch(hurt, defender->mindex(), KILLED_BY_SPINES);
             else
                 attacker->hurt(defender, hurt);
         }
