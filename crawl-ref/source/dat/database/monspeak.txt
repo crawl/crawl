@@ -3572,6 +3572,14 @@ VISUAL:@The_monster@ tugs at @possessive@ hair.
 
 VISUAL:@The_monster@ twirls gently on the spot.
 %%%%
+Donald killed
+
+w:100
+__NONE
+
+w:1
+@The_monster@ says, "I'm dying. I hate that."
+%%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan
 
