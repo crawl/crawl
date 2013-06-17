@@ -3103,7 +3103,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 
     // Pick number of beasts in the box
     if (item.sub_type == MISC_BOX_OF_BEASTS)
-        item.plus = 6 + random2avg(16,2);
+        item.plus = random_range(5, 15, 2);
 
     // Spider sack charges
     if (item.sub_type == MISC_SACK_OF_SPIDERS)

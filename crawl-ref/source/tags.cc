@@ -2941,7 +2941,7 @@ void unmarshallItem(reader &th, item_def &item)
     {
         // Give charges to box of beasts. If the player used it
         // already then, well, they got some freebies.
-        item.plus = 6 + random2avg(20,2);
+        item.plus = random_range(5, 15, 2);
     }
 
     // Convert Tome of Destruction to Shard

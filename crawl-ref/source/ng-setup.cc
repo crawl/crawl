@@ -946,7 +946,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_RODS, ROD_BLASTING);
 
         newgame_make_item(1, EQ_NONE, OBJ_MISCELLANY, MISC_BOX_OF_BEASTS,
-                          -1, 1, 6 + random2avg(16,2));
+                          -1, 1, random_range(5, 15, 2);
         newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_CONFUSION,
                           -1, 1, 15, 0);
 
