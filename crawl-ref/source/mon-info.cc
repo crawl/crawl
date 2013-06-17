@@ -56,6 +56,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     if (ench == ENCH_PETRIFIED && mons.has_ench(ENCH_PETRIFYING))
         return NUM_MB_FLAGS;
 
+    // Don't claim that naturally 'confused' monsters are especially bewildered
+    if (ench == ENCH_CONFUSION && mons_class_flag(mons.type, M_CONFUSED))
+        return NUM_MB_FLAGS;
+
     switch (ench)
     {
     case ENCH_BERSERK:
