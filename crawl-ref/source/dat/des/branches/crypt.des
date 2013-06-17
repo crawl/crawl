@@ -1564,17 +1564,17 @@ MONS:   patrolling vampire ; scimitar | great sword | battleaxe | \
         w:1
 # Using KMONS with fallback to vampire knight:
 KMONS:  2 = vampire knight / Jory, vampire knight
-MONS:   dancing weapon ; any weapon ego:vampiricism /\
+KMONS:  3 = dancing weapon ; any weapon ego:vampiricism /\
         vampire ; scimitar | great sword | battleaxe |\
         war axe | broad axe . chain \
         mail w:15 | plate armour w:1
-MONS:   phantasmal warrior /\
+KMONS:  4 = phantasmal warrior /\
         vampire ; scimitar | great sword | battleaxe |\
         war axe | broad axe . chain mail w:15 | \
         plate armour w:1
-MONS:   vampire / zombie / golden dragon zombie w:3 / storm dragon zombie \
+KMONS:  5 = vampire / zombie / golden dragon zombie w:3 / storm dragon zombie \
         w:3
-MONS:   generate_awake vampire mage
+KMONS:  6 = generate_awake vampire mage
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling phantasmal warrior
 MONS:   ghost moth hd:15
