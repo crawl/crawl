@@ -181,6 +181,9 @@ Call Lost Soul cast
 
 @The_monster@ beckons forth a restless soul!
 %%%%
+Haste Plants cast
+
+@The_monster@ empowers the plants around itself!
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################

@@ -1152,6 +1152,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AWAKEN_VINES:
     case SPELL_CONTROL_WINDS:
     case SPELL_WALL_OF_BRAMBLES:
+    case SPELL_HASTE_PLANTS:
         return true;
     default:
         if (check_validity)
@@ -1298,6 +1299,15 @@ static bool _ms_direct_nasty(spell_type monspell)
 {
     return (spell_needs_foe(monspell)
             && !spell_typematch(monspell, SPTYP_SUMMONING));
+}
+
+// Can be affected by the 'Haste Plants' spell
+static bool _is_hastable_plant(const monster* mons)
+{
+    return (mons->holiness() == MH_PLANT
+            && !mons_is_firewood(mons)
+            && mons->type != MONS_SNAPLASHER_VINE
+            && mons->type != MONS_SNAPLASHER_VINE_SEGMENT);
 }
 
 // Checks if the foe *appears* to be immune to negative energy.  We
@@ -1672,6 +1682,19 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_WATERSTRIKE:
         return (!feat_is_water(grd(foe->pos())));
+
+    case SPELL_HASTE_PLANTS:
+        for (monster_iterator mi(mon); mi; ++mi)
+        {
+            // Isn't useless if there's a single viable target for it
+            if (mons_aligned(*mi, mon)
+                && _is_hastable_plant(*mi)
+                && !mi->has_ench(ENCH_HASTE))
+            {
+                return false;
+            }
+        }
+        return true;
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -4680,6 +4703,23 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 get_monster_data(mons->type)->energy_usage.spell;
         }
         return;
+
+    case SPELL_HASTE_PLANTS:
+    {
+        int num = 2 + random2(3);
+        for (monster_iterator mi(mons); mi && num > 0; ++mi)
+        {
+            if (mons_aligned(*mi, mons)
+                && _is_hastable_plant(*mi)
+                && !mi->has_ench(ENCH_HASTE))
+            {
+                mi->add_ench(ENCH_HASTE);
+                simple_monster_message(*mi, " seems to speed up.");
+                --num;
+            }
+        }
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
