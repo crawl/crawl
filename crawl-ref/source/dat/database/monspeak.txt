@@ -2946,7 +2946,7 @@ w:50
 
 @The_monster@ says, "Those wind drakes are really a blast. I still hate them."
 
-@The_monster@ says, "What kind of person live in a tree, anyway?"
+@The_monster@ says, "What kind of person lives in a tree, anyway?"
 
 @The_monster@ says, "What am I supposed to do with all this fruit? Make a salad?"
 
