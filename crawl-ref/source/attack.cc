@@ -177,7 +177,16 @@ string attack::get_exclams(int dmg)
     else if (dmg < HIT_STRONG)
         return "!!";
     else
-        return "!!!";
+    {
+        string ret = "!!!";
+        int tmpdamage = dmg;
+        while (tmpdamage >= 2*HIT_STRONG)
+        {
+            ret += "!";
+            tmpdamage >>= 1;
+        }
+        return ret;
+    }
 }
 
 /* Returns evasion adverb
