@@ -392,19 +392,10 @@ int rod_fail(const item_def &irod, spell_type which_spell)
     if (you.confused())
         chance += 50;
 
-    if (you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        switch (you.form)
-        {
-        // Using rods with blade hands. Not the best idea.
-        case TRAN_BLADE_HANDS:
-            chance += 50;
-            break;
-
-        default:
-            break;
-        }
-    }
+    // XXX: Review forms to see if any should affect rod ability. Blade hands is irrelevant
+    // since the rod can't be wielded (unless there is a change to allow evoking from
+    // inventory). Dexterity changes will naturally affect rod success rates anyway for
+    // forms that do allow item usage.
 
     return max(1, chance);
 }
