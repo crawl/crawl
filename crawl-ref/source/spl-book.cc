@@ -1443,14 +1443,16 @@ int rod_spell(int rod)
 
             if (spfl < spfail_chance)
             {
-                int rod_miscast = floor(spfl / (double)spfail_chance * 10.0f);
-
-                if (rod_miscast == 0)
+                // Which miscast? XXX: Only one right now
+                // Possible miscasts: drain charges, make noise, smoke, low-level normal miscasts
+                // based on schools of chosen spell...
+                // int rod_miscast = floor(spfl / (double)spfail_chance * 10.0f);
+                // if (rod_miscast == 0)
                     jam_rod(irod);
-                else
-                    // TODO: Randomize "splutters"
-                    mprf("%s splutters and fails to fire.", irod.name(DESC_YOUR).c_str());
             }
+            else
+                // TODO: Randomize "splutters"
+                mprf("%s splutters and fails to fire.", irod.name(DESC_YOUR).c_str());
             you.turn_is_over = true;
             you.wield_change = true;
             return 1;

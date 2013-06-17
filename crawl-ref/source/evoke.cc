@@ -2030,8 +2030,8 @@ bool evoke_item(int slot)
 
 void jam_rod(item_def &rod)
 {
-    rod.props["rod_jammed"].get_bool() = true;
     mprf("%s is jammed!", rod.name(DESC_YOUR).c_str());
+    rod.props["rod_jammed"].get_bool() = true;
 }
 
 bool try_unjam_rod(item_def &rod, float mod, bool quiet)
