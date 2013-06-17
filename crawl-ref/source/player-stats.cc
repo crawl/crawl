@@ -536,6 +536,11 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
         _handle_stat_change(which_stat, cause, see_source);
+        if (you.stat_zero[which_stat] > 0)
+        {
+            mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
+            ouch(5 + random2(you.hp_max / 10), NON_MONSTER, _statloss_killtype(which_stat), cause);
+        }
         return true;
     }
     else
@@ -630,23 +635,15 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
-    if (you.stat(stat) <= 0)
+    if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
-        if (you.stat_zero[stat] == 0)
-        {
-            // Turns required for recovery once the stat is restored, randomised slightly.
-            you.stat_zero[stat] += 10 + random2(10);
-            mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
-            take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
-                stat_desc(stat, SD_NAME)).c_str()), true);
-            // 2 to 5 turns of paralysis (XXX: decremented right away?)
-            you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
-        }
-        else    // Further stat drain below 0 deals damage.
-        {
-            mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(stat, SD_NAME));
-            ouch(5 + random2(you.hp_max / 10), NON_MONSTER, _statloss_killtype(stat), cause);
-        }
+        // Turns required for recovery once the stat is restored, randomised slightly.
+        you.stat_zero[stat] += 10 + random2(10);
+        mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
+        take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
+            stat_desc(stat, SD_NAME)).c_str()), true);
+        // 2 to 5 turns of paralysis (XXX: decremented right away?)
+        you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
     }
 
     you.redraw_stats[stat] = true;
