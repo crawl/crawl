@@ -1127,8 +1127,6 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.stat_loss[i]);
     for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.stat_zero[i]);
-    for (i = 0; i < NUM_STATS; ++i)
-        marshallString(th, you.stat_zero_cause[i]);
 
     marshallByte(th, you.hit_points_regeneration);
     marshallByte(th, you.magic_points_regeneration);
@@ -1964,8 +1962,13 @@ static void tag_read_you(reader &th)
         you.stat_loss[i] = unmarshallByte(th);
     for (i = 0; i < NUM_STATS; ++i)
         you.stat_zero[i] = unmarshallByte(th);
-    for (i = 0; i < NUM_STATS; ++i)
-        you.stat_zero_cause[i] = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_STAT_ZERO)
+    {
+        for (i = 0; i < NUM_STATS; ++i)
+            unmarshallString(th);
+    }
+#endif
 
     you.hit_points_regeneration   = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
