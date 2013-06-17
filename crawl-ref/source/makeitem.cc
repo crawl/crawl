@@ -3107,7 +3107,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 
     // Spider sack charges
     if (item.sub_type == MISC_SACK_OF_SPIDERS)
-        item.plus = 5 + random2avg(11,2);
+        item.plus = random_range(5, 15, 2);
 
     // Shard of destruction charges
     if (item.sub_type == MISC_SHARD_OF_DESTRUCTION)
