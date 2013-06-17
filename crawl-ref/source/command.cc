@@ -1121,11 +1121,11 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     desc += make_stringf("\nLevel:      %d", spell_difficulty(type));
 
-    bool undead = false;
-    if (you_cannot_memorise(type, undead))
+    bool form = false;
+    if (you_cannot_memorise(type, form))
     {
         desc += "\n";
-        desc += desc_cannot_memorise_reason(undead);
+        desc += desc_cannot_memorise_reason(form);
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);

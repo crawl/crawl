@@ -2898,9 +2898,9 @@ static int _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    bool undead = false;
-    if (you_cannot_memorise(spell, undead))
-        description += "\n" + desc_cannot_memorise_reason(undead) + "\n";
+    bool form = false;
+    if (you_cannot_memorise(spell, form))
+        description += "\n" + desc_cannot_memorise_reason(form) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
         && you.form != TRAN_WISP)
@@ -2913,7 +2913,7 @@ static int _get_spell_description(const spell_type spell,
             return BOOK_FORGET;
         }
         else if (player_can_memorise_from_spellbook(*item)
-                 && !you_cannot_memorise(spell, undead))
+                 && !you_cannot_memorise(spell, form))
         {
             description += "\n(M)emorise this spell.\n";
             return BOOK_MEM;
