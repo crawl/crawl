@@ -2674,6 +2674,7 @@ enum monster_type                      // menv[].type
     MONS_ANCIENT_BEAR,
     MONS_WATER_NYMPH,
     MONS_TREANT,
+    MONS_THORN_LOTUS,
 
     NUM_MONSTERS,               // used for polymorph
 
