@@ -58,7 +58,7 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 spell_selector selector = NULL);
 int spell_fail(spell_type spell);
-int rod_fail(spell_type spell, int item_slot);
+int rod_fail(const item_def &irod, spell_type which_spell = SPELL_NO_SPELL);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      bool rod = false);

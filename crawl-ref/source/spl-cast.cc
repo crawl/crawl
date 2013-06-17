@@ -382,10 +382,8 @@ int spell_fail(spell_type spell)
     return chance2;
 }
 
-int rod_fail(spell_type spell, int item_slot)
+int rod_fail(const item_def &irod, spell_type which_spell)
 {
-    item_def& irod(you.inv[item_slot]);
-
     if (irod.base_type != OBJ_RODS)
         return 0;
 
@@ -1307,7 +1305,7 @@ spret_type your_spells(spell_type spell, int powc,
         // so we don't need to check its type.
         int spfl = random2avg(100, 3);
 
-        const int spfail_chance = rod_fail(spell, item_slot);
+        const int spfail_chance = rod_fail(you.inv[item_slot], spell);
 
         if (spfl < spfail_chance)
             fail = spfail_chance - spfl;

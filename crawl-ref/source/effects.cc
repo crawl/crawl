@@ -33,6 +33,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "fight.h"
 #include "fprop.h"
@@ -3111,7 +3112,18 @@ static void _update_corpses(int elapsedTime)
 
 static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 {
-    if (rod.base_type != OBJ_RODS || rod.plus >= rod.plus2)
+    if (rod.base_type != OBJ_RODS)
+        return;
+    // Don't recharge when jammed
+    if (rod.is_jammed())
+    {
+        // Small chance of unjamming, only when carried
+        if (in_inv && try_unjam_rod(rod, 0.1f, true))
+            mprf("%s unjams itself.", rod.name(DESC_YOUR).c_str());
+        // Charge next turn anyway
+        return;
+    }
+    if (rod.plus >= rod.plus2)
         return;
 
     // Skill calculations with a massive scale would overflow, cap it.

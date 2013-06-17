@@ -18,6 +18,7 @@ int maybe_roll_dice(int num, int size, bool random);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 double random_real();
+double random_real_avg(int rolls);
 
 int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);

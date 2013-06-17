@@ -3243,6 +3243,12 @@ bool item_def::is_greedy_sacrificeable() const
     return god_likes_item(you.religion, *this);
 }
 
+bool item_def::is_jammed() const
+{
+    return base_type == OBJ_RODS && props.exists("rod_jammed")
+        && props["rod_jammed"].get_bool();
+}
+
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];

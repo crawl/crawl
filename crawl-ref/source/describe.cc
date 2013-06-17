@@ -1691,7 +1691,7 @@ void append_spells(string &desc, const item_def &item)
 
         string schools;
         if (is_rod)
-            schools = failure_rate_to_string(rod_fail(stype, item.link));
+            schools = failure_rate_to_string(rod_fail(item, stype));
         else
             schools = spell_schools_string(stype);
 
@@ -2033,6 +2033,13 @@ string get_item_description(const item_def &item, bool verbose,
                 description << "\nIt can have at most " << max_charges
                             << " charges and +" << max_recharge_rate
                             << " recharge rate.";
+            }
+            if (item.is_jammed())
+            {
+                description << "\nIt is currently jammed. You can attempt"
+                            << " to unjam it by evoking but it may take"
+                            << " several attempts. It will naturally unjam"
+                            << " itself if you wait long enough.";
             }
         }
         else if (Options.dump_book_spells)

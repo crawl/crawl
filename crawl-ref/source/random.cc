@@ -247,6 +247,17 @@ double random_real()
     return random_int() / 4294967296.0;
 }
 
+// Works just like random2avg but for real numbers
+double random_real_avg(int rolls)
+{
+    double sum = 0;
+
+    for (int i = 0; i < (rolls - 1); i++)
+        sum += random_real();
+
+    return (sum / (double)rolls);
+}
+
 // Roll n_trials, return true if at least one succeeded.  n_trials might be
 // not integer.
 // [0, 1]

@@ -1831,6 +1831,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_curse && cursed() && terse)
             buff << " (curse)";
+
+        if (is_jammed())
+            buff << " (jammed)";
+
         break;
 
     case OBJ_STAVES:

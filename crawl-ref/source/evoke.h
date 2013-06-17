@@ -22,4 +22,7 @@ void shadow_lantern_effect();
 bool disc_of_storms(bool drac_breath = false);
 void gong_of_golubria_done();
 
+void jam_rod(item_def &rod);
+bool try_unjam_rod(item_def &rod, float boost = 1, bool quiet = false);
+
 #endif

@@ -12,6 +12,7 @@
 #include <string.h>
 #include <algorithm>
 #include <iomanip>
+#include <cmath>
 
 #include "artefact.h"
 #include "cio.h"
@@ -20,6 +21,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "effects.h"
+#include "evoke.h"
 #include "externs.h"
 #include "food.h"
 #include "format.h"
@@ -152,7 +154,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
 
         string schools;
         if (action == RBOOK_USE_ROD)
-            schools = failure_rate_to_string(rod_fail(stype, book.link));
+            schools = failure_rate_to_string(rod_fail(book, stype));
         else
         {
             bool first = true;
@@ -1326,8 +1328,16 @@ int rod_spell(int rod)
         return -1;
     }
 
-    // ID code got moved to item_use::wield_effects. {due}
+    if (irod.is_jammed())
+    {
+        // Attempt to unjam
+        try_unjam_rod(irod);
+        you.turn_is_over = true;
+        you.wield_change = true;
+        return 1;
+    }
 
+    // ID code got moved to item_use::wield_effects. {due}
     const int num_spells = count_rod_spells(irod, false);
 
     int keyin = 0;
@@ -1418,6 +1428,7 @@ int rod_spell(int rod)
     else
     {
         spret_type result = your_spells(spell, power, false, false, rod);
+
         if (result == SPRET_ABORT)
         {
             crawl_state.zero_turns_taken();
@@ -1425,8 +1436,23 @@ int rod_spell(int rod)
         }
         if (result == SPRET_FAIL)
         {
-            // TODO: Randomize string, and have actual (mild) miscast effects
-            mprf("%s sputters and fails to fire.", irod.name(DESC_YOUR).c_str());
+            // Repeat the failure calculation to determine a miscast if any
+            // Except using a double to handle 1% failure gracefully
+            const double spfl = random_real_avg(3) * 100.0;
+            const int spfail_chance = rod_fail(irod, spell);
+
+            if (spfl < spfail_chance)
+            {
+                int rod_miscast = floor(spfl / (double)spfail_chance * 10.0f);
+
+                if (rod_miscast == 0)
+                    jam_rod(irod);
+                else
+                    // TODO: Randomize "splutters"
+                    mprf("%s splutters and fails to fire.", irod.name(DESC_YOUR).c_str());
+            }
+            you.turn_is_over = true;
+            you.wield_change = true;
             return 1;
         }
     }

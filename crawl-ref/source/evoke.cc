@@ -2027,3 +2027,32 @@ bool evoke_item(int slot)
 
     return did_work;
 }
+
+void jam_rod(item_def &rod)
+{
+    rod.props["rod_jammed"].get_bool() = true;
+    mprf("%s is jammed!", rod.name(DESC_YOUR).c_str());
+}
+
+bool try_unjam_rod(item_def &rod, float mod, bool quiet)
+{
+    ASSERT(rod.is_jammed());
+
+    // Unjamming ability isn't improved so drastically by skills/stats as
+    // normal usage failure (since jamming is already far less likely with
+    // low failure rates).
+    if (random2(100) < (ceil((you.skill(SK_EVOCATIONS) + you.dex()) * mod)))
+    {
+        rod.props["rod_jammed"].get_bool() = false;
+        if (!quiet)
+        {
+            mprf("You wrestle with %s and manage to unjam it!",
+                 rod.name(DESC_THE).c_str());
+        }
+        return true;
+    }
+    if (!quiet)
+        // TODO: Improve/randomise messages
+        mprf("You fiddle with %s but it remains jammed.", rod.name(DESC_THE).c_str());
+    return false;
+}
