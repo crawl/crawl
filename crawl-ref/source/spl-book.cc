@@ -504,16 +504,11 @@ bool you_cannot_memorise(spell_type spell)
     return you_cannot_memorise(spell, temp);
 }
 
-// undead is set to true if being undead prevents us from memorising the spell.
-bool you_cannot_memorise(spell_type spell, bool &undead)
+// form is set to true if a form (lich or wisp) prevents us from
+// memorising the spell.
+bool you_cannot_memorise(spell_type spell, bool &form)
 {
     bool rc = false;
-
-    if (you.form == TRAN_WISP)
-    {
-        undead = false;
-        return true;
-    }
 
     switch (you.is_undead)
     {
@@ -579,14 +574,15 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     case US_ALIVE:
         break;
     }
-
     // If rc has been set to true before now, that was because we
-    // are (possibly temporarily) undead.
-    if (rc == true)
-        undead = true;
+    // are (possibly temporarily) undead; if the undeath is because of
+    // a form, mark that fact.  This assumes that the already undead
+    // cannot enter lich form.
+    if (rc == true && you.form == TRAN_LICH)
+        form = true;
 
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
-        rc = true, undead = false;
+        rc = true, form = false;
 
     if (you.species == SP_FELID
         && (spell == SPELL_PORTAL_PROJECTILE
@@ -601,7 +597,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          // could be useful if it didn't require wielding
          || spell == SPELL_TUKIMAS_DANCE))
     {
-        rc = true, undead = false;
+        rc = true, form = false;
     }
 
     if (you.species == SP_DJINNI
@@ -610,11 +606,19 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          || spell == SPELL_DEATHS_DOOR
          || spell == SPELL_LEDAS_LIQUEFACTION))
     {
-        rc = true, undead = false;
+        rc = true, form = false;
     }
 
     if (you.species == SP_LAVA_ORC && spell == SPELL_STONESKIN)
-        rc = true, undead = false;
+        rc = true, form = false;
+    
+    if (you.form == TRAN_WISP)
+    {
+        // If we were otherwise allowed to memorise the spell.
+        if (!rc)
+            form = true;
+        return true;
+    }
 
     return rc;
 }
@@ -1165,21 +1169,16 @@ bool learn_spell()
     return learn_spell(specspell);
 }
 
-// Returns a string about why an undead character can't memorise a spell.
-string desc_cannot_memorise_reason(bool undead)
+// Returns a string about why a character can't memorise a spell.
+string desc_cannot_memorise_reason(bool form)
 {
-    if (undead)
-        ASSERT(you.is_undead);
-
     string desc = "You cannot ";
-    if (you.form == TRAN_LICH || you.form == TRAN_WISP)
+    if (form)
         desc += "currently ";
     desc += "memorise or cast this spell because you are ";
 
-    if (you.form == TRAN_LICH)
-        desc += "in Lich form";
-    else if (you.form == TRAN_WISP)
-        desc += "in Wisp form";
+    if (form)
+        desc += "in " + uppercase_first(transform_name()) + " form";
     else
         desc += "a " + lowercase_string(species_name(you.species));
 
@@ -1196,10 +1195,10 @@ static bool _learn_spell_checks(spell_type specspell)
     if (already_learning_spell((int) specspell))
         return false;
 
-    bool undead = false;
-    if (you_cannot_memorise(specspell, undead))
+    bool form = false;
+    if (you_cannot_memorise(specspell, form))
     {
-        mpr(desc_cannot_memorise_reason(undead).c_str());
+        mpr(desc_cannot_memorise_reason(form).c_str());
         return false;
     }
 
