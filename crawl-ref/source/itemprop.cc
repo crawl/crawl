@@ -2561,6 +2561,7 @@ bool gives_ability(const item_def &item)
         if (item.sub_type == RING_TELEPORTATION
             || item.sub_type == RING_FLIGHT
             || item.sub_type == RING_INVISIBILITY
+            || item.sub_type == RING_TELEPORT_CONTROL
             || item.sub_type == AMU_RAGE)
         {
             return true;
