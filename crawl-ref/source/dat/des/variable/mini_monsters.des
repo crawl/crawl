@@ -5114,12 +5114,12 @@ TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  D:17-
 WEIGHT: 3
 # KMONS is used here to get the fallback to work properly.
-KMONS:  W = Wiglaf ; war axe unrand:arga . \
+KMONS:  W = Wiglaf ; broad axe unrand:arga . \
                      shield race:dwarven . \
                      chain mail w:8 race:dwarven | \
                      plate armour w:10 race:dwarven | \
                      crystal plate armour w:1 race:dwarven, \
-            deep dwarf berserker ; war axe unrand:arga . \
+            deep dwarf berserker ; broad axe unrand:arga . \
                                    chain mail w:7 race:dwarven | \
                                    plate armour w:1 race:dwarven
 KMONS:  J = Jorgrun, deep dwarf necromancer

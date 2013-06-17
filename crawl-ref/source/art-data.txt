@@ -499,7 +499,7 @@ BOOL:     elec, poison
 MAGIC:    50
 
 NAME:    mithril axe "Arga"
-OBJ:     OBJ_WEAPONS/WPN_WAR_AXE
+OBJ:     OBJ_WEAPONS/WPN_BROAD_AXE
 PLUS:    +10/+6
 COLOUR:  WHITE
 TILE:    urand_arga
