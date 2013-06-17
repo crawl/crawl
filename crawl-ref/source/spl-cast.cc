@@ -382,6 +382,32 @@ int spell_fail(spell_type spell)
     return chance2;
 }
 
+int rod_fail(spell_type spell, int item_slot)
+{
+    item_def& irod(you.inv[item_slot]);
+
+    if (irod.base_type != OBJ_RODS)
+        return 0;
+
+    int chance = 75 - you.skill(SK_EVOCATIONS) - you.dex() - irod.plus2 / ROD_CHARGE_MULT;
+
+    if (you.duration[DUR_TRANSFORMATION] > 0)
+    {
+        switch (you.form)
+        {
+        // Using rods with blade hands. Not the best idea.
+        case TRAN_BLADE_HANDS:
+            chance += 50;
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    return max(1, chance);
+}
+
 int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                      bool cap_power, bool rod)
 {
@@ -1121,7 +1147,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
 // effects might also land us here.
 // Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool check_range)
+                       bool allow_fail, bool check_range, int item_slot)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1275,6 +1301,17 @@ spret_type your_spells(spell_type spell, int powc,
         if (spfl < spfail_chance)
             fail = spfail_chance - spfl;
     }
+    else if (item_slot >= 0)
+    {
+        // Rod failure; for now, no other items are passing their slot,
+        // so we don't need to check its type.
+        int spfl = random2avg(100, 3);
+
+        const int spfail_chance = rod_fail(spell, item_slot);
+
+        if (spfl < spfail_chance)
+            fail = spfail_chance - spfl;
+    }
 
     dprf("Spell #%d, power=%d", spell, powc);
 
@@ -1295,7 +1332,7 @@ spret_type your_spells(spell_type spell, int powc,
 
     case SPRET_FAIL:
     {
-        if (antimagic)
+        if (antimagic || item_slot >= 0)
             return SPRET_FAIL;
 
         mprf("You miscast %s.", spell_title(spell));

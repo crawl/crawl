@@ -58,6 +58,7 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 spell_selector selector = NULL);
 int spell_fail(spell_type spell);
+int rod_fail(spell_type spell, int item_slot);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      bool rod = false);
@@ -69,7 +70,7 @@ void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                       bool check_range = true);
+                       bool check_range = true, int item_slot = -1);
 
 double get_miscast_chance(spell_type spell, int severity = 2);
 int failure_rate_colour(spell_type spell);
