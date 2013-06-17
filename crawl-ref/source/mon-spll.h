@@ -1487,9 +1487,9 @@
       {
        SPELL_SUNRAY,
        SPELL_AWAKEN_FOREST,
-       SPELL_NO_SPELL,
+       SPELL_HASTE_PLANTS,
        SPELL_SUMMON_CANIFORMS,
-       SPELL_NO_SPELL,
+       SPELL_HASTE_PLANTS,
        SPELL_MINOR_HEALING
       }
     },
