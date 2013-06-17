@@ -389,6 +389,9 @@ int rod_fail(const item_def &irod, spell_type which_spell)
 
     int chance = 75 - you.skill(SK_EVOCATIONS) - you.dex() - irod.plus2 / ROD_CHARGE_MULT;
 
+    if (you.confused())
+        chance += 50;
+
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
         switch (you.form)
