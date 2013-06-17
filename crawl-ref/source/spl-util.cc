@@ -17,6 +17,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "beam.h"
 #include "coord.h"
 #include "coordit.h"
@@ -1177,6 +1178,15 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_STONESKIN:
         if (you.species == SP_LAVA_ORC)
             return true;
+        break;
+
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (!you.stand_on_solid_ground()
+            || you.duration[DUR_LIQUEFYING]
+            || liquefied(you.pos()))
+        {
+            return true;
+        }
         break;
 
     default:
