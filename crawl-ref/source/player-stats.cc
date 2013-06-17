@@ -535,12 +535,12 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     {
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
-        _handle_stat_change(which_stat, cause, see_source);
         if (you.stat_zero[which_stat] > 0)
         {
             mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
             ouch(5 + random2(you.hp_max / 10), NON_MONSTER, _statloss_killtype(which_stat), cause);
         }
+        _handle_stat_change(which_stat, cause, see_source);
         return true;
     }
     else
