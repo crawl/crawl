@@ -405,6 +405,10 @@ dryad cast
 Minor Healing dryad cast
 
 @The_monster@ draws upon the vitality of nature.
+%%%%
+Summon Water Elementals elemental wellspring cast
+
+The water around @The_monster@ rises up and takes form!
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
