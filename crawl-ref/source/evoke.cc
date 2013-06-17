@@ -771,8 +771,8 @@ static bool _sack_of_spiders(item_def &sack)
 
     if (!one_chance_in(5))
     {
-        int count = 2 + random2(5)
-                    + random2(div_rand_round(you.skill(SK_EVOCATIONS,10),30));
+        int count = 1 + random2(3)
+                    + random2(div_rand_round(you.skill(SK_EVOCATIONS,10),40));
         for (int n = 0; n < count; n++)
         {
             // Invoke mon-pick with our custom list
@@ -792,17 +792,16 @@ static bool _sack_of_spiders(item_def &sack)
     if (success)
     {
         // Also generate webs
-        int rad = LOS_RADIUS / 2 + 1;
+        int rad = LOS_RADIUS / 2 + 2;
         for (radius_iterator ri(you.pos(), rad, false, true, true); ri; ++ri)
         {
-            if (grd(*ri) == DNGN_FLOOR &&
-                x_chance_in_y(div_rand_round(rad - you.pos().range(*ri),
-                                             (28 - you.skill(SK_EVOCATIONS))),
-                              rad)
-                && place_specific_trap(*ri, TRAP_WEB))
+            if (grd(*ri) == DNGN_FLOOR)
             {
-                // Reveal the trap
-                grd(*ri) = DNGN_TRAP_WEB;
+                int chance = 100 - (100 * (you.pos().range(*ri) - 1) / rad)
+                             - 2 * (27 - you.skill(SK_EVOCATIONS));
+                if (x_chance_in_y(chance,100) && place_specific_trap(*ri, TRAP_WEB))
+                    // Reveal the trap
+                    grd(*ri) = DNGN_TRAP_WEB;
             }
         }
         mpr("...and things crawl out!");
