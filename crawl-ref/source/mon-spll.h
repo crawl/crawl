@@ -2176,4 +2176,15 @@
       }
     },
 
+    {  MST_VAPOUR,
+      {
+       SPELL_LIGHTNING_BOLT,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_MELEE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
 #endif
