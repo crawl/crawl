@@ -2164,6 +2164,17 @@ void handle_monster_move(monster* mons)
         beem.target      = mons->target;
         beem.beam_source = mons->mindex();
 
+        // XXX: Otherwise perma-confused monsters can almost never properly
+        // aim spells, since their target is constantly randomized.
+        // This does make them automatically aware of the player in several
+        // situations they otherwise would not, however.
+        if (mons_class_flag(mons->type, M_CONFUSED))
+        {
+            actor* foe = mons->get_foe();
+            if (foe && mons->can_see(foe))
+                beem.target = foe->pos();
+        }
+
         // Prevents unfriendlies from nuking you from offscreen.
         // How nice!
         const bool friendly_or_near =
