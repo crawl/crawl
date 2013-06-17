@@ -124,9 +124,8 @@ DEPTH:  D:20-27, Swamp:5, Snake:5, Shoals:5, Spider:5, Vaults:2-, Crypt, Forest,
 : place_unique(_G, "Boris")
 
 NAME:   uniq_donald
-# XXX: add Vaults:1-4 when finished re-do of vaults.
 TAGS:   lab
-DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Crypt:1-4, Forest:1-4, Blade, Elf, Dwarf, Orc:3-4, Lab
+DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults:1-4, Crypt:1-4, Forest:1-4, Blade, Elf, Dwarf, Orc:3-4, Lab
 : place_unique(_G, "Donald")
 
 NAME:   uniq_duvessa
