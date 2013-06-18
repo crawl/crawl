@@ -43,7 +43,7 @@ for (@files)
         # frenchman/german/finn.  Sorry, polacks and russkies.
         Encode::from_to($_, "CP1252", "UTF-8");
     }
-    $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s;
+    $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s or /^$/;
     print "extra newlines at eof: $file\n" if s/\n+\n$/\n/s;
     $_=expand $_, print "tab: $file\n" if !$tab && /\t/;
     print "spaces at eol: $file\n" if s/ +\n/\n/sg;
