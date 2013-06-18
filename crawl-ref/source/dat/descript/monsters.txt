@@ -936,8 +936,8 @@ dank underground dungeon. {{
         return "Fedhas has suppressed its production of giant spores to " ..
                "protect you from explosions."
     else
-        return "It will occasionally produce giant spore balls, which in " ..
-               "turn will give rise to more ballistomycetes."
+        return "When active it will occasionally produce giant spore balls, " ..
+               "which in turn will give rise to more ballistomycetes."
     end
 }}
 %%%%
