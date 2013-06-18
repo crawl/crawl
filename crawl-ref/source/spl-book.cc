@@ -579,7 +579,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
 
     if (you.species == SP_LAVA_ORC && spell == SPELL_STONESKIN)
         rc = true, form = false;
-    
+
     if (you.form == TRAN_WISP)
     {
         // If we were otherwise allowed to memorise the spell.
