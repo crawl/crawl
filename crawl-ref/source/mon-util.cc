@@ -230,6 +230,9 @@ void init_mon_name_cache()
 
 monster_type get_monster_by_name(string name, bool substring)
 {
+    if (name.empty())
+        return MONS_PROGRAM_BUG;
+
     lowercase(name);
 
     if (!substring)

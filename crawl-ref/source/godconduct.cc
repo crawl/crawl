@@ -975,12 +975,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 penance = level * (known ? 2 : 1);
                 retval = true;
             }
-            else if (you.religion == GOD_TROG)
-            {
-                simple_god_message(" is delighted!");
-                piety_change = 2; // consistent with Burn Spellbooks
-                retval = true;
-            }
             break;
 
         case DID_EXPLORATION:
@@ -1003,15 +997,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_change = piety_denom - 4;
                 piety_denom = max(piety_denom, 1);
                 piety_change = max(piety_change, 0);
-                retval = true;
-            }
-            break;
-
-        case DID_DESTROY_DECK:
-            if (you.religion == GOD_NEMELEX_XOBEH)
-            {
-                piety_change = -level;
-                penance = level * (known ? 2 : 1);
                 retval = true;
             }
             break;
@@ -1077,7 +1062,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
-                "Destroy Deck",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

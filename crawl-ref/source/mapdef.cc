@@ -3665,6 +3665,14 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         }
 
         vector<string> parts = split_string(";", s);
+
+        if (parts.size() == 0)
+        {
+            error = make_stringf("Not enough non-semicolons for '%s' spec.",
+                                 s.c_str());
+            return slot;
+        }
+
         string mon_str = parts[0];
 
         if (parts.size() > 2)

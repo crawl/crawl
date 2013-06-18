@@ -161,6 +161,8 @@ LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
 LUARET1(you_depth, number, you.depth)
+LUARET1(you_depth_fraction, number,
+        (float)you.depth / brdepth[you.where_are_you])
 // [ds] Absolute depth is 1-based for Lua to match things like DEPTH:
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
 // change you.absdepth0 to be 1-based as well.
@@ -460,6 +462,7 @@ static const struct luaL_reg you_clib[] =
     { "where",        you_where },
     { "branch",       you_branch },
     { "depth",        you_depth },
+    { "depth_fraction", you_depth_fraction },
     { "absdepth",     you_absdepth },
     { "is_level_on_stack", you_is_level_on_stack },
 

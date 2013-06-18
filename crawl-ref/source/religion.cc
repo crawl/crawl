@@ -871,10 +871,6 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
         really_dislikes.push_back("you destroy spellbooks");
         break;
 
-    case GOD_NEMELEX_XOBEH:
-        really_dislikes.push_back("you destroy decks");
-        break;
-
     default:
         break;
     }
@@ -1377,7 +1373,7 @@ static bool _give_nemelex_gift(bool forced = false)
                                    true, 1, MAKE_ITEM_RANDOM_RACE,
                                    0, 0, GOD_NEMELEX_XOBEH);
 
-        move_item_to_grid(&thing_created, you.pos(), NON_MONSTER, true);
+        move_item_to_grid(&thing_created, you.pos(), true);
 
         if (thing_created != NON_ITEM)
         {
@@ -2268,8 +2264,7 @@ bool do_god_gift(bool forced)
                     // reason.
                     mark_had_book(gift);
 
-                    move_item_to_grid(&thing_created, you.pos(), NON_MONSTER,
-                                       true);
+                    move_item_to_grid(&thing_created, you.pos(), true);
 
                     if (thing_created != NON_ITEM)
                         success = true;

@@ -2051,43 +2051,6 @@ void melee_attack::set_attack_verb()
             else
                 attack_verb = "shred";
             break;
-        case TRAN_STATUE:
-        case TRAN_LICH:
-            if (you.has_usable_claws())
-            {
-                if (damage_done < HIT_WEAK)
-                    attack_verb = "scratch";
-                else if (damage_done < HIT_MED)
-                    attack_verb = "claw";
-                else if (damage_done < HIT_STRONG)
-                    attack_verb = "mangle";
-                else
-                    attack_verb = "eviscerate";
-                break;
-            }
-            else if (you.has_usable_tentacles())
-            {
-                if (damage_done < HIT_WEAK)
-                    attack_verb = "tentacle-slap";
-                else if (damage_done < HIT_MED)
-                    attack_verb = "bludgeon";
-                else if (damage_done < HIT_STRONG)
-                    attack_verb = "batter";
-                else
-                    attack_verb = "thrash";
-                break;
-            }
-            // or fall-through
-        case TRAN_FUNGUS:
-        case TRAN_ICE_BEAST:
-        case TRAN_JELLY: // ?
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_MED)
-                attack_verb = "punch";
-            else
-                attack_verb = "pummel";
-            break;
         case TRAN_TREE:
             if (damage_done < HIT_WEAK)
                 attack_verb = "hit";
@@ -2117,8 +2080,38 @@ void melee_attack::set_attack_verb()
                 attack_verb = "engulf";
             break;
             break;
+        case TRAN_STATUE:
+        case TRAN_LICH:
+            if (you.has_usable_claws())
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "claw";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "mangle";
+                else
+                    attack_verb = "eviscerate";
+                break;
+            }
+            else if (you.has_usable_tentacles())
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "tentacle-slap";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "bludgeon";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "batter";
+                else
+                    attack_verb = "thrash";
+                break;
+            }
+            // or fall-through
         case TRAN_NONE:
         case TRAN_APPENDAGE:
+        case TRAN_FUNGUS:
+        case TRAN_ICE_BEAST:
+        case TRAN_JELLY: // ?
             if (you.damage_type() == DVORP_CLAWING)
             {
                 if (damage_done < HIT_WEAK)
@@ -2143,10 +2136,48 @@ void melee_attack::set_attack_verb()
             }
             else
             {
-                if (damage_done < HIT_MED)
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "hit";
+                else if (damage_done < HIT_MED)
                     attack_verb = "punch";
-                else
+                else if (damage_done < HIT_STRONG)
                     attack_verb = "pummel";
+                // XXX: detect this better
+                else if (defender->is_monster()
+                         && (get_mon_shape(defender->as_monster()->type)
+                               == MON_SHAPE_INSECT
+                             || get_mon_shape(defender->as_monster()->type)
+                                == MON_SHAPE_INSECT_WINGED
+                             || get_mon_shape(defender->as_monster()->type)
+                                == MON_SHAPE_CENTIPEDE
+                             || get_mon_shape(defender->as_monster()->type)
+                                == MON_SHAPE_ARACHNID))
+                {
+                    attack_verb = "squash";
+                    verb_degree = "like a proverbial bug";
+                }
+                else
+                {
+                    const char* punch_desc[][2] =
+                        {{"pound",     "into fine dust"},
+                         {"pummel",    "like a punching bag"},
+                         {"pulverise", ""},
+                         {"squash",    "like a bug"}};
+                    const int choice = random2(ARRAYSZ(punch_desc));
+                    // XXX: could this distinction work better?
+                    if (choice == 0
+                        && defender->is_monster()
+                        && mons_has_blood(defender->as_monster()->type))
+                    {
+                        attack_verb = "beat";
+                        verb_degree = "into a bloody pulp";
+                    }
+                    else
+                    {
+                        attack_verb = punch_desc[choice][0];
+                        verb_degree = punch_desc[choice][1];
+                    }
+                }
             }
             break;
         } // transformations
@@ -5124,7 +5155,7 @@ void melee_attack::do_spines()
                      defender->name(DESC_ITS).c_str());
             }
             if (attacker->is_player())
-                ouch(hurt, defender->mindex(), KILLED_BY_MONSTER);
+                ouch(hurt, defender->mindex(), KILLED_BY_SPINES);
             else
                 attacker->hurt(defender, hurt);
         }

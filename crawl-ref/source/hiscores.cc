@@ -631,7 +631,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
-    "mirror_damage",
+    "mirror_damage", "spines",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1174,7 +1174,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION
-            || death_type == KILLED_BY_ROLLING)
+            || death_type == KILLED_BY_ROLLING
+            || death_type == KILLED_BY_SPINES)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != MONS_NO_MONSTER)
     {
@@ -1935,6 +1936,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "rolling " + death_source_desc();
         else
             desc += "Rolled over by " + death_source_desc();
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_SPINES:
+        if (terse)
+            desc += apostrophise(death_source_desc()) + " spines";
+        else
+            desc += "Impaled on " + apostrophise(death_source_desc()) + " spines" ;
         needs_damage = true;
         break;
 

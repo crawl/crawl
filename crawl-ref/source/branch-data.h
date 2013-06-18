@@ -1,11 +1,9 @@
-#ifndef BRANCHDATA_H
-#define BRANCHDATA_H
-
 #include "colour.h"
 #include "enum.h"
 #include "mon-pick.h"
 
-const Branch branches[NUM_BRANCHES] = {
+const Branch branches[NUM_BRANCHES] =
+{
     // Branch struct:
     //  branch id, parent branch, mindepth, maxdepth, depth, absdepth,
     //  branch flags, level flags
@@ -296,5 +294,3 @@ const Branch branches[NUM_BRANCHES] = {
       '9', false, 0 },
 #endif
 };
-
-#endif

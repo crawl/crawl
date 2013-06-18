@@ -1335,7 +1335,7 @@ bool monster::drop_item(int eslot, int near)
                  pitem->name(DESC_A).c_str());
         }
 
-        if (!move_item_to_grid(&item_index, pos(), mindex(), swimming()))
+        if (!move_item_to_grid(&item_index, pos(), swimming()))
         {
             // Re-equip item if we somehow failed to drop it.
             if (was_unequipped)

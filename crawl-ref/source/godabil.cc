@@ -1491,12 +1491,8 @@ bool trog_burn_spellbooks()
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, false); ri; ++ri)
     {
-        // This code has been rearranged a bit from its original form so that
-        // with the new handling of spellbook destruction god conducts, the
-        // message order "The spellbook bursts into flames! Trog is delighted!"
-        // is preserved.
         const unsigned short cloud = env.cgrid(*ri);
-        vector<int> targets;
+        int count = 0;
         int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
         {
@@ -1532,14 +1528,14 @@ bool trog_burn_spellbooks()
             rarity += book_rarity(si->sub_type);
 
             dprf("Burned spellbook rarity: %d", rarity);
-
-            targets.push_back(si.link());
+            destroy_spellbook(*si);
+            item_was_destroyed(*si);
+            destroy_item(si.link());
+            count++;
         }
 
-        if (targets.size())
+        if (count)
         {
-            const int count = targets.size();
-
             if (cloud != EMPTY_CLOUD)
             {
                 // Reinforce the cloud.
@@ -1547,31 +1543,23 @@ bool trog_burn_spellbooks()
                 const int extra_dur = count + random2(rarity / 2);
                 env.cloud[cloud].decay += extra_dur * 5;
                 env.cloud[cloud].set_whose(KC_YOU);
-            }
-            else
-            {
-                mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
-                     count == 1 ? ""  : "s",
-                     count == 1 ? "s" : "");
+                continue;
             }
 
-            for (vector<int>::iterator it = targets.begin();
-                 it != targets.end(); it++)
-            {
-                item_was_destroyed(mitm[*it], MHITYOU);
-                destroy_item(*it);
-            }
+            const int duration = min(4 + count + random2(rarity/2), 23);
+            place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
-            if (cloud == EMPTY_CLOUD)
-            {
-                const int duration = min(4 + count + random2(rarity/2), 23);
-                place_cloud(CLOUD_FIRE, *ri, duration, &you);
-            }
+            mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
+                 count == 1 ? ""  : "s",
+                 count == 1 ? "s" : "");
         }
     }
 
     if (totalpiety)
-        ; // Handled by destroy_item now.
+    {
+        simple_god_message(" is delighted!", GOD_TROG);
+        gain_piety(totalpiety);
+    }
     else if (totalblocked)
     {
         mprf("The spellbook%s fail%s to ignite!",
@@ -1870,7 +1858,7 @@ bool kiku_take_corpse()
         if (item_is_stationary(item))
             continue;
 
-        item_was_destroyed(item, MHITYOU);
+        item_was_destroyed(item);
         destroy_item(i);
         return true;
     }
@@ -2045,7 +2033,7 @@ int fedhas_fungal_bloom()
                     turn_corpse_into_skeleton(*j);
                 else
                 {
-                    item_was_destroyed(*j, MHITYOU);
+                    item_was_destroyed(*j);
                     destroy_item(j->index());
                 }
 
@@ -2789,7 +2777,7 @@ int fedhas_corpse_spores(beh_type attitude, bool interactive)
             turn_corpse_into_skeleton(*positions[i]);
         else
         {
-            item_was_destroyed(*positions[i], MHITYOU);
+            item_was_destroyed(*positions[i]);
             destroy_item(positions[i]->index());
         }
     }

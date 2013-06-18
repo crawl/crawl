@@ -17,6 +17,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "beam.h"
 #include "coord.h"
 #include "coordit.h"
@@ -24,6 +25,7 @@
 #include "godabil.h"
 #include "stuff.h"
 #include "env.h"
+#include "items.h"
 #include "libutil.h"
 #include "mon-behv.h"
 #include "mon-util.h"
@@ -1058,13 +1060,6 @@ spell_type zap_type_to_spell(zap_type zap)
 
 static bool _spell_is_empowered(spell_type spell)
 {
-    if ((you.religion == GOD_VEHUMET)
-        && vehumet_supports_spell(spell)
-        && piety_rank() > 2)
-    {
-        return true;
-    }
-
     switch (spell)
     {
     case SPELL_STONESKIN:
@@ -1146,15 +1141,17 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         if (you.racial_permanent_flight())
             return true;
-        if (transient && you.flight_mode())
+        if (transient && you.permanent_flight())
             return true;
         break;
     case SPELL_INVISIBILITY:
-        if (transient && (you.duration[DUR_INVIS] > 0 || you.backlit()))
+        if (transient && you.backlit())
             return true;
         break;
     case SPELL_CONTROL_TELEPORT:
-        if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
+        // Can be cast in advance in most places with -cTele,
+        // but useless once the orb is picked up.
+        if (player_has_orb())
             return true;
         break;
     case SPELL_DARKNESS:
@@ -1183,6 +1180,15 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
 
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (!you.stand_on_solid_ground()
+            || you.duration[DUR_LIQUEFYING]
+            || liquefied(you.pos()))
+        {
+            return true;
+        }
+        break;
+
     default:
         break; // quash unhandled constants warnings
     }
@@ -1193,12 +1199,6 @@ bool spell_is_useless(spell_type spell, bool transient)
 // This function takes a spell, and determines what color it should be
 // highlighted with. You shouldn't have to touch this unless you want
 // to add new highlighting options.
-//
-// as you can see, the functions it uses to determine highlights are:
-//       god_hates_spell(spell, god)
-//       god_likes_spell(spell, god)
-//       _spell_is_empowered(spell)
-//       spell_is_useless(spell, transient)
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool rod_spell)
 {

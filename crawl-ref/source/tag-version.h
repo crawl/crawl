@@ -47,6 +47,7 @@ enum tag_minor_version
     TAG_MINOR_TRAVEL_ALLY_PACE,    // Pace travel to slowest ally setting
     TAG_MINOR_AUTOMATIC_MANUALS,   // Manuals are now always studied
     TAG_MINOR_RM_GARGOYLE_DR,      // Gargoyle DR is redundant.
+    TAG_MINOR_STAT_ZERO,           // Stat zero doesn't cause death.
     TAG_MINOR_BOX_OF_BEASTS_CHARGES, // Box of Beasts counts its charges.
     TAG_MINOR_TOME_OVERHAUL,       // Tome of destruction replacement
     NUM_TAG_MINORS,

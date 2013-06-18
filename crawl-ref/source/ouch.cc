@@ -1078,7 +1078,7 @@ static void _place_player_corpse(bool explode)
     corpse.props["ac"].get_int() = you.armour_class();
     mitm[o] = corpse;
 
-    move_item_to_grid(&o, you.pos(), MHITYOU, !you.in_water());
+    move_item_to_grid(&o, you.pos(), !you.in_water());
 }
 
 
@@ -1089,15 +1089,6 @@ static void _wizard_restore_life()
         unrot_hp(9999);
     if (you.hp <= 0)
         set_hp(you.hp_max);
-    for (int i = 0; i < NUM_STATS; ++i)
-    {
-        if (you.stat(static_cast<stat_type>(i)) <= 0)
-        {
-            you.stat_loss[i] = 0;
-            you.stat_zero[i] = 0;
-            you.redraw_stats[i] = true;
-        }
-    }
 }
 #endif
 

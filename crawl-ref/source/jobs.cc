@@ -91,7 +91,18 @@ job_type get_job_by_name(const char *name)
     return cl;
 }
 
+// Determines if a job is valid in a saved game. This is a pure bounds check.
 bool is_valid_job(job_type job)
 {
     return (job >= 0 && job < NUM_JOBS);
+}
+
+// Determines if a job is valid for a new game.
+bool is_job_valid_choice(job_type job)
+{
+    return is_valid_job(job)
+#if TAG_MAJOR_VERSION == 34
+        && job != JOB_STALKER && job != JOB_JESTER && job != JOB_PRIEST
+#endif
+        ;
 }

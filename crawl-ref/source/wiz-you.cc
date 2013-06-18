@@ -1076,9 +1076,7 @@ void wizard_transform()
                 mpr("The force is weak with this one.");
         }
         else
-        {
             canned_msg(MSG_OK);
-        }
     }
 }
 

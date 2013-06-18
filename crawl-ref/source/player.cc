@@ -3610,6 +3610,15 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
+            case SP_GARGOYLE:
+                if (!(you.experience_level % 4))
+                {
+                    modify_stat((coinflip() ? STAT_STR
+                                            : STAT_INT), 1, false,
+                                "level gain");
+                }
+                break;
+
             default:
                 break;
             }
@@ -5682,7 +5691,6 @@ void player::init()
     stat_loss.init(0);
     base_stats.init(0);
     stat_zero.init(0);
-    stat_zero_cause.init("");
 
     hunger          = HUNGER_DEFAULT;
     hunger_state    = HS_SATIATED;
@@ -6546,7 +6554,7 @@ int player::gdr_perc() const
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
     return (player_evasion(evit)
-            - (const_cast<player *>(this)->is_constricted() ? 3 : 0)
+            - (is_constricted() ? 3 : 0)
             - ((!act || act->visible_to(this)
                 || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
             - (you_are_delayed()

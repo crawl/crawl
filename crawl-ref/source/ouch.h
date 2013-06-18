@@ -56,6 +56,7 @@ enum kill_method_type
     KILLED_BY_HEADBUTT,
     KILLED_BY_ROLLING,
     KILLED_BY_MIRROR_DAMAGE,
+    KILLED_BY_SPINES,
 
     NUM_KILLBY
 };

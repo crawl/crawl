@@ -720,7 +720,15 @@ void actor::handle_constriction()
         else if (damage < HIT_STRONG)
             exclams = "!!";
         else
+        {
+            int tmpdamage = damage;
             exclams = "!!!";
+            while (tmpdamage >= 2*HIT_STRONG)
+            {
+                exclams += "!";
+                tmpdamage >>= 1;
+            }
+        }
 
         if (is_player() || you.can_see(this))
         {

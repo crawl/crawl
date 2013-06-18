@@ -3,9 +3,6 @@
  * @brief Zap definitions. See zap_info struct in beam.cc.
 **/
 
-#ifndef ZAP_DATA_H
-#define ZAP_DATA_H
-
 /*
 struct zap_info
 {
@@ -495,7 +492,7 @@ struct zap_info
     200,
     new calcdice_calculator<3, 8, 3, 5>,
     new tohit_calculator<20, 1, 10>,
-    RED,
+    LIGHTRED,
     false,
     BEAM_HELLFIRE,
     DCHAR_FIRED_ZAP,
@@ -1115,5 +1112,3 @@ struct zap_info
     false,
     3
 },
-
-#endif
