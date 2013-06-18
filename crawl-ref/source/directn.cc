@@ -578,36 +578,26 @@ void full_describe_view()
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
     string title = "";
-    string action = "";
     if (!list_mons.empty())
     {
         title  = "Monsters";
-        action = "view"; // toggle views monster description
     }
-    bool nonmons = false;
     if (!list_items.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Items";
-        nonmons = true;
     }
     if (!list_features.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Features";
-        nonmons = true;
     }
-    if (nonmons)
-    {
-        if (!action.empty())
-            action += "/";
-        action += "travel"; // toggle travels to items/features
-    }
+
     title = "Visible " + title;
-    string title1 = title + " (select to " + action + ", '!' to examine):";
-    title += " (select for more detail, '!' to " + action + "):";
+    string title1 = title + " (select to view/travel, '!' to examine):";
+    title += " (select for more detail, '!' to view/travel):";
 
     desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
     desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
@@ -772,7 +762,7 @@ void full_describe_view()
                 redraw_screen();
                 mesclr();
             }
-            else // ACT_EXECUTE -> inspect monster 
+            else // ACT_EXECUTE -> view/travel
             {
                 do_look_around(m->pos);
                 break;
@@ -784,9 +774,9 @@ void full_describe_view()
             item_def* i = static_cast<item_def*>(sel[0]->data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_item(*i);
-            else // ACT_EXECUTE -> travel to item
+            else // ACT_EXECUTE -> view/travel
             {
-                start_travel(i->pos);
+                do_look_around(i->pos);
                 break;
             }
         }
@@ -799,9 +789,9 @@ void full_describe_view()
 
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_feature_wide(c);
-            else // ACT_EXECUTE -> travel to feature
+            else // ACT_EXECUTE -> view/travel
             {
-                start_travel(c);
+                do_look_around(c);
                 break;
             }
         }
