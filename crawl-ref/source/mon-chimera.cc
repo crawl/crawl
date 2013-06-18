@@ -55,6 +55,27 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
         mon->props["chimera_batty"].get_int() = partnum;
     else if (mons_flies(&dummy))
         mon->props["chimera_wings"].get_int() = partnum;
+
+    // Apply spells but only for 2nd and 3rd parts since 1st part is
+    // already supported by the original define_monster call
+    if (partnum > 1)
+    {
+        // Check monster's spells
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
+            if (dummy.spells[i] != SPELL_NO_SPELL)
+                continue;
+            // Find a free spell slot on the chimera
+            for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+            {
+                if (mon->spells[j] == SPELL_NO_SPELL)
+                {
+                    mon->spells[j] = dummy.spells[i];
+                    break;
+                }
+            }
+        }
+    }
 }
 
 monster_type get_chimera_part(const monster* mon, int partnum)
