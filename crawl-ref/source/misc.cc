@@ -1462,6 +1462,11 @@ bool go_berserk(bool intentional, bool potion)
     return true;
 }
 
+// HACK ALERT: In the following several functions, want_move is true if the
+// player is travelling. If that is the case, things must be considered one
+// square closer to the player, since we don't yet know where the player will
+// be next turn.
+
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
 static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
@@ -1645,6 +1650,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             const int cloudidx = env.cgrid(you.pos());
             const cloud_type type = env.cloud[cloudidx].type;
 
+            // Temporary immunity allows travelling through a cloud but not
+            // resting in it.
             if (is_damaging_cloud(type, want_move))
             {
                 if (announce)
