@@ -3014,6 +3014,9 @@ bool bolt::is_harmless(const monster* mon) const
     case BEAM_MEPHITIC:
         return mon->res_poison() > 0 || mon->is_unbreathing();
 
+    case BEAM_GHOSTLY_FLAME:
+        return mon->holiness() == MH_UNDEAD;
+
     default:
         return false;
     }
