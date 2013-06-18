@@ -1663,23 +1663,6 @@ static void _print_friendly_pickup_setting(bool was_changed)
         mprf(MSGCH_ERROR, "Your allies%s are collecting bugs!", now.c_str());
 }
 
-static void _do_look_around()
-{
-    dist lmove;   // Will be initialised by direction().
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.just_looking = true;
-    args.needs_path = false;
-    args.target_prefix = "Here";
-    args.may_target_monster = "Move the cursor around to observe a square.";
-    direction(lmove, args);
-    if (lmove.isValid && lmove.isTarget && !lmove.isCancel
-        && !crawl_state.arena_suspended)
-    {
-        start_travel(lmove.target);
-    }
-}
-
 static void _do_remove_armour()
 {
     if (you.species == SP_FELID)
@@ -1962,7 +1945,7 @@ void process_command(command_type cmd)
     case CMD_EXAMINE_OBJECT:       examine_object();         break;
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
-    case CMD_LOOK_AROUND:          _do_look_around();        break;
+    case CMD_LOOK_AROUND:          do_look_around();         break;
     case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read_scroll();            break;

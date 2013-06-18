@@ -492,7 +492,8 @@ direction_chooser::direction_chooser(dist& moves_,
     behaviour(args.behaviour),
     cancel_at_self(args.cancel_at_self),
     show_floor_desc(args.show_floor_desc),
-    hitfunc(args.hitfunc)
+    hitfunc(args.hitfunc),
+    default_place(args.default_place)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;
@@ -529,8 +530,6 @@ public:
     void print(const string &str) { cprintf("%s", str.c_str()); }
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
-
-static void _describe_monster(const monster_info& mon);
 
 // Lists all the monsters and items currently in view by the player.
 // TODO: Allow sorting of items lists.
@@ -773,10 +772,10 @@ void full_describe_view()
                 redraw_screen();
                 mesclr();
             }
-            else // ACT_EXECUTE, here used to display monster status.
+            else // ACT_EXECUTE -> inspect monster 
             {
-                _describe_monster(*m);
-                getchm();
+                do_look_around(m->pos);
+                break;
             }
         }
         else if (quant == 2)
@@ -822,6 +821,24 @@ void full_describe_view()
     tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
+}
+
+void do_look_around(const coord_def &whence)
+{
+    dist lmove;   // Will be initialised by direction().
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.just_looking = true;
+    args.needs_path = false;
+    args.target_prefix = "Here";
+    args.may_target_monster = "Move the cursor around to observe a square.";
+    args.default_place = whence;
+    direction(lmove, args);
+    if (lmove.isValid && lmove.isTarget && !lmove.isCancel
+        && !crawl_state.arena_suspended)
+    {
+        start_travel(lmove.target);
+    }
 }
 
 
@@ -2036,7 +2053,9 @@ bool direction_chooser::choose_direction()
     moves.delta.reset();
 
     // Find a default target.
-    set_target(Options.default_target ? find_default_target() : you.pos());
+    set_target(!default_place.origin()  ? default_place
+               : Options.default_target ? find_default_target() : you.pos());
+
     objfind_pos = monsfind_pos = target();
 
     // If requested, show the beam on startup.
