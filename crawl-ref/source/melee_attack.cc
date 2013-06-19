@@ -1031,9 +1031,8 @@ bool melee_attack::attack()
             // wielded and end the turn.
             if (Options.auto_switch && !wielded_weapon_check(weapon, true))
                 for (int i = 0; i <= 1; ++i)
-                    if (is_melee_weapon(you.inv[i]))
-                        if (wield_weapon(true, i))
-                            return false;
+                    if (is_melee_weapon(you.inv[i]) && wield_weapon(true, i))
+                        return false;
         }
 
         you.pet_target = attacker->mindex();
