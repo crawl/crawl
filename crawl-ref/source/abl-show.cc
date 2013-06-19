@@ -3394,6 +3394,8 @@ static int _find_ability_slot(const ability_def &abil)
     if (abil.flags & ABFLAG_ZOTDEF)
         first_slot = 5 + 26; // capital F, for *some* memory compat.
 
+    if (abil.ability == ABIL_ZIN_CURE_ALL_MUTATIONS)
+        first_slot = 'W' - 'A' + 26;
     if (abil.ability == ABIL_CONVERT_TO_BEOGH)
         first_slot = 'Y' - 'A' + 26;
 
