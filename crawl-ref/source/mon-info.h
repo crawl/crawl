@@ -165,7 +165,8 @@ struct monster_info : public monster_info_base
         return *this;
     }
 
-    void to_string(int count, string& desc, int& desc_colour, bool fullname = true) const;
+    void to_string(int count, string& desc, int& desc_colour,
+                   bool fullname = true, const char *adjective = nullptr) const;
 
     /* only real equipment is visible, miscellany is for mimic items */
     unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];

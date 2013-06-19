@@ -1292,19 +1292,21 @@ void clear_monster_list_colours()
         _monster_list_colours[i] = -1;
 }
 
-void monster_info::to_string(int count, string& desc,
-                             int& desc_colour, bool fullname) const
+void monster_info::to_string(int count, string& desc, int& desc_colour,
+                             bool fullname, const char *adj) const
 {
     ostringstream out;
     _monster_list_colour_type colour_type = _NUM_MLC;
 
+    string adjstr = adj ? string(adj) + " " : "";
+
     if (count == 1)
-        out << full_name();
+        out << adjstr << full_name();
     else
     {
         // TODO: this should be done in a much cleaner way, with code to
         // merge multiple monster_infos into a single common structure
-        out << count << " " << pluralised_name(fullname);
+        out << count << " " << adjstr << pluralised_name(fullname);
     }
 
 #ifdef DEBUG_DIAGNOSTICS
