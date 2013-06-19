@@ -3629,6 +3629,8 @@ string get_monster_equipment_desc(const monster_info& mi,
                 str = "friendly";
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
                 str = "peaceful";
+            else if (mi.is(MB_INSANE))
+                str = "insane";
             else if (mi.attitude != ATT_HOSTILE)
                 str = "neutral";
 
