@@ -1589,6 +1589,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_MASS_CONFUSION:
         return mass_enchantment(ENCH_CONFUSION, powc, fail);
 
+    case SPELL_DISCORD:
+        return mass_enchantment(ENCH_INSANE, powc, fail);
+
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 

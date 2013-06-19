@@ -3281,6 +3281,19 @@ struct spell_desc
 },
 
 {
+    SPELL_DISCORD, "Discord",
+     SPTYP_HEXES,
+     SPFLAG_AREA,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
