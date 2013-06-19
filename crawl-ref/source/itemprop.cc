@@ -1946,6 +1946,11 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
     return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
 }
 
+bool is_melee_weapon(const item_def &weapon)
+{
+    return is_weapon(weapon) && !is_range_weapon(weapon);
+}
+
 //
 // Reaching functions:
 //
