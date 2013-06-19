@@ -2137,13 +2137,14 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             // If examine_mons is true (currently only for the Tiles
             // mouse-over information), set monster's
             // equipment/woundedness/enchantment description as title.
-            string desc         = get_monster_equipment_desc(mi) + ".\n";
+            string desc = uppercase_first(get_monster_equipment_desc(mi))
+                        + ".\n";
             const string wounds = mi.wounds_description_sentence();
             if (!wounds.empty())
-                desc += wounds + "\n";
+                desc += uppercase_first(wounds) + "\n";
             const string constrictions = mi.constriction_description();
             if (!constrictions.empty())
-                desc += constrictions + "\n";
+                desc += "It is " + constrictions + ".\n";
             desc += _get_monster_desc(mi);
 
             inf.title = desc;
@@ -3416,7 +3417,7 @@ static string _mon_enchantments_string(const monster_info& mi)
 
     if (!enchant_descriptors.empty())
     {
-        return string(mi.pronoun(PRONOUN_SUBJECTIVE))
+        return uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
             + " is "
             + comma_separated_line(enchant_descriptors.begin(),
                                    enchant_descriptors.end())
@@ -3504,7 +3505,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 static string _get_monster_desc(const monster_info& mi)
 {
     string text    = "";
-    string pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
+    string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
     if (mi.is(MB_CLINGING))
         text += pronoun + " is clinging to the wall.\n";
@@ -3589,13 +3590,15 @@ static string _get_monster_desc(const monster_info& mi)
 static void _describe_monster(const monster_info& mi)
 {
     // First print type and equipment.
-    string text = get_monster_equipment_desc(mi) + ".";
+    string text = uppercase_first(get_monster_equipment_desc(mi)) + ".";
     const string wounds_desc = mi.wounds_description_sentence();
     if (!wounds_desc.empty())
-        text += " " + wounds_desc;
+        text += " " + uppercase_first(wounds_desc);
     const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
-        text += " " + constriction_desc;
+    {
+        text += " It is" + constriction_desc + ".";
+    }
     mpr(text, MSGCH_EXAMINE);
 
     // Print the rest of the description.
