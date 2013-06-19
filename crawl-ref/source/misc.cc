@@ -2275,7 +2275,13 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     if (mon->friendly())
     {
         if (you.religion == GOD_OKAWARU)
-            adj = "your ally the ";
+        {
+            adj = "your ally ";
+
+            monster_info mi(mon, MILEV_NAME);
+            if (!mi.is(MB_NAME_UNQUALIFIED))
+                adj += "the ";
+        }
         else
             adj = "your ";
         return true;
