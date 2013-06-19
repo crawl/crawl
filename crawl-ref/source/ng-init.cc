@@ -196,7 +196,7 @@ void initialise_temples()
     // altar; they can contain any number of altars, so long as there's
     // at least one vault definition with the tag "overflow_temple_num"
     // (where "num" is the number of altars).
-    for (unsigned int i = 0; i < overflow_gods.size(); i++)
+    for (unsigned int i = 0, size = overflow_gods.size(); i < size; i++)
     {
         const unsigned int level = random_range(2, MAX_OVERFLOW_LEVEL);
 
@@ -209,8 +209,29 @@ void initialise_temples()
         CrawlVector &gods
             = temple[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
 
-        // Only single-altar overflow temples for now.
+        // At least one god.
         gods.push_back((char) overflow_gods[i]);
+
+        // Maybe place a larger overflow temple.
+        if (i == 0 && size > 1 && one_chance_in(10))
+        {
+            unsigned int num_gods = 1;
+
+            // Randomly choose from the sizes which have maps.
+            // FIXME: it would be better to take weights into account.
+            int chance = 0;
+            for (unsigned int j = 2; j <= size; j++)
+            {
+                string mapname = make_stringf("temple_overflow_%d", j);
+                if (!find_maps_for_tag(mapname).empty())
+                    if (one_chance_in(++chance))
+                        num_gods = j;
+            }
+
+            // Add any extra gods (the first was added already).
+            for (; i < num_gods - 1; i++)
+                gods.push_back((char) overflow_gods[i + 1]);
+        }
 
         level_temples.push_back(temple);
     }
