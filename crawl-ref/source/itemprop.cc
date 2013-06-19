@@ -2523,7 +2523,9 @@ int property(const item_def &item, int prop_type)
 
     case OBJ_STAVES:
     case OBJ_RODS:
-        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_CLUB : WPN_STAFF;
+        weapon_sub = (item.base_type == OBJ_RODS) ?
+                         (item.sub_type == ROD_IRON ? WPN_HAMMER : WPN_CLUB)
+                         : WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
             return Weapon_prop[ Weapon_index[weapon_sub] ].dam;
