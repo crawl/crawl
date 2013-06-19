@@ -1752,7 +1752,7 @@ bool monster::wants_weapon(const item_def &weap) const
         return false;
     }
 
-    // Arcane spellcasters don't want -CAST.
+    // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
         && artefact_wpn_property(weap, ARTP_PREVENT_SPELLCASTING))
@@ -1796,7 +1796,7 @@ bool monster::wants_armour(const item_def &item) const
 
 bool monster::wants_jewellery(const item_def &item) const
 {
-    // Arcane spellcasters don't want -CAST.
+    // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(item)
         && artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
