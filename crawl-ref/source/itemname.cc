@@ -1110,10 +1110,10 @@ static const char* rod_type_name(int type)
     case ROD_VENOM:           return "venom";
     case ROD_INACCURACY:      return "inaccuracy";
     case ROD_BLASTING:        return "blasts";
+    case ROD_IRON:            return "iron";
 
     case ROD_DESTRUCTION_I:
     case ROD_DESTRUCTION_II:
-    case ROD_DESTRUCTION_III:
                               return "destruction";
 
     default: return "bugginess";
@@ -1825,6 +1825,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
             if (item_typ == ROD_LIGHTNING)
                 buff << "lightning rod";
+            else if (item_typ == ROD_IRON)
+                buff << "iron rod";
             else
                 buff << "rod of " << rod_type_name(item_typ);
         }
@@ -1942,9 +1944,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 break;
             case ROD_DESTRUCTION_II:
                 buff << " [ice]";
-                break;
-            case ROD_DESTRUCTION_III:
-                buff << " [lightning,fireball,iron]";
                 break;
             }
             break;

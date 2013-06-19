@@ -3099,7 +3099,20 @@ struct spell_desc
 },
 
 {
-    SPELL_NO_SPELL, "nonexistent spell",
+     SPELL_IRON_BLAST, "Iron Blast",
+     SPTYP_CONJURATION | SPTYP_EARTH,
+     SPFLAG_DIR_OR_TARGET,
+     4, // 2-5
+     200,
+     8, 8,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
      1,

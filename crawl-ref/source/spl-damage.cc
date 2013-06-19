@@ -2884,3 +2884,78 @@ spret_type cast_random_blast(int pow, bolt &beam, bool fail)
 
     return result;
 }
+
+spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
+{
+    int prev = 1;
+    if (caster->props.exists("spread_last")
+        && caster->props["spread_last"].get_int() + 1 == you.num_turns)
+    {
+        prev = caster->props["spread_count"].get_int();
+    }
+    int spread = 2 * prev - 1;
+    targetter_spread hitfunc(caster, spell_range(SPELL_IRON_BLAST, pow),
+                             spread);
+
+    hitfunc.set_aim(aim);
+
+    fail_check();
+
+    bolt beam;
+    beam.name              = "iron blast";
+    beam.aux_source        = "iron rod";
+    beam.flavour           = BEAM_ENERGY;
+    beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour            = LIGHTGREY;
+    beam.range             = 1;
+    // Decrease power with each shot
+    beam.hit               = 10 + pow / (20 + 5 * (prev - 1));
+    beam.ac_rule           = AC_PROPORTIONAL;
+    beam.set_agent(caster);
+#ifdef USE_TILE
+    beam.tile_beam = -1;
+#endif
+    beam.draw_delay = 0;
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        beam.draw(p->first);
+    }
+
+    delay(200);
+
+    beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        // beams are incredibly spammy in debug mode
+        if (!actor_at(p->first))
+            continue;
+
+        int arc = hitfunc.arc_length[p->first.range(hitfunc.origin)];
+        ASSERT(arc > 0);
+        dprf("at distance %d, arc length is %d", p->first.range(hitfunc.origin),
+                                                 arc);
+        beam.source = beam.target = p->first;
+        beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
+        beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+        beam.damage = dice_def(spread,
+                               div_rand_round(30 + pow / 6, arc + 2));
+        beam.fire();
+    }
+
+    caster->props["spread_last"].get_int() = you.num_turns;
+    caster->props["spread_count"].get_int() = prev + 1;
+
+    noisy(15 + div_rand_round(spread, ROD_CHARGE_MULT), hitfunc.origin);
+
+    return SPRET_SUCCESS;
+}

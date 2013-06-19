@@ -1090,6 +1090,13 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
             (you.props.exists("thunderbolt_last")
              && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns) ?
                 you.props["thunderbolt_aim"].get_coord() : coord_def());
+    case SPELL_IRON_BLAST:
+        {
+            int spread = (you.props.exists("spread_last")
+                 && you.props["spread_last"].get_int() + 1 == you.num_turns) ?
+                    you.props["spread_count"].get_int() : 1;
+            return new targetter_spread(&you, range, spread * 2 - 1);
+        }
     case SPELL_LRD:
         return new targetter_fragment(&you, pow, range);
     case SPELL_FULMINANT_PRISM:
@@ -1514,6 +1521,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_DAZZLING_SPRAY:
         return cast_dazzling_spray(&you, powc, target, fail);
+
+    case SPELL_IRON_BLAST:
+        return cast_iron_blast(&you, powc, target, fail);
 
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters

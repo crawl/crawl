@@ -1310,6 +1310,15 @@ static bool _handle_rod(monster *mons, bolt &beem)
         }
         break;
 
+    case SPELL_IRON_BLAST:
+        if (mons->props.exists("scatter_last")
+            && mons->props["scatter_last"].get_int() + 1 == you.num_turns)
+        {
+            rate = min(5 * ROD_CHARGE_MULT, (int)rod.plus);
+            mons->props["scatter_mana"].get_int() = rate;
+        }
+        break;
+
     case SPELL_CALL_IMP:
     case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_DEMON:

@@ -1242,6 +1242,12 @@ ice dragon hide:quote
 
 <steam dragon hide:quote>
 %%%%
+iron rod
+
+This rod allows its wielder to fire an explosive spray of iron pellets.
+Firing it on consecutive turns will result in a wider spray but a more
+powerful overall blast.
+%%%%
 javelin
 
 This lightweight spear is designed for throwing and can cause serious injury.

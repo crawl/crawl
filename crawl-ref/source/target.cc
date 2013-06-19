@@ -875,3 +875,121 @@ aff_type targetter_spray::is_affected(coord_def loc)
 
     return affected;
 }
+
+targetter_spread::targetter_spread(const actor* act, int range, int spread)
+{
+    ASSERT(act);
+    agent = act;
+    origin = act->pos();
+    aim = origin;
+    ASSERT_RANGE(range, 1 + 1, you.current_vision + 1);
+    _range = range;
+    _spread = spread;
+    range2 = sqr(range) + 1;
+}
+
+bool targetter_spread::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        // Scrying/glass/tree/grate.
+        if (agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    if ((origin - a).abs() > range2)
+        return notify_fail("Out of range.");
+    return true;
+}
+
+bool targetter_spread::set_aim(coord_def a)
+{
+    aim = a;
+    zapped.clear();
+
+    if (a == origin)
+        return false;
+
+    arc_length.init(0);
+
+    ray_def ray;
+    coord_def p; // ray.pos() does lots of processing, cache it
+
+    // For consistency with beams, we need to
+    _make_ray(ray, origin, aim);
+    double dorig = ray.get_degrees();
+    double dspread = (double)180 * (double)_spread / (PI * (double)LOS_RADIUS);
+    coord_def p1;
+
+    // Currently, marking the two edges of the cone as "definitely" and the
+    // middle is indefinite. Really nothing is totally definite except
+    // a 1-width base of the cone near the case. But this looks slightly
+    // better.
+    ray.set_degrees(dorig - dspread);
+    bool hit = true;
+    while ((origin - (p = ray.pos())).abs() <= range2)
+    {
+        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
+            hit = false;
+        if (hit && p != origin && zapped[p] <= 0)
+        {
+            zapped[p] = AFF_YES;
+            arc_length[origin.range(p)]++;
+        }
+        p1 = p;
+        ray.advance();
+    }
+
+    _make_ray(ray, origin, aim);
+    coord_def p2;
+    ray.set_degrees(dorig + dspread);
+    hit = true;
+    while ((origin - (p = ray.pos())).abs() <= range2)
+    {
+        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
+            hit = false;
+        if (hit && p != origin && zapped[p] <= 0)
+        {
+            zapped[p] = AFF_YES;
+            arc_length[origin.range(p)]++;
+        }
+        p2 = p;
+        ray.advance();
+    }
+
+    coord_def a1 = p1 - origin;
+    coord_def a2 = p2 - origin;
+    if (left_of(a2, a1))
+        swapv(a1, a2);
+
+    for (int x = -LOS_RADIUS; x <= LOS_RADIUS; ++x)
+        for (int y = -LOS_RADIUS; y <= LOS_RADIUS; ++y)
+        {
+            if (sqr(x) + sqr(y) > range2)
+                continue;
+            coord_def r(x, y);
+            if (left_of(a1, r) && left_of(r, a2))
+            {
+                (p = r) += origin;
+                if (zapped.find(p) == zapped.end())
+                    arc_length[r.range()]++;
+                if (zapped[p] <= 0 && cell_see_cell(origin, p, LOS_NO_TRANS))
+                    zapped[p] = AFF_MAYBE;
+            }
+        }
+
+    zapped[origin] = AFF_NO;
+
+    return true;
+}
+
+aff_type targetter_spread::is_affected(coord_def loc)
+{
+    if (loc == aim)
+        return zapped[loc] ? AFF_YES : AFF_TRACER;
+
+    if ((loc - origin).abs() > range2)
+        return AFF_NO;
+
+    return zapped[loc];
+}
