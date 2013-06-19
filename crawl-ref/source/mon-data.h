@@ -4180,7 +4180,7 @@ static monsterentry mondata[] = {
     M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS | M_FLEES,
     MR_NO_FLAGS,
     800, 9, MONS_BEAR, MONS_BLACK_BEAR, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4},
+    { {AT_BITE, AF_PLAIN, 9}, {AT_CLAW, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
        AT_NO_ATK },
     { 6, 3, 3, 0 },
     2, 8, MST_BERSERK_ESCAPE, CE_CLEAN, Z_SMALL, S_GROWL,
