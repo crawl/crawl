@@ -3056,6 +3056,7 @@ enum shop_type
     SHOP_SCROLL,
     SHOP_GENERAL,
     SHOP_MISCELLANY,
+    SHOP_MISC_ANTIQUE,
     NUM_SHOPS, // must remain last 'regular' member {dlb}
     SHOP_UNASSIGNED = 100,
     SHOP_RANDOM,

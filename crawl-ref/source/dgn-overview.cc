@@ -170,7 +170,8 @@ static string shoptype_to_string(shop_type s)
     case SHOP_FOOD:            return "%";
     case SHOP_DISTILLERY:      return "!";
     case SHOP_SCROLL:          return "?";
-    case SHOP_MISCELLANY:            return "}";
+    case SHOP_MISCELLANY:      return "}";
+    case SHOP_MISC_ANTIQUE:    return "<yellow>}</yellow>";
     default:                   return "x";
     }
 }

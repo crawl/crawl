@@ -1031,11 +1031,13 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
     return bought_something;
 }
 
+// Used as a psynonym for "not an antique shop"
 bool shoptype_identifies_stock(shop_type type)
 {
     return (type != SHOP_WEAPON_ANTIQUE
             && type != SHOP_ARMOUR_ANTIQUE
-            && type != SHOP_GENERAL_ANTIQUE);
+            && type != SHOP_GENERAL_ANTIQUE
+            && type != SHOP_MISC_ANTIQUE);
 }
 
 static bool _purchase(int shop, int item_got, int cost, bool id)
@@ -2439,6 +2441,8 @@ static string _shop_type_name(shop_type type)
             return "General Store";
         case SHOP_MISCELLANY:
             return "Gadget";
+        case SHOP_MISC_ANTIQUE:
+            return "Curiosities";
         default:
             return "Bug";
     }

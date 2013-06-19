@@ -66,6 +66,7 @@
 #include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "shopping.h"
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
@@ -5456,9 +5457,7 @@ static void _place_spec_shop(const coord_def& where,
 
     if (env.shop[i].type == SHOP_FOOD)
         env.shop[i].greed = 10 + random2(5);
-    else if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-             && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-             && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
+    else if (shoptype_identifies_stock(env.shop[i].type))
     {
         env.shop[i].greed = 10 + random2(5) + random2(level_number / 2);
     }
@@ -5516,12 +5515,8 @@ static void _place_spec_shop(const coord_def& where,
 
     for (j = 0; j < plojy; j++)
     {
-        if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-            && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-            && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
-        {
+        if (shoptype_identifies_stock(env.shop[i].type))
             item_level = level_number + random2((level_number + 1) * 2);
-        }
         else
             item_level = level_number + random2((level_number + 1) * 3);
 
@@ -5597,12 +5592,8 @@ static void _place_spec_shop(const coord_def& where,
         // Set object 'position' (gah!) & ID status.
         item.pos = stock_loc;
 
-        if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-            && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-            && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
-        {
+        if (shoptype_identifies_stock(env.shop[i].type))
             set_ident_flags(item, ISFLAG_IDENT_MASK);
-        }
     }
 
     env.shop[i].pos = where;
@@ -5650,6 +5641,10 @@ static object_class_type _item_in_shop(shop_type shop_type)
     case SHOP_SCROLL:
         return OBJ_SCROLLS;
 
+    case SHOP_MISC_ANTIQUE:
+        if (one_chance_in(3))
+            return OBJ_RODS;
+        // *** deliberate fall through here ***
     case SHOP_MISCELLANY:
         return OBJ_MISCELLANY;
 

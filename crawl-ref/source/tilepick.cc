@@ -167,6 +167,7 @@ static tileidx_t _tileidx_shop(coord_def where)
         case SHOP_GENERAL:
         case SHOP_GENERAL_ANTIQUE:
         case SHOP_MISCELLANY:
+        case SHOP_MISC_ANTIQUE:
             return TILE_SHOP_GENERAL;
         default:
             return TILE_DNGN_ERROR;
