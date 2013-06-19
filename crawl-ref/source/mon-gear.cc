@@ -1409,7 +1409,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_SPRIGGAN_DEFENDER:
     case MONS_THE_ENCHANTRESS:
-        // High end gear, but alas, with an extra chance for distortion.
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LAJATANG,    // best spriggan weapon
@@ -1419,7 +1418,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_FLAIL,       // best ordinary 1-handed
                                        -1);
         level = MAKE_GOOD_ITEM;
-        if (one_chance_in(mon->type == MONS_THE_ENCHANTRESS ? 4 : 10))
+        if (mon->type == MONS_THE_ENCHANTRESS && one_chance_in(6))
         {
             force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
