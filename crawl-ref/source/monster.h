@@ -299,7 +299,7 @@ public:
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
     void go_berserk(bool intentional, bool potion = false);
-    void go_frenzy(actor *source);
+    bool go_frenzy(actor *source);
     bool berserk() const;
     bool berserk_or_insane() const;
     bool has_lifeforce() const;

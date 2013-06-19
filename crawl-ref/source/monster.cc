@@ -2987,10 +2987,10 @@ void monster::attacking(actor * /* other */)
 }
 
 // Sends a monster into a frenzy.
-void monster::go_frenzy(actor *source)
+bool monster::go_frenzy(actor *source)
 {
     if (!can_go_frenzy())
-        return;
+        return false;
 
     if (has_ench(ENCH_SLOW))
     {
@@ -3019,6 +3019,8 @@ void monster::go_frenzy(actor *source)
     if (simple_monster_message(this, " flies into a frenzy!"))
         // Xom likes monsters going insane.
         xom_is_stimulated(friendly() ? 25 : 100);
+
+    return true;
 }
 
 void monster::go_berserk(bool /* intentional */, bool /* potion */)

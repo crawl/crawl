@@ -233,6 +233,11 @@ Dig spell
 
 This spell digs a tunnel through unworked rock.
 %%%%
+Discord spell
+
+This spell drives nearby creatures into an insane frenzy, mercilessly
+attacking anything and everything nearby with great strength and speed.
+%%%%
 Disjunction spell
 
 This spell destabilizes the space in a sphere around you for a while, causing

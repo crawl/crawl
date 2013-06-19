@@ -1906,6 +1906,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         return true;
     }
     else if (wh_enchant == ENCH_CONFUSION
+             || wh_enchant == ENCH_INSANE
              || mons->holiness() == MH_NATURAL)
     {
         if (wh_enchant == ENCH_CONFUSION
@@ -1916,6 +1917,12 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 
         if (wh_enchant == ENCH_FEAR
             && mons->friendly())
+        {
+            return true;
+        }
+
+        if (wh_enchant == ENCH_INSANE
+            && !mons->can_go_frenzy())
         {
             return true;
         }
@@ -1976,7 +1983,9 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
         if (resisted)
             continue;
 
-        if (mi->add_ench(mon_enchant(wh_enchant, 0, &you)))
+        if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
+            || (wh_enchant != ENCH_INSANE
+                && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
             // Do messaging.
             const char* msg;
