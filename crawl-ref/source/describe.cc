@@ -1736,7 +1736,7 @@ string get_item_description(const item_def &item, bool verbose,
     ostringstream description;
 
     if (!dump)
-        description << item.name(DESC_INVENTORY_EQUIP) << ".";
+        description << uppercase_first(item.name(DESC_INVENTORY_EQUIP)) << ".";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!dump)
