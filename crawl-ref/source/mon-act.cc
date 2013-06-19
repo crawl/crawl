@@ -260,6 +260,11 @@ static void _swim_or_move_energy(monster* mon, bool diag = false)
                       diag ? 10 : 1, diag ? 14 : 1);
 }
 
+static bool _unfriendly_or_insane(const monster* mon)
+{
+    return !mon->wont_attack() || mon->has_ench(ENCH_INSANE);
+}
+
 // Check up to eight grids in the given direction for whether there's a
 // monster of the same alignment as the given monster that happens to
 // have a ranged attack. If this is true for the first monster encountered,
@@ -282,7 +287,8 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
         {
             // Hostile monsters of normal intelligence only move aside for
             // monsters of the same type.
-            if (mons_intel(mon) <= I_NORMAL && !mon->wont_attack()
+            if (mons_intel(mon) <= I_NORMAL
+                && _unfriendly_or_insane(mon)
                 && mons_genus(mon->type) != mons_genus(ally->type))
             {
                 return false;
@@ -321,7 +327,8 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
 
         // Hostile monsters of normal intelligence only move aside for
         // monsters of the same genus.
-        if (mons_intel(mon) <= I_NORMAL && !mon->wont_attack()
+        if (mons_intel(mon) <= I_NORMAL
+            && _unfriendly_or_insane(mon)
             && mons_genus(mon->type) != mons_genus(ally->type))
         {
             continue;
@@ -666,7 +673,7 @@ static void _handle_movement(monster* mons)
                                        coord_def(-mmov.x, 0),
                                        coord_def(-mmov.x, 1))
                     || mons_intel(mons) >= I_NORMAL
-                       && !mons->wont_attack()
+                       && _unfriendly_or_insane(mons)
                        && _ranged_allied_monster_in_dir(mons,
                                                         coord_def(-mmov.x, 0))))
             {
@@ -684,7 +691,7 @@ static void _handle_movement(monster* mons)
                                        coord_def(0, -mmov.y),
                                        coord_def(1, -mmov.y))
                     || mons_intel(mons) >= I_NORMAL
-                       && !mons->wont_attack()
+                       && _unfriendly_or_insane(mons)
                        && _ranged_allied_monster_in_dir(mons,
                                                         coord_def(0, -mmov.y))))
             {
@@ -703,7 +710,7 @@ static void _handle_movement(monster* mons)
                                            coord_def(-mmov.x, 0),
                                            coord_def(-mmov.x, 1))
                         || mons_intel(mons) >= I_NORMAL
-                           && !mons->wont_attack()
+                           && _unfriendly_or_insane(mons)
                            && _ranged_allied_monster_in_dir(mons,
                                                 coord_def(-mmov.x, -mmov.y))))
                 {
@@ -715,7 +722,7 @@ static void _handle_movement(monster* mons)
                                             coord_def(0, -mmov.y),
                                             coord_def(1, -mmov.y))
                          || mons_intel(mons) >= I_NORMAL
-                            && !mons->wont_attack()
+                            && _unfriendly_or_insane(mons)
                             && _ranged_allied_monster_in_dir(mons,
                                                 coord_def(-mmov.x, -mmov.y))))
             {
@@ -904,7 +911,7 @@ static bool _handle_reaching(monster* mons)
     if (mons->submerged())
         return false;
 
-    if (mons_aligned(mons, foe))
+    if (mons_aligned(mons, foe) && !mons->has_ench(ENCH_INSANE))
         return false;
 
     // Greatly lowered chances if the monster is fleeing or pacified and
@@ -2031,7 +2038,7 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (crawl_state.disables[DIS_MON_ACT] && !mons->wont_attack())
+    if (crawl_state.disables[DIS_MON_ACT] && _unfriendly_or_insane(mons))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2265,7 +2272,8 @@ void handle_monster_move(monster* mons)
         {
             ASSERT(!crawl_state.game_is_arena());
 
-            if (!mons->wont_attack() && !mons->has_ench(ENCH_CHARM)
+            if (_unfriendly_or_insane(mons)
+                && !mons->has_ench(ENCH_CHARM)
                 && !mons->withdrawn())
             {
                 // If it steps into you, cancel other targets.
@@ -2305,7 +2313,7 @@ void handle_monster_move(monster* mons)
         if (targ
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
-            && !mons_aligned(mons, targ)
+            && (!mons_aligned(mons, targ) || mons->has_ench(ENCH_INSANE))
             && monster_can_hit_monster(mons, targ))
         {
             // Maybe they can swap places?
@@ -3293,6 +3301,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false;
 
         if (mons_aligned(mons, targmonster)
+            && !mons->has_ench(ENCH_INSANE)
             && !_mons_can_displace(mons, targmonster))
         {
             // In Zotdef hostiles will whack other hostiles if immobile
@@ -3309,7 +3318,8 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                 return false;
         }
         // Prefer to move past enemies instead of hit them, if we're retreating
-        else if (!mons_aligned(mons, targmonster)
+        else if ((!mons_aligned(mons, targmonster)
+                  || mons->has_ench(ENCH_INSANE))
                  && mons->behaviour == BEH_WITHDRAW)
         {
             return false;
@@ -3318,7 +3328,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Friendlies shouldn't try to move onto the player's
     // location, if they are aiming for some other target.
-    if (mons->wont_attack()
+    if (!_unfriendly_or_insane(mons)
         && mons->foe != MHITYOU
         && (mons->foe != MHITNOT || mons->is_patrolling())
         && targ == you.pos())
@@ -3740,8 +3750,9 @@ static bool _monster_move(monster* mons)
                 newpos = moves[i];
 
         const monster* mon2 = monster_at(newpos);
-        if (newpos == you.pos() && mons->wont_attack()
-            || (mon2 && mons->wont_attack() == mon2->wont_attack()))
+        if (!mons->has_ench(ENCH_INSANE)
+            && (newpos == you.pos() && mons->wont_attack()
+                || (mon2 && mons->wont_attack() == mon2->wont_attack())))
         {
             simple_monster_message(mons, " flops around on dry land!");
             return false;
@@ -3935,10 +3946,14 @@ static bool _monster_move(monster* mons)
         // Check for attacking another monster.
         if (monster* targ = monster_at(mons->pos() + mmov))
         {
-            if (mons_aligned(mons, targ) &&
-                (!crawl_state.game_is_zotdef() || !_may_cutdown(mons, targ)))
+            if (mons_aligned(mons, targ)
+                && !mons->has_ench(ENCH_INSANE)
+                && (!crawl_state.game_is_zotdef()
+                    || !_may_cutdown(mons, targ)))
+            {
                 // Zotdef: monsters will cut down firewood
                 ret = _monster_swaps_places(mons, mmov);
+            }
             else
             {
                 fight_melee(mons, targ);

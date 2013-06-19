@@ -295,7 +295,7 @@ void handle_behaviour(monster* mon)
     bool changed = true;
     bool isFriendly = mon->friendly();
     bool isNeutral  = mon->neutral();
-    bool wontAttack = mon->wont_attack();
+    bool wontAttack = mon->wont_attack() && !mon->has_ench(ENCH_INSANE);
 
     // Whether the player position is in LOS of the monster.
     bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos());
@@ -486,12 +486,19 @@ void handle_behaviour(monster* mon)
     // Instead, berserkers attack nearest monsters.
     if (mon->behaviour != BEH_SLEEP
         && (mon->berserk() || mon->type == MONS_GIANT_SPORE)
-        && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
+        && (mon->foe == MHITNOT
+            || isFriendly && mon->foe == MHITYOU
+            || mon->has_ench(ENCH_INSANE)))
     {
         // Intelligent monsters prefer to attack the player,
         // even when berserking.
-        if (!isFriendly && proxPlayer && mons_intel(mon) >= I_NORMAL)
+        if (!isFriendly
+            && !mon->has_ench(ENCH_INSANE)
+            && proxPlayer
+            && mons_intel(mon) >= I_NORMAL)
+        {
             mon->foe = MHITYOU;
+        }
         else
             _set_nearest_monster_foe(mon);
     }
@@ -527,7 +534,9 @@ void handle_behaviour(monster* mon)
     }
 
     // Neutral monsters prefer not to attack players, or other neutrals.
-    if (isNeutral && mon->foe != MHITNOT
+    if (isNeutral
+        && !mon->has_ench(ENCH_INSANE)
+        && mon->foe != MHITNOT
         && (mon->foe == MHITYOU || menv[mon->foe].neutral()))
     {
         mon->foe = MHITNOT;
@@ -612,7 +621,8 @@ void handle_behaviour(monster* mon)
             {
                 if (crawl_state.game_is_arena()
                     || !proxPlayer && !isFriendly
-                    || isNeutral || patrolling
+                    || isNeutral && !mon->has_ench(ENCH_INSANE)
+                    || patrolling
                     || mon->type == MONS_GIANT_SPORE)
                 {
                     if (mon->behaviour != BEH_LURK)
@@ -897,7 +907,8 @@ void handle_behaviour(monster* mon)
             // Creatures not currently pursuing another foe are
             // alerted by a sentinel's mark
             if (mon->foe == MHITNOT && you.duration[DUR_SENTINEL_MARK]
-                && !isFriendly && !isNeutral && !isPacified)
+                && (!isFriendly && !isNeutral && !isPacified
+                    || mon->has_ench(ENCH_INSANE)))
             {
                 new_foe = MHITYOU;
                 new_beh = BEH_SEEK;
@@ -987,7 +998,9 @@ void handle_behaviour(monster* mon)
             // Foe gone out of LOS?
             if (!proxFoe)
             {
-                if ((isFriendly || proxPlayer) && !isNeutral && !patrolling
+                if ((isFriendly || proxPlayer)
+                    && (!isNeutral || mon->has_ench(ENCH_INSANE))
+                    && !patrolling
                     && !crawl_state.game_is_arena())
                 {
                     new_foe = MHITYOU;
@@ -1120,7 +1133,8 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 
     monster* foe = monster_at(p);
     if (foe && foe != mon
-        && (foe->friendly() != friendly
+        && (mon->has_ench(ENCH_INSANE)
+            || foe->friendly() != friendly
             || neutral && !foe->neutral())
         && mon->can_see(foe)
         && !foe->is_projectile()
@@ -1131,6 +1145,10 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
     {
         return true;
     }
+
+    if (mon->has_ench(ENCH_INSANE) && p == you.pos())
+        return true;
+
     return false;
 }
 
@@ -1254,6 +1272,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // or else fleeing anyway.  Hitting someone over
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
+            || mon->has_ench(ENCH_INSANE)
             || ((wontAttack != sourceWontAttack || (mons_intel(mon) > I_PLANT))
                 && (!mons_is_fleeing(mon) && !mons_class_flag(mon->type, M_FLEEING))
                 && !mons_is_panicking(mon)))
@@ -1333,7 +1352,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // XXX: Neutral monsters are a tangled mess of arbitrary logic.
         // It's not even clear any more what behaviours are intended for
         // neutral monsters and what are merely accidents of the code.
-        if (mon->neutral())
+        if (mon->neutral() && !mon->has_ench(ENCH_INSANE))
         {
             if (mon->asleep())
                 mon->behaviour = BEH_WANDER;
