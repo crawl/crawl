@@ -1418,30 +1418,18 @@ static string _get_monster_name(const monster_info& mi, int count, bool fullname
 {
     string desc = "";
 
-    bool adj = false;
-    if (mi.attitude == ATT_FRIENDLY)
-    {
-        desc += "friendly ";
-        adj = true;
-    }
-    else if (mi.attitude != ATT_HOSTILE)
-    {
-        desc += "neutral ";
-        adj = true;
-    }
+    const char * const adj = mi.attitude == ATT_FRIENDLY ? "friendly"
+                           : mi.attitude == ATT_HOSTILE  ? nullptr
+                                                         : "neutral";
 
     string monpane_desc;
     int col;
-    mi.to_string(count, monpane_desc, col, fullname);
+    mi.to_string(count, monpane_desc, col, fullname, adj);
 
     if (count == 1)
     {
         if (!mi.is(MB_NAME_THE))
-        {
-            desc = ((!adj && is_vowel(monpane_desc[0])) ? "an "
-                                                        : "a ")
-                   + desc;
-        }
+            desc = (is_vowel(monpane_desc[0]) ? "an " : "a ") + desc;
         else if (adj)
             desc = "the " + desc;
     }
