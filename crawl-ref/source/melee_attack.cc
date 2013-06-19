@@ -534,7 +534,7 @@ bool melee_attack::handle_phase_hit()
             && weapon->is_jammed())
         {
             // Hitting has a 2x bigger chance to unjam than envoking
-            try_unjam_rod(*weapon, 2);
+            try_unjam_rod(*weapon, 2, true);
         }
     }
 
