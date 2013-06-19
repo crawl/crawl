@@ -1393,6 +1393,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_MACE,
                                        WPN_SHORT_SWORD,
                                        -1);
+        if (one_chance_in(5))
+        {
+            force_item = true;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
+        }
+
         break;
 
     case MONS_SPRIGGAN_DRUID:
