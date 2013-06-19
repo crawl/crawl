@@ -1430,7 +1430,7 @@ static string _get_monster_name(const monster_info& mi, int count, bool fullname
     {
         if (!mi.is(MB_NAME_THE))
             desc = (is_vowel(monpane_desc[0]) ? "an " : "a ") + desc;
-        else if (adj)
+        else if (adj || !mi.is(MB_NAME_UNQUALIFIED))
             desc = "the " + desc;
     }
 

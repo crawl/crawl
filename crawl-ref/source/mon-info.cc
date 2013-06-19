@@ -1298,16 +1298,18 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     ostringstream out;
     _monster_list_colour_type colour_type = _NUM_MLC;
 
-    string adjstr = adj ? string(adj) + " " : "";
+    string full = count == 1 ? full_name() : pluralised_name(fullname);
 
-    if (count == 1)
-        out << adjstr << full_name();
-    else
-    {
-        // TODO: this should be done in a much cleaner way, with code to
-        // merge multiple monster_infos into a single common structure
-        out << count << " " << adjstr << pluralised_name(fullname);
-    }
+    if (adj && starts_with(full, "the "))
+        full.erase(0, 4);
+
+    // TODO: this should be done in a much cleaner way, with code to
+    // merge multiple monster_infos into a single common structure
+    if (count != 1)
+        out << count << " ";
+    if (adj)
+        out << adj << " ";
+    out << full;
 
 #ifdef DEBUG_DIAGNOSTICS
     out << " av" << mons_avg_hp(type);
