@@ -2987,7 +2987,7 @@ void monster::attacking(actor * /* other */)
 }
 
 // Sends a monster into a frenzy.
-void monster::go_frenzy()
+void monster::go_frenzy(actor *source)
 {
     if (!can_go_berserk())
         return;
@@ -3008,9 +3008,9 @@ void monster::go_frenzy()
     props["old_attitude"] = short(attitude);
 
     attitude = ATT_NEUTRAL;
-    add_ench(mon_enchant(ENCH_INSANE, 0, 0, duration * 10));
-    add_ench(mon_enchant(ENCH_HASTE, 0, 0, duration * 10));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, 0, duration * 10));
+    add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * 10));
+    add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * 10));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * 10));
     mons_att_changed(this);
 
     if (simple_monster_message(this, " flies into a frenzy!"))
