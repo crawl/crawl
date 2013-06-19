@@ -1978,47 +1978,25 @@
       }
     },
 
-    {  MST_FAUN_I,
+    {  MST_FAUN,
       {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
        SPELL_CORONA,
        SPELL_SLOW,
-       SPELL_NO_SPELL,
-       SPELL_CAUSE_FEAR,
-       SPELL_SLOW,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_FAUN_II,
-      {
-       SPELL_CORONA,
        SPELL_CONFUSE,
-       SPELL_NO_SPELL,
-       SPELL_CAUSE_FEAR,
-       SPELL_CONFUSE,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_FAUN_III,
-      {
-       SPELL_CORONA,
-       SPELL_HIBERNATION,
-       SPELL_NO_SPELL,
-       SPELL_CAUSE_FEAR,
-       SPELL_CAUSE_FEAR,
-       SPELL_BLINK
+       SPELL_NO_SPELL
       }
     },
 
     {  MST_SATYR,
       {
-       SPELL_CORONA,
        SPELL_NO_SPELL,
-       SPELL_LEDAS_LIQUEFACTION,
+       SPELL_NO_SPELL,
        SPELL_CAUSE_FEAR,
-       SPELL_NO_SPELL,
-       SPELL_BLINK
+       SPELL_CAUSE_FEAR,
+       SPELL_SLEEP,
+       SPELL_NO_SPELL
       }
     },
 
