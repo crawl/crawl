@@ -3179,8 +3179,8 @@ int items(bool allow_uniques,
     {
         ASSERT(force_type == OBJ_RANDOM);
         item.base_type = random_choose_weighted(
-                                     1, OBJ_RODS,
-                                     9, OBJ_STAVES,
+                                     5, OBJ_RODS,
+                                     5, OBJ_STAVES,
                                     30, OBJ_BOOKS,
                                     50, OBJ_JEWELLERY,
                                     70, OBJ_WANDS,

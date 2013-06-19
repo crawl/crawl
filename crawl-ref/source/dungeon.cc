@@ -4434,8 +4434,8 @@ static object_class_type _superb_object_class()
             10, OBJ_ARMOUR,
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
-            9, OBJ_STAVES,
-            1, OBJ_RODS,
+            5, OBJ_STAVES,
+            5, OBJ_RODS,
             10, OBJ_MISCELLANY,
             0);
 }
