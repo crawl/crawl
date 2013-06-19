@@ -934,23 +934,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_PAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        // Fauns:  2/7 chance each of bow, sling, some type of throwing weapon;
-        //         1/7 chance of longbow.
-        // Satyrs: 1/2 chance of longbow;
-        //         1/6 chance each of bow, sling, some type of throwing weapon.
-        // Pan:    guaranteed longbow.
-        if (!melee_only
-            && (mon->type == MONS_FAUN && x_chance_in_y(5, 7)
-                || mon->type == MONS_SATYR && !one_chance_in(6))
-                || mon->type == MONS_PAN)
+        if (!melee_only)
         {
             switch (mon->type)
             {
                 case MONS_FAUN:
-                    item.sub_type = random_choose_weighted(1, WPN_LONGBOW,
-                                                           2, WPN_BOW,
-                                                           2, WPN_SLING,
-                                                           0);
+                    item.sub_type = WPN_SLING;
                     break;
                 case MONS_SATYR:
                     item.sub_type = random_choose_weighted(3, WPN_LONGBOW,
@@ -1752,21 +1741,6 @@ static void _give_ammo(monster* mon, int level,
             if (mon->type == MONS_HAROLD)
                 qty += random2(4);
 
-            break;
-
-        case MONS_FAUN:  // we only get this far if they have no launcher
-        case MONS_SATYR:
-            if (coinflip())
-            {
-                weap_class = OBJ_WEAPONS;
-                weap_type  = WPN_SPEAR;
-            }
-            else
-            {
-                weap_class = OBJ_MISSILES;
-                weap_type  = MI_JAVELIN;
-            }
-            qty = random_range(4, 8);
             break;
 
         default:

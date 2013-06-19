@@ -2152,12 +2152,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[3] = MST_ANCIENT_CHAMPION_IV;
         break;
 
-    case MONS_FAUN:
-        book[0] = MST_FAUN_I;
-        book[1] = MST_FAUN_II;
-        book[2] = MST_FAUN_III;
-        break;
-
     case MONS_TENGU_CONJURER:
         book[0] = MST_TENGU_CONJURER_I;
         book[1] = MST_TENGU_CONJURER_II;

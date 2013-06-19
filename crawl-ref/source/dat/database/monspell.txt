@@ -412,6 +412,14 @@ Minor Healing dryad cast
 Summon Water Elementals elemental wellspring cast
 
 The water around @The_monster@ rises up and takes form!
+%%%%
+Cause Fear satyr cast
+
+@The_monster@ plays a frightful melody on his pipes!
+%%%%
+Sleep satyr cast
+
+@The_monster@ plays a lulling melody on his pipes!
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
