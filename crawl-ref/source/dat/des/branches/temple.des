@@ -2828,6 +2828,26 @@ MAP
 B
 ENDMAP
 
+NAME:   amethyst_overflow_temple_binary
+TAGS:   temple_overflow_2
+SUBST:  p : .:15 c:10 g:3 n:2
+SUBST:  G : G:20 T:10 U:1 .:1
+SUBST:  g : t:10 T:10 .:5 w:5 U:1 l:1
+SUBST:  c : c:20 x:5 v:1 b:1
+SUBST:  + : +:10 .:10 A:5
+KMASK:  TUw = no_monster_gen
+ORIENT: float
+MAP
+  ccc     ccc
+ ccGcccccccGcc 
+cc...ccgcc...cc
+cB.p..+.+..p.Bc
+cc...cc.cc...cc
+ ccGccg.gccGcc 
+  ccccc+ccccc
+       @
+ENDMAP
+
 NAME:   minmay_overflow_temple_star_quad
 TAGS:   temple_overflow_3
 ORIENT: float
