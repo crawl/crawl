@@ -23,6 +23,7 @@
 #include "delay.h"
 #include "effects.h"
 #include "env.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "fineff.h"
 #include "fight.h"
@@ -527,6 +528,13 @@ bool melee_attack::handle_phase_hit()
             && mons_near(defender->as_monster()) && defender->asleep())
         {
             hit_woke_orc = true;
+        }
+
+        if (weapon && weapon->base_type == OBJ_RODS
+            && weapon->is_jammed())
+        {
+            // Hitting has a 2x bigger chance to unjam than envoking
+            try_unjam_rod(*weapon, 2);
         }
     }
 
