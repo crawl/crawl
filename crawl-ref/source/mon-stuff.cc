@@ -719,8 +719,11 @@ static bool _is_pet_kill(killer_type killer, int i)
     // Check if the monster was confused by you or a friendly, which
     // makes casualties to this monster collateral kills.
     const mon_enchant me = m->get_ench(ENCH_CONFUSION);
+    const mon_enchant me2 = m->get_ench(ENCH_INSANE);
     return (me.ench == ENCH_CONFUSION
-            && (me.who == KC_YOU || me.who == KC_FRIENDLY));
+            && (me.who == KC_YOU || me.who == KC_FRIENDLY)
+            || me2.ench == ENCH_INSANE
+               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY));
 }
 
 int exp_rate(int killer)

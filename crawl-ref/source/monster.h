@@ -298,7 +298,7 @@ public:
     void attacking(actor *other);
     bool can_go_berserk() const;
     void go_berserk(bool intentional, bool potion = false);
-    void go_frenzy();
+    void go_frenzy(actor *source);
     bool berserk() const;
     bool has_lifeforce() const;
     bool can_mutate() const;

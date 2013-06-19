@@ -3849,7 +3849,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_FRENZY:
-        mons->go_frenzy();
+        mons->go_frenzy(mons);
         return;
 
     case SPELL_TROGS_HAND:

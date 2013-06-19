@@ -978,7 +978,7 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
         return false;
 
     if (victim->is_monster())
-        victim->as_monster()->go_frenzy();
+        victim->as_monster()->go_frenzy(beam.agent());
     else
         victim->go_berserk(false);
 
