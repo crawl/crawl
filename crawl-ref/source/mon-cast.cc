@@ -2456,18 +2456,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     continue;
                 }
 
-                // Monsters shouldn't cast BiA before going berserk.
-                // Thematically, they are berserkers, they rush into
-                // battle without thinking. Stopping before berserk to
-                // ask your god for a few friends seems like too
-                // complicated a thought.
-                if (spell_cast == SPELL_BROTHERS_IN_ARMS
-                    && !mons->props.exists("went_berserk"))
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                    continue;
-                }
-
                 // Don't torment your allies. Maybe we want to add other
                 // spells here? Mass confusion, tornado, etc.?
                 if (you.visible_to(mons) && mons_aligned(mons, &you))
