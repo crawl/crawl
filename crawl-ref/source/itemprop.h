@@ -126,6 +126,7 @@ bool is_throwable(const actor *actor, const item_def &wpn,
                   bool force = false) PURE;
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile) PURE;
+bool is_melee_weapon(const item_def &weapon) PURE;
 
 reach_type weapon_reach(const item_def &item) PURE;
 

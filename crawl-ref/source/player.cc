@@ -939,7 +939,7 @@ bool berserk_check_wielded_weapon()
         return true;
 
     const item_def weapon = *you.weapon();
-    if (weapon.defined() && (!is_weapon(weapon) || is_range_weapon(weapon))
+    if (weapon.defined() && !is_melee_weapon(weapon)
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
         string prompt = "Do you really want to go berserk while wielding "
