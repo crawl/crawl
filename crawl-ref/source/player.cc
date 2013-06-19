@@ -935,15 +935,12 @@ bool player_weapon_wielded()
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {
-    if (!you.weapon())
-        return true;
-
-    const item_def weapon = *you.weapon();
-    if (weapon.defined() && !is_melee_weapon(weapon)
+    const item_def * const wpn = you.weapon();
+    if (wpn && wpn->defined() && !is_melee_weapon(*wpn)
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
         string prompt = "Do you really want to go berserk while wielding "
-                        + weapon.name(DESC_YOUR) + "?";
+                        + wpn->name(DESC_YOUR) + "?";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
