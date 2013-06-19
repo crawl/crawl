@@ -142,7 +142,7 @@ static duration_def duration_data[] =
     { DUR_WEAK, false,
       RED, "Weak", "weakened", "Your attacks are enfeebled." },
     { DUR_DIMENSION_ANCHOR, false,
-      RED, "-TELE", "cannot translocate", "You are firmly anchored to this plane." },
+      RED, "-Tele", "cannot translocate", "You are firmly anchored to this plane." },
 };
 
 static int duration_index[NUM_DURATIONS];
