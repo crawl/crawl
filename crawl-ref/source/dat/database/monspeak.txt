@@ -4571,16 +4571,10 @@ Jory
 %%%%
 _Jory_common_
 
-w:100
+w:50
 @_Jory_silent_@
 
 @The_monster@ says, "Leave me alone!"
-
-@The_monster@ says, "How dare you disturb my sanctum!"
-
-@The_monster@ says, "In my tower, I enforce my rules: silence at all times."
-
-@The_monster@ says, "Be quiet! Or I'll take your tongue!"
 
 @The_monster@ hisses in an unknowable language.
 
@@ -4617,8 +4611,6 @@ VISUAL:@The_monster@ smirks, showing shining fangs.
 VISUAL:@The_monster@ demonstrates baring @possessive@ neck.
 
 VISUAL:@The_monster@ hisses silently.
-
-VISUAL:@The_monster@ starts to speak, but stops.
 %%%%
 Jory killed
 
