@@ -4915,7 +4915,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_STRIKING:
     case SPELL_BOLT_OF_INACCURACY:
     case SPELL_SUMMON_SWARM:
-    case SPELL_BLAST:
         return TILEG_TODO;
 
     // --------------------------------------------

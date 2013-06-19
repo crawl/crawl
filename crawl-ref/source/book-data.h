@@ -588,14 +588,3 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
-
-{   // Rod of blasting
-    SPELL_BLAST,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-},

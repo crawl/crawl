@@ -51,8 +51,6 @@ void forest_damage(const actor *mon);
 vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int max_rays);
 spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim,
                                bool fail = false);
-spell_type blast_spell_type();
-spret_type cast_random_blast(int pow, bolt &beam, bool fail);
 spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail);
 
 #endif

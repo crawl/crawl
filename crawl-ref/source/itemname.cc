@@ -1109,7 +1109,6 @@ static const char* rod_type_name(int type)
     case ROD_DEMONOLOGY:      return "demonology";
     case ROD_VENOM:           return "venom";
     case ROD_INACCURACY:      return "inaccuracy";
-    case ROD_BLASTING:        return "blasts";
     case ROD_IRON:            return "iron";
 
     case ROD_DESTRUCTION_I:

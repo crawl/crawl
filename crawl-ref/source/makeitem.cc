@@ -3415,8 +3415,6 @@ void init_rod_mp(item_def &item, int ncharges, int item_level)
     {
         if (item.sub_type == ROD_STRIKING)
             item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
-        else if (item.sub_type == ROD_BLASTING)
-            item.plus2 = random_range(4, 6) * ROD_CHARGE_MULT;
         else
             item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
 

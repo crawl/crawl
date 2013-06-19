@@ -1471,9 +1471,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);
 
-    case SPELL_BLAST:
-        return cast_random_blast(powc, beam, fail);
-
     // LOS spells
 
     // Beogh ability, no failure.

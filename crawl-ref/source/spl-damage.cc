@@ -2833,58 +2833,6 @@ spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim, bool fail)
     return SPRET_SUCCESS;
 }
 
-spell_type blast_spell_type()
-{
-    return random_choose_weighted(
-        10, SPELL_MAGIC_DART,
-        10, SPELL_THROW_FLAME,
-        10, SPELL_THROW_FROST,
-        10, SPELL_SHOCK,
-        10, SPELL_STING,
-        10, SPELL_FORCE_LANCE,
-        10, SPELL_SANDBLAST,
-         5, SPELL_STONE_ARROW,
-         2, SPELL_ISKENDERUNS_MYSTIC_BLAST,
-         0);
-}
-
-spret_type cast_random_blast(int pow, bolt &beam, bool fail)
-{
-    // Random spell type
-    spell_type spell = blast_spell_type();
-    // Convert it to a zap
-    zap_type zap = spell_to_zap(spell);
-
-    // Rod of Blasts is somewhat unreliable (but still uses
-    // rod mana and food when it fails)
-    // TODO: Thematic effects / harmless clouds
-    int rod_fail = !fail && one_chance_in(5);
-
-    // Perform our own tracer with a fake zap so the player doesn't
-    // get info leaking warnings for e.g. shock
-    if (!player_tracer(ZAP_BLAST, pow, beam))
-        return SPRET_ABORT;
-
-    spret_type result = SPRET_FAIL;
-    if (zap != NUM_ZAPS)
-    {
-        result = zapping(zap, spell_zap_power(spell, pow), beam, false,
-                         NULL, fail || rod_fail);
-    }
-
-    if (result == SPRET_FAIL)
-    {
-        mpr("The rod sputters and fails to fire.");
-        // If it wasn't supposed to fail, pretend it didn't; since it
-        // came from rod code there's otherwise an error when miscast
-        // effects try to run
-        if (!fail)
-            return SPRET_SUCCESS;
-    }
-
-    return result;
-}
-
 spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
 {
     int prev = 1;

@@ -431,7 +431,6 @@ enum rod_type
     ROD_DEMONOLOGY,
     ROD_STRIKING,
     ROD_VENOM,
-    ROD_BLASTING,
     NUM_RODS,
 };
 
