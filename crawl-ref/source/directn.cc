@@ -3457,8 +3457,11 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
         descs.push_back("friendly");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         descs.push_back("peaceful");
-    else if (mi.attitude != ATT_HOSTILE) // don't differentiate between permanent or not
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    {
+        // don't differentiate between permanent or not
         descs.push_back("indifferent");
+    }
 
     if (mi.is(MB_SUMMONED))
         descs.push_back("summoned");
@@ -3527,8 +3530,11 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is friendly.\n";
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         text += pronoun + " seems to be peaceful towards you.\n";
-    else if (mi.attitude != ATT_HOSTILE) // don't differentiate between permanent or not
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    {
+        // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
+    }
 
     if (mi.is(MB_SUMMONED))
         text += pronoun + " has been summoned.\n";
