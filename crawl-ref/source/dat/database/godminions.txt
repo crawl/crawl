@@ -10,85 +10,280 @@ Ashenzari minion dispatched
 @The_god@ whispers: "@The_player@, your time is at an end as foretold in the prophecies."
 
 @The_god@ whispers: "The nails would be wasted on you."
+
+@The_god@ whispers: "I have been watching you closely..."
+
+@The_god@ whispers: "Your death has been foretold since the dawn of time."
+
+@The_god@ whispers: "It's time to meet your destiny, @mortal_or_player@!"
+
+@The_god@ whispers: "Face your fate and die, @mortal_or_player@!"
+
+@The_god@ whispers: "Never nailed to the sky will you be, only nailed to the [cross|tree|pole]."
 %%%%
 Cheibriados minion dispatched
 
 @The_god@ booms: "Where are you going in such a hurry?"
+
+@The_god@ booms: "You can run but you cannot hide!"
+
+@The_god@ booms: "The steady will prevail!"
+
+@The_god@ booms: "Don't worry, @mortal_or_player@! You'll die as quickly as you lived!"
+
+@The_god@ booms: "You cannot flee death, @mortal_or_player@!"
+
+@The_god@ booms: "Your hour of death has come, @mortal_or_player@!"
+
+@The_god@ booms: "Lay your weary bones to rest, mortal!"
+
+@The_god@ booms: "He who rushes deserves a slow death."
 %%%%
 Elyvilon minion dispatched
 
 @The_god@ says: "If you will not be pacified, then it saddens me but you must die."
 
-@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+@The_god@ says: "You are the warmonger, you kill for sport, for lust, for greed!"
 
-w:1
-@The_god@ says: "@The_player@, render unto the gods what is the gods."
+@The_god@ says: "You are one of those who never heal but always kill."
+
+@The_god@ says: "Your @good god mistake@ is uncurable - except through death."
+
+# Coriolanus (Shakespeare)
+@The_god@ says: "You're a disease that must be cut away."
+
+# Antony and Cleopatra (Shakespeare)
+@The_god@ says: "The most infectious pestilence upon thee!"
+
+w:20
+@good god minion dispatched@
 %%%%
 Fedhas minion dispatched
 
 @The_god@ says: "You will be recycled back into the ecosystem!"
 
 @The_god@ says: "May you make excellent compost..."
+
+# all synonyms should have 2 syllables
+@The_god@ says: "[Apple|Orange|Grape], [fungus|toadstool|mildew], [tadpole|cockroach|dormouse] - each of more worth than you!"
+
+@The_god@ says: "You are a waste of life!"
+
+@The_god@ says: "There is nothing divine about your shaking body parts."
+
+@The_god@ booms: "Your [body|corpse|remains|bones] shall fertilize the fields, @mortal_or_player@!"
+
+@The_god@ says: "You're barely fit to feed the worms, mortal!"
+
+@The_god@ says: "Any [maggot|flea|cockroach|dung beetle] is worth more than you!"
 %%%%
 Kikubaaqudgha minion dispatched
 
-@The_god@  screeches: "Your corpse shall make a fine addition to my army of the dead!"
+@The_god@ screeches: "Your corpse shall make a fine addition to my army of the dead!"
 
-@The_god@  intones: "You will make a better @undead type@ than a god, @The_player@."
-%%%%
-@The_god@  minion dispatched
+@The_god@ intones: "You will make a better @undead type@ than a god, @mortal_or_player@."
 
-@The_god@ says: "You have drawn... @nemelex bad card@!"
+@The_god@ warns: "Your sorry mortal hull will feel pain, agony and torment!"
+
+@The_god@ says: "I'll put your @body part@ to better use as spare parts for my minions."
+
+@The_god@ screeches: "You seek immortality? You'll get eternal pain!"
+
+@The_god@ screeches: "You are unworthy of undeath!"
+
+@The_god@ screeches: "Your future is not divine, you will be mummy, zombie or skeleton!"
+
+@The_god@ screeches: "@The_monster@, release this [fool|wight|meacock] from life!"
 %%%%
 Makhleb minion dispatched
 
 @The_god@ rages: "Cleanse this sinner, my servant!"
 
 @The_god@ rages: "@The_monster@, disembowel this inept agent of lackluster destruction."
+
+@The_god@ sneers: "Your list of sins is puny!"
+
+@The_god@ states: "Destruction is not a means, it is an end!"
+
+@The_god@ laughs: "@The_monster@ will show you how it goes."
+
+@The_god@ says: "I command demons a hundred times more powerful than you."
+
+@The_god@ says: "You are not to be worshiped, you are a soul to be collected."
+
+@The_god@ announces: "@The_monster@ will collect @The_player@'s blood and soul!"
+%%%%
+Nemelex minion dispatched
+
+@The_god@ says: "You have drawn... @nemelex bad card@!"
+
+@The_god@ coolly says: "Mortal, stick with your prestidigitation."
+
+@The_god@ says: "A sleight of hand or two does not make a god, @mortal_or_player@."
+
+@The_god@ coolly says: "Don't play a game if you can't fathom its rules, mortal!"
+
+@The_god@ sneers: "Halt, @mortal_or_player@! Rien ne vas plus."
+
+@The_god@ sneers: "Game over, @mortal_or_player@!"
+
+@The_god@ says: "How about a game?"
+
+@The_god@ says: "I bet @The_monster@'s life against yours, @The_player@!"
+
+@The_god@ says: "Teach @The_player@ the rules, @The_monster@!"
+
+@The_god@ says: "Place your [stakes|bets], ladies and gentlemen! Let the fight begin!"
 %%%%
 Okawaru minion dispatched
 
-@The_god@ says: "@The_monster@, bring me the @trophy body part@ of the @angry adjective@ one!"
+@The_god@ says: "@The_monster@, bring me the @body part@ of the @angry adjective@ one!"
 
+@The_god@ says: "In any army, they'd put @The_player@ in the last rank."
+
+@The_god@ says: "No courage, no skills - @The_player@, you're dead meat."
+
+@The_god@ sneers: "You're but a grindstone for @The_monster@, @mortal_or_player@!"
+
+@The_god@ says: "Into the ring with you, @mortal_or_player@!"
+
+@The_god@ says: "Teach the mortal some [manners|respect|humility], @The_monster@!"
+
+@The_god@ says: "You'll make a [fine|barely adequate|mediocre|puny] trophy for @The_monster@, mortal!"
+
+@The_god@ says: "Your [fate|death] shall serve as a warning to others, @mortal_or_player@!"
+
+@The_god@ says: "[Third|Fourth|Fifth]rate champions are wasted on you, mortal!"
 %%%%
 Sif Muna minion dispatched
 
 @The_god@ whispers: "You know too many secrets, child."
 
+@The_god@ whispers: "Knowledge is a burden... here comes relief."
+
+@The_god@ whispers: "May your ghost study happily forevermore."
+
+@The_god@ whispers: "Fool! You know nothing."
+
+@The_god@ whispers: "Don't meddle with things you don't understand, mortal!"
+
+@The_god@ whispers: "It's time you learnt your [lessons|final lesson], @The_player@!"
+
+@The_god@ whispers: "Teach this fool some lessons, @The_monster@!"
+
+@The_god@ whispers: "You should have stuck with theory, @mortal_or_player@!"
 %%%%
 The Shining One minion dispatched
 
-@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+@good god minion dispatched@
 
-w:1
-@The_god@ says: "@The_player@, render unto the gods what is the gods."
+@The_god@ says: "@The_monster@ will show you what a valiant crusader is made of."
+
+@The_god@ booms: "@The_monster@, start the crusade right here, against the evil @The_player@!"
+
+w:5
+@The_god@ says: "Death shall cleanse you of your sins, @mortal_or_player@!"
 %%%%
 Trog minion dispatched
 
 @The_god@ bellows: "Put down your @reading materials@ and prepare to @fight synonym@!"
 
 @The_god@ roars: "Will your @reading materials@ save you now, @mage synonym@?"
+
+@The_god@ roars: "@The_monster@, turn this deceiver into a puddle of blood!"
+
+@The_god@ roars: "Brothers are stronger than books, you fool!"
+
+@The_god@ roars: "You're but a grindstone for @The_monster@, mortal!"
+
+@The_god@ roars: "Join your @reading material@ on the pyre, @mage synonym@!"
+
+@The_god@ roars: "@The_monster@ will make you eat your @reading material@, @mage synonym@!"
 %%%%
 Vehumet minion dispatched
 
 @The_god@ screams: "@The_monster@ will end you in Hellfire."
+
+@The_god@ says: "The arcane potential of destruction is lost on you."
+
+@The_god@ says: "You are the most incompetent half-breed ever to claim goodhood."
+
+@The_god@ says: "You're but kindling to @The_monster@'s hellfire, @mortal_or_player@!"
+
+@The_god@ says: "You are as far from divinity as a firefly is from Hellfire!"
+
+@The_god@ says: "This [whit|dram|bit] of rampage will not make you divine."
 %%%%
 Xom minion dispatched
 
 @The_god@ chuckles: "A new toy for @The_monster@ to play with!"
 
+@The_god@ sneers: "Game over, @mortal_or_player@!"
+
+@The_god@ laughs: "All work and no play makes @The_player@ a dull toy!"
+
+@The_god@ says: "Have fun, @The_monster@!"
+
+@The_god@ grouses: "It's no fun and games until someone dies."
+
+@The_god@ cheers: "Look who's come to play, @The_monster@!"
+
+@The_god@ says: "I'm getting BORED!"
+
+@The_god@ says: "No risk, no death, no fun!"
+
 @Xom laughter@
 %%%%
 Yredelemnul minion dispatched
 
-@The_god@ says: "You will make a better @undead type@ than a god, @The_player@."
+@The_god@ says: "You will make a better @undead type@ than a god, @mortal_or_player@."
+
+@The_god@ forebodes: "The black torch will extinguish you!"
+
+@The_god@ states: "@The_player@ is [more idle than|too idle for] the dead."
+
+@The_god@ says: "Your feeble light is no match for the black torch!"
+
+@The_god@ says: "I've got a bone to pick from you. Your humerus might do."
+
+@The_god@ says: "My lowest servant may devour your soul."
 %%%%
 Zin minion dispatched
+
+w:30
+@good god minion dispatched@
+
+@The_god@ says: "By the Law, [this @good god heretic@|@The_player@] must die!"
+
+@The_god@ intones: "Repent, @mortal_or_player@! Your end is near!"
+
+w:5
+@The_god@ says: "Your very @good god sin@ is sin."
+
+@The_god@ intones: "Your [sin|crime] is @good god sin@. Your punishment is death!"
+%%%%
+good god minion dispatched
 
 @The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
 
 w:1
 @The_god@ says: "@The_player@, render unto the gods what is the gods'."
+
+w:3
+@good god commandment@
+
+w:1
+@The_god@ says: "Your [fate|death] shall serve as a warning to others, @player_or_mortal@!"
+%%%%
+good god commandment
+
+@The_god@ intones: "Thou shalt not covet immortality!"
+
+@The_god@ intones: "Thou shalt not make thyself into the likeness of a god!"
+
+@The_god@ intones: "Thou shalt not ask others to worship thee as they would a god!"
+
+@The_god@ intones: "Thou shalt not suffer the false prophet to live!"
 %%%%
 ##########################################################
 # Gods taunting the player (and each other) during fight
@@ -96,7 +291,7 @@ w:1
 # The format is:
 # (god) minion taunt [minion type] [winning/losing/won]
 # - winning means the timer is running out (assume player has run away)
-# - won is when timer expired and minion disappeared
+# - won is when the timer expired and the minion disappeared
 # - losing means the minion is dying and the god might encourage/shout at them
 # - nothing is a generic taunt or fallback if any of the above are winning
 # And:
@@ -104,7 +299,7 @@ w:1
 # - when gods taunt each other during the fight
 Ashenzari minion taunt winning
 
-@The_god@ whispers: "You will be nailed to the sky, just like I"
+@The_god@ whispers: "You will be nailed to the sky, just like I."
 %%%%
 Ashenzari minion taunt won
 
@@ -122,7 +317,7 @@ Trog taunt Sif Muna losing
 %%%
 Trog taunt Sif Muna winning
 
-@The_god@ says: "@The_player, tell me you're not scared of such parlour tricks?"
+@The_god@ says: "@The_player@, tell me you're not scared of such parlour tricks?"
 %%%
 Cheibriados minion taunt
 
@@ -140,10 +335,7 @@ Elyvilon minion taunt
 
 @The_god@ says: "If you will not be pacified, then it saddens me but you must die."
 
-@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
-
-w:1
-@The_god@ says: "@The_player@, render unto the gods what is the gods."
+@good god minion taunt@
 %%%%
 Fedhas minion taunt
 
@@ -153,13 +345,9 @@ Fedhas minion taunt
 %%%%
 Kikubaaqudgha minion taunt
 
-@The_god@  screeches: "Your corpse shall make a fine addition to my army of the dead!"
+@The_god@ screeches: "Your corpse shall make a fine addition to my army of the dead!"
 
-@The_god@  intones: "You will make a better @undead type@ than a god, @The_player@."
-%%%%
-@The_god@  minion taunt
-
-@The_god@ says: "You have drawn... @nemelex bad card@!"
+@The_god@ intones: "You will make a better @undead type@ than a god, @The_player@."
 %%%%
 Makhleb minion taunt
 
@@ -167,9 +355,27 @@ Makhleb minion taunt
 
 @The_god@ rages: "@The_monster@, disembowel this inept agent of lackluster destruction."
 %%%%
+Nemelex minion taunt
+
+@The_god@ says: "You have drawn... @nemelex bad card@!"
+
+@The_god@ says: "Teach @The_player@ the rules, @The_monster@!"
+%%%%
+Nemelex minion taunt winning
+
+@The_god@ laughs, "Ha! Quitters never win!"
+
+@The_god@ sneers: "Game over, @mortal_or_player@!"
+%%%%
 Okawaru minion taunt
 
 @The_god@ says: "@The_monster@, bring me the @body part@ of the @angry adjective@ one!"
+
+# Henry IV (Shakespeare)
+@The_god@ sneers: "@The_player@, there's no more valour in you than in a wild duck!"
+
+# All's Well That Ends Well (Shakespeare)
+@The_god@ sneers: "You go so much backward when you fight, @The_player@."
 
 %%%%
 Sif Muna minion taunt
@@ -179,10 +385,7 @@ Sif Muna minion taunt
 %%%%
 The Shining One minion taunt
 
-@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
-
-w:1
-@The_god@ says: "@The_player@, render unto the gods what is the gods."
+@good god minion taunt@
 %%%%
 Trog minion taunt
 
@@ -194,20 +397,36 @@ Vehumet minion taunt
 %%%%
 Xom minion taunt
 
-@The_god@ chuckles: "A new toy for @The_monster@ to play with!"
-
+w:30
 @Xom laughter@
+
+Xom cheers for @The_monster@!
+
+w:5
+Xom cheers for @The_player@!
+
+w:2
+Xom yells: "Fight, fight, fight, fight!"
+%%%%
+Xom minion taunt winning
+
+@The_god@ cackles: "Game over, @mortal_or_player@!"
 %%%%
 Yredelemnul minion taunt
 
-@The_god@ says: "You will make a better @undead type@ than a god, @The_player@."
+@The_god@ says: "You will make a better @undead type@ than a god, @mortal_or_player@."
 %%%%
 Zin minion taunt
 
-@The_god@ says: "@The_monster@, @good god teach@ this @good god heretic@ the @good god mistake@ of his ways!"
+Cease and desist, mortal!
 
-w:1
-@The_god@ says: "@The_player@, render unto the gods what is the gods'."
+Give up, mortal! Resistance is futile!
+
+@good god minion taunt@
+%%%%
+good god minion taunt
+
+@good god minion dispatched@
 %%%%
 #####################################################
 # Various nouns and adjectives for randomising the preceding speech
@@ -277,6 +496,14 @@ sinfulness
 
 untruthfulness
 %%%%
+good god sin
+
+arrogance
+
+avarice
+
+greediness
+%%%%
 nemelex bad card
 
 Death
@@ -288,7 +515,7 @@ Justice
 Judgement
 %%%%
 # Trophies used in Oka's speech
-trophy body part
+body part
 
 head
 
@@ -355,4 +582,10 @@ accountant
 quillpusher
 
 bookworm
+%%%%
+mortal_or_player
+
+mortal
+
+@The_player@
 %%%%
