@@ -2843,9 +2843,9 @@ spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
     }
     // Calculate spread and # of pellets to trace (3..(7+prev))
     const int spread = prev + 1;
+    const int range = spell_range(SPELL_IRON_BLAST, pow);
     const int pellets = random_range(3, 3 + prev + div_rand_round(pow, 50));
-    targetter_spread hitfunc(caster, spell_range(SPELL_IRON_BLAST, pow),
-                             spread, pellets);
+    targetter_spread hitfunc(caster, range, spread, pellets);
 
     hitfunc.set_aim(aim);
 
@@ -2854,10 +2854,10 @@ spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
     bolt beam;
     beam.name              = "iron blast";
     beam.aux_source        = "iron rod";
-    beam.flavour           = BEAM_MISSILE;
+    beam.flavour           = BEAM_ENERGY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTGREY;
-    beam.range             = 1;
+    beam.range             = range;
     // Decrease power with each shot
     beam.hit               = 10 + pow / (20 + 5 * (prev - 1));
     beam.ac_rule           = AC_PROPORTIONAL;
@@ -2869,22 +2869,21 @@ spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-//            beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
-
     for (vector<double>::const_iterator p = hitfunc.pellet_directions.begin();
          p != hitfunc.pellet_directions.end(); ++p)
     {
-        beam.ray.set_degrees(*p);
+        beam.rotate = *p;
         beam.damage = dice_def(spread,
-                               div_rand_round(30 + pow / 6, prev + 2));
+                               div_rand_round(30 + pow / 3, prev + 2));
         beam.fire();
+        delay(10);
     }
 
     // Save props for next turn
     caster->props["spread_last"].get_int() = you.num_turns;
     caster->props["spread_count"].get_int() = prev + 1;
 
-    noisy(15 + div_rand_round(spread, ROD_CHARGE_MULT), hitfunc.origin);
+    noisy(15 + spread * 2, hitfunc.origin);
 
     return SPRET_SUCCESS;
 }

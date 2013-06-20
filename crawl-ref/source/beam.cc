@@ -741,6 +741,8 @@ void bolt::choose_ray()
     {
         if (!find_ray(source, target, ray, opc_solid_see))
             fallback_ray(source, target, ray);
+        if (rotate != 0)
+            ray.set_degrees(ray.get_degrees() + rotate);
     }
 }
 
@@ -5841,7 +5843,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                can_see_invis(false), nightvision(false), attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false),
                dont_stop_player(false), bounces(false), bounce_pos(),
-               reflections(0), reflector(-1), auto_hit(false)
+               reflections(0), reflector(-1), auto_hit(false), rotate(0)
 {
 }
 

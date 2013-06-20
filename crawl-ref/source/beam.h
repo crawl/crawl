@@ -162,6 +162,8 @@ struct bolt
     bool        use_target_as_pos; // pos() should return ::target()
     bool        auto_hit;
 
+    double      rotate;          // Degrees to offset the direction of the ray
+
     ray_def     ray;             // shoot on this specific ray
 
 #ifdef USE_TILE

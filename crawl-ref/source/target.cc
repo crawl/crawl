@@ -976,7 +976,7 @@ bool targetter_spread::set_aim(coord_def a)
                 if (zapped.find(p) == zapped.end())
                     arc_length[r.range()]++;
                 if (zapped[p] <= 0 && cell_see_cell(origin, p, LOS_NO_TRANS))
-                    zapped[p] = AFF_MAYBE;
+                    zapped[p] = AFF_YES;
             }
         }
 
@@ -987,10 +987,7 @@ bool targetter_spread::set_aim(coord_def a)
     if (_pellets > 0)
     {
         for (unsigned int i = 0; i < _pellets; ++i)
-        {
-            pellet_directions.push_back(random_range_real(dorig - dspread,
-                                                          dorig + dspread));
-        }
+            pellet_directions.push_back(random_range_real(-dspread, dspread));
     }
 
     return true;
