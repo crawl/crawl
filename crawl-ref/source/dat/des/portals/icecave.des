@@ -739,6 +739,7 @@ SUBST:   ! = w
 ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil")
+ice_caven_item_attributes(_G)
 }}
 : if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
