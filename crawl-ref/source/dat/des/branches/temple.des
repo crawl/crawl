@@ -2839,11 +2839,11 @@ KMASK:  TUw = no_monster_gen
 ORIENT: float
 MAP
   ccc     ccc
- ccGcccccccGcc 
+ ccGcccccccGcc
 cc...ccgcc...cc
 cB.p..+.+..p.Bc
 cc...cc.cc...cc
- ccGccg.gccGcc 
+ ccGccg.gccGcc
   ccccc+ccccc
        @
 ENDMAP
