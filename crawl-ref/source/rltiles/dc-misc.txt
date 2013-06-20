@@ -37,6 +37,24 @@ stone_arrow5
 stone_arrow6
 stone_arrow7
 
+poison_arrow0 BOLT_POISON_ARROW
+poison_arrow1
+poison_arrow2
+poison_arrow3
+poison_arrow4
+poison_arrow5
+poison_arrow6
+poison_arrow7
+
+icicle0 BOLT_ICICLE
+icicle1
+icicle2
+icicle3
+icicle4
+icicle5
+icicle6
+icicle7
+
 flame0 BOLT_FLAME
 flame1
 flame2
@@ -47,6 +65,9 @@ frost1
 magic_dart0 BOLT_MAGIC_DART
 magic_dart1
 magic_dart2
+magic_dart3
+magic_dart4
+magic_dart5
 
 sandblast0 BOLT_SANDBLAST
 sandblast1
@@ -60,6 +81,10 @@ zap0 BOLT_ZAP
 zap1
 zap2
 zap3
+
+drain0 BOLT_DRAIN
+drain1
+drain2
 
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
