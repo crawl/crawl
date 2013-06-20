@@ -5552,6 +5552,13 @@ bool is_hovering()
            && !you.is_wall_clinging();
 }
 
+bool djinni_floats()
+{
+    return you.species == SP_DJINNI
+           && you.form != TRAN_TREE
+           && (you.form != TRAN_SPIDER || !you.is_wall_clinging());
+}
+
 static void _end_water_hold()
 {
     you.duration[DUR_WATER_HOLD] = 0;
