@@ -44,7 +44,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "map_knowledge.h"
@@ -3131,8 +3130,8 @@ static int _next_rod_to_recharge()
 
 static void _recharge_rod(item_def &rod, bool quiet)
 {
-    if (rod.base_type != OBJ_RODS)
-        return;
+    ASSERT(!_rod_fully_charged(rod));
+
     // Don't recharge while jammed
     if (rod.is_jammed())
     {
@@ -3142,37 +3141,38 @@ static void _recharge_rod(item_def &rod, bool quiet)
             mprf("You wrestle with %s and manage to unjam it!",
                  rod.name(DESC_THE).c_str());
         }
-        // Will charge next turn
-        return;
     }
-    if (rod.plus >= rod.plus2)
-        return;
-
-    // Crank the rod. Dex becomes quite significant here.
-    int chance = you.skill(SK_EVOCATIONS) + you.dex() * 2 + rod.special;
-    if (x_chance_in_y(chance, 125))
+    else
     {
-        // TODO: Fuzz the amount of charges added at all?
-        if (rod.plus / ROD_CHARGE_MULT
-            != (rod.plus + ROD_CHARGE_MULT) / ROD_CHARGE_MULT)
+        // Crank the rod. Dex becomes quite significant here.
+        int chance = you.skill(SK_EVOCATIONS) + you.dex() * 2 + rod.special;
+        if (x_chance_in_y(chance, 125))
         {
-            if (item_is_equipped(rod, true))
-                you.wield_change = true;
+            // TODO: Fuzz the amount of charges added at all?
+            if (rod.plus / ROD_CHARGE_MULT
+                != (rod.plus + ROD_CHARGE_MULT) / ROD_CHARGE_MULT)
+            {
+                if (item_is_equipped(rod, true))
+                    you.wield_change = true;
+            }
+            rod.plus = min(rod.plus + ROD_CHARGE_MULT, (int)rod.plus2);
+            if (!quiet)
+            {
+                mprf("You crank %s and it %s.", rod.name(DESC_THE).c_str(),
+                     (rod.plus == rod.plus2) ? "is now recharged" : "gains a charge");
+            }
         }
-        rod.plus = min(rod.plus + ROD_CHARGE_MULT, (int)rod.plus2);
-        if (!quiet)
-            mprf("You crank %s and it gains a charge.",
-                 rod.name(DESC_THE).c_str());
+        else if (!quiet)
+            mprf("You fail to crank %s.", rod.name(DESC_THE).c_str());
     }
-    else if (!quiet)
-        mprf("You fail to crank %s.", rod.name(DESC_THE).c_str());
 
-    if (rod.plus == rod.plus2 && !you.running.runmode)
+    // Stop resting only when all rods are charged / unjammed
+    if (rod.plus == rod.plus2 && quiet && _next_rod_to_recharge() == -1)
     {
-        msg::stream << "Your " << rod.name(DESC_QUALNAME) << " has recharged."
+        msg::stream << "All your rods are fully charged."
                     << endl;
+        stop_running();
     }
-
     return;
 }
 
@@ -3180,68 +3180,27 @@ static void _recharge_rod(item_def &rod, bool quiet)
 // charged, switch to one that needs recharging *if* change_wield is true.
 // Returns true if switching weapon instead of recharging,
 // so delays can be handled correctly.
-bool recharge_rods(bool change_wield, bool quiet)
+void recharge_rods(bool quiet)
 {
-    // Can't do anything if weapon slot melded
-    if (you.melded[EQ_WEAPON])
-        return false;
-
+    // First try to recharge the currently wielded rod
     item_def *wielded = you.slot_item(EQ_WEAPON, false);
 
     if (wielded && wielded->base_type == OBJ_RODS
-        && !_rod_fully_charged(*wielded))
+        && !_rod_fully_charged(*wielded) && !you.melded[EQ_WEAPON])
     {
-        // Remember which rod to switch back to
-        // TODO: Handle switching back due to other interruptions
-        if (!you.attribute[ATTR_WIELDED_BEFORE_REST])
-            you.attribute[ATTR_WIELDED_BEFORE_REST] = (wielded->link + 1);
-
         _recharge_rod(*wielded, quiet);
-        return false;
+        return;
     }
-
-    // No further action if we can't wield something else (also don't
-    // pester the player with prompts if wielding distortion etc.)
-    if (!change_wield || (wielded && needs_handle_warning(*wielded, OPER_WIELD)))
-        return false;
 
     // Otherwise, scan inventory for a rod that needs charging
     int next_rod = _next_rod_to_recharge();
 
     // Remember which rod to switch back to
     // TODO: Handle switching back due to other interruptions
-    if (next_rod >= 0 && !you.attribute[ATTR_WIELDED_BEFORE_REST])
+    if (next_rod >= 0)
     {
-        you.attribute[ATTR_WIELDED_BEFORE_REST] =
-            wielded ? (wielded->link + 1) : -1;
+        _recharge_rod(you.inv[next_rod], quiet);
     }
-
-    // Charged all rods?
-    if (next_rod == -1)
-    {
-        if (!you.attribute[ATTR_WIELDED_BEFORE_REST])
-            return false;
-
-        // Stop resting only when all rods are charged
-        if (you.running.runmode)
-        {
-            msg::stream << "All your rods are fully charged."
-                        << endl;
-            stop_running();
-        }
-
-        next_rod = you.attribute[ATTR_WIELDED_BEFORE_REST] - 1;
-        you.attribute[ATTR_WIELDED_BEFORE_REST] = 0;
-
-        if (wielded && next_rod == wielded->link)
-            return false;
-
-        // Revert to unarmed
-        if (next_rod == -2)
-            return unwield_item();
-    }
-
-    return wield_weapon(true, next_rod, false, false, false, false);
 }
 
 void slime_wall_damage(actor* act, int delay)

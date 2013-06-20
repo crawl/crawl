@@ -741,7 +741,7 @@ public:
     int usable_tentacles() const;
     bool has_usable_tentacle() const;
 
-    bool crank_rods(bool change_wield, bool quiet = false);
+    void crank_rods(bool quiet = false);
 
 protected:
     void _removed_beholder();

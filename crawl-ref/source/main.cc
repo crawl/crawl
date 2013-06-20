@@ -1946,10 +1946,8 @@ void process_command(command_type cmd)
     case CMD_MOVE_NOWHERE:
     case CMD_WAIT:
         you.check_clinging(false);
-        // Crank a wielded rod now only if waiting a single turn, since
-        // it's handled differently while resting to allow switching.
-        if (cmd == CMD_WAIT)
-            you.crank_rods(false);
+        // Crank rods now, quiet if during long rest
+        you.crank_rods(cmd == CMD_MOVE_NOWHERE);
         you.turn_is_over = true;
         break;
 

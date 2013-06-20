@@ -7954,7 +7954,7 @@ void count_action(caction_type type, int subtype)
     you.action_count[pair][you.experience_level - 1]++;
 }
 
-bool player::crank_rods(bool change_wield, bool quiet)
+void player::crank_rods(bool quiet)
 {
-    return recharge_rods(change_wield, quiet);
+    recharge_rods(quiet);
 }
