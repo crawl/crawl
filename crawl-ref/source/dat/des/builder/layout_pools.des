@@ -112,7 +112,12 @@
         e.widen_paths { find = "l", percent = 60 }
         e.remove_isolated_glyphs { find = "l", percent = 90, boxy = true }
 
+        -- Two passes to fill zones; the first prevents actual disconnects,
+        -- the second removes any resultant lava pools
+        -- XXX: At some point conflate zonage to be able to perform this in
+        -- a single pass (layout_swamp also has a special zoning function)
         zonify.map_fill_zones(e, 1, 'x')
+        zonify.map_fill_lava_zones(e, 1, 'x')
     end
 
 }}
