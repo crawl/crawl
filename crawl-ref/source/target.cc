@@ -723,7 +723,7 @@ bool targetter_thunderbolt::set_aim(coord_def a)
     aim = a;
     zapped.clear();
 
-    if (a == origin)
+    if (a == origin || !cell_see_cell(origin, a, LOS_NO_TRANS))
         return false;
 
     arc_length.init(0);
