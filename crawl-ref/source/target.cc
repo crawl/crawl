@@ -11,6 +11,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "random.h"
 #include "spl-damage.h"
 #include "terrain.h"
 
@@ -988,8 +989,8 @@ bool targetter_spread::set_aim(coord_def a)
     {
         for (unsigned int i = 0; i < _pellets; ++i)
         {
-            pellet_directions.push_back(random_range(dorig - dspread,
-                                                     dorig + dspread));
+            pellet_directions.push_back(random_range_real(dorig - dspread,
+                                                          dorig + dspread));
         }
     }
 
