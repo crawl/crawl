@@ -876,7 +876,8 @@ aff_type targetter_spray::is_affected(coord_def loc)
     return affected;
 }
 
-targetter_spread::targetter_spread(const actor* act, int range, int spread)
+targetter_spread::targetter_spread(const actor* act, int range, int spread,
+                                   unsigned int pellets)
 {
     ASSERT(act);
     agent = act;
@@ -884,8 +885,9 @@ targetter_spread::targetter_spread(const actor* act, int range, int spread)
     aim = origin;
     ASSERT_RANGE(range, 1 + 1, you.current_vision + 1);
     _range = range;
-    _spread = spread;
     range2 = sqr(range) + 1;
+    _spread = spread;
+    _pellets = pellets;
 }
 
 bool targetter_spread::valid_aim(coord_def a)
@@ -907,7 +909,7 @@ bool targetter_spread::set_aim(coord_def a)
     aim = a;
     zapped.clear();
 
-    if (a == origin)
+    if (a == origin || !cell_see_cell(origin, a, LOS_NO_TRANS))
         return false;
 
     arc_length.init(0);
@@ -979,6 +981,17 @@ bool targetter_spread::set_aim(coord_def a)
         }
 
     zapped[origin] = AFF_NO;
+
+    // Calculate the pellets
+    pellet_directions.clear();
+    if (_pellets > 0)
+    {
+        for (unsigned int i = 0; i < _pellets; ++i)
+        {
+            pellet_directions.push_back(random_range(dorig - dspread,
+                                                     dorig + dspread));
+        }
+    }
 
     return true;
 }

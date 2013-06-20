@@ -2841,9 +2841,11 @@ spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
     {
         prev = caster->props["spread_count"].get_int();
     }
-    int spread = 2 * prev - 1;
+    // Calculate spread and # of pellets to trace (3..(7+prev))
+    const int spread = 2 * prev - 1;
+    const int pellets = random_range(3, 3 + prev + div_rand_round(pow, 50));
     targetter_spread hitfunc(caster, spell_range(SPELL_IRON_BLAST, pow),
-                             spread);
+                             spread, pellets);
 
     hitfunc.set_aim(aim);
 
@@ -2852,7 +2854,7 @@ spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
     bolt beam;
     beam.name              = "iron blast";
     beam.aux_source        = "iron rod";
-    beam.flavour           = BEAM_ENERGY;
+    beam.flavour           = BEAM_MISSILE;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTGREY;
     beam.range             = 1;
@@ -2860,46 +2862,25 @@ spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
     beam.hit               = 10 + pow / (20 + 5 * (prev - 1));
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
+    beam.source = hitfunc.origin;
+    beam.target = aim;
 #ifdef USE_TILE
     beam.tile_beam = -1;
 #endif
     beam.draw_delay = 0;
 
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+//            beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
+
+    for (vector<double>::const_iterator p = hitfunc.pellet_directions.begin();
+         p != hitfunc.pellet_directions.end(); ++p)
     {
-        if (p->second <= 0)
-            continue;
-
-        beam.draw(p->first);
-    }
-
-    delay(200);
-
-    beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
-
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
-    {
-        if (p->second <= 0)
-            continue;
-
-        // beams are incredibly spammy in debug mode
-        if (!actor_at(p->first))
-            continue;
-
-        int arc = hitfunc.arc_length[p->first.range(hitfunc.origin)];
-        ASSERT(arc > 0);
-        dprf("at distance %d, arc length is %d", p->first.range(hitfunc.origin),
-                                                 arc);
-        beam.source = beam.target = p->first;
-        beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
-        beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+        beam.ray.set_degrees(*p);
         beam.damage = dice_def(spread,
-                               div_rand_round(30 + pow / 6, arc + 2));
+                               div_rand_round(30 + pow / 6, prev + 2));
         beam.fire();
     }
 
+    // Save props for next turn
     caster->props["spread_last"].get_int() = you.num_turns;
     caster->props["spread_count"].get_int() = prev + 1;
 

@@ -191,19 +191,21 @@ private:
 class targetter_spread : public targetter
 {
 public:
-    targetter_spread(const actor* act, int range, int spread); // , zap_type zap);
+    targetter_spread(const actor* act, int range, int spread,
+                     unsigned int pellets = 0);
 
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
     map<coord_def, aff_type> zapped;
     FixedVector<int, LOS_RADIUS + 1> arc_length;
+    vector<double> pellet_directions;
 
 private:
-    vector<vector<coord_def> > paths_taken;
     int _range;
     int range2;
     int _spread;
+    unsigned int _pellets;
 };
 
 #endif
